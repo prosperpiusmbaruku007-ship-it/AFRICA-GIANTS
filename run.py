@@ -26,6 +26,17 @@ def main():
     
     # Deploy command
     subparsers.add_parser("deploy", help="Send reload instruction to local API server")
+
+    # RAG command
+    subparsers.add_parser("build-rag", help="Build the local RAG index from processed/eval data")
+
+    # Evaluation command
+    eval_parser = subparsers.add_parser("evaluate", help="Run benchmarks and evaluation gate")
+    eval_parser.add_argument("--model", type=str, default="", help="Optional model name/path to evaluate")
+
+    # Smoke test command
+    smoke_parser = subparsers.add_parser("smoke", help="Run smoke tests against a running API server")
+    smoke_parser.add_argument("--port", type=str, default="8000", help="Server port to test")
     
     args = parser.parse_args()
     
@@ -57,6 +68,26 @@ def main():
         logger.info("Triggering hot-reload deployer...")
         from src.deploy.deploy_hf_model import trigger_reload
         trigger_reload()
+
+    elif args.command == "build-rag":
+        logger.info("Building local RAG index...")
+        from src.rag.retriever import Retriever
+        count = Retriever().rebuild()
+        logger.info(f"RAG index built with {count} chunks.")
+
+    elif args.command == "evaluate":
+        logger.info("Running evaluation gate...")
+        from src.evaluate.eval_gate import evaluate_gate
+        passed = evaluate_gate(model_name=args.model)
+        if not passed:
+            sys.exit(1)
+
+    elif args.command == "smoke":
+        logger.info("Running smoke tests...")
+        from src.deploy.smoke_test import run_smoke_tests
+        success = run_smoke_tests(port=args.port)
+        if not success:
+            sys.exit(1)
 
 if __name__ == "__main__":
     main()

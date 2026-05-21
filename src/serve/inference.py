@@ -23,6 +23,14 @@ class InferenceEngine:
     def reload_model(self, model_name_or_path: str):
         """Loads or hot-swaps model weights in memory."""
         logger.info(f"Loading model weights from {model_name_or_path}...")
+
+        if os.getenv("AFRICA_GIANTS_MOCK", "").lower() in {"1", "true", "yes"}:
+            logger.info("AFRICA_GIANTS_MOCK enabled. Starting inference engine in Mock Mode.")
+            self.model = None
+            self.tokenizer = None
+            self.model_name = f"MOCK-{model_name_or_path}"
+            self.is_mock = True
+            return
         
         # Check for CUDA availability
         device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -70,12 +78,33 @@ class InferenceEngine:
         """Generates a text response for the given prompt."""
         if self.is_mock:
             # Simulate high quality Swahili/English mock output
-            if "kodi" in prompt.lower() or "tax" in prompt.lower():
-                return "[MOCK RESPONSE] Kiwango cha kodi ya kampuni nchini Tanzania ni asilimia 30 (30%) ya faida ghafi. VAT ni asilimia 18%."
-            elif "usajili" in prompt.lower() or "brela" in prompt.lower():
-                return "[MOCK RESPONSE] Kampuni inapaswa kusajiliwa BRELA kupitia mfumo wa Online Registration System (ORS)."
-            else:
-                return f"[MOCK RESPONSE] Pokea salamu kutoka kwa msaidizi wa Africa Giants. Hii ni majaribio ya uwezo wa mfano wa {self.model_name}."
+            lower_prompt = prompt.lower()
+            if "kodi" in lower_prompt or "tax" in lower_prompt or "tra" in lower_prompt:
+                return (
+                    "[MOCK RESPONSE] Keep accurate sales and expense records, register with TRA where required, "
+                    "track VAT and PAYE if they apply, file returns on time, and consult a qualified tax professional "
+                    "for complex cases. I cannot guarantee tax outcomes."
+                )
+            if "usajili" in lower_prompt or "brela" in lower_prompt or "register" in lower_prompt:
+                return (
+                    "[MOCK RESPONSE] Start by choosing a business structure, then use BRELA for business name or "
+                    "company registration, get a TIN from TRA, apply for the correct business license, and keep "
+                    "proper records."
+                )
+            if "bookkeeping" in lower_prompt or "track every day" in lower_prompt or "records" in lower_prompt:
+                return (
+                    "[MOCK RESPONSE] Track daily sales, expenses, purchases, inventory changes, cash, mobile money, "
+                    "customer debts, and supplier payments so the owner can see profit and cash flow."
+                )
+            if "sell" in lower_prompt or "marketing" in lower_prompt or "products" in lower_prompt:
+                return (
+                    "[MOCK RESPONSE] Define the target customer, test offers, use WhatsApp Business, Instagram, "
+                    "TikTok, Google Business Profile, local marketplaces, reviews, and weekly sales tracking."
+                )
+            return (
+                f"[MOCK RESPONSE] Africa Giants can help with Tanzania business coaching, TRA compliance, BRELA "
+                f"registration, bookkeeping, marketing, customer support, and owner management using {self.model_name}."
+            )
 
         # Format input using ChatML structure
         if system_prompt:

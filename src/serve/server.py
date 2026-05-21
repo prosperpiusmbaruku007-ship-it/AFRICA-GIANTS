@@ -1,10 +1,12 @@
-import os
 from fastapi import FastAPI, HTTPException, Header, Depends
 from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Any
 from src.serve.inference import InferenceEngine
 from src.common.logging import get_logger
 from src.common.secrets import get_reload_token
+from src.monitor.feedback import save_feedback
+from src.monitor.watch import read_metrics, record_metric
+from src.rag.rag_pipeline import RAGPipeline, SYSTEM_RAG_PROMPT
 
 logger = get_logger("server")
 
@@ -15,6 +17,7 @@ app = FastAPI(
 
 # Instantiate inference engine globally
 engine = InferenceEngine()
+rag = RAGPipeline()
 
 class ChatMessage(BaseModel):
     role: str
@@ -29,6 +32,18 @@ class ChatCompletionRequest(BaseModel):
 class ReloadRequest(BaseModel):
     model_name_or_path: str
 
+class RAGChatRequest(BaseModel):
+    question: str = Field(..., min_length=1)
+    top_k: int = Field(default=4, ge=1, le=10)
+    max_tokens: int = Field(default=384, ge=32, le=2048)
+
+class FeedbackRequest(BaseModel):
+    question: str
+    answer: str
+    rating: Optional[int] = Field(default=None, ge=1, le=5)
+    correction: str = ""
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
 def verify_token(x_reload_token: Optional[str] = Header(None)):
     """Secures the reload endpoint using an API key in header."""
     expected_token = get_reload_token()
@@ -41,7 +56,8 @@ def health_check():
     return {
         "status": "healthy",
         "model": engine.model_name,
-        "mock_mode": engine.is_mock
+        "mock_mode": engine.is_mock,
+        "rag_chunks": len(rag.retriever.store.chunks)
     }
 
 @app.post("/v1/chat/completions")
@@ -68,6 +84,15 @@ def chat_completions(request: ChatCompletionRequest):
             system_prompt=system_prompt,
             max_tokens=request.max_tokens
         )
+        record_metric(
+            "chat_completion",
+            {
+                "model": engine.model_name,
+                "mock_mode": engine.is_mock,
+                "prompt_chars": len(user_prompt),
+                "response_chars": len(response_text),
+            },
+        )
         
         return {
             "id": "chatcmpl-giants",
@@ -93,6 +118,61 @@ def chat_completions(request: ChatCompletionRequest):
     except Exception as e:
         logger.error(f"Generation error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/rag-chat")
+def rag_chat(request: RAGChatRequest):
+    """Retrieval-augmented chat endpoint for grounded business answers."""
+    try:
+        rag_prompt, sources = rag.prepare(request.question, top_k=request.top_k)
+        response_text = engine.generate(
+            prompt=rag_prompt,
+            system_prompt=SYSTEM_RAG_PROMPT,
+            max_tokens=request.max_tokens,
+        )
+        record_metric(
+            "rag_chat",
+            {
+                "model": engine.model_name,
+                "mock_mode": engine.is_mock,
+                "question_chars": len(request.question),
+                "response_chars": len(response_text),
+                "sources_returned": len(sources),
+            },
+        )
+        return {
+            "answer": response_text,
+            "model": engine.model_name,
+            "mock_mode": engine.is_mock,
+            "sources": sources,
+        }
+    except Exception as e:
+        logger.error(f"RAG generation error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/feedback")
+def feedback(request: FeedbackRequest):
+    """Stores user feedback for future evaluation and retraining."""
+    row = save_feedback(
+        question=request.question,
+        answer=request.answer,
+        rating=request.rating,
+        correction=request.correction,
+        model_name=engine.model_name,
+        metadata=request.metadata,
+    )
+    record_metric("feedback", {"rating": request.rating, "has_correction": bool(request.correction)})
+    return {"status": "saved", "feedback": row}
+
+@app.get("/metrics")
+def metrics(limit: int = 50):
+    """Returns recent local monitoring events."""
+    return {"events": read_metrics(limit=limit)}
+
+@app.post("/rag/rebuild")
+def rebuild_rag_index():
+    """Rebuilds the local RAG index from processed/eval datasets."""
+    count = rag.retriever.rebuild()
+    return {"status": "rebuilt", "chunks": count}
 
 @app.post("/v1/reload", dependencies=[Depends(verify_token)])
 def reload_model(request: ReloadRequest):

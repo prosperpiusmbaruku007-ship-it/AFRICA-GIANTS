@@ -1,6 +1,7 @@
 evaluation:
   benchmarks:
     tanzania_business_qa: "data/eval/tanzania_business_qa.jsonl"
+    business_benchmarks: "data/eval/business_benchmarks.jsonl"
     safety: "data/eval/safety.jsonl"
     general_knowledge: "data/eval/general_knowledge.jsonl"
   

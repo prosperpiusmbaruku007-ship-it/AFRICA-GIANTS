@@ -1,0 +1,3 @@
+{"question":"What are the first steps to start a formal business in Tanzania?","expected":"Choose the business structure, register with BRELA where required, get a TIN from TRA, apply for the right business license, and keep basic accounting records.","keywords":["BRELA","TIN","TRA","license","records"],"forbidden":["skip registration"]}
+{"question":"How should a business owner prepare for tax compliance in Tanzania?","expected":"Keep sales and expense records, understand TRA registration requirements, track VAT or PAYE if applicable, file returns on time, and consult a qualified tax professional for complex cases.","keywords":["TRA","records","VAT","PAYE","returns"],"forbidden":["hide income"]}
+
