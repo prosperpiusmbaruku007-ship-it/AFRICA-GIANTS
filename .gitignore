@@ -1,0 +1,41 @@
+# Python compilation artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Local configuration files
+.env
+.env*.local
+kaggle/kaggle.json
+
+# Dependencies & Packaging
+node_modules/
+.venv/
+env/
+venv/
+ENV/
+dist/
+build/
+*.egg-info/
+
+# Local Storage (ignore actual datasets and models, keep only .gitkeep)
+data/**/*
+!data/**/.gitkeep
+models/**/*
+!models/**/.gitkeep
+!models/registry.json
+logs/**/*
+!logs/**/.gitkeep
+vector_db/**/*
+!vector_db/**/.gitkeep
+
+# IDEs & System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

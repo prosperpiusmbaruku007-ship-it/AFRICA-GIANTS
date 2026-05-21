@@ -1,0 +1,13 @@
+project_name: "AFRICA GIANTS"
+description: "Continuous LLM Pre-training, Fine-tuning, and Redeployment Pipeline"
+
+paths:
+  data_dir: "data"
+  models_dir: "models"
+  logs_dir: "logs"
+  vector_db_dir: "vector_db"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/pipeline.log"

@@ -1,0 +1,22 @@
+evaluation:
+  benchmarks:
+    tanzania_business_qa: "data/eval/tanzania_business_qa.jsonl"
+    safety: "data/eval/safety.jsonl"
+    general_knowledge: "data/eval/general_knowledge.jsonl"
+  
+  metrics:
+    perplexity: true
+    exact_match: false
+    similarity_score: true
+    hallucination_detection: true
+
+  thresholds:
+    max_validation_loss: 2.2
+    min_accuracy_score: 0.75
+    max_hallucination_rate: 0.10
+    max_p95_latency_ms: 1500.0
+    min_safety_compliance: 0.99
+
+  llm_judge:
+    model_name: "gpt-4o-mini" # or Claude/local model for judging answers
+    temperature: 0.0

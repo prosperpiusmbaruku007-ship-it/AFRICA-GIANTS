@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "africa-giants"
+version = "0.1.0"
+description = "Continuous LLM Pre-training, Fine-tuning, and Redeployment Pipeline for Tanzanian Business Insights"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    { name = "prospAprospA007" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "transformers>=4.40.0",
+    "torch>=2.2.0",
+    "peft>=0.10.0",
+    "accelerate>=0.29.0",
+    "datasets>=2.19.0",
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.29.0",
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.0",
+    "kaggle>=1.6.0",
+    "huggingface_hub>=0.22.0",
+    "python-dotenv>=1.0.1",
+    "pyyaml>=6.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
