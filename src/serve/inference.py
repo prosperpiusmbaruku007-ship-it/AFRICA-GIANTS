@@ -3,8 +3,35 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from src.common.logging import get_logger
 from src.common.storage import load_yaml_config
+from src.common.secrets import get_hf_token
 
 logger = get_logger("inference")
+
+# Llama 3.1 special tokens
+_BOS      = "<|begin_of_text|>"
+_SYS_S    = "<|start_header_id|>system<|end_header_id|>\n\n"
+_USER_S   = "<|start_header_id|>user<|end_header_id|>\n\n"
+_ASST_S   = "<|start_header_id|>assistant<|end_header_id|>\n\n"
+_EOT      = "<|eot_id|>"
+
+SYSTEM_PROMPT = (
+    "Wewe ni msaidizi wa AI wa biashara za Tanzania. "
+    "Unajibu maswali kuhusu sheria za biashara, kodi, usajili wa kampuni, "
+    "na kanuni za kifedha kwa Kiswahili na Kiingereza. "
+    "You are a Tanzanian business AI assistant. Answer questions about "
+    "business regulations, tax, company registration, and financial rules "
+    "in both Swahili and English."
+)
+
+
+def _llama31_prompt(user_msg: str, system: str = SYSTEM_PROMPT) -> str:
+    return (
+        f"{_BOS}"
+        f"{_SYS_S}{system}{_EOT}"
+        f"{_USER_S}{user_msg}{_EOT}"
+        f"{_ASST_S}"
+    )
+
 
 class InferenceEngine:
     def __init__(self):
@@ -12,109 +39,107 @@ class InferenceEngine:
         self.tokenizer = None
         self.model_name = ""
         self.is_mock = False
-        
-        # Load config
-        self.models_config = load_yaml_config("models")
-        default_model = self.models_config["model"]["base_model_name"]
-        
-        # Initialize
-        self.reload_model(default_model)
+
+        models_config = load_yaml_config("models")
+        hf_config = load_yaml_config("huggingface")
+
+        # Serve from the fine-tuned adapter if it exists, else fall back to base model
+        adapter_repo = hf_config["huggingface"].get("adapter_repo", "")
+        base_model   = models_config["model"]["base_model_name"]
+        start_model  = adapter_repo if adapter_repo else base_model
+
+        self.reload_model(start_model)
 
     def reload_model(self, model_name_or_path: str):
         """Loads or hot-swaps model weights in memory."""
-        logger.info(f"Loading model weights from {model_name_or_path}...")
+        logger.info("Loading model weights from %s...", model_name_or_path)
 
         if os.getenv("AFRICA_GIANTS_MOCK", "").lower() in {"1", "true", "yes"}:
-            logger.info("AFRICA_GIANTS_MOCK enabled. Starting inference engine in Mock Mode.")
+            logger.info("AFRICA_GIANTS_MOCK enabled — starting in mock mode.")
             self.model = None
             self.tokenizer = None
             self.model_name = f"MOCK-{model_name_or_path}"
             self.is_mock = True
             return
-        
-        # Check for CUDA availability
+
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        logger.info(f"Using device: {device}")
-        
+        logger.info("Using device: %s", device)
+
         try:
-            # First try loading the requested model
-            self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, trust_remote_code=True)
+            hf_token = get_hf_token()
+        except Exception:
+            hf_token = None
+
+        try:
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                model_name_or_path, token=hf_token, trust_remote_code=True
+            )
             self.tokenizer.pad_token = self.tokenizer.eos_token
-            
-            # Load in 8-bit or 4-bit if on CUDA, otherwise standard load
+
             if device == "cuda":
                 self.model = AutoModelForCausalLM.from_pretrained(
                     model_name_or_path,
                     device_map="auto",
-                    torch_dtype=torch.float16,
-                    trust_remote_code=True
+                    torch_dtype=torch.bfloat16,
+                    token=hf_token,
+                    trust_remote_code=True,
                 )
             else:
-                # Load a tiny model locally on CPU to keep memory footprint low
-                logger.warn("No CUDA GPU found. Loading on CPU. Fallback to tiny model recommended.")
-                if "Afrique" in model_name_or_path or "8B" in model_name_or_path:
-                    logger.warn("8B model on CPU is too slow! Redirecting to HuggingFaceTB/SmolLM-135M for local testing.")
+                models_config = load_yaml_config("models")
+                base = models_config["model"]["base_model_name"]
+                if model_name_or_path == base or "8B" in model_name_or_path:
+                    logger.warning(
+                        "8B model on CPU is too slow — redirecting to HuggingFaceTB/SmolLM-135M for local testing."
+                    )
                     model_name_or_path = "HuggingFaceTB/SmolLM-135M"
                     self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
-                    
                 self.model = AutoModelForCausalLM.from_pretrained(
                     model_name_or_path,
                     torch_dtype=torch.float32,
-                    trust_remote_code=True
+                    trust_remote_code=True,
                 )
-            
+
             self.model.eval()
             self.model_name = model_name_or_path
             self.is_mock = False
             logger.info("Model loaded successfully.")
-            
+
         except Exception as e:
-            logger.error(f"Failed to load model {model_name_or_path}: {e}")
-            logger.warn("Starting inference engine in Mock Mode for testing.")
+            logger.error("Failed to load model %s: %s", model_name_or_path, e)
+            logger.warning("Starting inference engine in mock mode for testing.")
             self.is_mock = True
             self.model_name = f"MOCK-{model_name_or_path}"
 
     def generate(self, prompt: str, system_prompt: str = "", max_tokens: int = 256) -> str:
         """Generates a text response for the given prompt."""
         if self.is_mock:
-            # Simulate high quality Swahili/English mock output
-            lower_prompt = prompt.lower()
-            if "kodi" in lower_prompt or "tax" in lower_prompt or "tra" in lower_prompt:
+            lower = prompt.lower()
+            if "kodi" in lower or "tax" in lower or "tra" in lower:
                 return (
-                    "[MOCK RESPONSE] Keep accurate sales and expense records, register with TRA where required, "
-                    "track VAT and PAYE if they apply, file returns on time, and consult a qualified tax professional "
-                    "for complex cases. I cannot guarantee tax outcomes."
+                    "[MOCK] Keep accurate sales and expense records, register with TRA, "
+                    "track VAT and PAYE if they apply, file returns on time."
                 )
-            if "usajili" in lower_prompt or "brela" in lower_prompt or "register" in lower_prompt:
+            if "usajili" in lower or "brela" in lower or "register" in lower:
                 return (
-                    "[MOCK RESPONSE] Start by choosing a business structure, then use BRELA for business name or "
-                    "company registration, get a TIN from TRA, apply for the correct business license, and keep "
-                    "proper records."
+                    "[MOCK] Choose a business structure, register with BRELA, get a TIN from TRA, "
+                    "apply for the correct business license, and keep proper records."
                 )
-            if "bookkeeping" in lower_prompt or "track every day" in lower_prompt or "records" in lower_prompt:
+            if "bookkeeping" in lower or "records" in lower:
                 return (
-                    "[MOCK RESPONSE] Track daily sales, expenses, purchases, inventory changes, cash, mobile money, "
-                    "customer debts, and supplier payments so the owner can see profit and cash flow."
-                )
-            if "sell" in lower_prompt or "marketing" in lower_prompt or "products" in lower_prompt:
-                return (
-                    "[MOCK RESPONSE] Define the target customer, test offers, use WhatsApp Business, Instagram, "
-                    "TikTok, Google Business Profile, local marketplaces, reviews, and weekly sales tracking."
+                    "[MOCK] Track daily sales, expenses, inventory, cash, mobile money, "
+                    "customer debts, and supplier payments to see profit and cash flow."
                 )
             return (
-                f"[MOCK RESPONSE] Africa Giants can help with Tanzania business coaching, TRA compliance, BRELA "
-                f"registration, bookkeeping, marketing, customer support, and owner management using {self.model_name}."
+                f"[MOCK] Africa Giants assists with Tanzanian business coaching, TRA compliance, "
+                f"BRELA registration, bookkeeping, and marketing. Model: {self.model_name}."
             )
 
-        # Format input using ChatML structure
-        if system_prompt:
-            formatted_prompt = f"<|im_start|>system\n{system_prompt}<|im_end|>\n<|im_start|>user\n{prompt}<|im_end|>\n<|im_start|>assistant\n"
-        else:
-            formatted_prompt = f"<|im_start|>user\n{prompt}<|im_end|>\n<|im_start|>assistant\n"
+        sys = system_prompt or SYSTEM_PROMPT
+        formatted = _llama31_prompt(prompt, sys)
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        inputs = self.tokenizer(formatted_prompt, return_tensors="pt").to(device)
-        
+        inputs = self.tokenizer(formatted, return_tensors="pt").to(device)
+
         with torch.no_grad():
             outputs = self.model.generate(
                 **inputs,
@@ -122,10 +147,10 @@ class InferenceEngine:
                 pad_token_id=self.tokenizer.eos_token_id,
                 do_sample=True,
                 temperature=0.3,
-                top_p=0.9
+                top_p=0.9,
             )
-            
+
         decoded = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-        # Extract response from output
-        response = decoded.split("assistant\n")[-1].strip()
+        # Strip the prompt prefix — everything after the last assistant header
+        response = decoded.split("assistant\n\n")[-1].strip()
         return response

@@ -1,7 +1,20 @@
 huggingface:
-  username: "prospaprospa"
-  model_repo: "prospaprospa/Afrique-llama-8B"
-  dataset_repo: "prospaprospa/africa-giants-dataset"
-  space_repo: "prospaprospa/africa-giants-api"
+  username: "prospaprospa007"
+  base_model: "McGill-NLP/AfriqueLlama-8B"
+  adapter_repo: "prospaprospa007/africa-giants-adapter-v1"
+  merged_model_repo: "prospaprospa007/africa-giants-model-v1"
+  dataset_repo: "prospaprospa007/africa-giants-dataset"
+  space_repo: "prospaprospa007/africa-giants-api"
   private: true
   token_env_var: "HF_TOKEN"
+  model_tags:
+    - llama-3.1
+    - african-languages
+    - swahili
+    - tanzanian-business
+    - qlora
+    - unsloth
+    - peft
+  model_languages:
+    - sw
+    - en

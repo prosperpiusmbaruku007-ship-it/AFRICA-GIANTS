@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 AFRICA GIANTS is a continuous LLM pre-training, fine-tuning, and redeployment pipeline for Tanzanian Business Insights. It combines QLoRA fine-tuning on Kaggle GPUs with RAG at inference time to produce a bilingual (Swahili/English) AI assistant grounded in Tanzanian business knowledge.
 
-Base model: `prospaprospa/Afrique-llama-8B` on Hugging Face.
+Base model: `McGill-NLP/AfriqueLlama-8B` on Hugging Face (Llama 3.1 8B pre-trained on 20 African languages including Swahili).
 
 ## Commands
 
