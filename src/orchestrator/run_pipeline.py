@@ -254,12 +254,10 @@ def monitor_kaggle_run(kernel_ref: str, timeout_seconds: int, polling_interval: 
             if "Permission" in err_str and "denied" in err_str:
                 logger.warning(
                     "Kaggle token lacks 'kernels.get' permission — cannot poll status. "
-                    "Kernel was pushed successfully; check https://kaggle.com/code/%s manually. "
-                    "Pipeline will wait %ds then proceed.",
-                    kernel_ref, timeout_seconds,
+                    "Kernel was pushed; check https://www.kaggle.com/code/%s manually. "
+                    "Skipping monitor step and proceeding to evaluate.",
+                    kernel_ref,
                 )
-                time.sleep(timeout_seconds)
-                logger.info("Monitor wait complete — proceeding optimistically")
                 return True
             logger.warning("Failed to poll Kaggle status: %s", e)
 
