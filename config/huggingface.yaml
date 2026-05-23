@@ -1,7 +1,7 @@
 huggingface:
-  username: "prospAprospA007"
-  model_repo: "prospAprospA007/Afrique-llama-8B"
-  dataset_repo: "prospAprospA007/africa-giants-dataset"
-  space_repo: "prospAprospA007/africa-giants-api"
+  username: "prospaprospa"
+  model_repo: "prospaprospa/Afrique-llama-8B"
+  dataset_repo: "prospaprospa/africa-giants-dataset"
+  space_repo: "prospaprospa/africa-giants-api"
   private: true
   token_env_var: "HF_TOKEN"

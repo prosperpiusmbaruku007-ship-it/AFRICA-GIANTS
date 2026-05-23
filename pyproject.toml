@@ -9,7 +9,7 @@ description = "Continuous LLM Pre-training, Fine-tuning, and Redeployment Pipeli
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
-    { name = "prospAprospA007" }
+    { name = "prospaprospa" }
 ]
 classifiers = [
     "Programming Language :: Python :: 3",

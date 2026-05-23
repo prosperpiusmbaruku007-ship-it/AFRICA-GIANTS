@@ -1,5 +1,5 @@
 model:
-  base_model_name: "prospAprospA007/Afrique-llama-8B"
+  base_model_name: "prospaprospa/Afrique-llama-8B"
   local_prod_dir: "models/current"
   local_candidates_dir: "models/candidates"
   local_adapters_dir: "models/adapters"

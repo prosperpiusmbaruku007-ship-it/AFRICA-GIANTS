@@ -2,7 +2,7 @@
 
 A continuous LLM fine-tuning and redeployment pipeline for **Tanzanian Business Insights**. Combines QLoRA training on Kaggle GPUs with RAG at inference time to produce a bilingual (Swahili/English) AI assistant grounded in Tanzanian business knowledge.
 
-**Base model:** `prospAprospA007/Afrique-llama-8B`
+**Base model:** `prospaprospa/Afrique-llama-8B`
 
 ## Architecture
 

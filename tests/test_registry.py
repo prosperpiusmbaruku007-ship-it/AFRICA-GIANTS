@@ -21,7 +21,7 @@ def test_register_model():
         base_model="McGill-NLP/AfriqueLlama-8B",
         training_method="qlora",
         dataset_version="2026-01",
-        hf_repo="prospAprospA007/africa-giants-adapter-v1",
+        hf_repo="prospaprospa/africa-giants-adapter-v1",
         eval_scores={"accuracy_score": 0.80, "hallucination_rate": 0.05, "p95_latency_ms": 900.0},
         passed_gate=True,
     )
@@ -36,7 +36,7 @@ def test_promote_model():
         base_model="McGill-NLP/AfriqueLlama-8B",
         training_method="qlora",
         dataset_version="2026-01",
-        hf_repo="prospAprospA007/africa-giants-adapter-v1",
+        hf_repo="prospaprospa/africa-giants-adapter-v1",
         eval_scores={"accuracy_score": 0.80, "hallucination_rate": 0.05, "p95_latency_ms": 900.0},
         passed_gate=True,
     )
@@ -55,7 +55,7 @@ def test_promote_fails_if_gate_not_passed():
         base_model="McGill-NLP/AfriqueLlama-8B",
         training_method="qlora",
         dataset_version="2026-01",
-        hf_repo="prospAprospA007/africa-giants-bad",
+        hf_repo="prospaprospa/africa-giants-bad",
         eval_scores={"accuracy_score": 0.50, "hallucination_rate": 0.30, "p95_latency_ms": 3000.0},
         passed_gate=False,
     )

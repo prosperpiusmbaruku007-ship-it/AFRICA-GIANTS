@@ -46,7 +46,7 @@ def evaluate_gate(
                 base_model=base_model or "McGill-NLP/AfriqueLlama-8B",
                 training_method=training_method,
                 dataset_version=dataset_version,
-                hf_repo=hf_repo or f"prospAprospA007/{model_name}",
+                hf_repo=hf_repo or f"prospaprospa/{model_name}",
                 eval_scores=metrics,
                 passed_gate=passed,
             )

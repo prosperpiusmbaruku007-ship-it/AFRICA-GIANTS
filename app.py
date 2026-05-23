@@ -4,7 +4,7 @@ Africa Giants — Gradio web interface for HuggingFace Spaces deployment.
 Provides a bilingual (Swahili/English) chat interface backed by the
 fine-tuned Afrique Llama model with RAG retrieval.
 
-Deploy: push this file to prospAprospA007/africa-giants-app (Space, SDK=Gradio).
+Deploy: push this file to prospaprospa/africa-giants-app (Space, SDK=Gradio).
 """
 import os
 import requests
