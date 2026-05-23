@@ -11,3 +11,12 @@ logging:
   level: "INFO"
   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
   file: "logs/pipeline.log"
+
+scheduler:
+  interval: "24h"   # options: 6h, 12h, 24h, 48h, 7d
+
+rag:
+  embedding_model: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+  top_k: 4
+  chunk_size: 900
+  chunk_overlap: 120

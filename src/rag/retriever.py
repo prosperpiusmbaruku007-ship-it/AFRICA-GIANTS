@@ -4,7 +4,7 @@ from typing import List
 
 from src.common.logging import get_logger
 from src.common.storage import get_project_root
-from src.rag.vector_store import LocalVectorStore
+from src.rag.vector_store import get_vector_store
 
 logger = get_logger("rag.retriever")
 
@@ -40,7 +40,7 @@ def load_local_documents() -> List[dict]:
 
 class Retriever:
     def __init__(self):
-        self.store = LocalVectorStore()
+        self.store = get_vector_store()
         if not self.store.chunks:
             self.rebuild()
 

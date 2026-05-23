@@ -1,7 +1,18 @@
-import os
+"""
+End-to-end pipeline orchestrator.
+
+Run order: local data prep → HF dataset upload → Kaggle trigger →
+monitor training → evaluate → register → deploy.
+
+State is persisted to models/pipeline_state.json so a crashed run can
+resume from the last completed step rather than starting over.
+"""
 import json
+import os
+import subprocess
 import time
 from typing import Optional
+
 from src.common.logging import get_logger
 from src.common.storage import load_yaml_config, get_project_root, get_data_path
 from src.common.secrets import get_hf_token, get_kaggle_credentials
@@ -15,11 +26,72 @@ from src.process.prepare_training_data import prepare_and_split_datasets
 
 logger = get_logger("orchestrator")
 
-def prepare_kaggle_metadata(root_dir: str, kaggle_config: dict, hf_config: dict):
-    """Dynamically generates the Kaggle metadata json file needed by the Kaggle CLI."""
+STATE_PATH = os.path.join(get_project_root(), "models", "pipeline_state.json")
+STEPS = [
+    "data_pipeline",
+    "hf_upload",
+    "kaggle_trigger",
+    "kaggle_monitor",
+    "evaluate",
+    "deploy",
+]
+
+
+# ---------------------------------------------------------------------------
+# State persistence
+# ---------------------------------------------------------------------------
+
+def _load_state() -> dict:
+    if not os.path.exists(STATE_PATH):
+        return {"completed_steps": [], "run_id": None}
+    with open(STATE_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _save_state(state: dict) -> None:
+    os.makedirs(os.path.dirname(STATE_PATH), exist_ok=True)
+    with open(STATE_PATH, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=2)
+
+
+def _mark_done(state: dict, step: str) -> None:
+    if step not in state["completed_steps"]:
+        state["completed_steps"].append(step)
+    _save_state(state)
+
+
+def _reset_state() -> dict:
+    import uuid
+    state = {"completed_steps": [], "run_id": str(uuid.uuid4())[:8]}
+    _save_state(state)
+    return state
+
+
+# ---------------------------------------------------------------------------
+# Retry helper
+# ---------------------------------------------------------------------------
+
+def _retry(fn, retries: int = 3, backoff: float = 10.0, label: str = ""):
+    """Call fn(); on exception retry up to `retries` times with exponential backoff."""
+    last_exc = None
+    for attempt in range(1, retries + 1):
+        try:
+            return fn()
+        except Exception as exc:
+            last_exc = exc
+            wait = backoff * (2 ** (attempt - 1))
+            logger.warning("%s failed (attempt %d/%d): %s — retrying in %.0fs", label, attempt, retries, exc, wait)
+            time.sleep(wait)
+    raise RuntimeError(f"{label} failed after {retries} retries") from last_exc
+
+
+# ---------------------------------------------------------------------------
+# Pipeline steps
+# ---------------------------------------------------------------------------
+
+def prepare_kaggle_metadata(root_dir: str, kaggle_config: dict, hf_config: dict) -> None:
     kaggle_dir = os.path.join(root_dir, "kaggle")
     os.makedirs(kaggle_dir, exist_ok=True)
-    
     metadata = {
         "id": f"{kaggle_config['kaggle']['username']}/{kaggle_config['kaggle']['kernel_slug']}",
         "title": kaggle_config['kaggle']['kernel_slug'].replace("-", " ").title(),
@@ -31,203 +103,236 @@ def prepare_kaggle_metadata(root_dir: str, kaggle_config: dict, hf_config: dict)
         "enable_internet": "true",
         "dataset_sources": [],
         "competition_sources": [],
-        "kernel_sources": []
+        "kernel_sources": [],
     }
-    
     metadata_path = os.path.join(root_dir, kaggle_config['kaggle']['kernel_metadata_file'])
     with open(metadata_path, "w", encoding="utf-8") as f:
         json.dump(metadata, f, indent=4)
-    logger.info(f"Generated Kaggle metadata at {metadata_path}")
+    logger.info("Generated Kaggle metadata at %s", metadata_path)
+
 
 def run_local_data_pipeline() -> bool:
-    """Executes the entire local data pipeline: Scrape -> Clean -> Deduplicate -> Synthesize -> Split."""
-    logger.info("Starting local data ingestion and preparation pipeline...")
-    
-    # 1. Scrape Tanzanian sites
+    logger.info("Starting local data ingestion pipeline...")
     scraper = TanzanianBusinessScraper(use_mock=True)
     raw_docs = scraper.collect_all()
-    
-    # 2. Gatekeeper validation
     valid_raw_docs = validate_raw_documents(raw_docs)
     if not valid_raw_docs:
-        logger.error("No valid raw documents passed the data gate! Aborting.")
+        logger.error("No valid raw documents passed the data gate")
         return False
-        
-    # 3. Text cleaning
     cleaned_docs = clean_documents(valid_raw_docs)
-    
-    # 4. Deduplication
     unique_cleaned_docs = deduplicate_documents(cleaned_docs)
-    
-    # 5. Synthetic QA generation
     synthetic_qa = generate_synthetic_dataset(unique_cleaned_docs)
-    
-    # 6. Validate synthetic QA pairs
     valid_qa = validate_synthetic_pairs(synthetic_qa)
     if not valid_qa:
-        logger.error("No synthetic Q&A pairs passed validation! Aborting.")
+        logger.error("No synthetic Q&A pairs passed validation")
         return False
-        
-    # 7. Dataset split
     prepare_and_split_datasets(valid_qa)
-    logger.info("Local data ingestion pipeline completed successfully.")
+
+    # Also build the clean instruction dataset for fine-tuning
+    try:
+        from src.process.build_instruction_dataset import build_instruction_dataset
+        build_instruction_dataset(include_forums=True)
+        logger.info("Built clean instruction dataset")
+    except Exception as e:
+        logger.warning("Instruction dataset build failed (non-critical): %s", e)
+
+    logger.info("Local data pipeline completed")
     return True
 
-def upload_datasets_to_hf(hf_config: dict, hf_token: str):
-    """Pushes the processed train/val JSONL files to Hugging Face Hub as a Dataset."""
+
+def upload_datasets_to_hf(hf_config: dict, hf_token: str) -> None:
     from huggingface_hub import HfApi
     api = HfApi()
-    
     repo_id = hf_config["huggingface"]["dataset_repo"]
     root_dir = get_project_root()
     train_path = os.path.join(root_dir, "data", "processed", "train_sft.jsonl")
     val_path = os.path.join(root_dir, "data", "processed", "val_sft.jsonl")
-    
-    logger.info(f"Uploading datasets to Hugging Face repo: {repo_id}...")
-    try:
-        # Create dataset repo if it doesn't exist
-        api.create_repo(
-            repo_id=repo_id,
-            repo_type="dataset",
-            token=hf_token,
-            private=hf_config["huggingface"]["private"],
-            exist_ok=True
-        )
-        
-        # Upload train
-        api.upload_file(
-            path_or_fileobj=train_path,
-            path_in_repo="train_sft.jsonl",
-            repo_id=repo_id,
-            repo_type="dataset",
-            token=hf_token
-        )
-        
-        # Upload val
-        api.upload_file(
-            path_or_fileobj=val_path,
-            path_in_repo="val_sft.jsonl",
-            repo_id=repo_id,
-            repo_type="dataset",
-            token=hf_token
-        )
-        logger.info("Datasets successfully uploaded to Hugging Face Hub.")
-    except Exception as e:
-        logger.error(f"Failed to upload datasets to HF: {e}")
-        raise e
+    instruction_path = os.path.join(root_dir, "data", "processed", "instruction_dataset.jsonl")
+
+    logger.info("Uploading datasets to HF repo: %s", repo_id)
+
+    def _upload():
+        api.create_repo(repo_id=repo_id, repo_type="dataset", token=hf_token,
+                        private=hf_config["huggingface"]["private"], exist_ok=True)
+        for local_path, repo_name in [
+            (train_path, "train_sft.jsonl"),
+            (val_path, "val_sft.jsonl"),
+            (instruction_path, "instruction_dataset.jsonl"),
+        ]:
+            if os.path.exists(local_path):
+                api.upload_file(path_or_fileobj=local_path, path_in_repo=repo_name,
+                                repo_id=repo_id, repo_type="dataset", token=hf_token)
+                logger.info("Uploaded %s to HF", repo_name)
+
+    _retry(_upload, retries=3, backoff=15.0, label="HF dataset upload")
+    logger.info("Datasets uploaded to HF Hub")
+
 
 def trigger_kaggle_training(kaggle_config: dict, credentials: dict) -> str:
-    """Configures Kaggle credentials and triggers the kernel run using Kaggle API."""
-    # Write kaggle.json credentials locally for the Kaggle CLI
     root_dir = get_project_root()
     os.makedirs(os.path.expanduser("~/.kaggle"), exist_ok=True)
     with open(os.path.expanduser("~/.kaggle/kaggle.json"), "w") as f:
         json.dump(credentials, f)
-    
-    # Secure permissions
     try:
-        if os.name != 'nt': # Unix only
+        if os.name != "nt":
             os.chmod(os.path.expanduser("~/.kaggle/kaggle.json"), 0o600)
     except Exception:
         pass
-        
-    # Import kaggle after writing credentials
+
     from kaggle.api.kaggle_api_extended import KaggleApi
     api = KaggleApi()
     api.authenticate()
-    
-    # Trigger the kernel
-    logger.info(f"Triggering training job on Kaggle for kernel {kaggle_config['kaggle']['username']}/{kaggle_config['kaggle']['kernel_slug']}...")
-    
-    # Kaggle CLI requires pushing from the folder containing the kernel-metadata.json and code file
+
     kaggle_dir = os.path.join(root_dir, "kaggle")
-    # Copy notebook to the kaggle dir if it exists
-    notebook_src = os.path.join(root_dir, kaggle_config['kaggle']['notebook_source'])
+    notebook_src = os.path.join(root_dir, kaggle_config["kaggle"]["notebook_source"])
     notebook_dest = os.path.join(kaggle_dir, "kaggle_train_arque_llama.ipynb")
-    
     if os.path.exists(notebook_src):
         import shutil
         shutil.copy(notebook_src, notebook_dest)
-        
-    # Trigger run
-    api.kernels_push(kaggle_dir)
-    logger.info("Successfully pushed kernel to Kaggle.")
-    return f"{kaggle_config['kaggle']['username']}/{kaggle_config['kaggle']['kernel_slug']}"
+
+    kernel_ref = f"{kaggle_config['kaggle']['username']}/{kaggle_config['kaggle']['kernel_slug']}"
+
+    def _push():
+        api.kernels_push(kaggle_dir)
+
+    _retry(_push, retries=3, backoff=30.0, label="Kaggle kernel push")
+    logger.info("Pushed kernel to Kaggle: %s", kernel_ref)
+    return kernel_ref
+
 
 def monitor_kaggle_run(kernel_ref: str, timeout_seconds: int, polling_interval: int) -> bool:
-    """Polls Kaggle to check the execution status of the notebook."""
     from kaggle.api.kaggle_api_extended import KaggleApi
     api = KaggleApi()
     api.authenticate()
-    
+
     start_time = time.time()
-    logger.info(f"Monitoring Kaggle kernel: {kernel_ref}")
-    
+    logger.info("Monitoring Kaggle kernel: %s", kernel_ref)
+
     while time.time() - start_time < timeout_seconds:
-        status_data = api.kernel_status(kernel_ref)
-        status = status_data.get("status", "unknown").lower()
-        logger.info(f"Kaggle status: {status}")
-        
-        if status == "complete" or status == "success":
-            logger.info("Kaggle training completed successfully!")
-            return True
-        elif status == "error" or status == "failed":
-            logger.error("Kaggle training failed with an error. Review Kaggle logs.")
-            return False
-        elif status == "cancel" or status == "cancelled":
-            logger.error("Kaggle job was cancelled.")
-            return False
-            
+        try:
+            status_data = _retry(
+                lambda: api.kernel_status(kernel_ref),
+                retries=3, backoff=10.0, label="Kaggle status poll"
+            )
+            status = status_data.get("status", "unknown").lower()
+            elapsed = int(time.time() - start_time)
+            logger.info("Kaggle status=%s elapsed=%ds", status, elapsed)
+
+            if status in ("complete", "success"):
+                logger.info("Kaggle training completed successfully")
+                return True
+            elif status in ("error", "failed"):
+                logger.error("Kaggle training failed — review Kaggle logs")
+                return False
+            elif status in ("cancel", "cancelled"):
+                logger.error("Kaggle job was cancelled")
+                return False
+        except Exception as e:
+            logger.warning("Failed to poll Kaggle status: %s", e)
+
         time.sleep(polling_interval)
-        
-    logger.error("Kaggle training timed out!")
+
+    logger.error("Kaggle training timed out after %ds", timeout_seconds)
     return False
 
-def main():
+
+# ---------------------------------------------------------------------------
+# Main entry point
+# ---------------------------------------------------------------------------
+
+def main(resume: bool = True) -> None:
     root_dir = get_project_root()
-    
-    # Load configs
     kaggle_config = load_yaml_config("kaggle")
     hf_config = load_yaml_config("huggingface")
-    
-    # Load tokens
+
     try:
         hf_token = get_hf_token()
         kaggle_creds = get_kaggle_credentials()
     except Exception as e:
-        logger.critical(f"Credential loading error: {e}")
+        logger.critical("Credential loading error: %s", e)
         return
 
-    # Step 1: Run Local Data Extraction & Prep
-    if not run_local_data_pipeline():
-        logger.error("Data pipeline step failed. Halting orchestrator.")
-        return
-        
-    # Step 2: Push dataset to Hugging Face
-    upload_datasets_to_hf(hf_config, hf_token)
-    
-    # Step 3: Set up Kaggle metadata & trigger
-    prepare_kaggle_metadata(root_dir, kaggle_config, hf_config)
-    kernel_ref = trigger_kaggle_training(kaggle_config, kaggle_creds)
-    
-    # Step 4: Monitor Training Run
-    success = monitor_kaggle_run(
-        kernel_ref,
-        kaggle_config["kaggle"]["training_timeout"],
-        kaggle_config["kaggle"]["polling_interval"]
-    )
-    
-    if success:
-        # Step 5: Notify Deployer to Hot-Reload Serving Weights
-        logger.info("Pipeline run succeeded! Ready to trigger model hot-reload.")
-        # Trigger deploy script
-        import subprocess
+    state = _load_state() if resume else _reset_state()
+    done = set(state.get("completed_steps", []))
+    logger.info("Pipeline run_id=%s resuming from step after: %s", state.get("run_id"), list(done) or "start")
+
+    # Step 0: merge any pending feedback into instruction dataset
+    try:
+        from src.orchestrator.feedback_loop import merge_feedback_into_dataset
+        added = merge_feedback_into_dataset()
+        if added:
+            logger.info("Feedback loop: merged %d new examples into instruction dataset", added)
+    except Exception as e:
+        logger.warning("Feedback loop failed (non-critical): %s", e)
+
+    # Step 1: local data prep
+    if "data_pipeline" not in done:
+        if not run_local_data_pipeline():
+            logger.error("Data pipeline failed — halting")
+            return
+        _mark_done(state, "data_pipeline")
+
+    # Step 2: HF dataset upload
+    if "hf_upload" not in done:
+        upload_datasets_to_hf(hf_config, hf_token)
+        _mark_done(state, "hf_upload")
+
+    # Step 3: Kaggle trigger
+    if "kaggle_trigger" not in done:
+        prepare_kaggle_metadata(root_dir, kaggle_config, hf_config)
+        kernel_ref = trigger_kaggle_training(kaggle_config, kaggle_creds)
+        state["kernel_ref"] = kernel_ref
+        _mark_done(state, "kaggle_trigger")
+    else:
+        kernel_ref = state.get("kernel_ref", "")
+
+    # Step 4: monitor Kaggle
+    if "kaggle_monitor" not in done:
+        success = monitor_kaggle_run(
+            kernel_ref,
+            kaggle_config["kaggle"]["training_timeout"],
+            kaggle_config["kaggle"]["polling_interval"],
+        )
+        if not success:
+            logger.error("Training failed or timed out — halting")
+            return
+        _mark_done(state, "kaggle_monitor")
+
+    # Step 5: evaluate
+    if "evaluate" not in done:
+        try:
+            from src.evaluate.eval_gate import evaluate_gate
+            model_id = hf_config["huggingface"].get("adapter_repo", "africa-giants-adapter-v1").split("/")[-1]
+            passed = evaluate_gate(
+                model_name=model_id,
+                dataset_version=state.get("run_id", "unknown"),
+                hf_repo=hf_config["huggingface"].get("adapter_repo", ""),
+                auto_register=True,
+            )
+            if not passed:
+                logger.warning("Eval gate failed — model NOT promoted to production")
+                return
+        except Exception as e:
+            logger.error("Evaluation step error: %s", e)
+            return
+        _mark_done(state, "evaluate")
+
+    # Step 6: deploy
+    if "deploy" not in done:
         deploy_script = os.path.join(root_dir, "src", "deploy", "deploy_hf_model.py")
         if os.path.exists(deploy_script):
-            logger.info("Executing deploy script...")
-            subprocess.run(["python", deploy_script], check=True)
-    else:
-        logger.error("Pipeline run failed on training or timeout.")
+            logger.info("Triggering deploy script...")
+            try:
+                subprocess.run(["python", deploy_script], check=True, timeout=120)
+            except Exception as e:
+                logger.error("Deploy script error: %s", e)
+                return
+        _mark_done(state, "deploy")
+
+    logger.info("Pipeline completed successfully — all steps done for run_id=%s", state.get("run_id"))
+    # Clear state so next run starts fresh
+    _reset_state()
+
 
 if __name__ == "__main__":
     main()

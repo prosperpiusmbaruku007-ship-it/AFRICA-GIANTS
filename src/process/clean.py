@@ -31,6 +31,10 @@ def clean_documents(raw_docs: List[ScrapedDocument]) -> List[CleanedDocument]:
         lang = detect_language(cleaned_text)
         doc_id = generate_doc_id(cleaned_text)
         
+        if not cleaned_text:
+            logger.warning("Skipping empty document from %s", doc.url)
+            continue
+
         cleaned_doc = CleanedDocument(
             doc_id=doc_id,
             source_name=doc.source_name,
