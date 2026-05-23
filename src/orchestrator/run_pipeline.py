@@ -229,13 +229,15 @@ def monitor_kaggle_run(kernel_ref: str, timeout_seconds: int, polling_interval: 
                 lambda: api.kernels_status(kernel_ref),
                 retries=3, backoff=10.0, label="Kaggle status poll"
             )
-            # SDK 2.x returns a response object; fall back to dict access
+            # SDK 2.x returns a response object with enum strings like
+            # "kernelworkerstatus.running" — strip the prefix to get the bare status
             if hasattr(status_data, "status"):
-                status = str(status_data.status).lower()
+                raw = str(status_data.status).lower()
             elif isinstance(status_data, dict):
-                status = status_data.get("status", "unknown").lower()
+                raw = status_data.get("status", "unknown").lower()
             else:
-                status = "unknown"
+                raw = "unknown"
+            status = raw.split(".")[-1]  # "kernelworkerstatus.running" -> "running"
             elapsed = int(time.time() - start_time)
             logger.info("Kaggle status=%s elapsed=%ds", status, elapsed)
 
