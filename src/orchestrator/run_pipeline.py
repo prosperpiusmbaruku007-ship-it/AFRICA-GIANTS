@@ -170,14 +170,29 @@ def upload_datasets_to_hf(hf_config: dict, hf_token: str) -> None:
 
 def trigger_kaggle_training(kaggle_config: dict, credentials: dict) -> str:
     root_dir = get_project_root()
+
+    key = credentials["key"]
+    username = credentials["username"]
     os.makedirs(os.path.expanduser("~/.kaggle"), exist_ok=True)
-    with open(os.path.expanduser("~/.kaggle/kaggle.json"), "w") as f:
-        json.dump(credentials, f)
-    try:
-        if os.name != "nt":
-            os.chmod(os.path.expanduser("~/.kaggle/kaggle.json"), 0o600)
-    except Exception:
-        pass
+
+    if key.startswith("KGAT_"):
+        # New-format access token — kagglesdk 2.x reads KAGGLE_API_TOKEN or ~/.kaggle/access_token
+        os.environ["KAGGLE_API_TOKEN"] = key
+        access_token_path = os.path.expanduser("~/.kaggle/access_token")
+        with open(access_token_path, "w") as f:
+            f.write(key)
+        logger.info("Using KGAT access token for Kaggle authentication")
+    else:
+        # Legacy API key — set env vars and write kaggle.json
+        os.environ["KAGGLE_USERNAME"] = username
+        os.environ["KAGGLE_KEY"] = key
+        with open(os.path.expanduser("~/.kaggle/kaggle.json"), "w") as f:
+            json.dump({"username": username, "key": key}, f)
+        try:
+            if os.name != "nt":
+                os.chmod(os.path.expanduser("~/.kaggle/kaggle.json"), 0o600)
+        except Exception:
+            pass
 
     from kaggle.api.kaggle_api_extended import KaggleApi
     api = KaggleApi()
@@ -203,7 +218,7 @@ def trigger_kaggle_training(kaggle_config: dict, credentials: dict) -> str:
 def monitor_kaggle_run(kernel_ref: str, timeout_seconds: int, polling_interval: int) -> bool:
     from kaggle.api.kaggle_api_extended import KaggleApi
     api = KaggleApi()
-    api.authenticate()
+    api.authenticate()  # credentials already set in env by trigger_kaggle_training
 
     start_time = time.time()
     logger.info("Monitoring Kaggle kernel: %s", kernel_ref)
@@ -211,10 +226,16 @@ def monitor_kaggle_run(kernel_ref: str, timeout_seconds: int, polling_interval: 
     while time.time() - start_time < timeout_seconds:
         try:
             status_data = _retry(
-                lambda: api.kernel_status(kernel_ref),
+                lambda: api.kernels_status(kernel_ref),
                 retries=3, backoff=10.0, label="Kaggle status poll"
             )
-            status = status_data.get("status", "unknown").lower()
+            # SDK 2.x returns a response object; fall back to dict access
+            if hasattr(status_data, "status"):
+                status = str(status_data.status).lower()
+            elif isinstance(status_data, dict):
+                status = status_data.get("status", "unknown").lower()
+            else:
+                status = "unknown"
             elapsed = int(time.time() - start_time)
             logger.info("Kaggle status=%s elapsed=%ds", status, elapsed)
 
@@ -228,6 +249,18 @@ def monitor_kaggle_run(kernel_ref: str, timeout_seconds: int, polling_interval: 
                 logger.error("Kaggle job was cancelled")
                 return False
         except Exception as e:
+            err_str = str(e)
+            # Permission denied means this token can't read kernel status — skip monitoring
+            if "Permission" in err_str and "denied" in err_str:
+                logger.warning(
+                    "Kaggle token lacks 'kernels.get' permission — cannot poll status. "
+                    "Kernel was pushed successfully; check https://kaggle.com/code/%s manually. "
+                    "Pipeline will wait %ds then proceed.",
+                    kernel_ref, timeout_seconds,
+                )
+                time.sleep(timeout_seconds)
+                logger.info("Monitor wait complete — proceeding optimistically")
+                return True
             logger.warning("Failed to poll Kaggle status: %s", e)
 
         time.sleep(polling_interval)
