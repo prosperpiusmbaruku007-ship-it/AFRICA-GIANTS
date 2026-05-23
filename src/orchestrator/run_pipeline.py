@@ -249,7 +249,8 @@ def monitor_kaggle_run(kernel_ref: str, timeout_seconds: int, polling_interval: 
                 logger.error("Kaggle job was cancelled")
                 return False
         except Exception as e:
-            err_str = str(e)
+            # Check both the RuntimeError message and its underlying cause
+            err_str = str(e) + str(e.__cause__ if e.__cause__ else "")
             # Permission denied means this token can't read kernel status — skip monitoring
             if "Permission" in err_str and "denied" in err_str:
                 logger.warning(
