@@ -118,9 +118,11 @@ Source text:
 
 def generate_synthetic_dataset(documents: List[CleanedDocument]) -> List[QAPair]:
     """Generates the entire synthetic training dataset from cleaned documents."""
-    api_key = get_openai_api_key()
+    raw_key = get_openai_api_key()
+    # Treat placeholder values as no key
+    api_key = raw_key if (raw_key and raw_key.startswith("sk-")) else ""
     dataset = []
-    
+
     for doc in documents:
         if api_key:
             logger.info(f"Generating LLM-based synthetic QA for document {doc.doc_id}...")
