@@ -100,6 +100,9 @@ def prepare_kaggle_metadata(root_dir: str, kaggle_config: dict, hf_config: dict)
         "kernel_type": "notebook",
         "is_private": "true",
         "enable_gpu": "true",
+        # Request T4 specifically — P100 (sm_60) lost PyTorch support after 2.1.x
+        # and torch==2.1.2+cu118 has been removed from PyPI.
+        "accelerator": "nvidiaTeslaT4",
         "enable_internet": "true",
         "dataset_sources": [],
         "competition_sources": [],
