@@ -18,6 +18,7 @@ if sys.platform == "win32":
 os.environ["PYTHONUTF8"] = "1"
 
 import json
+import subprocess
 import tempfile
 
 # Load .env
@@ -77,27 +78,43 @@ except Exception as e:
     print("(KGAT token may lack 'kernels.get' scope — check logs in Kaggle web UI)")
 
 # ── 2. Kernel output files ───────────────────────────────────────────────────
+# kernels_output() internally opens files with the OS default encoding (cp1252
+# on Windows), which cannot encode Unicode characters that appear in kernel logs
+# (e.g. box-drawing chars from the notebook).  Run it in a subprocess that has
+# PYTHONUTF8=1 so all file I/O defaults to UTF-8.
 print(f"\n=== Kernel output: {KERNEL_REF} ===")
 try:
-    with tempfile.TemporaryDirectory() as tmpdir:
-        api.kernels_output(KERNEL_REF, path=tmpdir, force=True)
-        files = os.listdir(tmpdir)
-        if not files:
-            print("No output files found (kernel may still be running or produced no files).")
-        for fname in files:
-            fpath = os.path.join(tmpdir, fname)
-            print(f"\n--- {fname} ---")
-            try:
-                with open(fpath, "r", encoding="utf-8", errors="replace") as f:
-                    content = f.read()
-                # Print last 200 lines — most useful for finding crash cause
-                lines = content.splitlines()
-                if len(lines) > 200:
-                    print(f"(showing last 200 of {len(lines)} lines)")
-                    lines = lines[-200:]
-                print("\n".join(lines))
-            except Exception as read_err:
-                print(f"  (binary file or read error: {read_err})")
+    _env = os.environ.copy()
+    _env["PYTHONUTF8"] = "1"
+    _tmpdir_obj = tempfile.mkdtemp()
+    tmpdir = _tmpdir_obj
+    _dl = subprocess.run(
+        [sys.executable, "-c",
+         f"import os,sys; os.environ['PYTHONUTF8']='1';"
+         f"from kaggle.api.kaggle_api_extended import KaggleApi;"
+         f"api=KaggleApi(); api.authenticate();"
+         f"api.kernels_output('{KERNEL_REF}', path=r'{tmpdir}', force=True)"],
+        env=_env, capture_output=True, text=True, encoding="utf-8"
+    )
+    if _dl.returncode != 0:
+        raise RuntimeError(_dl.stderr or _dl.stdout)
+    files = os.listdir(tmpdir)
+    if not files:
+        print("No output files found (kernel may still be running or produced no files).")
+    for fname in files:
+        fpath = os.path.join(tmpdir, fname)
+        print(f"\n--- {fname} ---")
+        try:
+            with open(fpath, "r", encoding="utf-8", errors="replace") as f:
+                content = f.read()
+            # Print last 200 lines — most useful for finding crash cause
+            lines = content.splitlines()
+            if len(lines) > 200:
+                print(f"(showing last 200 of {len(lines)} lines)")
+                lines = lines[-200:]
+            print("\n".join(lines))
+        except Exception as read_err:
+            print(f"  (binary file or read error: {read_err})")
 except Exception as e:
     print(f"kernels_output failed: {e}")
     print("(KGAT token may lack output scope)")

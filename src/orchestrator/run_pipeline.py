@@ -100,9 +100,10 @@ def prepare_kaggle_metadata(root_dir: str, kaggle_config: dict, hf_config: dict)
         "kernel_type": "notebook",
         "is_private": "true",
         "enable_gpu": "true",
-        # Request T4 specifically — P100 (sm_60) lost PyTorch support after 2.1.x
-        # and torch==2.1.2+cu118 has been removed from PyPI.
-        "accelerator": "nvidiaTeslaT4",
+        # Request T4 x2 specifically — P100 (sm_60) lost PyTorch support after 2.1.x
+        # and torch==2.1.2+cu118 has been removed from PyPI. Single T4 falls back to P100
+        # when unavailable; T4 x2 is the correct Kaggle API value for "GPU T4 x2".
+        "accelerator": "nvidiaTeslaT4x2",
         "enable_internet": "true",
         "dataset_sources": [],
         "competition_sources": [],
@@ -205,8 +206,13 @@ def trigger_kaggle_training(kaggle_config: dict, credentials: dict) -> str:
     notebook_src = os.path.join(root_dir, kaggle_config["kaggle"]["notebook_source"])
     notebook_dest = os.path.join(kaggle_dir, "kaggle_train_arque_llama.ipynb")
     if os.path.exists(notebook_src):
-        import shutil
-        shutil.copy(notebook_src, notebook_dest)
+        # Re-serialize with ensure_ascii=True so all Unicode chars become \uXXXX
+        # escapes — this keeps the file pure-ASCII content regardless of encoding,
+        # avoiding cp1252 decode errors when the Kaggle SDK or Windows tools read it.
+        with open(notebook_src, "r", encoding="utf-8") as f:
+            nb_data = json.load(f)
+        with open(notebook_dest, "w", encoding="utf-8") as f:
+            json.dump(nb_data, f, ensure_ascii=True, indent=1)
 
     kernel_ref = f"{kaggle_config['kaggle']['username']}/{kaggle_config['kaggle']['kernel_slug']}"
 
