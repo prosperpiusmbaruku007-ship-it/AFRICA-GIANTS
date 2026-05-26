@@ -95,7 +95,7 @@ def prepare_kaggle_metadata(root_dir: str, kaggle_config: dict, hf_config: dict)
     metadata = {
         "id": f"{kaggle_config['kaggle']['username']}/{kaggle_config['kaggle']['kernel_slug']}",
         "title": kaggle_config['kaggle']['kernel_slug'].replace("-", " ").title(),
-        "code_file": "kaggle_train_arque_llama.ipynb",
+        "code_file": "africa_giants_V2.ipynb",
         "language": "python",
         "kernel_type": "notebook",
         "is_private": "true",
@@ -204,7 +204,7 @@ def trigger_kaggle_training(kaggle_config: dict, credentials: dict) -> str:
 
     kaggle_dir = os.path.join(root_dir, "kaggle")
     notebook_src = os.path.join(root_dir, kaggle_config["kaggle"]["notebook_source"])
-    notebook_dest = os.path.join(kaggle_dir, "kaggle_train_arque_llama.ipynb")
+    notebook_dest = os.path.join(kaggle_dir, "africa_giants_V2.ipynb")
     if os.path.exists(notebook_src):
         # Re-serialize with ensure_ascii=True so all Unicode chars become \uXXXX
         # escapes — this keeps the file pure-ASCII content regardless of encoding,
@@ -256,8 +256,8 @@ def monitor_kaggle_run(kernel_ref: str, timeout_seconds: int, polling_interval: 
             elif status in ("error", "failed"):
                 logger.error("Kaggle training failed — review Kaggle logs")
                 return False
-            elif status in ("cancel", "cancelled"):
-                logger.error("Kaggle job was cancelled")
+            elif status in ("cancel", "cancelled", "cancel_acknowledged", "canceling"):
+                logger.error("Kaggle job was cancelled (status=%s)", status)
                 return False
         except Exception as e:
             # Check both the RuntimeError message and its underlying cause

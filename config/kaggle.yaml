@@ -1,8 +1,8 @@
 kaggle:
   username: "prospaprospa"
-  kernel_slug: "africa-giants-v2-007"
+  kernel_slug: "africa-giants-v2"
   dataset_slug: "africa-giants-dataset"
   kernel_metadata_file: "kaggle/kernel-metadata.json"
-  notebook_source: "notebooks/kaggle_train_arque_llama.ipynb"
+  notebook_source: "kaggle/africa_giants_V2.ipynb"
   training_timeout: 10800 # 3 hours in seconds
   polling_interval: 60 # Check status every 60 seconds
