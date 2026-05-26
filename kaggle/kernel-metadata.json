@@ -1,7 +1,8 @@
 {
-    "id": "prospaprospa/africa-giants-v2-007",
+    "id": "prospaprospa/africa-giants-v2",
+    "id_no": "2fd1d643-20ce-4275-b6b0-dbd1795f848b",
     "title": "Africa Giants V2",
-    "code_file": "kaggle_train_arque_llama.ipynb",
+    "code_file": "africa_giants_V2.ipynb",
     "language": "python",
     "kernel_type": "notebook",
     "is_private": "true",
