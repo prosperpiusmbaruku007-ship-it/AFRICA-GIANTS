@@ -1,3 +1,14 @@
+# MANDATORY SESSION START — READ THIS FIRST
+
+Every time you start a new session you MUST:
+1. Read this entire CLAUDE.md file
+2. Read PROGRESS.md immediately after
+3. Summarize current project state before doing anything
+4. State what the next step is based on PROGRESS.md
+5. Ask for confirmation before starting any work
+
+Do not skip this. Do not assume. Always read both files first.
+
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.

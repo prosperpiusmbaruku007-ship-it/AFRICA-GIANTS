@@ -118,36 +118,6 @@ print(f"DEBUG SFTConfig eos: {repr(_args_obj.eos_token)}")
 _build_tok  = dict(_tok_kwarg)
 _build_sft  = dict(_sft_direct)
 _trainer = None
-# ── COMPLETE EOS FIX ─────────────────────────────────────────────────────────────────────
-# Fix 1: Force tokenizer eos_token
-tokenizer.eos_token = "<|end_of_text|>"
-tokenizer.eos_token_id = 128001
-tokenizer.add_special_tokens({"eos_token": "<|end_of_text|>"})
-print(f"[eos] hardcoded: {tokenizer.convert_tokens_to_ids('<|end_of_text|>')}")
-
-# Fix 2: Clear chat template
-tokenizer.chat_template = None
-print("[fix] chat_template cleared")
-
-# Fix 3: Force model config eos_token_id
-print(f"[cfg] model.config.eos_token_id before: {getattr(model.config, 'eos_token_id', 'absent')}")
-if hasattr(model.config, 'eos_token_id'):
-    model.config.eos_token_id = 128001
-if hasattr(model, 'generation_config') and hasattr(model.generation_config, 'eos_token_id'):
-    model.generation_config.eos_token_id = 128001
-print("[cfg] model eos_token_id forced to 128001")
-
-# Fix 4: Clean dataset text
-train_ds = train_ds.map(lambda x: {"text": x["text"].replace("<EOS_TOKEN>", "<|end_of_text|>")})
-eval_ds  = eval_ds.map(lambda x: {"text": x["text"].replace("<EOS_TOKEN>", "<|end_of_text|>")})
-print(f"[data] dataset cleaned. Sample: {train_ds[0]['text'][:100]}")
-
-# Fix 5: Final assertion
-_eos_id_check = tokenizer.convert_tokens_to_ids(tokenizer.eos_token)
-assert _eos_id_check == 128001, f"FATAL: eos still wrong: {_eos_id_check}"
-assert tokenizer.chat_template is None, "FATAL: chat_template not cleared"
-print("[eos] ALL FIXES APPLIED -- proceeding to SFTTrainer")
-# ── END EOS FIX ──────────────────────────────────────────────────────────────────────
 for _attempt in range(20):
     try:
         _trainer = SFTTrainer(

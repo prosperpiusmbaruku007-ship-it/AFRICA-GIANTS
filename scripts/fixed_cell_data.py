@@ -39,22 +39,24 @@ def fmt(ex):
     ctx  = ex.get("input", "") or ""
     out  = ex.get("output", "")
     user = f"Context: {ctx}\n\n{inst}" if ctx.strip() else inst
-    # apply_chat_template removed: AfriqueLlama chat_template has literal <EOS_TOKEN>
-    # strings (Unsloth artifact). Use manual Llama-3.1 format for both paths.
-    text = (
-        f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>
-
-"
-        f"{SYSTEM_PROMPT}{EOS_TOKEN}"
-        f"<|start_header_id|>user<|end_header_id|>
-
-"
-        f"{user}{EOS_TOKEN}"
-        f"<|start_header_id|>assistant<|end_header_id|>
-
-"
-        f"{out}{EOS_TOKEN}"
-    )
+    if USE_UNSLOTH:
+        msgs = [
+            {"role": "system",    "content": SYSTEM_PROMPT},
+            {"role": "user",      "content": user},
+            {"role": "assistant", "content": out},
+        ]
+        text = tokenizer.apply_chat_template(msgs, tokenize=False, add_generation_prompt=False)
+        if not text.endswith(EOS_TOKEN):
+            text = text + EOS_TOKEN
+    else:
+        text = (
+            f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
+            f"{SYSTEM_PROMPT}{EOS_TOKEN}"
+            f"<|start_header_id|>user<|end_header_id|>\n\n"
+            f"{user}{EOS_TOKEN}"
+            f"<|start_header_id|>assistant<|end_header_id|>\n\n"
+            f"{out}{EOS_TOKEN}"
+        )
     return {"text": text}
 
 train_ds = raw_dataset["train"].map(fmt, batched=False)

@@ -45,17 +45,6 @@ tokenizer = AutoTokenizer.from_pretrained(
     BASE_MODEL,
     token=hf_token,
 )
-# AfriqueLlama tokenizer_config.json sets eos_token="<EOS_TOKEN>" (Unsloth artifact).
-# Unsloth-patched TRL reads tokenizer.eos_token and validates it; <EOS_TOKEN> is not
-# in the HF vocabulary so it raises ValueError. Hardcode the correct token here,
-# before anything else reads tokenizer.eos_token.
-tokenizer.eos_token = "<|end_of_text|>"
-tokenizer.eos_token_id = 128001
-tokenizer.add_special_tokens({"eos_token": "<|end_of_text|>"})
-tokenizer.chat_template = None  # AfriqueLlama template has literal <EOS_TOKEN> strings
-print(f"[fix-eos] eos_token forced: {tokenizer.eos_token}")
-print(f"[fix-eos] convert check:    {tokenizer.convert_tokens_to_ids(tokenizer.eos_token)}")
-assert tokenizer.convert_tokens_to_ids(tokenizer.eos_token) == 128001, \n    f"FATAL: eos not 128001 after hardcode: {tokenizer.convert_tokens_to_ids(tokenizer.eos_token)}"
 tokenizer.pad_token = tokenizer.eos_token
 print(f"[fix] reloaded raw tokenizer: {tokenizer.__class__.__name__}")
 print(f"[fix] eos_token: {tokenizer.eos_token}")
