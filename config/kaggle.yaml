@@ -1,6 +1,6 @@
 kaggle:
   username: "prospaprospa"
-  kernel_slug: "africa-giants-v2"
+  kernel_slug: "africa-giants-v2-007"
   dataset_slug: "africa-giants-dataset"
   kernel_metadata_file: "kaggle/kernel-metadata.json"
   notebook_source: "notebooks/kaggle_train_arque_llama.ipynb"
