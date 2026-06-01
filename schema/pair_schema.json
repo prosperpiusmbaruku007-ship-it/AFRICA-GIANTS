@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0",
+  "description": "Canonical metadata contract for AFRICA-GIANTS Q&A training pairs. All 18 fields required. Pipeline rejects any pair missing any field. See CLAUDE.md Section 6 for enforcement rules.",
+
+  "fields": {
+    "id": "string",
+    "domain": "string",
+    "subdomain": "string",
+    "question_sw": "string",
+    "answer_sw": "string",
+    "question_en": "string",
+    "answer_en": "string",
+    "primary_source_url": "string",
+    "primary_source_name": "string",
+    "source_type": "string",
+    "effective_date": "string",
+    "decay_risk": "string",
+    "next_review_trigger": "string",
+    "verified_by": "string",
+    "verified_date": "string",
+    "register": "string",
+    "pair_type": "string",
+    "eval_set": "boolean"
+  },
+
+  "required": [
+    "id",
+    "domain",
+    "subdomain",
+    "question_sw",
+    "answer_sw",
+    "question_en",
+    "answer_en",
+    "primary_source_url",
+    "primary_source_name",
+    "source_type",
+    "effective_date",
+    "decay_risk",
+    "next_review_trigger",
+    "verified_by",
+    "verified_date",
+    "register",
+    "pair_type",
+    "eval_set"
+  ],
+
+  "field_descriptions": {
+    "id": "Unique identifier. Format: {domain}_{subdomain}_{sequence}_{YYYYMMDD}. Example: tier1a_vat_001_20260601",
+    "domain": "Which dataset tier this pair belongs to",
+    "subdomain": "Specific regulatory topic within the domain. Examples: vat_compliance, labour_wages, gn487a, str_threshold, nest_registration",
+    "question_sw": "The question written in Swahili, in native register appropriate to context. NOT translated from English.",
+    "answer_sw": "The answer written in Swahili, in native register. Must cite the regulatory basis. NOT translated from English.",
+    "question_en": "The question in English. Written after the Swahili version.",
+    "answer_en": "The answer in English. Written after the Swahili version.",
+    "primary_source_url": "Full URL of the primary source. MUST be a domain present in sources/whitelist.json. Pipeline rejects any URL not on whitelist.",
+    "primary_source_name": "Human-readable name of the source document or portal. Example: Tanzania Revenue Authority, Finance Act 2025, GN 605A",
+    "source_type": "Category of source. Must match allowed_values.",
+    "effective_date": "ISO 8601 date (YYYY-MM-DD) when this regulatory fact became legally effective. Example: 2025-07-01 for Finance Act 2025 VAT withholding.",
+    "decay_risk": "How quickly this fact is likely to become outdated. Stable = rarely changes; Annual = check after each Finance Act; Event-triggered = changes when specific gazette notice is issued.",
+    "next_review_trigger": "Human-readable description of when this pair should be re-verified. Example: After Finance Act July 2026 | After next GN 605A gazette | Monitor PPRA NeST guideline updates",
+    "verified_by": "Name and role of the domain expert who confirmed factual accuracy. Example: Joseph Mwangi, TRA-registered Tax Consultant | Advocate Amina Hassan, Labour Law Practitioner",
+    "verified_date": "ISO 8601 date (YYYY-MM-DD) when expert verification was completed. PENDING is not a valid value — pair must not reach cleaned_pairs/ without verification.",
+    "register": "Swahili register of the question/answer. Determines which user population this pair trains the model to serve.",
+    "pair_type": "Functional type of the pair. Standard is a direct Q&A. Disambiguation clarifies a common confusion (e.g., originating status vs Common List). Adversarial tests edge cases. Out_of_corpus_refusal trains the model to say Sina uhakika when it should not answer.",
+    "eval_set": "If true, this pair is held out for evaluation and EXCLUDED from training data. Eval pairs must come from a different source document family than training pairs (see CLAUDE.md R6)."
+  },
+
+  "allowed_values": {
+    "domain": ["tier1a", "tier1b", "tier1c", "tier2a", "tier2b"],
+    "decay_risk": ["stable", "annual", "event_triggered"],
+    "register": ["formal", "business_market", "rural_conversational"],
+    "pair_type": ["standard", "disambiguation", "adversarial", "out_of_corpus_refusal"],
+    "source_type": ["government_portal", "tier1_advisory", "ilo_unctad_official", "official_gazette"],
+    "eval_set": [true, false]
+  },
+
+  "pipeline_enforcement": {
+    "raw_to_cleaned": "All 18 fields present AND primary_source_url domain in sources/whitelist.json. Script: python scripts/validate_dataset.py",
+    "cleaned_to_eval_set": "Human domain expert sign-off on 10% random sample before any pair advances. Tier 1A requires: TRA-registered consultant (compliance) + labour law practitioner (GN 605A) + immigration lawyer (GN 487A).",
+    "training_exclusion": "Pairs with eval_set=true are excluded from training JSONL at export time. Not manually managed.",
+    "gate_requirement": "Both accuracy_gate (>85%) AND refusal_gate (>70%) must pass. Script: python scripts/run_eval.py"
+  },
+
+  "example_pair": {
+    "id": "tier1a_vat_001_20260601",
+    "domain": "tier1a",
+    "subdomain": "vat_compliance",
+    "question_sw": "Kiwango cha VAT nchini Tanzania ni kiasi gani?",
+    "answer_sw": "Kiwango cha kawaida cha VAT nchini Tanzania ni asilimia 18 kulingana na sheria ya TRA. Biashara inayopita kizingiti cha TZS milioni 200 ndani ya miezi 12, au TZS milioni 100 ndani ya miezi 6, inahitajika kusajiliwa VAT. Thibitisha na TRA kwa taarifa za hivi karibuni.",
+    "question_en": "What is the VAT rate in Tanzania?",
+    "answer_en": "The standard VAT rate in Tanzania is 18% as per TRA. Businesses exceeding TZS 200 million in 12 months or TZS 100 million in 6 months are required to register for VAT. Confirm with TRA for latest information.",
+    "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+    "primary_source_name": "Tanzania Revenue Authority",
+    "source_type": "government_portal",
+    "effective_date": "2025-07-01",
+    "decay_risk": "annual",
+    "next_review_trigger": "After Finance Act July 2026",
+    "verified_by": "[PENDING — requires TRA-registered tax consultant review]",
+    "verified_date": "[PENDING]",
+    "register": "business_market",
+    "pair_type": "standard",
+    "eval_set": false
+  }
+}
