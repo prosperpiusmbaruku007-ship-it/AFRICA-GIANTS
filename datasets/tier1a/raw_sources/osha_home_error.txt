@@ -1,0 +1,3 @@
+Fetch failed at 2026-06-01T14:05:34.308820+00:00
+URL: https://www.osha.go.tz
+Error: 'charmap' codec can't encode character '\u2192' in position 29: character maps to <undefined>

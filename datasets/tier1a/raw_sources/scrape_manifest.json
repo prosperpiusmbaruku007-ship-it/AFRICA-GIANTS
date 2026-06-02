@@ -1,0 +1,42 @@
+[
+  {
+    "id": "tra_tax_information",
+    "url": "https://www.tra.go.tz/index.php/tax-information",
+    "institution": "Tanzania Revenue Authority",
+    "filename": "tra_tax_information.html",
+    "status": "error: HTTPConnectionPool(host='www.tra.go.tz', port=80): Max retries exceeded with url: /makosa/404 (Caused by ReadTimeoutError(\"HTTPConnectionPool(host='www.tra.go.tz', port=80): Read timed out. (read timeout=20)\"))",
+    "scraped_at": "2026-06-01T14:03:48.527018+00:00"
+  },
+  {
+    "id": "tra_filing_returns",
+    "url": "https://www.tra.go.tz/index.php/filing-returns",
+    "institution": "Tanzania Revenue Authority",
+    "filename": "tra_filing_returns.html",
+    "status": "error: HTTPConnectionPool(host='www.tra.go.tz', port=80): Max retries exceeded with url: /makosa/404 (Caused by ReadTimeoutError(\"HTTPConnectionPool(host='www.tra.go.tz', port=80): Read timed out. (read timeout=20)\"))",
+    "scraped_at": "2026-06-01T14:05:17.608196+00:00"
+  },
+  {
+    "id": "brela_home",
+    "url": "https://www.brela.go.tz",
+    "institution": "Business Registrations and Licensing Agency",
+    "filename": "brela_home.html",
+    "status": "error: 'charmap' codec can't encode character '\\u2192' in position 28: character maps to <undefined>",
+    "scraped_at": "2026-06-01T14:05:20.763657+00:00"
+  },
+  {
+    "id": "nssf_home",
+    "url": "https://www.nssf.or.tz",
+    "institution": "National Social Security Fund Tanzania",
+    "filename": "nssf_home.html",
+    "status": "error: HTTPSConnectionPool(host='www.nssf.or.tz', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x000002A17BCE0C50>: Failed to resolve 'www.nssf.or.tz' ([Errno 11001] getaddrinfo failed)\"))",
+    "scraped_at": "2026-06-01T14:05:29.641734+00:00"
+  },
+  {
+    "id": "osha_home",
+    "url": "https://www.osha.go.tz",
+    "institution": "Occupational Safety and Health Authority",
+    "filename": "osha_home.html",
+    "status": "error: 'charmap' codec can't encode character '\\u2192' in position 29: character maps to <undefined>",
+    "scraped_at": "2026-06-01T14:05:34.308820+00:00"
+  }
+]

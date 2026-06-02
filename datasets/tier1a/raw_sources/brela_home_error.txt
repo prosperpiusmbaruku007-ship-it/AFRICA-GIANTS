@@ -1,0 +1,3 @@
+Fetch failed at 2026-06-01T14:05:20.763657+00:00
+URL: https://www.brela.go.tz
+Error: 'charmap' codec can't encode character '\u2192' in position 28: character maps to <undefined>

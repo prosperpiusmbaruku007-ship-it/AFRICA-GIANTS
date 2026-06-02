@@ -1,0 +1,3 @@
+Fetch failed at 2026-06-01T14:05:17.608196+00:00
+URL: https://www.tra.go.tz/index.php/filing-returns
+Error: HTTPConnectionPool(host='www.tra.go.tz', port=80): Max retries exceeded with url: /makosa/404 (Caused by ReadTimeoutError("HTTPConnectionPool(host='www.tra.go.tz', port=80): Read timed out. (read timeout=20)"))

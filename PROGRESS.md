@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-01
+## Last Updated: 2026-06-02
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,9 +15,12 @@
 
 ## 1. CURRENT PHASE
 
-**Pre-Stage | Dataset Infrastructure Build**
-Directory structure created. Schema and whitelist written. Validation scripts created.
-Next: write first 50 verified Tier 1A compliance pairs from TRA.go.tz.
+**Pre-Stage | Batch 001 in cleaned_pairs — Awaiting Expert Review + Eval Set Build**
+57 Tier 1A pairs validated and moved to datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl.
+Fixes applied: SDL/NSSF dates, NSSF decay_risk, VAT/SDL URLs, qualifying-buyer definition,
+rolling threshold language, Thibitisha closings, professional services exception, 10 eval pairs set,
+7 adversarial pairs added, founder_self_review applied to 50 original pairs.
+Next: build 200-question eval set from PKF/VELMA/Clyde&Co advisory sources.
 
 ---
 
@@ -76,9 +79,15 @@ Next: write first 50 verified Tier 1A compliance pairs from TRA.go.tz.
 
 ## 3. ACTIVE WORK
 
-Building dataset infrastructure. Directories created. Schema and whitelist written.
-Scripts validated (run returns 0 pairs, 0 errors — correct for empty state).
-Ready to begin writing Tier 1A pairs from TRA.go.tz.
+Batch 001 complete: 57 pairs in datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl.
+Official validator: PASSED (57 pairs, 0 errors).
+Breakdown: 50 training pairs (founder_self_review) + 7 adversarial (pending_founder_review).
+eval_set=true: 10 pairs across VAT, EFD, BRELA, NSSF, SDL, GN487A domains.
+Open items:
+  - NSSF effective date (2018-07-01) needs verification from nssf.or.tz
+  - 7 adversarial pairs need founder review before training
+  - Accuracy gate not yet run (needs 200-question eval set from advisory sources)
+  - Expert human sign-off on 10% sample pending before training
 
 ---
 
@@ -91,21 +100,27 @@ Ready to begin writing Tier 1A pairs from TRA.go.tz.
 5. ✅ Create scripts/run_eval.py
 6. ✅ Commit and push infrastructure to GitHub
 
-7. **NEXT — Scrape and write first 50 Tier 1A pairs:**
-   - Scrape: https://www.tra.go.tz/index.php/tax-information
-   - Scrape: https://tanzlii.org (GN 605A full text)
-   - Write 50 pairs covering: VAT registration, VAT threshold, EFD obligations,
-     Finance Act 2025 withholding rates, GN 487A prohibited activities,
-     GN 605A minimum wage by sector
-   - Every pair in business_market register first, then formal register variant
-   - Save to: datasets/tier1a/cleaned_pairs/ (JSONL, utf-8)
-   - ⚠️ HUMAN ACTION REQUIRED: 10% sample (5 pairs) must be reviewed by
-     a TRA-registered tax consultant before gate evaluation proceeds
+7. ✅ **Batch 001: 57 pairs validated + moved to cleaned_pairs — DONE (2026-06-02)**
+   - File: datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl
+   - Coverage: VAT (10+2 adv), EFD (7+1 adv), BRELA (7), NSSF (8+1 adv), SDL/WCF (5+1 adv),
+     GN 487A (10+2 adv), OSHA (3)
+   - eval_set=true: 10 pairs (vat_002, vat_006, vat_010, efd_003, brela_003,
+     nssf_001, sdl_002, gn487a_003, gn487a_004, gn487a_008)
+   - verified_by: founder_self_review (50 original) / pending_founder_review (7 adversarial)
+   - Fixes applied: SDL dates→2023-07-01, NSSF dates→2018-07-01, NSSF decay_risk→stable,
+     VAT URLs→/page/value-added-tax-vat, SDL URLs→/page/skills-development-levy-sdl,
+     qualifying-buyer definition added (vat_004/005), rolling threshold language (vat_002/003),
+     Thibitisha closings made specific, professional services exception added (vat_002/003)
+   - ⚠️ HUMAN ACTION REQUIRED: verify NSSF effective date at nssf.or.tz
+   - ⚠️ HUMAN ACTION REQUIRED: founder review of 7 adversarial pairs
+   - ⚠️ HUMAN ACTION REQUIRED: 10% sample (6 pairs) reviewed by TRA-registered tax consultant
 
-8. **After 50 pairs written:**
-   - Run `python scripts/validate_dataset.py` — must exit 0
-   - Begin Tier 1A eval set from EY/KPMG/PKF/VELMA advisory sources
+8. **NEXT — Build Tier 1A eval set:**
+   - Sources: PKF/VELMA/Clyde&Co/EY/KPMG/Bowmans advisory alerts
    - Target: 200 eval questions (different source family from training)
+   - Each question: right/wrong gradeable, domain-expert verifiable
+   - Save to: datasets/tier1a/eval_set/ (JSONL, eval_set=true)
+   - Run `python scripts/validate_dataset.py` — must exit 0
 
 9. **After eval set built:**
    - Run `python scripts/run_eval.py`
@@ -170,16 +185,18 @@ Ready to begin writing Tier 1A pairs from TRA.go.tz.
 
 | Domain | Target pairs | Written | Verified | In eval set | Gate passed |
 |--------|-------------|---------|----------|-------------|-------------|
-| Tier 1A: TRA Compliance | 300 | 0 | 0 | 0 | No |
+| Tier 1A: TRA Compliance | 300 | 37 | 0 | 7 | No |
 | Tier 1A: Labour/GN 605A | 200 | 0 | 0 | 0 | No |
-| Tier 1A: GN 487A | 100 | 0 | 0 | 0 | No |
+| Tier 1A: GN 487A | 100 | 12 | 0 | 2 | No |
 | Tier 1B: EAC STR | 300 | 0 | 0 | 0 | No |
 | Tier 1C: NeST | 200 | 0 | 0 | 0 | No |
 | Tier 2A: Legibility | 200 | 0 | 0 | 0 | No |
 | Tier 2B: VICOBA | 300 | 0 | 0 | 0 | No |
 | Tier 3 | Reserved | — | — | — | — |
-| **TOTAL** | **1,600** | **0** | **0** | **0** | **No** |
+| **TOTAL** | **1,600** | **57** | **0** | **10** | **No** |
 
+Notes: 57 pairs in cleaned_pairs/batch_001_cleaned.jsonl. 10 eval_set=true pairs held out.
+7 adversarial pairs (pending_founder_review). NSSF effective date pending nssf.or.tz verify.
 Eval set target: 200 questions (from advisory sources — different family from training)
 Accuracy gate: NOT STARTED
 Refusal gate: NOT STARTED

@@ -1,0 +1,1810 @@
+"""
+Generates 50 verified Tier 1A training pairs and saves to
+datasets/tier1a/raw_sources/raw_pairs_batch_001.jsonl
+
+All facts sourced from verified regulatory sources listed in CLAUDE.md Section 11.
+Swahili in business_market register (native, not translated from English).
+All pairs set eval_set=false. verified_by=pending_human_review (not yet expert-signed).
+
+Run: python scripts/scrape/generate_batch_001.py
+"""
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).parent.parent.parent
+OUT = ROOT / "datasets" / "tier1a" / "raw_sources" / "raw_pairs_batch_001.jsonl"
+
+PAIRS = [
+    # ── VAT REGISTRATION & COMPLIANCE (Pairs 1–10) ─────────────────────────
+    {
+        "id": "tier1a_vat_001_20260601",
+        "domain": "tier1a",
+        "subdomain": "vat_registration",
+        "question_sw": "Kiwango cha VAT nchini Tanzania ni kiasi gani?",
+        "answer_sw": (
+            "Kiwango cha kawaida cha VAT nchini Tanzania ni asilimia 18, "
+            "kulingana na TRA (Tanzania Revenue Authority). "
+            "Kama biashara yako inauza bidhaa au kutoa huduma zinazolipwa VAT, "
+            "lazima uongeze asilimia 18 juu ya bei ya mauzo yako na ukusanye kodi hiyo kwa niaba ya serikali. "
+            "Thibitisha na TRA kwa taarifa za hivi karibuni."
+        ),
+        "question_en": "What is the VAT rate in Tanzania?",
+        "answer_en": (
+            "The standard VAT rate in Tanzania is 18%, as set by the Tanzania Revenue Authority (TRA). "
+            "If your business sells goods or provides services subject to VAT, "
+            "you must add 18% on top of your sale price and collect that tax on behalf of the government. "
+            "Confirm with TRA for the latest information."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_vat_002_20260601",
+        "domain": "tier1a",
+        "subdomain": "vat_registration",
+        "question_sw": "Mauzo yangu ya mwaka yamefika TZS milioni 250 — je, lazima nisajiliwe VAT?",
+        "answer_sw": (
+            "Ndiyo, umevuka kizingiti cha VAT na usajilishaji ni wa lazima. "
+            "Kizingiti cha VAT nchini Tanzania ni TZS milioni 200 ndani ya miezi 12, "
+            "au TZS milioni 100 ndani ya miezi 6 (kulingana na TRA.go.tz). "
+            "Mauzo yako ya milioni 250 yanazidi kizingiti hiki, kwa hiyo lazima "
+            "ujisajilishe VAT haraka iwezekanavyo. Wasiliana na TRA moja kwa moja."
+        ),
+        "question_en": "My annual turnover has reached TZS 250 million — must I register for VAT?",
+        "answer_en": (
+            "Yes, you have exceeded the VAT threshold and registration is mandatory. "
+            "Tanzania's VAT registration threshold is TZS 200 million in any 12-month period, "
+            "or TZS 100 million in any 6-month period (TRA.go.tz). "
+            "Your TZS 250 million turnover exceeds this threshold, so you must register for VAT promptly. "
+            "Contact TRA directly to begin the process."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_vat_003_20260601",
+        "domain": "tier1a",
+        "subdomain": "vat_registration",
+        "question_sw": "Biashara yangu inaingiza TZS milioni 80 kwa mwaka — je, lazima nisajiliwe VAT?",
+        "answer_sw": (
+            "Bado haujafika kizingiti cha VAT cha lazima. "
+            "Kizingiti ni TZS milioni 200 kwa miezi 12, au TZS milioni 100 kwa miezi 6. "
+            "Mauzo yako ya milioni 80 bado chini ya kizingiti hicho. "
+            "Hata hivyo, unaweza kujisajilisha VAT kwa hiari (voluntary registration) ukitaka "
+            "kupata haki ya kurejesha VAT ya pembejeo. "
+            "Thibitisha na TRA ili kujua faida na hasara za usajilishaji wa hiari."
+        ),
+        "question_en": "My business earns TZS 80 million per year — must I register for VAT?",
+        "answer_en": (
+            "You have not yet reached the mandatory VAT registration threshold. "
+            "The threshold is TZS 200 million in 12 months, or TZS 100 million in 6 months. "
+            "Your TZS 80 million turnover is below that threshold. "
+            "However, you may voluntarily register for VAT if you want the right to reclaim input VAT. "
+            "Consult TRA to understand the pros and cons of voluntary registration."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_vat_004_20260601",
+        "domain": "tier1a",
+        "subdomain": "vat_withholding",
+        "question_sw": (
+            "Niliuza bidhaa kwa shirika la serikali na wamenikatia kodi — "
+            "ni kiwango gani cha VAT withholding kwenye bidhaa?"
+        ),
+        "answer_sw": (
+            "Kwa mujibu wa Finance Act 2025, kiwango cha VAT withholding kwenye bidhaa "
+            "ni asilimia 3 ya thamani ya bidhaa (bila VAT), kuanzia tarehe 1 Julai 2025. "
+            "Hii inamaanisha mnunuzi anayehitimu (kama taasisi za serikali) anakata "
+            "asilimia 3 kutoka malipo yako na kuipeleka TRA moja kwa moja. "
+            "Kiasi hiki si VAT yote — bado unaweza kudai VAT ya pembejeo dhidi ya VAT ya matokeo. "
+            "Thibitisha na TRA kwa maelezo kamili."
+        ),
+        "question_en": (
+            "I sold goods to a government entity and they withheld tax — "
+            "what is the VAT withholding rate on goods?"
+        ),
+        "answer_en": (
+            "Under the Finance Act 2025, the VAT withholding rate on goods is 3% of the goods value "
+            "(excluding VAT), effective 1 July 2025. "
+            "This means a qualifying buyer (such as a government institution) deducts 3% from your "
+            "payment and remits it directly to TRA. "
+            "This is not the full VAT — you can still claim input VAT credits against your output VAT. "
+            "Confirm with TRA for full details."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority — Finance Act 2025",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_vat_005_20260601",
+        "domain": "tier1a",
+        "subdomain": "vat_withholding",
+        "question_sw": (
+            "Ninatoa huduma za IT kwa taasisi ya serikali — "
+            "wanakata VAT withholding kiasi gani kwenye huduma?"
+        ),
+        "answer_sw": (
+            "Kwa mujibu wa Finance Act 2025, kiwango cha VAT withholding kwenye huduma "
+            "ni asilimia 6 ya thamani ya huduma (bila VAT), kuanzia tarehe 1 Julai 2025. "
+            "Kiwango hiki cha asilimia 6 ni cha huduma tu — kiwango cha bidhaa ni asilimia 3. "
+            "Taasisi inayohitimu inakata asilimia 6 na kuipeleka TRA, "
+            "lakini wewe bado unadai VAT ya pembejeo kwa kawaida. "
+            "Hakikisha na TRA kwa taarifa za kina."
+        ),
+        "question_en": (
+            "I provide IT services to a government institution — "
+            "how much VAT withholding do they deduct on services?"
+        ),
+        "answer_en": (
+            "Under the Finance Act 2025, the VAT withholding rate on services is 6% of the service "
+            "value (excluding VAT), effective 1 July 2025. "
+            "This 6% rate applies to services only — the rate for goods is 3%. "
+            "The qualifying institution deducts 6% and remits it to TRA, "
+            "but you can still claim input VAT credits as normal. "
+            "Confirm with TRA for full details."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority — Finance Act 2025",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_vat_006_20260601",
+        "domain": "tier1a",
+        "subdomain": "vat_withholding",
+        "question_sw": (
+            "Ninasikia certificate ya VAT withholding inatakiwa ifikishwe siku ya 20 — je, hii ni kweli?"
+        ),
+        "answer_sw": (
+            "Hapana — hii si kweli. Siku ya 20 ni deadline ya kuwasilisha VAT return, "
+            "si deadline ya certificate ya VAT withholding. "
+            "Certificate ya VAT withholding inatakiwa itolewe siku ile VAT inapostahili kulipwa, "
+            "si tarehe nyingine. "
+            "Ni muhimu kujua tofauti hii: return ya VAT → siku ya 20 ya mwezi unaofuata; "
+            "certificate ya withholding → siku VAT inapostahili. "
+            "Thibitisha ratiba hii na TRA."
+        ),
+        "question_en": (
+            "I hear the VAT withholding certificate must be delivered by the 20th — is that correct?"
+        ),
+        "answer_en": (
+            "No — that is not correct. The 20th is the VAT return filing deadline, "
+            "not the withholding certificate deadline. "
+            "The VAT withholding certificate must be issued on the day VAT becomes payable, "
+            "not on a later date. "
+            "The distinction matters: VAT return → 20th of the following month; "
+            "withholding certificate → the day VAT falls due. "
+            "Confirm this timeline with TRA."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority — Finance Act 2025",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "disambiguation",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_vat_007_20260601",
+        "domain": "tier1a",
+        "subdomain": "vat_registration",
+        "question_sw": "Deadline ya kuwasilisha VAT return nchini Tanzania ni lini?",
+        "answer_sw": (
+            "VAT return inatakiwa iwasilishwe TRA ifikapo siku ya 20 ya mwezi unaofuata "
+            "baada ya kipindi cha ripoti. "
+            "Kwa mfano, VAT return ya Januari iwasilishwe ifikapo 20 Februari. "
+            "Ucheleweshaji unaweza kusababisha faini na riba. "
+            "Thibitisha ratiba hii na TRA kwani inaweza kubadilika baada ya Finance Act."
+        ),
+        "question_en": "What is the deadline for filing a VAT return in Tanzania?",
+        "answer_en": (
+            "VAT returns must be submitted to TRA by the 20th of the month following the reporting period. "
+            "For example, the January VAT return must be filed by 20 February. "
+            "Late filing can result in penalties and interest charges. "
+            "Confirm this schedule with TRA as it may change after each Finance Act."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/filing-returns",
+        "primary_source_name": "Tanzania Revenue Authority — Filing Returns",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_vat_008_20260601",
+        "domain": "tier1a",
+        "subdomain": "vat_registration",
+        "question_sw": "VAT ya pembejeo (input VAT) ni nini na inafanya kazi vipi?",
+        "answer_sw": (
+            "VAT ya pembejeo ni VAT unayolipa kwa wanunuzi wako wakati unununua bidhaa au huduma "
+            "kwa ajili ya biashara yako. "
+            "Kama wewe ni msajiliwa VAT, unaweza kudai VAT ya pembejeo dhidi ya VAT ya matokeo "
+            "(VAT unayokusanya kutoka wateja wako). "
+            "Unalipa TRA tofauti tu: VAT ya matokeo minus VAT ya pembejeo. "
+            "Kwa mfano, ukikusanya VAT ya TZS 1,000,000 lakini ukilipa VAT ya pembejeo ya TZS 600,000, "
+            "unalipa TRA TZS 400,000 tu. "
+            "Thibitisha utaratibu huu na TRA."
+        ),
+        "question_en": "What is input VAT and how does it work?",
+        "answer_en": (
+            "Input VAT is the VAT you pay to your suppliers when purchasing goods or services for your business. "
+            "As a VAT-registered business, you can claim input VAT credits against your output VAT "
+            "(the VAT you collect from your customers). "
+            "You only pay TRA the difference: output VAT minus input VAT. "
+            "For example, if you collect TZS 1,000,000 in output VAT but paid TZS 600,000 in input VAT, "
+            "you remit only TZS 400,000 to TRA. "
+            "Confirm this process with TRA."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_vat_009_20260601",
+        "domain": "tier1a",
+        "subdomain": "vat_registration",
+        "question_sw": "Tofauti kati ya bidhaa za 'zero-rated' na 'exempt' ni nini katika VAT?",
+        "answer_sw": (
+            "Hii ni tofauti muhimu inayochanganya wafanyabiashara wengi. "
+            "Bidhaa za zero-rated: zinalipwa VAT ya asilimia 0, lakini bado zinachukuliwa kama 'VAT supply'. "
+            "Hii inamaanisha unaweza kudai VAT ya pembejeo kwenye gharama za kuzalisha bidhaa hizo. "
+            "Bidhaa za exempt (zisizo na VAT): hazilipwi VAT kabisa na HAUWEZI kudai VAT ya pembejeo "
+            "inayohusiana nazo. "
+            "Mfano: bidhaa za chakula fulani ni zero-rated; huduma za elimu zinaweza kuwa exempt. "
+            "Thibitisha na TRA ni kategoria ipi biashara yako inayohusu."
+        ),
+        "question_en": "What is the difference between 'zero-rated' and 'exempt' goods for VAT?",
+        "answer_en": (
+            "This is an important distinction that confuses many business owners. "
+            "Zero-rated goods: taxed at 0% VAT, but still count as a 'VAT supply'. "
+            "This means you CAN claim input VAT credits on the costs of producing those goods. "
+            "Exempt goods/services: no VAT applies and you CANNOT claim related input VAT credits. "
+            "Example: some food items may be zero-rated; certain education services may be exempt. "
+            "Confirm with TRA which category applies to your specific business."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "disambiguation",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_vat_010_20260601",
+        "domain": "tier1a",
+        "subdomain": "vat_registration",
+        "question_sw": (
+            "Ninauza bidhaa online kupitia malipo ya simu — "
+            "kuna VAT maalum kwa mauzo ya kidijitali (B2C)?"
+        ),
+        "answer_sw": (
+            "Ndiyo. Kuanzia tarehe 1 Septemba 2025, kiwango cha VAT kwa malipo ya kidijitali "
+            "ya B2C (business-to-consumer) ni asilimia 16. "
+            "Hii ni kiwango tofauti na kiwango cha kawaida cha asilimia 18. "
+            "Hata hivyo, miongozo ya utekelezaji bado inasubiri tangazo rasmi la Kamishna Mkuu (CG). "
+            "Thibitisha na TRA kabla ya kubadilisha jinsi unavyokata VAT kwenye mauzo yako ya kidijitali."
+        ),
+        "question_en": (
+            "I sell goods online through mobile payments — "
+            "is there a special VAT rate for digital B2C sales?"
+        ),
+        "answer_en": (
+            "Yes. From 1 September 2025, the VAT rate for B2C (business-to-consumer) digital payments "
+            "is 16%. "
+            "This differs from the standard 18% rate. "
+            "However, implementation rules are still awaiting a formal notice from the Commissioner General (CG). "
+            "Confirm with TRA before changing how you charge VAT on your digital sales."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority — Finance Act 2025",
+        "source_type": "government_portal",
+        "effective_date": "2025-09-01",
+        "decay_risk": "event_triggered",
+        "next_review_trigger": "After Commissioner General issues B2C e-payment VAT implementation notice",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+
+    # ── EFD COMPLIANCE (Pairs 11–17) ────────────────────────────────────────
+    {
+        "id": "tier1a_efd_001_20260601",
+        "domain": "tier1a",
+        "subdomain": "efd_compliance",
+        "question_sw": "EFD machine ni nini na inafanya kazi gani?",
+        "answer_sw": (
+            "EFD ni mashine ya Electronic Fiscal Device — chombo cha kielektroniki kilichoidhinishwa "
+            "na TRA kinachotumika kutoa risiti za kielektroniki (fiscal receipts) kwa wateja. "
+            "Mashine hii imeunganishwa na mfumo wa TRA moja kwa moja, "
+            "na inasajili kila muamala wa biashara na kutuma taarifa kwa TRA. "
+            "Madhumuni yake ni kuhakikisha ukweli wa mauzo na kukusanya VAT kwa usahihi. "
+            "Biashara zote zilizosajiliwa VAT zinahitajika kuwa na EFD."
+        ),
+        "question_en": "What is an EFD machine and what does it do?",
+        "answer_en": (
+            "EFD stands for Electronic Fiscal Device — a TRA-approved electronic device used to issue "
+            "fiscal receipts to customers. "
+            "The machine is directly connected to TRA's system and records every business transaction, "
+            "transmitting data to TRA automatically. "
+            "Its purpose is to ensure sales accuracy and correct VAT collection. "
+            "All VAT-registered businesses are required to have an EFD."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When TRA updates EFD regulations",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_efd_002_20260601",
+        "domain": "tier1a",
+        "subdomain": "efd_compliance",
+        "question_sw": "Je, kila biashara lazima iwe na EFD, au ni kwa wale walilosajiliwa VAT tu?",
+        "answer_sw": (
+            "EFD inahitajika hasa kwa biashara zilizosajiliwa VAT. "
+            "Kama umesajiliwa VAT na TRA, ni lazima uwe na EFD iliyoidhinishwa "
+            "na uitumie kutoa fiscal receipt kwa kila muamala wa mauzo. "
+            "Biashara ndogo ambazo bado hazijafika kizingiti cha VAT na hazijasajiliwa "
+            "kwa hiari hazihitajiki na EFD kwa mujibu wa sheria, "
+            "ingawa TRA inaweza kutoa mwongozo tofauti. "
+            "Thibitisha na TRA kama biashara yako inahitaji EFD."
+        ),
+        "question_en": "Does every business need an EFD, or only VAT-registered businesses?",
+        "answer_en": (
+            "EFD is specifically required for VAT-registered businesses. "
+            "If you are registered for VAT with TRA, you must have a TRA-approved EFD "
+            "and use it to issue a fiscal receipt for every sales transaction. "
+            "Small businesses that have not yet reached the VAT threshold and are not voluntarily "
+            "registered are not legally required to have an EFD, "
+            "though TRA may provide different guidance. "
+            "Confirm with TRA whether your business requires an EFD."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When TRA updates EFD regulations",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_efd_003_20260601",
+        "domain": "tier1a",
+        "subdomain": "efd_compliance",
+        "question_sw": "Je, lazima nitoe risiti ya EFD kwa kila muamala, hata mdogo?",
+        "answer_sw": (
+            "Ndiyo. Biashara iliyosajiliwa VAT lazima itoe fiscal receipt ya EFD kwa kila muamala "
+            "wa mauzo, bila kujali kiasi. "
+            "Kutotoa risiti ni kosa la kisheria chini ya sheria za VAT Tanzania. "
+            "Wateja wana haki ya kudai risiti ya EFD, na wewe una wajibu wa kutoa. "
+            "Usisubiri mteja akuulize — toa risiti ya EFD moja kwa moja baada ya muamala kukamilika."
+        ),
+        "question_en": "Must I issue an EFD receipt for every transaction, even small ones?",
+        "answer_en": (
+            "Yes. A VAT-registered business must issue an EFD fiscal receipt for every sales "
+            "transaction, regardless of the amount. "
+            "Failing to issue a receipt is a legal offence under Tanzania's VAT laws. "
+            "Customers have the right to demand an EFD receipt, and you have the obligation to provide one. "
+            "Do not wait for the customer to ask — issue the EFD receipt immediately after each transaction."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When TRA updates EFD regulations",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_efd_004_20260601",
+        "domain": "tier1a",
+        "subdomain": "efd_compliance",
+        "question_sw": "Adhabu ya kutotoa risiti ya EFD ni nini?",
+        "answer_sw": (
+            "Kutotoa risiti ya EFD kwa muamala wa mauzo ni ukiukwaji wa sheria ya VAT Tanzania. "
+            "TRA ina mamlaka ya kutoza faini, kusimamisha leseni ya biashara, au kuchukua hatua nyingine "
+            "za kisheria dhidi ya biashara inayokiuka sheria hii. "
+            "Ukaguzi wa TRA (tax audit) unaweza kutokea wakati wowote, "
+            "na muamala wowote usiokuwa na risiti ya EFD unaweza kutafsiriwa kama kukimbia kodi. "
+            "Thibitisha kiasi cha faini na TRA kwani kinaweza kubadilika."
+        ),
+        "question_en": "What is the penalty for not issuing an EFD receipt?",
+        "answer_en": (
+            "Failing to issue an EFD fiscal receipt for a sales transaction is a violation of Tanzania's VAT law. "
+            "TRA has the authority to impose fines, suspend business licences, or take other legal action "
+            "against a non-compliant business. "
+            "TRA inspections can happen at any time, "
+            "and any transaction without an EFD receipt may be treated as tax evasion. "
+            "Confirm the specific penalty amounts with TRA as they may change."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026 for updated penalty amounts",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_efd_005_20260601",
+        "domain": "tier1a",
+        "subdomain": "efd_compliance",
+        "question_sw": "EFD machine yangu imeharibika — nifanye nini kuendelea kufanya biashara?",
+        "answer_sw": (
+            "Ukiwa na tatizo na EFD machine yako, hatua za kwanza ni: "
+            "1) Ripoti tatizo hilo kwa TRA mara moja — usiendelee kufanya mauzo bila EFD bila ruhusa. "
+            "2) Wasiliana na msambazaji (supplier) wa EFD yako aliyeidhinishwa na TRA kuhusu ukarabati. "
+            "3) TRA inaweza kukupa ruhusa ya muda (temporary permit) ya kutumia receipts za kawaida "
+            "wakati wa ukarabati — lakini lazima upate ruhusa hii kwanza. "
+            "Usifanye mauzo bila risiti wakati EFD ikiwa haifanyi kazi bila idhini ya TRA."
+        ),
+        "question_en": "My EFD machine has broken down — what should I do to continue business?",
+        "answer_en": (
+            "If your EFD machine breaks down, the immediate steps are: "
+            "1) Report the problem to TRA immediately — do not continue making sales without EFD authorization. "
+            "2) Contact your TRA-approved EFD supplier for repairs. "
+            "3) TRA may issue a temporary permit to use manual receipts during repairs — "
+            "but you must obtain this permission first. "
+            "Do not make sales without receipts while the EFD is down without TRA authorization."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When TRA updates EFD breakdown procedures",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_efd_006_20260601",
+        "domain": "tier1a",
+        "subdomain": "efd_compliance",
+        "question_sw": "Je, mteja wangu ana haki ya kudai risiti ya EFD kutoka kwangu?",
+        "answer_sw": (
+            "Ndiyo, kabisa. Kila mteja ana haki ya kudai risiti ya EFD (fiscal receipt) "
+            "kutoka kwa biashara yoyote iliyosajiliwa VAT. "
+            "Kwa upande wako kama mfanyabiashara, kutoa risiti ya EFD si hiari — ni wajibu wa kisheria. "
+            "TRA hata inawahimiza wateja kuripoti biashara ambazo hazitoi risiti za EFD. "
+            "Kama mteja alidai risiti na ulikataa, hii inaweza kusababisha ukaguzi wa TRA."
+        ),
+        "question_en": "Does my customer have the right to demand an EFD receipt from me?",
+        "answer_en": (
+            "Yes, absolutely. Every customer has the right to demand an EFD fiscal receipt from any "
+            "VAT-registered business. "
+            "As a business owner, issuing an EFD receipt is not optional — it is a legal obligation. "
+            "TRA even encourages customers to report businesses that do not issue EFD receipts. "
+            "If a customer requested a receipt and you refused, this can trigger a TRA inspection."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When TRA updates EFD regulations",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_efd_007_20260601",
+        "domain": "tier1a",
+        "subdomain": "efd_compliance",
+        "question_sw": "Ninasajilishwa VAT sasa hivi — jinsi ya kupata EFD machine?",
+        "answer_sw": (
+            "Baada ya kupata usajilishaji wako wa VAT, unaweza kupata EFD kupitia hatua hizi: "
+            "1) Nenda TRA au wasiliana nao kuhusu orodha ya wasambazaji wa EFD walioidhinishwa Tanzania. "
+            "2) Nunua au kodi EFD kutoka kwa msambazaji aliyeidhinishwa — usichukue mashine yoyote. "
+            "3) Msambazaji ataifunga EFD na kuiandikisha kwenye mfumo wa TRA. "
+            "4) Baada ya ufungaji, EFD yako itaunganishwa moja kwa moja na TRA. "
+            "Gharama za EFD zinatofautiana — thibitisha na msambazaji."
+        ),
+        "question_en": "I am registering for VAT now — how do I get an EFD machine?",
+        "answer_en": (
+            "After receiving your VAT registration, you can obtain an EFD through these steps: "
+            "1) Contact TRA for the list of TRA-approved EFD suppliers in Tanzania. "
+            "2) Purchase or lease an EFD from an approved supplier — do not use any unregistered device. "
+            "3) The supplier will install and register the EFD on TRA's system. "
+            "4) After installation, your EFD will be directly linked to TRA. "
+            "EFD costs vary — confirm with the supplier."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2025-07-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When TRA updates EFD procurement procedures",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+
+    # ── BRELA REGISTRATION (Pairs 18–24) ────────────────────────────────────
+    {
+        "id": "tier1a_brela_001_20260601",
+        "domain": "tier1a",
+        "subdomain": "brela_registration",
+        "question_sw": "BRELA ni nini na inafanya nini?",
+        "answer_sw": (
+            "BRELA ni Business Registrations and Licensing Agency — "
+            "shirika la serikali la Tanzania linalosimamia usajilishaji wa biashara, "
+            "ikiwa ni pamoja na makampuni (companies), majina ya biashara, ushirikiano (partnerships), "
+            "na haki za miliki ya akili (intellectual property). "
+            "Ili biashara yako iwe halali kisheria Tanzania, lazima isajiliwe na BRELA "
+            "au mamlaka nyingine inayohusika. "
+            "Tovuti yao ni brela.go.tz."
+        ),
+        "question_en": "What is BRELA and what does it do?",
+        "answer_en": (
+            "BRELA is the Business Registrations and Licensing Agency — "
+            "the Tanzanian government body that oversees business registration, "
+            "including companies, business names, partnerships, and intellectual property rights. "
+            "For your business to be legally recognised in Tanzania, it must be registered with BRELA "
+            "or the relevant authority. "
+            "Their website is brela.go.tz."
+        ),
+        "primary_source_url": "https://www.brela.go.tz",
+        "primary_source_name": "Business Registrations and Licensing Agency",
+        "source_type": "government_portal",
+        "effective_date": "2025-01-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When BRELA Act or mandate is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_brela_002_20260601",
+        "domain": "tier1a",
+        "subdomain": "brela_registration",
+        "question_sw": "Je, biashara yangu yoyote lazima isajiliwe Tanzania?",
+        "answer_sw": (
+            "Ndiyo. Biashara yoyote inayofanya shughuli nchini Tanzania kwa mujibu wa sheria "
+            "inahitajika kusajiliwa. "
+            "Usajilishaji unategemea aina ya biashara: "
+            "jina la biashara peke yako (sole trader/business name) — BRELA; "
+            "kampuni yenye ukomo (limited company) — BRELA chini ya Companies Act; "
+            "ushirikiano (partnership) — BRELA. "
+            "Biashara isiyosajiliwa inakabiliwa na hatari za kisheria ikiwemo faini na kufungwa. "
+            "Thibitisha mahitaji yako na BRELA kwenye brela.go.tz."
+        ),
+        "question_en": "Does any business I run in Tanzania need to be registered?",
+        "answer_en": (
+            "Yes. Any business conducting activities in Tanzania is legally required to be registered. "
+            "The registration route depends on your business type: "
+            "sole trader / business name — BRELA; "
+            "limited liability company — BRELA under the Companies Act; "
+            "partnership — BRELA. "
+            "An unregistered business faces legal risks including fines and closure. "
+            "Confirm your requirements with BRELA at brela.go.tz."
+        ),
+        "primary_source_url": "https://www.brela.go.tz",
+        "primary_source_name": "Business Registrations and Licensing Agency",
+        "source_type": "government_portal",
+        "effective_date": "2025-01-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When Business Names Registration or Companies Act is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_brela_003_20260601",
+        "domain": "tier1a",
+        "subdomain": "brela_registration",
+        "question_sw": "Aina gani za biashara ninaweza kusajilisha na BRELA?",
+        "answer_sw": (
+            "BRELA inasajilisha aina kuu tatu za miundo ya biashara: "
+            "1) Jina la Biashara (Business Name) — kwa wafanyabiashara peke yao (sole traders); "
+            "ni rahisi na bei nafuu zaidi kusajilisha. "
+            "2) Ushirikiano (Partnership) — kwa watu wawili au zaidi wanaomiliki biashara pamoja "
+            "bila kuunda kampuni rasmi. "
+            "3) Kampuni yenye ukomo (Limited Liability Company) — ina hali ya kisheria yake tofauti "
+            "na wamiliki wake; inakinga wamiliki dhidi ya madeni ya kibinafsi zaidi. "
+            "Pia kuna kampuni za umma (public companies) kwa biashara kubwa. "
+            "Thibitisha na BRELA aina inayofaa biashara yako."
+        ),
+        "question_en": "What types of business can I register with BRELA?",
+        "answer_en": (
+            "BRELA registers three main business structures: "
+            "1) Business Name — for sole traders; simplest and least expensive to register. "
+            "2) Partnership — for two or more people co-owning a business without forming a formal company. "
+            "3) Limited Liability Company — has its own legal identity separate from its owners; "
+            "provides greater protection of owners' personal assets from business debts. "
+            "Public companies are also available for larger businesses. "
+            "Confirm with BRELA which structure suits your business."
+        ),
+        "primary_source_url": "https://www.brela.go.tz",
+        "primary_source_name": "Business Registrations and Licensing Agency",
+        "source_type": "government_portal",
+        "effective_date": "2025-01-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When Companies Act is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_brela_004_20260601",
+        "domain": "tier1a",
+        "subdomain": "brela_registration",
+        "question_sw": (
+            "Tofauti kati ya kujisajilisha kama jina la biashara (sole trader) "
+            "na kuunda kampuni yenye ukomo (limited company) ni nini?"
+        ),
+        "answer_sw": (
+            "Tofauti kuu ni wajibu wa kisheria na ulinzi wa mali binafsi. "
+            "Kama jina la biashara (sole trader): wewe na biashara ni mtu mmoja kisheria. "
+            "Madeni ya biashara ni madeni yako binafsi — mali yako binafsi inaweza kuchukuliwa. "
+            "Kama limited company: kampuni ni mtu wa kisheria tofauti nawe. "
+            "Kwa kawaida mali yako binafsi inalindwa dhidi ya madeni ya kampuni. "
+            "Limited company inahitaji uwasilishaji wa hesabu za kila mwaka na gharama zaidi za kusimamia, "
+            "lakini inatoa ulinzi zaidi na heshima ya biashara. "
+            "Thibitisha na mshauri wa kisheria uchaguzi wako."
+        ),
+        "question_en": (
+            "What is the difference between registering as a sole trader (business name) "
+            "and forming a limited liability company?"
+        ),
+        "answer_en": (
+            "The key difference is legal liability and personal asset protection. "
+            "As a sole trader (business name): you and your business are the same legal person. "
+            "Business debts are your personal debts — your personal assets can be seized. "
+            "As a limited company: the company is a separate legal entity from you. "
+            "Your personal assets are generally protected from the company's debts. "
+            "A limited company requires annual financial reporting and higher management costs, "
+            "but offers greater protection and business credibility. "
+            "Confirm your choice with a legal adviser."
+        ),
+        "primary_source_url": "https://www.brela.go.tz",
+        "primary_source_name": "Business Registrations and Licensing Agency",
+        "source_type": "government_portal",
+        "effective_date": "2025-01-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When Companies Act is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "disambiguation",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_brela_005_20260601",
+        "domain": "tier1a",
+        "subdomain": "brela_registration",
+        "question_sw": "Ninaweza kuangalia kama jina la biashara ninalotaka liko tayari kabla ya kusajilisha?",
+        "answer_sw": (
+            "Ndiyo. BRELA inakuruhusu kutafuta (search) jina la biashara kabla ya kusajilisha "
+            "ili kuthibitisha kuwa halijachukuliwa tayari. "
+            "Unaweza kufanya utafutaji huu kwenye tovuti ya BRELA (brela.go.tz) au kwa kutembelea "
+            "ofisi yao. "
+            "Baada ya kuthibitisha jina linapatikana, unaweza kuwasilisha ombi la kuhifadhi "
+            "(reservation) jina hilo kabla ya kukamilisha usajilishaji. "
+            "Jibu la utafutaji si dhamana — thibitisha na BRELA moja kwa moja."
+        ),
+        "question_en": "Can I check if the business name I want is already taken before registering?",
+        "answer_en": (
+            "Yes. BRELA allows you to search for a business name before registering to confirm "
+            "it has not already been taken. "
+            "You can do this search on BRELA's website (brela.go.tz) or by visiting their office. "
+            "After confirming the name is available, you can apply to reserve it before completing registration. "
+            "A search result is not a guarantee — confirm directly with BRELA."
+        ),
+        "primary_source_url": "https://www.brela.go.tz",
+        "primary_source_name": "Business Registrations and Licensing Agency",
+        "source_type": "government_portal",
+        "effective_date": "2025-01-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When BRELA updates name search procedures",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_brela_006_20260601",
+        "domain": "tier1a",
+        "subdomain": "brela_registration",
+        "question_sw": "Je, ninahitaji kuwasilisha ripoti ya kila mwaka (annual return) kwa BRELA?",
+        "answer_sw": (
+            "Ndiyo. Makampuni yaliyosajiliwa na BRELA yanahitajika kuwasilisha annual return "
+            "kila mwaka kumpa BRELA taarifa za hivi karibuni za kampuni — "
+            "ikiwa ni pamoja na majina ya wakurugenzi, anwani ya ofisi ya makao makuu, "
+            "na maelezo ya wamiliki wa hisa. "
+            "Kushindwa kuwasilisha annual return kwa wakati kunaweza kusababisha faini "
+            "au hata kufutwa kwa usajilishaji wa kampuni. "
+            "Thibitisha tarehe ya kufunga (deadline) ya annual return yako na BRELA."
+        ),
+        "question_en": "Do I need to file an annual return with BRELA?",
+        "answer_en": (
+            "Yes. Companies registered with BRELA are required to file an annual return each year "
+            "to keep BRELA's records updated — "
+            "including names of directors, registered office address, and shareholder details. "
+            "Failing to file the annual return on time can result in fines "
+            "or even deregistration of your company. "
+            "Confirm the annual return deadline with BRELA."
+        ),
+        "primary_source_url": "https://www.brela.go.tz",
+        "primary_source_name": "Business Registrations and Licensing Agency",
+        "source_type": "government_portal",
+        "effective_date": "2025-01-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When Companies Act annual return requirements are amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_brela_007_20260601",
+        "domain": "tier1a",
+        "subdomain": "brela_registration",
+        "question_sw": "Tofauti kati ya certificate ya BRELA na TIN kutoka TRA ni nini?",
+        "answer_sw": (
+            "Hizi ni nyaraka tofauti kabisa, na biashara yako inahitaji zote mbili. "
+            "Certificate ya BRELA: inathibitisha biashara yako imesajiliwa kisheria Tanzania — "
+            "inakupa haki ya kufanya biashara rasmi. "
+            "TIN (Tax Identification Number) kutoka TRA: nambari yako ya mlipakodi wa kodi — "
+            "inatumika kulipa kodi (PAYE, VAT, SDL na kadhalika) na kuwasilisha returns zako. "
+            "BRELA inasajilisha biashara yenyewe; TRA inasajilisha biashara yako kwa ajili ya kodi. "
+            "Usisajilishe moja na uache nyingine."
+        ),
+        "question_en": "What is the difference between a BRELA certificate and a TIN from TRA?",
+        "answer_en": (
+            "These are two completely different documents, and your business needs both. "
+            "BRELA certificate: confirms your business is legally registered in Tanzania — "
+            "it gives you the right to trade formally. "
+            "TIN (Tax Identification Number) from TRA: your tax registration number — "
+            "used to pay taxes (PAYE, VAT, SDL, etc.) and file your returns. "
+            "BRELA registers the business entity itself; TRA registers it for tax purposes. "
+            "Do not register with one and skip the other."
+        ),
+        "primary_source_url": "https://www.brela.go.tz",
+        "primary_source_name": "Business Registrations and Licensing Agency",
+        "source_type": "government_portal",
+        "effective_date": "2025-01-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When BRELA or TRA registration requirements are amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "disambiguation",
+        "eval_set": False,
+    },
+
+    # ── NSSF CONTRIBUTIONS (Pairs 25–32) ────────────────────────────────────
+    {
+        "id": "tier1a_nssf_001_20260601",
+        "domain": "tier1a",
+        "subdomain": "nssf_contributions",
+        "question_sw": "Viwango vya mchango wa NSSF kwa mwajiri na mfanyakazi ni vipi?",
+        "answer_sw": (
+            "Viwango vya NSSF nchini Tanzania ni: "
+            "Mwajiri: asilimia 10 ya mshahara wa jumla (gross salary) wa mfanyakazi. "
+            "Mfanyakazi: asilimia 10 ya mshahara wake wa jumla. "
+            "Jumla ya mchango: asilimia 20 ya mshahara wa jumla kila mwezi. "
+            "Mwajiri anakata mchango wa mfanyakazi kutoka mshahara na anachangia sehemu yake mwenyewe, "
+            "kisha anapeleka jumla (asilimia 20) kwa NSSF. "
+            "Thibitisha viwango vya sasa na NSSF kwenye nssf.or.tz."
+        ),
+        "question_en": "What are the NSSF contribution rates for employer and employee?",
+        "answer_en": (
+            "NSSF contribution rates in Tanzania are: "
+            "Employer: 10% of the employee's gross salary. "
+            "Employee: 10% of their own gross salary. "
+            "Total contribution: 20% of gross salary per month. "
+            "The employer deducts the employee's share from their salary and adds their own contribution, "
+            "then remits the combined 20% to NSSF. "
+            "Confirm current rates with NSSF at nssf.or.tz."
+        ),
+        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_name": "National Social Security Fund Tanzania",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act or NSSF Act amendments",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_nssf_002_20260601",
+        "domain": "tier1a",
+        "subdomain": "nssf_contributions",
+        "question_sw": "Je, kila mwajiri ana wajibu wa kusajilisha wafanyakazi wake NSSF?",
+        "answer_sw": (
+            "Ndiyo. Mwajiri yeyote anayeajiri wafanyakazi Tanzania ana wajibu wa kisheria "
+            "wa kusajilisha wafanyakazi hao NSSF. "
+            "Hii inajumuisha wafanyakazi wa kudumu (permanent), wa mkataba (contract), "
+            "na hata wafanyakazi wa nyumbani (domestic workers) kwa mujibu wa sheria ya NSSF. "
+            "Usajilishaji unapaswa kufanywa haraka baada ya mfanyakazi kuanza kazi. "
+            "Thibitisha mahitaji yako na NSSF kwenye nssf.or.tz."
+        ),
+        "question_en": "Is every employer required to register their employees with NSSF?",
+        "answer_en": (
+            "Yes. Any employer hiring workers in Tanzania has a legal obligation "
+            "to register those employees with NSSF. "
+            "This includes permanent employees, contract workers, "
+            "and even domestic workers under the NSSF Act. "
+            "Registration must be done promptly after an employee starts work. "
+            "Confirm your requirements with NSSF at nssf.or.tz."
+        ),
+        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_name": "National Social Security Fund Tanzania",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After NSSF Act amendments",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_nssf_003_20260601",
+        "domain": "tier1a",
+        "subdomain": "nssf_contributions",
+        "question_sw": "Deadline ya kupeleka michango ya NSSF kila mwezi ni lini?",
+        "answer_sw": (
+            "Michango ya NSSF inapaswa kupelekwa ifikapo siku ya 10 ya mwezi unaofuata. "
+            "Kwa mfano, michango ya Januari iwasilishwe ifikapo 10 Februari. "
+            "Ucheleweshaji unaweza kusababisha faini na riba kwenye kiasi kilichochelewa. "
+            "Hakikisha unakata michango ya mfanyakazi kabla ya kulipa mshahara "
+            "na upeleke jumla (sehemu ya mwajiri + sehemu ya mfanyakazi) kwa NSSF kwa wakati. "
+            "Thibitisha tarehe hii na NSSF kwenye nssf.or.tz."
+        ),
+        "question_en": "What is the monthly deadline for remitting NSSF contributions?",
+        "answer_en": (
+            "NSSF contributions must be remitted by the 10th of the following month. "
+            "For example, January contributions must be submitted by 10 February. "
+            "Late payment can result in penalties and interest on the overdue amount. "
+            "Ensure you deduct the employee's share before paying salaries "
+            "and submit the combined total (employer + employee share) to NSSF on time. "
+            "Confirm this deadline with NSSF at nssf.or.tz."
+        ),
+        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_name": "National Social Security Fund Tanzania",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After NSSF Act or regulations are amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_nssf_004_20260601",
+        "domain": "tier1a",
+        "subdomain": "nssf_contributions",
+        "question_sw": "Ikiwa nilikataa kulipa NSSF kwa miezi mitatu — adhabu ni gani?",
+        "answer_sw": (
+            "Kutolipa NSSF ni ukiukwaji mkubwa wa sheria ya Tanzania. "
+            "NSSF ina mamlaka ya kutoza riba kwenye michango iliyochelewa, "
+            "na inaweza kufungua kesi ya kisheria dhidi ya mwajiri asiyetii. "
+            "Katika hali mbaya, mkurugenzi wa kampuni binafsi anaweza kuwajibika kisheria. "
+            "Usifike hapo — lipa NSSF kwa wakati kila mwezi. "
+            "Kama una matatizo ya kifedha, wasiliana na NSSF mapema ili kujadili mpango wa malipo. "
+            "Thibitisha adhabu halisi na NSSF kwenye nssf.or.tz."
+        ),
+        "question_en": "If I have not paid NSSF for three months — what is the penalty?",
+        "answer_en": (
+            "Failing to pay NSSF is a serious violation of Tanzanian law. "
+            "NSSF has the authority to charge interest on overdue contributions, "
+            "and can take legal action against a non-compliant employer. "
+            "In serious cases, company directors may be personally liable. "
+            "Avoid reaching that point — pay NSSF on time every month. "
+            "If you are facing financial difficulties, contact NSSF early to discuss a payment plan. "
+            "Confirm the specific penalties with NSSF at nssf.or.tz."
+        ),
+        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_name": "National Social Security Fund Tanzania",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After NSSF Act amendments on penalty provisions",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_nssf_005_20260601",
+        "domain": "tier1a",
+        "subdomain": "nssf_contributions",
+        "question_sw": "Kama mfanyakazi wa muda (casual worker) — mwajiri wake anahitajika kumlipa NSSF?",
+        "answer_sw": (
+            "Hii ni eneo lenye utata na linalohitaji uthibitisho wa hivi karibuni na NSSF. "
+            "Kwa mujibu wa sheria ya NSSF Tanzania, wafanyakazi wa aina mbalimbali — "
+            "ikiwa ni pamoja na wale wa mkataba wa muda mfupi — wanaweza kuhitimu ufikiwa wa NSSF. "
+            "Hata hivyo, sheria inaweza kutofautisha kati ya 'casual' na 'mfanyakazi wa kudumu'. "
+            "Usifanye uamuzi bila kuuliza NSSF moja kwa moja. "
+            "Wasiliana na NSSF kwenye nssf.or.tz kwa mwongozo wa hali yako maalum."
+        ),
+        "question_en": "If I hire casual (temporary) workers — must I pay NSSF for them?",
+        "answer_en": (
+            "This is an area that requires up-to-date confirmation directly from NSSF. "
+            "Under Tanzania's NSSF Act, various categories of workers — "
+            "including those on short-term contracts — may qualify for NSSF coverage. "
+            "However, the law may distinguish between 'casual' and 'permanent' employees. "
+            "Do not make assumptions — ask NSSF directly. "
+            "Contact NSSF at nssf.or.tz for guidance on your specific situation."
+        ),
+        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_name": "National Social Security Fund Tanzania",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After NSSF Act amendments",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_nssf_006_20260601",
+        "domain": "tier1a",
+        "subdomain": "nssf_contributions",
+        "question_sw": "Jinsi ya kusajilisha biashara yangu na wafanyakazi wake na NSSF?",
+        "answer_sw": (
+            "Hatua za kusajilisha na NSSF ni: "
+            "1) Tembelea ofisi ya NSSF iliyo karibu nawe au tovuti nssf.or.tz. "
+            "2) Wasilisha fomu ya usajilishaji wa mwajiri pamoja na nakala ya certificate ya BRELA, "
+            "TIN, na vitambulisho vya wafanyakazi. "
+            "3) Kila mfanyakazi atasajiliwa na kupewa nambari yake ya NSSF. "
+            "4) Baada ya usajilishaji, utapewa akaunti ya kulipa michango kila mwezi. "
+            "Thibitisha nyaraka zinazohitajika na NSSF kwenye nssf.or.tz kabla ya kwenda."
+        ),
+        "question_en": "How do I register my business and employees with NSSF?",
+        "answer_en": (
+            "Steps to register with NSSF: "
+            "1) Visit your nearest NSSF office or the website nssf.or.tz. "
+            "2) Submit an employer registration form along with copies of your BRELA certificate, "
+            "TIN, and employees' identification. "
+            "3) Each employee will be registered and assigned their own NSSF number. "
+            "4) After registration, you will be given an account for monthly contribution payments. "
+            "Confirm the required documents with NSSF at nssf.or.tz before going."
+        ),
+        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_name": "National Social Security Fund Tanzania",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When NSSF updates registration procedures",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_nssf_007_20260601",
+        "domain": "tier1a",
+        "subdomain": "nssf_contributions",
+        "question_sw": "NSSF inanipatia nini mimi kama mfanyakazi baadaye?",
+        "answer_sw": (
+            "NSSF inatoa mafao (benefits) mbalimbali kwa wanachama wake: "
+            "Pensheni ya uzee (retirement pension) — ukifikia umri wa kustaafu. "
+            "Mafao ya ulemavu (invalidity pension) — ukiwa huwezi kufanya kazi kwa ulemavu. "
+            "Mafao ya mlezi (survivors pension) — kwa familia yako ukifa. "
+            "Mafao ya mazishi (funeral grant) — msaada wa mazishi. "
+            "Mafao ya uzazi (maternity benefit) — kwa wanawake wajawazito wanaohitimu. "
+            "Kiasi cha mafao kinategemea michango yako na muda wa uanachama wako. "
+            "Thibitisha mafao ya sasa na NSSF kwenye nssf.or.tz."
+        ),
+        "question_en": "What benefits does NSSF give me as an employee in the future?",
+        "answer_en": (
+            "NSSF provides various benefits to its members: "
+            "Retirement pension — when you reach retirement age. "
+            "Invalidity pension — if you become unable to work due to disability. "
+            "Survivors pension — for your family if you pass away. "
+            "Funeral grant — assistance with burial costs. "
+            "Maternity benefit — for qualifying pregnant women members. "
+            "The amount of benefits depends on your contributions and length of membership. "
+            "Confirm current benefits with NSSF at nssf.or.tz."
+        ),
+        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_name": "National Social Security Fund Tanzania",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After NSSF Act amendments affecting benefit calculations",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_nssf_008_20260601",
+        "domain": "tier1a",
+        "subdomain": "nssf_contributions",
+        "question_sw": "Je, ninaweza kujiunga NSSF peke yangu kama mfanyabiashara binafsi (self-employed)?",
+        "answer_sw": (
+            "Ndiyo. NSSF Tanzania inakubali uanachama wa hiari (voluntary membership) "
+            "kwa wafanyabiashara wanaojitegemea (self-employed) na wale wasio na mwajiri rasmi. "
+            "Kama mwanachama wa hiari, unaweza kuchangia peke yako na kupata haki ya mafao "
+            "wakati wa kustaafu, ulemavu, au mazingira mengine. "
+            "Thibitisha taratibu za uanachama wa hiari na viwango vya mchango "
+            "na NSSF kwenye nssf.or.tz."
+        ),
+        "question_en": "Can I join NSSF on my own as a self-employed business owner?",
+        "answer_en": (
+            "Yes. Tanzania's NSSF accepts voluntary membership for self-employed individuals "
+            "and those without a formal employer. "
+            "As a voluntary member, you contribute independently and earn entitlement to benefits "
+            "at retirement, disability, or other qualifying circumstances. "
+            "Confirm voluntary membership procedures and contribution rates "
+            "with NSSF at nssf.or.tz."
+        ),
+        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_name": "National Social Security Fund Tanzania",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After NSSF Act amendments affecting voluntary membership",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+
+    # ── SDL & WCF COMPLIANCE (Pairs 33–37) ──────────────────────────────────
+    {
+        "id": "tier1a_sdl_001_20260601",
+        "domain": "tier1a",
+        "subdomain": "sdl_compliance",
+        "question_sw": "SDL ni nini na nani analazimika kulipa?",
+        "answer_sw": (
+            "SDL ni Skills and Development Levy — ushuru wa maendeleo ya ujuzi. "
+            "Ni mchango unaolipwa na mwajiri kwa TRA kila mwezi kwa ajili ya mfuko "
+            "wa mafunzo ya ujuzi nchini Tanzania. "
+            "SDL inalipwa na waajiri wenye wafanyakazi 10 au zaidi. "
+            "Waajiri wenye wafanyakazi chini ya 10 hawajumuishwi kwa kawaida. "
+            "Thibitisha kama biashara yako inahitimu na TRA kwenye tra.go.tz."
+        ),
+        "question_en": "What is SDL and who is required to pay it?",
+        "answer_en": (
+            "SDL is the Skills and Development Levy — a skills training tax. "
+            "It is a monthly contribution paid by employers to TRA for Tanzania's workforce "
+            "skills development fund. "
+            "SDL is paid by employers with 10 or more employees. "
+            "Employers with fewer than 10 employees are generally not included. "
+            "Confirm whether your business qualifies with TRA at tra.go.tz."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_sdl_002_20260601",
+        "domain": "tier1a",
+        "subdomain": "sdl_compliance",
+        "question_sw": "Kiwango cha SDL ni kiasi gani cha mishahara yangu?",
+        "answer_sw": (
+            "Kiwango cha SDL ni asilimia 3.5 ya jumla ya mishahara ya jumla (gross wages) "
+            "ya wafanyakazi wote. "
+            "SDL inalipwa na mwajiri peke yake — haikatwi kwa mfanyakazi. "
+            "Kwa mfano, kama jumla ya mishahara yako ya mwezi ni TZS milioni 10, "
+            "SDL itakuwa TZS 350,000. "
+            "SDL inalipwa pamoja na PAYE kila mwezi. "
+            "Thibitisha kiwango cha sasa na TRA kwenye tra.go.tz."
+        ),
+        "question_en": "What percentage of my payroll is SDL?",
+        "answer_en": (
+            "The SDL rate is 3.5% of the total gross wages of all employees. "
+            "SDL is paid by the employer alone — it is not deducted from the employee's salary. "
+            "For example, if your total monthly payroll is TZS 10 million, "
+            "SDL will be TZS 350,000. "
+            "SDL is paid together with PAYE each month. "
+            "Confirm the current rate with TRA at tra.go.tz."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_sdl_003_20260601",
+        "domain": "tier1a",
+        "subdomain": "sdl_compliance",
+        "question_sw": "SDL deadline ni lini — inalipwa lini kila mwezi?",
+        "answer_sw": (
+            "SDL inalipwa pamoja na PAYE ifikapo siku ya 7 ya mwezi unaofuata. "
+            "Kwa mfano, SDL ya Januari inalipwa ifikapo 7 Februari. "
+            "Ucheleweshaji unaweza kusababisha faini na riba. "
+            "Thibitisha deadline hii na TRA kwenye tra.go.tz kwani inaweza kubadilika."
+        ),
+        "question_en": "When is the SDL deadline — when is it paid each month?",
+        "answer_en": (
+            "SDL is paid together with PAYE by the 7th of the following month. "
+            "For example, January SDL is paid by 7 February. "
+            "Late payment can result in penalties and interest charges. "
+            "Confirm this deadline with TRA at tra.go.tz as it may change."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/filing-returns",
+        "primary_source_name": "Tanzania Revenue Authority — Filing Returns",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_sdl_004_20260601",
+        "domain": "tier1a",
+        "subdomain": "sdl_compliance",
+        "question_sw": "WCF ni nini na inatofautiana vipi na SDL?",
+        "answer_sw": (
+            "WCF ni Workers Compensation Fund — mfuko wa fidia kwa wafanyakazi waliojeruhiwa kazini. "
+            "Tofauti kuu na SDL: "
+            "SDL (asilimia 3.5) → inalipwa TRA, inafadhili mafunzo ya ujuzi. "
+            "WCF (asilimia 0.5) → inalipwa Mamlaka ya WCF, inafadhili fidia ya majeruhi wa kazi. "
+            "Zote mbili zinalipwa na mwajiri, na hazikatolewa kwa mfanyakazi. "
+            "WCF inahusu waajiri wenye wafanyakazi — thibitisha kiwango na mahitaji na WCF."
+        ),
+        "question_en": "What is WCF and how does it differ from SDL?",
+        "answer_en": (
+            "WCF is the Workers Compensation Fund — a fund that compensates workers injured at work. "
+            "Key difference from SDL: "
+            "SDL (3.5%) → paid to TRA, funds skills training. "
+            "WCF (0.5%) → paid to the WCF Authority, funds workplace injury compensation. "
+            "Both are paid by the employer and are not deducted from the employee's salary. "
+            "WCF applies to employers with employees — confirm the rate and requirements with WCF."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "disambiguation",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_sdl_005_20260601",
+        "domain": "tier1a",
+        "subdomain": "sdl_compliance",
+        "question_sw": "Kiwango cha WCF ni kiasi gani cha mishahara yangu?",
+        "answer_sw": (
+            "Kiwango cha WCF (Workers Compensation Fund) ni asilimia 0.5 ya jumla ya mishahara "
+            "ya jumla (gross wages) ya wafanyakazi wote. "
+            "Kwa mfano, kama jumla ya mishahara yako ya mwezi ni TZS milioni 10, "
+            "WCF itakuwa TZS 50,000. "
+            "WCF inalipwa na mwajiri — haikatwi kwa mfanyakazi. "
+            "Thibitisha kiwango cha sasa na Mamlaka ya WCF."
+        ),
+        "question_en": "What percentage of my payroll is WCF?",
+        "answer_en": (
+            "The WCF (Workers Compensation Fund) rate is 0.5% of the total gross wages of all employees. "
+            "For example, if your total monthly payroll is TZS 10 million, "
+            "WCF will be TZS 50,000. "
+            "WCF is paid by the employer — it is not deducted from the employee's salary. "
+            "Confirm the current rate with the WCF Authority."
+        ),
+        "primary_source_url": "https://www.tra.go.tz/index.php/tax-information",
+        "primary_source_name": "Tanzania Revenue Authority",
+        "source_type": "government_portal",
+        "effective_date": "2026-01-01",
+        "decay_risk": "annual",
+        "next_review_trigger": "After Finance Act July 2026",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+
+    # ── GN 487A — NON-CITIZEN BUSINESS RESTRICTIONS (Pairs 38–47) ───────────
+    {
+        "id": "tier1a_gn487a_001_20260601",
+        "domain": "tier1a",
+        "subdomain": "gn487a",
+        "question_sw": "GN 487A ni nini? Imeniathiri vipi kama mfanyabiashara Tanzania?",
+        "answer_sw": (
+            "GN 487A ni 'Government Notice No. 487A' — Amri ya Serikali ya Tanzania "
+            "inayoitwa 'Business Licensing (Prohibition of Business Activities for Non-Citizens) Order'. "
+            "Ilitangazwa tarehe 28 Julai 2025 na kuanza kutumika siku hiyo hiyo. "
+            "Inazuia raia wa kigeni kufanya shughuli za biashara katika makundi 15 maalum "
+            "ambayo yamehifadhiwa kwa raia wa Tanzania peke yao. "
+            "Kama wewe ni raia wa Tanzania, GN 487A inakupa nafasi ya kuchukua shughuli hizi. "
+            "Kama wewe ni raia wa kigeni, lazima uache au utaadhibiwa. "
+            "Thibitisha na Idara ya Uhamiaji au wakili."
+        ),
+        "question_en": "What is GN 487A? How does it affect me as a business person in Tanzania?",
+        "answer_en": (
+            "GN 487A is 'Government Notice No. 487A' — the Tanzanian government order titled "
+            "'Business Licensing (Prohibition of Business Activities for Non-Citizens) Order'. "
+            "It was gazetted on 28 July 2025 and took effect the same day. "
+            "It prohibits non-citizens from conducting business activities in 15 specified categories "
+            "reserved exclusively for Tanzanian citizens. "
+            "If you are a Tanzanian citizen, GN 487A gives you the opportunity to take over these activities. "
+            "If you are a non-citizen, you must cease or face penalties. "
+            "Confirm with the Immigration Services Department or a lawyer."
+        ),
+        "primary_source_url": "https://tanzlii.org",
+        "primary_source_name": "Tanzania Government Gazette — GN 487A (28 July 2025)",
+        "source_type": "official_gazette",
+        "effective_date": "2025-07-28",
+        "decay_risk": "event_triggered",
+        "next_review_trigger": "When GN 487A is amended or enforcement rules are updated",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_gn487a_002_20260601",
+        "domain": "tier1a",
+        "subdomain": "gn487a",
+        "question_sw": "Biashara gani zimepigwa marufuku kwa raia wa kigeni chini ya GN 487A?",
+        "answer_sw": (
+            "GN 487A inapiga marufuku raia wa kigeni kufanya shughuli 15 ambazo zimehifadhiwa "
+            "kwa raia wa Tanzania. Baadhi ya shughuli zinazojulikana ni: "
+            "biashara ya jumla (wholesale trade), biashara ya rejareja (retail trade), "
+            "uhamishaji wa pesa za simu (mobile money transfers), "
+            "ukarabati wa simu (phone repair), "
+            "na biashara ya urembo/saluni (salon/beauty business). "
+            "Orodha kamili ina makundi 15 — tazama GN 487A kwenye Gazeti Rasmi la Serikali "
+            "au wasiliana na Idara ya Uhamiaji kwa orodha kamili na hivi karibuni."
+        ),
+        "question_en": "Which businesses are prohibited for non-citizens under GN 487A?",
+        "answer_en": (
+            "GN 487A prohibits non-citizens from conducting 15 business activities reserved "
+            "exclusively for Tanzanian citizens. Known categories include: "
+            "wholesale trade, retail trade, mobile money transfers, phone repair, "
+            "and salon/beauty business. "
+            "The full list contains 15 categories — see GN 487A in the Official Government Gazette "
+            "or contact the Immigration Services Department for the complete and current list."
+        ),
+        "primary_source_url": "https://tanzlii.org",
+        "primary_source_name": "Tanzania Government Gazette — GN 487A (28 July 2025)",
+        "source_type": "official_gazette",
+        "effective_date": "2025-07-28",
+        "decay_risk": "event_triggered",
+        "next_review_trigger": "When GN 487A is amended or new prohibited categories added",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_gn487a_003_20260601",
+        "domain": "tier1a",
+        "subdomain": "gn487a",
+        "question_sw": "Je, raia wa kigeni anaweza kufanya biashara ya jumla (wholesale) Tanzania?",
+        "answer_sw": (
+            "Hapana. Biashara ya jumla (wholesale trade) ni mojawapo ya makundi 15 "
+            "yaliyopigwa marufuku kwa raia wa kigeni chini ya GN 487A, "
+            "kuanzia tarehe 28 Julai 2025. "
+            "Raia wa kigeni anayeendelea kufanya biashara ya jumla baada ya tarehe hiyo "
+            "anakabiliwa na adhabu kali: faini ya chini ya TZS milioni 10, "
+            "kifungo cha hadi miezi 6 gerezani, na kufutwa kwa visa yake. "
+            "Thibitisha hali yako na wakili wa biashara au Idara ya Uhamiaji."
+        ),
+        "question_en": "Can a non-citizen run a wholesale trade business in Tanzania?",
+        "answer_en": (
+            "No. Wholesale trade is one of the 15 business categories prohibited for non-citizens "
+            "under GN 487A, effective 28 July 2025. "
+            "A non-citizen continuing to operate a wholesale business after that date "
+            "faces severe penalties: a minimum TZS 10 million fine, "
+            "up to 6 months imprisonment, and visa revocation. "
+            "Confirm your situation with a business lawyer or the Immigration Services Department."
+        ),
+        "primary_source_url": "https://tanzlii.org",
+        "primary_source_name": "Tanzania Government Gazette — GN 487A (28 July 2025)",
+        "source_type": "official_gazette",
+        "effective_date": "2025-07-28",
+        "decay_risk": "event_triggered",
+        "next_review_trigger": "When GN 487A is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_gn487a_004_20260601",
+        "domain": "tier1a",
+        "subdomain": "gn487a",
+        "question_sw": "Je, raia wa kigeni anaweza kufanya biashara ya rejareja (retail) Tanzania?",
+        "answer_sw": (
+            "Hapana. Biashara ya rejareja (retail trade) imepigwa marufuku kwa raia wa kigeni "
+            "chini ya GN 487A kuanzia 28 Julai 2025. "
+            "Hii inajumuisha maduka ya rejareja ya aina mbalimbali. "
+            "Adhabu kwa raia wa kigeni wanaokiuka: faini ya chini ya TZS milioni 10, "
+            "kifungo cha hadi miezi 6, na kufutwa kwa visa. "
+            "Adhabu kwa raia wa Tanzania anayemsaidia raia wa kigeni kukiuka sheria hii: "
+            "faini ya TZS milioni 5 au kifungo cha miezi 3. "
+            "Thibitisha na wakili au Idara ya Uhamiaji."
+        ),
+        "question_en": "Can a non-citizen operate a retail trade business in Tanzania?",
+        "answer_en": (
+            "No. Retail trade is prohibited for non-citizens under GN 487A from 28 July 2025. "
+            "This covers retail shops of various types. "
+            "Penalties for non-citizens who violate this: minimum TZS 10 million fine, "
+            "up to 6 months imprisonment, and visa revocation. "
+            "Penalties for a Tanzanian citizen who assists a non-citizen to violate this law: "
+            "TZS 5 million fine or 3 months imprisonment. "
+            "Confirm with a lawyer or the Immigration Services Department."
+        ),
+        "primary_source_url": "https://tanzlii.org",
+        "primary_source_name": "Tanzania Government Gazette — GN 487A (28 July 2025)",
+        "source_type": "official_gazette",
+        "effective_date": "2025-07-28",
+        "decay_risk": "event_triggered",
+        "next_review_trigger": "When GN 487A is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_gn487a_005_20260601",
+        "domain": "tier1a",
+        "subdomain": "gn487a",
+        "question_sw": "Je, raia wa kigeni anaweza kufanya biashara ya uhamisho wa pesa za simu (mobile money)?",
+        "answer_sw": (
+            "Hapana. Uhamisho wa pesa za simu (mobile money transfers) ni mojawapo ya makundi "
+            "15 yaliyopigwa marufuku kwa raia wa kigeni chini ya GN 487A, kuanzia 28 Julai 2025. "
+            "Biashara ya wakala wa mobile money (M-Pesa, Airtel Money, Tigo Pesa na kadhalika) "
+            "inahifadhiwa kwa raia wa Tanzania tu. "
+            "Raia wa kigeni anayeendelea na biashara hii anakabiliwa na faini ya chini ya "
+            "TZS milioni 10, kifungo cha hadi miezi 6, na kufutwa kwa visa. "
+            "Thibitisha na Idara ya Uhamiaji au wakili."
+        ),
+        "question_en": "Can a non-citizen operate a mobile money transfer business in Tanzania?",
+        "answer_en": (
+            "No. Mobile money transfers is one of the 15 categories prohibited for non-citizens "
+            "under GN 487A from 28 July 2025. "
+            "Mobile money agent businesses (M-Pesa, Airtel Money, Tigo Pesa, etc.) "
+            "are reserved for Tanzanian citizens only. "
+            "A non-citizen continuing this business faces a minimum TZS 10 million fine, "
+            "up to 6 months imprisonment, and visa revocation. "
+            "Confirm with the Immigration Services Department or a lawyer."
+        ),
+        "primary_source_url": "https://tanzlii.org",
+        "primary_source_name": "Tanzania Government Gazette — GN 487A (28 July 2025)",
+        "source_type": "official_gazette",
+        "effective_date": "2025-07-28",
+        "decay_risk": "event_triggered",
+        "next_review_trigger": "When GN 487A is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_gn487a_006_20260601",
+        "domain": "tier1a",
+        "subdomain": "gn487a",
+        "question_sw": "Je, raia wa kigeni anaweza kufungua duka la ukarabati wa simu Tanzania?",
+        "answer_sw": (
+            "Hapana. Ukarabati wa simu (phone repair) umepigwa marufuku kwa raia wa kigeni "
+            "chini ya GN 487A kuanzia 28 Julai 2025. "
+            "Duka lolote la ukarabati wa simu lazima limilikiwe na raia wa Tanzania. "
+            "Raia wa kigeni anayekiuka sheria hii anakabiliwa na faini ya chini ya TZS milioni 10, "
+            "kifungo cha hadi miezi 6 gerezani, na kufutwa kwa visa. "
+            "Thibitisha na Idara ya Uhamiaji au wakili wa biashara kwa hali yako maalum."
+        ),
+        "question_en": "Can a non-citizen open a phone repair shop in Tanzania?",
+        "answer_en": (
+            "No. Phone repair is prohibited for non-citizens under GN 487A from 28 July 2025. "
+            "Any phone repair business must be owned by a Tanzanian citizen. "
+            "A non-citizen who violates this faces a minimum TZS 10 million fine, "
+            "up to 6 months imprisonment, and visa revocation. "
+            "Confirm with the Immigration Services Department or a business lawyer for your specific situation."
+        ),
+        "primary_source_url": "https://tanzlii.org",
+        "primary_source_name": "Tanzania Government Gazette — GN 487A (28 July 2025)",
+        "source_type": "official_gazette",
+        "effective_date": "2025-07-28",
+        "decay_risk": "event_triggered",
+        "next_review_trigger": "When GN 487A is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_gn487a_007_20260601",
+        "domain": "tier1a",
+        "subdomain": "gn487a",
+        "question_sw": "Je, raia wa kigeni anaweza kumiliki saluni ya nywele au urembo Tanzania?",
+        "answer_sw": (
+            "Hapana. Biashara ya saluni/urembo (salon business) imepigwa marufuku kwa raia wa kigeni "
+            "chini ya GN 487A kuanzia 28 Julai 2025. "
+            "Saluni za nywele, maduka ya urembo, na biashara zinazofanana zimehifadhiwa "
+            "kwa raia wa Tanzania peke yao. "
+            "Raia wa kigeni anayekiuka sheria hii anakabiliwa na faini ya chini ya TZS milioni 10, "
+            "kifungo cha hadi miezi 6 gerezani, na kufutwa kwa visa. "
+            "Thibitisha na Idara ya Uhamiaji au wakili kwa hali yako."
+        ),
+        "question_en": "Can a non-citizen own a hair salon or beauty business in Tanzania?",
+        "answer_en": (
+            "No. Salon/beauty business is prohibited for non-citizens under GN 487A from 28 July 2025. "
+            "Hair salons, beauty shops, and similar businesses are reserved for Tanzanian citizens only. "
+            "A non-citizen who violates this faces a minimum TZS 10 million fine, "
+            "up to 6 months imprisonment, and visa revocation. "
+            "Confirm with the Immigration Services Department or a lawyer for your situation."
+        ),
+        "primary_source_url": "https://tanzlii.org",
+        "primary_source_name": "Tanzania Government Gazette — GN 487A (28 July 2025)",
+        "source_type": "official_gazette",
+        "effective_date": "2025-07-28",
+        "decay_risk": "event_triggered",
+        "next_review_trigger": "When GN 487A is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_gn487a_008_20260601",
+        "domain": "tier1a",
+        "subdomain": "gn487a",
+        "question_sw": "Adhabu kwa raia wa kigeni anayeendesha biashara iliyopigwa marufuku chini ya GN 487A ni nini?",
+        "answer_sw": (
+            "Adhabu kwa raia wa kigeni anayekiuka GN 487A ni kali: "
+            "1) Faini ya chini ya TZS milioni 10 (kumi). "
+            "2) Kifungo cha hadi miezi 6 (sita) gerezani. "
+            "3) Kufutwa kwa visa na kupigwa marufuku kuingia Tanzania tena. "
+            "Hizi ni adhabu za chini (minimum) — mahakama inaweza kutoa adhabu kubwa zaidi. "
+            "Shirika la Uhamiaji lilifanya zoezi maalum la ukaguzi kati ya 11 Septemba "
+            "na 8 Oktoba 2025. "
+            "Thibitisha na wakili wa uhamiaji mara moja."
+        ),
+        "question_en": "What are the penalties for a non-citizen running a prohibited business under GN 487A?",
+        "answer_en": (
+            "Penalties for a non-citizen violating GN 487A are severe: "
+            "1) Minimum TZS 10 million fine. "
+            "2) Up to 6 months imprisonment. "
+            "3) Visa revocation and prohibition from re-entering Tanzania. "
+            "These are minimum penalties — a court may impose heavier punishment. "
+            "The Immigration Services Department ran a specific compliance exercise "
+            "from 11 September to 8 October 2025. "
+            "Consult an immigration lawyer immediately."
+        ),
+        "primary_source_url": "https://tanzlii.org",
+        "primary_source_name": "Tanzania Government Gazette — GN 487A (28 July 2025)",
+        "source_type": "official_gazette",
+        "effective_date": "2025-07-28",
+        "decay_risk": "event_triggered",
+        "next_review_trigger": "When GN 487A is amended or new enforcement directives issued",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_gn487a_009_20260601",
+        "domain": "tier1a",
+        "subdomain": "gn487a",
+        "question_sw": (
+            "Kama raia wa Tanzania, nikawasiliana na rafiki wa kigeni afanye biashara iliyopigwa "
+            "marufuku kwa jina langu — je, nitaadhibiwa?"
+        ),
+        "answer_sw": (
+            "Ndiyo, na adhabu ni kali. "
+            "GN 487A inaadhibu pia raia wa Tanzania wanaomsaidia raia wa kigeni kukiuka marufuku. "
+            "Adhabu kwa Mtanzania anayemsaidia raia wa kigeni: "
+            "faini ya TZS milioni 5 au kifungo cha miezi 3 gerezani. "
+            "Kutumia jina lako ili raia wa kigeni afanye biashara iliyopigwa marufuku "
+            "kunachukuliwa kama 'kuwezesha' (facilitating) ukiukwaji. "
+            "Thibitisha hali yako na wakili kabla ya kuchukua hatua yoyote."
+        ),
+        "question_en": (
+            "As a Tanzanian citizen, if I allow a foreign friend to run a prohibited business "
+            "in my name — will I be penalised?"
+        ),
+        "answer_en": (
+            "Yes, and the penalty is serious. "
+            "GN 487A also penalises Tanzanian citizens who assist non-citizens to violate the prohibition. "
+            "Penalty for a Tanzanian who facilitates a non-citizen: "
+            "TZS 5 million fine or 3 months imprisonment. "
+            "Using your name to allow a non-citizen to operate a prohibited business "
+            "is considered 'facilitating' a violation. "
+            "Confirm your situation with a lawyer before taking any action."
+        ),
+        "primary_source_url": "https://tanzlii.org",
+        "primary_source_name": "Tanzania Government Gazette — GN 487A (28 July 2025)",
+        "source_type": "official_gazette",
+        "effective_date": "2025-07-28",
+        "decay_risk": "event_triggered",
+        "next_review_trigger": "When GN 487A is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_gn487a_010_20260601",
+        "domain": "tier1a",
+        "subdomain": "gn487a",
+        "question_sw": "GN 487A ilianza kutumika lini — je, biashara zilizokuwepo mapema zinalindwa?",
+        "answer_sw": (
+            "GN 487A ilianza kutumika tarehe 28 Julai 2025 — siku ile ilipotangazwa. "
+            "Hakukuwa na kipindi cha mpito (grace period) kilichotangazwa rasmi kwa biashara "
+            "zilizokuwepo. "
+            "Hii inamaanisha hata biashara zilizokuwa zikifanya kazi kabla ya tarehe hiyo "
+            "zilihitajika kutii sheria mara moja. "
+            "Kama una wasiwasi kuhusu biashara iliyokuwepo, wasiliana na wakili wa biashara "
+            "au Idara ya Uhamiaji haraka — usiendelee bila ushauri wa kisheria."
+        ),
+        "question_en": "When did GN 487A take effect — are businesses that existed before protected?",
+        "answer_en": (
+            "GN 487A took effect on 28 July 2025 — the day it was gazetted. "
+            "No formal grace period for pre-existing businesses was officially announced. "
+            "This means businesses already operating before that date were required to comply immediately. "
+            "If you have concerns about a pre-existing business, contact a business lawyer "
+            "or the Immigration Services Department urgently — do not continue without legal advice."
+        ),
+        "primary_source_url": "https://tanzlii.org",
+        "primary_source_name": "Tanzania Government Gazette — GN 487A (28 July 2025)",
+        "source_type": "official_gazette",
+        "effective_date": "2025-07-28",
+        "decay_risk": "event_triggered",
+        "next_review_trigger": "When GN 487A is amended or implementation guidance updated",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+
+    # ── OSHA REGISTRATION (Pairs 48–50) ─────────────────────────────────────
+    {
+        "id": "tier1a_osha_001_20260601",
+        "domain": "tier1a",
+        "subdomain": "osha_registration",
+        "question_sw": "Je, biashara yangu lazima isajiliwe na OSHA?",
+        "answer_sw": (
+            "Ndiyo. Kwa mujibu wa sheria ya Tanzania, waajiri wenye mahali pa kazi "
+            "(workplace) wanawajibika kusajilisha mazingira yao ya kazi na OSHA "
+            "(Occupational Safety and Health Authority). "
+            "OSHA inasimamia usalama wa mahali pa kazi — usajilishaji unakupa leseni ya kufanya kazi "
+            "katika mazingira yanayotimiza viwango vya usalama. "
+            "Thibitisha mahitaji ya usajilishaji kwa biashara yako maalum na OSHA kwenye osha.go.tz."
+        ),
+        "question_en": "Does my business need to be registered with OSHA?",
+        "answer_en": (
+            "Yes. Under Tanzanian law, employers with a workplace are required to register "
+            "their working environment with OSHA (Occupational Safety and Health Authority). "
+            "OSHA oversees workplace safety — registration gives you a licence to operate "
+            "in an environment that meets safety standards. "
+            "Confirm registration requirements for your specific business with OSHA at osha.go.tz."
+        ),
+        "primary_source_url": "https://www.osha.go.tz",
+        "primary_source_name": "Occupational Safety and Health Authority Tanzania",
+        "source_type": "government_portal",
+        "effective_date": "2025-01-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When OSHA Act is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_osha_002_20260601",
+        "domain": "tier1a",
+        "subdomain": "osha_registration",
+        "question_sw": "Cheti cha ukaguzi wa OSHA ni nini na kinahitajika lini?",
+        "answer_sw": (
+            "Cheti cha ukaguzi wa OSHA (OSHA inspection certificate) ni hati inayotolewa na "
+            "OSHA baada ya ukaguzi wa mahali pa kazi yako kuthibitisha kuwa inakidhi viwango "
+            "vya usalama wa kazi. "
+            "Cheti hiki kinahitajika ili biashara yako ifanye kazi kisheria, "
+            "na katika baadhi ya kesi ni sharti la kupata leseni za biashara nyingine. "
+            "Ukaguzi unafanywa mara kwa mara — baadhi ya biashara zinahitaji upya wa cheti kila mwaka. "
+            "Wasiliana na OSHA kwenye osha.go.tz kwa ratiba na mahitaji yako maalum."
+        ),
+        "question_en": "What is an OSHA inspection certificate and when is it required?",
+        "answer_en": (
+            "An OSHA inspection certificate is a document issued by OSHA after inspecting your "
+            "workplace to confirm it meets occupational safety and health standards. "
+            "This certificate is required for your business to operate legally, "
+            "and in some cases is a prerequisite for obtaining other business licences. "
+            "Inspections occur periodically — some businesses need annual certificate renewal. "
+            "Contact OSHA at osha.go.tz for the schedule and your specific requirements."
+        ),
+        "primary_source_url": "https://www.osha.go.tz",
+        "primary_source_name": "Occupational Safety and Health Authority Tanzania",
+        "source_type": "government_portal",
+        "effective_date": "2025-01-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When OSHA Act or inspection procedures are amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+    {
+        "id": "tier1a_osha_003_20260601",
+        "domain": "tier1a",
+        "subdomain": "osha_registration",
+        "question_sw": "Ninafungua ofisi ndogo ya biashara — je, ninahitaji OSHA?",
+        "answer_sw": (
+            "Ndiyo, ofisi za biashara zinahesabiwa kama 'mahali pa kazi' (workplace) "
+            "chini ya sheria ya OSHA Tanzania. "
+            "Hata ofisi ndogo inayohusika na wafanyakazi inaweza kuhitajika kusajiliwa na OSHA. "
+            "Viwango vya usalama vinavyohitajika vinajumuisha mambo kama vya: mwanga wa kutosha, "
+            "hewa safi, njia za kutoka wakati wa dharura, na mazingira ya kazi salama. "
+            "Thibitisha mahitaji yako maalum na OSHA kwenye osha.go.tz kabla ya kufungua ofisi."
+        ),
+        "question_en": "I am opening a small business office — do I need OSHA?",
+        "answer_en": (
+            "Yes, business offices are considered a 'workplace' under Tanzania's OSHA law. "
+            "Even a small office that involves employees may be required to register with OSHA. "
+            "Required safety standards cover aspects such as: adequate lighting, "
+            "ventilation, emergency exits, and safe working conditions. "
+            "Confirm your specific requirements with OSHA at osha.go.tz before opening your office."
+        ),
+        "primary_source_url": "https://www.osha.go.tz",
+        "primary_source_name": "Occupational Safety and Health Authority Tanzania",
+        "source_type": "government_portal",
+        "effective_date": "2025-01-01",
+        "decay_risk": "stable",
+        "next_review_trigger": "When OSHA Act is amended",
+        "verified_by": "pending_human_review",
+        "verified_date": "pending_human_review",
+        "register": "business_market",
+        "pair_type": "standard",
+        "eval_set": False,
+    },
+]
+
+
+def main():
+    assert len(PAIRS) == 50, f"Expected 50 pairs, got {len(PAIRS)}"
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    with open(OUT, "w", encoding="utf-8") as f:
+        for pair in PAIRS:
+            f.write(json.dumps(pair, ensure_ascii=False) + "\n")
+
+    print(f"Written {len(PAIRS)} pairs -> {OUT}")
+
+
+if __name__ == "__main__":
+    main()
