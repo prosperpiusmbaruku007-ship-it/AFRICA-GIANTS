@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-03
+## Last Updated: 2026-06-04
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,22 +15,39 @@
 
 ## 1. CURRENT PHASE
 
-**Dataset build in progress — 157 pairs written, target 250 total. Eval running on Kaggle in parallel.**
+**300-pair milestone REACHED — Pre-Stage complete. batch_002 (243 pairs, 25 corrections applied) moved to cleaned_pairs/. Total corpus: 300 pairs cleaned and reviewed. Next: upload batch_002 to HuggingFace then retrain on 300 pairs.**
 
 ---
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
 
-### 2026-06-03 — Batch 002 dataset build (100 pairs, work in progress)
-- File: datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl — 100 pairs
-- Subdomains: paye (25), gn605a (20), work_permits (15), withholding_tax (15), vat_edge_cases (15), nssf_edge_cases (10)
-- Deduplication: existing_questions.txt loaded with 314 questions (157 pairs × 2 languages)
-- Validation: 0 errors, 0 duplicates across batch_001 + batch_002
-- Scraping: 4/6 URLs succeeded (paye timed out, VELMA 404 — both fell back to CLAUDE.md locked facts)
-- Status: WORK IN PROGRESS — target 250 total pairs (93 more needed)
-- Next: continue Batch C (paye_extended 20, eac_cross_border 15, business_licensing 15)
-         then Batch D (stamp_duty 10, skills_levy_extended 8, nssf_disputes 8, brela_changes 10, tax_disputes 7)
-- Do NOT commit to cleaned_pairs/ until founder review
+### 2026-06-04 — Batch 002 CLEANED and COMMITTED (243 pairs)
+- File: datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl — 243 pairs
+- Combined with batch_001 (57): **300 total cleaned pairs** — corpus milestone
+- 25 corrections applied across 3 runs (39 pairs updated):
+  - Run 1: PAYE band 8% (not 9%), worked examples recalculated, penalty 2.5%, interest rate → statutory TRA
+  - Run 2: Permit classes (A/B not B/C), royalties WHT 15%/15%, provisional tax 4 instalments,
+    min turnover tax 1% (Finance Act 2025), tax disputes 6 months + 1/3 deposit + TRAB 45-day step,
+    stamp duty flat 1%, P9 deadline 31 March
+  - Run 3: P45 removed → Leaving Certificate/P9, casual worker one month, director WHT 20% non-residents,
+    BRELA Form 23 disclaimer, TMDA (not TFDA), loss carry forward 60% cap, public sector PSC disclaimer,
+    tax clearance caveat, PRN expiry softened, first-time offender no-guarantee note
+- Validation: 300 pairs, 0 errors, 0 duplicates — PASSED
+- Next: Upload batch_002_cleaned.jsonl to HuggingFace, retrain on 300 pairs on Kaggle
+
+### 2026-06-03 — Batch 002 dataset build COMPLETE (193 raw pairs)
+- File: datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl — 193 pairs
+- Combined with batch_001 (57): **250 total pairs** — milestone reached
+- Subdomains all batches:
+  - Batch A (original): paye (25), gn605a (20), work_permits (15), withholding_tax (15), vat_edge_cases (15), nssf_edge_cases (10) [100 pairs]
+  - Batch C: paye_extended (20), income_tax (15), business_licensing (15) [50 pairs]
+  - Batch D: stamp_duty (10), skills_levy_extended (8), nssf_disputes (8), brela_changes (10), tax_disputes (7) [43 pairs]
+- Deduplication: 0 duplicates across all 250 pairs — CLEAN
+- Schema validation: 0 errors, all 18 fields populated
+- Scraping (new URLs): stamp_duty.html, withholding2.html, brela2.html, nssf2.html — OK
+  paye_retry.html timed out, income_tax.html timed out — fallback to CLAUDE.md locked facts
+- existing_questions.txt: 500 questions (250 pairs × 2 languages)
+- Status: COMPLETE — awaiting founder review before moving to cleaned_pairs/
 
 ### 2026-06-03 — Accuracy gate eval launched
 - Eval notebook: https://www.kaggle.com/code/prospaprospa/africa-giants-eval
@@ -85,15 +102,14 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 **Step 10:** ⏳ Accuracy gate eval running — Kaggle notebook `africa-giants-eval`. On completion:
 gate_001_results.json uploaded to HF adapter repo → save to eval/results/ → update PROGRESS.md.
 
-**Step 11:** ⏳ Dataset build — 157 pairs written (batch_001 57 + batch_002 100 raw).
-Target: 250 total. Remaining: 93 pairs across paye_extended, eac_cross_border, business_licensing,
-stamp_duty, skills_levy_extended, nssf_disputes, brela_changes, tax_disputes.
-Scraping interrupted mid-run — retry paye_retry.html, capital_gains.html, stamp_duty.html,
-eac_trade.html, brela_fees.html, osha_fees.html on next session.
+**Step 11:** ✅ Dataset build COMPLETE — 300 pairs total (batch_001 57 + batch_002 243).
+17 subdomains covered. 0 duplicates. 0 schema errors. 25 corrections applied, 39 pairs updated.
 
-**Step 12:** ⬜ Founder reviews batch_002 → move to cleaned_pairs/ after approval.
+**Step 12:** ✅ Founder reviewed batch_002, 25 corrections applied, batch_002_cleaned.jsonl committed.
 
-**Step 13:** ⬜ Engage TRA consultant for 10% training pair sample review (~TZS 50,000–100,000).
+**Step 13:** ⬜ Upload batch_002_cleaned.jsonl to HuggingFace dataset repo, then retrain on 300 pairs on Kaggle africa-giants-v2.
+
+**Step 14:** ⬜ Engage TRA consultant for 10% training pair sample review — ~30 pairs, ~TZS 50,000–100,000.
 
 ### Open items on training pairs (not blocking training run)
 - NSSF alternate arrangement (15%/5%) — no training pair covers this yet
@@ -189,7 +205,7 @@ eac_trade.html, brela_fees.html, osha_fees.html on next session.
 | Tier 2A: Legibility | 200 | 0 | 0 | 0 | No |
 | Tier 2B: VICOBA | 300 | 0 | 0 | 0 | No |
 | Tier 3 | Reserved | — | — | — | — |
-| **TOTAL** | **1,600** | **57** | **0** | **10** | **No** |
+| **TOTAL** | **1,600** | **300** | **0** | **10** | **No** |
 
 ### Eval Set Status (separate from training pairs)
 | File | Questions written | Questions remaining | Committed | Self-check |
