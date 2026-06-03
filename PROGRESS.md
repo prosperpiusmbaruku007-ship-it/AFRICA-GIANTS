@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-03 (eval in progress)
+## Last Updated: 2026-06-03
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,11 +15,22 @@
 
 ## 1. CURRENT PHASE
 
-**Pre-Stage — Accuracy gate eval running on Kaggle. Awaiting results.**
+**Dataset build in progress — 157 pairs written, target 250 total. Eval running on Kaggle in parallel.**
 
 ---
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
+
+### 2026-06-03 — Batch 002 dataset build (100 pairs, work in progress)
+- File: datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl — 100 pairs
+- Subdomains: paye (25), gn605a (20), work_permits (15), withholding_tax (15), vat_edge_cases (15), nssf_edge_cases (10)
+- Deduplication: existing_questions.txt loaded with 314 questions (157 pairs × 2 languages)
+- Validation: 0 errors, 0 duplicates across batch_001 + batch_002
+- Scraping: 4/6 URLs succeeded (paye timed out, VELMA 404 — both fell back to CLAUDE.md locked facts)
+- Status: WORK IN PROGRESS — target 250 total pairs (93 more needed)
+- Next: continue Batch C (paye_extended 20, eac_cross_border 15, business_licensing 15)
+         then Batch D (stamp_duty 10, skills_levy_extended 8, nssf_disputes 8, brela_changes 10, tax_disputes 7)
+- Do NOT commit to cleaned_pairs/ until founder review
 
 ### 2026-06-03 — Accuracy gate eval launched
 - Eval notebook: https://www.kaggle.com/code/prospaprospa/africa-giants-eval
@@ -69,18 +80,20 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 
 ### Immediate next tasks
 
-**Step 9:** ✅ Training data uploaded to HF Hub (47 train + 10 val pairs). Notebook
-`africa-giants-v2` pushed and run triggered on Kaggle (2026-06-03).
+**Step 9:** ✅ Training data uploaded to HF Hub. Notebook `africa-giants-v2` run triggered on Kaggle.
 
-**Step 10:** ⏳ Accuracy gate eval running — Kaggle notebook `africa-giants-eval`
-(prospaprospa/africa-giants-eval). On completion: gate_001_results.json uploaded to
-HF adapter repo. Then: save to eval/results/gate_001_results.json, update PROGRESS.md.
+**Step 10:** ⏳ Accuracy gate eval running — Kaggle notebook `africa-giants-eval`. On completion:
+gate_001_results.json uploaded to HF adapter repo → save to eval/results/ → update PROGRESS.md.
 
-**Step 11:** ⬜ Engage TRA consultant for 10% training pair sample review — 6 pairs,
-approximately TZS 50,000–100,000 one hour.
+**Step 11:** ⏳ Dataset build — 157 pairs written (batch_001 57 + batch_002 100 raw).
+Target: 250 total. Remaining: 93 pairs across paye_extended, eac_cross_border, business_licensing,
+stamp_duty, skills_levy_extended, nssf_disputes, brela_changes, tax_disputes.
+Scraping interrupted mid-run — retry paye_retry.html, capital_gains.html, stamp_duty.html,
+eac_trade.html, brela_fees.html, osha_fees.html on next session.
 
-**Step 12:** ⬜ Continue building Tier 1A toward 200 total pairs — next subdomains:
-PAYE, GN 605A minimum wages, work permits, withholding tax on imports.
+**Step 12:** ⬜ Founder reviews batch_002 → move to cleaned_pairs/ after approval.
+
+**Step 13:** ⬜ Engage TRA consultant for 10% training pair sample review (~TZS 50,000–100,000).
 
 ### Open items on training pairs (not blocking training run)
 - NSSF alternate arrangement (15%/5%) — no training pair covers this yet
