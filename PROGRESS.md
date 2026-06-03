@@ -15,7 +15,7 @@
 
 ## 1. CURRENT PHASE
 
-**Pre-Stage | Eval Set Complete — 200 questions committed. Awaiting accuracy gate run.**
+**Pre-Stage — Eval set complete and approved. Ready for training run.**
 
 ---
 
@@ -59,24 +59,22 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 
 ## 3. ACTIVE WORK
 
-### Immediate — Complete the eval set (next Claude Code session)
+### Immediate next tasks
 
-The /do command in .claude/commands/do.md contains the exact instruction.
-Run claude then /do to continue.
+**Step 9:** Retrain model on 57 pairs by continuing from existing adapter
+`prospaprospa007/africa-giants-adapter-v1` on Kaggle notebook `africa-giants-v2`.
+Training data: `datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl`
 
-Claude Code must:
-1. Read CLAUDE.md, PROGRESS.md, docs/reference_narrative.md,
-   datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl,
-   and eval/accuracy_gate/eval_questions_001.jsonl
-2. APPEND 65 questions to eval/accuracy_gate/eval_questions_001.jsonl
-   starting from eval_136 — do not overwrite existing content
-3. Write gn487a (eval_136–175), osha_registration (eval_176–190),
-   out_of_corpus (eval_191–200)
-4. Run self-check on full 200-question file
-5. Show first 3 and last 3 new questions for founder review
-6. Do NOT commit — wait for founder confirmation
+**Step 10:** After adapter is pushed run `python scripts/run_eval.py` and report
+accuracy by subdomain.
 
-### Open items on training pairs (not blocking eval set)
+**Step 11:** Engage TRA consultant for 10% training pair sample review — 6 pairs,
+approximately TZS 50,000–100,000 one hour.
+
+**Step 12:** Continue building Tier 1A toward 200 total pairs — next subdomains:
+PAYE, GN 605A minimum wages, work permits, withholding tax on imports.
+
+### Open items on training pairs (not blocking training run)
 - NSSF alternate arrangement (15%/5%) — no training pair covers this yet
 - NSSF deadline wording: pairs say "10th" but primary source says "within one month"
 - 7 adversarial pairs need founder review (pending_founder_review)
@@ -93,15 +91,17 @@ Claude Code must:
 5. ✅ Create scripts/run_eval.py
 6. ✅ Commit and push infrastructure to GitHub
 7. ✅ Batch 001: 57 pairs validated and committed — fbd2045 (2026-06-02)
-8. ⏳ Build 200-question eval set — 135 of 200 done, 65 remaining (2026-06-03)
-9. ⬜ Founder reviews eval set quality (first 5 + last 5 questions)
-10. ⬜ Commit eval set to GitHub after founder approval
-11. ⬜ Engage TRA consultant for 10% training pair sample review
-12. ⬜ Run accuracy gate: python scripts/run_eval.py
+8. ✅ Build 200-question eval set — 200 of 200 done, committed bfc8aed / 302e299
+9. ✅ Founder reviews eval set quality — complete, 17 fixes applied and committed
+10. ✅ Commit eval set to GitHub after founder approval — done
+11. ⬜ Retrain model on 57 pairs continuing from adapter prospaprospa007/africa-giants-adapter-v1
+    on Kaggle notebook africa-giants-v2
+12. ⬜ Run accuracy gate: python scripts/run_eval.py — after new adapter is pushed
     Target: >85% in-corpus accuracy AND >70% out-of-corpus refusal
-13. ⬜ If gate passes: prepare first human pilot on WhatsApp
+13. ⬜ Engage TRA consultant for 10% training pair sample review — 6 pairs, ~TZS 50,000–100,000
 14. ⬜ Continue building Tier 1A toward 200 pairs total
-    (add PAYE, minimum wages GN 605A, work permits, withholding tax on imports)
+    (next subdomains: PAYE, GN 605A minimum wages, work permits, withholding tax on imports)
+15. ⬜ If gate passes: prepare first human pilot on WhatsApp
 
 ---
 
@@ -109,7 +109,7 @@ Claude Code must:
 
 | Blocker | Unblocked by |
 |---------|-------------|
-| Accuracy gate run | Eval set complete + founder approval |
+| Accuracy gate run | Retrain adapter on Kaggle + run scripts/run_eval.py |
 | Tier 1A expert review | Engaging TRA-registered consultant (human decision) |
 | Tier 1B start | Tier 1A accuracy gate passing |
 | Tier 1C start | Tier 1A accuracy gate passing |
