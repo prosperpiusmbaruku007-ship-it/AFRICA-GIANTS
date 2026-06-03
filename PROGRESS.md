@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-03
+## Last Updated: 2026-06-03 (eval in progress)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,11 +15,19 @@
 
 ## 1. CURRENT PHASE
 
-**Pre-Stage — Eval set complete and approved. Ready for training run.**
+**Pre-Stage — Accuracy gate eval running on Kaggle. Awaiting results.**
 
 ---
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
+
+### 2026-06-03 — Accuracy gate eval launched
+- Eval notebook: https://www.kaggle.com/code/prospaprospa/africa-giants-eval
+- Kernel: prospaprospa/africa-giants-eval — status RUNNING when last observed
+- Scoring: 200 questions × keyword/number/refusal match per answer_type
+- On completion: uploads gate_001_results.json to prospaprospa007/africa-giants-adapter-v1 on HF Hub
+- When results arrive: save to eval/results/gate_001_results.json and update PROGRESS.md Section 8 table
+- Gate targets: >85% in-corpus accuracy AND >70% out-of-corpus refusal
 
 ### 2026-06-03
 Eval set complete: 200 questions written, 17 post-review fixes applied, committed to main. Self-check passed: 0 errors, 0 banned sources, 10 out-of-corpus refusals, 0 duplicate IDs.
@@ -61,17 +69,17 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 
 ### Immediate next tasks
 
-**Step 9:** Retrain model on 57 pairs by continuing from existing adapter
-`prospaprospa007/africa-giants-adapter-v1` on Kaggle notebook `africa-giants-v2`.
-Training data: `datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl`
+**Step 9:** ✅ Training data uploaded to HF Hub (47 train + 10 val pairs). Notebook
+`africa-giants-v2` pushed and run triggered on Kaggle (2026-06-03).
 
-**Step 10:** After adapter is pushed run `python scripts/run_eval.py` and report
-accuracy by subdomain.
+**Step 10:** ⏳ Accuracy gate eval running — Kaggle notebook `africa-giants-eval`
+(prospaprospa/africa-giants-eval). On completion: gate_001_results.json uploaded to
+HF adapter repo. Then: save to eval/results/gate_001_results.json, update PROGRESS.md.
 
-**Step 11:** Engage TRA consultant for 10% training pair sample review — 6 pairs,
+**Step 11:** ⬜ Engage TRA consultant for 10% training pair sample review — 6 pairs,
 approximately TZS 50,000–100,000 one hour.
 
-**Step 12:** Continue building Tier 1A toward 200 total pairs — next subdomains:
+**Step 12:** ⬜ Continue building Tier 1A toward 200 total pairs — next subdomains:
 PAYE, GN 605A minimum wages, work permits, withholding tax on imports.
 
 ### Open items on training pairs (not blocking training run)
