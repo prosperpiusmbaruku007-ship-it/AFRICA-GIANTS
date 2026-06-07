@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-07
+## Last Updated: 2026-06-07 (session 2)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -135,6 +135,12 @@ Target: >85% in-corpus AND >70% refusal. Training on 300 pairs insufficient.
 **Step 13:** ✅ HF dataset updated — 300-pair SFT files uploaded (train_sft.jsonl + val_sft.jsonl).
 
 **Step 14:** ✅ FACT-GUARDIAN installed — locked_facts.json (41 facts) + check_locked_facts.py. Checker CLEAN on batch_002.
+
+**Step 14b:** ✅ Autonomy scripts installed (b4772d4):
+  - `scripts/check_sources.py` — SOURCE-ENFORCER, CLEAN on batch_002
+  - `scripts/build_question_index.py` — DEDUP-GUARD, 600 unique questions / 300 IDs indexed
+  - `scripts/generate_sft.py` — SFT file generator; produces 261 train / 29 val from 290 non-eval pairs
+  - `scripts/hf_clean_upload.py` — HF upload tool (delete old → upload new → verify); do NOT run without intent
 
 **Step 15:** ⬜ Build batch_003 — adversarial pairs targeting the 3 confirmed model failure modes:
   - GN487A confusion (80 pairs) — model says it's about residence permits
