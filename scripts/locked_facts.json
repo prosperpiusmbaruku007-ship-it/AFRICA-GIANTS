@@ -276,7 +276,7 @@
     "wrong_patterns": [
       "TZS 100,000,000 kwa mwaka",
       "100 million per year",
-      "50 million",
+      "\\b50 million\\b",
       "TZS 150,000,000",
       "vat.*50,000,000",
       "50,000,000.*vat.*registration",
