@@ -8,11 +8,11 @@ Exit: 0 = clean, 1 = flags found
 Models used:
   - Groq (llama-3.1-8b-instant) — free forever, no card needed
   - Gemini (gemini-1.5-flash) — free forever, no card needed
-  - OpenAI gpt-4o-mini — optional, $5 free credits covers full project
+  - OpenAI gpt-4o-mini — optional,  free credits covers full project
   - Claude strict (optional if ANTHROPIC_API_KEY set) — adversarial prompt
 
 NOTE: Brave Search is NOT used — blocked in Tanzania by TRA registration requirement.
-NOTE: Perplexity is NOT used — requires $5 upfront payment with no free tier.
+NOTE: Perplexity is NOT used — requires  upfront payment with no free tier.
 """
 import json, sys, os, argparse, urllib.request, urllib.error, re
 from datetime import datetime
@@ -92,31 +92,36 @@ def call_groq(pairs_text, api_key):
 
 
 def call_gemini(pairs_text, api_key):
-    """Google Gemini API — free tier."""
+    import time
     full_prompt = REVIEW_PROMPT + "\n\n" + pairs_text
     payload = json.dumps({
         "contents": [{"parts": [{"text": full_prompt}]}]
     }).encode("utf-8")
-
-    url = (f"https://generativelanguage.googleapis.com/v1beta/"
-           f"models/gemini-1.5-flash:generateContent?key={api_key}")
-
-    req = urllib.request.Request(
-        url,
-        data=payload,
-        headers={"Content-Type": "application/json"}
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            result = json.loads(resp.read())
-            return (result["candidates"][0]["content"]
-                    ["parts"][0]["text"].strip())
-    except Exception as e:
-        return f"GEMINI_ERROR: {e}"
+    url = (f"https://generativelanguage.googleapis.com/v1/"
+           f"models/gemini-2.0-flash:generateContent?key={api_key}")
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(
+                url, data=payload,
+                headers={"Content-Type": "application/json"}
+            )
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                result = json.loads(resp.read())
+                return (result["candidates"][0]["content"]
+                        ["parts"][0]["text"].strip())
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < 2:
+                wait = 30 * (attempt + 1)
+                print(f"  Gemini 429 — waiting {wait}s then retry...")
+                time.sleep(wait)
+            else:
+                return f"GEMINI_ERROR: {e}"
+        except Exception as e:
+            return f"GEMINI_ERROR: {e}"
 
 
 def call_openai(pairs_text, api_key):
-    """OpenAI gpt-4o-mini — $5 free credits covers full 3,000-pair project."""
+    """OpenAI gpt-4o-mini —  free credits covers full 3,000-pair project."""
     payload = json.dumps({
         "model": "gpt-4o-mini",
         "max_tokens": 1000,
@@ -223,12 +228,12 @@ def main():
         print("Set GROQ_API_KEY and/or GEMINI_API_KEY environment variables.")
         print("Get Groq free at: console.groq.com")
         print("Get Gemini free at: aistudio.google.com")
-        print("Get OpenAI at: platform.openai.com (optional, $5 free credits)")
+        print("Get OpenAI at: platform.openai.com (optional,  free credits)")
         sys.exit(1)
 
     print(f"Models available: {', '.join(available)}")
     print(f"NOTE: Brave Search not used (blocked in Tanzania)")
-    print(f"NOTE: Perplexity not used (requires $5 upfront payment)\n")
+    print(f"NOTE: Perplexity not used (requires  upfront payment)\n")
 
     # Load pairs
     if not os.path.exists(args.file):

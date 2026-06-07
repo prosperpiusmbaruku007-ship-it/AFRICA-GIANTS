@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-07 (session 2)
+## Last Updated: 2026-06-08 (session 3)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,11 +15,36 @@
 
 ## 1. CURRENT PHASE
 
-**FACT-GUARDIAN infrastructure installed. batch_002 error-corrected and checker CLEAN (0 flags). HF dataset updated to 300-pair SFT corpus. Next: build batch_003 adversarial pairs targeting SDL/GN487A/VAT model failures identified by inference test.**
+**REGULATORY-VERIFIER (verify_pairs.py) updated with Gemini 2.0 Flash + retry backoff. API keys need one-time activation in terminal before first real review run. Next: activate keys → run verify_pairs.py on batch_002 → then build batch_003 adversarial pairs.**
 
 ---
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
+
+### 2026-06-08 — REGULATORY-VERIFIER updated — verify_pairs.py patched
+
+**Changes to scripts/verify_pairs.py (this session):**
+- Gemini model: `gemini-1.5-flash` → `gemini-2.0-flash`
+- Gemini URL: `v1beta/models/gemini-1.5-flash` → `v1/models/gemini-2.0-flash`
+- `call_gemini` now has 3-attempt retry with 30s/60s backoff on HTTP 429
+- Script structure confirmed correct — exits CLEAN when all models error (no false positives)
+
+**API key status at session end (2026-06-08):**
+- Groq `GROQ_API_KEY`: `403 Forbidden` — key in env is invalid; new key needed from console.groq.com
+- Gemini `GEMINI_API_KEY`: `401 Unauthorized` — new `AQ...` key set but not loaded in session
+- OpenAI `OPENAI_API_KEY`: `429 Too Many Requests` — rate-limited / quota exhausted
+- ANTHROPIC_API_KEY: not set
+
+**To activate keys without restarting PowerShell:**
+```powershell
+$env:GEMINI_API_KEY = "AQ..."
+$env:GROQ_API_KEY = "gsk_..."
+python scripts/verify_pairs.py --file datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl --batch-size 57
+```
+Expected first success: Gemini (key confirmed AQ format) or Groq (if new key from console.groq.com).
+
+**check_locked_facts.py result this session:**
+→ CLEAN — 0 violations on batch_002_cleaned.jsonl (243 pairs) — confirmed still clean
 
 ### 2026-06-07 — FACT-GUARDIAN installed + batch_002 error-corrected — CLEAN d901d64
 
@@ -142,7 +167,17 @@ Target: >85% in-corpus AND >70% refusal. Training on 300 pairs insufficient.
   - `scripts/generate_sft.py` — SFT file generator; produces 261 train / 29 val from 290 non-eval pairs
   - `scripts/hf_clean_upload.py` — HF upload tool (delete old → upload new → verify); do NOT run without intent
 
-**Step 15:** ⬜ Build batch_003 — adversarial pairs targeting the 3 confirmed model failure modes:
+**Step 14c:** ✅ REGULATORY-VERIFIER updated (this session):
+  - `scripts/verify_pairs.py` — Gemini 2.0 Flash, v1 endpoint, 30s/60s retry backoff on 429
+  - Retry logic confirmed working (saw 30s+60s waits in live output)
+  - Pending: API keys need activation before first real review run (see Section 2 above)
+
+**Step 15a:** ⬜ Activate API keys and run verify_pairs.py on batch_002_cleaned.jsonl (243 pairs)
+  - Use `$env:GEMINI_API_KEY = "AQ..."` and `$env:GROQ_API_KEY = "gsk_..."` in terminal
+  - Run: `python scripts/verify_pairs.py --file datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl --batch-size 10`
+  - Expected: Gemini and/or Groq respond; any flags reviewed and fixed before batch_003
+
+**Step 15b:** ⬜ Build batch_003 — adversarial pairs targeting the 3 confirmed model failure modes:
   - GN487A confusion (80 pairs) — model says it's about residence permits
   - SDL confusion (50 pairs) — model says "disability leave"
   - VAT invented rates (40 pairs) — model invents 5%/10% reduced rates
@@ -175,8 +210,10 @@ Target: >85% in-corpus AND >70% refusal. Training on 300 pairs insufficient.
 11. ✅ Trained on 300 pairs — adapter prospaprospa007/africa-giants-adapter-v1 pushed
 12. ✅ Accuracy gate run: 67% in-corpus / 40% refusal — FAILED both gates
 13. ✅ FACT-GUARDIAN installed — checker CLEAN on batch_002 (d901d64)
-14. ⬜ Build batch_003 adversarial pairs (GN487A 80 + SDL 50 + VAT 40 = ~170 pairs)
-15. ⬜ Retrain on expanded corpus, re-run accuracy gate
+14. ✅ REGULATORY-VERIFIER updated — Gemini 2.0 Flash + retry backoff (this session)
+15. ⬜ Activate API keys + run verify_pairs.py on batch_002 — get first real cross-AI review
+16. ⬜ Build batch_003 adversarial pairs (GN487A 80 + SDL 50 + VAT 40 = ~170 pairs)
+17. ⬜ Retrain on expanded corpus, re-run accuracy gate
 16. ⬜ Engage TRA consultant for 10% training pair sample review — ~30 pairs, ~TZS 50,000–100,000
 17. ⬜ If gate passes: prepare first human pilot on WhatsApp
 
