@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-04
+## Last Updated: 2026-06-07
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,11 +15,37 @@
 
 ## 1. CURRENT PHASE
 
-**300-pair milestone REACHED — Pre-Stage complete. batch_002 (243 pairs, 25 corrections applied) moved to cleaned_pairs/. Total corpus: 300 pairs cleaned and reviewed. Next: upload batch_002 to HuggingFace then retrain on 300 pairs.**
+**FACT-GUARDIAN infrastructure installed. batch_002 error-corrected and checker CLEAN (0 flags). HF dataset updated to 300-pair SFT corpus. Next: build batch_003 adversarial pairs targeting SDL/GN487A/VAT model failures identified by inference test.**
 
 ---
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
+
+### 2026-06-07 — FACT-GUARDIAN installed + batch_002 error-corrected — CLEAN d901d64
+
+**FACT-GUARDIAN infrastructure:**
+- `scripts/locked_facts.json` — 41 locked regulatory facts with wrong_patterns, primary sources, verified dates
+- `scripts/check_locked_facts.py` — validation script; exit 0 = CLEAN, exit 1 = violations; writes fact_check_log.txt
+- Folder structures created: `.claude/skills/` (9 skill dirs) + `datasets/tier1a/flagged/` (needs_human_review/ consensus_blocked/ resolved/)
+- HF dataset `prospAprospA007/africa-giants-dataset` updated — old 47-pair files deleted, new 300-pair SFT files uploaded (train_sft.jsonl 222KB, val_sft.jsonl 23KB)
+
+**batch_002 error corrections (10 genuine errors across 8 pairs):**
+- `permit_012`: Class B mislabelled as investor → corrected to employed expatriate
+- `permit_011`: Class C described as work permit for employees → added Class B clarification
+- `paye_deep_015`: PAYE late penalty stated as 5% → corrected to 2.5%
+- `biz_lic_004`: "Tanzania Food and Drugs Authority" → "Tanzania Medicines and Medical Devices Authority (TMDA)"
+- `biz_lic_002`, `biz_lic_015`: LGA licence renewal deadline "31 January" → "31 March"
+- `paye_extended_018`: P9 deadline "31 January" → "31 March"
+
+**Checker result:** `python scripts/check_locked_facts.py --file datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl`
+→ **CLEAN — 0 violations** (started at 55 flags, all resolved via error fixes + pattern tightening)
+
+**Commits:** a71ccd3 (55→2 flags), d901d64 (2→0 flags, CLEAN)
+
+**Inference test failures identified** (from 300-pair training run, accuracy 67% in-corpus / 40% refusal):
+- SDL: model STILL says "disability leave" — needs 50+ adversarial pairs
+- GN487A: model STILL says it's about residence permits — needs 80 adversarial pairs (HIGHEST PRIORITY)
+- VAT: model inventing 5% food VAT and 10% utilities VAT — needs 40+ adversarial pairs
 
 ### 2026-06-04 — Batch 002 CLEANED and COMMITTED (243 pairs)
 - File: datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl — 243 pairs
@@ -99,17 +125,26 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 
 **Step 9:** ✅ Training data uploaded to HF Hub. Notebook `africa-giants-v2` run triggered on Kaggle.
 
-**Step 10:** ⏳ Accuracy gate eval running — Kaggle notebook `africa-giants-eval`. On completion:
-gate_001_results.json uploaded to HF adapter repo → save to eval/results/ → update PROGRESS.md.
+**Step 10:** ✅ Accuracy gate results: 67% in-corpus accuracy / 40% refusal rate — BOTH GATES FAILED.
+Target: >85% in-corpus AND >70% refusal. Training on 300 pairs insufficient.
 
 **Step 11:** ✅ Dataset build COMPLETE — 300 pairs total (batch_001 57 + batch_002 243).
-17 subdomains covered. 0 duplicates. 0 schema errors. 25 corrections applied, 39 pairs updated.
 
 **Step 12:** ✅ Founder reviewed batch_002, 25 corrections applied, batch_002_cleaned.jsonl committed.
 
-**Step 13:** ⬜ Upload batch_002_cleaned.jsonl to HuggingFace dataset repo, then retrain on 300 pairs on Kaggle africa-giants-v2.
+**Step 13:** ✅ HF dataset updated — 300-pair SFT files uploaded (train_sft.jsonl + val_sft.jsonl).
 
-**Step 14:** ⬜ Engage TRA consultant for 10% training pair sample review — ~30 pairs, ~TZS 50,000–100,000.
+**Step 14:** ✅ FACT-GUARDIAN installed — locked_facts.json (41 facts) + check_locked_facts.py. Checker CLEAN on batch_002.
+
+**Step 15:** ⬜ Build batch_003 — adversarial pairs targeting the 3 confirmed model failure modes:
+  - GN487A confusion (80 pairs) — model says it's about residence permits
+  - SDL confusion (50 pairs) — model says "disability leave"
+  - VAT invented rates (40 pairs) — model invents 5%/10% reduced rates
+  Total batch_003 target: ~170 adversarial pairs
+
+**Step 16:** ⬜ Retrain on 300 + batch_003 corpus on Kaggle africa-giants-v2, re-run accuracy gate.
+
+**Step 17:** ⬜ Engage TRA consultant for 10% training pair sample review — ~30 pairs, ~TZS 50,000–100,000.
 
 ### Open items on training pairs (not blocking training run)
 - NSSF alternate arrangement (15%/5%) — no training pair covers this yet
@@ -131,14 +166,13 @@ gate_001_results.json uploaded to HF adapter repo → save to eval/results/ → 
 8. ✅ Build 200-question eval set — 200 of 200 done, committed bfc8aed / 302e299
 9. ✅ Founder reviews eval set quality — complete, 17 fixes applied and committed
 10. ✅ Commit eval set to GitHub after founder approval — done
-11. ⬜ Retrain model on 57 pairs continuing from adapter prospaprospa007/africa-giants-adapter-v1
-    on Kaggle notebook africa-giants-v2
-12. ⬜ Run accuracy gate: python scripts/run_eval.py — after new adapter is pushed
-    Target: >85% in-corpus accuracy AND >70% out-of-corpus refusal
-13. ⬜ Engage TRA consultant for 10% training pair sample review — 6 pairs, ~TZS 50,000–100,000
-14. ⬜ Continue building Tier 1A toward 200 pairs total
-    (next subdomains: PAYE, GN 605A minimum wages, work permits, withholding tax on imports)
-15. ⬜ If gate passes: prepare first human pilot on WhatsApp
+11. ✅ Trained on 300 pairs — adapter prospaprospa007/africa-giants-adapter-v1 pushed
+12. ✅ Accuracy gate run: 67% in-corpus / 40% refusal — FAILED both gates
+13. ✅ FACT-GUARDIAN installed — checker CLEAN on batch_002 (d901d64)
+14. ⬜ Build batch_003 adversarial pairs (GN487A 80 + SDL 50 + VAT 40 = ~170 pairs)
+15. ⬜ Retrain on expanded corpus, re-run accuracy gate
+16. ⬜ Engage TRA consultant for 10% training pair sample review — ~30 pairs, ~TZS 50,000–100,000
+17. ⬜ If gate passes: prepare first human pilot on WhatsApp
 
 ---
 
