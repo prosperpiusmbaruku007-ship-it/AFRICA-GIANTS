@@ -7,7 +7,7 @@ Exit: 0 = clean, 1 = flags found
 
 Models used:
   - Groq (llama-3.1-8b-instant) — free forever, no card needed
-  - Gemini (gemini-1.5-flash) — free forever, no card needed
+  - Gemini (gemini-3.5-flash) — free forever, no card needed
   - OpenAI gpt-4o-mini — optional,  free credits covers full project
   - Claude strict (optional if ANTHROPIC_API_KEY set) — adversarial prompt
 
@@ -92,32 +92,27 @@ def call_groq(pairs_text, api_key):
 
 
 def call_gemini(pairs_text, api_key):
-    import time
+    """Google Gemini API — free tier."""
     full_prompt = REVIEW_PROMPT + "\n\n" + pairs_text
     payload = json.dumps({
         "contents": [{"parts": [{"text": full_prompt}]}]
     }).encode("utf-8")
-    url = (f"https://generativelanguage.googleapis.com/v1/"
-           f"models/gemini-2.0-flash:generateContent?key={api_key}")
-    for attempt in range(3):
-        try:
-            req = urllib.request.Request(
-                url, data=payload,
-                headers={"Content-Type": "application/json"}
-            )
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                result = json.loads(resp.read())
-                return (result["candidates"][0]["content"]
-                        ["parts"][0]["text"].strip())
-        except urllib.error.HTTPError as e:
-            if e.code == 429 and attempt < 2:
-                wait = 30 * (attempt + 1)
-                print(f"  Gemini 429 — waiting {wait}s then retry...")
-                time.sleep(wait)
-            else:
-                return f"GEMINI_ERROR: {e}"
-        except Exception as e:
-            return f"GEMINI_ERROR: {e}"
+
+    url = (f"https://generativelanguage.googleapis.com/v1beta/"
+           f"models/gemini-3.5-flash:generateContent?key={api_key}")
+
+    req = urllib.request.Request(
+        url,
+        data=payload,
+        headers={"Content-Type": "application/json"}
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            result = json.loads(resp.read())
+            return (result["candidates"][0]["content"]
+                    ["parts"][0]["text"].strip())
+    except Exception as e:
+        return f"GEMINI_ERROR: {e}"
 
 
 def call_openai(pairs_text, api_key):
