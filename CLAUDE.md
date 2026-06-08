@@ -252,6 +252,13 @@ Both accuracy_gate (>85%) AND refusal_gate (>70%) must pass.
 `python scripts/run_eval.py` must print "GATE PASSED" before any product launch.
 Checkpoint name encodes the score: e.g. `tier1a_acc87_ref72_2026-09-01/`
 
+**Mandatory pre-task checks (automated — must exit 0 before proceeding):**
+- Before `plan_next_batch.py`: `python scripts/clean_temp_files.py --scan`
+- Before `generate_sft.py`: `python scripts/check_eval_split.py`
+- Before every `git commit`: `python scripts/scan_for_keys.py`
+
+If any check fails: fix the issue before proceeding. Do not bypass.
+
 ---
 
 # 10. SWAHILI REGISTER REQUIREMENTS
