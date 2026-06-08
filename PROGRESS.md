@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-08 (session 3)
+## Last Updated: 2026-06-08 (session 4)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,36 +15,58 @@
 
 ## 1. CURRENT PHASE
 
-**REGULATORY-VERIFIER (verify_pairs.py) updated with Gemini 2.0 Flash + retry backoff. API keys need one-time activation in terminal before first real review run. Next: activate keys → run verify_pairs.py on batch_002 → then build batch_003 adversarial pairs.**
+**REGULATORY-VERIFIER working with Gemini 3.5-flash + OpenRouter (llama-3.3-70b-instruct:free). Groq and Cerebras confirmed geo-blocked in Tanzania (HTTP 403 on all keys). Gemini responding on all batches. OpenRouter key confirmed valid but hits free-tier 429 before achieving consensus. plan_next_batch.py installed — corpus at 313 pairs, 2,687 remaining. Next: build batch_003 adversarial pairs (GN487A 80 + SDL 50 + VAT 40 = 170 pairs minimum) and verify GN487A imprisonment penalty against TanzLII gazette (Gemini flags 6mo→12mo across 8 pairs consistently).**
 
 ---
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
 
-### 2026-06-08 — REGULATORY-VERIFIER updated — verify_pairs.py patched
+### 2026-06-08 (session 4) — Verifier pipeline stabilised, data fixes, batch planner installed
 
-**Changes to scripts/verify_pairs.py (this session):**
-- Gemini model: `gemini-1.5-flash` → `gemini-2.0-flash`
-- Gemini URL: `v1beta/models/gemini-1.5-flash` → `v1/models/gemini-2.0-flash`
-- `call_gemini` now has 3-attempt retry with 30s/60s backoff on HTTP 429
-- Script structure confirmed correct — exits CLEAN when all models error (no false positives)
+**verify_pairs.py changes (session 4):**
+- Gemini model: `gemini-2.0-flash` → `gemini-3.5-flash` (2.0-flash shutdown June 2026)
+- Groq removed entirely — IP geo-blocked in Tanzania (HTTP 403 on all keys, confirmed 2 keys)
+- Cerebras added then removed — also IP geo-blocked in Tanzania (HTTP 403)
+- OpenRouter added — `meta-llama/llama-3.3-70b-instruct:free` — key valid, model confirmed,
+  hits free-tier 429 before responding; not geo-blocked
+- OPENROUTER_API_KEY loads from env var only (hardcoded key blocked by GitHub push protection)
+- Commits: `3624554` (Gemini 3.5-flash), `f39f3f0` (OpenRouter added), `b94d9a8` (model ID confirmed)
 
-**API key status at session end (2026-06-08):**
-- Groq `GROQ_API_KEY`: `403 Forbidden` — key in env is invalid; new key needed from console.groq.com
-- Gemini `GEMINI_API_KEY`: `401 Unauthorized` — new `AQ...` key set but not loaded in session
-- OpenAI `OPENAI_API_KEY`: `429 Too Many Requests` — rate-limited / quota exhausted
+**Data fixes (session 4) — committed `3efae26`:**
+- `batch_001_cleaned.jsonl` — `sdl_001`: "Skills **and** Development Levy" → "Skills Development Levy"
+- `locked_facts.json` — `vat_registration_threshold` pattern `"50 million"` → `"\\b50 million\\b"`
+  (was false-positive matching "2**50** million" in vat_002 answer via substring match)
+- `check_locked_facts.py` result after fix: **CLEAN — 0 violations** on batch_001 (57 pairs)
+
+**plan_next_batch.py installed (session 4) — committed `cedf00e`:**
+- Created from `do.md` command
+- Output: 313 pairs current / 2,687 remaining / 9 batches of 300 needed
+- No gate results file yet (`gate_001_results.json` not present)
+
+**API key status (session 4 end):**
+- Groq: geo-blocked — do not use
+- Cerebras: geo-blocked — do not use
+- Gemini `GEMINI_API_KEY`: **WORKING** — responds on all batches
+- OpenRouter `OPENROUTER_API_KEY`: key valid, model confirmed, free-tier 429 (needs paid tier or retry)
+- OpenAI `OPENAI_API_KEY`: 429 rate limit / quota exhausted
 - ANTHROPIC_API_KEY: not set
 
-**To activate keys without restarting PowerShell:**
+**To run verifier next session:**
 ```powershell
-$env:GEMINI_API_KEY = "AQ..."
-$env:GROQ_API_KEY = "gsk_..."
-python scripts/verify_pairs.py --file datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl --batch-size 57
+$env:OPENROUTER_API_KEY = "sk-or-v1-..."   # your key from openrouter.ai/keys
+python scripts/verify_pairs.py --file datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl --batch-size 10
 ```
-Expected first success: Gemini (key confirmed AQ format) or Groq (if new key from console.groq.com).
 
-**check_locked_facts.py result this session:**
-→ CLEAN — 0 violations on batch_002_cleaned.jsonl (243 pairs) — confirmed still clean
+**Cross-AI review results — batch_001 (57 pairs), Gemini only responding:**
+- 0 consensus flags (OpenRouter not responding = no 2-model agreement possible)
+- 19 single-model Gemini flags — breakdown:
+  - VAT rates (4 pairs): Gemini claims 18%/2%/2% — **pairs are correct** per Finance Act 2025
+  - GN487A date (3 pairs): Gemini claims 28 Jun 2024 — **pairs are correct** (locked: 28 Jul 2025)
+  - GN487A imprisonment (8 pairs): Gemini claims "not less than 12 months" vs pairs say "up to 6 months" — **NEEDS HUMAN VERIFICATION** against TanzLII gazette text
+  - NSSF deadline (1 pair): Gemini claims 30 days/last day vs pairs say 10th — needs check
+  - SDL name (already fixed this session)
+
+**Session checkpoint commit: `cedf00e` — 63 files, 22,195 insertions — pushed to main**
 
 ### 2026-06-07 — FACT-GUARDIAN installed + batch_002 error-corrected — CLEAN d901d64
 
@@ -167,25 +189,38 @@ Target: >85% in-corpus AND >70% refusal. Training on 300 pairs insufficient.
   - `scripts/generate_sft.py` — SFT file generator; produces 261 train / 29 val from 290 non-eval pairs
   - `scripts/hf_clean_upload.py` — HF upload tool (delete old → upload new → verify); do NOT run without intent
 
-**Step 14c:** ✅ REGULATORY-VERIFIER updated (this session):
-  - `scripts/verify_pairs.py` — Gemini 2.0 Flash, v1 endpoint, 30s/60s retry backoff on 429
-  - Retry logic confirmed working (saw 30s+60s waits in live output)
-  - Pending: API keys need activation before first real review run (see Section 2 above)
+**Step 14c:** ✅ REGULATORY-VERIFIER stabilised (session 4) — commit `b94d9a8`:
+  - `scripts/verify_pairs.py` — Gemini 3.5-flash (working) + OpenRouter llama-3.3-70b (valid, 429 on free tier)
+  - Groq and Cerebras removed — both geo-blocked in Tanzania
+  - batch_001 reviewed: 0 consensus flags, 19 Gemini single-model flags (mostly hallucinations)
+  - GN487A imprisonment penalty flag: Gemini claims 12mo minimum vs locked 6mo — verify before next batch
 
-**Step 15a:** ⬜ Activate API keys and run verify_pairs.py on batch_002_cleaned.jsonl (243 pairs)
-  - Use `$env:GEMINI_API_KEY = "AQ..."` and `$env:GROQ_API_KEY = "gsk_..."` in terminal
-  - Run: `python scripts/verify_pairs.py --file datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl --batch-size 10`
-  - Expected: Gemini and/or Groq respond; any flags reviewed and fixed before batch_003
+**Step 14d:** ✅ Data fixes applied and committed `3efae26`:
+  - sdl_001 name corrected, locked_facts.json word-boundary fix — CLEAN on check_locked_facts.py
 
-**Step 15b:** ⬜ Build batch_003 — adversarial pairs targeting the 3 confirmed model failure modes:
+**Step 14e:** ✅ plan_next_batch.py installed — committed `cedf00e`:
+  - 313 pairs / 2,687 remaining / 9 batches of 300 to target
+
+**Step 15:** ⬜ Verify GN487A imprisonment penalty against TanzLII gazette
+  - URL: https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28
+  - Question: is it "up to 6 months" or "not less than 12 months"?
+  - Affects 8 pairs: gn487a_004–009, adv001, adv002
+  - Fix pairs if Gemini is right; add locked fact if pairs are right
+
+**Step 16:** ⬜ Build batch_003 — adversarial pairs targeting the 3 confirmed model failure modes:
   - GN487A confusion (80 pairs) — model says it's about residence permits
   - SDL confusion (50 pairs) — model says "disability leave"
   - VAT invented rates (40 pairs) — model invents 5%/10% reduced rates
-  Total batch_003 target: ~170 adversarial pairs
+  - Out-of-corpus refusal (30 pairs)
+  - NSSF + EFD deep (50 pairs)
+  Total batch_003 target: 300 pairs
 
-**Step 16:** ⬜ Retrain on 300 + batch_003 corpus on Kaggle africa-giants-v2, re-run accuracy gate.
+**Step 17:** ⬜ Run verify_pairs.py on batch_002_cleaned.jsonl (243 pairs) once OpenRouter stops rate-limiting
+  - `python scripts/verify_pairs.py --file datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl --batch-size 10`
 
-**Step 17:** ⬜ Engage TRA consultant for 10% training pair sample review — ~30 pairs, ~TZS 50,000–100,000.
+**Step 18:** ⬜ Retrain on 313 + batch_003 corpus on Kaggle africa-giants-v2, re-run accuracy gate.
+
+**Step 19:** ⬜ Engage TRA consultant for 10% training pair sample review — ~30 pairs, ~TZS 50,000–100,000.
 
 ### Open items on training pairs (not blocking training run)
 - NSSF alternate arrangement (15%/5%) — no training pair covers this yet
@@ -210,12 +245,15 @@ Target: >85% in-corpus AND >70% refusal. Training on 300 pairs insufficient.
 11. ✅ Trained on 300 pairs — adapter prospaprospa007/africa-giants-adapter-v1 pushed
 12. ✅ Accuracy gate run: 67% in-corpus / 40% refusal — FAILED both gates
 13. ✅ FACT-GUARDIAN installed — checker CLEAN on batch_002 (d901d64)
-14. ✅ REGULATORY-VERIFIER updated — Gemini 2.0 Flash + retry backoff (this session)
-15. ⬜ Activate API keys + run verify_pairs.py on batch_002 — get first real cross-AI review
-16. ⬜ Build batch_003 adversarial pairs (GN487A 80 + SDL 50 + VAT 40 = ~170 pairs)
-17. ⬜ Retrain on expanded corpus, re-run accuracy gate
-16. ⬜ Engage TRA consultant for 10% training pair sample review — ~30 pairs, ~TZS 50,000–100,000
-17. ⬜ If gate passes: prepare first human pilot on WhatsApp
+14. ✅ REGULATORY-VERIFIER stabilised — Gemini 3.5-flash + OpenRouter confirmed (b94d9a8)
+15. ✅ Data fixes — sdl_001 name + locked_facts word-boundary fix — CLEAN (3efae26)
+16. ✅ plan_next_batch.py installed — 313 pairs, 9 batches remaining (cedf00e)
+17. ⬜ Verify GN487A imprisonment penalty (6mo vs 12mo) against TanzLII gazette
+18. ⬜ Build batch_003 (300 pairs: GN487A 80 + SDL 50 + VAT 40 + refusal 30 + NSSF/EFD 50 + other 50)
+19. ⬜ Run verify_pairs.py on batch_002_cleaned.jsonl when OpenRouter rate limit clears
+20. ⬜ Retrain on expanded corpus, re-run accuracy gate
+21. ⬜ Engage TRA consultant for 10% training pair sample review — ~30 pairs, ~TZS 50,000–100,000
+22. ⬜ If gate passes: prepare first human pilot on WhatsApp
 
 ---
 
@@ -282,7 +320,7 @@ Target: >85% in-corpus AND >70% refusal. Training on 300 pairs insufficient.
 | Tier 2A: Legibility | 200 | 0 | 0 | 0 | No |
 | Tier 2B: VICOBA | 300 | 0 | 0 | 0 | No |
 | Tier 3 | Reserved | — | — | — | — |
-| **TOTAL** | **1,600** | **300** | **0** | **10** | **No** |
+| **TOTAL** | **1,600** | **313** | **0** | **10** | **No** |
 
 ### Eval Set Status (separate from training pairs)
 | File | Questions written | Questions remaining | Committed | Self-check |
