@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 """
-REGULATORY-VERIFIER — cross-AI review using Cerebras + Gemini + OpenAI.
-Replaces manual Perplexity paste workflow entirely.
+REGULATORY-VERIFIER — cross-AI review for AFRICA-GIANTS training pairs.
 Usage: python scripts/verify_pairs.py --file path/to/batch.jsonl
-Exit: 0 = clean, 1 = flags found
+Exit: 0 = clean, 1 = flags found or no models responded
 
-Models used:
-  - Cerebras (llama3.1-8b) — free tier, no card needed
-  - Gemini (gemini-3.5-flash) — free forever, no card needed
-  - OpenAI gpt-4o-mini — optional,  free credits covers full project
-  - Claude strict (optional if ANTHROPIC_API_KEY set) — adversarial prompt
+CONFIRMED WORKING MODELS (June 2026):
+  - Gemini gemini-3.5-flash — free, confirmed working
+  - OpenRouter meta-llama/llama-3.3-70b-instruct:free — confirmed not geo-blocked
 
-NOTE: Groq removed — IP blocked in Tanzania (403 on all keys).
-NOTE: Brave Search is NOT used — blocked in Tanzania by TRA registration requirement.
-NOTE: Perplexity is NOT used — requires  upfront payment with no free tier.
+NOT USED:
+  - Groq — IP blocked in Tanzania at ISP/Cloudflare level
+  - Cerebras — IP blocked in Tanzania at ISP/Cloudflare level
+  - Brave Search — blocked in Tanzania (TRA registration issue)
+  - Perplexity — requires upfront payment
 """
-import json, sys, os, argparse, urllib.request, urllib.error, re
+import json, sys, os, argparse, urllib.request, urllib.error, time
 from datetime import datetime
 
 REVIEW_PROMPT = """You are a strict Tanzania tax law expert reviewing Q&A training pairs
@@ -54,44 +53,48 @@ Do not add any other text."""
 STRICT_PROMPT = """You are an adversarial Tanzania tax auditor.
 Your ONLY job is to find errors. Assume every answer might be wrong.
 Be especially suspicious of these known base model errors:
-- SDL = disability leave (base model says this — it is wrong)
-- NSSF = 6% (base model says this — it is wrong, should be 10%)
-- PAYE band 2 = 9% (base model says this — it is wrong, should be 8%)
-- GN487A = residence permit order (base model says this — it is wrong)
-- VAT changed from 14% (base model says this — it is wrong)
+- SDL = disability leave (WRONG)
+- NSSF = 6% (WRONG — should be 10%)
+- PAYE band 2 = 9% (WRONG — should be 8%)
+- GN487A = residence permit order (WRONG — business prohibition)
+- VAT changed from 14% (WRONG)
 - P45 form exists in Tanzania (it does not)
 
 Output FLAG: [pair_id] | [field] | [wrong_value] | [correct_value] | [source]
 or CLEAN — nothing else."""
 
 
-def call_cerebras(pairs_text, api_key):
+def call_gemini(pairs_text, api_key):
+    """Google Gemini gemini-3.5-flash — free tier. gemini-2.0-flash shut down June 2026."""
+    full_prompt = REVIEW_PROMPT + "\n\n" + pairs_text
     payload = json.dumps({
-        "model": "llama3.1-8b",
-        "max_tokens": 1000,
-        "messages": [
-            {"role": "system", "content": REVIEW_PROMPT},
-            {"role": "user", "content": pairs_text}
-        ]
+        "contents": [{"parts": [{"text": full_prompt}]}]
     }).encode("utf-8")
-
-    req = urllib.request.Request(
-        "https://api.cerebras.ai/v1/chat/completions",
-        data=payload,
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
-        }
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            result = json.loads(resp.read())
-            return result["choices"][0]["message"]["content"].strip()
-    except Exception as e:
-        return f"CEREBRAS_ERROR: {e}"
+    url = (f"https://generativelanguage.googleapis.com/v1beta/"
+           f"models/gemini-3.5-flash:generateContent?key={api_key}")
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(
+                url, data=payload,
+                headers={"Content-Type": "application/json"}
+            )
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                result = json.loads(resp.read())
+                return (result["candidates"][0]["content"]
+                        ["parts"][0]["text"].strip())
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < 2:
+                wait = 30 * (attempt + 1)
+                print(f"  Gemini 429 — waiting {wait}s then retry...", flush=True)
+                time.sleep(wait)
+            else:
+                return f"GEMINI_ERROR: HTTP {e.code}"
+        except Exception as e:
+            return f"GEMINI_ERROR: {e}"
 
 
 def call_openrouter(pairs_text, api_key):
+    """OpenRouter — not geo-blocked in Tanzania. Free tier confirmed working."""
     payload = json.dumps({
         "model": "meta-llama/llama-3.3-70b-instruct:free",
         "max_tokens": 1000,
@@ -100,7 +103,6 @@ def call_openrouter(pairs_text, api_key):
             {"role": "user", "content": pairs_text}
         ]
     }).encode("utf-8")
-
     req = urllib.request.Request(
         "https://openrouter.ai/api/v1/chat/completions",
         data=payload,
@@ -111,40 +113,24 @@ def call_openrouter(pairs_text, api_key):
             "X-Title": "AFRICA-GIANTS"
         }
     )
-    try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            result = json.loads(resp.read())
-            return result["choices"][0]["message"]["content"].strip()
-    except Exception as e:
-        return f"OPENROUTER_ERROR: {e}"
-
-
-def call_gemini(pairs_text, api_key):
-    """Google Gemini API — free tier."""
-    full_prompt = REVIEW_PROMPT + "\n\n" + pairs_text
-    payload = json.dumps({
-        "contents": [{"parts": [{"text": full_prompt}]}]
-    }).encode("utf-8")
-
-    url = (f"https://generativelanguage.googleapis.com/v1beta/"
-           f"models/gemini-3.5-flash:generateContent?key={api_key}")
-
-    req = urllib.request.Request(
-        url,
-        data=payload,
-        headers={"Content-Type": "application/json"}
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            result = json.loads(resp.read())
-            return (result["candidates"][0]["content"]
-                    ["parts"][0]["text"].strip())
-    except Exception as e:
-        return f"GEMINI_ERROR: {e}"
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                result = json.loads(resp.read())
+                return result["choices"][0]["message"]["content"].strip()
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < 2:
+                wait = 30 * (attempt + 1)
+                print(f"  OpenRouter 429 — waiting {wait}s then retry...", flush=True)
+                time.sleep(wait)
+            else:
+                return f"OPENROUTER_ERROR: HTTP {e.code}"
+        except Exception as e:
+            return f"OPENROUTER_ERROR: {e}"
 
 
 def call_openai(pairs_text, api_key):
-    """OpenAI gpt-4o-mini —  free credits covers full 3,000-pair project."""
+    """OpenAI gpt-4o-mini — optional, free credits covers full project."""
     payload = json.dumps({
         "model": "gpt-4o-mini",
         "max_tokens": 1000,
@@ -153,7 +139,6 @@ def call_openai(pairs_text, api_key):
             {"role": "user", "content": pairs_text}
         ]
     }).encode("utf-8")
-
     req = urllib.request.Request(
         "https://api.openai.com/v1/chat/completions",
         data=payload,
@@ -171,14 +156,13 @@ def call_openai(pairs_text, api_key):
 
 
 def call_claude_strict(pairs_text, api_key):
-    """Claude strict adversarial review — uses claude-haiku for low cost."""
+    """Claude strict adversarial — uses claude-haiku for low cost."""
     payload = json.dumps({
         "model": "claude-haiku-4-5-20251001",
         "max_tokens": 1000,
         "system": STRICT_PROMPT,
         "messages": [{"role": "user", "content": pairs_text}]
     }).encode("utf-8")
-
     req = urllib.request.Request(
         "https://api.anthropic.com/v1/messages",
         data=payload,
@@ -219,27 +203,20 @@ def format_pairs_for_review(pairs, batch_num):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Cross-AI review using Groq + Gemini + optional Claude strict"
+        description="Cross-AI review: Gemini + OpenRouter + optional OpenAI/Claude"
     )
-    parser.add_argument("--file", required=True,
-                        help="Path to JSONL file to verify")
-    parser.add_argument("--log",
-                        default="scripts/verification_log.jsonl",
-                        help="Path to verification log")
-    parser.add_argument("--batch-size", type=int, default=10,
-                        help="Pairs per AI review batch")
+    parser.add_argument("--file", required=True)
+    parser.add_argument("--log", default="scripts/verification_log.jsonl")
+    parser.add_argument("--batch-size", type=int, default=10)
     args = parser.parse_args()
 
     # Load API keys
-    cerebras_key = os.environ.get("CEREBRAS_API_KEY", "")
     gemini_key = os.environ.get("GEMINI_API_KEY", "")
+    openrouter_key = os.environ.get("OPENROUTER_API_KEY", "")
     openai_key = os.environ.get("OPENAI_API_KEY", "")
     claude_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    openrouter_key = os.environ.get("OPENROUTER_API_KEY", "")
 
     available = []
-    if cerebras_key:
-        available.append("cerebras")
     if gemini_key:
         available.append("gemini")
     if openrouter_key:
@@ -251,17 +228,16 @@ def main():
 
     if not available:
         print("ERROR: No API keys found.")
-        print("Set CEREBRAS_API_KEY and/or GEMINI_API_KEY environment variables.")
-        print("Get Cerebras free at: cloud.cerebras.ai")
-        print("Get Gemini free at: aistudio.google.com")
-        print("Get OpenAI at: platform.openai.com (optional,  free credits)")
+        print("Set GEMINI_API_KEY (free: aistudio.google.com)")
+        print("Set OPENROUTER_API_KEY (free: openrouter.ai)")
+        print("NOTE: Groq and Cerebras are IP-blocked in Tanzania")
         sys.exit(1)
 
     print(f"Models available: {', '.join(available)}")
-    print(f"NOTE: Brave Search not used (blocked in Tanzania)")
-    print(f"NOTE: Perplexity not used (requires  upfront payment)\n")
+    print(f"NOTE: Groq/Cerebras not used — IP blocked in Tanzania")
+    print(f"NOTE: Brave Search not used — blocked in Tanzania")
+    print(f"NOTE: Perplexity not used — requires upfront payment\n")
 
-    # Load pairs
     if not os.path.exists(args.file):
         print(f"ERROR: {args.file} not found")
         sys.exit(1)
@@ -291,12 +267,6 @@ def main():
 
         responses = {}
 
-        if cerebras_key:
-            print("  Calling Cerebras...", end=" ", flush=True)
-            responses["cerebras"] = call_cerebras(pairs_text, cerebras_key)
-            status = "ERROR" if "ERROR" in str(responses["cerebras"]) else "done"
-            print(status)
-
         if gemini_key:
             print("  Calling Gemini...", end=" ", flush=True)
             responses["gemini"] = call_gemini(pairs_text, gemini_key)
@@ -317,30 +287,30 @@ def main():
 
         if claude_key:
             print("  Calling Claude strict...", end=" ", flush=True)
-            responses["claude_strict"] = call_claude_strict(
-                pairs_text, claude_key)
-            status = ("ERROR" if "ERROR" in str(responses["claude_strict"])
-                      else "done")
+            responses["claude_strict"] = call_claude_strict(pairs_text, claude_key)
+            status = "ERROR" if "ERROR" in str(responses["claude_strict"]) else "done"
             print(status)
 
-        # Collect all flags
+        # CRITICAL: Check if any model actually responded
+        successful = [r for r in responses.values()
+                      if r and "ERROR" not in str(r)]
+        if not successful:
+            print("  WARNING: No models responded successfully this batch")
+
+        # Parse flags
         batch_flags = []
         for model_name, response in responses.items():
             flags = parse_flags(response, model_name)
             batch_flags.extend(flags)
-
-        # Show results per model
-        for model_name, response in responses.items():
-            flags = parse_flags(response, model_name)
             if "ERROR" in str(response):
                 print(f"  {model_name}: {response}")
             elif flags:
-                for f in flags:
-                    print(f"  FLAG ({model_name}): {f['raw']}")
+                for fl in flags:
+                    print(f"  FLAG ({model_name}): {fl['raw']}")
             else:
                 print(f"  {model_name}: CLEAN")
 
-        # Majority vote: flag pair if 2+ models agree
+        # Majority vote
         flag_by_pair = {}
         for flag in batch_flags:
             try:
@@ -360,12 +330,11 @@ def main():
                 all_flags.extend(pair_flags)
             else:
                 print(f"  SINGLE FLAG [{pair_id}]: "
-                      f"only {models_flagging[0]} — mark for human review")
-                for f in pair_flags:
-                    f["needs_human"] = True
+                      f"only {models_flagging[0]} — human review needed")
+                for fl in pair_flags:
+                    fl["needs_human"] = True
                 all_flags.extend(pair_flags)
 
-    # Write log
     timestamp = datetime.now().isoformat()
     log_entry = {
         "timestamp": timestamp,
@@ -380,7 +349,9 @@ def main():
         "flags": all_flags
     }
 
-    os.makedirs(os.path.dirname(args.log), exist_ok=True)
+    log_dir = os.path.dirname(args.log)
+    if log_dir:
+        os.makedirs(log_dir, exist_ok=True)
     with open(args.log, "a", encoding="utf-8") as log:
         log.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
 

@@ -1,0 +1,129 @@
+# BATCH-PLANNER
+
+## Decision logic for next batch subdomains
+
+### Priority 1: Subdomains below 60% in last accuracy gate
+These need adversarial pairs — not just more standard pairs.
+Adversarial pairs explicitly contradict the wrong answer the model gives.
+
+### Priority 2: Subdomains between 60-75% in last gate
+These need more standard pairs + disambiguation pairs.
+
+### Priority 3: Unbuilt subdomains with zero coverage
+Build 20 standard pairs to establish a foundation.
+
+### Priority 4: Out-of-corpus refusal pairs
+Always include 20 refusal pairs in every batch regardless of gate results.
+Target: >70% out-of-corpus refusal rate.
+
+## Fixed allocation for every 300-pair batch
+| Allocation | Pairs | Rationale |
+|-----------|-------|-----------|
+| Weakest gate subdomain (adversarial) | 80 | Override base model errors |
+| Second weakest subdomain | 50 | Improve coverage |
+| Third weakest subdomain | 40 | Improve coverage |
+| Refusal pairs (out-of-corpus) | 30 | Fix 40% refusal rate |
+| New unbuilt subdomain | 50 | Expand coverage |
+| Edge cases (highest-decay pairs) | 50 | Address annual updates |
+
+## Current priorities (based on gate_001_results.json)
+1. gn487a: 45% → 80 adversarial pairs
+2. sdl_compliance: 56% → 50 correction pairs
+3. vat_registration: 67% → 40 pairs fixing hallucinated reduced rates
+4. out_of_corpus: 40% → 30 refusal pairs
+5. nssf_contributions: 76% → edge cases
+6. New subdomains: EAC prep, WCF details, presumptive tax deep
+
+## Path to 3,000 pairs
+Current: 313 pairs
+Remaining: 2,687 pairs
+Batches needed at 300/batch: 9 more batches
+Estimated sessions at current pace: 9-12 sessions
+
+---
+
+## COMPANION SCRIPT — scripts/plan_next_batch.py
+
+```python
+#!/usr/bin/env python3
+"""
+BATCH-PLANNER — generate next batch plan from gate results and coverage.
+Usage: python scripts/plan_next_batch.py
+"""
+import json, os, glob
+
+GATE_RESULTS_FILE = "gate_001_results.json"
+CLEANED_DIR = "datasets/tier1a/cleaned_pairs"
+TARGET_PAIRS = 3000
+
+ADVERSARIAL_THRESHOLD = 60
+IMPROVEMENT_THRESHOLD = 75
+
+FIXED_REFUSAL_PAIRS = 30
+
+def count_existing_pairs():
+    total = 0
+    subdomain_counts = {}
+    for filepath in glob.glob(f"{CLEANED_DIR}/*.jsonl"):
+        with open(filepath, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    p = json.loads(line)
+                    sub = p.get("subdomain", "unknown")
+                    subdomain_counts[sub] = subdomain_counts.get(sub, 0) + 1
+                    total += 1
+                except json.JSONDecodeError:
+                    pass
+    return total, subdomain_counts
+
+def load_gate_results():
+    if not os.path.exists(GATE_RESULTS_FILE):
+        print(f"No gate results found at {GATE_RESULTS_FILE}")
+        return {}
+    with open(GATE_RESULTS_FILE, encoding="utf-8") as f:
+        return json.load(f)
+
+def main():
+    total, subdomain_counts = count_existing_pairs()
+    gate = load_gate_results()
+
+    print(f"\n{'='*60}")
+    print(f"BATCH PLANNER — AFRICA-GIANTS")
+    print(f"{'='*60}")
+    print(f"Current corpus: {total:,} pairs")
+    print(f"Target: {TARGET_PAIRS:,} pairs")
+    print(f"Remaining: {TARGET_PAIRS - total:,} pairs")
+    print(f"Batches needed (300/batch): {(TARGET_PAIRS - total) // 300 + 1}")
+
+    print(f"\n--- ACCURACY GATE STATUS ---")
+    if gate:
+        for subdomain, score in sorted(gate.items(), key=lambda x: x[1]):
+            if isinstance(score, (int, float)):
+                pct = score * 100 if score <= 1 else score
+                status = (
+                    "ADVERSARIAL NEEDED" if pct < ADVERSARIAL_THRESHOLD
+                    else "MORE PAIRS NEEDED" if pct < IMPROVEMENT_THRESHOLD
+                    else "PASSING"
+                )
+                print(f"  {subdomain:<30} {pct:.1f}%  {status}")
+
+    print(f"\n--- RECOMMENDED NEXT BATCH (300 pairs) ---")
+    print(f"  80 pairs: gn487a (adversarial — base model says 'residence permit')")
+    print(f"  50 pairs: sdl_compliance (adversarial — base model says 'disability leave')")
+    print(f"  40 pairs: vat_registration (base model invents 5% and 10% reduced rates)")
+    print(f"  30 pairs: out_of_corpus refusal pairs")
+    print(f"  50 pairs: nssf_contributions edge cases + NSSF deep")
+    print(f"  50 pairs: new subdomain — efd_compliance_deep or wcf_details")
+
+    print(f"\n--- PAIR TYPE ALLOCATION ---")
+    print(f"  adversarial pairs (explicitly contradict base model error): 40%")
+    print(f"  standard pairs (normal Q&A): 40%")
+    print(f"  disambiguation pairs (this vs that): 10%")
+    print(f"  procedural pairs (step-by-step): 10%")
+
+if __name__ == "__main__":
+    main()
+```
