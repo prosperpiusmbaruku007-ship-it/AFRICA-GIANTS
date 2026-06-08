@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """
-REGULATORY-VERIFIER — cross-AI review using Groq + Gemini + OpenAI.
+REGULATORY-VERIFIER — cross-AI review using Cerebras + Gemini + OpenAI.
 Replaces manual Perplexity paste workflow entirely.
 Usage: python scripts/verify_pairs.py --file path/to/batch.jsonl
 Exit: 0 = clean, 1 = flags found
 
 Models used:
-  - Groq (llama-3.1-8b-instant) — free forever, no card needed
+  - Cerebras (llama3.1-8b) — free tier, no card needed
   - Gemini (gemini-3.5-flash) — free forever, no card needed
   - OpenAI gpt-4o-mini — optional,  free credits covers full project
   - Claude strict (optional if ANTHROPIC_API_KEY set) — adversarial prompt
 
+NOTE: Groq removed — IP blocked in Tanzania (403 on all keys).
 NOTE: Brave Search is NOT used — blocked in Tanzania by TRA registration requirement.
 NOTE: Perplexity is NOT used — requires  upfront payment with no free tier.
 """
@@ -64,10 +65,9 @@ Output FLAG: [pair_id] | [field] | [wrong_value] | [correct_value] | [source]
 or CLEAN — nothing else."""
 
 
-def call_groq(pairs_text, api_key):
-    """Groq API — free tier, Llama 3 model."""
+def call_cerebras(pairs_text, api_key):
     payload = json.dumps({
-        "model": "llama-3.1-8b-instant",
+        "model": "llama3.1-8b",
         "max_tokens": 1000,
         "messages": [
             {"role": "system", "content": REVIEW_PROMPT},
@@ -76,7 +76,7 @@ def call_groq(pairs_text, api_key):
     }).encode("utf-8")
 
     req = urllib.request.Request(
-        "https://api.groq.com/openai/v1/chat/completions",
+        "https://api.cerebras.ai/v1/chat/completions",
         data=payload,
         headers={
             "Content-Type": "application/json",
@@ -88,7 +88,35 @@ def call_groq(pairs_text, api_key):
             result = json.loads(resp.read())
             return result["choices"][0]["message"]["content"].strip()
     except Exception as e:
-        return f"GROQ_ERROR: {e}"
+        return f"CEREBRAS_ERROR: {e}"
+
+
+def call_openrouter(pairs_text, api_key):
+    payload = json.dumps({
+        "model": "meta-llama/llama-3.1-8b-instruct:free",
+        "max_tokens": 1000,
+        "messages": [
+            {"role": "system", "content": REVIEW_PROMPT},
+            {"role": "user", "content": pairs_text}
+        ]
+    }).encode("utf-8")
+
+    req = urllib.request.Request(
+        "https://openrouter.ai/api/v1/chat/completions",
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+            "HTTP-Referer": "https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS",
+            "X-Title": "AFRICA-GIANTS"
+        }
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            result = json.loads(resp.read())
+            return result["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        return f"OPENROUTER_ERROR: {e}"
 
 
 def call_gemini(pairs_text, api_key):
@@ -203,16 +231,19 @@ def main():
     args = parser.parse_args()
 
     # Load API keys
-    groq_key = os.environ.get("GROQ_API_KEY", "")
+    cerebras_key = os.environ.get("CEREBRAS_API_KEY", "")
     gemini_key = os.environ.get("GEMINI_API_KEY", "")
     openai_key = os.environ.get("OPENAI_API_KEY", "")
     claude_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    openrouter_key = os.environ.get("OPENROUTER_API_KEY", "")
 
     available = []
-    if groq_key:
-        available.append("groq")
+    if cerebras_key:
+        available.append("cerebras")
     if gemini_key:
         available.append("gemini")
+    if openrouter_key:
+        available.append("openrouter")
     if openai_key:
         available.append("openai")
     if claude_key:
@@ -220,8 +251,8 @@ def main():
 
     if not available:
         print("ERROR: No API keys found.")
-        print("Set GROQ_API_KEY and/or GEMINI_API_KEY environment variables.")
-        print("Get Groq free at: console.groq.com")
+        print("Set CEREBRAS_API_KEY and/or GEMINI_API_KEY environment variables.")
+        print("Get Cerebras free at: cloud.cerebras.ai")
         print("Get Gemini free at: aistudio.google.com")
         print("Get OpenAI at: platform.openai.com (optional,  free credits)")
         sys.exit(1)
@@ -260,16 +291,22 @@ def main():
 
         responses = {}
 
-        if groq_key:
-            print("  Calling Groq...", end=" ", flush=True)
-            responses["groq"] = call_groq(pairs_text, groq_key)
-            status = "ERROR" if "ERROR" in str(responses["groq"]) else "done"
+        if cerebras_key:
+            print("  Calling Cerebras...", end=" ", flush=True)
+            responses["cerebras"] = call_cerebras(pairs_text, cerebras_key)
+            status = "ERROR" if "ERROR" in str(responses["cerebras"]) else "done"
             print(status)
 
         if gemini_key:
             print("  Calling Gemini...", end=" ", flush=True)
             responses["gemini"] = call_gemini(pairs_text, gemini_key)
             status = "ERROR" if "ERROR" in str(responses["gemini"]) else "done"
+            print(status)
+
+        if openrouter_key:
+            print("  Calling OpenRouter...", end=" ", flush=True)
+            responses["openrouter"] = call_openrouter(pairs_text, openrouter_key)
+            status = "ERROR" if "ERROR" in str(responses["openrouter"]) else "done"
             print(status)
 
         if openai_key:
