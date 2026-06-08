@@ -485,7 +485,7 @@ ALWAYS use os.environ.get("KEY_NAME", "")
 Before every commit run: python scripts/scan_for_keys.py
 
 ### Tanzania-specific network rules
-Groq API — IP blocked at ISP/Cloudflare level
-Cerebras API — IP blocked at ISP/Cloudflare level
+Groq API -- IP blocked at ISP/Cloudflare level (Groq -- blocked)
+Cerebras API -- IP blocked at ISP/Cloudflare level (Cerebras -- blocked)
 Brave Search — blocked by TRA registration requirement
 HuggingFace uploads — use Kaggle if local network blocks DNS
