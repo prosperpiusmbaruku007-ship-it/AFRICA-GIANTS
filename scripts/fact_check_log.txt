@@ -287,3 +287,38 @@ Total: 57 | Flagged: 0
 
 [2026-06-08T09:16:59.858109] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
 Total: 243 | Flagged: 0
+
+[2026-06-08T09:31:31.812235] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 50 | Flagged: 4
+  FLAG [tier1a_gn487a_001_20260608] gn487a_nature: 487.*residence permit
+  FLAG [tier1a_gn487a_002_20260608] gn487a_nature: 487.*kibali cha makazi
+  FLAG [tier1a_gn487a_002_20260608] gn487a_nature: kibali cha makazi.*487
+  FLAG [tier1a_gn487a_002_20260608] gn487a_nature: 487.*residence permit
+  FLAG [tier1a_gn487a_002_20260608] gn487a_nature: residence permit.*487
+  FLAG [tier1a_gn487a_005_20260608] gn487a_nature: 487.*residence permit
+  FLAG [tier1a_gn487a_040_20260608] gn487a_nature: 487.*kibali cha makazi
+  FLAG [tier1a_gn487a_040_20260608] gn487a_nature: kibali cha makazi.*487
+  FLAG [tier1a_gn487a_040_20260608] gn487a_nature: 487.*residence permit
+
+[2026-06-08T09:35:07.974444] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 50 | Flagged: 1
+  FLAG [tier1a_gn487a_001_20260608] gn487a_nature: gn.{0,5}487.*ni amri ya.*makazi
+  FLAG [tier1a_gn487a_001_20260608] gn487a_nature: gn.{0,5}487.*is.*about.*residence permit
+
+[2026-06-08T09:37:15.680428] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 50 | Flagged: 0
+
+[2026-06-08T09:45:33.934813] Checked datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl
+Total: 57 | Flagged: 0
+
+[2026-06-08T09:45:34.406432] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 0
+
+[2026-06-08T09:59:04.268001] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 80 | Flagged: 0
+
+[2026-06-08T10:09:22.578676] Checked datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl
+Total: 57 | Flagged: 0
+
+[2026-06-08T10:09:22.932649] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 0
