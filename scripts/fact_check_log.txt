@@ -322,3 +322,9 @@ Total: 57 | Flagged: 0
 
 [2026-06-08T10:09:22.932649] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
 Total: 243 | Flagged: 0
+
+[2026-06-08T10:16:05.624947] Checked datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl
+Total: 57 | Flagged: 0
+
+[2026-06-08T10:16:05.973170] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 0
