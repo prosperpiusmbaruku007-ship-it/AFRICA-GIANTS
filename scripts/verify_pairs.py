@@ -6,7 +6,7 @@ Exit: 0 = clean, 1 = flags found or no models responded
 
 CONFIRMED WORKING MODELS (June 2026):
   - Gemini gemini-3.5-flash — free, confirmed working
-  - OpenRouter mistralai/mistral-7b-instruct:free — higher rate limits than llama-3.3-70b
+  - OpenRouter meta-llama/llama-3.3-70b-instruct:free (primary) — fallback: mistral-small, qwen-2.5
 
 NOT USED:
   - Groq — IP blocked in Tanzania at ISP/Cloudflare level
@@ -94,39 +94,53 @@ def call_gemini(pairs_text, api_key):
 
 
 def call_openrouter(pairs_text, api_key):
-    """OpenRouter mistral-7b-instruct:free — higher rate limits than llama-3.3-70b."""
-    payload = json.dumps({
-        "model": "mistralai/mistral-7b-instruct:free",
-        "max_tokens": 1000,
-        "messages": [
-            {"role": "system", "content": REVIEW_PROMPT},
-            {"role": "user", "content": pairs_text}
-        ]
-    }).encode("utf-8")
-    req = urllib.request.Request(
-        "https://openrouter.ai/api/v1/chat/completions",
-        data=payload,
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-            "HTTP-Referer": "https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS",
-            "X-Title": "AFRICA-GIANTS"
-        }
-    )
-    for attempt in range(3):
-        try:
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                result = json.loads(resp.read())
-                return result["choices"][0]["message"]["content"].strip()
-        except urllib.error.HTTPError as e:
-            if e.code == 429 and attempt < 2:
-                wait = 45 * (attempt + 1)
-                print(f"  OpenRouter 429 — waiting {wait}s then retry...", flush=True)
-                time.sleep(wait)
-            else:
-                return f"OPENROUTER_ERROR: HTTP {e.code}"
-        except Exception as e:
-            return f"OPENROUTER_ERROR: {e}"
+    """OpenRouter fallback chain: llama-3.3-70b → mistral-small → qwen-2.5."""
+    models = [
+        "meta-llama/llama-3.3-70b-instruct:free",
+        "mistralai/mistral-small-24b-instruct-2501:free",
+        "qwen/qwen-2.5-7b-instruct:free",
+    ]
+    for model in models:
+        for attempt in range(2):
+            try:
+                payload = json.dumps({
+                    "model": model,
+                    "max_tokens": 1000,
+                    "messages": [
+                        {"role": "system", "content": REVIEW_PROMPT},
+                        {"role": "user", "content": pairs_text}
+                    ]
+                }).encode("utf-8")
+                req = urllib.request.Request(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    data=payload,
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {api_key}",
+                        "HTTP-Referer": "https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS",
+                        "X-Title": "AFRICA-GIANTS"
+                    }
+                )
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    result = json.loads(resp.read())
+                    text = result["choices"][0]["message"]["content"].strip()
+                    print(f"  OpenRouter ({model.split('/')[1]}): responded",
+                          flush=True)
+                    return text
+            except urllib.error.HTTPError as e:
+                if e.code == 429 and attempt == 0:
+                    print(f"  OpenRouter ({model}) 429 — waiting 45s...",
+                          flush=True)
+                    time.sleep(45)
+                elif e.code in (404, 403):
+                    print(f"  OpenRouter ({model}) {e.code} — trying next model",
+                          flush=True)
+                    break
+                else:
+                    return f"OPENROUTER_ERROR: HTTP {e.code}"
+            except Exception as e:
+                return f"OPENROUTER_ERROR: {e}"
+    return "OPENROUTER_ERROR: all models failed"
 
 
 def call_openai(pairs_text, api_key):
