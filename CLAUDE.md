@@ -391,3 +391,101 @@ GitHub: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
 ---
 
 See PROGRESS.md for current project status and next actions.
+
+---
+## MANDATORY SKILLS — activate automatically
+## Last updated: 2026-06-07 — 13 skills total
+
+### Cross-AI review models (verify_pairs.py)
+CONFIRMED WORKING (June 2026):
+  Gemini gemini-3.5-flash — free at aistudio.google.com
+  OpenRouter meta-llama/llama-3.3-70b-instruct:free — free at openrouter.ai
+IP-BLOCKED IN TANZANIA — do NOT use:
+  Groq — blocked at ISP/Cloudflare level
+  Cerebras — blocked at ISP/Cloudflare level
+DO NOT USE (other reasons):
+  Brave Search — blocked by TRA registration requirement
+  Perplexity — requires $5 upfront payment
+Keys to set: GEMINI_API_KEY, OPENROUTER_API_KEY
+Optional: OPENAI_API_KEY, ANTHROPIC_API_KEY
+
+### Before every git commit or push
+Read .claude/skills/git-push-guard/SKILL.md
+Run: python scripts/scan_for_keys.py
+Do NOT commit if exit code 1. Remove keys first.
+Use os.environ.get("KEY_NAME", "") instead of hardcoded keys.
+
+### Before writing any pair to disk
+Read .claude/skills/fact-guardian/SKILL.md
+Run: python scripts/check_locked_facts.py --file [batch_file]
+Do NOT save if exit code 1. Fix the pair first.
+
+### Before any pair with a primary_source_url
+Read .claude/skills/source-enforcer/SKILL.md
+Run: python scripts/check_sources.py --file [batch_file]
+Do NOT save if exit code 1.
+
+### After every 50 pairs written to memory
+Read .claude/skills/checkpoint-saver/SKILL.md
+Save immediately to disk. Never hold more than 50 pairs.
+
+### At start of every batch writing task
+Read .claude/skills/dedup-guard/SKILL.md
+Run: python scripts/build_question_index.py
+
+### Before every git commit touching datasets/
+Read .claude/skills/pair-validator/SKILL.md
+Run all 4 checks. Only commit if all return exit code 0.
+
+### Before any Kaggle training session
+Read .claude/skills/training-preflight/SKILL.md
+Print the 8-point checklist. Wait for founder confirmation.
+
+### Before generating SFT files for HuggingFace
+Read .claude/skills/eval-split-enforcer/SKILL.md
+Run: python scripts/check_eval_split.py
+Only proceed if exit code 0.
+Then read .claude/skills/hf-uploader/SKILL.md
+Run: python scripts/clean_temp_files.py --scan
+Run: python scripts/clean_temp_files.py --clean if needed
+Then: python scripts/generate_sft.py
+Then delete old Parquet files. Then upload new files.
+
+### After every 50-pair CHECKPOINT-SAVER save
+Read .claude/skills/regulatory-verifier/SKILL.md
+Run: python scripts/verify_pairs.py --file [batch_file]
+If flags found: Read .claude/skills/flagged-pair-router/SKILL.md
+Route flagged pairs to datasets/tier1a/flagged/ subfolders.
+Only commit clean pairs.
+
+### At start of any batch building session
+Read .claude/skills/temp-file-cleaner/SKILL.md
+Run: python scripts/clean_temp_files.py --scan
+Run: python scripts/clean_temp_files.py --clean if needed
+Then read .claude/skills/batch-planner/SKILL.md
+Run: python scripts/plan_next_batch.py
+Show output before writing any pairs.
+
+### When Finance Act or new GN is published
+Read .claude/skills/locked-facts-updater/SKILL.md
+Update scripts/locked_facts.json with new value.
+Add old value to wrong_patterns.
+Scan all cleaned pairs for old value.
+Fix flagged pairs before next training run.
+Run every July when Finance Act is published.
+
+### Flagged pairs folder structure
+datasets/tier1a/flagged/consensus_blocked/   — 2+ models agree: fix before commit
+datasets/tier1a/flagged/needs_human_review/  — 1 model flags: founder reviews
+datasets/tier1a/flagged/resolved/            — fixed pairs audit trail
+
+### API key storage rule
+NEVER hardcode API keys in any file.
+ALWAYS use os.environ.get("KEY_NAME", "")
+Before every commit run: python scripts/scan_for_keys.py
+
+### Tanzania-specific network rules
+Groq API — IP blocked at ISP/Cloudflare level
+Cerebras API — IP blocked at ISP/Cloudflare level
+Brave Search — blocked by TRA registration requirement
+HuggingFace uploads — use Kaggle if local network blocks DNS
