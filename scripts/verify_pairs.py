@@ -6,7 +6,7 @@ Exit: 0 = clean, 1 = flags found or no models responded
 
 CONFIRMED WORKING MODELS (June 2026):
   - Gemini gemini-3.5-flash — free, confirmed working
-  - OpenRouter meta-llama/llama-3.3-70b-instruct:free — confirmed not geo-blocked
+  - OpenRouter mistralai/mistral-7b-instruct:free — higher rate limits than llama-3.3-70b
 
 NOT USED:
   - Groq — IP blocked in Tanzania at ISP/Cloudflare level
@@ -94,9 +94,9 @@ def call_gemini(pairs_text, api_key):
 
 
 def call_openrouter(pairs_text, api_key):
-    """OpenRouter — not geo-blocked in Tanzania. Free tier confirmed working."""
+    """OpenRouter mistral-7b-instruct:free — higher rate limits than llama-3.3-70b."""
     payload = json.dumps({
-        "model": "meta-llama/llama-3.3-70b-instruct:free",
+        "model": "mistralai/mistral-7b-instruct:free",
         "max_tokens": 1000,
         "messages": [
             {"role": "system", "content": REVIEW_PROMPT},
@@ -120,7 +120,7 @@ def call_openrouter(pairs_text, api_key):
                 return result["choices"][0]["message"]["content"].strip()
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < 2:
-                wait = 30 * (attempt + 1)
+                wait = 45 * (attempt + 1)
                 print(f"  OpenRouter 429 — waiting {wait}s then retry...", flush=True)
                 time.sleep(wait)
             else:
@@ -297,18 +297,22 @@ def main():
         if not successful:
             print("  WARNING: No models responded successfully this batch")
 
-        # Parse flags
+        # Parse flags and show per-model status
         batch_flags = []
         for model_name, response in responses.items():
-            flags = parse_flags(response, model_name)
-            batch_flags.extend(flags)
             if "ERROR" in str(response):
-                print(f"  {model_name}: {response}")
-            elif flags:
-                for fl in flags:
-                    print(f"  FLAG ({model_name}): {fl['raw']}")
-            else:
+                print(f"  {model_name}: {str(response)[:80]}")
+            elif response and response.strip() == "CLEAN":
                 print(f"  {model_name}: CLEAN")
+            elif response:
+                flags = parse_flags(response, model_name)
+                print(f"  {model_name}: responded ({len(response)} chars)")
+                if flags:
+                    for fl in flags:
+                        print(f"    FLAG: {fl['raw']}")
+                batch_flags.extend(flags)
+            else:
+                print(f"  {model_name}: (no response)")
 
         # Majority vote
         flag_by_pair = {}
