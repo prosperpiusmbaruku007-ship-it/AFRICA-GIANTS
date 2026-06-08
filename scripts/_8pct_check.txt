@@ -1,0 +1,16 @@
+﻿Pairs with 8%: 3
+
+ID: tier1a_paye_005_20260603
+Subdomain: paye
+SW: Viwango vya PAYE Tanzania Bara (Finance Act 2025): TZS 0–270,000/mwezi: 0%; TZS 270,001–520,000: 8% ya ziada; TZS 520,001–760,000: 20% ya ziada + TZS 20,000; TZS 760,001–1,000,000: 25% ya ziada + TZS 68,000; zaidi ya TZS 1,000,000: 30% ya ziada + TZS 128,000. Thibitisha na TRA baada ya kila Finance 
+EN: Tanzania Mainland PAYE bands (Finance Act 2025): TZS 0–270,000/month: 0%; TZS 270,001–520,000: 8% on excess; TZS 520,001–760,000: 20% on excess + TZS 20,000; TZS 760,001–1,000,000: 25% on excess + TZS 68,000; over TZS 1,000,000: 30% on excess + TZS 128,000. Confirm with TRA after each Finance Act.
+
+ID: tier1a_gn605a_019_20260603
+Subdomain: gn605a
+SW: Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. PAYE ya mwezi: TZS 4,199. Thibitisha hesabu na TRA.
+EN: Gross wage TZS 358,322. Deduct employee NSSF (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. PAYE bands: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. Monthly PAYE: TZS 4,199. Confirm the calculation with TRA.
+
+ID: tier1a_vat_edge_004_20260603
+Subdomain: vat_edge_cases
+SW: VAT ya asilimia 18 inastahili kwa uingizaji wa bidhaa zinazostahili kutoka nje ya Tanzania Bara. Uingizaji wa huduma pia unastahili VAT. Sheria za kawaida za Forodha zinatumika. Thibitisha mahitaji ya VAT ya uingizaji na TRA na Forodha.
+EN: 18% VAT applies to the importation of taxable goods from outside Tanzania Mainland. Importation of services is also subject to VAT. Normal Customs laws and procedures apply. Confirm import VAT requirements with TRA and Customs.

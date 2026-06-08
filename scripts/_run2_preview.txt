@@ -1,0 +1,52 @@
+﻿
+=== tier1a_permit_001_20260603 ===
+SW: Mgeni anayeajiriwa na kampuni Tanzania anahitaji Kibali cha Makazi daraja C (Residence Permit Class C) — kibali cha kufanya kazi. Kibali hutolewa na Idara ya Uhamiaji. Mgeni lazima awe na mwajiri rasmi kabla ya kuomba kibali. Thibitisha na Idara ya Uhamiaji.
+EN: A foreign national employed by a company in Tanzania needs a Class C Residence Permit — a work permit. It is issued by the Immigration Department. The foreigner must have a formal employer before applying. Confirm with the Immigration Department.
+
+=== tier1a_permit_002_20260603 ===
+SW: Mwekezaji mgeni anayefanya biashara kwa akaunti yake mwenyewe anahitaji Kibali cha Makazi daraja B (Residence Permit Class B) — kinachojulikana kama kibali cha mwekezaji. Kinatolewa kwa wanaofanya uwekezaji unaokidhi vigezo vya TIC. Thibitisha na Idara ya Uhamiaji na TIC.
+EN: A foreign investor running a business on their own account needs a Class B Residence Permit — known as an investor permit. It is granted to those making investments meeting TIC criteria. Confirm with the Immigration Department and TIC.
+
+=== tier1a_permit_008_20260603 ===
+SW: Hapana. GN 487A inaweka marufuku ya aina ya shughuli — hata kibali cha kazi halimruhusu mgeni kufanya shughuli zilizoorodheshwa kwenye amri. Sheria hizi mbili zinatumika pamoja. Thibitisha na Idara ya Uhamiaji na mshauri wa kisheria.
+EN: No. GN 487A restricts the type of activity — even a work permit does not authorise a non-citizen to conduct activities listed in the order. Both laws apply concurrently. Confirm with the Immigration Department and a legal adviser.
+
+=== tier1a_permit_014_20260603 ===
+SW: Ada ya kibali cha makazi daraja C inaweza kutofautiana kulingana na muda na aina ya kazi. Karibu na USD 500–2,000 kwa mwaka — lakini thibitisha ada halisi za sasa na Idara ya Uhamiaji kupitia tovuti immigration.go.tz, kwani ada zinaweza kubadilika.
+EN: The Class C residence permit fee varies depending on duration and type of employment. Approximately USD 500–2,000 per year — but confirm the current exact fees with the Immigration Department at immigration.go.tz, as fees may change.
+
+=== tier1a_wh_007_20260603 ===
+SW: Kiwango cha kodi ya zuio ya mrabaha ni asilimia 15 kwa wakazi na asilimia 10 kwa wasio wakazi. Thibitisha na TRA.
+EN: The withholding tax rate on royalties is 15% for residents and 10% for non-residents. Confirm with TRA.
+
+=== tier1a_income_tax_003_20260603 ===
+SW: Kodi ya awali ni malipo ya mapema ya kodi ya mapato yanayofanywa wakati wa mwaka wa fedha kabla return ya mwisho haijafungwa. Kampuni inalipa kwa awamu tatu: awamu ya kwanza ifikapo mwisho wa mwezi wa 6 wa mwaka wa fedha, ya pili ifikapo mwisho wa mwezi wa 9, na ya tatu ifikapo mwisho wa mwezi wa 12. Kila awamu ni sawa na robo ya kodi inayokadiriwa ya mwaka. Tofauti kati ya kodi ya awali iliyolipwa na kodi halisi ya mwaka inalipwa au kurudishwa wakati return ya mwisho inawasilishwa.
+EN: Provisional tax is an advance payment of income tax made during the financial year before the final return is filed. A company pays in three instalments: first instalment by the end of month 6 of the financial year, second by end of month 9, and third by end of month 12. Each instalment equals approximately one quarter of the estimated annual tax. The difference between provisional tax paid and the actual annual tax is settled or refunded when the final return is filed.
+
+=== tier1a_stamp_duty_004_20260603 ===
+SW: Kodi ya stempu kwenye mabadiliko ya mali isiyohamia (exchange of property) ni asilimia 0.5 kwa TZS 100,000 ya kwanza ya thamani, kisha asilimia 1 ya thamani inayozidi TZS 100,000. Zaidi ya hilo, uhamishaji wa ardhi na nyumba unaweza pia kuathiriwa na Kodi ya Faida ya Mtaji (Capital Gains Tax). Thibitisha mahesabu na mshauri wa kodi kwa miamala mikubwa ya mali isiyohamia.
+EN: Stamp duty on an exchange of immovable property (land or buildings) is 0.5% on the first TZS 100,000 of value, then 1% on the value exceeding TZS 100,000. Additionally, transfer of land and buildings may also attract Capital Gains Tax. Confirm calculations with a tax consultant for large immovable property transactions.
+
+=== tier1a_tax_disp_001_20260603 ===
+SW: Unaweza kupinga tathmini ya TRA kwa kuwasilisha hoja ya pingamizi rasmi (notice of objection) kwa Kamishna wa TRA ndani ya siku 30 baada ya kupokea tathmini. Hoja lazima iwe kwa maandishi na ieleze kwa undani sababu za kisheria za kupingana na tathmini, ikiambatana na ushahidi wa kutosha (rekodi za uhasibu, risiti, mikataba). Kamishna atapitia hoja na kutoa uamuzi ndani ya siku 90. Muhimu: Siku 30 za kuwasilisha hoja ni muda wa kisheria usiopanuliwa kwa urahisi — usipoteze muda.
+EN: You can dispute a TRA assessment by submitting a formal notice of objection to the TRA Commissioner General within 30 days of receiving the assessment. The objection must be in writing and explain in detail the legal grounds for disputing the assessment, accompanied by sufficient evidence (accounting records, receipts, contracts). The Commissioner will review the objection and issue a decision within 90 days. Important: the 30-day period for filing an objection is a statutory deadline not easily extended — do not waste time.
+
+=== tier1a_tax_disp_002_20260603 ===
+SW: Kwa ujumla muda wa siku 30 ni mgumu kuongezwa. Sheria ya Mapato ya Kodi (Tax Revenue Appeals Act) inaweka muda huu kama masharti ya awali — kushindwa kuwasilisha ndani ya siku 30 kunaweza kusababisha hoja yako kutokubalika. Hata hivyo, kwa hali za kipekee za nguvu ya lazima (force majeure) au ushahidi wa thabiti kwamba haikuwezekana kuwasilisha kwa wakati, Kamishna anaweza kwa hiari kuruhusu upanuzi. Hii ni nadra sana. Kila wakati, boresha hoja na uwasilishe ndani ya siku 30 — usitegemee kupata upanuzi.
+EN: Generally the 30-day period is very difficult to extend. The Tax Revenue Appeals Act treats this period as a condition precedent — failing to file within 30 days may result in your objection being rejected as inadmissible. However, in exceptional cases of genuine force majeure or strong evidence that filing was genuinely impossible, the Commissioner may at discretion allow an extension. This is very rare. Always prepare your objection and file within 30 days — do not rely on getting an extension.
+
+=== tier1a_tax_disp_003_20260603 ===
+SW: TRAB ndiyo hatua ya pili ya rufaa baada ya hoja ya pingamizi kutofanikiwa kwa Kamishna. Ikiwa Kamishna wa TRA ametoa uamuzi dhidi yako, unaweza kupiga rufaa kwa TRAB ndani ya siku 30 baada ya kupokea uamuzi wa Kamishna. TRAB ni mahakama ya pekee ya kodi yenye wajumbe wa mwanasheria, mtaalamu wa kodi, na mfanyabiashara. TRAB inasikia mashauri, inachunguza ushahidi, na inatoa uamuzi. Ikiwa bado hujaridhika na uamuzi wa TRAB, unaweza kwenda Mahakama ya Rufaa ya Mapato ya Kodi (Tax Revenue Appeals Tribunal).
+EN: TRAB is the second stage of appeals after an objection to the Commissioner is unsuccessful. If the TRA Commissioner has ruled against you, you may appeal to TRAB within 30 days of receiving the Commissioner's decision. TRAB is a specialised tax court comprising a legal member, a tax expert, and a business representative. TRAB hears submissions, examines evidence, and issues a ruling. If still unsatisfied with TRAB's decision, you may proceed to the Tax Revenue Appeals Tribunal.
+
+=== tier1a_inc_tax_deep_001_20260603 ===
+SW: Kodi ya mapato ya kampuni (corporation tax) kwa faida ya TZS 50,000,000: Kiwango cha kawaida = 30%. Kodi = TZS 50,000,000 × 30% = TZS 15,000,000. Hii inalipwa: kwa awali (provisional tax) kwa awamu nne wakati wa mwaka — Machi, Juni, Septemba, Desemba. Tofauti yoyote kati ya kodi ya awali iliyolipwa na kodi halisi ya mwaka inalipwa au kurudishwa wakati return ya mwisho inawasilishwa ndani ya miezi 6 baada ya mwisho wa mwaka. Kampuni iliyoorodheshwa DSE inalipa 25% badala ya 30%.
+EN: Corporation tax on profit of TZS 50,000,000: Standard rate = 30%. Tax = TZS 50,000,000 × 30% = TZS 15,000,000. This is paid: in advance (provisional tax) in four instalments during the year — March, June, September, December. Any difference between provisional tax paid and actual annual tax is settled or refunded when the final return is filed within 6 months after year end. A DSE-listed company pays 25% instead of 30%.
+
+=== tier1a_inc_tax_deep_010_20260603 ===
+SW: Kodi ya awali inakokotolewa kwa njia mbili zinazoruhusiwa: (1) Mbinu ya mwaka uliopita: kila awamu = kodi halisi ya mwaka uliopita ÷ 4. Hii ni njia rahisi lakini inaweza kulazimisha ulipie zaidi ikiwa faida imeshuka. (2) Mbinu ya makisio ya mwaka huu: kampuni inakadiri faida ya mwaka huu na kuhesabu kodi inayotarajiwa, kisha inagawanya katika awamu 4. Njia hii inafaa zaidi ikiwa mwaka huu una mabadiliko makubwa ya faida. Kampuni inaweza kuwasilisha makisio yaliyorekebishwa (revised estimates) ikiwa hali inabadilika. Makisio lazima yawasilishwe kwenye tarehe za awamu.
+EN: Provisional tax is calculated using two permitted methods: (1) Prior year method: each instalment = prior year actual tax ÷ 4. This is straightforward but may lead to overpayment if profit has declined. (2) Current year estimate method: the company estimates current year profit and calculates expected tax, then divides into 4 instalments. This method is more appropriate if the current year has significant profit changes. A company may submit revised estimates if circumstances change. Estimates must be filed by the instalment due dates.
+
+=== tier1a_inc_tax_deep_011_20260603 ===
+SW: Sheria ya Kodi ya Mapato Tanzania ina kifungu kinachoweza kusababisha kampuni kulipa kodi ndogo ya chini ya 0.3% ya mapato ghafi (turnover minimum tax) kama imetangaza hasara kwa miaka mitatu mfululizo na haijalipi kodi yoyote. Hii ni hatua ya kuzuia kampuni kutumia hasara za bandia. Kodi hii inalipwa hata kama kampuni ina hasara halisi. Pia, TRA inaweza kuchunguza sababu za hasara zinazoendelea kuangalia kama kuna udanganyifu wa kodi. Ikiwa hasara ni ya kweli, wasiliana na TRA mapema na uwe na rekodi nzuri za uhasibu.
+EN: Tanzania's Income Tax Act has a provision that may require a company to pay a minimum tax of 0.3% of gross turnover if it has declared losses for three consecutive years and paid no tax. This is a measure to prevent companies from using artificial losses. This tax is paid even if the company has genuine losses. Additionally, TRA may investigate the reasons for persistent losses to check for tax fraud. If the losses are genuine, communicate with TRA early and maintain good accounting records.

@@ -1,0 +1,19 @@
+﻿C14 Fixed paye_extended_004
+C15 Fixed paye_extended_018: Mwajiri anatoa Hati ya Kuacha Kazi au sehemu husika ya Fomu P9 inayoonyesha jumla ya mapato na PAYE 
+C16 Fixed paye_017
+C17 Fixed paye_018: Ndiyo. Malipo ya mkurugenzi wa kampuni yanastahili PAYE. Kama mkurugenzi si mfanyakazi wa wakati kamili, yanaweza kustahili kodi ya zuio (withholding tax) badala ya PAYE — kiwango ni asilimia 15 kwa wakazi na asilimia 20 kwa wasio wakazi. Thibitisha aina ya mkurugenzi na TRA.
+C18 Fixed brela_chg_004
+C19 Fixed brela_chg_001
+C20 Fixed tier1a_biz_lic_004_20260603
+C20 tier1a_biz_lic_009_20260603: no TFDA references found — no change needed
+C21 Fixed income_tax_007
+C22 Fixed gn605a_007
+C23 Fixed compliance_004
+C24 Fixed compliance_002
+C25 Fixed compliance_009
+
+Run 3 complete. Total pairs changed: 12
+Changed IDs: ['tier1a_biz_lic_004_20260603', 'tier1a_brela_chg_001_20260603', 'tier1a_brela_chg_004_20260603', 'tier1a_compliance_002_20260603', 'tier1a_compliance_004_20260603', 'tier1a_compliance_009_20260603', 'tier1a_gn605a_007_20260603', 'tier1a_income_tax_007_20260603', 'tier1a_paye_017_20260603', 'tier1a_paye_018_20260603', 'tier1a_paye_extended_004_20260603', 'tier1a_paye_extended_018_20260603']
+
+NOTES/FLAGS:
+ - NOTE C24: replaced full parenthetical '(kawaida siku chache)' rather than inner text only — avoids nested parens per do.md literal instruction

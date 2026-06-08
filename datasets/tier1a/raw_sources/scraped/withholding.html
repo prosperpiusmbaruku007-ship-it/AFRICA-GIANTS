@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Juma Wahabu Mkwizu & Halfa Mnyimvua">
+  <meta name="google-site-verification" content="8L91-nzjoidEZDzczkqGMLevGEfhUjPl4TsPR9Ktasw" />
+ <meta name="description" content=" Introduction:Withholding tax is the amount of tax retained by one person when making payments to another person in respect of goods supplied or services rendered by the payee. A person receiving or entitled to receive a payment from which income tax is required to be withheld is a withholdee…  " />
+
+  <title>   TRA - Withholding tax  </title>
+  <link rel="icon" type="image/x-icon" href="/public/dist/images/favicon.ico">
+  <link href="/public/dist/fontawesome/css/fontawesome.css" rel="stylesheet" type="text/css" />
+  <link href="/public/dist/fontawesome/css/brands.css" rel="stylesheet" type="text/css" />
+  <link href="/public/dist/fontawesome/css/solid.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="/public/node_modules/datatables.net/css/dataTables.min.css" >
+ <!-- <link rel="stylesheet" href="/public/node_modules/tw-elements/dist/css/index.min.css" type="text/css">-->
+  <link href="/public/dist/calendar/lib/main.min.css" rel="stylesheet" type="text/css" />
+  <link href="/public/dist/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css" />
+  <link href="/public/dist/animate/dist/aos.css" rel="stylesheet" type="text/css" >
+  <link href="/public/dist/app.css" rel="stylesheet" type="text/css">
+  <link href="/public/dist/custom-tabs.css" rel="stylesheet" type="text/css" >
+  <link type="text/css" rel="stylesheet" href="/public/node_modules/lightgallery/css/lightgallery-bundle.css" />
+    <link rel="stylesheet" href="/public/dist/magnific-popup/magnific-popup.css">
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R0LFQ9GD4K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-R0LFQ9GD4K');
+</script>
+<style>
+#news-body img {
+    display: inline;
+}
+</style>
+ </head>
+<body class=" text-gray-600 text-justify text-xs" style= "font-family: 'Nunito', sans-serif;">
+
+  <div id="nav"></div>
+  <!--help buttons start-->
+
+
+  <div class=" px-4 py-2 z-50 fixed left-0 bottom-2">
+        <div class="flex flex-col">
+          <div class="flex flex-col items-center  justify-center font-bold ">
+            <a href="https://taxpayerportal.tra.go.tz/#/tax-evasion/form" target="_blank">
+              <!-- <div class="flex flex-col items-center  justify-center font-bold ">
+                <div class="rounded-t-lg bg-yellow-active py-2 px-4 animate-bounce ">
+                  <i  class="fa fa-bullhorn text-black"></i>&nbsp; <span class="text-black text-sm mt-1">Tax Evasion</span>
+                </div>
+              </div> -->
+
+              <div class="flex xflex-col items-center  justify-center font-bold ">
+                <div class="rounded-t-lg bg-yellow-active py-2 px-4 animate-bounce flex flex-row">
+                  <img src="/public/dist/svg/whistle.svg"  class=" w-4 h-4 ml-1 font-bold text-yellow-active ">&nbsp; 
+                  <span class="text-black text-sm hidden md:block">Report Tax Evasion</span>
+                  <span class="text-black text-sm block md:hidden">Tax Evasion</span>
+
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+  <!-- <div class="hidden md:block px-4 py-2 z-50 fixed left-1/2 bottom-2">
+        <div class="flex flex-col ">
+          <div class="flex flex-col items-center  justify-center font-bold ">
+            <a href="/page/sikika">
+              <div class="flex flex-col items-center  justify-center font-bold ">
+                <div class="rounded-t-lg bg-yellow-active py-2 px-4 animate-bounce ">
+                  <i  class="fa fa-bullhorn fa-2x"></i>&nbsp; <span class="text-black text-sm mt-1">Sikika App</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>-->
+
+
+
+  <div class="fixed right-0 bottom-2 flex flex-col z-50" >
+    <!-- First item -->
+    <div class="px-4 py-2 ">
+      <button id="to-top-button" onclick="goToTop()" title="Back To Top" class="hidden fixed right-0 bottom-0 mr-4 p-4 border-0 w-14 h-14 rounded-full shadow-md bg-yellow-active hover:bg-cp-white text-black text-lg font-semibold transition-colors duration-300 mb-16">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+          <path d="M12 4l8 8h-6v8h-4v-8H4l8-8z" />
+        </svg>
+        <span class="sr-only">Back To Top</span>
+      </button>
+    </div>
+      <!-- Second item -->
+      <div class=" px-4 py-2 z-50 fixed right-0 bottom-2">
+        
+        <div class="flex flex-col ">
+          <div class="flex flex-col items-center  justify-center font-bold ">
+           <!--<a href="http://gateway.tra.go.tz/maadili/English.aspx" target="_blank">-->
+
+            <!--<a href="https://paymentregistration.tra.go.tz/maadili/English.aspx" target="_blank">-->
+            <!--<a href="/page/sikika"> -->
+           <a href="https://taxpayerportal.tra.go.tz/#/misconducts/form/report-misconducts" target="_blank">
+              <div class="flex flex-col items-center  justify-center font-bold ">
+                <div class="rounded-t-lg bg-yellow-active py-2 px-4 animate-bounce flex flex-row">
+                  <img src="/public/dist/svg/alert.svg"  class=" w-4 h-4 fa fa-4x ml-1 font-bold text-yellow-active ">&nbsp; 
+                  <span class="text-black text-sm hidden md:block">Report Staff Misconduct</span>
+                  <span class="text-black text-sm block md:hidden">Staff Misconduct</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+
+    <header class="sticky top-0 z-50" >
+    <section class="xh-12 h-8 bg-black text-white z-40 px-4 py-1">
+         <!-- <section class="h-20 md:h-12 bg-black text-white z-40 px-4 md:pt-4"> -->
+
+      <div class="container mx-auto py-1">
+        <div class="flex justify-between">
+           <div >
+
+<!-- <button class=" relative inline-flex items-center justify-center px-6 py-2 bg-cp-yellow rounded-full text-black text-sm hover:bg-yellow-400 transition">
+    <span class="absolute inline-flex h-full w-full rounded-full bg-cp-yellow opacity-75 animate-slowping"></span>
+    
+    <a href="https://ee.kobotoolbox.org/x/4ejPbjJM" class="z-10" target="_blank"> Client Service Charter Survey </a>
+    
+</button>
+-->
+
+
+           <!--  <button class=" relative inline-flex items-center justify-center px-6 py-2 bg-cp-yellow rounded-full text-black md:font-bold text-sm hover:bg-yellow-400 transition">
+              <span class="absolute inline-flex h-full w-full rounded-full bg-cp-yellow opacity-75 animate-slowping"></span>
+              <span class="relative z-10 hidden md:block">
+                
+                   <a href="https://ee.kobotoolbox.org/x/4ejPbjJM" target="_blank"> Client Service Charter Survey </a>
+                
+
+              </span>
+              <span class="relative z-10 md:hidden ">
+                 
+                   <a href="https://ee.kobotoolbox.org/x/4ejPbjJM" target="_blank"> Client Service <br>Charter Survey </a>
+                
+              </span>
+            </button> -->
+
+            <!-- <button class=" relative inline-flex items-center justify-center px-6 py-2 bg-cp-yellow rounded-full text-black md:font-bold text-sm hover:bg-yellow-400 transition">
+              <span class="absolute inline-flex h-full w-full rounded-full bg-cp-yellow opacity-75 animate-slowping"></span>
+              <span class="relative z-10 hidden md:block">
+                
+                   <a href="https://forms.office.com/r/7qwF63kwCs" target="_blank"> Innovation Idea Submission Form </a>
+                
+
+              </span>
+              <span class="relative z-10 md:hidden ">
+                 
+                   <a href="https://forms.office.com/r/7qwF63kwCs" target="_blank"> Innovation Idea Submission </a>
+                
+              </span>
+            </button> -->
+            <!-- <a href="https://web.facebook.com/profile.php?id=61581933914749" target="_blank" class="hover:text-yellow-500">
+              <i class="fa-brands fa-facebook-f h-full"></i>
+            </a>
+            <a href="https://twitter.com/TRATanzania" target="_blank" class="hover:text-yellow-500">
+              <i class="fa-brands fa-x-twitter h-full"></i>
+            </a>
+            <a href="https://www.instagram.com/tratanzania/" target="_blank" class="hover:text-yellow-500">
+              <i class="fa-brands fa-instagram h-full"></i>
+            </a>
+            <a href="https://youtube.com/@traonlinetv?si=jl_IEISH0Ge79nDt" target="_blank" class="hover:text-yellow-500">
+              <i class="fa-brands fa-youtube h-full"></i>
+            </a> -->
+          </div>
+
+           <!-- <button class="relative inline-flex items-center justify-center px-6 py-2 bg-cp-yellow  rounded-full text-black font-bold text-sm hover:font-bolder transition-opacity">
+              <span class="absolute h-4 w-4 bg-yellow-400 rounded-full opacity-75 animate-ping"></span>
+              Click Here
+            </button> -->
+         <!--  <span class="xml-4 animate-slowping relative inline-flex items-center justify-center px-6 py-2 bg-cp-yellow opacity-75 rounded-full">
+            <span class=" text-black font-bold text-[0.4rem] ">
+                  Innovation idea Submission form
+            </span>
+          </span> -->
+
+       
+
+          
+
+
+          <div class="flex flex-row gap-4 font-bold items-center"> 
+          <a href="/sw/page/withholding-tax" class="z-20 flex flex-row gap-3  dark:text-white hover:text-yellow-500">
+            <!--img class="h-4" src="/public/dist/images/tz.svg" alt="" --> 
+            Swahili
+            <!-- <span class="hidden md:block">Swahili</span>
+            <span class="md:hidden">SW</span> -->
+             </a>
+          
+           |
+           <a class="hover:text-yellow-500" href="/faq">FAQs</a> 
+           <span class="hidden md:block">|</span>
+           <a href="https://mail.tra.go.tz/owa" class="hover:text-yellow-500 hidden md:block" target="_blank"> TRA Staff Mail  </a>
+           <span class="hidden md:block"> |</span>
+          <a href="https://servicedesk.tra.go.tz:8443/servicePortal" class="hover:text-yellow-500 hidden md:block" target="_blank" >Service Desk</a>
+          </div>
+
+
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-cover bg-center h-24" style="background-image: url('/public/dist/images/topbanner_44copy.png')">
+      <div class="bg-yellow-500 bg-opacity-50 h-full flex items-center justify-center"  style="background-color: rgba(255, 243, 29, 0.5)">
+        <div class="container mx-auto flex items-center justify-between px-4 h-full">
+          <img class="h-16 md:h-20" src="/public/dist/images/emblem.png" alt="Emblem">
+          <div class="text-center text-black py-4 sm:px-6 md:px-8 hidden md:block">
+            <p class="xs:text-sm sm:text-lg md:text-xl lg:text-2xl font-bold uppercase">
+              Tanzania Revenue Authority
+          </p>
+            <p class="xs:text-sm sm:text-base md:text-lg  font-bold ">
+                ISO 9001: 2015 CERTIFIED
+            </p>
+            <p class="xs:text-sm sm:text-sm md:text-base capitalize italic">
+                "Together We Build Our Nation"
+            </p>
+        </div>
+          <!--<img class="h-20" src="/public/dist/images/tra-logo.png" alt="TRA Logo">-->
+          
+          <img class="h-16 md:h-20" src="/public/dist/images/LOGO_WINGS.png" alt="TRA Logo">
+          
+          
+        </div>
+      </div>
+    </section>
+
+    <nav class="bg-cp-yellow text-black z-40 font-bold py-1 " >
+      <div class="container mx-auto px-4 md:flex items-center gap-6">
+         <div class="flex md:w-auto justify-between w-full md:hidden">
+          <!-- Mobile Menu Button -->
+          <div class="flex items-center ">
+            <button class="mobile-menu-button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="24" viewBox="0 0 24 24">
+                <title>bars-3-bottom-left</title>
+                <g fill="none">
+                  <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+
+              </svg>
+            </button>
+          </div>
+
+        <div class="flex">
+
+            
+            <form class="search_form2" name="search_form" method="post" action="/www.tra.go.tz/"  >
+<div class='hiddenFields'>
+<input type="hidden" name="ACT" value="31" />
+<input type="hidden" name="RES" value="8" />
+<input type="hidden" name="meta" value="Wfa3K3G0bczt+++fiRSizSzsivCuVq0J34m4rUF+AIsXUpPL0YaQMev3hI+8KKDTKEYOSZC34impZHjQWvvX2t8Ax9shDwxM6uxqGvlQwFcs2kCBwSUMLr+OM+gXnhwdUvTggdjHv+FhOHet8l9mDqP0LVUA3NsxH7AG+DQjyjhgWANgM7WCjsgK+qxJ8iuCXgcDa9oRf9L4CU8FXVRPTmiz1pfEIPa896xGjIfpJYUe275kALYsQ916fUVbmc/VBtxzIOId6lWuKRXYN6GoLlXGEgOurhRwjSlwxph7tDfDOPglF7B2LYIrmhUscw97pKiwOCOVsY9rUaGkRB6jpE6QP+dGrJdWlkYWx/Fk22JgZUSY226wakaHswLgC0vtElBxyNuj/21wdIdJBAfVVOCuwVnxLM5Iwa7vluW+rruTYTenC2XOFgJvTIWo/qiip2z8m0VyA0ksrRr8E4c6yU1E+7uFGPbEwFFyUR4RiLkSgO9yVfv4hZtPq93nriRmxjeHti2IQUt5F/0SdiWq+w==" />
+<input type="hidden" name="site_id" value="1" />
+<input type="hidden" name="csrf_token" value="" />
+</div>
+
+
+            <div class="relative flex flex-wrap items-stretch h-8 w-fit max-w-content">
+              <input
+                type="text"
+                class="relative rounded-l-md block flex-1 border border-solid bg-cp-white border-neutral-300
+                bg-clip-padding px-2 text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200
+                ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)]
+                focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary
+                sm:text-sm md:text-base lg:text-lg"
+                placeholder="Search" required="required"
+                aria-label="Search"
+                name="keywords" id="keywords"
+                aria-describedby="button-addon1" pattern="(?=.*[0-9A-Za-z].*[0-9A-Za-z].*[0-9A-Za-z])[0-9A-Za-z ]+" title="To search, write at least 3 characters" />
+
+              <!-- Search button -->
+              <button
+                class="relative z-[2] flex items-center rounded-r-md bg-cp-black px-4 py-2 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg
+                sm:px-3 sm:py-1.5 sm:text-xs md:px-4 md:py-2 md:text-sm lg:px-6 lg:py-2.5 lg:text-base"
+                type="submit"
+                id="button-addon1"
+                data-te-ripple-init
+                data-te-ripple-color="light">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class="h-5 w-5">
+                  <path
+                    fill-rule="evenodd"
+                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+
+        </div>
+            </form>
+            
+        </div>
+
+        </div>
+        <!-- Primary Navigation -->
+        <!-- <div class="hidden flex md:flex md:flex-row flex-col flex md:items-center justify-between  md:space-x-1 navigation-menu pb-3 md:pb-0 navigation-menu"> -->
+        <div class="hidden flex-col md:flex md:flex-row md:items-center md:justify-center w-full md:space-x-1 pb-3 md:pb-0 navigation-menu pl-3 md:pl-0">
+          <a class="py-2 px-3 block hover:bg-cp-white rounded w-fit" href="/">Home</a>
+           <!-- Dropdown Menu -->
+          <div class="relative group">
+            <button class="dropdown-toggle py-2 px-3 hover:bg-cp-white flex items-center gap-2 rounded">
+              <span class="pointer-events-none">About Us</span>
+              <svg class="w-3 h-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <title>chevron-down</title>
+                <g fill="none">
+                  <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+              </svg>
+            </button>
+            <div class="dropdown-menu absolute hidden bg-white text-black rounded-b-lg min-w-max group-hover:block">
+              <!-- Grid container with 3 columns -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+                
+                  <a href="/page/history " class="block px-6 py-2 sub-item">
+                     About TRA  
+                  </a>
+                
+                  <a href="/page/corporate-plan " class="block px-6 py-2 sub-item">
+                     Corporate Plan 
+                  </a>
+                
+                  <a href="/page/client-service-charter " class="block px-6 py-2 sub-item">
+                     Client Service Charter  
+                  </a>
+                
+
+                <a href="/page/board" class="block px-6 py-2 sub-item ">Board Of Directors</a>
+                <a href="/page/management" class="block px-6 py-2 sub-item">Management Team</a>
+
+                
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Dropdown Menu -->
+          <div class="relative group">
+            <button class="dropdown-toggle py-2 px-3 hover:bg-cp-white flex items-center gap-2 rounded">
+              <span class="pointer-events-none">Domestic Taxes</span>
+              <svg class="w-3 h-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <title>chevron-down</title>
+                <g fill="none">
+                  <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+              </svg>
+            </button>
+            <div class="dropdown-menu absolute hidden bg-white text-black rounded-b-lg min-w-max group-hover:block">
+              <!-- Grid container with 3 columns -->
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-0.5">
+                
+                <a href="/page/starting-business-income-for-individuals-and-paying-taxes " class="block px-6 py-2 sub-item">
+                     Starting Business 
+                  </a>
+                
+                <a href="/page/corporation-tax " class="block px-6 py-2 sub-item">
+                     Corporation Tax 
+                  </a>
+                
+                <a href="/page/income-tax-for-individuals " class="block px-6 py-2 sub-item">
+                     Income Tax for Individuals 
+                  </a>
+                
+                <a href="/page/value-added-tax-vat " class="block px-6 py-2 sub-item">
+                      Value Added Tax (VAT) 
+                  </a>
+                
+                <a href="/page/pay-as-you-earn " class="block px-6 py-2 sub-item">
+                     Pay As You Earn 
+                  </a>
+                
+                <a href="/page/withholding-tax " class="block px-6 py-2 sub-item">
+                     Withholding tax 
+                  </a>
+                
+                <a href="/page/digital-service-tax " class="block px-6 py-2 sub-item">
+                     Digital Service Tax  
+                  </a>
+                
+                <a href="/page/capital-gains-tax " class="block px-6 py-2 sub-item">
+                     Capital Gains tax 
+                  </a>
+                
+                <a href="/page/gaming-tax " class="block px-6 py-2 sub-item">
+                     Gaming tax 
+                  </a>
+                
+                <a href="/page/stamp-duty " class="block px-6 py-2 sub-item">
+                     Stamp Duty 
+                  </a>
+                
+                <a href="/page/skills-development-levy-sdl " class="block px-6 py-2 sub-item">
+                     Skills Development Levy (SDL) 
+                  </a>
+                
+                <a href="/page/charitable-organization " class="block px-6 py-2 sub-item">
+                     Charitable Organization 
+                  </a>
+                
+                <a href="/page/objections-appeals " class="block px-6 py-2 sub-item">
+                     Objections &amp; Appeals 
+                  </a>
+                
+                <a href="/page/paying-taxes " class="block px-6 py-2 sub-item">
+                     Paying Taxes. 
+                  </a>
+                
+                <a href="/page/interest-penalties-offences " class="block px-6 py-2 sub-item">
+                     Interest, Penalties &amp; Offences 
+                  </a>
+                
+                <a href="/page/eletronic-tax-stamps " class="block px-6 py-2 sub-item">
+                     Excise Duty  
+                  </a>
+                
+                <a href="/page/approved-tax-consultants " class="block px-6 py-2 sub-item">
+                     Approved Tax Consultants  
+                  </a>
+                
+                <a href="/page/motor " class="block px-6 py-2 sub-item">
+                     Motor Vehicle Registration  
+                  </a>
+                
+                <a href="/page/efd-vfd-suppliers " class="block px-6 py-2 sub-item">
+                     EFD/VFD Suppliers  
+                  </a>
+                
+                
+              </div>
+            </div>
+          </div>
+
+          <!-- Dropdown Menu -->
+          <div class="relative group">
+            <button class="dropdown-toggle py-2 px-3 hover:bg-cp-white flex items-center gap-2 rounded">
+              <span class="pointer-events-none">Customs & Excise</span>
+              <svg class="w-3 h-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <title>chevron-down</title>
+                <g fill="none">
+                  <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+              </svg>
+            </button>
+            <div class="dropdown-menu absolute hidden bg-white text-black rounded-b-lg min-w-max group-hover:block">
+              <!-- Grid container with 3 columns -->
+              <div class="grid grid-cols-2 gap-1">
+                
+                <a href="/page/import-procedures " class="block px-6 py-2 sub-item">
+                     Import Procedures 
+                  </a>
+                
+                <a href="/page/export-procedures " class="block px-6 py-2 sub-item">
+                     Export Procedures 
+                  </a>
+                
+                <a href="/page/temporary-importation " class="block px-6 py-2 sub-item">
+                     Temporary Importation  
+                  </a>
+                
+                <a href="/page/pre-arrival-declaration " class="block px-6 py-2 sub-item">
+                     Pre – Arrival Declaration 
+                  </a>
+                
+                <a href="/page/single-customs-territory-sct " class="block px-6 py-2 sub-item">
+                     Single Customs Territory (SCT) 
+                  </a>
+                
+                <a href="/page/one-stop-border-post-osbp " class="block px-6 py-2 sub-item">
+                     One Stop Border Post (OSBP) 
+                  </a>
+                
+                <a href="/page/customs-licencing " class="block px-6 py-2 sub-item">
+                     Customs Licenses 
+                  </a>
+                
+                <a href="/page/returning-resident " class="block px-6 py-2 sub-item">
+                     Returning Resident 
+                  </a>
+                
+                <a href="/page/trading-across-borders " class="block px-6 py-2 sub-item">
+                     Trading across borders 
+                  </a>
+                
+                <a href="/page/export-processing-zone-epz " class="block px-6 py-2 sub-item">
+                     Export Processing Zone (EPZ) 
+                  </a>
+                
+                <a href="/page/public-officials-import-duty-and-excise-duty-remission " class="block px-6 py-2 sub-item">
+                     Public Officials Import Duty and Excise Duty Remission  
+                  </a>
+                
+                <a href="/page/value-added-tax-vat-deferment " class="block px-6 py-2 sub-item">
+                     Value Added Tax (VAT) Deferment  
+                  </a>
+                
+                <a href="/page/authorized-economic-operators-aeos " class="block px-6 py-2 sub-item">
+                     Authorized Economic Operators (AEOs) 
+                  </a>
+                
+                <a href="/page/import-duty-for-some-items-during-the-importation-list-of-eight-8-items " class="block px-6 py-2 sub-item">
+                     Import duty for some Items During the Importation (List of Eight (8) Items) 
+                  </a>
+                
+                
+                <a href="https://www.tra.go.tz/images/uploads/pages/CET_2022_VERSION_Updated_June_2025.pdf" class="block px-6 py-2 sub-item">
+                     Tariff 
+                  </a>
+                
+                <a href="https://www.tra.go.tz/images/uploads/pages/LIST_OF_LICENSED_CUSTOMS_AGENTS_FOR_THE_YEAR_2025.xls" class="block px-6 py-2 sub-item">
+                     Licensed Customs Agents  
+                  </a>
+                
+              </div>
+            </div>
+          </div>
+
+          <a  class="py-2 px-3 block hover:bg-cp-white rounded w-fit" href="/#e-service">E-Services</a>
+
+          <!-- Dropdown Menu -->
+          <div class="relative group">
+            <button class="dropdown-toggle py-2 px-3 hover:bg-cp-white flex items-center gap-2 rounded">
+              <span class="pointer-events-none">Media Center</span>
+              <svg class="w-3 h-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <title>chevron-down</title>
+                <g fill="none">
+                  <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+              </svg>
+            </button>
+            <div class="dropdown-menu absolute hidden bg-white text-black rounded-b-lg min-w-max group-hover:block">
+              <!-- Grid container with 3 columns -->
+              <div class="grid grid-cols-1 gap-2">
+                <a href="/public-notice/all" class="block px-6 py-2 sub-item">Public Notice</a>
+                <a class="block px-6 py-2 sub-item" href="/news/all">News & Events</a>
+                
+              </div>
+            </div>
+          </div>
+
+          <a  class="py-2 px-3 block hover:bg-cp-white rounded w-fit" href="/tax-club">Tax Club</a>
+          <a class="py-2 px-3 block hover:bg-cp-white rounded w-fit" href="/vacancies">Vacancies</a>
+          <a class="py-2 px-3 block hover:bg-cp-white rounded w-fit" href="/contact-us">Contact Us</a>
+          <a class="py-2 px-3 block md:hidden hover:bg-cp-white rounded w-fit"  target="_blank" href="https://mail.tra.go.tz/owa">TRA Staff Mail</a>
+          <a class="py-2 px-3 block md:hidden hover:bg-cp-white rounded w-fit"  target="_blank" href="https://servicedesk.tra.go.tz:8443/servicePortal">Service Desk</a>
+
+
+
+        </div>
+
+
+      </div>
+    </nav>
+
+  </header>
+
+
+
+<!-- Navigation Wrapper ends here -->
+
+
+
+<main>
+<!-- breadcrumb start here -->
+
+
+
+
+
+<section class="bg-gray-altinative h-32 border-b-2 lg:px-8 px-4 ">
+    <div class="container mx-auto ">
+    <div class="flex flex-col justify-between py-12  md:flex-row ">
+        <div class="mx-2">
+        <span class="font-bold text-base md:text-xl uppercase">
+            
+            Withholding tax
+              
+        </span>
+        </div>
+        <div class="mx-2 mt-2">
+        <ul class="breadcrumb font-semibold text-md pl-0">
+            <li class="breadcrumb-item">
+            <a href="/">
+                <i class="fa fa-home" aria-hidden="true"></i> Home  </a>
+            </li>
+            <!-- <li class="breadcrumb-item">
+                <a href="#">About Us</a>
+            </li> -->
+            <li class="breadcrumb-item capitalize">
+                <a href="#">
+                    
+                    Withholding tax
+                      
+                </a>
+            </li>
+            </ul>
+        </div>
+        </div>
+    </div>
+    </section>
+
+
+    <!-- breadcrumb  ends here -->
+
+
+    <section class="bg-white text-black">
+    <div class="container mx-auto px-4">
+       <!-- <div class="grid grid-cols-3 py-8 gap-8"> -->
+          <div class="lg:grid lg:grid-cols-3 xl:grid xl:grid-cols-3 2xl:grid 2xl:grid-cols-3 py-8 gap-8 sm:mb-4">  
+          <div class=" col-span-2 mb-8 md:mb-0">
+            <div class="flex flex-col">
+            <div class="text-sm md:text-base mx-2">
+                <p><strong>Introduction:</strong></p><p>Withholding tax is the amount of tax retained by one person when making payments to another person in respect of goods supplied or services rendered by the payee. A person receiving or entitled to receive a payment from which income tax is required to be withheld is a withholdee while a person required to withhold income tax from a payment made to a withholdee is referred to as the Withholding Agent.</p><p>&nbsp;</p><p><strong>Payment subject to Withholding Tax.</strong></p><p>Withholding tax applies to specific payments including payment that is to be included in calculating the chargeable income of an employee from the employment, payment of investment return including dividend, interest, natural resource payment, rent or royalty, payment in respect to service fee and contract payments and payment in respect to supply of goods to the government and its institutions.</p><p>&nbsp;</p><p><strong>Statement and Time for payment of tax withheld.</strong></p><p>Every withholding agent shall pay to the Commissioner within seven days after the end of each calendar month any income tax that has been withheld.<br>&nbsp;</p><p><strong>Withholding Tax Certificate</strong></p><p>Certificates are obtained in Tax Payment under the Taxpayer Portal and can be printed by Withholder or withholder as the case may be after making payment.</p><p>&nbsp;</p><p><strong>Categories of withholding taxes:</strong></p><p>The law has divided withholding taxes in to two major categories namely: -</p><p>&nbsp;</p><p><strong>Final withholding taxes</strong><br>Final withholding taxes are taxes in which the withholdee cannot claim any tax credit when calculating the income tax payable for a year of income.</p><p>&nbsp;</p><p><strong>Non final withholding taxes</strong></p><p>Non final withholding taxes: are taxes which the withholdee is entitled for a tax credit an amount equal to the tax treated as paid for the year of income in which the amount is derived.</p><p>&nbsp;</p><p><strong>Withholding Tax rates</strong></p><figure class="table"><table><tbody><tr><td><p style="margin-left:0px;"><strong>Description of Payment</strong></p></td><td><p style="margin-left:0px;"><strong>Rate for Resident</strong></p></td><td><p style="margin-left:0px;"><strong>Rate for Non Resident</strong></p></td></tr><tr><td><p style="margin-left:0px;">(i)Dividends from the&nbsp;&nbsp;Dar es salaam Stock Exchange&nbsp;&nbsp;listed corporations</p><p style="margin-left:0px;">(ii)&nbsp;&nbsp;Dividend from&nbsp;&nbsp;resident corporation to another resident corporation where the corporation receiving the dividend holds 25% or more of the shares in the corporation</p></td><td><p style="margin-left:0px;text-align:center;">5%</p><p style="margin-left:0px;text-align:center;">&nbsp;</p><p style="margin-left:0px;text-align:center;">&nbsp;</p><p style="margin-left:0px;text-align:center;">5%</p></td><td><p style="margin-left:0px;text-align:center;">5%</p><p style="margin-left:0px;text-align:center;">&nbsp;</p><p style="margin-left:0px;text-align:center;">&nbsp;</p><p style="margin-left:0px;text-align:center;">NA</p></td></tr><tr><td><p style="margin-left:0px;">Dividends from other corporations</p></td><td><p style="margin-left:0px;text-align:center;">10%</p></td><td><p style="margin-left:0px;text-align:center;">10%</p></td></tr><tr><td><p style="margin-left:0px;">Interest</p></td><td><p style="margin-left:0px;text-align:center;">10%</p></td><td><p style="margin-left:0px;text-align:center;">10%</p></td></tr><tr><td><p style="margin-left:0px;">Royalties</p></td><td><p style="margin-left:0px;text-align:center;">15%</p></td><td><p style="margin-left:0px;text-align:center;">10%</p></td></tr><tr><td><p style="margin-left:0px;">Other Withholding payments from Investment Returns.</p></td><td><p style="margin-left:0px;text-align:center;">15%</p></td><td><p style="margin-left:0px;text-align:center;">15%</p></td></tr><tr><td><p style="margin-left:0px;">Rental Income (For commercial purposes)</p></td><td><p style="margin-left:0px;text-align:center;">10%</p></td><td><p style="margin-left:0px;text-align:center;">15%</p></td></tr><tr><td><p style="margin-left:0px;">Technical services fees (mining)</p></td><td><p style="margin-left:0px;text-align:center;">10%</p></td><td><p style="margin-left:0px;text-align:center;">20%</p></td></tr><tr><td><p style="margin-left:0px;">Transport (Non-resident operator/ charterer without permanent establishment).</p></td><td><p style="margin-left:0px;text-align:center;">N/A</p></td><td><p style="margin-left:0px;text-align:center;">5%</p></td></tr><tr><td><p style="margin-left:0px;">Insurance Premium</p></td><td><p style="margin-left:0px;text-align:center;">N\A</p></td><td><p style="margin-left:0px;text-align:center;">10%</p></td></tr><tr><td><span style="color:black;">Commission for gaming advertisement and promotion<span>&nbsp;&nbsp;</span></span></td><td><p style="text-align:center;">10%</p></td><td><p style="text-align:center;">N/A</p></td></tr><tr><td><div style="text-align:justify;"><span style="color:black;">Payments for purchase of salt&nbsp;</span></div></td><td><p style="text-align:center;">2%</p></td><td><p style="text-align:center;">N/A</p></td></tr><tr><td><span style="color:black;">VAT withholding obligation on supply of goods by the Withholding Agent under Section 5(5) of the VAT Act</span></td><td><p style="text-align:center;">3%</p></td><td><p style="text-align:center;">N/A</p></td></tr><tr><td><span style="color:black;">VAT withholding obligation on supply of service by the Withholding Agent under Section 5(5) of the VAT Act</span></td><td><p style="text-align:center;">6%</p></td><td><p style="text-align:center;">N/A</p></td></tr><tr><td><span style="color:black;">Payment made on hiring of motor vehicle&nbsp;</span></td><td><p style="text-align:center;">10%</p></td><td><p style="text-align:center;">N/A</p></td></tr><tr><td><span style="color:black;">Payment in respect of sale of forest produce to pay income tax by way of single instalment&nbsp;</span></td><td><p style="text-align:center;">2% of gross payment</p></td><td><p style="text-align:center;">N/A</p></td></tr><tr><td><p style="margin-left:0px;">Natural Resources Payment</p></td><td><p style="margin-left:0px;text-align:center;">15%</p></td><td><p style="margin-left:0px;text-align:center;">15%</p></td></tr><tr><td><p style="margin-left:0px;">Service Fees</p></td><td><p style="margin-left:0px;text-align:center;">5%</p></td><td><p style="margin-left:0px;text-align:center;">15%</p></td></tr><tr><td><p style="margin-left:0px;">Directors Fee (Non full time Directors)&nbsp;</p></td><td><p style="margin-left:0px;text-align:center;">15%</p></td><td><p style="margin-left:0px;text-align:center;">15%</p></td></tr><tr><td><p style="margin-left:0px;">Commission to agents by service providers on money transfer through mobile phones.</p></td><td><p style="margin-left:0px;text-align:center;">10%</p></td><td><p style="margin-left:0px;text-align:center;">N/A</p></td></tr><tr><td><p style="margin-left:0px;">Payments for goods supplied to&nbsp;&nbsp;&nbsp;Government and its institutions by any person.</p></td><td><p style="margin-left:0px;text-align:center;">2% of gross payment</p></td><td><p style="margin-left:0px;text-align:center;">N/A</p></td></tr><tr><td><p style="margin-left:0px;">Aircraft</p></td><td><p style="margin-left:0px;text-align:center;">10%</p></td><td><p style="margin-left:0px;text-align:center;">15%</p></td></tr><tr><td>Payment made to a resident person in respect of verified carbon emission reduction</td><td><p style="text-align:center;">10%</p></td><td><p style="text-align:center;">N/A</p></td></tr><tr><td>Payment made in respect of buying precious metals, gemstones and other precious stones supplied by the holder of a primary mining licence or artisanal miner</td><td><p style="text-align:center;">2%</p></td><td><p style="text-align:center;">N/A</p></td></tr><tr><td><p style="margin-left:0px;">Other Assets</p></td><td><p style="margin-left:0px;text-align:center;">N/A</p></td><td><p style="margin-left:0px;text-align:center;">15%</p></td></tr></tbody></table></figure><p><br>&nbsp;</p>
+
+                
+                <div class="mt-8">
+                    
+                  </div>
+                  
+            </div>
+            </div>
+            </div>
+            <div class="mx-2">
+                <div class="flex flex-col">                    
+                    
+
+
+
+                    <div class="border-l border-gray-400 sm:mb-1 sm:mt-8 ">
+                        <p class="uppercase border-l-2 border-l-black-active pl-3 py-3 font-bold text-md"> News & Events</p>
+                        <div class="pl-3">
+                            
+
+<div class="grid grid-cols-3 gap-4 mb-2 py-2">
+    <div class="">
+    <img class="object-cover object-top rounded-md w-full h-24" src="https://www.tra.go.tz/images/uploads/news/featured_image/picha_6.jpeg"/>
+    </div>
+    <div class="col-span-2">
+    <p class=" md:uppercase font-semibold text-xs md:text-md">
+        <a href="/news/parliamentary-budget-committee-applauds-tra-for-strong-revenue-performance-and-taxpayer-centred-reforms">
+            
+            PARLIAMENTARY BUDGET COMMITTEE APPLAUDS TRA FOR STRONG REVENUE PERFORMANCE AND TAXPAYER-CENTRED REFORMS
+            
+        </a>
+    </p>
+    <div class="flex justify-between">
+        <div><i class="fa fa-calendar" aria-hidden="true"></i> 31 May, 2026 </div>
+        <!-- <div><i class="fa fa-eye" aria-hidden="true"></i> 105                </div> -->
+    </div>
+    </div>
+</div>
+
+
+<div class="grid grid-cols-3 gap-4 mb-2 py-2">
+    <div class="">
+    <img class="object-cover object-top rounded-md w-full h-24" src="https://www.tra.go.tz/images/uploads/news/featured_image/3.jpg"/>
+    </div>
+    <div class="col-span-2">
+    <p class=" md:uppercase font-semibold text-xs md:text-md">
+        <a href="/news/general-mwenda-pledges-improved-taxpayer-services-to-boost-voluntary-compliance">
+            
+            GENERAL MWENDA PLEDGES IMPROVED TAXPAYER SERVICES TO BOOST VOLUNTARY COMPLIANCE 
+            
+        </a>
+    </p>
+    <div class="flex justify-between">
+        <div><i class="fa fa-calendar" aria-hidden="true"></i> 23 May, 2026 </div>
+        <!-- <div><i class="fa fa-eye" aria-hidden="true"></i> 105                </div> -->
+    </div>
+    </div>
+</div>
+
+
+<div class="grid grid-cols-3 gap-4 mb-2 py-2">
+    <div class="">
+    <img class="object-cover object-top rounded-md w-full h-24" src="https://www.tra.go.tz/images/uploads/news/featured_image/KYELA_5.jpg"/>
+    </div>
+    <div class="col-span-2">
+    <p class=" md:uppercase font-semibold text-xs md:text-md">
+        <a href="/news/kyela-dc-commends-tra-for-peaceful-tax-collection-and-supporting-development-projects">
+            
+            KYELA DC COMMENDS TRA FOR PEACEFUL TAX COLLECTION AND SUPPORTING DEVELOPMENT PROJECTS
+            
+        </a>
+    </p>
+    <div class="flex justify-between">
+        <div><i class="fa fa-calendar" aria-hidden="true"></i> 22 May, 2026 </div>
+        <!-- <div><i class="fa fa-eye" aria-hidden="true"></i> 105                </div> -->
+    </div>
+    </div>
+</div>
+
+
+<div class="grid grid-cols-3 gap-4 mb-2 py-2">
+    <div class="">
+    <img class="object-cover object-top rounded-md w-full h-24" src="https://www.tra.go.tz/images/uploads/news/featured_image/WhatsApp_Image_2026-05-19_at_7.00.29_AM_%281%29_.jpeg"/>
+    </div>
+    <div class="col-span-2">
+    <p class=" md:uppercase font-semibold text-xs md:text-md">
+        <a href="/news/tra-strengthens-efforts-to-protect-local-industries-expand-tax-base">
+            
+            TRA STRENGTHENS EFFORTS TO PROTECT LOCAL INDUSTRIES, EXPAND TAX BASE
+            
+        </a>
+    </p>
+    <div class="flex justify-between">
+        <div><i class="fa fa-calendar" aria-hidden="true"></i> 19 May, 2026 </div>
+        <!-- <div><i class="fa fa-eye" aria-hidden="true"></i> 105                </div> -->
+    </div>
+    </div>
+</div>
+
+
+<div class="grid grid-cols-3 gap-4 mb-2 py-2">
+    <div class="">
+    <img class="object-cover object-top rounded-md w-full h-24" src="https://www.tra.go.tz/images/uploads/news/featured_image/PICHAA_4.jpeg"/>
+    </div>
+    <div class="col-span-2">
+    <p class=" md:uppercase font-semibold text-xs md:text-md">
+        <a href="/news/tra-commissioner-general-attends-18th-eac-sectoral-council-of-ministers-meeting-in-arusha12">
+            
+            TRA COMMISSIONER GENERAL ATTENDS 18TH EAC SECTORAL COUNCIL OF MINISTERS MEETING IN ARUSHA
+            
+        </a>
+    </p>
+    <div class="flex justify-between">
+        <div><i class="fa fa-calendar" aria-hidden="true"></i> 15 May, 2026 </div>
+        <!-- <div><i class="fa fa-eye" aria-hidden="true"></i> 105                </div> -->
+    </div>
+    </div>
+</div>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </section>
+        
+    </main>
+
+
+
+<!-- Footer start here -->
+<!-- Footer start here -->
+<footer class="text-center lg:text-left bg-black-active text-white">
+
+  <section class="bg-cover h-auto" style="background-image: url('/public/dist/images/Replace-to-Map.png')">
+    <div class="bg-opacity" style="background-color: rgba(0, 0, 0, 0.75)">
+      <div class="container mx-auto lg:px-8 text-white">
+        <div class="flex justify-center items-center lg:justify-between p-6 border-b border-white">
+          <div class="mr-12 hidden lg:block">
+            <span>Get connected with us on social networks:</span>
+          </div>
+          <div class="flex justify-center">
+            <a href="https://web.facebook.com/profile.php?id=61581933914749" target="_blank" class="mr-6">
+              <i class="fa-brands fa-facebook-f"></i>
+            </a>
+            <a href="https://twitter.com/TRATanzania" target="_blank" class="mr-6">
+              <i class="fa-brands fa-x-twitter"></i>
+            </a>
+            <a href="https://www.instagram.com/tratanzania/" target="_blank" class="mr-6">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://youtube.com/@traonlinetv?si=jl_IEISH0Ge79nDt" target="_blank" class="mr-6">
+              <i class="fa-brands fa-youtube"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="mx-6 py-10 text-center md:text-left">
+          <div class="grid grid-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="flex flex-col text-white items-center justify-center text-center">
+              <div class="flex items-center justify-center">
+                <a href="/page/hakiki-stempu">
+                  <img class="h-32 w-32 md:h-56 md:w-56" src="/images/uploads/system_icons/QR.png" alt="QR Code"/>
+                </a>
+              </div>
+              <div class="flex items-center justify-center">
+                <p class="text-center italic">Whenever you sell, issue receipt. Whenever you buy, demand receipt</p>
+              </div>
+              <div class="flex items-center justify-center">
+                <p class="text-center text-yellow-active font-bold">
+                  <span class="text-2xl text-white">"</span> Together We Build Our Nation <span class="text-2xl text-white">"</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="hidden md:block">
+              <p class="uppercase  font-bold mb-4 flex justify-center md:justify-start border-b-2 border-white">
+                Quick Links
+              </p>
+              <ul class="footer-links text-white">
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="/page/value-added-tax-vat" class="hover:text-white">
+                     Value Added Tax (VAT)
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="/page/stamp-duty" class="hover:text-white">
+                    Stamp Duty
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="/page/client-service-charter" class="hover:text-white">
+                    Client Service Charter 
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="/page/gaming-tax" class="hover:text-white">
+                    Gaming tax
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="/page/export-processing-zone-epz" class="hover:text-white">
+                    Export Processing Zone (EPZ)
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="/page/customs-licencing" class="hover:text-white">
+                    Customs Licenses
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="/page/income-tax-for-individuals" class="hover:text-white">
+                    Income Tax for Individuals
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="/page/public-officials-import-duty-and-excise-duty-remission" class="hover:text-white">
+                    Public Officials Import Duty and Excise Duty Remission 
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="/page/charitable-organization" class="hover:text-white">
+                    Charitable Organization
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="/page/interest-penalties-offences" class="hover:text-white">
+                    Interest, Penalties &amp; Offences
+                  </a>
+                </li>
+                
+              </ul>
+            </div>
+
+            <div>
+              <p class="uppercase font-semibold mb-4 flex justify-center md:justify-start border-b-2 border-white">
+                Related Links
+              </p>
+              <ul class="text-white footer-links">
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="http://www.mof.go.tz/" target="_blank" class="hover:text-white">
+                    Ministry of Finance
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="https://www.viwanda.go.tz/" target="_blank" class="hover:text-white">
+                    Ministry of Industry and Trade
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="http://ita.ac.tz/" target="_blank" class="hover:text-white">
+                    Institute of Tax Administration
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="http://ports.go.tz/" target="_blank" class="hover:text-white">
+                    Tanzania Ports Authority
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="https://www.tic.go.tz/" target="_blank" class="hover:text-white">
+                    Tanzania Investment Center
+                  </a>
+                </li>
+                
+                <li class="hover:font-semibold">
+                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <a href="https://www.brela.go.tz/" target="_blank" class="hover:text-white">
+                    BRELA
+                  </a>
+                </li>
+                
+              </ul>
+            </div>
+
+            <div>
+              <p class="uppercase font-semibold mb-4 flex justify-center md:justify-start border-b-2 border-white">
+                Contact Us
+              </p>
+              <p class="flex items-center justify-center md:justify-start mb-4 font-bold">
+
+
+    Commissioner General
+    <p>Tanzania Revenue Authority,</p><p>&nbsp;</p><p>Postcode:28 Edward Sokoine Drive,11105 Mchafukoge,</p><p>&nbsp;</p><p>Ilala CBD, P.O.Box 11491,</p><p>&nbsp;</p><p>Dar es Salaam,</p><p>&nbsp;</p><p>Tel: +255 22 2116453</p>
+  
+</p>
+
+  <!-- sw_address_name -->
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ <div class="text-center py-3 bg-black border-t border-gray-50 lg:px-8">
+    <span>Copyrights &copy; 2026,</span>
+    <a class="font-semibold hover:text-yellow-active" href="/">Tanzania Revenue Authority </a> - All Rights Reserved
+    <div class="mt-2 text-xs text-gray-400 space-x-2">
+      <a href="/legal/privacy-notice" class="hover:text-yellow-active transition-colors decoration-gray-600 cursor-pointer">Privacy Notice</>
+      <span>|</span>
+      <a href="/legal/terms-and-conditions" class="hover:text-yellow-active transition-colors decoration-gray-600 cursor-pointer">Terms & Conditions</>
+      <span>|</span>
+      <a href="/legal/disclaimer" class="hover:text-yellow-active transition-colors decoration-gray-600 cursor-pointer">Disclaimer</a>
+    </div>
+  </div>
+
+</footer>
+<!-- Footer ends here -->
+
+<!-- Scripts -->
+<script src="/public/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="/public/node_modules/tw-elements/dist/js/index.min.js"></script>
+<script src="/public/dist/tw-elements.min.js"></script>
+<script src="/public/node_modules/datatables.net/js/dataTables.min.js"></script>
+<script src="/public/dist/select2/dist/js/select2.min.js"></script>
+<script src="/public/dist/animate/dist/aos.js"></script>
+<script src="/public/dist/calendar/lib/main.min.js"></script>
+<script src="/public/node_modules/nanogallery2/dist/jquery.nanogallery2.min.js"></script>
+<script src="/public/node_modules/lightgallery/lightgallery.min.js"></script>
+<script src="/public/node_modules/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script>
+<script src="/public/node_modules/lightgallery/plugins/zoom/lg-zoom.min.js"></script>
+<script src="/public/dist/custom.min.js"></script>
+<script src="/public/dist/magnific-popup/jquery.magnific-popup.js"></script>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => { 
+ if ($('.table-data').length) {
+      $('.table-data').DataTable({
+        "language": {
+          "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+          "lengthMenu": "Show _MENU_ Entries ",
+          "emptyTable": "No data available in table",
+          "zeroRecords": "No matching records found",
+          "search": "Search:",
+          "paginate": {
+            "previous": "Previous",
+            "next": "Next"
+          }
+        },
+        "order": []  // Disable default sorting
+      });
+    }
+
+
+    if ($('.table-data-child').length) {
+      $('.table-data-child').DataTable({
+        "language": {
+          "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+          "lengthMenu": "Show _MENU_ Entries ",
+          "emptyTable": "No data available in table",
+          "zeroRecords": "No matching records found",
+          "search": "Search:",
+          "paginate": {
+            "previous": "Previous",
+            "next": "Next"
+          }
+        }
+      });
+    }
+    
+     if ($('#table_departments').length) {
+  // Initialize DataTable for parent table
+  var parentTable = $('#table_departments').DataTable({
+    "ordering": false,
+    "paging": false,
+    "info": false,
+    // "order": [[1, 'asc']],
+    "language": {
+          "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+          "lengthMenu": "Show _MENU_ Entries ",
+          "emptyTable": "No data available in table",
+          "zeroRecords": "No matching records found",
+          "search": "Search:",
+          "paginate": {
+            "previous": "Previous",
+            "next": "Next"
+          }
+        },
+    "searching": false,
+    "columnDefs": [{
+      "targets": 0,
+      "orderable": false,
+      "searchable": false
+    }]
+  });
+
+  // Function to handle toggle and DataTable initialization for child rows
+  function toggleDetails(id) {
+    var childRow = $('#' + id + '-details');
+    // var icon = $('#icon-' + id);
+    var image = $('#image-' + id);
+
+    // Close all other child rows
+    $('#table_departments .child-row').not(childRow).each(function() {
+      $(this).hide();
+      var otherId = $(this).attr('id').split('-')[0];
+      // $('#icon-' + otherId).removeClass('fa-minus').addClass('fa-plus');
+      $('#image-' + otherId).attr('src', '/public/dist/images/details_open.png');
+    });
+
+    // Toggle the clicked child row
+    if (childRow.is(':visible')) {
+      childRow.hide();
+      // icon.removeClass('fa-minus').addClass('fa-plus');
+      image.attr('src', '/public/dist/images/details_open.png');
+
+    } else {
+      childRow.show();
+      console.log(id);
+      childRow.insertAfter($('#parent-' + id)).show(); // Ensure child row is placed immediately after its parent
+      // icon.removeClass('fa-plus').addClass('fa-minus');
+      image.attr('src', '/public/dist/images/details_close.png'); // Set to plus icon
+
+
+      // Initialize DataTable for child table if not already initialized
+      if (!$.fn.DataTable.isDataTable('#' + id + '-details table')) {
+        $('#' + id + '-details table').DataTable({
+          "ordering": false,
+          "paging": true,
+          "info": false
+        });
+      }
+    }
+  }
+
+  // Add click event to toggle details
+  $('#table_departments').on('click', 'td[data-id]', function() {
+    var id = $(this).data('id');
+    toggleDetails(id);
+  });
+}
+
+ // Calendar
+    if ($('#calendar').length) {
+      const myObject = [
+        
+      ];
+
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: myObject
+      });
+      calendar.render();
+    }
+
+});
+
+  </script>
+  
+<script>
+  window.intercomSettings = {
+    api_base: "https://api-iam.intercom.io",
+    app_id: "ovl4cru9",
+  };
+</script>
+
+
+<script>
+  // We pre-filled your app ID in the widget URL: 'https://widget.intercom.io/widget/ovl4cru9'
+  (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/ovl4cru9';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+</script>
+
+

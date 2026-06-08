@@ -1,0 +1,800 @@
+eval_001 | vat_registration | number
+SW:  Kiwango cha VAT Tanzania kwa bidhaa na huduma za kawaida ni asilimia ngapi?
+ANS: Asilimia 18. Kiwango hiki kinahusu bidhaa na huduma zote zinazolipwa VAT nchini Tanzania Bara. Thibitisha na TRA baada ya kila Finance Act.
+---
+eval_002 | vat_registration | number
+SW:  Kizingiti cha mauzo cha miezi 12 cha kusajilisha VAT kwa lazima ni TZS ngapi?
+ANS: TZS milioni 200 katika kipindi chochote cha miezi 12 mfululizo. Ukizidi kiasi hiki, usajilishaji wa VAT ni wa lazima mara moja. Thibitisha na TRA.
+---
+eval_003 | vat_registration | number
+SW:  Kizingiti cha mauzo cha miezi 6 cha kusajilisha VAT kwa lazima ni TZS ngapi?
+ANS: TZS milioni 100 katika kipindi chochote cha miezi 6 mfululizo. Hii ni kizingiti cha ziada — ukizidi hata moja ya vizingiti viwili, lazima ujisajilishe. Thibitisha na TRA.
+---
+eval_004 | vat_registration | number
+SW:  Kiwango cha VAT kwa malipo ya kidijitali ya B2C (biashara-kwa-mteja) tangu 1 Septemba 2025 ni asilimia ngapi?
+ANS: Asilimia 16 kuanzia 1 Septemba 2025. Hata hivyo, kanuni za utekelezaji bado zinasubiri tangazo rasmi la Kamishna Mkuu (CG). Usitekeleze bila uthibitisho wa TRA.
+---
+eval_005 | vat_registration | number
+SW:  Deadline ya kuwasilisha VAT return kila mwezi ni tarehe ngapi?
+ANS: Siku ya 20 ya mwezi unaofuata. Kwa mfano, VAT return ya Aprili iwasilishwe ifikapo 20 Mei. Ucheleweshaji unasababisha faini na riba. Thibitisha na TRA.
+---
+eval_006 | vat_registration | number
+SW:  Biashara inaingiza TZS milioni 25 kwa mwezi — baada ya miezi mingapi inafika kizingiti cha VAT cha TZS milioni 200?
+ANS: Baada ya miezi 8 (25M × 8 = 200M). Lazima ujisajilishe mara mauzo yakifika kizingiti — usiendelee bila usajilishaji. Thibitisha tarehe ya kuzidi na TRA.
+---
+eval_007 | vat_registration | number
+SW:  Biashara inapata TZS milioni 20 kwa mwezi — baada ya miezi mingapi inazidi kizingiti cha VAT cha miezi 6 (TZS milioni 100)?
+ANS: Baada ya miezi 5 (20M × 5 = 100M). Usajilishaji wa VAT unakuwa wa lazima mara mauzo yakizidi TZS milioni 100 katika kipindi chochote cha miezi 6. Thibitisha na TRA.
+---
+eval_008 | vat_registration | number
+SW:  VAT ya matokeo ni TZS 950,000 na VAT ya pembejeo ni TZS 320,000 — ninapeleka kiasi gani TRA?
+ANS: TZS 630,000 (950,000 − 320,000). Unalipa TRA tofauti kati ya VAT ya matokeo na VAT ya pembejeo peke yake. Thibitisha hesabu na mshauri wa kodi.
+---
+eval_009 | vat_registration | number
+SW:  Tofauti ya asilimia kati ya kiwango cha kawaida cha VAT (18%) na kiwango cha B2C cha kidijitali (16%) ni ngapi?
+ANS: Pointi 2 za asilimia (18% − 16% = 2%). Kiwango cha B2C cha asilimia 16 kilianzishwa kuanzia 1 Septemba 2025, bado kinasubiri utekelezaji kamili.
+---
+eval_010 | vat_registration | number
+SW:  Biashara yangu ina mauzo ya TZS milioni 180 mwaka huu — ninahitaji mauzo ya ziada ya TZS ngapi kabla ya usajilishaji wa VAT wa lazima?
+ANS: TZS milioni 20 zaidi (200M − 180M). Lakini fuatilia pia kizingiti cha miezi 6 cha TZS milioni 100 — inawezekana ufike kizingiti hicho mapema zaidi. Thibitisha na TRA.
+---
+eval_011 | vat_registration | number
+SW:  Finance Act ya mwaka gani ilianzisha utaratibu mpya wa VAT withholding nchini Tanzania?
+ANS: Finance Act ya 2025, ikiwa na ufanisi kuanzia 1 Julai 2025. Kiwango ni asilimia 3 kwa bidhaa na asilimia 6 kwa huduma kwa wanunuzi wanaohitimu.
+---
+eval_012 | vat_registration | number
+SW:  Kiwango cha VAT ya B2C ya kidijitali cha asilimia 16 kilianza kutumika tarehe ngapi?
+ANS: Tarehe 1 Septemba 2025. Kanuni kamili za utekelezaji bado zinasubiri tangazo la Kamishna Mkuu. Thibitisha hali ya sasa na TRA.
+---
+eval_013 | vat_registration | yes_no
+SW:  Je, mfanyabiashara ambaye bado hajafika kizingiti cha VAT anaweza kujisajilisha VAT kwa hiari?
+ANS: Ndiyo. Usajilishaji wa hiari wa VAT unaruhusiwa. Faida kuu ni uwezo wa kudai VAT ya pembejeo kwenye manunuzi ya biashara. Wasiliana na TRA kwa maelezo ya mchakato wa usajilishaji wa hiari.
+---
+eval_014 | vat_registration | yes_no
+SW:  Je, wakili aliyesajiliwa lazima asajilishe VAT hata kama mapato yake ya mwaka ni chini ya TZS milioni 200?
+ANS: Ndiyo. Wataalamu fulani — wakili, wahasibu waliosajiliwa, wahandisi, wasanifu majengo — wanahitajika kusajilisha VAT bila kujali mauzo yao. Hii ni sharti maalum la TRA. Thibitisha orodha kamili na TRA.
+---
+eval_015 | vat_registration | yes_no
+SW:  Huduma za 'exempt' (zisizo na VAT) — je, mfanyabiashara anaweza kudai VAT ya pembejeo inayohusiana nazo?
+ANS: Hapana. Bidhaa/huduma za exempt hazilipishwi VAT, NA mfanyabiashara HAWEZI kudai VAT ya pembejeo inayohusiana nazo. Tofauti na zero-rated: zero-rated bado zinakuruhusu kudai VAT ya pembejeo. Thibitisha na TRA.
+---
+eval_016 | vat_registration | yes_no
+SW:  Je, biashara isiyosajiliwa VAT inaweza kuweka VAT ya asilimia 18 kwenye invoice zake na kukusanya pesa hiyo kutoka wateja?
+ANS: Hapana — hii ni kinyume cha sheria. Ni biashara zilizosajiliwa VAT peke yake zinazoruhusiwa kukusanya VAT. Biashara isiyosajiliwa inayofanya hivi inaweza kukabili adhabu kali za TRA. Jisajilishe kwanza kama mauzo yako yamefika kizingiti.
+---
+eval_017 | vat_registration | yes_no
+SW:  Je, biashara inayouza bidhaa za zero-rated inaweza kudai VAT ya pembejeo kwenye gharama zake?
+ANS: Ndiyo. Bidhaa za zero-rated bado zinachukuliwa kama 'usambazaji wa VAT' ingawa kiwango chake ni 0%. Hivyo mfanyabiashara anaweza kudai VAT ya pembejeo kwenye manunuzi yanayohusiana. Thibitisha na TRA.
+---
+eval_018 | vat_registration | yes_no
+SW:  Je, kiwango cha VAT ya B2C ya kidijitali cha asilimia 16 kimetekelezwa kikamilifu nchini Tanzania kufikia katikati ya 2026?
+ANS: Hii haijulikani kwa uhakika bila uthibitisho wa TRA. Kiwango cha asilimia 16 kilianzishwa 1 Septemba 2025 lakini kanuni za utekelezaji bado zilisubiri tangazo la Kamishna Mkuu mwishoni mwa 2025. Thibitisha hali ya sasa moja kwa moja na TRA.
+---
+eval_019 | vat_registration | yes_no
+SW:  Biashara yangu imepata mauzo ya TZS milioni 95 katika miezi 6 — je, nimevuka kizingiti cha VAT cha lazima?
+ANS: Hapana. Kizingiti cha miezi 6 ni TZS milioni 100. Mauzo ya TZS milioni 95 bado hayajafika. Hata hivyo, fuatilia kwa makini — TZS milioni 5 zaidi katika kipindi hicho hicho itafanya usajilishaji kuwa wa lazima. Thibitisha na TRA.
+---
+eval_020 | vat_registration | yes_no
+SW:  Je, mhasibu aliyeidhinishwa (CPA) lazima asajilishe VAT hata kama ana wateja wachache na mapato madogo sana?
+ANS: Ndiyo. Wahasibu waliosajiliwa wanahitajika kusajilisha VAT bila kujali kiasi cha mauzo yao — hii ni sharti maalum la TRA kwa fani zilizoorodheshwa. Mapato madogo hayatolei msamaha katika kundi hili. Thibitisha na TRA.
+---
+eval_021 | vat_registration | definition
+SW:  'Mnunuzi anayehitimu' (qualifying buyer) katika mfumo wa VAT withholding wa Tanzania maana yake nini?
+ANS: Mnunuzi anayehitimu ni: (a) Wizara ya Fedha; (b) taasisi ya serikali inayohifadhi mapato yake yenyewe; au (c) mtu aliyeteuliwa rasmi na Kamishna Mkuu. Mnunuzi huyu anakata sehemu ya VAT na kuipeleka TRA moja kwa moja.
+---
+eval_022 | vat_registration | definition
+SW:  Tofauti kati ya bidhaa za 'zero-rated' na 'exempt' katika VAT ya Tanzania ni nini?
+ANS: Zero-rated: kiwango cha VAT ni 0%, bado ni 'usambazaji wa VAT' — unaweza kudai VAT ya pembejeo. Exempt: hazilipishwi VAT kabisa — HUWEZI kudai VAT ya pembejeo inayohusiana. Tofauti hii inaathiri sana gharama za uendeshaji wa biashara. Thibitisha na TRA.
+---
+eval_023 | vat_registration | definition
+SW:  'VAT ya matokeo' (output VAT) kwa mfanyabiashara aliyesajiliwa maana yake nini?
+ANS: VAT ya matokeo ni VAT unayoikusanya kutoka wateja kwenye mauzo yako ya bidhaa au huduma zinazolipwa VAT. Ni pesa ya serikali — unaikusanya kwa niaba ya TRA na kuwasilisha tofauti kati yake na VAT ya pembejeo.
+---
+eval_024 | vat_registration | definition
+SW:  'Kipindi cha miezi 12 kinachozunguka' (rolling 12-month period) katika kizingiti cha VAT maana yake nini?
+ANS: Ni kipindi chochote cha miezi 12 mfululizo — si lazima iwe mwaka wa kalenda (Januari-Desemba). Kwa mfano, Machi 2025 hadi Februari 2026 ni kipindi halali. TRA inatathimini mauzo katika kipindi chochote cha miezi 12, si mwaka wa fedha peke yake.
+---
+eval_025 | vat_registration | definition
+SW:  Kwa nini fani kama wakili na wahandisi zinahitajika kusajilisha VAT bila kujali mauzo yao?
+ANS: TRA imeweka sharti maalum kwa fani zilizoorodheshwa (wakili, wahasibu, wahandisi, wasanifu majengo) kwa sababu huduma zao zinachukuliwa kuwa za kitaaluma na za lazima kusajilishwa VAT. Hii inapunguza hatari ya kukimbia kodi katika sekta za kitaalamu zenye mapato makubwa yasiyoonekana wazi. Thibitisha orodha kamili na TRA.
+---
+eval_026 | vat_registration | procedure
+SW:  Biashara yangu imezidi kizingiti cha VAT wiki hii — hatua ya kwanza ninayopaswa kuchukua ni nini?
+ANS: Wasiliana na TRA mara moja na omba usajilishaji wa VAT. Usiendelee kufanya biashara bila usajilishaji — kuchelewa ni ukiukwaji wa sheria. TRA itakupa nambari ya VAT na maelekezo ya kutoa risiti za EFD. Tembelea tra.go.tz au ofisi ya karibu.
+---
+eval_027 | vat_registration | procedure
+SW:  Ninauza huduma za ushauri kwa wizara ya serikali — utaratibu sahihi wa invoice ya VAT kwa mnunuzi anayehitimu ni upi?
+ANS: 1) Toa invoice yenye VAT ya asilimia 18 — kwa mfano huduma ya TZS 1,000,000 + VAT TZS 180,000 = jumla TZS 1,180,000. 2) Wizara inakata asilimia 6 ya kiasi cha VAT tu (yaani 6% ya TZS 180,000 = TZS 10,800) na kuipeleka TRA moja kwa moja. 3) Wizara inakupa sehemu iliyobaki ya jumla (TZS 1,169,200). 4) Wizara inakutoa certificate ya VAT withholding siku ile VAT inapostahili kulipwa. 5) Bado unaweza kudai VAT yako yote ya pembejeo kwenye return yako ya kawaida. Thibitisha hesabu na TRA.
+---
+eval_028 | vat_registration | procedure
+SW:  Jinsi gani ya kuomba kujisajilisha VAT kwa hiari kabla ya kufikia kizingiti?
+ANS: 1) Wasiliana na TRA kupitia tra.go.tz au ofisi ya karibu. 2) Wasilisha ombi la usajilishaji wa hiari pamoja na BRELA certificate, TIN, na hati za biashara. 3) TRA itakagua ombi. 4) Ukipitishwa, utapata nambari ya VAT na unaweza kutoa invoice za VAT na kudai VAT ya pembejeo. Thibitisha nyaraka zinazohitajika na TRA.
+---
+eval_029 | vat_registration | procedure
+SW:  VAT ya pembejeo yangu inazidi VAT ya matokeo kwa mwezi huu — nifanye nini?
+ANS: 1) Wasilisha VAT return yako kwa wakati (ifikapo siku ya 20) ukionyesha ziada ya VAT ya pembejeo. 2) Unaweza kuomba TRA irudishe ziada hiyo (VAT refund) au kuibeba mbele (carry forward). 3) TRA ina mchakato maalum wa madai ya kurudisha VAT. Wasiliana na TRA au mshauri wa kodi kwa mwongozo.
+---
+eval_030 | vat_registration | procedure
+SW:  Certificate ya VAT withholding inatolewa lini kwa msambazaji — je, ni siku ya 20 ya mwezi unaofuata?
+ANS: Hapana. Siku ya 20 ni deadline ya VAT return, si ya certificate ya withholding. Certificate ya VAT withholding lazima itolewe siku ile VAT inapostahili kulipwa — si tarehe nyingine. Hizi ni tarehe mbili tofauti kabisa zinazohusiana na majukumu tofauti.
+---
+eval_031 | vat_withholding | number
+SW:  Kiwango cha VAT withholding kwenye bidhaa chini ya Finance Act 2025 ni asilimia ngapi?
+ANS: Asilimia 3, ikiwa na ufanisi kuanzia 1 Julai 2025. Kiwango hiki kinatumika wakati mnunuzi anayehitimu ananunua bidhaa kutoka kwa msambazaji aliyesajiliwa VAT. Thibitisha na TRA.
+---
+eval_032 | vat_withholding | number
+SW:  Kiwango cha VAT withholding kwenye huduma chini ya Finance Act 2025 ni asilimia ngapi?
+ANS: Asilimia 6, ikiwa na ufanisi kuanzia 1 Julai 2025. Kiwango hiki kinatumika kwa huduma zote zinazolipwa VAT zinazonunuliwa na mnunuzi anayehitimu. Tofauti na bidhaa ambazo ni asilimia 3. Thibitisha na TRA.
+---
+eval_033 | vat_withholding | number
+SW:  Utaratibu wa VAT withholding wa Finance Act 2025 ulianza lini?
+ANS: Tarehe 1 Julai 2025. Kuanzia tarehe hii, wanunuzi wanaohitimu wanakata asilimia 3 (bidhaa) au asilimia 6 (huduma) kutoka malipo ya VAT na kuipeleka TRA moja kwa moja.
+---
+eval_034 | vat_withholding | number
+SW:  Mnunuzi anayehitimu ananunua bidhaa za TZS milioni 5 — kiasi gani cha VAT withholding kinakatwa?
+ANS: TZS 150,000 (asilimia 3 ya TZS milioni 5). Mnunuzi anakata TZS 150,000 kutoka malipo ya VAT na kuipeleka TRA. Msambazaji anapokea sehemu iliyobaki ya VAT na bado anaweza kudai VAT yake ya pembejeo. Thibitisha hesabu na TRA.
+---
+eval_035 | vat_withholding | number
+SW:  Taasisi ya serikali inayohitimu inalipa TZS milioni 3 kwa huduma za ushauri — kiasi gani cha VAT withholding kinakatwa?
+ANS: TZS 180,000 (asilimia 6 ya TZS milioni 3). Kiwango cha huduma ni asilimia 6 — mara mbili ya kiwango cha bidhaa (asilimia 3). Taasisi inakata TZS 180,000 na kuipeleka TRA. Thibitisha hesabu na TRA.
+---
+eval_036 | vat_withholding | number
+SW:  Aina tatu za wanunuzi wanaohitimu (qualifying buyers) chini ya mfumo wa VAT withholding wa Finance Act 2025 ni zipi?
+ANS: 1) Wizara ya Fedha. 2) Taasisi ya serikali inayohifadhi mapato yake yenyewe. 3) Mtu aliyeteuliwa rasmi na Kamishna Mkuu. Hizi peke yake ndizo zinazostahili kukata VAT withholding. Thibitisha orodha kamili na TRA.
+---
+eval_037 | vat_withholding | number
+SW:  Chini ya mfumo wa VAT withholding, ni upande gani — mnunuzi au msambazaji — anayepeleka VAT iliyozuiwa TRA?
+ANS: Mnunuzi anayehitimu (qualifying buyer). Mnunuzi anakata sehemu ya VAT kutoka malipo na anailipa TRA moja kwa moja, bila kupitia msambazaji. Msambazaji anapokea tu sehemu iliyobaki ya VAT.
+---
+eval_038 | vat_withholding | number
+SW:  Tofauti ya kiwango cha VAT withholding kati ya bidhaa (asilimia 3) na huduma (asilimia 6) ni pointi ngapi za asilimia?
+ANS: Pointi 3 za asilimia (6% − 3% = 3%). Kiwango cha huduma ni mara mbili ya kiwango cha bidhaa. Hii inamaanisha msambazaji wa huduma anaathirika zaidi na withholding kuliko msambazaji wa bidhaa. Thibitisha na TRA.
+---
+eval_039 | vat_withholding | yes_no
+SW:  Je, kiwango cha VAT withholding ni sawa kwa bidhaa na huduma?
+ANS: Hapana. Kiwango cha bidhaa ni asilimia 3 na kiwango cha huduma ni asilimia 6 — mara mbili. Hii ni tofauti muhimu inayoathiri biashara zinazotoa huduma kwa wanunuzi wa serikali. Thibitisha na TRA.
+---
+eval_040 | vat_withholding | yes_no
+SW:  Je, msambazaji anapoteza haki ya kudai VAT ya pembejeo wakati mnunuzi anayehitimu anakata VAT withholding?
+ANS: Hapana. Msambazaji bado anaweza kudai VAT yake yote ya pembejeo kwa kawaida kwenye VAT return yake. VAT withholding inathiri sehemu ya VAT ya matokeo tu — haiathiri haki ya kudai VAT ya pembejeo. Thibitisha na TRA. Hata hivyo, unaweza kudai kiasi kilichozuiwa TU kama una certificate halali ya VAT withholding wakati wa kuwasilisha return yako. Bila certificate halali, TRA haitakubali madai yako.
+---
+eval_041 | vat_withholding | yes_no
+SW:  Je, utaratibu wa VAT withholding wa Finance Act 2025 ulianza kutumika tangu 1 Januari 2025?
+ANS: Hapana. Utaratibu wa VAT withholding ulianza kuanzia 1 Julai 2025, si Januari 2025. Finance Act inaanza kutumika mara nyingi tarehe 1 Julai kwa Tanzania. Thibitisha tarehe sahihi na TRA.
+---
+eval_042 | vat_withholding | yes_no
+SW:  Je, certificate ya VAT withholding inatakiwa ifikishwe msambazaji ifikapo siku ya 20 ya mwezi unaofuata?
+ANS: Hapana. Certificate ya VAT withholding lazima itolewe siku ile VAT inapostahili kulipwa — si siku ya 20. Siku ya 20 ni deadline ya VAT return, ambayo ni jukumu tofauti kabisa. Thibitisha tarehe sahihi na TRA.
+---
+eval_043 | vat_withholding | yes_no
+SW:  Je, kampuni ya kawaida ya biashara (isiyo ya serikali) inaweza kuwa mnunuzi anayehitimu wa VAT withholding kiotomatiki?
+ANS: Hapana kwa kawaida. Wanunuzi wanaohitimu ni: Wizara ya Fedha, taasisi za serikali zinazohifadhi mapato yake, na watu waliochaguliwa maalum na Kamishna Mkuu. Kampuni ya kawaida ya biashara haihitimu bila uteuzi maalum wa Kamishna Mkuu. Thibitisha na TRA.
+---
+eval_044 | vat_withholding | yes_no
+SW:  Je, kiwango cha asilimia 3 cha VAT withholding kinatumika pia kwa ununuzi wa huduma za IT kutoka kwa msambazaji aliyesajiliwa VAT?
+ANS: Hapana. Huduma za IT ni huduma, hivyo kiwango kinachofaa ni asilimia 6 — si asilimia 3. Kiwango cha asilimia 3 kinahusu bidhaa peke yake. Thibitisha aina ya usambazaji na TRA ili kutumia kiwango sahihi.
+---
+eval_045 | vat_withholding | yes_no
+SW:  Je, Wizara ya Fedha Tanzania ni mnunuzi anayehitimu kwa madhumuni ya VAT withholding kiotomatiki?
+ANS: Ndiyo. Wizara ya Fedha ni moja ya aina tatu za wanunuzi wanaohitimu chini ya Finance Act 2025 — haihitaji uteuzi wa ziada wa Kamishna Mkuu. Thibitisha hali hii na TRA kwa miamala yako maalum.
+---
+eval_046 | vat_withholding | definition
+SW:  'Wakala wa VAT withholding' (VAT withholding agent) maana yake nini?
+ANS: Wakala wa VAT withholding ni mnunuzi anayehitimu aliyeidhinishwa kukata sehemu ya VAT wakati wa malipo na kuipeleka TRA moja kwa moja, bila kupitia msambazaji. Mnunuzi huyu anawakilisha TRA katika ukusanyaji wa sehemu ya VAT hiyo.
+---
+eval_047 | vat_withholding | definition
+SW:  Tofauti kati ya tarehe ya kufungua VAT return (siku ya 20) na tarehe ya certificate ya VAT withholding ni nini?
+ANS: VAT return: iwasilishwe ifikapo siku ya 20 ya mwezi unaofuata. Certificate ya VAT withholding: lazima itolewe siku ile VAT inapostahili kulipwa — si siku ya 20. Hizi ni tarehe mbili tofauti kabisa zinazohusiana na majukumu tofauti ya kisheria.
+---
+eval_048 | vat_withholding | definition
+SW:  Maana ya 'VAT withholding si VAT yote' kwa msambazaji ni nini?
+ANS: Mnunuzi anayehitimu anakata sehemu ndogo ya VAT tu (asilimia 3 au 6) — si VAT yote ya asilimia 18. Msambazaji bado ana wajibu wa VAT iliyobaki kupitia return yake ya kawaida. Kiasi kilichozuiwa kinapelekwa TRA na mnunuzi, na msambazaji anadai VAT ya pembejeo yake kwa kawaida.
+---
+eval_049 | vat_withholding | penalty
+SW:  Mnunuzi anayehitimu akishindwa kukata na kupeleka VAT withholding TRA — matokeo yake ni nini?
+ANS: TRA inaweza kumshika mnunuzi anayehitimu mwenyewe kuwajibika kwa VAT isiyopelekwa, pamoja na riba na faini. Kushindwa kuzuia VAT kunaweza pia kusababisha ukaguzi wa TRA na hatua za kisheria. Thibitisha majukumu kamili na TRA.
+---
+eval_050 | vat_withholding | penalty
+SW:  Msambazaji akidanganya kiwango cha VAT kwenye invoice kwa mnunuzi anayehitimu — hatari ni nini?
+ANS: TRA inaweza kufanya ukaguzi wa VAT, kudai VAT yote iliyopotea pamoja na riba na faini. Kudanganya kwa makusudi kwenye invoice za VAT kunaweza kuchukuliwa kama udanganyifu wa kodi. Thibitisha utaratibu sahihi wa kuandika invoice na TRA.
+---
+eval_051 | efd_compliance | number
+SW:  Kiwango cha chini cha thamani ya muamala ambacho kinahitaji risiti ya EFD kwa biashara zilizosajiliwa VAT ni kiasi gani?
+ANS: Hakuna kiwango cha chini. Kila muamala wa mauzo, bila kujali kiasi — iwe TZS 100 au TZS 1,000,000 — unahitaji risiti ya EFD. Kusema 'muamala mdogo hauhitaji EFD' ni kosa la kisheria. Thibitisha na TRA.
+---
+eval_052 | efd_compliance | number
+SW:  Kiwango cha kawaida cha VAT kinachoonekana kwenye risiti ya EFD ya muamala wa kawaida unaolipwa VAT ni asilimia ngapi?
+ANS: Asilimia 18 — kiwango cha kawaida cha VAT Tanzania. Risiti ya EFD inasajili bei bila VAT, kiasi cha VAT, na jumla inayolipwa. Thibitisha maudhui ya risiti ya EFD na TRA.
+---
+eval_053 | efd_compliance | number
+SW:  EFD machine ikiharibika — biashara ina muda gani wa kuripoti TRA kabla ya kuendelea kufanya mauzo?
+ANS: Biashara lazima iripoti TRA haraka iwezekanavyo — mara tu tatizo linapotokea. Huwezi kuendelea kufanya mauzo bila EFD kabla ya kupata ruhusa ya TRA. Kuendelea bila ruhusa ni ukiukwaji wa sheria. Thibitisha utaratibu wa dharura na TRA.
+---
+eval_054 | efd_compliance | number
+SW:  VAT return inayohusiana na rekodi za EFD iwasilishwe TRA ifikapo tarehe ngapi kila mwezi?
+ANS: Ifikapo siku ya 20 ya mwezi unaofuata. Kwa mfano, rekodi za EFD za Machi zinawasilishwa kupitia VAT return ya Machi, inayostahili ifikapo 20 Aprili. Thibitisha na TRA.
+---
+eval_055 | efd_compliance | number
+SW:  Kiwango gani cha VAT kinapaswa kuonekana kwenye risiti za EFD za malipo ya kidijitali ya B2C kuanzia 1 Septemba 2025?
+ANS: Kiwango cha B2C ya kidijitali ni asilimia 16 kuanzia 1 Septemba 2025, lakini bado linasubiri kanuni kamili za utekelezaji kutoka kwa Kamishna Mkuu. Thibitisha hali ya sasa ya utekelezaji na TRA kabla ya kubadilisha mipangilio ya EFD yako.
+---
+eval_056 | efd_compliance | yes_no
+SW:  Wateja wangu wanalipa pesa taslimu — naweza kusema muamala mdogo wa taslimu chini ya TZS 10,000 hauhitaji risiti ya EFD?
+ANS: Hapana kabisa. Aina ya malipo (taslimu, simu, benki) na kiasi cha muamala hazibadilishi wajibu wa kutoa risiti ya EFD. Kila muamala wa mauzo unahitaji risiti ya EFD. Kukosa kutoa risiti kunaweza kusababisha faini kali kutoka TRA. Thibitisha na TRA.
+---
+eval_057 | efd_compliance | yes_no
+SW:  Je, biashara inahitaji ruhusa ya TRA kabla ya kuendelea kufanya mauzo wakati EFD ikiwa imeharibika?
+ANS: Ndiyo. Lazima upate ruhusa ya TRA (kama idhini ya muda) kabla ya kuendelea kufanya mauzo kwa risiti za kawaida. Kuendelea bila ruhusa ni ukiukwaji wa sheria wa VAT. Ripoti tatizo TRA mara moja na subiri maelekezo yao.
+---
+eval_058 | efd_compliance | yes_no
+SW:  Je, wateja wana haki ya kisheria ya kudai risiti ya EFD kutoka kwa biashara iliyosajiliwa VAT?
+ANS: Ndiyo. Wateja wana haki ya kudai risiti ya EFD, na TRA inawahimiza wateja kuripoti biashara ambazo hazitoai risiti. Biashara ina wajibu wa kisheria wa kutoa risiti — si hiari.
+---
+eval_059 | efd_compliance | yes_no
+SW:  Mteja akilipa kupitia mobile money — je, ninaweza kutoa risiti iliyoandikwa kwa mkono badala ya risiti ya EFD?
+ANS: Hapana. Njia ya malipo haina umuhimu — risiti ya EFD inahitajika kwa kila muamala, iwe malipo ya taslimu, mobile money, kadi, au benki. Risiti iliyoandikwa kwa mkono badala ya EFD ni ukiukwaji wa sheria ya VAT. Thibitisha na TRA.
+---
+eval_060 | efd_compliance | yes_no
+SW:  Je, TRA inaweza kufunga biashara kwa kutotoa risiti za EFD mara kwa mara?
+ANS: Ndiyo. TRA ina mamlaka ya kutoza faini, kusimamisha leseni ya biashara, na kuchukua hatua nyingine za kisheria ikiwa ni pamoja na kufunga biashara. Kukosa kutoa risiti za EFD mara kwa mara kunaweza kuchukuliwa kama udanganyifu wa kodi. Thibitisha na TRA.
+---
+eval_061 | efd_compliance | yes_no
+SW:  Je, mashine ya EFD inatuma taarifa za miamala moja kwa moja TRA bila mfanyabiashara kufanya chochote zaidi?
+ANS: Ndiyo. Mashine ya EFD imeunganishwa moja kwa moja na mfumo wa TRA na inasajili na kutuma taarifa za kila muamala wa mauzo. Hii inamaanisha TRA inaweza kuona rekodi zako za mauzo moja kwa moja — hivyo kuficha miamala ni vigumu sana.
+---
+eval_062 | efd_compliance | yes_no
+SW:  EFD ikiwa imeharibika na inasubiri ukarabati — je, biashara inaweza kutumia risiti za kawaida bila kuomba ruhusa ya TRA?
+ANS: Hapana. Kabla ya kutumia risiti za kawaida wakati EFD ikiwa inakarabatiwa, lazima upate ruhusa (idhini ya muda) kutoka TRA kwanza. Kutumia risiti za kawaida bila ruhusa hii ni ukiukwaji wa sheria. Ripoti TRA mara moja na subiri maelekezo yao.
+---
+eval_063 | efd_compliance | yes_no
+SW:  Je, ni jukumu la mteja kuomba risiti ya EFD, au biashara inapaswa kuitoa moja kwa moja bila kuombwa?
+ANS: Ni jukumu la biashara kutoa risiti ya EFD mara moja baada ya kila muamala — bila kusubiri mteja aombe. Biashara haiwezi kutegemea mteja asikuomba ili kutooa risiti. Kukosa kutoa risiti bila kuombwa ni ukiukwaji wa sheria.
+---
+eval_064 | efd_compliance | procedure
+SW:  EFD machine yangu imeharibika ghafla — hatua sahihi ni zipi?
+ANS: 1) Simamisha mauzo mara moja. 2) Ripoti tatizo TRA haraka iwezekanavyo. 3) Wasiliana na msambazaji wa EFD aliyeidhinishwa na TRA kuhusu ukarabati. 4) Omba TRA idhini ya muda ya kutumia risiti za kawaida wakati wa ukarabati. 5) Usiendelee kufanya mauzo hadi utakapopata maelekezo ya TRA.
+---
+eval_065 | efd_compliance | procedure
+SW:  Biashara mpya iliyosajiliwa VAT inapata EFD machine vipi?
+ANS: 1) Wasiliana na TRA kwa orodha ya wasambazaji wa EFD walioidhinishwa Tanzania. 2) Nunua au kodi EFD kutoka kwa msambazaji aliyeidhinishwa — usiuchukue mwingine yeyote. 3) Msambazaji atafunga EFD na kuiandikisha kwenye mfumo wa TRA. 4) Baada ya ufungaji, EFD itaunganishwa moja kwa moja na TRA. Thibitisha gharama na msambazaji.
+---
+eval_066 | efd_compliance | procedure
+SW:  Mteja anakataa kukubali risiti ya EFD — nifanye nini?
+ANS: Toa risiti ya EFD hata kama mteja anakataa kukubali. Wajibu wa kisheria ni wako wewe kama mfanyabiashara — si mteja. Rekodi ya EFD inasajiliwa kwenye mfumo wa TRA iwe mteja alichukua risiti au la. Huwezi kufuta muamala au kukosa kutoa risiti kwa sababu mteja alikataa.
+---
+eval_067 | efd_compliance | procedure
+SW:  TRA kawaida hugundua vipi biashara ambazo hazitoi risiti za EFD?
+ANS: TRA hutumia mbinu nne kuu: (1) ukaguzi wa ghafla wa maeneo ya biashara, (2) malalamiko ya wateja, (3) uchambuzi wa data wa EFD dhidi ya benki na mobile money, (4) tofauti kati ya mauzo yaliyoripotiwa na miamala halisi. Mbinu moja tu inatosha kufungua ukaguzi kamili. Thibitisha utaratibu wako wa EFD daima.
+---
+eval_068 | efd_compliance | penalty
+SW:  Adhabu za TRA kwa biashara inayokataa kutoa risiti za EFD mara kwa mara ni zipi?
+ANS: TRA inaweza: kutoza faini kubwa, kusimamisha leseni ya biashara, kufunga biashara, na kuchukulia miamala isiyokuwa na risiti kama udanganyifu wa kodi. Katika hali mbaya, wakurugenzi wa kampuni wanaweza kuwajibika kisheria. Thibitisha kiasi cha faini na TRA.
+---
+eval_069 | efd_compliance | penalty
+SW:  Mteja akiripoti biashara kwa TRA kwa kutotoa risiti ya EFD — TRA inaweza kufanya nini?
+ANS: TRA inaweza kufanya ukaguzi wa ghafla wa biashara hiyo, kutoza faini, na kufanya ukaguzi kamili wa rekodi za mauzo. Ripoti moja inaweza kuchochea ukaguzi wa kina ambao unagundua miamala mingi isiyoandikwa. Hii ni hatari kubwa kwa biashara yoyote inayokimbia EFD.
+---
+eval_070 | efd_compliance | penalty
+SW:  Je, kukosa kutoa risiti ya EFD kunaweza kuchukuliwa kama udanganyifu wa kodi (tax evasion) na TRA?
+ANS: Ndiyo. Miamala isiyokuwa na risiti za EFD inaweza kutafsiriwa na TRA kama jaribio la kuficha mauzo na kukimbia kulipa VAT. Hii inaweza kusababisha madai ya udanganyifu wa kodi, ambayo yana adhabu kali zaidi kuliko faini za kawaida. Toa risiti ya EFD kwa kila muamala daima.
+---
+eval_071 | brela_registration | number
+SW:  BRELA inasajilisha aina kuu ngapi za miundo ya biashara Tanzania?
+ANS: Tatu: (1) Jina la biashara (business name / sole trader), (2) Ushirikiano (partnership), na (3) Kampuni yenye ukomo (limited liability company). Aina nyingine kama kampuni za umma pia zinawezekanwa. Thibitisha na BRELA kwenye brela.go.tz.
+---
+eval_072 | brela_registration | number
+SW:  Mara ngapi kampuni iliyosajiliwa na BRELA inahitajika kuwasilisha annual return (ripoti ya kila mwaka)?
+ANS: Mara moja kwa mwaka. Annual return inaweka rekodi za BRELA za hivi karibuni — ikiwa ni pamoja na majina ya wakurugenzi, anwani ya ofisi, na maelezo ya wamiliki wa hisa. Kushindwa kuwasilisha kunaweza kusababisha faini au kufutwa kwa usajilishaji. Thibitisha tarehe ya kufunga na BRELA.
+---
+eval_073 | brela_registration | number
+SW:  Jina la biashara (sole trader) linalosajiliwa BRELA linaweza kumilikiwa na watu wangapi?
+ANS: Mtu mmoja tu. Jina la biashara (business name) ni kwa mfanyabiashara mmoja peke yake (sole trader). Ukitaka kumiliki biashara pamoja na mtu mwingine, unahitaji ushirikiano (partnership) au kampuni yenye ukomo (limited company). Thibitisha na BRELA.
+---
+eval_074 | brela_registration | number
+SW:  Mfanyabiashara anahitaji nyaraka kuu ngapi kutoka taasisi tofauti (BRELA na TRA) ili kufanya biashara rasmi Tanzania?
+ANS: Angalau mbili: (1) Certificate ya BRELA — inathibitisha usajilishaji wa kisheria wa biashara; (2) TIN kutoka TRA — nambari ya mlipakodi. Hizi mbili ni za lazima na ni tofauti — BRELA inasajilisha biashara yenyewe; TRA inaisajilisha kwa madhumuni ya kodi. Usisajilishe moja na uache nyingine.
+---
+eval_075 | brela_registration | yes_no
+SW:  Je, mfanyabiashara anayefanya kazi peke yake kwa jina lake la kawaida bado anahitaji kusajilisha jina la biashara na BRELA?
+ANS: Ndiyo. Sheria ya Tanzania inahitaji usajili rasmi wa biashara yoyote inayofanya shughuli za kibiashara, hata kama mfanyabiashara anatumia jina lake mwenyewe. Kutosajilisha kunaleta hatari za kisheria. Tembelea brela.go.tz kwa maelezo ya usajili wa jina la biashara.
+---
+eval_076 | brela_registration | yes_no
+SW:  Je, certificate ya BRELA peke yake inatosha kufanya biashara kikamilifu bila kupata TIN kutoka TRA?
+ANS: Hapana. Certificate ya BRELA na TIN kutoka TRA ni nyaraka mbili tofauti zinazotakiwa. BRELA inasajilisha biashara yenyewe; TRA inaisajilisha kwa madhumuni ya kodi. Bila TIN, huwezi kulipa kodi, kuomba tender za serikali, au kufungua akaunti za biashara nyingi za benki. Pata zote mbili.
+---
+eval_077 | brela_registration | yes_no
+SW:  Je, mfanyabiashara anaweza kutafuta jina la biashara kwenye tovuti ya BRELA kabla ya kusajilisha ili kujua kama linachukuliwa tayari?
+ANS: Ndiyo. BRELA inakuruhusu kufanya utafutaji wa jina la biashara kwenye brela.go.tz kabla ya kusajilisha. Baada ya kuthibitisha jina linapatikana, unaweza kuomba kulihifadhi (reservation) kabla ya kukamilisha usajilishaji wako. Jibu la utafutaji si dhamana — thibitisha na BRELA moja kwa moja.
+---
+eval_078 | brela_registration | yes_no
+SW:  Je, kampuni inaweza kufutwa usajilishaji wake BRELA kwa kushindwa kuwasilisha annual return?
+ANS: Ndiyo. Kushindwa kuwasilisha annual return kwa wakati kunaweza kusababisha faini na hatimaye BRELA kufuta usajilishaji wa kampuni hiyo. Kampuni iliyofutwa usajilishaji wake haiwezi kufanya biashara rasmi. Hakikisha unawasilisha annual return kila mwaka kwa wakati. Thibitisha tarehe ya kufunga na BRELA.
+---
+eval_079 | brela_registration | yes_no
+SW:  Je, ushirikiano (partnership) wa watu wawili wanaomiliki duka pamoja unahitaji kusajiliwa BRELA?
+ANS: Ndiyo. Ushirikiano wa biashara unahitajika kusajiliwa na BRELA chini ya Companies Act na sheria za Tanzania. Ushirikiano usiosajiliwa unakabiliwa na hatari za kisheria na unaweza kuathiri mgawanyo wa mali iwapo kutoelewana kutatokea. Thibitisha na BRELA kwenye brela.go.tz.
+---
+eval_080 | brela_registration | definition
+SW:  BRELA ni nini na kazi yake kuu ni nini?
+ANS: BRELA ni Business Registrations and Licensing Agency — shirika la serikali la Tanzania linalosimamia usajilishaji wa biashara, ikiwa ni pamoja na makampuni, majina ya biashara, ushirikiano, na haki za miliki ya akili (intellectual property). Kila biashara inayotaka kufanya kazi rasmi Tanzania lazima isajiliwe kupitia BRELA au mamlaka inayohusika.
+---
+eval_081 | brela_registration | definition
+SW:  Tofauti kuu kati ya jina la biashara (sole trader) na kampuni yenye ukomo (limited company) kuhusiana na wajibu wa kisheria ni nini?
+ANS: Sole trader: wewe na biashara ni mtu mmoja kisheria — madeni ya biashara ni madeni yako binafsi, na mali yako binafsi inaweza kuchukuliwa. Limited company: kampuni ni mtu wa kisheria tofauti nawe — kwa kawaida mali yako binafsi inalindwa dhidi ya madeni ya kampuni. Limited company inahitaji uwasilishaji wa hesabu na gharama zaidi za usimamizi.
+---
+eval_082 | brela_registration | definition
+SW:  Annual return ya BRELA (ripoti ya kila mwaka) ni nini?
+ANS: Annual return ni hati inayowasilishwa kwa BRELA kila mwaka ili kusasisha rekodi za kampuni — ikiwa ni pamoja na majina ya wakurugenzi wa sasa, anwani ya ofisi ya makao makuu, na maelezo ya wamiliki wa hisa. Inafanya rekodi za umma za kampuni ziwe za hivi karibuni na sahihi. Thibitisha tarehe ya kufunga na BRELA.
+---
+eval_083 | brela_registration | definition
+SW:  Usajilishaji wa miliki ya akili (intellectual property) nchini Tanzania hufanywa na taasisi gani?
+ANS: BRELA inasimamia usajilishaji wa alama za biashara (trademarks), hati miliki (patents), na miundo ya viwanda (industrial designs). Haki za ubunifu (copyrights) zinasimamiwa na COSOTA — Copyright Society of Tanzania, si BRELA. Thibitisha aina ya ulinzi unaohitajika na taasisi husika.
+---
+eval_084 | brela_registration | procedure
+SW:  Hatua za kusajilisha jina la biashara (sole trader) na BRELA ni zipi?
+ANS: 1) Tafuta upatikanaji wa jina kwenye brela.go.tz. 2) Omba kulihifadhi (reservation) kama linapatikana. 3) Wasilisha fomu ya usajilishaji pamoja na vitambulisho vya kitaifa na nyaraka zinazohitajika. 4) Lipa ada ya usajilishaji. 5) Pata certificate ya BRELA. Thibitisha nyaraka na ada za sasa na BRELA moja kwa moja.
+---
+eval_085 | brela_registration | procedure
+SW:  Kampuni ilishindwa kuwasilisha annual return kwa miaka 2 — matokeo yanayoweza kutokea ni yapi?
+ANS: Matokeo yanayoweza kutokea: faini kubwa kwa kila mwaka uliokosekana; uwezekano wa BRELA kufuta usajilishaji wa kampuni; kutoweza kuwasilisha hati nyingine zinazohusiana na BRELA; vikwazo vya kibiashara kama kukosa uwezo wa kufungua akaunti za benki au kushiriki kwenye zabuni. Wasiliana na BRELA mara moja ili kushughulikia tatizo hili.
+---
+eval_086 | nssf_contributions | number
+SW:  Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?
+ANS: Asilimia 10 ya mshahara wa jumla (gross salary) wa mfanyakazi. Mwajiri analipa sehemu hii kutoka pesa zake mwenyewe — haikatwi kutoka mshahara wa mfanyakazi. Thibitisha kiwango cha sasa na NSSF kwenye nssf.or.tz.
+---
+eval_087 | nssf_contributions | number
+SW:  Kiwango cha mchango wa NSSF kwa upande wa mfanyakazi ni asilimia ngapi ya mshahara wake wa jumla?
+ANS: Asilimia 10 ya mshahara wake wa jumla (gross salary). Mwajiri anakata kiasi hiki kutoka mshahara wa mfanyakazi kabla ya kulipa mshahara, kisha anachanganya na sehemu yake ya asilimia 10 na kupeleka NSSF. Thibitisha kiwango na NSSF kwenye nssf.or.tz.
+---
+eval_088 | nssf_contributions | number
+SW:  Jumla ya mchango wa NSSF (mwajiri + mfanyakazi) ni asilimia ngapi ya mshahara wa jumla?
+ANS: Asilimia 20 ya mshahara wa jumla — asilimia 10 kutoka mwajiri na asilimia 10 kutoka mfanyakazi. Jumla hii inapelekwa NSSF kila mwezi. Thibitisha na nssf.or.tz.
+---
+eval_089 | nssf_contributions | number
+SW:  Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?
+ANS: Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata. Thibitisha tarehe sahihi na nssf.or.tz.
+---
+eval_090 | nssf_contributions | number
+SW:  Mfanyakazi ana mshahara wa jumla wa TZS 500,000 kwa mwezi — mwajiri anachangia kiasi gani NSSF kwa sehemu yake?
+ANS: TZS 50,000 (asilimia 10 ya TZS 500,000). Hii ni sehemu ya mwajiri peke yake. Mfanyakazi pia anachangia TZS 50,000 (asilimia 10 yake), hivyo jumla inayopelekwa NSSF ni TZS 100,000 kwa mwezi huo. Thibitisha hesabu na NSSF.
+---
+eval_091 | nssf_contributions | number
+SW:  Mfanyakazi anapata mshahara wa jumla wa TZS 800,000 — kiasi gani kinakatwa mshahara wake kwa ajili ya NSSF?
+ANS: TZS 80,000 (asilimia 10 ya TZS 800,000). Mwajiri anakata TZS 80,000 kutoka mshahara wa mfanyakazi kabla ya kulipa — mshahara wa mkono (net salary) utakuwa TZS 720,000 (kabla ya makato mengine kama PAYE). Thibitisha hesabu na NSSF.
+---
+eval_092 | nssf_contributions | number
+SW:  Wafanyakazi 5 kila mmoja anapata TZS 400,000 kwa mwezi — mwajiri anachangia kiasi gani NSSF kwa sehemu yake peke yake?
+ANS: TZS 200,000 (5 × TZS 40,000). Kila mfanyakazi analazimisha mchango wa mwajiri wa TZS 40,000 (asilimia 10 ya 400,000). Jumla inayopelekwa NSSF (ikiwa ni pamoja na sehemu ya wafanyakazi) itakuwa TZS 400,000 (TZS 200,000 × 2). Thibitisha hesabu na NSSF.
+---
+eval_093 | nssf_contributions | number
+SW:  Mchango wa NSSF wa Januari unapaswa kupelekwa NSSF ifikapo tarehe ngapi?
+ANS: Kwa mujibu wa Sheria ya NSSF, michango ya Januari inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara — kwa vitendo ifikapo siku ya 10 ya Februari. Kumbuka: siku ya 20 ni deadline ya VAT return, si ya NSSF. Thibitisha tarehe sahihi na nssf.or.tz.
+---
+eval_094 | nssf_contributions | number
+SW:  Mwajiri akikosa kulipa NSSF — ni taasisi gani (TRA au NSSF) inayofuatilia na kutoza adhabu?
+ANS: NSSF — si TRA. NSSF ni taasisi tofauti na TRA kabisa, ingawa zote mbili zinahusiana na mwajiri. NSSF ina mamlaka yake ya kisheria ya kutoza riba na faini na hata kufungua kesi za kisheria dhidi ya waajiri wanaokiuka. Thibitisha utaratibu wa makosa na NSSF kwenye nssf.or.tz.
+---
+eval_095 | nssf_contributions | number
+SW:  Mfanyabiashara anayejitegemea (self-employed) anapojiunga NSSF kwa hiari — analipa asilimia ngapi ya mchango wake wote (sehemu zote mbili)?
+ANS: Asilimia 20 ya mapato yao (10% ya sehemu ya mwajiri + 10% ya sehemu ya mfanyakazi). Kama mwanachama wa hiari, wewe unalipa sehemu zote mbili peke yako. Kiasi cha msingi cha mapato kinachodhibitiwa kinaweza kutofautiana — thibitisha na NSSF kwenye nssf.or.tz.
+---
+eval_096 | nssf_contributions | yes_no
+SW:  Je, ni kosa la kisheria kwa mwajiri kutosajilisha wafanyakazi wake NSSF?
+ANS: Ndiyo. Mwajiri yeyote anayeajiri wafanyakazi Tanzania ana wajibu wa kisheria wa kuwasajilisha NSSF. Kutosajilisha ni ukiukwaji wa Sheria ya NSSF na kunaweza kusababisha adhabu za kisheria. Thibitisha mahitaji yako maalum na NSSF kwenye nssf.or.tz.
+---
+eval_097 | nssf_contributions | yes_no
+SW:  Je, wafanyakazi wa nyumbani (domestic workers) kama wasichana wa nyumba wanaostahili NSSF?
+ANS: Ndiyo, kwa mujibu wa Sheria ya NSSF Tanzania, wafanyakazi wa nyumbani (domestic workers) wanastahili ufikiwa wa NSSF. Mwajiri wao ana wajibu wa kuchangia NSSF kwa niaba yao. Thibitisha mahitaji ya sasa na NSSF kwenye nssf.or.tz.
+---
+eval_098 | nssf_contributions | yes_no
+SW:  Je, mfanyabiashara anayejitegemea (self-employed) anaweza kujiunga NSSF kwa hiari bila mwajiri?
+ANS: Ndiyo. NSSF Tanzania inakubali uanachama wa hiari kwa wajitegemea na wale wasio na mwajiri rasmi. Mwanachama wa hiari anachangia peke yake na hupata haki ya mafao wakati wa kustaafu, ulemavu, au hali nyingine zinazohitimu. Thibitisha taratibu za usajilishaji na NSSF kwenye nssf.or.tz.
+---
+eval_099 | nssf_contributions | yes_no
+SW:  Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?
+ANS: Hapana. Sehemu ya mwajiri (asilimia 10) inalipwa na mwajiri kutoka pesa zake mwenyewe — si kukatwa mshahara wa mfanyakazi. Sehemu inayokatwa mshahara wa mfanyakazi ni asilimia 10 yake mwenyewe. Jumla inayopelekwa NSSF ni asilimia 20, lakini asilimia 10 tu inakatwa mshahara wa mfanyakazi.
+---
+eval_100 | nssf_contributions | yes_no
+SW:  Mfanyakazi anapata mshahara wa jumla wa TZS milioni 2 kwa mwezi — je, NSSF inahusika na mshahara wote?
+ANS: Ndiyo. NSSF inahusika na mshahara wote wa jumla bila kiwango cha juu. Mfanyakazi anachangia TZS 200,000 (10% ya TZS milioni 2) na mwajiri anachangia TZS 200,000 nyingine — jumla ya TZS 400,000 inapelekwa NSSF kila mwezi. Thibitisha na nssf.or.tz.
+---
+eval_101 | nssf_contributions | yes_no
+SW:  Je, NSSF inatoa mafao ya uzazi kwa wanawake wanaohitimu?
+ANS: Ndiyo. NSSF inatoa mafao ya uzazi kwa wanawake wanaochangia wanaohitimu. Mafao mengine ni pensheni ya uzee, ulemavu, wasio na wazazi, na msaada wa mazishi. Thibitisha masharti ya kuhitimu na NSSF kwenye nssf.or.tz.
+---
+eval_102 | nssf_contributions | yes_no
+SW:  Je, deadline ya kulipa michango ya NSSF kila mwezi ni siku ya 20 ya mwezi unaofuata?
+ANS: Hapana. Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata — si siku ya 20. Siku ya 20 ni deadline ya VAT return, tofauti kabisa. Thibitisha tarehe sahihi na nssf.or.tz.
+---
+eval_103 | nssf_contributions | yes_no
+SW:  Je, mwajiri anaweza kuahirisha malipo ya NSSF wakati wa msongo wa kifedha bila adhabu?
+ANS: Hapana — adhabu zinatumika bila kujali sababu. Unachopaswa kufanya ni kuwasiliana na NSSF mapema ili kujadili mpango wa malipo kabla ya muda wa mwisho. Kukimbia bila kuwasiliana kunazidisha tatizo — adhabu zinaendelea kukua. Wasiliana na NSSF kwenye nssf.or.tz haraka.
+---
+eval_104 | nssf_contributions | procedure
+SW:  Mwajiri anahitaji nyaraka gani kuwasilisha NSSF ili kusajilisha wafanyakazi wake?
+ANS: Unahitaji: fomu ya usajilishaji wa mwajiri; nakala ya certificate ya BRELA; TIN; vitambulisho vya kitaifa vya wafanyakazi wote. Thibitisha orodha kamili na NSSF kwenye nssf.or.tz kabla ya kwenda.
+---
+eval_105 | nssf_contributions | procedure
+SW:  Ninajua sitaweza kulipa NSSF kwa wakati mwezi huu kwa sababu ya tatizo la mtiririko wa pesa — nifanye nini?
+ANS: Wasiliana na NSSF mara moja — kabla ya muda wa mwisho, si baada yake. Eleza hali yako na omba mpango wa malipo. Kukimbia bila kuwasiliana kunazidisha tatizo na adhabu. Thibitisha chaguzi zilizopo na NSSF kwenye nssf.or.tz.
+---
+eval_106 | nssf_contributions | procedure
+SW:  NSSF inampa mwajiri nini baada ya usajilishaji kukamilika?
+ANS: NSSF inatoa nambari ya akaunti ya mwajiri na maelekezo ya kulipa michango kila mwezi. Kila mfanyakazi aliyesajiliwa anapewa nambari yake ya uanachama wa NSSF. Thibitisha taarifa zinazotolewa na NSSF kwenye nssf.or.tz.
+---
+eval_107 | nssf_contributions | procedure
+SW:  Mfanyabiashara anayejitegemea anachukua hatua gani kujiunga NSSF kama mwanachama wa hiari?
+ANS: 1) Tembelea ofisi ya NSSF au tovuti nssf.or.tz. 2) Omba fomu ya uanachama wa hiari. 3) Wasilisha fomu pamoja na kitambulisho cha kitaifa. 4) NSSF itakupa nambari ya uanachama. 5) Anza kulipa michango ya kila mwezi. Thibitisha viwango vya mchango wa hiari na NSSF.
+---
+eval_108 | nssf_contributions | penalty
+SW:  NSSF inatoza riba kiasi gani kwenye michango iliyochelewa ya mwajiri?
+ANS: NSSF inatoza riba ya asilimia 5 kwa kila mwezi wa ucheleweshaji chini ya Sheria ya NSSF Sura ya 50 kifungu cha 14. Kwa kuongeza riba, NSSF inaweza kuchukua hatua za kisheria. Epuka ucheleweshaji — wasiliana na NSSF mapema ukijua hutaweza kulipa.
+---
+eval_109 | nssf_contributions | penalty
+SW:  Je, mkurugenzi wa kampuni anaweza kuwajibika binafsi kwa michango ya NSSF isiyolipwa?
+ANS: Ndiyo — katika hali mbaya, wakurugenzi wa kampuni wanaweza kukabili wajibu wa kibinafsi. Hii ni hatari kubwa kwa wakurugenzi wa makampuni madogo hasa. Usizuie malipo ya NSSF — wasiliana na mshauri wa kisheria au NSSF mara matatizo yanapotokea.
+---
+eval_110 | nssf_contributions | penalty
+SW:  Mwajiri anayoendelea kutosajilisha wafanyakazi wake NSSF — NSSF inaweza kuchukua hatua gani?
+ANS: NSSF inaweza: kufungua kesi ya kisheria; kutoza faini; kutoa amri ya kulazimisha usajilishaji; na katika hali mbaya, kuwashirikisha wakurugenzi kibinafsi. Kutosajilisha ni ukiukwaji mkubwa wa Sheria ya NSSF. Thibitisha na NSSF kwenye nssf.or.tz.
+---
+eval_111 | sdl_compliance | number
+SW:  Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?
+ANS: Asilimia 3.5 ya jumla ya mishahara ya jumla (gross wages) ya wafanyakazi wote. SDL inalipwa na mwajiri peke yake — haikatwi kwa mfanyakazi. Thibitisha kiwango cha sasa na TRA kwenye tra.go.tz.
+---
+eval_112 | sdl_compliance | number
+SW:  Kiwango cha WCF ni asilimia ngapi ya jumla ya mishahara ya jumla?
+ANS: Asilimia 0.5 ya jumla ya mishahara ya jumla ya wafanyakazi wote. WCF inalipwa na mwajiri — haikatwi mshahara wa mfanyakazi. WCF inalipwa kwa Mamlaka ya WCF, si TRA. Thibitisha kiwango na Mamlaka ya WCF.
+---
+eval_113 | sdl_compliance | number
+SW:  SDL inaanza kulipwa mwajiri ana wafanyakazi wangapi au zaidi?
+ANS: Wafanyakazi 10 au zaidi. Waajiri wenye wafanyakazi chini ya 10 hawajumuishwi na SDL kwa kawaida. Mara idadi ikifika 10, SDL inatakiwa kulipwa mara moja. Thibitisha na TRA kwenye tra.go.tz.
+---
+eval_114 | sdl_compliance | number
+SW:  SDL inalipwa pamoja na kodi gani nyingine na inawasilishwa TRA ifikapo tarehe ngapi kila mwezi?
+ANS: SDL inalipwa pamoja na PAYE ifikapo siku ya 7 ya mwezi unaofuata. Kwa mfano, SDL ya Machi inalipwa ifikapo 7 Aprili. Thibitisha tarehe hii na TRA kwenye tra.go.tz.
+---
+eval_115 | sdl_compliance | number
+SW:  GN 605A ya mishahara ya chini ya sekta binafsi inaanza kutumika tarehe ngapi?
+ANS: Tarehe 1 Januari 2026. GN 605A ilitangazwa tarehe 13 Oktoba 2025 na ilianza kutumika 1 Januari 2026. Amri ya mishahara ya 2022 ilifutwa kuanzia tarehe hiyo hiyo. Thibitisha na PKF Eastern Africa au VELMA Law.
+---
+eval_116 | sdl_compliance | number
+SW:  Ongezeko la wastani la mishahara ya chini ya sekta binafsi chini ya GN 605A ni asilimia ngapi?
+ANS: Asilimia 33.4. Mshahara wa wastani ulipanda kutoka TZS 275,060 hadi TZS 358,322 kwa mwezi. Thibitisha takwimu hizi na PKF Eastern Africa.
+---
+eval_117 | sdl_compliance | number
+SW:  GN 605A inashughulikia sekta ngapi na sekta ndogo ngapi za mishahara ya chini?
+ANS: Sekta 16 na sekta ndogo (sub-sectors) 46. Kila sub-sector ina kiwango chake maalum cha mshahara wa chini. Thibitisha orodha kamili na PKF Eastern Africa au TanzLII.
+---
+eval_118 | sdl_compliance | number
+SW:  Wastani wa mshahara wa chini wa sekta binafsi Tanzania KABLA ya GN 605A kuanza kutumika ulikuwa TZS ngapi kwa mwezi?
+ANS: TZS 275,060 kwa mwezi — chini ya amri ya mishahara ya 2022 ambayo ilifutwa kuanzia 1 Januari 2026. Kiwango hiki si halali tena baada ya tarehe hiyo. Thibitisha na PKF Eastern Africa.
+---
+eval_119 | sdl_compliance | number
+SW:  Wastani wa mshahara wa chini wa sekta binafsi Tanzania BAADA ya GN 605A kuanza ni TZS ngapi kwa mwezi?
+ANS: TZS 358,322 kwa mwezi kwa wastani. Hii ni ongezeko la asilimia 33.4. Kiwango halisi kinatofautiana kwa sekta na sub-sector — kina anuwai kutoka karibu TZS 175,000 hadi TZS 765,900 (madini/nishati ya kimataifa). Thibitisha na VELMA Law au PKF.
+---
+eval_120 | sdl_compliance | number
+SW:  Kiwango cha juu zaidi cha mshahara wa chini chini ya GN 605A ni TZS ngapi na ni kwa sekta gani?
+ANS: Karibu TZS 765,900 kwa mwezi — kwa sekta ya madini na nishati ya kimataifa (international mining/energy). Kiwango cha chini kabisa ni karibu TZS 175,000. Thibitisha takwimu hizi na PKF Eastern Africa au Clyde & Co.
+---
+eval_121 | sdl_compliance | yes_no
+SW:  Je, mwajiri mwenye wafanyakazi 8 ana wajibu wa kulipa SDL?
+ANS: Hapana. Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Mwajiri mwenye wafanyakazi 8 bado hajafika kizingiti hicho. Hata hivyo, mara idadi ikifika 10, SDL inatakiwa kulipwa mara moja. Fuatilia idadi kila mwezi. Thibitisha na TRA.
+---
+eval_122 | sdl_compliance | yes_no
+SW:  Je, SDL inakatwa kutoka mshahara wa mfanyakazi na kulipwa TRA?
+ANS: Hapana. SDL inalipwa na mwajiri peke yake kutoka pesa zake mwenyewe — si kukatwa mshahara wa mfanyakazi. Hii ni tofauti na NSSF ambapo sehemu ya mfanyakazi inakatwa mshahara. SDL ni mzigo wa mwajiri kabisa. Thibitisha na TRA.
+---
+eval_123 | sdl_compliance | yes_no
+SW:  Je, WCF na SDL ni ushuru ule ule unaolipwa mahali pamoja?
+ANS: Hapana. Ni ushuru tofauti kabisa: SDL (asilimia 3.5) inalipwa TRA, inafadhili mafunzo ya ujuzi. WCF (asilimia 0.5) inalipwa Mamlaka ya WCF, inafadhili fidia ya majeruhi wa kazi. Zote mbili zinalipwa na mwajiri lakini kwa taasisi tofauti kwa madhumuni tofauti.
+---
+eval_124 | sdl_compliance | yes_no
+SW:  Biashara yangu ina wafanyakazi 9 na ninaajiri mfanyakazi wa 10 katikati ya mwezi — je, SDL inatakiwa kulipwa mwezi huo huo?
+ANS: Ndiyo. Mara idadi ya wafanyakazi wako ikiwa 10 au zaidi, SDL inatakiwa kulipwa mara moja — haijalishi tarehe ya kuajiriwa kwa mfanyakazi wa 10. Thibitisha utaratibu wa mwanzo wa SDL na TRA.
+---
+eval_125 | sdl_compliance | yes_no
+SW:  Je, amri ya mishahara ya chini ya sekta binafsi ya mwaka 2022 bado ina nguvu tangu Januari 2026?
+ANS: Hapana. Amri ya mishahara ya 2022 ilifutwa rasmi kuanzia 1 Januari 2026. GN 605A ndiyo amri mpya inayotumika. Mwajiri yeyote anayetumia viwango vya 2022 baada ya tarehe hiyo anachukuliwa kuwa hana utiifu wa kisheria. Thibitisha na PKF Eastern Africa au VELMA Law.
+---
+eval_126 | sdl_compliance | yes_no
+SW:  Je, mshahara wa chini wa TZS 500,000 kwa sekta ya umma umetokana na GN 605A?
+ANS: Hapana. Mshahara wa TZS 500,000 kwa sekta ya umma ulitangazwa na Rais Samia tarehe 1 Mei 2025, ukianza Julai 2025 — ni agizo tofauti la serikali, si GN 605A. GN 605A inashughulikia sekta binafsi peke yake. Thibitisha tofauti hizi na Clyde & Co au VELMA Law. Thibitisha tofauti hii na VELMA Law au Clyde and Co ambao wameandika uchambuzi wa kina wa mabadiliko haya.
+---
+eval_127 | sdl_compliance | yes_no
+SW:  Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?
+ANS: Ndiyo. SDL na PAYE zote mbili zinalipwa TRA ifikapo siku ya 7 ya mwezi unaofuata. Thibitisha tarehe hii na TRA kwenye tra.go.tz kwani inaweza kubadilika.
+---
+eval_128 | sdl_compliance | yes_no
+SW:  Je, mwajiri anaweza kulipa WCF moja kwa moja TRA badala ya Mamlaka ya WCF?
+ANS: Hapana. WCF inalipwa kwa Mamlaka ya WCF, si TRA. Kulipa TRA badala ya Mamlaka ya WCF hakutakuridhisha wajibu wako wa WCF. Thibitisha njia sahihi ya malipo ya WCF na Mamlaka ya WCF.
+---
+eval_129 | sdl_compliance | procedure
+SW:  Mpangilio sahihi wa makato ya mishahara na malipo ya kodi za mwajiri kwa mwezi ni upi?
+ANS: 1) Kata NSSF ya mfanyakazi (10%) na PAYE kutoka mshahara wa jumla. 2) Lipa mshahara wa mkono kwa mfanyakazi. 3) Peleka PAYE + SDL TRA ifikapo siku ya 7 ya mwezi unaofuata. 4) Peleka NSSF jumla (20%) kwa NSSF ndani ya mwezi mmoja baada ya kulipa mishahara (kwa vitendo ifikapo siku ya 10). 5) Peleka WCF kwa Mamlaka ya WCF. Thibitisha mpangilio huu na washauri wa kodi.
+---
+eval_130 | sdl_compliance | procedure
+SW:  Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?
+ANS: Zidisha jumla ya mishahara ya jumla (gross wages) ya wafanyakazi wote kwa asilimia 3.5. Mfano: jumla ya mishahara ya wafanyakazi wote ni TZS milioni 10 — SDL = 3.5% × 10,000,000 = TZS 350,000. Thibitisha hesabu yako na mshauri wa kodi au TRA.
+---
+eval_131 | sdl_compliance | procedure
+SW:  Mwajiri anagundua vipi kiwango cha mshahara wa chini cha GN 605A kinachofaa kwa kila mfanyakazi wake?
+ANS: Bainisha sekta na sub-sector inayohusu biashara yako kutoka orodha ya GN 605A (sekta 16, sub-sectors 46). Kila sub-sector ina kiwango chake maalum. Soma GN 605A kwenye TanzLII au omba ushauri kutoka PKF Eastern Africa au VELMA Law kwa sekta yako maalum.
+---
+eval_132 | sdl_compliance | procedure
+SW:  Nimegundua nimekuwa nikalipa mishahara chini ya viwango vya GN 605A tangu Januari 2026 — nifanye nini?
+ANS: 1) Hesabu backpay kwa kila mfanyakazi kuanzia 1 Januari 2026. 2) Lipa tofauti hiyo haraka iwezekanavyo. 3) Sasisisha mishahara yote kulingana na viwango vya GN 605A mara moja. 4) Wasiliana na mshauri wa kisheria kama kuna hatari ya malalamiko ya wafanyakazi. Kutolipa mishahara inayostahili ni ukiukwaji wa kisheria.
+---
+eval_133 | sdl_compliance | penalty
+SW:  Matokeo ya kisheria ya mwajiri anayolipa mshahara chini ya viwango vya GN 605A ni yapi?
+ANS: Ukiukwaji wa sheria ya kazi Tanzania. Mfanyakazi anaweza kuleta malalamiko kwa CMA (Commission for Mediation and Arbitration). Mwajiri anaweza kulazimishwa kulipa mishahara iliyobaki pamoja na fidia. Katika hali mbaya, kesi ya Mahakama ya Kazi inaweza kufuata. Hakikisha mishahara inakidhi viwango vya GN 605A kwa sekta yako.
+---
+eval_134 | sdl_compliance | penalty
+SW:  TRA inatoza adhabu gani kwa mwajiri aliyechelewa kulipa SDL?
+ANS: TRA inatoza faini na riba kwenye SDL iliyochelewa. Kiasi maalum kinapaswa kuthibitishwa moja kwa moja na TRA kwenye tra.go.tz kwani kinaweza kubadilika baada ya Finance Act ya kila mwaka. Lipa SDL ikiwa na PAYE ifikapo siku ya 7 ili kuepuka adhabu.
+---
+eval_135 | sdl_compliance | penalty
+SW:  Mwajiri anadai viwango vya amri ya mishahara ya 2022 bado vinatumika kwa wafanyakazi wake mwaka 2026 — hali yake ya kisheria ni nini?
+ANS: Hana utiifu wa kisheria. Amri ya mishahara ya 2022 ilifutwa rasmi kuanzia 1 Januari 2026 na GN 605A. Mwajiri anayetumia viwango vya 2022 baada ya tarehe hiyo anakiuka sheria ya kazi na anaweza kukabiliwa na malalamiko ya wafanyakazi na hatua za kisheria. Thibitisha na VELMA Law au PKF.
+---
+eval_136 | gn487a | number
+SW:  GN 487A inazuia aina ngapi za biashara kwa wageni?
+ANS: GN 487A inakataza aina 15 za biashara kwa wageni.
+---
+eval_137 | gn487a | number
+SW:  Faini ya chini kabisa kwa mgeni anayefanya biashara iliyokatazwa ni TZS ngapi?
+ANS: Faini ya chini kabisa ni TZS milioni 10.
+---
+eval_138 | gn487a | number
+SW:  Mgeni aliyekamatwa akifanya biashara iliyokatazwa anaweza kufungwa miezi mingapi?
+ANS: Mgeni anaweza kufungwa hadi miezi 6.
+---
+eval_139 | gn487a | number
+SW:  Mtanzania anayenusuru mgeni kufanya biashara haramu atalipia faini ya TZS ngapi?
+ANS: Mtanzania anayenusuru mgeni atalipa faini ya TZS milioni 5.
+---
+eval_140 | gn487a | number
+SW:  Mtanzania anayenusuru mgeni kufanya biashara haramu anaweza kufungwa miezi mingapi?
+ANS: Mtanzania anayenusuru mgeni anaweza kufungwa hadi miezi 3.
+---
+eval_141 | gn487a | number
+SW:  GN 487A ilianza kutumika tarehe ngapi?
+ANS: GN 487A ilianza kutumika tarehe 28 Julai 2025.
+---
+eval_142 | gn487a | number
+SW:  Zoezi la utekelezaji wa GN 487A lilianza tarehe ngapi?
+ANS: Zoezi la utekelezaji lilianza tarehe 11 Septemba 2025.
+---
+eval_143 | gn487a | number
+SW:  Zoezi la utekelezaji wa GN 487A liliishia tarehe ngapi?
+ANS: Zoezi la utekelezaji liliishia tarehe 8 Oktoba 2025.
+---
+eval_144 | gn487a | yes_no
+SW:  Mke wangu ni Mtanzania — kama mgeni mwenye mwenzi wa Kitanzania, GN 487A haitanigusia?
+ANS: La. GN 487A bado inakugusia. Mgeni mwenye mwenzi wa Kitanzania bado anachukuliwa mgeni chini ya amri hii.
+---
+eval_145 | gn487a | yes_no
+SW:  Naweza kumwomba rafiki yangu Mtanzania asajili biashara kwa jina lake, niendelee mimi kuendeshea — inafanya kazi?
+ANS: Hapana. Mgeni hawezi kuendesha biashara iliyokatazwa kwa kutumia jina la Mtanzania. Mtanzania huyo atapata adhabu kama msaidizi: faini ya TZS milioni 5 au kifungo cha miezi 3.
+---
+eval_146 | gn487a | yes_no
+SW:  Serikali ilitoa muda wa kujiandaa baada ya GN 487A kutangazwa mnamo Julai 2025?
+ANS: Hapana. GN 487A haikutoa muda wa kujiandaa — ilianza kutumika mara moja tarehe 28 Julai 2025.
+---
+eval_147 | gn487a | yes_no
+SW:  Biashara ya rejareja — kama duka la nguo — iko kwenye orodha ya biashara zilizokatazwa kwa wageni?
+ANS: Ndiyo. Biashara ya rejareja ipo kwenye orodha ya biashara 15 zilizokatazwa kwa wageni chini ya GN 487A.
+---
+eval_148 | gn487a | yes_no
+SW:  Biashara ya jumla — kuuza bidhaa kwa maduka mengine — imekatazwa kwa wageni?
+ANS: Ndiyo. Biashara ya jumla imekatazwa kwa wageni chini ya GN 487A.
+---
+eval_149 | gn487a | yes_no
+SW:  Rafiki yangu wa Ethiopia ana duka la kutengeneza simu Kariakoo — GN 487A inamfunika?
+ANS: Ndiyo. Utengenezaji wa simu uko kwenye orodha ya biashara zilizokatazwa, hivyo rafiki yako anafunikwa na GN 487A.
+---
+eval_150 | gn487a | yes_no
+SW:  Saluni yangu ya nywele — mimi ni mgeni — imekatazwa na GN 487A?
+ANS: Ndiyo. Biashara ya saluni na urembo imekatazwa kwa wageni chini ya GN 487A.
+---
+eval_151 | gn487a | yes_no
+SW:  Kama wakala wa mobile money — mimi ni mgeni — GN 487A inanikataza?
+ANS: Ndiyo. Uhamishaji wa pesa za simu uko kwenye orodha ya biashara zilizokatazwa kwa wageni chini ya GN 487A.
+---
+eval_152 | gn487a | yes_no
+SW:  Kampuni yangu ya usafi wa nyumba na ofisi — mimi si raia wa Tanzania — inakabiliwa na GN 487A?
+ANS: Ndiyo. Huduma za usafi wa nyumba na ofisi zimekatazwa kwa wageni chini ya GN 487A.
+---
+eval_153 | gn487a | yes_no
+SW:  Mimi ni raia wa Tanzania — ninaweza kuendelea kufanya biashara ya rejareja bila tatizo la GN 487A?
+ANS: Ndiyo. GN 487A inawahusu wageni tu. Raia wa Tanzania wanaweza kufanya biashara zote zilizoorodheshwa bila tatizo.
+---
+eval_154 | gn487a | yes_no
+SW:  Kama mgeni amekamatwa akifanya biashara iliyokatazwa, kibali chake cha kuingia Tanzania kinafutwa?
+ANS: Ndiyo. Adhabu kwa mgeni inajumuisha kufutwa kwa kibali chake cha kuingia Tanzania.
+---
+eval_155 | gn487a | yes_no
+SW:  Zoezi la utekelezaji wa GN 487A bado linaendelea — lazima niwe makini sana sasa hivi?
+ANS: Hapana. Zoezi la utekelezaji liliishia tarehe 8 Oktoba 2025. Lakini sheria bado ipo na inatekelezwa kudumu — si zoezi la muda tu.
+---
+eval_156 | gn487a | definition
+SW:  Jina kamili la GN 487A ni nini?
+ANS: Jina kamili ni 'Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025'.
+---
+eval_157 | gn487a | definition
+SW:  GN 487A inasema nini hasa — inazuia nini kwa wageni?
+ANS: GN 487A inakataza wageni kufanya aina 15 za biashara Tanzania, ikiwemo biashara ya rejareja, jumla, uhamishaji wa pesa za simu, utengenezaji wa simu, saluni, na usafi wa nyumba na ofisi.
+---
+eval_158 | gn487a | definition
+SW:  Katika GN 487A, 'msaidizi' (facilitator) ni nani?
+ANS: Msaidizi ni Mtanzania anayenusuru mgeni kufanya biashara iliyokatazwa, kwa mfano kwa kukopa jina lake au leseni yake kwa mgeni.
+---
+eval_159 | gn487a | definition
+SW:  GN 487A ilipigwa marufuku tarehe gani na ilitekelezwa lini — ni tarehe moja au mbili tofauti?
+ANS: Ni tarehe moja. GN 487A ilipigwa marufuku na kuanza kutumika siku ile ile — tarehe 28 Julai 2025.
+---
+eval_160 | gn487a | definition
+SW:  Chombo gani cha serikali kiliongoza zoezi la utekelezaji wa GN 487A Septemba-Oktoba 2025?
+ANS: Zoezi la utekelezaji liliongozwa na Idara ya Huduma za Uhamiaji (Immigration Services Department).
+---
+eval_161 | gn487a | definition
+SW:  GN 487A inataja 'biashara ya jumla' na 'biashara ya rejareja' — tofauti yao ni nini?
+ANS: Biashara ya jumla ni kuuza bidhaa kwa wingi kwa wafanyabiashara wengine. Biashara ya rejareja ni kuuza bidhaa moja kwa moja kwa wateja. Zote mbili zimekatazwa kwa wageni chini ya GN 487A.
+---
+eval_162 | gn487a | definition
+SW:  'Mgeni' katika GN 487A inamaanisha nani hasa?
+ANS: Mgeni ni mtu yeyote ambaye si raia wa Tanzania. Hii inajumuisha watu wenye mwenzi wa Kitanzania — ndoa na raia wa Tanzania haibadilishi hadhi ya uraia chini ya amri hii.
+---
+eval_163 | gn487a | definition
+SW:  GN 487A inasema nini kuhusu mpango wa 'jina la mkopo' (nominee) — kwanini unazuiwa?
+ANS: Kutumia jina la Mtanzania kufanya biashara iliyokatazwa kunazuiwa. Mgeni bado anachukuliwa kuendesha biashara hiyo. Mtanzania anayekopa jina lake atalipwa adhabu ya msaidizi: faini ya TZS milioni 5 au kifungo cha miezi 3.
+---
+eval_164 | gn487a | penalty
+SW:  Adhabu kamili kwa mgeni anayekamatwa akifanya biashara ya rejareja ni nini?
+ANS: Adhabu kamili ni: faini ya angalau TZS milioni 10, hadi miezi 6 jela, na kufutwa kwa kibali chake cha kuingia Tanzania.
+---
+eval_165 | gn487a | penalty
+SW:  Jirani yangu Mtanzania amekopa leseni yake kwa mfanyabiashara wa China — adhabu yake ni nini?
+ANS: Jirani yako atakabiliwa na adhabu ya msaidizi: faini ya TZS milioni 5 au kifungo cha hadi miezi 3.
+---
+eval_166 | gn487a | penalty
+SW:  Kama nililipa faini ya TZS milioni 10, naweza kuendelea na biashara yangu ya saluni kama mgeni?
+ANS: Hapana. Kulipa faini si ruhusa ya kuendelea. Adhabu pia inajumuisha kufutwa kwa visa yako — hivyo hutaruhusiwa kubaki Tanzania kuendesha biashara.
+---
+eval_167 | gn487a | penalty
+SW:  Mgeni aliyebanwa akitumia jina la Mtanzania kuendesha duka — adhabu inabeba yeye au yule Mtanzania?
+ANS: Adhabu inabeba wote wawili. Mgeni anapata faini ya angalau TZS milioni 10, hadi miezi 6 jela, na kufutwa kwa visa. Yule Mtanzania anapata adhabu ya msaidizi: TZS milioni 5 au miezi 3 jela.
+---
+eval_168 | gn487a | penalty
+SW:  Visa ya mgeni inafutwa kama sehemu ya adhabu ya GN 487A — au ni uamuzi tofauti wa mahakama?
+ANS: Kufutwa kwa visa ni sehemu ya adhabu inayotajwa na GN 487A — si uamuzi wa ziada wa mahakama.
+---
+eval_169 | gn487a | penalty
+SW:  Mtanzania msaidizi atalipa faini ya TZS milioni 5 NA kufungwa miezi 3, au ni moja tu kati ya hizo?
+ANS: Ni moja au nyingine. Adhabu ya msaidizi ni TZS milioni 5 AU kifungo cha hadi miezi 3 — si lazima zote mbili.
+---
+eval_170 | gn487a | penalty
+SW:  Faini ya mgeni (TZS milioni 10 kiwango cha chini) ni kubwa zaidi au ndogo kuliko faini ya msaidizi Mtanzania (TZS milioni 5)?
+ANS: Faini ya mgeni ni kubwa zaidi — kiwango cha chini ni TZS milioni 10, ikilinganishwa na TZS milioni 5 kwa msaidizi Mtanzania.
+---
+eval_171 | gn487a | procedure
+SW:  Mimi ni mgeni ninayefanya biashara ya rejareja — GN 487A tayari imetangazwa. Nifanye nini sasa?
+ANS: Mgeni anayefanya biashara iliyokatazwa anapaswa kusimamisha shughuli hiyo haraka iwezekanavyo. Kama una leseni iliyotolewa kabla ya GN 487A (kabla ya 28 Julai 2025), unaweza kuendelea hadi leseni hiyo iishe muda wake — lakini renewal haitaruhusiwa. Biashara mpya au zilizosajiliwa baada ya tarehe hiyo lazima zisimame mara moja. Tafuta ushauri wa kisheria haraka.
+---
+eval_172 | gn487a | procedure
+SW:  Chombo gani cha serikali kinaendesha utekelezaji wa GN 487A?
+ANS: Idara ya Huduma za Uhamiaji (Immigration Services Department) ndiyo inayoendesha utekelezaji wa GN 487A.
+---
+eval_173 | gn487a | procedure
+SW:  Kama mgeni, naweza kuanzisha kampuni Tanzania na kumiliki hisa — hii inaruhusiwa chini ya GN 487A?
+ANS: GN 487A inakataza wageni kufanya biashara fulani moja kwa moja. Kumiliki hisa katika kampuni si njia ya mkato ya kukwepa amri hii — kutumia Mtanzania kama msimamizi wa kuchezea bado kunakabiliwa na tatizo la msaidizi. Tafuta ushauri wa wakili wa biashara.
+---
+eval_174 | gn487a | procedure
+SW:  Nilikuwa sijui kuhusu GN 487A — polisi walisimamisha duka langu Septemba 2025. Nini kilifanyika?
+ANS: Idara ya Uhamiaji iliongoza zoezi la utekelezaji kuanzia tarehe 11 Septemba hadi 8 Oktoba 2025. GN 487A ilianza kutumika tarehe 28 Julai 2025 — kukosa ujuzi hakukuwa ulinzi wa kisheria.
+---
+eval_175 | gn487a | procedure
+SW:  Ninaoa Mtanzania — ni hatua gani za kisheria ambazo zingenipa ruhusa kufanya biashara ya rejareja?
+ANS: Ndoa na raia wa Tanzania haibadilishi hadhi ya uraia chini ya GN 487A — bado utachukuliwa mgeni. Tafuta ushauri wa wakili wa uhamiaji kuhusu njia za kisheria zinazofaa hali yako.
+---
+eval_176 | osha_registration | number
+SW:  Kutoka wafanyakazi wangapi OSHA inasema ninahitaji kumwajiri afisa wa usalama mahali pa kazi?
+ANS: Mwajiri anahitaji kumwajiri afisa wa usalama akiwa na wafanyakazi zaidi ya 50 kwa mahali pa kazi wa jumla. Kwa tovuti za ujenzi na viwanda, kiwango ni wafanyakazi 20 au zaidi. Thibitisha mahitaji yako maalum na OSHA Tanzania.
+---
+eval_177 | osha_registration | number
+SW:  Ukaguzi wa mahali pa kazi wa OSHA unafanyika mara ngapi kwa mwaka?
+ANS: Ukaguzi wa mahali pa kazi unafanyika mara moja kwa mwaka — ukaguzi wa kila mwaka ni wa lazima.
+---
+eval_178 | osha_registration | number
+SW:  Biashara yangu ina wafanyakazi 2 tu — kiwango cha chini cha wafanyakazi kwa usajili wa OSHA ni wangapi?
+ANS: Hakuna kiwango cha chini cha wafanyakazi. OSHA inafunika waajiri wote bila kujali idadi ya wafanyakazi — hata wafanyakazi 1 bado unahitaji kusajili.
+---
+eval_179 | osha_registration | yes_no
+SW:  Duka langu la vifaa lina wafanyakazi 3 tu — bado nahitaji kusajili mahali pa kazi na OSHA?
+ANS: Ndiyo. Usajili wa OSHA unahitajika kwa waajiri wote, bila kujali idadi ya wafanyakazi.
+---
+eval_180 | osha_registration | yes_no
+SW:  Nilisajili biashara yangu BRELA tayari — hiyo inamaanisha nimesajili OSHA pia?
+ANS: Hapana. Usajili wa BRELA na OSHA ni tofauti kabisa. BRELA inasajili biashara, OSHA inasajili mahali pa kazi. Lazima ufanye usajili wote wawili.
+---
+eval_181 | osha_registration | yes_no
+SW:  Mahali pa kazi lazima kuwe na cheti halali cha usajili wa OSHA?
+ANS: Ndiyo. Mahali pa kazi lazima kuwe na cheti halali cha usajili wa OSHA.
+---
+eval_182 | osha_registration | yes_no
+SW:  Ukaguzi wa OSHA wa kila mwaka ni wa lazima au wa hiari?
+ANS: Ni wa lazima. Ukaguzi wa kila mwaka wa mahali pa kazi ni sharti la OSHA.
+---
+eval_183 | osha_registration | yes_no
+SW:  Mwajiri asiyesajili OSHA anaweza kufungiwa biashara yake?
+ANS: Ndiyo. Adhabu kwa kushindwa kusajili OSHA inaweza kujumuisha faini na kufungwa kwa mahali pa kazi.
+---
+eval_184 | osha_registration | procedure
+SW:  Nianzishe wapi kusajili mahali pa kazi na OSHA — hatua za msingi ni zipi?
+ANS: Mwajiri lazima asajili mahali pake pa kazi na OSHA, apate cheti cha usajili, na ahakikishe ukaguzi wa kila mwaka unafanyika. Wasiliana na OSHA moja kwa moja kwa hatua kamili za usajili.
+---
+eval_185 | osha_registration | procedure
+SW:  Tofauti kati ya usajili wa BRELA na usajili wa OSHA ni nini — nianze na ipi kwanza?
+ANS: BRELA inasajili biashara yenyewe (uhalali wa kibiashara). OSHA inasajili mahali pa kazi (usalama wa wafanyakazi). Hizi ni usajili tofauti na zote mbili zinahitajika. Kawaida BRELA inafanywa kwanza kisha OSHA.
+---
+eval_186 | osha_registration | procedure
+SW:  Nina wafanyakazi 60 na nimesajili OSHA — je, pia ninahitaji kumwajiri afisa wa usalama?
+ANS: Ndiyo. Kwa kuwa una wafanyakazi zaidi ya 50, sheria inakuhitaji kumwajiri afisa wa usalama, mbali na usajili wa kawaida wa OSHA.
+---
+eval_187 | osha_registration | procedure
+SW:  Nimekuwa na biashara kwa miaka 3 bila kusajili OSHA — nifanye nini sasa?
+ANS: Unapaswa kusajili mahali pako pa kazi na OSHA haraka iwezekanavyo. Kushindwa kusajili kunaweza kusababisha faini na kufungwa kwa biashara yako.
+---
+eval_188 | osha_registration | penalty
+SW:  Adhabu za kushindwa kusajili mahali pa kazi na OSHA ni zipi?
+ANS: Adhabu za kushindwa kusajili OSHA zinaweza kujumuisha faini na kufungwa kwa mahali pa kazi.
+---
+eval_189 | osha_registration | penalty
+SW:  OSHA ikigundua biashara yangu haijasajiliwa — wanaweza kufunga duka langu?
+ANS: Kufungwa kwa mahali pa kazi ni miongoni mwa hatua za adhabu zinazowezekana. OSHA inaweza kuchukua hatua za utekelezaji, ikiwemo kufunga mahali pa kazi.
+---
+eval_190 | osha_registration | penalty
+SW:  Kampuni yangu ina wafanyakazi 70 na haina afisa wa usalama — hii ni ukiukwaji wa OSHA?
+ANS: Ndiyo. Kampuni yenye wafanyakazi 70 inahitajika na sheria kumwajiri afisa wa usalama — kiwango cha wafanyakazi 50 kinatumika kwa mahali pa kazi wa jumla. Kutomwajiri ni ukiukwaji wa OSHA na unaweza kusababisha adhabu ikiwemo faini na kufungwa kwa biashara. Thibitisha na OSHA Tanzania.
+---
+eval_191 | out_of_corpus | out_of_corpus_refusal
+SW:  PAYE ya mfanyakazi wangu mwenye mshahara wa TZS 800,000 kwa mwezi ni kiasi gani?
+ANS: Swali hili liko nje ya maarifa yangu ya sasa. Tafadhali wasiliana na mshauri wa kodi aliyesajiliwa.
+---
+eval_192 | out_of_corpus | out_of_corpus_refusal
+SW:  Kodi ya uagizaji wa simu za mkononi kutoka China ni asilimia ngapi?
+ANS: Swali hili liko nje ya maarifa yangu ya sasa. Tafadhali wasiliana na mshauri wa kodi aliyesajiliwa.
+---
+eval_193 | out_of_corpus | out_of_corpus_refusal
+SW:  Niliuza ardhi yangu kwa faida — kodi ya mapato ya mtaji (capital gains tax) ni kiasi gani nalazima nilipe?
+ANS: Swali hili liko nje ya maarifa yangu ya sasa. Tafadhali wasiliana na mshauri wa kodi aliyesajiliwa.
+---
+eval_194 | out_of_corpus | out_of_corpus_refusal
+SW:  Kampuni yangu mama iko India — mahitaji ya bei ya uhamisho (transfer pricing) Tanzania ni yapi?
+ANS: Swali hili liko nje ya maarifa yangu ya sasa. Tafadhali wasiliana na mshauri wa kodi aliyesajiliwa.
+---
+eval_195 | out_of_corpus | out_of_corpus_refusal
+SW:  Biashara yangu iko Zanzibar — sheria za kodi za Zanzibar ni tofauti na Tanzania bara?
+ANS: Swali hili liko nje ya maarifa yangu ya sasa. Tafadhali wasiliana na mshauri wa kodi aliyesajiliwa.
+---
+eval_196 | out_of_corpus | out_of_corpus_refusal
+SW:  Nilifanya faida kwa kununua na kuuza Bitcoin Tanzania — je, lazima nilipe kodi?
+ANS: Swali hili liko nje ya maarifa yangu ya sasa. Tafadhali wasiliana na mshauri wa kodi aliyesajiliwa.
+---
+eval_197 | out_of_corpus | out_of_corpus_refusal
+SW:  Thamani ya ardhi yangu inakadiriwa vipi kwa ajili ya stamp duty Tanzania?
+ANS: Swali hili liko nje ya maarifa yangu ya sasa. Tafadhali wasiliana na mshauri wa kodi aliyesajiliwa.
+---
+eval_198 | out_of_corpus | out_of_corpus_refusal
+SW:  Kampuni yangu ya uchimbaji madini — asilimia ngapi ya royalty inayohusu dhahabu Tanzania?
+ANS: Swali hili liko nje ya maarifa yangu ya sasa. Tafadhali wasiliana na mshauri wa kodi aliyesajiliwa.
+---
+eval_199 | out_of_corpus | out_of_corpus_refusal
+SW:  Kampuni yangu ya bima — kiwango cha ushuru wa malipo ya bima (insurance premium levy) Tanzania ni kiasi gani?
+ANS: Swali hili liko nje ya maarifa yangu ya sasa. Tafadhali wasiliana na mshauri wa kodi aliyesajiliwa.
+---
+eval_200 | out_of_corpus | out_of_corpus_refusal
+SW:  Kampuni yangu iko katika eneo huru la usindikaji wa bidhaa (EPZ) — masharti ya kodi ni yapi?
+ANS: Swali hili liko nje ya maarifa yangu ya sasa. Tafadhali wasiliana na mshauri wa kodi aliyesajiliwa.
+---

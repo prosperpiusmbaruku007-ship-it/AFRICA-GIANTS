@@ -1,0 +1,326 @@
+=== Cell 3 ===
+  1: # ── Step 3: Imports – conditional on GPU path ───────────────────────────────────
+  2: print("[imports] starting ...")
+  3: 
+  4: import os, torch
+  5: print(f"[imports] torch {torch.__version__}")
+  6: 
+  7: from datasets import load_dataset
+  8: from transformers import TrainingArguments
+  9: print("[imports] transformers/datasets OK")
+ 10: 
+ 11: from trl import SFTTrainer
+ 12: try:
+ 13:     from trl import SFTConfig
+ 14:     print("[imports] trl SFTTrainer + SFTConfig OK")
+ 15: except ImportError:
+ 16:     SFTConfig = None
+ 17:     print("[imports] trl SFTTrainer OK (SFTConfig not available, falling back to TrainingArguments)")
+ 18: 
+ 19: from huggingface_hub import HfApi, create_repo, login, whoami
+ 20: print("[imports] huggingface_hub OK")
+ 21: 
+ 22: if USE_UNSLOTH:
+ 23:     print("[imports] loading unsloth ...")
+ 24:     from unsloth import FastLanguageModel, is_bfloat16_supported
+ 25:     BF16 = is_bfloat16_supported()
+ 26:     print("[imports] unsloth OK")
+ 27: else:
+ 28:     from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+ 29:     from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+ 30:     BF16 = False
+ 31:     print("[imports] BitsAndBytes path imports OK")
+ 32: 
+ 33: print(f"[imports] torch      : {torch.__version__}")
+ 34: print(f"[imports] GPU        : {torch.cuda.get_device_name(0)}  sm_{SM}")
+ 35: print(f"[imports] BF16       : {BF16}")
+ 36: print("[imports] done")
+
+=== Cell 7 ===
+  1: # -- Dataset -----------------------------------------------------------------
+  2: raw_dataset = load_dataset(DATASET_REPO, token=hf_token)
+  3: print(raw_dataset)
+  4: 
+  5: SYSTEM_PROMPT = (
+  6:     "Wewe ni msaidizi wa AI wa biashara za Tanzania. "
+  7:     "Unajibu maswali kuhusu sheria za biashara, kodi, usajili wa kampuni kwa Kiswahili na Kiingereza. "
+  8:     "You are a Tanzanian business AI assistant answering questions about regulations, "
+  9:     "tax, company registration, and financial rules in Swahili and English."
+ 10: )
+ 11: 
+ 12: # AfriqueLlama has its own tokenizer -- read EOS from it directly.
+ 13: # Decode from eos_token_id if the string value is None or a placeholder.
+ 14: _raw_eos = tokenizer.eos_token
+ 15: _PLACEHOLDER_EOS = {"<EOS_TOKEN>", "<eos>", "[EOS]", ""}
+ 16: if _raw_eos and _raw_eos not in _PLACEHOLDER_EOS:
+ 17:     EOS_TOKEN = _raw_eos
+ 18: else:
+ 19:     _eos_id = tokenizer.eos_token_id
+ 20:     EOS_TOKEN = tokenizer.decode([_eos_id]) if _eos_id is not None else "</s>"
+ 21:     print(f"[data] WARNING: eos_token={repr(_raw_eos)} is placeholder -- "
+ 22:           f"resolved via id={_eos_id} to {repr(EOS_TOKEN)}")
+ 23: print(f"[data] EOS_TOKEN = {repr(EOS_TOKEN)}")
+ 24: 
+ 25: # -- EOS registration (PROGRESS.md FINAL CONFIRMED CAUSE) ------------------
+ 26: # Fast tokenizer Rust backend may not recognize eos_token via
+ 27: # convert_tokens_to_ids even when it exists in get_vocab(). Register it
+ 28: # via add_special_tokens so TRL line 630 lookup succeeds.
+ 29: _eos_id = tokenizer.convert_tokens_to_ids(tokenizer.eos_token)
+ 30: print(f"[eos] convert_tokens_to_ids result: {_eos_id}")
+ 31: if _eos_id is None:
+ 32:     tokenizer.add_special_tokens({"eos_token": tokenizer.eos_token})
+ 33:     print(f"[eos] registered eos via add_special_tokens")
+ 34:     _eos_id = tokenizer.convert_tokens_to_ids(tokenizer.eos_token)
+ 35:     print(f"[eos] convert_tokens_to_ids after fix: {_eos_id}")
+ 36: 
+ 37: def fmt(ex):
+ 38:     inst = ex.get("instruction", "")
+ 39:     ctx  = ex.get("input", "") or ""
+ 40:     out  = ex.get("output", "")
+ 41:     user = f"Context: {ctx}\n\n{inst}" if ctx.strip() else inst
+ 42:     if USE_UNSLOTH:
+ 43:         msgs = [
+ 44:             {"role": "system",    "content": SYSTEM_PROMPT},
+ 45:             {"role": "user",      "content": user},
+ 46:             {"role": "assistant", "content": out},
+ 47:         ]
+ 48:         text = tokenizer.apply_chat_template(msgs, tokenize=False, add_generation_prompt=False)
+ 49:         if not text.endswith(EOS_TOKEN):
+ 50:             text = text + EOS_TOKEN
+ 51:     else:
+ 52:         text = (
+ 53:             f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
+ 54:             f"{SYSTEM_PROMPT}{EOS_TOKEN}"
+ 55:             f"<|start_header_id|>user<|end_header_id|>\n\n"
+ 56:             f"{user}{EOS_TOKEN}"
+ 57:             f"<|start_header_id|>assistant<|end_header_id|>\n\n"
+ 58:             f"{out}{EOS_TOKEN}"
+ 59:         )
+ 60:     return {"text": text}
+ 61: 
+ 62: train_ds = raw_dataset["train"].map(fmt, batched=False)
+ 63: val_src  = raw_dataset.get("validation") or raw_dataset["train"].select(range(min(10, len(raw_dataset["train"]))))
+ 64: eval_ds  = val_src.map(fmt, batched=False)
+ 65: print(f"Train: {len(train_ds)}  Eval: {len(eval_ds)}")
+ 66: 
+ 67: # -- Clean dataset text: strip any literal '<EOS_TOKEN>' from rendered text -
+ 68: # Defensive sweep: ensures no example's text column contains the sentinel
+ 69: # (could come from apply_chat_template output, raw dataset content, etc.).
+ 70: def clean_eos(example):
+ 71:     example["text"] = example["text"].replace("<EOS_TOKEN>", tokenizer.eos_token)
+ 72:     return example
+ 73: 
+ 74: _train_hits = sum(1 for ex in train_ds if "<EOS_TOKEN>" in ex["text"])
+ 75: _eval_hits  = sum(1 for ex in eval_ds  if "<EOS_TOKEN>" in ex["text"])
+ 76: print(f"[data] '<EOS_TOKEN>' literal in dataset text BEFORE clean: "
+ 77:       f"train={_train_hits}/{len(train_ds)}  eval={_eval_hits}/{len(eval_ds)}")
+ 78: 
+ 79: train_ds = train_ds.map(clean_eos)
+ 80: eval_ds  = eval_ds.map(clean_eos)
+ 81: 
+ 82: _train_hits_after = sum(1 for ex in train_ds if "<EOS_TOKEN>" in ex["text"])
+ 83: _eval_hits_after  = sum(1 for ex in eval_ds  if "<EOS_TOKEN>" in ex["text"])
+ 84: print(f"[data] '<EOS_TOKEN>' literal in dataset text AFTER clean:  "
+ 85:       f"train={_train_hits_after}/{len(train_ds)}  eval={_eval_hits_after}/{len(eval_ds)}")
+ 86: print(f"[data] cleaned EOS in dataset -- sample (first 300 chars):")
+ 87: print(train_ds[0]["text"][:300])
+ 88: 
+ 89: # -- TRL monkey-patch: ONLY fix sentinel pollution, never set None args.eos -
+ 90: # Per TRL 0.24.0 sft_trainer.py line 628: vocab validation only runs when
+ 91: # args.eos_token is not None. We INTENTIONALLY leave args.eos_token == None
+ 92: # in cell-train so TRL skips validation. This patch is defensive depth:
+ 93: # - If tokenizer.eos_token is somehow not in vocab, fix it.
+ 94: # - If something else has set args.eos_token to the literal sentinel
+ 95: #   "<EOS_TOKEN>", strip it back to None so TRL skips validation.
+ 96: # - Never overwrite args.eos_token when it is None.
+ 97: import trl.trainer.sft_trainer as _sft_mod
+ 98: 
+ 99: _orig_init = _sft_mod.SFTTrainer.__init__
+100: 
+101: def _patched_init(self, *args, **kwargs):
+102:     # Newer TRL: processing_class=; older TRL: tokenizer=
+103:     pc = kwargs.get('processing_class', None) or kwargs.get('tokenizer', None)
+104:     if pc is not None and hasattr(pc, 'eos_token'):
+105:         try:
+106:             _vocab = pc.get_vocab()
+107:         except Exception:
+108:             _vocab = {}
+109:         if pc.eos_token not in _vocab:
+110:             _candidates = ["</s>", "<|end_of_text|>", "<|im_end|>", "<eos>", "<|eot_id|>"]
+111:             _real = next((t for t in _candidates if t in _vocab), None)
+112:             if _real:
+113:                 pc.eos_token = _real
+114:                 pc.eos_token_id = _vocab[_real]
+115:                 print(f"[patch] tokenizer eos fixed: {_real}")
+116:     # Strip sentinel-only -- do NOT touch args.eos_token when it is None
+117:     _args = kwargs.get('args', None)
+118:     if _args is not None and getattr(_args, 'eos_token', None) == "<EOS_TOKEN>":
+119:         print(f"[patch] args.eos_token sentinel stripped -> None")
+120:         _args.eos_token = None
+121:     return _orig_init(self, *args, **kwargs)
+122: 
+123: _sft_mod.SFTTrainer.__init__ = _patched_init
+124: print("[patch] SFTTrainer.__init__ monkey-patched for EOS token fixup")
+125: 
+
+=== Cell 8 ===
+  1: # -- Train -------------------------------------------------------------------
+  2: import inspect
+  3: import trl as _trl_mod
+  4: import transformers as _tf_mod
+  5: 
+  6: print(f"[train] trl={_trl_mod.__version__}  transformers={_tf_mod.__version__}")
+  7: 
+  8: # -- 0. EOS guard: ensure tokenizer.eos_token is a real vocab token ---------
+  9: # TRL 0.24.0 SFTConfig.eos_token defaults to None. SFTTrainer.__init__ only
+ 10: # validates args.eos_token against vocab when it is NOT None. So the correct
+ 11: # strategy is: do NOT pass eos_token to SFTConfig at all. Let it stay None;
+ 12: # TRL will fall back to processing_class.eos_token (= tokenizer.eos_token)
+ 13: # which this guard ensures is a real vocab token.
+ 14: _vocab = tokenizer.get_vocab()
+ 15: _eos_candidates = ["</s>", "<|end_of_text|>", "<|im_end|>", "<eos>", "<|eot_id|>"]
+ 16: _found = next((t for t in _eos_candidates if t in _vocab), None)
+ 17: if tokenizer.eos_token not in _vocab:
+ 18:     if _found is None:
+ 19:         raise RuntimeError("[train] FATAL: no usable EOS candidate in tokenizer vocab")
+ 20:     tokenizer.eos_token = _found
+ 21:     tokenizer.eos_token_id = _vocab[_found]
+ 22:     print(f"[eos] forced: {_found}")
+ 23: else:
+ 24:     print(f"[eos] eos_token ok: {tokenizer.eos_token}")
+ 25: assert tokenizer.eos_token in _vocab, f"[eos] {tokenizer.eos_token!r} not in vocab"
+ 26: 
+ 27: # -- 1. Probe SFTTrainer signature ------------------------------------------
+ 28: _sft_sig_params = set(inspect.signature(SFTTrainer.__init__).parameters)
+ 29: 
+ 30: if "processing_class" in _sft_sig_params:
+ 31:     _tok_kwarg = {"processing_class": tokenizer}
+ 32:     print("[train] SFTTrainer tok-kwarg: processing_class")
+ 33: else:
+ 34:     _tok_kwarg = {"tokenizer": tokenizer}
+ 35:     print("[train] SFTTrainer tok-kwarg: tokenizer")
+ 36: 
+ 37: # -- 2. Pick args class -----------------------------------------------------
+ 38: _ArgsClass = SFTConfig if SFTConfig is not None else TrainingArguments
+ 39: print(f"[train] args class: {_ArgsClass.__name__}")
+ 40: _args_sig_params = set(inspect.signature(_ArgsClass.__init__).parameters)
+ 41: 
+ 42: _eval_key = "eval_strategy" if "eval_strategy" in _args_sig_params else "evaluation_strategy"
+ 43: print(f"[train] eval kwarg: {_eval_key}")
+ 44: 
+ 45: # -- 3. Training kwargs (NOTE: eos_token intentionally omitted) -------------
+ 46: _base_kwargs = {
+ 47:     "output_dir": "./outputs",
+ 48:     "per_device_train_batch_size": 1,
+ 49:     "gradient_accumulation_steps": 2 if SMOKE_TEST else 4,
+ 50:     "warmup_steps": 2,
+ 51:     "max_steps": 10 if SMOKE_TEST else -1,
+ 52:     "num_train_epochs": 1 if SMOKE_TEST else 3,
+ 53:     "learning_rate": 2e-4,
+ 54:     "fp16": not BF16,
+ 55:     "bf16": BF16,
+ 56:     "logging_steps": 1,
+ 57:     "optim": "adamw_8bit" if USE_UNSLOTH else "adamw_torch",
+ 58:     "weight_decay": 0.01,
+ 59:     "lr_scheduler_type": "cosine",
+ 60:     "seed": 3407,
+ 61:     "report_to": "none",
+ 62:     "save_strategy": "no",
+ 63:     "eval_steps": 5,
+ 64:     "dataloader_pin_memory": False,
+ 65:     "gradient_checkpointing": not USE_UNSLOTH,
+ 66:     _eval_key: "steps",
+ 67: }
+ 68: # Do NOT add "eos_token" here. Let SFTConfig.eos_token stay None so TRL skips
+ 69: # its vocab-validation block (sft_trainer.py line 628 `if args.eos_token is
+ 70: # not None:`) entirely and falls back to processing_class.eos_token.
+ 71: _sft_specific = {
+ 72:     "dataset_text_field": "text",
+ 73:     "max_seq_length": MAX_SEQ_LENGTH,
+ 74:     "packing": False,
+ 75:     "dataset_num_proc": 2,
+ 76: }
+ 77: _args_kwargs = {k: v for k, v in {**_base_kwargs, **_sft_specific}.items()
+ 78:                if k in _args_sig_params}
+ 79: _sft_direct  = {k: v for k, v in _sft_specific.items()
+ 80:                if k not in _args_sig_params and k in _sft_sig_params}
+ 81: _nowhere     = {k: v for k, v in _sft_specific.items()
+ 82:                if k not in _args_sig_params and k not in _sft_sig_params}
+ 83: print(f"[train] args class kwargs ({len(_args_kwargs)}): {sorted(_args_kwargs)}")
+ 84: print(f"[train] SFTTrainer direct kwargs ({len(_sft_direct)}): {sorted(_sft_direct)}")
+ 85: assert "eos_token" not in _args_kwargs and "eos_token" not in _sft_direct, \
+ 86:     "[train] eos_token must NOT be passed -- let SFTConfig.eos_token default to None"
+ 87: if _nowhere:
+ 88:     print(f"[train] WARNING: not accepted anywhere, skipping: {sorted(_nowhere)}")
+ 89: 
+ 90: # -- 4. Build args object ---------------------------------------------------
+ 91: _build_args = dict(_args_kwargs)
+ 92: _args_obj = None
+ 93: for _attempt in range(20):
+ 94:     try:
+ 95:         _args_obj = _ArgsClass(**_build_args)
+ 96:         print(f"[train] {_ArgsClass.__name__} built OK on attempt {_attempt + 1}")
+ 97:         break
+ 98:     except TypeError as _e:
+ 99:         _msg = str(_e)
+100:         _bad = _msg.split("'")[1] if _msg.count("'") >= 2 else None
+101:         if _bad and _bad in _build_args:
+102:             print(f"[train] WARNING: {_ArgsClass.__name__} rejected {_bad!r} -- removing and retrying")
+103:             _build_args.pop(_bad)
+104:         else:
+105:             print(f"[train] FATAL: {_ArgsClass.__name__} TypeError not fixable: {_e}")
+106:             raise
+107: if _args_obj is None:
+108:     raise RuntimeError("[train] Could not build args object after 20 attempts")
+109: 
+110: # Diagnostic: confirm SFTConfig.eos_token is left as None
+111: print(f"[train] args.eos_token (should be None): {getattr(_args_obj, 'eos_token', '(absent)')!r}")
+112: 
+113: # -- 4b. DEBUG (PROGRESS.md Step 1) -----------------------------------------
+114: print(f"DEBUG eos: {repr(_base_kwargs.get('eos_token','NOT IN DICT'))}")
+115: print(f"DEBUG SFTConfig eos: {repr(_args_obj.eos_token)}")
+116: 
+117: # -- 5. Build SFTTrainer ----------------------------------------------------
+118: _build_tok  = dict(_tok_kwarg)
+119: _build_sft  = dict(_sft_direct)
+120: _trainer = None
+121: for _attempt in range(20):
+122:     try:
+123:         _trainer = SFTTrainer(
+124:             model=model,
+125:             train_dataset=train_ds,
+126:             eval_dataset=eval_ds,
+127:             args=_args_obj,
+128:             **_build_tok,
+129:             **_build_sft,
+130:         )
+131:         print(f"[train] SFTTrainer built OK on attempt {_attempt + 1}")
+132:         break
+133:     except TypeError as _e:
+134:         _msg = str(_e)
+135:         _bad = _msg.split("'")[1] if _msg.count("'") >= 2 else None
+136:         if _bad and _bad in _build_sft:
+137:             print(f"[train] WARNING: SFTTrainer rejected {_bad!r} -- removing and retrying")
+138:             _build_sft.pop(_bad)
+139:         elif _bad and _bad in _build_tok:
+140:             if _bad == "processing_class":
+141:                 _build_tok = {"tokenizer": tokenizer}
+142:                 print("[train] WARNING: processing_class rejected, switching to tokenizer=")
+143:             elif _bad == "tokenizer":
+144:                 _build_tok = {"processing_class": tokenizer}
+145:                 print("[train] WARNING: tokenizer= rejected, switching to processing_class=")
+146:             else:
+147:                 print(f"[train] FATAL: SFTTrainer TypeError not fixable: {_e}")
+148:                 raise
+149:         else:
+150:             print(f"[train] FATAL: SFTTrainer TypeError not fixable: {_e}")
+151:             raise
+152: if _trainer is None:
+153:     raise RuntimeError("[train] Could not build SFTTrainer after 20 attempts")
+154: 
+155: trainer = _trainer
+156: print(f"[train] Starting on {GPU_NAME} via {'Unsloth' if USE_UNSLOTH else 'BitsAndBytes'} ...")
+157: stats = trainer.train()
+158: print(f"[train] Done. Runtime: {stats.metrics['train_runtime']:.1f}s")
+159: 
+

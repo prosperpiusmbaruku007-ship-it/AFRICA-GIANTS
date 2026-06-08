@@ -1,0 +1,36 @@
+﻿paye_deep_009 SW snippet: mwezi, mfanyakazi anaanza kulipa PAYE halisi wakati mshahara wake unapozidi kiwango kinachosababisha
+paye_deep_009 EN snippet: 000/month, an employee starts paying actual PAYE when their salary exceeds the level that generates 
+paye_deep_009 done
+paye_deep_010 SW snippet: �270,000): TZS 0. Kundi 2 (270,001�520,000): 250,000 � 9% = TZS 22,500. Kundi 3 (520,001�700,000): 180,000 � 2
+paye_deep_010 done
+paye_deep_016 SW snippet: ,000. Mwajiri anahesabu kwa mwezi huo peke yake: Kundi 1 (0�270,000): TZS 0. Kundi 2 (270,001�520,000): 250,00
+paye_deep_016 done
+paye_deep_022 SW snippet: uzo TZS 26,000. PAYE=TZS 0. (2) TZS 650,000: Kundi 2: 250,000�9%=22,500. Kundi 3: 130,000�20%=26,000. Jumla=46,000. Pung
+  Found Employee2 Band2 with char U+00D7: 250,000�9%=22,500
+paye_deep_022 done
+
+Total pairs changed this run: 4
+Changed: ['tier1a_paye_deep_009_20260603', 'tier1a_paye_deep_010_20260603', 'tier1a_paye_deep_016_20260603', 'tier1a_paye_deep_022_20260603']
+
+FLAGS:
+ - NOT FOUND tier1a_paye_deep_009_20260603.SW: [kundi la 9% (la pili)]
+ - NOT FOUND tier1a_paye_deep_009_20260603.SW: [TZS 270,000 + TZS 288,889 = TZS 558,889/]
+ - NOT FOUND tier1a_paye_deep_009_20260603.SW: [karibu TZS 559,000]
+ - NOT FOUND tier1a_paye_deep_009_20260603.EN: [9% band (second band)]
+ - NOT FOUND tier1a_paye_deep_009_20260603.EN: [TZS 270,000 + TZS 288,889 = TZS 558,889/]
+ - NOT FOUND tier1a_paye_deep_009_20260603.EN: [approximately TZS 559,000]
+ - NOT FOUND tier1a_paye_deep_010_20260603.SW: [Jumla = TZS 58,500]
+ - NOT FOUND tier1a_paye_deep_010_20260603.SW: [PAYE ya mfanyakazi = TZS 32,500]
+ - NOT FOUND tier1a_paye_deep_010_20260603.EN: [Total = TZS 58,500]
+ - NOT FOUND tier1a_paye_deep_010_20260603.EN: [Employee PAYE = TZS 32,500]
+ - FLAG paye_deep_010: do.md says final PAYE TZS 28,000 but 56,000-26,000=30,000. Applied TZS 30,000. Confirm with founder.
+ - NOT FOUND tier1a_paye_deep_016_20260603.SW: [Jumla = TZS 105,500]
+ - NOT FOUND tier1a_paye_deep_016_20260603.SW: [PAYE ya Aprili = TZS 79,500]
+ - NOT FOUND tier1a_paye_deep_016_20260603.EN: [Total = TZS 105,500]
+ - NOT FOUND tier1a_paye_deep_016_20260603.EN: [April PAYE = TZS 79,500]
+ - NOT FOUND tier1a_paye_deep_022_20260603.SW: [Jumla=48,500]
+ - NOT FOUND tier1a_paye_deep_022_20260603.SW: [PAYE=TZS 22,500. (3)]
+ - NOT FOUND tier1a_paye_deep_022_20260603.SW: [TZS 0 + TZS 22,500 + TZS 254,500 = TZS 2]
+ - NOT FOUND tier1a_paye_deep_022_20260603.EN: [Total=48,500]
+ - NOT FOUND tier1a_paye_deep_022_20260603.EN: [PAYE=TZS 22,500. (3)]
+ - NOT FOUND tier1a_paye_deep_022_20260603.EN: [TZS 0 + TZS 22,500 + TZS 254,500 = TZS 2]

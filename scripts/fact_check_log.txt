@@ -1,0 +1,283 @@
+
+[2026-06-07T19:37:10.520127] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 55
+  FLAG [tier1a_paye_007_20260603] paye_penalty_rate: 5% of the unpaid
+  FLAG [tier1a_paye_018_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_gn605a_007_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_gn605a_007_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_gn605a_011_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_gn605a_017_20260603] minimum_turnover_tax: asilimia 0.5
+  FLAG [tier1a_gn605a_017_20260603] minimum_turnover_tax: 0.5%
+  FLAG [tier1a_gn605a_018_20260603] minimum_turnover_tax: 0.5%
+  FLAG [tier1a_permit_001_20260603] gn487a_nature: kibali cha makazi
+  FLAG [tier1a_permit_001_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_permit_002_20260603] gn487a_nature: kibali cha makazi
+  FLAG [tier1a_permit_002_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_permit_003_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_permit_003_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_permit_004_20260603] commissioner_objection_deadline: miezi 3
+  FLAG [tier1a_permit_004_20260603] commissioner_objection_deadline: 3 months
+  FLAG [tier1a_permit_005_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_permit_006_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_permit_006_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_permit_007_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_permit_007_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_permit_011_20260603] permit_class_c_categories: Class C.*kazi
+  FLAG [tier1a_permit_012_20260603] gn487a_nature: kibali cha makazi
+  FLAG [tier1a_permit_012_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_permit_012_20260603] permit_class_b_employed: Class B.*investor
+  FLAG [tier1a_permit_012_20260603] permit_class_b_employed: daraja B.*mwekezaji
+  FLAG [tier1a_permit_013_20260603] gn487a_nature: kibali cha makazi
+  FLAG [tier1a_permit_013_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_permit_013_20260603] permit_class_c_categories: Class C.*kazi
+  FLAG [tier1a_permit_014_20260603] gn487a_nature: kibali cha makazi
+  FLAG [tier1a_permit_014_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_wh_002_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_wh_002_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_wh_003_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_wh_003_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_wh_004_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_wh_005_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_wh_008_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_wh_013_20260603] nssf_penalty: asilimia 2 ya
+  FLAG [tier1a_wh_014_20260603] paye_penalty_rate: asilimia 5 ya kiwango
+  FLAG [tier1a_wh_014_20260603] paye_penalty_rate: asilimia 5 ya
+  FLAG [tier1a_wh_014_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_vat_edge_007_20260603] wht_deadline: siku 30
+  FLAG [tier1a_vat_edge_007_20260603] wht_deadline: 30 days
+  FLAG [tier1a_vat_edge_014_20260603] nssf_total_rate: asilimia 16
+  FLAG [tier1a_nssf_edge_001_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_nssf_edge_002_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_nssf_edge_002_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_nssf_edge_003_20260603] paye_penalty_rate: asilimia 5 ya kiwango
+  FLAG [tier1a_nssf_edge_003_20260603] paye_penalty_rate: asilimia 5 ya
+  FLAG [tier1a_nssf_edge_003_20260603] paye_penalty_rate: 5% of the unpaid
+  FLAG [tier1a_nssf_edge_003_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_nssf_edge_008_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_paye_extended_018_20260603] paye_p9_deadline: 31 January
+  FLAG [tier1a_paye_extended_018_20260603] paye_p9_deadline: Januari 31
+  FLAG [tier1a_paye_extended_018_20260603] paye_p9_deadline: ifikapo Januari
+  FLAG [tier1a_income_tax_001_20260603] vat_reduced_rates: reduced rate
+  FLAG [tier1a_income_tax_003_20260603] provisional_tax_instalments: first instalment.*month 6
+  FLAG [tier1a_income_tax_004_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_income_tax_007_20260603] gn487a_effective_date: 2024
+  FLAG [tier1a_biz_lic_002_20260603] paye_p9_deadline: 31 January
+  FLAG [tier1a_biz_lic_002_20260603] paye_p9_deadline: Januari 31
+  FLAG [tier1a_biz_lic_002_20260603] paye_p9_deadline: ifikapo Januari
+  FLAG [tier1a_biz_lic_004_20260603] tmda_replaces_tfda: Tanzania Food and Drugs Authority
+  FLAG [tier1a_biz_lic_006_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_biz_lic_006_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_biz_lic_011_20260603] nssf_penalty: asilimia 2 ya
+  FLAG [tier1a_biz_lic_015_20260603] paye_p9_deadline: 31 Januari
+  FLAG [tier1a_biz_lic_015_20260603] paye_p9_deadline: 31 January
+  FLAG [tier1a_stamp_duty_003_20260603] wht_deadline: siku 30
+  FLAG [tier1a_stamp_duty_003_20260603] wht_deadline: 30 days
+  FLAG [tier1a_stamp_duty_005_20260603] wht_deadline: siku 30
+  FLAG [tier1a_stamp_duty_005_20260603] wht_deadline: 30 days
+  FLAG [tier1a_stamp_duty_006_20260603] wht_deadline: siku 30
+  FLAG [tier1a_stamp_duty_006_20260603] wht_deadline: 30 days
+  FLAG [tier1a_stamp_duty_007_20260603] wht_deadline: siku 30
+  FLAG [tier1a_stamp_duty_007_20260603] wht_deadline: 30 days
+  FLAG [tier1a_nssf_disp_001_20260603] wht_deadline: siku 30
+  FLAG [tier1a_nssf_disp_001_20260603] wht_deadline: 30 days
+  FLAG [tier1a_nssf_disp_003_20260603] paye_penalty_rate: faini ya 5%
+  FLAG [tier1a_brela_chg_007_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_brela_chg_007_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_tax_disp_001_20260603] wht_deadline: siku 30
+  FLAG [tier1a_tax_disp_001_20260603] wht_deadline: 30 days
+  FLAG [tier1a_tax_disp_002_20260603] wht_deadline: siku 30
+  FLAG [tier1a_tax_disp_002_20260603] wht_deadline: 30 days
+  FLAG [tier1a_tax_disp_003_20260603] wht_deadline: siku 30
+  FLAG [tier1a_tax_disp_003_20260603] wht_deadline: 30 days
+  FLAG [tier1a_tax_disp_005_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_paye_deep_010_20260603] minimum_turnover_tax: 0.5%
+  FLAG [tier1a_inc_tax_deep_001_20260603] vat_registration_threshold: TZS 50,000,000
+  FLAG [tier1a_inc_tax_deep_006_20260603] vat_registration_threshold: TZS 50,000,000
+  FLAG [tier1a_inc_tax_deep_011_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_inc_tax_deep_011_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_inc_tax_deep_011_20260603] minimum_turnover_tax: asilimia 0.5
+  FLAG [tier1a_inc_tax_deep_011_20260603] minimum_turnover_tax: 0.5%
+  FLAG [tier1a_inc_tax_deep_011_20260603] stamp_duty_property_transfer: 0.5%.*1%
+
+[2026-06-07T19:50:51.669467] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 55
+  FLAG [tier1a_paye_007_20260603] paye_penalty_rate: 5% of the unpaid
+  FLAG [tier1a_paye_018_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_gn605a_007_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_gn605a_007_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_gn605a_011_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_gn605a_017_20260603] minimum_turnover_tax: asilimia 0.5
+  FLAG [tier1a_gn605a_017_20260603] minimum_turnover_tax: 0.5%
+  FLAG [tier1a_gn605a_018_20260603] minimum_turnover_tax: 0.5%
+  FLAG [tier1a_permit_001_20260603] gn487a_nature: kibali cha makazi
+  FLAG [tier1a_permit_001_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_permit_002_20260603] gn487a_nature: kibali cha makazi
+  FLAG [tier1a_permit_002_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_permit_003_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_permit_003_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_permit_004_20260603] commissioner_objection_deadline: miezi 3
+  FLAG [tier1a_permit_004_20260603] commissioner_objection_deadline: 3 months
+  FLAG [tier1a_permit_005_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_permit_006_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_permit_006_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_permit_007_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_permit_007_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_permit_011_20260603] permit_class_c_categories: Class C.*kazi
+  FLAG [tier1a_permit_012_20260603] gn487a_nature: kibali cha makazi
+  FLAG [tier1a_permit_012_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_permit_012_20260603] permit_class_b_employed: Class B.*investor
+  FLAG [tier1a_permit_012_20260603] permit_class_b_employed: daraja B.*mwekezaji
+  FLAG [tier1a_permit_013_20260603] gn487a_nature: kibali cha makazi
+  FLAG [tier1a_permit_013_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_permit_013_20260603] permit_class_c_categories: Class C.*kazi
+  FLAG [tier1a_permit_014_20260603] gn487a_nature: kibali cha makazi
+  FLAG [tier1a_permit_014_20260603] gn487a_nature: residence permit
+  FLAG [tier1a_wh_002_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_wh_002_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_wh_003_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_wh_003_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_wh_004_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_wh_005_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_wh_008_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_wh_013_20260603] nssf_penalty: asilimia 2 ya
+  FLAG [tier1a_wh_014_20260603] paye_penalty_rate: asilimia 5 ya kiwango
+  FLAG [tier1a_wh_014_20260603] paye_penalty_rate: asilimia 5 ya
+  FLAG [tier1a_wh_014_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_vat_edge_007_20260603] wht_deadline: siku 30
+  FLAG [tier1a_vat_edge_007_20260603] wht_deadline: 30 days
+  FLAG [tier1a_vat_edge_014_20260603] nssf_total_rate: asilimia 16
+  FLAG [tier1a_nssf_edge_001_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_nssf_edge_002_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_nssf_edge_002_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_nssf_edge_003_20260603] paye_penalty_rate: asilimia 5 ya kiwango
+  FLAG [tier1a_nssf_edge_003_20260603] paye_penalty_rate: asilimia 5 ya
+  FLAG [tier1a_nssf_edge_003_20260603] paye_penalty_rate: 5% of the unpaid
+  FLAG [tier1a_nssf_edge_003_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_nssf_edge_008_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_paye_extended_018_20260603] paye_p9_deadline: 31 January
+  FLAG [tier1a_paye_extended_018_20260603] paye_p9_deadline: Januari 31
+  FLAG [tier1a_paye_extended_018_20260603] paye_p9_deadline: ifikapo Januari
+  FLAG [tier1a_income_tax_001_20260603] vat_reduced_rates: reduced rate
+  FLAG [tier1a_income_tax_003_20260603] provisional_tax_instalments: first instalment.*month 6
+  FLAG [tier1a_income_tax_004_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_income_tax_007_20260603] gn487a_effective_date: 2024
+  FLAG [tier1a_biz_lic_002_20260603] paye_p9_deadline: 31 January
+  FLAG [tier1a_biz_lic_002_20260603] paye_p9_deadline: Januari 31
+  FLAG [tier1a_biz_lic_002_20260603] paye_p9_deadline: ifikapo Januari
+  FLAG [tier1a_biz_lic_004_20260603] tmda_replaces_tfda: Tanzania Food and Drugs Authority
+  FLAG [tier1a_biz_lic_006_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_biz_lic_006_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_biz_lic_011_20260603] nssf_penalty: asilimia 2 ya
+  FLAG [tier1a_biz_lic_015_20260603] paye_p9_deadline: 31 Januari
+  FLAG [tier1a_biz_lic_015_20260603] paye_p9_deadline: 31 January
+  FLAG [tier1a_stamp_duty_003_20260603] wht_deadline: siku 30
+  FLAG [tier1a_stamp_duty_003_20260603] wht_deadline: 30 days
+  FLAG [tier1a_stamp_duty_005_20260603] wht_deadline: siku 30
+  FLAG [tier1a_stamp_duty_005_20260603] wht_deadline: 30 days
+  FLAG [tier1a_stamp_duty_006_20260603] wht_deadline: siku 30
+  FLAG [tier1a_stamp_duty_006_20260603] wht_deadline: 30 days
+  FLAG [tier1a_stamp_duty_007_20260603] wht_deadline: siku 30
+  FLAG [tier1a_stamp_duty_007_20260603] wht_deadline: 30 days
+  FLAG [tier1a_nssf_disp_001_20260603] wht_deadline: siku 30
+  FLAG [tier1a_nssf_disp_001_20260603] wht_deadline: 30 days
+  FLAG [tier1a_nssf_disp_003_20260603] paye_penalty_rate: faini ya 5%
+  FLAG [tier1a_brela_chg_007_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_brela_chg_007_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_tax_disp_001_20260603] wht_deadline: siku 30
+  FLAG [tier1a_tax_disp_001_20260603] wht_deadline: 30 days
+  FLAG [tier1a_tax_disp_002_20260603] wht_deadline: siku 30
+  FLAG [tier1a_tax_disp_002_20260603] wht_deadline: 30 days
+  FLAG [tier1a_tax_disp_003_20260603] wht_deadline: siku 30
+  FLAG [tier1a_tax_disp_003_20260603] wht_deadline: 30 days
+  FLAG [tier1a_tax_disp_005_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_paye_deep_010_20260603] minimum_turnover_tax: 0.5%
+  FLAG [tier1a_inc_tax_deep_001_20260603] vat_registration_threshold: TZS 50,000,000
+  FLAG [tier1a_inc_tax_deep_006_20260603] vat_registration_threshold: TZS 50,000,000
+  FLAG [tier1a_inc_tax_deep_011_20260603] gn605a_effective_date: Julai 2025
+  FLAG [tier1a_inc_tax_deep_011_20260603] gn605a_effective_date: July 2025
+  FLAG [tier1a_inc_tax_deep_011_20260603] minimum_turnover_tax: asilimia 0.5
+  FLAG [tier1a_inc_tax_deep_011_20260603] minimum_turnover_tax: 0.5%
+  FLAG [tier1a_inc_tax_deep_011_20260603] stamp_duty_property_transfer: 0.5%.*1%
+
+[2026-06-07T19:59:18.967803] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 27
+  FLAG [tier1a_paye_018_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_gn605a_007_20260603] gn605a_effective_date: julai 2025.*605
+  FLAG [tier1a_gn605a_007_20260603] gn605a_effective_date: 605.*july 2025
+  FLAG [tier1a_gn605a_007_20260603] gn605a_effective_date: july 2025.*605
+  FLAG [tier1a_gn605a_011_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_permit_011_20260603] permit_class_c_categories: Class C.*kazi
+  FLAG [tier1a_permit_012_20260603] permit_class_b_employed: Class B.*investor
+  FLAG [tier1a_permit_012_20260603] permit_class_c_categories: employed.*Class C
+  FLAG [tier1a_wh_004_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_wh_005_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_wh_008_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_wh_013_20260603] nssf_penalty: asilimia 2 ya
+  FLAG [tier1a_wh_014_20260603] paye_penalty_rate: asilimia 5 ya kiwango
+  FLAG [tier1a_wh_014_20260603] paye_penalty_rate: asilimia 5 ya
+  FLAG [tier1a_wh_014_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_vat_edge_014_20260603] nssf_total_rate: asilimia 16
+  FLAG [tier1a_nssf_edge_001_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_nssf_edge_002_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_nssf_edge_002_20260603] vat_standard_rate: asilimia 20
+  FLAG [tier1a_nssf_edge_003_20260603] paye_penalty_rate: asilimia 5 ya kiwango
+  FLAG [tier1a_nssf_edge_003_20260603] paye_penalty_rate: asilimia 5 ya
+  FLAG [tier1a_nssf_edge_003_20260603] paye_penalty_rate: (?<!2\.)5% of the unpaid
+  FLAG [tier1a_nssf_edge_003_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_nssf_edge_008_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_paye_extended_018_20260603] paye_p9_deadline: 31 January
+  FLAG [tier1a_paye_extended_018_20260603] paye_p9_deadline: Januari 31
+  FLAG [tier1a_paye_extended_018_20260603] paye_p9_deadline: ifikapo Januari
+  FLAG [tier1a_income_tax_001_20260603] vat_reduced_rates: reduced rate
+  FLAG [tier1a_income_tax_003_20260603] provisional_tax_instalments: first instalment.*month 6
+  FLAG [tier1a_income_tax_004_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_income_tax_007_20260603] gn487a_effective_date: 2024
+  FLAG [tier1a_biz_lic_002_20260603] paye_p9_deadline: 31 January
+  FLAG [tier1a_biz_lic_002_20260603] paye_p9_deadline: Januari 31
+  FLAG [tier1a_biz_lic_002_20260603] paye_p9_deadline: ifikapo Januari
+  FLAG [tier1a_biz_lic_004_20260603] tmda_replaces_tfda: Tanzania Food and Drugs Authority
+  FLAG [tier1a_biz_lic_011_20260603] nssf_penalty: asilimia 2 ya
+  FLAG [tier1a_biz_lic_015_20260603] paye_p9_deadline: 31 Januari
+  FLAG [tier1a_biz_lic_015_20260603] paye_p9_deadline: 31 January
+  FLAG [tier1a_nssf_disp_003_20260603] paye_penalty_rate: faini ya 5%
+  FLAG [tier1a_tax_disp_005_20260603] sdl_rate: asilimia 5
+  FLAG [tier1a_inc_tax_deep_011_20260603] minimum_turnover_tax: minimum.*tax.*0\.5
+  FLAG [tier1a_inc_tax_deep_011_20260603] minimum_turnover_tax: kodi ndogo.*0\.5
+  FLAG [tier1a_inc_tax_deep_011_20260603] minimum_turnover_tax: turnover.*tax.*0\.5
+  FLAG [tier1a_inc_tax_deep_011_20260603] minimum_turnover_tax: 0\.5.*minimum.*tax
+  FLAG [tier1a_inc_tax_deep_011_20260603] stamp_duty_property_transfer: 0.5%.*1%
+
+[2026-06-07T20:09:48.576823] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 11
+  FLAG [tier1a_paye_007_20260603] paye_penalty_rate: paye.*penalty.*5%
+  FLAG [tier1a_gn605a_011_20260603] nssf_penalty: nssf.*asilimia 2|asilimia 2.*nssf
+  FLAG [tier1a_permit_011_20260603] permit_class_c_categories: Class C.*kazi
+  FLAG [tier1a_permit_011_20260603] permit_class_c_categories: employed.*Class C
+  FLAG [tier1a_permit_012_20260603] permit_class_a_investor: employed.*Class A
+  FLAG [tier1a_nssf_edge_001_20260603] nssf_penalty: nssf.*asilimia 2|asilimia 2.*nssf
+  FLAG [tier1a_nssf_edge_002_20260603] nssf_penalty: nssf.*asilimia 2|asilimia 2.*nssf
+  FLAG [tier1a_nssf_edge_003_20260603] paye_penalty_rate: (?<!2\.)5% of the unpaid
+  FLAG [tier1a_paye_extended_012_20260603] paye_penalty_rate: adhabu.*paye.*5%
+  FLAG [tier1a_income_tax_001_20260603] vat_reduced_rates: reduced rate
+  FLAG [tier1a_paye_deep_015_20260603] paye_penalty_rate: adhabu.*paye.*5%
+  FLAG [tier1a_inc_tax_deep_011_20260603] minimum_turnover_tax: minimum.*tax.*(?<!kutoka asilimia )0\.5(?! hadi)
+  FLAG [tier1a_inc_tax_deep_011_20260603] minimum_turnover_tax: kodi ndogo.*(?<!kutoka )0\.5(?! hadi)
+  FLAG [tier1a_inc_tax_deep_011_20260603] minimum_turnover_tax: turnover.*tax.*(?<!from )0\.5(?! to )
+
+[2026-06-07T20:14:16.467467] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 2
+  FLAG [tier1a_permit_011_20260603] permit_class_c_categories: wafanyakazi.*daraja C
+  FLAG [tier1a_paye_deep_015_20260603] paye_penalty_rate: adhabu.*paye.*(?<![2]\.)5%
+
+[2026-06-07T20:21:49.190008] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 0
+
+[2026-06-08T00:30:15.756439] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 0
+
+[2026-06-08T02:40:41.174206] Checked datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl
+Total: 57 | Flagged: 1
+  FLAG [tier1a_vat_002_20260601] vat_registration_threshold: 50 million
+
+[2026-06-08T02:44:26.817288] Checked datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl
+Total: 57 | Flagged: 0

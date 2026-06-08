@@ -1,0 +1,20 @@
+﻿Fixed permit_001: Mgeni anayeajiriwa na kampuni Tanzania anahitaji Kibali cha Makazi daraja B (Residence Permit Class B) � kibali cha kufa
+Fixed permit_002: Mwekezaji mgeni anayefanya biashara kwa akaunti yake mwenyewe anahitaji Kibali cha Makazi daraja A (Residence Permit Cla
+permit_008: no daraja C found � no change needed
+Fixed permit_014: Ada ya kibali cha makazi daraja C inaweza kutofautiana kulingana na muda na aina ya kazi. Ada zinatofautiana sana kulingana na aina ya kibali, uraia, na muda � angalia jedwali la sasa la ada kwenye immigration.go.tz
+Fixed wh_007: Kiwango cha kodi ya zuio ya mrabaha ni asilimia 15 kwa wakazi na asilimia 15 kwa wasio wakazi. Thibitisha na TRA.
+Fixed income_tax_003
+inc_tax_deep_001: awamu nne confirmed � no change needed
+inc_tax_deep_010: four instalments confirmed � no change needed
+Fixed inc_tax_deep_011
+Fixed tax_disp_001 (C9: deadline)
+Fixed tax_disp_001 (C10: deposit requirement added at start)
+Fixed tax_disp_002 (C11: extension language)
+Fixed tax_disp_003 (C12: TRAB Step 2)
+Fixed stamp_duty_004 (C13: flat 1%)
+
+Total pairs changed: 10
+Changed IDs: ['tier1a_inc_tax_deep_011_20260603', 'tier1a_income_tax_003_20260603', 'tier1a_permit_001_20260603', 'tier1a_permit_002_20260603', 'tier1a_permit_014_20260603', 'tier1a_stamp_duty_004_20260603', 'tier1a_tax_disp_001_20260603', 'tier1a_tax_disp_002_20260603', 'tier1a_tax_disp_003_20260603', 'tier1a_wh_007_20260603']
+
+FLAGS:
+ - NOT FOUND tier1a_inc_tax_deep_011_20260603.SW: [asilimia 0.3 ya mapato ghafi (turnover minimum tax)]
