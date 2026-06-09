@@ -328,3 +328,179 @@ Total: 57 | Flagged: 0
 
 [2026-06-08T10:16:05.973170] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
 Total: 243 | Flagged: 0
+
+[2026-06-08T17:09:47.109130] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 130 | Flagged: 11
+  FLAG [tier1a_sdl_001_20260608] sdl_full_name: Service Delivery Levy
+  FLAG [tier1a_sdl_001_20260608] sdl_full_name: short-term disability
+  FLAG [tier1a_sdl_001_20260608] sdl_full_name: disability leave
+  FLAG [tier1a_sdl_002_20260608] sdl_full_name: disability leave
+  FLAG [tier1a_sdl_005_20260608] sdl_full_name: Skills Delivery Levy
+  FLAG [tier1a_sdl_010_20260608] sdl_full_name: disability leave
+  FLAG [tier1a_sdl_016_20260608] sdl_full_name: Service Delivery Levy
+  FLAG [tier1a_sdl_016_20260608] sdl_full_name: disability leave
+  FLAG [tier1a_sdl_019_20260608] sdl_payer: deducted from employee
+  FLAG [tier1a_sdl_020_20260608] sdl_full_name: short-term disability
+  FLAG [tier1a_sdl_020_20260608] sdl_full_name: ulemavu wa muda mfupi
+  FLAG [tier1a_sdl_025_20260608] sdl_threshold: 5 employees
+  FLAG [tier1a_sdl_046_20260608] nssf_penalty: 2% per month
+  FLAG [tier1a_sdl_048_20260608] commissioner_objection_deadline: (commissioner|tra).*3 months(?!.*imprison)
+  FLAG [tier1a_sdl_048_20260608] commissioner_objection_deadline: 3 months.*(commissioner|tra)(?!.*imprison)
+  FLAG [tier1a_sdl_050_20260608] nssf_penalty: 2% per month
+
+[2026-06-08T17:12:49.885526] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 130 | Flagged: 1
+  FLAG [tier1a_sdl_025_20260608] sdl_threshold: 5 employees.*threshold
+  FLAG [tier1a_sdl_025_20260608] sdl_threshold: sdl.*5 employees(?! or more| au zaidi)
+
+[2026-06-08T17:13:29.899272] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 130 | Flagged: 0
+
+[2026-06-08T18:14:54.741336] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 170 | Flagged: 3
+  FLAG [tier1a_vat_014_20260608] sdl_rate: sdl.*asilimia 5|asilimia 5.*sdl
+  FLAG [tier1a_vat_025_20260608] vat_registration_threshold: vat.*50,000,000
+  FLAG [tier1a_vat_025_20260608] vat_registration_threshold: 50,000,000.*vat.*registration
+  FLAG [tier1a_vat_025_20260608] vat_registration_threshold: kizingiti.*50,000,000
+  FLAG [tier1a_vat_025_20260608] vat_registration_threshold: 50,000,000.*kizingiti
+  FLAG [tier1a_vat_028_20260608] nssf_employer_rate: asilimia 12
+
+[2026-06-08T18:17:42.174476] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 170 | Flagged: 0
+
+[2026-06-08T18:18:02.370588] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 200 | Flagged: 0
+
+[2026-06-08T18:18:28.135462] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 250 | Flagged: 1
+  FLAG [tier1a_nssf_deep_049_20260608] paye_penalty_rate: 5% per month
+
+[2026-06-08T18:21:51.176346] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 250 | Flagged: 0
+
+[2026-06-08T18:23:20.962586] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 250 | Flagged: 0
+
+[2026-06-08T18:23:38.505911] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-08T18:24:15.725898] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-08T18:37:14.254520] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-09T07:54:07.888122] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 50 | Flagged: 2
+  FLAG [tier1a_gn605a_038_20260609] gn605a_effective_date: 605[^.!?]*julai 2025
+  FLAG [tier1a_gn605a_038_20260609] gn605a_effective_date: 605[^.!?]*july 2025
+  FLAG [tier1a_gn605a_040_20260609] gn605a_average_increase: 20% increase
+
+[2026-06-09T07:57:26.482936] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 50 | Flagged: 2
+  FLAG [tier1a_gn605a_007_20260609] gn605a_effective_date: GN 605A(?:(?!si |not |hapana).)*?july 2025(?:(?!si |not ).){0,5}
+  FLAG [tier1a_gn605a_050_20260609] gn605a_effective_date: GN 605A(?:(?!si |not |hapana).)*?july 2025(?:(?!si |not ).){0,5}
+
+[2026-06-09T07:57:30.445145] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 50 | Flagged: 2
+  FLAG [tier1a_gn605a_007_20260609] gn605a_effective_date: GN 605A(?:(?!si |not |hapana).)*?july 2025(?:(?!si |not ).){0,5}
+  FLAG [tier1a_gn605a_050_20260609] gn605a_effective_date: GN 605A(?:(?!si |not |hapana).)*?july 2025(?:(?!si |not ).){0,5}
+
+[2026-06-09T07:58:35.392193] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 50 | Flagged: 0
+
+[2026-06-09T08:04:02.835210] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 100 | Flagged: 4
+  FLAG [tier1a_paye_adv_002_20260609] p45_not_tanzanian: Form P45
+  FLAG [tier1a_paye_adv_002_20260609] p45_not_tanzanian: P45
+  FLAG [tier1a_paye_adv_003_20260609] paye_p9_deadline: 31 Januari
+  FLAG [tier1a_paye_adv_003_20260609] paye_p9_deadline: 31 January
+  FLAG [tier1a_paye_adv_004_20260609] paye_penalty_rate: paye.*5% per month
+  FLAG [tier1a_paye_adv_004_20260609] paye_penalty_rate: paye.*penalty.*(?<![2]\.)5%
+  FLAG [tier1a_paye_adv_004_20260609] paye_penalty_rate: adhabu.*paye.*(?<![2]\.)5%
+  FLAG [tier1a_paye_adv_006_20260609] paye_band_2_rate: rate of 9%
+
+[2026-06-09T08:04:07.470747] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 100 | Flagged: 4
+  FLAG [tier1a_paye_adv_002_20260609] p45_not_tanzanian: Form P45
+  FLAG [tier1a_paye_adv_002_20260609] p45_not_tanzanian: P45
+  FLAG [tier1a_paye_adv_003_20260609] paye_p9_deadline: 31 Januari
+  FLAG [tier1a_paye_adv_003_20260609] paye_p9_deadline: 31 January
+  FLAG [tier1a_paye_adv_004_20260609] paye_penalty_rate: paye.*5% per month
+  FLAG [tier1a_paye_adv_004_20260609] paye_penalty_rate: paye.*penalty.*(?<![2]\.)5%
+  FLAG [tier1a_paye_adv_004_20260609] paye_penalty_rate: adhabu.*paye.*(?<![2]\.)5%
+  FLAG [tier1a_paye_adv_006_20260609] paye_band_2_rate: rate of 9%
+
+[2026-06-09T08:05:52.609013] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 100 | Flagged: 1
+  FLAG [tier1a_paye_adv_003_20260609] paye_p9_deadline: p9.*deadline.*31 january
+
+[2026-06-09T08:05:57.063085] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 100 | Flagged: 1
+  FLAG [tier1a_paye_adv_003_20260609] paye_p9_deadline: p9.*deadline.*31 january
+
+[2026-06-09T08:06:32.159442] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 100 | Flagged: 0
+
+[2026-06-09T08:20:09.246782] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 150 | Flagged: 4
+  FLAG [tier1a_paye_adv_011_20260609] provisional_tax_instalments: 3 instalments
+  FLAG [tier1a_paye_adv_017_20260609] corporate_tax_rate: asilimia 35
+  FLAG [tier1a_wht_deep_002_20260609] royalties_wht_rate: royalt.*10%.*non
+  FLAG [tier1a_wht_deep_009_20260609] wht_deadline: withholding.*siku 30
+  FLAG [tier1a_wht_deep_009_20260609] wht_deadline: withholding.*30 days
+
+[2026-06-09T08:20:14.237430] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 150 | Flagged: 4
+  FLAG [tier1a_paye_adv_011_20260609] provisional_tax_instalments: 3 instalments
+  FLAG [tier1a_paye_adv_017_20260609] corporate_tax_rate: asilimia 35
+  FLAG [tier1a_wht_deep_002_20260609] royalties_wht_rate: royalt.*10%.*non
+  FLAG [tier1a_wht_deep_009_20260609] wht_deadline: withholding.*siku 30
+  FLAG [tier1a_wht_deep_009_20260609] wht_deadline: withholding.*30 days
+
+[2026-06-09T08:21:36.194677] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 150 | Flagged: 2
+  FLAG [tier1a_wht_deep_002_20260609] royalties_wht_rate: royalties.{0,15}non.{0,5}resident.{0,15}10%
+  FLAG [tier1a_wht_deep_009_20260609] wht_deadline: wht.*inalipwa.*ndani ya siku 30
+  FLAG [tier1a_wht_deep_009_20260609] wht_deadline: wht.*remitted.*within 30 days
+  FLAG [tier1a_wht_deep_009_20260609] wht_deadline: withholding.*paid.*within 30 days
+
+[2026-06-09T08:21:40.782000] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 150 | Flagged: 2
+  FLAG [tier1a_wht_deep_002_20260609] royalties_wht_rate: royalties.{0,15}non.{0,5}resident.{0,15}10%
+  FLAG [tier1a_wht_deep_009_20260609] wht_deadline: wht.*inalipwa.*ndani ya siku 30
+  FLAG [tier1a_wht_deep_009_20260609] wht_deadline: wht.*remitted.*within 30 days
+  FLAG [tier1a_wht_deep_009_20260609] wht_deadline: withholding.*paid.*within 30 days
+
+[2026-06-09T08:23:18.181762] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 150 | Flagged: 0
+
+[2026-06-09T08:30:48.174588] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 200 | Flagged: 0
+
+[2026-06-09T08:37:21.441825] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 250 | Flagged: 0
+
+[2026-06-09T08:46:34.616843] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 1
+  FLAG [tier1a_tax_dispute_025_20260609] commissioner_objection_deadline: siku 90
+  FLAG [tier1a_tax_dispute_025_20260609] commissioner_objection_deadline: 90 days
+
+[2026-06-09T08:46:40.071076] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 1
+  FLAG [tier1a_tax_dispute_025_20260609] commissioner_objection_deadline: siku 90
+  FLAG [tier1a_tax_dispute_025_20260609] commissioner_objection_deadline: 90 days
+
+[2026-06-09T08:47:01.454470] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 1
+  FLAG [tier1a_tax_dispute_025_20260609] commissioner_objection_deadline: muda.*kuwasilisha.*pingamizi.*siku 90
+
+[2026-06-09T08:47:06.363329] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 1
+  FLAG [tier1a_tax_dispute_025_20260609] commissioner_objection_deadline: muda.*kuwasilisha.*pingamizi.*siku 90
+
+[2026-06-09T08:47:28.641045] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-09T08:49:04.135432] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 0

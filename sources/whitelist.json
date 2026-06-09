@@ -4,7 +4,9 @@
     "url": "https://www.tra.go.tz/index.php/tax-information",
     "institution": "Tanzania Revenue Authority",
     "source_type": "government_portal",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "training",
     "content_type": "html_guide",
     "decay_risk": "Annual",
@@ -17,7 +19,9 @@
     "url": "https://www.tra.go.tz/index.php/filing-returns",
     "institution": "Tanzania Revenue Authority",
     "source_type": "government_portal",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "training",
     "content_type": "html_guide",
     "decay_risk": "Annual",
@@ -30,7 +34,9 @@
     "url": "https://www.brela.go.tz",
     "institution": "Business Registrations and Licensing Agency",
     "source_type": "government_portal",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "training",
     "content_type": "html_guide",
     "decay_risk": "Stable",
@@ -43,7 +49,9 @@
     "url": "https://www.nssf.or.tz",
     "institution": "National Social Security Fund Tanzania",
     "source_type": "government_portal",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "training",
     "content_type": "html_guide",
     "decay_risk": "Annual",
@@ -56,7 +64,9 @@
     "url": "https://www.osha.go.tz",
     "institution": "Occupational Safety and Health Authority Tanzania",
     "source_type": "government_portal",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "training",
     "content_type": "html_guide",
     "decay_risk": "Stable",
@@ -69,7 +79,9 @@
     "url": "https://tanzlii.org",
     "institution": "Tanzania Law Information Institute / Government Gazette",
     "source_type": "official_gazette",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "training",
     "content_type": "pdf_gazette",
     "decay_risk": "Event-triggered",
@@ -82,7 +94,9 @@
     "url": "https://www.ey.com/en_tz",
     "institution": "EY Tanzania",
     "source_type": "tier1_advisory",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "eval",
     "content_type": "pdf_advisory",
     "decay_risk": "Annual",
@@ -95,7 +109,9 @@
     "url": "https://kpmg.com/tz",
     "institution": "KPMG Tanzania",
     "source_type": "tier1_advisory",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "eval",
     "content_type": "pdf_advisory",
     "decay_risk": "Annual",
@@ -108,7 +124,9 @@
     "url": "https://www.pkfea.com",
     "institution": "PKF Eastern Africa",
     "source_type": "tier1_advisory",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "eval",
     "content_type": "pdf_advisory",
     "decay_risk": "Event-triggered",
@@ -121,7 +139,9 @@
     "url": "https://www.velmalaw.co.tz",
     "institution": "VELMA Law Tanzania",
     "source_type": "tier1_advisory",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "eval",
     "content_type": "html_advisory",
     "decay_risk": "Event-triggered",
@@ -134,7 +154,9 @@
     "url": "https://www.bowmans.com",
     "institution": "Bowmans Tanzania",
     "source_type": "tier1_advisory",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "eval",
     "content_type": "html_advisory",
     "decay_risk": "Event-triggered",
@@ -147,7 +169,9 @@
     "url": "https://www.clydeco.com",
     "institution": "Clyde & Co Tanzania",
     "source_type": "tier1_advisory",
-    "approved_for": ["tier1a"],
+    "approved_for": [
+      "tier1a"
+    ],
     "use_for": "eval",
     "content_type": "html_advisory",
     "decay_risk": "Annual",
@@ -160,7 +184,9 @@
     "url": "https://www.eac.int",
     "institution": "East African Community Secretariat",
     "source_type": "ilo_unctad_official",
-    "approved_for": ["tier1b"],
+    "approved_for": [
+      "tier1b"
+    ],
     "use_for": "training",
     "content_type": "html_pdf_mixed",
     "decay_risk": "Stable",
@@ -173,7 +199,9 @@
     "url": "https://www.comesa.int",
     "institution": "COMESA Secretariat",
     "source_type": "ilo_unctad_official",
-    "approved_for": ["tier1b"],
+    "approved_for": [
+      "tier1b"
+    ],
     "use_for": "training",
     "content_type": "pdf_official",
     "decay_risk": "Stable",
@@ -186,7 +214,9 @@
     "url": "https://www.ilo.org",
     "institution": "International Labour Organization",
     "source_type": "ilo_unctad_official",
-    "approved_for": ["tier1b"],
+    "approved_for": [
+      "tier1b"
+    ],
     "use_for": "training",
     "content_type": "pdf_official",
     "decay_risk": "Stable",
@@ -199,7 +229,9 @@
     "url": "https://unctad.org",
     "institution": "United Nations Conference on Trade and Development",
     "source_type": "ilo_unctad_official",
-    "approved_for": ["tier1b"],
+    "approved_for": [
+      "tier1b"
+    ],
     "use_for": "training",
     "content_type": "pdf_official",
     "decay_risk": "Stable",
@@ -212,7 +244,9 @@
     "url": "https://www.eabc.info",
     "institution": "East African Business Council",
     "source_type": "ilo_unctad_official",
-    "approved_for": ["tier1b"],
+    "approved_for": [
+      "tier1b"
+    ],
     "use_for": "training",
     "content_type": "pdf_official",
     "decay_risk": "Event-triggered",
@@ -225,7 +259,9 @@
     "url": "https://www.ppra.go.tz",
     "institution": "Public Procurement Regulatory Authority Tanzania",
     "source_type": "government_portal",
-    "approved_for": ["tier1c"],
+    "approved_for": [
+      "tier1c"
+    ],
     "use_for": "training",
     "content_type": "html_pdf_mixed",
     "decay_risk": "Annual",
@@ -238,7 +274,9 @@
     "url": "https://www.ppra.go.tz",
     "institution": "Public Procurement Regulatory Authority Tanzania",
     "source_type": "government_portal",
-    "approved_for": ["tier1c"],
+    "approved_for": [
+      "tier1c"
+    ],
     "use_for": "training",
     "content_type": "pdf_official",
     "decay_risk": "Stable",
@@ -251,12 +289,44 @@
     "url": "https://www.parliament.go.tz",
     "institution": "Tanzania National Assembly",
     "source_type": "official_gazette",
-    "approved_for": ["tier1c"],
+    "approved_for": [
+      "tier1c"
+    ],
     "use_for": "training",
     "content_type": "pdf_official",
     "decay_risk": "Stable",
     "last_verified": "2026-06-01",
     "re_scrape_trigger": "When PPA is amended by Parliament",
     "notes": "Public Procurement Act 2023 full text. Foundation for all NeST procurement pairs."
+  },
+  {
+    "id": "tier1a_nssf_002",
+    "url": "https://www.nssf.go.tz",
+    "institution": "National Social Security Fund Tanzania (alt domain)",
+    "source_type": "government_portal",
+    "approved_for": [
+      "tier1a"
+    ],
+    "use_for": "training",
+    "content_type": "html_guide",
+    "decay_risk": "Annual",
+    "last_verified": "2026-06-08",
+    "re_scrape_trigger": "After Finance Act or NSSF Act amendments",
+    "notes": "Alternative NSSF domain used in batch_002 pairs"
+  },
+  {
+    "id": "tier1a_immigration_001",
+    "url": "https://www.immigration.go.tz",
+    "institution": "Tanzania Immigration Services Department",
+    "source_type": "government_portal",
+    "approved_for": [
+      "tier1a"
+    ],
+    "use_for": "training",
+    "content_type": "html_guide",
+    "decay_risk": "Annual",
+    "last_verified": "2026-06-08",
+    "re_scrape_trigger": "After new GN or immigration policy update",
+    "notes": "GN 487A prohibition order, residence permits"
   }
 ]

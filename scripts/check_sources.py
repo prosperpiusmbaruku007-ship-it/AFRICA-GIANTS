@@ -9,7 +9,7 @@ import json, sys, argparse, os
 TRAINING_WHITELIST = [
     "tra.go.tz", "nssf.go.tz", "nssf.or.tz", "brela.go.tz",
     "immigration.go.tz", "mlywf.go.tz", "osha.go.tz",
-    "tanzlii.org", "nest.go.tz"
+    "tanzlii.org", "nest.go.tz", "ppra.go.tz"
 ]
 
 EVAL_ONLY = [
