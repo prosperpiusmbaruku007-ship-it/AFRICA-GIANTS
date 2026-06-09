@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-09 (session 6)
+## Last Updated: 2026-06-09 (session 7)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,7 +15,7 @@
 
 ## 1. CURRENT PHASE
 
-**batch_004 cross-AI review complete and all 18 consensus flags resolved from primary sources. batch_004 verified and corrected — ready for founder 10% sample review. Next: founder reviews batch_003 + batch_004 (30 pairs each), move to cleaned_pairs/, generate SFT on 900 pairs, retrain on Kaggle.**
+**batch_005 COMPLETE (300 pairs, commit eba5e97). Founder review samples generated for batch_003 + batch_004 (30 pairs each, commit 7dfe94f). Next: founder reviews batch_003_founder_sample.jsonl + batch_004_founder_sample.jsonl, approves both, then move all three batches (003/004/005) to cleaned_pairs/, run check_eval_split.py + generate_sft.py, retrain on Kaggle on 1,200 pairs.**
 
 ---
 
@@ -46,22 +46,31 @@
 - BRELA incorporation (min): TZS 95,000 (scales with paid-up capital). Source: brela.go.tz
 - BRELA foreign branch: USD 750 (certified copy) + USD 220 (document filing). Source: brela.go.tz
 
-**CORPUS STATE:**
+**CORPUS STATE (after session 7):**
 - batch_001_cleaned.jsonl: 57 pairs (committed, verified)
 - batch_002_cleaned.jsonl: 243 pairs (committed, verified)
 - raw_pairs_batch_003.jsonl: 300 pairs — cross-AI CLEAN, needs founder 10% review
 - raw_pairs_batch_004.jsonl: 300 pairs — cross-AI done, all consensus flags resolved, needs founder 10% review
-- Total raw: 900 pairs
+- raw_pairs_batch_005.jsonl: 300 pairs — check_locked_facts CLEAN, check_sources CLEAN, needs founder review
+- Total raw: 1,200 pairs
 - Total cleaned: 300 pairs
 
+**batch_005 subdomains:** permit_deep (50) + income_tax_adversarial (50) + stamp_duty_deep (50) + compliance_costs_deep (50) + efd_deep (50) + osha_nssf_adversarial (50)
+
+**Founder review samples ready:**
+- datasets/tier1a/flagged/needs_human_review/batch_003_founder_sample.jsonl (30 pairs)
+- datasets/tier1a/flagged/needs_human_review/batch_004_founder_sample.jsonl (30 pairs)
+- batch_005 needs its own founder review before moving to cleaned_pairs/
+
 **PENDING BEFORE NEXT TRAINING:**
-1. Founder reviews batch_003 sample (10% = 30 pairs)
-2. Founder reviews batch_004 sample (10% = 30 pairs)
-3. Move both reviewed batches to cleaned_pairs/
-4. python scripts/check_eval_split.py
-5. python scripts/generate_sft.py
-6. Upload to HuggingFace and retrain on Kaggle (africa-giants-v2)
-7. Run accuracy gate — target >75% in-corpus, >70% refusal
+1. Founder reviews batch_003_founder_sample.jsonl (30 pairs) — approve or flag
+2. Founder reviews batch_004_founder_sample.jsonl (30 pairs) — approve or flag
+3. Generate batch_005 founder sample (30 pairs) and review
+4. Move all three batches (003/004/005) to cleaned_pairs/ after approval
+5. python scripts/check_eval_split.py
+6. python scripts/generate_sft.py
+7. Upload to HuggingFace and retrain on Kaggle (africa-giants-v2) on 1,200 pairs
+8. Run accuracy gate — target >75% in-corpus, >70% refusal
 
 **KNOWN UNRESOLVED (from cross-AI review, single-model flags — human review):**
 - wcf_005 (Gemini): WCF notification timeframe — now fixed to 7 working days ✓
@@ -81,10 +90,25 @@
 - 14 skills installed, 11 scripts committed
 - All mandatory CLAUDE.md rules active
 
-**NEXT TASK (batch_005):**
-- target_sub: permit_deep, income_tax_adversarial, stamp_duty_deep, compliance_costs_deep
-- Target: 300 more pairs toward 3,000 total
-- Remaining after batch_005: 1,800 pairs
+### 2026-06-09 (session 7) — batch_005 COMPLETE + founder review samples generated
+
+**COMPLETED:**
+- batch_005: 300 pairs — commit `eba5e97`
+  - permit_deep (50): work permit classes A/B/C/D/E, GN 487A interaction, adversarial
+  - income_tax_adversarial (50): corporate tax, WHT rates, provisional tax, self-employed
+  - stamp_duty_deep (50): flat 1% rate, lease/loan/share transfer, process, disambiguation
+  - compliance_costs_deep (50): BRELA/TRA/NSSF/WCF/OSHA costs, EFD, penalties, EPZ
+  - efd_deep (50): EFD mandate, receipts, VAT integration, TIMS, breakdowns, QR codes
+  - osha_nssf_adversarial (50): OSHA vs WCF disambiguation, NSSF opt-out myths, WCF coverage
+- Founder review samples: batch_003 + batch_004 (30 pairs each) — commit `7dfe94f`
+- locked_facts.json: 11 additional patterns tightened (permit classes, SDL, PAYE, NSSF, stamp duty)
+- check_sources.py: wcf.go.tz added to TRAINING_WHITELIST
+- All 300 pairs: check_locked_facts CLEAN + check_sources CLEAN
+
+**NEXT TASK (batch_006):**
+- After founder approves batch_003/004/005: generate SFT on 1,200 pairs, retrain
+- Target: 3,000 total pairs; 1,800 remaining after batch_005
+- Suggested next subdomains: gn605a_deep (minimum wage sector tables), eac_str_intro (EAC STR — tier 1B unlock preview), vat_return_deep (filing procedures, credits, refunds)
 
 ---
 
