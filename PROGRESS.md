@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-08 (session 4)
+## Last Updated: 2026-06-09 (session 5)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,11 +15,45 @@
 
 ## 1. CURRENT PHASE
 
-**REGULATORY-VERIFIER working with Gemini 3.5-flash + OpenRouter (llama-3.3-70b-instruct:free). Groq and Cerebras confirmed geo-blocked in Tanzania (HTTP 403 on all keys). Gemini responding on all batches. OpenRouter key confirmed valid but hits free-tier 429 before achieving consensus. plan_next_batch.py installed — corpus at 313 pairs, 2,687 remaining. Next: build batch_003 adversarial pairs (GN487A 80 + SDL 50 + VAT 40 = 170 pairs minimum) and verify GN487A imprisonment penalty against TanzLII gazette (Gemini flags 6mo→12mo across 8 pairs consistently).**
+**batch_003 and batch_004 complete — 900 pairs total in raw_sources. Both batches need founder review (10% sample = 60 pairs total) before moving to cleaned_pairs/. OpenRouter switched to openrouter/auto. 15 locked_facts.json pattern fixes applied. Next: founder reviews batch_003 + batch_004, cross-AI review on batch_004, move to cleaned_pairs, generate SFT, retrain on Kaggle.**
 
 ---
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
+
+### 2026-06-09 (session 5) — batch_003 + batch_004 complete, OpenRouter fix, locked_facts hardening
+
+**COMPLETED:**
+- batch_003: 300 pairs (gn487a adversarial + sdl adversarial + vat + refusal + nssf_deep + efd_deep)
+- batch_004: 300 pairs (gn605a + osha + paye adversarial + wht_deep + wcf + brela_deep + tax_disputes + rural)
+- Cross-AI review: batch_003 reviewed, exit code 0 CLEAN
+- OpenRouter: switched to `openrouter/auto` model (bypasses per-model free-tier rate limits)
+- locked_facts.json: 15 pattern fixes for adversarial false-positives
+- 14 skills installed, 11 scripts committed
+- All mandatory CLAUDE.md rules active
+
+**CORPUS STATE:**
+- batch_001_cleaned.jsonl: 57 pairs
+- batch_002_cleaned.jsonl: 243 pairs
+- raw_pairs_batch_003.jsonl: 300 pairs (needs founder review)
+- raw_pairs_batch_004.jsonl: 300 pairs (needs founder review)
+- Total raw: 900 pairs
+- Total cleaned: 300 pairs
+
+**PENDING BEFORE NEXT TRAINING:**
+1. Founder reviews batch_003 and batch_004 samples (10% = 30 pairs each = 60 pairs total)
+2. Run cross-AI review on batch_004 when rate limits reset
+3. Move reviewed batches to cleaned_pairs/
+4. Run generate_sft.py on 900 pairs
+5. Upload to HuggingFace and retrain on Kaggle
+6. Run accuracy gate — target >75% in-corpus
+
+**NEXT TASK (batch_005):**
+- target_sub: permit_deep, income_tax_adversarial, stamp_duty_deep, compliance_costs_deep
+- Target: 300 more pairs toward 3,000 total
+- Remaining after batch_005: 1,800 pairs
+
+---
 
 ### 2026-06-08 (session 4) — Verifier pipeline stabilised, data fixes, batch planner installed
 
