@@ -487,7 +487,10 @@
     "wrong_patterns": [
       "asilimia 10 kwa wasio wakazi.*mrabaha",
       "10% non-resident.*royalt",
-      "royalt.*10%.*non",
+      "royalties.{0,20}non.{0,5}resident.{0,10}is 10%",
+      "royalties.{0,20}wasio wakazi.{0,10}ni asilimia 10(?! si| — si)",
+      "royalties.{0,15}wasio wakazi.{0,15}asilimia 10(?! si| — si)",
+      "royalties.*wht is 10%",
       "mrabaha.*wasio wakazi.*10"
     ],
     "primary_source": "https://www.tra.go.tz/page/withholding-tax",
@@ -501,11 +504,14 @@
     "wrong_patterns": [
       "awamu tatu",
       "three instalments",
-      "3 instalments",
       "awamu mbili",
       "two instalments",
       "first instalment[^,]*month 6",
-      "awamu ya kwanza[^,]*mwezi wa 6"
+      "awamu ya kwanza[^,]*mwezi wa 6",
+      "provisional tax.{0,30}3 instalments(?! will have| is wrong| is incorrect)",
+      "awamu 3.{0,20}kodi ya awali",
+      "kodi ya awali.{0,30}awamu 3(?! tu)",
+      "paid in 3 instalments(?! will)"
     ],
     "primary_source": "https://www.tra.go.tz/page/corporation-tax",
     "verified_by": "TRA Paying Taxes page + PWC Tanzania + Auditax International",
@@ -660,9 +666,12 @@
       "asilimia 25 kwa kawaida",
       "25% standard",
       "corporate tax 25% all",
-      "asilimia 35",
       "35% corporate",
-      "28% corporate"
+      "28% corporate",
+      "kodi ya kampuni.{0,30}asilimia 35",
+      "corporate tax.{0,20}35%",
+      "kiwango.{0,20}kampuni.{0,20}35",
+      "asilimia 35.{0,30}kodi.{0,20}kampuni"
     ],
     "primary_source": "https://www.tra.go.tz/page/corporation-tax",
     "verified_by": "TRA Corporation Tax page",
@@ -675,9 +684,12 @@
     "wrong_patterns": [
       "mwisho wa mwezi unaofuata",
       "end of following month",
-      "withholding.*siku 30",
+      "wht inalipwa[^.!?]*siku 30",
+      "wht.{0,10}remitted[^.!?]*within 30 days",
+      "wht[^.!?]*kulipa[^.!?]*ndani ya siku 30",
+      "withholding.*payment.*30 days",
+      "withholding[^.!?]*paid[^.!?]*within 30 days(?! of deduction)",
       "siku 30.*withholding",
-      "withholding.*30 days",
       "30 days.*withholding",
       "zuio.*siku 30",
       "siku 30.*zuio"
