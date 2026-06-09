@@ -440,10 +440,16 @@
       "2025-07-01",
       "Machi 2026",
       "March 2026",
-      "605[^.!?]*julai 2025",
-      "julai 2025[^.!?]*605",
-      "605[^.!?]*july 2025",
-      "july 2025[^.!?]*605"
+      "GN 605A ilianza kutumika julai 2025",
+      "GN 605A ilianza julai 2025",
+      "GN 605A ilifanya kazi julai 2025",
+      "GN 605A ya julai 2025",
+      "GN 605A (julai 2025)",
+      "GN 605A iliyoanza julai 2025",
+      "GN 605A effective july 2025",
+      "GN 605A took effect in july 2025",
+      "GN 605A, effective july 2025",
+      "GN 605A (july 2025)"
     ],
     "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/605a/eng@2025-10-13",
     "verified_by": "TanzLII gazette",
@@ -455,7 +461,10 @@
     "correct_value": "33.4% from TZS 275,060 to TZS 358,322",
     "wrong_patterns": [
       "20% ongezeko",
-      "20% increase",
+      "increase was 20%",
+      "was a 20% increase",
+      "increased by 20%",
+      "increase of 20%",
       "25% increase",
       "kutoka 200,000",
       "from TZS 200,000"
