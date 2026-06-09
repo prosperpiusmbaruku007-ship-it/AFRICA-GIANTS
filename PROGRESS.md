@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-09 (session 5)
+## Last Updated: 2026-06-09 (session 6)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,11 +15,60 @@
 
 ## 1. CURRENT PHASE
 
-**batch_003 and batch_004 complete — 900 pairs total in raw_sources. Both batches need founder review (10% sample = 60 pairs total) before moving to cleaned_pairs/. OpenRouter switched to openrouter/auto. 15 locked_facts.json pattern fixes applied. Next: founder reviews batch_003 + batch_004, cross-AI review on batch_004, move to cleaned_pairs, generate SFT, retrain on Kaggle.**
+**batch_004 cross-AI review complete and all 18 consensus flags resolved from primary sources. batch_004 verified and corrected — ready for founder 10% sample review. Next: founder reviews batch_003 + batch_004 (30 pairs each), move to cleaned_pairs/, generate SFT on 900 pairs, retrain on Kaggle.**
 
 ---
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
+
+### 2026-06-09 (session 6) — batch_004 cross-AI review + all consensus flags resolved from primary sources
+
+**COMPLETED:**
+- batch_004 cross-AI review: 300 pairs, 15 batches — commit `946c03d`
+  - 18 consensus flags (both Gemini + OpenRouter agreed)
+  - 124 single-model human-review flags (mostly OpenRouter false positives on adversarial pairs)
+- Primary source verification of all 18 consensus flags:
+  - WHT director fees (non-resident): **TRA.go.tz confirms 15% for all** — pairs had 20% (WRONG)
+  - WCF accident reporting deadline: **portal.wcf.go.tz confirms 7 working days** — pairs had 30 days (WRONG); AI models said 14 days (also WRONG)
+  - BRELA name reservation: **brela.go.tz confirms TZS 50,000** — pairs had 20,000 (WRONG)
+  - BRELA local incorporation: **brela.go.tz confirms TZS 95,000 minimum** — pairs had 50,000 (WRONG)
+  - BRELA foreign branch: **brela.go.tz confirms USD 750 + USD 220** — pairs had TZS 200,000+ (WRONG)
+  - brela_deep_007 Certificate of Compliance description: wording dispute only, no factual error
+- All 5 confirmed errors fixed — 15 pairs corrected total across 2 commits:
+  - `f4ba56c` — WHT director fees + BRELA fees (4 fixes, 9 pairs)
+  - `1cc7754` — WCF deadline (6 pairs: wcf_005/022/028 + osha_005/031 + mix_rc_007)
+- locked_facts.json: added `wht_director_fees` and `wcf_accident_reporting` entries
+
+**VERIFIED REGULATORY FACTS (added this session):**
+- WHT director fees (non-full-time): 15% — single rate, residents AND non-residents. Source: TRA.go.tz
+- WCF accident reporting: 7 working days via portal.wcf.go.tz. Source: WCF portal
+- BRELA name reservation: TZS 50,000 / 30 days. Source: brela.go.tz/pages/tozo-za-kampuni
+- BRELA incorporation (min): TZS 95,000 (scales with paid-up capital). Source: brela.go.tz
+- BRELA foreign branch: USD 750 (certified copy) + USD 220 (document filing). Source: brela.go.tz
+
+**CORPUS STATE:**
+- batch_001_cleaned.jsonl: 57 pairs (committed, verified)
+- batch_002_cleaned.jsonl: 243 pairs (committed, verified)
+- raw_pairs_batch_003.jsonl: 300 pairs — cross-AI CLEAN, needs founder 10% review
+- raw_pairs_batch_004.jsonl: 300 pairs — cross-AI done, all consensus flags resolved, needs founder 10% review
+- Total raw: 900 pairs
+- Total cleaned: 300 pairs
+
+**PENDING BEFORE NEXT TRAINING:**
+1. Founder reviews batch_003 sample (10% = 30 pairs)
+2. Founder reviews batch_004 sample (10% = 30 pairs)
+3. Move both reviewed batches to cleaned_pairs/
+4. python scripts/check_eval_split.py
+5. python scripts/generate_sft.py
+6. Upload to HuggingFace and retrain on Kaggle (africa-giants-v2)
+7. Run accuracy gate — target >75% in-corpus, >70% refusal
+
+**KNOWN UNRESOLVED (from cross-AI review, single-model flags — human review):**
+- wcf_005 (Gemini): WCF notification timeframe — now fixed to 7 working days ✓
+- Several OpenRouter flags on adversarial pairs: all false positives (model misreads question as answer)
+- brela_deep_006: annual return 42 days vs 60 days — OpenRouter says 60, pairs say 42. Needs verification.
+
+---
 
 ### 2026-06-09 (session 5) — batch_003 + batch_004 complete, OpenRouter fix, locked_facts hardening
 
@@ -31,22 +80,6 @@
 - locked_facts.json: 15 pattern fixes for adversarial false-positives
 - 14 skills installed, 11 scripts committed
 - All mandatory CLAUDE.md rules active
-
-**CORPUS STATE:**
-- batch_001_cleaned.jsonl: 57 pairs
-- batch_002_cleaned.jsonl: 243 pairs
-- raw_pairs_batch_003.jsonl: 300 pairs (needs founder review)
-- raw_pairs_batch_004.jsonl: 300 pairs (needs founder review)
-- Total raw: 900 pairs
-- Total cleaned: 300 pairs
-
-**PENDING BEFORE NEXT TRAINING:**
-1. Founder reviews batch_003 and batch_004 samples (10% = 30 pairs each = 60 pairs total)
-2. Run cross-AI review on batch_004 when rate limits reset
-3. Move reviewed batches to cleaned_pairs/
-4. Run generate_sft.py on 900 pairs
-5. Upload to HuggingFace and retrain on Kaggle
-6. Run accuracy gate — target >75% in-corpus
 
 **NEXT TASK (batch_005):**
 - target_sub: permit_deep, income_tax_adversarial, stamp_duty_deep, compliance_costs_deep
