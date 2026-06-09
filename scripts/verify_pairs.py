@@ -94,9 +94,11 @@ def call_gemini(pairs_text, api_key):
 
 
 def call_openrouter(pairs_text, api_key):
-    """OpenRouter fallback chain: llama-3.3-70b → mistral-small → qwen-2.5."""
+    """OpenRouter smart router → mistral-small → qwen-2.5.
+    openrouter/auto routes to best available free model — bypasses per-model limits.
+    """
     models = [
-        "meta-llama/llama-3.3-70b-instruct:free",
+        "openrouter/auto",
         "mistralai/mistral-small-24b-instruct-2501:free",
         "qwen/qwen-2.5-7b-instruct:free",
     ]
