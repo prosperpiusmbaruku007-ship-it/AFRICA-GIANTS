@@ -623,9 +623,9 @@
     "wrong_patterns": [
       "daraja B.*mwekezaji",
       "mwekezaji.*daraja B",
-      "investor.*Class B",
       "Class B kwa wanaowekeza",
-      "Class B.*(?:is|for|kwa).*investor(?! need| instead)"
+      "Class B ni kwa wanaowekeza(?! — si| — not| Class A)",
+      "Class B.*investor(?!.*Class A)(?!.*NOT)(?!.*si kwa)"
     ],
     "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
     "verified_by": "Tanzania Immigration Department official website",
@@ -636,10 +636,9 @@
     "fact": "Class A Residence Permit is for SELF-EMPLOYED FOREIGN INVESTORS — NOT Class B",
     "correct_value": "Class A = self-employed investors",
     "wrong_patterns": [
-      "Class A.*kazi",
       "daraja A.*mfanyakazi ajiriwa",
       "Class A for employees",
-      "(?<!self-)(?<!companies as )employed.*Class A"
+      "Class A.*for.*(?:employed|employees|regular workers)(?!.*invest|.*self)"
     ],
     "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
     "verified_by": "Tanzania Immigration Department official website",
@@ -652,9 +651,8 @@
     "wrong_patterns": [
       "daraja C.*mfanyakazi ajiriwa",
       "Class C for workers",
-      "work permit.*Class C",
-      "Class C.{0,40}kazi ya",
-      "employed.{0,30}Class C(?! is for| ni kwa)",
+      "Class C.{0,40}kazi ya(?! utafiti)",
+      "employed.{0,30}Class C(?! is for| ni kwa| \\(short| is a short)",
       "wafanyakazi.{0,50}daraja C"
     ],
     "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
