@@ -810,5 +810,18 @@
       "wasio wakazi.*ada.*mkurugenzi.*ni asilimia 20",
       "mkurugenzi.*kwa wasio wakazi.*ni asilimia 20"
     ]
+  },
+  "wcf_accident_reporting": {
+    "fact": "Employer must notify WCF of a workplace accident within 7 WORKING DAYS — via WCF online portal (portal.wcf.go.tz). Different deadline for occupational illness. Source: WCF portal.",
+    "primary_source": "https://portal.wcf.go.tz",
+    "verified_date": "2026-06-09",
+    "wrong_patterns": [
+      "wcf.*siku 30",
+      "siku 30.*wcf",
+      "wcf.*30 days",
+      "30 days.*wcf",
+      "wcf.*siku 14(?! za magonjwa)",
+      "wcf.*14 days(?! for occupational)"
+    ]
   }
 }
