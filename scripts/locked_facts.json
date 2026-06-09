@@ -794,5 +794,21 @@
       "resolution_source": "Tax Administration Act — WHT-specific penalty section",
       "priority": "MEDIUM"
     }
+  },
+  "wht_director_fees": {
+    "fact": "WHT on director fees (non-full-time directors) is 15% — a single rate for both residents and non-residents. Source: TRA.go.tz withholding tax page.",
+    "primary_source": "https://www.tra.go.tz/page/withholding-tax",
+    "verified_date": "2026-06-09",
+    "wrong_patterns": [
+      "asilimia 20.*mkurugenzi wasio wakazi",
+      "mkurugenzi.*asiye mkazi.*asilimia 20",
+      "director fee.{0,30}non.{0,10}resident.{0,10}(?:is |are |attracts )20%",
+      "non-resident director.{0,20}20%",
+      "director fees.*non-residents.{0,15}20%",
+      "mkurugenzi wa kigeni.{0,20}asilimia 20",
+      "ada za mkurugenzi.*wasio wakazi.*ni asilimia 20",
+      "wasio wakazi.*ada.*mkurugenzi.*ni asilimia 20",
+      "mkurugenzi.*kwa wasio wakazi.*ni asilimia 20"
+    ]
   }
 }
