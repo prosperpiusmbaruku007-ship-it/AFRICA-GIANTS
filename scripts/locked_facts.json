@@ -539,8 +539,9 @@
     "fact": "TRA Commissioner must determine an objection within 6 months from date of admission — NOT 90 days",
     "correct_value": "6 months from admission",
     "wrong_patterns": [
-      "siku 90",
-      "90 days",
+      "pingamizi.{0,30}siku 90(?! — si| — not| ni kosa)",
+      "objection.{0,30}90 days(?! — not| is wrong)",
+      "deadline.*objection.*90 days",
       "within 90 days",
       "ndani ya siku 60",
       "(kamishna|commissioner).*(determine|kuamua).*(miezi 3|3 months)",
@@ -548,7 +549,9 @@
       "commissioner.*must.*respond.*within.*3 months",
       "kamishna.*lazima.*kujibu.*miezi 3",
       "objection.*determined.*3 months",
-      "rufaa.*miezi 3.*kamishna"
+      "rufaa.*miezi 3.*kamishna",
+      "pingamizi.{0,20}ni siku 90(?! ya rufaa)",
+      "muda wa pingamizi ni siku 90"
     ],
     "primary_source": "https://taxsummaries.pwc.com/tanzania/corporate/tax-administration",
     "verified_by": "Finance Act 2020 amendment to Tax Administration Act confirmed by PWC",
