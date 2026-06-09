@@ -35,12 +35,12 @@
     "wrong_patterns": [
       "paye penalty is 5% per month",
       "adhabu ya paye ni asilimia 5 kwa mwezi",
-      "paye.*late.*penalty.*5%(?! per month.*not)",
+      "paye[^.!?]*late[^.!?]*penalty[^.!?]*(?<!\\d)5%(?! per month.*not)",
       "asilimia 10 kwa mwezi.*paye",
       "paye.*asilimia 10 kwa mwezi",
       "10% per month.*paye",
       "paye.*10% per month",
-      "paye.*faini.*asilimia 5(?! kwa mwezi — si)"
+      "paye[^.!?]*faini[^.!?]*asilimia 5(?! kwa mwezi — si)"
     ],
     "primary_source": "https://taxsummaries.pwc.com/tanzania/corporate/tax-administration",
     "verified_by": "PWC Tanzania Tax Summaries",
@@ -164,8 +164,8 @@
       "minimum.*\\b5 employees\\b",
       "\\b5 employees\\b.*threshold",
       "threshold.*\\b5 employees\\b",
-      "sdl.*wafanyakazi 5(?! au zaidi| or more)",
-      "sdl.*\\b5 employees\\b(?! or more| au zaidi)",
+      "sdl.*wafanyakazi 5(?! au zaidi| or more| tu| haihitajiki)",
+      "sdl.*\\b5 employees\\b(?! or more| au zaidi| only| is not)",
       "wafanyakazi 50.*kizingiti cha sdl",
       "sdl.*minimum.*50 employees"
     ],
@@ -235,10 +235,10 @@
     "fact": "NSSF late payment penalty is 5% per month of unpaid contributions",
     "correct_value": "5% per month",
     "wrong_patterns": [
-      "nssf.*2% per month",
-      "2% per month.*nssf",
-      "nssf.*2.5% per month",
-      "2.5% per month.*nssf",
+      "nssf[^.!?]*2% per month",
+      "2% per month[^.!?]*nssf",
+      "nssf[^.!?]*2\\.5% per month",
+      "2\\.5% per month[^.!?]*nssf",
       "10% per month.*nssf",
       "nssf.*10% per month",
       "nssf.*faini.*asilimia 2(?![0-9])",
