@@ -823,5 +823,18 @@
       "wcf.*siku 14(?! za magonjwa)",
       "wcf.*14 days(?! for occupational)"
     ]
+  },
+  "wcf_accident_reporting_deadline": {
+    "fact": "7 working days from date of accident. Source: Workers Compensation Act / portal.wcf.go.tz",
+    "primary_source": "https://tanzlii.org (Workers Compensation Act 2008)",
+    "verified_date": "2026-06-09",
+    "wrong_patterns": [
+      "wcf.*siku 30(?! ya kodi| ya hesabu)",
+      "siku 30.*wcf(?! ya kodi)",
+      "wcf.*30 days(?! of tax| of objection)",
+      "30 days.*wcf",
+      "wcf.*siku 14(?! za magonjwa)",
+      "wcf.*14 days(?! for occupational)"
+    ]
   }
 }
