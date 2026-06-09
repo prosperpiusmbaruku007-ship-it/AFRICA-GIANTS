@@ -608,9 +608,10 @@
       "0.5% ya kwanza",
       "0.5% on first",
       "asilimia 0.5.*100,000",
-      "tiered",
+      "(?:is|are|ina|ni) tiered",
       "graduated",
-      "stempu.*0\\.5%.*1%|stamp.*duty.*0\\.5.*1%"
+      "stamp.{0,60} is.{0,5}0\\.5%",
+      "stempu.{0,60}ni.{0,5}asilimia 0\\.5"
     ],
     "primary_source": "https://www.tra.go.tz/page/stamp-duty",
     "verified_by": "Auditax International Tanzania confirmed flat 1%",
