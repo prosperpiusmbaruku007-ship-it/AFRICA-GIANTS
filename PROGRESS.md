@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-09 (session 7)
+## Last Updated: 2026-06-10 (session 8)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,7 +15,7 @@
 
 ## 1. CURRENT PHASE
 
-**batch_005 COMPLETE (300 pairs, commit eba5e97). Founder review samples generated for batch_003 + batch_004 (30 pairs each, commit 7dfe94f). Next: founder reviews batch_003_founder_sample.jsonl + batch_004_founder_sample.jsonl, approves both, then move all three batches (003/004/005) to cleaned_pairs/, run check_eval_split.py + generate_sft.py, retrain on Kaggle on 1,200 pairs.**
+**batch_006 COMPLETE (300 pairs, commit 73f3e21). Total raw corpus: 1,500 pairs. Founder review samples ready for batch_003/004/005 (seed=99 sample for batch_005). Cross-AI review: batch_003 CLEAN (1 human-review flag routed), batch_005 CLEAN (0 flags). Next: founder reviews three samples, approves, move 003/004/005 to cleaned_pairs/, retrain on 1,200 pairs on Kaggle. batch_007 target: compensate register shortfall (more business_market + rural_conversational).**
 
 ---
 
@@ -89,6 +89,52 @@
 - locked_facts.json: 15 pattern fixes for adversarial false-positives
 - 14 skills installed, 11 scripts committed
 - All mandatory CLAUDE.md rules active
+
+### 2026-06-10 (session 8) — batch_006 COMPLETE 300 pairs + cross-AI review batch_003 + batch_005
+
+**COMPLETED:**
+- batch_006: 300 pairs — commit `73f3e21`
+  - gn487a_adversarial (50): corrects residence-permit confusion, wrong penalties, wrong agency
+  - sdl_adversarial (50): corrects "disability leave" error, wrong rate/threshold
+  - eac_str_basics (30, tier1b): USD 2,000, Common List, originating ≠ Common List
+  - digital_services_tax (20): B2C VAT 16%, WHT 6% on services, EFD online
+  - vat_refund_deep (50): input/output VAT, exporter refunds, zero-rated vs exempt
+  - paye_foreign_employees (50): all employees pay PAYE, non-cash benefits, DTA, P9
+  - out_of_corpus_refusal (20) + disambiguation_mixed (15) + rural_compliance (15)
+- batch_003 cross-AI review: CLEAN (0 consensus, 1 human-review flag — gn487a_072 SUMATRA vs LATRA)
+  - Flag routed to datasets/tier1a/flagged/needs_human_review/batch_003_gn487a_072_flag.json
+- batch_005 cross-AI review: CLEAN (0 flags)
+- batch_005_founder_sample.jsonl: regenerated with seed=99, commit 457c222
+- locked_facts.json: 5 additional pattern fixes (gn487a_effective_date, sdl_rate, permit_class_a, stamp_duty, 5% SDL lookbehind)
+
+**CORPUS STATE (after session 8):**
+- batch_001_cleaned.jsonl: 57 pairs (cleaned)
+- batch_002_cleaned.jsonl: 243 pairs (cleaned)
+- raw_pairs_batch_003.jsonl: 300 pairs — cross-AI CLEAN, founder sample ready (seed=99 needed for 003 too)
+- raw_pairs_batch_004.jsonl: 300 pairs — cross-AI done, all consensus flags resolved
+- raw_pairs_batch_005.jsonl: 300 pairs — cross-AI CLEAN, founder sample (seed=99) ready
+- raw_pairs_batch_006.jsonl: 300 pairs — check_locked_facts CLEAN, check_sources CLEAN, needs cross-AI review
+- Total raw: 1,500 pairs | Total cleaned: 300 pairs
+
+**REGISTER NOTE batch_006:** formal(177) bm(76) rural(47) — below minimums (need bm≥120, rural≥60).
+Technical subdomains (PAYE/VAT/SDL deep dives) naturally skew formal. Compensate in batch_007.
+
+**PENDING BEFORE NEXT TRAINING:**
+1. Founder reviews batch_003_founder_sample.jsonl (30 pairs)
+2. Founder reviews batch_004_founder_sample.jsonl (30 pairs)
+3. Founder reviews batch_005_founder_sample.jsonl (30 pairs, seed=99)
+4. Move all three batches (003/004/005) to cleaned_pairs/ after approval
+5. python scripts/check_eval_split.py
+6. python scripts/generate_sft.py
+7. Upload to HuggingFace and retrain on Kaggle on 1,200 pairs
+8. Run accuracy gate — target >75% in-corpus, >70% refusal
+
+**KNOWN UNRESOLVED (single-model human-review flags):**
+- gn487a_072: SUMATRA vs LATRA for daladala licensing — needs TanzLII/LATRA verification
+- GN 487A imprisonment penalty: 6 months (pairs) vs 12 months (Gemini) — 8 pairs need TanzLII verification
+- brela_deep_006: annual return 42 vs 60 days — needs BRELA verification
+
+---
 
 ### 2026-06-09 (session 7) — batch_005 COMPLETE + founder review samples generated
 
