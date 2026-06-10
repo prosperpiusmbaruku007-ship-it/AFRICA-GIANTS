@@ -404,7 +404,7 @@
       "January 2025",
       "Machi 2025",
       "Oktoba 2025 effective",
-      "gn.?487.*2024|487a.*2024"
+      "gn.{0,5}487[^.!?]{0,80}(?:ya|ni|was|in|mwaka|from|of|ilianza|ilitangazwa|enacted|issued|announced) 2024|487a[^.!?]{0,80}(?:ya|ni|was|in|mwaka|from|of|ilianza|ilitangazwa|enacted|issued|announced) 2024"
     ],
     "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
     "verified_by": "TanzLII gazette",

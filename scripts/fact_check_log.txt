@@ -626,3 +626,16 @@ Total: 300 | Flagged: 1
 
 [2026-06-09T17:33:18.755068] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
 Total: 300 | Flagged: 0
+
+[2026-06-10T11:20:00.775072] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 50 | Flagged: 2
+  FLAG [b006_gn487a_038] gn487a_effective_date: gn.?487.*2024|487a.*2024
+  FLAG [b006_gn487a_049] gn487a_effective_date: gn.?487.*2024|487a.*2024
+
+[2026-06-10T11:20:06.818213] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 50 | Flagged: 2
+  FLAG [b006_gn487a_038] gn487a_effective_date: gn.?487.*2024|487a.*2024
+  FLAG [b006_gn487a_049] gn487a_effective_date: gn.?487.*2024|487a.*2024
+
+[2026-06-10T11:24:31.118806] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 50 | Flagged: 0
