@@ -609,7 +609,7 @@
       "0.5% on first",
       "asilimia 0.5.*100,000",
       "(?:is|are|ina|ni) tiered",
-      "graduated",
+      "graduated.{0,30}(?:stamp|stempu)|(?:stamp|stempu).{0,30}graduated",
       "stamp.{0,60} is.{0,5}0\\.5%",
       "stempu.{0,60}ni.{0,5}asilimia 0\\.5"
     ],
@@ -639,7 +639,7 @@
     "wrong_patterns": [
       "daraja A.*mfanyakazi ajiriwa",
       "Class A for employees",
-      "Class A.*for.*(?:employed|employees|regular workers)(?!.*invest|.*self)"
+      "Class A.*for.*(?:employed|(?<!not hired )(?<!hired )employees|regular workers)(?!.*invest|.*self)"
     ],
     "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
     "verified_by": "Tanzania Immigration Department official website",

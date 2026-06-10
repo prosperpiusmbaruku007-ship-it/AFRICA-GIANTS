@@ -656,3 +656,16 @@ Total: 150 | Flagged: 0
 
 [2026-06-10T11:52:08.743046] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
 Total: 200 | Flagged: 0
+
+[2026-06-10T12:08:27.718957] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 250 | Flagged: 2
+  FLAG [b006_paye_for_003] permit_class_a_investor: Class A.*for.*(?:employed|employees|regular workers)(?!.*invest|.*self)
+  FLAG [b006_paye_for_011] stamp_duty_property_transfer: graduated
+
+[2026-06-10T12:08:33.456802] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 250 | Flagged: 2
+  FLAG [b006_paye_for_003] permit_class_a_investor: Class A.*for.*(?:employed|employees|regular workers)(?!.*invest|.*self)
+  FLAG [b006_paye_for_011] stamp_duty_property_transfer: graduated
+
+[2026-06-10T12:10:06.686025] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 250 | Flagged: 0
