@@ -1,0 +1,132 @@
+Models available: gemini, openai
+NOTE: Groq/Cerebras not used — IP blocked in Tanzania
+NOTE: Brave Search not used — blocked in Tanzania
+NOTE: Perplexity not used — requires upfront payment
+
+Reviewing 300 pairs...
+
+Batch 1/15 (pairs 1-20):
+  Calling Gemini... done
+  Calling OpenAI... ERROR
+  gemini: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 2/15 (pairs 21-40):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 503
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 3/15 (pairs 41-60):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 4/15 (pairs 61-80):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+done
+  Calling OpenAI... ERROR
+  gemini: responded (200 chars)
+    FLAG: FLAG: tier1a_gn487a_072_20260608 | regulator | SUMATRA (Surface and Marine Transport Regulatory Authority) | LATRA (Land Transport Regulatory Authority) | Land Transport Regulatory Authority Act, 2019
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [tier1a_gn487a_072_20260608]: only gemini — human review needed
+Batch 5/15 (pairs 81-100):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 6/15 (pairs 101-120):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 7/15 (pairs 121-140):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 8/15 (pairs 141-160):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 9/15 (pairs 161-180):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 10/15 (pairs 181-200):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 11/15 (pairs 201-220):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 12/15 (pairs 221-240):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 13/15 (pairs 241-260):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 14/15 (pairs 261-280):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 503
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 15/15 (pairs 281-300):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+
+============================================================
+Cross-AI review complete
+Pairs reviewed: 300
+Models used: gemini, openai
+Consensus flags (fix required): 0
+Human review flags: 1
+Log: scripts/verification_log.jsonl
+
+Review single-model flags then re-run.

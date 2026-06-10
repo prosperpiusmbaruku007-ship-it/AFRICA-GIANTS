@@ -1,0 +1,27 @@
+{
+  "pair": {
+    "id": "tier1a_gn487a_072_20260608",
+    "domain": "tier1a",
+    "subdomain": "gn487a_compliance",
+    "question_sw": "Mwenzi wangu mgeni anaendesha basi la mwendazake — je, hii ni tatizo?",
+    "answer_sw": "Huduma za usafiri wa abiria (passenger transport) haziko kati ya makundi 15 yaliyozuiliwa wazi na GN 487A. Hata hivyo, kuendesha gari ya biashara Tanzania kunahitaji: leseni ya SUMATRA (Surface and Marine Transport Regulatory Authority), usajili wa TRA, na kibali sahihi cha kufanya kazi kwa dereva mgeni. GN 487A peke yake haitazuia mgeni kuendesha basi la mwendazake, lakini sheria nyingine za usafirishaji na kazi zinaweza kutumika. Mwenzi wako anapaswa kuhakikisha ana hati zote za kisheria kabla ya kuendesha biashara hiyo.",
+    "question_en": "My foreign associate runs a daladala (minibus) — is this a problem?",
+    "answer_en": "Passenger transport services are not among the 15 categories explicitly prohibited by GN 487A. However, operating a commercial vehicle in Tanzania requires: a SUMATRA (Surface and Marine Transport Regulatory Authority) licence, TRA registration, and a valid work permit for a non-citizen driver. GN 487A alone would not prohibit a non-citizen from running a daladala, but other transport and labour laws may apply. Your associate should ensure they have all the legal documents before operating that business.",
+    "primary_source_url": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
+    "primary_source_name": "GN 487A — Business Licensing (Prohibition of Business Activities for Non-Citizens) Order 2025",
+    "source_type": "official_gazette",
+    "effective_date": "2025-07-28",
+    "decay_risk": "stable",
+    "next_review_trigger": "New Business Licensing Act or amendment to GN 487A",
+    "verified_by": "founder_self_review",
+    "verified_date": "2026-06-08",
+    "register": "rural_conversational",
+    "pair_type": "adversarial",
+    "eval_set": false
+  },
+  "flag_type": "human_review",
+  "model": "gemini",
+  "issue": "Pair says SUMATRA (Surface and Marine Transport Regulatory Authority) for daladala licensing. Gemini flags this — LATRA (Land Transport Regulatory Authority) established 2019 took over land transport. Verify: is LATRA or SUMATRA correct for daladala in 2025?",
+  "reference": "Land Transport Regulatory Authority Act, 2019",
+  "action": "If LATRA is correct: update answer_sw and answer_en to replace SUMATRA with LATRA in both pairs. Source: latra.go.tz or tanzlii.org LATRA Act 2019."
+}

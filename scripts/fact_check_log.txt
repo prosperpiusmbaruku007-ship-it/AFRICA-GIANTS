@@ -504,3 +504,125 @@ Total: 300 | Flagged: 0
 
 [2026-06-09T08:49:04.135432] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
 Total: 300 | Flagged: 0
+
+[2026-06-09T12:25:23.689498] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 3
+  FLAG [tier1a_wht_deep_008_20260609] wht_director_fees: director.*fee.*20%.*non.resident
+  FLAG [tier1a_wht_deep_008_20260609] wht_director_fees: non.resident.*director.*20%
+  FLAG [tier1a_wht_deep_008_20260609] wht_director_fees: director fees.*non-resident.*20
+  FLAG [tier1a_wht_deep_012_20260609] wht_director_fees: director.*fee.*20%.*non.resident
+  FLAG [tier1a_wht_deep_030_20260609] wht_director_fees: director.*fee.*20%.*non.resident
+  FLAG [tier1a_wht_deep_030_20260609] wht_director_fees: non.resident.*director.*20%
+  FLAG [tier1a_wht_deep_030_20260609] wht_director_fees: director fees.*non-resident.*20
+
+[2026-06-09T12:25:37.957032] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 3
+  FLAG [tier1a_wht_deep_008_20260609] wht_director_fees: director.*fee.*20%.*non.resident
+  FLAG [tier1a_wht_deep_008_20260609] wht_director_fees: non.resident.*director.*20%
+  FLAG [tier1a_wht_deep_008_20260609] wht_director_fees: director fees.*non-resident.*20
+  FLAG [tier1a_wht_deep_012_20260609] wht_director_fees: director.*fee.*20%.*non.resident
+  FLAG [tier1a_wht_deep_030_20260609] wht_director_fees: director.*fee.*20%.*non.resident
+  FLAG [tier1a_wht_deep_030_20260609] wht_director_fees: non.resident.*director.*20%
+  FLAG [tier1a_wht_deep_030_20260609] wht_director_fees: director fees.*non-resident.*20
+
+[2026-06-09T12:27:24.295090] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 1
+  FLAG [tier1a_wht_deep_008_20260609] wht_director_fees: ada za mkurugenzi.*wasio wakazi.*asilimia 20(?! si| — si| ni kosa| is incorrect)
+
+[2026-06-09T12:28:08.021849] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 1
+  FLAG [tier1a_wht_deep_008_20260609] wht_director_fees: ada za mkurugenzi.*wasio wakazi.*asilimia 20(?! si| — si| ni kosa| is incorrect)
+
+[2026-06-09T12:35:26.702480] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-09T12:41:56.367612] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 3
+  FLAG [tier1a_osha_005_20260609] wcf_accident_reporting: wcf.*siku 30
+  FLAG [tier1a_osha_005_20260609] wcf_accident_reporting: siku 30.*wcf
+  FLAG [tier1a_osha_005_20260609] wcf_accident_reporting: wcf.*30 days
+  FLAG [tier1a_osha_031_20260609] wcf_accident_reporting: wcf.*siku 30
+  FLAG [tier1a_osha_031_20260609] wcf_accident_reporting: siku 30.*wcf
+  FLAG [tier1a_osha_031_20260609] wcf_accident_reporting: wcf.*30 days
+  FLAG [tier1a_mix_rc_007_20260609] wcf_accident_reporting: wcf.*siku 30
+  FLAG [tier1a_mix_rc_007_20260609] wcf_accident_reporting: siku 30.*wcf
+  FLAG [tier1a_mix_rc_007_20260609] wcf_accident_reporting: wcf.*30 days
+  FLAG [tier1a_mix_rc_007_20260609] wcf_accident_reporting: 30 days.*wcf
+
+[2026-06-09T12:42:02.416218] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 3
+  FLAG [tier1a_osha_005_20260609] wcf_accident_reporting: wcf.*siku 30
+  FLAG [tier1a_osha_005_20260609] wcf_accident_reporting: siku 30.*wcf
+  FLAG [tier1a_osha_005_20260609] wcf_accident_reporting: wcf.*30 days
+  FLAG [tier1a_osha_031_20260609] wcf_accident_reporting: wcf.*siku 30
+  FLAG [tier1a_osha_031_20260609] wcf_accident_reporting: siku 30.*wcf
+  FLAG [tier1a_osha_031_20260609] wcf_accident_reporting: wcf.*30 days
+  FLAG [tier1a_mix_rc_007_20260609] wcf_accident_reporting: wcf.*siku 30
+  FLAG [tier1a_mix_rc_007_20260609] wcf_accident_reporting: siku 30.*wcf
+  FLAG [tier1a_mix_rc_007_20260609] wcf_accident_reporting: wcf.*30 days
+  FLAG [tier1a_mix_rc_007_20260609] wcf_accident_reporting: 30 days.*wcf
+
+[2026-06-09T12:42:41.776389] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-09T12:50:27.171076] Checked datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-09T13:09:41.197520] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 50 | Flagged: 4
+  FLAG [tier1a_permit_deep_001_20260609] permit_class_b_employed: investor.*Class B
+  FLAG [tier1a_permit_deep_001_20260609] permit_class_c_categories: work permit.*Class C
+  FLAG [tier1a_permit_deep_001_20260609] permit_class_c_categories: employed.{0,30}Class C(?! is for| ni kwa)
+  FLAG [tier1a_permit_deep_002_20260609] permit_class_b_employed: investor.*Class B
+  FLAG [tier1a_permit_deep_021_20260609] permit_class_b_employed: investor.*Class B
+  FLAG [tier1a_permit_deep_021_20260609] permit_class_b_employed: Class B.*(?:is|for|kwa).*investor(?! need| instead)
+  FLAG [tier1a_permit_deep_021_20260609] permit_class_a_investor: (?<!self-)(?<!companies as )employed.*Class A
+  FLAG [tier1a_permit_deep_022_20260609] permit_class_c_categories: work permit.*Class C
+
+[2026-06-09T13:15:22.060724] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 50 | Flagged: 2
+  FLAG [tier1a_permit_deep_001_20260609] permit_class_c_categories: employed.{0,30}Class C(?! is for| ni kwa)
+  FLAG [tier1a_permit_deep_005_20260609] permit_class_c_categories: Class C.*(?:short.term|muda mfupi).*(?:employ|worker|mfanyakazi)
+
+[2026-06-09T13:16:55.729686] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 50 | Flagged: 0
+
+[2026-06-09T13:25:07.326646] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 100 | Flagged: 0
+
+[2026-06-09T13:34:00.166023] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 150 | Flagged: 2
+  FLAG [tier1a_stamp_duty_101_20260609] stamp_duty_property_transfer: tiered
+  FLAG [tier1a_stamp_duty_101_20260609] stamp_duty_property_transfer: stempu.*0\.5%.*1%|stamp.*duty.*0\.5.*1%
+  FLAG [tier1a_stamp_duty_108_20260609] stamp_duty_property_transfer: tiered
+  FLAG [tier1a_stamp_duty_108_20260609] stamp_duty_property_transfer: stempu.*0\.5%.*1%|stamp.*duty.*0\.5.*1%
+
+[2026-06-09T13:39:44.686615] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 150 | Flagged: 0
+
+[2026-06-09T16:59:11.016572] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 200 | Flagged: 2
+  FLAG [tier1a_compliance_costs_157_20260609] sdl_threshold: sdl.*wafanyakazi 5(?! au zaidi| or more)
+  FLAG [tier1a_compliance_costs_157_20260609] sdl_threshold: sdl.*\b5 employees\b(?! or more| au zaidi)
+  FLAG [tier1a_compliance_costs_162_20260609] paye_penalty_rate: paye.*late.*penalty.*5%(?! per month.*not)
+  FLAG [tier1a_compliance_costs_162_20260609] paye_penalty_rate: paye.*faini.*asilimia 5(?! kwa mwezi — si)
+  FLAG [tier1a_compliance_costs_162_20260609] nssf_penalty: nssf.*2% per month
+  FLAG [tier1a_compliance_costs_162_20260609] nssf_penalty: 2% per month.*nssf
+  FLAG [tier1a_compliance_costs_162_20260609] nssf_penalty: nssf.*2.5% per month
+  FLAG [tier1a_compliance_costs_162_20260609] nssf_penalty: 2.5% per month.*nssf
+
+[2026-06-09T17:03:19.639101] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 200 | Flagged: 0
+
+[2026-06-09T17:04:56.492713] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 200 | Flagged: 0
+
+[2026-06-09T17:23:48.596919] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 250 | Flagged: 0
+
+[2026-06-09T17:32:13.986190] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 300 | Flagged: 1
+  FLAG [tier1a_osha_nssf_252_20260609] sdl_threshold: wafanyakazi 5.*kizingiti
+
+[2026-06-09T17:33:18.755068] Checked datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl
+Total: 300 | Flagged: 0
