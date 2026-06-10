@@ -669,3 +669,9 @@ Total: 250 | Flagged: 2
 
 [2026-06-10T12:10:06.686025] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
 Total: 250 | Flagged: 0
+
+[2026-06-10T13:12:27.827651] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-10T13:12:52.445992] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 300 | Flagged: 0
