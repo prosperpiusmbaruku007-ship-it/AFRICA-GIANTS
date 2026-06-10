@@ -639,3 +639,14 @@ Total: 50 | Flagged: 2
 
 [2026-06-10T11:24:31.118806] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
 Total: 50 | Flagged: 0
+
+[2026-06-10T11:36:43.558056] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 100 | Flagged: 1
+  FLAG [b006_sdl_009] sdl_rate: 5% SDL
+
+[2026-06-10T11:36:51.807688] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 100 | Flagged: 1
+  FLAG [b006_sdl_009] sdl_rate: 5% SDL
+
+[2026-06-10T11:38:13.485918] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 100 | Flagged: 0
