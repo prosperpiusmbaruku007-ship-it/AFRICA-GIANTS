@@ -678,3 +678,60 @@ Total: 300 | Flagged: 0
 
 [2026-06-11T00:52:13.807725] Checked datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl
 Total: 300 | Flagged: 0
+
+[2026-06-11T13:32:24.207808] Checked datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-11T14:15:37.047955] Checked datasets/tier1a/raw_sources/raw_pairs_replacements.jsonl
+Total: 13 | Flagged: 0
+
+[2026-06-11T14:18:59.310266] Checked datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl
+Total: 56 | Flagged: 0
+
+[2026-06-11T14:19:00.273788] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 1
+  FLAG [tier1a_paye_deep_024_20260603] paye_band_2_rate: second band.*9%(?! is incorrect| is wrong)
+
+[2026-06-11T14:19:01.389001] Checked datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl
+Total: 299 | Flagged: 0
+
+[2026-06-11T14:19:02.322382] Checked datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl
+Total: 299 | Flagged: 0
+
+[2026-06-11T14:19:03.238954] Checked datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-11T14:19:04.156603] Checked datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-11T14:19:04.622332] Checked datasets/tier1a/cleaned_pairs/batch_007_replacements.jsonl
+Total: 13 | Flagged: 0
+
+[2026-06-11T14:19:17.637805] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 1
+  FLAG [tier1a_paye_deep_024_20260603] paye_band_2_rate: second band.*9%(?! is incorrect| is wrong)
+
+[2026-06-11T14:19:28.438556] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 1
+  FLAG [tier1a_paye_deep_024_20260603] paye_band_2_rate: second band.*9%(?! is incorrect| is wrong)
+
+[2026-06-11T14:21:01.219862] Checked datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl
+Total: 56 | Flagged: 0
+
+[2026-06-11T14:21:02.060048] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 243 | Flagged: 0
+
+[2026-06-11T14:21:03.260867] Checked datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl
+Total: 299 | Flagged: 0
+
+[2026-06-11T14:21:04.330211] Checked datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl
+Total: 299 | Flagged: 0
+
+[2026-06-11T14:21:05.298188] Checked datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-11T14:21:06.213872] Checked datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-11T14:21:06.691129] Checked datasets/tier1a/cleaned_pairs/batch_007_replacements.jsonl
+Total: 13 | Flagged: 0

@@ -170,6 +170,7 @@ a tanzania company not listed on dse but 100% owned by a uk company — does it 
 a tanzania company with headquarters in mombasa kenya — can it operate in tanzania without a formal branch?
 a tanzania home buyer needs to pay both stamp duty and vat on the purchase — is this true?
 a tanzania work permit auto-renews every year — the employer doesn't need to do anything — is this true?
+a tanzanian citizen registered a business in his name while a foreigner actually runs it. what does the tanzanian face legally?
 a tanzanian company is owned by a foreign parent. how does the thin capitalisation rule affect loans from the parent company?
 a tanzanian company receives dividends from another tanzanian company. is that dividend subject to corporate income tax?
 a tanzanian employer with a foreign employee — summary of all tax obligations?
@@ -875,7 +876,6 @@ gn 487a ina nguvu ya kisheria au ni mwongozo tu?
 gn 487a inaathiri vipi wageni wanaofanya biashara tanzania?
 gn 487a inahusu vibali vya kazi au ni agizo tofauti?
 gn 487a inakataza shughuli ngapi kwa raia wa kigeni, na zipi kuu miongoni mwake?
-gn 487a inazuia makundi mangapi ya biashara kwa wageni?
 gn 487a inazuia wageni wafanye kazi tanzania — hii ni sahihi?
 gn 487a na gn 605a — ni amri zinazohusiana au tofauti kabisa?
 gn 487a ni nini hasa — ni amri ya vibali vya makazi au ni sheria ya biashara?
@@ -887,7 +887,6 @@ gn 605a ilianza kutumika julai 2025 — je, hii ni sahihi?
 gn 605a ilianza tarehe ngapi?
 gn 605a inahusu wafanyakazi wa sekta ya kilimo?
 gn 605a inashughulikia sekta 12 na sekta ndogo 30 — je, namba hizi ni sahihi?
-gn 605a inashughulikia sekta ngapi na sekta ndogo ngapi?
 gn 605a inashughulikia sekta ngapi?
 gn 605a kwa sekta binafsi na ongezeko la sekta ya umma la shilingi 500,000 ni tofauti gani?
 gn 605a na cba (makubaliano ya pamoja ya mishahara) vinaendanaje?
@@ -988,11 +987,9 @@ how long does the tra commissioner general have to decide my objection?
 how long does tra take to process a vat refund?
 how long is a work permit valid in tanzania?
 how many activities does gn 487a prohibit for non-citizens, and what are the main ones?
-how many business categories does gn 487a prohibit for non-citizens?
 how many days of maternity leave does a female employee have in tanzania?
 how many licences does a small retail shop generally need in tanzania?
 how many products are on the str common list and what does it include?
-how many sectors and sub-sectors does gn 605a cover?
 how many sectors does gn 605a cover?
 how many tax bands does tanzania's monthly paye table have and what are the rates?
 how many work permits can a company get for foreign employees?
@@ -1014,6 +1011,7 @@ how to calculate paye gross-up — a simple example.
 huduma za benki zinalipwa vat tanzania?
 huduma za kidijitali maana yake nini kwa madhumuni ya vat tanzania?
 huduma za wingu (cloud storage/computing) — kodi gani tanzania?
+i am a designated vat withholding agent. can i offset the vat i withheld from suppliers against my own vat liability?
 i am not sure if gn 487a affects my sector — what should i do?
 i am opening a small business office — do i need osha?
 i am registering for vat now — how do i get an efd machine?
@@ -1029,6 +1027,7 @@ i hear the vat withholding certificate must be delivered by the 20th — is that
 i heard a tanzanian who helps a foreigner can get a tzs 10 million fine — is this true?
 i heard that the imprisonment for a foreigner violating gn 487a is 1 year — is this true?
 i heard there is an nssf scheme of 15%/5% — is this true?
+i hold an investor permit from tanzania immigration department. can i open a retail shop based on this permit?
 i may be able to get penalty relief from tra — what is the procedure?
 i need weather data for my agricultural business in tanzania.
 i provide it services to a government institution — how much vat withholding do they deduct on services?
@@ -1039,17 +1038,21 @@ i run a transport business (5 motorbikes) — do my riders have a right to minim
 i run an online shop. does vfd replace the physical efd?
 i saw online that tanzania has 10% vat on hospital services. is this correct?
 i see a non-citizen with a prohibited business — who do i report to?
+i sell agricultural produce — fresh vegetables, maize, bananas. are these goods subject to vat or zero-rated?
 i sell goods online through mobile payments — is there a special vat rate for digital b2c sales?
 i sell vegetables at the market for tzs 500,000 per month. do i need an efd?
 i sold goods to a government entity and they withheld tax — what is the vat withholding rate on goods?
+i want to change my business name registered with brela. how do i do this?
 i want to convert my sole trader business into a limited company. how do i do this?
 i want to import goods from abroad and distribute them in tanzania. do i need an import licence?
 i want to know: annual sdl for a company with monthly payroll tzs 8,000,000 and 13 employees.
 i want to open a phone repair shop — i am a chinese national. does gn 487a affect me?
+i want to register for vat — what documents does tra require and how long does the application take?
 i want to start a clothes selling business — what do i need from brela?
 i was told hotels and restaurants pay 5% vat on food sold. is this true?
 i'm applying for a tra tax clearance certificate — how long will it take?
 i'm registering on tra's idras system online — what are the basic steps?
+idara ya uhamiaji imenitoa notisi ya ukiukaji wa gn 487a lakini ninaaminana sikukiuka. je, kuna mchakato wa kupinga uamuzi huo?
 idara ya uhamiaji tanzania inafanya kazi saa ngapi na iko wapi?
 if a company failed to deduct required wht, who bears the penalty — the company or the recipient?
 if a contract says payments are 'wht inclusive', what does the recipient receive?
@@ -1081,6 +1084,7 @@ ikiwa mkataba unasema malipo 'ni ya wht inclusive', mpokeaji anachukua nini?
 ikiwa nilikataa kulipa nssf kwa miezi mitatu — adhabu ni gani?
 ikiwa sekta yangu haipo kwenye jedwali la gn 605a, ninatumia kiwango gani?
 ikiwa trab imeniamua vibaya, hii ni uamuzi wa mwisho kabisa — je, ni kweli?
+immigration has issued me a gn 487a violation notice but i believe i did not violate it. is there an appeal process?
 improvement notice na prohibition notice kutoka osha ni tofauti vipi?
 income tax on capital gains from land sales in tanzania is 30% of all profit — is this correct?
 individuals earning below tzs 270,000 per month pay no income tax at all — is this correct?
@@ -1663,6 +1667,7 @@ mauzo ya bidhaa kwenye mitandao ya kijamii (facebook, instagram) hayalipishi kod
 mauzo ya exempt na zero-rated — tofauti muhimu kwa madai ya vat input?
 mauzo ya nje ya nchi (exports) yanastahili vat ya asilimia ngapi tanzania?
 mauzo ya vat ya sifuri (zero-rated) yanaonekana vipi kwenye efd tanzania?
+mauzo yangu bado hayajafika tzs 200 milioni kwa mwaka. ninaweza kusajili vat kwa hiari (voluntary vat registration)?
 mauzo yangu ya mwaka yamefika tzs milioni 250 — je, lazima nisajiliwe vat?
 mchakato wa kudai refund ya vat tra ni upi?
 mchakato wa kuomba kibali cha kazi darasa b tanzania unachukua muda gani?
@@ -1774,6 +1779,7 @@ mfanyakazi wangu ana ugonjwa wa kisukari. je, anatakiwa kufanya kazi?
 mfanyakazi wangu ana ulemavu — anapaswa kulipwa sdl?
 mfanyakazi wangu anakataa kuchangia nssf — ninafanya nini?
 mfanyakazi wangu anapata tzs 600,000 kwa mwezi. paye inayolipwa ni tzs ngapi?
+mfanyakazi wangu yuko likizoni ya ugonjwa kwa miezi miwili bado analipwa mshahara. je, ninalipia nssf wakati huu?
 mfanyakazi yuko likizo bila malipo (unpaid leave) kwa mwezi mzima. je, nssf inalipwa?
 mfanyakazi yuko likizo ya uzazi (maternity leave). je, nssf inaendelea kulipwa?
 mfumo wa pension ya serikali (government pension fund — gepf) — jinsi unavyofanya kazi?
@@ -1808,11 +1814,13 @@ mgeni mwenye tic certificate (cheti cha uwekezaji kutoka tic) ana ulinzi dhidi y
 mgeni wa tanzania anaweza kulipwa chini ya mshahara wa chini wa gn 605a?
 mgeni wangu anatoa huduma za uchukuzi wa haraka (courier) tanzania — je, anahitaji kibali gani?
 mgeni wetu wa duka anasema ana haki ya kufanya biashara kwa sababu amesimama tanzania miaka mingi — hii ni kweli?
+mimi ni wakala wa zuio la vat. ninaweza kupunguza vat niliyoizuia kutoka kwa wasambazaji dhidi ya vat ninayodaiwa mimi mwenyewe?
 mishahara ya wafanyakazi 15 ni: 5 wanapata tzs 1,200,000 na 10 wanapata tzs 600,000. sdl ni kiasi gani?
 mkaguzi wa osha anaweza kuingia mahali pa kazi bila notisi — je, hii inaruhusiwa kisheria?
 mkataba wa biashara ambao pande mbili zinasaini tanzania unahitaji ushuru wa stempu kiotomatiki?
 mkataba wa kukodisha (lease) kwa miaka miwili au chini ya miaka miwili una ushuru wa stempu tanzania?
 mke wangu ni raia wa ethiopia, anataka kufungua saluni dar es salaam — je, anaweza?
+mke wangu ni raia wa kigeni na anataka kunisaidia dukani bila kulipwa mshahara. je, hii inaruhusiwa chini ya gn 487a?
 mkono mrefu wa idara ya uhamiaji unafika hadi vijiji — wanaweza kufuatilia biashara za mgeni?
 mkulima anayeuza mazao yake sokoni mwenyewe — paye inahitajika?
 mkulima anayeuza miti (timber) kutoka msitu wake — ana wajibu gani wa kodi?
@@ -1853,12 +1861,14 @@ msimamizi wa mgahawa wa kijiji (kama mfanyakazi) — mwajiri wake analazimika ku
 msimbo wa kurudisha bidhaa (return/refund) kwenye efd tanzania unafanyaje?
 msimbo wa qr code kwenye risiti ya efd tanzania — inamaanisha nini na inatumikaje?
 mstahimilivu wa kodi ya paye (paye threshold) kwa mwaka mzima ni tzs ngapi?
+mtanzania alikubaliana na mgeni kutumia jina lake kusajili biashara huku mgeni ndiye anaendesha. je, yule mtanzania anakabiliwa na nini kisheria?
 mtanzania anayemsaidia mgeni kufanya biashara iliyozuiwa ana adhabu gani?
 mtanzania anayenusuru mgeni kukiuka gn 487a atapata adhabu gani?
 mteja alinipa malipo ya m-pesa usiku — je, ninatoa risiti kesho asubuhi?
 mteja ana haki ya kudai risiti ya efd tanzania — je, biashara inaweza kukataa?
 mteja anakataa kupokea risiti ya efd. je, ninafanya nini?
 mteja analipa kwa m-pesa. je, bado ninatoa risiti ya efd?
+mteja wangu alilipa kupitia uhamisho wa benki (bank transfer) — si pesa taslimu. je, bado ninahitaji kutoa risiti ya efd?
 mtoa huduma wa nje ya nchi anayetoa huduma za kidijitali tanzania — wajibu wake wa vat ni nini?
 mtu alisema umeme unalipwa vat ya asilimia 10 tanzania. je, hii ni kweli?
 mtu aliyekatwa wht anaweza kuomba rejesho lake vipi?
@@ -2006,6 +2016,7 @@ mwezi mmoja nilifikia wafanyakazi 11, mwezi uliofuata nilikuwa na 8 kwa sababu y
 mwombaji wa kibali cha kazi (class c) tanzania anahitaji hati gani?
 my adviser says agricultural products attract 5% vat. is that correct?
 my alcohol sales business needs what beyond the standard lga licence?
+my annual sales have not yet reached tzs 200 million. can i register for vat voluntarily?
 my annual turnover has reached tzs 250 million — must i register for vat?
 my brother used to be a non-citizen but now has tanzanian citizenship — does gn 487a still restrict him?
 my business earns tzs 80 million per year — must i register for vat?
@@ -2045,6 +2056,7 @@ my company pays tzs 350,000 in sdl per month. what is the total payroll?
 my company receives invoices from a supplier showing '10% vat included'. is this legal in tanzania?
 my company trains apprentices under a government scheme. does this affect the sdl obligation?
 my company uses ai/cloud services from abroad — do i withhold tax?
+my customer paid via bank transfer, not cash. do i still need to issue an efd receipt?
 my customers pay cash — can i skip the efd receipt because it is cash only?
 my efd broke down this morning. what do i do?
 my efd is printing receipts but not transmitting data to tra. how do i know?
@@ -2055,6 +2067,7 @@ my employee earns tzs 600,000 per month. how much paye is payable?
 my employee fell and was injured in the shop — how does wcf help?
 my employee has a disability — should they be paid sdl?
 my employee has an old nssf number they don't know. what do we do?
+my employee has been on sick leave for two months but is still receiving salary. do i pay nssf during this period?
 my employee has diabetes. are they required to work?
 my employee has two jobs — my company and another company. is nssf paid twice?
 my employee refuses to contribute to nssf — what do i do?
@@ -2083,6 +2096,7 @@ my product is on the common list but was made in china — do i get str benefits
 my restaurant near the market earns tzs 250,000,000 per year. am i required to have efd?
 my shop sells tzs 250m per year — must i register for vat?
 my small business has revenue of tzs 80,000,000 — how do i know whether to use presumptive tax or the normal system?
+my spouse is a foreign national and wants to help in our shop without being paid a salary. is this allowed under gn 487a?
 my wife is an ethiopian citizen and wants to open a salon in dar es salaam — can she?
 mzungumzo wa mshahara (cba) unaweza kuleta mshahara wa juu kuliko gn 605a?
 nakala ya gn 487a inapatikana wapi ili niisomee?
@@ -2122,10 +2136,12 @@ niliweza kupata unafuu wa adhabu kutoka tra — taratibu ni zipi?
 nimekuwa nikifanya biashara ya ukarabati wa simu kama mgeni kwa miaka 3 — gn 487a inanihusu?
 nimeona kwenye mtandao kwamba tanzania ina vat ya asilimia 10 kwa huduma za hospitali. je, hii ni sahihi?
 nimesikia kwamba kuna mpango wa nssf wa asilimia 15/5 — ni kweli?
+nimetaka kubadilisha jina la biashara yangu iliyosajiliwa na brela. nawezaje kufanya hivyo?
 nimevuka kizingiti cha vat lakini ninataka kuendelea bila kusajilisha — ni hatari gani?
 nina biashara ya usafiri (bodaboda 5) — wapanda bodaboda wangu wana haki ya mshahara wa chini?
 nina bidhaa zinazozalishwa tanzania lakini hazipo kwenye common list — ninaweza kutumia str?
 nina mahindi kutoka tanzania yanayokwenda kenya — mahindi yote ya tanzania yanapata str?
+nina ruhusa ya uwekezaji (investor permit) kutoka idara ya uhamiaji tanzania. je, ninaweza kufungua duka la rejareja kwa msingi wa ruhusa hii?
 ninaajiri watu 5 wa nusu muda. je, nssf inatumika kwao?
 ninaendesha duka la mtandaoni. je, vfd inatumika badala ya efd ya kimwili?
 ninaendesha mkahawa mdogo na wafanyakazi 12 — osha inanifikiria?
@@ -2143,10 +2159,12 @@ ninasikia paye inabadilika kila mwaka — kanda za sasa ni zipi?
 ninataka kubadilisha biashara yangu ya mmiliki mmoja (sole trader) na kuifanya kampuni ya kikomo cha dhima (limited company). ninafanyaje?
 ninataka kufungua duka la kutengeneza simu — mimi ni raia wa china. je, gn 487a inaniathiri?
 ninataka kujua: sdl ya mwaka mzima kwa kampuni yenye mishahara ya tzs 8,000,000 kwa mwezi na wafanyakazi 13.
+ninataka kusajili vat — ninahitaji nyaraka zipi na tra itachukua muda gani kusindika ombi langu?
 ninatoa huduma za it kwa taasisi ya serikali — wanakata vat withholding kiasi gani kwenye huduma?
 ninatoa huduma za ushauri wa mtandaoni kwa wateja wa tanzania. je, vfd inahitajika?
 ninauza bidhaa online kupitia malipo ya simu — kuna vat maalum kwa mauzo ya kidijitali (b2c)?
 ninauza mboga sokoni kwa tzs 500,000 kwa mwezi. je, ninahitaji efd?
+ninauzа mazao ya kilimo — mboga mbichi, mahindi, ndizi. je, bidhaa hizi zinatozwa vat au zinapewa kiwango cha sifuri (zero-rated)?
 ninaweza kuangalia kama jina la biashara ninalotaka liko tayari kabla ya kusajilisha?
 ninaweza kujisajili kwa vat hiari hata kama mauzo yangu ni tzs 80,000,000 kwa mwaka?
 ninaweza kulipa kodi zangu zote tra kupitia gepg mtandaoni bila kwenda ofisi?
@@ -2398,6 +2416,7 @@ tamko la kodi ya kampuni linawasilishwa ndani ya miezi sita baada ya mwisho wa m
 taneps and nest — which one is tanzania using now?
 taneps na nest — tanzania inayotumia ipi sasa?
 tangu gn 487a ilitangazwa, je, kuna mabadiliko yoyote au marekebisho?
+tangu lini gn 605a ilianza kutumika na ilifanyaje kwa amri ya mishahara ya mwaka 2022?
 tanzania agricultural business income tax is lower than regular business tax — agriculture has a special tax framework — is this true?
 tanzania ina mikataba ya kuzuia kodi mara mbili (dta) na nchi zipi?
 tanzania inaweka kiwango cha chini cha mtaji wa kampuni (minimum share capital)?
@@ -2463,7 +2482,6 @@ tin (tax identification number) na leseni ya biashara — ni vitu sawa?
 tin ya tra inagharimu kiasi gani na inachukua muda gani kupata?
 tofauti kati ya 'zero-rated' na 'exempt' kwa vat tanzania ni nini?
 tofauti kati ya ankara ya vat (vat invoice) na risiti ya efd tanzania ni nini?
-tofauti kati ya bidhaa za 'zero-rated' na 'exempt' ni nini katika vat?
 tofauti kati ya certificate ya brela na tin kutoka tra ni nini?
 tofauti kati ya etr, efd, na vfd ni nini tanzania?
 tofauti kati ya gn 487a na kibali cha kazi ni nini — vinafanya kazi pamoja vipi?
@@ -2514,6 +2532,7 @@ trab ni nini na inaendeshwa vipi?
 training allowances are never subject to paye — is this correct?
 trl (tanzania railways limited) freight charges — how much?
 tulikosa kulipa sdl kwa miezi 3. tra wanaweza kufanya nini?
+tunalipa wafanyakazi mshahara wa msingi pamoja na posho za usafiri na chakula. sdl ya asilimia 3.5 inahesabiwa kwenye nini hasa?
 ubia (joint venture) kati ya mgeni na mtanzania — gn 487a inazuiwa?
 uganda ina kizingiti gani cha usajili wa vat?
 uhamishaji wa ardhi kati ya kampuni mama na tanzu yake (subsidiary) una ushuru wa stempu tanzania?
@@ -2634,6 +2653,7 @@ wcf only covers workplace accidents — not work-related diseases — is this co
 wcf pays all medical costs without limit — is this true?
 wcf ya asilimia 0.5 inakatwa kutoka mshahara wa mfanyakazi kila mwezi — je, ni sahihi?
 we missed paying sdl for 3 months. what can tra do?
+we pay employees a basic salary plus transport and meal allowances. is the 3.5% sdl calculated on the full package or basic salary only?
 what action does nssf take against an employer who does not pay employee contributions?
 what are the 15 business activities prohibited for foreigners under gn 487a?
 what are the 15 business activities prohibited for non-citizens under gn 487a?
@@ -2719,7 +2739,6 @@ what is the deadline for filing a company income tax return with tra?
 what is the deadline for filing a vat return in tanzania?
 what is the difference between 'owning a business' and 'working' under gn 487a?
 what is the difference between 'zero-rated' and 'exempt' for vat purposes in tanzania?
-what is the difference between 'zero-rated' and 'exempt' goods for vat?
 what is the difference between a brela certificate and a tin from tra?
 what is the difference between a private limited company and a public limited company in tanzania?
 what is the difference between a tra assessment and an audit?
@@ -2888,6 +2907,7 @@ when did gn 487a come into force, and which department enforces it?
 when did gn 487a officially come into effect?
 when did gn 487a take effect — are businesses that existed before protected?
 when did gn 605a come into effect?
+when did gn 605a take effect and what happened to the 2022 wage order?
 when does a business become entitled to claim a vat refund?
 when does a new company register with nssf?
 when does a vat registrant file and pay vat in tanzania?
