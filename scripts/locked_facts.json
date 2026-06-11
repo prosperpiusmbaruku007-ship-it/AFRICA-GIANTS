@@ -835,5 +835,52 @@
       "wcf.*siku 14(?! za magonjwa)",
       "wcf.*14 days(?! for occupational)"
     ]
+  },
+  "osha_registration_threshold_b004": {
+    "fact": "OSHA applies to ALL workplaces — no minimum employee threshold",
+    "wrong_patterns": [
+      "wafanyakazi 10.*osha",
+      "osha.*10 employees",
+      "osha.*threshold ya 10",
+      "10 or more.*osha",
+      "osha.*wafanyakazi 10 au zaidi",
+      "biashara zenye wafanyakazi chini ya 10.*osha"
+    ],
+    "primary_source": "osha.go.tz",
+    "verified_date": "2026-06-12"
+  },
+  "dse_25_rate_three_years_only": {
+    "fact": "DSE 25% CIT rate applies for THREE YEARS ONLY from listing date",
+    "wrong_patterns": [
+      "muda wote.*dse.*25",
+      "permanently.*dse.*25",
+      "daima.*asilimia 25.*dse",
+      "indefinitely.*25.*listed",
+      "dse.*25.*permanently"
+    ],
+    "primary_source": "tra.go.tz income tax page",
+    "verified_date": "2026-06-12"
+  },
+  "amt_loss_companies_only": {
+    "fact": "AMT 1% applies ONLY to companies with 3 consecutive years of tax losses",
+    "wrong_patterns": [
+      "kampuni zote.*1%.*mauzo",
+      "all companies.*1%.*turnover",
+      "any company.*minimum.*1%",
+      "kampuni yoyote.*kodi ya chini.*1"
+    ],
+    "primary_source": "tra.go.tz income tax page",
+    "verified_date": "2026-06-12"
+  },
+  "permit_class_d_does_not_exist": {
+    "fact": "Tanzania has NO Class D permit — only Class A (investor), Class B (employed expatriate), Class C (researcher/voluntary)",
+    "wrong_patterns": [
+      "class d",
+      "darasa d",
+      "daraja d",
+      "kibali cha darasa d"
+    ],
+    "primary_source": "immigration.go.tz",
+    "verified_date": "2026-06-12"
   }
 }
