@@ -72,25 +72,34 @@ def call_gemini(pairs_text, api_key):
     }).encode("utf-8")
     url = (f"https://generativelanguage.googleapis.com/v1beta/"
            f"models/gemini-3.5-flash:generateContent?key={api_key}")
-    for attempt in range(3):
+    for attempt in range(5):
         try:
             req = urllib.request.Request(
                 url, data=payload,
                 headers={"Content-Type": "application/json"}
             )
-            with urllib.request.urlopen(req, timeout=60) as resp:
+            with urllib.request.urlopen(req, timeout=90) as resp:
                 result = json.loads(resp.read())
                 return (result["candidates"][0]["content"]
                         ["parts"][0]["text"].strip())
         except urllib.error.HTTPError as e:
-            if e.code == 429 and attempt < 2:
+            if e.code == 429 and attempt < 4:
                 wait = 30 * (attempt + 1)
                 print(f"  Gemini 429 — waiting {wait}s then retry...", flush=True)
+                time.sleep(wait)
+            elif e.code == 503 and attempt < 4:
+                wait = 20 * (attempt + 1)
+                print(f"  Gemini 503 — waiting {wait}s then retry...", flush=True)
                 time.sleep(wait)
             else:
                 return f"GEMINI_ERROR: HTTP {e.code}"
         except Exception as e:
-            return f"GEMINI_ERROR: {e}"
+            if attempt < 4:
+                wait = 15 * (attempt + 1)
+                print(f"  Gemini timeout/error — waiting {wait}s then retry...", flush=True)
+                time.sleep(wait)
+            else:
+                return f"GEMINI_ERROR: {e}"
 
 
 def call_openrouter(pairs_text, api_key):

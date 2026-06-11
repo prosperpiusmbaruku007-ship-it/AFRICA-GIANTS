@@ -1,0 +1,260 @@
+Models available: gemini, openrouter, openai
+NOTE: Groq/Cerebras not used — IP blocked in Tanzania
+NOTE: Brave Search not used — blocked in Tanzania
+NOTE: Perplexity not used — requires upfront payment
+
+Reviewing 300 pairs...
+
+Batch 1/15 (pairs 1-20):
+  Calling Gemini... done
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: responded (1603 chars)
+    FLAG: FLAG: tier1a_gn487a_001_20260608 | law_year | GN 487A of 2025 | GN 487A of 2023 | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_001_20260608 | effective_date | 28 July 2025 | 28 July 2023 | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_005_20260608 | law_year | GN 487A (2025) | GN 487A (2023) | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_006_20260608 | law_year | GN 487A (2025) | GN 487A (2023) | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_007_20260608 | law_year | GN 487A (2025) | GN 487A (2023) | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_008_20260608 | effective_date | 28 July 2025 | 28 July 2023 | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_009_20260608 | effective_date | 28 July 2025 | 28 July 2023 | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_010_20260608 | law_year | GN 487A (2025) | GN 487A (2023) | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_013_20260608 | law_year | GN 487A (2025) | GN 487A (2023) | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_014_20260608 | source_publication_dates | 30 Jul 2025, 29 Jul 2025 | 30 Jul 2023, 29 Jul 2023 | Bowmans & Dentons Legal Alerts 2023
+    FLAG: FLAG: tier1a_gn487a_018_20260608 | law_year | GN 487A (2025) | GN 487A (2023) | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_019_20260608 | law_year | GN 487A (2025) | GN 487A (2023) | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_019_20260608 | effective_date | 28 July 2025 | 28 July 2023 | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_019_20260608 | enforcement_period | 11 September and 8 October 2025 | 11 September and 8 October 2023 | GN 487A of 2023
+    FLAG: FLAG: tier1a_gn487a_020_20260608 | enforcement_period | 11 September 2025 and 8 October 2025 | 11 September 2023 and 8 October 2023 | GN 487A of 2023
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [tier1a_gn487a_001_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_005_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_006_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_007_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_008_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_009_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_010_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_013_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_014_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_018_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_019_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_020_20260608]: only gemini — human review needed
+Batch 2/15 (pairs 21-40):
+  Calling Gemini... done
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: CLEAN
+  openrouter: responded (2251 chars)
+    FLAG: FLAG: tier1a_gn487a_021 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_022 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_023 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_024 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_025 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_026 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_027 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_028 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_029 | Description of GN487A | GN 487A | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_030 | Description of GN487A | GN 487A | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_031 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_032 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_033 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_034 | Description of GN487A | GN 487A (2025) | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) | Source
+    FLAG: FLAG: tier1a_gn487a_035 | Description of GN487A | GN 487A | GN 487A (Business Licensing Prohibition Order 2025, effective 28 July 2025) |
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [tier1a_gn487a_021]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_022]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_023]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_024]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_025]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_026]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_027]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_028]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_029]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_030]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_031]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_032]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_033]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_034]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_gn487a_035]: only openrouter — human review needed
+Batch 3/15 (pairs 41-60):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+done
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: responded (620 chars)
+    FLAG: FLAG: tier1a_gn487a_044_20260608 | URL / Date | gn/2025/487a/eng@2025-07-28 | gn/2024/487 | Business Licensing (Prohibition of Business to Non-Citizens) Order, 2024 (GN 487 of 2024)
+    FLAG: FLAG: tier1a_gn487a_055_20260608 | date | 28 July 2025 | 14 June 2024 | Business Licensing (Prohibition of Business to Non-Citizens) Order, 2024 (GN 487 of 2024)
+    FLAG: FLAG: tier1a_gn487a_058_20260608 | penalty | minimum TZS 10 million fine, up to 6 months imprisonment | fine of TZS 500,000 to 20 million and/or imprisonment of not less than 12 months | Business Licensing (Prohibition of Business to Non-Citizens) Order, 2024 (GN 487 of 2024)
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [tier1a_gn487a_044_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_055_20260608]: only gemini — human review needed
+  SINGLE FLAG [tier1a_gn487a_058_20260608]: only gemini — human review needed
+Batch 4/15 (pairs 61-80):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 503 — waiting 60s then retry...
+done
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: responded (200 chars)
+    FLAG: FLAG: tier1a_gn487a_072_20260608 | regulator | SUMATRA (Surface and Marine Transport Regulatory Authority) | LATRA (Land Transport Regulatory Authority) | Land Transport Regulatory Authority Act, 2019
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [tier1a_gn487a_072_20260608]: only gemini — human review needed
+Batch 5/15 (pairs 81-100):
+  Calling Gemini... done
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: CLEAN
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 6/15 (pairs 101-120):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+done
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: CLEAN
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 7/15 (pairs 121-140):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+done
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: responded (554 chars)
+    FLAG: FLAG: tier1a_sdl_045_20260608 | description | Exemption depends on registration status (NGO, religious institution, or commercial company). If the institution is registered as an NGO or religious body, seek written exemption confirmation from TRA. Otherwise, pay SDL at 3.5% of total gross payroll. | Registered educational institutions (including nursery, primary, secondary schools, colleges, and universities) are exempt from SDL under VETA regardless of their ownership or commercial status. | Vocational Education and Training Act (VETA), Section 19
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [tier1a_sdl_045_20260608]: only gemini — human review needed
+Batch 8/15 (pairs 141-160):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: responded (610 chars)
+    FLAG: FLAG: tier1a_vat_013_20260608 | description | 16% rate for B2C e-payment transactions | 16% rate for B2C e-payment transactions effective 1 September 2025 | Finance Act 2025
+    FLAG: FLAG: tier1a_vat_014_20260608 | description | SDL rate from 4% to 3.5% | SDL rate from 4% to 3.5% effective 1 July 2025 | Finance Act 2025
+    FLAG: FLAG: tier1a_vat_026_20260608 | description | Rate: 3% on goods and 6% on services, effective 1 July 2025 | Rate: 3% on goods and 6% on services, effective 1 July 2025 | Finance Act 2025
+    FLAG: FLAG: tier1a_vat_027_20260608 | description | effective 1 July 2025 | effective 1 July 2025 | Finance Act 2025
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [tier1a_vat_013_20260608]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_vat_014_20260608]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_vat_026_20260608]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_vat_027_20260608]: only openrouter — human review needed
+Batch 9/15 (pairs 161-180):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: responded (195 chars)
+    FLAG: FLAG: tier1a_vat_032_20260608 | VAT withholding rate on services | 6% | 5% | Finance Act 2025
+    FLAG: FLAG: tier1a_vat_034_20260608 | VAT rate for zero-rated goods/services | 0% | 18% | Standard VAT rate
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [tier1a_vat_032_20260608]: only openrouter — human review needed
+  SINGLE FLAG [tier1a_vat_034_20260608]: only openrouter — human review needed
+Batch 10/15 (pairs 181-200):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 11/15 (pairs 201-220):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+done
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: CLEAN
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 12/15 (pairs 221-240):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 13/15 (pairs 241-260):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 14/15 (pairs 261-280):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 15/15 (pairs 281-300):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: responded (113 chars)
+    FLAG: FLAG: tier1a_efd_deep_036_20260608 | Commissioner objection deadline | 6 months | 30 days | VAT Act Section 36(4)
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [tier1a_efd_deep_036_20260608]: only openrouter — human review needed
+
+============================================================
+Cross-AI review complete
+Pairs reviewed: 300
+Models used: gemini, openrouter, openai
+Consensus flags (fix required): 0
+Human review flags: 42
+Log: scripts/verification_log.jsonl
+
+Review single-model flags then re-run.

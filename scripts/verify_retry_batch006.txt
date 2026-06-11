@@ -1,0 +1,272 @@
+Models available: gemini, openrouter, openai
+NOTE: Groq/Cerebras not used — IP blocked in Tanzania
+NOTE: Brave Search not used — blocked in Tanzania
+NOTE: Perplexity not used — requires upfront payment
+
+Reviewing 300 pairs...
+
+Batch 1/15 (pairs 1-20):
+  Calling Gemini...   Gemini 503 — waiting 20s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 503
+  openrouter: responded (2589 chars)
+    FLAG: FLAG: b006_gn487a_001 | description | Business Licensing Order prohibiting non-citizens from engaging in certain business activities in Mainland Tanzania. Its full name is the *Business Licensing (Prohibition of Business Activities for Non-Citizens) Order*. It took effect on 28 July 2025. | Business Licensing (Prohibition of Business Activities for Non-Citizens) Order GN No. 487A | GN 487A
+    FLAG: FLAG: b006_gn487a_002 | enforcing agency | Immigration Services Department — not BRELA, not TRA. | Immigration Services Department and Business Registrations and Licensing Agency (BRELA) | GN 487A
+    FLAG: FLAG: b006_gn487a_002 | enforcement dates | 11 September and 8 October 2025 | 11 September 2025 to 8 October 2025 | GN 487A
+    FLAG: FLAG: b006_gn487a_016 | minimum penalty | TZS 10,000,000 (ten million) — not TZS 500,000 or TZS 1,000,000. In addition to the fine, the offender may face up to 6 months imprisonment AND visa revocation. The penalties are severe. | a fine not exceeding TZS 10,000,000 OR imprisonment for a term not exceeding six months, or both. | GN 487A
+    FLAG: FLAG: b006_gn487a_017 | penalty | Visa revocation is a standard part of the penalty — not an optional additional step. A non-citizen found guilty of violating GN 487A can lose their visa and be required to leave Tanzania. The fine and visa revocation happen together. | While visa revocation is a possible consequence, it is not automatically a standard part of the penalty for all violations under GN 487A. | GN 487A
+    FLAG: FLAG: b006_gn487a_018 | penalty for facilitator | TZS 5,000,000 OR 3 months imprisonment. | TZS 5,000,000 AND imprisonment for a term not exceeding three months | GN 487A
+    FLAG: FLAG: b006_gn487a_019 | penalty comparison | Non-citizen violating GN 487A: minimum TZS 10,000,000 fine plus up to 6 months imprisonment plus visa revocation. Tanzanian facilitating a violation: TZS 5,000,000 fine OR 3 months imprisonment. The non-citizen's penalty is harsher. | Non-citizen: Fine not exceeding TZS 10,000,000 or imprisonment for up to six months, or both. Tanzanian facilitator: Fine not exceeding TZS 5,000,000 and imprisonment for up to three months. | GN 487A
+    FLAG: FLAG: b006_gn487a_020 | consequence of fine | After paying the fine, the business remains illegal for the non-citizen to operate, and the visa is revoked. The person may be required to leave Tanzania entirely. Paying the fine does not grant the right to continue. | Paying the fine does not automatically legitimize the continued operation of a prohibited business. Enforcement actions may still follow, including potential visa revocation and deportation. | GN 487A
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [b006_gn487a_001]: only openrouter — human review needed
+  SINGLE FLAG [b006_gn487a_002]: only openrouter — human review needed
+  SINGLE FLAG [b006_gn487a_016]: only openrouter — human review needed
+  SINGLE FLAG [b006_gn487a_017]: only openrouter — human review needed
+  SINGLE FLAG [b006_gn487a_018]: only openrouter — human review needed
+  SINGLE FLAG [b006_gn487a_019]: only openrouter — human review needed
+  SINGLE FLAG [b006_gn487a_020]: only openrouter — human review needed
+Batch 2/15 (pairs 21-40):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter... ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: OPENROUTER_ERROR: <urlopen error [WinError 10054] An existing connection was for
+  openai: OPENAI_ERROR: <urlopen error [WinError 10054] An existing connection was forcibl
+Batch 3/15 (pairs 41-60):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: responded (639 chars)
+    FLAG: FLAG: b006_gn487a_049 | announcement_date | 28 July 2025 | 28 July 2023 | GN 487A
+    FLAG: FLAG: b006_gn487a_049 | minimum_fine | TZS 10,000,000 | TZS 500,000 | GN 487A
+    FLAG: FLAG: b006_gn487a_050 | announcement_date | 28 July 2025 | 28 July 2023 | GN 487A
+    FLAG: FLAG: b006_sdl_001 | description | Skills Development Levy | Service Delivery Levy | SDL
+    FLAG: FLAG: b006_sdl_002 | description | Skills Development Levy | Service Delivery Levy | SDL
+    FLAG: FLAG: b006_sdl_005 | rate | 3.5% | 2% | SDL
+    FLAG: FLAG: b006_sdl_006 | rate | 3.5% | 2% | SDL
+    FLAG: FLAG: b006_sdl_007 | rate | 3.5% | 4% | SDL
+    FLAG: FLAG: b006_sdl_008 | rate | 3.5% | 2% | SDL
+    FLAG: FLAG: b006_sdl_009 | rate | 3.5% | 5% | SDL
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [b006_gn487a_049]: only openrouter — human review needed
+  SINGLE FLAG [b006_gn487a_050]: only openrouter — human review needed
+  SINGLE FLAG [b006_sdl_001]: only openrouter — human review needed
+  SINGLE FLAG [b006_sdl_002]: only openrouter — human review needed
+  SINGLE FLAG [b006_sdl_005]: only openrouter — human review needed
+  SINGLE FLAG [b006_sdl_006]: only openrouter — human review needed
+  SINGLE FLAG [b006_sdl_007]: only openrouter — human review needed
+  SINGLE FLAG [b006_sdl_008]: only openrouter — human review needed
+  SINGLE FLAG [b006_sdl_009]: only openrouter — human review needed
+Batch 4/15 (pairs 61-80):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 5/15 (pairs 81-100):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 6/15 (pairs 101-120):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 7/15 (pairs 121-140):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: responded (1686 chars)
+    FLAG: FLAG: b006_dst_002 | wrong_value | 16% VAT rate applies to B2C (business-to-consumer) electronic payments from 1 September 2025. This differs from the standard 18% VAT rate that applies to regular goods and services. | 18% VAT rate applies to B2C (business-to-consumer) electronic payments from 1 September 2025. This differs from the standard 18% VAT rate that applies to regular goods and services. | Finance Act 2025
+    FLAG: FLAG: b006_dst_003 | wrong_value | From 1 September 2025, B2C electronic payments (consumers paying for goods/services via mobile or internet) carry a 16% VAT rate — instead of the standard 18%. | From 1 September 2025, B2C electronic payments (consumers paying for goods/services via mobile or internet) carry a 18% VAT rate — instead of the standard 18%. | Finance Act 2025
+    FLAG: FLAG: b006_dst_004 | wrong_value | VAT 16%: a special rate for B2C electronic payments (e-payments) from 1 Sep 2025. | VAT 18%: a special rate for B2C electronic payments (e-payments) from 1 Sep 2025. | Finance Act 2025
+    FLAG: FLAG: b006_dst_007 | wrong_value | For services from foreign providers, 6% withholding tax (services) may apply from 1 July 2025. | For services from foreign providers, 15% withholding tax (services) may apply from 1 July 2025. | Finance Act 2025
+    FLAG: FLAG: b006_dst_009 | wrong_value | The 6% withholding tax on services started 1 July 2025 under the Finance Act 2025. | The 15% withholding tax on services started 1 July 2025 under the Finance Act 2025. | Finance Act 2025
+    FLAG: FLAG: b006_dst_010 | wrong_value | (3) 6% withholding tax on services (including digital) from 1 Jul 2025; | (3) 15% withholding tax on services (including digital) from 1 Jul 2025; | Finance Act 2025
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [b006_dst_002]: only openrouter — human review needed
+  SINGLE FLAG [b006_dst_003]: only openrouter — human review needed
+  SINGLE FLAG [b006_dst_004]: only openrouter — human review needed
+  SINGLE FLAG [b006_dst_007]: only openrouter — human review needed
+  SINGLE FLAG [b006_dst_009]: only openrouter — human review needed
+  SINGLE FLAG [b006_dst_010]: only openrouter — human review needed
+Batch 8/15 (pairs 141-160):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: responded (512 chars)
+    FLAG: FLAG: b006_dst_012 | withholding_tax_rate_foreign | 6% | 15% | TRA
+    FLAG: FLAG: b006_dst_017 | withholding_tax_rate_services_foreign | 6% | 15% | Finance Act 2025
+    FLAG: FLAG: b006_dst_017 | withholding_tax_rate_goods | 3% | 15% | TRA
+    FLAG: FLAG: b006_dst_018 | withholding_tax_rate_services_foreign | 6% | 15% | TRA
+    FLAG: FLAG: b006_dst_019 | withholding_tax_rate_foreign | 6% | 15% | TRA
+    FLAG: FLAG: b006_dst_020 | withholding_tax_rate_foreign_goods | 3% | 15% | TRA
+    FLAG: FLAG: b006_dst_020 | withholding_tax_rate_foreign_services | 6% | 15% | TRA
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [b006_dst_012]: only openrouter — human review needed
+  SINGLE FLAG [b006_dst_017]: only openrouter — human review needed
+  SINGLE FLAG [b006_dst_018]: only openrouter — human review needed
+  SINGLE FLAG [b006_dst_019]: only openrouter — human review needed
+  SINGLE FLAG [b006_dst_020]: only openrouter — human review needed
+Batch 9/15 (pairs 161-180):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 10/15 (pairs 181-200):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini timeout/error — waiting 45s then retry...
+  Gemini timeout/error — waiting 60s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 11/15 (pairs 201-220):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: responded (482 chars)
+    FLAG: FLAG: b006_paye_for_011 | [wrong_value] | 8%-30% | 8% - 30% | Tanzania PAYE rates (2025/2026)
+    FLAG: FLAG: b006_paye_for_016 | [wrong_value] | P9 form | P9 | P9 form at the end of the tax year (before 31 March)
+    FLAG: FLAG: b006_paye_for_018 | [wrong_value] | P9 form | P9 | P9 form is an annual tax year summary
+    FLAG: FLAG: b006_paye_for_019 | [wrong_value] | 2.5% penalty per month on the shortfall | Penalty of 100% of the unpaid tax, plus interest | Penalty for an employer who fails to deduct PAYE
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  SINGLE FLAG [b006_paye_for_011]: only openrouter — human review needed
+  SINGLE FLAG [b006_paye_for_016]: only openrouter — human review needed
+  SINGLE FLAG [b006_paye_for_018]: only openrouter — human review needed
+  SINGLE FLAG [b006_paye_for_019]: only openrouter — human review needed
+Batch 12/15 (pairs 221-240):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: HTTP 429
+  openrouter: CLEAN
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+Batch 13/15 (pairs 241-260):
+  Calling Gemini... done
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: responded (359 chars)
+    FLAG: FLAG: b006_paye_for_044 | Form name | P9 | Certificate of tax withheld (Form ITX 230.01.E) | Income Tax Act, Section 81
+    FLAG: FLAG: b006_paye_for_047 | Form name | P9 | Certificate of tax withheld (Form ITX 230.01.E) | Income Tax Act, Section 81
+    FLAG: FLAG: b006_paye_for_050 | Form name | P9 | Certificate of tax withheld (Form ITX 230.01.E) | Income Tax Act, Section 81
+  openrouter: responded (176 chars)
+    FLAG: FLAG: b006_paye_for_044 | P9 | P9 | P11 | TRA requirements
+    FLAG: FLAG: b006_paye_for_047 | P9 | P9 | P11 | TRA requirements
+    FLAG: FLAG: b006_paye_for_050 | P9 | P9 | P11 | TRA requirements
+  openai: OPENAI_ERROR: HTTP Error 429: Too Many Requests
+  CONSENSUS [b006_paye_for_044]: 2 models agree — FIX REQUIRED
+  CONSENSUS [b006_paye_for_047]: 2 models agree — FIX REQUIRED
+  CONSENSUS [b006_paye_for_050]: 2 models agree — FIX REQUIRED
+Batch 14/15 (pairs 261-280):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter...   OpenRouter (auto): responded
+done
+  Calling OpenAI... ERROR
+  gemini: GEMINI_ERROR: The read operation timed out
+  openrouter: responded (169 chars)
+    FLAG: FLAG: b006_refusal_013 | A | 10% | 15% | Tanzania Income Tax Act Section 68(1) and 83(1)
+    FLAG: FLAG: b006_disambig_009 | A | 3.5% | 1% | Workers Compensation Act Section 24(1)
+  openai: OPENAI_ERROR: Remote end closed connection without response
+  SINGLE FLAG [b006_refusal_013]: only openrouter — human review needed
+  SINGLE FLAG [b006_disambig_009]: only openrouter — human review needed
+Batch 15/15 (pairs 281-300):
+  Calling Gemini...   Gemini 429 — waiting 30s then retry...
+  Gemini 429 — waiting 60s then retry...
+  Gemini 429 — waiting 90s then retry...
+  Gemini 429 — waiting 120s then retry...
+ERROR
+  Calling OpenRouter... ERROR
+  Calling OpenAI... ERROR
+  WARNING: No models responded successfully this batch
+  gemini: GEMINI_ERROR: <urlopen error [Errno 11001] getaddrinfo failed>
+  openrouter: OPENROUTER_ERROR: <urlopen error [Errno 11001] getaddrinfo failed>
+  openai: OPENAI_ERROR: <urlopen error [Errno 11001] getaddrinfo failed>
+
+============================================================
+Cross-AI review complete
+Pairs reviewed: 300
+Models used: gemini, openrouter, openai
+Consensus flags (fix required): 6
+Human review flags: 37
+Log: scripts/verification_log.jsonl
+
+Fix consensus-flagged pairs before committing.
