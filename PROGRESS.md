@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-10 (session 8)
+## Last Updated: 2026-06-11 (session 9)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,7 +15,7 @@
 
 ## 1. CURRENT PHASE
 
-**batch_006 COMPLETE (300 pairs, commit 73f3e21). Total raw corpus: 1,500 pairs. Founder review samples ready for batch_003/004/005 (seed=99 sample for batch_005). Cross-AI review: batch_003 CLEAN (1 human-review flag routed), batch_005 CLEAN (0 flags). Next: founder reviews three samples, approves, move 003/004/005 to cleaned_pairs/, retrain on 1,200 pairs on Kaggle. batch_007 target: compensate register shortfall (more business_market + rural_conversational).**
+**ADAPTER-V2 TRAINING READY. 1,500 verified trainable pairs uploaded to HuggingFace (train=1350, val=150). Notebook updated for v2. Kaggle training run pending (adapter-v2). Model card pushed to prospAprospA007/africa-giants-adapter-v2. Waiting for Kaggle training to complete, then run accuracy gate.**
 
 ---
 
