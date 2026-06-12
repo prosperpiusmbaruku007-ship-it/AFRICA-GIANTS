@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-12 (session 11)
+## Last Updated: 2026-06-12 (session 12)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,11 +15,51 @@
 
 ## 1. CURRENT PHASE
 
-**ADAPTER-V3 TRAINING READY. 1,752 gazette-verified trainable pairs on HuggingFace (train=1576, val=176). batch_008 corrections applied (GN487A penalty AND/OR structure, scope category accuracy, PAYE TZS 26,000 myth removed). HF upload complete. Kaggle training run pending (adapter-v3). Cross-AI review of batch_008 pending (needs API keys in session).**
+**CHIKE BY AFRICA GIANTS — WhatsApp inference server built and committed (commit `86f28b7`). 1,752 gazette-verified trainable pairs on HuggingFace (train=1576, val=176). batch_008 corrections applied. Server ready for Railway deployment. Adapter-v3 Kaggle training run pending (manual trigger required). Cross-AI review of batch_008 pending (needs API keys in session).**
+
+**Product identity confirmed:** AI assistant = CHIKE | Company = AFRICA GIANTS | Full name = CHIKE BY AFRICA GIANTS
 
 ---
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
+
+### 2026-06-12 (session 12) — Chike WhatsApp inference server built + HF branding updated
+
+**COMPLETED:**
+- WhatsApp inference server built — commit `86f28b7`:
+  - `server/app.py` — FastAPI server; Twilio webhook at POST /webhook; loads AfriqueLlama-8B base + adapter-v3 via PeftModel; greeting detection with WELCOME_MESSAGE; 25s timeout with FALLBACK_MESSAGE; conversation logging to server/logs/conversations.jsonl
+  - `server/requirements.txt` — fastapi, uvicorn, transformers, peft, torch, accelerate, python-multipart, huggingface_hub, bitsandbytes
+  - `server/README.md` — deployment docs, endpoints, env vars, local dev instructions
+  - `Procfile` — `web: uvicorn server.app:app --host 0.0.0.0 --port $PORT`
+  - `railway.json` — NIXPACKS builder, /health healthcheck, ON_FAILURE restart
+  - `.env.example` — Chike header added; real credentials redacted to placeholders
+  - `CLAUDE.md` — product name note added at Section 1
+- HuggingFace READMEs updated with Chike branding:
+  - `prospAprospA007/africa-giants-adapter-v2` model repo: title → "Chike by Africa Giants (adapter-v2)"
+  - `prospAprospA007/africa-giants-dataset` dataset repo: title → "Chike by Africa Giants — Tanzania Business Regulatory Q&A Dataset"
+- scan_for_keys.py: CLEAN — 0 API keys in 7 staged files
+
+**CORPUS STATE (confirmed session 12):**
+- batch_001_cleaned.jsonl: 56 pairs (46 trainable, 10 eval_set=true)
+- batch_002_cleaned.jsonl: 243 pairs (243 trainable)
+- batch_002a_cleaned.jsonl: 50 pairs (50 trainable)
+- batch_002b_cleaned.jsonl: 50 pairs (50 trainable)
+- batch_003_cleaned.jsonl: 300 pairs (300 trainable)
+- batch_004_cleaned.jsonl: 300 pairs (300 trainable)
+- batch_005_cleaned.jsonl: 300 pairs (300 trainable)
+- batch_006_cleaned.jsonl: 300 pairs (300 trainable)
+- batch_007_replacements.jsonl: 13 pairs (13 trainable)
+- batch_008_cleaned.jsonl: 150 pairs (150 trainable)
+- **TOTAL TRAINABLE: 1,752 pairs**
+- HF: train_sft.jsonl=1,576 pairs (1.23MB), val_sft.jsonl=176 pairs (139KB)
+
+**PENDING BEFORE SERVER GOES LIVE:**
+1. Kaggle adapter-v3 training run: https://www.kaggle.com/code/prospaprospa/africa-giants-v2 (Run All)
+2. After training: run `python scripts/run_eval.py` — must pass >85% in-corpus AND >70% refusal
+3. Railway deployment: connect repo, set HF_TOKEN env var, point Twilio WhatsApp number to /webhook
+4. Cross-AI review of batch_008: set GEMINI_API_KEY + OPENROUTER_API_KEY then run verify_pairs.py
+
+---
 
 ### 2026-06-12 (session 11) — batch_008 corrections applied, adapter-v3 SFT ready
 
@@ -45,7 +85,7 @@
   Habib Advisory Tanzania Tax Guide 2025/2026
 
 **CORPUS STATE (after session 11):**
-- batch_001_cleaned.jsonl: 46 pairs (note: prior entry said 57 — verify)
+- batch_001_cleaned.jsonl: 56 pairs total (46 trainable, 10 eval_set=true)
 - batch_002_cleaned.jsonl: 243 pairs
 - batch_002a_cleaned.jsonl: 50 pairs (Class B→A investor fix, royalties WHT 15%)
 - batch_002b_cleaned.jsonl: 50 pairs (Class B→A investor fix, royalties WHT 15%)
@@ -106,7 +146,7 @@
 - BRELA foreign branch: USD 750 (certified copy) + USD 220 (document filing). Source: brela.go.tz
 
 **CORPUS STATE (after session 7):**
-- batch_001_cleaned.jsonl: 57 pairs (committed, verified)
+- batch_001_cleaned.jsonl: 56 pairs (committed, verified — 46 trainable + 10 eval_set=true)
 - batch_002_cleaned.jsonl: 243 pairs (committed, verified)
 - raw_pairs_batch_003.jsonl: 300 pairs — cross-AI CLEAN, needs founder 10% review
 - raw_pairs_batch_004.jsonl: 300 pairs — cross-AI done, all consensus flags resolved, needs founder 10% review
@@ -364,92 +404,63 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 
 ## 3. ACTIVE WORK
 
-### Immediate next tasks
+### Current priority: Adapter-v3 training → eval gates → Railway deployment
 
-**Step 9:** ✅ Training data uploaded to HF Hub. Notebook `africa-giants-v2` run triggered on Kaggle.
+**Step A (DONE):** ✅ Corpus complete — 1,752 trainable pairs across 10 cleaned batch files
+- All batch corrections applied (GN487A penalty, scope, PAYE 26K myth, VAT CPA, deadlines)
+- SFT files: train=1,576 / val=176 — uploaded to HF
 
-**Step 10:** ✅ Accuracy gate results: 67% in-corpus accuracy / 40% refusal rate — BOTH GATES FAILED.
-Target: >85% in-corpus AND >70% refusal. Training on 300 pairs insufficient.
+**Step B (DONE):** ✅ WhatsApp inference server built — commit `86f28b7`
+- server/app.py, Procfile, railway.json, server/requirements.txt, server/README.md
+- Product name: CHIKE BY AFRICA GIANTS
+- Adapter target: prospAprospA007/africa-giants-adapter-v3 (not yet trained)
 
-**Step 11:** ✅ Dataset build COMPLETE — 300 pairs total (batch_001 57 + batch_002 243).
+**Step C (PENDING — manual):** ⬜ Trigger adapter-v3 Kaggle training run
+- URL: https://www.kaggle.com/code/prospaprospa/africa-giants-v2
+- Action: Run All
+- Dataset: 1,752 pairs (train=1,576, val=176) already on HF
 
-**Step 12:** ✅ Founder reviewed batch_002, 25 corrections applied, batch_002_cleaned.jsonl committed.
+**Step D (PENDING — after training):** ⬜ Run accuracy gate
+- `python scripts/run_eval.py`
+- Must print GATE PASSED: >85% in-corpus AND >70% refusal
+- Adapter-v2 results for reference: 83.2% in-corpus (FAIL), 50% refusal (FAIL)
 
-**Step 13:** ✅ HF dataset updated — 300-pair SFT files uploaded (train_sft.jsonl + val_sft.jsonl).
+**Step E (PENDING — after gate passes):** ⬜ Deploy to Railway
+- Connect GitHub repo to Railway
+- Set env var: HF_TOKEN
+- Point Twilio WhatsApp sandbox number to https://your-railway-url/webhook
+- Test with: curl https://your-railway-url/health
 
-**Step 14:** ✅ FACT-GUARDIAN installed — locked_facts.json (41 facts) + check_locked_facts.py. Checker CLEAN on batch_002.
+**Step F (PENDING — parallel to C):** ⬜ Cross-AI review of batch_008 (150 pairs)
+- Set API keys in PowerShell session first:
+  `$env:GEMINI_API_KEY = "your_key"`
+  `$env:OPENROUTER_API_KEY = "sk-or-v1-..."`
+- Then: `python scripts/verify_pairs.py --file datasets/tier1a/raw_sources/raw_pairs_batch_008.jsonl --batch-size 10`
 
-**Step 14b:** ✅ Autonomy scripts installed (b4772d4):
-  - `scripts/check_sources.py` — SOURCE-ENFORCER, CLEAN on batch_002
-  - `scripts/build_question_index.py` — DEDUP-GUARD, 600 unique questions / 300 IDs indexed
-  - `scripts/generate_sft.py` — SFT file generator; produces 261 train / 29 val from 290 non-eval pairs
-  - `scripts/hf_clean_upload.py` — HF upload tool (delete old → upload new → verify); do NOT run without intent
-
-**Step 14c:** ✅ REGULATORY-VERIFIER stabilised (session 4) — commit `b94d9a8`:
-  - `scripts/verify_pairs.py` — Gemini 3.5-flash (working) + OpenRouter llama-3.3-70b (valid, 429 on free tier)
-  - Groq and Cerebras removed — both geo-blocked in Tanzania
-  - batch_001 reviewed: 0 consensus flags, 19 Gemini single-model flags (mostly hallucinations)
-  - GN487A imprisonment penalty flag: Gemini claims 12mo minimum vs locked 6mo — verify before next batch
-
-**Step 14d:** ✅ Data fixes applied and committed `3efae26`:
-  - sdl_001 name corrected, locked_facts.json word-boundary fix — CLEAN on check_locked_facts.py
-
-**Step 14e:** ✅ plan_next_batch.py installed — committed `cedf00e`:
-  - 313 pairs / 2,687 remaining / 9 batches of 300 to target
-
-**Step 15:** ⬜ Verify GN487A imprisonment penalty against TanzLII gazette
-  - URL: https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28
-  - Question: is it "up to 6 months" or "not less than 12 months"?
-  - Affects 8 pairs: gn487a_004–009, adv001, adv002
-  - Fix pairs if Gemini is right; add locked fact if pairs are right
-
-**Step 16:** ⬜ Build batch_003 — adversarial pairs targeting the 3 confirmed model failure modes:
-  - GN487A confusion (80 pairs) — model says it's about residence permits
-  - SDL confusion (50 pairs) — model says "disability leave"
-  - VAT invented rates (40 pairs) — model invents 5%/10% reduced rates
-  - Out-of-corpus refusal (30 pairs)
-  - NSSF + EFD deep (50 pairs)
-  Total batch_003 target: 300 pairs
-
-**Step 17:** ⬜ Run verify_pairs.py on batch_002_cleaned.jsonl (243 pairs) once OpenRouter stops rate-limiting
-  - `python scripts/verify_pairs.py --file datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl --batch-size 10`
-
-**Step 18:** ⬜ Retrain on 313 + batch_003 corpus on Kaggle africa-giants-v2, re-run accuracy gate.
-
-**Step 19:** ⬜ Engage TRA consultant for 10% training pair sample review — ~30 pairs, ~TZS 50,000–100,000.
-
-### Open items on training pairs (not blocking training run)
-- NSSF alternate arrangement (15%/5%) — no training pair covers this yet
-- NSSF deadline wording: pairs say "10th" but primary source says "within one month"
-- 7 adversarial pairs need founder review (pending_founder_review)
-- 10% sample (6 pairs) needs TRA-registered consultant review (~TZS 50,000–100,000)
+### Known unresolved items (not blocking training)
+- `gn487a_072`: SUMATRA vs LATRA for daladala licensing — needs TanzLII/LATRA verification
+- `brela_deep_006`: annual return 42 vs 60 days — needs BRELA portal verification
+- GN487A imprisonment penalty: 6 months (pairs) vs 12 months (Gemini session 4 flag) — Section C of do.md confirmed 6 months correct per gazette text
+- batch_001_cleaned.jsonl shows 56 pairs (PROGRESS.md previously said 57 — 56 is confirmed correct count)
 
 ---
 
 ## 4. NEXT PHYSICAL ACTIONS (dependency-ordered)
 
-1. ✅ Create all dataset directory structure
-2. ✅ Create schema/pair_schema.json
-3. ✅ Create sources/whitelist.json
-4. ✅ Create scripts/validate_dataset.py
-5. ✅ Create scripts/run_eval.py
-6. ✅ Commit and push infrastructure to GitHub
-7. ✅ Batch 001: 57 pairs validated and committed — fbd2045 (2026-06-02)
-8. ✅ Build 200-question eval set — 200 of 200 done, committed bfc8aed / 302e299
-9. ✅ Founder reviews eval set quality — complete, 17 fixes applied and committed
-10. ✅ Commit eval set to GitHub after founder approval — done
-11. ✅ Trained on 300 pairs — adapter prospaprospa007/africa-giants-adapter-v1 pushed
-12. ✅ Accuracy gate run: 67% in-corpus / 40% refusal — FAILED both gates
-13. ✅ FACT-GUARDIAN installed — checker CLEAN on batch_002 (d901d64)
-14. ✅ REGULATORY-VERIFIER stabilised — Gemini 3.5-flash + OpenRouter confirmed (b94d9a8)
-15. ✅ Data fixes — sdl_001 name + locked_facts word-boundary fix — CLEAN (3efae26)
-16. ✅ plan_next_batch.py installed — 313 pairs, 9 batches remaining (cedf00e)
-17. ⬜ Verify GN487A imprisonment penalty (6mo vs 12mo) against TanzLII gazette
-18. ⬜ Build batch_003 (300 pairs: GN487A 80 + SDL 50 + VAT 40 + refusal 30 + NSSF/EFD 50 + other 50)
-19. ⬜ Run verify_pairs.py on batch_002_cleaned.jsonl when OpenRouter rate limit clears
-20. ⬜ Retrain on expanded corpus, re-run accuracy gate
-21. ⬜ Engage TRA consultant for 10% training pair sample review — ~30 pairs, ~TZS 50,000–100,000
-22. ⬜ If gate passes: prepare first human pilot on WhatsApp
+1. ✅ Infrastructure, schema, scripts, eval set, whitelist — all committed
+2. ✅ adapter-v1: trained on 300 pairs — 67% in-corpus / 40% refusal — FAILED both gates
+3. ✅ FACT-GUARDIAN + REGULATORY-VERIFIER + dedup-guard + all autonomy scripts installed
+4. ✅ Corpus built to 1,752 trainable pairs across batches 001–008 + 002a/b + 007_replacements
+5. ✅ All batch corrections applied (GN487A, PAYE 26K myth, VAT CPA, BRELA fees, WHT)
+6. ✅ adapter-v2: trained on 1,500 pairs — 83.2% in-corpus / 50% refusal — FAILED both gates
+7. ✅ HF SFT files updated: train=1,576, val=176 (1,752 pairs total) — adapter-v3 ready
+8. ✅ WhatsApp inference server (CHIKE BY AFRICA GIANTS) built — commit `86f28b7`
+9. ⬜ Trigger adapter-v3 training on Kaggle (manual — Run All at africa-giants-v2)
+10. ⬜ Run eval gates after training: `python scripts/run_eval.py` (need >85% AND >70%)
+11. ⬜ Cross-AI review batch_008 (set API keys, run verify_pairs.py)
+12. ⬜ Deploy server to Railway: connect repo, set HF_TOKEN, point Twilio webhook to /webhook
+13. ⬜ Engage TRA consultant for 10% sample review (~30 pairs, ~TZS 50,000–100,000)
+14. ⬜ First human pilot on WhatsApp (after BOTH gates pass — R7 is blocking)
 
 ---
 
