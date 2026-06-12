@@ -735,3 +735,56 @@ Total: 300 | Flagged: 0
 
 [2026-06-11T14:21:06.691129] Checked datasets/tier1a/cleaned_pairs/batch_007_replacements.jsonl
 Total: 13 | Flagged: 0
+
+[2026-06-12T01:20:14.252848] Checked datasets/tier1a/raw_sources/raw_pairs_batch_008.jsonl
+Total: 100 | Flagged: 0
+
+[2026-06-12T02:03:59.883723] Checked datasets/tier1a/raw_sources/raw_pairs_batch_008.jsonl
+Total: 100 | Flagged: 0
+
+[2026-06-12T02:39:44.843042] Checked datasets/tier1a/raw_sources/raw_pairs_batch_002a.jsonl
+Total: 50 | Flagged: 1
+  FLAG [tier1a_permit_002_20260603] permit_class_b_employed: daraja B.*mwekezaji
+  FLAG [tier1a_permit_002_20260603] permit_class_b_employed: mwekezaji.*daraja B
+  FLAG [tier1a_permit_002_20260603] permit_class_b_employed: Class B.*investor(?!.*Class A)(?!.*NOT)(?!.*si kwa)
+
+[2026-06-12T02:39:45.226315] Checked datasets/tier1a/raw_sources/raw_pairs_batch_002b.jsonl
+Total: 50 | Flagged: 2
+  FLAG [tier1a_permit_012_20260603] permit_class_b_employed: daraja B.*mwekezaji
+  FLAG [tier1a_permit_012_20260603] permit_class_b_employed: Class B.*investor(?!.*Class A)(?!.*NOT)(?!.*si kwa)
+  FLAG [tier1a_wh_007_20260603] royalties_wht_rate: mrabaha.*wasio wakazi.*10
+
+[2026-06-12T02:42:20.243916] Checked datasets/tier1a/raw_sources/raw_pairs_batch_002a.jsonl
+Total: 50 | Flagged: 1
+  FLAG [tier1a_permit_002_20260603] permit_class_b_employed: mwekezaji.*daraja B
+
+[2026-06-12T02:42:20.518736] Checked datasets/tier1a/raw_sources/raw_pairs_batch_002b.jsonl
+Total: 50 | Flagged: 2
+  FLAG [tier1a_permit_012_20260603] permit_class_b_employed: mwekezaji.*daraja B
+  FLAG [tier1a_permit_012_20260603] permit_class_a_investor: daraja A.*mfanyakazi ajiriwa
+  FLAG [tier1a_permit_012_20260603] permit_class_a_investor: Class A.*for.*(?:employed|(?<!not hired )(?<!hired )employees|regular workers)(?!.*invest|.*self)
+  FLAG [tier1a_permit_012_20260603] permit_class_c_categories: daraja C.*mfanyakazi ajiriwa
+  FLAG [tier1a_permit_012_20260603] permit_class_c_categories: employed.{0,30}Class C(?! is for| ni kwa| \(short| is a short)
+  FLAG [tier1a_wh_007_20260603] royalties_wht_rate: mrabaha.*wasio wakazi.*10
+
+[2026-06-12T02:44:15.887485] Checked datasets/tier1a/raw_sources/raw_pairs_batch_002a.jsonl
+Total: 50 | Flagged: 0
+
+[2026-06-12T02:44:16.088852] Checked datasets/tier1a/raw_sources/raw_pairs_batch_002b.jsonl
+Total: 50 | Flagged: 0
+
+[2026-06-12T02:45:40.361767] Checked datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-12T02:45:40.799519] Checked datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl
+Total: 300 | Flagged: 0
+
+[2026-06-12T02:53:25.438086] Checked datasets/tier1a/raw_sources/raw_pairs_batch_008.jsonl
+Total: 150 | Flagged: 1
+  FLAG [b008_refusal_018_20260612] paye_band_2_rate: second band.*9%(?! is incorrect| is wrong)
+
+[2026-06-12T02:54:15.189631] Checked datasets/tier1a/raw_sources/raw_pairs_batch_008.jsonl
+Total: 150 | Flagged: 0
+
+[2026-06-12T08:58:37.465967] Checked datasets/tier1a/raw_sources/raw_pairs_batch_008.jsonl
+Total: 150 | Flagged: 0
