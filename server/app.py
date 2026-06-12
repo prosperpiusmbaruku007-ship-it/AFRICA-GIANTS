@@ -22,6 +22,8 @@ app = FastAPI(
 
 # ── Config from environment variables ────────────────────────────────────────
 HF_TOKEN        = os.environ.get("HF_TOKEN", "")
+# Note: adapter-v3 is public — token not required for inference
+# Token only needed if repo is private
 BASE_MODEL      = "McGill-NLP/AfriqueLlama-8B"
 ADAPTER_REPO    = "prospAprospA007/africa-giants-adapter-v3"
 MAX_NEW_TOKENS  = 300
@@ -81,24 +83,15 @@ async def load_model():
     print(f"[startup] Adapter: {ADAPTER_REPO}")
 
     tokenizer = AutoTokenizer.from_pretrained(
-        BASE_MODEL,
-        token=HF_TOKEN,
+        ADAPTER_REPO,
     )
     tokenizer.pad_token = tokenizer.eos_token
     print("[startup] Tokenizer loaded")
 
-    base = AutoModelForCausalLM.from_pretrained(
-        BASE_MODEL,
+    model = AutoModelForCausalLM.from_pretrained(
+        ADAPTER_REPO,
         torch_dtype=torch.float16,
         device_map="auto",
-        token=HF_TOKEN,
-    )
-    print("[startup] Base model loaded")
-
-    model = PeftModel.from_pretrained(
-        base,
-        ADAPTER_REPO,
-        token=HF_TOKEN,
     )
     model.eval()
     print(f"[startup] {FULL_NAME} ready ✓")
