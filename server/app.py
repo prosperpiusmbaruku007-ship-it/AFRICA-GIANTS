@@ -82,16 +82,18 @@ async def load_model():
     global model, tokenizer
     print(f"[startup] {FULL_IDENTITY} starting ...")
     print(f"[startup] {TAGLINE_SW}")
-    print(f"[startup] Loading full merged model from: {ADAPTER_REPO}")
+    print(f"[startup] Loading from: {ADAPTER_REPO}")
+
+    from transformers import BitsAndBytesConfig
 
     tokenizer = AutoTokenizer.from_pretrained(
         ADAPTER_REPO,
         token=HF_TOKEN if HF_TOKEN else None,
+        trust_remote_code=True,
     )
     tokenizer.pad_token = tokenizer.eos_token
     print(f"[startup] Tokenizer loaded — eos: {repr(tokenizer.eos_token)}")
 
-    from transformers import BitsAndBytesConfig
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type="nf4",
@@ -103,6 +105,7 @@ async def load_model():
         quantization_config=bnb_config,
         device_map="auto",
         token=HF_TOKEN if HF_TOKEN else None,
+        trust_remote_code=True,
     )
     model.eval()
     print(f"[startup] {FULL_IDENTITY} ready ✓")
