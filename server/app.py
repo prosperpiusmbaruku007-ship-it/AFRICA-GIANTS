@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import PlainTextResponse
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import BitsAndBytesConfig
 from peft import PeftModel
 import torch
 import os
@@ -13,6 +14,9 @@ import traceback
 PRODUCT_NAME    = "Chike"
 COMPANY_NAME    = "Africa Giants"
 FULL_NAME       = "Chike by Africa Giants"
+FULL_IDENTITY   = "Chike by Africa Giants"
+TAGLINE_SW      = "Msaidizi wa AI wa biashara za Tanzania kutoka Africa Giants"
+TAGLINE_EN      = "Tanzania's business AI assistant — tax, compliance, registration"
 
 app = FastAPI(
     title=FULL_NAME,
@@ -78,23 +82,47 @@ tokenizer = None
 @app.on_event("startup")
 async def load_model():
     global model, tokenizer
-    print(f"[startup] {FULL_NAME} loading ...")
+    print(f"[startup] {FULL_IDENTITY} starting ...")
+    print(f"[startup] {TAGLINE_SW}")
     print(f"[startup] Base model: {BASE_MODEL}")
     print(f"[startup] Adapter: {ADAPTER_REPO}")
 
+    # Step 1 — load tokenizer from base model
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+    from transformers import BitsAndBytesConfig
+    from peft import PeftModel
+
     tokenizer = AutoTokenizer.from_pretrained(
-        ADAPTER_REPO,
+        BASE_MODEL,
+        token=HF_TOKEN if HF_TOKEN else None,
     )
     tokenizer.pad_token = tokenizer.eos_token
     print("[startup] Tokenizer loaded")
 
-    model = AutoModelForCausalLM.from_pretrained(
-        ADAPTER_REPO,
-        torch_dtype=torch.float16,
+    # Step 2 — load base model in 4bit to fit in memory
+    bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.float16,
+        bnb_4bit_use_double_quant=True,
+    )
+    base = AutoModelForCausalLM.from_pretrained(
+        BASE_MODEL,
+        quantization_config=bnb_config,
         device_map="auto",
+        token=HF_TOKEN if HF_TOKEN else None,
+    )
+    print("[startup] Base model loaded")
+
+    # Step 3 — apply LoRA adapter on top of base model
+    model = PeftModel.from_pretrained(
+        base,
+        ADAPTER_REPO,
+        token=HF_TOKEN if HF_TOKEN else None,
     )
     model.eval()
-    print(f"[startup] {FULL_NAME} ready ✓")
+    print(f"[startup] {FULL_IDENTITY} ready ✓")
+    print(f"[startup] {TAGLINE_EN}")
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 def log_conversation(
