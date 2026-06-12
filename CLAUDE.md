@@ -13,6 +13,8 @@ Do not skip this. Do not assume. Always read both files first.
 
 # 1. PROJECT IDENTITY
 
+**Product name: CHIKE BY AFRICA GIANTS.** The AI assistant is named CHIKE. The company is AFRICA GIANTS.
+
 AFRICA-GIANTS is a Tanzanian-Swahili AI compliance navigator for informal businesses.
 It is NOT a chatbot, marketplace, fintech app, or general-purpose assistant.
 It moves knowledge and trust instead of goods. Marginal cost per answer ≈ electricity.
