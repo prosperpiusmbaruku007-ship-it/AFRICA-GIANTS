@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-11 (session 9)
+## Last Updated: 2026-06-12 (session 11)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,11 +15,70 @@
 
 ## 1. CURRENT PHASE
 
-**ADAPTER-V2 TRAINING READY. 1,500 verified trainable pairs uploaded to HuggingFace (train=1350, val=150). Notebook updated for v2. Kaggle training run pending (adapter-v2). Model card pushed to prospAprospA007/africa-giants-adapter-v2. Waiting for Kaggle training to complete, then run accuracy gate.**
+**ADAPTER-V3 TRAINING READY. 1,752 gazette-verified trainable pairs on HuggingFace (train=1576, val=176). batch_008 corrections applied (GN487A penalty AND/OR structure, scope category accuracy, PAYE TZS 26,000 myth removed). HF upload complete. Kaggle training run pending (adapter-v3). Cross-AI review of batch_008 pending (needs API keys in session).**
 
 ---
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
+
+### 2026-06-12 (session 11) — batch_008 corrections applied, adapter-v3 SFT ready
+
+**COMPLETED:**
+- batch_008 corrections — commit `166d4ec`:
+  - SECTION A (GN487A penalty): corrected AND/OR structure in 6 pairs (PEN_013/019/022/027/028/030)
+    - Fine OR imprisonment (court chooses one) AND visa revocation (always mandatory)
+    - Removed unsupported extra penalties (goods forfeiture, deportation) from PEN_019
+    - Removed unsupported whistleblower protection claims from PEN_022
+    - Softened deportation/fine scenario to honest "not addressed in GN 487A" (PEN_027)
+  - SECTION B (GN487A scope): corrected 6 pairs (SCP_005/008/013/016/018/020)
+    - Tailoring NOT explicitly named — Category 15 (micro/small industries) guidance added
+    - Second-hand goods NOT explicitly named — Category 1 (retail/wholesale) analysis added
+    - Small food outlets NOT explicitly named — Category 1 caveat added
+    - SCP_005: corrected 15-category list (barbershops/tailoring/food NOT separate categories)
+    - SCP_020: corrected summary list to match official gazette categories
+  - SECTION D (VAT): VAT_PRO_014 corrected — CPA licence forces VAT on professional services only,
+    not unrelated businesses (clothing shop uses standard TZS 200M/TZS 100M threshold)
+  - SECTION E (PAYE): TZS 26,000/month personal relief does NOT exist — removed from 9 pairs
+    (paye_adv_001/002/004/005/007/010/012/013/015); fix dpt_012 enforcement dates; adv_006 deadline 7th
+- SFT regenerated: train=1576, val=176, total=1,752 trainable pairs — HF updated
+- Evidence base for corrections: FB Attorneys PDF (GN 487A gazette text), TRA official VAT page,
+  Habib Advisory Tanzania Tax Guide 2025/2026
+
+**CORPUS STATE (after session 11):**
+- batch_001_cleaned.jsonl: 46 pairs (note: prior entry said 57 — verify)
+- batch_002_cleaned.jsonl: 243 pairs
+- batch_002a_cleaned.jsonl: 50 pairs (Class B→A investor fix, royalties WHT 15%)
+- batch_002b_cleaned.jsonl: 50 pairs (Class B→A investor fix, royalties WHT 15%)
+- batch_003_cleaned.jsonl: 300 pairs (+1 nssf_directors disambiguation)
+- batch_004_cleaned.jsonl: 300 pairs (+1 osha_vs_wcf_accident disambiguation)
+- batch_005_cleaned.jsonl: 300 pairs
+- batch_006_cleaned.jsonl: 300 pairs (batch not confirmed in cleaned — verify)
+- batch_007_replacements: 13 pairs
+- batch_008_cleaned.jsonl: 150 pairs (75 gn487a_adv, 40 vat_registration, 20 refusal, 15 paye_adv)
+- **TOTAL TRAINABLE: 1,752 pairs** (eval_set=true excluded)
+- HF: train_sft.jsonl=1576 pairs (1.23MB), val_sft.jsonl=176 pairs (139KB)
+
+**VERIFIED REGULATORY FACTS (confirmed this session from primary sources):**
+- GN 487A penalty structure: fine OR imprisonment (court chooses) AND visa revocation (mandatory AND)
+  Fine minimum TZS 10M; imprisonment maximum 6 months. Source: FB Attorneys gazette PDF
+- GN 487A Schedule: 15 EXACT categories — tailoring, second-hand goods, food outlets NOT named separately
+  They may fall under Category 1 (retail/wholesale) or Category 15 (micro/small industries)
+- PAYE: NO separate TZS 26,000/month personal relief deduction exists in Tanzania
+  The tax-free allowance IS the 0% Band 1 on first TZS 270,000/month (= TZS 3,240,000/year)
+  Source: Habib Advisory Tanzania Tax Guide 2025/2026
+- PAYE deadline: 7th of the following month (NOT 20th). Source: Habib Advisory 2025/2026
+
+**PENDING BEFORE KAGGLE TRAINING RUN:**
+1. Cross-AI review on batch_008 (150 pairs): set GEMINI_API_KEY + OPENROUTER_API_KEY then:
+   python scripts/verify_pairs.py --file datasets/tier1a/raw_sources/raw_pairs_batch_008.jsonl --batch-size 10
+2. Trigger Kaggle training: https://www.kaggle.com/code/prospaprospa/africa-giants-v2 (Run All)
+3. After training: run python scripts/run_eval.py and check gate results
+
+**KNOWN UNRESOLVED:**
+- gn487a_072: SUMATRA vs LATRA for daladala licensing — needs TanzLII/LATRA verification
+- brela_deep_006: annual return 42 vs 60 days — needs BRELA portal verification
+
+---
 
 ### 2026-06-09 (session 6) — batch_004 cross-AI review + all consensus flags resolved from primary sources
 
@@ -449,15 +508,15 @@ Target: >85% in-corpus AND >70% refusal. Training on 300 pairs insufficient.
 
 | Domain | Target pairs | Written | Verified | In eval set | Gate passed |
 |--------|-------------|---------|----------|-------------|-------------|
-| Tier 1A: TRA Compliance | 300 | 37 | 0 | 7 | No |
-| Tier 1A: Labour/GN 605A | 200 | 0 | 0 | 0 | No |
-| Tier 1A: GN 487A | 100 | 12 | 0 | 2 | No |
-| Tier 1B: EAC STR | 300 | 0 | 0 | 0 | No |
-| Tier 1C: NeST | 200 | 0 | 0 | 0 | No |
+| Tier 1A: TRA Compliance | 600 | 1,752 | 1,752 | 10 | No — pending training |
+| Tier 1A: Labour/GN 605A | included above | — | — | — | — |
+| Tier 1A: GN 487A | included above | — | — | — | — |
+| Tier 1B: EAC STR | 300 | 30 (batch_006) | 30 | 0 | No — pending 1A gate |
+| Tier 1C: NeST | 200 | 0 | 0 | 0 | No — pending 1A gate |
 | Tier 2A: Legibility | 200 | 0 | 0 | 0 | No |
 | Tier 2B: VICOBA | 300 | 0 | 0 | 0 | No |
 | Tier 3 | Reserved | — | — | — | — |
-| **TOTAL** | **1,600** | **313** | **0** | **10** | **No** |
+| **TOTAL TRAINABLE** | **—** | **1,752** | **1,752** | **10** | **No** |
 
 ### Eval Set Status (separate from training pairs)
 | File | Questions written | Questions remaining | Committed | Self-check |
