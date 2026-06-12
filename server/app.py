@@ -1,8 +1,6 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import PlainTextResponse
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from transformers import BitsAndBytesConfig
-from peft import PeftModel
 import torch
 import os
 import json
@@ -28,8 +26,8 @@ app = FastAPI(
 HF_TOKEN        = os.environ.get("HF_TOKEN", "")
 # Note: adapter-v3 is public — token not required for inference
 # Token only needed if repo is private
-BASE_MODEL      = "McGill-NLP/AfriqueLlama-8B"
-ADAPTER_REPO    = "prospAprospA007/africa-giants-adapter-v3"
+BASE_MODEL   = "McGill-NLP/AfriqueLlama-8B"  # base — not loaded directly, merged into adapter-v3
+ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v3"  # full merged model
 MAX_NEW_TOKENS  = 300
 TEMPERATURE     = 0.1
 TIMEOUT_SECS    = 25
@@ -84,40 +82,26 @@ async def load_model():
     global model, tokenizer
     print(f"[startup] {FULL_IDENTITY} starting ...")
     print(f"[startup] {TAGLINE_SW}")
-    print(f"[startup] Base model: {BASE_MODEL}")
-    print(f"[startup] Adapter: {ADAPTER_REPO}")
-
-    # Step 1 — load tokenizer from base model
-    from transformers import AutoTokenizer, AutoModelForCausalLM
-    from transformers import BitsAndBytesConfig
-    from peft import PeftModel
+    print(f"[startup] Loading full merged model from: {ADAPTER_REPO}")
 
     tokenizer = AutoTokenizer.from_pretrained(
-        BASE_MODEL,
+        ADAPTER_REPO,
         token=HF_TOKEN if HF_TOKEN else None,
     )
     tokenizer.pad_token = tokenizer.eos_token
-    print("[startup] Tokenizer loaded")
+    print(f"[startup] Tokenizer loaded — eos: {repr(tokenizer.eos_token)}")
 
-    # Step 2 — load base model in 4bit to fit in memory
+    from transformers import BitsAndBytesConfig
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type="nf4",
         bnb_4bit_compute_dtype=torch.float16,
         bnb_4bit_use_double_quant=True,
     )
-    base = AutoModelForCausalLM.from_pretrained(
-        BASE_MODEL,
+    model = AutoModelForCausalLM.from_pretrained(
+        ADAPTER_REPO,
         quantization_config=bnb_config,
         device_map="auto",
-        token=HF_TOKEN if HF_TOKEN else None,
-    )
-    print("[startup] Base model loaded")
-
-    # Step 3 — apply LoRA adapter on top of base model
-    model = PeftModel.from_pretrained(
-        base,
-        ADAPTER_REPO,
         token=HF_TOKEN if HF_TOKEN else None,
     )
     model.eval()
