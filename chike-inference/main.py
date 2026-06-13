@@ -1,7 +1,16 @@
-from vllm import LLM, SamplingParams
 import os
+import torch
+from huggingface_hub import login
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v3"
+HF_TOKEN     = os.environ.get("HF_TOKEN", "")
+
+if HF_TOKEN:
+    login(token=HF_TOKEN)
+    print("[chike] HuggingFace authenticated")
+else:
+    print("[chike] WARNING: HF_TOKEN not set — model may fail to load")
 
 SYSTEM_PROMPT = (
     "Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. "
@@ -18,37 +27,69 @@ SYSTEM_PROMPT = (
     "and direct the user to TRA or a qualified adviser."
 )
 
-# Lazy init — LLM loads on first request, not at import time
-_llm = None
+_model     = None
+_tokenizer = None
 
-def get_llm():
-    global _llm
-    if _llm is None:
-        from vllm import LLM
-        print("[chike] Loading model ...")
-        _llm = LLM(
-            model=ADAPTER_REPO,
-            dtype="auto",
+def get_model():
+    global _model, _tokenizer
+    if _model is None:
+        print("[chike] Loading tokenizer ...")
+        _tokenizer = AutoTokenizer.from_pretrained(
+            ADAPTER_REPO,
+            token=HF_TOKEN if HF_TOKEN else None,
             trust_remote_code=True,
-            max_model_len=1024,
-            tokenizer=ADAPTER_REPO,
-            tokenizer_mode="auto",
-            gpu_memory_utilization=0.85,
-            enforce_eager=True,
         )
-        print("[chike] Model loaded")
-    return _llm
+        if _tokenizer.pad_token is None:
+            _tokenizer.pad_token = _tokenizer.eos_token
+        print(f"[chike] eos_token: {repr(_tokenizer.eos_token)}")
 
+        print("[chike] Loading model ...")
+        _model = AutoModelForCausalLM.from_pretrained(
+            ADAPTER_REPO,
+            torch_dtype=torch.float16,
+            device_map="auto",
+            token=HF_TOKEN if HF_TOKEN else None,
+            trust_remote_code=True,
+        )
+        _model.eval()
+        print("[chike] Model loaded and ready")
+    return _model, _tokenizer
 
 def run(message: str, temperature: float = 0.1):
+    if not message or not message.strip():
+        return {"error": "No message provided"}
+
+    model, tokenizer = get_model()
+
     prompt = (
         f"<|begin_of_text|>"
         f"<|start_header_id|>system<|end_header_id|>\n\n"
         f"{SYSTEM_PROMPT}<|eot_id|>"
         f"<|start_header_id|>user<|end_header_id|>\n\n"
-        f"{message}<|eot_id|>"
+        f"{message.strip()}<|eot_id|>"
         f"<|start_header_id|>assistant<|end_header_id|>\n\n"
     )
-    params  = SamplingParams(temperature=temperature, max_tokens=300)
-    outputs = get_llm().generate([prompt], params)
-    return {"reply": outputs[0].outputs[0].text.strip()}
+
+    inputs = tokenizer(
+        prompt,
+        return_tensors="pt",
+    ).to(model.device)
+
+    with torch.no_grad():
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=300,
+            temperature=temperature,
+            do_sample=True,
+            pad_token_id=tokenizer.eos_token_id,
+            eos_token_id=tokenizer.eos_token_id,
+        )
+
+    full  = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    parts = full.split("<|start_header_id|>assistant<|end_header_id|>")
+    reply = parts[-1].strip() if len(parts) > 1 else full.strip()
+
+    print(f"[chike] Q: {message[:60]}")
+    print(f"[chike] A: {reply[:60]}")
+
+    return {"reply": reply}
