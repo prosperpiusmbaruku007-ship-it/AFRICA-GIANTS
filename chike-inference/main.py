@@ -24,12 +24,19 @@ _llm = None
 def get_llm():
     global _llm
     if _llm is None:
+        from vllm import LLM
+        print("[chike] Loading model ...")
         _llm = LLM(
             model=ADAPTER_REPO,
-            dtype="float16",
+            dtype="auto",
             trust_remote_code=True,
-            max_model_len=2048,
+            max_model_len=1024,
+            tokenizer=ADAPTER_REPO,
+            tokenizer_mode="auto",
+            gpu_memory_utilization=0.85,
+            enforce_eager=True,
         )
+        print("[chike] Model loaded")
     return _llm
 
 
