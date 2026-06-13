@@ -7,7 +7,7 @@ max_replicas = 2
 cooldown = 60
 
 [cerebrium.hardware]
-compute = "AMPERE_A100"
+compute = "AMPERE_A100_40GB"
 
 [cerebrium.dependencies.pip]
 vllm = "latest"
