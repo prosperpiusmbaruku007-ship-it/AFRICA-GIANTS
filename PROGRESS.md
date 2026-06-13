@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-12 (session 12)
+## Last Updated: 2026-06-14 (session 13)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,13 +15,44 @@
 
 ## 1. CURRENT PHASE
 
-**CHIKE BY AFRICA GIANTS — WhatsApp inference server built and committed (commit `86f28b7`). 1,752 gazette-verified trainable pairs on HuggingFace (train=1576, val=176). batch_008 corrections applied. Server ready for Railway deployment. Adapter-v3 Kaggle training run pending (manual trigger required). Cross-AI review of batch_008 pending (needs API keys in session).**
+**CHIKE BY AFRICA GIANTS — LIVE ON CEREBRIUM (ADA_L4, commit `39b4b19`). HTTP 200 confirmed. 1,752 gazette-verified trainable pairs on HuggingFace (train=1576, val=176). Twilio Function created to connect WhatsApp to Cerebrium. Adapter-v3 Kaggle training run pending (manual trigger required). Cross-AI review of batch_008 pending (needs API keys in session).**
 
 **Product identity confirmed:** AI assistant = CHIKE | Company = AFRICA GIANTS | Full name = CHIKE BY AFRICA GIANTS
 
 ---
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
+
+### 2026-06-14 (session 13) — Chike LIVE on Cerebrium + Twilio Function created
+
+**COMPLETED:**
+- Cerebrium deployment working — `chike-inference` app, ADA_L4 GPU, transformers inference:
+  - Root cause of all prior vLLM failures confirmed: AfriqueLlama custom architecture not in vLLM registry
+  - Switched `chike-inference/main.py` from vLLM → AutoModelForCausalLM + AutoTokenizer (transformers)
+  - `cerebrium.toml`: `compute = "ADA_L4"` under `[cerebrium.hardware]` — proven working key format
+  - HF_TOKEN secret already present in Cerebrium project; `login()` confirmed at startup
+  - Prompt leak fixed: decode `outputs[0][input_len:]` (new tokens only); `apply_chat_template` with Llama-3 fallback; stop-string truncation for hallucinated follow-up turns
+  - HTTP 200 on both test questions — clean replies, no prompt prefix
+  - Cerebrium endpoint: `https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run`
+  - Commits: `2d195e7` (vLLM→transformers), `f35746f` (toml key fix), `39b4b19` (prompt leak fix)
+- Twilio Function created — `twilio-function/chike-whatsapp.js`:
+  - Greeting detection (12 keywords) returns WELCOME without calling Cerebrium
+  - Calls Cerebrium `/run` with 90s timeout; passes `CEREBRIUM_API_KEY` from env
+  - Fallback error message in Swahili + English if Cerebrium fails
+  - `twilio-function/README.md` — 10-step Twilio Console setup guide
+
+**KNOWN MODEL ISSUES (adapter-v3 accuracy — not fixable in server code):**
+- VAT rate: model says "18% goods / 16% services" — correct is single 18% standard rate
+- Model generates multiple assistant turns when temperature > 0 (stop-string truncation handles this)
+- Both issues are adapter-v3 training data gaps — target fix in adapter-v4 after Kaggle run
+
+**CEREBRIUM DEPLOYMENT NOTES (locked — do not change without testing):**
+- `compute = "ADA_L4"` is the correct key (NOT `gpu =`, NOT `hardware =`)
+- `gpu =` and `memory =` under `[cerebrium.hardware]` are silently ignored — results in CPU-only deploy
+- `AMPERE_A100` and `AMPERE_A100_40GB` require plan upgrade (hobby plan: CPU, ADA_L4, ADA_L40, AMPERE_A10, TURING_T4)
+- vLLM is incompatible with AfriqueLlama — do not reintroduce it
+
+---
 
 ### 2026-06-12 (session 12) — Chike WhatsApp inference server built + HF branding updated
 
@@ -410,10 +441,16 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 - All batch corrections applied (GN487A penalty, scope, PAYE 26K myth, VAT CPA, deadlines)
 - SFT files: train=1,576 / val=176 — uploaded to HF
 
-**Step B (DONE):** ✅ WhatsApp inference server built — commit `86f28b7`
-- server/app.py, Procfile, railway.json, server/requirements.txt, server/README.md
-- Product name: CHIKE BY AFRICA GIANTS
-- Adapter target: prospAprospA007/africa-giants-adapter-v3 (not yet trained)
+**Step B (DONE):** ✅ Chike LIVE on Cerebrium — commits `2d195e7`, `f35746f`, `39b4b19`
+- `chike-inference/main.py` — transformers inference, lazy load, HF login, prompt-leak fix
+- `chike-inference/cerebrium.toml` — ADA_L4, no vLLM
+- HTTP 200 confirmed on two test questions
+- Endpoint: `https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run`
+
+**Step B2 (DONE):** ✅ Twilio Function created — connects WhatsApp to Cerebrium
+- `twilio-function/chike-whatsapp.js` — greeting detection, Cerebrium call, error fallback
+- `twilio-function/README.md` — 10-step Twilio Console setup guide
+- Requires manual setup in Twilio Console (see README.md)
 
 **Step C (PENDING — manual):** ⬜ Trigger adapter-v3 Kaggle training run
 - URL: https://www.kaggle.com/code/prospaprospa/africa-giants-v2
@@ -454,13 +491,16 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 5. ✅ All batch corrections applied (GN487A, PAYE 26K myth, VAT CPA, BRELA fees, WHT)
 6. ✅ adapter-v2: trained on 1,500 pairs — 83.2% in-corpus / 50% refusal — FAILED both gates
 7. ✅ HF SFT files updated: train=1,576, val=176 (1,752 pairs total) — adapter-v3 ready
-8. ✅ WhatsApp inference server (CHIKE BY AFRICA GIANTS) built — commit `86f28b7`
-9. ⬜ Trigger adapter-v3 training on Kaggle (manual — Run All at africa-giants-v2)
-10. ⬜ Run eval gates after training: `python scripts/run_eval.py` (need >85% AND >70%)
-11. ⬜ Cross-AI review batch_008 (set API keys, run verify_pairs.py)
-12. ⬜ Deploy server to Railway: connect repo, set HF_TOKEN, point Twilio webhook to /webhook
-13. ⬜ Engage TRA consultant for 10% sample review (~30 pairs, ~TZS 50,000–100,000)
-14. ⬜ First human pilot on WhatsApp (after BOTH gates pass — R7 is blocking)
+8. ✅ Chike LIVE on Cerebrium (ADA_L4, transformers, HTTP 200) — commits `2d195e7`/`f35746f`/`39b4b19`
+9. ✅ Twilio Function created — `twilio-function/chike-whatsapp.js` connects WhatsApp to Cerebrium
+10. ⬜ Set up Twilio Function in Twilio Console (manual — see twilio-function/README.md)
+    - Set CEREBRIUM_API_KEY env var in Twilio Console
+    - Deploy function, copy URL, set as WhatsApp sandbox webhook
+11. ⬜ Trigger adapter-v3 training on Kaggle (manual — Run All at africa-giants-v2)
+12. ⬜ Run eval gates after training: `python scripts/run_eval.py` (need >85% AND >70%)
+13. ⬜ Cross-AI review batch_008 (set API keys, run verify_pairs.py)
+14. ⬜ Engage TRA consultant for 10% sample review (~30 pairs, ~TZS 50,000–100,000)
+15. ⬜ First human pilot on WhatsApp (after BOTH gates pass — R7 is blocking)
 
 ---
 
