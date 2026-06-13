@@ -6,9 +6,11 @@ exports.handler = async function(context, event, callback) {
   const userMessage = (event.Body || '').trim();
   const from        = event.From || '';
 
-  console.log(`[chike] Message from ${from.slice(0,8)}***: ${userMessage.slice(0,80)}`);
+  console.log(`[chike-brain] ${from.slice(0,8)}***: ${userMessage.slice(0,80)}`);
 
-  // Greeting triggers — return welcome without calling Cerebrium
+  // Join split API key
+  const CEREBRIUM_KEY = (context.CKEY_1 || '') + (context.CKEY_2 || '');
+
   const GREETINGS = new Set([
     'habari','hujambo','mambo','hello','hi','hey',
     'salaam','salam','start','help','msaada',
@@ -33,14 +35,13 @@ exports.handler = async function(context, event, callback) {
     return callback(null, twiml);
   }
 
-  // Call Cerebrium
   try {
     const response = await axios.post(
-      `https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run`,
+      'https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run',
       { message: userMessage },
       {
         headers: {
-          'Authorization': `Bearer ${context.CEREBRIUM_API_KEY}`,
+          'Authorization': `Bearer ${CEREBRIUM_KEY}`,
           'Content-Type': 'application/json',
         },
         timeout: 90000,
@@ -49,17 +50,13 @@ exports.handler = async function(context, event, callback) {
 
     const reply = response.data?.result?.reply || '';
 
-    if (!reply) {
-      twiml.message(
-        'Samahani, Chike Brain hakupata jibu. Jaribu tena.\n\n' +
-        'Sorry, Chike Brain did not get a reply. Please try again.'
-      );
-    } else {
-      twiml.message(reply);
-    }
+    twiml.message(
+      reply ||
+      'Samahani, Chike Brain hakupata jibu. Jaribu tena.\n\nSorry, please try again.'
+    );
 
   } catch (error) {
-    console.error('[chike] Cerebrium error:', error.message);
+    console.error('[chike-brain] Error:', error.message);
     twiml.message(
       'Samahani, Chike Brain hakuweza kukusaidia sasa hivi. ' +
       'Tafadhali jaribu tena baadaye.\n\n' +
