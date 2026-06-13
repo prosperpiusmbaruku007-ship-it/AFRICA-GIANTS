@@ -7,9 +7,7 @@ max_replicas = 2
 cooldown = 60
 
 [cerebrium.hardware]
-gpu = "ADA_L4"
-cpu = 4
-memory = 16000
+compute = "ADA_L4"
 
 [cerebrium.dependencies.pip]
 transformers = ">=4.43.0"
