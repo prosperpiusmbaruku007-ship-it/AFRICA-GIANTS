@@ -61,19 +61,32 @@ def run(message: str, temperature: float = 0.1):
 
     model, tokenizer = get_model()
 
-    prompt = (
-        f"<|begin_of_text|>"
-        f"<|start_header_id|>system<|end_header_id|>\n\n"
-        f"{SYSTEM_PROMPT}<|eot_id|>"
-        f"<|start_header_id|>user<|end_header_id|>\n\n"
-        f"{message.strip()}<|eot_id|>"
-        f"<|start_header_id|>assistant<|end_header_id|>\n\n"
-    )
+    # Use tokenizer chat template if available
+    # otherwise fall back to manual format
+    messages = [
+        {"role": "system",    "content": SYSTEM_PROMPT},
+        {"role": "user",      "content": message.strip()},
+    ]
 
-    inputs = tokenizer(
-        prompt,
-        return_tensors="pt",
-    ).to(model.device)
+    try:
+        prompt = tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+        )
+    except Exception:
+        # Fallback to manual Llama 3 format
+        prompt = (
+            f"<|begin_of_text|>"
+            f"<|start_header_id|>system<|end_header_id|>\n\n"
+            f"{SYSTEM_PROMPT}<|eot_id|>"
+            f"<|start_header_id|>user<|end_header_id|>\n\n"
+            f"{message.strip()}<|eot_id|>"
+            f"<|start_header_id|>assistant<|end_header_id|>\n\n"
+        )
+
+    inputs      = tokenizer(prompt, return_tensors="pt").to(model.device)
+    input_len   = inputs["input_ids"].shape[1]
 
     with torch.no_grad():
         outputs = model.generate(
@@ -85,9 +98,17 @@ def run(message: str, temperature: float = 0.1):
             eos_token_id=tokenizer.eos_token_id,
         )
 
-    full  = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    parts = full.split("<|start_header_id|>assistant<|end_header_id|>")
-    reply = parts[-1].strip() if len(parts) > 1 else full.strip()
+    # Decode ONLY the new tokens — not the prompt
+    new_tokens = outputs[0][input_len:]
+    reply      = tokenizer.decode(
+        new_tokens,
+        skip_special_tokens=True,
+    ).strip()
+
+    # Remove any hallucinated follow-up turns
+    for stop in ["<|start_header_id|>", "User:", "Mtumiaji:"]:
+        if stop in reply:
+            reply = reply.split(stop)[0].strip()
 
     print(f"[chike] Q: {message[:60]}")
     print(f"[chike] A: {reply[:60]}")
