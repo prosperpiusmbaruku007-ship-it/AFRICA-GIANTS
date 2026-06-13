@@ -15,9 +15,9 @@
 
 ## 1. CURRENT PHASE
 
-**CHIKE BY AFRICA GIANTS — LIVE ON CEREBRIUM (ADA_L4, commit `39b4b19`). HTTP 200 confirmed. 1,752 gazette-verified trainable pairs on HuggingFace (train=1576, val=176). Twilio Function created to connect WhatsApp to Cerebrium. Adapter-v3 Kaggle training run pending (manual trigger required). Cross-AI review of batch_008 pending (needs API keys in session).**
+**CHIKE BRAIN BY AFRICA GIANTS — LIVE ON CEREBRIUM (ADA_L4, commit `39b4b19`). HTTP 200 confirmed. 1,752 gazette-verified trainable pairs on HuggingFace (train=1576, val=176). Twilio Function created to connect WhatsApp to Cerebrium. Adapter-v3 Kaggle training run pending (manual trigger required). Cross-AI review of batch_008 pending (needs API keys in session).**
 
-**Product identity confirmed:** AI assistant = CHIKE | Company = AFRICA GIANTS | Full name = CHIKE BY AFRICA GIANTS
+**Product identity confirmed:** AI assistant = CHIKE BRAIN | Company = AFRICA GIANTS | Full name = CHIKE BRAIN BY AFRICA GIANTS
 
 ---
 
@@ -66,8 +66,8 @@
   - `.env.example` — Chike header added; real credentials redacted to placeholders
   - `CLAUDE.md` — product name note added at Section 1
 - HuggingFace READMEs updated with Chike branding:
-  - `prospAprospA007/africa-giants-adapter-v2` model repo: title → "Chike by Africa Giants (adapter-v2)"
-  - `prospAprospA007/africa-giants-dataset` dataset repo: title → "Chike by Africa Giants — Tanzania Business Regulatory Q&A Dataset"
+  - `prospAprospA007/africa-giants-adapter-v2` model repo: title → "Chike Brain by Africa Giants (adapter-v2)"
+  - `prospAprospA007/africa-giants-dataset` dataset repo: title → "Chike Brain by Africa Giants — Tanzania Business Regulatory Q&A Dataset"
 - scan_for_keys.py: CLEAN — 0 API keys in 7 staged files
 
 **CORPUS STATE (confirmed session 12):**

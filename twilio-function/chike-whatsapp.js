@@ -11,12 +11,13 @@ exports.handler = async function(context, event, callback) {
   // Greeting triggers — return welcome without calling Cerebrium
   const GREETINGS = new Set([
     'habari','hujambo','mambo','hello','hi','hey',
-    'salaam','salam','start','help','msaada','chike','karibu',
+    'salaam','salam','start','help','msaada',
+    'chike','chike brain','chikebrain','karibu',
   ]);
 
   if (GREETINGS.has(userMessage.toLowerCase())) {
     twiml.message(
-      'Habari! Mimi ni *Chike* kutoka *Africa Giants*.\n\n' +
+      'Habari! Mimi ni *Chike Brain* kutoka *Africa Giants*.\n\n' +
       '_Fahamu Biashara Yako, Maarifa Yako._\n\n' +
       'Ninakusaidia na maswali ya biashara Tanzania:\n' +
       '• Kodi (VAT, PAYE, SDL, WHT)\n' +
@@ -25,7 +26,7 @@ exports.handler = async function(context, event, callback) {
       '• Mahitaji ya kufuata sheria\n\n' +
       'Uliza swali lolote. Ninajibu kwa Kiswahili na Kiingereza.\n\n' +
       '---\n\n' +
-      'Hi! I am *Chike* from *Africa Giants*.\n\n' +
+      'Hi! I am *Chike Brain* from *Africa Giants*.\n\n' +
       '_Understand Your Business, That Knowledge Is Yours._\n\n' +
       'Ask me anything about Tanzanian business, tax, or compliance.'
     );
@@ -50,8 +51,8 @@ exports.handler = async function(context, event, callback) {
 
     if (!reply) {
       twiml.message(
-        'Samahani, Chike hakupata jibu. Jaribu tena.\n\n' +
-        'Sorry, Chike did not get a reply. Please try again.'
+        'Samahani, Chike Brain hakupata jibu. Jaribu tena.\n\n' +
+        'Sorry, Chike Brain did not get a reply. Please try again.'
       );
     } else {
       twiml.message(reply);
@@ -60,9 +61,9 @@ exports.handler = async function(context, event, callback) {
   } catch (error) {
     console.error('[chike] Cerebrium error:', error.message);
     twiml.message(
-      'Samahani, Chike hakuweza kukusaidia sasa hivi. ' +
+      'Samahani, Chike Brain hakuweza kukusaidia sasa hivi. ' +
       'Tafadhali jaribu tena baadaye.\n\n' +
-      'Sorry, Chike could not help right now. ' +
+      'Sorry, Chike Brain could not help right now. ' +
       'Please try again shortly.'
     );
   }

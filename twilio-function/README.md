@@ -1,4 +1,4 @@
-# Chike by Africa Giants — Twilio Function
+# Chike Brain by Africa Giants — Twilio Function
 
 Connects Twilio WhatsApp sandbox to Chike inference
 on Cerebrium.
