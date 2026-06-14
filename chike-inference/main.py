@@ -33,6 +33,10 @@ _tokenizer = None
 def get_model():
     global _model, _tokenizer
     if _model is None:
+        import torch
+        from transformers import AutoTokenizer, AutoModelForCausalLM
+        from transformers import BitsAndBytesConfig
+
         print("[chike] Loading tokenizer ...")
         _tokenizer = AutoTokenizer.from_pretrained(
             ADAPTER_REPO,
@@ -41,18 +45,23 @@ def get_model():
         )
         if _tokenizer.pad_token is None:
             _tokenizer.pad_token = _tokenizer.eos_token
-        print(f"[chike] eos_token: {repr(_tokenizer.eos_token)}")
 
-        print("[chike] Loading model ...")
+        print("[chike] Loading model in 4bit ...")
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_use_double_quant=True,
+        )
         _model = AutoModelForCausalLM.from_pretrained(
             ADAPTER_REPO,
-            torch_dtype=torch.float16,
+            quantization_config=bnb_config,
             device_map="auto",
             token=HF_TOKEN if HF_TOKEN else None,
             trust_remote_code=True,
         )
         _model.eval()
-        print("[chike] Model loaded and ready")
+        print("[chike] Model loaded in 4bit — ready")
     return _model, _tokenizer
 
 def run(message: str, temperature: float = 0.1):
