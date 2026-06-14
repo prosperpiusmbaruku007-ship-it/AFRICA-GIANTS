@@ -1,5 +1,5 @@
 # PROGRESS LOG — AFRICA-GIANTS
-## Last Updated: 2026-06-14 (session 13)
+## Last Updated: 2026-06-14 (session 13 — end of day)
 
 ## Project Info
 - Repo: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
@@ -15,7 +15,7 @@
 
 ## 1. CURRENT PHASE
 
-**CHIKE BRAIN BY AFRICA GIANTS — LIVE ON CEREBRIUM (ADA_L4, commit `39b4b19`). HTTP 200 confirmed. 1,752 gazette-verified trainable pairs on HuggingFace (train=1576, val=176). Twilio Function created to connect WhatsApp to Cerebrium. Adapter-v3 Kaggle training run pending (manual trigger required). Cross-AI review of batch_008 pending (needs API keys in session).**
+**CHIKE BRAIN BY AFRICA GIANTS — LIVE ON CEREBRIUM (ADA_L4, commit `bace093`). HTTP 200 confirmed. 4bit quantization with float16 fallback. min_replicas=1 (always warm). Twilio Function deployed with CKEY_1+CKEY_2 split for 255-char JWT limit. Product renamed Chike Brain. Railway server removed. 1,752 gazette-verified trainable pairs on HF. Adapter-v3 Kaggle training run pending (manual trigger required).**
 
 **Product identity confirmed:** AI assistant = CHIKE BRAIN | Company = AFRICA GIANTS | Full name = CHIKE BRAIN BY AFRICA GIANTS
 
@@ -51,6 +51,51 @@
 - `gpu =` and `memory =` under `[cerebrium.hardware]` are silently ignored — results in CPU-only deploy
 - `AMPERE_A100` and `AMPERE_A100_40GB` require plan upgrade (hobby plan: CPU, ADA_L4, ADA_L40, AMPERE_A10, TURING_T4)
 - vLLM is incompatible with AfriqueLlama — do not reintroduce it
+- Scaling params must go under `[cerebrium.scaling]`, not `[cerebrium.deployment]`
+- `response_grace_period = 180` is a valid field under `[cerebrium.scaling]`
+
+**ADDITIONAL SESSION 13 WORK (after initial deployment):**
+
+- Product renamed: **Chike → Chike Brain by Africa Giants** — commit `b31f96e`
+  - SYSTEM_PROMPT updated in `chike-inference/main.py` and `.claude/commands/do.md`
+  - Greeting message updated in `twilio-function/chike-whatsapp.js`
+  - `CLAUDE.md`, `PROGRESS.md`, `twilio-function/README.md` all updated
+  - Stale-string scan confirmed clean (grep exit 1)
+
+- Railway server removed — commit `b31f96e`
+  - Deleted: `server/`, `Procfile`, `railway.json`, `.env.example`
+  - Current live architecture: `chike-inference/` (Cerebrium) + `twilio-function/` (Twilio)
+
+- Twilio Function updated — commit `6d9c651`
+  - Cerebrium JWT (~1,106 chars) exceeds Twilio 255-char env var limit
+  - Fix: split across `CKEY_1` + `CKEY_2`, join at runtime: `(context.CKEY_1 || '') + (context.CKEY_2 || '')`
+  - Replaced `CEREBRIUM_API_KEY` reference with joined `CEREBRIUM_KEY`
+
+- Cerebrium scaling tuned across multiple commits:
+  - `45bd5ef`: min_replicas=1, max_replicas=3, cooldown=300
+  - `2b87730`: min_replicas=0, [cerebrium.scaling] section added, response_grace_period=180
+  - `e6fa6d0`: min_replicas=1 (final — always warm, no cold starts)
+
+- 4bit quantization added — commit `3c0e3db`
+  - `BitsAndBytesConfig`: nf4, float16 compute, double quant
+  - `bitsandbytes>=0.46.1` added to cerebrium.toml deps
+  - **Caused 406 errors** on all requests (uncaught exception from bitsandbytes on first request)
+
+- 406 fix — commit `bace093` (CURRENT LIVE)
+  - Root cause: bitsandbytes raises exception on ADA_L4 at first request; Cerebrium surfaces as 406
+  - Fix: wrap 4bit load in try/except, fall back to float16 if bitsandbytes fails
+  - `BitsAndBytesConfig` moved to top-level import; duplicate imports inside `get_model()` removed
+  - HTTP 200 confirmed post-fix: `run_time_ms: 28,733ms` (model load on first request)
+  - Subsequent requests will be faster (model cached in memory)
+
+**CURRENT LIVE STATE:**
+- Endpoint: `https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run`
+- Commit: `bace093`
+- GPU: ADA_L4 (24GB VRAM)
+- Inference: transformers (not vLLM), 4bit if bitsandbytes works, float16 fallback
+- Scaling: min_replicas=1, max_replicas=2, cooldown=300s
+- HF_TOKEN: set as Cerebrium secret ✓
+- HF auth: confirmed at startup (`[chike] HuggingFace authenticated`)
 
 ---
 
@@ -435,22 +480,29 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 
 ## 3. ACTIVE WORK
 
-### Current priority: Adapter-v3 training → eval gates → Railway deployment
+### Current priority: Twilio Console setup → Kaggle adapter-v3 training → eval gates
 
 **Step A (DONE):** ✅ Corpus complete — 1,752 trainable pairs across 10 cleaned batch files
 - All batch corrections applied (GN487A penalty, scope, PAYE 26K myth, VAT CPA, deadlines)
 - SFT files: train=1,576 / val=176 — uploaded to HF
 
-**Step B (DONE):** ✅ Chike LIVE on Cerebrium — commits `2d195e7`, `f35746f`, `39b4b19`
-- `chike-inference/main.py` — transformers inference, lazy load, HF login, prompt-leak fix
-- `chike-inference/cerebrium.toml` — ADA_L4, no vLLM
-- HTTP 200 confirmed on two test questions
+**Step B (DONE):** ✅ Chike Brain LIVE on Cerebrium — current commit `bace093`
+- `chike-inference/main.py` — transformers inference, 4bit with float16 fallback, prompt-leak fix
+- `chike-inference/cerebrium.toml` — ADA_L4, min_replicas=1, [cerebrium.scaling] section
+- HTTP 200 confirmed, model self-identifies as "Chike Brain"
 - Endpoint: `https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run`
 
-**Step B2 (DONE):** ✅ Twilio Function created — connects WhatsApp to Cerebrium
-- `twilio-function/chike-whatsapp.js` — greeting detection, Cerebrium call, error fallback
-- `twilio-function/README.md` — 10-step Twilio Console setup guide
-- Requires manual setup in Twilio Console (see README.md)
+**Step B2 (DONE):** ✅ Twilio Function ready — `twilio-function/chike-whatsapp.js`
+- Greeting detection (14 keywords incl. 'chike brain', 'chikebrain')
+- CKEY_1 + CKEY_2 split for 255-char Twilio env var limit
+- Commit: `6d9c651`
+
+**Step B3 (PENDING — manual, 10 min):** ⬜ Set up Twilio Function in Twilio Console
+- See `twilio-function/README.md` for 10-step guide
+- Create service: `chike-whatsapp`, function path `/chike-whatsapp`
+- Add dependency: `axios`
+- Add env vars: `CKEY_1` = first half of Cerebrium JWT, `CKEY_2` = second half
+- Deploy, copy URL, set as WhatsApp sandbox webhook
 
 **Step C (PENDING — manual):** ⬜ Trigger adapter-v3 Kaggle training run
 - URL: https://www.kaggle.com/code/prospaprospa/africa-giants-v2
@@ -462,13 +514,7 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 - Must print GATE PASSED: >85% in-corpus AND >70% refusal
 - Adapter-v2 results for reference: 83.2% in-corpus (FAIL), 50% refusal (FAIL)
 
-**Step E (PENDING — after gate passes):** ⬜ Deploy to Railway
-- Connect GitHub repo to Railway
-- Set env var: HF_TOKEN
-- Point Twilio WhatsApp sandbox number to https://your-railway-url/webhook
-- Test with: curl https://your-railway-url/health
-
-**Step F (PENDING — parallel to C):** ⬜ Cross-AI review of batch_008 (150 pairs)
+**Step E (PENDING — parallel to C):** ⬜ Cross-AI review of batch_008 (150 pairs)
 - Set API keys in PowerShell session first:
   `$env:GEMINI_API_KEY = "your_key"`
   `$env:OPENROUTER_API_KEY = "sk-or-v1-..."`
@@ -491,16 +537,18 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 5. ✅ All batch corrections applied (GN487A, PAYE 26K myth, VAT CPA, BRELA fees, WHT)
 6. ✅ adapter-v2: trained on 1,500 pairs — 83.2% in-corpus / 50% refusal — FAILED both gates
 7. ✅ HF SFT files updated: train=1,576, val=176 (1,752 pairs total) — adapter-v3 ready
-8. ✅ Chike LIVE on Cerebrium (ADA_L4, transformers, HTTP 200) — commits `2d195e7`/`f35746f`/`39b4b19`
-9. ✅ Twilio Function created — `twilio-function/chike-whatsapp.js` connects WhatsApp to Cerebrium
-10. ⬜ Set up Twilio Function in Twilio Console (manual — see twilio-function/README.md)
-    - Set CEREBRIUM_API_KEY env var in Twilio Console
+8. ✅ Chike Brain LIVE on Cerebrium — 4bit+float16 fallback, HTTP 200, commit `bace093`
+9. ✅ Product renamed Chike Brain by Africa Giants — commit `b31f96e`
+10. ✅ Railway server removed (server/, Procfile, railway.json, .env.example) — commit `b31f96e`
+11. ✅ Twilio Function ready with CKEY_1+CKEY_2 JWT split — commit `6d9c651`
+12. ⬜ Set up Twilio Function in Twilio Console (manual — ~10 min, see twilio-function/README.md)
+    - Set CKEY_1 and CKEY_2 env vars (NOT CEREBRIUM_API_KEY — that was the old key)
     - Deploy function, copy URL, set as WhatsApp sandbox webhook
-11. ⬜ Trigger adapter-v3 training on Kaggle (manual — Run All at africa-giants-v2)
-12. ⬜ Run eval gates after training: `python scripts/run_eval.py` (need >85% AND >70%)
-13. ⬜ Cross-AI review batch_008 (set API keys, run verify_pairs.py)
-14. ⬜ Engage TRA consultant for 10% sample review (~30 pairs, ~TZS 50,000–100,000)
-15. ⬜ First human pilot on WhatsApp (after BOTH gates pass — R7 is blocking)
+13. ⬜ Trigger adapter-v3 training on Kaggle (manual — Run All at africa-giants-v2)
+14. ⬜ Run eval gates after training: `python scripts/run_eval.py` (need >85% AND >70%)
+15. ⬜ Cross-AI review batch_008 (set API keys, run verify_pairs.py)
+16. ⬜ Engage TRA consultant for 10% sample review (~30 pairs, ~TZS 50,000–100,000)
+17. ⬜ First human pilot on WhatsApp (after BOTH gates pass — R7 is blocking)
 
 ---
 
