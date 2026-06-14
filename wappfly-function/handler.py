@@ -66,30 +66,33 @@ async def call_cerebrium(message: str) -> str:
 async def webhook(request: Request):
     try:
         body = await request.json()
-        import json
-        print(f"[wappfly] Full payload: {json.dumps(body, indent=2)}")
-        print(f"[wappfly] Keys: {list(body.keys())}")
-        if "data" in body:
-            print(f"[wappfly] Data keys: {list(body['data'].keys())}")
 
-        # Extract message and sender from Wappfly payload
-        message_data = body.get("data", body)
+        # Only handle incoming messages
+        event = body.get("event", "")
+        if event != "messages.received":
+            return JSONResponse({"status": "ignored"})
+
+        messages = body.get("data", {}).get("messages", {})
+
+        # Skip messages sent by us
+        if messages.get("fromMe") or messages.get("key", {}).get("fromMe"):
+            return JSONResponse({"status": "ignored"})
+
+        # Extract message text
         text = (
-            message_data.get("text") or
-            message_data.get("body") or
-            message_data.get("message") or ""
+            messages.get("conversation") or
+            messages.get("messageBody") or
+            messages.get("text") or ""
         ).strip()
 
+        # Extract sender JID
         sender = (
-            message_data.get("from") or
-            message_data.get("sender") or ""
+            messages.get("remoteJid") or
+            messages.get("key", {}).get("remoteJid") or ""
         )
 
         if not text or not sender:
-            return JSONResponse({"status": "ignored"})
-
-        # Skip messages sent by us
-        if message_data.get("fromMe") or message_data.get("from_me"):
+            print(f"[chike] No text or sender found — ignoring")
             return JSONResponse({"status": "ignored"})
 
         print(f"[chike] From: {sender} — {text[:80]}")
@@ -106,6 +109,8 @@ async def webhook(request: Request):
 
     except Exception as e:
         print(f"[webhook] Error: {e}")
+        import traceback
+        traceback.print_exc()
         return JSONResponse({"status": "error"}, status_code=200)
 
 @app.get("/health")
