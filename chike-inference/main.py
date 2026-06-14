@@ -1,7 +1,7 @@
 import os
 import torch
 from huggingface_hub import login
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
 ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v3"
 HF_TOKEN     = os.environ.get("HF_TOKEN", "")
@@ -33,10 +33,6 @@ _tokenizer = None
 def get_model():
     global _model, _tokenizer
     if _model is None:
-        import torch
-        from transformers import AutoTokenizer, AutoModelForCausalLM
-        from transformers import BitsAndBytesConfig
-
         print("[chike] Loading tokenizer ...")
         _tokenizer = AutoTokenizer.from_pretrained(
             ADAPTER_REPO,
@@ -46,22 +42,34 @@ def get_model():
         if _tokenizer.pad_token is None:
             _tokenizer.pad_token = _tokenizer.eos_token
 
-        print("[chike] Loading model in 4bit ...")
-        bnb_config = BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.float16,
-            bnb_4bit_use_double_quant=True,
-        )
-        _model = AutoModelForCausalLM.from_pretrained(
-            ADAPTER_REPO,
-            quantization_config=bnb_config,
-            device_map="auto",
-            token=HF_TOKEN if HF_TOKEN else None,
-            trust_remote_code=True,
-        )
+        try:
+            print("[chike] Loading model in 4bit ...")
+            bnb_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.float16,
+                bnb_4bit_use_double_quant=True,
+            )
+            _model = AutoModelForCausalLM.from_pretrained(
+                ADAPTER_REPO,
+                quantization_config=bnb_config,
+                device_map="auto",
+                token=HF_TOKEN if HF_TOKEN else None,
+                trust_remote_code=True,
+            )
+            print("[chike] Model loaded in 4bit — ready")
+        except Exception as e:
+            print(f"[chike] 4bit load failed ({e}), falling back to float16 ...")
+            _model = AutoModelForCausalLM.from_pretrained(
+                ADAPTER_REPO,
+                torch_dtype=torch.float16,
+                device_map="auto",
+                token=HF_TOKEN if HF_TOKEN else None,
+                trust_remote_code=True,
+            )
+            print("[chike] Model loaded in float16 — ready")
+
         _model.eval()
-        print("[chike] Model loaded in 4bit — ready")
     return _model, _tokenizer
 
 def run(message: str, temperature: float = 0.1):
