@@ -66,7 +66,11 @@ async def call_cerebrium(message: str) -> str:
 async def webhook(request: Request):
     try:
         body = await request.json()
-        print(f"[wappfly] Incoming: {body}")
+        import json
+        print(f"[wappfly] Full payload: {json.dumps(body, indent=2)}")
+        print(f"[wappfly] Keys: {list(body.keys())}")
+        if "data" in body:
+            print(f"[wappfly] Data keys: {list(body['data'].keys())}")
 
         # Extract message and sender from Wappfly payload
         message_data = body.get("data", body)
