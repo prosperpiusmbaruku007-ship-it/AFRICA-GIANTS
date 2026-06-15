@@ -353,6 +353,35 @@ All facts below are locked from verified primary sources. Encode these exactly.
 - Cumulative DFI since 2022: ~USD 550M
 - Mandate: SME and women-owned business financial inclusion
 
+**PAYE Tax Bands — Monthly (PWC Tanzania, reviewed Jan 2026):**
+- TZS 0–270,000/month: 0%
+- TZS 270,001–520,000/month: 8% on excess over TZS 270,000
+- TZS 520,001–760,000/month: 20% on excess over TZS 520,000 (base TZS 20,000)
+- TZS 760,001–1,000,000/month: 25% on excess over TZS 760,000 (base TZS 68,000)
+- TZS 1,000,001+/month: 30% on excess over TZS 1,000,000 (base TZS 128,000)
+- Non-resident employees: 15% flat rate — final withholding tax, NOT progressive bands
+- No separate personal relief deduction in Tanzania. The 0% Band 1 (first TZS 270,000/month)
+  IS the effective tax-free threshold. Any pair mentioning "TZS 26,000 personal relief" is WRONG.
+- Source: PWC Tanzania Individual Tax Summary (last reviewed Jan 2026); Habib Advisory 2025/26
+
+**BRELA Annual Return and Fees (brela.go.tz/pages/tozo-za-kampuni, confirmed Jun 2026):**
+- Annual return filing fee: TZS 22,000
+- Late filing penalty: TZS 2,500 per month (or partial month) for local companies
+- Foreign company (Section XII) late filing penalty: USD 25 per month
+- Company without share capital: TZS 300,000 registration fee
+- (Name reservation TZS 50,000, incorporation min TZS 95,000, foreign branch USD 750+220 — unchanged)
+
+**WCF Additional Timelines (wcf.go.tz, confirmed Jun 2026):**
+- New employer: must register with WCF within 30 days of hiring first employee
+- Accident reporting: 7 working days from date of accident (already locked)
+- Occupational disease reporting: 7 working days from date of diagnosis
+- Death at workplace: report within 12 months of incident/disease discovery
+- Compensation claim filing deadline: 12 months from accident or disease discovery
+
+**GN 605A Increment Range (PKF Eastern Africa, Oct 2025):**
+- Minimum wage increment range across all sectors: TZS 20,000 (lowest) to TZS 195,000 (highest) per month
+- (Overall average: TZS 275,060 → TZS 358,322; effective 1 Jan 2026 — already locked)
+
 ---
 
 # 12. FAILED COMPETITORS — STRUCTURAL LESSON

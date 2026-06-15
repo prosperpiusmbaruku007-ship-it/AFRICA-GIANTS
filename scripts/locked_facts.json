@@ -48,19 +48,26 @@
     "status": "CONFIRMED"
   },
   "paye_personal_relief": {
-    "fact": "PAYE personal relief is TZS 26,000 per month — NOT 27,000",
-    "correct_value": "TZS 26,000 per month",
+    "fact": "Tanzania has NO separate PAYE personal relief deduction. The 0% band on first TZS 270,000/month IS the effective tax-free amount. Both TZS 26,000 and TZS 27,000 'personal relief' figures are WRONG.",
+    "correct_value": "No personal relief — 0% band on first TZS 270,000/month",
     "wrong_patterns": [
       "TZS 27,000",
       "TZS 27000",
       "27,000 kwa mwezi",
       "punguzo la TZS 27",
-      "relief ya 27"
+      "relief ya 27",
+      "TZS 26,000.*personal relief",
+      "26,000.*punguzo la kibinafsi",
+      "punguzo la kibinafsi.*26,000",
+      "personal relief.*26,000",
+      "26,000 per month.*relief",
+      "relief ya kibinafsi.*26"
     ],
-    "primary_source": "https://www.tra.go.tz/page/pay-as-you-earn-paye",
-    "verified_by": "AfroTools TRA 2025/26 web confirmed June 2026. Perplexity claimed 27,000 — REJECTED by web research.",
+    "primary_source": "https://taxsummaries.pwc.com/tanzania/individual/taxes-on-personal-income",
+    "verified_by": "PWC Tanzania Individual Tax Summary Jan 2026 + Habib Advisory 2025/26 — NO personal relief line item exists",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "correction_note": "Original entry incorrectly asserted 26,000 was correct. Session 11 (2026-06-12) confirmed no such relief exists in Tanzania law."
   },
   "paye_p9_deadline": {
     "fact": "Annual PAYE reconciliation Form P9 deadline is 31 March of following year — NOT 31 January",
@@ -756,6 +763,99 @@
     "effective_date": "2025-01-01",
     "status": "CONFIRMED",
     "note": "This is a project configuration fact not a regulatory fact. Do NOT install Brave Search MCP."
+  },
+  "paye_all_bands_sequence": {
+    "fact": "PAYE bands (monthly): 0% up to TZS 270K | 8% TZS 270K-520K | 20% TZS 520K-760K | 25% TZS 760K-1M | 30% above TZS 1M",
+    "correct_value": "0% / 8% / 20% / 25% / 30% in that order",
+    "wrong_patterns": [
+      "paye.*band.*9%(?! is wrong| ni kosa)",
+      "asilimia 9.*ziada.*paye(?! ni kosa)",
+      "paye.*third.*band.*22%",
+      "paye.*band 3.*22%",
+      "paye.*asilimia 22",
+      "paye.*asilimia 28",
+      "paye.*28%.*band",
+      "paye.*band.*35%",
+      "paye.*top.*35%",
+      "kiwango cha juu cha paye.*35"
+    ],
+    "primary_source": "https://taxsummaries.pwc.com/tanzania/individual/taxes-on-personal-income",
+    "verified_by": "PWC Tanzania Individual Tax Summary, last reviewed Jan 2026",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "paye_nonresident_flat_rate": {
+    "fact": "Non-resident employees pay PAYE at a flat 15% rate — NOT the progressive bands. This is a final withholding tax.",
+    "correct_value": "15% flat for non-residents",
+    "wrong_patterns": [
+      "non-resident.*paye.*30%(?!.*resident)",
+      "paye.*wasio wakazi.*30%",
+      "paye.*wasio wakazi.*viwango.*tofauti",
+      "non-resident.{0,30}paye.{0,30}progressive",
+      "wasio wakazi.*paye.*kwa viwango"
+    ],
+    "primary_source": "https://taxsummaries.pwc.com/tanzania/individual/taxes-on-personal-income",
+    "verified_by": "PWC Tanzania Individual Tax Summary, Jan 2026",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "brela_annual_return_fee": {
+    "fact": "BRELA annual return filing fee is TZS 22,000. Late filing penalty is TZS 2,500 per month (local company) or USD 25/month (foreign Section XII company).",
+    "correct_value": "TZS 22,000 filing; TZS 2,500/month late penalty",
+    "wrong_patterns": [
+      "annual return.*brela.*bila malipo",
+      "brela.*annual return.*free of charge",
+      "brela.*annual return.*tzs 50,000",
+      "brela.*annual return.*tzs 5,000(?!\\b)",
+      "brela.*faini.*kurasa za mwaka.*tzs 10,000"
+    ],
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "BRELA official fee schedule, Jun 2026",
+    "effective_date": "2025-01-01",
+    "status": "CONFIRMED"
+  },
+  "wcf_new_employer_registration": {
+    "fact": "A new employer must register with WCF within 30 days of hiring their first employee",
+    "correct_value": "30 days from first hire",
+    "wrong_patterns": [
+      "wcf.*sajili.*siku 90",
+      "wcf.*register.*within 90 days",
+      "sajili.*wcf.*ndani ya siku 60(?! ya kodi)",
+      "register.*wcf.*60 days(?! of tax)"
+    ],
+    "primary_source": "https://www.wcf.go.tz",
+    "verified_by": "WCF official website, Jun 2026",
+    "effective_date": "2015-07-01",
+    "status": "CONFIRMED"
+  },
+  "wcf_disease_reporting_deadline": {
+    "fact": "Occupational disease must be reported to WCF within 7 working days of diagnosis. Workplace death must be reported within 12 months. Compensation claim must be filed within 12 months of accident or disease discovery.",
+    "correct_value": "Disease: 7 working days; Death & claim: 12 months",
+    "wrong_patterns": [
+      "ugonjwa wa kazini.*wcf.*siku 30",
+      "occupational disease.*wcf.*30 days",
+      "kifo.*wcf.*siku 7(?! za kazi)",
+      "wcf.*dai.*miaka 2",
+      "wcf.*claim.*2 years",
+      "wcf.*dai.*miaka mitatu"
+    ],
+    "primary_source": "https://www.wcf.go.tz",
+    "verified_by": "WCF official website, Jun 2026",
+    "effective_date": "2015-07-01",
+    "status": "CONFIRMED"
+  },
+  "gn605a_increment_range": {
+    "fact": "GN 605A individual sector increments range from TZS 20,000 (lowest sector) to TZS 195,000 (highest sector) per month",
+    "correct_value": "TZS 20,000 minimum increment; TZS 195,000 maximum increment",
+    "wrong_patterns": [
+      "ongezeko la wastani.*tzs 20,000 peke yake",
+      "ongezeko la juu zaidi.*tzs 100,000(?!\\s*to)",
+      "highest increment.*tzs 100,000(?!\\s*to)"
+    ],
+    "primary_source": "https://www.pkfea.com/publications/2025/new-minimum-wage-order-2025-key-highlights-for-tanzania-s-private-sector/",
+    "verified_by": "PKF Eastern Africa GN 605A analysis, Oct 2025",
+    "effective_date": "2026-01-01",
+    "status": "CONFIRMED"
   },
   "_unresolved_items": {
     "commercial_rent_wht_nonresident": {

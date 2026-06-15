@@ -3,6 +3,16 @@
 FACT-GUARDIAN validation script.
 Usage: python scripts/check_locked_facts.py --file path/to/batch.jsonl
 Exit code: 0 = clean, 1 = violations found
+
+Assertions are defined in scripts/locked_facts.json (wrong_patterns per fact key).
+Last updated: 2026-06-16 — added from primary source verification:
+  paye_all_bands_sequence    — 0%/8%/20%/25%/30% bands (PWC Jan 2026)
+  paye_nonresident_flat_rate — 15% flat for non-residents (PWC Jan 2026)
+  paye_personal_relief       — CORRECTED: no personal relief exists in Tanzania
+  brela_annual_return_fee    — TZS 22,000 filing; TZS 2,500/month late penalty
+  wcf_new_employer_registration — 30 days from first hire
+  wcf_disease_reporting_deadline — disease 7 days; death/claim 12 months
+  gn605a_increment_range     — TZS 20,000–195,000 increment range (PKF Oct 2025)
 """
 import json, sys, re, argparse, os
 from datetime import datetime
