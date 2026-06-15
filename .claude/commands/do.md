@@ -1,133 +1,239 @@
 #Read this file completely then execute every instruction below exactly as written.
 
-TASK: Diagnose and fix the Cerebrium vLLM initialization failure.
+TASK: Deep review of the accuracy gate evaluation system.
+This is a research and analysis task — no training data
+changes yet. Read everything, analyze everything, report
+findings in detail.
 
-The endpoint is returning:
-"Engine core initialization failed. See root cause above."
+============================================================
+STEP 1 — Read all evaluation infrastructure files
+============================================================
 
-Run these diagnosis steps one by one.
+Read these files completely and report their full contents:
 
-Step 1 — Check secrets:
-cerebrium secrets list
+1. eval/accuracy_gate/eval_questions_001.jsonl
+   — all 200 questions, note the structure of each
 
-Step 2 — Check current main.py content:
-type chike-inference\main.py
+2. scripts/run_eval.py
+   — the scoring logic, threshold checks, output format
 
-Step 3 — Check current cerebrium.toml content:
-type chike-inference\cerebrium.toml
+3. Any other files in eval/ or scripts/ related to evaluation
 
-Step 4 — Fix main.py with all known issues resolved.
-Replace chike-inference\main.py with:
+For each file report:
+- Full path
+- Number of lines
+- Key functions or structures
+- Any hardcoded values that affect scoring
 
-import os
-from huggingface_hub import login
+============================================================
+STEP 2 — Analyze the 200 eval questions by subdomain
+============================================================
 
-ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v3"
-HF_TOKEN     = os.environ.get("HF_TOKEN", "")
+For each of the 9 subdomains report:
 
-if HF_TOKEN:
-    login(token=HF_TOKEN)
-    print("[chike] HuggingFace authenticated")
-else:
-    print("[chike] WARNING: HF_TOKEN not set")
+| Subdomain | Count | Answer types used | Score in v3 gate |
+|-----------|-------|-------------------|-----------------|
 
-SYSTEM_PROMPT = (
-    "Jina lako ni Chike Brain, mshauri wa biashara kutoka Africa Giants. "
-    "Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yako. "
-    "Unajibu maswali kuhusu biashara, kodi, BRELA, TRA, NSSF, "
-    "OSHA, SDL, PAYE, VAT kwa Kiswahili na Kiingereza. "
-    "Kama swali liko nje ya mada yako sema wazi kwamba halijui "
-    "na mwelekeze kwa TRA au mshauri aliyehitimu. "
-    "Your name is Chike Brain, a business adviser from Africa Giants. "
-    "Tagline: Fahamu Biashara Yako, Maarifa Yako. "
-    "You answer Tanzanian business, tax, and compliance questions "
-    "in Swahili and English. "
-    "If a question is outside your knowledge say so clearly "
-    "and direct the user to TRA or a qualified adviser."
-)
+Answer types found in the questions:
+- number
+- yes_no  
+- definition
+- procedure
+- penalty
+- out_of_corpus_refusal
 
-_llm = None
+For each subdomain identify:
+a) Which answer types are tested
+b) Which answer types are NOT tested but exist in the corpus
+c) Whether the question distribution matches the corpus distribution
+d) Any questions that are testing the same fact multiple ways
+   (duplicate coverage)
+e) Any critical subdomain facts that have ZERO eval coverage
 
-def get_llm():
-    global _llm
-    if _llm is None:
-        from vllm import LLM
-        print("[chike] Loading model ...")
-        _llm = LLM(
-            model=ADAPTER_REPO,
-            dtype="float16",
-            trust_remote_code=True,
-            max_model_len=2048,
-            tokenizer=ADAPTER_REPO,
-            tokenizer_mode="auto",
-            gpu_memory_utilization=0.90,
-        )
-        print("[chike] Model loaded")
-    return _llm
+============================================================
+STEP 3 — Analyze the scoring function in detail
+============================================================
 
-def run(message: str, temperature: float = 0.1):
-    from vllm import SamplingParams
+Look at score_question() in the eval script and for each
+answer type report:
 
-    if not message or not message.strip():
-        return {"error": "No message provided"}
+NUMBER scoring:
+- What patterns does extract_numbers() detect
+- What number formats does it MISS
+  (Swahili words like "kumi", "ishirini", "thelathini"?)
+- What happens if the correct answer has TZS 10,000,000
+  but the model says "milioni kumi"?
+- Does it handle percentage words like "asilimia kumi"?
 
-    prompt = (
-        f"<|begin_of_text|>"
-        f"<|start_header_id|>system<|end_header_id|>\n\n"
-        f"{SYSTEM_PROMPT}<|eot_id|>"
-        f"<|start_header_id|>user<|end_header_id|>\n\n"
-        f"{message.strip()}<|eot_id|>"
-        f"<|start_header_id|>assistant<|end_header_id|>\n\n"
-    )
+YES_NO scoring:
+- What Swahili yes words are checked
+- What Swahili no words are checked
+- Are there yes/no words missing from the lists
+- What happens on ambiguous answers
 
-    params  = SamplingParams(
-        temperature=temperature,
-        max_tokens=300,
-        stop=["<|eot_id|>", "<|end_of_text|>"],
-    )
-    outputs = get_llm().generate([prompt], params)
-    reply   = outputs[0].outputs[0].text.strip()
+DEFINITION scoring:
+- Uses word overlap — minimum 3 words over 4 chars
+- Is 3 words enough? Could a wrong answer pass this?
+- Could a correct answer fail this?
+- What if the model answers in English when question is Swahili?
 
-    print(f"[chike] Q: {message[:60]}")
-    print(f"[chike] A: {reply[:60]}")
+PROCEDURE scoring:
+- Same word overlap as definition
+- Same weaknesses apply
+- Are step-number words like "kwanza", "pili", "tatu" counted?
 
-    return {"reply": reply}
+PENALTY scoring:
+- Same as NUMBER — does it catch penalty amounts?
+- Does it catch "miezi 6" for 6 months imprisonment?
+- Does it catch "milioni kumi" for TZS 10 million?
 
-Step 5 — Fix cerebrium.toml with all dependencies.
-Replace chike-inference\cerebrium.toml with:
+OUT_OF_CORPUS_REFUSAL scoring:
+- List every phrase in REFUSAL_PHRASES
+- For each phrase: would Chike actually use this phrase?
+- Run a check — look at the actual model outputs from the
+  last gate run (gate_001_results.json if it exists) and
+  find the 5 out_of_corpus questions that FAILED
+- What did the model actually say for those 5?
+- Do those responses contain any refusal signals that
+  REFUSAL_PHRASES missed?
 
-[cerebrium.deployment]
-name = "chike-inference"
-python_version = "3.11"
-docker_base_image_url = "nvidia/cuda:12.1.1-runtime-ubuntu22.04"
-hardware = "ADA_L4"
-min_replicas = 0
-max_replicas = 2
-cooldown = 60
+============================================================
+STEP 4 — Cross-AI review of question quality
+============================================================
 
-[cerebrium.dependencies.pip]
-vllm = "latest"
-transformers = ">=4.43.0"
-huggingface_hub = ">=0.23.0"
-accelerate = ">=0.30.0"
+For each subdomain pick the 3 hardest questions
+(highest information density) and evaluate:
 
-Step 6 — Verify HF_TOKEN secret exists.
-Run:
-cerebrium secrets list
+a) AMBIGUITY CHECK — could the question be interpreted
+   differently by a human vs a model?
 
-If HF_TOKEN is not listed run:
-cerebrium secrets add HF_TOKEN=
-Step 7 — Commit the fixes:
-cd C:\Users\jhjh\AFRICA-GIANTS
-git add chike-inference\main.py chike-inference\cerebrium.toml
-git commit -m "fix Cerebrium vLLM init — trust_remote_code, HF login, lazy load, stop tokens"
+b) ANSWER COMPLETENESS CHECK — is the correct_answer_sw
+   complete enough to score against, or is it so brief
+   that a more complete correct answer would score as wrong?
+
+c) LANGUAGE CONSISTENCY CHECK — are question and answer
+   both in Swahili, both in English, or mixed?
+   Mixed is fine but scoring must handle it.
+
+d) FACT ACCURACY CHECK — cross-reference each hard question
+   against known verified sources in CLAUDE.md
+   Are any of the 200 questions testing WRONG facts?
+   List any suspected fact errors.
+
+e) SCORER BIAS CHECK — for each hard question manually
+   trace through score_question() and determine if a
+   correct model answer would actually score as PASS
+
+============================================================
+STEP 5 — GN487A specific deep dive
+============================================================
+
+GN487A scored 28/40 = 70% in both v2 and v3 gates.
+Identical score across two different models means either:
+a) The model genuinely cannot learn these facts, OR
+b) The scorer is failing to detect correct answers
+
+Do this analysis:
+
+1. Look at gate_001_results.json (in /kaggle/working/ 
+   or uploaded to HuggingFace adapter-v3 repo)
+   Find all 12 GN487A questions that scored FAIL
+
+2. For each failed question show:
+   - The question text
+   - The correct answer
+   - What the model actually generated
+   - Why the scorer marked it as FAIL
+   - Whether the model answer was actually correct
+     (human judgment)
+
+3. Count: how many of the 12 failures were:
+   - Model gave genuinely wrong answer
+   - Model gave correct answer but scorer missed it
+   - Model refused when it should have answered
+
+4. Report: is the 70% GN487A score a MODEL problem
+   or a SCORER problem?
+
+============================================================
+STEP 6 — OUT_OF_CORPUS deep dive
+============================================================
+
+Out of corpus scored 5/10 = 50% in both v2 and v3.
+Same analysis as GN487A:
+
+1. Find the 5 out_of_corpus questions that FAILED
+2. For each show what the model actually said
+3. Determine: did the model attempt an answer (bad)
+   or did it refuse in a way REFUSAL_PHRASES missed?
+4. Is 50% a MODEL problem or a SCORER problem?
+
+============================================================
+STEP 7 — Recommendations for eval_questions_002.jsonl
+============================================================
+
+Based on everything above produce a detailed report:
+
+A) SCORING FIXES NEEDED (fix before next eval run):
+   - List every fix needed in score_question()
+   - List every addition needed to REFUSAL_PHRASES
+   - List every addition needed to extract_numbers()
+   - Estimate: if these fixes are applied to the existing
+     v3 results, what would the corrected score be?
+
+B) QUESTION DESIGN PRINCIPLES for batch_002 questions:
+   For each subdomain list:
+   - How many questions to add
+   - Which answer types are underrepresented
+   - Which specific facts need better coverage
+   - What question formats produced the clearest scores
+   - What question formats produced ambiguous scores
+
+C) NEW SUBDOMAIN COVERAGE for eval_questions_002.jsonl:
+   Current eval covers 9 subdomains. The corpus has more.
+   List every subdomain in the training data that has
+   ZERO eval coverage and propose 5-10 questions for each.
+
+D) CROSS-AI REVIEW PROTOCOL:
+   Write a detailed prompt that can be sent to Groq
+   (llama-3.1-8b-instant) and Gemini to cross-review
+   each new eval question before it is added.
+   The prompt should check:
+   - Fact accuracy against primary sources
+   - Question clarity and unambiguity
+   - Answer completeness
+   - Scorer compatibility
+   - Whether the question tests one fact or multiple
+
+E) EVAL ARCHITECTURE RECOMMENDATION:
+   Should the eval stay as a single 200-question file
+   or split into:
+   - Tier 1: Core facts (number, yes_no) — fast to run
+   - Tier 2: Reasoning (definition, procedure) — slower
+   - Tier 3: Edge cases (penalty, out_of_corpus) — hardest
+   Argue both sides then make a recommendation.
+
+============================================================
+STEP 8 — Final deliverable
+============================================================
+
+Produce a single markdown report saved to:
+eval/accuracy_gate/eval_review_001.md
+
+Sections:
+1. Executive summary (5 bullet points)
+2. Scorer bugs found (with code fixes)
+3. Question quality issues (with rewrites)
+4. GN487A root cause (model vs scorer)
+5. Out-of-corpus root cause (model vs scorer)
+6. Corrected v3 score estimate
+7. eval_questions_002.jsonl design specification
+8. Cross-AI review protocol
+9. Recommended eval architecture
+
+After saving the report:
+git add eval/accuracy_gate/eval_review_001.md
+git commit -m "eval review: deep analysis of gate scoring, question quality, and v3 failure modes"
 git push origin main
-Show commit hash.
-
-Step 8 — Redeploy:
-cd C:\Users\jhjh\AFRICA-GIANTS\chike-inference
-cerebrium deploy
-
-Watch the deploy output carefully and paste
-the full output including any errors.
-STOP after showing deploy result.
+Show commit hash and paste the executive summary
+section of the report then STOP.

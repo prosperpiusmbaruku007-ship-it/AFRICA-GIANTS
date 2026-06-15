@@ -6,7 +6,7 @@ exports.handler = async function(context, event, callback) {
   const userMessage = (event.Body || '').trim();
   const from        = event.From || '';
 
-  console.log(`[chike-brain] ${from.slice(0,8)}***: ${userMessage.slice(0,80)}`);
+  console.log(`[chike] ${from.slice(0,8)}***: ${userMessage.slice(0,80)}`);
 
   // Join split API key
   const CEREBRIUM_KEY = (context.CKEY_1 || '') + (context.CKEY_2 || '');
@@ -14,12 +14,12 @@ exports.handler = async function(context, event, callback) {
   const GREETINGS = new Set([
     'habari','hujambo','mambo','hello','hi','hey',
     'salaam','salam','start','help','msaada',
-    'chike','chike brain','chikebrain','karibu',
+    'chike','karibu',
   ]);
 
   if (GREETINGS.has(userMessage.toLowerCase())) {
     twiml.message(
-      'Habari! Mimi ni *Chike Brain* kutoka *Africa Giants*.\n\n' +
+      'Habari! Mimi ni *Chike* kutoka *Africa Giants*.\n\n' +
       '_Fahamu Biashara Yako, Maarifa Yako._\n\n' +
       'Ninakusaidia na maswali ya biashara Tanzania:\n' +
       '• Kodi (VAT, PAYE, SDL, WHT)\n' +
@@ -28,7 +28,7 @@ exports.handler = async function(context, event, callback) {
       '• Mahitaji ya kufuata sheria\n\n' +
       'Uliza swali lolote. Ninajibu kwa Kiswahili na Kiingereza.\n\n' +
       '---\n\n' +
-      'Hi! I am *Chike Brain* from *Africa Giants*.\n\n' +
+      'Hi! I am *Chike* from *Africa Giants*.\n\n' +
       '_Understand Your Business, That Knowledge Is Yours._\n\n' +
       'Ask me anything about Tanzanian business, tax, or compliance.'
     );
@@ -52,15 +52,15 @@ exports.handler = async function(context, event, callback) {
 
     twiml.message(
       reply ||
-      'Samahani, Chike Brain hakupata jibu. Jaribu tena.\n\nSorry, please try again.'
+      'Samahani, Chike hakupata jibu. Jaribu tena.\n\nSorry, please try again.'
     );
 
   } catch (error) {
-    console.error('[chike-brain] Error:', error.message);
+    console.error('[chike] Error:', error.message);
     twiml.message(
-      'Samahani, Chike Brain hakuweza kukusaidia sasa hivi. ' +
+      'Samahani, Chike hakuweza kukusaidia sasa hivi. ' +
       'Tafadhali jaribu tena baadaye.\n\n' +
-      'Sorry, Chike Brain could not help right now. ' +
+      'Sorry, Chike could not help right now. ' +
       'Please try again shortly.'
     );
   }

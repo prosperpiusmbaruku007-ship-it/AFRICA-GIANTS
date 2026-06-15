@@ -15,9 +15,9 @@
 
 ## 1. CURRENT PHASE
 
-**CHIKE BRAIN BY AFRICA GIANTS — LIVE ON CEREBRIUM (ADA_L4, commit `bace093`). HTTP 200 confirmed. 4bit quantization with float16 fallback. min_replicas=1 (always warm). Twilio Function deployed with CKEY_1+CKEY_2 split for 255-char JWT limit. Product renamed Chike Brain. Railway server removed. 1,752 gazette-verified trainable pairs on HF. Adapter-v3 Kaggle training run pending (manual trigger required).**
+**CHIKE BY AFRICA GIANTS — LIVE ON CEREBRIUM (ADA_L4, commit `bace093`). HTTP 200 confirmed. 4bit quantization with float16 fallback. min_replicas=0 (scale to zero). Wappfly handler live on Railway. Product renamed Chike. Railway server removed. 1,752 gazette-verified trainable pairs on HF. Adapter-v3 Kaggle training run pending (manual trigger required).**
 
-**Product identity confirmed:** AI assistant = CHIKE BRAIN | Company = AFRICA GIANTS | Full name = CHIKE BRAIN BY AFRICA GIANTS
+**Product identity confirmed:** AI assistant = CHIKE | Company = AFRICA GIANTS | Full name = CHIKE BY AFRICA GIANTS
 
 ---
 
@@ -56,7 +56,7 @@
 
 **ADDITIONAL SESSION 13 WORK (after initial deployment):**
 
-- Product renamed: **Chike → Chike Brain by Africa Giants** — commit `b31f96e`
+- Product renamed: **Chike → Chike Brain by Africa Giants** — commit `b31f96e` (later reverted to Chike in session 14)
   - SYSTEM_PROMPT updated in `chike-inference/main.py` and `.claude/commands/do.md`
   - Greeting message updated in `twilio-function/chike-whatsapp.js`
   - `CLAUDE.md`, `PROGRESS.md`, `twilio-function/README.md` all updated
@@ -111,8 +111,8 @@
   - `.env.example` — Chike header added; real credentials redacted to placeholders
   - `CLAUDE.md` — product name note added at Section 1
 - HuggingFace READMEs updated with Chike branding:
-  - `prospAprospA007/africa-giants-adapter-v2` model repo: title → "Chike Brain by Africa Giants (adapter-v2)"
-  - `prospAprospA007/africa-giants-dataset` dataset repo: title → "Chike Brain by Africa Giants — Tanzania Business Regulatory Q&A Dataset"
+  - `prospAprospA007/africa-giants-adapter-v2` model repo: title → "Chike by Africa Giants (adapter-v2)"
+  - `prospAprospA007/africa-giants-dataset` dataset repo: title → "Chike by Africa Giants — Tanzania Business Regulatory Q&A Dataset"
 - scan_for_keys.py: CLEAN — 0 API keys in 7 staged files
 
 **CORPUS STATE (confirmed session 12):**
@@ -486,14 +486,14 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 - All batch corrections applied (GN487A penalty, scope, PAYE 26K myth, VAT CPA, deadlines)
 - SFT files: train=1,576 / val=176 — uploaded to HF
 
-**Step B (DONE):** ✅ Chike Brain LIVE on Cerebrium — current commit `bace093`
+**Step B (DONE):** ✅ Chike LIVE on Cerebrium — current commit `bace093`
 - `chike-inference/main.py` — transformers inference, 4bit with float16 fallback, prompt-leak fix
 - `chike-inference/cerebrium.toml` — ADA_L4, min_replicas=1, [cerebrium.scaling] section
-- HTTP 200 confirmed, model self-identifies as "Chike Brain"
+- HTTP 200 confirmed, model self-identifies as "Chike"
 - Endpoint: `https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run`
 
 **Step B2 (DONE):** ✅ Twilio Function ready — `twilio-function/chike-whatsapp.js`
-- Greeting detection (14 keywords incl. 'chike brain', 'chikebrain')
+- Greeting detection (12 keywords incl. 'chike')
 - CKEY_1 + CKEY_2 split for 255-char Twilio env var limit
 - Commit: `6d9c651`
 
@@ -537,8 +537,8 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 5. ✅ All batch corrections applied (GN487A, PAYE 26K myth, VAT CPA, BRELA fees, WHT)
 6. ✅ adapter-v2: trained on 1,500 pairs — 83.2% in-corpus / 50% refusal — FAILED both gates
 7. ✅ HF SFT files updated: train=1,576, val=176 (1,752 pairs total) — adapter-v3 ready
-8. ✅ Chike Brain LIVE on Cerebrium — 4bit+float16 fallback, HTTP 200, commit `bace093`
-9. ✅ Product renamed Chike Brain by Africa Giants — commit `b31f96e`
+8. ✅ Chike LIVE on Cerebrium — 4bit+float16 fallback, HTTP 200, commit `bace093`
+9. ✅ Product renamed Chike Brain → Chike — commit `b31f96e` + current session
 10. ✅ Railway server removed (server/, Procfile, railway.json, .env.example) — commit `b31f96e`
 11. ✅ Twilio Function ready with CKEY_1+CKEY_2 JWT split — commit `6d9c651`
 12. ⬜ Set up Twilio Function in Twilio Console (manual — ~10 min, see twilio-function/README.md)

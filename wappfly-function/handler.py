@@ -4,7 +4,7 @@ import asyncio
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-app = FastAPI(title="Chike Brain - Wappfly Webhook")
+app = FastAPI(title="Chike - Wappfly Webhook")
 
 WAPPFLY_TOKEN    = os.environ.get("WAPPFLY_TOKEN", "")
 CEREBRIUM_KEY    = os.environ.get("CEREBRIUM_KEY", "")
@@ -14,11 +14,11 @@ WAPPFLY_SEND_URL = "https://wappfly.com/api/messages/send"
 GREETINGS = {
     "habari","hujambo","mambo","hello","hi","hey",
     "salaam","salam","start","help","msaada",
-    "chike","chike brain","chikebrain","karibu",
+    "chike","karibu",
 }
 
 WELCOME = (
-    "Habari! Mimi ni *Chike Brain* kutoka *Africa Giants*.\n\n"
+    "Habari! Mimi ni *Chike* kutoka *Africa Giants*.\n\n"
     "_Fahamu Biashara Yako, Maarifa Yako._\n\n"
     "Ninakusaidia na maswali ya biashara Tanzania:\n"
     "• Kodi (VAT, PAYE, SDL, WHT)\n"
@@ -26,15 +26,15 @@ WELCOME = (
     "• Sheria za biashara (GN 487A, vibali)\n\n"
     "Uliza swali lolote. Ninajibu kwa Kiswahili na Kiingereza.\n\n"
     "---\n\n"
-    "Hi! I am *Chike Brain* from *Africa Giants*.\n\n"
+    "Hi! I am *Chike* from *Africa Giants*.\n\n"
     "_Understand Your Business, That Knowledge Is Yours._\n\n"
     "Ask me anything about Tanzanian business, tax, or compliance."
 )
 
 FALLBACK = (
-    "Samahani, Chike Brain hakuweza kukusaidia sasa hivi. "
+    "Samahani, Chike hakuweza kukusaidia sasa hivi. "
     "Tafadhali jaribu tena baadaye.\n\n"
-    "Sorry, Chike Brain could not help right now. "
+    "Sorry, Chike could not help right now. "
     "Please try again shortly."
 )
 
@@ -117,6 +117,6 @@ async def webhook(request: Request):
 async def health():
     return {
         "status": "ok",
-        "product": "Chike Brain by Africa Giants",
+        "product": "Chike by Africa Giants",
         "tagline": "Fahamu Biashara Yako, Maarifa Yako",
     }

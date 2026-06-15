@@ -1,4 +1,4 @@
-# Chike Brain — Wappfly Webhook
+# Chike — Wappfly Webhook
 
 Receives WhatsApp messages from Wappfly,
 calls Cerebrium, sends reply back via Wappfly.
