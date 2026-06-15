@@ -23,7 +23,7 @@
 
 ## 2. LAST VERIFIED COMPLETED (with dates)
 
-### 2026-06-14 (session 13) — Chike LIVE on Cerebrium + Twilio Function created
+### 2026-06-14 (session 13) — Chike LIVE on Cerebrium + Wappfly handler deployed
 
 **COMPLETED:**
 - Cerebrium deployment working — `chike-inference` app, ADA_L4 GPU, transformers inference:
@@ -35,11 +35,12 @@
   - HTTP 200 on both test questions — clean replies, no prompt prefix
   - Cerebrium endpoint: `https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run`
   - Commits: `2d195e7` (vLLM→transformers), `f35746f` (toml key fix), `39b4b19` (prompt leak fix)
-- Twilio Function created — `twilio-function/chike-whatsapp.js`:
-  - Greeting detection (12 keywords) returns WELCOME without calling Cerebrium
-  - Calls Cerebrium `/run` with 90s timeout; passes `CEREBRIUM_API_KEY` from env
+- Wappfly webhook handler built — `wappfly-function/handler.py` (FastAPI, deployed to Railway):
+  - Greeting detection returns WELCOME without calling Cerebrium
+  - Calls Cerebrium `/run` with 120s timeout; passes `CEREBRIUM_KEY` from env
   - Fallback error message in Swahili + English if Cerebrium fails
-  - `twilio-function/README.md` — 10-step Twilio Console setup guide
+  - Live at: https://striking-cat-production-ed7e.up.railway.app/webhook
+  - WhatsApp number: +255637809070 (Wappfly inbound webhook connected)
 
 **KNOWN MODEL ISSUES (adapter-v3 accuracy — not fixable in server code):**
 - VAT rate: model says "18% goods / 16% services" — correct is single 18% standard rate
@@ -56,20 +57,13 @@
 
 **ADDITIONAL SESSION 13 WORK (after initial deployment):**
 
-- Product renamed: **Chike → Chike Brain by Africa Giants** — commit `b31f96e` (later reverted to Chike in session 14)
-  - SYSTEM_PROMPT updated in `chike-inference/main.py` and `.claude/commands/do.md`
-  - Greeting message updated in `twilio-function/chike-whatsapp.js`
-  - `CLAUDE.md`, `PROGRESS.md`, `twilio-function/README.md` all updated
-  - Stale-string scan confirmed clean (grep exit 1)
+- Product renamed: **Chike → Chike Brain by Africa Giants** — commit `b31f96e` (reverted to Chike in session 14)
+  - SYSTEM_PROMPT updated in `chike-inference/main.py`
+  - CLAUDE.md, PROGRESS.md updated
 
-- Railway server removed — commit `b31f96e`
+- Old Railway inference server removed — commit `b31f96e`
   - Deleted: `server/`, `Procfile`, `railway.json`, `.env.example`
-  - Current live architecture: `chike-inference/` (Cerebrium) + `twilio-function/` (Twilio)
-
-- Twilio Function updated — commit `6d9c651`
-  - Cerebrium JWT (~1,106 chars) exceeds Twilio 255-char env var limit
-  - Fix: split across `CKEY_1` + `CKEY_2`, join at runtime: `(context.CKEY_1 || '') + (context.CKEY_2 || '')`
-  - Replaced `CEREBRIUM_API_KEY` reference with joined `CEREBRIUM_KEY`
+  - Replaced by Wappfly handler on Railway (`wappfly-function/handler.py`)
 
 - Cerebrium scaling tuned across multiple commits:
   - `45bd5ef`: min_replicas=1, max_replicas=3, cooldown=300
@@ -88,14 +82,14 @@
   - HTTP 200 confirmed post-fix: `run_time_ms: 28,733ms` (model load on first request)
   - Subsequent requests will be faster (model cached in memory)
 
-**CURRENT LIVE STATE:**
-- Endpoint: `https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run`
-- Commit: `bace093`
-- GPU: ADA_L4 (24GB VRAM)
-- Inference: transformers (not vLLM), 4bit if bitsandbytes works, float16 fallback
-- Scaling: min_replicas=1, max_replicas=2, cooldown=300s
+**CURRENT LIVE STACK:**
+- WhatsApp number: +255637809070 (Wappfly)
+- Webhook handler: Railway — https://striking-cat-production-ed7e.up.railway.app/webhook
+- Webhook code: `wappfly-function/handler.py` (FastAPI)
+- Inference: Cerebrium ADA_L4 — `https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run`
+- Cerebrium commit: `bace093` — transformers, 4bit with float16 fallback, min_replicas=0
+- Model: `prospAprospA007/africa-giants-adapter-v3` (adapter-v3 training pending)
 - HF_TOKEN: set as Cerebrium secret ✓
-- HF auth: confirmed at startup (`[chike] HuggingFace authenticated`)
 
 ---
 
@@ -103,7 +97,7 @@
 
 **COMPLETED:**
 - WhatsApp inference server built — commit `86f28b7`:
-  - `server/app.py` — FastAPI server; Twilio webhook at POST /webhook; loads AfriqueLlama-8B base + adapter-v3 via PeftModel; greeting detection with WELCOME_MESSAGE; 25s timeout with FALLBACK_MESSAGE; conversation logging to server/logs/conversations.jsonl
+  - `server/app.py` — FastAPI server (deleted in session 13); replaced by Wappfly handler
   - `server/requirements.txt` — fastapi, uvicorn, transformers, peft, torch, accelerate, python-multipart, huggingface_hub, bitsandbytes
   - `server/README.md` — deployment docs, endpoints, env vars, local dev instructions
   - `Procfile` — `web: uvicorn server.app:app --host 0.0.0.0 --port $PORT`
@@ -129,11 +123,10 @@
 - **TOTAL TRAINABLE: 1,752 pairs**
 - HF: train_sft.jsonl=1,576 pairs (1.23MB), val_sft.jsonl=176 pairs (139KB)
 
-**PENDING BEFORE SERVER GOES LIVE:**
+**PENDING BEFORE FIRST USER PILOT:**
 1. Kaggle adapter-v3 training run: https://www.kaggle.com/code/prospaprospa/africa-giants-v2 (Run All)
 2. After training: run `python scripts/run_eval.py` — must pass >85% in-corpus AND >70% refusal
-3. Railway deployment: connect repo, set HF_TOKEN env var, point Twilio WhatsApp number to /webhook
-4. Cross-AI review of batch_008: set GEMINI_API_KEY + OPENROUTER_API_KEY then run verify_pairs.py
+3. Cross-AI review of batch_008: set GEMINI_API_KEY + OPENROUTER_API_KEY then run verify_pairs.py
 
 ---
 
@@ -480,7 +473,7 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 
 ## 3. ACTIVE WORK
 
-### Current priority: Twilio Console setup → Kaggle adapter-v3 training → eval gates
+### Current priority: Kaggle adapter-v3 training → eval gates → first user pilot
 
 **Step A (DONE):** ✅ Corpus complete — 1,752 trainable pairs across 10 cleaned batch files
 - All batch corrections applied (GN487A penalty, scope, PAYE 26K myth, VAT CPA, deadlines)
@@ -492,17 +485,11 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 - HTTP 200 confirmed, model self-identifies as "Chike"
 - Endpoint: `https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run`
 
-**Step B2 (DONE):** ✅ Twilio Function ready — `twilio-function/chike-whatsapp.js`
-- Greeting detection (12 keywords incl. 'chike')
-- CKEY_1 + CKEY_2 split for 255-char Twilio env var limit
-- Commit: `6d9c651`
-
-**Step B3 (PENDING — manual, 10 min):** ⬜ Set up Twilio Function in Twilio Console
-- See `twilio-function/README.md` for 10-step guide
-- Create service: `chike-whatsapp`, function path `/chike-whatsapp`
-- Add dependency: `axios`
-- Add env vars: `CKEY_1` = first half of Cerebrium JWT, `CKEY_2` = second half
-- Deploy, copy URL, set as WhatsApp sandbox webhook
+**Step B2 (DONE):** ✅ Wappfly handler LIVE on Railway
+- `wappfly-function/handler.py` — FastAPI, greeting detection, 120s Cerebrium timeout
+- Railway URL: https://striking-cat-production-ed7e.up.railway.app
+- Wappfly inbound webhook: /webhook (set and confirmed)
+- WhatsApp number: +255637809070
 
 **Step C (PENDING — manual):** ⬜ Trigger adapter-v3 Kaggle training run
 - URL: https://www.kaggle.com/code/prospaprospa/africa-giants-v2
@@ -540,15 +527,12 @@ Eval set complete: 200 questions written, 17 post-review fixes applied, committe
 8. ✅ Chike LIVE on Cerebrium — 4bit+float16 fallback, HTTP 200, commit `bace093`
 9. ✅ Product renamed Chike Brain → Chike — commit `b31f96e` + current session
 10. ✅ Railway server removed (server/, Procfile, railway.json, .env.example) — commit `b31f96e`
-11. ✅ Twilio Function ready with CKEY_1+CKEY_2 JWT split — commit `6d9c651`
-12. ⬜ Set up Twilio Function in Twilio Console (manual — ~10 min, see twilio-function/README.md)
-    - Set CKEY_1 and CKEY_2 env vars (NOT CEREBRIUM_API_KEY — that was the old key)
-    - Deploy function, copy URL, set as WhatsApp sandbox webhook
-13. ⬜ Trigger adapter-v3 training on Kaggle (manual — Run All at africa-giants-v2)
-14. ⬜ Run eval gates after training: `python scripts/run_eval.py` (need >85% AND >70%)
-15. ⬜ Cross-AI review batch_008 (set API keys, run verify_pairs.py)
-16. ⬜ Engage TRA consultant for 10% sample review (~30 pairs, ~TZS 50,000–100,000)
-17. ⬜ First human pilot on WhatsApp (after BOTH gates pass — R7 is blocking)
+11. ✅ Wappfly handler live on Railway, connected to WhatsApp +255637809070
+12. ⬜ Trigger adapter-v3 training on Kaggle (manual — Run All at africa-giants-v2)
+13. ⬜ Run eval gates after training: `python scripts/run_eval.py` (need >85% AND >70%)
+14. ⬜ Cross-AI review batch_008 (set API keys, run verify_pairs.py)
+15. ⬜ Engage TRA consultant for 10% sample review (~30 pairs, ~TZS 50,000–100,000)
+16. ⬜ First human pilot on WhatsApp +255637809070 (after BOTH gates pass — R7 is blocking)
 
 ---
 
