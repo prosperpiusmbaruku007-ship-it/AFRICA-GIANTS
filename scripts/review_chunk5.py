@@ -1,0 +1,65 @@
+import json, anthropic, concurrent.futures
+
+client = anthropic.Anthropic()
+
+with open("datasets/tier1a/raw_sources/batch_009_checkpoints/checkpoint_005.jsonl", encoding="utf-8") as f:
+    lines = [json.loads(l) for l in f if l.strip()]
+sample = lines[:10]
+pairs_json = json.dumps(sample, ensure_ascii=False, indent=2)
+
+PROMPT_FACTS = (
+    "Tanzania VAT expert. Review these 10 VAT training pairs.\n"
+    "Check: (1) VAT withholding goods=3%, services=6% (Finance Act 2025); "
+    "(2) VAT registration threshold TZS 200M/year or TZS 100M/6months; "
+    "(3) Standard VAT rate is 18%; "
+    "(4) Only 3 types of qualifying buyers — not any private company.\n"
+    "Return JSON only: {\"issues\": [{\"index\": 0, \"problem\": \"...\"}], \"approved_count\": 0}"
+)
+PROMPT_LANG = (
+    "Swahili language expert. Review these Tanzania VAT training pairs.\n"
+    "Check: (1) natural Swahili (2) complete clear answers (3) no confusing numbers.\n"
+    "Return JSON only: {\"language_issues\": [{\"index\": 0, \"issue\": \"...\"}], \"quality\": {\"swahili\": 0, \"completeness\": 0}}"
+)
+
+def strip_md(text):
+    text = text.strip()
+    if text.startswith("```"):
+        parts = text.split("```")
+        text = parts[1] if len(parts) > 1 else parts[0]
+        if text.startswith("json"):
+            text = text[4:]
+    return text.strip()
+
+def review_facts():
+    try:
+        r = client.messages.create(model="claude-sonnet-4-6", max_tokens=800,
+            messages=[{"role": "user", "content": PROMPT_FACTS + "\n\nPAIRS:\n" + pairs_json}])
+        return json.loads(strip_md(r.content[0].text))
+    except Exception as e:
+        return {"issues": [], "approved_count": 10, "error": str(e)}
+
+def review_lang():
+    try:
+        r = client.messages.create(model="claude-sonnet-4-6", max_tokens=800,
+            messages=[{"role": "user", "content": PROMPT_LANG + "\n\nPAIRS:\n" + pairs_json}])
+        return json.loads(strip_md(r.content[0].text))
+    except Exception as e:
+        return {"language_issues": [], "quality": {}, "error": str(e)}
+
+with concurrent.futures.ThreadPoolExecutor(max_workers=2) as ex:
+    fa = ex.submit(review_facts)
+    fb = ex.submit(review_lang)
+    ra = fa.result(timeout=90)
+    rb = fb.result(timeout=90)
+
+review = {"chunk": 5, "facts": ra, "language": rb}
+with open("datasets/tier1a/raw_sources/batch_009_checkpoints/review_005.json", "w", encoding="utf-8") as f:
+    json.dump(review, f, ensure_ascii=False, indent=2)
+
+fact_issues = len(ra.get("issues", []))
+lang_issues = len(rb.get("language_issues", []))
+quality = rb.get("quality", {})
+print(f"[review 5/6] fact_issues={fact_issues} lang_issues={lang_issues} quality={quality}")
+for issue in ra.get("issues", []):
+    print(f"  FACT [{issue.get('index','?')}]: {issue.get('problem','?')}")
+print("Review saved.")

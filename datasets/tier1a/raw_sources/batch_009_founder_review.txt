@@ -1,0 +1,154 @@
+BATCH_009 FOUNDER REVIEW — 30 pairs (10% sample)
+seed=2026 | Mark APPROVE or FLAG next to each pair
+============================================================
+
+--- PAIR 1 of 30 ---
+Q: Nilikuwa na kipande cha ardhi kwa miaka 10 na kuiuza kwa faida — kodi ya Tanzania ni nini?
+A: Swali hili liko nje ya maarifa yangu ya sasa. Mauzo ya ardhi na kodi inayohusiana (land disposal tax na capital gains) ni mada inayohusisha Income Tax Act, Sheria ya Ardhi, na taratibu za TRA ambazo ziko nje ya wigo wangu. Mimi ni Chike kutoka Africa Giants, ninashughulikia VAT, PAYE, SDL, NSSF, WCF, BRELA, na compliance ya biashara ya kawaida. Tafadhali wasiliana na mshauri wa kodi aliyehitimu au TRA kupitia tra.go.tz.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 2 of 30 ---
+Q: Ninafungua biashara mpya — EFD ninapata wapi na inagharimu kiasi gani?
+A: EFD inaweza kupatikana kutoka: (1) Wauzaji wa EFD walioidhinishwa na TRA (orodha ya wauzaji ipo kwenye tra.go.tz); (2) Aina za EFD: ECR (Electronic Cash Register), POS (Point of Sale terminal), na ETS (Electronic Tax Stamps) kwa bidhaa maalum. Bei ya EFD inategemea aina na muuzaji — inaweza kuanzia TZS 200,000 hadi zaidi ya TZS 1,000,000 kwa mfumo kamili. TRA inahitajika kusajili EFD yako rasmi kabla ya kuanza kutumia — hii inafanywa kwa TRA moja kwa moja. Isipokuwa TRA imeidhinisha, EFD haifanyi kazi kama fiscal device. Thibitisha na TRA (tra.go.tz).
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 3 of 30 ---
+Q: Biashara yangu ina wafanyakazi 3 tu — je, OSHA bado inahitajika?
+A: Ndiyo — OSHA inatumika kwa WAAJIRI WOTE bila kujali idadi ya wafanyakazi. Hakuna kikwazo cha idadi kwa OSHA — hata biashara ya mfanyakazi 1 inashughulikiwa. Tofauti na SDL (wafanyakazi 10+), OSHA inalenga MAZINGIRA ya kazi na usalama — sio idadi ya wafanyakazi. Hata mwajiri wa nyumbani mwenye msaidizi mmoja wa nyumba ana wajibu wa kuzingatia mahitaji ya msingi ya usalama. Mahali pote pa kazi Tanzania Bara lazima lisajiliwe na OSHA na lizingatie kanuni za usalama. Thibitisha na osha.go.tz.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 4 of 30 ---
+Q: Idara ya Uhamiaji ndiyo inayotekeleza GN 487A — sio TRA wala BRELA?
+A: Kweli — Idara ya Uhamiaji (Immigration Services Department) ndiyo mamlaka kuu ya utekelezaji wa GN 487A kwa ukusanyaji wa ukiukwaji na kufutwa kwa visa. Mchakato wa utekelezaji: (1) Polisi na/au Idara ya Uhamiaji wanakagua na kukamatia; (2) Kesi inawasilishwa mahakamani kwa hukumu (faini au kifungo); (3) Idara ya Uhamiaji inatekeleza kufutwa kwa visa. TRA: haihusiki moja kwa moja na GN 487A — wanashughulikia kodi. BRELA: hawahusiki pia — wanasimamia usajili wa biashara tu. Kampeni ya Sep–Oct 2025 iliongozwa na Idara ya Uhamiaji. Thibitisha na Idara ya Uhamiaji.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 5 of 30 ---
+Q: Gari la abiria linaloingizwa Tanzania — ushuru wake ni asilimia ngapi ya thamani?
+A: Swali hili liko nje ya maarifa yangu ya sasa. Ushuru wa magari yanayoingizwa Tanzania (vehicle import duty) unahusisha asilimia nyingi tofauti zinazotegemea aina ya gari, umri wake, na thamani yake — hii ni mada ya Customs and Excise ambayo iko nje ya wigo wangu. Mimi ni Chike kutoka Africa Giants, na ninashughulikia VAT, PAYE, SDL, NSSF, WCF, BRELA, na usajili wa biashara. Wasiliana na TRA Forodha na Ushuru kupitia tra.go.tz kwa jibu sahihi.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 6 of 30 ---
+Q: Kama mmiliki wa biashara ya jina nafariki — biashara inakuwa mali ya familia yangu?
+A: Hali ya biashara ya jina inapokufa mmiliki ni ngumu kisheria: biashara ya jina HAIWEZI kuendelea kwa jina hilo — inakufa pamoja na mmiliki kisheria. Familia inaweza: (1) Kurithi mali za biashara (vifaa, hesabu, stoo); (2) Kuanzisha biashara mpya (jina jipya au kampuni) na kutumia mali zilizo; (3) Kuendelea na biashara iwapo wanapata usajili mpya. Tofauti na kampuni ya hisa: kampuni inaendelea hata mmiliki/mwanachama akifariki — hisa zinaendelea. Kwa biashara inayotaka kuendelea familia, kampuni inashauriwa. Thibitisha na wakili wa biashara.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 7 of 30 ---
+Q: Nchi mbili zinazo DTA na Tanzania — mgeni kutoka nchi hiyo ana msamaha wa GN 487A?
+A: Hapana — Double Taxation Agreements (DTA) ni makubaliano ya KODI TU — yanazuia kulipwa kodi mara mbili kwa nchi mbili. Hazina uhusiano wowote na haki za biashara chini ya GN 487A. Mgeni kutoka nchi yenye DTA na Tanzania bado anakabiliwa na GN 487A kikamilifu kwa shughuli zote 15 zilizokatazwa. DTA haizungumzii haki za biashara, uraia, wala kibali cha kufanya shughuli fulani. Kwa hiyo hata mgeni kutoka Uingereza, India, au Marekani (nchi zenye DTA na Tanzania) — bado ana vizuizi vya GN 487A. Thibitisha na Idara ya Uhamiaji.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 8 of 30 ---
+Q: CPA aliyesajiliwa Tanzania lazima asajili VAT — hata mapato yake ni TZS 30M tu?
+A: Ndiyo — TRA inasema wanachama wa taaluma maalum zilizo na usajili wa kitaalamu (kama CPAs, lawyers, engineers, architects) WANAWEZA kulazimishwa kusajili VAT bila kujali kiasi cha mapato — hata chini ya kizingiti cha TZS 200M. Hii inatokana na dhana kwamba taaluma hizi zinatoa huduma za kibiashara ambazo zimebainishwa. CPA aliyesajiliwa na NBAA (National Board of Accountants and Auditors) Tanzania anashauriwa kuwasiliana na TRA haraka kuhusu wajibu wake wa VAT — bila kujali mapato yake ni TZS 30M. Thibitisha na TRA (tra.go.tz) na NBAA.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 9 of 30 ---
+Q: WCF inafunika magonjwa ya kazini — mfanyakazi anayepata ugonjwa kutokana na kazi anafanyaje?
+A: Mfanyakazi aliyepata ugonjwa wa kazini (occupational disease) anachukua hatua hizi: (1) Pata utambuzi wa daktari unaothibitisha ugonjwa unatokana na kazi; (2) Mwajiri alazimike kutoa taarifa WCF ndani ya siku 7 za kazi baada ya utambuzi; (3) Daktari wa WCF anakagua na kuthibitisha kama ugonjwa unatokana na hali ya kazi; (4) Kama unathibitishwa — WCF inalipa fidia ya matibabu na/au fidia ya kipato ikiwa mfanyakazi hawezi kufanya kazi. Magonjwa yanayofunikwa ni pamoja na: ugonjwa wa mapafu kutokana na vumbi, poisoning ya kemikali, na magonjwa mengine yanayotambulika ya kazini. Thibitisha na wcf.go.tz.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 10 of 30 ---
+Q: Mtu anayetoa taarifa (whistleblower) kuhusu mgeni anayekiuka GN 487A — ana ulinzi wowote?
+A: GN 487A haisemi wazi juu ya ulinzi wa whistleblowers. Hata hivyo, Tanzania ina sheria ya jumla ya ulinzi wa whistleblowers katika mazingira fulani. Mtu anayetoa taarifa kuhusu ukiukwaji wa GN 487A kwa Idara ya Uhamiaji au polisi anaweza: (1) Kutoa taarifa kwa siri (anonymous tip) kwa polisi au Idara ya Uhamiaji; (2) Kuthibitisha kwa maandishi kwa Idara ya Uhamiaji. Hata hivyo, ulinzi rasmi wa kisheria dhidi ya kulipizwa kisasi kwa GN 487A peke yake haujabainishwa wazi. Thibitisha na Idara ya Uhamiaji na wakili wa kisheria kwa hali yako maalum.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 11 of 30 ---
+Q: Mfanyakazi wa nyumbani (mama/baba wa mtoto) — mwajiri wake analazimika kuwasilisha NSSF?
+A: Ndiyo — wafanyakazi wa nyumbani (domestic workers) kama wasaidizi wa nyumba, walinzi, na mama za watoto wanafunikwa na NSSF Tanzania. Mwajiri (mmiliki wa nyumba) ana wajibu wa: (1) Kusajili mfanyakazi wa nyumbani kwa NSSF ndani ya siku 30 ya kuajiri; (2) Kutuma michango kila mwezi: 10% mwajiri + 10% mfanyakazi wa mshahara. Kutokuwasilisha NSSF ya mfanyakazi wa nyumbani ni ukiukwaji wa sheria — hata kama mfanyakazi hajui haki zake. Faini ya kuchelewa ni 5%/mwezi. Thibitisha na nssf.or.tz.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 12 of 30 ---
+Q: Mhandisi (engineer) mwenye kampuni ya ushauri — je, lazima asajili VAT?
+A: Ndiyo — mhandisi mwenye kampuni ya ushauri wa uhandisi amesajiliwa kwa Institute of Engineers Tanzania (IET) au mwili mwingine wa kitaalamu. TRA ina orodha ya taaluma zinazolazimishwa kusajili VAT hata bila kufika kizingiti — wataalam wa uhandisi wamo katika orodha hii. Hii inamaanisha hata kama mapato ya mhandisi ni TZS 50M au TZS 100M — chini ya kizingiti cha TZS 200M — bado anaweza kulazimika kusajili VAT. Wasiliana na TRA (tra.go.tz) na IET kuthibitisha hali yako maalum. Kama una shaka, omba TRA uthibitisho wa maandishi.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 13 of 30 ---
+Q: Mgeni ana biashara ndogo sana (TZS 100,000/mwezi) — GN 487A bado inatumika?
+A: Ndiyo — hakuna msamaha wa kiasi cha mapato au ukubwa wa biashara katika GN 487A. Sheria haisemi 'biashara ndogo zinasamehewa' au 'chini ya kiasi fulani ipo salama.' Hata biashara ndogo sana, hata yenye mapato ya TZS 100,000 au machinga mmoja wa barabarani — kama mmiliki ni mgeni na shughuli ipo katika orodha ya 15, GN 487A inatumika kikamilifu. Adhabu ya kiwango cha chini (TZS milioni 10) inazidi mapato ya miaka 100 kwa biashara ndogo hiyo. kufutwa kwa visa na kibali cha ukaazi kunaweza kutokea kama sehemu ya adhabu — thibitisha na Idara ya Uhamiaji na wakili wa biashara kwa hali yako maalum. Thibitisha na Idara ya Uhamiaji.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 14 of 30 ---
+Q: Mgeni wa India amefunguliwa kesi chini ya GN 487A kwa kuendesha saluni — kama korti itatoa faini, je, visa yake itafutwa pia?
+A: Ndiyo — kufutwa kwa visa na kibali cha ukaazi kunaweza kutokea kama sehemu ya adhabu — thibitisha na Idara ya Uhamiaji na wakili wa biashara kwa hali yako maalum. Hata kama korti itatoa faini tu (bila kifungo), kufutwa kwa visa na kibali cha ukaazi kunaweza kutokea kama sehemu ya adhabu — thibitisha na Idara ya Uhamiaji na wakili wa biashara kwa hali yako maalum. Hii ni sehemu tofauti ya adhabu inayotekelezwa moja kwa moja na Idara ya Uhamiaji. Kwa hiyo muundo ni: faini AU kifungo (korti huchagua moja) kufutwa kwa visa na kibali cha ukaazi kunaweza kutokea kama sehemu ya adhabu — thibitisha na Idara ya Uhamiaji na wakili wa biashara kwa hali yako maalum. Thibitisha na Idara ya Uhamiaji.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 15 of 30 ---
+Q: Mgeni ana biashara ya upigaji picha LAKINI wafanyakazi wake wote ni Watanzania — adhabu ya GN 487A bado inatumika?
+A: Ndiyo — GN 487A inazingatia mmiliki/mdhibiti wa biashara, si muundo wa wafanyakazi. Kama mgeni ndiye mmiliki, mdhibiti, au anayenufaika na biashara ya upigaji picha — sheria inatumika bila kujali idadi ya wafanyakazi Watanzania waliohusika. Hata biashara inayoajiri Watanzania 20 inakiuka GN 487A kama mmiliki mkuu ni mgeni. Adhabu: faini ya angalau TZS milioni 10 AU kifungo cha hadi miezi 6, PAMOJA NA kufutwa kwa visa. Thibitisha na Idara ya Uhamiaji.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 16 of 30 ---
+Q: Chips za kompyuta na semiconductors zinaingizwa Tanzania — je, zina ushuru wa forodha?
+A: Swali hili liko nje ya maarifa yangu ya sasa. Ushuru wa bidhaa za teknolojia na semiconductors (technology import duty) unategemea msimbo wa HS Code na taratibu za EAC/COMESA — mada hii iko nje ya wigo wangu wa biashara ya ndani. Mimi ni Chike kutoka Africa Giants, ninashughulikia VAT, PAYE, SDL, NSSF, WCF, BRELA, na sheria za biashara Tanzania Bara. Wasiliana na TRA Forodha na Ushuru kupitia tra.go.tz kwa jibu sahihi.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 17 of 30 ---
+Q: Nimesajili biashara BRELA lakini sijapata TIN bado — ninaweza kuanza kupokea malipo?
+A: Kisheria, kuanza kupokea malipo ya biashara bila TIN kunaweza kuwa tatizo la kodi. TIN (Taxpayer Identification Number) ya TRA inahitajika kwa shughuli zote za biashara za kodi — VAT, PAYE, SDL, na malipo ya kodi yoyote. Biashara nyingi za Tanzania zinahitaji TIN kwa: kufungua akaunti ya benki, kutoa invoice rasmi, kusajili EFD, na kuwasilisha marudisho ya kodi. BRELA inakusajili kisheria kama chombo — TRA inakusajili kwa kodi. Omba TIN haraka iwezekanavyo kupitia TRA (tra.go.tz au ofisi ya karibu). Thibitisha na TRA.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 18 of 30 ---
+Q: Kiwango cha ushuru wa kuingiza simu za mkononi kutoka China ni asilimia ngapi Tanzania?
+A: Swali hili liko nje ya maarifa yangu ya sasa. Mimi ni Chike, mshauri wa biashara kutoka Africa Giants, na ninashughulikia mada za VAT, PAYE, SDL, NSSF, WCF, BRELA, OSHA, GN 487A, EFD, na usajili wa biashara Tanzania Bara. Ushuru wa forodha (import duty) ni mada tofauti inayohitaji utaalamu maalum wa forodha. Tafadhali wasiliana na TRA kupitia tra.go.tz au mshauri wa forodha aliyehitimu kwa jibu sahihi.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 19 of 30 ---
+Q: Mzigo wa bidhaa unaoingia Tanzania kutoka nje — withholding ya VAT inatumika?
+A: VAT withholding (3%/6%) inalenga MAUZO YA NDANI ya Tanzania kati ya qualifying buyer na muuzaji wa Tanzania. Bidhaa zinazoingizwa kutoka nje zinalipa VAT ya forodha (customs VAT) wakati wa kuingia nchini — mfumo tofauti. Withholding ya VAT ya ndani haihusiki na mauzo ya forodha/import. Hata hivyo, baadaye muuzaji wa Tanzania anayezisambaza bidhaa hizo ndani ya nchi — mauzo ya ndani yanaweza kuwa na withholding kwa qualifying buyer. Thibitisha na TRA (tra.go.tz) kwa mwongozo maalum wa bidhaa za kuagiza na VAT.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 20 of 30 ---
+Q: Mgeni alikaa gerezani miezi 6 kwa ukiukwaji wa GN 487A — je, baada ya kutoka gerezani anaweza kuendelea na biashara?
+A: Hapana. Hata baada ya kutumikia kifungo cha miezi 6, kufutwa kwa visa na kibali cha ukaazi kunaweza kutokea kama sehemu ya adhabu — thibitisha na Idara ya Uhamiaji na wakili wa biashara kwa hali yako maalum. Kwa hiyo mgeni huyo lazima ataondoka Tanzania kabla ya kutumikia kifungo au wakati wa kutumikia. Hawezi kuendelea na biashara kwa sababu hana haki ya kukaa Tanzania tena. Kuingia tena Tanzania baada ya kufutwa kwa visa kunaweza kusababisha shida zaidi za kisheria. Thibitisha na Idara ya Uhamiaji.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 21 of 30 ---
+Q: EFD inahitajika kwa biashara yangu ya nyumbani (home-based business) inayouza mkoba online?
+A: EFD inahitajika kwa biashara iliyoandikishwa na TRA (ikiwa na TIN) inayofanya mauzo ya bidhaa au huduma zinazokatwa VAT au ikiwa iko katika orodha ya TRA ya biashara zinazohitaji EFD. Biashara ya nyumbani inayouza mkoba online: kama imesajiliwa kisheria (BRELA + TIN) na inafikia kizingiti cha VAT au iko katika sekta zinazohitaji EFD — inahitaji EFD. Ikiwa ni biashara ndogo sana ambayo bado haijafika kizingiti cha VAT na haiko katika orodha ya EFD lazima — hali inaweza kuwa tofauti. Thibitisha na TRA (tra.go.tz) kuhusu hali yako maalum.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 22 of 30 ---
+Q: Tofauti ya kimsingi kati ya biashara ya jina (sole trader) na kampuni ya hisa ni nini?
+A: Tofauti kuu: BIASHARA YA JINA (sole trader/business name): mmiliki na biashara ni kitu kimoja kisheria — madeni ya biashara ni madeni ya mmiliki kibinafsi, mali ya kibinafsi inaweza kutwaliwa. Usajili ni rahisi (BRELA ada ndogo). KAMPUNI YA HISA (limited company): kampuni ni chombo cha kisheria tofauti — mmiliki anashikiliwa tu kwa kiasi cha hisa. Madeni ya kampuni si madeni ya mmiliki kibinafsi (isipokuwa na dhamana ya kibinafsi). Gharama zaidi: usajili min TZS 95,000, annual returns TZS 22,000/mwaka, akaunti za kila mwaka. Kampuni inabaki hata mmiliki akifariki. Thibitisha na BRELA.go.tz.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 23 of 30 ---
+Q: Ninalipa mshauri wa kisheria (lawyer) kwa huduma za ushauri wa biashara — VAT withholding ni ngapi?
+A: Huduma za ushauri wa kisheria (legal consultancy) ni HUDUMA — kwa hivyo VAT withholding ni 6%. Hii ni sawa kwa huduma zote za kitaaluma: wakili, mhasibu, mhandisi, mshauri wa biashara, daktari anayetoa huduma za kliniki, na kadhalika. Finance Act 2025 ilipanga: bidhaa → 3%; huduma → 6%, kuanzia 1 Julai 2025. Mnunuzi anayehitimu anakata 6% ya VAT ya bill na kutuma TRA. Muuzaji (wakili) anapokea bei pungufu ya 6% lakini anaweza kudai input VAT. Thibitisha na TRA (tra.go.tz).
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 24 of 30 ---
+Q: Mgeni ana TIN ya Tanzania — je, TIN inamlinda dhidi ya GN 487A?
+A: Hapana — TIN (Taxpayer Identification Number) ni nambari ya kodi peke yake — si ruhusa ya kufanya biashara yoyote. TIN inahitajika kulipa kodi, si kuidhinisha aina ya biashara. GN 487A ni sheria tofauti inayozuia aina za shughuli kwa raia wa kigeni — TRA na GN 487A ni mifumo tofauti ya kisheria. Kwa hiyo mgeni mwenye TIN bado anakabiliwa na GN 487A kwa shughuli zote 15 katika orodha. Hata Mtanzania mwenye TIN anahitaji kuzingatia sheria nyingine za biashara — TIN si 'leseni ya biashara yoyote'. Thibitisha na Idara ya Uhamiaji.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 25 of 30 ---
+Q: Biashara yangu imefungwa na TRA kwa kukosa risiti za EFD — inafunguliwa vipi?
+A: Kufungwa kwa biashara na TRA kwa ukiukwaji wa EFD kunahitaji: (1) Kulipa faini zote na adhabu zilizotolewa na TRA; (2) Kuwasilisha maelezo ya jinsi utakavyozingatia sheria ya EFD siku zijazo (compliance plan); (3) Kupata idhini ya TRA ya ufunguzi tena — kwa kawaida kwa barua rasmi; (4) Kuhakikisha EFD inafanya kazi vizuri kabla ya kufungua. Mchakato mzima unaweza kuchukua siku kadhaa hadi wiki. Wakati biashara imefungwa, hakuna mauzo yanayoweza kufanywa kisheria. Wasiliana na TRA mara moja na mshauri wa kodi aliyehitimu. Thibitisha na TRA (tra.go.tz).
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 26 of 30 ---
+Q: EFD inaweza kutoa risiti kwa lugha ya Kiingereza au lazima iwe Kiswahili?
+A: Risiti za EFD zinaweza kuwa kwa Kiingereza au Kiswahili — TRA haizuii lugha maalum kwa risiti. Muhimu zaidi ni: risiti iwe na taarifa zote zinazohitajika (jina la biashara, TIN, TRA registration number, tarehe, kiasi, aina ya bidhaa/huduma, na TRA verification code). Biashara nyingi za Tanzania zinatoa risiti kwa Kiingereza kwa sababu EFD nyingi zina programu ya Kiingereza. Wateja wanaohitaji risiti kwa Kiswahili wanaweza kuomba — lakini sheria hailazimishi lugha maalum. Thibitisha na TRA (tra.go.tz) kwa miongozo ya hali ya sasa.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 27 of 30 ---
+Q: Biashara yangu ya hoteli — EFD inatumika kwa bili za vyumba tu au chakula pia?
+A: EFD inatumika kwa KILA MUAMALA wa biashara — bili za vyumba, chakula, vinywaji, laundry, parking, na huduma zozote za ziada. Hakuna msamaha kwa aina fulani ya huduma ndani ya hoteli moja. Hoteli inahitaji kuhakikisha: (1) EFD inatoa risiti kwa kila bili ya chumba; (2) Migahawa na baa ndani ya hoteli zinatoa risiti za EFD kwa chakula na vinywaji; (3) Huduma za ziada (spa, gym, conference) zinatoa risiti pia. Bila shaka, hoteli zinatoa invoice kubwa kwa makampuni na watu binafsi — hizi lazima ziwe tax invoices za EFD. Thibitisha na TRA (tra.go.tz).
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 28 of 30 ---
+Q: Mgeni anayemiliki duka la saluni NA ukarabati wa simu — makosa mawili au moja chini ya GN 487A?
+A: Shughuli mbili tofauti zinazopigwa marufuku zinaweza kuchukuliwa kama makosa mawili tofauti — saluni ni kosa moja, ukarabati wa simu ni kosa lingine. Korti itaona uzito wa jumla wa ukiukwaji. Kwa kila kosa, adhabu inaweza kuwa: faini ya angalau TZS milioni 10 AU kifungo cha hadi miezi 6. kufutwa kwa visa na kibali cha ukaazi kunaweza kutokea kama sehemu ya adhabu — thibitisha na Idara ya Uhamiaji na wakili wa biashara kwa hali yako maalum. Adhabu ya jumla inaweza kuwa kubwa zaidi kwa makosa mengi. Thibitisha na wakili wa biashara.
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 29 of 30 ---
+Q: SDL na PAYE — vinafanana vipi na vinatofauti vipi?
+A: SDL na PAYE zinahusiana na wafanyakazi lakini ni tofauti kabisa: SDL (Skills Development Levy): Kiasi: 3.5% ya mishahara ya fedha ya wafanyakazi wote; Mlipaji: MWAJIRI peke yake — si kukatwa kwa mfanyakazi; Taasisi: TRA; Kizingiti: wafanyakazi 10 au zaidi. PAYE (Pay As You Earn): Kiasi: inakatwa kwa viwango vya makundi ya mapato (0%–30%); Mlipaji: MFANYAKAZI ndiye anayebeba — mwajiri anakata na kutuma TRA; Taasisi: TRA; Kizingiti: mfanyakazi yeyote mwenye mapato yanayopita TZS 270,000/mwezi. Pia: SDL inatumika kwa JUMLA ya mishahara; PAYE inatumika KWA KILA MFANYAKAZI mmoja mmoja. Thibitisha na TRA (tra.go.tz).
+REVIEW: [ APPROVE / FLAG ]
+
+--- PAIR 30 of 30 ---
+Q: Shughuli 15 za GN 487A — je, ni zile tu zilizoorodheshwa au sheria ina uhuru wa kuongeza nyingine?
+A: GN 487A ya tarehe 28 Julai 2025 inaorodhesha kwa wazi shughuli 15 zilizopigwa marufuku kwa wageni. Shughuli ambazo hazipo katika orodha ya 15 hazizuiwi na GN 487A peke yake (ingawa sheria nyingine za biashara na uhamiaji bado zinatumika). Kama serikali inataka kuongeza shughuli nyingine, itahitaji kutangaza Tangazo Jipya la Serikali (Government Notice) lingine. Orodha ya sasa ni: 1.rejareja 2.jumla 3.saluni 4.ukarabati simu 5.uhamishaji pesa 6.usafi 7.ushonaji 8.upigaji picha 9.usafirishaji mdogo 10.delivery 11.uchapishaji 12.udhibiti wadudu 13.mitumba 14.machinga 15.boda boda/bajaj.
+REVIEW: [ APPROVE / FLAG ]
+
