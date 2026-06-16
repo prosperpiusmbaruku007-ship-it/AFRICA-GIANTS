@@ -3,7 +3,7 @@ import torch
 from huggingface_hub import login
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v3"
+ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v4"
 HF_TOKEN     = os.environ.get("HF_TOKEN", "")
 
 if HF_TOKEN:
