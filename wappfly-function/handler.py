@@ -18,17 +18,28 @@ GREETINGS = {
 }
 
 WELCOME = (
-    "Habari! Mimi ni *Chike* kutoka *Africa Giants*.\n\n"
+    "🌍 *Chike* — mshauri wako wa biashara Tanzania.\n"
     "_Fahamu Biashara Yako, Maarifa Yako._\n\n"
-    "Ninakusaidia na maswali ya biashara Tanzania:\n"
-    "• Kodi (VAT, PAYE, SDL, WHT)\n"
-    "• Usajili (BRELA, TRA, NSSF, OSHA, WCF)\n"
-    "• Sheria za biashara (GN 487A, vibali)\n\n"
-    "Uliza swali lolote. Ninajibu kwa Kiswahili na Kiingereza.\n\n"
-    "---\n\n"
-    "Hi! I am *Chike* from *Africa Giants*.\n\n"
+    "Ninajibu maswali yote ya biashara kwa sekunde chache:\n\n"
+    "💰 *Kodi* — VAT · PAYE · SDL · WHT · EFD\n"
+    "📋 *Usajili* — BRELA · TRA · NSSF · OSHA · WCF\n"
+    "⚖️ *Sheria* — GN 487A · Vibali · Leseni\n"
+    "📊 *Mishahara* — GN 605A · SDL · WCF\n\n"
+    "Uliza swali lolote sasa hivi. 👇\n\n"
+    "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+    "🌍 *Chike* — your Tanzanian business adviser.\n"
     "_Understand Your Business, That Knowledge Is Yours._\n\n"
-    "Ask me anything about Tanzanian business, tax, or compliance."
+    "I answer all business questions in seconds:\n\n"
+    "💰 *Tax* — VAT · PAYE · SDL · WHT · EFD\n"
+    "📋 *Registration* — BRELA · TRA · NSSF · OSHA · WCF\n"
+    "⚖️ *Law* — GN 487A · Permits · Licences\n"
+    "📊 *Wages* — GN 605A · SDL · WCF\n\n"
+    "Ask me anything right now. 👇\n\n"
+    "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+    "⚠️ _Chike iko katika awamu ya majaribio (beta)._\n"
+    "_Thibitisha majibu muhimu na TRA au mshauri wa kodi._\n\n"
+    "⚠️ _Chike is in beta. Always verify important_\n"
+    "_answers with TRA or a qualified adviser._"
 )
 
 FALLBACK = (
