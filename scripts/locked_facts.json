@@ -982,5 +982,110 @@
     ],
     "primary_source": "immigration.go.tz",
     "verified_date": "2026-06-12"
+  },
+  "gn487a_transitional_provision": {
+    "fact": "Non-citizens with valid licences at 28 July 2025 may continue until licence expiry. No renewal permitted. No new licences issued for prohibited activities.",
+    "correct_value": "Transitional: valid licence holders continue to expiry only",
+    "wrong_patterns": [
+      "hakukuwa na kipindi cha mpito",
+      "hakuna kipindi cha mazoea rasmi",
+      "wamekuwa wakikosea sheria tangu 28 julai"
+    ],
+    "primary_source": "Bowmans Jul 2025; MAK Africa Legal Aug 2025; TanzaniaInvest Jul 2025; The Citizen Jul 2025",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED"
+  },
+  "efd_threshold_tzs_11m": {
+    "fact": "EFD required for businesses with annual turnover TZS 11 million and above. Below TZS 11M may use manual receipts. All VAT-registered businesses must use EFD regardless of turnover.",
+    "correct_value": "TZS 11M annual turnover threshold; VAT-registered = always EFD",
+    "wrong_patterns": [
+      "kila biashara tanzania lazima iwe na efd machine",
+      "kila biashara inahitaji efd bila kizingiti"
+    ],
+    "primary_source": "TRA official website tra.go.tz; RSM Tanzania Tax Guide 2025/26; Auditax International Feb 2025",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED"
+  },
+  "gn487a_visa_revocation": {
+    "fact": "Visa revocation is a possible consequence — not universally mandatory in all sources. Bowmans says AND/mandatory. The Star and The Citizen say possible/risk. Train model to say CAN be revoked not WILL always be revoked.",
+    "correct_value": "kunaweza kutokea (can happen) — not ni lazima daima (always mandatory)",
+    "wrong_patterns": [
+      "visa ni lazima daima",
+      "visa itafutwa lazima",
+      "kufutwa kwa visa ni lazima daima bila exception"
+    ],
+    "primary_source": "Bowmans 30 Jul 2025 (mandatory); The Star Jul 2025 (possible); The Citizen Jul 2025 (risk)",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED — sources disagree, use softer language"
+  },
+  "vat_withholding_remittance_deadline": {
+    "fact": "VAT withholding remitted to TRA by 20th of following month — same deadline as VAT return. NOT 7 days after month end.",
+    "correct_value": "20th of following month",
+    "wrong_patterns": [
+      "siku 7 baada ya mwisho wa mwezi.*withholding",
+      "withholding.*siku 7 baada ya mwisho",
+      "ndani ya siku 7.*withholding.*tra"
+    ],
+    "primary_source": "PWC Tax Summaries 2025; Finance Act 2025 analysis (Lexology); Habib Advisory Tax Guide 2025/26",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED"
+  },
+  "vat_late_registration_penalty": {
+    "fact": "Penalty for failure to register VAT: fine up to TZS 200,000 AND/OR imprisonment 2-12 months PLUS interest on unpaid VAT. NO 2.5% monthly rate exists in the VAT Act.",
+    "correct_value": "Fine up to TZS 200,000 and/or 2-12 months imprisonment + interest",
+    "wrong_patterns": [
+      "2\\.5%.*kwa kila mwezi.*vat.*kusajili",
+      "faini ya 2\\.5%.*vat.*kuchelewa",
+      "vat.*late.*registration.*2\\.5%"
+    ],
+    "primary_source": "VAT Act Tanzania Cap 148",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED"
+  },
+  "nssf_payment_deadline": {
+    "fact": "NSSF due by end of month following payroll month. Dataset had inconsistent dates (10th vs end of month) — always direct users to nssf.or.tz to confirm current deadline.",
+    "correct_value": "End of month following payroll — verify at nssf.or.tz",
+    "wrong_patterns": [
+      "nssf.*tarehe 10 au mwishoni mwa mwezi",
+      "nssf.*tarehe 10 au mwisho wa mwezi"
+    ],
+    "primary_source": "nssf.or.tz — verify current deadline",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED — use hedged language"
+  },
+  "sdl_rate_2025": {
+    "fact": "SDL rate is 3.5% of gross cash emoluments effective 1 July 2023 (Finance Act 2023 reduced from 4%). Minimum 10 employees threshold applies.",
+    "correct_value": "3.5% from 1 Jul 2023",
+    "wrong_patterns": [
+      "sdl.*4%(?! hadi| to | kabla)",
+      "sdl.*asilimia 4(?! hadi| to | kabla)"
+    ],
+    "primary_source": "PWC Tax Summaries 2025; Finance Act 2023",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED — 3.5% is correct for 2025/26"
+  },
+  "sdl_employee_threshold": {
+    "fact": "SDL applies to employers with minimum 10 employees. Below 10 employees = no SDL obligation.",
+    "correct_value": "10 employees minimum",
+    "wrong_patterns": [
+      "sdl.*wafanyakazi 5(?! au zaidi| or more)",
+      "sdl.*wafanyakazi 4(?! au zaidi| or more)"
+    ],
+    "primary_source": "PWC Tax Summaries 2025; RSM Tax Guide 2025/26; TRA SDL official page",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED — 10 is correct"
+  },
+  "paye_bands_monthly_2025_26": {
+    "fact": "PAYE monthly bands 2025/26: Band 1: 0-270,000=0%; Band 2: 270,001-520,000=8%; Band 3: 520,001-760,000=20%; Band 4: 760,001-1,000,000=25%; Band 5: above 1,000,000=30%. No personal relief of TZS 26,000 exists.",
+    "correct_value": "0%/8%/20%/25%/30% — confirmed PWC Jan 2026",
+    "wrong_patterns": [
+      "band 2.*9%(?! ni kosa| is wrong)",
+      "paye.*band 3.*22%",
+      "26,000.*personal relief",
+      "punguzo la kibinafsi.*26,000"
+    ],
+    "primary_source": "PWC Tax Summaries Tanzania (reviewed Jan 2026); Habib Advisory Tax Guide 2025/26",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED"
   }
 }
