@@ -28,8 +28,9 @@ def load_all_pairs():
     return all_pairs
 
 def fmt_pair(p):
-    q = p.get("question_sw", "") or p.get("question_en", "")
-    a = p.get("answer_sw", "") or p.get("answer_en", "")
+    # Support schema format (question_sw/answer_sw) and SFT format (instruction/output)
+    q = p.get("question_sw", "") or p.get("question_en", "") or p.get("instruction", "")
+    a = p.get("answer_sw", "") or p.get("answer_en", "") or p.get("output", "")
     return {
         "instruction": q,
         "input": "",

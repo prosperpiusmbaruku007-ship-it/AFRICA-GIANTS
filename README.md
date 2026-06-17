@@ -26,6 +26,23 @@ Data Gate → Clean → Deduplicate → Vector DB (RAG index)
 - **Fine-tuning** — teaches behavior, tone, domain reasoning
 - **RAG** — provides fresh factual knowledge at inference time
 
+## Dataset — adapter-v5
+
+| | Count |
+|---|---|
+| **Total cleaned pairs** | 2,152 |
+| **Training pairs** (SFT) | 1,927 |
+| **Validation pairs** | 215 |
+| **Eval-set pairs** (held out) | 10 |
+| **Cleaned batches** | 12 (batch_001 – batch_010) |
+| **HuggingFace dataset** | [prospAprospA007/africa-giants-dataset](https://huggingface.co/datasets/prospAprospA007/africa-giants-dataset) |
+
+**batch_010 (90 pairs, adapter-v5 targeted fixes):**
+- 40 refusal-training pairs covering 8 out-of-corpus domains that had zero coverage in adapter-v4
+- 5 PAYE band-by-band calculation pairs (correct figures)
+- 25 GN 605A disambiguation pairs (33.4% vs 33.5%, average vs maximum, date disambiguation, 2022 order revocation)
+- 20 SDL quick-win pairs (deadline, cash-only base, threshold mechanics, SDL vs WCF distinction)
+
 ## Quickstart
 
 ```bash

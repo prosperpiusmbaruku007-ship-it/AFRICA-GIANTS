@@ -1,452 +1,551 @@
 #Read this file completely then execute every instruction below exactly as written.
-Generate batch_009 — 300 training pairs in 6 chunks
-of 50 pairs each. Generate ALL chunks in one session.
-Save and review after each chunk before continuing
-to the next. Do not stop between chunks.
 
-The pairs must address the real eval failures:
-- gn487a: 60% — biggest gap
-- brela_registration: 60%
-- out_of_corpus refusal: 0% — most urgent
-- efd_compliance: 70%
-- sdl_compliance: 68%
-- vat_withholding: 70%
-- vat_registration: 73%
-- nssf_contributions: 80%
-- osha_registration: 80%
-
-OUTPUT FILE:
+TASK: Apply all PENDING corrections below to:
 datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl
 
-CHECKPOINT DIR:
-datasets/tier1a/raw_sources/batch_009_checkpoints/
+For each correction:
+1. Search for the exact wrong phrase
+2. Replace with the correct version
+3. Update locked_facts.json with the verified fact
+4. Run check_locked_facts.py after all corrections
+5. Commit once with all changes
 
-PAIR FORMAT — every pair must use this exact structure:
-{
-  "instruction": "question in Swahili",
-  "input": "",
-  "output": "answer in Swahili — complete, accurate, verified"
-}
-
-============================================================
-SETUP — run once before any generation
-============================================================
-
-import json
-import os
-import anthropic
-import concurrent.futures
-
-client = anthropic.Anthropic()
-
-OUTPUT_FILE    = "datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl"
-CHECKPOINT_DIR = "datasets/tier1a/raw_sources/batch_009_checkpoints"
-os.makedirs(CHECKPOINT_DIR, exist_ok=True)
-
-# Clear output file if exists from previous attempt
-if os.path.exists(OUTPUT_FILE):
-    os.remove(OUTPUT_FILE)
-    print(f"[setup] Cleared existing {OUTPUT_FILE}")
-
-total_saved = 0
-
-def save_chunk(pairs, chunk_num):
-    global total_saved
-    checkpoint_path = f"{CHECKPOINT_DIR}/checkpoint_{chunk_num:03d}.jsonl"
-    with open(checkpoint_path, "w", encoding="utf-8") as f:
-        for p in pairs:
-            f.write(json.dumps(p, ensure_ascii=False) + "\n")
-    with open(OUTPUT_FILE, "a", encoding="utf-8") as f:
-        for p in pairs:
-            f.write(json.dumps(p, ensure_ascii=False) + "\n")
-    total_saved += len(pairs)
-    print(f"[chunk {chunk_num}/6] Saved {len(pairs)} pairs — total: {total_saved}")
-
-def cross_ai_review(pairs, chunk_num):
-    pairs_json = json.dumps(pairs[:10], ensure_ascii=False, indent=2)
-
-    PROMPT_FACTS = """Tanzania tax and business law expert.
-Review these training pairs for Chike AI assistant.
-Check: (1) fact accuracy against TRA/Finance Act 2025/GN 487A
-(2) refusal pairs must NEVER answer — only refuse
-(3) GN487A penalty must say OR not AND for fine/imprisonment
-(4) no fabricated numbers
-Return JSON: {"issues": [{"index": 0, "problem": "...", "fix": "..."}], "approved_count": N}"""
-
-    PROMPT_LANG = """Swahili language and Tanzania compliance expert.
-Review these training pairs for language quality.
-Check: (1) natural correct Swahili (2) answer completeness
-(3) question clarity and unambiguity
-Return JSON: {"language_issues": [{"index": 0, "issue": "..."}], "quality": {"swahili": 0-10, "completeness": 0-10}}"""
-
-    def review_facts():
-        try:
-            r = client.messages.create(
-                model="claude-sonnet-4-6",
-                max_tokens=1000,
-                messages=[{"role": "user", "content": PROMPT_FACTS + "\n\nPAIRS:\n" + pairs_json}]
-            )
-            return json.loads(r.content[0].text)
-        except Exception as e:
-            return {"issues": [], "approved_count": len(pairs), "error": str(e)}
-
-    def review_lang():
-        try:
-            r = client.messages.create(
-                model="claude-sonnet-4-6",
-                max_tokens=1000,
-                messages=[{"role": "user", "content": PROMPT_LANG + "\n\nPAIRS:\n" + pairs_json}]
-            )
-            return json.loads(r.content[0].text)
-        except Exception as e:
-            return {"language_issues": [], "quality": {}, "error": str(e)}
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as ex:
-        fa = ex.submit(review_facts)
-        fb = ex.submit(review_lang)
-        ra = fa.result(timeout=60)
-        rb = fb.result(timeout=60)
-
-    fact_issues = len(ra.get("issues", []))
-    lang_issues = len(rb.get("language_issues", []))
-    quality     = rb.get("quality", {})
-
-    review_path = f"{CHECKPOINT_DIR}/review_{chunk_num:03d}.json"
-    with open(review_path, "w", encoding="utf-8") as f:
-        json.dump({"chunk": chunk_num, "facts": ra, "language": rb}, f,
-                  ensure_ascii=False, indent=2)
-
-    print(f"[review {chunk_num}/6] fact_issues={fact_issues} lang_issues={lang_issues} quality={quality}")
+Show count of pairs changed per correction.
+Show commit hash at the end then STOP.
 
 ============================================================
-CHUNK 1 — GN487A penalty AND/OR + categories (50 pairs)
+CORRECTION 1 — GN487A TRANSITIONAL PROVISION
+Status: PENDING
+Severity: CRITICAL
+Evidence: Bowmans Law July 2025, MAK Africa Legal
+August 2025, TanzaniaInvest July 2025, The Citizen
+July 2025, IMMMA/DLA Piper 2025 — ALL CONFIRM
 ============================================================
 
-Generate exactly 50 pairs then call:
-save_chunk(pairs, 1)
-cross_ai_review(pairs, 1)
+WRONG PHRASES — search and replace all of these:
+- "Hakukuwa na kipindi cha mpito"
+- "hakukuwa na kipindi cha mpito"
+- "Hakuna kipindi cha mazoea"
+- "hakuna kipindi cha mazoea"
+- "wageni waliokuwa na biashara katika orodha ya 15
+  tangu 28 Julai 2025 wamekuwa wakikosea sheria"
 
-Topics:
-25 pairs — GN487A penalty AND/OR structure
-Each output MUST contain these exact phrases:
-"faini AU kifungo" (fine OR imprisonment)
-"kufutwa kwa visa ni lazima daima" (visa always mandatory)
-NEVER use "faini NA kifungo" in output
+REPLACE WITH:
+"GN 487A ina masharti ya mpito: wageni waliokuwa
+na leseni halali tarehe 28 Julai 2025 katika
+shughuli zilizokatazwa waliruhusiwa kuendelea mpaka
+leseni zao ziishe. Baada ya leseni kuisha, upya
+(renewal) haukuruhusiwa na leseni mpya haikuweza
+kutolewa."
 
-Example pair:
-{
-  "instruction": "Mgeni aliyekamatwa akifanya biashara ya rejareja Tanzania anaweza kupewa faini NA kifungo kwa wakati mmoja?",
-  "input": "",
-  "output": "Hapana. Adhabu kwa mgeni chini ya GN 487A ni: faini ya angalau TZS milioni 10 AU kifungo cha hadi miezi 6 — si zote mbili pamoja. Hata hivyo, kufutwa kwa visa/kibali cha kuingia Tanzania ni lazima daima, bila kujali kama faini au kifungo kimetolewa. Muundo sahihi ni: (faini AU kifungo) NA kufutwa kwa visa. Thibitisha na Idara ya Uhamiaji."
-}
-
-25 pairs — GN487A 15 prohibited categories
-Cover all 15 categories by name. Mix yes/no questions,
-definition questions, and scenario questions.
-Categories:
-1.Biashara ya rejareja 2.Biashara ya jumla
-3.Saluni na urembo 4.Ukarabati wa simu
-5.Uhamishaji wa pesa 6.Huduma za usafi
-7.Ushonaji na utengenezaji wa nguo
-8.Upigaji picha na video 9.Usafirishaji mdogo
-10.Huduma za ujumbe na delivery
-11.Uchapishaji na unanakili 12.Udhibiti wa wadudu
-13.Biashara ya nguo za pili 14.Biashara ndogo/machinga
-15.Boda boda na bajaj
+Add to locked_facts.json:
+KEY: "gn487a_transitional_provision"
+VALUE: "Non-citizens with valid licences at 28 July
+2025 may continue until licence expiry. No renewal
+permitted. No new licences issued for prohibited
+activities. Source: Bowmans, MAK Africa Legal,
+TanzaniaInvest, The Citizen — all confirmed."
 
 ============================================================
-CHUNK 2 — Out of corpus refusal (50 pairs)
+CORRECTION 2 — EFD THRESHOLD TZS 11M
+Status: PENDING
+Severity: CRITICAL
+Evidence: TRA official website tra.go.tz/page/
+efd-vfd-suppliers, RSM Tanzania Tax Guide 2025/26,
+Auditax International February 2025
 ============================================================
 
-Generate exactly 50 pairs then call:
-save_chunk(pairs, 2)
-cross_ai_review(pairs, 2)
+WRONG PHRASES — search and replace:
+- "Kila biashara Tanzania lazima iwe na EFD machine"
+- "kila biashara inahitaji EFD bila kizingiti"
+- Any pair implying EFD is required with no threshold
 
-CRITICAL: Every output MUST start with:
-"Swali hili liko nje ya maarifa yangu ya sasa."
-And MUST NOT attempt to answer the question.
-And MUST end with direction to TRA or qualified adviser.
+REPLACE WITH (add to relevant EFD pairs):
+"EFD inahitajika kwa biashara zenye mauzo ya TZS
+milioni 11 au zaidi kwa mwaka. Biashara zenye mauzo
+chini ya TZS milioni 11 zinaweza kutumia risiti za
+kawaida (manual receipts). VAT registered businesses
+zote lazima zitumie EFD bila kujali kiasi cha mauzo.
+Thibitisha na TRA tra.go.tz."
 
-Topics (vary question phrasing widely):
-8 pairs — import duty rates on different goods
-6 pairs — capital gains tax on land/property/shares
-6 pairs — crypto/Bitcoin/digital assets taxation
-5 pairs — transfer pricing between related companies
-5 pairs — Zanzibar tax differences from mainland
-5 pairs — gold/mineral/oil royalty rates
-5 pairs — insurance premium levy rates
-5 pairs — EPZ/SEZ tax exemptions and conditions
-5 pairs — stamp duty land valuation methods
-5 pairs — mix of other genuinely out-of-corpus topics
-
-Each pair must use different question phrasing.
-Do not repeat the same scenario twice.
-
-Example pair:
-{
-  "instruction": "Kiwango cha ushuru wa kuingiza simu za mkononi kutoka China ni asilimia ngapi Tanzania?",
-  "input": "",
-  "output": "Swali hili liko nje ya maarifa yangu ya sasa. Mimi ni Chike, mshauri wa biashara kutoka Africa Giants, na ninashughulikia mada za VAT, PAYE, SDL, NSSF, WCF, BRELA, TRA, OSHA, GN 487A, EFD, na biashara za Tanzania Bara. Ushuru wa forodha ni mada tofauti inayohitaji utaalamu maalum. Tafadhali wasiliana na TRA kupitia tra.go.tz au mshauri wa forodha aliyehitimu kwa jibu sahihi."
-}
+Add to locked_facts.json:
+KEY: "efd_threshold_tzs_11m"
+VALUE: "EFD required for businesses with annual
+turnover TZS 11 million and above. Below TZS 11M
+may use manual receipts. All VAT-registered
+businesses must use EFD regardless of turnover.
+Source: TRA official website, RSM Tax Guide 2025/26."
 
 ============================================================
-CHUNK 3 — BRELA registration gaps (40 pairs)
-         + GN487A spouse/exception (10 pairs)
+CORRECTION 3 — VISA REVOCATION LANGUAGE
+Status: PENDING
+Severity: OVERSTATED
+Evidence: The Star July 2025 (possible revocation),
+The Citizen July 2025 (risk having their...revoked).
+Bowmans uses AND (mandatory). Sources genuinely
+disagree — use softer language.
 ============================================================
 
-Generate exactly 50 pairs then call:
-save_chunk(pairs, 3)
-cross_ai_review(pairs, 3)
+WRONG PHRASES — search and replace:
+- "kufutwa kwa visa ni lazima daima"
+- "visa itafutwa lazima"
+- "kufutwa kwa visa/kibali cha kuingia Tanzania
+  ni lazima daima"
+- "kufutwa kwa visa ni lazima daima bila exception"
 
-40 pairs BRELA:
-15 pairs — annual return consequences
-  Focus: fines + deregistration + commercial restrictions
-  The model scores 60% here — it knows basics but
-  misses consequences of non-compliance
+REPLACE WITH:
+"kufutwa kwa visa na kibali cha ukaazi kunaweza
+kutokea kama sehemu ya adhabu — thibitisha na
+Idara ya Uhamiaji na wakili wa biashara kwa
+hali yako maalum"
 
-15 pairs — sole trader vs limited company liability
-  Personal liability vs separate legal entity
-  When to choose each structure
-  Cost and reporting differences
-
-10 pairs — BRELA vs COSOTA vs TRA distinction
-  BRELA: business + trademarks + patents + designs
-  COSOTA: copyrights ONLY
-  TRA: tax registration (TIN) — completely separate
-  Need BOTH BRELA certificate AND TIN to operate
-
-10 pairs GN487A:
-5 pairs — Tanzanian spouse does not exempt non-citizen
-  "Ndoa na raia wa Tanzania haibadilishi hadhi ya
-   uraia chini ya GN 487A"
-5 pairs — No small business exception exists
-  "Hakuna msamaha kwa biashara ndogo katika GN 487A"
-  The TZS 10M minimum applies equally to all
+Add to locked_facts.json:
+KEY: "gn487a_visa_revocation"
+VALUE: "Visa revocation is a possible consequence
+not universally mandatory in all sources. Bowmans
+says AND (mandatory). The Star and The Citizen say
+possible/risk. Train model to say CAN be revoked
+not WILL always be revoked. Use: kunaweza kutokea
+not ni lazima daima."
 
 ============================================================
-CHUNK 4 — EFD compliance gaps (35 pairs)
-         + SDL compliance gaps (15 pairs)
+CORRECTION 4 — VAT WITHHOLDING REMITTANCE DEADLINE
+Status: PENDING
+Severity: CRITICAL
+Evidence: PWC Tax Summaries 2025, Lexology Finance
+Act 2025 analysis, Habib Advisory Tax Guide 2025/26,
+TRA official VAT returns page — ALL SAY 20th
 ============================================================
 
-Generate exactly 50 pairs then call:
-save_chunk(pairs, 4)
-cross_ai_review(pairs, 4)
+WRONG PHRASES — search and replace:
+- "ndani ya siku 7 baada ya mwisho wa mwezi"
+- "siku 7 baada ya mwisho"
+- Any pair saying VAT withholding goes to TRA
+  within 7 days
 
-35 pairs EFD:
-15 pairs — every transaction without exception
-  Scenarios: TZS 100 sale, mobile money, card payment,
-  customer refuses receipt, market stall, online sale
-  Key message: no minimum amount, no payment method exception
+REPLACE WITH:
+"VAT withholding inalipwa TRA tarehe 20 ya mwezi
+unaofuata — siku ile ile ya VAT return ya kawaida.
+Si siku 7. Thibitisha na TRA tra.go.tz."
 
-10 pairs — TRA enforcement and detection methods
-  Surprise inspections, customer complaints,
-  EFD data cross-referenced with M-Pesa/bank records,
-  One complaint = full audit risk
-
-10 pairs — consequences of non-compliance
-  Business closure, director personal liability,
-  Tax evasion charges, licence suspension
-
-15 pairs SDL:
-8 pairs — 10-employee threshold mechanics
-  Below 10: no SDL, exactly 10: starts immediately,
-  Mid-month hire: starts that month, contractor vs employee
-
-7 pairs — SDL vs WCF distinction
-  SDL: 3.5% to TRA for skills training
-  WCF: 0.5% to WCF Authority for injury compensation
-  Both employer-only, neither from employee salary
-  Different institutions, different purposes, different rates
+Add to locked_facts.json:
+KEY: "vat_withholding_remittance_deadline"
+VALUE: "VAT withholding remitted to TRA by 20th of
+following month — same deadline as VAT return.
+NOT 7 days. Source: PWC Tax Summaries 2025, Finance
+Act 2025 analysis (Lexology), Habib Advisory
+Tax Guide 2025/26."
 
 ============================================================
-CHUNK 5 — VAT withholding (25 pairs)
-         + VAT registration (15 pairs)
-         + SDL GN605A interaction (10 pairs)
+CORRECTION 5 — VAT LATE REGISTRATION PENALTY
+2.5% INVENTED
+Status: PENDING
+Severity: CRITICAL
+Evidence: VAT Act Tanzania Cap 148 — actual penalty
+is fine up to TZS 200,000 and/or 2-12 months
+imprisonment plus interest. NO 2.5% monthly rate
+exists in the VAT Act.
 ============================================================
 
-Generate exactly 50 pairs then call:
-save_chunk(pairs, 5)
-cross_ai_review(pairs, 5)
+WRONG PHRASES — search ALL pairs for:
+- "2.5%" in any VAT registration context
+- "Faini ya 2.5% kwa kila mwezi wa kuchelewa"
 
-25 pairs VAT withholding:
-12 pairs — 3% goods vs 6% services
-  Common confusions to address:
-  IT services = 6% (not 3%)
-  Construction materials = 3%
-  Consultancy = 6%
-  Mixed supplies: split and apply correct rate
+REMOVE completely. REPLACE WITH:
+"Adhabu ya kushindwa kusajili VAT kwa wakati ni
+faini ya hadi TZS 200,000 na/au kifungo cha miezi
+2 hadi 12, pamoja na riba kwa VAT iliyopaswa
+kukusanywa tangu kufika kizingiti. Hakuna asilimia
+ya 2.5% kwa mwezi katika Sheria ya VAT.
+Thibitisha na TRA tra.go.tz."
 
-8 pairs — 3 qualifying buyer types
-  Ministry of Finance: automatic
-  Government entity retaining own revenue: automatic
-  CG-designated person: requires formal designation
-  Private company: CANNOT be qualifying buyer without CG
-
-5 pairs — certificate timing
-  Day VAT becomes payable — NOT the 20th
-  20th is VAT return deadline — different obligation
-  Two separate deadlines, two separate legal duties
-
-15 pairs VAT registration:
-8 pairs — threshold mechanics with calculations
-  Rolling 12-month TZS 200M
-  Rolling 6-month TZS 100M
-  Either triggers mandatory immediate registration
-  Include calculation scenarios
-
-7 pairs — professional mandatory registration
-  Lawyers, CPAs, engineers, architects
-  Low revenue does NOT exempt listed professions
-  Specific TRA requirement for these categories
-
-10 pairs SDL + GN605A:
-SDL base is gross payroll
-If GN605A raises minimum wages SDL base increases
-GN605A effective 1 January 2026, covers 16 sectors
-SDL calculation must use updated wage floor
+Add to locked_facts.json:
+KEY: "vat_late_registration_penalty"
+VALUE: "Penalty for failure to register VAT: fine
+up to TZS 200,000 AND/OR imprisonment 2-12 months
+PLUS interest on unpaid VAT. NO 2.5% monthly rate
+exists in the VAT Act. Source: VAT Act Tanzania
+Cap 148."
 
 ============================================================
-CHUNK 6 — NSSF gaps (10 pairs)
-         + OSHA gaps (10 pairs)
-         + GN487A enforcement dates (15 pairs)
-         + Mixed reinforcement (15 pairs)
+CORRECTION 6 — NO SMALL BUSINESS EXCEPTION
+IN GN487A
+Status: PENDING
+Severity: CRITICAL
+Evidence: GN 487A gazette text — Schedule has no
+size threshold. Bowmans, MAK Africa Legal, all
+sources confirm flat TZS 10M minimum with no
+small business carve-out.
 ============================================================
 
-Generate exactly 50 pairs then call:
-save_chunk(pairs, 6)
-cross_ai_review(pairs, 6)
+WRONG PHRASES — search and replace:
+- "TZS milioni 5 kwa biashara ndogo"
+- "msamaha kwa biashara ndogo" in GN487A context
+- Any pair implying reduced penalty for small
+  businesses under GN487A
 
-10 pairs NSSF:
-5 pairs — late payment: 5% monthly interest,
-  director personal liability, contact NSSF early
-5 pairs — domestic workers covered,
-  self-employed voluntary 20% total
+REPLACE WITH:
+"Hakuna msamaha kwa biashara ndogo katika GN 487A.
+Faini ya angalau TZS milioni 10 inatumika kwa
+wageni wote bila kujali ukubwa wa biashara, mtaji,
+au mapato. Thibitisha na Idara ya Uhamiaji."
 
-10 pairs OSHA:
-5 pairs — every employer regardless of count,
-  OSHA separate from BRELA
-5 pairs — safety officer 50+ general, 20+ construction,
-  director personal liability for non-compliance
-
-15 pairs GN487A enforcement:
-5 pairs — gazetted 28 July 2025, effective same day
-5 pairs — enforcement exercise 11 Sep to 8 Oct 2025
-5 pairs — led by Immigration Services Department,
-  exercise ended but law permanent ongoing enforcement
-
-15 pairs mixed reinforcement — hardest questions:
-Pick the 15 topics with lowest accuracy across
-all subdomains and create one reinforcement pair
-for each. These are deliberately the hardest
-scenarios combining multiple compliance areas.
-Example: "Mgeni mwenye duka la rejareja ambaye
-pia amesajili NSSF — je, NSSF inasaidia kuomba
-msamaha wa GN 487A?" (No — completely separate systems)
+Add to locked_facts.json:
+KEY: "gn487a_no_small_business_exception"
+VALUE: "GN 487A has NO small business exception.
+TZS 10M minimum penalty applies equally to all
+non-citizens regardless of business size, revenue,
+or capital. The TZS 5M figure for small businesses
+is fabricated. Source: GN 487A gazette Schedule."
 
 ============================================================
-AFTER ALL 6 CHUNKS COMPLETE
+CORRECTION 7 — BRELA DEREGISTRATION NOT AUTOMATIC
+FOR GN487A VIOLATIONS
+Status: PENDING
+Severity: CRITICAL
+Evidence: GN 487A text lists penalties as fine,
+imprisonment, visa revocation. No BRELA
+deregistration listed as penalty. Companies Act
+Tanzania has its own separate grounds.
 ============================================================
 
-Run final verification:
+WRONG PHRASES — search and replace:
+- "BRELA inaweza kufuta kampuni ya mgeni moja kwa
+  moja kwa kukiuka GN 487A"
+- "BRELA itafuta kampuni moja kwa moja"
+
+REPLACE WITH:
+"Ukiukaji wa GN 487A unaweza kusababisha adhabu za
+jinai na hatua za uhamiaji. Kufutwa kwa kampuni na
+BRELA ni mchakato tofauti wa kisheria wenye
+masharti yake chini ya Sheria za Kampuni — si
+adhabu ya moja kwa moja ya GN 487A.
+Thibitisha na wakili wa biashara."
+
+============================================================
+CORRECTION 8 — CLOSING BUSINESS DOES NOT ERASE
+TAX DEBT
+Status: PENDING
+Severity: CRITICAL
+Evidence: Tax Administration Act Tanzania —
+universal tax law principle confirmed.
+============================================================
+
+WRONG PHRASES — search and replace:
+- Any pair implying kufunga biashara cancels
+  TRA obligations or past tax debts
+
+REPLACE WITH:
+"Kufunga biashara kunasimamisha shughuli za
+baadaye lakini hakufuti wajibu wa kodi uliotokana
+na kipindi ambacho biashara ilikuwa inafanya kazi.
+TRA inaweza kudai PAYE, VAT, SDL, faini, na riba
+zilizobaki hata baada ya biashara kufungwa.
+Thibitisha na TRA tra.go.tz."
+
+============================================================
+CORRECTION 9 — SDL BASE IS CASH EMOLUMENTS ONLY
+Status: PENDING
+Severity: MODERATE
+Evidence: PWC Tax Summaries 2025 confirms SDL is
+3.5% of gross CASH emoluments. TRA SDL page and
+RSM Tax Guide 2025/26 confirm cash only.
+============================================================
+
+WRONG PHRASES — search and replace:
+- Any SDL pair claiming SDL applies to benefits
+  in kind (nyumba ya kampuni, gari la kampuni,
+  bima ya afya)
+
+ADD clarification to such pairs:
+"SDL inakokotolewa kwa malipo ya FEDHA (cash
+emoluments) peke yake — si faida zisizo za fedha
+(benefits in kind) kama nyumba ya kampuni, gari
+la kampuni, au bima ya afya inayolipwa moja kwa
+moja. SDL base: mshahara wa msingi + posho za
+fedha + bonasi za fedha. Thibitisha na TRA."
+
+============================================================
+CORRECTION 10 — EAC CITIZENS GN487A AMBIGUITY
+Status: PENDING
+Severity: OVERSTATED
+Evidence: EAC Common Market Protocol covers right
+of establishment and free movement of services —
+genuine legal ambiguity exists between GN487A
+and EAC Protocol obligations.
+============================================================
+
+WRONG PHRASES — search and replace:
+- "Raia wa EAC hawana haki zozote"
+- "hakuna mjadala wowote kuhusu raia wa EAC"
+- Any pair saying EAC rights are completely
+  irrelevant to GN487A with no nuance
+
+ADD to such pairs:
+"GN 487A kwa maandishi yake inatumika kwa
+non-citizens wote bila kutenganisha raia wa EAC.
+Hata hivyo, uhusiano wake na haki za EAC Common
+Market Protocol (uhuru wa kuanzisha biashara na
+huduma) unaweza kuhitaji tafsiri ya kisheria ya
+kina. Thibitisha na wakili wa biashara."
+
+============================================================
+CORRECTION 11 — NSSF PAYMENT DATE UNCLEAR
+Status: PENDING
+Severity: MODERATE
+Evidence: Dataset gave inconsistent dates (10th,
+end of month) without citing official NSSF source.
+Reviewer flagged this correctly.
+============================================================
+
+WRONG PHRASES — search and replace:
+- "tarehe 10 au mwisho wa mwezi" for NSSF deadline
+- Any pair giving inconsistent NSSF dates
+
+REPLACE WITH:
+"NSSF iwasilishwe mwishoni mwa mwezi unaofuata
+mwezi wa malipo ya wafanyakazi. Thibitisha tarehe
+halisi ya sasa na nssf.or.tz kwa sababu TRA
+inaweza kutangaza mabadiliko."
+
+Add to locked_facts.json:
+KEY: "nssf_payment_deadline"
+VALUE: "NSSF due by end of month following payroll
+month. Dataset had inconsistent dates — always
+direct users to nssf.or.tz to confirm current
+deadline. Do not state specific date without
+official confirmation."
+
+============================================================
+CORRECTION 12 — SDL RATE CONFIRMED 3.5%
+Status: INFORMATIONAL — NO CHANGE NEEDED
+Evidence: Finance Act 2023 reduced SDL from 4% to
+3.5% effective 1 July 2023. PWC Tax Summaries 2025
+confirms 3.5%. Reviewer questioned this but was
+wrong. 3.5% IS CORRECT for 2025/26.
+============================================================
+
+No changes needed. SDL is correctly stated as
+3.5% in batch_009. Confirm this in locked_facts.json:
+
+Add to locked_facts.json:
+KEY: "sdl_rate_2025"
+VALUE: "SDL rate is 3.5% of gross cash emoluments
+effective 1 July 2023 (Finance Act 2023 reduced
+from 4%). Minimum 10 employees threshold applies.
+Source: PWC Tax Summaries 2025, Finance Act 2023."
+
+============================================================
+CORRECTION 13 — SDL EMPLOYEE THRESHOLD CONFIRMED 10
+Status: INFORMATIONAL — NO CHANGE NEEDED
+Evidence: PWC Tax Summaries 2025 and RSM Tax Guide
+2025/26 both confirm minimum 10 employees.
+Reviewer questioned this but was wrong.
+10 employees IS CORRECT.
+============================================================
+
+No changes needed. Confirm in locked_facts.json:
+
+Add to locked_facts.json:
+KEY: "sdl_employee_threshold"
+VALUE: "SDL applies to employers with minimum 10
+employees. Below 10 employees = no SDL obligation.
+Source: PWC Tax Summaries 2025, RSM Tax Guide
+2025/26, TRA SDL official page."
+
+============================================================
+[ADD NEW CORRECTIONS HERE AS YOU REVIEW MORE PAIRS]
+============================================================
+
+CORRECTION 14 — [TITLE]
+Status: PENDING
+Severity: [CRITICAL / OVERSTATED / MODERATE]
+Evidence: [source URL or name]
+============================================================
+
+WRONG PHRASES:
+- [paste wrong phrase from pair here]
+
+REPLACE WITH:
+[paste correct version here]
+
+Add to locked_facts.json:
+KEY: "[key_name]"
+VALUE: "[correct fact + source]"
+
+============================================================
+CORRECTION 15 — [TITLE]
+Status: PENDING
+Severity:
+Evidence:
+============================================================
+
+WRONG PHRASES:
+-
+
+REPLACE WITH:
+
+Add to locked_facts.json:
+KEY:
+VALUE:
+
+============================================================
+VERIFICATION SCRIPT — RUN AFTER ALL CORRECTIONS
+============================================================
+
 python -c "
-import json, glob
+import json
 
-# Count total
-with open('datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl') as f:
+with open('datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl',
+          encoding='utf-8') as f:
     lines = [l for l in f if l.strip()]
-print(f'Total pairs: {len(lines)}')
-assert len(lines) == 300, f'Expected 300 got {len(lines)}'
 
-# Verify no empty outputs
-empty = 0
-refusal_correct = 0
-and_or_errors = 0
-for l in lines:
-    d = json.loads(l)
+checks = {
+    'transitional_fixed': 0,
+    'efd_threshold_present': 0,
+    'visa_softened': 0,
+    'vat_withholding_20th': 0,
+    'vat_2_5_pct_REMAINING': 0,
+    'no_small_biz_exception': 0,
+}
+
+for line in lines:
+    d = json.loads(line)
     out = d.get('output', '')
-    if not out.strip():
-        empty += 1
-    if 'liko nje ya maarifa' in out and 'asilimia' in out:
-        refusal_correct += 0  # refusal should not have numbers
-    if 'faini NA kifungo' in out.lower():
-        and_or_errors += 1
+    inst = d.get('instruction', '')
+    if 'masharti ya mpito' in out:
+        checks['transitional_fixed'] += 1
+    if 'milioni 11' in out and 'EFD' in out:
+        checks['efd_threshold_present'] += 1
+    if 'inaweza kutokea kama sehemu ya adhabu' in out:
+        checks['visa_softened'] += 1
+    if 'tarehe 20' in out and 'withholding' in out.lower():
+        checks['vat_withholding_20th'] += 1
+    if '2.5%' in out and 'VAT' in out:
+        checks['vat_2_5_pct_REMAINING'] += 1
+    if 'Hakuna msamaha kwa biashara ndogo' in out:
+        checks['no_small_biz_exception'] += 1
 
-print(f'Empty outputs: {empty} (should be 0)')
-print(f'AND/OR errors in GN487A: {and_or_errors} (should be 0)')
-print('All checks passed' if empty == 0 and and_or_errors == 0 else 'ISSUES FOUND')
+print(f'Total pairs: {len(lines)}')
+for k, v in checks.items():
+    flag = ' *** WARNING' if k == 'vat_2_5_pct_REMAINING' and v > 0 else ''
+    print(f'  {k}: {v}{flag}')
 "
 
-Run check_locked_facts.py:
 python check_locked_facts.py \
   datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl
 
-Run DEDUP check:
-python -c "
-import json, glob
-
-existing_keys = set()
-for f in glob.glob('datasets/tier1a/cleaned_pairs/*.jsonl'):
-    with open(f, encoding='utf-8') as fh:
-        for line in fh:
-            if line.strip():
-                d = json.loads(line)
-                key = (d.get('instruction','') + d.get('output',''))[:120]
-                existing_keys.add(key)
-
-dupes = 0
-with open('datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl',
-          encoding='utf-8') as f:
-    for i, line in enumerate(f):
-        if line.strip():
-            d = json.loads(line)
-            key = (d.get('instruction','') + d.get('output',''))[:120]
-            if key in existing_keys:
-                dupes += 1
-                print(f'DUPE at line {i}: {key[:80]}')
-
-print(f'Duplicates found: {dupes} (should be 0)')
-"
-
-Then commit everything:
 git add datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl
-git add datasets/tier1a/raw_sources/batch_009_checkpoints/
-git commit -m "batch_009: 300 pairs — 6 chunks, cross-AI reviewed, gn487a AND/OR fix, 50 refusal pairs"
+git add datasets/tier1a/raw_sources/locked_facts.json
+git commit -m "batch_009: apply corrections canvas — GN487A transition, EFD threshold, VAT deadline, 2.5% removed, visa language, no small biz exception"
 git push origin main
-Show commit hash and final summary then STOP.
+Show commit hash and verification counts then STOP.
 
 ============================================================
-ALSO IN THE SAME SESSION — update welcome message
+CORRECTION 14 — PAYE: EMPLOYEE DOES NOT LOSE ANYTHING
+IS OVERSTATED
+Status: PENDING
+Severity: MODERATE
+Evidence: General tax law principle — while PAYE is
+employer's obligation to remit, employee can face
+compliance record issues, tax clearance disputes,
+or audit questions if employer failed to remit
+despite deducting.
 ============================================================
 
-After batch_009 is committed update
-wappfly-function/handler.py WELCOME message:
+WRONG PHRASES — search and replace:
+- "mfanyakazi HUPOTEZA CHOCHOTE kwa upande wa PAYE"
+- "mfanyakazi hapotezi chochote"
 
-WELCOME = (
-    "🌍 *Chike* — mshauri wako wa biashara Tanzania.\n"
-    "_Fahamu Biashara Yako, Maarifa Yako._\n\n"
-    "Ninajibu maswali yote ya biashara kwa sekunde chache:\n\n"
-    "💰 *Kodi* — VAT · PAYE · SDL · WHT · EFD\n"
-    "📋 *Usajili* — BRELA · TRA · NSSF · OSHA · WCF\n"
-    "⚖️ *Sheria* — GN 487A · Vibali · Leseni\n"
-    "📊 *Mishahara* — GN 605A · SDL · WCF\n\n"
-    "Uliza swali lolote sasa hivi. 👇\n\n"
-    "━━━━━━━━━━━━━━━━━━━━━━\n\n"
-    "🌍 *Chike* — your Tanzanian business adviser.\n"
-    "_Understand Your Business, That Knowledge Is Yours._\n\n"
-    "I answer all business questions in seconds:\n\n"
-    "💰 *Tax* — VAT · PAYE · SDL · WHT · EFD\n"
-    "📋 *Registration* — BRELA · TRA · NSSF · OSHA · WCF\n"
-    "⚖️ *Law* — GN 487A · Permits · Licences\n"
-    "📊 *Wages* — GN 605A · SDL · WCF\n\n"
-    "Ask me anything right now. 👇\n\n"
-    "━━━━━━━━━━━━━━━━━━━━━━\n\n"
-    "⚠️ _Chike iko katika awamu ya majaribio (beta)._\n"
-    "_Thibitisha majibu muhimu na TRA au mshauri wa kodi._\n\n"
-    "⚠️ _Chike is in beta. Always verify important_\n"
-    "_answers with TRA or a qualified adviser._"
-)
+REPLACE WITH:
+"PAYE ni wajibu wa mwajiri kuwasilisha TRA —
+si akiba ya mfanyakazi. Hata hivyo kama mwajiri
+alikata PAYE lakini hakuituma TRA, mfanyakazi
+anaweza kukabiliwa na matatizo ya rekodi za kodi,
+uthibitisho wa malipo, au maswali ya ukaguzi.
+Mfanyakazi anaweza kulalamika TRA au Mahakama
+ya Kazi. Thibitisha na TRA tra.go.tz na
+Wizara ya Kazi."
 
-git add wappfly-function/handler.py
-git commit -m "update welcome message — hooking structure, beta disclaimer"
-git push origin main
-Show both commit hashes then STOP.
+============================================================
+CORRECTION 15 — GN487A BENEFICIAL OWNERSHIP NOT
+EXPLICITLY IN ORDER TEXT
+Status: PENDING
+Severity: MODERATE
+Evidence: GN 487A gazette text reviewed — no
+explicit "beneficial ownership test" language
+found in the Order itself. This is legal
+interpretation, not written law.
+============================================================
+
+WRONG PHRASES — search and replace:
+- "Sheria inazingatia udhibiti wa kweli na faida"
+  presented as written in GN 487A
+- "GN 487A inatambua beneficial ownership wazi"
+- Any pair claiming GN 487A explicitly mentions
+  beneficial ownership as a test
+
+REPLACE WITH:
+"GN 487A haisemi wazi kuhusu 'beneficial ownership'
+kama kipimo. Hata hivyo mamlaka za uhamiaji na
+mahakama zinaweza kuchunguza udhibiti wa kweli na
+mnufaika halisi wa biashara kama sehemu ya uchunguzi
+wa ukiukwaji. Thibitisha na wakili wa biashara na
+Idara ya Uhamiaji kwa tafsiri ya kisheria ya hali
+yako maalum."
+
+============================================================
+CORRECTION 16 — ONLINE RETAIL GN487A NOT EXPLICIT
+Status: PENDING
+Severity: MODERATE
+Evidence: GN 487A text does not explicitly mention
+online stores or e-commerce. Applying it to online
+retail is legal interpretation, not written law.
+============================================================
+
+WRONG PHRASES — search and replace:
+- Any pair stating definitively that online retail
+  owned by non-citizen DEFINITELY violates GN 487A
+  without noting this is interpretation
+
+ADD to such pairs:
+"GN 487A haisemi wazi 'online store' au biashara
+za mtandaoni. Kutumika kwake kwa biashara za
+mtandaoni ni tafsiri ya kisheria inayotegemea
+maamuzi ya mamlaka au mahakama. Thibitisha na
+wakili wa biashara na Idara ya Uhamiaji kwa
+hali yako maalum."
+
+============================================================
+CORRECTION 17 — PAYE BAND CALCULATIONS NEED VERIFICATION
+Status: PENDING
+Severity: MODERATE
+Evidence: Reviewer correctly flagged that PAYE
+band calculations in pairs must be verified
+against current TRA tax table. Bands change
+with Finance Acts.
+============================================================
+
+CONFIRMED PAYE BANDS 2025/26 (from PWC Tax
+Summaries confirmed earlier in this project):
+
+Monthly bands Tanzania Mainland:
+Band 1: TZS 0 - 270,000 → 0%
+Band 2: TZS 270,001 - 520,000 → 8%
+Band 3: TZS 520,001 - 760,000 → 20%
+Band 4: TZS 760,001 - 1,000,000 → 25%
+Band 5: Above TZS 1,000,000 → 30%
+
+Search ALL PAYE calculation pairs and verify
+against these exact bands. Fix any that use
+wrong thresholds or rates.
+
+Add to locked_facts.json:
+KEY: "paye_bands_monthly_2025_26"
+VALUE: "Band 1: 0-270,000 = 0%; Band 2:
+270,001-520,000 = 8%; Band 3: 520,001-760,000
+= 20%; Band 4: 760,001-1,000,000 = 25%;
+Band 5: above 1,000,000 = 30%. No personal
+relief of TZS 26,000 exists. Source: PWC Tax
+Summaries 2025, confirmed from Habib Advisory
+Tax Guide 2025/26."
