@@ -219,9 +219,12 @@ def parse_flags(response, model_name):
 def format_pairs_for_review(pairs, batch_num):
     lines = [f"BATCH {batch_num} — Tanzania regulatory Q&A pairs:\n"]
     for p in pairs:
+        # Support both schema format (question_en/answer_en) and SFT format (instruction/output)
+        q = p.get('question_en') or p.get('instruction', '')
+        a = p.get('answer_en') or p.get('output', '')
         lines.append(f"PAIR_ID: {p.get('id', 'unknown')}")
-        lines.append(f"Q: {p.get('question_en', '')}")
-        lines.append(f"A: {p.get('answer_en', '')}")
+        lines.append(f"Q: {q}")
+        lines.append(f"A: {a}")
         lines.append("")
     return "\n".join(lines)
 
