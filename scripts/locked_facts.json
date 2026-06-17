@@ -350,12 +350,18 @@
       "WHT goods 6%",
       "bidhaa 5%",
       "goods 5%",
-      "goods 2%"
+      "goods 2%",
+      "3% ya invoice ya bidhaa",
+      "3% ya thamani ya invoice",
+      "3% x.*1,000,000.*30,000",
+      "3% ya TZS 1,000,000.*= TZS 30,000",
+      "withholding.*3%.*invoice.*amount"
     ],
     "primary_source": "https://www.tra.go.tz/page/value-added-tax",
     "verified_by": "Finance Act 2025",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "formula_note": "CRITICAL: The 3% is applied to the VAT AMOUNT, not the invoice value. Example: TZS 1M invoice + TZS 180K VAT => withholding = 3% x 180,000 = TZS 5,400. NOT 3% x 1,000,000 = TZS 30,000."
   },
   "vat_withholding_services": {
     "fact": "VAT withholding on services is 6% — effective 1 July 2025 (Finance Act 2025)",
@@ -365,12 +371,18 @@
       "3% for services",
       "WHT services 3%",
       "huduma 5%",
-      "services 5%"
+      "services 5%",
+      "6% ya invoice ya huduma",
+      "6% ya thamani ya invoice",
+      "6% x.*1,000,000.*60,000",
+      "6% ya TZS 1,000,000.*= TZS 60,000",
+      "withholding.*6%.*invoice.*amount"
     ],
     "primary_source": "https://www.tra.go.tz/page/value-added-tax",
     "verified_by": "Finance Act 2025",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "formula_note": "CRITICAL: The 6% is applied to the VAT AMOUNT, not the invoice value. Example: TZS 1M invoice + TZS 180K VAT => withholding = 6% x 180,000 = TZS 10,800. NOT 6% x 1,000,000 = TZS 60,000."
   },
   "gn487a_nature": {
     "fact": "GN487A is a BUSINESS PROHIBITION ORDER listing 15 activities non-citizens cannot conduct. It is NOT about immigration or residence permits.",
@@ -1086,6 +1098,65 @@
     ],
     "primary_source": "PWC Tax Summaries Tanzania (reviewed Jan 2026); Habib Advisory Tax Guide 2025/26",
     "verified_date": "2026-06-16",
+    "status": "CONFIRMED"
+  },
+  "vat_withholding_formula_correct": {
+    "fact": "VAT withholding rate applies to the VAT AMOUNT, not the invoice/contract value. Goods: 3% x VAT amount. Services: 6% x VAT amount. Example goods: TZS 1M invoice, VAT = TZS 180,000, withholding = TZS 5,400 (3% x 180,000). Supplier receives TZS 1,174,600 (invoice + VAT minus withheld). Example services: TZS 1M invoice, VAT = TZS 180,000, withholding = TZS 10,800 (6% x 180,000). Supplier receives TZS 1,169,200.",
+    "correct_value": "3% of VAT amount for goods; 6% of VAT amount for services",
+    "wrong_patterns": [
+      "3% ya TZS 1,000,000.*= TZS 30,000",
+      "3% ya bei ya bidhaa",
+      "6% ya TZS 1,000,000.*= TZS 60,000",
+      "3% ya thamani ya invoice",
+      "withholding.*3%.*invoice value",
+      "withholding.*6%.*invoice value"
+    ],
+    "primary_source": "PWC Tax Summaries Tanzania 2025; EY Finance Act 2025 analysis; Auditax International; Clyde & Co July 2025; Afriwise July 2025",
+    "verified_by": "PWC, EY, Auditax, Clyde & Co, Afriwise — all confirm formula",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "wcf_threshold_no_minimum": {
+    "fact": "WCF (Workers Compensation Fund) applies to ALL employers in Mainland Tanzania from the first employee. There is NO minimum employee count threshold. Contrast with SDL which requires 10+ employees. WCF: 0.5% of gross cash emoluments, from employee 1. SDL: 3.5% of gross cash emoluments, from employee 10.",
+    "correct_value": "WCF from employee 1 (no threshold)",
+    "wrong_patterns": [
+      "wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)",
+      "wcf.*10 employees(?! for sdl)",
+      "wote mbili.*wafanyakazi 10.*wcf",
+      "wcf.*inahitaji wafanyakazi 10",
+      "wcf threshold.*10"
+    ],
+    "primary_source": "wcf.go.tz official portal; VELMA Law; Workers Compensation Act No.20 of 2008; V.A Business Consultants July 2025; Lenvica.com",
+    "verified_by": "WCF official portal, VELMA Law, V.A Business Consultants July 2025",
+    "effective_date": "2008-01-01",
+    "status": "CONFIRMED"
+  },
+  "wcf_rate_0_5_percent_confirmed": {
+    "fact": "WCF rate is 0.5% of gross cash emoluments for ALL employers (both private and public sector) as of 1 July 2022. History: was 1% before 2021, then 0.6% July 2021, then equalized to 0.5% for all sectors from July 2022.",
+    "correct_value": "0.5% — confirmed current rate for all sectors",
+    "wrong_patterns": [
+      "wcf.*1%(?! before| kabla| was| ilikuwa)",
+      "wcf.*0.6%(?! before| kabla| was| ilikuwa)",
+      "wcf.*asilimia 1(?! kabla| before)",
+      "wcf.*rate.*0.6"
+    ],
+    "primary_source": "wcf.go.tz official website; Sage payroll July 2022 announcement; WCF Director General May 2025 press briefing; PWC Tax Summaries 2025",
+    "verified_by": "WCF official, Sage July 2022, WCF DG May 2025, PWC 2025",
+    "effective_date": "2022-07-01",
+    "status": "CONFIRMED"
+  },
+  "vat_threshold_200m_july2024_increase": {
+    "fact": "VAT registration threshold was increased from TZS 100M to TZS 200M in July 2024. Current thresholds: TZS 200M per 12 months OR TZS 100M per any 6-month rolling period. Zanzibar threshold is separate (TZS 100M) — different jurisdiction. Any pair showing TZS 100M/year or TZS 50M/6mo is citing pre-July-2024 rules.",
+    "correct_value": "TZS 200M/12mo or TZS 100M/6mo (effective July 2024)",
+    "wrong_patterns": [
+      "vat.*kizingiti.*100,000,000 kwa mwaka(?! wa 2023| wa 2022| kabla)",
+      "vat.*kizingiti.*50,000,000.*miezi 6",
+      "vat registration.*100M per year(?! before 2024| was)",
+      "vat.*50M.*6 months(?! before 2024| was)"
+    ],
+    "primary_source": "TRA official (tra.go.tz); PWC Tax Summaries 2025; TanzaniaInvest August 2025",
+    "verified_by": "TRA official, PWC 2025, TanzaniaInvest Aug 2025",
+    "effective_date": "2024-07-01",
     "status": "CONFIRMED"
   }
 }
