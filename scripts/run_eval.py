@@ -131,6 +131,7 @@ def score_keyword_overlap(correct_sw, model_text, min_overlap=3):
     """Pass if model output shares enough content words (>5 chars) with correct answer."""
     def content_words(text):
         return {w for w in re.findall(r"[a-zA-ZÀ-ɏ]{6,}", text.lower())}
+    correct_sw = re.sub(r'Thibitisha na.*$', '', correct_sw, flags=re.IGNORECASE | re.DOTALL).strip()
     correct_words = content_words(correct_sw)
     model_words   = content_words(model_text)
     shared = correct_words & model_words
