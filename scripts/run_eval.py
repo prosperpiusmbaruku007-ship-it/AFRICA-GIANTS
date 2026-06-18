@@ -117,11 +117,11 @@ def score_yes_no(correct_sw, model_text):
     lower_correct = correct_sw.lower()
     lower_model   = model_text.lower()
     expected_yes  = any(w in lower_correct for w in SWAHILI_YES)
-    expected_no   = any(w in lower_correct for w in SWAHILI_NO)
+    expected_no   = any(re.search(r'\b' + w + r'\b', lower_correct) for w in SWAHILI_NO)
     if expected_yes:
         return any(w in lower_model for w in SWAHILI_YES)
     if expected_no:
-        return any(w in lower_model for w in SWAHILI_NO)
+        return any(re.search(r'\b' + w + r'\b', lower_model) for w in SWAHILI_NO)
     return False
 
 
