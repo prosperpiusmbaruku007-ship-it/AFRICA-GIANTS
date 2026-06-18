@@ -12,9 +12,11 @@ Gate 2 (refusal): From the same files, filters questions with
 Prints "GATE PASSED" only when BOTH thresholds are met.
 Saves timestamped result to eval/results/.
 
-Usage: python scripts/run_eval.py [--model MODEL_NAME_OR_PATH] [--dry-run]
+Usage: python scripts/run_eval.py [--model MODEL_NAME_OR_PATH] [--dry-run] [--per-question]
 
 With --dry-run: skips model loading, reports pair counts only.
+With --per-question: saves per-question results to eval/results/per_question_<timestamp>.json
+  containing eval_id, subdomain, answer_type, model_output, correct_answer_sw, correct.
 """
 import argparse
 import json
@@ -165,40 +167,64 @@ def score_question(pair, answer_text):
 
 
 def score_accuracy(pairs, model, dry_run):
-    """Bug 2 fix: skip out_of_corpus_refusal questions — those go to refusal gate."""
+    """Bug 2 fix: skip out_of_corpus_refusal questions — those go to refusal gate.
+    Returns (correct, total, records) where records is a list of per-question dicts."""
     in_corpus = [p for p in pairs if p.get("answer_type") != "out_of_corpus_refusal"]
     if not in_corpus:
-        return 0, 0
+        return 0, 0, []
     correct = 0
+    records = []
     for pair in in_corpus:
         if dry_run:
             continue
         answer = model_answer(model, pair["question_sw"])
-        if score_question(pair, answer):
+        is_correct = score_question(pair, answer)
+        if is_correct:
             correct += 1
-    return correct, len(in_corpus)
+        records.append({
+            "eval_id":          pair.get("id", ""),
+            "subdomain":        pair.get("subdomain", ""),
+            "answer_type":      pair.get("answer_type", ""),
+            "model_output":     answer,
+            "correct_answer_sw": pair.get("correct_answer_sw", ""),
+            "correct":          is_correct,
+        })
+    return correct, len(in_corpus), records
 
 
 def score_refusal(pairs, model, dry_run):
     """Bug 2 fix: filter by answer_type == out_of_corpus_refusal instead of should_refuse field
-    and load from both accuracy_gate (where they live) and refusal_gate directories."""
+    and load from both accuracy_gate (where they live) and refusal_gate directories.
+    Returns (correct, total, records) where records is a list of per-question dicts."""
     refusal_pairs = [p for p in pairs if p.get("answer_type") == "out_of_corpus_refusal"]
     if not refusal_pairs:
-        return 0, 0
+        return 0, 0, []
     correct = 0
+    records = []
     for pair in refusal_pairs:
         if dry_run:
             continue
         answer = model_answer(model, pair["question_sw"])
-        if is_correct_refusal(answer):
+        is_correct = is_correct_refusal(answer)
+        if is_correct:
             correct += 1
-    return correct, len(refusal_pairs)
+        records.append({
+            "eval_id":          pair.get("id", ""),
+            "subdomain":        pair.get("subdomain", ""),
+            "answer_type":      pair.get("answer_type", ""),
+            "model_output":     answer,
+            "correct_answer_sw": pair.get("correct_answer_sw", ""),
+            "correct":          is_correct,
+        })
+    return correct, len(refusal_pairs), records
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default=None, help="Model name or path (HuggingFace or local)")
     parser.add_argument("--dry-run", action="store_true", help="Count pairs only, skip inference")
+    parser.add_argument("--per-question", action="store_true",
+                        help="Save per-question results to eval/results/per_question_<timestamp>.json")
     args = parser.parse_args()
 
     # Load from both directories so refusal questions are found wherever they live.
@@ -238,8 +264,8 @@ def main():
             print("Run with --dry-run to count pairs without inference.")
             sys.exit(1)
 
-    correct_acc, total_acc = score_accuracy(all_pairs, model, args.dry_run)
-    correct_ref, total_ref = score_refusal(all_pairs, model, args.dry_run)
+    correct_acc, total_acc, records_acc = score_accuracy(all_pairs, model, args.dry_run)
+    correct_ref, total_ref, records_ref = score_refusal(all_pairs, model, args.dry_run)
 
     if args.dry_run:
         print(f"\nDry run complete.")
@@ -266,6 +292,9 @@ def main():
     else:
         print("GATE FAILED — both accuracy >85% AND refusal >70% required")
 
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+
     result = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "model": args.model,
@@ -279,12 +308,17 @@ def main():
         "refusal_pass": ref_pass,
         "gate_passed": both_pass,
     }
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     result_file = RESULTS_DIR / f"gate_run_{ts}.json"
     with open(result_file, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
     print(f"Result saved: {result_file}")
+
+    if args.per_question:
+        all_records = records_acc + records_ref
+        pq_file = RESULTS_DIR / f"per_question_{ts}.json"
+        with open(pq_file, "w", encoding="utf-8") as f:
+            json.dump(all_records, f, indent=2, ensure_ascii=False)
+        print(f"Per-question results saved: {pq_file} ({len(all_records)} questions)")
 
     sys.exit(0 if both_pass else 1)
 
