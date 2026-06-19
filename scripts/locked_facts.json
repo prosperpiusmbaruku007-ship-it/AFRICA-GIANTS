@@ -1158,5 +1158,115 @@
     "verified_by": "TRA official, PWC 2025, TanzaniaInvest Aug 2025",
     "effective_date": "2024-07-01",
     "status": "CONFIRMED"
+  },
+  "GN605A_effective_date": {
+    "fact": "GN 605A (Government Notice No. 605A) gazetted 13 October 2025, effective 1 January 2026. Revokes and replaces the Minimum Wage Order 2022 in its entirety. The 2022 order has NO force after 31 December 2025.",
+    "correct_value": "Gazetted 13 Oct 2025, effective 1 Jan 2026 — 2022 order revoked",
+    "wrong_patterns": [
+      "amri ya 2022 bado inatumika baada ya 2026",
+      "minimum wage order 2022 is still valid",
+      "GN 605A haikufuta amri ya 2022",
+      "2022 order remains in force"
+    ],
+    "primary_source": "PKF Eastern Africa Oct 2025; kazi.go.tz",
+    "verified_date": "2026-06-19",
+    "effective_date": "2026-01-01",
+    "status": "LOCKED"
+  },
+  "GN605A_sector_count": {
+    "fact": "GN 605A establishes minimum wages across 16 main sectors with multiple subsectors. There is no single flat national rate — each sector and subsector has its own distinct monthly minimum. Training pairs must not state a single flat rate as applying to all workers.",
+    "correct_value": "16 sectors, multiple subsectors — no single flat rate",
+    "wrong_patterns": [
+      "kiwango kimoja cha chini.*wafanyakazi wote",
+      "single minimum wage for all workers",
+      "GN 605A ina kiwango kimoja tu",
+      "GN 605A sets one flat rate"
+    ],
+    "primary_source": "PKF Eastern Africa GN 605A PDF Oct 2025",
+    "verified_date": "2026-06-19",
+    "effective_date": "2026-01-01",
+    "status": "LOCKED"
+  },
+  "GN605A_rate_range": {
+    "fact": "GN 605A monthly rates range from TZS 80,000 (other domestic workers) to TZS 765,900 (energy sector international companies). Agricultural/general floor is TZS 175,000. Any sector not explicitly specified in the Order defaults to TZS 175,000 per month.",
+    "correct_value": "TZS 80,000 (domestic) to TZS 765,900 (energy international); default TZS 175,000",
+    "wrong_patterns": [
+      "kiwango cha chini kabisa.*TZS 175,000 kwa wote",
+      "minimum wage floor.*175,000 for all",
+      "GN 605A.*chini.*TZS 100,000(?! domestic| nyumbani)",
+      "GN 605A.*chini kabisa.*TZS 200,000"
+    ],
+    "primary_source": "PKF Eastern Africa GN 605A PDF Oct 2025",
+    "verified_date": "2026-06-19",
+    "effective_date": "2026-01-01",
+    "status": "LOCKED"
+  },
+  "GN605A_key_sector_rates": {
+    "fact": "Selected confirmed GN 605A monthly minimum rates: Agricultural (crop/animal): TZS 175,000. Hotel 5-star/4-star: TZS 375,000. Hotel bars/restaurants: TZS 195,000. Mining (prospecting): TZS 695,000. Energy international: TZS 765,900. Commercial banks: TZS 733,000. Construction Class I: TZS 515,000. Telecommunication: TZS 644,000. Industrial: TZS 200,000.",
+    "correct_value": "See fact field for confirmed sector rates",
+    "wrong_patterns": [
+      "kilimo.*TZS 358,322",
+      "agricultural.*TZS 358,322",
+      "hoteli.*TZS 275,060",
+      "hotel.*minimum.*TZS 275,060"
+    ],
+    "primary_source": "PKF Eastern Africa GN 605A PDF Oct 2025",
+    "verified_date": "2026-06-19",
+    "effective_date": "2026-01-01",
+    "status": "LOCKED"
+  },
+  "OSHA_penalties": {
+    "fact": "Failure to register or obtain OSHA compliance licence: fine TZS 1,000,000 to TZS 5,000,000 OR imprisonment up to 12 months OR both. Continuing offence: additional TZS 100,000 per day. Source: OHS Act No. 5 of 2003.",
+    "correct_value": "TZS 1M–5M fine OR up to 12 months OR both; TZS 100,000/day continuing offence",
+    "wrong_patterns": [
+      "osha.*faini.*TZS 500,000(?! na)",
+      "osha.*penalty.*500,000(?! plus)",
+      "osha.*faini.*TZS 10,000,000",
+      "osha.*fine.*10 million",
+      "osha.*miezi 6.*kifungo(?! au zaidi)",
+      "osha.*6 months imprisonment(?! or more)"
+    ],
+    "primary_source": "OHS Act No. 5 of 2003, TanzLII (tanzlii.org)",
+    "verified_date": "2026-06-19",
+    "effective_date": "2003-01-01",
+    "status": "LOCKED"
+  },
+  "VAT_withholding_base_disputed": {
+    "fact": "The base for VAT withholding calculation is DISPUTED between sources. TRA.go.tz says 3% of the consideration (invoice total) for goods, 6% of consideration for services. PwC Tax Summaries says 3% of VAT amount for goods, 6% of VAT amount for services. These produce very different results. Training pairs must NOT state a specific calculation formula — use 'thibitisha na TRA kwa hesabu sahihi' instead.",
+    "correct_value": "DISPUTED — do not encode a specific formula in training pairs",
+    "wrong_patterns": [
+      "3% ya thamani ya jumla ya invoice",
+      "withholding.*3%.*total invoice value",
+      "6% ya thamani ya jumla ya invoice.*huduma",
+      "withholding.*6%.*total invoice value.*services"
+    ],
+    "primary_source": "TRA.go.tz vs PWC Tax Summaries Tanzania 2025",
+    "verified_date": "2026-06-19",
+    "status": "DISPUTED — hedge in training pairs",
+    "training_instruction": "Do not state a specific withholding calculation formula. Use: 'thibitisha na TRA kwa hesabu sahihi' or 'wasiliana na mshauri wa kodi kwa hesabu halisi'."
+  },
+  "NSSF_split_triggers": {
+    "fact": "NSSF total is always 20% of gross wage. Three valid employer-employee split arrangements: (a) 10% employer + 10% employee — standard default; (b) 15% employer + 5% employee — employer elects to contribute more; (c) 20% employer + 0% employee — employer pays the full 20%, employee pays nothing. Employee share must never exceed 10%. All three arrangements are legal under the NSSF Act.",
+    "correct_value": "20% total — three valid splits: 10+10, 15+5, 20+0",
+    "wrong_patterns": [
+      "mgawanyo wa NSSF ni 10%\\+10% peke yake",
+      "only valid split is 10.*10",
+      "NSSF inakataza mgawanyo mwingine wowote",
+      "15%.*employer.*NSSF.*si halali",
+      "20%.*employer.*NSSF.*si halali"
+    ],
+    "primary_source": "nssf.go.tz official website — payment of contributions page",
+    "verified_date": "2026-06-19",
+    "effective_date": "2018-07-01",
+    "status": "LOCKED"
+  },
+  "BRELA_fees_hedge": {
+    "fact": "BRELA registration and filing fees change periodically via ministerial order. Training pairs must direct users to brela.go.tz or the ORS portal for current fees rather than stating specific TZS amounts. The annual return filing fee has been approximately TZS 22,000 but this must be verified before quoting in any business context.",
+    "correct_value": "Do not state specific BRELA fee amounts — always direct to brela.go.tz",
+    "wrong_patterns": [],
+    "primary_source": "miamia.co.tz 2024; brela.go.tz ORS portal",
+    "verified_date": "2026-06-19",
+    "status": "HEDGE — do not state specific amounts in training pairs",
+    "training_instruction": "Replace specific TZS fee amounts with: 'angalia ratiba rasmi ya ada kwenye brela.go.tz' or 'thibitisha ada halisi kupitia mfumo wa ORS (ors.brela.go.tz)'."
   }
 }
