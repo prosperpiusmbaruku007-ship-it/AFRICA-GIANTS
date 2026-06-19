@@ -1268,5 +1268,78 @@
     "verified_date": "2026-06-19",
     "status": "HEDGE — do not state specific amounts in training pairs",
     "training_instruction": "Replace specific TZS fee amounts with: 'angalia ratiba rasmi ya ada kwenye brela.go.tz' or 'thibitisha ada halisi kupitia mfumo wa ORS (ors.brela.go.tz)'."
+  },
+  "vat_withholding_certificate_timing": {
+    "fact": "VAT withholding certificate must be issued NOT LATER THAN the date on which VAT becomes payable under section 15 of the VAT Act — NOT on the 20th of the following month. The 20th deadline applies to filing the VAT return and remitting the withheld amount, which are separate obligations. A withholding agent must issue the certificate in an approved system format containing: TIN, registration number, supply description, consideration amount, withholding rate and withholding amount.",
+    "correct_value": "Issue certificate: date VAT becomes payable. Remit withheld VAT: 20th of following month. These are two separate deadlines.",
+    "wrong_patterns": [
+      "cheti cha withholding kinatumwa tarehe 20",
+      "certificate issued on 20th of following month",
+      "withholding certificate.*tarehe 20.*mwezi unaofuata",
+      "toa cheti cha withholding ifikapo tarehe 20",
+      "certificate due on 20th.*following month"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax-vat",
+    "verified_date": "2026-06-19",
+    "effective_date": "2025-07-01",
+    "status": "LOCKED",
+    "training_instruction": "Pairs about certificate timing must distinguish: certificate = same day VAT becomes payable; remittance to TRA = 20th of following month. Never conflate the two."
+  },
+  "brela_partnership_registration": {
+    "fact": "A general partnership (ushirikiano wa kibiashara) in Tanzania can be registered with BRELA under the Business Names Registration Act or incorporated as a Limited Partnership. Required documents typically include: partnership deed, names and addresses of all partners, business name, nature of business, TIN for each partner. Exact current procedure and fees must be verified at brela.go.tz or via the ORS portal (ors.brela.go.tz) as requirements change by ministerial order.",
+    "correct_value": "Partnership registration via BRELA — verify current steps and fees at brela.go.tz",
+    "wrong_patterns": [
+      "ushirikiano huhitaji usajilishaji wa brela",
+      "partnership does not need BRELA registration",
+      "ushirikiano unasajiliwa bure bila ada",
+      "partnership registration is free"
+    ],
+    "primary_source": "brela.go.tz — ORS portal",
+    "verified_date": "2026-06-19",
+    "status": "HEDGE — specific steps unverifiable from primary source; direct users to brela.go.tz",
+    "training_instruction": "Do not state specific fees or step counts for partnership registration. Use: 'thibitisha hatua za usajilishaji kwenye brela.go.tz au mfumo wa ORS (ors.brela.go.tz)'."
+  },
+  "osha_licence_renewal_frequency": {
+    "fact": "OSHA workplace compliance certificate (cheti cha usajilishaji) renewal frequency is not explicitly stated on osha.go.tz. The OHS Act 2003 requires employers to maintain workplace registration. In practice OSHA conducts annual risk assessments and inspections. Training pairs must direct employers to osha.go.tz to confirm current renewal period rather than stating a specific interval.",
+    "correct_value": "Renewal period — verify at osha.go.tz or contact +255-22-2760548",
+    "wrong_patterns": [
+      "cheti cha osha kinaisha baada ya miaka 5",
+      "osha certificate valid for 5 years",
+      "osha certificate never needs renewal",
+      "cheti cha osha hakihitaji kuhuishwa",
+      "osha licence renew every 3 years"
+    ],
+    "primary_source": "https://www.osha.go.tz",
+    "verified_date": "2026-06-19",
+    "status": "HEDGE — renewal period not confirmed from primary source; direct to osha.go.tz",
+    "training_instruction": "Do not state a specific renewal interval. Use: 'thibitisha muda wa uhuishaji na OSHA (osha.go.tz)' or direct to osha.go.tz."
+  },
+  "nssf_employer_registration_deadline": {
+    "fact": "Every employer in Tanzania must register with NSSF before or within a reasonable period of commencing business. The NSSF Act Cap. 50 imposes a registration obligation but the exact number of days is not confirmed from the primary source (nssf.go.tz was unreachable during verification). Training pairs must direct employers to nssf.or.tz to confirm current registration deadline and avoid stating a specific day count.",
+    "correct_value": "Register with NSSF at or shortly after commencement of business — verify deadline at nssf.or.tz",
+    "wrong_patterns": [
+      "mwajiri hana wajibu wa kusajili nssf",
+      "employer does not need to register with nssf",
+      "nssf registration is optional",
+      "usajilishaji wa nssf si lazima"
+    ],
+    "primary_source": "https://www.nssf.or.tz — unverifiable at time of writing",
+    "verified_date": "2026-06-19",
+    "status": "HEDGE — specific deadline unverifiable from primary source; direct to nssf.or.tz",
+    "training_instruction": "Do not state a specific day count for NSSF registration deadline. Use: 'sajili na NSSF haraka iwezekanavyo baada ya kuanza biashara. Thibitisha tarehe ya mwisho kwenye nssf.or.tz'."
+  },
+  "efd_approved_supplier_verification": {
+    "fact": "To verify that an EFD supplier/distributor (msambazaji) is TRA-approved, businesses should check the official TRA website (tra.go.tz) for the current list of approved EFD dealers. TRA publishes a register of approved EFD suppliers. Businesses should only purchase EFD machines from TRA-approved dealers — purchasing from unapproved suppliers may result in the machine not being activated by TRA. The TRA EFD page URL changed and was unavailable at time of writing.",
+    "correct_value": "Verify approved EFD supplier list at tra.go.tz — only purchase from TRA-registered dealers",
+    "wrong_patterns": [
+      "unaweza kununua efd kutoka kwa muuzaji yeyote",
+      "any supplier can sell EFD machines",
+      "efd machine inaweza kununuliwa ovyo",
+      "no need to verify EFD supplier with TRA"
+    ],
+    "primary_source": "https://www.tra.go.tz — EFD page unavailable at time of writing",
+    "verified_date": "2026-06-19",
+    "status": "HEDGE — specific supplier list URL unverifiable; direct to tra.go.tz",
+    "training_instruction": "Direct businesses to tra.go.tz to verify current list of approved EFD suppliers. Use: 'angalia orodha ya wasambazaji walioidhinishwa na TRA kwenye tra.go.tz'."
   }
 }
