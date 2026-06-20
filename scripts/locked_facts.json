@@ -446,18 +446,21 @@
     "status": "CONFIRMED"
   },
   "gn487a_penalty_citizen_facilitator": {
-    "fact": "GN 487A penalty for Tanzanian citizen who facilitates non-citizen: TZS 5,000,000 OR 3 months imprisonment",
-    "correct_value": "TZS 5M or 3 months for facilitating citizen",
+    "fact": "GN 487A penalty for Tanzanian citizen who assists or aids a non-citizen in any GN487A prohibited business activity: TZS 5,000,000 fine OR imprisonment not exceeding 3 months. This is SEPARATE from the non-citizen penalty (TZS 10M minimum fine OR 6 months OR both, plus visa revocation). BOTH parties are penalised — the non-citizen AND the Tanzanian facilitator.",
+    "correct_value": "TZS 5M or 3 months for Tanzanian facilitator — BOTH parties penalised",
     "wrong_patterns": [
       "TZS 10,000,000 kwa raia",
       "10 million for citizen",
       "miezi 6 kwa raia",
-      "6 months for Tanzanian"
+      "6 months for Tanzanian",
+      "adhabu inabeba mgeni peke yake",
+      "only the foreigner is penalised",
+      "raia wa tanzania hawapati adhabu kwa kusaidia"
     ],
     "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
-    "verified_by": "TanzLII gazette text",
+    "verified_by": "TanzLII gazette text; Bowmans 30 Jul 2025; Clyde & Co Jul 2025; VELMA Law; ChimpReports",
     "effective_date": "2025-07-28",
-    "status": "CONFIRMED"
+    "status": "LOCKED"
   },
   "gn605a_effective_date": {
     "fact": "GN 605A Private Sector Wage Order came into effect on 1 January 2026",
@@ -1341,5 +1344,73 @@
     "verified_date": "2026-06-19",
     "status": "HEDGE — specific supplier list URL unverifiable; direct to tra.go.tz",
     "training_instruction": "Direct businesses to tra.go.tz to verify current list of approved EFD suppliers. Use: 'angalia orodha ya wasambazaji walioidhinishwa na TRA kwenye tra.go.tz'."
+  },
+  "OSHA_annual_inspection": {
+    "fact": "OSHA conducts mandatory annual inspections of all workplaces in Tanzania. The OSHA compliance licence must be renewed every year.",
+    "correct_value": "Annual inspection mandatory; licence renewed annually",
+    "wrong_patterns": [
+      "osha hukagua kila miaka 2",
+      "osha inspection is not annual",
+      "osha inspects every 2 years",
+      "osha hakuna ukaguzi wa lazima kila mwaka",
+      "ukaguzi wa osha si wa lazima kila mwaka"
+    ],
+    "primary_source": "tiseza.go.tz eregulations; OHS Act No. 5 of 2003",
+    "verified_by": "tiseza.go.tz eregulations; Revocatus Mandago citing OHS Act",
+    "effective_date": "2003-01-01",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
+  },
+  "OSHA_safety_officer_threshold": {
+    "fact": "The specific employee threshold requiring a dedicated safety officer is NOT confirmed from authoritative sources. Training pairs must NOT state a specific number (e.g. 50 employees). Direct users to osha.go.tz for current requirements.",
+    "correct_value": "HEDGE — do not state specific threshold; direct to osha.go.tz",
+    "wrong_patterns": [
+      "osha.*afisa wa usalama.*wafanyakazi 50",
+      "safety officer.*required.*50 employees",
+      "50 employees.*osha.*safety officer",
+      "osha.*lazima.*afisa usalama.*wafanyakazi 50",
+      "wafanyakazi zaidi ya 50.*afisa wa usalama wa osha"
+    ],
+    "primary_source": "https://www.osha.go.tz",
+    "verified_date": "2026-06-20",
+    "status": "HEDGE — threshold not confirmed from primary source",
+    "training_instruction": "Do not state a specific employee count for safety officer requirement. Use: 'thibitisha mahitaji ya afisa wa usalama na OSHA (osha.go.tz)'."
+  },
+  "BRELA_COSOTA_split": {
+    "fact": "Intellectual property in Tanzania is split between two bodies. BRELA (Business Registrations and Licensing Agency) administers: trademarks (alama za biashara), patents (hati miliki), and industrial designs (miundo ya viwanda). COSOTA (Copyright Society of Tanzania) administers: copyright and neighbouring rights (haki za ubunifu na haki jirani). There is NO body called ORT — ort.go.tz does not exist as a Tanzanian IP registry.",
+    "correct_value": "BRELA = trademarks/patents/designs; COSOTA = copyright. ORT does not exist.",
+    "wrong_patterns": [
+      "ort.go.tz",
+      "ofisi ya usajilishaji wa hati.*miliki ya akili",
+      "registrar of titles.*intellectual property",
+      "cosota.*patent",
+      "cosota.*trademark",
+      "cosota.*alama za biashara",
+      "brela.*copyright(?!.*cosota)",
+      "brela.*haki za ubunifu(?!.*cosota)",
+      "cosota.*hati miliki(?!.*brela)"
+    ],
+    "primary_source": "ARIPO; WIPO; US Trade.gov Tanzania IP report; IBA",
+    "verified_by": "ARIPO; WIPO; US Trade.gov; IBA",
+    "effective_date": "2025-01-01",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
+  },
+  "SDL_source_law": {
+    "fact": "SDL (Skills Development Levy) is imposed under Section 14 of the Vocational Education Training Act, Cap. 82. It is collected by TRA. Rate: 3.5% of gross cash emoluments (reduced from 4% by Finance Act 2023, effective 1 July 2023). Applies to employers with 10 or more employees on Mainland Tanzania.",
+    "correct_value": "Vocational Education Training Act Cap. 82 Section 14 — collected by TRA at 3.5%",
+    "wrong_patterns": [
+      "sdl.*value added tax act",
+      "sdl.*vat act",
+      "sdl.*sheria ya kodi ya ongezeko la thamani",
+      "sdl.*income tax act",
+      "sdl.*sheria ya kodi ya mapato",
+      "sdl.*income tax.*act.*cap"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
+    "verified_by": "TRA SDL page; Vocational Education Training Act Cap. 82",
+    "effective_date": "2023-07-01",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
   }
 }
