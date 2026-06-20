@@ -1,0 +1,51 @@
+{
+  "method": "programmatic_check_12_conditions",
+  "total_pairs": 135,
+  "programmatic_flagged": 7,
+  "confirmed_false_positives": 7,
+  "real_failures": 0,
+  "ai_review_status": "BLOCKED - Anthropic key not in env; google.generativeai not installed; OpenRouter rate-limited (429)",
+  "note": "Programmatic check verified all 12 fail conditions. 7 flags = false positives (correct negation pairs). All 135 pairs pass.",
+  "subdomain_results": {
+    "vat_withholding_correction": {
+      "pairs": 20,
+      "pass": 20,
+      "fail": 0
+    },
+    "vat_zero_rated_correction": {
+      "pairs": 15,
+      "pass": 15,
+      "fail": 0
+    },
+    "gn487a_correction": {
+      "pairs": 25,
+      "pass": 25,
+      "fail": 0
+    },
+    "sdl_correction": {
+      "pairs": 20,
+      "pass": 20,
+      "fail": 0
+    },
+    "out_of_corpus_correction": {
+      "pairs": 15,
+      "pass": 15,
+      "fail": 0
+    },
+    "osha_correction": {
+      "pairs": 15,
+      "pass": 15,
+      "fail": 0
+    },
+    "brela_correction": {
+      "pairs": 15,
+      "pass": 15,
+      "fail": 0
+    },
+    "efd_correction": {
+      "pairs": 10,
+      "pass": 10,
+      "fail": 0
+    }
+  }
+}
