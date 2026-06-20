@@ -1412,5 +1412,25 @@
     "effective_date": "2023-07-01",
     "verified_date": "2026-06-20",
     "status": "LOCKED"
+  },
+  "VAT_zero_rated_vs_exempt_input_VAT": {
+    "fact": "Zero-rated supplies are taxable at 0% VAT rate — suppliers CAN claim input VAT on their purchases. Exempt supplies are not subject to VAT at all — suppliers CANNOT claim input VAT on their purchases. These are fundamentally different categories. The model previously inverted this rule (eval_017 failure: stated zero-rated businesses cannot claim input VAT).",
+    "correct_value": "Zero-rated = 0% VAT, CAN claim input VAT. Exempt = no VAT, CANNOT claim input VAT.",
+    "wrong_patterns": [
+      "zero.rated.*hainezi kudai input vat",
+      "zero.rated.*cannot claim input vat",
+      "biashara ya zero.rated.*haiwezi kudai vat ya pembejeo",
+      "zero.rated.*haiwezi kudai.*input",
+      "exempt na zero.rated ni sawa",
+      "exempt and zero.rated are the same",
+      "zero.rated.*haijalishi.*input vat",
+      "hakuna tofauti.*zero.rated.*exempt"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
+    "verified_by": "TanzaniaInvest VAT Guide; PwC Tax Summaries Tanzania; TRA.go.tz",
+    "effective_date": "2015-07-01",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED",
+    "training_instruction": "Pairs on this topic must explicitly state: zero-rated = CAN claim input VAT; exempt = CANNOT claim input VAT. Never conflate the two categories."
   }
 }
