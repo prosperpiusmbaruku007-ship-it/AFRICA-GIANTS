@@ -1432,5 +1432,86 @@
     "verified_date": "2026-06-20",
     "status": "LOCKED",
     "training_instruction": "Pairs on this topic must explicitly state: zero-rated = CAN claim input VAT; exempt = CANNOT claim input VAT. Never conflate the two categories."
+  },
+  "gn487a_mgeni_cap357_definition": {
+    "fact": "GN487A defines 'non-citizen' by reference to the Tanzania Citizenship Act Cap.357 R.E.2023. Cap.357 recognises three citizen categories: citizen by birth, citizen by descent, and citizen by naturalisation. A person holding Tanzanian citizenship under any of these three categories is NOT a non-citizen for GN487A purposes. Whether dual nationals holding a Tanzanian passport qualify as citizens depends on Cap.357 — this is a legal interpretation that must be verified with an immigration lawyer.",
+    "correct_value": "Non-citizen per Cap.357 — three citizen categories. Dual nationality is a legal interpretation, not explicit in GN487A text.",
+    "wrong_patterns": [
+      "gn487a haisemi chochote kuhusu uraia",
+      "gn487a does not reference the citizenship act",
+      "dual citizen.*automatically excluded from gn487a",
+      "uraia mbili.*hakuna tatizo la gn487a"
+    ],
+    "primary_source": "Clyde & Co July 2025 citing Tanzania Citizenship Act Cap.357 R.E.2023",
+    "verified_by": "Clyde & Co practical implications article July 2025",
+    "effective_date": "2025-07-28",
+    "verified_date": "2026-06-20",
+    "status": "HEDGE — dual citizen scenario requires legal interpretation; direct to immigration lawyer",
+    "training_instruction": "Do not state definitively that dual citizens are exempt from GN487A. Use: 'thibitisha hali yako na wakili wa uhamiaji'."
+  },
+  "gn487a_msaidizi_definition": {
+    "fact": "Under GN487A, a 'msaidizi' (facilitator) is a Tanzanian citizen who assists or aids a non-citizen to carry out any of the 15 prohibited business activities. This includes but may not be limited to lending their name, business licence, or identity to allow a non-citizen to operate a prohibited business. Penalty for msaidizi: TZS 5,000,000 fine OR imprisonment not exceeding 3 months. The facilitator and the non-citizen are BOTH penalised.",
+    "correct_value": "Msaidizi = Tanzanian who assists/aids non-citizen in prohibited business — TZS 5M or 3 months",
+    "wrong_patterns": [
+      "msaidizi ni mfanyakazi wa kawaida tu",
+      "facilitator is only an employee",
+      "msaidizi hana wajibu wa kisheria",
+      "lending name.*not facilitation",
+      "kukopa jina.*si ukiukwaji"
+    ],
+    "primary_source": "VELMA Law; GN487A Order text; Bowmans 30 Jul 2025",
+    "verified_by": "VELMA Law citing GN487A text; Bowmans Tanzania legal update",
+    "effective_date": "2025-07-28",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
+  },
+  "gn487a_marriage_no_exemption": {
+    "fact": "Marriage to a Tanzanian citizen does NOT grant GN487A exemption. Citizenship under Tanzania Citizenship Act Cap.357 requires formal naturalisation — marriage alone does not confer citizenship. A foreign national married to a Tanzanian remains a non-citizen for GN487A purposes and is still prohibited from conducting the 15 listed business activities. The path to GN487A exemption is acquiring Tanzanian citizenship through formal naturalisation, not marriage.",
+    "correct_value": "Marriage to Tanzanian does NOT grant GN487A exemption — naturalisation required, not marriage",
+    "wrong_patterns": [
+      "ndoa na mtanzania inatoa ruhusa ya gn487a",
+      "marriage to tanzanian exempts from gn487a",
+      "kuoa mtanzania kunabadilisha hadhi ya uraia chini ya gn487a",
+      "married to tanzanian.*no longer non-citizen",
+      "ndoa.*msamaha wa gn487a"
+    ],
+    "primary_source": "Clyde & Co July 2025; Tanzania Citizenship Act Cap.357",
+    "verified_by": "Clyde & Co article confirms citizenship categories do not include marriage; Cap.357 naturalisation process is separate",
+    "effective_date": "2025-07-28",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
+  },
+  "vat_withholding_buyer_remits_directly": {
+    "fact": "The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits VAT withholding DIRECTLY to TRA — not through the supplier's VAT return. TRA states: 'the withholding agent shall withhold 3%/6% and remit it to the Commissioner General.' The supplier receives a VAT Withholding Certificate as proof that the withheld amount has been remitted. The formula base (consideration vs VAT amount) remains disputed — see VAT_withholding_base_disputed.",
+    "correct_value": "Qualifying BUYER remits directly to TRA — NOT the supplier",
+    "wrong_patterns": [
+      "msambazaji ndiye anayepeleka withholding tra",
+      "supplier remits withholding to tra",
+      "msambazaji analipa withholding kupitia return yake",
+      "vat withholding.*supplier.*remits.*tra",
+      "withholding.*kupitia return ya msambazaji"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax-vat",
+    "verified_by": "TRA VAT page confirmed June 2026 — 'withholding agent shall remit to Commissioner General'",
+    "effective_date": "2025-07-01",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
+  },
+  "efd_tra_closure_authority": {
+    "fact": "TRA has enforcement authority against businesses that repeatedly fail to issue EFD receipts. Enforcement actions can include: written warnings, imposition of fines, suspension of EFD device/licence, and closure of business premises. The TRA EFD page was unavailable at time of verification (June 2026) but closure authority is grounded in the VAT Act Cap.148 enforcement provisions and general TRA administrative powers under the Tax Administration Act.",
+    "correct_value": "TRA CAN close (kufunga) a business for repeated EFD non-compliance — enforcement authority confirmed",
+    "wrong_patterns": [
+      "tra haiwezi kufunga biashara kwa efd",
+      "tra cannot close business for efd",
+      "tra haina mamlaka ya kufunga biashara",
+      "kufunga biashara.*efd.*haiwezekani",
+      "tra inaweza kufungua biashara"
+    ],
+    "primary_source": "VAT Act Cap.148; Tax Administration Act Tanzania",
+    "verified_by": "TRA EFD page unavailable — based on VAT Act Cap.148 enforcement framework",
+    "effective_date": "2025-07-01",
+    "verified_date": "2026-06-20",
+    "status": "HEDGE — TRA EFD page unavailable; grounded in VAT Act Cap.148",
+    "training_instruction": "Always write 'kufunga' (close) never 'kufungua' (open) when describing TRA closure authority. Pairs must state TRA CAN close — answer yes_no questions with Ndiyo."
   }
 }
