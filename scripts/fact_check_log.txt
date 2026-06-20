@@ -800,3 +800,15 @@ Total: 300 | Flagged: 0
 
 [2026-06-16T08:16:35.760799] Checked datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl
 Total: 300 | Flagged: 0
+
+[2026-06-17T07:24:28.857840] Checked datasets/tier1a/raw_sources/raw_pairs_batch_010.jsonl
+Total: 90 | Flagged: 0
+
+[2026-06-17T08:17:08.154523] Checked datasets/tier1a/raw_sources/raw_pairs_batch_010.jsonl
+Total: 90 | Flagged: 0
+
+[2026-06-17T08:20:51.718010] Checked datasets/tier1a/raw_sources/raw_pairs_batch_010.jsonl
+Total: 90 | Flagged: 0
+
+[2026-06-18T02:08:51.125676] Checked datasets/tier1a/raw_sources/raw_pairs_batch_011.jsonl
+Total: 225 | Flagged: 0
