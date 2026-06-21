@@ -280,8 +280,8 @@ log(raw_dataset)
 _train_count = len(raw_dataset["train"])
 _val_count   = len(raw_dataset["validation"])
 log(f"[data] LOADED: train={_train_count}  val={_val_count}")
-assert _train_count >= 1600, \
-    f"FATAL: only {_train_count} train examples — expected >= 1600. Check HF repo."
+assert _train_count >= 2300, \
+    f"FATAL: only {_train_count} train examples — expected >= 2300. Check HF repo."
 log(f"[data] dataset size PASSED ({_train_count} train pairs)")
 
 # ══════════════════════════════════════════════════════════
@@ -608,7 +608,7 @@ on Tanzanian business, tax, company registration, and financial regulation data.
 **Base model:** AfriqueLlama-8B (Llama 3.1 8B, 20 African languages incl. Swahili)
 **Languages:** Swahili (sw), English (en)
 **Training:** QLoRA r={LORA_RANK} on {GPU_NAME} x{WORLD_SIZE} DDP
-**Training pairs:** ~3,000 (balanced dataset, 11 canonical subdomains)
+**Training pairs:** 2,662 total pairs, ~2,395 train (full unbalanced dataset, all 13 batches)
 **Validation loss:** {_loss_str}
 **Gate result:** {_gate_str}
 **Started from:** Fresh weights at r={LORA_RANK} (rank change from v9 r=64)
