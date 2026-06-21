@@ -13,19 +13,9 @@ from datetime import datetime, timezone
 
 import torch
 
-# ══════════════════════════════════════════════════════════
-# DISTRIBUTED SETUP
-# ══════════════════════════════════════════════════════════
-LOCAL_RANK  = 0
-WORLD_SIZE  = 1
-IS_MAIN     = LOCAL_RANK == 0
-
 def log(msg):
-    """Only rank 0 prints."""
-    if IS_MAIN:
-        print(msg, flush=True)
+    print(msg, flush=True)
 
-log(f"[ddp] Unsloth native multi-GPU — no torchrun needed")
 log(f"[ddp] Num GPUs visible: {torch.cuda.device_count()}")
 
 # ══════════════════════════════════════════════════════════
@@ -58,16 +48,16 @@ log(f"[config] BF16        : {BF16}")
 SMOKE_TEST        = False
 MAX_SEQ_LENGTH    = 512 if SMOKE_TEST else 2048
 LOSS_THRESHOLD    = 3.0
-LORA_RANK         = 256
-LORA_ALPHA        = 256
+LORA_RANK         = 128
+LORA_ALPHA        = 128
 
 BASE_MODEL        = "McGill-NLP/AfriqueLlama-8B"
 DATASET_REPO      = "prospAprospA007/africa-giants-dataset"
 ADAPTER_REPO      = "prospAprospA007/africa-giants-adapter-v10"
 LORA_ONLY_REPO    = "prospAprospA007/africa-giants-adapter-v10-lora"
 PREV_LORA_REPO    = "prospAprospA007/africa-giants-adapter-v9-lora"
-# NOTE: v9-lora is r=64. v10 is r=256. Shapes will NOT match.
-# load_adapter will fail — this is EXPECTED. v10 starts fresh at r=256.
+# NOTE: v9-lora is r=64. v10 is r=128. Shapes will NOT match.
+# load_adapter will fail — this is EXPECTED. v10 starts fresh at r=128.
 # Log clearly so there is no confusion.
 
 log(f"[config] SMOKE_TEST    : {SMOKE_TEST}")
@@ -201,7 +191,7 @@ try:
     log(f"[model] Loaded {PREV_LORA_REPO} successfully (unexpected — rank matched?)")
 except Exception as e:
     if "size mismatch" in str(e).lower() or "shape" in str(e).lower():
-        log(f"[model] Expected rank mismatch (r=64 → r={LORA_RANK}): starting fresh ✓")
+        log(f"[model] Expected rank mismatch (r=64 → r=128): starting fresh ✓")
     else:
         log(f"[model] WARNING: load_adapter failed unexpectedly — {e}")
         log(f"[model] Continuing with fresh LoRA weights")
@@ -493,96 +483,95 @@ if _trainer is None:
     raise RuntimeError("[train] Could not build SFTTrainer after 20 attempts")
 
 trainer = _trainer
-log(f"[train] Starting on {GPU_NAME} (WORLD_SIZE={WORLD_SIZE}) ...")
+log(f"[train] Starting on {GPU_NAME} (single GPU) ...")
 stats = trainer.train()
 log(f"[train] Done. Runtime: {stats.metrics['train_runtime']:.1f}s")
 log(f"[train] Train loss: {stats.metrics.get('train_loss', 'N/A')}")
 
 # ══════════════════════════════════════════════════════════
-# EVAL + PUSH — only rank 0
+# EVAL + PUSH
 # ══════════════════════════════════════════════════════════
-if IS_MAIN:
-    # Remove notebook progress callback if present
-    try:
-        from transformers.utils.notebook import NotebookProgressCallback
-        trainer.remove_callback(NotebookProgressCallback)
-        log("[eval] Notebook progress callback removed")
-    except Exception as _e:
-        log(f"[eval] Could not remove callback (safe to ignore): {_e}")
+# Remove notebook progress callback if present
+try:
+    from transformers.utils.notebook import NotebookProgressCallback
+    trainer.remove_callback(NotebookProgressCallback)
+    log("[eval] Notebook progress callback removed")
+except Exception as _e:
+    log(f"[eval] Could not remove callback (safe to ignore): {_e}")
 
-    # Evaluate
-    validation_loss = None
-    gate_passed     = False
-    try:
-        log("[eval] Running evaluation ...")
-        eval_results    = trainer.evaluate()
-        validation_loss = eval_results.get("eval_loss", None)
-        if validation_loss is not None:
-            gate_passed = validation_loss <= LOSS_THRESHOLD
-            log(f"[eval] Val loss: {validation_loss:.4f}  threshold: {LOSS_THRESHOLD}  "
-                f"→ {'PASSED ✓' if gate_passed else 'FAILED ✗'}")
-        else:
-            log("[eval] WARNING: eval_loss not in results — pushing anyway")
-            validation_loss = 999.0
-    except Exception as _e:
-        log(f"[eval] Evaluation failed — pushing anyway: {_e}")
-        traceback.print_exc()
+# Evaluate
+validation_loss = None
+gate_passed     = False
+try:
+    log("[eval] Running evaluation ...")
+    eval_results    = trainer.evaluate()
+    validation_loss = eval_results.get("eval_loss", None)
+    if validation_loss is not None:
+        gate_passed = validation_loss <= LOSS_THRESHOLD
+        log(f"[eval] Val loss: {validation_loss:.4f}  threshold: {LOSS_THRESHOLD}  "
+            f"→ {'PASSED ✓' if gate_passed else 'FAILED ✗'}")
+    else:
+        log("[eval] WARNING: eval_loss not in results — pushing anyway")
         validation_loss = 999.0
+except Exception as _e:
+    log(f"[eval] Evaluation failed — pushing anyway: {_e}")
+    traceback.print_exc()
+    validation_loss = 999.0
 
-    # Push LoRA-only adapter
-    log(f"[lora] Pushing LoRA-only adapter to {LORA_ONLY_REPO} ...")
-    try:
-        with tempfile.TemporaryDirectory() as tmpdir:
-            model.save_pretrained(tmpdir)
-            tokenizer.save_pretrained(tmpdir)
-            import os as _os
-            for f in _os.listdir(tmpdir):
-                size_mb = _os.path.getsize(_os.path.join(tmpdir, f)) / 1024 / 1024
-                log(f"[lora]   {f}  ({size_mb:.1f} MB)")
-            HfApi().upload_folder(
-                folder_path    = tmpdir,
-                repo_id        = LORA_ONLY_REPO,
-                repo_type      = "model",
-                token          = hf_token,
-                commit_message = f"adapter-v10 LoRA-only weights r={LORA_RANK} — for v11 load_adapter()",
-            )
-        log(f"[lora] LoRA-only pushed to {LORA_ONLY_REPO} ✓")
-        log(f"[lora] For v11: model.load_adapter('{LORA_ONLY_REPO}', adapter_name='default')")
-    except Exception as _e:
-        log(f"[lora] LoRA-only push FAILED: {_e}")
-        traceback.print_exc()
+# Push LoRA-only adapter
+log(f"[lora] Pushing LoRA-only adapter to {LORA_ONLY_REPO} ...")
+try:
+    with tempfile.TemporaryDirectory() as tmpdir:
+        model.save_pretrained(tmpdir)
+        tokenizer.save_pretrained(tmpdir)
+        import os as _os
+        for f in _os.listdir(tmpdir):
+            size_mb = _os.path.getsize(_os.path.join(tmpdir, f)) / 1024 / 1024
+            log(f"[lora]   {f}  ({size_mb:.1f} MB)")
+        HfApi().upload_folder(
+            folder_path    = tmpdir,
+            repo_id        = LORA_ONLY_REPO,
+            repo_type      = "model",
+            token          = hf_token,
+            commit_message = f"adapter-v10 LoRA-only weights r={LORA_RANK} — for v11 load_adapter()",
+        )
+    log(f"[lora] LoRA-only pushed to {LORA_ONLY_REPO} ✓")
+    log(f"[lora] For v11: model.load_adapter('{LORA_ONLY_REPO}', adapter_name='default')")
+except Exception as _e:
+    log(f"[lora] LoRA-only push FAILED: {_e}")
+    traceback.print_exc()
 
-    # Push merged 16-bit adapter
-    log(f"[push] Pushing merged model to {ADAPTER_REPO} ...")
-    log(f"[push] Gate result: {'PASSED' if gate_passed else 'FAILED or UNKNOWN'} — pushing regardless")
+# Push merged 16-bit adapter
+log(f"[push] Pushing merged model to {ADAPTER_REPO} ...")
+log(f"[push] Gate result: {'PASSED' if gate_passed else 'FAILED or UNKNOWN'} — pushing regardless")
+try:
+    if USE_UNSLOTH:
+        model.push_to_hub_merged(
+            ADAPTER_REPO,
+            tokenizer,
+            save_method = "merged_16bit",
+            token       = hf_token,
+        )
+    else:
+        model.push_to_hub(ADAPTER_REPO, token=hf_token)
+        tokenizer.push_to_hub(ADAPTER_REPO, token=hf_token)
+    log(f"[push] Adapter weights pushed ✓")
+except Exception as _e:
+    log(f"[push] PUSH FAILED: {_e}")
+    traceback.print_exc()
+    log("[push] Saving adapter locally to /kaggle/working/adapter_emergency_save/")
     try:
-        if USE_UNSLOTH:
-            model.push_to_hub_merged(
-                ADAPTER_REPO,
-                tokenizer,
-                save_method = "merged_16bit",
-                token       = hf_token,
-            )
-        else:
-            model.push_to_hub(ADAPTER_REPO, token=hf_token)
-            tokenizer.push_to_hub(ADAPTER_REPO, token=hf_token)
-        log(f"[push] Adapter weights pushed ✓")
-    except Exception as _e:
-        log(f"[push] PUSH FAILED: {_e}")
-        traceback.print_exc()
-        log("[push] Saving adapter locally to /kaggle/working/adapter_emergency_save/")
-        try:
-            model.save_pretrained("/kaggle/working/adapter_emergency_save/")
-            tokenizer.save_pretrained("/kaggle/working/adapter_emergency_save/")
-            log("[push] Emergency local save completed ✓")
-        except Exception as _e2:
-            log(f"[push] Emergency save also failed: {_e2}")
+        model.save_pretrained("/kaggle/working/adapter_emergency_save/")
+        tokenizer.save_pretrained("/kaggle/working/adapter_emergency_save/")
+        log("[push] Emergency local save completed ✓")
+    except Exception as _e2:
+        log(f"[push] Emergency save also failed: {_e2}")
 
-    # Push model card
-    try:
-        _loss_str = f"{validation_loss:.4f}" if validation_loss != 999.0 else "eval_failed"
-        _gate_str = "PASSED" if gate_passed else "FAILED or eval error"
-        card = f"""---
+# Push model card
+try:
+    _loss_str = f"{validation_loss:.4f}" if validation_loss != 999.0 else "eval_failed"
+    _gate_str = "PASSED" if gate_passed else "FAILED or eval error"
+    card = f"""---
 language:
 - sw
 - en
@@ -606,73 +595,72 @@ QLoRA fine-tune of [{BASE_MODEL}](https://huggingface.co/{BASE_MODEL})
 on Tanzanian business, tax, company registration, and financial regulation data.
 **Base model:** AfriqueLlama-8B (Llama 3.1 8B, 20 African languages incl. Swahili)
 **Languages:** Swahili (sw), English (en)
-**Training:** QLoRA r={LORA_RANK} on {GPU_NAME} x{WORLD_SIZE} DDP
+**Training:** QLoRA r={LORA_RANK} on {GPU_NAME} single GPU
 **Training pairs:** 2,662 total pairs, ~2,395 train (full unbalanced dataset, all 13 batches)
 **Validation loss:** {_loss_str}
 **Gate result:** {_gate_str}
 **Started from:** Fresh weights at r={LORA_RANK} (rank change from v9 r=64)
 **LoRA-only checkpoint:** {LORA_ONLY_REPO}
 """
-        HfApi().upload_file(
-            path_or_fileobj=card.encode(),
-            path_in_repo="README.md",
-            repo_id=ADAPTER_REPO,
-            repo_type="model",
-            token=hf_token,
-            commit_message=f"adapter-v10 model card — val_loss={_loss_str} r={LORA_RANK}",
-        )
-        log(f"[push] Model card pushed ✓")
-    except Exception as _e:
-        log(f"[push] Model card push failed (non-critical): {_e}")
+    HfApi().upload_file(
+        path_or_fileobj=card.encode(),
+        path_in_repo="README.md",
+        repo_id=ADAPTER_REPO,
+        repo_type="model",
+        token=hf_token,
+        commit_message=f"adapter-v10 model card — val_loss={_loss_str} r={LORA_RANK}",
+    )
+    log(f"[push] Model card pushed ✓")
+except Exception as _e:
+    log(f"[push] Model card push failed (non-critical): {_e}")
 
-    log(f"[push] Adapter live at: https://huggingface.co/{ADAPTER_REPO}")
-    log(f"[lora] LoRA adapter live at: https://huggingface.co/{LORA_ONLY_REPO}")
+log(f"[push] Adapter live at: https://huggingface.co/{ADAPTER_REPO}")
+log(f"[lora] LoRA adapter live at: https://huggingface.co/{LORA_ONLY_REPO}")
 
 # ══════════════════════════════════════════════════════════
-# INFERENCE TEST — only rank 0, only after push
+# INFERENCE TEST — after push
 # ══════════════════════════════════════════════════════════
-if IS_MAIN:
-    log("[test] Running quick inference check ...")
-    try:
-        if USE_UNSLOTH:
-            FastLanguageModel.for_inference(model)
+log("[test] Running quick inference check ...")
+try:
+    if USE_UNSLOTH:
+        FastLanguageModel.for_inference(model)
 
-        from transformers import pipeline as hf_pipeline
+    from transformers import pipeline as hf_pipeline
 
-        pipe = hf_pipeline(
-            "text-generation",
-            model     = model,
-            tokenizer = tokenizer,
-            max_new_tokens     = 300,
-            temperature        = 0.1,
-            do_sample          = True,
-            repetition_penalty = 1.3,
+    pipe = hf_pipeline(
+        "text-generation",
+        model     = model,
+        tokenizer = tokenizer,
+        max_new_tokens     = 300,
+        temperature        = 0.1,
+        do_sample          = True,
+        repetition_penalty = 1.3,
+    )
+
+    test_questions = [
+        "Kiwango cha VAT nchini Tanzania ni kiasi gani?",
+        "SDL ni nini na nani analazimika kulipa?",
+        "Je, biashara yangu lazima isajiliwe na BRELA?",
+    ]
+
+    for q in test_questions:
+        prompt = (
+            f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
+            f"{SYSTEM_PROMPT}<|eot_id|>"
+            f"<|start_header_id|>user<|end_header_id|>\n\n"
+            f"{q}<|eot_id|>"
+            f"<|start_header_id|>assistant<|end_header_id|>\n\n"
         )
+        result = pipe(prompt)[0]["generated_text"]
+        answer = result[len(prompt):]
+        log(f"\nQ: {q}")
+        log(f"A: {answer[:300]}")
+        log("-" * 60)
 
-        test_questions = [
-            "Kiwango cha VAT nchini Tanzania ni kiasi gani?",
-            "SDL ni nini na nani analazimika kulipa?",
-            "Je, biashara yangu lazima isajiliwe na BRELA?",
-        ]
-
-        for q in test_questions:
-            prompt = (
-                f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
-                f"{SYSTEM_PROMPT}<|eot_id|>"
-                f"<|start_header_id|>user<|end_header_id|>\n\n"
-                f"{q}<|eot_id|>"
-                f"<|start_header_id|>assistant<|end_header_id|>\n\n"
-            )
-            result = pipe(prompt)[0]["generated_text"]
-            answer = result[len(prompt):]
-            log(f"\nQ: {q}")
-            log(f"A: {answer[:300]}")
-            log("-" * 60)
-
-        log("[test] Inference check complete.")
-        log("[test] If answers look reasonable run the accuracy gate next.")
-    except Exception as _e:
-        log(f"[test] Inference check failed (non-critical): {_e}")
-        traceback.print_exc()
+    log("[test] Inference check complete.")
+    log("[test] If answers look reasonable run the accuracy gate next.")
+except Exception as _e:
+    log(f"[test] Inference check failed (non-critical): {_e}")
+    traceback.print_exc()
 
 log("[done] train_ddp.py complete.")
