@@ -3,7 +3,7 @@ import torch
 from huggingface_hub import login
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v6"
+ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v10"
 HF_TOKEN     = os.environ.get("HF_TOKEN", "")
 
 if HF_TOKEN:
@@ -111,6 +111,7 @@ def run(message: str, temperature: float = 0.1):
             max_new_tokens=300,
             temperature=temperature,
             do_sample=True,
+            repetition_penalty=1.1,
             pad_token_id=tokenizer.eos_token_id,
             eos_token_id=tokenizer.eos_token_id,
         )
