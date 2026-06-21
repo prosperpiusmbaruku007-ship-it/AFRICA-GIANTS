@@ -1,4 +1,10 @@
 import os
+
+# Route HF cache to persistent storage — bypasses 4GB ephemeral disk quota.
+# First cold start downloads 15GB to /persistent-storage/.cache/; subsequent
+# cold starts load from there instantly without re-downloading.
+os.environ['HF_HOME'] = '/persistent-storage/.cache/huggingface'
+
 import torch
 from huggingface_hub import login
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
