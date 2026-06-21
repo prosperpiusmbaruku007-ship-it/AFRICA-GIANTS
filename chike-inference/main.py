@@ -1,9 +1,9 @@
 import os
 
-# Route HF cache to persistent storage — bypasses 4GB ephemeral disk quota.
-# First cold start downloads 15GB to /persistent-storage/.cache/; subsequent
-# cold starts load from there instantly without re-downloading.
-os.environ['HF_HOME'] = '/persistent-storage/.cache/huggingface'
+# Route HF cache to /tmp — persistent-storage is 95% full (only 2.9GB free).
+# /tmp has 505GB free on the overlay filesystem. Model loads fresh each cold
+# start; fix by clearing persistent-storage and pointing back there later.
+os.environ['HF_HOME'] = '/tmp/hf_cache'
 
 import torch
 from huggingface_hub import login
@@ -138,3 +138,53 @@ def run(message: str, temperature: float = 0.1):
     print(f"[chike] A: {reply[:60]}")
 
     return {"reply": reply}
+
+
+def diagnose():
+    """Diagnostic endpoint — checks disk space and filesystem paths. Remove after debugging."""
+    import shutil, subprocess
+    results = {}
+
+    paths_to_check = [
+        '/persistent-storage',
+        '/persistent-storage/.cache',
+        '/persistent-storage/models',
+        '/tmp',
+        '/app',
+        os.path.expanduser('~'),
+    ]
+
+    for p in paths_to_check:
+        if os.path.exists(p):
+            try:
+                total, used, free = shutil.disk_usage(p)
+                results[p] = {
+                    'exists': True,
+                    'total_gb': round(total / 1e9, 1),
+                    'used_gb':  round(used  / 1e9, 1),
+                    'free_gb':  round(free  / 1e9, 1),
+                }
+                # Check writability
+                test = os.path.join(p, '.write_test')
+                try:
+                    open(test, 'w').close()
+                    os.remove(test)
+                    results[p]['writable'] = True
+                except Exception as we:
+                    results[p]['writable'] = False
+                    results[p]['write_error'] = str(we)
+            except Exception as e:
+                results[p] = {'exists': True, 'error': str(e)}
+        else:
+            results[p] = {'exists': False}
+
+    results['HF_HOME'] = os.environ.get('HF_HOME', 'NOT SET')
+    results['HF_HUB_CACHE'] = os.environ.get('HF_HUB_CACHE', 'NOT SET')
+
+    try:
+        df = subprocess.run(['df', '-h'], capture_output=True, text=True)
+        results['df_h'] = df.stdout
+    except Exception:
+        pass
+
+    return results
