@@ -1,71 +1,114 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-06-19
+Last updated: 2026-06-21
 
 ## Current State
-- Live adapter: africa-giants-adapter-v7 (Cerebrium still serving v6 — update pending)
+- Live adapter: africa-giants-adapter-v9 (Cerebrium still serving v6 — update overdue)
 - Live on WhatsApp: +255637809070 via Wappfly
-- Dataset: 2,537 pairs across 12 batches
-- locked_facts.json: 82 entries
+- Dataset: 2,662 pairs across 13 batches (batches 001–013), all SFT-format verified
+- locked_facts.json: 82+ entries
+- Training script: kaggle/train_ddp.py — ready to run as `python3 train_ddp.py`
 
-## v7 Gate Results (2026-06-19)
-| Subdomain | v6 | v7 | Target | Status |
+## Gate History
+| Version | In-corpus | Refusal | Gate | Notes |
 |---|---|---|---|---|
-| brela_registration | 73.3% | 73.3% | >85% | FAIL |
-| efd_compliance | 60.0% | 80.0% | >85% | FAIL |
-| gn487a | 70.0% | 80.0% | >85% | FAIL |
-| nssf_contributions | 84.0% | 88.0% | >85% | PASS |
-| osha_registration | 80.0% | 73.3% | >85% | FAIL |
-| sdl_compliance | 80.0% | 68.0% | >85% | FAIL |
-| vat_registration | 76.7% | 86.7% | >85% | PASS |
-| vat_withholding | 75.0% | 80.0% | >85% | FAIL |
-| In-corpus | 74.7% | 79.5% | >85% | FAIL |
-| Out-of-corpus | 50.0% | 80.0% | >70% | PASS |
+| v6 | ~74% | 50% | FAIL | baseline |
+| v7 | 79.5% | 80% | FAIL | refusal gate passed for first time |
+| v8 | 82.1% | 70.0% | FAIL | closest to gate; refusal at threshold |
+| v9 | 80.0% | 40.0% | FAIL | rebalanced dataset hurt refusal (stop-after-redirect not trained) |
+| **v10** | pending | pending | pending | full 2,662-pair dataset, r=128, single GPU |
 
-Gate: FAILED — in-corpus 79.5% vs 85% threshold.
-Refusal gate PASSED for first time in project history.
+## v9 Gate Results (gate_001_results.json on HF adapter-v9)
+Total: 200 questions | Pass: 160 | Fail: 40 | **Overall: 80.0%** — Gate FAILED
 
-## Key Findings This Session
-- Vocab gap analysis: identified zero-coverage keywords per subdomain
-- Scorer bugs fixed: yes_no word boundary, PKF citation strip
-- batch_012: 160 surgical vocabulary pairs written, reviewed, approved
-- v7 trained at r=64 (fresh weights — v6-lora incompatible with r=64)
-- r=64 cannot load from r=16 checkpoint — v8 will also start fresh
-- SDL regression: -12% from v6. Root cause: fresh start at r=64 lost v6 SDL gains
-- OSHA regression: -6.7% same reason
+| Subdomain | Pass/Total | % | Status |
+|---|---|---|---|
+| efd_compliance | 19/20 | 95.0% | ✓ |
+| brela_registration | 14/15 | 93.3% | ✓ |
+| nssf_contributions | 23/25 | 92.0% | ✓ |
+| vat_withholding | 18/20 | 90.0% | ✓ |
+| gn487a | 30/40 | 75.0% | ✗ |
+| osha_registration | 12/15 | 80.0% | ✗ |
+| sdl_compliance | 20/25 | 80.0% | ✗ |
+| out_of_corpus | 4/10 | 40.0% | ✗ |
+| vat_registration | 20/30 | 66.7% | ✗ |
 
-## Pending Tasks
-1. Analyze v7 gate failures per question (gate_001_results.json on HF)
-2. Based on failure analysis: write batch_013 targeting SDL, OSHA, BRELA, GN487A
-3. Consider 3 epochs for v8 (currently 2) to allow r=64 to converge better
-4. Update Cerebrium to serve adapter-v7
-5. Fix glob pattern in dataset rebuild script — use *.jsonl not cleaned_pairs_batch_*.jsonl
+### v9 Root Cause Analysis
+- **vat_registration (10 failures):** arithmetic on thresholds, rolling 12-month definition, zero-rated vs exempt disambiguation, qualifying buyer definition
+- **gn487a (10 failures):** full legal name never stated, effective date hallucinated (28+29 Jul), "mgeni" definition inverted, marriage exception wrong (ndoa haibadilishi hadhi), enforcement exercise dates wrong, enforcement body hedged
+- **sdl_compliance (5 failures):** WCF rate wrong (20% instead of 0.5%), SDL threshold (10 employees) ignored, SDL+PAYE same deadline wrong, GN 605B cited (doesn't exist)
+- **out_of_corpus (6 failures):** refusal-then-elaborate pattern — model says "nje ya maarifa yangu" then explains anyway; eval_191 (PAYE TZS 800K) misclassified as out-of-corpus
+- **osha_registration (3 failures):** >50 employee safety officer requirement missed, late registration first step wrong
 
-## Commit History (recent)
-- 2713d1e: batch_012 + dataset rebuild
-- 13b02d7: locked_facts Agent 2 pre-batch_012
-- 8da440d: locked_facts GN605A, OSHA, NSSF, VAT withholding dispute
-- cdbbfcc: run_eval.py per-question logging
-- e60d07d: run_eval.py yes_no word boundary fix
+## Pending Tasks — Immediate
+1. **Run v10 training** — upload kaggle/train_ddp.py to Kaggle, run as `python3 train_ddp.py`
+   - Dataset: prospaprospa007/africa-giants-dataset (2,395 train / 267 val)
+   - Model: McGill-NLP/AfriqueLlama-8B, r=128, alpha=128, fp16
+   - Push target: prospaprospa007/africa-giants-adapter-v10
+2. **Write batch_014** — correction pairs for v9 failures (see breakdown above):
+   - Priority 1: VAT arithmetic worked examples (15–20 pairs), rolling 12-month definition
+   - Priority 2: GN487A precision pairs — full name, single date, mgeni definition, ndoa exception
+   - Priority 3: Out-of-corpus clean-stop pairs (refusal only, no elaboration) — 20+ pairs
+   - Priority 4: SDL/WCF precision — 0.5% rate, 10-employee threshold, same-day deadline
+   - Move eval_191 (PAYE 800K) from refusal gate to accuracy gate
+3. **Fix repetition loop in production** — chike-inference/main.py lines 109–116 missing `repetition_penalty=1.1` — identified but not yet applied
+4. **Update Cerebrium** to serve adapter-v9 (or wait for v10)
+
+## Dataset State
+- Source files: 13 batches in `datasets/tier1a/cleaned_pairs/`
+  - Batches 001–008: old 18-field schema (question_sw/answer_sw) — converted by generate_sft.py
+  - Batches 009–013: SFT format (instruction/input/output/system) — direct use
+- SFT files (current, on HuggingFace):
+  - train_sft.jsonl: 2,395 pairs
+  - val_sft.jsonl: 267 pairs
+  - Total loaded: 2,662 (10 excluded as eval_set:true)
+- Generation: `python scripts/generate_sft.py` — always use this, never raw glob from cleaned_pairs
+- Balanced files retained locally: `sft/train_sft_balanced.jsonl` (1,658) / `sft/val_sft_balanced.jsonl` (183) — used for v9, NOT on HuggingFace
+
+## Training Script
+- File: `kaggle/train_ddp.py`
+- Run: `python3 train_ddp.py` (Unsloth handles multi-GPU natively — no torchrun)
+- Config: LORA_RANK=128, LORA_ALPHA=128, MAX_SEQ_LENGTH=2048, 2 epochs, lr=2e-4
+- Previous LoRA (v9-lora, r=64) will fail to load — EXPECTED, v10 starts fresh at r=128
+- Pushes: merged 16-bit to adapter-v10, LoRA-only to adapter-v10-lora
+- Dataset assertion: `_train_count >= 2300`
+
+## Scorer Fixes Applied (eval notebook — Kaggle africa_giants_eval.ipynb)
+- `la` removed from NO_WORDS in yes_no scorer (word boundary issue)
+- `Thibitisha na` citation strip in definition/procedure scorer
+- Both fixes in eval notebook Cell 2 only — NOT in run_eval.py (local script)
+
+## Known Issues / Technical Debt
+- `chike-inference/main.py`: missing `repetition_penalty=1.1` — production model repeats "Thibitisha na TRA" 8–9× before truncation
+- Cerebrium still serving v6 adapter — v9 weights exist on HF but not deployed
+- `run_eval.py` (local) does not have the scorer fixes that the Kaggle eval notebook has
+- eval_191 (PAYE TZS 800K) misclassified in refusal gate — should be accuracy gate
+
+## Dataset Naming Convention
+- Batches 001–008: `batch_NNN_cleaned.jsonl`
+- Batches 009–013: `cleaned_pairs_batch_NNN.jsonl`
+- Always use `glob('datasets/tier1a/cleaned_pairs/*.jsonl')` — never hardcode prefix
+- Always use `generate_sft.py` to build SFT files — it handles both schemas
 
 ## HuggingFace Repos
-- africa-giants-adapter-v7: LIVE (merged 16bit)
-- africa-giants-adapter-v7-lora: LIVE (320MB, r=64)
-- africa-giants-adapter-v6: rollback available
-- africa-giants-dataset: 2,537 pairs (train 2,283 / val 254)
+- africa-giants-adapter-v9: LIVE (merged 16-bit, gate results uploaded)
+- africa-giants-adapter-v9-lora: LIVE (r=64 LoRA-only — NOT compatible with v10 r=128)
+- africa-giants-adapter-v10: pending (v10 training not yet run)
+- africa-giants-adapter-v10-lora: pending
+- africa-giants-dataset: 2,662 pairs (train 2,395 / val 267)
 
 ## Infrastructure
-- Cerebrium: serving adapter-v6 (needs update to v7)
+- Cerebrium: serving adapter-v6 (STALE — needs update)
 - Wappfly: +255637809070
-- Kaggle: eval notebook updated for v7 scorer fixes
-- GitHub: main branch, all changes pushed
+- Kaggle: training notebook (africa_giants_V2.ipynb) + eval notebook (africa_giants_eval.ipynb)
+- GitHub: main branch, HEAD at 496850d
+- HuggingFace token: Kaggle secret `AFRICA_GIANTS`
 
-## Scorer Fixes Applied (eval notebook)
-- la removed from NO_WORDS in yes_no scorer (word boundary issue)
-- Thibitisha na citation strip in definition/procedure scorer
-- Both fixes in Kaggle eval notebook Cell 2 only (not in run_eval.py)
-
-## Dataset Naming Convention Issue
-Batches 001-008: batch_NNN_cleaned.jsonl
-Batches 009-012: cleaned_pairs_batch_NNN.jsonl
-Fix: use glob *.jsonl when loading all cleaned pairs
+## Recent Commits
+- 496850d: train_ddp.py r=128 single GPU
+- 9ef505b: fix train_ddp.py python3 not torchrun
+- acfc506: dataset full 2662 pairs schema verified
+- 36edbae: add train_ddp.py DDP v10 script
+- ca17114: dataset balanced 1841 pairs v9
+- 533140d: batch_013 135 correction pairs
+- 67769c4: session close PROGRESS.md v7 results
