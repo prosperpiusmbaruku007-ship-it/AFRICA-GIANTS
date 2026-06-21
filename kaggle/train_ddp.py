@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Africa Giants — DDP Training Script v10
-Multi-GPU training with Unsloth + TRL + DDP via torchrun
-Usage: torchrun --nproc_per_node 2 train_ddp.py
+Multi-GPU training with Unsloth + TRL — Unsloth handles multi-GPU natively
+Usage: python3 train_ddp.py
 """
 
 # ══════════════════════════════════════════════════════════
@@ -12,13 +12,12 @@ import os, sys, json, re, subprocess, tempfile, traceback, inspect
 from datetime import datetime, timezone
 
 import torch
-import torch.distributed as dist
 
 # ══════════════════════════════════════════════════════════
 # DISTRIBUTED SETUP
 # ══════════════════════════════════════════════════════════
-LOCAL_RANK  = int(os.environ.get('LOCAL_RANK', 0))
-WORLD_SIZE  = int(os.environ.get('WORLD_SIZE', 1))
+LOCAL_RANK  = 0
+WORLD_SIZE  = 1
 IS_MAIN     = LOCAL_RANK == 0
 
 def log(msg):
@@ -26,7 +25,7 @@ def log(msg):
     if IS_MAIN:
         print(msg, flush=True)
 
-log(f"[ddp] LOCAL_RANK={LOCAL_RANK} WORLD_SIZE={WORLD_SIZE}")
+log(f"[ddp] Unsloth native multi-GPU — no torchrun needed")
 log(f"[ddp] Num GPUs visible: {torch.cuda.device_count()}")
 
 # ══════════════════════════════════════════════════════════
@@ -376,7 +375,7 @@ _base_kwargs = {
     "eval_steps":                    5,
     "dataloader_pin_memory":         False,
     "gradient_checkpointing":        not USE_UNSLOTH,
-    "ddp_find_unused_parameters":    False,
+
     _eval_key:                       "steps",
 }
 _sft_specific = {
