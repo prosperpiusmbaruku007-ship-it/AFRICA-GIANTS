@@ -11,6 +11,18 @@ Usage: python3 train_ddp.py
 import os, sys, json, re, subprocess, tempfile, traceback, inspect
 from datetime import datetime, timezone
 
+# Silence non-rank-0 processes completely
+if int(os.environ.get('LOCAL_RANK', 0)) != 0:
+    sys.stdout = open(os.devnull, 'w')
+    sys.stderr = open(os.devnull, 'w')
+
+# Silence warnings and verbose library output
+import warnings
+warnings.filterwarnings('ignore')
+os.environ['TRANSFORMERS_VERBOSITY'] = 'error'
+os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+os.environ['HF_HUB_DISABLE_PROGRESS_BARS'] = '1'
+
 import torch
 
 def log(msg):
@@ -120,11 +132,17 @@ if not USE_UNSLOTH:
 
 from datasets import load_dataset
 from huggingface_hub import HfApi
+import logging
+logging.getLogger('huggingface_hub').setLevel(logging.ERROR)
+logging.getLogger('urllib3').setLevel(logging.ERROR)
 log("[imports] complete")
 
 # ══════════════════════════════════════════════════════════
 # MODEL LOAD
 # ══════════════════════════════════════════════════════════
+print(f"\n{'='*50}")
+print(f"[v10] STEP: MODEL LOADING")
+print(f"{'='*50}")
 log(f"[model] Loading from: {BASE_MODEL}")
 
 if USE_UNSLOTH:
@@ -258,6 +276,9 @@ SYSTEM_PROMPT = (
 # ══════════════════════════════════════════════════════════
 # DATASET LOAD
 # ══════════════════════════════════════════════════════════
+print(f"\n{'='*50}")
+print(f"[v10] STEP: DATASET LOADING")
+print(f"{'='*50}")
 log(f"[data] Loading dataset from: {DATASET_REPO}")
 raw_dataset = load_dataset(
     DATASET_REPO,
@@ -483,6 +504,9 @@ if _trainer is None:
     raise RuntimeError("[train] Could not build SFTTrainer after 20 attempts")
 
 trainer = _trainer
+print(f"\n{'='*50}")
+print(f"[v10] STEP: TRAINING START")
+print(f"{'='*50}")
 log(f"[train] Starting on {GPU_NAME} (single GPU) ...")
 stats = trainer.train()
 log(f"[train] Done. Runtime: {stats.metrics['train_runtime']:.1f}s")
@@ -491,6 +515,9 @@ log(f"[train] Train loss: {stats.metrics.get('train_loss', 'N/A')}")
 # ══════════════════════════════════════════════════════════
 # EVAL + PUSH
 # ══════════════════════════════════════════════════════════
+print(f"\n{'='*50}")
+print(f"[v10] STEP: EVALUATION")
+print(f"{'='*50}")
 # Remove notebook progress callback if present
 try:
     from transformers.utils.notebook import NotebookProgressCallback
@@ -519,15 +546,17 @@ except Exception as _e:
     validation_loss = 999.0
 
 # Push LoRA-only adapter
+print(f"\n{'='*50}")
+print(f"[v10] STEP: LORA PUSH")
+print(f"{'='*50}")
 log(f"[lora] Pushing LoRA-only adapter to {LORA_ONLY_REPO} ...")
 try:
     with tempfile.TemporaryDirectory() as tmpdir:
         model.save_pretrained(tmpdir)
         tokenizer.save_pretrained(tmpdir)
         import os as _os
-        for f in _os.listdir(tmpdir):
-            size_mb = _os.path.getsize(_os.path.join(tmpdir, f)) / 1024 / 1024
-            log(f"[lora]   {f}  ({size_mb:.1f} MB)")
+        adapter_size = _os.path.getsize(_os.path.join(tmpdir, 'adapter_model.safetensors')) / 1024 / 1024
+        print(f"[lora] adapter_model.safetensors: {adapter_size:.1f} MB — pushing to {LORA_ONLY_REPO}")
         HfApi().upload_folder(
             folder_path    = tmpdir,
             repo_id        = LORA_ONLY_REPO,
@@ -542,6 +571,9 @@ except Exception as _e:
     traceback.print_exc()
 
 # Push merged 16-bit adapter
+print(f"\n{'='*50}")
+print(f"[v10] STEP: MERGED PUSH")
+print(f"{'='*50}")
 log(f"[push] Pushing merged model to {ADAPTER_REPO} ...")
 log(f"[push] Gate result: {'PASSED' if gate_passed else 'FAILED or UNKNOWN'} — pushing regardless")
 try:
@@ -620,6 +652,9 @@ log(f"[lora] LoRA adapter live at: https://huggingface.co/{LORA_ONLY_REPO}")
 # ══════════════════════════════════════════════════════════
 # INFERENCE TEST — after push
 # ══════════════════════════════════════════════════════════
+print(f"\n{'='*50}")
+print(f"[v10] STEP: INFERENCE TEST")
+print(f"{'='*50}")
 log("[test] Running quick inference check ...")
 try:
     if USE_UNSLOTH:
