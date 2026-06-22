@@ -128,7 +128,8 @@ def run(message: str, temperature: float = 0.1):
             max_new_tokens=300,
             temperature=temperature,
             do_sample=True,
-            repetition_penalty=1.1,
+            repetition_penalty=1.3,
+            no_repeat_ngram_size=4,
             pad_token_id=tokenizer.eos_token_id,
             eos_token_id=tokenizer.eos_token_id,
         )
