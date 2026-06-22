@@ -2,15 +2,14 @@ import os
 import shutil
 
 # Route HF cache to persistent storage for fast cold starts.
-# Old adapter versions (v3/v4/v5) were deleted 2026-06-22 to free space.
-# Persistent storage now has ~20GB free; v10 (15GB) fits with room to spare.
+# v8 is the active adapter; v10 reverted pending better training data (2026-06-22).
 HF_CACHE_DIR   = '/persistent-storage/.cache/huggingface'
 MODEL_CACHE_DIR = '/persistent-storage/.cache/huggingface/hub'
 os.environ['HF_HOME'] = HF_CACHE_DIR
 os.makedirs(HF_CACHE_DIR, exist_ok=True)
 
-# Safety: delete any old adapter versions that reappear in persistent storage
-for old_version in ['v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9']:
+# Delete all adapter versions except v8 (keep v8 cached for fast cold starts)
+for old_version in ['v3', 'v4', 'v5', 'v6', 'v7', 'v9', 'v10']:
     old_path = f'/persistent-storage/.cache/huggingface/hub/models--prospAprospA007--africa-giants-adapter-{old_version}'
     if os.path.exists(old_path):
         shutil.rmtree(old_path)
@@ -20,7 +19,7 @@ import torch
 from huggingface_hub import login
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v10"
+ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v8"
 HF_TOKEN     = os.environ.get("HF_TOKEN", "")
 
 if HF_TOKEN:
