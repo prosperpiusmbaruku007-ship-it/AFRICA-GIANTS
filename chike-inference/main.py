@@ -1,9 +1,20 @@
 import os
+import shutil
 
-# Route HF cache to /tmp — persistent-storage is 95% full (only 2.9GB free).
-# /tmp has 505GB free on the overlay filesystem. Model loads fresh each cold
-# start; fix by clearing persistent-storage and pointing back there later.
-os.environ['HF_HOME'] = '/tmp/hf_cache'
+# Route HF cache to persistent storage for fast cold starts.
+# Old adapter versions (v3/v4/v5) were deleted 2026-06-22 to free space.
+# Persistent storage now has ~20GB free; v10 (15GB) fits with room to spare.
+HF_CACHE_DIR   = '/persistent-storage/.cache/huggingface'
+MODEL_CACHE_DIR = '/persistent-storage/.cache/huggingface/hub'
+os.environ['HF_HOME'] = HF_CACHE_DIR
+os.makedirs(HF_CACHE_DIR, exist_ok=True)
+
+# Safety: delete any old adapter versions that reappear in persistent storage
+for old_version in ['v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9']:
+    old_path = f'/persistent-storage/.cache/huggingface/hub/models--prospAprospA007--africa-giants-adapter-{old_version}'
+    if os.path.exists(old_path):
+        shutil.rmtree(old_path)
+        print(f'[cache] Deleted old model: {old_path}')
 
 import torch
 from huggingface_hub import login
@@ -42,6 +53,7 @@ def get_model():
         print("[chike] Loading tokenizer ...")
         _tokenizer = AutoTokenizer.from_pretrained(
             ADAPTER_REPO,
+            cache_dir=MODEL_CACHE_DIR,
             token=HF_TOKEN if HF_TOKEN else None,
             trust_remote_code=True,
         )
@@ -58,6 +70,7 @@ def get_model():
             )
             _model = AutoModelForCausalLM.from_pretrained(
                 ADAPTER_REPO,
+                cache_dir=MODEL_CACHE_DIR,
                 quantization_config=bnb_config,
                 device_map="auto",
                 token=HF_TOKEN if HF_TOKEN else None,
@@ -68,6 +81,7 @@ def get_model():
             print(f"[chike] 4bit load failed ({e}), falling back to float16 ...")
             _model = AutoModelForCausalLM.from_pretrained(
                 ADAPTER_REPO,
+                cache_dir=MODEL_CACHE_DIR,
                 torch_dtype=torch.float16,
                 device_map="auto",
                 token=HF_TOKEN if HF_TOKEN else None,
@@ -84,11 +98,9 @@ def run(message: str, temperature: float = 0.1):
 
     model, tokenizer = get_model()
 
-    # Use tokenizer chat template if available
-    # otherwise fall back to manual format
     messages = [
-        {"role": "system",    "content": SYSTEM_PROMPT},
-        {"role": "user",      "content": message.strip()},
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user",   "content": message.strip()},
     ]
 
     try:
@@ -98,7 +110,6 @@ def run(message: str, temperature: float = 0.1):
             add_generation_prompt=True,
         )
     except Exception:
-        # Fallback to manual Llama 3 format
         prompt = (
             f"<|begin_of_text|>"
             f"<|start_header_id|>system<|end_header_id|>\n\n"
@@ -108,8 +119,8 @@ def run(message: str, temperature: float = 0.1):
             f"<|start_header_id|>assistant<|end_header_id|>\n\n"
         )
 
-    inputs      = tokenizer(prompt, return_tensors="pt").to(model.device)
-    input_len   = inputs["input_ids"].shape[1]
+    inputs    = tokenizer(prompt, return_tensors="pt").to(model.device)
+    input_len = inputs["input_ids"].shape[1]
 
     with torch.no_grad():
         outputs = model.generate(
@@ -122,14 +133,9 @@ def run(message: str, temperature: float = 0.1):
             eos_token_id=tokenizer.eos_token_id,
         )
 
-    # Decode ONLY the new tokens — not the prompt
     new_tokens = outputs[0][input_len:]
-    reply      = tokenizer.decode(
-        new_tokens,
-        skip_special_tokens=True,
-    ).strip()
+    reply = tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
 
-    # Remove any hallucinated follow-up turns
     for stop in ["<|start_header_id|>", "User:", "Mtumiaji:"]:
         if stop in reply:
             reply = reply.split(stop)[0].strip()
@@ -141,45 +147,27 @@ def run(message: str, temperature: float = 0.1):
 
 
 def diagnose():
-    """Diagnostic endpoint — checks disk space and filesystem paths. Remove after debugging."""
-    import shutil, subprocess
+    """Check disk space and persistent storage state."""
+    import subprocess
     results = {}
 
-    paths_to_check = [
-        '/persistent-storage',
-        '/persistent-storage/.cache',
-        '/persistent-storage/models',
-        '/tmp',
-        '/app',
-        os.path.expanduser('~'),
-    ]
-
-    for p in paths_to_check:
+    for p in ['/persistent-storage', '/persistent-storage/.cache/huggingface/hub', '/tmp']:
         if os.path.exists(p):
             try:
                 total, used, free = shutil.disk_usage(p)
                 results[p] = {
-                    'exists': True,
                     'total_gb': round(total / 1e9, 1),
                     'used_gb':  round(used  / 1e9, 1),
                     'free_gb':  round(free  / 1e9, 1),
                 }
-                # Check writability
-                test = os.path.join(p, '.write_test')
-                try:
-                    open(test, 'w').close()
-                    os.remove(test)
-                    results[p]['writable'] = True
-                except Exception as we:
-                    results[p]['writable'] = False
-                    results[p]['write_error'] = str(we)
+                if os.path.isdir(p):
+                    results[p]['contents'] = os.listdir(p)
             except Exception as e:
-                results[p] = {'exists': True, 'error': str(e)}
+                results[p] = {'error': str(e)}
         else:
             results[p] = {'exists': False}
 
     results['HF_HOME'] = os.environ.get('HF_HOME', 'NOT SET')
-    results['HF_HUB_CACHE'] = os.environ.get('HF_HUB_CACHE', 'NOT SET')
 
     try:
         df = subprocess.run(['df', '-h'], capture_output=True, text=True)
