@@ -21,7 +21,7 @@ if LLM_PROVIDER == 'anthropic':
 elif LLM_PROVIDER == 'openrouter':
     BASE_URL      = 'https://openrouter.ai/api/v1'
     API_KEY       = os.environ.get('OPENROUTER_API_KEY')
-    DEFAULT_MODEL = os.environ.get('OPENROUTER_MODEL', 'google/gemini-flash-2.0')
+    DEFAULT_MODEL = os.environ.get('OPENROUTER_MODEL', 'google/gemini-2.5-flash-lite')
     HEADERS = {
         'Authorization': f'Bearer {API_KEY or ""}',
         'Content-Type':  'application/json',
