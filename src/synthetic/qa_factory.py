@@ -107,6 +107,9 @@ def run_pipeline(reprocess: str = None, no_budget_check: bool = False):
 
     print(f"[factory] Found {len(new_files)} new file(s) to process")
 
+    from src.synthetic.api_utils import check_provider
+    check_provider()
+
     # Import heavy deps only after confirming there's work to do
     from src.synthetic.pdf_extractor     import extract_document
     from src.synthetic.fact_extractor    import extract_facts

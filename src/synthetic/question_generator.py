@@ -7,9 +7,9 @@ from pathlib import Path
 
 import numpy as np
 
-from src.synthetic.api_utils import call_with_cost_tracking
-
-MODEL            = 'claude-sonnet-4-6'
+from src.synthetic.api_utils import (
+    call_with_cost_tracking, DEFAULT_MODEL, API_KEY, LLM_PROVIDER,
+)
 EMBED_MODEL_NAME = 'paraphrase-multilingual-MiniLM-L12-v2'
 DEDUP_THRESHOLD  = 0.92
 
@@ -188,13 +188,10 @@ def generate_pairs(facts: list, document: dict,
                    index_embeddings=None, index_texts=None,
                    raw_output_path: str = None) -> list:
     """Generate Swahili Q&A pairs from confirmed facts."""
-    import anthropic
-    api_key = os.environ.get('ANTHROPIC_API_KEY', '')
-    if not api_key:
-        print("[generator] ANTHROPIC_API_KEY not set -- cannot generate pairs")
+    if not API_KEY and LLM_PROVIDER != 'ollama':
+        print(f"[generator] API key not set for provider '{LLM_PROVIDER}' -- cannot generate pairs")
         return []
 
-    client     = anthropic.Anthropic(api_key=api_key)
     today      = datetime.utcnow().strftime('%Y-%m-%d')
     source_doc = document.get('source_document', '')
     source_url = document.get('source_url', 'tanzlii.org')
@@ -220,8 +217,8 @@ def generate_pairs(facts: list, document: dict,
 
         try:
             response = call_with_cost_tracking(
-                client, 'question_generator',
-                model=MODEL,
+                'question_generator',
+                model=DEFAULT_MODEL,
                 max_tokens=2048,
                 messages=[{"role": "user", "content": user_msg}],
                 system=GENERATION_SYSTEM,

@@ -2,15 +2,16 @@ import json
 import os
 import re
 
-from src.synthetic.api_utils import call_with_cost_tracking, sum_cost_log_this_month
+from src.synthetic.api_utils import (
+    call_with_cost_tracking, sum_cost_log_this_month,
+    DEFAULT_MODEL, API_KEY, LLM_PROVIDER,
+)
 
 LOCKED_FACTS_PATH  = 'scripts/locked_facts.json'
 PENDING_FACTS_PATH = 'data/flagged/new_facts_pending.json'
 
 MONTHLY_CAP              = float(os.environ.get('MONTHLY_BUDGET', '20.0'))
 COST_PER_DOCUMENT_BUDGET = float(os.environ.get('COST_PER_DOCUMENT_BUDGET', '0.20'))
-
-MODEL = 'claude-sonnet-4-6'
 
 EXTRACTION_SYSTEM = (
     "You are a compliance fact extractor for Tanzania business law. "
@@ -110,14 +111,12 @@ def _parse_facts_response(raw: str) -> list:
 
 
 def extract_facts(document: dict) -> list:
-    """Extract confirmed facts from document sections via Claude API."""
-    import anthropic
-    api_key = os.environ.get('ANTHROPIC_API_KEY', '')
-    if not api_key:
-        print("[facts] ANTHROPIC_API_KEY not set -- cannot extract facts")
+    """Extract confirmed facts from document sections via configured LLM provider."""
+    if not API_KEY and LLM_PROVIDER != 'ollama':
+        print(f"[facts] API key not set for provider '{LLM_PROVIDER}' -- cannot extract facts")
+        print(f"[facts] Run 'python run.py generate' after setting the key")
         return []
 
-    client       = anthropic.Anthropic(api_key=api_key)
     locked_facts = _load_locked_facts()
     confirmed    = []
     new_count    = 0
@@ -131,8 +130,8 @@ def extract_facts(document: dict) -> list:
         user_msg = EXTRACTION_USER_TMPL.format(section_content=content[:4000])
         try:
             response = call_with_cost_tracking(
-                client, 'fact_extractor',
-                model=MODEL,
+                'fact_extractor',
+                model=DEFAULT_MODEL,
                 max_tokens=1024,
                 messages=[{"role": "user", "content": user_msg}],
                 system=EXTRACTION_SYSTEM,
