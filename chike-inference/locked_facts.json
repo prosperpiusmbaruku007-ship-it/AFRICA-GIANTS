@@ -1,0 +1,1517 @@
+{
+  "_meta": {
+    "version": "2026-06-07",
+    "project": "AFRICA-GIANTS",
+    "purpose": "Single source of truth for FACT-GUARDIAN validation script",
+    "usage": "python scripts/check_locked_facts.py --file [batch_file.jsonl]",
+    "update_policy": "Only update after web-verified primary source confirmation. Never update from base model output.",
+    "cross_ai_review": "Every batch verified by Groq (llama-3.1-8b-instant) + Gemini (gemini-1.5-flash) before commit"
+  },
+  "paye_band_2_rate": {
+    "fact": "PAYE second band rate is 8% on income between TZS 270,001 and TZS 520,000",
+    "correct_value": "8%",
+    "wrong_patterns": [
+      "9% ya ziada",
+      "9% on excess",
+      "kiwango 9%",
+      "asilimia 9 ya ziada",
+      "9 per cent on excess",
+      "9% juu ya",
+      "paye band 2.*9%",
+      "band 2.*paye.*9%",
+      "9% paye on income",
+      "9% kwa kipato cha paye",
+      "second band.*9%(?! is incorrect| is wrong)"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/pay-as-you-earn-paye",
+    "verified_by": "AfroTools TRA 2025/26 verified July 2025",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED",
+    "unresolved_note": "Confirm via TRA IDRAS calculator before batch_004"
+  },
+  "paye_penalty_rate": {
+    "fact": "Late PAYE remittance penalty is 2.5% per month of unpaid amount",
+    "correct_value": "2.5% per month",
+    "wrong_patterns": [
+      "paye penalty is 5% per month",
+      "adhabu ya paye ni asilimia 5 kwa mwezi",
+      "paye[^.!?]*late[^.!?]*penalty[^.!?]*(?<!\\d)5%(?! per month.*not)",
+      "asilimia 10 kwa mwezi.*paye",
+      "paye.*asilimia 10 kwa mwezi",
+      "10% per month.*paye",
+      "paye.*10% per month",
+      "paye[^.!?]*faini[^.!?]*asilimia 5(?! kwa mwezi — si)"
+    ],
+    "primary_source": "https://taxsummaries.pwc.com/tanzania/corporate/tax-administration",
+    "verified_by": "PWC Tanzania Tax Summaries",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "paye_personal_relief": {
+    "fact": "Tanzania has NO separate PAYE personal relief deduction. The 0% band on first TZS 270,000/month IS the effective tax-free amount. Both TZS 26,000 and TZS 27,000 'personal relief' figures are WRONG.",
+    "correct_value": "No personal relief — 0% band on first TZS 270,000/month",
+    "wrong_patterns": [
+      "TZS 27,000",
+      "TZS 27000",
+      "27,000 kwa mwezi",
+      "punguzo la TZS 27",
+      "relief ya 27",
+      "TZS 26,000.*personal relief",
+      "26,000.*punguzo la kibinafsi",
+      "punguzo la kibinafsi.*26,000",
+      "personal relief.*26,000",
+      "26,000 per month.*relief",
+      "relief ya kibinafsi.*26"
+    ],
+    "primary_source": "https://taxsummaries.pwc.com/tanzania/individual/taxes-on-personal-income",
+    "verified_by": "PWC Tanzania Individual Tax Summary Jan 2026 + Habib Advisory 2025/26 — NO personal relief line item exists",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED",
+    "correction_note": "Original entry incorrectly asserted 26,000 was correct. Session 11 (2026-06-12) confirmed no such relief exists in Tanzania law."
+  },
+  "paye_p9_deadline": {
+    "fact": "Annual PAYE reconciliation Form P9 deadline is 31 March of following year — NOT 31 January",
+    "correct_value": "31 March",
+    "wrong_patterns": [
+      "p9.*inawasilishwa.*31 januari",
+      "p9.*deadline is 31 january",
+      "p9.*due on 31 january",
+      "p9.*submitted by 31 january",
+      "p9.*due.*31 january",
+      "p9.*kwa tarehe.*31 januari",
+      "tarehe ya mwisho ya p9.*januari",
+      "January 31",
+      "Januari 31",
+      "tarehe 31 ya Januari"
+    ],
+    "primary_source": "https://www.payspace.com/tz",
+    "verified_by": "PaySpace, Deel, Rivermate — multiple sources confirmed 31 March",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "p45_not_tanzanian": {
+    "fact": "Form P45 does not exist in Tanzania — it is a UK payroll form. Use P9 or leaving certificate.",
+    "correct_value": "No P45 in Tanzania — use P9 or leaving certificate",
+    "wrong_patterns": [
+      "p45 inatumiwa tanzania",
+      "p45 form is used in tanzania",
+      "use a p45 in tanzania",
+      "issue a p45 to",
+      "kutumia fomu ya p45 tanzania",
+      "toa fomu ya p45 kwa",
+      "p45 form exists in tanzania",
+      "P-45",
+      "kutoa P45",
+      "issue P45"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/pay-as-you-earn-paye",
+    "verified_by": "TRA website — P45 not mentioned anywhere in Tanzania tax law",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "sdl_rate": {
+    "fact": "SDL rate is 3.5% of gross payroll — NOT 4%",
+    "correct_value": "3.5%",
+    "wrong_patterns": [
+      "asilimia 4 ya",
+      "4% of",
+      "SDL ya 4%",
+      "4 per cent",
+      "(?<!no )5% SDL",
+      "SDL 2%",
+      "2% ya",
+      "SDL ni asilimia 5",
+      "SDL rate is 5%",
+      "SDL ya asilimia 5",
+      "kiwango cha SDL ni 5%"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
+    "verified_by": "Finance Act 2023 — changed from 4% to 3.5%",
+    "effective_date": "2023-07-01",
+    "status": "CONFIRMED"
+  },
+  "sdl_full_name": {
+    "fact": "SDL stands for Skills Development Levy — NOT Service Delivery Levy and NOT short-term disability leave",
+    "correct_value": "Skills Development Levy",
+    "wrong_patterns": [
+      "SDL inamaanisha Service Delivery Levy",
+      "SDL ni Service Delivery Levy",
+      "SDL stands for Service Delivery Levy",
+      "SDL means Service Delivery Levy",
+      "SDL inamaanisha Skills Delivery Levy",
+      "SDL ni Skills Delivery Levy",
+      "SDL stands for Skills Delivery Levy",
+      "SDL inamaanisha disability leave",
+      "SDL ni disability leave",
+      "SDL is disability leave",
+      "SDL inamaanisha short-term disability",
+      "SDL ni short-term disability",
+      "SDL is short-term disability",
+      "SDL inahusu ulemavu wa muda mfupi",
+      "SDL covers disability leave",
+      "SDL ni kodi ya ulemavu",
+      "SDL is a disability levy",
+      "SDL inamaanisha Service Development"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
+    "verified_by": "TRA official SDL page",
+    "effective_date": "2023-07-01",
+    "status": "CONFIRMED",
+    "adversarial_note": "Base model inference test after 300 pairs STILL said disability leave — needs 50+ adversarial pairs in batch_003"
+  },
+  "sdl_threshold": {
+    "fact": "SDL applies to employers with 10 or more employees on Mainland Tanzania — NOT 4 employees",
+    "correct_value": "10 employees",
+    "wrong_patterns": [
+      "wafanyakazi 4",
+      "4 employees",
+      "threshold.*wafanyakazi 5(?! au zaidi| or more)",
+      "sdl.{0,100}wafanyakazi 5.{0,50}kizingiti",
+      "kizingiti.{0,50}wafanyakazi 5.{0,100}sdl",
+      "minimum.*\\b5 employees\\b",
+      "\\b5 employees\\b.*threshold",
+      "threshold.*\\b5 employees\\b",
+      "sdl.*wafanyakazi 5(?! au zaidi| or more| tu| haihitajiki)",
+      "sdl.*\\b5 employees\\b(?! or more| au zaidi| only| is not)",
+      "wafanyakazi 50.*kizingiti cha sdl",
+      "sdl.*minimum.*50 employees"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
+    "verified_by": "Finance Act 2021 — changed threshold from 4 to 10",
+    "effective_date": "2021-07-01",
+    "status": "CONFIRMED"
+  },
+  "sdl_payer": {
+    "fact": "SDL is paid by the employer only — NOT deducted from employee wages",
+    "correct_value": "Employer only — not from employee",
+    "wrong_patterns": [
+      "SDL inakatwa kwa mfanyakazi",
+      "SDL inakatwa kutoka mshahara wa mfanyakazi",
+      "SDL is deducted from the employee",
+      "SDL is deducted from employee salary",
+      "employee pays SDL",
+      "mfanyakazi analipa SDL",
+      "SDL ya mfanyakazi",
+      "mfanyakazi anapaswa kulipa SDL",
+      "SDL hulipwa na mfanyakazi"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
+    "verified_by": "TRA SDL page",
+    "effective_date": "2023-07-01",
+    "status": "CONFIRMED"
+  },
+  "nssf_employer_rate": {
+    "fact": "NSSF employer contribution is 10% of gross wage — NOT 6%",
+    "correct_value": "10% employer",
+    "wrong_patterns": [
+      "asilimia 6 ya mwajiri",
+      "6% employer",
+      "employer 6%",
+      "mwajiri analipa 6%",
+      "12% employer",
+      "nssf.*employer.*12%",
+      "12%.*nssf.*employer",
+      "mwajiri.*nssf.*asilimia 12(?!\\s*/)",
+      "nssf.*asilimia 12(?!\\s*/)"
+    ],
+    "primary_source": "https://www.nssf.go.tz/pages/payment-of-contributions",
+    "verified_by": "NSSF official website — inference test after 300 pairs confirmed 10% is now learned",
+    "effective_date": "2018-07-01",
+    "status": "CONFIRMED",
+    "adversarial_note": "Base model frequently says 6% — confirmed fixed after 300-pair training"
+  },
+  "nssf_total_rate": {
+    "fact": "NSSF total contribution is 20% of gross wage (10% employer + 10% employee)",
+    "correct_value": "20% total (10+10)",
+    "wrong_patterns": [
+      "jumla ya 12%",
+      "12% total",
+      "jumla 15%",
+      "15% total",
+      "16% total",
+      "10% tu",
+      "10% only total",
+      "nssf.*asilimia 16|asilimia 16.*nssf"
+    ],
+    "primary_source": "https://www.nssf.go.tz/pages/payment-of-contributions",
+    "verified_by": "NSSF official website",
+    "effective_date": "2018-07-01",
+    "status": "CONFIRMED"
+  },
+  "nssf_penalty": {
+    "fact": "NSSF late payment penalty is 5% per month of unpaid contributions",
+    "correct_value": "5% per month",
+    "wrong_patterns": [
+      "nssf[^.!?]*2% per month",
+      "2% per month[^.!?]*nssf",
+      "nssf[^.!?]*2\\.5% per month",
+      "2\\.5% per month[^.!?]*nssf",
+      "10% per month.*nssf",
+      "nssf.*10% per month",
+      "nssf.*faini.*asilimia 2(?![0-9])",
+      "nssf.*asilimia 2(?![0-9]).*adhabu|adhabu.*nssf.*asilimia 2(?![0-9])"
+    ],
+    "primary_source": "https://www.nssf.go.tz/pages/payment-of-contributions",
+    "verified_by": "NSSF Act Cap.50",
+    "effective_date": "2018-07-01",
+    "status": "CONFIRMED"
+  },
+  "nssf_retirement_age": {
+    "fact": "NSSF retirement age is 60 (55 for mining/early retirement), minimum 180 months contributions for full pension",
+    "correct_value": "60 years (55 mining), 180 months minimum",
+    "wrong_patterns": [
+      "umri wa 65",
+      "age 65",
+      "miaka 65",
+      "umri wa 55 kwa wote",
+      "55 for everyone",
+      "miezi 120",
+      "120 months",
+      "miezi 240"
+    ],
+    "primary_source": "https://www.nssf.go.tz",
+    "verified_by": "Mywage.org + US SSA Tanzania profile",
+    "effective_date": "2018-07-01",
+    "status": "CONFIRMED"
+  },
+  "vat_standard_rate": {
+    "fact": "Tanzania VAT standard rate is 18% — unchanged since 2015. It was NEVER 14%.",
+    "correct_value": "18% unchanged since 2015",
+    "wrong_patterns": [
+      "kutoka asilimia 14",
+      "from 14%",
+      "changed from 14",
+      "ilibadilika kutoka 14",
+      "previously 14%",
+      "20% VAT",
+      "kiwango cha kawaida cha VAT ni asilimia 16",
+      "standard VAT rate is 16%",
+      "Tanzania VAT ni 16% kwa bidhaa zote",
+      "vat.*asilimia 20|kodi.*ongezeko.*asilimia 20"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
+    "verified_by": "TRA VAT page — history section confirms 18% since 2015",
+    "effective_date": "2015-07-01",
+    "status": "CONFIRMED",
+    "adversarial_note": "Inference test showed model inventing 5% food VAT and 10% utilities VAT — needs adversarial pairs"
+  },
+  "vat_reduced_rates": {
+    "fact": "Tanzania does NOT have reduced VAT rates of 5% or 10%. Only 18% standard, 0% zero-rated, and exempt.",
+    "correct_value": "No 5% or 10% reduced rates exist in Tanzania",
+    "wrong_patterns": [
+      "Tanzania ina kiwango cha 5% cha VAT",
+      "Tanzania has a 5% VAT rate",
+      "kiwango cha VAT ni asilimia 5",
+      "VAT rate is 5%",
+      "VAT ya chakula ni 5%",
+      "food is taxed at 5% VAT",
+      "chakula linalipwa VAT ya 5%",
+      "Tanzania ina kiwango cha 10% cha VAT",
+      "Tanzania has a 10% VAT rate",
+      "kiwango cha VAT ni asilimia 10",
+      "VAT rate is 10%",
+      "umeme unalipwa VAT ya 10%",
+      "electricity is taxed at 10% VAT",
+      "Tanzania ina kiwango kilichopunguzwa cha VAT",
+      "Tanzania has a reduced VAT rate",
+      "kiwango kilichopunguzwa cha VAT kinapatikana"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
+    "verified_by": "TRA VAT Act — only standard 18%, zero-rated 0%, exempt",
+    "effective_date": "2015-07-01",
+    "status": "CONFIRMED",
+    "adversarial_note": "CRITICAL — inference test showed model confidently saying 5% for food and 10% for utilities. Needs 40+ adversarial pairs in batch_003"
+  },
+  "vat_registration_threshold": {
+    "fact": "VAT registration threshold is TZS 200,000,000 per year OR TZS 100,000,000 per 6 months",
+    "correct_value": "TZS 200M/year or TZS 100M/6 months",
+    "wrong_patterns": [
+      "TZS 100,000,000 kwa mwaka",
+      "100 million per year",
+      "\\b50 million\\b",
+      "TZS 150,000,000",
+      "kizingiti cha vat ni.*50,000,000",
+      "vat threshold.*50,000,000",
+      "50,000,000.*kizingiti cha vat",
+      "register.*vat.*50,000,000",
+      "vat.*register.*50,000,000"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
+    "verified_by": "TRA VAT page confirmed matching RSM 2025/26 guide",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "vat_withholding_goods": {
+    "fact": "VAT withholding on goods is 3% — effective 1 July 2025 (Finance Act 2025)",
+    "correct_value": "3% on goods",
+    "wrong_patterns": [
+      "6% ya bidhaa",
+      "6% for goods",
+      "WHT goods 6%",
+      "bidhaa 5%",
+      "goods 5%",
+      "goods 2%",
+      "3% ya invoice ya bidhaa",
+      "3% ya thamani ya invoice",
+      "3% x.*1,000,000.*30,000",
+      "3% ya TZS 1,000,000.*= TZS 30,000",
+      "withholding.*3%.*invoice.*amount"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
+    "verified_by": "Finance Act 2025",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED",
+    "formula_note": "CRITICAL: The 3% is applied to the VAT AMOUNT, not the invoice value. Example: TZS 1M invoice + TZS 180K VAT => withholding = 3% x 180,000 = TZS 5,400. NOT 3% x 1,000,000 = TZS 30,000."
+  },
+  "vat_withholding_services": {
+    "fact": "VAT withholding on services is 6% — effective 1 July 2025 (Finance Act 2025)",
+    "correct_value": "6% on services",
+    "wrong_patterns": [
+      "3% ya huduma",
+      "3% for services",
+      "WHT services 3%",
+      "huduma 5%",
+      "services 5%",
+      "6% ya invoice ya huduma",
+      "6% ya thamani ya invoice",
+      "6% x.*1,000,000.*60,000",
+      "6% ya TZS 1,000,000.*= TZS 60,000",
+      "withholding.*6%.*invoice.*amount"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
+    "verified_by": "Finance Act 2025",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED",
+    "formula_note": "CRITICAL: The 6% is applied to the VAT AMOUNT, not the invoice value. Example: TZS 1M invoice + TZS 180K VAT => withholding = 6% x 180,000 = TZS 10,800. NOT 6% x 1,000,000 = TZS 60,000."
+  },
+  "gn487a_nature": {
+    "fact": "GN487A is a BUSINESS PROHIBITION ORDER listing 15 activities non-citizens cannot conduct. It is NOT about immigration or residence permits.",
+    "correct_value": "Business prohibition order — 15 prohibited business activities",
+    "wrong_patterns": [
+      "masharti ya makazi",
+      "residence requirements",
+      "immigration permit",
+      "visa requirements",
+      "60 days",
+      "siku 60",
+      "immigration order",
+      "raia wa kigeni lazima waomba kibali ndani ya",
+      "must apply for permit within",
+      "masharti mapya ya makazi",
+      "gn 487a ni amri ya makazi",
+      "gn 487a ni amri ya kibali",
+      "gn 487a ni amri ya uhamiaji wa makazi",
+      "gn 487a is a residence permit order",
+      "gn 487a is an immigration permit order",
+      "gn 487a requires non-citizens to apply for residence",
+      "gn487a is about immigration",
+      "gn487a is about residence",
+      "gn 487a inazungumzia masharti ya makazi",
+      "gn 487a inasimamia vibali vya makazi"
+    ],
+    "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
+    "verified_by": "TanzLII gazette text + Bowmans Tanzania legal update",
+    "effective_date": "2025-07-28",
+    "status": "CONFIRMED",
+    "adversarial_note": "CRITICAL — inference test after 300 pairs showed model STILL saying GN487A is about residence permits. Needs 80 adversarial pairs in batch_003. HIGHEST PRIORITY."
+  },
+  "gn487a_effective_date": {
+    "fact": "GN 487A came into effect on 28 July 2025",
+    "correct_value": "28 July 2025",
+    "wrong_patterns": [
+      "Januari 2025",
+      "January 2025",
+      "Machi 2025",
+      "Oktoba 2025 effective",
+      "gn.{0,5}487[^.!?]{0,80}(?:ya|ni|was|in|mwaka|from|of|ilianza|ilitangazwa|enacted|issued|announced) 2024|487a[^.!?]{0,80}(?:ya|ni|was|in|mwaka|from|of|ilianza|ilitangazwa|enacted|issued|announced) 2024"
+    ],
+    "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
+    "verified_by": "TanzLII gazette",
+    "effective_date": "2025-07-28",
+    "status": "CONFIRMED"
+  },
+  "gn487a_penalty_noncitizen": {
+    "fact": "GN 487A penalty for non-citizen: minimum TZS 10,000,000 fine AND/OR up to 6 months imprisonment AND visa revocation",
+    "correct_value": "TZS 10M minimum + 6 months + visa revocation",
+    "wrong_patterns": [
+      "TZS 5,000,000 kwa mgeni",
+      "5 million for non-citizen",
+      "miezi 3 gerezani kwa mgeni",
+      "3 months for non-citizen",
+      "faini ya TZS 1,000,000"
+    ],
+    "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
+    "verified_by": "TanzLII gazette text",
+    "effective_date": "2025-07-28",
+    "status": "CONFIRMED"
+  },
+  "gn487a_penalty_citizen_facilitator": {
+    "fact": "GN 487A penalty for Tanzanian citizen who assists or aids a non-citizen in any GN487A prohibited business activity: TZS 5,000,000 fine OR imprisonment not exceeding 3 months. This is SEPARATE from the non-citizen penalty (TZS 10M minimum fine OR 6 months OR both, plus visa revocation). BOTH parties are penalised — the non-citizen AND the Tanzanian facilitator.",
+    "correct_value": "TZS 5M or 3 months for Tanzanian facilitator — BOTH parties penalised",
+    "wrong_patterns": [
+      "TZS 10,000,000 kwa raia",
+      "10 million for citizen",
+      "miezi 6 kwa raia",
+      "6 months for Tanzanian",
+      "adhabu inabeba mgeni peke yake",
+      "only the foreigner is penalised",
+      "raia wa tanzania hawapati adhabu kwa kusaidia"
+    ],
+    "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
+    "verified_by": "TanzLII gazette text; Bowmans 30 Jul 2025; Clyde & Co Jul 2025; VELMA Law; ChimpReports",
+    "effective_date": "2025-07-28",
+    "status": "LOCKED"
+  },
+  "gn605a_effective_date": {
+    "fact": "GN 605A Private Sector Wage Order came into effect on 1 January 2026",
+    "correct_value": "1 January 2026",
+    "wrong_patterns": [
+      "2025-07-01",
+      "Machi 2026",
+      "March 2026",
+      "GN 605A ilianza kutumika julai 2025",
+      "GN 605A ilianza julai 2025",
+      "GN 605A ilifanya kazi julai 2025",
+      "GN 605A ya julai 2025",
+      "GN 605A (julai 2025)",
+      "GN 605A iliyoanza julai 2025",
+      "GN 605A effective july 2025",
+      "GN 605A took effect in july 2025",
+      "GN 605A, effective july 2025",
+      "GN 605A (july 2025)"
+    ],
+    "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/605a/eng@2025-10-13",
+    "verified_by": "TanzLII gazette",
+    "effective_date": "2026-01-01",
+    "status": "CONFIRMED"
+  },
+  "gn605a_average_increase": {
+    "fact": "GN 605A average increase is 33.4% from TZS 275,060 to TZS 358,322 per month",
+    "correct_value": "33.4% from TZS 275,060 to TZS 358,322",
+    "wrong_patterns": [
+      "20% ongezeko",
+      "increase was 20%",
+      "was a 20% increase",
+      "increased by 20%",
+      "increase of 20%",
+      "25% increase",
+      "kutoka 200,000",
+      "from TZS 200,000"
+    ],
+    "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/605a/eng@2025-10-13",
+    "verified_by": "Business and Human Rights Centre — Minister Kikwete press briefing October 2025",
+    "effective_date": "2026-01-01",
+    "status": "CONFIRMED"
+  },
+  "royalties_wht_rate": {
+    "fact": "Withholding tax on royalties is 15% for BOTH residents and non-residents",
+    "correct_value": "15% resident AND 15% non-resident",
+    "wrong_patterns": [
+      "asilimia 10 kwa wasio wakazi.*mrabaha",
+      "10% non-resident.*royalt",
+      "royalties.{0,20}non.{0,5}resident.{0,10}is 10%",
+      "royalties.{0,20}wasio wakazi.{0,10}ni asilimia 10(?! si| — si)",
+      "royalties.{0,15}wasio wakazi.{0,15}asilimia 10(?! si| — si)",
+      "royalties.*wht is 10%",
+      "mrabaha.*wasio wakazi.*10"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/withholding-tax",
+    "verified_by": "Auditax International Tanzania confirmed both 15%",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "provisional_tax_instalments": {
+    "fact": "Provisional tax is paid in FOUR equal instalments at end of months 3, 6, 9, and 12 from start of financial year",
+    "correct_value": "4 instalments at months 3/6/9/12",
+    "wrong_patterns": [
+      "awamu tatu",
+      "three instalments",
+      "awamu mbili",
+      "two instalments",
+      "first instalment[^,]*month 6",
+      "awamu ya kwanza[^,]*mwezi wa 6",
+      "provisional tax.{0,30}3 instalments(?! will have| is wrong| is incorrect)",
+      "awamu 3.{0,20}kodi ya awali",
+      "kodi ya awali.{0,30}awamu 3(?! tu)",
+      "paid in 3 instalments(?! will)"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/corporation-tax",
+    "verified_by": "TRA Paying Taxes page + PWC Tanzania + Auditax International",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "minimum_turnover_tax": {
+    "fact": "Tanzania minimum turnover tax is 1% of gross turnover effective 1 July 2025 — was 0.5%, never 0.3%",
+    "correct_value": "1% WEF 1 July 2025",
+    "wrong_patterns": [
+      "asilimia 0.3",
+      "0.3%",
+      "0.3 percent",
+      "minimum.*tax.*(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to )",
+      "kodi ndogo.*(?<!kutoka )(?<!from )0\\.5(?! hadi)(?! to )",
+      "turnover.*tax.*(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to )",
+      "(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to ).*minimum.*tax"
+    ],
+    "primary_source": "https://habibadvisory.com/tanzania-tax-guide-2025-26",
+    "verified_by": "Habib Advisory 2025/26 Tax Guide",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "commissioner_objection_deadline": {
+    "fact": "TRA Commissioner must determine an objection within 6 months from date of admission — NOT 90 days",
+    "correct_value": "6 months from admission",
+    "wrong_patterns": [
+      "pingamizi.{0,30}siku 90(?! — si| — not| ni kosa)",
+      "objection.{0,30}90 days(?! — not| is wrong)",
+      "deadline.*objection.*90 days",
+      "within 90 days",
+      "ndani ya siku 60",
+      "(kamishna|commissioner).*(determine|kuamua).*(miezi 3|3 months)",
+      "(miezi 3|3 months).*(determine|kuamua).*(kamishna|commissioner)",
+      "commissioner.*must.*respond.*within.*3 months",
+      "kamishna.*lazima.*kujibu.*miezi 3",
+      "objection.*determined.*3 months",
+      "rufaa.*miezi 3.*kamishna",
+      "pingamizi.{0,20}ni siku 90(?! ya rufaa)",
+      "muda wa pingamizi ni siku 90"
+    ],
+    "primary_source": "https://taxsummaries.pwc.com/tanzania/corporate/tax-administration",
+    "verified_by": "Finance Act 2020 amendment to Tax Administration Act confirmed by PWC",
+    "effective_date": "2020-07-01",
+    "status": "CONFIRMED"
+  },
+  "trab_appeal_two_steps": {
+    "fact": "TRAB appeal requires TWO steps: (1) Notice of Intention within 30 days AND (2) Statement of Appeal within 45 days",
+    "correct_value": "30-day notice + 45-day statement of appeal — both mandatory",
+    "wrong_patterns": [
+      "rufaa ndani ya siku 30 tu",
+      "only 30 days to appeal",
+      "appeal within 30 days.*complete",
+      "siku 30 peke yake"
+    ],
+    "primary_source": "https://www.trab.go.tz/pages/how-to-appeals",
+    "verified_by": "TRAB official website",
+    "effective_date": "2020-07-01",
+    "status": "CONFIRMED"
+  },
+  "objection_deposit_requirement": {
+    "fact": "Before TRA objection is admitted taxpayer must pay the HIGHER of undisputed tax OR one-third of assessed tax within 15 days",
+    "correct_value": "Pay higher of undisputed OR 1/3 assessed within 15 days",
+    "wrong_patterns": [
+      "huhitajiki kulipa",
+      "no payment required before objection",
+      "unaweza kukata rufaa bila kulipa",
+      "can appeal without paying"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/objections-and-appeals",
+    "verified_by": "TRA Objections page + FB Attorneys Tanzania. Was MISSING from original batch_002 pairs.",
+    "effective_date": "2020-07-01",
+    "status": "CONFIRMED"
+  },
+  "objection_extension_statutory_right": {
+    "fact": "Extension of the 30-day objection period is a STATUTORY RIGHT — NOT very rare. Apply within 7 days before expiry.",
+    "correct_value": "Statutory right — apply 7 days before expiry, max 30 more days",
+    "wrong_patterns": [
+      "nadra sana",
+      "very rare",
+      "almost impossible",
+      "haitolewa kwa kawaida",
+      "rarely granted"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/objections-and-appeals",
+    "verified_by": "TRA Objections page — extension explicitly provided by law",
+    "effective_date": "2020-07-01",
+    "status": "CONFIRMED"
+  },
+  "stamp_duty_property_transfer": {
+    "fact": "Stamp duty on transfer of land or buildings is a FLAT 1% of consideration or market value — NOT tiered 0.5%/1%",
+    "correct_value": "Flat 1% of value",
+    "wrong_patterns": [
+      "0.5% ya kwanza",
+      "0.5% on first",
+      "asilimia 0.5.*100,000",
+      "(?:is|are|ina|ni) tiered",
+      "graduated.{0,30}(?:stamp|stempu)|(?:stamp|stempu).{0,30}graduated",
+      "stamp.{0,60} is.{0,5}0\\.5%",
+      "stempu.{0,60}ni.{0,5}asilimia 0\\.5"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/stamp-duty",
+    "verified_by": "Auditax International Tanzania confirmed flat 1%",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "permit_class_b_employed": {
+    "fact": "Class B Residence Permit is for EMPLOYED EXPATRIATES working for companies — NOT for investors",
+    "correct_value": "Class B = employed expatriates",
+    "wrong_patterns": [
+      "daraja B.*mwekezaji",
+      "mwekezaji.*daraja B",
+      "Class B kwa wanaowekeza",
+      "Class B ni kwa wanaowekeza(?! — si| — not| Class A)",
+      "Class B.*investor(?!.*Class A)(?!.*NOT)(?!.*si kwa)"
+    ],
+    "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
+    "verified_by": "Tanzania Immigration Department official website",
+    "effective_date": "2025-07-28",
+    "status": "CONFIRMED"
+  },
+  "permit_class_a_investor": {
+    "fact": "Class A Residence Permit is for SELF-EMPLOYED FOREIGN INVESTORS — NOT Class B",
+    "correct_value": "Class A = self-employed investors",
+    "wrong_patterns": [
+      "daraja A.*mfanyakazi ajiriwa",
+      "Class A for employees",
+      "Class A.*for.*(?:employed|(?<!not hired )(?<!hired )employees|regular workers)(?!.*invest|.*self)"
+    ],
+    "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
+    "verified_by": "Tanzania Immigration Department official website",
+    "effective_date": "2025-07-28",
+    "status": "CONFIRMED"
+  },
+  "permit_class_c_categories": {
+    "fact": "Class C Residence Permit is for researchers, retired persons, missionaries, volunteers — NOT for employed foreign workers",
+    "correct_value": "Class C = researchers, missionaries, volunteers, retired",
+    "wrong_patterns": [
+      "daraja C.*mfanyakazi ajiriwa",
+      "Class C for workers",
+      "Class C.{0,40}kazi ya(?! utafiti)",
+      "employed.{0,30}Class C(?! is for| ni kwa| \\(short| is a short)",
+      "wafanyakazi.{0,50}daraja C"
+    ],
+    "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
+    "verified_by": "Tanzania Immigration Department official website",
+    "effective_date": "2025-07-28",
+    "status": "CONFIRMED"
+  },
+  "corporate_tax_rate": {
+    "fact": "Tanzania standard corporate income tax rate is 30%. DSE-listed companies pay 25%.",
+    "correct_value": "30% standard, 25% DSE-listed",
+    "wrong_patterns": [
+      "asilimia 25 kwa kawaida",
+      "25% standard",
+      "corporate tax 25% all",
+      "35% corporate",
+      "28% corporate",
+      "kodi ya kampuni.{0,30}asilimia 35",
+      "corporate tax.{0,20}35%",
+      "kiwango.{0,20}kampuni.{0,20}35",
+      "asilimia 35.{0,30}kodi.{0,20}kampuni"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/corporation-tax",
+    "verified_by": "TRA Corporation Tax page",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "wht_deadline": {
+    "fact": "Withholding tax must be remitted within 7 DAYS after end of the calendar month — NOT 7th of following month",
+    "correct_value": "7 days after month end",
+    "wrong_patterns": [
+      "mwisho wa mwezi unaofuata",
+      "end of following month",
+      "wht inalipwa[^.!?]*siku 30",
+      "wht.{0,10}remitted[^.!?]*within 30 days",
+      "wht[^.!?]*kulipa[^.!?]*ndani ya siku 30",
+      "withholding.*payment.*30 days",
+      "withholding[^.!?]*paid[^.!?]*within 30 days(?! of deduction)",
+      "siku 30.*withholding",
+      "30 days.*withholding",
+      "zuio.*siku 30",
+      "siku 30.*zuio"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/withholding-tax",
+    "verified_by": "Income Tax Act s.84",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED",
+    "note": "PAYE deadline = 7th of following month. WHT deadline = 7 DAYS after month end. These are different."
+  },
+  "loss_carryforward_finance_act_2024": {
+    "fact": "After 4 consecutive years of tax losses only 60% of year 5 income can be offset against losses (Finance Act 2024)",
+    "correct_value": "60% offset limit after 4 consecutive loss years",
+    "wrong_patterns": [
+      "hasara zinaweza kubebwa bila kikomo",
+      "losses carried unlimited",
+      "100% offset allowed",
+      "no restriction on loss offset"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/corporation-tax",
+    "verified_by": "Finance Act 2024 amendment",
+    "effective_date": "2024-07-01",
+    "status": "CONFIRMED"
+  },
+  "brela_share_transfer_legal_effect": {
+    "fact": "Share transfer without BRELA notification MAY LACK LEGAL EFFECT AGAINST THIRD PARTIES — it is not absolutely void",
+    "correct_value": "May lack legal effect against third parties",
+    "wrong_patterns": [
+      "hana nguvu ya kisheria kabisa",
+      "has absolutely no legal force",
+      "transfer is void",
+      "uhamishaji ni batili",
+      "completely invalid without BRELA"
+    ],
+    "primary_source": "https://www.brela.go.tz",
+    "verified_by": "Companies Act 2002",
+    "effective_date": "2025-01-01",
+    "status": "CONFIRMED"
+  },
+  "tmda_replaces_tfda": {
+    "fact": "TMDA (Tanzania Medicines and Medical Devices Authority) is the current name — TFDA no longer exists",
+    "correct_value": "TMDA is correct current name",
+    "wrong_patterns": [
+      "TFDA peke yake",
+      "TFDA only",
+      "Tanzania Food and Drugs Authority",
+      "contact TFDA",
+      "TFDA certificate",
+      "TFDA licence"
+    ],
+    "primary_source": "https://www.tmda.go.tz",
+    "verified_by": "TMDA official website",
+    "effective_date": "2019-07-01",
+    "status": "CONFIRMED"
+  },
+  "brave_search_blocked_tanzania": {
+    "fact": "Brave Search API is blocked in Tanzania. TRA required Brave Software to register as non-resident electronic service provider. Brave blocked Tanzania access instead of registering.",
+    "correct_value": "Do not use Brave Search for this project — use Groq and Gemini APIs instead",
+    "wrong_patterns": [],
+    "primary_source": "https://brave.com/transparency/",
+    "verified_by": "Brave Software public statement 2025",
+    "effective_date": "2025-01-01",
+    "status": "CONFIRMED",
+    "note": "This is a project configuration fact not a regulatory fact. Do NOT install Brave Search MCP."
+  },
+  "paye_all_bands_sequence": {
+    "fact": "PAYE bands (monthly): 0% up to TZS 270K | 8% TZS 270K-520K | 20% TZS 520K-760K | 25% TZS 760K-1M | 30% above TZS 1M",
+    "correct_value": "0% / 8% / 20% / 25% / 30% in that order",
+    "wrong_patterns": [
+      "paye.*band.*9%(?! is wrong| ni kosa)",
+      "asilimia 9.*ziada.*paye(?! ni kosa)",
+      "paye.*third.*band.*22%",
+      "paye.*band 3.*22%",
+      "paye.*asilimia 22",
+      "paye.*asilimia 28",
+      "paye.*28%.*band",
+      "paye.*band.*35%",
+      "paye.*top.*35%",
+      "kiwango cha juu cha paye.*35"
+    ],
+    "primary_source": "https://taxsummaries.pwc.com/tanzania/individual/taxes-on-personal-income",
+    "verified_by": "PWC Tanzania Individual Tax Summary, last reviewed Jan 2026",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "paye_nonresident_flat_rate": {
+    "fact": "Non-resident employees pay PAYE at a flat 15% rate — NOT the progressive bands. This is a final withholding tax.",
+    "correct_value": "15% flat for non-residents",
+    "wrong_patterns": [
+      "non-resident.*paye.*30%(?!.*resident)",
+      "paye.*wasio wakazi.*30%",
+      "paye.*wasio wakazi.*viwango.*tofauti",
+      "non-resident.{0,30}paye.{0,30}progressive",
+      "wasio wakazi.*paye.*kwa viwango"
+    ],
+    "primary_source": "https://taxsummaries.pwc.com/tanzania/individual/taxes-on-personal-income",
+    "verified_by": "PWC Tanzania Individual Tax Summary, Jan 2026",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "brela_annual_return_fee": {
+    "fact": "BRELA annual return filing fee is TZS 22,000. Late filing penalty is TZS 2,500 per month (local company) or USD 25/month (foreign Section XII company).",
+    "correct_value": "TZS 22,000 filing; TZS 2,500/month late penalty",
+    "wrong_patterns": [
+      "annual return.*brela.*bila malipo",
+      "brela.*annual return.*free of charge",
+      "brela.*annual return.*tzs 50,000",
+      "brela.*annual return.*tzs 5,000(?!\\b)",
+      "brela.*faini.*kurasa za mwaka.*tzs 10,000"
+    ],
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "BRELA official fee schedule, Jun 2026",
+    "effective_date": "2025-01-01",
+    "status": "CONFIRMED"
+  },
+  "wcf_new_employer_registration": {
+    "fact": "A new employer must register with WCF within 30 days of hiring their first employee",
+    "correct_value": "30 days from first hire",
+    "wrong_patterns": [
+      "wcf.*sajili.*siku 90",
+      "wcf.*register.*within 90 days",
+      "sajili.*wcf.*ndani ya siku 60(?! ya kodi)",
+      "register.*wcf.*60 days(?! of tax)"
+    ],
+    "primary_source": "https://www.wcf.go.tz",
+    "verified_by": "WCF official website, Jun 2026",
+    "effective_date": "2015-07-01",
+    "status": "CONFIRMED"
+  },
+  "wcf_disease_reporting_deadline": {
+    "fact": "Occupational disease must be reported to WCF within 7 working days of diagnosis. Workplace death must be reported within 12 months. Compensation claim must be filed within 12 months of accident or disease discovery.",
+    "correct_value": "Disease: 7 working days; Death & claim: 12 months",
+    "wrong_patterns": [
+      "ugonjwa wa kazini.*wcf.*siku 30",
+      "occupational disease.*wcf.*30 days",
+      "kifo.*wcf.*siku 7(?! za kazi)",
+      "wcf.*dai.*miaka 2",
+      "wcf.*claim.*2 years",
+      "wcf.*dai.*miaka mitatu"
+    ],
+    "primary_source": "https://www.wcf.go.tz",
+    "verified_by": "WCF official website, Jun 2026",
+    "effective_date": "2015-07-01",
+    "status": "CONFIRMED"
+  },
+  "gn605a_increment_range": {
+    "fact": "GN 605A individual sector increments range from TZS 20,000 (lowest sector) to TZS 195,000 (highest sector) per month",
+    "correct_value": "TZS 20,000 minimum increment; TZS 195,000 maximum increment",
+    "wrong_patterns": [
+      "ongezeko la wastani.*tzs 20,000 peke yake",
+      "ongezeko la juu zaidi.*tzs 100,000(?!\\s*to)",
+      "highest increment.*tzs 100,000(?!\\s*to)"
+    ],
+    "primary_source": "https://www.pkfea.com/publications/2025/new-minimum-wage-order-2025-key-highlights-for-tanzania-s-private-sector/",
+    "verified_by": "PKF Eastern Africa GN 605A analysis, Oct 2025",
+    "effective_date": "2026-01-01",
+    "status": "CONFIRMED"
+  },
+  "_unresolved_items": {
+    "commercial_rent_wht_nonresident": {
+      "claim": "Commercial rent WHT rate for non-residents",
+      "current_assumption": "15% non-resident (resident confirmed 10%)",
+      "status": "NEEDS_TRA_CHECK",
+      "resolution_source": "https://www.tra.go.tz/page/withholding-tax — rent/lease column",
+      "priority": "MEDIUM",
+      "pairs_affected": [
+        "tier1a_wh_009_20260603"
+      ]
+    },
+    "paye_band2_final_confirmation": {
+      "claim": "PAYE second band rate is definitively 8% not 9%",
+      "current_assumption": "8% confirmed AfroTools July 2025",
+      "status": "NEEDS_TRA_CHECK",
+      "resolution_source": "TRA IDRAS system — log in and check PAYE calculator directly",
+      "priority": "CRITICAL",
+      "note": "One Perplexity source disputed — confirm via IDRAS before batch_004 PAYE pairs"
+    },
+    "moa_stamp_duty": {
+      "claim": "Memorandum of Association stamp duty is TZS 10,000",
+      "current_assumption": "TZS 10,000 commonly cited",
+      "status": "NEEDS_TRA_CHECK",
+      "resolution_source": "Current Stamp Duty Act schedule or TRA stamp duty page",
+      "priority": "LOW",
+      "pairs_affected": [
+        "tier1a_stamp_duty_010_20260603"
+      ]
+    },
+    "wht_penalty_rate": {
+      "claim": "Withholding tax specific late penalty rate",
+      "current_assumption": "5% per month same as general",
+      "status": "NEEDS_TRA_CHECK",
+      "resolution_source": "Tax Administration Act — WHT-specific penalty section",
+      "priority": "MEDIUM"
+    }
+  },
+  "wht_director_fees": {
+    "fact": "WHT on director fees (non-full-time directors) is 15% — a single rate for both residents and non-residents. Source: TRA.go.tz withholding tax page.",
+    "primary_source": "https://www.tra.go.tz/page/withholding-tax",
+    "verified_date": "2026-06-09",
+    "wrong_patterns": [
+      "asilimia 20.*mkurugenzi wasio wakazi",
+      "mkurugenzi.*asiye mkazi.*asilimia 20",
+      "director fee.{0,30}non.{0,10}resident.{0,10}(?:is |are |attracts )20%",
+      "non-resident director.{0,20}20%",
+      "director fees.*non-residents.{0,15}20%",
+      "mkurugenzi wa kigeni.{0,20}asilimia 20",
+      "ada za mkurugenzi.*wasio wakazi.*ni asilimia 20",
+      "wasio wakazi.*ada.*mkurugenzi.*ni asilimia 20",
+      "mkurugenzi.*kwa wasio wakazi.*ni asilimia 20"
+    ]
+  },
+  "wcf_accident_reporting": {
+    "fact": "Employer must notify WCF of a workplace accident within 7 WORKING DAYS — via WCF online portal (portal.wcf.go.tz). Different deadline for occupational illness. Source: WCF portal.",
+    "primary_source": "https://portal.wcf.go.tz",
+    "verified_date": "2026-06-09",
+    "wrong_patterns": [
+      "wcf.*siku 30",
+      "siku 30.*wcf",
+      "wcf.*30 days",
+      "30 days.*wcf",
+      "wcf.*siku 14(?! za magonjwa)",
+      "wcf.*14 days(?! for occupational)"
+    ]
+  },
+  "wcf_accident_reporting_deadline": {
+    "fact": "7 working days from date of accident. Source: Workers Compensation Act / portal.wcf.go.tz",
+    "primary_source": "https://tanzlii.org (Workers Compensation Act 2008)",
+    "verified_date": "2026-06-09",
+    "wrong_patterns": [
+      "wcf.*siku 30(?! ya kodi| ya hesabu)",
+      "siku 30.*wcf(?! ya kodi)",
+      "wcf.*30 days(?! of tax| of objection)",
+      "30 days.*wcf",
+      "wcf.*siku 14(?! za magonjwa)",
+      "wcf.*14 days(?! for occupational)"
+    ]
+  },
+  "osha_registration_threshold_b004": {
+    "fact": "OSHA applies to ALL workplaces — no minimum employee threshold",
+    "wrong_patterns": [
+      "wafanyakazi 10.*osha",
+      "osha.*10 employees",
+      "osha.*threshold ya 10",
+      "10 or more.*osha",
+      "osha.*wafanyakazi 10 au zaidi",
+      "biashara zenye wafanyakazi chini ya 10.*osha"
+    ],
+    "primary_source": "osha.go.tz",
+    "verified_date": "2026-06-12"
+  },
+  "dse_25_rate_three_years_only": {
+    "fact": "DSE 25% CIT rate applies for THREE YEARS ONLY from listing date",
+    "wrong_patterns": [
+      "muda wote.*dse.*25",
+      "permanently.*dse.*25",
+      "daima.*asilimia 25.*dse",
+      "indefinitely.*25.*listed",
+      "dse.*25.*permanently"
+    ],
+    "primary_source": "tra.go.tz income tax page",
+    "verified_date": "2026-06-12"
+  },
+  "amt_loss_companies_only": {
+    "fact": "AMT 1% applies ONLY to companies with 3 consecutive years of tax losses",
+    "wrong_patterns": [
+      "kampuni zote.*1%.*mauzo",
+      "all companies.*1%.*turnover",
+      "any company.*minimum.*1%",
+      "kampuni yoyote.*kodi ya chini.*1"
+    ],
+    "primary_source": "tra.go.tz income tax page",
+    "verified_date": "2026-06-12"
+  },
+  "permit_class_d_does_not_exist": {
+    "fact": "Tanzania has NO Class D permit — only Class A (investor), Class B (employed expatriate), Class C (researcher/voluntary)",
+    "wrong_patterns": [
+      "class d",
+      "darasa d",
+      "daraja d",
+      "kibali cha darasa d"
+    ],
+    "primary_source": "immigration.go.tz",
+    "verified_date": "2026-06-12"
+  },
+  "gn487a_transitional_provision": {
+    "fact": "Non-citizens with valid licences at 28 July 2025 may continue until licence expiry. No renewal permitted. No new licences issued for prohibited activities.",
+    "correct_value": "Transitional: valid licence holders continue to expiry only",
+    "wrong_patterns": [
+      "hakukuwa na kipindi cha mpito",
+      "hakuna kipindi cha mazoea rasmi",
+      "wamekuwa wakikosea sheria tangu 28 julai"
+    ],
+    "primary_source": "Bowmans Jul 2025; MAK Africa Legal Aug 2025; TanzaniaInvest Jul 2025; The Citizen Jul 2025",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED"
+  },
+  "efd_threshold_tzs_11m": {
+    "fact": "EFD required for businesses with annual turnover TZS 11 million and above. Below TZS 11M may use manual receipts. All VAT-registered businesses must use EFD regardless of turnover.",
+    "correct_value": "TZS 11M annual turnover threshold; VAT-registered = always EFD",
+    "wrong_patterns": [
+      "kila biashara tanzania lazima iwe na efd machine",
+      "kila biashara inahitaji efd bila kizingiti"
+    ],
+    "primary_source": "TRA official website tra.go.tz; RSM Tanzania Tax Guide 2025/26; Auditax International Feb 2025",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED"
+  },
+  "gn487a_visa_revocation": {
+    "fact": "Visa revocation is a possible consequence — not universally mandatory in all sources. Bowmans says AND/mandatory. The Star and The Citizen say possible/risk. Train model to say CAN be revoked not WILL always be revoked.",
+    "correct_value": "kunaweza kutokea (can happen) — not ni lazima daima (always mandatory)",
+    "wrong_patterns": [
+      "visa ni lazima daima",
+      "visa itafutwa lazima",
+      "kufutwa kwa visa ni lazima daima bila exception"
+    ],
+    "primary_source": "Bowmans 30 Jul 2025 (mandatory); The Star Jul 2025 (possible); The Citizen Jul 2025 (risk)",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED — sources disagree, use softer language"
+  },
+  "vat_withholding_remittance_deadline": {
+    "fact": "VAT withholding remitted to TRA by 20th of following month — same deadline as VAT return. NOT 7 days after month end.",
+    "correct_value": "20th of following month",
+    "wrong_patterns": [
+      "siku 7 baada ya mwisho wa mwezi.*withholding",
+      "withholding.*siku 7 baada ya mwisho",
+      "ndani ya siku 7.*withholding.*tra"
+    ],
+    "primary_source": "PWC Tax Summaries 2025; Finance Act 2025 analysis (Lexology); Habib Advisory Tax Guide 2025/26",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED"
+  },
+  "vat_late_registration_penalty": {
+    "fact": "Penalty for failure to register VAT: fine up to TZS 200,000 AND/OR imprisonment 2-12 months PLUS interest on unpaid VAT. NO 2.5% monthly rate exists in the VAT Act.",
+    "correct_value": "Fine up to TZS 200,000 and/or 2-12 months imprisonment + interest",
+    "wrong_patterns": [
+      "2\\.5%.*kwa kila mwezi.*vat.*kusajili",
+      "faini ya 2\\.5%.*vat.*kuchelewa",
+      "vat.*late.*registration.*2\\.5%"
+    ],
+    "primary_source": "VAT Act Tanzania Cap 148",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED"
+  },
+  "nssf_payment_deadline": {
+    "fact": "NSSF due by end of month following payroll month. Dataset had inconsistent dates (10th vs end of month) — always direct users to nssf.or.tz to confirm current deadline.",
+    "correct_value": "End of month following payroll — verify at nssf.or.tz",
+    "wrong_patterns": [
+      "nssf.*tarehe 10 au mwishoni mwa mwezi",
+      "nssf.*tarehe 10 au mwisho wa mwezi"
+    ],
+    "primary_source": "nssf.or.tz — verify current deadline",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED — use hedged language"
+  },
+  "sdl_rate_2025": {
+    "fact": "SDL rate is 3.5% of gross cash emoluments effective 1 July 2023 (Finance Act 2023 reduced from 4%). Minimum 10 employees threshold applies.",
+    "correct_value": "3.5% from 1 Jul 2023",
+    "wrong_patterns": [
+      "sdl.*4%(?! hadi| to | kabla)",
+      "sdl.*asilimia 4(?! hadi| to | kabla)"
+    ],
+    "primary_source": "PWC Tax Summaries 2025; Finance Act 2023",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED — 3.5% is correct for 2025/26"
+  },
+  "sdl_employee_threshold": {
+    "fact": "SDL applies to employers with minimum 10 employees. Below 10 employees = no SDL obligation.",
+    "correct_value": "10 employees minimum",
+    "wrong_patterns": [
+      "sdl.*wafanyakazi 5(?! au zaidi| or more)",
+      "sdl.*wafanyakazi 4(?! au zaidi| or more)"
+    ],
+    "primary_source": "PWC Tax Summaries 2025; RSM Tax Guide 2025/26; TRA SDL official page",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED — 10 is correct"
+  },
+  "paye_bands_monthly_2025_26": {
+    "fact": "PAYE monthly bands 2025/26: Band 1: 0-270,000=0%; Band 2: 270,001-520,000=8%; Band 3: 520,001-760,000=20%; Band 4: 760,001-1,000,000=25%; Band 5: above 1,000,000=30%. No personal relief of TZS 26,000 exists.",
+    "correct_value": "0%/8%/20%/25%/30% — confirmed PWC Jan 2026",
+    "wrong_patterns": [
+      "band 2.*9%(?! ni kosa| is wrong)",
+      "paye.*band 3.*22%",
+      "26,000.*personal relief",
+      "punguzo la kibinafsi.*26,000"
+    ],
+    "primary_source": "PWC Tax Summaries Tanzania (reviewed Jan 2026); Habib Advisory Tax Guide 2025/26",
+    "verified_date": "2026-06-16",
+    "status": "CONFIRMED"
+  },
+  "vat_withholding_formula_correct": {
+    "fact": "VAT withholding rate applies to the VAT AMOUNT, not the invoice/contract value. Goods: 3% x VAT amount. Services: 6% x VAT amount. Example goods: TZS 1M invoice, VAT = TZS 180,000, withholding = TZS 5,400 (3% x 180,000). Supplier receives TZS 1,174,600 (invoice + VAT minus withheld). Example services: TZS 1M invoice, VAT = TZS 180,000, withholding = TZS 10,800 (6% x 180,000). Supplier receives TZS 1,169,200.",
+    "correct_value": "3% of VAT amount for goods; 6% of VAT amount for services",
+    "wrong_patterns": [
+      "3% ya TZS 1,000,000.*= TZS 30,000",
+      "3% ya bei ya bidhaa",
+      "6% ya TZS 1,000,000.*= TZS 60,000",
+      "3% ya thamani ya invoice",
+      "withholding.*3%.*invoice value",
+      "withholding.*6%.*invoice value"
+    ],
+    "primary_source": "PWC Tax Summaries Tanzania 2025; EY Finance Act 2025 analysis; Auditax International; Clyde & Co July 2025; Afriwise July 2025",
+    "verified_by": "PWC, EY, Auditax, Clyde & Co, Afriwise — all confirm formula",
+    "effective_date": "2025-07-01",
+    "status": "CONFIRMED"
+  },
+  "wcf_threshold_no_minimum": {
+    "fact": "WCF (Workers Compensation Fund) applies to ALL employers in Mainland Tanzania from the first employee. There is NO minimum employee count threshold. Contrast with SDL which requires 10+ employees. WCF: 0.5% of gross cash emoluments, from employee 1. SDL: 3.5% of gross cash emoluments, from employee 10.",
+    "correct_value": "WCF from employee 1 (no threshold)",
+    "wrong_patterns": [
+      "wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)",
+      "wcf.*10 employees(?! for sdl)",
+      "wote mbili.*wafanyakazi 10.*wcf",
+      "wcf.*inahitaji wafanyakazi 10",
+      "wcf threshold.*10"
+    ],
+    "primary_source": "wcf.go.tz official portal; VELMA Law; Workers Compensation Act No.20 of 2008; V.A Business Consultants July 2025; Lenvica.com",
+    "verified_by": "WCF official portal, VELMA Law, V.A Business Consultants July 2025",
+    "effective_date": "2008-01-01",
+    "status": "CONFIRMED"
+  },
+  "wcf_rate_0_5_percent_confirmed": {
+    "fact": "WCF rate is 0.5% of gross cash emoluments for ALL employers (both private and public sector) as of 1 July 2022. History: was 1% before 2021, then 0.6% July 2021, then equalized to 0.5% for all sectors from July 2022.",
+    "correct_value": "0.5% — confirmed current rate for all sectors",
+    "wrong_patterns": [
+      "wcf.*1%(?! before| kabla| was| ilikuwa)",
+      "wcf.*0.6%(?! before| kabla| was| ilikuwa)",
+      "wcf.*asilimia 1(?! kabla| before)",
+      "wcf.*rate.*0.6"
+    ],
+    "primary_source": "wcf.go.tz official website; Sage payroll July 2022 announcement; WCF Director General May 2025 press briefing; PWC Tax Summaries 2025",
+    "verified_by": "WCF official, Sage July 2022, WCF DG May 2025, PWC 2025",
+    "effective_date": "2022-07-01",
+    "status": "CONFIRMED"
+  },
+  "vat_threshold_200m_july2024_increase": {
+    "fact": "VAT registration threshold was increased from TZS 100M to TZS 200M in July 2024. Current thresholds: TZS 200M per 12 months OR TZS 100M per any 6-month rolling period. Zanzibar threshold is separate (TZS 100M) — different jurisdiction. Any pair showing TZS 100M/year or TZS 50M/6mo is citing pre-July-2024 rules.",
+    "correct_value": "TZS 200M/12mo or TZS 100M/6mo (effective July 2024)",
+    "wrong_patterns": [
+      "vat.*kizingiti.*100,000,000 kwa mwaka(?! wa 2023| wa 2022| kabla)",
+      "vat.*kizingiti.*50,000,000.*miezi 6",
+      "vat registration.*100M per year(?! before 2024| was)",
+      "vat.*50M.*6 months(?! before 2024| was)"
+    ],
+    "primary_source": "TRA official (tra.go.tz); PWC Tax Summaries 2025; TanzaniaInvest August 2025",
+    "verified_by": "TRA official, PWC 2025, TanzaniaInvest Aug 2025",
+    "effective_date": "2024-07-01",
+    "status": "CONFIRMED"
+  },
+  "GN605A_effective_date": {
+    "fact": "GN 605A (Government Notice No. 605A) gazetted 13 October 2025, effective 1 January 2026. Revokes and replaces the Minimum Wage Order 2022 in its entirety. The 2022 order has NO force after 31 December 2025.",
+    "correct_value": "Gazetted 13 Oct 2025, effective 1 Jan 2026 — 2022 order revoked",
+    "wrong_patterns": [
+      "amri ya 2022 bado inatumika baada ya 2026",
+      "minimum wage order 2022 is still valid",
+      "GN 605A haikufuta amri ya 2022",
+      "2022 order remains in force"
+    ],
+    "primary_source": "PKF Eastern Africa Oct 2025; kazi.go.tz",
+    "verified_date": "2026-06-19",
+    "effective_date": "2026-01-01",
+    "status": "LOCKED"
+  },
+  "GN605A_sector_count": {
+    "fact": "GN 605A establishes minimum wages across 16 main sectors with multiple subsectors. There is no single flat national rate — each sector and subsector has its own distinct monthly minimum. Training pairs must not state a single flat rate as applying to all workers.",
+    "correct_value": "16 sectors, multiple subsectors — no single flat rate",
+    "wrong_patterns": [
+      "kiwango kimoja cha chini.*wafanyakazi wote",
+      "single minimum wage for all workers",
+      "GN 605A ina kiwango kimoja tu",
+      "GN 605A sets one flat rate"
+    ],
+    "primary_source": "PKF Eastern Africa GN 605A PDF Oct 2025",
+    "verified_date": "2026-06-19",
+    "effective_date": "2026-01-01",
+    "status": "LOCKED"
+  },
+  "GN605A_rate_range": {
+    "fact": "GN 605A monthly rates range from TZS 80,000 (other domestic workers) to TZS 765,900 (energy sector international companies). Agricultural/general floor is TZS 175,000. Any sector not explicitly specified in the Order defaults to TZS 175,000 per month.",
+    "correct_value": "TZS 80,000 (domestic) to TZS 765,900 (energy international); default TZS 175,000",
+    "wrong_patterns": [
+      "kiwango cha chini kabisa.*TZS 175,000 kwa wote",
+      "minimum wage floor.*175,000 for all",
+      "GN 605A.*chini.*TZS 100,000(?! domestic| nyumbani)",
+      "GN 605A.*chini kabisa.*TZS 200,000"
+    ],
+    "primary_source": "PKF Eastern Africa GN 605A PDF Oct 2025",
+    "verified_date": "2026-06-19",
+    "effective_date": "2026-01-01",
+    "status": "LOCKED"
+  },
+  "GN605A_key_sector_rates": {
+    "fact": "Selected confirmed GN 605A monthly minimum rates: Agricultural (crop/animal): TZS 175,000. Hotel 5-star/4-star: TZS 375,000. Hotel bars/restaurants: TZS 195,000. Mining (prospecting): TZS 695,000. Energy international: TZS 765,900. Commercial banks: TZS 733,000. Construction Class I: TZS 515,000. Telecommunication: TZS 644,000. Industrial: TZS 200,000.",
+    "correct_value": "See fact field for confirmed sector rates",
+    "wrong_patterns": [
+      "kilimo.*TZS 358,322",
+      "agricultural.*TZS 358,322",
+      "hoteli.*TZS 275,060",
+      "hotel.*minimum.*TZS 275,060"
+    ],
+    "primary_source": "PKF Eastern Africa GN 605A PDF Oct 2025",
+    "verified_date": "2026-06-19",
+    "effective_date": "2026-01-01",
+    "status": "LOCKED"
+  },
+  "OSHA_penalties": {
+    "fact": "Failure to register or obtain OSHA compliance licence: fine TZS 1,000,000 to TZS 5,000,000 OR imprisonment up to 12 months OR both. Continuing offence: additional TZS 100,000 per day. Source: OHS Act No. 5 of 2003.",
+    "correct_value": "TZS 1M–5M fine OR up to 12 months OR both; TZS 100,000/day continuing offence",
+    "wrong_patterns": [
+      "osha.*faini.*TZS 500,000(?! na)",
+      "osha.*penalty.*500,000(?! plus)",
+      "osha.*faini.*TZS 10,000,000",
+      "osha.*fine.*10 million",
+      "osha.*miezi 6.*kifungo(?! au zaidi)",
+      "osha.*6 months imprisonment(?! or more)"
+    ],
+    "primary_source": "OHS Act No. 5 of 2003, TanzLII (tanzlii.org)",
+    "verified_date": "2026-06-19",
+    "effective_date": "2003-01-01",
+    "status": "LOCKED"
+  },
+  "VAT_withholding_base_disputed": {
+    "fact": "The base for VAT withholding calculation is DISPUTED between sources. TRA.go.tz says 3% of the consideration (invoice total) for goods, 6% of consideration for services. PwC Tax Summaries says 3% of VAT amount for goods, 6% of VAT amount for services. These produce very different results. Training pairs must NOT state a specific calculation formula — use 'thibitisha na TRA kwa hesabu sahihi' instead.",
+    "correct_value": "DISPUTED — do not encode a specific formula in training pairs",
+    "wrong_patterns": [
+      "3% ya thamani ya jumla ya invoice",
+      "withholding.*3%.*total invoice value",
+      "6% ya thamani ya jumla ya invoice.*huduma",
+      "withholding.*6%.*total invoice value.*services"
+    ],
+    "primary_source": "TRA.go.tz vs PWC Tax Summaries Tanzania 2025",
+    "verified_date": "2026-06-19",
+    "status": "DISPUTED — hedge in training pairs",
+    "training_instruction": "Do not state a specific withholding calculation formula. Use: 'thibitisha na TRA kwa hesabu sahihi' or 'wasiliana na mshauri wa kodi kwa hesabu halisi'."
+  },
+  "NSSF_split_triggers": {
+    "fact": "NSSF total is always 20% of gross wage. Three valid employer-employee split arrangements: (a) 10% employer + 10% employee — standard default; (b) 15% employer + 5% employee — employer elects to contribute more; (c) 20% employer + 0% employee — employer pays the full 20%, employee pays nothing. Employee share must never exceed 10%. All three arrangements are legal under the NSSF Act.",
+    "correct_value": "20% total — three valid splits: 10+10, 15+5, 20+0",
+    "wrong_patterns": [
+      "mgawanyo wa NSSF ni 10%\\+10% peke yake",
+      "only valid split is 10.*10",
+      "NSSF inakataza mgawanyo mwingine wowote",
+      "15%.*employer.*NSSF.*si halali",
+      "20%.*employer.*NSSF.*si halali"
+    ],
+    "primary_source": "nssf.go.tz official website — payment of contributions page",
+    "verified_date": "2026-06-19",
+    "effective_date": "2018-07-01",
+    "status": "LOCKED"
+  },
+  "BRELA_fees_hedge": {
+    "fact": "BRELA registration and filing fees change periodically via ministerial order. Training pairs must direct users to brela.go.tz or the ORS portal for current fees rather than stating specific TZS amounts. The annual return filing fee has been approximately TZS 22,000 but this must be verified before quoting in any business context.",
+    "correct_value": "Do not state specific BRELA fee amounts — always direct to brela.go.tz",
+    "wrong_patterns": [],
+    "primary_source": "miamia.co.tz 2024; brela.go.tz ORS portal",
+    "verified_date": "2026-06-19",
+    "status": "HEDGE — do not state specific amounts in training pairs",
+    "training_instruction": "Replace specific TZS fee amounts with: 'angalia ratiba rasmi ya ada kwenye brela.go.tz' or 'thibitisha ada halisi kupitia mfumo wa ORS (ors.brela.go.tz)'."
+  },
+  "vat_withholding_certificate_timing": {
+    "fact": "VAT withholding certificate must be issued NOT LATER THAN the date on which VAT becomes payable under section 15 of the VAT Act — NOT on the 20th of the following month. The 20th deadline applies to filing the VAT return and remitting the withheld amount, which are separate obligations. A withholding agent must issue the certificate in an approved system format containing: TIN, registration number, supply description, consideration amount, withholding rate and withholding amount.",
+    "correct_value": "Issue certificate: date VAT becomes payable. Remit withheld VAT: 20th of following month. These are two separate deadlines.",
+    "wrong_patterns": [
+      "cheti cha withholding kinatumwa tarehe 20",
+      "certificate issued on 20th of following month",
+      "withholding certificate.*tarehe 20.*mwezi unaofuata",
+      "toa cheti cha withholding ifikapo tarehe 20",
+      "certificate due on 20th.*following month"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax-vat",
+    "verified_date": "2026-06-19",
+    "effective_date": "2025-07-01",
+    "status": "LOCKED",
+    "training_instruction": "Pairs about certificate timing must distinguish: certificate = same day VAT becomes payable; remittance to TRA = 20th of following month. Never conflate the two."
+  },
+  "brela_partnership_registration": {
+    "fact": "A general partnership (ushirikiano wa kibiashara) in Tanzania can be registered with BRELA under the Business Names Registration Act or incorporated as a Limited Partnership. Required documents typically include: partnership deed, names and addresses of all partners, business name, nature of business, TIN for each partner. Exact current procedure and fees must be verified at brela.go.tz or via the ORS portal (ors.brela.go.tz) as requirements change by ministerial order.",
+    "correct_value": "Partnership registration via BRELA — verify current steps and fees at brela.go.tz",
+    "wrong_patterns": [
+      "ushirikiano huhitaji usajilishaji wa brela",
+      "partnership does not need BRELA registration",
+      "ushirikiano unasajiliwa bure bila ada",
+      "partnership registration is free"
+    ],
+    "primary_source": "brela.go.tz — ORS portal",
+    "verified_date": "2026-06-19",
+    "status": "HEDGE — specific steps unverifiable from primary source; direct users to brela.go.tz",
+    "training_instruction": "Do not state specific fees or step counts for partnership registration. Use: 'thibitisha hatua za usajilishaji kwenye brela.go.tz au mfumo wa ORS (ors.brela.go.tz)'."
+  },
+  "osha_licence_renewal_frequency": {
+    "fact": "OSHA workplace compliance certificate (cheti cha usajilishaji) renewal frequency is not explicitly stated on osha.go.tz. The OHS Act 2003 requires employers to maintain workplace registration. In practice OSHA conducts annual risk assessments and inspections. Training pairs must direct employers to osha.go.tz to confirm current renewal period rather than stating a specific interval.",
+    "correct_value": "Renewal period — verify at osha.go.tz or contact +255-22-2760548",
+    "wrong_patterns": [
+      "cheti cha osha kinaisha baada ya miaka 5",
+      "osha certificate valid for 5 years",
+      "osha certificate never needs renewal",
+      "cheti cha osha hakihitaji kuhuishwa",
+      "osha licence renew every 3 years"
+    ],
+    "primary_source": "https://www.osha.go.tz",
+    "verified_date": "2026-06-19",
+    "status": "HEDGE — renewal period not confirmed from primary source; direct to osha.go.tz",
+    "training_instruction": "Do not state a specific renewal interval. Use: 'thibitisha muda wa uhuishaji na OSHA (osha.go.tz)' or direct to osha.go.tz."
+  },
+  "nssf_employer_registration_deadline": {
+    "fact": "Every employer in Tanzania must register with NSSF before or within a reasonable period of commencing business. The NSSF Act Cap. 50 imposes a registration obligation but the exact number of days is not confirmed from the primary source (nssf.go.tz was unreachable during verification). Training pairs must direct employers to nssf.or.tz to confirm current registration deadline and avoid stating a specific day count.",
+    "correct_value": "Register with NSSF at or shortly after commencement of business — verify deadline at nssf.or.tz",
+    "wrong_patterns": [
+      "mwajiri hana wajibu wa kusajili nssf",
+      "employer does not need to register with nssf",
+      "nssf registration is optional",
+      "usajilishaji wa nssf si lazima"
+    ],
+    "primary_source": "https://www.nssf.or.tz — unverifiable at time of writing",
+    "verified_date": "2026-06-19",
+    "status": "HEDGE — specific deadline unverifiable from primary source; direct to nssf.or.tz",
+    "training_instruction": "Do not state a specific day count for NSSF registration deadline. Use: 'sajili na NSSF haraka iwezekanavyo baada ya kuanza biashara. Thibitisha tarehe ya mwisho kwenye nssf.or.tz'."
+  },
+  "efd_approved_supplier_verification": {
+    "fact": "To verify that an EFD supplier/distributor (msambazaji) is TRA-approved, businesses should check the official TRA website (tra.go.tz) for the current list of approved EFD dealers. TRA publishes a register of approved EFD suppliers. Businesses should only purchase EFD machines from TRA-approved dealers — purchasing from unapproved suppliers may result in the machine not being activated by TRA. The TRA EFD page URL changed and was unavailable at time of writing.",
+    "correct_value": "Verify approved EFD supplier list at tra.go.tz — only purchase from TRA-registered dealers",
+    "wrong_patterns": [
+      "unaweza kununua efd kutoka kwa muuzaji yeyote",
+      "any supplier can sell EFD machines",
+      "efd machine inaweza kununuliwa ovyo",
+      "no need to verify EFD supplier with TRA"
+    ],
+    "primary_source": "https://www.tra.go.tz — EFD page unavailable at time of writing",
+    "verified_date": "2026-06-19",
+    "status": "HEDGE — specific supplier list URL unverifiable; direct to tra.go.tz",
+    "training_instruction": "Direct businesses to tra.go.tz to verify current list of approved EFD suppliers. Use: 'angalia orodha ya wasambazaji walioidhinishwa na TRA kwenye tra.go.tz'."
+  },
+  "OSHA_annual_inspection": {
+    "fact": "OSHA conducts mandatory annual inspections of all workplaces in Tanzania. The OSHA compliance licence must be renewed every year.",
+    "correct_value": "Annual inspection mandatory; licence renewed annually",
+    "wrong_patterns": [
+      "osha hukagua kila miaka 2",
+      "osha inspection is not annual",
+      "osha inspects every 2 years",
+      "osha hakuna ukaguzi wa lazima kila mwaka",
+      "ukaguzi wa osha si wa lazima kila mwaka"
+    ],
+    "primary_source": "tiseza.go.tz eregulations; OHS Act No. 5 of 2003",
+    "verified_by": "tiseza.go.tz eregulations; Revocatus Mandago citing OHS Act",
+    "effective_date": "2003-01-01",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
+  },
+  "OSHA_safety_officer_threshold": {
+    "fact": "The specific employee threshold requiring a dedicated safety officer is NOT confirmed from authoritative sources. Training pairs must NOT state a specific number (e.g. 50 employees). Direct users to osha.go.tz for current requirements.",
+    "correct_value": "HEDGE — do not state specific threshold; direct to osha.go.tz",
+    "wrong_patterns": [
+      "osha.*afisa wa usalama.*wafanyakazi 50",
+      "safety officer.*required.*50 employees",
+      "50 employees.*osha.*safety officer",
+      "osha.*lazima.*afisa usalama.*wafanyakazi 50",
+      "wafanyakazi zaidi ya 50.*afisa wa usalama wa osha"
+    ],
+    "primary_source": "https://www.osha.go.tz",
+    "verified_date": "2026-06-20",
+    "status": "HEDGE — threshold not confirmed from primary source",
+    "training_instruction": "Do not state a specific employee count for safety officer requirement. Use: 'thibitisha mahitaji ya afisa wa usalama na OSHA (osha.go.tz)'."
+  },
+  "BRELA_COSOTA_split": {
+    "fact": "Intellectual property in Tanzania is split between two bodies. BRELA (Business Registrations and Licensing Agency) administers: trademarks (alama za biashara), patents (hati miliki), and industrial designs (miundo ya viwanda). COSOTA (Copyright Society of Tanzania) administers: copyright and neighbouring rights (haki za ubunifu na haki jirani). There is NO body called ORT — ort.go.tz does not exist as a Tanzanian IP registry.",
+    "correct_value": "BRELA = trademarks/patents/designs; COSOTA = copyright. ORT does not exist.",
+    "wrong_patterns": [
+      "ort.go.tz",
+      "ofisi ya usajilishaji wa hati.*miliki ya akili",
+      "registrar of titles.*intellectual property",
+      "cosota.*patent",
+      "cosota.*trademark",
+      "cosota.*alama za biashara",
+      "brela.*copyright(?!.*cosota)",
+      "brela.*haki za ubunifu(?!.*cosota)",
+      "cosota.*hati miliki(?!.*brela)"
+    ],
+    "primary_source": "ARIPO; WIPO; US Trade.gov Tanzania IP report; IBA",
+    "verified_by": "ARIPO; WIPO; US Trade.gov; IBA",
+    "effective_date": "2025-01-01",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
+  },
+  "SDL_source_law": {
+    "fact": "SDL (Skills Development Levy) is imposed under Section 14 of the Vocational Education Training Act, Cap. 82. It is collected by TRA. Rate: 3.5% of gross cash emoluments (reduced from 4% by Finance Act 2023, effective 1 July 2023). Applies to employers with 10 or more employees on Mainland Tanzania.",
+    "correct_value": "Vocational Education Training Act Cap. 82 Section 14 — collected by TRA at 3.5%",
+    "wrong_patterns": [
+      "sdl.*value added tax act",
+      "sdl.*vat act",
+      "sdl.*sheria ya kodi ya ongezeko la thamani",
+      "sdl.*income tax act",
+      "sdl.*sheria ya kodi ya mapato",
+      "sdl.*income tax.*act.*cap"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
+    "verified_by": "TRA SDL page; Vocational Education Training Act Cap. 82",
+    "effective_date": "2023-07-01",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
+  },
+  "VAT_zero_rated_vs_exempt_input_VAT": {
+    "fact": "Zero-rated supplies are taxable at 0% VAT rate — suppliers CAN claim input VAT on their purchases. Exempt supplies are not subject to VAT at all — suppliers CANNOT claim input VAT on their purchases. These are fundamentally different categories. The model previously inverted this rule (eval_017 failure: stated zero-rated businesses cannot claim input VAT).",
+    "correct_value": "Zero-rated = 0% VAT, CAN claim input VAT. Exempt = no VAT, CANNOT claim input VAT.",
+    "wrong_patterns": [
+      "zero.rated.*hainezi kudai input vat",
+      "zero.rated.*cannot claim input vat",
+      "biashara ya zero.rated.*haiwezi kudai vat ya pembejeo",
+      "zero.rated.*haiwezi kudai.*input",
+      "exempt na zero.rated ni sawa",
+      "exempt and zero.rated are the same",
+      "zero.rated.*haijalishi.*input vat",
+      "hakuna tofauti.*zero.rated.*exempt"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
+    "verified_by": "TanzaniaInvest VAT Guide; PwC Tax Summaries Tanzania; TRA.go.tz",
+    "effective_date": "2015-07-01",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED",
+    "training_instruction": "Pairs on this topic must explicitly state: zero-rated = CAN claim input VAT; exempt = CANNOT claim input VAT. Never conflate the two categories."
+  },
+  "gn487a_mgeni_cap357_definition": {
+    "fact": "GN487A defines 'non-citizen' by reference to the Tanzania Citizenship Act Cap.357 R.E.2023. Cap.357 recognises three citizen categories: citizen by birth, citizen by descent, and citizen by naturalisation. A person holding Tanzanian citizenship under any of these three categories is NOT a non-citizen for GN487A purposes. Whether dual nationals holding a Tanzanian passport qualify as citizens depends on Cap.357 — this is a legal interpretation that must be verified with an immigration lawyer.",
+    "correct_value": "Non-citizen per Cap.357 — three citizen categories. Dual nationality is a legal interpretation, not explicit in GN487A text.",
+    "wrong_patterns": [
+      "gn487a haisemi chochote kuhusu uraia",
+      "gn487a does not reference the citizenship act",
+      "dual citizen.*automatically excluded from gn487a",
+      "uraia mbili.*hakuna tatizo la gn487a"
+    ],
+    "primary_source": "Clyde & Co July 2025 citing Tanzania Citizenship Act Cap.357 R.E.2023",
+    "verified_by": "Clyde & Co practical implications article July 2025",
+    "effective_date": "2025-07-28",
+    "verified_date": "2026-06-20",
+    "status": "HEDGE — dual citizen scenario requires legal interpretation; direct to immigration lawyer",
+    "training_instruction": "Do not state definitively that dual citizens are exempt from GN487A. Use: 'thibitisha hali yako na wakili wa uhamiaji'."
+  },
+  "gn487a_msaidizi_definition": {
+    "fact": "Under GN487A, a 'msaidizi' (facilitator) is a Tanzanian citizen who assists or aids a non-citizen to carry out any of the 15 prohibited business activities. This includes but may not be limited to lending their name, business licence, or identity to allow a non-citizen to operate a prohibited business. Penalty for msaidizi: TZS 5,000,000 fine OR imprisonment not exceeding 3 months. The facilitator and the non-citizen are BOTH penalised.",
+    "correct_value": "Msaidizi = Tanzanian who assists/aids non-citizen in prohibited business — TZS 5M or 3 months",
+    "wrong_patterns": [
+      "msaidizi ni mfanyakazi wa kawaida tu",
+      "facilitator is only an employee",
+      "msaidizi hana wajibu wa kisheria",
+      "lending name.*not facilitation",
+      "kukopa jina.*si ukiukwaji"
+    ],
+    "primary_source": "VELMA Law; GN487A Order text; Bowmans 30 Jul 2025",
+    "verified_by": "VELMA Law citing GN487A text; Bowmans Tanzania legal update",
+    "effective_date": "2025-07-28",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
+  },
+  "gn487a_marriage_no_exemption": {
+    "fact": "Marriage to a Tanzanian citizen does NOT grant GN487A exemption. Citizenship under Tanzania Citizenship Act Cap.357 requires formal naturalisation — marriage alone does not confer citizenship. A foreign national married to a Tanzanian remains a non-citizen for GN487A purposes and is still prohibited from conducting the 15 listed business activities. The path to GN487A exemption is acquiring Tanzanian citizenship through formal naturalisation, not marriage.",
+    "correct_value": "Marriage to Tanzanian does NOT grant GN487A exemption — naturalisation required, not marriage",
+    "wrong_patterns": [
+      "ndoa na mtanzania inatoa ruhusa ya gn487a",
+      "marriage to tanzanian exempts from gn487a",
+      "kuoa mtanzania kunabadilisha hadhi ya uraia chini ya gn487a",
+      "married to tanzanian.*no longer non-citizen",
+      "ndoa.*msamaha wa gn487a"
+    ],
+    "primary_source": "Clyde & Co July 2025; Tanzania Citizenship Act Cap.357",
+    "verified_by": "Clyde & Co article confirms citizenship categories do not include marriage; Cap.357 naturalisation process is separate",
+    "effective_date": "2025-07-28",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
+  },
+  "vat_withholding_buyer_remits_directly": {
+    "fact": "The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits VAT withholding DIRECTLY to TRA — not through the supplier's VAT return. TRA states: 'the withholding agent shall withhold 3%/6% and remit it to the Commissioner General.' The supplier receives a VAT Withholding Certificate as proof that the withheld amount has been remitted. The formula base (consideration vs VAT amount) remains disputed — see VAT_withholding_base_disputed.",
+    "correct_value": "Qualifying BUYER remits directly to TRA — NOT the supplier",
+    "wrong_patterns": [
+      "msambazaji ndiye anayepeleka withholding tra",
+      "supplier remits withholding to tra",
+      "msambazaji analipa withholding kupitia return yake",
+      "vat withholding.*supplier.*remits.*tra",
+      "withholding.*kupitia return ya msambazaji"
+    ],
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax-vat",
+    "verified_by": "TRA VAT page confirmed June 2026 — 'withholding agent shall remit to Commissioner General'",
+    "effective_date": "2025-07-01",
+    "verified_date": "2026-06-20",
+    "status": "LOCKED"
+  },
+  "efd_tra_closure_authority": {
+    "fact": "TRA has enforcement authority against businesses that repeatedly fail to issue EFD receipts. Enforcement actions can include: written warnings, imposition of fines, suspension of EFD device/licence, and closure of business premises. The TRA EFD page was unavailable at time of verification (June 2026) but closure authority is grounded in the VAT Act Cap.148 enforcement provisions and general TRA administrative powers under the Tax Administration Act.",
+    "correct_value": "TRA CAN close (kufunga) a business for repeated EFD non-compliance — enforcement authority confirmed",
+    "wrong_patterns": [
+      "tra haiwezi kufunga biashara kwa efd",
+      "tra cannot close business for efd",
+      "tra haina mamlaka ya kufunga biashara",
+      "kufunga biashara.*efd.*haiwezekani",
+      "tra inaweza kufungua biashara"
+    ],
+    "primary_source": "VAT Act Cap.148; Tax Administration Act Tanzania",
+    "verified_by": "TRA EFD page unavailable — based on VAT Act Cap.148 enforcement framework",
+    "effective_date": "2025-07-01",
+    "verified_date": "2026-06-20",
+    "status": "HEDGE — TRA EFD page unavailable; grounded in VAT Act Cap.148",
+    "training_instruction": "Always write 'kufunga' (close) never 'kufungua' (open) when describing TRA closure authority. Pairs must state TRA CAN close — answer yes_no questions with Ndiyo."
+  }
+}
