@@ -20,6 +20,7 @@ With --per-question: saves per-question results to eval/results/per_question_<ti
 """
 import argparse
 import json
+import os
 import re
 import sys
 from datetime import datetime, timezone
@@ -30,7 +31,7 @@ ACCURACY_GATE_DIR = ROOT / "eval" / "accuracy_gate"
 REFUSAL_GATE_DIR  = ROOT / "eval" / "refusal_gate"
 RESULTS_DIR       = ROOT / "eval" / "results"
 
-ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v3"
+ADAPTER_REPO = os.environ.get("ADAPTER_REPO", "prospAprospA007/africa-giants-adapter-v8")
 
 ACCURACY_THRESHOLD = 0.85
 REFUSAL_THRESHOLD  = 0.70

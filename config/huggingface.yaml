@@ -1,9 +1,9 @@
 huggingface:
   username: "prospaprospa007"
   base_model: "McGill-NLP/AfriqueLlama-8B"
-  adapter_repo: "prospaprospa007/africa-giants-adapter-v1"
-  merged_model_repo: "prospaprospa007/africa-giants-model-v1"
-  dataset_repo: "prospaprospa007/africa-giants-dataset"
+  adapter_repo: "prospAprospA007/africa-giants-adapter-v8"
+  merged_model_repo: "prospAprospA007/africa-giants-model-v8"
+  dataset_repo: "prospAprospA007/africa-giants-dataset"
   space_repo: "prospaprospa007/africa-giants-api"
   private: true
   token_env_var: "HF_TOKEN"

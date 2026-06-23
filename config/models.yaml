@@ -11,8 +11,8 @@ training:
   packing: false
 
 lora:
-  r: 16
-  lora_alpha: 32
+  r: 128
+  lora_alpha: 128
   lora_dropout: 0.05
   target_modules:
     - "q_proj"
