@@ -163,7 +163,12 @@ def call_api_with_retry(model: str = None, max_tokens: int = 1024,
             return _make_request(model, max_tokens, messages, system)
         except requests.exceptions.HTTPError as e:
             status = e.response.status_code if e.response is not None else 0
-            if status in (401, 403, 404):
+            if status in (401, 402, 403, 404, 422):
+                if status == 402:
+                    raise Exception(
+                        '[api] Payment Required (402) -- add credits at '
+                        'openrouter.ai/billing or platform.anthropic.com'
+                    )
                 raise  # auth / permission / not-found — never retry
             if attempt == 2:
                 raise

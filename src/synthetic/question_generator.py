@@ -6,16 +6,21 @@ from datetime import datetime
 from pathlib import Path
 
 import numpy as np
+import requests as _requests
 
 from src.synthetic.api_utils import (
     call_with_cost_tracking, DEFAULT_MODEL, API_KEY, LLM_PROVIDER,
 )
-EMBED_MODEL_NAME = 'paraphrase-multilingual-MiniLM-L12-v2'
-DEDUP_THRESHOLD  = 0.92
 
-INDEX_PATH       = 'data/raw/instruction_index.npy'
-INDEX_TEXTS_PATH = 'data/raw/instruction_index_texts.json'
-INDEX_HASH_PATH  = 'data/raw/instruction_index_hash.txt'
+EMBED_MODEL_NAME    = 'nomic-embed-text'
+EMBED_DIM           = 768                # nomic-embed-text output dimension
+DEDUP_THRESHOLD     = 0.92
+SKIP_SEMANTIC_DEDUP = os.environ.get('SKIP_SEMANTIC_DEDUP', 'false').lower() == 'true'
+OLLAMA_BASE         = os.environ.get('OLLAMA_BASE_URL', 'http://localhost:11434')
+
+INDEX_PATH        = 'data/raw/instruction_index.npy'
+INDEX_TEXTS_PATH  = 'data/raw/instruction_index_texts.json'
+INDEX_HASH_PATH   = 'data/raw/instruction_index_hash.txt'
 CLEANED_PAIRS_DIR = 'datasets/tier1a/cleaned_pairs'
 
 GENERATION_SYSTEM = (
@@ -83,15 +88,37 @@ Example output:
   }}
 ]"""
 
-_embed_model = None
+_ollama_warned = False
 
 
-def _get_embed_model():
-    global _embed_model
-    if _embed_model is None:
-        from sentence_transformers import SentenceTransformer
-        _embed_model = SentenceTransformer(EMBED_MODEL_NAME)
-    return _embed_model
+def embed_instruction(text: str):
+    """Embed a single text via Ollama nomic-embed-text. Returns numpy array or None."""
+    global _ollama_warned
+    try:
+        r = _requests.post(
+            f'{OLLAMA_BASE}/api/embeddings',
+            json={'model': EMBED_MODEL_NAME, 'prompt': text},
+            timeout=10,
+        )
+        r.raise_for_status()
+        return np.array(r.json()['embedding'], dtype=np.float32)
+    except Exception:
+        if not _ollama_warned:
+            print(f'[dedup] Ollama not running -- semantic dedup disabled.')
+            print(f'[dedup] Start with: ollama serve  (then: ollama pull {EMBED_MODEL_NAME})')
+            _ollama_warned = True
+        return None
+
+
+def _embed_batch(texts: list):
+    """Embed a list of texts. Returns stacked numpy array or None if Ollama unreachable."""
+    embeddings = []
+    for text in texts:
+        emb = embed_instruction(text)
+        if emb is None:
+            return None
+        embeddings.append(emb)
+    return np.array(embeddings, dtype=np.float32)
 
 
 def _md5_of_directory(dir_path: str) -> str:
@@ -102,7 +129,11 @@ def _md5_of_directory(dir_path: str) -> str:
 
 
 def get_instruction_index() -> tuple:
-    """Load or rebuild semantic dedup index from cleaned_pairs/."""
+    """Load or rebuild semantic dedup index from cleaned_pairs/ using nomic-embed-text."""
+    if SKIP_SEMANTIC_DEDUP:
+        print("[dedup] SKIP_SEMANTIC_DEDUP=true -- skipping index build")
+        return np.empty((0, EMBED_DIM), dtype=np.float32), []
+
     current_hash = _md5_of_directory(CLEANED_PAIRS_DIR)
 
     if (os.path.exists(INDEX_PATH) and
@@ -124,7 +155,7 @@ def get_instruction_index() -> tuple:
                 if not line:
                     continue
                 try:
-                    p    = json.loads(line)
+                    p     = json.loads(line)
                     instr = p.get('instruction') or p.get('question_sw', '')
                     if instr:
                         all_instructions.append(instr)
@@ -134,7 +165,7 @@ def get_instruction_index() -> tuple:
     os.makedirs(os.path.dirname(INDEX_PATH), exist_ok=True)
 
     if not all_instructions:
-        empty = np.empty((0, 384))  # MiniLM-L12-v2 output dim
+        empty = np.empty((0, EMBED_DIM), dtype=np.float32)
         np.save(INDEX_PATH, empty)
         with open(INDEX_TEXTS_PATH, 'w', encoding='utf-8') as f:
             json.dump([], f)
@@ -142,8 +173,11 @@ def get_instruction_index() -> tuple:
             f.write(current_hash)
         return empty, []
 
-    model      = _get_embed_model()
-    embeddings = model.encode(all_instructions, show_progress_bar=False)
+    embeddings = _embed_batch(all_instructions)
+    if embeddings is None:
+        print("[dedup] Ollama unreachable -- index not built, dedup disabled this run")
+        return np.empty((0, EMBED_DIM), dtype=np.float32), []
+
     np.save(INDEX_PATH, embeddings)
     with open(INDEX_TEXTS_PATH, 'w', encoding='utf-8') as f:
         json.dump(all_instructions, f, ensure_ascii=False)
@@ -156,12 +190,15 @@ def get_instruction_index() -> tuple:
 def is_semantic_duplicate(instruction: str,
                            index_embeddings: np.ndarray,
                            index_texts: list) -> bool:
+    if SKIP_SEMANTIC_DEDUP:
+        return False
     if len(index_texts) == 0 or index_embeddings.shape[0] == 0:
         return False
-    model  = _get_embed_model()
-    q_emb  = model.encode([instruction])[0]
-    scores = np.dot(index_embeddings, q_emb.T).flatten()
-    return float(scores.max()) > DEDUP_THRESHOLD
+    emb = embed_instruction(instruction)
+    if emb is None:
+        return False  # Ollama not running — skip dedup gracefully
+    scores = np.dot(index_embeddings, emb)
+    return float(np.max(scores)) > DEDUP_THRESHOLD
 
 
 def parse_llm_response(raw: str) -> list:
@@ -244,13 +281,12 @@ def generate_pairs(facts: list, document: dict,
 
             all_pairs.append(pair)
 
-            # Add to in-run index so we dedup within this run
-            new_emb = _get_embed_model().encode([instr])
-            if cur_emb is not None and cur_emb.shape[0] > 0:
-                cur_emb = np.vstack([cur_emb, new_emb])
-            else:
-                cur_emb = new_emb
-            cur_texts.append(instr)
+            # Add to in-run index so we dedup within this run too
+            new_emb = embed_instruction(instr)
+            if new_emb is not None:
+                new_emb = new_emb.reshape(1, -1)
+                cur_emb = np.vstack([cur_emb, new_emb]) if cur_emb.shape[0] > 0 else new_emb
+                cur_texts.append(instr)
 
     print(f"[generator] {document['source_file']}: "
           f"{len(all_pairs)} pairs generated, {dedup_skipped} dedup-skipped")

@@ -1,16 +1,9 @@
 import os
 import shutil
-import hashlib
 import json
 
-# === 2a: RAG paths — SENTENCE_TRANSFORMERS_HOME must be set before any ST import ===
+# Must be set before sentence_transformers is imported (lazy, in _get_embed_model)
 os.environ['SENTENCE_TRANSFORMERS_HOME'] = '/persistent-storage/.cache/sentence_transformers'
-
-FACTS_PATH      = 'locked_facts.json'
-EMBEDDINGS_PATH = '/persistent-storage/rag_embeddings.npy'
-FACTS_TEXT_PATH = '/persistent-storage/rag_facts_text.json'
-HASH_PATH       = '/persistent-storage/locked_facts_hash.txt'
-EMBED_MODEL     = 'paraphrase-multilingual-MiniLM-L12-v2'
 
 # Route HF cache to persistent storage for fast cold starts.
 # v8 is the active adapter; v10 reverted pending better training data (2026-06-22).
@@ -41,80 +34,48 @@ else:
     print("[chike] WARNING: HF_TOKEN not set -- model may fail to load")
 
 
-# === 2b: Persistent embedding cache (numpy only -- no FAISS) ===
+# === RAG: load pre-computed embeddings from repo (no startup embedding computation) ===
+# Facts are embedded locally via scripts/precompute_rag_embeddings.py and committed.
+# Only the query embedding runs at inference time (lazy, cached after first call).
 
-def _locked_facts_texts():
-    """Extract human-readable strings from locked_facts.json for embedding."""
-    if not os.path.exists(FACTS_PATH):
-        return []
-    with open(FACTS_PATH, encoding='utf-8') as f:
-        locked = json.load(f)
-    texts = []
-    for key, val in locked.items():
-        if key == '_meta':
-            continue
-        if isinstance(val, dict):
-            fact_str = val.get('fact') or f"{key}: {val.get('correct_value', str(val))}"
-        else:
-            fact_str = f"{key}: {val}"
-        texts.append(fact_str)
-    return texts
-
-def _md5_file(path):
-    return hashlib.md5(open(path, 'rb').read()).hexdigest()
-
+_BASE       = os.path.dirname(os.path.abspath(__file__))
+_EMB_PATH   = os.path.join(_BASE, 'rag_embeddings.npy')
+_TEXTS_PATH = os.path.join(_BASE, 'rag_facts_text.json')
 
 fact_embeddings = None
 fact_texts      = []
-embed_model     = None
+_embed_model    = None
 
-def _build_rag_index():
-    global fact_embeddings, fact_texts, embed_model
-    if not os.path.exists(FACTS_PATH):
-        print(f"[rag] {FACTS_PATH} not found -- RAG disabled")
-        return
 
-    # Always load the ST model (first run: 420MB download to persistent storage; after: disk load)
-    from sentence_transformers import SentenceTransformer
-    embed_model = SentenceTransformer(EMBED_MODEL)
+def _get_embed_model():
+    global _embed_model
+    if _embed_model is None:
+        from sentence_transformers import SentenceTransformer
+        _embed_model = SentenceTransformer(
+            'paraphrase-multilingual-MiniLM-L12-v2',
+            cache_folder='/persistent-storage/.cache/sentence_transformers',
+        )
+    return _embed_model
 
-    current_hash = _md5_file(FACTS_PATH)
 
-    # Load from cache if hash unchanged
-    if (os.path.exists(EMBEDDINGS_PATH) and
-            os.path.exists(FACTS_TEXT_PATH) and
-            os.path.exists(HASH_PATH) and
-            open(HASH_PATH).read().strip() == current_hash):
-        fact_embeddings = np.load(EMBEDDINGS_PATH)
-        with open(FACTS_TEXT_PATH, encoding='utf-8') as f:
+def load_rag_index():
+    global fact_embeddings, fact_texts
+    if os.path.exists(_EMB_PATH) and os.path.exists(_TEXTS_PATH):
+        fact_embeddings = np.load(_EMB_PATH)
+        with open(_TEXTS_PATH, encoding='utf-8') as f:
             fact_texts = json.load(f)
-        print(f"[rag] index loaded from cache -- {len(fact_texts)} facts")
-        return
+        print(f'[rag] loaded {len(fact_texts)} pre-computed embeddings from repo')
+    else:
+        print('[rag] WARNING: rag_embeddings.npy not found -- RAG disabled')
+        print('[rag] Run: python scripts/precompute_rag_embeddings.py')
 
-    # Rebuild
-    print("[rag] rebuilding embedding index ...")
-    fact_texts = _locked_facts_texts()
-    if not fact_texts:
-        print("[rag] no facts extracted -- RAG disabled")
-        return
-    fact_embeddings = embed_model.encode(fact_texts)
-    np.save(EMBEDDINGS_PATH, fact_embeddings)
-    with open(FACTS_TEXT_PATH, 'w', encoding='utf-8') as f:
-        json.dump(fact_texts, f, ensure_ascii=False)
-    with open(HASH_PATH, 'w') as f:
-        f.write(current_hash)
-    print(f"[rag] embeddings rebuilt -- {len(fact_texts)} facts embedded")
-
-_build_rag_index()
-
-
-# === 2c: Retrieval function (pure numpy cosine similarity) ===
 
 def retrieve_facts(question: str, top_k: int = 3) -> list:
-    if fact_embeddings is None or not fact_texts or embed_model is None:
+    if fact_embeddings is None or not fact_texts:
         return []
     try:
-        q_emb  = embed_model.encode([question])[0]
+        model  = _get_embed_model()
+        q_emb  = model.encode([question])
         scores = np.dot(fact_embeddings, q_emb.T).flatten()
         top_indices = np.argsort(scores)[-top_k:][::-1]
         return [fact_texts[i] for i in top_indices]
@@ -123,7 +84,10 @@ def retrieve_facts(question: str, top_k: int = 3) -> list:
         return []
 
 
-# === System prompt — renamed to BASE so run() can enrich it ===
+load_rag_index()
+
+
+# === System prompt ===
 
 BASE_SYSTEM_PROMPT = (
     "Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. "
@@ -142,6 +106,7 @@ BASE_SYSTEM_PROMPT = (
 
 _model     = None
 _tokenizer = None
+
 
 def get_model():
     global _model, _tokenizer
@@ -195,7 +160,6 @@ def run(message: str, temperature: float = 0.1):
 
     model, tokenizer = get_model()
 
-    # === 2d: Enrich system prompt with retrieved facts ===
     relevant_facts = retrieve_facts(message)
     if relevant_facts:
         facts_block = "\n".join(f"- {f}" for f in relevant_facts)
