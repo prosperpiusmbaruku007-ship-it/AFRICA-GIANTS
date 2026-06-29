@@ -46,6 +46,24 @@ COST_PER_OUTPUT_TOKEN = 0.000015 if LLM_PROVIDER == 'anthropic' else 0.0
 
 COST_LOG_PATH = 'data/cost_log.jsonl'
 
+
+def get_actual_cost(response_data: dict, provider: str) -> float:
+    """Real USD cost of one API call.
+
+    OpenRouter returns the charged cost directly in its usage object, so we use
+    that rather than guessing from token counts. Anthropic is computed from
+    tokens; Ollama is local and free.
+    """
+    if provider == 'anthropic':
+        tokens_in  = response_data.get('usage', {}).get('input_tokens', 0)
+        tokens_out = response_data.get('usage', {}).get('output_tokens', 0)
+        return (tokens_in * COST_PER_INPUT_TOKEN) + (tokens_out * COST_PER_OUTPUT_TOKEN)
+    elif provider == 'openrouter':
+        return float(response_data.get('usage', {}).get('cost', 0.0) or 0.0)
+    elif provider == 'ollama':
+        return 0.0  # local, no cost
+    return 0.0
+
 _KEY_VAR = {
     'anthropic':  'ANTHROPIC_API_KEY',
     'openrouter': 'OPENROUTER_API_KEY',
@@ -72,9 +90,11 @@ class _Usage:
         self.output_tokens = output_tokens
 
 class NormalizedResponse:
-    def __init__(self, text: str, input_tokens: int = 0, output_tokens: int = 0):
+    def __init__(self, text: str, input_tokens: int = 0, output_tokens: int = 0,
+                 cost: float = 0.0):
         self.content = [_Content(text)]
         self.usage   = _Usage(input_tokens, output_tokens)
+        self.cost    = cost  # real USD cost of this call (provider-reported where available)
 
 
 # === Provider check ===
@@ -143,7 +163,8 @@ def _make_request(model: str, max_tokens: int,
         input_tokens  = data.get('prompt_eval_count', 0)
         output_tokens = data.get('eval_count',        0)
 
-    return NormalizedResponse(text, input_tokens, output_tokens)
+    cost = get_actual_cost(data, LLM_PROVIDER)
+    return NormalizedResponse(text, input_tokens, output_tokens, cost)
 
 
 # === Retry wrapper ===
@@ -209,12 +230,14 @@ def call_with_cost_tracking(script_name: str, **kwargs) -> NormalizedResponse:
         return response
     finally:
         if response is not None:
-            cost = (response.usage.input_tokens  * COST_PER_INPUT_TOKEN +
-                    response.usage.output_tokens * COST_PER_OUTPUT_TOKEN)
+            # Real cost captured at request time: OpenRouter reports it directly,
+            # Anthropic is token-derived, Ollama is $0. sum_cost_log_this_month()
+            # reads these logged values, so the monthly cap now reflects real
+            # spend for every provider, not just Anthropic.
             log_cost(script_name,
                      response.usage.input_tokens,
                      response.usage.output_tokens,
-                     cost)
+                     response.cost)
 
 
 def sum_cost_log_this_month() -> float:
