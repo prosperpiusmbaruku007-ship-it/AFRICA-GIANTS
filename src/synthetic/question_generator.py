@@ -14,7 +14,7 @@ from src.synthetic.api_utils import (
 
 EMBED_MODEL_NAME    = 'nomic-embed-text'
 EMBED_DIM           = 768                # nomic-embed-text output dimension
-DEDUP_THRESHOLD     = 0.92
+DEDUP_THRESHOLD     = float(os.environ.get('DEDUP_THRESHOLD', '0.85'))
 SKIP_SEMANTIC_DEDUP = os.environ.get('SKIP_SEMANTIC_DEDUP', 'false').lower() == 'true'
 OLLAMA_BASE         = os.environ.get('OLLAMA_BASE_URL', 'http://localhost:11434')
 
@@ -197,8 +197,21 @@ def is_semantic_duplicate(instruction: str,
     emb = embed_instruction(instruction)
     if emb is None:
         return False  # Ollama not running — skip dedup gracefully
-    scores = np.dot(index_embeddings, emb)
-    return float(np.max(scores)) > DEDUP_THRESHOLD
+    # nomic-embed-text vectors are NOT unit-normalized (L2 ~20), so a raw dot
+    # product yields ~270-330, not cosine. Normalize both sides so np.dot gives
+    # cosine similarity in [-1, 1] and DEDUP_THRESHOLD is meaningful.
+    emb_n = emb / (np.linalg.norm(emb) + 1e-8)
+    idx_n = index_embeddings / (np.linalg.norm(index_embeddings, axis=1, keepdims=True) + 1e-8)
+    scores    = np.dot(idx_n, emb_n)
+    max_score = float(np.max(scores))
+    if max_score > DEDUP_THRESHOLD:
+        best_idx   = int(np.argmax(scores))
+        best_match = index_texts[best_idx] if index_texts else 'unknown'
+        print(f'[dedup] SKIP similarity={max_score:.3f} > {DEDUP_THRESHOLD}')
+        print(f'[dedup]   new:      {instruction[:80]}')
+        print(f'[dedup]   matched:  {best_match[:80]}')
+        return True
+    return False
 
 
 def parse_llm_response(raw: str) -> list:
@@ -217,8 +230,48 @@ def parse_llm_response(raw: str) -> list:
         return json.loads(raw[start:end])
     except (ValueError, json.JSONDecodeError):
         pass
+    # Attempt 4: salvage complete {...} objects from a truncated/broken array
+    salvaged = _salvage_objects(raw)
+    if salvaged:
+        print(f"[parse] salvaged {len(salvaged)} objects from truncated response")
+        return salvaged
     print(f"[generator] Failed to parse LLM response. Skipping. Raw: {raw[:200]}")
     return []
+
+
+def _salvage_objects(raw: str) -> list:
+    """Extract every complete top-level {...} object even if the outer [] is broken
+    (e.g. response truncated at max_tokens mid-array)."""
+    objects = []
+    depth = 0
+    start = None
+    in_str = False
+    escape = False
+    for i, ch in enumerate(raw):
+        if in_str:
+            if escape:
+                escape = False
+            elif ch == '\\':
+                escape = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == '{':
+            if depth == 0:
+                start = i
+            depth += 1
+        elif ch == '}':
+            if depth > 0:
+                depth -= 1
+                if depth == 0 and start is not None:
+                    try:
+                        objects.append(json.loads(raw[start:i + 1]))
+                    except json.JSONDecodeError:
+                        pass
+                    start = None
+    return objects
 
 
 def generate_pairs(facts: list, document: dict,
@@ -256,7 +309,7 @@ def generate_pairs(facts: list, document: dict,
             response = call_with_cost_tracking(
                 'question_generator',
                 model=DEFAULT_MODEL,
-                max_tokens=2048,
+                max_tokens=4096,
                 messages=[{"role": "user", "content": user_msg}],
                 system=GENERATION_SYSTEM,
             )

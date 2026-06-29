@@ -128,8 +128,48 @@ def _parse_facts_response(raw: str) -> list:
         return json.loads(raw[start:end])
     except (ValueError, json.JSONDecodeError):
         pass
+    # Attempt 4: salvage complete {...} objects from a truncated/broken array
+    salvaged = _salvage_objects(raw)
+    if salvaged:
+        print(f"[parse] salvaged {len(salvaged)} objects from truncated response")
+        return salvaged
     print(f"[facts] Failed to parse LLM response. Raw: {raw[:200]}")
     return []
+
+
+def _salvage_objects(raw: str) -> list:
+    """Extract every complete top-level {...} object even if the outer [] is broken
+    (e.g. response truncated at max_tokens mid-array)."""
+    objects = []
+    depth = 0
+    start = None
+    in_str = False
+    escape = False
+    for i, ch in enumerate(raw):
+        if in_str:
+            if escape:
+                escape = False
+            elif ch == '\\':
+                escape = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == '{':
+            if depth == 0:
+                start = i
+            depth += 1
+        elif ch == '}':
+            if depth > 0:
+                depth -= 1
+                if depth == 0 and start is not None:
+                    try:
+                        objects.append(json.loads(raw[start:i + 1]))
+                    except json.JSONDecodeError:
+                        pass
+                    start = None
+    return objects
 
 
 def extract_facts(document: dict) -> list:
@@ -154,7 +194,7 @@ def extract_facts(document: dict) -> list:
             response = call_with_cost_tracking(
                 'fact_extractor',
                 model=DEFAULT_MODEL,
-                max_tokens=1024,
+                max_tokens=4096,
                 messages=[{"role": "user", "content": user_msg}],
                 system=EXTRACTION_SYSTEM,
             )
