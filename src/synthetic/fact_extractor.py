@@ -15,11 +15,30 @@ COST_PER_DOCUMENT_BUDGET = float(os.environ.get('COST_PER_DOCUMENT_BUDGET', '0.2
 
 EXTRACTION_SYSTEM = (
     "You are a compliance fact extractor for Tanzania business law. "
-    "Extract only numerical facts, deadlines, rates, thresholds, and penalties. "
+    "Documents may be in Swahili or English. "
+    "Extract ALL of the following fact types — do not skip any:\n"
+    "- Numerical rates and percentages\n"
+    "- Employee count thresholds\n"
+    "- Deadline dates (day of month)\n"
+    "- Form numbers and codes\n"
+    "- Legal citations (Act name, chapter number, section number)\n"
+    "- Exemption categories (list each separately)\n"
+    "- Penalty amounts\n"
+    "Even if a fact appears in a list or bullet point — extract it. "
     "Respond ONLY with a JSON array. No preamble, no explanation, no markdown."
 )
 
 EXTRACTION_USER_TMPL = """Extract all compliance facts from this document section.
+Extract ALL of the following fact types — do not skip any:
+- Numerical rates and percentages
+- Employee count thresholds
+- Deadline dates (day of month)
+- Form numbers and codes
+- Legal citations (Act name, chapter number, section number)
+- Exemption categories (list each separately)
+- Penalty amounts
+Even if a fact appears in a list or bullet point — extract it.
+
 Output format (JSON array only):
 [
   {{
@@ -60,7 +79,10 @@ def extract_number_unit_pairs(text: str) -> set:
 
 def is_confirmed_fact(extracted: dict, locked_facts: dict) -> tuple:
     """Returns (True, matching_key) if matches a locked fact, else (False, None)."""
-    extracted_pairs = extract_number_unit_pairs(extracted.get('value', ''))
+    # value and unit are separate fields (e.g. value="3.5", unit="%") -- combine them
+    # so the number+unit are adjacent for extract_number_unit_pairs to match.
+    combined = f"{extracted.get('value', '')} {extracted.get('unit', '')}".strip()
+    extracted_pairs = extract_number_unit_pairs(combined)
     if not extracted_pairs:
         return False, None  # non-numerical -> human review queue
     for key, fact in locked_facts.items():

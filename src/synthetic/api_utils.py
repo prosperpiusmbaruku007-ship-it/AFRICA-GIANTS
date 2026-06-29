@@ -134,7 +134,8 @@ def _make_request(model: str, max_tokens: int,
         prompt     = ((system + '\n\n') if system else '') + '\n'.join(user_parts)
         payload    = {'model': model, 'prompt': prompt, 'stream': False}
         r = requests.post(
-            f"{BASE_URL}/generate", headers=HEADERS, json=payload, timeout=300
+            f"{BASE_URL}/generate", headers=HEADERS, json=payload,
+            timeout=600  # qwen2.5:7b on CPU: full-document extraction can exceed 300s
         )
         r.raise_for_status()
         data          = r.json()
