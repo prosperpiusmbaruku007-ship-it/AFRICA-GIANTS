@@ -181,9 +181,21 @@ def cmd_approve_facts(args):
             print(f"\n[approve-facts] Stopped at {i+1}/{len(candidates)}. Re-run to continue.")
             break
         if choice == 'a':
-            locked_facts[fact_key] = f"{value} {unit}".strip()
-            approved_keys.append(fact_key)
-            print(f"  -> Approved: {fact_key}")
+            candidate_value = f"{value} {unit}".strip()
+            if fact_key in locked_facts:
+                # Existing keys are protected — never overwrite a richer locked entry.
+                existing = locked_facts[fact_key]
+                existing_value = (existing.get('correct_value', '')
+                                  if isinstance(existing, dict) else str(existing))
+                print(f"  [approve-facts] WARNING: fact_key '{fact_key}' already exists in locked_facts.json")
+                print(f"  [approve-facts] Existing entry is richer than the candidate — skipping overwrite")
+                if existing_value:
+                    print(f"  [approve-facts] Candidate value ({candidate_value}) "
+                          f"matches existing value ({existing_value}) — no conflict")
+            else:
+                locked_facts[fact_key] = candidate_value
+                approved_keys.append(fact_key)
+                print(f"  -> Approved: {fact_key}")
         else:
             print(f"  -> Rejected: {fact_key}")
 
