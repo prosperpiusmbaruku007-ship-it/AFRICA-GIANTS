@@ -109,27 +109,7 @@
     "effective_date": "2025-07-01",
     "status": "CONFIRMED"
   },
-  "sdl_rate": {
-    "fact": "SDL rate is 3.5% of gross payroll — NOT 4%",
-    "correct_value": "3.5%",
-    "wrong_patterns": [
-      "asilimia 4 ya",
-      "4% of",
-      "SDL ya 4%",
-      "4 per cent",
-      "(?<!no )5% SDL",
-      "SDL 2%",
-      "2% ya",
-      "SDL ni asilimia 5",
-      "SDL rate is 5%",
-      "SDL ya asilimia 5",
-      "kiwango cha SDL ni 5%"
-    ],
-    "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
-    "verified_by": "Finance Act 2023 — changed from 4% to 3.5%",
-    "effective_date": "2023-07-01",
-    "status": "CONFIRMED"
-  },
+  "sdl_rate": "3.5 %",
   "sdl_full_name": {
     "fact": "SDL stands for Skills Development Levy — NOT Service Delivery Levy and NOT short-term disability leave",
     "correct_value": "Skills Development Levy",
@@ -1513,5 +1493,6 @@
     "verified_date": "2026-06-20",
     "status": "HEDGE — TRA EFD page unavailable; grounded in VAT Act Cap.148",
     "training_instruction": "Always write 'kufunga' (close) never 'kufungua' (open) when describing TRA closure authority. Pairs must state TRA CAN close — answer yes_no questions with Ndiyo."
-  }
+  },
+  "sdl_payment_deadline": "7 days_of_month"
 }
