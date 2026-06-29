@@ -39,3 +39,11 @@ vector_db/**/*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Temporary pipeline artifacts
+datasets/tier1a/raw_sources/*_checkpoints/
+datasets/**/*.pkl
+_*.py
+data/raw/
+data/generated/
+data/reviewed/

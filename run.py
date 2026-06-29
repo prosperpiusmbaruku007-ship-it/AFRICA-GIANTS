@@ -77,11 +77,11 @@ def cmd_status(args):
 def cmd_generate(args):
     try:
         from src.synthetic.qa_factory import run_pipeline
-        run_pipeline(reprocess=args.reprocess, no_budget_check=args.no_budget_check)
     except ImportError:
         print("[generate] Phase 3 not yet implemented.")
         print("Build src/synthetic/ modules first (Phase 3 in do.md).")
         sys.exit(1)
+    run_pipeline(reprocess=args.reprocess, no_budget_check=args.no_budget_check)
 
 
 def cmd_build_rag(args):
