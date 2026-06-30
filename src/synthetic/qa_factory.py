@@ -1,3 +1,4 @@
+import asyncio
 import hashlib
 import json
 import os
@@ -9,11 +10,47 @@ SOURCE_DOCS_DIR   = 'data/source_documents'
 PROCESSED_FILES   = 'data/raw/processed_files.json'
 RAW_GENERATED_DIR = 'data/raw/generated'
 FLAGGED_DIR       = 'data/flagged'
+CLEANED_PAIRS_DIR = 'datasets/tier1a/cleaned_pairs'
 
 MONTHLY_CAP              = float(os.environ.get('MONTHLY_BUDGET', '20.0'))
 COST_PER_DOCUMENT_BUDGET = float(os.environ.get('COST_PER_DOCUMENT_BUDGET', '0.20'))
 
+# Number of documents processed in parallel per batch. Overridable via env var.
+BATCH_SIZE = int(os.environ.get('PIPELINE_BATCH_SIZE', '3'))
+
 SUPPORTED_EXTS = {'.pdf', '.html', '.txt'}
+
+
+class StreamingBatchWriter:
+    """Append approved pairs to a batch file as they are produced, flushing each
+    line immediately so pairs are visible on disk in real time and survive a crash.
+    Removes the file on close if nothing was written (no empty batches left behind)."""
+
+    def __init__(self, batch_num: int):
+        self.batch_num     = batch_num
+        self.path          = os.path.join(
+            CLEANED_PAIRS_DIR, f'cleaned_pairs_batch_{batch_num:03d}.jsonl')
+        self.total_written = 0
+        os.makedirs(CLEANED_PAIRS_DIR, exist_ok=True)
+        self.file = open(self.path, 'a', encoding='utf-8')
+
+    def write(self, pairs: list):
+        for p in pairs:
+            self.file.write(json.dumps(p, ensure_ascii=False) + '\n')
+            self.file.flush()  # flush immediately so pairs are visible on disk
+            self.total_written += 1
+
+    def close(self):
+        self.file.close()
+        if self.total_written == 0:
+            try:
+                os.remove(self.path)
+            except OSError:
+                pass
+            print(f'[writer] batch {self.batch_num:03d}: no approved pairs -- file removed')
+        else:
+            print(f'[writer] batch {self.batch_num:03d} complete: '
+                  f'{self.total_written} pairs at {self.path}')
 
 
 def _file_md5(path: str) -> str:
@@ -85,6 +122,185 @@ def _check_budget(remaining: int, no_budget_check: bool) -> bool:
     return True
 
 
+def process_document(file_path: str, batch_num: int,
+                     index_embeddings, index_texts) -> dict:
+    """Process ONE document end-to-end with streaming writes.
+
+    Extract -> confirm facts -> for each fact: generate pairs, review, and write
+    approved pairs IMMEDIATELY (not after the whole document). Runs in a worker
+    thread under the async orchestrator; touches only batch_num-scoped output files
+    (cleaned_pairs_batch_NNN, flagged_batch_NNN, generated/batch_NNN) so parallel
+    documents never collide. Shared writes (cost log, pending facts) are lock-guarded
+    in their own modules. Returns a result dict the main thread folds into stats."""
+    from src.synthetic.pdf_extractor      import extract_document
+    from src.synthetic.fact_extractor     import extract_facts
+    from src.synthetic.question_generator import generate_pairs_for_fact
+    from src.synthetic.pair_reviewer      import review_pairs
+
+    result = {
+        'file_path': file_path, 'facts': 0, 'generated': 0,
+        'approved': 0, 'flagged': 0, 'rejected': 0,
+        'batch_num': batch_num, 'skipped': None, 'error': None,
+        'zero_facts': False, 'zero_pairs': False,
+    }
+
+    try:
+        document = extract_document(file_path)
+    except ValueError as e:
+        print(f"[factory] Skipping {file_path}: {e}")
+        result['skipped'] = str(e)
+        return result
+    except Exception as e:
+        print(f"[factory] ERROR extracting {file_path}: {e}")
+        result['error'] = str(e)
+        return result
+
+    facts = extract_facts(document)
+    result['facts'] = len(facts)
+    if not facts:
+        print(f"[factory] No confirmed facts in {os.path.basename(file_path)}")
+        print(f"[factory] If new candidates are pending: python run.py approve-facts")
+        print(f"[factory] Then: python run.py generate --reprocess {os.path.basename(file_path)}")
+        result['zero_facts'] = True
+        return result
+
+    today      = datetime.utcnow().strftime('%Y-%m-%d')
+    source_doc = document.get('source_document', '')
+    source_url = document.get('source_url', 'tanzlii.org')
+
+    cur_emb    = index_embeddings
+    cur_texts  = list(index_texts)
+
+    writer        = StreamingBatchWriter(batch_num)
+    generated_all = []
+    flagged_all   = []
+    rejected_n    = 0
+    dedup_skipped = 0
+
+    for fact in facts:
+        pairs, cur_emb, cur_texts, skipped = generate_pairs_for_fact(
+            fact, today, source_doc, source_url, cur_emb, cur_texts,
+        )
+        dedup_skipped += skipped
+        if not pairs:
+            continue
+        generated_all.extend(pairs)
+
+        approved, flagged, rejected = review_pairs(pairs, batch_num=None)
+        if approved:
+            # Write approved pairs IMMEDIATELY -- do not wait for the full document
+            writer.write(approved)
+            print(f"[writer] +{len(approved)} pairs written (fact: {fact.get('fact_key')})")
+        flagged_all.extend(flagged)
+        rejected_n += len(rejected)
+
+    writer.close()
+
+    result['generated'] = len(generated_all)
+    result['approved']  = writer.total_written
+    result['flagged']   = len(flagged_all)
+    result['rejected']  = rejected_n
+    print(f"[generator] {document['source_file']}: "
+          f"{len(generated_all)} pairs generated, {dedup_skipped} dedup-skipped")
+
+    # Audit trail: raw generated pairs + deterministic review results JSON
+    if generated_all:
+        os.makedirs(RAW_GENERATED_DIR, exist_ok=True)
+        with open(os.path.join(RAW_GENERATED_DIR, f'batch_{batch_num:03d}.jsonl'),
+                  'w', encoding='utf-8') as f:
+            for p in generated_all:
+                f.write(json.dumps(p, ensure_ascii=False) + '\n')
+        review_pairs(generated_all, batch_num=f'{batch_num:03d}')  # writes results JSON only
+
+    if not generated_all:
+        result['zero_pairs'] = True
+
+    if flagged_all:
+        flagged_path = os.path.join(FLAGGED_DIR, f'batch_{batch_num:03d}_flagged.jsonl')
+        os.makedirs(FLAGGED_DIR, exist_ok=True)
+        with open(flagged_path, 'w', encoding='utf-8') as f:
+            for p in flagged_all:
+                f.write(json.dumps(p, ensure_ascii=False) + '\n')
+        print(f"[factory] {len(flagged_all)} flagged -> {flagged_path}")
+        print(f"[factory] Run: python run.py approve-flags --batch {batch_num:03d}")
+
+    return result
+
+
+def _apply_result(result: dict, stats: dict, processed: dict):
+    """Fold a worker result into run stats and the processed-files cache.
+    Called on the main thread only -- no concurrent mutation of processed/stats."""
+    file_path = result['file_path']
+
+    if result['error']:
+        return  # extraction error -- leave unprocessed so it retries next run
+
+    if result['skipped']:
+        processed[file_path] = {
+            'md5': _file_md5(file_path),
+            'processed_at': datetime.utcnow().strftime('%Y-%m-%d'),
+            'skipped': result['skipped'],
+        }
+        return
+
+    stats['facts_confirmed'] += result['facts']
+    stats['pairs_generated'] += result['generated']
+    stats['pairs_approved']  += result['approved']
+    stats['pairs_flagged']   += result['flagged']
+    stats['pairs_rejected']  += result['rejected']
+    if result['approved']:
+        stats['batches_written'].append(f"batch_{result['batch_num']:03d}")
+
+    entry = {
+        'md5': _file_md5(file_path),
+        'processed_at': datetime.utcnow().strftime('%Y-%m-%d'),
+    }
+    if result['zero_facts']:
+        entry['zero_facts'] = True
+    elif result['zero_pairs']:
+        entry['zero_pairs'] = True
+    processed[file_path] = entry
+    stats['files_processed'] += 1
+
+
+async def _process_document_async(file_path, batch_num, index_embeddings, index_texts):
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(
+        None, process_document, file_path, batch_num, index_embeddings, index_texts)
+
+
+async def _run_pipeline_async(new_files, no_budget_check, index_embeddings, index_texts,
+                              processed, stats):
+    from src.synthetic.dataset_builder import next_batch_num
+
+    for i in range(0, len(new_files), BATCH_SIZE):
+        remaining = len(new_files) - i
+        if not _check_budget(remaining, no_budget_check):
+            print(f"[factory] Budget cap reached -- stopping (>= {remaining} document(s) unprocessed)")
+            break
+
+        batch = new_files[i:i + BATCH_SIZE]
+        # Pre-assign batch numbers BEFORE launching, so parallel workers never race
+        # on next_batch_num() / overwrite each other's output files.
+        base = next_batch_num()
+        print(f"\n[factory] Processing batch {i // BATCH_SIZE + 1}: "
+              f"{[os.path.basename(f) for f in batch]} -> "
+              f"batches {[f'{base + j:03d}' for j in range(len(batch))]}")
+
+        tasks = [
+            _process_document_async(f, base + j, index_embeddings, index_texts)
+            for j, f in enumerate(batch)
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        for f, res in zip(batch, results):
+            if isinstance(res, Exception):
+                print(f"[factory] ERROR in {os.path.basename(f)}: {res}")
+                continue
+            _apply_result(res, stats, processed)
+            _save_processed(processed)  # persist after each doc -- crash-safe progress
+
+
 def run_pipeline(reprocess: str = None, no_budget_check: bool = False):
     processed = _load_processed()
 
@@ -105,19 +321,16 @@ def run_pipeline(reprocess: str = None, no_budget_check: bool = False):
         print("Supported categories: tra/ brela/ osha/ nssf/ wcf/ labour/ immigration/ general/")
         return
 
-    print(f"[factory] Found {len(new_files)} new file(s) to process")
+    print(f"[factory] Found {len(new_files)} new file(s) to process "
+          f"({BATCH_SIZE} in parallel per batch)")
 
     from src.synthetic.api_utils import check_provider
     check_provider()
 
     # Import heavy deps only after confirming there's work to do
-    from src.synthetic.pdf_extractor     import extract_document
-    from src.synthetic.fact_extractor    import extract_facts
-    from src.synthetic.question_generator import generate_pairs, get_instruction_index
-    from src.synthetic.pair_reviewer     import review_pairs
-    from src.synthetic.dataset_builder   import build_dataset, next_batch_num
+    from src.synthetic.question_generator import get_instruction_index
 
-    # Build semantic dedup index once for the entire run
+    # Build semantic dedup index once for the entire run (shared, read-only base)
     index_embeddings, index_texts = get_instruction_index()
 
     stats = {
@@ -130,90 +343,8 @@ def run_pipeline(reprocess: str = None, no_budget_check: bool = False):
         'batches_written': [],
     }
 
-    for i, file_path in enumerate(new_files):
-        remaining = len(new_files) - i
-        if not _check_budget(remaining, no_budget_check):
-            print(f"[factory] Budget cap reached -- stopping before {os.path.basename(file_path)}")
-            break
-
-        print(f"\n[factory] Processing {i + 1}/{len(new_files)}: {file_path}")
-
-        try:
-            document = extract_document(file_path)
-        except ValueError as e:
-            print(f"[factory] Skipping {file_path}: {e}")
-            processed[file_path] = {
-                'md5': _file_md5(file_path),
-                'processed_at': datetime.utcnow().strftime('%Y-%m-%d'),
-                'skipped': str(e),
-            }
-            _save_processed(processed)
-            continue
-        except Exception as e:
-            print(f"[factory] ERROR extracting {file_path}: {e}")
-            continue
-
-        facts = extract_facts(document)
-        stats['facts_confirmed'] += len(facts)
-
-        if not facts:
-            print(f"[factory] No confirmed facts in {os.path.basename(file_path)}")
-            print(f"[factory] If new candidates are pending: python run.py approve-facts")
-            print(f"[factory] Then: python run.py generate --reprocess {os.path.basename(file_path)}")
-            processed[file_path] = {
-                'md5': _file_md5(file_path),
-                'processed_at': datetime.utcnow().strftime('%Y-%m-%d'),
-                'zero_facts': True,
-            }
-            _save_processed(processed)
-            continue
-
-        batch_num    = next_batch_num()
-        raw_gen_path = os.path.join(RAW_GENERATED_DIR, f'batch_{batch_num:03d}.jsonl')
-        os.makedirs(RAW_GENERATED_DIR, exist_ok=True)
-
-        pairs = generate_pairs(
-            facts, document,
-            index_embeddings=index_embeddings,
-            index_texts=index_texts,
-            raw_output_path=raw_gen_path,
-        )
-        stats['pairs_generated'] += len(pairs)
-
-        if not pairs:
-            print(f"[factory] No pairs generated from {os.path.basename(file_path)}")
-            processed[file_path] = {
-                'md5': _file_md5(file_path),
-                'processed_at': datetime.utcnow().strftime('%Y-%m-%d'),
-                'zero_pairs': True,
-            }
-            _save_processed(processed)
-            continue
-
-        approved, flagged_pairs, rejected = review_pairs(pairs, batch_num=f'{batch_num:03d}')
-        stats['pairs_approved']  += len(approved)
-        stats['pairs_flagged']   += len(flagged_pairs)
-        stats['pairs_rejected']  += len(rejected)
-
-        if approved:
-            out_path = build_dataset(approved, batch_num)
-            stats['batches_written'].append(out_path)
-
-        if flagged_pairs:
-            flagged_path = os.path.join(FLAGGED_DIR, f'batch_{batch_num:03d}_flagged.jsonl')
-            os.makedirs(FLAGGED_DIR, exist_ok=True)
-            with open(flagged_path, 'w', encoding='utf-8') as f:
-                for p in flagged_pairs:
-                    f.write(json.dumps(p, ensure_ascii=False) + '\n')
-            print(f"[factory] {len(flagged_pairs)} flagged -> {flagged_path}")
-            print(f"[factory] Run: python run.py approve-flags --batch {batch_num:03d}")
-
-        processed[file_path] = {
-            'md5': _file_md5(file_path),
-            'processed_at': datetime.utcnow().strftime('%Y-%m-%d'),
-        }
-        _save_processed(processed)
-        stats['files_processed'] += 1
+    asyncio.run(_run_pipeline_async(
+        new_files, no_budget_check, index_embeddings, index_texts, processed, stats))
 
     print("\n=== Pipeline complete ===")
     print(f"Files processed:  {stats['files_processed']}")
@@ -225,5 +356,5 @@ def run_pipeline(reprocess: str = None, no_budget_check: bool = False):
     if stats['pairs_rejected']:
         print(f"Pairs rejected:   {stats['pairs_rejected']} (see data/raw/reviewed/ for details)")
     if stats['batches_written']:
-        print(f"Batches written:  {', '.join(os.path.basename(b) for b in stats['batches_written'])}")
+        print(f"Batches written:  {', '.join(stats['batches_written'])}")
         print("Run 'python run.py upload' to push to HuggingFace")

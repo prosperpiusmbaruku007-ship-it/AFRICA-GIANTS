@@ -1,9 +1,14 @@
 import json
 import os
+import threading
 import time
 from datetime import datetime
 
 import requests
+
+# Pipeline can process several documents in parallel threads (PIPELINE_BATCH_SIZE).
+# Serialise appends to the shared cost log so concurrent calls don't interleave lines.
+_COST_LOG_LOCK = threading.Lock()
 
 # === Provider configuration ===
 LLM_PROVIDER = os.environ.get('LLM_PROVIDER', 'openrouter')
@@ -218,8 +223,9 @@ def log_cost(script_name: str, tokens_in: int, tokens_out: int, cost_usd: float)
         "tokens_out": tokens_out,
         "cost_usd":   round(cost_usd, 6),
     }
-    with open(COST_LOG_PATH, 'a', encoding='utf-8') as f:
-        f.write(json.dumps(entry) + '\n')
+    with _COST_LOG_LOCK:
+        with open(COST_LOG_PATH, 'a', encoding='utf-8') as f:
+            f.write(json.dumps(entry) + '\n')
 
 
 def call_with_cost_tracking(script_name: str, **kwargs) -> NormalizedResponse:

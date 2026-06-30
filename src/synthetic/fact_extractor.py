@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import threading
 
 from src.synthetic.api_utils import (
     call_with_cost_tracking, sum_cost_log_this_month,
@@ -12,6 +13,11 @@ PENDING_FACTS_PATH = 'data/flagged/new_facts_pending.json'
 
 MONTHLY_CAP              = float(os.environ.get('MONTHLY_BUDGET', '20.0'))
 COST_PER_DOCUMENT_BUDGET = float(os.environ.get('COST_PER_DOCUMENT_BUDGET', '0.20'))
+
+# Parallel document processing means several threads may append new fact candidates
+# at once. The pending-facts file is a read-modify-write, so guard it with a lock to
+# avoid lost updates.
+_PENDING_FACTS_LOCK = threading.Lock()
 
 EXTRACTION_SYSTEM = (
     "You are a compliance fact extractor for Tanzania business law. "
@@ -97,19 +103,20 @@ def is_confirmed_fact(extracted: dict, locked_facts: dict) -> tuple:
 
 
 def _append_pending_fact(candidate: dict):
-    pending = []
-    if os.path.exists(PENDING_FACTS_PATH):
-        try:
-            with open(PENDING_FACTS_PATH, encoding='utf-8') as f:
-                pending = json.load(f)
-        except Exception:
-            pending = []
-    existing_keys = {c.get('fact_key') for c in pending}
-    if candidate.get('fact_key') not in existing_keys:
-        pending.append(candidate)
-        os.makedirs(os.path.dirname(PENDING_FACTS_PATH), exist_ok=True)
-        with open(PENDING_FACTS_PATH, 'w', encoding='utf-8') as f:
-            json.dump(pending, f, indent=2, ensure_ascii=False)
+    with _PENDING_FACTS_LOCK:
+        pending = []
+        if os.path.exists(PENDING_FACTS_PATH):
+            try:
+                with open(PENDING_FACTS_PATH, encoding='utf-8') as f:
+                    pending = json.load(f)
+            except Exception:
+                pending = []
+        existing_keys = {c.get('fact_key') for c in pending}
+        if candidate.get('fact_key') not in existing_keys:
+            pending.append(candidate)
+            os.makedirs(os.path.dirname(PENDING_FACTS_PATH), exist_ok=True)
+            with open(PENDING_FACTS_PATH, 'w', encoding='utf-8') as f:
+                json.dump(pending, f, indent=2, ensure_ascii=False)
 
 
 def _parse_facts_response(raw: str) -> list:

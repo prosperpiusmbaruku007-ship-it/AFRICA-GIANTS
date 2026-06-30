@@ -31,6 +31,26 @@ GENERATION_SYSTEM = (
     "Respond ONLY with a JSON array. No preamble, no explanation."
 )
 
+# The reviewer (pair_reviewer._check2_schema) rejects any pair whose subdomain is
+# not in this exact set. The generator MUST be told the closed list explicitly,
+# otherwise the LLM invents plausible-but-invalid names (vat_compliance,
+# withholding_tax_compliance, customs_duties, ...) and every pair fails CHECK2.
+CANONICAL_SUBDOMAINS = [
+    'vat_registration',
+    'paye',
+    'sdl_compliance',
+    'gn487a',
+    'brela_registration',
+    'nssf_contributions',
+    'osha_registration',
+    'efd_compliance',
+    'vat_withholding',
+    'out_of_corpus',
+    'wcf_compliance',
+]
+
+SUBDOMAIN_LIST = ', '.join(CANONICAL_SUBDOMAINS)
+
 GENERATION_USER_TMPL = """Generate {n} compliance questions from this fact.
 Fact: {fact_key}: {value} {unit} -- source: {source_section}
 
@@ -41,6 +61,13 @@ Question type distribution (follow exactly):
 - procedure: 15% (questions asking how to do something)
 - penalty: 10% (questions asking about consequences)
 
+subdomain MUST be EXACTLY one of these 11 values -- no other values accepted:
+{subdomain_list}
+
+If the fact does not fit any of these subdomains set subdomain to 'out_of_corpus'
+and answer_type to 'out_of_corpus_refusal'.
+Do NOT invent new subdomain names.
+
 Output format (JSON array only):
 [
   {{
@@ -48,7 +75,7 @@ Output format (JSON array only):
     "input": "",
     "output": "direct answer in Swahili citing source domain",
     "system": "Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yako. Unajibu maswali kuhusu biashara, kodi, BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT kwa Kiswahili na Kiingereza. Kama swali liko nje ya mada yako sema wazi kwamba halijui na mwelekeze kwa mtaalamu.",
-    "subdomain": "one of 11 canonical subdomains",
+    "subdomain": "EXACTLY one of the 11 canonical subdomains listed above",
     "answer_type": "yes_no|number|definition|procedure|penalty|out_of_corpus_refusal",
     "source_url": "canonical .go.tz domain from SOURCE_URL_MAP",
     "source_name": "TRA Official|BRELA Official|OSHA Official|etc",
@@ -274,10 +301,74 @@ def _salvage_objects(raw: str) -> list:
     return objects
 
 
+def generate_pairs_for_fact(fact: dict, today: str, source_doc: str, source_url: str,
+                            cur_emb: np.ndarray, cur_texts: list) -> tuple:
+    """Generate Swahili Q&A pairs for a SINGLE confirmed fact.
+
+    Returns (pairs, cur_emb, cur_texts, dedup_skipped). cur_emb/cur_texts are the
+    running dedup index — passed in and returned so the caller can thread the
+    in-run index across facts (and stream-write approved pairs per fact).
+    """
+    pairs_out     = []
+    dedup_skipped = 0
+    if not API_KEY and LLM_PROVIDER != 'ollama':
+        return pairs_out, cur_emb, cur_texts, dedup_skipped
+
+    fact_key    = fact.get('fact_key', 'unknown')
+    value       = fact.get('value', '')
+    unit        = fact.get('unit', '') or ''
+    source_sect = fact.get('source_section', '')
+
+    user_msg = GENERATION_USER_TMPL.format(
+        n=4, fact_key=fact_key, value=value,
+        unit=unit, source_section=source_sect,
+        subdomain_list=SUBDOMAIN_LIST,
+    )
+
+    try:
+        response = call_with_cost_tracking(
+            'question_generator',
+            model=DEFAULT_MODEL,
+            max_tokens=4096,
+            messages=[{"role": "user", "content": user_msg}],
+            system=GENERATION_SYSTEM,
+        )
+        raw_pairs = parse_llm_response(response.content[0].text)
+    except Exception as e:
+        print(f"[generator] API error for fact '{fact_key}': {e}")
+        return pairs_out, cur_emb, cur_texts, dedup_skipped
+
+    for pair in raw_pairs:
+        pair['generated_date']  = today
+        pair['source_document'] = source_doc
+        if not pair.get('source_url'):
+            pair['source_url'] = source_url
+
+        instr = pair.get('instruction', '')
+        if not instr:
+            continue
+
+        if is_semantic_duplicate(instr, cur_emb, cur_texts):
+            dedup_skipped += 1
+            continue
+
+        pairs_out.append(pair)
+
+        # Add to in-run index so we dedup within this run too
+        new_emb = embed_instruction(instr)
+        if new_emb is not None:
+            new_emb = new_emb.reshape(1, -1)
+            cur_emb = np.vstack([cur_emb, new_emb]) if cur_emb.shape[0] > 0 else new_emb
+            cur_texts.append(instr)
+
+    return pairs_out, cur_emb, cur_texts, dedup_skipped
+
+
 def generate_pairs(facts: list, document: dict,
                    index_embeddings=None, index_texts=None,
                    raw_output_path: str = None) -> list:
-    """Generate Swahili Q&A pairs from confirmed facts."""
+    """Generate Swahili Q&A pairs from confirmed facts (batch wrapper over
+    generate_pairs_for_fact — kept for callers that want all pairs at once)."""
     if not API_KEY and LLM_PROVIDER != 'ollama':
         print(f"[generator] API key not set for provider '{LLM_PROVIDER}' -- cannot generate pairs")
         return []
@@ -295,51 +386,11 @@ def generate_pairs(facts: list, document: dict,
     dedup_skipped = 0
 
     for fact in facts:
-        fact_key    = fact.get('fact_key', 'unknown')
-        value       = fact.get('value', '')
-        unit        = fact.get('unit', '') or ''
-        source_sect = fact.get('source_section', '')
-
-        user_msg = GENERATION_USER_TMPL.format(
-            n=4, fact_key=fact_key, value=value,
-            unit=unit, source_section=source_sect,
+        pairs, cur_emb, cur_texts, skipped = generate_pairs_for_fact(
+            fact, today, source_doc, source_url, cur_emb, cur_texts,
         )
-
-        try:
-            response = call_with_cost_tracking(
-                'question_generator',
-                model=DEFAULT_MODEL,
-                max_tokens=4096,
-                messages=[{"role": "user", "content": user_msg}],
-                system=GENERATION_SYSTEM,
-            )
-            raw_pairs = parse_llm_response(response.content[0].text)
-        except Exception as e:
-            print(f"[generator] API error for fact '{fact_key}': {e}")
-            continue
-
-        for pair in raw_pairs:
-            pair['generated_date']  = today
-            pair['source_document'] = source_doc
-            if not pair.get('source_url'):
-                pair['source_url'] = source_url
-
-            instr = pair.get('instruction', '')
-            if not instr:
-                continue
-
-            if is_semantic_duplicate(instr, cur_emb, cur_texts):
-                dedup_skipped += 1
-                continue
-
-            all_pairs.append(pair)
-
-            # Add to in-run index so we dedup within this run too
-            new_emb = embed_instruction(instr)
-            if new_emb is not None:
-                new_emb = new_emb.reshape(1, -1)
-                cur_emb = np.vstack([cur_emb, new_emb]) if cur_emb.shape[0] > 0 else new_emb
-                cur_texts.append(instr)
+        all_pairs.extend(pairs)
+        dedup_skipped += skipped
 
     print(f"[generator] {document['source_file']}: "
           f"{len(all_pairs)} pairs generated, {dedup_skipped} dedup-skipped")

@@ -3,7 +3,13 @@ import os
 import re
 
 VALID_GN_NUMBERS  = {'GN487A', 'GN605A'}
-VALID_PERCENTAGES = {0.0, 3.0, 3.5, 6.0, 8.0, 10.0, 15.0, 16.0, 18.0, 20.0, 25.0, 30.0, 33.4}
+# Genuine Tanzanian rates that appear in primary TRA sources (transport/film WHT 5%,
+# certain levies 1%/2%, presumptive 2.5%, mineral royalty 17%) were previously rejected
+# by CHECK 6 even though they are real. Extended to cover the published rate set.
+VALID_PERCENTAGES = {
+    0.0, 1.0, 2.0, 2.5, 3.0, 3.5, 5.0, 6.0, 8.0, 10.0,
+    15.0, 16.0, 17.0, 18.0, 20.0, 25.0, 30.0, 33.4,
+}
 
 VALID_SUBDOMAINS = {
     'vat_registration', 'paye', 'sdl_compliance', 'gn487a',
