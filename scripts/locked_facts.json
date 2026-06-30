@@ -1583,5 +1583,12 @@
   "exemption_category_educational_institutions": "Taasisi za elimu zilizosajiliwa, zikiwemo: shule za awali, msingi na sekondari; vyuo vya ufundi na mafunzo; vyuo vikuu na taasisi za elimu ya juu",
   "exemption_category_local_government_authorities": "Mamlaka za Serikali za Mitaa",
   "exemption_category_trainees_under_TAESA": "Wanafunzi wa mafunzo kwa vitendo walio chini ya mpango wa Wakala wa Huduma za Ajira Tanzania (TaESA)",
-  "exemption_category_farm_employers_agriculture": "Waajiri wa mashambani ambao wafanyakazi wao wanajihusisha moja kwa moja na shughuli za kilimo (isipokuwa wale wanaosimamia au kushughulika na usindikaji wa mazao)"
+  "exemption_category_farm_employers_agriculture": "Waajiri wa mashambani ambao wafanyakazi wao wanajihusisha moja kwa moja na shughuli za kilimo (isipokuwa wale wanaosimamia au kushughulika na usindikaji wa mazao)",
+  "late_payment_penalty_rate": "2 %",
+  "workers_compensation_act_citation": "Sheria ya Fidia kwa Wafanyakazi [Sura 263]",
+  "workers_compensation_act_section": "75 (2)",
+  "workers_compensation_rules_citation": "Kanuni za Sheria ya Fidia kwa Wafanyakazi za mwaka 2016",
+  "workers_compensation_rules_section": "13 (7)",
+  "workers_compensation_amendment_rules_citation": "Kanuni za Sheria ya Fidia kwa Wafanyakazi Marekebisho ya mwaka 2021",
+  "workers_compensation_amendment_rules_section": "13 (7)"
 }
