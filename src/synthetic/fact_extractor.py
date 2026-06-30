@@ -84,20 +84,43 @@ def extract_number_unit_pairs(text: str) -> set:
 
 
 def is_confirmed_fact(extracted: dict, locked_facts: dict) -> tuple:
-    """Returns (True, matching_key) if matches a locked fact, else (False, None)."""
-    # value and unit are separate fields (e.g. value="3.5", unit="%") -- combine them
+    """Returns (True, matching_key) if the extracted fact matches a locked fact.
+
+    PRIORITY 1 -- direct fact_key match: once a fact_key is approved into
+    locked_facts.json, ANY later extraction producing that same key is confirmed,
+    with no dependence on the LLM re-extracting the identical number formatting.
+    PRIORITY 2 -- normalized number/unit match (commas stripped, unit lowercased)
+    as a safety net so 95,000 vs 95000 (and unit case) still match even when the
+    LLM names the fact_key differently on reprocess.
+    """
+    # PRIORITY 1 -- direct fact_key match
+    fact_key = extracted.get('fact_key', '')
+    if fact_key and fact_key in locked_facts:
+        return True, fact_key
+
+    # PRIORITY 2 -- normalized number/unit match.
+    # value and unit are separate fields (e.g. value="95,000", unit="TZS") -- combine
     # so the number+unit are adjacent for extract_number_unit_pairs to match.
     combined = f"{extracted.get('value', '')} {extracted.get('unit', '')}".strip()
     extracted_pairs = extract_number_unit_pairs(combined)
-    if not extracted_pairs:
-        return False, None  # non-numerical -> human review queue
+    normalized_extracted = {
+        (num.replace(',', '').strip(), unit.strip().lower())
+        for num, unit in extracted_pairs
+    }
+    if not normalized_extracted:
+        return False, None  # non-numerical and key not locked -> human review queue
+
     for key, fact in locked_facts.items():
         if key == '_meta':
             continue
         locked_val = (fact.get('correct_value', str(fact))
                       if isinstance(fact, dict) else str(fact))
         locked_pairs = extract_number_unit_pairs(locked_val)
-        if extracted_pairs and extracted_pairs == locked_pairs:
+        normalized_locked = {
+            (num.replace(',', '').strip(), unit.strip().lower())
+            for num, unit in locked_pairs
+        }
+        if normalized_extracted == normalized_locked:
             return True, key
     return False, None
 

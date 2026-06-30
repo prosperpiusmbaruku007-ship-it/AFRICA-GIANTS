@@ -1,10 +1,15 @@
 import json
 import os
+import socket
 import threading
 import time
 from datetime import datetime
 
 import requests
+
+# Global safety-net socket timeout: no network read may block indefinitely even if a
+# call site forgets an explicit timeout. Per-request timeouts still override this.
+socket.setdefaulttimeout(60)
 
 # Pipeline can process several documents in parallel threads (PIPELINE_BATCH_SIZE).
 # Serialise appends to the shared cost log so concurrent calls don't interleave lines.

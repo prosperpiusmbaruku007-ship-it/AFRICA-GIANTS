@@ -23,6 +23,11 @@ INDEX_TEXTS_PATH  = 'data/raw/instruction_index_texts.json'
 INDEX_HASH_PATH   = 'data/raw/instruction_index_hash.txt'
 CLEANED_PAIRS_DIR = 'datasets/tier1a/cleaned_pairs'
 
+# Built once per pipeline run (process): reused for the whole run even if this run's
+# own batch writes change the cleaned_pairs/ hash mid-run. Avoids the O(docs x corpus)
+# full re-embed that made multi-document runs take hours.
+_INDEX_CACHE = None
+
 GENERATION_SYSTEM = (
     "You are a Swahili compliance question generator for Chike, "
     "a Tanzanian business adviser. Generate natural conversational questions "
@@ -155,26 +160,8 @@ def _md5_of_directory(dir_path: str) -> str:
     return h.hexdigest()
 
 
-def get_instruction_index() -> tuple:
-    """Load or rebuild semantic dedup index from cleaned_pairs/ using nomic-embed-text."""
-    if SKIP_SEMANTIC_DEDUP:
-        print("[dedup] SKIP_SEMANTIC_DEDUP=true -- skipping index build")
-        return np.empty((0, EMBED_DIM), dtype=np.float32), []
-
-    current_hash = _md5_of_directory(CLEANED_PAIRS_DIR)
-
-    if (os.path.exists(INDEX_PATH) and
-            os.path.exists(INDEX_TEXTS_PATH) and
-            os.path.exists(INDEX_HASH_PATH) and
-            open(INDEX_HASH_PATH).read().strip() == current_hash):
-        embeddings = np.load(INDEX_PATH)
-        with open(INDEX_TEXTS_PATH, encoding='utf-8') as f:
-            texts = json.load(f)
-        print(f"[dedup] index loaded from cache -- {len(texts)} existing instructions")
-        return embeddings, texts
-
-    print("[dedup] rebuilding instruction index ...")
-    all_instructions = []
+def _load_all_instructions() -> list:
+    instructions = []
     for fpath in sorted(Path(CLEANED_PAIRS_DIR).glob('*.jsonl')):
         with open(fpath, encoding='utf-8') as f:
             for line in f:
@@ -185,10 +172,46 @@ def get_instruction_index() -> tuple:
                     p     = json.loads(line)
                     instr = p.get('instruction') or p.get('question_sw', '')
                     if instr:
-                        all_instructions.append(instr)
+                        instructions.append(instr)
                 except Exception:
                     pass
+    return instructions
 
+
+def get_instruction_index() -> tuple:
+    """Load/build the semantic dedup index ONCE per run, updating the on-disk cache
+    INCREMENTALLY (embed only instructions not already embedded) so adding a few
+    pairs never triggers a full re-embed of the whole corpus."""
+    global _INDEX_CACHE
+    if SKIP_SEMANTIC_DEDUP:
+        print("[dedup] SKIP_SEMANTIC_DEDUP=true -- skipping index build")
+        return np.empty((0, EMBED_DIM), dtype=np.float32), []
+
+    # Per-run memoization: reuse within this process even if our own writes changed
+    # the cleaned_pairs/ hash mid-run (cross-run overlaps are caught on the next run).
+    if _INDEX_CACHE is not None:
+        return _INDEX_CACHE
+
+    current_hash = _md5_of_directory(CLEANED_PAIRS_DIR)
+
+    # Load any existing on-disk cache
+    cached_emb, cached_texts, cached_hash = None, None, None
+    if (os.path.exists(INDEX_PATH) and os.path.exists(INDEX_TEXTS_PATH)
+            and os.path.exists(INDEX_HASH_PATH)):
+        try:
+            cached_emb = np.load(INDEX_PATH)
+            with open(INDEX_TEXTS_PATH, encoding='utf-8') as f:
+                cached_texts = json.load(f)
+            cached_hash = open(INDEX_HASH_PATH).read().strip()
+        except Exception:
+            cached_emb, cached_texts, cached_hash = None, None, None
+
+    if cached_texts is not None and cached_hash == current_hash:
+        print(f"[dedup] index loaded from cache -- {len(cached_texts)} existing instructions")
+        _INDEX_CACHE = (cached_emb, cached_texts)
+        return _INDEX_CACHE
+
+    all_instructions = _load_all_instructions()
     os.makedirs(os.path.dirname(INDEX_PATH), exist_ok=True)
 
     if not all_instructions:
@@ -198,20 +221,49 @@ def get_instruction_index() -> tuple:
             json.dump([], f)
         with open(INDEX_HASH_PATH, 'w') as f:
             f.write(current_hash)
-        return empty, []
+        _INDEX_CACHE = (empty, [])
+        return _INDEX_CACHE
 
-    embeddings = _embed_batch(all_instructions)
-    if embeddings is None:
-        print("[dedup] Ollama unreachable -- index not built, dedup disabled this run")
-        return np.empty((0, EMBED_DIM), dtype=np.float32), []
+    # Incremental: reuse embeddings for instructions still present; embed only new ones.
+    if (cached_texts is not None and cached_emb is not None
+            and len(cached_texts) == cached_emb.shape[0]):
+        present    = set(all_instructions)
+        keep       = [i for i, t in enumerate(cached_texts) if t in present]
+        base_emb   = cached_emb[keep] if keep else np.empty((0, EMBED_DIM), dtype=np.float32)
+        base_texts = [cached_texts[i] for i in keep]
+        known      = set(base_texts)
+        new_instructions = [t for t in all_instructions if t not in known]
+    else:
+        base_emb         = np.empty((0, EMBED_DIM), dtype=np.float32)
+        base_texts       = []
+        new_instructions = all_instructions
+
+    if new_instructions:
+        print(f"[dedup] embedding {len(new_instructions)} new instruction(s) "
+              f"(reusing {len(base_texts)} cached) ...")
+        new_emb = _embed_batch(new_instructions)
+        if new_emb is None:
+            if base_texts:
+                print("[dedup] Ollama unreachable -- using cached subset only this run")
+                _INDEX_CACHE = (base_emb, base_texts)
+                return _INDEX_CACHE
+            print("[dedup] Ollama unreachable -- index not built, dedup disabled this run")
+            return np.empty((0, EMBED_DIM), dtype=np.float32), []
+        embeddings = np.vstack([base_emb, new_emb]) if base_emb.shape[0] > 0 else new_emb
+        texts      = base_texts + new_instructions
+    else:
+        embeddings = base_emb
+        texts      = base_texts
 
     np.save(INDEX_PATH, embeddings)
     with open(INDEX_TEXTS_PATH, 'w', encoding='utf-8') as f:
-        json.dump(all_instructions, f, ensure_ascii=False)
+        json.dump(texts, f, ensure_ascii=False)
     with open(INDEX_HASH_PATH, 'w') as f:
         f.write(current_hash)
-    print(f"[dedup] index rebuilt -- {len(all_instructions)} instructions indexed")
-    return embeddings, all_instructions
+    print(f"[dedup] index ready -- {len(texts)} instructions "
+          f"({len(new_instructions)} newly embedded)")
+    _INDEX_CACHE = (embeddings, texts)
+    return _INDEX_CACHE
 
 
 def is_semantic_duplicate(instruction: str,
