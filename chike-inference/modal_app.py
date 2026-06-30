@@ -251,8 +251,16 @@ class ChikeModel:
         return {'reply': reply}
 
 
-@app.function(image=web_image)
+@app.function(image=web_image, secrets=[modal.Secret.from_name('modal-api-token')])
 @modal.fastapi_endpoint(method='POST')
-def web_endpoint(item: dict):
+def web_endpoint(item: dict, token: str = None):
+    # Token-gate the public endpoint (token passed as ?token=... query param).
+    # Query param (not a header) avoids a module-level `from fastapi import Header`,
+    # which would crash the GPU container that imports this module without fastapi.
+    import os
+    from fastapi.responses import JSONResponse
+    expected = os.environ.get('MODAL_API_TOKEN', '')
+    if not token or not expected or token != expected:
+        return JSONResponse({'error': 'unauthorized'}, status_code=401)
     # Forward to the GPU class; returns main.py's contract: {"reply": ...} / {"error": ...}
     return ChikeModel().run.remote(item.get('message', ''))

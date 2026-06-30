@@ -7,8 +7,8 @@ from fastapi.responses import JSONResponse
 app = FastAPI(title="Chike - Wappfly Webhook")
 
 WAPPFLY_TOKEN    = os.environ.get("WAPPFLY_TOKEN", "")
-CEREBRIUM_KEY    = os.environ.get("CEREBRIUM_KEY", "")
-CEREBRIUM_URL    = "https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run"
+MODAL_API_TOKEN  = os.environ.get("MODAL_API_TOKEN", "")
+MODAL_URL        = "https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run"
 WAPPFLY_SEND_URL = "https://wappfly.com/api/messages/send"
 
 GREETINGS = {
@@ -62,18 +62,17 @@ async def send_whatsapp(to: str, text: str):
             json={"to": to, "text": text},
         )
 
-async def call_cerebrium(message: str) -> str:
-    async with httpx.AsyncClient(timeout=120) as client:
+async def call_modal(message: str) -> str:
+    # timeout 180s: Modal cold starts (~100-216s) exceed the old 120s and would FALLBACK
+    async with httpx.AsyncClient(timeout=180) as client:
         response = await client.post(
-            CEREBRIUM_URL,
-            headers={
-                "Authorization": f"Bearer {CEREBRIUM_KEY}",
-                "Content-Type": "application/json",
-            },
+            MODAL_URL,
+            params={"token": MODAL_API_TOKEN},
+            headers={"Content-Type": "application/json"},
             json={"message": message},
         )
         result = response.json()
-        return result.get("result", {}).get("reply", FALLBACK)
+        return result.get("reply", FALLBACK)
 
 @app.post("/webhook")
 async def webhook(request: Request):
@@ -114,7 +113,7 @@ async def webhook(request: Request):
             asyncio.create_task(send_whatsapp(sender, WELCOME))
         else:
             async def respond():
-                reply = await call_cerebrium(text)
+                reply = await call_modal(text)
                 await send_whatsapp(sender, reply)
             asyncio.create_task(respond())
 
