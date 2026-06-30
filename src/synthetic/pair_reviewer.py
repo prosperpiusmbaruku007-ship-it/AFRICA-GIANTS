@@ -24,6 +24,22 @@ VALID_SOURCE_DOMAINS = {
     'wcf.go.tz', 'immigration.go.tz', 'labour.go.tz', 'ppra.go.tz', 'tanzlii.org',
 }
 
+# Each subdomain must cite its OWN authority. Prevents e.g. a WCF pair citing tra.go.tz
+# (the WCF->TRA misattribution observed in the wcf_michango run).
+SUBDOMAIN_DOMAIN_MAP = {
+    'vat_registration':   ['tra.go.tz'],
+    'paye':               ['tra.go.tz'],
+    'sdl_compliance':     ['tra.go.tz'],
+    'gn487a':             ['immigration.go.tz'],
+    'brela_registration': ['brela.go.tz'],
+    'nssf_contributions': ['nssf.or.tz'],
+    'osha_registration':  ['osha.go.tz'],
+    'efd_compliance':     ['tra.go.tz'],
+    'vat_withholding':    ['tra.go.tz'],
+    'wcf_compliance':     ['wcf.go.tz'],
+    'out_of_corpus':      [],  # refusals need no domain citation
+}
+
 RAW_REVIEWED_DIR = 'data/raw/reviewed'
 
 
@@ -70,11 +86,29 @@ def _check3_refusal_discipline(pair: dict) -> list:
 
 
 def _check4_source_citation(pair: dict) -> list:
-    output = pair.get('output', '')
-    for domain in VALID_SOURCE_DOMAINS:
-        if domain in output:
-            return []
-    return ["CHECK4: no valid .go.tz domain found in output"]
+    output    = pair.get('output', '')
+    subdomain = pair.get('subdomain', '')
+
+    if subdomain == 'out_of_corpus':
+        return []  # refusals don't need a domain citation
+
+    allowed = SUBDOMAIN_DOMAIN_MAP.get(subdomain)
+    if not allowed:
+        # Unknown subdomain, or one with no mapped authority -> fail safe.
+        return [f"CHECK4: subdomain '{subdomain}' has no mapped citation domain"]
+
+    out_low = output.lower()
+
+    # 1) some valid authority domain must be present at all
+    if not any(d in out_low for d in VALID_SOURCE_DOMAINS):
+        return ["CHECK4: no valid .go.tz domain found in output"]
+
+    # 2) and it must be the CORRECT authority for this subdomain
+    if not any(d in out_low for d in allowed):
+        return [f"CHECK4: subdomain '{subdomain}' requires {allowed} "
+                f"but output cites a different authority"]
+
+    return []
 
 
 def _check5_completeness(pair: dict) -> list:

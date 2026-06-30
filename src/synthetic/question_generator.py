@@ -56,6 +56,31 @@ CANONICAL_SUBDOMAINS = [
 
 SUBDOMAIN_LIST = ', '.join(CANONICAL_SUBDOMAINS)
 
+# Pin the cited authority to the document's actual source category (its folder), so the
+# model stops defaulting to TRA. Mirrors pdf_extractor.SOURCE_URL_MAP.
+CATEGORY_TO_DOMAIN = {
+    'tra':         'tra.go.tz',
+    'brela':       'brela.go.tz',
+    'osha':        'osha.go.tz',
+    'nssf':        'nssf.or.tz',
+    'wcf':         'wcf.go.tz',
+    'immigration': 'immigration.go.tz',
+    'labour':      'labour.go.tz',
+    'ppra':        'ppra.go.tz',
+    'general':     'tanzlii.org',
+}
+
+
+def _required_domain(source_doc: str, source_url: str) -> str:
+    """The authority a pair from this document MUST cite, derived from the source
+    folder (data/source_documents/<category>/...), falling back to source_url."""
+    norm  = (source_doc or '').replace('\\', '/').strip('/').split('/')
+    category = norm[-2] if len(norm) >= 2 else ''
+    if category in CATEGORY_TO_DOMAIN:
+        return CATEGORY_TO_DOMAIN[category]
+    bare = re.sub(r'^https?://', '', source_url or '').replace('www.', '').strip('/')
+    return bare or 'tra.go.tz'
+
 GENERATION_USER_TMPL = """Generate {n} compliance questions from this fact.
 Fact: {fact_key}: {value} {unit} -- source: {source_section}
 
@@ -73,6 +98,11 @@ If the fact does not fit any of these subdomains set subdomain to 'out_of_corpus
 and answer_type to 'out_of_corpus_refusal'.
 Do NOT invent new subdomain names.
 
+CITATION (MANDATORY): This fact comes from {required_domain}. Every answer's "output"
+MUST cite {required_domain} as the authority (e.g. "Thibitisha na ... ({required_domain})").
+Do NOT cite tra.go.tz or "TRA" unless {required_domain} is exactly tra.go.tz. The correct
+authority for this fact is {required_domain} -- never default to TRA.
+
 Output format (JSON array only):
 [
   {{
@@ -82,7 +112,7 @@ Output format (JSON array only):
     "system": "Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yako. Unajibu maswali kuhusu biashara, kodi, BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT kwa Kiswahili na Kiingereza. Kama swali liko nje ya mada yako sema wazi kwamba halijui na mwelekeze kwa mtaalamu.",
     "subdomain": "EXACTLY one of the 11 canonical subdomains listed above",
     "answer_type": "yes_no|number|definition|procedure|penalty|out_of_corpus_refusal",
-    "source_url": "canonical .go.tz domain from SOURCE_URL_MAP",
+    "source_url": "MUST be {required_domain}",
     "source_name": "TRA Official|BRELA Official|OSHA Official|etc",
     "generated_date": "YYYY-MM-DD",
     "source_document": "relative path of input file"
@@ -370,11 +400,13 @@ def generate_pairs_for_fact(fact: dict, today: str, source_doc: str, source_url:
     value       = fact.get('value', '')
     unit        = fact.get('unit', '') or ''
     source_sect = fact.get('source_section', '')
+    required_domain = _required_domain(source_doc, source_url)
 
     user_msg = GENERATION_USER_TMPL.format(
         n=4, fact_key=fact_key, value=value,
         unit=unit, source_section=source_sect,
         subdomain_list=SUBDOMAIN_LIST,
+        required_domain=required_domain,
     )
 
     try:
@@ -393,8 +425,9 @@ def generate_pairs_for_fact(fact: dict, today: str, source_doc: str, source_url:
     for pair in raw_pairs:
         pair['generated_date']  = today
         pair['source_document'] = source_doc
-        if not pair.get('source_url'):
-            pair['source_url'] = source_url
+        # Force the citation metadata to the correct authority (the model is told to
+        # cite it in-text too; CHECK4 enforces the in-text citation).
+        pair['source_url'] = f"https://{required_domain}"
 
         instr = pair.get('instruction', '')
         if not instr:
