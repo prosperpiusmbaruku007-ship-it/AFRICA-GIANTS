@@ -8,16 +8,24 @@ from src.synthetic.api_utils import (
     DEFAULT_MODEL, API_KEY, LLM_PROVIDER,
 )
 
-LOCKED_FACTS_PATH  = 'scripts/locked_facts.json'
-PENDING_FACTS_PATH = 'data/flagged/new_facts_pending.json'
+LOCKED_FACTS_PATH      = 'scripts/locked_facts.json'
+PENDING_FACTS_PATH     = 'data/flagged/new_facts_pending.json'
+CONFLICTING_FACTS_PATH = 'data/flagged/conflicting_facts.json'
+
+# Folder categories whose facts are NEVER authoritative. Community/forum/blog sources
+# (data/source_documents/general/) are valuable only for question PHRASING, not facts:
+# every extracted fact is routed to pending for human review regardless of whether it
+# matches a locked fact. This enforces CLAUDE.md R4 / Section 3 (citation laundering).
+COMMUNITY_CATEGORIES = {'general'}
 
 MONTHLY_CAP              = float(os.environ.get('MONTHLY_BUDGET', '20.0'))
 COST_PER_DOCUMENT_BUDGET = float(os.environ.get('COST_PER_DOCUMENT_BUDGET', '0.20'))
 
 # Parallel document processing means several threads may append new fact candidates
-# at once. The pending-facts file is a read-modify-write, so guard it with a lock to
-# avoid lost updates.
-_PENDING_FACTS_LOCK = threading.Lock()
+# at once. The pending/conflicting files are read-modify-write, so guard each with a
+# lock to avoid lost updates.
+_PENDING_FACTS_LOCK     = threading.Lock()
+_CONFLICTING_FACTS_LOCK = threading.Lock()
 
 EXTRACTION_SYSTEM = (
     "You are a compliance fact extractor for Tanzania business law. "
@@ -83,46 +91,66 @@ def extract_number_unit_pairs(text: str) -> set:
     return set(re.findall(pattern, str(text), re.IGNORECASE))
 
 
-def is_confirmed_fact(extracted: dict, locked_facts: dict) -> tuple:
-    """Returns (True, matching_key) if the extracted fact matches a locked fact.
+def _norm_pairs(text: str) -> set:
+    """Normalized {(number, unit)} set: commas stripped, unit lowercased."""
+    return {
+        (num.replace(',', '').strip(), unit.strip().lower())
+        for num, unit in extract_number_unit_pairs(text)
+    }
+
+
+def _locked_value_str(fact) -> str:
+    if isinstance(fact, dict):
+        return fact.get('correct_value', str(fact))
+    return str(fact)
+
+
+def classify_fact(extracted: dict, locked_facts: dict) -> tuple:
+    """Classify an extracted fact against locked_facts.
+
+    Returns (status, key) where status is one of:
+      'confirmed' -- matches a locked fact; safe to generate pairs from.
+      'conflict'  -- its fact_key is locked but the numeric value CONTRADICTS the
+                     locked value (disjoint number/unit sets). Never confirm; route
+                     to conflicting_facts.json so the locked fact is never overridden.
+      'new'       -- not locked and no numeric match; route to pending for review.
 
     PRIORITY 1 -- direct fact_key match: once a fact_key is approved into
-    locked_facts.json, ANY later extraction producing that same key is confirmed,
-    with no dependence on the LLM re-extracting the identical number formatting.
-    PRIORITY 2 -- normalized number/unit match (commas stripped, unit lowercased)
-    as a safety net so 95,000 vs 95000 (and unit case) still match even when the
-    LLM names the fact_key differently on reprocess.
+    locked_facts.json, a later extraction with that same key is confirmed without
+    depending on identical number formatting. BUT if both sides carry numbers and
+    they share NO common (number,unit) pair, that is a genuine contradiction
+    (e.g. locked SDL 3.5% vs extracted 4.0%) -> 'conflict', not 'confirmed'.
+    A formatting/partial diff (95,000 vs 95000, or a subset of numbers) still shares
+    a pair and stays 'confirmed'.
+    PRIORITY 2 -- normalized number/unit match against any locked fact, so a
+    differently-named key whose value equals a locked value still confirms.
     """
-    # PRIORITY 1 -- direct fact_key match
     fact_key = extracted.get('fact_key', '')
-    if fact_key and fact_key in locked_facts:
-        return True, fact_key
-
-    # PRIORITY 2 -- normalized number/unit match.
-    # value and unit are separate fields (e.g. value="95,000", unit="TZS") -- combine
-    # so the number+unit are adjacent for extract_number_unit_pairs to match.
     combined = f"{extracted.get('value', '')} {extracted.get('unit', '')}".strip()
-    extracted_pairs = extract_number_unit_pairs(combined)
-    normalized_extracted = {
-        (num.replace(',', '').strip(), unit.strip().lower())
-        for num, unit in extracted_pairs
-    }
-    if not normalized_extracted:
-        return False, None  # non-numerical and key not locked -> human review queue
+    norm_ex  = _norm_pairs(combined)
 
+    # PRIORITY 1 -- direct fact_key match (with contradiction guard)
+    if fact_key and fact_key in locked_facts:
+        norm_lk = _norm_pairs(_locked_value_str(locked_facts[fact_key]))
+        if norm_ex and norm_lk and norm_ex.isdisjoint(norm_lk):
+            return 'conflict', fact_key
+        return 'confirmed', fact_key
+
+    # PRIORITY 2 -- normalized number/unit match against any locked fact
+    if not norm_ex:
+        return 'new', None
     for key, fact in locked_facts.items():
         if key == '_meta':
             continue
-        locked_val = (fact.get('correct_value', str(fact))
-                      if isinstance(fact, dict) else str(fact))
-        locked_pairs = extract_number_unit_pairs(locked_val)
-        normalized_locked = {
-            (num.replace(',', '').strip(), unit.strip().lower())
-            for num, unit in locked_pairs
-        }
-        if normalized_extracted == normalized_locked:
-            return True, key
-    return False, None
+        if norm_ex == _norm_pairs(_locked_value_str(fact)):
+            return 'confirmed', key
+    return 'new', None
+
+
+def is_confirmed_fact(extracted: dict, locked_facts: dict) -> tuple:
+    """Back-compat wrapper: (True, key) only when status is 'confirmed'."""
+    status, key = classify_fact(extracted, locked_facts)
+    return (status == 'confirmed'), (key if status == 'confirmed' else None)
 
 
 def _append_pending_fact(candidate: dict):
@@ -140,6 +168,27 @@ def _append_pending_fact(candidate: dict):
             os.makedirs(os.path.dirname(PENDING_FACTS_PATH), exist_ok=True)
             with open(PENDING_FACTS_PATH, 'w', encoding='utf-8') as f:
                 json.dump(pending, f, indent=2, ensure_ascii=False)
+
+
+def _append_conflicting_fact(candidate: dict):
+    """Record a practitioner/source value that contradicts a locked fact. The locked
+    fact is NEVER overridden -- this is an audit queue for human review. Keyed on
+    (fact_key, value) so distinct contradicting values are all retained."""
+    with _CONFLICTING_FACTS_LOCK:
+        conflicts = []
+        if os.path.exists(CONFLICTING_FACTS_PATH):
+            try:
+                with open(CONFLICTING_FACTS_PATH, encoding='utf-8') as f:
+                    conflicts = json.load(f)
+            except Exception:
+                conflicts = []
+        sig = (candidate.get('fact_key'), str(candidate.get('value')))
+        existing = {(c.get('fact_key'), str(c.get('value'))) for c in conflicts}
+        if sig not in existing:
+            conflicts.append(candidate)
+            os.makedirs(os.path.dirname(CONFLICTING_FACTS_PATH), exist_ok=True)
+            with open(CONFLICTING_FACTS_PATH, 'w', encoding='utf-8') as f:
+                json.dump(conflicts, f, indent=2, ensure_ascii=False)
 
 
 def _parse_facts_response(raw: str) -> list:
@@ -209,10 +258,16 @@ def extract_facts(document: dict) -> list:
         print(f"[facts] Run 'python run.py generate' after setting the key")
         return []
 
-    locked_facts = _load_locked_facts()
-    confirmed    = []
-    new_count    = 0
-    source_doc   = document.get('source_document', '')
+    locked_facts  = _load_locked_facts()
+    confirmed     = []
+    new_count     = 0
+    conflict_count = 0
+    source_doc    = document.get('source_document', '')
+    source_cat    = document.get('source_category', '')
+    is_community  = source_cat in COMMUNITY_CATEGORIES
+    if is_community:
+        print(f"[facts] {source_cat}/ is a community source -- ALL facts routed to "
+              f"pending (phrasing only, never auto-confirmed)")
 
     for section in document.get('sections', []):
         content = section.get('content', '').strip()
@@ -236,16 +291,35 @@ def extract_facts(document: dict) -> list:
 
         for extracted in extracted_list:
             extracted['source_document'] = source_doc
-            ok, _ = is_confirmed_fact(extracted, locked_facts)
-            if ok:
+            extracted['source_category'] = source_cat
+
+            # Community/blog sources are never authoritative -- everything to pending.
+            if is_community:
+                _append_pending_fact(extracted)
+                new_count += 1
+                continue
+
+            status, key = classify_fact(extracted, locked_facts)
+            if status == 'confirmed':
                 confirmed.append(extracted)
+            elif status == 'conflict':
+                extracted['conflicts_with'] = key
+                extracted['locked_value']   = _locked_value_str(locked_facts.get(key))
+                _append_conflicting_fact(extracted)
+                conflict_count += 1
+                print(f"[facts] CONFLICT: '{key}' locked={extracted['locked_value']!r} "
+                      f"vs source={extracted.get('value')!r}{extracted.get('unit') or ''} "
+                      f"-- locked fact NOT overridden")
             else:
                 _append_pending_fact(extracted)
                 new_count += 1
 
-    print(f"[facts] {document['source_file']}: {len(confirmed)} confirmed, {new_count} new candidates")
+    print(f"[facts] {document['source_file']}: {len(confirmed)} confirmed, "
+          f"{new_count} new candidates, {conflict_count} conflicts")
     if new_count > 0:
         print(f"[facts] Run 'python run.py approve-facts' to review new candidates")
+    if conflict_count > 0:
+        print(f"[facts] {conflict_count} conflicts -> {CONFLICTING_FACTS_PATH} (locked facts kept)")
     return confirmed
 
 

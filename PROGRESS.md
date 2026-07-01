@@ -15,6 +15,14 @@ Last updated: 2026-06-29
 - locked_facts.json: 82+ entries
 - Training script: kaggle/train_ddp.py — ready to run as `python3 train_ddp.py`
 
+## HELD — pending R6 review
+HELD — HELD_habib_advisory_batch_017.jsonl (162 pairs from Habib Advisory)
+Reason: R6 — practitioner advisory source family = same category as eval set sources.
+Decision: review whether Habib was used in eval_questions_001.jsonl construction.
+If NOT used in eval: can be merged into training in a future pass.
+If YES used in eval: must remain held or used only for eval expansion.
+Action needed: check eval_questions_001.jsonl source attribution before releasing.
+
 ## Pipeline — Autonomous Q&A Factory (Phases 1–4 COMPLETE)
 The pipeline is now a one-command autonomous Q&A factory. Source doc → reviewed dataset → HF.
 - **Phase 1 — Foundations:** configs updated, directories created, run.py rewritten (bd83be5)
