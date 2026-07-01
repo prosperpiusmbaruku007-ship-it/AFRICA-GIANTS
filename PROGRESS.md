@@ -17,8 +17,11 @@ Last updated: 2026-06-29
     dense legal docs no longer auto-confirm a % against an unrelated locked % (e.g. NSSF Act
     attendance_allowance 25% vs PAYE 25%). NSSF Act batch_015/016 (14 pairs) DISCARDED as
     coincidence-confirmed + 2015-edition; nssf_contributions already passes gate (92%).
-  - GN487A STILL has no primary training source (12 train + 3 eval pairs only). fbattorneys
-    gazette PDF unreachable from TZ network + not in Wayback; practitioner sources are eval-family.
+  - GN487A GAP CLOSED (2026-07-01): founder supplied the official gazette PDF (GN No.487A,
+    28/7/2025). 20 verified facts locked; 77 seed-generated training pairs (48 approved + 29
+    recovered from CHECK2/CHECK5-only flags) merged into batch_014. gn487a: 12 -> 89 train.
+    New guard CHECK7 (pair_reviewer) rejects non-listed-activity + wrong number<->activity claims.
+    batch_014 = 547 pairs; SFT train 2888 / val 321.
 - Source documents staged for processing: **2** (data/source_documents/tra/TRA.txt, sdl_guide.txt)
 - locked_facts.json: 82+ entries
 - Training script: kaggle/train_ddp.py — ready to run as `python3 train_ddp.py`
