@@ -1610,5 +1610,125 @@
   "vat_deferment_limit_date": "30 June 2026",
   "vat_deferment_threshold_percentage": "90 %",
   "vat_deferment_minimum_value": "10,000,000 TZS",
-  "vat_deferment_form_number": "ITX 247.02.E"
+  "vat_deferment_form_number": "ITX 247.02.E",
+  "gn487a_full_legal_name": {
+    "fact": "Full legal name: The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025",
+    "correct_value": "The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_legal_authority": {
+    "fact": "GN487A is made under the Business Licensing Act (Cap. 101), section 14A(2)",
+    "correct_value": "Business Licensing Act Cap. 101, section 14A(2)",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_salon_exception": {
+    "fact": "Salon business is prohibited for non-citizens UNLESS conducted in a hotel or for tourism purposes",
+    "correct_value": "Salon prohibited unless in a hotel or for tourism purposes",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_1": {
+    "fact": "Prohibited activity 1: Sale of goods on a wholesale and retail basis, excluding supermarkets, specialised product outlets, and wholesale centers for local producers",
+    "correct_value": "wholesale and retail sale of goods (excl. supermarkets, specialised outlets, wholesale centers for local producers)",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_2": {
+    "fact": "Prohibited activity 2: Mobile money transfers",
+    "correct_value": "Mobile money transfers",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_3": {
+    "fact": "Prohibited activity 3: Repair of mobile phones and electronic devices",
+    "correct_value": "Repair of mobile phones and electronic devices",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_4": {
+    "fact": "Prohibited activity 4: Salon business unless conducted in a hotel or for tourism purposes",
+    "correct_value": "Salon business (unless hotel/tourism)",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_5": {
+    "fact": "Prohibited activity 5: Home, office and environmental cleanliness",
+    "correct_value": "Home, office and environmental cleanliness",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_6": {
+    "fact": "Prohibited activity 6: Small-scale mining",
+    "correct_value": "Small-scale mining",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_7": {
+    "fact": "Prohibited activity 7: Postal activities and parcel delivery within the country",
+    "correct_value": "Postal activities and parcel delivery within the country",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_8": {
+    "fact": "Prohibited activity 8: Tour guiding within the country",
+    "correct_value": "Tour guiding within the country",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_9": {
+    "fact": "Prohibited activity 9: Establishment and operation of radio and television",
+    "correct_value": "Establishment and operation of radio and television",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_10": {
+    "fact": "Prohibited activity 10: Operation of museums or curio shops",
+    "correct_value": "Operation of museums or curio shops",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_11": {
+    "fact": "Prohibited activity 11: Brokerage or agency in businesses and real estate",
+    "correct_value": "Brokerage or agency in businesses and real estate",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_12": {
+    "fact": "Prohibited activity 12: Clearing and forwarding services",
+    "correct_value": "Clearing and forwarding services",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_13": {
+    "fact": "Prohibited activity 13: On-farm crop purchasing operations",
+    "correct_value": "On-farm crop purchasing operations",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_14": {
+    "fact": "Prohibited activity 14: Ownership or operation of gambling machines or devices, except within casino premises",
+    "correct_value": "Gambling machines/devices ownership or operation (except within casino premises)",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_prohibited_activity_15": {
+    "fact": "Prohibited activity 15: Ownership and operation of micro and small industries",
+    "correct_value": "Ownership and operation of micro and small industries",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_total_prohibited_activities": {
+    "fact": "GN487A Schedule lists exactly 15 prohibited business activities for non-citizens",
+    "correct_value": "15 prohibited activities",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_signatory": {
+    "fact": "GN487A was signed by Selemani Saidi Jafo, Minister for Industry and Trade, at Dodoma on 25 July 2025",
+    "correct_value": "Selemani Saidi Jafo, Minister for Industry and Trade, 25 July 2025",
+    "wrong_patterns": [],
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  }
 }
