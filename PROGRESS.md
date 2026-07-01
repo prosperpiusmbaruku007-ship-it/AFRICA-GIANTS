@@ -15,13 +15,24 @@ Last updated: 2026-06-29
 - locked_facts.json: 82+ entries
 - Training script: kaggle/train_ddp.py — ready to run as `python3 train_ddp.py`
 
-## HELD — pending R6 review
-HELD — HELD_habib_advisory_batch_017.jsonl (162 pairs from Habib Advisory)
-Reason: R6 — practitioner advisory source family = same category as eval set sources.
-Decision: review whether Habib was used in eval_questions_001.jsonl construction.
-If NOT used in eval: can be merged into training in a future pass.
-If YES used in eval: must remain held or used only for eval expansion.
-Action needed: check eval_questions_001.jsonl source attribution before releasing.
+## R6 review — RESOLVED (Habib released) + GN487A eval-family quarantine
+**Habib Advisory (162 pairs) — RELEASED into batch_014 on 2026-07-01.**
+Cleared a 4-check eval-contamination scan vs eval_questions_001.jsonl:
+CHECK1 exact-instruction=0, CHECK2 exact-output=0, CHECK3 "habib" keyword in eval=0,
+CHECK4 semantic (normalized cosine, threshold 0.92 + subdomain-keyword topic gate)=
+0 genuine risks (1 cross-topic false positive only). Habib Advisory is NOT in the
+Section-4 eval whitelist, so no source-family conflict.
+
+**GN487A practitioner sources — QUARANTINED (eval family, R6/R4).**
+VELMA + Bowmans GN487A files moved to `data/eval_family_quarantine/immigration/`
+(OUTSIDE the os.walk scan root so the pipeline never trains on them). Reason:
+velmalaw.co.tz / bowmans.com / clydeco.com are the NAMED gn487a eval family
+(CLAUDE.md §4; pair_reviewer.py maps gn487a eval -> immigration.go.tz). They may
+later feed EVAL expansion only, never training.
+Attempted primary GN487A re-sourcing (tanzlii / gazette / immigration.go.tz /
+parliament) — FAILED: all returns were search/landing/homepage shells (one a Jan-2021
+snapshot; one HTML mislabeled .pdf), no actual GN487A legal text. No gn487a pairs
+generated this pass. Real primary GN487A text still needed for that subdomain.
 
 ## Pipeline — Autonomous Q&A Factory (Phases 1–4 COMPLETE)
 The pipeline is now a one-command autonomous Q&A factory. Source doc → reviewed dataset → HF.
