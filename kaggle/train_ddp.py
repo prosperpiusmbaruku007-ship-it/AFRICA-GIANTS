@@ -199,8 +199,8 @@ log(f"[model] tokenizer eos_token_id: {tokenizer.eos_token_id}")
 # LOAD PREVIOUS LORA — with explicit rank-mismatch handling
 # ══════════════════════════════════════════════════════════
 log(f"[model] Attempting to load {PREV_LORA_REPO} as starting point ...")
-log(f"[model] NOTE: prev lora is r=64, current model is r={LORA_RANK}")
-log(f"[model] Shape mismatch is EXPECTED — v10 starts from fresh weights at r={LORA_RANK}")
+log(f"[model] NOTE: prev lora (v10-lora) is r={LORA_RANK}, same as current — shapes MATCH")
+log(f"[model] v11 warm-starts from v10-lora weights (fine-tune at lr=1e-4), not fresh")
 try:
     model.load_adapter(
         PREV_LORA_REPO,
@@ -563,7 +563,7 @@ try:
             repo_id        = LORA_ONLY_REPO,
             repo_type      = "model",
             token          = hf_token,
-            commit_message = f"adapter-v10 LoRA-only weights r={LORA_RANK} — for v11 load_adapter()",
+            commit_message = f"adapter-v11 LoRA-only weights r={LORA_RANK} — for v12 load_adapter()",
         )
     log(f"[lora] LoRA-only pushed to {LORA_ONLY_REPO} ✓")
     log(f"[lora] For v11: model.load_adapter('{LORA_ONLY_REPO}', adapter_name='default')")
@@ -632,7 +632,7 @@ on Tanzanian business, tax, company registration, and financial regulation data.
 **Training pairs:** 2,662 total pairs, ~2,395 train (full unbalanced dataset, all 13 batches)
 **Validation loss:** {_loss_str}
 **Gate result:** {_gate_str}
-**Started from:** Fresh weights at r={LORA_RANK} (rank change from v9 r=64)
+**Started from:** v10-lora at r={LORA_RANK} (warm-start fine-tune, lr=1e-4)
 **LoRA-only checkpoint:** {LORA_ONLY_REPO}
 """
     HfApi().upload_file(
@@ -641,7 +641,7 @@ on Tanzanian business, tax, company registration, and financial regulation data.
         repo_id=ADAPTER_REPO,
         repo_type="model",
         token=hf_token,
-        commit_message=f"adapter-v10 model card — val_loss={_loss_str} r={LORA_RANK}",
+        commit_message=f"adapter-v11 model card — val_loss={_loss_str} r={LORA_RANK}",
     )
     log(f"[push] Model card pushed ✓")
 except Exception as _e:

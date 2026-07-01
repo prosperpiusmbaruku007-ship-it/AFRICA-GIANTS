@@ -1,30 +1,37 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-06-29
+Last updated: 2026-07-01
 
 ## Current State
-- **Production adapter: africa-giants-adapter-v8** — live on Cerebrium
-  - Endpoint: https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run
-  - v10 was built but REVERTED 2026-06-22 (r=128 hallucinated on insufficient data — see Gate History)
-- Live on WhatsApp: **+255637809070 via Wappfly**
+- **Production adapter: africa-giants-adapter-v8** — served via Cerebrium AND Modal
+  - Cerebrium: https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run
+    — **UNPAID, outstanding bill $20.81**
+  - Modal (LIVE, v8): https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run
+    — waiting for v11 weights (cutover steps in docs/runbook_modal_cutover.md)
+  - v10 built but REVERTED 2026-06-22 (r=128 hallucinated on insufficient data — see Gate History)
+- Live on WhatsApp: **+255637809070 via Wappfly → Railway handler → Modal endpoint**
 - RAG: pre-computed embeddings serving locked facts at inference
   (chike-inference/rag_embeddings.npy + rag_facts_text.json)
-- Dataset: **batch_014 = 470 pairs** (Habib 162 released + govt + 1 NSSF); corpus 3,142 total
-  - SFT export (2026-07-01, on HF): **2,818 train / 314 val** (10 held out as eval_set:true)
-  - v11 training config SET in kaggle/train_ddp.py: r=128, lr=1e-4, warm-start from v10-lora,
-    push to adapter-v11 / adapter-v11-lora (both HF repos created 2026-07-01)
-  - PRIORITY-2 false-confirm bug FIXED (fact_extractor.classify_fact domain-prefix guard):
-    dense legal docs no longer auto-confirm a % against an unrelated locked % (e.g. NSSF Act
-    attendance_allowance 25% vs PAYE 25%). NSSF Act batch_015/016 (14 pairs) DISCARDED as
-    coincidence-confirmed + 2015-edition; nssf_contributions already passes gate (92%).
-  - GN487A GAP CLOSED (2026-07-01): founder supplied the official gazette PDF (GN No.487A,
-    28/7/2025). 20 verified facts locked; 77 seed-generated training pairs (48 approved + 29
-    recovered from CHECK2/CHECK5-only flags) merged into batch_014. gn487a: 12 -> 89 train.
-    New guard CHECK7 (pair_reviewer) rejects non-listed-activity + wrong number<->activity claims.
-    batch_014 = 547 pairs; SFT train 2888 / val 321.
-- Source documents staged for processing: **2** (data/source_documents/tra/TRA.txt, sdl_guide.txt)
-- locked_facts.json: 82+ entries
-- Training script: kaggle/train_ddp.py — ready to run as `python3 train_ddp.py`
+- Dataset: **3,209 pairs total** (batch_014 = 547 pairs across 10 subdomains)
+  - SFT on HF prospAprospA007/africa-giants-dataset: **2,888 train / 321 val** (10 held eval_set:true)
+  - locked_facts.json (scripts/locked_facts.json): **209 entries**
+  - 59 source docs processed (27 produced facts; 32 produced zero confirmed facts)
+- **v11 training: READY TO RUN** — kaggle/train_ddp.py: r=128, α=128, lr=1e-4, 2 epochs,
+  warm-start from adapter-v10-lora; pushes to adapter-v11 / adapter-v11-lora (HF repos created).
+  Run: `python3 train_ddp.py`.
+- Best gate scores to date: **v8 — 82.1% in-corpus / 70.0% refusal** (neither passed; need >85% AND >70%).
+
+### Key changes this session (2026-07-01)
+- Habib Advisory (162 pairs) released into batch_014 after a clean 4-check eval-contamination scan.
+- PRIORITY-2 false-confirm bug FIXED (classify_fact domain-prefix guard); NSSF Act batch_015/016 (14) discarded.
+- GN487A GAP CLOSED: founder supplied the official gazette PDF; 20 facts locked; 77 seed-generated pairs
+  (48 approved + 29 recovered from CHECK2/CHECK5-only flags) merged; new CHECK7 activity-accuracy guard added.
+  gn487a training coverage 12 -> 89 pairs.
+
+### Pending backlog (unfinished — NOT blocking v11)
+- **74 flagged pairs** across 9 data/flagged/batch_*_flagged.jsonl (largest: batch_017 Habib = 41; mostly CHECK4/CHECK2).
+- **1,129 unreviewed fact candidates** in data/flagged/new_facts_pending.json (TRA 619, BRELA 212, NSSF 144, …).
+- **3 stale CHECK7 gn487a flagged pairs** held in data/reviewed/gn487a_seed_flagged.jsonl (non-listed / wrong-number).
 
 ## R6 review — RESOLVED (Habib released) + GN487A eval-family quarantine
 **Habib Advisory (162 pairs) — RELEASED into batch_014 on 2026-07-01.**
@@ -40,10 +47,11 @@ VELMA + Bowmans GN487A files moved to `data/eval_family_quarantine/immigration/`
 velmalaw.co.tz / bowmans.com / clydeco.com are the NAMED gn487a eval family
 (CLAUDE.md §4; pair_reviewer.py maps gn487a eval -> immigration.go.tz). They may
 later feed EVAL expansion only, never training.
-Attempted primary GN487A re-sourcing (tanzlii / gazette / immigration.go.tz /
-parliament) — FAILED: all returns were search/landing/homepage shells (one a Jan-2021
-snapshot; one HTML mislabeled .pdf), no actual GN487A legal text. No gn487a pairs
-generated this pass. Real primary GN487A text still needed for that subdomain.
+Automated primary GN487A re-sourcing (tanzlii / gazette / immigration.go.tz /
+parliament) FAILED: all returns were search/landing/homepage shells. **RESOLVED
+2026-07-01** — founder supplied the official gazette PDF directly; 20 facts locked and
+77 seed-generated training pairs merged (see Current State "Key changes"). The VELMA/
+Bowmans eval-family files remain quarantined for possible EVAL expansion only.
 
 ## Pipeline — Autonomous Q&A Factory (Phases 1–4 COMPLETE)
 The pipeline is now a one-command autonomous Q&A factory. Source doc → reviewed dataset → HF.
