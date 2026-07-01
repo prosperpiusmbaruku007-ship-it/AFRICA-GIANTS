@@ -65,11 +65,12 @@ LORA_ALPHA        = 128
 
 BASE_MODEL        = "McGill-NLP/AfriqueLlama-8B"
 DATASET_REPO      = "prospAprospA007/africa-giants-dataset"
-ADAPTER_REPO      = "prospAprospA007/africa-giants-adapter-v10"
-LORA_ONLY_REPO    = "prospAprospA007/africa-giants-adapter-v10-lora"
-PREV_LORA_REPO    = "prospAprospA007/africa-giants-adapter-v9-lora"
-# NOTE: v9-lora is r=64. v10 is r=128. Shapes will NOT match.
-# load_adapter will fail — this is EXPECTED. v10 starts fresh at r=128.
+ADAPTER_REPO      = "prospAprospA007/africa-giants-adapter-v11"
+LORA_ONLY_REPO    = "prospAprospA007/africa-giants-adapter-v11-lora"
+PREV_LORA_REPO    = "prospAprospA007/africa-giants-adapter-v10-lora"
+# NOTE: v10-lora is r=128, same as v11. Shapes MATCH — v11 warm-starts from the
+# v10 LoRA weights. Paired with lr=1e-4 (down from 2e-4) + the expanded batch_014
+# dataset, this is a fine-tune of v10's adapter, not a fresh r=128 run.
 # Log clearly so there is no confusion.
 
 log(f"[config] SMOKE_TEST    : {SMOKE_TEST}")
@@ -373,7 +374,7 @@ _base_kwargs = {
     "warmup_steps":                  2,
     "max_steps":                     10 if SMOKE_TEST else -1,
     "num_train_epochs":              1 if SMOKE_TEST else 2,
-    "learning_rate":                 2e-4,
+    "learning_rate":                 1e-4,
     "fp16":                          not BF16,
     "bf16":                          BF16,
     "logging_steps":                 1,

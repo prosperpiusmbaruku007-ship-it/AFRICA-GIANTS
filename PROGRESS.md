@@ -9,8 +9,16 @@ Last updated: 2026-06-29
 - Live on WhatsApp: **+255637809070 via Wappfly**
 - RAG: pre-computed embeddings serving locked facts at inference
   (chike-inference/rag_embeddings.npy + rag_facts_text.json)
-- Dataset: **2,672 pairs across 15 batch files** (batches 001–013), all SFT-format verified
-  - SFT export: 2,395 train / 267 val (10 held out as eval_set:true)
+- Dataset: **batch_014 = 470 pairs** (Habib 162 released + govt + 1 NSSF); corpus 3,142 total
+  - SFT export (2026-07-01, on HF): **2,818 train / 314 val** (10 held out as eval_set:true)
+  - v11 training config SET in kaggle/train_ddp.py: r=128, lr=1e-4, warm-start from v10-lora,
+    push to adapter-v11 / adapter-v11-lora (both HF repos created 2026-07-01)
+  - PRIORITY-2 false-confirm bug FIXED (fact_extractor.classify_fact domain-prefix guard):
+    dense legal docs no longer auto-confirm a % against an unrelated locked % (e.g. NSSF Act
+    attendance_allowance 25% vs PAYE 25%). NSSF Act batch_015/016 (14 pairs) DISCARDED as
+    coincidence-confirmed + 2015-edition; nssf_contributions already passes gate (92%).
+  - GN487A STILL has no primary training source (12 train + 3 eval pairs only). fbattorneys
+    gazette PDF unreachable from TZ network + not in Wayback; practitioner sources are eval-family.
 - Source documents staged for processing: **2** (data/source_documents/tra/TRA.txt, sdl_guide.txt)
 - locked_facts.json: 82+ entries
 - Training script: kaggle/train_ddp.py — ready to run as `python3 train_ddp.py`

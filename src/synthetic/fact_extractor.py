@@ -124,6 +124,11 @@ def classify_fact(extracted: dict, locked_facts: dict) -> tuple:
     a pair and stays 'confirmed'.
     PRIORITY 2 -- normalized number/unit match against any locked fact, so a
     differently-named key whose value equals a locked value still confirms.
+    SAFETY GUARD (added 2026-07-01): PRIORITY 2 only matches within the same
+    domain prefix. A dense legal document (e.g. the 40-page NSSF Act) emits many
+    percentages; without this guard attendance_allowance_rate:25% would confirm
+    against a paye 25% band by pure numeric coincidence. Cross-prefix numeric
+    matches are skipped so only genuinely same-domain values confirm.
     """
     fact_key = extracted.get('fact_key', '')
     combined = f"{extracted.get('value', '')} {extracted.get('unit', '')}".strip()
@@ -136,12 +141,20 @@ def classify_fact(extracted: dict, locked_facts: dict) -> tuple:
             return 'conflict', fact_key
         return 'confirmed', fact_key
 
-    # PRIORITY 2 -- normalized number/unit match against any locked fact
+    # PRIORITY 2 -- normalized number/unit match against any locked fact,
+    # restricted to the same domain prefix to avoid cross-domain false-confirms.
     if not norm_ex:
         return 'new', None
+    extracted_prefix = fact_key.split('_')[0] if fact_key else ''
     for key, fact in locked_facts.items():
         if key == '_meta':
             continue
+        locked_prefix = key.split('_')[0]
+        if (extracted_prefix and locked_prefix and
+                extracted_prefix != locked_prefix and
+                extracted_prefix not in ('', 'general') and
+                locked_prefix not in ('', 'general')):
+            continue  # cross-domain numeric coincidence -- not a real match
         if norm_ex == _norm_pairs(_locked_value_str(fact)):
             return 'confirmed', key
     return 'new', None
