@@ -2,36 +2,34 @@
 
 Last updated: 2026-07-01
 
+## Training History
+
+| Version | r | Val Loss | In-corpus | OOC | Notes |
+|---|---|---|---|---|---|
+| v8 | 64 | 0.4447 | 82.1% | 70% | PRODUCTION — current best, serving WhatsApp |
+| v9 | 64 | 0.1164 | 82.1% | 40% | Overfit |
+| v10 | 128 | 0.4107 | 77.9% | 10% | OOC collapsed, dangerous GN487A hallucination |
+| v11 | 128 | 0.4660 | 73.2% | 30% | FAILED — v10-lora warm start + epoch 2 overfit |
+| v12 | 64 | — | — | — | READY TO TRAIN — warm from v8-lora, 1 epoch, lr=5e-5 |
+
+## v12 Training Config
+- LORA_RANK = 64 (matches v8-lora)
+- PREV_LORA_REPO = africa-giants-adapter-v8-lora (stable baseline)
+- learning_rate = 5e-5 (conservative — half of v11)
+- num_train_epochs = 1 (epoch 2 caused overfit in v11)
+- Gate requirement: >85% in-corpus AND >70% OOC — never passed
+
+## v11 Failure Analysis
+- Out-of-corpus collapsed 70%→30%: warm start from v10-lora overwrote refusal behavior
+- GN487A 62.5% despite 77 new pairs: v10-lora hallucination patterns reintroduced
+- Epoch 2 overfit: val loss 0.4111 (epoch 1) → 0.4660 (epoch 2)
+- Lesson: never warm-start from a broken model regardless of rank compatibility
+
 ## Current State
-- **Production adapter: africa-giants-adapter-v8** — served via Cerebrium AND Modal
-  - Cerebrium: https://api.aws.us-east-1.cerebrium.ai/v4/p-e3f41403/chike-inference/run
-    — **UNPAID, outstanding bill $20.81**
-  - Modal (LIVE, v8): https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run
-    — waiting for v11 weights (cutover steps in docs/runbook_modal_cutover.md)
-  - v10 built but REVERTED 2026-06-22 (r=128 hallucinated on insufficient data — see Gate History)
-- Live on WhatsApp: **+255637809070 via Wappfly → Railway handler → Modal endpoint**
-- RAG: pre-computed embeddings serving locked facts at inference
-  (chike-inference/rag_embeddings.npy + rag_facts_text.json)
-- Dataset: **3,209 pairs total** (batch_014 = 547 pairs across 10 subdomains)
-  - SFT on HF prospAprospA007/africa-giants-dataset: **2,888 train / 321 val** (10 held eval_set:true)
-  - locked_facts.json (scripts/locked_facts.json): **209 entries**
-  - 59 source docs processed (27 produced facts; 32 produced zero confirmed facts)
-- **v11 training: READY TO RUN** — kaggle/train_ddp.py: r=128, α=128, lr=1e-4, 2 epochs,
-  warm-start from adapter-v10-lora; pushes to adapter-v11 / adapter-v11-lora (HF repos created).
-  Run: `python3 train_ddp.py`.
-- Best gate scores to date: **v8 — 82.1% in-corpus / 70.0% refusal** (neither passed; need >85% AND >70%).
-
-### Key changes this session (2026-07-01)
-- Habib Advisory (162 pairs) released into batch_014 after a clean 4-check eval-contamination scan.
-- PRIORITY-2 false-confirm bug FIXED (classify_fact domain-prefix guard); NSSF Act batch_015/016 (14) discarded.
-- GN487A GAP CLOSED: founder supplied the official gazette PDF; 20 facts locked; 77 seed-generated pairs
-  (48 approved + 29 recovered from CHECK2/CHECK5-only flags) merged; new CHECK7 activity-accuracy guard added.
-  gn487a training coverage 12 -> 89 pairs.
-
-### Pending backlog (unfinished — NOT blocking v11)
-- **74 flagged pairs** across 9 data/flagged/batch_*_flagged.jsonl (largest: batch_017 Habib = 41; mostly CHECK4/CHECK2).
-- **1,129 unreviewed fact candidates** in data/flagged/new_facts_pending.json (TRA 619, BRELA 212, NSSF 144, …).
-- **3 stale CHECK7 gn487a flagged pairs** held in data/reviewed/gn487a_seed_flagged.jsonl (non-listed / wrong-number).
+- Production: v8 on Modal (WhatsApp +255637809070)
+- Dataset: 3,209 pairs (2,888 train / 321 val) — prospAprospA007/africa-giants-dataset
+- batch_014: 547 pairs across 10 subdomains including 77 GN487A pairs from official gazette
+- Pending: 74 flagged pairs, 1,129 pending fact candidates
 
 ## R6 review — RESOLVED (Habib released) + GN487A eval-family quarantine
 **Habib Advisory (162 pairs) — RELEASED into batch_014 on 2026-07-01.**
