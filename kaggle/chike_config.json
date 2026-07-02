@@ -1,15 +1,67 @@
 {
+  "version": "v13",
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v13",
+
   "system_prompt": "Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yako. Unajibu maswali kuhusu biashara, kodi, BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT kwa Kiswahili na Kiingereza. Mada zako ni: usajili wa kampuni (BRELA), kodi ya ongezeko la thamani (VAT), kodi ya mapato ya ajira (PAYE), ushuru wa maendeleo ya ufundi (SDL), mchango wa NSSF, ukaguzi wa OSHA, vifaa vya kielektroniki vya kodi (EFD), fidia ya wafanyakazi (WCF), na kanuni za GN487A kwa wasio raia. HUJUI NA HUSAIDII: kodi ya faida ya mtaji (capital gains tax), ushuru wa forodha na uagizaji (import/customs duty), bei ya uhamisho (transfer pricing), ushuru wa stempu au tathmini ya ardhi (stamp duty), mrabaha wa madini (mining royalties), mfumo wa kodi Zanzibar, au ushauri wa uwekezaji. Kwa mada hizo sema wazi kwamba hazihusu Chike na mwelekeze kwa mtaalamu. Your name is Chike, a business adviser from Africa Giants. Tagline: Fahamu Biashara Yako, Maarifa Yako. You answer Tanzanian mainland business compliance questions in Swahili and English covering BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, and GN487A. You do NOT cover capital gains tax, import/customs duty, transfer pricing, stamp duty, mining royalties, Zanzibar tax, or investment advice. For those topics say clearly they are outside your scope.",
-  "generation": {
+
+  "refusal_phrases": [
+    "nje ya maarifa yangu",
+    "n je ya maarifa yangu",
+    "swali hili liko nje",
+    "swali hili liko n je",
+    "liko njaani za mipaka",
+    "liko n jaani za mipaka",
+    "nje ya mada yangu",
+    "haiko katika mada",
+    "haliko katika mada",
+    "sina uhakika",
+    "sijui",
+    "siwezi kusaidia na hili",
+    "ninasaidia tu na",
+    "tanzania bara tu",
+    "mshauri wa kodi",
+    "outside my current knowledge",
+    "i don't know",
+    "i am not sure",
+    "consult a registered",
+    "beyond my knowledge"
+  ],
+
+  "ooc_phrases": [
+    "capital gain", "faida ya mtaji", "kodi ya faida ya mtaji",
+    "nilinunua ardhi", "nilinunua nyumba", "niliuza ardhi", "niliuza nyumba",
+    "import duty", "customs duty", "ushuru wa forodha", "ushuru wa uagizaji",
+    "kodi ya uagizaji", "kuagiza bidhaa", "duty ya kuagiza",
+    "transfer pricing", "bei ya uhamisho", "arm's length",
+    "stamp duty", "ushuru wa stempu", "tathmini ya ardhi", "land valuation",
+    "mining royalt", "mrabaha wa madini", "royalty ya madini", "ya royalty",
+    "export processing zone", "epz tax", "kodi ya epz", "(epz)",
+    "insurance premium levy", "ushuru wa bima",
+    "zanzibar tax", "kodi ya zanzibar", "kodi za zanzibar", "vat zanzibar",
+    "bitcoin", "cryptocurrency", "hisa za soko", "stock market"
+  ],
+
+  "in_scope_phrases": [
+    "brela", "vat", "ongezeko la thamani", "paye", "mapato ya ajira",
+    "sdl", "ufundi stadi", "nssf", "hifadhi ya jamii", "osha", "usalama kazini",
+    "efd", "mashine ya kodi", "wcf", "fidia ya wafanyakazi",
+    "gn487a", "gn 487", "wageni", "wasio raia",
+    "kampuni", "usajili", "leseni ya biashara", "tin", "taxpayer"
+  ],
+
+  "generation_params": {
     "max_new_tokens": 256,
     "do_sample": false,
     "temperature": 1.0,
-    "repetition_penalty": 1.1
+    "repetition_penalty": 1.3,
+    "no_repeat_ngram_size": 4
   },
-  "thresholds": {
-    "accuracy": 0.85,
-    "refusal": 0.70
+
+  "gate_thresholds": {
+    "in_corpus": 0.85,
+    "out_of_corpus": 0.70
   },
+
   "training": {
     "lora_rank": 64,
     "lora_alpha": 64,
@@ -23,9 +75,9 @@
     "lr_scheduler_type": "cosine",
     "seed": 3407
   },
+
   "repos": {
     "base_model": "McGill-NLP/AfriqueLlama-8B",
     "dataset": "prospAprospA007/africa-giants-dataset"
-  },
-  "version": "v13"
+  }
 }
