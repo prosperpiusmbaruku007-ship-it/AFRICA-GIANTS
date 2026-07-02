@@ -84,6 +84,19 @@ def cmd_generate(args):
     run_pipeline(reprocess=args.reprocess, no_budget_check=args.no_budget_check)
 
 
+def cmd_generate_from_facts(args):
+    try:
+        from src.synthetic.qa_factory import generate_from_locked_facts
+    except ImportError as e:
+        print(f"[generate-from-facts] Import error: {e}")
+        sys.exit(1)
+    generate_from_locked_facts(
+        subdomain_filter=args.subdomain,
+        key_filter=args.keys.split(',') if args.keys else None,
+        limit=args.limit,
+    )
+
+
 def cmd_build_rag(args):
     print("[build-rag] RAG index lives in Cerebrium persistent storage.")
     print("The index rebuilds automatically on cold start when locked_facts.json changes.")
@@ -307,14 +320,16 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Commands:
-  generate                       Process new source documents in data/source_documents/
-  generate --reprocess FILENAME  Force re-processing of a specific document
-  build-rag                      Rebuild RAG index (redeploy Cerebrium to activate)
-  upload                         Rebuild SFT files and push dataset to HuggingFace
-  review                         Show pending flagged pairs and new fact candidates
-  status                         Show pipeline state and pair counts
-  approve-facts                  Approve new fact candidates interactively
-  approve-flags --batch NNN      Review flagged pairs one-by-one interactively
+  generate                                Process new source documents in data/source_documents/
+  generate --reprocess FILENAME           Force re-processing of a specific document
+  generate-from-facts --subdomain NAME    Generate pairs from locked_facts, no document needed
+  generate-from-facts --keys k1,k2,k3    Generate pairs for specific locked_fact keys
+  build-rag                               Rebuild RAG index (redeploy Cerebrium to activate)
+  upload                                  Rebuild SFT files and push dataset to HuggingFace
+  review                                  Show pending flagged pairs and new fact candidates
+  status                                  Show pipeline state and pair counts
+  approve-facts                           Approve new fact candidates interactively
+  approve-flags --batch NNN               Review flagged pairs one-by-one interactively
 
 Human workflow (after all phases built):
   1. Drop PDF/HTML/TXT into data/source_documents/{category}/
@@ -333,6 +348,15 @@ Human workflow (after all phases built):
                      help='Force re-processing of a specific file')
     gen.add_argument('--no-budget-check', action='store_true',
                      help='Skip per-document cost cap check')
+
+    gff = sub.add_parser('generate-from-facts',
+                         help='Generate pairs from locked_facts entries directly, no source doc needed')
+    gff.add_argument('--subdomain', default=None,
+                     help='Filter by subdomain (e.g. nssf_contributions, gn487a, paye)')
+    gff.add_argument('--keys', default=None,
+                     help='Comma-separated locked_fact key names to target')
+    gff.add_argument('--limit', type=int, default=50,
+                     help='Max number of facts to process (default 50)')
 
     sub.add_parser('build-rag',     help='Rebuild RAG index from locked_facts.json')
     sub.add_parser('upload',        help='Rebuild SFT and upload dataset to HuggingFace')
@@ -353,13 +377,14 @@ Human workflow (after all phases built):
         sys.exit(0)
 
     {
-        'generate':      cmd_generate,
-        'build-rag':     cmd_build_rag,
-        'upload':        cmd_upload,
-        'review':        cmd_review,
-        'status':        cmd_status,
-        'approve-facts': cmd_approve_facts,
-        'approve-flags': cmd_approve_flags,
+        'generate':              cmd_generate,
+        'generate-from-facts':   cmd_generate_from_facts,
+        'build-rag':             cmd_build_rag,
+        'upload':                cmd_upload,
+        'review':                cmd_review,
+        'status':                cmd_status,
+        'approve-facts':         cmd_approve_facts,
+        'approve-flags':         cmd_approve_flags,
     }[args.command](args)
 
 

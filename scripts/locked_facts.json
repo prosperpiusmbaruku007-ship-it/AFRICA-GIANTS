@@ -1730,5 +1730,166 @@
     "correct_value": "Selemani Saidi Jafo, Minister for Industry and Trade, 25 July 2025",
     "wrong_patterns": [],
     "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "unpaid_contribution_penalty_rate": {
+    "correct_value": "five %",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "Payment 14.-(3)",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "unpaid_contribution_penalty_frequency": {
+    "correct_value": "each month or a part of a month null",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "Payment 14.-(3)",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "minimum_monthly_contributions_for_retirement_pension": {
+    "correct_value": "180 monthly contributions",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "Condi tions for retirement pension",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "minimum_contribution_months_health_insurance": {
+    "correct_value": "3 months",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "Health insurance benefit",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "minimum_monthly_contributions_maternity_benefit": {
+    "correct_value": "36 monthly_contributions",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "Conditions for maternity benefit",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "duration_of_maternity_cash_benefit": {
+    "correct_value": "12 weeks",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "Types of maternity benefit",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "maternity_cash_benefit_rate": {
+    "correct_value": "100 %",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "Types of maternity benefit",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "employer_notification_deadline_before_retirement": {
+    "correct_value": "6 months",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "49.-( I) An employer shall, within six months before the date of Penalty",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "fund_payment_deadline_after_retirement_notification": {
+    "correct_value": "60 days",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "49.-(2) The Fund shall ensure that, within sixty days following the date of",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "pensionable_age": {
+    "correct_value": "60 years",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "Definitions",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "fine_limit": {
+    "correct_value": "one hundred thousand TZS",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "(1)",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "imprisonment_term_limit": {
+    "correct_value": "two years",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "(1)",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "business_licensing_act_citation": {
+    "correct_value": "THE BUSINESS LICENSING ACT, (CAP. 101)",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
+    "section": "THE BUSINESS LICENSING ACT,\n(CAP. 101)",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "order_made_under_section": {
+    "correct_value": "section 14A(2)",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
+    "section": "ORDER\n(Made under section 14A(2))",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "prohibited_business_activities_for_non_citizens_order_year": {
+    "correct_value": "2025",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
+    "section": "THE BUSINESS LICENSING (PROHIBITION OF BUSINESS ACTIVITIES FOR NON-\nCITIZENS) OR",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "business_licensing_act_chapter": {
+    "correct_value": "CAP. 101",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
+    "section": "THE BUSINESS LICENSING ACT,\n(CAP. 101)",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "tanzania_citizenship_act_reference": {
+    "correct_value": "Cap. 357",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
+    "section": "Interpretation",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "offence_penalty_mention": {
+    "correct_value": "commits an offence",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
+    "section": "Prohibited\nbusiness\nactivities",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "penalty_fine_non_citizen": {
+    "correct_value": "ten million TZS",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
+    "section": "Business Licensing (Prohibition of Business Activities for Non-Citizens GN. NO.4",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "penalty_imprisonment_non_citizen": {
+    "correct_value": "six months null",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
+    "section": "Business Licensing (Prohibition of Business Activities for Non-Citizens GN. NO.4",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "penalty_fine_tanzanian_citizen": {
+    "correct_value": "five million TZS",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
+    "section": "Business Licensing (Prohibition of Business Activities for Non-Citizens GN. NO.4",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "penalty_imprisonment_tanzanian_citizen": {
+    "correct_value": "three months null",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
+    "section": "Business Licensing (Prohibition of Business Activities for Non-Citizens GN. NO.4",
+    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+  },
+  "contribution_rate_emplyees": {
+    "correct_value": "10 %",
+    "status": "CONFIRMED",
+    "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
+    "section": "CONTRIBUTIONS FOR EMPLOYEES",
+    "approved": "manual_review — NSSF employee contribution rate 10%, unit corrected from cents to %"
   }
 }

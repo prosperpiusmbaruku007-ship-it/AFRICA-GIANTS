@@ -301,6 +301,128 @@ async def _run_pipeline_async(new_files, no_budget_check, index_embeddings, inde
             _save_processed(processed)  # persist after each doc -- crash-safe progress
 
 
+def generate_from_locked_facts(subdomain_filter: str = None,
+                               key_filter: list = None,
+                               limit: int = 50):
+    """Generate Q&A pairs directly from locked_facts entries.
+
+    Bypasses document extraction. Each locked fact is used as a seed for pair
+    generation via the same LLM + 6-check review path as the document pipeline.
+    Output goes through the normal StreamingBatchWriter.
+    """
+    from src.synthetic.dataset_builder  import next_batch_num
+    from src.synthetic.question_generator import generate_pairs_for_fact, get_instruction_index
+    from src.synthetic.pair_reviewer      import review_pairs
+
+    LOCKED_FACTS_PATH = 'scripts/locked_facts.json'
+    with open(LOCKED_FACTS_PATH, encoding='utf-8') as f:
+        locked_facts = json.load(f)
+
+    # Subdomain -> (source_doc_hint, source_url, fact_key_prefix)
+    SUBDOMAIN_META = {
+        'nssf_contributions': ('data/source_documents/nssf/nssf_act_cap50.pdf',     'nssf.or.tz',         ['nssf', 'unpaid', 'minimum', 'pensionable', 'duration', 'maternity', 'employer_notification', 'fund_payment', 'fine', 'imprisonment', 'contribution']),
+        'gn487a':             ('data/source_documents/immigration/gn487a_official_gazette.pdf', 'immigration.go.tz', ['gn487a', 'business_licensing', 'order_made', 'prohibited', 'tanzania_citizenship', 'offence', 'penalty']),
+        'paye':               ('data/source_documents/tra/tra_paye_sw.html',          'tra.go.tz',          ['paye']),
+        'sdl_compliance':     ('data/source_documents/tra/tra_sdl_sw.txt',            'tra.go.tz',          ['sdl']),
+        'vat_registration':   ('data/source_documents/tra/tra_vat_registration_sw.html', 'tra.go.tz',       ['vat']),
+        'wcf_compliance':     ('data/source_documents/wcf/wcf_michango.html',         'wcf.go.tz',          ['wcf', 'workers']),
+        'brela_registration': ('data/source_documents/brela/brela_faq_official.pdf',  'brela.go.tz',        ['brela', 'company', 'annual', 'name', 'file', 'document', 'certified', 'memorandum', 'registration', 'stamp', 'late', 'business']),
+        'osha_registration':  ('data/source_documents/osha/osha_maswali.html',        'osha.go.tz',         ['osha', 'OSHA']),
+        'efd_compliance':     ('data/source_documents/tra/tra_efd_index.html',        'tra.go.tz',          ['efd']),
+    }
+
+    # Select target facts
+    target_facts = []
+    for key, fact in locked_facts.items():
+        if key == '_meta':
+            continue
+        if key_filter and key not in key_filter:
+            continue
+        if subdomain_filter:
+            meta = SUBDOMAIN_META.get(subdomain_filter, ('', 'tra.go.tz', []))
+            prefixes = meta[2]
+            if not any(key.startswith(p) or key == p for p in prefixes):
+                continue
+        target_facts.append((key, fact))
+        if len(target_facts) >= limit:
+            break
+
+    if not target_facts:
+        print(f'[generate-from-facts] No matching facts found for subdomain={subdomain_filter!r} key_filter={key_filter}')
+        print(f'[generate-from-facts] Available subdomains: {list(SUBDOMAIN_META)}')
+        return
+
+    print(f'[generate-from-facts] {len(target_facts)} facts selected (subdomain={subdomain_filter}, limit={limit})')
+
+    from src.synthetic.api_utils import check_provider
+    check_provider()
+
+    index_embeddings, index_texts = get_instruction_index()
+    today   = datetime.utcnow().strftime('%Y-%m-%d')
+    batch_n = next_batch_num()
+    writer  = StreamingBatchWriter(batch_n)
+    cur_emb, cur_texts = index_embeddings, list(index_texts)
+
+    stats = {'generated': 0, 'approved': 0, 'flagged': 0, 'rejected': 0, 'dedup_skipped': 0}
+    flagged_all = []
+
+    for fact_key, fact_data in target_facts:
+        # Look up subdomain meta for source routing
+        meta = SUBDOMAIN_META.get(subdomain_filter, ('', 'tra.go.tz', []))
+        source_doc = meta[0]
+        source_url = meta[1]
+
+        value = fact_data.get('correct_value', '') if isinstance(fact_data, dict) else str(fact_data)
+
+        fact = {
+            'fact_key':       fact_key,
+            'value':          value,
+            'unit':           '',
+            'source_section': fact_data.get('section', '') if isinstance(fact_data, dict) else '',
+            'source_document': source_doc,
+        }
+
+        try:
+            pairs, cur_emb, cur_texts, skipped = generate_pairs_for_fact(
+                fact, today, source_doc, source_url, cur_emb, cur_texts,
+            )
+            stats['dedup_skipped'] += skipped
+            stats['generated']     += len(pairs)
+            if not pairs:
+                continue
+
+            approved, flagged, rejected = review_pairs(pairs, batch_num=None)
+            if approved:
+                writer.write(approved)
+                stats['approved'] += len(approved)
+            flagged_all.extend(flagged)
+            stats['flagged']  += len(flagged)
+            stats['rejected'] += len(rejected)
+        except Exception as e:
+            print(f'[generate-from-facts] ERROR on {fact_key}: {e}')
+
+    writer.close()
+
+    if flagged_all:
+        flagged_path = os.path.join(FLAGGED_DIR, f'batch_{batch_n:03d}_flagged.jsonl')
+        os.makedirs(FLAGGED_DIR, exist_ok=True)
+        with open(flagged_path, 'w', encoding='utf-8') as f:
+            for p in flagged_all:
+                f.write(json.dumps(p, ensure_ascii=False) + '\n')
+        print(f'[generate-from-facts] {len(flagged_all)} flagged -> {flagged_path}')
+        print(f'[generate-from-facts] Run: python run.py approve-flags --batch {batch_n:03d}')
+
+    print(f'\n[generate-from-facts] Done — batch {batch_n:03d}')
+    print(f'  facts targeted:  {len(target_facts)}')
+    print(f'  pairs generated: {stats["generated"]}')
+    print(f'  pairs approved:  {stats["approved"]}')
+    print(f'  pairs flagged:   {stats["flagged"]}')
+    print(f'  pairs rejected:  {stats["rejected"]}')
+    print(f'  dedup skipped:   {stats["dedup_skipped"]}')
+    if stats['approved']:
+        print(f'  Run: python run.py upload')
+
+
 def run_pipeline(reprocess: str = None, no_budget_check: bool = False):
     processed = _load_processed()
 
