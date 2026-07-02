@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Africa Giants — DDP Training Script v10
+Africa Giants — DDP Training Script v12
 Multi-GPU training with Unsloth + TRL — Unsloth handles multi-GPU natively
 Usage: python3 train_ddp.py
 """
@@ -60,18 +60,24 @@ log(f"[config] BF16        : {BF16}")
 SMOKE_TEST        = False
 MAX_SEQ_LENGTH    = 512 if SMOKE_TEST else 2048
 LOSS_THRESHOLD    = 3.0
-LORA_RANK         = 128
-LORA_ALPHA        = 128
+# LoRA rank — CRITICAL: must match v8-lora which was r=64
+# v11 used r=128 but warm-started from v10-lora (also r=128)
+# v12 warm-starts from v8-lora which is r=64 — shapes MUST match
+LORA_RANK         = 64
+LORA_ALPHA        = 64
 
 BASE_MODEL        = "McGill-NLP/AfriqueLlama-8B"
 DATASET_REPO      = "prospAprospA007/africa-giants-dataset"
-ADAPTER_REPO      = "prospAprospA007/africa-giants-adapter-v11"
-LORA_ONLY_REPO    = "prospAprospA007/africa-giants-adapter-v11-lora"
-PREV_LORA_REPO    = "prospAprospA007/africa-giants-adapter-v10-lora"
-# NOTE: v10-lora is r=128, same as v11. Shapes MATCH — v11 warm-starts from the
-# v10 LoRA weights. Paired with lr=1e-4 (down from 2e-4) + the expanded batch_014
-# dataset, this is a fine-tune of v10's adapter, not a fresh r=128 run.
-# Log clearly so there is no confusion.
+ADAPTER_REPO      = "prospAprospA007/africa-giants-adapter-v12"
+LORA_ONLY_REPO    = "prospAprospA007/africa-giants-adapter-v12-lora"
+PREV_LORA_REPO    = "prospAprospA007/africa-giants-adapter-v8-lora"  # Back to v8 — stable production baseline
+# NOTE: v10-lora had a dangerous GN487A hallucination and out-of-corpus collapse
+# to 30%. v11 warm-started from v10-lora and inherited those failures. v8 is the
+# stable production baseline (82.1% in-corpus / 70% out-of-corpus — best gate
+# scores ever). v12 warm-starts from v8-lora (r=64) so LORA_RANK MUST be 64 —
+# a rank mismatch crashes at load_adapter() time. Paired with 1 epoch (v11 epoch 2
+# overfit to val=0.4660) and lr=5e-5 (half of v11's 1e-4, protects v8's refusal
+# behavior from being overwritten). Log clearly so there is no confusion.
 
 log(f"[config] SMOKE_TEST    : {SMOKE_TEST}")
 log(f"[config] MAX_SEQ_LENGTH: {MAX_SEQ_LENGTH}")
@@ -142,7 +148,7 @@ log("[imports] complete")
 # MODEL LOAD
 # ══════════════════════════════════════════════════════════
 print(f"\n{'='*50}")
-print(f"[v10] STEP: MODEL LOADING")
+print(f"[v12] STEP: MODEL LOADING")
 print(f"{'='*50}")
 log(f"[model] Loading from: {BASE_MODEL}")
 
@@ -199,18 +205,20 @@ log(f"[model] tokenizer eos_token_id: {tokenizer.eos_token_id}")
 # LOAD PREVIOUS LORA — with explicit rank-mismatch handling
 # ══════════════════════════════════════════════════════════
 log(f"[model] Attempting to load {PREV_LORA_REPO} as starting point ...")
-log(f"[model] NOTE: prev lora (v10-lora) is r={LORA_RANK}, same as current — shapes MATCH")
-log(f"[model] v11 warm-starts from v10-lora weights (fine-tune at lr=1e-4), not fresh")
+log(f"[model] NOTE: prev lora (v8-lora) is r={LORA_RANK}, same as current — shapes MATCH")
+log(f"[model] v12 warm-starts from v8-lora weights (fine-tune at lr=5e-5), not fresh")
 try:
     model.load_adapter(
         PREV_LORA_REPO,
         adapter_name="default",
         token=hf_token,
     )
-    log(f"[model] Loaded {PREV_LORA_REPO} successfully (unexpected — rank matched?)")
+    log(f"[model] Loaded {PREV_LORA_REPO} successfully — v8 warm-start OK ✓")
 except Exception as e:
     if "size mismatch" in str(e).lower() or "shape" in str(e).lower():
-        log(f"[model] Expected rank mismatch (r=64 → r=128): starting fresh ✓")
+        log(f"[model] FATAL: rank mismatch loading v8-lora — LORA_RANK ({LORA_RANK}) "
+            f"must equal v8-lora rank (64). Aborting to avoid a fresh-random run. {e}")
+        raise
     else:
         log(f"[model] WARNING: load_adapter failed unexpectedly — {e}")
         log(f"[model] Continuing with fresh LoRA weights")
@@ -278,7 +286,7 @@ SYSTEM_PROMPT = (
 # DATASET LOAD
 # ══════════════════════════════════════════════════════════
 print(f"\n{'='*50}")
-print(f"[v10] STEP: DATASET LOADING")
+print(f"[v12] STEP: DATASET LOADING")
 print(f"{'='*50}")
 log(f"[data] Loading dataset from: {DATASET_REPO}")
 raw_dataset = load_dataset(
@@ -373,8 +381,8 @@ _base_kwargs = {
     "gradient_accumulation_steps":   2 if SMOKE_TEST else 8,
     "warmup_steps":                  2,
     "max_steps":                     10 if SMOKE_TEST else -1,
-    "num_train_epochs":              1 if SMOKE_TEST else 2,
-    "learning_rate":                 1e-4,
+    "num_train_epochs":              1 if SMOKE_TEST else 1,  # NOT 2 — v11 epoch 1 val=0.4111 best, epoch 2 overfit to 0.4660
+    "learning_rate":                 5e-5,  # half of v11's 1e-4 — conservative, protects v8's OOC refusal behavior
     "fp16":                          not BF16,
     "bf16":                          BF16,
     "logging_steps":                 1,
@@ -506,7 +514,7 @@ if _trainer is None:
 
 trainer = _trainer
 print(f"\n{'='*50}")
-print(f"[v10] STEP: TRAINING START")
+print(f"[v12] STEP: TRAINING START")
 print(f"{'='*50}")
 log(f"[train] Starting on {GPU_NAME} (single GPU) ...")
 stats = trainer.train()
@@ -517,7 +525,7 @@ log(f"[train] Train loss: {stats.metrics.get('train_loss', 'N/A')}")
 # EVAL + PUSH
 # ══════════════════════════════════════════════════════════
 print(f"\n{'='*50}")
-print(f"[v10] STEP: EVALUATION")
+print(f"[v12] STEP: EVALUATION")
 print(f"{'='*50}")
 # Remove notebook progress callback if present
 try:
@@ -548,7 +556,7 @@ except Exception as _e:
 
 # Push LoRA-only adapter
 print(f"\n{'='*50}")
-print(f"[v10] STEP: LORA PUSH")
+print(f"[v12] STEP: LORA PUSH")
 print(f"{'='*50}")
 log(f"[lora] Pushing LoRA-only adapter to {LORA_ONLY_REPO} ...")
 try:
@@ -563,17 +571,17 @@ try:
             repo_id        = LORA_ONLY_REPO,
             repo_type      = "model",
             token          = hf_token,
-            commit_message = f"adapter-v11 LoRA-only weights r={LORA_RANK} — for v12 load_adapter()",
+            commit_message = f"adapter-v12 LoRA-only weights r={LORA_RANK} — for v13 load_adapter()",
         )
     log(f"[lora] LoRA-only pushed to {LORA_ONLY_REPO} ✓")
-    log(f"[lora] For v11: model.load_adapter('{LORA_ONLY_REPO}', adapter_name='default')")
+    log(f"[lora] For v13: model.load_adapter('{LORA_ONLY_REPO}', adapter_name='default')")
 except Exception as _e:
     log(f"[lora] LoRA-only push FAILED: {_e}")
     traceback.print_exc()
 
 # Push merged 16-bit adapter
 print(f"\n{'='*50}")
-print(f"[v10] STEP: MERGED PUSH")
+print(f"[v12] STEP: MERGED PUSH")
 print(f"{'='*50}")
 log(f"[push] Pushing merged model to {ADAPTER_REPO} ...")
 log(f"[push] Gate result: {'PASSED' if gate_passed else 'FAILED or UNKNOWN'} — pushing regardless")
@@ -623,16 +631,16 @@ pipeline_tag: text-generation
 datasets:
 - {DATASET_REPO}
 ---
-# Africa Giants — Chike Tanzanian Business AI (adapter-v10)
+# Africa Giants — Chike Tanzanian Business AI (adapter-v12)
 QLoRA fine-tune of [{BASE_MODEL}](https://huggingface.co/{BASE_MODEL})
 on Tanzanian business, tax, company registration, and financial regulation data.
 **Base model:** AfriqueLlama-8B (Llama 3.1 8B, 20 African languages incl. Swahili)
 **Languages:** Swahili (sw), English (en)
 **Training:** QLoRA r={LORA_RANK} on {GPU_NAME} single GPU
-**Training pairs:** 2,662 total pairs, ~2,395 train (full unbalanced dataset, all 13 batches)
+**Training pairs:** batch_014 dataset (train_sft.jsonl / val_sft.jsonl on {DATASET_REPO})
 **Validation loss:** {_loss_str}
 **Gate result:** {_gate_str}
-**Started from:** v10-lora at r={LORA_RANK} (warm-start fine-tune, lr=1e-4)
+**Started from:** v8-lora at r={LORA_RANK} (warm-start fine-tune, 1 epoch, lr=5e-5)
 **LoRA-only checkpoint:** {LORA_ONLY_REPO}
 """
     HfApi().upload_file(
@@ -641,7 +649,7 @@ on Tanzanian business, tax, company registration, and financial regulation data.
         repo_id=ADAPTER_REPO,
         repo_type="model",
         token=hf_token,
-        commit_message=f"adapter-v11 model card — val_loss={_loss_str} r={LORA_RANK}",
+        commit_message=f"adapter-v12 model card — val_loss={_loss_str} r={LORA_RANK}",
     )
     log(f"[push] Model card pushed ✓")
 except Exception as _e:
@@ -654,7 +662,7 @@ log(f"[lora] LoRA adapter live at: https://huggingface.co/{LORA_ONLY_REPO}")
 # INFERENCE TEST — after push
 # ══════════════════════════════════════════════════════════
 print(f"\n{'='*50}")
-print(f"[v10] STEP: INFERENCE TEST")
+print(f"[v12] STEP: INFERENCE TEST")
 print(f"{'='*50}")
 log("[test] Running quick inference check ...")
 try:
