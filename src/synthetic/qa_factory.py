@@ -318,17 +318,35 @@ def generate_from_locked_facts(subdomain_filter: str = None,
     with open(LOCKED_FACTS_PATH, encoding='utf-8') as f:
         locked_facts = json.load(f)
 
-    # Subdomain -> (source_doc_hint, source_url, fact_key_prefix)
+    # Subdomain -> (source_doc_hint, source_url, fact_key_prefixes)
+    # Prefix matching is case-insensitive against lowercased key
     SUBDOMAIN_META = {
-        'nssf_contributions': ('data/source_documents/nssf/nssf_act_cap50.pdf',     'nssf.or.tz',         ['nssf', 'unpaid', 'minimum', 'pensionable', 'duration', 'maternity', 'employer_notification', 'fund_payment', 'fine', 'imprisonment', 'contribution']),
-        'gn487a':             ('data/source_documents/immigration/gn487a_official_gazette.pdf', 'immigration.go.tz', ['gn487a', 'business_licensing', 'order_made', 'prohibited', 'tanzania_citizenship', 'offence', 'penalty']),
-        'paye':               ('data/source_documents/tra/tra_paye_sw.html',          'tra.go.tz',          ['paye']),
-        'sdl_compliance':     ('data/source_documents/tra/tra_sdl_sw.txt',            'tra.go.tz',          ['sdl']),
-        'vat_registration':   ('data/source_documents/tra/tra_vat_registration_sw.html', 'tra.go.tz',       ['vat']),
-        'wcf_compliance':     ('data/source_documents/wcf/wcf_michango.html',         'wcf.go.tz',          ['wcf', 'workers']),
-        'brela_registration': ('data/source_documents/brela/brela_faq_official.pdf',  'brela.go.tz',        ['brela', 'company', 'annual', 'name', 'file', 'document', 'certified', 'memorandum', 'registration', 'stamp', 'late', 'business']),
-        'osha_registration':  ('data/source_documents/osha/osha_maswali.html',        'osha.go.tz',         ['osha', 'OSHA']),
-        'efd_compliance':     ('data/source_documents/tra/tra_efd_index.html',        'tra.go.tz',          ['efd']),
+        'nssf_contributions': ('data/source_documents/nssf/nssf_act_cap50.pdf',     'nssf.or.tz',
+                               ['nssf', 'unpaid', 'minimum', 'pensionable', 'duration', 'maternity',
+                                'employer_notification', 'fund_payment', 'fine', 'imprisonment', 'contribution']),
+        'gn487a':             ('data/source_documents/immigration/gn487a_official_gazette.pdf', 'immigration.go.tz',
+                               ['gn487a', 'business_licensing', 'order_made', 'prohibited',
+                                'tanzania_citizenship', 'offence', 'penalty']),
+        'paye':               ('data/source_documents/tra/tra_paye_sw.html',          'tra.go.tz',
+                               ['paye', 'p45']),
+        'sdl_compliance':     ('data/source_documents/tra/tra_sdl_sw.txt',            'tra.go.tz',
+                               ['sdl']),
+        'vat_registration':   ('data/source_documents/tra/tra_vat_registration_sw.html', 'tra.go.tz',
+                               ['vat_registration', 'vat_threshold', 'vat_standard', 'vat_late',
+                                'vat_reduced', 'vat_zero', 'vat_return', 'vat_deferment',
+                                'vat_notification', 'vat_filing']),
+        'vat_withholding':    ('data/source_documents/tra/tra_withholding_tax_sw.html', 'tra.go.tz',
+                               ['vat_withholding', 'vat_withhol']),
+        'wcf_compliance':     ('data/source_documents/wcf/wcf_michango.html',         'wcf.go.tz',
+                               ['wcf', 'workers']),
+        'brela_registration': ('data/source_documents/brela/brela_faq_official.pdf',  'brela.go.tz',
+                               ['brela', 'company', 'annual_return', 'name_similarity',
+                                'late_filing', 'memorandum', 'beneficial', 'minimum_directors',
+                                'minimum_shareholders', 'registration_certificate']),
+        'osha_registration':  ('data/source_documents/osha/osha_maswali.html',        'osha.go.tz',
+                               ['osha', 'osiha', 'health_and_safety', 'risk_assessment']),
+        'efd_compliance':     ('data/source_documents/tra/tra_efd_index.html',        'tra.go.tz',
+                               ['efd']),
     }
 
     # Select target facts
@@ -341,7 +359,8 @@ def generate_from_locked_facts(subdomain_filter: str = None,
         if subdomain_filter:
             meta = SUBDOMAIN_META.get(subdomain_filter, ('', 'tra.go.tz', []))
             prefixes = meta[2]
-            if not any(key.startswith(p) or key == p for p in prefixes):
+            key_lower = key.lower()
+            if not any(key_lower.startswith(p.lower()) or key_lower == p.lower() for p in prefixes):
                 continue
         target_facts.append((key, fact))
         if len(target_facts) >= limit:
