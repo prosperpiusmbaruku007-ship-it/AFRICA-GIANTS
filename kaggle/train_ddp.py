@@ -8,7 +8,7 @@ Usage: python3 train_ddp.py
 # ══════════════════════════════════════════════════════════
 # IMPORTS
 # ══════════════════════════════════════════════════════════
-import os, sys, json, re, subprocess, tempfile, traceback, inspect
+import os, sys, json, re, subprocess, tempfile, traceback, inspect, urllib.request
 from datetime import datetime, timezone
 
 # Silence non-rank-0 processes completely
@@ -265,9 +265,24 @@ else:
 assert tokenizer.eos_token in _vocab, f"[eos] {tokenizer.eos_token!r} not in vocab"
 
 # ══════════════════════════════════════════════════════════
-# SYSTEM PROMPT — must match cerebrium/main.py exactly
+# CHIKE CONFIG — fetch from GitHub (single source of truth)
+# training notebook downloads train_ddp.py fresh each run,
+# so this config fetch always gets the latest values.
 # ══════════════════════════════════════════════════════════
-SYSTEM_PROMPT = (
+_CONFIG_URL = (
+    "https://raw.githubusercontent.com/"
+    "prosperpiusmbaruku007-ship-it/AFRICA-GIANTS/main/kaggle/chike_config.json"
+)
+_chike_cfg = {}
+try:
+    with urllib.request.urlopen(_CONFIG_URL, timeout=15) as _resp:
+        _chike_cfg = json.loads(_resp.read().decode())
+    log(f"[config] chike_config.json loaded from GitHub (version={_chike_cfg.get('version','?')})")
+except Exception as _cfg_err:
+    log(f"[config] WARNING: GitHub config fetch failed: {_cfg_err} — using hardcoded fallback")
+
+# SYSTEM PROMPT — from config or hardcoded fallback (must match cerebrium/main.py)
+SYSTEM_PROMPT = _chike_cfg.get("system_prompt") or (
     "Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. "
     "Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yako. "
     "Unajibu maswali kuhusu biashara, kodi, BRELA, TRA, NSSF, "
@@ -281,6 +296,7 @@ SYSTEM_PROMPT = (
     "If a question is outside your knowledge say so clearly "
     "and direct the user to TRA or a qualified adviser."
 )
+log(f"[config] SYSTEM_PROMPT loaded ({len(SYSTEM_PROMPT)} chars)")
 
 # ══════════════════════════════════════════════════════════
 # DATASET LOAD

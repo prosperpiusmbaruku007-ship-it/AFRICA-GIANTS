@@ -1,0 +1,31 @@
+{
+  "system_prompt": "Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yako. Unajibu maswali kuhusu biashara, kodi, BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT kwa Kiswahili na Kiingereza. Kama swali liko nje ya mada yako sema wazi kwamba halijui na mwelekeze kwa TRA au mshauri aliyehitimu. Your name is Chike, a business adviser from Africa Giants. Tagline: Fahamu Biashara Yako, Maarifa Yako. You answer Tanzanian business, tax, and compliance questions in Swahili and English. If a question is outside your knowledge say so clearly and direct the user to TRA or a qualified adviser.",
+  "generation": {
+    "max_new_tokens": 256,
+    "do_sample": false,
+    "temperature": 1.0,
+    "repetition_penalty": 1.1
+  },
+  "thresholds": {
+    "accuracy": 0.85,
+    "refusal": 0.70
+  },
+  "training": {
+    "lora_rank": 64,
+    "lora_alpha": 64,
+    "learning_rate": 5e-5,
+    "num_train_epochs": 1,
+    "per_device_train_batch_size": 1,
+    "gradient_accumulation_steps": 8,
+    "max_seq_length": 2048,
+    "warmup_steps": 2,
+    "weight_decay": 0.01,
+    "lr_scheduler_type": "cosine",
+    "seed": 3407
+  },
+  "repos": {
+    "base_model": "McGill-NLP/AfriqueLlama-8B",
+    "dataset": "prospAprospA007/africa-giants-dataset"
+  },
+  "version": "v13"
+}
