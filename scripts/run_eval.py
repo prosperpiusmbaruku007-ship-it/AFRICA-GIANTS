@@ -41,9 +41,18 @@ REFUSAL_THRESHOLD  = 0.70
 # "hakuna taarifa") that appear in every factual answer and would inflate refusal scores.
 REFUSAL_PHRASES = [
     "nje ya maarifa yangu",
+    "n je ya maarifa yangu",       # tokenization variant
     "swali hili liko nje",
+    "swali hili liko n je",        # tokenization variant
+    "liko njaani za mipaka",
+    "liko n jaani za mipaka",      # tokenization variant
+    "nje ya mada yangu",
+    "haiko katika mada",
     "sina uhakika",
     "sijui",
+    "siwezi kusaidia na hili",
+    "ninasaidia tu na",
+    "tanzania bara tu",
     "mshauri wa kodi",
     "outside my current knowledge",
     "i don't know",
@@ -140,11 +149,11 @@ def score_keyword_overlap(correct_sw, model_text, min_overlap=3):
 
 
 def is_correct_refusal(answer_text):
-    """Bug 4 fix: check for trained refusal phrases, not false-positive closings."""
+    """Check for refusal phrases with space normalization to catch tokenization artifacts (e.g. 'n je')."""
     if not answer_text:
         return False
-    lower = answer_text.lower()
-    return any(phrase in lower for phrase in REFUSAL_PHRASES)
+    normalized = " ".join(answer_text.lower().split())
+    return any(phrase in normalized for phrase in REFUSAL_PHRASES)
 
 
 def score_question(pair, answer_text):
