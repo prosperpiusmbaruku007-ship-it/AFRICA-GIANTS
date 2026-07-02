@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Africa Giants — DDP Training Script v12
+Africa Giants — DDP Training Script v13
 Multi-GPU training with Unsloth + TRL — Unsloth handles multi-GPU natively
 Usage: python3 train_ddp.py
 """
@@ -68,16 +68,17 @@ LORA_ALPHA        = 64
 
 BASE_MODEL        = "McGill-NLP/AfriqueLlama-8B"
 DATASET_REPO      = "prospAprospA007/africa-giants-dataset"
-ADAPTER_REPO      = "prospAprospA007/africa-giants-adapter-v12"
-LORA_ONLY_REPO    = "prospAprospA007/africa-giants-adapter-v12-lora"
-PREV_LORA_REPO    = "prospAprospA007/africa-giants-adapter-v8-lora"  # Back to v8 — stable production baseline
-# NOTE: v10-lora had a dangerous GN487A hallucination and out-of-corpus collapse
-# to 30%. v11 warm-started from v10-lora and inherited those failures. v8 is the
-# stable production baseline (82.1% in-corpus / 70% out-of-corpus — best gate
-# scores ever). v12 warm-starts from v8-lora (r=64) so LORA_RANK MUST be 64 —
-# a rank mismatch crashes at load_adapter() time. Paired with 1 epoch (v11 epoch 2
-# overfit to val=0.4660) and lr=5e-5 (half of v11's 1e-4, protects v8's refusal
-# behavior from being overwritten). Log clearly so there is no confusion.
+ADAPTER_REPO      = "prospAprospA007/africa-giants-adapter-v13"
+LORA_ONLY_REPO    = "prospAprospA007/africa-giants-adapter-v13-lora"
+PREV_LORA_REPO    = "prospAprospA007/africa-giants-adapter-v8-lora"  # v8 — stable production baseline
+# NOTE: v12 failed because of bad data (SDL tourism pairs, missing GN487A confidence),
+# not because of the training config. v13 uses the same config as v12:
+# r=64, warm from v8-lora, 1 epoch, lr=5e-5. Data fixes applied:
+# - 3 tourism levy pairs removed from sdl_compliance subdomain
+# - SDL day-7 deadline pair fixed
+# - 5 targeted OOC refusal pairs added
+# - Explicit OOC boundaries added to system_prompt via chike_config.json
+# LORA_RANK MUST be 64 — v8-lora is r=64 (rank mismatch crashes at load_adapter).
 
 log(f"[config] SMOKE_TEST    : {SMOKE_TEST}")
 log(f"[config] MAX_SEQ_LENGTH: {MAX_SEQ_LENGTH}")
@@ -148,7 +149,7 @@ log("[imports] complete")
 # MODEL LOAD
 # ══════════════════════════════════════════════════════════
 print(f"\n{'='*50}")
-print(f"[v12] STEP: MODEL LOADING")
+print(f"[v13] STEP: MODEL LOADING")
 print(f"{'='*50}")
 log(f"[model] Loading from: {BASE_MODEL}")
 
@@ -302,7 +303,7 @@ log(f"[config] SYSTEM_PROMPT loaded ({len(SYSTEM_PROMPT)} chars)")
 # DATASET LOAD
 # ══════════════════════════════════════════════════════════
 print(f"\n{'='*50}")
-print(f"[v12] STEP: DATASET LOADING")
+print(f"[v13] STEP: DATASET LOADING")
 print(f"{'='*50}")
 log(f"[data] Loading dataset from: {DATASET_REPO}")
 raw_dataset = load_dataset(
@@ -530,7 +531,7 @@ if _trainer is None:
 
 trainer = _trainer
 print(f"\n{'='*50}")
-print(f"[v12] STEP: TRAINING START")
+print(f"[v13] STEP: TRAINING START")
 print(f"{'='*50}")
 log(f"[train] Starting on {GPU_NAME} (single GPU) ...")
 stats = trainer.train()
@@ -541,7 +542,7 @@ log(f"[train] Train loss: {stats.metrics.get('train_loss', 'N/A')}")
 # EVAL + PUSH
 # ══════════════════════════════════════════════════════════
 print(f"\n{'='*50}")
-print(f"[v12] STEP: EVALUATION")
+print(f"[v13] STEP: EVALUATION")
 print(f"{'='*50}")
 # Remove notebook progress callback if present
 try:
@@ -572,7 +573,7 @@ except Exception as _e:
 
 # Push LoRA-only adapter
 print(f"\n{'='*50}")
-print(f"[v12] STEP: LORA PUSH")
+print(f"[v13] STEP: LORA PUSH")
 print(f"{'='*50}")
 log(f"[lora] Pushing LoRA-only adapter to {LORA_ONLY_REPO} ...")
 try:
@@ -597,7 +598,7 @@ except Exception as _e:
 
 # Push merged 16-bit adapter
 print(f"\n{'='*50}")
-print(f"[v12] STEP: MERGED PUSH")
+print(f"[v13] STEP: MERGED PUSH")
 print(f"{'='*50}")
 log(f"[push] Pushing merged model to {ADAPTER_REPO} ...")
 log(f"[push] Gate result: {'PASSED' if gate_passed else 'FAILED or UNKNOWN'} — pushing regardless")
@@ -678,7 +679,7 @@ log(f"[lora] LoRA adapter live at: https://huggingface.co/{LORA_ONLY_REPO}")
 # INFERENCE TEST — after push
 # ══════════════════════════════════════════════════════════
 print(f"\n{'='*50}")
-print(f"[v12] STEP: INFERENCE TEST")
+print(f"[v13] STEP: INFERENCE TEST")
 print(f"{'='*50}")
 log("[test] Running quick inference check ...")
 try:

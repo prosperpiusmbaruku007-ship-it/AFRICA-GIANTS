@@ -45,21 +45,85 @@ _TEXTS_PATH = os.path.join(RAG_DIR, 'rag_facts_text.json')
 HF_CACHE_DIR    = '/persistent-storage/.cache/huggingface'
 MODEL_CACHE_DIR = '/persistent-storage/.cache/huggingface/hub'
 
-# === System prompt (verbatim from main.py) ===
+# === System prompt — must stay in sync with kaggle/chike_config.json ===
 BASE_SYSTEM_PROMPT = (
     "Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. "
     "Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yako. "
-    "Unajibu maswali kuhusu biashara, kodi, BRELA, TRA, NSSF, "
-    "OSHA, SDL, PAYE, VAT kwa Kiswahili na Kiingereza. "
-    "Kama swali liko nje ya mada yako sema wazi kwamba halijui "
-    "na mwelekeze kwa TRA au mshauri aliyehitimu. "
+    "Unajibu maswali kuhusu biashara, kodi, BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT "
+    "kwa Kiswahili na Kiingereza. "
+    "Mada zako ni: usajili wa kampuni (BRELA), kodi ya ongezeko la thamani (VAT), "
+    "kodi ya mapato ya ajira (PAYE), ushuru wa maendeleo ya ufundi (SDL), "
+    "mchango wa NSSF, ukaguzi wa OSHA, vifaa vya kielektroniki vya kodi (EFD), "
+    "fidia ya wafanyakazi (WCF), na kanuni za GN487A kwa wasio raia. "
+    "HUJUI NA HUSAIDII: kodi ya faida ya mtaji (capital gains tax), "
+    "ushuru wa forodha na uagizaji (import/customs duty), "
+    "bei ya uhamisho (transfer pricing), "
+    "ushuru wa stempu au tathmini ya ardhi (stamp duty), "
+    "mrabaha wa madini (mining royalties), mfumo wa kodi Zanzibar, "
+    "au ushauri wa uwekezaji. "
+    "Kwa mada hizo sema wazi kwamba hazihusu Chike na mwelekeze kwa mtaalamu. "
     "Your name is Chike, a business adviser from Africa Giants. "
     "Tagline: Fahamu Biashara Yako, Maarifa Yako. "
-    "You answer Tanzanian business, tax, and compliance questions "
-    "in Swahili and English. "
-    "If a question is outside your knowledge say so clearly "
-    "and direct the user to TRA or a qualified adviser."
+    "You answer Tanzanian mainland business compliance questions in Swahili and English "
+    "covering BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, and GN487A. "
+    "You do NOT cover capital gains tax, import/customs duty, transfer pricing, "
+    "stamp duty, mining royalties, Zanzibar tax, or investment advice. "
+    "For those topics say clearly they are outside your scope."
 )
+
+# === Inference-time OOC classifier ===
+# Uses phrase-level (multi-word) matching to avoid single-word false positives.
+# Ambiguous questions pass through to the model — better to attempt than wrongly refuse.
+
+EXPLICIT_OOC_PHRASES = [
+    # Capital gains
+    'capital gain', 'faida ya mtaji', 'kodi ya faida ya mtaji',
+    'nilinunua ardhi', 'nilinunua nyumba', 'niliuza ardhi', 'niliuza nyumba',
+    # Import / customs duty
+    'import duty', 'customs duty', 'ushuru wa forodha', 'ushuru wa uagizaji',
+    'kodi ya uagizaji', 'kuagiza bidhaa', 'duty ya kuagiza',
+    # Transfer pricing
+    'transfer pricing', 'bei ya uhamisho', "arm's length",
+    # Stamp duty and land valuation
+    'stamp duty', 'ushuru wa stempu', 'tathmini ya ardhi', 'land valuation',
+    # Mining royalties
+    'mining royalt', 'mrabaha wa madini', 'royalty ya madini', 'ya royalty',
+    # EPZ / special economic zones
+    'export processing zone', 'epz tax', 'kodi ya epz', '(epz)',
+    # Insurance premium levy
+    'insurance premium levy', 'ushuru wa bima',
+    # Zanzibar tax system (not general Zanzibar mention)
+    'zanzibar tax', 'kodi ya zanzibar', 'kodi za zanzibar', 'vat zanzibar',
+    # Crypto / investment
+    'bitcoin', 'cryptocurrency', 'hisa za soko', 'stock market',
+]
+
+IN_SCOPE_PHRASES = [
+    'brela', 'vat', 'ongezeko la thamani', 'paye', 'mapato ya ajira',
+    'sdl', 'ufundi stadi', 'nssf', 'hifadhi ya jamii', 'osha', 'usalama kazini',
+    'efd', 'mashine ya kodi', 'wcf', 'fidia ya wafanyakazi',
+    'gn487a', 'gn 487', 'wageni', 'wasio raia',
+    'kampuni', 'usajili', 'leseni ya biashara', 'tin', 'taxpayer',
+]
+
+HARDCODED_REFUSAL = (
+    'Samahani, swali hili liko nje ya mada yangu. '
+    'Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — '
+    'BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. '
+    'Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.'
+)
+
+
+def classify_question(message: str) -> bool:
+    """Return False if question is explicitly OOC, True otherwise (pass to model)."""
+    msg = message.lower()
+    for phrase in EXPLICIT_OOC_PHRASES:
+        if phrase in msg:
+            return False  # OOC — intercept
+    for phrase in IN_SCOPE_PHRASES:
+        if phrase in msg:
+            return True   # clearly in-scope
+    return True  # ambiguous — let model handle, do not over-intercept
 
 
 @app.cls(
@@ -188,6 +252,11 @@ class ChikeModel:
 
         if not message or not message.strip():
             return {'error': 'No message provided'}
+
+        # OOC classifier — intercepts known out-of-scope topics before model call
+        if not classify_question(message):
+            print(f'[classifier] OOC intercepted: {message[:60]}')
+            return {'reply': HARDCODED_REFUSAL}
 
         relevant_facts = self.retrieve_facts(message)
         if relevant_facts:
