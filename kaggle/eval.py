@@ -23,7 +23,7 @@ except Exception as e:
     print(f'[config] FAILED to load from GitHub: {e}')
     sys.exit(1)
 
-ADAPTER_REPO       = CONFIG.get('adapter_repo', 'prospAprospA007/africa-giants-adapter-v13')
+ADAPTER_REPO       = CONFIG.get('adapter_repo', 'prospAprospA007/africa-giants-adapter-v12')
 SYSTEM_PROMPT      = CONFIG['system_prompt']
 REFUSAL_PHRASES    = CONFIG['refusal_phrases']
 MAX_NEW_TOKENS     = CONFIG['generation_params']['max_new_tokens']
