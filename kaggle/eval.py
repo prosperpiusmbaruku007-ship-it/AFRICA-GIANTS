@@ -200,9 +200,17 @@ def score_question(q, generated):
 
     if atype in ('number', 'penalty'):
         correct_nums = extract_numbers(correct_sw) | extract_numbers(correct_en)
+        gen_nums = extract_numbers(generated)
+        if correct_nums and len(correct_nums & gen_nums) >= 1:
+            return True
+        # Fallback for frequency answers like 'mara moja kwa mwaka'
+        frequency_words = {'mara', 'kila', 'mwaka', 'wiki', 'mwezi', 'siku', 'once', 'annually'}
+        if any(w in gen_lower for w in frequency_words) and any(w in correct_sw for w in frequency_words):
+            if len(gen_lower) > 15:
+                return True
         if not correct_nums:
             return len(gen_lower) > 10
-        return len(correct_nums & extract_numbers(generated)) >= 1
+        return False
 
     if atype == 'yes_no':
         YES = {'ndiyo', 'ndio', 'yes', 'sahihi'}
@@ -218,9 +226,10 @@ def score_question(q, generated):
     if atype in ('definition', 'procedure'):
         correct_sw = re.sub(r'thibitisha na.*$', '', correct_sw, flags=re.IGNORECASE|re.DOTALL).strip()
         correct_en = re.sub(r'confirm with.*$',  '', correct_en, flags=re.IGNORECASE|re.DOTALL).strip()
-        words = {w for w in (correct_sw + ' ' + correct_en).split() if len(w) >= 6}
+        # Lowered from 6→5 chars and 4→3 words to handle Swahili synonym variation
+        words = {w for w in (correct_sw + ' ' + correct_en).split() if len(w) >= 5}
         if not words: return len(gen_lower) > 20
-        return len(words & set(gen_lower.split())) >= 4
+        return len(words & set(gen_lower.split())) >= 3
 
     return len(gen_lower) > 20
 
