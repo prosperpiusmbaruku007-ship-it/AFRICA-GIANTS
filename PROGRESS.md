@@ -4,15 +4,18 @@ Last updated: 2026-07-03
 
 ## Training History
 
-| Version | r | Val Loss | In-corpus | OOC | Notes |
-|---|---|---|---|---|---|
-| v8 | 64 | 0.4447 | 82.1% | 70% | PRODUCTION — best in-corpus ever, serving WhatsApp |
-| v9 | 64 | 0.1164 | 82.1% | 40% | Overfit |
-| v10 | 128 | 0.4107 | 77.9% | 10% | OOC collapsed, dangerous GN487A hallucination |
-| v11 | 128 | 0.4660 (ep2); 0.4111 (ep1) | 73.2% | 30% | FAILED — v10-lora warm start + epoch 2 overfit; ep1 was best |
-| v12 | 64 | 0.46xx | 70.5% | 10% (30% fixed) | FAILED — data problem (SDL mislabeled, n je bug) |
-| v13 | 64 | — | 71.6% | 100% (system) | FAILED in-corpus; OOC solved via classifier |
-| v14 | 128 | — | — | — | READY TO TRAIN — r=128 from v11-lora, lr=2e-5, 1 epoch, 3811 pairs |
+| Version | r | Val Loss | In-corpus | OOC | Gate | Notes |
+|---|---|---|---|---|---|---|
+| v8 | 64 | 0.4447 | 82.1% | 70% | FAIL | Best stable — served production |
+| v9 | 64 | 0.1164 | 82.1% | 40% | FAIL | Overfit epoch 2 |
+| v10 | 128 | 0.4107 | 77.9% | 10% | FAIL | OOC collapsed, GN487A hallucination |
+| v11 | 128 | 0.4660 | 73.2% | 30% | FAIL | v10-lora warmstart + epoch 2 overfit |
+| v12 | 64 | — | 70.5% | 10% | FAIL | v8-lora warmstart, data conflict |
+| v13 | 64 | — | 71.6% | 100% | FAIL | Classifier fixed OOC permanently |
+| v14 | 128 | — | — | — | IN TRAINING | v11-lora warmstart, lr=2e-5, 3811 pairs |
+
+Gate requirement: >82% in-corpus AND >70% OOC
+OOC note: classifier handles OOC in production — gate OOC measures bare model
 
 ## v14 Training Config (commit — this session, 2026-07-03)
 Hypothesis under test: does r=128 capacity unlock better fact recall than v8's r=64
@@ -117,12 +120,13 @@ Fixes in `scripts/locked_facts.json` (canonical):
   - GN487A was 75% in v8 → needs to recover from v12's 55%
   - If both recover: in-corpus ~82-84% — close but may still need one more run
 
-## Current State
-- Production: v8 on Modal (WhatsApp +255637809070)
-- Classifier deployed on Modal: intercepts OOC before model call
-- Dataset: 3,221 total (2,889 train / 322 val) — prospAprospA007/africa-giants-dataset
-- batch_014 (v13): 549 pairs — 77 GN487A, fixed SDL, 5 OOC refusals
-- train_ddp.py updated to v13 (ADAPTER_REPO = africa-giants-adapter-v13)
+## Current Production State
+- Modal serving: africa-giants-adapter-v13 + inference-time OOC classifier
+- Endpoint: https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run
+- WhatsApp: +255637809070 via Wappfly → Railway → Modal
+- RAG: 231 facts pre-computed (rag_embeddings.npy + rag_facts_text.json)
+- Cerebrium: UNPAID ($20.81) — superseded by Modal, endpoint inactive
+- Auth: ?token= query param, Railway env MODAL_API_TOKEN
 
 ## R6 review — RESOLVED (Habib released) + GN487A eval-family quarantine
 **Habib Advisory (162 pairs) — RELEASED into batch_014 on 2026-07-01.**
@@ -189,20 +193,23 @@ Total: 200 questions | Pass: 160 | Fail: 40 | **Overall: 80.0%** — Gate FAILED
 - **out_of_corpus (6 failures):** refusal-then-elaborate pattern — model says "nje ya maarifa yangu" then explains anyway; eval_191 (PAYE TZS 800K) misclassified as out-of-corpus
 - **osha_registration (3 failures):** >50 employee safety officer requirement missed, late registration first step wrong
 
-## Pending Tasks — Immediate
-1. **Write batch_014 via the autonomous pipeline** — correction pairs for v9 failures:
-   - Priority 1: VAT arithmetic worked examples (15–20 pairs), rolling 12-month definition
-   - Priority 2: GN487A precision pairs — full name, single date, mgeni definition, ndoa exception
-   - Priority 3: Out-of-corpus clean-stop pairs (refusal only, no elaboration) — 20+ pairs
-   - Priority 4: SDL/WCF precision — 0.5% rate, 10-employee threshold, same-day deadline
-   - Move eval_191 (PAYE 800K) from refusal gate to accuracy gate
-2. **Run v11 training** once batch_014 lands — upload kaggle/train_ddp.py to Kaggle
-   - Model: McGill-NLP/AfriqueLlama-8B; push target: africa-giants-adapter-v11
-   - NOTE: v10 reverted because r=128 over-fit / hallucinated on insufficient data —
-     v11 must only follow a meaningful dataset expansion, not just a rank bump
-3. **Fix repetition loop in production** — chike-inference/main.py: repetition_penalty tuning
-   (711745a set 1.3 + no_repeat_ngram_size=4) — verify it resolved the "Thibitisha na TRA" repeat
-4. Stage more source documents — only 2 raw docs currently in data/source_documents/tra/
+## Pending Tasks (Priority Order)
+
+### IN PROGRESS
+- v14 training on Kaggle (r=128, v11-lora warmstart, lr=2e-5, 1 epoch)
+
+### AFTER v14 COMPLETES
+- Run eval.py on v14 — watch for in-corpus improvement above 82.1%
+- If v14 > 82.1% in-corpus: update Modal to v14, run full production test
+- If v14 ≤ 82.1%: keep v13 in production, consider RAG-only architecture with frontier API model
+
+### BACKLOG (non-blocking)
+- Review 1,129 pending fact candidates — TRA-heavy (619), use generate-from-facts after approving
+- Recover 74 flagged pairs — run approve-flags on batches 016, 018
+- Pay Cerebrium $20.81 OR formally close the account
+- zuck30 lightweight offline Chike discussion (held from earlier session)
+- Consider replacing AfriqueLlama-8B with frontier API model (Claude Sonnet / Gemini Flash)
+  via OpenRouter in modal_app.py — single line change, same RAG infrastructure
 
 ## Dataset State
 - Source files: 15 batch files in `datasets/tier1a/cleaned_pairs/` (batches 001–013)
@@ -234,7 +241,7 @@ Total: 200 questions | Pass: 160 | Fail: 40 | **Overall: 80.0%** — Gate FAILED
 
 ## Known Issues / Technical Debt
 - v10 reverted: r=128 hallucinated on insufficient data — production stays on v8
-- Cerebrium serving v8 (best gate scores but neither gate fully passed)
+- Modal serving v13 + classifier (neither gate fully passed at bare-model level)
 - `run_eval.py` (local) does not have the scorer fixes that the Kaggle eval notebook has
 - eval_191 (PAYE TZS 800K) misclassified in refusal gate — should be accuracy gate
 - Only 2 source documents staged — corpus expansion needs more raw material
@@ -247,11 +254,9 @@ Total: 200 questions | Pass: 160 | Fail: 40 | **Overall: 80.0%** — Gate FAILED
 - africa-giants-dataset: 2,672 pairs (train 2,395 / val 267)
 
 ## Infrastructure
-- Cerebrium: serving adapter-v8
+- Modal: serving adapter-v13 + OOC classifier (Cerebrium retired — see Current Production State)
 - Wappfly: +255637809070
 - Kaggle: training notebook (africa_giants_V2.ipynb) + eval notebook (africa_giants_eval.ipynb)
 - GitHub: main branch
 - HuggingFace token: Kaggle secret `AFRICA_GIANTS`
 - Local pipeline: Ollama (qwen2.5:7b generation, nomic-embed-text dedup/embeddings)
-</content>
-</invoke>

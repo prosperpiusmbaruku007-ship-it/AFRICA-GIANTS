@@ -49,6 +49,9 @@ Quoting old rates gives wrong payroll advice to every Tanzanian employer.
 Training sources: TRA/BRELA/NSSF/OSHA primary portals + official gazettes.
 Eval sources: EY/KPMG/PKF/VELMA/Bowmans/Clyde&Co practitioner advisory alerts.
 Contamination inflates accuracy scores without improving real-world performance.
+Quarantined eval-family firms (this session): velmalaw.com, bowmanslaw.com, clydeco.com —
+their files live in data/source_documents/immigration_eval_family/ (NOT immigration/) and
+must never feed training; reserved for eval-set expansion only.
 
 **R7 — Never ship any user-facing product before BOTH accuracy gates pass.**
 Gate 1: >85% accuracy on in-corpus Swahili questions (verified vs primary government sources).
@@ -115,9 +118,11 @@ Full machine-readable list: **sources/whitelist.json**
 **Tier 1A Training (government portals + official gazettes):**
 - tra.go.tz — VAT, PAYE, SDL, EFD, filing procedures
 - brela.go.tz — business registration and fees
-- nssf.or.tz — NSSF contributions and registration
+- nssf.go.tz — NSSF contributions and registration (use .go.tz — nssf.or.tz fails DNS)
+- kazi.go.tz — NSSF Act / labour source
 - osha.go.tz — OSHA workplace registration
-- tanzlii.org — official Acts and Government Notices (GN 605A, ELRA)
+- tanzlii.org — primary legal database: official Acts and Government Notices (GN 605A, ELRA)
+- fbattorneys.co.tz/gn487a — GN 487A gazette copy
 - Tanzania Government Gazette — Finance Act 2025, GN 487A, GN 605A
 
 **Tier 1A Eval (DIFFERENT document family — practitioner advisory):**
@@ -418,6 +423,42 @@ Base model: `McGill-NLP/AfriqueLlama-8B`
 Trained adapter: `prospaprospa007/africa-giants-adapter-v1`
 Kaggle account: prospaprospa
 GitHub: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
+
+---
+
+## ARCHITECTURE DECISIONS (2026-07-03)
+
+### R10 — RAG-first fact delivery
+Facts come from locked_facts.json via RAG injection at inference time.
+The model's role is Swahili response formatting and persona, not fact storage.
+Research confirms 8B r=64 LoRA reliably stores ~100-150 facts; we have 200+.
+When a compliance fact changes: update locked_facts.json → rebuild RAG embeddings → redeploy Modal.
+No retraining required for fact updates.
+
+### R11 — Inference-time OOC classifier
+The Modal endpoint runs classify_question() BEFORE the model on every request.
+OOC topics (capital gains, import duty, transfer pricing, stamp duty, mining royalties, Zanzibar tax)
+are intercepted with a hardcoded refusal without calling the model.
+This cannot be broken by training — it is infrastructure not behavior.
+The classifier lists live in chike_config.json (ooc_phrases, in_scope_phrases).
+
+### R12 — Eval tests full production system
+eval.py (kaggle/eval.py, fetched from GitHub at runtime) runs the OOC classifier
+before every model call — matching production behavior.
+The gate measures the full system: classifier + RAG + model.
+Gate thresholds: in_corpus ≥ 0.82, out_of_corpus ≥ 0.70
+
+### R13 — generate-from-facts command
+python run.py generate-from-facts --subdomain <name> --limit <n>
+Generates pairs directly from locked_facts.json entries without document extraction.
+Use when: (a) facts are approved in locked_facts but not generating pairs via pipeline,
+(b) targeting specific failing subdomains without new source documents.
+
+### R14 — Single source of truth: chike_config.json
+kaggle/chike_config.json controls: SYSTEM_PROMPT, REFUSAL_PHRASES, OOC phrases,
+in_scope_phrases, generation params, gate thresholds, adapter_repo.
+Both train_ddp.py and eval.py fetch this at runtime from GitHub.
+Never hardcode these values in notebooks or scripts.
 
 ---
 
