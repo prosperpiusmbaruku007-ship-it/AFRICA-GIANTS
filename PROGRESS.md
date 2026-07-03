@@ -1,17 +1,66 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-02
+Last updated: 2026-07-03
 
 ## Training History
 
 | Version | r | Val Loss | In-corpus | OOC | Notes |
 |---|---|---|---|---|---|
-| v8 | 64 | 0.4447 | 82.1% | 70% | PRODUCTION — current best, serving WhatsApp |
+| v8 | 64 | 0.4447 | 82.1% | 70% | PRODUCTION — best in-corpus ever, serving WhatsApp |
 | v9 | 64 | 0.1164 | 82.1% | 40% | Overfit |
 | v10 | 128 | 0.4107 | 77.9% | 10% | OOC collapsed, dangerous GN487A hallucination |
-| v11 | 128 | 0.4660 | 73.2% | 30% | FAILED — v10-lora warm start + epoch 2 overfit |
+| v11 | 128 | 0.4660 (ep2); 0.4111 (ep1) | 73.2% | 30% | FAILED — v10-lora warm start + epoch 2 overfit; ep1 was best |
 | v12 | 64 | 0.46xx | 70.5% | 10% (30% fixed) | FAILED — data problem (SDL mislabeled, n je bug) |
-| v13 | 64 | — | — | — | READY TO TRAIN — same config as v12, data fixed |
+| v13 | 64 | — | 71.6% | 100% (system) | FAILED in-corpus; OOC solved via classifier |
+| v14 | 128 | — | — | — | READY TO TRAIN — r=128 from v11-lora, lr=2e-5, 1 epoch, 3811 pairs |
+
+## v14 Training Config (commit — this session, 2026-07-03)
+Hypothesis under test: does r=128 capacity unlock better fact recall than v8's r=64
+(which plateaued at 82.1% and was never beaten by r=64 successors)?
+- LORA_RANK = 128, LORA_ALPHA = 128 (matches v11-lora — shapes must match for warm-start)
+- PREV_LORA_REPO = africa-giants-adapter-v11-lora (r=128 confirmed via adapter_config.json)
+- learning_rate = 2e-5 — VERY conservative (half of v13's 5e-5). Rationale: nudge weights
+  toward new GN487A/NSSF data without aggressively overwriting v11 epoch-1 knowledge.
+  Risk = underfit if too low; val loss will show quickly.
+- num_train_epochs = 1 ONLY (v11 epoch 1 val=0.4111 was best; epoch 2 overfit to 0.4660)
+- ADAPTER_REPO = africa-giants-adapter-v14; LORA_ONLY_REPO = africa-giants-adapter-v14-lora
+- Both HF repos created (exist_ok) this session
+- chike_config.json version bumped to v14; training block updated (r/alpha 128, lr 2e-5)
+
+## Architecture Findings — RAG + Refusal Classifier (2026-07-03)
+Evidence gathered this session that reframes what to invest in next:
+- **OOC refusal is SOLVED at the system level, not by the model.** v8 model-only refusal
+  was 70%; with the inference-time phrase classifier + hardcoded refusal + system-prompt
+  boundaries, OOC intercept is ~100% (5/5 OOC, 5/5 in-scope pass-through). The gate-2
+  problem is closed by architecture, not by more fine-tuning.
+- **Fine-tuning is the wrong tool for fact recall.** v8 (2,672 pairs) scored the best
+  in-corpus ever (82.1%); every r=64 successor scored LOWER despite growing to 3,811 pairs
+  (80.0 → 77.9 → 73.2 → 70.5 → 71.6). More pairs → interference, not more knowledge.
+  8/15 v8-vs-v13 hard-fact outputs are byte-identical — LoRA barely moves the model on
+  facts; retrieved/injected context dominates the answer.
+- **RAG grounding is the correct fact path** (facts decay: VAT withholding changed 1 Jul
+  2025, GN 605A revoked 2022 wage order 1 Jan 2026 — weights freeze facts, retrieval doesn't).
+  v14 tests the capacity hypothesis (r=128), but the strategic bet is retrieval-first with
+  the fine-tune demoted to register/refusal styling.
+- Two-eval discipline going forward: keep the bare-weights eval as a DIAGNOSTIC (never hide
+  it), gate the PRODUCT on the full-system eval (model + RAG + classifier). Not goalpost-moving
+  as long as both are reported and RAG retrieves from the training family, eval from the
+  practitioner family (R6).
+
+## GN487A/GN605A Poisoning FIX (2026-07-03)
+Root cause: RAG retrieval collision. The GN487A `full_legal_name` fact body contained NO
+"Government Notice" anchor, while the GN605A fact literally contains "(Government Notice
+No. 605A)". A GN487A name query therefore retrieved the 605A fact and the model parroted
+"Government Notice No.605A" as GN487A's name (observed identically in v8 AND v13).
+Fixes in `scripts/locked_facts.json` (canonical):
+- Strengthened `gn487a_full_legal_name`: fact body now leads with "GN 487A is Government
+  Notice No. 487A ... is NOT Government Notice No. 605A" (adds the correct anchor so RAG
+  retrieves the right fact) + wrong_patterns catching any 487A→605A / 487A→wage confusion.
+- Added `gn487a_vs_gn605a_disambiguation` fact — explicit separation of the two notices.
+- Rebuilt RAG index: `scripts/precompute_rag_embeddings.py` → chike-inference/rag_embeddings.npy
+  (232, 384) + rag_facts_text.json (was 231 facts → 232). Redeploy Modal to activate.
+- Verified: locked_facts JSON valid (233 keys incl _meta); check_locked_facts on batch_014
+  (1,122 pairs) = 0 flags (no false positives from the new patterns).
 
 ## v12 Gate Results (gate_001_results.json on HF adapter-v12)
 - In-corpus: 70.5% (134/190) — Gate FAILED (need >85%)

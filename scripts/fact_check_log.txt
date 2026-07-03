@@ -812,3 +812,6 @@ Total: 90 | Flagged: 0
 
 [2026-06-18T02:08:51.125676] Checked datasets/tier1a/raw_sources/raw_pairs_batch_011.jsonl
 Total: 225 | Flagged: 0
+
+[2026-07-03T20:09:57.024788] Checked datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl
+Total: 1122 | Flagged: 0

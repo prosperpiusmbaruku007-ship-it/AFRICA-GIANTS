@@ -1612,10 +1612,24 @@
   "vat_deferment_minimum_value": "10,000,000 TZS",
   "vat_deferment_form_number": "ITX 247.02.E",
   "gn487a_full_legal_name": {
-    "fact": "Full legal name: The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025",
-    "correct_value": "The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025",
-    "wrong_patterns": [],
+    "fact": "GN 487A is Government Notice No. 487A. Its full legal name is: The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025. GN 487A is NOT Government Notice No. 605A. Government Notice No. 605A is a completely different instrument -- the 2026 minimum wage order. Never state that GN 487A's name or number is 605A.",
+    "correct_value": "Government Notice No. 487A -- The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025",
+    "wrong_patterns": [
+      "gn ?487a.{0,40}(government notice no\\.? ?605a|no\\.? ?605a|gn ?605a)",
+      "jina.{0,40}487a.{0,40}605a",
+      "487a.{0,30}(mishahara ya chini|minimum wage|wage order)",
+      "487a.{0,30}business licensing order(?!.*prohibition)"
+    ],
     "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+  },
+  "gn487a_vs_gn605a_disambiguation": {
+    "fact": "GN 487A and GN 605A are two DIFFERENT Government Notices and must never be conflated. GN 487A = Government Notice No. 487A = The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025 (effective 28 July 2025; bars non-citizens from 15 business activities). GN 605A = Government Notice No. 605A = the Private Sector Minimum Wage Order (gazetted 13 October 2025, effective 1 January 2026; sets minimum wages, revokes the 2022 wage order). Different numbers, different subjects, different Ministries. Asking for GN 487A's name must NOT return 605A, and asking about minimum wage must NOT return 487A.",
+    "correct_value": "GN 487A = non-citizen business prohibition order (2025); GN 605A = minimum wage order (2026). They are distinct.",
+    "wrong_patterns": [
+      "487a.{0,20}(ni sawa na|is the same as|same as).{0,20}605a",
+      "605a.{0,20}(ni sawa na|is the same as|same as).{0,20}487a"
+    ],
+    "source": "GN487A Official Gazette (Govt Notice No.487A, 28/7/2025); GN605A (PKF Eastern Africa, Oct 2025) -- both verified from primary sources"
   },
   "gn487a_legal_authority": {
     "fact": "GN487A is made under the Business Licensing Act (Cap. 101), section 14A(2)",

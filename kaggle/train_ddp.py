@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Africa Giants — DDP Training Script v13
+Africa Giants — DDP Training Script v14
 Multi-GPU training with Unsloth + TRL — Unsloth handles multi-GPU natively
 Usage: python3 train_ddp.py
 """
@@ -60,25 +60,23 @@ log(f"[config] BF16        : {BF16}")
 SMOKE_TEST        = False
 MAX_SEQ_LENGTH    = 512 if SMOKE_TEST else 2048
 LOSS_THRESHOLD    = 3.0
-# LoRA rank — CRITICAL: must match v8-lora which was r=64
-# v11 used r=128 but warm-started from v10-lora (also r=128)
-# v12 warm-starts from v8-lora which is r=64 — shapes MUST match
-LORA_RANK         = 64
-LORA_ALPHA        = 64
+# LoRA rank — v14: r=128, warm-started from v11-lora (also r=128) — shapes MUST match
+# v13 and earlier warm-started from v8-lora at r=64. v14 tests whether the extra
+# r=128 capacity unlocks better fact recall (v8 r=64 plateaued at 82.1% in-corpus).
+LORA_RANK         = 128
+LORA_ALPHA        = 128
 
 BASE_MODEL        = "McGill-NLP/AfriqueLlama-8B"
 DATASET_REPO      = "prospAprospA007/africa-giants-dataset"
-ADAPTER_REPO      = "prospAprospA007/africa-giants-adapter-v13"
-LORA_ONLY_REPO    = "prospAprospA007/africa-giants-adapter-v13-lora"
-PREV_LORA_REPO    = "prospAprospA007/africa-giants-adapter-v8-lora"  # v8 — stable production baseline
-# NOTE: v12 failed because of bad data (SDL tourism pairs, missing GN487A confidence),
-# not because of the training config. v13 uses the same config as v12:
-# r=64, warm from v8-lora, 1 epoch, lr=5e-5. Data fixes applied:
-# - 3 tourism levy pairs removed from sdl_compliance subdomain
-# - SDL day-7 deadline pair fixed
-# - 5 targeted OOC refusal pairs added
-# - Explicit OOC boundaries added to system_prompt via chike_config.json
-# LORA_RANK MUST be 64 — v8-lora is r=64 (rank mismatch crashes at load_adapter).
+ADAPTER_REPO      = "prospAprospA007/africa-giants-adapter-v14"
+LORA_ONLY_REPO    = "prospAprospA007/africa-giants-adapter-v14-lora"
+PREV_LORA_REPO    = "prospAprospA007/africa-giants-adapter-v11-lora"  # v11 — r=128 base for warm-start
+# v14 rationale: r=128 from v11-lora, lr=2e-5 (very conservative — half of v13's 5e-5),
+# 1 epoch only (v11 epoch 1 val=0.4111 was best; epoch 2 overfit to 0.4660).
+# The low lr nudges weights toward the new GN487A/NSSF data without aggressively
+# overwriting what v11 epoch 1 already learned. Risk is underfitting if too low —
+# val loss will tell us quickly.
+# LORA_RANK MUST be 128 — v11-lora is r=128 (rank mismatch crashes at load_adapter).
 
 log(f"[config] SMOKE_TEST    : {SMOKE_TEST}")
 log(f"[config] MAX_SEQ_LENGTH: {MAX_SEQ_LENGTH}")
@@ -206,8 +204,8 @@ log(f"[model] tokenizer eos_token_id: {tokenizer.eos_token_id}")
 # LOAD PREVIOUS LORA — with explicit rank-mismatch handling
 # ══════════════════════════════════════════════════════════
 log(f"[model] Attempting to load {PREV_LORA_REPO} as starting point ...")
-log(f"[model] NOTE: prev lora (v8-lora) is r={LORA_RANK}, same as current — shapes MATCH")
-log(f"[model] v12 warm-starts from v8-lora weights (fine-tune at lr=5e-5), not fresh")
+log(f"[model] NOTE: prev lora (v11-lora) is r={LORA_RANK}, same as current — shapes MATCH")
+log(f"[model] v14 warm-starts from v11-lora weights (fine-tune at lr=2e-5), not fresh")
 try:
     model.load_adapter(
         PREV_LORA_REPO,
@@ -217,8 +215,8 @@ try:
     log(f"[model] Loaded {PREV_LORA_REPO} successfully — v8 warm-start OK ✓")
 except Exception as e:
     if "size mismatch" in str(e).lower() or "shape" in str(e).lower():
-        log(f"[model] FATAL: rank mismatch loading v8-lora — LORA_RANK ({LORA_RANK}) "
-            f"must equal v8-lora rank (64). Aborting to avoid a fresh-random run. {e}")
+        log(f"[model] FATAL: rank mismatch loading v11-lora — LORA_RANK ({LORA_RANK}) "
+            f"must equal v11-lora rank (128). Aborting to avoid a fresh-random run. {e}")
         raise
     else:
         log(f"[model] WARNING: load_adapter failed unexpectedly — {e}")
@@ -399,7 +397,7 @@ _base_kwargs = {
     "warmup_steps":                  2,
     "max_steps":                     10 if SMOKE_TEST else -1,
     "num_train_epochs":              1 if SMOKE_TEST else 1,  # NOT 2 — v11 epoch 1 val=0.4111 best, epoch 2 overfit to 0.4660
-    "learning_rate":                 5e-5,  # half of v11's 1e-4 — conservative, protects v8's OOC refusal behavior
+    "learning_rate":                 2e-5,  # v14: very conservative — half of v13's 5e-5; preserves v11 epoch-1 knowledge while absorbing new pairs
     "fp16":                          not BF16,
     "bf16":                          BF16,
     "logging_steps":                 1,
@@ -588,7 +586,7 @@ try:
             repo_id        = LORA_ONLY_REPO,
             repo_type      = "model",
             token          = hf_token,
-            commit_message = f"adapter-v12 LoRA-only weights r={LORA_RANK} — for v13 load_adapter()",
+            commit_message = f"adapter-v14 LoRA-only weights r={LORA_RANK} — for future load_adapter()",
         )
     log(f"[lora] LoRA-only pushed to {LORA_ONLY_REPO} ✓")
     log(f"[lora] For v13: model.load_adapter('{LORA_ONLY_REPO}', adapter_name='default')")
@@ -648,7 +646,7 @@ pipeline_tag: text-generation
 datasets:
 - {DATASET_REPO}
 ---
-# Africa Giants — Chike Tanzanian Business AI (adapter-v12)
+# Africa Giants — Chike Tanzanian Business AI (adapter-v14)
 QLoRA fine-tune of [{BASE_MODEL}](https://huggingface.co/{BASE_MODEL})
 on Tanzanian business, tax, company registration, and financial regulation data.
 **Base model:** AfriqueLlama-8B (Llama 3.1 8B, 20 African languages incl. Swahili)
@@ -657,7 +655,7 @@ on Tanzanian business, tax, company registration, and financial regulation data.
 **Training pairs:** batch_014 dataset (train_sft.jsonl / val_sft.jsonl on {DATASET_REPO})
 **Validation loss:** {_loss_str}
 **Gate result:** {_gate_str}
-**Started from:** v8-lora at r={LORA_RANK} (warm-start fine-tune, 1 epoch, lr=5e-5)
+**Started from:** v11-lora at r={LORA_RANK} (warm-start fine-tune, 1 epoch, lr=2e-5)
 **LoRA-only checkpoint:** {LORA_ONLY_REPO}
 """
     HfApi().upload_file(
@@ -666,7 +664,7 @@ on Tanzanian business, tax, company registration, and financial regulation data.
         repo_id=ADAPTER_REPO,
         repo_type="model",
         token=hf_token,
-        commit_message=f"adapter-v12 model card — val_loss={_loss_str} r={LORA_RANK}",
+        commit_message=f"adapter-v14 model card — val_loss={_loss_str} r={LORA_RANK}",
     )
     log(f"[push] Model card pushed ✓")
 except Exception as _e:
