@@ -33,7 +33,7 @@ web_image = modal.Image.debian_slim(python_version='3.11').pip_install('fastapi[
 
 volume = modal.Volume.from_name('chike-storage', create_if_missing=True)
 
-ADAPTER_REPO = 'prospAprospA007/africa-giants-adapter-v8'
+ADAPTER_REPO = 'prospAprospA007/africa-giants-adapter-v13'
 BASE_MODEL   = 'McGill-NLP/AfriqueLlama-8B'   # adapter v8 references this base
 
 # Pre-computed RAG assets (baked into the image above)
