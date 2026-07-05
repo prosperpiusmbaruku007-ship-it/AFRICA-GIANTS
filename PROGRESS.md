@@ -2,6 +2,43 @@
 
 Last updated: 2026-07-05
 
+## Session End State (2026-07-05)
+
+### Production system (live on WhatsApp +255637809070)
+- Model: africa-giants-adapter-v14 on Modal (T4 GPU, scales to zero)
+- RAG: 206 facts, cosine similarity, concise bilingual high-stakes facts
+- Classifier: inference-time OOC filter (capital gains, mining, import duty etc.)
+- Gate scores: 83.2% in-corpus (best ever), 90% OOC
+
+### What works reliably in production (RAG-driven)
+- GN487A penalty: TZS 10M non-citizen, TZS 5M facilitator ✅
+- SDL rate: 3.5%, threshold 10+ employees ✅
+- VAT registration threshold: TZS 200M/12mo, TZS 100M/6mo ✅
+- VAT withholding: 6% services, 3% goods ✅
+- NSSF: 10% employer + 10% employee = 20% total ✅
+- BRELA annual return: TZS 22,000 ✅
+- WCF rate: 0.5% of gross payroll ✅
+- Capital gains / import duty / mining OOC: hardcoded refusal ✅
+
+### Known limitations (model-generation, not RAG)
+- Multi-part questions: RAG retrieves top-3 facts, cannot cover 5 subdomains in one query
+- Minor Swahili typos: TZSh, asilimai, garbled domain on secondary topics
+- SDL combined-query threshold: correct for simple queries, fails for mixed queries
+- NSSF URL: updated to nssf.go.tz (old nssf.or.tz kept failing DNS)
+
+### Architecture insight confirmed this session
+The model handles Swahili formatting and persona.
+Facts come from locked_facts.json via RAG.
+Training more versions will not improve factual accuracy — RAG does that.
+Next improvement = query decomposition for multi-part questions + stronger cross-lingual embedder.
+
+### Immediate next session priorities
+1. Query decomposition — break multi-part WhatsApp messages into sub-queries before RAG
+2. intfloat/multilingual-e5-base embedder — better cross-lingual retrieval than MiniLM
+3. Hand-coded pairs targeting specific eval failures (50 pairs, not yet done)
+4. Pay Cerebrium $20.81 or close account
+5. zuck30 lightweight offline Chike discussion
+
 ## Training History
 
 | Version | r | Val Loss | In-corpus | OOC | Gate | Notes |
