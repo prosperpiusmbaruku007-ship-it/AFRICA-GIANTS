@@ -1058,13 +1058,13 @@
     "status": "CONFIRMED"
   },
   "nssf_payment_deadline": {
-    "fact": "NSSF due by end of month following payroll month. Dataset had inconsistent dates (10th vs end of month) — always direct users to nssf.or.tz to confirm current deadline.",
-    "correct_value": "End of month following payroll — verify at nssf.or.tz",
+    "fact": "NSSF due by end of month following payroll month. Dataset had inconsistent dates (10th vs end of month) — always direct users to nssf.go.tz to confirm current deadline.",
+    "correct_value": "End of month following payroll — verify at nssf.go.tz",
     "wrong_patterns": [
       "nssf.*tarehe 10 au mwishoni mwa mwezi",
       "nssf.*tarehe 10 au mwisho wa mwezi"
     ],
-    "primary_source": "nssf.or.tz — verify current deadline",
+    "primary_source": "nssf.go.tz — verify current deadline",
     "verified_date": "2026-06-16",
     "status": "CONFIRMED — use hedged language"
   },
@@ -1318,18 +1318,18 @@
     "training_instruction": "Do not state a specific renewal interval. Use: 'thibitisha muda wa uhuishaji na OSHA (osha.go.tz)' or direct to osha.go.tz."
   },
   "nssf_employer_registration_deadline": {
-    "fact": "Every employer in Tanzania must register with NSSF before or within a reasonable period of commencing business. The NSSF Act Cap. 50 imposes a registration obligation but the exact number of days is not confirmed from the primary source (nssf.go.tz was unreachable during verification). Training pairs must direct employers to nssf.or.tz to confirm current registration deadline and avoid stating a specific day count.",
-    "correct_value": "Register with NSSF at or shortly after commencement of business — verify deadline at nssf.or.tz",
+    "fact": "Every employer in Tanzania must register with NSSF before or within a reasonable period of commencing business. The NSSF Act Cap. 50 imposes a registration obligation but the exact number of days is not confirmed from the primary source (nssf.go.tz was unreachable during verification). Training pairs must direct employers to nssf.go.tz to confirm current registration deadline and avoid stating a specific day count.",
+    "correct_value": "Register with NSSF at or shortly after commencement of business — verify deadline at nssf.go.tz",
     "wrong_patterns": [
       "mwajiri hana wajibu wa kusajili nssf",
       "employer does not need to register with nssf",
       "nssf registration is optional",
       "usajilishaji wa nssf si lazima"
     ],
-    "primary_source": "https://www.nssf.or.tz — unverifiable at time of writing",
+    "primary_source": "https://www.nssf.go.tz — unverifiable at time of writing",
     "verified_date": "2026-06-19",
-    "status": "HEDGE — specific deadline unverifiable from primary source; direct to nssf.or.tz",
-    "training_instruction": "Do not state a specific day count for NSSF registration deadline. Use: 'sajili na NSSF haraka iwezekanavyo baada ya kuanza biashara. Thibitisha tarehe ya mwisho kwenye nssf.or.tz'."
+    "status": "HEDGE — specific deadline unverifiable from primary source; direct to nssf.go.tz",
+    "training_instruction": "Do not state a specific day count for NSSF registration deadline. Use: 'sajili na NSSF haraka iwezekanavyo baada ya kuanza biashara. Thibitisha tarehe ya mwisho kwenye nssf.go.tz'."
   },
   "efd_approved_supplier_verification": {
     "fact": "To verify that an EFD supplier/distributor (msambazaji) is TRA-approved, businesses should check the official TRA website (tra.go.tz) for the current list of approved EFD dealers. TRA publishes a register of approved EFD suppliers. Businesses should only purchase EFD machines from TRA-approved dealers — purchasing from unapproved suppliers may result in the machine not being activated by TRA. The TRA EFD page URL changed and was unavailable at time of writing.",

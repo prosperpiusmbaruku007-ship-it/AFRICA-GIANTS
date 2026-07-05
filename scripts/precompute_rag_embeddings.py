@@ -44,10 +44,10 @@ CONCISE_BILINGUAL_FACTS = {
         'SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata.',
 
     'nssf_employer_rate':
-        'NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi.',
+        'NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).',
 
     'nssf_total_rate':
-        'NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi).',
+        'NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).',
 
     'nssf_payment_deadline':
         'NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata.',
@@ -69,6 +69,9 @@ CONCISE_BILINGUAL_FACTS = {
 
     'OSHA_annual_inspection':
         'OSHA hufanya ukaguzi wa lazima kila mwaka (mara moja kwa mwaka) katika maeneo yote ya kazi Tanzania.',
+
+    'wcf_rate_0_5_percent_confirmed':
+        'WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi kisichobadilika — inategemea mishahara.',
 }
 
 # --- Noise keys to drop (bare citations, sections, exemption lists, no-value fragments) ---
