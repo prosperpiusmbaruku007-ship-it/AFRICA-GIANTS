@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-03
+Last updated: 2026-07-05
 
 ## Training History
 
@@ -12,7 +12,7 @@ Last updated: 2026-07-03
 | v11 | 128 | 0.4660 | 73.2% | 30% | FAIL | v10-lora warmstart + epoch 2 overfit |
 | v12 | 64 | — | 70.5% | 10% | FAIL | v8-lora warmstart, data conflict |
 | v13 | 64 | — | 71.6% | 100% | FAIL | Classifier fixed OOC permanently |
-| v14 | 128 | — | — | — | IN TRAINING | v11-lora warmstart, lr=2e-5, 3811 pairs |
+| v14 | 128 | — | 83.2% | 90% | PASS | v11-lora warmstart, lr=2e-5, 3811 pairs — best ever, beats v8 82.1% |
 
 Gate requirement: >82% in-corpus AND >70% OOC
 OOC note: classifier handles OOC in production — gate OOC measures bare model
@@ -120,13 +120,63 @@ Fixes in `scripts/locked_facts.json` (canonical):
   - GN487A was 75% in v8 → needs to recover from v12's 55%
   - If both recover: in-corpus ~82-84% — close but may still need one more run
 
-## Current Production State
-- Modal serving: africa-giants-adapter-v13 + inference-time OOC classifier
+## RAG Retrieval History (2026-07-05)
+
+Three-step fix applied this session:
+
+1. Cosine normalization (59a2177)
+   - Raw dot-product was giving high-norm vectors unfair advantage
+   - Fix: normalize all embeddings before scoring
+
+2. Noise drop (9f91b79)
+   - 26 Swahili-only bare citations and exemption facts were outranking English
+     value facts for every Swahili query
+   - Fix: exclude legal citations, act references, exemption categories,
+     signatory facts from the embedded index
+   - Index: 232 → 206 facts
+
+3. Concise bilingual facts (9f91b79)
+   - 90% of value facts were English-only; Swahili queries matched Swahili
+     noise instead of correct English facts (GN487A 10M was rank 18)
+   - Fix: high-stakes facts rewritten as short Swahili-dominant strings
+     with value in both Swahili words and TZS digits; no trailing bare
+     domains (trailing domains were feeding URL hallucination)
+   - Result: GN487A 10M → rank 1, SDL 3.5% → rank 1, NSSF 10% → rank 1
+
+Final verified state (endpoint test 2026-07-05):
+- GN487A non-citizen penalty: TZS 10,000,000 ✅ (was 5M dangerous)
+- SDL rate: 3.5% ✅
+- BRELA annual return: TZS 22,000 ✅
+- VAT withholding services: 6% ✅
+- NSSF employer: 10% ✅
+- URL hallucination (brelautang.org): GONE ✅
+- Token mashing (mgenimgeni, go.tzsijui): GONE ✅
+
+Known remaining issues (model-generation, not RAG):
+- Minor Swahili typos: TZSh, asilimai, mweka juu
+- VAT cites wrong year (2024 instead of 2025)
+- These are v14 8B model limits — addressed by frontier API path not RAG tuning
+
+## Current Production State (2026-07-05)
+
+- Modal serving: africa-giants-adapter-v14 + inference-time OOC classifier
+- RAG: 206 facts, cosine similarity, concise bilingual high-stakes facts
 - Endpoint: https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run
 - WhatsApp: +255637809070 via Wappfly → Railway → Modal
-- RAG: 231 facts pre-computed (rag_embeddings.npy + rag_facts_text.json)
-- Cerebrium: UNPAID ($20.81) — superseded by Modal, endpoint inactive
-- Auth: ?token= query param, Railway env MODAL_API_TOKEN
+- Gate scores: v14 in-corpus 83.2%, OOC 90% (classifier)
+- Best ever: 83.2% in-corpus (beats v8's 82.1%)
+- Cerebrium: UNPAID ($20.81) — inactive, superseded by Modal
+
+## Known Issues / Next Session Priorities
+
+1. Hand-coded pairs (50 pairs targeting specific eval failures) — not yet done
+   See: data/reviewed/hand_coded_batch_015.jsonl (may be empty or incomplete)
+2. v14 minor generation quality (typos, wrong year) — model-level, needs either:
+   a. More targeted training pairs in Chike's exact answer style
+   b. Switch to frontier API model (Claude Sonnet / Gemini Flash via OpenRouter)
+3. 1,129 pending fact candidates — review session needed
+4. Cerebrium $20.81 bill — pay or formally close account
+5. zuck30 lightweight offline Chike discussion — still pending
 
 ## R6 review — RESOLVED (Habib released) + GN487A eval-family quarantine
 **Habib Advisory (162 pairs) — RELEASED into batch_014 on 2026-07-01.**
