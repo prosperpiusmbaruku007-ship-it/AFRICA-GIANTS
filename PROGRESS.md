@@ -210,6 +210,26 @@ SDL combined-query threshold:
 - Fix path: stronger embedder (intfloat/multilingual-e5-base) OR query decomposition
   before retrieval OR frontier API model — NOT more concise fact tuning (proven twice)
 
+### Parametric memory override — v14 resists RAG correction on memorized strings
+
+Two confirmed cases where v14's memorized values override correct RAG-injected facts:
+
+1. SDL combined-query threshold
+   - Model says 11 employees (wrong) even when correct fact (10+) is in context
+   - Correct for simple queries, fails when mixed with rate/comparison
+
+2. NSSF URL
+   - Model outputs nssf.or.tz even when RAG explicitly injects nssf.go.tz
+   - RAG can override numerical values (WCF 0.5% proved this)
+   - RAG cannot override deeply memorized string tokens in 8B weights
+
+Pattern: RAG reliably corrects number hallucinations (WCF 1M→0.5%, GN487A 5M→10M)
+but cannot reliably correct memorized string tokens (URLs, thresholds stored as text).
+
+Fix path: frontier API model (Claude Sonnet / Gemini Flash) — larger models do not
+have this parametric override problem because their memorized URLs are more accurate
+and their instruction-following is stronger.
+
 ## Current Production State (2026-07-05)
 
 - Modal serving: africa-giants-adapter-v14 + inference-time OOC classifier
