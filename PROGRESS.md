@@ -157,6 +157,22 @@ Known remaining issues (model-generation, not RAG):
 - VAT cites wrong year (2024 instead of 2025)
 - These are v14 8B model limits — addressed by frontier API path not RAG tuning
 
+OSHA domain hallucination fix (607a923):
+- Q9 OSHA question hallucinated OSHAnz.org (New Zealand OSHA)
+- Fix: added domain-free OSHA concise facts (osha_registration_threshold_b004,
+  OSHA_annual_inspection) — now cites osha.go.tz correctly
+- Also removed dead concise key nssf_employee_rate (not in locked_facts)
+
+## Known Limitations (architectural, not fixable by RAG tuning)
+
+SDL combined-query threshold:
+- Simple query 'SDL threshold ni wafanyakazi wangapi?' → RAG retrieves correct fact at rank 1 ✅
+- Combined query mixing rate + threshold + comparison → generic percentage facts rank higher
+- Model falls back to parametric belief of '11 employees' (incorrect — correct is 10)
+- Root cause: 384-dim multilingual embedding cannot decompose multi-part Swahili queries
+- Fix path: stronger embedder (intfloat/multilingual-e5-base) OR query decomposition
+  before retrieval OR frontier API model — NOT more concise fact tuning (proven twice)
+
 ## Current Production State (2026-07-05)
 
 - Modal serving: africa-giants-adapter-v14 + inference-time OOC classifier
