@@ -35,16 +35,16 @@ CONCISE_BILINGUAL_FACTS = {
         'SDL (Skills Development Levy) Tanzania: asilimia 3.5 ya mishahara yote. Si 4%, si 2%.',
 
     'sdl_employee_threshold':
-        'SDL inalipwa na mwajiri mwenye wafanyakazi 10 au zaidi. Wafanyakazi chini ya 10 hawalipi SDL.',
+        'Kizingiti cha SDL: mwajiri mwenye wafanyakazi 10 AU ZAIDI analipa SDL. Mwenye wafanyakazi 10 YUKO NDANI ya kizingiti na analipa SDL. Chini ya 10 (yaani 9 au pungufu) hawalipi SDL.',
+
+    'sdl_threshold':
+        'Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.',
 
     'sdl_payment_deadline':
         'SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata.',
 
     'nssf_employer_rate':
         'NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi.',
-
-    'nssf_employee_rate':
-        'NSSF: mfanyakazi analipa asilimia 10 ya mshahara wake kila mwezi.',
 
     'nssf_total_rate':
         'NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi).',
@@ -63,6 +63,12 @@ CONCISE_BILINGUAL_FACTS = {
 
     'late_filing_penalty_monthly_fee':
         'BRELA: faini ya kuchelewa kuwasilisha annual return ni TZS 2,500 kwa kila mwezi.',
+
+    'osha_registration_threshold_b004':
+        'OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kikomo cha idadi ya wafanyakazi.',
+
+    'OSHA_annual_inspection':
+        'OSHA hufanya ukaguzi wa lazima kila mwaka (mara moja kwa mwaka) katika maeneo yote ya kazi Tanzania.',
 }
 
 # --- Noise keys to drop (bare citations, sections, exemption lists, no-value fragments) ---
