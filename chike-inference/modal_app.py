@@ -26,6 +26,7 @@ image = (
     )
     .add_local_file(os.path.join(_HERE, 'rag_embeddings.npy'),   '/root/assets/rag_embeddings.npy')
     .add_local_file(os.path.join(_HERE, 'rag_facts_text.json'),  '/root/assets/rag_facts_text.json')
+    .add_local_file(os.path.join(_HERE, '..', 'kaggle', 'chike_config.json'), '/root/assets/chike_config.json')
 )
 
 # Tiny image for the HTTP endpoint (only needs FastAPI; it just forwards to the GPU class).
@@ -40,6 +41,33 @@ BASE_MODEL   = 'McGill-NLP/AfriqueLlama-8B'   # adapter v14 references this base
 RAG_DIR     = '/root/assets'
 _EMB_PATH   = os.path.join(RAG_DIR, 'rag_embeddings.npy')
 _TEXTS_PATH = os.path.join(RAG_DIR, 'rag_facts_text.json')
+_CONFIG_PATH = os.path.join(RAG_DIR, 'chike_config.json')
+
+
+def _load_config():
+    """Single source of truth: kaggle/chike_config.json (baked into the GPU image).
+    Falls back to {} in the web container (which does not have the file)."""
+    import json
+    try:
+        with open(_CONFIG_PATH, encoding='utf-8') as f:
+            cfg = json.load(f)
+        print(f"[config] chike_config.json loaded (version={cfg.get('version','?')})")
+        return cfg
+    except Exception as e:
+        print(f'[config] chike_config.json not loaded ({e}) -- using hardcoded fallbacks')
+        return {}
+
+
+CONFIG = _load_config()
+
+# Generation params — read from config, with safe fallbacks (fixed decoding: greedy,
+# repetition_penalty 1.1 + no_repeat_ngram_size 3 to stop token mashing).
+_GEN = CONFIG.get('generation_params', {})
+MAX_NEW_TOKENS     = int(_GEN.get('max_new_tokens', 512))
+DO_SAMPLE          = bool(_GEN.get('do_sample', False))
+GEN_TEMPERATURE    = float(_GEN.get('temperature', 1.0))
+REPETITION_PENALTY = float(_GEN.get('repetition_penalty', 1.1))
+NO_REPEAT_NGRAM    = int(_GEN.get('no_repeat_ngram_size', 3))
 
 # Cache locations on the persistent volume (fast cold starts after first download)
 HF_CACHE_DIR    = '/persistent-storage/.cache/huggingface'
@@ -105,6 +133,13 @@ IN_SCOPE_PHRASES = [
     'gn487a', 'gn 487', 'wageni', 'wasio raia',
     'kampuni', 'usajili', 'leseni ya biashara', 'tin', 'taxpayer',
 ]
+
+# Merge config-driven phrase lists (single source of truth: chike_config.json).
+# Union preserves the hardcoded fallbacks if config is unavailable.
+EXPLICIT_OOC_PHRASES += [p for p in CONFIG.get('ooc_phrases', [])
+                         if p and p not in EXPLICIT_OOC_PHRASES]
+IN_SCOPE_PHRASES     += [p for p in CONFIG.get('in_scope_phrases', [])
+                         if p and p not in IN_SCOPE_PHRASES]
 
 HARDCODED_REFUSAL = (
     'Samahani, swali hili liko nje ya mada yangu. '
@@ -259,6 +294,10 @@ class ChikeModel:
             return {'reply': HARDCODED_REFUSAL}
 
         relevant_facts = self.retrieve_facts(message)
+        print(f'[RAG] query: {message[:80]}')
+        print(f'[RAG] retrieved {len(relevant_facts)} facts:')
+        for _i, _f in enumerate(relevant_facts):
+            print(f'[RAG]   {_i+1}. {_f[:120]}')
         if relevant_facts:
             facts_block = '\n'.join(f'- {f}' for f in relevant_facts)
             enriched_system = (
@@ -267,9 +306,12 @@ class ChikeModel:
                 + facts_block
                 + '\n\nTumia ukweli huu. Usibuni takwimu ambazo hazipo hapa.'
             )
-            print(f'[rag] injected {len(relevant_facts)} facts for: {message[:50]}')
+            print(f'[RAG] enriched system prompt: {len(enriched_system)} chars '
+                  f'(facts_block {len(facts_block)} chars)')
+            print(f'[RAG] facts_block preview: {facts_block[:300]}')
         else:
             enriched_system = BASE_SYSTEM_PROMPT
+            print('[RAG] no facts retrieved -- using base system prompt only')
 
         messages = [
             {'role': 'system', 'content': enriched_system},
@@ -295,17 +337,20 @@ class ChikeModel:
         inputs    = self.tokenizer(prompt, return_tensors='pt').to(self.model.device)
         input_len = inputs['input_ids'].shape[1]
 
+        gen_kwargs = dict(
+            max_new_tokens=MAX_NEW_TOKENS,
+            do_sample=DO_SAMPLE,
+            repetition_penalty=REPETITION_PENALTY,
+            no_repeat_ngram_size=NO_REPEAT_NGRAM,
+            pad_token_id=self.tokenizer.eos_token_id,
+            eos_token_id=self.tokenizer.eos_token_id,
+        )
+        if DO_SAMPLE:
+            gen_kwargs['temperature'] = GEN_TEMPERATURE
+        print(f'[gen] max_new_tokens={MAX_NEW_TOKENS} do_sample={DO_SAMPLE} '
+              f'repetition_penalty={REPETITION_PENALTY} no_repeat_ngram_size={NO_REPEAT_NGRAM}')
         with torch.no_grad():
-            outputs = self.model.generate(
-                **inputs,
-                max_new_tokens=300,
-                temperature=temperature,
-                do_sample=True,
-                repetition_penalty=1.3,
-                no_repeat_ngram_size=4,
-                pad_token_id=self.tokenizer.eos_token_id,
-                eos_token_id=self.tokenizer.eos_token_id,
-            )
+            outputs = self.model.generate(**inputs, **gen_kwargs)
 
         new_tokens = outputs[0][input_len:]
         reply = self.tokenizer.decode(new_tokens, skip_special_tokens=True).strip()

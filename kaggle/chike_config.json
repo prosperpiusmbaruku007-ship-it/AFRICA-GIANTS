@@ -28,8 +28,10 @@
   ],
 
   "ooc_phrases": [
-    "capital gain", "faida ya mtaji", "kodi ya faida ya mtaji",
+    "capital gain", "capital gains", "faida ya mtaji", "kodi ya faida ya mtaji",
     "nilinunua ardhi", "nilinunua nyumba", "niliuza ardhi", "niliuza nyumba",
+    "uza ardhi", "nunua ardhi", "uza nyumba", "nunua nyumba",
+    "faida ya ardhi", "kipande cha ardhi", "plot nilinunua", "shamba nilinunua",
     "import duty", "customs duty", "ushuru wa forodha", "ushuru wa uagizaji",
     "kodi ya uagizaji", "kuagiza bidhaa", "duty ya kuagiza",
     "transfer pricing", "bei ya uhamisho", "arm's length",
@@ -50,11 +52,11 @@
   ],
 
   "generation_params": {
-    "max_new_tokens": 256,
+    "max_new_tokens": 512,
     "do_sample": false,
     "temperature": 1.0,
-    "repetition_penalty": 1.3,
-    "no_repeat_ngram_size": 4
+    "repetition_penalty": 1.1,
+    "no_repeat_ngram_size": 3
   },
 
   "gate_thresholds": {
