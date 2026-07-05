@@ -35,6 +35,13 @@ for k, v in facts.items():
 print(f'[rag] Embedding {len(fact_texts)} facts...')
 embeddings = model.encode(fact_texts, show_progress_bar=True)
 
+# Pre-normalize to unit vectors so inference cosine similarity == plain dot-product.
+# (Raw un-normalized vectors made retrieval rank wrong facts.)
+embeddings = np.array(embeddings)
+norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+embeddings = embeddings / (norms + 1e-10)
+print(f'[rag] normalized embeddings for cosine similarity')
+
 np.save(OUTPUT_NPY, embeddings)
 with open(OUTPUT_TEXTS, 'w', encoding='utf-8') as f:
     json.dump(fact_texts, f, ensure_ascii=False, indent=2)

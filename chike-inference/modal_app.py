@@ -273,9 +273,17 @@ class ChikeModel:
                     'paraphrase-multilingual-MiniLM-L12-v2',
                     cache_folder='/persistent-storage/.cache/sentence_transformers',
                 )
-            q_emb  = self.embed_model.encode([question])
-            scores = np.dot(self.fact_embeddings, q_emb.T).flatten()
+            # Cosine similarity: normalize the query AND fact vectors before the
+            # dot-product. Raw dot-product favoured high-norm vectors and ranked
+            # semantically-wrong facts (e.g. an SDL query surfaced GN487A penalties).
+            q_emb  = self.embed_model.encode([question])[0]
+            q_norm = q_emb / (np.linalg.norm(q_emb) + 1e-10)
+            norms  = np.linalg.norm(self.fact_embeddings, axis=1, keepdims=True)
+            normalized_facts = self.fact_embeddings / (norms + 1e-10)
+            scores = np.dot(normalized_facts, q_norm)
             top_indices = np.argsort(scores)[-top_k:][::-1]
+            for i, idx in enumerate(top_indices):
+                print(f'[RAG] rank {i+1} score={scores[idx]:.3f}: {self.fact_texts[idx][:80]}')
             return [self.fact_texts[i] for i in top_indices]
         except Exception as e:
             print(f'[rag] retrieve_facts error: {e}')
