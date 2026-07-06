@@ -1905,5 +1905,17 @@
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "CONTRIBUTIONS FOR EMPLOYEES",
     "approved": "manual_review — NSSF employee contribution rate 10%, unit corrected from cents to %"
+  },
+  "gn487a_shareholder_vs_operator_distinction": {
+    "fact": "GN487A prohibits non-citizens from CONDUCTING or OPERATING the listed business activities. Passive shareholding or investment in a Tanzanian-owned and operated company is not explicitly prohibited by GN487A - the prohibition targets the person carrying out the activity, not the investor. However, a non-citizen who is a shareholder AND actively manages or operates the business would be covered. Consult an immigration lawyer for specific structures.",
+    "correct_value": "Passive shareholding not explicitly barred; active operation/management by a non-citizen IS covered",
+    "wrong_patterns": [
+      "non-citizens cannot be shareholders",
+      "passive investment is prohibited"
+    ],
+    "primary_source": "GN487A Official Gazette 28 July 2025 - Section 3(1): activities shall not be CARRIED OUT by non-citizens; legal interpretation",
+    "verified_by": "manual_review - high-value edge case, common real user question",
+    "effective_date": "2025-07-28",
+    "status": "CONFIRMED"
   }
 }
