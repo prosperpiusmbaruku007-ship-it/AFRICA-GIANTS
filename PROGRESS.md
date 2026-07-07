@@ -42,6 +42,39 @@ fact's stated answer. Fragile to phrasing (gate eval_191 phrasing passed). The c
 paye_bands_with_examples fact lists bands that invite miscalculation; a follow-up should
 state 78,000 more emphatically or drop the band table. Not a corruption/retrieval issue.
 
+## Known Limitations — Compound Query Generation (2026-07-08)
+
+Surfaced via real WhatsApp testing of multi-part compound questions. Retrieval and
+loop behaviour were fixed (decompose_query enumeration extension, commit 3e47597;
+NSSF fact rewrite + regen guard, commits 3d6c1e2 / bd348f7). The remaining issues
+below are model-generation limits of the 8B AfriqueLlama, not retrieval bugs.
+
+1. Model number-selection failure on scaled calculations
+   Fact retrieval works correctly (nssf_calculation_example retrieves at rank 1,
+   contains the correct scaled total AND single-employee figure). The 8B model
+   still sometimes selects the wrong number from a correct fact when multiple
+   numbers appear in context. Attempted fix: explicit 'SI TZS 120,000' contrast
+   language in the fact text (commit 3d6c1e2). Partial mitigation, not a full fix.
+
+2. Scenario-pinned calculation facts do not generalize
+   locked_facts calc examples are written for specific numbers (e.g. NSSF for
+   12 employees at 600,000 each; PAYE for salary of 800,000). When a real user
+   asks about different numbers (e.g. salary of 900,000), the wrong scenario's
+   fact retrieves and the model either uses the wrong fixed answer or fails to
+   adapt. This is a structural limitation of fact-based RAG for arithmetic —
+   the system does not have a calculation engine, only worked examples.
+
+   Fix path: either (a) add many more worked examples covering common salary
+   bands, which does not scale, or (b) frontier API model with genuine
+   arithmetic reasoning capability replacing the 8B parametric approach for
+   calculation-type questions specifically.
+
+3. Empty/refusal collapse on complex compound queries
+   When retrieval succeeds (3 correct facts for 3 sub-questions) but the
+   facts do not perfectly match the asked scenario, the model sometimes
+   produces a bare refusal ('Thibitisha na TRA') rather than attempting a
+   partial or approximate answer using the general principles it does know.
+
 ## Session End State (2026-07-05)
 
 ### Production system (live on WhatsApp +255637809070)
