@@ -420,7 +420,7 @@ python scripts/run_eval.py          # Run accuracy + refusal gates; print GATE P
 ```
 
 Base model: `McGill-NLP/AfriqueLlama-8B`
-Trained adapter: `prospaprospa007/africa-giants-adapter-v1`
+Trained adapter: `prospAprospA007/africa-giants-adapter-v15` (production — first gate pass: 87.9% in-corpus / 100% OOC, 2026-07-07)
 Kaggle account: prospaprospa
 GitHub: https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS
 

@@ -1,6 +1,46 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-05
+Last updated: 2026-07-07
+
+## GATE PASSED — v15 (2026-07-07) — FIRST PASSING RESULT IN PROJECT HISTORY
+
+In-corpus: 87.9% (167/190) — PASS (threshold 85%)
+Out-of-corpus: 100% (10/10) — PASS (threshold 70%)
+
+Subdomain results:
+- brela_registration: 100.0%
+- out_of_corpus: 100.0%
+- efd_compliance: 95.0%
+- osha_registration: 93.3%
+- sdl_compliance: 92.0%
+- vat_registration: 86.7%
+- gn487a: 85.0%
+- vat_withholding: 85.0%
+- nssf_contributions: 76.0% (only subdomain below 85%, does not block aggregate pass)
+
+What got us here:
+1. 750 hand-coded training pairs (batch_015) written in v8's original style
+2. Removed 9 eval-contaminated pairs present in corpus since v8 (R6 leak)
+3. e5-base embedder migration — fixed multilingual retrieval gap (MiniLM buried English facts at rank 13-48 for Swahili queries)
+4. Concise bilingual high-stakes facts (GN487A, SDL, NSSF, WCF, BRELA) — short Swahili-dominant text with values in both words and digits
+5. RAG noise filter — dropped 26 bare legal citations/exemption facts that were generic attractors
+6. Fixed PAYE band retrieval by consolidating into paye_bands_with_examples with worked example
+7. CRITICAL FIX: no_repeat_ngram_size=2 was destructively interacting with RAG injection —
+   forbidding the model from reproducing exact facts it was handed (tra.go.tz, TZS amounts),
+   causing 45% domain corruption (.tz→.ke). Fixed by setting no_repeat_ngram_size=0.
+8. Eval.py now tests the full production system (classifier + RAG + model) per R12 —
+   previously tested bare model weights only
+
+Production deployed: adapter-v15 on Modal (2026-07-07), live at
+https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run
+
+Post-deploy endpoint smoke test (6 critical facts): 5/6 correct and clean (no .ke
+corruption, no token mashing). GN487A 10M, SDL 3.5%, BRELA 22,000, VAT withholding 6%,
+zero-rated input VAT — all correct. KNOWN CAVEAT: PAYE-on-800,000 query returned
+TZS 202,000 instead of 78,000 — the model over-reasoned the bands instead of using the
+fact's stated answer. Fragile to phrasing (gate eval_191 phrasing passed). The concise
+paye_bands_with_examples fact lists bands that invite miscalculation; a follow-up should
+state 78,000 more emphatically or drop the band table. Not a corruption/retrieval issue.
 
 ## Session End State (2026-07-05)
 
