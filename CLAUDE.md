@@ -469,6 +469,21 @@ in_scope_phrases, generation params, gate thresholds, adapter_repo.
 Both train_ddp.py and eval.py fetch this at runtime from GitHub.
 Never hardcode these values in notebooks or scripts.
 
+### Shared production logic requiring dual-file sync
+
+The following mechanisms must be identical in both chike-inference/modal_app.py
+and kaggle/eval.py, since the gate must test the exact system users experience:
+- Generation parameters (already enforced via chike_config.json, R14)
+- RAG retrieval (embedding model, cosine scoring, fact index — R12)
+- decompose_query and all sub-query splitting logic (added here after a gap
+  was found: eval.py had no decomposition at all while production had the
+  enumeration extension from commit 3e47597)
+- Post-generation cleanup (domain correction, leading-question strip)
+
+When any of these mechanisms changes in one file, immediately port it to the
+other in the same commit. A silent divergence here means the gate is no
+longer measuring the production system, defeating the purpose of R12.
+
 ### R15 — RAG embedding regeneration required after locked_facts changes
 
 Whenever scripts/locked_facts.json is modified (facts added, changed, or removed):
