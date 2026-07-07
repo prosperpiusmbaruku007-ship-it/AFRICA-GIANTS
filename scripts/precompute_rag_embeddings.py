@@ -21,7 +21,11 @@ import numpy as np
 FACTS_PATH   = 'scripts/locked_facts.json'
 OUTPUT_NPY   = 'chike-inference/rag_embeddings.npy'
 OUTPUT_TEXTS = 'chike-inference/rag_facts_text.json'
-EMBED_MODEL  = 'paraphrase-multilingual-MiniLM-L12-v2'
+# intfloat/multilingual-e5-base: 768-dim, trained for multilingual retrieval.
+# e5 REQUIRES an asymmetric prefix — facts are 'passage: ', queries are 'query: '
+# (the query prefix is applied at retrieval time in chike-inference/modal_app.py).
+EMBED_MODEL  = 'intfloat/multilingual-e5-base'
+E5_PASSAGE_PREFIX = 'passage: '
 
 # --- Concise, Swahili-dominant text for high-stakes facts (SHORT, no long English tail) ---
 CONCISE_BILINGUAL_FACTS = {
@@ -134,8 +138,12 @@ if __name__ == '__main__':
     print(f'[rag] Loading model: {EMBED_MODEL}')
     model = SentenceTransformer(EMBED_MODEL)
 
-    print(f'[rag] Embedding {len(fact_texts)} facts...')
-    embeddings = np.array(model.encode(fact_texts, show_progress_bar=True))
+    # e5 asymmetric retrieval: embed facts as passages. The plain fact_texts are
+    # still what gets saved + injected into the prompt; only the embedded copy is
+    # prefixed. Queries get the 'query: ' prefix at retrieval time in modal_app.py.
+    print(f'[rag] Embedding {len(fact_texts)} facts (with e5 passage prefix)...')
+    fact_texts_prefixed = [E5_PASSAGE_PREFIX + t for t in fact_texts]
+    embeddings = np.array(model.encode(fact_texts_prefixed, show_progress_bar=True))
 
     norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
     embeddings = embeddings / (norms + 1e-10)

@@ -1,4 +1,5 @@
 import os, json, re, sys, subprocess, requests
+import numpy as np
 from datetime import datetime, timezone
 from collections import defaultdict
 
@@ -85,7 +86,8 @@ def classify_question(message: str) -> bool:
 
 # ── INSTALL DEPENDENCIES ──────────────────────────────────────────────────────
 subprocess.run(['pip', 'install', '-q', '-U', 'bitsandbytes>=0.46.1'], check=True)
-print('[model] bitsandbytes updated')
+subprocess.run(['pip', 'install', '-q', '-U', 'sentence-transformers>=2.7.0'], check=True)
+print('[model] bitsandbytes + sentence-transformers updated')
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from transformers import StoppingCriteria, StoppingCriteriaList
@@ -153,6 +155,39 @@ result = subprocess.run(
 GPU_NAME = result.stdout.strip() if result.returncode == 0 else 'CPU'
 print(f'[gpu] {GPU_NAME} | CUDA: {torch.cuda.is_available()}')
 
+# ── RAG SETUP (e5-base) ───────────────────────────────────────────────────────
+# Matches production (chike-inference/modal_app.py) so the gate tests the FULL
+# system per R12 (classifier + RAG + model), not bare model weights. The e5 index
+# is fetched from the HF dataset repo — same repo as the eval questions — so the
+# gate and production share one index (built by kaggle/regenerate_rag_e5.py).
+print('[rag] fetching e5 index from HF dataset repo ...')
+_rag_npy = hf_hub_download(repo_id='prospAprospA007/africa-giants-dataset',
+                          filename='rag_embeddings.npy', repo_type='dataset', token=hf_token)
+_rag_txt = hf_hub_download(repo_id='prospAprospA007/africa-giants-dataset',
+                          filename='rag_facts_text.json', repo_type='dataset', token=hf_token)
+fact_embeddings = np.load(_rag_npy)
+with open(_rag_txt, encoding='utf-8') as f:
+    fact_texts = json.load(f)
+assert fact_embeddings.shape[0] == len(fact_texts), \
+    f'RAG mismatch: {fact_embeddings.shape[0]} embeddings vs {len(fact_texts)} texts'
+print(f'[rag] loaded {len(fact_texts)} facts, embeddings {fact_embeddings.shape}')
+
+from sentence_transformers import SentenceTransformer
+# MUST match the embedder that built rag_embeddings.npy (e5-base, 768-dim).
+embed_model = SentenceTransformer('intfloat/multilingual-e5-base')
+_fact_norms = np.linalg.norm(fact_embeddings, axis=1, keepdims=True)
+fact_embeddings_norm = fact_embeddings / (_fact_norms + 1e-10)
+
+def retrieve_facts(question, top_k=3):
+    # e5 asymmetric retrieval: query gets the 'query: ' prefix (facts were embedded
+    # as 'passage: ' at build time). Cosine similarity on normalized vectors — same
+    # math as modal_app.py.retrieve_facts.
+    q_emb = embed_model.encode([f'query: {question}'])[0]
+    q_norm = q_emb / (np.linalg.norm(q_emb) + 1e-10)
+    scores = np.dot(fact_embeddings_norm, q_norm)
+    top_indices = np.argsort(scores)[-top_k:][::-1]
+    return [fact_texts[i] for i in top_indices]
+
 # ── SWAHILI NUMBERS ───────────────────────────────────────────────────────────
 SWAHILI_NUMBERS = {
     'moja': 1, 'mbili': 2, 'tatu': 3, 'nne': 4, 'tano': 5,
@@ -165,9 +200,18 @@ SWAHILI_NUMBERS = {
 
 # ── INFERENCE ─────────────────────────────────────────────────────────────────
 def generate_answer(question_sw: str) -> str:
+    # RAG injection — retrieve top-3 facts and prepend to the system prompt, the same
+    # way modal_app.py does, so the gate measures the production system per R12.
+    retrieved_facts = retrieve_facts(question_sw, top_k=3)
+    rag_context = ''
+    if retrieved_facts:
+        rag_context = '\n\nUkweli muhimu (tumia hawa, usibuni takwimu):\n'
+        for fact in retrieved_facts:
+            rag_context += f'• {fact}\n'
+    full_system = SYSTEM_PROMPT + rag_context
     prompt = (
         f'<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n'
-        f'{SYSTEM_PROMPT}<|eot_id|>'
+        f'{full_system}<|eot_id|>'
         f'<|start_header_id|>user<|end_header_id|>\n\n'
         f'{question_sw}<|eot_id|>'
         f'<|start_header_id|>assistant<|end_header_id|>\n\n'
