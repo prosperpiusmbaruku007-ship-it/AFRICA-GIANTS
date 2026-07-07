@@ -76,6 +76,9 @@ CONCISE_BILINGUAL_FACTS = {
 
     'wcf_rate_0_5_percent_confirmed':
         'WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi kisichobadilika — inategemea mishahara.',
+
+    'paye_bands_with_examples':
+        'PAYE kwa mshahara TZS 800,000 ni TZS 78,000 (asilimia 25 juu ya kiwango cha TZS 760,000). Bendi zote: 0% hadi 270,000; 8% 270,001-520,000; 20% 520,001-760,000; 25% 760,001-1,000,000; 30% zaidi ya 1,000,000.',
 }
 
 # --- Noise keys to drop (bare citations, sections, exemption lists, no-value fragments) ---
