@@ -27,6 +27,12 @@ ADAPTER_REPO       = CONFIG.get('adapter_repo', 'prospAprospA007/africa-giants-a
 SYSTEM_PROMPT      = CONFIG['system_prompt']
 REFUSAL_PHRASES    = CONFIG['refusal_phrases']
 MAX_NEW_TOKENS     = CONFIG['generation_params']['max_new_tokens']
+REPETITION_PENALTY = CONFIG['generation_params'].get('repetition_penalty', 1.1)
+NO_REPEAT_NGRAM    = CONFIG['generation_params'].get('no_repeat_ngram_size', 3)
+# Stop sequences — must match production (modal_app.py) so the gate measures the
+# real system (R12). Halts the fabricated follow-up turns that caused run-on failures.
+STOP_STRINGS       = CONFIG['generation_params'].get(
+    'stop_strings', ['\n\nQ:', '\n\nSwali:', '<|start_header_id|>', '\n\n---'])
 ACCURACY_THRESHOLD = CONFIG['gate_thresholds']['in_corpus']
 REFUSAL_THRESHOLD  = CONFIG['gate_thresholds']['out_of_corpus']
 
@@ -82,7 +88,20 @@ subprocess.run(['pip', 'install', '-q', '-U', 'bitsandbytes>=0.46.1'], check=Tru
 print('[model] bitsandbytes updated')
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+from transformers import StoppingCriteria, StoppingCriteriaList
 import torch
+
+
+# Hard stop the instant the model tries to open a new Q&A turn — identical to
+# production (chike-inference/modal_app.py) so the gate reflects real behavior.
+class StopOnSubstrings(StoppingCriteria):
+    def __init__(self, tokenizer, stop_strings):
+        self.tokenizer = tokenizer
+        self.stop_strings = stop_strings
+
+    def __call__(self, input_ids, scores, **kwargs):
+        text = self.tokenizer.decode(input_ids[0], skip_special_tokens=True)
+        return any(s in text[-100:] for s in self.stop_strings)
 
 # ── LOAD MODEL ────────────────────────────────────────────────────────────────
 print(f'[model] Loading {ADAPTER_REPO} ...')
@@ -154,14 +173,18 @@ def generate_answer(question_sw: str) -> str:
         f'<|start_header_id|>assistant<|end_header_id|>\n\n'
     )
     inputs = tokenizer(prompt, return_tensors='pt').to(model.device)
+    stopping_criteria = StoppingCriteriaList(
+        [StopOnSubstrings(tokenizer, STOP_STRINGS)]
+    )
     with torch.no_grad():
         out = model.generate(
             **inputs,
             max_new_tokens=MAX_NEW_TOKENS,
             do_sample=False,
             temperature=1.0,
-            repetition_penalty=1.3,
-            no_repeat_ngram_size=4,
+            repetition_penalty=REPETITION_PENALTY,
+            no_repeat_ngram_size=NO_REPEAT_NGRAM,
+            stopping_criteria=stopping_criteria,
             eos_token_id=tokenizer.eos_token_id,
             pad_token_id=tokenizer.pad_token_id,
         )

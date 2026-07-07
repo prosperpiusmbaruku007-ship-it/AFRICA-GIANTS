@@ -52,11 +52,12 @@
   ],
 
   "generation_params": {
-    "max_new_tokens": 320,
+    "max_new_tokens": 200,
     "do_sample": false,
     "temperature": 1.0,
     "repetition_penalty": 1.1,
-    "no_repeat_ngram_size": 3
+    "no_repeat_ngram_size": 3,
+    "stop_strings": ["\n\nQ:", "\n\nSwali:", "<|start_header_id|>", "\n\n---"]
   },
 
   "gate_thresholds": {
