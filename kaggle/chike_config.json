@@ -55,8 +55,8 @@
     "max_new_tokens": 200,
     "do_sample": false,
     "temperature": 1.0,
-    "repetition_penalty": 1.18,
-    "no_repeat_ngram_size": 2,
+    "repetition_penalty": 1.1,
+    "no_repeat_ngram_size": 0,
     "stop_strings": ["\n\nQ:", "\n\nSwali:", "<|start_header_id|>", "\n\n---"]
   },
 
