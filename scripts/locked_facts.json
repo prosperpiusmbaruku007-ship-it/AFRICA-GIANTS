@@ -1919,8 +1919,8 @@
     "status": "CONFIRMED"
   },
   "paye_bands_with_examples": {
-    "fact": "PAYE kwa mshahara TZS 800,000 ni TZS 78,000 (asilimia 25 juu ya kiwango cha TZS 760,000). Bendi zote: 0% hadi 270,000; 8% 270,001-520,000; 20% 520,001-760,000; 25% 760,001-1,000,000; 30% zaidi ya 1,000,000.",
-    "correct_value": "PAYE on TZS 800,000 = TZS 78,000",
+    "fact": "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+    "correct_value": "PAYE on TZS 800,000 = TZS 78,000 (final answer)",
     "status": "CONFIRMED",
     "primary_source": "tra.go.tz"
   }
