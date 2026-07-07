@@ -200,6 +200,39 @@ MULTI_PART_SIGNALS = [
 # Strong, unambiguous split points (never split on a bare "pia").
 _SPLIT_PATTERN = r'(?:na pia|pia pia|vilevile|zaidi ya hayo|swali lingine)'
 
+# Enumeration: a single clause listing several obligations to compute in one breath,
+# e.g. "Nihesabie PAYE, SDL, na NSSF zote tatu". Such a message has no '?' and no
+# multi-part connector, so the '?'/connector paths below never fire and a single
+# whole-message top-3 retrieval covers only ONE domain (observed: PAYE dropped
+# entirely, model looped on 'Thibitisha na TRA'). We detect the "A, B, na C" list
+# and give each item its own context-carrying sub-query so each domain is retrieved.
+_ENUMERATION_CLAUSE = re.compile(
+    r'([^\s,.?!][\w/]*(?:\s*,\s*[\w/]+)+\s*,?\s*na\s+[\w/]+)', re.IGNORECASE)
+# Require a calculate/list verb so ordinary prose ("inalipa BRELA, TRA na NSSF") is
+# never over-split. \w* on both sides matches the Swahili object prefix so the verb
+# in "Nihesabie" / "Nielezee" / "Niambie" is caught, not skipped by a word boundary.
+_ENUMERATION_VERB = re.compile(r'\w*(?:hesab|elez|ambi|orodh|taj)\w*', re.IGNORECASE)
+
+
+def _split_enumeration(message: str) -> list:
+    """Sub-queries for an 'A, B, na C' compute list, else [] (not an enumeration).
+
+    Each sub-query carries the context preceding the list (salary, employee count,
+    verb) so it retrieves the calc example, not just the bare domain keyword.
+    """
+    if not _ENUMERATION_VERB.search(message):
+        return []
+    m = _ENUMERATION_CLAUSE.search(message)
+    if not m:
+        return []
+    raw = re.split(r'\s*,\s*(?:na\s+)?|\s+na\s+', m.group(1), flags=re.IGNORECASE)
+    items = [re.sub(r'^na\s+', '', it.strip(), flags=re.IGNORECASE)
+             for it in raw if it.strip()]
+    if len(items) < 2:
+        return []
+    preamble = message[:m.start()].strip()
+    return [f'{preamble} {item}'.strip() for item in items]
+
 
 def decompose_query(message: str) -> list:
     """Split a multi-part message into sub-queries for separate RAG retrieval.
@@ -211,8 +244,9 @@ def decompose_query(message: str) -> list:
     message_lower = message.lower()
     question_marks = message.count('?')
     has_connector = any(re.search(p, message_lower) for p in MULTI_PART_SIGNALS)
+    enum_parts = _split_enumeration(message)
 
-    if question_marks <= 1 and not has_connector:
+    if question_marks <= 1 and not has_connector and not enum_parts:
         return [message]  # single question — no decomposition needed
 
     parts = []
@@ -229,6 +263,11 @@ def decompose_query(message: str) -> list:
     if not parts and has_connector:
         segments = re.split(_SPLIT_PATTERN, message, flags=re.IGNORECASE)
         parts = [s.strip() for s in segments if len(s.strip()) > 8]
+
+    # Enumeration list ("Nihesabie A, B, na C") — use when the '?'/connector paths
+    # above produced nothing usable (no '?', no connector).
+    if (not parts or len(parts) == 1) and enum_parts:
+        parts = enum_parts
 
     # Fallback: unusable fragments -> treat as single query.
     if not parts or len(parts) == 1:
