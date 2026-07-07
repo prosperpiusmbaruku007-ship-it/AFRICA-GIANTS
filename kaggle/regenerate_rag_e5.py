@@ -143,6 +143,11 @@ critical_queries = [
     ('PAYE 800K band', 'query: PAYE kwa mshahara wa TZS 800,000 ni kiasi gani?', ['760', '25%', '78,000']),
     ('SDL 12-employee calculation', 'query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, SDL jumla ni kiasi gani?', ['252,000']),
     ('NSSF 12-employee calculation', 'query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, NSSF jumla ni kiasi gani?', ['1,440,000']),
+    # Number-selection regression guard: the compound query where the model kept
+    # defaulting to the per-employee 120,000 instead of the 12-employee total.
+    # Retrieved fact must carry the scaled total AND the explicit 'SI TZS 120,000'
+    # contrast (verified separately below) — the contrastive-correction pattern.
+    ('NSSF compound (120k selection bug)', 'query: Kampuni ina wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja. NSSF jumla ya kampuni ni kiasi gani?', ['1,440,000']),
 ]
 
 print('\n' + '=' * 60)
@@ -170,16 +175,41 @@ for name, query, expected in critical_queries:
         for r, idx in enumerate(top3_idx, 1):
             print(f'        top{r}: {fact_texts_to_embed[idx][:90]}')
 
+# ── CONTRAST-LANGUAGE GUARD — NSSF 120k number-selection regression ──────────────
+# The compound query must retrieve a fact that carries BOTH the correct scaled total
+# (1,440,000) AND the explicit contrastive correction (SI TZS 120,000) in the SAME
+# fact text. This directly counters the exact wrong number the model kept defaulting
+# to; if a future fact edit drops the contrast, this fails loudly.
+print('\n' + '=' * 60)
+print('CONTRAST-LANGUAGE GUARD — NSSF 120k selection')
+print('=' * 60)
+_guard_q = 'query: Kampuni ina wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja. NSSF jumla ya kampuni ni kiasi gani?'
+_q = model.encode([_guard_q])[0]
+_q = _q / (np.linalg.norm(_q) + 1e-10)
+_scores = np.dot(embeddings_normalized, _q)
+_top3 = np.argsort(_scores)[-3:][::-1]
+contrast_pass = any(
+    ('1,440,000' in fact_texts_to_embed[i])
+    and any(c in fact_texts_to_embed[i].lower() for c in ('si tzs 120,000', 'si 120,000'))
+    for i in _top3
+)
+print(f'[{"PASS" if contrast_pass else "FAIL"}] retrieved fact carries 1,440,000 AND "SI TZS 120,000" contrast')
+if not contrast_pass:
+    for r, idx in enumerate(_top3, 1):
+        print(f'        top{r}: {fact_texts_to_embed[idx][:110]}')
+
 print()
 # allow <10% self-retrieval noise (near-duplicate facts can surface a sibling at rank 1)
-overall_pass = critical_pass and len(failures) < len(fact_texts_to_embed) * 0.1
+overall_pass = (critical_pass and contrast_pass
+                and len(failures) < len(fact_texts_to_embed) * 0.1)
 if overall_pass:
     print(f'VERIFICATION PASSED — {len(fact_texts_to_embed) - len(failures)}/{len(fact_texts_to_embed)} '
           f'facts self-retrieve correctly, all critical queries pass')
     print('Saving and uploading...')
 else:
     print('VERIFICATION FAILED — review failures before saving')
-    print(f'  critical_pass={critical_pass} | self_retrieval_failures={len(failures)} '
+    print(f'  critical_pass={critical_pass} | contrast_pass={contrast_pass} | '
+          f'self_retrieval_failures={len(failures)} '
           f'(tolerance={int(len(fact_texts_to_embed) * 0.1)})')
     sys.exit(1)   # do NOT upload a broken index
 
