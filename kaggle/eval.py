@@ -200,8 +200,13 @@ SWAHILI_NUMBERS = {
 
 # ── POST-GENERATION CLEANUP (must match chike-inference/modal_app.py) ──────────
 def clean_generated_reply(text: str) -> str:
-    # 1. strip a leading fabricated question '(4) Je...?' before the real answer
-    text = re.sub(r'^\(\d+\)\s*[^.!?]*\?\s*', '', text.strip())
+    # 1. strip ALL leading fabricated questions '(4) Je...?' before the real answer.
+    #    Loop because the model can emit several consecutive ones (4)(5)(6)(7); a
+    #    single strip removed only the first, wasting token budget and truncating.
+    prev = None
+    while prev != text:
+        prev = text
+        text = re.sub(r'^\(\d+\)\s*[^.!?]*\?\s*', '', text.strip())
     # 2. correct memorized domain tokens RAG cannot override
     text = re.sub(r'nssf\.or\.tz', 'nssf.go.tz', text, flags=re.IGNORECASE)
     text = re.sub(r'\.go\.ke\b', '.go.tz', text, flags=re.IGNORECASE)

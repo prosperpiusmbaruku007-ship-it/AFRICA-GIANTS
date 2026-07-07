@@ -166,7 +166,12 @@ def clean_generated_reply(text: str) -> str:
     2. Correct memorized domain tokens RAG cannot reliably override: nssf.or.tz ->
        nssf.go.tz, and any residual .go.ke -> .go.tz safety net.
     """
-    text = re.sub(r'^\(\d+\)\s*[^.!?]*\?\s*', '', text.strip())
+    # Loop: the model can emit several consecutive fabricated questions (4)(5)(6)(7);
+    # a single strip removed only the first, wasting token budget and truncating.
+    prev = None
+    while prev != text:
+        prev = text
+        text = re.sub(r'^\(\d+\)\s*[^.!?]*\?\s*', '', text.strip())
     text = re.sub(r'nssf\.or\.tz', 'nssf.go.tz', text, flags=re.IGNORECASE)
     text = re.sub(r'\.go\.ke\b', '.go.tz', text, flags=re.IGNORECASE)
     return text.strip()
