@@ -52,7 +52,7 @@
   ],
 
   "generation_params": {
-    "max_new_tokens": 280,
+    "max_new_tokens": 350,
     "do_sample": false,
     "temperature": 1.0,
     "repetition_penalty": 1.1,
