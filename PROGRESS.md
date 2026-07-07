@@ -42,6 +42,37 @@ fact's stated answer. Fragile to phrasing (gate eval_191 phrasing passed). The c
 paye_bands_with_examples fact lists bands that invite miscalculation; a follow-up should
 state 78,000 more emphatically or drop the band table. Not a corruption/retrieval issue.
 
+## v15 Production Fixes — Complete (2026-07-08)
+
+Fixed via real WhatsApp testing feedback:
+1. Compound question fabrication — leading-question strip now loops, removes
+   all consecutive fabricated (N) questions before the real answer
+2. Compound answer truncation — max_new_tokens 280→350. All substantive
+   information (SDL amount, NSSF amount, deadline, penalty rate) now completes.
+   The model tends to append a redundant self-generated summary after delivering
+   the full answer; this summary may still clip at 350 tokens, but no substantive
+   content is lost — only a restatement of information already given.
+3. NSSF compound calculation (120,000 → 1,440,000) — contrast-language fact rewrite
+4. Domain corruption (.ke, nssf.or.tz) — post-generation regex correction
+5. Repetition loops on complex queries — decompose_query enumeration pattern extension
+
+Remaining known limitations (documented, not fixed):
+- Triple-compound queries with untrained number scenarios (e.g. salary 900,000 when
+  facts are pinned to 600,000/800,000) still produce refusal collapse rather than a
+  coherent attempt. Requires a calculation engine or frontier API model with genuine
+  arithmetic reasoning — not more RAG fact tuning. Backlogged.
+- Model generates a fabricated preamble before some compound answers (stripped from
+  display, still consumes generation budget) and a redundant summary after (may clip
+  but is non-substantive). Root fix requires training data demonstrating direct-answer
+  behavior on compound questions without preamble or recap — not a generation parameter.
+
+RAG index: 210 facts, e5-base 768-dim, 14 critical regression guards in
+kaggle/regenerate_rag_e5.py including contrast-language checks.
+
+Gate result holding: v15 at 87.9% in-corpus / 100% OOC — confirmed no regression
+from any production fix via spot-check (GN487A/SDL/BRELA/VAT withholding/zero-rated
+VAT) after each change including the final max_new_tokens adjustment to 350.
+
 ## Known Limitations — Compound Query Generation (2026-07-08)
 
 Surfaced via real WhatsApp testing of multi-part compound questions. Retrieval and
