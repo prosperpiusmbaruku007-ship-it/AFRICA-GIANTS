@@ -42,13 +42,26 @@ RAW = 'https://raw.githubusercontent.com/prosperpiusmbaruku007-ship-it/AFRICA-GI
 
 # ── FETCH SOURCE OF TRUTH FROM GITHUB ───────────────────────────────────────────
 # locked_facts.json (the facts) + precompute module (the build + noise-drop logic).
+# IMPORTANT: raw.githubusercontent.com sits behind a CDN (~5-min TTL). Fetching the
+# plain URL can serve a STALE copy right after a push — which silently regenerates
+# the index from OLD facts. Bust the cache with a unique query param + no-cache
+# headers, and log the live commit SHA so the run is auditable.
+import time
+_cb = str(int(time.time() * 1000))
+_nocache = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
+
+_live_sha = requests.get(
+    'https://api.github.com/repos/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS/commits/main',
+    headers=_nocache, timeout=30).json().get('sha', '?')[:7]
+print(f'[fetch] GitHub main HEAD = {_live_sha} (index will be built from THIS commit)')
+
 for name in ['scripts/locked_facts.json', 'scripts/precompute_rag_embeddings.py']:
-    r = requests.get(f'{RAW}/{name}', timeout=30)
+    r = requests.get(f'{RAW}/{name}?cb={_cb}', headers=_nocache, timeout=30)
     r.raise_for_status()
     os.makedirs(os.path.dirname(name), exist_ok=True)
     with open(name, 'w', encoding='utf-8') as f:
         f.write(r.text)
-    print(f'[fetch] {name} ({len(r.text)} bytes)')
+    print(f'[fetch] {name} ({len(r.content)} bytes)')
 
 # Import build_fact_texts from the fetched module (module-level is side-effect free;
 # embedding only runs under its own __main__, which we do NOT trigger by importing).
