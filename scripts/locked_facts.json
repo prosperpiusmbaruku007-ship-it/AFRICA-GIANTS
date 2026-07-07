@@ -1923,5 +1923,17 @@
     "correct_value": "PAYE on TZS 800,000 = TZS 78,000 (final answer)",
     "status": "CONFIRMED",
     "primary_source": "tra.go.tz"
+  },
+  "sdl_calculation_example": {
+    "fact": "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wafanyakazi 12 wenye mshahara huo huo, SDL jumla ni TZS 252,000 (12 × 21,000).",
+    "correct_value": "SDL = 3.5% per employee salary, sum across all employees",
+    "status": "CONFIRMED",
+    "primary_source": "tra.go.tz"
+  },
+  "nssf_calculation_example": {
+    "fact": "Mfano wa hesabu ya NSSF: mfanyakazi mmoja mwenye mshahara TZS 600,000, NSSF jumla (mwajiri + mfanyakazi) ni asilimia 20 = TZS 120,000. Kwa wafanyakazi 12 wenye mshahara huo huo, NSSF jumla ni TZS 1,440,000 (12 × 120,000).",
+    "correct_value": "NSSF = 20% total per employee salary, sum across all employees",
+    "status": "CONFIRMED",
+    "primary_source": "nssf.go.tz"
   }
 }

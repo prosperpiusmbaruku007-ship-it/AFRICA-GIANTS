@@ -79,6 +79,12 @@ CONCISE_BILINGUAL_FACTS = {
 
     'paye_bands_with_examples':
         'PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.',
+
+    'sdl_calculation_example':
+        'Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wafanyakazi 12 wenye mshahara huo huo, SDL jumla ni TZS 252,000 (12 × 21,000).',
+
+    'nssf_calculation_example':
+        'Mfano wa hesabu ya NSSF: mfanyakazi mmoja mwenye mshahara TZS 600,000, NSSF jumla (mwajiri + mfanyakazi) ni asilimia 20 = TZS 120,000. Kwa wafanyakazi 12 wenye mshahara huo huo, NSSF jumla ni TZS 1,440,000 (12 × 120,000).',
 }
 
 # --- Noise keys to drop (bare citations, sections, exemption lists, no-value fragments) ---
