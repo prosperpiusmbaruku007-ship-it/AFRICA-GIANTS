@@ -460,6 +460,27 @@ in_scope_phrases, generation params, gate thresholds, adapter_repo.
 Both train_ddp.py and eval.py fetch this at runtime from GitHub.
 Never hardcode these values in notebooks or scripts.
 
+### R15 — RAG embedding regeneration required after locked_facts changes
+
+Whenever scripts/locked_facts.json is modified (facts added, changed, or removed):
+1. Run kaggle/regenerate_rag_e5.py on Kaggle (local network blocks e5-base download)
+2. The script logs 'GitHub main HEAD = <sha>' at startup — verify this matches the
+   latest commit before trusting the results. raw.githubusercontent.com has a ~5 min
+   CDN cache; without cache-busting, Kaggle can silently rebuild from a stale commit
+   and produce misleading verification failures that look like data/logic bugs.
+3. Verify the full verification check passes (self-retrieval + critical known-failure queries)
+4. Claude Code fetches the updated rag_embeddings.npy and rag_facts_text.json from
+   HuggingFace and commits them to BOTH chike-inference/ and kaggle/
+5. Redeploy Modal to activate the updated RAG index in production
+6. Re-run the eval.py gate to confirm the new facts are retrievable in the full system test
+
+Never edit locked_facts.json and skip this regeneration — the RAG index will silently
+serve stale facts until this process runs, even though the source data is correct.
+
+Note: a fact registered in CONCISE_BILINGUAL_FACTS (precompute_rag_embeddings.py) is
+embedded WITHOUT the 'key: ' prefix — short Swahili-first text with the value at the
+front retrieves far better than a long English fact (see paye_bands_with_examples).
+
 ---
 
 See PROGRESS.md for current project status and next actions.
