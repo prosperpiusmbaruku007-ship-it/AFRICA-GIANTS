@@ -1917,5 +1917,12 @@
     "verified_by": "manual_review - high-value edge case, common real user question",
     "effective_date": "2025-07-28",
     "status": "CONFIRMED"
+  },
+  "paye_bands_with_examples": {
+    "fact": "PAYE bands Tanzania: 0% up to TZS 270,000; 8% from 270,001-520,000; 20% from 520,001-760,000; 25% from 760,001-1,000,000; 30% above 1,000,000. Example: salary TZS 800,000 falls in the 25% band, PAYE = 68,000 (cumulative from lower bands) + 25% of (800,000-760,000) = 68,000 + 10,000 = 78,000.",
+    "correct_value": "PAYE on TZS 800,000 = TZS 78,000",
+    "status": "CONFIRMED",
+    "primary_source": "tra.go.tz",
+    "verified_by": "Income Tax Act PAYE bands, existing paye_band_1-4 facts"
   }
 }
