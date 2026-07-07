@@ -79,8 +79,9 @@ STOP_STRINGS       = _GEN.get('stop_strings',
 HF_CACHE_DIR    = '/persistent-storage/.cache/huggingface'
 MODEL_CACHE_DIR = '/persistent-storage/.cache/huggingface/hub'
 
-# === System prompt — must stay in sync with kaggle/chike_config.json ===
-BASE_SYSTEM_PROMPT = (
+# === System prompt — R14: kaggle/chike_config.json is the single source of truth.
+# This hardcoded copy is only a fallback for the web container (no baked config file). ===
+_HARDCODED_SYSTEM_PROMPT = (
     "Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. "
     "Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yako. "
     "Unajibu maswali kuhusu biashara, kodi, BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT "
@@ -104,6 +105,9 @@ BASE_SYSTEM_PROMPT = (
     "stamp duty, mining royalties, Zanzibar tax, or investment advice. "
     "For those topics say clearly they are outside your scope."
 )
+# R14: use the config system_prompt when available (so the compound-question
+# instruction and any future edits propagate to production); fall back otherwise.
+BASE_SYSTEM_PROMPT = CONFIG.get('system_prompt', _HARDCODED_SYSTEM_PROMPT)
 
 # === Inference-time OOC classifier ===
 # Uses phrase-level (multi-word) matching to avoid single-word false positives.
@@ -153,6 +157,19 @@ HARDCODED_REFUSAL = (
     'BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. '
     'Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.'
 )
+
+
+def clean_generated_reply(text: str) -> str:
+    """Post-generation cleanup applied to every reply (must match kaggle/eval.py).
+    1. Strip a leading fabricated question like '(4) Je, kuna...?' that the model
+       sometimes prepends before the real answer to a numbered compound question.
+    2. Correct memorized domain tokens RAG cannot reliably override: nssf.or.tz ->
+       nssf.go.tz, and any residual .go.ke -> .go.tz safety net.
+    """
+    text = re.sub(r'^\(\d+\)\s*[^.!?]*\?\s*', '', text.strip())
+    text = re.sub(r'nssf\.or\.tz', 'nssf.go.tz', text, flags=re.IGNORECASE)
+    text = re.sub(r'\.go\.ke\b', '.go.tz', text, flags=re.IGNORECASE)
+    return text.strip()
 
 
 def classify_question(message: str) -> bool:
@@ -463,6 +480,8 @@ class ChikeModel:
         for stop in ['<|start_header_id|>', 'User:', 'Mtumiaji:'] + STOP_STRINGS:
             if stop in reply:
                 reply = reply.split(stop)[0].strip()
+
+        reply = clean_generated_reply(reply)
 
         print(f'[chike] Q: {message[:60]}')
         print(f'[chike] A: {reply[:60]}')

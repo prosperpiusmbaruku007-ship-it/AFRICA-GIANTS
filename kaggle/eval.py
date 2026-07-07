@@ -198,6 +198,15 @@ SWAHILI_NUMBERS = {
     'elfu': 1_000, 'milioni': 1_000_000,
 }
 
+# ── POST-GENERATION CLEANUP (must match chike-inference/modal_app.py) ──────────
+def clean_generated_reply(text: str) -> str:
+    # 1. strip a leading fabricated question '(4) Je...?' before the real answer
+    text = re.sub(r'^\(\d+\)\s*[^.!?]*\?\s*', '', text.strip())
+    # 2. correct memorized domain tokens RAG cannot override
+    text = re.sub(r'nssf\.or\.tz', 'nssf.go.tz', text, flags=re.IGNORECASE)
+    text = re.sub(r'\.go\.ke\b', '.go.tz', text, flags=re.IGNORECASE)
+    return text.strip()
+
 # ── INFERENCE ─────────────────────────────────────────────────────────────────
 def generate_answer(question_sw: str) -> str:
     # RAG injection — byte-identical wrapper to production (modal_app.py) so the gate
@@ -238,7 +247,7 @@ def generate_answer(question_sw: str) -> str:
             pad_token_id=tokenizer.pad_token_id,
         )
     new_tokens = out[0][inputs['input_ids'].shape[1]:]
-    return tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
+    return clean_generated_reply(tokenizer.decode(new_tokens, skip_special_tokens=True).strip())
 
 # ── NUMBER EXTRACTION ─────────────────────────────────────────────────────────
 def extract_numbers(text):
