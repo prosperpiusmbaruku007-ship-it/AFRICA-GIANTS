@@ -80,6 +80,15 @@ models/pipeline_state.json          ← Pipeline state
 ```
 The training pipeline works. Do not touch it.
 
+### Scratch file convention
+
+Temporary/throwaway diagnostic scripts belong in scratch/ (gitignored), never
+directly in scripts/ or the repo root with an underscore prefix. The scripts/
+directory contains R10-protected files (e.g. _trl_sft_trainer_v0_24_0.py) that
+share the same underscore-prefix naming pattern as ad-hoc scratch work, making
+broad globs like rm scripts/_*.py dangerous. Always use scratch/ for anything
+not meant to be committed.
+
 **R11 — Never build the web app, mobile app, or any interface other than WhatsApp**
 before 1,000 verified business users and one named institutional partner with LOI.
 77% of Tanzania mobile money transactions run via USSD (TCRA/Bank of Tanzania).
