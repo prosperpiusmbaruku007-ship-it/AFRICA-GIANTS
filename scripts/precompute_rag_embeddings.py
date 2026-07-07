@@ -84,7 +84,7 @@ CONCISE_BILINGUAL_FACTS = {
         'Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wafanyakazi 12 wenye mshahara huo huo, SDL jumla ni TZS 252,000 (12 × 21,000).',
 
     'nssf_calculation_example':
-        'Mfano wa hesabu ya NSSF: mfanyakazi mmoja mwenye mshahara TZS 600,000, NSSF jumla (mwajiri + mfanyakazi) ni asilimia 20 = TZS 120,000. Kwa wafanyakazi 12 wenye mshahara huo huo, NSSF jumla ni TZS 1,440,000 (12 × 120,000).',
+        'Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo ni kwa mfanyakazi mmoja tu). Hesabu: kila mfanyakazi analipa NSSF ya TZS 120,000 (asilimia 20 ya mshahara wake), kisha zidisha kwa wafanyakazi 12 = TZS 1,440,000 jumla.',
 }
 
 # --- Noise keys to drop (bare citations, sections, exemption lists, no-value fragments) ---
