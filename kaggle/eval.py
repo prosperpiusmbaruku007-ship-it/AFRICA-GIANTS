@@ -200,15 +200,20 @@ SWAHILI_NUMBERS = {
 
 # ── INFERENCE ─────────────────────────────────────────────────────────────────
 def generate_answer(question_sw: str) -> str:
-    # RAG injection — retrieve top-3 facts and prepend to the system prompt, the same
-    # way modal_app.py does, so the gate measures the production system per R12.
+    # RAG injection — byte-identical wrapper to production (modal_app.py) so the gate
+    # tests the exact same prompt format per R12: same header, same '- ' bullets
+    # (joined, no trailing newline), same trailing instruction line.
     retrieved_facts = retrieve_facts(question_sw, top_k=3)
-    rag_context = ''
     if retrieved_facts:
-        rag_context = '\n\nUkweli muhimu (tumia hawa, usibuni takwimu):\n'
-        for fact in retrieved_facts:
-            rag_context += f'• {fact}\n'
-    full_system = SYSTEM_PROMPT + rag_context
+        facts_block = '\n'.join(f'- {fact}' for fact in retrieved_facts)
+        full_system = (
+            SYSTEM_PROMPT
+            + '\n\nUKWELI ULIOTHIBITISHWA KWA SWALI HILI:\n'
+            + facts_block
+            + '\n\nTumia ukweli huu. Usibuni takwimu ambazo hazipo hapa.'
+        )
+    else:
+        full_system = SYSTEM_PROMPT
     prompt = (
         f'<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n'
         f'{full_system}<|eot_id|>'
