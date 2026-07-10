@@ -1,6 +1,44 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-07
+Last updated: 2026-07-08
+
+## Real WhatsApp Testing Findings (2026-07-08) — Post v15 91.1% Gate
+
+Confirmed working well:
+- Compound question handling stable across multi-message conversation
+- VICOBA multi-jurisdiction question correctly separated NSSF/BRELA/TRA scope
+- EFD-VAT deadline interaction correctly answered
+- GN487A inheritance question correctly identified as still prohibited (de facto control test)
+
+New calculation errors confirmed (same root cause as documented NSSF limitation):
+- SDL calculation wrong for 15 employees @ 450,000: gave TZS 63,750, correct is TZS 236,250
+  (15 × 450,000 × 3.5%). Appears to compute per-employee flat amount rather than percentage of salary.
+- NSSF calculation wrong for same scenario: gave TZS 675,000 (using only 10% employer share),
+  correct is TZS 1,350,000 (20% total). Confirms scenario-pinned facts (600,000/12-employee
+  example) do not generalize to different salary/headcount combinations.
+
+New potential hallucination — needs verification:
+- GN487A ownership threshold: model stated 'asilimia 25%' as the prohibited ownership
+  percentage. This does NOT appear in locked_facts.json. GN487A prohibits OPERATING listed
+  activities, not ownership percentage per se (see gn487a_shareholder_vs_operator_distinction).
+  This number appears fabricated. Needs verification against primary source before any
+  correction — do not assume it is wrong without checking, but do not treat it as confirmed
+  either.
+
+Confirms architectural conclusion already documented: scenario-pinned calculation facts
+in RAG do not generalize. Every new salary/employee-count combination not matching a
+pinned example risks wrong arithmetic. This is the clearest evidence yet that the fix
+path is a calculation-capable frontier model for arithmetic-type questions, not more
+worked examples in locked_facts.
+
+Recommended next session priority:
+1. Verify the GN487A 25% ownership claim — check TanzLII/gazette, confirm hallucination
+   or find missing locked fact
+2. Consider whether SDL/NSSF/PAYE calculation questions should route to a frontier API
+   model (Claude/Gemini via OpenRouter) for the arithmetic step specifically, using RAG
+   only to supply the rate/threshold facts, rather than expecting the 8B model to do
+   percentage math reliably
+3. This is a scoping decision, not a quick fix — do not attempt in a reactive cycle
 
 ## GATE PASSED — v15 (2026-07-07) — FIRST PASSING RESULT IN PROJECT HISTORY
 
