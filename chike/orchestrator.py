@@ -23,6 +23,7 @@ ComputationResult.working, which is carried on the SubAnswer and rendered verbat
 into the final reply — the model only supplies Swahili persona around it.
 """
 
+import dataclasses
 import re
 from dataclasses import dataclass
 from typing import Callable, Optional, Sequence
@@ -33,6 +34,7 @@ from .model_abstraction import ModelBackend
 from .extraction import SlotExtractor, REQUIRED_FIELDS
 from .retrieval import retrieve as default_retrieve
 from . import prompting
+from . import generation_cleanup
 
 # --- Stage-level configuration (thin stubs; real lists live in chike_config.json) ---
 
@@ -183,8 +185,7 @@ class Orchestrator:
 
     def _answer_sub(self, sq: SubQuestion) -> SubAnswer:
         sub = self._answer_compute(sq) if sq.kind == "compute" else self._answer_fact(sq)
-        self._validate(sub)  # STUB: fidelity check is a later item
-        return sub
+        return self._validate_and_clean(sub)
 
     def _answer_compute(self, sq: SubQuestion) -> SubAnswer:
         """Compute path: extract fields WITH confidence first, and only call the
@@ -223,10 +224,16 @@ class Orchestrator:
         # the format the v16 diagnostic proved reproduces production answer quality.
         return prompting.build_chat_prompt(question, facts, self.system_prompt)
 
-    def _validate(self, sub: SubAnswer) -> bool:
-        """STUB fidelity check. A later item verifies the model text did not
-        contradict sub.computation. For now every answer passes."""
-        return True
+    def _validate_and_clean(self, sub: SubAnswer) -> SubAnswer:
+        """Validate/clean stage. Real implementation of the stop/clean step: truncate
+        fabricated follow-on turns and apply production's domain corrections
+        (chike.cleaning). Clarification sentinels pass through untouched.
+
+        NOTE: the fidelity check (does the model text contradict sub.computation?)
+        is still a separate follow-up; this stage currently does stop/clean only."""
+        if sub.needs_clarification:
+            return sub
+        return dataclasses.replace(sub, text=generation_cleanup.clean_reply(sub.text))
 
     # --- Stage 5: merge ----------------------------------------------------
 

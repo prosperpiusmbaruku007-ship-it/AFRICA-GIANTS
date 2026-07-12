@@ -1,0 +1,103 @@
+"""Canonical post-generation stop/clean logic for Chike replies.
+
+Two responsibilities, both ported from production (chike-inference/modal_app.py) and
+kept identical to it and kaggle/eval.py:
+
+1. Stop the reply from running into fabricated follow-up turns. StoppingCriteria is
+   a GENERATION-time mechanism and cannot run post-hoc, so the portable equivalent is
+   production's post-generation substring truncation (modal_app.py:524): cut the text
+   at the first chat-turn boundary / stop string. This works on the orchestrator side
+   because the raw endpoint now returns text WITH special tokens (skip_special_tokens
+   =False), so the '<|eot_id|>' / '<|start_header_id|>' turn markers are present to
+   split on — reliably, without truncating a legitimate multi-paragraph single turn.
+
+2. clean_generated_reply — the exact post-generation corrections: strip leading
+   fabricated '(N) …?' questions (loop), and the domain fixes RAG can't override
+   (nssf.or.tz -> nssf.go.tz, .go.ke -> .go.tz).
+
+DIVERGENCE-RISK FOLLOW-UP (same as chike/prompting.py): clean_generated_reply and
+STOP_STRINGS live inline in BOTH modal_app.py and eval.py. This module is written to
+become the single shared home; wiring those two to import it is a cross-deployment
+change (modal bakes chike-inference/; eval fetches from GitHub) tracked as a follow-up.
+Kept byte-for-byte identical to both for now.
+"""
+
+import json
+import os
+import re
+from typing import Optional, Sequence
+
+_CONFIG_PATH = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "kaggle", "chike_config.json")
+)
+
+# Default matches modal_app.py / eval.py's _GEN.get('stop_strings', [...]) fallback.
+_DEFAULT_STOP_STRINGS = ["\n\nQ:", "\n\nSwali:", "<|start_header_id|>", "\n\n---"]
+
+# Chat-turn boundaries. The first three are the special tokens that bound the
+# assistant turn (present because generate_raw decodes skip_special_tokens=False);
+# 'User:' / 'Mtumiaji:' match production's post-split list (modal_app.py:524).
+_TURN_MARKERS = [
+    "<|eot_id|>", "<|end_of_text|>", "<|start_header_id|>", "User:", "Mtumiaji:",
+]
+
+_SPECIAL_TOKEN_RE = re.compile(r"<\|[^|]*\|>")
+
+# The fine-tuned model, driven by a manual Llama chat template, does NOT emit the
+# real turn tokens — it appends fabricated follow-up turns as PLAIN TEXT separated by
+# a blank line, each glued to the prior answer by a leaked role word ('user') or a
+# fact-key-like run ('understand...'). So the reliable turn boundary is the first
+# '\n\n', and the trailing glued junk is stripped after it. (Proper server-side fix:
+# use the tokenizer's real chat template so generation stops at EOS — tracked separately.)
+_TURN_SEPARATOR = "\n\n"
+_ROLE_JUNK_RE = re.compile(r"(?i)(user|assistant|system|understand)[a-z0-9_]*\s*$")
+
+
+def _load_stop_strings() -> list:
+    try:
+        with open(_CONFIG_PATH, encoding="utf-8") as fh:
+            cfg = json.load(fh)
+        return cfg.get("generation_params", {}).get("stop_strings", _DEFAULT_STOP_STRINGS)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return _DEFAULT_STOP_STRINGS
+
+
+STOP_STRINGS = _load_stop_strings()
+
+
+def clean_generated_reply(text: str) -> str:
+    """Exact port of modal_app.clean_generated_reply / eval.clean_generated_reply."""
+    prev = None
+    while prev != text:
+        prev = text
+        text = re.sub(r"^\(\d+\)\s*[^.!?]*\?\s*", "", text.strip())
+    text = re.sub(r"nssf\.or\.tz", "nssf.go.tz", text, flags=re.IGNORECASE)
+    text = re.sub(r"\.go\.ke\b", ".go.tz", text, flags=re.IGNORECASE)
+    return text.strip()
+
+
+def truncate_at_stops(text: str, stop_strings: Optional[Sequence[str]] = None) -> str:
+    """Cut the reply at the first chat-turn boundary or stop string — the post-hoc
+    equivalent of production's StoppingCriteria (modal_app.py:524 post-split)."""
+    if stop_strings is None:
+        stop_strings = STOP_STRINGS
+    for stop in _TURN_MARKERS + list(stop_strings):
+        if stop in text:
+            text = text.split(stop)[0]
+    return text.strip()
+
+
+def clean_reply(text: str, stop_strings: Optional[Sequence[str]] = None) -> str:
+    """Full stop/clean stage: cut the reply at the first fabricated follow-up turn,
+    drop residual special tokens and glued role junk, then apply clean_generated_reply.
+
+    Order: (1) truncate at any real turn/stop marker; (2) keep only the first block
+    before a blank line — the model appends fabricated turns separated by '\\n\\n', and
+    production replies are single-paragraph; (3) strip a trailing leaked role word /
+    fact-key run glued to the answer; (4) strip residual special tokens; (5) domain fixes.
+    """
+    text = truncate_at_stops(text, stop_strings)
+    text = text.split(_TURN_SEPARATOR)[0].strip()
+    text = _ROLE_JUNK_RE.sub("", text).strip()
+    text = _SPECIAL_TOKEN_RE.sub("", text).strip()
+    return clean_generated_reply(text)

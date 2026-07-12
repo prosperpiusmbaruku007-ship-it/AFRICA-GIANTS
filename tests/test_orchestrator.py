@@ -148,6 +148,21 @@ def test_default_retriever_is_the_real_v15_retrieve_function():
     assert orch.retriever is retrieval.retrieve
 
 
+def test_validate_stage_strips_ramble_from_fact_reply():
+    ramble = (
+        "SDL ni asilimia 3.5 ya mishahara ghafi. Thibitisha na TRA (tra.go.tz)."
+        "<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nSwali jingine la kubuni?"
+    )
+    fake = FakeBackend(scripted_reply=ramble)
+    orch = Orchestrator(backend=fake, retriever=lambda q: ["SDL ni 3.5%"])
+
+    reply = orch.answer("SDL ni ngapi")
+
+    assert reply.text == "SDL ni asilimia 3.5 ya mishahara ghafi. Thibitisha na TRA (tra.go.tz)."
+    assert "kubuni" not in reply.text          # fabricated follow-up turn removed
+    assert "<|" not in reply.text               # residual special tokens stripped
+
+
 def test_fact_prompt_uses_production_rag_wrapper():
     fake = FakeBackend(scripted_reply="ok")
     orch = Orchestrator(

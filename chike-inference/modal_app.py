@@ -560,8 +560,12 @@ class ChikeModel:
             gen_kwargs['temperature'] = float(params.get('temperature', GEN_TEMPERATURE))
         with torch.no_grad():
             outputs = self.model.generate(**inputs, **gen_kwargs)
+        # skip_special_tokens=False: return TRULY raw output so the v16 orchestrator's
+        # clean stage can truncate at the '<|eot_id|>' / '<|start_header_id|>' turn
+        # boundaries (the post-hoc equivalent of production's StoppingCriteria). This
+        # endpoint stays dumb — all stopping/cleaning is the orchestrator's job.
         completion = self.tokenizer.decode(
-            outputs[0][input_len:], skip_special_tokens=True
+            outputs[0][input_len:], skip_special_tokens=False
         ).strip()
         return {'completion': completion}
 
