@@ -2,6 +2,60 @@
 
 Last updated: 2026-07-12
 
+## v16 Shared-Module Extraction — Complete
+
+modal_app.py and eval.py now import chike.prompting and chike.generation_cleanup
+instead of carrying inline copies of the RAG wrapper and stop/clean logic. This
+closes the drift risk flagged during both earlier ports — there is now exactly
+one place each piece of logic is defined (chike/prompting.py,
+chike/generation_cleanup.py) and three places that use it via import: the
+orchestrator, modal_app.py (via Modal's add_local_dir), and eval.py (via
+fetch-and-exec of the two files, matching the existing pattern used to load
+eval.py itself).
+
+Production verified unaffected: 5 spot-check questions (GN487A, SDL, BRELA,
+VAT withholding, zero-rated VAT) byte-identical to pre-change baseline.
+
+## Repo-integrity fix — untracked __init__.py files (found and fixed same session)
+
+.gitignore's _*.py pattern was silently matching all __init__.py files project-wide,
+meaning chike/__init__.py, chike/model_abstraction/__init__.py, and
+chike/rules_engine/__init__.py were never tracked in git since item 1 of this
+build phase, despite every commit succeeding and all local tests passing.
+
+Root cause: Modal (add_local_dir) copies the working directory directly and
+eval.py fetches individual files by name — both sidestep Python package import
+entirely, so neither path ever exercised the actual package structure. Only a
+fresh git clone would have hit ImportError on FakeBackend and AttributeError
+on rules_engine.compute — confirmed empirically via git archive HEAD extraction
+before and after the fix.
+
+Fix: narrowed the ignore pattern to scripts/_*.py (matching the documented
+scratch-file convention established earlier this session), committed the three
+previously-untracked __init__.py files, and re-verified via fresh git-archive
+extraction that the package now imports correctly from a clean checkout.
+
+Lesson for future sessions: any local-only verification method (tests, Modal
+deploy, manual imports) that runs against the working directory rather than a
+fresh checkout can mask git-tracking gaps. The git-archive-extraction check
+used here is now the standard verification method for confirming a package
+is actually complete in git, not just present on disk.
+
+## v16 status — porting phase complete
+
+Six components built, tested, and proven against the real fine-tuned v15 model:
+model abstraction layer, orchestrator, rules engine, retrieval, prompt wrapper,
+generation cleanup. Fact-path questions (Q1-Q5 pattern) match production
+exactly. Shared-module extraction eliminates duplication across all three
+consumers (orchestrator, modal_app.py, eval.py).
+
+Remaining gap: slot extraction for compound/compute questions. Confirmed this
+session that v15 never solved this — the fine-tuned model attempted
+calculations directly from natural language with no dedicated extraction step,
+succeeding only on memorized scenarios. This is new architecture with no
+port target, correctly blocked pending real ambiguous Swahili phrasing data
+collection — not further engineering work.
+
 ## v16 Compute-Path Investigation — Resolved (not a bug, a scope confirmation)
 
 Investigated whether v15 had a working slot-extraction step to port, following
