@@ -71,9 +71,52 @@ def test_backends_are_modelbackend_subclasses():
 
 def test_concrete_backends_are_instantiable():
     # Construction must not touch network or GPU — these must simply succeed.
-    assert isinstance(LocalAdapter(config={"generation_params": {}, "repos": {}}), ModelBackend)
+    assert isinstance(
+        LocalAdapter(endpoint_url="https://raw.example", token="t", config={}),
+        ModelBackend,
+    )
     assert isinstance(FrontierAPI(), ModelBackend)
     assert isinstance(FakeBackend(), ModelBackend)
+
+
+def test_localadapter_posts_prompt_to_raw_endpoint_and_returns_completion(monkeypatch):
+    import sys, types
+    captured = {}
+
+    class _Resp:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"completion": "jibu halisi"}
+
+    def fake_post(url, params=None, json=None, timeout=None):
+        captured.update(url=url, params=params, json=json, timeout=timeout)
+        return _Resp()
+
+    monkeypatch.setitem(sys.modules, "requests", types.SimpleNamespace(post=fake_post))
+
+    adapter = LocalAdapter(
+        endpoint_url="https://raw.example",
+        token="tok",
+        config={"generation_params": {"max_new_tokens": 350}},
+    )
+    out = adapter.generate("Swali: X", params={"temperature": 0.1})
+
+    assert out == "jibu halisi"
+    assert captured["url"] == "https://raw.example"
+    assert captured["params"] == {"token": "tok"}
+    assert captured["json"]["prompt"] == "Swali: X"
+    # config default merged with per-call override (caller wins), caller dict untouched.
+    assert captured["json"]["params"]["max_new_tokens"] == 350
+    assert captured["json"]["params"]["temperature"] == 0.1
+
+
+def test_localadapter_requires_endpoint_url(monkeypatch):
+    monkeypatch.delenv("CHIKE_RAW_ENDPOINT", raising=False)
+    adapter = LocalAdapter(endpoint_url="", token="", config={})
+    with pytest.raises(RuntimeError):
+        adapter.generate("hi")
 
 
 def test_abc_rejects_subclass_that_does_not_implement_generate():

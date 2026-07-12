@@ -532,6 +532,39 @@ class ChikeModel:
 
         return {'reply': reply}
 
+    @modal.method()
+    def generate_raw(self, prompt: str, params: dict = None) -> dict:
+        """RAW completion primitive: tokenize -> generate -> decode. NO classify /
+        decompose / RAG / system prompt / cleaning.
+
+        This is the primitive the v16 orchestrator (chike/orchestrator.py) drives via
+        LocalAdapter: the orchestrator owns ALL pipeline logic and hands this a finished
+        prompt; the real v15 weights only complete it. Kept separate from run() so the
+        production endpoint's behaviour is unchanged. Defaults mirror run()'s generation
+        config; a params dict overrides per call (slot extraction needs the raw text,
+        e.g. JSON, that run() would otherwise strip/clean away).
+        """
+        import torch
+        params = params or {}
+        inputs = self.tokenizer(prompt, return_tensors='pt').to(self.model.device)
+        input_len = inputs['input_ids'].shape[1]
+        gen_kwargs = dict(
+            max_new_tokens=int(params.get('max_new_tokens', MAX_NEW_TOKENS)),
+            do_sample=bool(params.get('do_sample', DO_SAMPLE)),
+            repetition_penalty=float(params.get('repetition_penalty', REPETITION_PENALTY)),
+            no_repeat_ngram_size=int(params.get('no_repeat_ngram_size', NO_REPEAT_NGRAM)),
+            pad_token_id=self.tokenizer.eos_token_id,
+            eos_token_id=self.tokenizer.eos_token_id,
+        )
+        if gen_kwargs['do_sample']:
+            gen_kwargs['temperature'] = float(params.get('temperature', GEN_TEMPERATURE))
+        with torch.no_grad():
+            outputs = self.model.generate(**inputs, **gen_kwargs)
+        completion = self.tokenizer.decode(
+            outputs[0][input_len:], skip_special_tokens=True
+        ).strip()
+        return {'completion': completion}
+
 
 @app.function(image=web_image, secrets=[modal.Secret.from_name('modal-api-token')])
 @modal.fastapi_endpoint(method='POST')
@@ -546,3 +579,19 @@ def web_endpoint(item: dict, token: str = None):
         return JSONResponse({'error': 'unauthorized'}, status_code=401)
     # Forward to the GPU class; returns main.py's contract: {"reply": ...} / {"error": ...}
     return ChikeModel().run.remote(item.get('message', ''))
+
+
+@app.function(image=web_image, secrets=[modal.Secret.from_name('modal-api-token')])
+@modal.fastapi_endpoint(method='POST')
+def generate_endpoint(item: dict, token: str = None):
+    """RAW completion endpoint for the v16 orchestrator. Same token gate as
+    web_endpoint, but calls generate_raw (no v15 pipeline). Body: {"prompt": str,
+    "params": {...}} -> {"completion": str}. Production web_endpoint is unaffected."""
+    import os
+    from fastapi.responses import JSONResponse
+    expected = os.environ.get('MODAL_API_TOKEN', '')
+    if not token or not expected or token != expected:
+        return JSONResponse({'error': 'unauthorized'}, status_code=401)
+    return ChikeModel().generate_raw.remote(
+        item.get('prompt', ''), item.get('params') or {}
+    )

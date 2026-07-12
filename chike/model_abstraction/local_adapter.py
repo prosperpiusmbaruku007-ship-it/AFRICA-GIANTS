@@ -1,15 +1,26 @@
-"""LocalAdapter — wraps the model v15 currently uses (AfriqueLlama-8B + LoRA).
+"""LocalAdapter — ModelBackend that drives the REAL v15 model over its Modal endpoint.
 
-This is the production generation path behind the ModelBackend interface. It is a
-concrete backend, so it can be *constructed* with no network and no GPU — the heavy
-transformers/peft import and weight load happen lazily on the first generate()
-call, not at __init__. That keeps the interface substitutable for FakeBackend in
-tests while still delegating to the real v15 stack when actually invoked.
+The 8B AfriqueLlama weights only run on GPU (Modal/Kaggle), never on the local dev
+box. So this backend does NOT load weights in-process; it is a thin authenticated
+HTTP client to a RAW text-completion endpoint served by the same Modal app that runs
+production (chike-inference/modal_app.py). That lets the entire v16 orchestrator be
+exercised locally (no GPU) while every generate() call is answered by the actual
+fine-tuned v15 model already serving users.
 
-Config is read from kaggle/chike_config.json (single source of truth, R14):
-base model McGill-NLP/AfriqueLlama-8B + adapter prospAprospA007/africa-giants-adapter-v15,
-generation params from `generation_params`. RAG injection and the OOC classifier
-live in the orchestrator, NOT here — this backend only turns a finished prompt into text.
+IMPORTANT — this MUST point at the RAW completion endpoint (prompt -> completion),
+NOT production's web_endpoint. web_endpoint runs the whole v15 pipeline (classify +
+decompose + RAG + chat template + clean) on its input, so feeding it the orchestrator's
+already-built prompts would double-process fact questions and — worse — return prose
+where slot extraction needs raw JSON, collapsing every compute question to a
+clarification. The raw endpoint (generate_endpoint) is added alongside production in
+modal_app.py and does tokenize -> generate -> decode only.
+
+Endpoint URL + token come from the environment (never hardcoded — CLAUDE.md):
+  CHIKE_RAW_ENDPOINT  — full URL of the raw completion endpoint
+  CHIKE_MODAL_TOKEN   — the ?token= value (same MODAL_API_TOKEN gate as production)
+
+Construction stays cheap and side-effect-free (no network), so the class remains a
+drop-in for FakeBackend in tests; the HTTP call happens only inside generate().
 """
 
 import json
@@ -24,50 +35,53 @@ _CONFIG_PATH = os.path.join(
 
 
 def _load_config() -> dict:
-    with open(os.path.normpath(_CONFIG_PATH), encoding="utf-8") as fh:
-        return json.load(fh)
+    try:
+        with open(os.path.normpath(_CONFIG_PATH), encoding="utf-8") as fh:
+            return json.load(fh)
+    except FileNotFoundError:
+        return {}
 
 
 class LocalAdapter(ModelBackend):
-    """In-process AfriqueLlama-8B + v15 LoRA adapter.
+    """Authenticated HTTP client to the real v15 model's raw completion endpoint.
 
-    Construction is cheap and side-effect-free; the model is loaded once on first
-    use via _ensure_loaded(). Requires GPU + weights at generate() time — not at
-    import or construction — so importing this module never pulls in torch.
+    Default generation params come from kaggle/chike_config.json (R14) so the model
+    is driven exactly as production drives it; a per-call params dict overrides them.
     """
 
-    def __init__(self, config: Optional[dict] = None):
-        self.config = config or _load_config()
-        self.adapter_repo = self.config.get("adapter_repo")
-        self.base_model = self.config.get("repos", {}).get("base_model")
+    def __init__(
+        self,
+        endpoint_url: Optional[str] = None,
+        token: Optional[str] = None,
+        config: Optional[dict] = None,
+        timeout: float = 180.0,
+    ):
+        self.config = config if config is not None else _load_config()
+        self.endpoint_url = endpoint_url or os.environ.get("CHIKE_RAW_ENDPOINT", "")
+        self.token = token or os.environ.get("CHIKE_MODAL_TOKEN", "")
         self.default_params = dict(self.config.get("generation_params", {}))
-        self._model = None
-        self._tokenizer = None
-
-    def _ensure_loaded(self):
-        """Lazily load base model + LoRA adapter. Imports torch/transformers/peft
-        only here so the rest of the pipeline stays importable without them."""
-        if self._model is not None:
-            return
-        import torch  # noqa: F401  (imported for side effect / availability check)
-        from transformers import AutoModelForCausalLM, AutoTokenizer
-        from peft import PeftModel
-
-        self._tokenizer = AutoTokenizer.from_pretrained(self.base_model)
-        base = AutoModelForCausalLM.from_pretrained(
-            self.base_model, device_map="auto"
-        )
-        self._model = PeftModel.from_pretrained(base, self.adapter_repo)
-        self._model.eval()
+        self.timeout = timeout
 
     def generate(self, prompt: str, params: Optional[dict] = None) -> str:
-        self._ensure_loaded()
+        if not self.endpoint_url:
+            raise RuntimeError(
+                "LocalAdapter has no endpoint URL. Set CHIKE_RAW_ENDPOINT (the raw "
+                "completion endpoint added to modal_app.py) or pass endpoint_url=."
+            )
+        import requests
+
         merged = dict(self.default_params)
         if params:
             merged.update(params)  # caller overrides win; caller's dict untouched
 
-        inputs = self._tokenizer(prompt, return_tensors="pt").to(self._model.device)
-        output = self._model.generate(**inputs, **merged)
-        text = self._tokenizer.decode(output[0], skip_special_tokens=True)
-        # Strip the echoed prompt the same way production does.
-        return text[len(prompt):].strip() if text.startswith(prompt) else text.strip()
+        resp = requests.post(
+            self.endpoint_url,
+            params={"token": self.token},
+            json={"prompt": prompt, "params": merged},
+            timeout=self.timeout,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        if "completion" not in data:
+            raise RuntimeError(f"raw endpoint returned no 'completion': {data}")
+        return data["completion"]
