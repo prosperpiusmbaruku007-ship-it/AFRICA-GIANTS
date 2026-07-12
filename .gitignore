@@ -43,7 +43,10 @@ Thumbs.db
 # Temporary pipeline artifacts
 datasets/tier1a/raw_sources/*_checkpoints/
 datasets/**/*.pkl
-_*.py
+# Scratch scripts (scripts/ scratch convention). NARROWED from a bare `_*.py`, which
+# silently matched every __init__.py in the tree and left chike/ package init files
+# untracked. Keep this scoped to scripts/ so it can never swallow __init__.py again.
+scripts/_*.py
 data/raw/
 data/generated/
 data/reviewed/
