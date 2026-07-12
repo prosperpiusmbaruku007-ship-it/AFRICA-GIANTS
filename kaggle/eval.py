@@ -44,6 +44,42 @@ print(f'[config] ADAPTER_REPO: {ADAPTER_REPO}')
 print(f'[config] thresholds: in_corpus={ACCURACY_THRESHOLD} ooc={REFUSAL_THRESHOLD}')
 print(f'[config] REFUSAL_PHRASES: {len(REFUSAL_PHRASES)} phrases')
 
+# ── FETCH SHARED CHIKE MODULES FROM GITHUB (single source of truth) ────────────
+# The RAG wrapper (chike.prompting.build_chat_prompt) and post-generation cleanup
+# (chike.generation_cleanup.clean_generated_reply) now live in chike/ — fetched + exec'd
+# here instead of carrying inline copies, the same fetch pattern used for this eval.py
+# and chike_config.json. This is what makes the gate test the EXACT wrapper/clean logic
+# production uses (R12), and closes the drift that inline copies caused.
+# Cache-bust (R15): raw.githubusercontent has a ~5-min CDN TTL; a stale copy would
+# silently make the gate test old logic. Log the live HEAD sha so the run is auditable.
+_RAW = 'https://raw.githubusercontent.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS/main'
+_NOCACHE = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
+_cb = str(int(__import__('time').time() * 1000))
+try:
+    _sha = requests.get(
+        'https://api.github.com/repos/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS/commits/main',
+        headers=_NOCACHE, timeout=15).json().get('sha', '?')[:7]
+    print(f'[chike] GitHub main HEAD = {_sha} (shared modules fetched from THIS commit)')
+except Exception as e:
+    print(f'[chike] HEAD sha check skipped: {e}')
+
+def _fetch_chike_module(modname):
+    """Fetch chike/<modname>.py and exec it into an isolated namespace. Both modules
+    are leaf (stdlib-only, no chike-internal imports), so exec works standalone. We
+    seed __file__ because exec() has none, and the modules build a config path from
+    os.path.dirname(__file__) at import (guarded by try/except -> safe default here)."""
+    r = requests.get(f'{_RAW}/chike/{modname}.py?cb={_cb}', headers=_NOCACHE, timeout=15)
+    r.raise_for_status()
+    ns = {'__file__': f'{modname}.py'}
+    exec(compile(r.text, f'chike/{modname}.py', 'exec'), ns)
+    print(f'[chike] fetched chike/{modname}.py ({len(r.text)} bytes)')
+    return ns
+
+_prompting = _fetch_chike_module('prompting')
+_cleanup   = _fetch_chike_module('generation_cleanup')
+build_chat_prompt     = _prompting['build_chat_prompt']
+clean_generated_reply = _cleanup['clean_generated_reply']
+
 # ── OOC CLASSIFIER ────────────────────────────────────────────────────────────
 EXPLICIT_OOC_PHRASES = CONFIG.get('ooc_phrases', [
     'capital gain', 'faida ya mtaji', 'kodi ya faida ya mtaji',
@@ -294,19 +330,9 @@ SWAHILI_NUMBERS = {
     'elfu': 1_000, 'milioni': 1_000_000,
 }
 
-# ── POST-GENERATION CLEANUP (must match chike-inference/modal_app.py) ──────────
-def clean_generated_reply(text: str) -> str:
-    # 1. strip ALL leading fabricated questions '(4) Je...?' before the real answer.
-    #    Loop because the model can emit several consecutive ones (4)(5)(6)(7); a
-    #    single strip removed only the first, wasting token budget and truncating.
-    prev = None
-    while prev != text:
-        prev = text
-        text = re.sub(r'^\(\d+\)\s*[^.!?]*\?\s*', '', text.strip())
-    # 2. correct memorized domain tokens RAG cannot override
-    text = re.sub(r'nssf\.or\.tz', 'nssf.go.tz', text, flags=re.IGNORECASE)
-    text = re.sub(r'\.go\.ke\b', '.go.tz', text, flags=re.IGNORECASE)
-    return text.strip()
+# clean_generated_reply is imported from the shared chike.generation_cleanup module
+# (fetched above), not defined inline — single source of truth with modal_app.py and
+# the orchestrator.
 
 # ── INFERENCE ─────────────────────────────────────────────────────────────────
 def generate_answer(question_sw: str) -> str:
@@ -326,23 +352,10 @@ def generate_answer(question_sw: str) -> str:
                 all_retrieved_facts.append(fact)
                 seen_facts.add(fact)
     retrieved_facts = all_retrieved_facts[:9]
-    if retrieved_facts:
-        facts_block = '\n'.join(f'- {fact}' for fact in retrieved_facts)
-        full_system = (
-            SYSTEM_PROMPT
-            + '\n\nUKWELI ULIOTHIBITISHWA KWA SWALI HILI:\n'
-            + facts_block
-            + '\n\nTumia ukweli huu. Usibuni takwimu ambazo hazipo hapa.'
-        )
-    else:
-        full_system = SYSTEM_PROMPT
-    prompt = (
-        f'<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n'
-        f'{full_system}<|eot_id|>'
-        f'<|start_header_id|>user<|end_header_id|>\n\n'
-        f'{question_sw}<|eot_id|>'
-        f'<|start_header_id|>assistant<|end_header_id|>\n\n'
-    )
+    # RAG wrapper built by the shared chike.prompting (fetched above) — identical
+    # manual chat scaffolding as the inline copy this replaces. eval uses the manual
+    # template (no tokenizer.apply_chat_template), which is exactly build_chat_prompt.
+    prompt = build_chat_prompt(question_sw, retrieved_facts, SYSTEM_PROMPT)
     inputs = tokenizer(prompt, return_tensors='pt').to(model.device)
     stopping_criteria = StoppingCriteriaList(
         [StopOnSubstrings(tokenizer, STOP_STRINGS)]

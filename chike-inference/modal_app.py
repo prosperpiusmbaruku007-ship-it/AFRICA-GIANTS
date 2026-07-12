@@ -28,6 +28,11 @@ image = (
     .add_local_file(os.path.join(_HERE, 'rag_embeddings.npy'),   '/root/assets/rag_embeddings.npy')
     .add_local_file(os.path.join(_HERE, 'rag_facts_text.json'),  '/root/assets/rag_facts_text.json')
     .add_local_file(os.path.join(_HERE, '..', 'kaggle', 'chike_config.json'), '/root/assets/chike_config.json')
+    # The shared chike/ package (repo root) — mounted so modal_app can import the
+    # canonical prompt wrapper + cleanup instead of carrying inline copies. Same
+    # add_local pattern as the RAG data files above; /root is on sys.path so
+    # `import chike.prompting` / `import chike.generation_cleanup` resolve at runtime.
+    .add_local_dir(os.path.join(_HERE, '..', 'chike'), '/root/chike')
 )
 
 # Tiny image for the HTTP endpoint (only needs FastAPI; it just forwards to the GPU class).
@@ -159,22 +164,9 @@ HARDCODED_REFUSAL = (
 )
 
 
-def clean_generated_reply(text: str) -> str:
-    """Post-generation cleanup applied to every reply (must match kaggle/eval.py).
-    1. Strip a leading fabricated question like '(4) Je, kuna...?' that the model
-       sometimes prepends before the real answer to a numbered compound question.
-    2. Correct memorized domain tokens RAG cannot reliably override: nssf.or.tz ->
-       nssf.go.tz, and any residual .go.ke -> .go.tz safety net.
-    """
-    # Loop: the model can emit several consecutive fabricated questions (4)(5)(6)(7);
-    # a single strip removed only the first, wasting token budget and truncating.
-    prev = None
-    while prev != text:
-        prev = text
-        text = re.sub(r'^\(\d+\)\s*[^.!?]*\?\s*', '', text.strip())
-    text = re.sub(r'nssf\.or\.tz', 'nssf.go.tz', text, flags=re.IGNORECASE)
-    text = re.sub(r'\.go\.ke\b', '.go.tz', text, flags=re.IGNORECASE)
-    return text.strip()
+# clean_generated_reply now lives in the shared chike.generation_cleanup module and
+# is imported inside ChikeModel.run() from the mounted chike/ package (single source
+# of truth, identical to the orchestrator and kaggle/eval.py).
 
 
 def classify_question(message: str) -> bool:
@@ -420,6 +412,12 @@ class ChikeModel:
     @modal.method()
     def run(self, message: str, temperature: float = 0.1) -> dict:
         import torch
+        import sys
+        # Shared wrapper + cleanup from the mounted chike/ package (/root/chike).
+        if '/root' not in sys.path:
+            sys.path.insert(0, '/root')
+        from chike.prompting import build_enriched_system
+        from chike.generation_cleanup import clean_generated_reply
 
         if not message or not message.strip():
             return {'error': 'No message provided'}
@@ -446,20 +444,13 @@ class ChikeModel:
         print(f'[RAG] {len(sub_queries)} sub-queries -> {len(relevant_facts)} unique facts:')
         for _i, _f in enumerate(relevant_facts):
             print(f'[RAG]   {_i+1}. {_f[:120]}')
-        if relevant_facts:
-            facts_block = '\n'.join(f'- {f}' for f in relevant_facts)
-            enriched_system = (
-                BASE_SYSTEM_PROMPT
-                + '\n\nUKWELI ULIOTHIBITISHWA KWA SWALI HILI:\n'
-                + facts_block
-                + '\n\nTumia ukweli huu. Usibuni takwimu ambazo hazipo hapa.'
-            )
-            print(f'[RAG] enriched system prompt: {len(enriched_system)} chars '
-                  f'(facts_block {len(facts_block)} chars)')
-            print(f'[RAG] facts_block preview: {facts_block[:300]}')
-        else:
-            enriched_system = BASE_SYSTEM_PROMPT
-            print('[RAG] no facts retrieved -- using base system prompt only')
+        # Enriched-system (UKWELI facts block) built by the shared chike.prompting —
+        # single source of truth, identical to kaggle/eval.py and the orchestrator.
+        # apply_chat_template scaffolding below is unchanged (production keeps the
+        # tokenizer's real template; only the wrapper content is now shared).
+        enriched_system = build_enriched_system(BASE_SYSTEM_PROMPT, relevant_facts)
+        print(f'[RAG] enriched system prompt: {len(enriched_system)} chars '
+              f'({len(relevant_facts)} facts)')
 
         messages = [
             {'role': 'system', 'content': enriched_system},
