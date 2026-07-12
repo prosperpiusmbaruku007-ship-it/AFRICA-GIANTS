@@ -2,6 +2,36 @@
 
 Last updated: 2026-07-12
 
+## v16 Fact-Path Parity — Achieved
+
+Q1-Q5 (single-topic fact questions) now produce answers through the v16
+orchestrator that match production exactly: correct substantive content
+(TZS amounts, percentages, Ndiyo/Hapana) AND correct format (no ramble,
+no fabricated follow-up turns, correct domain citations).
+
+This was proven empirically, not assumed:
+1. Isolated the gap via a raw-generation Modal endpoint bypassing production's
+   opaque pipeline
+2. Confirmed retrieval, rules engine, and orchestrator routing were correct
+   from the start — the gap was entirely in generate/validate stage formatting
+3. Ported the RAG wrapper (chike/prompting.py) — fixed substantive correctness
+4. Ported the stop/clean stage (chike/generation_cleanup.py) — fixed format/ramble
+5. Both ports extracted into shared modules rather than duplicated inline,
+   directly avoiding the class of divergence bug that caused two earlier
+   production incidents this session
+
+Remaining gap — Q6 (compound/compute questions):
+- decompose_query not yet ported — thin stub splits on ?/(2)/(3) and loses
+  context (employee count, salary figures) needed for the compute sub-questions
+- Slot extraction from the 8B model doesn't reliably emit parseable structured
+  output from a bare prompt — needs either a few-shot/chat-formatted extraction
+  prompt (port from what if anything worked in v15) or routing extraction to
+  a frontier model, consistent with the earlier-documented finding that
+  arithmetic/compound-question handling is the 8B model's structural weakness
+
+Next priority: port decompose_query (known-working logic, straightforward port)
+before attempting to fix slot extraction (open question, needs investigation).
+
 ## v16 Build Progress
 
 Items 1-4 complete, tested, committed:
