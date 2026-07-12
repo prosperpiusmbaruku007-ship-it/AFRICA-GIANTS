@@ -31,6 +31,7 @@ from . import rules_engine
 from .rules_engine.results import ComputationResult
 from .model_abstraction import ModelBackend
 from .extraction import SlotExtractor, REQUIRED_FIELDS
+from .retrieval import retrieve as default_retrieve
 
 # --- Stage-level configuration (thin stubs; real lists live in chike_config.json) ---
 
@@ -109,8 +110,10 @@ class Orchestrator:
         backend: the injected ModelBackend. Tests pass FakeBackend; production
             passes LocalAdapter or FrontierAPI. This is the entire reason the
             model abstraction layer (item 1) exists.
-        retriever: fact-lookup stub — callable(question) -> sequence of fact strings.
-            Defaults to returning nothing until real RAG retrieval is wired in.
+        retriever: fact-lookup — callable(question) -> sequence of fact strings.
+            Defaults to the real v15 RAG retrieval (chike.retrieval.retrieve, e5-base
+            + the 210-fact index). Tests inject a stub the same way they inject
+            FakeBackend; dependency injection is preserved.
         ooc_phrases: out-of-scope markers for the classifier stub.
         gen_params: generation params forwarded to backend.generate().
     """
@@ -124,7 +127,8 @@ class Orchestrator:
         extractor: Optional[SlotExtractor] = None,
     ):
         self.backend = backend
-        self.retriever = retriever or (lambda _q: ())
+        # Default to the real v15 retrieval; an injected retriever overrides it.
+        self.retriever = retriever if retriever is not None else default_retrieve
         self.ooc_phrases = tuple(p.lower() for p in ooc_phrases)
         self.gen_params = gen_params
         # Slot extractor shares the injected backend by default (same DI contract).

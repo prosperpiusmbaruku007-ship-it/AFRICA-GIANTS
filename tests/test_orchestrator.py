@@ -13,7 +13,8 @@ from chike.model_abstraction import FakeBackend
 
 def test_in_scope_fact_question_reaches_the_model_and_returns_its_reply():
     fake = FakeBackend(scripted_reply="Ada ya BRELA ni TZS 22,000.")
-    orch = Orchestrator(backend=fake)
+    # Inject a stub retriever so the test never touches the real e5 index/network.
+    orch = Orchestrator(backend=fake, retriever=lambda q: [])
 
     reply = orch.answer("BRELA ada ya mwaka ni ngapi")
 
@@ -115,7 +116,7 @@ def test_low_confidence_required_field_routes_to_clarification_not_rules_engine(
 
 def test_multi_part_question_produces_one_subanswer_per_part():
     fake = FakeBackend(scripted_reply="jibu")
-    orch = Orchestrator(backend=fake)
+    orch = Orchestrator(backend=fake, retriever=lambda q: [])
 
     reply = orch.answer("BRELA ada ni ngapi? NSSF ni asilimia ngapi?")
 
@@ -132,6 +133,31 @@ def test_orchestrator_accepts_any_modelbackend():
         def generate(self, prompt, params=None):
             return "custom"
 
-    orch = Orchestrator(backend=RecordingBackend())
+    orch = Orchestrator(backend=RecordingBackend(), retriever=lambda q: [])
     reply = orch.answer("VAT ni ngapi")
     assert reply.text == "custom"
+
+
+# --- Real retriever is the default, and injection still overrides it --------
+
+def test_default_retriever_is_the_real_v15_retrieve_function():
+    import chike.retrieval as retrieval
+
+    orch = Orchestrator(backend=FakeBackend())
+    # Wired, but NOT invoked here — so no e5 model/index load happens.
+    assert orch.retriever is retrieval.retrieve
+
+
+def test_injected_retriever_overrides_the_real_default():
+    calls = []
+
+    def stub(q):
+        calls.append(q)
+        return ["injected fact"]
+
+    fake = FakeBackend(scripted_reply="ok")
+    orch = Orchestrator(backend=fake, retriever=stub)
+    orch.answer("BRELA ada ni ngapi")
+
+    assert calls == ["BRELA ada ni ngapi"]                # stub used, not real retrieval
+    assert "injected fact" in fake.last_prompt
