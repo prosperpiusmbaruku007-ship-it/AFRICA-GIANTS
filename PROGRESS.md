@@ -2,6 +2,44 @@
 
 Last updated: 2026-07-12
 
+## v16 Compute-Path Investigation — Resolved (not a bug, a scope confirmation)
+
+Investigated whether v15 had a working slot-extraction step to port, following
+the same pattern that succeeded for the wrapper, stop/clean, and decompose ports.
+
+Finding: v15 never had slot extraction. The fine-tuned 8B model attempted
+compound calculations directly from natural language in one shot, succeeding
+only on scenarios matching a memorized worked example (e.g. exactly 12
+employees at TZS 600,000) and failing on any other numbers — this is the
+exact structural weakness documented throughout this project.
+
+This means chike/extraction.py (built in item 4) is not a port target — it's
+new architecture with no v15 precedent to validate against. This confirms,
+rather than changes, the original scoping decision: the interface shape is
+built and tested against FakeBackend; the confidence threshold and real
+extraction-prompt design remain correctly blocked pending real ambiguous
+Swahili phrasing data, which does not yet exist.
+
+## v16 status summary
+
+Fact-path (Q1-Q5 pattern): COMPLETE. Proven end-to-end through real
+retrieval, real model, real wrapper, real cleanup, real decompose. Matches
+production exactly.
+
+Compute-path (Q6 pattern): PARTIALLY COMPLETE.
+- Context loss: FIXED (decompose_query port)
+- Routing to rules engine: WORKING (proven in earlier orchestrator tests
+  with FakeBackend)
+- Slot extraction from real free text: NOT YET BUILT — correctly blocked,
+  requires real data collection, not more architecture work
+
+Next session priority, unchanged from earlier scoping: collect real
+ambiguous Swahili phrasing before touching slot extraction further. In the
+meantime, the one remaining low-risk port available is the 3-way shared-module
+extraction (chike/prompting.py and chike/generation_cleanup.py into
+modal_app.py and eval.py, closing the drift risk flagged during both of those
+ports) — this is available now and requires no new data.
+
 ## v16 Fact-Path Parity — Achieved
 
 Q1-Q5 (single-topic fact questions) now produce answers through the v16
