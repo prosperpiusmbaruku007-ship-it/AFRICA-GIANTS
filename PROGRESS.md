@@ -1,6 +1,42 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-08
+Last updated: 2026-07-12
+
+## v16 Build Progress
+
+Items 1-4 complete, tested, committed:
+1. Model Abstraction Layer — chike/model_abstraction/ (10/10 tests) — commit 55d516c
+2. Orchestrator pipeline skeleton — chike/orchestrator.py (8/8 tests) — commit 329ccc5
+   (was 7/7 at item 2; +1 clarification-routing test added when item 4 wired extraction in)
+3. Deterministic rules engine — chike/rules_engine/ (pre-existing, now committed) — commit 31bc921
+4. Slot extraction interface (confidence-signal shape only) — chike/extraction.py (8/8 tests) — commit 729dc54
+
+Total: 26/26 tests passing, zero network/GPU dependency for the full test suite.
+(Counts differ from the original build note's 6/23 estimate: extraction shipped 8 interface
+tests, not 6, and the orchestrator gained a clarification-routing test in item 4 — 26 actual.)
+
+BLOCKED — requires real data, do not proceed without it:
+- Confidence threshold tuning for extraction routing
+- Clarification response phrasing
+- Both explicitly marked as TODO in chike/extraction.py (and the orchestrator sentinel
+  CLARIFICATION_PENDING), tagged "requires real ambiguous-phrasing test data — see
+  PROGRESS.md milestone 5 gap"
+
+Remaining v16 items not yet started (per original build order):
+- Real retrieval wiring (currently stub retriever in orchestrator)
+- Real classifier wiring (currently thin phrase-match stub)
+- Real decompose_query enumeration logic (currently thin newline/? split stub)
+- Fidelity validation (currently stub, always returns True)
+- Change detection job
+- Monitoring/logging
+- Admin tooling
+- Frontier model comparison harness
+
+Next session priority: collect real ambiguous Swahili phrasing (see RISKS.md,
+'over-clarification' risk) before touching extraction further. All other stub
+components (retrieval, classifier, decompose) can be replaced with the real,
+already-proven v15 logic in parallel — none of that requires new data, it
+requires porting existing working code into the new orchestrator shape.
 
 ## Real WhatsApp Testing Findings (2026-07-08) — Post v15 91.1% Gate
 
