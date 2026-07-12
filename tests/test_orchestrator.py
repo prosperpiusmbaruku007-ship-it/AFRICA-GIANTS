@@ -148,6 +148,24 @@ def test_default_retriever_is_the_real_v15_retrieve_function():
     assert orch.retriever is retrieval.retrieve
 
 
+def test_fact_prompt_uses_production_rag_wrapper():
+    fake = FakeBackend(scripted_reply="ok")
+    orch = Orchestrator(
+        backend=fake,
+        retriever=lambda q: ["SDL ni 3.5%"],
+        system_prompt="Wewe ni Chike.",
+    )
+    orch.answer("SDL ni ngapi")
+
+    prompt = fake.last_prompt
+    # System prompt + UKWELI block + '- ' fact + Llama chat scaffolding all present.
+    assert prompt.startswith("<|begin_of_text|><|start_header_id|>system")
+    assert "Wewe ni Chike." in prompt
+    assert "UKWELI ULIOTHIBITISHWA KWA SWALI HILI:" in prompt
+    assert "- SDL ni 3.5%" in prompt
+    assert prompt.rstrip().endswith("<|start_header_id|>assistant<|end_header_id|>")
+
+
 def test_injected_retriever_overrides_the_real_default():
     calls = []
 

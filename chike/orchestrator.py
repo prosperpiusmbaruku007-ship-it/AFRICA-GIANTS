@@ -32,6 +32,7 @@ from .rules_engine.results import ComputationResult
 from .model_abstraction import ModelBackend
 from .extraction import SlotExtractor, REQUIRED_FIELDS
 from .retrieval import retrieve as default_retrieve
+from . import prompting
 
 # --- Stage-level configuration (thin stubs; real lists live in chike_config.json) ---
 
@@ -125,6 +126,7 @@ class Orchestrator:
         ooc_phrases: Sequence[str] = DEFAULT_OOC_PHRASES,
         gen_params: Optional[dict] = None,
         extractor: Optional[SlotExtractor] = None,
+        system_prompt: Optional[str] = None,
     ):
         self.backend = backend
         # Default to the real v15 retrieval; an injected retriever overrides it.
@@ -133,6 +135,10 @@ class Orchestrator:
         self.gen_params = gen_params
         # Slot extractor shares the injected backend by default (same DI contract).
         self.extractor = extractor or SlotExtractor(backend, gen_params)
+        # Chike system prompt (R14) for the generate-stage RAG wrapper.
+        self.system_prompt = (
+            system_prompt if system_prompt is not None else prompting.load_system_prompt()
+        )
 
     # --- Stage 1: classify -------------------------------------------------
 
@@ -204,19 +210,18 @@ class Orchestrator:
         reply = self.backend.generate(prompt, self.gen_params)
         return SubAnswer(sub_question=sq, text=reply, facts=facts)
 
-    @staticmethod
-    def _build_compute_prompt(question: str, result: ComputationResult) -> str:
-        # Hand the model the deterministic working as GROUND TRUTH to format.
-        return (
-            f"Swali: {question}\n"
-            f"Jibu sahihi (hesabu iliyothibitishwa): {result.working}\n"
-            f"Andika jibu kwa Kiswahili ukitumia hesabu hii kama ilivyo."
-        )
+    # --- Generate-stage prompts (production-aligned RAG wrapper, chike.prompting) ---
 
-    @staticmethod
-    def _build_fact_prompt(question: str, facts: Sequence[str]) -> str:
-        context = "\n".join(facts) if facts else "(hakuna ukweli uliopatikana)"
-        return f"Swali: {question}\nUkweli:\n{context}\nAndika jibu kwa Kiswahili."
+    def _build_compute_prompt(self, question: str, result: ComputationResult) -> str:
+        # Hand the model the deterministic working as GROUND TRUTH, injected through
+        # the same production RAG wrapper as facts so the generate stage is uniform.
+        working_fact = f"Jibu sahihi (hesabu iliyothibitishwa): {result.working}"
+        return prompting.build_chat_prompt(question, [working_fact], self.system_prompt)
+
+    def _build_fact_prompt(self, question: str, facts: Sequence[str]) -> str:
+        # Production-aligned wrapper (system prompt + UKWELI block + chat template) —
+        # the format the v16 diagnostic proved reproduces production answer quality.
+        return prompting.build_chat_prompt(question, facts, self.system_prompt)
 
     def _validate(self, sub: SubAnswer) -> bool:
         """STUB fidelity check. A later item verifies the model text did not
