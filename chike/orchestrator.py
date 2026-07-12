@@ -35,6 +35,7 @@ from .extraction import SlotExtractor, REQUIRED_FIELDS
 from .retrieval import retrieve as default_retrieve
 from . import prompting
 from . import generation_cleanup
+from . import decomposition
 
 # --- Stage-level configuration (thin stubs; real lists live in chike_config.json) ---
 
@@ -156,15 +157,11 @@ class Orchestrator:
     # --- Stage 2: decompose ------------------------------------------------
 
     def decompose(self, question: str) -> list:
-        """Split a multi-part question into atomic sub-questions. STUB heuristic:
-        break on newlines and '?'. Production uses the decompose_query enumeration
-        logic (R12 dual-file sync); that is a later item."""
-        parts = []
-        for line in question.replace("?", "?\n").splitlines():
-            piece = line.strip()
-            if piece:
-                parts.append(piece)
-        return parts or [question.strip()]
+        """Split a multi-part question into sub-queries via chike.decomposition —
+        the proven production decompose_query (R12): '?'-splitting, Swahili
+        connectors ('na pia' ...), and enumeration lists ('A, B, na C') that carry
+        the preamble context (salary, employee count) to each item."""
+        return decomposition.decompose_query(question)
 
     # --- Stage 3: route ----------------------------------------------------
 
