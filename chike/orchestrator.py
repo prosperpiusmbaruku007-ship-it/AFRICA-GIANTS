@@ -24,12 +24,13 @@ into the final reply — the model only supplies Swahili persona around it.
 """
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Callable, Optional, Sequence
 
 from . import rules_engine
 from .rules_engine.results import ComputationResult
 from .model_abstraction import ModelBackend
+from .extraction import SlotExtractor, REQUIRED_FIELDS
 
 # --- Stage-level configuration (thin stubs; real lists live in chike_config.json) ---
 
@@ -54,19 +55,24 @@ REFUSAL_TEXT = (
     "Tafadhali thibitisha na TRA."
 )
 
+# TODO: requires real ambiguous-phrasing test data — see PROGRESS.md milestone 5 gap.
+# Clarification response phrasing is intentionally unwritten. This sentinel lets the
+# never-guess routing contract be exercised in tests without inventing user-facing copy.
+CLARIFICATION_PENDING = "<CLARIFICATION_NEEDED>"
+
 
 @dataclass(frozen=True)
 class SubQuestion:
     """One atomic question after decomposition, with its routing decision.
 
-    `kind` is 'compute' or 'fact'. For 'compute', `computation_type` and `inputs`
-    are the resolved call into rules_engine; for 'fact' both are empty.
+    `kind` is 'compute' or 'fact'. For 'compute', `computation_type` names the
+    rules_engine calculation; the field VALUES are resolved later by the slot
+    extractor, not stored here.
     """
 
     text: str
     kind: str                                   # 'compute' | 'fact'
     computation_type: Optional[str] = None
-    inputs: dict = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -82,6 +88,7 @@ class SubAnswer:
     text: str
     facts: tuple = ()
     computation: Optional[ComputationResult] = None
+    needs_clarification: bool = False
 
 
 @dataclass(frozen=True)
@@ -114,11 +121,14 @@ class Orchestrator:
         retriever: Optional[Callable[[str], Sequence[str]]] = None,
         ooc_phrases: Sequence[str] = DEFAULT_OOC_PHRASES,
         gen_params: Optional[dict] = None,
+        extractor: Optional[SlotExtractor] = None,
     ):
         self.backend = backend
         self.retriever = retriever or (lambda _q: ())
         self.ooc_phrases = tuple(p.lower() for p in ooc_phrases)
         self.gen_params = gen_params
+        # Slot extractor shares the injected backend by default (same DI contract).
+        self.extractor = extractor or SlotExtractor(backend, gen_params)
 
     # --- Stage 1: classify -------------------------------------------------
 
@@ -148,49 +158,47 @@ class Orchestrator:
 
     def route(self, text: str) -> SubQuestion:
         """Decide compute vs fact-lookup for one sub-question. STUB heuristic:
-        a supported computation keyword plus at least one number -> compute path.
-
-        Number extraction is intentionally naive (documented stub): the largest
-        number is the gross payroll / salary, the smallest is the employee count.
-        Good enough to exercise the compute wiring; real extraction is a later item.
+        a supported computation keyword plus at least one number signals a compute
+        scenario. Field VALUES are NOT parsed here — resolving them (with confidence)
+        is the slot extractor's job (item 4); route only picks the path and type.
         """
         low = text.lower()
-        numbers = [int(n.replace(",", "")) for n in re.findall(r"\d[\d,]*", text)]
-
+        has_number = bool(re.search(r"\d", text))
         for keyword, ctype in _COMPUTE_KEYWORDS.items():
-            if keyword in low and numbers:
-                return SubQuestion(
-                    text=text, kind="compute",
-                    computation_type=ctype, inputs=self._extract_inputs(ctype, numbers),
-                )
+            if keyword in low and has_number:
+                return SubQuestion(text=text, kind="compute", computation_type=ctype)
         return SubQuestion(text=text, kind="fact")
-
-    @staticmethod
-    def _extract_inputs(ctype: str, numbers: list) -> dict:
-        gross = max(numbers)
-        if ctype == "sdl":
-            # employee_count is the smaller number when two are present.
-            count = min(numbers) if len(numbers) > 1 else 0
-            return {"gross_monthly_payroll": gross, "employee_count": count}
-        if ctype == "paye":
-            return {"monthly_salary": gross}
-        return {"gross_monthly_payroll": gross}  # nssf, wcf
 
     # --- Stage 4: answer one sub-question ----------------------------------
 
     def _answer_sub(self, sq: SubQuestion) -> SubAnswer:
-        if sq.kind == "compute":
-            result = rules_engine.compute(sq.computation_type, **sq.inputs)
-            prompt = self._build_compute_prompt(sq.text, result)
-            reply = self.backend.generate(prompt, self.gen_params)
-            sub = SubAnswer(sub_question=sq, text=reply, computation=result)
-        else:
-            facts = tuple(self.retriever(sq.text))
-            prompt = self._build_fact_prompt(sq.text, facts)
-            reply = self.backend.generate(prompt, self.gen_params)
-            sub = SubAnswer(sub_question=sq, text=reply, facts=facts)
+        sub = self._answer_compute(sq) if sq.kind == "compute" else self._answer_fact(sq)
         self._validate(sub)  # STUB: fidelity check is a later item
         return sub
+
+    def _answer_compute(self, sq: SubQuestion) -> SubAnswer:
+        """Compute path: extract fields WITH confidence first, and only call the
+        rules engine if every required field is present and high-confidence. A
+        missing OR low-confidence required field routes to clarification — the
+        rules engine is never handed a guessed value."""
+        required = REQUIRED_FIELDS[sq.computation_type]
+        extraction = self.extractor.extract(sq.text, required)
+        if not extraction.usable(required):
+            return SubAnswer(
+                sub_question=sq, text=CLARIFICATION_PENDING, needs_clarification=True,
+            )
+
+        inputs = {name: extraction.fields[name].value for name in required}
+        result = rules_engine.compute(sq.computation_type, **inputs)
+        prompt = self._build_compute_prompt(sq.text, result)
+        reply = self.backend.generate(prompt, self.gen_params)
+        return SubAnswer(sub_question=sq, text=reply, computation=result)
+
+    def _answer_fact(self, sq: SubQuestion) -> SubAnswer:
+        facts = tuple(self.retriever(sq.text))
+        prompt = self._build_fact_prompt(sq.text, facts)
+        reply = self.backend.generate(prompt, self.gen_params)
+        return SubAnswer(sub_question=sq, text=reply, facts=facts)
 
     @staticmethod
     def _build_compute_prompt(question: str, result: ComputationResult) -> str:
@@ -215,6 +223,8 @@ class Orchestrator:
 
     @staticmethod
     def _render(sub: SubAnswer) -> str:
+        if sub.needs_clarification:
+            return CLARIFICATION_PENDING
         # For compute answers, append the authoritative deterministic working so
         # the exact figure is guaranteed present regardless of what the model said.
         if sub.computation is not None:

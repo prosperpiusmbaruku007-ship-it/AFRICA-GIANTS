@@ -51,13 +51,19 @@ def test_out_of_scope_question_short_circuits_before_model():
 
 def test_compute_question_routes_to_rules_engine_and_output_reaches_reply():
     # SDL for 15 employees on a total payroll of TZS 6,750,000 -> 3.5% = 236,250.
-    fake = FakeBackend(scripted_reply="Hii ndio hesabu yako ya SDL:")
+    # Backend is called twice: first for slot extraction (JSON), then to format.
+    extraction = (
+        '{"gross_monthly_payroll": {"value": 6750000, "confidence": "high"}, '
+        '"employee_count": {"value": 15, "confidence": "high"}}'
+    )
+    fake = FakeBackend(replies=[extraction, "Hii ndio hesabu yako ya SDL:"])
     orch = Orchestrator(backend=fake)
 
     reply = orch.answer("SDL kwa wafanyakazi 15 wenye jumla ya mshahara 6,750,000")
 
     sub = reply.sub_answers[0]
     assert sub.sub_question.kind == "compute"
+    assert sub.needs_clarification is False
     assert sub.computation is not None
     assert sub.computation.computation == "sdl"
     assert sub.computation.amount == Decimal("236250")   # deterministic engine result
@@ -65,12 +71,16 @@ def test_compute_question_routes_to_rules_engine_and_output_reaches_reply():
     # Both the model persona text AND the authoritative working reach final reply.
     assert "Hii ndio hesabu yako ya SDL" in reply.text
     assert "TZS 236,250" in reply.text
-    assert fake.call_count == 1                           # model formats, not computes
+    assert fake.call_count == 2                           # extraction + formatting
 
 
 def test_compute_below_threshold_returns_not_applicable_working():
     # SDL for 5 employees -> below the 10-employee threshold -> applicable False.
-    fake = FakeBackend(scripted_reply="")
+    extraction = (
+        '{"gross_monthly_payroll": {"value": 2000000, "confidence": "high"}, '
+        '"employee_count": {"value": 5, "confidence": "high"}}'
+    )
+    fake = FakeBackend(replies=[extraction, ""])
     orch = Orchestrator(backend=fake)
 
     reply = orch.answer("SDL kwa wafanyakazi 5 wenye mshahara 2,000,000")
@@ -78,6 +88,27 @@ def test_compute_below_threshold_returns_not_applicable_working():
     sub = reply.sub_answers[0]
     assert sub.computation.applicable is False
     assert "haihusiki" in reply.text                      # deterministic note surfaced
+
+
+def test_low_confidence_required_field_routes_to_clarification_not_rules_engine():
+    # Extraction returns a required field at LOW confidence -> never guess: the
+    # orchestrator must clarify, not call the rules engine or the formatting model.
+    from chike.orchestrator import CLARIFICATION_PENDING
+
+    extraction = (
+        '{"gross_monthly_payroll": {"value": 6750000, "confidence": "low"}, '
+        '"employee_count": {"value": 15, "confidence": "high"}}'
+    )
+    fake = FakeBackend(replies=[extraction])
+    orch = Orchestrator(backend=fake)
+
+    reply = orch.answer("SDL kwa wafanyakazi 15 wenye takribani 6,750,000")
+
+    sub = reply.sub_answers[0]
+    assert sub.needs_clarification is True
+    assert sub.computation is None                        # rules engine NOT called
+    assert reply.text == CLARIFICATION_PENDING
+    assert fake.call_count == 1                            # extraction only, no formatting
 
 
 # --- Decomposition produces one sub-answer per part ------------------------
