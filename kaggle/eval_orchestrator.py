@@ -180,6 +180,35 @@ def normalize(text):
     return ' '.join(text.lower().split())
 
 
+# NOTE: known-fragile heuristic fix for the ramble-credits-wrong-answer bug found in
+# v16 orchestrator testing (eval_045, eval_101 — see PROGRESS.md). It scores the polarity
+# of the SUBSTANTIVE answer (the first block, before any trailing fabricated ramble) via
+# the leading yes/no word + Swahili negation markers, NOT a substring scan of the full
+# text. It is NOT a robust yes/no classifier — a differently-shaped answer (an implicit
+# yes/no with no leading word and no negation marker) can still be misclassified.
+# Future improvement: score only the first sentence / first N chars, not the full text,
+# so trailing content (ramble or otherwise) cannot influence the score at all.
+_YN_NEG = re.compile(r'\b(hakuna|haiwezi|hairuhusiwi|haiondoi|haipatikani|hawezi|'
+                     r'haihusiki|haistahili|hairuhusu|haitakiwi|haina|haiathiri)\b')
+_YN_YES = re.compile(r'\b(ndiyo|ndio)\b')
+
+def _yn_leading(text):
+    w = text.strip().lower().split()
+    return w[0].strip('.,—-:()"') if w else ''
+
+def _yn_polarity(text):
+    substantive = text.split('\n\n')[0]           # ignore trailing ramble entirely
+    lead = _yn_leading(substantive); low = substantive.lower()
+    if lead in ('hapana', 'la', 'siyo', 'sivyo', 'no'):   # 'la' = No ONLY as a leading word
+        return 'no'
+    if lead in ('ndiyo', 'ndio', 'yes'):
+        return 'yes'
+    if re.search(r'\bhapana\b', low) or _YN_NEG.search(low):
+        return 'no'
+    if _YN_YES.search(low):
+        return 'yes'
+    return 'yes'                                   # affirmative default
+
 def score_question(q, generated):
     gen_lower  = normalize(generated)
     atype      = q.get('answer_type', '')
@@ -204,15 +233,9 @@ def score_question(q, generated):
         return False
 
     if atype == 'yes_no':
-        YES = {'ndiyo', 'ndio', 'yes', 'sahihi'}
-        NO  = {'hapana', 'la', 'no', 'siyo', 'sivyo'}
-        yes_in_correct = any(w in correct_sw for w in YES)
-        no_in_correct  = any(w in correct_sw for w in NO)
-        gen_yes = any(w in gen_lower for w in YES)
-        gen_no  = any(w in gen_lower for w in NO)
-        if yes_in_correct: return gen_yes
-        if no_in_correct:  return gen_no
-        return len(gen_lower) > 10
+        # Compare the model's stated polarity to the expected polarity (see _yn_polarity
+        # NOTE above). Correct answers reliably lead with Ndiyo/Hapana/La.
+        return _yn_polarity(generated) == _yn_polarity(q.get('correct_answer_sw', ''))
 
     if atype in ('definition', 'procedure'):
         correct_sw = re.sub(r'thibitisha na.*$', '', correct_sw, flags=re.IGNORECASE|re.DOTALL).strip()

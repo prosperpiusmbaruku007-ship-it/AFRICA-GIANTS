@@ -51,6 +51,26 @@ _SPECIAL_TOKEN_RE = re.compile(r"<\|[^|]*\|>")
 # use the tokenizer's real chat template so generation stops at EOS — tracked separately.)
 _TURN_SEPARATOR = "\n\n"
 _ROLE_JUNK_RE = re.compile(r"(?i)(user|assistant|system|understand)[a-z0-9_]*\s*$")
+# A '\n\n'-separated block is a fabricated follow-up turn (not part of the answer) if it
+# starts with a leaked role header, repeats an earlier block (repeated disclaimer), or is a
+# question immediately followed by its own answer. Blindly cutting at the first '\n\n' threw
+# away legitimately-structured answers (intro line + steps/rates/definition); this keeps
+# answer blocks and stops only at the first fabricated one.
+_ROLE_START_RE = re.compile(r"(?i)^\s*(user|assistant|system|understand[a-z0-9_]*)\b")
+
+
+def _is_fabricated_block(block: str, seen: set) -> bool:
+    b = block.strip()
+    if not b:
+        return True
+    if _ROLE_START_RE.match(b):                 # leaked chat-turn header
+        return True
+    if b.lower()[:50] in seen:                  # repeated disclaimer / duplicate block
+        return True
+    m = re.search(r"\?\s*[A-Za-z]", b)          # a question followed by its own answer = fabricated Q&A turn
+    if m and len(b) - m.end() > 15:
+        return True
+    return False
 
 
 def _load_stop_strings() -> list:
@@ -91,13 +111,20 @@ def clean_reply(text: str, stop_strings: Optional[Sequence[str]] = None) -> str:
     """Full stop/clean stage: cut the reply at the first fabricated follow-up turn,
     drop residual special tokens and glued role junk, then apply clean_generated_reply.
 
-    Order: (1) truncate at any real turn/stop marker; (2) keep only the first block
-    before a blank line — the model appends fabricated turns separated by '\\n\\n', and
-    production replies are single-paragraph; (3) strip a trailing leaked role word /
-    fact-key run glued to the answer; (4) strip residual special tokens; (5) domain fixes.
+    Order: (1) truncate at any real turn/stop marker; (2) keep '\\n\\n'-separated blocks
+    until the first fabricated follow-up turn (a legitimately-structured answer — intro
+    line + steps/rates/definition — is kept whole; only the appended ramble is dropped);
+    (3) strip a trailing leaked role word / fact-key run glued to the answer; (4) strip
+    residual special tokens; (5) domain fixes.
     """
     text = truncate_at_stops(text, stop_strings)
-    text = text.split(_TURN_SEPARATOR)[0].strip()
+    kept, seen = [], set()
+    for block in text.split(_TURN_SEPARATOR):
+        if _is_fabricated_block(block, seen):
+            break
+        kept.append(block)
+        seen.add(block.strip().lower()[:50])
+    text = _TURN_SEPARATOR.join(kept).strip()
     text = _ROLE_JUNK_RE.sub("", text).strip()
     text = _SPECIAL_TOKEN_RE.sub("", text).strip()
     return clean_generated_reply(text)
