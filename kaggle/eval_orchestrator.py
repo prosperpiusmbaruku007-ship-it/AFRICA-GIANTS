@@ -129,7 +129,7 @@ REFUSAL_THRESHOLD  = CONFIG['gate_thresholds']['out_of_corpus']
 print(f'[config] version={CONFIG.get("version")} thresholds in={ACCURACY_THRESHOLD} ooc={REFUSAL_THRESHOLD}')
 
 # ── DATA: 200 gate questions + RAG index (same HF sources as eval.py) ────────────
-from huggingface_hub import hf_hub_download            # noqa: E402
+from huggingface_hub import hf_hub_download, HfApi     # noqa: E402
 _q_path = hf_hub_download(repo_id=DATASET_REPO, filename='eval_questions_001.jsonl',
                           repo_type='dataset', token=hf_token)
 eval_questions = []
@@ -317,3 +317,20 @@ with open(out_path, 'w', encoding='utf-8') as f:
         'results': results,
     }, f, ensure_ascii=False, indent=2)
 print(f'[save] {out_path}')
+
+# Upload so the file survives the ephemeral Kaggle session — same pattern eval.py uses
+# for gate_001_results.json (uploaded to the adapter-v15 model repo). Kept as a separate
+# filename so it sits ALONGSIDE the v15 baseline for a per-question diff, not overwriting it.
+try:
+    HfApi().upload_file(
+        path_or_fileobj=out_path,
+        path_in_repo='gate_orchestrator_subset.json',
+        repo_id='prospAprospA007/africa-giants-adapter-v15',
+        repo_type='model',
+        token=hf_token,
+        commit_message=(f'v16 orchestrator fact-path subset run — '
+                        f'in_corpus={in_acc:.1%} on {len(in_corpus)} tested, for regression diagnosis'),
+    )
+    print('[upload] gate_orchestrator_subset.json -> prospAprospA007/africa-giants-adapter-v15')
+except Exception as e:
+    print(f'[upload] failed (non-critical): {e}')
