@@ -48,16 +48,44 @@ from datetime import datetime, timezone
 import requests
 
 # ── AUTH ────────────────────────────────────────────────────────────────────────
+# Required Kaggle Secrets (attach BOTH to the notebook before running):
+#   AFRICA_GIANTS    -> HuggingFace token   (same label eval.py / regenerate_rag_e5.py use)
+#   MODAL_API_TOKEN  -> raw Modal endpoint ?token= value
+# Look each up INDEPENDENTLY: a missing MODAL secret must not null the HF token. Missing
+# secrets fail LOUDLY here rather than falling back to '' (an empty token silently becomes
+# 'Bearer ' and crashes deep inside hf_hub_download with no hint of the real cause).
 try:
     import kaggle_secrets
     _sec = kaggle_secrets.UserSecretsClient()
-    hf_token = _sec.get_secret('AFRICA_GIANTS')
-    modal_token = _sec.get_secret('MODAL_API_TOKEN')
-    print(f'[auth] HF token ({hf_token[:6]}...) + Modal token ({modal_token[:6]}...) from Kaggle secrets')
 except Exception as e:
-    hf_token = os.environ.get('HF_TOKEN', '')
-    modal_token = os.environ.get('CHIKE_MODAL_TOKEN', '')
-    print(f'[auth] fallback env — HF:{bool(hf_token)} Modal:{bool(modal_token)} ({e})')
+    raise RuntimeError(
+        'kaggle_secrets unavailable — this script must run on Kaggle with the '
+        'AFRICA_GIANTS and MODAL_API_TOKEN secrets attached.') from e
+
+
+def _kaggle_secret(label, env_fallback):
+    try:
+        val = _sec.get_secret(label)
+    except Exception:
+        val = ''
+    return (val or os.environ.get(env_fallback, '') or '').strip()
+
+
+hf_token    = _kaggle_secret('AFRICA_GIANTS', 'HF_TOKEN')
+modal_token = _kaggle_secret('MODAL_API_TOKEN', 'CHIKE_MODAL_TOKEN')
+
+_missing = []
+if not hf_token:
+    _missing.append('AFRICA_GIANTS (HuggingFace token)')
+if not modal_token:
+    _missing.append('MODAL_API_TOKEN (raw Modal endpoint token)')
+if _missing:
+    raise RuntimeError(
+        'MODAL_API_TOKEN and/or HF_TOKEN not found in Kaggle secrets — attach both '
+        'secrets to this notebook before running. Expected labels: AFRICA_GIANTS '
+        '(HuggingFace) and MODAL_API_TOKEN (raw Modal endpoint). Missing: '
+        + ', '.join(_missing))
+print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) + MODAL_API_TOKEN ({modal_token[:6]}...) OK')
 os.environ['HF_TOKEN'] = hf_token
 
 RAW_ENDPOINT = os.environ.get(
