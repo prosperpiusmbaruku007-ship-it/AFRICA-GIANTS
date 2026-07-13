@@ -3,11 +3,13 @@
 Run the v16 ORCHESTRATOR against the 200-question gate — ON KAGGLE.
 
 This is the test that has been missing: eval.py runs v15's own pipeline (its own
-retrieve/decompose/generate) and only *borrows* two shared utility functions. THIS
+retrieve/decompose/generate) and only *borrows* shared utility functions. THIS
 script instead drives the real chike/orchestrator.py end-to-end (classify -> decompose
 -> route -> retrieve -> generate -> validate/clean -> merge), with generation served by
-the REAL fine-tuned v15 model via the raw-generation Modal endpoint (same LocalAdapter
-path used for the manual spot-checks this session).
+the REAL fine-tuned v15 model loaded DIRECTLY on Kaggle's GPU — the exact same 4-bit
+load eval.py uses. No Modal, no HTTP, no raw-generation endpoint: one in-process model
+load and direct generate() calls, so this script depends on nothing but the model
+weights on HuggingFace, identical to how eval.py already runs on Kaggle.
 
 WHAT IT TESTS: the FACT-PATH-ONLY subset of the gate (190 of 200). The 10 questions the
 orchestrator routes to its compute path are EXCLUDED, because slot extraction from the
@@ -16,25 +18,25 @@ orchestrator routes to its compute path are EXCLUDED, because slot extraction fr
 whether the orchestrator matches v15's quality on everything it is actually built to
 handle today.
 
-HOW TO RUN (Kaggle notebook cell):
+HOW TO RUN (Kaggle notebook cell, GPU accelerator ON):
     import requests
     r = requests.get('https://raw.githubusercontent.com/prosperpiusmbaruku007-ship-it/'
                      'AFRICA-GIANTS/main/kaggle/eval_orchestrator.py', timeout=10)
     exec(r.text)
 
-PREREQS (Kaggle Secrets):
-    AFRICA_GIANTS     -> HuggingFace token (eval questions + RAG index download)
-    MODAL_API_TOKEN   -> the ?token= value for the raw Modal endpoint
+PREREQS:
+    - Kaggle GPU accelerator ON (loads the 8B in 4-bit, same as eval.py).
+    - Kaggle Secret AFRICA_GIANTS -> HuggingFace token (model weights + eval questions
+      + RAG index). This is the ONLY secret required — no MODAL_API_TOKEN.
 
-CAVEATS (read before interpreting a score delta vs eval.py's 91.1%):
-  - The raw endpoint has NO StoppingCriteria (it is intentionally dumb); the orchestrator
-    relies on chike.generation_cleanup.clean_reply's turn-truncation to cut the ramble.
-    eval.py's own path uses in-process StoppingCriteria. For score_question (which checks
-    number/keyword PRESENCE in the answer) this should not matter, but a delta is not
-    purely "orchestrator logic" — it could be the stopping-mechanism difference.
-  - Retrieval here uses the real chike.retrieval (e5-base + the same HF index eval.py
-    loads), injected into the orchestrator.
-  - 190 live HTTP calls to the Modal endpoint; cold starts may make the first calls slow.
+NOTES (for interpreting a score delta vs eval.py's corrected baseline):
+  - The in-process backend applies the SAME StoppingCriteria eval.py uses (stop_strings
+    from chike_config.json), so the stopping mechanism is now identical to eval.py — any
+    delta reflects orchestrator logic (classify/decompose/route/merge), not a
+    stopping-mechanism difference as in the earlier Modal-endpoint version.
+  - Retrieval uses the real chike.retrieval (e5-base + the same HF index eval.py loads),
+    injected into the orchestrator.
+  - 190 in-process generations on the Kaggle GPU; the first call is slower (model warmup).
 """
 import os
 import re
@@ -48,19 +50,19 @@ from datetime import datetime, timezone
 import requests
 
 # ── AUTH ────────────────────────────────────────────────────────────────────────
-# Required Kaggle Secrets (attach BOTH to the notebook before running):
-#   AFRICA_GIANTS    -> HuggingFace token   (same label eval.py / regenerate_rag_e5.py use)
-#   MODAL_API_TOKEN  -> raw Modal endpoint ?token= value
-# Look each up INDEPENDENTLY: a missing MODAL secret must not null the HF token. Missing
-# secrets fail LOUDLY here rather than falling back to '' (an empty token silently becomes
-# 'Bearer ' and crashes deep inside hf_hub_download with no hint of the real cause).
+# Required Kaggle Secret (attach before running):
+#   AFRICA_GIANTS -> HuggingFace token (model weights + eval questions + RAG index).
+# This is the ONLY secret needed — the model loads directly on the Kaggle GPU, so there
+# is no Modal endpoint and no MODAL_API_TOKEN. A missing token fails LOUDLY here rather
+# than falling back to '' (an empty token silently becomes 'Bearer ' and crashes deep
+# inside hf_hub_download with no hint of the real cause).
 try:
     import kaggle_secrets
     _sec = kaggle_secrets.UserSecretsClient()
 except Exception as e:
     raise RuntimeError(
         'kaggle_secrets unavailable — this script must run on Kaggle with the '
-        'AFRICA_GIANTS and MODAL_API_TOKEN secrets attached.') from e
+        'AFRICA_GIANTS secret attached.') from e
 
 
 def _kaggle_secret(label, env_fallback):
@@ -71,28 +73,13 @@ def _kaggle_secret(label, env_fallback):
     return (val or os.environ.get(env_fallback, '') or '').strip()
 
 
-hf_token    = _kaggle_secret('AFRICA_GIANTS', 'HF_TOKEN')
-modal_token = _kaggle_secret('MODAL_API_TOKEN', 'CHIKE_MODAL_TOKEN')
-
-_missing = []
+hf_token = _kaggle_secret('AFRICA_GIANTS', 'HF_TOKEN')
 if not hf_token:
-    _missing.append('AFRICA_GIANTS (HuggingFace token)')
-if not modal_token:
-    _missing.append('MODAL_API_TOKEN (raw Modal endpoint token)')
-if _missing:
     raise RuntimeError(
-        'MODAL_API_TOKEN and/or HF_TOKEN not found in Kaggle secrets — attach both '
-        'secrets to this notebook before running. Expected labels: AFRICA_GIANTS '
-        '(HuggingFace) and MODAL_API_TOKEN (raw Modal endpoint). Missing: '
-        + ', '.join(_missing))
-print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) + MODAL_API_TOKEN ({modal_token[:6]}...) OK')
+        'AFRICA_GIANTS (HuggingFace token) not found in Kaggle secrets — attach it to '
+        'this notebook before running. It is the only secret this script needs.')
+print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) OK')
 os.environ['HF_TOKEN'] = hf_token
-
-RAW_ENDPOINT = os.environ.get(
-    'CHIKE_RAW_ENDPOINT',
-    'https://prosperpiusmbaruku007--chike-inference-generate-endpoint.modal.run')
-os.environ['CHIKE_RAW_ENDPOINT'] = RAW_ENDPOINT
-os.environ['CHIKE_MODAL_TOKEN'] = modal_token
 
 REPO = 'prosperpiusmbaruku007-ship-it/AFRICA-GIANTS'
 RAW = f'https://raw.githubusercontent.com/{REPO}/main'
@@ -113,7 +100,7 @@ _sha = subprocess.run(['git', '-C', _CLONE_DIR, 'rev-parse', '--short', 'HEAD'],
 print(f'[clone] chike package @ {_CLONE_DIR} (HEAD {_sha})')
 
 from chike.orchestrator import Orchestrator          # noqa: E402
-from chike.model_abstraction import LocalAdapter      # noqa: E402
+from chike.model_abstraction import ModelBackend      # noqa: E402
 from chike.retrieval import Retriever                 # noqa: E402
 from chike.scoring import score_question              # noqa: E402  (shared scorer)
 
@@ -151,11 +138,84 @@ print('[data] RAG index downloaded (e5-base 768-dim)')
 # of truth with kaggle/eval.py. score_question(q, generated, REFUSAL_PHRASES) is called below.
 
 
+# ── LOAD THE v15 MODEL DIRECTLY ON THE KAGGLE GPU (same 4-bit load as eval.py) ──
+# In-process ModelBackend — no Modal, no HTTP. generate(prompt) returns the RAW
+# completion (prompt -> new tokens -> decode); the orchestrator's own validate/clean
+# stage (chike.generation_cleanup.clean_reply) does the turn-truncation downstream,
+# exactly as it did for the Modal path this replaces. Because the raw completion is
+# what feeds clean_reply, it is also what gets saved as raw_generated below.
+import torch                                                            # noqa: E402
+from transformers import (AutoTokenizer, AutoModelForCausalLM,          # noqa: E402
+                          BitsAndBytesConfig, StoppingCriteria, StoppingCriteriaList)
+
+ADAPTER_REPO = CONFIG.get('adapter_repo', 'prospAprospA007/africa-giants-adapter-v15')
+GEN          = CONFIG['generation_params']
+STOP_STRINGS = GEN.get('stop_strings',
+                       ['\n\nQ:', '\n\nSwali:', '<|start_header_id|>', '\n\n---'])
+
+
+class _StopOnSubstrings(StoppingCriteria):
+    # Byte-identical to eval.py's StopOnSubstrings — hard-stop the instant the model
+    # opens a new Q&A turn, so in-process generation matches eval.py's stop mechanism.
+    def __init__(self, tokenizer, stop_strings):
+        self.tokenizer = tokenizer
+        self.stop_strings = stop_strings
+
+    def __call__(self, input_ids, scores, **kwargs):
+        text = self.tokenizer.decode(input_ids[0], skip_special_tokens=True)
+        return any(s in text[-100:] for s in self.stop_strings)
+
+
+class KaggleDirectBackend(ModelBackend):
+    """In-process ModelBackend: loads the v15 adapter in 4-bit on the Kaggle GPU and
+    generates directly, mirroring eval.py's load + generate config exactly. Returns the
+    RAW completion (no clean_reply here — the orchestrator cleans downstream)."""
+
+    def __init__(self, adapter_repo, token, gen_params, stop_strings):
+        print(f'[model] Loading {adapter_repo} directly on GPU (4-bit) ...')
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            adapter_repo, token=token, trust_remote_code=True)
+        if self.tokenizer.pad_token is None:
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+        bnb = BitsAndBytesConfig(
+            load_in_4bit=True, bnb_4bit_quant_type='nf4',
+            bnb_4bit_compute_dtype=torch.float16, bnb_4bit_use_double_quant=True)
+        self.model = AutoModelForCausalLM.from_pretrained(
+            adapter_repo, quantization_config=bnb, device_map='auto',
+            token=token, trust_remote_code=True)
+        self.model.eval()
+        self.gen_params = dict(gen_params)
+        self.stop_strings = stop_strings
+        print('[model] Loaded OK')
+
+    def generate(self, prompt, params=None):
+        p = dict(self.gen_params)
+        if params:
+            p.update(params)                                   # caller overrides win
+        inputs = self.tokenizer(prompt, return_tensors='pt').to(self.model.device)
+        stopping = StoppingCriteriaList(
+            [_StopOnSubstrings(self.tokenizer, self.stop_strings)])
+        with torch.no_grad():
+            out = self.model.generate(
+                **inputs,
+                max_new_tokens=p.get('max_new_tokens', 350),
+                do_sample=False,
+                temperature=1.0,
+                repetition_penalty=p.get('repetition_penalty', 1.1),
+                no_repeat_ngram_size=p.get('no_repeat_ngram_size', 0),
+                stopping_criteria=stopping,
+                eos_token_id=self.tokenizer.eos_token_id,
+                pad_token_id=self.tokenizer.pad_token_id,
+            )
+        new_tokens = out[0][inputs['input_ids'].shape[1]:]
+        return self.tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
+
+
 # ── BUILD THE REAL ORCHESTRATOR ─────────────────────────────────────────────────
-# Backend: LocalAdapter -> raw Modal endpoint (env set above). Retriever: real
+# Backend: KaggleDirectBackend (in-process GPU load — no Modal). Retriever: real
 # chike.retrieval over the HF index. OOC + system prompt injected from config.
 _retriever = Retriever(emb_path=_rag_npy, texts_path=_rag_txt)
-backend = LocalAdapter()  # reads CHIKE_RAW_ENDPOINT + CHIKE_MODAL_TOKEN from env
+backend = KaggleDirectBackend(ADAPTER_REPO, hf_token, GEN, STOP_STRINGS)
 orch = Orchestrator(
     backend=backend,
     retriever=_retriever.retrieve,   # (question) -> list[str], top_k defaults to 3

@@ -1,6 +1,59 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-12
+Last updated: 2026-07-13
+
+## Gate measurement-bug fix + corrected baseline + orchestrator gate rework (2026-07-13)
+
+A measurement bug was found during v16 orchestrator validation: the gate scorer was
+crediting wrong answers, inflating reported scores. Three commits fixed it, then two
+more prepared the orchestrator gate for a real (non-proxy) Kaggle re-run.
+
+**Scorer fixes (commit da9c69a):**
+1. `chike/generation_cleanup.py` `clean_reply` was blindly truncating at the first
+   `\n\n`, discarding real content. Fixed to preserve content blocks until a genuinely
+   fabricated block is detected (9 verdict flips, all fail→pass, zero regressions).
+2. The `yes_no` scorer credited a wrong answer whenever a fabricated ramble happened to
+   contain the expected keyword. Fixed to compare substantive-answer POLARITY (leading
+   Ndiyo/Hapana/La word + Swahili negation markers on the first `\n\n` block) instead of
+   a full-text substring scan.
+
+**Corrected baseline:** the old v15 in-corpus figure of 91.1% was inflated by the
+substring bug. Rescoring the stored v15 outputs with the fixed scorer gives **85.3%**
+in-corpus — this is the real v15 baseline. (Still a gate PASS: threshold is 85% / 82%
+depending on config; the definitive number comes from the Kaggle re-run of `eval.py`.)
+The 91.1% figure elsewhere in this file predates the fix and should be read as inflated.
+
+**Scorer extraction (commit b5a5e83):** `score_question` + helpers extracted into shared
+`chike/scoring.py` (leaf module, stdlib-only), consumed by both `kaggle/eval.py` (via
+fetch-and-exec) and `kaggle/eval_orchestrator.py` (via git-clone import) — single source
+of truth, following the `chike/prompting.py` / `chike/generation_cleanup.py` pattern.
+
+**Raw pre-clean persistence (commit 96f9d8b):** the prior orchestrator run stored only
+the CLEANED output, so when `clean_reply` changed there was no way to rescore offline —
+forcing a full GPU re-run. Fixed: `SubAnswer` and `Reply` now carry a `raw_text` field
+holding the model's pre-clean generation (captured in `_validate_and_clean` before `text`
+is overwritten; merged onto `Reply` alongside the cleaned `text`). `eval_orchestrator.py`
+now saves both `generated` (cleaned, scored) and `raw_generated` (pre-clean) per question,
+so any future `clean_reply` change is rescorable from saved JSON without another GPU run.
+26→96 test suite still green.
+
+**Orchestrator gate de-Modaled:**
+`eval_orchestrator.py` previously drove generation via `LocalAdapter` — an HTTP client to
+a Modal raw-generation endpoint requiring a second Kaggle secret (`MODAL_API_TOKEN`) and
+190 live HTTP calls. Rewired to load the v15 adapter DIRECTLY on the Kaggle GPU (new
+in-process `KaggleDirectBackend(ModelBackend)`, byte-identical 4-bit load + generation
+config + `StopOnSubstrings` stopping criteria as `eval.py`), passed into the Orchestrator
+as its backend. Now needs ONLY the `AFRICA_GIANTS` HF secret — same as `eval.py`. No
+Modal, no HTTP, no raw endpoint. `LocalAdapter` (the HTTP client) is left intact for
+local-dev-over-HTTP use; the `chike` package stays torch-free (transformers imported at
+script level, same as `eval.py`).
+
+### Ready for Kaggle re-run (founder runs; Claude does not)
+- `kaggle/eval.py` → real corrected v15 baseline (~85.3% in-corpus expected).
+- `kaggle/eval_orchestrator.py` → real v16 orchestrator fact-path number (replaces the
+  82.3% v15-stored-output proxy from da9c69a), saving both cleaned + raw output.
+- Both need only the `AFRICA_GIANTS` secret + Kaggle GPU. Both fetch code from GitHub
+  main, which is fully pushed.
 
 ## v16 Shared-Module Extraction — Complete
 
