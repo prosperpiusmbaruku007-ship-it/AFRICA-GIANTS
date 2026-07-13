@@ -86,7 +86,14 @@ STOP_STRINGS = _load_stop_strings()
 
 
 def clean_generated_reply(text: str) -> str:
-    """Exact port of modal_app.clean_generated_reply / eval.clean_generated_reply."""
+    """Thin cleanup: strip leading (N)? enumerations + domain fixes only. Does NOT
+    truncate fabricated follow-up turns.
+
+    DEPRECATED as a public entry point — kept ONLY as the final building block inside
+    clean_reply (step 5). All consumers (eval.py, modal_app.py, orchestrator) now call
+    clean_reply, which strips ramble first. Do not wire this in directly: on its own it
+    leaves fabricated Q&A ramble in the reply, which fed the scorer false-credit keywords
+    (eval_029/132/163). Use clean_reply."""
     prev = None
     while prev != text:
         prev = text

@@ -164,9 +164,10 @@ HARDCODED_REFUSAL = (
 )
 
 
-# clean_generated_reply now lives in the shared chike.generation_cleanup module and
-# is imported inside ChikeModel.run() from the mounted chike/ package (single source
-# of truth, identical to the orchestrator and kaggle/eval.py).
+# clean_reply (the full stop/clean stage) lives in the shared chike.generation_cleanup
+# module and is imported inside ChikeModel.run() from the mounted chike/ package (single
+# source of truth, identical to the orchestrator and kaggle/eval.py). It supersedes the
+# thin clean_generated_reply, which left fabricated follow-up turns in the reply.
 
 
 def classify_question(message: str) -> bool:
@@ -417,7 +418,7 @@ class ChikeModel:
         if '/root' not in sys.path:
             sys.path.insert(0, '/root')
         from chike.prompting import build_enriched_system
-        from chike.generation_cleanup import clean_generated_reply
+        from chike.generation_cleanup import clean_reply
 
         if not message or not message.strip():
             return {'error': 'No message provided'}
@@ -516,7 +517,11 @@ class ChikeModel:
             if stop in reply:
                 reply = reply.split(stop)[0].strip()
 
-        reply = clean_generated_reply(reply)
+        # Full stop/clean: truncates fabricated follow-up turns + strips role junk/special
+        # tokens, then applies the old clean_generated_reply. Identical to eval.py and the
+        # orchestrator (the manual stop loop above is now a subset of clean_reply, kept as
+        # a harmless fast-path). Passing STOP_STRINGS makes the truncation config-exact.
+        reply = clean_reply(reply, STOP_STRINGS)
 
         print(f'[chike] Q: {message[:60]}')
         print(f'[chike] A: {reply[:60]}')

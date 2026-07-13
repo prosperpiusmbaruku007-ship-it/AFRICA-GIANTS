@@ -46,7 +46,7 @@ print(f'[config] REFUSAL_PHRASES: {len(REFUSAL_PHRASES)} phrases')
 
 # ── FETCH SHARED CHIKE MODULES FROM GITHUB (single source of truth) ────────────
 # The RAG wrapper (chike.prompting.build_chat_prompt) and post-generation cleanup
-# (chike.generation_cleanup.clean_generated_reply) now live in chike/ — fetched + exec'd
+# (chike.generation_cleanup.clean_reply) now live in chike/ — fetched + exec'd
 # here instead of carrying inline copies, the same fetch pattern used for this eval.py
 # and chike_config.json. This is what makes the gate test the EXACT wrapper/clean logic
 # production uses (R12), and closes the drift that inline copies caused.
@@ -79,7 +79,13 @@ _prompting = _fetch_chike_module('prompting')
 _cleanup   = _fetch_chike_module('generation_cleanup')
 _scoring   = _fetch_chike_module('scoring')
 build_chat_prompt     = _prompting['build_chat_prompt']
-clean_generated_reply = _cleanup['clean_generated_reply']
+# clean_reply is the FULL stop/clean stage (truncates fabricated follow-up turns +
+# strips role junk/special tokens, then applies clean_generated_reply). Use it — NOT
+# the thin clean_generated_reply — so eval, production (modal_app.py) and the
+# orchestrator all strip ramble identically (R12 / dual-file-sync). The thin
+# clean_generated_reply left fabricated Q&A ramble in, which then fed the scorer
+# false-credit keywords (eval_029/132/163).
+clean_reply           = _cleanup['clean_reply']
 score_question        = _scoring['score_question']   # (q, generated, refusal_phrases)
 
 # ── OOC CLASSIFIER ────────────────────────────────────────────────────────────
@@ -325,9 +331,9 @@ def decompose_query(message: str) -> list:
 # SWAHILI_NUMBERS + extract_numbers + normalize + score_question are imported from the
 # shared chike.scoring module (fetched above) — single source of truth with eval_orchestrator.py.
 
-# clean_generated_reply is imported from the shared chike.generation_cleanup module
-# (fetched above), not defined inline — single source of truth with modal_app.py and
-# the orchestrator.
+# clean_reply is imported from the shared chike.generation_cleanup module (fetched
+# above), not defined inline — single source of truth with modal_app.py and the
+# orchestrator.
 
 # ── INFERENCE ─────────────────────────────────────────────────────────────────
 def generate_answer(question_sw: str) -> str:
@@ -368,7 +374,7 @@ def generate_answer(question_sw: str) -> str:
             pad_token_id=tokenizer.pad_token_id,
         )
     new_tokens = out[0][inputs['input_ids'].shape[1]:]
-    return clean_generated_reply(tokenizer.decode(new_tokens, skip_special_tokens=True).strip())
+    return clean_reply(tokenizer.decode(new_tokens, skip_special_tokens=True).strip(), STOP_STRINGS)
 
 # extract_numbers, normalize, and score_question now live in the shared chike.scoring
 # module (fetched at the top). score_question(q, generated, REFUSAL_PHRASES) is called
