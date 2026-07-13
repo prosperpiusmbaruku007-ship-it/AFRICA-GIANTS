@@ -50,6 +50,30 @@ a real finding — not a v16 problem, a project-wide one. Options: raise real
 accuracy (fact/generation work) or revisit the threshold with eyes open. No
 silent reversion of the scorer fixes.
 
+## Confirmed gate status (2026-07-13) — threshold reconciled to 0.85
+
+CLAUDE.md previously referenced an outdated 0.82 in-corpus threshold; the
+actual, intended, governing threshold has always been 0.85 in
+chike_config.json (R14 single source of truth). CLAUDE.md corrected to match.
+
+With the threshold confirmed at 0.85:
+- v15 (production): 84.7% in-corpus (161/190) — FAILS the gate
+- v16 orchestrator: 84.7% in-corpus (161/190) — FAILS the gate, exact parity with v15
+- Both: 100% OOC — PASSES
+
+This is not a v16 regression. It is the first honest measurement of production's
+true accuracy, after fixing three scorer/cleanup bugs that had inflated every
+previous recorded score (91.1% -> 88.0% -> 84.7%, corrected). Production has
+been serving real WhatsApp users at approximately this true accuracy level
+all along.
+
+This is a real, standing gap against the project's own stated bar and needs
+a decision: either close the accuracy gap (more/better training data, or the
+frontier-model path already discussed earlier this project), or make a
+deliberate, documented decision to adjust the threshold with clear reasoning
+if 0.85 is reconsidered as the right bar — not by silently drifting to
+whatever a given measurement happens to produce.
+
 ## Gate measurement-bug fix + corrected baseline + orchestrator gate rework (2026-07-13)
 
 A measurement bug was found during v16 orchestrator validation: the gate scorer was
