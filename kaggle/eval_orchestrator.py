@@ -183,8 +183,11 @@ print(f'[subset] fact-path-only: {len(subset)}/200 tested; '
 print(f'[run] {len(subset)} questions through Orchestrator.answer() via the real model ...')
 results = []
 for i, q in enumerate(subset):
+    raw_generated = ''
     try:
-        generated = orch.answer(q['question_sw']).text
+        reply = orch.answer(q['question_sw'])
+        generated = reply.text
+        raw_generated = reply.raw_text   # pre-clean generation, for offline rescoring
         passed = score_question(q, generated, REFUSAL_PHRASES)
     except Exception as e:
         generated = f'ERROR: {e}'
@@ -194,7 +197,10 @@ for i, q in enumerate(subset):
         'answer_type': q.get('answer_type', ''),
         'question_sw': q['question_sw'],
         'correct_answer_sw': q['correct_answer_sw'],
-        'generated': generated, 'pass': passed,
+        # 'generated' = post-clean answer scored above; 'raw_generated' = pre-clean
+        # model output, saved so a future clean_reply change can be rescored offline
+        # without another GPU run (the gap that forced this validation cycle).
+        'generated': generated, 'raw_generated': raw_generated, 'pass': passed,
     })
     if (i + 1) % 20 == 0 or i == 0:
         rp = sum(r['pass'] for r in results)

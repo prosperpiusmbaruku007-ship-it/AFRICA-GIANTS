@@ -84,13 +84,18 @@ class SubQuestion:
 class SubAnswer:
     """The answer to one sub-question.
 
-    `text` is the model's Swahili reply. `computation` is the authoritative
+    `text` is the model's Swahili reply (post-clean). `raw_text` is the model's
+    generation BEFORE clean_reply ran — kept so a future clean_reply change can be
+    rescored offline against saved data instead of forcing a fresh GPU run. Empty
+    until the validate/clean stage populates it (clarification/refusal paths never
+    call the model, so their raw_text stays ""). `computation` is the authoritative
     deterministic result when this went down the compute path (None otherwise) —
     it, not the model text, is the source of truth for any number.
     """
 
     sub_question: SubQuestion
     text: str
+    raw_text: str = ""
     facts: tuple = ()
     computation: Optional[ComputationResult] = None
     needs_clarification: bool = False
@@ -104,6 +109,7 @@ class Reply:
     in_scope: bool
     refused: bool
     text: str
+    raw_text: str = ""
     sub_answers: tuple = ()
 
 
@@ -230,7 +236,10 @@ class Orchestrator:
         is still a separate follow-up; this stage currently does stop/clean only."""
         if sub.needs_clarification:
             return sub
-        return dataclasses.replace(sub, text=generation_cleanup.clean_reply(sub.text))
+        # Preserve the pre-clean generation in raw_text before overwriting text,
+        # so future clean_reply changes can be rescored offline (see SubAnswer docstring).
+        return dataclasses.replace(
+            sub, text=generation_cleanup.clean_reply(sub.text), raw_text=sub.text)
 
     # --- Stage 5: merge ----------------------------------------------------
 
@@ -246,18 +255,25 @@ class Orchestrator:
             return f"{body}\n{working}" if body else working
         return sub.text.strip()
 
+    @staticmethod
+    def _raw_render(sub: SubAnswer) -> str:
+        # Pre-clean counterpart of _render: the raw model generation when one was
+        # produced, else the final text (clarification/compute-working have no raw).
+        return sub.raw_text or sub.text.strip()
+
     def answer(self, question: str) -> Reply:
         """Full pipeline entry point."""
         if not self.classify(question):
             return Reply(
                 question=question, in_scope=False, refused=True,
-                text=REFUSAL_TEXT, sub_answers=(),
+                text=REFUSAL_TEXT, raw_text=REFUSAL_TEXT, sub_answers=(),
             )
 
         sub_answers = tuple(self._answer_sub(self.route(part))
                             for part in self.decompose(question))
         merged = "\n\n".join(self._render(sa) for sa in sub_answers)
+        merged_raw = "\n\n".join(self._raw_render(sa) for sa in sub_answers)
         return Reply(
             question=question, in_scope=True, refused=False,
-            text=merged, sub_answers=sub_answers,
+            text=merged, raw_text=merged_raw, sub_answers=sub_answers,
         )
