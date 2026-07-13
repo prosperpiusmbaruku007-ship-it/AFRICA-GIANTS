@@ -16,6 +16,16 @@ eval.py itself).
 Production verified unaffected: 5 spot-check questions (GN487A, SDL, BRELA,
 VAT withholding, zero-rated VAT) byte-identical to pre-change baseline.
 
+### Gate re-verification scope (important — do not misread)
+
+The eval.py gate tests the v15 pipeline (eval's own retrieve/decompose/generate,
+mirroring production modal_app.py) with build_chat_prompt + clean_generated_reply
+now sourced from the shared chike/ modules. It confirms the shared-module
+extraction is behavior-preserving. It does not test the v16 orchestrator end-to-
+end — the orchestrator is validated separately via FakeBackend unit tests and
+raw-endpoint spot-checks. No gate currently exercises the v16 orchestrator
+pipeline.
+
 ## Repo-integrity fix — untracked __init__.py files (found and fixed same session)
 
 .gitignore's _*.py pattern was silently matching all __init__.py files project-wide,
