@@ -115,6 +115,7 @@ print(f'[clone] chike package @ {_CLONE_DIR} (HEAD {_sha})')
 from chike.orchestrator import Orchestrator          # noqa: E402
 from chike.model_abstraction import LocalAdapter      # noqa: E402
 from chike.retrieval import Retriever                 # noqa: E402
+from chike.scoring import score_question              # noqa: E402  (shared scorer)
 
 # ── CONFIG (from GitHub, cache-busted per R15) ──────────────────────────────────
 _cb = str(int(time.time() * 1000))
@@ -146,106 +147,8 @@ _rag_txt = hf_hub_download(repo_id=DATASET_REPO, filename='rag_facts_text.json',
                            repo_type='dataset', token=hf_token)
 print('[data] RAG index downloaded (e5-base 768-dim)')
 
-# ── SCORING — COPIED VERBATIM from kaggle/eval.py (SWAHILI_NUMBERS, extract_numbers,
-#    normalize, score_question). Kept as a copy because eval.py is not importable without
-#    triggering its full model-load + gate run. MUST STAY IN SYNC with eval.py's scoring. ──
-SWAHILI_NUMBERS = {
-    'moja': 1, 'mbili': 2, 'tatu': 3, 'nne': 4, 'tano': 5,
-    'sita': 6, 'saba': 7, 'nane': 8, 'tisa': 9, 'kumi': 10,
-    'ishirini': 20, 'thelathini': 30, 'arobaini': 40,
-    'hamsini': 50, 'sitini': 60, 'sabini': 70,
-    'themanini': 80, 'tisini': 90, 'mia': 100,
-    'elfu': 1_000, 'milioni': 1_000_000,
-}
-
-
-def extract_numbers(text):
-    text_lower = text.lower()
-    nums = set()
-    for m in re.findall(r'asilimia\s*(\d+(?:\.\d+)?)', text_lower):
-        nums.add(m)
-    for m in re.findall(r'(\d+(?:\.\d+)?)\s*%', text_lower):
-        nums.add(m)
-    for m in re.findall(r'tzs\s*([\d,]+)', text_lower):
-        nums.add(m.replace(',', ''))
-    for m in re.findall(r'\b(\d{3,}(?:,\d+)*)\b', text_lower):
-        nums.add(m.replace(',', ''))
-    for word, val in SWAHILI_NUMBERS.items():
-        if re.search(r'\b' + word + r'\b', text_lower):
-            nums.add(str(int(val)))
-    return nums
-
-
-def normalize(text):
-    return ' '.join(text.lower().split())
-
-
-# NOTE: known-fragile heuristic fix for the ramble-credits-wrong-answer bug found in
-# v16 orchestrator testing (eval_045, eval_101 — see PROGRESS.md). It scores the polarity
-# of the SUBSTANTIVE answer (the first block, before any trailing fabricated ramble) via
-# the leading yes/no word + Swahili negation markers, NOT a substring scan of the full
-# text. It is NOT a robust yes/no classifier — a differently-shaped answer (an implicit
-# yes/no with no leading word and no negation marker) can still be misclassified.
-# Future improvement: score only the first sentence / first N chars, not the full text,
-# so trailing content (ramble or otherwise) cannot influence the score at all.
-_YN_NEG = re.compile(r'\b(hakuna|haiwezi|hairuhusiwi|haiondoi|haipatikani|hawezi|'
-                     r'haihusiki|haistahili|hairuhusu|haitakiwi|haina|haiathiri)\b')
-_YN_YES = re.compile(r'\b(ndiyo|ndio)\b')
-
-def _yn_leading(text):
-    w = text.strip().lower().split()
-    return w[0].strip('.,—-:()"') if w else ''
-
-def _yn_polarity(text):
-    substantive = text.split('\n\n')[0]           # ignore trailing ramble entirely
-    lead = _yn_leading(substantive); low = substantive.lower()
-    if lead in ('hapana', 'la', 'siyo', 'sivyo', 'no'):   # 'la' = No ONLY as a leading word
-        return 'no'
-    if lead in ('ndiyo', 'ndio', 'yes'):
-        return 'yes'
-    if re.search(r'\bhapana\b', low) or _YN_NEG.search(low):
-        return 'no'
-    if _YN_YES.search(low):
-        return 'yes'
-    return 'yes'                                   # affirmative default
-
-def score_question(q, generated):
-    gen_lower  = normalize(generated)
-    atype      = q.get('answer_type', '')
-    correct_sw = q.get('correct_answer_sw', '').lower()
-    correct_en = q.get('correct_answer_en', '').lower()
-
-    if atype == 'out_of_corpus_refusal':
-        return any(p in gen_lower for p in [normalize(p) for p in REFUSAL_PHRASES])
-
-    if atype in ('number', 'penalty'):
-        correct_nums = extract_numbers(correct_sw) | extract_numbers(correct_en)
-        gen_nums = extract_numbers(generated)
-        if correct_nums and len(correct_nums & gen_nums) >= 1:
-            return True
-        # Fallback for frequency answers like 'mara moja kwa mwaka'
-        frequency_words = {'mara', 'kila', 'mwaka', 'wiki', 'mwezi', 'siku', 'once', 'annually'}
-        if any(w in gen_lower for w in frequency_words) and any(w in correct_sw for w in frequency_words):
-            if len(gen_lower) > 15:
-                return True
-        if not correct_nums:
-            return len(gen_lower) > 10
-        return False
-
-    if atype == 'yes_no':
-        # Compare the model's stated polarity to the expected polarity (see _yn_polarity
-        # NOTE above). Correct answers reliably lead with Ndiyo/Hapana/La.
-        return _yn_polarity(generated) == _yn_polarity(q.get('correct_answer_sw', ''))
-
-    if atype in ('definition', 'procedure'):
-        correct_sw = re.sub(r'thibitisha na.*$', '', correct_sw, flags=re.IGNORECASE|re.DOTALL).strip()
-        correct_en = re.sub(r'confirm with.*$',  '', correct_en, flags=re.IGNORECASE|re.DOTALL).strip()
-        # Lowered from 6→5 chars and 4→3 words to handle Swahili synonym variation
-        words = {w for w in (correct_sw + ' ' + correct_en).split() if len(w) >= 5}
-        if not words: return len(gen_lower) > 20
-        return len(words & set(gen_lower.split())) >= 3
-
-    return len(gen_lower) > 20
+# SCORING is imported from the shared chike.scoring module (import above) — single source
+# of truth with kaggle/eval.py. score_question(q, generated, REFUSAL_PHRASES) is called below.
 
 
 # ── BUILD THE REAL ORCHESTRATOR ─────────────────────────────────────────────────
@@ -282,7 +185,7 @@ results = []
 for i, q in enumerate(subset):
     try:
         generated = orch.answer(q['question_sw']).text
-        passed = score_question(q, generated)
+        passed = score_question(q, generated, REFUSAL_PHRASES)
     except Exception as e:
         generated = f'ERROR: {e}'
         passed = False
