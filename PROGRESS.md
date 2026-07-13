@@ -34,9 +34,9 @@ problem introduced by v16 work.
   (Note on framing: the gate scores in-corpus and OOC as two SEPARATE pools —
   in_corpus ≥ 0.85 AND out_of_corpus ≥ 0.70. OOC is 10/10 = 100%. A naive blend
   of both pools (171/200 = 85.5%) is NOT how the gate is scored and must not be
-  cited as a pass; the failing pool is in-corpus at 84.7%. CLAUDE.md R12 mentions
-  a 0.82 in-corpus threshold, but the operative config value is 0.85 — that doc
-  inconsistency should be reconciled.)
+  cited as a pass; the failing pool is in-corpus at 84.7%. The 0.85 in-corpus
+  threshold is the intended governing value in chike_config.json (R14); CLAUDE.md's
+  old 0.82 reference was stale and has been corrected to 0.85.)
 
 v16 orchestrator status: fact-path is proven at true parity with v15, using
 real, non-proxy, non-Modal-dependent gate runs on Kaggle. Remaining work
@@ -66,9 +66,10 @@ more prepared the orchestrator gate for a real (non-proxy) Kaggle re-run.
    a full-text substring scan.
 
 **Corrected baseline:** the old v15 in-corpus figure of 91.1% was inflated by the
-substring bug. Rescoring the stored v15 outputs with the fixed scorer gives **85.3%**
-in-corpus — this is the real v15 baseline. (Still a gate PASS: threshold is 85% / 82%
-depending on config; the definitive number comes from the Kaggle re-run of `eval.py`.)
+substring bug. A preliminary local rescore of stored v15 outputs gave ~85.3%, but the
+definitive real Kaggle re-run of `eval.py` (2026-07-14) settled it at **84.7% (161/190)**
+in-corpus — see the confirmed-gate-status section at the top of this file. Against the
+governing 0.85 in-corpus threshold (chike_config.json, R14) this is a gate FAIL.
 The 91.1% figure elsewhere in this file predates the fix and should be read as inflated.
 
 **Scorer extraction (commit b5a5e83):** `score_question` + helpers extracted into shared
@@ -462,7 +463,7 @@ Next improvement = query decomposition for multi-part questions + stronger cross
 | v13 | 64 | — | 71.6% | 100% | FAIL | Classifier fixed OOC permanently |
 | v14 | 128 | — | 83.2% | 90% | PASS | v11-lora warmstart, lr=2e-5, 3811 pairs — best ever, beats v8 82.1% |
 
-Gate requirement: >82% in-corpus AND >70% OOC
+Gate requirement: ≥85% in-corpus AND ≥70% OOC
 OOC note: classifier handles OOC in production — gate OOC measures bare model
 
 ## v14 Training Config (commit — this session, 2026-07-03)

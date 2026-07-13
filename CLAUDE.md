@@ -455,7 +455,7 @@ The classifier lists live in chike_config.json (ooc_phrases, in_scope_phrases).
 eval.py (kaggle/eval.py, fetched from GitHub at runtime) runs the OOC classifier
 before every model call — matching production behavior.
 The gate measures the full system: classifier + RAG + model.
-Gate thresholds: in_corpus ≥ 0.82, out_of_corpus ≥ 0.70
+Gate thresholds: in_corpus ≥ 0.85, out_of_corpus ≥ 0.70
 
 ### R13 — generate-from-facts command
 python run.py generate-from-facts --subdomain <name> --limit <n>
