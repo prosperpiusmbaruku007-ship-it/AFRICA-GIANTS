@@ -138,6 +138,14 @@ print('[data] RAG index downloaded (e5-base 768-dim)')
 # of truth with kaggle/eval.py. score_question(q, generated, REFUSAL_PHRASES) is called below.
 
 
+# ── INSTALL DEPENDENCIES (identical to eval.py — must run BEFORE the 4-bit load and
+#    before chike.retrieval lazily imports sentence_transformers on first retrieve) ──
+# The Modal path never needed these locally (generation + embedding ran server-side);
+# the direct-GPU path does, so the install eval.py runs must be carried over here too.
+subprocess.run(['pip', 'install', '-q', '-U', 'bitsandbytes>=0.46.1'], check=True)
+subprocess.run(['pip', 'install', '-q', '-U', 'sentence-transformers>=2.7.0'], check=True)
+print('[deps] bitsandbytes + sentence-transformers updated')
+
 # ── LOAD THE v15 MODEL DIRECTLY ON THE KAGGLE GPU (same 4-bit load as eval.py) ──
 # In-process ModelBackend — no Modal, no HTTP. generate(prompt) returns the RAW
 # completion (prompt -> new tokens -> decode); the orchestrator's own validate/clean
