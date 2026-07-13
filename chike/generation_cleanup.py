@@ -57,6 +57,10 @@ _ROLE_JUNK_RE = re.compile(r"(?i)(user|assistant|system|understand)[a-z0-9_]*\s*
 # away legitimately-structured answers (intro line + steps/rates/definition); this keeps
 # answer blocks and stops only at the first fabricated one.
 _ROLE_START_RE = re.compile(r"(?i)^\s*(user|assistant|system|understand[a-z0-9_]*)\b")
+# A block that ENDS with a question glued straight onto a leaked role/junk token
+# ('...?user_0x01', '...?become', '...?understander') — the model's fabricated-Q&A
+# boundary. Anchored to end + limited to leak tokens so real questions are untouched.
+_GLUED_TURN_RE = re.compile(r"(?i)\?\s*(?:user|assistant|system|become|understand)[a-z0-9_]*\s*$")
 
 
 def _is_fabricated_block(block: str, seen: set) -> bool:
@@ -69,6 +73,14 @@ def _is_fabricated_block(block: str, seen: set) -> bool:
         return True
     m = re.search(r"\?\s*[A-Za-z]", b)          # a question followed by its own answer = fabricated Q&A turn
     if m and len(b) - m.end() > 15:
+        return True
+    # A question glued directly to a leaked role/junk token at the block's END — the boundary
+    # where the model begins fabricating Q&A turns (e.g. '...withholding?user_0x01', '...hiari?become',
+    # '...ni ngapi?understander'). The rule above misses these because the glued token is short
+    # (<=15 chars). Anchored to end-of-block and restricted to known leak tokens, so a legitimate
+    # rhetorical question in a real answer — and legit 'intro:\n\n(1)(2)(3)' structure — is never
+    # caught (verified: strips eval_048/107 ramble, zero content loss across all 190 gate outputs).
+    if _GLUED_TURN_RE.search(b):
         return True
     return False
 

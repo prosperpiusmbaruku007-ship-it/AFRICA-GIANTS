@@ -58,3 +58,30 @@ def test_clean_reply_on_real_style_ramble():
 def test_clean_reply_leaves_a_clean_answer_untouched():
     good = "Ada ya BRELA ni TZS 22,000. Thibitisha na BRELA.go.tz."
     assert clean_reply(good) == good
+
+
+def test_clean_reply_strips_glued_role_token_ramble():
+    # Real leak pattern (eval_048/eval_107): the real answer, then fabricated Q&A turns
+    # whose question blocks END in a leaked role/junk token glued to the '?'
+    # ('?user_0x01', '?become'). The generic '?...>15 chars' rule missed these because the
+    # glued token is short. clean_reply must cut at the first such block.
+    raw = (
+        "Mchango kamili wa NSSF ni asilimia 20 ya mshahara. Thibitisha na NSSF (nssf.go.tz).user\n\n"
+        "NSSF inasema nini kuhusu michango ya hiari?become\n\n"
+        "Michango ya hiari ni huduma ya NSSF. Thibitisha na NSSF (nssf.go.tz).user"
+    )
+    cleaned = clean_reply(raw)
+    assert cleaned == "Mchango kamili wa NSSF ni asilimia 20 ya mshahara. Thibitisha na NSSF (nssf.go.tz)."
+    assert "become" not in cleaned and "michango ya hiari" not in cleaned.lower()
+
+
+def test_clean_reply_keeps_legit_intro_plus_enumerated_steps():
+    # The opposite case (eval_064/eval_066): a short intro line followed by a legitimately
+    # enumerated answer is NOT fabrication — the '\n\n' block boundary must be preserved.
+    raw = (
+        "Hatua sahihi ni:\n\n"
+        "(1) Taarifa TRA ndani ya masaa 24;\n"
+        "(2) Wasiliana na msambazaji aliyeidhinishwa;\n"
+        "(3) Msambazaji pekee ndiye anayeruhusiwa kufanya marekebisho."
+    )
+    assert clean_reply(raw) == raw
