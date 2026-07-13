@@ -1,6 +1,54 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-13
+Last updated: 2026-07-14
+
+## v16 orchestrator fact-path parity — CONFIRMED EXACT (final, 2026-07-14)
+
+After two rounds of scorer/cleanup fixes (yes_no polarity fix, clean_reply
+parity fix, clean_reply ramble-hardening fix), the v15 pipeline and v16
+orchestrator were re-run on Kaggle with fully identical scoring and cleanup
+logic (both at commit d72f98f). Result on the exact 190 question IDs the
+orchestrator was run on (181 in-corpus fact-path + 9 OOC): v15 = 161/190 =
+**84.7%**, orchestrator = 161/190 = **84.7%**, with **0** per-question
+disagreements out of 190.
+
+This is definitive proof, not an estimate: raw model generations were already
+proven byte-identical between the two pipelines (same v15 adapter, same greedy
+decoding, same prompts, now non-Modal in-process load in both). The only
+differences ever found were in post-generation measurement (scorer bugs, cleanup
+divergence), and those are now fixed and shared across eval.py, modal_app.py, and
+the orchestrator via chike/scoring.py + chike/generation_cleanup.py. Zero
+disagreements is the direct consequence.
+
+IMPORTANT — corrected historical record: v15's IN-CORPUS gate metric, measured
+honestly with the fixed scorer/cleanup, is **84.7% (161/190)** — below the
+operative **0.85** in-corpus threshold (kaggle/chike_config.json gate_thresholds,
+the R14 single source of truth). The stored gate_001_results.json records
+`gate_passed: False`. This is the first time v15 fails its own gate. Every
+previously recorded v15 gate score (91.1%, 88.0%, 87.9%) was inflated by the
+scorer bugs now fixed. The model's actual quality has not changed — the
+measurement is now honest. Production has been serving at this true quality
+level all along; this is a pre-existing measurement gap now closed, not a new
+problem introduced by v16 work.
+
+  (Note on framing: the gate scores in-corpus and OOC as two SEPARATE pools —
+  in_corpus ≥ 0.85 AND out_of_corpus ≥ 0.70. OOC is 10/10 = 100%. A naive blend
+  of both pools (171/200 = 85.5%) is NOT how the gate is scored and must not be
+  cited as a pass; the failing pool is in-corpus at 84.7%. CLAUDE.md R12 mentions
+  a 0.82 in-corpus threshold, but the operative config value is 0.85 — that doc
+  inconsistency should be reconciled.)
+
+v16 orchestrator status: fact-path is proven at true parity with v15, using
+real, non-proxy, non-Modal-dependent gate runs on Kaggle. Remaining work
+(compute-path slot extraction, the 10 excluded compute-routed questions) is
+unchanged — still correctly blocked pending real ambiguous-phrasing data.
+
+Immediate implication (project-wide, requires a decision): since v15 (production)
+now measures below the 0.85 in-corpus gate threshold with honest scoring, and the
+orchestrator matches it exactly, NEITHER system currently passes the gate. This is
+a real finding — not a v16 problem, a project-wide one. Options: raise real
+accuracy (fact/generation work) or revisit the threshold with eyes open. No
+silent reversion of the scorer fixes.
 
 ## Gate measurement-bug fix + corrected baseline + orchestrator gate rework (2026-07-13)
 
