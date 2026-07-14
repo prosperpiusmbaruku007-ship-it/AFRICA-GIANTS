@@ -104,6 +104,79 @@ contradicts locked_facts.OSHA_safety_officer_threshold, which explicitly says
 this figure is unconfirmed and must not be stated — a separate gate
 data-quality issue requiring correction independent of the scorer fix.
 
+## Comprehensive scorer audit + coordinated fix (2026-07-14, commit 255a9ec)
+
+After four separate scorer bugs were found one-at-a-time this session, a single
+deliberate exhaustive pass was done over EVERY answer type in chike/scoring.py.
+Six bugs total. **Key meta-finding: the scorer has both inflation AND deflation
+bugs, and they roughly cancel — so Finding 5's "84.7% is inflated to ~82.5%" was
+itself wrong-signed.** On the trustworthy (verifiable) subset the real figure is
+HIGHER than 84.7%, not lower (see numbers below).
+
+The six bugs:
+- BUG 1 (number/penalty, inflates): `if not correct_nums: return len>10` length
+  fallback when the answer has no 3+digit numeric key. 26 questions. Confirmed
+  false-passes eval_178/114/093/176.
+- BUG 2 (number/penalty, inflates): `\d{3,}` extracts the year '2025' from
+  'Finance Act 2025' boilerplate; a shared year passes the question. Confirmed
+  eval_033.
+- BUG 3 (number/penalty, deflates): `extract_numbers` didn't compose multiplier
+  words, so 'milioni 5' (→1,000,000 + dropped '5') never matched '5,000,000'.
+  Confirmed false-fail eval_165 (a perfectly correct answer scored wrong).
+- BUG 4 (yes_no, deflates + latent inflation): fixed negation list misses regular
+  Swahili negatives (haku-/hau-/ha-+verb) and a subordinate-clause 'hakuna' flips
+  polarity; the affirmative default silently passes any 'yes'-expected question.
+  Confirmed false-fails eval_019/040/059/180/182.
+- BUG 5 (definition/procedure, deflates): exact-token overlap≥3 defeated by
+  morphology (usajili/usajilishaji) and synonyms (inakataza/inazuia,
+  wageni/wasio-raia). Confirmed eval_026/157/175.
+- BUG 6 (default branch, latent inflation): unknown answer_type fell through to a
+  silent 'pass if >20 chars'.
+
+**Empirical proof BUGs 1/2/4/5 are NOT regex-fixable:** a broadened yes_no
+negation regex was built and regression-tested across all 61 yes_no — it made 5
+correct fixes but introduced 3 NEW regressions (eval_060/153 clearly wrong),
+because Swahili negations occur in both decisive and subordinate clauses. Every
+broadening trades a false-fail for a new false-pass. Proven, not asserted.
+
+**Decision (hybrid): fix the two regex-clean bugs, exclude the rest.**
+- BUG 3 + BUG 6 fixed in chike/scoring.py, regression-tested: only 2 number/penalty
+  verdicts flip (eval_165 correctly now passes; eval_010 correctly excluded as
+  compute-derived) — zero new regressions among scored questions. Test suite 99/99.
+- BUGs 1/2/4/5: a new `scorer_reliability(q, generated)` classifier marks every
+  affected question `scorer_unreliable` with a reason and EXCLUDES it from the
+  scored denominator — reported separately as 'unscored, pending semantic judge',
+  never silently passed or failed. Deterministic from the question + output, so
+  v15 and orchestrator exclude the same set.
+- Gate data fix: eval_176/eval_190 reference answers corrected to match
+  locked_facts.OSHA_safety_officer_threshold (state the threshold is unconfirmed,
+  redirect to osha.go.tz) instead of asserting the wrong '50 employees' figure.
+
+**New honest gate math (offline re-score of the stored runs; Kaggle re-run pending):**
+- v15: 200 questions → 71 marked scorer_unreliable → **113/129 = 87.6%** on the
+  verifiable denominator.
+- v16 orchestrator: 190 it ran → 68 unreliable → **106/122 = 86.9%** on the
+  verifiable denominator (still separately owes the 9 compute-routed it can't
+  answer — Finding 4).
+- Unreliable breakdown (v15): qualitative_number 26, yes_no_polarity 20,
+  compute_derived 12, year_only 6, year_collision 2, morphological_gap 3,
+  yes_no_ground_truth_ambiguous 2.
+
+Both systems clear 0.85 ON THE VERIFIABLE SUBSET — but this is a REDUCED
+denominator (129/200). The 71 excluded questions are genuinely unknown, not
+passed: the system's true full-set accuracy is unknowable until a semantic judge
+(LLM-as-judge / the frontier-model scoring path) scores the excluded categories.
+Known residuals inside the 'reliable' set: ~2 synonym-variation false-fails
+(eval_157/175) that prefix-stem detection doesn't catch — so 87.6% is a slight
+UNDER-estimate. The long-term fix for the excluded 71 is a semantic judge, not
+more regex.
+
+FOLLOW-UP REQUIRED before the Kaggle re-run reproduces these numbers: eval.py and
+eval_orchestrator.py must be wired to call scorer_reliability(), emit
+`scorer_unreliable`+reason per question, and report the reduced-denominator score.
+That wiring is NOT in commit 255a9ec (which was scoped to scoring.py + the gate
+data file per instruction).
+
 ## Gate measurement-bug fix + corrected baseline + orchestrator gate rework (2026-07-13)
 
 A measurement bug was found during v16 orchestrator validation: the gate scorer was
