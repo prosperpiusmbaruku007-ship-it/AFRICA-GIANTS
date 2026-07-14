@@ -74,6 +74,36 @@ deliberate, documented decision to adjust the threshold with clear reasoning
 if 0.85 is reconsidered as the right bar — not by silently drifting to
 whatever a given measurement happens to produce.
 
+## Additional measurement findings (2026-07-13, post-parity investigation)
+
+### Finding 4 — Compute-path exclusion flatters the orchestrator's headline number
+The 181-question 'shared' comparison excludes 9 in-corpus compute-routed questions
+that v15 answers correctly (no routing) but the orchestrator cannot yet answer
+(slot extraction unbuilt, correctly stubbed). Counting these as fails on the full
+190-question in-corpus set: orchestrator = 152/190 = 80.0%, v15 = 161/190 = 84.7%.
+The 'exact parity' claim is TRUE ONLY for single-part, non-compute questions.
+On the full set, the orchestrator is currently 4.7 points behind v15 — this is
+the real, quantified cost of the deferred compute-path work, and should be
+stated whenever the orchestrator's score is cited.
+
+### Finding 5 — A fourth scorer bug inflates the in-corpus baseline itself
+chike/scoring.py's number/penalty scorer falls back to 'pass if response is
+>10 characters' whenever the expected answer contains no 3+ digit number,
+percentage, or TZS amount (e.g. 'siku ya 7', 'ndani ya mwezi mmoja', '15
+activities'). 27 of 82 number/penalty questions (33%) hit this fallback.
+Confirmed genuine false-passes: eval_178 (hallucinated OSHA minimum-employee
+threshold that doesn't exist), eval_114 (no SDL deadline given, credited pass),
+eval_093 (wrong NSSF deadline, credited pass), eval_176 (contradicts locked_facts
+and the gate's own reference answer, credited pass). This bug affects v15 and
+the orchestrator equally (shared scorer), so it does not affect the parity
+finding, but it means the 84.7% headline itself is inflated. Estimated honest
+score after removing confirmed false-passes: approximately 82.5-83.2%.
+
+Also flagged: eval_176's reference answer in the gate question set itself
+contradicts locked_facts.OSHA_safety_officer_threshold, which explicitly says
+this figure is unconfirmed and must not be stated — a separate gate
+data-quality issue requiring correction independent of the scorer fix.
+
 ## Gate measurement-bug fix + corrected baseline + orchestrator gate rework (2026-07-13)
 
 A measurement bug was found during v16 orchestrator validation: the gate scorer was
