@@ -35,6 +35,23 @@ def extract_numbers(text):
     for word, val in SWAHILI_NUMBERS.items():
         if re.search(r'\b' + word + r'\b', text_lower):
             nums.add(str(int(val)))
+    # BUG 3 fix — multiplier composition. Without this, 'milioni 5' contributed only
+    # the bare word-value 1_000_000 (from SWAHILI_NUMBERS) and dropped the '5', so it
+    # never matched '5,000,000' (a correct answer scored WRONG — e.g. eval_165). Compose
+    # each multiplier word with its adjacent number so both spellings canonicalize equally.
+    _MULT = {'bilioni': 1_000_000_000, 'billion': 1_000_000_000,
+             'milioni': 1_000_000, 'million': 1_000_000,
+             'laki': 100_000, 'elfu': 1_000, 'thousand': 1_000}
+    for word, mult in _MULT.items():
+        for m in re.findall(r'(\d+(?:\.\d+)?)\s*' + word + r'\b', text_lower):
+            nums.add(str(int(float(m) * mult)))
+        for m in re.findall(r'\b' + word + r'\s*(\d+(?:\.\d+)?)', text_lower):
+            nums.add(str(int(float(m) * mult)))
+    # 'M' / 'bn' shorthand on a bare figure: '200M' -> 200000000, '1.5bn' -> 1500000000.
+    for m in re.findall(r'(\d+(?:\.\d+)?)\s*m\b', text_lower):
+        nums.add(str(int(float(m) * 1_000_000)))
+    for m in re.findall(r'(\d+(?:\.\d+)?)\s*bn\b', text_lower):
+        nums.add(str(int(float(m) * 1_000_000_000)))
     return nums
 
 
@@ -110,4 +127,124 @@ def score_question(q, generated, refusal_phrases):
         if not words: return len(gen_lower) > 20
         return len(words & set(gen_lower.split())) >= 3
 
-    return len(gen_lower) > 20
+    # BUG 6 fix — an unrecognized answer_type previously fell through to a silent
+    # 'pass if >20 chars'. That masks a data/config error (a typo'd or new answer_type
+    # would be scored PASS without any real check). Fail loudly instead of silently pass.
+    raise ValueError(f"score_question: unrecognized answer_type {atype!r} (id={q.get('id')})")
+
+
+# ── SCORER RELIABILITY (BUGs 1/2/4/5 — flag, do NOT regex-patch) ───────────────
+# The audit proved these categories cannot be scored robustly by regex without trading
+# false-passes for false-fails. Rather than pretend otherwise, a question in one of
+# these categories is marked scorer_unreliable and EXCLUDED from the scored denominator
+# (reported separately as 'unscored, pending semantic judge'), never silently passed or
+# failed. The check is deterministic from the question record + the model's output, so
+# both the v15 and orchestrator runs exclude the same set. The real long-term fix is a
+# semantic judge (LLM-as-judge / frontier-model scoring), not more regex here.
+
+_ARITH_RE = re.compile(r'[−–—]\s*\d|\d\s*[−–—]|[x×*]\s*\d|=\s*\d|\d\s*\+\s*\d')
+
+
+def _is_year(s):
+    return bool(re.fullmatch(r'(19|20)\d\d', s))
+
+
+def _polarity_conf(text):
+    """Return (polarity, confident). Confident only when the stance is unambiguous:
+    an explicit leading Ndiyo/Hapana/La, or a single-polarity marker sitting in the
+    LEADING clause with no contradicting marker later. Not confident when there is no
+    marker (pure affirmative default), when a marker appears only in a subordinate
+    clause (the eval_182/eval_153 flip risk), or when both polarities appear."""
+    substantive = text.split('\n\n')[0]
+    low = substantive.lower()
+    w = low.split()
+    lead = w[0].strip('.,—-:()"') if w else ''
+    if lead in ('hapana', 'la', 'siyo', 'sivyo', 'no'):
+        return 'no', True
+    if lead in ('ndiyo', 'ndio', 'yes'):
+        return 'yes', True
+    head = re.split(r'[.,—]', low, 1)[0]
+
+    def pol(seg):
+        neg = bool(re.search(r'\bhapana\b', seg) or _YN_NEG.search(seg))
+        pos = bool(_YN_YES.search(seg) or re.search(r'\blazima\b', seg))
+        if neg and pos:
+            return 'both'
+        if neg:
+            return 'no'
+        if pos:
+            return 'yes'
+        return None
+
+    ph, pf = pol(head), pol(low)
+    if ph in ('no', 'yes') and (pf is None or pf == ph):
+        return ph, True                     # decisive marker in the leading clause
+    if ph is None and pf in ('no', 'yes'):
+        return pf, False                    # marker only in a later clause -> flip risk
+    if ph == 'both' or pf == 'both' or (ph and pf and ph != pf):
+        return (pf or 'yes'), False         # conflicting markers -> ambiguous
+    return 'yes', False                     # nothing found -> affirmative default, not confident
+
+
+def _defproc_words(correct_sw, correct_en, stem):
+    csw = re.sub(r'thibitisha na.*$', '', correct_sw.lower(), flags=re.IGNORECASE | re.DOTALL).strip()
+    cen = re.sub(r'confirm with.*$', '', correct_en.lower(), flags=re.IGNORECASE | re.DOTALL).strip()
+    ws = {w for w in (csw + ' ' + cen).split() if len(w) >= 5}
+    return {w[:5] for w in ws} if stem else ws
+
+
+def _defproc_pass(correct_sw, correct_en, generated, stem):
+    words = _defproc_words(correct_sw, correct_en, stem)
+    if not words:
+        return len(normalize(generated)) > 20
+    g = set(normalize(generated).split())
+    if stem:
+        g = {w[:5] for w in g}
+    return len(words & g) >= 3
+
+
+def scorer_reliability(q, generated):
+    """Return (reliable: bool, reason: str). reliable=False marks a question the regex
+    scorer cannot verify robustly (BUGs 1/2/4/5) — exclude it from the scored total."""
+    atype = q.get('answer_type', '')
+    csw = q.get('correct_answer_sw', '') or ''
+    cen = q.get('correct_answer_en', '') or ''
+
+    if atype in ('number', 'penalty'):
+        if _ARITH_RE.search(csw) or _ARITH_RE.search(cen):
+            return False, 'compute_derived_number'      # answer is a computed delta; context figures leak in
+        nums = extract_numbers(csw) | extract_numbers(cen)
+        nonyear = {n for n in nums if not _is_year(n)}
+        if not nums:
+            return False, 'qualitative_number_no_numeric_key'   # BUG 1
+        if not nonyear:
+            return False, 'year_only_numeric_key'               # BUG 2
+        # BUG 2 residual: even when the reference answer carries other (non-year) figures,
+        # a pass can still hinge ENTIRELY on a shared calendar year ('Finance Act 2025'
+        # boilerplate) when the model reproduced only the year and none of the real figures
+        # (e.g. eval_033). If the sole overlap with the output is a year, we cannot verify
+        # substantive correctness either way -> unreliable.
+        matched = nums & extract_numbers(generated)
+        if matched and all(_is_year(n) for n in matched):
+            return False, 'year_collision_match'
+        return True, ''
+
+    if atype == 'yes_no':                                        # BUG 4
+        _, cconf = _polarity_conf(csw)
+        _, gconf = _polarity_conf(generated)
+        if not cconf:
+            return False, 'yes_no_ground_truth_ambiguous'
+        if not gconf:
+            return False, 'yes_no_polarity_unverifiable'
+        return True, ''
+
+    if atype in ('definition', 'procedure'):                    # BUG 5
+        if not _defproc_words(csw, cen, stem=False):
+            return False, 'no_distinctive_vocabulary'
+        if _defproc_pass(csw, cen, generated, stem=False) != _defproc_pass(csw, cen, generated, stem=True):
+            return False, 'morphological_overlap_gap'
+        return True, ''
+
+    if atype == 'out_of_corpus_refusal':
+        return True, ''
+    return False, 'unknown_answer_type'
