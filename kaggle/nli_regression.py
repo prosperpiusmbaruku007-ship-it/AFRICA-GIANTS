@@ -12,11 +12,11 @@ secret attached (same secret eval.py uses for HuggingFace).
 
 It is SELF-CONTAINED and READ-ONLY — it does NOT modify chike/scoring.py or write any
 result back. It fetches the already-committed chike/scoring.py and eval_questions_001.jsonl
-from GitHub raw, pulls the v15 stored gate results from HuggingFace, loads mDeBERTa-v3 on
-the GPU, and evaluates the proposed Part 1 rule against all 190 shared question IDs plus
-the 14 confirmed audit examples:
+from GitHub raw, pulls the v15 stored gate results from HuggingFace, loads the XNLI model
+(joeddav/xlm-roberta-large-xnli, ~2.24GB) on the GPU, and evaluates the proposed Part 1 rule
+against the 14 confirmed audit examples FIRST, then all 190 shared question IDs:
 
-    NLI (mDeBERTa sw-sw, both directions), max contradiction >= 0.70  ==> score as FAIL
+    NLI (xlm-roberta-large-xnli sw-sw, both directions), max contradiction >= 0.70  ==> FAIL
 
 It reports the two numbers that gate the recommendation:
   * FALSE demotions: currently-PASS (reliable) answers wrongly flipped to FAIL  (MUST be ~0)
@@ -70,15 +70,51 @@ res = {rr['id']: rr for rr in json.load(open(p, encoding='utf-8'))['results']}
 print(f'[data] {len(res)} v15 stored results')
 
 # ---- NLI model on GPU ------------------------------------------------------
-import torch
+# Swapped mDeBERTa-v3-base (280MB) -> xlm-roberta-large-xnli (~2.24GB fp32).
+# Why the earlier attempt "hung": it was NOT a hard hang. It was a slow-but-progressing
+# ~2.24GB pull (logged 67/2240 MB in ~17 min => ~4 MB/min) that had (a) no staged logging,
+# so a slow download looked identical to a freeze, and (b) an ANONYMOUS request — line 68's
+# hf_hub_download passes token=, but the old from_pretrained calls did not, so HF throttled
+# the big download harder. Fixes: pass the token into every load; log each stage separately
+# (resolve -> RAM -> GPU); pre-resolve files with snapshot_download(etag_timeout=30) so a
+# genuinely stalled connection ERRORS instead of blocking forever; enable hf_transfer only
+# if the package is actually importable (enabling it without the pkg raises and would break
+# the download outright).
+import os, time, torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-MN = 'MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7'
+from huggingface_hub import snapshot_download
+
+MN = 'joeddav/xlm-roberta-large-xnli'   # was MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7
 dev = 'cuda' if torch.cuda.is_available() else 'cpu'
-print(f'[nli] loading {MN} on {dev} ...')
-tok = AutoTokenizer.from_pretrained(MN)
-mdl = AutoModelForSequenceClassification.from_pretrained(MN).to(dev).eval()
+_tok = HF_TOKEN or None
+try:
+    import hf_transfer  # noqa: F401
+    os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '1'
+    print('[nli] hf_transfer available -> fast multipart download enabled', flush=True)
+except Exception:
+    os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '0'
+    print('[nli] hf_transfer not installed -> standard download', flush=True)
+
+print(f'[nli] STAGE 1/3 resolving {MN} (~2.24GB) with etag_timeout=30 ...', flush=True)
+t_dl = time.time()
+try:
+    src = snapshot_download(MN, token=_tok, etag_timeout=30,
+                            allow_patterns=['*.json', '*.bin', '*.model', '*.txt', '*.safetensors'])
+    print(f'[nli] download/cache resolved in {time.time()-t_dl:.0f}s -> {src}', flush=True)
+except Exception as e:
+    os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '0'   # hf_transfer can be brittle; retry via direct load
+    print(f'[nli] snapshot_download failed ({type(e).__name__}: {e}); loading MN directly', flush=True)
+    src = MN
+
+print(f'[nli] STAGE 2/3 loading tokenizer + weights into RAM on {dev} host ...', flush=True)
+t_ld = time.time()
+tok = AutoTokenizer.from_pretrained(src, token=_tok)
+mdl = AutoModelForSequenceClassification.from_pretrained(src, token=_tok)
+print(f'[nli] weights in RAM in {time.time()-t_ld:.0f}s; STAGE 3/3 moving to {dev} ...', flush=True)
+mdl = mdl.to(dev).eval()
 lab = {v.lower(): k for k, v in mdl.config.id2label.items()}
 iC = lab['contradiction']
+print(f'[nli] READY on {dev}; id2label={mdl.config.id2label}; contradiction idx={iC}', flush=True)
 
 def clean(g):
     for mk in ['\nuser', 'user_0', 'user ', '\n\n']:
@@ -95,6 +131,25 @@ def contra_pair(a, b):
     pr = torch.softmax(mdl(**enc).logits, -1)[:, iC]
     return float(pr.max())
 
+# ---- STEP 1: 14-example cross-check (run + eyeball FIRST) ------------------
+AUDIT = ['eval_178','eval_114','eval_093','eval_176','eval_033','eval_019','eval_040',
+         'eval_059','eval_180','eval_182','eval_165','eval_026','eval_157','eval_175']
+TRUTH = {'eval_178':'FAIL','eval_114':'FAIL','eval_093':'FAIL','eval_176':'PASS','eval_033':'PASS',
+         'eval_019':'PASS','eval_040':'PASS','eval_059':'FAIL','eval_180':'PASS','eval_182':'PASS',
+         'eval_165':'PASS','eval_026':'PASS','eval_157':'PASS','eval_175':'PASS'}
+print('\n### STEP 1 — 14-example cross-check (contra >= 0.70 -> demote to FAIL):')
+for qid in AUDIT:
+    if qid not in res: continue
+    q = dict(qs.get(qid, {})); q['id'] = qid; q['answer_type'] = q.get('answer_type', res[qid].get('answer_type'))
+    cln = clean(res[qid]['generated'])
+    c = contra_pair(q.get('correct_answer_sw', ''), cln)
+    verdict = 'FAIL(nli)' if c >= 0.70 else 'no-demote'
+    flag = '' if (verdict.startswith('FAIL') == (TRUTH[qid] == 'FAIL')) else '   <-- MISMATCH'
+    print(f'   {qid:11} truth={TRUTH[qid]:5} contra={c:.2f} -> {verdict}{flag}', flush=True)
+print('   NOTE: clean here is NECESSARY, not SUFFICIENT — mDeBERTa was clean on these 14')
+print('   yet demoted 5 correct answers at full 190 scale. STEP 2 below is the real gate.')
+
+# ---- STEP 2: full 190-scale regression ------------------------------------
 TH = 0.70
 false_demote, recovered, already_fail = [], [], []
 t0 = time.time(); n = 0
@@ -116,7 +171,7 @@ for qid, rr in res.items():
 print(f'\n[nli] scored {n} non-refusal questions in {time.time()-t0:.0f}s on {dev}')
 
 print('\n' + '=' * 70)
-print(f'RULE: mDeBERTa sw-sw bidirectional contradiction >= {TH} => score as FAIL')
+print(f'RULE: {MN.split("/")[-1]} sw-sw bidirectional contradiction >= {TH} => score as FAIL')
 print('=' * 70)
 print(f'\n### FALSE-DEMOTION RISK (currently-PASS wrongly flipped to FAIL): {len(false_demote)}  <-- MUST be ~0')
 for x in false_demote: print('   ', x)
@@ -125,18 +180,6 @@ for x in recovered: print('   ', x)
 print(f'\n### already-FAIL, NLI agrees (no change): {len(already_fail)}')
 for x in already_fail: print('   ', x['id'], x['type'], x['contra'])
 
-# ---- explicit cross-check on the 14 audit examples ------------------------
-AUDIT = ['eval_178','eval_114','eval_093','eval_176','eval_033','eval_019','eval_040',
-         'eval_059','eval_180','eval_182','eval_165','eval_026','eval_157','eval_175']
-TRUTH = {'eval_178':'FAIL','eval_114':'FAIL','eval_093':'FAIL','eval_176':'PASS','eval_033':'PASS',
-         'eval_019':'PASS','eval_040':'PASS','eval_059':'FAIL','eval_180':'PASS','eval_182':'PASS',
-         'eval_165':'PASS','eval_026':'PASS','eval_157':'PASS','eval_175':'PASS'}
-print('\n### 14-example cross-check (contra >=0.70 -> FAIL):')
-for qid in AUDIT:
-    if qid not in res: continue
-    q = dict(qs.get(qid, {})); q['id'] = qid; q['answer_type'] = q.get('answer_type', res[qid].get('answer_type'))
-    cln = clean(res[qid]['generated'])
-    c = contra_pair(q.get('correct_answer_sw',''), cln)
-    verdict = 'FAIL(nli)' if c >= TH else 'no-demote'
-    print(f'   {qid:11} truth={TRUTH[qid]:5} contra={c:.2f} -> {verdict}')
-print('\nDONE — read FALSE-DEMOTION count above: if 0, the rule is safe at scale.')
+print(f'\nDONE — the decision number is the FALSE-DEMOTION RISK above ({len(false_demote)}).')
+print(f'Judge {MN.split("/")[-1]} on this 190-scale count, NOT the STEP 1 sample:')
+print('mDeBERTa looked clean on the 14 but demoted 5 correct answers at scale.')
