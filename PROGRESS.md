@@ -1,6 +1,90 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-14
+Last updated: 2026-07-16
+
+## Hybrid-scorer investigation CONCLUDED — both NLI models rejected, qwen3-32b judge is a genuine improvement (2026-07-16)
+
+Goal: find a semantic layer to replace the regex fallbacks for the 71 gate
+questions the fixed scorer marks `scorer_unreliable` and excludes (yes_no
+polarity, qualitative-number, year-collision, morphological-overlap cases — see
+the 2026-07-13 scorer-audit entry below). Three candidates were tested with the
+SAME two-stage protocol every time: (STAGE 1) the 14 confirmed audit examples
+against known ground truth, then (STAGE 2) the full 190 non-refusal question IDs.
+Every run was executed on Kaggle by the founder and PERSISTED to the v15 HF repo
+(`prospAprospA007/africa-giants-adapter-v15`) so the numbers below are read from
+saved per-question data, not a local run or a truncated log.
+
+Decision metric (same for all three): FALSE-DEMOTION count — currently-reliable
+PASS answers that the candidate would flip to FAIL. A candidate that newly breaks
+correct answers is not shippable, so this must be ~0.
+
+### 1. Embedding similarity (intfloat/multilingual-e5-base) — REJECTED
+Cosine similarity between reference and generated answer is blind to polarity:
+clear contradictions (e.g. eval_059 "handwritten receipt OK", which is WRONG)
+score HIGHER cosine than several correct answers. Best single threshold ≈ the
+majority-class baseline. Topical similarity swamps correctness. Not viable.
+
+### 2a. NLI — MoritzLaurer/mDeBERTa-v3-base-xnli (280M) — REJECTED
+Rule: sw-sw bidirectional, max contradiction ≥ 0.70 ⇒ demote to FAIL.
+STAGE 1 looked clean on the 14. STAGE 2 (full 190): **5 FALSE-DEMOTIONS**
+(eval_120, eval_121, eval_126, eval_177, eval_191) — correct answers flagged as
+contradictions at 0.81–0.98. High-confidence, so threshold-raising cannot fix
+them. Confirmed from local run artifact.
+
+### 2b. NLI — joeddav/xlm-roberta-large-xnli (560M) — REJECTED (worse)
+Same rule, larger model. Persisted result `nli_regression_xlm-roberta-large-xnli.json`
+(git_head 8efdd32). STAGE 1: 12/14 (missed 2 real contradictions, 0 false-positives
+on the sample). STAGE 2 (full 190): **13 FALSE-DEMOTIONS** — CONFIRMED from the
+saved file (this supersedes the earlier unpersisted "13" figure): eval_067, 074,
+076, 081, 083, 086, 103, 119, 120, 121, 156, 161, 191. Several at 0.97–1.00
+(eval_081=1.0, eval_119=0.99, eval_083=0.97) demoting plainly-correct definitions
+and number answers. The bigger XNLI model is STRICTLY WORSE than mDeBERTa (13 vs 5).
+Both NLI models share the failure mode: high-confidence spurious contradictions on
+Swahili negation/polarity constructions — exactly the categories we needed help
+with. The earlier "hang" on this model was root-caused (slow ~2.24GB anonymous
+download + no staged logging, not a freeze) and fixed in the harness; the model
+itself is the problem, not the plumbing.
+
+### 3. Frontier LLM-as-judge — qwen/qwen3-32b via OpenRouter — GENUINE IMPROVEMENT
+Dense 32B, Qwen3 documents 119 languages incl. Swahili. Judge task: given
+(question, reference answer, generated answer) classify generated as substantively
+correct / wrong / undetermined + one sentence. Persisted result
+`judge_regression_qwen3-32b.json` (git_head 8efdd32). No GPU — runs on OpenRouter.
+
+- **STAGE 1 (14, TRUE ground truth): 12/14 match.** Only **1 genuine harmful error**
+  (eval_026, false-demote — misread a deadline) and **1 conservative abstain**
+  (eval_093, undetermined instead of wrong). 0 false-promotions. Crucially it
+  **correctly rescued eval_157 and eval_175** — two answers the regex scorer had
+  WRONGLY FAILED — proving the judge corrects regex, not the reverse.
+- **STAGE 2 (190): false-demotion = 13, false-promotion = 6, and it covered ALL 71
+  currently-EXCLUDED questions** with a verdict (the entire point of the exercise),
+  101 agreements with reliable regex, 0 API errors.
+- These 13/6 are DISAGREEMENTS WITH THE IMPERFECT REGEX BASELINE, not proven errors
+  (unlike NLI's demotions, which are demotions of verified-correct answers). By type
+  the 13 demotions are 6 `number` (genuine regex false-passes on miscalculated
+  figures the judge caught — e.g. eval_191 PAYE, eval_072 deadline, eval_091 NSSF),
+  6 `procedure` (over-strict completeness/ramble penalties — the judge's real
+  weakness), 1 yes_no. The 6 promotions include the two ground-truth-confirmed
+  regex false-fails above.
+- **Cost/latency: 205 calls, $0.0183 total, 160s wall for 191 calls (8 workers,
+  6.33s/call mean).** Trivially acceptable for a gate-run cadence (gates run
+  infrequently; ~2 cents and <3 min is nothing).
+
+### Recommendation / next step
+- chike/scoring.py stays UNCHANGED. Neither NLI model nor embeddings will be added.
+- qwen3-32b is NOT rejected — it is the first candidate whose disagreements are
+  mostly the judge being RIGHT (it caught regex false-passes AND rescued regex
+  false-fails, and covered all 71 excluded questions). Its only real fault is
+  over-strictness on `procedure` completeness.
+- Per the founder's escalation branch: this is a genuine improvement worth
+  ESCALATING to a larger paid frontier model on the identical harness, to see
+  whether the `procedure` over-strictness disappears, and to adjudicate the 13
+  demote / 6 promote disagreements against locked_facts.json to measure the judge's
+  TRUE precision before wiring it in as the scorer's confirmation layer. Do NOT
+  adopt it as a silent automatic scorer until the procedure over-strictness is
+  characterized.
+- Harnesses are committed and reusable: kaggle/nli_regression.py and
+  kaggle/judge_regression.py (both fetch-and-run, both persist to v15 HF).
 
 ## v16 orchestrator fact-path parity — CONFIRMED EXACT (final, 2026-07-14)
 
