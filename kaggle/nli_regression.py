@@ -137,6 +137,7 @@ AUDIT = ['eval_178','eval_114','eval_093','eval_176','eval_033','eval_019','eval
 TRUTH = {'eval_178':'FAIL','eval_114':'FAIL','eval_093':'FAIL','eval_176':'PASS','eval_033':'PASS',
          'eval_019':'PASS','eval_040':'PASS','eval_059':'FAIL','eval_180':'PASS','eval_182':'PASS',
          'eval_165':'PASS','eval_026':'PASS','eval_157':'PASS','eval_175':'PASS'}
+step1_rows = []
 print('\n### STEP 1 — 14-example cross-check (contra >= 0.70 -> demote to FAIL):')
 for qid in AUDIT:
     if qid not in res: continue
@@ -144,7 +145,10 @@ for qid in AUDIT:
     cln = clean(res[qid]['generated'])
     c = contra_pair(q.get('correct_answer_sw', ''), cln)
     verdict = 'FAIL(nli)' if c >= 0.70 else 'no-demote'
-    flag = '' if (verdict.startswith('FAIL') == (TRUTH[qid] == 'FAIL')) else '   <-- MISMATCH'
+    correct = (verdict.startswith('FAIL') == (TRUTH[qid] == 'FAIL'))
+    flag = '' if correct else '   <-- MISMATCH'
+    step1_rows.append({'id': qid, 'truth': TRUTH[qid], 'contra': round(c, 2),
+                       'verdict': verdict, 'match_truth': correct})
     print(f'   {qid:11} truth={TRUTH[qid]:5} contra={c:.2f} -> {verdict}{flag}', flush=True)
 print('   NOTE: clean here is NECESSARY, not SUFFICIENT — mDeBERTa was clean on these 14')
 print('   yet demoted 5 correct answers at full 190 scale. STEP 2 below is the real gate.')
@@ -183,3 +187,35 @@ for x in already_fail: print('   ', x['id'], x['type'], x['contra'])
 print(f'\nDONE — the decision number is the FALSE-DEMOTION RISK above ({len(false_demote)}).')
 print(f'Judge {MN.split("/")[-1]} on this 190-scale count, NOT the STEP 1 sample:')
 print('mDeBERTa looked clean on the 14 but demoted 5 correct answers at scale.')
+
+# ---- persist results to HF v15 so they can be retrieved off-Kaggle ---------
+# (this box has no persistent disk; the whole point is a durable artifact to analyse later)
+out = {
+    'model': MN,
+    'rule': f'{MN.split("/")[-1]} sw-sw bidirectional max-contradiction >= {TH} => FAIL',
+    'threshold': TH,
+    'git_head': sha if 'sha' in dir() else '?',
+    'n_scored': n,
+    'step1_14example': step1_rows,
+    'step2_190': {
+        'false_demotion_count': len(false_demote),
+        'benefit_recovered_count': len(recovered),
+        'already_fail_count': len(already_fail),
+        'false_demotions': false_demote,
+        'recovered': recovered,
+        'already_fail': already_fail,
+    },
+}
+fname = f'nli_regression_{MN.split("/")[-1]}.json'
+try:
+    from huggingface_hub import HfApi
+    import io
+    HfApi().upload_file(
+        path_or_fileobj=io.BytesIO(json.dumps(out, ensure_ascii=False, indent=2).encode('utf-8')),
+        path_in_repo=fname, repo_id='prospAprospA007/africa-giants-adapter-v15',
+        repo_type='model', token=HF_TOKEN or None,
+        commit_message=f'NLI regression results: {MN.split("/")[-1]} (false_demote={len(false_demote)})')
+    print(f'\n[hf] uploaded results -> prospAprospA007/africa-giants-adapter-v15/{fname}')
+except Exception as e:
+    print(f'\n[hf] UPLOAD FAILED ({type(e).__name__}: {e}) — copy the JSON above manually')
+    print(json.dumps(out, ensure_ascii=False))
