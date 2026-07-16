@@ -163,7 +163,7 @@ _VAGUE = [
 ]
 _APPROX = [
     r"\bkama\b", r"\bhivi\b", r"\bka-?\d", r"\baround\b", r"\bna kitu\b", r"\bplus kitu\b",
-    r"\bkasoro\b", r"\bushee\b", r"\bushe\b", r"\bnegotiable\b", r"\btakriban\b",
+    r"\bkasoro\b", r"\bushee\b", r"\bushe\b", r"\bnegotiable\b", r"\btakriban[a-z]*",
     r"\bkaribu\b", r"\bhivyo hivyo\b", r"\bna ushee\b", r"\bna kitu kidogo\b",
 ]
 _ANTECEDENT = [
@@ -181,6 +181,9 @@ _ALLOWANCE = [
     r"\bposho\b", r"\bbonasi\b", r"\ballowance\b", r"\bgross\b", r"\bnet\b",
     r"take home", r"baada ya kukatwa", r"bila posho", r"\bbima\b", r"\bovertime\b",
     r"\blikizo\b", r"malipo ya likizo", r"pamoja na", r"commission",
+    # VAT-inclusive vs exclusive is the same gross/net base ambiguity for a money
+    # figure — "is this 180M with or without VAT?" must be clarified, not assumed.
+    r"jumuisha vat", r"vat au la", r"pamoja na vat", r"bila vat", r"ikiwa na vat",
 ]
 
 

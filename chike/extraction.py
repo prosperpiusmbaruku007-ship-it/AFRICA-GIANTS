@@ -1,37 +1,43 @@
 """Slot extraction — parse a sub-question into typed fields WITH confidence.
 
-ARCHITECTURE (built 2026-07-16, replacing the interface-only stub)
-Two layers with a deliberate division of trust:
+ARCHITECTURE (trust-inverted 2026-07-17 after real-model evidence)
+The v15 debug run (extraction_raw_debug.json) proved the production 8B model does NOT
+return field-extraction JSON: it ignores the extraction instruction and answers the
+compliance question directly — computing a figure and citing tra.go.tz — and its
+arithmetic is wrong in exactly the ways documented this session (annual/monthly not
+converted, wrong tax type, Swahili compound numerals misread). The deterministic parser
+got all four debug cases right with zero model involvement. So the trust order is inverted:
 
-  1. MODEL layer (free-text role assignment): a ModelBackend is asked which number in
-     the sub-question is the payroll, which is the headcount, etc. — the model's genuine
-     strength. It returns JSON {field: {value, confidence}}.
+  1. DETERMINISTIC layer (chike.swahili_numbers) is PRIMARY. It ORIGINATES the field
+     values: parses the Swahili numerals (scale-first, unit-tested), does the
+     per-person x count multiplication and the period->monthly conversion itself, and
+     owns the never-guess guardrail via explicit, inspectable ambiguity detectors
+     (vague / approximation / missing-antecedent / wrong-base / allowance-or-VAT).
 
-  2. DETERMINISTIC layer (confidence + clarification, chike.swahili_numbers): every value
-     and confidence the model produced is then validated by pure, unit-tested Python. This
-     layer OWNS the never-guess guardrail because this session proved a 32B model — let
-     alone the 8B — misreads Swahili compound numerals and mis-detects ambiguity
-     (PROGRESS.md qwen3-32b finding). It can only ever DOWNGRADE confidence (force a field
-     to LOW -> clarification) or apply a deterministic period conversion; it never invents
-     a value the model didn't propose. Its rules are explicit and inspectable here, not
-     hidden in a prompt.
+  2. MODEL layer is a NARROW FALLBACK, used only for what regex genuinely cannot do:
+     when the deterministic parser found NO value for a field, a clean role-assignment
+     JSON from the model may supply it. But the model is NEVER trusted to output a final
+     calculated answer or citation during extraction — if its raw output looks like a
+     compliance answer (currency/percent/citation/"jibu"), it is discarded entirely,
+     because that means it went off-script and is not trustworthy extractor input.
 
 The routing contract the orchestrator depends on is unchanged:
   - every required field must be present AND high-confidence before the rules engine runs;
   - an absent OR low-confidence required field is treated identically -> clarification.
     A wrong compliance number is worse than a clarifying question (R8 trust invariant).
 
-Failure categories from the reviewed slot-extraction stress test and how they resolve:
+Failure categories from the reviewed stress test and how they resolve:
   vague_quantity / casual_slang(approx) / missing_antecedent / wrong_calculation_number /
-  gross_net_allowance      -> a deterministic detector fires -> field forced LOW -> clarify.
-  swahili_number_words      -> deterministic numeral cross-check validates the model's value.
+  gross_net_allowance      -> a deterministic detector fires -> field LOW -> clarify.
+  swahili_number_words      -> deterministic numeral parse originates the value.
   period_conversion         -> deterministic monthly conversion (or clarify if week/day).
-  aggregate_vs_per_person /
-  non_uniform_figures        -> the model does the summation/role split; guarded by the
-                               numeral cross-check and the ambiguity vetoes above.
+  aggregate_vs_per_person   -> "kila" multiplies; "jumla/yote" is a total; conflicting or
+                               bare-with-count -> clarify (never guess the base).
+  non_uniform_figures        -> multiple distinct figures -> role ambiguous -> clarify.
 """
 
 import json
+import re
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
 from enum import Enum
@@ -60,6 +66,17 @@ REQUIRED_FIELDS = {
 # Field classes the deterministic layer reasons about.
 _AMOUNT_FIELDS = frozenset({"gross_monthly_payroll", "monthly_salary"})
 _COUNT_FIELDS = frozenset({"employee_count"})
+
+# "each"/"per employee" markers -> a stated figure is PER PERSON (multiply by count).
+_PER_PERSON = re.compile(r"kila\s+(?:mmoja|mfanyakazi|mtu|mmojawapo|mwajiriwa|kichwa)")
+# aggregate markers -> a stated figure is already the WHOLE payroll (do not multiply).
+_AGGREGATE = re.compile(r"\bjumla\b|\byote\b|\bwote\b|kwa\s+pamoja|payroll\s+yote")
+# off-script markers -> the model answered the compliance question instead of extracting;
+# its output is discarded for extraction purposes (currency / percent / citation / answer).
+_OFFSCRIPT = re.compile(
+    r"go\.tz|shilingi|\btzs\b|\btsh\b|asilimia|%|kulingana na|\bjibu\b|\bfaini\b|\bsheria\b",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -111,10 +128,11 @@ def _is_usable(confidence: Confidence) -> bool:
 
 
 class SlotExtractor:
-    """Extracts fields-with-confidence from a sub-question via an injected ModelBackend
-    plus the deterministic chike.swahili_numbers layer. Dependency-injection contract is
-    unchanged: tests pass a FakeBackend with scripted JSON to exercise parsing + the
-    never-guess contract with no network and no GPU."""
+    """Extracts fields-with-confidence from a sub-question. The deterministic
+    chike.swahili_numbers layer originates the values; the injected ModelBackend is a
+    narrow fallback for role assignment when regex found nothing. Dependency-injection
+    contract is unchanged: tests pass a FakeBackend with scripted JSON to exercise the
+    fallback + never-guess contract with no network and no GPU."""
 
     def __init__(self, backend: ModelBackend, params: Optional[dict] = None):
         self.backend = backend
@@ -122,9 +140,31 @@ class SlotExtractor:
 
     def extract(self, sub_question: str, required: Sequence[str],
                 computation_type: Optional[str] = None) -> Extraction:
+        # The model is consulted exactly once (DI contract), but it is now a FALLBACK:
+        # deterministic values win, and the model is used only where regex found nothing
+        # AND the model did not go off-script into a compliance answer.
         raw = self.backend.generate(self._build_prompt(sub_question, required), self.params)
-        model_fields = self._parse(raw)
-        return self._apply_deterministic_layer(sub_question, model_fields, computation_type)
+        offscript = bool(_OFFSCRIPT.search(raw or ""))
+        model_fields = {} if offscript else self._parse(raw)
+
+        det, global_veto = self._deterministic(sub_question, required, computation_type)
+
+        out = {}
+        for name in required:
+            d = det.get(name)
+            if d is not None:
+                value, conf, reason = d
+                if global_veto:                     # vague/approx/antecedent overrides all
+                    conf, reason = Confidence.LOW, global_veto
+            elif not global_veto and name in model_fields:
+                # deterministic found nothing here and the model output was clean JSON —
+                # accept the model's proposal (role assignment regex can't do).
+                mval, mconf = model_fields[name]
+                value, conf, reason = mval, mconf, "model fallback (no deterministic value)"
+            else:
+                continue                            # absent -> missing -> clarify
+            out[name] = ExtractedField(name, value, conf, reason)
+        return Extraction(fields=out)
 
     # --- model prompt (free-text role assignment) --------------------------
 
@@ -149,9 +189,10 @@ class SlotExtractor:
 
     @staticmethod
     def _parse(raw: str) -> dict:
-        """Parse the model JSON into {name: (value, Confidence)}. Anything unparseable or
-        an unrecognised confidence label is dropped/downgraded so it can never be silently
-        treated as confident — malformed output routes to clarification, not a guess."""
+        """Parse a CLEAN role-assignment JSON into {name: (value, Confidence)}. Strict:
+        the whole string must be JSON (a compliance answer in prose fails here and yields
+        {}), and an unrecognised confidence label is downgraded — malformed or off-script
+        output can never be silently treated as a confident value."""
         try:
             data = json.loads(raw)
         except (json.JSONDecodeError, TypeError):
@@ -169,55 +210,91 @@ class SlotExtractor:
                 fields[name] = (spec["value"], confidence)
         return fields
 
-    # --- deterministic layer (confidence + clarification) ------------------
+    # --- deterministic layer (PRIMARY: originates values + owns clarification) ----
 
-    def _apply_deterministic_layer(self, sub_question, model_fields, computation_type):
-        """Validate/adjust the model's fields. Only ever downgrades confidence or applies
-        a deterministic period conversion — never invents a value."""
-        vague = swn.detect_vague_quantity(sub_question)
-        approx = swn.detect_approximation(sub_question)
-        antecedent = swn.detect_missing_antecedent(sub_question)
-        wrong_base = swn.detect_wrong_base(sub_question, computation_type)
-        allowance = swn.detect_allowance_ambiguity(sub_question)
-        divisor, period = swn.detect_period(sub_question)
-        det_amounts = swn.parse_amounts(sub_question)
-        det_count = swn.parse_count(sub_question)
+    def _deterministic(self, text, required, computation_type):
+        """Originate field values from the Swahili numeral parser. Returns
+        (det, global_veto) where det maps name -> (value, Confidence, reason) for every
+        field the deterministic layer has an opinion on (HIGH value or LOW veto), and
+        omits fields it found nothing for (those may fall back to the model). global_veto
+        is a whole-question clarification reason (vague/approx/antecedent) or None."""
+        tl = text.lower()
+        vague = swn.detect_vague_quantity(text)
+        approx = swn.detect_approximation(text)
+        antecedent = swn.detect_missing_antecedent(text)
+        wrong_base = swn.detect_wrong_base(text, computation_type)
+        allowance = swn.detect_allowance_ambiguity(text)
+        divisor, period = swn.detect_period(text)
 
-        out = {}
-        for name, (value, conf) in model_fields.items():
-            reason = ""
-            # period conversion for amount fields (deterministic, authoritative)
-            if name in _AMOUNT_FIELDS and divisor is None:
-                conf, reason = Confidence.LOW, f"period={period} needs days/weeks worked"
-            elif name in _AMOUNT_FIELDS and divisor and divisor > 1 and len(det_amounts) == 1:
-                converted = det_amounts[0] / Decimal(divisor)
-                value, conf, reason = converted, Confidence.HIGH, f"converted {period}->monthly /{divisor}"
+        per_person = bool(_PER_PERSON.search(tl))
+        aggregate = bool(_AGGREGATE.search(tl))
+        # Parse amounts from a copy with the per-person phrase removed: "kila mmoja"
+        # otherwise contributes a spurious "1" ("mmoja") that makes a single stated
+        # salary look like multiple figures. per_person is already captured above.
+        amt_source = _PER_PERSON.sub(" ", text)
+        amounts = swn.parse_amounts(amt_source)
+        count = swn.parse_count(text)
+        if count is not None:                        # don't let the headcount pose as money
+            amounts = [a for a in amounts if a != Decimal(count)]
 
-            # ambiguity vetoes (force LOW). Order: most specific reason wins.
-            if name in _AMOUNT_FIELDS and wrong_base:
-                conf, reason = Confidence.LOW, "wrong_base (non-payroll figure)"
-            elif name in _AMOUNT_FIELDS and allowance:
-                conf, reason = Confidence.LOW, "allowance/gross-net base ambiguous"
-            if vague:
-                conf, reason = Confidence.LOW, "vague_quantity"
-            elif approx:
-                conf, reason = Confidence.LOW, "approximation"
-            elif antecedent:
-                conf, reason = Confidence.LOW, "missing_antecedent"
+        global_veto = ("vague_quantity" if vague else "approximation" if approx
+                       else "missing_antecedent" if antecedent else None)
 
-            # numeral cross-check: single-figure question, model value disagrees with the
-            # deterministic parse -> can't trust it (the model's Swahili-numeral weakness).
-            if (name in _AMOUNT_FIELDS and conf is Confidence.HIGH
-                    and not reason and det_count is None and len(det_amounts) == 1):
-                mv = _to_decimal(value)
-                if mv is not None and mv != det_amounts[0]:
-                    conf, reason = Confidence.LOW, f"numeral mismatch (model {mv} vs parsed {det_amounts[0]})"
-            if (name in _COUNT_FIELDS and conf is Confidence.HIGH and det_count is not None):
-                if _to_decimal(value) != Decimal(det_count):
-                    conf, reason = Confidence.LOW, f"count mismatch (model {value} vs parsed {det_count})"
+        det = {}
+        amount_field = next((f for f in required if f in _AMOUNT_FIELDS), None)
+        if amount_field:
+            a = self._amount_field(amount_field, amounts, count, per_person, aggregate,
+                                   divisor, period, wrong_base, allowance)
+            if a is not None:
+                det[amount_field] = a
+        if any(f in _COUNT_FIELDS for f in required):
+            c = self._count_field(count, vague)
+            if c is not None:
+                det["employee_count"] = c
+        return det, global_veto
 
-            out[name] = ExtractedField(name, value, conf, reason)
-        return Extraction(fields=out)
+    @staticmethod
+    def _amount_field(field, amounts, count, per_person, aggregate,
+                      divisor, period, wrong_base, allowance):
+        """Return (value, Confidence, reason) for an amount field, or None if the parser
+        found no figure (leave it to the model fallback). LOW result == clarify."""
+        if not amounts:
+            return None
+        if len(amounts) > 1:
+            return (None, Confidence.LOW,
+                    f"multiple figures {[str(a) for a in amounts]} — role ambiguous")
+
+        amt, reason = amounts[0], "parsed amount"
+        is_payroll = field == "gross_monthly_payroll"
+
+        if is_payroll and per_person and aggregate:
+            return (None, Confidence.LOW, 'conflicting "kila" and "jumla/yote" — base ambiguous')
+        if is_payroll and per_person and count is not None:
+            # "kila mmoja ... X" -> X is per person, payroll = X * headcount.
+            amt, reason = amt * Decimal(count), f"per-person {amounts[0]} x {count}"
+        # A single stated figure with no "kila"/"jumla" marker is taken as the payroll base
+        # (the established orchestrator contract); the truly dangerous cases — conflicting
+        # markers, multiple distinct figures, vague/approx/wrong-base/allowance — are vetoed
+        # elsewhere. We never guess a base we cannot see.
+
+        if divisor is None:                          # week/day: needs days-worked -> clarify
+            return (amt, Confidence.LOW, f"period={period} needs days/weeks worked")
+        if divisor > 1:
+            amt, reason = amt / Decimal(divisor), f"{reason}; /{divisor} {period}->monthly"
+
+        if wrong_base:
+            return (amt, Confidence.LOW, "wrong_base (non-payroll figure)")
+        if allowance:
+            return (amt, Confidence.LOW, "allowance/gross-net/VAT base ambiguous")
+        return (amt, Confidence.HIGH, reason)
+
+    @staticmethod
+    def _count_field(count, vague):
+        if count is None:
+            return None
+        if vague:
+            return (count, Confidence.LOW, "vague_quantity")
+        return (int(count), Confidence.HIGH, "parsed count")
 
 
 def _to_decimal(value):
