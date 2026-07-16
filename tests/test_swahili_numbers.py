@@ -54,6 +54,15 @@ def test_spelled_and_digit_counts():
     assert parse_count("wafanyakazi ishirini") == 20
 
 
+def test_law_citation_number_not_parsed_as_amount():
+    # The digits inside a law/citation code must never be read as a currency figure —
+    # "487" in "GN487A", "605" in "GN605A". This was a DANGEROUS misread (extract_120).
+    assert parse_amounts("hii ni sawa chini ya GN487A") == []
+    assert parse_amounts("kiwango cha mshahara kipo GN605A") == []
+    # a real figure alongside a citation is still parsed; only the code digits are excluded
+    assert parse_amounts("chini ya GN487A, payroll ni milioni tano") == [Decimal("5000000")]
+
+
 # --- ambiguity detectors (the clarification triggers) ----------------------
 def test_vague_quantity():
     assert detect_vague_quantity("duka langu lina wafanyakazi wachache tu")

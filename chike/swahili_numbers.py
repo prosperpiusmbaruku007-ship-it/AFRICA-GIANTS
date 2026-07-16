@@ -118,6 +118,13 @@ def parse_amounts(text):
     for m in _DIGITS.finditer(text_l):
         if m.start() in consumed:
             continue
+        # A run of digits touching a letter on either side is part of an alphanumeric
+        # code, not a currency figure — the "487" in "GN487A", the "605" in "GN605A".
+        # Extracting it as money is the exact DANGEROUS misread the parser must avoid.
+        before = text_l[m.start() - 1] if m.start() > 0 else ""
+        after = text_l[m.end()] if m.end() < len(text_l) else ""
+        if before.isalpha() or after.isalpha():
+            continue
         raw = m.group(0).rstrip(".,").replace(",", "")
         if raw.isdigit():
             found.append((m.start(), Decimal(raw)))

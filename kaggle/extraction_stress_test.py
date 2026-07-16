@@ -155,7 +155,12 @@ def _ctype_and_required(entry):
 def _grade(entry, usable):
     cat = entry['failure_category']
     if cat == 'compound_question':
-        return 'compound'
+        # A compound question mixes a computation with a separate (often legal) part;
+        # the safe behaviour is to DEFER — clarify rather than silently compute one part
+        # and drop the other. So a usable HIGH-confidence extraction here is NOT "ungraded":
+        # it means a field was populated (e.g. '487' misread from 'GN487A') and is about to
+        # feed the rules engine. That is a DANGEROUS wrong extract, not an exemption.
+        return 'DANGEROUS_wrong_extract' if usable else 'compound'
     exp = 'clarify' if cat in SHOULD_CLARIFY else 'extract' if cat in SHOULD_EXTRACT else 'other'
     if exp == 'extract':
         return 'correct_extract' if usable else 'over_clarify'
