@@ -196,7 +196,7 @@ class Orchestrator:
         missing OR low-confidence required field routes to clarification — the
         rules engine is never handed a guessed value."""
         required = REQUIRED_FIELDS[sq.computation_type]
-        extraction = self.extractor.extract(sq.text, required)
+        extraction = self.extractor.extract(sq.text, required, sq.computation_type)
         if not extraction.usable(required):
             return SubAnswer(
                 sub_question=sq, text=CLARIFICATION_PENDING, needs_clarification=True,

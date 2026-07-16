@@ -1,0 +1,291 @@
+# -*- coding: utf-8 -*-
+"""Step 6 — COMBINED orchestrator regression on Kaggle (GPU). Prepare-only; founder runs it.
+
+Extends kaggle/eval_orchestrator.py (which tested the fact-path-only 190 subset and EXCLUDED
+the 10 compute-routed questions) to a full combined run:
+
+  200 main gate (eval_questions_001)  +  50 staged additions (eval_questions_002_additions)
+  = 250 questions, ALL run through the real chike/orchestrator.py end-to-end, with the 10
+  compute-type questions now routed through the REAL slot extraction (chike/extraction.py +
+  chike/swahili_numbers.py) and the rules engine FOR THE FIRST TIME.
+
+Reports three separate scores (so the effect of the extraction change is isolated):
+  A. FACT-PATH 190  — must be UNCHANGED vs the prior baseline (extraction only touches the
+     compute path + route() is unchanged, so these answers are byte-identical; this run
+     re-confirms empirically, not by assertion).
+  B. STAGED 50      — first real score on eval_questions_002_additions (held back earlier
+     until the scorer was trustworthy; scorer bugs since fixed + scorer_reliability in place).
+  C. COMPUTE ~10    — first real score on the compute-routed questions now that extraction is
+     built (previously all excluded / would have returned <CLARIFICATION_NEEDED>).
+
+Reliable-denominator scoring (chike.scoring.scorer_reliability) is reported alongside raw,
+matching the honest reduced-denominator method adopted 2026-07-14 (PROGRESS.md).
+
+HOW TO RUN (Kaggle notebook, GPU ON):
+    import requests
+    exec(requests.get('https://raw.githubusercontent.com/prosperpiusmbaruku007-ship-it/'
+                      'AFRICA-GIANTS/main/kaggle/eval_orchestrator_combined.py', timeout=10).text)
+
+PREREQS:
+  - Kaggle GPU ON; Kaggle secret AFRICA_GIANTS (HF token).
+  - eval_questions_002_additions.jsonl is UNMERGED + not on GitHub. Loader checks, in order:
+      (1) local clone eval/accuracy_gate/, (2) /kaggle/input/**, (3) HF dataset repo.
+"""
+import os, sys, json, glob, time, subprocess
+from collections import defaultdict, Counter
+from datetime import datetime, timezone
+
+import requests
+
+REPO = 'prosperpiusmbaruku007-ship-it/AFRICA-GIANTS'
+RAW = f'https://raw.githubusercontent.com/{REPO}/main'
+DATASET_REPO = 'prospAprospA007/africa-giants-dataset'
+ADDITIONS_FILE = 'eval_questions_002_additions.jsonl'
+
+# ── AUTH ────────────────────────────────────────────────────────────────────────
+try:
+    import kaggle_secrets
+    hf_token = kaggle_secrets.UserSecretsClient().get_secret('AFRICA_GIANTS')
+except Exception as e:
+    raise RuntimeError('run on Kaggle with AFRICA_GIANTS attached') from e
+assert hf_token, 'AFRICA_GIANTS empty'
+os.environ['HF_TOKEN'] = hf_token
+print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) OK')
+
+# ── CLONE chike/ ─────────────────────────────────────────────────────────────────
+_CLONE = '/kaggle/working/AFRICA-GIANTS'
+if not os.path.isdir(_CLONE):
+    subprocess.run(['git', 'clone', '--depth', '1', f'https://github.com/{REPO}.git', _CLONE], check=True)
+else:
+    subprocess.run(['git', '-C', _CLONE, 'pull', '--ff-only'], check=False)
+sys.path.insert(0, _CLONE)
+_sha = subprocess.run(['git', '-C', _CLONE, 'rev-parse', '--short', 'HEAD'],
+                      capture_output=True, text=True).stdout.strip()
+print(f'[clone] chike @ {_CLONE} (HEAD {_sha})')
+
+# These 4 are yes/no FACT questions that route()'s crude keyword+digit heuristic
+# misroutes to the compute path (they mention nssf/sdl + a digit like '10'/'20'/'7' but
+# ask a concept, not a calculation). When they return clarification / fail in bucket C
+# that is a ROUTING MISS, not an extraction defect — labeled explicitly so it is not
+# misread during review. Broadening route() is the deferred follow-up (PROGRESS.md).
+KNOWN_ROUTING_MISS = {'eval_099', 'eval_100', 'eval_102', 'eval_127'}
+
+from chike.orchestrator import Orchestrator, CLARIFICATION_PENDING        # noqa: E402
+from chike.model_abstraction import ModelBackend                          # noqa: E402
+from chike.retrieval import Retriever                                     # noqa: E402
+from chike.scoring import score_question, scorer_reliability             # noqa: E402
+
+# ── CONFIG ───────────────────────────────────────────────────────────────────────
+_cb = str(int(time.time() * 1000))
+_nc = {'Cache-Control': 'no-cache'}
+CONFIG = requests.get(f'{RAW}/kaggle/chike_config.json?cb={_cb}', headers=_nc, timeout=15).json()
+SYSTEM_PROMPT = CONFIG['system_prompt']
+REFUSAL_PHRASES = CONFIG['refusal_phrases']
+OOC_PHRASES = CONFIG.get('ooc_phrases', [])
+IN_THR = CONFIG['gate_thresholds']['in_corpus']
+GEN = CONFIG['generation_params']
+STOP = GEN.get('stop_strings', ['\n\nQ:', '\n\nSwali:', '<|start_header_id|>', '\n\n---'])
+ADAPTER = CONFIG.get('adapter_repo', 'prospAprospA007/africa-giants-adapter-v15')
+print(f'[config] v={CONFIG.get("version")} in_corpus_threshold={IN_THR}')
+
+# ── DATA: 200 gate (HF) + 50 additions (local/input/HF) + RAG index ─────────────
+from huggingface_hub import hf_hub_download, HfApi                        # noqa: E402
+_q = hf_hub_download(repo_id=DATASET_REPO, filename='eval_questions_001.jsonl',
+                     repo_type='dataset', token=hf_token)
+gate = [json.loads(l) for l in open(_q, encoding='utf-8') if l.strip()]
+assert len(gate) == 200, len(gate)
+for q in gate:
+    q['_source'] = 'gate_001'
+
+
+def _load_additions():
+    for p in [os.path.join(_CLONE, 'eval/accuracy_gate', ADDITIONS_FILE),
+              *glob.glob(f'/kaggle/input/**/{ADDITIONS_FILE}', recursive=True)]:
+        if os.path.exists(p):
+            print(f'[data] additions from {p}')
+            return [json.loads(l) for l in open(p, encoding='utf-8') if l.strip()]
+    p = hf_hub_download(repo_id=DATASET_REPO, filename=ADDITIONS_FILE,
+                        repo_type='dataset', token=hf_token)
+    print(f'[data] additions from HF {DATASET_REPO}/{ADDITIONS_FILE}')
+    return [json.loads(l) for l in open(p, encoding='utf-8') if l.strip()]
+
+
+additions = _load_additions()
+assert len(additions) == 50, len(additions)
+for q in additions:
+    q['_source'] = 'additions_002'
+    q.setdefault('correct_answer_sw', q.get('correct_answer_sw', ''))
+ALL = gate + additions
+print(f'[data] {len(ALL)} questions total (200 gate + 50 additions)')
+
+_rag_npy = hf_hub_download(repo_id=DATASET_REPO, filename='rag_embeddings.npy',
+                           repo_type='dataset', token=hf_token)
+_rag_txt = hf_hub_download(repo_id=DATASET_REPO, filename='rag_facts_text.json',
+                           repo_type='dataset', token=hf_token)
+print('[data] RAG index downloaded (e5-base)')
+
+# ── MODEL (byte-identical 4-bit load to eval_orchestrator.py) ────────────────────
+subprocess.run(['pip', 'install', '-q', '-U', 'bitsandbytes>=0.46.1'], check=True)
+subprocess.run(['pip', 'install', '-q', '-U', 'sentence-transformers>=2.7.0'], check=True)
+import torch                                                              # noqa: E402
+from transformers import (AutoTokenizer, AutoModelForCausalLM,           # noqa: E402
+                          BitsAndBytesConfig, StoppingCriteria, StoppingCriteriaList)
+
+
+class _Stop(StoppingCriteria):
+    def __init__(self, tok, stops): self.tok, self.stops = tok, stops
+    def __call__(self, input_ids, scores, **kw):
+        return any(s in self.tok.decode(input_ids[0], skip_special_tokens=True)[-100:]
+                   for s in self.stops)
+
+
+class KaggleDirectBackend(ModelBackend):
+    def __init__(self):
+        print(f'[model] loading {ADAPTER} (4-bit) ...')
+        self.tok = AutoTokenizer.from_pretrained(ADAPTER, token=hf_token, trust_remote_code=True)
+        if self.tok.pad_token is None:
+            self.tok.pad_token = self.tok.eos_token
+        bnb = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type='nf4',
+                                 bnb_4bit_compute_dtype=torch.float16, bnb_4bit_use_double_quant=True)
+        self.model = AutoModelForCausalLM.from_pretrained(
+            ADAPTER, quantization_config=bnb, device_map='auto', token=hf_token, trust_remote_code=True)
+        self.model.eval()
+        print('[model] loaded OK')
+
+    def generate(self, prompt, params=None):
+        p = dict(GEN)
+        if params:
+            p.update(params)
+        inp = self.tok(prompt, return_tensors='pt').to(self.model.device)
+        with torch.no_grad():
+            out = self.model.generate(
+                **inp, max_new_tokens=p.get('max_new_tokens', 350), do_sample=False,
+                temperature=1.0, repetition_penalty=p.get('repetition_penalty', 1.1),
+                no_repeat_ngram_size=p.get('no_repeat_ngram_size', 0),
+                stopping_criteria=StoppingCriteriaList([_Stop(self.tok, STOP)]),
+                eos_token_id=self.tok.eos_token_id, pad_token_id=self.tok.pad_token_id)
+        return self.tok.decode(out[0][inp['input_ids'].shape[1]:], skip_special_tokens=True).strip()
+
+
+backend = KaggleDirectBackend()
+retriever = Retriever(emb_path=_rag_npy, texts_path=_rag_txt)
+orch = Orchestrator(backend=backend, retriever=retriever.retrieve,
+                    ooc_phrases=OOC_PHRASES, system_prompt=SYSTEM_PROMPT)
+
+# ── TAG each question by orchestrator routing (compute vs fact) ──────────────────
+def _is_compute(q):
+    if not orch.classify(q['question_sw']):
+        return False
+    return any(orch.route(p).kind == 'compute' for p in orch.decompose(q['question_sw']))
+
+
+for q in ALL:
+    q['_compute'] = _is_compute(q)
+n_compute = sum(q['_compute'] for q in ALL)
+print(f'[route] {n_compute} compute-routed of {len(ALL)} '
+      f'(gate={sum(q["_compute"] for q in gate)}, additions={sum(q["_compute"] for q in additions)})')
+
+# ── RUN all 250 through Orchestrator.answer() ───────────────────────────────────
+print(f'[run] {len(ALL)} through the real orchestrator + model ...')
+results = []
+t0 = time.time()
+for i, q in enumerate(ALL):
+    raw = ''
+    try:
+        reply = orch.answer(q['question_sw'])
+        gen, raw = reply.text, reply.raw_text
+        clarified = CLARIFICATION_PENDING in gen
+        passed = False if clarified else bool(score_question(q, gen, REFUSAL_PHRASES))
+        try:
+            reliable, why = scorer_reliability(q, gen)
+        except Exception:
+            reliable, why = True, ''
+    except Exception as e:
+        gen, clarified, passed, reliable, why = f'ERROR: {e}', False, False, True, 'error'
+    results.append({'id': q['id'], 'source': q['_source'], 'subdomain': q.get('subdomain', ''),
+                    'answer_type': q.get('answer_type', ''), 'compute': q['_compute'],
+                    'routing_note': ('ROUTING MISS (yes/no fact misrouted to compute by route() '
+                                     'keyword+digit heuristic — NOT an extraction failure)'
+                                     if q['id'] in KNOWN_ROUTING_MISS else ''),
+                    'question_sw': q['question_sw'], 'correct_answer_sw': q.get('correct_answer_sw', ''),
+                    'generated': gen, 'raw_generated': raw, 'clarified': clarified,
+                    'pass': passed, 'reliable': reliable, 'reliable_reason': why})
+    if (i + 1) % 25 == 0 or i == 0:
+        print(f'  [{i+1}/{len(ALL)}] {time.time()-t0:.0f}s')
+
+
+# ── SCORE THE THREE BUCKETS ─────────────────────────────────────────────────────
+def _score(rows, reliable_only=False):
+    rs = [r for r in rows if (r['reliable'] or not reliable_only)]
+    rs = [r for r in rs if r['subdomain'] != 'out_of_corpus']       # in-corpus only
+    if not rs:
+        return 0, 0, 0.0
+    p = sum(r['pass'] for r in rs)
+    return p, len(rs), (p / len(rs))
+
+
+A = [r for r in results if r['source'] == 'gate_001' and not r['compute']]     # fact-path 190
+B = [r for r in results if r['source'] == 'additions_002']                     # staged 50
+C = [r for r in results if r['compute']]                                       # compute-type
+
+print('\n' + '=' * 60)
+print('COMBINED ORCHESTRATOR REGRESSION  (commit %s)' % _sha)
+print('=' * 60)
+for name, bucket in [('A. FACT-PATH (gate_001, non-compute)', A),
+                     ('B. STAGED ADDITIONS (eval_002, 50)', B),
+                     ('C. COMPUTE-TYPE (real extraction, first run)', C)]:
+    praw, nraw, accraw = _score(bucket, reliable_only=False)
+    prel, nrel, accrel = _score(bucket, reliable_only=True)
+    clar = sum(r['clarified'] for r in bucket)
+    print(f'\n{name}: n={len(bucket)}')
+    print(f'   raw in-corpus:      {praw}/{nraw} = {accraw:.1%}')
+    print(f'   reliable-subset:    {prel}/{nrel} = {accrel:.1%}  (scorer_unreliable excluded)')
+    print(f'   returned clarification: {clar}')
+
+# compute bucket per-question detail (only ~10 — show all). Genuine-compute vs
+# routing-miss are separated so a failing routing-miss is not misread as an extraction bug.
+_genuine = [r for r in C if not r['routing_note']]
+_miss = [r for r in C if r['routing_note']]
+print(f'\n  COMPUTE-TYPE per-question ({len(_genuine)} genuine-compute, '
+      f'{len(_miss)} routing-miss labeled separately):')
+for r in _genuine:
+    print(f"    [GENUINE COMPUTE] {r['id']} [{r['subdomain']}/{r['answer_type']}] "
+          f"pass={r['pass']} clarified={r['clarified']}")
+    print(f"       Q: {r['question_sw'][:70]}")
+    print(f"       gen: {r['generated'][:90].replace(chr(10),' ')}")
+for r in _miss:
+    print(f"    [ROUTING MISS — not an extraction failure] {r['id']} "
+          f"[{r['subdomain']}/{r['answer_type']}] pass={r['pass']} clarified={r['clarified']}")
+    print(f"       Q: {r['question_sw'][:70]}")
+
+by_sd = defaultdict(lambda: {'pass': 0, 'total': 0})
+for r in results:
+    if r['subdomain'] != 'out_of_corpus':
+        by_sd[r['subdomain']]['total'] += 1
+        by_sd[r['subdomain']]['pass'] += int(r['pass'])
+
+out = {'mode': 'combined_orchestrator_regression', 'commit': _sha,
+       'timestamp': datetime.now(timezone.utc).isoformat(),
+       'buckets': {
+           'fact_path_190': dict(zip(('pass', 'n', 'acc'), _score(A))),
+           'staged_50': dict(zip(('pass', 'n', 'acc'), _score(B))),
+           'compute_type': dict(zip(('pass', 'n', 'acc'), _score(C))),
+           'compute_type_genuine': dict(zip(('pass', 'n', 'acc'), _score(_genuine))),
+           'compute_type_routing_miss': dict(zip(('pass', 'n', 'acc'), _score(_miss))),
+           'fact_path_190_reliable': dict(zip(('pass', 'n', 'acc'), _score(A, True))),
+           'staged_50_reliable': dict(zip(('pass', 'n', 'acc'), _score(B, True))),
+       },
+       'known_routing_miss_ids': sorted(KNOWN_ROUTING_MISS),
+       'by_subdomain': {k: dict(v) for k, v in by_sd.items()},
+       'results': results}
+path = '/kaggle/working/gate_orchestrator_combined.json'
+json.dump(out, open(path, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
+print(f'\n[save] {path}')
+try:
+    HfApi().upload_file(path_or_fileobj=path, path_in_repo='gate_orchestrator_combined.json',
+                        repo_id='prospAprospA007/africa-giants-adapter-v15', repo_type='model',
+                        token=hf_token, commit_message='combined orchestrator regression (190 fact + 50 staged + compute)')
+    print('[upload] gate_orchestrator_combined.json -> adapter-v15')
+except Exception as e:
+    print(f'[upload] failed (non-critical): {e}')
+print('\nCOMBINED_DONE')
