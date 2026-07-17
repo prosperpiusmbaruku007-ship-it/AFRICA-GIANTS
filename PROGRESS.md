@@ -2,6 +2,46 @@
 
 Last updated: 2026-07-17
 
+## Verification-entry recommendations — all three CLOSED
+
+1. compute_type_reliable + compute_type_genuine_reliable headlines added to
+   eval_orchestrator_combined.py (ec2909a) — reporting-only change, matches
+   existing fact_path/staged reliable-subset pattern.
+
+2. extract_numbers '000'-garbage-token bug fixed (60f140d) — comma-grouped
+   numbers with a 1-2 digit leading group were fragmenting into a bare '000'
+   token; fixed regex captures complete thousands-grouped numbers. 0 verdict
+   flips across all 250 gate+additions questions (garbage token was present
+   symmetrically in reference and generation, so removing it never changed
+   a non-empty intersection on this specific dataset) — real fix, no visible
+   impact on current results, removes a latent false-pass mechanism.
+
+3. Zero/'does-not-apply' reference answers now flagged scorer_reliability=False
+   (BUG 7, e6781fc) — a number/penalty question whose only extractable figure
+   is 0 represents a below-threshold conclusion, not a computed amount that
+   number-overlap scoring can verify. Exactly 1 reliability-flag change
+   (eval_247), 0 verdict flips, scoped narrowly to the numeric-zero signal.
+
+CAVEAT — stored data not yet updated: both scorer changes (#2, #3) were
+regression-tested offline against the existing persisted generations in
+gate_orchestrator_combined.json, which is valid since neither change alters
+any pass/fail verdict. But the STORED JSON's scorer_reliability flags and
+the compute_type_reliable/compute_type_genuine_reliable headline values
+still reflect the OLD scorer (pre-e6781fc) until eval_orchestrator_combined.py
+is re-run on Kaggle. Expected shift on next run: compute_type_reliable
+5/7->5/6 (83.3%), compute_type_genuine_reliable 4/6->4/5 (80.0%) — eval_247
+drops out of the reliable subset as intended. Do not read the current stored
+file as already reflecting these fixes.
+
+DEFERRED (documented, not silently dropped): eval_051's 'no minimum threshold /
+illustrative-figures' leniency pattern is a distinct issue from the zero-
+conclusion signal just fixed — noted for a future scoped pass if pursued.
+
+All three fixes followed identical discipline: root-cause confirmation via
+code inspection, full-scale regression across all 250 gate+additions
+questions (not a small sample), verdict-preservation verification, the
+114-test suite, and a reviewed report before each commit.
+
 ## v16 compute-path — first real end-to-end validation (corrected analysis)
 
 Combined regression (commit 8bf3c85, real v15 model on Kaggle) — independently
