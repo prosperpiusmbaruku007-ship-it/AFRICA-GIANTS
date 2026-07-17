@@ -230,6 +230,18 @@ def scorer_reliability(q, generated):
             return False, 'qualitative_number_no_numeric_key'   # BUG 1
         if not nonyear:
             return False, 'year_only_numeric_key'               # BUG 2
+        # BUG 7 — zero / "does not apply" conclusion. When the reference answer's only
+        # non-year figure is 0 (e.g. eval_247 "TZS 0. SDL inatozwa tu ... 10 au zaidi"),
+        # the answer is a below-threshold / not-applicable conclusion, not a computed
+        # amount. Number-overlap scoring cannot verify it either way: a wrong answer that
+        # states any nonzero figure never shares the bare '0' (spurious FAIL), and a
+        # rambling answer that happens to print '0' passes without establishing the
+        # not-applicable reasoning (spurious PASS). Flag unreliable — the verdict is a
+        # coin-flip on phrasing, not a real check. (Scope: numeric zero only. "No minimum
+        # threshold" answers carrying illustrative nonzero figures, e.g. eval_051, are a
+        # separate leniency pattern not addressed here.)
+        if all(float(n) == 0 for n in nonyear):
+            return False, 'zero_or_not_applicable_answer'       # BUG 7
         # BUG 2 residual: even when the reference answer carries other (non-year) figures,
         # a pass can still hinge ENTIRELY on a shared calendar year ('Finance Act 2025'
         # boilerplate) when the model reproduced only the year and none of the real figures
