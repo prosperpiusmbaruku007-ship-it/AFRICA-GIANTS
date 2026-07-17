@@ -26,6 +26,40 @@ the full set hit vat/brela/osha/gn487a questions carrying non-payroll numbers.
 Rule going forward: no extraction/scorer change is "confirmed" on a sample. Sample = smoke
 test only. The full-scale run is the gate.
 
+## Slot-extraction danger investigation — CLOSED (RC-1/2/3 fixed, RC-5 tracked separately)
+
+Full-205 stress test progression: 25 DANGEROUS -> 18 (grader/dataset fixes) -> 8 (RC-1 wrong-base guard) -> 2 (RC-2 plausibility floor, RC-3 currency/net detection).
+
+Final confirmed state, real v15 model on Kaggle, exact match to local prediction:
+correct_extract=31, correct_clarify=105, over_clarify=52 (safe misses), compound=15,
+DANGEROUS_wrong_extract=2 (both RC-5, tracked below).
+
+RC-5 (extract_078, extract_205) — NOT a numeral-parsing bug. The extracted figure
+is genuinely correct in both cases; the problem is the question is a yes/no
+compliance question (BRELA registration, VAT registration) that happens to
+mention a real payroll figure, and the generic compute-routing path treats it
+as a computation question when it should route to a fact-lookup/yes-no answer
+instead. This is a routing/classifier scope issue, not an extraction issue.
+Tracked as a separate follow-up pass — do not attempt to fix via the extractor,
+since the extractor correctly reading a real figure is not the bug.
+
+Extraction logic (chike/extraction.py + chike/swahili_numbers.py) is now
+considered production-ready for the fact types it covers: SDL/NSSF/PAYE/WCF
+payroll and employee-count extraction, correctly handling vague quantities,
+missing antecedents, non-uniform per-person figures, period conversion,
+casual slang/approximation, gross/net/allowance ambiguity, currency-unit
+mismatches, and wrong-base figures (sales/capital/turnover/share-count
+misread as payroll) — validated at 205-question stress-test scale with
+two independent confirmations (local deterministic simulation matching
+real v15 model output exactly, twice).
+
+Standing lesson reconfirmed a third time this session: small-sample tests
+are not predictive of full-scale behavior for Swahili numeral/semantic-
+ambiguity logic. Full-scale validation is mandatory before trusting any
+result in this category, regardless of how clean a smaller sample looks.
+(Refinement: the lesson is about sample SIZE — local deterministic
+simulation IS trustworthy once validated at full scale, now proven twice.)
+
 ## Extraction danger-case investigation — RESOLVED 25 -> 2 (2026-07-17)
 
 Full-205 stress test on the real v15 exposed 25 DANGEROUS_wrong_extract (a HIGH-confidence
