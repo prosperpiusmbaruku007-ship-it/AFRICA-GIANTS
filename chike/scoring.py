@@ -30,7 +30,18 @@ def extract_numbers(text):
         nums.add(m)
     for m in re.findall(r'tzs\s*([\d,]+)', text_lower):
         nums.add(m.replace(',', ''))
-    for m in re.findall(r'\b(\d{3,}(?:,\d+)*)\b', text_lower):
+    # Comma-grouped numbers must be captured as ONE token. The old pattern
+    # r'\b(\d{3,}(?:,\d+)*)\b' anchored on a 3+-digit FIRST group, so any figure
+    # whose leading group is 1-2 digits ('40,000', '1,000,000', '36,000,000')
+    # failed at the start; the engine then re-anchored after a comma and captured
+    # a garbage fragment ('000' / '000000'), dropping the real value. A shared
+    # bare '000' then satisfied number-type scoring for almost any comma-formatted
+    # payroll answer regardless of the actual figures. Fix: match either a proper
+    # thousands-grouped number (1-3 digits + one-or-more exactly-3-digit groups)
+    # OR a bare 3+-digit run. The comma form is the first alternative so it wins
+    # the anchor; no fragment is ever emitted. (3-digit-lead cases like '100,000'
+    # that already worked canonicalize to the same value, so they do not regress.)
+    for m in re.findall(r'\b(\d{1,3}(?:,\d{3})+|\d{3,})\b', text_lower):
         nums.add(m.replace(',', ''))
     for word, val in SWAHILI_NUMBERS.items():
         if re.search(r'\b' + word + r'\b', text_lower):
