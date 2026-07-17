@@ -152,15 +152,21 @@ def _ctype_and_required(entry):
     return None, GENERIC_REQUIRED
 
 
-def _grade(entry, usable):
+def _grade(entry, usable, ctype):
     cat = entry['failure_category']
     if cat == 'compound_question':
-        # A compound question mixes a computation with a separate (often legal) part;
-        # the safe behaviour is to DEFER — clarify rather than silently compute one part
-        # and drop the other. So a usable HIGH-confidence extraction here is NOT "ungraded":
-        # it means a field was populated (e.g. '487' misread from 'GN487A') and is about to
-        # feed the rules engine. That is a DANGEROUS wrong extract, not an exemption.
-        return 'DANGEROUS_wrong_extract' if usable else 'compound'
+        # A compound question mixes a computation with a separate (often legal) part.
+        # A usable extraction is only DANGEROUS when the value is spurious for the part it
+        # belongs to. The discriminator: does a real computation type consume it?
+        #  - ct set (sdl/paye/wcf/nssf) + usable -> the compute sub-question's own numbers
+        #    were extracted correctly (e.g. 11 x 500,000 = 5,500,000). That is correct_extract;
+        #    the untouched second part is a decomposition concern, not a wrong number.
+        #  - ct None (vat/brela/osha/gn487a) + usable -> a payroll slot was filled from a
+        #    non-payroll figure (sales/capital) — spurious. DANGEROUS.
+        #  - not usable -> correctly deferred.
+        if not usable:
+            return 'compound'
+        return 'correct_extract' if ctype else 'DANGEROUS_wrong_extract'
     exp = 'clarify' if cat in SHOULD_CLARIFY else 'extract' if cat in SHOULD_EXTRACT else 'other'
     if exp == 'extract':
         return 'correct_extract' if usable else 'over_clarify'
@@ -200,7 +206,7 @@ def run_stage(stage='sample'):
             reasons = xr.clarification_reasons(required)
         except Exception as ex:
             usable, fields, reasons = False, {}, [f'ERROR: {ex}']
-        grade = _grade(e, usable)
+        grade = _grade(e, usable, ct)
         rows.append({'id': e['id'], 'subdomain': e['subdomain'],
                      'failure_category': e['failure_category'], 'computation_type': ct,
                      'question_sw': e['question_sw'], 'decision': 'EXTRACT' if usable else 'CLARIFY',

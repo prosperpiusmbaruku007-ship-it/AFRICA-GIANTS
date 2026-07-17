@@ -32,6 +32,12 @@ BIG_SCALE = {"elfu": 1000, "laki": 100000, "milioni": 1000000, "bilioni": 100000
 FRACTION = {"nusu": Decimal("0.5"), "robo": Decimal("0.25"), "theluthi": Decimal("1") / 3}
 NUMBER_TOKENS = set(UNITS) | set(BIG_SCALE) | set(FRACTION) | {"mia", "na"}
 
+# RC-2: a monthly payroll/salary below this is not a real TZS figure — the 2026 minimum
+# wage floor is ~175,000/month, so a "payroll" of 2 / 5 / 8 is a miscounted quantity
+# (branches, employees, shares), not money. Used to veto small-int-as-money AND to stop a
+# spelled small count ("wawili" = 2) from masking a missing antecedent.
+MIN_PLAUSIBLE_AMOUNT = Decimal(10000)
+
 
 def _value_small(tokens):
     """Value of a number phrase with no leading big-scale: mia/tens/units/fraction."""
@@ -183,6 +189,10 @@ _WRONG_BASE = [
     r"\bmauzo\b", r"\brevenue\b", r"\bturnover\b", r"\bfaida\b", r"\bmtaji\b",
     r"\btin\b", r"namba ya simu", r"\bphone\b", r"\befd\b", r"namba ya mashine",
     r"tumesajiliwa brela", r"miaka \d+", r"\bcompany ina mtaji\b",
+    # RC-1b: phrasings that slipped through the full-205 run — sales given as a verb
+    # ("tunauza"/"kuuza"), a VAT-threshold figure, and a share count/holding.
+    r"\btunauza\b", r"\bkuuza\b", r"\btunanunua\b", r"kizingiti cha vat", r"\bhisa\b",
+    r"soko la hisa",
 ]
 _ALLOWANCE = [
     r"\bposho\b", r"\bbonasi\b", r"\ballowance\b", r"\bgross\b", r"\bnet\b",
@@ -191,6 +201,17 @@ _ALLOWANCE = [
     # VAT-inclusive vs exclusive is the same gross/net base ambiguity for a money
     # figure — "is this 180M with or without VAT?" must be clarified, not assumed.
     r"jumuisha vat", r"vat au la", r"pamoja na vat", r"bila vat", r"ikiwa na vat",
+    # RC-3: net/take-home in noun form ("baada ya makato", "mkononi"), and a per-diem
+    # figure explicitly flagged as NOT salary ("siyo mshahara", "malazi na chakula").
+    r"baada ya makato", r"\bmkononi\b", r"siyo mshahara", r"\bsio mshahara\b",
+    r"si mshahara", r"\bmalazi\b", r"posho ya safari",
+]
+
+# RC-3: a figure quoted in a foreign currency is not a TZS payroll base — it needs
+# conversion before use, so the extractor must clarify rather than read "dola 300" as 300.
+_CURRENCY = [
+    r"\bdola\b", r"\busd\b", r"\bdollar", r"\$", r"\beuro\b", r"\bpauni\b",
+    r"\bpound", r"\bksh\b", r"shilingi za kenya", r"\bgbp\b",
 ]
 
 
@@ -207,17 +228,32 @@ def detect_approximation(text):
 
 
 def detect_missing_antecedent(text):
-    """Antecedent pronoun present AND no explicit number to anchor on."""
+    """Antecedent pronoun present AND no explicit number to anchor on.
+
+    RC-2: 'no number' means no PLAUSIBLE amount — a spelled small count like 'wawili'
+    (2) in "wale wawili waliobaki" is a pronoun-count, not a figure, and must not mask
+    the missing antecedent (extract_153)."""
     text_l = text.lower()
     if not _any(_ANTECEDENT, text_l):
         return False
-    return not parse_amounts(text) and parse_count(text) is None
+    plausible = [a for a in parse_amounts(text) if a >= MIN_PLAUSIBLE_AMOUNT]
+    return not plausible and parse_count(text) is None
+
+
+def detect_foreign_currency(text):
+    """A figure quoted in a non-TZS currency (dola/USD/euro/...) — needs conversion."""
+    return _any(_CURRENCY, text.lower())
 
 
 def detect_wrong_base(text, computation_type):
-    """A payroll-based levy (sdl/nssf/wcf/paye) but the figure offered is a
-    non-payroll base (sales/turnover/capital/registration id)."""
-    if computation_type not in ("sdl", "nssf", "wcf", "paye"):
+    """The slot wants a PAYROLL figure but the number offered is a non-payroll base
+    (sales/turnover/capital/threshold/registration id/share count).
+
+    RC-1a: this must run for the payroll levies AND for the generic payroll slot
+    (computation_type is None — the path vat/brela/osha/gn487a questions take, exactly
+    where sales/capital figures get misread as payroll). It is NOT run for a genuinely
+    turnover-based computation type (e.g. 'vat'), where sales IS the right base."""
+    if computation_type not in ("sdl", "nssf", "wcf", "paye", None):
         return False
     return _any(_WRONG_BASE, text.lower())
 

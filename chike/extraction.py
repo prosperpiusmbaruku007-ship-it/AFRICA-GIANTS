@@ -224,6 +224,7 @@ class SlotExtractor:
         antecedent = swn.detect_missing_antecedent(text)
         wrong_base = swn.detect_wrong_base(text, computation_type)
         allowance = swn.detect_allowance_ambiguity(text)
+        foreign_currency = swn.detect_foreign_currency(text)
         divisor, period = swn.detect_period(text)
 
         per_person = bool(_PER_PERSON.search(tl))
@@ -244,7 +245,7 @@ class SlotExtractor:
         amount_field = next((f for f in required if f in _AMOUNT_FIELDS), None)
         if amount_field:
             a = self._amount_field(amount_field, amounts, count, per_person, aggregate,
-                                   divisor, period, wrong_base, allowance)
+                                   divisor, period, wrong_base, allowance, foreign_currency)
             if a is not None:
                 det[amount_field] = a
         if any(f in _COUNT_FIELDS for f in required):
@@ -255,7 +256,7 @@ class SlotExtractor:
 
     @staticmethod
     def _amount_field(field, amounts, count, per_person, aggregate,
-                      divisor, period, wrong_base, allowance):
+                      divisor, period, wrong_base, allowance, foreign_currency=False):
         """Return (value, Confidence, reason) for an amount field, or None if the parser
         found no figure (leave it to the model fallback). LOW result == clarify."""
         if not amounts:
@@ -286,6 +287,11 @@ class SlotExtractor:
             return (amt, Confidence.LOW, "wrong_base (non-payroll figure)")
         if allowance:
             return (amt, Confidence.LOW, "allowance/gross-net/VAT base ambiguous")
+        if foreign_currency:                          # RC-3: not TZS -> needs conversion
+            return (amt, Confidence.LOW, "amount in foreign currency (not TZS) — needs conversion")
+        if amt < swn.MIN_PLAUSIBLE_AMOUNT:            # RC-2: too small to be a payroll
+            return (amt, Confidence.LOW,
+                    f"implausibly small for a payroll ({amt}) — likely a count/quantity")
         return (amt, Confidence.HIGH, reason)
 
     @staticmethod

@@ -1,6 +1,145 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-16
+Last updated: 2026-07-17
+
+## STANDING LESSON — validate Swahili semantic/numeral tests at FULL SCALE (2026-07-17)
+
+Any test in this project that hinges on Swahili semantic or numeral ambiguity MUST be
+validated on the full set before its result is trusted, no matter how clean a small
+sample looks. A clean sample is NOT evidence; only the full run is.
+
+This has now happened THREE times this session, same shape every time:
+1. mDeBERTa NLI hybrid scorer — clean on a 14-example proof, rejected at 190-scale.
+2. xlm-roberta-large-xnli — same pattern (small proof convincing, full-scale failure).
+3. Slot extraction (chike/extraction.py) — 18-sample dry run showed correct_extract=6 /
+   DANGEROUS_wrong_extract=0; the full 205 exposed 25 DANGEROUS (12.2%), concentrated in
+   wrong_calculation_number (10/22) and compound_question (9/21) — the categories where a
+   number is PRESENT but belongs to something other than the field being extracted
+   (a threshold, sales/revenue/capital figure, share/branch count, a different sub-question).
+
+Why samples mislead here: these failures are LONG-TAIL and semantic. An 18-question sample
+picks the obvious shapes; the dangerous shapes (sales-figure-as-payroll, USD-as-TZS,
+share-count-as-money) are individually rare and only surface in volume. The generic
+(computation_type=None) path in particular had NO wrong-base guard at all — invisible until
+the full set hit vat/brela/osha/gn487a questions carrying non-payroll numbers.
+
+Rule going forward: no extraction/scorer change is "confirmed" on a sample. Sample = smoke
+test only. The full-scale run is the gate.
+
+## Extraction danger-case investigation — RESOLVED 25 -> 2 (2026-07-17)
+
+Full-205 stress test on the real v15 exposed 25 DANGEROUS_wrong_extract (a HIGH-confidence
+wrong number about to feed the rules engine). All 25 shown verbatim and categorized by root
+cause. Fixes (one coherent pass):
+- Grader false positives (6): compound danger is now keyed on whether a real computation
+  type consumes the value, not mere HIGH confidence in a compound context.
+- Dataset mislabel (1): extract_145 relabeled vague_quantity -> swahili_number_words (audit
+  trail preserved in _review_original_category_2 / _review_relabel_2026_07_17).
+- RC-1 wrong-base guard (9+1): detect_wrong_base now runs on the generic ct=None path (was
+  gated to compute types, missing vat/brela/osha/gn487a entirely) + verb-form ("tunauza")
+  and threshold ("kizingiti cha vat") and share ("hisa") patterns. Also caught extract_125.
+- RC-2 plausibility floor (3): a monthly payroll/salary < MIN_PLAUSIBLE_AMOUNT (10,000 TZS)
+  is a miscounted quantity (branches/employees/shares), vetoed to LOW. Also makes
+  detect_missing_antecedent key on PLAUSIBLE amounts so a spelled count ("wawili"=2) no
+  longer masks a missing antecedent (extract_153).
+- RC-3 currency/net/per-diem (3): foreign-currency figures ("dola 300") flagged for
+  conversion; net/take-home noun forms ("baada ya makato","mkononi") and explicit
+  non-salary per-diem ("siyo mshahara","malazi na chakula") added to the allowance veto.
+
+Full local deterministic 205 run: DANGEROUS 25 -> 2. 115/115 tests pass. No false wrong-base
+or floor vetoes on genuine payroll questions (every affected SHOULD_EXTRACT case is a real
+sales/capital/count-only question, correctly not extracted as payroll).
+
+### RC-5 — TRACKED FOLLOW-UP (NOT fixed in this pass): routing/scope, not numeral parsing
+extract_078 ("laki nne kila mmoja ... tunahitaji kusasisha BRELA?") and extract_205
+("Payroll yetu milioni tano ... nisajili VAT?") are the last 2 DANGEROUS. The extracted
+figure is GENUINELY CORRECT (400,000 / 5,000,000) — the problem is the question is a
+BRELA/VAT yes/no that should never be routed to a payroll computation at all. This is a
+classifier/route() scope fix, NOT an extraction-layer bug; forcing it into the numeral
+parser would make the extractor second-guess valid figures. Fix at the routing layer in a
+separate pass (broaden the out-of-compute / fact-intent detection so a payroll figure inside
+a non-payroll question doesn't trigger the compute path).
+
+
+
+## chike/extraction.py real logic built + Kaggle regression staged (2026-07-16) — UNCOMMITTED, pending founder review
+
+Replaced the interface-only slot-extraction stub with real logic, tested against the
+human-verified 205-example stress test. NOT committed — waiting on the founder's review
+of the Kaggle results (per instruction).
+
+Architecture — two layers, deliberate trust split:
+- MODEL layer (chike/extraction.py SlotExtractor): the ModelBackend does free-text role
+  assignment (which number is payroll vs headcount vs salary) — the model's real strength.
+- DETERMINISTIC layer (chike/swahili_numbers.py, NEW, 15/15 local tests): pure unit-tested
+  Python owns confidence + clarification, because this session proved even a 32B judge
+  misreads Swahili compound numerals (laki/robo/mia). It can only DOWNGRADE a field to LOW
+  (-> clarify) or apply a deterministic period conversion; never invents a value. Explicit
+  detectors: vague_quantity, approximation(casual_slang), missing_antecedent, wrong_base
+  (non-payroll figure for a payroll levy), allowance/gross-net, period(annual/quarter/half
+  -> /12,/3,/6; week/day -> clarify), plus a numeral cross-check (downgrade if the model's
+  value disagrees with the deterministic parse of a single-figure question).
+- Failure-category mapping proven locally (FakeBackend, no GPU): all vague/slang/wrong_base/
+  allowance -> correct_clarify; all swahili_number_words/period_conversion/aggregate/
+  non_uniform -> correct_extract; 0 DANGEROUS (confident-but-wrong) mis-extractions.
+
+Orchestrator wiring: _answer_compute now passes computation_type into extract(); no other
+change. Existing 8 extraction tests still green; existing fact path untouched (route()
+unchanged), so the 190 fact-path questions are byte-identical to the prior baseline.
+
+ROUTING FINDING (surfaced during the build): orchestrator.route() only sends keyword+DIGIT
+sub-questions to compute, so word-form-number ("milioni mia mbili na hamsini") and no-digit
+vague questions bypass extraction entirely. The Step-4 stress test therefore calls
+SlotExtractor directly (isolating extraction from routing). Broadening route() to catch
+word-form compute intent is a separate follow-up (would move questions between the fact/
+compute buckets, so deferred to keep the 190 fact-path comparison clean).
+
+Kaggle scripts staged (prepare-only; founder runs on GPU, Claude never runs them locally):
+- kaggle/extraction_stress_test.py — real v15 model vs the 205 reviewed entries, sample(18)
+  then full(205); grades correct_extract / correct_clarify / DANGEROUS_wrong_extract /
+  over_clarify per failure_category; persists to adapter-v15 HF repo.
+- kaggle/eval_orchestrator_combined.py — 200 gate + 50 staged additions = 250 through the
+  real orchestrator; reports (A) fact-path 190 UNCHANGED check, (B) first real score on the
+  50 staged additions, (C) first real score on the ~10 compute-type questions now through
+  real extraction + rules engine. Raw + reliable-denominator (scorer_reliability) scores.
+
+DATA PREREQ (both scripts): data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl and
+eval/accuracy_gate/eval_questions_002_additions.jsonl are gitignored/untracked -> NOT on
+GitHub, so the founder must upload both to the HF dataset repo (prospAprospA007/
+africa-giants-dataset) before running (loaders check local clone -> /kaggle/input -> HF).
+
+## qwen3-32b judge non-determinism finding (2026-07-16)
+
+During slot-extraction dataset review, extract_120 and extract_011 both flipped
+verdicts between a 13-entry sample run and the full 205-entry run, despite
+temperature=0 configuration. This confirms qwen3-32b via OpenRouter is not fully
+reproducible even at supposedly deterministic settings — likely provider-side
+routing or reasoning-token variance. Any future single-pass judge verdict on a
+borderline case should not be treated as final; consider a second confirmation
+pass for anything near a decision boundary.
+
+Also confirmed: qwen3-32b makes real errors on Swahili numeral parsing
+specifically (laki/robo/milioni compound number words) — 7 of 22 flags in this
+review were the judge misreading the entry's own correct figures, not genuine
+dataset defects. This model is usable as a general semantic judge (proven
+earlier in the scorer-adjudication work) but should not be fully trusted, without
+a second check, on tasks specifically requiring correct Swahili numeral
+comprehension.
+
+Context/artifacts: harness kaggle/slot_extraction_review.py (self-contained,
+OpenRouter qwen/qwen3-32b, additive-only review of the 205-entry slot-extraction
+stress test against locked_facts.json on 3 axes: number fidelity, category fit,
+self-consistency). Full run: 205 entries, $0.0866, 426s, 0 parse/API errors,
+183 correct / 22 needs_revision. After manual triage the 7 confirmed judge-error
+false-positives were corrected to `correct` (marked `_review_correction:
+judge_error_confirmed` with the specific misreading recorded in
+`_review_judge_original_reason`), leaving 190 correct / 15 needs_revision.
+The 15-item human queue lives in data/reviewed/human_review_priority.jsonl
+(4 factual_error defects: extract_064 OSHA-safety-officer-threshold-unconfirmed,
+extract_164 SDL-10-threshold, extract_052 WCF-allowance-unconfirmed, extract_194
+thin-spec; 10 category_dispute; 1 borderline_substantive extract_011). All files
+stay in gitignored data/reviewed/, uncommitted, NOT merged into the extraction
+build — that still waits on the human pass.
 
 ## Hybrid-scorer investigation CONCLUDED — both NLI models rejected, qwen3-32b judge is a genuine improvement (2026-07-16)
 
