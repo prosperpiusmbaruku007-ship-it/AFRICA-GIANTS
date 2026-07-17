@@ -2,6 +2,97 @@
 
 Last updated: 2026-07-17
 
+## v16 compute-path — first real end-to-end validation (corrected analysis)
+
+Combined regression (commit 8bf3c85, real v15 model on Kaggle) — independently
+re-verified against the actual persisted gate_orchestrator_combined.json,
+gate_001_results.json, and gate_orchestrator_subset.json, not accepted from
+a first-pass summary.
+
+### Bucket composition (precisely defined)
+- Bucket A (fact_path_190): raw bucket is 190 non-compute gate_001 questions;
+  stored n=181 is the in-corpus scored subset after _score() drops 9
+  out_of_corpus-subdomain rows (eval_192-eval_200) — both numbers are correct,
+  they describe different things (raw bucket size vs. scored denominator).
+- Bucket B (staged_50): all 50 staged additions, including the 10 compute-routed
+  ones — there is no non-compute/compute split within B.
+- Bucket C (compute_type): 20 compute-routed questions from either source
+  (10 from the gate, 10 from the additions), n=19 after dropping 1 OOC-labeled
+  row (eval_191 — the known PAYE-800K question mislabeled out_of_corpus in the
+  gate data, documented separately in the v9 analysis).
+- B and C overlap by exactly the 10 compute-routed additions (eval_241-250).
+  A overlaps with neither.
+
+### Fact-path (Bucket A) parity — CONFIRMED, genuinely strong
+Compared against the prior orchestrator subset run on the same 190 IDs:
+100% ID overlap, 0 differences in generated text, 0 differences in raw
+generation — byte-identical. Only 2 pass-verdict flips (eval_010, eval_165),
+both explained by an intentional scorer improvement (BUG-3 multiplier
+composition fix) already in place before this run, not a behavior change.
+The extraction/compute-path work genuinely did not touch the fact path.
+
+### Scorer leniency for number-type questions — CONFIRMED, worse than first flagged
+chike/scoring.py's number-type pass condition requires only ONE expected
+figure to appear anywhere in the generated text; extra wrong figures never
+cause a fail. Two compounding problems found on independent inspection:
+1. Reference answers embed input figures (e.g. the salary used in the
+   question) alongside the actual answer figure, so a model that only
+   echoes the question's input numbers can pass without stating the
+   correct output at all — demonstrated directly.
+2. NEW FINDING: extract_numbers() on "TZS 40,000"-style text returns a
+   garbage '000' token (the 3+-digit regex can't span the comma), and
+   this '000' token is present in nearly every payroll-related correct
+   answer AND generated answer, meaning a shared '000' alone can satisfy
+   the pass condition regardless of the actual figures involved.
+
+Concrete impact on this run: of 15 genuine-compute pass=True results in
+Bucket C, 9 are already flagged scorer_reliability=False (the existing
+reliability layer catches most leniency-driven false passes) — but the
+combined regression script never computes or reports a reliable-subset
+headline for Bucket C the way it does for A and B, so the published
+compute numbers (raw 12/19=63.2%, genuine 11/15=73.3%) are the
+leniency-inflated ones. The reliable-subset compute figure is only
+4/6=66.7% — real, but on too small a denominator to be meaningful yet.
+
+eval_247 specifically confirmed as a genuine per-employee-vs-total-payroll
+misinterpretation (multiplied a stated TOTAL payroll by headcount, same
+shape as eval_249) — correctly scored as failing, but only by luck of the
+scorer (the correct answer's only figure is bare '0', which the leniency
+bug doesn't help here). This case should arguably be flagged
+scorer_reliability=False as well, since threshold/"TZS 0" answers are
+exactly where number-overlap scoring is unsafe in either direction.
+
+### Corrections to initial (pre-verification) characterization
+- eval_191 does NOT explain Bucket A's 190->181 drop, as first stated —
+  that drop is from 9 different rows (eval_192-200). eval_191 is itself
+  compute-routed and lives in Bucket C, contributing to C's 20->19 drop.
+- The 190-vs-181 figures are not an internal inconsistency in the data —
+  both are correct, describing the raw bucket vs. the scored subset.
+
+### Recommended next steps (not yet done)
+1. Add a compute_type_reliable headline to eval_orchestrator_combined.py,
+   matching the pattern already used for Buckets A and B, so the compute
+   path's true (reliable-subset) performance is visible rather than
+   burying it in per-question flags.
+2. Fix the '000'-garbage-token bug in extract_numbers() — this affects
+   scoring project-wide, not just Bucket C, since any number-type question
+   with a comma-formatted TZS amount is at risk.
+3. Consider flagging threshold/"answer is zero" reference answers as
+   scorer_reliability=False by default, since number-overlap scoring
+   cannot meaningfully verify a "does not apply" conclusion.
+
+### Net assessment
+Fact-path parity is real and strong — the compute-path work is correctly
+isolated and did not disturb it. The compute-path itself is now producing
+real, deterministic, rules-engine-backed arithmetic for the first time in
+this project's history, but its true accuracy has not yet been measured
+on a trustworthy denominator — the reliable-subset sample (n=6) is too
+small to draw a conclusion from yet. This is not a regression or a failed
+milestone; it is an honest, evidence-based statement of exactly how far
+validation has actually gotten, consistent with this project's standing
+practice of not trusting a headline number until its scoring methodology
+has itself been verified.
+
 ## STANDING LESSON — validate Swahili semantic/numeral tests at FULL SCALE (2026-07-17)
 
 Any test in this project that hinges on Swahili semantic or numeral ambiguity MUST be
