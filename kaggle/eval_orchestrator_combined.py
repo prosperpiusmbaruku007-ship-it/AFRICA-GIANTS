@@ -274,6 +274,14 @@ out = {'mode': 'combined_orchestrator_regression', 'commit': _sha,
            'compute_type_routing_miss': dict(zip(('pass', 'n', 'acc'), _score(_miss))),
            'fact_path_190_reliable': dict(zip(('pass', 'n', 'acc'), _score(A, True))),
            'staged_50_reliable': dict(zip(('pass', 'n', 'acc'), _score(B, True))),
+           # Reliable-subset for the compute bucket, same pattern as A/B above. The raw
+           # compute_type/compute_type_genuine numbers ride on number-type scorer leniency
+           # (the reference answers embed input figures + rates), so the trustworthy read
+           # is this scorer_reliability-filtered subset. Both are kept: raw shows what the
+           # scorer currently reports, reliable shows the verifiable subset. compute_type_
+           # genuine_reliable also excludes the route()-keyword-heuristic misroutes.
+           'compute_type_reliable': dict(zip(('pass', 'n', 'acc'), _score(C, True))),
+           'compute_type_genuine_reliable': dict(zip(('pass', 'n', 'acc'), _score(_genuine, True))),
        },
        'known_routing_miss_ids': sorted(KNOWN_ROUTING_MISS),
        'by_subdomain': {k: dict(v) for k, v in by_sd.items()},
