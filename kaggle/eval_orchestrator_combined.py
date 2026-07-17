@@ -5,18 +5,25 @@ Extends kaggle/eval_orchestrator.py (which tested the fact-path-only 190 subset 
 the 10 compute-routed questions) to a full combined run:
 
   200 main gate (eval_questions_001)  +  50 staged additions (eval_questions_002_additions)
-  = 250 questions, ALL run through the real chike/orchestrator.py end-to-end, with the 10
-  compute-type questions now routed through the REAL slot extraction (chike/extraction.py +
-  chike/swahili_numbers.py) and the rules engine FOR THE FIRST TIME.
+  + 150 adversarial additions (eval_questions_003)  =  400 questions, ALL run through the
+  real chike/orchestrator.py end-to-end, with every compute-routed question now going through
+  the REAL slot extraction (chike/extraction.py + chike/swahili_numbers.py) and the rules
+  engine. The 150 new questions (eval_251-400) deliberately stress every architecture sub-part
+  (slot-extraction attacks, classifier/OOC edge cases, decomposer stress, retrieval near-misses,
+  rules-engine threshold boundaries, and scorer-leak probes for the already-fixed BUG 7 /
+  '000'-token / yes_no-polarity / overlap-leniency issues).
 
-Reports three separate scores (so the effect of the extraction change is isolated):
+Reports four separate scores (so the effect of the extraction change is isolated):
   A. FACT-PATH 190  — must be UNCHANGED vs the prior baseline (extraction only touches the
      compute path + route() is unchanged, so these answers are byte-identical; this run
      re-confirms empirically, not by assertion).
   B. STAGED 50      — first real score on eval_questions_002_additions (held back earlier
      until the scorer was trustworthy; scorer bugs since fixed + scorer_reliability in place).
-  C. COMPUTE ~10    — first real score on the compute-routed questions now that extraction is
-     built (previously all excluded / would have returned <CLARIFICATION_NEEDED>).
+  C. COMPUTE        — real score on ALL compute-routed questions from every source, now that
+     extraction is built (previously all excluded / would have returned <CLARIFICATION_NEEDED>).
+     With the 150 new questions this is the first meaningfully-sized compute-path sample.
+  D. ADVERSARIAL 150 — first real score on eval_questions_003 (eval_251-400), the deliberate
+     per-sub-part stress set.
 
 Reliable-denominator scoring (chike.scoring.scorer_reliability) is reported alongside raw,
 matching the honest reduced-denominator method adopted 2026-07-14 (PROGRESS.md).
@@ -28,7 +35,8 @@ HOW TO RUN (Kaggle notebook, GPU ON):
 
 PREREQS:
   - Kaggle GPU ON; Kaggle secret AFRICA_GIANTS (HF token).
-  - eval_questions_002_additions.jsonl is UNMERGED + not on GitHub. Loader checks, in order:
+  - eval_questions_002_additions.jsonl AND eval_questions_003.jsonl are UNMERGED + not on
+    GitHub. Loader checks, for each, in order:
       (1) local clone eval/accuracy_gate/, (2) /kaggle/input/**, (3) HF dataset repo.
 """
 import os, sys, json, glob, time, subprocess
@@ -41,6 +49,7 @@ REPO = 'prosperpiusmbaruku007-ship-it/AFRICA-GIANTS'
 RAW = f'https://raw.githubusercontent.com/{REPO}/main'
 DATASET_REPO = 'prospAprospA007/africa-giants-dataset'
 ADDITIONS_FILE = 'eval_questions_002_additions.jsonl'
+ADDITIONS3_FILE = 'eval_questions_003.jsonl'
 
 # ── AUTH ────────────────────────────────────────────────────────────────────────
 try:
@@ -98,25 +107,33 @@ for q in gate:
     q['_source'] = 'gate_001'
 
 
-def _load_additions():
-    for p in [os.path.join(_CLONE, 'eval/accuracy_gate', ADDITIONS_FILE),
-              *glob.glob(f'/kaggle/input/**/{ADDITIONS_FILE}', recursive=True)]:
+def _load_unmerged(fname):
+    """Load an unmerged/gitignored gate file: local clone -> /kaggle/input -> HF dataset repo."""
+    for p in [os.path.join(_CLONE, 'eval/accuracy_gate', fname),
+              *glob.glob(f'/kaggle/input/**/{fname}', recursive=True)]:
         if os.path.exists(p):
-            print(f'[data] additions from {p}')
+            print(f'[data] {fname} from {p}')
             return [json.loads(l) for l in open(p, encoding='utf-8') if l.strip()]
-    p = hf_hub_download(repo_id=DATASET_REPO, filename=ADDITIONS_FILE,
+    p = hf_hub_download(repo_id=DATASET_REPO, filename=fname,
                         repo_type='dataset', token=hf_token)
-    print(f'[data] additions from HF {DATASET_REPO}/{ADDITIONS_FILE}')
+    print(f'[data] {fname} from HF {DATASET_REPO}/{fname}')
     return [json.loads(l) for l in open(p, encoding='utf-8') if l.strip()]
 
 
-additions = _load_additions()
+additions = _load_unmerged(ADDITIONS_FILE)
 assert len(additions) == 50, len(additions)
 for q in additions:
     q['_source'] = 'additions_002'
     q.setdefault('correct_answer_sw', q.get('correct_answer_sw', ''))
-ALL = gate + additions
-print(f'[data] {len(ALL)} questions total (200 gate + 50 additions)')
+
+additions3 = _load_unmerged(ADDITIONS3_FILE)
+assert len(additions3) == 150, len(additions3)
+for q in additions3:
+    q['_source'] = 'additions_003'
+    q.setdefault('correct_answer_sw', q.get('correct_answer_sw', ''))
+
+ALL = gate + additions + additions3
+print(f'[data] {len(ALL)} questions total (200 gate + 50 additions + 150 adversarial)')
 
 _rag_npy = hf_hub_download(repo_id=DATASET_REPO, filename='rag_embeddings.npy',
                            repo_type='dataset', token=hf_token)
@@ -209,7 +226,12 @@ for i, q in enumerate(ALL):
                                      if q['id'] in KNOWN_ROUTING_MISS else ''),
                     'question_sw': q['question_sw'], 'correct_answer_sw': q.get('correct_answer_sw', ''),
                     'generated': gen, 'raw_generated': raw, 'clarified': clarified,
-                    'pass': passed, 'reliable': reliable, 'reliable_reason': why})
+                    'pass': passed, 'reliable': reliable, 'reliable_reason': why,
+                    # authoring intent for the 150 adversarial questions (eval_003); empty for
+                    # gate_001/additions_002. Surfaced in the compute detail so a deliberate
+                    # classifier/OOC/decomposer probe that misroutes to compute is not misread
+                    # as an extraction defect during review.
+                    'target': q.get('_target', ''), 'why_hard': q.get('_why_hard', '')})
     if (i + 1) % 25 == 0 or i == 0:
         print(f'  [{i+1}/{len(ALL)}] {time.time()-t0:.0f}s')
 
@@ -226,14 +248,16 @@ def _score(rows, reliable_only=False):
 
 A = [r for r in results if r['source'] == 'gate_001' and not r['compute']]     # fact-path 190
 B = [r for r in results if r['source'] == 'additions_002']                     # staged 50
-C = [r for r in results if r['compute']]                                       # compute-type
+C = [r for r in results if r['compute']]                                       # compute-type (any source)
+D = [r for r in results if r['source'] == 'additions_003']                     # adversarial 150
 
 print('\n' + '=' * 60)
 print('COMBINED ORCHESTRATOR REGRESSION  (commit %s)' % _sha)
 print('=' * 60)
 for name, bucket in [('A. FACT-PATH (gate_001, non-compute)', A),
                      ('B. STAGED ADDITIONS (eval_002, 50)', B),
-                     ('C. COMPUTE-TYPE (real extraction, first run)', C)]:
+                     ('C. COMPUTE-TYPE (real extraction, all sources)', C),
+                     ('D. ADVERSARIAL ADDITIONS (eval_003, 150)', D)]:
     praw, nraw, accraw = _score(bucket, reliable_only=False)
     prel, nrel, accrel = _score(bucket, reliable_only=True)
     clar = sum(r['clarified'] for r in bucket)
@@ -250,7 +274,8 @@ print(f'\n  COMPUTE-TYPE per-question ({len(_genuine)} genuine-compute, '
       f'{len(_miss)} routing-miss labeled separately):')
 for r in _genuine:
     print(f"    [GENUINE COMPUTE] {r['id']} [{r['subdomain']}/{r['answer_type']}] "
-          f"pass={r['pass']} clarified={r['clarified']}")
+          f"pass={r['pass']} clarified={r['clarified']}"
+          + (f"  intent={r['target']}" if r['target'] else ''))
     print(f"       Q: {r['question_sw'][:70]}")
     print(f"       gen: {r['generated'][:90].replace(chr(10),' ')}")
 for r in _miss:
@@ -272,8 +297,10 @@ out = {'mode': 'combined_orchestrator_regression', 'commit': _sha,
            'compute_type': dict(zip(('pass', 'n', 'acc'), _score(C))),
            'compute_type_genuine': dict(zip(('pass', 'n', 'acc'), _score(_genuine))),
            'compute_type_routing_miss': dict(zip(('pass', 'n', 'acc'), _score(_miss))),
+           'adversarial_150': dict(zip(('pass', 'n', 'acc'), _score(D))),
            'fact_path_190_reliable': dict(zip(('pass', 'n', 'acc'), _score(A, True))),
            'staged_50_reliable': dict(zip(('pass', 'n', 'acc'), _score(B, True))),
+           'adversarial_150_reliable': dict(zip(('pass', 'n', 'acc'), _score(D, True))),
            # Reliable-subset for the compute bucket, same pattern as A/B above. The raw
            # compute_type/compute_type_genuine numbers ride on number-type scorer leniency
            # (the reference answers embed input figures + rates), so the trustworthy read
