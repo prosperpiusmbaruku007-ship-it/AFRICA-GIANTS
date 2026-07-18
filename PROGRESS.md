@@ -77,6 +77,20 @@ once this is fixed and re-run.
   project has had** — every prior score was measured on the mismatched format and is
   superseded once this lands. → **DONE 2026-07-19 (see FINAL summary below).**
 
+## eval_183 RECLASSIFIED — locked_facts coverage gap, NOT a faithfulness defect (2026-07-19)
+
+While designing the eval_213 faithfulness probe, local retrieval on eval_183's phrasing
+("Mwajiri asiyesajili OSHA anaweza kufungiwa biashara yake?") showed **no fact stating OSHA
+lacks direct business-closure authority exists in the 210-fact index** — the closest facts
+are the OSHA penalty list (fine TZS 1–5M / imprisonment) and the GN487A closure distinction.
+So the model was NOT overriding a retrieved fact; it filled a genuine coverage gap with a
+wrong assumption (asserting a stop-work power). This is the **same class as eval_155** (a
+locked_facts clarity/coverage issue), NOT a model faithfulness defect. **Fix target: add an
+'OSHA has no direct business-closure authority; enforcement is fine/imprisonment' fact to
+locked_facts.json** (then the R15 RAG-regen cycle) — a fact-base addition, not a prompt or
+generation change. Batched with eval_155 for a dedicated locked_facts pass (deferred, per
+prioritization). This moves eval_183 OFF the faithfulness track it was tentatively on.
+
 ## ✅ EOS CYCLE CLOSED — corrected 400-run re-baseline is IN (2026-07-19)
 
 The founder ran the full 400-question combined regression on the corrected format (commit
