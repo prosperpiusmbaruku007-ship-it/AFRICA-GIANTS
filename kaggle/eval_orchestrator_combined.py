@@ -82,7 +82,8 @@ KNOWN_ROUTING_MISS = {'eval_099', 'eval_100', 'eval_102', 'eval_127'}
 from chike.orchestrator import Orchestrator, CLARIFICATION_PENDING        # noqa: E402
 from chike.model_abstraction import ModelBackend                          # noqa: E402
 from chike.retrieval import Retriever                                     # noqa: E402
-from chike.scoring import score_question, scorer_reliability             # noqa: E402
+from chike.scoring import (score_question, scorer_reliability,           # noqa: E402
+                           prohibition_polarity_review)
 
 # ── CONFIG ───────────────────────────────────────────────────────────────────────
 _cb = str(int(time.time() * 1000))
@@ -283,6 +284,35 @@ for r in _miss:
           f"[{r['subdomain']}/{r['answer_type']}] pass={r['pass']} clarified={r['clarified']}")
     print(f"       Q: {r['question_sw'][:70]}")
 
+# ── HIGH-STAKES PROHIBITION POLARITY REVIEW (always reported; reliability-independent) ──
+# Deterministic safety section: every hard-prohibition / absolute-obligation yes-no answer
+# is polarity-checked against its reference answer REGARDLESS of scorer_reliability, so a
+# dangerous inversion (e.g. eval_317 salon, eval_332 wholesale) can never again hide inside
+# the 'unverifiable' bucket. Reporting-only: this touches no bucket score or denominator.
+prohibition_review = []
+for r in results:
+    rev = prohibition_polarity_review(
+        {'id': r['id'], 'answer_type': r['answer_type'], 'subdomain': r['subdomain'],
+         'question_sw': r['question_sw'], 'correct_answer_sw': r['correct_answer_sw']},
+        r['generated'])
+    if rev is not None:
+        rev['reliable'] = r['reliable']       # show whether the main scorer excluded it
+        rev['pass'] = r['pass']
+        prohibition_review.append(rev)
+
+_pr_inv = [x for x in prohibition_review if x['candidate_inversion']]
+print('\n' + '=' * 60)
+print('HIGH-STAKES PROHIBITION POLARITY REVIEW (reliability-independent)')
+print('=' * 60)
+print(f'  high-stakes prohibition/absolute yes-no questions reviewed: {len(prohibition_review)}')
+print(f'  CANDIDATE INVERSIONS (model polarity disagrees with reference): {len(_pr_inv)}')
+_pr_inv_hidden = sum(1 for x in _pr_inv if not x['reliable'])
+print(f'    of which the main scorer marked reliable=False (would otherwise be HIDDEN): '
+      f'{_pr_inv_hidden}')
+for x in _pr_inv:
+    print(f"    *** {x['id']} [{x['reason']}] gold={x['gold_polarity']} "
+          f"model={x['model_polarity']} reliable={x['reliable']} pass={x['pass']}")
+
 by_sd = defaultdict(lambda: {'pass': 0, 'total': 0})
 for r in results:
     if r['subdomain'] != 'out_of_corpus':
@@ -311,6 +341,10 @@ out = {'mode': 'combined_orchestrator_regression', 'commit': _sha,
            'compute_type_genuine_reliable': dict(zip(('pass', 'n', 'acc'), _score(_genuine, True))),
        },
        'known_routing_miss_ids': sorted(KNOWN_ROUTING_MISS),
+       # Reporting-only safety section — reliability-independent polarity check on every
+       # high-stakes prohibition/absolute yes-no. Does not affect any bucket score.
+       'prohibition_polarity_review': prohibition_review,
+       'prohibition_candidate_inversions': [x['id'] for x in _pr_inv],
        'by_subdomain': {k: dict(v) for k, v in by_sd.items()},
        'results': results}
 path = '/kaggle/working/gate_orchestrator_combined.json'

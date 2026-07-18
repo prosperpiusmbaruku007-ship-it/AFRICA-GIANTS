@@ -271,3 +271,104 @@ def scorer_reliability(q, generated):
     if atype == 'out_of_corpus_refusal':
         return True, ''
     return False, 'unknown_answer_type'
+
+
+# ── HIGH-STAKES PROHIBITION SAFETY FLAG (reporting-only; never touches denominators) ──
+# A hard-prohibition / absolute-obligation yes-no answer must NEVER be allowed to hide a
+# polarity inversion inside the scorer_reliability 'unverifiable' bucket. In the 400-run,
+# eval_317 (salon) and eval_332 (wholesale) were BOTH excluded as
+# yes_no_polarity_unverifiable, so the reliable-subset headline was blind to two dangerous
+# inversions (a non-citizen told a prohibited activity is permitted). These questions are
+# tagged deterministically from the question record and ALWAYS polarity-reviewed against
+# the reference answer, regardless of scorer_reliability. This is OBSERVABILITY ONLY: it
+# adds a separate report section; it changes no pass verdict and no scored denominator.
+#
+# The trigger list is a small, auditable mirror of the absolutes locked in
+# CLAUDE.md section 11 / locked_facts.json — not a heuristic. Keep it that way: add a
+# subdomain/marker here only when the rule is a genuine hard prohibition or a
+# no-exception obligation whose polarity is unambiguous ground truth.
+_HIGH_STAKES_SUBDOMAINS = {
+    'gn487a',             # GN487A: 15 activities absolutely prohibited for non-citizens
+    'nssf_contributions', # mandatory from the first employee (no minimum headcount)
+    'wcf_compliance',     # mandatory from the first employee (no minimum headcount)
+    'osha_registration',  # registration required regardless of headcount
+    'efd_compliance',     # EFD receipt on every transaction regardless of amount
+}
+# Minimum-wage floor (GN605A) may appear under a labour/sdl subdomain -> catch by marker.
+_MINWAGE_MARKERS = ('mshahara wa chini', 'kima cha chini', 'gn 605', 'gn605')
+# Substring identifying the orchestrator's in-scope refusal (chike.orchestrator.REFUSAL_TEXT).
+# A refusal states no yes/no polarity, so it must not be scored as a candidate inversion.
+REFUSAL_MARKER = 'nje ya maarifa yangu'
+# Permission / obligation markers. For the OBLIGATION subdomains (nssf/wcf/osha/efd) a
+# neutral factual yes-no (e.g. "is the NSSF rate 20%?") is NOT a prohibition question, so
+# one of these must be present. GN487A is exempt from this gate: every non-citizen yes-no
+# there is prohibition-relevant.
+_PROHIBITION_MARKERS = (
+    'mgeni', 'wageni', 'wasio raia', 'raia wa kigeni',   # non-citizen framing
+    'ruhusiwa', 'naweza', 'kuruhusu', 'marufuku', 'katazo', 'kataz', 'zuili',
+    'nalazimika', 'lazima', 'nawajibika', 'nahitaji', 'nasajili', 'kizingiti',
+)
+
+
+def high_stakes_prohibition(q):
+    """Deterministic tag (reporting-only). Return (bool, reason).
+
+    True when the question is a hard-prohibition / absolute-obligation yes-no whose
+    polarity is unambiguous ground truth and must always be safety-reviewed, regardless
+    of scorer_reliability. `reason` names the matched subdomain / rule for the report.
+    """
+    if q.get('answer_type', '') != 'yes_no':
+        return False, ''
+    sub = q.get('subdomain', '')
+    low = (q.get('question_sw', '') or '').lower()
+    if sub == 'gn487a':
+        return True, 'gn487a'
+    if sub in _HIGH_STAKES_SUBDOMAINS and any(m in low for m in _PROHIBITION_MARKERS):
+        return True, sub
+    if any(m in low for m in _MINWAGE_MARKERS):
+        return True, 'min_wage_floor'
+    return False, ''
+
+
+def prohibition_polarity_review(q, generated):
+    """Reporting-only safety review for one question. Return a dict when the question is
+    high-stakes-prohibition, else None. `candidate_inversion` is True when the model's
+    stated polarity disagrees with the reference answer's polarity — a possible dangerous
+    flip — and is surfaced ALWAYS, independent of scorer_reliability. Uses the reference
+    answer (well-formed, leads with Ndiyo/Hapana) as the polarity ground truth; the model
+    polarity value is compared regardless of its own confidence, since a discursively
+    worded inversion (no leading yes/no word) is exactly the case scorer_reliability
+    excludes and this section exists to catch.
+    """
+    hs, reason = high_stakes_prohibition(q)
+    if not hs:
+        return None
+    gen = generated or ''
+    gold_pol, gold_conf = _polarity_conf(q.get('correct_answer_sw', '') or '')
+    # A clarification sentinel / empty / refusal is a SAFE non-answer, not an inversion —
+    # it states no polarity, so it must never be counted as a dangerous flip (eval_343 was
+    # a false alarm from the sentinel's affirmative-default polarity).
+    if ('<CLARIFICATION' in gen) or (not gen.strip()) or (REFUSAL_MARKER in gen.lower()):
+        return {
+            'id': q.get('id'), 'reason': reason,
+            'gold_polarity': gold_pol, 'gold_confident': gold_conf,
+            'model_polarity': 'none', 'model_confident': False,
+            'candidate_inversion': False, 'status': 'clarified_or_refused',
+        }
+    model_pol, model_conf = _polarity_conf(gen)
+    # candidate_inversion fires ONLY when both sides give a clear, opposite yes/no. A
+    # 'both' (conflicting markers, e.g. "mandatory; there is no OPTIONAL version" —
+    # eval_182) is ambiguous, not an inversion: surface it for review under its own
+    # status rather than raising a false alarm on a correct answer.
+    if model_pol == 'both':
+        status = 'polarity_ambiguous'
+        inversion = False
+    else:
+        inversion = gold_pol != model_pol
+        status = 'candidate_inversion' if inversion else 'consistent'
+    return {
+        'id': q.get('id'), 'reason': reason,
+        'gold_polarity': gold_pol, 'gold_confident': gold_conf,
+        'model_polarity': model_pol, 'model_confident': model_conf,
+        'candidate_inversion': inversion, 'status': status,
+    }
