@@ -173,12 +173,16 @@ def test_fact_prompt_uses_production_rag_wrapper():
     orch.answer("SDL ni ngapi")
 
     prompt = fake.last_prompt
-    # System prompt + UKWELI block + '- ' fact + Llama chat scaffolding all present.
-    assert prompt.startswith("<|begin_of_text|><|start_header_id|>system")
+    # FakeBackend exposes no .tokenizer, so build_chat_prompt uses the naive-concat
+    # fallback (a real GPU backend would route through apply_chat_template instead).
+    # System prompt + UKWELI block + '- ' fact + the question are all present; the old
+    # hardcoded Llama-3 header tokens are NOT (the model was never trained to stop after
+    # them — see chike/prompting.py).
     assert "Wewe ni Chike." in prompt
     assert "UKWELI ULIOTHIBITISHWA KWA SWALI HILI:" in prompt
     assert "- SDL ni 3.5%" in prompt
-    assert prompt.rstrip().endswith("<|start_header_id|>assistant<|end_header_id|>")
+    assert prompt.rstrip().endswith("SDL ni ngapi")
+    assert "<|begin_of_text|>" not in prompt and "<|start_header_id|>" not in prompt
 
 
 def test_injected_retriever_overrides_the_real_default():

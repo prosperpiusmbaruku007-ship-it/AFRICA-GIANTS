@@ -216,16 +216,27 @@ class Orchestrator:
 
     # --- Generate-stage prompts (production-aligned RAG wrapper, chike.prompting) ---
 
+    def _backend_tokenizer(self):
+        # The real GPU backend (KaggleDirectBackend / Modal) exposes .tokenizer; passing
+        # it makes build_chat_prompt route through apply_chat_template — byte-identical to
+        # production and to the format v15 was trained on, so the model actually stops at
+        # EOS (see chike/prompting.py docstring). FakeBackend has none -> test fallback.
+        return getattr(self.backend, "tokenizer", None)
+
     def _build_compute_prompt(self, question: str, result: ComputationResult) -> str:
         # Hand the model the deterministic working as GROUND TRUTH, injected through
         # the same production RAG wrapper as facts so the generate stage is uniform.
         working_fact = f"Jibu sahihi (hesabu iliyothibitishwa): {result.working}"
-        return prompting.build_chat_prompt(question, [working_fact], self.system_prompt)
+        return prompting.build_chat_prompt(
+            question, [working_fact], self.system_prompt,
+            tokenizer=self._backend_tokenizer())
 
     def _build_fact_prompt(self, question: str, facts: Sequence[str]) -> str:
-        # Production-aligned wrapper (system prompt + UKWELI block + chat template) —
-        # the format the v16 diagnostic proved reproduces production answer quality.
-        return prompting.build_chat_prompt(question, facts, self.system_prompt)
+        # Production-aligned wrapper (system prompt + UKWELI block + tokenizer chat
+        # template) — the format the v16 diagnostic proved reproduces production quality.
+        return prompting.build_chat_prompt(
+            question, facts, self.system_prompt,
+            tokenizer=self._backend_tokenizer())
 
     def _validate_and_clean(self, sub: SubAnswer) -> SubAnswer:
         """Validate/clean stage. Real implementation of the stop/clean step: truncate

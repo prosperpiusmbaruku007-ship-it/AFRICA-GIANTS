@@ -353,10 +353,14 @@ def generate_answer(question_sw: str) -> str:
                 all_retrieved_facts.append(fact)
                 seen_facts.add(fact)
     retrieved_facts = all_retrieved_facts[:9]
-    # RAG wrapper built by the shared chike.prompting (fetched above) — identical
-    # manual chat scaffolding as the inline copy this replaces. eval uses the manual
-    # template (no tokenizer.apply_chat_template), which is exactly build_chat_prompt.
-    prompt = build_chat_prompt(question_sw, retrieved_facts, SYSTEM_PROMPT)
+    # RAG wrapper built by the shared chike.prompting (fetched above). Passing the
+    # tokenizer routes through apply_chat_template — BYTE-IDENTICAL to production
+    # (modal_app.py) and to the format v15 was trained on. Before 2026-07-18 this used
+    # the hardcoded Llama-3 header format, which the model was never trained to stop
+    # after (proved by eos_production_probe.py: header format ran to the 350-cap 0/20;
+    # apply_chat_template stopped 20/20) — so every prior gate score was measured on a
+    # prompt format that did not match production (R12 violation in the harness itself).
+    prompt = build_chat_prompt(question_sw, retrieved_facts, SYSTEM_PROMPT, tokenizer=tokenizer)
     inputs = tokenizer(prompt, return_tensors='pt').to(model.device)
     stopping_criteria = StoppingCriteriaList(
         [StopOnSubstrings(tokenizer, STOP_STRINGS)]

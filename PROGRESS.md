@@ -5,60 +5,98 @@ Last updated: 2026-07-18
 **STANDING STATUS:** Retrieval-layer prohibition-inversion investigation + fix — **CLOSED
 and VALIDATED** (d92e63f). Reporting-layer polarity parser — negated-lazima lexicon fix
 shipped (cec8fae); eval_317/146 left to framing-aware polarity. Generation-robustness
-**cleanup-layer** gaps — **CLOSED** (this session): intra-block repetition, generalized
-fabricated-turn detection, non-Latin/domain-loop cut; eval_317/183 + 78 others now clean,
-0 content loss, 0 score regressions. **NEXT PRIORITY (HIGH): the EOS/generation-layer root
-cause — 79% of model generations never stop** (see below). Then: framing-aware/semantic
-polarity for the 5 non-numeric inversions + eval_317/146.
+**cleanup-layer** gaps — **CLOSED** (this session). The "EOS/generation 'root cause' (79%)"
+is now **CORRECTED with direct evidence** and was an **eval-harness artifact, not a
+production defect** (see below); the harness fix (build_chat_prompt →
+apply_chat_template) is **IMPLEMENTED** and awaits a Kaggle 400-run re-baseline —
+**every prior gate score this session was measured on a mismatched prompt format and is
+superseded** until that re-run. Then: framing-aware/semantic polarity for the 5
+non-numeric inversions + eval_317/146.
 
-## ⚠ HIGH-PRIORITY FOLLOW-UP — EOS/generation-layer root cause (79% of calls) (2026-07-18)
+## EOS/generation 'root cause' — CORRECTED with direct evidence (2026-07-18)
 
-**Not a targeted bug — a project-wide efficiency + reliability defect.** Full 400-run raw-
-generation analysis: **263 of 331 model generations (79%) end MID-WORD at the 350-token
-cap** — i.e. the fine-tuned model almost never emits its EOS/stop token, so greedy decoding
-overruns every answer into a degradation tail until `max_new_tokens` truncates it. Only
-**44/331 (13%) stop cleanly**; median raw length 886 chars (max 1797) for answers that
-should be 1–3 sentences. The tail degrades into repetition loops, fabricated multi-turn
-Q&A, domain/fact-key token loops, and occasional foreign-script (Arabic) leakage.
+Direct A/B test (kaggle/eos_production_probe.py, commit 6d21253, 20 questions
+across 20 subdomains, skip_special_tokens=False, no substring stopping criteria
+so only real EOS emission could stop generation):
 
-Root mechanism (documented in generation_cleanup.py:46-51): the model is driven by a manual
-Llama chat template and does not emit the real turn tokens. Config is NOT the cause — it is
-correct and not regressed (`max_new_tokens=350`, `do_sample=False`, `repetition_penalty=1.1`,
-`no_repeat_ngram_size=0` — confirmed NOT the RAG-corrupting `2`); the stop_strings simply
-never match a `". "`-repeat or a `\n\n<fake-q>` turn.
+- PRODUCTION format (modal_app.py's apply_chat_template, matches training):
+  20/20 stopped early, 20/20 emitted <|end_of_text|> (128001), mean 68 tokens.
+- EVAL/ORCHESTRATOR format (chike/prompting.build_chat_prompt, hardcoded
+  Llama-3 headers never used in training): 0/20 stopped early, 0/20 emitted
+  EOS, 20/20 ran to the full 350-token cap.
 
-Impact of NOT fixing this at the source: inflated latency + token cost on ~4 of every 5
-answers across the ENTIRE project history, plus scorer noise and the residual robustness
-failures the cleanup layer now mops up post-hoc. **Fix requires touching production Modal
-(chike-inference/modal_app.py) + Kaggle generation (kaggle/eval.py) under the R12/R14 dual-
-file-sync rule** — proper tokenizer chat template so generation stops at EOS, and/or an
-EOS-or-repetition StoppingCriteria, and/or repetition-penalty tuning that avoids the
-`no_repeat_ngram_size=2` landmine. Needs its own dedicated investigation + validation pass;
-prioritize it (79% scale), do not defer as "separate/later".
+CONFIRMED: the earlier '79% of all generations never stop, project-wide'
+framing was WRONG. Production has never had this defect — it uses a prompt
+format matching training, and the model reliably emits its stop token.
+This was entirely a testing-harness artifact: chike/prompting.build_chat_prompt
+uses a Llama-3 chat-header format the model was never trained on, so at
+eval/gate time only, the model doesn't recognize where to stop.
+
+REAL IMPACT: every eval/gate score computed via the orchestrator path this
+session (the 190/250/400-question combined regressions, Bucket A/B/C/D,
+the retrieval-fix validation, the prohibition-inversion investigation, the
+cleanup-layer gap-closure) was measured against a prompt format that does
+NOT match production. This is a genuine R12 (dual-file-sync) violation in
+the eval harness itself, not a defect in the deployed system.
+
+FIX (no retraining needed): chike/prompting.build_chat_prompt and
+kaggle/eval.py need to use apply_chat_template (matching modal_app.py
+and training), not the hardcoded Llama-3 header format. Once fixed, the
+existing cleanup-layer gap-closure fixes are likely to matter far less
+(since correctly-stopped generations rarely need aggressive tail-trimming)
+but should remain as defense-in-depth.
+
+NEXT STEP: fix chike/prompting.build_chat_prompt to use apply_chat_template,
+re-run the full 400-question combined regression on the corrected format,
+and treat that as the new, trustworthy baseline — every prior gate score
+this session should be considered measured on a flawed harness and superseded
+once this is fixed and re-run.
+
+### FIX IMPLEMENTED (2026-07-18) — awaiting Kaggle 400-run re-baseline
+
+- `chike/prompting.build_chat_prompt(question, facts, system_prompt, tokenizer=None)`
+  now routes through `tokenizer.apply_chat_template(..., add_generation_prompt=True)`
+  over the SAME `[system, user]` messages modal_app.py builds (byte-identical to
+  production and training). No-tokenizer callers (unit tests) get a naive-concat
+  fallback — system + blank line + question — deliberately NOT the untrained header
+  tokens.
+- `kaggle/eval.py` (`generate_answer`) now passes its loaded `tokenizer` to
+  build_chat_prompt → the standalone gate now tokenizes the exact production prompt.
+- `chike/orchestrator.py` passes `getattr(self.backend, 'tokenizer', None)` through
+  `_build_fact_prompt` / `_build_compute_prompt`; `KaggleDirectBackend` exposes
+  `.tokenizer`, so the combined-orchestrator gate uses apply_chat_template too.
+- Tests updated to the corrected behavior (test_prompting.py, test_orchestrator.py);
+  full local suite **140 passed**. Offline verification: fallback emits no header
+  tokens; tokenizer path delegates to apply_chat_template with modal_app-identical
+  messages.
+- **PENDING (founder, Kaggle GPU): re-run the full 400-question combined regression on
+  the corrected format. That will be the FIRST trustworthy full-scale gate score this
+  project has had** — every prior score was measured on the mismatched format and is
+  superseded once this lands.
+
+## ✅ CLOSED — cleanup-layer port to production (Modal + Kaggle) — premise was STALE (2026-07-18)
+
+The earlier "port cleanup fixes to Modal + Kaggle" action item assumed
+`chike-inference/modal_app.py` and `kaggle/eval.py` each carried their OWN OLD, unfixed
+INLINE copy of `clean_reply`. **Direct inspection shows that is not (or no longer) the
+case — both already import the shared module:**
+- `chike-inference/modal_app.py:421` — `from chike.generation_cleanup import clean_reply`
+  (called at :524); modal_app also already builds its prompt via `apply_chat_template`
+  (:462), so production was **never** on the mismatched format.
+- `kaggle/eval.py:88` — `clean_reply = _cleanup['clean_reply']` (shared module fetched
+  from GitHub at runtime; called at :377).
+
+So the three cleanup-layer fixes (`_truncate_repeated_sentences`, generalized
+`_GLUED_TURN_RE`, `_cut_nonlatin_and_domain_loops` incl. the U+2212 allowance) already
+reach both production and the standalone gate via the shared import — no inline port was
+needed. The only genuine divergence was the prompt template (`build_chat_prompt`), fixed
+above. Net: production was already correct on BOTH cleanup and chat-template; the fix this
+session was scoped entirely to the eval/orchestrator harness. (Minor latent note: modal_app's
+`except Exception` fallback at :467-475 still hardcodes the Llama-3 header format; it is dead
+code unless apply_chat_template throws, but should be aligned to naive-concat in a future pass.)
 
 Second follow-up (lower priority): framing-aware/semantic polarity for the 5 non-numeric
 genuine model inversions (eval_059/062/183/332/391) + eval_317/146.
-
-## ⚠ ACTION ITEM — port cleanup fixes to production (Modal + Kaggle) — OPEN (2026-07-18)
-
-**Production users are NOT currently receiving the cleanup-layer fix.** The three EOS-tail
-cuts landed only in `chike/generation_cleanup.py`, which is on the ORCHESTRATOR path
-(`chike/orchestrator.py` → `clean_reply`) — so a combined-orchestrator gate re-run gets them,
-but live inference does not. `chike-inference/modal_app.py` (production) and `kaggle/eval.py`
-(standalone gate) each carry their OWN OLD, unfixed INLINE copy of the clean_reply logic
-(the documented divergence-risk, generation_cleanup.py:18-22). Until ported, real WhatsApp
-users still see eval_317-style repetition loops, fabricated multi-turn tails, Arabic-script
-leaks, and domain loops.
-
-- [ ] Port `_truncate_repeated_sentences`, generalized `_GLUED_TURN_RE`, and
-      `_cut_nonlatin_and_domain_loops` (incl. the U+2212 allowance) into
-      `chike-inference/modal_app.py` inline clean_reply.
-- [ ] Port the same into `kaggle/eval.py` inline clean_reply.
-- [ ] Verify byte-parity of the three copies (orchestrator module ↔ modal ↔ eval) per R12
-      (the gate must test the production system) and R14.
-- **Bundle this port with the EOS/generation root-fix work above** — both touch the same two
-  files (modal_app.py + kaggle/eval.py) under the R12/R14 dual-file-sync rule, so doing them
-  in one pass avoids editing those files twice and re-validating twice.
 
 ## Cleanup-layer gap-closure — three EOS-tail cuts (2026-07-18)
 
