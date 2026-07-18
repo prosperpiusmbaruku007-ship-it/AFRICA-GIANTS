@@ -58,9 +58,90 @@ _ROLE_JUNK_RE = re.compile(r"(?i)(user|assistant|system|understand)[a-z0-9_]*\s*
 # answer blocks and stops only at the first fabricated one.
 _ROLE_START_RE = re.compile(r"(?i)^\s*(user|assistant|system|understand[a-z0-9_]*)\b")
 # A block that ENDS with a question glued straight onto a leaked role/junk token
-# ('...?user_0x01', '...?become', '...?understander') — the model's fabricated-Q&A
-# boundary. Anchored to end + limited to leak tokens so real questions are untouched.
-_GLUED_TURN_RE = re.compile(r"(?i)\?\s*(?:user|assistant|system|become|understand)[a-z0-9_]*\s*$")
+# ('...?user_0x01', '...?become', '...?understander', '...OSHA?nssm') — the model's
+# fabricated-Q&A boundary. Two branches:
+#   (1) a known role word after '? ' (optionally spaced) — the original leaks;
+#   (2) GENERAL: any short token glued DIRECTLY to '?' with NO space ('?nssm'). A real
+#       question ends with '?' then either end-of-block or a SPACE + capital next sentence;
+#       '?'+lowercase-with-no-space is never natural Swahili/English — it is a leaked turn
+#       token. Generalized (2) so a new glued-token variant needs no further hardcoding
+#       (the eval_183 'nssm' leak was invisible to the whitelist-only rule).
+_GLUED_TURN_RE = re.compile(
+    r"(?i)\?\s*(?:user|assistant|system|become|understand)[a-z0-9_]*\s*$"
+    r"|\?[a-z][a-z0-9_.:/-]{0,25}\s*$"
+)
+
+
+# --- degradation-tail cuts (2026-07-18) --------------------------------------
+# All three target the SAME upstream defect — the model rarely emits EOS, so ~79% of
+# generations overrun the answer into a degradation tail (repetition / fabricated turns /
+# script leak) until max_new_tokens truncates mid-word. clean_reply already trims most;
+# these close the enumerated gaps that left eval_317 (intra-block repetition) and eval_183
+# (glued 'nssm' turn) — and the Arabic / domain-loop leaks — degraded. The proper fix is
+# server-side EOS (PROGRESS.md, HIGH-PRIORITY follow-up); these are post-hoc, byte-exact on
+# a clean reply (they fire only when the specific garbage signature is present).
+
+# Any character in a foreign SCRIPT is never part of a legitimate Swahili/English Chike
+# reply -- it is always leaked fabricated-turn content (observed: Arabic 'yes'/'no' glued
+# after a fabricated '?'). Allowed = Latin+diacritics (U+0000-036F) and shared punctuation
+# / symbols incl. Mathematical Operators (U+2000-22FF) -- the em/en dash AND the arithmetic
+# MINUS SIGN U+2212 that PAYE/SDL sums use (dropping it truncated eval_191 mid-sum). Foreign
+# scripts (Arabic 06xx, Hebrew 05xx, Greek/Cyrillic 037x-04xx, CJK 3000+) fall outside and
+# are still cut at the first character.
+_NONLATIN_RE = re.compile(r"[^\x00-ͯ -⋿\s]")
+
+# A domain glued straight onto another domain ('tra.go.tz.understandthis.com', or the
+# '...understandthis.com.understandthis.com...' decode loop) is never legitimate — a real
+# citation is a SINGLE 'word.tld'. Group 1 is the first (legitimate) domain; group 2 is the
+# glued junk domain(s). Cutting at group 2's start KEEPS the real citation and drops only the
+# leaked/looped fragment(s). Separators between fragments are '.', ')', '/' (no whitespace),
+# so the match never crosses into the next sentence.
+_DOMAIN_LOOP_RE = re.compile(
+    r"(?i)\b([a-z0-9_-]+\.(?:com|go\.tz|co\.tz|or\.tz|org|net))"
+    r"((?:[.)/][a-z0-9_/-]*\.(?:com|go\.tz|co\.tz|or\.tz|org|net))+[a-z0-9_/-]*)"
+)
+
+# Sentence boundary that KEEPS the separator (capturing group) so a non-repeating reply
+# re-joins byte-for-byte identical.
+_SENT_SPLIT_RE = re.compile(r"((?<=[.)])\s+)")
+
+
+def _cut_at_first(text: str, match) -> str:
+    return text[: match.start()].rstrip() if match else text
+
+
+def _cut_nonlatin_and_domain_loops(text: str) -> str:
+    """Truncate at the first non-Latin-script char, and drop a glued/looped junk domain
+    while KEEPING the first legitimate citation. Byte-identical when neither is present."""
+    text = _cut_at_first(text, _NONLATIN_RE.search(text))
+    m = _DOMAIN_LOOP_RE.search(text)
+    if m:
+        text = text[: m.start(2)].rstrip()   # keep group 1 (real domain), drop group 2 junk
+    return text
+
+
+def _truncate_repeated_sentences(text: str) -> str:
+    """Cut at the first sentence that exactly repeats an earlier sentence in the reply
+    (the eval_317 '…Thibitisha na Idara ya Uhamiaji (immigration.go.tz).' ×13 loop).
+
+    Only sentences >=12 chars count, so a short legitimately-restated clause is never a
+    trigger; the first occurrence is always kept. Re-joins via the captured separators, so
+    a reply with no repeat is returned byte-for-byte unchanged."""
+    parts = _SENT_SPLIT_RE.split(text)      # [sent, sep, sent, sep, ..., sent]
+    kept, seen = [], set()
+    i = 0
+    while i < len(parts):
+        sent = parts[i]
+        key = sent.strip().lower()
+        if len(key) >= 12 and key in seen:
+            break                            # loop start — drop this sentence and the rest
+        kept.append(sent)
+        if i + 1 < len(parts):
+            kept.append(parts[i + 1])        # its trailing separator (verbatim)
+        if len(key) >= 12:
+            seen.add(key)
+        i += 2
+    return "".join(kept).rstrip()
 
 
 def _is_fabricated_block(block: str, seen: set) -> bool:
@@ -130,13 +211,19 @@ def clean_reply(text: str, stop_strings: Optional[Sequence[str]] = None) -> str:
     """Full stop/clean stage: cut the reply at the first fabricated follow-up turn,
     drop residual special tokens and glued role junk, then apply clean_generated_reply.
 
-    Order: (1) truncate at any real turn/stop marker; (2) keep '\\n\\n'-separated blocks
-    until the first fabricated follow-up turn (a legitimately-structured answer — intro
-    line + steps/rates/definition — is kept whole; only the appended ramble is dropped);
-    (3) strip a trailing leaked role word / fact-key run glued to the answer; (4) strip
-    residual special tokens; (5) domain fixes.
+    Order: (1) truncate at any real turn/stop marker; (2) cut a leaked non-Latin-script
+    tail / domain-fragment loop; (3) keep '\\n\\n'-separated blocks until the first
+    fabricated follow-up turn (a legitimately-structured answer — intro line + steps/rates/
+    definition — is kept whole; only the appended ramble is dropped); (4) cut an intra-block
+    repeated-sentence loop; (5) strip a trailing leaked role word / fact-key run glued to
+    the answer; (6) strip residual special tokens; (7) domain fixes.
+
+    Steps (2) and (4) are byte-exact no-ops on a clean reply — they fire only when the
+    specific degradation-tail signature (non-Latin char, domain loop, repeated sentence)
+    is actually present.
     """
     text = truncate_at_stops(text, stop_strings)
+    text = _cut_nonlatin_and_domain_loops(text)
     kept, seen = [], set()
     for block in text.split(_TURN_SEPARATOR):
         if _is_fabricated_block(block, seen):
@@ -144,6 +231,12 @@ def clean_reply(text: str, stop_strings: Optional[Sequence[str]] = None) -> str:
         kept.append(block)
         seen.add(block.strip().lower()[:50])
     text = _TURN_SEPARATOR.join(kept).strip()
+    # Strip a trailing glued role token BEFORE the repetition cut, so a duplicate closing
+    # line that differs only by a leaked suffix ('…(tra.go.tz).user' vs '…(tra.go.tz).')
+    # still matches and de-duplicates (eval_111). Re-strip afterwards in case the cut
+    # exposed another. Both are no-ops on a clean reply.
+    text = _ROLE_JUNK_RE.sub("", text).strip()
+    text = _truncate_repeated_sentences(text)
     text = _ROLE_JUNK_RE.sub("", text).strip()
     text = _SPECIAL_TOKEN_RE.sub("", text).strip()
     return clean_generated_reply(text)

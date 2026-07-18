@@ -3,14 +3,92 @@
 Last updated: 2026-07-18
 
 **STANDING STATUS:** Retrieval-layer prohibition-inversion investigation + fix — **CLOSED
-and VALIDATED** (d92e63f; post-fix 400-run confirms eval_317/355 flipped wrong→right, 0
-non-numeric regressions, Bucket A change non-regressive). Reporting-layer polarity parser —
-partially closed: eval_355 resolved via the negated-lazima lexicon fix; eval_317/146 left
-open by design (a flat lexicon regresses 4-6 correct answers). **NEXT PRIORITY: the
-repetition-loop generation-robustness bug** (eval_317's "Thibitisha…" ×14 tail and
-eval_183's fabricated multi-turn Q&A) — this, not retrieval and not the parser, is what
-still fails eval_317's scorer. Then: framing-aware/semantic polarity for the 5 non-numeric
-inversions + eval_317/146.
+and VALIDATED** (d92e63f). Reporting-layer polarity parser — negated-lazima lexicon fix
+shipped (cec8fae); eval_317/146 left to framing-aware polarity. Generation-robustness
+**cleanup-layer** gaps — **CLOSED** (this session): intra-block repetition, generalized
+fabricated-turn detection, non-Latin/domain-loop cut; eval_317/183 + 78 others now clean,
+0 content loss, 0 score regressions. **NEXT PRIORITY (HIGH): the EOS/generation-layer root
+cause — 79% of model generations never stop** (see below). Then: framing-aware/semantic
+polarity for the 5 non-numeric inversions + eval_317/146.
+
+## ⚠ HIGH-PRIORITY FOLLOW-UP — EOS/generation-layer root cause (79% of calls) (2026-07-18)
+
+**Not a targeted bug — a project-wide efficiency + reliability defect.** Full 400-run raw-
+generation analysis: **263 of 331 model generations (79%) end MID-WORD at the 350-token
+cap** — i.e. the fine-tuned model almost never emits its EOS/stop token, so greedy decoding
+overruns every answer into a degradation tail until `max_new_tokens` truncates it. Only
+**44/331 (13%) stop cleanly**; median raw length 886 chars (max 1797) for answers that
+should be 1–3 sentences. The tail degrades into repetition loops, fabricated multi-turn
+Q&A, domain/fact-key token loops, and occasional foreign-script (Arabic) leakage.
+
+Root mechanism (documented in generation_cleanup.py:46-51): the model is driven by a manual
+Llama chat template and does not emit the real turn tokens. Config is NOT the cause — it is
+correct and not regressed (`max_new_tokens=350`, `do_sample=False`, `repetition_penalty=1.1`,
+`no_repeat_ngram_size=0` — confirmed NOT the RAG-corrupting `2`); the stop_strings simply
+never match a `". "`-repeat or a `\n\n<fake-q>` turn.
+
+Impact of NOT fixing this at the source: inflated latency + token cost on ~4 of every 5
+answers across the ENTIRE project history, plus scorer noise and the residual robustness
+failures the cleanup layer now mops up post-hoc. **Fix requires touching production Modal
+(chike-inference/modal_app.py) + Kaggle generation (kaggle/eval.py) under the R12/R14 dual-
+file-sync rule** — proper tokenizer chat template so generation stops at EOS, and/or an
+EOS-or-repetition StoppingCriteria, and/or repetition-penalty tuning that avoids the
+`no_repeat_ngram_size=2` landmine. Needs its own dedicated investigation + validation pass;
+prioritize it (79% scale), do not defer as "separate/later".
+
+Second follow-up (lower priority): framing-aware/semantic polarity for the 5 non-numeric
+genuine model inversions (eval_059/062/183/332/391) + eval_317/146.
+
+## ⚠ ACTION ITEM — port cleanup fixes to production (Modal + Kaggle) — OPEN (2026-07-18)
+
+**Production users are NOT currently receiving the cleanup-layer fix.** The three EOS-tail
+cuts landed only in `chike/generation_cleanup.py`, which is on the ORCHESTRATOR path
+(`chike/orchestrator.py` → `clean_reply`) — so a combined-orchestrator gate re-run gets them,
+but live inference does not. `chike-inference/modal_app.py` (production) and `kaggle/eval.py`
+(standalone gate) each carry their OWN OLD, unfixed INLINE copy of the clean_reply logic
+(the documented divergence-risk, generation_cleanup.py:18-22). Until ported, real WhatsApp
+users still see eval_317-style repetition loops, fabricated multi-turn tails, Arabic-script
+leaks, and domain loops.
+
+- [ ] Port `_truncate_repeated_sentences`, generalized `_GLUED_TURN_RE`, and
+      `_cut_nonlatin_and_domain_loops` (incl. the U+2212 allowance) into
+      `chike-inference/modal_app.py` inline clean_reply.
+- [ ] Port the same into `kaggle/eval.py` inline clean_reply.
+- [ ] Verify byte-parity of the three copies (orchestrator module ↔ modal ↔ eval) per R12
+      (the gate must test the production system) and R14.
+- **Bundle this port with the EOS/generation root-fix work above** — both touch the same two
+  files (modal_app.py + kaggle/eval.py) under the R12/R14 dual-file-sync rule, so doing them
+  in one pass avoids editing those files twice and re-validating twice.
+
+## Cleanup-layer gap-closure — three EOS-tail cuts (2026-07-18)
+
+Closed the three enumerated `clean_reply` coverage gaps that left the degradation tail in
+place after cleanup (chike/generation_cleanup.py; the mitigation layer for the EOS root
+cause above). Regression-tested across all 400 raw generations with the module's zero-
+content-loss discipline:
+- **Intra-block repetition cut** (`_truncate_repeated_sentences`) — cuts at the first
+  sentence (>=12 chars) that repeats an earlier one, keeping the first occurrence; re-joins
+  via captured separators so a non-repeating reply is byte-identical. Fixes eval_317's
+  "Thibitisha…" ×13 loop. A short repeated clause ('Ndiyo. Ndiyo.') is never truncated.
+- **Generalized fabricated-turn detection** — `_GLUED_TURN_RE` now catches any short token
+  glued directly to '?' with no space ('?nssm', '?about:blank', '?nssf.go.tz'), not just a
+  hardcoded role-word whitelist. Fixes eval_183 (the 'nssm' leak) + the domain-token fake
+  turns. Role-junk stripping now runs BEFORE the repetition cut so a duplicate closing line
+  differing only by a leaked '.user' suffix still de-duplicates (eval_111).
+- **Non-Latin-script + domain-loop cut** (`_cut_nonlatin_and_domain_loops`) — truncates at
+  the first foreign-script char (Arabic/Cyrillic/CJK) and drops a glued/looped junk domain
+  while KEEPING the first legitimate citation (`tra.go.tz` preserved, `.understandthis.com…`
+  loop dropped). The allowed range deliberately includes Mathematical Operators (U+2200-22FF)
+  so the arithmetic MINUS SIGN U+2212 in PAYE/SDL sums survives — an earlier draft cut there
+  and truncated eval_191 mid-sum (caught by the score-regression guard; now a locked test).
+
+Results across 400: eval_317/183 + all 80 detector-degraded cases now clean; 9 previously-
+clean cases changed and ALL are prefix-only garbage removal (0 content loss, e.g. eval_090
+1399→112, eval_218 1278→118 loop removals); **0 yes_no/number score regressions**, 0 new
+candidate-inversion flips. Unit tests added (tests/test_generation_cleanup.py, incl. the
+eval_191 minus-sign regression guard); full non-integration suite 138 passed. NOTE: this is
+the MITIGATION layer — it does not reduce the 79% overrun (tokens are still generated then
+trimmed); only the EOS root fix above does that.
 
 ## Post-retrieval-fix 400-run VALIDATION + polarity-parser lexicon fix (2026-07-18)
 

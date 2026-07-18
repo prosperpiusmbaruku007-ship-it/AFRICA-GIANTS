@@ -85,3 +85,75 @@ def test_clean_reply_keeps_legit_intro_plus_enumerated_steps():
         "(3) Msambazaji pekee ndiye anayeruhusiwa kufanya marekebisho."
     )
     assert clean_reply(raw) == raw
+
+
+# --- degradation-tail cuts (2026-07-18): EOS-failure mitigations -------------
+# The model rarely emits EOS, so ~79% of generations overrun into a degradation tail.
+# These three cases were the enumerated gaps clean_reply used to miss.
+
+def test_cuts_intra_block_sentence_repetition_loop():
+    # eval_317: a complete correct answer, then the closing sentence looped ×N with no
+    # '\n\n' boundary. Cut at the first repeat, keep exactly one occurrence.
+    raw = ("Shughuli za saluni imepigwa marufuku kwa wasio raia. "
+           "Thibitisha na Idara ya Uhamiaji (immigration.go.tz). "
+           "Thibitisha na Idara ya Uhamiaji (immigration.go.tz). "
+           "Thibitisha na Idara ya Uhamiaji (immigration.go.tz).")
+    cleaned = clean_reply(raw)
+    assert cleaned == ("Shughuli za saluni imepigwa marufuku kwa wasio raia. "
+                       "Thibitisha na Idara ya Uhamiaji (immigration.go.tz).")
+    assert cleaned.count("Thibitisha na Idara ya Uhamiaji") == 1
+
+
+def test_short_repeated_clause_is_not_truncated():
+    # Guard against false truncation: a short (<12-char) legitimately repeated clause
+    # ('Ndiyo. Ndiyo.') must NOT trigger the repetition cut.
+    good = "Ndiyo. Ndiyo. Jibu ni TZS 22,000."
+    assert clean_reply(good) == good
+
+
+def test_cuts_fabricated_turn_glued_to_nssm_role_token():
+    # eval_183: fabricated Q&A turns whose questions end in the leaked role token 'nssm',
+    # which the old hardcoded whitelist missed. The generalized '?'+no-space-lowercase rule
+    # catches it.
+    raw = ("Ndiyo. Kutokuwasilisha OSHA kunaweza kusababisha faini. Thibitisha na osha.go.tz.understander\n\n"
+           "Kampuni yangu ina wafanyakazi 15 — je, tunasajili OSHA?nssm\n\nNdiyo — OSHA inatumika.")
+    cleaned = clean_reply(raw)
+    assert cleaned == "Ndiyo. Kutokuwasilisha OSHA kunaweza kusababisha faini. Thibitisha na osha.go.tz."
+    assert "nssm" not in cleaned and "wafanyakazi 15" not in cleaned
+
+
+def test_cuts_fabricated_turn_glued_to_domain_token():
+    # eval_339/367/392 variant: the fake question ends in a domain token ('?about:blank',
+    # '?nssf.go.tz') rather than a role word — the '?'+glued-token rule now covers dots/colons.
+    raw = ("Mfanyakazi asiye mkazi halipiwi PAYE. Thibitisha na TRA (tra.go.tz).\n\n"
+           "Kiwango cha juu cha PAYE ni ngapi?about:blank\n\nNi asilimia 30.")
+    cleaned = clean_reply(raw)
+    assert cleaned == "Mfanyakazi asiye mkazi halipiwi PAYE. Thibitisha na TRA (tra.go.tz)."
+    assert "about:blank" not in cleaned and "asilimia 30" not in cleaned
+
+
+def test_cuts_non_latin_script_leak():
+    # eval_033/034/058: leaked Arabic answer glued after a fabricated '?'. Cut at the first
+    # non-Latin character; the legitimate leading answer survives.
+    raw = ("Finance Act 2025 ilianzisha VAT withholding kuanzia 1 Julai 2025. Thibitisha na TRA (tra.go.tz).\n\n"
+           "Je, ninatakiwa kukata?نعم. Kama wewe ni mnunuzi.")
+    cleaned = clean_reply(raw)
+    assert "نعم" not in cleaned
+    assert "kuanzia 1 Julai 2025" in cleaned
+
+
+def test_preserves_arithmetic_minus_sign_in_compute_answers():
+    # eval_191 REGRESSION GUARD: the arithmetic MINUS SIGN (U+2212) and MULTIPLICATION
+    # (U+00D7) in PAYE/SDL sums must NOT be treated as a foreign-script leak — an earlier
+    # non-Latin cut truncated this answer mid-sum, dropping '= TZS 78,000'.
+    good = "PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz)."
+    assert clean_reply(good) == good
+
+
+def test_domain_loop_cut_keeps_first_real_citation():
+    # eval_090/218/332: a real citation followed by a glued/looped junk domain. Keep the
+    # first (legitimate) domain, drop only the junk.
+    raw = "Withholding tax kwa asiye mkazi ni 15%. Thibitisha na tra.go.tz.understandthis.com.understandthis.com."
+    cleaned = clean_reply(raw)
+    assert cleaned == "Withholding tax kwa asiye mkazi ni 15%. Thibitisha na tra.go.tz"
+    assert "understandthis" not in cleaned
