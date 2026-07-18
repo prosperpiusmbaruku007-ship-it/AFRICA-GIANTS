@@ -1,17 +1,20 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-18
+Last updated: 2026-07-19
 
-**STANDING STATUS:** Retrieval-layer prohibition-inversion investigation + fix — **CLOSED
-and VALIDATED** (d92e63f). Reporting-layer polarity parser — negated-lazima lexicon fix
-shipped (cec8fae); eval_317/146 left to framing-aware polarity. Generation-robustness
-**cleanup-layer** gaps — **CLOSED** (this session). The "EOS/generation 'root cause' (79%)"
-is now **CORRECTED with direct evidence** and was an **eval-harness artifact, not a
-production defect** (see below); the harness fix (build_chat_prompt →
-apply_chat_template) is **IMPLEMENTED** and awaits a Kaggle 400-run re-baseline —
-**every prior gate score this session was measured on a mismatched prompt format and is
-superseded** until that re-run. Then: framing-aware/semantic polarity for the 5
-non-numeric inversions + eval_317/146.
+**STANDING STATUS:** EOS harness fix (build_chat_prompt → apply_chat_template) — **CLOSED,
+RE-BASELINED, and VALIDATED at scale.** The corrected 400-question combined regression is
+IN (commit e9cc68a, persisted to `eval/results/gate_orchestrator_combined_e9cc68a.json`) —
+**the first fully clean, trustworthy full-scale gate run this project has had.** EOS fix
+confirmed broad-based (0 loops / 0 header-leakage / 0 empty across 400; ~3× runtime).
+eval_317/146 **resolved**; eval_213/355/155 are **genuine defects the corrected harness
+newly exposed** (NOT harness noise); eval_332/365 **reclassified as scorer artifacts**.
+Retrieval-layer prohibition-inversion fix — CLOSED and VALIDATED (d92e63f). Reporting-layer
+negated-lazima lexicon fix shipped (cec8fae). **Compute buckets (32–40%) are scorer-limited,
+not a confirmed measure of true compute accuracy** — closing that gap needs the
+frontier-judge scoring approach, not more prompt/retrieval work. NEW convention: every gate
+run is committed to `eval/results/` (see below). Next: eval_213 faithfulness defect +
+frontier-judge compute scoring + framing-aware polarity.
 
 ## EOS/generation 'root cause' — CORRECTED with direct evidence (2026-07-18)
 
@@ -72,7 +75,100 @@ once this is fixed and re-run.
 - **PENDING (founder, Kaggle GPU): re-run the full 400-question combined regression on
   the corrected format. That will be the FIRST trustworthy full-scale gate score this
   project has had** — every prior score was measured on the mismatched format and is
-  superseded once this lands.
+  superseded once this lands. → **DONE 2026-07-19 (see FINAL summary below).**
+
+## ✅ EOS CYCLE CLOSED — corrected 400-run re-baseline is IN (2026-07-19)
+
+The founder ran the full 400-question combined regression on the corrected format (commit
+**e9cc68a**, timestamp 2026-07-18T20:34Z). Persisted data:
+`eval/results/gate_orchestrator_combined_e9cc68a.json` (fetched from HF and committed — see
+standing convention below). This is the FIRST fully clean, trustworthy full-scale gate run
+this project has had; every prior score was on the mismatched harness and is superseded.
+
+**EOS fix confirmed broad-based (not concentrated in a few questions).** Across all 400
+generations: **0** with a repetition-loop tail, **0** with `<|start_header_id|>`/
+`<|begin_of_text|>` header-token leakage, **0** empty generations. Mean 229.8 chars, median
+187, p90 469 (char proxy — no token-count field was persisted, but the loop/header/empty
+counts are exact). Runtime dropped ~3× (13,300s → 4,861s), fully explained by clean early-
+stop instead of runs hitting the 350-token cap. The probe's 20/20 finding holds at scale.
+
+**Bucket results (raw / reliable subset):**
+- fact_path_190: 156/181 = 86.2% / 110/129 = 85.3%
+- staged_50: 35/50 = 70.0% / 28/40 = 70.0%
+- compute_type: 36/112 = 32.1% / 20/50 = 40.0% (genuine 35/108 = 32.4% / 19/49 = 38.8%)
+- adversarial_150: 60/144 = 41.7% / 45/82 = 54.9%
+- Weakest subdomains (all compute-heavy): wcf 1/10, sdl 29/67, paye 14/31, nssf 37/64.
+  Strong: gn487a 48/54, efd 23/25, gn605a 5/5, vat_registration 40/54.
+
+**Per-question findings vs. this session's claims:**
+- **eval_317 & eval_146 — RESOLVED.** Both pass=True, reliable=True, clean single-shot
+  generation, correct polarity, no repetition tail. The d92e63f retrieval fix (eval_317
+  salon capital-distractor) held up under the corrected harness.
+- **eval_213 — GENUINE NEW DEFECT** (gold=yes/model=no; opposite direction from every
+  prior inversion). Clean generation, reliable=True. Model confidently claims only
+  non-citizens are punished under GN 487A, contradicting the locked facilitator-penalty
+  fact (Tanzanian facilitator: TZS 5M / 3 months). See dedicated section below — the
+  RAG-gap hypothesis was **REFUTED**; it is a faithfulness defect.
+- **eval_355 — GENUINE DEFECT.** Sales TZS 10,999,000 vs 11M EFD threshold; model says
+  "Ndiyo, unazidi" (wrong — 10.999M < 11M). A boundary-comparison error.
+- **eval_155 — GENUINE DEFECT.** Model says the GN 487A enforcement *exercise* is still
+  ongoing; gold: the exercise ended 8 Oct 2025 though the law is permanent. Conflates the
+  time-limited exercise with the standing law.
+- **eval_332 — SCORER ARTIFACT.** Model actually correct (agrees wholesale prohibited,
+  reproduces both penalties incl. the citizen-helper TZS 5M); "Ndiyo [prohibited]" vs gold
+  "Hapana [you can't]" is a framing-polarity mismatch, not an error.
+- **eval_365 — SCORER ARTIFACT.** pass=True, reliable=False; model correctly states NSSF
+  has no employee threshold; surface "hakuna" flagged by the polarity classifier.
+- eval_183 (OSHA stop-work-order vs. business-closure) is a genuine *semantic* nuance the
+  polarity scorer can't separate — left with the deferred framing-aware polarity item.
+
+**Compute buckets (32–40%) are SCORER-LIMITED, not a confirmed measure of true compute
+accuracy.** 130/400 results are reliable=False, and every exclusion reason is a
+scorer/ground-truth limitation — NONE is a generation-quality reason (0 truncated/loop/
+empty). Breakdown: compute_derived_number 48, qualitative_number_no_numeric_key 27,
+yes_no_polarity_unverifiable 26, yes_no_ground_truth_ambiguous 9, year_only_numeric_key 6,
+morphological_overlap_gap 6, zero_or_not_applicable_answer 6, year_collision_match 2. On the
+compute path specifically, 62/113 are unreliable (mostly compute_derived_number — the
+number-overlap scorer cannot verify a computed figure). This means the reliable-subset
+denominators are governed by scorer structure, not generation cleanliness (the EOS fix could
+not have moved them). **Closing this gap requires the frontier-judge scoring approach already
+validated earlier this session — NOT further prompt or retrieval work.** Until then, treat
+the compute numbers as a floor obscured by scorer leniency/blindness, not a true accuracy.
+
+## eval_213 — RAG-gap hypothesis REFUTED; it is a FAITHFULNESS defect (2026-07-19)
+
+Investigated with the same rigor as the salon-inversion case, and the mechanism is the
+OPPOSITE of what I first hypothesized. Ran the real e5 retriever (chike.retrieval, using the
+committed, git-clean `kaggle/rag_embeddings.npy` + `rag_facts_text.json` — the exact 210-fact
+index the e9cc68a Kaggle run used) on eval_213's exact phrasing:
+
+  Q: "raia wa Tanzania anayekopesha leseni yake kwa mgeni naye anaadhibiwa chini ya GN 487A?"
+  top_3[0] = "Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini si zaidi
+             ya TZS 5,000,000 ... au kifungo si zaidi ya miezi 3."  ← the facilitator fact,
+             retrieved at the VERY TOP of context.
+
+The facilitator-penalty fact is **present in eval_213's retrieved context at position [0]**,
+yet the model still answered "Hapana — adhabu zinawahusu tu wasio raia." So this is **NOT a
+retrieval gap** — the model was handed the correct fact and contradicted it. The two-arm
+hybrid retrieval fix (d92e63f) does **NOT transfer**; confirming the mechanism first (per
+the founder's instruction) prevented applying the wrong fix. eval_213 is a
+**faithfulness/grounding defect** (model overrides a retrieved fact with a confident prior
+that "GN 487A is about non-citizens, therefore only non-citizens are punished"). eval_332
+corroborates: with the same fact retrieved, the model gets the citizen-helper penalty RIGHT
+inside the wholesale multipart — so the failure is phrasing/prompt-conditioned generation,
+not index coverage. TRACKED as a new priority finding; candidate remedies are
+faithfulness-side (e.g. prompt instruction to defer to retrieved penalties, or a
+polarity/consistency check against retrieved facts), NOT retrieval-side.
+
+## Standing convention (2026-07-19): commit every gate run to eval/results/
+
+The immediate-predecessor combined-gate run could not be diffed against because its
+`gate_orchestrator_combined.json` lived only on HF and was overwritten by the e9cc68a run
+(never committed). To prevent this recurring: **every `gate_orchestrator_combined.json` (and
+standalone gate) run is fetched from HF and committed into `eval/results/` with a
+commit-tagged filename**, e.g. `gate_orchestrator_combined_<sha>.json`. This gives each
+future re-baseline a real, byte-exact predecessor for per-ID before/after diffs. First entry:
+`eval/results/gate_orchestrator_combined_e9cc68a.json`.
 
 ## ✅ CLOSED — cleanup-layer port to production (Modal + Kaggle) — premise was STALE (2026-07-18)
 
