@@ -2,6 +2,105 @@
 
 Last updated: 2026-07-18
 
+**STANDING STATUS:** Retrieval-layer prohibition-inversion investigation + fix — **CLOSED
+and VALIDATED** (d92e63f; post-fix 400-run confirms eval_317/355 flipped wrong→right, 0
+non-numeric regressions, Bucket A change non-regressive). Reporting-layer polarity parser —
+partially closed: eval_355 resolved via the negated-lazima lexicon fix; eval_317/146 left
+open by design (a flat lexicon regresses 4-6 correct answers). **NEXT PRIORITY: the
+repetition-loop generation-robustness bug** (eval_317's "Thibitisha…" ×14 tail and
+eval_183's fabricated multi-turn Q&A) — this, not retrieval and not the parser, is what
+still fails eval_317's scorer. Then: framing-aware/semantic polarity for the 5 non-numeric
+inversions + eval_317/146.
+
+## Post-retrieval-fix 400-run VALIDATION + polarity-parser lexicon fix (2026-07-18)
+
+The founder re-ran the full combined 400 on Kaggle after the retrieval fix (d92e63f);
+`gate_orchestrator_combined.json` on HF adapter-v15 (commit d92e63f) was diffed
+independently, per-question, against the immediately prior run (HF commit 5817d9d,
+internal code commit **c094636**, 400 q). Both files pulled locally; the local
+`kaggle/rag_embeddings.npy` + `rag_facts_text.json` are MD5-identical to the HF index
+the run used, so retrieval was reconstructed faithfully offline (e5 cached).
+
+### Finding 1 — the retrieval fix is VALIDATED; "eval_317 still inverts" was a false alarm
+The prior run had NO polarity review (that code, ca49520, did not exist yet), so the 9
+candidate inversions were surfaced for the first time in the d92e63f run — comparison
+required reconstructing polarity from the actual generated text in both runs, not the flag.
+
+- **eval_317 (salon):** prior retrieval = `{fine-limit, trademark-fee, vat-deferment}`,
+  ZERO GN487A facts → generated *"anaweza kuendesha saluni … chini ya milioni 100"* (the
+  dangerous inversion). Post-fix the hybrid appended GN487A fact [21] → generated
+  *"saluni **imepigwa marufuku** kwa wasio raia"* — **substantively CORRECT**. The
+  retrieval fix reached generation and flipped the polarity wrong→right.
+- **eval_355 (EFD 10,999,000):** prior hedge → post-fix *"chini ya 11,000,000 … EFD **si
+  lazima**"* — correct (below threshold, not mandatory).
+- It still showed as a candidate inversion + pass=False for **two reasons unrelated to
+  "generation ignored the fact":** (a) the polarity parser's negation lexicon had no
+  prohibition/negation verbs, so *"imepigwa marufuku"* fell through to the affirmative
+  default `model=yes`; and (b) a generation-robustness repetition loop ("Thibitisha na
+  Idara ya Uhamiaji" ×14) starved the overlap scorer.
+- Of the 9: **5 are non-numeric** (eval_059/062/183/332/391) — byte-identical retrieval AND
+  generation between runs (the fix's design guarantee held exactly), genuine pre-existing
+  model errors OUT OF THIS FIX'S SCOPE; **1 numeric didn't fire** (eval_155, "487A" is not a
+  strippable amount — correct); **3 fired and improved/held substance** (317 wrong→right,
+  355 hedge→right, 146 right→right).
+
+### Finding 2 — Bucket A 154→152 fully explained, non-regressive; design guarantee held
+Exactly **2 flips across all 181 in-corpus Bucket-A questions, both numeric, ZERO
+non-numeric flips** (byte-identical guarantee intact; also verified no Bucket-A question
+newly refused/clarified, ruling out the interim OOC-classifier commit d767e71):
+- **eval_146** — numeric, reliable=False. Substantively correct in BOTH runs ("no grace
+  period"); the fix reworded it and the citation shifted Immigration→TanzLII, flipping the
+  *unreliable* overlap scorer. Scorer noise, not a real regression.
+- **eval_186** — numeric, reliable=True, the ONLY reliable flip. Mechanism confirmed as the
+  fix (appended an extra fact → 4-bullet prompt → greedy decoding diverged), NOT GPU
+  nondeterminism. But the lost "pass" was itself a **fabricated-number false-pass**: prior
+  asserted a *"50 au zaidi"* safety-officer threshold the reference explicitly says is *not
+  established*; post-fix dropped the fabrication for a vaguer answer that fails the overlap
+  scorer. A lateral move (confident-wrong-that-passed → vague-incomplete-that-failed), not
+  the loss of a genuinely-correct answer.
+
+### The cross-cutting discovery — the polarity parser is the bottleneck, not retrieval
+The reporting-only parser recognised `hakuna/haiwezi/…` but NOT the core Swahili
+prohibition/negation forms these answers use — `marufuku`, `imezuiliwa`, `si lazima`,
+`bila`. Proven on real data it BOTH missed the one real correction (eval_317, "marufuku"
+read as yes) AND manufactured a spurious new inversion (eval_146, a benign rewording that
+dropped the word "Hakuna").
+
+### Reporting-layer fix IMPLEMENTED — negated-obligation lexicon (chike/scoring.py)
+Separate from the retrieval-layer fix (d92e63f). Added to `_YN_NEG`: `si lazima` /
+`sio lazima` / `siyo lazima` / `halazimiki` / `hailazimu` (an unambiguous NO regardless of
+question framing), plus a negative-lookbehind on the positive-`lazima` marker in
+`_polarity_conf` so a negated `lazima` reads as a clean 'no', not an ambiguous 'both'.
+
+Full-400 regression (live patched module, re-derived over the stored generations):
+- Candidate inversions **9 → 8**: exactly **eval_355 resolved**, ZERO new false positives.
+- yes_no scorer: exactly **1 flip, eval_355 False→True** (a correct resolution; reliable=False
+  and in Bucket D, so no reliable-subset headline moves). Nothing else in the 400 changed.
+- Existing polarity test suite + full non-integration suite green (131 passed).
+
+**DELIBERATELY NOT ADDED (contradicts the initial plan — evidence-driven):** the prohibition
+verbs `marufuku` / `imezuiliwa` / `zuiliw` and the broad `bila`. Tested across all 400, a
+flat mapping to NO **regressed FOUR genuinely-correct answers** (eval_149/152/153/389) —
+because a Swahili prohibition verb carries prohibition CONTENT, not a fixed yes/no polarity:
+for "can I do X?" it means NO, but for "is X prohibited / is he covered?" the correct answer
+is YES ("Ndiyo, ni marufuku"). `bila` was worse (broke the reliable-scored eval_309). A
+framing-aware variant was also tested and still broke eval_153 (a permission-framed question
+whose correct answer is YES). So eval_317 and eval_146 CANNOT be resolved by any flat
+lexicon; their SUBSTANCE is already correct post-retrieval-fix, and a regression guard test
+(`test_prohibition_verbs_deliberately_not_flat_negation`) locks this decision in.
+
+### Next tracked follow-ups (priority order, for future work)
+1. **Generation-robustness repetition loop** — eval_317's "Thibitisha…" ×14 tail and
+   eval_183's fabricated multi-turn Q&A. Likely a stop-string / `no_repeat_ngram` / decoding
+   fix. This (not retrieval, not the parser) is what still fails eval_317's scorer.
+2. **The 5 non-numeric genuine model errors** (eval_059/062/183/332/391) — real prohibition
+   inversions the retrieval fix does not and was not meant to touch; need a generation/
+   prompt-side intervention (leading-question handling, EFD-receipt absolutes) or the
+   semantic judge. eval_317/146's remaining parser mis-reads also fold into the semantic-
+   judge / framing-aware-polarity workstream.
+
+---
+
 ## Prohibition-inversion investigation — ROOT CAUSE = numeric-query retrieval eviction (2026-07-18)
 
 The 400-question run surfaced GN487A prohibition answers that flipped to "allowed"

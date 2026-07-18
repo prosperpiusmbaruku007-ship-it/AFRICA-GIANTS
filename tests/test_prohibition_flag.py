@@ -12,7 +12,8 @@ headline. These tests lock in that:
     factual yes-no in an obligation subdomain is not over-tagged).
 Cases mirror the actual eval_* findings so a regression re-introducing the hole fails here.
 """
-from chike.scoring import high_stakes_prohibition, prohibition_polarity_review
+from chike.scoring import (high_stakes_prohibition, prohibition_polarity_review,
+                           _polarity_conf, _yn_polarity)
 
 
 # --- high_stakes_prohibition tagging -----------------------------------------
@@ -100,3 +101,44 @@ def test_returns_none_when_not_high_stakes():
     q = {"id": "eval_001", "answer_type": "number", "subdomain": "vat_registration",
          "question_sw": "Kizingiti cha VAT ni ngapi?", "correct_answer_sw": "TZS 200,000,000."}
     assert prohibition_polarity_review(q, "TZS 200,000,000") is None
+
+
+# --- negated-obligation lexicon fix (2026-07-18) -----------------------------
+# 'si lazima' / 'halazimiki' / 'hailazimu' mean "not required" — a clean NO. Locks in the
+# eval_355 resolution (was a false candidate_inversion AND a scorer miss).
+
+def test_si_lazima_parses_as_no_not_ambiguous():
+    # eval_355-shape: model correctly says the EFD is not mandatory below threshold.
+    gen = ("Kwa mauzo ya TZS 10,999,000, bado chini ya kiwango cha TZS 11,000,000. "
+           "Kwa hiyo, EFD si lazima kisheria. Lakini unaweza kujiunga kwa hiari.")
+    assert _polarity_conf(gen)[0] == "no"      # not 'both', not affirmative-default 'yes'
+    assert _yn_polarity(gen) == "no"           # scorer agrees
+
+
+def test_si_lazima_answer_matches_no_reference_and_scores_pass():
+    q = {"id": "eval_355", "answer_type": "yes_no", "subdomain": "efd_compliance",
+         "question_sw": "Mauzo yangu ni TZS 10,999,000 kwa mwaka, je EFD ni lazima kwangu?",
+         "correct_answer_sw": ("Hapana, bado si lazima kwa kizingiti hicho — TZS 10,999,000 "
+                               "iko chini ya TZS 11,000,000; unaweza kutumia risiti za mikono.")}
+    gen = ("Kwa mauzo ya TZS 10,999,000, bado chini ya kiwango cha TZS 11,000,000. "
+           "Kwa hiyo, EFD si lazima kisheria. Lakini unaweza kujiunga kwa hiari.")
+    rev = prohibition_polarity_review(q, gen)
+    assert rev["candidate_inversion"] is False          # no longer a false inversion
+    assert _yn_polarity(gen) == _yn_polarity(q["correct_answer_sw"])   # scorer PASS
+
+
+def test_positive_lazima_unaffected_by_negation_lookbehind():
+    # A plain obligation ('ni wa lazima') must still read as YES — the lookbehind only
+    # suppresses 'lazima' when it is directly negated by si/sio/siyo.
+    assert _polarity_conf("Ukaguzi wa OSHA ni wa lazima kila mwaka.")[0] == "yes"
+
+
+def test_prohibition_verbs_deliberately_not_flat_negation():
+    # REGRESSION GUARD: marufuku / imezuiliwa / zuiliw were deliberately NOT added to
+    # _YN_NEG — a flat mapping to NO regressed eval_149/152/153/389, where the correct
+    # answer to an "is X prohibited?" question is YES ('Ndiyo, ni marufuku'). A no-lead
+    # answer that merely states prohibition content must therefore parse as the
+    # affirmative default 'yes', NOT 'no'. If someone re-adds those verbs, this fails.
+    gen = "GN487A inazuia shughuli 15 kwa wasio raia; rejareja ni miongoni mwa zilizopigwa marufuku."
+    assert _polarity_conf(gen)[0] == "yes"
+    assert _yn_polarity(gen) == "yes"

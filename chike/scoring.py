@@ -78,8 +78,25 @@ def normalize(text):
 # yes/no with no leading word and no negation marker) can still be misclassified.
 # Future improvement: score only the first sentence / first N chars, not the full text,
 # so trailing content (ramble or otherwise) cannot influence the score at all.
+# Negated-obligation forms ADDED 2026-07-18 (reporting-layer follow-up to the retrieval
+# fix). 'si lazima' / 'sio lazima' / 'siyo lazima' / 'halazimiki' / 'hailazimu' mean "not
+# required" — an unambiguous NO regardless of question framing — so they belong in the
+# negation set. This resolved eval_355's false inversion AND its scorer verdict with ZERO
+# collateral across the full 400-question run.
+#
+# DELIBERATELY NOT ADDED: the prohibition verbs marufuku / imezuiliwa / zuiliw (and the
+# broad 'bila'). Tested across all 400, mapping them to a flat NO regressed FOUR genuinely
+# CORRECT answers (eval_149/152/153/389) — because a Swahili prohibition verb carries
+# prohibition CONTENT, not a fixed yes/no polarity: for a "can I do X?" question it means
+# NO, but for an "is X prohibited / is he covered?" question the correct answer is YES
+# ("Ndiyo, ni marufuku"). 'bila' was worse (broke the reliable-scored eval_309). Those
+# inversions (eval_317 salon, eval_146) need a question-framing-aware / semantic parser,
+# tracked as a follow-up — a flat lexicon cannot separate the two framings. See PROGRESS.md
+# "Polarity-parser lexicon gap".
 _YN_NEG = re.compile(r'\b(hakuna|haiwezi|hairuhusiwi|haiondoi|haipatikani|hawezi|'
-                     r'haihusiki|haistahili|hairuhusu|haitakiwi|haina|haiathiri)\b')
+                     r'haihusiki|haistahili|hairuhusu|haitakiwi|haina|haiathiri|'
+                     r'halazimiki|hailazimu)\b'
+                     r'|\bsi(?:yo|o)? lazima\b')
 _YN_YES = re.compile(r'\b(ndiyo|ndio)\b')
 
 
@@ -178,7 +195,12 @@ def _polarity_conf(text):
 
     def pol(seg):
         neg = bool(re.search(r'\bhapana\b', seg) or _YN_NEG.search(seg))
-        pos = bool(_YN_YES.search(seg) or re.search(r'\blazima\b', seg))
+        # 'lazima' is a positive obligation marker EXCEPT when negated ('si/sio/siyo
+        # lazima'), which _YN_NEG now catches as a NO. The lookbehind stops a negated
+        # 'lazima' from also registering as positive (which would parse 'si lazima' as an
+        # ambiguous 'both' instead of the clean 'no' it is — eval_355).
+        pos = bool(_YN_YES.search(seg)
+                   or re.search(r'(?<!si )(?<!sio )(?<!siyo )\blazima\b', seg))
         if neg and pos:
             return 'both'
         if neg:
