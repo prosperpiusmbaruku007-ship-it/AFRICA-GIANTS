@@ -1,6 +1,144 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-17
+Last updated: 2026-07-18
+
+## Prohibition-inversion investigation — ROOT CAUSE = numeric-query retrieval eviction (2026-07-18)
+
+The 400-question run surfaced GN487A prohibition answers that flipped to "allowed"
+(eval_317 salon, eval_332 wholesale), hidden from the reliable-subset headline
+because scorer_reliability excluded them as yes_no_polarity_unverifiable. A
+14-question probe set (gn487a_inversion_probes.jsonl, run on the real v15 model +
+e5 RAG on Kaggle, results in gn487a_inversion_probe.json on HF adapter-v15) plus
+an offline retrieval trace (e5-base is cached locally; retrieval is CPU-only cosine
+over kaggle/rag_embeddings.npy, so the ACTUAL top-3 retrieved facts were reproduced
+locally with no GPU) together identify a single, precise root cause.
+
+### Root cause (corrected twice, now evidence-locked): the query's NUMBER hijacks e5 retrieval
+
+The numeral in a question dominates the multilingual-e5-base query embedding and
+evicts the topic fact from the top-3, replacing it with numerically-shaped but
+semantically-wrong facts (trademark fees, VAT deferment thresholds, course fees —
+all "X TZS" entries). With no relevant fact in context, the model falls back on
+parametric memory. Confirmed directly by the retrieval trace:
+
+- probe_01 salon + "TZS 100,000,000" -> retrieved {fine limit 100k TZS, trademark
+  fee 10k, vat deferment 10M}. The correct salon facts (rag idx 172/176: "salon
+  prohibited UNLESS hotel/tourism") were NOT retrieved. Model hallucinated a
+  "<100M capital" exception = eval_317 reproduced. Strip the number -> GN487A-family
+  facts return and the model answers correctly (probe_02).
+- probe_12 EFD + "TZS 500" -> retrieved 3 trademark-fee facts (50k each). The
+  correct EFD fact (idx 56: receipt threshold 11M turnover) was NOT retrieved.
+  Model fabricated a "TZS 200,000 EFD floor". Strip the number -> the correct EFD
+  11M fact returns to #1.
+- probe_10 OSHA + "wafanyakazi 8" -> correct OSHA absolute (idx 51: "bila kikomo
+  cha idadi ya wafanyakazi") buried at #3 behind {28-day processing, small-scale
+  mining}; model hedged "under 10 employees you may not be required" — importing
+  SDL's real 10-employee threshold. Strip the number -> the OSHA absolute returns
+  to #1.
+
+RETRIEVAL-vs-RECALL determination (the fork the fix hinges on): it is PRIMARILY
+RETRIEVAL. The contaminating SDL-10 / VAT-200k facts were NOT themselves retrieved
+in probe_10/probe_12 — so the wrong number is free parametric recall, but ONLY
+because retrieval first evicted the correct topic fact. Every no-number control
+retrieved the right fact and answered correctly. The fix therefore belongs in
+RETRIEVAL (numeral downweighting/stripping in the query embedding, or a topic-term
+retrieval pass), NOT in a prompt/generation clamp. Precedent already noted in
+chike/retrieval.py:44-46 (a raw-dot-product SDL query once ranked GN487A penalties
+top — same class of cross-topic embedding contamination).
+
+### Why some numeric probes still answered correctly (H1/H2/H3 verdicts)
+
+Given no fact in context, outcome depends purely on parametric-recall robustness:
+- Unconditional absolutes recall correctly despite the retrieval whiff: mobile
+  money, phone repair, tour guiding, real estate, wholesale prohibitions
+  (probes 03/05/06/07/08); NSSF-from-first (14); min-wage ~175k floor (13).
+- Conditional or threshold-adjacent facts fabricate a carve-out: salon (real
+  hotel/tourism exception), OSHA (SDL-10 competitor), EFD (a plausible floor).
+
+So: H1 (numeric-distractor binding) CONFIRMED but is a retrieval-eviction artifact,
+not conditional-fact reasoning per se. H2 NARROW — only the conditional-exception
+activity (salon) flips; 5 other GN487A activities with numbers stay correct;
+NOT systemic across GN487A. H3 CONFIRMED-SELECTIVE — OSHA and EFD flip (competing
+thresholds exist to recall), min-wage and NSSF hold. All three collapse into the
+one retrieval-eviction mechanism above.
+
+### Two SEPARATE, lower-severity findings (do not conflate with the safety issue)
+
+FINDING B — polarity-parser over-surfacing (reporting-noise, NOT a safety defect):
+probes 02/03/05/06/07/09 are substantively CORRECT ("...imepigwa marufuku kwa wasio
+raia") yet flagged candidate_inversion=True. The "naweza X? ... [activity] marufuku"
+construction parses as a low-confidence 'yes' in _polarity_conf (all confident=False).
+Human review catches these, so it is review-time noise, not a hidden danger. Refine
+by de-tiering a low-confidence 'yes' that contains a strong prohibition marker
+(marufuku / imezuiliwa / hawawezi / inakataza) into a distinct "likely-correct,
+confidence-parsing" bucket. Lower priority than the retrieval fix.
+
+FINDING C — generation-robustness bleed-through (corroborated, its own defect):
+probes 10/11/12 independently reproduced repetition loops, fabricated multi-turn
+Q&A, and stray Arabic text surviving clean_reply — the same failure class seen in
+eval_303/321/332 on the 400-run. Two independent datasets now show it; logged as a
+standalone Priority-3 investigation for when capacity allows. No new action taken.
+
+### Fix scoping (NOT yet implemented — reported for confirmation first)
+
+Target ONLY the confirmed mechanism: numeral-driven retrieval eviction. Do NOT
+build a blanket "suppress numeric prohibition answers" clamp — 6 of 8 numeric
+GN487A probes answered CORRECTLY and a clamp would regress them. Candidate fix
+locus is chike/retrieval.py query construction (numeral handling before embedding);
+must be regression-tested against the full 400 for retrieval changes on non-numeric
+questions before proposal. Awaiting go-ahead before writing fix code.
+
+### Fix IMPLEMENTED — additive two-arm hybrid retrieval (chike/retrieval.py)
+
+Approved and built. Retrieval-layer change only; the model-level confirmation
+(does eval_317's answer actually flip to "prohibited"?) still requires a founder
+Kaggle full-400 run (see below).
+
+DESIGN — append-only union of two retrieval arms, at the single retriever boundary
+(chike/retrieval.py Retriever.retrieve, used by the orchestrator via retriever.retrieve):
+  1. Full-query arm — current production retrieval, top-3, KEPT VERBATIM.
+  2. Number-stripped arm — re-embed with digit amounts removed (strip_numeric_amounts:
+     'TZS 100,000,000' / bare '8' / '500' go; number-WORDS milioni/elfu/kumi stay,
+     since they carry topic meaning without the hijacking magnitude), retrieve top-6.
+  3. Merge = APPEND-ONLY: return baseline top-3 unchanged, then append the FIRST NEW
+     fact the stripped arm surfaces (final size 4). Fires ONLY when the query contains
+     a digit; non-numeric queries take a single-arm path that is byte-identical to
+     production (one embed call, no merge) — locked by a unit test.
+
+WHY APPEND-ONLY, NOT INTERLEAVE/RRF (this is the crux): interleave forces a stripped-
+arm fact into slot 2, which EVICTED the correct EFD fact sitting at baseline rank 3 on
+eval_331 and eval_355 — a real regression the 14-query guard set could NOT catch
+because guard facts sit at rank 1. Append-only cannot drop a baseline fact by
+construction (verified: 0 regressions across all 90 numeric test queries). It also
+resolves the "incidental number vs subject number" problem WITHOUT a classifier: the
+full arm keeps the numeric fact when the number is the subject (PAYE 800k, SDL/NSSF
+12-employee calcs all still hit), the stripped arm recovers the topic fact when the
+number is incidental, the union carries both. add=1 (size 4) chosen over add=2 (size 5)
+because coverage was identical (85/90 either way) — take the smaller prompt.
+
+RETRIEVAL-LAYER EVIDENCE (e5 cached locally; CPU cosine; model not run):
+  - Topic coverage across 90 numeric GN487A/OSHA/EFD/NSSF questions in the 400:
+    baseline 83/90 -> additive 85/90 -> interleave 83/90 (with 2 regressions).
+  - additive REGRESSIONS: 0 (append-only, by construction and measured).
+  - GAINS: eval_317 (salon — the headline inversion; baseline retrieved zero GN487A
+    facts, additive appends a GN487A penalty fact) and eval_347 (EFD threshold false-
+    premise question — additive appends the real EFD 11M fact).
+  - 14 critical regression guards: 14/14 under additive (integration test asserts all
+    14 hit AND eval_317 recovers a GN487A fact on the real 210-fact index).
+
+OPEN FOLLOW-UP (not silently dropped): probe_12 / eval_056 remain unfixed. These use
+the word 'Muamala wangu ni TZS 500 tu' — stripping the digit leaves 'Muamala ... tu',
+which still mis-retrieves to transaction/fee facts. The real 400-set EFD questions that
+use 'Mauzo' (turnover) — eval_354/355 — already retrieve the EFD fact fine. So this is a
+narrow 'muamala' vs 'mauzo' wording artifact, NOT a systemic hole; tracked as a separate,
+narrower follow-up (would need a topic-term retrieval arm) rather than over-engineered now.
+
+WIRED FOR KAGGLE: no change to eval_orchestrator_combined.py is needed — it constructs
+Retriever(...) and passes retriever.retrieve to the Orchestrator (lines 189-190), so the
+hybrid is inherited automatically. The script clones main fresh and prints '[clone] chike
+@ ... (HEAD <sha>)'; verify that SHA matches the fix commit before trusting the run. The
+definitive test is whether the model's ANSWER flips on eval_317 and similar with the
+recovered fact in context — founder runs the full 400 on Kaggle (Claude does not run GPU).
 
 ## Verification-entry recommendations — all three CLOSED
 
