@@ -37,12 +37,22 @@ This is DIAGNOSTIC ONLY — no gate, no pass/fail thresholds, no fix. It prints 
 the question, the FULL injected context (with the target fact flagged + its rank), the
 raw + cleaned generation, the deterministic polarity verdict, and the expected answer.
 
-Bootstrap on Kaggle (GPU + AFRICA_GIANTS secret):
+Bootstrap on Kaggle (GPU + AFRICA_GIANTS secret) — original 9-case set:
     import requests
     exec(requests.get('https://raw.githubusercontent.com/prosperpiusmbaruku007-ship-it/'
                       'AFRICA-GIANTS/main/kaggle/faithfulness_probe.py', timeout=10).text)
 
-PREREQ: faithfulness_probes.jsonl is committed to the repo (eval/accuracy_gate/), so the
+Follow-up sets select via env var BEFORE exec (e.g. the license-framing 2x2 factorial that
+isolates why only fp_01 fails — see faithfulness_leseni_probes.jsonl):
+    import os, requests
+    os.environ['FAITHFULNESS_PROBE_FILE'] = 'faithfulness_leseni_probes.jsonl'
+    exec(requests.get('https://raw.githubusercontent.com/prosperpiusmbaruku007-ship-it/'
+                      'AFRICA-GIANTS/main/kaggle/faithfulness_probe.py', timeout=10).text)
+
+The result JSON name tracks the input stem (e.g. faithfulness_leseni_probes_result.json),
+so follow-up runs never overwrite the original faithfulness_probes_result.json.
+
+PREREQ: the selected *_probes.jsonl is committed to the repo (eval/accuracy_gate/), so the
 clone path below finds it directly — no HF upload needed. The HF-dataset fallback is kept
 only for a pure-bootstrap run where the clone is unavailable.
 """
@@ -54,7 +64,11 @@ import requests
 REPO = 'prosperpiusmbaruku007-ship-it/AFRICA-GIANTS'
 RAW = f'https://raw.githubusercontent.com/{REPO}/main'
 DATASET_REPO = 'prospAprospA007/africa-giants-dataset'
-PROBE_FILE = 'faithfulness_probes.jsonl'
+# Which probe set to run. Defaults to the original 9-case set; set the env var before
+# exec() to run a follow-up set, e.g.:
+#   os.environ['FAITHFULNESS_PROBE_FILE'] = 'faithfulness_leseni_probes.jsonl'
+PROBE_FILE = os.environ.get('FAITHFULNESS_PROBE_FILE', 'faithfulness_probes.jsonl')
+_STEM = os.path.splitext(os.path.basename(PROBE_FILE))[0]   # output name tracks input
 
 # ── AUTH ────────────────────────────────────────────────────────────────────────
 try:
@@ -262,17 +276,18 @@ bad_ctrl = [r['id'] for r in ctrls if r['classification'] != 'faithful']
 print(f"\ncontrols faithful: {sum(r['classification']=='faithful' for r in ctrls)}/{len(ctrls)}"
       + (f"  !!! CONTROL(S) NOT FAITHFUL: {bad_ctrl} — split logic suspect" if bad_ctrl else "  (OK)"))
 
-out = {'mode': 'faithfulness_probe', 'commit': _sha,
+out = {'mode': f'faithfulness_probe:{_STEM}', 'commit': _sha,
        'timestamp': datetime.now(timezone.utc).isoformat(),
        'faithfulness_failure_ids': failures, 'retrieval_gap_ids': gaps, 'rows': rows}
-path = '/kaggle/working/faithfulness_probe.json'
+_out_name = f'{_STEM}_result.json'
+path = f'/kaggle/working/{_out_name}'
 json.dump(out, open(path, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
 try:
     from huggingface_hub import HfApi
-    HfApi().upload_file(path_or_fileobj=path, path_in_repo='faithfulness_probe.json',
+    HfApi().upload_file(path_or_fileobj=path, path_in_repo=_out_name,
                         repo_id=ADAPTER, repo_type='model', token=hf_token,
-                        commit_message='faithfulness/grounding reproduction probe')
-    print(f'\n[upload] faithfulness_probe.json -> {ADAPTER}')
+                        commit_message=f'faithfulness/grounding probe result ({_STEM})')
+    print(f'\n[upload] {_out_name} -> {ADAPTER}')
 except Exception as e:
     print(f'\n[upload] failed (non-critical): {e}')
 print('\nPROBE_DONE')
