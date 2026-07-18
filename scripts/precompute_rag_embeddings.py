@@ -35,6 +35,17 @@ CONCISE_BILINGUAL_FACTS = {
     'gn487a_penalty_citizen_facilitator':
         'Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini si zaidi ya TZS 5,000,000 (milioni tano), au kifungo si zaidi ya miezi 3.',
 
+    # Retrieval-targeted restatement of the facilitator penalty using the exact
+    # 'kukopesha leseni' collocation. lv_01/fp_01 showed the model overrides the
+    # generic 'anayemsaidia mgeni' fact with a parametric 'licensed Tanzanian may
+    # operate' prior for THIS phrasing only (2x2 factorial: swapping either the verb
+    # or the object alone fixes it). Same TZS 5M/3-month figure — no new claim.
+    'gn487a_license_lending_is_facilitation':
+        'Kumkopesha au kumkabidhi mgeni leseni yako ya biashara ni kumsaidia kukiuka GN487A. '
+        'Raia wa Tanzania anayekopesha leseni yake kwa mgeni anaadhibiwa kama msaidizi: '
+        'faini si zaidi ya TZS 5,000,000 (milioni tano), au kifungo si zaidi ya miezi 3; '
+        'uraia haukuondoi adhabu hii, adhabu ni kwa kumsaidia si kwa kuendesha.',
+
     'sdl_rate':
         'SDL (Skills Development Levy) Tanzania: asilimia 3.5 ya mishahara yote. Si 4%, si 2%.',
 

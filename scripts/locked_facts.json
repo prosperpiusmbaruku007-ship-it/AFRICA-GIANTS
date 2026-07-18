@@ -462,6 +462,20 @@
     "effective_date": "2025-07-28",
     "status": "LOCKED"
   },
+  "gn487a_license_lending_is_facilitation": {
+    "fact": "Lending, renting, or transferring your business licence to a non-citizen so they can run a GN487A-prohibited activity is itself facilitation ('kumsaidia') under GN487A. The Tanzanian licence-holder is penalised as a facilitator: TZS 5,000,000 fine OR imprisonment not exceeding 3 months. Being a citizen does NOT exempt them — the penalty is for facilitating, not for operating. Same penalty as gn487a_penalty_citizen_facilitator, restated for the licence-lending case.",
+    "correct_value": "License-lending to a non-citizen = facilitation; Tanzanian penalised TZS 5M or 3 months (same as citizen-facilitator penalty)",
+    "wrong_patterns": [
+      "raia wa tanzania hawakatazwi",
+      "kukopesha leseni si kosa",
+      "adhabu zinawahusu tu wasio raia",
+      "only the non-citizen is punished"
+    ],
+    "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
+    "verified_by": "TanzLII gazette text; derived from gn487a_msaidizi_definition + gn487a_penalty_citizen_facilitator (no new figure)",
+    "effective_date": "2025-07-28",
+    "status": "LOCKED"
+  },
   "gn605a_effective_date": {
     "fact": "GN 605A Private Sector Wage Order came into effect on 1 January 2026",
     "correct_value": "1 January 2026",
