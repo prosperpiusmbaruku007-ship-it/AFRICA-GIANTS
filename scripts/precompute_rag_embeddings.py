@@ -59,9 +59,33 @@ CONCISE_BILINGUAL_FACTS = {
     # This version concentrates the embedding centroid on license-transfer (kukopesha/
     # kukodisha/kukabidhi + leseni — tokens absent from every competing fact, so lv_01
     # still wins) and drops the generic penalty/facilitation prose.
+    # NARROWED AGAIN (v3): v2 still carried the explicit 'faini ya TZS 5,000,000 au
+    # kifungo cha miezi 3' penalty-amount tail. That residual penalty-amount vocabulary
+    # made it rank #2 (in top-3) for eval_380's non-citizen-penalty-AMOUNT query
+    # ('Faini ya chini kabisa ... asiye raia ... TZS ngapi?'), injecting a SECOND 5M
+    # figure alongside the correct 10M non-citizen fact (which is already rank 0). Two
+    # 5M facts vs one 10M in context tipped the model to answer 5M — a wrong number
+    # (10M->5M gate regression at 19fce68, eval_380). Dropping the figure tail and
+    # ending on 'anaadhibiwa kama msaidizi wa mgeni' keeps the kukopesha+leseni
+    # collocation (lv_01/eval_213 still retrieves it at rank 0 and stays faithful) while
+    # pushing it OUT of eval_380's top-3 (verified rank 3). The 5M figure for eval_213's
+    # answer is still available from gn487a_penalty_citizen_facilitator (idx 21).
     'gn487a_license_lending_is_facilitation':
         'Kukopesha, kukodisha au kukabidhi leseni yako ya biashara kwa mgeni ni kosa chini ya GN487A. '
-        'Raia anayekopesha leseni yake kwa mgeni analipa faini ya TZS 5,000,000 au kifungo cha miezi 3.',
+        'Raia anayekopesha leseni yake kwa mgeni anaadhibiwa kama msaidizi wa mgeni.',
+
+    # Swahili grounding for the marriage-exemption fact. Like the 15 prohibited-activity
+    # facts, gn487a_marriage_no_exemption was English-only (key:value fallback) — it
+    # ranked ~5 (outside top-3) for the Swahili marriage query, so eval_175 lost its
+    # correct fact and the model deflected to a vague 'apply for citizenship' answer
+    # (True->False at 19fce68). This gives it real same-language tokens (kuoa/kuolewa/
+    # Mtanzania/msamaha/rejareja) so it wins its own query (verified rank 0), pulled
+    # forward from the queued systemic English-only batch because it has a measured
+    # gate cost. Same figure-free, action/status statement pattern as activity_3.
+    'gn487a_marriage_no_exemption':
+        'Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. '
+        'Mgeni aliyeoa Mtanzania bado ni mgeni na hawezi kufanya biashara ya rejareja iliyozuiliwa. '
+        'Tafuta ushauri wa wakili wa uhamiaji.',
 
     'sdl_rate':
         'SDL (Skills Development Levy) Tanzania: asilimia 3.5 ya mishahara yote. Si 4%, si 2%.',

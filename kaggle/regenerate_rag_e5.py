@@ -144,6 +144,10 @@ critical_queries = [
     # kukopesha+leseni trigger (its distinctive tokens), while NOT displacing
     # 'Phone repair activity' above — the two guards together bracket the over-match fix.
     ('License lending facilitation', 'query: Raia anayekopesha leseni yake kwa mgeni anaadhibiwa?', ['leseni', 'kukopesha']),
+    # Marriage-exemption Swahili grounding (eval_175): the previously English-only
+    # gn487a_marriage_no_exemption fact must now WIN its own Swahili query. kuoa/kuolewa
+    # are distinctive to this fact (no other fact uses them), so this is unambiguous.
+    ('GN487A marriage no exemption', 'query: Ninaoa Mtanzania, naweza kufanya biashara ya rejareja?', ['kuoa', 'kuolewa']),
     ('PAYE 800K band', 'query: PAYE kwa mshahara wa TZS 800,000 ni kiasi gani?', ['760', '25%', '78,000']),
     ('SDL 12-employee calculation', 'query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, SDL jumla ni kiasi gani?', ['252,000']),
     ('NSSF 12-employee calculation', 'query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, NSSF jumla ni kiasi gani?', ['1,440,000']),
@@ -202,9 +206,38 @@ if not contrast_pass:
     for r, idx in enumerate(_top3, 1):
         print(f'        top{r}: {fact_texts_to_embed[idx][:110]}')
 
+# ── DISAMBIGUATION GUARD — eval_380 non-citizen penalty AMOUNT ───────────────────
+# The non-citizen-penalty-AMOUNT query must retrieve the 10M non-citizen fact in top-3
+# AND must NOT contain the license-lending facilitation fact in top-3. The 10M fact was
+# never outranked (it is rank 0); the regression was CONTEXT COMPOSITION — the narrowed
+# 5M license-lending fact intruding at rank 2 put a second 5M figure in context and the
+# model answered 5M instead of 10M. A plain 'is 10M present' check would have passed
+# even while broken, so this is a two-part guard: 10M present AND license-lending fact
+# ('kukopesha' — a token unique to that fact, absent from the 10M/generic-facilitator
+# facts) absent. If a future edit lets the license-lending fact drift back into this
+# query's top-3, this fails loudly.
+print('\n' + '=' * 60)
+print('DISAMBIGUATION GUARD — eval_380 non-citizen penalty amount')
+print('=' * 60)
+_dq = 'query: Faini ya chini kabisa anayotozwa asiye raia kwa kukiuka GN 487A ni TZS ngapi hasa?'
+_dqe = model.encode([_dq])[0]
+_dqe = _dqe / (np.linalg.norm(_dqe) + 1e-10)
+_dscores = np.dot(embeddings_normalized, _dqe)
+_dtop3 = np.argsort(_dscores)[-3:][::-1]
+_has_10m = any(
+    ('10,000,000' in fact_texts_to_embed[i] or 'milioni kumi' in fact_texts_to_embed[i].lower())
+    for i in _dtop3)
+_has_license = any('kukopesha' in fact_texts_to_embed[i].lower() for i in _dtop3)
+disambig_pass = _has_10m and not _has_license
+print(f'[{"PASS" if disambig_pass else "FAIL"}] 10M non-citizen fact in top-3 '
+      f'(present={_has_10m}) AND license-lending fact absent (present={_has_license})')
+if not disambig_pass:
+    for r, idx in enumerate(_dtop3, 1):
+        print(f'        top{r}: {fact_texts_to_embed[idx][:110]}')
+
 print()
 # allow <10% self-retrieval noise (near-duplicate facts can surface a sibling at rank 1)
-overall_pass = (critical_pass and contrast_pass
+overall_pass = (critical_pass and contrast_pass and disambig_pass
                 and len(failures) < len(fact_texts_to_embed) * 0.1)
 if overall_pass:
     print(f'VERIFICATION PASSED — {len(fact_texts_to_embed) - len(failures)}/{len(fact_texts_to_embed)} '
@@ -213,7 +246,7 @@ if overall_pass:
 else:
     print('VERIFICATION FAILED — review failures before saving')
     print(f'  critical_pass={critical_pass} | contrast_pass={contrast_pass} | '
-          f'self_retrieval_failures={len(failures)} '
+          f'disambig_pass={disambig_pass} | self_retrieval_failures={len(failures)} '
           f'(tolerance={int(len(fact_texts_to_embed) * 0.1)})')
     sys.exit(1)   # do NOT upload a broken index
 
