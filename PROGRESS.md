@@ -77,9 +77,102 @@ once this is fixed and re-run.
   project has had** — every prior score was measured on the mismatched format and is
   superseded once this lands. → **DONE 2026-07-19 (see FINAL summary below).**
 
-## ✅ FAITHFULNESS INVESTIGATION CYCLE — CLOSED (2026-07-19)
+## ✅ FAITHFULNESS + FACT-INDEX CYCLE — FINAL VERDICT (2026-07-20, gate-measured)
 
-The eval_213 faithfulness cycle is complete. Summary for the record:
+**Status: net-positive cycle, closed on full 400-gate data — NOT a clean single-shot win.**
+The eval_213 faithfulness fix required three fact-index rounds and surfaced a real regression
+along the way; the final measured result is a net improvement, with two documented scorer
+artifacts and one latent (not-yet-costly) fragility carried on a watchlist. Honest full arc:
+
+### 1. The eval_213 discovery + fix (2×2 collocation isolation)
+The facilitator-penalty fact was retrieved at **rank 0** yet the model answered wrong ("only
+non-citizens are punished") — a **faithfulness/grounding defect, not a retrieval gap** (the
+initial retrieval-gap hypothesis was REFUTED by pulling the actual retrieved context — the
+discipline that prevented shipping a wrong "fixed" status). A systematic **2×2 (verb × object)
+factorial** (`faithfulness_leseni_probes.jsonl`) isolated it to the single `kukopesha + leseni`
+collocation — swapping either the verb or the object alone eliminates it. A phrase-level
+parametric-prior override, not a general defect.
+
+### 2. The two-round (actually three-round) fact-index iteration this fix required
+- **v1** `gn487a_license_lending_is_facilitation`: over-matched — displaced
+  `gn487a_prohibited_activity_3` from the phone-repair query (**caught by the regen gate**).
+  Root cause of THAT was activity_3 being English-only/weakly-grounded; fixed by
+  Swahili-strengthening activity_3 rather than shrinking the new fact further.
+- **v2** (narrowed) + adding `gn487a_marriage_no_exemption` (Swahili) to fix eval_175: the
+  **marriage addition then caused two regressions**, found only on the full 400-gate at 19fce68 —
+  **eval_380** (non-citizen minimum penalty answered **TZS 5M instead of 10M** — a wrong number)
+  and **eval_175** (marriage answer degraded to a vague deflection). Retrieval-rank evidence
+  showed the 10M fact was never outranked (rank 0); the v2 license fact's residual `5,000,000`
+  tail put a **second 5M figure** into eval_380's top-3 — a **context-composition** failure.
+- **v3** (commit 2448c14 → index 0939eef): dropped the penalty-amount tail from the license
+  fact (kept the `kukopesha+leseni` collocation so eval_213 stays fixed) and Swahili-grounded
+  the marriage fact so it wins its own query. Added two regen guards (marriage positive;
+  eval_380 disambiguation: 10M present AND license fact absent from top-3).
+
+### 3. Probe-vs-gate discipline caught and correctly triaged every issue
+- **Stale "Linux-environment / os.path.join" Modal theory** — diagnosed as wrong and RETRACTED;
+  real cause was a Windows console-encoding crash on Modal CLI output (`PYTHONUTF8=1`).
+- **Unpushed-commit stale fetch** — the fetched-HEAD tripwire caught it; it was NOT a CDN delay
+  (origin genuinely was two commits behind because the commits were never pushed).
+- **Two probe-harness bugs** (stale target strings): fp_04 searched English `"marriage no
+  exemption"` against a now-Swahili fact; fp_02 was tied to one exact phrase the marriage fact
+  crowded out — both were false `retrieval_gap`s while the model answered correctly. Fixed the
+  matcher (string-or-list) + verified offline against real `facts_seen`.
+- **fp_05 fragility** — a genuine confident-wrong flip at probe level (passive-shareholding
+  "yes" flipped to "no" by prohibition-heavy context), attributed deterministically
+  (`do_sample=False`) to the marriage fact entering its top-3. Carried to the watchlist.
+
+### 4. Final measured result — full 400-gate, v3 (7eb9226) vs 19fce68
+- **Net +2 raw pass; +4 reliable-subset with ZERO reliable losses.** All 4 gains
+  (`eval_380`, `eval_175`, `eval_069`, `eval_163`) are `reliable=True`; eval_069/eval_163 were
+  19fce68 regressions now **recovered**. `eval_144` upgraded rambling→clean **reliable** pass.
+- **eval_213 / eval_380 / eval_175 all confirmed fixed** on real generated text (eval_380 now
+  "TZS 10,000,000"; eval_175 nails marriage≠citizenship/exemption).
+- **fact_path reliable-subset 108→111/130 = 85.4%** — above the 85% threshold AND slightly
+  above the pre-cycle baseline (e9cc68a 110/129 = 85.3%), with the faithfulness fix baked in.
+  Buckets: A ▲ (raw 85.1→86.2%, reliable ▲), D reliable ▲ (53.7→54.9%), B/C flat.
+- **The two losses are unreliable-subset scorer artifacts, not defects** — see (a) below.
+- **The predicted fp_05 crowding cost did NOT materialize on the gate:** shareholder-carveout
+  gate Qs (eval_173/eval_204) and all 6 facilitator-displaced Qs held pass.
+- Archived: `eval/results/gate_orchestrator_combined_7eb9226.json` (predecessor `_19fce68.json`).
+
+### (a) Logged as scorer-artifact / temporal items — NOT defects requiring a fix
+- **eval_157** (gn487a definition): both runs enumerate the 15 activities; v3 reformatted to a
+  numbered list and the overlap scorer scored it lower → `morphological_overlap_gap`, dropped to
+  `reliable=False`. Formatting + scorer-lexical artifact.
+- **eval_369** (gn487a yes_no, temporal retroactivity): `reliable=False` in BOTH runs
+  (`yes_no_polarity_unverifiable`). Not the fp_05 class (opposite direction — a yes-applies case
+  where the model over-hedged toward a spurious grandfathering carve-out). Pass→fail is a
+  scorer-boundary flip between two flawed answers on an already-unreliable case. Candidate future
+  locked-fact ("GN487A applies from 28 Jul 2025 regardless of business start date; no
+  grandfathering") but does not touch the trustworthy gate.
+
+### (b) STANDING WATCHLIST — check on any future gate run or fact-index change (not urgent)
+1. **fp_05-class carve-out fragility.** GN487A "permitted/yes" carve-out questions (passive
+   shareholding, etc.) sitting on English-only facts can be flipped negative by prohibition-heavy
+   Swahili context. Real at probe level; NOT yet costing reliable-gate accuracy. If a future gate
+   shows eval_173/eval_204 or similar carve-out Qs regressing, escalate.
+2. **English-only GN487A fact batch** (the ~15 `gn487a_prohibited_activity_*` + remaining
+   carve-outs) — still weakly grounded for Swahili queries; queued from earlier this session (see
+   TRACKED SYSTEMIC GAP below). The 26-question gn487a top-3 crowding is real in retrieval space
+   but not currently costing accuracy at the present top-k.
+
+### (c) STRUCTURAL GN487A decision — deliberate future work, NOT reactive
+Raise injected top-k for GN487A vs. a single consolidated GN487A rewrite (fewer, well-scoped,
+all-Swahili facts with a designed layout + a standing carve-out guard set). The measured gate
+says this is **not urgent** — decide deliberately with the watchlist data, not reactively.
+
+---
+
+
+
+> This section declared closure on 2026-07-19 based on a 14-case probe regression, BEFORE
+> the full 400-gate revealed the marriage-fact addition had caused eval_380/eval_175
+> regressions. It is retained for the audit trail but is SUPERSEDED by the FINAL VERDICT
+> section above (v3 fix + measured gate result). In particular, the "ACCEPTED low-severity
+> fp_04 trade-off" below was later CORRECTED: eval_175 did carry a real, measured gate cost.
+
+The eval_213 faithfulness cycle (interim summary for the record):
 
 - **eval_213 discovered:** the facilitator-penalty fact was retrieved correctly (rank 0) yet
   the model still answered wrong ("only non-citizens are punished") — a faithfulness/grounding
