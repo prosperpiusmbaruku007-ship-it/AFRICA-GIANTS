@@ -77,6 +77,33 @@ once this is fixed and re-run.
   project has had** — every prior score was measured on the mismatched format and is
   superseded once this lands. → **DONE 2026-07-19 (see FINAL summary below).**
 
+## TRACKED SYSTEMIC GAP — all 15 GN487A prohibited-activity facts are English-only (2026-07-19)
+
+Surfaced while fixing the lv_01 license-lending fact's regen over-match. `gn487a_prohibited_
+activity_1..15` have NO `CONCISE_BILINGUAL_FACTS` entry — they fall back to the English
+`key: value` form (e.g. "gn487a prohibited activity 3: Prohibited activity 3: Repair of
+mobile phones and electronic devices"). A Swahili query like `Mgeni anaweza kutengeneza
+simu?` shares ZERO surface tokens with the English text and matches only cross-lingually
+(weak e5 signal). These facts were only *luckily* top-ranked before, absent a strong
+Swahili GN487A-domain competitor in the index.
+
+**Structural risk:** ANY future Swahili-dense GN487A fact added to the index can displace a
+weakly-grounded activity fact from top-3 for its own query — not a one-off caused by the
+license-lending fact specifically. Confirmed: the license-lending fact displaced activity 3
+from the phone-repair query twice (before AND after narrowing) until activity 3 itself was
+given Swahili grounding.
+
+**Fixed so far:** only `gn487a_prohibited_activity_3` (Swahili CONCISE added — it has the
+'Phone repair activity' regen guard, so the fix is verifiable). The other 14 remain
+English-only.
+
+**Recommended follow-up (dedicated, guarded batch — do NOT bulk-edit unverified):** for each
+of the remaining 14 activities, add a Swahili-first CONCISE entry AND a matching
+`critical_queries` regen-guard query, following the exact verify-before-commit discipline
+used for activity 3 — one activity (or a small guarded group) at a time, each confirmed by
+the regen gate before the next. A bulk unguarded Swahili rewrite of all 14 is explicitly
+rejected: only activity 3 currently has a guard, so the rest would ship less-verified.
+
 ## eval_183 RECLASSIFIED — locked_facts coverage gap, NOT a faithfulness defect (2026-07-19)
 
 While designing the eval_213 faithfulness probe, local retrieval on eval_183's phrasing

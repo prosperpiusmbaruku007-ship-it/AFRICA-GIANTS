@@ -32,6 +32,18 @@ CONCISE_BILINGUAL_FACTS = {
     'gn487a_penalty_noncitizen':
         'Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni kumi), na/au kifungo miezi 6, na kufutwa kwa visa.',
 
+    # Swahili-first grounding for the phone-repair activity. The 15 prohibited-activity
+    # facts are otherwise English-only (key: value fallback) and match Swahili queries
+    # only cross-lingually (weak e5 signal) — see PROGRESS.md systemic-gap note. This
+    # entry gives activity 3 real same-language tokens (mgeni/kutengeneza/simu) so it
+    # wins its own query on grounding, not luck, instead of being displaced by any
+    # Swahili-dense GN487A fact. English tail keeps the 'phone'/'activity 3' guard keys.
+    'gn487a_prohibited_activity_3':
+        'Kutengeneza au ukarabati wa simu na vifaa vya kielektroniki ni shughuli '
+        'iliyozuiliwa kwa wasio raia chini ya GN487A. Mgeni hawezi kufanya biashara '
+        'ya kutengeneza simu. (Prohibited activity 3: repair of mobile phones and '
+        'electronic devices.)',
+
     'gn487a_penalty_citizen_facilitator':
         'Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini si zaidi ya TZS 5,000,000 (milioni tano), au kifungo si zaidi ya miezi 3.',
 
