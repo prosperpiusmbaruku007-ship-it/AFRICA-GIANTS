@@ -140,6 +140,10 @@ critical_queries = [
     ('GN487A full name', 'query: Jina kamili la GN487A ni nini?', ['business licensing', 'prohibition']),
     ('Facilitator penalty', 'query: Adhabu ya raia wa Tanzania anayemsaidia mgeni ni nini?', ['5,000,000', 'milioni tano']),
     ('Phone repair activity', 'query: Mgeni anaweza kutengeneza simu?', ['phone', 'simu', 'activity 3']),
+    # lv_01/fp_01 narrow faithfulness fix: the license-lending fact must WIN for the
+    # kukopesha+leseni trigger (its distinctive tokens), while NOT displacing
+    # 'Phone repair activity' above — the two guards together bracket the over-match fix.
+    ('License lending facilitation', 'query: Raia anayekopesha leseni yake kwa mgeni anaadhibiwa?', ['leseni', 'kukopesha']),
     ('PAYE 800K band', 'query: PAYE kwa mshahara wa TZS 800,000 ni kiasi gani?', ['760', '25%', '78,000']),
     ('SDL 12-employee calculation', 'query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, SDL jumla ni kiasi gani?', ['252,000']),
     ('NSSF 12-employee calculation', 'query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, NSSF jumla ni kiasi gani?', ['1,440,000']),

@@ -40,11 +40,16 @@ CONCISE_BILINGUAL_FACTS = {
     # generic 'anayemsaidia mgeni' fact with a parametric 'licensed Tanzanian may
     # operate' prior for THIS phrasing only (2x2 factorial: swapping either the verb
     # or the object alone fixes it). Same TZS 5M/3-month figure — no new claim.
+    # NARROWED (v2): the first draft carried generic GN487A-penalty mass
+    # (kumsaidia/kukiuka/msaidizi/adhabu/faini prose) that made it a generic Swahili
+    # GN487A-penalty magnet — it displaced gn487a_prohibited_activity_3 from the
+    # 'Mgeni anaweza kutengeneza simu?' top-3 (caught by the regen verification gate).
+    # This version concentrates the embedding centroid on license-transfer (kukopesha/
+    # kukodisha/kukabidhi + leseni — tokens absent from every competing fact, so lv_01
+    # still wins) and drops the generic penalty/facilitation prose.
     'gn487a_license_lending_is_facilitation':
-        'Kumkopesha au kumkabidhi mgeni leseni yako ya biashara ni kumsaidia kukiuka GN487A. '
-        'Raia wa Tanzania anayekopesha leseni yake kwa mgeni anaadhibiwa kama msaidizi: '
-        'faini si zaidi ya TZS 5,000,000 (milioni tano), au kifungo si zaidi ya miezi 3; '
-        'uraia haukuondoi adhabu hii, adhabu ni kwa kumsaidia si kwa kuendesha.',
+        'Kukopesha, kukodisha au kukabidhi leseni yako ya biashara kwa mgeni ni kosa chini ya GN487A. '
+        'Raia anayekopesha leseni yake kwa mgeni analipa faini ya TZS 5,000,000 au kifungo cha miezi 3.',
 
     'sdl_rate':
         'SDL (Skills Development Levy) Tanzania: asilimia 3.5 ya mishahara yote. Si 4%, si 2%.',
