@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-19
+Last updated: 2026-07-20
 
 **STANDING STATUS:** EOS harness fix (build_chat_prompt → apply_chat_template) — **CLOSED,
 RE-BASELINED, and VALIDATED at scale.** The corrected 400-question combined regression is
@@ -15,6 +15,88 @@ not a confirmed measure of true compute accuracy** — closing that gap needs th
 frontier-judge scoring approach, not more prompt/retrieval work. NEW convention: every gate
 run is committed to `eval/results/` (see below). Next: eval_213 faithfulness defect +
 frontier-judge compute scoring + framing-aware polarity.
+
+## v16-READINESS BASELINE — first real-weights, natural-phrasing A/B vs v15 (2026-07-20) — BLOCKING
+
+**The single most methodologically important test of this session.** 20 questions written in
+natural Swahili that deliberately name NO law/agency/tax type (compute, prohibition, boundary,
+ambiguous, and evasion framings), run end-to-end against the **live production weights** twice:
+v15 via the real `web_endpoint` (full pipeline as users receive it) and v16 via
+`Orchestrator(LocalAdapter → generate_endpoint)` — same weights, same RAG index, real Modal
+inference, **0 errors / 0 timeouts** across all 40 calls. Harness: `scratch/v16_ab_test.py`;
+raw data `scratch/v16_ab_test_result.json` (gitignored scratch).
+
+### Verdict: v16 is a REGRESSION against v15, NOT an upgrade — do not wire into production
+- **v15 ≥ v16 on 18/20** (both correct 9; both wrong 2; v15 strictly better 7; v16 strictly better 2).
+- **v16 wins 0 of the 4 compute questions** (Q2, Q5, Q8, Q15). It did not produce a single
+  correct authoritative arithmetic answer; on Q5/Q15 its model-generated math was
+  self-contradictory (Q5 "14% × 7,200,000 = 1,440,000" — false; Q15 a nonsensical
+  "11 × 400,000 + 10 × 600,000 = 8,900,000" that doesn't even self-consist).
+- **3 v16-UNIQUE regressions** absent from v15: (1) Q1 **empty answer** (`"\n\n"`);
+  (2) Q12 **hallucinated two extra Q&A turns** the user never asked; (3) self-contradictory
+  arithmetic justifications (Q5/Q15) surfaced by the raw endpoint's ungoverned generation.
+- Both systems correctly refused **every** evasion attempt (Q6/14/17/18/19/20 — no
+  evasion-acceptance in either) — but that comes from the SHARED model+RAG, not from anything
+  v16 adds.
+
+### ROOT CAUSE — the router never inferred subdomain; compute path fired 0/20
+v16's `route()` (`chike/orchestrator.py:174`) routes to the deterministic rules engine only on
+a **literal** tax-name keyword (`sdl`/`nssf`/`paye`/`wcf`) + a digit. Because the 20 questions
+name no tax, **all 20 routed to `fact`** — the deterministic engine (v16's entire reason to
+exist) was UNREACHABLE, the never-guess clarification guard never triggered
+(`has_clarification_sentinel` false 20/20, even on Q2/Q5/Q15 where salaries were missing/
+ambiguous), and v16's "authoritative arithmetic" was in fact model arithmetic
+(`computation: null` on all 20). v16's router adds **no** subdomain-inference over the shared
+RAG+model layer, which is identical to v15.
+
+### The route() gap is BIDIRECTIONAL — and this exposes a gap in THIS SESSION's own methodology
+This connects directly to the earlier-session route() keyword-gap findings (the "ROUTING
+FINDING", ~line 885, and the RC-5 tracked follow-up + `ct=None` wrong-base guard work, ~lines
+848/784/833). Those documented the router pulling fact/BRELA/VAT questions that merely CONTAIN
+a payroll figure INTO the compute path incorrectly (the "wrong-base" misroutes — extract_078
+"laki nne … BRELA?", extract_205 "payroll milioni tano … nisajili VAT?", ~21 flagged, patched
+via the wrong-base guard). **This test proves the gap runs the OTHER way too:** the router also
+fails to send genuine, naturally-phrased compute questions INTO the compute path. The failure
+is bidirectional — misrouting fact→compute AND failing to route compute→compute.
+
+Consequence for our own numbers: **every prior gate score claiming v16 "fact-path parity" or
+"compute-path validated" was measured on a question set that structurally avoided ever
+stress-testing the router on natural phrasing.** The fact-path-parity runs held `route()` fixed
+and compared the 190 fact-bucket questions (all still routed to fact); the compute-path
+validation called `SlotExtractor` DIRECTLY, bypassing `route()` entirely (see ~line 887). So no
+prior test ever exercised the router on questions that (a) are compute in intent but (b) don't
+name the tax — i.e. exactly how real users ask. This is a real gap in the session's testing
+methodology, not merely a v16 defect, and must be stated as such: our headline v16 numbers were
+measured around the router, never through it.
+
+### SEPARATE, ADDITIONAL BLOCKER — the raw-endpoint governance gap
+Independent of routing: v16's Orchestrator calls `generate_endpoint` (raw tokenize→generate→
+decode) directly via `LocalAdapter`, and `_validate_and_clean` is currently stop/clean only.
+The raw endpoint's ungoverned output is what produced the Q1 empty answer, the Q12 hallucinated
+extra turns, and the self-contradictory math — failure modes v15's integrated pipeline
+suppresses. **Even after the router is fixed, whatever calls the raw endpoint directly needs at
+least v15's level of output cleaning/validation, or these same failure modes will surface on
+legitimate compute-routed answers once the router actually starts sending traffic there.** This
+is a distinct problem from the router and must be fixed on its own track.
+
+### BLOCKING path to production-readiness (dependency-ordered — v16 must NOT be wired into Modal until 1–2 land and 4 passes)
+1. **Replace the router stub with real subdomain/intent inference** (classifier or LLM router)
+   so naturally-phrased compute questions reach the rules engine. Nothing else matters until
+   this lands. Gate: these 20 (and the broader set) route compute questions to `compute`.
+2. **Make the slot extractor resolve real-world phrasing** — per-person × count
+   ("wengine kumi … laki sita kila mmoja"), currency conversion (Q8 KES→TZS), and FIRE the
+   never-guess clarification when salaries are missing (Q2/Q5). Gate: deterministic trace on
+   Q5/Q15 matches the correct figures (Q15 payroll 6,400,000 / SDL 224,000, etc.).
+3. **Fix decompose→generate→clean** to eliminate empty output (Q1) and hallucinated extra
+   turns (Q12): `_validate_and_clean` must reach at least v15's robustness + a non-empty guard.
+   (This is the governance-gap track above.)
+4. **Re-run THIS EXACT A/B plus the full 400-gate THROUGH the real router**, and require
+   **v16 ≥ v15 on both raw correctness and the reliable subset** before any production wiring.
+   The bar is not "v16 works" — it is "v16 beats the system already serving users."
+
+Until at least steps 1–2 land and step 4 passes, wiring v16 into Modal would degrade the live
+product. Keep v15 in production; treat this entry as the concrete spec for what the
+orchestrator's stub stages (`route`/`classify`/`validate`) must become.
 
 ## EOS/generation 'root cause' — CORRECTED with direct evidence (2026-07-18)
 
