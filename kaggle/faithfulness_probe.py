@@ -188,9 +188,21 @@ def _injected_facts(reply):
 
 
 def _target_rank(facts, needle):
-    n = (needle or '').lower()
+    """Rank of the first injected fact containing the target substring(s).
+
+    `needle` may be a single string OR a list of acceptable substrings (match if
+    ANY is present). The list form exists because a semantic target can now be
+    conveyed by more than one fact — e.g. after the v3 narrowing, the facilitator
+    penalty for a citizen is carried by EITHER the generic facilitator fact
+    ('anayemsaidia mgeni') OR the license-lending fact ('anaadhibiwa kama msaidizi').
+    Both are correct grounding for the same answer, so matching either is right;
+    tying the probe to one exact phrase produced a false retrieval_gap for fp_02
+    once the marriage fact crowded the generic facilitator out of top-3."""
+    needles = [needle] if isinstance(needle, str) else list(needle or [])
+    needles = [n.lower() for n in needles if n]
     for i, f in enumerate(facts):
-        if n and n in f.lower():
+        fl = f.lower()
+        if any(n in fl for n in needles):
             return i
     return None
 
