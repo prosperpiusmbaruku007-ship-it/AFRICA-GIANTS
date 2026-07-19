@@ -77,32 +77,79 @@ once this is fixed and re-run.
   project has had** — every prior score was measured on the mismatched format and is
   superseded once this lands. → **DONE 2026-07-19 (see FINAL summary below).**
 
-## TRACKED SYSTEMIC GAP — all 15 GN487A prohibited-activity facts are English-only (2026-07-19)
+## ✅ FAITHFULNESS INVESTIGATION CYCLE — CLOSED (2026-07-19)
 
-Surfaced while fixing the lv_01 license-lending fact's regen over-match. `gn487a_prohibited_
-activity_1..15` have NO `CONCISE_BILINGUAL_FACTS` entry — they fall back to the English
-`key: value` form (e.g. "gn487a prohibited activity 3: Prohibited activity 3: Repair of
-mobile phones and electronic devices"). A Swahili query like `Mgeni anaweza kutengeneza
-simu?` shares ZERO surface tokens with the English text and matches only cross-lingually
-(weak e5 signal). These facts were only *luckily* top-ranked before, absent a strong
-Swahili GN487A-domain competitor in the index.
+The eval_213 faithfulness cycle is complete. Summary for the record:
+
+- **eval_213 discovered:** the facilitator-penalty fact was retrieved correctly (rank 0) yet
+  the model still answered wrong ("only non-citizens are punished") — a faithfulness/grounding
+  defect, NOT a retrieval gap (refuted the initial retrieval-gap hypothesis by pulling the
+  actual retrieved context).
+- **Root-caused as NARROW** via a systematic 2×2 (verb × object) isolation probe
+  (`faithfulness_leseni_probes.jsonl`): only the specific `kukopesha + leseni` collocation
+  triggers it; swapping either the verb or the object alone eliminates it. Not a general
+  faithfulness defect — a phrase-level parametric-prior override.
+- **Fix:** targeted `gn487a_license_lending_is_facilitation` locked fact, iterated twice —
+  v1 over-matched and displaced `gn487a_prohibited_activity_3` (caught by the regen gate);
+  root cause of THAT was the activity fact being English-only/weakly-grounded, fixed by
+  Swahili-strengthening the activity fact rather than further shrinking the new fact.
+- **Regen verified clean** on all 15 critical queries + 2 new guards (License lending,
+  Phone repair); committed to `chike-inference/` + `kaggle/` with byte-identical sha256.
+- **Modal redeployed** successfully from Windows — after an INCORRECT "Linux environment /
+  os.path.join breaks container paths" theory was diagnosed and RETRACTED; the real cause was
+  a Windows console-encoding crash on Modal CLI's `✓` output, fixed with `PYTHONUTF8=1`
+  (container recomputes paths on Linux, so host OS is irrelevant to runtime paths).
+- **Full 14-case regression (commit 403da7a):** fp_01/lv_01 both flipped
+  `faithfulness_failure → faithful`; all other 12 hold `faithful`; both control pairs pass;
+  ZERO new faithfulness_failure; ZERO wrong answers introduced.
+
+### Accepted low-severity side effect — fp_04 marriage-fact displacement
+
+fp_04 (`Nimeoa mwanamke Mtanzania, je nasamehewa katazo la GN487A?`) moved
+`faithful → retrieval_gap`: `gn487a_marriage_no_exemption` was pushed from rank 2 to **rank 3**
+(one slot outside top-3) by the license-lending fact at rank 1. Reproducible (retrieval is
+deterministic), borderline (single-position slip). The model still answered **correctly and
+confidently** from a strong, correct parametric prior ("Hapana — ndoa haikupi msamaha...").
+Blast-radius check (marriage-exemption gate questions): **eval_204 unaffected** (marriage fact
+still rank 0); **eval_175** marginally displaced by this fix (rank 5, both new facts in top-3);
+**eval_144** rank 5 but its top-3 contains NO new facts → **pre-existing** English-only weakness,
+NOT caused by this fix. All 4 gate questions passed pre-fix (reliable) and answer correctly.
+**Decision: ACCEPTED as a low-severity retrieval-hygiene trade-off** (zero answer-quality
+impact; the net win of resolving the dangerous eval_213-class defect dominates; a one-off regen
+now to move a rank-3 fact would risk repeating the exact displacement just resolved).
+`gn487a_marriage_no_exemption` is QUEUED by name in the systemic English-only batch below.
+
+## TRACKED SYSTEMIC GAP — English-only GN487A facts are weakly grounded for Swahili queries (2026-07-19)
+
+Surfaced while fixing the lv_01 license-lending fact's regen over-match. The 15 prohibited-
+activity facts `gn487a_prohibited_activity_1..15` — AND `gn487a_marriage_no_exemption` —
+have NO `CONCISE_BILINGUAL_FACTS` entry; they fall back to the English `key: value` form
+(e.g. "gn487a prohibited activity 3: Prohibited activity 3: Repair of mobile phones and
+electronic devices"). A Swahili query like `Mgeni anaweza kutengeneza simu?` or `Nimeoa
+mwanamke Mtanzania, je nasamehewa...?` shares ZERO distinctive surface tokens with the
+English text (only `gn487a`) and matches only cross-lingually — a weak, ERRATIC e5 signal
+(the marriage fact ranks 0 for one phrasing, 5 for another). These facts were only *luckily*
+top-ranked before, absent a strong Swahili GN487A-domain competitor in the index.
 
 **Structural risk:** ANY future Swahili-dense GN487A fact added to the index can displace a
-weakly-grounded activity fact from top-3 for its own query — not a one-off caused by the
-license-lending fact specifically. Confirmed: the license-lending fact displaced activity 3
-from the phone-repair query twice (before AND after narrowing) until activity 3 itself was
-given Swahili grounding.
+weakly-grounded English-only fact from top-3 for its own query — not a one-off caused by the
+license-lending fact specifically. Confirmed twice: the license-lending fact displaced
+activity 3 from the phone-repair query (fixed by Swahili-grounding activity 3), and displaced
+`gn487a_marriage_no_exemption` from fp_04's top-3 (accepted low-severity — see below).
 
 **Fixed so far:** only `gn487a_prohibited_activity_3` (Swahili CONCISE added — it has the
-'Phone repair activity' regen guard, so the fix is verifiable). The other 14 remain
-English-only.
+'Phone repair activity' regen guard, so the fix is verifiable).
+
+**QUEUED for the guarded batch (English-only, still weakly grounded):**
+`gn487a_prohibited_activity_1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15` (14 activities)
++ `gn487a_marriage_no_exemption`.
 
 **Recommended follow-up (dedicated, guarded batch — do NOT bulk-edit unverified):** for each
-of the remaining 14 activities, add a Swahili-first CONCISE entry AND a matching
-`critical_queries` regen-guard query, following the exact verify-before-commit discipline
-used for activity 3 — one activity (or a small guarded group) at a time, each confirmed by
-the regen gate before the next. A bulk unguarded Swahili rewrite of all 14 is explicitly
-rejected: only activity 3 currently has a guard, so the rest would ship less-verified.
+queued fact, add a Swahili-first CONCISE entry AND a matching `critical_queries` regen-guard
+query, following the exact verify-before-commit discipline used for activity 3 — one fact (or
+a small guarded group) at a time, each confirmed by the regen gate before the next. A bulk
+unguarded Swahili rewrite is explicitly rejected: only activity 3 currently has a guard, so
+the rest would ship less-verified.
 
 ## eval_183 RECLASSIFIED — locked_facts coverage gap, NOT a faithfulness defect (2026-07-19)
 
