@@ -3,11 +3,12 @@
 Every test injects a FakeBackend (no network, no GPU), proving the orchestrator is
 fully exercisable via the model abstraction layer built in item 1.
 """
+import os
 from decimal import Decimal
 
 import pytest
 
-from chike.orchestrator import Orchestrator, REFUSAL_TEXT
+from chike.orchestrator import Orchestrator, REFUSAL_TEXT, CLARIFICATION_PENDING
 from chike.model_abstraction import FakeBackend
 
 
@@ -190,11 +191,9 @@ def test_mixed_compute_and_fact_keeps_two_distinct_sources():
          "Je, kama mgeni naruhusiwa kufanya biashara ya rejareja?")
     compute_part = "Nihesabie SDL kwa wafanyakazi 15 wenye jumla ya mshahara 6,750,000?"
     fact_part = "Je, kama mgeni naruhusiwa kufanya biashara ya rejareja?"
-    # Preconditions: the parts route to opposite paths, and the fact part does NOT trip the
-    # backstop gate (no number, no payroll cue) — so it consumes no extra model call.
+    # Preconditions: the parts route to opposite paths.
     assert routing.detect_intent(compute_part) == "sdl"
     assert routing.detect_intent(fact_part) == "none"
-    assert routing.invoke_extractor(fact_part) is False
 
     extraction = (
         '{"gross_monthly_payroll": {"value": 6750000, "confidence": "high"}, '
@@ -243,19 +242,149 @@ def test_multi_compute_parts_are_not_collapsed():
     assert fake.call_count == 4            # (extract + format) x 2, no fact pooling
 
 
-# --- GPU-deferred (Phase D, real weights) — NOT run here -------------------
-# These require the real v15 adapter on GPU; they are the real-weights confirmation that
-# the offline plumbing above holds with actual model output. Marked skip so they are
-# visibly present but never executed in the offline suite (ADR 0001 Phase D).
+# --- Real-weights confirmation (Phase D Stage 1) ---------------------------
+# These drive the ACTUAL v15 adapter over the raw generate_endpoint (LocalAdapter),
+# with the AfriqueLlama tokenizer loaded so prompts are byte-identical to production
+# (Stage 0 fix). They are env-gated: with no Modal token available the whole block
+# SKIPS, so the offline suite stays green and reproducible. Set CHIKE_MODAL_TOKEN
+# (or place the token in ~/.chike_modal_token.txt) to run them for real.
+#
+# What they gate (ADR 0001 Phase D Stage 1). Stage 1's first run showed the LLM backstop
+# was inert on real weights (it answered in prose instead of emitting routing JSON) and the
+# fact path fabricated a number (rc_22 -> "PAYE TZS 4,000" with no salary). The backstop was
+# retired in favour of a deterministic router extension + a fabrication guard; these tests
+# now confirm THOSE mechanisms on real weights:
+#   - test_net_take_home_routed_to_compute_and_never_guesses_on_real_weights (rc_11): the
+#     router's net-take-home extension routes to compute deterministically; the extractor's
+#     RC-3 gross/net veto ('mkononi') then never-guesses -> a clarification, never a fabricated
+#     take-home. (Whether to relax RC-3 for a 'mshahara'-labelled figure is an open decision.)
+#   - test_fabrication_guard_never_guesses_on_real_weights (rc_22): a payroll amount with the
+#     salary MISSING hits the fabrication guard -> clarification, NEVER a fabricated number.
+#   - test_q1_q12_regressions_resolved_on_real_weights: the Phase B route-aware merge,
+#     on real weights, produces NON-EMPTY output for Q1 (was empty) and Q12 (was
+#     empty + hallucinated follow-up turns).
+#   - test_mixed_compound_end_to_end_on_real_weights: a mixed compute+fact compound
+#     keeps two distinct sources end-to-end (a real computed number AND a fact answer).
 
-@pytest.mark.skip(reason="Phase D — GPU, real weights: re-run Q1/Q12 from the 20-question A/B set")
+GENERATE_ENDPOINT = (
+    "https://prosperpiusmbaruku007--chike-inference-generate-endpoint.modal.run"
+)
+ADAPTER_REPO = "prospAprospA007/africa-giants-adapter-v15"
+
+
+def _real_modal_token():
+    """Token from env, else ~/.chike_modal_token.txt. Never logged. None if absent."""
+    for k in ("CHIKE_MODAL_TOKEN", "MODAL_API_TOKEN"):
+        v = os.environ.get(k)
+        if v:
+            return v.strip()
+    path = os.path.expanduser("~/.chike_modal_token.txt")
+    if os.path.exists(path):
+        tok = open(path, encoding="utf-8").read().strip()
+        return tok or None
+    return None
+
+
+_HAVE_REAL_WEIGHTS = _real_modal_token() is not None
+_real_weights = pytest.mark.skipif(
+    not _HAVE_REAL_WEIGHTS,
+    reason="Phase D real-weights test: no Modal token (set CHIKE_MODAL_TOKEN or "
+    "~/.chike_modal_token.txt). The offline suite skips this block.",
+)
+
+
+def _real_orchestrator():
+    """Orchestrator wired to the REAL v15 model via LocalAdapter -> generate_endpoint,
+    with the AfriqueLlama tokenizer loaded (CPU) so prompts match production byte-for-byte
+    (Stage 0). Uses the real RAG retriever (default) — the same facts v15 serves."""
+    from transformers import AutoTokenizer
+    from chike.model_abstraction import LocalAdapter
+
+    tok = AutoTokenizer.from_pretrained(ADAPTER_REPO, trust_remote_code=True)
+    endpoint = os.environ.get("CHIKE_RAW_ENDPOINT") or GENERATE_ENDPOINT
+    backend = LocalAdapter(endpoint_url=endpoint, token=_real_modal_token(), tokenizer=tok)
+    return Orchestrator(backend=backend)  # real retriever (default_retrieve)
+
+
+def _computations(reply):
+    return [s.computation for s in reply.sub_answers if s.computation is not None]
+
+
+@_real_weights
+def test_net_take_home_routed_to_compute_and_never_guesses_on_real_weights():
+    # rc_11: net-of-PAYE take-home ("...mshahara wa mwezi ni milioni moja na nusu ...
+    # kitakachobaki mkononi baada ya kodi ya mshahara"). The router's net-take-home extension
+    # routes this to compute DETERMINISTICALLY; the extractor's RC-3 gross/net veto ('mkononi')
+    # then never-guesses -> a CLARIFICATION, never a fabricated fact-path number. (This outcome
+    # is deterministic; the real backend must never turn it into a guessed figure.)
+    orch = _real_orchestrator()
+    reply = orch.answer(
+        "Mshahara wangu wa mwezi ni milioni moja na nusu. Nataka kujua "
+        "kitakachobaki mkononi baada ya kodi ya mshahara."
+    )
+    print("\n[rc_11] text:\n" + reply.text)
+    sub = reply.sub_answers[0]
+    assert sub.sub_question.kind == "compute"             # router extension routed it to compute
+    assert sub.computation is None                         # never-guess on the gross/net ambiguity
+    assert sub.needs_clarification is True                 # clarify, not a fabricated take-home
+
+
+@_real_weights
+def test_fabrication_guard_never_guesses_on_real_weights():
+    # rc_22: a payroll amount with NO salary given ("Nina duka lenye wafanyakazi wanne.
+    # Makato ya mshahara ninayotakiwa kulipa kila mwezi ni kiasi gani?"). The fabrication
+    # guard must force a clarification (R8) — never a fabricated number.
+    orch = _real_orchestrator()
+    reply = orch.answer(
+        "Nina duka lenye wafanyakazi wanne. Makato ya mshahara ninayotakiwa "
+        "kulipa kila mwezi ni kiasi gani?"
+    )
+    print("\n[rc_22] text:\n" + reply.text)
+    assert not _computations(reply), (
+        "never-guess violated: a computation ran with no salary provided — "
+        f"{[c.computation for c in _computations(reply)]}")
+    assert any(s.needs_clarification for s in reply.sub_answers), \
+        "expected the fabrication guard to clarify (missing salary), not answer"
+
+
+@_real_weights
 def test_q1_q12_regressions_resolved_on_real_weights():
-    ...
+    orch = _real_orchestrator()
+    # Q1 (was empty output): single GN 487A fact — non-citizen salon restriction.
+    q1 = ("Mimi ni mgeni na nataka kufungua saluni Arusha, nina mtaji wa milioni 80, "
+          "naruhusiwa kufanya hivyo?")
+    r1 = orch.answer(q1)
+    print("\n[Q1] text:\n" + r1.text)
+    assert r1.text.strip(), "Q1 regressed: empty output (the original v16 bug)"
+    assert CLARIFICATION_PENDING not in r1.text
+    assert r1.refused is False
+
+    # Q12 (was empty + hallucinated follow-up turns): two-part fact — NSSF vs SDL.
+    q12 = ("Kuna aina mbili za makato ya wafanyakazi ninazosikia watu wakizungumza, "
+           "ni kitu kimoja au tofauti? Mwajiri analipa vyote viwili?")
+    r12 = orch.answer(q12)
+    print("\n[Q12] text:\n" + r12.text)
+    assert r12.text.strip(), "Q12 regressed: empty output (the original v16 bug)"
+    # No fabricated multi-turn dialogue: the cleaned reply must not spawn extra Q/A turns.
+    for marker in ("Swali:", "Jibu:", "Mtumiaji:", "Mteja:"):
+        assert r12.text.count(marker) <= 1, f"fabricated follow-up turn ({marker!r})"
 
 
-@pytest.mark.skip(reason="Phase D — GPU, real weights: mixed compute+fact end-to-end")
+@_real_weights
 def test_mixed_compound_end_to_end_on_real_weights():
-    ...
+    # Mixed compute+fact: SDL computation AND a BRELA annual-fee fact must both survive
+    # the route-aware merge as two distinct sources (Phase B structural guarantee).
+    orch = _real_orchestrator()
+    reply = orch.answer(
+        "Nina wafanyakazi 15 wenye jumla ya mshahara milioni 12 kwa mwezi, "
+        "nihesabie SDL. Pia, ada ya BRELA ya mwaka ni ngapi?"
+    )
+    print("\n[mixed] text:\n" + reply.text)
+    comps = _computations(reply)
+    assert any(c.computation == "sdl" for c in comps), \
+        f"expected an SDL computation, got {[c.computation for c in comps]}"
+    assert len(reply.sub_answers) >= 2, "compute and fact must remain two distinct sources"
+    assert reply.text.strip()
 
 
 # --- Dependency injection: production backends are drop-in ------------------
@@ -355,58 +484,55 @@ def test_injected_retriever_overrides_the_real_default():
     assert "injected fact" in fake.last_prompt
 
 
-# --- Extractor-emitted-intent backstop (ADR 0001 Phase A) ------------------
-# The deterministic router (chike.routing) abstains on these, the invoke gate fires, and a
-# scripted FakeBackend stands in for the real model's {intent, fields} output. These prove
-# the PLUMBING only (Phase D validates the real model's judgment on GPU).
+# --- Net-take-home router extension + fabrication guard --------------------
+# These REPLACE the retired extractor-emitted-intent backstop (which only ever proved
+# wiring against a scripted FakeBackend and then failed its first real-weights test).
+# rc_11 is now recovered deterministically by the router; rc_22 is a never-guess clarify
+# via the fabrication guard — no model call, no scripted JSON, fully offline.
 
-def test_backstop_recovers_compute_intent_the_deterministic_router_missed():
+def test_net_take_home_routes_to_compute_then_never_guesses_gross_net():
     from chike import routing
-
-    q = "Mfanyakazi wangu ana mshahara wa milioni mbili kwa mwezi."
-    # Precondition: deterministic router abstains (no money-'how-much' cue) but the gate fires.
-    assert routing.detect_intent(q) == "none"
-    assert routing.invoke_extractor(q) is True
-
-    intent_json = '{"intent": "paye", "monthly_salary": {"value": 2000000, "confidence": "high"}}'
-    fake = FakeBackend(replies=[intent_json, "Jibu lako la PAYE:"])
-    orch = Orchestrator(backend=fake, retriever=lambda q: [])
-
-    reply = orch.answer(q)
-    sub = reply.sub_answers[0]
-    assert sub.sub_question.kind == "compute"            # backstop re-routed fact -> compute
-    assert sub.sub_question.computation_type == "paye"
-    assert sub.computation is not None                    # rules engine actually ran
-    assert sub.computation.computation == "paye"
-    assert fake.call_count == 2                            # ONE intent call + one formatting call
-
-
-def test_backstop_declines_to_fact_when_model_says_none():
-    q = "Nina wafanyakazi kadhaa dukani, nauliza kuhusu mishahara yao."
-    fake = FakeBackend(replies=['{"intent": "none"}', "Jibu la ukweli."])
-    orch = Orchestrator(backend=fake, retriever=lambda q: [])
-
-    reply = orch.answer(q)
-    sub = reply.sub_answers[0]
-    assert sub.sub_question.kind == "fact"                # stayed on the fact path
-    assert sub.computation is None
-    assert reply.text == "Jibu la ukweli."
-    assert fake.call_count == 2                            # intent call + fact generation
-
-
-def test_backstop_preserves_never_guess_on_missing_required_field():
     from chike.orchestrator import CLARIFICATION_PENDING
 
-    # Missing salary: the model emits a compute intent but supplies no amount -> the extraction
-    # is unusable -> clarify. The rules engine must NOT be handed a guessed value.
+    # rc_11: the router's net-take-home extension routes this to compute (paye)
+    # DETERMINISTICALLY — replacing the retired LLM backstop. The extractor's existing RC-3
+    # gross/net veto then fires ('mkononi' makes the stated 1.5M gross-or-net ambiguous), so
+    # the never-guess contract yields a CLARIFICATION rather than a possibly-wrong take-home.
+    # This is strictly safer than the retired backstop (which produced a degenerate non-answer)
+    # and is fully deterministic. See the report: whether to relax RC-3 for a figure explicitly
+    # labelled 'mshahara' is a separate, open decision.
+    q = ("Mshahara wangu wa mwezi ni milioni moja na nusu. Nataka kujua kitakachobaki "
+         "mkononi baada ya kodi ya mshahara.")
+    assert routing.detect_intent(q) == "paye"            # router extension routed it to compute
+
+    fake = FakeBackend(scripted_reply="{}")              # extract probe; value is deterministic
+    orch = Orchestrator(backend=fake, retriever=lambda q: [])
+    reply = orch.answer(q)
+    sub = reply.sub_answers[0]
+    assert sub.sub_question.kind == "compute"            # routed to compute (not fact, not fabricated)
+    assert sub.sub_question.computation_type == "paye"
+    assert sub.computation is None                        # never-guess: rules engine NOT handed an ambiguous base
+    assert sub.needs_clarification is True
+    assert reply.text == CLARIFICATION_PENDING
+    assert fake.call_count == 1                           # one extract probe, no formatting/fabrication call
+
+
+def test_fabrication_guard_clarifies_without_calling_the_model():
+    from chike.orchestrator import CLARIFICATION_PENDING
+
+    # rc_22: a payroll-levy AMOUNT asked with no salary given. The fact path must NOT be
+    # allowed to fabricate a number — the guard returns a clarification and the model
+    # (and retriever) are never even called.
     q = ("Nina duka lenye wafanyakazi wanne. Makato ya mshahara ninayotakiwa kulipa "
          "kila mwezi ni kiasi gani?")
-    fake = FakeBackend(replies=['{"intent": "nssf"}'])     # intent only, no fields
-    orch = Orchestrator(backend=fake, retriever=lambda q: [])
+    calls = []
+    fake = FakeBackend(scripted_reply="SHOULD NOT BE CALLED")
+    orch = Orchestrator(backend=fake, retriever=lambda q: calls.append(q) or [])
 
     reply = orch.answer(q)
     sub = reply.sub_answers[0]
     assert sub.needs_clarification is True
-    assert sub.computation is None                         # rules engine NOT called
+    assert sub.computation is None                         # never a computed number
     assert reply.text == CLARIFICATION_PENDING
-    assert fake.call_count == 1                             # intent call only, no formatting
+    assert fake.call_count == 0                            # model NEVER called — no fabrication possible
+    assert calls == []                                    # retrieval skipped too

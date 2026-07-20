@@ -127,6 +127,15 @@ HARDCODED_REFUSAL = (
     'Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.'
 )
 
+# Never-guess (R8) clarification for a payroll-levy AMOUNT asked with no salary/payroll
+# figure given: ask for the figure rather than let the model fabricate one (see
+# chike.routing.is_uncomputable_payroll_amount).
+PAYROLL_CLARIFICATION = (
+    'Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji '
+    'kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni '
+    'shilingi ngapi, kisha nitakuletea hesabu kamili.'
+)
+
 
 # clean_reply (the full stop/clean stage) lives in the shared chike.generation_cleanup
 # module and is imported inside ChikeModel.run() from the mounted chike/ package (single
@@ -384,6 +393,7 @@ class ChikeModel:
             sys.path.insert(0, '/root')
         from chike.prompting import build_enriched_system
         from chike.generation_cleanup import clean_reply
+        from chike.routing import is_uncomputable_payroll_amount
 
         if not message or not message.strip():
             return {'error': 'No message provided'}
@@ -392,6 +402,14 @@ class ChikeModel:
         if not classify_question(message):
             print(f'[classifier] OOC intercepted: {message[:60]}')
             return {'reply': HARDCODED_REFUSAL}
+
+        # Never-guess fabrication guard (R8): a payroll-levy AMOUNT asked with no salary
+        # figure can't be computed — clarify instead of letting the model invent a number.
+        # Shared predicate with the orchestrator's fact path (chike.routing), so the two
+        # cannot diverge. Runs before decompose/RAG/generate: no model call on this path.
+        if is_uncomputable_payroll_amount(message):
+            print(f'[guard] uncomputable payroll amount -> clarify: {message[:60]}')
+            return {'reply': PAYROLL_CLARIFICATION}
 
         # Query decomposition: split multi-part messages so each subdomain gets
         # its own top-3 retrieval, then merge (dedup, preserve order). A single

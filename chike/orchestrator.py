@@ -178,48 +178,26 @@ class Orchestrator:
             return SubQuestion(text=text, kind="fact")
         return SubQuestion(text=text, kind="compute", computation_type=intent)
 
-    def _route_with_backstop(self, text: str):
-        """route() + the extractor-intent backstop (ADR 0001 Phase A). Returns
-        (SubQuestion, pre_extraction). The deterministic router runs first (free); if it
-        abstains (kind='fact') but the recall-biased gate fires, escalate to the extractor's
-        single {intent, fields} call. A recovered compute intent re-routes to compute and
-        carries its Extraction forward (so the model is not called twice); otherwise the
-        fact route stands. never-guess is preserved downstream: a recovered compute intent
-        with unusable fields becomes a clarification, not a guessed computation."""
-        sq = self.route(text)
-        if sq.kind == "fact" and routing.invoke_extractor(text):
-            intent, extraction = self.extractor.route_and_extract(text)
-            if intent in REQUIRED_FIELDS:
-                return (SubQuestion(text=text, kind="compute", computation_type=intent),
-                        extraction)
-        return sq, None
-
     # --- Stage 4: answer one sub-question ----------------------------------
 
-    def _answer_sub(self, sq: SubQuestion,
-                    pre_extraction=None) -> SubAnswer:
-        sub = (self._answer_compute(sq, pre_extraction) if sq.kind == "compute"
+    def _answer_sub(self, sq: SubQuestion) -> SubAnswer:
+        sub = (self._answer_compute(sq) if sq.kind == "compute"
                else self._answer_fact(sq))
         return self._validate_and_clean(sub)
 
-    def _answer_compute(self, sq: SubQuestion, pre_extraction=None) -> SubAnswer:
+    def _answer_compute(self, sq: SubQuestion) -> SubAnswer:
         """Compute path: extract fields WITH confidence first, and only call the
         rules engine if every required field is present and high-confidence. A
         missing OR low-confidence required field routes to clarification — the
-        rules engine is never handed a guessed value.
-
-        `pre_extraction` lets the backstop router pass the Extraction it already produced
-        in its single {intent, fields} call, so the model is not consulted twice."""
+        rules engine is never handed a guessed value."""
         # 'ambiguous_multi' (or any type the rules engine doesn't define) is compute-intent
-        # with an unresolved levy — never guess which one; clarify. (The extractor-emitted
-        # intent backstop, ADR Phase A, is where this gets resolved with model help.)
+        # with an unresolved levy — never guess which one; clarify.
         required = REQUIRED_FIELDS.get(sq.computation_type)
         if required is None:
             return SubAnswer(
                 sub_question=sq, text=CLARIFICATION_PENDING, needs_clarification=True,
             )
-        extraction = (pre_extraction if pre_extraction is not None
-                      else self.extractor.extract(sq.text, required, sq.computation_type))
+        extraction = self.extractor.extract(sq.text, required, sq.computation_type)
         if not extraction.usable(required):
             return SubAnswer(
                 sub_question=sq, text=CLARIFICATION_PENDING, needs_clarification=True,
@@ -232,6 +210,12 @@ class Orchestrator:
         return SubAnswer(sub_question=sq, text=reply, computation=result)
 
     def _answer_fact(self, sq: SubQuestion) -> SubAnswer:
+        # Never-guess (R8) fabrication guard: a situation-specific payroll-levy AMOUNT
+        # with no salary/payroll figure given can't be computed — clarify instead of
+        # letting the fact/RAG model invent a number (rc_22). No model call, no retrieval.
+        if routing.is_uncomputable_payroll_amount(sq.text):
+            return SubAnswer(sub_question=sq, text=CLARIFICATION_PENDING,
+                             needs_clarification=True)
         facts = tuple(self.retriever(sq.text))
         prompt = self._build_fact_prompt(sq.text, facts)
         reply = self.backend.generate(prompt, self.gen_params)
@@ -255,8 +239,13 @@ class Orchestrator:
         proven whole-question behaviour for all-fact messages (closing the per-fragment
         Q1 empty-output and Q12 fabricated-turn regressions), and produces the pooled fact
         answer for the fact remainder of a mixed compute+fact message."""
-        facts = self._pool_facts(retrieval_queries)
         sq = SubQuestion(text=generation_question, kind="fact")
+        # Same never-guess fabrication guard as _answer_fact, applied to the collapsed
+        # whole-question generation (rc_22 arrives here via the all-fact path).
+        if routing.is_uncomputable_payroll_amount(generation_question):
+            return SubAnswer(sub_question=sq, text=CLARIFICATION_PENDING,
+                             needs_clarification=True)
+        facts = self._pool_facts(retrieval_queries)
         prompt = self._build_fact_prompt(generation_question, facts)
         reply = self.backend.generate(prompt, self.gen_params)
         return self._validate_and_clean(SubAnswer(sub_question=sq, text=reply, facts=facts))
@@ -337,9 +326,9 @@ class Orchestrator:
                 text=REFUSAL_TEXT, raw_text=REFUSAL_TEXT, sub_answers=(),
             )
 
-        routed = [self._route_with_backstop(part) for part in self.decompose(question)]
-        compute_parts = [(sq, pre) for sq, pre in routed if sq.kind == "compute"]
-        fact_parts = [sq for sq, _ in routed if sq.kind == "fact"]
+        routed = [self.route(part) for part in self.decompose(question)]
+        compute_parts = [sq for sq in routed if sq.kind == "compute"]
+        fact_parts = [sq for sq in routed if sq.kind == "fact"]
 
         if not compute_parts:
             # All-fact -> collapse to v15's single whole-question pass.
@@ -350,7 +339,7 @@ class Orchestrator:
             # pooled fact generation over the fact sub-questions only. Compute parts are
             # NEVER folded into the fact generation (that would forfeit the authoritative
             # deterministic figure — the one load-bearing reason per-part generation exists).
-            subs = [self._answer_sub(sq, pre) for sq, pre in compute_parts]
+            subs = [self._answer_sub(sq) for sq in compute_parts]
             if fact_parts:
                 fact_question = " ".join(sq.text for sq in fact_parts)
                 subs.append(self._answer_facts_single_pass(
@@ -365,7 +354,7 @@ class Orchestrator:
         # whole-question single-pass generation and return that instead.
         if not merged.strip():
             fallback = self._answer_facts_single_pass(
-                [sq.text for sq, _ in routed], question)
+                [sq.text for sq in routed], question)
             sub_answers = (fallback,)
             merged = self._render(fallback)
             merged_raw = self._raw_render(fallback)

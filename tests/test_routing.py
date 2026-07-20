@@ -75,10 +75,40 @@ def test_moja_kwa_moja_idiom_not_a_number():
     assert routing._has_number("mwajiri anaweza kulipa moja kwa moja") is False
 
 
-# --- invoke gate ------------------------------------------------------------
+# --- net-take-home router extension (rc_11: replaces the retired LLM backstop) ---------
 
-def test_invoke_gate_fires_on_payroll_or_number_only():
-    assert routing.invoke_extractor("Mshahara wangu ni milioni moja na nusu, baada ya kodi") is True
-    assert routing.invoke_extractor("Nina duka lenye wafanyakazi wanne") is True
-    # No number, no payroll context -> gate does not fire (a fee/definition lookup).
-    assert routing.invoke_extractor("BRELA ada ni ngapi?") is False
+def test_net_take_home_phrasing_routes_to_paye_deterministically():
+    # rc_11: number + payroll + a PAYE cue, but NO explicit 'kiasi gani' — the money ask is
+    # the net-take-home phrasing ('kitakachobaki mkononi baada ya kodi ya mshahara'). This is
+    # the case the extractor-emitted-intent backstop targeted and failed on real weights; the
+    # deterministic router now handles it, no model call.
+    q = ("Mshahara wangu wa mwezi ni milioni moja na nusu. Nataka kujua kitakachobaki "
+         "mkononi baada ya kodi ya mshahara.")
+    assert routing.detect_intent(q) == "paye"
+
+
+def test_take_home_cue_needs_payroll_and_number_to_route_compute():
+    # 'baada ya kodi' alone, with no payroll context or number, is not a compute route.
+    assert routing.detect_intent("Bei ya bidhaa baada ya kodi ni ipi?") == "none"
+
+
+# --- fabrication guard: is_uncomputable_payroll_amount --------------------------------
+
+def test_guard_fires_on_payroll_amount_ask_with_no_salary():
+    # rc_22: payroll context + generic levy ('makato ya mshahara') + money ask ('kiasi gani')
+    # but no monetary figure -> guard True (clarify, never fabricate).
+    q = ("Nina duka lenye wafanyakazi wanne. Makato ya mshahara ninayotakiwa kulipa "
+         "kila mwezi ni kiasi gani?")
+    assert routing.detect_intent(q) == "none"          # router abstains (no amount)
+    assert routing.is_uncomputable_payroll_amount(q) is True
+
+
+def test_guard_does_not_fire_on_fee_lookup_or_rate_or_computable_question():
+    # Fixed-fee lookup (no payroll context) -> not the guard's business.
+    assert routing.is_uncomputable_payroll_amount("BRELA ada ya mwaka ni ngapi?") is False
+    # Rate/definition question ('asilimia ngapi' is a non-money ask) stays on the fact path.
+    assert routing.is_uncomputable_payroll_amount(
+        "Kodi ya mapato kwa mshahara ni asilimia ngapi?") is False
+    # A computable payroll question (amount present) routes to compute, never reaches the guard.
+    assert routing.is_uncomputable_payroll_amount(
+        "Nihesabie SDL kwa wafanyakazi 15 wenye jumla ya mshahara 6,750,000?") is False

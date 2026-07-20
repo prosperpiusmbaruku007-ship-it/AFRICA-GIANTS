@@ -64,6 +64,11 @@ _MONEY_ASK = ["kiasi gani", "shilingi ngapi", "kinakatwa kiasi", "ni ngapi", "gh
 # Non-money quantity asks (rate / time / count) that must NOT count as a money ask.
 _NONMONEY_ASK = ["asilimia ngapi", "siku ngapi", "muda gani", "miaka mingapi", "idadi gani",
                  "wangapi", "mara ngapi"]
+# Net-take-home phrasing ("what remains in hand after tax") — a money 'how-much' request
+# that never uses an explicit 'kiasi gani'. rc_11's phrasing; caught here so a net-of-PAYE
+# question routes to compute deterministically (this is the residual the retired
+# extractor-emitted-intent backstop unreliably targeted — now a fixed lexical rule).
+_TAKEHOME_ASK = ["kitakachobaki", "kinachobaki", "mkononi", "baada ya kodi", "nitabaki na"]
 
 # Swahili number words (so a compute question with no ASCII digit still counts as numeric).
 _SWA_NUM = (r"\b(moja|mbili|tatu|nne|tano|sita|saba|nane|tisa|kumi|ishirini|thelathini|"
@@ -88,6 +93,9 @@ def _has_money_ask(ql: str) -> bool:
     if any(nm in ql for nm in _NONMONEY_ASK) and not (
             "kiasi gani" in ql or "shilingi ngapi" in ql):
         ask = False
+    # Net-take-home phrasing is a money 'how-much' request even with no explicit 'kiasi gani'.
+    if any(t in ql for t in _TAKEHOME_ASK):
+        ask = True
     return ask
 
 
@@ -126,16 +134,27 @@ def detect_intent(text: str) -> str:
     return "none"
 
 
-def invoke_extractor(text: str) -> bool:
-    """Recall-biased gate (ADR Phase A): should the extractor-intent backstop be consulted
-    when the deterministic router abstained (detect_intent == 'none')?
+def is_uncomputable_payroll_amount(text: str) -> bool:
+    """Never-guess (R8) fabrication guard for the FACT/RAG path.
 
-    True when the question carries a PAYROLL compute signal — a number OR payroll context.
-    A money 'how-much' cue is deliberately NOT sufficient on its own: a money question with
-    no payroll context (e.g. 'BRELA ada ni ngapi' — a fixed-fee lookup) can never be a
-    payroll-levy computation, so escalating it would spend a model call that always returns
-    'none'. Number-or-payroll still catches the deterministic layer's residual misses
-    (rc_11: payroll+number; rc_22: payroll) while skipping non-payroll fee/definition
-    questions. (Refinement found during Phase A wiring; see ADR 0001 s8.)"""
+    True when a question asks for a SPECIFIC payroll-levy shilling amount, in a
+    situation-specific context (a workplace / employees / salary is referenced), but gives
+    NO monetary figure to compute from — the case where the fact/RAG model otherwise
+    invents a number (rc_22: 'wafanyakazi wanne ... makato ya mshahara ... kiasi gani?'
+    -> the model fabricated 'PAYE TZS 4,000' with no salary ever given).
+
+    Fires only when the deterministic router found no computable intent (detect_intent ==
+    'none' -> no usable amount is present); a question with a computable amount routes to
+    compute and never reaches this guard. Precision-first: requires payroll context AND a
+    levy/deduction cue AND a money 'how-much' ask, so it never touches fixed-fee lookups
+    ('BRELA ada ni ngapi' — no payroll context) or rate/definition questions ('kodi ni
+    asilimia ngapi' — _has_money_ask rejects 'asilimia ngapi').
+
+    Pure string logic, no model call. Applied in the fact path of BOTH the orchestrator and
+    production run() (modal_app.py) as a shared predicate, so they cannot diverge."""
     ql = text.lower()
-    return _has_number(ql) or any(c in ql for c in _PAYROLL_CTX)
+    if detect_intent(text) != "none":
+        return False                                  # a computable route exists — not this guard's job
+    has_payroll = any(c in ql for c in _PAYROLL_CTX)
+    has_levy = bool(_explicit_levy(ql) or _natural_levy(ql))   # named levy OR generic 'makato'
+    return has_payroll and has_levy and _has_money_ask(ql)
