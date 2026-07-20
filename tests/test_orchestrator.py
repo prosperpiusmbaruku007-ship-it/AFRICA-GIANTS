@@ -198,3 +198,60 @@ def test_injected_retriever_overrides_the_real_default():
 
     assert calls == ["BRELA ada ni ngapi"]                # stub used, not real retrieval
     assert "injected fact" in fake.last_prompt
+
+
+# --- Extractor-emitted-intent backstop (ADR 0001 Phase A) ------------------
+# The deterministic router (chike.routing) abstains on these, the invoke gate fires, and a
+# scripted FakeBackend stands in for the real model's {intent, fields} output. These prove
+# the PLUMBING only (Phase D validates the real model's judgment on GPU).
+
+def test_backstop_recovers_compute_intent_the_deterministic_router_missed():
+    from chike import routing
+
+    q = "Mfanyakazi wangu ana mshahara wa milioni mbili kwa mwezi."
+    # Precondition: deterministic router abstains (no money-'how-much' cue) but the gate fires.
+    assert routing.detect_intent(q) == "none"
+    assert routing.invoke_extractor(q) is True
+
+    intent_json = '{"intent": "paye", "monthly_salary": {"value": 2000000, "confidence": "high"}}'
+    fake = FakeBackend(replies=[intent_json, "Jibu lako la PAYE:"])
+    orch = Orchestrator(backend=fake, retriever=lambda q: [])
+
+    reply = orch.answer(q)
+    sub = reply.sub_answers[0]
+    assert sub.sub_question.kind == "compute"            # backstop re-routed fact -> compute
+    assert sub.sub_question.computation_type == "paye"
+    assert sub.computation is not None                    # rules engine actually ran
+    assert sub.computation.computation == "paye"
+    assert fake.call_count == 2                            # ONE intent call + one formatting call
+
+
+def test_backstop_declines_to_fact_when_model_says_none():
+    q = "Nina wafanyakazi kadhaa dukani, nauliza kuhusu mishahara yao."
+    fake = FakeBackend(replies=['{"intent": "none"}', "Jibu la ukweli."])
+    orch = Orchestrator(backend=fake, retriever=lambda q: [])
+
+    reply = orch.answer(q)
+    sub = reply.sub_answers[0]
+    assert sub.sub_question.kind == "fact"                # stayed on the fact path
+    assert sub.computation is None
+    assert reply.text == "Jibu la ukweli."
+    assert fake.call_count == 2                            # intent call + fact generation
+
+
+def test_backstop_preserves_never_guess_on_missing_required_field():
+    from chike.orchestrator import CLARIFICATION_PENDING
+
+    # Missing salary: the model emits a compute intent but supplies no amount -> the extraction
+    # is unusable -> clarify. The rules engine must NOT be handed a guessed value.
+    q = ("Nina duka lenye wafanyakazi wanne. Makato ya mshahara ninayotakiwa kulipa "
+         "kila mwezi ni kiasi gani?")
+    fake = FakeBackend(replies=['{"intent": "nssf"}'])     # intent only, no fields
+    orch = Orchestrator(backend=fake, retriever=lambda q: [])
+
+    reply = orch.answer(q)
+    sub = reply.sub_answers[0]
+    assert sub.needs_clarification is True
+    assert sub.computation is None                         # rules engine NOT called
+    assert reply.text == CLARIFICATION_PENDING
+    assert fake.call_count == 1                             # intent call only, no formatting

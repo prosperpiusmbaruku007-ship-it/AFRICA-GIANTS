@@ -146,7 +146,13 @@ class SlotExtractor:
         raw = self.backend.generate(self._build_prompt(sub_question, required), self.params)
         offscript = bool(_OFFSCRIPT.search(raw or ""))
         model_fields = {} if offscript else self._parse(raw)
+        return self._reconcile(sub_question, required, computation_type, model_fields)
 
+    def _reconcile(self, sub_question: str, required: Sequence[str],
+                   computation_type: Optional[str], model_fields: dict) -> Extraction:
+        """Merge deterministic values (primary) with model-proposed fields (fallback) into
+        an Extraction. Shared by extract() and route_and_extract() so the never-guess
+        reconciliation is identical whichever entry point supplied the model output."""
         det, global_veto = self._deterministic(sub_question, required, computation_type)
 
         out = {}
@@ -165,6 +171,56 @@ class SlotExtractor:
                 continue                            # absent -> missing -> clarify
             out[name] = ExtractedField(name, value, conf, reason)
         return Extraction(fields=out)
+
+    # --- intent-emitting backstop (ADR 0001 Phase A) -----------------------
+
+    def route_and_extract(self, sub_question: str):
+        """Backstop router: ONE model call emits {intent, fields}. Used only when the
+        deterministic router (chike.routing) found no confident intent but the invoke gate
+        fired. Returns (intent, Extraction) where intent is one of REQUIRED_FIELDS keys or
+        'none' (route to fact/RAG).
+
+        never-guess is preserved end-to-end: an emitted compute intent whose required fields
+        are missing or low-confidence yields an UNUSABLE Extraction, which the orchestrator
+        turns into a clarification — the rules engine is never handed a guessed value."""
+        raw = self.backend.generate(self._build_intent_prompt(sub_question), self.params)
+        intent, model_fields = self._parse_intent(raw)
+        if intent not in REQUIRED_FIELDS:
+            return "none", Extraction(fields={})
+        required = REQUIRED_FIELDS[intent]
+        return intent, self._reconcile(sub_question, required, intent, model_fields)
+
+    @staticmethod
+    def _build_intent_prompt(sub_question: str) -> str:
+        choices = '", "'.join(REQUIRED_FIELDS)      # sdl, nssf, wcf, paye
+        return (
+            "Wewe ni kifaa cha kupanga swali la kodi Tanzania. Amua kama swali linahitaji "
+            "HESABU ya moja ya tozo za mshahara, na toa namba zake, kama JSON.\n"
+            f'"intent": moja kati ya "{choices}", au "none" ikiwa SI hesabu ya mshahara '
+            "(kwa mfano swali la kiwango/sheria/ndiyo-hapana).\n"
+            'Kisha sehemu za namba kama {"value": <namba kamili>, "confidence": "high" au '
+            '"low"}: gross_monthly_payroll, employee_count, monthly_salary.\n'
+            'KANUNI: namba isipotajwa wazi au ni ya kukisia -> "confidence": "low" au iache '
+            "sehemu hiyo.\n"
+            'Mfano: {"intent": "paye", "monthly_salary": {"value": 1500000, '
+            '"confidence": "high"}}\n'
+            f"Swali: {sub_question}"
+        )
+
+    def _parse_intent(self, raw: str):
+        """Parse {intent, <fields>} from a clean JSON. Off-script (a compliance answer in
+        prose) or unparseable output -> ('none', {}), so the backstop can never route a
+        malformed generation into the compute path."""
+        if _OFFSCRIPT.search(raw or ""):
+            return "none", {}
+        try:
+            data = json.loads(raw)
+        except (json.JSONDecodeError, TypeError):
+            return "none", {}
+        if not isinstance(data, dict):
+            return "none", {}
+        intent = str(data.get("intent", "")).lower().strip() or "none"
+        return intent, self._parse_field_dict(data)
 
     # --- model prompt (free-text role assignment) --------------------------
 
@@ -197,10 +253,17 @@ class SlotExtractor:
             data = json.loads(raw)
         except (json.JSONDecodeError, TypeError):
             return {}
+        return SlotExtractor._parse_field_dict(data)
+
+    @staticmethod
+    def _parse_field_dict(data) -> dict:
+        """Parse {name: {"value":..,"confidence":..}} into {name: (value, Confidence)}.
+        Ignores a leading 'intent' key (used by the backstop) and any non-field entries;
+        an unknown confidence label downgrades to LOW so it is never usable."""
         fields = {}
         if isinstance(data, dict):
             for name, spec in data.items():
-                if not isinstance(spec, dict) or "value" not in spec:
+                if name == "intent" or not isinstance(spec, dict) or "value" not in spec:
                     continue
                 label = str(spec.get("confidence", "")).lower()
                 try:

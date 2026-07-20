@@ -24,7 +24,6 @@ into the final reply — the model only supplies Swahili persona around it.
 """
 
 import dataclasses
-import re
 from dataclasses import dataclass
 from typing import Callable, Optional, Sequence
 
@@ -36,6 +35,7 @@ from .retrieval import retrieve as default_retrieve
 from . import prompting
 from . import generation_cleanup
 from . import decomposition
+from . import routing
 
 # --- Stage-level configuration (thin stubs; real lists live in chike_config.json) ---
 
@@ -45,15 +45,6 @@ DEFAULT_OOC_PHRASES = (
     "capital gain", "faida ya mtaji", "import duty", "ushuru wa forodha",
     "transfer pricing", "stamp duty", "mining royalt", "zanzibar",
 )
-
-# Keyword -> rules_engine computation type. A sub-question mentioning one of these
-# AND containing a number is routed to the deterministic compute path.
-_COMPUTE_KEYWORDS = {
-    "sdl": "sdl",
-    "nssf": "nssf",
-    "paye": "paye",
-    "wcf": "wcf",
-}
 
 REFUSAL_TEXT = (
     "Samahani, swali hili liko nje ya maarifa yangu. "
@@ -172,31 +163,61 @@ class Orchestrator:
     # --- Stage 3: route ----------------------------------------------------
 
     def route(self, text: str) -> SubQuestion:
-        """Decide compute vs fact-lookup for one sub-question. STUB heuristic:
-        a supported computation keyword plus at least one number signals a compute
-        scenario. Field VALUES are NOT parsed here — resolving them (with confidence)
-        is the slot extractor's job (item 4); route only picks the path and type.
-        """
-        low = text.lower()
-        has_number = bool(re.search(r"\d", text))
-        for keyword, ctype in _COMPUTE_KEYWORDS.items():
-            if keyword in low and has_number:
-                return SubQuestion(text=text, kind="compute", computation_type=ctype)
-        return SubQuestion(text=text, kind="fact")
+        """Decide compute vs fact-lookup for one sub-question, via chike.routing
+        (ADR 0001 Phase A — the Candidate-C deterministic router that validated at
+        precision 1.0 / 8-of-8 boundary pairs / 0 OOC misroutes on the natural set).
+
+        route only picks the path and the computation TYPE; field VALUES are resolved
+        (with confidence) by the slot extractor. 'ambiguous_multi' is compute-intent with
+        an unresolved specific levy — it takes the compute path, where the missing type
+        surfaces as a never-guess clarification (see _answer_compute)."""
+        intent = routing.detect_intent(text)
+        if intent == "none":
+            return SubQuestion(text=text, kind="fact")
+        return SubQuestion(text=text, kind="compute", computation_type=intent)
+
+    def _route_with_backstop(self, text: str):
+        """route() + the extractor-intent backstop (ADR 0001 Phase A). Returns
+        (SubQuestion, pre_extraction). The deterministic router runs first (free); if it
+        abstains (kind='fact') but the recall-biased gate fires, escalate to the extractor's
+        single {intent, fields} call. A recovered compute intent re-routes to compute and
+        carries its Extraction forward (so the model is not called twice); otherwise the
+        fact route stands. never-guess is preserved downstream: a recovered compute intent
+        with unusable fields becomes a clarification, not a guessed computation."""
+        sq = self.route(text)
+        if sq.kind == "fact" and routing.invoke_extractor(text):
+            intent, extraction = self.extractor.route_and_extract(text)
+            if intent in REQUIRED_FIELDS:
+                return (SubQuestion(text=text, kind="compute", computation_type=intent),
+                        extraction)
+        return sq, None
 
     # --- Stage 4: answer one sub-question ----------------------------------
 
-    def _answer_sub(self, sq: SubQuestion) -> SubAnswer:
-        sub = self._answer_compute(sq) if sq.kind == "compute" else self._answer_fact(sq)
+    def _answer_sub(self, sq: SubQuestion,
+                    pre_extraction=None) -> SubAnswer:
+        sub = (self._answer_compute(sq, pre_extraction) if sq.kind == "compute"
+               else self._answer_fact(sq))
         return self._validate_and_clean(sub)
 
-    def _answer_compute(self, sq: SubQuestion) -> SubAnswer:
+    def _answer_compute(self, sq: SubQuestion, pre_extraction=None) -> SubAnswer:
         """Compute path: extract fields WITH confidence first, and only call the
         rules engine if every required field is present and high-confidence. A
         missing OR low-confidence required field routes to clarification — the
-        rules engine is never handed a guessed value."""
-        required = REQUIRED_FIELDS[sq.computation_type]
-        extraction = self.extractor.extract(sq.text, required, sq.computation_type)
+        rules engine is never handed a guessed value.
+
+        `pre_extraction` lets the backstop router pass the Extraction it already produced
+        in its single {intent, fields} call, so the model is not consulted twice."""
+        # 'ambiguous_multi' (or any type the rules engine doesn't define) is compute-intent
+        # with an unresolved levy — never guess which one; clarify. (The extractor-emitted
+        # intent backstop, ADR Phase A, is where this gets resolved with model help.)
+        required = REQUIRED_FIELDS.get(sq.computation_type)
+        if required is None:
+            return SubAnswer(
+                sub_question=sq, text=CLARIFICATION_PENDING, needs_clarification=True,
+            )
+        extraction = (pre_extraction if pre_extraction is not None
+                      else self.extractor.extract(sq.text, required, sq.computation_type))
         if not extraction.usable(required):
             return SubAnswer(
                 sub_question=sq, text=CLARIFICATION_PENDING, needs_clarification=True,
@@ -280,8 +301,9 @@ class Orchestrator:
                 text=REFUSAL_TEXT, raw_text=REFUSAL_TEXT, sub_answers=(),
             )
 
-        sub_answers = tuple(self._answer_sub(self.route(part))
-                            for part in self.decompose(question))
+        sub_answers = tuple(self._answer_sub(sq, pre)
+                            for sq, pre in (self._route_with_backstop(part)
+                                            for part in self.decompose(question)))
         merged = "\n\n".join(self._render(sa) for sa in sub_answers)
         merged_raw = "\n\n".join(self._raw_render(sa) for sa in sub_answers)
         return Reply(
