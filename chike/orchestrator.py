@@ -235,6 +235,30 @@ class Orchestrator:
         reply = self.backend.generate(prompt, self.gen_params)
         return SubAnswer(sub_question=sq, text=reply, facts=facts)
 
+    def _pool_facts(self, retrieval_queries) -> tuple:
+        """Retrieve facts for each sub-query and pool them (dedup, preserve order,
+        cap 9) — the v15 run() retrieval-merge (modal_app.py:437-443) that a single
+        whole-question generation is then built on."""
+        facts, seen = [], set()
+        for q in retrieval_queries:
+            for fact in self.retriever(q):
+                if fact not in seen:
+                    facts.append(fact)
+                    seen.add(fact)
+        return tuple(facts[:9])
+
+    def _answer_facts_single_pass(self, retrieval_queries, generation_question) -> SubAnswer:
+        """v15-style single fact generation: pool facts across retrieval_queries, then
+        generate ONCE over generation_question. This is the collapse that restores v15's
+        proven whole-question behaviour for all-fact messages (closing the per-fragment
+        Q1 empty-output and Q12 fabricated-turn regressions), and produces the pooled fact
+        answer for the fact remainder of a mixed compute+fact message."""
+        facts = self._pool_facts(retrieval_queries)
+        sq = SubQuestion(text=generation_question, kind="fact")
+        prompt = self._build_fact_prompt(generation_question, facts)
+        reply = self.backend.generate(prompt, self.gen_params)
+        return self._validate_and_clean(SubAnswer(sub_question=sq, text=reply, facts=facts))
+
     # --- Generate-stage prompts (production-aligned RAG wrapper, chike.prompting) ---
 
     def _backend_tokenizer(self):
@@ -294,18 +318,56 @@ class Orchestrator:
         return sub.raw_text or sub.text.strip()
 
     def answer(self, question: str) -> Reply:
-        """Full pipeline entry point."""
+        """Full pipeline entry point.
+
+        Route-aware merge (ADR 0001 Phase B): decomposition is a RETRIEVAL fan-out that
+        RE-COLLAPSES to a single generation whenever every part is fact — matching v15
+        run() (decompose -> pool facts -> generate once over the whole message), which is
+        what closes the per-fragment Q1 empty-output and Q12 fabricated-turn regressions.
+        Per-part generation is kept ONLY where two genuinely different answer sources are
+        needed: a compute part goes through the deterministic rules engine (authoritative
+        arithmetic, never trusted to the model), while the fact remainder is pooled into a
+        single generation over just the fact sub-questions (so it never re-answers the
+        compute part or does its sum)."""
         if not self.classify(question):
             return Reply(
                 question=question, in_scope=False, refused=True,
                 text=REFUSAL_TEXT, raw_text=REFUSAL_TEXT, sub_answers=(),
             )
 
-        sub_answers = tuple(self._answer_sub(sq, pre)
-                            for sq, pre in (self._route_with_backstop(part)
-                                            for part in self.decompose(question)))
+        routed = [self._route_with_backstop(part) for part in self.decompose(question)]
+        compute_parts = [(sq, pre) for sq, pre in routed if sq.kind == "compute"]
+        fact_parts = [sq for sq, _ in routed if sq.kind == "fact"]
+
+        if not compute_parts:
+            # All-fact -> collapse to v15's single whole-question pass.
+            sub_answers = (self._answer_facts_single_pass(
+                [sq.text for sq in fact_parts], question),)
+        else:
+            # Any compute part present -> per-part compute (rules engine), then AT MOST one
+            # pooled fact generation over the fact sub-questions only. Compute parts are
+            # NEVER folded into the fact generation (that would forfeit the authoritative
+            # deterministic figure — the one load-bearing reason per-part generation exists).
+            subs = [self._answer_sub(sq, pre) for sq, pre in compute_parts]
+            if fact_parts:
+                fact_question = " ".join(sq.text for sq in fact_parts)
+                subs.append(self._answer_facts_single_pass(
+                    [sq.text for sq in fact_parts], fact_question))
+            sub_answers = tuple(subs)
+
         merged = "\n\n".join(self._render(sa) for sa in sub_answers)
         merged_raw = "\n\n".join(self._raw_render(sa) for sa in sub_answers)
+
+        # Merge-time empty guard: a genuinely empty merged reply (every sub-answer came back
+        # blank after cleaning) must never be returned silently. Fall back to ONE v15-style
+        # whole-question single-pass generation and return that instead.
+        if not merged.strip():
+            fallback = self._answer_facts_single_pass(
+                [sq.text for sq, _ in routed], question)
+            sub_answers = (fallback,)
+            merged = self._render(fallback)
+            merged_raw = self._raw_render(fallback)
+
         return Reply(
             question=question, in_scope=True, refused=False,
             text=merged, raw_text=merged_raw, sub_answers=sub_answers,

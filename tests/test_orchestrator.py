@@ -5,6 +5,8 @@ fully exercisable via the model abstraction layer built in item 1.
 """
 from decimal import Decimal
 
+import pytest
+
 from chike.orchestrator import Orchestrator, REFUSAL_TEXT
 from chike.model_abstraction import FakeBackend
 
@@ -112,16 +114,148 @@ def test_low_confidence_required_field_routes_to_clarification_not_rules_engine(
     assert fake.call_count == 1                            # extraction only, no formatting
 
 
-# --- Decomposition produces one sub-answer per part ------------------------
+# --- Route-aware merge (ADR 0001 Phase B) ----------------------------------
+# An all-fact multi-part message COLLAPSES to a single v15-style whole-question
+# generation (decompose -> pool facts -> generate once). This test REPLACES the old
+# test_multi_part_question_produces_one_subanswer_per_part, whose `len == 2` /
+# `call_count == 2` assertions encoded the very per-fragment generation that caused the
+# Q1/Q12 regressions and that Phase B removes — revised openly, not silently.
 
-def test_multi_part_question_produces_one_subanswer_per_part():
-    fake = FakeBackend(scripted_reply="jibu")
-    orch = Orchestrator(backend=fake, retriever=lambda q: [])
+def test_multi_part_all_fact_collapses_to_single_pass():
+    def retr(q):
+        if "BRELA" in q:
+            return ["BRELA ada ya mwaka ni TZS 22,000"]
+        if "NSSF" in q:
+            return ["NSSF ni asilimia 20 ya mshahara"]
+        return []
+
+    fake = FakeBackend(scripted_reply="jibu moja lililojumuishwa")
+    orch = Orchestrator(backend=fake, retriever=retr)
 
     reply = orch.answer("BRELA ada ni ngapi? NSSF ni asilimia ngapi?")
 
+    # One generation, one sub-answer — the v15 collapse, not per-fragment generation.
+    assert fake.call_count == 1
+    assert len(reply.sub_answers) == 1
+    # Facts from BOTH sub-queries were pooled into the single prompt (v15 retrieval-merge).
+    assert "BRELA ada ya mwaka ni TZS 22,000" in fake.last_prompt
+    assert "NSSF ni asilimia 20 ya mshahara" in fake.last_prompt
+    # The single generation is over the WHOLE original question (not a lone fragment).
+    assert fake.last_prompt.rstrip().endswith("BRELA ada ni ngapi? NSSF ni asilimia ngapi?")
+    assert reply.text == "jibu moja lililojumuishwa"
+
+
+def test_empty_generation_triggers_whole_question_fallback():
+    # Q1 analog: the structured generation comes back empty; the merge-time guard must
+    # re-generate over the whole question and surface THAT, never return an empty reply.
+    fake = FakeBackend(replies=["", "Jibu kamili baada ya fallback."])
+    orch = Orchestrator(backend=fake, retriever=lambda q: [])
+
+    reply = orch.answer("BRELA ada ni ngapi?")
+
+    assert reply.text == "Jibu kamili baada ya fallback."   # guard rescued the empty result
+    assert reply.text.strip() != ""
+    assert fake.call_count == 2                              # primary (empty) + fallback
+
+
+def test_fabricated_followup_turn_is_cleaned_in_single_pass():
+    # Q12 analog: one generation, cleaned once. The model rambles into a fabricated
+    # follow-up Q&A turn ('\n\nSwali: ...'); the single-pass clean truncates it.
+    ramble = (
+        "NSSF ni asilimia 20 ya mshahara ghafi. Thibitisha na NSSF (nssf.go.tz)."
+        "\n\nSwali: Je, nikichelewa kulipa NSSF adhabu ni ipi?"
+        "\nJibu: Faini ya kubuni ambayo mfano haupaswi kuiamini."
+    )
+    fake = FakeBackend(scripted_reply=ramble)
+    orch = Orchestrator(backend=fake, retriever=lambda q: ["NSSF ni 20%"])
+
+    reply = orch.answer("NSSF inalipwaje?")
+
+    assert fake.call_count == 1                              # ONE generation (v15 shape)
+    assert len(reply.sub_answers) == 1
+    assert reply.text == "NSSF ni asilimia 20 ya mshahara ghafi. Thibitisha na NSSF (nssf.go.tz)."
+    assert "kubuni" not in reply.text                        # fabricated follow-up removed
+    assert "Swali:" not in reply.text
+
+
+def test_mixed_compute_and_fact_keeps_two_distinct_sources():
+    # THE load-bearing regression guard (scope s2): a compound message with a compute part
+    # AND a fact part must keep them as TWO sub-answers from TWO sources — the compute part
+    # through the deterministic rules engine (authoritative working), the fact part through
+    # RAG+model. It must fail LOUDLY if a future change collapses the compute part into the
+    # pooled fact generation (then there would be no computation object / no verified figure).
+    from chike import routing
+
+    q = ("Nihesabie SDL kwa wafanyakazi 15 wenye jumla ya mshahara 6,750,000? "
+         "Je, kama mgeni naruhusiwa kufanya biashara ya rejareja?")
+    compute_part = "Nihesabie SDL kwa wafanyakazi 15 wenye jumla ya mshahara 6,750,000?"
+    fact_part = "Je, kama mgeni naruhusiwa kufanya biashara ya rejareja?"
+    # Preconditions: the parts route to opposite paths, and the fact part does NOT trip the
+    # backstop gate (no number, no payroll cue) — so it consumes no extra model call.
+    assert routing.detect_intent(compute_part) == "sdl"
+    assert routing.detect_intent(fact_part) == "none"
+    assert routing.invoke_extractor(fact_part) is False
+
+    extraction = (
+        '{"gross_monthly_payroll": {"value": 6750000, "confidence": "high"}, '
+        '"employee_count": {"value": 15, "confidence": "high"}}'
+    )
+    fake = FakeBackend(replies=[extraction, "Hii ndio hesabu yako ya SDL:",
+                                "Kwa GN487A, biashara ya rejareja imezuiliwa kwa wasio raia."])
+    orch = Orchestrator(backend=fake, retriever=lambda q: [])
+
+    reply = orch.answer(q)
+
+    compute_subs = [s for s in reply.sub_answers if s.computation is not None]
+    fact_subs = [s for s in reply.sub_answers
+                 if s.computation is None and not s.needs_clarification]
     assert len(reply.sub_answers) == 2
-    assert fake.call_count == 2
+    # LOUD guard: the compute part is NOT collapsed into the pooled fact generation.
+    assert len(compute_subs) == 1, "compute part must stay a rules-engine sub-answer, not fold into fact"
+    assert len(fact_subs) == 1
+    assert compute_subs[0].computation.computation == "sdl"
+    assert compute_subs[0].computation.amount == Decimal("236250")   # deterministic engine
+    assert "TZS 236,250" in reply.text                               # authoritative working survives
+    assert "GN487A" in reply.text                                     # fact source survives
+    assert fake.call_count == 3            # extract + compute-format + one pooled fact gen
+
+
+def test_multi_compute_parts_are_not_collapsed():
+    # Two compute questions in one message -> two rules-engine sub-answers, each with its
+    # OWN authoritative figure. Proves compute parts are never pooled into a single
+    # generation (the enumeration/"A, B na C" path routes into exactly this shape).
+    sdl_extract = (
+        '{"gross_monthly_payroll": {"value": 6750000, "confidence": "high"}, '
+        '"employee_count": {"value": 15, "confidence": "high"}}'
+    )
+    nssf_extract = '{"gross_monthly_payroll": {"value": 800000, "confidence": "high"}}'
+    fake = FakeBackend(replies=[sdl_extract, "Hesabu ya SDL", nssf_extract, "Hesabu ya NSSF"])
+    orch = Orchestrator(backend=fake, retriever=lambda q: [])
+
+    reply = orch.answer(
+        "Nihesabie SDL kwa wafanyakazi 15 wenye mshahara 6,750,000? "
+        "Nihesabie NSSF kwa mshahara 800,000?")
+
+    assert len(reply.sub_answers) == 2
+    computed = [s.computation.computation for s in reply.sub_answers if s.computation]
+    assert len(computed) == 2, "both compute parts must keep their own generation"
+    assert set(computed) == {"sdl", "nssf"}
+    assert fake.call_count == 4            # (extract + format) x 2, no fact pooling
+
+
+# --- GPU-deferred (Phase D, real weights) — NOT run here -------------------
+# These require the real v15 adapter on GPU; they are the real-weights confirmation that
+# the offline plumbing above holds with actual model output. Marked skip so they are
+# visibly present but never executed in the offline suite (ADR 0001 Phase D).
+
+@pytest.mark.skip(reason="Phase D — GPU, real weights: re-run Q1/Q12 from the 20-question A/B set")
+def test_q1_q12_regressions_resolved_on_real_weights():
+    ...
+
+
+@pytest.mark.skip(reason="Phase D — GPU, real weights: mixed compute+fact end-to-end")
+def test_mixed_compound_end_to_end_on_real_weights():
+    ...
 
 
 # --- Dependency injection: production backends are drop-in ------------------
