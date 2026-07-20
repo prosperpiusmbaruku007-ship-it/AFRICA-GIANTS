@@ -36,6 +36,22 @@ The v16 router/orchestrator remediation is governed by **ADR 0001** (do not dupl
   GPU tests, re-run the 20-question A/B and the full 400-gate through the corrected system,
   require **v16 ≥ v15 on both**. Also resolves the deferred AND-vs-OR invoke-gate cost lever.
 
+### TRACKED KNOWN LIMITATION — decomposition coverage gap (2026-07-20, backlog, low urgency)
+`decompose_query` does not split some period-joined / sentence-initial-`Pia,` clauses: a mixed
+compute+fact question phrased as *"...nihesabie SDL. Pia, ada ya BRELA ya mwaka ni ngapi?"* (a
+single `?`, second clause joined by "Pia," after a full stop) stays **one** sub-question. It then
+funnels entirely into the single compute (SDL) route, and the trailing fact clause **corrupts the
+compute extraction** — the gross payroll `milioni 12` was read as **1,000,000 instead of
+12,000,000** (the "mwaka"/second-figure context in the un-split clause misleads the deterministic
+amount parser). A two-`?` phrasing decomposes correctly and both sources come back right (SDL on
+12M = 420,000 + BRELA annual return = 22,000), so this is purely a **decompose-coverage** gap.
+Orthogonal to Phase B (route-aware merge) and to the backstop retirement — neither caused it and
+neither fixes it. Discovered while running the Stage 1 mixed-compound real-weights test; the test
+now uses a decomposing phrasing and notes this inline. **Backlog:** extend `decompose_query` to
+split "Pia,"/period-joined clauses (and add a guard so an un-decomposed multi-figure question does
+not silently feed a wrong figure to the rules engine). Not blocking; no current production impact
+(production run() has no compute path).
+
 ## v16-READINESS BASELINE — first real-weights, natural-phrasing A/B vs v15 (2026-07-20) — BLOCKING
 
 **The single most methodologically important test of this session.** 20 questions written in
