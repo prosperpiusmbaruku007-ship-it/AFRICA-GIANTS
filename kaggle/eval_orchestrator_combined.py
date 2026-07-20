@@ -163,6 +163,12 @@ class KaggleDirectBackend(ModelBackend):
         self.tok = AutoTokenizer.from_pretrained(ADAPTER, token=hf_token, trust_remote_code=True)
         if self.tok.pad_token is None:
             self.tok.pad_token = self.tok.eos_token
+        # Expose the tokenizer under the name Orchestrator._backend_tokenizer() looks for, so
+        # build_chat_prompt routes through apply_chat_template — byte-identical to modal_app.run()
+        # / production (Phase D Stage 0, Finding D-1). Without this alias the orchestrator fell
+        # back to the naive-concat format the model was NOT trained on (a `\n\n` separator between
+        # the system block and the question), silently mis-measuring the v16 gate.
+        self.tokenizer = self.tok
         bnb = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type='nf4',
                                  bnb_4bit_compute_dtype=torch.float16, bnb_4bit_use_double_quant=True)
         self.model = AutoModelForCausalLM.from_pretrained(

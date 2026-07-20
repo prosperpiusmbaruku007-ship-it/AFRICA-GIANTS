@@ -55,12 +55,19 @@ class LocalAdapter(ModelBackend):
         token: Optional[str] = None,
         config: Optional[dict] = None,
         timeout: float = 180.0,
+        tokenizer: Optional[object] = None,
     ):
         self.config = config if config is not None else _load_config()
         self.endpoint_url = endpoint_url or os.environ.get("CHIKE_RAW_ENDPOINT", "")
         self.token = token or os.environ.get("CHIKE_MODAL_TOKEN", "")
         self.default_params = dict(self.config.get("generation_params", {}))
         self.timeout = timeout
+        # Optional tokenizer so Orchestrator._backend_tokenizer() can route build_chat_prompt
+        # through apply_chat_template — byte-identical to modal_app.run()/production (Phase D
+        # Stage 0, Finding D-1). Left None by default to keep construction cheap and side-effect
+        # free (the FakeBackend drop-in contract); the real-weights harness loads the AfriqueLlama
+        # tokenizer once (CPU-only, no GPU) and passes it. None -> the naive-concat fallback.
+        self.tokenizer = tokenizer
 
     def generate(self, prompt: str, params: Optional[dict] = None) -> str:
         if not self.endpoint_url:

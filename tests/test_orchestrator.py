@@ -319,6 +319,27 @@ def test_fact_prompt_uses_production_rag_wrapper():
     assert "<|begin_of_text|>" not in prompt and "<|start_header_id|>" not in prompt
 
 
+def test_fact_prompt_routes_through_apply_chat_template_when_backend_has_tokenizer():
+    # Stage 0 / Finding D-1: when the real backend exposes .tokenizer, build_chat_prompt must
+    # use apply_chat_template (byte-identical to modal_app.run()/production), NOT the naive-concat
+    # fallback. The prior test above pins the no-tokenizer fallback; this pins the parity path.
+    class StubTokenizer:
+        def apply_chat_template(self, messages, tokenize=False, add_generation_prompt=True):
+            return "CHAT_TEMPLATE::" + "|".join(m["role"] for m in messages)
+
+    class TokenizerBackend(FakeBackend):
+        tokenizer = StubTokenizer()
+
+    fake = TokenizerBackend(scripted_reply="ok")
+    orch = Orchestrator(backend=fake, retriever=lambda q: ["SDL ni 3.5%"],
+                        system_prompt="Wewe ni Chike.")
+    orch.answer("SDL ni ngapi")
+
+    # apply_chat_template was used (its marker), and the naive-concat shape was NOT produced.
+    assert fake.last_prompt == "CHAT_TEMPLATE::system|user"
+    assert "UKWELI" not in fake.last_prompt   # naive fallback would inline the facts block here
+
+
 def test_injected_retriever_overrides_the_real_default():
     calls = []
 
