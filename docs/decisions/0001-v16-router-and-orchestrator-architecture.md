@@ -153,3 +153,54 @@ set retained only as a *no-regression* control (a candidate must not lose the ea
 The decision-relevant metric is precision/recall on the **natural** set. This correction is
 itself an instance of the ADR's own thesis: validate against the distribution real users
 produce, not the one the router is trained to match.
+
+## 8. Phase 0 — DECIDED (2026-07-20): bake-off run, Candidate C adopted for Phase A
+
+The bake-off ran against the corrected 50-question natural set
+(`eval/router_eval/router_natural_eval_001.jsonl`, verified 50/50 by gemini-3.5-flash blind
+to gold labels; 8 boundary-discriminator pairs + 4 OOC controls). Harness:
+`scratch/router_bakeoff.py`. Decision metric = precision/recall on the COMPUTE class over the
+natural 50; the 400-set is a no-regression control only.
+
+| Candidate | Precision | Recall | F1 | Boundary pairs (8) | OOC→compute misroutes | 400-control |
+|-----------|-----------|--------|-----|--------------------|-----------------------|-------------|
+| A — keyword-v2 (topic lexicon) | 0.692 | 0.783 | 0.735 | **3/8** | 0 | recall 113/113, **52/287 FP** |
+| B — embedding 1-NN (e5-base) | 0.742 | 1.000 | 0.852 | **3/8** | **2 (ro_01 capital-gains, ro_04 mining-royalty)** | n/a |
+| **C — lexical-prefilter + lookup** | **1.000** | **0.913** | **0.955** | **8/8** | **0** | recall 49/113, 4/287 FP |
+
+### KEY SAFETY FINDING — the embedding router is empirically dangerous (this is the decisive result)
+Candidate B (embedding 1-NN) achieved perfect recall yet **misrouted two out-of-corpus
+questions — capital gains (ro_01) and mining royalty (ro_04) — into the COMPUTE path**, because
+their amount-bearing phrasing embedded nearest a compute prototype. In production this would
+**bypass the OOC refusal (`classify()`) with false confidence** and attempt a payroll
+computation on a question the system must refuse. It also showed the **same 3/8 boundary
+blindness as the keyword lexicon** — e5 encodes topic, not compute-vs-fact intent, so "how much
+is the SDL" and "is there an SDL threshold" are inseparable to it. This is the ADR's central
+safety objection (§3), now confirmed with data rather than reasoning: **an embedding/similarity
+router fails silently with false confidence, which is strictly worse than the keyword stub's
+honest failure to route. Do not build an embedding or LLM-similarity router.**
+
+Candidate A (keyword-v2) is likewise rejected: broadening the lexicon to levy-topic words gives
+poor precision (0.69), is boundary-blind (3/8), and regresses even the easy 400-set (0→52 false
+positives) by matching "makato/tozo/michango" inside fact questions.
+
+### DECISION — Phase A foundation = Candidate C design
+Candidate C — `number(digit OR Swahili number-word) AND payroll-context AND money-"how-much"
+cue` — wins the decision metric decisively: **precision 1.000, 8/8 boundary pairs, 0 OOC
+misroutes.** Its only two natural-set misses (rc_11 net-take-home phrasing, rc_22 missing-input)
+are precisely the cases that require model semantics, not a better lexical rule. Its lower
+400-control recall (49/113) was characterized and is not a true regression: of the 64 misses,
+~25 are `answer_type: yes_no` mechanism questions (the 400 `compute=True` label is
+over-inclusive) and 3 are wrong-base traps (loan→SDL, profit→PAYE, machines→SDL) where declining
+to compute is correct; the residual terse-compute misses are exactly why the lexical layer must
+be backstopped by the extractor.
+
+**Phase A design (adopted):** lexical prefilter used as a **recall-biased invoke-gate** (a
+question triggers the extractor if it has a number OR a payroll cue OR a money-"how-much" cue) →
+the extractor emits `{intent: sdl|nssf|paye|wcf|none, fields:{…}}` in the single model call it
+already makes → never-guess contract preserved (intent=compute + low-confidence/missing fields →
+clarify; intent=none → fact/RAG). The prefilter's job is to bound cost by skipping the extractor
+on obvious no-number pure-fact questions, NOT to be the final router — the extractor is the
+arbiter, which closes C's recall gap (rc_11/rc_22/terse cases). **No new model on the serving
+path; no embedding router; OOC stays with `classify()` upstream, where C — unlike B — never
+intrudes.**

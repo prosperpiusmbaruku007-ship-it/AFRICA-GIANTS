@@ -16,6 +16,18 @@ frontier-judge scoring approach, not more prompt/retrieval work. NEW convention:
 run is committed to `eval/results/` (see below). Next: eval_213 faithfulness defect +
 frontier-judge compute scoring + framing-aware polarity.
 
+## v16 router architecture — ADR 0001 (see docs/decisions/0001-v16-router-and-orchestrator-architecture.md)
+
+The v16 router/orchestrator remediation is governed by **ADR 0001** (do not duplicate here — read it):
+- Original embedding-router + LLM-fallback plan REJECTED; extractor-intent counter-proposal adopted.
+- **Phase 0 bake-off DECIDED (2026-07-20):** on the 50-question natural routing set, the embedding
+  router (Candidate B) **misrouted 2 OOC questions (capital-gains, mining-royalty) into compute** —
+  empirically confirming the ADR's key safety objection — and was boundary-blind (3/8). Candidate C
+  (lexical-prefilter + extractor-intent) won: precision 1.0, 8/8 boundary pairs, 0 OOC misroutes.
+- **Phase A foundation:** lexical prefilter as a recall-biased invoke-gate → extractor emits
+  `{intent, fields}` in its existing single call → never-guess preserved. No new model on the
+  serving path; OOC stays with `classify()`. Test artifact: `eval/router_eval/router_natural_eval_001.jsonl`.
+
 ## v16-READINESS BASELINE — first real-weights, natural-phrasing A/B vs v15 (2026-07-20) — BLOCKING
 
 **The single most methodologically important test of this session.** 20 questions written in
