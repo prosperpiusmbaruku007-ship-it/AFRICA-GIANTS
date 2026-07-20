@@ -36,15 +36,9 @@ from . import prompting
 from . import generation_cleanup
 from . import decomposition
 from . import routing
+from . import classification
 
-# --- Stage-level configuration (thin stubs; real lists live in chike_config.json) ---
-
-# Minimal out-of-scope markers. Production uses the full ooc_phrases list (R11);
-# this subset is enough to prove the short-circuit before the model is called.
-DEFAULT_OOC_PHRASES = (
-    "capital gain", "faida ya mtaji", "import duty", "ushuru wa forodha",
-    "transfer pricing", "stamp duty", "mining royalt", "zanzibar",
-)
+# --- Stage-level configuration ---------------------------------------------
 
 REFUSAL_TEXT = (
     "Samahani, swali hili liko nje ya maarifa yangu. "
@@ -123,7 +117,8 @@ class Orchestrator:
         self,
         backend: ModelBackend,
         retriever: Optional[Callable[[str], Sequence[str]]] = None,
-        ooc_phrases: Sequence[str] = DEFAULT_OOC_PHRASES,
+        ooc_phrases: Optional[Sequence[str]] = None,
+        in_scope_phrases: Optional[Sequence[str]] = None,
         gen_params: Optional[dict] = None,
         extractor: Optional[SlotExtractor] = None,
         system_prompt: Optional[str] = None,
@@ -131,7 +126,16 @@ class Orchestrator:
         self.backend = backend
         # Default to the real v15 retrieval; an injected retriever overrides it.
         self.retriever = retriever if retriever is not None else default_retrieve
-        self.ooc_phrases = tuple(p.lower() for p in ooc_phrases)
+        # OOC classifier phrase lists: default to the production set resolved from
+        # chike_config.json via the shared chike.classification module (R11/R12 parity —
+        # the 53 ooc / 24 in_scope union, no longer an 8-phrase stub). Either list can be
+        # overridden for tests; a partial override still fills the other from config.
+        if ooc_phrases is None or in_scope_phrases is None:
+            cfg_ooc, cfg_in = classification.resolve_phrases(
+                classification.load_local_config())
+        self.ooc_phrases = tuple(ooc_phrases) if ooc_phrases is not None else tuple(cfg_ooc)
+        self.in_scope_phrases = (tuple(in_scope_phrases) if in_scope_phrases is not None
+                                 else tuple(cfg_in))
         self.gen_params = gen_params
         # Slot extractor shares the injected backend by default (same DI contract).
         self.extractor = extractor or SlotExtractor(backend, gen_params)
@@ -143,13 +147,11 @@ class Orchestrator:
     # --- Stage 1: classify -------------------------------------------------
 
     def classify(self, question: str) -> bool:
-        """Return True if the question is in scope. STUB: phrase match only.
-
-        Real classifier (R11) lives at the Modal edge with the full phrase lists;
-        this is enough to short-circuit an out-of-scope question before the model.
-        """
-        low = question.lower()
-        return not any(phrase in low for phrase in self.ooc_phrases)
+        """Return True if the question is in scope. Delegates to the shared
+        chike.classification.classify — byte-for-byte the same R11 OOC gate the Modal
+        edge (modal_app.py) and the eval gate (kaggle/eval.py) run, over the same
+        config-resolved phrase lists. This closes Finding 3 (the former 8-phrase stub)."""
+        return classification.classify(question, self.ooc_phrases, self.in_scope_phrases)
 
     # --- Stage 2: decompose ------------------------------------------------
 

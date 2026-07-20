@@ -78,6 +78,7 @@ def _fetch_chike_module(modname):
 _prompting = _fetch_chike_module('prompting')
 _cleanup   = _fetch_chike_module('generation_cleanup')
 _scoring   = _fetch_chike_module('scoring')
+_classification = _fetch_chike_module('classification')
 build_chat_prompt     = _prompting['build_chat_prompt']
 # clean_reply is the FULL stop/clean stage (truncates fabricated follow-up turns +
 # strips role junk/special tokens, then applies clean_generated_reply). Use it — NOT
@@ -89,27 +90,14 @@ clean_reply           = _cleanup['clean_reply']
 score_question        = _scoring['score_question']   # (q, generated, refusal_phrases)
 
 # ── OOC CLASSIFIER ────────────────────────────────────────────────────────────
-EXPLICIT_OOC_PHRASES = CONFIG.get('ooc_phrases', [
-    'capital gain', 'faida ya mtaji', 'kodi ya faida ya mtaji',
-    'nilinunua ardhi', 'nilinunua nyumba', 'niliuza ardhi', 'niliuza nyumba',
-    'import duty', 'customs duty', 'ushuru wa forodha', 'ushuru wa uagizaji',
-    'kuagiza bidhaa', 'duty ya kuagiza',
-    'transfer pricing', 'bei ya uhamisho',
-    'stamp duty', 'ushuru wa stempu', 'tathmini ya ardhi', 'land valuation',
-    'mining royalt', 'mrabaha wa madini', 'royalty ya madini',
-    'export processing zone', 'epz tax', 'kodi ya epz',
-    'insurance premium levy', 'ushuru wa bima',
-    'zanzibar tax', 'kodi ya zanzibar', 'vat zanzibar',
-    'bitcoin', 'cryptocurrency', 'hisa za soko',
-])
-
-IN_SCOPE_PHRASES = CONFIG.get('in_scope_phrases', [
-    'brela', 'vat', 'ongezeko la thamani', 'paye', 'mapato ya ajira',
-    'sdl', 'ufundi stadi', 'nssf', 'hifadhi ya jamii', 'osha', 'usalama kazini',
-    'efd', 'mashine ya kodi', 'wcf', 'fidia ya wafanyakazi',
-    'gn487a', 'gn 487', 'wageni', 'wasio raia',
-    'kampuni', 'usajili', 'leseni ya biashara', 'tin',
-])
+# Phrase lists + classify logic come from the shared chike.classification module (fetched
+# above) — one source of truth with production (modal_app.py) and the v16 orchestrator so
+# the gate measures the EXACT classifier users hit (R12). resolve_phrases UNIONs the
+# canonical hardcoded lists with CONFIG's ooc/in_scope additions (this replaces the old
+# inline CONFIG.get(..., [fallback]) REPLACE, which could silently drop a hardcoded phrase).
+resolve_phrases = _classification['resolve_phrases']
+_classify       = _classification['classify']
+EXPLICIT_OOC_PHRASES, IN_SCOPE_PHRASES = resolve_phrases(CONFIG)
 
 HARDCODED_REFUSAL = (
     'Samahani, swali hili liko nje ya mada yangu. '
@@ -119,14 +107,7 @@ HARDCODED_REFUSAL = (
 )
 
 def classify_question(message: str) -> bool:
-    msg = message.lower()
-    for phrase in EXPLICIT_OOC_PHRASES:
-        if phrase in msg:
-            return False
-    for phrase in IN_SCOPE_PHRASES:
-        if phrase in msg:
-            return True
-    return True  # ambiguous — pass through to model
+    return _classify(message, EXPLICIT_OOC_PHRASES, IN_SCOPE_PHRASES)
 
 # ── INSTALL DEPENDENCIES ──────────────────────────────────────────────────────
 subprocess.run(['pip', 'install', '-q', '-U', 'bitsandbytes>=0.46.1'], check=True)

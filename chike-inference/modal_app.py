@@ -114,47 +114,11 @@ _HARDCODED_SYSTEM_PROMPT = (
 # instruction and any future edits propagate to production); fall back otherwise.
 BASE_SYSTEM_PROMPT = CONFIG.get('system_prompt', _HARDCODED_SYSTEM_PROMPT)
 
-# === Inference-time OOC classifier ===
-# Uses phrase-level (multi-word) matching to avoid single-word false positives.
-# Ambiguous questions pass through to the model — better to attempt than wrongly refuse.
-
-EXPLICIT_OOC_PHRASES = [
-    # Capital gains
-    'capital gain', 'faida ya mtaji', 'kodi ya faida ya mtaji',
-    'nilinunua ardhi', 'nilinunua nyumba', 'niliuza ardhi', 'niliuza nyumba',
-    # Import / customs duty
-    'import duty', 'customs duty', 'ushuru wa forodha', 'ushuru wa uagizaji',
-    'kodi ya uagizaji', 'kuagiza bidhaa', 'duty ya kuagiza',
-    # Transfer pricing
-    'transfer pricing', 'bei ya uhamisho', "arm's length",
-    # Stamp duty and land valuation
-    'stamp duty', 'ushuru wa stempu', 'tathmini ya ardhi', 'land valuation',
-    # Mining royalties
-    'mining royalt', 'mrabaha wa madini', 'royalty ya madini', 'ya royalty',
-    # EPZ / special economic zones
-    'export processing zone', 'epz tax', 'kodi ya epz', '(epz)',
-    # Insurance premium levy
-    'insurance premium levy', 'ushuru wa bima',
-    # Zanzibar tax system (not general Zanzibar mention)
-    'zanzibar tax', 'kodi ya zanzibar', 'kodi za zanzibar', 'vat zanzibar',
-    # Crypto / investment
-    'bitcoin', 'cryptocurrency', 'hisa za soko', 'stock market',
-]
-
-IN_SCOPE_PHRASES = [
-    'brela', 'vat', 'ongezeko la thamani', 'paye', 'mapato ya ajira',
-    'sdl', 'ufundi stadi', 'nssf', 'hifadhi ya jamii', 'osha', 'usalama kazini',
-    'efd', 'mashine ya kodi', 'wcf', 'fidia ya wafanyakazi',
-    'gn487a', 'gn 487', 'wageni', 'wasio raia',
-    'kampuni', 'usajili', 'leseni ya biashara', 'tin', 'taxpayer',
-]
-
-# Merge config-driven phrase lists (single source of truth: chike_config.json).
-# Union preserves the hardcoded fallbacks if config is unavailable.
-EXPLICIT_OOC_PHRASES += [p for p in CONFIG.get('ooc_phrases', [])
-                         if p and p not in EXPLICIT_OOC_PHRASES]
-IN_SCOPE_PHRASES     += [p for p in CONFIG.get('in_scope_phrases', [])
-                         if p and p not in IN_SCOPE_PHRASES]
+# === Inference-time OOC classifier (R11) ===
+# The phrase lists AND the 3-step classify logic now live in the shared chike.classification
+# module — one source of truth with the eval gate (kaggle/eval.py) and the v16 pipeline
+# (chike/orchestrator.py), so the gate measures the exact classifier production runs (R12).
+# classify_question below is a thin delegator (see its docstring for the lazy-import reason).
 
 HARDCODED_REFUSAL = (
     'Samahani, swali hili liko nje ya mada yangu. '
@@ -171,15 +135,16 @@ HARDCODED_REFUSAL = (
 
 
 def classify_question(message: str) -> bool:
-    """Return False if question is explicitly OOC, True otherwise (pass to model)."""
-    msg = message.lower()
-    for phrase in EXPLICIT_OOC_PHRASES:
-        if phrase in msg:
-            return False  # OOC — intercept
-    for phrase in IN_SCOPE_PHRASES:
-        if phrase in msg:
-            return True   # clearly in-scope
-    return True  # ambiguous — let model handle, do not over-intercept
+    """Return False if the question is explicitly OOC, True otherwise (pass to model).
+
+    Delegates to the shared chike.classification (R11/R12 single source of truth). Lazy
+    import: the chike/ package is mounted to /root only in the GPU image, and /root is added
+    to sys.path inside ChikeModel.run() before this is called — the web container, which has
+    no chike/ mount, never calls this. Resolves the phrase lists from the baked CONFIG
+    (hardcoded canonical ∪ config additions)."""
+    from chike.classification import resolve_phrases, classify
+    ooc_phrases, in_scope_phrases = resolve_phrases(CONFIG)
+    return classify(message, ooc_phrases, in_scope_phrases)
 
 
 # === Query decomposition ===
