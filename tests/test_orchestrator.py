@@ -373,11 +373,15 @@ def test_q1_q12_regressions_resolved_on_real_weights():
 @_real_weights
 def test_mixed_compound_end_to_end_on_real_weights():
     # Mixed compute+fact: SDL computation AND a BRELA annual-fee fact must both survive
-    # the route-aware merge as two distinct sources (Phase B structural guarantee).
+    # the route-aware merge as two distinct sources (Phase B structural guarantee). Uses a
+    # two-'?' phrasing that decomposes cleanly into [compute SDL] + [fact BRELA] — the same
+    # structure as the offline test_mixed_compute_and_fact_keeps_two_distinct_sources. (A
+    # single-'?' 'Pia,'-joined phrasing does NOT decompose and collapses to one compute part,
+    # which also corrupts the SDL extraction — a decomposition-coverage gap tracked separately.)
     orch = _real_orchestrator()
     reply = orch.answer(
-        "Nina wafanyakazi 15 wenye jumla ya mshahara milioni 12 kwa mwezi, "
-        "nihesabie SDL. Pia, ada ya BRELA ya mwaka ni ngapi?"
+        "Nihesabie SDL kwa wafanyakazi 15 wenye jumla ya mshahara milioni 12 "
+        "kwa mwezi? Je, ada ya BRELA ya mwaka ni ngapi?"
     )
     print("\n[mixed] text:\n" + reply.text)
     comps = _computations(reply)
