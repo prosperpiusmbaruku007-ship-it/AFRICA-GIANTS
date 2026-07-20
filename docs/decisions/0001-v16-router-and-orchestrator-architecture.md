@@ -204,3 +204,52 @@ on obvious no-number pure-fact questions, NOT to be the final router — the ext
 arbiter, which closes C's recall gap (rc_11/rc_22/terse cases). **No new model on the serving
 path; no embedding router; OOC stays with `classify()` upstream, where C — unlike B — never
 intrudes.**
+
+## 9. Phases A, B, C — IMPLEMENTED (2026-07-20)
+
+All three offline remediation phases are built, tested, and committed. Phase D (real-weights
+re-validation on GPU) is the only remaining step before any production-wiring decision.
+
+**Phase A — deterministic router (Candidate C) + extractor-emitted-intent backstop** (commit
+`592f0d2`). `chike/routing.py` implements C as a UNION of an explicit path (named levy + number,
+preserving the 400-control recall) and the natural path (number + payroll-context + money-cue).
+`SlotExtractor.route_and_extract()` + `Orchestrator._route_with_backstop()` add the single
+`{intent, fields}` backstop call for C's two residual misses (rc_11, rc_22); never-guess is
+preserved (unusable extraction → clarify). Validated offline with scripted `FakeBackend`
+(recover / decline / never-guess). The recall-biased invoke gate was narrowed during wiring from
+`number OR payroll OR money-ask` to `number OR payroll` — the money-ask-only arm always resolved
+to `none` (pure cost). Cost note: on the 400-set the gate would invoke the backstop on 150/287
+non-compute questions; the AND-vs-OR tightening lever is deferred to Phase D as a data-driven
+production tuning decision. 13 new tests; suite 140 → 153.
+
+**Phase B — route-aware merge fixes the decompose/generate/concatenate divergence** (commit
+`72b3cbe`, Finding 2). `Orchestrator.answer()` now RE-COLLAPSES to a single v15-style
+whole-question generation whenever every decomposed part is fact (closing the per-fragment Q1
+empty-output and Q12 fabricated-turn regressions), while keeping per-part generation ONLY where a
+compute part needs the deterministic rules engine (authoritative arithmetic, never the model) —
+the fact remainder is pooled into one generation over just the fact sub-questions. A merge-time
+empty guard falls back to one whole-question generation if the merged reply is empty. The
+load-bearing mixed compute+fact capability is protected by a loud-failing regression test. One
+prior test was revised openly (`test_multi_part_question` → `test_multi_part_all_fact_collapses_
+to_single_pass`) because its `call_count==2`/`len==2` assertions encoded the fragmentation bug.
+5 new/revised offline tests + 2 GPU-deferred (skipped); suite 153 → 157 passed / 2 skipped.
+
+**Phase C — unified OOC classification** (commit `f55f0cf`, Finding 3). New leaf module
+`chike/classification.py` (canonical 39/24 hardcoded lists, `resolve_phrases()` union, `classify()`
+3-step precedence with the inert in-scope loop preserved byte-for-byte + a NOTE comment). All
+three copies now delegate to it: `Orchestrator.classify()` (was an 8-phrase stub → full 53/24
+config-resolved set), `modal_app.classify_question` (thin delegator, runtime unchanged), and
+`kaggle/eval.py` (also closing a latent union-vs-replace fragility). A differential test proves
+`orchestrator.classify()` and `modal_app.classify_question()` agree on shared config-resolved
+inputs. Surfaced (asserted, not "fixed"): the classifier is a substring gate, not semantic —
+it catches ro_02/ro_04 but not the paraphrased ro_01/ro_03; production-accurate, parity not recall.
+10 new tests; suite 157 → 167 passed / 2 skipped.
+
+## 10. Phase D — real-weights re-validation (REMAINING, GPU)
+
+Not yet run. Requires the real v15 adapter on GPU: (1) un-skip the two GPU-deferred orchestrator
+tests; (2) re-run the 20-question v15/v16 A/B through the corrected router/orchestrator; (3)
+re-run the full 400-question gate through the corrected system. Gate to proceed to any production
+wiring: **v16 ≥ v15 on both** the 20-question A/B and the 400-gate. Phase D also validates the
+backstop's real-model judgment on rc_11/rc_22-class questions and resolves the deferred AND-vs-OR
+invoke-gate cost lever with measured data.

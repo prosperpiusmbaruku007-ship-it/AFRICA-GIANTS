@@ -27,6 +27,14 @@ The v16 router/orchestrator remediation is governed by **ADR 0001** (do not dupl
 - **Phase A foundation:** lexical prefilter as a recall-biased invoke-gate → extractor emits
   `{intent, fields}` in its existing single call → never-guess preserved. No new model on the
   serving path; OOC stays with `classify()`. Test artifact: `eval/router_eval/router_natural_eval_001.jsonl`.
+- **Phases A, B, C IMPLEMENTED (2026-07-20)** — see ADR §9. A: deterministic router + backstop
+  (`592f0d2`). B: route-aware merge fixes the decompose/generate/concatenate divergence, closing
+  the Q1/Q12 regressions (`72b3cbe`). C: unified OOC classification into shared
+  `chike/classification.py`, closing Finding 3 (`f55f0cf`). Offline suite: **167 passed, 2 skipped**
+  (the 2 skips are the Phase D GPU pair).
+- **Phase D REMAINING (GPU, BLOCKING before any production wiring)** — see ADR §10: un-skip the 2
+  GPU tests, re-run the 20-question A/B and the full 400-gate through the corrected system,
+  require **v16 ≥ v15 on both**. Also resolves the deferred AND-vs-OR invoke-gate cost lever.
 
 ## v16-READINESS BASELINE — first real-weights, natural-phrasing A/B vs v15 (2026-07-20) — BLOCKING
 
