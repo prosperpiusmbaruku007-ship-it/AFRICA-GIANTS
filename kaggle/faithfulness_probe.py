@@ -219,7 +219,7 @@ for pr in probes:
     rank = _target_rank(facts_seen, pr.get('target_fact_substring'))
     target_retrieved = rank is not None
     pol, conf = _polarity_conf(gen)
-    is_clar = CLARIFICATION_PENDING in gen
+    is_clar = reply.needs_clarification          # structured flag (copy is now real Swahili)
 
     if is_clar:
         cls = 'clarified'

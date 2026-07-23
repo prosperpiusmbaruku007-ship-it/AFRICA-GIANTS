@@ -218,7 +218,9 @@ for i, q in enumerate(ALL):
     try:
         reply = orch.answer(q['question_sw'])
         gen, raw = reply.text, reply.raw_text
-        clarified = CLARIFICATION_PENDING in gen
+        # Clarifications now render real Swahili copy (chike.clarification), not the bare
+        # sentinel — detect via the structured flag, not a magic string in the text.
+        clarified = reply.needs_clarification
         passed = False if clarified else bool(score_question(q, gen, REFUSAL_PHRASES))
         try:
             reliable, why = scorer_reliability(q, gen)

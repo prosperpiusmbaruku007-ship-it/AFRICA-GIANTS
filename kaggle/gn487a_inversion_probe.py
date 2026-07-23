@@ -162,7 +162,7 @@ for pr in probes:
     pol, conf = _polarity_conf(gen)
     # A probe is a candidate inversion when the confident-or-not polarity disagrees
     # with the expected polarity (and it is not a clarification/refusal).
-    is_clar = CLARIFICATION_PENDING in gen
+    is_clar = reply.needs_clarification          # structured flag (copy is now real Swahili)
     flipped = (not is_clar) and pol != pr['expected_polarity']
     rows.append({**pr, 'generated': gen, 'raw_generated': reply.raw_text,
                  'model_polarity': pol, 'polarity_confident': conf,

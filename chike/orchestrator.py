@@ -37,6 +37,7 @@ from . import generation_cleanup
 from . import decomposition
 from . import routing
 from . import classification
+from . import clarification
 
 # --- Stage-level configuration ---------------------------------------------
 
@@ -45,9 +46,10 @@ REFUSAL_TEXT = (
     "Tafadhali thibitisha na TRA."
 )
 
-# TODO: requires real ambiguous-phrasing test data — see PROGRESS.md milestone 5 gap.
-# Clarification response phrasing is intentionally unwritten. This sentinel lets the
-# never-guess routing contract be exercised in tests without inventing user-facing copy.
+# Legacy internal marker. Clarifications no longer RENDER this sentinel — they render real
+# Swahili copy from chike.clarification, and callers detect a clarification via the structured
+# SubAnswer.needs_clarification flag / Reply.needs_clarification (not a magic string in the
+# text). Kept defined only for backward-compatible imports; do not use it for detection.
 CLARIFICATION_PENDING = "<CLARIFICATION_NEEDED>"
 
 
@@ -96,6 +98,7 @@ class Reply:
     text: str
     raw_text: str = ""
     sub_answers: tuple = ()
+    needs_clarification: bool = False           # any sub-answer asked to clarify (never-guess)
 
 
 class Orchestrator:
@@ -195,13 +198,13 @@ class Orchestrator:
         required = REQUIRED_FIELDS.get(sq.computation_type)
         if required is None:
             return SubAnswer(
-                sub_question=sq, text=CLARIFICATION_PENDING, needs_clarification=True,
+                sub_question=sq, text=clarification.AMBIGUOUS_LEVY, needs_clarification=True,
             )
         extraction = self.extractor.extract(sq.text, required, sq.computation_type)
         if not extraction.usable(required):
-            return SubAnswer(
-                sub_question=sq, text=CLARIFICATION_PENDING, needs_clarification=True,
-            )
+            copy = clarification.compute_clarification(
+                sq.computation_type, extraction.clarification_reasons(required))
+            return SubAnswer(sub_question=sq, text=copy, needs_clarification=True)
 
         inputs = {name: extraction.fields[name].value for name in required}
         result = rules_engine.compute(sq.computation_type, **inputs)
@@ -214,7 +217,7 @@ class Orchestrator:
         # with no salary/payroll figure given can't be computed — clarify instead of
         # letting the fact/RAG model invent a number (rc_22). No model call, no retrieval.
         if routing.is_uncomputable_payroll_amount(sq.text):
-            return SubAnswer(sub_question=sq, text=CLARIFICATION_PENDING,
+            return SubAnswer(sub_question=sq, text=clarification.PAYROLL_AMOUNT,
                              needs_clarification=True)
         facts = tuple(self.retriever(sq.text))
         prompt = self._build_fact_prompt(sq.text, facts)
@@ -243,7 +246,7 @@ class Orchestrator:
         # Same never-guess fabrication guard as _answer_fact, applied to the collapsed
         # whole-question generation (rc_22 arrives here via the all-fact path).
         if routing.is_uncomputable_payroll_amount(generation_question):
-            return SubAnswer(sub_question=sq, text=CLARIFICATION_PENDING,
+            return SubAnswer(sub_question=sq, text=clarification.PAYROLL_AMOUNT,
                              needs_clarification=True)
         facts = self._pool_facts(retrieval_queries)
         prompt = self._build_fact_prompt(generation_question, facts)
@@ -293,7 +296,7 @@ class Orchestrator:
     @staticmethod
     def _render(sub: SubAnswer) -> str:
         if sub.needs_clarification:
-            return CLARIFICATION_PENDING
+            return sub.text.strip()          # real Swahili clarification copy (chike.clarification)
         # For compute answers, append the authoritative deterministic working so
         # the exact figure is guaranteed present regardless of what the model said.
         if sub.computation is not None:
@@ -362,4 +365,5 @@ class Orchestrator:
         return Reply(
             question=question, in_scope=True, refused=False,
             text=merged, raw_text=merged_raw, sub_answers=sub_answers,
+            needs_clarification=any(sa.needs_clarification for sa in sub_answers),
         )

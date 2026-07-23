@@ -111,7 +111,11 @@ def test_low_confidence_required_field_routes_to_clarification_not_rules_engine(
     sub = reply.sub_answers[0]
     assert sub.needs_clarification is True
     assert sub.computation is None                        # rules engine NOT called
-    assert reply.text == CLARIFICATION_PENDING
+    # (copy change) clarifications now render real Swahili copy, not the bare sentinel;
+    # detection is via the structured flag.
+    assert reply.needs_clarification is True
+    assert CLARIFICATION_PENDING not in reply.text
+    assert "mshahara" in reply.text.lower()               # it actually asks for the salary figure
     assert fake.call_count == 1                            # extraction only, no formatting
 
 
@@ -356,7 +360,7 @@ def test_q1_q12_regressions_resolved_on_real_weights():
     r1 = orch.answer(q1)
     print("\n[Q1] text:\n" + r1.text)
     assert r1.text.strip(), "Q1 regressed: empty output (the original v16 bug)"
-    assert CLARIFICATION_PENDING not in r1.text
+    assert not r1.needs_clarification                      # a fact answer, not a clarification
     assert r1.refused is False
 
     # Q12 (was empty + hallucinated follow-up turns): two-part fact — NSSF vs SDL.
@@ -517,12 +521,16 @@ def test_net_take_home_routes_to_compute_then_never_guesses_gross_net():
     assert sub.sub_question.computation_type == "paye"
     assert sub.computation is None                        # never-guess: rules engine NOT handed an ambiguous base
     assert sub.needs_clarification is True
-    assert reply.text == CLARIFICATION_PENDING
+    # (copy change) renders reason-aware gross/net clarification copy, not the bare sentinel.
+    assert reply.needs_clarification is True
+    assert CLARIFICATION_PENDING not in reply.text
+    assert "ghafi" in reply.text.lower() or "mkononi" in reply.text.lower()
     assert fake.call_count == 1                           # one extract probe, no formatting/fabrication call
 
 
 def test_fabrication_guard_clarifies_without_calling_the_model():
     from chike.orchestrator import CLARIFICATION_PENDING
+    from chike import clarification
 
     # rc_22: a payroll-levy AMOUNT asked with no salary given. The fact path must NOT be
     # allowed to fabricate a number — the guard returns a clarification and the model
@@ -537,6 +545,9 @@ def test_fabrication_guard_clarifies_without_calling_the_model():
     sub = reply.sub_answers[0]
     assert sub.needs_clarification is True
     assert sub.computation is None                         # never a computed number
-    assert reply.text == CLARIFICATION_PENDING
+    # (copy change) renders the shared PAYROLL_AMOUNT clarification, not the bare sentinel.
+    assert reply.needs_clarification is True
+    assert CLARIFICATION_PENDING not in reply.text
+    assert reply.text == clarification.PAYROLL_AMOUNT
     assert fake.call_count == 0                            # model NEVER called — no fabrication possible
     assert calls == []                                    # retrieval skipped too
