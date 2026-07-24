@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-20
+Last updated: 2026-07-24
 
 **STANDING STATUS:** EOS harness fix (build_chat_prompt → apply_chat_template) — **CLOSED,
 RE-BASELINED, and VALIDATED at scale.** The corrected 400-question combined regression is
@@ -51,6 +51,53 @@ now uses a decomposing phrasing and notes this inline. **Backlog:** extend `deco
 split "Pia,"/period-joined clauses (and add a guard so an un-decomposed multi-figure question does
 not silently feed a wrong figure to the rules engine). Not blocking; no current production impact
 (production run() has no compute path).
+
+**Tracked instance — eval_322 (enumerated compound, 2026-07-24).** *"Nataka kujua mambo matatu:
+kwanza kizingiti cha VAT, pili kiwango cha SDL, tatu je nitoe risiti ya EFD kwa muamala wa TZS
+5,000?"* — a **`kwanza…pili…tatu` enumeration** whose three parts are all directly answerable
+**facts** (VAT threshold 200M/100M; SDL rate 3.5%; EFD required for any amount). It does not
+decompose; the "SDL rate" fragment is mis-routed to **compute** and emits a salary/count
+clarification, and the VAT-threshold and EFD parts are **dropped entirely**. Same root phenomenon
+as the "Pia,"/period-joined gap above — a new *instance*, not a new defect. Found during the
+Finding-2 individual verification of the 5239190 run (it was the 1 of 23 "safe never-guess"
+clarifications that did NOT hold up). **Per option (b): logged here, no engine change this session.**
+Fix would be the same enumerated/period-clause `decompose_query` extension (+ the never-guess
+multi-figure guard), with a full 400 no-regression sweep.
+
+## MEASUREMENT GAP — a THIRD of the gate is scored by an admittedly-arbitrary mechanism (2026-07-24) — ELEVATED
+
+**This is a first-order measurement finding, not a caveat.** On the 5239190 combined run
+(the current v16 baseline), **133 of 400 results (33.25%) are `reliable=False`** — the harness
+itself declares them **unverifiable in either direction**. The weight is not "63 unverifiable
+failures": it is that **70 of those 133 are marked PASS and 63 are marked FAIL, and the pass/fail
+split across that entire third is arbitrary from the scorer's own standpoint.** A "pass" inside
+that third is exactly as unadjudicated as a "fail." Every one of the eight exclusion reasons is a
+scorer / ground-truth-structure limitation; **none** is a generation-quality reason (0 truncated /
+loop / empty):
+
+| reason | n | meaning |
+|---|---|---|
+| compute_derived_number | 48 | number-overlap cannot verify a *computed* figure |
+| yes_no_polarity_unverifiable | 28 | cannot parse the Swahili yes/no lead |
+| qualitative_number_no_numeric_key | 27 | answer is qualitative; no numeric key to match |
+| yes_no_ground_truth_ambiguous | 9 | gold polarity itself ambiguous |
+| morphological_overlap_gap | 7 | correct answer, tokenizer missed the overlap |
+| year_only_numeric_key | 6 | scoring on a stray year token |
+| zero_or_not_applicable_answer | 6 | "TZS 0 / not applicable" unverifiable by overlap |
+| year_collision_match | 2 | spurious year-token match |
+
+The reliable-subset gates (`fact_path_190_reliable`, etc.) exist *only* to route around this, and
+they shrink the measurable base substantially (fact_path drops from n=180 to n=127). **This is
+direct evidence that the frontier-judge scoring item is the binding constraint on trusting any
+compute/adversarial number — and a third of the fact numbers too — and is NOT deferrable.**
+(Supersedes the earlier "130/400" figure from the e9cc68a run; current is 133/400.)
+
+### Copy-quality note (low priority, NOT a defect) — eval_275 / 291 / 292 (2026-07-24)
+These three clarify **safely** (no fabricated number) but name a **generic** count/per-person need
+instead of the *actual* blocker — foreign currency (eval_275, USD 300) or an irregular pay period
+(eval_291 bi-weekly, eval_292 per-shift). `chike/clarification.py` already has `foreign_currency`
+and `period` reason-mappers; the miss is that extraction did not surface those blockers into
+`clarification_reasons` for these phrasings. Future copy-quality polish only — no code this session.
 
 ## v16-READINESS BASELINE — first real-weights, natural-phrasing A/B vs v15 (2026-07-20) — BLOCKING
 
@@ -422,7 +469,9 @@ stop instead of runs hitting the 350-token cap. The probe's 20/20 finding holds 
   polarity scorer can't separate — left with the deferred framing-aware polarity item.
 
 **Compute buckets (32–40%) are SCORER-LIMITED, not a confirmed measure of true compute
-accuracy.** 130/400 results are reliable=False, and every exclusion reason is a
+accuracy.** 130/400 results are reliable=False (this is the e9cc68a figure; the current
+5239190 baseline is **133/400 = 33.25%** — see the dated "MEASUREMENT GAP" section near the
+top for the elevated restatement), and every exclusion reason is a
 scorer/ground-truth limitation — NONE is a generation-quality reason (0 truncated/loop/
 empty). Breakdown: compute_derived_number 48, qualitative_number_no_numeric_key 27,
 yes_no_polarity_unverifiable 26, yes_no_ground_truth_ambiguous 9, year_only_numeric_key 6,
@@ -601,6 +650,12 @@ lexicon; their SUBSTANCE is already correct post-retrieval-fix, and a regression
 (`test_prohibition_verbs_deliberately_not_flat_negation`) locks this decision in.
 
 ### Next tracked follow-ups (priority order, for future work)
+0. **[ELEVATED 2026-07-24] Frontier-judge / semantic scoring — now the BINDING constraint.**
+   The 5239190 investigation showed **133/400 (33.25%) are `reliable=False`** with an
+   arbitrary pass/fail split (70 pass / 63 fail) across that third, every exclusion reason
+   scorer-structural (see "MEASUREMENT GAP" section above). This is no longer a deferrable
+   nicety: it caps the trustworthiness of every compute/adversarial number and a third of the
+   fact numbers. Promoted above the two items below — they largely *fold into* this workstream.
 1. **Generation-robustness repetition loop** — eval_317's "Thibitisha…" ×14 tail and
    eval_183's fabricated multi-turn Q&A. Likely a stop-string / `no_repeat_ngram` / decoding
    fix. This (not retrieval, not the parser) is what still fails eval_317's scorer.
