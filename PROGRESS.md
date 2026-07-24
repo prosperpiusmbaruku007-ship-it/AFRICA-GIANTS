@@ -64,6 +64,67 @@ clarifications that did NOT hold up). **Per option (b): logged here, no engine c
 Fix would be the same enumerated/period-clause `decompose_query` extension (+ the never-guess
 multi-figure guard), with a full 400 no-regression sweep.
 
+## ✅ Ordinal-enumeration decomposition (`_split_ordinal_enumeration`) — SHIPPED (2026-07-24) — router follow-up #2 of 3
+
+**The second of the three tracked follow-ups from the Phase D router investigation.** Preceded
+by a full characterization (Steps 1-3, offline, pure string logic) before any code, given the
+much broader blast radius — decomposition sits upstream of routing/retrieval/extraction/merge for
+all 400 questions.
+
+### Characterization findings (the scope was much smaller than the label suggested)
+- **Baseline:** of 400, only **3 decompose** today (eval_318 pass / eval_321 fail / eval_330 pass,
+  all via `na pia`/enum); 397 stay whole. Snapshot anchored at `scratch/decomp_baseline_snapshot.json`.
+- **The `"Pia,"` period-joined pattern = 0 real gate instances.** A direct search for a sentence-
+  boundary `[.!] Pia,/vilevile/aidha` across all 400 returns **zero** — the logged example
+  (*"…nihesabie SDL. Pia, ada ya BRELA…"*) was a **constructed** illustration, never an actual gate
+  question. Worth stating plainly: **half the originally-scoped problem did not exist in real data.**
+  (The 6 `pia` hits are all adverbial "also/too" inside one question, or multi-part via other
+  connectors — not the period-joined shape.)
+- **The ordinal `kwanza/pili/tatu` pattern = exactly 1 real case (eval_322).** The other raw hit,
+  eval_290 (*"watu 3 wa kwanza… wanne wanaofuata… watano wa mwisho… SDL?"*), is a **tiered-payroll
+  compute** question — "kwanza" = "the first [group]", not "firstly [question 1]" — a false positive
+  that must stay whole.
+- eval_322's three parts (VAT threshold / SDL rate / EFD receipt) are **all facts**, and once split
+  each routes to `none` (fact) — so **decomposition alone is sufficient**, no compute/extraction change.
+
+### Fix mechanism (decomposition-layer only; pure string logic)
+`_split_ordinal_enumeration` fires **only** when BOTH signals are present: an announce phrase
+(`_ORDINAL_ANNOUNCE`: `(mambo|maswali|masuala|vitu|mengi) (mawili|matatu|manne|matano|sita|saba|
+kadhaa)`) AND a **sequential ordinal run** starting `kwanza`→`pili`[→`tatu`…], each present and
+strictly after the previous, matched as whole words (never found inside `matatu`/`wanne`/`watano`).
+It splits on the ordinal delimiters and drops the announce preamble (each listed item is self-
+contained). Requiring **both** signals is what excludes the bare-`kwanza` tiered-payroll class and
+the adverbial-`pia` class. Wired into `decompose_query`'s early-return guard and as a split branch
+after the enum branch (fires only when the `?`/connector/enum paths produced nothing usable).
+
+### Validation (exactly the plan)
+- **Full-400 before/after decomposition diff vs the snapshot: exactly 1 question changed —
+  eval_322** (n=1 → n=3: `['kizingiti cha VAT', 'kiwango cha SDL', 'je nitoe risiti ya EFD kwa
+  muamala wa TZS 5,000?']`). The 3 pre-existing splits (eval_318/321/330) are **byte-identical**.
+- **All 14 false-positive candidates stay whole (n=1):** eval_290 (tiered payroll), eval_044/180/
+  186/206 (adverbial "pia"), eval_345 (comparison ref), eval_051/052/055/058 (single question,
+  multiple domain keywords), eval_331 (conditional if-yes-then), eval_171/174/219 (context + one ask).
+- The 3 new eval_322 sub-questions all route to `none` (fact), as predicted.
+- Unit tests (`tests/test_decomposition.py` 6 → 10): 3-way split; bare-ordinal tiered payroll not
+  split; adverbial "pia" not split; requires-both-announce-and-two-ordinals guard.
+- **Full offline suite: 208 passed, 0 failed.**
+
+### Scope held
+eval_320/eval_319 (compute enumeration — a `levy-list + verb` shape needing compute routing AND an
+N-way merge) are **deliberately deferred as a separate, higher-risk pattern** with its own future
+investigation, NOT folded in. eval_332 (3-part gn487a) **excluded as a scorer artifact** — the model
+already answers all three parts correctly whole, so decomposition would not move its score.
+
+### Gate-number caveat (unchanged discipline)
+Routing-quality fix: eval_322 is `pass=False` today and production `run()` has no compute path, so
+this **cannot move the reliable-subset number on its own**. It removes the mis-route (SDL fragment →
+compute clarification) and the dropped VAT/EFD parts; whether the merged 3-fact answer clears the
+overlap scorer is confirmed by **folding into the next scheduled 400-run** — no separate GPU cycle.
+
+**Follow-up #2 of 3 COMPLETE. Remaining: #3 — frontier-judge / semantic scoring (the largest in
+scope; directly addresses the MEASUREMENT GAP — ~a third of the 400 scored by a mechanism that
+admits it cannot verify its own answers in either direction).**
+
 ## ✅ Generic explicit-levy money-ask guard — SHIPPED (2026-07-24) — router follow-up #1 of 3
 
 **The first of the three tracked follow-ups from the Phase D router investigation (the

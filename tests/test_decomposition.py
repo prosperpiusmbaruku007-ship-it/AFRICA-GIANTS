@@ -70,3 +70,49 @@ def test_q6_numbered_questions_split_but_only_first_keeps_context():
     assert "wafanyakazi 12" in parts[0] and "600,000" in parts[0]
     assert "600,000" not in parts[1]
     assert "600,000" not in parts[2]
+
+
+# --- announce-then-ordinal enumeration (eval_322) ---------------------------
+# "...mambo matatu: kwanza A, pili B, tatu C" — one '?', no connector, no calc-verb enum, so
+# the '?'/connector/enum paths miss it. Detected ONLY on announce phrase + >=2 sequential
+# ordinals, so the many bare-"kwanza"/"pia" false positives stay whole.
+
+def test_ordinal_announce_enumeration_splits_into_three():
+    parts = decompose_query(
+        "Nataka kujua mambo matatu: kwanza kizingiti cha VAT, pili kiwango cha SDL, "
+        "tatu je nitoe risiti ya EFD kwa muamala wa TZS 5,000?"
+    )
+    assert parts == [
+        "kizingiti cha VAT",
+        "kiwango cha SDL",
+        "je nitoe risiti ya EFD kwa muamala wa TZS 5,000?",
+    ]
+
+
+def test_bare_ordinal_tiered_payroll_is_not_split():
+    # eval_290: "kwanza"/"wanne"/"watano" mean "the first/next/last GROUP" of a tiered payroll,
+    # NOT firstly/secondly. No announce phrase and no sequential kwanza+pili -> stays whole
+    # (one SDL compute over the whole payroll).
+    q = ("Watu 3 wa kwanza wanapata TZS 1,200,000, wanne wanaofuata TZS 800,000, "
+         "watano wa mwisho TZS 500,000 — SDL?")
+    assert decompose_query(q) == [q]
+
+
+def test_adverbial_pia_is_not_split():
+    # eval_180/186: "pia" = "also/too" inside a single question — no announce, no ordinals.
+    for q in [
+        "Nilisajili biashara yangu BRELA tayari — hiyo inamaanisha nimesajili OSHA pia?",
+        "Nina wafanyakazi 60 na nimesajili OSHA — je, pia ninahitaji kumwajiri afisa wa usalama?",
+    ]:
+        assert decompose_query(q) == [q]
+
+
+def test_ordinal_enumeration_needs_both_announce_and_two_ordinals():
+    # Announce phrase but only ONE ordinal -> not split (needs kwanza AND pili in sequence).
+    assert decompose_query("Nataka kujua mambo matatu: kwanza kizingiti cha VAT ni kiasi gani?") == [
+        "Nataka kujua mambo matatu: kwanza kizingiti cha VAT ni kiasi gani?"
+    ]
+    # Sequential ordinals but NO announce phrase -> not split (guards the bare-ordinal class).
+    assert decompose_query("Kwanza nilipe SDL, pili nilipe NSSF.") == [
+        "Kwanza nilipe SDL, pili nilipe NSSF."
+    ]

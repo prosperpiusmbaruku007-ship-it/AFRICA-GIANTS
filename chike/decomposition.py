@@ -62,6 +62,59 @@ def _split_enumeration(message: str) -> list:
     return [f'{preamble} {item}'.strip() for item in items]
 
 
+# Announce-then-ordinal enumeration: "...mambo matatu: kwanza A, pili B, tatu C" — a single
+# message that announces N things then lists them with ORDINAL delimiters (firstly/secondly/
+# thirdly). It has one '?' and no multi-part connector, so the '?'/connector/enum paths never
+# fire and whole-message top-3 retrieval covers only one part (eval_322: the SDL fragment
+# mis-routes to compute and the VAT/EFD parts are dropped). Detected ONLY when BOTH signals are
+# present — the announce phrase AND >=2 sequential ordinals — so a bare "kwanza" meaning "the
+# first [group]" (eval_290's tiered payroll: "watu 3 wa kwanza... wanne wanaofuata...") is
+# never split. The adverbial "pia" (also/too) has no announce phrase and is likewise untouched.
+_ORDINAL_ANNOUNCE = re.compile(
+    r'\b(mambo|maswali|masuala|vitu|mengi)\s+'
+    r'(mawili|matatu|manne|matano|sita|saba|kadhaa)\b', re.IGNORECASE)
+# Ordinal words in canonical sequence. Used as clause delimiters, matched as whole words so
+# they are not found inside "matatu"/"wanne"/"watano".
+_ORDINAL_SEQUENCE = ['kwanza', 'pili', 'tatu', 'nne', 'tano']
+
+
+def _split_ordinal_enumeration(message: str) -> list:
+    """Sub-queries for an announce-then-ordinal list ("mambo matatu: kwanza A, pili B, tatu C"),
+    else [] (not this shape). Requires the announce phrase AND a sequential ordinal run starting
+    at 'kwanza' then 'pili' (>=2), each appearing after the previous in text order. Splits on the
+    ordinal delimiters; the announce preamble before the first ordinal is dropped (it carries no
+    per-item context — each listed item is self-contained)."""
+    if not _ORDINAL_ANNOUNCE.search(message):
+        return []
+    # First whole-word position of each ordinal.
+    firsts = {}
+    for ordw in _ORDINAL_SEQUENCE:
+        mo = re.search(r'\b' + ordw + r'\b', message, flags=re.IGNORECASE)
+        if mo:
+            firsts[ordw] = mo.start()
+    # Build the sequential run: kwanza, then pili, then tatu... each present and strictly after
+    # the previous. Stop at the first missing/out-of-order ordinal (never a bare 'kwanza' alone).
+    run = []
+    prev = -1
+    for ordw in _ORDINAL_SEQUENCE:
+        pos = firsts.get(ordw, -1)
+        if pos > prev:
+            run.append((pos, ordw))
+            prev = pos
+        else:
+            break
+    if len(run) < 2:
+        return []
+    items = []
+    for i, (pos, ordw) in enumerate(run):
+        start = pos + len(ordw)
+        end = run[i + 1][0] if i + 1 < len(run) else len(message)
+        item = message[start:end].strip(' ,:;.-')
+        if item:
+            items.append(item)
+    return items if len(items) >= 2 else []
+
+
 def decompose_query(message: str) -> List[str]:
     """Split a multi-part message into sub-queries for separate RAG retrieval.
 
@@ -73,8 +126,9 @@ def decompose_query(message: str) -> List[str]:
     question_marks = message.count('?')
     has_connector = any(re.search(p, message_lower) for p in MULTI_PART_SIGNALS)
     enum_parts = _split_enumeration(message)
+    ordinal_parts = _split_ordinal_enumeration(message)
 
-    if question_marks <= 1 and not has_connector and not enum_parts:
+    if question_marks <= 1 and not has_connector and not enum_parts and not ordinal_parts:
         return [message]  # single question — no decomposition needed
 
     parts = []
@@ -96,6 +150,12 @@ def decompose_query(message: str) -> List[str]:
     # above produced nothing usable (no '?', no connector).
     if (not parts or len(parts) == 1) and enum_parts:
         parts = enum_parts
+
+    # Announce-then-ordinal list ("...mambo matatu: kwanza A, pili B, tatu C") — used when the
+    # '?'/connector/enum paths above produced nothing usable. Tightly scoped (announce phrase +
+    # >=2 sequential ordinals); see _split_ordinal_enumeration.
+    if (not parts or len(parts) == 1) and ordinal_parts:
+        parts = ordinal_parts
 
     # Fallback: unusable fragments -> treat as single query.
     if not parts or len(parts) == 1:
