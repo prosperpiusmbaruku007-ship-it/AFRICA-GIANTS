@@ -17,7 +17,9 @@ This module is the deterministic routing layer. It is a UNION of two paths:
      {a number} + {payroll context} + {a money 'how-much' cue}. The levy is then read off the
      generic obligation words (pensheni->nssf, ufundi->sdl, kodi ya mapato->paye, fidia->wcf);
      if the cue is generic/multi ('makato yote') the intent is 'ambiguous_multi' (compute-intent,
-     specific levy unresolved -> the compute path clarifies which one).
+     specific levy unresolved -> the compute path clarifies which one). If NO levy/obligation
+     word is present at all, the {number + payroll + money-ask} combination is not treated as
+     compute-intent (the number may be incidental, e.g. a gazette 'GN 605A') -> fact/RAG.
 
 Everything here is pure string logic — no model call, no network, no GPU — so routing is free
 and fully offline-testable. The model (SlotExtractor) is consulted only AFTER a compute route,
@@ -128,8 +130,16 @@ def detect_intent(text: str) -> str:
         return explicit
 
     # Path 2 — Candidate C: number + payroll context + a money 'how-much' cue.
+    # Only a compute route when _natural_levy actually resolves a levy — a specific one,
+    # OR 'ambiguous_multi' via a generic obligation word ('makato yote'/'michango'). A bare
+    # {digit + payroll word + money-ask} with NO levy/obligation word is NOT compute-intent:
+    # the digit may be incidental (e.g. '605' in 'GN 605A', a pure fact lookup) or the ask a
+    # non-levy custom split ('mgao wa 15%'). Those fall through to fact/RAG rather than emitting
+    # a spurious 'which levy?' clarification.
     if _has_number(ql) and any(c in ql for c in _PAYROLL_CTX) and _has_money_ask(ql):
-        return _natural_levy(ql) or "ambiguous_multi"
+        natural = _natural_levy(ql)
+        if natural:
+            return natural
 
     return "none"
 

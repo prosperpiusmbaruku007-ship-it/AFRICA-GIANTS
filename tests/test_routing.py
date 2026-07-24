@@ -36,6 +36,25 @@ def test_generic_deductions_route_ambiguous_multi():
     ) == "ambiguous_multi"
 
 
+def test_incidental_digit_with_no_levy_word_is_fact_not_ambiguous_multi():
+    # eval_240 shape: a pure fact lookup whose only digit is an incidental gazette number
+    # ('GN 605A') plus a payroll word + 'kiasi gani' must NOT be pulled into compute — it has
+    # no levy/obligation word, so it routes to fact/RAG, never a spurious 'which levy?' clarify.
+    assert routing.detect_intent(
+        "GN 605A ilibadilisha kima cha chini cha mshahara wa sekta binafsi kwa wastani wa kiasi gani?"
+    ) == "none"
+
+
+def test_custom_split_with_no_levy_word_is_fact_not_ambiguous_multi():
+    # eval_398 shape: self-contained arithmetic with an explicit non-levy custom split
+    # ('mgao wa 15% mwajiri na 5%') and no levy/obligation word -> fact/RAG, not ambiguous_multi.
+    # (The fixed-rate rules engine cannot produce a custom split anyway.)
+    assert routing.detect_intent(
+        "Mshahara ni TZS 700,000 na tumekubaliana mgao wa 15% mwajiri na 5% mfanyakazi — "
+        "kila upande ni ngapi?"
+    ) == "none"
+
+
 # --- boundary discriminators (same topic, opposite route) -------------------
 
 def test_boundary_amount_vs_threshold():
