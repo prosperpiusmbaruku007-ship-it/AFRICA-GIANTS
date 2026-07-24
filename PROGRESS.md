@@ -64,6 +64,76 @@ clarifications that did NOT hold up). **Per option (b): logged here, no engine c
 Fix would be the same enumerated/period-clause `decompose_query` extension (+ the never-guess
 multi-figure guard), with a full 400 no-regression sweep.
 
+## ✅ Generic explicit-levy money-ask guard — SHIPPED (2026-07-24) — router follow-up #1 of 3
+
+**The first of the three tracked follow-ups from the Phase D router investigation (the
+applicability-vs-amount fix `f200a4e` and the natural-path money-ask guard were the earlier two
+guards this mirrors).** `chike/routing.py`'s explicit path committed to compute on nothing more
+than *a levy name + any digit* (`if explicit and _has_number(ql): return explicit`) — no
+money-ask/obligation-cue guard, unlike the natural path (requires `_has_money_ask`) and
+`is_applicability_question` (rejects when `_has_money_ask`). So a yes_no/definition/deadline
+question that merely NAMES SDL/NSSF/PAYE/WCF and carries an **incidental** number (a rate
+'asilimia 3.5', a day 'siku 30'/'tarehe 20', a threshold headcount 'wafanyakazi 4, sivyo?') was
+routed to compute and then emitted a needless "give me the salary" clarification instead of just
+answering from fact/RAG.
+
+### Fix mechanism (routing-layer only; no model/network/GPU)
+Guard Path 1 so it commits to compute only when a computation is actually needed —
+`_has_money_ask OR is_applicability_question OR _has_money_magnitude OR _COUNT_TRANSITION OR
+_DERIVE_CUE`. The discriminator is a **payroll money magnitude**: `_has_money_magnitude` returns
+True for a currency/magnitude token (TZS/shilingi/milioni/elfu/laki/dola/euro/kes) **or** a
+parsed amount ≥ `swahili_numbers.MIN_PLAUSIBLE_AMOUNT` (the extraction layer's own payroll-
+plausibility floor, so a bare large number like `6,750,000` counts while a rate/day/small-count
+does not — keeping routing consistent with how extraction itself decides a figure is real
+payroll). A rate/deadline/confirmation whose only number is incidental now falls through to
+fact/RAG.
+
+**Empirical necessity of the money-magnitude refinement:** the naive "money-ask OR
+applicability" guard was measured **unsafe** — it flips 51 questions and hijacks **6
+currently-passing** ones (incl. `eval_318`, an unambiguous genuine compute question). Adding the
+money-magnitude keep-condition narrows the blast radius to the intended class only.
+
+### The 12-question flip set (all → fact/RAG; all `pass=False` today, so no reliable-subset loss)
+`eval_099, eval_102, eval_127, eval_335, eval_342, eval_343, eval_344, eval_345` (the eight
+originally-named) **plus** `eval_095, eval_337, eval_341, eval_348` (four same-class rate/
+threshold confirmations surfaced by the 400 sweep). Exactly these 12 flip; every flip goes to
+`none`; **0 currently-passing questions affected**; the 35 genuine compute questions the naive
+guard would have wrongly hijacked (elliptical asks like `eval_372` "mishahara TZS 1,500,000 →
+SDL yake?") are preserved.
+
+### Carve-outs — deliberately NOT flipped (belong to other, already-built mechanisms)
+- **`eval_124`** — the count-transition never-guess case (`_COUNT_TRANSITION`, from the
+  applicability fix `f200a4e`). Kept on the compute path so its own never-guess clarification
+  (not a fact answer) still fires when the headcount is crossing the SDL threshold. Flipping it
+  would undo that just-built fix.
+- **`eval_263 / eval_265 / eval_266`** — wrong-base traps (`extraction:small_int_as_money`;
+  invoice/branch/vehicle counts offered as a payroll base). Their **gold answers themselves ask
+  for the payroll figure** ("Nipe mshahara wa mwezi, siyo idadi ya invoice"), so the current
+  salary-clarification is already aligned with intent; flipping them to fact/RAG would reintroduce
+  exactly the fabricate-on-wrong-base failure the `rc_22`/`eval_380`-class guards exist to prevent.
+  A compute-derivation cue (`_DERIVE_CUE`: itakuwaje/naipataje/inahesabiwa…) keeps them on the
+  compute path, where extraction clarifies safely (never-guess, R8). These stay on the separately-
+  tracked wrong-base track, not blurred into this guard.
+
+### Validation
+- New unit tests A1–A5 in `tests/test_routing.py` (named-8 → fact; the four additional → fact;
+  genuine-compute regression locks stay on levy; `_has_money_magnitude` truth table; carve-out
+  assertions). Routing tests 18 → 23.
+- Full 400 routing sweep (offline, `scratch/explicit_guard_final_sweep.py`): exactly the 12-flip
+  set, all → `none`, 0 currently-passing hijacked, 4 carve-outs stay compute.
+- **Full offline suite: 204 passed, 0 failed.**
+
+### Gate-number caveat (understood and correct)
+This is a **routing-quality** fix, not something that moves the reliable-subset number on its own:
+all 12 flipped questions are `pass=False` today, and production `run()` has no compute path.
+Confirmation that the 12 now answer correctly via fact/RAG (rather than clarifying) is **folded
+into the next scheduled 400-run** — no separate GPU cycle spent on it.
+
+**Follow-up #2 of 3 — the `decompose_query` extension (enumerated/period-joined clauses, the
+eval_322 / "Pia," gap above) — is next, and is HIGHER RISK: it touches shared infrastructure
+affecting all 400 questions, so it needs its own careful, isolated investigation before any fix
+is proposed (same discipline the applicability fix and this guard both received).**
+
 ## MEASUREMENT GAP — a THIRD of the gate is scored by an admittedly-arbitrary mechanism (2026-07-24) — ELEVATED
 
 **This is a first-order measurement finding, not a caveat.** On the 5239190 combined run

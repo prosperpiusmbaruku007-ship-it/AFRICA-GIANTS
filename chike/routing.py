@@ -32,6 +32,8 @@ fall through to the fact/RAG path, the same honest failure as the current stub.
 
 import re
 
+from . import swahili_numbers as swn
+
 # The four rules-engine computation types. 'ambiguous_multi' is compute-intent with an
 # unresolved specific levy; 'none' means fact/RAG.
 COMPUTE_TYPES = ("sdl", "nssf", "paye", "wcf")
@@ -101,6 +103,37 @@ def _has_money_ask(ql: str) -> bool:
     return ask
 
 
+# Payroll MONEY MAGNITUDE: a figure that could serve as a computation base. This separates a
+# genuine compute question ("mishahara TZS 1,500,000 -> SDL yake?", "mshahara 6,750,000") from
+# a rate/deadline/confirmation whose only number is incidental ("asilimia 3.5", "siku 30",
+# "tarehe 20", "wafanyakazi 4"). Two signals: a currency/magnitude token, OR a parsed amount
+# at/above the extraction layer's own payroll-plausibility floor (swn.MIN_PLAUSIBLE_AMOUNT),
+# so a bare large number like 6,750,000 counts while a small rate/day/count does not — keeping
+# routing consistent with how extraction itself decides a figure is a real payroll amount.
+# Present -> the question may need computing, keep it on the compute path; absent (and no
+# money-ask/applicability/derive cue) -> the number is incidental, route to fact/RAG.
+_MONEY_MAGNITUDE = re.compile(
+    r"\b(tzs|tsh|sh|shilingi|milioni|elfu|laki|dola|dollar|usd|euro|eur|kes|pound|paundi)\b")
+
+
+def _has_money_magnitude(ql: str) -> bool:
+    if _MONEY_MAGNITUDE.search(ql):
+        return True
+    return any(a >= swn.MIN_PLAUSIBLE_AMOUNT for a in swn.parse_amounts(ql))
+
+
+# Compute-DERIVATION cue: the question actively asks to derive/compute the levy ("how will my
+# X be?", "how do I get X?", "how is X computed?") — compute-intent even when the only number
+# offered is a wrong base (a non-payroll count). Such a question belongs on the compute path,
+# where the wrong-base / too-small-amount extraction guards clarify SAFELY (never-guess, R8);
+# flipping it to fact/RAG would risk fabricating a levy from the wrong base — the separately-
+# tracked extraction:small_int_as_money class (eval_263/265/266), deliberately NOT absorbed
+# into this money-ask guard.
+_DERIVE_CUE = re.compile(
+    r"itakuwaje|itakuwa\s+ngapi|naipataje|naichangiaje|naikadiriaje|naihesabuje|"
+    r"inahesabuje|inahesabiwa|inakatwa\s+vipi")
+
+
 def _explicit_levy(ql: str):
     for levy, pats in _EXPLICIT.items():
         if any(re.search(p, ql) for p in pats):
@@ -124,9 +157,27 @@ def detect_intent(text: str) -> str:
     """
     ql = text.lower()
 
-    # Path 1 — explicit levy named + a number -> that levy (preserves stub / 400 control).
+    # Path 1 — explicit levy named + a number. GUARD (mirrors the natural-path money-ask
+    # guard and the applicability-vs-amount guard): only COMMIT to compute when a computation
+    # is actually needed. A bare incidental number — a rate ('asilimia 3.5'), a day ('siku
+    # 30'/'tarehe 20'), a threshold headcount in a confirmation ('wafanyakazi 4, sivyo?') —
+    # in a yes_no/definition/deadline question that merely NAMES the levy is NOT compute-
+    # intent; without this guard it hit the compute path and asked for a salary the answer
+    # never uses (eval_099/102/127/335/342/343/344/345). Commit to compute when ANY of:
+    #   - a money 'how-much' ask (_has_money_ask), OR
+    #   - an obligation/applicability cue (is_applicability_question), OR
+    #   - a payroll money magnitude to compute from (_has_money_magnitude), OR
+    #   - a threshold-crossing count (_COUNT_TRANSITION — eval_124's dedicated never-guess
+    #     case from the applicability fix; kept on its own path, not flipped here), OR
+    #   - a compute-derivation cue on a wrong base (_DERIVE_CUE — the extraction wrong-base
+    #     small_int_as_money cases eval_263/265/266, where extraction clarifies safely).
+    # The last two are explicit carve-outs so this guard stays surgical to the rate/deadline/
+    # confirmation class and does not disturb mechanisms built/tracked on other lines.
     explicit = _explicit_levy(ql)
-    if explicit and _has_number(ql):
+    if explicit and _has_number(ql) and (
+            _has_money_ask(ql) or is_applicability_question(text)
+            or _has_money_magnitude(ql)
+            or _COUNT_TRANSITION.search(ql) or _DERIVE_CUE.search(ql)):
         return explicit
 
     # Path 2 — Candidate C: number + payroll context + a money 'how-much' cue.

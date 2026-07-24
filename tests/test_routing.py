@@ -175,3 +175,89 @@ def test_is_applicability_question_excludes_amount_distractor_and_fact_questions
     assert routing.is_applicability_question(
         "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi "
         "unaofuata?") is False                                                          # eval_127
+
+
+# --- explicit-levy money-ask guard (the generic guard on Path 1) ----------------------
+# A yes_no/definition/deadline question that merely NAMES a levy and carries an INCIDENTAL
+# number (a rate 'asilimia 3.5', a day 'siku 30'/'tarehe 20', a threshold headcount in a
+# confirmation 'wafanyakazi 4, sivyo?') must NOT be forced to the compute path (which then
+# asks for a salary the answer never uses). It routes to fact/RAG. Mirrors the natural-path
+# money-ask guard and the applicability-vs-amount guard.
+
+# A1 — the eight originally-named affected questions now route to fact.
+def test_explicit_guard_named_eight_route_to_fact():
+    for q in [
+        "Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?",   # eval_099
+        "Je, deadline ya kulipa michango ya NSSF kila mwezi ni siku ya 20 ya mwezi unaofuata?",   # eval_102
+        "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?",          # eval_127
+        "Kiwango cha WCF ni asilimia 3.5 ya mishahara, sivyo?",                                    # eval_335
+        "Kiwango cha juu kabisa cha PAYE ni asilimia 25, sivyo?",                                  # eval_342
+        "Ajali ya kazini WCF lazima itolewe taarifa ndani ya siku 30, sivyo?",                     # eval_343
+        "PAYE ya mfanyakazi asiye mkazi ni asilimia 30, sivyo?",                                   # eval_344
+        "SDL inalipwa ifikapo tarehe 20 ya mwezi kama VAT withholding, sivyo?",                    # eval_345
+    ]:
+        assert routing.detect_intent(q) == "none"
+
+
+# A2 — the four additional same-class questions surfaced by the 400 sweep also route to fact.
+def test_explicit_guard_additional_rate_and_threshold_confirmations_route_to_fact():
+    for q in [
+        "Mfanyabiashara anayejitegemea (self-employed) anapojiunga NSSF kwa hiari — "
+        "analipa asilimia ngapi ya mchango wake wote (sehemu zote mbili)?",                        # eval_095
+        "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",                                 # eval_337
+        "Kizingiti cha SDL ni wafanyakazi 4, sivyo?",                                              # eval_341
+        "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",           # eval_348
+    ]:
+        assert routing.detect_intent(q) == "none"
+
+
+# A3 — regression locks: genuine compute (a payroll money magnitude, a money-ask, or an
+# applicability cue present) MUST still route to its levy, not be hijacked to fact.
+def test_explicit_guard_preserves_genuine_compute_questions():
+    checks = [
+        ("Nina wafanyakazi 11 na mishahara TZS 5,500,000 na nataka kujua SDL na NSSF na "
+         "pia je nasajili VAT kama mapato ni TZS 205,000,000?", "sdl"),                           # eval_318
+        ("Duka dogo lina wafanyakazi 5, mishahara TZS 1,500,000 — SDL yake?", "sdl"),             # eval_372
+        ("Mzee faida ya duka mwezi huu imefika TZS 8,400,000, sasa SDL yangu itakuwa ngapi?",
+         "sdl"),                                                                                   # eval_251 (wrong-base, still compute -> clarifies)
+        ("Mfanyakazi anapata mshahara wa jumla wa TZS milioni 2 kwa mwezi — je, NSSF "
+         "inahusika na mshahara wote?", "nssf"),                                                   # eval_100
+        ("Nilipe SDL, NSSF, PAYE na WCF kwa mfanyakazi mmoja mwenye TZS 800,000 — "
+         "nionyeshe vyote.", "sdl"),                                                               # eval_320
+        ("Nina wafanyakazi 9 na mishahara TZS 3,600,000 — je SDL inanihusu?", "sdl"),             # eval_363 (applicability)
+        ("Mshahara wa mfanyakazi ni TZS 300,000, je kujiunga na NSSF ni hiari au lazima?",
+         "nssf"),                                                                                  # eval_309
+    ]
+    for q, expected in checks:
+        assert routing.detect_intent(q) == expected
+
+
+# A4 — _has_money_magnitude truth table: currency/magnitude tokens are a base to compute
+# from; a bare rate/day/percentage number is not.
+def test_has_money_magnitude_truth_table():
+    for pos in ["mishahara TZS 1,500,000", "milioni 2", "laki tano", "elfu hamsini",
+                "analipwa dola 1,200", "euro 400", "KES 90,000"]:
+        assert routing._has_money_magnitude(pos.lower()) is True
+    for neg in ["asilimia 3.5", "asilimia 25", "siku 30", "tarehe 20", "wafanyakazi 4",
+                "kwa wakati mmoja siku ya 7"]:
+        assert routing._has_money_magnitude(neg.lower()) is False
+
+
+# A5 — explicit carve-outs: these belong to OTHER, already-built mechanisms and must stay on
+# the compute path, NOT be flipped by this guard.
+def test_explicit_guard_carve_outs_stay_on_compute():
+    # eval_124 — count-transition never-guess (_COUNT_TRANSITION, applicability fix). Stays on
+    # compute so its own never-guess clarification (not a fact answer) still fires.
+    assert routing.detect_intent(
+        "Biashara yangu ina wafanyakazi 9 na ninaajiri mfanyakazi wa 10 katikati ya mwezi — "
+        "je, SDL inatakiwa kulipwa mwezi huo huo?") == "sdl"                                       # eval_124
+    # eval_263/265/266 — wrong-base (extraction:small_int_as_money). A compute-derivation cue
+    # keeps them on compute, where extraction clarifies for the right input (never-guess R8);
+    # flipping to fact/RAG would risk fabricating a levy from the wrong base.
+    assert routing.detect_intent(
+        "Nimetoa invoice 450 mwezi huu, sasa NSSF yangu itakuwaje?") == "nssf"                    # eval_263
+    assert routing.detect_intent(
+        "Nina matawi 6 nchini kote, PAYE ya wafanyakazi wangu naipataje kutoka idadi hiyo?"
+    ) == "paye"                                                                                    # eval_265
+    assert routing.detect_intent(
+        "Kampuni yangu ina magari 14, WCF inahesabiwa kwa kila gari?") == "wcf"                    # eval_266
