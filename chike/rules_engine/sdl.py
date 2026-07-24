@@ -38,3 +38,35 @@ def compute_sdl(gross_monthly_payroll, employee_count: int) -> ComputationResult
         working=f"SDL = 3.5% × {tzs(gross)} = {tzs(amount)}",
         inputs=inputs,
     )
+
+
+def sdl_applies(employee_count: int) -> ComputationResult:
+    """Applicability-only answer: does SDL apply, from headcount alone (no salary)?
+
+    SDL is owed only by employers with 10+ employees, so the yes/no is fully
+    determined by employee_count — the salary the amount path demands is not needed
+    (Finding 1). amount stays None; `working` is the yes/no verdict in Swahili."""
+    if employee_count < SDL_MIN_EMPLOYEES:
+        return ComputationResult(
+            computation="sdl",
+            applicable=False,
+            amount=None,
+            working=(
+                f"Hapana. SDL haihusiki: una wafanyakazi {employee_count} "
+                f"(chini ya {SDL_MIN_EMPLOYEES}). SDL inahusu waajiri wenye "
+                f"wafanyakazi {SDL_MIN_EMPLOYEES} au zaidi."
+            ),
+            inputs={"employee_count": employee_count},
+            note="below SDL 10-employee threshold",
+        )
+    return ComputationResult(
+        computation="sdl",
+        applicable=True,
+        amount=None,
+        working=(
+            f"Ndiyo. Una wafanyakazi {employee_count} ({SDL_MIN_EMPLOYEES} au zaidi), "
+            f"hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara."
+        ),
+        inputs={"employee_count": employee_count},
+        note="at/above SDL 10-employee threshold",
+    )

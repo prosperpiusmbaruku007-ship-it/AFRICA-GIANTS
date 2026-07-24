@@ -30,7 +30,7 @@ from typing import Callable, Optional, Sequence
 from . import rules_engine
 from .rules_engine.results import ComputationResult
 from .model_abstraction import ModelBackend
-from .extraction import SlotExtractor, REQUIRED_FIELDS
+from .extraction import SlotExtractor, REQUIRED_FIELDS, APPLICABILITY_REQUIRED_FIELDS
 from .retrieval import retrieve as default_retrieve
 from . import prompting
 from . import generation_cleanup
@@ -200,6 +200,12 @@ class Orchestrator:
             return SubAnswer(
                 sub_question=sq, text=clarification.AMBIGUOUS_LEVY, needs_clarification=True,
             )
+        # Applicability-only question (obligation/threshold, no amount asked): answer the
+        # yes/no from headcount (SDL) or the flat no-threshold rule (NSSF/WCF) — no salary
+        # required, which the amount path below would otherwise demand (Finding 1).
+        if (rules_engine.supports_applicability(sq.computation_type)
+                and routing.is_applicability_question(sq.text)):
+            return self._answer_applicability(sq)
         extraction = self.extractor.extract(sq.text, required, sq.computation_type)
         if not extraction.usable(required):
             copy = clarification.compute_clarification(
@@ -208,6 +214,28 @@ class Orchestrator:
 
         inputs = {name: extraction.fields[name].value for name in required}
         result = rules_engine.compute(sq.computation_type, **inputs)
+        prompt = self._build_compute_prompt(sq.text, result)
+        reply = self.backend.generate(prompt, self.gen_params)
+        return SubAnswer(sub_question=sq, text=reply, computation=result)
+
+    def _answer_applicability(self, sq: SubQuestion) -> SubAnswer:
+        """Deterministic yes/no for an applicability-only levy question. SDL needs the
+        headcount (clarify for the COUNT — not a salary — if absent); NSSF/WCF need no
+        field (flat no-threshold rule). The verdict's `working` is rendered as ground
+        truth through the same compute prompt (Finding 1)."""
+        appl_required = APPLICABILITY_REQUIRED_FIELDS[sq.computation_type]
+        if appl_required:
+            extraction = self.extractor.extract(sq.text, appl_required, sq.computation_type)
+            if not extraction.usable(appl_required):
+                return SubAnswer(
+                    sub_question=sq,
+                    text=clarification.applicability_clarification(sq.computation_type),
+                    needs_clarification=True,
+                )
+            inputs = {name: extraction.fields[name].value for name in appl_required}
+        else:
+            inputs = {}
+        result = rules_engine.applicability(sq.computation_type, **inputs)
         prompt = self._build_compute_prompt(sq.text, result)
         reply = self.backend.generate(prompt, self.gen_params)
         return SubAnswer(sub_question=sq, text=reply, computation=result)

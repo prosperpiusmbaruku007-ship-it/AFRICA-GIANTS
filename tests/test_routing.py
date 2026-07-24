@@ -131,3 +131,47 @@ def test_guard_does_not_fire_on_fee_lookup_or_rate_or_computable_question():
     # A computable payroll question (amount present) routes to compute, never reaches the guard.
     assert routing.is_uncomputable_payroll_amount(
         "Nihesabie SDL kwa wafanyakazi 15 wenye jumla ya mshahara 6,750,000?") is False
+
+
+# --- applicability-vs-amount predicate (Finding 1) ------------------------------------
+
+def test_is_applicability_question_fires_on_obligation_and_threshold_asks():
+    # The six recovery shapes: obligation/threshold phrasing, NO amount ask.
+    for q in [
+        "Je, mwajiri mwenye wafanyakazi 8 ana wajibu wa kulipa SDL?",                   # eval_121
+        "Je, kama nina wafanyakazi 8 tu, bado nalazimika kulipa NSSF?",                 # eval_308
+        "Nina mfanyakazi mmoja tu anayelipwa TZS 500,000, je bado nachangia WCF?",      # eval_311
+        "Nina wafanyakazi 12 lakini wote ni wa muda (part-time), je bado nafikia "
+        "kizingiti cha SDL?",                                                           # eval_368
+        "Kampuni yenye wafanyakazi 9 haitakiwi kulipa SDL, sivyo?",                     # eval_393
+    ]:
+        assert routing.is_applicability_question(q) is True
+
+
+def test_is_applicability_question_excludes_count_transition_never_guess():
+    # eval_124: 'ninaajiri mfanyakazi wa 10 katikati ya mwezi' — the count is CROSSING the
+    # threshold, so a static count check would assert a wrong 'haihusiki'. Never-guess: this
+    # must NOT take the deterministic applicability path (falls back to a safe clarification).
+    assert routing.is_applicability_question(
+        "Biashara yangu ina wafanyakazi 9 na ninaajiri mfanyakazi wa 10 katikati "
+        "ya mwezi — je, SDL inatakiwa kulipwa mwezi huo huo?") is False
+
+
+def test_is_applicability_question_excludes_amount_distractor_and_fact_questions():
+    # An AMOUNT ask ('kiasi gani') is not applicability — must stay on the amount path.
+    assert routing.is_applicability_question(
+        "Kampuni ina waajiriwa 9 na mishahara ya TZS 4,000,000 — SDL "
+        "inayostahili kulipwa ni kiasi gani?") is False                                 # eval_247
+    # A distractor question ('per car') has no obligation cue.
+    assert routing.is_applicability_question(
+        "Kampuni yangu ina magari 14, WCF inahesabiwa kwa kila gari?") is False         # eval_266
+    # Deadline / mechanism FACT questions naming a levy — no obligation-to-pay cue.
+    assert routing.is_applicability_question(
+        "Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara "
+        "wa mfanyakazi?") is False                                                      # eval_099
+    assert routing.is_applicability_question(
+        "Je, deadline ya kulipa michango ya NSSF kila mwezi ni siku ya 20 ya "
+        "mwezi unaofuata?") is False                                                    # eval_102
+    assert routing.is_applicability_question(
+        "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi "
+        "unaofuata?") is False                                                          # eval_127

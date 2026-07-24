@@ -37,3 +37,21 @@ def compute_nssf(
         },
         note="total across all employees",
     )
+
+
+def nssf_applies() -> ComputationResult:
+    """Applicability-only answer: NSSF has NO headcount threshold — it applies to every
+    employer from the first employee, so the yes/no needs neither salary nor count
+    (Finding 1). amount stays None; `working` is the verdict in Swahili."""
+    return ComputationResult(
+        computation="nssf",
+        applicable=True,
+        amount=None,
+        working=(
+            "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri "
+            "kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi "
+            "(10% mwajiri + 10% mfanyakazi)."
+        ),
+        inputs={},
+        note="NSSF applies from first employee, no headcount threshold",
+    )

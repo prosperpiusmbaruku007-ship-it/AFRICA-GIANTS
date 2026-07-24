@@ -63,6 +63,15 @@ REQUIRED_FIELDS = {
     "paye": ("monthly_salary",),
 }
 
+# Reduced fields for an applicability-only ('does this levy apply?') answer — no salary.
+# SDL needs only the headcount (10-employee threshold); NSSF/WCF have no threshold, so
+# their applicability needs nothing. PAYE is absent (its applicability needs salary).
+APPLICABILITY_REQUIRED_FIELDS = {
+    "sdl": ("employee_count",),
+    "nssf": (),
+    "wcf": (),
+}
+
 # Field classes the deterministic layer reasons about.
 _AMOUNT_FIELDS = frozenset({"gross_monthly_payroll", "monthly_salary"})
 _COUNT_FIELDS = frozenset({"employee_count"})

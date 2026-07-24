@@ -29,6 +29,15 @@ AMBIGUOUS_LEVY = (
 _LEVY_NAME = {"paye": "PAYE", "sdl": "SDL", "nssf": "NSSF", "wcf": "WCF"}
 
 
+def applicability_clarification(computation_type):
+    """Clarification for an applicability-only question that still lacks the one field its
+    yes/no needs — currently only SDL, which needs the headcount (vs the 10-employee
+    threshold). Asks for the COUNT, not a salary. Pure string logic."""
+    levy = _LEVY_NAME.get(computation_type, "makato ya mshahara")
+    return (f"Ili nijue kama {levy} inakuhusu, niambie una wafanyakazi wangapi "
+            "(kizingiti ni wafanyakazi 10).")
+
+
 def compute_clarification(computation_type, reasons):
     """Reason-aware clarification for a compute question whose extraction was UNUSABLE.
 

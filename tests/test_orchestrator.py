@@ -119,6 +119,95 @@ def test_low_confidence_required_field_routes_to_clarification_not_rules_engine(
     assert fake.call_count == 1                            # extraction only, no formatting
 
 
+# --- Applicability-vs-amount routing (Finding 1) ---------------------------
+# An obligation/threshold question ('am I obligated to pay X?') is answered from the
+# rule's threshold (SDL, from headcount) or flat no-threshold rule (NSSF/WCF) WITHOUT a
+# salary — recovering a correct deterministic yes/no the amount path would reject.
+
+def test_sdl_applicability_below_threshold_answers_from_headcount_no_salary():
+    # eval_121 shape: 8 employees, obligation ask, NO amount ask -> deterministic 'Hapana'
+    # from the count alone; the salary the amount path demands is never requested.
+    extraction = '{"employee_count": {"value": 8, "confidence": "high"}}'
+    fake = FakeBackend(replies=[extraction, "Kwa mujibu wa hesabu:"])
+    orch = Orchestrator(backend=fake)
+
+    reply = orch.answer("Je, mwajiri mwenye wafanyakazi 8 ana wajibu wa kulipa SDL?")
+
+    sub = reply.sub_answers[0]
+    assert sub.sub_question.kind == "compute"
+    assert sub.needs_clarification is False
+    assert sub.computation is not None
+    assert sub.computation.computation == "sdl"
+    assert sub.computation.applicable is False
+    assert sub.computation.amount is None                  # applicability answer, no amount
+    assert "haihusiki" in reply.text                       # deterministic verdict surfaced
+    assert reply.needs_clarification is False
+
+
+def test_sdl_applicability_at_threshold_answers_yes_from_headcount():
+    # eval_368 shape: 12 (part-timers count) -> 'Ndiyo, SDL inatozwa', still no salary needed.
+    extraction = '{"employee_count": {"value": 12, "confidence": "high"}}'
+    fake = FakeBackend(replies=[extraction, "Ndiyo:"])
+    orch = Orchestrator(backend=fake)
+
+    reply = orch.answer(
+        "Nina wafanyakazi 12 lakini wote ni wa muda, je bado nafikia kizingiti cha SDL?")
+
+    sub = reply.sub_answers[0]
+    assert sub.computation.computation == "sdl"
+    assert sub.computation.applicable is True
+    assert sub.computation.amount is None
+    assert "inatozwa" in reply.text
+
+
+def test_nssf_applicability_answers_yes_with_no_extraction_call():
+    # eval_308 shape: NSSF has no headcount threshold -> answer directly, NO field needed,
+    # so the backend is called ONCE (formatting only) — no extraction round-trip.
+    fake = FakeBackend(replies=["Ndiyo, NSSF inakuhusu:"])
+    orch = Orchestrator(backend=fake)
+
+    reply = orch.answer("Je, kama nina wafanyakazi 8 tu, bado nalazimika kulipa NSSF?")
+
+    sub = reply.sub_answers[0]
+    assert sub.computation.computation == "nssf"
+    assert sub.computation.applicable is True
+    assert "kizingiti" in sub.computation.working.lower()  # 'no headcount threshold' verdict
+    assert fake.call_count == 1                            # NO extraction call
+
+
+def test_wcf_applicability_answers_yes_with_no_extraction_call():
+    # eval_311 shape: WCF applies from the first employee; the stated salary is irrelevant.
+    fake = FakeBackend(replies=["Ndiyo, WCF inakuhusu:"])
+    orch = Orchestrator(backend=fake)
+
+    reply = orch.answer(
+        "Nina mfanyakazi mmoja tu anayelipwa TZS 500,000, je bado nachangia WCF?")
+
+    sub = reply.sub_answers[0]
+    assert sub.computation.computation == "wcf"
+    assert sub.computation.applicable is True
+    assert fake.call_count == 1
+
+
+def test_sdl_applicability_without_a_count_clarifies_for_headcount_not_salary():
+    # An SDL obligation question routed to compute (a number is present) but with no usable
+    # headcount -> clarify for the COUNT, never for a salary.
+    extraction = '{"employee_count": {"value": 0, "confidence": "low"}}'
+    fake = FakeBackend(replies=[extraction])
+    orch = Orchestrator(backend=fake)
+
+    reply = orch.answer(
+        "Nina mshahara wa jumla TZS 5,000,000 kwa wafanyakazi wengi, je nina wajibu "
+        "wa kulipa SDL?")
+
+    sub = reply.sub_answers[0]
+    assert sub.needs_clarification is True
+    assert sub.computation is None                         # rules engine NOT called
+    assert "wafanyakazi" in reply.text.lower()             # asks for the COUNT
+    assert "mshahara ni shilingi" not in reply.text.lower()  # NOT the salary-ask copy
+    assert fake.call_count == 1                            # extraction only
+
+
 # --- Route-aware merge (ADR 0001 Phase B) ----------------------------------
 # An all-fact multi-part message COLLAPSES to a single v15-style whole-question
 # generation (decompose -> pool facts -> generate once). This test REPLACES the old

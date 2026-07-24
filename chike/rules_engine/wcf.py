@@ -18,3 +18,20 @@ def compute_wcf(gross_monthly_payroll) -> ComputationResult:
         inputs={"gross_monthly_payroll": gross},
         note="all employers, from first employee",
     )
+
+
+def wcf_applies() -> ComputationResult:
+    """Applicability-only answer: WCF has NO headcount threshold — it applies to all
+    employers from the first employee, so the yes/no needs neither salary nor count
+    (Finding 1). amount stays None; `working` is the verdict in Swahili."""
+    return ComputationResult(
+        computation="wcf",
+        applicable=True,
+        amount=None,
+        working=(
+            "Ndiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna "
+            "kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara."
+        ),
+        inputs={},
+        note="WCF applies to all employers from first employee, no threshold",
+    )

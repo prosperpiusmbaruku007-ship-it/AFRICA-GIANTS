@@ -144,6 +144,38 @@ def detect_intent(text: str) -> str:
     return "none"
 
 
+# Obligation/threshold cues: the question asks WHETHER a levy applies (am I obligated /
+# do I reach the threshold), not HOW MUCH. Multi-word to avoid matching bare 'kulipa' in
+# deadline/mechanism facts ('deadline ya kulipa michango', 'zinalipwa TRA siku ya 7').
+_APPLICABILITY_CUES = [
+    "wajibu wa kulipa", "nawajibika kulipa", "nalazimika kulipa", "lazima nilipe",
+    "lazima kulipa", "inatakiwa kulipwa", "nafikia kizingiti", "fikia kizingiti",
+    "haitakiwi kulipa", "nachangia",
+]
+
+
+# Ordinal-hire / threshold-crossing phrasing ('ninaajiri mfanyakazi wa 10 katikati ya
+# mwezi') — the headcount CHANGES over the period, so a static count-vs-threshold check
+# would assert a possibly-wrong verdict (eval_124: reads '9', but hiring the 10th makes SDL
+# due). Never-guess (R8): decline the deterministic shortcut here and let the amount path
+# clarify, rather than assert 'haihusiki' on a count that is actually crossing the threshold.
+_COUNT_TRANSITION = re.compile(r"mfanyakazi\s+wa\s+\d+")
+
+
+def is_applicability_question(text: str) -> bool:
+    """True when a levy question asks WHETHER the obligation applies (yes/no) AND a static
+    headcount/flat-rule check can answer it — an obligation/threshold cue is present, there
+    is NO money 'how-much' ask, and the count is not mid-transition (Finding 1). The
+    orchestrator gates the levy type (sdl/nssf/wcf) separately; PAYE applicability needs a
+    salary, so it stays on the amount path. Pure string logic."""
+    ql = text.lower()
+    if _has_money_ask(ql):
+        return False
+    if _COUNT_TRANSITION.search(ql):
+        return False
+    return any(cue in ql for cue in _APPLICABILITY_CUES)
+
+
 def is_uncomputable_payroll_amount(text: str) -> bool:
     """Never-guess (R8) fabrication guard for the FACT/RAG path.
 
