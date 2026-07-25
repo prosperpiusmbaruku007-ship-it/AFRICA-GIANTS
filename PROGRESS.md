@@ -185,6 +185,8 @@ questions to a frontier model — `generate()` raises `NotImplementedError` — 
    sample across the `reliable=False` categories, to measure the judge's TRUE precision/recall
    (STAGE 2's 13/6 are unadjudicated disagreements).
 3. **Characterize the `procedure` over-strictness** (6 of the 13 demotions — the judge's known weakness).
+   **✅ DONE (2026-07-25)** — see "Work item 3 — procedure/definition over-strictness characterization"
+   below. One narrow deterministic fix shipped (commit `22af4ad`); everything else routed to item 5.
 4. **Resolve non-determinism** — a confirmation/second-pass rule, or the founder's escalation to a
    larger/more stable frontier model on the identical harness (untested).
 5. **Integration design** — wire the judge as a CONFIRMATION layer (adjudicate `reliable=False`;
@@ -226,6 +228,65 @@ workers), **0 API errors**. Output: `eval/results/judge_regression_qwen3-32b_400
   (regex FAIL, judge CORRECT) · 17 undetermined · 30 clarified (deliberate, excluded — not bugs) · 166
   agree. Full disagreement IDs in the artifact; this list *is* the deliverable that turns work item 2
   from "audit a sample" into "adjudicate this concrete list."
+
+### Work item 3 — procedure/definition over-strictness characterization (DONE, 2026-07-25)
+
+**Method.** Ran the live `chike/scoring.py` functions against the 10 adjudicated false-fails
+(eval_029/074/094/131/134/187/217/230/233/390), pulling each model output from the pinned
+`5239190` baseline, to get exact matched-token sets rather than reasoning about the regex by
+hand. The 10 resolve to **6 precise mechanisms**, only ONE of which is a cheap, narrow,
+deterministic fix in the `'000'`/BUG-7 class; the rest are genuinely semantic → item 5.
+
+**Sub-pattern 1 — spurious numeric key from a numeral-word inside the idiom "moja kwa moja"
+(="directly"). ✅ FIXED (commit `22af4ad`).** `extract_numbers` matched `\bmoja\b`→`1` inside
+the idiom, injecting a junk key that (a) suppressed the `qualitative_number_no_numeric_key`
+exclusion → false FAILs (eval_134, eval_217), and (b) collided with the same idiom in the
+model's own answer → coincidental false PASS verifying no content (eval_037). Blanking the
+trigram before numeral extraction is **tightening-only** (removes a spurious key, never adds
+one — the property that made the `'000'`/BUG-7 fixes safe to ship narrowly). Full-400 sweep:
+exactly eval_037/134/217 → `qualitative_number_no_numeric_key`; eval_033 no-op; zero others.
+7 new tests (`tests/test_scoring_number_idiom.py`); full suite 242 passed.
+
+**Everything below → item 5's semantic-judge worklist (do NOT regex-patch):**
+
+- **Sub-pattern 2 — answer_type mislabel: entity/enumeration typed `number`.**
+  - eval_094 — answer IS the entity "NSSF"; the only numeral (`mbili`="both") is incidental.
+    *Candidate one-line gold relabel* `number`→`definition` (would let vocab-overlap score it) —
+    but that is a DATA-correctness decision, held to the same verify-and-review standard as every
+    other gold change this session, NOT bundled into the scorer fix.
+  - eval_074 — answer is "at least two", but the model conveys the count by ENUMERATING BRELA+TIN;
+    needs enumeration understanding → semantic.
+- **Sub-pattern 3 — terse-but-correct def/proc defeated by surface mismatch. NOT a narrow fix.**
+  - 3a punctuation glued to tokens (`(input`, `refund).`, `pembejeo.`) — eval_029. The "obvious"
+    fix (strip punctuation off tokens) was SIMULATED across the 400 and **flips 19 verdicts, all
+    loosening, direction-indeterminate without per-case review** — exactly the "trade one failure
+    mode for another" trap this session already learned to reject (embedding/NLI router). eval_029
+    resolves at item 5 as part of an adjudicated batch, not via a blanket patch.
+  - 3b synonym substitution (`jedwali`≈`orodha`) + gold padded with proper nouns a good answer need
+    not echo (PKF, VELMA, TanzLII) — eval_131. Inherently semantic.
+- **Sub-pattern 4 — "no fixed figure applies" (qualitative number).** eval_134/217 — **subsumed by
+  the sub-pattern 1 fix** (once the junk key is gone, the existing BUG-1 exclusion fires).
+- **Sub-pattern 5 — number answer mislabeled `definition`.** eval_233 ("10 employees" threshold typed
+  `definition`; model states the correct `10`, but def-scoring ignores numbers AND bare 2-digit `10`
+  is not captured by `extract_numbers` anyway). Relabel insufficient; 2-digit bare capture too risky
+  globally → item 5.
+- **Sub-pattern 6 — negative-question polarity trap (affirming a negative).** eval_390: gold "Ndiyo,
+  haitozwi" vs model "Hapana… hazitozwi VAT" — substantive clauses AGREE ("hazitozwi"), only the
+  leading polarity word inverts under negative framing. The documented flat-lexicon gap → semantic/NLI.
+
+**Item-5 adjudication worklist compiled here** (structured input for the integration design):
+| lead | sub-pattern | disposition |
+|------|-------------|-------------|
+| eval_094 | 2 entity-mislabel | candidate gold relabel (verify separately) OR judge |
+| eval_074 | 2 enumeration-count | judge (list satisfies "at least two") |
+| eval_029 | 3a punct + the **19 punctuation-strip flip candidates** | judge-adjudicate each; NO blanket patch |
+| eval_131 | 3b synonym + proper-noun padding | judge |
+| eval_233 | 5 number-as-definition | judge (relabel insufficient) |
+| eval_390 | 6 negative-polarity trap | judge/NLI (content agrees, polarity word inverts) |
+
+**Scope note.** Legacy `scripts/run_eval.py` and `scripts/build_eval_notebook.py` carry their own
+divergent `extract_numbers` (missing even the `'000'`/BUG-7 fixes) — NOT the shared scorer the
+400-gate runs, so left untouched. Flagged, not fixed here.
 
 ### 🚑 NEW DEFECT surfaced by the census — NSSF employee-deduction is a rules-engine error (NOT scoring, NOT #3)
 
