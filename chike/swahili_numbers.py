@@ -193,6 +193,15 @@ _WRONG_BASE = [
     # ("tunauza"/"kuuza"), a VAT-threshold figure, and a share count/holding.
     r"\btunauza\b", r"\bkuuza\b", r"\btunanunua\b", r"kizingiti cha vat", r"\bhisa\b",
     r"soko la hisa",
+    # D-WCF-1: an ASSET / VEHICLE value ("magari ... yana thamani ya TZS 40,000,000") is not a
+    # payroll base — WCF/NSSF/SDL are computed on gross payroll, not on the worth of vehicles or
+    # assets. eval_259 slipped through (the extractor read the 40M vehicle value as gross payroll
+    # and computed WCF on it) because _WRONG_BASE had no asset-value pattern. The specific asset
+    # words keep the intent auditable; the general "thamani ya <asset>" prefix catches the class.
+    # A payroll figure is never phrased "thamani ya ..." (it is "mshahara wa"/"analipwa"), so this
+    # does not touch legitimate payroll questions.
+    r"thamani ya magari", r"thamani ya gari", r"thamani ya mali", r"thamani ya vifaa",
+    r"thamani ya mtambo", r"thamani ya \w+",
 ]
 _ALLOWANCE = [
     r"\bposho\b", r"\bbonasi\b", r"\ballowance\b", r"\bgross\b", r"\bnet\b",

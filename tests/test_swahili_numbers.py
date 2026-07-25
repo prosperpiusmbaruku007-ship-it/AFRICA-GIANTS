@@ -91,6 +91,21 @@ def test_wrong_base_trap():
     assert not detect_wrong_base("mauzo yetu ni milioni 190, VAT?", "vat")
 
 
+def test_wrong_base_asset_value_trap():
+    # D-WCF-1: an asset / vehicle value is not a payroll base. eval_259 slipped through
+    # (the 40M vehicle value was read as gross payroll and WCF computed on it) because
+    # _WRONG_BASE had no asset-value pattern.
+    assert detect_wrong_base(
+        "Magari yangu ya biashara yana thamani ya TZS 40,000,000 kwa jumla, WCF yake naikadiriaje?",
+        "wcf")                                                                         # eval_259
+    # the general "thamani ya <asset>" prefix catches the class across payroll levies
+    assert detect_wrong_base("mali yangu ina thamani ya milioni 50, NSSF yake ni ngapi?", "nssf")
+    assert detect_wrong_base("thamani ya mtambo ni milioni 80, SDL?", "sdl")
+    # a genuine payroll figure is phrased "mshahara wa"/"analipwa", never "thamani ya" — no false trip
+    assert not detect_wrong_base("mshahara wa jumla ni TZS 5,000,000, WCF yake?", "wcf")
+    assert not detect_wrong_base("wafanyakazi 12 wenye mshahara 600,000, WCF ni ngapi?", "wcf")
+
+
 def test_allowance_ambiguity():
     assert detect_allowance_ambiguity("mshahara wa msingi laki tano na posho ya nyumba laki moja")
     assert detect_allowance_ambiguity("nampa take home laki nane")

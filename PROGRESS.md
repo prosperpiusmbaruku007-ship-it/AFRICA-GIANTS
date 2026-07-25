@@ -275,8 +275,18 @@ root cause.
   a regression). **Gate-number caveat holds** — several of the 12 already showed `pass=True` via number-
   overlap masking, so the fix corrects the *advice*, not necessarily the gate integer; confirmation folds
   into the next full 400-run.
-- **D-WCF-1 (content, MED):** WCF computed on a non-payroll base (vehicle value) for eval_259-style trap
-  questions; must reject irrelevant figures and require payroll. **Next** (own commit).
+- **D-WCF-1 (content, MED): ✅ FIXED (2026-07-25).** WCF was computed on a non-payroll base (vehicle
+  value) for eval_259 (*"Magari yangu ya biashara yana thamani ya TZS 40,000,000 … WCF yake?"*) because
+  `swahili_numbers._WRONG_BASE` caught `mtaji`/`mapato`/`hisa` but had **no asset/vehicle-value pattern**,
+  so the 40M was read as gross payroll. `compute_wcf` itself was correct — this was an **extraction**
+  wrong-base gap. Fix: added `thamani ya magari|gari|mali|vifaa|mtambo` + the general `thamani ya \w+`
+  prefix to `_WRONG_BASE`. **Validation:** eval_259 now `detect_wrong_base=True` → clarifies (matches
+  gold); full-400 sweep of the new pattern = 4 matches, and **0 regressions** — eval_259 is the target;
+  eval_256 was *already* caught by the existing `hisa` pattern (unchanged); eval_051 (EFD threshold fact)
+  and eval_197 (stamp-duty refusal) are fact/refusal-path so they never invoke `detect_wrong_base`
+  (call site is extraction.py:246, compute-path only). New unit test + full suite **222 passed**. A
+  legitimate payroll figure is phrased "mshahara wa"/"analipwa", never "thamani ya", so no payroll
+  question regresses to an unnecessary clarification.
 - **D-SCORER-1 (scorer leniency, MED — feeds work item 5):** number-overlap credits a PASS off an
   incidental correct sub-figure while the headline answer is wrong (the NSSF cluster + others among the
   27 false-pass candidates). Adjudicate the 27 list; this is the concrete evidence for the judge-as-
