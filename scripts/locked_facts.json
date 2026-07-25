@@ -342,8 +342,8 @@
     "status": "CONFIRMED"
   },
   "vat_withholding_goods": {
-    "fact": "VAT withholding on goods is 3% — effective 1 July 2025 (Finance Act 2025)",
-    "correct_value": "3% on goods",
+    "fact": "VAT withholding on goods is 3% of the consideration (invoice value exclusive of VAT) — effective 1 July 2025 (Finance Act 2025, VAT Act s.5(5)). The standard 18% VAT rate is split: the withholding agent remits 3% to TRA and the supplier receives the remaining 15%.",
+    "correct_value": "3% of consideration for goods (supplier receives 15%)",
     "wrong_patterns": [
       "6% ya bidhaa",
       "6% for goods",
@@ -351,38 +351,38 @@
       "bidhaa 5%",
       "goods 5%",
       "goods 2%",
-      "3% ya invoice ya bidhaa",
-      "3% ya thamani ya invoice",
-      "3% x.*1,000,000.*30,000",
-      "3% ya TZS 1,000,000.*= TZS 30,000",
-      "withholding.*3%.*invoice.*amount"
+      "3% ya kiasi cha VAT",
+      "3% ya VAT iliyolipwa",
+      "3%.{0,4}x.{0,4}180,000",
+      "3% ya TZS 180,000",
+      "withholding.*3%.*VAT amount"
     ],
-    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
-    "verified_by": "Finance Act 2025",
+    "primary_source": "https://www.tra.go.tz/images/uploads/acts/THE_FINANCE_ACT,_2025.pdf",
+    "verified_by": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5); GN 352K of 30/6/2025 reg 31B — primary legislation, TRA-hosted",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "formula_note": "CRITICAL: The 3% is applied to the VAT AMOUNT, not the invoice value. Example: TZS 1M invoice + TZS 180K VAT => withholding = 3% x 180,000 = TZS 5,400. NOT 3% x 1,000,000 = TZS 30,000."
+    "formula_note": "The 3% applies to the CONSIDERATION (invoice value excl. VAT), NOT the VAT amount. Example: TZS 5M goods invoice, VAT = TZS 900,000; withholding = 3% x 5,000,000 = TZS 150,000 (= 1/6 of the VAT). Supplier receives the remaining 15% x 5,000,000 = TZS 750,000 of VAT (3% + 15% = 18%). NOT 3% x the VAT amount."
   },
   "vat_withholding_services": {
-    "fact": "VAT withholding on services is 6% — effective 1 July 2025 (Finance Act 2025)",
-    "correct_value": "6% on services",
+    "fact": "VAT withholding on services is 6% of the consideration (invoice value exclusive of VAT) — effective 1 July 2025 (Finance Act 2025, VAT Act s.5(5)). The standard 18% VAT rate is split: the withholding agent remits 6% to TRA and the supplier receives the remaining 12% (the statute states this 12% expressly).",
+    "correct_value": "6% of consideration for services (supplier receives 12%)",
     "wrong_patterns": [
       "3% ya huduma",
       "3% for services",
       "WHT services 3%",
       "huduma 5%",
       "services 5%",
-      "6% ya invoice ya huduma",
-      "6% ya thamani ya invoice",
-      "6% x.*1,000,000.*60,000",
-      "6% ya TZS 1,000,000.*= TZS 60,000",
-      "withholding.*6%.*invoice.*amount"
+      "6% ya kiasi cha VAT",
+      "6% ya VAT iliyolipwa",
+      "6%.{0,4}x.{0,4}540,000",
+      "6% ya TZS 540,000",
+      "withholding.*6%.*VAT amount"
     ],
-    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
-    "verified_by": "Finance Act 2025",
+    "primary_source": "https://www.tra.go.tz/images/uploads/acts/THE_FINANCE_ACT,_2025.pdf",
+    "verified_by": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5); GN 352K of 30/6/2025 reg 31B — primary legislation, TRA-hosted",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "formula_note": "CRITICAL: The 6% is applied to the VAT AMOUNT, not the invoice value. Example: TZS 1M invoice + TZS 180K VAT => withholding = 6% x 180,000 = TZS 10,800. NOT 6% x 1,000,000 = TZS 60,000."
+    "formula_note": "The 6% applies to the CONSIDERATION (invoice value excl. VAT), NOT the VAT amount. Example: TZS 3M services invoice, VAT = TZS 540,000; withholding = 6% x 3,000,000 = TZS 180,000 (= 1/3 of the VAT). Supplier receives the remaining 12% x 3,000,000 = TZS 360,000 of VAT (6% + 12% = 18%). NOT 6% x the VAT amount."
   },
   "gn487a_nature": {
     "fact": "GN487A is a BUSINESS PROHIBITION ORDER listing 15 activities non-citizens cannot conduct. It is NOT about immigration or residence permits.",
@@ -1118,18 +1118,18 @@
     "status": "CONFIRMED"
   },
   "vat_withholding_formula_correct": {
-    "fact": "VAT withholding rate applies to the VAT AMOUNT, not the invoice/contract value. Goods: 3% x VAT amount. Services: 6% x VAT amount. Example goods: TZS 1M invoice, VAT = TZS 180,000, withholding = TZS 5,400 (3% x 180,000). Supplier receives TZS 1,174,600 (invoice + VAT minus withheld). Example services: TZS 1M invoice, VAT = TZS 180,000, withholding = TZS 10,800 (6% x 180,000). Supplier receives TZS 1,169,200.",
-    "correct_value": "3% of VAT amount for goods; 6% of VAT amount for services",
+    "fact": "VAT withholding rate applies to the CONSIDERATION (invoice value exclusive of VAT), NOT the VAT amount. The standard 18% VAT is split between TRA and the supplier. Goods: 3% x consideration withheld, supplier receives 15% x consideration (3 + 15 = 18). Services: 6% x consideration withheld, supplier receives 12% x consideration (6 + 12 = 18). Example goods: TZS 5M invoice, VAT = TZS 900,000; withholding = 3% x 5,000,000 = TZS 150,000; supplier receives TZS 750,000 of the VAT. Example services: TZS 3M invoice, VAT = TZS 540,000; withholding = 6% x 3,000,000 = TZS 180,000; supplier receives TZS 360,000 of the VAT.",
+    "correct_value": "3% of consideration for goods (supplier 15%); 6% of consideration for services (supplier 12%)",
     "wrong_patterns": [
-      "3% ya TZS 1,000,000.*= TZS 30,000",
-      "3% ya bei ya bidhaa",
-      "6% ya TZS 1,000,000.*= TZS 60,000",
-      "3% ya thamani ya invoice",
-      "withholding.*3%.*invoice value",
-      "withholding.*6%.*invoice value"
+      "3%.{0,4}x.{0,4}180,000",
+      "3% ya kiasi cha VAT",
+      "6%.{0,4}x.{0,4}540,000",
+      "6% ya kiasi cha VAT",
+      "withholding.*3%.*VAT amount",
+      "withholding.*6%.*VAT amount"
     ],
-    "primary_source": "PWC Tax Summaries Tanzania 2025; EY Finance Act 2025 analysis; Auditax International; Clyde & Co July 2025; Afriwise July 2025",
-    "verified_by": "PWC, EY, Auditax, Clyde & Co, Afriwise — all confirm formula",
+    "primary_source": "https://www.tra.go.tz/images/uploads/acts/THE_FINANCE_ACT,_2025.pdf",
+    "verified_by": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5) — statute states withheld 3%/6% and supplier's 12% (services) as components of the 18% rate on the supply; GN 352K of 30/6/2025 reg 31B — primary legislation, TRA-hosted. (Corrected 2026-07-25: earlier VAT-amount-base reading, sourced to practitioner summaries, was wrong.)",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED"
   },
@@ -1249,18 +1249,19 @@
     "status": "LOCKED"
   },
   "VAT_withholding_base_disputed": {
-    "fact": "The base for VAT withholding calculation is DISPUTED between sources. TRA.go.tz says 3% of the consideration (invoice total) for goods, 6% of consideration for services. PwC Tax Summaries says 3% of VAT amount for goods, 6% of VAT amount for services. These produce very different results. Training pairs must NOT state a specific calculation formula — use 'thibitisha na TRA kwa hesabu sahihi' instead.",
-    "correct_value": "DISPUTED — do not encode a specific formula in training pairs",
+    "fact": "RESOLVED (2026-07-25) by primary legislation: the base is the CONSIDERATION (invoice value exclusive of VAT), not the VAT amount. Finance Act 2025 s.124 (VAT Act s.5(5)) splits the 18% standard rate — the withholding agent withholds 3% (goods) / 6% (services) of the supply and the supplier receives 15% / 12% respectively (3+15 = 6+12 = 18). The earlier 'dispute' arose from practitioner summaries loosely phrasing the split as '3% of the VAT'; the VAT-amount reading is inconsistent with the statute's express 12% supplier share for services. Training pairs SHOULD now use the consideration formula. See vat_withholding_formula_correct.",
+    "correct_value": "RESOLVED — 3%/6% of the consideration (invoice value excl. VAT)",
     "wrong_patterns": [
-      "3% ya thamani ya jumla ya invoice",
-      "withholding.*3%.*total invoice value",
-      "6% ya thamani ya jumla ya invoice.*huduma",
-      "withholding.*6%.*total invoice value.*services"
+      "3% ya kiasi cha VAT",
+      "withholding.*3%.*VAT amount",
+      "6% ya kiasi cha VAT.*huduma",
+      "withholding.*6%.*VAT amount.*services"
     ],
-    "primary_source": "TRA.go.tz vs PWC Tax Summaries Tanzania 2025",
-    "verified_date": "2026-06-19",
-    "status": "DISPUTED — hedge in training pairs",
-    "training_instruction": "Do not state a specific withholding calculation formula. Use: 'thibitisha na TRA kwa hesabu sahihi' or 'wasiliana na mshauri wa kodi kwa hesabu halisi'."
+    "primary_source": "https://www.tra.go.tz/images/uploads/acts/THE_FINANCE_ACT,_2025.pdf",
+    "verified_by": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5); GN 352K of 30/6/2025 reg 31B — primary legislation, TRA-hosted",
+    "verified_date": "2026-07-25",
+    "status": "RESOLVED — consideration base confirmed by primary law",
+    "training_instruction": "State the consideration-base formula: goods 3% x consideration (supplier 15%); services 6% x consideration (supplier 12%). May still add 'thibitisha na TRA kwa hesabu sahihi' as a safety hedge, but the formula itself is now confirmed and may be encoded."
   },
   "NSSF_split_triggers": {
     "fact": "NSSF total is always 20% of gross wage. Three valid employer-employee split arrangements: (a) 10% employer + 10% employee — standard default; (b) 15% employer + 5% employee — employer elects to contribute more; (c) 20% employer + 0% employee — employer pays the full 20%, employee pays nothing. Employee share must never exceed 10%. All three arrangements are legal under the NSSF Act.",
@@ -1496,7 +1497,7 @@
     "status": "LOCKED"
   },
   "vat_withholding_buyer_remits_directly": {
-    "fact": "The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits VAT withholding DIRECTLY to TRA — not through the supplier's VAT return. TRA states: 'the withholding agent shall withhold 3%/6% and remit it to the Commissioner General.' The supplier receives a VAT Withholding Certificate as proof that the withheld amount has been remitted. The formula base (consideration vs VAT amount) remains disputed — see VAT_withholding_base_disputed.",
+    "fact": "The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits VAT withholding DIRECTLY to TRA — not through the supplier's VAT return. TRA states: 'the withholding agent shall withhold 3%/6% and remit it to the Commissioner General.' The supplier receives a VAT Withholding Certificate as proof that the withheld amount has been remitted, which it then subtracts as output tax withheld in its VAT return (Finance Act 2025 s.71 amendment). The formula base is the consideration (invoice value excl. VAT) — see vat_withholding_formula_correct.",
     "correct_value": "Qualifying BUYER remits directly to TRA — NOT the supplier",
     "wrong_patterns": [
       "msambazaji ndiye anayepeleka withholding tra",

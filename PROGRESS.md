@@ -310,6 +310,37 @@ root cause.
   - **eval_218 / eval_392 (→ fact/RAG queue):** both `compute=False`. eval_218 is non-resident **rental**
     withholding (a different tax entirely); eval_392 is a yes_no answered wrongly on the fact/generate path
     (needs the non-resident flat-15% fact retrievable). Neither is a compute-wiring bug.
+- **D-VATWH-1 (fact-base, HIGH): ✅ RESOLVED (2026-07-25).** The VAT-withholding **base** was internally
+  contradictory across the fact base (work item 4): three "CONFIRMED" facts encoded a **VAT-amount** base
+  (3%/6% × VAT), while `VAT_withholding_base_disputed` said the base was unresolved and the eval golds
+  (eval_034/315) used the **consideration** base — so eval_034/315 were stuck permanently "ambiguous" and
+  any future VAT-withholding work risked building on the wrong side. **Resolved by PRIMARY legislation**
+  (not practitioner summaries): **Finance Act 2025 (Act No. 11) s.124** inserts VAT Act Cap.148 **s.5(5)** —
+  the 18% standard rate is split, the withholding agent withholds **3% (goods) / 6% (services) of the
+  supply** and the supplier receives **15% / 12%** respectively (3+15 = 6+12 = 18). The statute's express
+  **12% supplier share for services** is decisive: it is impossible under a VAT-amount reading (which would
+  leave the supplier ~94% of the VAT). Corroborated by **GN 352K of 30/6/2025** reg 31B + the withholding
+  certificate form (signed Minister for Finance, 29 Jun 2025). Both TRA-hosted PDFs were fetched and text-
+  extracted locally. **Verdict: consideration base is correct; the eval golds were right all along; the
+  model + `vat_withholding_formula_correct` were wrong.** Corrected 5 fact entries (`vat_withholding_goods`,
+  `vat_withholding_services`, `vat_withholding_formula_correct`, `VAT_withholding_base_disputed` →
+  RESOLVED, `vat_withholding_buyer_remits_directly`), un-inverting `wrong_patterns` that were flagging the
+  now-correct consideration answers and adding the VAT-amount error as the new wrong pattern (verified:
+  golds not flagged, model errors caught). **No training pairs asserted the wrong formula** — the one
+  matching cleaned pair (batch_015) is a *hedge* ("base varies by source, confirm TRA"), now improvable to
+  the confirmed formula (optional follow-on). **Two bonus findings** from the primary text: (1) the
+  **effective-date** discrepancy is explained — VAT withholding is **1 Jul 2025** (fact base correct); the
+  "1 Sep 2025" some secondary sources cite is the *separate* 16% B2C e-payment rate in **s.5(6)**, not the
+  withholding. (2) `vat_withholding_certificate_timing` and `vat_withholding_buyer_remits_directly` were
+  **already correct** — confirmed by s.90B ("certificate not later than the day VAT becomes payable under
+  s.15") and the s.71 amendment (supplier subtracts withheld output tax only with a valid certificate).
+  **D-VATWH-1 fact-base corrected, RAG regeneration PENDING — founder will trigger before next production
+  RAG use, not scheduled now.** The corrected facts are committed to `scripts/locked_facts.json` but the
+  live RAG index still serves the OLD (VAT-amount) facts until R15 runs: regenerate e5 embeddings on Kaggle
+  → fetch `rag_embeddings.npy`/`rag_facts_text.json` → commit to BOTH `chike-inference/` and `kaggle/` →
+  redeploy Modal → re-run the gate. **Do not treat this fact-base fix as fully live in production until that
+  regeneration has actually happened.** No future session should assume the corrected VAT-withholding
+  formula is being served until this line is updated to DONE.
 - **D-SCORER-1 (scorer leniency, MED — feeds work item 5):** number-overlap credits a PASS off an
   incidental correct sub-figure while the headline answer is wrong (the NSSF cluster + others among the
   27 false-pass candidates). Adjudicate the 27 list; this is the concrete evidence for the judge-as-
@@ -328,8 +359,11 @@ list this census produced, then design integration into `scoring.py`/the gate.
 - **#2 — ordinal-enumeration decomposition (`_split_ordinal_enumeration`): ✅ DONE** (commit `d86b92e`).
 - **#3 — frontier-judge / semantic scoring: 🔎 IN PROGRESS** — work item 1 (scale to 400 census) DONE
   (2026-07-25); work item 2 (adjudicate the 39-candidate disagreement list → confusion matrix, judge
-  92.9% accurate on 28 clean cases) DONE (2026-07-25); items 3-5 not started. Surfaced NEW defects
-  D-NSSF-1 / D-WCF-1 / D-PAYE-1 / D-SCORER-1 (tracked above, separate from #3).
+  92.9% accurate on 28 clean cases) DONE (2026-07-25). From the adjudication defect queue: D-PAYE-1 FIXED,
+  D-VATWH-1 (VAT-withholding base) RESOLVED by primary law (2026-07-25). Items 3/5 (procedure
+  over-strictness, non-determinism, judge→scoring integration) not started; the 8 model/RAG factual-error
+  cases + eval_344 + decompose/merge remain queued. Surfaced NEW defects D-NSSF-1 / D-WCF-1 / D-PAYE-1 /
+  D-VATWH-1 / D-SCORER-1 (tracked above, separate from #3).
 
 ## ✅ Generic explicit-levy money-ask guard — SHIPPED (2026-07-24) — router follow-up #1 of 3
 
