@@ -19,17 +19,30 @@ Read-only: fetches the committed index from GitHub main (cache-busted) and only 
 Requires the chike/ package on the path (Kaggle fetches the repo). Nothing is rebuilt/uploaded.
 """
 import json
+import subprocess
 import sys
 import time
 import numpy as np
 import requests
 
 RAW = 'https://raw.githubusercontent.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS/main'
+REPO = 'prosperpiusmbaruku007-ship-it/AFRICA-GIANTS'
 _nocache = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
 
-_sha = requests.get('https://api.github.com/repos/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS/commits/main',
-                    headers=_nocache, timeout=30).json().get('sha', '?')[:7]
-print(f'[fetch] GitHub main HEAD = {_sha} (probing the index committed at THIS commit)')
+# ── GET THE chike/ PACKAGE (git clone — the probe imports chike.retrieval and its helpers,
+#    so a raw single-file fetch is not enough). Fresh clone = latest main; same pattern as
+#    eval_orchestrator.py:88-100 / regenerate_rag_e5.py. ──────────────────────────────────
+_CLONE_DIR = '/kaggle/working/AFRICA-GIANTS'
+import os
+if not os.path.isdir(_CLONE_DIR):
+    subprocess.run(['git', 'clone', '--depth', '1',
+                    f'https://github.com/{REPO}.git', _CLONE_DIR], check=True)
+else:
+    subprocess.run(['git', '-C', _CLONE_DIR, 'pull', '--ff-only'], check=False)
+sys.path.insert(0, _CLONE_DIR)
+_sha = subprocess.run(['git', '-C', _CLONE_DIR, 'rev-parse', '--short', 'HEAD'],
+                      capture_output=True, text=True).stdout.strip()
+print(f'[clone] chike package @ {_CLONE_DIR} (HEAD {_sha})')
 
 _cb = int(time.time())
 with open('rag_embeddings.npy', 'wb') as f:
