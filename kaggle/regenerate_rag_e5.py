@@ -156,6 +156,14 @@ critical_queries = [
     # Retrieved fact must carry the scaled total AND the explicit 'SI TZS 120,000'
     # contrast (verified separately below) — the contrastive-correction pattern.
     ('NSSF compound (120k selection bug)', 'query: Kampuni ina wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja. NSSF jumla ya kampuni ni kiasi gani?', ['1,440,000']),
+    # EFD-threshold Swahili grounding (eval_347): the concise efd_threshold_tzs_11m fact must
+    # WIN its own query — previously the 200M-magnitude vat_registration fact hijacked it.
+    ('EFD threshold', 'query: Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?', ['11,000,000', 'milioni kumi na moja', 'efd threshold tzs 11m']),
+    # Anti-displacement guard (bracket): the new concise EFD fact mentions 200M/kusajili-VAT,
+    # which could displace the real VAT-registration fact from a genuine VAT-reg query — the
+    # exact failure mode the GN487A concise facts hit. This must still return the 200M VAT-reg
+    # fact. If it FAILS, narrow the EFD fact's 200M contrast (GN487A narrowing precedent).
+    ('VAT registration threshold (displacement guard)', 'query: Kizingiti cha kusajili VAT ni mauzo ya kiasi gani kwa mwaka?', ['200,000,000']),
 ]
 
 print('\n' + '=' * 60)

@@ -357,15 +357,31 @@ root cause.
     correct-answer false-flags; the only model hit is eval_304's own wrong answer (guard working as intended).
     Patterns kept conservative (they don't try to catch the eval_071/123 model outputs — the corrective
     mechanism is RAG surfacing the new facts after R15, not the training-guard regex). **RAG regeneration
-    PENDING** — batched with D-VATWH-1: the same R15 run covers D-VATWH-1's 5 corrected facts + these 2 new
-    facts. Not live until that runs.
+    PENDING** — batched with D-VATWH-1: the single R15 run covers D-VATWH-1's 5 corrected facts + these 2 new
+    facts (BRELA/WCF) + the concise-EFD embedding fix (Group B, eval_347) = 8 fact changes. Not live until
+    that runs.
   - **eval_223 (EAC STR) — EXCLUDED from the active defect/gate queue:** *out of active scope — Tier 1B
     (EAC/STR) not yet started per CLAUDE.md §5, deferred until Tier 1A gate passes and Tier 1B unlocks.* No
     STR fact verified or drafted; pulling Tier 1B content forward to pass one eval question would be working
     backward from a test case rather than respecting the project's tier-staging plan.
-  - **Group B (eval_162 mgeni, eval_347 EFD) — retrieval probe prepared, HELD:** correct fact exists AND is in
-    the index; a Kaggle-side e5 probe (`kaggle/retrieval_probe_group_b.py`) splits retrieval-ranking-failure vs
-    hallucination. To be run in the same Kaggle session as the R15 regen.
+  - **Group B (eval_162 mgeni, eval_347 EFD) — probed on Kaggle, split confirmed:**
+    - **eval_162 — HALLUCINATION, CLOSED:** the v2 two-arm probe (`kaggle/retrieval_probe_group_b_v2.py`)
+      showed the target fact IS recovered (in the top-3 the model saw); the model fabricated the
+      citizen-becomes-mgeni criteria anyway. Not fixable at fact-base/retrieval — feeds semantic scoring
+      (item 5), like Group C.
+    - **eval_347 — RETRIEVAL gap, FIX APPLIED (pending R15):** `efd_threshold_tzs_11m` was English-only
+      (`key:value` fallback) while the hijacking competitor `vat_registration_threshold_annual` is a concise
+      Swahili fact of the same 200M magnitude and near-identical "Kizingiti cha … mauzo ya" phrasing. v2
+      detail: the number-stripped arm DID surface the EFD fact, but only at **s#2** — it lost the single
+      append-only promotion slot to `efd_approved_supplier_verification` (s#1) **by one rank**. Fix: a concise
+      Swahili-first `CONCISE_BILINGUAL_FACTS['efd_threshold_tzs_11m']` entry (value at front, distinctive
+      'kuanza kutumia EFD' tokens, explicit "200M = VAT-registration, si EFD" contrast for eval_347's false
+      premise) — same figure, no new claim, same precedent as `gn487a_prohibited_activity_3`/
+      `gn487a_marriage_no_exemption`. Guarded by **two verification tuples** in `regenerate_rag_e5.py` (EFD
+      query → 11M; VAT-reg query → 200M anti-displacement bracket). Narrow the 200M contrast if the regen gate
+      flags displacement (GN487A narrowing precedent). **Rides the same pending R15 batch.** Broader idea noted
+      but OUT OF SCOPE: the "promote only the first new fact" append rule cost the EFD fact its slot by one
+      rank — worth revisiting the merge rule separately, not in this fix.
   - **Group C (eval_047, eval_210) — NO fix (correct):** correct fact exists, indexed, effectively surfaced;
     model appended false detail anyway. Not fixable by fact-base/retrieval — feeds semantic scoring (item 5).
 - **D-SCORER-1 (scorer leniency, MED — feeds work item 5):** number-overlap credits a PASS off an

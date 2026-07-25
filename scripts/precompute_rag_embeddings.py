@@ -111,6 +111,24 @@ CONCISE_BILINGUAL_FACTS = {
     'vat_registration_threshold_annual':
         'Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.',
 
+    # EFD-threshold Swahili grounding (eval_347). efd_threshold_tzs_11m was English-only
+    # (key:value fallback), so a query naming EFD + "mauzo ya TZS 200,000,000" was hijacked
+    # by the concise Swahili vat_registration_threshold_annual fact (same 200M magnitude, same
+    # 'Kizingiti cha ... mauzo ya' phrasing). Probe v2 (ca2a0cf): the number-stripped arm DID
+    # surface the EFD fact, but only at s#2 — it lost the single append-only promotion slot to
+    # efd_approved_supplier_verification (s#1) by one rank. This concise, Swahili-first entry
+    # (value at front, distinctive 'kuanza kutumia EFD' tokens) lifts it so it wins its own
+    # query; the explicit '200M = VAT-registration, si EFD' contrast targets eval_347's exact
+    # false premise. Same figure (TZS 11M) — no new claim. NOTE: the 200M/kusajili-VAT tokens
+    # carry a displacement risk toward genuine VAT-registration queries (as the GN487A concise
+    # facts did) — guarded by the two verification tuples in regenerate_rag_e5.py; narrow this
+    # text (trim the 200M contrast) if the regen gate flags displacement.
+    'efd_threshold_tzs_11m':
+        'Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 '
+        '(milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti '
+        'cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD '
+        'bila kujali kiwango cha mauzo.',
+
     'vat_registration_threshold_six_months':
         'Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6.',
 
