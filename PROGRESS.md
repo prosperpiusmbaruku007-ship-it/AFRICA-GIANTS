@@ -341,6 +341,33 @@ root cause.
   redeploy Modal → re-run the gate. **Do not treat this fact-base fix as fully live in production until that
   regeneration has actually happened.** No future session should assume the corrected VAT-withholding
   formula is being served until this line is updated to DONE.
+- **D-MODELRAG-A (fact-base GAPs, MED — item (3) Group A): ✅ FACTS ADDED (2026-07-25), RAG regen PENDING.**
+  Of the 8 confirmed model/RAG factual-error cases, the 4 traced to a **missing fact** were investigated;
+  primary-source verification + two new locked facts drafted and added:
+  - **`brela_business_structures`** (eval_071 + eval_304): the model answered "how many business structures"
+    with IP categories (it retrieved the adjacent `BRELA COSOTA split` IP fact), and fabricated "register a
+    company if 10+ employees". New fact enumerates the 3 legal forms (sole proprietor + partnership = business
+    name under Business Names (Registration) Act Cap.213; company under Companies Act Cap.212) and states the
+    choice is independent of headcount/capital, distinguishing IP. Verified against the BRELA-hosted Acts
+    (Cap.213 s.2 definition; Cap.212) + brela.go.tz.
+  - **`wcf_paid_to_fund_not_tra`** (eval_123): the model said WCF is paid to TRA. New fact: WCF paid directly
+    to the Fund via portal.wcf.go.tz, NOT TRA (SDL -> TRA); employee does not contribute. Verified against
+    wcf.go.tz/pages/contribution + Workers Compensation Act No.20 of 2008.
+    **Validation:** both facts' `wrong_patterns` run against all 400 gold + 400 model answers — 0 gold or
+    correct-answer false-flags; the only model hit is eval_304's own wrong answer (guard working as intended).
+    Patterns kept conservative (they don't try to catch the eval_071/123 model outputs — the corrective
+    mechanism is RAG surfacing the new facts after R15, not the training-guard regex). **RAG regeneration
+    PENDING** — batched with D-VATWH-1: the same R15 run covers D-VATWH-1's 5 corrected facts + these 2 new
+    facts. Not live until that runs.
+  - **eval_223 (EAC STR) — EXCLUDED from the active defect/gate queue:** *out of active scope — Tier 1B
+    (EAC/STR) not yet started per CLAUDE.md §5, deferred until Tier 1A gate passes and Tier 1B unlocks.* No
+    STR fact verified or drafted; pulling Tier 1B content forward to pass one eval question would be working
+    backward from a test case rather than respecting the project's tier-staging plan.
+  - **Group B (eval_162 mgeni, eval_347 EFD) — retrieval probe prepared, HELD:** correct fact exists AND is in
+    the index; a Kaggle-side e5 probe (`kaggle/retrieval_probe_group_b.py`) splits retrieval-ranking-failure vs
+    hallucination. To be run in the same Kaggle session as the R15 regen.
+  - **Group C (eval_047, eval_210) — NO fix (correct):** correct fact exists, indexed, effectively surfaced;
+    model appended false detail anyway. Not fixable by fact-base/retrieval — feeds semantic scoring (item 5).
 - **D-SCORER-1 (scorer leniency, MED — feeds work item 5):** number-overlap credits a PASS off an
   incidental correct sub-figure while the headline answer is wrong (the NSSF cluster + others among the
   27 false-pass candidates). Adjudicate the 27 list; this is the concrete evidence for the judge-as-

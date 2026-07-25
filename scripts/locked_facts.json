@@ -1162,6 +1162,18 @@
     "effective_date": "2022-07-01",
     "status": "CONFIRMED"
   },
+  "wcf_paid_to_fund_not_tra": {
+    "fact": "WCF (Workers Compensation Fund) contributions are paid by the employer DIRECTLY to the Fund via its portal (portal.wcf.go.tz), NOT to TRA. WCF and SDL are different levies collected by different institutions: WCF = 0.5% of gross emoluments, paid to the WCF Fund, funds workplace-injury compensation; SDL = 3.5% of gross emoluments (employers with 10+ employees), paid to TRA, funds skills development. The employee does NOT contribute to WCF — it is a criminal offence for an employer to deduct a WCF contribution from an employee.",
+    "correct_value": "WCF paid to the WCF Fund (portal.wcf.go.tz), NOT TRA; SDL paid to TRA — different institutions",
+    "wrong_patterns": [
+      "wcf[^.?!]{0,30}(inayolipwa|hulipwa kwa|inalipwa kwa) tra",
+      "wcf na sdl[^.?!]{0,30}(zote|both)[^.?!]{0,20}tra"
+    ],
+    "primary_source": "https://www.wcf.go.tz/pages/contribution; Workers Compensation Act No.20 of 2008",
+    "verified_by": "wcf.go.tz/pages/contribution — 'Mwajiri anaweza kulipa katika Mfuko kwa njia ya mtandao (portal.wcf.go.tz)', employer-only contribution, no TRA; Workers Compensation Act No.20 of 2008 — primary source, WCF-hosted",
+    "verified_date": "2026-07-25",
+    "status": "CONFIRMED"
+  },
   "vat_threshold_200m_july2024_increase": {
     "fact": "VAT registration threshold was increased from TZS 100M to TZS 200M in July 2024. Current thresholds: TZS 200M per 12 months OR TZS 100M per any 6-month rolling period. Zanzibar threshold is separate (TZS 100M) — different jurisdiction. Any pair showing TZS 100M/year or TZS 50M/6mo is citing pre-July-2024 rules.",
     "correct_value": "TZS 200M/12mo or TZS 100M/6mo (effective July 2024)",
@@ -1316,6 +1328,20 @@
     "verified_date": "2026-06-19",
     "status": "HEDGE — specific steps unverifiable from primary source; direct users to brela.go.tz",
     "training_instruction": "Do not state specific fees or step counts for partnership registration. Use: 'thibitisha hatua za usajilishaji kwenye brela.go.tz au mfumo wa ORS (ors.brela.go.tz)'."
+  },
+  "brela_business_structures": {
+    "fact": "BRELA registers businesses in THREE main legal forms: (1) sole proprietorship / individual — registered as a business name under the Business Names (Registration) Act Cap.213; (2) partnership (firm) — also registered as a business name under Cap.213 (a firm is two or more persons in partnership); (3) limited liability company — incorporated under the Companies Act Cap.212. The choice between a business name and a company depends on the desired legal structure and liability, NOT on the number of employees or the amount of capital — there is no employee-count or capital threshold that forces incorporation. BRELA separately administers trademarks, patents and industrial designs (intellectual property); these are NOT business structures.",
+    "correct_value": "3 forms: sole proprietor + partnership (both = business name, Cap.213) + company (Cap.212); choice is by legal form, not headcount/capital",
+    "wrong_patterns": [
+      "brela.{0,40}(alama za biashara|trademark|hati miliki|patent|industrial design).{0,30}(miundo ya biashara|business structures)",
+      "kampuni.{0,30}(ikiwa|kama).{0,15}wafanyakazi (10|20)",
+      "company.{0,20}(if|requires).{0,10}(10|20) (or more )?employees"
+    ],
+    "primary_source": "Business Names (Registration) Act Cap.213 (brela.go.tz); Companies Act Cap.212 (brela.go.tz)",
+    "verified_by": "Business Names (Registration) Act Cap.213 s.2 ('business name' = style under which business carried on, whether in partnership or otherwise; applies to firms, individuals, corporations); Companies Act Cap.212 — primary legislation, BRELA-hosted; brela.go.tz business-name service page",
+    "verified_date": "2026-07-25",
+    "status": "CONFIRMED",
+    "training_instruction": "How many business structures BRELA registers -> the three legal forms (sole proprietor, partnership, company). Do NOT answer with trademarks/patents/designs (that is IP). The company-vs-business-name choice does not depend on employee count or capital."
   },
   "osha_licence_renewal_frequency": {
     "fact": "OSHA workplace compliance certificate (cheti cha usajilishaji) renewal frequency is not explicitly stated on osha.go.tz. The OHS Act 2003 requires employers to maintain workplace registration. In practice OSHA conducts annual risk assessments and inspections. Training pairs must direct employers to osha.go.tz to confirm current renewal period rather than stating a specific interval.",
