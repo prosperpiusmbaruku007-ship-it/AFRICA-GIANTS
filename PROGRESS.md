@@ -301,10 +301,21 @@ root cause.
   **full suite 231 passed.** One over-broad cue caught in testing (`mkazi analipwa` matched inside `asiye
   mkazi analipwa`, reverting eval_367 to resident) and narrowed to `ni mkazi` before shipping. **Gate-
   number caveat holds** — offline fix, confirmation folds into the next 400-run.
-  - **eval_344 (separate item — false-premise yes_no, no amount):** *"PAYE ya asiye mkazi ni asilimia 30,
-    sivyo?"* carries **no salary**, so the compute path routes to clarification before the resident flag is
-    ever evaluated — D-PAYE-1 does **not** lift it (checked, not assumed). Needs adversarial-yes_no /
-    false-premise handling (a rate assertion should be refuted, not met with a "give me the salary" ask).
+  - **eval_344 (false-premise yes_no, no amount): ✅ CONFIRMED ALREADY-FIXED (2026-07-25).** When D-PAYE-1
+    reasoned this "routes to clarification," it was reading the **5239190 baseline output** — but that
+    baseline (2026-07-23) **predates the money-ask guard** (`5d806c6`, 2026-07-24). `git merge-base` confirms
+    the guard is not an ancestor of the baseline. Current `detect_intent` routes eval_344 (and its 4 siblings
+    eval_099/335/337/342 — the true blast radius of the rate/mechanism-confirmation-yes_no-naming-a-compute-
+    levy pattern) to `'none'` (fact/RAG); `tests/test_routing.py:188-243` already lock all of them (15/15
+    pass). **No fix needed** — the answer-correctness (does fact/RAG actually refute the false rate) folds
+    into the held eval.py run. Lesson: baseline outputs are pre-fix snapshots; always re-test current
+    `detect_intent`, don't infer routing from the pinned baseline.
+  - **eval_311 (applicability-detector gap, LOWER priority — tracked, queued after decompose/merge):**
+    *"Nina mfanyakazi mmoja tu anayelipwa TZS 500,000, je bado nachangia WCF?"* routes to compute `wcf`
+    but `is_applicability_question` does not catch "bado nachangia", so it doesn't get the clean
+    applicability "Ndiyo — WCF kutoka mfanyakazi wa kwanza" answer. Lower severity than a wrong-number bug
+    (a **missed correct answer**, not a confidently-wrong one). Fix later by extending the applicability cue
+    set; do NOT fix now.
   - **eval_326 (→ decompose/merge, with eval_318):** two employees of differing residency in one question;
     deferred, guarded to resident-default so the resident half is not wrongly billed 15%.
   - **eval_218 / eval_392 (→ fact/RAG queue):** both `compute=False`. eval_218 is non-resident **rental**
