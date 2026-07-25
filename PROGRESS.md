@@ -287,6 +287,25 @@ root cause.
   (call site is extraction.py:246, compute-path only). New unit test + full suite **222 passed**. A
   legitimate payroll figure is phrased "mshahara wa"/"analipwa", never "thamani ya", so no payroll
   question regresses to an unnecessary clarification.
+- **D-WCF-2 (content, MED; one HIGH sub-case): ✅ FIXED (2026-07-25, commit `fd150d1`).** Direct extension of
+  D-WCF-1: `_WRONG_BASE` caught asset-value bases (`thamani ya X`) but not **market value, rent, savings,
+  utility cost, bank loan, or business cash flow** offered as a payroll base for SDL/NSSF/WCF/PAYE. Full-400
+  sweep found **6 cases (2 beyond the 4 flagged): eval_253** (deni la benki), **254** (bei ya soko — the HIGH
+  one, was mis-computing `WCF = 0.5% × 25,000,000 = 125,000`), **255** (mzunguko wa fedha/cash flow), **258**
+  (kodi ya pango), **260** (akiba), **261** (gharama za umeme). 8 new terms, precision-scoped:
+  `gharama za umeme`/`maji` (not broad `gharama za \w+` → would hit `gharama za mishahara`); `\bdeni\b` word
+  boundary (catches `deni la benki`, not `madeni`). **Validation:** new unit test (6 caught + exclusions);
+  full-400 no-regression sweep **on the real call path** (detect_wrong_base is invoked only from the compute
+  path via `extraction.py:246`) = **delta exactly the 6 targets, 0 unexpected, 0 legit-payroll caught**.
+  eval_218 confirmed unaffected (intent `none`/fact path, never calls detect_wrong_base — the initial sweep
+  phantom-counted it off-path). **Gate caveat:** 5 of 6 already `pass=False`; the fix corrects the advice /
+  kills the wrong number, folds into the held eval.py run.
+- **D-WCF-3 (content, MED — TRACKED, NOT fixed): the inverse problem.** eval_324 (*"…mishahara TZS 4,800,000
+  kwa watu 13, na madeni TZS 2,000,000, na faida TZS 1,000,000 — SDL?"*) states a **legit payroll base**
+  (gold wants SDL = 3.5% × 4,800,000 = 168,000) but a distractor `faida`/`madeni` figure fires `_WRONG_BASE`,
+  so it clarifies instead of computing. This is **not** a term-addition problem (D-WCF-1/2's shape) — it needs
+  logic to suppress the wrong-base veto when an explicit `mishahara/analipwa TZS <amount>` payroll figure is
+  present alongside the distractor. Its own investigation; queued, do not fold into D-WCF-2.
 - **D-PAYE-1 (user-facing, HIGH): ✅ FIXED (2026-07-25, commit `0785c7a`).** Same class as D-NSSF-1 —
   the engine already implements the flat-15% non-resident branch (`compute_paye(resident=False)`) but
   nothing upstream ever determined residency, so **every** PAYE compute defaulted to progressive resident
