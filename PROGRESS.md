@@ -125,7 +125,7 @@ overlap scorer is confirmed by **folding into the next scheduled 400-run** — n
 scope; directly addresses the MEASUREMENT GAP — ~a third of the 400 scored by a mechanism that
 admits it cannot verify its own answers in either direction).**
 
-## 🔎 Frontier-judge scoring — SCOPED, NOT STARTED (2026-07-24) — router follow-up #3 of 3
+## 🔎 Frontier-judge scoring — IN PROGRESS (work item 1 of 5 DONE, 2026-07-25) — router follow-up #3 of 3
 
 **Status-check before scoping (confirm before building, same discipline as #1/#2). #3 does NOT
 start from zero — a completed, persisted bake-off already exists (2026-07-16). But "validated"
@@ -177,8 +177,10 @@ layers on top of it. **What does NOT exist:** any wiring of a judge verdict back
 questions to a frontier model — `generate()` raises `NotImplementedError` — NOT the scorer seam.)
 
 ### Five genuinely-new work items for #3 (none started)
-1. **Scale to 400.** All existing judge/NLI work targets the **190** `gate_001` set; the current
-   MEASUREMENT GAP is **133/400** on the `5239190` orchestrator baseline — re-point the harness.
+1. **Scale to 400. ✅ DONE (2026-07-25)** — see the "Work item 1 — census" subsection below. All
+   prior judge/NLI work targeted the **190** `gate_001` set; the census now covers the full
+   **133/400** MEASUREMENT GAP on the `5239190` baseline **plus** an audit of the 252 reliable
+   verdicts.
 2. **Real adjudicated ground truth.** Expand beyond 14 hand-labeled examples to a human-adjudicated
    sample across the `reliable=False` categories, to measure the judge's TRUE precision/recall
    (STAGE 2's 13/6 are unadjudicated disagreements).
@@ -189,14 +191,99 @@ questions to a frontier model — `generate()` raises `NotImplementedError` — 
    decide how `undetermined` counts in the denominator; decide when the judge overrides regex) into
    `scoring.py`/the gate. No code exists for this.
 
-**Follow-up #3 SCOPED, NOT STARTED.** Start point for the dedicated session: fetch the persisted HF
-result JSONs and re-point `judge_regression.py` at the 400-set — do NOT re-invent the harness. This
-is its own larger, multi-part workstream; paused here deliberately.
+### Work item 1 — CENSUS of the 400-question gate (DONE, 2026-07-25)
+
+**Harness:** `scripts/judge_regression_400.py` — a **local** re-point of `kaggle/judge_regression.py`
+(the judge is pure OpenRouter `qwen/qwen3-32b`, no GPU, so it runs locally off `OPENROUTER_API_KEY`).
+Input is **pinned to the committed** `eval/results/gate_orchestrator_combined_5239190.json` (baseline
+archived this session, commit `959283f`); the harness asserts `commit == '5239190'` on load so it
+cannot run against a stale baseline. Grades `row['generated']` directly (already `reply.text`); trusts
+the stored `reliable`/`pass` fields (they *are* the 5239190 verdicts being characterized).
+
+**Scope decision — CENSUS, not a sample.** `reliable=False` means "the regex scorer has low confidence
+in its own verdict," **not** "the system failed to answer" (all 400 produced a real answer; 0 empty, 0
+ERROR). So `reliable=True` means *regex is confident, not regex is right* — and this session has
+repeatedly found confident-but-wrong regex verdicts. A 40-question spot-check of the 252 reliable
+verdicts was rejected on the statistics (at a 3% true error rate — the order of bugs already found — a
+clean 40-sample happens **30%** of the time; the 252 population is too small for an efficient middle
+sample; the census costs only ~2¢/~3min more). So the judge did two jobs at once: **gap-fill** the 133
+excluded **and audit** the 252 reliable.
+
+**Run actuals:** 399 calls (14 audit + 385 non-refusal), **$0.0407**, ~438s total (STAGE 2 349s @ 8
+workers), **0 API errors**. Output: `eval/results/judge_regression_qwen3-32b_400.json`.
+
+- **STAGE 1 judge-trust: 10/14** vs hand-truth (down from 12/14 @190: 1 false-demote eval_176, 2
+  false-promote eval_093/059, 1 undetermined eval_026). **The judge itself disagrees with hand-truth
+  ~1-in-4 — so every candidate below is an adjudication LEAD, not a verdict** (this is exactly why
+  work item 2 = real adjudicated ground truth exists).
+- **GROUP 1 gap-fill (133 by exclusion reason):** compute_derived_number 48 (25 correct / **21 wrong** /
+  2 undet), yes_no_polarity_unverifiable 28 (6 / **21 wrong** / 1), qualitative_number_no_numeric_key 27
+  (18 / 7 / 2), yes_no_ground_truth_ambiguous 9 (6/2/1), morphological_overlap_gap 7 (6/1/0),
+  year_only_numeric_key 6 (5/1/0), zero_or_not_applicable 6 (2/**4 wrong**/0), year_collision_match 2
+  (2/0/0). The gap is **not** uniformly-correct-but-unscorable: ~57/133 read wrong, concentrated in
+  compute-derived and polarity-unverifiable.
+- **GROUP 2 regex-audit (252 reliable):** **27 false-pass** (regex PASS, judge WRONG) · **12 false-fail**
+  (regex FAIL, judge CORRECT) · 17 undetermined · 30 clarified (deliberate, excluded — not bugs) · 166
+  agree. Full disagreement IDs in the artifact; this list *is* the deliverable that turns work item 2
+  from "audit a sample" into "adjudicate this concrete list."
+
+### 🚑 NEW DEFECT surfaced by the census — NSSF employee-deduction is a rules-engine error (NOT scoring, NOT #3)
+
+**Highest-stakes finding, root-caused precisely — do NOT file this under the scorer work.** Four
+false-passes (eval_091 gate, eval_274/282/330 additions; plus compute-derived instances) show the
+system reporting **double the correct NSSF deduction**. Investigated to ground:
+
+- **It is a rules-engine answer-*selection* error, not a rate-knowledge error and not flat-20% belief.**
+  All are **compute-routed**; the figures come from `chike/rules_engine/nssf.py::compute_nssf`, which sets
+  `amount = gross × (employer_rate + employee_rate)` = the **20% both-parties total**. The rates are
+  correct (`NSSF_EMPLOYER_RATE=NSSF_EMPLOYEE_RATE=0.10`) and the engine explicitly decomposes and prints
+  the correct halves ("mwajiri 80,000 + mfanyakazi 80,000"). But all four questions asked *"kiasi gani
+  kinakatwa mshahara **wake**"* / *"NSSF **anayokatwa**"* — **how much is deducted from the employee** —
+  whose correct answer is the employee's 10% half (80,000 / 75,000 / 64,000 / 45,000, confirmed by every
+  gold: *"NSSF ya mfanyakazi ni asilimia 10"*). The engine **computes the correct employee figure but
+  returns `total` as the headline `amount`**, so a user asking "how much NSSF comes off my 800k salary?"
+  is told **160,000 when the answer is 80,000**. Returning `total` is correct for a "total remittance /
+  how much do I as employer pay" framing — the bug is that the engine has **no notion of the question
+  sub-framing** (employee deduction vs employer share vs total) and always returns the total.
+- **Systematic & deterministic** (engine logic, not sampling) — hits *every* employee-deduction-framed
+  NSSF compute, not just these four. **User-facing** (doubles stated payroll deduction), currently
+  **hidden by scorer leniency** → higher priority than any scorer fix.
+- **Compounded by an independent scorer-leniency bug** (the known number-overlap class): the regex marked
+  these PASS because the correct 80,000 appears as an incidental sub-component in the working string.
+  Fixing one does **not** fix the other.
+- **NOT in scope for follow-up #3** (which is about the scorer). Tracked as its own defect below.
+
+**Separately — eval_259 is a DIFFERENT genuine content error** (not the NSSF pattern): the engine computed
+**WCF as 0.5% of vehicle value** (TZS 40M → 200,000) instead of 0.5% of payroll — it took the trap
+question's irrelevant figure as the base. Also false-passed (definition-vocabulary overlap). Distinct
+root cause.
+
+### NEW TRACKED DEFECTS (rules-engine / scorer — separate from follow-up #3's five items)
+- **D-NSSF-1 (user-facing, HIGH):** `compute_nssf` returns the 20% total as `amount` even when the
+  question asks for the **employee deduction** (correct = 10% half). Needs question-sub-framing awareness
+  (employee-deduction vs employer-share vs total-remittance) in extraction/routing → select the matching
+  figure the engine already computes. Full 400 no-regression sweep on fix.
+- **D-WCF-1 (content, MED):** WCF computed on a non-payroll base (vehicle value) for eval_259-style trap
+  questions; must reject irrelevant figures and require payroll.
+- **D-SCORER-1 (scorer leniency, MED — feeds work item 5):** number-overlap credits a PASS off an
+  incidental correct sub-figure while the headline answer is wrong (the NSSF cluster + others among the
+  27 false-pass candidates). Adjudicate the 27 list; this is the concrete evidence for the judge-as-
+  confirmation-layer integration.
+
+**CAVEAT preserved (also embedded in the artifact JSON):** the judge is **not** ground truth (work item 2).
+A judge-vs-regex disagreement is a **candidate** to adjudicate, not an automatic correction; STAGE 1 was
+10/14, so a fraction of the 27/12 will be judge errors. The NSSF cluster, however, is unambiguous on
+direct inspection of the engine + golds.
+
+**Remaining work items 2-5 NOT started.** Start point unchanged: adjudicate the concrete disagreement
+list this census produced, then design integration into `scoring.py`/the gate.
 
 ### Router-investigation follow-up tracker (3 items)
 - **#1 — generic explicit-levy money-ask guard: ✅ DONE** (commit `5d806c6`).
 - **#2 — ordinal-enumeration decomposition (`_split_ordinal_enumeration`): ✅ DONE** (commit `d86b92e`).
-- **#3 — frontier-judge / semantic scoring: 🔎 SCOPED, NOT STARTED** (this entry).
+- **#3 — frontier-judge / semantic scoring: 🔎 IN PROGRESS** — work item 1 (scale to 400 census) DONE
+  (2026-07-25); items 2-5 not started. Surfaced NEW defects D-NSSF-1 / D-WCF-1 / D-SCORER-1 (tracked
+  above, separate from #3).
 
 ## ✅ Generic explicit-levy money-ask guard — SHIPPED (2026-07-24) — router follow-up #1 of 3
 
