@@ -334,13 +334,12 @@ root cause.
   withholding. (2) `vat_withholding_certificate_timing` and `vat_withholding_buyer_remits_directly` were
   **already correct** — confirmed by s.90B ("certificate not later than the day VAT becomes payable under
   s.15") and the s.71 amendment (supplier subtracts withheld output tax only with a valid certificate).
-  **D-VATWH-1 fact-base corrected, RAG regeneration PENDING — founder will trigger before next production
-  RAG use, not scheduled now.** The corrected facts are committed to `scripts/locked_facts.json` but the
-  live RAG index still serves the OLD (VAT-amount) facts until R15 runs: regenerate e5 embeddings on Kaggle
-  → fetch `rag_embeddings.npy`/`rag_facts_text.json` → commit to BOTH `chike-inference/` and `kaggle/` →
-  redeploy Modal → re-run the gate. **Do not treat this fact-base fix as fully live in production until that
-  regeneration has actually happened.** No future session should assume the corrected VAT-withholding
-  formula is being served until this line is updated to DONE.
+  **D-VATWH-1 RAG regeneration ✅ DONE + DEPLOYED (2026-07-25, index commit `afba3a2`).** R15 ran on Kaggle,
+  the e5 index was fetched from HF (`prospAprospA007/africa-giants-dataset`), committed byte-identical to BOTH
+  `chike-inference/` and `kaggle/` (sha256 verified matching), and **Modal was redeployed** — the corrected
+  consideration-base VAT-withholding facts are now live in production. Index is 213 facts (was 211).
+  **Remaining:** the `kaggle/eval.py` gate confirmation is intentionally HELD for ONE comprehensive run after
+  all of follow-up #3 is complete (not per-change), so gate-number confirmation folds into that single run.
 - **D-MODELRAG-A (fact-base GAPs, MED — item (3) Group A): ✅ FACTS ADDED (2026-07-25), RAG regen PENDING.**
   Of the 8 confirmed model/RAG factual-error cases, the 4 traced to a **missing fact** were investigated;
   primary-source verification + two new locked facts drafted and added:
@@ -357,9 +356,10 @@ root cause.
     correct-answer false-flags; the only model hit is eval_304's own wrong answer (guard working as intended).
     Patterns kept conservative (they don't try to catch the eval_071/123 model outputs — the corrective
     mechanism is RAG surfacing the new facts after R15, not the training-guard regex). **RAG regeneration
-    PENDING** — batched with D-VATWH-1: the single R15 run covers D-VATWH-1's 5 corrected facts + these 2 new
-    facts (BRELA/WCF) + the concise-EFD embedding fix (Group B, eval_347) = 8 fact changes. Not live until
-    that runs.
+    ✅ DONE + DEPLOYED (index commit `afba3a2`)** — the single R15 run covered D-VATWH-1's 5 corrected facts +
+    these 2 new facts (BRELA/WCF) + the concise-EFD embedding fix (Group B, eval_347) = 8 fact changes; index
+    now 213 facts, committed byte-identical to both dirs and live on Modal. `kaggle/eval.py` gate confirmation
+    HELD for the single comprehensive run after all of follow-up #3.
   - **eval_223 (EAC STR) — EXCLUDED from the active defect/gate queue:** *out of active scope — Tier 1B
     (EAC/STR) not yet started per CLAUDE.md §5, deferred until Tier 1A gate passes and Tier 1B unlocks.* No
     STR fact verified or drafted; pulling Tier 1B content forward to pass one eval question would be working
@@ -379,7 +379,9 @@ root cause.
       premise) — same figure, no new claim, same precedent as `gn487a_prohibited_activity_3`/
       `gn487a_marriage_no_exemption`. Guarded by **two verification tuples** in `regenerate_rag_e5.py` (EFD
       query → 11M; VAT-reg query → 200M anti-displacement bracket). Narrow the 200M contrast if the regen gate
-      flags displacement (GN487A narrowing precedent). **Rides the same pending R15 batch.** Broader idea noted
+      flags displacement (GN487A narrowing precedent). **✅ DEPLOYED in the R15 batch (index commit `afba3a2`);
+      the fetched index carries the concise EFD fact AND the VAT-reg fact (displacement sanity passed on
+      presence; ranking to be confirmed in the held eval.py run).** Broader idea noted
       but OUT OF SCOPE: the "promote only the first new fact" append rule cost the EFD fact its slot by one
       rank — worth revisiting the merge rule separately, not in this fix.
   - **Group C (eval_047, eval_210) — NO fix (correct):** correct fact exists, indexed, effectively surfaced;
