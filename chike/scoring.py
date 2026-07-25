@@ -23,6 +23,18 @@ SWAHILI_NUMBERS = {
 
 def extract_numbers(text):
     text_lower = text.lower()
+    # Idiom guard — 'moja kwa moja' means "directly", not the numeral one. Without this,
+    # the '\bmoja\b' Swahili-numeral match below injects a spurious '1' into any answer
+    # carrying the idiom. That junk key does the same two kinds of damage as the old '000'
+    # fragment bug: (a) it suppresses the qualitative_number_no_numeric_key reliability
+    # exclusion, turning genuine "no fixed figure" answers into false FAILs (eval_134,
+    # eval_217); and (b) because the model's own answer often repeats the idiom, gold and
+    # output collide on the bare '1' and score a coincidental false PASS that verifies no
+    # real content (eval_037). Blank the fixed trigram before numeral extraction. This can
+    # only ever REMOVE a spurious key, never add one — the same tightening-only safety
+    # property that made the '000' and BUG-7 fixes safe to ship narrowly. Exhaustively,
+    # exactly four gold answers in the 400-set contain it (eval_033/037/134/217).
+    text_lower = re.sub(r'\bmoja kwa moja\b', ' ', text_lower)
     nums = set()
     for m in re.findall(r'asilimia\s*(\d+(?:\.\d+)?)', text_lower):
         nums.add(m)
