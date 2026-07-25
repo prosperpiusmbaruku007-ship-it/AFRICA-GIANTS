@@ -125,6 +125,79 @@ overlap scorer is confirmed by **folding into the next scheduled 400-run** — n
 scope; directly addresses the MEASUREMENT GAP — ~a third of the 400 scored by a mechanism that
 admits it cannot verify its own answers in either direction).**
 
+## 🔎 Frontier-judge scoring — SCOPED, NOT STARTED (2026-07-24) — router follow-up #3 of 3
+
+**Status-check before scoping (confirm before building, same discipline as #1/#2). #3 does NOT
+start from zero — a completed, persisted bake-off already exists (2026-07-16). But "validated"
+means a feasibility/comparison win, not a precision-measured, wired-in scorer, and it was run on
+190 questions, not the current 400.** This entry is the documented baseline for the eventual
+dedicated session; NONE of the five work items below has been started.
+
+### Groundwork inventory (two tiers)
+- **Scratch (exploratory, local, gitignored):** `nli_regression_190.py` (mDeBERTa),
+  `nli_xlmr_190.py` (xlm-roberta-large-xnli), `nli_round2.py` (threshold-tuning + entailment +
+  cross-lingual on the 14-example set). All are **contradiction-demotion** experiments (demote a
+  regex-PASS→FAIL only when NLI contradiction ≥ 0.70) — NOT full judges.
+- **Committed, reusable harnesses (`kaggle/`):** `nli_regression.py` (mDeBERTa, fetch-and-run,
+  persists to HF) and **`judge_regression.py` — the real LLM-as-judge** on OpenRouter
+  `qwen/qwen3-32b`. Two stages: STAGE 1 = 14 audit examples vs known ground truth
+  (`scratch/audit14.json`); STAGE 2 = full 190 non-refusal questions, judge verdict
+  (correct/wrong/undetermined) vs the current `score_question`+`scorer_reliability`. Persists
+  `judge_regression_qwen3-32b.json` to HF v15. Models actually called across the bake-off:
+  `intfloat/multilingual-e5-base`, `mDeBERTa-v3-base-xnli` (280M), `xlm-roberta-large-xnli`
+  (560M), `qwen/qwen3-32b`. Data: `audit14.json` (14 hand-labeled) + the **190** first-block v15
+  results (`gate_001_results.json` on HF).
+
+### What was actually produced (persisted to HF v15, git_head 8efdd32 — read from saved data)
+- **Embeddings REJECTED** (cosine is polarity-blind). **mDeBERTa NLI REJECTED** (5 false-demotions
+  @190, high-confidence). **xlm-roberta-large NLI REJECTED, worse** (13 false-demotions @190).
+- **qwen3-32b judge "genuine improvement":** STAGE 1 **12/14** vs ground truth (1 harmful
+  false-demote, 0 false-promotes, and it **rescued 2 answers regex had wrongly FAILED**); STAGE 2
+  **covered all 71 currently-EXCLUDED questions** with a verdict, 13 demote / 6 promote
+  **disagreements with regex**, 101 agreements, 0 API errors, **$0.018 / 160s**.
+
+### Precise reading of "already validated earlier this session" (PROGRESS line ~613)
+"Validated" = **a completed comparative bake-off proved the frontier-judge is the RIGHT approach**
+(beat NLI + embeddings, matched 12/14 ground truth, covered all 71 excluded, ~2 cents). It does
+**NOT** mean: (a) a measured precision/recall against a real ground-truth set — only **14** are
+adjudicated; STAGE 2's 13/6 are **disagreements with an imperfect regex baseline, explicitly "not
+proven errors"**; (b) a production-ready scorer — the 2026-07-16 entry's OWN recommendation says
+**"do NOT adopt it as a silent automatic scorer"** until `procedure` over-strictness is
+characterized, it is escalated to a larger frontier model, and the 13/6 are adjudicated against
+`locked_facts.json`; (c) a settled model — a separate **non-determinism finding** shows qwen3-32b
+**flips verdicts even at temp=0** and **misreads Swahili compound numerals** (laki/robo/milioni).
+
+### The scorer seam (confirmed ready, currently untouched)
+`chike/scoring.py::scorer_reliability(q, generated)` returns `(reliable, reason)` and is exactly
+where the **8 exclusion categories** live; its docstring explicitly names *"a semantic judge
+(LLM-as-judge / frontier-model scoring)"* as the intended fix, and `judge_regression.py` already
+layers on top of it. **What does NOT exist:** any wiring of a judge verdict back into
+`scoring.py` / `run_eval.py` / the gate — `scoring.py` is deliberately unchanged.
+(`chike/model_abstraction/frontier_api.py` is a GENERATION-backend stub for routing *compute*
+questions to a frontier model — `generate()` raises `NotImplementedError` — NOT the scorer seam.)
+
+### Five genuinely-new work items for #3 (none started)
+1. **Scale to 400.** All existing judge/NLI work targets the **190** `gate_001` set; the current
+   MEASUREMENT GAP is **133/400** on the `5239190` orchestrator baseline — re-point the harness.
+2. **Real adjudicated ground truth.** Expand beyond 14 hand-labeled examples to a human-adjudicated
+   sample across the `reliable=False` categories, to measure the judge's TRUE precision/recall
+   (STAGE 2's 13/6 are unadjudicated disagreements).
+3. **Characterize the `procedure` over-strictness** (6 of the 13 demotions — the judge's known weakness).
+4. **Resolve non-determinism** — a confirmation/second-pass rule, or the founder's escalation to a
+   larger/more stable frontier model on the identical harness (untested).
+5. **Integration design** — wire the judge as a CONFIRMATION layer (adjudicate `reliable=False`;
+   decide how `undetermined` counts in the denominator; decide when the judge overrides regex) into
+   `scoring.py`/the gate. No code exists for this.
+
+**Follow-up #3 SCOPED, NOT STARTED.** Start point for the dedicated session: fetch the persisted HF
+result JSONs and re-point `judge_regression.py` at the 400-set — do NOT re-invent the harness. This
+is its own larger, multi-part workstream; paused here deliberately.
+
+### Router-investigation follow-up tracker (3 items)
+- **#1 — generic explicit-levy money-ask guard: ✅ DONE** (commit `5d806c6`).
+- **#2 — ordinal-enumeration decomposition (`_split_ordinal_enumeration`): ✅ DONE** (commit `d86b92e`).
+- **#3 — frontier-judge / semantic scoring: 🔎 SCOPED, NOT STARTED** (this entry).
+
 ## ✅ Generic explicit-levy money-ask guard — SHIPPED (2026-07-24) — router follow-up #1 of 3
 
 **The first of the three tracked follow-ups from the Phase D router investigation (the
