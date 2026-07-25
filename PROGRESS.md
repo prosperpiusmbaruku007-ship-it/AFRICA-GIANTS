@@ -287,6 +287,29 @@ root cause.
   (call site is extraction.py:246, compute-path only). New unit test + full suite **222 passed**. A
   legitimate payroll figure is phrased "mshahara wa"/"analipwa", never "thamani ya", so no payroll
   question regresses to an unnecessary clarification.
+- **D-PAYE-1 (user-facing, HIGH): ✅ FIXED (2026-07-25, commit `0785c7a`).** Same class as D-NSSF-1 —
+  the engine already implements the flat-15% non-resident branch (`compute_paye(resident=False)`) but
+  nothing upstream ever determined residency, so **every** PAYE compute defaulted to progressive resident
+  bands. eval_367 (*"Mfanyakazi asiye mkazi analipwa TZS 5,000,000 … PAYE yake?"*) returned **1,328,000**
+  (progressive) instead of the correct **750,000** (15% flat, = gold). Fix: `routing.paye_resident(text)
+  → bool`, negated-residency cues (`asiye mkazi`/`si mkazi`/`wasio wakazi`/`non-resident`), **guarded
+  against the mixed two-person case** (eval_326: one resident + one non-resident — a scalar flag can't
+  express both, so the precise `ni mkazi` cue keeps it resident-default and defers to the decompose/merge
+  item); narrow levy-gated wiring in `orchestrator._answer_compute`. **Validation:** full-27 PAYE-compute
+  sweep = **25/27 byte-identical** (resident=True, unchanged working), exactly 2 flip (eval_344/367);
+  eval_218/392 are `compute=False` so `paye_resident` is never invoked (untouched); 9 new unit tests;
+  **full suite 231 passed.** One over-broad cue caught in testing (`mkazi analipwa` matched inside `asiye
+  mkazi analipwa`, reverting eval_367 to resident) and narrowed to `ni mkazi` before shipping. **Gate-
+  number caveat holds** — offline fix, confirmation folds into the next 400-run.
+  - **eval_344 (separate item — false-premise yes_no, no amount):** *"PAYE ya asiye mkazi ni asilimia 30,
+    sivyo?"* carries **no salary**, so the compute path routes to clarification before the resident flag is
+    ever evaluated — D-PAYE-1 does **not** lift it (checked, not assumed). Needs adversarial-yes_no /
+    false-premise handling (a rate assertion should be refuted, not met with a "give me the salary" ask).
+  - **eval_326 (→ decompose/merge, with eval_318):** two employees of differing residency in one question;
+    deferred, guarded to resident-default so the resident half is not wrongly billed 15%.
+  - **eval_218 / eval_392 (→ fact/RAG queue):** both `compute=False`. eval_218 is non-resident **rental**
+    withholding (a different tax entirely); eval_392 is a yes_no answered wrongly on the fact/generate path
+    (needs the non-resident flat-15% fact retrievable). Neither is a compute-wiring bug.
 - **D-SCORER-1 (scorer leniency, MED — feeds work item 5):** number-overlap credits a PASS off an
   incidental correct sub-figure while the headline answer is wrong (the NSSF cluster + others among the
   27 false-pass candidates). Adjudicate the 27 list; this is the concrete evidence for the judge-as-
@@ -304,8 +327,9 @@ list this census produced, then design integration into `scoring.py`/the gate.
 - **#1 — generic explicit-levy money-ask guard: ✅ DONE** (commit `5d806c6`).
 - **#2 — ordinal-enumeration decomposition (`_split_ordinal_enumeration`): ✅ DONE** (commit `d86b92e`).
 - **#3 — frontier-judge / semantic scoring: 🔎 IN PROGRESS** — work item 1 (scale to 400 census) DONE
-  (2026-07-25); items 2-5 not started. Surfaced NEW defects D-NSSF-1 / D-WCF-1 / D-SCORER-1 (tracked
-  above, separate from #3).
+  (2026-07-25); work item 2 (adjudicate the 39-candidate disagreement list → confusion matrix, judge
+  92.9% accurate on 28 clean cases) DONE (2026-07-25); items 3-5 not started. Surfaced NEW defects
+  D-NSSF-1 / D-WCF-1 / D-PAYE-1 / D-SCORER-1 (tracked above, separate from #3).
 
 ## ✅ Generic explicit-levy money-ask guard — SHIPPED (2026-07-24) — router follow-up #1 of 3
 
