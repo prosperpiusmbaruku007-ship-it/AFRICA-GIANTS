@@ -187,8 +187,10 @@ questions to a frontier model — `generate()` raises `NotImplementedError` — 
 3. **Characterize the `procedure` over-strictness** (6 of the 13 demotions — the judge's known weakness).
    **✅ DONE (2026-07-25)** — see "Work item 3 — procedure/definition over-strictness characterization"
    below. One narrow deterministic fix shipped (commit `22af4ad`); everything else routed to item 5.
-4. **Resolve non-determinism** — a confirmation/second-pass rule, or the founder's escalation to a
-   larger/more stable frontier model on the identical harness (untested).
+4. **Resolve non-determinism.** ✅ DATA-GATHERING DONE (2026-07-25) — see "Work item 4" below.
+   Pinning (seed + single provider) cuts flips but leaves 2 correct↔wrong flips at scale; a subsample
+   sufficiency proof (0/780 at N=3, 0/234 at N=5 across all 39 IDs) recommends pinned-provider +
+   **majority-of-5** (robust to 4-2, 3-3→undetermined). Wiring the rule is deferred into item 5.
 5. **Integration design** — wire the judge as a CONFIRMATION layer (adjudicate `reliable=False`;
    decide how `undetermined` counts in the denominator; decide when the judge overrides regex) into
    `scoring.py`/the gate. No code exists for this.
@@ -287,6 +289,57 @@ exactly eval_037/134/217 → `qualitative_number_no_numeric_key`; eval_033 no-op
 **Scope note.** Legacy `scripts/run_eval.py` and `scripts/build_eval_notebook.py` carry their own
 divergent `extract_numbers` (missing even the `'000'`/BUG-7 fixes) — NOT the shared scorer the
 400-gate runs, so left untouched. Flagged, not fixed here.
+
+### Work item 4 — judge non-determinism: DATA-GATHERING DONE (2026-07-25); N=5 majority-vote proposed, integration deferred to item 5
+
+**Root causes characterized** (why qwen3-32b flips verdicts even at temp=0 on `judge_regression.py`):
+no seed, no provider pin (OpenRouter routes to different backend providers between calls), temp=0
+not truly deterministic under batched GPU serving, and a fragile JSON/substring parse fallback.
+
+**Option A (pin `seed=42` + single provider DeepInfra, `allow_fallbacks:false`) — tested at two scales:**
+- **14-example STAGE-1 audit set** (`scratch/judge_determinism_optionA*.py/.json`): baseline flip_rate
+  4/14, truth-match 13/14; pinned flip_rate **1/14** (75% reduction), truth-match 13/14, 0 false-
+  demotes/promotes. The one residual (eval_026) was benign (correct↔undetermined only).
+- **39 census disagreement IDs** (`scratch/judge_determinism_scale39.py/.json`, N=6 pinned,
+  DeepInfra served all 234 calls, seed=42 — run COMPLETED before a PowerShell crash; result file
+  is whole and was recovered, no re-run/duplicate spend): flip_rate **7/39 (18%)**, and crucially
+  **2 correct↔wrong (DANGEROUS) flips appear at scale** (eval_228, eval_230) that the 14-set did not
+  show. This is the session's recurring "clean at small N, fails at scale" pattern — **pinning
+  reduces but does NOT eliminate the safety-relevant flip.**
+
+**Subsample sufficiency proof (all 39 IDs, ref = majority-of-6):** every unstable case is a **5-1
+split** (7 unstable all 5-1; other 32 unanimous 6-0). Simulating all C(6,3)=20 and C(6,5)=6
+subsamples per ID: **0/780 three-draw and 0/234 five-draw subsamples disagree with the majority-of-6**
+— including both dangerous IDs (0/20 each at N=3). Structurally, a 5-1 split *cannot* flip majority-of-3
+(minority appears once, needs ≥2 to win). **So majority-of-3 is provably sufficient on all observed
+data** — not luck.
+
+**Why N=5 is proposed anyway (final design recommendation):** majority-of-3's safety is *contingent
+on instability never exceeding 5-1*. The failure boundary is a **4-2 split**: at N=3 the minority wins
+**4/20 = 20%** of subsamples (majority-of-3 flips); at N=5 it is **0%** (2 can't reach 3-of-5). No 4-2
+case appeared across 39×6 draws, but that is a thin basis to assert 4-2 never occurs in the full 400.
+**Majority-of-5** costs ~1.67× N=3 (~3¢/run at this scale), is robust to both 5-1 AND 4-2, and its only
+failure mode — a genuine **3-3** tie — is an honest judge coin-flip that should resolve to
+`undetermined` (a clean hook for item-5 integration), not silently pass/fail. Per the session's
+no-extrapolation discipline, spend the extra two draws.
+
+**Nature of the 2 dangerous flips (diagnosed — NOT a numeral misread → majority-vote IS the right fix,
+no narrower cause to target):**
+- **eval_228** (stamp duty on MoA, `brela_registration`): gold is itself a **hedge** ("commonly cited
+  TZS 10,000 but not confirmed — confirm TRA"); model gave a **pure refusal** ("outside my knowledge,
+  confirm TRA"). The 5-1 (majority=wrong) is the genuine question of whether a refusal *satisfies* a
+  hedge-gold or *under-answers* it (dropped the "10,000 commonly cited" surfacing). Census single-shot
+  drew the 1/6 "correct" outlier — direct evidence the single-shot census verdict is itself exposed.
+- **eval_230** (PAYE personal relief, `paye_compliance`): model gets **core polarity right** ("no
+  separate personal relief" — matches gold) but the elaboration is muddled; 5-1 majority=correct, the
+  1/6 outlier penalizes the muddle.
+- Both are legitimate borderline judgments on qualitative/refusal answers vs non-clean-numeric golds —
+  real epistemic borderline-ness, exactly what majority-voting is for. No systematic misread pattern.
+
+**Status:** the DATA-GATHERING half of item 4 is COMPLETE and conclusive. The remaining half — wiring
+pinned-provider + majority-of-5 (with 3-3→undetermined) into `judge_regression.py` and the item-5
+scorer integration — is deferred to **item 5** (integration design), where the judge becomes a
+confirmation layer. No code wired this turn; `judge_regression.py`/`scoring.py` unchanged.
 
 ### 🚑 NEW DEFECT surfaced by the census — NSSF employee-deduction is a rules-engine error (NOT scoring, NOT #3)
 
@@ -506,19 +559,24 @@ A judge-vs-regex disagreement is a **candidate** to adjudicate, not an automatic
 10/14, so a fraction of the 27/12 will be judge errors. The NSSF cluster, however, is unambiguous on
 direct inspection of the engine + golds.
 
-**Remaining work items 2-5 NOT started.** Start point unchanged: adjudicate the concrete disagreement
-list this census produced, then design integration into `scoring.py`/the gate.
+**Work-item status:** 1 (census) DONE, 2 (adjudication → 39-candidate confusion matrix) DONE, 3
+(procedure over-strictness) DONE, **4 (non-determinism) DATA-GATHERING DONE** (pinned + majority-of-5
+proposed; wiring deferred to 5). **Item 5 (integration design) NOT started** — this is now the single
+remaining work item: wire pinned-provider + majority-of-5 judge (3-3→undetermined) as a CONFIRMATION
+layer over `reliable=False` into `scoring.py`/the gate, using the adjudicated disagreement list.
 
 ### Router-investigation follow-up tracker (3 items)
 - **#1 — generic explicit-levy money-ask guard: ✅ DONE** (commit `5d806c6`).
 - **#2 — ordinal-enumeration decomposition (`_split_ordinal_enumeration`): ✅ DONE** (commit `d86b92e`).
 - **#3 — frontier-judge / semantic scoring: 🔎 IN PROGRESS** — work item 1 (scale to 400 census) DONE
   (2026-07-25); work item 2 (adjudicate the 39-candidate disagreement list → confusion matrix, judge
-  92.9% accurate on 28 clean cases) DONE (2026-07-25). From the adjudication defect queue: D-PAYE-1 FIXED,
-  D-VATWH-1 (VAT-withholding base) RESOLVED by primary law (2026-07-25). Items 3/5 (procedure
-  over-strictness, non-determinism, judge→scoring integration) not started; the 8 model/RAG factual-error
-  cases + eval_344 + decompose/merge remain queued. Surfaced NEW defects D-NSSF-1 / D-WCF-1 / D-PAYE-1 /
-  D-VATWH-1 / D-SCORER-1 (tracked above, separate from #3).
+  92.9% accurate on 28 clean cases) DONE (2026-07-25); work item 3 (procedure over-strictness) DONE
+  (2026-07-25); **work item 4 (non-determinism) DATA-GATHERING DONE (2026-07-25)** — pinned + majority-of-5
+  proposed (subsample proof: 0/780 flips at N=3 across 39 IDs, but N=5 chosen for 4-2 robustness), wiring
+  deferred to item 5. From the adjudication defect queue: D-PAYE-1 FIXED, D-VATWH-1 (VAT-withholding base)
+  RESOLVED by primary law. **Only work item 5 (judge→scoring integration) remains**; the 8 model/RAG
+  factual-error cases + eval_344 + decompose/merge remain queued. Surfaced NEW defects D-NSSF-1 / D-WCF-1 /
+  D-PAYE-1 / D-VATWH-1 / D-SCORER-1 (tracked above, separate from #3).
 
 ## ✅ Generic explicit-levy money-ask guard — SHIPPED (2026-07-24) — router follow-up #1 of 3
 
