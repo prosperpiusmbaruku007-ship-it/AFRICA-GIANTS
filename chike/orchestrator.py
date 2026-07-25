@@ -350,6 +350,24 @@ class Orchestrator:
         # produced, else the final text (clarification/compute-working have no raw).
         return sub.raw_text or sub.text.strip()
 
+    @staticmethod
+    def _fan_out_multi_levy(routed: list) -> list:
+        """D-DECOMP-1: expand any compute sub-question that names >=2 explicit levies into one
+        compute sub-question per levy (same text, distinct computation_type), preserving order.
+        Single-levy compute parts and all fact parts pass through unchanged, so every question
+        that did not name multiple levies produces a byte-identical `routed` list. The first
+        named levy keeps the position detect_intent already assigned; the remaining levies are
+        inserted immediately after it."""
+        out = []
+        for sq in routed:
+            if sq.kind == "compute":
+                levies = routing.all_explicit_levies(sq.text)
+                if len(levies) >= 2:
+                    out.extend(dataclasses.replace(sq, computation_type=lv) for lv in levies)
+                    continue
+            out.append(sq)
+        return out
+
     def answer(self, question: str) -> Reply:
         """Full pipeline entry point.
 
@@ -369,6 +387,14 @@ class Orchestrator:
             )
 
         routed = [self.route(part) for part in self.decompose(question)]
+        # D-DECOMP-1: a compute part that NAMES several levies ("...SDL na NSSF...") routed to
+        # only the first (detect_intent -> _explicit_levy), silently dropping the rest
+        # (eval_318 lost NSSF). Fan each such part out into one compute per named levy, sharing
+        # the part text so each runs its own extraction + rules-engine compute. Fact parts and
+        # single-levy compute parts are untouched (byte-identical). This only ADDS compute
+        # sub-answers — it never folds a compute part into the pooled fact generation, so the
+        # Phase B route-aware merge invariant is preserved.
+        routed = self._fan_out_multi_levy(routed)
         compute_parts = [sq for sq in routed if sq.kind == "compute"]
         fact_parts = [sq for sq in routed if sq.kind == "fact"]
 

@@ -335,6 +335,67 @@ def test_multi_compute_parts_are_not_collapsed():
     assert fake.call_count == 4            # (extract + format) x 2, no fact pooling
 
 
+# --- D-DECOMP-1: multi-levy compute fan-out --------------------------------
+# A compute part that NAMES several levies ("...SDL na NSSF...") used to compute only the
+# first (detect_intent -> _explicit_levy) and silently drop the rest (eval_318 lost NSSF).
+# all_explicit_levies + _fan_out_multi_levy expand it into one compute per named levy.
+
+def test_all_explicit_levies_lists_every_named_levy_in_order():
+    from chike import routing
+    assert routing.all_explicit_levies("nataka kujua SDL na NSSF") == ["sdl", "nssf"]
+    assert routing.all_explicit_levies("SDL, NSSF, PAYE na WCF kwa mfanyakazi") == [
+        "sdl", "nssf", "paye", "wcf"]
+    assert routing.all_explicit_levies("PAYE yake ni ngapi") == ["paye"]      # single
+    assert routing.all_explicit_levies("je nasajili VAT?") == []              # no compute levy
+
+
+def test_fan_out_expands_multi_levy_leaves_others_identical():
+    from chike.orchestrator import SubQuestion, Orchestrator
+    routed = [
+        SubQuestion(text="wafanyakazi 11 mishahara 5,500,000 SDL na NSSF", kind="compute",
+                    computation_type="sdl"),
+        SubQuestion(text="je nasajili VAT?", kind="fact"),
+    ]
+    fanned = Orchestrator._fan_out_multi_levy(routed)
+    # the multi-levy compute part became two computes (sdl, then nssf), in order
+    assert [(s.kind, s.computation_type) for s in fanned] == [
+        ("compute", "sdl"), ("compute", "nssf"), ("fact", None)]
+    # the fact SubQuestion is the SAME object (untouched)
+    assert fanned[2] is routed[1]
+    # a routed list with no multi-levy part is returned byte-identically (same objects)
+    single = [SubQuestion(text="SDL yangu?", kind="compute", computation_type="sdl"),
+              SubQuestion(text="VAT?", kind="fact")]
+    assert Orchestrator._fan_out_multi_levy(single) == single
+
+
+def test_multi_levy_part_computes_each_levy_plus_fact_survives():
+    # eval_318 shape: "...SDL na NSSF?" (compute, two levies) + "...VAT?" (fact). All three
+    # sub-answers must survive: SDL and NSSF each with their OWN authoritative working, and the
+    # VAT fact — NSSF is no longer dropped. Phase B invariant intact (2 compute subs + 1 fact).
+    sdl_extract = ('{"gross_monthly_payroll": {"value": 5500000, "confidence": "high"}, '
+                   '"employee_count": {"value": 11, "confidence": "high"}}')
+    nssf_extract = '{"gross_monthly_payroll": {"value": 5500000, "confidence": "high"}}'
+    fake = FakeBackend(replies=[sdl_extract, "Hesabu ya SDL:", nssf_extract, "Hesabu ya NSSF:",
+                                "Ndiyo, unatakiwa kusajili VAT."])
+    orch = Orchestrator(backend=fake, retriever=lambda q: [])
+
+    reply = orch.answer(
+        "Nina wafanyakazi 11 wenye mishahara TZS 5,500,000 — SDL na NSSF? "
+        "Je nasajili VAT kama mapato ni TZS 205,000,000?")
+
+    compute_subs = [s for s in reply.sub_answers if s.computation is not None]
+    fact_subs = [s for s in reply.sub_answers
+                 if s.computation is None and not s.needs_clarification]
+    assert [s.computation.computation for s in compute_subs] == ["sdl", "nssf"]
+    assert len(fact_subs) == 1, "the VAT fact part must survive alongside the two computes"
+    assert compute_subs[0].computation.amount == Decimal("192500")     # SDL 3.5% x 5,500,000
+    assert compute_subs[1].computation.amount == Decimal("1100000")    # NSSF 20% x 5,500,000
+    assert "TZS 192,500" in reply.text
+    assert "TZS 1,100,000" in reply.text                               # NSSF no longer dropped
+    assert "VAT" in reply.text
+    assert fake.call_count == 5            # (extract+format) x 2 computes + 1 pooled fact gen
+
+
 # --- Real-weights confirmation (Phase D Stage 1) ---------------------------
 # These drive the ACTUAL v15 adapter over the raw generate_endpoint (LocalAdapter),
 # with the AfriqueLlama tokenizer loaded so prompts are byte-identical to production

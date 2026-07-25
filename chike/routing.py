@@ -141,6 +141,19 @@ def _explicit_levy(ql: str):
     return None
 
 
+def all_explicit_levies(text: str):
+    """Every explicitly-named compute levy in the text, in canonical order (sdl, nssf,
+    paye, wcf). D-DECOMP-1: a compute sub-question can name MORE THAN ONE levy
+    ("...SDL na NSSF...", "SDL, NSSF, PAYE na WCF"); detect_intent returns only the first
+    (_explicit_levy), so the orchestrator used to compute one levy and silently drop the
+    rest (eval_318 dropped NSSF). The orchestrator fans a multi-levy compute part out into
+    one compute per levy using this list. Bounded to the four explicit levy tokens, so it
+    never over-splits ordinary prose. Pure string logic, no model call."""
+    ql = text.lower()
+    return [levy for levy, pats in _EXPLICIT.items()
+            if any(re.search(p, ql) for p in pats)]
+
+
 def _natural_levy(ql: str):
     for levy, cues in _LEVY_CUES:
         if any(c in ql for c in cues):
