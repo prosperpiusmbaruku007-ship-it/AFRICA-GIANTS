@@ -202,6 +202,20 @@ _WRONG_BASE = [
     # does not touch legitimate payroll questions.
     r"thamani ya magari", r"thamani ya gari", r"thamani ya mali", r"thamani ya vifaa",
     r"thamani ya mtambo", r"thamani ya \w+",
+    # D-WCF-2: further non-payroll bases offered for a payroll levy — same class as the
+    # D-WCF-1 asset value. A market value, rent, savings, utility cost, bank loan, or business
+    # cash flow is not gross payroll; WCF/SDL/NSSF/PAYE are computed on wages only. Full-400
+    # sweep: these 6 (eval_253/254/255/258/260/261) offered such a figure as the base, and
+    # eval_254 was mis-computed (WCF = 0.5% x 25,000,000 shop value). Two precision choices:
+    # 'gharama za umeme'/'maji' (NOT a broad 'gharama za \w+', which would hit 'gharama za
+    # mishahara'), and '\bdeni\b' (its boundary catches 'deni la benki' but NOT 'madeni' in
+    # eval_324 — that is D-WCF-3's distinct inverse problem, kept out of this additive scope).
+    r"bei ya soko",                            # eval_254 shop market value
+    r"kodi ya pango", r"\bpango\b",            # eval_258 office rent
+    r"\bakiba\b",                              # eval_260 bank savings
+    r"gharama za umeme", r"gharama za maji",   # eval_261 utility cost
+    r"\bdeni\b",                               # eval_253 bank loan
+    r"mzunguko wa fedha", r"cash ?flow",       # eval_255 business cash flow
 ]
 _ALLOWANCE = [
     r"\bposho\b", r"\bbonasi\b", r"\ballowance\b", r"\bgross\b", r"\bnet\b",

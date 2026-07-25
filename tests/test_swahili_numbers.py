@@ -106,6 +106,33 @@ def test_wrong_base_asset_value_trap():
     assert not detect_wrong_base("wafanyakazi 12 wenye mshahara 600,000, WCF ni ngapi?", "wcf")
 
 
+def test_wrong_base_d_wcf_2_further_nonpayroll_bases():
+    # D-WCF-2: market value / rent / savings / utility / bank loan / cash flow are not payroll.
+    assert detect_wrong_base(
+        "Bei ya soko ya duka langu ni TZS 25,000,000, WCF nailipa kutokana na thamani hiyo?",
+        "wcf")                                                                          # eval_254
+    assert detect_wrong_base(
+        "Nimechukua deni la benki TZS 6,700,000 kwa ajili ya biashara, hii inaongeza SDL?",
+        "sdl")                                                                          # eval_253
+    assert detect_wrong_base(
+        "Mzunguko wa fedha (cash flow) wa biashara ni TZS 9,000,000 kwa mwezi, PAYE inahesabiwaje?",
+        "paye")                                                                         # eval_255
+    assert detect_wrong_base(
+        "Nalipa kodi ya pango TZS 850,000 kwa mwezi kwa ofisi, hii inaingia kwenye hesabu ya SDL?",
+        "sdl")                                                                          # eval_258
+    assert detect_wrong_base(
+        "Nina akiba ya benki TZS 3,300,000, naweza kuitumia kulipa NSSF ya mfanyakazi mmoja?",
+        "nssf")                                                                         # eval_260
+    assert detect_wrong_base(
+        "Gharama za umeme mwezi huu ni TZS 1,200,000, je zinabadilisha kiasi cha SDL?",
+        "sdl")                                                                          # eval_261
+    # exclusion: a genuine payroll figure is never phrased as any of these bases — no false trip
+    assert not detect_wrong_base("mishahara ya wafanyakazi ni TZS 4,800,000, SDL yangu ni ngapi?", "sdl")
+    assert not detect_wrong_base("analipwa mshahara wa TZS 900,000, NSSF yake?", "nssf")
+    # '\\bdeni\\b' must NOT catch 'madeni' (eval_324 is D-WCF-3's distinct problem, caught by 'faida')
+    assert not detect_wrong_base("mishahara TZS 4,800,000 kwa watu 13, na X TZS 2,000,000, SDL?", "sdl")
+
+
 def test_allowance_ambiguity():
     assert detect_allowance_ambiguity("mshahara wa msingi laki tano na posho ya nyumba laki moja")
     assert detect_allowance_ambiguity("nampa take home laki nane")
