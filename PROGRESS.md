@@ -16,6 +16,35 @@ frontier-judge scoring approach, not more prompt/retrieval work. NEW convention:
 run is committed to `eval/results/` (see below). Next: eval_213 faithfulness defect +
 frontier-judge compute scoring + framing-aware polarity.
 
+## 🔦 STRUCTURAL GATE FINDING — the live `GATE PASSED` number does NOT apply `scorer_reliability` (2026-07-26)
+
+**Stated plainly because it changes what "the gate" has actually been measuring:** the production
+gate `kaggle/eval.py` — the file that prints `GATE PASSED` and whose `in_corpus` accuracy gates
+every product launch — scores **every** in-corpus question raw via `score_question`
+(`in_acc = in_pass / len(in_corpus)`) and **never calls `scorer_reliability` at all.** The
+`reliable=False` exclusion, the "8 exclusion categories," and the **133-question measurement gap**
+that this entire frontier-judge investigation (follow-up #3) has characterized live **only** in the
+*analysis* harness `kaggle/eval_orchestrator_combined.py` (which reports reliable-denominator scoring
+alongside raw) and in `chike/scoring.py::scorer_reliability`.
+
+**Consequence:** the 133 questions the regex scorer *itself admits it cannot verify robustly* have
+**not** been excluded from the live gate — they have been **silently included in the raw pass/fail
+number the whole time**, each scored by the mechanism that flags itself as unreliable on exactly
+those cases. So the headline gate accuracy (e.g. the v15 first-gate-pass 87.9% in-corpus) rests, for
+~a third of its denominator, on verdicts the project's own scorer marks low-confidence. This is not a
+regression introduced this session — it is the pre-existing state of the gate, surfaced while tracing
+the item-5 integration seam.
+
+**Not being "fixed" reflexively.** Making `eval.py` exclude the 133 would *change the live gate's
+denominator and its historical comparability* — a real decision, deliberately deferred (it was option
+3 of the item-5 gate-integration fork; founder chose the conservative report-alongside path). Item 5
+instead layers the judge as a **transparency overlay** in the analysis harness (raw vs reliable-denom
+vs judge-augmented, side by side) so the size and direction of this gap becomes *visible and
+quantified* in every run **without** silently moving the launch-blocking number. Whether to later
+promote the reliable-denominator (or judge-augmented) number to the actual `GATE PASSED` trigger is a
+separate, explicit call, gated on work-item-2 ground truth. **Tracked; do not silently change
+`eval.py`'s denominator without a deliberate decision + a re-baseline of the historical gate numbers.**
+
 ## v16 router architecture — ADR 0001 (see docs/decisions/0001-v16-router-and-orchestrator-architecture.md)
 
 The v16 router/orchestrator remediation is governed by **ADR 0001** (do not duplicate here — read it):
@@ -191,9 +220,71 @@ questions to a frontier model — `generate()` raises `NotImplementedError` — 
    Pinning (seed + single provider) cuts flips but leaves 2 correct↔wrong flips at scale; a subsample
    sufficiency proof (0/780 at N=3, 0/234 at N=5 across all 39 IDs) recommends pinned-provider +
    **majority-of-5** (robust to 4-2, 3-3→undetermined). Wiring the rule is deferred into item 5.
-5. **Integration design** — wire the judge as a CONFIRMATION layer (adjudicate `reliable=False`;
-   decide how `undetermined` counts in the denominator; decide when the judge overrides regex) into
-   `scoring.py`/the gate. No code exists for this.
+5. **Integration design.** ✅ BUILT (2026-07-26) — see "Work item 5" below. Judge wired as a
+   conservative, asymmetric CONFIRMATION overlay: fills the `reliable=False` gap, flags (never
+   flips) `reliable=True` disagreements, reports a third "judge-augmented" number alongside
+   raw + reliable-denom. `scoring.py` and the live `GATE PASSED` trigger unchanged (report-alongside).
+
+### Work item 5 — judge→scoring integration (BUILT, 2026-07-26) — the last piece of follow-up #3
+
+**Prior-work check first (crash-recovery discipline):** searched scratch/ + eval/results/ + repo-wide
+for a "267 reliable=True" judge run the previous session might have left — **none exists.** The only
+prior judge pass is the **census** (`eval/results/judge_regression_qwen3-32b_400.json`): single-shot
+(N=1), non-pinned, over all 385 non-refusal (252 reliable + 133 excluded), **$0.0407 / 349s @ 8
+workers / 7.17s per call / 0 errors** — the actuals the cost model below is grounded on. Reconciled
+the "267": real reliable=True is **252**; `400 − 133 = 267` conflates the 15 OOC refusals (separate
+refusal gate) into the count.
+
+**Structural finding (documented as its own headline above):** the live gate `kaggle/eval.py` **does
+not apply `scorer_reliability` at all** — it scores every in-corpus question raw, so the 133-question
+measurement gap has been *silently inside* the live gate number, not excluded. This is why item 5 is a
+**transparency overlay**, not a gate-logic change: it makes the gap visible/quantified without moving
+the launch-blocking number.
+
+**The four open design questions — resolved (founder-confirmed):**
+1. **Adjudicate the `reliable=False` gap? YES** — the judge FILLS it (regex explicitly abstained there).
+2. **Confirmation/override on `reliable=True`? Confirmation yes, override NO** — disagreements emit an
+   adjudication QUEUE (false-pass / false-fail candidates), never auto-flip. This is exactly how the
+   census's disagreements drove real engine fixes this session (D-NSSF-1/D-WCF/D-PAYE), not a per-run flip.
+3. **`undetermined` in the denominator?** Never moves a regex-scored question in/out. In the gap-fill:
+   `correct`→pass, `wrong`→fail, `undetermined`→**excluded** (+ a conservative `undet=fail` floor is
+   also reported, to bracket true accuracy). This kills the "farm undetermined to shrink the denominator"
+   exploit — the denominator stays anchored by regex.
+4. **When does the judge override regex? NEVER in the live gate number.** It only fills the gap and
+   flags disagreements. Promotion to an actual override is gated on **work-item-2 ground truth** — a
+   separate, explicit future call.
+
+**What was built (all offline-tested; no `scoring.py`/`eval.py` pass/fail change):**
+- **`chike/judge.py`** (new, eval-only leaf module: stdlib + `requests`). The item-4 design made
+  reusable — pinned provider (**DeepInfra, seed=42, `allow_fallbacks:false`**) + **majority-of-5**
+  (`majority_vote`: strict plurality, any tie→`undetermined`) — plus the item-5 pure aggregation
+  `build_confirmation_report` (the three numbers + gap-fill + disagreement queue) and `judge_gradeable`
+  (in-corpus, non-clarified; clarifications are deliberate never-guess, excluded like the census's 30).
+  **Explicitly EXEMPT from the modal_app↔eval.py dual-file-sync rule** — it is a scorer overlay (like
+  `scorer_reliability`), never on the production serving path.
+- **Wired into `kaggle/eval_orchestrator_combined.py`** as an OPTIONAL post-scoring pass (runs when
+  `OPENROUTER_API_KEY` present and `CHIKE_JUDGE!=0`; the GPU gate runs fully without it). Prints the
+  three numbers side-by-side + gap-fill + disagreement queue + provider-pin verification; persists a
+  `judge_overlay` block in the artifact. Touches no bucket score, no `scoring.py`, no `GATE PASSED`.
+- **`scripts/judge_augmented_local.py`** — local twin (no GPU) over the pinned **5239190** baseline
+  (asserts `commit=='5239190'`), the direct successor to the single-shot `judge_regression_400.py`.
+  Lets the three-number report be produced now from existing data. Writes
+  `eval/results/judge_augmented_5239190.json`.
+- **`tests/test_judge.py`** — 15 tests locking the safety invariants (5-1→majority side, 2-2-1 tie→
+  undetermined, parser ladder, pin held across 5 calls via injected fake `requests`, gap FILLED but
+  reliable=True NEVER flipped, undetermined never moves the trusted denominator, clarifications excluded).
+  **Full `tests/` suite: 257 passed** (was 242 + 15 new).
+
+**Cost/scale (grounded in census actuals):** majority-of-5 over the 307 in-corpus non-clarified rows of
+the 5239190 baseline = **~1,535 calls ≈ $0.16, ~20–25 min @ 8 workers** (full-400 Kaggle harness path
+grades ~all non-refusal ≈ 1,925 calls ≈ $0.20). **Cheap enough for a normal gate cycle** — dwarfed by
+the GPU generation step, and OpenRouter-parallel. Caveat: the DeepInfra pin serves from one provider, so
+throughput may trail the census's provider-agnostic routing.
+
+**Remaining:** run `judge_augmented_local.py` once to produce the first real three-number report from the
+pinned baseline (~16¢, founder go-ahead), then the long-held single comprehensive `kaggle/eval.py` gate
+run covering every change since 5239190. **Work item 2 (real adjudicated ground truth)** stays the
+prerequisite before any promotion of the judge-augmented number to the live `GATE PASSED` trigger.
 
 ### Work item 1 — CENSUS of the 400-question gate (DONE, 2026-07-25)
 
@@ -573,10 +664,15 @@ layer over `reliable=False` into `scoring.py`/the gate, using the adjudicated di
   92.9% accurate on 28 clean cases) DONE (2026-07-25); work item 3 (procedure over-strictness) DONE
   (2026-07-25); **work item 4 (non-determinism) DATA-GATHERING DONE (2026-07-25)** — pinned + majority-of-5
   proposed (subsample proof: 0/780 flips at N=3 across 39 IDs, but N=5 chosen for 4-2 robustness), wiring
-  deferred to item 5. From the adjudication defect queue: D-PAYE-1 FIXED, D-VATWH-1 (VAT-withholding base)
-  RESOLVED by primary law. **Only work item 5 (judge→scoring integration) remains**; the 8 model/RAG
-  factual-error cases + eval_344 + decompose/merge remain queued. Surfaced NEW defects D-NSSF-1 / D-WCF-1 /
-  D-PAYE-1 / D-VATWH-1 / D-SCORER-1 (tracked above, separate from #3).
+  deferred to item 5; **work item 5 (judge→scoring integration) BUILT (2026-07-26)** — `chike/judge.py`
+  (pinned + majority-of-5 + confirmation-overlay aggregation) wired into `eval_orchestrator_combined.py`
+  as a report-alongside overlay + `scripts/judge_augmented_local.py` local twin; `scoring.py`/`GATE PASSED`
+  unchanged; 15 new tests, `tests/` 257 passed. From the adjudication defect queue: D-PAYE-1 FIXED,
+  D-VATWH-1 (VAT-withholding base) RESOLVED by primary law. **All 5 work items of #3 now built** — remaining
+  is the live judge-overlay run + the single comprehensive gate run; work item 2 (real adjudicated ground
+  truth) is the prerequisite before promoting the judge-augmented number to the live gate. Also surfaced a
+  STRUCTURAL GATE FINDING (eval.py never applied `scorer_reliability`; see top headline). NEW defects
+  D-NSSF-1 / D-WCF-1 / D-PAYE-1 / D-VATWH-1 / D-SCORER-1 (tracked above, separate from #3).
 
 ## ✅ Generic explicit-levy money-ask guard — SHIPPED (2026-07-24) — router follow-up #1 of 3
 

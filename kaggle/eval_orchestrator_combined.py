@@ -54,12 +54,22 @@ ADDITIONS3_FILE = 'eval_questions_003.jsonl'
 # ── AUTH ────────────────────────────────────────────────────────────────────────
 try:
     import kaggle_secrets
-    hf_token = kaggle_secrets.UserSecretsClient().get_secret('AFRICA_GIANTS')
+    _sc = kaggle_secrets.UserSecretsClient()
+    hf_token = _sc.get_secret('AFRICA_GIANTS')
 except Exception as e:
     raise RuntimeError('run on Kaggle with AFRICA_GIANTS attached') from e
 assert hf_token, 'AFRICA_GIANTS empty'
 os.environ['HF_TOKEN'] = hf_token
 print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) OK')
+
+# OPENROUTER_API_KEY is OPTIONAL — only needed for the item-5 frontier-judge overlay pass.
+# Absent (or CHIKE_JUDGE=0) -> the GPU gate still runs fully, the judge pass is skipped.
+try:
+    OR_KEY = _sc.get_secret('OPENROUTER_API_KEY')
+except Exception:
+    OR_KEY = os.environ.get('OPENROUTER_API_KEY', '')
+RUN_JUDGE = bool(OR_KEY) and os.environ.get('CHIKE_JUDGE', '1') != '0'
+print(f'[auth] OPENROUTER_API_KEY {"set — judge overlay ON" if RUN_JUDGE else "absent — judge overlay SKIPPED"}')
 
 # ── CLONE chike/ ─────────────────────────────────────────────────────────────────
 _CLONE = '/kaggle/working/AFRICA-GIANTS'
@@ -84,6 +94,7 @@ from chike.model_abstraction import ModelBackend                          # noqa
 from chike.retrieval import Retriever                                     # noqa: E402
 from chike.scoring import (score_question, scorer_reliability,           # noqa: E402
                            prohibition_polarity_review)
+from chike import judge as chike_judge                                    # noqa: E402  (item-5 overlay)
 
 # ── CONFIG ───────────────────────────────────────────────────────────────────────
 _cb = str(int(time.time() * 1000))
@@ -321,6 +332,80 @@ for x in _pr_inv:
     print(f"    *** {x['id']} [{x['reason']}] gold={x['gold_polarity']} "
           f"model={x['model_polarity']} reliable={x['reliable']} pass={x['pass']}")
 
+# ── ITEM-5 FRONTIER-JUDGE OVERLAY (optional; OpenRouter, no GPU) ─────────────────
+# A CONSERVATIVE, ASYMMETRIC scorer overlay (chike.judge): pinned provider + majority-of-5
+# grades every in-corpus, non-clarified answer, then reports THREE numbers side by side —
+# raw (today's gate) vs reliable-denominator (regex, gap excluded) vs judge-augmented (the
+# reliable=False gap FILLED by the judge). Disagreements on the reliable=True set are QUEUED
+# as candidates, never auto-applied. Does NOT touch any bucket score, scoring.py, or the live
+# GATE PASSED trigger — reporting/transparency only (PROGRESS.md: the STRUCTURAL GATE FINDING
+# + the item-5 report-alongside decision). Skipped cleanly when OPENROUTER_API_KEY is absent.
+judge_overlay = None
+if RUN_JUDGE:
+    from concurrent.futures import ThreadPoolExecutor
+    gradeable = chike_judge.judge_gradeable(results)
+    print('\n' + '=' * 60)
+    print(f'ITEM-5 FRONTIER-JUDGE OVERLAY — majority-of-{chike_judge.DEFAULT_N}, '
+          f'pinned {chike_judge.DEFAULT_PROVIDER} seed={chike_judge.DEFAULT_SEED}')
+    print(f'  grading {len(gradeable)} in-corpus non-clarified answers '
+          f'(~{len(gradeable) * chike_judge.DEFAULT_N} calls) ...', flush=True)
+    _tj = time.time()
+
+    def _judge_row(r):
+        v = chike_judge.judge_majority(r['question_sw'],
+                                       r.get('correct_answer_sw', ''),
+                                       chike_judge.clean_for_judge(r['generated']),
+                                       api_key=OR_KEY)
+        return r['id'], v
+
+    jrows, jdone = {}, 0
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        for qid, v in ex.map(_judge_row, gradeable):
+            jrows[qid] = v
+            jdone += 1
+            if jdone % 40 == 0:
+                print(f'   ...{jdone}/{len(gradeable)} judged ({time.time()-_tj:.0f}s)', flush=True)
+    for r in results:                       # attach majority verdict for the aggregation
+        r['judge'] = jrows[r['id']]['verdict'] if r['id'] in jrows else None
+
+    report = chike_judge.build_confirmation_report(results)
+    provs = sorted({p for v in jrows.values() for p in v['providers']})
+    ties = [qid for qid, v in jrows.items() if v['tie']]
+    jpin = sum(v['pin'] for v in jrows.values()); jpout = sum(v['pout'] for v in jrows.values())
+    jerr = sum(v['err_count'] for v in jrows.values())
+    jcost = jpin * chike_judge.PRICE_IN + jpout * chike_judge.PRICE_OUT
+    judge_overlay = {
+        'model': chike_judge.DEFAULT_MODEL, 'n': chike_judge.DEFAULT_N,
+        'provider_pin': chike_judge.DEFAULT_PROVIDER, 'seed': chike_judge.DEFAULT_SEED,
+        'providers_served': provs, 'graded': len(gradeable),
+        'report': report, 'tie_ids': sorted(ties),
+        'per_id': {qid: {'verdict': v['verdict'], 'votes': v['votes'], 'tie': v['tie'],
+                         'justification': v['justification']} for qid, v in jrows.items()},
+        'cost': {'calls': len(gradeable) * chike_judge.DEFAULT_N, 'prompt_tokens': jpin,
+                 'completion_tokens': jpout, 'usd': round(jcost, 4)},
+        'wall_s': round(time.time() - _tj, 1), 'api_errors': jerr,
+        'caveat': ('report-alongside only: the judge fills the reliable=False gap and FLAGS '
+                   'reliable=True disagreements, but never flips a confident regex verdict '
+                   'and does not drive GATE PASSED (item-5, PROGRESS.md).')}
+    rp = report
+    print(f'  provider(s) served (want [{chike_judge.DEFAULT_PROVIDER}]): {provs}   '
+          f'ties->undetermined: {len(ties)}   api_errors: {jerr}')
+    print(f'  raw in-corpus:      {rp["raw"]["pass"]}/{rp["raw"]["total"]} = {rp["raw"]["acc"]:.1%}')
+    print(f'  reliable-denom:     {rp["reliable_denom"]["pass"]}/{rp["reliable_denom"]["total"]} '
+          f'= {rp["reliable_denom"]["acc"]:.1%}  (regex, gap excluded)')
+    print(f'  JUDGE-AUGMENTED:    {rp["judge_augmented"]["pass"]}/{rp["judge_augmented"]["total"]} '
+          f'= {rp["judge_augmented"]["acc"]:.1%}  (gap filled; undet excluded)   '
+          f'floor(undet=fail) {rp["judge_augmented"]["floor_undet_fail"]["acc"]:.1%}')
+    gf = rp['gap_fill']
+    print(f'  gap-fill: {gf["gap_n"]} reliable=False -> {gf["judge_correct"]} correct / '
+          f'{gf["judge_wrong"]} wrong / {gf["judge_undetermined"]} undetermined')
+    dq = rp['disagreement_queue']
+    print(f'  DISAGREEMENT QUEUE (candidates, NOT applied): '
+          f'{len(dq["false_pass_candidates"])} false-pass, {len(dq["false_fail_candidates"])} false-fail')
+    print(f'  [judge] ~USD {jcost:.4f}  wall {judge_overlay["wall_s"]:.0f}s')
+else:
+    print('\n[item-5 judge overlay] SKIPPED (no OPENROUTER_API_KEY or CHIKE_JUDGE=0)')
+
 by_sd = defaultdict(lambda: {'pass': 0, 'total': 0})
 for r in results:
     if r['subdomain'] != 'out_of_corpus':
@@ -353,6 +438,9 @@ out = {'mode': 'combined_orchestrator_regression', 'commit': _sha,
        # high-stakes prohibition/absolute yes-no. Does not affect any bucket score.
        'prohibition_polarity_review': prohibition_review,
        'prohibition_candidate_inversions': [x['id'] for x in _pr_inv],
+       # item-5 frontier-judge overlay (None when skipped): three side-by-side numbers +
+       # gap-fill + disagreement queue. Reporting-only; does not drive GATE PASSED.
+       'judge_overlay': judge_overlay,
        'by_subdomain': {k: dict(v) for k, v in by_sd.items()},
        'results': results}
 path = '/kaggle/working/gate_orchestrator_combined.json'
