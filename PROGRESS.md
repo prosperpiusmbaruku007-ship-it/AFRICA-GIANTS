@@ -306,6 +306,25 @@ root cause.
   so it clarifies instead of computing. This is **not** a term-addition problem (D-WCF-1/2's shape) — it needs
   logic to suppress the wrong-base veto when an explicit `mishahara/analipwa TZS <amount>` payroll figure is
   present alongside the distractor. Its own investigation; queued, do not fold into D-WCF-2.
+- **D-DECOMP-1 (completeness, MED; one HIGH false-pass): ✅ FIXED (2026-07-25, commit `4c7d5e5`).** A compute
+  part naming **several levies** ("...SDL na NSSF...", "SDL, NSSF, PAYE na WCF") routed to only the first
+  (`_explicit_levy` returns the first match), **silently dropping the rest**. eval_318 was a `pass=True`
+  false-pass concealing a dropped NSSF. Fix: `routing.all_explicit_levies(text)` + `orchestrator.
+  _fan_out_multi_levy()` expand a multi-levy compute part into one compute per named levy (shared text, own
+  extraction + engine). **Full-400 structural sweep:** exactly **6 fan out** (eval_318/319/320/321/323/327,
+  measured not assumed); the other **394 are byte-identical at object identity** (`fanned[i] is routed[i]`),
+  so single-levy output is provably unchanged. **Phase B invariant re-verified** (fan-out only adds to
+  `compute_parts`, never folds into the pooled fact gen) — both existing guards
+  (`test_mixed_compute_and_fact_keeps_two_distinct_sources`, `test_multi_compute_parts_are_not_collapsed`)
+  re-run and pass. 3 new tests; **full suite 235 passed**. Fixes eval_318 fully; advances 320/321.
+  - **Per-person / tiered / conditional aggregation (eval_319/327/323) — SEPARATE follow-on, tracked:** the
+    fan-out now computes each named levy, but these three carry a compounding need the fan-out does NOT solve —
+    per-person aggregation ("14 × 500,000"), tiered payroll ("4×700k + 6×300k"), conditional headcount ("if I
+    add 9 to reach 10"). They now surface that need per-levy instead of silently dropping a levy. Own item.
+  - **eval_326 (D-DECOMP-2 — two-employee mixed-residency split): deferred.** "Mfanyakazi ni mkazi analipwa X
+    na mwenzake si mkazi analipwa Y — PAYE ya kila mmoja?" No decompose signal fires; it's one PAYE compute
+    over two salaries → per-person ambiguity → **safe clarify**. Fixing needs splitting by employee AND applying
+    residency per split (intersects D-PAYE-1). Rare (1/400), currently safe (not a wrong number). Queued.
 - **D-PAYE-1 (user-facing, HIGH): ✅ FIXED (2026-07-25, commit `0785c7a`).** Same class as D-NSSF-1 —
   the engine already implements the flat-15% non-resident branch (`compute_paye(resident=False)`) but
   nothing upstream ever determined residency, so **every** PAYE compute defaulted to progressive resident
