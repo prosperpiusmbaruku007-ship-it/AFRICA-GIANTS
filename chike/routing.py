@@ -270,6 +270,40 @@ def nssf_party(text: str) -> str:
     return "total"
 
 
+# D-PAYE-1. Non-resident employees pay a flat 15% final withholding, NOT the resident
+# progressive bands. The engine (compute_paye) already expresses this via resident=False;
+# it was never told, so every PAYE compute got resident bands (eval_367: a non-resident on
+# TZS 5,000,000 was billed 1,328,000 progressive instead of the flat 750,000).
+# NON-RESIDENT cues are negated-residency phrases; each CONTAINS 'mkazi', so a bare 'mkazi'
+# resident test would misfire — the resident-affirmation cue is the precise 'ni mkazi'.
+_PAYE_NONRESIDENT_CUES = [
+    "asiye mkazi", "si mkazi", "sio mkazi", "wasio wakazi", "asiyekuwa mkazi",
+    "non-resident", "nonresident",
+]
+# A DISTINCT resident is also named -> a two-person, mixed-residency question that a single
+# scalar flag cannot express (eval_326: "ni mkazi ... na mwenzake si mkazi"). Guard: do NOT
+# flip; leave the default resident path and defer to the multi-part decompose/merge item.
+# Cues are the PRECISE 'ni mkazi' — a greedy 'mkazi analipwa' would match inside the
+# non-resident 'asiye mkazi analipwa' and wrongly guard eval_367 back to resident.
+_PAYE_RESIDENT_CUES = ["ni mkazi", "ni wakazi"]
+
+
+def paye_resident(text: str) -> bool:
+    """True = resident (progressive bands, the default); False = non-resident (flat 15%).
+
+    Only a negated-residency cue flips to non-resident. If a resident is ALSO named
+    (mixed-residency, two people), the scalar can't represent both — stay resident-default
+    and let the decompose/merge path handle it (eval_326). Default True is byte-identical to
+    the engine's prior single behaviour, so unmatched questions are unchanged. Pure string
+    logic, no model call."""
+    ql = text.lower()
+    if not any(cue in ql for cue in _PAYE_NONRESIDENT_CUES):
+        return True
+    if any(cue in ql for cue in _PAYE_RESIDENT_CUES):  # mixed -> defer to decomposition
+        return True
+    return False
+
+
 def is_uncomputable_payroll_amount(text: str) -> bool:
     """Never-guess (R8) fabrication guard for the FACT/RAG path.
 

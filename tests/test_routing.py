@@ -320,3 +320,42 @@ def test_nssf_party_defaults_to_total_when_unmatched():
     # No single-party or total cue -> default 'total' (byte-identical to the engine's prior
     # single behaviour, so unmatched questions are unchanged).
     assert routing.nssf_party("NSSF ya mshahara wa 800,000 ni ngapi") == "total"
+
+
+# --- PAYE residency detection (D-PAYE-1) ------------------------------------
+# paye_resident decides whether a PAYE compute uses resident progressive bands (True) or the
+# non-resident flat 15% (False). Only a negated-residency cue flips it; a mixed two-person
+# question stays resident-default and defers to decompose/merge.
+
+def test_paye_resident_nonresident_framings():
+    for q in [
+        "Mfanyakazi asiye mkazi analipwa TZS 5,000,000 kwa mwezi — PAYE yake ni ngapi?",   # eval_367
+        "PAYE ya mfanyakazi asiye mkazi ni asilimia 30, sivyo?",                            # eval_344
+        "Mtu si mkazi wa Tanzania analipwa TZS 2,000,000 — PAYE yake ni ngapi?",
+        "Wasio wakazi wanalipwaje PAYE?",
+    ]:
+        assert routing.paye_resident(q) is False, q
+
+
+def test_paye_resident_resident_framings_default_true():
+    for q in [
+        "Mshahara ni TZS 800,000 — PAYE ni ngapi?",                    # eval_395 family
+        "Mfanyakazi analipwa TZS 250,000 kwa mwezi — PAYE inayokatwa ni ngapi?",  # eval_373
+        "Meneja wangu analipwa dola 1,200 kwa mwezi, yuko kwenye kundi gani la PAYE?",  # eval_276
+    ]:
+        assert routing.paye_resident(q) is True, q
+
+
+def test_paye_resident_mixed_two_person_is_guarded_to_resident_default():
+    # eval_326: one resident + one non-resident in the same question. A scalar flag cannot
+    # express both — the 'ni mkazi' guard keeps it resident-default (no wrong 15% on the
+    # resident half), deferring the two-answer split to the multi-part decompose/merge item.
+    q = ("Mfanyakazi ni mkazi analipwa TZS 1,100,000 na mwenzake si mkazi analipwa "
+         "TZS 1,100,000 — PAYE ya kila mmoja ni ngapi?")
+    assert routing.paye_resident(q) is True
+
+
+def test_paye_resident_nonresident_cue_does_not_falsely_trip_on_bare_mkazi():
+    # 'asiye mkazi' / 'si mkazi' both CONTAIN 'mkazi'; the resident guard uses the precise
+    # 'ni mkazi', so a pure non-resident question is NOT mis-guarded back to resident.
+    assert routing.paye_resident("mfanyakazi asiye mkazi, PAYE yake?") is False

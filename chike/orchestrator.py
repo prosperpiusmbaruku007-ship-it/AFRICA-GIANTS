@@ -219,6 +219,11 @@ class Orchestrator:
         # branch above; other levies are untouched.
         if sq.computation_type == "nssf":
             inputs["party"] = routing.nssf_party(sq.text)
+        # D-PAYE-1: a non-resident employee pays flat 15%, not the resident progressive bands.
+        # Resolve residency from the question (guarded against the mixed two-person case, which
+        # defers to decompose/merge). Levy-gated like the NSSF branch; other levies untouched.
+        if sq.computation_type == "paye":
+            inputs["resident"] = routing.paye_resident(sq.text)
         result = rules_engine.compute(sq.computation_type, **inputs)
         prompt = self._build_compute_prompt(sq.text, result)
         reply = self.backend.generate(prompt, self.gen_params)
