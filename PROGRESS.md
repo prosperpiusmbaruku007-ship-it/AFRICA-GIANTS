@@ -259,12 +259,24 @@ question's irrelevant figure as the base. Also false-passed (definition-vocabula
 root cause.
 
 ### NEW TRACKED DEFECTS (rules-engine / scorer — separate from follow-up #3's five items)
-- **D-NSSF-1 (user-facing, HIGH):** `compute_nssf` returns the 20% total as `amount` even when the
-  question asks for the **employee deduction** (correct = 10% half). Needs question-sub-framing awareness
-  (employee-deduction vs employer-share vs total-remittance) in extraction/routing → select the matching
-  figure the engine already computes. Full 400 no-regression sweep on fix.
+- **D-NSSF-1 (user-facing, HIGH): ✅ FIXED (2026-07-25).** `compute_nssf` returned the 20% total as
+  `amount` even when the question asked for a single party's share. Scope was **broader than the 4 the
+  judge flagged** — the full-400 sweep found **12 single-party questions** (8 employee: eval_091/241/248/
+  274/282/296/330/386; 4 employer: eval_090/092/243/289) all wrong-headlined, plus the ~total questions
+  that were already correct. Fix (3 parts): (1) `routing.nssf_party(text) → employee|employer|total`,
+  pure-lexical with **precise total cues (never bare `jumla`)** so the gross-salary phrase "mshahara wa
+  jumla" (eval_090) does not misroute to total, and employer precedence over the incidental "mfanyakazi";
+  (2) `compute_nssf(party=…)` selects the headline `amount`/`working`, keeping the 10/10 breakdown for
+  transparency — `party='total'` string is **byte-identical to pre-fix**; (3) narrow levy-gated wiring in
+  `orchestrator._answer_compute`. **Validation:** 36 routing+engine unit tests (all 12 cases + the two
+  traps + total byte-identity); full-400 deterministic sweep = **0 party mismatches, 0 total-working
+  diffs**; **full suite 221 passed**. Known-harmless edge: eval_095 (self-employed voluntary, gold 20%)
+  detects `employee` but has no salary → clarifies before compute, so party never applies (documented, not
+  a regression). **Gate-number caveat holds** — several of the 12 already showed `pass=True` via number-
+  overlap masking, so the fix corrects the *advice*, not necessarily the gate integer; confirmation folds
+  into the next full 400-run.
 - **D-WCF-1 (content, MED):** WCF computed on a non-payroll base (vehicle value) for eval_259-style trap
-  questions; must reject irrelevant figures and require payroll.
+  questions; must reject irrelevant figures and require payroll. **Next** (own commit).
 - **D-SCORER-1 (scorer leniency, MED — feeds work item 5):** number-overlap credits a PASS off an
   incidental correct sub-figure while the headline answer is wrong (the NSSF cluster + others among the
   27 false-pass candidates). Adjudicate the 27 list; this is the concrete evidence for the judge-as-

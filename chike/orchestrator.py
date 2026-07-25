@@ -213,6 +213,12 @@ class Orchestrator:
             return SubAnswer(sub_question=sq, text=copy, needs_clarification=True)
 
         inputs = {name: extraction.fields[name].value for name in required}
+        # D-NSSF-1: NSSF asks for the employee's / employer's / total share. Resolve the party
+        # from the question so the engine returns the right headline (it used to always return
+        # the 20% total, doubling single-party answers). Levy-gated, like the applicability
+        # branch above; other levies are untouched.
+        if sq.computation_type == "nssf":
+            inputs["party"] = routing.nssf_party(sq.text)
         result = rules_engine.compute(sq.computation_type, **inputs)
         prompt = self._build_compute_prompt(sq.text, result)
         reply = self.backend.generate(prompt, self.gen_params)

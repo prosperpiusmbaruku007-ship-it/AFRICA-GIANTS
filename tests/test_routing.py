@@ -261,3 +261,62 @@ def test_explicit_guard_carve_outs_stay_on_compute():
     ) == "paye"                                                                                    # eval_265
     assert routing.detect_intent(
         "Kampuni yangu ina magari 14, WCF inahesabiwa kwa kila gari?") == "wcf"                    # eval_266
+
+
+# --- NSSF party detection (D-NSSF-1) ----------------------------------------
+# nssf_party picks which figure an NSSF amount question asks for: the employee's 10% share,
+# the employer's 10% share, or the 20% total. Precise total cues (never bare 'jumla') so the
+# gross-salary phrase "mshahara wa jumla" does not misroute a single-party question to total.
+
+def test_nssf_party_employee_framings():
+    for q in [
+        "Mfanyakazi anapata mshahara wa jumla wa TZS 800,000 — kiasi gani kinakatwa mshahara wake kwa ajili ya NSSF?",  # eval_091
+        "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi — mchango wa NSSF wa mfanyakazi ni kiasi gani?",              # eval_241
+        "Mfanyakazi mpya analipwa TZS 350,000 kwa mwezi — mchango wake wa NSSF ni kiasi gani?",                        # eval_248
+        "Mfanyakazi analipwa laki saba na nusu tu, NSSF anayokatwa ni ngapi?",                                         # eval_274
+        "Analipwa mshahara wa wastani, yaani TZS 640,000 — NSSF yake anayokatwa ni ngapi?",                            # eval_282
+        "Nataka jibu la haraka: NSSF ya mfanyakazi wa TZS 450,000, na pia deadline ya kuwasilisha",                    # eval_330
+        "Mshahara wa meneja ni TZS 2,500,000 kwa mwezi — mchango wake wa NSSF ni ngapi?",                              # eval_386
+    ]:
+        assert routing.nssf_party(q) == "employee", q
+
+
+def test_nssf_party_employer_framings():
+    for q in [
+        "Mfanyakazi ana mshahara wa jumla wa TZS 500,000 kwa mwezi — mwajiri anachangia kiasi gani NSSF kwa sehemu yake",   # eval_090
+        "Wafanyakazi 5 kila mmoja anapata TZS 400,000 kwa mwezi — mwajiri anachangia kiasi gani NSSF kwa sehemu yake peke", # eval_092
+        "Mfanyakazi analipwa TZS 1,200,000 kwa mwezi — sehemu ya mwajiri ya NSSF ni kiasi gani?",                           # eval_243
+        "Nusu ya wafanyakazi 14 wanapata TZS 620,000, nusu wanapata TZS 380,000 — sehemu ya mwajiri ya NSSF?",              # eval_289
+    ]:
+        assert routing.nssf_party(q) == "employer", q
+
+
+def test_nssf_party_total_framings():
+    for q in [
+        "Mshahara ni TZS 800,000 — jumla ya mchango wa NSSF (mwajiri pamoja na mfanyakazi) ni kiasi gani?",  # eval_242
+        "Mshahara ni TZS 500,000 — jumla ya michango yote miwili ya NSSF ni kiasi gani?",                    # eval_244
+        "Mshahara ni TZS 1,000,000 kwa mwezi — jumla ya mchango wa NSSF ni kiasi gani na umegawanywaje?",    # eval_250
+    ]:
+        assert routing.nssf_party(q) == "total", q
+
+
+def test_nssf_party_gross_salary_trap_is_employer_not_total():
+    # eval_090: "mshahara wa jumla" (= GROSS salary) contains 'jumla' but the question asks the
+    # EMPLOYER's share. A bare-'jumla' total cue would misroute this to total; precise cues +
+    # employer precedence keep it 'employer'.
+    q = ("Mfanyakazi ana mshahara wa jumla wa TZS 500,000 kwa mwezi — "
+         "mwajiri anachangia kiasi gani NSSF kwa sehemu yake")
+    assert routing.nssf_party(q) == "employer"
+
+
+def test_nssf_party_total_rate_with_named_employee_is_total():
+    # eval_314: "kiwango cha jumla cha NSSF ... kwa mfanyakazi mwenye mshahara" — names the
+    # employee (salary owner) but asks the TOTAL rate. The explicit total cue must win.
+    q = "Kiwango cha jumla cha NSSF ni asilimia ngapi kwa mfanyakazi mwenye mshahara wa TZS 950,000?"
+    assert routing.nssf_party(q) == "total"
+
+
+def test_nssf_party_defaults_to_total_when_unmatched():
+    # No single-party or total cue -> default 'total' (byte-identical to the engine's prior
+    # single behaviour, so unmatched questions are unchanged).
+    assert routing.nssf_party("NSSF ya mshahara wa 800,000 ni ngapi") == "total"

@@ -227,6 +227,49 @@ def is_applicability_question(text: str) -> bool:
     return any(cue in ql for cue in _APPLICABILITY_CUES)
 
 
+# NSSF party framing (D-NSSF-1): an NSSF amount question can ask for the EMPLOYEE's 10%
+# share, the EMPLOYER's 10% share, or the 20% TOTAL. The rules engine used to always return
+# the total, doubling the answer for single-party questions. This picks the party so
+# compute_nssf returns the right headline. Pure string logic; default 'total' preserves the
+# prior behaviour for anything unmatched.
+#
+# TOTAL cues are DELIBERATELY PRECISE — never bare 'jumla', because "mshahara wa jumla" /
+# "jumla ya mshahara" means GROSS SALARY (not total contribution) and appears in employer
+# questions (eval_090: "mshahara wa jumla ... mwajiri anachangia ... sehemu yake"). A bare
+# 'jumla' rule misroutes that to total. Employer cues WIN over an incidental 'mfanyakazi'
+# (the salary owner is named even in an employer-share question).
+_NSSF_TOTAL_CUES = [
+    "jumla ya mchango", "jumla ya michango", "michango yote", "yote miwili",
+    "mwajiri pamoja na mfanyakazi", "mwajiri na mfanyakazi", "kiwango cha jumla",
+    "jumla ya nssf", "nssf ya jumla", "umegawanywa",
+]
+_NSSF_EMPLOYER_CUES = [
+    "sehemu ya mwajiri", "mwajiri anachangia", "upande wa mwajiri", "mchango wa mwajiri",
+]
+_NSSF_EMPLOYEE_CUES = [
+    "ya mfanyakazi", "wa mfanyakazi", "anayokatwa", "kinakatwa mshahara",
+    "wake wa nssf", "nssf yake", "mchango wake",
+]
+
+
+def nssf_party(text: str) -> str:
+    """Which NSSF figure the question asks for: 'employee' | 'employer' | 'total'.
+
+    Precedence: an explicit TOTAL cue wins first (a 'jumla ya mchango' / 'mwajiri na
+    mfanyakazi' question wants the 20% total even though it names both parties); then an
+    EMPLOYER cue (wins over the incidental 'mfanyakazi' that names the salary owner); then an
+    EMPLOYEE cue. Default 'total' — byte-identical to the engine's prior single-behaviour, so
+    an unmatched question is unchanged. Pure string logic, no model call."""
+    ql = text.lower()
+    if any(cue in ql for cue in _NSSF_TOTAL_CUES):
+        return "total"
+    if any(cue in ql for cue in _NSSF_EMPLOYER_CUES):
+        return "employer"
+    if any(cue in ql for cue in _NSSF_EMPLOYEE_CUES):
+        return "employee"
+    return "total"
+
+
 def is_uncomputable_payroll_amount(text: str) -> bool:
     """Never-guess (R8) fabrication guard for the FACT/RAG path.
 
