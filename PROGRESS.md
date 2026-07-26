@@ -449,9 +449,16 @@ but is **not covered** by any D-* fix this session, and is **structurally seriou
 undermine EVERY engine fix shipped this session by showing the user a wrong number the engine got right.
 **Promoted to its own defect item — D-FIDELITY-1 (scoped below).**
 
-### 🔧 D-FIDELITY-1 — SCOPED, awaiting approval (2026-07-26) — NOT implemented
+### 🔧 D-FIDELITY-1 — IMPLEMENTED, offline-validated; GPU sweep pending (2026-07-26)
 
-Same characterize-before-fix discipline as decomposition/every structural change this session.
+Approved as scoped and SHIPPED (offline). `chike/fidelity.py::body_contradicts_working` +
+`_validate_and_clean` blanking (body → `_render` emits the working alone; `raw_text` preserved).
+Offline validation: 13/13 detector unit tests (Case A/B/B0 + the 10 benign shapes confirmed never
+firing); full suite **270 passed** (was 257); re-render over the saved afef9dd 400 fires on **exactly
+eval_367/371/378**, byte-identical on all other 397 rows. GPU full-400 confirmation sweep pending
+(founder-executed): predicts eval_367/378 flip false-pass→correct (wrong number removed), eval_371
+unchanged (already failing), no other bucket movement. Same characterize-before-fix discipline as
+decomposition/every structural change this session; original scope preserved below for the record.
 
 **Mechanism & hook point.** Compute answers merge as `body + '\n' + working` (`orchestrator._render`,
 :341), where `working` is the deterministic `ComputationResult.working` and `body` is the model's free

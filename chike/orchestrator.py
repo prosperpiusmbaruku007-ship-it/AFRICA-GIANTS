@@ -38,6 +38,7 @@ from . import decomposition
 from . import routing
 from . import classification
 from . import clarification
+from . import fidelity
 
 # --- Stage-level configuration ---------------------------------------------
 
@@ -321,14 +322,20 @@ class Orchestrator:
         fabricated follow-on turns and apply production's domain corrections
         (chike.cleaning). Clarification sentinels pass through untouched.
 
-        NOTE: the fidelity check (does the model text contradict sub.computation?)
-        is still a separate follow-up; this stage currently does stop/clean only."""
+        D-FIDELITY-1: for a compute answer, if the cleaned model body numerically contradicts
+        the authoritative sub.computation (it ignored the working and re-derived a naive figure —
+        e.g. an SDL amount below the 10-employee threshold, or progressive PAYE for a non-resident),
+        the body is BLANKED so _render emits the deterministic working alone. This upholds the
+        arithmetic-never-trusted-to-the-model invariant (ADR 0001): a body proven to contradict the
+        engine is discarded whole, not partially salvaged. raw_text keeps the pre-clean generation."""
         if sub.needs_clarification:
             return sub
         # Preserve the pre-clean generation in raw_text before overwriting text,
         # so future clean_reply changes can be rescored offline (see SubAnswer docstring).
-        return dataclasses.replace(
-            sub, text=generation_cleanup.clean_reply(sub.text), raw_text=sub.text)
+        cleaned = generation_cleanup.clean_reply(sub.text)
+        if sub.computation is not None and fidelity.body_contradicts_working(cleaned, sub.computation):
+            cleaned = ""
+        return dataclasses.replace(sub, text=cleaned, raw_text=sub.text)
 
     # --- Stage 5: merge ----------------------------------------------------
 
