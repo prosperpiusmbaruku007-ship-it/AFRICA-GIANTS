@@ -55,7 +55,25 @@ Same edge probe surfaced three fact-path fabrications where a correct locked fac
 Individually narrow RAG/fact-correction candidates; pick up via the same primary-source-verification
 process as D-VATWH-1 whenever scheduled. Not blocking; lower priority than ROUTING-GAP-PAYE.
 
-### 🔧 ROUTING-GAP-PAYE — SCOPED, awaiting approval (2026-07-26) — NOT implemented
+### ✅ ROUTING-GAP-PAYE — IMPLEMENTED, offline-validated; GPU re-run pending (2026-07-26)
+
+Approved and SHIPPED (offline). `_LEVY_CUES` PAYE extended with six everyday phrasings
+(`kodi ya serikali`, `kodi ya kipato`, `kodi ya ajira`, `kodi inayokatwa`, `kodi ya mfanyakazi`,
+`kodi yake`). Validation: routing tests **35 passed** (positives for each phrasing incl. edge_04/05;
+negatives for property tax / VAT / bare-"kodi" definition); full-400 detect_intent **0 changes**
+(exact decompose+route method); full offline suite **272 passed** (was 270). edge_04/edge_05 → `paye`.
+GPU re-run of the 20-edge pending to confirm engine returns 188,000 / 450,000 and D-FIDELITY-1 guards
+any body contradiction.
+
+**Deferred follow-up (tracked, lower priority):** generalized safety net — *"any in-scope
+payroll-context `kodi` + money-ask with no other levy → PAYE fail-safe"* — closes the whole class
+rather than the two confirmed instances, but is a real scope-widening that needs its own blast-radius
+analysis (same discipline as the natural-path fallback / explicit-levy over-capture / wrong-base term
+list, each of which required a dedicated scoped investigation). Not part of this fix.
+
+Original scope preserved below for the record.
+
+### 🔧 ROUTING-GAP-PAYE — original scope (2026-07-26)
 
 **Blast-radius sweep (`chike.routing.detect_intent` over all 400 gate questions + the 20 edge questions).**
 "Looks like a levy-amount question (payroll ctx + number + money/derive ask) but routed to FACT": **400-gate

@@ -54,7 +54,18 @@ _LEVY_CUES = [
               "mfuko wa hifadhi", "akiba ya baadaye"]),
     ("sdl", ["ufundi", "ujuzi", "mafunzo", "maendeleo ya ujuzi", "kuendeleza wafanyakazi"]),
     ("wcf", ["fidia", "bima ya ajali", "bima ya majeraha", "majeraha kazini", "ajali kazini"]),
-    ("paye", ["kodi ya mapato", "kodi ya mshahara", "mapato ya ajira"]),
+    # ROUTING-GAP-PAYE: PAYE's everyday word is 'kodi' (tax), which is in neither the original
+    # PAYE cues nor _GENERIC_LEVY, so ordinary "tax deducted from salary" phrasings mis-routed to
+    # fact and the model free-computed a wrong figure (edge_04 "kodi ya serikali inayokatwa";
+    # edge_05 "kodi yake"). These everyday phrasings are added so such questions reach paye compute
+    # (and thus the D-PAYE-1 non-resident branch + the D-FIDELITY-1 guard). They only participate in
+    # path 2, which already requires {number + payroll context + money-ask}, and the OOC classifier
+    # runs BEFORE routing (so property/capital-gains/etc. 'kodi' questions are intercepted first) —
+    # so these can only fire on an in-scope salary-context money-ask, which is PAYE. Offline sweep
+    # over 400+20: routes exactly edge_04/edge_05 -> paye, zero other routing changes on the 400.
+    ("paye", ["kodi ya mapato", "kodi ya mshahara", "mapato ya ajira",
+              "kodi ya serikali", "kodi ya kipato", "kodi ya ajira",
+              "kodi inayokatwa", "kodi ya mfanyakazi", "kodi yake"]),
 ]
 _GENERIC_LEVY = ["makato", "michango", "tozo", "malipo kwa serikali", "kulipa serikali",
                  "kwa serikali"]

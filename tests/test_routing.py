@@ -359,3 +359,34 @@ def test_paye_resident_nonresident_cue_does_not_falsely_trip_on_bare_mkazi():
     # 'asiye mkazi' / 'si mkazi' both CONTAIN 'mkazi'; the resident guard uses the precise
     # 'ni mkazi', so a pure non-resident question is NOT mis-guarded back to resident.
     assert routing.paye_resident("mfanyakazi asiye mkazi, PAYE yake?") is False
+
+
+# --- ROUTING-GAP-PAYE: everyday 'kodi' PAYE phrasings reach paye compute ---------------
+
+def test_routing_gap_paye_everyday_kodi_phrasings_route_to_paye():
+    # edge_04 / edge_05 shape: a salary-context money-ask using ordinary 'kodi' wording (not the
+    # 'PAYE' keyword, not 'kodi ya mapato'). Previously fell through to fact -> the model
+    # free-computed a wrong figure; now routes to paye compute (engine + D-FIDELITY-1 guard).
+    assert routing.detect_intent(
+        "Mfanyakazi wangu anapata TZS 1,200,000 kila mwezi, kodi ya serikali "
+        "inayokatwa ni ngapi?") == "paye"
+    assert routing.detect_intent(
+        "Mfanyakazi wangu si mkazi, analipwa TZS 3,000,000 kwa mwezi, kodi yake "
+        "ni kiasi gani?") == "paye"
+    # each added everyday phrasing, in a minimal salary-context money-ask
+    for cue in ("kodi ya kipato", "kodi ya ajira", "kodi inayokatwa", "kodi ya mfanyakazi"):
+        q = f"Mfanyakazi analipwa TZS 900,000, {cue} ni kiasi gani?"
+        assert routing.detect_intent(q) == "paye", q
+
+
+def test_routing_gap_paye_does_not_over_capture_property_or_vat_or_bare_kodi():
+    # Property tax on a salary-context money-ask is OUT OF CORPUS (the OOC classifier intercepts
+    # it before routing) — and at the routing layer it must NOT be pulled into PAYE compute.
+    assert routing.detect_intent(
+        "Mshahara wangu ni TZS 900,000, kodi ya majengo (property tax) ninayolipa "
+        "ni ngapi?") != "paye"
+    # VAT is a named non-PAYE tax; a 'kodi ya VAT' money-ask must not route to paye.
+    assert routing.detect_intent(
+        "Mfanyakazi analipwa TZS 900,000, kodi ya VAT ni kiasi gani?") != "paye"
+    # A bare-'kodi' definition question (no salary amount, a rate/definition ask) stays fact.
+    assert routing.detect_intent("Kodi ya mshahara ni asilimia ngapi?") == "none"
