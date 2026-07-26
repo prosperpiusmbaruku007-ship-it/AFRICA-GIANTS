@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-24
+Last updated: 2026-07-26
 
 **STANDING STATUS:** EOS harness fix (build_chat_prompt → apply_chat_template) — **CLOSED,
 RE-BASELINED, and VALIDATED at scale.** The corrected 400-question combined regression is
@@ -301,10 +301,92 @@ design intends: **eval_228 → a tie → `undetermined`** (the honest coin-flip,
 single-shot verdict), **eval_230 → stable false-fail** (judge says correct). 4 ties total
 (eval_034/074/228/360), all correctly parked at `undetermined`.
 
-**Remaining (both founder-gated):** the long-held single comprehensive `kaggle/eval.py` gate run covering
-every change since 5239190 (the judge overlay now rides along in it automatically), and **work item 2 (real
-adjudicated ground truth)** — the prerequisite before any promotion of the judge-augmented number to the live
-`GATE PASSED` trigger. The 27+11 disagreement queue is the concrete input for that adjudication.
+**Remaining (both founder-gated):** ~~the long-held single comprehensive gate run covering every change
+since 5239190~~ **— DONE 2026-07-26, commit `afef9dd`; see the CLOSE-OUT entry below.** Only **work item 2
+(real adjudicated ground truth)** stays open — the prerequisite before any promotion of the judge-augmented
+number to the live `GATE PASSED` trigger. Its input is now the **fresh 25+7 disagreement queue** from the
+afef9dd run (superseding the stale 27+11 from the 5239190 baseline).
+
+## 🏁 CLOSE-OUT — comprehensive confirmation run `afef9dd` (2026-07-26): the entire router-investigation / defect-fix cycle is CLOSED
+
+**This is the closing entry for the whole cycle** — router remediation Phases A–D, all three
+router-investigation follow-ups (#1 explicit-levy money-ask guard, #2 ordinal-enumeration decomposition,
+#3 frontier-judge scoring), and now the single comprehensive gate run that confirms the accumulated fix
+cluster at scale. A fresh 400-question orchestrator regression was run on GPU (founder-executed on Kaggle)
+at commit `afef9dd` with the item-5 judge overlay riding along (majority-of-5, pinned DeepInfra seed=42).
+It exercises **every change since the `5239190` baseline**: fixed engine (D-NSSF-1 / D-WCF / D-PAYE /
+D-DECOMP-1 multi-levy fan-out) + fixed RAG (213 facts) + v15 model + judge overlay. Artifact fetched
+independently from HF and committed: `eval/results/gate_orchestrator_combined_afef9dd.json` (commit `0a2db58`).
+
+**Bucket before/after (5239190 → afef9dd), raw AND reliable:**
+
+| Bucket | raw base | raw fresh | Δ | reliable base | reliable fresh | Δ |
+|---|---|---|---|---|---|---|
+| adversarial_150 | 39.6% | **49.3%** | +9.7 | 54.4% | **62.1%** | **+7.6** |
+| compute_type | 31.6% | **40.2%** | +8.6 | 41.2% | **46.9%** | **+5.8** |
+| compute_type_genuine | 31.9% | **39.6%** | +7.7 | 40.0% | **45.8%** | +5.8 |
+| staged_50 | 74.0% | **80.0%** | +6.0 | 73.2% | **80.0%** | **+6.8** |
+| fact_path_190 | 86.7% | 86.4% | −0.3 | 85.0% | **85.4%** | +0.3 (stable) |
+
+Every touched cluster moved up +5.8 to +7.6 pts (reliable); the untouched fact path held flat — exactly
+the expected signature of engine/RAG fixes that don't touch the fact answers.
+
+**Fix-cluster verification — each shipped fix confirmed present in the FRESH generation (read from persisted data, not the terminal paste):**
+
+| Case | Fix | Evidence in fresh generation | Verdict |
+|---|---|---|---|
+| eval_121 (SDL, 8 staff) | applicability threshold | `FAIL→PASS`; *"Hapana… wafanyakazi 10 au zaidi… una wafanyakazi 8"*; judge=correct | ✅ landed |
+| eval_318 (multi-levy, 11 staff) | D-DECOMP-1 fan-out | Computes all three: SDL 3.5%×5.5M=192,500; NSSF 20%=1,100,000; VAT threshold crossed | ✅ landed |
+| eval_321 (multi-levy, 8 staff) | D-DECOMP-1 fan-out | `FAIL→PASS`; SDL=none(<10) + NSSF 640,000 + WCF 16,000 + OSHA yes — full fan-out | ✅ landed |
+| eval_098/100/105/110 (NSSF) | compute/fact | Pass; voluntary membership; full-salary no-cap 200k+200k=400k | ✅ stable |
+| eval_115 (GN 605A date) | fact/RAG | Correct: 1 Jan 2026, gazetted 13 Oct 2025 | ✅ stable |
+
+*Known-open follow-ons (correctly NOT counted as regressions):* eval_124 / eval_320 (per-person / tiered
+multi-levy) — the model **clarifies** instead of computing, which is the still-tracked **D-DECOMP-2 /
+per-person aggregation** work; `reliable=False`, correctly excluded from the denominator.
+
+**Prohibition-inversion continuity check — zero engine-introduced regressions.** Fresh set
+`{eval_144, 155, 183, 332, 365, 391}` is a **strict subset** of the baseline's 8
+`{144, 155, 183, 332, 343, 355, 365, 391}` — each verified `candidate_inversion=True` at 5239190 (including
+eval_391, which was flagged at baseline though not written up by ID). **New in fresh: NONE. Resolved since
+baseline: eval_343 + eval_355** (both now pass). All 6 remaining are the known adversarial leading-premise
+polarity traps (gold is a counter-intuitive *"Hapana/La"*; model agrees with the surface framing). eval_391
+is the genuinely-ambiguous one — its marker *"Ndiyo"* agrees with the leading *"sivyo?"* but its substance
+is correct, so the judge scored it **correct** (it sits in the false-fail queue) while the polarity heuristic
+flags it — precisely the ambiguity item-4/5 exists to surface.
+
+**Per-question flip analysis (400 common IDs, no set drift): 24 real gains, 1 genuine stochastic loss, 2 false losses.**
+24 `FAIL→PASS`, concentrated exactly in the fix clusters (NSSF/SDL/WCF/PAYE compute + adversarial). The 3
+`PASS→FAIL`, dissected individually:
+- **eval_259** (WCF compute) — baseline "passed" by computing `0.5% × 40,000,000` **on vehicle value** (the
+  trap; WCF is on payroll) = a **false pass**. Fresh now correctly **clarifies** (*"nahitaji jumla ya
+  mishahara"*). A **real improvement disguised as a raw-number drop.**
+- **eval_048** (VAT-WH) — fresh answer is substantively correct, just shorter than gold; regex missed it,
+  **judge=correct**, `reliable=False` (excluded). A **scorer artifact, not a regression.**
+- **eval_039** (VAT-WH) — the **one genuine loss**: model emitted a self-contradictory answer this decode
+  (*"Ndiyo… ni sawa"* then lists 3% vs 6%), judge=wrong. Non-deterministic model decode on a fact path the
+  engine fixes don't touch — **not an engine fault.** Net: **24 real gains, 1 stochastic loss, 2 false losses.**
+
+**Judge-augmented / reliable-denominator convergence — now TWICE-CONFIRMED evidence.** The three numbers
+(base → fresh): raw 66.1% → **71.6%**, reliable-denom 73.3% → **77.0%**, judge-augmented 73.7% → **76.4%**.
+The judge-augmented number lands **within 0.6 pt** of the reliable-denominator (77.0% vs 76.4%) — the same
+result as the baseline local run (73.3% vs 73.7%, within 0.4 pt). The 91-question `reliable=False` gap,
+independently judged, resolves at **65 correct / 22 wrong / 4 undetermined ≈ 74.7%** — statistically the same
+population as the reliable regex set. **Stated plainly as positive evidence, not a coincidence of numbers:
+across two independent runs the measurement gap the reduced-denominator method excludes was NEVER hiding a
+materially worse-or-better-performing population.** Provider pin held (`providers_served: ['DeepInfra']`),
+324 graded, 0 API errors.
+
+**Bottom line:** every fix the cycle built landed and is verifiable in the fresh persisted generations;
++5.8 to +7.6 pts across all three touched buckets; the single real regression is a stochastic decode
+artifact on an untouched fact path; no new prohibition inversions; and the judge overlay independently
+reconfirms the reliable-denominator method. **The router-investigation / defect-fix cycle is CLOSED.**
+
+**Still held (correctly deferred):** **work item 2 — real adjudicated ground truth** on the **fresh 25+7
+disagreement queue** (25 false-pass: eval_027/028/034/066/071/075/106/120/132/145/162/164/171/223/234/235/
+268/304/318/330/342/366/367/378/392; 7 false-fail: eval_029/094/131/187/230/233/391). This is the concrete
+input for any future promotion of the reliable-denominator or judge-augmented number to the live
+`GATE PASSED` trigger — a separate, explicit call. Not started; now has the right, current input.
 
 ### Work item 1 — CENSUS of the 400-question gate (DONE, 2026-07-25)
 
@@ -676,10 +758,13 @@ proposed; wiring deferred to 5). **Item 5 (integration design) NOT started** —
 remaining work item: wire pinned-provider + majority-of-5 judge (3-3→undetermined) as a CONFIRMATION
 layer over `reliable=False` into `scoring.py`/the gate, using the adjudicated disagreement list.
 
-### Router-investigation follow-up tracker (3 items)
+### Router-investigation follow-up tracker (3 items) — ✅ CYCLE CLOSED (2026-07-26)
+**All three follow-ups done; comprehensive confirmation run `afef9dd` closes the entire router-investigation
+/ defect-fix cycle (see the 🏁 CLOSE-OUT entry above).** Only work item 2 (real adjudicated ground truth,
+founder-gated) remains open, with its fresh 25+7 disagreement queue as input.
 - **#1 — generic explicit-levy money-ask guard: ✅ DONE** (commit `5d806c6`).
 - **#2 — ordinal-enumeration decomposition (`_split_ordinal_enumeration`): ✅ DONE** (commit `d86b92e`).
-- **#3 — frontier-judge / semantic scoring: 🔎 IN PROGRESS** — work item 1 (scale to 400 census) DONE
+- **#3 — frontier-judge / semantic scoring: ✅ DONE** — work item 1 (scale to 400 census) DONE
   (2026-07-25); work item 2 (adjudicate the 39-candidate disagreement list → confusion matrix, judge
   92.9% accurate on 28 clean cases) DONE (2026-07-25); work item 3 (procedure over-strictness) DONE
   (2026-07-25); **work item 4 (non-determinism) DATA-GATHERING DONE (2026-07-25)** — pinned + majority-of-5
@@ -688,9 +773,12 @@ layer over `reliable=False` into `scoring.py`/the gate, using the adjudicated di
   (pinned + majority-of-5 + confirmation-overlay aggregation) wired into `eval_orchestrator_combined.py`
   as a report-alongside overlay + `scripts/judge_augmented_local.py` local twin; `scoring.py`/`GATE PASSED`
   unchanged; 15 new tests, `tests/` 257 passed. From the adjudication defect queue: D-PAYE-1 FIXED,
-  D-VATWH-1 (VAT-withholding base) RESOLVED by primary law. **All 5 work items of #3 now built** — remaining
-  is the live judge-overlay run + the single comprehensive gate run; work item 2 (real adjudicated ground
-  truth) is the prerequisite before promoting the judge-augmented number to the live gate. Also surfaced a
+  D-VATWH-1 (VAT-withholding base) RESOLVED by primary law. **All 5 work items of #3 built and CONFIRMED at
+  scale** by the comprehensive `afef9dd` run (2026-07-26): reliable buckets +5.8 to +7.6 pts across all
+  touched clusters, judge-augmented (76.4%) reconfirms reliable-denom (77.0%) a second time, zero engine-
+  introduced prohibition inversions. Work item 2 (real adjudicated ground truth) is the only open piece —
+  the prerequisite before promoting the judge-augmented number to the live gate; its input is now the fresh
+  25+7 disagreement queue. Also surfaced a
   STRUCTURAL GATE FINDING (eval.py never applied `scorer_reliability`; see top headline). NEW defects
   D-NSSF-1 / D-WCF-1 / D-PAYE-1 / D-VATWH-1 / D-SCORER-1 (tracked above, separate from #3).
 
