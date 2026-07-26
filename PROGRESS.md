@@ -2,6 +2,15 @@
 
 Last updated: 2026-07-26
 
+**🏁 CYCLE FULLY CLOSED (2026-07-26):** the entire router-investigation + defect-fix cycle is now
+closed end-to-end with real GPU confirmation. Follow-up #3's last two threads landed this session:
+**work item 2** (round-2 adjudication of the afef9dd 25+7 queue — judge 23/24 = 95.8%, zero new engine
+defects, commit `f195c23`) and **D-FIDELITY-1** (model body contradicting the deterministic compute
+working — shipped `75421f0`, GPU-confirmed: 3 target rows corrected + judge 5/5, single fully-explained
+eval_378 scorer-artifact flip, zero collateral). Two non-blocking follow-ups logged for later
+(SCORER-SEMANTICS-1: credit "TZS 0"/not-applicable answers; JUDGE-NONDET: eval_397). See the
+D-FIDELITY-1 and work-item-2-round-2 entries below.
+
 **STANDING STATUS:** EOS harness fix (build_chat_prompt → apply_chat_template) — **CLOSED,
 RE-BASELINED, and VALIDATED at scale.** The corrected 400-question combined regression is
 IN (commit e9cc68a, persisted to `eval/results/gate_orchestrator_combined_e9cc68a.json`) —
@@ -449,16 +458,59 @@ but is **not covered** by any D-* fix this session, and is **structurally seriou
 undermine EVERY engine fix shipped this session by showing the user a wrong number the engine got right.
 **Promoted to its own defect item — D-FIDELITY-1 (scoped below).**
 
-### 🔧 D-FIDELITY-1 — IMPLEMENTED, offline-validated; GPU sweep pending (2026-07-26)
+### ✅ D-FIDELITY-1 — SHIPPED and GPU-CONFIRMED (2026-07-26) — commit 75421f0
 
-Approved as scoped and SHIPPED (offline). `chike/fidelity.py::body_contradicts_working` +
+Approved as scoped and SHIPPED. `chike/fidelity.py::body_contradicts_working` +
 `_validate_and_clean` blanking (body → `_render` emits the working alone; `raw_text` preserved).
 Offline validation: 13/13 detector unit tests (Case A/B/B0 + the 10 benign shapes confirmed never
-firing); full suite **270 passed** (was 257); re-render over the saved afef9dd 400 fires on **exactly
-eval_367/371/378**, byte-identical on all other 397 rows. GPU full-400 confirmation sweep pending
-(founder-executed): predicts eval_367/378 flip false-pass→correct (wrong number removed), eval_371
-unchanged (already failing), no other bucket movement. Same characterize-before-fix discipline as
-decomposition/every structural change this session; original scope preserved below for the record.
+firing); full suite **270 passed** (was 257); re-render over the saved afef9dd 400 fired on **exactly
+eval_367/371/378**, byte-identical on all other 397 rows.
+
+**GPU confirmation run DONE — commit `75421f0`, artifact `eval/results/gate_orchestrator_combined_75421f0.json`**
+(fetched independently from HF adapter-v15, verified `commit==75421f0`, 400 rows, 0 empty/ERROR;
+judge overlay `providers_served=['DeepInfra']`, seed=42, N=5, 324 graded, **0 API errors**).
+
+**The three target rows — all exactly as scoped (GEN = working alone; RAW retains the wrong body; judge 5/5 correct):**
+| row | generated (rendered) | raw_generated (preserved) | pass | judge |
+|---|---|---|---|---|
+| eval_378 | `SDL haihusiki: …wafanyakazi 8 (chini ya 10)…` (no 175,000) | `SDL = 5,000,000 × 3.5% = 175,000` | True→**False** | correct 5/5 |
+| eval_367 | `PAYE (asiye mkazi) = 15% × 5,000,000 = 750,000…` (no 264,000) | `PAYE = 264,000 (15% × 1,760,000)` | **True** (stays) | correct 5/5 |
+| eval_371 | `SDL haihusiki: …wafanyakazi 7 (chini ya 10)…` (no 98,000) | `SDL = 2,800,000 × 3.5% = 98,000` | False (stays) | correct 5/5 |
+
+**Only ONE pass/fail flip in all 400: eval_378 (PASS→FAIL).** Zero other flips; `fact_path_190` and
+`staged_50` pass counts byte-identical; zero stochastic decode noise this run.
+
+**All bucket movement is eval_378 alone, double-counted.** It is in both bucket C (`compute_type` =
+any `compute==True`) and bucket D (`adversarial_150` = `source=='additions_003'`), reliable=True,
+genuine — so its single flip drops: compute_type 41→40 (raw) / 23→22 (rel); compute_type_genuine
+40→39 / 22→21; adversarial_150 71→70 (raw) / 54→53 (rel). Nothing else moved.
+
+**The literal "v-next ≥ afef9dd per bucket" criterion technically did NOT hold** (compute_type +
+adversarial each −1 row, raw and reliable). **The reason is fully understood and is itself evidence of
+the fix working, not a regression:** eval_378 went from a false-PASS (regex credited the wrong 175,000)
+to a **regex false-FAIL** — the corrected `SDL haihusiki / TZS 0` answer has no numeric key the
+number-scorer can match to gold "TZS 0", so regex drops it while the answer is now CORRECT (judge 5/5).
+Judge-augmented accuracy flat (76.4%→76.4%); raw/reliable each −1 = eval_378 only. This is exactly the
+measurement gap the judge overlay exists to catch — and it caught it.
+
+**Disagreement queue 25+7 → 24+8, fully reconciled:** FP −eval_367 (now regex-pass AND judge-correct →
+agree, leaves queue), −eval_378 (→FAIL, migrates to FF), +eval_397; FF +eval_378. eval_371 stays out of
+the reliable-only queue (reliable=False → gap-fill, judge=correct). **Zero collateral, zero detector
+false-positives:** only the 3 intended bodies were blanked.
+
+**Two follow-ups logged (not urgent, not blocking — tracked, not patched reactively):**
+- **SCORER-SEMANTICS-1 — number-scorer should credit "not-applicable / TZS 0" answers.** Concrete
+  motivating case: eval_378 gold "TZS 0" is a correct answer that the number-scorer cannot credit when
+  the reply says "SDL haihusiki / chini ya 10" (no matching numeric key). Same class as the item-3/item-5
+  scorer-semantics gaps; the honest fix is either teach the scorer that gold "TZS 0" is satisfied by a
+  not-applicable/zero verdict, or let the judge-augmented number carry it. Explicit, separate decision.
+- **JUDGE-NONDET data point — eval_397.** `generated` byte-identical afef9dd↔75421f0 (compute=False, the
+  guard never touches it), pass=True both runs; it entered the FP queue only because the judge's
+  majority-of-5 verdict shifted **undetermined→wrong** between runs. Pure item-4 judge non-determinism,
+  NOT a D-FIDELITY-1 side-effect — logged for whenever judge non-determinism work resumes.
+
+Same characterize-before-fix discipline as decomposition/every structural change this session; original
+scope preserved below for the record.
 
 **Mechanism & hook point.** Compute answers merge as `body + '\n' + working` (`orchestrator._render`,
 :341), where `working` is the deterministic `ComputationResult.working` and `body` is the model's free
