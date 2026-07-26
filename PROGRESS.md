@@ -281,10 +281,30 @@ grades ~all non-refusal ≈ 1,925 calls ≈ $0.20). **Cheap enough for a normal 
 the GPU generation step, and OpenRouter-parallel. Caveat: the DeepInfra pin serves from one provider, so
 throughput may trail the census's provider-agnostic routing.
 
-**Remaining:** run `judge_augmented_local.py` once to produce the first real three-number report from the
-pinned baseline (~16¢, founder go-ahead), then the long-held single comprehensive `kaggle/eval.py` gate
-run covering every change since 5239190. **Work item 2 (real adjudicated ground truth)** stays the
-prerequisite before any promotion of the judge-augmented number to the live `GATE PASSED` trigger.
+**FIRST LIVE RUN — DONE (2026-07-26, `eval/results/judge_augmented_5239190.json`).** Ran
+`judge_augmented_local.py` over the pinned 5239190 baseline: 307 in-corpus non-clarified answers ×
+majority-of-5, **provider pin held (DeepInfra only), 0 API errors, $0.165, 933s (~15.5 min)** — cost/latency
+match the census-grounded projection. **The three numbers:**
+- **raw in-corpus 254/384 = 66.1%** (what the live `eval.py` gate computes)
+- **reliable-denom 184/251 = 73.3%** (regex, gap excluded)
+- **judge-augmented 247/335 = 73.7%** (gap filled; undet excluded) — floor(undet=fail) 73.3%
+
+**Headline finding: the judge-augmented number CONFIRMS the reliable-denominator (73.7% ≈ 73.3%) rather
+than diverging.** The 86-question `reliable=False` gap, independently adjudicated by the judge (63 correct /
+21 wrong / 2 undetermined), performs about the same as the reliable subset — so the honest reduced-denominator
+method (adopted 2026-07-14) was **not** concealing a materially different-performing third of the gate. Raw
+(66.1%) sits ~7 points below both because it scores ~49 deliberate clarifications as fails and mis-scores the
+unreliable gap — quantifying how much the live raw gate *understates* true in-corpus accuracy. **Disagreement
+queue: 27 false-pass + 11 false-fail candidates** (vs the census single-shot's 27+12); majority-of-5 shifted
+~5 IDs each way — the expected stabilisation. Notably the two item-4 dangerous-flip cases land exactly as the
+design intends: **eval_228 → a tie → `undetermined`** (the honest coin-flip, not the census's unlucky
+single-shot verdict), **eval_230 → stable false-fail** (judge says correct). 4 ties total
+(eval_034/074/228/360), all correctly parked at `undetermined`.
+
+**Remaining (both founder-gated):** the long-held single comprehensive `kaggle/eval.py` gate run covering
+every change since 5239190 (the judge overlay now rides along in it automatically), and **work item 2 (real
+adjudicated ground truth)** — the prerequisite before any promotion of the judge-augmented number to the live
+`GATE PASSED` trigger. The 27+11 disagreement queue is the concrete input for that adjudication.
 
 ### Work item 1 — CENSUS of the 400-question gate (DONE, 2026-07-25)
 

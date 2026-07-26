@@ -1,0 +1,2729 @@
+{
+  "harness": "judge_augmented_local",
+  "baseline_commit": "5239190",
+  "model": "qwen/qwen3-32b",
+  "n": 5,
+  "provider_pin": "DeepInfra",
+  "seed": 42,
+  "providers_served": [
+    "DeepInfra"
+  ],
+  "graded": 307,
+  "report": {
+    "raw": {
+      "pass": 254,
+      "total": 384,
+      "acc": 0.6614583333333334
+    },
+    "reliable_denom": {
+      "pass": 184,
+      "total": 251,
+      "acc": 0.7330677290836654
+    },
+    "judge_augmented": {
+      "pass": 247,
+      "total": 335,
+      "acc": 0.7373134328358208,
+      "floor_undet_fail": {
+        "pass": 247,
+        "total": 337,
+        "acc": 0.7329376854599406
+      }
+    },
+    "gap_fill": {
+      "gap_n": 86,
+      "judge_correct": 63,
+      "judge_wrong": 21,
+      "judge_undetermined": 2,
+      "correct_ids": [
+        "eval_006",
+        "eval_007",
+        "eval_008",
+        "eval_009",
+        "eval_011",
+        "eval_012",
+        "eval_025",
+        "eval_033",
+        "eval_035",
+        "eval_036",
+        "eval_038",
+        "eval_050",
+        "eval_051",
+        "eval_052",
+        "eval_054",
+        "eval_063",
+        "eval_068",
+        "eval_070",
+        "eval_073",
+        "eval_088",
+        "eval_093",
+        "eval_109",
+        "eval_110",
+        "eval_115",
+        "eval_117",
+        "eval_133",
+        "eval_135",
+        "eval_136",
+        "eval_138",
+        "eval_140",
+        "eval_141",
+        "eval_142",
+        "eval_154",
+        "eval_168",
+        "eval_182",
+        "eval_188",
+        "eval_189",
+        "eval_190",
+        "eval_220",
+        "eval_244",
+        "eval_245",
+        "eval_246",
+        "eval_247",
+        "eval_248",
+        "eval_249",
+        "eval_250",
+        "eval_328",
+        "eval_331",
+        "eval_333",
+        "eval_352",
+        "eval_356",
+        "eval_357",
+        "eval_358",
+        "eval_359",
+        "eval_361",
+        "eval_364",
+        "eval_365",
+        "eval_369",
+        "eval_372",
+        "eval_388",
+        "eval_395",
+        "eval_396",
+        "eval_400"
+      ],
+      "wrong_ids": [
+        "eval_005",
+        "eval_010",
+        "eval_018",
+        "eval_053",
+        "eval_075",
+        "eval_089",
+        "eval_092",
+        "eval_101",
+        "eval_114",
+        "eval_143",
+        "eval_144",
+        "eval_166",
+        "eval_169",
+        "eval_176",
+        "eval_178",
+        "eval_216",
+        "eval_301",
+        "eval_302",
+        "eval_321",
+        "eval_371",
+        "eval_375"
+      ],
+      "undetermined_ids": [
+        "eval_049",
+        "eval_360"
+      ]
+    },
+    "disagreement_queue": {
+      "false_pass_candidates": [
+        "eval_021",
+        "eval_071",
+        "eval_084",
+        "eval_091",
+        "eval_106",
+        "eval_120",
+        "eval_123",
+        "eval_132",
+        "eval_145",
+        "eval_162",
+        "eval_164",
+        "eval_171",
+        "eval_223",
+        "eval_234",
+        "eval_235",
+        "eval_259",
+        "eval_274",
+        "eval_282",
+        "eval_304",
+        "eval_315",
+        "eval_318",
+        "eval_347",
+        "eval_354",
+        "eval_366",
+        "eval_367",
+        "eval_378",
+        "eval_392"
+      ],
+      "false_fail_candidates": [
+        "eval_029",
+        "eval_094",
+        "eval_131",
+        "eval_134",
+        "eval_187",
+        "eval_217",
+        "eval_224",
+        "eval_230",
+        "eval_233",
+        "eval_390",
+        "eval_391"
+      ],
+      "note": "CANDIDATES to adjudicate (work item 2), NOT corrections. The judge is not ground truth; it never auto-flips a reliable=True regex verdict."
+    }
+  },
+  "tie_ids": [
+    "eval_034",
+    "eval_074",
+    "eval_228",
+    "eval_360"
+  ],
+  "per_id": {
+    "eval_001": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the standard VAT rate is 18% and explicitly confirms the absence of a 14% rate, aligning with the reference answer's key factual claims."
+    },
+    "eval_002": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the TZS 200 million threshold for mandatory VAT registration over 12 months, matching the reference answer's key figure and requirement."
+    },
+    "eval_003": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the TZS 100,000,000 threshold for 6-month VAT registration, matching the reference's key figure and requirement."
+    },
+    "eval_004": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 16% VAT rate effective from 1 September 2025 and includes the TRA verification instruction, aligning with the reference answer's key factual claim."
+    },
+    "eval_005": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "Generated answer incorrectly states the 20th of the same month instead of the following month as the deadline for VAT returns."
+    },
+    "eval_006": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates 8 months (25M × 8 = 200M) and mentions verifying with TRA, matching the reference answer's key facts and requirements."
+    },
+    "eval_007": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that after 5 months (20M × 5 = 100M), the VAT registration threshold is met, matching the reference answer's key calculation and conclusion."
+    },
+    "eval_008": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates the VAT payable to TRA by subtracting input VAT from output VAT (950,000 − 320,000 = 630,000) and aligns with the reference answer's key figures and logic."
+    },
+    "eval_009": {
+      "verdict": "correct",
+      "votes": {
+        "undetermined": 1,
+        "correct": 4
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 2% difference between the standard 18% VAT rate and the new 16% B2C digital rate, and accurately mentions the September 2025 implementation date as per the 20"
+    },
+    "eval_010": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 4,
+        "correct": 1
+      },
+      "tie": false,
+      "justification": "The generated answer fails to specify the exact required additional revenue (TZS 20M) and omits the 6-month threshold detail, though it correctly identifies the 200M threshold."
+    },
+    "eval_011": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "Generated answer correctly identifies Finance Act 2025 and July 1, 2025 start date matching reference answer's key facts despite omitting rate details."
+    },
+    "eval_012": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the effective date of 1 September 2025 and references the 2025 Tax Act, aligning with the reference answer's key factual claim despite omitting the pending regula"
+    },
+    "eval_013": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms voluntary VAT registration is allowed, mentions benefits like VAT claims on purchases, and directs to TRA, aligning with the reference answer."
+    },
+    "eval_014": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms that a registered lawyer (advocate) must register for VAT regardless of income, aligning with the reference answer's key points about mandatory VAT registration"
+    },
+    "eval_015": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that exempt services are not subject to VAT at all and cannot claim input VAT credits, aligning with the reference's clarification that exempt supplies disallow s"
+    },
+    "eval_016": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that only VAT-registered businesses can charge VAT, aligning with the reference answer's key points about legal restrictions and penalties for unregistered busine"
+    },
+    "eval_017": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "Both answers correctly confirm that businesses selling zero-rated goods can claim input VAT on related expenses, distinguishing zero-rated from exempt status and aligning with the reference's key poin"
+    },
+    "eval_018": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states implementation was delayed until July 2026, contradicting the reference which specifies the President's assent was pending by late 2025."
+    },
+    "eval_019": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the VAT threshold is TZS 100 million for 6 months, confirming 95 million is below the threshold, matching the reference answer's key facts and conclusion."
+    },
+    "eval_020": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that CPAs must register for VAT regardless of income level, aligning with the reference's assertion that it is a mandatory requirement by TRA for this professiona"
+    },
+    "eval_021": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "Generated answer incorrectly attributes appointment to TRA instead of President (Kamishna Mkuu) and omits Treasury/government institutions from reference definition."
+    },
+    "eval_022": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly explains the distinction between zero-rated and exempt goods, matching the reference's key points about VAT rates, input tax reclaim eligibility, and business implicatio"
+    },
+    "eval_023": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies output VAT as the tax collected from customers on taxable sales, aligning with the reference's explanation of it being a government levy collected on behalf o"
+    },
+    "eval_024": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly explains that a rolling 12-month period is any consecutive 12 months, not tied to the calendar year, and aligns with the reference's examples and key points about VAT re"
+    },
+    "eval_025": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "Generated answer correctly states that regulated professions must register for VAT regardless of turnover, aligning with the reference's explanation about TRA's special requirements for these sectors."
+    },
+    "eval_026": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 3,
+        "undetermined": 2
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly specifies a 14-day deadline for VAT registration, whereas the correct answer emphasizes immediate contact with TRA without a specific timeframe, conflicting with Tanza"
+    },
+    "eval_027": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 18% VAT rate, 6% withholding tax on VAT, and the requirement for a certificate, aligning with the reference answer's key facts and procedure."
+    },
+    "eval_028": {
+      "verdict": "wrong",
+      "votes": {
+        "correct": 2,
+        "wrong": 3
+      },
+      "tie": false,
+      "justification": "The generated answer is too vague and omits key steps like contacting TRA via website/office, submitting required documents (BRELA certificate, TIN, business license), and receiving the VAT number, wh"
+    },
+    "eval_029": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the right to claim a VAT refund when input VAT exceeds output VAT and directs the taxpayer to contact TRA, aligning with the reference answer's key points."
+    },
+    "eval_030": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that the VAT withholding certificate must be submitted on the day VAT is paid, not the 20th, aligning with the reference answer."
+    },
+    "eval_031": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 3% VAT withholding rate effective from July 1, 2025, and directs verification to TRA, aligning with the reference answer's key facts."
+    },
+    "eval_032": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 6% VAT withholding rate for services starting July 1, 2025, and includes the TRA verification note as in the reference."
+    },
+    "eval_033": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the start date of 1 July 2025, matching the reference answer's key fact despite omitting percentage details."
+    },
+    "eval_034": {
+      "verdict": "undetermined",
+      "votes": {
+        "correct": 2,
+        "wrong": 2,
+        "undetermined": 1
+      },
+      "tie": true,
+      "justification": ""
+    },
+    "eval_035": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates 6% of TZS 3 million as TZS 180,000 and aligns with the reference answer's key figures and instructions to verify with TRA."
+    },
+    "eval_036": {
+      "verdict": "correct",
+      "votes": {
+        "wrong": 2,
+        "correct": 3
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies all three qualifying buyer categories and includes the TRA verification instruction, aligning with the reference answer's key points."
+    },
+    "eval_037": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 3,
+        "wrong": 2
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the qualifying buyer as the party responsible for paying the withheld VAT directly to TRA, aligning with the reference answer's key points about the buyer's r"
+    },
+    "eval_038": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the 3% difference in VAT withholding rates between goods (3%) and services (6%), matching the reference answer's key fact and calculation."
+    },
+    "eval_039": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 3% rate for goods and 6% for services, matching the reference's key figures and conclusion."
+    },
+    "eval_040": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that the taxpayer retains the right to claim input VAT despite withholding, aligning with the reference answer's key points about unaffected input VAT claims and "
+    },
+    "eval_041": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that the VAT withholding provisions started on 1 July 2025, aligning with the reference answer's key facts and reasoning."
+    },
+    "eval_042": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that the VAT withholding certificate must be submitted on the day VAT is payable, not the 20th of the following month, aligning with the reference answer's key fa"
+    },
+    "eval_043": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states 'yes' and claims businesses can withhold VAT automatically without TRA approval, directly contradicting the reference answer which explicitly states this is not"
+    },
+    "eval_044": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states that 3% VAT applies to IT services, whereas the correct answer specifies 6% for services and 3% only for goods."
+    },
+    "eval_045": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer contradicts the reference by stating 'Wizara ya Fedha si mnunuzi anayehitimu' when the correct answer confirms it is a withholding agent under the Finance Act 2025."
+    },
+    "eval_046": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 3,
+        "wrong": 2
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the VAT withholding agent as an entity or individual authorized by TRA, aligning with the reference's key point about TRA authorization and direct VAT remitta"
+    },
+    "eval_047": {
+      "verdict": "correct",
+      "votes": {
+        "wrong": 2,
+        "correct": 3
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the two distinct dates and their purposes, aligning with the reference answer's key distinction."
+    },
+    "eval_048": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly explains that VAT withholding involves a small portion (3% or 6%) collected by the withholding agent, with the taxpayer still liable for the remaining VAT (18%) through "
+    },
+    "eval_049": {
+      "verdict": "undetermined",
+      "votes": {
+        "undetermined": 4,
+        "correct": 1
+      },
+      "tie": false,
+      "justification": ""
+    },
+    "eval_050": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies tax evasion as the key risk, mentions TRA enforcement, and aligns with the reference on penalties and legal consequences, even with added specifics like TZS 2"
+    },
+    "eval_051": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states there is no minimum transaction value (TZS 0) requiring an EFD receipt, aligning with the reference answer, despite adding a non-contradictory detail about the Ju"
+    },
+    "eval_052": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the standard VAT rate as 18% and aligns with the reference, including additional accurate details about the absence of 14% or 16% rates in Tanzania's system."
+    },
+    "eval_053": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 3,
+        "undetermined": 2
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states a 'few days' timeframe for reporting EFD breakdowns to TRA, whereas the reference requires immediate reporting ('haraka iwezekanavyo') and prohibits continuing "
+    },
+    "eval_054": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 20th of the following month deadline for EFD records submission via VAT return, matching the reference answer's key fact and example."
+    },
+    "eval_055": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 16% VAT rate for digital B2C EFD receipts starting 1 September 2025, aligning with the reference answer's key fact and directive to verify with TRA."
+    },
+    "eval_056": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that no legal exemption exists for small cash transactions and aligns with the reference answer that all transactions require EFD receipts regardless of amount."
+    },
+    "eval_057": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that a TRA permit is required to continue operations when EFD is blocked, aligning with the reference's emphasis on legal compliance and TRA procedures."
+    },
+    "eval_058": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms customers' legal right to request EFD receipts from VAT-registered businesses and aligns with the reference on obligations and TRA's role."
+    },
+    "eval_059": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that handwritten receipts cannot replace EFD receipts and emphasizes the legal requirement for EFD use regardless of payment method, aligning with the reference a"
+    },
+    "eval_060": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms TRA's authority to close businesses for not issuing EFD receipts regularly, aligning with the reference answer's key points about legal actions and consultation"
+    },
+    "eval_061": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms the direct one-to-one connection between EFD and TRA, automatic transaction reporting, and lack of need for business owner intervention, matching the reference "
+    },
+    "eval_062": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that TRA permission is required before using regular invoices when EFD is malfunctioning, aligning with the reference answer's key requirement and legal implicati"
+    },
+    "eval_063": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that businesses must provide EFD receipts automatically without customer request, aligning with the reference answer's assertion of legal obligation and consequen"
+    },
+    "eval_064": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 3,
+        "wrong": 1,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly includes key steps like contacting the TRA-approved service provider, reporting to TRA promptly, and avoiding business until TRA instructions are received, aligning with"
+    },
+    "eval_065": {
+      "verdict": "undetermined",
+      "votes": {
+        "undetermined": 3,
+        "correct": 2
+      },
+      "tie": false,
+      "justification": ""
+    },
+    "eval_066": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly emphasizes the legal obligation to issue EFD receipts regardless of customer refusal, aligning with the reference's key points about legal duty and consequences of non-c"
+    },
+    "eval_067": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 3,
+        "wrong": 1,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer includes all four key methods from the reference answer and adds two additional valid methods without contradicting the core facts."
+    },
+    "eval_068": {
+      "verdict": "correct",
+      "votes": {
+        "wrong": 2,
+        "correct": 3
+      },
+      "tie": false,
+      "justification": "The generated answer correctly lists penalties including heavy fines, license revocation, operational suspension, and legal action, aligning with the reference's key points despite minor phrasing diff"
+    },
+    "eval_069": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer aligns with the reference by confirming TRA can initiate investigations, issue fines, and take legal actions against businesses not complying with EFD requirements, including clos"
+    },
+    "eval_070": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms that withholding EFD invoices can be considered tax evasion by TRA and highlights the severe penalties, aligning with the reference answer's key points."
+    },
+    "eval_071": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly lists intellectual property categories (trademarks, patents, industrial designs) instead of business entity types (sole trader, partnership, limited company) as in the"
+    },
+    "eval_072": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the annual submission requirement, aligning with the reference answer's key fact of 'mara moja kwa mwaka' despite additional details like the September 30 deadlin"
+    },
+    "eval_073": {
+      "verdict": "correct",
+      "votes": {
+        "wrong": 1,
+        "undetermined": 1,
+        "correct": 3
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that a sole trader business is for one person and suggests alternative structures for multiple owners, aligning with the reference answer's key points."
+    },
+    "eval_074": {
+      "verdict": "undetermined",
+      "votes": {
+        "correct": 1,
+        "undetermined": 2,
+        "wrong": 2
+      },
+      "tie": true,
+      "justification": ""
+    },
+    "eval_075": {
+      "verdict": "wrong",
+      "votes": {
+        "correct": 2,
+        "wrong": 3
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly suggests registration depends on name choice, contradicting the reference which states registration is mandatory regardless of name used."
+    },
+    "eval_076": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that BRELA certificate alone is insufficient, requiring a TIN from TRA for tax compliance, banking, and official business operations, aligning with the reference "
+    },
+    "eval_077": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "Generated answer correctly confirms BRELA's website allows name searches and verification before registration, aligning with the reference answer's key points."
+    },
+    "eval_078": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms that failing to submit annual returns can lead to deregistration by BRELA and aligns with the reference's key points about legal consequences and process initia"
+    },
+    "eval_079": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "wrong": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms the need for BRELA registration of partnerships, aligning with the reference answer's key point, despite adding specific details about business names."
+    },
+    "eval_080": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies BRELA and its functions, aligning with the reference answer's key points about business registration and intellectual property management."
+    },
+    "eval_081": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the key legal liability distinction between sole traders (unlimited personal liability) and limited companies (limited liability protecting personal assets), "
+    },
+    "eval_082": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the annual return as a mandatory report to BRELA containing company details like directors, office address, and ownership, aligning with the reference answer "
+    },
+    "eval_083": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies BRELA and COSOTA's roles for different intellectual property types and aligns with the reference's key facts without contradictions."
+    },
+    "eval_084": {
+      "verdict": "wrong",
+      "votes": {
+        "correct": 2,
+        "wrong": 3
+      },
+      "tie": false,
+      "justification": "The generated answer omits key steps like reserving the name and submitting required documents, which are present in the reference answer."
+    },
+    "eval_085": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies key consequences like fines, deregistration risks, and business penalties, aligning with the reference answer while adding specific fine amounts which do not "
+    },
+    "eval_086": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 3,
+        "wrong": 2
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 10% contribution rate by employers, aligning with the reference answer despite minor phrasing differences."
+    },
+    "eval_087": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 10% employee contribution rate for NSSF, matching the reference answer's key fact despite omitting employer's contribution details irrelevant to the question."
+    },
+    "eval_088": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 20% total contribution split equally between employer and employee, matching the reference answer's key figures and claims."
+    },
+    "eval_089": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer introduces irrelevant information about SDL differences and fails to specify the correct deadline (10th of the following month) as stated in the reference."
+    },
+    "eval_090": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the employer's 10% contribution (TZS 50,000) and the employee's 10% (TZS 50,000), matching the reference answer's key figures and total NSSF contribution of TZS 1"
+    },
+    "eval_091": {
+      "verdict": "wrong",
+      "votes": {
+        "undetermined": 1,
+        "wrong": 4
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states TZS 160,000 (double the correct 10% of 800,000), contradicting the reference answer's accurate calculation of TZS 80,000."
+    },
+    "eval_092": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer calculates the per-employee contribution (TZS 40,000) but fails to sum it for all five employees (total TZS 200,000), missing the key figure in the reference answer."
+    },
+    "eval_093": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the February 10th deadline for January NSSF contributions, aligning with the reference answer's key factual claim."
+    },
+    "eval_094": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies NSSF as the institution responsible for imposing penalties on employers who fail to pay NSSF contributions, aligning with the reference answer."
+    },
+    "eval_096": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the legal offense and aligns with the reference answer's key fact that failing to register employees with NSSF is illegal under Tanzanian law."
+    },
+    "eval_097": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms domestic workers' eligibility for NSSF and aligns with the reference answer's key fact, despite omitting the employer's contribution detail."
+    },
+    "eval_098": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms voluntary NSSF membership for self-employed individuals, aligns with the reference on key facts like benefits and requirements, and minor phrasing differences d"
+    },
+    "eval_100": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that NSSF is calculated on the total gross salary without an upper limit, with both employer and employee contributing 10% each (TZS 200,000), totaling TZS 400,00"
+    },
+    "eval_101": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer contradicts the reference by denying NSSF provides maternity benefits, while the reference confirms it does along with other benefits like old-age pension and disability support."
+    },
+    "eval_103": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that penalties apply regardless of reason and aligns with the reference's key point of unavoidable penalties, though it adds a specific 5% rate not in the referen"
+    },
+    "eval_104": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer omits key required documents like BRELA certificate, TIN, and employee national IDs specified in the reference answer."
+    },
+    "eval_105": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly advises contacting NSSF promptly, requesting payment plans, and checking the official site, aligning with the reference's key points despite minor phrasing differences."
+    },
+    "eval_106": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "Generated answer mentions a registration certificate, while the reference specifies an account number, employee membership numbers, and payment instructions as key deliverables from NSSF."
+    },
+    "eval_107": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 3,
+        "undetermined": 2
+      },
+      "tie": false,
+      "justification": "The generated answer is too vague and omits key steps like obtaining a form, submitting documents, and starting monthly contributions, which are present in the reference answer."
+    },
+    "eval_108": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer contradicts the reference by claiming NSSF does not provide official interest rates, while the reference explicitly states a 5% monthly interest rate under the NSSF Act Schedule 5"
+    },
+    "eval_109": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that directors can be personally liable for unpaid NSSF contributions if they fail to act, aligning with the reference's assertion of personal liability in advers"
+    },
+    "eval_110": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "wrong": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies legal actions (court cases, investigations) and aligns with the reference's emphasis on legal recourse, though it omits specific details like fines or registr"
+    },
+    "eval_111": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 3.5% SDL rate on total gross wages and confirms employer responsibility, matching the reference answer's key facts."
+    },
+    "eval_112": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 0.5% rate of total gross payroll and correctly identifies the employer as the payer, aligning with the reference answer's key facts despite omitting some addi"
+    },
+    "eval_113": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that SDL starts when an employer has 10 or more employees, matching the reference answer's key threshold and instruction to verify with TRA."
+    },
+    "eval_114": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "Generated answer incorrectly adds NSSF to the list of codes and contradicts the reference's specific deadline of the 7th of the following month by stating 'a bit different'."
+    },
+    "eval_115": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the effective date (1 Januari 2026) and gazetting date (13 Oktoba 2025), matching the reference answer's key facts despite a minor source variation."
+    },
+    "eval_116": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 33.4% increase and the salary figures, matching the reference despite additional verification sources."
+    },
+    "eval_117": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 16 sectors and 46 sub-sectors, aligning with the reference answer and including the verification sources."
+    },
+    "eval_118": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the pre-GN 605A average minimum salary (TZS 275,060) and aligns with the reference's key fact, while additional context about the 2026 increase does not contradic"
+    },
+    "eval_119": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the TZS 358,322 monthly minimum average salary after GN 605A, matching the reference answer's key figure and context."
+    },
+    "eval_120": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 3,
+        "undetermined": 2
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states the minimum salary as TZS 358,322 instead of the correct TZS 175,000 from the reference."
+    },
+    "eval_122": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that SDL is not deducted from the employee's salary and is the employer's responsibility, matching the reference answer's key facts."
+    },
+    "eval_123": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states that both WCF and SDL are paid to TRA, whereas the reference clarifies that WCF is paid to the WCF Agency, not TRA."
+    },
+    "eval_125": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that the 2022 order was revoked from January 2026, GN 605A is now in effect, and using 2022 rates afterward is illegal, matching the reference answer's key facts."
+    },
+    "eval_126": {
+      "verdict": "undetermined",
+      "votes": {
+        "wrong": 1,
+        "undetermined": 3,
+        "correct": 1
+      },
+      "tie": false,
+      "justification": ""
+    },
+    "eval_128": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that WCF is paid through the WCF Board and not TRA, aligning with the reference answer's key fact."
+    },
+    "eval_129": {
+      "verdict": "undetermined",
+      "votes": {
+        "undetermined": 3,
+        "wrong": 2
+      },
+      "tie": false,
+      "justification": ""
+    },
+    "eval_130": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that SDL is calculated as 3.5% of total gross payroll, aligning with the reference answer's key fact and calculation method."
+    },
+    "eval_131": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly directs employers to use GN 605A's table from the Office of Labour and verify with their office, aligning with the reference's guidance on sector-specific rates and offi"
+    },
+    "eval_132": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer omits critical steps from the reference answer (calculating backpay, adjusting salaries) and focuses only on contacting the Labor Office about penalties, missing the core remedial"
+    },
+    "eval_133": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies backpay obligations and legal consequences, aligning with the reference's key points about GN 605A compliance and enforcement mechanisms."
+    },
+    "eval_134": {
+      "verdict": "correct",
+      "votes": {
+        "wrong": 2,
+        "correct": 3
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies penalties (interest and legal fines) and advises verification with TRA, aligning with the reference despite omitting specific details like the 7th deadline or"
+    },
+    "eval_135": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the legal violation of using 2022 salary scales after Jan 1, 2026, aligning with the reference's assertion of illegality and GN 605A's enforcement."
+    },
+    "eval_136": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states 15 business types for foreigners as per GN 487A, matching the reference answer's key figure."
+    },
+    "eval_137": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the fine as TZS 10,000,000 (10 million), matching the reference answer despite additional phrasing."
+    },
+    "eval_138": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states a 6-month detention period (kifungo cha miezi sita) as per the reference, despite additional details about fines and deportation."
+    },
+    "eval_139": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 5 million TZS fine as per GN487A, matching the reference answer's key figure despite additional details."
+    },
+    "eval_140": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the maximum 3-month imprisonment penalty, matching the reference answer's key fact despite additional details about fines."
+    },
+    "eval_141": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer matches the reference answer's key date of 28 Julai 2025 without contradiction."
+    },
+    "eval_142": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the start date as 11 Septemba 2025, matching the reference answer, despite adding an additional verification source."
+    },
+    "eval_143": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer states the exercise ended on 11 Septemba 2025, contradicting the reference's 8 Oktoba 2025."
+    },
+    "eval_144": {
+      "verdict": "wrong",
+      "votes": {
+        "correct": 1,
+        "wrong": 3,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly claims GN 487A does not apply to Tanzanian passport holders, contradicting the reference which confirms it does apply."
+    },
+    "eval_145": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer contradicts the reference by stating a TZS 10 million fine and 6 months imprisonment instead of the correct TZS 5 million fine or 3 months imprisonment mentioned in the reference "
+    },
+    "eval_146": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that GN 487A had no notice period and came into effect immediately on 28 July 2025, aligning with the reference answer's key facts."
+    },
+    "eval_147": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms that retail trade is on the prohibited list for non-citizens, aligning with the reference's assertion."
+    },
+    "eval_148": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms the prohibition under GN 487A, aligning with the reference answer while adding context about specific prohibited activities and authorities."
+    },
+    "eval_149": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms taxation under GN 487A and aligns with the reference answer's key fact about phone manufacturing being restricted, while adding relevant penalties and verificat"
+    },
+    "eval_150": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms regulation under GN 487A for non-citizens, aligning with the reference answer despite additional advice."
+    },
+    "eval_151": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms that GN 487A prohibits foreigners from operating as mobile money agents, aligning with the reference answer's key fact."
+    },
+    "eval_152": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms that GN 487A applies to non-citizens for cleaning services, aligning with the reference answer's key fact."
+    },
+    "eval_153": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that GN 487A targets non-citizens and Tanzanians can freely engage in all 15 business groups, aligning with the reference answer's key facts."
+    },
+    "eval_154": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer confirms that entry permit revocation is a possible penalty, aligning with the reference's affirmation."
+    },
+    "eval_155": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states that the implementation of GN 487A is still ongoing, directly contradicting the reference answer which clarifies the trial period ended on October 8, 2025, thou"
+    },
+    "eval_156": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly provides the full English name of GN 487A as specified in the reference, even with additional context about prohibited activities and TanzLII."
+    },
+    "eval_157": {
+      "verdict": "correct",
+      "votes": {
+        "undetermined": 2,
+        "correct": 3
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies GN 487A as prohibiting 15 business activities for foreigners, including the listed examples, and appropriately directs verification to the Immigration Authori"
+    },
+    "eval_158": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the facilitator as a Tanzanian assisting a foreigner in business under GN 487A, aligning with the reference's definition and examples."
+    },
+    "eval_159": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that GN 487A began on 28 July 2025 with no separate implementation date, matching the reference answer's assertion of a single date."
+    },
+    "eval_160": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the Immigration Services Department as the lead body, aligning with the reference answer despite additional details about the Ministry of Home Affairs and a c"
+    },
+    "eval_161": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "wrong": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly distinguishes 'biashara ya jumla' (wholesale) and 'biashara ya rejareja' (retail) as covered under GN 487A, aligning with the reference answer despite additional details"
+    },
+    "eval_162": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states that naturalized Tanzanian citizens can be 'mgeni' under GN 487A, contradicting the reference which clarifies that Tanzanian citizens (including naturalized) ar"
+    },
+    "eval_163": {
+      "verdict": "wrong",
+      "votes": {
+        "undetermined": 2,
+        "wrong": 3
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states that nominee registration is prohibited, whereas the reference clarifies that using a Tanzanian's name is allowed but penalizes foreigners, contradicting the ke"
+    },
+    "eval_164": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 3,
+        "correct": 1,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states visa/permit revocation instead of deportation (kufutwa kwa kibali) and adds non-existent 'no upper limit' claims not in the reference."
+    },
+    "eval_165": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the penalty as TZS 5 million or 3 months imprisonment for the Tanzanian citizen, aligning with the reference answer's key facts and clarification about the 'msaid"
+    },
+    "eval_166": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer fails to directly address the key fact from the reference answer that paying the fine does not grant permission to continue business, and instead shifts responsibility to the immi"
+    },
+    "eval_167": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states penalties for both the foreigner (TZS 10M fine, 6 months jail, visa cancellation) and the Tanzanian accomplice (TZS 5M or 3 months jail), aligning with the refere"
+    },
+    "eval_168": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "wrong": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that visa revocation is part of the penalty under GN 487A, aligning with the reference answer which confirms it is not a separate court order."
+    },
+    "eval_169": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states both penalties can be applied together, while the reference answer specifies it's either a fine or imprisonment, not both."
+    },
+    "eval_170": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that the foreigner's fine (TZS 10M) is higher than the Tanzanian citizen's fine (TZS 5M), matching the reference answer's key fact and figures."
+    },
+    "eval_171": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer only mentions contacting immigration without addressing the key requirements to cease operations, existing license validity, and seeking legal advice as specified in the reference"
+    },
+    "eval_172": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the Immigration Services Department as the primary authority overseeing GN 487A implementation, despite additional details about other agencies."
+    },
+    "eval_173": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that GN 487A prohibits non-citizens from doing business in 15 specific sectors, not owning shares in a company, aligning with the reference answer's clarification"
+    },
+    "eval_174": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "Generated answer focuses on penalties under GN 487A but omits key facts about the enforcement operation dates (Sept 11–Oct 8, 2025) and the policy's implementation date (July 28, 2025) stated in the r"
+    },
+    "eval_175": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that GN 487A applies regardless of Tanzanian parent/spouse status, requires naturalization through immigration procedures, and advises consulting legal authoritie"
+    },
+    "eval_176": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer contradicts the reference by claiming OSHA hasn't specified worker thresholds, whereas the reference clearly states 50+ workers generally and 20+ in construction/workshops."
+    },
+    "eval_177": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer contradicts the reference by stating there is no fixed schedule for OSHA inspections, whereas the reference confirms annual inspections are mandatory."
+    },
+    "eval_178": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states a minimum of 5 employees, contradicting the reference which confirms no minimum threshold exists for OSHA registration in Tanzania."
+    },
+    "eval_179": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that OSHA registration is required regardless of employee count, aligning with the reference answer's assertion."
+    },
+    "eval_180": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly distinguishes BRELA (business registration) and OSHA (workplace registration), agreeing with the reference that both are required despite BRELA registration."
+    },
+    "eval_181": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer agrees with the reference answer on the key fact that workplaces must have a valid OSHA registration certificate, even with additional details."
+    },
+    "eval_182": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that OSHA inspections are mandatory, aligning with the reference answer's assertion of their necessity."
+    },
+    "eval_183": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 3,
+        "undetermined": 2
+      },
+      "tie": false,
+      "justification": "The generated answer contradicts the reference by claiming OSHA can close businesses (yes) while the reference explicitly states they cannot (no), and provides conflicting penalty figures."
+    },
+    "eval_184": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly outlines the basic steps for OSHA registration, including key actions like submitting forms, paying fees, obtaining a certificate, and annual renewal, which align with t"
+    },
+    "eval_185": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies BRELA as business registration and OSHA as workplace safety licensing, and correctly states that BRELA is typically done first, aligning with the reference an"
+    },
+    "eval_186": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that the law does not specify a minimum employee count for a safety officer and directs verification with OSHA, aligning with the reference."
+    },
+    "eval_187": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly advises immediate registration with OSHA and specifies penalties (TZS 5M fine, 12 months imprisonment) consistent with Tanzanian labor laws, aligning with the reference'"
+    },
+    "eval_188": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer includes specific figures (TZS 5,000,000 fine or 12-month closure) not in the reference, but these details do not contradict the reference's general statement of 'fines and workpl"
+    },
+    "eval_189": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms OSHA's authority to close an unregistered business and aligns with the reference's assertion that closure is a possible enforcement action."
+    },
+    "eval_190": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies that a safety officer is required for companies with a certain number of employees and directs verification to OSHA, aligning with the reference's key point a"
+    },
+    "eval_201": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that SDL is not deducted from employee salaries, confirms it's employer-paid, and contrasts it with PAYE, aligning with the reference answer."
+    },
+    "eval_202": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states Tanzania has three VAT rates (18%, 0%, and exempt) and confirms food is not taxed at 5%, aligning with the reference answer."
+    },
+    "eval_203": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that P45 is not used in Tanzania's system and recommends P9 and a leaving certificate, aligning with the reference answer."
+    },
+    "eval_204": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that marriage to a Tanzanian citizen does not grant business rights under GN 487A and aligns with the reference answer's key points about immigration status and r"
+    },
+    "eval_205": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer contradicts the reference by claiming objections can be filed without initial payment, whereas the reference explicitly states payments are required before objections are accepted"
+    },
+    "eval_206": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly distinguishes BRELA and OSHA roles, confirming they are separate requirements, matching the reference answer's key facts and conclusions."
+    },
+    "eval_207": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states that the taxpayer loses the right to claim input VAT after withholding, directly contradicting the reference answer which clarifies that withholding only affect"
+    },
+    "eval_208": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the TZS 100 million threshold, confirms 95 million is below it, and aligns with the reference on mandatory registration not being triggered."
+    },
+    "eval_209": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies that only DSE-listed companies pay 25% tax, while others follow the standard 30% rate, aligning with the reference answer."
+    },
+    "eval_210": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "wrong": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that the 2022 minimum wage rates were replaced by GN 605A starting January 1, 2026, aligning with the reference answer's key factual claims."
+    },
+    "eval_211": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 60% deduction limit under the Finance Act 2024 and aligns with the reference answer's key facts and figures."
+    },
+    "eval_212": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that TFDA no longer exists and medicines are regulated by TMDA, aligning with the reference answer."
+    },
+    "eval_213": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the penalty (TZS 5 million fine or 3-month imprisonment) and confirms both parties are punished, aligning with the reference answer's key facts and legal framewor"
+    },
+    "eval_214": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "Generated answer correctly confirms annual OSHA inspections are mandatory, matching the reference's key assertion."
+    },
+    "eval_215": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms the obligation to provide an EFD receipt regardless of payment method, aligning with the reference answer's key points about legal requirements and TRA complian"
+    },
+    "eval_216": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states the minimum employee threshold is 'not specified' when the reference explicitly states there is no minimum requirement, even for a single employee."
+    },
+    "eval_217": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that OSHA does not specify a particular number of employees required to hire a safety officer, aligning with the reference answer's key point to verify directly w"
+    },
+    "eval_218": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer states a 15% rate for non-residents, but the reference explicitly states the exact rate for non-residents is not confirmed and advises checking with TRA, making the 15% figure uns"
+    },
+    "eval_219": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 3,
+        "undetermined": 2
+      },
+      "tie": false,
+      "justification": "The generated answer correctly lists 15 business types under GN 487A for non-residents, including retail, mobile money, salons, and market trading, aligning with the reference answer's key points."
+    },
+    "eval_220": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the key distinctions between the classes as per the reference, despite minor phrasing differences like 'self-employed investor' instead of 'foreign investors'"
+    },
+    "eval_221": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies GN 487A as a business licensing order restricting non-citizens from specific business activities and clarifies it does not concern residential permits or immi"
+    },
+    "eval_222": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies SDL as Skills Development Levy and clarifies it is not Service Delivery Levy or Short Term Disability Leave, matching the reference answer's key points."
+    },
+    "eval_223": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly lists three zones instead of four and misidentifies 'Common External Tariff (CET)' as a zone when the reference specifies 'Common List' as one of the four key componen"
+    },
+    "eval_224": {
+      "verdict": "correct",
+      "votes": {
+        "undetermined": 2,
+        "correct": 3
+      },
+      "tie": false,
+      "justification": "The generated answer correctly emphasizes the 14-day deadline for VAT registration and aligns with the reference's key points about contacting TRA and obtaining a VAT number, though it adds specific d"
+    },
+    "eval_225": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that extending the deadline is a legal right under the Tax Code and directs to TRA, aligning with the reference answer's key points despite omitting specific proc"
+    },
+    "eval_226": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "wrong": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the two mandatory steps (Notice of Intention and Statement of Appeal) with accurate deadlines (30 and 45 days) and emphasizes both are required, matching the "
+    },
+    "eval_227": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the risk of losing legal standing against third parties and emphasizes the importance of notifying BRELA, aligning with the reference answer's key points."
+    },
+    "eval_228": {
+      "verdict": "undetermined",
+      "votes": {
+        "wrong": 2,
+        "undetermined": 1,
+        "correct": 2
+      },
+      "tie": true,
+      "justification": ""
+    },
+    "eval_229": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly matches the tax brackets and percentages in the reference answer, using equivalent phrasing and including the TRA verification."
+    },
+    "eval_230": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states there is no additional personal relief beyond the standard 0% on TZS 270,000, aligning with the reference answer's key fact."
+    },
+    "eval_231": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the fine and imprisonment as in the reference, with additional non-contradictory details about prohibited business types."
+    },
+    "eval_232": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 30-day requirement for new employers to register with WCF, matching the reference answer's key fact and timeframe."
+    },
+    "eval_233": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 3,
+        "wrong": 1,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the '10 employees' threshold mentioned in the reference, even if phrased more concisely."
+    },
+    "eval_234": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states a 15-day deadline after month-end, whereas the reference specifies contributions must be submitted by the 10th of the following month within one month."
+    },
+    "eval_235": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly introduces a 65-year-old age requirement without contribution period, which contradicts the reference's requirement of 180 months (15 years) of contributions for full "
+    },
+    "eval_236": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 6-month timeframe and adds a non-contradictory clarification about it not being 90 days, which does not affect the key factual agreement with the reference."
+    },
+    "eval_237": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 7-day deadline after month-end and clarifies it's not the 7th day of the following month, aligning with the reference answer's key points."
+    },
+    "eval_238": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the four equal installments at the end of months 3, 6, 9, and 12, aligning with the reference, despite additional details about 6-month returns which do not contr"
+    },
+    "eval_239": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states 30 days for work-related illness reporting, contradicting the reference's 7 working days."
+    },
+    "eval_241": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the employee's 10% contribution (TZS 80,000) and adds accurate context about the total NSSF (20%) split between employer and employee, which aligns with the refer"
+    },
+    "eval_243": {
+      "verdict": "undetermined",
+      "votes": {
+        "wrong": 1,
+        "undetermined": 4
+      },
+      "tie": false,
+      "justification": ""
+    },
+    "eval_244": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the total NSSF contribution as TZS 100,000 with equal splits between employer and employee, matching the reference answer's key figures and percentages."
+    },
+    "eval_245": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates SDL as 3.5% of TZS 6,000,000 (TZS 210,000) and aligns with the reference on key figures and requirements."
+    },
+    "eval_246": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 3.5% SDL rate and calculates TZS 350,000, matching the reference answer's key figures and verification source."
+    },
+    "eval_247": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that SDL does not apply to companies with fewer than 10 employees, aligning with the reference answer's key fact and reasoning."
+    },
+    "eval_248": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the employee's 10% contribution (TZS 35,000) and total NSSF (20% = TZS 70,000) matching the reference answer's key figures and percentages."
+    },
+    "eval_249": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates SDL as 3.5% of TZS 2,000,000 (TZS 70,000) and aligns with the reference answer’s key figures and verification source, despite adding non-contradictory context"
+    },
+    "eval_250": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 20% NSSF contribution split equally between employer and employee, matching the reference answer's figures and breakdown."
+    },
+    "eval_254": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states WCF is 0.5% of annual sales value, while the reference clarifies it is 0.5% of employees' gross cash emoluments, not shop value."
+    },
+    "eval_255": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly calculates PAYE from the business's cash flow, whereas the reference clarifies that PAYE is deducted from employees' salaries, not business cash flow."
+    },
+    "eval_257": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly calculates NSSF as 20% of business income (TZS 12,300,000), whereas the reference clarifies NSSF is based on employee salaries, not business revenue."
+    },
+    "eval_259": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly calculates WCF as 0.5% of the vehicle's value, whereas the reference answer clarifies WCF is 0.5% of total employee salaries, unrelated to vehicle value."
+    },
+    "eval_268": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the VAT registration thresholds (TZS 200M/year or 100M/6 months) and agrees with the reference that customer count (1,500/month) alone does not determine VAT regi"
+    },
+    "eval_274": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states a 20% NSSF deduction rate (TZS 150,000) instead of the correct 10% (TZS 75,000) as per the reference."
+    },
+    "eval_278": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer fails to address the VAT threshold calculation by not converting KES to TZS or comparing the revenue to the specified thresholds (200M TZS/year or 100M TZS/6 months)."
+    },
+    "eval_282": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 3,
+        "undetermined": 2
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states a 20% NSSF rate (TZS 128,000) instead of the correct 10% (TZS 64,000) as per the reference."
+    },
+    "eval_301": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly introduces a requirement of having 5 or more employees for BRELA registration, whereas the reference answer clearly states that all businesses in Tanzania must registe"
+    },
+    "eval_302": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly calculates employee salaries as the basis for VAT registration, whereas the correct answer states that VAT registration depends on business turnover/revenue thresholds"
+    },
+    "eval_304": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states that a company must be registered with BRELA if there are 10+ employees, contradicting the reference which clarifies that employee count and capital are irrelev"
+    },
+    "eval_309": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that NSSF is mandatory for all employees regardless of salary, aligning with the reference answer's key point."
+    },
+    "eval_310": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the requirement to register with OSHA, aligning with the reference answer's key point despite omitting specific numerical details."
+    },
+    "eval_314": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 20% total NSSF rate, splits it into 10% employer and 10% employee contributions, and accurately calculates TZS 190,000 for a TZS 950,000 salary, aligning with"
+    },
+    "eval_315": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly calculates VAT withholding as 6% of the 18% VAT (TZS 32,400) instead of 6% of the invoice amount (TZS 180,000), contradicting the reference."
+    },
+    "eval_317": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the restriction under GN 487A and agrees with the reference's 'no' answer, despite adding a different verification source."
+    },
+    "eval_318": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer lacks specific calculations for SDL, NSSF, and VAT registration confirmation, omitting key figures like TZS 192,500, TZS 1,100,000, and the TZS 200,000,000 threshold from the refe"
+    },
+    "eval_321": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer only addresses SDL and omits NSSF, WCF, and OSHA requirements, which were explicitly asked in the question."
+    },
+    "eval_328": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates the VAT withholding amounts (TZS 300,000 for goods and TZS 240,000 for services) and matches the reference's total of TZS 540,000, while also mentioning the V"
+    },
+    "eval_330": {
+      "verdict": "undetermined",
+      "votes": {
+        "undetermined": 5
+      },
+      "tie": false,
+      "justification": ""
+    },
+    "eval_331": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the EFD threshold (TZS 11 million) and clarifies that manual receipts are allowed below this threshold unless VAT is registered, aligning with the reference answe"
+    },
+    "eval_332": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states 'Ndiyo' (Yes) when the reference clearly answers 'Hapana' (No) regarding foreigners engaging in wholesale trading under GN 487A, directly contradicting the key "
+    },
+    "eval_333": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies the 6-month threshold (TZS 100M) as the trigger for VAT registration, aligning with the reference answer's key fact and reasoning."
+    },
+    "eval_336": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly identifies GN 487A as the regulation restricting foreign business activities and clarifies GN 605A's purpose, aligning with the reference answer's key facts."
+    },
+    "eval_338": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that VAT withholding is 6% for services, aligning with the reference answer which clarifies the 18% rate is standard VAT, not withholding."
+    },
+    "eval_339": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that GN 487A began on 28 July 2025, not January 2026, and accurately identifies GN 605A as the January 2026 directive, aligning with the reference answer."
+    },
+    "eval_340": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that the annual return fee is TZS 22,000, not 2,500, and clarifies the 2,500 is a monthly penalty, matching the reference answer's key facts and figures."
+    },
+    "eval_346": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the helper's penalty (TZS 5M or 3 months) and clarifies it is less than the immigrant's 10M fine, matching the reference's key facts and figures."
+    },
+    "eval_347": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states the EFD threshold as TZS 100,000,000 instead of the correct TZS 11,000,000 from the reference."
+    },
+    "eval_349": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the annual VAT registration threshold as TZS 200,000,000 and clarifies the 6-month threshold, matching the reference answer's key figures and corrections."
+    },
+    "eval_350": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states GN 605A's gazettement date (13 Oct 2025) and effective date (1 Jan 2026), agreeing with the reference's key facts and rejecting the July 2025 claim."
+    },
+    "eval_351": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that reaching the TZS 200,000,000 threshold requires VAT registration, aligning with the reference answer's key fact and instruction to confirm with TRA."
+    },
+    "eval_352": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the VAT registration threshold and aligns with the reference answer's key facts and conclusion."
+    },
+    "eval_353": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "wrong": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that neither the annual nor the 6-month income thresholds for VAT registration are met, aligning with the reference answer's conclusion of 'Hapana' and providing "
+    },
+    "eval_354": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 3,
+        "correct": 1,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states the threshold as 'exceeding the lower threshold' of TZS 11,000,000, while the correct answer specifies that EFD is required for sales of TZS 11,000,000 or more,"
+    },
+    "eval_355": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states that TZS 10,999,000 exceeds the TZS 11,000,000 threshold, contradicting the reference answer which correctly notes it is below the threshold and EFD not require"
+    },
+    "eval_356": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates PAYE as TZS 80 using the same formula and tax bracket as the reference answer."
+    },
+    "eval_357": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates PAYE as TZS 20,000 using the same formula and figures as the reference answer."
+    },
+    "eval_358": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates PAYE as TZS 20,200 using the same formula and figures as the reference answer, with no conflicting information."
+    },
+    "eval_359": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates PAYE as TZS 68,000 using the same formula and figures as the reference answer."
+    },
+    "eval_360": {
+      "verdict": "undetermined",
+      "votes": {
+        "undetermined": 2,
+        "correct": 2,
+        "wrong": 1
+      },
+      "tie": true,
+      "justification": ""
+    },
+    "eval_361": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly applies the PAYE calculation formula and arrives at the same final amount as the reference answer, using accurate figures and steps."
+    },
+    "eval_362": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates SDL as 3.5% of TZS 4,000,000 (TZS 140,000) and matches the reference's key figures and instruction to verify with TRA."
+    },
+    "eval_363": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that 9 employees are below the 10-employee threshold for SDL, matching the reference's key facts and conclusion."
+    },
+    "eval_364": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that WCF applies regardless of employee count, matching the reference answer's key fact and directive to verify with WCF's website."
+    },
+    "eval_365": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that NSSF registration is mandatory regardless of employee count, aligning with the reference answer's key fact."
+    },
+    "eval_366": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 4,
+        "correct": 1
+      },
+      "tie": false,
+      "justification": "Generated answer incorrectly adds a 12-month period and 'exceeding' threshold, whereas reference states registration is required upon reaching TZS 200M regardless of time frame."
+    },
+    "eval_367": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly calculates PAYE using a progressive tax formula (128,000 + 30% of excess) instead of the correct flat 15% rate for non-residents, resulting in a conflicting TZS 1,328,"
+    },
+    "eval_369": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that GN 487A applies from 28 July 2025, confirming the reference's assertion that businesses started before this date are still subject to the regulation."
+    },
+    "eval_370": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states the VAT threshold is not exceeded, contradicting the reference which confirms it is exceeded (TZS 100,500,000 > TZS 100,000,000 threshold)."
+    },
+    "eval_371": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly calculates SDL without considering the employee threshold (10 employees required), contradicting the reference answer which correctly states SDL is TZS 0 for 7 employe"
+    },
+    "eval_372": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that 5 employees are below the 10-employee threshold, thus no SDL is required, aligning with the reference answer."
+    },
+    "eval_373": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states no PAYE is deducted for TZS 250,000, aligning with the reference's explanation about the 0% tax band and threshold."
+    },
+    "eval_374": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that a TZS 270,000 salary incurs 0% PAYE, aligning with the reference answer's key fact and reasoning."
+    },
+    "eval_375": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states a 3% withholding rate, while the reference answer correctly states 0 TZS when no VAT is charged on the invoice (supplier not registered for VAT)."
+    },
+    "eval_377": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states there is no PAYE deduction for TZS 200,000, aligning with the reference's explanation that the amount falls within the 0% tax band."
+    },
+    "eval_378": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly calculates SDL at 3.5% of salaries, ignoring the key fact that companies with fewer than 10 employees are exempt from SDL regardless of salary amounts."
+    },
+    "eval_380": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the fine amount (TZS 10,000,000) and references the Immigration Department, aligning with the reference answer's key factual details."
+    },
+    "eval_381": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the annual and six-month VAT registration thresholds as TZS 200,000,000 and TZS 100,000,000 respectively, matching the reference answer's key figures and requirem"
+    },
+    "eval_382": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly matches the key figures (TZS 765,900 maximum and TZS 175,000 default) despite minor phrasing differences and alternative source citations."
+    },
+    "eval_383": {
+      "verdict": "undetermined",
+      "votes": {
+        "undetermined": 3,
+        "correct": 1,
+        "wrong": 1
+      },
+      "tie": false,
+      "justification": ""
+    },
+    "eval_384": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the fine (TZS 5,000,000) and imprisonment (3 months) under GN 487A, aligning with the reference answer and adding non-contradictory context about liability for th"
+    },
+    "eval_385": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the SDL amount (TZS 1,575,000) and calculation (3.5% of TZS 45,000,000) without contradicting the reference's key facts about employee count threshold."
+    },
+    "eval_386": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that both employer and employee contribute 10% each (TZS 250,000) to NSSF, matching the reference answer's key figures and structure."
+    },
+    "eval_387": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the fee as TZS 50,000 and directs verification to BRELA's official website, matching the reference answer's key facts and instructions."
+    },
+    "eval_388": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 3,
+        "undetermined": 2
+      },
+      "tie": false,
+      "justification": "Both answers agree that SDL is paid by the employer, not the employee, confirming the key fact aligns with the reference."
+    },
+    "eval_389": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms that non-citizens are allowed to engage in tailoring business in Tanzania, aligning with the reference answer's assertion under GN 487A and directing verificati"
+    },
+    "eval_390": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that exempt goods are not subject to VAT, aligning with the reference answer's key fact."
+    },
+    "eval_391": {
+      "verdict": "correct",
+      "votes": {
+        "undetermined": 2,
+        "correct": 3
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states that OSHA registration is mandatory regardless of employee count, aligning with the reference answer's assertion that even a single employee requires registration"
+    },
+    "eval_392": {
+      "verdict": "wrong",
+      "votes": {
+        "wrong": 5
+      },
+      "tie": false,
+      "justification": "The generated answer incorrectly states that non-residents pay standard PAYE rates, whereas the reference clarifies they pay a flat 15% with no standard deductions."
+    },
+    "eval_394": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly confirms NSSF is mandatory for eligible employers and directs verification to the official site, aligning with the reference answer's key points despite omitting mention"
+    },
+    "eval_395": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates PAYE as TZS 78,000 and net salary as TZS 722,000, matching the reference's figures and methodology."
+    },
+    "eval_396": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 4,
+        "undetermined": 1
+      },
+      "tie": false,
+      "justification": "The generated answer correctly states the 3.5% SDL rate, accurate calculation (3.5% × 6,400,000 = 224,000 TZS), and clarifies employer responsibility, aligning with the reference answer's key facts."
+    },
+    "eval_397": {
+      "verdict": "undetermined",
+      "votes": {
+        "undetermined": 3,
+        "correct": 2
+      },
+      "tie": false,
+      "justification": ""
+    },
+    "eval_400": {
+      "verdict": "correct",
+      "votes": {
+        "correct": 5
+      },
+      "tie": false,
+      "justification": "The generated answer correctly calculates SDL at 3.5% (TZS 105,000) and specifies payment on the 7th day of the following month, aligning with the reference answer."
+    }
+  },
+  "cost": {
+    "calls": 1535,
+    "prompt_tokens": 680625,
+    "completion_tokens": 395798,
+    "usd": 0.1653
+  },
+  "wall_s": 933.2,
+  "api_errors": 0,
+  "caveat": "report-alongside only: judge fills reliable=False gap + flags reliable=True disagreements; never flips a confident regex verdict; does not drive GATE PASSED."
+}
