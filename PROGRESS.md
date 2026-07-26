@@ -11,6 +11,84 @@ eval_378 scorer-artifact flip, zero collateral). Two non-blocking follow-ups log
 (SCORER-SEMANTICS-1: credit "TZS 0"/not-applicable answers; JUDGE-NONDET: eval_397). See the
 D-FIDELITY-1 and work-item-2-round-2 entries below.
 
+## 🔴🔴 ROUTING-GAP-PAYE — HIGH PRIORITY (2026-07-26) — top open item, above all other tracked gaps
+
+**Discovered by a 20-question real-weights edge probe (v16 live Modal, `scratch/edge20_v16_result.json`).**
+Two PAYE amount questions phrased in ordinary language — Q4 *"Mfanyakazi wangu anapata TZS 1,200,000 kila
+mwezi, kodi ya serikali inayokatwa ni ngapi?"* and Q5 *"Mfanyakazi wangu si mkazi, analipwa TZS 3,000,000
+kwa mwezi, kodi yake ni kiasi gani?"* — **mis-routed to the FACT path** and the model free-computed
+**confident WRONG numbers** (Q4: PAYE 128,000, correct 188,000; Q5: 270,000, correct non-resident flat-15%
+= 450,000).
+
+**Why this is structurally more serious than any D-* defect fixed this session:** those were "the engine
+computed wrong." This is **"the engine never ran at all."** Every never-guess / fidelity protection built
+this session (D-NSSF-1 party resolution, D-PAYE-1 non-resident flat rate, D-FIDELITY-1 body-vs-working
+suppression) is **contingent on the question first being routed to compute.** This gap breaks that
+contingency on the single most common real compliance question there is — *how much tax comes out of my
+salary* — phrased the way an actual user asks it. The fidelity guard cannot help because there is no
+`ComputationResult` to guard; the fact/RAG model does the arithmetic with no deterministic backstop.
+
+**Ranked HIGHER than every currently-open tracked gap** (D-WCF-3 distractor-coexistence, per-person/tiered
+aggregation, applicability-detector/eval_311, eval_326 mixed) because **all of those are confirmed
+safe-clarification gaps** (verified again in the same edge probe: Q8 tiered NSSF, Q10 WCF distractor, Q18
+mixed all failed SAFE — clarify, no wrong number). ROUTING-GAP-PAYE is a **confirmed unsafe-wrong-answer
+gap on natural phrasing** — a different and worse class.
+
+**Mechanism (confirmed):** gap in `chike/routing.py::_natural_levy` cue lists (detect_intent path 2, the
+Candidate C natural path). PAYE cues are only `["kodi ya mapato","kodi ya mshahara","mapato ya ajira"]`;
+everyday "income tax / tax deducted from salary" phrasings (*kodi ya serikali*, *kodi yake*, *kodi
+inayokatwa*, *kodi ya kipato* …) match no cue, and "ya serikali" ≠ the generic "kwa serikali", so
+`_natural_levy` returns None → intent `none` → fact. Same lexical-cue mechanism as the original router fix.
+
+**SCOPED below (characterize-before-fix, no code yet); full blast-radius sweep + proposed cue extension +
+validation to be reported for review before implementing — same rigor as D-NSSF-1 / D-FIDELITY-1.**
+
+## 📋 FACT-ACCURACY (Q13/Q14/Q16) — tracked, LOWER priority (2026-07-26)
+
+Same edge probe surfaced three fact-path fabrications where a correct locked fact (or general rule) exists:
+- **Q13 BRELA deregistration** — asserted a company "must finish its term first" (fabricated; voluntary
+  deregistration/striking-off exists, no fixed term).
+- **Q14 OSHA vs WCF** — answered the wrong agency and fabricated a "2-employee WCF registration threshold"
+  (contradicts `wcf_threshold_no_minimum`; OSHA covers all workplaces incl. one employee).
+- **Q16 EFD** — "every shop needs EFD regardless of sales" (matches `efd_threshold_tzs_11m` wrong_pattern;
+  below TZS 11M may use manual receipts unless VAT-registered).
+Individually narrow RAG/fact-correction candidates; pick up via the same primary-source-verification
+process as D-VATWH-1 whenever scheduled. Not blocking; lower priority than ROUTING-GAP-PAYE.
+
+### 🔧 ROUTING-GAP-PAYE — SCOPED, awaiting approval (2026-07-26) — NOT implemented
+
+**Blast-radius sweep (`chike.routing.detect_intent` over all 400 gate questions + the 20 edge questions).**
+"Looks like a levy-amount question (payroll ctx + number + money/derive ask) but routed to FACT": **400-gate
+= 0 genuine mis-routes** (3 flagged all correctly fact: eval_240 GN605A avg-wage fact lookup; eval_303
+property tax = OOC, intercepted before routing; eval_398 custom 15%/5% split); **20-edge = 2** (edge_04,
+edge_05 — both PAYE). The 400-gate is **blind by authoring bias** (its questions name their levy, per the
+routing docstring); natural phrasing is only exercised by the edge set.
+
+**PAYE is uniquely exposed.** SDL/NSSF/WCF natural-phrasing amount questions fail SAFE: a generic deduction
+word (`makato`/`michango`) → `ambiguous_multi` → compute-clarify, and jargon cues (pensheni→nssf,
+ufundi→sdl, fidia→wcf) cover the rest. PAYE's everyday word `kodi` is in **neither** `_LEVY_CUES` (only
+"kodi ya mapato"/"kodi ya mshahara") **nor** `_GENERIC_LEVY` ("ya serikali" ≠ "kwa serikali"), so a
+`kodi`-phrased PAYE question falls through to fact and the model free-computes a wrong number.
+
+**Mechanism:** gap in `_natural_levy` cue lists (detect_intent path 2 / Candidate C). Same lexical-cue
+detector the original router fix used — NOT a distinct problem.
+
+**Proposed fix (lexical-cue extension, same pattern as the router fix):** add everyday PAYE phrasings to the
+`_LEVY_CUES` PAYE list — `kodi ya serikali`, `kodi ya kipato`, `kodi ya ajira`, `kodi inayokatwa`, `kodi ya
+mfanyakazi`, `kodi yake`. Offline simulation over 400+20: routes **exactly edge_04→paye and edge_05→paye**,
+**zero** other routing changes on the 400 (no new false compute-routes). Safety: the OOC classifier runs
+BEFORE routing, so property/capital-gains/etc. "kodi" questions are intercepted first — the PAYE cues can
+only affect in-scope questions. `kodi yake` is the broadest cue (fires only under path-2's payroll+number+
+money-ask guard); flagged for review, tighten if needed.
+
+**Expected post-fix:** edge_04 → paye compute → 188,000 (resident: 128,000 + 30%×200,000); edge_05 →
+non-resident flat 15% = 450,000 (`paye_resident` reads "si mkazi"); D-FIDELITY-1 then guards any body
+contradiction. **Validation plan:** unit tests in `tests/test_routing.py` (new PAYE phrasings → 'paye';
+negatives: "kodi ya majengo"/property, "kodi ya VAT", bare-"kodi" definition not over-routed); full-400
+detect_intent no-regression (0 changes, shown); full offline suite green; founder GPU re-run of the 20-edge
+(or just Q4/Q5) confirming paye compute + correct figures. **Report before implementing — same rigor as
+D-NSSF-1/D-FIDELITY-1.**
+
 **STANDING STATUS:** EOS harness fix (build_chat_prompt → apply_chat_template) — **CLOSED,
 RE-BASELINED, and VALIDATED at scale.** The corrected 400-question combined regression is
 IN (commit e9cc68a, persisted to `eval/results/gate_orchestrator_combined_e9cc68a.json`) —
