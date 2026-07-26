@@ -1,0 +1,742 @@
+{
+  "artifact": "work_item_2_round_2_adjudication",
+  "created": "2026-07-26",
+  "baseline_gate": "gate_orchestrator_combined_afef9dd.json",
+  "source_queue": "afef9dd judge_overlay.report.disagreement_queue (25 false-pass + 7 false-fail)",
+  "method": "independent adjudication vs scripts/locked_facts.json + CLAUDE.md S11; truth C/W/A; not judge/regex opinion",
+  "summary": {
+    "total": 32,
+    "clean": 24,
+    "ambiguous": [
+      "eval_075",
+      "eval_106",
+      "eval_120",
+      "eval_132",
+      "eval_145",
+      "eval_171",
+      "eval_234",
+      "eval_366"
+    ],
+    "judge_right_clean": 23,
+    "regex_right_clean": 1,
+    "judge_acc_clean": 95.8,
+    "confirmed_false_pass": [
+      "eval_027",
+      "eval_028",
+      "eval_034",
+      "eval_066",
+      "eval_071",
+      "eval_162",
+      "eval_223",
+      "eval_235",
+      "eval_268",
+      "eval_304",
+      "eval_318",
+      "eval_330",
+      "eval_342",
+      "eval_367",
+      "eval_378",
+      "eval_392"
+    ],
+    "judge_errors": [
+      "eval_164"
+    ],
+    "confirmed_false_fail": [
+      "eval_029",
+      "eval_094",
+      "eval_131",
+      "eval_187",
+      "eval_230",
+      "eval_233",
+      "eval_391"
+    ],
+    "confusion_matrix_clean": {
+      "regex_wrong_judge_right": 23,
+      "regex_right_judge_wrong": 1,
+      "regex_right_judge_right": 0,
+      "regex_wrong_judge_wrong": 0
+    },
+    "confirmed_fp_root_causes": {
+      "fact": 10,
+      "generation": 4,
+      "fidelity": 2
+    },
+    "new_engine_defect": false,
+    "headline": "D-FIDELITY-1: model body can contradict the authoritative ComputationResult.working (eval_367, eval_378). Pre-existing documented gap; not covered by this session D-* fixes."
+  },
+  "rows": [
+    {
+      "id": "eval_027",
+      "group": "FP",
+      "truth": "W",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "VAT-WH procedure: model fabricates \"supplier waits to receive remaining 12% via return\" — false mechanism (supplier claims ALL input VAT normally; withholding is 6% of VAT amount, not a 12% remainder). Concrete wrong claim, not just incomplete.",
+      "subdomain": "vat_registration",
+      "answer_type": "procedure",
+      "compute": false,
+      "question_sw": "Ninauza huduma za ushauri kwa wizara ya serikali — utaratibu sahihi wa invoice ya VAT kwa mnunuzi anayehitimu ni upi?",
+      "gold": "1) Toa invoice yenye VAT ya asilimia 18 — kwa mfano huduma ya TZS 1,000,000 + VAT TZS 180,000 = jumla TZS 1,180,000. 2) Wizara inakata asilimia 6 ya kiasi cha VAT tu (yaani 6% ya TZS 180,000 = TZS 10,800) na kuipeleka TRA moja kwa moja. 3) Wizara inakupa sehemu iliyobaki ya jumla (TZS 1,169,200). 4) Wizara inakutoa certificate ya VAT withholding siku ile VAT inapostahili kulipwa. 5) Bado unaweza kudai VAT yako yote ya pembejeo kwenye return yako ya kawaida. Thibitisha hesabu na TRA.",
+      "generated": "Invoice ya huduma za ushauri kwa wizara (mnunuzi anayehitimu): (1) Toa invoice yenye VAT 18% (standard rate); (2) Weka kiasi kilichokatwa cha 6% kwenye certificate ya withholding; (3) Toa certificate ya withholding (VAT withholding certificate); (4) Mnunuzi (wizara) atakata 6% na kuwasilisha TRA; (5) Supplier atasubiri kupokea VAT iliyobaki (12%) kupitia VAT return yake. Thibitisha na TRA tra.go.tz.",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 4,
+        "correct": 1
+      }
+    },
+    {
+      "id": "eval_028",
+      "group": "FP",
+      "truth": "W",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "Voluntary VAT reg: model invents a \"30-day\" deadline (the mandatory-crossing notice is 14 days, and it is not voluntary reg anyway) and omits every real step/document. Wrong + non-responsive.",
+      "subdomain": "vat_registration",
+      "answer_type": "procedure",
+      "compute": false,
+      "question_sw": "Jinsi gani ya kuomba kujisajilisha VAT kwa hiari kabla ya kufikia kizingiti?",
+      "gold": "1) Wasiliana na TRA kupitia tra.go.tz au ofisi ya karibu. 2) Wasilisha ombi la usajilishaji wa hiari pamoja na BRELA certificate, TIN, na hati za biashara. 3) TRA itakagua ombi. 4) Ukipitishwa, utapata nambari ya VAT na unaweza kutoa invoice za VAT na kudai VAT ya pembejeo. Thibitisha nyaraka zinazohitajika na TRA.",
+      "generated": "Unaweza kuwasilisha ombi la usajilishaji wa hiari wa VAT kwa Kamishna wa TRA ndani ya siku 30 tangu tarehe ya kuanzia. Thibitisha na TRA (tra.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_034",
+      "group": "FP",
+      "truth": "W",
+      "root": "generation",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "VAT-WH number (compute:false→fact): model invents \"VAT paid = 10%\" assumption and does 3%×(5M-500k)=135,000. Gold 3%×5M=150,000. 135,000 matches neither documented base — fabricated.",
+      "subdomain": "vat_withholding",
+      "answer_type": "number",
+      "compute": false,
+      "question_sw": "Mnunuzi anayehitimu ananunua bidhaa za TZS milioni 5 — kiasi gani cha VAT withholding kinakatwa?",
+      "gold": "TZS 150,000 (asilimia 3 ya TZS milioni 5). Mnunuzi anakata TZS 150,000 kutoka malipo ya VAT na kuipeleka TRA. Msambazaji anapokea sehemu iliyobaki ya VAT na bado anaweza kudai VAT yake ya pembejeo. Thibitisha hesabu na TRA.",
+      "generated": "Kwa hesabu sahihi ya kiasi cha VAT withholding, tumia fomula: VAT Withholding = 3% × (TZS 5,000,000 − VAT iliyolipwa). Kwa mfano, ikiwa VAT iliyolipwa ni 10% ya gharama, basi VAT withholding = 3% × (5,000,000 − 500,000) = 3% × 4,500,000 = TZS 135,000. Thibitisha na TRA (tra.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_066",
+      "group": "FP",
+      "truth": "W",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "EFD refusal: model says issue a HAND receipt as substitute when customer refuses — contradicts locked/gold (EFD receipt is mandatory regardless; obligation is the trader's).",
+      "subdomain": "efd_compliance",
+      "answer_type": "procedure",
+      "compute": false,
+      "question_sw": "Mteja anakataa kukubali risiti ya EFD — nifanye nini?",
+      "gold": "Toa risiti ya EFD hata kama mteja anakataa kukubali. Wajibu wa kisheria ni wako wewe kama mfanyabiashara — si mteja. Rekodi ya EFD inasajiliwa kwenye mfumo wa TRA iwe mteja alichukua risiti au la. Huwezi kufuta muamala au kukosa kutoa risiti kwa sababu mteja alikataa.",
+      "generated": "Mteja ana haki ya kupewa risiti ya EFD — si wewe unayeambiwa 'toa risiti'. Lazima umpe risiti. Kama amekataa, toa risiti ya mkono (hand receipt) inayoonyesha muamala uliotumika. Rekodi muamala huo kwenye mfumo wako wa akaunti. Ukikataliwa risiti ya EFD, ripoti tatizo hilo kwa TRA (tra.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_071",
+      "group": "FP",
+      "truth": "W",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "BRELA structures: model lists IP categories (trademarks/patents/industrial designs) instead of sole-trader/partnership/company — exactly brela_business_structures wrong_pattern. \"tatu/3\" masked it.",
+      "subdomain": "brela_registration",
+      "answer_type": "number",
+      "compute": false,
+      "question_sw": "BRELA inasajilisha aina kuu ngapi za miundo ya biashara Tanzania?",
+      "gold": "Tatu: (1) Jina la biashara (business name / sole trader), (2) Ushirikiano (partnership), na (3) Kampuni yenye ukomo (limited liability company). Aina nyingine kama kampuni za umma pia zinawezekanwa. Thibitisha na BRELA kwenye brela.go.tz.",
+      "generated": "BRELA inasajilisha aina TATU kuu za miundo ya biashara: 1. Alama za biashara (trademarks): alama ya bidhaa au huduma, ikiwa ni pamoja na nembo, herufi, namba, na muundo. 2. Hati miliki (patents): uvumbuzi wa kiakili unaotengeneza bidhaa au huduma mpya. 3. Miundo ya viwanda (industrial designs): muundo wa bidhaa uliotengenezwa. Hakuna aina nyingine ya nne au ya tano chini ya sheria ya BRELA. Thibitisha na BRELA (brela.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_075",
+      "group": "FP",
+      "truth": "A",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": null,
+      "judge_right": null,
+      "basis": "Sole-trader own-name registration: model hedges \"huenda usihitaji kusajili\" — a genuine Business-Names-Act own-name nuance the fact base neither confirms nor denies. Contradicts gold's blanket \"Ndiyo\" but not a locked fact. Disputed.",
+      "subdomain": "brela_registration",
+      "answer_type": "yes_no",
+      "compute": false,
+      "question_sw": "Je, mfanyabiashara anayefanya kazi peke yake kwa jina lake la kawaida bado anahitaji kusajilisha jina la biashara na BRELA?",
+      "gold": "Ndiyo. Sheria ya Tanzania inahitaji usajili rasmi wa biashara yoyote inayofanya shughuli za kibiashara, hata kama mfanyabiashara anatumia jina lake mwenyewe. Kutosajilisha kunaleta hatari za kisheria. Tembelea brela.go.tz kwa maelezo ya usajili wa jina la biashara.",
+      "generated": "Ndiyo, kwa mujibu wa sheria, jina lolote linalotumika kwenye shughuli za biashara linatakiwa kusajilishwa na BRELA. Ikiwa unafanya biashara kwa jina lako kamili la kibinafsi tu bila nyongeza yoyote, huenda usihitaji kusajilisha jina la biashara rasmi, lakini mara nyingi watu wanapenda kuongeza kitu cha ziada ili kulinda dhidi ya matumizi mengine. Thibitisha na BRELA (brela.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_106",
+      "group": "FP",
+      "truth": "A",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": null,
+      "judge_right": null,
+      "basis": "NSSF post-registration: model \"registration certificate\" vs gold \"account number + membership numbers + payment instructions\". Incomplete, not false.",
+      "subdomain": "nssf_contributions",
+      "answer_type": "procedure",
+      "compute": false,
+      "question_sw": "NSSF inampa mwajiri nini baada ya usajilishaji kukamilika?",
+      "gold": "NSSF inatoa nambari ya akaunti ya mwajiri na maelekezo ya kulipa michango kila mwezi. Kila mfanyakazi aliyesajiliwa anapewa nambari yake ya uanachama wa NSSF. Thibitisha taarifa zinazotolewa na NSSF kwenye nssf.or.tz.",
+      "generated": "Baada ya usajilishaji wa NSSF, mwajiri anapewa cheti cha usajilishaji kinachothibitisha kuwa ametekeleza mahitaji ya NSSF. Thibitisha na NSSF (nssf.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_120",
+      "group": "FP",
+      "truth": "A",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": null,
+      "judge_right": null,
+      "basis": "GN605A max wage: model answers the ASKED max correctly (765,900 + intl energy) but adds a garbled wrong \"minimum 358,322\" (that is the average, min≈175,000). Core right, tangent wrong.",
+      "subdomain": "sdl_compliance",
+      "answer_type": "number",
+      "compute": false,
+      "question_sw": "Kiwango cha juu zaidi cha mshahara wa chini chini ya GN 605A ni TZS ngapi na ni kwa sekta gani?",
+      "gold": "Karibu TZS 765,900 kwa mwezi — kwa sekta ya madini na nishati ya kimataifa (international mining/energy). Kiwango cha chini kabisa ni karibu TZS 175,000. Thibitisha takwimu hizi na PKF Eastern Africa au Clyde & Co.",
+      "generated": "Kiwango cha JUU KABISA (maximum) cha mshahara wa chini chini ya GN 605A ni TZS 765,900 — kwa sekta ya nishati ya kimataifa (international energy companies). Hii ni kiwango cha CHINI YA KIWANGO CHA LULU (minimum) cha TZS 358,322. Thibitisha na PKF Eastern Africa au TanzLII.",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_132",
+      "group": "FP",
+      "truth": "A",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": null,
+      "judge_right": null,
+      "basis": "GN605A underpayment remedy: model deflects to Labour Office + penalties, omits backpay calc + salary adjustment. Incomplete, not false.",
+      "subdomain": "sdl_compliance",
+      "answer_type": "procedure",
+      "compute": false,
+      "question_sw": "Nimegundua nimekuwa nikalipa mishahara chini ya viwango vya GN 605A tangu Januari 2026 — nifanye nini?",
+      "gold": "1) Hesabu backpay kwa kila mfanyakazi kuanzia 1 Januari 2026. 2) Lipa tofauti hiyo haraka iwezekanavyo. 3) Sasisisha mishahara yote kulingana na viwango vya GN 605A mara moja. 4) Wasiliana na mshauri wa kisheria kama kuna hatari ya malalamiko ya wafanyakazi. Kutolipa mishahara inayostahili ni ukiukwaji wa kisheria.",
+      "generated": "Wasiliana na Ofisi ya Kazi mara moja ili kutathmini adhabu zinazohusika. Kutolipa mishahara sahihi kunaweza kusababisha faini na riba. Thibitisha na Ofisi ya Kazi (labor.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_145",
+      "group": "FP",
+      "truth": "A",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": null,
+      "judge_right": null,
+      "basis": "GN487A nominee: model gives right conclusion (Hapana) + the non-citizen's own correct 10M/6mo penalty; gold emphasises the facilitator 5M/3mo. Different angle, not a clean falsehood.",
+      "subdomain": "gn487a",
+      "answer_type": "yes_no",
+      "compute": false,
+      "question_sw": "Naweza kumwomba rafiki yangu Mtanzania asajili biashara kwa jina lake, niendelee mimi kuendeshea — inafanya kazi?",
+      "gold": "Hapana. Mgeni hawezi kuendesha biashara iliyokatazwa kwa kutumia jina la Mtanzania. Mtanzania huyo atapata adhabu kama msaidizi: faini ya TZS milioni 5 au kifungo cha miezi 3.",
+      "generated": "Hapana — hii si'mkombozi' halisi. GN 487A inazuia watu wasio raia KUMILIKI au KUENDESHA shughuli fulani. Hata kama rafiki yako Mtanzania atasajili biashara kwa jina lake, sheria itamzuia wewe kufanya shughuli husika. Adhabu yake ni faini ya TZS milioni 10 AU kifungo cha miezi 6, pamoja na kufutwa kwa visa. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_162",
+      "group": "FP",
+      "truth": "W",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "GN487A \"mgeni\": model fabricates criteria under which a CITIZEN is a mgeni (marriage-only + 15yrs + passport) — inverts gn487a_mgeni_cap357_definition. Fabrication.",
+      "subdomain": "gn487a",
+      "answer_type": "definition",
+      "compute": false,
+      "question_sw": "'Mgeni' katika GN 487A inamaanisha nani hasa?",
+      "gold": "Mgeni ni mtu yeyote ambaye si raia wa Tanzania. Hii inajumuisha watu wenye mwenzi wa Kitanzania — ndoa na raia wa Tanzania haibadilishi hadhi ya uraia chini ya amri hii.",
+      "generated": "Raia wa Tanzania ni'mgeni' kwa maana ya GN 487A ikiwa amefikia masharti haya: (1) Amepata uraia kupitia ndoa tu (si kwa njia ya kuasiliwa); (2) Ameishi Tanzania kwa miaka 15 au zaidi; (3) Ana pasipoti ya Tanzania yenye hadhi kamili ya uraia. Ikiwa amefikia masharti hayo, bado ana adhabu ya faini ya TZS milioni 5 au kifungo cha miezi 3 kwa kuvunja GN 487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_164",
+      "group": "FP",
+      "truth": "C",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": true,
+      "judge_right": false,
+      "basis": "GN487A penalty: model = min 10M fine, up to 6mo jail, visa/permit revocation — MATCHES gold AND gn487a_penalty_noncitizen. Judge said \"should be deportation not visa\" but gold+locked BOTH say visa revocation. JUDGE ERROR. \"no upper limit\" tangent is harmless.",
+      "subdomain": "gn487a",
+      "answer_type": "penalty",
+      "compute": false,
+      "question_sw": "Adhabu kamili kwa mgeni anayekamatwa akifanya biashara ya rejareja ni nini?",
+      "gold": "Adhabu kamili ni: faini ya angalau TZS milioni 10, hadi miezi 6 jela, na kufutwa kwa kibali chake cha kuingia Tanzania.",
+      "generated": "Adhabu kamili kwa mgeni ni: (1) FAINI YA ISIYOPUNGUA TZS 10,000,000 (milioni kumi) — hakuna kiwango cha juu katika sheria; (2) KIFUNGO CHA HADI MIEZI 6 — tena hakuna kiwango cha juu; (3) VISA AU LESENI YA MAKAZI inafutwa — thibitisha na Idara ya Uhamiaji na wakili wa biashara kwa hali yako maalum. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_171",
+      "group": "FP",
+      "truth": "A",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": null,
+      "judge_right": null,
+      "basis": "GN487A what-to-do: model advises restructure/partner-with-citizen vs gold cease+grandfather. Advice-quality difference (and partnering edges toward facilitation), not a clear factual error. Says confirm w/ lawyer.",
+      "subdomain": "gn487a",
+      "answer_type": "procedure",
+      "compute": false,
+      "question_sw": "Mimi ni mgeni ninayefanya biashara ya rejareja — GN 487A tayari imetangazwa. Nifanye nini sasa?",
+      "gold": "Mgeni anayefanya biashara iliyokatazwa anapaswa kusimamisha shughuli hiyo haraka iwezekanavyo. Kama una leseni iliyotolewa kabla ya GN 487A (kabla ya 28 Julai 2025), unaweza kuendelea hadi leseni hiyo iishe muda wake — lakini renewal haitaruhusiwa. Biashara mpya au zilizosajiliwa baada ya tarehe hiyo lazima zisimame mara moja. Tafuta ushauri wa kisheria haraka.",
+      "generated": "Kwanza, thibitisha na Idara ya Uhamiaji (immigration.go.tz) ili kujua hatua sahihi za kisheria zinazohusiana na hali yako. Pili, hakikisha unabadilisha muundo wa umiliki wa biashara haraka. Unaweza kubadilisha muundo wa umiliki kwa njia mbalimbali, ikiwa ni pamoja na ubia na raia wa Tanzania, kununua biashara hiyo na Mtanzania, au kuanzisha biashara mpya yenye muundo salama. Thibitisha na wakili wa uhamiaji na BRELA (brela.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_223",
+      "group": "FP",
+      "truth": "W",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "EAC STR tools: model says THREE incl. the wrong CET, omitting Common List + USD 2,000 threshold. Gold/CLAUDE S11 = FOUR. Wrong.",
+      "subdomain": "vat_registration",
+      "answer_type": "definition",
+      "compute": false,
+      "question_sw": "Utaratibu Rahisishwa wa Biashara (STR) wa EAC una zana kuu ngapi na ni zipi?",
+      "gold": "STR ina zana kuu nne: Cheti Rahisishwa cha Asili (Simplified Certificate of Origin), Hati Rahisishwa ya Forodha (Simplified Customs Document), Orodha ya Pamoja (Common List), na kizingiti cha thamani cha USD 2,000 kwa mzigo. Thibitisha na Sekretarieti ya EAC.",
+      "generated": "Utaratibu Rahisishwa wa Biashara (STR) wa EAC unatumia zana TATU kuu: (1) Common External Tariff (CET) — jedwali la pamoja la ushuru; (2) Simplified Certificate of Origin (SCO) — hati inayothibitisha asili ya bidhaa; (3) Simplified Customs Document (SCD) — fomu rahisi ya forodha badala ya fomu kamili. Bidhaa nyingi za biashara ya mpakani zinastahili STR ikiwa zimezingatia vigezo.",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_234",
+      "group": "FP",
+      "truth": "A",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": null,
+      "judge_right": null,
+      "basis": "NSSF remittance deadline: model \"siku 15 baada ya mwisho wa mwezi\"; gold \"10th of following month\"; locked fact = \"end of month following\" and DOCUMENTS the 10th-vs-month-end inconsistency. Fact base unresolved → not a clean W.",
+      "subdomain": "nssf_contributions",
+      "answer_type": "procedure",
+      "compute": false,
+      "question_sw": "Michango ya NSSF inatakiwa kufikishwa NSSF ndani ya muda gani baada ya kulipa mishahara?",
+      "gold": "Ndani ya mwezi mmoja baada ya kulipa mishahara — kwa vitendo ifikapo siku ya 10 ya mwezi unaofuata. Kumbuka siku ya 20 ni ya VAT return, si NSSF. Thibitisha na NSSF (nssf.go.tz).",
+      "generated": "Michango ya NSSF inatakiwa kuwasilishwa ndani ya siku 15 baada ya mwisho wa mwezi husika. Thibitisha na NSSF (nssf.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_235",
+      "group": "FP",
+      "truth": "W",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "NSSF pension: model adds \"umri 65 + 0 michango = pensheni kamili\" — hits nssf_retirement_age wrong_patterns (\"umri wa 65\"). Gold = 60(55) + 180 months. Wrong.",
+      "subdomain": "nssf_contributions",
+      "answer_type": "definition",
+      "compute": false,
+      "question_sw": "Mtu anaweza kustaafu na kupata pensheni kamili ya NSSF akiwa na umri gani na michango ya miezi mingapi?",
+      "gold": "Umri wa kustaafu ni miaka 60 (miaka 55 kwa sekta ya madini/kustaafu mapema), na michango isiyopungua miezi 180 kwa pensheni kamili. Thibitisha na NSSF (nssf.go.tz).",
+      "generated": "Kuna masharti mawili tofauti: (1) Umri wa miaka 60 (au 55 kwa uchimbaji madini) — lakini lazima uwe na angalau miezi 180 (miaka 15) ya michango ili kupata pensheni kamili. (2) Umri wa miaka 65 — bila kuhitaji miezi ya michango. Kwa muhtasari: umri 60+180 = pensheni kamili; umri 65+0 = pensheni kamili pia. Thibitisha na NSSF (nssf.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_268",
+      "group": "FP",
+      "truth": "W",
+      "root": "generation",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "VAT customer-count: model FABRICATES a turnover figure (TZS 150,000,000) never given in the question and answers as if known. Never-guess/fabrication (R8-adjacent). Gold: customer count irrelevant, ask for revenue.",
+      "subdomain": "vat_registration",
+      "answer_type": "yes_no",
+      "compute": false,
+      "question_sw": "Nina wateja 1,500 kwa mwezi, je hii inanifanya nilazimike kusajili VAT?",
+      "gold": "Hapana. Kizingiti cha VAT hakitegemei idadi ya wateja (1,500) bali mauzo/mapato: TZS 200,000,000 kwa mwaka au TZS 100,000,000 kwa miezi 6. Nipe mapato yako, siyo idadi ya wateja. Thibitisha na TRA (tra.go.tz).",
+      "generated": "Hapana, bado haujafikia kiwango cha lazima cha usajili wa VAT. Kiwango cha chini kabisa cha mauzo kinachohitaji usajili wa VAT ni TZS 200,000,000 kwa miezi 12, au TZS 100,000,000 kwa miezi 6. Kwa sasa una mauzo ya TZS 150,000,000 tu kwa mwaka, ambayo ni chini ya kiwango hicho. Thibitisha na TRA (tra.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_304",
+      "group": "FP",
+      "truth": "W",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "BRELA company vs business name: model falsely ties company registration to \"wafanyakazi 10 au zaidi\" + share capital — brela_business_structures wrong_pattern. Count/capital irrelevant. Wrong.",
+      "subdomain": "brela_registration",
+      "answer_type": "definition",
+      "compute": false,
+      "question_sw": "Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?",
+      "gold": "Uchaguzi kati ya kampuni (company) na jina la biashara (business name) hautegemei idadi ya wafanyakazi wala mtaji, bali muundo wa kisheria unaotaka. Idadi 20 na mtaji TZS 50,000,000 hazihusiki. Thibitisha na BRELA (brela.go.tz).",
+      "generated": "Kampuni inasajiliwa BRELA ikiwa una wafanyakazi 10 au zaidi, na unatakiwa kuwasilisha taarifa za mtaji wa hisa. Jina la biashara linaweza kusajiliwa pia. Thibitisha na BRELA (brela.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_318",
+      "group": "FP",
+      "truth": "W",
+      "root": "generation",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "Multi-levy compute: SDL 192,500 + NSSF 1,100,000 CORRECT (engine fan-out D-DECOMP-1 landed). But VAT sub-part inverted: \"205,000,000 hayakufikii 200,000,000\" — 205M>200M so MUST register. Model-generated fact error on the VAT part.",
+      "subdomain": "sdl_compliance",
+      "answer_type": "number",
+      "compute": true,
+      "question_sw": "Nina wafanyakazi 11 na mishahara TZS 5,500,000 na nataka kujua SDL na NSSF na pia je nasajili VAT kama mapato ni TZS 205,000,000?",
+      "gold": "Sehemu tatu: (1) SDL: wafanyakazi 11 zaidi ya 10, 3.5% ya TZS 5,500,000 = TZS 192,500. (2) NSSF: 20% ya TZS 5,500,000 = TZS 1,100,000. (3) VAT: mapato TZS 205,000,000 yamevuka kizingiti cha TZS 200,000,000/mwaka, hivyo lazima usajili VAT. Thibitisha na TRA/NSSF.",
+      "generated": ". Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500\n\n. Thibitisha na TRA (tra.go.tz). Thibitisha na NSSF (nssf.go.tz).\nNSSF = 20% × TZS 5,500,000 = TZS 1,100,000 (mwajiri TZS 550,000 + mfanyakazi TZS 550,000)\n\nHapana, kizingiti chako cha VAT ni TZS 200,000,000 tu. Mapato ya TZS 205,000,000 hayakufikii kizingiti cha VAT cha TZS 200,000,000. Thibitisha na tra.go.tz.",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_330",
+      "group": "FP",
+      "truth": "W",
+      "root": "generation",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "NSSF quick: employee 45,000 CORRECT (D-NSSF-1 10% landed). But model fabricates penalties (10M beneficial-owner, 5%), misdirects to BRELA, and omits the deadline asked. Model-generation errors around a correct engine figure.",
+      "subdomain": "nssf_contributions",
+      "answer_type": "number",
+      "compute": true,
+      "question_sw": "Nataka jibu la haraka: NSSF ya mfanyakazi wa TZS 450,000, na pia deadline ya kuwasilisha, na kama nikichelewa adhabu ni ngapi?",
+      "gold": "NSSF ya mfanyakazi: 10% ya TZS 450,000 = TZS 45,000. Deadline: mwisho wa mwezi unaofuata mwezi wa mishahara. Adhabu ya kuchelewa: thibitisha kiwango na NSSF (nssf.go.tz) kwani hutofautiana. Thibitisha na NSSF.",
+      "generated": "NSSF (sehemu ya mfanyakazi) = 10% × TZS 450,000 = TZS 45,000 — jumla ya NSSF ni 20% (mwajiri TZS 45,000 + mfanyakazi TZS 45,000)\n\nKuna adhabu mbili tofauti. Moja ni kwa kuchelewa kuwasilisha taarifa za mmiliki manufaa, ambapo faini huwa ni shilingi milioni 10. Nyingine ni kwa kuchelewa kulipa michango husika, ambayo huwa asilimia 5. Thibitisha na BRELA Official (brela.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_342",
+      "group": "FP",
+      "truth": "W",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "Max PAYE rate: model says 20% (correct top band is 30% over 1M/mo; 25% is band 4). Fact error.",
+      "subdomain": "paye_compliance",
+      "answer_type": "yes_no",
+      "compute": false,
+      "question_sw": "Kiwango cha juu kabisa cha PAYE ni asilimia 25, sivyo?",
+      "gold": "Hapana. Kiwango cha juu kabisa cha PAYE ni asilimia 30 (kwa mapato yanayozidi TZS 1,000,000 kwa mwezi). Asilimia 25 ni kundi la nne. Thibitisha na TRA (tra.go.tz).",
+      "generated": "Hapana, si sahihi. Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 20 — si 25%. Thibitisha na TRA (tra.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_366",
+      "group": "FP",
+      "truth": "A",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": null,
+      "judge_right": null,
+      "basis": "VAT reg \"fikia vs vuka\": gold inclusive (reaching 200M triggers); model says \"unapovuka\" (exceed) + adds the correct 12-month window. Right action (Ndiyo, register) but boundary-imprecise at exactly 200M. Disputed.",
+      "subdomain": "vat_registration",
+      "answer_type": "yes_no",
+      "compute": false,
+      "question_sw": "Mzunguko wangu umefika TZS 200,000,000, lakini nasema sijavuka, nimefikia tu — je bado nasajili?",
+      "gold": "Ndiyo, unasajili. Kizingiti ni cha kujumuisha: kufikia TZS 200,000,000 (siyo lazima kuzidi) kunalazimisha usajili. Thibitisha na TRA (tra.go.tz).",
+      "generated": "Ndiyo, lazima usajili VAT haraka unapovuka kizingiti cha TZS 200,000,000 kwa miezi 12. Thibitisha na TRA (tra.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_367",
+      "group": "FP",
+      "truth": "W",
+      "root": "fidelity",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "Non-resident PAYE compute: engine appended CORRECT \"15% × 5,000,000 = 750,000\" (D-PAYE-1 landed), but the model BODY leads with a wrong 264,000 progressive-ish calc → self-contradictory. FIDELITY-CHECK gap (model text contradicts deterministic working).",
+      "subdomain": "paye_compliance",
+      "answer_type": "number",
+      "compute": true,
+      "question_sw": "Mfanyakazi asiye mkazi analipwa TZS 5,000,000 kwa mwezi — PAYE yake ni ngapi?",
+      "gold": "Wasio wakazi hulipa kiwango tambarare cha asilimia 15 (mkato wa mwisho), siyo mabano: 15% ya TZS 5,000,000 = TZS 750,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+      "generated": "Kwa mfanyakazi asiye mkazi: TZS 5,000,000 ni zaidi ya TZS 3,240,000 (kiwango cha pili). Kwa hiyo, asilimia 15 inatumika kwenye TZS 1,760,000 (TZS 5,000,000 − TZS 3,240,000). PAYE = TZS 264,000 (15% × TZS 1,760,000). Hakuna mabano ya kupanda (progressive band) kwa asilimia 15.\nPAYE (asiye mkazi) = 15% × TZS 5,000,000 = TZS 750,000 (kodi ya mwisho, si mabano ya kupanda)",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_378",
+      "group": "FP",
+      "truth": "W",
+      "root": "fidelity",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "SDL amount, 8 staff: engine appended CORRECT \"SDL haihusiki: wafanyakazi 8 (chini ya 10)\" (amount=None), but model BODY leads with wrong \"SDL=5,000,000×3.5%=175,000\". Correct answer is TZS 0. FIDELITY-CHECK gap — NOT an engine/routing defect (engine gates threshold correctly).",
+      "subdomain": "sdl_compliance",
+      "answer_type": "number",
+      "compute": true,
+      "question_sw": "Kampuni ina wafanyakazi 8 wenye jumla ya mishahara TZS 5,000,000 — SDL inayolipwa ni ngapi?",
+      "gold": "TZS 0. Wafanyakazi 8 wako chini ya kizingiti cha 10, hivyo hakuna SDL inayolipwa, licha ya mishahara kuwa TZS 5,000,000. Thibitisha na TRA (tra.go.tz).",
+      "generated": "Kwa hesabu sahihi: SDL = TZS 5,000,000 × 3.5% = TZS 175,000. Thibitisha na TRA (tra.go.tz).\nSDL haihusiki: una wafanyakazi 8 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_392",
+      "group": "FP",
+      "truth": "W",
+      "root": "fact",
+      "regex": "PASS",
+      "judge": "wrong",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "Non-resident PAYE yes/no: model says standard bands apply to non-residents (\"kwa viwango vya kawaida bila kujali\") — paye_nonresident_flat_rate wrong_pattern. Correct = flat 15%. \"Ndiyo\" lead masked it.",
+      "subdomain": "paye_compliance",
+      "answer_type": "yes_no",
+      "compute": false,
+      "question_sw": "Je, mfanyakazi asiye mkazi HALIPI mabano ya kawaida ya PAYE?",
+      "gold": "Ndiyo, halipi mabano. Asiye mkazi hulipa kiwango tambarare cha asilimia 15 (mkato wa mwisho), siyo mabano ya kawaida. Thibitisha na TRA (tra.go.tz).",
+      "generated": "Ndiyo, PAYE inalipwa kwa viwango vya kawaida bila kujali ikiwa mfanyakazi ni mkazi au la. Hakuna kiwango cha sifuri kwa wasio wakazi. Thibitisha na TRA (tra.go.tz).",
+      "judge_verdict": "wrong",
+      "judge_votes": {
+        "wrong": 5
+      }
+    },
+    {
+      "id": "eval_029",
+      "group": "FF",
+      "truth": "C",
+      "root": "fact",
+      "regex": "FAIL",
+      "judge": "correct",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "Input>output VAT: model \"una haki ya kudai rejesho (VAT refund) kutoka TRA\" — correct core. Regex over-strict on short procedure text.",
+      "subdomain": "vat_registration",
+      "answer_type": "procedure",
+      "compute": false,
+      "question_sw": "VAT ya pembejeo yangu inazidi VAT ya matokeo kwa mwezi huu — nifanye nini?",
+      "gold": "1) Wasilisha VAT return yako kwa wakati (ifikapo siku ya 20) ukionyesha ziada ya VAT ya pembejeo. 2) Unaweza kuomba TRA irudishe ziada hiyo (VAT refund) au kuibeba mbele (carry forward). 3) TRA ina mchakato maalum wa madai ya kurudisha VAT. Wasiliana na TRA au mshauri wa kodi kwa mwongozo.",
+      "generated": "Kama VAT ya pembejeo (input VAT) inazidi VAT ya matokeo (output VAT) kwa mwezi husika, una haki ya kudai rejesho (VAT refund) kutoka TRA. Thibitisha na TRA (tra.go.tz).",
+      "judge_verdict": "correct",
+      "judge_votes": {
+        "correct": 5
+      }
+    },
+    {
+      "id": "eval_094",
+      "group": "FF",
+      "truth": "C",
+      "root": "fact",
+      "regex": "FAIL",
+      "judge": "correct",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "Who enforces NSSF: model \"NSSF ndiyo inayofuatilia na kutoza adhabu\" — correct (NSSF not TRA). Regex number-scorer failed on an institution answer.",
+      "subdomain": "nssf_contributions",
+      "answer_type": "number",
+      "compute": false,
+      "question_sw": "Mwajiri akikosa kulipa NSSF — ni taasisi gani (TRA au NSSF) inayofuatilia na kutoza adhabu?",
+      "gold": "NSSF — si TRA. NSSF ni taasisi tofauti na TRA kabisa, ingawa zote mbili zinahusiana na mwajiri. NSSF ina mamlaka yake ya kisheria ya kutoza riba na faini na hata kufungua kesi za kisheria dhidi ya waajiri wanaokiuka. Thibitisha utaratibu wa makosa na NSSF kwenye nssf.or.tz.",
+      "generated": "NSSF ndiyo inayofuatilia na kutoza adhabu kwa mwajiri anayekosa kulipa michango ya NSSF. Thibitisha na NSSF (nssf.go.tz).",
+      "judge_verdict": "correct",
+      "judge_votes": {
+        "correct": 5
+      }
+    },
+    {
+      "id": "eval_131",
+      "group": "FF",
+      "truth": "C",
+      "root": "fact",
+      "regex": "FAIL",
+      "judge": "correct",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "GN605A per-employee rate: model \"tumia jedwali la GN 605A ... kwa sekta husika\" — correct method. Minor off URL (wcf.go.tz). Regex over-strict.",
+      "subdomain": "sdl_compliance",
+      "answer_type": "procedure",
+      "compute": false,
+      "question_sw": "Mwajiri anagundua vipi kiwango cha mshahara wa chini cha GN 605A kinachofaa kwa kila mfanyakazi wake?",
+      "gold": "Bainisha sekta na sub-sector inayohusu biashara yako kutoka orodha ya GN 605A (sekta 16, sub-sectors 46). Kila sub-sector ina kiwango chake maalum. Soma GN 605A kwenye TanzLII au omba ushauri kutoka PKF Eastern Africa au VELMA Law kwa sekta yako maalum.",
+      "generated": "Kila mwajiri lazima atumie jedwali la GN 605A lililotolewa na Ofisi ya Kazi ili kuamua viwango vinavyohusiana na sekta husika. Thibitisha na Ofisi ya Kazi (wcf.go.tz).",
+      "judge_verdict": "correct",
+      "judge_votes": {
+        "correct": 5
+      }
+    },
+    {
+      "id": "eval_187",
+      "group": "FF",
+      "truth": "C",
+      "root": "fact",
+      "regex": "FAIL",
+      "judge": "correct",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "OSHA 3-yrs-unregistered: model \"wasiliana na OSHA mara moja\" + penalties — correct core, matches gold. (Penalty figures 5M/12mo unverified but core right.) Regex procedure over-strict.",
+      "subdomain": "osha_registration",
+      "answer_type": "procedure",
+      "compute": false,
+      "question_sw": "Nimekuwa na biashara kwa miaka 3 bila kusajili OSHA — nifanye nini sasa?",
+      "gold": "Unapaswa kusajili mahali pako pa kazi na OSHA haraka iwezekanavyo. Kushindwa kusajili kunaweza kusababisha faini na kufungwa kwa biashara yako.",
+      "generated": "Wasiliana na OSHA mara moja (osha.go.tz). Ukaguzi unaweza kuanza wakati wowote. Adhabu kwa biashara ambayo haijasajiliwa OSHA ni faini ya hadi TZS 5M, miezi 12 gerezani, na/au vyote viwili. Thibitisha adhabu kamili na OSHA (osha.go.tz).",
+      "judge_verdict": "correct",
+      "judge_votes": {
+        "correct": 5
+      }
+    },
+    {
+      "id": "eval_230",
+      "group": "FF",
+      "truth": "C",
+      "root": "fact",
+      "regex": "FAIL",
+      "judge": "correct",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "PAYE personal relief: model \"hakuna punguzo la kodi ya kibinafsi tofauti\" — matches gold AND CLAUDE S11. Regex number-scorer failed.",
+      "subdomain": "paye_compliance",
+      "answer_type": "number",
+      "compute": false,
+      "question_sw": "Punguzo la kodi ya kibinafsi (personal relief) la PAYE nchini Tanzania ni TZS ngapi kwa mwezi?",
+      "gold": "Hakuna punguzo la kodi ya kibinafsi tofauti nchini Tanzania. Bano la asilimia 0 kwa TZS 270,000 za kwanza kwa mwezi ndilo kiwango kisicholipiwa kodi — hakuna kiasi cha ziada kinachopunguzwa. Thibitisha na TRA.",
+      "generated": "Hakuna punguzo la kodi ya kibinafsi tofauti la PAYE lililothibitishwa nchini Tanzania. PAYE inalipwa kwenye vipande vya mapato kuanzia asilimia sifuri hadi 30%. Kiasi kinachokatwa halisi cha kodi ya kibinafsi hutegemea kipande cha juu kabisa cha kodi kinachotumika kwenye mshahara. Thibitisha na TRA (tra.go.tz).",
+      "judge_verdict": "correct",
+      "judge_votes": {
+        "correct": 5
+      }
+    },
+    {
+      "id": "eval_233",
+      "group": "FF",
+      "truth": "C",
+      "root": "fact",
+      "regex": "FAIL",
+      "judge": "correct",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "SDL threshold: model states \"10 employees\" — correct (sdl_employee_threshold). Terse phrasing; regex definition over-strict.",
+      "subdomain": "sdl_compliance",
+      "answer_type": "definition",
+      "compute": false,
+      "question_sw": "Ni idadi gani ya waajiriwa inayofanya mwajiri kuwa na wajibu wa kulipa SDL Tanzania Bara?",
+      "gold": "Waajiri wenye waajiriwa 10 au zaidi ndio wanaowajibika kulipa SDL Tanzania Bara. Chini ya hapo hakuna wajibu wa SDL. Thibitisha na TRA (tra.go.tz).",
+      "generated": "Kuna kipengele kinachosema '10 employees'. Thibitisha na TRA (tra.go.tz).",
+      "judge_verdict": "correct",
+      "judge_votes": {
+        "correct": 5
+      }
+    },
+    {
+      "id": "eval_391",
+      "group": "FF",
+      "truth": "C",
+      "root": "fact",
+      "regex": "FAIL",
+      "judge": "correct",
+      "regex_right": false,
+      "judge_right": true,
+      "basis": "OSHA one-employee (neg-framed \"sivyo?\"): substance correct — \"OSHA inatumika ... hata mfanyakazi mmoja\". Leading \"Ndiyo\" is a negative-framing polarity slip (same class as d39 eval_390→C), but content matches gold. Regex polarity-scorer failed. Borderline but content-correct.",
+      "subdomain": "osha_registration",
+      "answer_type": "yes_no",
+      "compute": false,
+      "question_sw": "Si lazima kusajili mahali pa kazi na OSHA kama nina mfanyakazi mmoja tu, sivyo?",
+      "gold": "Hapana, ni lazima. OSHA inahusu maeneo yote ya kazi bila kizingiti — hata mfanyakazi mmoja unatakiwa kusajili. Thibitisha na OSHA (osha.go.tz).",
+      "generated": "Ndiyo, sheria ya OSHA inatumika kwa mahali pote pa kazi bila kujali idadi ya wafanyakazi. Mahali pa kazi yenye mfanyakazi hata mmoja linahitaji kufuata viwango vya usalama vilivyowekwa na OSHA. Thibitisha na OSHA (osha.go.tz).",
+      "judge_verdict": "correct",
+      "judge_votes": {
+        "correct": 5
+      }
+    }
+  ]
+}

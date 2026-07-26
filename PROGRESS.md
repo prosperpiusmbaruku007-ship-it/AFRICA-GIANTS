@@ -388,6 +388,113 @@ disagreement queue** (25 false-pass: eval_027/028/034/066/071/075/106/120/132/14
 input for any future promotion of the reliable-denominator or judge-augmented number to the live
 `GATE PASSED` trigger — a separate, explicit call. Not started; now has the right, current input.
 
+## ✅ Work item 2 — ROUND 2 adjudication of the afef9dd disagreement queue (DONE, 2026-07-26)
+
+**The fresh 25+7 queue from the `afef9dd` comprehensive run, adjudicated independently** against
+`scripts/locked_facts.json` + CLAUDE.md §11 (NOT against the judge's or regex's stated opinion). Full
+record: `eval/results/work_item2_round2_adjudication_afef9dd.json` (all 32 rows: question, gold, fresh
+generation, regex/judge verdict, my truth C/W/A, root cause, basis). This supersedes the stale
+5239190-baseline queue and is the concrete input for any future promotion of the reliable-denominator /
+judge-augmented number to the live `GATE PASSED` trigger.
+
+**Confusion matrix (24 clean cases; 8 ambiguous excluded):**
+
+| | judge right | judge wrong |
+|---|---|---|
+| **regex right** | 0 | 1 (eval_164) |
+| **regex wrong** | 23 | 0 |
+
+- **JUDGE 23/24 = 95.8% correct** on the adjudicated disagreement set — consistent with (slightly above)
+  the ~93% measured reliability. Single miss: **eval_164** (false-DEMOTE of a correct GN487A penalty
+  answer — 10M/6mo/visa-revocation matches gold AND `gn487a_penalty_noncitizen`; the judge invented that
+  the reference wanted "deportation"). Second confirmed judge-error data point (after item-1 STAGE-1's 10/14).
+- **REGEX 1/24 = 4.2%** — expected: the queue is BY CONSTRUCTION the regex↔judge disagreement set, so in
+  each clean case exactly one is wrong; in 23/24 the judge was right and regex wrong.
+
+**Categorized findings:**
+- **Confirmed real regex false-POSITIVES: 16** (model truly WRONG): eval_027/028/034/066/071/162/223/235/
+  268/304/318/330/342/367/378/392. Root causes: **10 fact** (model/RAG gave a wrong fact where a correct
+  locked fact exists — BRELA structures/company, EAC STR, PAYE max & non-resident, NSSF pension, mgeni),
+  **4 generation** (hallucination/reasoning: eval_034 invented assumption; eval_268 **fabricated a
+  turnover** the user never gave; eval_318 **inverted** the VAT 205M>200M comparison; eval_330 fabricated
+  penalties + BRELA misdirect), **2 fidelity** (eval_367/378, see headline). **NONE trace to a new
+  deterministic engine/routing defect.**
+- **Every shipped engine fix confirmed correctly LANDED in the fresh generation:** eval_330→employee
+  45,000 (D-NSSF-1), eval_367→750,000 flat (D-PAYE-1), eval_378→"SDL haihusiki" amount=None (SDL
+  threshold), eval_318→SDL 192,500 + NSSF 1,100,000 (D-DECOMP-1 fan-out). The residual errors on those
+  same questions are all MODEL-side (fact/generation/fidelity), not engine.
+- **Confirmed real regex false-NEGATIVES: 7** (model truly CORRECT): eval_029/094/131/187/230/233/391 —
+  all fit the six item-3 sub-patterns (terse-but-correct procedure/definition; institution-answer-no-number;
+  number-as-definition; negative-framing polarity). **No new sub-pattern.**
+- **Judge errors: 1** (eval_164, above).
+- **Genuinely ambiguous/disputed: 8** — eval_075 (own-name reg nuance), eval_106/120/132 (incomplete not
+  false), eval_145/171 (different-angle GN487A advice), eval_234 (documented NSSF-deadline inconsistency),
+  eval_366 (reach-vs-exceed boundary). Not forced to a verdict.
+
+**NEW-DEFECT DETERMINATION: no new deterministic defect.** All 16 confirmed false-passes are model-side.
+The engine/router are correct in every compute case, including the two crash-relevant ones (eval_367/378).
+
+### 🔴 HEADLINE FINDING — D-FIDELITY-1: model body can contradict the authoritative compute working
+
+On a compute question the model can emit a WRONG figure that **leads** the answer, even though the correct
+deterministic `ComputationResult.working` is appended right below it (`_render` returns
+`f"{body}\n{working}"`, orchestrator.py:341). Two confirmed instances this round:
+- **eval_378** (SDL, 8 staff): engine appended correct *"SDL haihusiki: wafanyakazi 8 (chini ya 10)"* (=0);
+  model body led with wrong *"SDL = 5,000,000 × 3.5% = 175,000"*.
+- **eval_367** (non-resident PAYE): engine appended correct *"15% × 5,000,000 = 750,000"* (D-PAYE-1);
+  model body led with wrong *"264,000"* (a bogus progressive-band calc).
+
+This is **not new** (documented in `_validate_and_clean`'s docstring as a deferred fidelity-check follow-up)
+but is **not covered** by any D-* fix this session, and is **structurally serious**: it can silently
+undermine EVERY engine fix shipped this session by showing the user a wrong number the engine got right.
+**Promoted to its own defect item — D-FIDELITY-1 (scoped below).**
+
+### 🔧 D-FIDELITY-1 — SCOPED, awaiting approval (2026-07-26) — NOT implemented
+
+Same characterize-before-fix discipline as decomposition/every structural change this session.
+
+**Mechanism & hook point.** Compute answers merge as `body + '\n' + working` (`orchestrator._render`,
+:341), where `working` is the deterministic `ComputationResult.working` and `body` is the model's free
+generation. Nothing checks that `body` agrees with the authoritative result. The hook is per-SubAnswer in
+`Orchestrator._validate_and_clean` (:319), which already holds both `sub.computation` (structured
+`ComputationResult` — has `applicable`, `amount`) and `sub.text` (the isolated model body). Because it runs
+per sub-answer, multi-levy fan-out rows are seen one compute at a time — no cross-levy confusion.
+
+**Blast radius (full-400 afef9dd sweep, `scratch/dfidelity_sweep.py` + `dfidelity_detector.py`).** Of 103
+compute rows (56 clarified/never-guess skipped), **exactly 3 true body-vs-working contradictions:
+eval_367, eval_371, eval_378** (the 2 from the adjudication + eval_371 newly surfaced). 10 further
+candidates are BENIGN breakdowns (body faithfully restates the working's figure with intermediate steps /
+net-pay extras) and must NOT be touched. **The contradiction class is precise:** it occurs ONLY when the
+engine applied a GATING/OVERRIDE rule that moves the answer off the naive `rate×base` (SDL `<10`→not
+applicable; PAYE non-resident→flat 15%), and the model recomputed the naive figure anyway — i.e. it
+re-derives exactly the *pre-fix* wrong answer, which is why it can silently undermine the session's engine
+fixes.
+
+**Detector spec (deterministic; validated EXACT — flags {367,371,378}, 0 false-pos on all 13 candidates):**
+- Case A — `computation.applicable is False` (amount None): contradiction iff body contains a naive levy
+  compute (`rate% × TZS base = TZS N`) asserting an amount. → covers 371, 378.
+- Case B — `computation.amount` is a definite figure: contradiction iff that authoritative amount is
+  **ABSENT** from the body while the body asserts some other levy result. (Robust: a faithful body always
+  restates the correct figure; checking presence-of-correct is immune to intermediate band-base steps and
+  net-pay extras that a naive "extra-number" rule would false-flag on eval_092/191/360/395.) → covers 367.
+- Case B0 — amount 0 (within 0% band): contradiction iff body asserts a nonzero `= TZS N`.
+
+**Proposed fix (deterministic, preferred over prompt).** On a detected contradiction, blank `sub.text`
+(preserving `raw_text` for offline rescore) so `_render` emits the **authoritative working alone** (already
+user-facing Swahili). Deterministic is chosen over prompt-hardening because (a) the model ALREADY receives
+the working as a ground-truth "fact" in `_build_compute_prompt` and still ignored it in all 3 cases, so a
+prompt can't *guarantee* deference; (b) it matches the architecture's load-bearing invariant *"arithmetic is
+NEVER trusted to the model"* (ADR 0001). Prompt hardening is at most a complementary secondary measure.
+Gate impact: eval_371 already fails (no change); eval_367/378 are current false-PASSES → corrected to the
+right answer, removing a user-facing wrong number with no expected gate-number regression.
+
+**Validation plan (same standard as D-NSSF-1/D-PAYE-1).** (1) Unit tests for the detector across Case
+A/B/B0 + the 10 benign shapes (must stay untouched). (2) Offline re-render over the saved afef9dd 400: the
+detector must fire on exactly the 3, and re-rendering them working-only must be correct; all other 100
+compute rows byte-identical (proves no regression on saved data). (3) Fresh GPU full-400 orchestrator sweep
+(founder-executed), require v-next ≥ afef9dd on every bucket. (4) Judge overlay rides along to confirm the 3
+move to judge=correct. **Awaiting approval before writing any code.**
+
 ### Work item 1 — CENSUS of the 400-question gate (DONE, 2026-07-25)
 
 **Harness:** `scripts/judge_regression_400.py` — a **local** re-point of `kaggle/judge_regression.py`
