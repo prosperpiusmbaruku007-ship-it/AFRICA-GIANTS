@@ -55,15 +55,37 @@ Same edge probe surfaced three fact-path fabrications where a correct locked fac
 Individually narrow RAG/fact-correction candidates; pick up via the same primary-source-verification
 process as D-VATWH-1 whenever scheduled. Not blocking; lower priority than ROUTING-GAP-PAYE.
 
-### ✅ ROUTING-GAP-PAYE — IMPLEMENTED, offline-validated; GPU re-run pending (2026-07-26)
+### ✅ ROUTING-GAP-PAYE — SHIPPED and GPU-CONFIRMED (2026-07-26 fix `3144a98`; confirmed 2026-07-27)
 
-Approved and SHIPPED (offline). `_LEVY_CUES` PAYE extended with six everyday phrasings
-(`kodi ya serikali`, `kodi ya kipato`, `kodi ya ajira`, `kodi inayokatwa`, `kodi ya mfanyakazi`,
-`kodi yake`). Validation: routing tests **35 passed** (positives for each phrasing incl. edge_04/05;
-negatives for property tax / VAT / bare-"kodi" definition); full-400 detect_intent **0 changes**
-(exact decompose+route method); full offline suite **272 passed** (was 270). edge_04/edge_05 → `paye`.
-GPU re-run of the 20-edge pending to confirm engine returns 188,000 / 450,000 and D-FIDELITY-1 guards
-any body contradiction.
+Approved and SHIPPED. `_LEVY_CUES` PAYE extended with six everyday phrasings (`kodi ya serikali`,
+`kodi ya kipato`, `kodi ya ajira`, `kodi inayokatwa`, `kodi ya mfanyakazi`, `kodi yake`). Offline
+validation: routing tests **35 passed** (positives for each phrasing incl. edge_04/05; negatives for
+property tax / VAT / bare-"kodi" definition); full-400 detect_intent **0 changes** (exact decompose+route
+method); full offline suite **272 passed** (was 270).
+
+**GPU confirmation DONE (real Modal, v16 live weights, same method as the discovery probe).** Full 20-edge
+re-run at `3144a98`; artifacts persisted: `eval/results/edge20_v16_run1_prefix_67e9e4c.json` (before) and
+`eval/results/edge20_v16_run2_3144a98.json` (after).
+
+**Before/after — the two target questions:**
+| | edge_04 (resident) | edge_05 (non-resident) |
+|---|---|---|
+| phrasing | "…kodi ya serikali inayokatwa ni ngapi?" | "…si mkazi… kodi yake ni kiasi gani?" |
+| run-1 routing/answer | **fact** → PAYE **128,000** ❌ | **fact** → PAYE **270,000** ❌ |
+| run-2 routing | **compute[paye]** ✅ | **compute[paye]** ✅ |
+| engine result | `applicable=True amount=188000` resident=True | `applicable=True amount=450000` resident=**False** (read "si mkazi") |
+| working | `128,000 + 30%×(1,200,000−1,000,000) = 188,000` | `15% × 3,000,000 = 450,000 (kodi ya mwisho…)` |
+| run-2 answer | **188,000** ✅ | **450,000** ✅ (correct flat-15% detection) |
+
+**D-FIDELITY-1: armed, correctly not needed** — both model bodies were faithful to the authoritative
+working this decode (edge_04 body computed 188,000 matching the working; edge_05 body stated "asilimia 15"
+with no contradictory figure), so the guard passed them through (`raw_generated`==body; nothing blanked).
+The guard remains the validated backstop for a contradicting decode; this run simply didn't trigger it.
+
+**Zero regression:** all other 18 questions **byte-identical** run-1↔run-2 (routing AND answer text, greedy
+decode); the known-safe clarifications (Q6, Q8 tiered NSSF, Q10 WCF distractor, Q11, Q18 mixed) unchanged.
+Only edge_04/edge_05 changed. The single most common real question — "how much tax comes out of my salary,"
+phrased naturally — is now on the protected compute path.
 
 **Deferred follow-up (tracked, lower priority):** generalized safety net — *"any in-scope
 payroll-context `kodi` + money-ask with no other levy → PAYE fail-safe"* — closes the whole class

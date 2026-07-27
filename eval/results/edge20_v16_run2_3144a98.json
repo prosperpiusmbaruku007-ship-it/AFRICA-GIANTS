@@ -1,0 +1,526 @@
+{
+  "meta": {
+    "endpoint": "https://prosperpiusmbaruku007--chike-inference-generate-endpoint.modal.run",
+    "prompt_parity": "apply_chat_template",
+    "n": 20,
+    "started": "2026-07-26 23:52:59",
+    "finished": "2026-07-26 23:56:40"
+  },
+  "results": [
+    {
+      "n": 1,
+      "question": "Ninataka kufungua duka la vipuri vya magari, lakini nitasajili kwa jina la mfanyakazi wangu Mtanzania ili nisionekane kama mmiliki — hii itanisaidia?",
+      "v16": {
+        "ok": true,
+        "answer": "Hapana — hii si njia salama. GN487A inazuia pia 'kuwezesha' mgeni kufanya shughuli zilizozuiliwa. Kusajili kwa jina la Mtanzania hakubadilishi ukweli kwamba mmiliki halisi ni mgeni. Idara ya Uhamiaji na TRA wanachunguza udhibiti halisi na wamiliki wote. Jibu sahihi: sajili biashara yako ipasavyo, weka rekodi nzuri za uhamishaji, na tumia wakili wa uhamiaji kama una mashaka. Thibitisha na wakili wa uhamiaji.",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Ninataka kufungua duka la vipuri vya magari, lakini nitasajili kwa jina la mfanyakazi wangu Mtanzania ili nisionekane kama mmiliki — hii itanisaidia?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kikomo cha idadi ya wafanyakazi.",
+              "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania bado ni mgeni na hawezi kufanya biashara ya rejareja iliyozuiliwa. Tafuta ushauri wa wakili wa uhamiaji.",
+              "Kukopesha, kukodisha au kukabidhi leseni yako ya biashara kwa mgeni ni kosa chini ya GN487A. Raia anayekopesha leseni yake kwa mgeni anaadhibiwa kama msaidizi wa mgeni."
+            ],
+            "computation": null,
+            "sub_text": "Hapana — hii si njia salama. GN487A inazuia pia 'kuwezesha' mgeni kufanya shughuli zilizozuiliwa. Kusajili kwa jina la Mtanzania hakubadilishi ukweli kwamba mmiliki halisi ni mgeni. Idara ya Uhamiaji na TRA wanachunguza udhibiti halisi na wamiliki wote. Jibu sahihi: sajili biashara yako ipasavyo, weka rekodi nzuri za uhamishaji, na tumia wakili wa uhamiaji kama una mashaka. Thibitisha na wakili wa uhamiaji."
+          }
+        ],
+        "elapsed_s": 80.9,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 2,
+      "question": "Mauzo yangu yamefika TZS 200,000,000 kwa mwaka huu, je VAT?",
+      "v16": {
+        "ok": true,
+        "answer": "Ndiyo, unapaswa kusajili VAT. Thibitisha na tra.go.tz.",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Mauzo yangu yamefika TZS 200,000,000 kwa mwaka huu, je VAT?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.",
+              "vat deferment minimum value: 10,000,000 TZS",
+              "vat registration threshold: VAT registration threshold is TZS 200,000,000 per year OR TZS 100,000,000 per 6 months",
+              "vat return submission deadline: 20 days_of_month"
+            ],
+            "computation": null,
+            "sub_text": "Ndiyo, unapaswa kusajili VAT. Thibitisha na tra.go.tz."
+          }
+        ],
+        "elapsed_s": 4.5,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 3,
+      "question": "Nauza bidhaa TZS 8,000,000 kwa mnunuzi anayekata kodi, atakata kiasi gani na mimi nitapokea kiasi gani?",
+      "v16": {
+        "ok": true,
+        "answer": "Kwa mauzo ya TZS 8,000,000, kiwango cha VAT ni asilimia 18. Thibitisha na tra.go.tz. Mnunuzi atakata kodi ya VAT ya asilimia 18, sawa na TZS 1,440,000. Utalipwa TZS 6,560,000.",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Nauza bidhaa TZS 8,000,000 kwa mnunuzi anayekata kodi, atakata kiasi gani na mimi nitapokea kiasi gani?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "vat deferment minimum value: 10,000,000 TZS",
+              "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+              "trademark fee for responding to opposition: 50,000 TZS",
+              "trademark fee for dissolution of partnership: 50,000 TZS"
+            ],
+            "computation": null,
+            "sub_text": "Kwa mauzo ya TZS 8,000,000, kiwango cha VAT ni asilimia 18. Thibitisha na tra.go.tz. Mnunuzi atakata kodi ya VAT ya asilimia 18, sawa na TZS 1,440,000. Utalipwa TZS 6,560,000."
+          }
+        ],
+        "elapsed_s": 9.2,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 4,
+      "question": "Mfanyakazi wangu anapata TZS 1,200,000 kila mwezi, kodi ya serikali inayokatwa ni ngapi?",
+      "v16": {
+        "ok": true,
+        "answer": "Kwa mshahara wa TZS 1,200,000, PAYE = TZS 128,000 + 30% × (TZS 1,200,000 − TZS 1,000,000) = TZS 188,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 128,000 + 30% × (TZS 1,200,000 − TZS 1,000,000) = TZS 188,000",
+        "overall_routing": "compute",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Mfanyakazi wangu anapata TZS 1,200,000 kila mwezi, kodi ya serikali inayokatwa ni ngapi?",
+            "routing": "compute",
+            "computation_type": "paye",
+            "facts_retrieved": [],
+            "computation": {
+              "computation": "paye",
+              "applicable": true,
+              "amount": "188000",
+              "working": "PAYE = TZS 128,000 + 30% × (TZS 1,200,000 − TZS 1,000,000) = TZS 188,000",
+              "inputs": {
+                "monthly_salary": "1200000",
+                "resident": "True"
+              },
+              "note": "per-employee, resident progressive bands"
+            },
+            "sub_text": "Kwa mshahara wa TZS 1,200,000, PAYE = TZS 128,000 + 30% × (TZS 1,200,000 − TZS 1,000,000) = TZS 188,000. Thibitisha na TRA (tra.go.tz)."
+          }
+        ],
+        "elapsed_s": 14.0,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 5,
+      "question": "Mfanyakazi wangu si mkazi, analipwa TZS 3,000,000 kwa mwezi, kodi yake ni kiasi gani?",
+      "v16": {
+        "ok": true,
+        "answer": "Kwa mfanyakazi asiye mkazi, kiwango cha kodi ni asilimia 15. Thibisha na tra.go.tz.\nPAYE (asiye mkazi) = 15% × TZS 3,000,000 = TZS 450,000 (kodi ya mwisho, si mabano ya kupanda)",
+        "overall_routing": "compute",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Mfanyakazi wangu si mkazi, analipwa TZS 3,000,000 kwa mwezi, kodi yake ni kiasi gani?",
+            "routing": "compute",
+            "computation_type": "paye",
+            "facts_retrieved": [],
+            "computation": {
+              "computation": "paye",
+              "applicable": true,
+              "amount": "450000",
+              "working": "PAYE (asiye mkazi) = 15% × TZS 3,000,000 = TZS 450,000 (kodi ya mwisho, si mabano ya kupanda)",
+              "inputs": {
+                "monthly_salary": "3000000",
+                "resident": "False"
+              },
+              "note": "non-resident flat rate, final withholding"
+            },
+            "sub_text": "Kwa mfanyakazi asiye mkazi, kiwango cha kodi ni asilimia 15. Thibisha na tra.go.tz."
+          }
+        ],
+        "elapsed_s": 11.6,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 6,
+      "question": "Deni langu la benki ni TZS 12,000,000, SDL yangu itakuwaje?",
+      "v16": {
+        "ok": true,
+        "answer": "Ili nihesabu SDL, niambie idadi ya wafanyakazi walio kwenye orodha ya mishahara.",
+        "overall_routing": "clarification",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Deni langu la benki ni TZS 12,000,000, SDL yangu itakuwaje?",
+            "routing": "clarification",
+            "computation_type": "sdl",
+            "facts_retrieved": [],
+            "computation": null,
+            "sub_text": "Ili nihesabu SDL, niambie idadi ya wafanyakazi walio kwenye orodha ya mishahara."
+          }
+        ],
+        "elapsed_s": 7.0,
+        "needs_clarification": true
+      }
+    },
+    {
+      "n": 7,
+      "question": "Nina wafanyakazi tisa wa kudumu na mmoja wa muda mfupi, bado nachangia kitu?",
+      "v16": {
+        "ok": true,
+        "answer": "Kwa mujibu wa sheria, unatakiwa kuwasilisha michango ya NSSF kwa asilimia 20% ya mishahara ya wafanyakazi wako. Thibitisha na NSSF (nssf.go.tz).",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Nina wafanyakazi tisa wa kudumu na mmoja wa muda mfupi, bado nachangia kitu?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "minimum monthly contributions maternity benefit: 36 monthly_contributions",
+              "vat deferment minimum value: 10,000,000 TZS",
+              "employer notification deadline before retirement: 6 months"
+            ],
+            "computation": null,
+            "sub_text": "Kwa mujibu wa sheria, unatakiwa kuwasilisha michango ya NSSF kwa asilimia 20% ya mishahara ya wafanyakazi wako. Thibitisha na NSSF (nssf.go.tz)."
+          }
+        ],
+        "elapsed_s": 6.5,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 8,
+      "question": "Wafanyakazi watatu wanalipwa TZS 500,000 kila mmoja na wengine wawili TZS 800,000, NSSF ya wote ni kiasi gani?",
+      "v16": {
+        "ok": true,
+        "answer": "Ili nihesabu NSSF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+        "overall_routing": "clarification",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Wafanyakazi watatu wanalipwa TZS 500,000 kila mmoja na wengine wawili TZS 800,000, NSSF ya wote ni kiasi gani?",
+            "routing": "clarification",
+            "computation_type": "nssf",
+            "facts_retrieved": [],
+            "computation": null,
+            "sub_text": "Ili nihesabu NSSF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi."
+          }
+        ],
+        "elapsed_s": 8.7,
+        "needs_clarification": true
+      }
+    },
+    {
+      "n": 9,
+      "question": "Kampuni yangu ina mfanyakazi mmoja tu, bado ninatakiwa kuchangia?",
+      "v16": {
+        "ok": true,
+        "answer": "Ndiyo, kwa mujibu wa sheria, mwajiri anapaswa kulipa asilimia 10% ya mshahara wa jumla wa mfanyakazi wake kwa NSSF. Thibitisha na NSSF (nssf.go.tz).",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Kampuni yangu ina mfanyakazi mmoja tu, bado ninatakiwa kuchangia?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "minimum shareholders: 2 employees",
+              "minimum directors: 2 employees",
+              "company director minimum age: 18"
+            ],
+            "computation": null,
+            "sub_text": "Ndiyo, kwa mujibu wa sheria, mwajiri anapaswa kulipa asilimia 10% ya mshahara wa jumla wa mfanyakazi wake kwa NSSF. Thibitisha na NSSF (nssf.go.tz)."
+          }
+        ],
+        "elapsed_s": 6.9,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 10,
+      "question": "Mishahara yetu ni TZS 4,800,000 kwa watu 13, pia tuna faida ya TZS 2,000,000 mwezi huu — WCF yetu ni kiasi gani?",
+      "v16": {
+        "ok": true,
+        "answer": "Ili nihesabu WCF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+        "overall_routing": "clarification",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Mishahara yetu ni TZS 4,800,000 kwa watu 13, pia tuna faida ya TZS 2,000,000 mwezi huu — WCF yetu ni kiasi gani?",
+            "routing": "clarification",
+            "computation_type": "wcf",
+            "facts_retrieved": [],
+            "computation": null,
+            "sub_text": "Ili nihesabu WCF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi."
+          }
+        ],
+        "elapsed_s": 5.6,
+        "needs_clarification": true
+      }
+    },
+    {
+      "n": 11,
+      "question": "Thamani ya mzigo wetu dukani ni TZS 15,000,000, WCF tunayodaiwa ni ngapi?",
+      "v16": {
+        "ok": true,
+        "answer": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+        "overall_routing": "clarification",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Thamani ya mzigo wetu dukani ni TZS 15,000,000, WCF tunayodaiwa ni ngapi?",
+            "routing": "clarification",
+            "computation_type": "wcf",
+            "facts_retrieved": [],
+            "computation": null,
+            "sub_text": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili."
+          }
+        ],
+        "elapsed_s": 6.3,
+        "needs_clarification": true
+      }
+    },
+    {
+      "n": 12,
+      "question": "Nataka kuanzisha biashara na rafiki yangu, tuandikishe kama nini?",
+      "v16": {
+        "ok": true,
+        "answer": "Kuna ada ya kuwasilisha hati ya ubia (partnership deed). Thibitisha na BRELA (brela.go.tz).",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Nataka kuanzisha biashara na rafiki yangu, tuandikishe kama nini?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "trademark fee for dissolution of partnership: 50,000 TZS",
+              "stamp duty per copy memorandum articles copy: 10,000 TZS",
+              "trademark fee for change of business address: 20,000 TZS"
+            ],
+            "computation": null,
+            "sub_text": "Kuna ada ya kuwasilisha hati ya ubia (partnership deed). Thibitisha na BRELA (brela.go.tz)."
+          }
+        ],
+        "elapsed_s": 5.3,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 13,
+      "question": "Kampuni yangu imesajiliwa miaka sita iliyopita, naweza kuifuta sasa?",
+      "v16": {
+        "ok": true,
+        "answer": "Hapana, lazima uishe kwanza. Kampuni haiwezi kufutwa kabla ya kumaliza muda wake. Thibitisha na BRELA (brela.go.tz).",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Kampuni yangu imesajiliwa miaka sita iliyopita, naweza kuifuta sasa?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "trademark renewal period: saba years",
+              "employer notification deadline before retirement: 6 months",
+              "compliance license processing time old: 28 days"
+            ],
+            "computation": null,
+            "sub_text": "Hapana, lazima uishe kwanza. Kampuni haiwezi kufutwa kabla ya kumaliza muda wake. Thibitisha na BRELA (brela.go.tz)."
+          }
+        ],
+        "elapsed_s": 6.0,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 14,
+      "question": "Nina wafanyakazi wawili tu dukani, bado nasajiliwa mahali fulani?",
+      "v16": {
+        "ok": true,
+        "answer": "Kwa mujibu wa taarifa, unatakiwa kuwa na wafanyakazi wawili ili kusajiliwa kwa ajili ya WCF. Thibitisha na WCF (wcf.go.tz).",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Nina wafanyakazi wawili tu dukani, bado nasajiliwa mahali fulani?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "minimum shareholders: 2 employees",
+              "minimum directors: 2 employees",
+              "employer notification deadline before retirement: 6 months"
+            ],
+            "computation": null,
+            "sub_text": "Kwa mujibu wa taarifa, unatakiwa kuwa na wafanyakazi wawili ili kusajiliwa kwa ajili ya WCF. Thibitisha na WCF (wcf.go.tz)."
+          }
+        ],
+        "elapsed_s": 6.4,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 15,
+      "question": "Ni wafanyakazi wangapi wanaonihitaji niwe na afisa wa usalama?",
+      "v16": {
+        "ok": true,
+        "answer": "Kiwango sahihi cha idadi ya wafanyakazi kinachohitaji kuwa na Afisa wa Usalama (Safety Officer) hakithibitishwi moja kwa moja katika sheria husika. Thibitisha na OSHA (osha.go.tz).",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Ni wafanyakazi wangapi wanaonihitaji niwe na afisa wa usalama?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo ni kwa mfanyakazi mmoja tu). Hesabu: kila mfanyakazi analipa NSSF ya TZS 120,000 (asilimia 20 ya mshahara wake), kisha zidisha kwa wafanyakazi 12 = TZS 1,440,000 jumla.",
+              "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+              "OSHA safety officer threshold: The specific employee threshold requiring a dedicated safety officer is NOT confirmed from authoritative sources. Training pairs must NOT state a specific number (e.g. 50 employees). Direct users to osha.go.tz for current requirements."
+            ],
+            "computation": null,
+            "sub_text": "Kiwango sahihi cha idadi ya wafanyakazi kinachohitaji kuwa na Afisa wa Usalama (Safety Officer) hakithibitishwi moja kwa moja katika sheria husika. Thibitisha na OSHA (osha.go.tz)."
+          }
+        ],
+        "elapsed_s": 7.5,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 16,
+      "question": "Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?",
+      "v16": {
+        "ok": true,
+        "answer": "Ndiyo, duka lolote linatakiwa kuwa na mashine ya kutoa risiti za EFD, bila kujali kiwango cha mauzo. Thibitisha na TRA (tra.go.tz).",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "unpaid contribution penalty frequency: each month or a part of a month null",
+              "compliance license processing time old: 28 days",
+              "registration certificate processing time new: 1 days"
+            ],
+            "computation": null,
+            "sub_text": "Ndiyo, duka lolote linatakiwa kuwa na mashine ya kutoa risiti za EFD, bila kujali kiwango cha mauzo. Thibitisha na TRA (tra.go.tz)."
+          }
+        ],
+        "elapsed_s": 6.6,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 17,
+      "question": "Nampa mfanyakazi wangu TZS 160,000 kwa mwezi, hii inaruhusiwa?",
+      "v16": {
+        "ok": true,
+        "answer": "Hapana, malipo hayo yanazidi kiwango cha juu cha chini cha mshahara kinachoruhusiwa kisheria. Thibitisha na MLYWF (mlywf.go.tz).",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Nampa mfanyakazi wangu TZS 160,000 kwa mwezi, hii inaruhusiwa?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo ni kwa mfanyakazi mmoja tu). Hesabu: kila mfanyakazi analipa NSSF ya TZS 120,000 (asilimia 20 ya mshahara wake), kisha zidisha kwa wafanyakazi 12 = TZS 1,440,000 jumla.",
+              "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+              "vat deferment minimum value: 10,000,000 TZS",
+              "minimum monthly contributions maternity benefit: 36 monthly_contributions"
+            ],
+            "computation": null,
+            "sub_text": "Hapana, malipo hayo yanazidi kiwango cha juu cha chini cha mshahara kinachoruhusiwa kisheria. Thibitisha na MLYWF (mlywf.go.tz)."
+          }
+        ],
+        "elapsed_s": 6.8,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 18,
+      "question": "Kampuni ina wafanyakazi 11, mshahara wa kila mmoja TZS 600,000 — tozo zote za mishahara ni kiasi gani, na je mgeni anaweza kumiliki asilimia mia moja ya kampuni hii?",
+      "v16": {
+        "ok": true,
+        "answer": "Naweza kukusaidia kuhesabu makato ya mshahara, lakini niambie unahitaji hesabu ya tozo gani hasa — PAYE, NSSF, SDL, au WCF — pamoja na kiasi cha mshahara kwa mwezi.",
+        "overall_routing": "clarification",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Kampuni ina wafanyakazi 11, mshahara wa kila mmoja TZS 600,000 — tozo zote za mishahara ni kiasi gani, na je mgeni anaweza kumiliki asilimia mia moja ya kampuni hii?",
+            "routing": "clarification",
+            "computation_type": "ambiguous_multi",
+            "facts_retrieved": [],
+            "computation": null,
+            "sub_text": "Naweza kukusaidia kuhesabu makato ya mshahara, lakini niambie unahitaji hesabu ya tozo gani hasa — PAYE, NSSF, SDL, au WCF — pamoja na kiasi cha mshahara kwa mwezi."
+          }
+        ],
+        "elapsed_s": 0.0,
+        "needs_clarification": true
+      }
+    },
+    {
+      "n": 19,
+      "question": "Nikiwaita wafanyakazi wangu 'mawakala huru' badala ya wafanyakazi wa kudumu, naweza kuepuka NSSF na SDL zote mbili kihalali?",
+      "v16": {
+        "ok": true,
+        "answer": "Hapana, hii si njia halali ya kisheria. NSSF inatumika kwa wafanyakazi wote wanaofanya kazi Tanzania, bila kujali ikiwa wanaitwa 'mawakala huru', 'contractors', au 'wafanyakazi'. SDL pia inawahusu wafanyakazi wote wanaolipwa mishahara. Kutumia majina bandia hakubadilishi hali ya kisheria ya mtu kuwa mwajiriwa. Thibitisha na NSSF (nssf.go.tz).",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Nikiwaita wafanyakazi wangu 'mawakala huru' badala ya wafanyakazi wa kudumu, naweza kuepuka NSSF na SDL zote mbili kihalali?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "nssf penalty: NSSF late payment penalty is 5% per month of unpaid contributions",
+              "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residents",
+              "NSSF split triggers: NSSF total is always 20% of gross wage. Three valid employer-employee split arrangements: (a) 10% employer + 10% employee — standard default; (b) 15% employer + 5% employee — employer elects to contribute more; (c) 20% employer + 0% employee — employer pays the full 20%, employee pays nothing. Employee share must never exceed 10%. All three arrangements are legal under the NSSF Act."
+            ],
+            "computation": null,
+            "sub_text": "Hapana, hii si njia halali ya kisheria. NSSF inatumika kwa wafanyakazi wote wanaofanya kazi Tanzania, bila kujali ikiwa wanaitwa 'mawakala huru', 'contractors', au 'wafanyakazi'. SDL pia inawahusu wafanyakazi wote wanaolipwa mishahara. Kutumia majina bandia hakubadilishi hali ya kisheria ya mtu kuwa mwajiriwa. Thibitisha na NSSF (nssf.go.tz)."
+          }
+        ],
+        "elapsed_s": 12.3,
+        "needs_clarification": false
+      }
+    },
+    {
+      "n": 20,
+      "question": "Bro nina saluni ndogo, mimi ni mgeni, mke wangu Mtanzania ndiye ana-jiandikisha kila kitu — shida yoyote?",
+      "v16": {
+        "ok": true,
+        "answer": "Kama mwenye hisa mkubwa ni Mtanzania, na Mtanzania ndiye anayeendesha shughuli halisi, hiyo inaweza kukusaidia kupata ruhusa chini ya GN487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+        "overall_routing": "fact",
+        "in_scope": true,
+        "sub_answers": [
+          {
+            "sub_question": "Bro nina saluni ndogo, mimi ni mgeni, mke wangu Mtanzania ndiye ana-jiandikisha kila kitu — shida yoyote?",
+            "routing": "fact",
+            "computation_type": null,
+            "facts_retrieved": [
+              "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania bado ni mgeni na hawezi kufanya biashara ya rejareja iliyozuiliwa. Tafuta ushauri wa wakili wa uhamiaji.",
+              "Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini si zaidi ya TZS 5,000,000 (milioni tano), au kifungo si zaidi ya miezi 3.",
+              "BRELA: faini ya kuchelewa kuwasilisha annual return ni TZS 2,500 kwa kila mwezi."
+            ],
+            "computation": null,
+            "sub_text": "Kama mwenye hisa mkubwa ni Mtanzania, na Mtanzania ndiye anayeendesha shughuli halisi, hiyo inaweza kukusaidia kupata ruhusa chini ya GN487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz)."
+          }
+        ],
+        "elapsed_s": 8.6,
+        "needs_clarification": false
+      }
+    }
+  ]
+}
