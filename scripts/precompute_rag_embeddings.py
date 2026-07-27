@@ -139,10 +139,23 @@ CONCISE_BILINGUAL_FACTS = {
     # Counters the model's over-generalization that every shop needs an EFD regardless
     # of sales, by injecting the explicit "Si kila biashara" + manual-receipts nuance.
     'efd_not_every_business':
-        'Si kila biashara inalazimika kutumia EFD. Biashara ndogo yenye mauzo chini ya '
-        'TZS 11,000,000 kwa mwaka na isiyosajiliwa VAT inaweza kutumia risiti za mkono. '
+        'Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine ya risiti '
+        '(EFD)? Si lazima. Si kila biashara inalazimika kutumia mashine ya risiti za '
+        'kielektroniki (EFD): biashara ndogo yenye mauzo chini ya TZS 11,000,000 kwa mwaka '
+        'na isiyosajiliwa VAT inaweza kutumia risiti za mkono badala ya mashine ya EFD. '
         'Waliosajiliwa VAT na wenye mauzo ya TZS 11,000,000 au zaidi ndio hulazimika '
-        'kutumia EFD.',
+        'kutumia mashine ya risiti za EFD.',
+
+    # Q14 companion — SHORT + high-concentration so it out-ranks the "minimum shareholders:
+    # 2 employees" company-incorporation distractor that hijacked "wafanyakazi wawili tu...
+    # nasajiliwa" (Q14). Registration-obligation framing (distinct from wcf_threshold_no_minimum,
+    # which is about the 0.5% LEVY threshold, and from minimum_shareholders, which is company
+    # incorporation) — no contradiction/duplication; see PROGRESS §FACT-ACCURACY guardrail 2.
+    'small_headcount_still_register':
+        'Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? '
+        'Ndiyo. OSHA husajili maeneo YOTE ya kazi bila kikomo cha idadi ya wafanyakazi, na '
+        'WCF huanza tangu mfanyakazi wa kwanza. Idadi ndogo ya wafanyakazi HAIONDOI wajibu '
+        'wa kujisajili OSHA na WCF (mfuko wa fidia).',
 
     'vat_registration_threshold_six_months':
         'Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6.',
@@ -176,11 +189,12 @@ CONCISE_BILINGUAL_FACTS = {
     # the correct rule is the non-filing -> defunct -> 30-day notice -> strike-off
     # procedure. English-only would match the Swahili query only cross-lingually.
     'brela_striking_off_non_filing':
-        'Kampuni isipowasilisha ritani za mwaka (annual returns) BRELA inaweza kuhesabiwa '
-        'haifanyi kazi (defunct) na kufutwa kwenye Daftari la Makampuni. Msajili hutoa notisi '
-        'ya siku 30 kuthibitisha kampuni bado inafanya kazi; ikishindwa, jina hufutwa chini ya '
-        'Sheria ya Makampuni (Sura 212). HAKUNA sharti la "kumaliza muda" kabla ya kufutwa — '
-        'kampuni haina muda maalum. Kurejesha kampuni iliyofutwa kunahitaji maombi Mahakama Kuu.',
+        'Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la '
+        'BRELA? Ndiyo — HAKUNA sharti la "kumaliza muda" kwanza, kwa sababu kampuni haina '
+        'muda maalum. Kampuni isipowasilisha ritani za mwaka (annual returns) inaweza '
+        'kuhesabiwa haifanyi kazi (defunct) na kufutwa kwenye Daftari la Makampuni: Msajili '
+        'hutoa notisi ya siku 30, kisha jina hufutwa chini ya Sheria ya Makampuni (Sura 212). '
+        'Kurejesha kampuni iliyofutwa kunahitaji Mahakama Kuu.',
 
     # Swahili-first grounding for the OSHA-vs-WCF role distinction (edge Q14). The model
     # answered the wrong agency and fabricated a 2-employee WCF threshold after retrieval

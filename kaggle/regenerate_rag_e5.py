@@ -164,20 +164,17 @@ critical_queries = [
     # exact failure mode the GN487A concise facts hit. This must still return the 200M VAT-reg
     # fact. If it FAILS, narrow the EFD fact's 200M contrast (GN487A narrowing precedent).
     ('VAT registration threshold (displacement guard)', 'query: Kizingiti cha kusajili VAT ni mauzo ya kiasi gani kwa mwaka?', ['200,000,000']),
-    # ── FACT-ACCURACY 2026-07-27: the three edge-Q13/14/16 fixes must each retrieve ──
-    # Q13 BRELA striking-off: the model fabricated a "must finish its term first" bar.
-    # The new brela_striking_off_non_filing fact must win this deregistration query
-    # (distinctive tokens: 30-day defunct notice / High Court / no fixed term).
-    ('BRELA striking-off (Q13)', 'query: Naweza kufuta kampuni yangu kabla ya kumaliza muda wake?', ['siku 30', 'mahakama kuu', 'defunct']),
-    # Q14 OSHA vs WCF: the model answered the wrong agency and invented a 2-employee WCF
-    # threshold after retrieval pulled a company-shareholders fact. The new osha_vs_wcf_roles
-    # fact must win the "who pays injury compensation" query (distinctive: taasisi mbili / HAILIPI fidia).
-    ('OSHA vs WCF roles (Q14)', 'query: Nani hulipa fidia ya ajali kazini, OSHA au WCF, na nahitaji wafanyakazi wangapi?', ['taasisi mbili', 'hailipi', 'mfanyakazi wa kwanza']),
-    # Q16 EFD: the model said every shop needs an EFD regardless of sales. The dedicated
-    # 200M-free efd_not_every_business fact must win this over-broad-premise query
-    # (distinctive: "Si kila biashara" — unique to that key; efd_threshold_tzs_11m is kept
-    # pristine for the eval_347 tuple above, so this correction lives in its own key).
-    ('EFD not-every-business (Q16)', 'query: Je, kila duka linahitaji mashine ya EFD bila kujali kiwango cha mauzo?', ['si kila biashara', '11,000,000']),
+    # ── FACT-ACCURACY 2026-07-27: the three VERBATIM edge questions must each retrieve ──
+    # These are the EXACT questions from the 20-edge probe that produced the fabrications
+    # (not lexically-easy paraphrases — an earlier draft used paraphrases too close to the
+    # fact wording, which passed here but still missed on the real phrasing; see PROGRESS
+    # §FACT-ACCURACY). Expected keywords are distinctive to each corrected fact.
+    # Q13 BRELA striking-off: model fabricated a "must finish its term first" bar.
+    ('BRELA striking-off (Q13 verbatim)', 'query: Kampuni yangu imesajiliwa miaka sita iliyopita, naweza kuifuta sasa?', ['defunct', 'mahakama kuu', 'sura 212']),
+    # Q14 OSHA/WCF: model answered wrong agency + invented a 2-employee WCF threshold.
+    ('OSHA/WCF small-count (Q14 verbatim)', 'query: Nina wafanyakazi wawili tu dukani, bado nasajiliwa mahali fulani?', ['osha husajili', 'wcf huanza', 'mfanyakazi wa kwanza']),
+    # Q16 EFD: model said every shop needs an EFD regardless of sales.
+    ('EFD not-every-business (Q16 verbatim)', 'query: Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?', ['si kila biashara', 'risiti za mkono']),
 ]
 
 print('\n' + '=' * 60)

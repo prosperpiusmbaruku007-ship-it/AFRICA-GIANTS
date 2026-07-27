@@ -1215,6 +1215,18 @@
     "verified_date": "2026-07-27",
     "status": "CONFIRMED"
   },
+  "small_headcount_still_register": {
+    "fact": "A very small employer (one or two employees) is still required to register: OSHA registers ALL workplaces with no minimum employee count, and WCF applies from the first employee. A small number of employees does NOT remove the obligation to register with OSHA and WCF. This is distinct from company incorporation, which requires a minimum of 2 shareholders/directors — a separate matter, not a WCF/OSHA registration threshold.",
+    "correct_value": "1-2 employees still must register with OSHA (all workplaces) and WCF (from employee 1); small headcount is not an exemption.",
+    "wrong_patterns": [
+      "wafanyakazi (wawili|2)[^.?!]{0,30}(ili|ndipo)[^.?!]{0,20}(kusajili|kujisajili)[^.?!]{0,10}wcf",
+      "unatakiwa kuwa na wafanyakazi wawili ili kusajiliwa"
+    ],
+    "primary_source": "osha.go.tz (all workplaces, s.16 OSH Act 2003); wcf.go.tz (from first employee); cross-ref osha_vs_wcf_roles + wcf_threshold_no_minimum",
+    "verified_by": "retrieval-targeted companion for the small-headcount registration phrasing; does NOT restate company-incorporation minimums (minimum_shareholders — different topic) nor the WCF levy threshold (wcf_threshold_no_minimum)",
+    "verified_date": "2026-07-27",
+    "status": "CONFIRMED"
+  },
   "vat_threshold_200m_july2024_increase": {
     "fact": "VAT registration threshold was increased from TZS 100M to TZS 200M in July 2024. Current thresholds: TZS 200M per 12 months OR TZS 100M per any 6-month rolling period. Zanzibar threshold is separate (TZS 100M) — different jurisdiction. Any pair showing TZS 100M/year or TZS 50M/6mo is citing pre-July-2024 rules.",
     "correct_value": "TZS 200M/12mo or TZS 100M/6mo (effective July 2024)",
