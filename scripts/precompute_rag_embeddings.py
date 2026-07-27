@@ -128,8 +128,7 @@ CONCISE_BILINGUAL_FACTS = {
         '(milioni kumi na moja) kwa mwaka. Si kila biashara inalazimika kutumia EFD. '
         'Si TZS 200,000,000 — hiyo ni kizingiti '
         'cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD '
-        'bila kujali kiwango cha mauzo. Sekta na maeneo teule husajiliwa hatua kwa '
-        'hatua na TRA; ukikaribia kiwango thibitisha na TRA.',
+        'bila kujali kiwango cha mauzo.',
 
     'vat_registration_threshold_six_months':
         'Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6.',
