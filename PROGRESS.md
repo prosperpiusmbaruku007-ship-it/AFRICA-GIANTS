@@ -43,7 +43,7 @@ inayokatwa*, *kodi ya kipato* …) match no cue, and "ya serikali" ≠ the gener
 **SCOPED below (characterize-before-fix, no code yet); full blast-radius sweep + proposed cue extension +
 validation to be reported for review before implementing — same rigor as D-NSSF-1 / D-FIDELITY-1.**
 
-## 📋 FACT-ACCURACY (Q13/Q14/Q16) — tracked, LOWER priority (2026-07-26)
+## ✅ FACT-ACCURACY (Q13/Q14/Q16) — SHIPPED + GATE-CONFIRMED (2026-07-28; batch `5a62c00`)
 
 Same edge probe surfaced three fact-path fabrications where a correct locked fact (or general rule) exists:
 - **Q13 BRELA deregistration** — asserted a company "must finish its term first" (fabricated; voluntary
@@ -52,8 +52,49 @@ Same edge probe surfaced three fact-path fabrications where a correct locked fac
   (contradicts `wcf_threshold_no_minimum`; OSHA covers all workplaces incl. one employee).
 - **Q16 EFD** — "every shop needs EFD regardless of sales" (matches `efd_threshold_tzs_11m` wrong_pattern;
   below TZS 11M may use manual receipts unless VAT-registered).
-Individually narrow RAG/fact-correction candidates; pick up via the same primary-source-verification
-process as D-VATWH-1 whenever scheduled. Not blocking; lower priority than ROUTING-GAP-PAYE.
+Individually narrow RAG/fact-correction candidates; picked up via the same primary-source-verification
+process as D-VATWH-1. Primary-source verification completed in a claude.ai session (2026-07-27, founder-approved).
+
+**RESOLUTION (all three landed as one batch, live-verified, gate-confirmed):**
+
+*Facts (scripts/locked_facts.json → 244 keys; CONCISE_BILINGUAL_FACTS in precompute_rag_embeddings.py):*
+- **Q13** — added `brela_striking_off_non_filing`: non-filing → deemed defunct → Registrar's 30-day notice →
+  struck off under Companies Act Cap 212; own-accord strike-off (2019 amendment); restoration via High Court;
+  **no fixed term** (companies have no term). Fabrication ("lazima uishe muda kwanza") added to `wrong_patterns`.
+  Section numbers kept in metadata only (R.E.2023 renumbers s.400A→s.403).
+- **Q14** — added `osha_vs_wcf_roles` + `small_headcount_still_register`: OSHA registers/inspects **all**
+  workplaces (s.16 OSH Act 5/2003), does **not** pay compensation; WCF compensates **from employee 1** (0.5%
+  levy, no minimum count). Fabricated "2-employee WCF threshold" added to `wrong_patterns`; the short
+  high-concentration fact out-ranks the minimum-shareholders distractor.
+- **Q16** — kept `efd_threshold_tzs_11m` **pristine** (byte-identical to the deployed 213-index, preserves the
+  eval_347 200M-contrast) + added separate `efd_not_every_business`: not every business needs an EFD;
+  VAT-registered always; non-VAT ≥ TZS 11M; below 11M & unregistered may use manual receipts. **11M encoded per
+  the primary-over-practitioner hierarchy (D-VATWH-1 precedent)** — TRA live pages say 11M; practitioners say 14M.
+
+*Process:* full R15 regeneration cycle (Kaggle e5-base, cache-busted HEAD verify) → **217-fact index**
+VERIFICATION PASSED 217/217 with the three verbatim edge questions added to the critical-query set; index
+fetched + dual-committed byte-identical to `chike-inference/` + `kaggle/`; Modal redeployed. A methodology
+flaw (verification paraphrases too lexically close to fact wording) was caught by a **negative live re-test**
+and fixed by switching verification tuples to verbatim edge questions + a local e5 gate
+(`scratch/local_rag_gate.py`) with held-out paraphrases. Live re-test #2 confirmed all three FIXED on the
+217-index Modal endpoint (`eval/results/factacc_retest_a72c113.json`): Q13 retrieves
+`brela_striking_off_non_filing`, Q14 `small_headcount_still_register` (rank 1), Q16 `efd_not_every_business` (rank 1).
+
+*Comprehensive gate — `5a62c00` vs baseline `afef9dd`* (`eval/results/gate_orchestrator_combined_5a62c00.json`,
+CHIKE_JUDGE=1, pinned DeepInfra seed=42, majority-of-5):
+- **Target bucket UP:** fact_path reliable **85.4% → 87.7%** (111→114/130) raw 86.4%→88.0%. **Both gates still pass.**
+- **Judge-augmented** 76.4% → **76.9%**. Net −1 raw / 400 (5 gained, 6 lost).
+- **Collateral gain:** OSHA **+3** (eval_177/187/391) from the new OSHA/WCF facts.
+- **Known-minor accepted (founder, no further regen):** `eval_355` (efd_compliance) — the deliberately
+  adversarial *1,000-below-threshold* trap (turnover 10,999,000) flipped gold "Hapana" → "Ndiyo": the generic
+  `efd_not_every_business` now leads retrieval and tips the boundary reasoning (both correct EFD facts are still
+  retrieved; it is a generation-boundary flip, not a missing fact). `eval_304` = scorer artifact (afef9dd passed
+  by number-overlap luck; neither run answers the structure-choice question). `eval_383`/`eval_208`/`eval_378`
+  flips = run-to-run gen/judge noise (correct fee still retrieved rank-2; vat/sdl untouched by any fact change),
+  offset by the OSHA/nssf gains.
+
+*Commit trail:* `4912602` → `b4e6722` → `b54eb23` → `f1e3d30` → `68b9cba` → `b7666b6` → `a72c113` (217-index) →
+`5a62c00` (live re-test artifact) → close-out. Not blocking; superseded ROUTING-GAP-PAYE priority ordering — done.
 
 ### ✅ ROUTING-GAP-PAYE — SHIPPED and GPU-CONFIRMED (2026-07-26 fix `3144a98`; confirmed 2026-07-27)
 
