@@ -815,3 +815,99 @@ Total: 225 | Flagged: 0
 
 [2026-07-03T20:09:57.024788] Checked datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl
 Total: 1122 | Flagged: 0
+
+[2026-07-05T19:38:58.269811] Checked data/reviewed/hand_coded_batch_015_b01.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-05T19:53:03.832613] Checked data/reviewed/hand_coded_batch_015_b02.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-05T20:12:30.729694] Checked data/reviewed/hand_coded_batch_015_b03.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T06:20:33.546954] Checked data/reviewed/hand_coded_batch_015_b04.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T06:38:55.878172] Checked data/reviewed/hand_coded_batch_015_b05.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T07:06:40.755664] Checked data/reviewed/hand_coded_batch_015_b06.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T07:16:58.062145] Checked data/reviewed/hand_coded_batch_015_b07.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T07:22:11.924138] Checked data/reviewed/hand_coded_batch_015_b07.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T07:27:14.985065] Checked data/reviewed/hand_coded_batch_015_b08.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T07:52:41.415598] Checked data/reviewed/hand_coded_batch_015_b09.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T08:05:27.800810] Checked data/reviewed/hand_coded_batch_015_b10.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T12:30:35.021382] Checked data/reviewed/hand_coded_batch_015_b11.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:13:19.307913] Checked data/reviewed/hand_coded_batch_015_b12a.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:19:46.907012] Checked data/reviewed/hand_coded_batch_015_b12b.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:30:24.690349] Checked data/reviewed/hand_coded_batch_015_b12c.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:39:58.599221] Checked data/reviewed/hand_coded_batch_015_b12d.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:44:43.218412] Checked data/reviewed/hand_coded_batch_015_b01.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:44:45.822667] Checked data/reviewed/hand_coded_batch_015_b02.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:44:48.358792] Checked data/reviewed/hand_coded_batch_015_b03.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:44:50.954147] Checked data/reviewed/hand_coded_batch_015_b04.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:44:53.475888] Checked data/reviewed/hand_coded_batch_015_b05.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:44:55.994072] Checked data/reviewed/hand_coded_batch_015_b06.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:44:58.476184] Checked data/reviewed/hand_coded_batch_015_b07.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:45:00.981564] Checked data/reviewed/hand_coded_batch_015_b08.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:45:03.436058] Checked data/reviewed/hand_coded_batch_015_b09.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:45:05.899212] Checked data/reviewed/hand_coded_batch_015_b10.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:45:08.252032] Checked data/reviewed/hand_coded_batch_015_b11.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:45:10.772112] Checked data/reviewed/hand_coded_batch_015_b12a.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:45:13.217538] Checked data/reviewed/hand_coded_batch_015_b12b.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:45:15.671810] Checked data/reviewed/hand_coded_batch_015_b12c.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:45:18.139345] Checked data/reviewed/hand_coded_batch_015_b12d.jsonl
+Total: 50 | Flagged: 0
+
+[2026-07-06T13:45:52.666182] Checked C:/Users/jhjh/AppData/Local/Temp/b015_all.jsonl
+Total: 750 | Flagged: 0

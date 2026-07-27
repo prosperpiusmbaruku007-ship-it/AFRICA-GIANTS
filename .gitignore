@@ -53,3 +53,6 @@ data/reviewed/
 
 # Scratch / throwaway diagnostic work (see CLAUDE.md "Scratch file convention")
 scratch/
+
+# Ephemeral scheduler lock files (machine-local runtime state, never versioned)
+.claude/*.lock
