@@ -1,0 +1,284 @@
+{
+  "probe": "edge_probe_plain_sw_015",
+  "endpoint": "https://prosperpiusmbaruku007--chike-inference-generate-endpoint.modal.run",
+  "index_facts": 217,
+  "run_started": "2026-07-28 01:52:46",
+  "run_finished": "2026-07-28 01:58:11",
+  "gate_baseline_context": "gate_orchestrator_combined_5a62c00.json (does NOT exercise this register)",
+  "headline": "All 15 user-facing answers returned EMPTY. Two stacked defects, both production-code-identical.",
+  "defect_A": {
+    "name": "clean_reply discards the whole answer",
+    "location": "chike/generation_cleanup.py _is_fabricated_block (line ~155)",
+    "rule": "re.search(r'\\?\\s*[A-Za-z]', block) with >15 chars after -> block classified fabricated Q&A turn; leading/early ? nukes the first block -> ''",
+    "proof": "clean_reply('?Kuna taratibu...brela.go.tz.<eot>')=='' ; clean_reply('Kuna taratibu...brela.go.tz.<eot>')==full answer",
+    "production_parity": "cleanup byte-identical to modal_app.py/eval.py per its docstring",
+    "gate_impact": "0/400 gate results empty and 0/400 start with ? -> Defect A did NOT contaminate 5a62c00; formal corpus does not trigger it"
+  },
+  "defect_B": {
+    "name": "model prepends question-echo + leading ? on plain-WhatsApp phrasing",
+    "evidence": "all 15 raw generations carry an early ? (e.g. p01 'sijafikia kiwango?...', p03 '...kama mwajiri?...', p02 bare '?')",
+    "production_parity": "orchestrator prompt uses tokenizer.apply_chat_template(add_generation_prompt=True), identical to modal_app.py -> not a harness priming artifact",
+    "caveat": "exercised the code-identical local orchestrator + Modal generate endpoint, not the production /answer HTTP path end-to-end"
+  },
+  "secondary_findings": [
+    "Q13/Q14/Q16 fixes are phrasing-fragile: corrected facts NOT retrieved on these fresh plain phrasings (top-3 was irrelevant)",
+    "PAYE routing regression on plain phrasing (p02): unlabeled 'kodi ya serikali' + Swahili numeral routed fact and hallucinated",
+    "SDL rate confusion (p04): 0.5% quoted (WCF's rate; SDL is 3.5%)",
+    "Retrieval on colloquial register is broadly weak (several wholly-irrelevant top-3), masked downstream by Defect A"
+  ],
+  "underlying_tally": {
+    "CORRECT": 5,
+    "PARTIAL": 3,
+    "BORDERLINE-SAFE": 1,
+    "WRONG_or_MISROUTED": 6,
+    "user_facing_usable": 0
+  },
+  "results": [
+    {
+      "id": "edge_p01",
+      "subdomain": "vat_registration",
+      "question": "mambo naomba kuuliza duka langu la nguo linaingiza kama milioni 17 hivi kwa mwezi je nahitajika kusajili vat au bado",
+      "expected_behavior": "17M/month -> ~204M/year exceeds the TZS 200M annual VAT-registration threshold, so registration is required (or SAFE-CLARIFY confirming the figure is monthly). Must not treat 17M as annual and say 'below threshold'.",
+      "route": "fact",
+      "retrieval_top3": [
+        "vat deferment minimum value: 10,000,000 TZS",
+        "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residents",
+        "company registration fee 2: 175,000 TZS",
+        "unpaid contribution penalty frequency: each month or a part of a month null"
+      ],
+      "raw_answer": "sijafikia kiwango?Kulingana na sheria, unatakiwa kusajili VAT pale mauzo yako yanapofikia au kuzidi shilingi milioni 200 kwa mwaka au shilingi milioni 100 kwa miezi sita. Thibitisha na tra.go.tz.<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "WRONG",
+      "note": "recites 200M/100M threshold but never converts 17M/mo->204M/yr nor concludes; \"sijafikia kiwango\" leak implies below-threshold"
+    },
+    {
+      "id": "edge_p02",
+      "subdomain": "paye_compliance",
+      "question": "nimemuajiri msichana wa kazi ofisini nampa laki nane kwa mwezi kodi yake ya serikali itakuwa shilingi ngapi",
+      "expected_behavior": "Unlabeled PAYE ('kodi ya serikali') + Swahili numeral 'laki nane' = 800,000/month. Route compute[paye] and compute PAYE on 800,000. ROUTING-GAP-PAYE regression check; must NOT route to fact.",
+      "route": "fact",
+      "retrieval_top3": [
+        "minimum monthly contributions maternity benefit: 36 monthly_contributions",
+        "duration of maternity cash benefit: 12 weeks",
+        "minimum monthly contributions for retirement pension: 180 monthly contributions"
+      ],
+      "raw_answer": "?Kodi ya PAYE kwa TZS 400,000/mwezi ni TZS 16,000. Thibitisha na TRA (tra.go.tz).<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "MISROUTED+WRONG",
+      "note": "should route compute[paye]; \"laki nane\"=800,000 unparsed; invented 400,000->16,000. ROUTING-GAP-PAYE regression on plain phrasing"
+    },
+    {
+      "id": "edge_p03",
+      "subdomain": "nssf_contributions",
+      "question": "mshahara wa mfanyakazi wangu ni sh 500000 nataka kujua mchango wangu tu kama mwajiri kwenye mfuko wa uzeeni sio jumla",
+      "expected_behavior": "NSSF employer-only share = 10% of 500,000 = 50,000 (explicitly NOT the 20% combined). D-NSSF-1 single-party regression check.",
+      "route": "fact",
+      "retrieval_top3": [
+        "file search report fee: 22,000 TZS",
+        "trademark fee for explanation of decision: 50,000 TZS",
+        "trademark fee for dissolution of partnership: 50,000 TZS",
+        "minimum monthly contributions maternity benefit: 36 monthly_contributions"
+      ],
+      "raw_answer": "yote.nikilipa shilingi ngapi kama mwajiri?Kama mwajiri unatakiwa kulipa asilimia 10 ya mshahara ghafi (gross wage) kwa ajili ya mfuko wa uzeeni. Thibitisha na NSSF (nssf.or.tz).<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "CORRECT",
+      "note": "employer 10% (not 20%) - D-NSSF-1 holds; no amount computed; nssf.or.tz domain leak"
+    },
+    {
+      "id": "edge_p04",
+      "subdomain": "sdl_compliance",
+      "question": "tuko na vibarua 8 wa kudumu na wawili wa muda kwenye gereji yangu je ile tozo ya mafunzo kwa waajiri inanihusu",
+      "expected_behavior": "SDL applies at >=10 employees; 8 permanent + 2 temporary = 10, so SDL (3.5% of gross payroll) DOES apply. Must aggregate 8+2 and not treat 8 as below threshold.",
+      "route": "fact",
+      "retrieval_top3": [
+        "compliance license processing time old: 28 days",
+        "duration of maternity cash benefit: 12 weeks",
+        "imprisonment term limit: two years",
+        "employer notification deadline before retirement: 6 months"
+      ],
+      "raw_answer": "?Ndiyo, unapaswa kulipa asilimia 0.5% ya mishahara ghafi kwa ajili ya mafunzo kwa waajiri. Thibitisha na TRA (tra.go.tz).<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "WRONG",
+      "note": "states 0.5% for SDL (that is WCF; SDL is 3.5%); did not use 8+2=10"
+    },
+    {
+      "id": "edge_p05",
+      "subdomain": "wcf_compliance",
+      "question": "nina saluni thamani ya vifaa vyangu ni milioni 20 na nawalipa wafanyakazi jumla ya milioni 2 kwa mwezi nichangie ngapi kwenye ile ya fidia za wafanyakazi",
+      "expected_behavior": "WCF = 0.5% of payroll 2,000,000 = 10,000/month. Must ignore the 20M equipment-value distractor as the base. D-WCF-3 asset-distractor stress.",
+      "route": "fact",
+      "retrieval_top3": [
+        "company share value threshold 4 min: 20,000,000 TZS",
+        "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.",
+        "company share value threshold 3 max: 20,000,000 TZS",
+        "minimum monthly contributions maternity benefit: 36 monthly_contributions"
+      ],
+      "raw_answer": "?Kwa mujibu wa sheria, unapaswa kulipa asilimia 0.5% ya jumla ya mishahara yote kwa ajili ya Fidia kwa Ajali za Kazini (WCF). Thibitisha na WCF (wcf.go.tz).<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "CORRECT",
+      "note": "0.5% of payroll; ignored the 20M asset distractor - D-WCF-3 holds; no amount computed"
+    },
+    {
+      "id": "edge_p06",
+      "subdomain": "brela_registration",
+      "question": "kampuni yangu sijawahi kupeleka ritani tangu nifungue miaka minne iliyopita nikiacha tu itajifuta yenyewe au kuna hatua za kuchukua",
+      "expected_behavior": "Not auto-dissolved: non-filing -> deemed defunct -> Registrar's 30-day notice -> struck off (Companies Act Cap 212); no fixed term; restoration via High Court. Retrieve brela_striking_off_non_filing. Q13 fix, fresh phrasing.",
+      "route": "fact",
+      "retrieval_top3": [
+        "trademark fee for dissolution of partnership: 50,000 TZS",
+        "amt loss companies only: AMT 1% applies ONLY to companies with 3 consecutive years of tax losses",
+        "unpaid contribution penalty frequency: each month or a part of a month null"
+      ],
+      "raw_answer": "?Kuna taratibu za kufuta usajili wa kampuni (dissolution/striking off). Thibitisha na BRELA (brela.go.tz).<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "PARTIAL",
+      "note": "right direction, no fabrication, but shallow; Q13 fix fact not retrieved"
+    },
+    {
+      "id": "edge_p07",
+      "subdomain": "osha_vs_wcf",
+      "question": "mfanyakazi wangu ameumia kazini kwenye mashine nani analipa matibabu yake serikali au mimi na niende wapi kudai",
+      "expected_behavior": "WCF pays workplace-injury compensation (employer contributes 0.5%); claim via WCF. OSHA registers/inspects workplaces but does NOT pay compensation. Retrieve osha_vs_wcf_roles. Q14 fix.",
+      "route": "fact",
+      "retrieval_top3": [
+        "employer notification deadline before retirement: 6 months",
+        "unpaid contribution penalty frequency: each month or a part of a month null",
+        "gn487a prohibited activity 15: Prohibited activity 15: Ownership and operation of micro and small industries"
+      ],
+      "raw_answer": "?Kwa mujibu wa sheria, mwajiri ndiye anayewajibika kulipa gharama za matibabu ya majeraha ya kazini. Thibitisha na WCF (wcf.go.tz).<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "WRONG",
+      "note": "says the employer pays medical costs (should be WCF fund pays); Q14 fix fact not retrieved"
+    },
+    {
+      "id": "edge_p08",
+      "subdomain": "efd_compliance",
+      "question": "nauza mitumba mtaani mauzo yangu hayazidi laki tano kwa mwezi jamaa wamesema lazima niwe na mashine ya risiti ni kweli",
+      "expected_behavior": "500k/month -> ~6M/year, below TZS 11M and unregistered, so EFD not mandatory; may use manual receipts. Not every business needs EFD. Retrieve efd_not_every_business. Q16 fix; 'mashine ya risiti' phrasing.",
+      "route": "fact",
+      "retrieval_top3": [
+        "employer notification deadline before retirement: 6 months",
+        "minimum contribution months health insurance: 3 months",
+        "compliance license processing time old: 28 days"
+      ],
+      "raw_answer": "?Ndiyo, kulingana na sheria, biashara yenye mauzo ya TZS 11,000,000 au zaidi kwa mwaka inatakiwa kuwa na EFD. Thibitisha na tra.go.tz.<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "WRONG",
+      "note": "user ~6M/yr is below 11M -> should be \"no\"; model said \"Ndiyo\"; Q16 fix fact not retrieved"
+    },
+    {
+      "id": "edge_p09",
+      "subdomain": "gn487a",
+      "question": "shemeji yangu ni raia wa kenya anataka kufungua duka la rejareja hapa kariakoo inaruhusiwa siku hizi",
+      "expected_behavior": "Retail trade (duka la rejareja) is a prohibited activity for non-citizens under GN 487A (effective 28 Jul 2025); not allowed. GN487A unlabeled.",
+      "route": "fact",
+      "retrieval_top3": [
+        "trademark fee for any other entry: 10,000 TZS",
+        "trademark fee for explanation of decision: 50,000 TZS",
+        "trademark fee for change of business address: 20,000 TZS"
+      ],
+      "raw_answer": "?Hapana, shemeji yako hawezi kuendesha duka la rejareja katika eneo la Kariakoo kulingana na taarifa uliyonipa. Sheria za uhamiaji zinazuia watu wasio raia wa Tanzania kufanya shughuli fulani za kiuchumi ikiwemo biashara ya rejareja. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "CORRECT",
+      "note": "non-citizen retail prohibited, cites immigration"
+    },
+    {
+      "id": "edge_p10",
+      "subdomain": "sdl_nssf_fanout",
+      "question": "nawalipa wafanyakazi watano jumla ya milioni 4 kwa mwezi nitalipa ngapi kwa ile ya mafunzo na ya uzeeni kwa pamoja",
+      "expected_behavior": "Multi-levy fan-out. SDL trap: only 5 employees (<10) so SDL is NOT applicable. NSSF computed on 4,000,000 (10% employer / 20% combined). Must not charge SDL at 5 staff.",
+      "route": "fact",
+      "retrieval_top3": [
+        "company registration fee 5: 440,000 TZS",
+        "trademark fee for responding to opposition: 50,000 TZS",
+        "minimum monthly contributions maternity benefit: 36 monthly_contributions",
+        "trademark fee for dissolution of partnership: 50,000 TZS"
+      ],
+      "raw_answer": "?Kwa wafanyakazi 5, jumla ya mishahara ni TZS 4,000,000. Kiasi cha michango ya NSSF kinachotakiwa ni asilimia 20 ya jumla, sawa na TZS 800,000. Thibitisha na NSSF (nssf.or.tz).<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "PARTIAL/WRONG",
+      "note": "NSSF 20%x4M=800k correct, but SDL trap ignored (should be not-applicable at 5<10); no fan-out"
+    },
+    {
+      "id": "edge_p11",
+      "subdomain": "wcf_compliance",
+      "question": "nimebaki na mfanyakazi mmoja tu baada ya kupunguza wengine bado nalazimika kuchangia ile ya fidia",
+      "expected_behavior": "Yes -- WCF applies from the first employee; there is no minimum headcount. Retrieve small_headcount_still_register / wcf_threshold_no_minimum. eval_311-class.",
+      "route": "fact",
+      "retrieval_top3": [
+        "trademark fee for dissolution of partnership: 50,000 TZS",
+        "minimum monthly contributions maternity benefit: 36 monthly_contributions",
+        "minimum shareholders: 2 employees"
+      ],
+      "raw_answer": "?Ndiyo, unatakiwa kuwasilisha taarifa za ajali za kazini kwa OSHA hata kama una mfanyakazi mmoja tu. Thibitisha na OSHA (osha.go.tz).<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "PARTIAL",
+      "note": "right polarity (still obligated) but wrong mechanism (OSHA accident-reporting vs WCF contribution)"
+    },
+    {
+      "id": "edge_p12",
+      "subdomain": "paye_compliance",
+      "question": "nimemwajiri fundi kutoka uganda hana ukaazi hapa nampa milioni 2 kwa mwezi kodi yake itakatwa kama ya watanzania au tofauti",
+      "expected_behavior": "Non-resident employee -> 15% flat final withholding, NOT the progressive resident bands. 15% x 2,000,000 = 300,000. D-PAYE-1 regression check.",
+      "route": "fact",
+      "retrieval_top3": [
+        "unpaid contribution penalty frequency: each month or a part of a month null",
+        "penalty fine non citizen: ten million TZS",
+        "company name change fee: 22,000 TZS",
+        "trademark fee for responding to opposition: 50,000 TZS"
+      ],
+      "raw_answer": "?Kwa mujibu wa sheria, kodi ya PAYE kwa mfanyakazi asiye mkazi Tanzania ni asilimia 15. Thibitisha na tra.go.tz.<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "CORRECT",
+      "note": "15% flat, differs from residents - D-PAYE-1 holds"
+    },
+    {
+      "id": "edge_p13",
+      "subdomain": "brela_registration",
+      "question": "mimi na mdogo wangu tunataka kuanzisha bizna pamoja tusajili kama nini kuna njia ngapi za kusajili biashara",
+      "expected_behavior": "Explain the business-registration structures (sole proprietor / business name, partnership, company); with 2 founders -> partnership or company. BRELA 3-structures (D-MODELRAG-A).",
+      "route": "fact",
+      "retrieval_top3": [
+        "trademark fee for dissolution of partnership: 50,000 TZS",
+        "trademark fee for any other entry: 10,000 TZS",
+        "trademark fee for change of business address: 20,000 TZS"
+      ],
+      "raw_answer": "?Kuna njia mbili za kusajili biashara; moja ni kwa jina la mmiliki pekee, na nyingine ni kwa jina la biashara. Thibitisha na BRELA (brela.go.tz).<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "WRONG",
+      "note": "says \"two ways\" (owner name / business name); misses partnership + company - D-MODELRAG-A not satisfied"
+    },
+    {
+      "id": "edge_p14",
+      "subdomain": "multi_group_aggregation",
+      "question": "nina wafanyakazi watatu wa laki tano kila mmoja na wawili wa milioni moja kila mmoja nitachangia ngapi kwenye mfuko wa wafanyakazi kwa mwezi",
+      "expected_behavior": "Mixed wage groups (3x500,000 + 2x1,000,000). Known aggregation gap -> expect SAFE-CLARIFY (ask for a single payroll total), NEVER a guessed figure.",
+      "route": "fact",
+      "retrieval_top3": [
+        "minimum monthly contributions maternity benefit: 36 monthly_contributions",
+        "minimum monthly contributions for retirement pension: 180 monthly contributions",
+        "minimum contribution months health insurance: 3 months"
+      ],
+      "raw_answer": "?Kwa wafanyakazi 3 wa TZS 500,000 kila mmoja, jumla ya mishahara = TZS 1,500,000. Kwa wafanyakazi 2 wa TZS 1,000,000 kila mmoja, jumla ya mishahara = TZS 2,000,000. Jumlisha mishahara yote: TZS 3,500,000. Thibitisha na TRA (tra.go.tz).<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "BORDERLINE-SAFE",
+      "note": "aggregated payroll correctly (3x500k+2x1M=3.5M), stopped there, no wrong guess; expected SAFE-CLARIFY, did not clarify but did not fabricate a contribution"
+    },
+    {
+      "id": "edge_p15",
+      "subdomain": "out_of_corpus",
+      "question": "nisaidie jinsi ya kupata mkopo wa benki kwa bizna yangu",
+      "expected_behavior": "Out-of-corpus (bank-loan how-to) -> clean refusal/redirect ('Sina uhakika...'), not a fabricated compliance answer.",
+      "route": "fact",
+      "retrieval_top3": [
+        "file search fee: 3,000 TZS",
+        "file search report fee: 22,000 TZS",
+        "vat return submission deadline: 20 days_of_month"
+      ],
+      "raw_answer": "?Samahani, sijui kuhusu utaratibu wa kupata mikopo ya benki. Kwa msaada wa fedha za biashara, unaweza kuwasiliana na NMB Bank PLC (nmbbank.com), CRDB Bank (crdb.com), au taasisi ndogo ndogo za fedha kama FINCA Microfinance. Ninaweza kukusaidia na masuala ya BRELA, VAT, PAYE, SDL, NSSF, WCF, au GN 487A.<|end_of_text|>",
+      "user_facing_answer": "",
+      "underlying_verdict": "CORRECT",
+      "note": "clean refusal + redirect to banks + scope list; routed via model self-refusal, not the R11 OOC classifier"
+    }
+  ]
+}
