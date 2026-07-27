@@ -123,12 +123,26 @@ CONCISE_BILINGUAL_FACTS = {
     # carry a displacement risk toward genuine VAT-registration queries (as the GN487A concise
     # facts did) — guarded by the two verification tuples in regenerate_rag_e5.py; narrow this
     # text (trim the 200M contrast) if the regen gate flags displacement.
+    # KEPT PRISTINE (value-at-front + tight 200M-contrast) — this exact text was the
+    # deployed 213-fact index and PASSES the adversarial eval_347 'EFD threshold' tuple.
+    # Do NOT add applicability prose here; the "not every business" correction lives in
+    # the separate 200M-free efd_not_every_business key below (adding it here tipped
+    # eval_347 out of top-3 — see PROGRESS §FACT-ACCURACY / regen b54eb23).
     'efd_threshold_tzs_11m':
         'Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 '
-        '(milioni kumi na moja) kwa mwaka. Si kila biashara inalazimika kutumia EFD. '
-        'Si TZS 200,000,000 — hiyo ni kizingiti '
+        '(milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti '
         'cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD '
         'bila kujali kiwango cha mauzo.',
+
+    # Q16 fix (200M-FREE by design, so it does NOT intrude on eval_347's 200M-heavy
+    # adversarial query while still winning the "kila duka bila kujali mauzo?" query).
+    # Counters the model's over-generalization that every shop needs an EFD regardless
+    # of sales, by injecting the explicit "Si kila biashara" + manual-receipts nuance.
+    'efd_not_every_business':
+        'Si kila biashara inalazimika kutumia EFD. Biashara ndogo yenye mauzo chini ya '
+        'TZS 11,000,000 kwa mwaka na isiyosajiliwa VAT inaweza kutumia risiti za mkono. '
+        'Waliosajiliwa VAT na wenye mauzo ya TZS 11,000,000 au zaidi ndio hulazimika '
+        'kutumia EFD.',
 
     'vat_registration_threshold_six_months':
         'Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6.',

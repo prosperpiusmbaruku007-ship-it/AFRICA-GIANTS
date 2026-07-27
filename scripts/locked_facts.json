@@ -1039,15 +1039,26 @@
     "status": "CONFIRMED"
   },
   "efd_threshold_tzs_11m": {
-    "fact": "Not every business must use an EFD. Required: (1) all VAT-registered persons; (2) non-VAT-registered persons with assessed annual turnover of TZS 11 million or more; (3) traders in prime commercial areas and selected sectors (spare parts, hardware, mini supermarkets, petrol stations, phone shops, sub-wholesale, bars/restaurants, pharmacies, electronics) as TRA progressively registers them (Phase 2, Tax Administration Act 2015). Businesses below TZS 11M turnover and not otherwise registered may use manual receipts. Exemptions under tax law exist. Near the threshold, confirm registration status with TRA.",
-    "correct_value": "Not every business: VAT-registered always; non-VAT >= TZS 11M turnover; + Phase-2 prime-area/selected sectors as TRA registers them. Below 11M & unregistered may use manual receipts.",
+    "fact": "EFD required for businesses with annual turnover TZS 11 million and above. Below TZS 11M may use manual receipts. All VAT-registered businesses must use EFD regardless of turnover.",
+    "correct_value": "TZS 11M annual turnover threshold; VAT-registered = always EFD",
     "wrong_patterns": [
       "kila biashara tanzania lazima iwe na efd machine",
-      "kila biashara inahitaji efd bila kizingiti",
+      "kila biashara inahitaji efd bila kizingiti"
+    ],
+    "primary_source": "tra.go.tz/page/know-about-e-fiscal-devices-efd + tra.go.tz/page/efd-vfd-suppliers (both live 2026-07-27); RSM Tanzania Tax Guide 2025/26; Auditax International Feb 2025",
+    "verified_date": "2026-07-27",
+    "status": "CONFIRMED"
+  },
+  "efd_not_every_business": {
+    "fact": "Not every business must use an EFD. A small business with annual turnover below TZS 11 million that is NOT VAT-registered may issue manual receipts. Only (1) VAT-registered persons (always), (2) non-VAT-registered persons with assessed annual turnover of TZS 11 million or more, and (3) traders in prime commercial areas and selected sectors (spare parts, hardware, mini supermarkets, petrol stations, phone shops, sub-wholesale, bars/restaurants, pharmacies, electronics) as TRA progressively registers them (Phase 2, Tax Administration Act 2015) are required to use an EFD. Do NOT tell every shop it must have an EFD regardless of sales.",
+    "correct_value": "Not every business needs an EFD; below TZS 11M and non-VAT may use manual receipts. VAT-registered always; non-VAT >= 11M; + Phase-2 prime-area/selected sectors.",
+    "wrong_patterns": [
       "duka lolote[^.?!]{0,40}efd[^.?!]{0,30}bila kujali[^.?!]{0,15}mauzo",
+      "kila (duka|biashara)[^.?!]{0,40}efd[^.?!]{0,30}bila kujali[^.?!]{0,15}mauzo",
       "every (shop|business)[^.?!]{0,40}efd[^.?!]{0,20}regardless of (sales|turnover)"
     ],
     "primary_source": "tra.go.tz/page/know-about-e-fiscal-devices-efd + tra.go.tz/page/efd-vfd-suppliers (both live 2026-07-27); Tax Administration Act 2015. NOTE: Bowmans/Mondaq/EDICOM state TZS 14M — overruled by TRA primary pages per primary-over-practitioner hierarchy (D-VATWH-1 precedent).",
+    "verified_by": "TRA live EFD pages 2026-07-27; 200M-free companion to efd_threshold_tzs_11m (kept pristine for eval_347 retrieval — see PROGRESS §FACT-ACCURACY)",
     "verified_date": "2026-07-27",
     "status": "CONFIRMED"
   },

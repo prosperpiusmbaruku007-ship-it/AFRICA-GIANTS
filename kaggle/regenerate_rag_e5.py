@@ -173,8 +173,10 @@ critical_queries = [
     # threshold after retrieval pulled a company-shareholders fact. The new osha_vs_wcf_roles
     # fact must win the "who pays injury compensation" query (distinctive: taasisi mbili / HAILIPI fidia).
     ('OSHA vs WCF roles (Q14)', 'query: Nani hulipa fidia ya ajali kazini, OSHA au WCF, na nahitaji wafanyakazi wangapi?', ['taasisi mbili', 'hailipi', 'mfanyakazi wa kwanza']),
-    # Q16 EFD: the model said every shop needs an EFD regardless of sales. The enriched
-    # efd_threshold_tzs_11m fact must win this over-broad-premise query (distinctive: "Si kila biashara").
+    # Q16 EFD: the model said every shop needs an EFD regardless of sales. The dedicated
+    # 200M-free efd_not_every_business fact must win this over-broad-premise query
+    # (distinctive: "Si kila biashara" — unique to that key; efd_threshold_tzs_11m is kept
+    # pristine for the eval_347 tuple above, so this correction lives in its own key).
     ('EFD not-every-business (Q16)', 'query: Je, kila duka linahitaji mashine ya EFD bila kujali kiwango cha mauzo?', ['si kila biashara', '11,000,000']),
 ]
 
