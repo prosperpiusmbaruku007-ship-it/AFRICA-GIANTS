@@ -124,9 +124,9 @@ CONCISE_BILINGUAL_FACTS = {
     # facts did) — guarded by the two verification tuples in regenerate_rag_e5.py; narrow this
     # text (trim the 200M contrast) if the regen gate flags displacement.
     'efd_threshold_tzs_11m':
-        'Si kila biashara inalazimika kutumia EFD. Kizingiti cha kuanza kutumia '
-        'mashine ya EFD: mauzo ya TZS 11,000,000 '
-        '(milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti '
+        'Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 '
+        '(milioni kumi na moja) kwa mwaka. Si kila biashara inalazimika kutumia EFD. '
+        'Si TZS 200,000,000 — hiyo ni kizingiti '
         'cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD '
         'bila kujali kiwango cha mauzo. Sekta na maeneo teule husajiliwa hatua kwa '
         'hatua na TRA; ukikaribia kiwango thibitisha na TRA.',
