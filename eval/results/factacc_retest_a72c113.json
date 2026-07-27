@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "commit": "a72c113",
+    "index_facts": 217,
+    "endpoint": "https://prosperpiusmbaruku007--chike-inference-generate-endpoint.modal.run",
+    "note": "FACT-ACCURACY Q13/Q14/Q16 before(216-index pre-fix)/after(217-index) live real-weights re-test"
+  },
+  "results": [
+    {
+      "tag": "Q13_BRELA",
+      "question": "Kampuni yangu imesajiliwa miaka sita iliyopita, naweza kuifuta sasa?",
+      "before_answer": "Hapana, lazima uishe kwanza. Kampuni haiwezi kufutwa kabla ya kumaliza muda wake. Thibitisha na BRELA (brela.go.tz).",
+      "after_answer": "Ndiyo — kampuni isiyowasilisha annual return kwa miaka mitatu inachukuliwa 'defunct' (haifanyi kazi) na inaweza kufutwa kwenye Daftari la Makampuni. Thibitisha na BRELA (brela.go.tz).",
+      "after_routing": "fact",
+      "after_facts_retrieved": [
+        [
+          "trademark renewal period: saba years",
+          "employer notification deadline before retirement: 6 months",
+          "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUNA sharti la \"kumaliza muda\" kwanza, kwa sababu kampuni haina muda maalum. Kampuni isipowasilisha ritani za mwaka (annual returns) inaweza kuhesabiwa haifanyi kazi (defunct) na kufutwa kwenye Daftari la Makampuni: Msajili hutoa notisi ya siku 30, kisha jina hufutwa chini ya Sheria ya Makampuni (Sura 212). Kurejesha kampuni iliyofutwa kunahitaji Mahakama Kuu."
+        ]
+      ],
+      "verdict": "FIXED (correct fact now retrieved + correct answer)"
+    },
+    {
+      "tag": "Q14_OSHA_WCF",
+      "question": "Nina wafanyakazi wawili tu dukani, bado nasajiliwa mahali fulani?",
+      "before_answer": "Kwa mujibu wa taarifa, unatakiwa kuwa na wafanyakazi wawili ili kusajiliwa kwa ajili ya WCF. Thibitisha na WCF (wcf.go.tz).",
+      "after_answer": "Ndiyo, unatakiwa kusajiliwa OSHA na WCF bila kujali idadi ya wafanyakazi. Thibitisha na osha.go.tz na wcf.go.tz.",
+      "after_routing": "fact",
+      "after_facts_retrieved": [
+        [
+          "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo YOTE ya kazi bila kikomo cha idadi ya wafanyakazi, na WCF huanza tangu mfanyakazi wa kwanza. Idadi ndogo ya wafanyakazi HAIONDOI wajibu wa kujisajili OSHA na WCF (mfuko wa fidia).",
+          "minimum shareholders: 2 employees",
+          "minimum directors: 2 employees"
+        ]
+      ],
+      "verdict": "FIXED (correct fact now retrieved + correct answer)"
+    },
+    {
+      "tag": "Q16_EFD",
+      "question": "Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?",
+      "before_answer": "Ndiyo, duka lolote linatakiwa kuwa na mashine ya kutoa risiti za EFD, bila kujali kiwango cha mauzo. Thibitisha na TRA (tra.go.tz).",
+      "after_answer": "Kwa mujibu wa sheria, biashara zenye mauzo chini ya milioni 11 kwa mwaka hazilazimiki kutumia mashine ya EFD. Lakini kumbuka kuwa unapaswa kutoa risiti sahihi kwa wateja wako, hata kama si kwenye mashine ya EFD. Thibitisha na tra.go.tz.",
+      "after_routing": "fact",
+      "after_facts_retrieved": [
+        [
+          "Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine ya risiti (EFD)? Si lazima. Si kila biashara inalazimika kutumia mashine ya risiti za kielektroniki (EFD): biashara ndogo yenye mauzo chini ya TZS 11,000,000 kwa mwaka na isiyosajiliwa VAT inaweza kutumia risiti za mkono badala ya mashine ya EFD. Waliosajiliwa VAT na wenye mauzo ya TZS 11,000,000 au zaidi ndio hulazimika kutumia mashine ya risiti za EFD.",
+          "unpaid contribution penalty frequency: each month or a part of a month null",
+          "compliance license processing time old: 28 days"
+        ]
+      ],
+      "verdict": "FIXED (correct fact now retrieved + correct answer)"
+    }
+  ]
+}
