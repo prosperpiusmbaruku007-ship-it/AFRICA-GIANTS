@@ -124,10 +124,12 @@ CONCISE_BILINGUAL_FACTS = {
     # facts did) — guarded by the two verification tuples in regenerate_rag_e5.py; narrow this
     # text (trim the 200M contrast) if the regen gate flags displacement.
     'efd_threshold_tzs_11m':
-        'Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 '
+        'Si kila biashara inalazimika kutumia EFD. Kizingiti cha kuanza kutumia '
+        'mashine ya EFD: mauzo ya TZS 11,000,000 '
         '(milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti '
         'cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD '
-        'bila kujali kiwango cha mauzo.',
+        'bila kujali kiwango cha mauzo. Sekta na maeneo teule husajiliwa hatua kwa '
+        'hatua na TRA; ukikaribia kiwango thibitisha na TRA.',
 
     'vat_registration_threshold_six_months':
         'Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6.',
@@ -155,6 +157,28 @@ CONCISE_BILINGUAL_FACTS = {
 
     'nssf_calculation_example':
         'Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo ni kwa mfanyakazi mmoja tu). Hesabu: kila mfanyakazi analipa NSSF ya TZS 120,000 (asilimia 20 ya mshahara wake), kisha zidisha kwa wafanyakazi 12 = TZS 1,440,000 jumla.',
+
+    # Swahili-first grounding for the BRELA striking-off rule (edge Q13). The model
+    # fabricated a "company must finish its term first" bar (companies have no term);
+    # the correct rule is the non-filing -> defunct -> 30-day notice -> strike-off
+    # procedure. English-only would match the Swahili query only cross-lingually.
+    'brela_striking_off_non_filing':
+        'Kampuni isipowasilisha ritani za mwaka (annual returns) BRELA inaweza kuhesabiwa '
+        'haifanyi kazi (defunct) na kufutwa kwenye Daftari la Makampuni. Msajili hutoa notisi '
+        'ya siku 30 kuthibitisha kampuni bado inafanya kazi; ikishindwa, jina hufutwa chini ya '
+        'Sheria ya Makampuni (Sura 212). HAKUNA sharti la "kumaliza muda" kabla ya kufutwa — '
+        'kampuni haina muda maalum. Kurejesha kampuni iliyofutwa kunahitaji maombi Mahakama Kuu.',
+
+    # Swahili-first grounding for the OSHA-vs-WCF role distinction (edge Q14). The model
+    # answered the wrong agency and fabricated a 2-employee WCF threshold after retrieval
+    # pulled a company-shareholders fact for a WCF question — a same-language grounding
+    # entry stops that cross-lingual displacement.
+    'osha_vs_wcf_roles':
+        'OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (kifungu 16, Sheria '
+        'ya OSHA Na.5 ya 2003), hukagua, na hutoa leseni ya utii kila mwaka — OSHA HAILIPI fidia '
+        'ya ajali. Fidia ya ajali na magonjwa ya kazini hulipwa na WCF (mwajiri huchangia 0.5% ya '
+        'mishahara). Usajili wa OSHA na wa WCF ni tofauti; vyote vinahitajika. WCF huanza tangu '
+        'mfanyakazi wa kwanza — HAKUNA kizingiti cha wafanyakazi wawili.',
 }
 
 # --- Noise keys to drop (bare citations, sections, exemption lists, no-value fragments) ---

@@ -164,6 +164,18 @@ critical_queries = [
     # exact failure mode the GN487A concise facts hit. This must still return the 200M VAT-reg
     # fact. If it FAILS, narrow the EFD fact's 200M contrast (GN487A narrowing precedent).
     ('VAT registration threshold (displacement guard)', 'query: Kizingiti cha kusajili VAT ni mauzo ya kiasi gani kwa mwaka?', ['200,000,000']),
+    # ── FACT-ACCURACY 2026-07-27: the three edge-Q13/14/16 fixes must each retrieve ──
+    # Q13 BRELA striking-off: the model fabricated a "must finish its term first" bar.
+    # The new brela_striking_off_non_filing fact must win this deregistration query
+    # (distinctive tokens: 30-day defunct notice / High Court / no fixed term).
+    ('BRELA striking-off (Q13)', 'query: Naweza kufuta kampuni yangu kabla ya kumaliza muda wake?', ['siku 30', 'mahakama kuu', 'defunct']),
+    # Q14 OSHA vs WCF: the model answered the wrong agency and invented a 2-employee WCF
+    # threshold after retrieval pulled a company-shareholders fact. The new osha_vs_wcf_roles
+    # fact must win the "who pays injury compensation" query (distinctive: taasisi mbili / HAILIPI fidia).
+    ('OSHA vs WCF roles (Q14)', 'query: Nani hulipa fidia ya ajali kazini, OSHA au WCF, na nahitaji wafanyakazi wangapi?', ['taasisi mbili', 'hailipi', 'mfanyakazi wa kwanza']),
+    # Q16 EFD: the model said every shop needs an EFD regardless of sales. The enriched
+    # efd_threshold_tzs_11m fact must win this over-broad-premise query (distinctive: "Si kila biashara").
+    ('EFD not-every-business (Q16)', 'query: Je, kila duka linahitaji mashine ya EFD bila kujali kiwango cha mauzo?', ['si kila biashara', '11,000,000']),
 ]
 
 print('\n' + '=' * 60)

@@ -843,6 +843,20 @@
     "effective_date": "2025-01-01",
     "status": "CONFIRMED"
   },
+  "brela_striking_off_non_filing": {
+    "fact": "A company that fails to file annual returns with BRELA may be deemed defunct and struck off the Register of Companies. Procedure: the Registrar publishes a 30-day notice requiring proof the company is still operating; on failure the name is struck off under the Companies Act, Cap 212. The Registrar may also strike off on his own accord by written notice (2019 amendment). There is NO rule that a company must 'finish its term' before removal — companies have no fixed term. Restoring a struck-off company requires a High Court application.",
+    "correct_value": "Non-filing -> defunct -> 30-day notice -> struck off (Companies Act Cap 212); restore via High Court. No 'fixed term' bar.",
+    "wrong_patterns": [
+      "lazima uishe kwanza",
+      "haiwezi kufutwa kabla ya kumaliza muda",
+      "must (finish|complete) (its )?term",
+      "cannot be (struck off|deregistered|removed) before .*term"
+    ],
+    "primary_source": "Companies Act Cap 212 ss.128/400/400A; BRELA gazette notice brela.go.tz/uploads/documents/sw-1653651054-1.pdf",
+    "verified_by": "BRELA gazette notice (30-day defunct notice + s.400(3) strike-off); Written Laws (Misc. Amendments)(No.3) Act 2019 s.400A own-accord + s.400A(5) High Court restoration; R.E.2023 renumbers to s.403 (section numbers kept in metadata only, per CLAUDE.md answer-text discipline)",
+    "verified_date": "2026-07-27",
+    "status": "CONFIRMED"
+  },
   "wcf_new_employer_registration": {
     "fact": "A new employer must register with WCF within 30 days of hiring their first employee",
     "correct_value": "30 days from first hire",
@@ -1025,14 +1039,16 @@
     "status": "CONFIRMED"
   },
   "efd_threshold_tzs_11m": {
-    "fact": "EFD required for businesses with annual turnover TZS 11 million and above. Below TZS 11M may use manual receipts. All VAT-registered businesses must use EFD regardless of turnover.",
-    "correct_value": "TZS 11M annual turnover threshold; VAT-registered = always EFD",
+    "fact": "Not every business must use an EFD. Required: (1) all VAT-registered persons; (2) non-VAT-registered persons with assessed annual turnover of TZS 11 million or more; (3) traders in prime commercial areas and selected sectors (spare parts, hardware, mini supermarkets, petrol stations, phone shops, sub-wholesale, bars/restaurants, pharmacies, electronics) as TRA progressively registers them (Phase 2, Tax Administration Act 2015). Businesses below TZS 11M turnover and not otherwise registered may use manual receipts. Exemptions under tax law exist. Near the threshold, confirm registration status with TRA.",
+    "correct_value": "Not every business: VAT-registered always; non-VAT >= TZS 11M turnover; + Phase-2 prime-area/selected sectors as TRA registers them. Below 11M & unregistered may use manual receipts.",
     "wrong_patterns": [
       "kila biashara tanzania lazima iwe na efd machine",
-      "kila biashara inahitaji efd bila kizingiti"
+      "kila biashara inahitaji efd bila kizingiti",
+      "duka lolote[^.?!]{0,40}efd[^.?!]{0,30}bila kujali[^.?!]{0,15}mauzo",
+      "every (shop|business)[^.?!]{0,40}efd[^.?!]{0,20}regardless of (sales|turnover)"
     ],
-    "primary_source": "TRA official website tra.go.tz; RSM Tanzania Tax Guide 2025/26; Auditax International Feb 2025",
-    "verified_date": "2026-06-16",
+    "primary_source": "tra.go.tz/page/know-about-e-fiscal-devices-efd + tra.go.tz/page/efd-vfd-suppliers (both live 2026-07-27); Tax Administration Act 2015. NOTE: Bowmans/Mondaq/EDICOM state TZS 14M — overruled by TRA primary pages per primary-over-practitioner hierarchy (D-VATWH-1 precedent).",
+    "verified_date": "2026-07-27",
     "status": "CONFIRMED"
   },
   "gn487a_visa_revocation": {
@@ -1172,6 +1188,20 @@
     "primary_source": "https://www.wcf.go.tz/pages/contribution; Workers Compensation Act No.20 of 2008",
     "verified_by": "wcf.go.tz/pages/contribution — 'Mwajiri anaweza kulipa katika Mfuko kwa njia ya mtandao (portal.wcf.go.tz)', employer-only contribution, no TRA; Workers Compensation Act No.20 of 2008 — primary source, WCF-hosted",
     "verified_date": "2026-07-25",
+    "status": "CONFIRMED"
+  },
+  "osha_vs_wcf_roles": {
+    "fact": "OSHA and WCF are two separate institutions with different roles. OSHA (Occupational Safety and Health Authority) registers workplaces (s.16, OSH Act No.5 of 2003, before commencing operations), inspects, and issues the annual Compliance Licence; OSHA does NOT pay injury compensation. Compensation for occupational injuries and diseases is paid by the WCF (Workers Compensation Fund) under the Workers Compensation Act, Cap 263, funded by the employer's 0.5% monthly wage contribution. OSHA registration and WCF registration are separate obligations and both apply. WCF applies from the first employee — there is NO 2-employee or other minimum-count threshold for WCF.",
+    "correct_value": "OSHA registers/inspects/licenses workplaces (does NOT compensate); WCF pays injury/disease compensation (0.5% employer levy, from employee 1). Separate obligations. No 2-employee WCF threshold.",
+    "wrong_patterns": [
+      "osha[^.?!]{0,30}(hulipa|inalipa|hutoa) fidia",
+      "osha[^.?!]{0,30}(pays|provides)[^.?!]{0,20}compensation",
+      "wafanyakazi (wawili|2)[^.?!]{0,40}(kusajiliwa|kusajili)[^.?!]{0,20}wcf",
+      "wcf[^.?!]{0,30}(2|wawili) employees"
+    ],
+    "primary_source": "osha.go.tz FAQ (OSHA does not compensate; refer to WCF) item 17; osha.go.tz services (s.16 OSH Act 2003); wcf.go.tz",
+    "verified_by": "osha.go.tz/frequent-asked-questions (eng) item 17 directs injured workers to WCF; OSH Act No.5/2003 s.16; Workers Compensation Act Cap 263; cross-ref wcf_threshold_no_minimum + wcf_paid_to_fund_not_tra",
+    "verified_date": "2026-07-27",
     "status": "CONFIRMED"
   },
   "vat_threshold_200m_july2024_increase": {
