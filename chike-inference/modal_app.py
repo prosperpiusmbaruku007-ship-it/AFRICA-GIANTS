@@ -391,7 +391,7 @@ class ChikeModel:
         # Shared wrapper + cleanup from the mounted chike/ package (/root/chike).
         if '/root' not in sys.path:
             sys.path.insert(0, '/root')
-        from chike.prompting import build_enriched_system
+        from chike.prompting import build_enriched_system, ensure_terminal_punct
         from chike.generation_cleanup import clean_reply
         from chike.routing import is_uncomputable_payroll_amount
 
@@ -436,9 +436,15 @@ class ChikeModel:
         print(f'[RAG] enriched system prompt: {len(enriched_system)} chars '
               f'({len(relevant_facts)} facts)')
 
+        # Defect B (2026-07-28): give the question a terminal boundary so the naive-concat
+        # model starts its answer instead of first completing the missing '?' (leading-echo
+        # artifact). No-op on already-punctuated messages; shared helper with the orchestrator
+        # and kaggle/eval.py (chike.prompting) so the three prompt builds cannot diverge.
+        user_msg = ensure_terminal_punct(message)
+
         messages = [
             {'role': 'system', 'content': enriched_system},
-            {'role': 'user',   'content': message.strip()},
+            {'role': 'user',   'content': user_msg},
         ]
 
         try:
@@ -453,7 +459,7 @@ class ChikeModel:
                 f'<|start_header_id|>system<|end_header_id|>\n\n'
                 f'{enriched_system}<|eot_id|>'
                 f'<|start_header_id|>user<|end_header_id|>\n\n'
-                f'{message.strip()}<|eot_id|>'
+                f'{user_msg}<|eot_id|>'
                 f'<|start_header_id|>assistant<|end_header_id|>\n\n'
             )
 

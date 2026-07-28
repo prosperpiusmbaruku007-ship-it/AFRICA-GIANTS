@@ -63,6 +63,27 @@ def build_enriched_system(system_prompt: str, facts: Sequence[str]) -> str:
     )
 
 
+_TERMINAL_PUNCT = ("?", ".", "!")
+
+
+def ensure_terminal_punct(text: str) -> str:
+    """Append '?' when the user message lacks terminal punctuation (Defect B, 2026-07-28).
+
+    v15 was trained on a naive-concat chat format with NO assistant-turn boundary, so on
+    an UNPUNCTUATED question the model first completes the question's missing '?' (a
+    leading-echo artifact) before answering — which clean_reply then had to strip
+    (Defect A). Giving the question a terminal boundary makes the model start its answer
+    directly, fixing the echo at the source and removing Defect A's >60-char echo coupling.
+
+    No-op on already-punctuated text (all 400 gate questions end in punctuation, so their
+    prompts stay byte-identical); on unpunctuated plain-WhatsApp questions it only removes
+    the leading echo (answer content unchanged — verified live on p02/p06/p09/p15)."""
+    t = (text or "").strip()
+    if t and t[-1] not in _TERMINAL_PUNCT:
+        return t + "?"
+    return t
+
+
 def build_chat_prompt(
     question: str,
     facts: Sequence[str],
@@ -88,13 +109,14 @@ def build_chat_prompt(
     if system_prompt is None:
         system_prompt = load_system_prompt()
     enriched = build_enriched_system(system_prompt, facts)
+    user_msg = ensure_terminal_punct(question)   # Defect B: give the question a terminal boundary
     messages = [
         {"role": "system", "content": enriched},
-        {"role": "user", "content": question.strip()},
+        {"role": "user", "content": user_msg},
     ]
     if tokenizer is not None:
         return tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
         )
     # Test-only fallback (no tokenizer): trained naive-concat shape, never header tokens.
-    return f"{enriched}\n\n{question.strip()}"
+    return f"{enriched}\n\n{user_msg}"

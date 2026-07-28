@@ -64,11 +64,25 @@ def test_chat_prompt_delegates_to_tokenizer_chat_template():
 def test_chat_prompt_fallback_is_naive_concat_without_header_tokens():
     # No tokenizer (unit-test path): naive-concat shape (enriched system, blank line,
     # question) — deliberately NOT the old Llama-3 header format the model can't stop after.
+    # The unpunctuated question gains a terminal '?' (Defect B) so the naive-concat model
+    # starts its answer instead of first completing the question's missing punctuation.
     prompt = build_chat_prompt("Swali", ["fact-a"], system_prompt="SYS")
     expected = (
         "SYS\n\nUKWELI ULIOTHIBITISHWA KWA SWALI HILI:\n- fact-a\n\n"
         "Tumia ukweli huu. Usibuni takwimu ambazo hazipo hapa."
-        "\n\nSwali"
+        "\n\nSwali?"
     )
     assert prompt == expected
     assert "<|start_header_id|>" not in prompt and "<|begin_of_text|>" not in prompt
+
+
+def test_ensure_terminal_punct_appends_only_when_missing():
+    from chike.prompting import ensure_terminal_punct
+    # unpunctuated -> single '?' appended (Defect B fix)
+    assert ensure_terminal_punct("duka langu vat au bado") == "duka langu vat au bado?"
+    assert ensure_terminal_punct("  trailing spaces trimmed  ") == "trailing spaces trimmed?"
+    # already-punctuated -> byte-identical no-op (all 400 gate questions are this case)
+    for done in ("tayari na swali?", "sentensi kamili.", "wow!"):
+        assert ensure_terminal_punct(done) == done
+    # empty / whitespace -> empty (never a bare '?')
+    assert ensure_terminal_punct("   ") == ""

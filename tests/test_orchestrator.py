@@ -602,7 +602,8 @@ def test_fact_prompt_uses_production_rag_wrapper():
     assert "Wewe ni Chike." in prompt
     assert "UKWELI ULIOTHIBITISHWA KWA SWALI HILI:" in prompt
     assert "- SDL ni 3.5%" in prompt
-    assert prompt.rstrip().endswith("SDL ni ngapi")
+    # Unpunctuated question gains a terminal '?' (Defect B) before the prompt is built.
+    assert prompt.rstrip().endswith("SDL ni ngapi?")
     assert "<|begin_of_text|>" not in prompt and "<|start_header_id|>" not in prompt
 
 
