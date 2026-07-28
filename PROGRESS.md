@@ -103,6 +103,30 @@ Scoped AFTER item 3. To investigate: whether tokenization actually diverges (rou
 with/without `fix_mistral_regex=True`), whether it affects generation/retrieval, and provenance of the
 Mistral tokenizer reference in the adapter repo.
 
+## 🟠 ITEM 4 — colloquial-register retrieval fragility (PARKED; direction set, 2026-07-28)
+
+**Diagnosis CONFIRMED (data).** On plain-WhatsApp run-on queries the dense e5 retriever MISSES the correct
+fact (p06/p07/p08: top-3 were off-topic English facts — `trademark fee…`, `employer notification…`), while
+a trivial lexical token-overlap arm RECOVERS the correct fact 3/3. Two compounding factors:
+- **factor 1 — noise dilution:** greetings/narrative ("mambo naomba kuuliza…", "jamaa wamesema…") pull the
+  dense vector off-topic; the domain keywords survive but are a minority of tokens.
+- **factor 2 — English-fact attractors:** every dense miss landed on English `"key: value"` facts, whose
+  generic-English embeddings spuriously outrank the on-topic Swahili fact for a noisy Swahili query.
+
+**Direction = hybrid dense + lexical (two-arm).** Additive, no model call, no retrain. Complementary
+structural cleanup = fact-form normalization (English `key: value` → concise Swahili-first) — this is the
+**parked follow-up "E"** (forces a RAG regen; batch with the next `locked_facts.json` change).
+
+**Merge strategy = TBD via a Kaggle spike** (union-then-rerank vs interleave vs weighted; rank-of-correct
+across 400 gate + 15 probe). Cannot run locally — e5 load is not viable on this machine (Windows paging
+limit). The spike is already written: **`scratch/item4_hybrid_sweep.py`** (adapt to the `regenerate_rag_e5.py`
+Kaggle pattern — CPU, Internet, fetch inputs from GitHub). Run it AFTER the v16-wiring decision, because
+that decides the target retriever: `chike.retrieval` (v16/gate) vs production `modal_app.py::retrieve_facts`
+(v15) — **do not harden v15's retriever separately if v16 replaces that path.**
+
+**Value note:** unlike item 3 (v16-only), item 4 affects real users — production `/answer` is v15 RAG-only,
+so retrieval quality is the whole product there. Priority rises once the wiring target is fixed.
+
 ## ✅ FACT-ACCURACY (Q13/Q14/Q16) — SHIPPED + GATE-CONFIRMED (2026-07-28; batch `5a62c00`)
 
 Same edge probe surfaced three fact-path fabrications where a correct locked fact (or general rule) exists:
