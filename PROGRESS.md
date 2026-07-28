@@ -70,10 +70,28 @@ answers came back EMPTY** — two stacked, production-code-identical defects:
 **Note:** the gate corpus (`5a62c00`) never triggered either defect (0/400) because it is formally phrased —
 this is a **coverage gap**, not a contamination of the gate numbers, which stand unchanged.
 
-Recovered ≠ correct: several plain-phrasing answers are still wrong on content — tracked as **item 3**
-(p02 PAYE mis-route on `kodi ya serikali` + Swahili numeral `laki nane`; p04 SDL rate stated 0.5% vs 3.5%)
-and **item 4** (retrieval fragility on colloquial register: Q13/Q14/Q16 fix-facts not retrieved on fresh
-plain phrasing). p02 likely relates to **ROUTING-GAP-PAYE** (supposedly shipped `3144a98`) — verify next.
+Recovered ≠ correct: several plain-phrasing answers were still wrong on content. Cycle close-out:
+
+- **item 3 / p02 — SHIPPED (`45a9b48`).** Root cause was the `_PAYROLL_CTX` gate, not the levy cue:
+  informal employment phrasing (`nimemuajiri`, `msichana wa kazi`, `nampa`) matched no payroll-context
+  word, so PAYE mis-routed to fact. (`laki nane` parses fine to 800,000 — the "400k/16k" was fact-path
+  hallucination.) Added informal-employment cues to `_PAYROLL_CTX`; `edge_p02` now routes paye →
+  `compute_paye(800000)=TZS 78,000`. Sweep: 1 routing change, **0/400 gate changes**. **v16 orchestrator/
+  gate only** (v15 `/answer` unaffected — no redeploy).
+- **item 3 / p04 — DEFERRED → v16 hardening backlog: "natural-levy applicability route (structural)".**
+  p04 (`…tozo ya mafunzo…inanihusu`) is an applicability ask (`_has_money_ask=False`) on a NATURAL (non-
+  explicit) levy; `detect_intent` has no applicability route for that case, so cues alone can't fix it —
+  needs its own design + blast-radius analysis when picked up. Its `0.5%`-vs-`3.5%` SDL rate is a
+  downstream fact-path symptom of the routing miss.
+- **item 3 / p12 — LEFT AS FACT (low priority).** Comparison question (`kama ya watanzania au tofauti`,
+  `_has_money_ask=False`); the fact answer is already rate-correct (non-resident 15%). Logged, not fixed.
+- **item 4 — OPEN (analysis-only next):** retrieval fragility on colloquial register — Q13/Q14/Q16
+  fix-facts and others not retrieved on fresh plain phrasing. Structural (two-arm retrieval on run-on
+  colloquial text), NOT another round of per-phrasing fact tuning. Scope options to be reported; no fix
+  without approval.
+
+**Probe cycle status:** Defect A ✅ + Defect B ✅ shipped & prod-verified; item 3/p02 ✅ shipped; p04 deferred;
+p12 logged; item 4 open. Tokenizer warning (below) scoped after item 3.
 
 ## 🟠 OPEN ITEM — tokenizer `fix_mistral_regex` / Mistral reference on the production adapter (2026-07-28)
 
