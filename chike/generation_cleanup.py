@@ -105,6 +105,21 @@ _DOMAIN_LOOP_RE = re.compile(
 # re-joins byte-for-byte identical.
 _SENT_SPLIT_RE = re.compile(r"((?<=[.)])\s+)")
 
+# Leading echoed-question strip (2026-07-28, Defect A). On plain-WhatsApp phrasing the
+# fine-tuned model prepends an ECHO of the user's question (or a bare stray '?') before
+# the real answer, which begins a fresh sentence (capital). That early '?' made
+# _is_fabricated_block classify the ENTIRE first block as a fabricated 'Q? A' turn and
+# discard it -> '' (confirmed live on the production /answer path: 4/4 probe questions
+# returned empty). This strips ONLY that leading echo, ONCE, at the very start:
+#   - anchored at ^, so it never touches a mid-answer question;
+#   - '[^?\n]' cannot cross a '\n\n', so only the leading block is affected — a fabricated
+#     'Q? A' turn in a LATER block is still caught by _is_fabricated_block (unchanged);
+#   - <=60 chars before the first '?' (max echo observed across all 400 gate + 15 probe
+#     raw outputs was 41 chars; 0 exceeded 60), then a capital letter = the real answer.
+# Blast-radius sweep over those 415 raw outputs: 17 recovered (empty -> real answer),
+# 0 regressed, 0 other changes.
+_LEADING_ECHO_RE = re.compile(r"^\s*[^?\n]{0,60}\?\s*(?=[A-ZÀ-Ý])")
+
 
 def _cut_at_first(text: str, match) -> str:
     return text[: match.start()].rstrip() if match else text
@@ -212,18 +227,20 @@ def clean_reply(text: str, stop_strings: Optional[Sequence[str]] = None) -> str:
     drop residual special tokens and glued role junk, then apply clean_generated_reply.
 
     Order: (1) truncate at any real turn/stop marker; (2) cut a leaked non-Latin-script
-    tail / domain-fragment loop; (3) keep '\\n\\n'-separated blocks until the first
-    fabricated follow-up turn (a legitimately-structured answer — intro line + steps/rates/
+    tail / domain-fragment loop; (2b) strip a leading echoed-question '?' at the very
+    start (Defect A); (3) keep '\\n\\n'-separated blocks until the first fabricated
+    follow-up turn (a legitimately-structured answer — intro line + steps/rates/
     definition — is kept whole; only the appended ramble is dropped); (4) cut an intra-block
     repeated-sentence loop; (5) strip a trailing leaked role word / fact-key run glued to
     the answer; (6) strip residual special tokens; (7) domain fixes.
 
-    Steps (2) and (4) are byte-exact no-ops on a clean reply — they fire only when the
-    specific degradation-tail signature (non-Latin char, domain loop, repeated sentence)
-    is actually present.
+    Steps (2), (2b) and (4) are byte-exact no-ops on a clean reply — they fire only when
+    the specific signature (non-Latin char, domain loop, leading echoed '?', repeated
+    sentence) is actually present.
     """
     text = truncate_at_stops(text, stop_strings)
     text = _cut_nonlatin_and_domain_loops(text)
+    text = _LEADING_ECHO_RE.sub("", text, count=1)   # Defect A: drop a leading echoed-question '?'
     kept, seen = [], set()
     for block in text.split(_TURN_SEPARATOR):
         if _is_fabricated_block(block, seen):
