@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-26
+Last updated: 2026-07-28
 
 **🏁 CYCLE FULLY CLOSED (2026-07-26):** the entire router-investigation + defect-fix cycle is now
 closed end-to-end with real GPU confirmation. Follow-up #3's last two threads landed this session:
