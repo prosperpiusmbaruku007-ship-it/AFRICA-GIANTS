@@ -72,7 +72,15 @@ _GENERIC_LEVY = ["makato", "michango", "tozo", "malipo kwa serikali", "kulipa se
 
 # Payroll context: the question is about wages/employees (needed for a payroll levy).
 _PAYROLL_CTX = ["mshahara", "mishahara", "mfanyakazi", "wafanyakazi", "waajiriwa",
-                "watumishi", "analipwa", "ninalipa", "kumlipa", "ajira", "payroll", "mlipwa"]
+                "watumishi", "analipwa", "ninalipa", "kumlipa", "ajira", "payroll", "mlipwa",
+                # Informal employment phrasing (item 3 / edge_p02): real users describe
+                # employing/paying staff without a formal payroll word ("nimemuajiri msichana
+                # wa kazi", "nina vibarua", "namlipa fundi"). Extends the ROUTING-GAP-PAYE class
+                # (3144a98 added levy cues; this closes the payroll-context gate). Blast-radius
+                # sweep over 400 gate + 15 probe: routes edge_p02 none->paye (correct compute
+                # = TZS 78,000), ZERO other routing changes.
+                "kuajiri", "niliajiri", "nimeajiri", "nimemuajiri", "nimemwajiri", "kumuajiri",
+                "kumwajiri", "muajiri", "mwajiri", "waajiri", "kibarua", "vibarua", "mtumishi"]
 
 # Money 'how-much' cue: a request for a shilling QUANTITY.
 _MONEY_ASK = ["kiasi gani", "shilingi ngapi", "kinakatwa kiasi", "ni ngapi", "gharama gani"]
