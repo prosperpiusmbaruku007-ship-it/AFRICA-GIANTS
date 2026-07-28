@@ -43,6 +43,48 @@ inayokatwa*, *kodi ya kipato* …) match no cue, and "ya serikali" ≠ the gener
 **SCOPED below (characterize-before-fix, no code yet); full blast-radius sweep + proposed cue extension +
 validation to be reported for review before implementing — same rigor as D-NSSF-1 / D-FIDELITY-1.**
 
+## ✅ PLAIN-SWAHILI EDGE PROBE — Defect A + Defect B SHIPPED + PROD-VERIFIED (2026-07-28)
+
+A 15-question plain-WhatsApp Swahili probe (`eval/accuracy_gate/edge_probe_plain_sw_015.jsonl`,
+findings `eval/results/edge_probe_plain_sw_015_findings.json`) surfaced that **all 15 user-facing
+answers came back EMPTY** — two stacked, production-code-identical defects:
+
+- **Defect A — `clean_reply` blanked whole answers (`fix 628f6a0`).** `_is_fabricated_block` treated
+  an early `?` (from the leading echo below) as a fabricated `Q? A` turn and discarded the first block
+  → `''`. Confirmed LIVE on the production `/answer` path (4/4 → `{"reply":""}`). Fix: strip a leading
+  echoed-question `?` once at the start of `clean_reply` (anchored `^`, ≤60 chars, capital-after; cannot
+  cross `\n\n` so mid-answer `Q? A` detection is untouched). Blast-radius over 400 gate + 15 probe raws:
+  **17 recovered, 0 regressed, 0 other**; 27 cleanup tests pass. Also recovered 2 gate rows (eval_321/330)
+  whose compute path had masked the blank.
+- **Defect B — model prepended a question-echo + leading `?` (`fix 6161cb9`).** Root cause: v15 trained
+  on naive-concat with no assistant-turn boundary → on an UNPUNCTUATED question the model completes the
+  missing `?` before answering. Fix: `chike.prompting.ensure_terminal_punct` appends `?` when terminal
+  punctuation is missing, applied in all 3 prompt builds (build_chat_prompt → orchestrator + eval.py;
+  modal_app.py inline primary + fallback). Sweep: **no-op on all 400 gate questions** (already punctuated
+  → byte-identical), appends one `?` on the 15 probe questions with answer content unchanged. Verified
+  live on the production `/answer` path (4/4 non-empty, no leading `?`). 36 prompting/orchestrator tests pass.
+- **CLOSED by Defect B:** the Defect-A `>60-char leading-echo` coupling risk (a long echo could slip past
+  A's cap and re-blank). B removes the echo at the source, so this can no longer arise; A remains as
+  defense-in-depth.
+
+**Note:** the gate corpus (`5a62c00`) never triggered either defect (0/400) because it is formally phrased —
+this is a **coverage gap**, not a contamination of the gate numbers, which stand unchanged.
+
+Recovered ≠ correct: several plain-phrasing answers are still wrong on content — tracked as **item 3**
+(p02 PAYE mis-route on `kodi ya serikali` + Swahili numeral `laki nane`; p04 SDL rate stated 0.5% vs 3.5%)
+and **item 4** (retrieval fragility on colloquial register: Q13/Q14/Q16 fix-facts not retrieved on fresh
+plain phrasing). p02 likely relates to **ROUTING-GAP-PAYE** (supposedly shipped `3144a98`) — verify next.
+
+## 🟠 OPEN ITEM — tokenizer `fix_mistral_regex` / Mistral reference on the production adapter (2026-07-28)
+
+Loading the adapter tokenizer (`prospAprospA007/africa-giants-adapter-v15`) emits:
+*"loading … with an incorrect regex pattern … set `fix_mistral_regex=True` … This will lead to incorrect
+tokenization."* — and references **Mistral-Small-3.1-24B**, while the base is meant to be
+`McGill-NLP/AfriqueLlama-8B`. "Possibly incorrect tokenization" on a production model is **not minor**.
+Scoped AFTER item 3. To investigate: whether tokenization actually diverges (round-trip a Swahili sample
+with/without `fix_mistral_regex=True`), whether it affects generation/retrieval, and provenance of the
+Mistral tokenizer reference in the adapter repo.
+
 ## ✅ FACT-ACCURACY (Q13/Q14/Q16) — SHIPPED + GATE-CONFIRMED (2026-07-28; batch `5a62c00`)
 
 Same edge probe surfaced three fact-path fabrications where a correct locked fact (or general rule) exists:
