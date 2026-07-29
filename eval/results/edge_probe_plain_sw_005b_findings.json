@@ -1,0 +1,67 @@
+{
+  "probe": "eval/accuracy_gate/edge_probe_plain_sw_005b.jsonl",
+  "raw_result": "scratch/edge_probe_005b_result.json (gitignored)",
+  "runner": "scratch/edge_probe_005b_run.py (gitignored)",
+  "date": "2026-07-29",
+  "purpose": "5-question plain-Swahili probe on never-seen phrasing: (a) regression-check Defects A+B and p02 on both live paths; (b) gather v15-vs-v16 evidence for the v16 wiring decision.",
+  "method": "Each question run through BOTH live paths on the same Modal deployment / same v15 weights: v15 = production web_endpoint (classify+decompose+RAG+chat-template+clean, {message}->{reply}); v16 = Orchestrator(LocalAdapter->generate_endpoint) + AfriqueLlama tokenizer prompt-parity + shared v15 RAG index. Adjudicated against scripts/locked_facts.json + rules engine.",
+  "headline": {
+    "defect_ab_regression": "PASS 10/10 non-empty (both paths, all 5). No clean_reply blanking, no leading-echo re-blank on fresh unpunctuated plain-Swahili phrasing. Defects A+B hold.",
+    "v15_vs_v16": "4/5 questions BYTE-IDENTICAL between v15 and v16 (all fact-routed). The one compute question (b02) DIVERGED decisively: v15 (no compute path) emitted a confident WRONG payroll number; v16 routed compute[sdl] and SAFE-CLARIFIED (no wrong number). => v16 >= v15 everywhere here, strictly safer on the compute question, zero fact-path regression.",
+    "dominant_residual_failure": "RETRIEVAL fragility (item-4), shared by BOTH paths (same index) and ORTHOGONAL to the wiring decision: b05 (GN487A fronting) missed the facilitation facts entirely -> inadequate answer; b01 top-3 also off-topic but rescued by general knowledge. Good retrieval (b04 rank-1 on-topic) -> good answer. Retrieval quality tracked answer quality 1:1.",
+    "new_findings_not_fixed": [
+      "b05 GN487A facilitation retrieval miss: the fronting/name-lending facts exist (gn487a_license_lending_is_facilitation, gn487a_penalty_citizen_facilitator) but were NOT retrieved on this friendly-partnership phrasing; both paths gave a generic immigration-ownership answer that misses the criminal-facilitation exposure. Correctness failure driven by retrieval, not routing.",
+      "b02 slot-extraction gap on all-Swahili numerals: routing correctly reached compute[sdl], but the extractor did not resolve the fully-specified figures ('kumi na wawili'=12, 'laki tatu na nusu'=350,000 each, explicit 'kila mmoja') -> safe-clarify instead of the engine's 147,000. Compute path is only as good as the downstream Swahili-numeral extractor."
+    ]
+  },
+  "per_question": [
+    {
+      "id": "edge_b01",
+      "subdomain": "income_tax_presumptive",
+      "adjudication_basis": "Income tax applies to the trade; 800,000/wk = 41.6M/yr (under 100M presumptive ceiling, under 200M VAT); minimum_turnover_tax=1% WEF 1 Jul 2025. Correct = confirm income tax applies + TRA redirect.",
+      "v15": {"verdict": "CORRECT", "note": "'Ndiyo, unapaswa kulipa kodi ya mapato... Thibitisha na tra.go.tz.' Confirms income tax applies + safe TRA redirect. Does not spell out 'get a TIN' but does not deny/understate. Non-empty."},
+      "v16": {"verdict": "CORRECT", "route": "fact", "note": "Byte-identical answer. Retrieval MISS (top-3 all off-topic: vat-registration-deadline, fund-payment-deadline, employer-notification) yet answered correctly from general knowledge/persona. Retrieval fragility present but rescued.", "retrieval_top3": ["vat registration notification deadline commissioner: 14 days", "fund payment deadline after retirement notification: 60 days", "employer notification deadline before retirement: 6 months"]},
+      "non_empty": {"v15": true, "v16": true}
+    },
+    {
+      "id": "edge_b02",
+      "subdomain": "sdl_compute",
+      "adjudication_basis": "12 >= 10 -> SDL applies; 3.5% x (12 x 350,000 = 4,200,000) = 147,000/month (sdl_rate, sdl_threshold, sdl_calculation_example). Engine WOULD produce 147,000 if slots resolved.",
+      "v15": {"verdict": "WRONG", "note": "'Kwa wafanyakazi 12, jumla ya malipo ya mshahara ni TZS 3,750,000... Thibitisha na TRA.' Confident WRONG payroll (should be 4,200,000) and gives NO SDL figure. Classic v15 fact-path free-computation failure (no deterministic backstop). Non-empty."},
+      "v16": {"verdict": "SAFE-CLARIFY (no wrong number)", "route": "clarification (computation_type=sdl)", "note": "Routed to compute[sdl] then asked per-employee-vs-total + employee count. Safe never-guess, but a MISS on the ideal 147,000: the extractor did not resolve the all-Swahili numerals + 'kila mmoja' per-person structure. Strictly safer than v15's confident wrong number.", "retrieval_top3": []},
+      "non_empty": {"v15": true, "v16": true},
+      "significance": "The single clearest v16-vs-v15 datapoint: on the one computational question, v15 gave a confident wrong number, v16 refused to guess. Core v16 value prop confirmed. Downstream Swahili-numeral extraction is the next gap on the compute path."
+    },
+    {
+      "id": "edge_b03",
+      "subdomain": "business_transfer_inheritance",
+      "adjudication_basis": "Deceased mother's registered pharmacy does not auto-continue; heir must update/transfer BRELA registration + licence (+ TMDA pharmacy licensing). Safe-clarify / graceful referral preferred. WRONG = 'just continue' or fabricated specifics.",
+      "v15": {"verdict": "ACCEPTABLE (borderline)", "note": "'...unatakiwa kuwasilisha taarifa za mabadiliko ya umiliki... ndani ya siku 14. Thibitisha na BRELA.' Correct DIRECTION (must file change-of-ownership, not just continue) + BRELA redirect. Caveat: the specific 'siku 14' deadline is not a clearly-locked fact (possible conflation with a 14-day notification figure) -> mild fabrication risk. Non-empty."},
+      "v16": {"verdict": "ACCEPTABLE (borderline)", "route": "fact", "note": "Byte-identical. Retrieval partially on-topic (TMDA-replaces-TFDA is relevant for a pharmacy; + name-change fee 22,000). Same 'siku 14' caveat.", "retrieval_top3": ["tmda replaces tfda: TMDA is the current name — TFDA no longer exists", "compliance license processing time old: 28 days", "company name change fee: 22,000 TZS"]},
+      "non_empty": {"v15": true, "v16": true}
+    },
+    {
+      "id": "edge_b04",
+      "subdomain": "multi_levy_applicability",
+      "adjudication_basis": "Owner+spouse, no employees: SDL no (<10); NSSF/WCF employee-based -> trigger on hiring (WCF from employee 1); OSHA workplace registration applies NOW to the premises. Differentiate, not blanket.",
+      "v15": {"verdict": "CORRECT (minor imprecision)", "note": "Opens 'Zinakuhusu zote' (overstates, since no employees yet) BUT the body correctly conditions: NSSF on hiring, WCF within 30 days of first employee, OSHA register workplace within 30 days, SDL/PAYE depend on headcount. OSHA-now is right; employee-based ones correctly deferred. Does not address spouse/voluntary-NSSF nuance. Non-empty."},
+      "v16": {"verdict": "CORRECT (minor imprecision)", "route": "fact", "note": "Byte-identical. GOOD retrieval: on-topic small-headcount OSHA/WCF fact at rank 1.", "retrieval_top3": ["Nina wafanyakazi wawili tu (au mmoja) dukani... OSHA husajili maeneo YOTE ya kazi bila kikomo... WCF huanza tangu mfanyakazi wa kwanza...", "minimum contribution months health insurance: 3 months", "minimum monthly contributions maternity benefit: 36 monthly_contributions"]},
+      "non_empty": {"v15": true, "v16": true}
+    },
+    {
+      "id": "edge_b05",
+      "subdomain": "gn487a_fronting",
+      "adjudication_basis": "Non-citizen capital + Tanzanian name on wholesale (duka la jumla) licence = fronting. Must catch FACILITATION: name/licence-lending is 'kumsaidia' -> Tanzanian penalised TZS 5M or 3 months (gn487a_license_lending_is_facilitation / gn487a_penalty_citizen_facilitator); non-citizen 10M min/6mo/visa revocation. WRONG = frame as legal partnership OR answer only ownership while missing the offence.",
+      "v15": {"verdict": "WRONG / INADEQUATE", "note": "'Hapana... rafiki yako lazima awe mmiliki halisi wa hisa... Jina lako kwenye leseni linaweza kukusaidia kupata vibali fulani, lakini sheria za uhamiaji zinakataza umiliki kamili...' Catches 'Hapana' but MISSES the facilitation offence entirely: no mention that name-lending is itself a crime, that wholesale is GN487A-prohibited, or that the user faces TZS 5M/3 months. Rationale is garbled and even hints the name-on-licence 'can help'. Frames as immigration-ownership, not GN487A facilitation. Non-empty."},
+      "v16": {"verdict": "WRONG / INADEQUATE", "route": "fact", "note": "Byte-identical. Retrieval MISS: top-3 all off-topic trademark fees; the GN487A facilitation facts were never surfaced. Same failure as v15 -> confirms this is a RETRIEVAL failure shared by both paths, not a routing/pipeline difference.", "retrieval_top3": ["trademark fee for any other entry: 10,000 TZS", "trademark fee for dissolution of partnership: 50,000 TZS", "trademark fee for change of business address: 20,000 TZS"]},
+      "non_empty": {"v15": true, "v16": true},
+      "significance": "Highest-severity content miss in the set. The correct facts EXIST in locked_facts but were not retrieved on friendly-partnership fronting phrasing -> both paths gave an answer that fails to warn the user of criminal facilitation exposure. This is exactly the item-4 (colloquial/oblique-phrasing retrieval) failure mode, on a high-stakes question."
+    }
+  ],
+  "v16_wiring_evidence_summary": {
+    "no_fact_path_regression": "4/4 fact-routed questions produced byte-identical v15/v16 answers on the same weights+index. Wiring v16 carries no regression risk on the fact path; it only ADDS the compute route + never-guess.",
+    "compute_path_is_strictly_safer": "b02: v15 confident-wrong number vs v16 safe-clarify. This is the concrete case the v16 architecture (deterministic rules engine + never-guess) exists to fix.",
+    "retrieval_is_the_independent_top_lever": "The two real content failures (b05 wrong, b01 rescued) are RETRIEVAL misses shared by both paths. v16 wiring will NOT fix them; the parked item-4 hybrid dense+lexical retrieval work is the lever. Wiring decision and item-4 are independent workstreams.",
+    "downstream_compute_extractor_is_next_after_routing": "b02 shows routing-to-compute now works, but Swahili-numeral slot extraction ('kumi na wawili', 'laki tatu na nusu', per-person 'kila mmoja') did not resolve -> the engine's 147,000 was not delivered. The compute path's value is gated on extractor coverage."
+  }
+}
