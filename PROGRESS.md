@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-29
+Last updated: 2026-08-06
 
 **🏁 CYCLE FULLY CLOSED (2026-07-26):** the entire router-investigation + defect-fix cycle is now
 closed end-to-end with real GPU confirmation. Follow-up #3's last two threads landed this session:
@@ -10,6 +10,70 @@ working — shipped `75421f0`, GPU-confirmed: 3 target rows corrected + judge 5/
 eval_378 scorer-artifact flip, zero collateral). Two non-blocking follow-ups logged for later
 (SCORER-SEMANTICS-1: credit "TZS 0"/not-applicable answers; JUDGE-NONDET: eval_397). See the
 D-FIDELITY-1 and work-item-2-round-2 entries below.
+
+## 🧭 PHASE D WIRING CYCLE — IN FLIGHT (2026-08-06)
+
+Founder decision: **Stage 0 cancelled** (no users yet → no live traffic to observe → zero
+blast radius pre-launch makes flag-gated staging over-engineering). Straight to **Stage 1 =
+Phase D as ADR 0001 §10 actually specifies.** Planning premise (an assumption, NOT evidence,
+and explicitly not to be reconciled with the 400's 26%): **compute ≈ 50% of eventual traffic.**
+
+**Pre-launch blockers landed first, independent of the wiring outcome:**
+- `149938d` — `chike.retrieval` **fails loud** on a missing/corrupt index instead of returning
+  `[]`. The default paths are repo-relative `kaggle/`, which do **not** exist inside the Modal
+  image; the old graceful-disable turned a wiring mistake into a silent no-facts collapse that
+  looks like model failure. + `expected_fact_count` (R15 stale-index guard), `preflight()`,
+  `configure()`.
+- `fb8d3bc` — **one shared OOC refusal text.** The orchestrator carried its own terser string.
+  Both matched `refusal_phrases`, so **the refusal gate could not see the difference** — wiring
+  v16 would have silently downgraded every refused user's answer while passing validation.
+- `30aa79b` — orchestrator resolves **`stop_strings` from config** instead of the implicit
+  module default. Behavioural no-op today; closes a config-only edit reaching production and
+  the gate but not v16's clean stage — a latent divergence underneath a measurement run.
+
+**Plan A extraction — SHIPPED (`d54ec17`).** `chike/pipeline_v15.py` (production's sequence,
+generation injected) + `chike/decomposition_v15.py` (leaf, **no** ordinal split), imported by
+BOTH `modal_app.py` and the Phase D harness. **All three `decompose_query` copies collapsed**
+(modal_app, eval.py, and the v16-only `chike/decomposition.py` kept deliberately distinct).
+Behaviour proved, not asserted, against `tests/fixtures/v15_inline_baseline_30aa79b.py`
+(captured via `git show` from the last pre-extraction commit): decompose/pool/prompt
+byte-identical over 420 questions, stop-split+clean byte-identical over 400 persisted
+generations, and **20/20 byte-identical live against the production `web_endpoint`** (closing
+the two stages tests can't reach offline: the real e5 encode and the real
+`apply_chat_template`). The v15 arm cannot inherit v16 powers — guarded by tests that
+`decomposition_v15` differs from `decomposition` on **exactly eval_322**, and that
+`V15Retriever` never invokes the two-arm hybrid. Suite 273 → 308.
+
+**No Modal redeploy before the wiring decision** — production picks the extraction up whenever
+we next deploy.
+
+### 🟠 LAST OPEN R12 GAP — `kaggle/eval.py` has no `is_uncomputable_payroll_amount` guard
+
+Production intercepts a payroll-levy AMOUNT asked with no salary figure **before**
+decompose/RAG/generate and returns `PAYROLL_CLARIFICATION` (no model call). **The live gate does
+not** — it sends the question to the model. After `d54ec17` this is the **only** remaining
+divergence between `eval.py` and production.
+
+**Deliberately NOT fixed inside this measurement cycle (founder call).** Adding it moves the
+launch-blocking `GATE PASSED` number — the same class of decision as the `scorer_reliability`
+denominator (see the STRUCTURAL GATE FINDING below), and changing the gate's denominator
+mid-comparison would corrupt Phase D. **Decide after Phase D lands.** The Phase D v15 arm is
+unaffected: it uses `pipeline_v15`, which has the guard.
+
+### Run status
+
+| Run | What | Who | State |
+|---|---|---|---|
+| 2 parts 1–2 | numeric retrieval A/B, CPU (`kaggle/rag_numeric_ab_run2.py`, `f521768`) | founder (Kaggle) | **run; artifact pending** — see below |
+| 1 + 2 part 3 | paired v15-vs-v16 400 + de-confound, GPU (`kaggle/eval_phase_d_paired.py`, `124cbd2`) | founder (Kaggle) | packaged, not yet run |
+| 3 | 48-question dual-path natural probe, HTTP | Claude Code | approved, not yet built |
+
+**Run 2 parts 1–2 — founder-reported figures (full artifact not yet pasted into the repo):**
+append-only **confirmed** (0 violations, 0 facts lost, Set A ranks identical) → the hybrid is
+**safe**. But the second arm fires **197/197** and yields **1 recovery vs 86 dilutions** on the
+labelled set → **not a demonstrated fact-path win.** Consequence: **"keep single-arm in
+production" is now a live option**, and Run 2 part 3 is the deciding evidence on whether the
+two-arm retriever ships at all — not merely a de-confound.
 
 ## 🔴🔴 ROUTING-GAP-PAYE — HIGH PRIORITY (2026-07-26) — top open item, above all other tracked gaps
 
