@@ -11,6 +11,51 @@ eval_378 scorer-artifact flip, zero collateral). Two non-blocking follow-ups log
 (SCORER-SEMANTICS-1: credit "TZS 0"/not-applicable answers; JUDGE-NONDET: eval_397). See the
 D-FIDELITY-1 and work-item-2-round-2 entries below.
 
+## 🔴 SAFETY-2 / D-RESIDENCY-1 — engine-authoritative wrong figure (TRACKED DEFECT, 2026-08-06)
+
+**Logged, not implemented.** Discovered by Run 3 (`nat_16`, `eval/results/edge_probe_natural_048_findings.json`).
+
+**What happened.** *"nimemleta engineer kutoka india **hana residence permit ya kudumu** nampa
+milioni 4 kwa mwezi kodi ya mshahara wake ni ngapi"* — routing **succeeded** (`compute[paye]`),
+but `chike.routing.paye_resident` did not read *"hana residence permit ya kudumu"* as
+non-resident. The rules engine therefore applied the **resident progressive bands** and returned
+**TZS 1,028,000** instead of the non-resident flat 15% = **TZS 600,000**. That figure was then
+rendered as the authoritative deterministic *working*.
+
+**(a) Why D-FIDELITY-1 structurally cannot catch it.** D-FIDELITY-1 blanks the model body when
+it *contradicts* the engine's working. Here the body and the working **agreed** — both were
+wrong, because both derived from the same mis-detected input. The guard is a
+consistency check between two outputs of one computation; it has no independent notion of
+correctness and therefore cannot detect an error upstream of both. **No amount of fidelity
+guarding closes this class.** The defect lives in input resolution, not in output fidelity.
+
+**(b) This failure class exists ONLY in v16.** v15 has no rules engine, so it cannot lend an
+authoritative frame to a wrong number: its errors are model guesses, presented as model prose.
+v16 prints a wrong figure *as a verified calculation*, appended verbatim by `_render`. On this
+question v15's answer was off-topic (immigration permits) but asserted **no tax figure at all**.
+So on `nat_16` specifically, v16 is **worse than v15** — the only such case found in Run 3, set
+against 4 confident wrong numbers v16 removed. Stated plainly because the wiring case must not
+be argued on the favourable cases alone.
+
+**(c) Proposed fix approach (NOT implemented).** Extend `_PAYE_NONRESIDENT_CUES` with
+residency/permit phrasings — *"hana residence permit"*, *"hana kibali cha ukaazi"*, *"si mkazi
+wa kudumu"*, *"yuko kwa muda"*, *"anafanya kazi kwa mkataba wa muda"*, *"amekuja kutoka"* —
+i.e. the same lexical-cue extension pattern as the shipped ROUTING-GAP-PAYE fix, with the same
+discipline: sweep every candidate over the 400 + all probe sets for false positives BEFORE
+implementing, because a false *non-resident* detection is symmetrically dangerous (it would
+apply flat 15% to a resident earning below the threshold). A deeper alternative — having the
+engine return a *confidence* on residency and clarifying when low — is a real design change and
+should not be folded into a cue extension.
+
+**(d) This is an INPUT to the wiring decision, not a blocker to be quietly closed.** It does not
+by itself argue against wiring v16: the net compute-path safety change in Run 3 was still
+positive (4 wrong numbers removed, 1 correct answer lost, 1 new authoritative error added). But
+it establishes that *routing success ≠ safety*, and that v16 carries a failure mode with a worse
+**presentation** than anything v15 can produce. Whoever takes the wiring decision must weigh it
+explicitly. **Do not close this by fixing the cue list and declaring the class handled** — the
+class is "engine authority applied to a mis-resolved input", and the residency cue is one
+instance of it.
+
 ## 🧭 PHASE D WIRING CYCLE — IN FLIGHT (2026-08-06)
 
 Founder decision: **Stage 0 cancelled** (no users yet → no live traffic to observe → zero
