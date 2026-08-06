@@ -1,0 +1,204 @@
+{
+ "record": "VERIFICATION OF RECORD — chike/pipeline_v15.py vs production web_endpoint",
+ "status": "pipeline_v15 IS NOW THE CODE SERVING PRODUCTION (deployed 2026-08-07)",
+ "date_run": "2026-08-06",
+ "commit_verified": "d54ec17 (the extraction commit)",
+ "deployed_at_commit": "6b21a28 / 0d294b4",
+ "runner": "scratch/pipeline_v15_live_compare.py (gitignored)",
+ "method": "Each of the canonical 20 edge questions run through BOTH: (A) the live production web_endpoint (the pre-extraction v15 pipeline, inline in modal_app), and (B) chike.pipeline_v15.answer() driven locally with generate() over HTTP to generate_endpoint on the SAME Modal deployment / SAME v15 weights, single-arm V15Retriever on the local 217-fact index. RAG index sha-verified identical between kaggle/ and chike-inference/ before the run.",
+ "result": {
+  "byte_identical": 20,
+  "n": 20,
+  "differing_ids": []
+ },
+ "latency": {
+  "warm_n": 19,
+  "production_mean_s": 10.6,
+  "extracted_mean_s": 11.3,
+  "cold_start_observed_s": 128.8
+ },
+ "why_this_is_the_verification_of_record": "This was run BEFORE the extraction was merged, as a pre-merge check. It is now the verification OF RECORD because the 2026-08-07 redeploy put pipeline_v15 on the production serving path: these 20 rows are the evidence that what users now hit is byte-identical to what they hit before. It closes the two stages the offline suite cannot reach -- the real e5 encode and the real apply_chat_template on the adapter tokenizer -- which no unit test substitutes for.",
+ "offline_companion": "tests/test_pipeline_v15.py: decompose/pool/prompt byte-identical vs the git-pinned pre-extraction baseline across 420 questions; stop-split+clean byte-identical across 400 persisted generations.",
+ "rows": [
+  {
+   "n": 1,
+   "question": "Ninataka kufungua duka la vipuri vya magari, lakini nitasajili kwa jina la mfanyakazi wangu Mtanzania ili nisionekane kama mmiliki — hii itanisaidia?",
+   "identical": true,
+   "production": "Hapana — hii si njia salama ya kisheria. Hata kama utasajili kwa jina la mfanyakazi wako Mtanzania, sheria inazingatia MMILIKI halisi wa biashara — si jina lililosajiliwa tu. Ukaguzi wa BRELA, TRA au polisi unaweza kubainisha mmiliki halisi kupitia rekodi za benki, akaunti za simu, na nyaraka za biashara. Adhabu kamili zinatumika kwa mmiliki na mfanyakazi aliyeruhusu matumizi yake. Thibitisha na wakili wa biashara.",
+   "extracted": "Hapana — hii si njia salama ya kisheria. Hata kama utasajili kwa jina la mfanyakazi wako Mtanzania, sheria inazingatia MMILIKI halisi wa biashara — si jina lililosajiliwa tu. Ukaguzi wa BRELA, TRA au polisi unaweza kubainisha mmiliki halisi kupitia rekodi za benki, akaunti za simu, na nyaraka za biashara. Adhabu kamili zinatumika kwa mmiliki na mfanyakazi aliyeruhusu matumizi yake. Thibitisha na wakili wa biashara.",
+   "prod_secs": 128.8,
+   "extracted_secs": 46.1
+  },
+  {
+   "n": 2,
+   "question": "Mauzo yangu yamefika TZS 200,000,000 kwa mwaka huu, je VAT?",
+   "identical": true,
+   "production": "Ndiyo, unapaswa kujiandikisha kwa VAT. Thibitisha na tra.go.tz.",
+   "extracted": "Ndiyo, unapaswa kujiandikisha kwa VAT. Thibitisha na tra.go.tz.",
+   "prod_secs": 7.2,
+   "extracted_secs": 6.0
+  },
+  {
+   "n": 3,
+   "question": "Nauza bidhaa TZS 8,000,000 kwa mnunuzi anayekata kodi, atakata kiasi gani na mimi nitapokea kiasi gani?",
+   "identical": true,
+   "production": "Kwa mauzo ya TZS 8,000,000, kiwango cha VAT ni asilimia 18. Thibitisha na tra.go.tz. Mnunuzi atakata kodi ya VAT ya asilimia 18, sawa na TZS 1,440,000. Utalipwa TZS 6,560,000.",
+   "extracted": "Kwa mauzo ya TZS 8,000,000, kiwango cha VAT ni asilimia 18. Thibitisha na tra.go.tz. Mnunuzi atakata kodi ya VAT ya asilimia 18, sawa na TZS 1,440,000. Utalipwa TZS 6,560,000.",
+   "prod_secs": 12.2,
+   "extracted_secs": 12.0
+  },
+  {
+   "n": 4,
+   "question": "Mfanyakazi wangu anapata TZS 1,200,000 kila mwezi, kodi ya serikali inayokatwa ni ngapi?",
+   "identical": true,
+   "production": "Kwa mshahara wa TZS 1,200,000, PAYE inayokatwa ni TZS 128,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+   "extracted": "Kwa mshahara wa TZS 1,200,000, PAYE inayokatwa ni TZS 128,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+   "prod_secs": 8.3,
+   "extracted_secs": 9.9
+  },
+  {
+   "n": 5,
+   "question": "Mfanyakazi wangu si mkazi, analipwa TZS 3,000,000 kwa mwezi, kodi yake ni kiasi gani?",
+   "identical": true,
+   "production": "Kwa mshahara wa TZS 3,000,000, PAYE ni TZS 250,000. Thibitisha na TRA (tra.go.tz).",
+   "extracted": "Kwa mshahara wa TZS 3,000,000, PAYE ni TZS 250,000. Thibitisha na TRA (tra.go.tz).",
+   "prod_secs": 7.6,
+   "extracted_secs": 9.2
+  },
+  {
+   "n": 6,
+   "question": "Deni langu la benki ni TZS 12,000,000, SDL yangu itakuwaje?",
+   "identical": true,
+   "production": "Kwa deni la TZS 12,000,000, unazidi kiwango cha chini cha TZS 10,000,000 kinachohitaji SDL. SDL ni asilimia 3.5 ya malipo ya fedha ya wafanyakazi wako. Thibitisha na tra.go.tz.",
+   "extracted": "Kwa deni la TZS 12,000,000, unazidi kiwango cha chini cha TZS 10,000,000 kinachohitaji SDL. SDL ni asilimia 3.5 ya malipo ya fedha ya wafanyakazi wako. Thibitisha na tra.go.tz.",
+   "prod_secs": 11.0,
+   "extracted_secs": 11.3
+  },
+  {
+   "n": 7,
+   "question": "Nina wafanyakazi tisa wa kudumu na mmoja wa muda mfupi, bado nachangia kitu?",
+   "identical": true,
+   "production": "Kwa mujibu wa sheria, unatakiwa kuwasilisha michango ya NSSF kwa asilimia 20% ya mishahara ya wafanyakazi wako. Thibitisha na NSSF (nssf.go.tz).",
+   "extracted": "Kwa mujibu wa sheria, unatakiwa kuwasilisha michango ya NSSF kwa asilimia 20% ya mishahara ya wafanyakazi wako. Thibitisha na NSSF (nssf.go.tz).",
+   "prod_secs": 8.6,
+   "extracted_secs": 9.0
+  },
+  {
+   "n": 8,
+   "question": "Wafanyakazi watatu wanalipwa TZS 500,000 kila mmoja na wengine wawili TZS 800,000, NSSF ya wote ni kiasi gani?",
+   "identical": true,
+   "production": "NSSF ya wafanyakazi wote: wafanyakazi 3 × TZS 50,000 + wafanyakazi 2 × TZS 80,000 = TZS 250,000 (jumla ya michango ya asilimia 20). Thibitisha na nssf.go.tz.",
+   "extracted": "NSSF ya wafanyakazi wote: wafanyakazi 3 × TZS 50,000 + wafanyakazi 2 × TZS 80,000 = TZS 250,000 (jumla ya michango ya asilimia 20). Thibitisha na nssf.go.tz.",
+   "prod_secs": 10.1,
+   "extracted_secs": 10.8
+  },
+  {
+   "n": 9,
+   "question": "Kampuni yangu ina mfanyakazi mmoja tu, bado ninatakiwa kuchangia?",
+   "identical": true,
+   "production": "Ndiyo, kwa mujibu wa sheria, unapaswa kuchangia asilimia 0.5 ya mishahara ya mwaka kwa WCF. Thibitisha na WCF (wcf.go.tz).",
+   "extracted": "Ndiyo, kwa mujibu wa sheria, unapaswa kuchangia asilimia 0.5 ya mishahara ya mwaka kwa WCF. Thibitisha na WCF (wcf.go.tz).",
+   "prod_secs": 9.5,
+   "extracted_secs": 9.8
+  },
+  {
+   "n": 10,
+   "question": "Mishahara yetu ni TZS 4,800,000 kwa watu 13, pia tuna faida ya TZS 2,000,000 mwezi huu — WCF yetu ni kiasi gani?",
+   "identical": true,
+   "production": "Kwa hesabu sahihi ya WCF, unahitaji kujua jinsi ya kuongeza faida na mishahara pamoja ili kupata jumla halisi ya mishahara. Thibitisha na WCF (wcf.go.tz).",
+   "extracted": "Kwa hesabu sahihi ya WCF, unahitaji kujua jinsi ya kuongeza faida na mishahara pamoja ili kupata jumla halisi ya mishahara. Thibitisha na WCF (wcf.go.tz).",
+   "prod_secs": 9.2,
+   "extracted_secs": 9.7
+  },
+  {
+   "n": 11,
+   "question": "Thamani ya mzigo wetu dukani ni TZS 15,000,000, WCF tunayodaiwa ni ngapi?",
+   "identical": true,
+   "production": "Kwa hesabu sahihi ya WCF, unahitaji kujua idadi kamili ya wafanyakazi na mishahara yao. Thibitisha na WCF (wcf.go.tz).",
+   "extracted": "Kwa hesabu sahihi ya WCF, unahitaji kujua idadi kamili ya wafanyakazi na mishahara yao. Thibitisha na WCF (wcf.go.tz).",
+   "prod_secs": 8.9,
+   "extracted_secs": 8.5
+  },
+  {
+   "n": 12,
+   "question": "Nataka kuanzisha biashara na rafiki yangu, tuandikishe kama nini?",
+   "identical": true,
+   "production": "Kuna ada ya kuwasilisha hati ya ubia (partnership deed). Thibitisha na BRELA (brela.go.tz).",
+   "extracted": "Kuna ada ya kuwasilisha hati ya ubia (partnership deed). Thibitisha na BRELA (brela.go.tz).",
+   "prod_secs": 7.4,
+   "extracted_secs": 7.0
+  },
+  {
+   "n": 13,
+   "question": "Kampuni yangu imesajiliwa miaka sita iliyopita, naweza kuifuta sasa?",
+   "identical": true,
+   "production": "Ndiyo — kampuni isiyowasilisha annual return kwa miaka mitatu inachukuliwa 'defunct' (haifanyi kazi) na inaweza kufutwa kwenye Daftari la Makampuni. Thibitisha na BRELA (brela.go.tz).",
+   "extracted": "Ndiyo — kampuni isiyowasilisha annual return kwa miaka mitatu inachukuliwa 'defunct' (haifanyi kazi) na inaweza kufutwa kwenye Daftari la Makampuni. Thibitisha na BRELA (brela.go.tz).",
+   "prod_secs": 10.3,
+   "extracted_secs": 14.1
+  },
+  {
+   "n": 14,
+   "question": "Nina wafanyakazi wawili tu dukani, bado nasajiliwa mahali fulani?",
+   "identical": true,
+   "production": "Ndiyo, unatakiwa kusajiliwa OSHA na WCF bila kujali idadi ya wafanyakazi. Thibitisha na osha.go.tz na wcf.go.tz.",
+   "extracted": "Ndiyo, unatakiwa kusajiliwa OSHA na WCF bila kujali idadi ya wafanyakazi. Thibitisha na osha.go.tz na wcf.go.tz.",
+   "prod_secs": 8.7,
+   "extracted_secs": 8.3
+  },
+  {
+   "n": 15,
+   "question": "Ni wafanyakazi wangapi wanaonihitaji niwe na afisa wa usalama?",
+   "identical": true,
+   "production": "Kwa mujibu wa sheria, unatakiwa kuwa na Afisa wa Usalama katika eneo lako la kazi ikiwa una wafanyakazi 50 au zaidi. Thibitisha na OSHA (osha.go.tz).",
+   "extracted": "Kwa mujibu wa sheria, unatakiwa kuwa na Afisa wa Usalama katika eneo lako la kazi ikiwa una wafanyakazi 50 au zaidi. Thibitisha na OSHA (osha.go.tz).",
+   "prod_secs": 9.0,
+   "extracted_secs": 9.7
+  },
+  {
+   "n": 16,
+   "question": "Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?",
+   "identical": true,
+   "production": "Kwa mujibu wa sheria, biashara zenye mauzo chini ya milioni 11 kwa mwaka hazilazimiki kutumia mashine ya EFD. Lakini kumbuka kuwa unapaswa kutoa risiti sahihi kwa wateja wako, hata kama si kwenye mashine ya EFD. Thibitisha na tra.go.tz.",
+   "extracted": "Kwa mujibu wa sheria, biashara zenye mauzo chini ya milioni 11 kwa mwaka hazilazimiki kutumia mashine ya EFD. Lakini kumbuka kuwa unapaswa kutoa risiti sahihi kwa wateja wako, hata kama si kwenye mashine ya EFD. Thibitisha na tra.go.tz.",
+   "prod_secs": 13.0,
+   "extracted_secs": 13.7
+  },
+  {
+   "n": 17,
+   "question": "Nampa mfanyakazi wangu TZS 160,000 kwa mwezi, hii inaruhusiwa?",
+   "identical": true,
+   "production": "Hapana, malipo hayo yanazidi kiwango cha juu cha mshahara wa chini cha sekta binafsi kwa mujibu wa GN605A. Kwa mujibu wa GN605A, kiwango cha juu kabisa kinachoruhusiwa ni TZS 765,900 kwa mwezi. Malipo ya zaidi ya hapo yanaweza kuadhibiwa. Thibitisha na MLYWF.",
+   "extracted": "Hapana, malipo hayo yanazidi kiwango cha juu cha mshahara wa chini cha sekta binafsi kwa mujibu wa GN605A. Kwa mujibu wa GN605A, kiwango cha juu kabisa kinachoruhusiwa ni TZS 765,900 kwa mwezi. Malipo ya zaidi ya hapo yanaweza kuadhibiwa. Thibitisha na MLYWF.",
+   "prod_secs": 13.7,
+   "extracted_secs": 13.9
+  },
+  {
+   "n": 18,
+   "question": "Kampuni ina wafanyakazi 11, mshahara wa kila mmoja TZS 600,000 — tozo zote za mishahara ni kiasi gani, na je mgeni anaweza kumiliki asilimia mia moja ya kampuni hii?",
+   "identical": true,
+   "production": "Kwa wafanyakazi 11, PAYE ni TZS 66,000, SDL ni TZS 231,000, NSSF ni TZS 1,320,000, WCF ni TZS 33,000. Jumla ya gharama za mishahara kabla ya punguzo lolote ni TZS 1,650,000. Thibitisha na TRA (tra.go.tz). Kuhusu umiliki wa mgeni, sheria ya GN487A inakataza shughuli fulani kwa wasio raia Tanzania. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "extracted": "Kwa wafanyakazi 11, PAYE ni TZS 66,000, SDL ni TZS 231,000, NSSF ni TZS 1,320,000, WCF ni TZS 33,000. Jumla ya gharama za mishahara kabla ya punguzo lolote ni TZS 1,650,000. Thibitisha na TRA (tra.go.tz). Kuhusu umiliki wa mgeni, sheria ya GN487A inakataza shughuli fulani kwa wasio raia Tanzania. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "prod_secs": 17.9,
+   "extracted_secs": 21.8
+  },
+  {
+   "n": 19,
+   "question": "Nikiwaita wafanyakazi wangu 'mawakala huru' badala ya wafanyakazi wa kudumu, naweza kuepuka NSSF na SDL zote mbili kihalali?",
+   "identical": true,
+   "production": "Hapana — jina lolote unaloita wafanyakazi wako halibadilishi wajibu wako wa NSSF na SDL. Sheria haisemi 'mwajiri' mpaka pale utakapoajiri watu 10+; sheria inazungumzia 'wafanyakazi' na 'ajira'. Ukijaribu kuwaita 'mawakala huru', 'wasambazaji wa bidhaa', au majina mengine ili kuepuka NSSF na SDL — hilo si jina rasmi la ajira linalokubalika kisheria. Thibitisha na NSSF (nssf.go.tz).",
+   "extracted": "Hapana — jina lolote unaloita wafanyakazi wako halibadilishi wajibu wako wa NSSF na SDL. Sheria haisemi 'mwajiri' mpaka pale utakapoajiri watu 10+; sheria inazungumzia 'wafanyakazi' na 'ajira'. Ukijaribu kuwaita 'mawakala huru', 'wasambazaji wa bidhaa', au majina mengine ili kuepuka NSSF na SDL — hilo si jina rasmi la ajira linalokubalika kisheria. Thibitisha na NSSF (nssf.go.tz).",
+   "prod_secs": 19.3,
+   "extracted_secs": 18.7
+  },
+  {
+   "n": 20,
+   "question": "Bro nina saluni ndogo, mimi ni mgeni, mke wangu Mtanzania ndiye ana-jiandikisha kila kitu — shida yoyote?",
+   "identical": true,
+   "production": "Kama mwenye hisa mkubwa ni Mtanzania, na Mtanzania ndiye anayeendesha shughuli halisi, hiyo inaweza kukusaidia kupata ruhusa chini ya GN487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "extracted": "Kama mwenye hisa mkubwa ni Mtanzania, na Mtanzania ndiye anayeendesha shughuli halisi, hiyo inaweza kukusaidia kupata ruhusa chini ya GN487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "prod_secs": 10.3,
+   "extracted_secs": 11.5
+  }
+ ]
+}

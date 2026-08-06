@@ -11,6 +11,39 @@ eval_378 scorer-artifact flip, zero collateral). Two non-blocking follow-ups log
 (SCORER-SEMANTICS-1: credit "TZS 0"/not-applicable answers; JUDGE-NONDET: eval_397). See the
 D-FIDELITY-1 and work-item-2-round-2 entries below.
 
+## 🚀 PRODUCTION NOW SERVES `chike/pipeline_v15.py` (deployed 2026-08-07)
+
+The 2026-08-07 redeploy that shipped the SAFETY-1 OOC fix **also carried the Plan A extraction
+onto the production serving path for the first time.** `ChikeModel.run()` is now a thin adapter
+over `chike.pipeline_v15.answer()`; the only stage it still owns is `_generate`
+(tokenize → generate → decode). This was expected — the extraction commit (`d54ec17`) stated
+production would pick it up at the next deploy — but it is stated here explicitly because it
+changes what "production" means for every future entry.
+
+### VERIFICATION OF RECORD — 20/20 byte-identical against the live pre-extraction endpoint
+
+Artifact: **`eval/results/pipeline_v15_live_byte_identity_d54ec17.json`** (promoted out of
+gitignored `scratch/`).
+
+Each of the canonical 20 edge questions was run through BOTH the live production
+`web_endpoint` (the pre-extraction inline v15 pipeline) and `chike.pipeline_v15.answer()`
+driven over HTTP to `generate_endpoint` on the **same deployment, same v15 weights**,
+single-arm `V15Retriever`, RAG index sha-verified identical between `kaggle/` and
+`chike-inference/` before the run. **Result: 20/20 byte-identical.** Warm latency 10.6s
+(production) vs 11.3s (extracted).
+
+**Why this is the verification of record and not merely a pre-merge check:** it was run before
+the merge, but the redeploy has now put that code in front of users, so these 20 rows are the
+evidence that **what users hit today is byte-identical to what they hit before**. It closes the
+two stages the offline suite structurally cannot reach — the real e5 encode and the real
+`apply_chat_template` on the adapter tokenizer. Its offline companion (`tests/test_pipeline_v15.py`)
+proves decompose/pool/prompt byte-identical against the git-pinned pre-extraction baseline over
+420 questions, and stop-split+clean byte-identical over 400 persisted generations — but no unit
+test substitutes for the live pair.
+
+Post-deploy sanity on the fresh containers (SDL rate + 5 adversarial in-scope questions,
+9/9 as expected) is consistent with unchanged behaviour.
+
 ## ✅ SAFETY-1 — OOC refusal-gate leak CLOSED (2026-08-06)
 
 Run 3 found a **live** refusal-gate hole: *"niliuza **kiwanja** changu cha mwanza nimepata faida
