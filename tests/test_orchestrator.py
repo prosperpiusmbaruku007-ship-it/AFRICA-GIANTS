@@ -702,3 +702,49 @@ def test_fabrication_guard_clarifies_without_calling_the_model():
     assert reply.text == clarification.PAYROLL_AMOUNT
     assert fake.call_count == 0                            # model NEVER called — no fabrication possible
     assert calls == []                                    # retrieval skipped too
+
+
+# --- R14 stop_strings resolution (2026-08-06) --------------------------------
+# _validate_and_clean used to call clean_reply(text) with no stop_strings, relying on
+# generation_cleanup's module default. That default equals config's list today, so it was a
+# behavioural no-op -- but a config-only edit to generation_params.stop_strings would have
+# reached production (modal_app passes STOP_STRINGS) and the gate (eval.py passes STOP_STRINGS)
+# and NOT the v16 clean stage. These lock the explicit resolution.
+
+def test_stop_strings_default_to_the_config_list():
+    import json as _json
+    import os as _os
+
+    from chike.orchestrator import Orchestrator as _Orch
+    from chike.model_abstraction import FakeBackend as _Fake
+
+    root = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    with open(_os.path.join(root, "kaggle", "chike_config.json"), encoding="utf-8") as fh:
+        expected = _json.load(fh)["generation_params"]["stop_strings"]
+
+    orch = _Orch(backend=_Fake("jibu"))
+    assert list(orch.stop_strings) == list(expected)
+
+
+def test_gen_params_stop_strings_override_the_config():
+    from chike.orchestrator import Orchestrator as _Orch
+    from chike.model_abstraction import FakeBackend as _Fake
+
+    orch = _Orch(backend=_Fake("jibu"), gen_params={"stop_strings": ["\n\nSTOP"]})
+    assert list(orch.stop_strings) == ["\n\nSTOP"]
+
+
+def test_clean_stage_actually_applies_the_resolved_stop_strings():
+    # The point of the fix: a custom stop string must truncate the model's reply. With the
+    # old implicit default this reply would have come back whole.
+    from chike.orchestrator import Orchestrator as _Orch
+    from chike.model_abstraction import FakeBackend as _Fake
+
+    orch = _Orch(
+        backend=_Fake("Jibu halisi hapa.\n\nZZZKATA rubbish tail"),
+        retriever=lambda q: ("ukweli",),
+        gen_params={"stop_strings": ["\n\nZZZKATA"]},
+    )
+    reply = orch.answer("Kiwango cha SDL ni asilimia ngapi?")
+    assert "ZZZKATA" not in reply.text
+    assert reply.text.startswith("Jibu halisi hapa.")

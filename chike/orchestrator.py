@@ -143,6 +143,20 @@ class Orchestrator:
         self.in_scope_phrases = (tuple(in_scope_phrases) if in_scope_phrases is not None
                                  else tuple(cfg_in))
         self.gen_params = gen_params
+        # R14 stop_strings: resolve from gen_params -> chike_config.json -> the module
+        # default, and pass them EXPLICITLY into clean_reply (see _validate_and_clean).
+        # The module default happens to equal the config list today, so this is a behavioural
+        # no-op right now — but relying on that made a config-only edit to
+        # generation_params.stop_strings silently NOT reach the v16 clean stage while it did
+        # reach production and the gate. A latent config divergence inside a measurement run
+        # is the wrong thing to leave open.
+        _cfg_stops = (classification.load_local_config()
+                      .get("generation_params", {}).get("stop_strings"))
+        self.stop_strings = tuple(
+            (gen_params or {}).get("stop_strings")
+            or _cfg_stops
+            or generation_cleanup.STOP_STRINGS
+        )
         # Slot extractor shares the injected backend by default (same DI contract).
         self.extractor = extractor or SlotExtractor(backend, gen_params)
         # Chike system prompt (R14) for the generate-stage RAG wrapper.
@@ -334,7 +348,7 @@ class Orchestrator:
             return sub
         # Preserve the pre-clean generation in raw_text before overwriting text,
         # so future clean_reply changes can be rescored offline (see SubAnswer docstring).
-        cleaned = generation_cleanup.clean_reply(sub.text)
+        cleaned = generation_cleanup.clean_reply(sub.text, self.stop_strings)
         if sub.computation is not None and fidelity.body_contradicts_working(cleaned, sub.computation):
             cleaned = ""
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text)
