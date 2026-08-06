@@ -57,6 +57,24 @@ HARDCODED_OOC_PHRASES = [
     "bitcoin", "cryptocurrency", "hisa za soko", "stock market",
 ]
 
+# The canonical user-facing OOC refusal — the text a real user receives when classify()
+# returns False. Moved verbatim out of chike-inference/modal_app.py (HARDCODED_REFUSAL) so
+# the classifier and its response live together and cannot drift apart.
+#
+# WHY THIS IS HERE (2026-08-06, pre-launch blocker): chike/orchestrator.py carried its own
+# much shorter REFUSAL_TEXT ("Samahani, swali hili liko nje ya maarifa yangu. Tafadhali
+# thibitisha na TRA."). Both strings match phrases in chike_config.refusal_phrases, so the
+# refusal GATE scored them identically and would never have flagged the difference — yet
+# wiring v16 would have silently regressed every refused user from the full text (what Chike
+# does cover + the tra.go.tz pointer) to the terse one. A user-facing regression invisible to
+# the gate is exactly the class of divergence this module exists to make impossible.
+REFUSAL_TEXT = (
+    'Samahani, swali hili liko nje ya mada yangu. '
+    'Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — '
+    'BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. '
+    'Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.'
+)
+
 HARDCODED_IN_SCOPE_PHRASES = [
     "brela", "vat", "ongezeko la thamani", "paye", "mapato ya ajira",
     "sdl", "ufundi stadi", "nssf", "hifadhi ya jamii", "osha", "usalama kazini",

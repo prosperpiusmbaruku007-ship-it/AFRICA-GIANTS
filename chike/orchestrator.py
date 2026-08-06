@@ -42,10 +42,12 @@ from . import fidelity
 
 # --- Stage-level configuration ---------------------------------------------
 
-REFUSAL_TEXT = (
-    "Samahani, swali hili liko nje ya maarifa yangu. "
-    "Tafadhali thibitisha na TRA."
-)
+# The OOC refusal a user actually receives. Delegated to chike.classification so it is the
+# SAME text production (modal_app.py) and the gate (kaggle/eval.py) emit — this module used
+# to carry its own terser string, which the refusal gate could not catch (both match
+# refusal_phrases) but which would have regressed every refused user on wiring. See the
+# REFUSAL_TEXT comment in chike/classification.py.
+REFUSAL_TEXT = classification.REFUSAL_TEXT
 
 # Legacy internal marker. Clarifications no longer RENDER this sentinel — they render real
 # Swahili copy from chike.clarification, and callers detect a clarification via the structured

@@ -159,3 +159,59 @@ def test_orchestrator_and_production_classify_identically_on_shared_config(monke
     mismatches = [q for q in inputs
                   if orch.classify(q) != modal_app.classify_question(q)]
     assert not mismatches, f"orchestrator vs production classifier disagree on: {mismatches}"
+
+
+# --- refusal-text parity (pre-launch blocker, 2026-08-06) --------------------
+# The orchestrator used to carry its own terser REFUSAL_TEXT. Both it and production's
+# string match phrases in chike_config.refusal_phrases, so the refusal GATE scored them
+# identically and could never have caught the difference — wiring v16 would have silently
+# regressed every refused user to a text that drops the scope list and the tra.go.tz
+# pointer. These tests lock the single shared constant AND the reason the gate was blind.
+
+def _production_refusal_from_modal_app() -> str:
+    """The refusal string production actually returns, read from modal_app.py source.
+
+    modal_app.py cannot be imported here (it imports `modal`), so we assert on the source
+    the same way the differential classify test does — that the OOC branch returns the
+    shared constant rather than a locally-defined copy."""
+    path = os.path.join(_ROOT, "chike-inference", "modal_app.py")
+    with open(path, encoding="utf-8") as fh:
+        return fh.read()
+
+
+def test_orchestrator_refusal_is_the_shared_production_text():
+    from chike import orchestrator
+
+    assert orchestrator.REFUSAL_TEXT == classification.REFUSAL_TEXT
+
+
+def test_refusal_text_keeps_the_scope_list_and_the_tra_pointer():
+    # The content the terse orchestrator string dropped — what Chike DOES cover, and where
+    # to go instead. This is the user-facing value the gate was blind to.
+    text = classification.REFUSAL_TEXT
+    for token in ("BRELA", "TRA", "NSSF", "OSHA", "SDL", "PAYE", "VAT", "EFD", "WCF",
+                  "GN487A", "tra.go.tz", "mshauri wa kodi"):
+        assert token in text, token
+
+
+def test_production_and_eval_delegate_to_the_shared_refusal_constant():
+    # No third/fourth inline copy may reappear: modal_app.py must return the imported
+    # constant, and kaggle/eval.py must read it out of the fetched classification namespace.
+    modal_src = _production_refusal_from_modal_app()
+    assert "from chike.classification import REFUSAL_TEXT" in modal_src
+    assert "return {'reply': REFUSAL_TEXT}" in modal_src
+
+    with open(os.path.join(_ROOT, "kaggle", "eval.py"), encoding="utf-8") as fh:
+        eval_src = fh.read()
+    assert "HARDCODED_REFUSAL = _classification['REFUSAL_TEXT']" in eval_src
+
+
+def test_refusal_text_still_scores_as_a_refusal_on_the_gate():
+    # Changing the orchestrator's refusal must not break the refusal gate: the shared text
+    # has to keep matching at least one configured refusal phrase.
+    cfg = classification.load_local_config()
+    phrases = cfg.get("refusal_phrases", [])
+    assert phrases, "chike_config.json has no refusal_phrases"
+    lowered = classification.REFUSAL_TEXT.lower()
+    matched = [p for p in phrases if p in lowered]
+    assert matched, f"shared refusal text matches no refusal phrase: {lowered!r}"

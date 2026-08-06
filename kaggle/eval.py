@@ -99,12 +99,11 @@ resolve_phrases = _classification['resolve_phrases']
 _classify       = _classification['classify']
 EXPLICIT_OOC_PHRASES, IN_SCOPE_PHRASES = resolve_phrases(CONFIG)
 
-HARDCODED_REFUSAL = (
-    'Samahani, swali hili liko nje ya mada yangu. '
-    'Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — '
-    'BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. '
-    'Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.'
-)
+# The refusal TEXT comes from the same fetched chike.classification namespace as the phrase
+# lists and classify() — one constant shared with production (modal_app.py) and the v16
+# orchestrator, byte-identical to the string this file used to define inline. R12: the gate
+# must emit the exact refusal users receive.
+HARDCODED_REFUSAL = _classification['REFUSAL_TEXT']
 
 def classify_question(message: str) -> bool:
     return _classify(message, EXPLICIT_OOC_PHRASES, IN_SCOPE_PHRASES)

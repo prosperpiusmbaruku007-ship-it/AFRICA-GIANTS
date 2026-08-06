@@ -120,12 +120,13 @@ BASE_SYSTEM_PROMPT = CONFIG.get('system_prompt', _HARDCODED_SYSTEM_PROMPT)
 # (chike/orchestrator.py), so the gate measures the exact classifier production runs (R12).
 # classify_question below is a thin delegator (see its docstring for the lazy-import reason).
 
-HARDCODED_REFUSAL = (
-    'Samahani, swali hili liko nje ya mada yangu. '
-    'Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — '
-    'BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. '
-    'Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.'
-)
+# The user-facing OOC refusal now lives with the classifier that triggers it, in the shared
+# chike.classification module (REFUSAL_TEXT) — byte-identical to the string this file used to
+# define inline. It is imported lazily inside ChikeModel.run(), alongside the other chike
+# imports, for the same reason classify_question imports lazily: the chike/ package is mounted
+# only in the GPU image. The v16 orchestrator carried a DIFFERENT, terser refusal that the
+# refusal gate could not distinguish (both match refusal_phrases); sharing one constant makes
+# that divergence impossible.
 
 # Never-guess (R8) clarification for a payroll-levy AMOUNT asked with no salary/payroll
 # figure given: ask for the figure rather than let the model fabricate one (see
@@ -394,6 +395,7 @@ class ChikeModel:
         from chike.prompting import build_enriched_system, ensure_terminal_punct
         from chike.generation_cleanup import clean_reply
         from chike.routing import is_uncomputable_payroll_amount
+        from chike.classification import REFUSAL_TEXT
 
         if not message or not message.strip():
             return {'error': 'No message provided'}
@@ -401,7 +403,7 @@ class ChikeModel:
         # OOC classifier — intercepts known out-of-scope topics before model call
         if not classify_question(message):
             print(f'[classifier] OOC intercepted: {message[:60]}')
-            return {'reply': HARDCODED_REFUSAL}
+            return {'reply': REFUSAL_TEXT}
 
         # Never-guess fabrication guard (R8): a payroll-levy AMOUNT asked with no salary
         # figure can't be computed — clarify instead of letting the model invent a number.
