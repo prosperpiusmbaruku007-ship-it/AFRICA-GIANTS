@@ -1,5 +1,4 @@
 import os
-import re
 import modal
 
 # ---------------------------------------------------------------------------
@@ -129,19 +128,17 @@ BASE_SYSTEM_PROMPT = CONFIG.get('system_prompt', _HARDCODED_SYSTEM_PROMPT)
 # that divergence impossible.
 
 # Never-guess (R8) clarification for a payroll-levy AMOUNT asked with no salary/payroll
-# figure given: ask for the figure rather than let the model fabricate one (see
-# chike.routing.is_uncomputable_payroll_amount).
-PAYROLL_CLARIFICATION = (
-    'Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji '
-    'kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni '
-    'shilingi ngapi, kisha nitakuletea hesabu kamili.'
-)
+# figure given: now chike.pipeline_v15.PAYROLL_CLARIFICATION (== chike.clarification.
+# PAYROLL_AMOUNT), byte-identical to the constant this file used to define inline.
 
-
-# clean_reply (the full stop/clean stage) lives in the shared chike.generation_cleanup
-# module and is imported inside ChikeModel.run() from the mounted chike/ package (single
-# source of truth, identical to the orchestrator and kaggle/eval.py). It supersedes the
-# thin clean_generated_reply, which left fabricated follow-up turns in the reply.
+# THE PIPELINE ITSELF — classify -> never-guess guard -> decompose -> retrieve+pool ->
+# prompt -> generate -> stop-split -> clean — now lives in chike/pipeline_v15.py, imported
+# by BOTH this file and the Phase D paired harness. It used to be inline here, alongside
+# near-identical copies in kaggle/eval.py and chike/decomposition.py. run() below is now a
+# thin adapter: it owns only the environment-specific stage (tokenize -> model.generate ->
+# decode) and hands that to the shared pipeline as a callable. Behaviour is unchanged —
+# tests/test_pipeline_v15.py proves the extracted stages are byte-identical to the inline
+# ones this file used to run, across all 400 gate questions and 400 persisted generations.
 
 
 def classify_question(message: str) -> bool:
@@ -158,98 +155,10 @@ def classify_question(message: str) -> bool:
 
 
 # === Query decomposition ===
-# A single WhatsApp message often covers two subdomains ("Nina wafanyakazi 12,
-# SDL inalipwa vipi na pia EFD ninahitaji?"). Top-3 RAG retrieval on the whole
-# message returns SDL facts OR EFD facts, never both, so the model answers half
-# the question. We split multi-part messages and retrieve for each part.
-
-# Swahili connectors that signal a second question inside one message.
-MULTI_PART_SIGNALS = [
-    r'\bna pia\b', r'\bpia\b', r'\bvilevile\b', r'\bzaidi ya hayo\b',
-    r'\blakini pia\b', r'\bna aidha\b', r'\bpia ningependa\b',
-    r'\bswali lingine\b', r'\bpia niambie\b', r'\bna je\b',
-]
-
-# Strong, unambiguous split points (never split on a bare "pia").
-_SPLIT_PATTERN = r'(?:na pia|pia pia|vilevile|zaidi ya hayo|swali lingine)'
-
-# Enumeration: a single clause listing several obligations to compute in one breath,
-# e.g. "Nihesabie PAYE, SDL, na NSSF zote tatu". Such a message has no '?' and no
-# multi-part connector, so the '?'/connector paths below never fire and a single
-# whole-message top-3 retrieval covers only ONE domain (observed: PAYE dropped
-# entirely, model looped on 'Thibitisha na TRA'). We detect the "A, B, na C" list
-# and give each item its own context-carrying sub-query so each domain is retrieved.
-_ENUMERATION_CLAUSE = re.compile(
-    r'([^\s,.?!][\w/]*(?:\s*,\s*[\w/]+)+\s*,?\s*na\s+[\w/]+)', re.IGNORECASE)
-# Require a calculate/list verb so ordinary prose ("inalipa BRELA, TRA na NSSF") is
-# never over-split. \w* on both sides matches the Swahili object prefix so the verb
-# in "Nihesabie" / "Nielezee" / "Niambie" is caught, not skipped by a word boundary.
-_ENUMERATION_VERB = re.compile(r'\w*(?:hesab|elez|ambi|orodh|taj)\w*', re.IGNORECASE)
-
-
-def _split_enumeration(message: str) -> list:
-    """Sub-queries for an 'A, B, na C' compute list, else [] (not an enumeration).
-
-    Each sub-query carries the context preceding the list (salary, employee count,
-    verb) so it retrieves the calc example, not just the bare domain keyword.
-    """
-    if not _ENUMERATION_VERB.search(message):
-        return []
-    m = _ENUMERATION_CLAUSE.search(message)
-    if not m:
-        return []
-    raw = re.split(r'\s*,\s*(?:na\s+)?|\s+na\s+', m.group(1), flags=re.IGNORECASE)
-    items = [re.sub(r'^na\s+', '', it.strip(), flags=re.IGNORECASE)
-             for it in raw if it.strip()]
-    if len(items) < 2:
-        return []
-    preamble = message[:m.start()].strip()
-    return [f'{preamble} {item}'.strip() for item in items]
-
-
-def decompose_query(message: str) -> list:
-    """Split a multi-part message into sub-queries for separate RAG retrieval.
-
-    Returns a list of sub-query strings — a single-item list for single-part
-    messages. Conservative: if a split produces unusable fragments it falls back
-    to the original message so single questions are never over-decomposed.
-    """
-    message_lower = message.lower()
-    question_marks = message.count('?')
-    has_connector = any(re.search(p, message_lower) for p in MULTI_PART_SIGNALS)
-    enum_parts = _split_enumeration(message)
-
-    if question_marks <= 1 and not has_connector and not enum_parts:
-        return [message]  # single question — no decomposition needed
-
-    parts = []
-
-    # Prefer splitting on '?' boundaries when the message has several questions.
-    # Fragment floor of 8 chars drops junk remnants ("Sawa?") while keeping real
-    # short Swahili sub-queries ("EFD ninahitaji?" is 15 chars).
-    if question_marks > 1:
-        segments = [s.strip() for s in re.split(r'\?', message) if len(s.strip()) > 8]
-        if len(segments) > 1:
-            parts = [s + '?' for s in segments]
-
-    # Otherwise split on strong Swahili connectors (case-insensitive on original).
-    if not parts and has_connector:
-        segments = re.split(_SPLIT_PATTERN, message, flags=re.IGNORECASE)
-        parts = [s.strip() for s in segments if len(s.strip()) > 8]
-
-    # Enumeration list ("Nihesabie A, B, na C") — use when the '?'/connector paths
-    # above produced nothing usable (no '?', no connector).
-    if (not parts or len(parts) == 1) and enum_parts:
-        parts = enum_parts
-
-    # Fallback: unusable fragments -> treat as single query.
-    if not parts or len(parts) == 1:
-        return [message]
-
-    print(f'[decompose] split into {len(parts)} sub-queries:')
-    for i, p in enumerate(parts):
-        print(f'[decompose]   {i+1}. {p[:80]}')
-    return parts
+# Production's decomposer now lives in chike/decomposition_v15.py (leaf module) and is
+# called via chike.pipeline_v15. It is the V15 shape deliberately — NO ordinal-enumeration
+# split; that lives in chike/decomposition.py for the v16 path only. See the header of
+# chike/decomposition_v15.py for why the two must stay distinct.
 
 
 @app.cls(
@@ -385,93 +294,22 @@ class ChikeModel:
             print(f'[rag] retrieve_facts error: {e}')
             return []
 
-    @modal.method()
-    def run(self, message: str, temperature: float = 0.1) -> dict:
+    def _generate(self, prompt: str) -> str:
+        """The ONE environment-specific stage: tokenize -> generate -> decode.
+
+        Handed to chike.pipeline_v15.answer as a callable. Everything around it (classify,
+        never-guess guard, decompose, retrieve+pool, prompt build, stop-split, clean) is the
+        shared pipeline, so the Phase D v15 arm runs the identical logic with only this
+        function swapped for its Kaggle in-process equivalent. Body is verbatim from the
+        former inline run(): same StoppingCriteria, same gen_kwargs, same slicing/decode."""
         import torch
-        import sys
-        # Shared wrapper + cleanup from the mounted chike/ package (/root/chike).
-        if '/root' not in sys.path:
-            sys.path.insert(0, '/root')
-        from chike.prompting import build_enriched_system, ensure_terminal_punct
-        from chike.generation_cleanup import clean_reply
-        from chike.routing import is_uncomputable_payroll_amount
-        from chike.classification import REFUSAL_TEXT
-
-        if not message or not message.strip():
-            return {'error': 'No message provided'}
-
-        # OOC classifier — intercepts known out-of-scope topics before model call
-        if not classify_question(message):
-            print(f'[classifier] OOC intercepted: {message[:60]}')
-            return {'reply': REFUSAL_TEXT}
-
-        # Never-guess fabrication guard (R8): a payroll-levy AMOUNT asked with no salary
-        # figure can't be computed — clarify instead of letting the model invent a number.
-        # Shared predicate with the orchestrator's fact path (chike.routing), so the two
-        # cannot diverge. Runs before decompose/RAG/generate: no model call on this path.
-        if is_uncomputable_payroll_amount(message):
-            print(f'[guard] uncomputable payroll amount -> clarify: {message[:60]}')
-            return {'reply': PAYROLL_CLARIFICATION}
-
-        # Query decomposition: split multi-part messages so each subdomain gets
-        # its own top-3 retrieval, then merge (dedup, preserve order). A single
-        # question yields one sub-query and behaves exactly as before.
-        sub_queries = decompose_query(message)
-        relevant_facts = []
-        seen_facts = set()
-        for sub_query in sub_queries:
-            for fact in self.retrieve_facts(sub_query):
-                if fact not in seen_facts:
-                    relevant_facts.append(fact)
-                    seen_facts.add(fact)
-        # Cap at 9 facts (up to 3 sub-queries × top-3) to bound the prompt.
-        relevant_facts = relevant_facts[:9]
-        print(f'[RAG] query: {message[:80]}')
-        print(f'[RAG] {len(sub_queries)} sub-queries -> {len(relevant_facts)} unique facts:')
-        for _i, _f in enumerate(relevant_facts):
-            print(f'[RAG]   {_i+1}. {_f[:120]}')
-        # Enriched-system (UKWELI facts block) built by the shared chike.prompting —
-        # single source of truth, identical to kaggle/eval.py and the orchestrator.
-        # apply_chat_template scaffolding below is unchanged (production keeps the
-        # tokenizer's real template; only the wrapper content is now shared).
-        enriched_system = build_enriched_system(BASE_SYSTEM_PROMPT, relevant_facts)
-        print(f'[RAG] enriched system prompt: {len(enriched_system)} chars '
-              f'({len(relevant_facts)} facts)')
-
-        # Defect B (2026-07-28): give the question a terminal boundary so the naive-concat
-        # model starts its answer instead of first completing the missing '?' (leading-echo
-        # artifact). No-op on already-punctuated messages; shared helper with the orchestrator
-        # and kaggle/eval.py (chike.prompting) so the three prompt builds cannot diverge.
-        user_msg = ensure_terminal_punct(message)
-
-        messages = [
-            {'role': 'system', 'content': enriched_system},
-            {'role': 'user',   'content': user_msg},
-        ]
-
-        try:
-            prompt = self.tokenizer.apply_chat_template(
-                messages,
-                tokenize=False,
-                add_generation_prompt=True,
-            )
-        except Exception:
-            prompt = (
-                f'<|begin_of_text|>'
-                f'<|start_header_id|>system<|end_header_id|>\n\n'
-                f'{enriched_system}<|eot_id|>'
-                f'<|start_header_id|>user<|end_header_id|>\n\n'
-                f'{user_msg}<|eot_id|>'
-                f'<|start_header_id|>assistant<|end_header_id|>\n\n'
-            )
+        from transformers import StoppingCriteria, StoppingCriteriaList
 
         inputs    = self.tokenizer(prompt, return_tensors='pt').to(self.model.device)
         input_len = inputs['input_ids'].shape[1]
 
         # Hard stop the instant the model tries to open a new Q&A turn — kills the
         # fabricated follow-up turns (with hallucinated URLs) that ran past the answer.
-        from transformers import StoppingCriteria, StoppingCriteriaList
-
         class StopOnSubstrings(StoppingCriteria):
             def __init__(self, tokenizer, stop_strings):
                 self.tokenizer = tokenizer
@@ -501,23 +339,38 @@ class ChikeModel:
         with torch.no_grad():
             outputs = self.model.generate(**inputs, **gen_kwargs)
 
-        new_tokens = outputs[0][input_len:]
-        reply = self.tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
+        return self.tokenizer.decode(
+            outputs[0][input_len:], skip_special_tokens=True
+        ).strip()
 
-        for stop in ['<|start_header_id|>', 'User:', 'Mtumiaji:'] + STOP_STRINGS:
-            if stop in reply:
-                reply = reply.split(stop)[0].strip()
+    @modal.method()
+    def run(self, message: str, temperature: float = 0.1) -> dict:
+        """Production entry point — now a thin adapter over the shared v15 pipeline.
 
-        # Full stop/clean: truncates fabricated follow-up turns + strips role junk/special
-        # tokens, then applies the old clean_generated_reply. Identical to eval.py and the
-        # orchestrator (the manual stop loop above is now a subset of clean_reply, kept as
-        # a harmless fast-path). Passing STOP_STRINGS makes the truncation config-exact.
-        reply = clean_reply(reply, STOP_STRINGS)
+        chike.pipeline_v15.answer owns the sequence; this supplies the three things only the
+        Modal container can: the loaded tokenizer, the single-arm retrieve_facts bound to the
+        baked index, and _generate. Behaviour is unchanged from the former inline version
+        (tests/test_pipeline_v15.py proves every extracted stage byte-identical across the 400
+        gate questions and 400 persisted generations)."""
+        import sys
+        # The chike/ package is mounted at /root only in the GPU image.
+        if '/root' not in sys.path:
+            sys.path.insert(0, '/root')
+        from chike import pipeline_v15
 
-        print(f'[chike] Q: {message[:60]}')
-        print(f'[chike] A: {reply[:60]}')
-
-        return {'reply': reply}
+        return pipeline_v15.answer(
+            message,
+            generate=self._generate,
+            # SINGLE-ARM retrieval — production's own method, not chike.retrieval's two-arm
+            # hybrid. See chike/pipeline_v15.py's header for why that distinction is
+            # load-bearing for the Phase D comparison.
+            retrieve_facts=self.retrieve_facts,
+            system_prompt=BASE_SYSTEM_PROMPT,
+            tokenizer=self.tokenizer,
+            stop_strings=STOP_STRINGS,
+            config=CONFIG,
+            log=print,
+        )
 
     @modal.method()
     def generate_raw(self, prompt: str, params: dict = None) -> dict:

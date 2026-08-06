@@ -195,15 +195,27 @@ def test_refusal_text_keeps_the_scope_list_and_the_tra_pointer():
 
 
 def test_production_and_eval_delegate_to_the_shared_refusal_constant():
-    # No third/fourth inline copy may reappear: modal_app.py must return the imported
-    # constant, and kaggle/eval.py must read it out of the fetched classification namespace.
+    # No third/fourth inline copy may reappear. Since the pipeline_v15 extraction, production
+    # reaches the refusal through chike.pipeline_v15.answer (which returns
+    # classification.REFUSAL_TEXT on the OOC branch) rather than returning it inline, so the
+    # assertion follows the delegation chain instead of a literal in modal_app.
     modal_src = _production_refusal_from_modal_app()
-    assert "from chike.classification import REFUSAL_TEXT" in modal_src
-    assert "return {'reply': REFUSAL_TEXT}" in modal_src
+    assert "from chike import pipeline_v15" in modal_src
+    assert "pipeline_v15.answer(" in modal_src
+
+    with open(os.path.join(_ROOT, "chike", "pipeline_v15.py"), encoding="utf-8") as fh:
+        pipeline_src = fh.read()
+    assert "return {'reply': classification.REFUSAL_TEXT}" in pipeline_src
 
     with open(os.path.join(_ROOT, "kaggle", "eval.py"), encoding="utf-8") as fh:
         eval_src = fh.read()
     assert "HARDCODED_REFUSAL = _classification['REFUSAL_TEXT']" in eval_src
+
+    # And no file may define its own refusal string again.
+    for rel in ("chike-inference/modal_app.py", "kaggle/eval.py", "chike/orchestrator.py"):
+        with open(os.path.join(_ROOT, *rel.split("/")), encoding="utf-8") as fh:
+            body = fh.read()
+        assert "Samahani, swali hili liko nje" not in body, rel
 
 
 def test_refusal_text_still_scores_as_a_refusal_on_the_gate():
