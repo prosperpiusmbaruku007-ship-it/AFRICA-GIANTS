@@ -104,11 +104,96 @@ def test_retriever_applies_the_e5_query_prefix():
     assert r.embed_model.encoded[0] == ["query: SDL ni asilimia ngapi"]
 
 
-def test_retriever_returns_empty_when_index_absent():
-    # Point at a non-existent index -> graceful RAG-disabled fallback, no embedder.
+# --- Unit: fail-loud index contract (silent-[] is the failure being killed) ---
+
+def test_missing_index_raises_instead_of_silently_returning_no_facts():
+    # THE pre-launch bug: a mis-wired index path used to disable RAG silently, so every
+    # answer came back fact-less and looked like a model-quality collapse, not a config
+    # error. Missing files must now raise, loudly, naming both paths.
     r = Retriever(emb_path="/no/such/emb.npy", texts_path="/no/such/texts.json")
-    assert r.retrieve("swali") == []
+    with pytest.raises(retrieval.RetrievalIndexError) as exc:
+        r.retrieve("swali")
+    assert "/no/such/emb.npy" in str(exc.value)
     assert r.embed_model is None      # embedder never imported/loaded
+
+
+def test_missing_index_still_degrades_gracefully_when_explicitly_allowed():
+    # The legacy behaviour survives, but only opt-in.
+    r = Retriever(emb_path="/no/such/emb.npy", texts_path="/no/such/texts.json",
+                  require_index=False)
+    assert r.retrieve("swali") == []
+    assert r.embed_model is None
+
+
+def test_inconsistent_index_raises_even_when_index_not_required(tmp_path):
+    # A present-but-corrupt index is never a "RAG optional" case: 3 embeddings vs 2 texts
+    # must raise regardless of require_index.
+    emb = tmp_path / "emb.npy"
+    txt = tmp_path / "texts.json"
+    np.save(str(emb), np.zeros((3, 4)))
+    txt.write_text('["a", "b"]', encoding="utf-8")
+
+    r = Retriever(emb_path=str(emb), texts_path=str(txt), require_index=False)
+    with pytest.raises(retrieval.RetrievalIndexError) as exc:
+        r.preflight()
+    assert "3 embeddings vs 2 fact texts" in str(exc.value)
+
+
+def test_expected_fact_count_mismatch_raises(tmp_path):
+    # The R15 guard: a stale index that loads cleanly but has the wrong size is caught
+    # at startup rather than serving stale facts (R15's silent-stale-index failure).
+    emb = tmp_path / "emb.npy"
+    txt = tmp_path / "texts.json"
+    np.save(str(emb), np.zeros((2, 4)))
+    txt.write_text('["a", "b"]', encoding="utf-8")
+
+    r = Retriever(emb_path=str(emb), texts_path=str(txt), expected_fact_count=217)
+    with pytest.raises(retrieval.RetrievalIndexError) as exc:
+        r.preflight()
+    assert "loaded 2, expected 217" in str(exc.value)
+
+
+def test_preflight_returns_fact_count_and_loads_no_embedder(tmp_path):
+    # The startup assertion must be cheap: index only, no e5 download.
+    emb = tmp_path / "emb.npy"
+    txt = tmp_path / "texts.json"
+    np.save(str(emb), np.zeros((2, 4)))
+    txt.write_text('["a", "b"]', encoding="utf-8")
+
+    r = Retriever(emb_path=str(emb), texts_path=str(txt), expected_fact_count=2)
+    assert r.preflight() == 2
+    assert r.embed_model is None
+
+
+def test_configure_binds_explicit_paths_for_the_module_level_retriever(tmp_path):
+    # The deployment hook: bind an explicit index (Modal's /root/assets, not the
+    # repo-relative kaggle/ default) and validate it immediately.
+    emb = tmp_path / "emb.npy"
+    txt = tmp_path / "texts.json"
+    np.save(str(emb), np.zeros((2, 4)))
+    txt.write_text('["a", "b"]', encoding="utf-8")
+
+    previous = retrieval._DEFAULT_RETRIEVER
+    try:
+        bound = retrieval.configure(emb_path=str(emb), texts_path=str(txt),
+                                    expected_fact_count=2)
+        assert retrieval._DEFAULT_RETRIEVER is bound
+        assert bound.emb_path == str(emb)
+        assert len(bound.fact_texts) == 2
+    finally:
+        retrieval._DEFAULT_RETRIEVER = previous
+
+
+def test_configure_raises_on_a_bad_index_before_any_question_is_answered():
+    previous = retrieval._DEFAULT_RETRIEVER
+    try:
+        with pytest.raises(retrieval.RetrievalIndexError):
+            retrieval.configure(emb_path="/no/such/emb.npy",
+                                texts_path="/no/such/texts.json")
+        # A failed configure must not install a broken singleton.
+        assert retrieval._DEFAULT_RETRIEVER is previous
+    finally:
+        retrieval._DEFAULT_RETRIEVER = previous
 
 
 # --- Unit: numeric-query hybrid retrieval (numeric-embedding-hijack fix) ------
