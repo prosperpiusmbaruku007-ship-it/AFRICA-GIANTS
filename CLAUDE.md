@@ -505,6 +505,61 @@ Note: a fact registered in CONCISE_BILINGUAL_FACTS (precompute_rag_embeddings.py
 embedded WITHOUT the 'key: ' prefix — short Swahili-first text with the value at the
 front retrieves far better than a long English fact (see paye_bands_with_examples).
 
+### R16 — "✓ App deployed" is NOT verification. Warm containers serve the OLD code.
+
+Learned the hard way on 2026-08-07 shipping the OOC phrase-list fix. `modal deploy` returned
+`✓ App deployed in 4.8s` and the change was **still not live**: two warm containers kept
+serving the previous config, and the leak the deploy was meant to close reproduced exactly.
+The diagnostic that settled it — config-only phrases (`kodi ya majengo`, `property tax`,
+`uza ardhi`, present in chike_config.json but NOT in the hardcoded fallback) still refused
+correctly, proving config loading was fine and the container was simply stale.
+
+**After EVERY Modal redeploy, before claiming a change is live:**
+1. Force fresh containers — `python -m modal app stop chike-inference --yes` then
+   `python -m modal deploy chike-inference/modal_app.py` — **or** wait past the 300s
+   `scaledown_window` with no traffic (test requests reset the idle timer, so "wait" means
+   actually wait).
+2. Run a **live check that exercises the specific change** — a request whose behaviour is
+   different before and after. A health check, a sanity question, or the deploy log prove
+   nothing about the change.
+3. Include a **negative** case: something that must still behave as before. A change that
+   only proves the new behaviour can be silently over-broad.
+
+**`modal app stop` prompts interactively and ABORTS SILENTLY in a non-interactive shell**
+(it prints `Aborted!` and exits 0). Always pass `--yes`.
+
+This applies to every config-only change, which R14 makes the NORMAL path for phrase lists,
+system prompt, generation params, and gate thresholds — precisely the changes with no code
+diff to remind you a deploy happened.
+
+### R17 — A sweep can only find what the corpus contains. Author probes to contain it.
+
+Any lexical change (OOC phrases, router cue lists, levy cues, refusal phrases) must be swept
+for false positives — but **a clean sweep over an existing corpus is weak evidence, not a
+green light.** Proven twice on 2026-08-06/07:
+- The first OOC sweep returned **0 false positives on every one of 61 candidates**. That was
+  not safety; the gate corpora simply do not use that vocabulary.
+- Adding **15 adversarial in-scope probes** — realistic IN-SCOPE questions deliberately
+  written to CONTAIN the risky words — immediately exposed that bare `hisa` would refuse
+  **7 real gate questions**, and that bare `kiwanja`/`nyumba`/`shamba`/`bima`/`madini`/
+  `bandari`/`hati` were all unusable.
+
+**Procedure for any phrase/cue-list change:**
+1. Sweep candidates individually over all corpora (400 gate + every probe set).
+2. **Author adversarial probes that contain the risky vocabulary in an IN-SCOPE context**,
+   one per dangerous word, and sweep those too. This step is not optional — it is the only
+   part that can find an over-broad phrase the corpus never exercises.
+3. Commit the probes as a regression file with a `guards_against` note per row, and wire a
+   test that FAILS when a future addition trips one. See
+   `eval/refusal_gate/ooc_adversarial_in_scope_015.jsonl` + `tests/test_classification.py`.
+4. Prefer the narrowest form that closes the case (`uza kiwanja`, not `kiwanja`) — verb- or
+   context-qualified phrases, chosen so one substring covers a whole inflection family.
+
+Corollary, from the same cycle: **a test that instructs future maintainers not to fix a real
+defect is worse than no test.** `test_paraphrased_ooc_controls_*` asserted a known OOC leak
+should pass the gate, on the assumption the model would refuse it. Live data disproved the
+assumption. When that happens, invert the test and keep the history in its docstring.
+
 ---
 
 See PROGRESS.md for current project status and next actions.
