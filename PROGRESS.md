@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-07-28
+Last updated: 2026-07-29
 
 **🏁 CYCLE FULLY CLOSED (2026-07-26):** the entire router-investigation + defect-fix cycle is now
 closed end-to-end with real GPU confirmation. Follow-up #3's last two threads landed this session:
@@ -92,6 +92,39 @@ Recovered ≠ correct: several plain-phrasing answers were still wrong on conten
 
 **Probe cycle status:** Defect A ✅ + Defect B ✅ shipped & prod-verified; item 3/p02 ✅ shipped; p04 deferred;
 p12 logged; item 4 open. Tokenizer warning (below) scoped after item 3.
+
+## ✅ DUAL-PATH PROBE 005b — Defects A+B REGRESSION-CLEAR + the v16 wiring evidence (2026-07-29, `c1776a9`)
+
+A 5-question plain-Swahili probe on **never-seen phrasing** (`eval/accuracy_gate/edge_probe_plain_sw_005b.jsonl`,
+findings `eval/results/edge_probe_plain_sw_005b_findings.json`; runner + raw result in gitignored `scratch/`).
+**Findings only — no code changed, nothing redeployed.** Each question ran through BOTH live paths on the
+**same Modal deployment / same v15 weights / same 217-fact RAG index**: v15 = production `web_endpoint`
+(classify+decompose+RAG+chat-template+clean), v16 = `Orchestrator(LocalAdapter → generate_endpoint)` with the
+AfriqueLlama tokenizer for prompt parity. Adjudicated against `scripts/locked_facts.json` + the rules engine.
+
+- **Defect A + Defect B hold — 10/10 non-empty** (both paths, all 5) on fresh UNPUNCTUATED plain-Swahili.
+  No `clean_reply` blanking, no leading-echo re-blank. The two shipped fixes are regression-clear on the
+  phrasing class that discovered them.
+- **v16 ≥ v15, and strictly safer on compute.** 4/5 questions (all fact-routed) came back **byte-identical**
+  between the paths. The one compute question (b02, SDL) **diverged decisively**: v15 free-computed a
+  **confident WRONG payroll** (3,750,000 for 12 × 350,000; no SDL figure at all), v16 routed `compute[sdl]`
+  and **safe-clarified — no wrong number**. This is the concrete case the v16 architecture exists to fix.
+- **Dominant residual failure is RETRIEVAL (item 4), shared by BOTH paths and orthogonal to wiring.** b05
+  (GN487A fronting, "rafiki yangu mchina… jina langu kwenye leseni") retrieved **top-3 all off-topic trademark
+  fees**; the correct facts (`gn487a_license_lending_is_facilitation`, `gn487a_penalty_citizen_facilitator`)
+  exist but were never surfaced, so **both** paths gave a generic immigration-ownership answer that never warns
+  the user that name-lending is itself an offence (TZS 5M / 3 months). b01 also had a top-3 miss but was
+  rescued by general knowledge; b04 had a rank-1 on-topic hit and answered well. **Retrieval quality tracked
+  answer quality 1:1** — the strongest evidence yet for the parked item-4 hybrid dense+lexical direction, on a
+  high-stakes question.
+- **NEW gap logged, NOT fixed — Swahili-numeral slot extraction on the compute path.** b02 proves routing now
+  reaches `compute[sdl]`, but the extractor did not resolve fully-specified all-Swahili figures
+  (`kumi na wawili`=12, `laki tatu na nusu`=350,000, per-person `kila mmoja`), so the engine's correct
+  **147,000** was never delivered — safe-clarify instead. **The compute path's value is gated on extractor
+  coverage.** Backlog item; no code this cycle.
+
+**Latency captured (same probe, incidental):** warm v16 ≈ v15 (b02 6.1s/6.4s, b03 6.7s/6.6s, b04 12.0s/11.9s,
+b05 9.4s/9.1s); b01 was a cold start (v15 62.4s). Warm parity holds because 4/5 took **one** backend call each.
 
 ## 🟠 OPEN ITEM — tokenizer `fix_mistral_regex` / Mistral reference on the production adapter (2026-07-28)
 
