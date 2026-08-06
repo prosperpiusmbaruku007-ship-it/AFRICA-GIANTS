@@ -1,0 +1,76 @@
+{
+ "run": "Run 2 parts 1-2 — numeric-query retrieval A/B (single-arm v15 vs two-arm chike/)",
+ "harness": "kaggle/rag_numeric_ab_run2.py",
+ "date": "2026-08-06",
+ "executed_by": "founder (Kaggle, CPU, no secrets)",
+ "provenance_note": "Summary block as printed by the harness. Fact strings are truncated to 120 chars by the harness itself; the untruncated detail is in the Kaggle output file rag_numeric_ab_run2_summary.json.",
+ "github_head": "f521768",
+ "index_facts": 217,
+ "corpus_total": 400,
+ "part1": {
+  "digit_bearing": 238,
+  "second_arm_eligible": 197,
+  "gained_4th_fact": 197,
+  "unchanged": 0,
+  "append_only_violations": 0,
+  "violation_ids": [],
+  "top_appended_facts": [
+   {"times": 27, "fact": "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi kisichobad"},
+   {"times": 16, "fact": "SDL (Skills Development Levy) Tanzania: asilimia 3.5 ya mishahara yote. Si 4%, si 2%."},
+   {"times": 15, "fact": "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz)."},
+   {"times": 11, "fact": "Kizingiti cha SDL: mwajiri mwenye wafanyakazi 10 AU ZAIDI analipa SDL. Mwenye wafanyakazi 10 YUKO NDANI ya kizingiti na "},
+   {"times": 9, "fact": "SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata."},
+   {"times": 7, "fact": "Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine ya risiti (EFD)? Si lazima. Si kila biashara inalaz"},
+   {"times": 7, "fact": "vat return submission deadline: 20 days_of_month"},
+   {"times": 7, "fact": "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo YOTE ya kaz"},
+   {"times": 7, "fact": "unpaid contribution penalty frequency: each month or a part of a month null"},
+   {"times": 6, "fact": "NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata."}
+  ],
+  "by_subdomain": {
+   "vat_registration": {"eligible": 31, "gained": 31},
+   "vat_withholding": {"eligible": 15, "gained": 15},
+   "efd_compliance": {"eligible": 6, "gained": 6},
+   "brela_registration": {"eligible": 4, "gained": 4},
+   "nssf_contributions": {"eligible": 39, "gained": 39},
+   "sdl_compliance": {"eligible": 43, "gained": 43},
+   "gn487a": {"eligible": 10, "gained": 10},
+   "osha_registration": {"eligible": 6, "gained": 6},
+   "out_of_corpus": {"eligible": 7, "gained": 7},
+   "gn605a": {"eligible": 2, "gained": 2},
+   "wcf_compliance": {"eligible": 8, "gained": 8},
+   "paye_compliance": {"eligible": 26, "gained": 26}
+  }
+ },
+ "part2_setA_critical": {
+  "n": 21,
+  "hit_single_arm": 21,
+  "hit_two_arm": 21,
+  "recovered": [],
+  "lost": [],
+  "rank_changes": [],
+  "note": "Every rank identical between arms; 20 of 21 at rank 1, BRELA striking-off at rank 3 on both. The second arm changed NOTHING on the R15 critical set."
+ },
+ "part2_setB_goldset": {
+  "eligible": 197,
+  "labelled": 96,
+  "uncovered_no_numeric_label": 101,
+  "hit_single_arm": 40,
+  "hit_two_arm": 41,
+  "recovered": [
+   {
+    "id": "eval_338",
+    "subdomain": "vat_withholding",
+    "appended": "VAT withholding base disputed: RESOLVED (2026-07-25) by primary legislation: the base is the CONSIDERATION (invoice value exclusive of VAT), not the VAT amount. Finance Act 2025 s.124 (VAT Act s.5(5)) splits the 18% standard rate — the withholding agent withholds 3% (goods) / 6% (services) of the supply and the supplier receives 15% / 12% respectively (3+15 = 6+12 = 18). The earlier 'dispute' arose from practitioner summaries loosely phrasing the split as '3% of the VAT'; the VAT-amount reading is inconsistent with the statute's express 12% supplier share for services. Training pairs SHOULD now use the consideration formula. See vat_withholding_formula_correct."
+   }
+  ],
+  "dilution_count": 86
+ },
+ "reading": {
+  "safety": "ESTABLISHED. 0 append-only violations across 197 questions, 0 facts lost, Set A ranks byte-identical on all 21 critical queries. The hybrid cannot degrade retrieval by dropping or reordering a fact — confirmed empirically, not just by reading the code.",
+  "benefit": "NOT DEMONSTRATED. The second arm fires on 197/197 eligible questions and produces exactly ONE gold-set recovery (eval_338) against 86 non-gold appends on the labelled set; 41/96 vs 40/96 = +1.0 pt, which is noise at n=96.",
+  "metric_caveat_stated_against_our_own_framing": "The 'dilution' count OVERSTATES harm. It is defined as 'the appended fact is not a gold fact', which is a proxy for 'did not supply the gold number' — NOT for 'was noise'. The appended-fact inventory shows the opposite: the most-appended facts are core on-topic rate/threshold facts (WCF 0.5% 27x, SDL 3.5% 16x, NSSF 10% 15x, SDL threshold 11x). Most 'dilutions' are relevant facts that simply do not contain the gold answer's digits. Whether an extra on-topic fact HELPS or CONFUSES generation cannot be read off retrieval at all — that is exactly what Run 2 part 3 measures.",
+  "hypothesis_for_part3": "The single most-appended fact is the WCF 0.5% RATE fact (27x), a rate belonging to a different levy. Run 3 independently observed both live paths asserting 'asilimia 0.5%' for SDL on nat_01 and nat_04 (SDL is 3.5%; 0.5% is WCF). Note the v15 path in Run 3 is SINGLE-arm and made the same error, so the appended fact is NOT the sole cause — but whether the two-arm append makes cross-levy rate confusion MORE likely is a concrete, checkable question for part 3.",
+  "decision_rule_in_force": "Founder-approved: two-arm wins on reliable accuracy over the 90-question part-3 subset -> ship it; a wash -> KEEP SINGLE-ARM (a tie does not favour the newer code); two-arm loses -> keep single-arm and investigate whether the appended fact is actively harmful.",
+  "prior_probability_after_parts_1_2": "On this evidence a wash is the most likely part-3 outcome, which under the approved rule means production keeps single-arm retrieval — the configuration it already runs."
+ }
+}
