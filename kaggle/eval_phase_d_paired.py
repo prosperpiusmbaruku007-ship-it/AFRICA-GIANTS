@@ -50,6 +50,7 @@ KAGGLE SETUP
 Ends with a delimited SUMMARY BLOCK to paste back.
 """
 import glob
+import hashlib
 import json
 import os
 import subprocess
@@ -151,9 +152,6 @@ _rag_npy = hf_hub_download(repo_id=DATASET_REPO, filename='rag_embeddings.npy',
                            repo_type='dataset', token=hf_token)
 _rag_txt = hf_hub_download(repo_id=DATASET_REPO, filename='rag_facts_text.json',
                            repo_type='dataset', token=hf_token)
-import hashlib                                                       # noqa: E402
-
-
 def _sha256(p):
     return hashlib.sha256(open(p, 'rb').read()).hexdigest()[:16]
 
@@ -240,6 +238,58 @@ orch = Orchestrator(backend=_Backend(), retriever=two_arm.retrieve,
 orch_single = Orchestrator(backend=_Backend(), retriever=single_arm.retrieve_facts,
                            system_prompt=SYSTEM_PROMPT)
 
+# ── ARTIFACT PUBLISHING — checkpointed, verified, and loud on failure ────────────
+# A 3.5h GPU run must NOT end with only a terminal paste (project convention: results are
+# fetched independently from HF and committed, never concluded from a paste). The previous
+# version uploaded once, as the very last statement, inside a bare try/except that merely
+# printed on failure — so a crash in the judge overlay, or a transient HF error at hour 3.5,
+# lost everything. This publishes at EVERY stage boundary, overwrites one canonical filename
+# so the latest state is always retrievable, and VERIFIES each upload by re-downloading and
+# comparing sha256. `complete` distinguishes a checkpoint from the finished artifact.
+ARTIFACT_NAME = f'gate_phase_d_paired_{_sha}.json'
+ARTIFACT_PATH = f'/kaggle/working/{ARTIFACT_NAME}'
+
+
+def _publish(stage, complete=False, **extra):
+    """Write the artifact locally, upload to HF, then verify by re-download + sha256."""
+    payload = {
+        'stage': stage, 'complete': complete, 'clone_head': _sha,
+        'utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+        'adapter': ADAPTER, 'config_version': CONFIG.get('version'),
+        'index_facts': EXPECTED_FACT_COUNT, 'n_questions': len(ALL),
+    }
+    payload.update(extra)
+    with open(ARTIFACT_PATH, 'w', encoding='utf-8') as fh:
+        json.dump(payload, fh, ensure_ascii=False, indent=1)
+    local_sha = hashlib.sha256(open(ARTIFACT_PATH, 'rb').read()).hexdigest()
+
+    from huggingface_hub import HfApi, hf_hub_download as _dl
+    last = None
+    for attempt in range(1, 4):
+        try:
+            HfApi().upload_file(path_or_fileobj=ARTIFACT_PATH, path_in_repo=ARTIFACT_NAME,
+                                repo_id=DATASET_REPO, repo_type='dataset', token=hf_token)
+            back = _dl(repo_id=DATASET_REPO, filename=ARTIFACT_NAME, repo_type='dataset',
+                       token=hf_token, force_download=True)
+            remote_sha = hashlib.sha256(open(back, 'rb').read()).hexdigest()
+            if remote_sha == local_sha:
+                print(f'[publish] {stage:<14} OK  HF {DATASET_REPO}/{ARTIFACT_NAME}  '
+                      f'sha256={local_sha[:16]}  complete={complete}', flush=True)
+                return True
+            print(f'[publish] {stage} VERIFY MISMATCH local={local_sha[:16]} '
+                  f'remote={remote_sha[:16]} — retrying', flush=True)
+            last = RuntimeError('sha mismatch')
+        except Exception as e:                                       # noqa: BLE001
+            last = e
+            print(f'[publish] {stage} attempt {attempt}/3 FAILED: {str(e)[:200]}', flush=True)
+            time.sleep(10 * attempt)
+    # Loud, unmissable, but never fatal: the run must not be thrown away because HF is down.
+    print('\n' + '!' * 78, flush=True)
+    print(f'!! HF PUBLISH FAILED at stage={stage} after 3 attempts: {str(last)[:300]}')
+    print(f'!! The artifact IS on Kaggle at {ARTIFACT_PATH} — DOWNLOAD IT MANUALLY.')
+    print('!' * 78 + '\n', flush=True)
+    return False
+
 
 def v15_answer(q):
     return pipeline_v15.answer(
@@ -296,6 +346,7 @@ for i, q in enumerate(ALL):
     res15.append(_row(q, gen, gen, clar))
     if (i + 1) % 25 == 0:
         print(f'  v15 [{i+1}/{len(ALL)}] {time.time()-t0:.0f}s', flush=True)
+_publish('v15_arm_done', v15_results=res15)
 
 print(f'\n[run] ARM v16 — {len(ALL)} questions through the Orchestrator ...', flush=True)
 res16, t0 = [], time.time()
@@ -309,6 +360,7 @@ for i, q in enumerate(ALL):
     res16.append(_row(q, gen, raw, clar))
     if (i + 1) % 25 == 0:
         print(f'  v16 [{i+1}/{len(ALL)}] {time.time()-t0:.0f}s', flush=True)
+_publish('v16_arm_done', v15_results=res15, v16_results=res16)
 
 
 # ── BUCKETS, BOTH ARMS ───────────────────────────────────────────────────────────
@@ -421,6 +473,8 @@ for i, q in enumerate(part3_qs):
     res3.append(_row(q, gen, gen, clar))
     if (i + 1) % 20 == 0:
         print(f'  part3 [{i+1}/{len(part3_qs)}] {time.time()-t0:.0f}s', flush=True)
+_publish('part3_done', v15_results=res15, v16_results=res16, part3_results=res3,
+         buckets=bucket_table, regression_detail=reg_detail)
 
 by3 = {r['id']: r for r in res3}
 two_rows = [by16[i] for i in by3]
@@ -547,19 +601,8 @@ print('#' * 78)
 print('### END SUMMARY ###')
 print('#' * 78)
 
-artifact = {'summary': summary, 'regression_detail': reg_detail,
-            'v15_results': res15, 'v16_results': res16, 'part3_results': res3,
-            'judge_overlays': judge_overlays}
-out_path = f'/kaggle/working/gate_phase_d_paired_{_sha}.json'
-json.dump(artifact, open(out_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-print(f'\n[done] full artifact: {out_path}')
-print('[done] DOWNLOAD IT — the regression detail and both arms\' generations are needed for '
-      'the individual adjudication and for eval/results/.')
-try:
-    from huggingface_hub import HfApi
-    HfApi().upload_file(path_or_fileobj=out_path,
-                        path_in_repo=os.path.basename(out_path),
-                        repo_id=DATASET_REPO, repo_type='dataset', token=hf_token)
-    print(f'[done] also uploaded to HF {DATASET_REPO}/{os.path.basename(out_path)}')
-except Exception as e:                                               # noqa: BLE001
-    print(f'[done] HF upload skipped ({e}) — download the file from Kaggle output instead')
+_publish('complete', complete=True, summary=summary, regression_detail=reg_detail,
+         v15_results=res15, v16_results=res16, part3_results=res3,
+         judge_overlays=judge_overlays)
+print(f'\n[done] artifact: {ARTIFACT_PATH}')
+print(f'[done] HF: {DATASET_REPO}/{ARTIFACT_NAME}  (Claude Code fetches THIS, not the paste)')
