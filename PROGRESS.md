@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-06
+Last updated: 2026-08-07
 
 **🏁 CYCLE FULLY CLOSED (2026-07-26):** the entire router-investigation + defect-fix cycle is now
 closed end-to-end with real GPU confirmation. Follow-up #3's last two threads landed this session:
@@ -10,6 +10,71 @@ working — shipped `75421f0`, GPU-confirmed: 3 target rows corrected + judge 5/
 eval_378 scorer-artifact flip, zero collateral). Two non-blocking follow-ups logged for later
 (SCORER-SEMANTICS-1: credit "TZS 0"/not-applicable answers; JUDGE-NONDET: eval_397). See the
 D-FIDELITY-1 and work-item-2-round-2 entries below.
+
+## ✅ SAFETY-1 — OOC refusal-gate leak CLOSED (2026-08-06)
+
+Run 3 found a **live** refusal-gate hole: *"niliuza **kiwanja** changu cha mwanza nimepata faida
+kubwa nalipa kodi gani"* passed the R11 gate on the production endpoint and the model answered
+*"Kodi ya faida ya mtaji (Capital Gains Tax) … ni **asilimia 30%**"*. A direct Gate-2 failure on
+natural phrasing, on the mechanism ADR R11 calls infrastructure.
+
+**Fix: `ooc_phrases` 53 → 107 (+54), audited not patched.** Additions cover Swahili synonyms,
+inflections and colloquial variants across every declared refusal category — capital-gains/land,
+import/customs, stamp duty/valuation, mining royalties, EPZ, insurance premium levy, Zanzibar,
+transfer pricing, investment/crypto. No new refusal categories were invented.
+
+**The method is the durable part.** The first sweep returned **0 false positives on every
+candidate**, which was treated as a WEAK test rather than a green light — the gate corpora barely
+contain that vocabulary, so "0 fp" mostly meant "the word never appears". Adding **15 adversarial
+in-scope probes** (realistic in-scope questions written to CONTAIN the dangerous vocabulary)
+changed the picture immediately:
+- bare **`hisa`** would have refused **7 real gate questions** (eval_227 BRELA share transfer,
+  eval_173 GN487A shareholding, eval_256 SDL) — the decisive catch;
+- bare `kiwanja` refuses premises questions (a plot is where a business SITS) → the capital-gains
+  additions are **verb-qualified**, and `uza kiwanja` covers the whole verb family as a substring;
+- `nyumba`, `shamba`, `bima`, `madini`, `uwecheza…`/`uwekezaji`, `bandari`, `hati` all confirmed
+  dangerous by data, not by argument.
+Rejected by sweep: `kodi ya pango` (hits eval_258, an in-scope SDL question). Dropped on
+judgement despite 0 fp: `dse`, `znz`, `kampuni mama`, `kodi ya kupangisha`, `kupangisha nyumba`.
+Dropped on founder review: `kontena`, `bidhaa kutoka nje` (same reasoning as bare `kiwanja`).
+
+**Final sweep, 54 phrases over 483 questions (400 gate + 15 + 5 + 48 probes + 15 adversarial):
+exactly ONE classification change — nat_46, the target — and ZERO in-scope questions newly
+refused.**
+
+**Now self-enforcing:** the 15 probes are committed at
+`eval/refusal_gate/ooc_adversarial_in_scope_015.jsonl`, each carrying a `guards_against` note,
+and `tests/test_classification.py` fails if any future phrase refuses one of them. An over-broad
+addition now breaks a test instead of needing someone to remember the audit.
+
+**A prior assumption was refuted and the test inverted.**
+`test_paraphrased_ooc_controls_pass_the_phrase_gate_to_the_model` previously ASSERTED that
+ro_01 (*"niliuza kiwanja"* — nat_46's own phrasing) should pass the gate, on the rationale that
+the **model** would refuse it via the system prompt, and said *"Do NOT fix classify() to catch
+these"*. Run 3 showed the model does NOT refuse it. The test is now inverted with that history
+recorded in its docstring. The phrase-gate-is-not-semantic point still stands as a **limit** — it
+no longer justifies leaving a known leak category open.
+
+## 🟠 OPEN — two Run-3 findings that are NOT classifier gaps (logged, not fixed, 2026-08-06)
+
+**(a) `eval_191` is MISLABELLED in the gate corpus.** *"PAYE ya mfanyakazi wangu mwenye mshahara
+wa TZS 800,000 kwa mwezi ni kiasi gani?"* carries `subdomain: out_of_corpus` with gold answer
+**TZS 78,000** — a correct, core, in-scope PAYE computation. It surfaced during the SAFETY-1
+audit as an "uncaught OOC item"; it is nothing of the kind. **Any attempt to close it with an OOC
+phrase would start refusing PAYE questions — the single most common real question there is.**
+Correcting the label **moves the gate denominator** (it shifts one question between the in-corpus
+and refusal sets), so it is a **scored-number decision of the same class as the `eval.py` payroll
+guard and the `scorer_reliability` denominator** — not a data cleanup. Do not change it inside a
+measurement cycle. Decide alongside those.
+
+**(b) Bank-loan advice has no declared OOC category.** `edge_p15` (*"nisaidie jinsi ya kupata
+mkopo wa benki kwa bizna yangu"*) is genuinely outside what Chike does, but "how to get a bank
+loan" is not among the categories the system prompt declares out of scope (capital gains,
+import/customs, transfer pricing, stamp duty, mining royalties, Zanzibar tax, investment advice).
+Adding loan phrases would **create a new refusal category**, which is a **scope question for the
+product, not a bug in the classifier**. Deliberately excluded from the SAFETY-1 audit, which was
+scoped to variants of concepts already listed. Needs a product decision: does Chike refuse
+financing questions, or answer them within the compliance frame?
 
 ## 🔴 SAFETY-2 / D-RESIDENCY-1 — engine-authoritative wrong figure (TRACKED DEFECT, 2026-08-06)
 
