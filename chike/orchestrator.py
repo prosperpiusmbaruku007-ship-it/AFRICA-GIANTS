@@ -239,6 +239,31 @@ class Orchestrator:
             return self._answer_applicability(sq)
         extraction = self.extractor.extract(sq.text, required, sq.computation_type)
         if not extraction.usable(required):
+            # PREREQ-2 pattern B. GATED TO RUN ONLY WHERE EXTRACTION ALREADY FAILED, so a
+            # question that computes today (eval_092, eval_302) can never be diverted here.
+            #
+            # eval_399 shape first: INDIVIDUALS enumerated, not a group. PAYE bands are
+            # progressive, so summing two salaries is not a presentation choice but an
+            # arithmetic error (1,600,000 as one salary = TZS 308,000; the true answer is
+            # 10,400 + 188,000 = TZS 198,400).
+            if sq.computation_type == "paye":
+                individuals = swn.parse_individual_salaries(sq.text)
+                if individuals:
+                    return self._deterministic_answer(sq, rules_engine.compute_paye_each(
+                        individuals, resident=routing.paye_resident(sq.text)))
+            grouped = swn.parse_payroll_groups(sq.text)
+            if grouped and grouped.get("groups"):
+                inputs = {"gross_monthly_payroll": grouped["payroll"]}
+                if "employee_count" in required:
+                    inputs["employee_count"] = grouped["headcount"]
+                # eval_289 asks for the employer share of a GROUP total — the same party
+                # resolution the single-figure path already applies must reach here too.
+                if sq.computation_type == "nssf":
+                    inputs["party"] = routing.nssf_party(sq.text)
+                result = rules_engine.compute(sq.computation_type, **inputs)
+                prompt = self._build_compute_prompt(sq.text, result)
+                reply = self.backend.generate(prompt, self.gen_params)
+                return SubAnswer(sub_question=sq, text=reply, computation=result)
             # PREREQ-1 M1/M2/M3: the compute path is blocked because the only figure offered
             # is NOT a payroll base (a loan, rent, market value, utility bill, or a count of
             # machines/invoices/branches). Asking for a salary here validates the false

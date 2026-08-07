@@ -13,7 +13,7 @@ from .results import ComputationResult
 from .base_rejection import reject_base
 from .sdl import compute_sdl, sdl_applies, sdl_crosses_threshold
 from .nssf import compute_nssf, nssf_applies
-from .paye import compute_paye
+from .paye import compute_paye, compute_paye_each
 from .wcf import compute_wcf, wcf_applies
 
 SUPPORTED = frozenset({"sdl", "nssf", "paye", "wcf"})
@@ -67,6 +67,7 @@ __all__ = [
     "compute_sdl",
     "compute_nssf",
     "compute_paye",
+    "compute_paye_each",
     "compute_wcf",
     "sdl_applies",
     "nssf_applies",

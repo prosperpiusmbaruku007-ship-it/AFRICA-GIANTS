@@ -229,6 +229,144 @@ def parse_fraction_of_count(text):
     return {"base": base, "groups": groups}
 
 
+# ── PREREQ-2 pattern B: multi-group payroll, Σ(countᵢ × salaryᵢ) ─────────────────────
+#
+# ALL-OR-NOTHING BY CONSTRUCTION. A prototype of the obvious structural template
+# ("<count> <pay-verb> <amount>") was swept over 524 questions: it matched 12 and MIS-PARSED
+# SIX of them, two catastrophically —
+#   eval_304  "wafanyakazi 20 na MTAJI wa TZS 50,000,000"  -> 20 x 50M = TZS 1 BILLION payroll
+#   nat_18    "wafanyakazi wawili mmoja 400000 mwingine 1100000" -> 2 x 400k, not 400k + 1.1M
+#   eval_285  "ROBO YA wafanyakazi 24 wanapata 800,000"    -> 24 x 800k; the group is SIX
+#   ex_08     two branches stated                          -> caught only the second
+# Every one of those replaces an honest clarification with a confident wrong number. So this
+# parser never returns a partial result: four validations must ALL pass, or it declines and
+# the existing clarification stands.
+#
+# Magnitude cannot be the count-vs-salary discriminator: MIN_PLAUSIBLE_AMOUNT is 10,000, but
+# real rates in this corpus are 1,500/piece and 18,000/day, so a magnitude rule reads 1,500 as
+# "a count of 1,500 people". Counts are identified STRUCTURALLY — adjacent to a people-noun or
+# carrying the wa- people-class prefix — never by size.
+_GROUP_PAY_VERB = r"wanapata|wanalipwa|wana|wenye|wa|analipwa|anapata|lenye"
+# wa-prefixed spelled counts stand alone ("WANNE wanaofuata"), bare ones need a people-noun.
+_WA_SPELLED = {"mmoja": 1, "wawili": 2, "watatu": 3, "wanne": 4, "watano": 5,
+               "wasita": 6, "wanane": 8}
+_BARE_SPELLED = {"moja": 1, "mbili": 2, "tatu": 3, "nne": 4, "tano": 5, "sita": 6,
+                 "saba": 7, "nane": 8, "tisa": 9, "kumi": 10}
+_COUNT_TOKEN = re.compile(
+    rf"(?:(?:{_FRACTION_PEOPLE})\s+(\d{{1,4}}|{'|'.join(_BARE_SPELLED)}|{'|'.join(_WA_SPELLED)}))"
+    rf"|(?:(\d{{1,4}})\s+(?:{_FRACTION_PEOPLE}))"
+    # A bare count directly governing a pay verb ("KATI YAO 4 WANA mishahara ya TZS 700,000",
+    # eval_327). The pay verb is what makes it a headcount rather than a loose number; without
+    # this the groups are invisible and the whole parse declines.
+    rf"|(?:(\d{{1,4}})\s+(?:wana|wanapata|wanalipwa|wenye)\b)"
+    rf"|\b({'|'.join(_WA_SPELLED)})\b")
+_MONEY_TOKEN = re.compile(
+    r"(?:tzs|tsh|sh|shilingi)\s*(\d[\d,]*)|(\d[\d,]{4,})(?!\s*%)", re.IGNORECASE)
+_STATED_TOTAL = re.compile(rf"(?:{_FRACTION_PEOPLE})\s+(\d{{1,4}})\s*,?\s*(?:kati\s+ya|ambao)")
+
+
+def _count_value(match):
+    for group in match.groups():
+        if group is None:
+            continue
+        if group.isdigit():
+            return int(group)
+        return _WA_SPELLED.get(group) or _BARE_SPELLED.get(group)
+    return None
+
+
+def parse_payroll_groups(text):
+    """Resolve a multi-group payroll into {'groups': [(count, salary), ...],
+    'payroll': Decimal, 'headcount': int}, or {'groups': None, 'reason': ...} when any
+    validation fails, or None when no group construction is present.
+
+    VALIDATIONS (all must pass — see the module comment for what each one caught):
+      1. every plausible money figure in the question is assigned to a group;
+      2. a separately stated total headcount equals the sum of the group counts;
+      3. fraction forms take their counts from parse_fraction_of_count, NEVER from the
+         number adjacent to the salary (that number is the fraction's BASE);
+      4. no wrong-base word is present (mtaji/mauzo/faida/... are not payroll).
+    """
+    text_l = _PER_PERSON.sub(" ", text.lower()) if False else text.lower()
+    salaries = [a for a in parse_amounts(text) if a >= MIN_PLAUSIBLE_AMOUNT]
+    if len(salaries) < 2:
+        return None                                   # not a multi-group construction
+
+    if not re.search(rf"(?:{_FRACTION_PEOPLE})|(?:{'|'.join(_WA_SPELLED)})", text_l):
+        return None
+    if not re.search(rf"\b(?:{_GROUP_PAY_VERB})\b", text_l):
+        return None
+
+    # (4) a non-payroll base anywhere disqualifies the whole parse.
+    if detect_wrong_base(text, None):
+        return {"groups": None, "reason": "non-payroll figure present (wrong base)"}
+
+    # INDIVIDUALS, NOT GROUPS. nat_18 ("wafanyakazi WAWILI, MMOJA anapata 400000, MWINGINE
+    # 1100000") reads as a group parse of (2 x 400,000) + (1 x 1,100,000) = 1,900,000 when the
+    # truth is 400,000 + 1,100,000 = 1,500,000. Found by the 524-sweep, not by a probe. An
+    # explicit individual enumeration is never a group construction — hand it to
+    # parse_individual_salaries instead.
+    if _INDIVIDUAL.search(text_l):
+        return None
+
+    # (3) fraction forms: counts come only from C-2.
+    fraction = parse_fraction_of_count(text)
+    if fraction is not None:
+        if fraction.get("groups") is None:
+            return {"groups": None, "reason": fraction.get("reason", "unresolved fraction")}
+        counts = list(fraction["groups"])
+        stated_total = fraction["base"]
+    else:
+        counts = [c for c in (_count_value(m) for m in _COUNT_TOKEN.finditer(text_l))
+                  if c is not None]
+        stated = _STATED_TOTAL.search(text_l)
+        stated_total = int(stated.group(1)) if stated else None
+        if stated_total is not None and counts and counts[0] == stated_total:
+            counts = counts[1:]                       # the leading figure is the total
+    if not counts:
+        return {"groups": None, "reason": "no group headcounts found"}
+
+    # (1) one salary per group, none left over.
+    if len(counts) != len(salaries):
+        return {"groups": None,
+                "reason": f"{len(counts)} groups but {len(salaries)} salaries — "
+                          "not every figure is accounted for"}
+
+    groups = list(zip(counts, salaries))
+    headcount = sum(counts)
+    # (2) a stated total must agree with the groups.
+    if stated_total is not None and headcount != stated_total:
+        return {"groups": None,
+                "reason": f"group counts sum to {headcount} but {stated_total} was stated"}
+    payroll = sum(Decimal(c) * s for c, s in groups)
+    return {"groups": groups, "payroll": payroll, "headcount": headcount}
+
+
+# eval_399 shape: INDIVIDUALS enumerated, not a group. PAYE is progressive, so summing two
+# salaries into one payroll is not a presentation choice — it is arithmetically wrong
+# (400,000 + 1,200,000 answered as one 1,600,000 salary gives TZS 308,000 against a true
+# 10,400 + 188,000 = 198,400). Kept deliberately separate from parse_payroll_groups.
+_INDIVIDUAL = re.compile(r"\b(mmoja|wa kwanza)\b.{0,40}?\b(?:mwingine|wa pili|mwenzake)\b",
+                         re.IGNORECASE | re.DOTALL)
+
+
+def parse_individual_salaries(text):
+    """The distinct per-person salaries in an 'X gets A, the other gets B' question, or None.
+
+    Requires an explicit two-person enumeration AND a matching people count, so a group
+    question never lands here."""
+    text_l = text.lower()
+    if not _INDIVIDUAL.search(text_l):
+        return None
+    # A two-person enumeration: the stated headcount must be 2, so a group question with an
+    # incidental 'mmoja' never lands here. eval_326 (mixed residency, "mwenzake" with no
+    # leading 'mmoja') is untouched — it stays on its deferred D-PAYE-1 path.
+    if not re.search(rf"(?:{_FRACTION_PEOPLE})\s+(?:2|wawili|mbili)\b", text_l):
+        return None
+    salaries = [a for a in parse_amounts(text) if a >= MIN_PLAUSIBLE_AMOUNT]
+    return salaries if len(salaries) == 2 else None
+
+
 # PREREQ-2 pattern I. People-nouns parse_count recognises. 'vibarua/kibarua/watumishi' are
 # the INFORMAL employment words PREREQ-1 added to routing._PAYROLL_CTX; they were never added
 # here, so a question could route to a levy and then be told its headcount was missing.

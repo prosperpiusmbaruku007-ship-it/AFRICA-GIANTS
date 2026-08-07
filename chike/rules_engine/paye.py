@@ -10,6 +10,31 @@ from .rates import PAYE_BANDS, PAYE_NONRESIDENT_RATE
 from .results import ComputationResult, to_shillings, tzs
 
 
+def compute_paye_each(salaries, resident: bool = True) -> ComputationResult:
+    """PAYE for each of several INDIVIDUALS, answered separately (PREREQ-2, eval_399).
+
+    "Watu wawili: mmoja anapata TZS 400,000 na mwingine TZS 1,200,000 — PAYE ya KILA MMOJA?"
+    is not a group-payroll question. Because the bands are progressive, summing the two
+    salaries is not a different presentation of the same answer — it is arithmetically wrong:
+    one salary of 1,600,000 yields TZS 308,000, while the true answer is 10,400 + 188,000 =
+    TZS 198,400. So this enumerates per-person results instead of aggregating.
+
+    `amount` is the TOTAL PAYE across the individuals (what the employer remits); each
+    person's figure is spelled out in `working`, which is what the user asked for.
+    """
+    results = [compute_paye(s, resident=resident) for s in salaries]
+    total = sum(r.amount for r in results)
+    lines = [f"Mfanyakazi {i}: {r.working}" for i, r in enumerate(results, start=1)]
+    return ComputationResult(
+        computation="paye",
+        applicable=True,
+        amount=total,
+        working=" ".join(lines) + f" Jumla ya PAYE = {tzs(total)}.",
+        inputs={"salaries": [Decimal(s) for s in salaries], "resident": resident},
+        note="per-individual PAYE (progressive bands are not additive across people)",
+    )
+
+
 def compute_paye(monthly_salary, resident: bool = True) -> ComputationResult:
     """PAYE on one employee's monthly salary.
 

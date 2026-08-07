@@ -61,6 +61,22 @@ def _branch(question):
         if ct == "paye":
             inputs["resident"] = routing.paye_resident(question)
         return "compute", rules_engine.compute(ct, **inputs).working
+    # PREREQ-2 pattern B, mirrored here after it silently diverged: this local copy still
+    # reported 'clarify' for ex_07 while the real orchestrator had begun computing it. The
+    # mirror is supposed to fail loudly when _answer_compute's order changes; it did not,
+    # because it simply lacked the new branch. Keep it in step.
+    if ct == "paye" and swn.parse_individual_salaries(question):
+        return "compute", rules_engine.compute_paye_each(
+            swn.parse_individual_salaries(question),
+            resident=routing.paye_resident(question)).working
+    grouped = swn.parse_payroll_groups(question)
+    if grouped and grouped.get("groups"):
+        inputs = {"gross_monthly_payroll": grouped["payroll"]}
+        if "employee_count" in required:
+            inputs["employee_count"] = grouped["headcount"]
+        if ct == "nssf":
+            inputs["party"] = routing.nssf_party(question)
+        return "compute", rules_engine.compute(ct, **inputs).working
     if swn.detect_rejectable_base(question, ct):
         return "base_rejection", None
     return "clarify", None
@@ -76,21 +92,37 @@ def test_probe_file_is_complete():
 
 @pytest.mark.parametrize("probe", PROBES, ids=[p["id"] for p in PROBES])
 def test_adversarial_extraction_probe(probe):
-    branch, _ = _branch(probe["question"])
+    branch, working = _branch(probe["question"])
     assert branch == probe["expected_branch"], probe["guards_against"]
+    # ex_07/ex_08 moved from 'clarify' to 'compute' when pattern B landed. The guard did not
+    # weaken — it strengthened: they now assert the CORRECT figure, so a mis-parse that
+    # anchors on one group (WCF 3,500) or drops a branch fails here rather than passing.
+    if probe.get("expect_contains"):
+        assert probe["expect_contains"] in (working or ""), probe["guards_against"]
 
 
 # ── the guard that matters most: multi-group must never anchor ───────────────────
 
 def test_multi_group_never_anchors_on_one_groups_salary():
     """eval_327. Anchoring here would compute WCF = 0.5% x 700,000 = TZS 3,500 in place of
-    0.5% x 4,600,000 = TZS 23,000 — a confident wrong number replacing a clarification."""
+    0.5% x 4,600,000 = TZS 23,000.
+
+    HISTORY: this asserted 'clarify' until PREREQ-2 pattern B landed a validated group parse.
+    The anchoring guard itself is unchanged and still asserted below — what changed is that
+    the correct number is now reachable, so the test asserts THAT instead. Strengthened, not
+    relaxed: 3,500 would now fail on the figure, not merely on the branch."""
     q = ("Nina wafanyakazi 10, kati yao 4 wana mishahara ya TZS 700,000 na 6 wana "
          "TZS 300,000, nataka WCF na SDL")
     assert swn.has_multiple_groups(q) is True
     assert swn.select_anchored_amount(q, [swn.Decimal("700000"), swn.Decimal("300000")]) \
         == (None, None)
-    assert _branch(q)[0] == "clarify"
+    branch, working = _branch(q)
+    assert branch == "compute"
+    # The base is what proves no anchoring happened: the FULL 4,600,000 payroll, not one
+    # group's 700,000. (_branch mirrors a single levy; the WCF 23,000 / SDL 161,000 fan-out
+    # is asserted end-to-end in tests/test_group_payroll.py.)
+    assert swn.parse_payroll_groups(q)["payroll"] == swn.Decimal("4600000")
+    assert "TZS 4,600,000" in working and "TZS 700,000" not in working
 
 
 def test_multi_period_never_answers_for_one_period():
