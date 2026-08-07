@@ -11,6 +11,105 @@ eval_378 scorer-artifact flip, zero collateral). Two non-blocking follow-ups log
 (SCORER-SEMANTICS-1: credit "TZS 0"/not-applicable answers; JUDGE-NONDET: eval_397). See the
 D-FIDELITY-1 and work-item-2-round-2 entries below.
 
+## 🏁 PHASE D COMPLETE — v16 NOT WIRED; two-arm retriever NOT SHIPPED (2026-08-07)
+
+Artifacts: **`eval/results/gate_phase_d_paired_3ac522a.json`** (raw, fetched from HF and
+**sha256-verified** `1e3a962695fa5cfd`, `complete: true`) + **`..._findings.json`** (the
+adjudication). **Every number below was recomputed from the raw `v15_results`/`v16_results`/
+`part3_results` rows, not read from the script's summary — the independent recomputation
+reproduced the summary exactly.**
+
+### The four calls
+
+**(1) v16 is NOT wired. The ADR bar genuinely failed.** raw **−6.8**, reliable **−3.7**;
+ADR 0001 §10 requires v16 ≥ v15 on both. **The failure is real, not a scorer artifact:
+29 of the 33 clarification-regressions are v16 defects.** Not a close call to be argued away.
+
+**(2) The two-arm retriever is NOT shipped. Settled.** See the Run 2 part 3 section below.
+
+**(3) The judge-augmented "+1.8" is NOT like-for-like — do not quote it.** `judge_gradeable`
+excludes clarifications; v15 had 5 and v16 had 61, so **v15 was judged on 379 questions and v16
+on 323**, and the 56 excluded are precisely the ones v16 clarified — the questions it did worst
+on. Correct framing:
+- like-for-like on the 323 both arms were judged on: **v15 67.2% vs v16 72.8% → +5.6 pts**
+- counting clarifications as failures (what raw does): **v15 60.4% vs v16 62.0% → +1.6 pts**
+- **Honest range: v16 leads by +1.6 to +5.6 pts on judged correctness**, depending entirely on
+  whether a clarification counts as a failure. `+1.8` sits inside the band but was derived
+  across different question sets. **Cite the range, never the +1.8.**
+Mechanism confirmed: judge false-PASS candidates **v15 41 vs v16 30** — the regex scorer credits
+v15 for wrong answers more often, which is why raw says −6.8 while judged correctness favours v16.
+
+**(4) The fact path is clean.** **+2.2 raw / +2.3 reliable at n=193.** Wiring carries no
+fact-path regression risk — now confirmed at scale (005b said this at n=5, Run 3 at n=21).
+
+### Adjudication of the 33 clarification-regressions
+
+| Class | n | Meaning |
+|---|---|---|
+| **A — extraction failure** | **22** | information WAS present and sufficient; v16 failed to extract |
+| **C — input not needed** | **7** | yes/no, wrong-base or definitional; no salary was ever required |
+| **B — v16 correct** | **4** | information genuinely absent |
+
+**But the baseline is false in 16 of the 33:** the judge says v15's answer was WRONG on
+eval_242/253/259/269/271/279/281/291/293/294/296/324/327/329/334/399 — v15 computed SDL on a
+bank loan, WCF on vehicle value, PAYE on base salary only, `1,500 ÷ 100`, and read *9 machines*
+as *9 workers*. **Genuine user-facing losses — v15 judged correct AND v16 clarified — number
+NINE, not 37**; seven more are judge-undetermined. On three Class-B cases (eval_291/294/295)
+**the gold answer itself asks for clarification**, so v16 matched gold and was scored as failing.
+
+### The 4 non-clarification regressions — adjudicated
+
+- **eval_127** and **eval_208: GENUINE v16 regressions, and BOTH are CAUSED BY THE TWO-ARM
+  RETRIEVER.** Under single-arm, v16 answers both correctly. Two-arm invented a *"TZS milioni
+  90"* six-month VAT threshold (eval_208) and produced a self-contradictory SDL/PAYE deadline
+  answer — *"zinawasilishwa kwa nyakati tofauti"* followed by the same date twice (eval_127).
+- **eval_378: scorer artifact.** Both arms judged correct; v16's *"SDL haihusiki: una
+  wafanyakazi 8"* is arguably crisper — the regex wanted an explicit TZS 0.
+- **eval_393: scorer artifact + a real presentation defect.** Both judged correct, both
+  `reliable=False`, but the merged v16 reply opens *"Sawa kabisa"* and then says *"Hapana"* —
+  surface polarity self-contradicts. A merge/render issue, not a wrong answer.
+
+**So v16's only two genuine non-clarification regressions in the entire 400 would not exist
+under single-arm retrieval.**
+
+### Run 2 part 3 — DON'T SHIP the two-arm retriever (SETTLED)
+
+Recomputed: raw two-arm 78/90 = 86.7% vs single-arm 74/90 = 82.2% (**+4.4**); reliable 58/66 vs
+56/65 (**+1.7**). That reverses the earlier lean — **until the judge is applied**:
+- **4 of the 6 two-arm-only passes are judged WRONG** (eval_008, eval_034, eval_186, eval_331).
+  Only eval_019 and eval_187 are judge-confirmed correct.
+- Both single-arm-only passes (eval_127, eval_208) are the confirmed two-arm **harms** above.
+- **Harness limitation: the 90 part-3 rows were never judged (0/90)** — the overlay ran on
+  res15/res16 only. Fix before any future de-confound run.
+
+Net: **2 confirmed wins, 4 illusory ones, 2 confirmed harms.** Worse than a wash, and under the
+approved rule a wash already keeps single-arm. **Three independent measurements have now failed
+to demonstrate a benefit** (parts 1–2: 1 recovery vs 86 non-gold appends; Set A: zero rank
+changes across 21 critical queries; part 3: net negative once judged). Production keeps
+single-arm — the configuration it already runs.
+
+### 🔜 BLOCKING PREREQUISITES for re-running Phase D
+
+**PREREQ-1 — applicability routing (Class C, 7 confirmed). DO THIS FIRST.** Higher severity
+*and* the smaller change. A wrong-base or yes/no question must **never** demand a salary. Asking
+a user for their payroll when they asked whether their **electricity bill** affects SDL is worse
+than a wrong number — **it validates the false premise.** This **absorbs the previously-parked
+p04 item** ("natural-levy applicability route, structural"), which now has 7 confirmed instances
+instead of 1 constructed example: eval_124 (headcount-timing yes/no), eval_253 (bank loan),
+eval_254 (shop market value), eval_258 (office rent), eval_259 (vehicle value), eval_261
+(electricity), eval_269 (9 machines).
+
+**PREREQ-2 — extraction coverage (Class A, 22 confirmed).** Sub-patterns: per-person-vs-total
+**stated in the question** but not parsed (the largest group); fractional headcounts (*robo ya
+24*, *theluthi mbili ya 30*, *robo tatu ya 16*, *nusu ya 14*); rate × quantity (*1,500 kwa
+kipande × 400*, *18,000 kwa siku × 26*, *80,000 kwa safari × 15*); multi-component pay (*msingi
++ posho + bonasi*); multi-group and multi-branch payrolls; period conversion (bi-weekly,
+commission). IDs enumerated in the findings artifact.
+
+**Contamination note:** eval_191's mislabel (tracked separately) sits inside this denominator.
+
+**Next session resumes at PREREQ-1.**
+
 ## 🚀 PRODUCTION NOW SERVES `chike/pipeline_v15.py` (deployed 2026-08-07)
 
 The 2026-08-07 redeploy that shipped the SAFETY-1 OOC fix **also carried the Plan A extraction

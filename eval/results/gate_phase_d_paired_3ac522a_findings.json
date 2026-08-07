@@ -1,0 +1,623 @@
+{
+ "run": "PHASE D - paired v15-vs-v16 over the 400 (+ Run 2 part 3 de-confound)",
+ "harness": "kaggle/eval_phase_d_paired.py",
+ "executed_by": "founder (Kaggle GPU)",
+ "date": "2026-08-07",
+ "provenance": {
+  "hf_repo": "prospAprospA007/africa-giants-dataset",
+  "hf_file": "gate_phase_d_paired_3ac522a.json",
+  "sha256_prefix": "1e3a962695fa5cfd",
+  "sha_verified": true,
+  "complete": true,
+  "clone_head": "3ac522a",
+  "method_note": "Fetched from HF and VERIFIED by sha256, then every number below was RECOMPUTED from the raw v15_results/v16_results/part3_results rows - not read from the script's summary block. The independent recomputation reproduced the summary exactly."
+ },
+ "buckets_recomputed": {
+  "fact_path_190": {
+   "n": 193,
+   "raw": "85.9 -> 88.0 (+2.2)",
+   "reliable": "85.4 -> 87.7 (+2.3)"
+  },
+  "staged_50": {
+   "n": 50,
+   "raw": "76.0 -> 78.0 (+2.0)",
+   "reliable": "79.5 -> 79.5 (0.0)"
+  },
+  "compute_type": {
+   "n": 103,
+   "raw": "68.6 -> 39.2 (-29.4)",
+   "reliable": "67.9 -> 44.9 (-23.0)",
+   "v16_clarified": 56
+  },
+  "adversarial_150": {
+   "n": 150,
+   "raw": "68.1 -> 47.2 (-20.8)",
+   "reliable": "73.0 -> 58.6 (-14.4)",
+   "v16_clarified": 58
+  },
+  "ALL_400": {
+   "n": 400,
+   "raw": "78.1 -> 71.4 (-6.8)",
+   "reliable": "80.6 -> 76.9 (-3.7)",
+   "v15_clarified": 5,
+   "v16_clarified": 61
+  }
+ },
+ "headline": {
+  "CALL_1_adr_bar": "FAILED on both limbs: raw -6.8 pts, reliable -3.7 pts. ADR 0001 §10 requires v16 >= v15 on BOTH. The failure is REAL, not a scorer artifact: 29 of the 33 clarification-regressions are v16 defects.",
+  "CALL_4_fact_path": "CLEAN and slightly better: +2.2 raw / +2.3 reliable at n=193.",
+  "compute_path": "raw -29.4 / reliable -23.0 with 56 of 103 clarified. The ENTIRE loss is clarifications.",
+  "flips": "11 gains, 37 regressions (33 clarifications + 4 non-clarification)."
+ },
+ "adjudication_of_the_33_clarification_regressions": {
+  "classification_scheme": {
+   "A": "information WAS present and sufficient -> v16 EXTRACTION FAILURE",
+   "B": "information genuinely ABSENT/insufficient -> v16 correct to clarify",
+   "C": "the missing input was NOT NEEDED (yes/no, wrong-base, definitional) -> v16 clarified inappropriately, validating a false premise. ROUTING/APPLICABILITY defect."
+  },
+  "totals": {
+   "A_extraction_failure": 22,
+   "C_input_not_needed": 7,
+   "B_v16_correct": 4
+  },
+  "class_A_ids": [
+   "eval_242",
+   "eval_279",
+   "eval_280",
+   "eval_281",
+   "eval_283",
+   "eval_284",
+   "eval_285",
+   "eval_286",
+   "eval_287",
+   "eval_288",
+   "eval_289",
+   "eval_290",
+   "eval_293",
+   "eval_296",
+   "eval_319",
+   "eval_323",
+   "eval_324",
+   "eval_325",
+   "eval_327",
+   "eval_329",
+   "eval_334",
+   "eval_399"
+  ],
+  "class_B_ids": [
+   "eval_271",
+   "eval_291",
+   "eval_294",
+   "eval_295"
+  ],
+  "class_C_ids": [
+   "eval_124",
+   "eval_253",
+   "eval_254",
+   "eval_258",
+   "eval_259",
+   "eval_261",
+   "eval_269"
+  ],
+  "rows": [
+   {
+    "id": "eval_124",
+    "class": "C",
+    "subdomain": "sdl_compliance",
+    "answer_type": "yes_no",
+    "question": "Biashara yangu ina wafanyakazi 9 na ninaajiri mfanyakazi wa 10 katikati ya mwezi — je, SDL inatakiwa kulipwa mwezi huo huo?",
+    "gold": "Ndiyo. Mara idadi ya wafanyakazi wako ikiwa 10 au zaidi, SDL inatakiwa kulipwa mara moja — haijalishi tarehe ya kuajiriwa kwa mfanyakazi wa 10. Thibitisha utaratibu wa mwanzo wa SDL na TRA.",
+    "v15": "Ndiyo — mara tu unapofikia wafanyakazi 10, unakuwa chini ya kizingiti cha SDL na unapaswa kujiandikisha na kulipa SDL kuanzia mwezi huo huo. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "judge_v15": "correct",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_242",
+    "class": "A",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "question": "Mshahara ni TZS 800,000 — jumla ya mchango wa NSSF (mwajiri pamoja na mfanyakazi) ni kiasi gani?",
+    "gold": "Jumla ni asilimia 20 (asilimia 10 mwajiri pamoja na asilimia 10 mfanyakazi) — yaani TZS 160,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz).",
+    "v15": "Kwa mshahara wa TZS 800,000, PAYE ni TZS 78,000. Jumla ya mchango wa NSSF ni TZS 160,000 (mwajiri TZS 80,000 + mfanyakazi TZS 80,000). Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+    "v16": "Ili nihesabu NSSF, thibitisha kama kiasi ulichotaja ni mshahara ghafi (kabla ya makato) au wa mkononi (baada ya makato).",
+    "judge_v15": "wrong",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_253",
+    "class": "C",
+    "subdomain": "sdl_compliance",
+    "answer_type": "definition",
+    "question": "Nimechukua deni la benki TZS 6,700,000 kwa ajili ya biashara, hii inaongeza SDL yangu kiasi gani?",
+    "gold": "Deni la benki halihusiani na SDL. SDL ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi tu. Deni la TZS 6,700,000 halitozwi SDL. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kiwango cha SDL ni asilimia 3.5% ya mishahara yako, hivyo kwa deni la TZS 6,700,000 unalipa TZS 234,000 kwa mwaka kama SDL. Thibitisha na tra.go.tz.",
+    "v16": "Ili nihesabu SDL, niambie idadi ya wafanyakazi walio kwenye orodha ya mishahara.",
+    "judge_v15": "wrong",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_254",
+    "class": "C",
+    "subdomain": "wcf_compliance",
+    "answer_type": "yes_no",
+    "question": "Bei ya soko ya duka langu ni TZS 25,000,000, WCF nailipa kutokana na thamani hiyo?",
+    "gold": "Hapana. WCF ni asilimia 0.5 ya jumla ya mishahara (gross cash emoluments) ya wafanyakazi, siyo thamani ya soko ya duka. Bei ya TZS 25,000,000 haitumiki. Nipe jumla ya mishahara. Thibitisha na WCF (wcf.go.tz).",
+    "v15": "Hapana, si lazima ulipie WCF kulingana na bei ya soko. Kiwango cha asilimia 0.5 kinatumika kwenye mishahara halisi (gross wages). Thibitisha na WCF (wcf.go.tz).",
+    "v16": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "judge_v15": "correct",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_258",
+    "class": "C",
+    "subdomain": "sdl_compliance",
+    "answer_type": "yes_no",
+    "question": "Nalipa kodi ya pango TZS 850,000 kwa mwezi kwa ofisi, hii inaingia kwenye hesabu ya SDL?",
+    "gold": "Hapana. Kodi ya pango si sehemu ya mishahara, kwa hiyo haiingii kwenye SDL. SDL ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi pekee. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Hapana, kodi ya pango haiko katika vigezo vya SDL. SDL inakokotolewa kwa mishahara tu. Thibitisha na tra.go.tz.",
+    "v16": "Ili nihesabu SDL, niambie idadi ya wafanyakazi walio kwenye orodha ya mishahara.",
+    "judge_v15": "correct",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_259",
+    "class": "C",
+    "subdomain": "wcf_compliance",
+    "answer_type": "definition",
+    "question": "Magari yangu ya biashara yana thamani ya TZS 40,000,000 kwa jumla, WCF yake naikadiriaje?",
+    "gold": "WCF haitozwi kwa thamani ya magari. WCF ni asilimia 0.5 ya jumla ya mishahara ya wafanyakazi. Thamani ya magari TZS 40,000,000 haihusiki. Nipe jumla ya mishahara. Thibitisha na WCF (wcf.go.tz).",
+    "v15": "Kwa magari yenye thamani ya TZS 40,000,000, WCF huwa ni asilimia 0.5% ya thamani hiyo. Thibitisha na WCF (wcf.go.tz).",
+    "v16": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "judge_v15": "wrong",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_261",
+    "class": "C",
+    "subdomain": "sdl_compliance",
+    "answer_type": "yes_no",
+    "question": "Gharama za umeme mwezi huu ni TZS 1,200,000, je zinabadilisha kiasi cha SDL ninachodaiwa?",
+    "gold": "Hapana. Gharama za umeme si mishahara, hazibadilishi SDL. SDL ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Hapana, gharama za umeme hazimbadilishi kiwango cha SDL. SDL inakokotolewa kwa mishahara tu, si huduma nyingine. Thibitisha na tra.go.tz.",
+    "v16": "Ili nihesabu SDL, niambie idadi ya wafanyakazi walio kwenye orodha ya mishahara.",
+    "judge_v15": "correct",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_269",
+    "class": "C",
+    "subdomain": "sdl_compliance",
+    "answer_type": "definition",
+    "question": "Nimefunga mashine 9 mpya za uzalishaji, SDL yangu itapanda kwa kiasi gani?",
+    "gold": "Idadi ya mashine (9) haihusiani na SDL. SDL ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi tu, si vifaa. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa kuongeza wafanyakazi 9, unakuwa na wafanyakazi 19, na umepita kizingiti cha SDL cha wafanyakazi 10. SDL yako itakuwa asilimia 3.5 ya mishahara yao ya pamoja. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu SDL, niambie idadi ya wafanyakazi walio kwenye orodha ya mishahara.",
+    "judge_v15": "wrong",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_271",
+    "class": "B",
+    "subdomain": "nssf_contributions",
+    "answer_type": "definition",
+    "question": "Mfanyakazi wangu analipwa dola 500 za Marekani kwa mwezi, NSSF yake ni ngapi?",
+    "gold": "Mshahara umetajwa kwa dola za Marekani (USD 500), siyo shilingi. NSSF ni asilimia 10 ya mshahara wa TZS. Lazima ubadilishe USD 500 kuwa TZS kwa kiwango cha ubadilishaji cha siku kabla ya kukokotoa. Thibitisha na NSSF (nssf.go.tz).",
+    "v15": "Kwa mshahara wa USD 500, unahitaji kuubadili kuwa shilingi za Kitanzania ili kuhesabu NSSF. Thibitisha kiwango cha ubadilishaji wa sasa na benki yako au tovuti ya BoT. Kisha hesabu asilimia 20 ya shilingi hizo. Thibitisha na NSSF (nssf.go.tz).",
+    "v16": "Ili nihesabu NSSF, tafadhali badilisha kiasi kuwa shilingi za Tanzania (TZS) — kiasi ulichotaja kiko katika sarafu ya kigeni. Kisha nitahesabu.",
+    "judge_v15": "wrong",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_279",
+    "class": "A",
+    "subdomain": "sdl_compliance",
+    "answer_type": "number",
+    "question": "Mishahara yetu ni mingi kiasi, lakini jumla hasa ni TZS 3,750,000 kwa wafanyakazi 13 — SDL ni ngapi?",
+    "gold": "Kwa kuwa wafanyakazi ni 13 (zaidi ya 10), SDL inatozwa. Tumia jumla hasa iliyotolewa: asilimia 3.5 ya TZS 3,750,000 = TZS 131,250 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa jumla ya mishahara ya TZS 3,750,000 kwa wafanyakazi 13, SDL ni asilimia 3.5 ya jumla hiyo, sawa na TZS 132,500. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "judge_v15": "wrong",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_280",
+    "class": "A",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "question": "Tuna wafanyakazi wengi sana karibu, lakini hasa ni 18 wenye mshahara wa TZS 480,000 kila mmoja — NSSF ya wote?",
+    "gold": "Tumia takwimu hasa: 18 x TZS 480,000 = TZS 8,640,000 jumla ya mishahara. NSSF ni asilimia 20 (mwajiri + mfanyakazi) = TZS 1,728,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz).",
+    "v15": "NSSF ya wafanyakazi 18 wenye mshahara wa TZS 480,000 kila mmoja: kila mmoja anachangia TZS 96,000 (20% ya TZS 480,000). Jumla ya michango yao yote: TZS 96,000 × 18 = TZS 1,728,000. Thibitisha na nssf.go.tz.",
+    "v16": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "judge_v15": "correct",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_281",
+    "class": "A",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "question": "Mshahara wake ni mkubwa kidogo, unafika TZS 920,000 hivi — PAYE yake ni ngapi?",
+    "gold": "Tumia TZS 920,000. Iko kwenye kundi la nne: PAYE = TZS 68,000 + 25% ya (920,000 - 760,000) = 68,000 + 40,000 = TZS 108,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa mshahara wa TZS 920,000, PAYE ni karibu TZS 90,000. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "judge_v15": "wrong",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_283",
+    "class": "A",
+    "subdomain": "sdl_compliance",
+    "answer_type": "number",
+    "question": "Kama kawaida mishahara inabadilika, mwezi huu ni TZS 5,200,000 kwa watu 16 — SDL yake?",
+    "gold": "Watu 16 ni zaidi ya 10, hivyo SDL inatozwa. Tumia jumla hasa: asilimia 3.5 ya TZS 5,200,000 = TZS 182,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa mwezi huu, unalipa SDL ya asilimia 3.5 ya jumla ya mishahara yote, sawa na TZS 182,000 (TZS 5,200,000 × 0.035). Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "judge_v15": "correct",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_284",
+    "class": "A",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "question": "Mfanyakazi anapata kama laki sita hivi, sawa TZS 610,000 kamili — PAYE yake ni ngapi?",
+    "gold": "Tumia TZS 610,000 (kundi la tatu): PAYE = TZS 20,000 + 20% ya (610,000 - 520,000) = 20,000 + 18,000 = TZS 38,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa mshahara wa TZS 610,000, PAYE ni karibu TZS 78,000. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "judge_v15": "undetermined",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_285",
+    "class": "A",
+    "subdomain": "sdl_compliance",
+    "answer_type": "number",
+    "question": "Robo ya wafanyakazi 24 wanapata TZS 800,000, wengine wote TZS 350,000 — SDL ya jumla?",
+    "gold": "Robo ya 24 ni 6 (kwa TZS 800,000) na 18 (kwa TZS 350,000). Jumla: 6 x 800,000 + 18 x 350,000 = 4,800,000 + 6,300,000 = TZS 11,100,000. Watu 24 zaidi ya 10, SDL = 3.5% = TZS 388,500 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa wafanyakazi 8 (robo) wenye TZS 800,000 kila mmoja: SDL = TZS 28,000 (0.35% × TZS 800,000). Kwa wafanyakazi 16 waliosalia wenye TZS 350,000 kila mmoja: hakuna SDL (chini ya TZS 270,000). Jumla ya SDL = TZS 28,000. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "undetermined",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_286",
+    "class": "A",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "question": "Watu 5 wanapata 700,000, watu 4 wanapata 550,000, watu 6 wanapata 300,000 — NSSF ya jumla ni ngapi?",
+    "gold": "Jumla ya mishahara: 5 x 700,000 + 4 x 550,000 + 6 x 300,000 = 3,500,000 + 2,200,000 + 1,800,000 = TZS 7,500,000. NSSF ni asilimia 20 = TZS 1,500,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz).",
+    "v15": "Kwa hesabu sahihi:\n\nWatu 5 x TZS 700,000 = TZS 3,500,000\nWatu 4 x TZS 550,000 = TZS 2,200,000\nWatu 6 x TZS 300,000 = TZS 1,800,000\n\nJumla ya mishahara = TZS 7,500,000\n\nNSSF ya jumla = TZS 1,500,000 (asilimia 20 ya jumla)\n\nTZS 1,500,000 ni NSSF ya jumla — si kiasi cha mfanyakazi mmoja. Thibitisha na nssf.go.tz.",
+    "v16": "Ili nihesabu NSSF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "correct",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_287",
+    "class": "A",
+    "subdomain": "sdl_compliance",
+    "answer_type": "number",
+    "question": "Theluthi mbili ya watu 30 wanalipwa TZS 500,000, wengine wanalipwa TZS 900,000 — SDL?",
+    "gold": "Theluthi mbili ya 30 ni 20 (kwa 500,000) na 10 (kwa 900,000). Jumla: 20 x 500,000 + 10 x 900,000 = 10,000,000 + 9,000,000 = TZS 19,000,000. Watu 30 zaidi ya 10, SDL = 3.5% = TZS 665,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa jinsi ulivyoeleza, kuna wafanyakazi 20 wanaolipwa TZS 500,000 na wafanyakazi 10 wanaolipwa TZS 900,000. Jumla ya mishahara = 20 × 500,000 + 10 × 900,000 = TZS 22,000,000. SDL = 3.5% × TZS 22,000,000 = TZS 770,000. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "undetermined",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_288",
+    "class": "A",
+    "subdomain": "wcf_compliance",
+    "answer_type": "number",
+    "question": "Robo tatu ya wafanyakazi 16 wanapata TZS 450,000, robo wanapata TZS 1,000,000 — WCF ya jumla?",
+    "gold": "Robo tatu ya 16 ni 12 (kwa 450,000) na 4 (kwa 1,000,000). Jumla: 12 x 450,000 + 4 x 1,000,000 = 5,400,000 + 4,000,000 = TZS 9,400,000. WCF ni asilimia 0.5 = TZS 47,000 kwa mwezi. Thibitisha na WCF (wcf.go.tz).",
+    "v15": "Kwa hesabu sahihi: TZS 450,000 × 16 = TZS 7,200,000; TZS 1,000,000 × 4 = TZS 4,000,000. Jumla ya mishahara = TZS 11,200,000. WCF = 0.5% × TZS 11,200,000 = TZS 56,000. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu WCF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "undetermined",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_289",
+    "class": "A",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "question": "Nusu ya wafanyakazi 14 wanapata TZS 620,000, nusu wanapata TZS 380,000 — sehemu ya mwajiri ya NSSF?",
+    "gold": "Nusu ya 14 ni 7 na 7. Jumla: 7 x 620,000 + 7 x 380,000 = 4,340,000 + 2,660,000 = TZS 7,000,000. Sehemu ya mwajiri ni asilimia 10 = TZS 700,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz).",
+    "v15": "Kwa wafanyakazi 7 wanaopata TZS 620,000 kila mmoja: sehemu ya mwajiri = TZS 62,000 (10%) kwa kila mmoja. Jumla ya sehemu ya mwajiri kwa wote 7 = TZS 434,000. Kwa wafanyakazi 7 wanaopata TZS 380,000 kila mmoja: sehemu ya mwajiri = TZS 38,000 (10%)",
+    "v16": "Ili nihesabu NSSF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "undetermined",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_290",
+    "class": "A",
+    "subdomain": "sdl_compliance",
+    "answer_type": "number",
+    "question": "Watu 3 wa kwanza wanapata TZS 1,200,000, wanne wanaofuata TZS 800,000, watano wa mwisho TZS 500,000 — SDL?",
+    "gold": "Jumla ya mishahara: 3 x 1,200,000 + 4 x 800,000 + 5 x 500,000 = 3,600,000 + 3,200,000 + 2,500,000 = TZS 9,300,000. Wafanyakazi 12 (zaidi ya 10), SDL = 3.5% = TZS 325,500 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa muhtasari: wafanyakazi 10+ → SDL 3.5% ya mishahara; wafanyakazi 9 chini ya hapo → hakuna SDL. Kwa mgawanyo uliotolewa:\n\nWatu 3 wa kwanza (TZS 1,200,000): SDL = 3.5% × (1,200,000 + 1,200,000 + 1,200,000) = 3.5% × 3,600,000 = TZS 126,000\n\nWanne wanaofuata (TZS 800,000 kila mmoja): SDL = 0 (chini ya kizingiti)\n\nWatano wa mwisho (TZS 500,000 kila mmoja): SDL = 0 (chini ya kizingiti)\n\nJumla ya SDL = TZS 126,000. Thibitisha na TRA kupitia tra.go.tz.",
+    "v16": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "correct",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_291",
+    "class": "B",
+    "subdomain": "nssf_contributions",
+    "answer_type": "definition",
+    "question": "Analipwa TZS 320,000 kila wiki mbili (bi-weekly), NSSF yake ya mwezi ni ngapi?",
+    "gold": "Malipo ni ya kila wiki mbili, hivyo nihitaji mshahara halisi wa mwezi kwanza (mfano malipo mawili kwa mwezi ni TZS 640,000, lakini hii inategemea kalenda). Toa mshahara wa mwezi ndipo nikokotoe NSSF (10% ya mfanyakazi). Thibitisha na NSSF (nssf.go.tz).",
+    "v15": "Kwa mshahara wa TZS 320,000 kwa wiki mbili, mwezi una viwango VITATU: (1) TZS 0 hadi 270,000 → 0%; (2) TZS 270,001 hadi 320,000 → 8% (TZS 50,000); (3) Zaidi ya TZS 320,000 → 20% (TZS 64,000). Jumla ya NSSF ya mwezi = TZS 114,000 (si 120,000). Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu NSSF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "wrong",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_293",
+    "class": "A",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "question": "Fundi analipwa TZS 1,500 kwa kipande, anatengeneza vipande 400 kwa mwezi — PAYE yake?",
+    "gold": "Mshahara wa mwezi = 1,500 x 400 = TZS 600,000. Iko kwenye kundi la tatu: PAYE = TZS 20,000 + 20% ya (600,000 - 520,000) = 20,000 + 16,000 = TZS 36,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa kipande kimoja: TZS 1,500 ÷ 100 = TZS 15. Kwa vipande 400: TZS 15 × 400 = TZS 6,000. Kwa sababu TZS 6,000 ipo ndani ya bendi ya asilimia sifuri (0%), PAYE = TZS 0. Hakuna PAYE inayolipwa kwa fundi huyu.",
+    "v16": "Ili nihesabu PAYE, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "wrong",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_294",
+    "class": "B",
+    "subdomain": "sdl_compliance",
+    "answer_type": "definition",
+    "question": "Dereva analipwa TZS 80,000 kwa safari, anafanya safari 15 kwa mwezi — SDL inahesabuje?",
+    "gold": "Mshahara wa dereva kwa mwezi ni 80,000 x 15 = TZS 1,200,000. Lakini SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi WOTE na tu kama ni 10 au zaidi. Nipe idadi ya wafanyakazi wote na mishahara yao. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Mshahara wa dereva huyu ni TZS 80,000 × 15 = TZS 1,200,000 kwa mwezi. SDL ni asilimia 3.5 ya jumla hiyo, sawa na TZS 42,000 kwa mwezi. Inalipwa na mwajiri pekee — si kukatwa kwa mfanyakazi. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "wrong",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_295",
+    "class": "B",
+    "subdomain": "nssf_contributions",
+    "answer_type": "definition",
+    "question": "Muuzaji analipwa kwa kamisheni, asilimia 5 ya alichouza mwezi — NSSF yake ni ngapi?",
+    "gold": "Mshahara wa kamisheni hubadilika kila mwezi. NSSF ni asilimia 10 ya mshahara ghafi halisi aliopata. Nihitaji kiasi halisi cha kamisheni cha mwezi husika (TZS) ndipo nikokotoe. Thibitisha na NSSF (nssf.go.tz).",
+    "v15": "NSSF ya muuzaji anayelipwa kwa kamisheni ni asilimia 10 ya mshahara wake mkubwa wa jumla, si asilimia 5 tu. Thibitisha mshahara halisi na NSSF.",
+    "v16": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "judge_v15": "undetermined",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_296",
+    "class": "A",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "question": "Analipwa TZS 18,000 kwa siku, anafanya kazi siku 26 kwa mwezi — NSSF yake ya mwezi?",
+    "gold": "Mshahara wa mwezi = 18,000 x 26 = TZS 468,000. NSSF ya mfanyakazi ni asilimia 10 = TZS 46,800 kwa mwezi. Thibitisha na NSSF (nssf.go.tz).",
+    "v15": "Kwa mshahara wa TZS 18,000 kwa siku, kwa siku 26 za mwezi, jumla ya mshahara = TZS 468,000 (26 × 18,000). NSSF ya mwajiri = TZS 9,360 (asilimia 10 ya TZS 468,000). Thibitisha na NSSF.",
+    "v16": "Ili nihesabu NSSF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "wrong",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_319",
+    "class": "A",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "question": "Kama nikizingatia kwamba wafanyakazi wangu, ambao ni 14 wanaopata kila mmoja TZS 500,000, wanastahili NSSF, je jumla ni ngapi na SDL yao pia?",
+    "gold": "Jumla ya mishahara: 14 x TZS 500,000 = TZS 7,000,000. NSSF: 20% = TZS 1,400,000. SDL: wafanyakazi 14 zaidi ya 10, 3.5% ya TZS 7,000,000 = TZS 245,000. Thibitisha na NSSF/TRA.",
+    "v15": "Kwa wafanyakazi 14 wanaolipwa TZS 500,000 kila mmoja, NSSF itakuwa TZS 140,000 kwa kila mmoja (20% ya mshahara). Jumla ya michango ya NSSF ni TZS 1,960,000. SDL ni asilimia 3.5 ya jumla ya mishahara, sawa na TZS 17,500 kwa kila mmoja. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu SDL, niambie idadi ya wafanyakazi walio kwenye orodha ya mishahara.\n\nIli nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "judge_v15": "undetermined",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_323",
+    "class": "A",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "question": "Mfanyakazi anapata TZS 760,000 na nataka PAYE yake na kama nikiongeza watu wengine 9 kufikia 10, SDL ya jumla ya mishahara ya TZS 7,600,000 itakuwa ngapi?",
+    "gold": "PAYE ya TZS 760,000 (kikomo cha kundi 3) = 20,000 + 20% x (760,000-520,000) = TZS 68,000. SDL: ukifikia wafanyakazi 10, sasa inatozwa: 3.5% ya TZS 7,600,000 = TZS 266,000. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa PAYE, tumia fomu ya TRA (tra.go.tz) kwa mwezi husika. Kwa SDL, ni 3.5% ya jumla ya mishahara ya fedha ya wafanyakazi 10, hivyo utakokotoa kwa 7,600,000 x 3.5%. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu SDL, niambie idadi ya wafanyakazi walio kwenye orodha ya mishahara.\n\nIli nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "judge_v15": "correct",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_324",
+    "class": "A",
+    "subdomain": "sdl_compliance",
+    "answer_type": "number",
+    "question": "Biashara yangu ina mishahara TZS 4,800,000 kwa watu 13, na madeni TZS 2,000,000, na faida TZS 1,000,000 — SDL yangu ni ngapi?",
+    "gold": "SDL hutozwa kwa mishahara tu. Tumia TZS 4,800,000 (watu 13 zaidi ya 10): 3.5% = TZS 168,000. Madeni TZS 2,000,000 na faida TZS 1,000,000 hazihusiki na SDL. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa hesabu sahihi:\n\nMishahara: TZS 4,800,000\nMadeni (kodi): -TZS 2,000,000\nFaida: +TZS 1,000,000\n\nNet payroll (jumla ya mishahara halisi): TZS 6,800,000\n\nSDL base: 3.5% × TZS 6,800,000 = TZS 238,000\n\nSDL inalipwa na mwajiri peke yake — si kukatwa kwa mfanyakazi. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "wrong",
+    "reliable_v15": true
+   },
+   {
+    "id": "eval_325",
+    "class": "A",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "question": "Swali refu: tuna tawi la Arusha lenye watu 6 wa TZS 400,000 na tawi la Mwanza lenye watu 9 wa TZS 500,000, jumla ya NSSF ya makampuni yote ni ngapi?",
+    "gold": "Arusha: 6 x 400,000 = 2,400,000. Mwanza: 9 x 500,000 = 4,500,000. Jumla ya mishahara = TZS 6,900,000. NSSF ni 20% = TZS 1,380,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz).",
+    "v15": "Kwa tawi la Arusha (watatu): NSSF ya kila mmoja = TZS 80,000 (20% ya TZS 400,000). Jumla ya Arusha = TZS 240,000. Kwa tawi la Mwanza (wane): NSSF ya kila mmoja = TZS 100,000 (20% ya TZS 500,000). Jumla ya Mwanza = TZS 400,000. Jumla ya NSSF ya makampuni yote = TZS 640,000 (Arusha + Mwanza). Thibitisha na nssf.go.tz.",
+    "v16": "Ili nihesabu NSSF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "undetermined",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_327",
+    "class": "A",
+    "subdomain": "wcf_compliance",
+    "answer_type": "number",
+    "question": "Nina wafanyakazi 10, kati yao 4 wana mishahara ya TZS 700,000 na 6 wana TZS 300,000, nataka WCF na SDL — zote mbili.",
+    "gold": "Jumla ya mishahara: 4 x 700,000 + 6 x 300,000 = 2,800,000 + 1,800,000 = TZS 4,600,000. WCF: 0.5% = TZS 23,000. SDL: watu 10 wamefikia kizingiti, 3.5% = TZS 161,000. Thibitisha na WCF/TRA.",
+    "v15": "Kwa WCF, unalipa 0.5% ya jumla ya mishahara yote bila kujali idadi ya wafanyakazi. Kwa SDL, unalipa 3.5% kwa wale walio na mishahara ya TZS 270,000 hadi 520,000 tu. Kwa kuwa una wafanyakazi 10, unapaswa kulipa SDL. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.\n\nIli nihesabu WCF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "wrong",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_329",
+    "class": "A",
+    "subdomain": "sdl_compliance",
+    "answer_type": "number",
+    "question": "Mwezi Januari nilikuwa na watu 9, Februari nikaongeza mmoja kufikia 10, mishahara ni TZS 3,000,000 kila mwezi — SDL ya Januari na Februari?",
+    "gold": "Januari: watu 9 (chini ya 10) — HAKUNA SDL. Februari: watu 10 (wamefikia kizingiti) — SDL = 3.5% ya TZS 3,000,000 = TZS 105,000. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa Januari: SDL = 3.5% × TZS 27,000,000 (jumla ya mishahara ya wafanyakazi 9 × TZS 3,000,000) = TZS 945,000. Kwa Februari: SDL = 3.5% × TZS 28,000,000 (jumla ya mishahara ya wafanyakazi 10 × TZS 3,000,000) = TZS 980,000. Jumlisha pamoja: TZS 945,000 + TZS 980,000 = TZS 1,925,000. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "wrong",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_334",
+    "class": "A",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "question": "Mfanyakazi ana mshahara wa msingi TZS 600,000 na posho ya usafiri TZS 150,000 na bonasi ya mara moja TZS 200,000 — PAYE ya mwezi huu?",
+    "gold": "Mshahara wa jumla unaotozwa (kama posho na bonasi zinahesabika) = 600,000 + 150,000 + 200,000 = TZS 950,000 (kundi 4): PAYE = 68,000 + 25% x (950,000-760,000) = 68,000 + 47,500 = TZS 115,500. Thibitisha aina ya posho na TRA (tra.go.tz).",
+    "v15": "Kwa mshahara wa msingi TZS 600,000 pekee, PAYE ni TZS 78,000. Posho za usafiri na bonasi zinazolipwa mara moja huongezwa kwenye mshahara wa msingi kabla ya kuhesabu PAYE. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu PAYE, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "wrong",
+    "reliable_v15": false
+   },
+   {
+    "id": "eval_399",
+    "class": "A",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "question": "Watu wawili: mmoja anapata TZS 400,000 na mwingine TZS 1,200,000 — PAYE ya kila mmoja ni ngapi?",
+    "gold": "Wa TZS 400,000 (kundi 2): 8% x (400,000-270,000) = TZS 10,400. Wa TZS 1,200,000 (kundi 5): 128,000 + 30% x (1,200,000-1,000,000) = TZS 188,000. Thibitisha na TRA (tra.go.tz).",
+    "v15": "Kwa muhtasari: mfanyakazi mmoja mwenye mshahara chini ya TZS 270,000 ana PAYE sifuri; mwingine mwenye mshahara juu ya TZS 520,000 analipa asilimia 8. Thibitisha na TRA (tra.go.tz).",
+    "v16": "Ili nihesabu PAYE, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "judge_v15": "wrong",
+    "reliable_v15": false
+   }
+  ]
+ },
+ "verdict_on_the_33": "29 of 33 are v16 DEFECTS (22 extraction + 7 applicability); only 4 are the never-guess working as designed. BUT the baseline is FALSE in 16 of the 33: the judge says the v15 answer was WRONG on eval_242/253/259/269/271/279/281/291/293/294/296/324/327/329/334/399 - v15 computed SDL on a bank loan, WCF on vehicle value, PAYE on base salary only, '1,500 / 100', and read '9 machines' as '9 workers'. GENUINE user-facing losses - v15 judged CORRECT and v16 clarified - number NINE, not 37. Seven more are judge-undetermined. On three Class-B cases (eval_291/294/295) the GOLD ANSWER ITSELF asks for clarification, so v16 matched gold and was scored as a failure.",
+ "non_clarification_regressions": {
+  "eval_127": {
+   "verdict": "GENUINE v16 REGRESSION - caused by the TWO-ARM retriever",
+   "detail": "v16 two-arm: 'Hapana - zinawasilishwa kwa nyakati tofauti' and then gives the SAME date for both (7th and 7th) - self-contradictory and wrong. judge=wrong. Under SINGLE-ARM v16 answers 'Ndiyo - pamoja ... siku ya 7' and PASSES."
+  },
+  "eval_208": {
+   "verdict": "GENUINE v16 REGRESSION - caused by the TWO-ARM retriever",
+   "detail": "v16 two-arm invents a 'TZS milioni 90' six-month VAT threshold and answers Ndiyo (gold: Hapana; the 6-month limb is 100M). judge=wrong. Under SINGLE-ARM v16 answers 'Hapana ... 100M/6 miezi' correctly and PASSES."
+  },
+  "eval_378": {
+   "verdict": "SCORER ARTIFACT - not a regression",
+   "detail": "BOTH arms judged CORRECT. v16 ('SDL haihusiki: una wafanyakazi 8') is arguably crisper than v15; the regex wanted an explicit TZS 0."
+  },
+  "eval_393": {
+   "verdict": "SCORER ARTIFACT + a real presentation defect",
+   "detail": "Both judged correct, both reliable=False (yes_no_polarity_unverifiable). But the merged v16 reply opens 'Sawa kabisa' and then says 'Hapana' - the surface polarity contradicts itself even though the substance is right. A merge/render issue, not a wrong answer."
+  }
+ },
+ "CALL_3_judge_comparison_caveat": {
+  "headline_number_is_NOT_like_for_like": true,
+  "why": "judge_gradeable EXCLUDES clarifications. v15 had 5, v16 had 61, so v15 was judged on 379 questions and v16 on 323. The 56 excluded are exactly the questions v16 clarified - i.e. the ones it did worst on by the raw measure.",
+  "reported_figure_DO_NOT_QUOTE": "v15 74.4% -> v16 76.2% (+1.8). Computed across DIFFERENT question sets. Not a like-for-like result.",
+  "like_for_like_on_the_323_both_arms_were_judged_on": "v15 67.2% vs v16 72.8% -> +5.6 pts",
+  "clarifications_counted_as_failures": "v15 60.4% vs v16 62.0% -> +1.6 pts",
+  "HONEST_RANGE": "v16 leads by +1.6 to +5.6 pts on judged correctness, depending entirely on whether a clarification counts as a failure. The true value lies in that band. +1.8 sits inside it but was derived incorrectly and must not be cited.",
+  "on_the_56_excluded": "v15 scored 12 correct / 33 wrong / 11 undetermined on them.",
+  "scorer_false_passes": "judge false-PASS candidates: v15 41 vs v16 30. The regex scorer credits v15 for wrong answers more often - this is the mechanism by which raw shows -6.8 while judged correctness favours v16."
+ },
+ "CALL_2_run2_part3_deconfound": {
+  "recomputed_raw": "two-arm 78/90 = 86.7% vs single-arm 74/90 = 82.2% (+4.4 pts)",
+  "recomputed_reliable": "two-arm 58/66 = 87.9% vs single-arm 56/65 = 86.2% (+1.7 pts)",
+  "answers_byte_identical": "20/90",
+  "two_arm_only_passes": [
+   "eval_008",
+   "eval_019",
+   "eval_034",
+   "eval_186",
+   "eval_187",
+   "eval_331"
+  ],
+  "single_arm_only_passes": [
+   "eval_127",
+   "eval_208"
+  ],
+  "judge_on_two_arm_only_passes": "4 of the 6 are judged WRONG (eval_008, eval_034, eval_186, eval_331). Only eval_019 and eval_187 are judge-confirmed correct. The +4.4 raw is substantially scorer false-passes.",
+  "harness_limitation": "The 90 part-3 rows were NEVER judged (0/90) - the overlay ran on res15/res16 only. The judge cannot arbitrate the single-arm side. Fix before any future de-confound run.",
+  "DECISIVE_FINDING": "BOTH genuine non-clarification v16 regressions in the entire 400 (eval_127, eval_208) are CAUSED by the two-arm retriever: under single-arm v16 answers both CORRECTLY. The appended fourth fact turned two correct answers into wrong ones - a fabricated 'TZS milioni 90' VAT threshold, and a self-contradictory SDL/PAYE deadline answer.",
+  "CALL": "DO NOT SHIP the two-arm retriever. Keep single-arm - the configuration production already runs. Under the approved rule a wash keeps single-arm; with the judge applied this is WORSE than a wash: 2 confirmed wins, 4 illusory ones, 2 confirmed HARMS. Three independent measurements have now failed to demonstrate a benefit (parts 1-2: 1 recovery vs 86 non-gold appends; Set A: zero rank changes across 21 critical queries; part 3: net negative once judged). SETTLED."
+ },
+ "CALL_1_wiring": {
+  "DECISION": "DO NOT WIRE v16 yet. The ADR bar failed and the failure is real - 29 of 33 clarification-regressions are v16 defects, not safety wins.",
+  "architecture_is_NOT_indicted": [
+   "fact path +2.2 / +2.3 at n=193 - no regression",
+   "the never-guess works when it should (4 Class-B cases; plus Run 3 nat_21, where v15 computed WCF on a vehicle value and v16 refused to guess)",
+   "judged correctness favours v16 by +1.6 to +5.6 pts",
+   "both genuine fact-path regressions are retrieval-induced and vanish under single-arm retrieval"
+  ],
+  "blocking_prerequisites_for_a_PHASE_D_RE_RUN": {
+   "PREREQ-1_applicability_routing_DO_FIRST": {
+    "severity": "HIGHER - and the smaller change",
+    "n": 7,
+    "ids": [
+     "eval_124",
+     "eval_253",
+     "eval_254",
+     "eval_258",
+     "eval_259",
+     "eval_261",
+     "eval_269"
+    ],
+    "statement": "A wrong-base or yes/no question must NEVER demand a salary. Asking a user for their payroll when they asked whether their ELECTRICITY BILL affects SDL is worse than a wrong number: it validates the false premise. Absorbs the previously-parked p04 item ('natural-levy applicability route, structural'), which now has 7 confirmed instances rather than 1 constructed example.",
+    "instances": {
+     "eval_124": "headcount-timing yes/no - no salary needed",
+     "eval_253": "wrong base: bank loan",
+     "eval_254": "wrong base: shop market value",
+     "eval_258": "wrong base: office rent",
+     "eval_259": "wrong base: vehicle value",
+     "eval_261": "wrong base: electricity bill",
+     "eval_269": "wrong base: 9 machines"
+    }
+   },
+   "PREREQ-2_extraction_coverage": {
+    "severity": "HIGH",
+    "n": 22,
+    "ids": [
+     "eval_242",
+     "eval_279",
+     "eval_280",
+     "eval_281",
+     "eval_283",
+     "eval_284",
+     "eval_285",
+     "eval_286",
+     "eval_287",
+     "eval_288",
+     "eval_289",
+     "eval_290",
+     "eval_293",
+     "eval_296",
+     "eval_319",
+     "eval_323",
+     "eval_324",
+     "eval_325",
+     "eval_327",
+     "eval_329",
+     "eval_334",
+     "eval_399"
+    ],
+    "sub_patterns": [
+     "per-person vs total IS STATED in the question but not parsed (the single largest group)",
+     "fractional headcounts: robo ya 24, theluthi mbili ya 30, robo tatu ya 16, nusu ya 14",
+     "rate x quantity: 1,500 kwa kipande x 400; 18,000 kwa siku x 26; 80,000 kwa safari x 15",
+     "multi-component pay: mshahara wa msingi + posho + bonasi",
+     "multi-group and multi-branch payrolls (Arusha/Mwanza; 3/4/5 tiers)",
+     "period conversion: bi-weekly and commission-based pay"
+    ]
+   }
+  },
+  "known_contamination_in_this_denominator": "eval_191 is mislabelled out_of_corpus (see the tracked open item) and sits inside these numbers."
+ },
+ "cycle_status": "Phase D COMPLETE. Both approved calls recorded. Next session resumes at PREREQ-1 (Class C applicability routing)."
+}
