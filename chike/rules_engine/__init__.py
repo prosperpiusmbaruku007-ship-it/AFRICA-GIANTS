@@ -10,7 +10,8 @@ never fall through to raw language-model generation.
 """
 
 from .results import ComputationResult
-from .sdl import compute_sdl, sdl_applies
+from .base_rejection import reject_base
+from .sdl import compute_sdl, sdl_applies, sdl_crosses_threshold
 from .nssf import compute_nssf, nssf_applies
 from .paye import compute_paye
 from .wcf import compute_wcf, wcf_applies
@@ -61,6 +62,8 @@ __all__ = [
     "supports_applicability",
     "compute",
     "applicability",
+    "reject_base",
+    "sdl_crosses_threshold",
     "compute_sdl",
     "compute_nssf",
     "compute_paye",

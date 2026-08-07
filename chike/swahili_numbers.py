@@ -281,6 +281,66 @@ def detect_wrong_base(text, computation_type):
     return _any(_WRONG_BASE, text.lower())
 
 
+# PREREQ-1. A COUNT of non-payroll objects offered as a levy base ("mashine 9",
+# "invoice 450", "matawi 6", "magari 14" — eval_263/265/266/269). _WRONG_BASE has no
+# pattern for these, so detect_wrong_base misses them entirely and the small-int guard
+# catches them instead: a true observation ("implausibly small for a payroll") with the
+# wrong consequence (SDL then asks for a headcount).
+#
+# NARROWEST FORM (R17): noun + digit, never a bare noun. A bare 'magari'/'matawi' would
+# fire on legitimate compute questions that merely mention company assets — see the
+# ap_01..ap_05 probes in eval/accuracy_gate/applicability_adversarial_in_scope_017.jsonl.
+_OBJECT_COUNT = re.compile(
+    r"\b(mashine|magari|gari|invoice|ankara|matawi|tawi|vifaa|mitambo|mtambo|"
+    r"kompyuta|pikipiki)\s+\d+"
+    r"|\bidadi ya (mashine|magari|invoice|ankara|matawi|vifaa|mitambo)\b")
+
+# A payroll figure IS on the table -> never reject the base. Found by the R17 adversarial
+# probes (ap_07..ap_10), NOT by the corpus: a wrong-base WORD can sit in a question whose
+# only FIGURE is a legitimate payroll ("pamoja na kodi ya pango, nalipa mishahara TZS
+# 3,600,000 kwa wafanyakazi 11"). A figure count alone does not separate those cases — the
+# count is 1 and the figure is the RIGHT base. None of the 11 wrong-base gate questions
+# contains 'mshahara'/'mishahara' at all, so requiring its ABSENCE separates the two classes
+# exactly. It fails SAFE: a question that mentions payroll falls back to the existing
+# clarification, never to a wrong assertion.
+_PAYROLL_WORD = re.compile(r"\bmshahara\w*|\bmishahara\w*")
+
+
+def detect_rejectable_base(text, computation_type):
+    """Return 'wrong_base' | 'object_count' | None — is the ONLY base on offer a
+    non-payroll figure, such that the correct reply names the real base instead of asking
+    for a salary? (PREREQ-1; consumed by the orchestrator's compute path.)
+
+    Structural by design: it keys off detect_wrong_base() and the parsed amounts rather
+    than off Extraction's reason STRING. eval_261's wrong_base reason is overwritten by a
+    (false) vague_quantity global veto — '_VAGUE' matches 'kiasi cha SDL ninachodaiwa', a
+    definite reference, not a vague quantity — so a reason-string check would miss it. The
+    _VAGUE over-match itself is logged for PREREQ-2 and deliberately not touched here.
+
+    Never fires when a payroll word is present (see _PAYROLL_WORD), and 'wrong_base'
+    additionally requires the non-payroll figure to be the ONLY plausible amount — which is
+    what keeps eval_324 / nat_21 (a real payroll figure IS present, merely unparsed among
+    several) on the existing clarification path, where PREREQ-2 owns them."""
+    if computation_type not in ("sdl", "nssf", "wcf", "paye"):
+        return None
+    text_l = text.lower()
+    if _PAYROLL_WORD.search(text_l):
+        return None
+    plausible = [a for a in parse_amounts(text) if a >= MIN_PLAUSIBLE_AMOUNT]
+    if _OBJECT_COUNT.search(text_l) and not plausible:
+        return "object_count"
+    if detect_wrong_base(text, computation_type) and len(plausible) == 1:
+        return "wrong_base"
+    return None
+
+
+def rejectable_base_amount(text):
+    """The single non-payroll figure to echo back in a base rejection, or None when what
+    was offered was a COUNT of objects rather than a money figure."""
+    plausible = [a for a in parse_amounts(text) if a >= MIN_PLAUSIBLE_AMOUNT]
+    return plausible[0] if len(plausible) == 1 else None
+
+
 def detect_allowance_ambiguity(text):
     return _any(_ALLOWANCE, text.lower())
 

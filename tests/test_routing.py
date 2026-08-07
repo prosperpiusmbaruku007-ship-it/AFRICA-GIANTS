@@ -58,12 +58,29 @@ def test_custom_split_with_no_levy_word_is_fact_not_ambiguous_multi():
 # --- boundary discriminators (same topic, opposite route) -------------------
 
 def test_boundary_amount_vs_threshold():
-    # amount asked -> compute; yes/no threshold -> fact
+    """Amount asked -> compute-amount; yes/no threshold -> compute-APPLICABILITY.
+
+    HISTORY (PREREQ-1, 2026-08-07): the second assertion used to require 'none' — "yes/no
+    threshold -> fact". That encoded the pre-PREREQ-1 design, in which a levy named only
+    NATURALLY ("tozo la mafunzo") had no applicability route at all: detect_intent path 2
+    required a money 'how-much' ask, so an applicability question could never reach compute.
+    edge_p04 is the same shape, and on live data it produced a WRONG RATE (0.5% quoted for
+    SDL) from free fact-path generation. Path 2b now routes it to the deterministic
+    applicability answer, so 'sdl' is the correct expectation and 'none' was asserting a
+    defect. Inverted rather than deleted, per the CLAUDE.md rule that a test instructing
+    maintainers not to fix a real defect is worse than no test.
+
+    Note this question still lands on a headcount CLARIFICATION, not a verdict, because
+    swahili_numbers.parse_count does not read the spelled-out 'tisa' — PREREQ-2 owns that.
+    An honest redundant question is the acceptable interim state; a wrong rate was not.
+    """
     assert routing.detect_intent(
         "Nina wafanyakazi wanane, mishahara milioni tatu, nalipa kiasi gani kwa tozo la ujuzi?"
     ) == "sdl"
     assert routing.detect_intent(
-        "Nina wafanyakazi tisa tu — je bado nawajibika kulipa tozo la mafunzo?") == "none"
+        "Nina wafanyakazi tisa tu — je bado nawajibika kulipa tozo la mafunzo?") == "sdl"
+    assert routing.is_applicability_question(
+        "Nina wafanyakazi tisa tu — je bado nawajibika kulipa tozo la mafunzo?") is True
 
 
 def test_boundary_rate_only_is_fact():

@@ -40,6 +40,38 @@ def compute_sdl(gross_monthly_payroll, employee_count: int) -> ComputationResult
     )
 
 
+def sdl_crosses_threshold(ordinal: int) -> ComputationResult:
+    """Applicability answer for a headcount that CROSSES the threshold mid-period —
+    "I have 9 and I'm hiring the 10th mid-month, is SDL due that month?" (eval_124).
+
+    The static sdl_applies() check cannot answer this: it reads the CURRENT count (9) and
+    would answer 'haihusiki', which is wrong once the 10th is hired. routing._COUNT_TRANSITION
+    correctly refuses that shortcut — but refusing it dropped the question onto the AMOUNT
+    path, which then demanded a salary the yes/no never needs (PREREQ-1 M4).
+
+    Callers MUST gate on ordinal >= SDL_MIN_EMPLOYEES. Below the threshold the crossing does
+    not settle the obligation (hiring a 5th employee tells you nothing about reaching 10), so
+    the never-guess refusal stands and this function must not be called — the guard is not
+    loosened, it is given the one case it can answer deterministically."""
+    if ordinal < SDL_MIN_EMPLOYEES:
+        raise ValueError(
+            f"sdl_crosses_threshold: ordinal {ordinal} is below the {SDL_MIN_EMPLOYEES}"
+            " threshold — this case is never-guess, not a deterministic verdict")
+    return ComputationResult(
+        computation="sdl",
+        applicable=True,
+        amount=None,
+        working=(
+            f"Ndiyo. Mara idadi ya wafanyakazi inapofikia {SDL_MIN_EMPLOYEES} au zaidi, SDL "
+            f"inatakiwa kulipwa mwezi huo huo — haijalishi tarehe ya kuajiriwa kwa mfanyakazi "
+            f"wa {ordinal}. SDL ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi. "
+            f"Thibitisha utaratibu wa mwanzo wa SDL na TRA (tra.go.tz)."
+        ),
+        inputs={"crossing_ordinal": ordinal},
+        note="headcount crosses the SDL threshold mid-period",
+    )
+
+
 def sdl_applies(employee_count: int) -> ComputationResult:
     """Applicability-only answer: does SDL apply, from headcount alone (no salary)?
 

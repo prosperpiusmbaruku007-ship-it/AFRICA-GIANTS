@@ -224,6 +224,24 @@ def detect_intent(text: str) -> str:
         if natural:
             return natural
 
+    # Path 2b — NATURAL APPLICABILITY (PREREQ-1 M5 / edge_p04). Path 2 above requires a money
+    # 'how-much' ask, so an APPLICABILITY question on a levy that is only named naturally
+    # ("...ile tozo ya mafunzo kwa waajiri inanihusu") could never reach compute — there was
+    # no applicability arm on the natural path at all, which is why cue additions alone could
+    # not fix p04. Same {number + payroll context + resolved levy} evidence as path 2, with
+    # the money-ask swapped for an applicability cue.
+    #
+    # NARROWEST FORM: a number is REQUIRED, mirroring both paths above. The number-free form
+    # also diverts adv_06 ("mfanyakazi wangu ameumia je bima ya ajali inatosha au nachangia
+    # WCF") to a correct-but-partial deterministic yes that ignores the insurance half of the
+    # question — not worth widening for. Limited to the three levies with a deterministic
+    # applicability answer; 'ambiguous_multi' is excluded, since "does SOME levy apply?" has
+    # no single yes/no.
+    if _has_number(ql) and any(c in ql for c in _PAYROLL_CTX) and is_applicability_question(text):
+        natural = _natural_levy(ql)
+        if natural in ("sdl", "nssf", "wcf"):
+            return natural
+
     return "none"
 
 
@@ -234,6 +252,15 @@ _APPLICABILITY_CUES = [
     "wajibu wa kulipa", "nawajibika kulipa", "nalazimika kulipa", "lazima nilipe",
     "lazima kulipa", "inatakiwa kulipwa", "nafikia kizingiti", "fikia kizingiti",
     "haitakiwi kulipa", "nachangia",
+    # PREREQ-1: the everyday "does it concern me?" phrasing. Its absence meant even an
+    # EXPLICIT-levy applicability question missed path 1's guard ("nina wafanyakazi 15 je
+    # SDL inanihusu" routed to fact — probe ap_13), as well as blocking the natural path
+    # (edge_p04). DROPPED after the 483-sweep: "nahusika na", because it substring-matches
+    # "i-nahusika na" in eval_100 ("je, NSSF inahusika na mshahara wote?") — a base-SCOPE
+    # question that currently passes, which nssf_applies() would answer with the wrong
+    # question's answer. The three '-nihusu/-kuhusu/-tuhusu' object forms carry the
+    # applicability sense unambiguously.
+    "inanihusu", "inakuhusu", "inatuhusu",
 ]
 
 
@@ -242,7 +269,35 @@ _APPLICABILITY_CUES = [
 # would assert a possibly-wrong verdict (eval_124: reads '9', but hiring the 10th makes SDL
 # due). Never-guess (R8): decline the deterministic shortcut here and let the amount path
 # clarify, rather than assert 'haihusiki' on a count that is actually crossing the threshold.
-_COUNT_TRANSITION = re.compile(r"mfanyakazi\s+wa\s+\d+")
+_COUNT_TRANSITION = re.compile(r"mfanyakazi\s+wa\s+(\d+)")
+
+
+def asks_applicability(text: str) -> bool:
+    """True when the question asks WHETHER the obligation applies (yes/no) rather than HOW
+    MUCH — an obligation/threshold cue with no money 'how-much' ask.
+
+    This is is_applicability_question WITHOUT the mid-transition veto, so the transition
+    branch (see count_transition_ordinal) can tell "an applicability question whose count is
+    crossing" apart from "not an applicability question at all". Splitting the predicate does
+    not weaken the veto: is_applicability_question still applies it, and the transition branch
+    answers only at/above the threshold."""
+    ql = text.lower()
+    if _has_money_ask(ql):
+        return False
+    return any(cue in ql for cue in _APPLICABILITY_CUES)
+
+
+def count_transition_ordinal(text: str):
+    """The ordinal in a threshold-crossing hire phrase ('...mfanyakazi wa 10...'), else None.
+
+    PREREQ-1 M4. _COUNT_TRANSITION already detected this shape in order to VETO the static
+    headcount shortcut (eval_124: reads '9', but hiring the 10th makes SDL due). The veto was
+    right and stays; what was missing is the ordinal itself, without which the question fell
+    through to the amount path and demanded a salary its yes/no never needed. Callers must
+    still gate on ordinal >= the levy threshold — below it, the crossing settles nothing and
+    the never-guess refusal stands (probe ap_15)."""
+    m = _COUNT_TRANSITION.search(text.lower())
+    return int(m.group(1)) if m else None
 
 
 def is_applicability_question(text: str) -> bool:
@@ -251,12 +306,9 @@ def is_applicability_question(text: str) -> bool:
     is NO money 'how-much' ask, and the count is not mid-transition (Finding 1). The
     orchestrator gates the levy type (sdl/nssf/wcf) separately; PAYE applicability needs a
     salary, so it stays on the amount path. Pure string logic."""
-    ql = text.lower()
-    if _has_money_ask(ql):
+    if _COUNT_TRANSITION.search(text.lower()):
         return False
-    if _COUNT_TRANSITION.search(ql):
-        return False
-    return any(cue in ql for cue in _APPLICABILITY_CUES)
+    return asks_applicability(text)
 
 
 # NSSF party framing (D-NSSF-1): an NSSF amount question can ask for the EMPLOYEE's 10%

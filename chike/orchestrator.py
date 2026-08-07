@@ -28,6 +28,8 @@ from dataclasses import dataclass
 from typing import Callable, Optional, Sequence
 
 from . import rules_engine
+from . import swahili_numbers as swn
+from .rules_engine import rates
 from .rules_engine.results import ComputationResult
 from .model_abstraction import ModelBackend
 from .extraction import SlotExtractor, REQUIRED_FIELDS, APPLICABILITY_REQUIRED_FIELDS
@@ -217,6 +219,18 @@ class Orchestrator:
             return SubAnswer(
                 sub_question=sq, text=clarification.AMBIGUOUS_LEVY, needs_clarification=True,
             )
+        # PREREQ-1 M4: the headcount CROSSES the threshold mid-period ("nina wafanyakazi 9 na
+        # ninaajiri mfanyakazi wa 10..."). routing._COUNT_TRANSITION vetoes the static
+        # headcount shortcut — correctly, since a static read of '9' would answer 'haihusiki'
+        # — but that veto alone dropped the question onto the amount path, which then demanded
+        # a salary the yes/no never needs (eval_124). Answer the crossing deterministically,
+        # and ONLY at/above the threshold: below it the crossing settles nothing, so the
+        # never-guess refusal stands untouched (probe ap_15).
+        if sq.computation_type == "sdl" and routing.asks_applicability(sq.text):
+            ordinal = routing.count_transition_ordinal(sq.text)
+            if ordinal is not None and ordinal >= rates.SDL_MIN_EMPLOYEES:
+                return self._deterministic_answer(
+                    sq, rules_engine.sdl_crosses_threshold(ordinal))
         # Applicability-only question (obligation/threshold, no amount asked): answer the
         # yes/no from headcount (SDL) or the flat no-threshold rule (NSSF/WCF) — no salary
         # required, which the amount path below would otherwise demand (Finding 1).
@@ -225,6 +239,22 @@ class Orchestrator:
             return self._answer_applicability(sq)
         extraction = self.extractor.extract(sq.text, required, sq.computation_type)
         if not extraction.usable(required):
+            # PREREQ-1 M1/M2/M3: the compute path is blocked because the only figure offered
+            # is NOT a payroll base (a loan, rent, market value, utility bill, or a count of
+            # machines/invoices/branches). Asking for a salary here validates the false
+            # premise — it implies the figure IS a base and only the salary is missing. Name
+            # the real base instead. This is an ANSWER, not a clarification (see
+            # rules_engine/base_rejection.py), so it re-enters the judged denominator.
+            #
+            # Placed AFTER the usable() check so it can never divert a question that computes:
+            # the 483-question sweep found exactly one currently-computing question affected
+            # (eval_363, which moves to the applicability branch and keeps its verdict).
+            rejectable = swn.detect_rejectable_base(sq.text, sq.computation_type)
+            if rejectable:
+                stated = (swn.rejectable_base_amount(sq.text)
+                          if rejectable == "wrong_base" else None)
+                return self._deterministic_answer(
+                    sq, rules_engine.reject_base(sq.computation_type, stated))
             copy = clarification.compute_clarification(
                 sq.computation_type, extraction.clarification_reasons(required))
             return SubAnswer(sub_question=sq, text=copy, needs_clarification=True)
@@ -245,6 +275,22 @@ class Orchestrator:
         prompt = self._build_compute_prompt(sq.text, result)
         reply = self.backend.generate(prompt, self.gen_params)
         return SubAnswer(sub_question=sq, text=reply, computation=result)
+
+    @staticmethod
+    def _deterministic_answer(sq: SubQuestion, result: ComputationResult) -> SubAnswer:
+        """A compute answer whose text is the engine's `working` ALONE — no model call.
+
+        Used where the deterministic verdict IS the whole answer and a model preamble could
+        only distort it (PREREQ-1: base rejections and the SDL threshold crossing). The body
+        is left empty so _render emits `working` verbatim, the same discipline D-FIDELITY-1
+        applies after the fact. needs_clarification stays False: these are answers, and the
+        judge_gradeable exclusion of clarifications is precisely what made Phase D's
+        judge-augmented comparison not like-for-like.
+
+        The blanked body also protects the yes/no scorer, which reads the polarity of the
+        FIRST paragraph: _render joins body and working with a single newline, so a model
+        preamble leading with the wrong word would flip a correct 'Hapana.' verdict."""
+        return SubAnswer(sub_question=sq, text="", computation=result)
 
     def _answer_applicability(self, sq: SubQuestion) -> SubAnswer:
         """Deterministic yes/no for an applicability-only levy question. SDL needs the
