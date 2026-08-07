@@ -110,6 +110,87 @@ commission). IDs enumerated in the findings artifact.
 
 **Next session resumes at PREREQ-1.**
 
+## ✅ PREREQ-1 — applicability routing + base rejection (IMPLEMENTED 2026-08-07)
+
+**v16 orchestrator only. Production (`pipeline_v15`) is unchanged — no Modal redeploy.**
+
+### Root cause: four mechanisms, not one
+
+`_WRONG_BASE` **fires correctly** on 4 of the 7 Class-C questions. It was neither absent nor
+overridden — it was **recorded and then never read**.
+
+| | ids | state | reply before |
+|---|---|---|---|
+| **M1** copy has no `wrong_base` branch | 253, 254, 258, 259 (+251/252/255/256/260/262) | `detect_wrong_base=True`, reason `wrong_base (non-payroll figure)` | *"how many employees?"* (SDL — the `missing==['employee_count']` branch fires first, so money is never mentioned) or *"tell me the salary"* (WCF/NSSF/PAYE) |
+| **M2** wrong_base masked | 261 | `_VAGUE`'s `\bkiasi\b(?!\s+gani)` matches "**kiasi cha** SDL ninachodaiwa" — a definite reference; `global_veto` overwrites the reason | *"how many employees?"* |
+| **M3** no pattern for an object COUNT | 269 (+263/265/266) | `detect_wrong_base=False`; small-int guard catches it instead — true observation, wrong consequence | *"how many employees?"* |
+| **M4** count transition | 124 | cue `inatakiwa kulipwa` **does** match, but `_COUNT_TRANSITION` vetoes `is_applicability_question` | *"tell me the salary"* |
+| **M5** no natural applicability arm | p04 | path 2 requires a money ask, so a naturally-named levy could never reach compute; `inanihusu` also absent from the cues | free fact generation (the 0.5%-vs-3.5% wrong rate) |
+
+**The family is 15 gate questions, not 7.** Class C caught only the 7 that *regressed*;
+eval_251/252/255/256/260/262/263/265/266 failed in **both** arms. All 15 clarified, all 15 failed.
+
+### What shipped
+
+- `chike/rules_engine/base_rejection.py` — `reject_base()` returns a `ComputationResult(applicable=False)`
+  naming the correct base and rejecting the stated figure. Rates come from `rates.py`; **no new
+  regulatory fact is encoded**, only Swahili framing. Correction mandatory, invitation optional
+  (`invite=False`) — the failure mode is demanding a salary *in place of* the correction, not
+  offering it after; 6 of the 10 golds invite it.
+- `rules_engine.sdl_crosses_threshold(ordinal)` — M4. **Raises** below the threshold: the
+  never-guess veto is not loosened, it is given the one case it can answer deterministically.
+- `swahili_numbers.detect_rejectable_base()` — structural, keyed off `detect_wrong_base` and the
+  parsed amounts rather than the Extraction reason STRING, so eval_261's masked reason is
+  irrelevant. `_VAGUE`'s over-match is logged for PREREQ-2, untouched.
+- `routing`: `+inanihusu/inakuhusu/inatuhusu` cues; `asks_applicability()` split from
+  `is_applicability_question()`; `count_transition_ordinal()`; **path 2b** natural applicability.
+- `Orchestrator._deterministic_answer()` — body blanked, `working` rendered alone,
+  `needs_clarification=False`, no model call.
+
+### Blast radius — 18 changed / 483, +15 / −0
+
+`compute_clarify → base_rejection` 15 · `→ count_transition` 1 · `compute → applicability` 1 ·
+`fact → applicability_clarify` 1. The **one** currently-computing question diverted is eval_363,
+where `sdl_applies(9)` gives the identical verdict plus a leading "Hapana." the yes/no scorer needs.
+Projected **+15 raw on the 400 (+3.75pp)** — closes ~55% of the raw −6.8 gap. **Not sufficient
+alone; PREREQ-2 is still required.**
+
+### R17 earned its keep again
+
+The first guard ("wrong_base AND exactly one plausible figure") passed **all 483 corpus questions**
+and was still over-broad. Four authored probes caught it: ap_07–ap_10 state a *legitimate payroll*
+while a wrong-base WORD sits nearby, and all four were wrongly rejected. Fix: require the **absence
+of `mshahara`/`mishahara`** — none of the 11 wrong-base gate questions contains it. Fails safe.
+The sweep separately caught **`nahusika na`** substring-matching "i-nahusika na" in eval_100
+(a base-SCOPE question that passes today); dropped, with a regression test forbidding re-adding it.
+Probes committed as `eval/accuracy_gate/applicability_adversarial_in_scope_017.jsonl`, wired into
+`tests/test_applicability_routing.py`.
+
+### Necessary but NOT sufficient for p04
+
+p04 now routes correctly to applicability, then **clarifies for the headcount**, because
+`parse_count` does not read `vibarua 8` + `wawili` (nor the spelled-out `tisa`). The 8+2=10
+aggregation is **PREREQ-2**. Interim state for SDL natural applicability is an honest redundant
+question instead of a free-generated wrong rate — the R8-consistent direction, but p04's gold
+still needs PREREQ-2.
+
+### Production isolation proven, not assumed
+
+`pipeline_v15.py` **is** production and imports `routing` for one predicate,
+`is_uncomputable_payroll_amount`. Diffed old-vs-new over **500 questions: 0 differences.** It also
+holds structurally (path 2b requires no money ask; the guard requires one) — pinned by
+`test_path_2b_can_never_reach_the_production_fabrication_guard`.
+
+### Deliberately not done (queued, same decision class)
+
+- **eval_260 accepted as a 1-row miss.** Its *gold* parses as polarity `yes` (`haitumiki` is not in
+  `scoring._YN_NEG`, and the gold has no leading "Hapana."), so a correct reply scores FAIL.
+  **`_YN_NEG` `hai-` verb gap logged** with eval_191's mislabel and `kaggle/eval.py`'s payroll
+  guard — all three move the gate denominator and are not to be reopened piecemeal.
+- **`_VAGUE` `kiasi cha` over-match** → PREREQ-2.
+- **adv_06** stays on fact: the number-free form of path 2b would divert it to a correct-but-partial
+  deterministic yes that ignores the insurance half. Not worth widening for.
+
 ## 🚀 PRODUCTION NOW SERVES `chike/pipeline_v15.py` (deployed 2026-08-07)
 
 The 2026-08-07 redeploy that shipped the SAFETY-1 OOC fix **also carried the Plan A extraction
