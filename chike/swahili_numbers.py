@@ -114,9 +114,32 @@ def parse_amounts(text):
                 else:
                     break
             if run and any(t in BIG_SCALE or t == "mia" or t in UNITS for t in run):
-                val = _value(run)
-                if val > 0:
-                    found.append((start, val))
+                # PREREQ-2 pattern C-1. A run BEGINNING with a fraction word is a QUANTIFIER
+                # ("theluthi mbili ya watu 30" = two-thirds OF thirty), not an amount. Swahili
+                # has two fraction constructions and _value_small implements only one:
+                #   additive       "<scale> <n> NA <frac>"  laki saba na nusu = 750,000   ✅
+                #   multiplicative "<frac> [<mult>] YA <N>" theluthi mbili ya 30 = 20      ❌
+                # The multiplier is a NUMERATOR, not an addend, so the additive path yields
+                # 1/3 + 2 = 2.333 and 1/4 + 3 = 3.25 — junk in the amount list.
+                #
+                # This SUPPRESSES rather than computes: resolving the quantifier needs the
+                # group it modifies, which is pattern B. parse_fraction_of_count() below
+                # exposes the resolved split for B to consume.
+                #
+                # Applied to ANY fraction-initial run, not only 'ya'-gated ones, on evidence:
+                # _value produces junk for every fraction-initial run (nusu milioni -> 0.5,
+                # robo milioni -> 0.25, theluthi elfu -> 0.33), so there is no correct figure
+                # to lose. The 516-sweep could NOT distinguish the two variants — both change
+                # the same 2 questions — so the choice rests on the probes.
+                #
+                # DEFINED ON THE PARSED RUN, NOT BY REGEX. A '\b(nusu|robo|theluthi)\s+ya'
+                # regex wrongly suppresses nat_05 ("asilimia tatu na nusu YA nini" = 3.5%):
+                # it matches 'nusu ya' while the actual run starts at 'tatu'. Run-initial is
+                # the only formulation that separates the two constructions.
+                if run[0] not in FRACTION:
+                    val = _value(run)
+                    if val > 0:
+                        found.append((start, val))
             # advance past this run by marking consumed
             consumed.update(range(start, start + len(" ".join(run))))
 
@@ -138,6 +161,72 @@ def parse_amounts(text):
     found.sort(key=lambda x: x[0])
     # de-dup by (position) keeping order
     return [v for _, v in found]
+
+
+# ── PREREQ-2 pattern C-2: resolve a fraction-of-headcount into group sizes ──────────
+#
+# UNUSED BY DEFAULT. Nothing in the pipeline calls this yet: C-1 only removes junk, and no
+# gate question becomes answerable from it. It exists so pattern B (multi-group payroll) can
+# consume the split instead of re-deriving it — which is what makes C a prerequisite for 4 of
+# B's 9 instances (eval_285/287/288/289).
+#
+# Requires a PEOPLE noun. "nusu ya MSHAHARA wake" is a proportion of MONEY, not a headcount,
+# and must never be read as a group size — the corpus contains no such case, so the probes
+# (extraction_fraction_probes_008.jsonl) are the only thing testing it.
+_FRACTION_DENOM = {"nusu": 2, "robo": 4, "theluthi": 3}
+# The word after a fraction is its NUMERATOR: "theluthi MBILI" = TWO thirds, "robo TATU" =
+# THREE quarters. This is the exact place _value_small went wrong by adding instead.
+_FRACTION_NUMERATOR = {
+    "moja": 1, "mmoja": 1, "mbili": 2, "wawili": 2, "tatu": 3, "watatu": 3,
+    "nne": 4, "wanne": 4, "tano": 5, "watano": 5, "sita": 6, "saba": 7, "nane": 8, "tisa": 9,
+}
+_FRACTION_PEOPLE = r"wafanyakazi|watu|wafanyikazi|waajiriwa|vibarua|watumishi"
+_FRACTION_OF = re.compile(
+    rf"\b(nusu|robo|theluthi)(?:\s+({'|'.join(_FRACTION_NUMERATOR)}))?\s+ya\s+"
+    rf"(?:{_FRACTION_PEOPLE})\s+(\d{{1,4}})")
+# The SECOND group is often elliptical — the fraction repeats with no 'ya' and no base
+# ("robo tatu ya wafanyakazi 16 wanapata X, ROBO wanapata Y") — or is named as the remainder
+# ("wengine wote").
+_FRACTION_ELLIPTIC = re.compile(
+    rf"\b(nusu|robo|theluthi)(?:\s+({'|'.join(_FRACTION_NUMERATOR)}))?\s+"
+    r"(?:wanapata|wanalipwa|wana\b|wenye)")
+_FRACTION_REMAINDER = re.compile(r"\bwengine\w*\b")
+
+
+def parse_fraction_of_count(text):
+    """Resolve "<fraction> [<numerator>] ya <people-noun> <N>" into group sizes.
+
+    Returns {'base': N, 'groups': [...]} , or {'base': N, 'groups': None, 'reason': ...} when
+    the split is not a whole number, or None when the construction is absent.
+
+    NEVER ROUNDS. "theluthi ya watu 10" is 3.33 people; rounding it would assert a headcount
+    the user never gave, which is the never-guess contract's whole point. Declines instead.
+    """
+    text_l = text.lower()
+    match = _FRACTION_OF.search(text_l)
+    if not match:
+        return None
+    fraction, numerator_word, base_raw = match.groups()
+    base = int(base_raw)
+    first = (Decimal(base) * _FRACTION_NUMERATOR.get(numerator_word, 1)
+             / _FRACTION_DENOM[fraction])
+    if first != first.to_integral_value():
+        return {"base": base, "groups": None,
+                "reason": f"fraction of {base} is not a whole number of people ({first})"}
+
+    groups = [int(first)]
+    tail = text_l[match.end():]
+    elliptic = _FRACTION_ELLIPTIC.search(tail)
+    if elliptic:
+        second = (Decimal(base) * _FRACTION_NUMERATOR.get(elliptic.group(2), 1)
+                  / _FRACTION_DENOM[elliptic.group(1)])
+        if second != second.to_integral_value():
+            return {"base": base, "groups": None,
+                    "reason": f"second group of {base} is not a whole number ({second})"}
+        groups.append(int(second))
+    elif _FRACTION_REMAINDER.search(tail):
+        groups.append(base - groups[0])
+    return {"base": base, "groups": groups}
 
 
 # PREREQ-2 pattern I. People-nouns parse_count recognises. 'vibarua/kibarua/watumishi' are
