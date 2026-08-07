@@ -38,7 +38,7 @@ def _orch():
 
 
 def test_probe_file_is_complete():
-    assert len(PROBES) == 8
+    assert len(PROBES) == 9
     assert all(p["in_scope"] and p["guards_against"].strip() for p in PROBES)
 
 

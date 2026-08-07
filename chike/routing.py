@@ -63,7 +63,14 @@ _LEVY_CUES = [
     # runs BEFORE routing (so property/capital-gains/etc. 'kodi' questions are intercepted first) —
     # so these can only fire on an in-scope salary-context money-ask, which is PAYE. Offline sweep
     # over 400+20: routes exactly edge_04/edge_05 -> paye, zero other routing changes on the 400.
-    ("paye", ["kodi ya mapato", "kodi ya mshahara", "mapato ya ajira",
+    # PREREQ-2 follow-up: 'kodi ya MISHAHARA' (plural) was missing while the singular 'kodi ya
+    # mshahara' was present — the same singular/plural inflection gap Run 3 identified in the
+    # levy cues. nat_18 ("...kodi ya mishahara yao ni ngapi") therefore routed to fact and
+    # never reached the per-individual PAYE shape that pattern B had just built to answer it.
+    # Sweep over 532: matches nat_18 (and its gp_05 probe twin) only. The OOC classifier runs
+    # BEFORE routing, so a property/capital-gains 'kodi' is intercepted upstream and cannot
+    # reach this cue.
+    ("paye", ["kodi ya mapato", "kodi ya mshahara", "kodi ya mishahara", "mapato ya ajira",
               "kodi ya serikali", "kodi ya kipato", "kodi ya ajira",
               "kodi inayokatwa", "kodi ya mfanyakazi", "kodi yake"]),
 ]
