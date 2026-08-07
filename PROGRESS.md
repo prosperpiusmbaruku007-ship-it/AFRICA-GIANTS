@@ -191,6 +191,102 @@ holds structurally (path 2b requires no money ask; the guard requires one) — p
 - **adv_06** stays on fact: the number-free form of path 2b would divert it to a correct-but-partial
   deterministic yes that ignores the insurance half. Not worth widening for.
 
+## ✅ PREREQ-2 Tiers 1–2 — narrowed false vetoes + anchored figures (IMPLEMENTED 2026-08-07)
+
+**v16 orchestrator only. Production unchanged — no Modal redeploy.**
+
+### The dominant blocker
+
+`_amount_field`'s `if len(amounts) > 1 → LOW ("role ambiguous")` fires before any role
+assignment is attempted — **14 of the 22 Class-A questions**. Every downstream capability
+(per-person × count, group sums, rate × quantity) is unreachable because the parser bails
+first. Tiers 1–2 do **not** relax that rule.
+
+### The 8 patterns (all *narrowings*, or selection where the parser already gave up)
+
+| | defect | fix | reach |
+|---|---|---|---|
+| **G** | `_ALLOWANCE` matched `pamoja na` in "mwajiri **pamoja na** mfanyakazi" — the NSSF **party** | require a real pay component | 3 hits, 0 computing |
+| **K** | `_VAGUE` matched `"kiasi **cha** SDL"` — a definite reference | exempt `kiasi cha` only | 2 hits |
+| **A1** | `_APPROX` matched `kama` as *if*/*as* ("**Kama** kawaida", "mimi **kama** mwajiri") | require a following quantity | **39 hits → 3** |
+| **H** | `_ANTECEDENT` matched demonstratives modifying a **named** noun ("**ile tozo** ya mafunzo") | strip demonstrative + definite noun | 18 hits, 0 computing |
+| **A2** | a hedge the *same sentence* corrects ("wengi sana karibu, **lakini hasa ni 18**") | precision marker overrides the veto | 3 |
+| **J** | a payroll-**labelled** figure discarded among several | anchor-select it | 2 |
+| **I** | `parse_count` never learned PREREQ-1's informal nouns (`vibarua`) | add them + spelled counts | 2 |
+
+**Result over 516 questions: +10 computing, 0 lost, 0 value changes.** All 8 corpus gains
+verified against the gold **figure**, not just the route: eval_242 (160,000), eval_279
+(131,250), eval_283 (182,000), eval_284 (38,000), eval_318 (192,500), eval_324 (168,000),
+eval_330 (45,000), nat_07 (80,000).
+
+### 🚨 The 516-sweep caught a confident wrong number IN THIS PATCH — the probes did not
+
+The first guard ("wrong_base and exactly one plausible figure") anchored **eval_327**
+(*"wafanyakazi 10, **kati yao** 4 wana **mishahara ya TZS 700,000** na 6 wana TZS 300,000"*)
+on the **first group's salary** and computed **WCF = 0.5% × 700,000 = TZS 3,500** against a
+true payroll of 4,600,000 (**TZS 23,000**) — a wrong figure replacing an honest clarification,
+which is the exact failure never-guess exists to prevent. `has_multiple_groups()` now blocks
+anchoring *and* `parse_count` whenever several pay groups or periods are named.
+
+Three further self-inflicted defects surfaced the same way: **eval_329** (answered for one of
+two periods), **eval_299** (I over-stripped `hesabu`, a genuine dangling reference), and
+**`"wafanyakazi kumi na wawili"`** parsing as a second group instead of the compound *twelve*
+(caught by the pre-existing `test_spelled_and_digit_counts`).
+
+### 🔑 No single instrument is sufficient — three different ones caught different things
+
+| instrument | caught |
+|---|---|
+| **adversarial probes (R17)** | bare `hisa` refusing 7 real gate questions; the wrong-base guard rejecting a stated payroll (ap_07–ap_10) |
+| **frontier judge** | the two-arm retriever's false passes; 41 v15 / 30 v16 regex false-passes |
+| **full-corpus sweep** | **eval_327's confident wrong number**; the `nahusika na` substring collision; the compound-numeral break |
+
+Each found something the others missed. **Run all three; a clean result from one is not a
+green light.** (R17 already says a clean sweep isn't evidence — the converse also holds:
+a clean probe set isn't either.)
+
+### ⚠️ Approved out-of-scope addition — `routing._NSSF_EMPLOYER_CUES`
+
+**Not one of the eight patterns.** The A1 narrowing made **nat_07** computable, which exposed
+a latent **D-NSSF-1** party gap underneath: it would have answered the 20% total
+(**TZS 160,000**) where the question asks the employer share (**TZS 80,000**). The
+first-person phrasing *"mimi kama mwajiri nachangia"* matched none of the third-person cues.
+Added the two-phrase cue (sweep: nat_07 only; `edge_p03` unchanged), **flagged for approval
+rather than shipped silently**, and approved on that basis.
+
+**Standing expectation for Tier 3:** every veto narrowed may expose a defect that was
+previously unreachable. Each one is a **stop-and-flag, not a silent fix.**
+
+### R17 probes
+
+`eval/accuracy_gate/extraction_adversarial_in_scope_016.jsonl` (16) →
+`tests/test_extraction_tiers12.py`. Four first-draft probes were **mis-authored** — three had
+no number so they never reached extraction, one named no levy — and reported FAIL against
+correct code. Rewritten rather than have their expectations adjusted: a probe that passes for
+the wrong reason is worse than no probe.
+
+**386 tests pass** (358 + 28). `is_uncomputable_payroll_amount`, the sole predicate production
+imports from `routing`, verified identical across all 516 questions.
+
+### Decided, not deferred
+
+- **eval_281 — PERMANENT WON'T-FIX.** *"unafika TZS 920,000 **hivi**"* carries no correction
+  marker; a bare `hivi` after a figure genuinely means "about". Treating it as exact would
+  loosen never-guess for **one row**. Not a backlog item.
+- **Pattern E (multi-component pay, eval_334) — WON'T DO.** The gold itself hedges
+  (*"kama posho na bonasi zinahesabika"*) because whether a transport allowance and a one-off
+  bonus are taxable is a **regulatory** question, not a parsing one. Summing them would have
+  the engine assert a tax treatment never verified against primary sources. If wanted, it is a
+  **locked_facts question first.**
+
+### Next: Tier 3, pattern C first
+
+`theluthi mbili` parses to **2.333…** and `robo tatu` to **3.25** — an **active mis-parse**
+feeding junk into the amount list, not merely a gap. Self-contained, and a prerequisite for 4
+of B's 9. **Pattern B's two odd members are output-shape questions, to be decided separately
+from the group parse:** eval_399 wants per-person answers (*"PAYE ya kila mmoja"*), eval_289
+wants the employer share of the total.
+
 ## 🚀 PRODUCTION NOW SERVES `chike/pipeline_v15.py` (deployed 2026-08-07)
 
 The 2026-08-07 redeploy that shipped the SAFETY-1 OOC fix **also carried the Plan A extraction
