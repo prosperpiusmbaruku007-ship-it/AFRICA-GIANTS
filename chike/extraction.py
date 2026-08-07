@@ -261,6 +261,34 @@ class SlotExtractor:
 
         global_veto = ("vague_quantity" if vague else "approximation" if approx
                        else "missing_antecedent" if antecedent else None)
+        # PREREQ-2 (A2): the hedge describes what the speaker FIRST said, and the same
+        # sentence then supplies an exact figure and marks it exact ("wengi sana karibu,
+        # LAKINI HASA NI 18"). Discarding that figure asks the user to repeat what they
+        # already told us precisely. Only lifts the vague/approximation veto — a missing
+        # antecedent is a genuinely unresolvable reference and is never overridden.
+        if global_veto in ("vague_quantity", "approximation") \
+                and swn.has_precision_override(text):
+            global_veto = None
+
+        # PREREQ-2 (J + A2): when several figures were parsed, _amount_field gives up as
+        # "role ambiguous". If exactly ONE of them is explicitly anchored as the amount — by a
+        # payroll word ("ina MISHAHARA TZS 4,800,000 ... na madeni TZS 2,000,000") or by a
+        # precision marker ("sawa TZS 610,000 KAMILI") — the role is not ambiguous at all.
+        # Collapsing to that figure engages ONLY where the parser had already given up; two
+        # anchored figures or none leaves the ambiguity, and the clarification, intact.
+        payroll_anchored = False
+        if len(amounts) > 1:
+            anchored, anchor_kind = swn.select_anchored_amount(text, amounts)
+            if anchored is not None:
+                amounts = [anchored]
+                # A figure the user LABELLED as payroll is a payroll base, whatever other
+                # non-payroll words the sentence also contains ("ina MISHAHARA TZS 4,800,000
+                # kwa watu 13, na madeni ..., na FAIDA ..." — eval_324). Without this the
+                # wrong_base detector vetoes the very figure the anchor just identified.
+                # Only the payroll anchor grants this; a precision anchor does not.
+                payroll_anchored = anchor_kind == "payroll"
+        if payroll_anchored:
+            wrong_base = False
 
         det = {}
         amount_field = next((f for f in required if f in _AMOUNT_FIELDS), None)
@@ -270,7 +298,9 @@ class SlotExtractor:
             if a is not None:
                 det[amount_field] = a
         if any(f in _COUNT_FIELDS for f in required):
-            c = self._count_field(count, vague)
+            # The precision override applies to the COUNT too: "wengi sana karibu, LAKINI HASA
+            # NI 18" is a vetoed count that the same sentence states exactly (eval_279/280).
+            c = self._count_field(count, vague and global_veto is not None)
             if c is not None:
                 det["employee_count"] = c
         return det, global_veto

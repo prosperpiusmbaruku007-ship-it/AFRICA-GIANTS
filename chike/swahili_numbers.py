@@ -17,7 +17,7 @@ exact place the models fail; parse_amount() implements it explicitly.
 """
 
 import re
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 # --- cardinal words (incl. the wa-/w- noun-class forms used for counting people) ---
 UNITS = {
@@ -140,21 +140,59 @@ def parse_amounts(text):
     return [v for _, v in found]
 
 
+# PREREQ-2 pattern I. People-nouns parse_count recognises. 'vibarua/kibarua/watumishi' are
+# the INFORMAL employment words PREREQ-1 added to routing._PAYROLL_CTX; they were never added
+# here, so a question could route to a levy and then be told its headcount was missing.
+_PEOPLE_NOUN = r"wafanyakazi|watu|wafanyikazi|waajiriwa|vibarua|kibarua|watumishi|wafanyabiashara"
+# Spelled small counts ("wafanyakazi tisa"), on top of the existing tens.
+_SPELLED_COUNT = (r"moja|mmoja|wawili|mbili|watatu|tatu|wanne|nne|watano|tano|sita|saba|"
+                  r"nane|tisa|kumi|ishirini|thelathini|arobaini|hamsini")
+# A SECOND people-quantity anywhere else in the question means the headcount is a SUM, not the
+# first number found. Without this guard, edge_p04 ("vibarua 8 wa kudumu na WAWILI wa muda")
+# would return 8 and the SDL applicability answer would flip from an honest clarification to a
+# confident "Hapana" — when 8 + 2 = 10 means SDL DOES apply. Aggregating the groups is
+# PREREQ-2 pattern B; until it lands, decline and keep clarifying. Same guard covers
+# edge_p14 / eval_399 / nat_18, which are all B-shaped.
+_SECOND_GROUP = re.compile(
+    rf"(\w+)\s+(?:na|kati|wengine|wengineo)\s+(?:{_SPELLED_COUNT})\b"
+    # headcount CHANGES during the period ("nikaongeza mmoja KUFIKIA 10" — eval_329): the
+    # single count is not the whole answer, so decline rather than answer for one period.
+    rf"|(\bkufikia\s+\d+|\bnikaongeza\b|\bnikapunguza\b)")
+# Swahili compounds numerals with 'na' — "kumi NA WAWILI" is TWELVE, one group, not a second
+# one. Caught by test_spelled_and_digit_counts, which this guard broke on its first version.
+_COMPOUND_HEAD = re.compile(rf"^(?:{_SPELLED_COUNT}|mia|elfu|laki|milioni)$")
+
+
+def _has_second_group(text_l):
+    for m in _SECOND_GROUP.finditer(text_l):
+        if m.group(2):                       # the headcount-changes alternative
+            return True
+        if not _COMPOUND_HEAD.match(m.group(1) or ""):
+            return True
+    return False
+
+
 def parse_count(text):
     """Best-effort employee/people count (small integer), or None.
 
-    Looks for 'wafanyakazi/watu/wafanyikazi <N>' or a spelled count ('kumi na wawili').
+    Looks for '<people-noun> <N>' or a spelled count ('kumi na wawili'). Returns None when a
+    SECOND people-group is mentioned (see _SECOND_GROUP) — a partial headcount asserted as the
+    whole is a confident wrong answer, which is exactly what never-guess exists to prevent.
     """
     text_l = text.lower()
-    m = re.search(r"(?:wafanyakazi|watu|wafanyikazi|waajiriwa)\s+(\d{1,4})", text_l)
+    # 'kila mmoja' is the per-person MARKER, not a second group — strip before that check.
+    if _has_second_group(re.sub(r"kila\s+(?:mmoja|mfanyakazi|mtu)", " ", text_l)):
+        return None
+    if has_multiple_groups(text):
+        return None
+    m = re.search(rf"(?:{_PEOPLE_NOUN})\s+(\d{{1,4}})", text_l)
     if m:
         return int(m.group(1))
-    m = re.search(r"\b(\d{1,4})\s+(?:wafanyakazi|watu)", text_l)
+    m = re.search(rf"\b(\d{{1,4}})\s+(?:{_PEOPLE_NOUN})", text_l)
     if m:
         return int(m.group(1))
     # spelled count near a people-noun
-    m = re.search(r"(?:wafanyakazi|watu)\s+((?:kumi|ishirini|thelathini|arobaini|hamsini)"
-                  r"(?:\s+na\s+\w+)?)", text_l)
+    m = re.search(rf"(?:{_PEOPLE_NOUN})\s+((?:{_SPELLED_COUNT})(?:\s+na\s+\w+)?)", text_l)
     if m:
         v = _value_small(m.group(1).split())
         if v > 0:
@@ -171,11 +209,22 @@ def parse_count(text):
 _VAGUE = [
     r"\bwachache\b", r"\bwengi\b", r"\bkadhaa\b", r"\bchache\b", r"\bmdogo\b",
     r"\bmidogo\b", r"\bndogo\b", r"\bkubwa\b", r"\bmengi\b", r"\bwingi\b",
-    r"\bkutosha\b", r"\bflani\b", r"\bfulani\b", r"\bkiasi\b(?!\s+gani)",
+    # PREREQ-2 pattern K: 'kiasi CHA <X>' is "the AMOUNT OF X" — a definite reference, not a
+    # vague quantity ("zinabadilisha kiasi cha SDL ninachodaiwa", eval_261). The genuinely
+    # vague uses ('mingi kiasi', 'kiasi kidogo') are unaffected, so only 'cha' is excluded
+    # alongside the existing 'gani'. Sweep over 500: 2 questions, 0 of them currently computing.
+    r"\bkutosha\b", r"\bflani\b", r"\bfulani\b", r"\bkiasi\b(?!\s+(?:gani|cha))",
     r"\bsi wengi\b", r"\bsi chache\b",
 ]
 _APPROX = [
-    r"\bkama\b", r"\bhivi\b", r"\bka-?\d", r"\baround\b", r"\bna kitu\b", r"\bplus kitu\b",
+    # PREREQ-2 pattern A1: bare '\bkama\b' fired on the CONDITIONAL/COMPARATIVE "if"/"as"
+    # ("KAMA kawaida mishahara inabadilika" = as usual; "KAMA nikizingatia" = if I consider;
+    # "na KAMA nikiongeza" = and if I add — eval_283/319/323), vetoing an exact figure that was
+    # never approximate. Approximative 'kama' is always followed by a QUANTITY ("kama laki
+    # sita", "kama TZS 500,000"), so requiring one keeps eval_284's real hedge while dropping
+    # the false ones. Sweep over 500: bare form 39 hits, this form 3 — 0 currently computing.
+    r"\bkama\s+(?=\d|laki\b|elfu\b|milioni\b|mia\b|nusu\b|robo\b|shilingi\b|tzs\b)",
+    r"\bhivi\b", r"\bka-?\d", r"\baround\b", r"\bna kitu\b", r"\bplus kitu\b",
     r"\bkasoro\b", r"\bushee\b", r"\bushe\b", r"\bnegotiable\b", r"\btakriban[a-z]*",
     r"\bkaribu\b", r"\bhivyo hivyo\b", r"\bna ushee\b", r"\bna kitu kidogo\b",
 ]
@@ -220,7 +269,15 @@ _WRONG_BASE = [
 _ALLOWANCE = [
     r"\bposho\b", r"\bbonasi\b", r"\ballowance\b", r"\bgross\b", r"\bnet\b",
     r"take home", r"baada ya kukatwa", r"bila posho", r"\bbima\b", r"\bovertime\b",
-    r"\blikizo\b", r"malipo ya likizo", r"pamoja na", r"commission",
+    r"\blikizo\b", r"malipo ya likizo", r"commission",
+    # PREREQ-2 pattern G: 'pamoja na' meant "salary INCLUDING <component>" — but bare, it also
+    # matched "mwajiri PAMOJA NA mfanyakazi" (employer TOGETHER WITH employee), which names the
+    # NSSF PARTY, not a pay component. eval_242 states its salary plainly (TZS 800,000) and was
+    # asked whether that figure was gross or net. Requiring an actual pay-component object keeps
+    # the intended sense. Sweep over 500: 3 'pamoja na' occurrences, only eval_242 changes;
+    # eval_114 (a deadline fact) and ap_07 never reached this detector.
+    r"pamoja na\s+(?:posho|bonasi|allowance|marupurupu|malazi|chakula|usafiri|likizo|"
+    r"overtime|commission|kodi|vat)",
     # VAT-inclusive vs exclusive is the same gross/net base ambiguity for a money
     # figure — "is this 180M with or without VAT?" must be clarified, not assumed.
     r"jumuisha vat", r"vat au la", r"pamoja na vat", r"bila vat", r"ikiwa na vat",
@@ -250,17 +307,125 @@ def detect_approximation(text):
     return _any(_APPROX, text.lower())
 
 
+# PREREQ-2 pattern H. A demonstrative that MODIFIES a named noun is not a dangling
+# reference: "je ILE TOZO ya mafunzo" is "that training levy" — the referent is right there
+# (edge_p04). Only the DEFINITE nouns below count, deliberately not any following word: the
+# documented RC-2 case "wale WAWILI waliobaki" (extract_153) is a demonstrative followed by a
+# pronoun-count and MUST keep firing, which a general '\w+' suppression would break.
+# NOT 'hesabu'/'fedha'/'deni': "ILE HESABU ya wiki iliyopita" (eval_299) is a genuine dangling
+# reference — the calculation itself is the unresolved thing. Only nouns naming a levy, a pay
+# component, or an institution, where the demonstrative is doing ordinary definite reference.
+_ANTECEDENT_NOUNS = (r"tozo|kodi|mshahara|mishahara|malipo|makato|mchango|michango|ada|"
+                     r"faini|sheria|kampuni|biashara|leseni")
+_ANTECEDENT_MODIFIED = re.compile(
+    r"\b(?:ile|hiyo|hii|hayo|hicho|huyo|ule|wale|hao|yao|wao)\s+(?:ya\s+|wa\s+)?"
+    rf"(?:{_ANTECEDENT_NOUNS})\b")
+
+
 def detect_missing_antecedent(text):
     """Antecedent pronoun present AND no explicit number to anchor on.
 
     RC-2: 'no number' means no PLAUSIBLE amount — a spelled small count like 'wawili'
     (2) in "wale wawili waliobaki" is a pronoun-count, not a figure, and must not mask
-    the missing antecedent (extract_153)."""
-    text_l = text.lower()
+    the missing antecedent (extract_153).
+
+    PREREQ-2 (H): demonstratives modifying a named compliance noun are stripped first, so
+    "ile tozo ya mafunzo" no longer reads as a dangling reference."""
+    text_l = _ANTECEDENT_MODIFIED.sub(" ", text.lower())
     if not _any(_ANTECEDENT, text_l):
         return False
     plausible = [a for a in parse_amounts(text) if a >= MIN_PLAUSIBLE_AMOUNT]
     return not plausible and parse_count(text) is None
+
+
+# PREREQ-2 patterns A2 + J — ANCHORED FIGURE SELECTION.
+#
+# _amount_field gives up whenever it parses more than one figure ("role ambiguous") — the
+# single biggest blocker in the Class-A set. This does NOT relax that rule: it engages ONLY
+# where the parser has already given up, and only when exactly ONE figure carries an
+# unambiguous anchor naming it as the intended amount:
+#   J  — a payroll word:      "ina MISHAHARA TZS 4,800,000 kwa watu 13, na madeni TZS 2,000,000"
+#   A2 — a precision marker:  "kama laki sita hivi, sawa TZS 610,000 KAMILI"
+# Two anchored figures, or none, means the ambiguity is real and the clarification stands.
+# Measured over 500 questions: J engages on 2, A2 on 3, none currently computing.
+_PRECISION = r"hasa|haswa|kamili|sawasawa|kabisa"
+_ANCHORED = [
+    ("payroll", re.compile(r"(?:mshahara|mishahara)\w*\s+(?:wa\s+|ya\s+|ni\s+|za\s+)*"
+                           r"(?:tzs\s*|tsh\s*|sh\s*)?(\d[\d,\.]*)", re.IGNORECASE)),
+    ("precision", re.compile(rf"(?:{_PRECISION})\s+(?:ni\s+|ya\s+|kwa\s+)*"
+                             r"(?:tzs\s*|tsh\s*|sh\s*)?(\d[\d,\.]*)", re.IGNORECASE)),
+    ("precision", re.compile(r"(?:tzs\s*|tsh\s*|sh\s*)(\d[\d,\.]*)\s+(?:" + _PRECISION + r")",
+                             re.IGNORECASE)),
+]
+
+
+def _to_decimal_amount(raw):
+    try:
+        return Decimal(str(raw).replace(",", "").rstrip("."))
+    except (InvalidOperation, ValueError):
+        return None
+
+
+# MULTI-GROUP / MULTI-PERIOD BLOCK — the most important guard in this module.
+#
+# Found by the 500-question sweep, not by a probe: without it, eval_327 ("Nina wafanyakazi 10,
+# KATI YAO 4 wana MISHAHARA YA TZS 700,000 na 6 wana TZS 300,000") anchors on the FIRST group's
+# salary and computes WCF on 700,000 instead of the real 4,600,000 payroll — 0.5% x 700,000 =
+# TZS 3,500 asserted confidently in place of TZS 23,000. That is precisely the confident-wrong-
+# number failure never-guess exists to prevent, and it is worse than the clarification it
+# replaces. When the question describes SEVERAL pay groups or SEVERAL periods, no single figure
+# is "the" payroll, so anchoring must not run at all; summing the groups is pattern B.
+_GROUP_MARKERS = re.compile(
+    r"kati\s+ya(?:o|nu|ke|tu)\b|\bwengine\w*\b|wanaofuata|wa\s+mwisho|wa\s+kwanza|"
+    r"wa\s+muda\b|wa\s+kudumu\b|\btawi\b|\bmatawi\b|\bkundi\b|\bmakundi\b")
+_MONTHS = re.compile(r"\b(januari|februari|machi|aprili|mei|juni|julai|agosti|septemba|"
+                     r"oktoba|novemba|desemba)\b")
+
+
+def has_multiple_groups(text):
+    """True when the question describes more than one pay group or more than one period, so
+    no single parsed figure can be the whole payroll."""
+    text_l = text.lower()
+    if _GROUP_MARKERS.search(text_l):
+        return True
+    return len(set(_MONTHS.findall(text_l))) >= 2
+
+
+def select_anchored_amount(text, amounts):
+    """The one figure explicitly named as the amount, or None when the question is genuinely
+    ambiguous.
+
+    `amounts` is the already-parsed candidate list; only a value present there can be
+    returned, so this can never introduce a figure the parser did not itself see.
+
+    Returns (value, kind) where kind is 'payroll' or 'precision', or (None, None)."""
+    if len(amounts) < 2 or has_multiple_groups(text):
+        return None, None
+    pool = {Decimal(a) for a in amounts}
+    found = {}
+    for kind, pattern in _ANCHORED:
+        for raw in pattern.findall(text):
+            value = _to_decimal_amount(raw)
+            if value is not None and value in pool:
+                found[value] = kind
+    if len(found) != 1:
+        return None, None
+    value, kind = next(iter(found.items()))
+    return value, kind
+
+
+def has_precision_override(text):
+    """A hedge word is present, but the SAME sentence supplies an exact figure and marks it as
+    exact ("wengi sana karibu, LAKINI HASA NI 18"; "sawa TZS 610,000 KAMILI"). The hedge then
+    describes what the speaker first said, not the figure they went on to give, so the global
+    vague/approximation veto must not discard it.
+
+    Deliberately requires an explicit precision MARKER. eval_281 ("unafika TZS 920,000 hivi")
+    has none — a bare 'hivi' after a figure really does mean "about", and treating it as exact
+    would loosen never-guess for a single row. Permanent won't-fix, not a deferred item."""
+    if not re.search(rf"\b(?:{_PRECISION})\b", text.lower()):
+        return False
+    return any(a >= MIN_PLAUSIBLE_AMOUNT for a in parse_amounts(text))
 
 
 def detect_foreign_currency(text):

@@ -329,6 +329,14 @@ _NSSF_TOTAL_CUES = [
 ]
 _NSSF_EMPLOYER_CUES = [
     "sehemu ya mwajiri", "mwajiri anachangia", "upande wa mwajiri", "mchango wa mwajiri",
+    # PREREQ-2: the FIRST-PERSON employer phrasing ("mimi KAMA MWAJIRI NACHANGIA kiasi gani")
+    # matched none of the third-person cues above, so nat_07 fell to the 'total' default and
+    # would answer 20% (TZS 160,000) where the employer share is 10% (TZS 80,000). Latent
+    # until now — the question used to clarify; the Tier-1 'kama' fix makes it computable, so
+    # the D-NSSF-1 party gap underneath became reachable and had to be closed with it.
+    # Sweep over 500: matches nat_07 only (edge_p03 already resolves 'employee' on an
+    # earlier cue and is unchanged).
+    "kama mwajiri nachangia", "mwajiri nachangia",
 ]
 _NSSF_EMPLOYEE_CUES = [
     "ya mfanyakazi", "wa mfanyakazi", "anayokatwa", "kinakatwa mshahara",
