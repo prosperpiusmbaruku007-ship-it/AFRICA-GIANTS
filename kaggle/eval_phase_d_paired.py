@@ -31,7 +31,23 @@ WHAT IS REPORTED
   - judge overlay (majority-of-5, pinned DeepInfra seed=42) for BOTH arms
   - EVERY v15-PASS -> v16-FAIL enumerated individually, with full text (a healthy net can
     hide a bad class; the founder's bar is "no class of regression even at parity")
-  - part 3: v16 two-arm vs v16 single-arm on the 90-question subset, answer-level
+  - part 3: v16 two-arm vs v16 single-arm on the 90-question subset, answer-level, AND
+    judge-augmented (the 3ac522a run left all 90 part-3 rows UNGRADED, so the two-arm
+    ship/don't-ship call rested on the regex scorer alone until it was adjudicated by hand)
+
+RE-RUN NOTE (2026-08-07). This is the second execution of this harness. Everything is held
+identical to the 3ac522a run — same 400 questions, same adapter, same RAG index, same scorer,
+same judge config, both arms — with exactly ONE harness change: part-3 rows are now judged.
+What changed is the CODE UNDER TEST: PREREQ-1 (applicability routing + base rejection) and
+PREREQ-2 (Tiers 1-2 narrowings, pattern C fractions, pattern B group payroll).
+
+PRE-REGISTERED EXPECTATION, recorded before the run so it cannot be retrofitted:
+    PREREQ-1 +15, Tiers 1-2 +7, C 0, B +9  ->  ~+31 raw on the 400 = +7.75 pts,
+    against the 3ac522a raw gap of -6.8 pts.
+Every one of those figures is measured on the DETERMINISTIC extraction/routing path only.
+This run measures the FULL system with model behaviour on top, and +7.75 against -6.8 is a
+thin margin — a handful of model-side losses could erase it. If it lands short, patterns D
+(+2) and F (+4) are the next increment, not a redesign.
 
 HOW TO RUN (Kaggle notebook)
     import requests
@@ -543,8 +559,43 @@ if RUN_JUDGE:
 
     judge_overlays['v15'] = _judge_arm('v15', res15)
     judge_overlays['v16'] = _judge_arm('v16', res16)
+
+    # HARNESS FIX (re-run): judge the PART-3 rows too. The 3ac522a run left 90/90 part-3 rows
+    # ungraded — the overlay ran on res15/res16 only — so the two-arm ship/don't-ship call
+    # rested on the regex scorer alone until it was adjudicated by hand. That mattered: on
+    # that run the regex scorer credited two-arm with 4 passes the judge called wrong, and
+    # 2 of the 6 "two-arm-only" wins survived judging. Grade the single-arm rows here and
+    # restate the comparison judge-augmented, so the call rests on the same instrument as
+    # the main arms.
+    judge_overlays['part3_single_arm'] = _judge_arm('part3_single_arm', res3)
+
+    def _aug(rows):
+        rep = chike_judge.build_confirmation_report(rows)['judge_augmented']
+        return rep['pass'], rep['total'], rep['acc']
+
+    # two_rows are the SAME questions as res3 but answered by the two-arm retriever; they
+    # were graded inside the v16 overlay above, so both sides are now judge-augmented.
+    jp_two, jn_two, ja_two = _aug(two_rows)
+    jp_one, jn_one, ja_one = _aug(res3)
+    print('\n' + '=' * 78)
+    print('RUN 2 PART 3 — JUDGE-AUGMENTED (the instrument the 3ac522a run lacked)')
+    print('=' * 78)
+    print(f'  two-arm    {jp_two}/{jn_two} = {ja_two:.1%}')
+    print(f'  single-arm {jp_one}/{jn_one} = {ja_one:.1%}')
+    print(f'  delta {(ja_two - ja_one) * 100:+.1f} pts (positive = two-arm better)')
+    j_two_only = [i for i in by3
+                  if by16[i].get('judge') == 'correct' and by3[i].get('judge') == 'wrong']
+    j_one_only = [i for i in by3
+                  if by3[i].get('judge') == 'correct' and by16[i].get('judge') == 'wrong']
+    print(f'  judge-confirmed TWO-ARM-only wins ({len(j_two_only)}): {j_two_only}')
+    print(f'  judge-confirmed SINGLE-ARM-only wins ({len(j_one_only)}): {j_one_only}')
+    part3_judged = {'two_arm': {'pass': jp_two, 'total': jn_two, 'acc': ja_two},
+                    'single_arm': {'pass': jp_one, 'total': jn_one, 'acc': ja_one},
+                    'delta_pts': round((ja_two - ja_one) * 100, 2),
+                    'judge_two_arm_only': j_two_only, 'judge_single_arm_only': j_one_only}
 else:
     print('\n[judge] SKIPPED (no OPENROUTER_API_KEY or CHIKE_JUDGE=0)')
+    part3_judged = None
 
 # ── VERDICT vs THE ADR BAR ───────────────────────────────────────────────────────
 raw_ok = bucket_table['ALL_400']['raw']['delta_pts'] >= 0
@@ -582,7 +633,10 @@ summary = {
         'reliable': {'two_arm': [pl_two, nl_two, round(al_two, 4)],
                      'single_arm': [pl_one, nl_one, round(al_one, 4)],
                      'delta_pts': round((al_two - al_one) * 100, 1)},
-        'two_arm_only_passes': two_only, 'single_arm_only_passes': one_only},
+        'two_arm_only_passes': two_only, 'single_arm_only_passes': one_only,
+        # Re-run addition: the 3ac522a run left these 90 rows ungraded, so the two-arm call
+        # rested on the regex scorer alone. None only when the judge is skipped entirely.
+        'judge_augmented': part3_judged},
     'judge': {k: {'raw': v['report']['raw'], 'reliable_denom': v['report']['reliable_denom'],
                   'judge_augmented': v['report']['judge_augmented'],
                   'gap_fill': v['report']['gap_fill'],
