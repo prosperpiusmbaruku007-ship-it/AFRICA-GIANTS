@@ -279,7 +279,49 @@ imports from `routing`, verified identical across all 516 questions.
   the engine assert a tax treatment never verified against primary sources. If wanted, it is a
   **locked_facts question first.**
 
-### Next: Tier 3, pattern C first
+### ✅ Tier 3 pattern C — the fraction grammar (IMPLEMENTED 2026-08-07)
+
+**C CLOSES ZERO GATE QUESTIONS. It is NOT a gate gain.** All four instances still clarify —
+their blocker is the multi-figure rule that **pattern B** owns. C is a correctness fix to an
+active mis-parse and a prerequisite for 4 of B's 9. `test_c2_is_unused_by_default` asserts by
+source inspection that neither `extraction.py` nor `orchestrator.py` calls the resolver, so a
+future session cannot quietly wire it and credit C with movement it did not produce.
+
+**Root cause — Swahili has two fraction constructions; `_value_small` implemented one:**
+
+| construction | shape | example | correct | was |
+|---|---|---|---|---|
+| additive | `<scale> <n> **na** <frac>` | `laki saba na nusu` | 750,000 | ✅ |
+| multiplicative | `<frac> [<num>] **ya** <N>` | `theluthi mbili ya 30` | ⅔×30 = 20 | ❌ **2.333** |
+
+The word after a fraction is a **numerator, not an addend**: `theluthi mbili` = two-thirds,
+`robo tatu` = three-quarters. Junk appeared only *with* a numerator — a bare `robo`/`nusu`
+emits nothing — so only eval_287 and eval_288 carried it.
+
+**C-1 suppresses** (resolving needs the group it modifies = B), applied to **any
+fraction-initial run**, not just `ya`-gated, on evidence: `_value` yields junk for *every*
+fraction-initial run (`nusu milioni`→0.5, `robo milioni`→0.25), so there is no correct figure
+to lose. **The 524-sweep could not distinguish the two variants** — both change the same 2
+questions — so the choice rested entirely on probes.
+
+**🔑 The near-miss worth remembering: the rule is defined on the parsed RUN, not by regex.**
+A `\b(nusu|robo|theluthi)\s+ya` pattern — the obvious first formulation — matches `nusu ya`
+in **nat_05** (*"asilimia tatu na **nusu ya** nini"*) and suppresses a correct **3.5%**,
+because the run actually starts at `tatu`. Pinned by
+`test_the_nat_05_near_miss_a_regex_rule_would_have_broken`.
+
+**C-2** — `parse_fraction_of_count()`, unused by default, verified against all four golds
+including the elliptical second fraction and the `wengine wote` remainder: eval_285 `[6,18]`,
+eval_287 `[20,10]`, eval_288 `[12,4]`, eval_289 `[7,7]`. **Never rounds a person** —
+`theluthi ya watu 10` is 3.33 and returns no split with a reason.
+
+**Sweep over 524: 4 amount-lists change, 0 branch/value changes. Nothing unmasked.**
+**408 tests pass** (+24). Two pre-existing `_real_weights` failures are environment-dependent
+and fail identically at HEAD with these changes stashed — deselected, not masked.
+R17: 8 probes; **eval_274** (the only *live computing* fraction question, on the additive
+grammar) pinned in its own test, not only inside the parametrised loop.
+
+### Next: Tier 3, pattern B
 
 `theluthi mbili` parses to **2.333…** and `robo tatu` to **3.25** — an **active mis-parse**
 feeding junk into the amount list, not merely a gap. Self-contained, and a prerequisite for 4
