@@ -321,7 +321,79 @@ and fail identically at HEAD with these changes stashed — deselected, not mask
 R17: 8 probes; **eval_274** (the only *live computing* fraction question, on the additive
 grammar) pinned in its own test, not only inside the parametrised loop.
 
-### Next: Tier 3, pattern B
+### ✅ Tier 3 pattern B — multi-group payroll + the per-individual shape (IMPLEMENTED 2026-08-07)
+
+**All 9 instances answer with the gold figure.** eval_285 SDL 388,500 · eval_286 NSSF
+1,500,000 · eval_287 SDL 665,000 · eval_288 WCF 47,000 · eval_289 NSSF 700,000 · eval_290 SDL
+325,500 · eval_325 NSSF 1,380,000 · eval_327 SDL 161,000 **+ WCF 23,000** · eval_399 PAYE
+198,400.
+
+**All-or-nothing, because best-effort was measurably dangerous.** A prototype of the obvious
+template (`<count> <pay-verb> <amount>`) swept over 524 questions **matched 12 and mis-parsed
+6**:
+
+| | naive parse | truth |
+|---|---|---|
+| eval_304 | 20 × 50,000,000 = **TZS 1 billion** payroll | `mtaji` is capital |
+| nat_18 | 2 × 400,000 | 400,000 + 1,100,000 |
+| eval_285/287/288/289 | the fraction **base** as the group count | C-2's split |
+| ex_08 | only the second branch | both or decline |
+
+Four validations must all pass or it declines: every money figure assigned · a stated total
+equals Σ counts · fraction counts come from pattern C only · no wrong-base word. **Five corpus
+questions decline** rather than mis-parse. **Magnitude is not the discriminator** —
+`MIN_PLAUSIBLE_AMOUNT` is 10,000 but real rates here are 1,500/piece and 18,000/day, so roles
+are assigned **structurally**. Gated positionally so eval_092/eval_302 cannot be diverted.
+
+**eval_399 as its own shape.** PAYE bands are progressive, so summing is an arithmetic error,
+not a presentation choice: 1,600,000 as one salary = **308,000**, versus the true 10,400 +
+188,000 = **198,400**. `compute_paye_each()` lives in the rules engine and needed **no
+orchestrator surgery**. **eval_289** needed no decision — `nssf_party` already resolved it.
+
+### ⚠️ Test-mirror finding — the third test this cycle that asserted or masked a defect
+
+`tests/test_extraction_tiers12.py::_branch` reimplements `_answer_compute`'s decision order,
+and its docstring claims it *"fails loudly if that order changes."* **It did not.** It simply
+lacked the new branch, so it kept reporting `clarify` for ex_07 while the real orchestrator
+computed. Only the 532-sweep — which drives the *real* orchestrator — exposed the
+disagreement.
+
+**A mirror that claims to fail loudly and silently does not is a weaker guard than none.**
+Re-synced. **If a third mirror ever appears, replace the pattern rather than maintain it.**
+
+Running tally of tests that were themselves the defect this cycle:
+1. `test_paraphrased_ooc_controls_*` — asserted a known OOC leak should pass.
+2. `test_boundary_amount_vs_threshold` — asserted the p04 routing defect as correct.
+3. `_branch` mirror — claimed loud failure, drifted silently.
+
+**Probes ex_07/ex_08 moved `clarify` → `compute`, STRENGTHENED not relaxed:** they now assert
+the correct **figure** (WCF 23,000, SDL 238,000), so a mis-parse fails on the number rather
+than the branch. History preserved in each `guards_against` string.
+
+**433 tests pass** (416 offline + 17 retrieval, two processes — the single-process run hits a
+native torch access violation in `test_retrieval.py` from repeated model loads, which
+reproduces with these changes stashed).
+
+### 📊 PROJECTION FOR THE PHASE D RE-RUN — recorded BEFORE the result
+
+| | raw gain on the 400 |
+|---|---|
+| PREREQ-1 | **+15** (measured) |
+| Tiers 1–2 | **+7** (measured) |
+| C | **0** (stated: correctness fix, not a gate gain) |
+| B | **+9** (all scorer-verified) |
+| **total** | **≈ +31 → +7.75pp** |
+
+Against a raw gap of **−6.8pp**.
+
+**THIS IS A PROJECTION, NOT A GUARANTEE.** Every figure above is measured on the
+*deterministic* extraction/routing path. The paired run measures the **full system** with
+model behaviour on top, and **+7.75 against −6.8 is a thin margin — a handful of model-side
+losses could erase it.** If the re-run lands short, D (+2) and F (+4) are the next increment,
+**not** a redesign. This paragraph is written before the run so the expectation cannot be
+retrofitted to the result.
+
+### Next: Tier 3 remainder (D, F) — only if the re-run lands short
 
 `theluthi mbili` parses to **2.333…** and `robo tatu` to **3.25** — an **active mis-parse**
 feeding junk into the amount list, not merely a gap. Self-contained, and a prerequisite for 4
