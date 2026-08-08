@@ -1,0 +1,808 @@
+{
+ "run": "phase D paired, run 3 — FIRST RUN ON THE SHIPPING CONFIGURATION (single-arm)",
+ "harness": "kaggle/eval_phase_d_paired.py at 5d0dcb7",
+ "executed_by": "founder, on Kaggle (GPU + Internet)",
+ "date": "2026-08-08",
+ "provenance": {
+  "artifact": "gate_phase_d_paired_5d0dcb7.json",
+  "sha256": "0385db93ba5a946b11c8c3978a34888de36455c4b115caa97a308853573fc170",
+  "bytes": 1024998,
+  "complete": true,
+  "clone_head": "5d0dcb7",
+  "live_head": "5d0dcb7",
+  "adapter": "prospAprospA007/africa-giants-adapter-v15",
+  "index_facts": 217,
+  "utc": "2026-08-08T10:30:48Z",
+  "verification": "every figure below recomputed from raw rows by scratchpad/verify5d0.py + judgerange.py + dfreach.py; nothing copied from the run's own summary block."
+ },
+ "determinism": {
+  "v15_byte_identical_third_consecutive_run": true,
+  "vs_030a5ff": {
+   "generated_diffs": 0,
+   "raw_generated_diffs": 0,
+   "pass_diffs": 0
+  },
+  "vs_3ac522a": {
+   "generated_diffs": 0,
+   "raw_generated_diffs": 0,
+   "pass_diffs": 0
+  },
+  "v16_churn_vs_030a5ff": {
+   "generated_text_changed": 84,
+   "raw_generated_changed": 83,
+   "pass_flips": 15,
+   "clarified_flips": 2,
+   "attributable_to_the_four_shipped_items": 13,
+   "attributable_to_the_retrieval_swap": 71
+  },
+  "note": "No sampling-noise defence is available for any v16 change. The harness is deterministic; every delta is attributable to code."
+ },
+ "THE_FINDING_THE_HEADLINE_UNDERSTATED": {
+  "claim": "fact_path is not merely 'flat' — on the shipped configuration v16 and v15 produce BYTE-IDENTICAL text on 281 of the 282 scored fact-path rows.",
+  "scored_fact_path_rows": 282,
+  "byte_identical": 281,
+  "the_one_exception": {
+   "id": "eval_322",
+   "why": "three-part enumeration; v16's decompose_query splits it. Both arms PASS and the judge calls BOTH correct."
+  },
+  "ooc_rows": {
+   "n": 16,
+   "byte_identical": 15,
+   "exception": "eval_191 — the known mislabel (an in-scope PAYE question tagged out_of_corpus); excluded from scoring either way, both give 78,000."
+  },
+  "consequence": "v16's entire delta lives in the 102 compute rows. The fact path has BYTE-ZERO regression surface — not statistically zero. The two-arm retriever was the only thing that had ever perturbed it, and dropping it removed 100% of v16's fact-path risk. This is the strongest available form of the ADR 'no class of regression' answer and it only became measurable once the arm was dropped."
+ },
+ "pre_registered_expectation_vs_outcome": {
+  "recorded_before_the_run_in": "kaggle/eval_phase_d_paired.py docstring at d0e7390",
+  "deterministic": {
+   "predicted": "+7 (eval_368; 247/371/372/378/379/393)",
+   "observed": "+7, those exact ids"
+  },
+  "retrieval": {
+   "predicted": "-4 (6 lost, 2 regained)",
+   "observed": "-6 (008,019,034,186,187,331) +2 (127,208) = -4, those exact ids"
+  },
+  "net": {
+   "predicted": "+3 -> 305/384 = +1.3 pts",
+   "observed": "305/384 = +1.3 pts"
+  },
+  "verdict": "EXACT, including the composition and the row ids — not merely the total. Second calibration point for the method (030a5ff was +7.3 against +7.75)."
+ },
+ "buckets_recomputed": {
+  "ALL_400_raw": {
+   "v15": "300/384 = 78.1",
+   "v16": "305/384 = 79.4",
+   "delta_pts": 1.3
+  },
+  "ALL_400_reliable": {
+   "v15": "212/263 = 80.6",
+   "v16": "219/269 = 81.4",
+   "delta_pts": 0.8
+  },
+  "compute_raw": {
+   "v15": "70/102 = 68.6",
+   "v16": "75/102 = 73.5",
+   "delta_pts": 4.9
+  },
+  "compute_reliable": {
+   "v15": "36/53 = 67.9",
+   "v16": "43/59 = 72.9",
+   "delta_pts": 5.0
+  },
+  "fact_path_raw": {
+   "v15": "230/282",
+   "v16": "230/282",
+   "delta_pts": 0.0,
+   "flips_in_either_direction": 0
+  },
+  "adr_bar": {
+   "raw_pass": true,
+   "reliable_pass": true
+  }
+ },
+ "adjudication_of_the_12_regressions": {
+  "classification_scheme": {
+   "A": "extraction coverage failure — the input IS present and v16 did not use it",
+   "B": "never-guess CORRECT — the gold is itself a clarification",
+   "C": "v16 substantively correct, scorer false-fail on output SHAPE (none this run — all Class C rows were closed by bb30e25)",
+   "D": "retrieval-caused fact error (none this run — the two-arm retriever is gone)",
+   "E": "rate x quantity / multi-part / composition — known deferrals (patterns D, E, F)"
+  },
+  "totals": {
+   "A": 3,
+   "B": 4,
+   "C": 0,
+   "D": 0,
+   "E": 5
+  },
+  "judge_on_v15s_own_answer": {
+   "wrong": [
+    "eval_271",
+    "eval_281",
+    "eval_291",
+    "eval_293",
+    "eval_294",
+    "eval_296",
+    "eval_329",
+    "eval_334"
+   ],
+   "correct": [
+    "eval_280",
+    "eval_323"
+   ],
+   "undetermined": [
+    "eval_295",
+    "eval_319"
+   ]
+  },
+  "rows": [
+   {
+    "id": "eval_271",
+    "class": "B",
+    "subdomain": "nssf_contributions",
+    "answer_type": "definition",
+    "v15_judge_on_its_own_answer": "wrong",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Mfanyakazi wangu analipwa dola 500 za Marekani kwa mwezi, NSSF yake ni ngapi?",
+    "gold_sw": "Mshahara umetajwa kwa dola za Marekani (USD 500), siyo shilingi. NSSF ni asilimia 10 ya mshahara wa TZS. Lazima ubadilishe USD 500 kuwa TZS kwa kiwango cha ubadilishaji cha siku kabla ya kukokotoa. Thibitisha na NSSF (nssf.go.tz).",
+    "v15_sw": "Kwa mshahara wa USD 500, unahitaji kuubadili kuwa shilingi za Kitanzania ili kuhesabu NSSF. Thibitisha kiwango cha ubadilishaji wa sasa na benki yako au tovuti ya BoT. Kisha hesabu asilimia 20 ya shilingi hizo. Thibitisha na NSSF (nssf.go.tz).",
+    "v16_sw": "Ili nihesabu NSSF, tafadhali badilisha kiasi kuwa shilingi za Tanzania (TZS) — kiasi ulichotaja kiko katika sarafu ya kigeni. Kisha nitahesabu.",
+    "adjudication": "foreign currency (USD 500). The GOLD is itself a clarification — it instructs the user to convert to TZS first. v16 asks exactly that. Judge calls v15 WRONG (v15 quoted 20% without a conversion)."
+   },
+   {
+    "id": "eval_280",
+    "class": "A",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "v15_judge_on_its_own_answer": "correct",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Tuna wafanyakazi wengi sana karibu, lakini hasa ni 18 wenye mshahara wa TZS 480,000 kila mmoja — NSSF ya wote?",
+    "gold_sw": "Tumia takwimu hasa: 18 x TZS 480,000 = TZS 8,640,000 jumla ya mishahara. NSSF ni asilimia 20 (mwajiri + mfanyakazi) = TZS 1,728,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz).",
+    "v15_sw": "NSSF ya wafanyakazi 18 wenye mshahara wa TZS 480,000 kila mmoja: kila mmoja anachangia TZS 96,000 (20% ya TZS 480,000). Jumla ya michango yao yote: TZS 96,000 × 18 = TZS 1,728,000. Thibitisha na nssf.go.tz.",
+    "v16_sw": "Ili nihesabu NSSF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "adjudication": "'wafanyakazi wengi sana karibu, lakini HASA NI 18 wenye mshahara wa TZS 480,000 kila mmoja' — both inputs are stated and has_precision_override() already returns True, so the vague/approximate hedge is handled. parse_count still returns None because the digit is followed by 'wenye', not a people-noun. Judge calls v15 CORRECT. A GENUINE REGRESSION."
+   },
+   {
+    "id": "eval_281",
+    "class": "A",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "v15_judge_on_its_own_answer": "wrong",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Mshahara wake ni mkubwa kidogo, unafika TZS 920,000 hivi — PAYE yake ni ngapi?",
+    "gold_sw": "Tumia TZS 920,000. Iko kwenye kundi la nne: PAYE = TZS 68,000 + 25% ya (920,000 - 760,000) = 68,000 + 40,000 = TZS 108,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+    "v15_sw": "Kwa mshahara wa TZS 920,000, PAYE ni karibu TZS 90,000. Thibitisha na TRA (tra.go.tz).",
+    "v16_sw": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "adjudication": "'unafika TZS 920,000 HIVI' — the amount parses fine; the approximation veto (detect_approximation) fires on 'hivi'/'kidogo' and blocks the compute. The gold uses 920,000 as stated. Judge calls v15 WRONG (v15 guessed ~90,000 against a gold of 108,000), so the row is a scorer false-pass, not a real loss — but the veto is miscalibrated here."
+   },
+   {
+    "id": "eval_291",
+    "class": "B",
+    "subdomain": "nssf_contributions",
+    "answer_type": "definition",
+    "v15_judge_on_its_own_answer": "wrong",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Analipwa TZS 320,000 kila wiki mbili (bi-weekly), NSSF yake ya mwezi ni ngapi?",
+    "gold_sw": "Malipo ni ya kila wiki mbili, hivyo nihitaji mshahara halisi wa mwezi kwanza (mfano malipo mawili kwa mwezi ni TZS 640,000, lakini hii inategemea kalenda). Toa mshahara wa mwezi ndipo nikokotoe NSSF (10% ya mfanyakazi). Thibitisha na NSSF (nssf.go.tz).",
+    "v15_sw": "Kwa mshahara wa TZS 320,000 kwa wiki mbili, mwezi una viwango VITATU: (1) TZS 0 hadi 270,000 → 0%; (2) TZS 270,001 hadi 320,000 → 8% (TZS 50,000); (3) Zaidi ya TZS 320,000 → 20% (TZS 64,000). Jumla ya NSSF ya mwezi = TZS 114,000 (si 120,000). Thibitisha na TRA (tra.go.tz).",
+    "v16_sw": "Ili nihesabu NSSF, niambie mshahara wa MWEZI ni kiasi gani — kiasi ulichotaja ni cha kipindi au kazi moja, si cha mwezi mzima. Kisha nitahesabu.",
+    "adjudication": "bi-weekly TZS 320,000. The GOLD clarifies and says so explicitly: the monthly figure 'inategemea kalenda'. Pattern D must NOT close this. v16's new copy (item 4, bb30e25) now asks the right question. Judge: v15 WRONG."
+   },
+   {
+    "id": "eval_293",
+    "class": "E",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "v15_judge_on_its_own_answer": "wrong",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Fundi analipwa TZS 1,500 kwa kipande, anatengeneza vipande 400 kwa mwezi — PAYE yake?",
+    "gold_sw": "Mshahara wa mwezi = 1,500 x 400 = TZS 600,000. Iko kwenye kundi la tatu: PAYE = TZS 20,000 + 20% ya (600,000 - 520,000) = 20,000 + 16,000 = TZS 36,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+    "v15_sw": "Kwa kipande kimoja: TZS 1,500 ÷ 100 = TZS 15. Kwa vipande 400: TZS 15 × 400 = TZS 6,000. Kwa sababu TZS 6,000 ipo ndani ya bendi ya asilimia sifuri (0%), PAYE = TZS 0. Hakuna PAYE inayolipwa kwa fundi huyu.",
+    "v16_sw": "Ili nihesabu PAYE, niambie mshahara wa MWEZI ni kiasi gani — kiasi ulichotaja ni cha kipindi au kazi moja, si cha mwezi mzima. Kisha nitahesabu.",
+    "adjudication": "rate x quantity with an explicit monthly quantity (TZS 1,500/piece x 400 pieces/month). Pattern D territory; deferred by instruction. Judge: v15 WRONG (v15 divided by 100 and answered TZS 0)."
+   },
+   {
+    "id": "eval_294",
+    "class": "B",
+    "subdomain": "sdl_compliance",
+    "answer_type": "definition",
+    "v15_judge_on_its_own_answer": "wrong",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Dereva analipwa TZS 80,000 kwa safari, anafanya safari 15 kwa mwezi — SDL inahesabuje?",
+    "gold_sw": "Mshahara wa dereva kwa mwezi ni 80,000 x 15 = TZS 1,200,000. Lakini SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi WOTE na tu kama ni 10 au zaidi. Nipe idadi ya wafanyakazi wote na mishahara yao. Thibitisha na TRA (tra.go.tz).",
+    "v15_sw": "Mshahara wa dereva huyu ni TZS 80,000 × 15 = TZS 1,200,000 kwa mwezi. SDL ni asilimia 3.5 ya jumla hiyo, sawa na TZS 42,000 kwa mwezi. Inalipwa na mwajiri pekee — si kukatwa kwa mfanyakazi. Thibitisha na TRA (tra.go.tz).",
+    "v16_sw": "Ili nihesabu SDL, niambie mshahara wa MWEZI ni kiasi gani — kiasi ulichotaja ni cha kipindi au kazi moja, si cha mwezi mzima, na idadi ya wafanyakazi wote walio kwenye orodha ya mishahara (kizingiti cha SDL ni wafanyakazi 10). Kisha nitahesabu.",
+    "adjudication": "TZS 80,000/trip x 15 trips. Pattern D would recover TZS 1,200,000, but the GOLD STILL CLARIFIES — SDL needs the whole payroll and the total headcount, neither of which is stated. D improves the copy here; it does not remove the clarification. Judge: v15 WRONG (v15 charged SDL on one driver)."
+   },
+   {
+    "id": "eval_295",
+    "class": "B",
+    "subdomain": "nssf_contributions",
+    "answer_type": "definition",
+    "v15_judge_on_its_own_answer": "undetermined",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Muuzaji analipwa kwa kamisheni, asilimia 5 ya alichouza mwezi — NSSF yake ni ngapi?",
+    "gold_sw": "Mshahara wa kamisheni hubadilika kila mwezi. NSSF ni asilimia 10 ya mshahara ghafi halisi aliopata. Nihitaji kiasi halisi cha kamisheni cha mwezi husika (TZS) ndipo nikokotoe. Thibitisha na NSSF (nssf.go.tz).",
+    "v15_sw": "NSSF ya muuzaji anayelipwa kwa kamisheni ni asilimia 10 ya mshahara wake mkubwa wa jumla, si asilimia 5 tu. Thibitisha mshahara halisi na NSSF.",
+    "v16_sw": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "adjudication": "commission-based pay ('asilimia 5 ya alichouza'). No monetary base exists in the question at all. The GOLD clarifies. Judge: v15 UNDETERMINED."
+   },
+   {
+    "id": "eval_296",
+    "class": "E",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "v15_judge_on_its_own_answer": "wrong",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Analipwa TZS 18,000 kwa siku, anafanya kazi siku 26 kwa mwezi — NSSF yake ya mwezi?",
+    "gold_sw": "Mshahara wa mwezi = 18,000 x 26 = TZS 468,000. NSSF ya mfanyakazi ni asilimia 10 = TZS 46,800 kwa mwezi. Thibitisha na NSSF (nssf.go.tz).",
+    "v15_sw": "Kwa mshahara wa TZS 18,000 kwa siku, kwa siku 26 za mwezi, jumla ya mshahara = TZS 468,000 (26 × 18,000). NSSF ya mwajiri = TZS 9,360 (asilimia 10 ya TZS 468,000). Thibitisha na NSSF.",
+    "v16_sw": "Ili nihesabu NSSF, niambie mshahara wa MWEZI ni kiasi gani — kiasi ulichotaja ni cha kipindi au kazi moja, si cha mwezi mzima. Kisha nitahesabu.",
+    "adjudication": "TZS 18,000/day x 26 days/month. Pattern D territory; deferred. Judge: v15 WRONG (v15 computed 10% of the daily rate, not the monthly)."
+   },
+   {
+    "id": "eval_319",
+    "class": "E",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "v15_judge_on_its_own_answer": "undetermined",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Kama nikizingatia kwamba wafanyakazi wangu, ambao ni 14 wanaopata kila mmoja TZS 500,000, wanastahili NSSF, je jumla ni ngapi na SDL yao pia?",
+    "gold_sw": "Jumla ya mishahara: 14 x TZS 500,000 = TZS 7,000,000. NSSF: 20% = TZS 1,400,000. SDL: wafanyakazi 14 zaidi ya 10, 3.5% ya TZS 7,000,000 = TZS 245,000. Thibitisha na NSSF/TRA.",
+    "v15_sw": "Kwa wafanyakazi 14 wanaolipwa TZS 500,000 kila mmoja, NSSF itakuwa TZS 140,000 kwa kila mmoja (20% ya mshahara). Jumla ya michango ya NSSF ni TZS 1,960,000. SDL ni asilimia 3.5 ya jumla ya mishahara, sawa na TZS 17,500 kwa kila mmoja. Thibitisha na TRA (tra.go.tz).",
+    "v16_sw": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.\n\nIli nihesabu NSSF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "adjudication": "'wafanyakazi wangu, AMBAO NI 14 wanaopata kila mmoja TZS 500,000' + two levies. Multi-levy decomposition ALREADY WORKS — v16 emits one clarification per levy. The only gap is parse_count returning None because the noun is separated from the digit by 'wangu, ambao ni'. Judge: v15 UNDETERMINED."
+   },
+   {
+    "id": "eval_323",
+    "class": "A",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "v15_judge_on_its_own_answer": "correct",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Mfanyakazi anapata TZS 760,000 na nataka PAYE yake na kama nikiongeza watu wengine 9 kufikia 10, SDL ya jumla ya mishahara ya TZS 7,600,000 itakuwa ngapi?",
+    "gold_sw": "PAYE ya TZS 760,000 (kikomo cha kundi 3) = 20,000 + 20% x (760,000-520,000) = TZS 68,000. SDL: ukifikia wafanyakazi 10, sasa inatozwa: 3.5% ya TZS 7,600,000 = TZS 266,000. Thibitisha na TRA (tra.go.tz).",
+    "v15_sw": "Kwa PAYE, tumia fomu ya TRA (tra.go.tz) kwa mwezi husika. Kwa SDL, ni 3.5% ya jumla ya mishahara ya fedha ya wafanyakazi 10, hivyo utakokotoa kwa 7,600,000 x 3.5%. Thibitisha na TRA (tra.go.tz).",
+    "v16_sw": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.\n\nIli nihesabu PAYE, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "adjudication": "PAYE on TZS 760,000 plus SDL on TZS 7,600,000 after a 9->10 headcount transition. Decomposition works; parse_count correctly DECLINES (_has_second_group sees 'kufikia 10'), and count_transition_ordinal also returns None, so the transition is not detected either. Judge calls v15 CORRECT. A GENUINE REGRESSION."
+   },
+   {
+    "id": "eval_329",
+    "class": "E",
+    "subdomain": "sdl_compliance",
+    "answer_type": "number",
+    "v15_judge_on_its_own_answer": "wrong",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Mwezi Januari nilikuwa na watu 9, Februari nikaongeza mmoja kufikia 10, mishahara ni TZS 3,000,000 kila mwezi — SDL ya Januari na Februari?",
+    "gold_sw": "Januari: watu 9 (chini ya 10) — HAKUNA SDL. Februari: watu 10 (wamefikia kizingiti) — SDL = 3.5% ya TZS 3,000,000 = TZS 105,000. Thibitisha na TRA (tra.go.tz).",
+    "v15_sw": "Kwa Januari: SDL = 3.5% × TZS 27,000,000 (jumla ya mishahara ya wafanyakazi 9 × TZS 3,000,000) = TZS 945,000. Kwa Februari: SDL = 3.5% × TZS 28,000,000 (jumla ya mishahara ya wafanyakazi 10 × TZS 3,000,000) = TZS 980,000. Jumlisha pamoja: TZS 945,000 + TZS 980,000 = TZS 1,925,000. Thibitisha na TRA (tra.go.tz).",
+    "v16_sw": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "adjudication": "multi-period with a headcount transition (Jan 9 -> Feb 10). Pattern F territory; deferred. parse_count correctly declines; count_transition_ordinal returns None here too. Judge: v15 WRONG (v15 multiplied the payroll by the headcount and answered TZS 1,925,000)."
+   },
+   {
+    "id": "eval_334",
+    "class": "E",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "v15_judge_on_its_own_answer": "wrong",
+    "v16_is_a_clarification": true,
+    "v16_states_a_wrong_number": false,
+    "carried_from_3ac522a": true,
+    "carried_from_030a5ff": true,
+    "new_this_run": false,
+    "question_sw": "Mfanyakazi ana mshahara wa msingi TZS 600,000 na posho ya usafiri TZS 150,000 na bonasi ya mara moja TZS 200,000 — PAYE ya mwezi huu?",
+    "gold_sw": "Mshahara wa jumla unaotozwa (kama posho na bonasi zinahesabika) = 600,000 + 150,000 + 200,000 = TZS 950,000 (kundi 4): PAYE = 68,000 + 25% x (950,000-760,000) = 68,000 + 47,500 = TZS 115,500. Thibitisha aina ya posho na TRA (tra.go.tz).",
+    "v15_sw": "Kwa mshahara wa msingi TZS 600,000 pekee, PAYE ni TZS 78,000. Posho za usafiri na bonasi zinazolipwa mara moja huongezwa kwenye mshahara wa msingi kabla ya kuhesabu PAYE. Thibitisha na TRA (tra.go.tz).",
+    "v16_sw": "Ili nihesabu PAYE, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+    "adjudication": "composition: base 600,000 + allowance 150,000 + one-off bonus 200,000. detect_allowance_ambiguity fires. The gold sums to 950,000 but hedges ('Thibitisha aina ya posho'). Pattern E — logged won't-do pending a locked_facts answer on allowance taxability. Judge: v15 WRONG."
+   }
+  ]
+ },
+ "verdict_on_the_12": {
+  "all_twelve_are_v16_clarifications": true,
+  "rows_where_v16_states_a_wrong_number_v15_stated_right": 0,
+  "in_two_thirds_v16_replaced_a_confidently_wrong_number_with_a_question": "judge on v15's answer: 8 wrong, 2 correct, 2 undetermined",
+  "no_class_of_regression_clause": {
+   "satisfied_outright_for_the_class_it_was_written_to_catch": true,
+   "evidence": "zero rows where v16 is wrong and v15 was right; and byte-zero divergence on the entire fact path.",
+   "residual_narrower_class_NOT_clean": [
+    "eval_280",
+    "eval_323"
+   ],
+   "residual_description": "a judge-confirmed CORRECT v15 answer became a v16 clarification. Both are headcount-extraction gaps with a named fix; both close with the headcount-extraction item."
+  }
+ },
+ "CALL_2_judge_comparison_like_for_like": {
+  "T1_reported_build_confirmation_report": {
+   "v15": "267/360 = 74.2",
+   "v16": "291/362 = 80.4",
+   "delta_pts": 6.2
+  },
+  "T2_common_denominator_decisive_in_BOTH_arms": {
+   "n": 349,
+   "v15": "266/349 = 76.2",
+   "v16": "279/349 = 79.9",
+   "delta_pts": 3.7,
+   "note": "strictest like-for-like"
+  },
+  "T3_every_clarification_FAIL_undetermined_excluded": {
+   "v15": "267/361 = 74.0",
+   "v16": "291/373 = 78.0",
+   "delta_pts": 4.0
+  },
+  "T4_hard_floor_clarifications_AND_undetermined_FAIL_denom_384": {
+   "v15": "267/384 = 69.5",
+   "v16": "291/384 = 75.8",
+   "delta_pts": 6.3
+  },
+  "HONEST_RANGE": "+3.7 to +6.2 pts; strictest like-for-like +3.7. NO accounting flips the sign, including the one that counts all 30 v16 clarifications as failures. Do not quote +6.2 flat.",
+  "exclusion_asymmetry_precisely": {
+   "v16_clarifications": 30,
+   "inside_the_reliable_set_already_scored_FAIL_in_the_denominator": 19,
+   "excluded_outright": 11,
+   "v15_excluded_outright": 1,
+   "real_exclusion_gap_rows": 10,
+   "was_at_030a5ff": 14,
+   "undetermined": {
+    "v15": 23,
+    "v16": 11
+   }
+  },
+  "symmetric_honesty_on_the_gains": {
+   "n_gains": 17,
+   "gains_the_judge_calls_wrong": [
+    "eval_321"
+   ],
+   "note": "1 of 17, against 5 of 19 at 030a5ff — and four of those five were two-arm fact-path credits that no longer exist."
+  }
+ },
+ "CALL_3_new_vs_carried": {
+  "new_this_run": [],
+  "carried_from_030a5ff": [
+   "eval_271",
+   "eval_280",
+   "eval_281",
+   "eval_291",
+   "eval_293",
+   "eval_294",
+   "eval_295",
+   "eval_296",
+   "eval_319",
+   "eval_323",
+   "eval_329",
+   "eval_334"
+  ],
+  "carried_from_3ac522a": [
+   "eval_271",
+   "eval_280",
+   "eval_281",
+   "eval_291",
+   "eval_293",
+   "eval_294",
+   "eval_295",
+   "eval_296",
+   "eval_319",
+   "eval_323",
+   "eval_329",
+   "eval_334"
+  ],
+  "closed_since_030a5ff": [
+   "eval_127",
+   "eval_208",
+   "eval_368",
+   "eval_378",
+   "eval_393"
+  ],
+  "closed_how": {
+   "eval_368": "78b672c — employment type is a group split only when BOTH sides are named",
+   "eval_378": "bb30e25 — state TZS 0 on a sub-threshold SDL applicability rejection",
+   "eval_393": "bb30e25 — agree with a negated premise instead of leading 'Hapana.'",
+   "eval_127": "d0e7390 — the retrieval arm swap (single-arm answers this correctly)",
+   "eval_208": "d0e7390 — the retrieval arm swap"
+  },
+  "all_five_closed_rows_are_now_judge_correct": true,
+  "gains_delta": {
+   "new": [
+    "eval_247",
+    "eval_371",
+    "eval_372",
+    "eval_379"
+   ],
+   "lost": [
+    "eval_008",
+    "eval_019",
+    "eval_034",
+    "eval_186",
+    "eval_187",
+    "eval_331"
+   ]
+  }
+ },
+ "CALL_4_two_arm_retriever_final_confirmation": {
+  "judged_part3": {
+   "two_arm": "70/89 = 78.7",
+   "single_arm": "67/85 = 78.8",
+   "delta_pts": -0.17,
+   "judge_two_arm_only_wins": 4,
+   "judge_single_arm_only_wins": 11
+  },
+  "per_row_on_the_8_regex_flipped_rows": {
+   "eval_008": {
+    "regex_single_arm_pass": false,
+    "regex_two_arm_pass": true,
+    "judge_single_arm": "wrong",
+    "judge_two_arm": "wrong"
+   },
+   "eval_019": {
+    "regex_single_arm_pass": false,
+    "regex_two_arm_pass": true,
+    "judge_single_arm": "wrong",
+    "judge_two_arm": "correct"
+   },
+   "eval_034": {
+    "regex_single_arm_pass": false,
+    "regex_two_arm_pass": true,
+    "judge_single_arm": "wrong",
+    "judge_two_arm": "wrong"
+   },
+   "eval_186": {
+    "regex_single_arm_pass": false,
+    "regex_two_arm_pass": true,
+    "judge_single_arm": "wrong",
+    "judge_two_arm": "wrong"
+   },
+   "eval_187": {
+    "regex_single_arm_pass": false,
+    "regex_two_arm_pass": true,
+    "judge_single_arm": "undetermined",
+    "judge_two_arm": "correct"
+   },
+   "eval_331": {
+    "regex_single_arm_pass": false,
+    "regex_two_arm_pass": true,
+    "judge_single_arm": "correct",
+    "judge_two_arm": "wrong"
+   },
+   "eval_127": {
+    "regex_single_arm_pass": true,
+    "regex_two_arm_pass": false,
+    "judge_single_arm": "correct",
+    "judge_two_arm": "wrong"
+   },
+   "eval_208": {
+    "regex_single_arm_pass": true,
+    "regex_two_arm_pass": false,
+    "judge_single_arm": "correct",
+    "judge_two_arm": "wrong"
+   }
+  },
+  "the_regex_minus_4_is_phantom": {
+   "phantom_losses_judge_WRONG_under_both_arms": [
+    "eval_008",
+    "eval_034",
+    "eval_186"
+   ],
+   "INVERTED_regex_scored_it_backwards": [
+    "eval_331"
+   ],
+   "real_loss": [
+    "eval_019"
+   ],
+   "possible_loss_undetermined_to_correct": [
+    "eval_187"
+   ],
+   "real_wins_judge_confirmed": [
+    "eval_127",
+    "eval_208"
+   ]
+  },
+  "final_call": "SETTLED. Three independent instruments now agree the two-arm retriever is not better: judged part 3 (-0.17, 4 wins vs 11), the per-row judge on the 8 flipped rows, and the byte-identity finding (single-arm makes v16 a pass-through on the fact path). The regex scorer has now pointed the wrong way three times on the same question set. The raw +1.3 is, if anything, an UNDERSTATEMENT of v16's true delta."
+ },
+ "CALL_5_the_25_clarifications_adjudicated": {
+  "method": "D/F reach was MEASURED against the live extraction layer (scratchpad/dfreach.py: parse_amounts, parse_count, sole_headcount, parse_payroll_groups, parse_individual_salaries, detect_period, has_multiple_groups, count_transition_ordinal, all_explicit_levies) — not estimated from the question text by eye.",
+  "compute_routed_denominator": 102,
+  "buckets": {
+   "gold_itself_clarifies_CORRECT_BEHAVIOUR": {
+    "n": 15,
+    "ids": [
+     "eval_264",
+     "eval_267",
+     "eval_270",
+     "eval_271",
+     "eval_272",
+     "eval_273",
+     "eval_275",
+     "eval_276",
+     "eval_277",
+     "eval_291",
+     "eval_292",
+     "eval_294",
+     "eval_295",
+     "eval_299",
+     "eval_305"
+    ]
+   },
+   "pattern_D_closes": {
+    "n": 2,
+    "ids": [
+     "eval_293",
+     "eval_296"
+    ]
+   },
+   "headcount_extraction_closes_NEW_ITEM": {
+    "n": 3,
+    "ids": [
+     "eval_280",
+     "eval_319",
+     "eval_320"
+    ]
+   },
+   "pattern_F_closes": {
+    "n": 2,
+    "ids": [
+     "eval_323",
+     "eval_329"
+    ]
+   },
+   "neither_D_nor_F": {
+    "n": 3,
+    "ids": [
+     "eval_281",
+     "eval_326",
+     "eval_334"
+    ]
+   }
+  },
+  "per_row": {
+   "eval_264": {
+    "bucket": "gold_clarifies",
+    "note": "receipt COUNT (780) is not a payroll base at all; gold says so. v16 clarifies correctly but ASKS THE WRONG THING (headcount) — copy defect.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_267": {
+    "bucket": "gold_clarifies",
+    "note": "day count (26) is not a salary; gold asks for the monthly salary; v16 asks exactly that.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_270": {
+    "bucket": "gold_clarifies",
+    "note": "shift count (3/day) is not a salary; gold wants BOTH headcount and salary. v16 asks only for salary — copy incomplete.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_271": {
+    "bucket": "gold_clarifies",
+    "note": "foreign currency USD 500; gold instructs conversion first.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_272": {
+    "bucket": "gold_clarifies",
+    "note": "foreign currency EUR 400; gold instructs conversion first.",
+    "judge_on_v15s_answer": "correct"
+   },
+   "eval_273": {
+    "bucket": "gold_clarifies",
+    "note": "foreign currency KES 45,000; gold instructs conversion first.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_275": {
+    "bucket": "gold_clarifies",
+    "note": "foreign currency USD 300 x 12 staff. Gold asks for the FX rate. v16 asks 'per person or total, plus headcount' — BOTH ARE STATED. Wrong question.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_276": {
+    "bucket": "gold_clarifies",
+    "note": "foreign currency USD 1,200; PAYE bands are TZS-denominated.",
+    "judge_on_v15s_answer": "undetermined"
+   },
+   "eval_277": {
+    "bucket": "gold_clarifies",
+    "note": "headcount genuinely absent; SDL is conditional on >=10 staff. Gold asks for it.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_280": {
+    "bucket": "headcount_extraction",
+    "note": "both inputs stated; parse_count misses '18 wenye'. Judge: v15 CORRECT.",
+    "judge_on_v15s_answer": "correct"
+   },
+   "eval_281": {
+    "bucket": "neither",
+    "note": "approximation veto miscalibrated on 'hivi'; amount parses fine.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_291": {
+    "bucket": "gold_clarifies",
+    "note": "bi-weekly; gold says the monthly figure is calendar-dependent.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_292": {
+    "bucket": "gold_clarifies",
+    "note": "TZS 25,000/shift, 3 shifts/DAY — days-per-month never stated, so no monthly quantity exists. Pattern D cannot close this.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_293": {
+    "bucket": "pattern_D",
+    "note": "TZS 1,500/piece x 400 pieces/MONTH — both operands and an explicit monthly quantity.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_294": {
+    "bucket": "gold_clarifies",
+    "note": "D recovers TZS 1,200,000 but SDL still needs the whole payroll and headcount; gold clarifies.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_295": {
+    "bucket": "gold_clarifies",
+    "note": "commission %; no monetary base in the question.",
+    "judge_on_v15s_answer": "undetermined"
+   },
+   "eval_296": {
+    "bucket": "pattern_D",
+    "note": "TZS 18,000/day x 26 days/MONTH — both operands and an explicit monthly quantity.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_299": {
+    "bucket": "gold_clarifies",
+    "note": "refers to a prior turn that does not exist; detect_missing_antecedent already True.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_305": {
+    "bucket": "gold_clarifies",
+    "note": "gold's substance is that 3.5% is not a per-person rate; v16 asks for headcount without saying that — copy incomplete.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_319": {
+    "bucket": "headcount_extraction",
+    "note": "'wafanyakazi wangu, ambao ni 14' — decomposition already works, parse_count does not.",
+    "judge_on_v15s_answer": "undetermined"
+   },
+   "eval_320": {
+    "bucket": "headcount_extraction",
+    "note": "'mfanyakazi MMOJA' — mmoja is in _WA_SPELLED but not _SPELLED_COUNT. Four levies already decompose correctly.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_323": {
+    "bucket": "pattern_F",
+    "note": "PAYE + SDL across a 9->10 transition; needs per-sub-question amount anchoring AND count_transition_ordinal, which returns None. Judge: v15 CORRECT.",
+    "judge_on_v15s_answer": "correct"
+   },
+   "eval_326": {
+    "bucket": "neither",
+    "note": "resident vs non-resident, two individuals; parse_individual_salaries returns None (no 'mmoja'/'wa kwanza' anchor). Needs the residency split (D-RESIDENCY-1).",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_329": {
+    "bucket": "pattern_F",
+    "note": "multi-period Jan/Feb across a 9->10 transition; count_transition_ordinal returns None.",
+    "judge_on_v15s_answer": "wrong"
+   },
+   "eval_334": {
+    "bucket": "neither",
+    "note": "base + allowance + one-off bonus; pattern E, deferred pending a locked_facts answer on allowance taxability.",
+    "judge_on_v15s_answer": "wrong"
+   }
+  },
+  "THE_MEASUREMENT_CHANGED_THE_PICTURE": {
+   "assumption_before": "pattern F would close the multi-part rows (319/320/323/326/329).",
+   "what_the_measurement_showed": "multi-levy decomposition ALREADY WORKS — eval_319 emits 2 clarifications, eval_320 emits 4, eval_323 emits 2, one per levy. What blocks those rows is that parse_count returns None on six rows where a headcount is written in plain Swahili. The binding constraint is HEADCOUNT EXTRACTION, not the D/F splitting patterns.",
+   "this_is_a_new_work_item_discovered_by_measuring_rather_than_assuming": true
+  },
+  "achievable_rate_measured_not_estimated": {
+   "today": "25/102 = 24.5%",
+   "after_D": "23/102 = 22.5%",
+   "after_D_and_F": "21/102 = 20.6%",
+   "after_D_F_and_headcount_extraction": "18/102 = 17.6%",
+   "after_everything_including_the_three_deferred": "15/102 = 14.7%",
+   "THE_FLOOR": "15/102 = 14.7% — 15 of these questions CANNOT be answered without guessing, because the gold answer is itself a clarification."
+  },
+  "why_the_old_15_percent_target_was_wrong": {
+   "target_as_set": "<=15% of all compute-routed clarifications",
+   "measured_floor": "14.7%",
+   "consequence": "the target sat 0.3 pts above the floor and was reachable only after closing EVERY defect including two already logged deferred/won't-do. It was a floor with a rounding error on top, not a product target with headroom. D and F together land at 20.6% — nowhere near it.",
+   "founder_decision_2026_08_08": "target replaced (see the defective_clarification_rate block). The founder recorded that setting 15% without knowing the floor was the error."
+  },
+  "copy_quality_defects_independent_of_the_rate": {
+   "ids": [
+    "eval_264",
+    "eval_270",
+    "eval_275",
+    "eval_305"
+   ],
+   "description": "these four clarify CORRECTLY but ask the WRONG QUESTION. eval_264 asks for a headcount when receipt counts are not a payroll base at all; eval_275 asks 'per person or total, plus headcount' when both are stated and the real gap is the FX rate; eval_305 omits that 3.5% is not a per-person rate; eval_270 asks only for salary when the gold wants headcount too. Approved as a separate cheap fix."
+  }
+ },
+ "defective_clarification_rate": {
+  "replaces": "the all-clarification rate (<=15%), retired 2026-08-08",
+  "definition": "clarifications where the GOLD answers rather than clarifies, as a share of compute-routed scored questions.",
+  "today": "10/102 = 9.8%",
+  "ids_today": [
+   "eval_280",
+   "eval_281",
+   "eval_293",
+   "eval_296",
+   "eval_319",
+   "eval_320",
+   "eval_323",
+   "eval_326",
+   "eval_329",
+   "eval_334"
+  ],
+  "target": 0.05,
+  "after_D_F_and_headcount_extraction": "3/102 = 2.9% (eval_281, eval_326, eval_334)",
+  "why_this_metric": "it measures product breakage rather than never-guess behaviour, and unlike the all-clarification rate it can reach zero without pushing the model into guessing. The all-clarification rate cannot go below 14.7% without violating R8.",
+  "tracked": "every future paired run"
+ },
+ "CALL_1_wiring": {
+  "recommendation": "WIRE v16 — approved in principle by the founder on 2026-08-08, GATED ON THE DEFECTIVE CLARIFICATION RATE, not the retired all-clarification rate.",
+  "sequence_set_by_the_founder": [
+   "1. headcount extraction (investigate and propose first; do not implement blind)",
+   "2. re-measure with a paired run",
+   "3. then wire"
+  ],
+  "founder_reasoning": "headcount extraction is the cheapest remaining item, it unblocks 3 rows on its own including BOTH genuine regressions (eval_280, eval_323), and it moves the defective rate from 9.8% toward the 5% target. Wiring with the residual class closed beats wiring and then fixing it.",
+  "for": [
+   "ADR bar passes on the SHIPPED configuration: raw +1.3, reliable +0.8",
+   "281/282 fact-path rows byte-identical to v15 — wiring cannot regress the fact path",
+   "zero rows where v16 gives a wrong number that v15 gave right",
+   "compute path +4.9 raw / +5.0 reliable",
+   "judge +3.7 to +6.2, sign-stable under all four accountings",
+   "across all 25 clarifications the judge calls v15's replaced answer WRONG 19 times and CORRECT 3 times (eval_272, eval_280, eval_323) — a 6:1 trade in v16's favour, and asking rather than guessing is R8"
+  ],
+  "against": [
+   "all-clarification rate 24.5% (metric now retired as unreachable by construction)",
+   "defective clarification rate 9.8% against the new <=5% target",
+   "3 rows where a judge-correct answer became a question"
+  ],
+  "held_until_after_headcount_extraction": [
+   "pattern D (+2)",
+   "pattern F (+2)"
+  ]
+ },
+ "cycle_status": {
+  "D_and_F": "HELD until headcount extraction ships and is re-measured",
+  "next_item": "headcount extraction — investigate and propose, do not implement",
+  "also_approved": "copy fix for eval_264/270/275/305, separate commit"
+ }
+}
