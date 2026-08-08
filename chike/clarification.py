@@ -38,6 +38,12 @@ _PER_UNIT_PAY = re.compile(
     r"kwa\s+(?:siku|wiki|saa|safari|kipande|zamu|mzigo|mteja|kazi\s+moja)\b|"
     r"kila\s+(?:siku|wiki|saa|safari|zamu)\b|bi-?weekly|part-?time\s+kwa\s+saa")
 
+# The question asks about the WHOLE payroll ("NSSF ya JUMLA", "SDL ya WOTE"), not one
+# person's. Used only to pick the wording of the question asked back — see the eval_270
+# note on the 'needs days/weeks' branch. Kept identical in spirit to extraction._AGGREGATE;
+# it is a copy signal here, never an extraction decision.
+_AGGREGATE_ASK = re.compile(r"\bjumla\b|\byote\b|\bwote\b|kwa\s+pamoja")
+
 
 def applicability_clarification(computation_type):
     """Clarification for an applicability-only question that still lacks the one field its
@@ -71,6 +77,16 @@ def compute_clarification(computation_type, reasons, question=""):
         return (f"Ili nihesabu {levy}, thibitisha kama kiasi ulichotaja ni mshahara ghafi "
                 "(kabla ya makato) au wa mkononi (baada ya makato).")
     if "needs days" in blob or "needs weeks" in blob:
+        # eval_270 ("Tunaendesha zamu 3 kwa siku kiwandani, NSSF ya JUMLA kwa zamu hizo ni
+        # ngapi?") asks about a whole factory's payroll, and was answered with a question
+        # about one worker's month — the gold asks for the headcount AND their pay. A shift
+        # COUNT is not a payroll, so the input actually needed is the total monthly payroll
+        # across every worker. Copy only: the verdict (decline to compute) is unchanged, and
+        # a false positive costs a differently worded clarification, never a wrong number.
+        if question and _AGGREGATE_ASK.search(question.lower()):
+            return (f"Ili nihesabu {levy}, niambie JUMLA ya mishahara ya wafanyakazi wote kwa "
+                    "mwezi — idadi ya zamu au siku peke yake hainitoshi. Kama unalipa kwa siku "
+                    "au kwa zamu, nipe idadi ya wafanyakazi na kiasi wanacholipwa kwa mwezi.")
         return (f"Ili nihesabu {levy}, niambie mshahara wa mwezi ni kiasi gani (au mfanyakazi "
                 "anafanya kazi siku/wiki ngapi kwa mwezi) ili nibadilishe kuwa mshahara wa mwezi.")
     # Phase D re-run, eval_291 / eval_294. A PER-UNIT rate ("TZS 320,000 kila wiki mbili",

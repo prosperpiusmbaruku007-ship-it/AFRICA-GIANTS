@@ -737,9 +737,9 @@ def detect_wrong_base(text, computation_type):
 # fire on legitimate compute questions that merely mention company assets — see the
 # ap_01..ap_05 probes in eval/accuracy_gate/applicability_adversarial_in_scope_017.jsonl.
 _OBJECT_COUNT = re.compile(
-    r"\b(mashine|magari|gari|invoice|ankara|matawi|tawi|vifaa|mitambo|mtambo|"
-    r"kompyuta|pikipiki)\s+\d+"
-    r"|\bidadi ya (mashine|magari|invoice|ankara|matawi|vifaa|mitambo)\b")
+    r"\b(mashine|magari|gari|invoice|ankara|risiti|risiti za efd|matawi|tawi|vifaa|"
+    r"mitambo|mtambo|kompyuta|pikipiki)\s+\d+"
+    r"|\bidadi ya (mashine|magari|invoice|ankara|risiti|matawi|vifaa|mitambo)\b")
 
 # A payroll figure IS on the table -> never reject the base. Found by the R17 adversarial
 # probes (ap_07..ap_10), NOT by the corpus: a wrong-base WORD can sit in a question whose
