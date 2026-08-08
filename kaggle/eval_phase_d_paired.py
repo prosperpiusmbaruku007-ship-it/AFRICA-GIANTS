@@ -16,14 +16,14 @@ index, same scorer, same judge.
 
   ARM v16 : chike.orchestrator.Orchestrator(...) — deterministic router + rules engine +
             never-guess + fidelity guard, chike.decomposition (ordinal split), and the
-            TWO-ARM numeric retriever (chike.retrieval.Retriever.retrieve).
+            SINGLE-ARM retriever. *** THE ARM CHANGED FOR THIS RUN. *** Every previous run
+            measured v16 with the TWO-ARM numeric retriever, which was DROPPED on 2026-08-08.
+            The ADR bar has to be measured on the configuration that ships, and it never has
+            been — that is the entire reason for this run.
 
-  RUN 2 PART 3 (de-confound): the v16 arm is re-run over the 90 fact-routed, second-arm-
-            eligible questions with a SINGLE-ARM retriever. Run 1's paired diff mixes routing
-            and retrieval; this isolates retrieval. After parts 1-2 showed the second arm is
-            safe (append-only, nothing lost) but not a demonstrated win (1 recovery vs 86
-            dilutions on the labelled set), this is now the DECIDING evidence on whether the
-            two-arm retriever ships at all — not merely a de-confound.
+  PART 3  : the same 90 fact-routed, second-arm-eligible questions through the DROPPED
+            two-arm variant, so the decision is re-tested at the new HEAD rather than
+            assumed. ARMS ARE SWAPPED relative to the previous two runs.
 
 WHAT IS REPORTED
   - per bucket (fact-path 190 / staged 50 / compute-type / adversarial 150), for BOTH arms:
@@ -35,19 +35,45 @@ WHAT IS REPORTED
     judge-augmented (the 3ac522a run left all 90 part-3 rows UNGRADED, so the two-arm
     ship/don't-ship call rested on the regex scorer alone until it was adjudicated by hand)
 
-RE-RUN NOTE (2026-08-07). This is the second execution of this harness. Everything is held
-identical to the 3ac522a run — same 400 questions, same adapter, same RAG index, same scorer,
-same judge config, both arms — with exactly ONE harness change: part-3 rows are now judged.
-What changed is the CODE UNDER TEST: PREREQ-1 (applicability routing + base rejection) and
-PREREQ-2 (Tiers 1-2 narrowings, pattern C fractions, pattern B group payroll).
+RUN HISTORY
+  3ac522a (2026-08-06)  v16 two-arm.   raw -6.8, reliable -3.7. Bar FAILED both limbs.
+  030a5ff (2026-08-07)  v16 two-arm.   raw +0.5, reliable +1.1. Bar PASSED both limbs, but
+                        on a configuration we then decided NOT to ship.
+  this run              v16 SINGLE-arm — the shipped configuration, measured for the first
+                        time. v15 has been byte-identical across both prior runs (400/400
+                        generations, 0 pass-flips), so it is a fixed reference and any
+                        movement below is v16's.
+
+WHAT CHANGED SINCE 030a5ff
+  * the two-arm retriever is dropped (see ARM v16 above) — the only change that can LOSE rows
+  * eval_368: employment type is a group split only when BOTH sides are named
+  * SDL below the threshold states TZS 0 instead of only 'haihusiki', and no longer asks for
+    a payroll that cannot change the answer
+  * a negated premise put for confirmation is agreed with, not denied
+  * per-unit pay ("kwa safari", "kila wiki mbili") asks for the MONTHLY figure
 
 PRE-REGISTERED EXPECTATION, recorded before the run so it cannot be retrofitted:
-    PREREQ-1 +15, Tiers 1-2 +7, C 0, B +9  ->  ~+31 raw on the 400 = +7.75 pts,
-    against the 3ac522a raw gap of -6.8 pts.
-Every one of those figures is measured on the DETERMINISTIC extraction/routing path only.
-This run measures the FULL system with model behaviour on top, and +7.75 against -6.8 is a
-thin margin — a handful of model-side losses could erase it. If it lands short, patterns D
-(+2) and F (+4) are the next increment, not a redesign.
+    deterministic gains  +7 rows  (eval_368; eval_247/371/372/378/379/393)
+    retrieval change     -4 rows  (on the 90 measured in part 3: 6 lost, 2 regained)
+    net                  +3 rows  ->  305/384 vs v15 300/384 = +1.3 pts raw
+  The 030a5ff projection (+7.75) came in at +7.3, so the method has one calibration point.
+  It is still a thin margin and model-side movement could erase it.
+
+  THE RETRIEVAL TERM IS THE UNCERTAIN ONE, IN BOTH DIRECTIONS. Its -4 is measured on the
+  regex scorer, which credited two-arm with +4.4 on this same subset TWICE on byte-identical
+  runs while the judge scored it 0.0 / -8.6. So -4 is the pessimistic reading and the judge
+  should move the other way. Separately, 100 compute-routed second-arm-eligible questions
+  are OUTSIDE part 3 and therefore outside this projection entirely.
+
+  IF RAW LANDS SLIGHTLY NEGATIVE WHILE THE JUDGE HOLDS, that is a result to bring back, not
+  a reason to reopen the retrieval decision — founder instruction, 2026-08-08: decide against
+  a real number, not a projected one. Patterns D (+2) and F (+4) are the next increment and
+  are deliberately NOT in this run: no stacking changes onto an unmeasured configuration.
+
+  Clarification rate is expected at 25/102 = 24.5% against the 15% target, i.e. ABOVE it
+  (27/102 = 26.5% at 030a5ff; eval_368 and eval_379 now answer). Verified offline against the
+  deterministic path, so a materially different figure means something else moved. Being
+  above target is known in advance and is not a reason to hold the run.
 
 HOW TO RUN (Kaggle notebook)
     import requests
@@ -249,10 +275,16 @@ class _Backend(ModelBackend):
         return _generate(prompt, params)
 
 
-orch = Orchestrator(backend=_Backend(), retriever=two_arm.retrieve,
+# ARMS SWAPPED for this run. The two-arm retriever was DROPPED on 2026-08-08 after the
+# 030a5ff adjudication (regex +4.4, judge-augmented 0.0, pure judge -8.6, and both genuine
+# non-clarification regressions in the whole 400 were two-arm artefacts). `orch` is therefore
+# the SHIPPED configuration — single-arm — because the ADR bar has to be measured on the
+# configuration that ships, and it never has been. `orch_alt` keeps the discarded two-arm
+# variant so part 3 re-tests the decision at the new HEAD rather than assuming it.
+orch = Orchestrator(backend=_Backend(), retriever=single_arm.retrieve_facts,
                     system_prompt=SYSTEM_PROMPT)
-orch_single = Orchestrator(backend=_Backend(), retriever=single_arm.retrieve_facts,
-                           system_prompt=SYSTEM_PROMPT)
+orch_alt = Orchestrator(backend=_Backend(), retriever=two_arm.retrieve,
+                        system_prompt=SYSTEM_PROMPT)
 
 # ── ARTIFACT PUBLISHING — checkpointed, verified, and loud on failure ────────────
 # A 3.5h GPU run must NOT end with only a terminal paste (project convention: results are
@@ -462,11 +494,15 @@ print(f'\nregressions by subdomain: {dict(_reg_by_sub)}')
 print(f'regressions that are v16 CLARIFICATIONS (never-guess, not wrong answers): '
       f'{sum(1 for d in reg_detail if d["v16_clarified"])}')
 
-# ── RUN 2 PART 3 — de-confound: v16 two-arm vs v16 SINGLE-arm ────────────────────
-# After parts 1-2 (append-only confirmed safe, but 1 recovery vs 86 dilutions on the labelled
-# set), this decides whether the two-arm retriever ships at all. Subset = questions where the
-# second arm can actually fire AND the answer comes from RAG: digit-bearing, strip-eligible,
-# and FACT-routed (a compute answer's number comes from the rules engine, not from facts).
+# ── PART 3 — re-test the DROPPED two-arm retriever against the shipped single arm ─
+# The decision was made on 2026-08-08 and is not being reopened; this re-tests it at the new
+# HEAD rather than assuming it carries. NOTE THE ARMS ARE SWAPPED relative to the previous
+# two runs: `res3` is now the TWO-ARM alternative and the main v16 arm is single-arm, so
+# `delta` below is still "positive = two-arm better" and is expected to be <= 0.
+# Subset = questions where the second arm can actually fire AND the answer comes from RAG:
+# digit-bearing, strip-eligible, and FACT-routed (a compute answer's number comes from the
+# rules engine, not from facts). 100 compute-routed second-arm-eligible questions are
+# therefore NOT covered here — that limitation is unchanged and still worth stating.
 from chike.retrieval import strip_numeric_amounts                    # noqa: E402
 
 part3_qs = [q for q in ALL
@@ -475,14 +511,14 @@ part3_qs = [q for q in ALL
             and not q['_compute']
             and q.get('subdomain') != 'out_of_corpus']
 print('\n' + '=' * 78)
-print(f'RUN 2 PART 3 — de-confound: v16 TWO-ARM vs v16 SINGLE-ARM on {len(part3_qs)} '
+print(f'PART 3 — SHIPPED single-arm vs the DROPPED two-arm, on {len(part3_qs)} '
       'fact-routed, second-arm-eligible questions')
 print('=' * 78)
 
 res3, t0 = [], time.time()
 for i, q in enumerate(part3_qs):
     try:
-        reply = orch_single.answer(q['question_sw'])
+        reply = orch_alt.answer(q['question_sw'])
         gen, clar = reply.text, reply.needs_clarification
     except Exception as e:                                           # noqa: BLE001
         gen, clar = f'ERROR: {e}', False
@@ -493,26 +529,27 @@ _publish('part3_done', v15_results=res15, v16_results=res16, part3_results=res3,
          buckets=bucket_table, regression_detail=reg_detail)
 
 by3 = {r['id']: r for r in res3}
-two_rows = [by16[i] for i in by3]
-p_two, n_two, a_two = _acc(two_rows)
-p_one, n_one, a_one = _acc(res3)
-pl_two, nl_two, al_two = _acc(two_rows, True)
-pl_one, nl_one, al_one = _acc(res3, True)
+# res3 is the TWO-ARM alternative this time; by16 is the shipped SINGLE arm.
+one_rows = [by16[i] for i in by3]
+p_two, n_two, a_two = _acc(res3)
+p_one, n_one, a_one = _acc(one_rows)
+pl_two, nl_two, al_two = _acc(res3, True)
+pl_one, nl_one, al_one = _acc(one_rows, True)
 identical_text = sum(1 for i in by3 if by3[i]['generated'] == by16[i]['generated'])
-two_only = [i for i in by3 if by16[i]['pass'] and not by3[i]['pass']]     # two-arm wins
-one_only = [i for i in by3 if by3[i]['pass'] and not by16[i]['pass']]     # single-arm wins
+two_only = [i for i in by3 if by3[i]['pass'] and not by16[i]['pass']]     # two-arm wins
+one_only = [i for i in by3 if by16[i]['pass'] and not by3[i]['pass']]     # single-arm wins
 
 print(f'\nanswers byte-identical despite the extra fact: {identical_text}/{len(part3_qs)}')
 print(f'raw       two-arm {p_two}/{n_two}={a_two:.1%}   single-arm {p_one}/{n_one}={a_one:.1%}   '
       f'delta {(a_two-a_one)*100:+.1f} pts (positive = two-arm better)')
 print(f'reliable  two-arm {pl_two}/{nl_two}={al_two:.1%}   single-arm {pl_one}/{nl_one}={al_one:.1%}   '
       f'delta {(al_two-al_one)*100:+.1f} pts')
-print(f'\nTWO-ARM-ONLY passes ({len(two_only)}): {two_only}')
+print(f'\nTWO-ARM-ONLY passes ({len(two_only)}) — the case FOR reopening the decision:')
 for qid in two_only:
-    print(f'  + {qid} [{by16[qid]["subdomain"]}] Q: {by16[qid]["question_sw"][:90]}')
-print(f'SINGLE-ARM-ONLY passes ({len(one_only)}): {one_only}')
+    print(f'  + {qid} [{by3[qid]["subdomain"]}] Q: {by3[qid]["question_sw"][:90]}')
+print(f'SINGLE-ARM-ONLY passes ({len(one_only)}) — the case for the SHIPPED arm:')
 for qid in one_only:
-    print(f'  - {qid} [{by3[qid]["subdomain"]}] Q: {by3[qid]["question_sw"][:90]}')
+    print(f'  - {qid} [{by16[qid]["subdomain"]}] Q: {by16[qid]["question_sw"][:90]}')
 
 # ── JUDGE OVERLAY — both arms ────────────────────────────────────────────────────
 judge_overlays = {}
@@ -567,26 +604,27 @@ if RUN_JUDGE:
     # 2 of the 6 "two-arm-only" wins survived judging. Grade the single-arm rows here and
     # restate the comparison judge-augmented, so the call rests on the same instrument as
     # the main arms.
-    judge_overlays['part3_single_arm'] = _judge_arm('part3_single_arm', res3)
+    judge_overlays['part3_two_arm_alt'] = _judge_arm('part3_two_arm_alt', res3)
 
     def _aug(rows):
         rep = chike_judge.build_confirmation_report(rows)['judge_augmented']
         return rep['pass'], rep['total'], rep['acc']
 
-    # two_rows are the SAME questions as res3 but answered by the two-arm retriever; they
-    # were graded inside the v16 overlay above, so both sides are now judge-augmented.
-    jp_two, jn_two, ja_two = _aug(two_rows)
-    jp_one, jn_one, ja_one = _aug(res3)
+    # one_rows are the SAME questions as res3 but answered by the SHIPPED single arm; they
+    # were graded inside the v16 overlay above, so both sides are judge-augmented.
+    jp_two, jn_two, ja_two = _aug(res3)
+    jp_one, jn_one, ja_one = _aug(one_rows)
     print('\n' + '=' * 78)
-    print('RUN 2 PART 3 — JUDGE-AUGMENTED (the instrument the 3ac522a run lacked)')
+    print('PART 3 — JUDGE-AUGMENTED. The denominators DIFFER whenever the arms clarify '
+          'different rows, so quote the range, never the delta alone.')
     print('=' * 78)
     print(f'  two-arm    {jp_two}/{jn_two} = {ja_two:.1%}')
     print(f'  single-arm {jp_one}/{jn_one} = {ja_one:.1%}')
     print(f'  delta {(ja_two - ja_one) * 100:+.1f} pts (positive = two-arm better)')
     j_two_only = [i for i in by3
-                  if by16[i].get('judge') == 'correct' and by3[i].get('judge') == 'wrong']
-    j_one_only = [i for i in by3
                   if by3[i].get('judge') == 'correct' and by16[i].get('judge') == 'wrong']
+    j_one_only = [i for i in by3
+                  if by16[i].get('judge') == 'correct' and by3[i].get('judge') == 'wrong']
     print(f'  judge-confirmed TWO-ARM-only wins ({len(j_two_only)}): {j_two_only}')
     print(f'  judge-confirmed SINGLE-ARM-only wins ({len(j_one_only)}): {j_one_only}')
     part3_judged = {'two_arm': {'pass': jp_two, 'total': jn_two, 'acc': ja_two},
@@ -596,6 +634,29 @@ if RUN_JUDGE:
 else:
     print('\n[judge] SKIPPED (no OPENROUTER_API_KEY or CHIKE_JUDGE=0)')
     part3_judged = None
+
+# ── CLARIFICATION RATE — the second wiring precondition ──────────────────────────
+# Set by the founder on 2026-08-08 alongside the ADR bar: at most 15% of compute-routed
+# questions may come back as a clarification. It was 27/103 = 26% at 030a5ff. This is a
+# PRODUCT metric and the gate will never surface it on its own — every extraction fix
+# converts a clarification into an answer, which the ADR bar rewards only if the answer is
+# also right, so a run can pass the bar while a quarter of numeric questions ask a question
+# back. Tracked here so that cannot happen quietly.
+CLARIFICATION_TARGET = 0.15
+_comp_rows = [r for r in res16 if r['compute'] and r['subdomain'] != 'out_of_corpus']
+_clar_n = sum(r['clarified'] for r in _comp_rows)
+_clar_rate = _clar_n / len(_comp_rows) if _comp_rows else 0.0
+clar_ok = _clar_rate <= CLARIFICATION_TARGET
+print('\n' + '=' * 78)
+print('CLARIFICATION RATE — wiring precondition, target <= 15% of compute-routed')
+print('=' * 78)
+print(f'  v16 {_clar_n}/{len(_comp_rows)} = {_clar_rate:.1%}  -> '
+      f'{"PASS" if clar_ok else "ABOVE TARGET"}   (v15 for reference: '
+      f'{sum(r["clarified"] for r in res15 if r["compute"] and r["subdomain"] != "out_of_corpus")}'
+      f'/{len(_comp_rows)})')
+print('  Not every clarification is a defect: foreign-currency and prior-context questions '
+      'SHOULD clarify.\n  Adjudicate the list before treating the gap as work to be done.')
+print(f'  clarified compute ids: {sorted(r["id"] for r in _comp_rows if r["clarified"])}')
 
 # ── VERDICT vs THE ADR BAR ───────────────────────────────────────────────────────
 raw_ok = bucket_table['ALL_400']['raw']['delta_pts'] >= 0
@@ -616,15 +677,24 @@ summary = {
     'adapter': ADAPTER, 'index_facts': EXPECTED_FACT_COUNT, 'n_questions': len(ALL),
     'v16_compute_routed': sum(q['_compute'] for q in ALL),
     'buckets': bucket_table,
+    'v16_retrieval_arm': 'single_arm (SHIPPED; two-arm dropped 2026-08-08)',
     'adr_bar': {'raw_delta_pts': bucket_table['ALL_400']['raw']['delta_pts'],
                 'reliable_delta_pts': bucket_table['ALL_400']['reliable']['delta_pts'],
                 'raw_pass': raw_ok, 'reliable_pass': rel_ok},
+    'clarification_rate': {'target': CLARIFICATION_TARGET,
+                           'v16_clarified': _clar_n, 'compute_routed': len(_comp_rows),
+                           'rate': round(_clar_rate, 4), 'pass': clar_ok,
+                           'clarified_ids': sorted(r['id'] for r in _comp_rows
+                                                   if r['clarified'])},
     'flips': {'gains': len(gains), 'regressions': len(regressions),
               'regression_ids': sorted(regressions), 'gain_ids': sorted(gains),
               'regressions_by_subdomain': dict(_reg_by_sub),
               'regressions_that_are_v16_clarifications':
                   sum(1 for d in reg_detail if d['v16_clarified'])},
     'run2_part3_deconfound': {
+        'ARMS_SWAPPED_THIS_RUN': 'part3_results is the DROPPED two-arm alternative; the main '
+                                 'v16 arm is single-arm. Delta remains positive = two-arm '
+                                 'better, and is expected to be <= 0.',
         'n': len(part3_qs),
         'answers_byte_identical': identical_text,
         'raw': {'two_arm': [p_two, n_two, round(a_two, 4)],
