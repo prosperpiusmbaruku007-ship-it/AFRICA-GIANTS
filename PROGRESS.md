@@ -177,17 +177,127 @@ the cheapest remaining item, it closes eval_280 (one of the two genuine regressi
 wiring rather than after, and it moves the defective rate toward ≤5%. **Patterns D and F are held
 until after the re-measure** — no stacking onto an unmeasured configuration.
 
-**Next:** a paired re-run at the new HEAD to measure the bar and the defective rate on the
-shipped config with C1–C4 in. Then **D and F proposed together as ONE investigation round** (the
-founder's call: they are the last known items and the whole remaining picture should be seen at
-once rather than in two more sequential rounds).
+**Next:** ~~a paired re-run~~ **BATCHED (founder, 2026-08-08).** A full paired run is ~3h of GPU
+time and C1–C4 alone lands at 6.9%, above the ≤5% target — so no run until D + F are also in.
+**One paired run at the end covering C1–C4 + D + F together**, so it measures the configuration
+that would actually be wired rather than an intermediate.
+
+## 🔬 D / F / eval_305 — ONE investigation round (2026-08-08, PROPOSAL — nothing implemented)
+
+Remaining defective set after C1–C4 = **7 rows**: eval_281, eval_293, eval_296, eval_323,
+eval_326, eval_329, eval_334.
+
+### Pattern D — per-unit rate × per-month quantity
+
+**Root cause.** eval_293 and eval_296 both reach `_amount_field` as *"multiple figures — role
+ambiguous"* on exactly two figures. The rate and the quantity are both stated; nothing infers
+that one multiplies the other. **Magnitude cannot be the discriminator** — the real rates here
+are 1,500/piece and 18,000/day, so a size rule reads 1,500 as a count (this is already recorded
+in the `_COUNT_TOKEN` note). **Structural rule:** rate = the figure before `kwa|kila <unit>`;
+quantity = the figure adjacent to `<unit> N kwa mwezi`; monthly = rate × quantity, **only when
+the quantity is explicitly per MONTH**.
+
+**Reach:** 3 corpus questions (eval_293, eval_294, eval_296) + 1 probe duplicate. 9 further rows
+match a rate but have no monthly quantity and **correctly decline** — including eval_291
+(bi-weekly, calendar-dependent, gold clarifies), eval_292 (shifts per *day*), and gp_02/os_03
+(the two-group twelve-person case).
+
+**R17 — the naive rule produces TWO confident wrong numbers; the guarded form declines both:**
+`dv_01` (two rate groups → 600,000 asserted as the payroll, the gp_02 failure mode with a
+monthly quantity bolted on) and `dv_06` (two quantities, 3 shifts/day *and* 26 days/month →
+650,000 where the truth is 1,950,000). **Guards required:** inherit `_has_second_group` /
+`has_multiple_groups`, and decline when more than one rate or more than one monthly quantity is
+present.
+
+**Design constraint that must be stated in the code:** D yields **one person's** monthly pay,
+never the payroll. It must feed `monthly_salary` / the per-person × headcount path, never
+`gross_monthly_payroll` directly — otherwise eval_294 becomes "SDL = 3.5% × 1,200,000" for a
+single driver, which the gold explicitly refuses.
+
+### Pattern F is TWO mechanisms, not one
+
+**F1 — per-levy amount anchoring (eval_323).** Multi-levy decomposition already emits one
+sub-answer per levy, but every sub-question sees all four figures. **The obvious fix is unsafe:**
+anchoring each levy to its nearest plausible amount gets eval_323 right *and breaks eval_327*,
+anchoring both WCF and SDL to 300,000 when the correct base is the 4,600,000 group payroll —
+a row that answers correctly today. A safe version must (a) gate on `parse_payroll_groups(text)
+is None` so a resolvable group construction always wins, and (b) require the amount to be a
+**payroll-label genitive inside the levy's own clause** (`SDL ya jumla ya mishahara ya TZS N`).
+**Reach: 1 row.**
+
+**F2 — multi-period split (eval_329).** Two named months, one payroll, a headcount either side
+of the threshold. `count_transition_ordinal` already supplies the post-transition count (C3).
+**Reach: 1 row** + 1 probe (ex_09). The third multi-month hit, eval_160, is a fact-path date
+range and a false positive for this shape.
+
+### eval_305 is a 5-row family, not a single row
+
+`kiwango cha <levy> ni asilimia ngapi` — **the rate does not depend on the amount.** eval_111 and
+eval_112 carry no figure and already work; eval_305, eval_314 and eval_315 carry one, and every
+gold states the rate first and *then* optionally applies it. **Defective-rate impact: 0** (see
+the borderline note below) — this is an answer-quality item, not a rate item.
+
+### Does ≤5% actually get reached?
+
+Denominator 102. **The answer depends on one borderline classification, so both readings are
+given rather than the flattering one.**
+
+| | eval_305 as *gold-clarifies* (my original call) | eval_305 as *defective* (strict reading) |
+|---|---|---|
+| today, after C1–C4 | 7/102 = **6.9%** | 8/102 = **7.8%** |
+| + D | 5/102 = **4.9%** ✅ *one-row margin* | 6/102 = **5.9%** ❌ |
+| + D + F1 | 4/102 = 3.9% | 5/102 = 4.9% ✅ |
+| + D + F1 + F2 | 3/102 = **2.9%** ✅ | 4/102 = 3.9% ✅ |
+| + eval_305 family | 3/102 = 2.9% | 3/102 = **2.9%** ✅ |
+
+**The borderline:** eval_305's gold both *answers* (3.5%) and *asks* ("Thibitisha idadi ya
+wafanyakazi"). I bucketed it as gold-clarifies; the stricter reading is defensible.
+
+**Answer: yes, ≤5% is reachable — but not by D alone under both readings.** D alone clears it
+only on the looser reading and only by a single row, so any one new defective clarification
+puts it back over. **D + F reaches 2.9%–3.9% under either reading**, with a three-to-four-row
+margin. That is the combination to build.
+
+**What remains after all of it — 3 rows, ~2.9%, and worth leaving:**
+eval_281 (the approximation veto firing on "hivi"/"kidogo" — narrowing it trades a clarification
+for a guessed figure), eval_326 (resident vs non-resident, two individuals — needs a residency
+split, D-RESIDENCY-1), eval_334 (base + allowance + one-off bonus — pattern E, blocked on a
+`locked_facts` answer about allowance taxability, which is a **regulatory** question, not a code
+one). None should be forced to close a metric.
+
+### Recommendation
+
+**Build D and F2. Build F1 only in its narrow gated form. Take the eval_305 family as a
+separate small answer-shape item.** D is the load-bearing one and the only one whose absence
+keeps the rate above target under both readings. F1 buys one row for the riskiest mechanism in
+the set and is the one to drop if anything has to be dropped — but it also closes eval_323, the
+**last remaining member of the residual regression class**, which is an argument for keeping it.
 
 ### Logged, not fixed
 
 **eval_305** — "Kiwango cha SDL ni ngapi kwa mtu mwenye mshahara wa TZS 480,000?" wants "3.5%,
 and it is not a per-person rate". That is an **answer-shape** item, not copy and not extraction.
 Filed with the applicability output-shape family and **taken with D/F**, deliberately not folded
-into C1–C4.
+into C1–C4. (The D/F round below found it is one of a **5-row family**, not a single row.)
+
+**`_SECOND_GROUP` / `kufikia` asymmetry (pre-existing, exposed by probe hc_12).**
+`_SECOND_GROUP` matches `kufikia \d+` but **not** `kufikia wafanyakazi \d+`, so
+eval_329 ("nikaongeza mmoja kufikia 10") makes `parse_count` decline while hc_12
+("nimeajiri hadi kufikia wafanyakazi 11") does not. **Benign today** — in the hc_12 shape the
+static count and `count_transition_ordinal` agree (both 11), so no consumer can be handed a
+stale count — and narrowing it further would cost clarifications on completed hires, where the
+count *is* the answer. Deferred deliberately; revisit only if a row appears where the two
+signals disagree.
+
+**Diagnostic invalidated by the swapped-argument test helper (part of the record).**
+`_deterministic(text, required, computation_type)` had its last two arguments swapped in a
+throwaway diagnostic during the **copy-fix investigation** (eval_264 / eval_270 / eval_277 /
+eval_305). That makes `required` a *string*, so the amount field is silently never computed and
+every row reports `det={}`. **That trace was garbage and should not be cited.** No conclusion
+changed: the copy fixes in `f3e0480` were built on the run's actual v16 answers and on the
+587-question sweep, not on that trace. The same bug then produced one false test failure in the
+C1–C4 round, which is how it was caught; the signature order is now called out in a comment in
+`tests/test_headcount_extraction.py`.
 
 ### Also shipped this session
 
