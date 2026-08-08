@@ -319,7 +319,18 @@ class SlotExtractor:
         amt, reason = amounts[0], "parsed amount"
         is_payroll = field == "gross_monthly_payroll"
 
-        if is_payroll and per_person and aggregate:
+        # SCOPE, not conflict (2026-08-08). "TZS 480,000 KILA MMOJA ... NSSF ya WOTE" reads as
+        # two contradictory markers only if both are taken to govern the same thing. They do
+        # not: 'kila mmoja' governs the SALARY clause, 'jumla/wote' governs the ASK. When the
+        # headcount is known there is exactly one arithmetic reading — per-person x headcount
+        # IS the aggregate the question asks for — so resolve it instead of vetoing it.
+        # eval_280 and eval_319 were both judge-confirmed CORRECT in v15 and became
+        # clarifications here; eval_275 was asked "per person or total?" when both were stated
+        # and the real gap was the FX rate (that veto sits further down and still fires).
+        # The veto stands wherever the pairing CANNOT be resolved arithmetically — no
+        # headcount, or several figures (len(amounts) > 1 has already returned above, so a
+        # missing count is the only remaining case). Probe hc_10 pins the multi-figure case.
+        if is_payroll and per_person and aggregate and count is None:
             return (None, Confidence.LOW, 'conflicting "kila" and "jumla/yote" — base ambiguous')
         if is_payroll and per_person and count is not None:
             # "kila mmoja ... X" -> X is per person, payroll = X * headcount.

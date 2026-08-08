@@ -399,6 +399,29 @@ def _has_second_group(text_l):
     return False
 
 
+# ── Headcount extraction (2026-08-08), found by MEASURING pattern F's reach ─────────────
+#
+# Pattern F was assumed to close the multi-part clarifications. It does not: multi-levy
+# decomposition already works (eval_319 emits 2 clarifications, eval_320 emits 4, one per
+# levy). What blocks those rows is parse_count returning None where a headcount is written in
+# plain Swahili. A 579-question survey found 13 such surface misses, 10 of them from ONE gap:
+# _PEOPLE_NOUN carries only the PLURAL forms plus 'kibarua'. 'mfanyakazi mmoja' — one
+# employee, the commonest small-business shape there is — was invisible.
+#
+# Both additions are appended AFTER the three established patterns and AFTER the
+# second-group / multiple-group vetoes, so they can only fire where parse_count already
+# returned None, and a stated plural headcount always wins over an incidental singular
+# (probe hc_01: "wafanyakazi 15, mfanyakazi mmoja anapata ..." must stay 15).
+_SINGULAR_PERSON = re.compile(
+    r"\b(?:mfanyakazi|mfanyikazi|mtumishi|mwajiriwa|kibarua|mtu)\s+mmoja\b")
+# A bare count governing a pay verb ("hasa ni 18 WENYE mshahara", "ambao ni 14 WANAOPATA").
+# _COUNT_TOKEN has carried this shape for parse_payroll_groups since eval_327; parse_count
+# simply never used it. The pay verb is what makes the digit a headcount rather than a loose
+# number — magnitude cannot be the discriminator (see the _COUNT_TOKEN note above).
+_COUNT_BY_PAY_VERB = re.compile(
+    r"\b(\d{1,4})\s+(?:wanapata|wanalipwa|wanaopata|wanaolipwa|wenye|wana)\b")
+
+
 def parse_count(text):
     """Best-effort employee/people count (small integer), or None.
 
@@ -424,6 +447,11 @@ def parse_count(text):
         v = _value_small(m.group(1).split())
         if v > 0:
             return int(v)
+    m = _COUNT_BY_PAY_VERB.search(text_l)
+    if m:
+        return int(m.group(1))
+    if _SINGULAR_PERSON.search(text_l):
+        return 1
     return None
 
 

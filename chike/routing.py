@@ -276,7 +276,17 @@ _APPLICABILITY_CUES = [
 # would assert a possibly-wrong verdict (eval_124: reads '9', but hiring the 10th makes SDL
 # due). Never-guess (R8): decline the deterministic shortcut here and let the amount path
 # clarify, rather than assert 'haihusiki' on a count that is actually crossing the threshold.
-_COUNT_TRANSITION = re.compile(r"mfanyakazi\s+wa\s+(\d+)")
+# A headcount that CHANGES during the period. 'mfanyakazi wa 10' (the ordinal hire) was the
+# only surface covered until 2026-08-08; 'kufikia 10' / 'nikafikia watu 12' are the same event
+# stated as a destination and appear in eval_323 / eval_329 / ex_09. Widening this MATTERS for
+# safety, not only for pattern F: parse_count's new singular and pay-verb surfaces make more
+# questions yield a static headcount, and this veto is what stops that static count being
+# treated as the whole story at the consumer (the SDL-zero branch gates on it). Narrowing a
+# parser while leaving its safety net at one surface form is how a nat_07 gets made.
+_COUNT_TRANSITION = re.compile(
+    r"mfanyakazi\s+wa\s+(\d+)"
+    r"|\b(?:kufikia|nikafikia|tukafikia|kufika)\s+"
+    r"(?:watu\s+|wafanyakazi\s+|watumishi\s+|waajiriwa\s+)?(\d+)")
 
 # Confirmation tag ("..., sivyo?") — the questioner states a premise and asks us to confirm
 # it. There are 17 across the corpora and 16 are FALSE-premise traps whose correct lead is
@@ -330,7 +340,7 @@ def count_transition_ordinal(text: str):
     still gate on ordinal >= the levy threshold — below it, the crossing settles nothing and
     the never-guess refusal stands (probe ap_15)."""
     m = _COUNT_TRANSITION.search(text.lower())
-    return int(m.group(1)) if m else None
+    return int(next(g for g in m.groups() if g)) if m else None
 
 
 def is_applicability_question(text: str) -> bool:
