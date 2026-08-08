@@ -61,8 +61,16 @@ number with a question.
 **"No class of regression" — satisfied outright** for the class the clause was written to catch
 (zero rows where v16 is wrong and v15 was right, plus byte-zero fact-path divergence). **Not
 clean** for a narrower residual class: **eval_280 and eval_323**, where a judge-confirmed *correct*
-v15 answer became a clarification. Both close with the headcount-extraction item, which is why
-that item is sequenced before wiring.
+v15 answer became a clarification.
+
+> **⚠️ CORRECTION (2026-08-08), recorded because the sequencing rationale was built on it.**
+> The wiring order was set partly on my claim that headcount extraction "unblocks 3 rows on its
+> own including both genuine regressions (eval_280, eval_323)". **Measurement disproved that.**
+> Headcount extraction closes eval_280 only in combination with the C4 scope fix, and **it does
+> not close eval_323 at all** — eval_323 needs pattern F. **The residual class therefore goes
+> from 2 rows to 1 (eval_323), not to 0.** The sequencing decision still stands on its other
+> grounds (cheapest item; moves the defective rate; closes eval_280 before wiring rather than
+> after), but the file must not carry a claim measurement disproved.
 
 ### Judge range — four treatments, sign-stable
 
@@ -140,20 +148,46 @@ Four candidate changes, prototyped in scratch and **ablated over all 579 corpus 
 corrected to the FX question), eval_280, eval_319 and eval_320 all now match gold exactly.
 C1+C2+C4 is the load-bearing combination; C3 changes 3 predicates and 0 answers.
 
-R17 step done: **10 adversarial in-scope probes** written to *contain* the risky vocabulary.
-9 pass; **hc_07 was mis-specified by me** — I asserted `parse_count` must return `None` for
-"wafanyakazi 9 na ninaajiri mfanyakazi wa 10", but it returns 9 **at baseline too**, and the
-design deliberately places the veto at the *consumer* (`count_transition_ordinal` returns 10 and
-the SDL-zero branch gates on it). **The probe gets rewritten, not the code** — same as os_08 last
-cycle. Not yet implemented: **investigate-and-propose only, per the founder.**
+**✅ SHIPPED `54b9b29`.** 587-question sweep: **13 rows change a predicate, 4 change an ANSWER, 3
+stop being clarifications, 0 regressions.** eval_280 → TZS 1,728,000; eval_319 → SDL 245,000 +
+NSSF 1,400,000; eval_320 → SDL TZS 0 + NSSF 80,000 + PAYE 78,000 + WCF 4,000; eval_275 → the FX
+question. All four match gold exactly. The other 9 rows recover a count of 1 without changing any
+answer and were each checked individually for a newly reachable defect — **none exists**:
+eval_260 is held by the wrong-base rejection, and `wcf_applies()` / `nssf_applies()` take no
+`employee_count` at all, so a recovered 1 cannot make a threshold-free levy "not applicable".
+Only SDL has a count threshold and `applicability(sdl, 1)` correctly returns not-applicable.
+
+R17: **12 adversarial in-scope probes**. **Two I mis-specified and rewrote rather than changing
+the code** — hc_07 (I asserted `parse_count` must return `None` for "wafanyakazi 9 na ninaajiri
+mfanyakazi wa 10"; it returns 9 *at baseline*, because the veto lives at the **consumer**, not
+the parser) and hc_12 (I asserted `None` for "nimeajiri hadi **kufikia** wafanyakazi 11" — a
+*completed* hire, so 11 **is** the current headcount). hc_12 exposed a pre-existing asymmetry:
+`_SECOND_GROUP` matches `kufikia \d+` but not `kufikia wafanyakazi \d+`. Benign — count and
+transition agree — and logged rather than silently relied on. A **test helper** was also wrong,
+not the code: `_deterministic(text, required, computation_type)` had its last two arguments
+swapped, which makes `required` a string and silently skips the amount field entirely.
+
+Defective clarification rate: **9.8% → 6.9%** (10/102 → 7/102). Target ≤5%.
 
 ### Sequence set by the founder (2026-08-08)
 
 **Wiring is approved in principle, gated on the DEFECTIVE clarification rate, not the retired
 one.** Order: **headcount extraction → re-measure with a paired run → then wire.** Reasons: it is
-the cheapest remaining item, it unblocks 3 rows including both genuine regressions
-(eval_280, eval_323), and it moves the defective rate toward ≤5%. **Patterns D and F are held
-until after it** — no stacking onto an unmeasured configuration.
+the cheapest remaining item, it closes eval_280 (one of the two genuine regressions) before
+wiring rather than after, and it moves the defective rate toward ≤5%. **Patterns D and F are held
+until after the re-measure** — no stacking onto an unmeasured configuration.
+
+**Next:** a paired re-run at the new HEAD to measure the bar and the defective rate on the
+shipped config with C1–C4 in. Then **D and F proposed together as ONE investigation round** (the
+founder's call: they are the last known items and the whole remaining picture should be seen at
+once rather than in two more sequential rounds).
+
+### Logged, not fixed
+
+**eval_305** — "Kiwango cha SDL ni ngapi kwa mtu mwenye mshahara wa TZS 480,000?" wants "3.5%,
+and it is not a per-person rate". That is an **answer-shape** item, not copy and not extraction.
+Filed with the applicability output-shape family and **taken with D/F**, deliberately not folded
+into C1–C4.
 
 ### Also shipped this session
 
