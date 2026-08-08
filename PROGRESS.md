@@ -11,7 +11,162 @@ eval_378 scorer-artifact flip, zero collateral). Two non-blocking follow-ups log
 (SCORER-SEMANTICS-1: credit "TZS 0"/not-applicable answers; JUDGE-NONDET: eval_397). See the
 D-FIDELITY-1 and work-item-2-round-2 entries below.
 
-## 🏁 PHASE D RE-RUN (030a5ff) — ADR BAR PASSES; four fixes shipped; single-arm re-run packaged (2026-08-08)
+## 🏁 PHASE D RUN 3 (5d0dcb7) — ADR BAR PASSES ON THE SHIPPING CONFIG; clarification metric replaced (2026-08-08)
+
+Artifacts: **`eval/results/gate_phase_d_paired_5d0dcb7.json`** (fetched from HF, **sha256-verified**
+`0385db93ba5a946b`, 1,024,998 bytes, `complete: true`, `clone_head == live_head == 5d0dcb7`)
++ **`..._findings.json`**. **Every number recomputed from raw rows, independently of the summary
+block; all recomputations matched.** This is the **first run on the configuration that would
+actually ship** — the two earlier runs measured v16 *with* the two-arm retriever, which was dropped.
+
+### Headline
+
+| | 3ac522a | 030a5ff | **5d0dcb7 (shipped config)** |
+|---|---|---|---|
+| ADR bar raw | −6.8 FAIL | +0.5 PASS | **+1.3 PASS** |
+| ADR bar reliable | −3.7 FAIL | +1.1 PASS | **+0.8 PASS** |
+| compute raw / reliable | −29.4 / −23.0 | −2.0 / +4.0 | **+4.9 / +5.0** |
+| gains / regressions | 11 / 37 | 19 / 17 | **17 / 12** |
+| judge-augmented v15 → v16 | — | 74.4 → 80.2 | **74.2 → 80.4** |
+
+### The finding the headline understated
+
+`fact_path` is not merely "flat". On the shipped configuration **v16 and v15 produce
+BYTE-IDENTICAL text on 281 of the 282 scored fact-path rows** (and 15 of 16 OOC rows). The one
+exception, eval_322, is a three-part enumeration the decomposer splits — both arms PASS, judge
+calls both correct. So **v16's entire delta lives in the 102 compute rows and the fact path has
+byte-zero regression surface**, not statistically zero. The two-arm retriever was the only thing
+that had ever perturbed it. This is the strongest available form of the ADR "no class of
+regression" answer, and it only became measurable once the arm was dropped.
+
+### Pre-registration hit exactly, including its composition
+
+Recorded in the harness docstring at `d0e7390` **before** the run: deterministic **+7**
+(eval_368; 247/371/372/378/379/393), retrieval **−4** (6 lost, 2 regained), net **+3 → 305/384 =
++1.3**. Observed: those exact ids, that exact total. v15 is **byte-identical for the third
+consecutive run**, so no sampling-noise defence exists for any v16 change.
+
+### The 12 regressions — zero new
+
+All 12 carried from 3ac522a *and* 030a5ff. Five closed since 030a5ff (eval_368 `78b672c`;
+eval_378/393 `bb30e25`; eval_127/208 the arm swap) and all five are now judge-correct.
+**All 12 are v16 clarifications — there is not one row where v16 states a wrong number that v15
+stated right.** Classing with the judge as tiebreaker on v15's own answer: **A=3** (extraction
+coverage), **B=4** (never-guess correct — the gold is itself a clarification), **E=5** (deferred
+patterns). C and D are empty: every output-shape row was closed by `bb30e25`, and the
+retrieval-caused class died with the two-arm arm. Judge on v15: **8 wrong, 2 correct, 2
+undetermined** — in two-thirds of the "regressions" v16 replaced a confidently wrong compliance
+number with a question.
+
+**"No class of regression" — satisfied outright** for the class the clause was written to catch
+(zero rows where v16 is wrong and v15 was right, plus byte-zero fact-path divergence). **Not
+clean** for a narrower residual class: **eval_280 and eval_323**, where a judge-confirmed *correct*
+v15 answer became a clarification. Both close with the headcount-extraction item, which is why
+that item is sequenced before wiring.
+
+### Judge range — four treatments, sign-stable
+
+| Treatment | v15 | v16 | Δ |
+|---|---|---|---|
+| Reported (`build_confirmation_report`) | 267/360 = 74.2% | 291/362 = 80.4% | +6.2 |
+| Common denominator, decisive in both arms (n=349) | 266/349 = 76.2% | 279/349 = 79.9% | **+3.7** |
+| Every clarification = FAIL, undetermined excluded | 267/361 = 74.0% | 291/373 = 78.0% | +4.1 |
+| Hard floor — clarifications *and* undetermined FAIL, /384 | 267/384 = 69.5% | 291/384 = 75.8% | +6.2 |
+
+**Honest range +3.7 to +6.2; strictest like-for-like +3.7. No accounting flips the sign** — do not
+quote +6.2 flat. Exclusion asymmetry measured precisely: of v16's 30 clarifications, **19 sit
+inside the reliable set and are already scored FAIL**; only 11 are excluded outright (v15: 1). The
+real gap is **10 rows, down from 14**. Undetermined fell 23 → 11. Of the 17 gains only eval_321 is
+judge-wrong (1 in 17, against 5 in 19 last run).
+
+### Two-arm retriever — settled, and the regex "loss" is largely phantom
+
+Judged part 3: two-arm 78.7% vs single-arm 78.8% (**−0.17**), with **4 two-arm-only judge wins
+against 11 single-arm-only**. Per-row on the 8 regex-flipped rows: eval_008/034/186 are
+judge-**wrong under both arms** (phantom losses); **eval_331 is judge-correct under single-arm and
+wrong under two-arm — the regex scored it backwards**; eval_019 is a real loss; eval_187
+undetermined→correct; both single-arm wins (eval_127/208) are judge-confirmed. **Three independent
+instruments now agree**, and the regex scorer has pointed the wrong way three times on the same
+question set. **The raw +1.3 is, if anything, an understatement.**
+
+### ⚠️ THE 15% CLARIFICATION TARGET WAS UNREACHABLE BY CONSTRUCTION — RETIRED, DO NOT REINSTATE
+
+The all-clarification target (≤15% of compute-routed questions), set on 2026-08-08 alongside the
+ADR bar, **has a measured floor of 15/102 = 14.7%** and is therefore not a product target with
+headroom — it is the floor with a rounding error on top. The founder set it without knowing the
+floor and retired it the same day. **Do not reinstate it.**
+
+Why 14.7% is a floor: **15 of the 25 clarifications are questions whose GOLD ANSWER IS ITSELF A
+CLARIFICATION.** Answering them at all would require guessing, which is precisely what R8 forbids:
+
+| Bucket | n | ids |
+|---|---|---|
+| **Gold itself clarifies — correct behaviour, cannot be "fixed"** | **15** | FX 271/272/273/275/276 · missing prior context 299 · non-monetary basis 264/267/270 · pay basis unresolvable 291/292/295 · headcount genuinely absent 277/294/305 |
+| Pattern **D** closes | 2 | 293, 296 |
+| **Headcount extraction** closes — a NEW item | 3 | 280, 319, 320 |
+| Pattern **F** closes | 2 | 323, 329 |
+| Neither | 3 | 281 (approximation veto), 326 (residency split), 334 (composition) |
+
+Achievable rate, **measured against the live extraction layer, not estimated**: today 24.5% ·
+after D 22.5% · **after D + F 20.6%** · after D + F + headcount extraction 17.6% · after closing
+literally every defect **14.7%**.
+
+**REPLACEMENT METRIC — DEFECTIVE CLARIFICATION RATE.** Clarifications where the **gold answers**
+rather than clarifies, as a share of compute-routed scored questions. **9.8% today (10/102),
+target ≤5%, tracked in every paired run.** It measures product breakage rather than never-guess
+behaviour, and unlike the all-clarification rate it can reach zero without violating R8.
+After D + F + headcount extraction it is 3/102 = 2.9%.
+
+### 🔎 NEW ITEM — HEADCOUNT EXTRACTION (discovered by measuring, not by assuming)
+
+**Pattern F was assumed to close the multi-part rows. Measurement showed it does not.** Multi-levy
+decomposition **already works** — eval_319 emits 2 clarifications, eval_320 emits 4, eval_323
+emits 2, one per levy. What blocks them is `parse_count` returning `None` on rows where a
+headcount is written in plain Swahili. **The binding constraint is headcount extraction, not the
+D/F splitting patterns.** A 579-question survey found **13 real surface misses**, dominated by a
+single gap: **the singular people-nouns (`mfanyakazi`, `mtu`, `mtumishi`, `mwajiriwa`) are absent
+from `_PEOPLE_NOUN`** — only `kibarua` is there.
+
+Four candidate changes, prototyped in scratch and **ablated over all 579 corpus questions**:
+
+| | change | closes alone | needs |
+|---|---|---|---|
+| **C1** | singular `mfanyakazi mmoja` → 1, appended *after* the existing patterns | eval_320 | — |
+| **C2** | digit + pay-verb (`18 wenye`, `14 wanaopata`) — already in `_COUNT_TOKEN`, absent from `parse_count` | nothing alone | C4 |
+| **C3** | `count_transition_ordinal` surfaces: `kufikia N`, `nikafikia watu N` (today only `mfanyakazi wa N`) | nothing — **preparatory for F**, and it strengthens the M4 containment C1/C2 rely on | — |
+| **C4** | per-person/aggregate **scope**: `kila mmoja` governs the SALARY, `jumla/wote` governs the ASK — not a conflict when the headcount is known and one amount was parsed | eval_275 copy | — |
+
+**All four together: 4 answers change across 579 questions, 0 regressions** — eval_275 (copy
+corrected to the FX question), eval_280, eval_319 and eval_320 all now match gold exactly.
+C1+C2+C4 is the load-bearing combination; C3 changes 3 predicates and 0 answers.
+
+R17 step done: **10 adversarial in-scope probes** written to *contain* the risky vocabulary.
+9 pass; **hc_07 was mis-specified by me** — I asserted `parse_count` must return `None` for
+"wafanyakazi 9 na ninaajiri mfanyakazi wa 10", but it returns 9 **at baseline too**, and the
+design deliberately places the veto at the *consumer* (`count_transition_ordinal` returns 10 and
+the SDL-zero branch gates on it). **The probe gets rewritten, not the code** — same as os_08 last
+cycle. Not yet implemented: **investigate-and-propose only, per the founder.**
+
+### Sequence set by the founder (2026-08-08)
+
+**Wiring is approved in principle, gated on the DEFECTIVE clarification rate, not the retired
+one.** Order: **headcount extraction → re-measure with a paired run → then wire.** Reasons: it is
+the cheapest remaining item, it unblocks 3 rows including both genuine regressions
+(eval_280, eval_323), and it moves the defective rate toward ≤5%. **Patterns D and F are held
+until after it** — no stacking onto an unmeasured configuration.
+
+### Also shipped this session
+
+`f3e0480` — two of the four wrong-question clarifications: eval_264 (a **receipt count** is not a
+payroll base; `risiti` was missing from `_OBJECT_COUNT` beside invoice/ankara) and eval_270 (an
+**aggregate** ask answered with a question about one worker's month). 579-sweep: **exactly 2 rows
+changed, zero collateral**; 491 tests pass. eval_275 and eval_305 deliberately **not** fixed there —
+275 is a symptom the C4 change removes at source, and 305 needs a **rate**-question answer shape,
+which is logged rather than smuggled into a copy commit.
+
+---
+
+## PHASE D RE-RUN (030a5ff) — ADR BAR PASSES; four fixes shipped; single-arm re-run packaged (2026-08-08)
 
 Artifacts: **`eval/results/gate_phase_d_paired_030a5ff.json`** (fetched from HF and
 **sha256-verified** `003ff4f7fa3b4081`, `complete: true`, `clone_head == live_head == 030a5ff`)
