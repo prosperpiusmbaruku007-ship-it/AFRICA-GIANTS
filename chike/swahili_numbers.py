@@ -427,6 +427,48 @@ def parse_count(text):
     return None
 
 
+# An explicitly stated headcount of ZERO ("sina wafanyakazi kabisa", "nafanya kazi peke
+# yangu"). parse_count cannot express this — it looks for a digit or a spelled numeral and
+# there is neither — so eval_376 fell through to a clarification asking for a payroll that
+# cannot change the answer. Requires an explicit negation or a solo-trader phrase, never the
+# mere ABSENCE of a count, so a question that simply omits the headcount still clarifies.
+_NO_EMPLOYEES = re.compile(
+    rf"\b(?:sina|hakuna|hatuna|sio?\s+na)\s+(?:{_PEOPLE_NOUN})|"
+    r"\b(?:peke\s+yangu|mimi\s+pekee|mwenyewe\s+pekee)\b|"
+    rf"\b(?:{_PEOPLE_NOUN})\s+(?:sifuri|hakuna)\b")
+
+
+def states_no_employees(text):
+    """True when the question explicitly states there are NO employees (a headcount of 0)."""
+    return bool(_NO_EMPLOYEES.search(text.lower()))
+
+
+# A count is only the WHOLE headcount when it is the only one in the sentence. parse_count
+# returns the first match and _SECOND_GROUP only catches a SPELLED second count, so
+# "vibarua 8 wanalipwa ... na 4 wanalipwa ..." (gp_02) yields 8 for a 12-person employer.
+# That was harmless while nothing asserted on a sub-threshold count; the SDL-zero branch made
+# it reachable and it immediately produced "SDL ni TZS 0" for an employer over the threshold —
+# the eval_327 class again, caught by the 569-question sweep rather than by a probe.
+_ANY_HEADCOUNT = None                       # built lazily; _PEOPLE_NOUN is defined above
+
+
+def sole_headcount(text):
+    """parse_count's value, but ONLY when the sentence states exactly one people-count.
+
+    Returns None when a second count is present, whatever form it takes — the safe direction,
+    since a partial headcount asserted as the whole is a confident wrong answer."""
+    global _ANY_HEADCOUNT
+    if _ANY_HEADCOUNT is None:
+        _ANY_HEADCOUNT = re.compile(
+            rf"(?:{_PEOPLE_NOUN})\s+(\d{{1,4}})|\b(\d{{1,4}})\s+(?:{_PEOPLE_NOUN})|"
+            rf"\b(\d{{1,4}})\s+wana(?:lipwa|pata)\b")
+    count = parse_count(text)
+    if count is None:
+        return None
+    hits = {int(next(g for g in m if g)) for m in _ANY_HEADCOUNT.findall(text.lower())}
+    return count if len(hits) <= 1 else None
+
+
 # ============================ AMBIGUITY DETECTORS ============================
 # Each returns True when the named ambiguity is present. These are the EXPLICIT,
 # inspectable clarification triggers — the never-guess guardrail. A True from any

@@ -17,17 +17,14 @@ def compute_sdl(gross_monthly_payroll, employee_count: int) -> ComputationResult
     inputs = {"gross_monthly_payroll": gross, "employee_count": employee_count}
 
     if employee_count < SDL_MIN_EMPLOYEES:
+        below = sdl_zero_below_threshold(employee_count)
         return ComputationResult(
             computation="sdl",
             applicable=False,
-            amount=None,
-            working=(
-                f"SDL haihusiki: una wafanyakazi {employee_count} "
-                f"(chini ya {SDL_MIN_EMPLOYEES}). SDL inahusu waajiri wenye "
-                f"wafanyakazi {SDL_MIN_EMPLOYEES} au zaidi."
-            ),
+            amount=below.amount,
+            working=below.working,
             inputs=inputs,
-            note="below SDL 10-employee threshold",
+            note=below.note,
         )
 
     amount = to_shillings(gross * SDL_RATE)
@@ -37,6 +34,38 @@ def compute_sdl(gross_monthly_payroll, employee_count: int) -> ComputationResult
         amount=amount,
         working=f"SDL = 3.5% × {tzs(gross)} = {tzs(amount)}",
         inputs=inputs,
+    )
+
+
+def sdl_zero_below_threshold(employee_count: int) -> ComputationResult:
+    """The AMOUNT answer below the threshold: TZS 0, and the payroll is not needed to say so.
+
+    Phase D re-run (030a5ff) finding. eval_378 asks "wafanyakazi 8 wenye jumla ya mishahara
+    TZS 5,000,000 — SDL inayolipwa ni NGAPI?" and the reply was "SDL haihusiki: una wafanyakazi
+    8 (chini ya 10)" — substantively correct, judge-confirmed correct, and scored FAIL because
+    a question asking HOW MUCH was never given a figure. eval_376 ("sina wafanyakazi kabisa")
+    and eval_379 ("wafanyakazi 6 tu") asked the same thing and got a clarification requesting
+    a payroll that cannot change the answer.
+
+    Below the threshold the obligation is nil whatever the payroll is, so this states the
+    figure. That is not a new regulatory fact — it is SDL_MIN_EMPLOYEES, already locked.
+    """
+    if employee_count >= SDL_MIN_EMPLOYEES:
+        raise ValueError(
+            f"sdl_zero_below_threshold: {employee_count} is at or above the "
+            f"{SDL_MIN_EMPLOYEES}-employee threshold — SDL is owed, so this is not the "
+            "zero answer")
+    return ComputationResult(
+        computation="sdl",
+        applicable=False,
+        amount=Decimal(0),
+        working=(
+            f"SDL inayolipwa ni TZS 0. Una wafanyakazi {employee_count} "
+            f"(chini ya {SDL_MIN_EMPLOYEES}); SDL inahusu waajiri wenye wafanyakazi "
+            f"{SDL_MIN_EMPLOYEES} au zaidi, hivyo jumla ya mishahara haibadilishi jibu."
+        ),
+        inputs={"employee_count": employee_count},
+        note="below SDL 10-employee threshold — amount is nil",
     )
 
 

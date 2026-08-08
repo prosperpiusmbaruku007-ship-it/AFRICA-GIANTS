@@ -120,16 +120,22 @@ def test_all_ten_benign_breakdowns_are_not_contradictions():
 
 def test_orchestrator_blanks_contradictory_body_and_renders_working_only():
     # SDL amount asked for 8 employees / TZS 5,000,000 -> engine says NOT APPLICABLE.
-    extraction = ('{"gross_monthly_payroll": {"value": 5000000, "confidence": "high"}, '
-                  '"employee_count": {"value": 8, "confidence": "high"}}')
+    # ONE scripted reply, not two: since the Phase D re-run cycle this question takes the
+    # SDL-zero branch, which sits BEFORE slot extraction because a sub-threshold headcount
+    # settles the amount without the payroll. So the extraction model call no longer happens
+    # here — one fewer call, and the deterministic headcount (sole_headcount) is the only
+    # input the branch reads.
     wrong_body = "Kwa hesabu sahihi: SDL = TZS 5,000,000 × 3.5% = TZS 175,000."
-    fake = FakeBackend(replies=[extraction, wrong_body])
+    fake = FakeBackend(replies=[wrong_body])
     orch = Orchestrator(backend=fake)
 
     reply = orch.answer("Kampuni ina wafanyakazi 8 wenye mishahara TZS 5,000,000 — SDL inayolipwa ni ngapi?")
 
     assert "175,000" not in reply.text                 # the wrong figure is gone
-    assert "haihusiki" in reply.text                    # authoritative working is what's shown
+    # Authoritative working is what's shown. This question now takes the SDL-zero branch
+    # added in the Phase D re-run cycle, which keeps the model in the loop — so this also
+    # pins that the fidelity guard still blanks a contradictory body on that path.
+    assert "TZS 0" in reply.text and "chini ya 10" in reply.text
     assert reply.sub_answers[0].raw_text == wrong_body  # raw generation preserved for offline rescore
 
 

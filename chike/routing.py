@@ -278,6 +278,32 @@ _APPLICABILITY_CUES = [
 # clarify, rather than assert 'haihusiki' on a count that is actually crossing the threshold.
 _COUNT_TRANSITION = re.compile(r"mfanyakazi\s+wa\s+(\d+)")
 
+# Confirmation tag ("..., sivyo?") — the questioner states a premise and asks us to confirm
+# it. There are 17 across the corpora and 16 are FALSE-premise traps whose correct lead is
+# "Hapana."; only a premise that is both NEGATED and TRUE is agreed with. See
+# rules_engine.results.agree_with_negated_premise for the eval_393 history.
+_CONFIRMATION_TAG = re.compile(
+    r"[,–—-]\s*(?:sivyo|si\s+ndivyo|siyo|sio\s+hivyo)\s*\??\s*$", re.IGNORECASE)
+# Swahili negative concord in the premise clause: hai-/hawa-/ha- verb prefixes, 'si',
+# 'hakuna'. Deliberately NOT matching bare 'si' inside a word (hivyo, sisi, kisicho...).
+_NEGATED_PREMISE = re.compile(
+    r"\bha(?:i|wa|tu|u|ki|ya|zi|li)?[a-z]*(?:takiwi|paswi|husiki|na\b|kuna\b)|"
+    r"\bsi\s+lazima\b|\bsi\s+sharti\b|\bhakuna\b", re.IGNORECASE)
+
+
+def confirms_negated_premise(text: str) -> bool:
+    """True for a confirmation-tag question whose premise is NEGATED ('X haitakiwi ..., sivyo?').
+
+    Agreeing with such a premise means leading 'Ndiyo', not 'Hapana' — the opposite of the
+    plain frame the rules engine writes its verdict for. Gate the re-lead on this AND on the
+    verdict actually confirming the premise (applicable is False); a negated premise the
+    verdict CONTRADICTS must still be denied."""
+    stripped = text.strip()
+    if not _CONFIRMATION_TAG.search(stripped):
+        return False
+    premise = _CONFIRMATION_TAG.sub("", stripped)
+    return bool(_NEGATED_PREMISE.search(premise))
+
 
 def asks_applicability(text: str) -> bool:
     """True when the question asks WHETHER the obligation applies (yes/no) rather than HOW

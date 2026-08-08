@@ -9,9 +9,10 @@ computation request in a domain NOT in this set must return a template refusal,
 never fall through to raw language-model generation.
 """
 
-from .results import ComputationResult
+from .results import ComputationResult, agree_with_negated_premise
 from .base_rejection import reject_base
-from .sdl import compute_sdl, sdl_applies, sdl_crosses_threshold
+from .sdl import (compute_sdl, sdl_applies, sdl_crosses_threshold,
+                  sdl_zero_below_threshold)
 from .nssf import compute_nssf, nssf_applies
 from .paye import compute_paye, compute_paye_each
 from .wcf import compute_wcf, wcf_applies
@@ -64,6 +65,8 @@ __all__ = [
     "applicability",
     "reject_base",
     "sdl_crosses_threshold",
+    "sdl_zero_below_threshold",
+    "agree_with_negated_premise",
     "compute_sdl",
     "compute_nssf",
     "compute_paye",

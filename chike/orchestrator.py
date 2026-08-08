@@ -237,6 +237,35 @@ class Orchestrator:
         if (rules_engine.supports_applicability(sq.computation_type)
                 and routing.is_applicability_question(sq.text)):
             return self._answer_applicability(sq)
+        # Phase D re-run: SDL below the threshold is TZS 0 WHATEVER the payroll is, so an
+        # AMOUNT question does not need the payroll either — the same "input not needed"
+        # reasoning as the applicability branch above (Finding 1), applied to 'ni ngapi'.
+        # eval_378 answered correctly but never stated a figure; eval_376/eval_379 asked for
+        # a payroll that cannot change the answer. Placed AFTER the applicability branch so
+        # yes/no questions keep their 'Hapana.' verdict, and gated on a KNOWN sub-threshold
+        # count so a question that merely omits the headcount still clarifies.
+        #
+        # TWO GUARDS, both added after the 569-question sweep caught this branch asserting a
+        # confident wrong number — the nat_07 class, third occurrence this cycle:
+        #   * sole_headcount, not parse_count: gp_02 ("vibarua 8 ... na 4 ...") is a 12-person
+        #     employer and the branch answered TZS 0 on the first group's 8.
+        #   * no stated threshold CROSSING: "wafanyakazi 9 na ninaajiri mfanyakazi wa 10"
+        #     answered TZS 0 when SDL is in fact due. That is exactly the case M4's veto
+        #     exists for, so the veto governs here too and the question keeps clarifying.
+        if (sq.computation_type == "sdl"
+                and routing.count_transition_ordinal(sq.text) is None):
+            zero_count = (0 if swn.states_no_employees(sq.text)
+                          else swn.sole_headcount(sq.text))
+            if zero_count is not None and zero_count < rates.SDL_MIN_EMPLOYEES:
+                # Model in the loop, not _deterministic_answer: eval_247/371/372/378 already
+                # reached compute_sdl's below-threshold branch and were judged CORRECT — they
+                # failed only for want of a figure. Keeping the same rendering path adds the
+                # figure without also changing their register, and _render appends `working`
+                # verbatim so 'TZS 0' is guaranteed present whatever the model says.
+                result = rules_engine.sdl_zero_below_threshold(zero_count)
+                prompt = self._build_compute_prompt(sq.text, result)
+                reply = self.backend.generate(prompt, self.gen_params)
+                return SubAnswer(sub_question=sq, text=reply, computation=result)
         extraction = self.extractor.extract(sq.text, required, sq.computation_type)
         if not extraction.usable(required):
             # PREREQ-2 pattern B. GATED TO RUN ONLY WHERE EXTRACTION ALREADY FAILED, so a
@@ -281,7 +310,7 @@ class Orchestrator:
                 return self._deterministic_answer(
                     sq, rules_engine.reject_base(sq.computation_type, stated))
             copy = clarification.compute_clarification(
-                sq.computation_type, extraction.clarification_reasons(required))
+                sq.computation_type, extraction.clarification_reasons(required), sq.text)
             return SubAnswer(sub_question=sq, text=copy, needs_clarification=True)
 
         inputs = {name: extraction.fields[name].value for name in required}
@@ -335,6 +364,15 @@ class Orchestrator:
         else:
             inputs = {}
         result = rules_engine.applicability(sq.computation_type, **inputs)
+        # eval_393: a NEGATED premise put to us for confirmation ("...haitakiwi kulipa SDL,
+        # sivyo?") is AGREED with when the verdict confirms it — leading 'Hapana.' reads as a
+        # contradiction of an answer that in fact agrees. Gated on applicable is False, so a
+        # negated premise the verdict CONTRADICTS is still denied (eval_391's shape). The body
+        # is blanked too: the yes/no polarity is read from the first paragraph, so a model
+        # preamble in front of the re-led verdict would put the lead back out of reach.
+        if not result.applicable and routing.confirms_negated_premise(sq.text):
+            return self._deterministic_answer(
+                sq, rules_engine.agree_with_negated_premise(result))
         prompt = self._build_compute_prompt(sq.text, result)
         reply = self.backend.generate(prompt, self.gen_params)
         return SubAnswer(sub_question=sq, text=reply, computation=result)

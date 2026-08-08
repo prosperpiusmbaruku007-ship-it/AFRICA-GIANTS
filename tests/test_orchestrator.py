@@ -91,7 +91,10 @@ def test_compute_below_threshold_returns_not_applicable_working():
 
     sub = reply.sub_answers[0]
     assert sub.computation.applicable is False
-    assert "haihusiki" in reply.text                      # deterministic note surfaced
+    # Deterministic note surfaced. The copy gained the FIGURE in the Phase D re-run cycle:
+    # eval_378 asked "ni ngapi", got a correct 'haihusiki' verdict with no number, and was
+    # scored FAIL for it. 'chini ya 10' is the part of the verdict that has not changed.
+    assert "TZS 0" in reply.text and "chini ya 10" in reply.text
 
 
 def test_low_confidence_required_field_routes_to_clarification_not_rules_engine():
