@@ -290,11 +290,45 @@ class SlotExtractor:
         if payroll_anchored:
             wrong_base = False
 
+        # PATTERN D. A per-unit rate times an explicitly per-MONTH quantity states ONE PERSON'S
+        # monthly pay ("TZS 18,000 kwa siku, siku 26 kwa mwezi"). It is NEVER a payroll, so SDL
+        # — the only levy whose answer depends on the TOTAL payroll and a headcount threshold —
+        # must not receive it without a headcount. eval_294 is a single driver on TZS 80,000 x
+        # 15 trips and its gold explicitly refuses "SDL = 3.5% x 1,200,000"; this gate is what
+        # makes that refusal survive, and it is asserted directly rather than left to the
+        # required-fields contract to enforce as a side effect.
+        unit_rate_monthly = swn.monthly_from_unit_rate(text)
+        if (unit_rate_monthly is not None
+                and computation_type == "sdl" and count is None):
+            unit_rate_monthly = None
+
+        # PATTERN F1. When one levy's own clause names its payroll ("SDL ya jumla ya mishahara
+        # ya TZS 7,600,000"), that figure belongs to THAT levy and the sibling levy in the same
+        # question keeps whatever single plausible figure is left over. Both gates live in
+        # levy_labelled_payroll: a resolved group parse always wins, and the amount must be a
+        # payroll-label genitive rather than merely the nearest number. eval_327 is the row the
+        # proximity version would have broken and is pinned by name in the probes.
+        labelled = swn.levy_labelled_payroll(text)
+        if labelled:
+            if computation_type in labelled:
+                amounts = [labelled[computation_type]]
+                if count is None:
+                    # The question poses the POST-crossing scenario ("nikiongeza ... kufikia
+                    # 10, SDL ... itakuwa ngapi") — the crossing count is the one it asks about.
+                    count = swn.crossing_headcount(text)
+            else:
+                claimed = set(labelled.values())
+                left = [a for a in swn.parse_amounts(text)
+                        if a >= swn.MIN_PLAUSIBLE_AMOUNT and a not in claimed]
+                if len(left) == 1:
+                    amounts = left
+
         det = {}
         amount_field = next((f for f in required if f in _AMOUNT_FIELDS), None)
         if amount_field:
             a = self._amount_field(amount_field, amounts, count, per_person, aggregate,
-                                   divisor, period, wrong_base, allowance, foreign_currency)
+                                   divisor, period, wrong_base, allowance, foreign_currency,
+                                   unit_rate_monthly)
             if a is not None:
                 det[amount_field] = a
         if any(f in _COUNT_FIELDS for f in required):
@@ -307,11 +341,29 @@ class SlotExtractor:
 
     @staticmethod
     def _amount_field(field, amounts, count, per_person, aggregate,
-                      divisor, period, wrong_base, allowance, foreign_currency=False):
+                      divisor, period, wrong_base, allowance, foreign_currency=False,
+                      unit_rate_monthly=None):
         """Return (value, Confidence, reason) for an amount field, or None if the parser
         found no figure (leave it to the model fallback). LOW result == clarify."""
-        if not amounts:
+        if not amounts and unit_rate_monthly is None:
             return None
+
+        # PATTERN D resolves the 'role ambiguous' pair itself: the two figures are a rate and a
+        # quantity, not two candidate salaries. It also makes the period conversion moot — the
+        # product is ALREADY monthly — so the divisor branch below is skipped, which is what
+        # eval_296 ("kwa siku ... siku 26 kwa mwezi") needs: without this it would fall into
+        # 'period=daily needs days/weeks worked' having just been told the days.
+        if unit_rate_monthly is not None:
+            amt, reason = unit_rate_monthly, "per-unit rate x per-month quantity"
+            if per_person and count is not None:
+                amt, reason = amt * Decimal(count), f"{reason}; x {count} employees"
+            if wrong_base:
+                return (amt, Confidence.LOW, "wrong_base (non-payroll figure)")
+            if foreign_currency:
+                return (amt, Confidence.LOW,
+                        "amount in foreign currency (not TZS) — needs conversion")
+            return (amt, Confidence.HIGH, reason)
+
         if len(amounts) > 1:
             return (None, Confidence.LOW,
                     f"multiple figures {[str(a) for a in amounts]} — role ambiguous")

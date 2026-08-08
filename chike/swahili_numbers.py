@@ -815,6 +815,163 @@ def rejectable_base_amount(text):
     return plausible[0] if len(plausible) == 1 else None
 
 
+# ── Pattern D — per-unit rate × per-MONTH quantity ──────────────────────────────────────
+#
+# "TZS 1,500 kwa KIPANDE, vipande 400 KWA MWEZI" and "TZS 18,000 kwa SIKU, siku 26 KWA MWEZI"
+# state a monthly wage in two parts. Both reached _amount_field as 'role ambiguous' and were
+# answered with a question the user had already answered.
+#
+# STRUCTURAL, NEVER MAGNITUDE. The real rates in this corpus are 1,500/piece and 18,000/day,
+# so any size-based rate-vs-count rule reads 1,500 as a headcount (same reasoning as the
+# _COUNT_TOKEN note). The rate is the figure governed by 'kwa|kila <unit>'; the quantity is
+# the one governed by '<unit> N kwa mwezi'.
+#
+# THE NAIVE FORM ASSERTS TWO CONFIDENT WRONG NUMBERS. Found by R17 probes the corpus does not
+# contain, not by the sweep:
+#   dv_01  two rate groups ("vibarua 8 ... 1,500 kwa kipande, vipande 400 kwa mwezi na 4 ...")
+#          -> multiplies the FIRST rate by the FIRST quantity and calls it the payroll. This is
+#          the gp_02 failure mode with a monthly quantity bolted on.
+#   dv_06  two quantities ("zamu 3 kwa siku, siku 26 kwa mwezi") -> pairs the rate with one of
+#          them and returns 650,000 where the truth is 25,000 × 3 × 26 = 1,950,000.
+# Hence: inherit the group vetoes, and decline outright on more than one rate or more than one
+# monthly quantity. Ambiguity about WHICH figures pair is never resolved by picking one.
+#
+# WHAT THIS RETURNS IS ONE PERSON'S MONTHLY PAY — NEVER A PAYROLL. See the SDL gate in
+# extraction._deterministic: a single driver on TZS 80,000 × 15 trips must not become
+# "SDL = 3.5% × 1,200,000" (eval_294, whose gold explicitly refuses exactly that).
+_RATE_UNIT = (r"vipande|kipande|safari|siku|wiki|saa|zamu|mizigo|mzigo|wateja|mteja|"
+              r"magunia|gunia|mikate|mkate|kazi")
+_UNIT_RATE = re.compile(
+    rf"(?:tzs|tsh|sh|shilingi)?\s*([\d][\d,]*)\s*(?:kwa|kila)\s+(?:{_RATE_UNIT})\b",
+    re.IGNORECASE)
+_MONTHLY_QTY = re.compile(
+    rf"\b(?:{_RATE_UNIT})\s+(\d{{1,4}})\s+kwa\s+mwezi\b"
+    rf"|\b(\d{{1,4}})\s+(?:{_RATE_UNIT})\s+kwa\s+mwezi\b", re.IGNORECASE)
+
+
+def monthly_from_unit_rate(text):
+    """ONE PERSON's monthly pay from '<rate> kwa <unit>' × '<unit> N kwa mwezi', or None.
+
+    Declines whenever the pairing is not unique: a second people-group, a second rate, or a
+    second quantity. Never returns a payroll — see the module note above.
+    """
+    text_l = text.lower()
+    if _has_second_group(re.sub(r"kila\s+(?:mmoja|mfanyakazi|mtu)", " ", text_l)):
+        return None
+    if has_multiple_groups(text):
+        return None
+    rates = _UNIT_RATE.findall(text_l)
+    quantities = _MONTHLY_QTY.findall(text_l)
+    if len(rates) != 1 or len(quantities) != 1:
+        return None                       # which pairs with which? -> never guess
+    rate = _to_decimal_amount(rates[0])
+    qty = next((int(g) for g in quantities[0] if g), 0)
+    if rate is None or rate <= 0 or qty <= 0:
+        return None
+    return rate * Decimal(qty)
+
+
+# ── Pattern F2 — a headcount stated per NAMED MONTH ──────────────────────────────────────
+#
+# eval_329: "Mwezi JANUARI nilikuwa na watu 9, FEBRUARI nikaongeza mmoja kufikia 10, mishahara
+# ni TZS 3,000,000 kila mwezi" — one payroll, two months, a headcount either side of the SDL
+# threshold. The correct answer is two answers.
+#
+# Segment on month names and take each segment's OWN count, preferring an explicit crossing
+# ('kufikia 10') over a plain headcount, because in 'Februari nikaongeza MMOJA kufikia 10' the
+# bare 'mmoja' is the INCREMENT, not the count. A month that yields no count is skipped, which
+# is what keeps the trailing restatement ("SDL ya Januari na Februari?") from creating empty
+# duplicate periods.
+# THE SINGLE OWNER of the threshold-crossing surface. routing._COUNT_TRANSITION delegates to
+# this rather than carrying its own copy: the same phrase drives the M4 never-guess veto, the
+# per-month split below, and F1's SDL headcount, and three copies of one safety predicate is
+# the dual-file divergence CLAUDE.md warns about. Add a surface here and every consumer sees it.
+# NOTE THE INNER GROUP around _PEOPLE_NOUN. Written as `(?:{_PEOPLE_NOUN}\s+)?` the alternation
+# binds loosely and only the LAST alternative carries the \s+, so 'nikafikia WATU 12' silently
+# fails to match while 'nikafikia 12' succeeds. That bug was introduced moving this surface out
+# of routing.py and was caught by ex_09 changing behaviour, not by a test.
+_CROSSING = re.compile(
+    r"\bmfanyakazi\s+wa\s+(\d+)"
+    rf"|\b(?:kufikia|nikafikia|tukafikia|kufika)\s+(?:(?:{_PEOPLE_NOUN})\s+)?(\d{{1,4}})\b")
+
+
+def crossing_headcount(text):
+    """The headcount a threshold-crossing phrase names ('mfanyakazi wa 10', 'kufikia 10'), or
+    None. This is the count AFTER the change — callers that need the veto rather than the value
+    should test for None-ness, not compare it to a static count."""
+    m = _CROSSING.search(text.lower())
+    return int(next(g for g in m.groups() if g)) if m else None
+
+
+def parse_month_headcounts(text):
+    """[(month, count), ...] in stated order for two or more named months, else None."""
+    text_l = text.lower()
+    marks = [(m.start(), m.group(0)) for m in _MONTHS.finditer(text_l)]
+    if len(marks) < 2:
+        return None
+    out, seen = [], set()
+    for idx, (pos, month) in enumerate(marks):
+        end = marks[idx + 1][0] if idx + 1 < len(marks) else len(text_l)
+        segment = text_l[pos:end]
+        crossing = crossing_headcount(segment)
+        if crossing is not None:
+            count = crossing
+        else:
+            plain = re.search(rf"(?:{_PEOPLE_NOUN})\s+(\d{{1,4}})", segment)
+            if not plain:
+                continue
+            count = int(plain.group(1))
+        if month in seen:
+            continue
+        seen.add(month)
+        out.append((month, count))
+    return out if len(out) >= 2 else None
+
+
+def sole_plausible_amount(text):
+    """The one plausible money figure in the question, or None when there is not exactly one."""
+    plausible = [a for a in parse_amounts(text) if a >= MIN_PLAUSIBLE_AMOUNT]
+    return plausible[0] if len(plausible) == 1 else None
+
+
+# ── Pattern F1 — a payroll figure LABELLED as belonging to one levy ─────────────────────
+#
+# eval_323 asks two levies with two different bases in one sentence: PAYE on TZS 760,000 and
+# "SDL ya JUMLA YA MISHAHARA ya TZS 7,600,000". Multi-levy decomposition already emits one
+# sub-answer per levy, but each sub-question sees all four figures and gives up as 'role
+# ambiguous'.
+#
+# THE OBVIOUS FIX IS UNSAFE AND WAS MEASURED BEFORE BEING WRITTEN. Anchoring each levy to its
+# NEAREST plausible amount gets eval_323 right and BREAKS eval_327 — it pins both WCF and SDL
+# to 300,000 when the correct base is the 4,600,000 group payroll, on a row that answers
+# correctly today. So this is deliberately not a proximity rule. Two gates:
+#   1. parse_payroll_groups(text) must be None — a resolvable group construction ALWAYS wins,
+#      which is what keeps eval_327 / eval_285 / eval_325 untouched;
+#   2. the amount must be a PAYROLL-LABEL GENITIVE inside the levy's own clause
+#      ("<levy> ya jumla ya mishahara ya TZS N"), not merely the closest number.
+# Anything looser is a widening, and a widening here is a wrong compliance figure.
+_LEVY_LABELLED = re.compile(
+    r"\b(paye|sdl|nssf|wcf)\b[^.?!]{0,40}?\bya\s+(?:jumla\s+ya\s+)?mishahara\s+ya\s+"
+    r"(?:tzs|tsh|shilingi)?\s*([\d][\d,]*)", re.IGNORECASE)
+
+
+def levy_labelled_payroll(text):
+    """{levy: Decimal} for each levy whose own clause names its payroll, else {}."""
+    # A group parse that RESOLVED owns the payroll. A parse that DECLINED
+    # ({'groups': None, 'reason': ...}) has resolved nothing, so 'is not None' is the wrong
+    # test — it would gate F1 out of eval_323, whose group parse declines with 'no group
+    # headcounts found'. Only a real [(count, salary), ...] blocks F1.
+    groups = parse_payroll_groups(text)
+    if groups and groups.get("groups"):
+        return {}
+    out = {}
+    for m in _LEVY_LABELLED.finditer(text):
+        amount = _to_decimal_amount(m.group(2))
+        if amount is not None and amount >= MIN_PLAUSIBLE_AMOUNT:
+            out.setdefault(m.group(1).lower(), amount)
+    return out
+
+
 def detect_allowance_ambiguity(text):
     return _any(_ALLOWANCE, text.lower())
 

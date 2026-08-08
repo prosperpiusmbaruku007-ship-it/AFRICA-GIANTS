@@ -14,6 +14,8 @@ from .base_rejection import reject_base
 from .sdl import (compute_sdl, sdl_applies, sdl_crosses_threshold,
                   sdl_zero_below_threshold)
 from .nssf import compute_nssf, nssf_applies
+from .periods import sdl_by_month
+from .rate_statement import levy_rate_statement, supports as rate_statement_supports
 from .paye import compute_paye, compute_paye_each
 from .wcf import compute_wcf, wcf_applies
 

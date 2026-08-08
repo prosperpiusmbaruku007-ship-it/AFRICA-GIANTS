@@ -279,14 +279,16 @@ _APPLICABILITY_CUES = [
 # A headcount that CHANGES during the period. 'mfanyakazi wa 10' (the ordinal hire) was the
 # only surface covered until 2026-08-08; 'kufikia 10' / 'nikafikia watu 12' are the same event
 # stated as a destination and appear in eval_323 / eval_329 / ex_09. Widening this MATTERS for
-# safety, not only for pattern F: parse_count's new singular and pay-verb surfaces make more
+# safety, not only for pattern F: parse_count's singular and pay-verb surfaces make more
 # questions yield a static headcount, and this veto is what stops that static count being
 # treated as the whole story at the consumer (the SDL-zero branch gates on it). Narrowing a
 # parser while leaving its safety net at one surface form is how a nat_07 gets made.
-_COUNT_TRANSITION = re.compile(
-    r"mfanyakazi\s+wa\s+(\d+)"
-    r"|\b(?:kufikia|nikafikia|tukafikia|kufika)\s+"
-    r"(?:watu\s+|wafanyakazi\s+|watumishi\s+|waajiriwa\s+)?(\d+)")
+#
+# THE SURFACE ITSELF LIVES IN swahili_numbers._CROSSING and is not duplicated here. The same
+# phrase drives this veto, the per-month split (F2) and F1's SDL headcount; three copies of one
+# safety predicate is precisely the dual-file divergence CLAUDE.md warns about, so there is one
+# owner and every consumer delegates to it.
+_COUNT_TRANSITION = swn._CROSSING
 
 # Confirmation tag ("..., sivyo?") — the questioner states a premise and asks us to confirm
 # it. There are 17 across the corpora and 16 are FALSE-premise traps whose correct lead is
@@ -315,6 +317,19 @@ def confirms_negated_premise(text: str) -> bool:
     return bool(_NEGATED_PREMISE.search(premise))
 
 
+# "Kiwango cha SDL ni (asilimia) ngapi ...?" — the RATE is what is being asked for, and it does
+# not depend on the figure the question also carries. Requires 'kiwango'/'asilimia ngapi'
+# phrasing; a plain "SDL yangu ni ngapi" is an AMOUNT question and must not land here.
+_RATE_QUESTION = re.compile(
+    r"\bkiwango\s+(?:cha|kwa)\b[^.?!]{0,60}?\bngapi\b"
+    r"|\b(?:paye|sdl|nssf|wcf)\s+ni\s+asilimia\s+ngapi\b", re.IGNORECASE)
+
+
+def asks_rate(text: str) -> bool:
+    """True when the question asks for a levy's RATE rather than an amount owed."""
+    return bool(_RATE_QUESTION.search(text))
+
+
 def asks_applicability(text: str) -> bool:
     """True when the question asks WHETHER the obligation applies (yes/no) rather than HOW
     MUCH — an obligation/threshold cue with no money 'how-much' ask.
@@ -339,8 +354,7 @@ def count_transition_ordinal(text: str):
     through to the amount path and demanded a salary its yes/no never needed. Callers must
     still gate on ordinal >= the levy threshold — below it, the crossing settles nothing and
     the never-guess refusal stands (probe ap_15)."""
-    m = _COUNT_TRANSITION.search(text.lower())
-    return int(next(g for g in m.groups() if g)) if m else None
+    return swn.crossing_headcount(text)
 
 
 def is_applicability_question(text: str) -> bool:

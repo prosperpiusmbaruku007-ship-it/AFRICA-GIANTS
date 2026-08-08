@@ -266,6 +266,40 @@ class Orchestrator:
                 prompt = self._build_compute_prompt(sq.text, result)
                 reply = self.backend.generate(prompt, self.gen_params)
                 return SubAnswer(sub_question=sq, text=reply, computation=result)
+
+        # PATTERN F2. The headcount differs BY NAMED MONTH and straddles the threshold
+        # (eval_329: Januari 9, Februari 10, one payroll). One figure is wrong whichever month
+        # it describes, so answer per month.
+        #
+        # DELIBERATELY OUTSIDE the crossing veto above. That veto exists because a stated
+        # crossing means a single static count is not the whole story — which is precisely what
+        # this branch supplies rather than assumes: it reads BOTH counts and answers both. The
+        # first version sat inside the veto and could never fire on eval_329, the one row it was
+        # written for; ex_09 only reached it because a separate regex bug hid its crossing.
+        # _deterministic_answer, not the model-in-the-loop path, because the whole point is a
+        # two-part shape the model would flatten.
+        if sq.computation_type == "sdl":
+            periods = swn.parse_month_headcounts(sq.text)
+            payroll = swn.sole_plausible_amount(sq.text)
+            if periods and payroll is not None:
+                return self._deterministic_answer(
+                    sq, rules_engine.sdl_by_month(periods, payroll))
+
+        # RATE QUESTION ("Kiwango cha SDL ni ngapi kwa mtu mwenye mshahara wa TZS 480,000?").
+        # The rate is the answer and does not depend on the figure the question carries.
+        #
+        # GATED ON AN AMOUNT BEING PRESENT, deliberately. eval_111 and eval_112 ask the same
+        # thing with no figure, already answer correctly on the fact path, and carry detail this
+        # branch does not reproduce (SDL is employer-only; WCF is paid to the WCF Authority, not
+        # TRA). Firing here would replace a correct richer answer with a thinner one, so the
+        # branch engages only where a figure is present — which is exactly the case that was
+        # clarifying instead of answering.
+        if (rules_engine.rate_statement_supports(sq.computation_type)
+                and routing.asks_rate(sq.text)):
+            amount = swn.sole_plausible_amount(sq.text)
+            if amount is not None:
+                return self._deterministic_answer(
+                    sq, rules_engine.levy_rate_statement(sq.computation_type, amount))
         extraction = self.extractor.extract(sq.text, required, sq.computation_type)
         if not extraction.usable(required):
             # PREREQ-2 pattern B. GATED TO RUN ONLY WHERE EXTRACTION ALREADY FAILED, so a
