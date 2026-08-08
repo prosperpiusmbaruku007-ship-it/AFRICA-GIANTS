@@ -1,0 +1,532 @@
+{
+ "run": "PHASE D RE-RUN - paired v15-vs-v16 over the same 400 (+ Run 2 part 3, part-3 rows judged)",
+ "harness": "kaggle/eval_phase_d_paired.py",
+ "executed_by": "founder (Kaggle GPU)",
+ "date": "2026-08-08",
+ "provenance": {
+  "hf_repo": "prospAprospA007/africa-giants-dataset",
+  "hf_file": "gate_phase_d_paired_030a5ff.json",
+  "sha256_prefix": "003ff4f7fa3b4081",
+  "sha_verified": true,
+  "complete": true,
+  "clone_head": "030a5ff",
+  "live_head": "030a5ff",
+  "method_note": "Fetched from HF and VERIFIED by sha256, then EVERY number below was RECOMPUTED from the raw v15_results / v16_results / part3_results rows, independently of the summary block. All recomputations matched."
+ },
+ "determinism": {
+  "v15_generations_byte_identical_to_3ac522a": "400/400",
+  "v15_pass_flips_between_runs": 0,
+  "part3_byte_identical_to_3ac522a": "78/90 and 74/90, same win lists, same 20 identical answers",
+  "why_it_matters": "The harness is deterministic, so there is no sampling noise term. All 35 changed v16 rows are attributable to CODE (PREREQ-1 + PREREQ-2), not to decoding."
+ },
+ "pre_registered_expectation": {
+  "recorded_at": "030a5ff, BEFORE the run",
+  "projection": "PREREQ-1 +15, Tiers 1-2 +7, C 0, B +9 -> about +31 raw = +7.75 pts, against the 3ac522a raw gap of -6.8 pts",
+  "actual": "raw swing +7.3 pts (-6.8 -> +0.5). The projection held."
+ },
+ "buckets_recomputed": {
+  "fact_path_190": {
+   "raw": {
+    "v15": [
+     158,
+     184,
+     0.8587
+    ],
+    "v16": [
+     162,
+     184,
+     0.8804
+    ],
+    "delta_pts": 2.2
+   },
+   "reliable": {
+    "v15": [
+     111,
+     130,
+     0.8538
+    ],
+    "v16": [
+     114,
+     130,
+     0.8769
+    ],
+    "delta_pts": 2.3
+   },
+   "clarified": {
+    "v15": 1,
+    "v16": 1
+   },
+   "raw_delta_improvement_vs_3ac522a_pts": 0.0
+  },
+  "staged_50": {
+   "raw": {
+    "v15": [
+     38,
+     50,
+     0.76
+    ],
+    "v16": [
+     40,
+     50,
+     0.8
+    ],
+    "delta_pts": 4.0
+   },
+   "reliable": {
+    "v15": [
+     31,
+     39,
+     0.7949
+    ],
+    "v16": [
+     32,
+     39,
+     0.8205
+    ],
+    "delta_pts": 2.6
+   },
+   "clarified": {
+    "v15": 0,
+    "v16": 0
+   },
+   "raw_delta_improvement_vs_3ac522a_pts": 2.0
+  },
+  "compute_type": {
+   "raw": {
+    "v15": [
+     70,
+     102,
+     0.6863
+    ],
+    "v16": [
+     68,
+     102,
+     0.6667
+    ],
+    "delta_pts": -2.0
+   },
+   "reliable": {
+    "v15": [
+     36,
+     53,
+     0.6792
+    ],
+    "v16": [
+     41,
+     57,
+     0.7193
+    ],
+    "delta_pts": 4.0
+   },
+   "clarified": {
+    "v15": 0,
+    "v16": 27
+   },
+   "raw_delta_improvement_vs_3ac522a_pts": 27.4
+  },
+  "adversarial_150": {
+   "raw": {
+    "v15": [
+     98,
+     144,
+     0.6806
+    ],
+    "v16": [
+     94,
+     144,
+     0.6528
+    ],
+    "delta_pts": -2.8
+   },
+   "reliable": {
+    "v15": [
+     65,
+     89,
+     0.7303
+    ],
+    "v16": [
+     68,
+     94,
+     0.7234
+    ],
+    "delta_pts": -0.7
+   },
+   "clarified": {
+    "v15": 4,
+    "v16": 31
+   },
+   "raw_delta_improvement_vs_3ac522a_pts": 18.0
+  },
+  "ALL_400": {
+   "raw": {
+    "v15": [
+     300,
+     384,
+     0.7812
+    ],
+    "v16": [
+     302,
+     384,
+     0.7865
+    ],
+    "delta_pts": 0.5
+   },
+   "reliable": {
+    "v15": [
+     212,
+     263,
+     0.8061
+    ],
+    "v16": [
+     219,
+     268,
+     0.8172
+    ],
+    "delta_pts": 1.1
+   },
+   "clarified": {
+    "v15": 5,
+    "v16": 32
+   },
+   "raw_delta_improvement_vs_3ac522a_pts": 7.3
+  }
+ },
+ "headline": {
+  "CALL_1_adr_bar": "PASSES on both limbs: raw +0.5 pts (302/384 vs 300/384), reliable +1.1 pts (219/268 vs 212/263). First time ADR 0001 section 10 has ever been satisfied.",
+  "compute_path": "raw -29.4 -> -2.0, reliable -23.0 -> +4.0, clarifications 56 -> 27.",
+  "fact_path": "unchanged and clean: +2.2 raw / +2.3 reliable at n=193.",
+  "flips": "19 gains / 17 regressions (was 11 / 37). 21 regressions fixed, 0 gains lost, 1 new.",
+  "clarifications": "v16 61 -> 32 in-scope (compute 56 -> 27). v15 5."
+ },
+ "adjudication_of_the_17_regressions": {
+  "classification_scheme": {
+   "A": "extraction coverage failure - the input IS present and v16 did not use it",
+   "B": "never-guess CORRECT - the gold is itself a clarification, or the input is genuinely unusable",
+   "C": "v16 answer substantively CORRECT (judge-confirmed), scorer false-fail on output SHAPE",
+   "D": "retrieval-caused fact error - NEW CLASS, entirely attributable to the two-arm retriever",
+   "E": "rate x quantity / composition - known deferrals (patterns D, E, F)"
+  },
+  "method": "The frontier judge was applied to V15 answers, because a regression is only real if v15 was right. On 9 of the 17 it was not.",
+  "totals": {
+   "A": 4,
+   "B": 5,
+   "C": 2,
+   "D": 2,
+   "E": 4
+  },
+  "v15_judge_verdicts_across_the_17": {
+   "correct": 6,
+   "wrong": 9,
+   "undetermined": 2
+  },
+  "rows": [
+   {
+    "id": "eval_127",
+    "class": "D",
+    "subdomain": "sdl_compliance",
+    "answer_type": "yes_no",
+    "compute_routed": false,
+    "v16_clarified": false,
+    "v15_judge": "correct",
+    "v16_judge": "wrong",
+    "new_this_run": false,
+    "single_arm_fixes_it": true,
+    "note": "TWO-ARM RETRIEVER artefact. Self-contradictory: says the deadlines differ, then gives the same date twice. Single-arm answers it correctly."
+   },
+   {
+    "id": "eval_208",
+    "class": "D",
+    "subdomain": "vat_registration",
+    "answer_type": "yes_no",
+    "compute_routed": false,
+    "v16_clarified": false,
+    "v15_judge": "correct",
+    "v16_judge": "wrong",
+    "new_this_run": false,
+    "single_arm_fixes_it": true,
+    "note": "TWO-ARM RETRIEVER artefact and the worst output in the set: asserts a \"kizingiti cha TZS milioni 90\" VAT threshold that does not exist, and answers Ndiyo where gold is Hapana. R2-adjacent fabricated figure. Single-arm answers it correctly."
+   },
+   {
+    "id": "eval_271",
+    "class": "B",
+    "subdomain": "nssf_contributions",
+    "answer_type": "definition",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "wrong",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "gold IS a clarification (\"Lazima ubadilishe USD 500 kuwa TZS\"). v16 says exactly that and is scored FAIL for clarifying. v15 judged WRONG."
+   },
+   {
+    "id": "eval_280",
+    "class": "A",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "correct",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "p04 family: parse_count returns None because the count is separated from the people-noun by the vague-then-precise clause (\"wafanyakazi wengi sana karibu, lakini hasa ni 18\"). Real extraction gap; carried from 3ac522a."
+   },
+   {
+    "id": "eval_281",
+    "class": "B",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "wrong",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "\"unafika TZS 920,000 hivi\" - approximation. Permanent wont-fix by decision. v15 answered about 90,000 against gold 108,000 and is judged WRONG."
+   },
+   {
+    "id": "eval_291",
+    "class": "B",
+    "subdomain": "nssf_contributions",
+    "answer_type": "definition",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "wrong",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "bi-weekly pay; gold IS a clarification. v15 applied PAYE bands to NSSF and is judged WRONG. v16 clarification TEXT asks the wrong question (per-person vs total) - fixed separately."
+   },
+   {
+    "id": "eval_293",
+    "class": "E",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "wrong",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "pattern D (rate x quantity). v15 answered PAYE = TZS 0 on a 600,000 salary and is judged WRONG; it passes the regex scorer only by echoing \"1,500\" and \"400\"."
+   },
+   {
+    "id": "eval_294",
+    "class": "B",
+    "subdomain": "sdl_compliance",
+    "answer_type": "definition",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "wrong",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "gold IS a clarification (needs the total headcount). v15 invented SDL on one driver and is judged WRONG. Clarification TEXT fixed separately."
+   },
+   {
+    "id": "eval_295",
+    "class": "B",
+    "subdomain": "nssf_contributions",
+    "answer_type": "definition",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "undetermined",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "commission pay; gold IS a clarification. v15 judged UNDETERMINED."
+   },
+   {
+    "id": "eval_296",
+    "class": "E",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "wrong",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "pattern D (rate x quantity). v15 judged WRONG."
+   },
+   {
+    "id": "eval_319",
+    "class": "A",
+    "subdomain": "nssf_contributions",
+    "answer_type": "number",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "undetermined",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "pattern F (multi-part NSSF+SDL), deferred by decision. v15 judged UNDETERMINED: it answered 1,960,000 / 17,500 against gold 1,400,000 / 245,000."
+   },
+   {
+    "id": "eval_323",
+    "class": "A",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "correct",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "pattern F (PAYE + headcount transition). v15 judged correct but gave NO PAYE figure at all, so this is likely a judge false-positive; counted as a real gap conservatively."
+   },
+   {
+    "id": "eval_329",
+    "class": "E",
+    "subdomain": "sdl_compliance",
+    "answer_type": "number",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "wrong",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "pattern F (two periods). v15 answered TZS 1,925,000 where gold is 0 and 105,000, and is judged WRONG."
+   },
+   {
+    "id": "eval_334",
+    "class": "E",
+    "subdomain": "paye_compliance",
+    "answer_type": "number",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "wrong",
+    "v16_judge": null,
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "pattern E (allowance/bonus taxability) - WONT-DO by decision, a locked_facts question rather than a parsing one. v15 judged WRONG."
+   },
+   {
+    "id": "eval_368",
+    "class": "A",
+    "subdomain": "sdl_compliance",
+    "answer_type": "yes_no",
+    "compute_routed": true,
+    "v16_clarified": true,
+    "v15_judge": "wrong",
+    "v16_judge": null,
+    "new_this_run": true,
+    "single_arm_fixes_it": null,
+    "note": "NEW, and CAUSED BY PATTERN B. _GROUP_MARKERS matches \"wa muda\" on a SINGLE group described as part-time, so has_multiple_groups is True, parse_count returns None, and the applicability route asks for a headcount that is in the question."
+   },
+   {
+    "id": "eval_378",
+    "class": "C",
+    "subdomain": "sdl_compliance",
+    "answer_type": "number",
+    "compute_routed": true,
+    "v16_clarified": false,
+    "v15_judge": "correct",
+    "v16_judge": "correct",
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "v16 answer is CORRECT and judge-confirmed. It fails because the question asks \"ni ngapi\" and the applicability rejection never states TZS 0 (gold number set is {0, 5000000}). Extraction is perfect here: count 8, payroll 5,000,000."
+   },
+   {
+    "id": "eval_393",
+    "class": "C",
+    "subdomain": "sdl_compliance",
+    "answer_type": "yes_no",
+    "compute_routed": true,
+    "v16_clarified": false,
+    "v15_judge": "correct",
+    "v16_judge": "correct",
+    "new_this_run": false,
+    "single_arm_fixes_it": null,
+    "note": "v16 answer is CORRECT and judge-confirmed. It fails because the mandatory \"Hapana.\" base-rejection lead is concatenated after model text that already opened \"Sawa kabisa\" - two opposite polarity markers in one reply."
+   }
+  ]
+ },
+ "verdict_on_the_17": "SIX are real quality regressions: 2 retrieval (Class D, removable by dropping the two-arm retriever) and 4 extraction (Class A, of which ONE - eval_368 - is new and was caused by pattern B). NINE are v15 FALSE-PASSES: the regex scorer credits v15 for wrong answers that echo the questions own digits (eval_293 answers PAYE = TZS 0 on a 600,000 salary; eval_329 answers TZS 1,925,000 where gold is 0 and 105,000). TWO are v16 FALSE-FAILS where the judge confirms v16 correct. There is no class in which v16 answers WORSE than v15 while both are answering.",
+ "no_class_of_regression_clause": "SATISFIED CONDITIONAL on (a) removing Class D by dropping the two-arm retriever and (b) fixing eval_368. Not resolved before those two.",
+ "compute_raw_minus_2_explained": "Exactly 13 gains minus 15 regressions in that bucket. 13 of the 15 are v16 clarifications, and the judge calls v15 WRONG on 9 of them. The -2.0 is the regex scorer paying v15 for wrong answers that intersect the questions digits. The same bucket on the reliable denominator is +4.0.",
+ "CALL_3_judge_comparison_like_for_like": {
+  "asymmetry_is_smaller_than_the_graded_counts_suggest": "v15 graded 379, v16 352 - but 18 of v16s 32 clarifications sit INSIDE the reliable set and are already scored FAIL. Only 14 are excluded outright (v15: 1). The real exclusion gap is 14 rows, not 27.",
+  "reported_figure": "v15 267/359 = 74.4% vs v16 291/363 = 80.2% -> +5.8 pts. Near the TOP of the range; do not quote it alone.",
+  "common_denominator_346_rows_decisive_in_BOTH_arms": "v15 264/346 = 76.3% vs v16 276/346 = 79.8% -> +3.5 pts (strictest like-for-like)",
+  "every_clarification_counted_FAIL_undetermined_excluded": "v15 267/360 = 74.2% vs v16 291/377 = 77.2% -> +3.0 pts",
+  "hard_floor_clarifications_AND_undetermined_all_FAIL_denom_384": "v15 267/384 = 69.5% vs v16 291/384 = 75.8% -> +6.2 pts",
+  "HONEST_RANGE": "+3.0 to +6.2 pts, strictest like-for-like +3.5. The load-bearing point is that NO accounting flips the sign - including the one that counts all 32 clarifications as failures.",
+  "symmetric_honesty_on_the_gains": "5 of the 19 gains are judge-FALSE: eval_008, eval_034, eval_186, eval_321, eval_331. Four of those five are fact-path rows credited by the two-arm retriever."
+ },
+ "CALL_2_two_arm_retriever": {
+  "instrument_1_regex_raw": "two-arm 78/90 = 86.7% vs single-arm 74/90 = 82.2% -> +4.4 pts",
+  "instrument_2_judge_augmented_common_denominator_n85": "two-arm 67/85 = 78.8% vs single-arm 67/85 = 78.8% -> 0.0 pts (6 wins each side)",
+  "instrument_3_pure_judge_both_arms_graded_n81": "two-arm 53/81 = 65.4% vs single-arm 60/81 = 74.1% -> -8.6 pts (4 wins vs 11)",
+  "harness_reported_minus_0_2": "comes from unequal denominators (89 vs 85); the common-denominator figure is a dead heat.",
+  "THE_SCORER_POINTED_THE_WRONG_WAY_TWICE_ON_A_BYTE_IDENTICAL_RUN": "Part 3 reproduced EXACTLY from 3ac522a. +4.4 was not a sampling fluke - it is a systematic property of number-set-intersection scoring applied to a retriever whose entire job is to inject MORE numbers into the prompt. On eval_331 the two instruments disagree on DIRECTION outright.",
+  "DECISIVE": "Both Class D regressions (eval_127, eval_208) are answered CORRECTLY by the single-arm retriever. Dropping the two-arm retriever deletes the entire class.",
+  "CALL": "DO NOT SHIP the two-arm retriever. Approved by the founder 2026-08-08.",
+  "the_cost_stated_plainly": "Under the regex scorer, single-arm costs 6 rows and gains 2 -> ALL_400 raw about 298 vs v15 300 = -0.5 pts, and the ADR raw bar would FAIL as literally measured. But 4 of those 6 lost rows are judge-WRONG. This is why the bar must be re-measured on the shipped configuration rather than argued about.",
+  "unmeasured_surface": "100 compute-routed, second-arm-eligible questions were OUTSIDE the part-3 subset (which excludes compute-routed rows). The -0.5 estimate is on the measured 90 only."
+ },
+ "CALL_4_new_vs_carried": {
+  "carried_from_3ac522a": 16,
+  "new_this_run": 1,
+  "regressions_fixed_by_this_cycle": [
+   "eval_124",
+   "eval_242",
+   "eval_253",
+   "eval_254",
+   "eval_258",
+   "eval_259",
+   "eval_261",
+   "eval_269",
+   "eval_279",
+   "eval_283",
+   "eval_284",
+   "eval_285",
+   "eval_286",
+   "eval_287",
+   "eval_288",
+   "eval_289",
+   "eval_290",
+   "eval_324",
+   "eval_325",
+   "eval_327",
+   "eval_399"
+  ],
+  "gains_lost": 0,
+  "new_gains": [
+   "eval_251",
+   "eval_252",
+   "eval_255",
+   "eval_256",
+   "eval_262",
+   "eval_263",
+   "eval_265",
+   "eval_266"
+  ],
+  "new_gains_note": "All 8 are PREREQ-2 Tier 1-2, and all 8 are judge-confirmed correct.",
+  "caused_by_PREREQ_1_or_2": [
+   "eval_368"
+  ],
+  "eval_368_root_cause": "_GROUP_MARKERS contains \"wa muda\" / \"wa kudumu\", added in pattern B to catch a genuine two-group split. It also fires on a SINGLE group described as part-time, so has_multiple_groups returns True, parse_count returns None, and the applicability route asks for a headcount that is in the question. This is the nat_07 class: flagged, not silently fixed.",
+  "eval_368_blast_radius": "Exactly 3 corpus rows, all currently wrong: eval_368, eval_377, and eval_225 (which matches \"muda wa siku 30\", a time period with no employment sense at all). Two rows MUST keep firing: edge_p04 and ex_10, both of which name BOTH sides of a real split."
+ },
+ "residual_clarifications_weighed": {
+  "count": "32 in-scope, 27 of them compute-routed = 26% of the 103 compute questions",
+  "the_case_FOR_them": "Across all 32, the frontier judge says v15 answered WRONG on 20, correct on 4, undetermined on 3, and 5 were ungraded. Twenty times a clarification replaced a confident wrong number.",
+  "the_case_AGAINST_them": "A quarter of the time a trader asks for a number, CHIKE asks a question back. Four are unnecessary today (eval_280, eval_323, and the eval_376 / eval_379 zero-count family).",
+  "why_the_gate_will_never_show_it": "Every extraction fix converts a clarification into an answer, which the ADR bar rewards only if the answer is also right. The rate is a PRODUCT metric, not a gate metric.",
+  "TARGET_SET_BY_FOUNDER_2026_08_08": "At most 15% of compute-routed questions (currently 26%), recorded as a WIRING PRECONDITION alongside the ADR bar, and tracked in every future paired run."
+ },
+ "CALL_1_wiring": {
+  "DECISION": "WIRE v16 - but NOT this configuration, and not before the bar is measured on the one that ships.",
+  "approved_items_in_order": [
+   "1. Fix the eval_368 marker (own commit, R17 probe, edge_p04 and ex_10 pinned).",
+   "2. BLOCKING: drop the two-arm retriever, make single-arm the v16 arm, re-run the paired 400. The ADR bar has never been measured on the shipped configuration.",
+   "3. Output shape: state TZS 0 explicitly on applicability rejections answering \"ni ngapi\" (eval_378 plus the eval_376 / eval_379 family); suppress the mandatory \"Hapana.\" lead when the model text already opened affirmatively (eval_393).",
+   "4. Clarification text for eval_291 and eval_294 - they ask \"per-person or total?\" when the real gap is the monthly salary or the total headcount."
+  ],
+  "held_until_the_bar_is_measured_on_the_shipped_config": "patterns D (+2) and F (+4). No stacking changes onto an unmeasured configuration.",
+  "founder_instruction_on_the_re_run": "If raw lands slightly negative while the judge holds, bring the result rather than pre-arguing it - decide against a real number, not a projected one."
+ },
+ "cycle_status": "Phase D RE-RUN complete and adjudicated. Next: items 1-4, then the single-arm paired re-run."
+}
