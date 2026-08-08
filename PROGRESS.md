@@ -360,6 +360,74 @@ changed: the copy fixes in `f3e0480` were built on the run's actual v16 answers 
 C1–C4 round, which is how it was caught; the signature order is now called out in a comment in
 `tests/test_headcount_extraction.py`.
 
+### 🅳 DEFERRED — taken up after the current fix cycle closes (set by the founder, 2026-08-08)
+
+Neither is part of the batched paired run. Both are logged here so the cycle can close without
+losing them.
+
+---
+
+**D-1 — tokenizer / `fix_mistral_regex`. Supersedes the 2026-07-28 item below (§ *OPEN ITEM —
+tokenizer `fix_mistral_regex`*), which scoped it as a warning to look at; this scopes it as a
+possible train/serve mismatch.**
+
+The adapter repo emits a warning referencing **Mistral-Small-3.1-24B** while the base is
+**`McGill-NLP/AfriqueLlama-8B`**. The asymmetry it points at is **verified in the code, not
+assumed** — training and serving load the tokenizer from *different repos*:
+
+| where | line | loads from |
+|---|---|---|
+| training | `kaggle/train_ddp.py:183` | **`BASE_MODEL`** |
+| production | `chike-inference/modal_app.py:218` | **`ADAPTER_REPO`** |
+| gate | `kaggle/eval.py:134` | `ADAPTER_REPO` |
+| paired harness | `kaggle/eval_phase_d_paired.py:245` | `ADAPTER_REPO` |
+| every probe | `gn487a_inversion_probe.py`, `faithfulness_probe.py`, `extraction_stress_test.py`, … | `ADAPTER_REPO` |
+
+Nothing in the repo passes `fix_mistral_regex` anywhere, so the pre-token split is whatever each
+repo's `tokenizer.json` specifies. If the two differ, **Swahili segmentation at serve time differs
+from segmentation at train time on every answer** — which would sit underneath every gate number
+ever collected, not just the recent ones.
+
+**It is path-neutral, so it cannot explain any v15-vs-v16 delta.** Both arms load the same
+tokenizer from the same repo in the same process. That is *why* it is deferrable — and equally why
+deferring it does not make it smaller. It is a real defect either way.
+
+**Diagnosis is CPU-only and needs no GPU slot:**
+1. Round-trip a Swahili sample under both tokenizers, ± `fix_mistral_regex=True`; **diff token
+   ids**, not decoded strings — a lossless round-trip proves nothing about the split.
+2. Inspect both repos' `tokenizer.json` / `tokenizer_config.json` / `chat_template`.
+3. Establish **how the Mistral reference got into the adapter repo** — provenance is the actual
+   question; a divergent split is the symptom.
+
+**Founder position: the Mistral reference should not be there.** If the diagnosis shows it is
+live-affecting, it touches production and gets **its own change cycle** — not a fold-in.
+
+---
+
+**D-2 — byte-level extraction. A design question to answer, NOT a build to schedule.**
+
+Most extraction defects this cycle were **surface-pattern brittleness**, not logic errors:
+`mshahara`/`mishahara`, `wenye` vs the people-noun list, `kufikia wafanyakazi` vs bare `kufikia`,
+spelled vs digit counts. Each was fixed by enumerating one more word pattern. The question is
+whether byte- or character-level parsing would handle Swahili morphology better than continuing to
+enumerate.
+
+**It is not obviously yes, and the assessment has to be honest about three properties the regex
+layer currently gives us for free:**
+- **Auditable and deterministic** — every answer traces to a named pattern, and a reviewer can
+  read why a row matched.
+- **Fail-safe in the never-guess direction** — when the parser cannot resolve, it declines and the
+  system clarifies. A learned or fuzzy matcher that degrades into a *plausible* parse instead of no
+  parse trades clarifications for confident wrong numbers, which is the wrong direction (the same
+  reasoning that made **eval_281 a permanent won't-fix**).
+- **Validatable by sweep-and-probe** — the 620-row sweep plus R17 adversarial probes is the
+  instrument that has caught every confident wrong number this cycle (dv_01, dv_06, fv_01 were all
+  found by writing the probe first). Any replacement has to be measurable the same way.
+
+**If determinism cannot be preserved, say so and close the item.** A brittle-but-auditable layer
+beats coverage without the guarantee — that conclusion is a legitimate and expected outcome of this
+investigation, not a failure to deliver one.
+
 ### Also shipped this session
 
 `f3e0480` — two of the four wrong-question clarifications: eval_264 (a **receipt count** is not a
@@ -1297,6 +1365,12 @@ AfriqueLlama tokenizer for prompt parity. Adjudicated against `scripts/locked_fa
 b05 9.4s/9.1s); b01 was a cold start (v15 62.4s). Warm parity holds because 4/5 took **one** backend call each.
 
 ## 🟠 OPEN ITEM — tokenizer `fix_mistral_regex` / Mistral reference on the production adapter (2026-07-28)
+
+> **SUPERSEDED 2026-08-08 by D-1** (top of file, *DEFERRED — taken up after the current fix cycle
+> closes*). Work from **D-1**, not from this entry: the train/serve repo split is now verified in
+> code (`train_ddp.py` loads `BASE_MODEL`; production, the gate and every probe load
+> `ADAPTER_REPO`), which makes this a possible **train/serve mismatch underneath every gate number**
+> rather than the warning-to-look-at scoped here. Kept for the original date and observation.
 
 Loading the adapter tokenizer (`prospAprospA007/africa-giants-adapter-v15`) emits:
 *"loading … with an incorrect regex pattern … set `fix_mistral_regex=True` … This will lead to incorrect
