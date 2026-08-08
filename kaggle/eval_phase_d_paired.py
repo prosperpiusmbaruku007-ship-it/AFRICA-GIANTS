@@ -106,8 +106,11 @@ KAGGLE SETUP
     Secrets     : AFRICA_GIANTS      (HF token — model weights + eval questions + RAG index)
                   OPENROUTER_API_KEY (judge overlay on both arms; without it the run still
                                       completes and the judge section is skipped)
-    Runtime     : ~1,010 generations (400 v15 + ~520 v16 + 90 part-3) ~= 2.5-3.5h,
-                  plus ~30 min judge. Well inside Kaggle's 12h.
+    Runtime     : ~670 generations (60 v15 determinism check + ~520 v16 + 90 part-3)
+                  ~= 1.7-2.4h, plus ~20 min judge. The v15 arm is CACHED from 5d0dcb7 —
+                  see the block above ARM v15 — which saves ~340 generations, about a
+                  third of the run. If the determinism check fails the full 400 are
+                  regenerated and it reverts to ~2.5-3.5h.
 
 Ends with a delimited SUMMARY BLOCK to paste back.
 """
@@ -401,19 +404,139 @@ def _row(q, gen, raw, clarified):
             'target': q.get('_target', ''), 'why_hard': q.get('_why_hard', '')}
 
 
-print(f'\n[run] ARM v15 — {len(ALL)} questions through chike.pipeline_v15 ...', flush=True)
+# ── ARM v15 — CACHED, WITH A DETERMINISM CHECK ──────────────────────────────────
+#
+# v15 has now produced byte-identical generations on THREE consecutive runs (400/400, zero
+# pass-flips), so re-generating all 400 buys almost nothing. It is cached from 5d0dcb7 and a
+# 60-question subset is regenerated to prove the arm still behaves identically. Saves ~340 of
+# ~1,010 generations — about a third of the run.
+#
+# THE CODE-SIDE RISK IS ZERO AND WAS PROVEN, NOT ASSUMED. pipeline_v15 touches exactly two
+# things outside itself — clarification.PAYROLL_AMOUNT (a constant) and
+# routing.is_uncomputable_payroll_amount (which calls detect_intent, which reads
+# _COUNT_TRANSITION, WIDENED by C3). Both were diffed across all 620 corpus questions at HEAD
+# vs 5d0dcb7: the constant is byte-identical and the predicate is identical on every row.
+# count_transition_ordinal does change on 7 rows, but on every one detect_intent was ALREADY
+# 'sdl', so the widened surface never reaches the disjunct that could flip anything.
+#
+# SO THE CHECK IS NOT ABOUT CODE — IT IS ABOUT THE ENVIRONMENT. What a cache cannot control
+# for is a different weights revision, a different GPU, or a runtime-resolved
+# transformers/bitsandbytes version. That kind of drift is GLOBAL rather than per-row, so a
+# 60-question stratified subset catches it with near-certainty.
+#
+# IT FAILS SAFE BY FALLING BACK, NOT BY ABORTING. If any checked row differs, the full 400 are
+# regenerated and the cache is discarded. A run that costs an extra hour is strictly better
+# than one that dies two hours in, and better still than one that silently compares against a
+# stale arm.
+CACHE_COMMIT = '5d0dcb7'
+CACHE_PATH = os.path.join(_CLONE, 'eval', 'results',
+                          f'gate_phase_d_paired_{CACHE_COMMIT}.json')
+DETERMINISM_N = 60
+
+_cached15, cache_note = None, ''
+try:
+    with open(CACHE_PATH, encoding='utf-8') as fh:
+        _cache_art = json.load(fh)
+    _cached15 = {r['id']: r for r in _cache_art['v15_results']}
+    if _cache_art.get('clone_head') != CACHE_COMMIT or not _cache_art.get('complete'):
+        _cached15, cache_note = None, 'cache artifact incomplete or wrong head'
+    elif set(_cached15) != {q['id'] for q in ALL}:
+        _cached15, cache_note = None, 'cached question set differs from this run'
+except Exception as e:                                               # noqa: BLE001
+    _cached15, cache_note = None, f'cache unreadable: {str(e)[:120]}'
+
 res15, t0 = [], time.time()
-for i, q in enumerate(ALL):
-    try:
-        gen = v15_answer(q['question_sw'])
-    except Exception as e:                                           # noqa: BLE001
-        gen = f'ERROR: {e}'
-    # v15 has no compute path: its only non-generated replies are the OOC refusal and the
-    # payroll never-guess clarification.
-    clar = gen == pipeline_v15.PAYROLL_CLARIFICATION
-    res15.append(_row(q, gen, gen, clar))
-    if (i + 1) % 25 == 0:
-        print(f'  v15 [{i+1}/{len(ALL)}] {time.time()-t0:.0f}s', flush=True)
+if _cached15 is not None:
+    # Stratified across sources so partial drift is caught wherever it lands, and DELIBERATELY
+    # includes every row that carried the last adjudication — the 12 regressions and the rows
+    # whose verdicts the wiring argument rests on.
+    _must = ['eval_271', 'eval_280', 'eval_281', 'eval_291', 'eval_293', 'eval_294',
+             'eval_295', 'eval_296', 'eval_319', 'eval_323', 'eval_329', 'eval_334',
+             'eval_305', 'eval_314', 'eval_327', 'eval_318', 'eval_322', 'eval_331',
+             'eval_127', 'eval_208']
+    _by_src = defaultdict(list)
+    for q in ALL:
+        _by_src[q['_source']].append(q)
+    _check_ids, _seen = [i for i in _must if i in _cached15], set()
+    _seen.update(_check_ids)
+    _round = 0
+    while len(_check_ids) < DETERMINISM_N:
+        _added = False
+        for src in sorted(_by_src):
+            bucket = _by_src[src]
+            if _round < len(bucket) and len(_check_ids) < DETERMINISM_N:
+                cand = bucket[_round]['id']
+                if cand not in _seen:
+                    _check_ids.append(cand)
+                    _seen.add(cand)
+                    _added = True
+        if not _added:
+            break
+        _round += 1
+
+    print(f'\n[run] ARM v15 — CACHED from {CACHE_COMMIT}; regenerating '
+          f'{len(_check_ids)} rows as a determinism check ...', flush=True)
+    _drift = []
+    _by_id = {q['id']: q for q in ALL}
+    for i, qid in enumerate(_check_ids):
+        try:
+            gen = v15_answer(_by_id[qid]['question_sw'])
+        except Exception as e:                                       # noqa: BLE001
+            gen = f'ERROR: {e}'
+        if gen != _cached15[qid]['generated']:
+            _drift.append(qid)
+        if (i + 1) % 20 == 0:
+            print(f'  v15-check [{i+1}/{len(_check_ids)}] {time.time()-t0:.0f}s', flush=True)
+
+    print('=' * 78)
+    if _drift:
+        print(f'  DETERMINISM CHECK FAILED — {len(_drift)}/{len(_check_ids)} rows differ: '
+              f'{_drift[:10]}')
+        print('  The cache is DISCARDED and the full v15 arm will be regenerated. This means '
+              'the\n  environment moved (weights revision, GPU, or a runtime-resolved library) '
+              '— say so\n  when reporting, because it also breaks the three-run byte-identity '
+              'claim.')
+        _cached15, cache_note = None, f'determinism check failed on {len(_drift)} rows'
+    else:
+        print(f'  DETERMINISM CHECK PASSED — {len(_check_ids)}/{len(_check_ids)} rows '
+              f'byte-identical to {CACHE_COMMIT}.')
+        print('  The remaining 340 v15 rows are served from cache.')
+        cache_note = (f'cached from {CACHE_COMMIT}; {len(_check_ids)}-row determinism check '
+                      f'passed byte-identical')
+        # A GENERATION cache, NOT a results cache. Only the model output is reused; the route
+        # tag, the score and the reliability verdict are all RECOMPUTED at this HEAD from this
+        # run's question metadata. Copying the cached rows wholesale would have carried
+        # 5d0dcb7's `compute` flag — set by v16's router, which changed this cycle — so the two
+        # arms could have been bucketed differently against each other. Same argument for the
+        # scorer: reusing a stored `pass` would silently compare across scorer versions.
+        # Only `judge` is carried over, and only because the generations are byte-identical.
+        res15 = []
+        for q in ALL:
+            _c = _cached15[q['id']]
+            _r = _row(q, _c['generated'], _c.get('raw_generated', _c['generated']),
+                      _c['clarified'])
+            if 'judge' in _c:
+                _r['judge'] = _c['judge']
+            res15.append(_r)
+    print('=' * 78, flush=True)
+
+if _cached15 is None:
+    if cache_note:
+        print(f'\n[run] v15 cache NOT used ({cache_note}) — regenerating the full arm.',
+              flush=True)
+    print(f'\n[run] ARM v15 — {len(ALL)} questions through chike.pipeline_v15 ...', flush=True)
+    res15, t0 = [], time.time()
+    for i, q in enumerate(ALL):
+        try:
+            gen = v15_answer(q['question_sw'])
+        except Exception as e:                                       # noqa: BLE001
+            gen = f'ERROR: {e}'
+        # v15 has no compute path: its only non-generated replies are the OOC refusal and the
+        # payroll never-guess clarification.
+        clar = gen == pipeline_v15.PAYROLL_CLARIFICATION
+        res15.append(_row(q, gen, gen, clar))
+        if (i + 1) % 25 == 0:
+            print(f'  v15 [{i+1}/{len(ALL)}] {time.time()-t0:.0f}s', flush=True)
 _publish('v15_arm_done', v15_results=res15)
 
 print(f'\n[run] ARM v16 — {len(ALL)} questions through the Orchestrator ...', flush=True)
@@ -614,7 +737,16 @@ if RUN_JUDGE:
         return {'report': rep, 'providers': provs, 'usd': round(cost, 4),
                 'graded': len(gradeable)}
 
-    judge_overlays['v15'] = _judge_arm('v15', res15)
+    # v15 CACHED -> its judge overlay is cached too. The rows are byte-identical (proven by the
+    # determinism check above), so re-grading would spend ~$0.21 and ~10 min to reproduce
+    # verdicts we already hold. Reusing them ALSO removes judge non-determinism as a source of
+    # v15 movement, which makes the arm a stricter fixed reference, not a looser one.
+    if _cached15 is not None and _cache_art.get('judge_overlays', {}).get('v15'):
+        judge_overlays['v15'] = _cache_art['judge_overlays']['v15']
+        print(f'\n[judge/v15] REUSED from {CACHE_COMMIT} — rows are byte-identical, so the '
+              f'verdicts are too.')
+    else:
+        judge_overlays['v15'] = _judge_arm('v15', res15)
     judge_overlays['v16'] = _judge_arm('v16', res16)
 
     # HARNESS FIX (re-run): judge the PART-3 rows too. The 3ac522a run left 90/90 part-3 rows
@@ -725,6 +857,9 @@ summary = {
     'v16_compute_routed': sum(q['_compute'] for q in ALL),
     'buckets': bucket_table,
     'v16_retrieval_arm': 'single_arm (SHIPPED; two-arm dropped 2026-08-08)',
+    'v15_arm_source': ('regenerated in full' if _cached15 is None
+                       else f'cached from {CACHE_COMMIT}'),
+    'v15_determinism_check': cache_note or 'n/a — full arm regenerated',
     'adr_bar': {'raw_delta_pts': bucket_table['ALL_400']['raw']['delta_pts'],
                 'reliable_delta_pts': bucket_table['ALL_400']['reliable']['delta_pts'],
                 'raw_pass': raw_ok, 'reliable_pass': rel_ok},
