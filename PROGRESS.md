@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-07
+Last updated: 2026-08-08
 
 **🏁 CYCLE FULLY CLOSED (2026-07-26):** the entire router-investigation + defect-fix cycle is now
 closed end-to-end with real GPU confirmation. Follow-up #3's last two threads landed this session:
@@ -10,6 +10,219 @@ working — shipped `75421f0`, GPU-confirmed: 3 target rows corrected + judge 5/
 eval_378 scorer-artifact flip, zero collateral). Two non-blocking follow-ups logged for later
 (SCORER-SEMANTICS-1: credit "TZS 0"/not-applicable answers; JUDGE-NONDET: eval_397). See the
 D-FIDELITY-1 and work-item-2-round-2 entries below.
+
+## 🏁 PHASE D RE-RUN (030a5ff) — ADR BAR PASSES; four fixes shipped; single-arm re-run packaged (2026-08-08)
+
+Artifacts: **`eval/results/gate_phase_d_paired_030a5ff.json`** (fetched from HF and
+**sha256-verified** `003ff4f7fa3b4081`, `complete: true`, `clone_head == live_head == 030a5ff`)
++ **`..._findings.json`** (the adjudication). **Every number was recomputed from the raw
+`v15_results` / `v16_results` / `part3_results` rows, independently of the summary block. All
+recomputations matched.**
+
+### Headline
+
+| | 3ac522a | 030a5ff |
+|---|---|---|
+| ADR bar raw | −6.8 **FAIL** | **+0.5 PASS** |
+| ADR bar reliable | −3.7 **FAIL** | **+1.1 PASS** |
+| compute raw / reliable | −29.4 / −23.0 | −2.0 / **+4.0** |
+| v16 clarifications | 61 (compute 56) | 32 (compute 27) |
+| gains / regressions | 11 / 37 | **19 / 17** |
+
+**ADR 0001 §10 is satisfied for the first time.** Pre-registered projection was +7.75 raw pts;
+the actual swing was **+7.3**. The projection predated the result and is in the harness
+docstring at `030a5ff` — it was not retrofitted.
+
+**The harness is deterministic.** The v15 arm is **byte-identical across both runs (400/400
+generations, 0 pass-flips)** and part 3 reproduced exactly. There is no sampling noise term:
+all 35 changed v16 rows are attributable to code.
+
+### Adjudication of the 17 regressions — only SIX are real
+
+Classing extended with two new classes. The frontier judge was applied to **v15's** answers,
+because a regression is only real if v15 was right. **On 9 of the 17 it was not.**
+
+| Class | n | ids |
+|---|---|---|
+| A extraction coverage failure | 4 | eval_280, 319, 323, **368** |
+| B never-guess CORRECT (gold is itself a clarification) | 5 | eval_271, 281, 291, 294, 295 |
+| C v16 correct, scorer false-fail on SHAPE | 2 | eval_378, 393 |
+| **D retrieval-caused fact error — NEW CLASS** | 2 | eval_127, 208 |
+| E rate × quantity / known deferrals | 4 | eval_293, 296, 329, 334 |
+
+- **Nine are v15 false-passes.** The regex scorer credits v15 for wrong answers that echo the
+  question's own digits: **eval_293 answers PAYE = TZS 0 on a 600,000 salary**; **eval_329
+  answers TZS 1,925,000 where gold is 0 and 105,000**.
+- **Two are v16 false-fails** the judge confirms correct (Class C — both fixed this session).
+- **Class D is the only avoidable quality loss**, and it is entirely the two-arm retriever.
+  **eval_208 asserts a "kizingiti cha TZS milioni 90" VAT threshold that does not exist** —
+  an R2-adjacent fabricated figure. Single-arm answers both correctly.
+
+**"No class of regression even at parity" — SATISFIED, conditional** on removing Class D and
+fixing eval_368. Both done this session.
+
+**compute raw −2.0 explained:** exactly 13 gains − 15 regressions in that bucket. 13 of the 15
+are clarifications and the judge calls v15 wrong on 9. The same bucket on the reliable
+denominator is **+4.0**.
+
+### Judge comparison — a RANGE, and no accounting flips the sign
+
+The exclusion asymmetry is **14 rows, not the 27** the graded counts (379 vs 352) suggest: 18
+of v16's 32 clarifications sit *inside* the reliable set and are already scored FAIL.
+
+| treatment | v15 | v16 | Δ |
+|---|---|---|---|
+| as reported | 267/359 = 74.4% | 291/363 = 80.2% | +5.8 |
+| **common denominator — 346 rows decisive in BOTH arms** | 264/346 = 76.3% | 276/346 = 79.8% | **+3.5** |
+| clarifications counted FAIL | 267/360 = 74.2% | 291/377 = 77.2% | +3.0 |
+| hard floor (clarifications AND undetermined FAIL) | 267/384 = 69.5% | 291/384 = 75.8% | +6.2 |
+
+**Honest range +3.0 to +6.2; strictest like-for-like +3.5. Do not quote +5.8 alone.**
+Symmetrically, **5 of the 19 gains are judge-FALSE** (eval_008, 034, 186, 321, 331) — four of
+them credited by the two-arm retriever.
+
+### 🚨 The regex scorer pointed the wrong way TWICE on a byte-identical run
+
+| instrument | two-arm | single-arm | Δ |
+|---|---|---|---|
+| regex raw | 78/90 = 86.7% | 74/90 = 82.2% | **+4.4** |
+| judge-augmented, common denominator (n=85) | 67/85 = 78.8% | 67/85 = 78.8% | **0.0** |
+| pure judge, both arms graded (n=81) | 53/81 = 65.4% | 60/81 = 74.1% | **−8.6** |
+
+Part 3 reproduced **exactly** from `3ac522a`, so +4.4 was never a sampling fluke — it is a
+systematic property of **number-set-intersection scoring applied to a retriever whose entire
+job is to inject more numbers into the prompt.** On eval_331 the two instruments disagree on
+**direction**. This settles the two-arm question permanently.
+
+### New vs carried
+
+16 of 17 carried. **21 regressions fixed, 0 gains lost, 8 new gains** (eval_251/252/255/256/
+262/263/265/266 — all PREREQ-2 Tier 1–2, all judge-confirmed).
+
+**One new, and it was mine: eval_368.** Pattern B added `wa muda` / `wa kudumu` to
+`_GROUP_MARKERS`; as bare alternatives they fired on **one** group described as part-time, so
+`has_multiple_groups` → True → `parse_count` → None → the applicability route asked for a
+headcount that was in the question. **This is the nat_07 class, flagged in the adjudication
+before being fixed, not slipped in.**
+
+---
+
+## ✅ The four approved items (IMPLEMENTED 2026-08-08)
+
+### 1. eval_368 — employment type is a split only when BOTH sides are named (`78b672c`)
+
+A real split names both sides, so require both. Blast radius measured by a **561-question
+deterministic sweep: exactly 3 questions changed, all three wrong before** — eval_368,
+eval_377 (*a single* part-time employee), and eval_225 (`"muda wa siku 30"`, a time period
+with no employment sense at all). Only eval_368 changes its answer.
+Must-not-break pair pinned by name: **edge_p04** and **ex_10**.
+R17: `eval/accuracy_gate/employment_type_probes_008.jsonl` (8 probes).
+
+### 2. 🔴 BLOCKING — single-arm is now the v16 arm; paired re-run packaged (`d0e7390`)
+
+Every paired run so far measured v16 **with** the two-arm retriever. **The ADR bar has never
+been measured on the configuration that would ship.** `orch` → `single_arm.retrieve_facts`;
+`orch_alt` → `two_arm.retrieve`. Part 3 is **kept and inverted** so the dropped variant is
+re-tested at the new HEAD rather than assumed to carry.
+
+**PRE-REGISTERED EXPECTATION, recorded before the run:**
+> deterministic **+7** (eval_368; eval_247/371/372/378/379/393) · retrieval **−4** (6 lost, 2
+> regained on the 90 measured) · net **+3 → 305/384 vs v15 300/384 = +1.3 pts raw.**
+
+The retrieval term is uncertain **in both directions**: its −4 comes from the same regex
+scorer that credited two-arm +4.4 twice while the judge scored it 0.0 / −8.6, so −4 is the
+**pessimistic** reading. **100 compute-routed second-arm-eligible questions are outside part 3
+and outside this projection entirely.** The 030a5ff projection landed +7.3 against +7.75 —
+one calibration point, no more.
+
+**Founder instruction, recorded in the docstring:** *if raw lands slightly negative while the
+judge holds, bring the result rather than pre-arguing it — decide against a real number, not a
+projected one.*
+
+### 3. Output shape — TZS 0, and polarity (`bb30e25`)
+
+**eval_378** ("SDL inayolipwa ni **ngapi**?") replied `"SDL haihusiki…"` — judge-confirmed
+correct, scored FAIL for never stating a figure. Below the threshold the obligation is nil
+whatever the payroll is, so say so, and stop asking for a payroll that cannot change the
+answer (**eval_379**). No new regulatory fact: this is `SDL_MIN_EMPLOYEES`, already locked.
+
+> **🚨 The first draft of this branch shipped a confident wrong number TWICE, and the
+> 569-question sweep caught both — the probes did not.** `gp_02` ("vibarua 8 … na 4 …") is a
+> **twelve**-person employer and it answered TZS 0 on the first group's 8; and "wafanyakazi 9
+> na ninaajiri mfanyakazi wa 10" answered TZS 0 where SDL **is** due. Two guards added:
+> `swahili_numbers.sole_headcount` (decline whenever a second count exists in **any** form —
+> `_SECOND_GROUP` only ever caught a *spelled* one) and the **M4 count-transition veto**,
+> which now governs this branch too. **Third occurrence of the nat_07 class this cycle.**
+
+**eval_393** ("wafanyakazi 9 **haitakiwi** kulipa SDL, **sivyo?**") replied *"Sawa kabisa …
+**Hapana.** SDL haihusiki …"* — two opposite polarity markers agreeing with each other. A
+negated premise the verdict **confirms** is agreed with. Gated on **both** the tag predicate
+and `applicable is False`, so the **15 false-premise tag questions** (eval_335–350) keep their
+correct `"Hapana."` lead. Only 2 of the 17 corpus tag questions carry a negated premise.
+
+### 4. Clarification copy — ask for what is actually missing (`bb30e25`)
+
+eval_291 (TZS 320,000 **per fortnight**) and eval_294 (TZS 80,000 **per trip** × 15) reach the
+extractor in the same `role ambiguous` state as a per-person salary and were asked *"is that
+per employee or the total?"*. The missing input is the **monthly** figure. **Both still decline
+to compute** — converting a rate is pattern D and stays deferred — so a false positive costs a
+differently-worded clarification, never a wrong number.
+
+**Measured blast radius for items 3+4 (569-question sweep): 14 corpus questions changed, 0
+regressions, +6 on the deterministic path** — eval_247/371/372/378 (judge said CORRECT, scorer
+said FAIL for want of a figure), eval_379 (clarification → answer), eval_393 (polarity).
+**eval_378 and eval_393 were 2 of the 17 regressions.**
+
+### Tests that asserted the old behaviour
+
+Two pre-existing tests asserted the old wording and **one encoded the old call sequence** — the
+zero branch sits *before* slot extraction, so that model call no longer happens on that path.
+Both updated with the reason in place, not silenced. **One probe (os_08) was mis-authored**: it
+asserted the tag predicate returns False for eval_391 when it correctly returns True, the
+safety coming from the second gate. **The probe was rewritten; the code was not.**
+456 tests pass.
+
+---
+
+## 📊 CLARIFICATION RATE — a WIRING PRECONDITION alongside the ADR bar (set 2026-08-08)
+
+**Target: ≤ 15% of compute-routed questions.** It was **27/102 = 26.5%** at `030a5ff` and is
+predicted at **25/102 = 24.5%** for the next run (eval_368 and eval_379 now answer) — **above
+target, known in advance, and not a reason to hold the run.**
+
+Now computed, printed with the clarified ids, and carried in the summary and artifact by
+`kaggle/eval_phase_d_paired.py`. **The gate will never surface this on its own:** every
+extraction fix converts a clarification into an answer, which the ADR bar rewards only if the
+answer is *also* right, so a run can pass the bar while a quarter of numeric questions ask a
+question back.
+
+**The case FOR the clarifications is strong and should not be lost in chasing the target.**
+Across all 32 at `030a5ff`, the frontier judge says **v15 answered WRONG on 20**, correct on 4,
+undetermined on 3, ungraded on 5. Twenty times a clarification replaced a confident wrong
+number. **Not every clarification is a defect** — the foreign-currency (eval_271/272/273/275/
+276) and prior-context (eval_297/298/299/300) families **should** clarify, which puts a floor
+of roughly 9–12% under the rate. Reaching 15% needs patterns D and F **plus** the p04-family
+extraction work; adjudicate the list before treating the gap as a work queue.
+
+---
+
+## 🔭 Not fixed, deliberately
+
+- **eval_376** ("sina wafanyakazi kabisa — SDL yangu ni ngapi?") still clarifies. `detect_intent`
+  returns `none` because the router requires a figure to take the compute path, and the only
+  "figure" here is an implicit zero. **That is a ROUTER change, not an output-shape one**, and
+  routing changes are exactly what must not be stacked onto an unmeasured configuration.
+  `swahili_numbers.states_no_employees` already exists and is wired for when it is approved.
+- **Patterns D (+2) and F (+4)** — held until the bar is measured on the shipped config.
+- Unchanged tracked-open items: eval_281 (permanent won't-fix), pattern E (won't-do —
+  a `locked_facts` question first), eval_260 + `scoring._YN_NEG` `hai-` verb gap, eval_191
+  mislabel, `kaggle/eval.py` payroll guard, `_VAGUE`'s `kiasi cha` over-match, SAFETY-2 /
+  D-RESIDENCY-1, tokenizer `fix_mistral_regex`, item 4 hybrid retrieval, eval_280.
+- **Outstanding, unrelated:** the Modal token rotation has still not taken effect.
+
+**Next: the founder runs `kaggle/eval_phase_d_paired.py` on Kaggle at this HEAD.**
+Secrets `AFRICA_GIANTS` + `OPENROUTER_API_KEY`, GPU + Internet ON.
+
 
 ## 🏁 PHASE D COMPLETE — v16 NOT WIRED; two-arm retriever NOT SHIPPED (2026-08-07)
 
