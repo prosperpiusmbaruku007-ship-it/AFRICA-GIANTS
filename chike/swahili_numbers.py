@@ -604,7 +604,17 @@ def _to_decimal_amount(raw):
 # is "the" payroll, so anchoring must not run at all; summing the groups is pattern B.
 _GROUP_MARKERS = re.compile(
     r"kati\s+ya(?:o|nu|ke|tu)\b|\bwengine\w*\b|wanaofuata|wa\s+mwisho|wa\s+kwanza|"
-    r"wa\s+muda\b|wa\s+kudumu\b|\btawi\b|\bmatawi\b|\bkundi\b|\bmakundi\b")
+    r"\btawi\b|\bmatawi\b|\bkundi\b|\bmakundi\b")
+# EMPLOYMENT-TYPE split, held SEPARATE from the markers above because it is only a split when
+# BOTH sides are named. The Phase D re-run (030a5ff) caught this: as a bare alternative,
+# `wa muda` fired on eval_368 ("wafanyakazi 12 lakini WOTE ni WA MUDA") — one group described
+# as part-time, not two groups — which made has_multiple_groups True, parse_count None, and the
+# applicability route ask for a headcount that was in the question. It also fired on eval_377
+# ("MFANYAKAZI WA MUDA analipwa...", a single employee) and on eval_225 ("muda wa siku 30"),
+# a time period with no employment sense at all. Requiring both sides keeps the two genuine
+# splits — edge_p04 and ex_10, both "<n> wa kudumu na <n> wa muda" — and drops all three.
+_PART_TIME = re.compile(r"wa\s+muda\b")
+_PERMANENT = re.compile(r"wa\s+kudumu\b")
 _MONTHS = re.compile(r"\b(januari|februari|machi|aprili|mei|juni|julai|agosti|septemba|"
                      r"oktoba|novemba|desemba)\b")
 
@@ -614,6 +624,8 @@ def has_multiple_groups(text):
     no single parsed figure can be the whole payroll."""
     text_l = text.lower()
     if _GROUP_MARKERS.search(text_l):
+        return True
+    if _PART_TIME.search(text_l) and _PERMANENT.search(text_l):
         return True
     return len(set(_MONTHS.findall(text_l))) >= 2
 
