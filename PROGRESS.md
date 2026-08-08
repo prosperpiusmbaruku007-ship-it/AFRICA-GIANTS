@@ -273,6 +273,67 @@ keeps the rate above target under both readings. F1 buys one row for the riskies
 the set and is the one to drop if anything has to be dropped — but it also closes eval_323, the
 **last remaining member of the residual regression class**, which is an argument for keeping it.
 
+### ✅ ALL FOUR SHIPPED — `93e4d84` (2026-08-08)
+
+599-question sweep: **7 rows change, all intended, 0 regressions, 6 clarifications closed.**
+eval_293 → PAYE 36,000 · eval_296 → NSSF 46,800 · eval_323 → SDL 266,000 + PAYE 68,000 ·
+eval_329 → Januari nil / Februari 105,000 · ex_09 → correct · eval_305 → the rate ·
+**eval_314 → already correct and still correct**, its shape now matching a gold that states the
+rate before applying it. That last one is a change to a *working* row, flagged as such.
+
+**R17 — 21 probes; three earned their keep and none was reachable from the corpus.**
+`dv_01` two rate *groups* → naive D asserts 600,000 as a **twelve**-person employer's payroll
+(gp_02's failure mode with a monthly quantity bolted on). `dv_06` two *quantities* → naive D
+returns 650,000 where the truth is 1,950,000. `fv_01` **eval_327** → naive F1 pins both WCF and
+SDL to 300,000 instead of the 4,600,000 group payroll. All three now decline.
+
+**Two defects of mine, caught by behaviour rather than review.** F2 was first nested *inside*
+the crossing veto and could therefore never fire on eval_329, the one row it was written for —
+a multi-period question inherently *has* a crossing, and this branch reads both counts instead
+of assuming one. And `_CROSSING` written as `(?:{_PEOPLE_NOUN}\s+)?` binds loosely, so only the
+last alternative carries the `\s+` and `nikafikia WATU 12` silently stopped matching when the
+surface moved out of `routing.py`; ex_09 changing behaviour exposed it. Both fixed at source.
+
+Also removed a duplication C3 had introduced: the threshold-crossing surface now has **one
+owner** (`swahili_numbers._CROSSING`) and `routing._COUNT_TRANSITION` delegates to it, with a
+test pinning the delegation. Three copies of one safety predicate is the dual-file divergence
+CLAUDE.md warns about.
+
+**Defective clarification rate: 7.8% → 2.9%** on the founder's strict reading, against ≤5%.
+Verified offline end-to-end. **587 tests pass.**
+
+### ⛔ eval_281 — WON'T FIX BY DESIGN. Do not reopen this chasing a number.
+
+"Mshahara wake ni mkubwa kidogo, unafika TZS 920,000 **hivi**" clarifies because the
+approximation veto fires on the hedge. The gold uses 920,000 as stated, so this reads as a
+miss — and closing it means **narrowing an approximation veto so the model treats a hedged
+figure as exact**. That trades a clarification for a guess, which is the wrong direction under
+R8 and the exact trade the never-guess contract exists to refuse. It stays open, and the
+defective rate carries it at ~1% forever. A future session finding this row while chasing a
+metric should stop here.
+
+eval_326 (residency split, D-RESIDENCY-1) and eval_334 (blocked on a **regulatory** question
+about allowance taxability, not a code one) are the other two deliberate residuals.
+
+## 🚀 BATCHED PAIRED RUN — packaged, awaiting the founder's GPU
+
+`kaggle/eval_phase_d_paired.py` at HEAD. Retrieval is **unchanged** from 5d0dcb7, so unlike the
+last run there is no term that can lose rows — the projection's only uncertainty is model-side
+movement on the compute prompts.
+
+**Pre-registered, recorded before the run:** 10 rows change on the 400; 9 were failing and
+should now pass; **raw 314/384 vs v15 300/384 = +3.6 pts** (from +1.3 at 5d0dcb7). Defective
+clarification rate **3/102 = 2.9%**. The method has two exact calibration points (5d0dcb7 hit
+its total *and* its row ids).
+
+**The one row to watch is eval_314** — already passing, shape changed. If it flips to FAIL the
+rate branch is over-broad and should be narrowed to rows that were clarifying.
+
+The harness now computes the **defective** rate against ≤5% and reports the all-clarification
+rate as context only, with the retired target's 14.7% floor stated inline so it cannot be
+reinstated by accident. `GOLD_CLARIFIES` is subtracted rather than the defective rows listed,
+which **fails safe**: a row clarifying for the first time counts as defective until adjudicated.
+
 ### Logged, not fixed
 
 **eval_305** — "Kiwango cha SDL ni ngapi kwa mtu mwenye mshahara wa TZS 480,000?" wants "3.5%,

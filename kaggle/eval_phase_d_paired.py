@@ -39,41 +39,61 @@ RUN HISTORY
   3ac522a (2026-08-06)  v16 two-arm.   raw -6.8, reliable -3.7. Bar FAILED both limbs.
   030a5ff (2026-08-07)  v16 two-arm.   raw +0.5, reliable +1.1. Bar PASSED both limbs, but
                         on a configuration we then decided NOT to ship.
-  this run              v16 SINGLE-arm — the shipped configuration, measured for the first
-                        time. v15 has been byte-identical across both prior runs (400/400
-                        generations, 0 pass-flips), so it is a fixed reference and any
-                        movement below is v16's.
+  5d0dcb7 (2026-08-08)  v16 SINGLE-arm. raw +1.3, reliable +0.8. Bar PASSED on the shipped
+                        configuration for the first time. It also showed v16 and v15 are
+                        BYTE-IDENTICAL on 281 of the 282 scored fact-path rows, so the whole
+                        delta lives in the 102 compute rows.
+  this run              the same shipped configuration plus every remaining known compute
+                        item. THIS IS THE BATCHED RUN: the founder held the GPU (~3h) until
+                        the full set was ready, so this measures the configuration that would
+                        actually be wired rather than an intermediate.
+  v15 has now been byte-identical across THREE runs (400/400 generations, 0 pass-flips), so it
+  is a fixed reference and every movement below is v16's.
 
-WHAT CHANGED SINCE 030a5ff
-  * the two-arm retriever is dropped (see ARM v16 above) — the only change that can LOSE rows
-  * eval_368: employment type is a group split only when BOTH sides are named
-  * SDL below the threshold states TZS 0 instead of only 'haihusiki', and no longer asks for
-    a payroll that cannot change the answer
-  * a negated premise put for confirmation is agreed with, not denied
-  * per-unit pay ("kwa safari", "kila wiki mbili") asks for the MONTHLY figure
+WHAT CHANGED SINCE 5d0dcb7 — all compute-path, none touching retrieval or the fact path
+  * C1/C2  parse_count reads the headcount Swahili actually states: singular 'mfanyakazi
+           mmoja', and a digit governing a pay verb ('18 wenye', '14 wanaopata')
+  * C3     the threshold-crossing veto also sees 'kufikia N' / 'nikafikia watu N', and now has
+           ONE owner (swahili_numbers._CROSSING) that routing delegates to
+  * C4     'kila mmoja' governs the SALARY and 'jumla/wote' the ASK — a scope, not a conflict
+  * D      per-unit rate x per-MONTH quantity ('TZS 18,000 kwa siku, siku 26 kwa mwezi')
+  * F1     a levy's own clause naming its payroll ('SDL ya jumla ya mishahara ya TZS N')
+  * F2     a headcount stated per NAMED MONTH is answered per month
+  * rate   'kiwango cha <levy> ni asilimia ngapi' answers with the rate
+  * copy   a receipt count and an aggregate shift question name the real gap
 
-PRE-REGISTERED EXPECTATION, recorded before the run so it cannot be retrofitted:
-    deterministic gains  +7 rows  (eval_368; eval_247/371/372/378/379/393)
-    retrieval change     -4 rows  (on the 90 measured in part 3: 6 lost, 2 regained)
-    net                  +3 rows  ->  305/384 vs v15 300/384 = +1.3 pts raw
-  The 030a5ff projection (+7.75) came in at +7.3, so the method has one calibration point.
-  It is still a thin margin and model-side movement could erase it.
+PRE-REGISTERED EXPECTATION, recorded before the run so it cannot be retrofitted.
+Measured on the deterministic path over 599 corpus questions; the 5d0dcb7 projection was exact
+on both the total AND the row ids, which gives the method two calibration points.
 
-  THE RETRIEVAL TERM IS THE UNCERTAIN ONE, IN BOTH DIRECTIONS. Its -4 is measured on the
-  regex scorer, which credited two-arm with +4.4 on this same subset TWICE on byte-identical
-  runs while the judge scored it 0.0 / -8.6. So -4 is the pessimistic reading and the judge
-  should move the other way. Separately, 100 compute-routed second-arm-eligible questions
-  are OUTSIDE part 3 and therefore outside this projection entirely.
+    C1-C4 (54b9b29)   +4 answers   eval_275, eval_280, eval_319, eval_320
+    D/F/rate (93e4d84) +7 answers  eval_293, eval_296, eval_305, eval_314, eval_323,
+                                   eval_329, ex_09*        (*ex_09 is a probe, not in the 400)
+    copy (f3e0480)    +2 answers   eval_264, eval_270
+    ---------------------------------------------------------------------------------------
+    net on the 400    10 rows change; 9 were FAILING and should now PASS; eval_314 was
+                      already passing and stays passing (its shape now matches its gold).
+    raw               314/384 vs v15 300/384  ->  +3.6 pts   (from 305/384 at 5d0dcb7)
 
-  IF RAW LANDS SLIGHTLY NEGATIVE WHILE THE JUDGE HOLDS, that is a result to bring back, not
-  a reason to reopen the retrieval decision — founder instruction, 2026-08-08: decide against
-  a real number, not a projected one. Patterns D (+2) and F (+4) are the next increment and
-  are deliberately NOT in this run: no stacking changes onto an unmeasured configuration.
+  RETRIEVAL IS UNCHANGED from 5d0dcb7, so unlike the last run there is no term here that can
+  lose rows. That makes this projection materially firmer than the last one — its uncertainty
+  is model-side movement on the compute prompts, not a retrieval swap.
 
-  Clarification rate is expected at 25/102 = 24.5% against the 15% target, i.e. ABOVE it
-  (27/102 = 26.5% at 030a5ff; eval_368 and eval_379 now answer). Verified offline against the
-  deterministic path, so a materially different figure means something else moved. Being
-  above target is known in advance and is not a reason to hold the run.
+  THE ONE ROW TO WATCH is eval_314: it already answered correctly and this run changes its
+  SHAPE (rate first, then the figure) to match its gold. If it flips to FAIL, the rate branch
+  is over-broad and should be narrowed to rows that were clarifying.
+
+  DEFECTIVE CLARIFICATION RATE — the wiring precondition, target <= 5%. Expected 3/102 = 2.9%
+  on the founder's STRICT reading (eval_305 counted as defective because its gold both answers
+  and asks). The three that remain are deliberate and are NOT to be closed by force:
+  eval_281 (approximation veto — narrowing it trades a clarification for a guess), eval_326
+  (residency split), eval_334 (blocked on a REGULATORY question about allowance taxability).
+  The all-clarification rate is reported for context only; its floor is 14.7% and it is no
+  longer a target.
+
+  IF RAW LANDS BELOW THE PROJECTION WHILE THE JUDGE HOLDS, that is a result to bring back, not
+  a reason to reopen a decision — founder instruction, 2026-08-08: decide against a real
+  number, not a projected one.
 
 HOW TO RUN (Kaggle notebook)
     import requests
@@ -642,21 +662,48 @@ else:
 # converts a clarification into an answer, which the ADR bar rewards only if the answer is
 # also right, so a run can pass the bar while a quarter of numeric questions ask a question
 # back. Tracked here so that cannot happen quietly.
-CLARIFICATION_TARGET = 0.15
+# DEFECTIVE CLARIFICATION RATE — replaces the all-clarification rate, retired 2026-08-08.
+#
+# The old target (<= 15% of ALL compute-routed clarifications) was unreachable BY CONSTRUCTION:
+# its measured floor is 15/102 = 14.7%, because 15 of those questions have a GOLD ANSWER THAT
+# IS ITSELF A CLARIFICATION — answering them would require guessing, which R8 forbids. The
+# founder set it without knowing the floor and retired it the same day. DO NOT REINSTATE IT.
+#
+# What is measured instead is the rate of clarifications where the GOLD ANSWERS. That is the
+# number that tracks product breakage, and unlike the old one it can reach zero without pushing
+# the model into guessing.
+#
+# GOLD_CLARIFIES is the adjudicated list from the 5d0dcb7 findings. Subtracting it (rather than
+# listing the defective rows directly) fails SAFE: a row that starts clarifying for the first
+# time is not on this list, so it counts as DEFECTIVE until someone adjudicates it. A new
+# never-guess win will therefore look like a regression here — that is deliberate, and the fix
+# is to adjudicate it into the list, not to widen the rule.
+GOLD_CLARIFIES = {
+    'eval_271', 'eval_272', 'eval_273', 'eval_275', 'eval_276',   # foreign currency
+    'eval_299',                                                    # no prior context to refer to
+    'eval_264', 'eval_267', 'eval_270',                            # a non-monetary basis offered
+    'eval_291', 'eval_292', 'eval_295',                            # pay basis unresolvable
+    'eval_277', 'eval_294', 'eval_305',                            # headcount genuinely absent
+}
+DEFECTIVE_TARGET = 0.05
 _comp_rows = [r for r in res16 if r['compute'] and r['subdomain'] != 'out_of_corpus']
-_clar_n = sum(r['clarified'] for r in _comp_rows)
+_clar_ids = sorted(r['id'] for r in _comp_rows if r['clarified'])
+_defective = [i for i in _clar_ids if i not in GOLD_CLARIFIES]
+_clar_n = len(_clar_ids)
 _clar_rate = _clar_n / len(_comp_rows) if _comp_rows else 0.0
-clar_ok = _clar_rate <= CLARIFICATION_TARGET
+_def_rate = len(_defective) / len(_comp_rows) if _comp_rows else 0.0
+clar_ok = _def_rate <= DEFECTIVE_TARGET
 print('\n' + '=' * 78)
-print('CLARIFICATION RATE — wiring precondition, target <= 15% of compute-routed')
+print('DEFECTIVE CLARIFICATION RATE — wiring precondition, target <= 5% of compute-routed')
 print('=' * 78)
-print(f'  v16 {_clar_n}/{len(_comp_rows)} = {_clar_rate:.1%}  -> '
-      f'{"PASS" if clar_ok else "ABOVE TARGET"}   (v15 for reference: '
-      f'{sum(r["clarified"] for r in res15 if r["compute"] and r["subdomain"] != "out_of_corpus")}'
-      f'/{len(_comp_rows)})')
-print('  Not every clarification is a defect: foreign-currency and prior-context questions '
-      'SHOULD clarify.\n  Adjudicate the list before treating the gap as work to be done.')
-print(f'  clarified compute ids: {sorted(r["id"] for r in _comp_rows if r["clarified"])}')
+print(f'  DEFECTIVE (gold ANSWERS) {len(_defective)}/{len(_comp_rows)} = {_def_rate:.1%}  -> '
+      f'{"PASS" if clar_ok else "ABOVE TARGET"}')
+print(f'  defective ids: {_defective}')
+print(f'  all clarifications {_clar_n}/{len(_comp_rows)} = {_clar_rate:.1%} '
+      f'(context only — its floor is 14.7%, it is NOT a target)')
+print(f'  of which gold-clarifies (correct never-guess): '
+      f'{sorted(i for i in _clar_ids if i in GOLD_CLARIFIES)}')
+print('  A row that is clarifying for the FIRST time counts as defective until adjudicated.')
 
 # ── VERDICT vs THE ADR BAR ───────────────────────────────────────────────────────
 raw_ok = bucket_table['ALL_400']['raw']['delta_pts'] >= 0
@@ -681,11 +728,16 @@ summary = {
     'adr_bar': {'raw_delta_pts': bucket_table['ALL_400']['raw']['delta_pts'],
                 'reliable_delta_pts': bucket_table['ALL_400']['reliable']['delta_pts'],
                 'raw_pass': raw_ok, 'reliable_pass': rel_ok},
-    'clarification_rate': {'target': CLARIFICATION_TARGET,
-                           'v16_clarified': _clar_n, 'compute_routed': len(_comp_rows),
-                           'rate': round(_clar_rate, 4), 'pass': clar_ok,
-                           'clarified_ids': sorted(r['id'] for r in _comp_rows
-                                                   if r['clarified'])},
+    'clarification_rate': {'target': DEFECTIVE_TARGET,
+                           'metric': 'defective_clarification_rate (gold ANSWERS rather than '
+                                     'clarifies); the all-clarification target was retired '
+                                     '2026-08-08 with a measured floor of 14.7%',
+                           'v16_defective': len(_defective), 'defective_ids': _defective,
+                           'defective_rate': round(_def_rate, 4), 'pass': clar_ok,
+                           'compute_routed': len(_comp_rows),
+                           'v16_clarified': _clar_n, 'all_clarification_rate': round(_clar_rate, 4),
+                           'clarified_ids': _clar_ids,
+                           'gold_clarifies_list': sorted(GOLD_CLARIFIES)},
     'flips': {'gains': len(gains), 'regressions': len(regressions),
               'regression_ids': sorted(regressions), 'gain_ids': sorted(gains),
               'regressions_by_subdomain': dict(_reg_by_sub),
