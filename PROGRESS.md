@@ -77,18 +77,48 @@ Production produced exactly the designed output. **The expected string was malfo
 captured. That trailing segment is the pooled **fact** sub-answer. eval_318 is the only canary
 carrying one, which is why it is the only row affected.
 
-> ### ⚠️ `recover()` IS KNOWN-BROKEN. DO NOT TRUST A CANARY RUN AGAINST IT UNTIL IT IS FIXED.
->
-> Both `scratch/canary_expected_v16.py` and `scratch/preflight_wiring.py` share the defect. A
-> future canary set containing any fact sub-answer will produce a **false FAIL** the same way.
-> Fixing it is the tracked follow-up to this entry.
->
-> The `1476caa` **pre-flight conclusion is unaffected**: it compared the *set* of guard-blanked
-> rows, not rendered strings — `preflight_wiring.py` computed `rendered` and never compared it
-> to `stored`. The defect was latent there, not load-bearing.
-
 Stopping on the deviation and reporting before acting was the correct call and stays the rule:
 a near-miss explained after the fact is exactly what pre-registration exists to prevent.
+
+### ✅ `recover()` FIXED and eval_318 RE-REGISTERED (2026-08-10)
+
+Recovery now lives in **`scratch/render_recovery.py`** and **parses the `_render` grammar**
+instead of slicing at landmarks. `rep.sub_answers` gives the exact part count and which parts
+are compute; each compute part is `body\n<working>` or bare `<working>`, parts join with
+`\n\n`. A small backtracking parse finds the unique segmentation, **reports ambiguity or
+no-parse rather than guessing**, and callers assert a **round-trip invariant**: re-rendering
+with nothing dropped must reproduce the stored text byte-for-byte.
+
+**Three defects, not one — and the second fix was itself wrong.** Worth recording because the
+sequence is the lesson:
+
+| # | defect | direction | how it was caught |
+|---|---|---|---|
+| 1 | text after the LAST working discarded | truncation | eval_318 false FAIL at the cutover |
+| 2 | `find()` anchored on a working occurring **inside a body** — eval_320's model answer contains a line character-identical to the deterministic WCF working | mis-split | only visible once #1 was fixed |
+| 3 | *my first fix*: taking the body as the final `\n\n`-delimited chunk | **under-removal** — left eval_320's contradicting `SDL = TZS 28,000` / `NSSF = 160,000` / `PAYE − TZS 26,000` block in the output | eval_320 stopped matching live |
+
+**Defect 3 is the one to remember.** The first fix passed its own self-check cleanly — a
+narrow/wide verdict comparison — because narrow and wide bodies both *contained* a
+contradiction, so the guard **verdict** agreed while the **extent of removal** silently
+differed. An instrument that compares verdicts cannot see a defect in extent. What caught it
+was re-running the corrected harness against the **recorded live replies** and noticing that a
+row which had previously PASSED now disagreed. **A fix that changes a row which was already
+correct is a fix that needs explaining**, and that check is now the habit.
+
+**Verification, all three loops:**
+
+| check | result |
+|---|---|
+| corrected expectations vs pre-registration | **exactly one row changed — eval_318**; the other five shas byte-identical to what was pre-registered |
+| eval_318 corrected expectation, derived from the artifact + guard **without reference to the live reply** | sha `6a314afc` — **exactly the live sha** |
+| full live canary re-run against the corrected file | **6/6 PASS**, every row byte-identical |
+| `preflight_wiring.py` re-run with the parser | 87/87 workings byte-identical, **0 unrecoverable, 0 round-trip failures**, guard touches exactly eval_318 + eval_320 |
+
+The `1476caa` pre-flight conclusion therefore **stands, and now stands by construction rather
+than by luck**: it had compared the *set* of guard-blanked rows and never compared its
+`rendered` string to `stored`, so the broken recovery was latent rather than load-bearing.
+That is no longer something to rely on — the round-trip assert makes a mis-parse fail loudly.
 
 ### 🟢 Production reproduces the harness BYTE-IDENTICALLY
 
@@ -121,10 +151,16 @@ directions.
 
 - **SAFETY-3 is now user-facing** and is the next work item. The VAT inversion was not live
   under v15 (which never applies the threshold); it went live at this deploy.
-- **Fix `recover()`** in both scratch harnesses, then re-register eval_318 so the canary set is
-  trustworthy again.
+- ~~Fix `recover()` in both scratch harnesses, then re-register eval_318~~ — **done
+  2026-08-10**, see the section above.
 - The standing audit of remaining repo-relative reads inside the Modal image (CONTAINER-PATH-1)
   is unchanged and still open.
+
+**Canary artifacts.** `scratch/canary_expected_v16.PRE_REGISTERED.json` is the untouched
+pre-cutover record and is **not** rewritten to match the outcome;
+`scratch/canary_expected_v16_corrected.json` is the post-fix version, stamped as such, with a
+`differs_from_pre_registration` flag per row. Keeping both is the point — a pre-registration
+edited after the fact is not a pre-registration.
 
 **🏁 CYCLE FULLY CLOSED (2026-07-26):** the entire router-investigation + defect-fix cycle is now
 closed end-to-end with real GPU confirmation. Follow-up #3's last two threads landed this session:
