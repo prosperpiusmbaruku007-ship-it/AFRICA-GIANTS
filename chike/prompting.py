@@ -40,13 +40,45 @@ _FACTS_HEADER = "UKWELI ULIOTHIBITISHWA KWA SWALI HILI:"
 _FACTS_FOOTER = "Tumia ukweli huu. Usibuni takwimu ambazo hazipo hapa."
 
 
-def load_system_prompt() -> str:
-    """Read SYSTEM_PROMPT from kaggle/chike_config.json (R14 single source of truth)."""
+def load_system_prompt(*, required: bool = True) -> str:
+    """Read SYSTEM_PROMPT from kaggle/chike_config.json (R14 single source of truth).
+
+    RAISES by default when the config cannot be read or carries no system_prompt.
+
+    It used to return "" on failure. That is the CONTAINER-PATH-1 shape (2026-08-09):
+    `_CONFIG_PATH` is REPO-RELATIVE, and the Modal image mounts only `chike/` while baking the
+    config to `/root/assets/` — so inside the container this path does not exist and the soft
+    default would hand the model an EMPTY system prompt. That is not a degraded answer, it is
+    Chike with no persona, no register, and none of the R11 out-of-scope boundaries the prompt
+    declares to the model. Silent, and worse than a crash.
+
+    Production is currently safe only because `modal_app.ChikeModel` passes
+    `system_prompt=BASE_SYSTEM_PROMPT` explicitly — safe by the caller's habit, not by
+    construction, which is exactly what the phrase-list defect looked like the day before it
+    bit. Strict-by-default closes it for every future caller instead.
+
+    `required=False` restores the old soft behaviour for callers that genuinely want a
+    best-effort read; nothing on a serving path should use it.
+    """
     try:
         with open(_CONFIG_PATH, encoding="utf-8") as fh:
-            return json.load(fh).get("system_prompt", "")
-    except (FileNotFoundError, json.JSONDecodeError):
+            prompt = json.load(fh).get("system_prompt", "")
+    except (FileNotFoundError, json.JSONDecodeError) as exc:
+        if required:
+            raise RuntimeError(
+                f"system_prompt unavailable: cannot read {_CONFIG_PATH} ({exc}). "
+                "This path is REPO-RELATIVE and does not resolve inside the Modal image — "
+                "pass system_prompt explicitly from the baked config (see CONTAINER-PATH-1 "
+                "in PROGRESS.md), or call load_system_prompt(required=False) if an empty "
+                "prompt is genuinely acceptable here."
+            ) from exc
         return ""
+    if required and not prompt.strip():
+        raise RuntimeError(
+            f"system_prompt is empty in {_CONFIG_PATH} — refusing to build a prompt with no "
+            "persona and no R11 scope boundaries."
+        )
+    return prompt
 
 
 def build_enriched_system(system_prompt: str, facts: Sequence[str]) -> str:

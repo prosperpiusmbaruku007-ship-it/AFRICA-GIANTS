@@ -87,7 +87,21 @@ class LocalAdapter(ModelBackend):
             json={"prompt": prompt, "params": merged},
             timeout=self.timeout,
         )
-        resp.raise_for_status()
+        # The token rides in the QUERY STRING, so requests' own HTTPError message embeds it
+        # verbatim ("401 Client Error: Unauthorized for url: ...?token=<secret>"). Raising it
+        # unmodified prints a live credential into pytest output, CI logs and terminal
+        # scrollback — which is exactly what happened on 2026-08-09 when the post-rotation
+        # 401s surfaced through these tests. Scrub before it escapes; the callers' docstrings
+        # promise the token is never logged, and this is what makes that true.
+        try:
+            resp.raise_for_status()
+        except Exception as exc:                                       # noqa: BLE001
+            msg = str(exc)
+            if self.token:
+                msg = msg.replace(self.token, "<TOKEN>")
+            raise RuntimeError(
+                f"raw endpoint call failed [{resp.status_code}]: {msg}"
+            ) from None            # `from None` — the original exception also carries the URL
         data = resp.json()
         if "completion" not in data:
             raise RuntimeError(f"raw endpoint returned no 'completion': {data}")

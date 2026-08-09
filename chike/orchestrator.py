@@ -139,8 +139,22 @@ class Orchestrator:
         # the 53 ooc / 24 in_scope union, no longer an 8-phrase stub). Either list can be
         # overridden for tests; a partial override still fills the other from config.
         if ooc_phrases is None or in_scope_phrases is None:
-            cfg_ooc, cfg_in = classification.resolve_phrases(
-                classification.load_local_config())
+            # CONTAINER-PATH-1 (2026-08-09): load_local_config() reads a REPO-RELATIVE path and
+            # fails SOFT to {}. Inside the Modal image that path does not exist, so defaulting
+            # here would silently yield the hardcoded-only list — 39 OOC phrases instead of
+            # 107, dropping the entire SAFETY-1 audit and reopening a launch-blocking Gate-2
+            # leak. Refuse to default from a config that could not be read: a caller on a
+            # serving path must pass the phrase lists explicitly from ITS OWN loaded config.
+            _cfg = classification.load_local_config()
+            if not _cfg:
+                raise RuntimeError(
+                    "cannot default ooc_phrases/in_scope_phrases: "
+                    f"{classification._LOCAL_CONFIG_PATH} is unreadable, so resolve_phrases() "
+                    "would silently return the hardcoded-only list and drop every "
+                    "config-only phrase (107 -> 39, the whole SAFETY-1 audit). Pass both "
+                    "lists explicitly — see CONTAINER-PATH-1 in PROGRESS.md."
+                )
+            cfg_ooc, cfg_in = classification.resolve_phrases(_cfg)
         self.ooc_phrases = tuple(ooc_phrases) if ooc_phrases is not None else tuple(cfg_ooc)
         self.in_scope_phrases = (tuple(in_scope_phrases) if in_scope_phrases is not None
                                  else tuple(cfg_in))
