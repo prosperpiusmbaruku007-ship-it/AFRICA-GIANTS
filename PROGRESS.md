@@ -494,6 +494,135 @@ SAFETY-2 / D-RESIDENCY-1 class, where body and working agree because both derive
 mis-resolved input, is untouched by it. It also cannot see a fact sub-answer, which is precisely
 why the eval_318 VAT defect below needs its own item rather than being folded in here.
 
+## 🔬 SAFETY-3 INVESTIGATION ROUND — it is a CLASS, and it is wider than "wrong direction" (2026-08-10)
+
+**Nothing implemented. Proposal only.** Artifact:
+**`eval/results/safety3_threshold_investigation.json`**. Probes preserved at
+**`eval/accuracy_gate/threshold_comparison_probes_024.jsonl`** (note: this takes the sweep
+corpus from 620 rows to 644 — no test is wired to them yet, that belongs with the fix).
+
+### The headline: the corpus understated the failure rate by about five times
+
+| instrument | result |
+|---|---|
+| corpus exposure (620 rows) | **132 rows require a threshold comparison**; 48 have it performed by the model |
+| corpus outcome (400 gate, both arms, adjudicated individually) | **1** answer with a wrong verdict (eval_318, v16) + 1 wrong-direction phrase with a right conclusion (eval_124, v15, fixed in v16) |
+| **24 authored probes against LIVE v16** | **7 of 20 model-performed comparisons are WRONG (35%)**; **4 of 4 deterministic controls correct** |
+
+**R17, demonstrated with numbers rather than restated.** The corpus rate is 1-in-8; the authored
+rate is 7-in-20. Every one of the extra failures is a *form the corpus does not contain*. The
+corpus was not reassuring — it was silent.
+
+### Six distinct failure mechanisms, not one
+
+`eval_318` is the direction inversion. It is the *least* of what is there.
+
+| mechanism | probe | what happened |
+|---|---|---|
+| **direction inversion** | th_03 | TZS 195M vs a 200M threshold → *"umepita kizingiti"*. Invents an obligation that does not exist. |
+| **direction inversion** | th_17 | reproduces the live eval_318 inversion byte-for-byte |
+| **wrong threshold selected** | th_06 | TZS 120M in six months exceeds the **100M six-month limb**; the answer applies the 200M annual limb and says no |
+| **no unit normalisation** | th_08 | TZS 20M/month = 240M/yr. The answer states *"you cross 100M in 5.5 months"* and then concludes **below the threshold** |
+| **floor treated as ceiling** | th_16 | paying TZS 200,000 against a TZS 175,000 minimum wage → *"malipo ya ziada juu ya hapo ni kinyume cha sheria"*. **It tells an employer that paying above the minimum wage is illegal.** |
+| **threshold conflation** | th_24 | TZS 50M is above EFD's 11M and below VAT's 200M; the answer orders **VAT registration off the EFD threshold** |
+| **sub-question dropped** | th_20 | the VAT part of a multi-part question is never answered at all |
+
+**th_16 is arguably worse than eval_318.** A fabricated prohibition on paying workers *more*
+than the minimum is wrong-direction advice on a labour-law question, and nothing in the corpus
+or the gate would ever have found it.
+
+**Both directions fail.** th_03/th_24 invent obligations; th_06/th_08/th_17 excuse real ones. A
+fix that biases toward "register" would trade one class of wrong advice for another.
+
+### Root cause: not retrieval, not generation quality — a MISSING DETERMINISTIC PATH
+
+Established, not assumed:
+
+1. **Retrieval is fine.** The RAG index carries five VAT-threshold entries, including the
+   Swahili-first *"Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12."* The
+   model **recites 200,000,000 correctly** and then compares wrongly. The fact is present and
+   correctly stated in the very sentence that misapplies it.
+2. **Not generation quality either.** `th_01` — the identical 205M-vs-200M comparison, asked
+   standalone — is answered **correctly**. The model can do it. It just is not required to.
+3. **There is no route.** `routing.COMPUTE_TYPES` is `("sdl","nssf","paye","wcf")`. VAT, EFD,
+   minimum wage and the share-capital bands have **no computation type at all**, so
+   `detect_intent("je nasajili VAT kama mapato ni TZS 205,000,000?")` returns **`none`** and the
+   comparison is performed in free generation with no `ComputationResult` behind it.
+
+**This is ROUTING-GAP-PAYE in a new domain, and the same argument settles it.** SDL and PAYE sit
+behind a rules engine because a levy amount is arithmetic. *A threshold comparison is also
+arithmetic* — `V >= T` — and it is the simpler of the two. The probe result is the measurement
+that argument was always missing: **4/4 where the engine owns the comparison, 13/20 where the
+model does.**
+
+Corollary: because there is no `ComputationResult`, **neither fidelity guard has jurisdiction**.
+D-FIDELITY-2 blanked eval_318's SDL body and left the VAT inversion untouched — correctly, by
+its own design. No amount of guard widening reaches this; it needs a route.
+
+### Does v16 being live make it worse? Yes — three ways, and one way better
+
+**Worse:**
+1. **Authority by association.** Under v16 the inversion is rendered *after* two deterministic
+   workings, inside an answer that otherwise reads as verified computation. v15 delivered the
+   same class of error as hedged prose.
+2. **The guard raised its share of the answer.** D-FIDELITY-2 blanked the contradicting SDL
+   body, so the wrong VAT sentence went from a clause inside a long paragraph to **186 of the
+   317 characters (59%)** of the live reply. Removing wrong prose around a wrong claim
+   concentrates it.
+3. **v15 did not assert it.** Paired over the 79 gate rows demanding a comparison, v15 leaves
+   eval_318 **UNRESOLVED** — it states the rule conditionally (*"unatakiwa kujiandikisha **ikiwa**
+   mauzo yanazidi..."*) and never applies it. v16 applies it and gets it backwards. `undetermined
+   → wrong`.
+
+**Better:** all **four** rows where v16 asserts a direction v15 did not are **SDL headcount**
+rows, all four routed to the engine, all four **judge-correct**, and two of them were
+**judge-wrong under v15**. Where the deterministic path exists, v16 strictly improves the
+comparison. That is the same finding from the other side.
+
+### Options
+
+| | approach | closes | cost / risk |
+|---|---|---|---|
+| **A** | **Deterministic threshold route** — give the engine `vat_registration` and `efd_requirement` computation types; extraction supplies V and its period, the engine holds T and emits verdict + working | direction, threshold selection, conflation, and unit normalisation — all four are consequences of the engine not owning the comparison. Also gives both fidelity guards jurisdiction for the first time | period extraction (12mo / 6mo / monthly) is a **new extraction surface** and th_08 shows it is genuinely hard. Router changes carry the highest blast radius in this system (ROUTING-GAP-PAYE) |
+| **B** | **Fact-path comparison guard** — post-generation: recompute V vs T on any answer reciting a known threshold, blank or correct on mismatch | direction inversion and conflation, with no routing or extraction change | **cannot** fix th_06/th_08 — knowing *which limb* and *how to annualise* is exactly what it lacks, so it must blank. Blanking a fact sub-answer **deletes content** rather than replacing it with truth — the stated reason D-FIDELITY-2 excluded fact sub-answers. My own detector needed three iterations and still had 4 false positives before per-threshold attribution |
+| **C** | **Refuse to compare** (R8 never-guess) — state the rule conditionally, decline the verdict. This is exactly v15's eval_318 behaviour | every wrong answer, immediately | turns 13 currently-correct answers into non-answers, on a question ("am I over the VAT threshold?") that is core to the product. Gate would score it worse — clarifications FAIL under most treatments |
+
+**Recommendation — A for VAT and EFD, staged, with C as the fallback inside it.**
+
+- **Phase 1: VAT (200M/12mo + 100M/6mo) and EFD (11M) only.** Both are single scalars needing
+  no sector or band resolution, and they carry the question volume — 29 and 6 corpus rows. When
+  the period is unambiguous the engine answers; **when the period cannot be extracted the engine
+  declines and the answer states the rule conditionally** (option C, scoped to the hard case
+  rather than applied to everything). That keeps th_08 safe without pretending to solve it.
+- **Phase 2: minimum wage — separate investigation.** GN 605A is 16 sectors and 46 sub-sectors;
+  resolving which floor applies is a bigger extraction problem than the comparison. **th_16 may
+  not need a route at all** — a locked fact stating plainly that paying *above* the minimum is
+  lawful is cheap and worth doing on its own.
+- **Phase 3: unit normalisation** (th_08) as its own item. Annualising a monthly figure is an
+  extraction problem, not a comparison problem, and folding it into Phase 1 would hide it.
+
+**Do not skip the R17 step on the router change.** These 24 probes are the *start* of the probe
+set, not the whole of it — a router change needs its own adversarial probes written against the
+new cue list, plus the 644-row sweep.
+
+### Three incidental defects, each needing its own item
+
+1. **🔴 D-FIDELITY-1 has an attribution gap — VERIFIED, not suspected.** th_19's body says
+   *"SDL ... **sawa na** TZS 210,000"* while its working says **TZS 17,500**. Checked directly:
+   `_asserted_results(body)` returns an **empty set** and `body_contradicts_working` returns
+   **False**. `_RESULT` matches `=` only and `_ATTRIBUTED` matches `[:=]`; **"sawa na" is the
+   ordinary Swahili way to state a result and neither pattern sees it.** This is the same shape
+   as the colon widening that D-FIDELITY-2's ablation proved load-bearing, and it means a body
+   contradicting its own working passes silently.
+2. **🔴 Compute base error on embedded multi-part.** th_19 computes SDL on a base of
+   **TZS 500,000** instead of the stated 6,000,000; th_20 computes NSSF on **TZS 750,000**
+   instead of 9,000,000. Both are the stated payroll **divided by 12** — a per-employee or
+   per-month derivation firing where it should not. The deterministic layer is confidently
+   wrong, which is the SAFETY-2 / D-RESIDENCY-1 class, not this one.
+3. **🟠 A fact sub-question can be silently dropped** (th_20 never answers its VAT part) and
+   **🟠 a fabricated figure** (th_22 invents a *"TZS 3,000 minimum"* WCF that appears in no
+   locked fact).
+
 ## 🔴 SAFETY-3 — eval_318 answers the VAT threshold BACKWARDS on the fact path (2026-08-09)
 
 > ### ⬆️ PROMOTED TO TOP OF THE QUEUE — 2026-08-09, at the v16 cutover

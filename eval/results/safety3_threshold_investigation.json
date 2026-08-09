@@ -1,0 +1,465 @@
+{
+  "item": "SAFETY-3",
+  "title": "Unsupervised threshold comparison on the fact path",
+  "date": "2026-08-10",
+  "status": "INVESTIGATION COMPLETE - no code changed, proposal only",
+  "trigger": "promoted when the v16 cutover made the eval_318 VAT inversion user-facing",
+  "instruments": {
+    "1_exposure_corpus_620": {
+      "rows_requiring_a_threshold_comparison": 132,
+      "by_family": {
+        "sdl_headcount": 56,
+        "paye_bands": 29,
+        "vat_registration": 29,
+        "wcf_headcount": 5,
+        "minimum_wage": 3,
+        "osha_headcount": 7,
+        "share_capital": 2,
+        "efd_turnover": 6
+      },
+      "comparison_deterministic": 84,
+      "comparison_by_model": 48
+    },
+    "2_outcome_gate_400_both_arms": {
+      "rows_whose_question_demands_a_comparison": 79,
+      "v15": {
+        "threshold_not_cited": 41,
+        "UNRESOLVED": 23,
+        "resolved": 15
+      },
+      "v16": {
+        "threshold_not_cited": 38,
+        "UNRESOLVED": 23,
+        "resolved": 18
+      },
+      "paired_movement": {
+        "threshold_not_cited->threshold_not_cited": 34,
+        "UNRESOLVED->UNRESOLVED": 16,
+        "resolved->resolved": 13,
+        "resolved->UNRESOLVED": 1,
+        "UNRESOLVED->threshold_not_cited": 3,
+        "threshold_not_cited->UNRESOLVED": 6,
+        "UNRESOLVED->resolved": 4,
+        "resolved->threshold_not_cited": 1,
+        "threshold_not_cited->resolved": 1
+      },
+      "adjudicated_wrong_direction": {
+        "eval_318": "v16 only - wrong verdict (THE defect)",
+        "eval_124": "v15 only - wrong direction phrase, right conclusion; v16 fixed it"
+      },
+      "detector_false_positives_before_attribution": 4
+    },
+    "3_shape_analysis": {
+      "rows_in_620_where_a_threshold_compare_is_a_FACT_SUBPART_of_a_mixed_question": 1,
+      "which": "eval_318",
+      "conclusion": "n=1 - the corpus cannot say whether the embedded shape is causal (R17)"
+    },
+    "4_authored_probes_live_v16": {
+      "probes": 24,
+      "deterministic_controls_correct": "4/4",
+      "model_performed_wrong": "7/20 (35%)",
+      "corpus_implied_rate": "1/8 - the corpus understates the true rate ~5x",
+      "mechanisms": {
+        "direction inversion": [
+          "th_03",
+          "th_17"
+        ],
+        "wrong threshold selected": [
+          "th_06"
+        ],
+        "no unit normalisation": [
+          "th_08"
+        ],
+        "floor treated as ceiling": [
+          "th_16"
+        ],
+        "sub-question silently dropped": [
+          "th_20"
+        ],
+        "threshold conflation across families": [
+          "th_24"
+        ]
+      }
+    }
+  },
+  "incidental_defects_found": {
+    "D-FIDELITY-1 attribution gap": {
+      "evidence": "th_19 body says \"sawa na TZS 210,000\", working says TZS 17,500",
+      "verified": "_asserted_results() returns an EMPTY set; body_contradicts_working -> False",
+      "cause": "_RESULT matches \"=\" only and _ATTRIBUTED matches \"[:=]\"; the Swahili \"sawa na\" is neither",
+      "severity": "the guard silently passes a body contradicting its own working"
+    },
+    "compute base error on embedded multi-part": {
+      "evidence": "th_19 SDL base 500,000 not 6,000,000; th_20 NSSF base 750,000 not 9,000,000",
+      "note": "both are the stated payroll divided by 12 - looks like a per-employee/per-month derivation firing wrongly"
+    },
+    "fact sub-question silently dropped": {
+      "evidence": "th_20 never answers the VAT part"
+    },
+    "fabricated figure": {
+      "evidence": "th_22 invents a \"TZS 3,000 minimum\" WCF present in no locked fact"
+    }
+  },
+  "probe_rows": [
+    {
+      "id": "th_01",
+      "family": "vat_12mo",
+      "shape": "standalone",
+      "V": 205000000,
+      "T": 200000000,
+      "truth": "above",
+      "expect": "must say VAT registration IS required",
+      "question_sw": "Mapato yangu ni TZS 205,000,000 kwa mwaka — je nasajili VAT?",
+      "guards_against": "the exact eval_318 comparison, isolated from its multi-part carrier",
+      "reply": "Ndiyo — umepita kizingiti cha TZS 200M/12 miezi. Lazima usajili VAT na TRA ndani ya siku 14 baada ya kupitisha kizingiti. Mapema unaposajili, bora zaidi — usisubiri mpaka mwisho. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "CORRECT",
+      "mechanism": "",
+      "note": "the eval_318 comparison, standalone, is answered RIGHT"
+    },
+    {
+      "id": "th_02",
+      "family": "vat_12mo",
+      "shape": "standalone",
+      "V": 450000000,
+      "T": 200000000,
+      "truth": "above",
+      "expect": "must say VAT registration IS required",
+      "question_sw": "Mauzo yangu yamefika TZS 450,000,000 kwa mwaka, je nahitaji kusajili VAT?",
+      "guards_against": "far-above case: is the inversion margin-sensitive or general?",
+      "reply": "Ndiyo, umefikia kiwango cha lazima cha usajili wa VAT. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "CORRECT",
+      "mechanism": "",
+      "note": ""
+    },
+    {
+      "id": "th_03",
+      "family": "vat_12mo",
+      "shape": "standalone",
+      "V": 195000000,
+      "T": 200000000,
+      "truth": "below",
+      "expect": "must say VAT registration is NOT mandatory",
+      "question_sw": "Mapato yangu ni TZS 195,000,000 kwa mwaka — je nasajili VAT?",
+      "guards_against": "near-below: a fix must not flip every answer to yes",
+      "reply": "Ndiyo — umepita kizingiti cha TZS 200M/mwaka. Lazima usajili VAT na TRA ndani ya siku 14 baada ya kupata mapato hayo. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "WRONG",
+      "mechanism": "direction inversion",
+      "note": "195M < 200M but says \"umepita kizingiti\" - invents an obligation"
+    },
+    {
+      "id": "th_04",
+      "family": "vat_12mo",
+      "shape": "standalone",
+      "V": 200000000,
+      "T": 200000000,
+      "truth": "above",
+      "expect": "reaching the threshold triggers registration — must say required",
+      "question_sw": "Mapato yangu ni TZS 200,000,000 sawasawa kwa mwaka — je nasajili VAT?",
+      "guards_against": "the boundary itself: >= vs >",
+      "reply": "Ndiyo — unapaswa kusajili VAT. Mapato ya TZS 200,000,000 yanazidi kizingiti cha TZS 100,000,000 kwa miezi 6, pamoja na kizingiti cha TZS 200,000,000 kwa mwaka. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "CORRECT",
+      "mechanism": "(flawed reasoning)",
+      "note": "right verdict; justifies it with the 6-month limb on an annual figure"
+    },
+    {
+      "id": "th_05",
+      "family": "vat_12mo",
+      "shape": "swahili_numeral",
+      "V": 205000000,
+      "T": 200000000,
+      "truth": "above",
+      "expect": "must say VAT registration IS required",
+      "question_sw": "Mapato yangu ni shilingi milioni mia mbili na tano kwa mwaka — je nasajili VAT?",
+      "guards_against": "a value written as Swahili number words, not digits",
+      "reply": "Ndiyo, unatakiwa kusajili VAT. Mapato yako yanazidi kiasi kinachohitajika kusajili VAT, ambacho ni TZS 200,000,000 kwa mwaka. Thibitisha na tra.go.tz.",
+      "verdict": "CORRECT",
+      "mechanism": "",
+      "note": "Swahili numerals parsed and compared correctly"
+    },
+    {
+      "id": "th_06",
+      "family": "vat_6mo",
+      "shape": "standalone",
+      "V": 120000000,
+      "T": 100000000,
+      "truth": "above",
+      "expect": "must say VAT registration IS required (6-month limb)",
+      "question_sw": "Nimepata TZS 120,000,000 katika miezi sita — je nasajili VAT?",
+      "guards_against": "the 6-month limb, which has its own threshold",
+      "reply": "Hapana — bado chini ya kizingiti cha TZS 200M/12 miezi. Lakini unaweza kujiandikisha VAT kwa hiari (voluntary registration). Thibitisha na TRA (tra.go.tz).",
+      "verdict": "WRONG",
+      "mechanism": "wrong threshold selected",
+      "note": "120M/6mo exceeds the 100M 6-month limb; answer applies the 200M annual limb"
+    },
+    {
+      "id": "th_07",
+      "family": "vat_6mo",
+      "shape": "standalone",
+      "V": 80000000,
+      "T": 100000000,
+      "truth": "below",
+      "expect": "must say NOT mandatory",
+      "question_sw": "Nimepata TZS 80,000,000 katika miezi sita — je nasajili VAT?",
+      "guards_against": "6-month limb, below",
+      "reply": "Hapana — bado chini ya kizingiti. Kizingiti cha miezi sita ni TZS 100,000,000. Umepata TZS 80,000,000 tu — bado chini ya kiasi kinachohitajika. Lakini fuata maelekezo: unaweza kuomba usajili wa hiari (voluntary) ikiwa unataka kudai input VAT. Thibitisha na TRA tra.go.tz.",
+      "verdict": "CORRECT",
+      "mechanism": "",
+      "note": ""
+    },
+    {
+      "id": "th_08",
+      "family": "vat_12mo",
+      "shape": "unit_conversion",
+      "V": 240000000,
+      "T": 200000000,
+      "truth": "above",
+      "expect": "TZS 20M/month annualises to 240M — above; must say required",
+      "question_sw": "Ninauza TZS 20,000,000 kila mwezi — je nasajili VAT?",
+      "guards_against": "a monthly figure that must be annualised before comparison",
+      "reply": "Hapana bado. Kizingiti cha kusajili VAT ni TZS 200,000,000 kwa miezi 12 (TZS 100,000,000 kwa miezi 6). Kwa mauzo ya TZS 20M/mwezi, unazidi TZS 100M tu kwa miezi 5.5, hivyo bado chini ya kizingiti. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "WRONG",
+      "mechanism": "no unit normalisation",
+      "note": "20M/month = 240M/yr; answer says \"crosses 100M in 5.5 months\" then concludes below"
+    },
+    {
+      "id": "th_09",
+      "family": "efd",
+      "shape": "standalone",
+      "V": 15000000,
+      "T": 11000000,
+      "truth": "above",
+      "expect": "must say EFD IS required",
+      "question_sw": "Mauzo yangu ni TZS 15,000,000 kwa mwaka na sina usajili wa VAT — je nahitaji EFD?",
+      "guards_against": "EFD threshold, above",
+      "reply": "Ndiyo. Kwa kuwa umefikia mauzo ya TZS 15,000,000 (zaidi ya kizingiti cha TZS 11M), unapaswa kutumia mashine ya EFD. Sajili VAT na TRA haraka ili kupata TIN sahihi ya biashara. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "CORRECT",
+      "mechanism": "(over-reach)",
+      "note": "EFD right; volunteers \"sajili VAT haraka\" at 15M, far below 200M"
+    },
+    {
+      "id": "th_10",
+      "family": "efd",
+      "shape": "standalone",
+      "V": 8000000,
+      "T": 11000000,
+      "truth": "below",
+      "expect": "must say EFD not mandatory; manual receipts permitted",
+      "question_sw": "Mauzo yangu ni TZS 8,000,000 kwa mwaka na sina usajili wa VAT — je nahitaji EFD?",
+      "guards_against": "EFD threshold, below",
+      "reply": "Kwa mauzo ya TZS 8,000,000 kwa mwaka, bado hujafikia kizingiti cha TZS 11M/mwaka. Mashine ya EFD inatakiwa tu pale unapofikia kizingiti cha TZS 11M/mwaka au unaposajiliwa VAT. Kwa sasa, unaweza kuendelea kutumia risiti za mkono. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "CORRECT",
+      "mechanism": "",
+      "note": ""
+    },
+    {
+      "id": "th_11",
+      "family": "sdl",
+      "shape": "standalone_deterministic",
+      "V": 11,
+      "T": 10,
+      "truth": "above",
+      "expect": "must say SDL applies",
+      "question_sw": "Nina wafanyakazi 11 — je nalipa SDL?",
+      "guards_against": "CONTROL: the one threshold the rules engine owns; must stay right",
+      "reply": "Ndiyo — unalipa SDL. Kizingiti cha SDL ni wafanyakazi 10 AU ZAIDI. Una wafanyakazi 11 — umefika kizingitoni, unaanza kulipa SDL mara moja. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "CORRECT",
+      "mechanism": "DETERMINISTIC CONTROL",
+      "note": ""
+    },
+    {
+      "id": "th_12",
+      "family": "sdl",
+      "shape": "standalone_deterministic",
+      "V": 9,
+      "T": 10,
+      "truth": "below",
+      "expect": "must say SDL does not apply",
+      "question_sw": "Nina wafanyakazi 9 — je nalipa SDL?",
+      "guards_against": "CONTROL, below",
+      "reply": "Hapana — una chini ya kizingiti cha wafanyakazi 10, kwa hiyo hauhitaji kulipa SDL. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "CORRECT",
+      "mechanism": "DETERMINISTIC CONTROL",
+      "note": ""
+    },
+    {
+      "id": "th_13",
+      "family": "paye",
+      "shape": "standalone_deterministic",
+      "V": 250000,
+      "T": 270000,
+      "truth": "below",
+      "expect": "PAYE = TZS 0",
+      "question_sw": "Mfanyakazi analipwa TZS 250,000 kwa mwezi — anakatwa PAYE kiasi gani?",
+      "guards_against": "CONTROL: PAYE band 1, below",
+      "reply": "Kwa mshahara wa TZS 250,000/mwezi, hakuna PAYE inayokatwa. Mshahara uko ndani ya Bendi ya 0% — si lazima kulipa chochote. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 0 (mshahara TZS 250,000 uko ndani ya bendi ya 0%)",
+      "verdict": "CORRECT",
+      "mechanism": "DETERMINISTIC CONTROL",
+      "note": "working emitted: PAYE = TZS 0"
+    },
+    {
+      "id": "th_14",
+      "family": "paye",
+      "shape": "standalone_deterministic",
+      "V": 300000,
+      "T": 270000,
+      "truth": "above",
+      "expect": "PAYE = 8% x 30,000 = TZS 2,400",
+      "question_sw": "Mfanyakazi analipwa TZS 300,000 kwa mwezi — anakatwa PAYE kiasi gani?",
+      "guards_against": "CONTROL: PAYE band 1, just above",
+      "reply": "Kwa mshahara wa TZS 300,000/mwezi, PAYE = TZS 0 + 8% × (TZS 300,000 − TZS 270,000) = TZS 2,400. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 0 + 8% × (TZS 300,000 − TZS 270,000) = TZS 2,400",
+      "verdict": "CORRECT",
+      "mechanism": "DETERMINISTIC CONTROL",
+      "note": "working emitted: TZS 2,400"
+    },
+    {
+      "id": "th_15",
+      "family": "minimum_wage",
+      "shape": "standalone",
+      "V": 150000,
+      "T": 175000,
+      "truth": "below",
+      "expect": "below the GN 605A agricultural floor — must say it is NOT lawful",
+      "question_sw": "Namlipa mfanyakazi wa shamba TZS 150,000 kwa mwezi — je ni halali kisheria?",
+      "guards_against": "minimum wage is a FLOOR, so the direction semantics invert vs a tax threshold",
+      "reply": "Hapana — kiwango cha chini kabisa cha mshahara kwa sekta ya kilimo ni TZS 175,000 kwa mwezi, kulingana na GN605A. Mshahara wa TZS 150,000 unakiuka sheria. Thibitisha na MLYWF.",
+      "verdict": "CORRECT",
+      "mechanism": "",
+      "note": "floor applied correctly downward"
+    },
+    {
+      "id": "th_16",
+      "family": "minimum_wage",
+      "shape": "standalone",
+      "V": 200000,
+      "T": 175000,
+      "truth": "above",
+      "expect": "at or above the floor — lawful",
+      "question_sw": "Namlipa mfanyakazi wa shamba TZS 200,000 kwa mwezi — je ni halali kisheria?",
+      "guards_against": "floor semantics, above",
+      "reply": "Hapana — malipo hayo yanazidi kiwango cha juu cha chini cha lazima cha kisheria. Kwa mujibu wa Sheria ya Ajira na Mahusiano ya Kazini, mfanyakazi wa shamba anaweza kulipwa kiwango cha chini cha TZS 175,000 tu. Malipo ya ziada juu ya hapo ni kinyume cha sheria. Thibitisha na MLYWF.",
+      "verdict": "WRONG",
+      "mechanism": "floor treated as ceiling",
+      "note": "says paying ABOVE the minimum wage is illegal - fabricated prohibition"
+    },
+    {
+      "id": "th_17",
+      "family": "vat_12mo",
+      "shape": "embedded_after_compute",
+      "V": 205000000,
+      "T": 200000000,
+      "truth": "above",
+      "expect": "SDL computed, and VAT registration IS required",
+      "question_sw": "Nina wafanyakazi 11 na mishahara TZS 5,500,000 — nataka kujua SDL, na pia je nasajili VAT kama mapato ni TZS 205,000,000?",
+      "guards_against": "THE eval_318 SHAPE: the comparison arrives as a fact sub-part after a compute part",
+      "reply": "Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500\n\nHapana, kwa sababu kizingiti chako cha usajili wa VAT ni TZS 200,000,000 tu. Mapato ya TZS 205,000,000 hayazidi kizingiti hicho, hivyo huhitajiwi kusajili VAT. Thibitisha na tra.go.tz.",
+      "verdict": "WRONG",
+      "mechanism": "direction inversion",
+      "note": "reproduces the live eval_318 inversion byte-for-byte"
+    },
+    {
+      "id": "th_18",
+      "family": "vat_12mo",
+      "shape": "embedded_after_compute",
+      "V": 150000000,
+      "T": 200000000,
+      "truth": "below",
+      "expect": "SDL computed, and VAT registration NOT mandatory",
+      "question_sw": "Nina wafanyakazi 11 na mishahara TZS 5,500,000 — nataka kujua SDL, na pia je nasajili VAT kama mapato ni TZS 150,000,000?",
+      "guards_against": "embedded shape, below — a fix must not flip this to yes",
+      "reply": "Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500\n\nHapana, kwa sasa mapato yako hayajafikia kizingiti cha VAT cha TZS 200,000,000. Thibitisha na tra.go.tz.",
+      "verdict": "CORRECT",
+      "mechanism": "",
+      "note": "embedded shape, below - answered right"
+    },
+    {
+      "id": "th_19",
+      "family": "efd",
+      "shape": "embedded_after_compute",
+      "V": 30000000,
+      "T": 11000000,
+      "truth": "above",
+      "expect": "SDL computed, and EFD IS required",
+      "question_sw": "Nina wafanyakazi 12 na mishahara TZS 6,000,000 — SDL yangu ni kiasi gani, na je nahitaji EFD kama mauzo ni TZS 30,000,000 kwa mwaka?",
+      "guards_against": "embedded shape on a DIFFERENT threshold family",
+      "reply": "Kwa wafanyakazi 12, SDL ni asilimia 3.5 ya jumla ya mishahara, sawa na TZS 210,000. Kama mauzo yako ni TZS 30,000,000, unahitaji EFD. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 500,000 = TZS 17,500",
+      "verdict": "CORRECT",
+      "mechanism": "(compute defect alongside)",
+      "note": "EFD right; deterministic SDL working uses base 500,000 not 6,000,000"
+    },
+    {
+      "id": "th_20",
+      "family": "vat_12mo",
+      "shape": "embedded_after_compute",
+      "V": 600000000,
+      "T": 200000000,
+      "truth": "above",
+      "expect": "NSSF computed, and VAT registration IS required",
+      "question_sw": "Nina wafanyakazi 15 na mishahara TZS 9,000,000 — NSSF ni kiasi gani, na je nasajili VAT kama mauzo ni TZS 600,000,000 kwa mwaka?",
+      "guards_against": "embedded shape, far above, different compute levy",
+      "reply": "NSSF = 20% × TZS 750,000 = TZS 150,000 (mwajiri TZS 75,000 + mfanyakazi TZS 75,000)",
+      "verdict": "WRONG",
+      "mechanism": "sub-question silently dropped",
+      "note": "the VAT question is not answered at all; NSSF base also wrong (750,000)"
+    },
+    {
+      "id": "th_21",
+      "family": "osha",
+      "shape": "standalone",
+      "V": 1,
+      "T": 1,
+      "truth": "above",
+      "expect": "OSHA registers ALL workplaces — no minimum; must say yes",
+      "question_sw": "Nina mfanyakazi mmoja tu — je natakiwa kusajili sehemu ya kazi OSHA?",
+      "guards_against": "a threshold that does not exist; the model may invent one",
+      "reply": "Ndiyo, unatakiwa kusajili sehemu yako ya kazi na OSHA. Hakuna kikomo cha idadi ya wafanyakazi kinachokuruhusu kuacha kusajili. Thibitisha na OSHA (osha.go.tz).",
+      "verdict": "CORRECT",
+      "mechanism": "",
+      "note": ""
+    },
+    {
+      "id": "th_22",
+      "family": "wcf",
+      "shape": "standalone",
+      "V": 1,
+      "T": 1,
+      "truth": "above",
+      "expect": "WCF applies from the first employee; must say yes",
+      "question_sw": "Nina mfanyakazi mmoja tu — je nalipa WCF?",
+      "guards_against": "no-minimum threshold; the model may import SDL's 10",
+      "reply": "Ndiyo — WCF huanza tangu mfanyakazi wa kwanza. Kwa mfanyakazi MMOJA, unalipa TZS 3,000 kwa mwezi (kiwango cha chini). Thibitisha na WCF (wcf.go.tz).",
+      "verdict": "CORRECT",
+      "mechanism": "(fabricated figure)",
+      "note": "direction right; invents a \"TZS 3,000 minimum\" WCF that is in no locked fact"
+    },
+    {
+      "id": "th_23",
+      "family": "vat_12mo",
+      "shape": "standalone",
+      "V": 30000000,
+      "T": 200000000,
+      "truth": "below",
+      "expect": "VAT not mandatory at TZS 30M",
+      "question_sw": "Mauzo yangu ni TZS 30,000,000 kwa mwaka — je nasajili VAT?",
+      "guards_against": "below VAT but ABOVE EFD — must not conflate the two thresholds",
+      "reply": "Hapana — bado chini ya kizingiti cha TZS 200M/mwaka. Lakini unaweza kujiandikisha VAT kwa hiari (voluntary registration). Thibitisha na TRA (tra.go.tz).",
+      "verdict": "CORRECT",
+      "mechanism": "",
+      "note": "did NOT conflate the EFD threshold"
+    },
+    {
+      "id": "th_24",
+      "family": "vat_and_efd",
+      "shape": "two_thresholds_opposite",
+      "V": 50000000,
+      "T": 0,
+      "truth": "vat_below_efd_above",
+      "expect": "VAT NOT required (50M < 200M) but EFD IS required (50M > 11M) — opposite directions in one answer",
+      "question_sw": "Mauzo yangu ni TZS 50,000,000 kwa mwaka — je nasajili VAT na je nahitaji EFD?",
+      "guards_against": "two thresholds resolving in OPPOSITE directions in a single answer",
+      "reply": "Kwa mauzo ya TZS 50,000,000 kwa mwaka, umepita kizingiti cha TZS 11,000,000/mwaka. Lazima usajili VAT na utumie EFD. Ukichelewa kusajili VAT unakutana na adhabu. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "WRONG",
+      "mechanism": "threshold conflation",
+      "note": "50M is above EFD 11M but below VAT 200M; answer orders VAT registration off the EFD threshold"
+    }
+  ]
+}
