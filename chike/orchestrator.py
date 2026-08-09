@@ -496,6 +496,32 @@ class Orchestrator:
             cleaned = ""
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text)
 
+    @staticmethod
+    def _cross_levy_guard(subs: Sequence[SubAnswer]) -> list:
+        """D-FIDELITY-2 — blank a compute body that volunteers a WRONG figure for a SIBLING levy.
+
+        _validate_and_clean checks each body against its own ComputationResult, which cannot see
+        a body that restates its own levy correctly while asserting wrong figures for the others
+        in the same breath (eval_320: WCF right, SDL and PAYE wrong). This runs as a SECOND pass
+        because the sibling results do not exist until every compute part has been answered.
+
+        Blanking is idempotent, so running after the per-levy guard can only ever remove more
+        text, never resurrect any. Compute sub-answers only — see the module docstring.
+        """
+        by_levy = {sa.computation.computation: sa.computation
+                   for sa in subs if sa.computation is not None}
+        if len(by_levy) < 2:
+            return list(subs)                 # nothing to be a sibling OF
+        out = []
+        for sa in subs:
+            if (sa.computation is not None and not sa.needs_clarification and sa.text
+                    and fidelity.body_contradicts_siblings(
+                        sa.text, {k: v for k, v in by_levy.items()
+                                  if k != sa.computation.computation})):
+                sa = dataclasses.replace(sa, text="")
+            out.append(sa)
+        return out
+
     # --- Stage 5: merge ----------------------------------------------------
 
     @staticmethod
@@ -573,7 +599,7 @@ class Orchestrator:
             # pooled fact generation over the fact sub-questions only. Compute parts are
             # NEVER folded into the fact generation (that would forfeit the authoritative
             # deterministic figure — the one load-bearing reason per-part generation exists).
-            subs = [self._answer_sub(sq) for sq in compute_parts]
+            subs = self._cross_levy_guard([self._answer_sub(sq) for sq in compute_parts])
             if fact_parts:
                 fact_question = " ".join(sq.text for sq in fact_parts)
                 subs.append(self._answer_facts_single_pass(

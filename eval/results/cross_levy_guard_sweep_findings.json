@@ -1,0 +1,372 @@
+{
+  "item": "D-FIDELITY-2 — cross-levy fidelity guard",
+  "utc": "2026-08-09T11:47:06.802078Z",
+  "method": {
+    "A": "no-op proof: 620 corpus rows through the real Orchestrator, guard active vs guard replaced by identity; compares merged text, clarification flags and the per-sub ComputationResult tuple",
+    "B": "real-body replay: every question routing to >=2 compute levies, swept against the model bodies recorded in gate_phase_d_paired_1476caa.json. Bodies recovered exactly by locating each deterministic working inside the merged answer, not approximated",
+    "C": "ablation: each design decision disabled in turn against the 13 probes and the live replay",
+    "offline": "CPU only; no model call; part B replays recorded generations"
+  },
+  "corpus": {
+    "rows": 620,
+    "files": [
+      "eval/accuracy_gate/applicability_adversarial_in_scope_017.jsonl",
+      "eval/accuracy_gate/clarification_copy_probes_008.jsonl",
+      "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "eval/accuracy_gate/edge_probe_plain_sw_005b.jsonl",
+      "eval/accuracy_gate/edge_probe_plain_sw_015.jsonl",
+      "eval/accuracy_gate/employment_type_probes_008.jsonl",
+      "eval/accuracy_gate/eval_questions_001.jsonl",
+      "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+      "eval/accuracy_gate/eval_questions_003.jsonl",
+      "eval/accuracy_gate/extraction_adversarial_in_scope_016.jsonl",
+      "eval/accuracy_gate/extraction_fraction_probes_008.jsonl",
+      "eval/accuracy_gate/faithfulness_leseni_probes.jsonl",
+      "eval/accuracy_gate/faithfulness_probes.jsonl",
+      "eval/accuracy_gate/gn487a_inversion_probes.jsonl",
+      "eval/accuracy_gate/group_payroll_probes_008.jsonl",
+      "eval/accuracy_gate/headcount_extraction_probes_012.jsonl",
+      "eval/accuracy_gate/output_shape_probes_010.jsonl",
+      "eval/accuracy_gate/rate_period_probes_016.jsonl",
+      "eval/refusal_gate/ooc_adversarial_in_scope_015.jsonl"
+    ]
+  },
+  "part_a_no_op": {
+    "rows": 620,
+    "changed": [],
+    "result": "strict no-op on the deterministic path"
+  },
+  "part_b_replay": {
+    "multi_levy_rows": 9,
+    "multi_levy_ids": [
+      "eval_318",
+      "eval_319",
+      "eval_320",
+      "eval_321",
+      "eval_323",
+      "eval_327",
+      "fv_01",
+      "fv_02",
+      "fv_04"
+    ],
+    "replayed": 6,
+    "unmatched": [
+      [
+        "fv_01",
+        "not in the 1476caa artifact"
+      ],
+      [
+        "fv_02",
+        "not in the 1476caa artifact"
+      ],
+      [
+        "fv_04",
+        "not in the 1476caa artifact"
+      ]
+    ],
+    "flagged_bodies": [
+      {
+        "id": "eval_318",
+        "source": "eval/accuracy_gate/eval_questions_003.jsonl",
+        "own_levy": "sdl",
+        "question": "Nina wafanyakazi 11 na mishahara TZS 5,500,000 na nataka kujua SDL na NSSF na pia je nasajili VAT kama mapato ni TZS 205,000,000?",
+        "body": "Kwa SDL: TZS 5,500,000 × 3.5% = TZS 192,500. Kwa NSSF: wafanyakazi 11 → NSSF inalipwa 20% ya mishahara yao; TZS 5,500,000 × 20% = TZS 110,000. Thibitisha na TRA (tra.go.tz).",
+        "siblings": {
+          "nssf": "1100000"
+        },
+        "recorded_pass": true,
+        "recorded_reliable": true,
+        "recorded_judge": "wrong"
+      },
+      {
+        "id": "eval_320",
+        "source": "eval/accuracy_gate/eval_questions_003.jsonl",
+        "own_levy": "nssf",
+        "question": "Nilipe SDL, NSSF, PAYE na WCF kwa mfanyakazi mmoja mwenye TZS 800,000 — nionyeshe vyote.",
+        "body": "Thibitisha hesabu yangu.NSSF (sehemu ya mwajiri): TZS 800,000 × 10% = TZS 80,000. Jumla ya NSSF: TZS 80,000 (mwajiri) + TZS 80,000 (mfanyakazi) = TZS 160,000. PAYE (TZS 800,000, 8%): TZS 64,000. WCF (0.5%): TZS 4,000. SDL (3.5%, wafanyakazi ≥10): TZS 28,000. Jumla ya malipo yote kwa mfanyakazi huyu: TZS 176,000. Thibitisha na TRA (tra.go.tz).",
+        "siblings": {
+          "sdl": "0",
+          "paye": "78000",
+          "wcf": "4000"
+        },
+        "recorded_pass": true,
+        "recorded_reliable": false,
+        "recorded_judge": "wrong"
+      },
+      {
+        "id": "eval_320",
+        "source": "eval/accuracy_gate/eval_questions_003.jsonl",
+        "own_levy": "wcf",
+        "question": "Nilipe SDL, NSSF, PAYE na WCF kwa mfanyakazi mmoja mwenye TZS 800,000 — nionyeshe vyote.",
+        "body": "Thibitisha hesabu zangu. (TZS 4,000)\n\nKwa mfanyakazi mmoja mwenye mshahara wa TZS 800,000/mwezi:\n\nSDL = 3.5% × TZS 800,000 = TZS 28,000\nNSSF = 20% × TZS 800,000 = TZS 160,000\nPAYE = 8% × TZS 800,000 − TZS 26,000 = TZS 64,000",
+        "siblings": {
+          "sdl": "0",
+          "nssf": "80000",
+          "paye": "78000"
+        },
+        "recorded_pass": true,
+        "recorded_reliable": false,
+        "recorded_judge": "wrong"
+      }
+    ],
+    "flagged_questions": [
+      "eval_318",
+      "eval_320"
+    ],
+    "not_flagged": [
+      "eval_319",
+      "eval_321",
+      "eval_323",
+      "eval_327"
+    ],
+    "not_flagged_adjudication": [
+      {
+        "id": "eval_319",
+        "question": "Kama nikizingatia kwamba wafanyakazi wangu, ambao ni 14 wanaopata kila mmoja TZS 500,000, wanastahili NSSF, je jumla ni ngapi na SDL yao pia?",
+        "recorded_pass": true,
+        "recorded_reliable": false,
+        "verdict": "TRUE NEGATIVE",
+        "sub_answers": [
+          {
+            "own_levy": "sdl",
+            "body": "Kwa hesabu ya NSSF, jumla ya mishahara ya wafanyakazi wote ni TZS 7,000,000 (14 x TZS 500,000). Thibisha na NSSF (nssf.go.tz). SDL ni asilimia 3.5 ya jumla hiyo, sawa na TZS 245,000. Thibitisha na TRA (tra.go.tz).",
+            "siblings_seen": {
+              "nssf": {
+                "body_attributes": [],
+                "engine_amount": "1400000",
+                "acceptable": [
+                  700000,
+                  1400000,
+                  7000000
+                ]
+              }
+            },
+            "why_not_flagged": "names the sibling but attributes NO figure to it"
+          },
+          {
+            "own_levy": "nssf",
+            "body": "Kwa hesabu sahihi ya NSSF na SDL, unapaswa kuainisha idadi kamili ya wafanyakazi wanaostahili na mishahara halisi. Thibitisha na NSSF (nssf.go.tz).",
+            "siblings_seen": {
+              "sdl": {
+                "body_attributes": [],
+                "engine_amount": "245000",
+                "acceptable": [
+                  245000,
+                  7000000
+                ]
+              }
+            },
+            "why_not_flagged": "names the sibling but attributes NO figure to it"
+          }
+        ]
+      },
+      {
+        "id": "eval_321",
+        "question": "Nina maswali: mishahara ni TZS 3,200,000 kwa watu 8, nataka SDL, NSSF na WCF, na pia je nawajibika kusajili OSHA?",
+        "recorded_pass": true,
+        "recorded_reliable": false,
+        "verdict": "TRUE NEGATIVE",
+        "sub_answers": [
+          {
+            "own_levy": "sdl",
+            "body": "Thibitisha na TRA (tra.go.tz).",
+            "siblings_seen": {},
+            "why_not_flagged": "names the sibling but attributes NO figure to it"
+          },
+          {
+            "own_levy": "nssf",
+            "body": "Thibitisha na TRA (tra.go.tz).",
+            "siblings_seen": {},
+            "why_not_flagged": "names the sibling but attributes NO figure to it"
+          },
+          {
+            "own_levy": "wcf",
+            "body": "Thibitisha na TRA (tra.go.tz).",
+            "siblings_seen": {},
+            "why_not_flagged": "names the sibling but attributes NO figure to it"
+          }
+        ]
+      },
+      {
+        "id": "eval_323",
+        "question": "Mfanyakazi anapata TZS 760,000 na nataka PAYE yake na kama nikiongeza watu wengine 9 kufikia 10, SDL ya jumla ya mishahara ya TZS 7,600,000 itakuwa ngapi?",
+        "recorded_pass": true,
+        "recorded_reliable": false,
+        "verdict": "TRUE NEGATIVE",
+        "sub_answers": [
+          {
+            "own_levy": "sdl",
+            "body": "Kwa PAYE, tumia kipengele cha 'Paye Calculator' kwenye tra.go.tz. Thibitisha na TRA (tra.go.tz). Kwa SDL, hesabu ni asilimia 3.5 ya jumla ya mishahara ya fedha tu (TZS 7,600,000 × 3.5%) = TZS 266,000.",
+            "siblings_seen": {
+              "paye": {
+                "body_attributes": [],
+                "engine_amount": "68000",
+                "acceptable": [
+                  20000,
+                  68000,
+                  520000,
+                  760000
+                ]
+              }
+            },
+            "why_not_flagged": "names the sibling but attributes NO figure to it"
+          },
+          {
+            "own_levy": "paye",
+            "body": "Kwa PAYE, tumia jedwali la kawaida. Kwa SDL, asilimia 3.5 ya jumla ya mishahara ya fedha ya wafanyakazi wote 10. Thibitisha na TRA (tra.go.tz).",
+            "siblings_seen": {
+              "sdl": {
+                "body_attributes": [],
+                "engine_amount": "266000",
+                "acceptable": [
+                  266000,
+                  7600000
+                ]
+              }
+            },
+            "why_not_flagged": "names the sibling but attributes NO figure to it"
+          }
+        ]
+      },
+      {
+        "id": "eval_327",
+        "question": "Nina wafanyakazi 10, kati yao 4 wana mishahara ya TZS 700,000 na 6 wana TZS 300,000, nataka WCF na SDL — zote mbili.",
+        "recorded_pass": true,
+        "recorded_reliable": false,
+        "verdict": "TRUE NEGATIVE",
+        "sub_answers": [
+          {
+            "own_levy": "sdl",
+            "body": "Thibitisha na TRA (tra.go.tz).",
+            "siblings_seen": {},
+            "why_not_flagged": "names the sibling but attributes NO figure to it"
+          },
+          {
+            "own_levy": "wcf",
+            "body": "Thibitisha na TRA (tra.go.tz).",
+            "siblings_seen": {},
+            "why_not_flagged": "names the sibling but attributes NO figure to it"
+          }
+        ]
+      }
+    ],
+    "false_positives": 0,
+    "false_negatives": 0,
+    "note": "eval_320 is flagged TWICE — its NSSF body and its WCF body each volunteer wrong sibling figures independently, so 3 bodies across 2 questions."
+  },
+  "part_c_ablation": {
+    "baseline_live_flags": [
+      "eval_318",
+      "eval_320"
+    ],
+    "disabled": {
+      "_acceptable: accept ONLY the headline amount (drop working figures and the employer/employee split sum)": {
+        "good_bodies_wrongly_blanked": [
+          "nssf_total_when_engine_holds_the_share",
+          "nssf_share_when_engine_holds_the_total"
+        ],
+        "bad_bodies_missed": [],
+        "live_flags": [
+          "eval_318",
+          "eval_320"
+        ],
+        "live_lost": [],
+        "live_gained_SPURIOUS": [],
+        "load_bearing": true
+      },
+      "_levy_windows: no windowing, every levy sees the WHOLE body": {
+        "good_bodies_wrongly_blanked": [
+          "faithful_restates_all"
+        ],
+        "bad_bodies_missed": [
+          "eval_318_nssf_off_by_a_factor_of_ten"
+        ],
+        "live_flags": [
+          "eval_320",
+          "eval_323"
+        ],
+        "live_lost": [
+          "eval_318"
+        ],
+        "live_gained_SPURIOUS": [
+          "eval_323"
+        ],
+        "load_bearing": true
+      },
+      "_ATTRIBUTED: '=' only, dropping colon attribution": {
+        "good_bodies_wrongly_blanked": [],
+        "bad_bodies_missed": [
+          "eval_320_sdl_asserted_for_one_employee",
+          "wrong_wcf_alongside_correct_own_levy"
+        ],
+        "live_flags": [
+          "eval_318",
+          "eval_320"
+        ],
+        "live_lost": [],
+        "live_gained_SPURIOUS": [],
+        "load_bearing": true
+      }
+    },
+    "reading": "Every decision is load-bearing. Windowing is the strongest: without it the guard both MISSES eval_318 and SPURIOUSLY flags eval_323, whose bodies attribute no figure to their sibling and are correct as written — i.e. removing it would blank a good body on a live corpus row."
+  },
+  "probes": {
+    "file": "tests/test_fidelity_cross_levy.py",
+    "must_not_blank": [
+      {
+        "id": "faithful_restates_all",
+        "guards_against": "a body that restates every sibling CORRECTLY is the normal good case"
+      },
+      {
+        "id": "nssf_total_when_engine_holds_the_share",
+        "guards_against": "engine amount is the EMPLOYEE SHARE (80,000); the 20% TOTAL is equally correct and the working spells out the split that sums to it"
+      },
+      {
+        "id": "nssf_share_when_engine_holds_the_total",
+        "guards_against": "mirror image — engine amount is the TOTAL; a half stated in the working is not a contradiction"
+      },
+      {
+        "id": "sibling_named_without_a_figure",
+        "guards_against": "naming a levy with NO attributed figure must never flag"
+      },
+      {
+        "id": "not_applicable_stated_as_zero",
+        "guards_against": "TZS 0 is the FAITHFUL figure for a not-applicable levy"
+      },
+      {
+        "id": "rate_without_amount",
+        "guards_against": "percentages are not attributed TZS figures"
+      },
+      {
+        "id": "sibling_base_quoted_with_result",
+        "guards_against": "the payroll BASE appears after the levy name; the correct result is also present"
+      },
+      {
+        "id": "own_levy_band_intermediates",
+        "guards_against": "band bases and intermediate figures in the body must not be read as sibling results"
+      }
+    ],
+    "must_blank": [
+      {
+        "id": "eval_320_sdl_asserted_for_one_employee",
+        "guards_against": "THE ROW THIS GUARD EXISTS FOR — SDL charged to a ONE-employee payroll, colon-attributed with no multiplication shown"
+      },
+      {
+        "id": "eval_318_nssf_off_by_a_factor_of_ten",
+        "guards_against": "second real instance found by the sweep: NSSF 110,000 where the engine says 1,100,000"
+      },
+      {
+        "id": "paye_via_the_phantom_26000_relief",
+        "guards_against": "the TZS 26,000 personal relief does not exist in Tanzania (CLAUDE.md section 11)"
+      },
+      {
+        "id": "nonzero_for_a_not_applicable_sibling",
+        "guards_against": "bare assertion against a not-applicable verdict, no working shown"
+      },
+      {
+        "id": "wrong_wcf_alongside_correct_own_levy",
+        "guards_against": "own levy correct is exactly what let eval_320 through the per-levy guard"
+      }
+    ]
+  }
+}
