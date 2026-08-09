@@ -5,9 +5,18 @@ Last updated: 2026-08-09
 **⏸️ WIRING IS HELD ON THE MODAL TOKEN ROTATION (2026-08-09).** Both technical preconditions are
 clear — the ADR bar passes on the shipping configuration at `1476caa` and the defective
 clarification rate is 2.9% against ≤5% — and the cross-levy guard that was the last approved
-blocker has shipped. **Nothing is deployed and nothing may be deployed until the founder confirms
-the token rotation has taken effect.** The wiring plan itself is unchanged and recorded at the
-bottom of the `1476caa` entry below.
+blocker has shipped. The v16 wiring is **committed and pre-flighted but NOT deployed**, and the
+`pipeline` flag is currently **`v15`**, so the pending credential-rotation deploy carries one
+change rather than two. **Nothing is deployed and nothing may be deployed until the founder
+confirms the token rotation has completed the full chain.** Deploy checklist and the agreed
+two-deploy sequence are in the `1476caa` entry below.
+
+**Two findings from this cycle outrank the wiring itself and are written up as their own
+entries: CONTAINER-PATH-1** (wiring v16 with defaulted phrase lists would have silently
+reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline instrument;
+second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
+credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
+overlay is now mandatory).
 
 **🏁 CYCLE FULLY CLOSED (2026-07-26):** the entire router-investigation + defect-fix cycle is now
 closed end-to-end with real GPU confirmation. Follow-up #3's last two threads landed this session:
@@ -188,27 +197,13 @@ dispatches on a new `chike_config.json` flag `pipeline: "v15" | "v16"`. The flag
 `v15`** on an absent or unrecognised value, so a malformed config can never silently promote
 v16; rollback is a config edit + redeploy, never a code change.
 
-> #### 🚨 The wiring found a Gate-2 regression that every offline test would have passed
+> #### 🚨 The wiring surfaced a container-only Gate-2 regression — see **CONTAINER-PATH-1** below
 >
-> `Orchestrator.__init__` defaults its OOC phrase lists from
-> `classification.load_local_config()`, which reads a **repo-relative**
-> `../kaggle/chike_config.json`. The Modal image mounts **only** `chike/` (at `/root/chike`) and
-> bakes the config to `/root/assets/` — so that path resolves to `/root/kaggle/chike_config.json`,
-> which does not exist, `load_local_config()` returns `{}`, and `resolve_phrases({})` yields the
-> hardcoded-only list: **39 OOC phrases instead of 107.**
->
-> Wiring v16 with defaulted phrase lists would therefore have **silently dropped all 68
-> config-only phrases — the entire SAFETY-1 audit — and reopened the refusal-gate leak that
-> audit closed.** Nothing offline would have caught it: on Kaggle and locally the repo-relative
-> path resolves fine, so the harness that produced the 1476caa measurement had the full 107.
-> The divergence exists *only* inside the container. This is precisely the R16 class — a
-> config-only value that never reaches production — and it is closed by passing
-> `resolve_phrases(CONFIG)` explicitly from the baked config. `stop_strings` is set explicitly
-> for the same reason (a behavioural no-op today: `generation_cleanup.STOP_STRINGS` is verified
-> byte-equal to the config list).
->
-> Set as an attribute rather than through `gen_params`, because `gen_params` also becomes
-> `SlotExtractor.params` and the measured configuration had that `None`.
+> Letting `Orchestrator` default its OOC phrase lists would have served **39 phrases instead
+> of 107** inside the Modal container, silently reopening SAFETY-1. Closed by passing
+> `resolve_phrases(CONFIG)` explicitly from the baked config; `stop_strings` set explicitly for
+> the same reason. Full write-up in its own entry — it is a class of defect, not a detail of
+> this wiring.
 
 **Pre-flight — all four ran, all four passed, before any deploy:**
 
@@ -223,15 +218,43 @@ The byte-compare (`scratch/preflight_wiring.py`) re-renders each stored row thro
 code from its recorded model bodies. It answers the two questions the test suite cannot: that
 HEAD still reproduces what was measured, and that nothing besides the guard changed.
 
-**Still to do after the founder's confirmation — deploy and live verification only:**
+### 🚦 DEPLOY CHECKLIST — read the flag correctly
 
-- **Deploy** — the committed `pipeline: "v16"` takes effect only at the next `modal deploy`;
-  until then the running containers keep serving v15 from the previously-baked config.
-- **Live verification per R16** — `modal app stop chike-inference --yes` FIRST, because
-  "✓ App deployed" proves nothing while containers are warm. Then against the live endpoint:
-  **eval_320 and eval_318** (permanent canaries for the cross-levy class), **eval_323 and
-  eval_280** (changed compute rows), **a fact row as the negative case** (must be byte-identical
-  to v15), and **an OOC question** (must still refuse).
+> **THE COMMITTED FLAG IS NOT THE LIVE FLAG.** `chike-inference/modal_app.py` bakes the
+> **local working-tree** `kaggle/chike_config.json` into the image via `add_local_file`, so
+> whatever the flag says takes effect **only at the next `modal deploy`**. Until then the
+> running containers keep serving whatever config was baked at the *previous* deploy. Reading
+> the committed value as "already live" is exactly backwards, and it is the same warm-container
+> reasoning as R16.
+>
+> **Current state: `pipeline: "v15"` (flipped back at `e365c25`), production serving v15,
+> nothing deployed.** The flag was briefly committed as `v16`; it was flipped back so the
+> credential-rotation deploy carries ONE change rather than two — a combined deploy leaves two
+> candidate causes for any failure, which is what R16 exists to prevent.
+
+**Agreed sequence (founder, 2026-08-09) — two deploys, deliberately:**
+
+| # | who | step |
+|---|---|---|
+| 1 | Claude | flip the flag to `v15` and commit — **done, `e365c25`** |
+| 2 | founder | rotate: new value → Modal secret `modal-api-token` / `MODAL_API_TOKEN` → `~/.chike_modal_token.txt` → Railway `MODAL_API_TOKEN` |
+| 3 | founder | confirm the chain is complete |
+| 4 | Claude | **rotation deploy** — `modal app stop chike-inference --yes` then `modal deploy`; verify the live path on the new token: one fact question answers normally, one OOC question refuses |
+| 5 | Claude | **v16 cutover, its own deploy** — re-flip to `v16`, `modal app stop --yes`, deploy, then the full canary set |
+
+Rotation order, confirmed: **Modal secret → `modal app stop --yes` && `modal deploy` → Railway
+variable + redeploy → verify.** There is an unavoidable 401 window on the WhatsApp path
+(Modal injects secrets at container start, so a single-value secret cannot be valid on both
+sides at once); every reply during it is the FALLBACK message. Accepted — there are no users
+yet. `generate_endpoint` shares the same gate, so `~/.chike_modal_token.txt` must be updated
+before any local canary run.
+
+**Step 5 live verification per R16** — `modal app stop chike-inference --yes` FIRST, because
+"✓ App deployed" proves nothing while containers are warm. Then against the live endpoint:
+**eval_320 and eval_318** (permanent canaries for the cross-levy class — the gate cannot see
+them, both score `pass=True`), **eval_323 and eval_280** (changed compute rows), **a fact row
+as the negative case** (must be byte-identical to v15), and **an OOC question** (must still
+refuse).
 
 ## ✅ D-FIDELITY-2 — a compute body that volunteers a WRONG figure for a SIBLING levy (SHIPPED 2026-08-09)
 
@@ -355,6 +378,95 @@ its own dated item with its own heading at the time it is found — the queue en
 not a record of work. Concretely: when a future adjudication produces a false-pass list, sweep it
 for wrong-direction and wrong-number answers **before** closing the batch, and promote each one.
 
+## 🔴🔴 CONTAINER-PATH-1 — WIRING v16 WOULD HAVE SILENTLY REOPENED SAFETY-1 (2026-08-09)
+
+**The most important finding of the wiring work, and it is a CLASS, not a detail.** Caught
+while writing `ChikeModel._orchestrator()`; closed in the same commit (`30db5e6`). Nothing
+shipped broken — but nothing offline would have told us if it had.
+
+### The defect
+
+`Orchestrator.__init__` defaults its OOC phrase lists from
+`classification.load_local_config()`, which reads a **repo-relative** path:
+
+```python
+_LOCAL_CONFIG_PATH = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "kaggle", "chike_config.json"))
+```
+
+The Modal image mounts **only** `chike/` — `add_local_dir(..., '/root/chike')` — and bakes the
+config somewhere else entirely, `/root/assets/chike_config.json`. So inside the container that
+path resolves to **`/root/kaggle/chike_config.json`, which does not exist**.
+`load_local_config()` swallows the `FileNotFoundError` and returns `{}` by design, and
+`resolve_phrases({})` returns the hardcoded-only list.
+
+**Measured, not reasoned:** `resolve_phrases(CONFIG)` → **107** OOC phrases.
+`resolve_phrases({})` → **39**. The 68 missing ones are the config-only additions —
+**the entire SAFETY-1 audit**, the 54-phrase expansion that closed the live refusal-gate leak
+where the production endpoint answered *"niliuza kiwanja changu... nalipa kodi gani"* with a
+confident capital-gains rate.
+
+So wiring v16 with defaulted phrase lists would have **served users a v16 whose OOC gate had
+been silently rolled back to its pre-SAFETY-1 state.** Gate 2 is a launch-blocking gate under
+R7.
+
+### Why no offline instrument could have caught it
+
+This is the part worth internalising. **The path resolves correctly everywhere except in
+production:**
+
+| environment | `../kaggle/chike_config.json` resolves to | phrases |
+|---|---|---|
+| local dev / `pytest` | the real repo file | **107** ✅ |
+| Kaggle clone (every gate + paired run, incl. the 1476caa measurement) | the real cloned file | **107** ✅ |
+| **Modal container** | `/root/kaggle/...` — absent | **39** ❌ |
+
+The full test suite passes. The 620-row sweep passes. The byte-compare against the stored
+1476caa rows passes. **The harness that produced the measurement authorising the wiring had
+the full 107**, so even a perfect replication of the measured configuration would not have
+revealed it. The divergence exists *only* in the one environment no offline instrument runs
+in, and the failure is **silent** — a shorter list refuses less, and refusing less looks like
+working.
+
+### Second time R16's class has bitten — and the first is the same shape
+
+| | 2026-08-07 — stale containers | 2026-08-09 — CONTAINER-PATH-1 |
+|---|---|---|
+| change | OOC phrase list expanded in config | v16 wired, phrase lists left to default |
+| what was true locally | new phrases present and correct | 107 phrases resolved correctly |
+| what the container did | kept serving the OLD config from warm containers | would have resolved `{}` → 39 phrases |
+| how it presents | the leak the fix closed reproduces exactly | the leak SAFETY-1 closed silently reopens |
+| detectable offline? | **no** | **no** |
+
+**Both are the same failure: a config value that is correct in the repo and absent in the
+container, presenting as a refusal-gate regression.** R16 was written about *timing* (warm
+containers serve old config). CONTAINER-PATH-1 shows the same class through *path resolution* —
+the config never reaches the container at all, at any point, no matter how many times you
+redeploy. Generalising R16 accordingly:
+
+> **A config value is not "in production" because it is in `chike_config.json`. It is in
+> production when a request has demonstrably behaved differently because of it.** Two ways it
+> can fail to arrive: the container is stale (R16), or the code reads a path the container does
+> not have (this). Neither is visible to any test that runs outside the container.
+
+### Rules that follow
+
+1. **Never let production code depend on `load_local_config()`.** It is the *local/orchestrator*
+   loader — its own docstring says so — and it fails soft to `{}`. Production must pass the
+   baked `CONFIG` explicitly. Done here for `ooc_phrases`, `in_scope_phrases` and
+   `stop_strings`.
+2. **Audit every remaining repo-relative path read from inside the Modal image.**
+   `chike/prompting.py` uses the same pattern (`load_system_prompt`) — production overrides it
+   by passing `system_prompt=BASE_SYSTEM_PROMPT` explicitly, so it is safe *today*, but only
+   because the caller happens to be explicit. Worth a standing check rather than luck.
+3. **A fail-soft default in a config loader is a liability on the serving path.** `{}` is right
+   for a unit test and wrong for a container: it converts "the config is missing" into "the
+   safety list is shorter". Where a fail-soft default meets production, the caller must be
+   explicit.
+4. **The live canary set must include an OOC refusal on every deploy** — it is the only check
+   that can see this class. It is already in the wiring verification set, and it is now the
+   single non-negotiable item in it.
+
 ## 🔴 STANDING LIMITATION — THE GATE CREDITS BOTH OF THE WORST DEFECTS THIS CYCLE FOUND (2026-08-09)
 
 **The two most serious defects found this cycle both score `pass=True` on the regex scorer.**
@@ -390,13 +502,16 @@ Two conclusions, and they are different questions that have been getting conflat
 1. **Should the judge MOVE the `GATE PASSED` number? Still no — unchanged.** That remains gated
    on work item 2 (real adjudicated ground truth). Nothing here changes that; the judge is not
    ground truth and was itself wrong on eval_321 this very run.
-2. **Should the judge RUN at all? It should always run.** Today the overlay is *optional* — it
-   fires only when `OPENROUTER_API_KEY` is present and `CHIKE_JUDGE != 0`, and the GPU gate is
-   explicitly designed to complete without it. That makes the only instrument capable of seeing
-   wrong-direction answers a thing that can silently not happen. **Recommendation: make the
-   overlay mandatory in every paired/gate run and fail loudly when the key is absent**, rather
-   than degrade to a run whose headline number credits its own worst defects. Cost is not the
-   obstacle — $0.21 (v15) + $0.20 (v16) + $0.05 (part 3) on this run, against ~3.5h of GPU.
+2. **Should the judge RUN at all? Always — ✅ APPROVED AND SHIPPED (`1facd2a`).** The overlay
+   used to be *optional*: it fired only when `OPENROUTER_API_KEY` was present and
+   `CHIKE_JUDGE != 0`, and both harnesses were explicitly designed to complete without it. That
+   made the only instrument capable of seeing wrong-direction answers a thing that could
+   silently not happen. **Both `kaggle/eval_phase_d_paired.py` and
+   `kaggle/eval_orchestrator_combined.py` now RAISE at second 0** — not after ~3.5h of GPU —
+   with the cost stated in the error ($0.21 + $0.20 + $0.05 on this run) so nobody skips it to
+   save money. `CHIKE_JUDGE=0` survives as an explicit human opt-out, but it prints a banner and
+   stamps the artifact `judge_overlay: "SKIPPED"`, so **a judge-less run is self-identifying and
+   can never be read as a clean result.**
 
 **Additional standing practice:** every run's false-pass queue must be swept for
 **wrong-direction and wrong-number** answers and each one promoted to its own item *before* the
