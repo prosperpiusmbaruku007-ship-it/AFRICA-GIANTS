@@ -2,14 +2,12 @@
 
 Last updated: 2026-08-09
 
-**⏸️ WIRING IS HELD ON THE MODAL TOKEN ROTATION (2026-08-09).** Both technical preconditions are
-clear — the ADR bar passes on the shipping configuration at `1476caa` and the defective
-clarification rate is 2.9% against ≤5% — and the cross-levy guard that was the last approved
-blocker has shipped. The v16 wiring is **committed and pre-flighted but NOT deployed**, and the
-`pipeline` flag is currently **`v15`**, so the pending credential-rotation deploy carries one
-change rather than two. **Nothing is deployed and nothing may be deployed until the founder
-confirms the token rotation has completed the full chain.** Deploy checklist and the agreed
-two-deploy sequence are in the `1476caa` entry below.
+**🚀 v16 IS LIVE IN PRODUCTION (2026-08-09, `ec9cbb3`).** The router + rules engine +
+orchestrator pipeline now serves every request. Cutover entry immediately below — deployed
+commit, the two gate results that authorised it, and the rollback procedure.
+
+**➡️ NEXT WORK ITEM: SAFETY-3.** Promoted to the top of the queue **because the cutover made it
+user-facing**, not because any new evidence arrived. It gets a fresh investigation round.
 
 **Two findings from this cycle outrank the wiring itself and are written up as their own
 entries: CONTAINER-PATH-1** (wiring v16 with defaulted phrase lists would have silently
@@ -17,6 +15,116 @@ reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline 
 second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
+
+## 🚀 v16 CUTOVER — LIVE IN PRODUCTION (2026-08-09)
+
+**Deployed commit: `ec9cbb3`** (`config(pipeline): v16 — the cutover flip`). Endpoint
+`prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run`. Second of the two deliberate
+deploys; the first was the credential rotation on v15, so **this deploy carried exactly one
+change**.
+
+### What authorised it — both preconditions, measured, not asserted
+
+| precondition | result | source |
+|---|---|---|
+| ADR 0001 §10 bar: v16 ≥ v15 on raw **and** reliable | **raw +3.6, reliable +1.6** — PASS | `gate_phase_d_paired_1476caa.json`, sha256-verified, 46/46 recomputed checks |
+| defective clarification rate ≤5% | **2.9%** (3/102) — PASS | same artifact |
+
+Supporting, from the same run: compute **+13.7 raw / +8.7 reliable**, 19 real gains / 1 false,
+6 regressions all of them v16 clarifications, judge range **+5.1 to +7.8 sign-stable**, fact
+path **byte-identical on 281 of 282** non-compute scored rows. The headline the decision rested
+on — *no row where v16 states a wrong number that v15 stated right* — holds, with the eval_318
+correction recorded in the `1476caa` entry.
+
+### Live verification — R16 procedure, judged against pre-registration
+
+`modal app stop chike-inference --yes` first (verified `stopped`, 0 tasks, via `modal app list`
+— the command exits 0 silently), then `modal deploy`, then
+`scratch/cutover_verify.py` comparing each reply **byte-for-byte** against
+`scratch/canary_expected_v16.json`, which was written **before** the cutover.
+
+| # | canary | live sha | result |
+|---|---|---|---|
+| 1 | **CONTAINER-PATH-1 / OOC** (`kodi ya majengo`, config-only phrase) | `a71619b1` | **PASS** — refuses, and byte-identical to v15's refusal |
+| 2 | eval_115 — fact negative case | `5b46098b` | **PASS** — byte-identical to v15 |
+| 3 | eval_320 — cross-levy canary | `66aac953` | **PASS** — guard blanked the nssf and wcf bodies |
+| 4 | eval_318 — cross-levy canary | `6a314afc` | production correct; **the pre-registered string was wrong** (below) |
+| 5 | eval_323 — changed compute row | `3f3fc316` | **PASS** |
+| 6 | eval_280 — changed compute row | `57e36a8c` | **PASS** |
+
+**Canary 1 ran first deliberately** and is the most important result: v16 moved phrase-list
+loading from `run()` into `Orchestrator`, so a config-only OOC phrase still refusing is the only
+available proof that the container reads the baked `chike_config.json` and serves **107 phrases,
+not the 39-phrase hardcoded fallback**. CONTAINER-PATH-1 is closed in production, not just in
+the source.
+
+**The D-FIDELITY-2 guard fired live on a real user-facing answer, first time out.** eval_318's
+contradicting `TZS 110,000` NSSF figure is gone from the live reply; the correct `TZS 1,100,000`
+remains.
+
+### 🐛 The one deviation was in the verification harness, not in production
+
+eval_318's live reply did not match its pre-registered string. Verified read-only, before
+touching anything:
+
+```
+artifact v16 text  MINUS  the SDL body the guard should blank  ==  LIVE   →  True
+```
+
+Production produced exactly the designed output. **The expected string was malformed.**
+`recover()` in `scratch/canary_expected_v16.py` reconstructs each sub-answer body as the text
+*preceding its deterministic working* — so any text after the **last** working is never
+captured. That trailing segment is the pooled **fact** sub-answer. eval_318 is the only canary
+carrying one, which is why it is the only row affected.
+
+> ### ⚠️ `recover()` IS KNOWN-BROKEN. DO NOT TRUST A CANARY RUN AGAINST IT UNTIL IT IS FIXED.
+>
+> Both `scratch/canary_expected_v16.py` and `scratch/preflight_wiring.py` share the defect. A
+> future canary set containing any fact sub-answer will produce a **false FAIL** the same way.
+> Fixing it is the tracked follow-up to this entry.
+>
+> The `1476caa` **pre-flight conclusion is unaffected**: it compared the *set* of guard-blanked
+> rows, not rendered strings — `preflight_wiring.py` computed `rendered` and never compared it
+> to `stored`. The defect was latent there, not load-bearing.
+
+Stopping on the deviation and reporting before acting was the correct call and stays the rule:
+a near-miss explained after the fact is exactly what pre-registration exists to prevent.
+
+### 🟢 Production reproduces the harness BYTE-IDENTICALLY
+
+Before the cutover, live v15 was captured on all five canaries
+(`scratch/canary_baseline_v15.json`) and matched the `1476caa` artifact's v15 arm **byte for
+byte**. After the cutover, five of six rows matched their pre-registered v16 strings byte for
+byte, and the sixth matched once the harness bug is accounted for.
+
+**This is the load-bearing fact for every future artifact.** It means a Kaggle paired-gate
+number is a *prediction about production*, not merely a lab result — the same weights, config,
+generation params and RAG index produce the same bytes on both sides. Any future run where the
+live endpoint and the artifact disagree on a canary is a real divergence and must be
+investigated as one, because the null hypothesis is byte-equality.
+
+### ↩️ ROLLBACK — a config flag flip, never a code change
+
+1. Set `"pipeline": "v15"` in `kaggle/chike_config.json`.
+2. `python -m modal app stop chike-inference --yes` — **required**; warm containers keep serving
+   the baked v16 config, and this command prompts and aborts silently without `--yes`.
+3. `python -m modal deploy chike-inference/modal_app.py`.
+4. Verify per R16 with a request whose behaviour differs between arms — a compute row such as
+   eval_323 renders as v15 prose rather than a deterministic working.
+
+The flag **defaults to `v15`** on an absent or unrecognised value, so a malformed config can
+never silently promote v16. `modal_app.py` bakes the **local working-tree** config via
+`add_local_file`: the committed flag is not the live flag until the next deploy — in both
+directions.
+
+### Carried forward from the cutover
+
+- **SAFETY-3 is now user-facing** and is the next work item. The VAT inversion was not live
+  under v15 (which never applies the threshold); it went live at this deploy.
+- **Fix `recover()`** in both scratch harnesses, then re-register eval_318 so the canary set is
+  trustworthy again.
+- The standing audit of remaining repo-relative reads inside the Modal image (CONTAINER-PATH-1)
+  is unchanged and still open.
 
 **🏁 CYCLE FULLY CLOSED (2026-07-26):** the entire router-investigation + defect-fix cycle is now
 closed end-to-end with real GPU confirmation. Follow-up #3's last two threads landed this session:
@@ -102,21 +210,44 @@ residual: eval_280 and eval_323, where a judge-confirmed *correct* v15 answer be
 clarification. **Both now pass** — eval_280 via C4 + headcount extraction, eval_323 via F1, each
 closing exactly as the D/F investigation projected. The residual class goes from 1 row to zero.
 
-> ### 🟢 THERE IS NO ROW WHERE v16 IS WORSE THAN v15 BY ANY READING.
+> ### 🟢 THERE IS NO ROW WHERE v16 STATES A WRONG NUMBER THAT v15 STATED RIGHT.
 >
 > Stated plainly because **this is the sentence the wiring decision rests on**, and "the ADR
-> clause is satisfied" is a weaker and less findable claim. Concretely, across all 400:
-> **zero** rows where v16 states a wrong number that v15 stated right; **zero** rows where a
-> judge-confirmed correct v15 answer became a v16 clarification; **zero** fact-path divergence
-> on 281 of 282 non-compute scored rows, the single exception (eval_322) passing in both arms.
+> clause is satisfied" is a weaker and less findable claim. Three measured zeros hold it up,
+> across all 400:
+>
+> - **zero** rows where v16 states a wrong number that v15 stated right;
+> - **zero** rows where a judge-confirmed correct v15 answer became a v16 clarification;
+> - **zero** fact-path divergence on 281 of 282 non-compute scored rows, the single exception
+>   (eval_322) passing in both arms.
+>
 > Every one of the 6 regressions is a v16 clarification replacing a v15 answer the judge calls
 > wrong or cannot call at all.
 >
-> The one row where v16 was ever *worse* than v15 in this project's record — **nat_16**, the
-> SAFETY-2 / D-RESIDENCY-1 residency mis-detection, where v16 prints a wrong figure as a
-> verified calculation while v15 asserts no figure — is **not in the 400** and is unaffected by
-> this run. It remains open, and it is the honest qualifier on the sentence above: no row *in
-> the measured set*.
+> #### ⚠️ CORRECTION (2026-08-09, at cutover) — the original wording overreached, and here is the exception
+>
+> This block first read **"THERE IS NO ROW WHERE v16 IS WORSE THAN v15 BY ANY READING."** That
+> is a stronger claim than the three zeros beneath it support, and it is **false on one row**:
+>
+> **eval_318 goes v15 `judge=undetermined` → v16 `judge=wrong`.** v15 recites the VAT threshold
+> and never applies it to the user's figure; v16 applies it **backwards** and tells a business
+> that must register for VAT that it need not (SAFETY-3 below). By the judge's reading that is
+> v16 being worse than v15 on that row. The three zeros are each still exactly true — v15 never
+> *stated the number right* there, so no zero is violated — but "worse by any reading" reaches
+> past them, and eval_318 is what it reaches into.
+>
+> Caught by Claude re-reading its own claim against the cutover canary data, not by the founder
+> or by any instrument. **The narrower headline above is the defensible one and is what the
+> wiring decision actually rested on**; the overreaching version was live in this file from the
+> `1476caa` entry until the cutover.
+>
+> Also unchanged and still the second honest qualifier: the one other row where v16 has ever
+> been *worse* than v15 in this project's record — **nat_16**, the SAFETY-2 / D-RESIDENCY-1
+> residency mis-detection, where v16 prints a wrong figure as a verified calculation while v15
+> asserts no figure — is **not in the 400** and is unaffected by this run. It remains open. So
+> the fully-qualified statement is: no row in the measured set where v16 states a wrong number
+> v15 stated right, with **eval_318** the judge-visible exception inside the set and **nat_16**
+> the known exception outside it.
 
 ### ⚠️ GAIN RECORD CORRECTED — 19 real / 1 false, not 20
 
@@ -185,11 +316,10 @@ allowance taxability, not a code one). There is no defective clarification left 
 defect. All-clarification rate 16/102 = 15.7%, reported as context only — the retired target's
 measured floor is 14.7% and **must not be reinstated**.
 
-### Wiring — CODE COMMITTED, PRE-FLIGHT PASSED, NOT DEPLOYED (2026-08-09)
+### Wiring — CODE COMMITTED, PRE-FLIGHT PASSED, ~~NOT DEPLOYED~~ **DEPLOYED `ec9cbb3`** (2026-08-09)
 
-Both preconditions are clear. **Nothing is deployed and nothing may be deployed until the
-founder confirms the Modal token rotation has taken effect** (Modal secret → local file →
-Railway, full chain).
+Both preconditions are clear. The rotation completed and **v16 is live** — see the cutover entry
+at the top of this file. The text below records the wiring as it was staged, before the deploy.
 
 **Shipped as code, not as a deploy:** `ChikeModel._orchestrator()` builds the Orchestrator once
 per container with `retriever=self.retrieve_facts` (single-arm, load-bearing) and `run()`
@@ -227,10 +357,12 @@ HEAD still reproduces what was measured, and that nothing besides the guard chan
 > the committed value as "already live" is exactly backwards, and it is the same warm-container
 > reasoning as R16.
 >
-> **Current state: `pipeline: "v15"` (flipped back at `e365c25`), production serving v15,
-> nothing deployed.** The flag was briefly committed as `v16`; it was flipped back so the
-> credential-rotation deploy carries ONE change rather than two — a combined deploy leaves two
-> candidate causes for any failure, which is what R16 exists to prevent.
+> **~~Current state: `pipeline: "v15"` (flipped back at `e365c25`), production serving v15,
+> nothing deployed.~~ SUPERSEDED — the cutover ran. Current state: `pipeline: "v16"`, deployed
+> at `ec9cbb3`, production serving v16.** See the cutover entry at the top of this file.
+> The flag was briefly committed as `v16`, then flipped back so the credential-rotation deploy
+> carried ONE change rather than two — a combined deploy leaves two candidate causes for any
+> failure, which is what R16 exists to prevent — then re-flipped as step 1 of the cutover.
 
 **Agreed sequence (founder, 2026-08-09) — two deploys, deliberately:**
 
@@ -239,8 +371,8 @@ HEAD still reproduces what was measured, and that nothing besides the guard chan
 | 1 | Claude | flip the flag to `v15` and commit — **done, `e365c25`** |
 | 2 | founder | rotate: new value → Modal secret `modal-api-token` / `MODAL_API_TOKEN` → `~/.chike_modal_token.txt` → Railway `MODAL_API_TOKEN` |
 | 3 | founder | confirm the chain is complete |
-| 4 | Claude | **rotation deploy** — `modal app stop chike-inference --yes` then `modal deploy`; verify the live path on the new token: one fact question answers normally, one OOC question refuses |
-| 5 | Claude | **v16 cutover, its own deploy** — re-flip to `v16`, `modal app stop --yes`, deploy, then the full canary set |
+| 4 | Claude | **rotation deploy** — `modal app stop chike-inference --yes` then `modal deploy`; verify the live path on the new token: one fact question answers normally, one OOC question refuses — **done** (took three rotation attempts; the Modal secret held a 10-char value against the local 43-char file, diagnosed from inside the container without exposing it) |
+| 5 | Claude | **v16 cutover, its own deploy** — re-flip to `v16`, `modal app stop --yes`, deploy, then the full canary set — **done, `ec9cbb3`** |
 
 Rotation order, confirmed: **Modal secret → `modal app stop --yes` && `modal deploy` → Railway
 variable + redeploy → verify.** There is an unavoidable 401 window on the WhatsApp path
@@ -327,6 +459,23 @@ mis-resolved input, is untouched by it. It also cannot see a fact sub-answer, wh
 why the eval_318 VAT defect below needs its own item rather than being folded in here.
 
 ## 🔴 SAFETY-3 — eval_318 answers the VAT threshold BACKWARDS on the fact path (2026-08-09)
+
+> ### ⬆️ PROMOTED TO TOP OF THE QUEUE — 2026-08-09, at the v16 cutover
+>
+> **The promotion trigger was the cutover making it user-facing. No new evidence arrived.** The
+> defect, the mechanism and the gold are exactly as characterised below and as they were this
+> morning. What changed is deployment state: under v15 this row was *undetermined* — the model
+> recited the threshold and never applied it — and at `ec9cbb3` v16 went live and now emits the
+> inversion to real users.
+>
+> **"Logged" and "serving users" are different states, and this crossed the line at cutover.**
+> A defect can sit correctly filed, correctly root-caused and honestly reported, and still
+> change priority the moment the code path carrying it starts answering people. That transition
+> is a promotion trigger in its own right and should be treated as one whenever a deploy moves
+> a known defect onto the live path.
+>
+> It gets a **fresh investigation round** — characterise before any code, in the usual way.
+> This is the next work item; nothing else starts ahead of it.
 
 **Own investigation. Not folded into D-FIDELITY-2, and not closable by it.**
 
