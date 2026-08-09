@@ -141,6 +141,22 @@ BASE_SYSTEM_PROMPT = CONFIG.get('system_prompt', _HARDCODED_SYSTEM_PROMPT)
 # ones this file used to run, across all 400 gate questions and 400 persisted generations.
 
 
+# === R14 PIPELINE SELECTOR — 'v15' | 'v16' ===
+# Which pipeline run() serves. DEFAULTS TO 'v15': an absent or unrecognised flag keeps the
+# shipped path byte-for-byte, so a malformed config can never silently promote v16. Rollback
+# is a config edit + redeploy, never a code change.
+#
+# Measured at 1476caa: ADR bar +3.6 raw / +1.6 reliable, both PASS; compute +13.7 / +8.7;
+# 20 gains / 6 regressions with NO row where v16 is worse than v15 by any reading; fact path
+# byte-identical on 281 of 282 non-compute scored rows; defective clarification rate 2.9%
+# against <=5%. See the 1476caa entry in PROGRESS.md.
+PIPELINE = str(CONFIG.get('pipeline', 'v15')).strip().lower()
+if PIPELINE not in ('v15', 'v16'):
+    print(f"[config] unrecognised pipeline={PIPELINE!r} -- falling back to 'v15'")
+    PIPELINE = 'v15'
+print(f'[config] pipeline = {PIPELINE}')
+
+
 def classify_question(message: str) -> bool:
     """Return False if the question is explicitly OOC, True otherwise (pass to model).
 
@@ -343,19 +359,110 @@ class ChikeModel:
             outputs[0][input_len:], skip_special_tokens=True
         ).strip()
 
+    def _orchestrator(self):
+        """The v16 Orchestrator, built ONCE per container and reused.
+
+        Construction mirrors the harness that produced the 1476caa measurement
+        (kaggle/eval_phase_d_paired.py:307) — same single-arm retriever, same system prompt,
+        same defaulted gen_params so SlotExtractor.params stays None — with TWO deliberate
+        differences, both of which exist to keep the container identical to what was measured
+        rather than to change it:
+
+        1. ooc_phrases / in_scope_phrases are passed EXPLICITLY from the baked CONFIG.
+           THIS IS LOAD-BEARING, NOT TIDINESS. Orchestrator defaults them from
+           classification.load_local_config(), which reads a REPO-RELATIVE
+           ../kaggle/chike_config.json. Only chike/ is mounted in this image (at /root/chike),
+           and the config is baked to /root/assets/ — so that path is /root/kaggle/... which
+           does not exist, load_local_config() returns {}, and resolve_phrases({}) yields the
+           hardcoded-only list: 39 OOC phrases instead of 107. Letting it default would
+           silently drop all 68 config-only phrases, including the entire SAFETY-1 audit, and
+           reopen the Gate-2 leak that audit closed. It would have passed every offline test.
+           This is the R16 class of failure — a config-only value that never reaches the
+           container — so it is closed here rather than trusted.
+
+        2. stop_strings is set explicitly for the same reason. A behavioural no-op TODAY
+           (generation_cleanup.STOP_STRINGS is byte-equal to the config list, verified), so
+           this changes nothing now and stops a future config-only edit from reaching
+           production and the gate but not the v16 clean stage. Set as an attribute rather
+           than via gen_params, because gen_params also becomes SlotExtractor.params and the
+           measured configuration had that None.
+
+        Deliberately ABSENT: pipeline_v15's is_uncomputable_payroll_amount never-guess guard.
+        v16 reaches the same outcome through the compute path's own clarification, and adding
+        the v15 guard here would make production differ from the arm that was measured.
+        """
+        orch = getattr(self, '_orch', None)
+        if orch is not None:
+            return orch
+
+        from chike.classification import resolve_phrases
+        from chike.model_abstraction import ModelBackend
+        from chike.orchestrator import Orchestrator
+
+        _generate = self._generate
+        _tokenizer = self.tokenizer
+
+        class _ContainerBackend(ModelBackend):
+            """The `tokenizer` attribute is what Orchestrator._backend_tokenizer() looks for.
+            Without it build_chat_prompt silently falls back to a naive-concat shape the model
+            was never trained on — the same trap the Kaggle harness documents at its own
+            _Backend."""
+
+            def __init__(self):
+                self.tokenizer = _tokenizer
+
+            def generate(self, prompt, params=None):
+                # _generate applies the config gen_kwargs and the StopOnSubstrings criteria,
+                # exactly as the harness twin does. params is unused because the measured
+                # configuration never passed any (SlotExtractor.params was None).
+                return _generate(prompt)
+
+        ooc_phrases, in_scope_phrases = resolve_phrases(CONFIG)
+        orch = Orchestrator(
+            backend=_ContainerBackend(),
+            # SINGLE-ARM retrieval — production's own bound method, never chike.retrieval's
+            # two-arm hybrid. Four measurements have failed to show a two-arm benefit and the
+            # only two genuine non-clarification regressions ever recorded were its artefacts.
+            retriever=self.retrieve_facts,
+            ooc_phrases=ooc_phrases,
+            in_scope_phrases=in_scope_phrases,
+            system_prompt=BASE_SYSTEM_PROMPT,
+        )
+        orch.stop_strings = tuple(STOP_STRINGS)
+        print(f'[v16] orchestrator built: {len(ooc_phrases)} ooc / '
+              f'{len(in_scope_phrases)} in_scope phrases, single-arm retriever')
+        self._orch = orch
+        return orch
+
     @modal.method()
     def run(self, message: str, temperature: float = 0.1) -> dict:
-        """Production entry point — now a thin adapter over the shared v15 pipeline.
+        """Production entry point.
 
-        chike.pipeline_v15.answer owns the sequence; this supplies the three things only the
-        Modal container can: the loaded tokenizer, the single-arm retrieve_facts bound to the
-        baked index, and _generate. Behaviour is unchanged from the former inline version
+        Serves whichever pipeline the R14 `pipeline` flag selects. On 'v15' (the default) this
+        is a thin adapter over the shared v15 pipeline: chike.pipeline_v15.answer owns the
+        sequence and this supplies the three things only the Modal container can — the loaded
+        tokenizer, the single-arm retrieve_facts bound to the baked index, and _generate.
+        Behaviour on that path is unchanged from the former inline version
         (tests/test_pipeline_v15.py proves every extracted stage byte-identical across the 400
-        gate questions and 400 persisted generations)."""
+        gate questions and 400 persisted generations).
+
+        On 'v16' the orchestrator owns the sequence instead. Both return the same
+        {'reply': str} contract, and both refuse with the one shared REFUSAL_TEXT, so the
+        refusal gate cannot tell them apart on a refusal — which is why the phrase lists in
+        _orchestrator() have to be right rather than merely present."""
         import sys
         # The chike/ package is mounted at /root only in the GPU image.
         if '/root' not in sys.path:
             sys.path.insert(0, '/root')
+
+        if PIPELINE == 'v16':
+            if not message or not message.strip():
+                return {'error': 'No message provided'}
+            reply = self._orchestrator().answer(message)
+            print(f'[chike/v16] Q: {message[:60]}')
+            print(f'[chike/v16] A: {reply.text[:60]}')
+            return {'reply': reply.text}
+
         from chike import pipeline_v15
 
         return pipeline_v15.answer(
