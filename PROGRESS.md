@@ -467,6 +467,42 @@ redeploy. Generalising R16 accordingly:
    that can see this class. It is already in the wiring verification set, and it is now the
    single non-negotiable item in it.
 
+## 🔐 CREDENTIAL HYGIENE — a docstring promised "never logged" and was false in exactly the failure path (2026-08-09)
+
+`tests/test_orchestrator.py::_real_modal_token` is documented *"Token from env, else
+~/.chike_modal_token.txt. **Never logged.**"* Every scratch probe carries the same promise. It
+held on the success path and **broke on the only path that matters** — the token rides in the
+**query string**, so `requests`' own `HTTPError` embeds it verbatim:
+
+```
+401 Client Error: Unauthorized for url: https://...generate-endpoint.modal.run/?token=<LIVE TOKEN>
+```
+
+During the 2026-08-09 rotation the real-weights tests — which normally SKIP, and only ran
+because a token file now existed — hit the post-rotation 401 and **printed the live credential
+into the pytest failure report**. Not a hypothetical: it went to a temp file on disk and into
+terminal scrollback, and the token had to be treated as burned and rotated again.
+
+**Three things worth keeping:**
+
+1. **A safety claim in a docstring is not a safety mechanism.** The promise was written about
+   the code the author was looking at (nothing calls `print(token)`) and not about the library
+   underneath it. `LocalAdapter.generate()` now scrubs before re-raising, and
+   `tests/test_container_path_guards.py` fails if a future change lets the value through — the
+   claim is now enforced rather than asserted.
+2. **A credential in a QUERY STRING leaks by default, not by mistake.** Every layer that
+   renders a URL — exception messages, access logs, proxies, browser history, CI output — gets
+   the secret for free. The query-param design was chosen deliberately (a module-level
+   `from fastapi import Header` would crash the GPU container that imports `modal_app` without
+   fastapi), so this is a **known cost of a defensible decision**, and the mitigation is to
+   scrub at every boundary rather than to re-litigate the design.
+3. **`scan_for_keys` cannot see this class.** It scans *staged files* for hardcoded keys. A
+   credential that only ever appears in runtime output is invisible to it. Nothing in the repo
+   was ever wrong; the leak was entirely in what the code *printed*.
+
+Same shape as CONTAINER-PATH-1 above, one layer up: something true of the code as written, and
+false in the one environment or path that was never exercised.
+
 ## 🔴 STANDING LIMITATION — THE GATE CREDITS BOTH OF THE WORST DEFECTS THIS CYCLE FOUND (2026-08-09)
 
 **The two most serious defects found this cycle both score `pass=True` on the regex scorer.**
