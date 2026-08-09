@@ -91,8 +91,23 @@ That last figure is the one that moved. At `5d0dcb7` the "no class of regression
 satisfied outright for the class it was written to catch, but **not clean** for a narrower
 residual: eval_280 and eval_323, where a judge-confirmed *correct* v15 answer became a
 clarification. **Both now pass** — eval_280 via C4 + headcount extraction, eval_323 via F1, each
-closing exactly as the D/F investigation projected. **The residual class goes from 1 row to
-zero.** There is no longer any row on which v16 is worse than v15 by any reading.
+closing exactly as the D/F investigation projected. The residual class goes from 1 row to zero.
+
+> ### 🟢 THERE IS NO ROW WHERE v16 IS WORSE THAN v15 BY ANY READING.
+>
+> Stated plainly because **this is the sentence the wiring decision rests on**, and "the ADR
+> clause is satisfied" is a weaker and less findable claim. Concretely, across all 400:
+> **zero** rows where v16 states a wrong number that v15 stated right; **zero** rows where a
+> judge-confirmed correct v15 answer became a v16 clarification; **zero** fact-path divergence
+> on 281 of 282 non-compute scored rows, the single exception (eval_322) passing in both arms.
+> Every one of the 6 regressions is a v16 clarification replacing a v15 answer the judge calls
+> wrong or cannot call at all.
+>
+> The one row where v16 was ever *worse* than v15 in this project's record — **nat_16**, the
+> SAFETY-2 / D-RESIDENCY-1 residency mis-detection, where v16 prints a wrong figure as a
+> verified calculation while v15 asserts no figure — is **not in the 400** and is unaffected by
+> this run. It remains open, and it is the honest qualifier on the sentence above: no row *in
+> the measured set*.
 
 ### ⚠️ GAIN RECORD CORRECTED — 19 real / 1 false, not 20
 
@@ -161,16 +176,57 @@ allowance taxability, not a code one). There is no defective clarification left 
 defect. All-clarification rate 16/102 = 15.7%, reported as context only — the retired target's
 measured floor is 14.7% and **must not be reinstated**.
 
-### Wiring plan — APPROVED IN PRINCIPLE, HELD ON THE TOKEN ROTATION
+### Wiring — CODE COMMITTED, PRE-FLIGHT PASSED, NOT DEPLOYED (2026-08-09)
 
-Both preconditions are clear. **Nothing deploys until the founder confirms the Modal token
-rotation has taken effect.** The plan, unchanged:
+Both preconditions are clear. **Nothing is deployed and nothing may be deployed until the
+founder confirms the Modal token rotation has taken effect** (Modal secret → local file →
+Railway, full chain).
 
-- `run()` builds an **Orchestrator once per container** with `retriever=self.retrieve_facts`
-  (single-arm, load-bearing), gated on a `chike_config.json` flag `pipeline: "v16" | "v15"` so
-  rollback is a config edit rather than a deploy.
-- **Pre-flight:** full test suite · `scripts/scan_for_keys.py` · the 620-row deterministic sweep ·
-  byte-compare against the stored v16 rows from `1476caa`.
+**Shipped as code, not as a deploy:** `ChikeModel._orchestrator()` builds the Orchestrator once
+per container with `retriever=self.retrieve_facts` (single-arm, load-bearing) and `run()`
+dispatches on a new `chike_config.json` flag `pipeline: "v15" | "v16"`. The flag **defaults to
+`v15`** on an absent or unrecognised value, so a malformed config can never silently promote
+v16; rollback is a config edit + redeploy, never a code change.
+
+> #### 🚨 The wiring found a Gate-2 regression that every offline test would have passed
+>
+> `Orchestrator.__init__` defaults its OOC phrase lists from
+> `classification.load_local_config()`, which reads a **repo-relative**
+> `../kaggle/chike_config.json`. The Modal image mounts **only** `chike/` (at `/root/chike`) and
+> bakes the config to `/root/assets/` — so that path resolves to `/root/kaggle/chike_config.json`,
+> which does not exist, `load_local_config()` returns `{}`, and `resolve_phrases({})` yields the
+> hardcoded-only list: **39 OOC phrases instead of 107.**
+>
+> Wiring v16 with defaulted phrase lists would therefore have **silently dropped all 68
+> config-only phrases — the entire SAFETY-1 audit — and reopened the refusal-gate leak that
+> audit closed.** Nothing offline would have caught it: on Kaggle and locally the repo-relative
+> path resolves fine, so the harness that produced the 1476caa measurement had the full 107.
+> The divergence exists *only* inside the container. This is precisely the R16 class — a
+> config-only value that never reaches production — and it is closed by passing
+> `resolve_phrases(CONFIG)` explicitly from the baked config. `stop_strings` is set explicitly
+> for the same reason (a behavioural no-op today: `generation_cleanup.STOP_STRINGS` is verified
+> byte-equal to the config list).
+>
+> Set as an attribute rather than through `gen_params`, because `gen_params` also becomes
+> `SlotExtractor.params` and the measured configuration had that `None`.
+
+**Pre-flight — all four ran, all four passed, before any deploy:**
+
+| check | result |
+|---|---|
+| full test suite | 605 passed |
+| `scripts/scan_for_keys.py` | clean |
+| 620-row deterministic sweep | 0 rows changed |
+| byte-compare vs the stored 1476caa v16 rows | deterministic path **byte-identical on all 87 working-producing rows**; the guard is the **only** behavioural change, on **exactly eval_318 and eval_320** |
+
+The byte-compare (`scratch/preflight_wiring.py`) re-renders each stored row through today's
+code from its recorded model bodies. It answers the two questions the test suite cannot: that
+HEAD still reproduces what was measured, and that nothing besides the guard changed.
+
+**Still to do after the founder's confirmation — deploy and live verification only:**
+
+- **Deploy** — the committed `pipeline: "v16"` takes effect only at the next `modal deploy`;
+  until then the running containers keep serving v15 from the previously-baked config.
 - **Live verification per R16** — `modal app stop chike-inference --yes` FIRST, because
   "✓ App deployed" proves nothing while containers are warm. Then against the live endpoint:
   **eval_320 and eval_318** (permanent canaries for the cross-levy class), **eval_323 and
@@ -298,6 +354,57 @@ found inside an adjudication batch that is a **user-facing wrong answer** must b
 its own dated item with its own heading at the time it is found — the queue entry is evidence,
 not a record of work. Concretely: when a future adjudication produces a false-pass list, sweep it
 for wrong-direction and wrong-number answers **before** closing the batch, and promote each one.
+
+## 🔴 STANDING LIMITATION — THE GATE CREDITS BOTH OF THE WORST DEFECTS THIS CYCLE FOUND (2026-08-09)
+
+**The two most serious defects found this cycle both score `pass=True` on the regex scorer.**
+Not `reliable=False`, not excluded — positively credited, counted toward the launch-blocking
+in-corpus number.
+
+| row | what it does | regex | judge |
+|---|---|---|---|
+| **eval_318** | tells a business with TZS 205,000,000 turnover it need **not** register for VAT against a 200M threshold — wrong-direction compliance advice | `pass=True`, `reliable=True` | wrong |
+| **eval_320** | asserts **SDL TZS 28,000 on a ONE-employee payroll** and a PAYE figure derived from the **phantom TZS 26,000 relief** (CLAUDE.md §11) | `pass=True` | wrong |
+
+**Mechanism — this is structural, not bad luck.** The scorer is number-set intersection: it asks
+*"is a correct figure present?"* and never *"is a WRONG figure also present?"* eval_318 passes
+because 200,000,000 and 205,000,000 both appear; eval_320 passes because all four correct
+figures (0 / 80,000 / 78,000 / 4,000) appear **alongside** the wrong ones. So **an answer that
+states the right number AND a contradicting wrong number scores identically to one that states
+only the right number** — and that is exactly the shape the v16 compute path produces, because
+`_render` appends the authoritative working to whatever the model said. The better the
+deterministic layer gets at guaranteeing a correct figure is present, the more reliably it
+*masks* a wrong figure sitting next to it from the scorer. **This is D-SCORER-1, but the
+severity is new**: the masked content is now wrong-direction compliance advice and an
+authoritative-looking wrong levy figure, not a rambling near-miss.
+
+### Why this and the queue-buried lesson are one argument
+
+The judge caught both rows. It also caught eval_318 **a cycle earlier**, on 2026-07-26, and that
+finding was lost because it lived as a line item inside an adjudication queue with no owner (see
+SAFETY-3 above). So the record is: **the only instrument that can see this class found both
+defects, and the process still lost one of them for a full cycle.**
+
+Two conclusions, and they are different questions that have been getting conflated:
+
+1. **Should the judge MOVE the `GATE PASSED` number? Still no — unchanged.** That remains gated
+   on work item 2 (real adjudicated ground truth). Nothing here changes that; the judge is not
+   ground truth and was itself wrong on eval_321 this very run.
+2. **Should the judge RUN at all? It should always run.** Today the overlay is *optional* — it
+   fires only when `OPENROUTER_API_KEY` is present and `CHIKE_JUDGE != 0`, and the GPU gate is
+   explicitly designed to complete without it. That makes the only instrument capable of seeing
+   wrong-direction answers a thing that can silently not happen. **Recommendation: make the
+   overlay mandatory in every paired/gate run and fail loudly when the key is absent**, rather
+   than degrade to a run whose headline number credits its own worst defects. Cost is not the
+   obstacle — $0.21 (v15) + $0.20 (v16) + $0.05 (part 3) on this run, against ~3.5h of GPU.
+
+**Additional standing practice:** every run's false-pass queue must be swept for
+**wrong-direction and wrong-number** answers and each one promoted to its own item *before* the
+run is declared clean. A false-pass list is evidence, not a work list.
+
+**eval_318 and eval_320 are therefore PERMANENT LIVE CANARIES, not gate rows.** The gate cannot
+see them by construction, so they are checked against the live endpoint on every deploy. They
+are already in the wiring verification set for exactly this reason.
 
 ## 🏁 PHASE D RUN 3 (5d0dcb7) — ADR BAR PASSES ON THE SHIPPING CONFIG; clarification metric replaced (2026-08-08)
 
