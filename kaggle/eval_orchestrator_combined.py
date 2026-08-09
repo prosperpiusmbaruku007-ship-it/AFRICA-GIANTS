@@ -62,14 +62,37 @@ assert hf_token, 'AFRICA_GIANTS empty'
 os.environ['HF_TOKEN'] = hf_token
 print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) OK')
 
-# OPENROUTER_API_KEY is OPTIONAL — only needed for the item-5 frontier-judge overlay pass.
-# Absent (or CHIKE_JUDGE=0) -> the GPU gate still runs fully, the judge pass is skipped.
+# OPENROUTER_API_KEY is MANDATORY (2026-08-09). It used to be optional — absent key meant the
+# gate ran fully and quietly skipped the overlay. The 1476caa run showed what that costs:
+# eval_318 (tells a TZS 205,000,000 business it need not register for VAT against a 200M
+# threshold) and eval_320 (SDL 28,000 on a ONE-employee payroll) BOTH score pass=True, so the
+# regex scorer positively credits the two worst defects of the cycle and only the judge calls
+# either wrong. The instrument that sees that class must not be the one that can silently not
+# run. This does NOT promote the judge to the GATE PASSED trigger — that stays gated on work
+# item 2. Fail at second 0, not after the GPU pass.
 try:
     OR_KEY = _sc.get_secret('OPENROUTER_API_KEY')
 except Exception:
     OR_KEY = os.environ.get('OPENROUTER_API_KEY', '')
-RUN_JUDGE = bool(OR_KEY) and os.environ.get('CHIKE_JUDGE', '1') != '0'
-print(f'[auth] OPENROUTER_API_KEY {"set — judge overlay ON" if RUN_JUDGE else "absent — judge overlay SKIPPED"}')
+
+JUDGE_OPT_OUT = os.environ.get('CHIKE_JUDGE', '1') == '0'
+if not OR_KEY and not JUDGE_OPT_OUT:
+    raise RuntimeError(
+        'OPENROUTER_API_KEY missing — the judge overlay is MANDATORY for a gate run.\n'
+        '  Attach it as a Kaggle secret named OPENROUTER_API_KEY (or set the env var).\n'
+        '  To run WITHOUT it anyway, set CHIKE_JUDGE=0 explicitly; the artifact is then\n'
+        '  stamped judge_overlay="SKIPPED" and its headline is not trustworthy on its own\n'
+        '  — see the STANDING LIMITATION entry in PROGRESS.md.'
+    )
+RUN_JUDGE = bool(OR_KEY) and not JUDGE_OPT_OUT
+if RUN_JUDGE:
+    print('[auth] OPENROUTER_API_KEY set — judge overlay ON, MANDATORY')
+else:
+    print('=' * 78)
+    print('!! JUDGE OVERLAY EXPLICITLY DISABLED (CHIKE_JUDGE=0).')
+    print('!! The regex scorer CREDITS wrong-direction answers. Do NOT report this run as a')
+    print('!! clean result. The artifact is stamped judge_overlay="SKIPPED".')
+    print('=' * 78)
 
 # ── CLONE chike/ ─────────────────────────────────────────────────────────────────
 _CLONE = '/kaggle/working/AFRICA-GIANTS'
@@ -441,6 +464,10 @@ out = {'mode': 'combined_orchestrator_regression', 'commit': _sha,
        # item-5 frontier-judge overlay (None when skipped): three side-by-side numbers +
        # gap-fill + disagreement queue. Reporting-only; does not drive GATE PASSED.
        'judge_overlay': judge_overlay,
+       # Mandatory since 2026-08-09; a SKIPPED run must be self-identifying, because its
+       # headline cannot see the wrong-direction class the regex scorer credits.
+       'judge_overlay_status': ('ran' if RUN_JUDGE else
+                                'SKIPPED (CHIKE_JUDGE=0) — headline NOT trustworthy alone'),
        'by_subdomain': {k: dict(v) for k, v in by_sd.items()},
        'results': results}
 path = '/kaggle/working/gate_orchestrator_combined.json'

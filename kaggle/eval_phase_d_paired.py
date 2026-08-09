@@ -104,8 +104,13 @@ KAGGLE SETUP
     Accelerator : GPU  (T4 x2 or P100 — one device is used; 4-bit 8B needs ~6GB)
     Internet    : ON
     Secrets     : AFRICA_GIANTS      (HF token — model weights + eval questions + RAG index)
-                  OPENROUTER_API_KEY (judge overlay on both arms; without it the run still
-                                      completes and the judge section is skipped)
+                  OPENROUTER_API_KEY (judge overlay on both arms — MANDATORY since
+                                      2026-08-09; the run now RAISES at second 0 without it
+                                      rather than completing and skipping the judge. The
+                                      regex scorer credits wrong-direction answers, so a
+                                      judge-less headline cannot see its own worst failures.
+                                      Explicit opt-out: CHIKE_JUDGE=0, which stamps the
+                                      artifact judge_overlay="SKIPPED".)
     Runtime     : ~670 generations (60 v15 determinism check + ~520 v16 + 90 part-3)
                   ~= 1.7-2.4h, plus ~20 min judge. The v15 arm is CACHED from 5d0dcb7 —
                   see the block above ARM v15 — which saves ~340 generations, about a
@@ -145,12 +150,46 @@ assert hf_token, 'AFRICA_GIANTS empty'
 os.environ['HF_TOKEN'] = hf_token
 print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) OK')
 
+# ── JUDGE OVERLAY IS MANDATORY (2026-08-09) ──────────────────────────────────────
+# It used to be optional: absent key -> the run completed and simply skipped the overlay.
+# That made the ONLY instrument capable of seeing a wrong-direction answer a thing that could
+# silently not happen. The 1476caa run settled it: eval_318 (tells a TZS 205,000,000 business
+# it need not register for VAT against a 200M threshold) and eval_320 (SDL 28,000 on a
+# ONE-employee payroll) BOTH score pass=True on the regex scorer — the gate positively credits
+# the two worst defects of the cycle, and only the judge calls either wrong. A run without the
+# overlay is not a cheaper run; it is a run whose headline number cannot see its own failures.
+#
+# This does NOT promote the judge to the GATE PASSED trigger — that stays gated on work item 2
+# (real adjudicated ground truth), and the judge was itself wrong on eval_321 in this very run.
+# Two separate questions: whether the judge MOVES the number (still no) and whether it RUNS
+# (always). Fail here, at second 0, rather than after ~3.5h of GPU.
 try:
     OR_KEY = _sc.get_secret('OPENROUTER_API_KEY')
 except Exception:                                                    # noqa: BLE001
     OR_KEY = os.environ.get('OPENROUTER_API_KEY', '')
-RUN_JUDGE = bool(OR_KEY) and os.environ.get('CHIKE_JUDGE', '1') != '0'
-print(f'[auth] OPENROUTER_API_KEY {"set — judge overlay ON (both arms)" if RUN_JUDGE else "absent — judge SKIPPED"}')
+
+JUDGE_OPT_OUT = os.environ.get('CHIKE_JUDGE', '1') == '0'
+if not OR_KEY and not JUDGE_OPT_OUT:
+    raise RuntimeError(
+        'OPENROUTER_API_KEY missing — the judge overlay is MANDATORY for a paired run.\n'
+        '  Attach it as a Kaggle secret named OPENROUTER_API_KEY (or set the env var).\n'
+        '  Cost on the last full run: $0.21 (v15) + $0.20 (v16) + $0.05 (part 3), against\n'
+        '  ~3.5h of GPU — cost is not a reason to skip it.\n'
+        '  To run WITHOUT it anyway, set CHIKE_JUDGE=0 explicitly. The artifact is then\n'
+        '  stamped judge_overlay="SKIPPED" so the result can never be mistaken for a clean\n'
+        '  one, and its headline number is not trustworthy on its own — see the STANDING\n'
+        '  LIMITATION entry in PROGRESS.md.'
+    )
+RUN_JUDGE = bool(OR_KEY) and not JUDGE_OPT_OUT
+if RUN_JUDGE:
+    print('[auth] OPENROUTER_API_KEY set — judge overlay ON (both arms), MANDATORY')
+else:
+    print('=' * 78)
+    print('!! JUDGE OVERLAY EXPLICITLY DISABLED (CHIKE_JUDGE=0).')
+    print('!! The regex scorer CREDITS wrong-direction answers (eval_318, eval_320 both')
+    print('!! pass=True). This run cannot see that class. Do NOT report its headline as a')
+    print('!! clean result. The artifact is stamped judge_overlay="SKIPPED".')
+    print('=' * 78)
 
 # ── CLONE (chike/ is non-leaf: pipeline_v15 + orchestrator import siblings) ───────
 _CLONE = '/kaggle/working/AFRICA-GIANTS'
@@ -857,6 +896,10 @@ summary = {
     'v16_compute_routed': sum(q['_compute'] for q in ALL),
     'buckets': bucket_table,
     'v16_retrieval_arm': 'single_arm (SHIPPED; two-arm dropped 2026-08-08)',
+    # Mandatory since 2026-08-09. A SKIPPED run is self-identifying in the artifact, because
+    # its headline number cannot see the wrong-direction class the regex scorer credits.
+    'judge_overlay': ('ran' if RUN_JUDGE else
+                      'SKIPPED (CHIKE_JUDGE=0) — headline NOT trustworthy on its own'),
     'v15_arm_source': ('regenerated in full' if _cached15 is None
                        else f'cached from {CACHE_COMMIT}'),
     'v15_determinism_check': cache_note or 'n/a — full arm regenerated',
