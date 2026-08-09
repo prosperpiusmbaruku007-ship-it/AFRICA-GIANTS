@@ -1,6 +1,13 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-08
+Last updated: 2026-08-09
+
+**⏸️ WIRING IS HELD ON THE MODAL TOKEN ROTATION (2026-08-09).** Both technical preconditions are
+clear — the ADR bar passes on the shipping configuration at `1476caa` and the defective
+clarification rate is 2.9% against ≤5% — and the cross-levy guard that was the last approved
+blocker has shipped. **Nothing is deployed and nothing may be deployed until the founder confirms
+the token rotation has taken effect.** The wiring plan itself is unchanged and recorded at the
+bottom of the `1476caa` entry below.
 
 **🏁 CYCLE FULLY CLOSED (2026-07-26):** the entire router-investigation + defect-fix cycle is now
 closed end-to-end with real GPU confirmation. Follow-up #3's last two threads landed this session:
@@ -10,6 +17,287 @@ working — shipped `75421f0`, GPU-confirmed: 3 target rows corrected + judge 5/
 eval_378 scorer-artifact flip, zero collateral). Two non-blocking follow-ups logged for later
 (SCORER-SEMANTICS-1: credit "TZS 0"/not-applicable answers; JUDGE-NONDET: eval_397). See the
 D-FIDELITY-1 and work-item-2-round-2 entries below.
+
+## 🏁 PHASE D BATCHED RUN (1476caa) — ADR BAR PASSES; THE RESIDUAL REGRESSION CLASS IS GONE (2026-08-09)
+
+Artifact: **`eval/results/gate_phase_d_paired_1476caa.json`** — fetched from HF
+(`prospAprospA007/africa-giants-dataset`) and **sha256-verified**
+`65015f060be37ef4c2208bce59952e61ab064e2fb35e939a81f8ae68a8e32ea1`, 1,022,937 bytes,
+`complete: true`, `clone_head == live_head == 1476caa`, 400 questions, 217-fact index.
+**Every number below was recomputed from the raw `v15_results` / `v16_results` / `part3_results`
+rows independently of the summary block: 46 checks, all 46 matched.** Harness
+`scratch/recompute_1476caa.py`.
+
+This is the run the batched decision (founder, 2026-08-08) was waiting for: C1–C4 **plus** D and
+F1/F2 together, measured on the configuration that would actually be wired, rather than on an
+intermediate.
+
+### Headline
+
+| | 3ac522a | 030a5ff | 5d0dcb7 | **1476caa** |
+|---|---|---|---|---|
+| ADR bar raw | −6.8 **FAIL** | +0.5 | +1.3 | **+3.6 PASS** |
+| ADR bar reliable | −3.7 **FAIL** | +1.1 | +0.8 | **+1.6 PASS** |
+| compute raw / reliable | −29.4 / −23.0 | −2.0 / +4.0 | +4.9 / +5.0 | **+13.7 / +8.7** |
+| gains / regressions | 11 / 37 | 19 / 17 | 17 / 12 | **20 / 6** |
+| defective clarification rate | — | — | 9.8% | **2.9%** (target ≤5%) |
+
+Per bucket (raw, then reliable):
+
+| bucket | n | raw v15 | raw v16 | Δ | rel v15 | rel v16 | Δ |
+|---|---|---|---|---|---|---|---|
+| fact_path_190 | 193 | 158/184 | 158/184 | **0.0** | 111/130 | 111/130 | **0.0** |
+| staged_50 | 50 | 38/50 | 42/50 | +8.0 | 31/39 | 33/39 | +5.1 |
+| compute_type | 103 | 70/102 | 84/102 | **+13.7** | 36/53 | 46/60 | **+8.7** |
+| adversarial_150 | 150 | 98/144 | 108/144 | +6.9 | 65/89 | 73/96 | +3.0 |
+| **ALL_400** | 400 | **300/384** | **314/384** | **+3.6** | **212/263** | **222/270** | **+1.6** |
+
+### The v15 arm was CACHED — and the cache was verified in full, not on the harness's 60 rows
+
+`1476caa` cached the v15 arm from `5d0dcb7` behind a 60-row determinism check rather than
+regenerating 400 GPU rows. **All 400 rows were re-verified offline here: 0 generated-text
+differences and 0 pass-verdict differences against the `5d0dcb7` artifact.** The caching commit
+is sound, and the v15 baseline is byte-identical for the **fourth** consecutive run — so no
+sampling-noise defence exists for any v16 movement.
+
+The judge verdicts on that cached arm are also unchanged, **400/400** — worth stating because a
+byte-identical arm with drifting judge verdicts would have made every cross-run judge delta
+meaningless, and JUDGE-NONDET makes that a live possibility rather than a hypothetical.
+
+### Pre-registration — hit on the number and the direction
+
+Recorded in the harness docstring at `57145f3`, **before** the run: *10 rows change on the 400;
+9 were failing and should now pass; raw 314/384 vs v15 300/384 = +3.6; defective rate 3/102 =
+2.9%.*
+
+Observed, comparing the v16 arm against v16 at `5d0dcb7`: **9 flips, every one FAIL→PASS, zero
+PASS→FAIL, raw 305 → 314**, and the defective rate exactly 3/102. **The composition claim was
+slightly off in the safe direction — 12 rows changed text, not 10.** The two extras (eval_275,
+eval_314) changed wording without flipping a verdict. Third consecutive calibration point, and
+the second to hit its total exactly.
+
+**The pre-registered watch row cleared.** eval_314 was flagged in advance as the one to watch —
+already passing, shape changed by the rate branch, and *"if it flips to FAIL the rate branch is
+over-broad and should be narrowed to rows that were clarifying"*. It is **still PASS and still
+judge-correct** at `1476caa`. The rate branch is not over-broad.
+
+### The 6 regressions — and the residual class is now EMPTY
+
+**All 6 are v16 clarifications** (eval_271, 281, 291, 294, 295, 334). **There is not one row in
+the entire 400 where v16 states a wrong number that v15 stated right.** Judge applied to *v15's*
+answer on those 6: **5 wrong, 1 undetermined, 0 correct.**
+
+That last figure is the one that moved. At `5d0dcb7` the "no class of regression" clause was
+satisfied outright for the class it was written to catch, but **not clean** for a narrower
+residual: eval_280 and eval_323, where a judge-confirmed *correct* v15 answer became a
+clarification. **Both now pass** — eval_280 via C4 + headcount extraction, eval_323 via F1, each
+closing exactly as the D/F investigation projected. **The residual class goes from 1 row to
+zero.** There is no longer any row on which v16 is worse than v15 by any reading.
+
+### ⚠️ GAIN RECORD CORRECTED — 19 real / 1 false, not 20
+
+The raw judge verdict on the 20 gains is **18 correct / 2 wrong** (eval_320, eval_321).
+Adjudicated individually against gold rather than taken from the judge, that resolves to
+**19 real gains and 1 false**, with the two rows going in opposite directions:
+
+- **eval_320 is a genuine FALSE gain.** The regex credited it because every correct figure
+  (0 / 80,000 / 78,000 / 4,000) appears somewhere in the merged answer — while the model body in
+  the same breath asserts **SDL = TZS 28,000 on a ONE-employee payroll**, **NSSF = 160,000**, and
+  **PAYE = 8% × 800,000 − TZS 26,000 = 64,000**, the last via a personal relief that **does not
+  exist in Tanzania** (CLAUDE.md §11). The judge is right and the scorer is wrong.
+- **eval_321 is a JUDGE error in the opposite direction.** Checked part-by-part against gold:
+  SDL TZS 0 (8 < 10) ✓, NSSF 640,000 ✓, WCF 16,000 ✓, OSHA "Ndiyo, unatakiwa kusajili" ✓ — **all
+  four parts match.** Independently corroborated by the cross-levy sweep below, which recovered
+  eval_321's three model bodies as bare *"Thibitisha na TRA (tra.go.tz)."*: every figure in that
+  answer is a deterministic working, so there is nothing left for the model to have got wrong.
+
+**eval_320 is the row D-FIDELITY-2 was built for.** With the guard shipped this session those
+bodies are blanked and the deterministic workings carry the answer, which should convert
+eval_320 from a false gain into a real one — **but that is a projection, not a measurement, and
+it is not confirmed until the next paired run.**
+
+### Judge range — four treatments, sign-stable, and the exclusion gap has nearly closed
+
+The reconstruction was **calibrated against the published `5d0dcb7` table first** and reproduced
+all eight of its cells exactly before being applied here (`scratch/judge_treatments.py`).
+
+| Treatment | v15 | v16 | Δ | (Δ at 5d0dcb7) |
+|---|---|---|---|---|
+| Reported (`build_confirmation_report`) | 267/360 = 74.2% | 297/368 = 80.7% | +6.5 | +6.2 |
+| Common denominator, decisive in both arms (n=354) | 266/354 = 75.1% | 284/354 = 80.2% | **+5.1** | +3.7 |
+| Every clarification = FAIL, undetermined excluded | 267/361 = 74.0% | 297/372 = 79.8% | +5.9 | +4.1 |
+| Hard floor — clarifications *and* undetermined FAIL, /384 | 267/384 = 69.5% | 297/384 = 77.3% | +7.8 | +6.2 |
+
+**Honest range +5.1 to +7.8; strictest like-for-like +5.1. No accounting flips the sign** — do
+not quote +6.5 flat. Every treatment improved on `5d0dcb7`, the strictest by the most (+3.7 →
++5.1). **The exclusion asymmetry is now 3 rows, down from 10:** of v16's 21 clarifications, 17
+sit inside the graded set and are already scored FAIL and only 4 are excluded outright (v15: 1).
+Judge-undetermined fell 23 → 12 on v16.
+
+### Fact path — byte-zero regression surface, holding
+
+**281 of the 282 non-compute scored rows are BYTE-IDENTICAL between v15 and v16.** The sole
+exception is again **eval_322**, the three-part enumeration the decomposer splits; both arms
+PASS. 15 of 16 OOC rows are byte-identical, the exception being **eval_191** — the row whose
+`out_of_corpus` label is a known mislabel (tracked separately; it is a core in-scope PAYE
+computation and correcting the label moves the gate denominator).
+
+So v16's entire delta still lives in the 102 compute rows, and the fact path carries **byte-zero**
+regression surface rather than statistically-zero.
+
+### Two-arm retriever — the regex pointed the wrong way for a fourth time
+
+Part 3 reproduced **exactly**: two-arm 78/90 = 86.7% vs single-arm 74/90 = 82.2%, regex **+4.4**.
+Judge-augmented on the same rows lands 70/89 = 78.7%. Four independent measurements have now
+failed to demonstrate a two-arm benefit, and the regex scorer has pointed the wrong way on the
+same question set every time. **Single-arm stays. Settled; do not reopen.**
+
+### Clarification
+
+**Defective clarification rate 3/102 = 2.9%, against ≤5% — PASS.** The three are exactly the
+deliberate residuals: **eval_281** (permanent won't-fix, the approximation veto), **eval_326**
+(residency split, D-RESIDENCY-1), **eval_334** (blocked on a *regulatory* question about
+allowance taxability, not a code one). There is no defective clarification left that is a code
+defect. All-clarification rate 16/102 = 15.7%, reported as context only — the retired target's
+measured floor is 14.7% and **must not be reinstated**.
+
+### Wiring plan — APPROVED IN PRINCIPLE, HELD ON THE TOKEN ROTATION
+
+Both preconditions are clear. **Nothing deploys until the founder confirms the Modal token
+rotation has taken effect.** The plan, unchanged:
+
+- `run()` builds an **Orchestrator once per container** with `retriever=self.retrieve_facts`
+  (single-arm, load-bearing), gated on a `chike_config.json` flag `pipeline: "v16" | "v15"` so
+  rollback is a config edit rather than a deploy.
+- **Pre-flight:** full test suite · `scripts/scan_for_keys.py` · the 620-row deterministic sweep ·
+  byte-compare against the stored v16 rows from `1476caa`.
+- **Live verification per R16** — `modal app stop chike-inference --yes` FIRST, because
+  "✓ App deployed" proves nothing while containers are warm. Then against the live endpoint:
+  **eval_320 and eval_318** (permanent canaries for the cross-levy class), **eval_323 and
+  eval_280** (changed compute rows), **a fact row as the negative case** (must be byte-identical
+  to v15), and **an OOC question** (must still refuse).
+
+## ✅ D-FIDELITY-2 — a compute body that volunteers a WRONG figure for a SIBLING levy (SHIPPED 2026-08-09)
+
+`chike/fidelity.py::body_contradicts_siblings` + `Orchestrator._cross_levy_guard`, with 18 tests
+in `tests/test_fidelity_cross_levy.py` and the findings artifact at
+**`eval/results/cross_levy_guard_sweep_findings.json`**.
+
+### What D-FIDELITY-1 structurally could not see
+
+D-FIDELITY-1 validates each sub-answer body against **its own** `ComputationResult`. That is
+blind to a body which restates its own levy correctly while asserting wrong figures for the
+others in the same breath. **eval_320** is the case: the WCF sub-answer restated WCF 4,000
+correctly and passed the per-levy guard, while the same body volunteered `SDL = 3.5% × TZS
+800,000 = TZS 28,000` for a **one-employee** payroll (engine: TZS 0, below the 10-employee
+threshold) and `PAYE = 8% × TZS 800,000 − TZS 26,000 = TZS 64,000` (engine: 78,000, and the
+**TZS 26,000 personal relief does not exist** — CLAUDE.md §11). The regex scored the row PASS;
+the judge called it wrong.
+
+The guard runs as a **second pass**, because sibling results do not exist until every compute
+part has been answered. Blanking is whole-body and idempotent, so running after the per-levy
+guard can only ever remove more text, never resurrect any. **Compute sub-answers only** — a fact
+sub-answer has no `ComputationResult` to fall back on, so blanking it would delete content
+rather than replace it with the truth.
+
+### Sweep — three instruments, because a clean result from one is not a green light
+
+**A — no-op proof, 620 rows.** Every corpus question through the real Orchestrator twice, guard
+active vs guard replaced by identity, comparing merged text, clarification flags and the per-sub
+`ComputationResult` tuple. **0 of 620 rows change.** The guard cannot move a figure, a route or
+a clarification.
+
+**B — real-body replay.** The guard can only fire where a question routes to **two or more**
+compute levies, which is **9 corpus questions**; 6 are in the gate and were replayed against the
+**actual model bodies** recorded in the `1476caa` artifact. Bodies are recovered *exactly*, not
+approximated: `_render` emits `body\n<working>` joined by `\n\n` and the workings are
+deterministic, so each body is the text preceding its own working. The 3 probe rows (fv_01,
+fv_02, fv_04) are not in the artifact and are reported **unmatched rather than guessed at**.
+
+**2 questions flagged, 3 bodies, 0 false positives, 0 false negatives.** eval_320 is flagged
+**twice** — its NSSF body and its WCF body each volunteer wrong sibling figures independently.
+eval_318's SDL body asserts `NSSF = TZS 110,000` where the engine says 1,100,000 (a factor of
+ten). **The four unflagged rows were each adjudicated individually rather than counted**
+(eval_319, eval_321, eval_323, eval_327): every one names a sibling levy but attributes **no TZS
+figure** to it, so there is nothing to contradict. All four are true negatives.
+
+**C — ablation. All three design decisions are load-bearing**, measured rather than asserted:
+
+| disabled | good bodies wrongly blanked | bad bodies missed | live flags |
+|---|---|---|---|
+| `_acceptable` → headline amount only | 2 (both NSSF share-vs-total probes) | — | unchanged |
+| `_levy_windows` → every levy sees the whole body | 1 | eval_318 | **loses eval_318, spuriously gains eval_323** |
+| `_ATTRIBUTED` → `=` only, no colon | — | 2 (incl. the eval_320 target) | unchanged |
+
+**Windowing is the strongest result: without it the guard both misses eval_318 and blanks
+eval_323, a correct body on a live corpus row.** `_acceptable` exists because NSSF's
+authoritative `amount` is the employee share in a per-employee framing (eval_320) and the 20%
+total in a payroll framing (eval_318), so a faithful body quoting either is not a contradiction —
+that probe is the one that changed the code. Colon attribution matters because the enumeration
+shapes attribute with `:` as often as with `=`; `_RESULT` is left byte-identical so the validated
+own-levy detector is untouched.
+
+**605 tests pass** (587 + 18).
+
+### What this does NOT do
+
+It is a **consistency check between two outputs of one computation**, exactly as D-FIDELITY-1 is.
+It has no independent notion of correctness and **cannot detect an error upstream of both** — the
+SAFETY-2 / D-RESIDENCY-1 class, where body and working agree because both derive from the same
+mis-resolved input, is untouched by it. It also cannot see a fact sub-answer, which is precisely
+why the eval_318 VAT defect below needs its own item rather than being folded in here.
+
+## 🔴 SAFETY-3 — eval_318 answers the VAT threshold BACKWARDS on the fact path (2026-08-09)
+
+**Own investigation. Not folded into D-FIDELITY-2, and not closable by it.**
+
+The fact sub-answer of eval_318, at both `5d0dcb7` and `1476caa`:
+
+> *"**Hapana**, kwa sababu kizingiti chako cha usajili wa VAT ni TZS 200,000,000 tu. Mapato ya
+> TZS 205,000,000 **hayazidi** kizingiti hicho, hivyo **huhitajiwi kusajili VAT**."*
+
+**TZS 205,000,000 does exceed TZS 200,000,000.** The gold is explicit: *"mapato TZS 205,000,000
+yamevuka kizingiti cha TZS 200,000,000/mwaka, hivyo **lazima usajili VAT**."* The system tells a
+business that must register for VAT that it need not. This is **wrong-direction compliance
+advice** — the same class as SAFETY-1, where the OOC gate leaked and the model answered a
+capital-gains question with a confident rate.
+
+**The row scores `pass=True, reliable=True` in both arms.** The regex credits it because 200M and
+205M both appear; only the judge catches it (`judge=wrong`, and it sits in v16's false-pass
+queue). A wrong-direction answer that the gate positively credits is worse than one it fails.
+
+**Which path, and which arms.** The defect sits on the **shared fact path — the path that serves
+every user whichever arm ships**. On this specific row only **v16** emits the inversion; v15
+recites the threshold correctly and simply never applies it to the user's figure (`judge=
+undetermined`). So v16 is worse *on this row*, but the mechanism — an unguarded numeric
+comparison performed by the model on the fact path, with no deterministic backstop — is v15's
+too, and v15's non-answer here is luck rather than safety.
+
+**Not a rules-engine gap.** VAT registration is not a levy the rules engine computes; there is no
+`ComputationResult` to guard, so neither fidelity guard can reach it. This is the
+ROUTING-GAP-PAYE shape in a new domain: *the engine never ran at all*, and the model did the
+threshold arithmetic unsupervised. Candidate directions — a deterministic threshold-comparison
+route for VAT registration, or a fact-path numeric-comparison guard — are a **scoped
+investigation, not a fix to attempt reactively**, and they must be characterised before any code
+in the usual way.
+
+### ⚠️ IT WAS ALREADY FILED ON 2026-07-26 AND NEVER PROMOTED — this is the actual finding
+
+eval_318's VAT inversion is recorded in this file at the work-item-2 round-2 adjudication of the
+`afef9dd` queue: *"eval_318 **inverted** the VAT 205M>200M comparison"*, filed as one of **"4
+generation"** root causes inside a list of 16 confirmed regex false-passes. It was correctly
+identified, correctly root-caused, written down — **and given no owner, no item number, and no
+tracking line.** It has survived an entire fix cycle untouched and is still live in the most
+recent run.
+
+**Standing lesson — a defect filed as a row inside a queue is not tracked.** The
+adjudication queues exist to compare *instruments* (regex vs judge), and their output is a list
+of scored rows, not a work list. Two instruments flagged this row and neither produced an owner,
+because nothing in the process promotes a row out of a queue into the defect register. Anything
+found inside an adjudication batch that is a **user-facing wrong answer** must be lifted out into
+its own dated item with its own heading at the time it is found — the queue entry is evidence,
+not a record of work. Concretely: when a future adjudication produces a false-pass list, sweep it
+for wrong-direction and wrong-number answers **before** closing the batch, and promote each one.
 
 ## 🏁 PHASE D RUN 3 (5d0dcb7) — ADR BAR PASSES ON THE SHIPPING CONFIG; clarification metric replaced (2026-08-08)
 
@@ -315,7 +603,13 @@ metric should stop here.
 eval_326 (residency split, D-RESIDENCY-1) and eval_334 (blocked on a **regulatory** question
 about allowance taxability, not a code one) are the other two deliberate residuals.
 
-## 🚀 BATCHED PAIRED RUN — packaged, awaiting the founder's GPU
+## ✅ BATCHED PAIRED RUN — RUN, at `1476caa` (2026-08-09)
+
+> **Superseded by the `1476caa` entry at the top of this file.** The run happened, the artifact
+> is fetched, sha256-verified and committed to `eval/results/`, and every number was recomputed
+> from raw rows. The pre-registration recorded below **hit its total and its direction exactly**
+> (9 flips, all FAIL→PASS, raw 314/384; defective rate 3/102), and the pre-registered watch row
+> eval_314 held. Kept below for the record of what was predicted before the result was known.
 
 `kaggle/eval_phase_d_paired.py` at HEAD. Retrieval is **unchanged** from 5d0dcb7, so unlike the
 last run there is no term that can lose rows — the projection's only uncertainty is model-side
