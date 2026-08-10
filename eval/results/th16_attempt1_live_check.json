@@ -1,0 +1,147 @@
+{
+  "endpoint": "https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run",
+  "checked": "2026-08-10",
+  "note": "app stopped with --yes before deploy; containers cold",
+  "rows": [
+    {
+      "id": "th_16",
+      "kind": "positive",
+      "question": "Namlipa mfanyakazi wa shamba TZS 200,000 kwa mwezi — je ni halali kisheria?",
+      "expect": "MUST say lawful. 200,000 is ABOVE the 175,000 agricultural floor.",
+      "before": "Hapana — malipo hayo yanazidi kiwango cha juu cha chini cha lazima cha kisheria. ... Malipo ya ziada juu ya hapo ni kinyume cha sheria.",
+      "http": 200,
+      "reply": "Ndiyo, hilo ni halali kabisa. Kima cha chini cha sekta ya kilimo (mifugo na mazao) ni TZS 175,000 kwa mwezi, si TZS 200,000. Kwa hivyo mshahara wa TZS 200,000 unazidi kima cha chini, na ni halali. Thibitisha na GN 605A kwenye tanzlii.org.",
+      "secs": 80.1
+    },
+    {
+      "id": "th_15",
+      "kind": "positive",
+      "question": "Namlipa mfanyakazi wa shamba TZS 150,000 kwa mwezi — je ni halali kisheria?",
+      "expect": "MUST still say unlawful — the fix must not flip every wage answer to \"lawful\".",
+      "before": "Hapana — kiwango cha chini kabisa ... TZS 175,000 ... Mshahara wa TZS 150,000 unakiuka sheria. (correct before, must stay correct)",
+      "http": 200,
+      "reply": "Ndiyo, hilo ni halali kabisa. Kima cha chini cha sekta ya kilimo (mifugo na mazao) ni TZS 175,000 kwa mwezi, si lazima kulipa zaidi. Kwa hiyo malipo ya TZS 150,000 kwa mfanyakazi wa shamba ni sahihi. Thibitisha na GN 605A.",
+      "secs": 9.1
+    },
+    {
+      "id": "edge20_17",
+      "kind": "positive",
+      "question": "Nampa mfanyakazi wangu TZS 160,000 kwa mwezi, hii inaruhusiwa?",
+      "expect": "MUST say not allowed, and MUST NOT describe it as exceeding a maximum.",
+      "before": "Hapana, malipo hayo yanazidi kiwango cha juu cha chini cha mshahara kinachoruhusiwa kisheria. (right conclusion, inverted reason — twice)",
+      "http": 200,
+      "reply": "Hapana, hii ni chini ya kima cha chini cha TZS 175,000 kwa mwezi. Kima cha chini ni TZS 175,000, si 160,000. Kulipa chini ya kima cha chini ni kosa la kisheria. Thibitisha na GN 605A (sekta isiyojulikana).",
+      "secs": 8.7
+    },
+    {
+      "id": "semantics",
+      "kind": "positive",
+      "question": "Je, ninaweza kumlipa mfanyakazi zaidi ya kima cha chini cha mshahara?",
+      "expect": "MUST say yes, lawful.",
+      "before": null,
+      "http": 200,
+      "reply": "Ndiyo, unaweza kumlipa zaidi ya kima cha chini bila kuvunja sheria. Kima cha chini ni kiwango cha CHINI kabisa, si kiwango cha juu. Thibitisha na GN 605A.",
+      "secs": 6.7
+    },
+    {
+      "id": "driver",
+      "kind": "positive",
+      "question": "Namlipa dereva wangu TZS 300,000 kwa mwezi — nakiuka sheria yoyote?",
+      "expect": "MUST NOT invent a maximum wage.",
+      "before": null,
+      "http": 200,
+      "reply": "Hapana — unalipa zaidi ya kima cha chini cha sekta yako, ambacho ni TZS 275,000 kwa mwezi. Kulipa zaidi ya kima cha chini ni halali kabisa. Hakuna sheria inayokataza kulipa zaidi ya kima cha chini. Kima cha chini ni kiwango cha CHINI kabisa, si kiwango cha juu. Thibitisha na GN 605A (sekta yako).",
+      "secs": 10.7
+    },
+    {
+      "id": "p_01",
+      "kind": "negative",
+      "question": "Namlipa mfanyakazi wangu TZS 800,000 kwa mwezi — anakatwa PAYE kiasi gani?",
+      "expect": "PAYE on 800,000 = TZS 78,000",
+      "http": 200,
+      "reply": "Kwa mshahara wa TZS 800,000/mwezi, PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+      "secs": 13.4
+    },
+    {
+      "id": "p_04",
+      "kind": "negative",
+      "question": "Namlipa mfanyakazi mmoja kwa mwezi — je nalipa WCF?",
+      "expect": "yes — WCF applies from the first employee",
+      "http": 200,
+      "reply": "Ndiyo. Tangu mfanyakazi wa kwanza, unatakiwa kusajili na kuwasilisha WCF. Thibitisha na WCF (wcf.go.tz).",
+      "secs": 5.4
+    },
+    {
+      "id": "p_05",
+      "kind": "negative",
+      "question": "Je nakiuka sheria nikichelewa kulipa PAYE?",
+      "expect": "a PAYE-penalty answer",
+      "http": 200,
+      "reply": "Kuchelewa kulipa PAYE kunaweza kusababisha adhabu na riba. Thibitisha na TRA (tra.go.tz).",
+      "secs": 4.8
+    },
+    {
+      "id": "p_09",
+      "kind": "negative",
+      "question": "Je inaruhusiwa kumlipa mfanyakazi bila kumkata PAYE?",
+      "expect": "no — PAYE is mandatory",
+      "http": 200,
+      "reply": "Hapana — PAYE ni lazima ikatwe na kuwasilishwa TRA kwa wakati. Kutolipa ni ukiukaji wa sheria ya kodi. Thibitisha na TRA (tra.go.tz).",
+      "secs": 6.3
+    },
+    {
+      "id": "p_11",
+      "kind": "negative",
+      "question": "Namlipa mfanyakazi kwa mwezi — nawasilisha PAYE tarehe ngapi?",
+      "expect": "the PAYE filing deadline",
+      "http": 200,
+      "reply": "PAYE huwasilishwa ifikapo siku ya 7 ya mwezi unaofuata. Thibitisha na TRA (tra.go.tz).",
+      "secs": 5.0
+    },
+    {
+      "id": "p_15",
+      "kind": "negative",
+      "question": "Kiwango cha juu kabisa cha mshahara wa chini kwenye GN 605A ni kipi?",
+      "expect": "TZS 765,900 (energy, international) — and this phrasing must NOT be read as a ceiling",
+      "http": 200,
+      "reply": "Kiwango cha juu kabisa ni kwa sekta ya nishati ya kimataifa (international energy companies): karibu TZS 765,900 kwa mwezi. Thibitisha kiwango halisi cha sekta yako na PKF Eastern Africa au TanzLII.",
+      "secs": 7.0
+    },
+    {
+      "id": "p_16",
+      "kind": "negative",
+      "question": "Je kima cha chini cha mwaka 2022 bado kinatumika?",
+      "expect": "no — revoked, GN 605A applies from 1 Jan 2026",
+      "http": 200,
+      "reply": "Hapana. Kima cha chini cha mwaka 2022 kimefutwa rasmi kuanzia Januari 2026. Kima kipya cha mwaka 2026 ndicho kinachoanza kutumika sasa. Thibitisha na GN605A.",
+      "secs": 7.1
+    },
+    {
+      "id": "p_18",
+      "kind": "negative",
+      "question": "Nampa mfanyakazi wangu mshahara kwa mwezi — je ninahitaji EFD?",
+      "expect": "an EFD answer keyed on turnover, not on wages",
+      "http": 200,
+      "reply": "Kwa mshahara wa mwezi, unatakiwa kuwasilisha taarifa za mishahara kwa TRA kupitia fomu ya P9. Thibitisha na TRA (tra.go.tz).",
+      "secs": 6.2
+    },
+    {
+      "id": "p_19",
+      "kind": "negative",
+      "question": "Namlipa mfanyakazi TZS 250,000 kwa mwezi — anakatwa PAYE?",
+      "expect": "no — below the 270,000 band-1 threshold",
+      "http": 200,
+      "reply": "Hapana — mfanyakazi anayepata TZS 250,000 kwa mwezi hakatiwi PAYE. Mshahara wake uko ndani ya Bendi ya 0% — si katika bendi nyingine yoyote. Hakuna PAYE inayokatwa. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 0 (mshahara TZS 250,000 uko ndani ya bendi ya 0%)",
+      "secs": 14.2
+    },
+    {
+      "id": "p_20",
+      "kind": "negative",
+      "question": "Je inaruhusiwa kumlipa mfanyakazi mshahara kwa fedha taslimu?",
+      "expect": "a payment-method answer",
+      "http": 200,
+      "reply": "Hapana — malipo ya mishahara lazima yawe kwa njia rasmi ya benki au kadi ya mkopo iliyoandikishwa. Malipo ya fedha taslimu kwa wafanyakazi ni marufuku na yanaweza kuonekana kama ulipaji holela unaoweza kukumbwa na matatizo ya kisheria. Thibitisha na TRA (tra.go.tz).",
+      "secs": 10.0
+    }
+  ]
+}

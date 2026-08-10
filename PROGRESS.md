@@ -1,13 +1,16 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
 
 **🚀 v16 IS LIVE IN PRODUCTION (2026-08-09, `ec9cbb3`).** The router + rules engine +
 orchestrator pipeline now serves every request. Cutover entry immediately below — deployed
 commit, the two gate results that authorised it, and the rollback procedure.
 
-**➡️ NEXT WORK ITEM: SAFETY-3.** Promoted to the top of the queue **because the cutover made it
-user-facing**, not because any new evidence arrived. It gets a fresh investigation round.
+**➡️ QUEUE (founder-ordered, 2026-08-10): th_16 → D-FIDELITY-1 widening → VAT/EFD compute
+route.** SAFETY-3's investigation is done (written up below); its fix was approved for VAT and EFD
+only, staged. **th_16 attempt 1 shipped, broke its own control, and was rolled back — production
+is in its known state and th_16 is still open.** Entry immediately below. Minimum-wage sector
+rates and unit normalisation remain separate investigations.
 
 **Two findings from this cycle outrank the wiring itself and are written up as their own
 entries: CONTAINER-PATH-1** (wiring v16 with defaulted phrase lists would have silently
@@ -15,6 +18,107 @@ reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline 
 second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
+
+## ⛔ th_16 ATTEMPT 1 — SHIPPED, BROKE ITS OWN CONTROL, ROLLED BACK (2026-08-10)
+
+**Production is back in its known state** (`70a2b7f`, deployed and verified live). th_16 is still
+open. The investigation and the primary-source verification below all stand; only the fact's
+*wording* failed, and it failed at a stage no instrument in this repo can see.
+
+### What was shipped, and what it did
+
+| probe | before | after the fix | verdict |
+|---|---|---|---|
+| **th_16** — TZS 200,000 to a farm worker | *"malipo hayo yanazidi **kiwango cha juu cha chini**… Malipo ya ziada juu ya hapo ni kinyume cha sheria"* | *"**Ndiyo, hilo ni halali kabisa.** … TZS 200,000 unazidi kima cha chini, na ni halali."* | **fixed** |
+| **th_15** — TZS 150,000 to a farm worker | *"Mshahara wa TZS 150,000 **unakiuka sheria**"* — correct | *"**Ndiyo, hilo ni halali kabisa** … malipo ya TZS 150,000 … **ni sahihi**."* | **BROKE** |
+| edge20 row 17 — TZS 160,000 | right conclusion, inverted reason | right conclusion, right reason | fixed |
+| 10 unrelated payroll negatives | — | unchanged | ok |
+
+**th_15 was correct before and is wrong after.** The system told an employer that paying *below*
+the minimum wage is fine. That is not a smaller defect than the one being fixed — it is the same
+defect pointing the other way, at a worker's expense. Traded one wrong answer for another, so it
+was rolled back rather than left live while iterating.
+
+### Why every offline check passed anyway
+
+Retrieval was never the failing stage. The fact was retrieved correctly on **both** arms for
+th_15. The model read its lead clause — *"kulipa mshahara MKUBWA kuliko kima cha chini ni halali
+kabisa"* — and generalised it to "the wage is lawful", never reaching the converse stated two
+sentences later in the same fact.
+
+**Nothing in this repo's offline toolchain runs generation.** Every instrument built for this
+item measured *which facts reach the prompt*, and all of them were green: 3/3 self-retrieval,
+7/8 targets, 0 evictions across 30 probes, 625 tests passing, verified on production's own
+single-arm top-3 as well as the two-arm hybrid. **Fact-in-prompt is not fact-applied**, and this
+is the second time in two work items that the gap between them is where the defect lived —
+SAFETY-3's root cause was the same shape (RAG carries the VAT threshold; the model recites it
+correctly in the sentence it misapplies).
+
+**Method change for attempt 2: a live generation check belongs INSIDE the loop, not after it.**
+Retrieval benching stays — it is cheap, and it is what found the actual cause — but a wording is
+not a candidate until it has been asked th_15 and th_16 live.
+
+### The one thing that worked exactly as designed
+
+`t_below_farm`'s `guards_against` note reads *"below the floor; the fix must not flip this to
+lawful."* It was authored **before** the fix existed, for a failure mode that had not happened,
+in a probe set built because R17 says the corpus will not contain the forms that break you. It
+is the only reason this was caught in minutes instead of by a user.
+
+### What survives and is NOT lost in the revert
+
+Recoverable in full from `2adbd4c`, and none of it needs redoing:
+
+- **Primary-source verification.** The official gazette PDF from **kazi.go.tz** (Tier 1A; TanzLII
+  403s behind Cloudflare from this network) — *Special Supplement No. 9 to Special Gazette No. 6
+  Vol. 106, 13 Oct 2025*. **Paragraph 4(3):** *"The minimum wage rates specified in the Second
+  Schedule shall be regarded as the minimum wage payable to employee in the respective sector or
+  area, **and an employer may pay such employee an amount above the minimum wage prescribed** in
+  respective sector or area."* Plus para 4(4), para 6, para 7 (revoking **GN No. 687 of 2022** by
+  name), and the whole Second Schedule. Every sector rate already locked was checked against the
+  gazette — **no corrections needed**; "16 sectors, 46 sub-sectors" reconciles exactly (46
+  lettered sub-sectors + 4 unlettered = 50 rate rows).
+- **The root-cause finding.** Realistic Swahili minimum-wage queries retrieved **0 of 7** GN 605A
+  facts, best rank **#22–#52**, against **7 of 8** other domains at rank 1. GN 605A was in the
+  index only as long English `key: value` text keyed on the notice number — reachable by naming
+  it, and by nothing a user says. The offline reproduction is exact: its top-3 for the edge20
+  row-17 question matched that run's recorded `facts_retrieved` **in the same order**.
+- **The probe corpus** (8 targets + 22 authored R17 displacement probes) and its regression test.
+- **The `wrong_patterns`**, swept over **149,983 stored strings** with 0 false positives, then
+  given authored probes for the lawful phrasings they could plausibly catch.
+- **R15's Kaggle round-trip is no longer required.** e5-base is in the local HF cache, and
+  re-embedding the 217 committed texts locally reproduced the live index at **cosine 1.000000 on
+  every fact**. The rule's stated reason — *"local network blocks e5-base download"* — no longer
+  holds. The rule should be amended; its *verification* steps stay, and this cycle is the
+  argument for adding a live generation step to them.
+
+### A retriever divergence found by reading the deploy path
+
+Worth recording separately because it nearly invalidated the whole bench. Instruments 4–9 used
+`chike.retrieval.Retriever` — the **two-arm** hybrid (top-3 plus one fact from a number-stripped
+second arm). Production does not use it: `modal_app.py` builds the Orchestrator with
+`retriever=self.retrieve_facts`, its own **single-arm** method, called with no `top_k`, so users
+get a plain top-3. Every query in this bench is numeric, so the extra slot is exactly where a fix
+could have been hiding. Re-run under single-arm: **same result**, 7/8 and 0 evictions — the
+conclusion held, but it was luck that it did. The regression test now parametrizes over both.
+
+The edge20 artifact recording **4** retrieved facts is what made the wrong retriever look like the
+right one: that harness runs the local two-arm path, not the endpoint.
+
+### Still open, unchanged by this attempt
+
+- **t_hotel** — *"Nina mfanyakazi wa hoteli namlipa TZS 400,000 kwa mwezi, je ni sawa?"* needs the
+  hotel floor (375,000 / 225,000 / 195,000 by star rating). Sector-rate reachability is part of
+  the separate minimum-wage investigation.
+- **A fabricated sector floor.** Live, the driver probe answered *"kima cha chini cha sekta yako …
+  ni TZS 275,000"* — no such floor exists; 275,060 is the pre-GN 605A national **average**. The
+  conclusion (lawful) was right and the number invented, on the fixed index and presumably on the
+  current one too.
+- **Pre-existing retrieval gaps** — `p_05` / `p_09` / `p_11` (PAYE penalty, deadline, "can I pay
+  without deducting") and `p_16` (is the 2022 order still in force) retrieved no relevant fact on
+  the OLD index either. Evidence that retrieval reachability is wider than minimum wage. Own item.
+- **`p_20`**, live: *"malipo ya mishahara lazima yawe kwa njia rasmi ya benki … fedha taslimu ni
+  marufuku"* — fabricated, and no baseline exists to say whether this attempt caused it. Logged.
 
 ## 🚀 v16 CUTOVER — LIVE IN PRODUCTION (2026-08-09)
 

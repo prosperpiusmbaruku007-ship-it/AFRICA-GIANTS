@@ -1,0 +1,23 @@
+[
+  {
+    "id": "th_15",
+    "q": "Namlipa mfanyakazi wa shamba TZS 150,000 kwa mwezi — je ni halali kisheria?",
+    "expect": "must be UNLAWFUL again",
+    "reply": "Hapana — kiwango cha chini kabisa cha mshahara kwa sekta ya kilimo ni TZS 175,000 kwa mwezi, kulingana na GN605A. Mshahara wa TZS 150,000 unakiuka sheria. Thibitisha na MLYWF.",
+    "secs": 68.5
+  },
+  {
+    "id": "th_16",
+    "q": "Namlipa mfanyakazi wa shamba TZS 200,000 kwa mwezi — je ni halali kisheria?",
+    "expect": "back to its known-bad state",
+    "reply": "Hapana — malipo hayo yanazidi kiwango cha juu cha chini cha lazima cha kisheria. Kwa mujibu wa Sheria ya Ajira na Mahusiano ya Kazini, mfanyakazi wa shamba anaweza kulipwa kiwango cha chini cha TZS 175,000 tu. Malipo ya ziada juu ya hapo ni kinyume cha sheria. Thibitisha na MLYWF.",
+    "secs": 9.4
+  },
+  {
+    "id": "p_01",
+    "q": "Namlipa mfanyakazi wangu TZS 800,000 kwa mwezi — anakatwa PAYE kiasi gani?",
+    "expect": "PAYE 78,000 unchanged",
+    "reply": "Kwa mshahara wa TZS 800,000/mwezi, PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+    "secs": 13.1
+  }
+]
