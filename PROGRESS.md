@@ -1,13 +1,15 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
 
 **🚀 v16 IS LIVE IN PRODUCTION (2026-08-09, `ec9cbb3`).** The router + rules engine +
 orchestrator pipeline now serves every request. Cutover entry immediately below — deployed
 commit, the two gate results that authorised it, and the rollback procedure.
 
-**➡️ NEXT WORK ITEM: SAFETY-3.** Promoted to the top of the queue **because the cutover made it
-user-facing**, not because any new evidence arrived. It gets a fresh investigation round.
+**➡️ QUEUE (founder-ordered, 2026-08-10): th_16 → D-FIDELITY-1 widening → VAT/EFD compute
+route.** SAFETY-3's investigation is done and is written up below; the fix was approved for VAT
+and EFD only, staged. **th_16 is DONE and live** — see the entry immediately below. Minimum-wage
+sector rates and unit normalisation are separate investigations, not part of the route.
 
 **Two findings from this cycle outrank the wiring itself and are written up as their own
 entries: CONTAINER-PATH-1** (wiring v16 with defaulted phrase lists would have silently
@@ -15,6 +17,132 @@ reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline 
 second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
+
+## ✅ th_16 FIXED AND LIVE — "paying above the minimum wage is illegal" (2026-08-10)
+
+The worst answer this project has produced, and the only SAFETY-3 finding taken out of order.
+Production told an employer paying a farm worker TZS 200,000/month:
+
+> *Hapana — malipo hayo yanazidi **kiwango cha juu cha chini** cha lazima cha kisheria … mfanyakazi
+> wa shamba anaweza kulipwa kiwango cha chini cha TZS 175,000 **tu**. **Malipo ya ziada juu ya hapo
+> ni kinyume cha sheria.***
+
+"Kiwango cha juu cha chini" — a *maximum-minimum* — describes nothing that exists in Tanzanian
+law. **It reproduced in two independent runs** (`edge20_v16_run1_prefix_67e9e4c` and
+`edge20_v16_run2_3144a98`, row 17, plus the SAFETY-3 probe), so it was never sampling noise.
+
+### The cause was an ABSENT fact, not a wrong one — and that changed the fix
+
+The SAFETY-3 report attributed the VAT inversion to generation-with-the-fact-present. That
+diagnosis does **not** carry over here, and assuming it would have produced the wrong remedy.
+Offline reproduction of production retrieval (`scratch/mw_retrieval.py`, same e5-base, same
+`query: ` prefix, same live index) found:
+
+| | result |
+|---|---|
+| realistic Swahili minimum-wage queries retrieving **any** GN 605A fact | **0 of 7** |
+| rank of the best GN 605A fact on those queries | **#22 – #52** |
+| the same instrument on eight other domains | **7 of 8 at rank 1** |
+| the one minimum-wage query that *did* work | `GN 605A ilianza kutumika lini?` — because it names the notice |
+
+The reproduction is exact, not approximate: its top-3 for the edge20 row-17 question matched
+that run's recorded `facts_retrieved` **in the same order**, including the three irrelevant
+facts (NSSF, PAYE, VAT deferment) that the model was actually given.
+
+**GN 605A was in the index only as long English `key: value` text keyed on the notice number.**
+It answered the one question that names it and nothing a user actually says. This is precisely
+the failure mode the R15 note already warns about — *"short Swahili-first text with the value at
+the front retrieves far better than a long English fact"* — reaching a domain nobody had swept.
+
+**A disproved hypothesis, recorded because it was tested:** instrument 1 saw `file search fee:
+3,000 TZS` rank top-3 on a wage query, which looked like the source of SAFETY-3's unexplained
+fabricated *"TZS 3,000 minimum"* WCF answer (th_22). Checked directly — **no**, that fact is not
+retrieved for th_22's question. The fabrication remains unexplained and stays logged.
+
+### Verified against the gazette itself, not a summary
+
+TanzLII is behind a Cloudflare challenge from this network (403, same class as the Groq/Cerebras
+blocks). The official PDF was instead downloaded from **kazi.go.tz** — Tier 1A whitelist —
+*Special Supplement No. 9 to Special Gazette No. 6 Vol. 106, 13 Oct 2025*, and read paragraph by
+paragraph. **Paragraph 4(3):**
+
+> *"The minimum wage rates specified in the Second Schedule shall be regarded as the minimum wage
+> payable to employee in the respective sector or area, **and an employer may pay such employee an
+> amount above the minimum wage prescribed** in respective sector or area."*
+
+Also confirmed: para 4(4) (more favourable terms via contract or CBA), para 6 ("Persons enjoying
+better terms"), para 7 revoking **GN No. 687 of 2022** by name, and the entire Second Schedule.
+Every sector rate already in `locked_facts.json` verified against the gazette — **no corrections
+needed**, and "16 sectors, 46 sub-sectors" reconciles exactly (46 lettered sub-sectors + 4
+unlettered sectors = 50 rate rows).
+
+### One fact, not two — decided by measurement
+
+The obvious shape was two entries: floor semantics + the agricultural rate. Benched, that shape
+**lost**: with production injecting only `top_k=3` (+1 on numeric queries), the two competed for
+the same slots and knocked each other out.
+
+| shape | targets served | evictions |
+|---|---|---|
+| split, full B | 6/8 | 0 |
+| split, short B | 6/8 | 0 |
+| split, narrow B | 4/8 | 0 |
+| **merged (shipped)** | **7/8** | **0** |
+
+The wording was iterated offline through four variants before anything was written to disk,
+which was only possible because of a side finding: **R15's Kaggle round-trip is no longer
+required.** e5-base is now in the local HF cache, and re-embedding the current 217 committed
+texts locally reproduced the live index at **cosine 1.000000 on every fact**
+(`scratch/mw_regen_control.py`). R15 step 1's stated reason — *"local network blocks e5-base
+download"* — no longer holds. The rule should be amended; the *verification* steps stay.
+
+### R17 applied to both halves
+
+The shipped entry is deliberately loaded with generic wage vocabulary (*namlipa, nampa,
+mfanyakazi, mshahara, kwa mwezi, inaruhusiwa, ni sawa, nakiuka sheria*) — exactly the words in
+almost every payroll question this system answers. A clean sweep would have proved nothing, so
+**22 in-scope payroll probes were authored to contain that vocabulary while needing a different
+fact** (`eval/accuracy_gate/minimum_wage_floor_probes_030.jsonl`, 8 targets + 22 displacement
+probes, `guards_against` per row, wired to `tests/test_minimum_wage_floor.py`).
+
+The `wrong_patterns` got the same treatment: swept over **149,983 stored strings** for false
+positives (**0** — every match was the defect itself or a note describing it), then given
+authored probes for the *legitimate* phrasings they could plausibly catch — "kiwango cha juu
+zaidi cha mshahara wa chini" (the highest minimum rate, which eval_120/eval_382 both ask for).
+
+### Result
+
+| check | result |
+|---|---|
+| self-retrieval on the new fact's own subject vocabulary | **3/3** |
+| target queries served on the regenerated index | **7/8** (t_hotel is a documented miss) |
+| evictions across 30 control + R17 probes | **0** |
+| full test suite | **625 passed** |
+
+Artifact: `eval/results/th16_minimum_wage_floor_verification.json`. Index 217 → 218 facts,
+`kaggle/` and `chike-inference/` byte-identical.
+
+**t_hotel is an accepted miss, named rather than hidden.** *"Nina mfanyakazi wa hoteli namlipa
+TZS 400,000 kwa mwezi, je ni sawa?"* needs the **hotel** floor (375,000 / 225,000 / 195,000 by
+star rating), which this entry deliberately does not carry — a fact listing every sector's rate
+is the long-English shape that caused the problem. Retrieving the semantics without the rate
+would let the model assert lawfulness against a number it does not have. It is listed in
+`KNOWN_MISSES` with its reason so a future regression on a *different* target cannot hide
+inside a lowered bar.
+
+### Two things this turned up that are NOT th_16
+
+1. **Pre-existing retrieval gaps, not caused by this change** — four of the 22 authored probes
+   retrieved no relevant fact on the OLD index either: `p_05` / `p_09` / `p_11` (PAYE deadline,
+   PAYE penalty, "can I pay without deducting PAYE") and `p_16` (is the 2022 wage order still in
+   force). Recorded per row in the probe file, so the test asserts **non-regression** rather
+   than absolute correctness — a test that failed here would be failing for a defect it did not
+   cause and cannot fix. **Evidence that retrieval reachability is wider than minimum wage.**
+   Own item.
+2. **Context noise.** The floor fact is now also injected into **9 of 22** unrelated payroll
+   probes. Nothing is evicted, but the build script's own history records an irrelevant injected
+   fact changing an answer (two 5M facts beating one 10M). Those nine are the negative controls
+   for the live check.
 
 ## 🚀 v16 CUTOVER — LIVE IN PRODUCTION (2026-08-09)
 

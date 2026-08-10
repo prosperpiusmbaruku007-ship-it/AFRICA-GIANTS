@@ -1297,6 +1297,24 @@
     "effective_date": "2026-01-01",
     "status": "LOCKED"
   },
+  "GN605A_minimum_is_a_floor_not_a_ceiling": {
+    "fact": "GN 605A sets a FLOOR, not a ceiling and not a fixed salary. Paragraph 4(3) of the Order: \"The minimum wage rates specified in the Second Schedule shall be regarded as the minimum wage payable to employee in the respective sector or area, and an employer may pay such employee an amount above the minimum wage prescribed in respective sector or area.\" Paying MORE than the sector minimum is lawful and is never an offence. Paragraph 4(4): more favourable terms are improved through employment contracts or collective bargaining agreements. Paragraph 6 (\"Persons enjoying better terms\"): an employee already receiving a higher rate at commencement continues to receive it. Only paying BELOW the sector minimum is unlawful. There is no maximum wage; the phrase \"kiwango cha juu cha chini\" (a maximum-minimum) describes nothing that exists in Tanzanian law. Second Schedule reference points: agriculture (crop or animal production) TZS 175,000/month; forestry TZS 185,000; fishing/aquaculture TZS 300,000; item 16, any sector or area not specified in the Order, TZS 175,000.",
+    "correct_value": "Minimum wage is a floor — an employer MAY pay above it (GN 605A para 4(3)); only paying below is unlawful",
+    "wrong_patterns": [
+      "kiwango cha juu cha chini",
+      "kima cha juu cha chini",
+      "malipo ya ziada.{0,30}kinyume cha sheria",
+      "kulipa zaidi ya (kima|kiwango) cha chini.{0,40}(kinyume cha sheria|si halali|hairuhusiwi)",
+      "(anaweza|anapaswa) kulipwa kiwango cha chini cha [^.]{0,25}\btu\b",
+      "paying (more|above).{0,30}minimum wage.{0,30}(illegal|unlawful|not allowed|prohibited)",
+      "maximum minimum wage"
+    ],
+    "primary_source": "https://www.kazi.go.tz/uploads/documents/en-1760702541-GN%20605A-THE%20LABOUR%20INSTITUTIONS%20(MINIMUM%20WAGE%20FOR%20PRIVATE%20SECTOR)%20ORDER,%202025%20(5).pdf",
+    "verified_by": "Official gazette text, Special Supplement No. 9 to Special Gazette No. 6 Vol. 106 of 13 Oct 2025, downloaded from kazi.go.tz (Tier 1A whitelist) and read paragraph by paragraph — paras 1, 4(3), 4(4), 6, 7 and the full Second Schedule",
+    "verified_date": "2026-08-10",
+    "effective_date": "2026-01-01",
+    "status": "LOCKED"
+  },
   "OSHA_penalties": {
     "fact": "Failure to register or obtain OSHA compliance licence: fine TZS 1,000,000 to TZS 5,000,000 OR imprisonment up to 12 months OR both. Continuing offence: additional TZS 100,000 per day. Source: OHS Act No. 5 of 2003.",
     "correct_value": "TZS 1M–5M fine OR up to 12 months OR both; TZS 100,000/day continuing offence",

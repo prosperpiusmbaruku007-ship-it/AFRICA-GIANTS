@@ -206,6 +206,32 @@ CONCISE_BILINGUAL_FACTS = {
         'ya ajali. Fidia ya ajali na magonjwa ya kazini hulipwa na WCF (mwajiri huchangia 0.5% ya '
         'mishahara). Usajili wa OSHA na wa WCF ni tofauti; vyote vinahitajika. WCF huanza tangu '
         'mfanyakazi wa kwanza — HAKUNA kizingiti cha wafanyakazi wawili.',
+
+    # th_16: production told an employer that paying ABOVE the minimum wage is illegal
+    # ("malipo hayo yanazidi kiwango cha juu cha chini ... Malipo ya ziada juu ya hapo ni
+    # kinyume cha sheria"), reproducibly, in two independent runs. The cause was not a wrong
+    # fact but an ABSENT one: before this entry the minimum-wage domain was unreachable —
+    # 0 of 7 realistic Swahili queries retrieved any GN 605A fact, the best ranking #22-#52,
+    # while 7 of 8 other domains hit rank 1. GN 605A lived in the index only as long English
+    # `key: value` text keyed on the notice number, so it answered "GN 605A ilianza lini?" and
+    # nothing a user actually asks. The model then generated the semantics from nowhere and
+    # invented a "kiwango cha juu cha chini" (a maximum-minimum), which does not exist.
+    #
+    # Deliberately ONE entry, not two. Split into a semantics fact plus a rate fact, the two
+    # competed for the same top_k=3 (+1 numeric) slots and knocked each other out of the
+    # injected set: 6/8 target queries served split, 7/8 merged, 0 evictions either way
+    # (scratch/mw_shape_sweep.py). Question-shaped lead because the facts that win their
+    # queries in this index are question-shaped (the WCF entry above ranks 1 on its query).
+    # Carries NO worked TZS example beyond the two floor rates: an example amount would
+    # retrieve better on bare-wage queries and would also hand the model a number to recite
+    # as a threshold — the failure this entry exists to stop.
+    'GN605A_minimum_is_a_floor_not_a_ceiling':
+        'Nampa mfanyakazi wangu mshahara kwa mwezi — je inaruhusiwa? Je ni sawa? Je nakiuka '
+        'sheria yoyote? Jibu: kulipa mshahara MKUBWA kuliko kima cha chini cha sekta yake ni '
+        'halali kabisa na hakuna sheria inayovunjwa. Kima cha chini ni kiwango cha CHINI '
+        'kabisa kinachoruhusiwa, si kiwango cha juu na si mshahara kamili. Ni kulipa CHINI ya '
+        'kima cha chini tu ndiko kinyume cha sheria. Kima cha chini cha kilimo (mazao au '
+        'mifugo) na cha sekta isiyotajwa ni TZS 175,000 kwa mwezi. (GN 605A, aya 4(3)).',
 }
 
 # --- Noise keys to drop (bare citations, sections, exemption lists, no-value fragments) ---
