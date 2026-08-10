@@ -163,6 +163,14 @@ Written the same day, by the same hand, in copy explicitly designed to state no 
 lexical defect recurs wherever the vocabulary is natural, and a check that reads the mechanism's
 own output catches the recurrence for free — the cheapest instrument in the repo, again.
 
+**Both fixes deployed and re-verified live** (second R16 pass, `79e41a2`): re-running all 12
+canaries, **exactly one row changed — `hotel_no_star`, the row the fix targeted** — and the
+other eleven, including all four controls, were byte-identical to the previous run. Live
+polarity of every clarification now reads `unknown`. The no-sector exit is not exercised by any
+of the 12, so it was probed separately and directly: *"Namlipa mfanyakazi wangu TZS 200,000 kwa
+mwezi — je ni halali kisheria?"* → the sector clarification, polarity `unknown`, and **no
+TZS 175,000 anywhere in it** (the item-16 conflation, still closed).
+
 ### 🔌 OUTAGE — ~2 minutes, no wrong answers served (2026-08-10)
 
 `modal app stop chike-inference --yes` succeeded instantly. The `modal deploy` that was to
