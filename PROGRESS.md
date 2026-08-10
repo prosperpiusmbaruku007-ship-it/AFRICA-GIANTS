@@ -6,8 +6,8 @@ Last updated: 2026-08-10
 orchestrator pipeline now serves every request. Cutover entry immediately below — deployed
 commit, the two gate results that authorised it, and the rollback procedure.
 
-**➡️ QUEUE (founder-ordered, 2026-08-10): D-FIDELITY-1 widening → minimum-wage investigation
-→ VAT/EFD compute route.** D-FIDELITY-1 first because it is live and has been partly blind since
+**➡️ QUEUE (founder-ordered, 2026-08-10): ~~D-FIDELITY-1 widening~~ **DONE** → minimum-wage
+investigation → VAT/EFD compute route.** D-FIDELITY-1 first because it is live and has been partly blind since
 it shipped, and because it is the guard that would catch a fabricated figure the moment an answer
 carries a working beside it.
 
@@ -22,6 +22,144 @@ reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline 
 second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
+
+## 🔎 D-FIDELITY-1 HAS BEEN BLANKING CORRECT BODIES SINCE IT SHIPPED — a guard whose false positives are invisible by construction (2026-08-10)
+
+The item was opened because the guard MISSES contradictions: `_RESULT` matched `=` and nothing
+else, so "SDL … **sawa na** TZS 210,000" against a working of TZS 17,500 produced an empty
+asserted-set and `body_contradicts_working` returned False. That is real, and it is **the
+smaller half**.
+
+The sweep over every recoverable stored body found the blindness is **two-sided**, and in the
+measured population the false positives outnumber the misses **3 : 2**:
+
+| direction | n | what it looks like |
+|---|---|---|
+| **contradiction MISSED** | 2 | th_19's `sawa na TZS 210,000`; and an NSSF body claiming employee TZS 400,000 **(20%)** *and* employer TZS 400,000 **(20%)** of a TZS 800,000 salary — engine 160,000 |
+| **CORRECT body blanked** | 3 | a right band breakdown or employer/employee split whose total line reads `Jumla ya mchango: TZS 200,000` — `=`-only matching cannot see the total, `amount not in results` fires, the body is discarded |
+
+**The new failure shape, and the reason this went unnoticed for so long: a guard's false
+positives are invisible by construction.** When D-FIDELITY-1 blanks a correct body, `_render`
+still emits the deterministic working, so the user gets a correct — merely tersest — answer. No
+gate row fails. No judge marks it wrong. Nothing in any artifact says "an explanation was
+deleted here." **A deleted explanation is indistinguishable from a model that was terse.** The
+missed contradictions were the visible half only because a wrong number eventually shows up in a
+judge verdict; the blanked-correct half produces no signal at all, anywhere.
+
+That generalises past this guard: **any blanking/suppression mechanism needs its removals
+counted, not just its firings.** Whatever replaces content must record that it did.
+
+One of the two missed contradictions deserves naming on its own: the NSSF 20%+20% body **passed
+the regex scorer AND the judge called it correct.** Both scorers saw a plausible-looking split
+and a total; neither checked it against the engine. That is what the guard is for, and it was
+the punctuation — a colon instead of an equals — that let it past.
+
+### The size of it, and the honest limit on that number
+
+| | |
+|---|---|
+| stored merged answers with a compute part | **402** |
+| compute bodies judged (round-trip verified, + 2 stored directly) | **118** |
+| rows the parse REFUSED to guess at (engine drift since those runs) | **261** |
+| … of those, containing an assertion construction `_RESULT` cannot see | **58** (colon 26, levy-`ni` 23, `sawa na` 6, `itakuwa` 4, `ni karibu` 1) |
+| **bodies whose verdict changes** | **5 of 118 — 4.2%** |
+
+The 261 is the limit, stated rather than buried: those artifacts predate the current engine, so
+body and working cannot be told apart in them and `render_recovery` correctly declines. The 58
+bounds what is out of reach instead of leaving it unquantified.
+
+### Widened on attestation, and one candidate killed by the probes
+
+Connectors harvested by frequency from **946 distinct stored generations / 3,381 TZS amounts**
+(`scratch/dfid1_constructions.py`), each shipped with the count that justifies it: `=` 703,
+`:` 198, `sawa na` 24, `ni karibu` 11, `→` 8, `itakuwa` 5, `kitakuwa` 4.
+
+**Bare levy-scoped `ni` was REJECTED.** Frequency argued for it — 23 occurrences among the
+unrecoverable rows, and `ni` is the second most common connector in the corpus at 373. The R17
+probes settled it: it reads a PAYE band boundary (`na_13`), an SDL applicability threshold
+(`na_14`) and an NSSF exemption (`na_15`) as computed results. **Frequency would have shipped
+it; only the authored adversarial probes stopped it.**
+
+Two refinements the probes forced, both of which change what the OLD `=` pattern extracted, so
+the widening is **not purely additive**: a digit boundary, and an operand exclusion — an
+asserted result is a TERMINAL figure, never the left side of `TZS 250,000 × 8%` or
+`TZS 270,000 = TZS 0`.
+
+Final: **0 false positives across 16 non-assertion probes, 0 misses across 7 assertion probes.**
+
+### D-FIDELITY-2 shared the gap — one fix, not two
+
+Verified by direct call rather than inferred, because the corpus contains none of the missed
+forms. One employee, engine says SDL does not apply, body volunteers TZS 28,000:
+
+| punctuation | before the fix |
+|---|---|
+| `SDL = TZS 28,000` · `SDL: TZS 28,000` | caught |
+| `SDL ni sawa na TZS 28,000` · `SDL ni TZS 28,000` · `SDL itakuwa TZS 28,000` | **missed** |
+
+Three of five punctuations of the same wrong figure. `_ATTRIBUTED` is now the same object as
+`_RESULT`, with a test asserting it, so a future re-split has to argue for itself.
+
+### Verification
+
+- full suite **615 passed**; new regression file `tests/test_fidelity_assertion_widening.py`
+  **33 tests**
+- `scratch/preflight_wiring.py`: **87/87 workings byte-identical, 0 round-trip failures,
+  cross-levy blanking still exactly `{eval_318, eval_320}`**
+- **0 of the 18 bodies recoverable from the current gate artifact change verdict** — no expected
+  behaviour change on the measured gate
+- sweep artifact: `eval/results/dfid1_stored_body_sweep.json`
+
+---
+
+## 🪞 A PROBE THAT PASSED FOR THE WRONG REASON — the fourth instrument this project has caught lying (2026-08-10)
+
+R17 probe `na_06` asserted that `Band 2 (8%): TZS 250,000 × 8% = TZS 20,000` must not yield
+250,000 as a result. It passed. **250,000 was indeed absent — because the pattern had extracted
+25,000 instead.**
+
+The operand exclusion was written as `([\d,]+)(?!\s*[operator])`. Regex backtracking defeats it:
+the lookahead fails after `250,000` (next is ` ×`), so the engine gives back a digit and retries
+`250,00`, whose next character is `0` — not an operator — and matches. **The operand was not
+excluded, it was silently renumbered.** Every probe still went green, and the pattern would have
+shipped with a class of figures being read as arbitrary wrong numbers.
+
+Found by a **two-line sanity check** printing what the pattern extracted from five strings — not
+by the 23-probe suite built specifically to test it. Fixed with a digit boundary that pins the
+run to full length before the operand test, and pinned by
+`test_operand_exclusion_survives_backtracking`, whose docstring carries the mechanism.
+
+**This is now the fourth instrument this project has caught lying, and the pattern in how:**
+
+| # | instrument | how it lied | what caught it |
+|---|---|---|---|
+| 1 | `recover()` v1 | discarded everything after the last working | a live canary reply that was byte-correct |
+| 2 | `recover()` v2 | under-removed multi-paragraph bodies; **passed its own self-check**, because the check compared verdicts and the defect was in extent | a row that had already PASSED stopped matching live |
+| 3 | direction detector (SAFETY-3) | scored a whole answer against one threshold, crediting an SDL verdict to a VAT question | per-threshold attribution, added after the counts looked wrong |
+| 4 | `na_06` (this one) | green because backtracking renumbered the thing it was testing | a two-line print of the pattern's actual output |
+
+**Not one was caught by itself.** Each was caught by a different instrument, a live run, or an
+ad-hoc check — never by the suite it belonged to. The corollary is not "write better probes",
+it is: **an instrument cannot be its own control.** Before trusting a green board, print what the
+mechanism actually produced on a handful of inputs and read it. That is the cheapest check in
+this repo and it has now found what the expensive ones missed, twice.
+
+---
+
+## 🫥 A MEASUREMENT THAT ERASES ITSELF WHEN THE FIX LANDS (2026-08-10)
+
+The sweep compared **live `chike.fidelity`** against a widened set. The moment the widening
+landed in `chike.fidelity`, before and after became the same object and the sweep reported
+**0 bodies affected** — the number that justified the change, gone, replaced by a confident zero.
+
+Caught by re-running the sweep after the edit as a matter of routine and noticing the headline
+had changed in the wrong direction.
+
+**Rule: a before/after instrument must own its "before".** The pre-fix patterns are now frozen
+into `scratch/dfid1_sweep.py` as `OLD_RESULT` / `OLD_ATTRIBUTED` with their own re-implemented
+guard functions, so re-running the sweep at any future commit still reproduces the 5-of-118 that
+authorised this change. An instrument that reads the current code for its baseline is measuring
+nothing the moment the code moves.
 
 ## 🧱 NEVER-GUESS CANNOT BE A SENTENCE IN THE INDEX — it has to be infrastructure (2026-08-10)
 

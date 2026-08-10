@@ -50,8 +50,51 @@ from typing import Optional
 
 from .rules_engine.results import ComputationResult
 
-# RHS of an '=' expressed in shillings — an asserted compute RESULT.
-_RESULT = re.compile(r"=\s*TZS\s*([\d,]+)")
+# --- what counts as an ASSERTED RESULT (widened 2026-08-10, D-FIDELITY-1) ----------------
+#
+# This was `=\s*TZS\s*([\d,]+)` — an equals sign and nothing else. A body saying "SDL ... sawa
+# na TZS 210,000" against a working of TZS 17,500 therefore produced an EMPTY asserted-set and
+# `body_contradicts_working` returned False, so the guard has been partly blind since it
+# shipped. "sawa na" is the ordinary Swahili way to state a result.
+#
+# Widened on ATTESTED constructions, not on symmetry. Every connector below was harvested by
+# frequency from what actually precedes a `TZS` amount across 946 distinct stored model
+# generations (scratch/dfid1_constructions.py); the count that justifies each is in the comment.
+# Bare levy-scoped "ni" ("PAYE ni TZS 128,000") was a candidate on frequency and was REJECTED:
+# the R17 probes show it reads a PAYE band boundary, an SDL applicability threshold and an NSSF
+# exemption as computed results. Frequency argued for it; the adversarial probes settled it.
+#
+# The sweep over every recoverable stored body found the blindness is TWO-SIDED. Of the five
+# bodies whose verdict changes, two are contradictions the guard was missing — including an
+# NSSF answer claiming a 20% employee share AND a 20% employer share of TZS 800,000, which the
+# regex scorer passed and the judge called correct — and THREE are the guard firing on CORRECT
+# bodies and blanking them, because their total line was punctuated "Jumla ya mchango: TZS
+# 200,000" and `=`-only matching could not see it. Widening fixes both directions.
+_ASSERT_CONNECTORS = (
+    r"=",                        # 703 — arithmetic result
+    r":",                        # 198 — enumeration/total line; was in _ATTRIBUTED only
+    r"(?:ni\s+)?sawa\s+na",      #  24 — the Swahili "equals"; the construction that exposed this
+    r"itakuwa",                  #   5 — "PAYE itakuwa TZS 72,000"
+    r"kitakuwa",                 #   4 — "VAT withholding kitakuwa TZS 180,000"
+    r"→",                        #   8 — arrow used as an equals in breakdown lines
+    r"ni\s+karibu",              #  11 — "PAYE ni karibu TZS 78,000"; hedged, still an assertion
+)
+# Pin the digit run to its full length BEFORE the operand test. Without this the operand
+# lookahead is defeated by backtracking: on "TZS 250,000 × 8%" the engine gives back a digit and
+# matches "250,00" instead, so the operand is not excluded but silently renumbered. (Found by a
+# sanity check, after an R17 probe passed for exactly that wrong reason.)
+_DIGIT_BOUNDARY = r"(?![\d,])"
+# An asserted result is a TERMINAL figure. A number followed by an arithmetic operator is an
+# OPERAND: the band base in "Band 2 (8%): TZS 250,000 × 8% = TZS 20,000", or the left side in
+# "Band 1 (0%): TZS 270,000 = TZS 0". This also removes intermediate operands the OLD `=`
+# pattern read as results, so the change is not purely additive — its effect on
+# currently-correct rows is measured in eval/results/dfid1_stored_body_sweep.json.
+_OPERAND = r"(?!\s*[-+*x×−=])"
+
+_ASSERTED_SRC = (r"(?:" + "|".join(_ASSERT_CONNECTORS) + r")\s*TZS\s*([\d,]+)"
+                 + _DIGIT_BOUNDARY + _OPERAND)
+
+_RESULT = re.compile(_ASSERTED_SRC, re.IGNORECASE)
 # A naive levy computation: 'TZS base x rate%' or 'rate% x TZS base' (x may be x, *, or the
 # unicode multiplication sign). Presence means the body did its own arithmetic.
 _NAIVE_LEVY = re.compile(
@@ -101,11 +144,17 @@ def body_contradicts_working(body: str, result: ComputationResult) -> bool:
 # 'sdl' in prose and 'SDL' in a breakdown line are the same token.
 _LEVY_TOKEN = re.compile(r"\b(sdl|nssf|paye|wcf)\b", re.IGNORECASE)
 
-# An amount ATTRIBUTED to the label that precedes it — the RHS of either '=' or ':'. This is
-# deliberately BROADER than _RESULT above, which stays '=' only: the enumeration shapes that
-# motivated this check attribute with a colon ('PAYE (TZS 800,000, 8%): TZS 64,000') as often
-# as with '='. _RESULT is left untouched so the validated own-levy detector is byte-identical.
-_ATTRIBUTED = re.compile(r"[:=]\s*TZS\s*([\d,]+)")
+# An amount ATTRIBUTED to the label that precedes it. This used to be `[:=]` — broader than
+# _RESULT, which was '=' only — precisely because the enumeration shapes attribute with a colon
+# as often as with '='.
+#
+# THE TWO ARE NOW ONE PATTERN, because the sibling guard turned out to share the same blindness.
+# Verified by direct call rather than inferred from the corpus (which does not contain the
+# form): given a one-employee payroll where the engine says SDL does not apply, a body
+# volunteering "SDL = TZS 28,000" is caught, and so is "SDL: TZS 28,000" — but "SDL ni sawa na
+# TZS 28,000", "SDL ni TZS 28,000" and "SDL itakuwa TZS 28,000" all pass. Three of five
+# punctuations of the same wrong figure. One gap, one fix.
+_ATTRIBUTED = _RESULT
 
 
 def _levy_windows(body: str) -> dict:

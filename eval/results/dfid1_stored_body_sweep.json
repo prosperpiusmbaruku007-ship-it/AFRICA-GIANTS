@@ -1,0 +1,239 @@
+{
+  "stats": {
+    "direct_bodies": 2,
+    "direct_flag_now": 0,
+    "direct_flag_new": 0,
+    "direct_changed": 0,
+    "merged_compute_rows": 402,
+    "unrecoverable": 261,
+    "recovered_bodies": 116,
+    "rec_flag_now": 11,
+    "rec_flag_new": 10,
+    "rec_changed": 5
+  },
+  "per_artifact": {
+    "edge20_v16_run2_3144a98.json": {
+      "direct_bodies": 2,
+      "compute_rows": 4,
+      "recovered_bodies": 2,
+      "unrecoverable": 2
+    },
+    "edge20_v16_run1_prefix_67e9e4c.json": {
+      "compute_rows": 4,
+      "unrecoverable": 4
+    },
+    "gate_orchestrator_combined_19fce68.json": {
+      "compute_rows": 87,
+      "unrecoverable": 65,
+      "recovered_bodies": 22
+    },
+    "gate_orchestrator_combined_5239190.json": {
+      "compute_rows": 79,
+      "unrecoverable": 60,
+      "recovered_bodies": 19
+    },
+    "gate_orchestrator_combined_5a62c00.json": {
+      "compute_rows": 28,
+      "recovered_bodies": 16,
+      "unrecoverable": 11
+    },
+    "gate_orchestrator_combined_75421f0.json": {
+      "compute_rows": 1,
+      "unrecoverable": 1
+    },
+    "gate_orchestrator_combined_afef9dd.json": {
+      "compute_rows": 1,
+      "recovered_bodies": 1
+    },
+    "gate_phase_d_paired_030a5ff.json": {
+      "compute_rows": 124,
+      "unrecoverable": 91,
+      "recovered_bodies": 10
+    },
+    "gate_phase_d_paired_1476caa.json": {
+      "compute_rows": 18,
+      "recovered_bodies": 18
+    },
+    "gate_phase_d_paired_5d0dcb7.json": {
+      "compute_rows": 2,
+      "unrecoverable": 2
+    },
+    "safety3_threshold_investigation.json": {
+      "compute_rows": 6,
+      "recovered_bodies": 5
+    },
+    "th16_attempt1_live_check.json": {
+      "compute_rows": 2,
+      "recovered_bodies": 2
+    },
+    "edge_probe_015_result.json": {
+      "compute_rows": 1,
+      "unrecoverable": 1
+    },
+    "gate_combined_0717_1143.json": {
+      "compute_rows": 14,
+      "unrecoverable": 7,
+      "recovered_bodies": 7
+    },
+    "gate_combined_0717_2141.json": {
+      "compute_rows": 30,
+      "unrecoverable": 16,
+      "recovered_bodies": 14
+    },
+    "gate_combined_current.json": {
+      "compute_rows": 1,
+      "unrecoverable": 1
+    }
+  },
+  "unmeasured": {
+    "rows_with_an_assertion_construction": 58,
+    "construction:levy_ni": 23,
+    "construction:colon": 26,
+    "construction:itakuwa": 4,
+    "construction:sawa_na": 6,
+    "construction:ni_karibu": 1
+  },
+  "flips": [
+    {
+      "source": "gate_orchestrator_combined_19fce68.json",
+      "via": "recovered",
+      "question": "PAYE ya mfanyakazi wangu mwenye mshahara wa TZS 800,000 kwa mwezi ni kiasi gani?",
+      "levy": "paye",
+      "engine_amount": "78000",
+      "working": "PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+      "body": "Hesabu ya PAYE kwa TZS 800,000/mwezi:\nBand 1 (0%): TZS 270,000 = TZS 0\nBand 2 (8%): TZS 250,000 × 8% = TZS 20,000\nBand 3 (20%): TZS 240,000 × 20% = TZS 48,000\nBand 4 (25%): TZS 40,000 × 25% = TZS 10,000\nPAYE ya jumla: TZS 78,000/mwezi\nTZS 40,000 ya ziada juu ya TZS 760,000 iko Band 4 (25%) = TZS 10,000.",
+      "now": {
+        "working": true,
+        "siblings": false
+      },
+      "widened": {
+        "working": false,
+        "siblings": false
+      },
+      "asserted_now": [
+        0,
+        10000,
+        20000,
+        48000
+      ],
+      "asserted_widened": [
+        0,
+        10000,
+        20000,
+        48000,
+        78000
+      ],
+      "connectors_present": [
+        "colon"
+      ],
+      "direction": "FALSE POSITIVE -> now cleared"
+    },
+    {
+      "source": "gate_orchestrator_combined_19fce68.json",
+      "via": "recovered",
+      "question": "Mshahara ni TZS 500,000 — jumla ya michango yote miwili ya NSSF ni kiasi gani?",
+      "levy": "nssf",
+      "engine_amount": "100000",
+      "working": "NSSF = 20% × TZS 500,000 = TZS 100,000 (mwajiri TZS 50,000 + mfanyakazi TZS 50,000)",
+      "body": "Kwa mshahara wa TZS 500,000, jumla ya michango ya NSSF ni:\n\nMfanyakazi anachangia: TZS 500,000 × 10% = TZS 50,000\nMwajiri anachangia: TZS 500,000 × 10% = TZS 50,000\n\nJumla ya michango: TZS 100,000 (TZS 50,000 + TZS 50,000)\n\nMichango hii huwasilishwa ndani ya siku 7 za mwisho wa mwezi. Thibitisha na NSSF (nssf.go.tz).",
+      "now": {
+        "working": true,
+        "siblings": false
+      },
+      "widened": {
+        "working": false,
+        "siblings": false
+      },
+      "asserted_now": [
+        50000
+      ],
+      "asserted_widened": [
+        50000,
+        100000
+      ],
+      "connectors_present": [
+        "colon"
+      ],
+      "direction": "FALSE POSITIVE -> now cleared"
+    },
+    {
+      "source": "gate_phase_d_paired_030a5ff.json",
+      "via": "recovered",
+      "question": "Mshahara ni TZS 800,000 — jumla ya mchango wa NSSF (mwajiri pamoja na mfanyakazi) ni kiasi gani?",
+      "levy": "nssf",
+      "engine_amount": "160000",
+      "working": "NSSF = 20% × TZS 800,000 = TZS 160,000 (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)",
+      "body": "Kwa mshahara wa TZS 800,000, jumla ya mchango wa NSSF ni:\n\nMfanyakazi anachangia: TZS 400,000 (20%)\nMwajiri anachangia: TZS 400,000 (20%)\n\nJumla ya mchango: TZS 800,000\n\nHii ni hesabu rahisi ya jumla — si mgawanyo kati ya mwajiri na mfanyakazi. Thibitisha na nssf.go.tz.",
+      "now": {
+        "working": false,
+        "siblings": false
+      },
+      "widened": {
+        "working": true,
+        "siblings": false
+      },
+      "asserted_now": [],
+      "asserted_widened": [
+        400000,
+        800000
+      ],
+      "connectors_present": [
+        "colon"
+      ],
+      "direction": "MISSED -> now caught"
+    },
+    {
+      "source": "safety3_threshold_investigation.json",
+      "via": "recovered",
+      "question": "Nina wafanyakazi 12 na mishahara TZS 6,000,000 — SDL yangu ni kiasi gani, na je nahitaji EFD kama mauzo ni TZS 30,000,000 kwa mwaka?",
+      "levy": "sdl",
+      "engine_amount": "17500",
+      "working": "SDL = 3.5% × TZS 500,000 = TZS 17,500",
+      "body": "Kwa wafanyakazi 12, SDL ni asilimia 3.5 ya jumla ya mishahara, sawa na TZS 210,000. Kama mauzo yako ni TZS 30,000,000, unahitaji EFD. Thibitisha na TRA (tra.go.tz).",
+      "now": {
+        "working": false,
+        "siblings": false
+      },
+      "widened": {
+        "working": true,
+        "siblings": false
+      },
+      "asserted_now": [],
+      "asserted_widened": [
+        210000
+      ],
+      "connectors_present": [
+        "sawa_na"
+      ],
+      "direction": "MISSED -> now caught"
+    },
+    {
+      "source": "gate_combined_0717_1143.json",
+      "via": "recovered",
+      "question": "Mshahara ni TZS 1,000,000 kwa mwezi — jumla ya mchango wa NSSF ni kiasi gani na umegawanywaje?",
+      "levy": "nssf",
+      "engine_amount": "200000",
+      "working": "NSSF = 20% × TZS 1,000,000 = TZS 200,000 (mwajiri TZS 100,000 + mfanyakazi TZS 100,000)",
+      "body": "NSSF kwa TZS 1,000,000/mwezi: mwajiri anachanga TZS 100,000; mfanyakazi anachanga TZS 100,000. Jumla ya mchango: TZS 200,000. Thibitisha na nssf.go.tz.understander\n\nTZS 1,000,000 → NSSF: mwajiri 10% = TZS 100,000; mfanyakazi 10% = TZS 100,000. Jumla ya michango: TZS 200,000. Thibitisha na nssf.go.tz.",
+      "now": {
+        "working": true,
+        "siblings": false
+      },
+      "widened": {
+        "working": false,
+        "siblings": false
+      },
+      "asserted_now": [
+        100000
+      ],
+      "asserted_widened": [
+        100000,
+        200000
+      ],
+      "connectors_present": [
+        "colon"
+      ],
+      "direction": "FALSE POSITIVE -> now cleared"
+    }
+  ]
+}
