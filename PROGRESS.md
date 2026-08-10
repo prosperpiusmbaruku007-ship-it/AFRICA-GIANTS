@@ -7,14 +7,18 @@ orchestrator pipeline now serves every request. Cutover entry immediately below 
 commit, the two gate results that authorised it, and the rollback procedure.
 
 **➡️ QUEUE (founder-ordered, 2026-08-10): ~~D-FIDELITY-1 widening~~ **DONE, DEPLOYED,
-VERIFIED LIVE** → minimum-wage investigation (NEXT) → VAT/EFD compute route.** D-FIDELITY-1 first because it is live and has been partly blind since
+VERIFIED LIVE** → ~~minimum-wage investigation~~ **BUILT, COMMITTED, NOT DEPLOYED** → VAT/EFD
+compute route (NEXT).** D-FIDELITY-1 first because it is live and has been partly blind since
 it shipped, and because it is the guard that would catch a fabricated figure the moment an answer
 carries a working beside it.
 
-**⛔ th_16 IS STILL LIVE, BY DECISION, NOT BY OVERSIGHT.** Two fix attempts were made and both were
-rejected on evidence — the second because four of six candidate wordings fabricated **TZS 765,900
-as a legal maximum wage**, which is more dangerous than the nonsense phrase it would have replaced.
-The class fix is the only correct fix. Entries below; unit normalisation remains its own item.
+**⛔ th_16 IS STILL LIVE. The class fix is BUILT but NOT DEPLOYED.** Two wording fixes were made
+and both were rejected on evidence — the second because four of six candidate wordings fabricated
+**TZS 765,900 as a legal maximum wage**, which is more dangerous than the nonsense phrase it would
+have replaced. The class fix — a deterministic `minimum_wage` route that removes the model from
+the comparison entirely — is now built and green offline (entry immediately below). **Until it is
+deployed and live-verified per R16, th_16 is still answered wrong in production.** Unit
+normalisation remains its own item.
 
 **Two findings from this cycle outrank the wiring itself and are written up as their own
 entries: CONTAINER-PATH-1** (wiring v16 with defaulted phrase lists would have silently
@@ -22,6 +26,94 @@ reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline 
 second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
+
+## ⚖️ MINIMUM WAGE IS NOW A DETERMINISTIC ROUTE — the comparison left the model (2026-08-10)
+
+**Built, green offline, NOT DEPLOYED.** The th_16 class fix, done the way the evidence pointed:
+a genuine `minimum_wage` computation type behind the rules engine, with sector resolution and
+four never-guess exits. `Orchestrator._deterministic_answer` blanks the model body and renders
+the working verbatim, so **`model_calls_on_wage_path: 0`** — every mechanism behind the six
+failed wordings is removed structurally rather than guarded against.
+
+That last point is what makes offline evidence sufficient here, and it is the exception rather
+than the rule. MEASUREMENT-GAP-1 says a fix whose success depends on how the model REASONS over
+a fact needs live generation inside the loop. **This fix does not depend on that** — there is no
+generation on the path to depend on. What still needs the live check is the wiring: that the
+container actually runs this code and that nothing else regressed (R16, CONTAINER-PATH-1).
+
+### The five pieces, and why each is shaped the way it is
+
+| piece | shape | the argument |
+|---|---|---|
+| **the Schedule** | 50 rows × 5 period columns, hand-transcribed, `verify_transcription()` asserts **all 250 figures** back against the committed gazette extract | the PDF interleaves columns with labels; a silent mis-parse puts a wrong wage in front of an employer. Transcription is auditable, not trusted |
+| **periods** | compared **column to column, never converted** | the Order prescribes hourly/daily/weekly/fortnightly/monthly for every row. TZS 10,000/day against the MONTHLY 175,000 floor calls a lawful wage unlawful; against the daily 6,731 it is lawful. No division, no ×26 — a class of arithmetic error removed instead of guarded, and it does not wait on the unit-normalisation item |
+| **the resolver** | four outcomes: ROW / SECTOR / UNLISTED / NONE | a sector is not a rate — **12 of 16 sectors carry more than one**, largest spread **TZS 532,500** (12a business 200,500 → 12b(i) commercial banks 733,000), and **5 of 7 sector-only cases flip the verdict** across their candidates. Guessing a sub-sector returns the OPPOSITE legal answer, not a less precise one |
+| **item 16** | **UNLISTED is a separate outcome from NONE, and the UNLISTED cue table ships EMPTY** | TZS 175,000 is the rate for a sector the ORDER does not list — not the answer to "the user didn't say what the work is". Populating the table needs a labour-law source: para 3 defines "agriculture", "domestic work", "energy", "mining operations" but NOT the scope of "Trade and finance", so whether a salon is item 16 (175,000) or 12a (200,500) is a classification the gazette does not settle — and a wage between them gets opposite verdicts |
+| **the never-guess exits** | four, in the orchestrator, ordered status → amount → period → row | **C4, measured:** a locked fact saying *"SINA UHAKIKA … usiseme mshahara ni halali bila kuthibitisha sekta"* was retrieved on 6 of 8 probes and **the model adjudicated anyway on every one.** A refusal must be a code path that runs INSTEAD of generation |
+
+### The inversion had a second source, on the question side
+
+Blanking the body kills the MODEL-side inversion. It does nothing about the QUESTION's frame:
+*"je ni halali?"* and *"nakiuka sheria?"* take **opposite lead words for identical facts**, and
+the yes/no scorer reads the polarity of the first paragraph. So the lead is selected from
+`(frame, compliant)`, the verdict word is derived from the boolean **in one place and never
+authored twice**, and where the frame is unmatched — including a question carrying both framings
+— there is **no lead at all**: the answer opens with the substantive comparison
+(*"Mshahara wa TZS X uko CHINI ya kima cha chini cha TZS Y"*), which is correct under either
+reading and does not depend on the detector being right. `mw_06`/`mw_07` are the two directions.
+
+### Blast radius: bounded by construction first, then measured
+
+The arm is **placed last in `detect_intent`**, immediately before the fact fallthrough, so by
+construction it can only capture questions that route to fact today — every levy route wins
+first. The sweep then confirmed it over a **675-question corpus**:
+
+| | |
+|---|---|
+| rows changing route | **15 — all 15 in the new probe file** |
+| `other_route_changes` | **[]** |
+| R17 cue probes | 0 misroutes, 0 non-wage leaks, 1 benign self-collision (`benki ya biashara` matching its own sector cue, which resolves to the row anyway) |
+
+**The narrowing that mattered was caught by the sweep, not by authoring.** The first cue list
+included the noun `mshahara`. It stole **five real gate questions** — eval_118/119/120/126/382,
+all GN 605A **lookups** (*"wastani wa mshahara wa chini … ulikuwa TZS ngapi?"*). Each says
+`mshahara wa chini` and carries a `TZS` token, so cue and magnitude were both satisfied while
+**nobody was being paid anything**, and each would have been answered with "tell me what work
+your employee does" — not an answer to any of them. The fix is a **pay VERB**, which is what
+distinguishes "I pay X" from "what is X", and it is the narrowest form that closes the case per
+R17. `analipa` (he pays) is excluded and only `analipwa` (he is paid) kept — the active form
+appears in *"mfanyakazi analipa kodi"*, a levy question.
+
+A second find of the same kind, from the exhaustive cue-collision pass rather than from reading
+the table: **`duka la dawa`** (pharmacy, 2e, 240,000) contains **`duka`** (12a, 200,500). Both
+cues fired, the sectors conflicted, and a perfectly resolvable question got the "tell me what
+work" clarification. Fixed with a negative lookahead. A collision between two cues that are each
+correct on their own is not a shape authoring finds.
+
+### Verification
+
+- **72 new tests** (`tests/test_minimum_wage.py`); full suite **720 passed** (648 + 72)
+- `eval/results/mw_orchestrator_offline.json` — **20/20 probes correct end to end through the
+  real orchestrator**, `model_calls_on_wage_path: 0`, `model_text_leaked: False` on every row
+  including both multipart carriers (a stub model returning `"NDIYO NI HALALI KABISA"` sits on
+  the sibling sub-questions specifically so a leak onto the wage answer would be unmissable)
+- `eval/accuracy_gate/minimum_wage_probes_018.jsonl` — **20 probes with `guards_against` per
+  row**, including three R17 negative controls (`mw_16` GN 487A lawfulness, `mw_17` a levy
+  question carrying a wage figure and `ni halali`, `mw_18` employment lawfulness with no figure)
+- `eval/results/mw_sector_resolution.json`, `mw_route_sweep.json`, `mw_r17_cue_probes.json`
+- primary source: `docs/domain_research/gn605a_2025_gazette_extract.txt` (kazi.go.tz, Tier 1A)
+
+### Open, and deliberately left open
+
+- **NOT DEPLOYED.** `chike/` is mounted into the Modal image, so this needs a deploy to reach
+  production, and R16's full procedure — `app stop --yes`, redeploy, then th_16 itself as the
+  positive probe with levy and OOC negatives — before any claim that it is live.
+- **`_UNLISTED_CUES` is empty**, so an occupation genuinely absent from the Order is clarified
+  rather than answered with item 16. Correct today; closing it needs a labour-law source.
+- **Employment status** (bodaboda, gig work) exits to a clarification naming Cap. 366 rather
+  than being resolved by a cue. Its own item — the answer is wrong in both directions if guessed.
+- The resolver is **narrow by design**: 11 of 22 authored phrasings resolve to a row. *"Hoteli ya
+  nyota ngapi?"* is what a competent advisor asks back; it is a good answer, not a failure.
 
 ## 🔎 D-FIDELITY-1 HAS BEEN BLANKING CORRECT BODIES SINCE IT SHIPPED — a guard whose false positives are invisible by construction (2026-08-10)
 
@@ -280,6 +372,7 @@ run to full length before the operand test, and pinned by
 | 2 | `recover()` v2 | under-removed multi-paragraph bodies; **passed its own self-check**, because the check compared verdicts and the defect was in extent | a row that had already PASSED stopped matching live |
 | 3 | direction detector (SAFETY-3) | scored a whole answer against one threshold, crediting an SDL verdict to a VAT question | per-threshold attribution, added after the counts looked wrong |
 | 4 | `na_06` (this one) | green because backtracking renumbered the thing it was testing | a two-line print of the pattern's actual output |
+| 5 | probe `mw_15` (added 2026-08-10, minimum wage) | asserted the resolver's cross-sector conflict check, but was authored with `na pia` — a decomposition connector — so the clause was **split into two sub-questions before the resolver ever saw two sectors**. The check it existed to test was unreachable; it passed on a different code path | reading the decomposed sub-questions while debugging something else. A unit test of `resolve()` cannot see this: the resolver was always correct, the probe never got to it |
 
 **Not one was caught by itself.** Each was caught by a different instrument, a live run, or an
 ad-hoc check — never by the suite it belonged to. The corollary is not "write better probes",

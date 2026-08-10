@@ -1,0 +1,156 @@
+{
+  "corpus_size": 675,
+  "to_minimum_wage": [
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_01",
+      "question": "Namlipa mfanyakazi wa shamba TZS 150,000 kwa mwezi — je ni halali kisheria?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "row:(1, 'a')",
+      "frame": "lawful",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_02",
+      "question": "Namlipa mfanyakazi wa shamba TZS 200,000 kwa mwezi — je ni halali kisheria?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "row:(1, 'a')",
+      "frame": "lawful",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_03",
+      "question": "Namlipa mfanyakazi wa shamba TZS 175,000 kwa mwezi — je ni halali kisheria?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "row:(1, 'a')",
+      "frame": "lawful",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_04",
+      "question": "Nina hoteli ya nyota nne, mhudumu wangu analipwa TZS 350,000 kwa mwezi — je ni halali?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "row:(5, 'a')",
+      "frame": "lawful",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_05",
+      "question": "Nina baa ndogo, mhudumu analipwa TZS 220,000 kwa mwezi — je ni halali?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "row:(5, 'c')",
+      "frame": "lawful",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_06",
+      "question": "Namlipa dereva wangu wa lori TZS 450,000 kwa mwezi — nakiuka sheria?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "row:(8, 'c')",
+      "frame": "violation",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_07",
+      "question": "Namlipa dereva wangu wa lori TZS 300,000 kwa mwezi — nakiuka sheria?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "row:(8, 'c')",
+      "frame": "violation",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_08",
+      "question": "Namlipa mfanyakazi wangu TZS 160,000 kwa mwezi, hii inaruhusiwa?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "none:None",
+      "frame": "lawful",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_09",
+      "question": "Nina hoteli, mhudumu wangu analipwa TZS 250,000 kwa mwezi — je ni halali?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "sector:5",
+      "frame": "lawful",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_10",
+      "question": "Nina dada wa kazi analipwa TZS 150,000 kwa mwezi — je ni halali?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "sector:4",
+      "frame": "lawful",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_11",
+      "question": "Namlipa kibarua wa shamba TZS 10,000 kwa siku — je ni halali?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "row:(1, 'a')",
+      "frame": "lawful",
+      "period": "daily"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_12",
+      "question": "Namlipa mfanyakazi wa shamba TZS 15,000 — je ni halali?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "row:(1, 'a')",
+      "frame": "lawful",
+      "period": null
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_13",
+      "question": "Nina bodaboda anayenifanyia kazi, namlipa TZS 200,000 kwa mwezi — je ni halali?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "none:None",
+      "frame": "lawful",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_14",
+      "question": "Nina kiwanda kidogo, fundi analipwa TZS 250,000 kwa mwezi — je ni halali?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "row:(13, '')",
+      "frame": "lawful",
+      "period": "monthly"
+    },
+    {
+      "file": "minimum_wage_probes_018.jsonl",
+      "id": "mw_15",
+      "question": "Nina hoteli na pia nina lori, dereva analipwa TZS 300,000 kwa mwezi — je ni halali?",
+      "before": "none",
+      "after": "minimum_wage",
+      "resolves_to": "none:None",
+      "frame": "lawful",
+      "period": "monthly"
+    }
+  ],
+  "other_route_changes": []
+}

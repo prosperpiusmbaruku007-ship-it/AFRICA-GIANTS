@@ -1,0 +1,235 @@
+{
+  "schedule_rows": 50,
+  "item_16_monthly": 175000,
+  "spreads": [
+    {
+      "sector": 1,
+      "n_sub": 3,
+      "low": 175000,
+      "high": 300000,
+      "spread": 125000
+    },
+    {
+      "sector": 2,
+      "n_sub": 5,
+      "low": 230000,
+      "high": 250000,
+      "spread": 20000
+    },
+    {
+      "sector": 3,
+      "n_sub": 3,
+      "low": 289000,
+      "high": 644000,
+      "spread": 355000
+    },
+    {
+      "sector": 4,
+      "n_sub": 4,
+      "low": 80000,
+      "high": 328000,
+      "spread": 248000
+    },
+    {
+      "sector": 5,
+      "n_sub": 6,
+      "low": 195000,
+      "high": 375000,
+      "spread": 180000
+    },
+    {
+      "sector": 6,
+      "n_sub": 2,
+      "low": 197000,
+      "high": 292000,
+      "spread": 95000
+    },
+    {
+      "sector": 7,
+      "n_sub": 2,
+      "low": 297000,
+      "high": 765900,
+      "spread": 468900
+    },
+    {
+      "sector": 8,
+      "n_sub": 4,
+      "low": 287500,
+      "high": 498000,
+      "spread": 210500
+    },
+    {
+      "sector": 9,
+      "n_sub": 3,
+      "low": 398500,
+      "high": 515000,
+      "spread": 116500
+    },
+    {
+      "sector": 10,
+      "n_sub": 4,
+      "low": 333500,
+      "high": 695000,
+      "spread": 361500
+    },
+    {
+      "sector": 11,
+      "n_sub": 4,
+      "low": 276500,
+      "high": 300700,
+      "spread": 24200
+    },
+    {
+      "sector": 12,
+      "n_sub": 6,
+      "low": 200500,
+      "high": 733000,
+      "spread": 532500
+    },
+    {
+      "sector": 13,
+      "n_sub": 1,
+      "low": 200000,
+      "high": 200000,
+      "spread": 0
+    },
+    {
+      "sector": 14,
+      "n_sub": 1,
+      "low": 287500,
+      "high": 287500,
+      "spread": 0
+    },
+    {
+      "sector": 15,
+      "n_sub": 1,
+      "low": 188500,
+      "high": 188500,
+      "spread": 0
+    },
+    {
+      "sector": 16,
+      "n_sub": 1,
+      "low": 175000,
+      "high": 175000,
+      "spread": 0
+    }
+  ],
+  "resolution": [
+    {
+      "question": "Namlipa mfanyakazi wa shamba TZS 200,000 kwa mwezi — je ni halali?",
+      "kind": "row",
+      "detail": "1a — Crop or animal production and activities related to agriculture — TZS 175,000"
+    },
+    {
+      "question": "Nina kibarua wa kilimo, namlipa TZS 160,000 — ni sawa?",
+      "kind": "row",
+      "detail": "1a — Crop or animal production and activities related to agriculture — TZS 175,000"
+    },
+    {
+      "question": "Namlipa mvuvi wangu TZS 250,000 kwa mwezi.",
+      "kind": "row",
+      "detail": "1c — Fishing and fish farming or aquaculture — TZS 300,000"
+    },
+    {
+      "question": "Nina baa na mgahawa, mhudumu analipwa TZS 180,000.",
+      "kind": "row",
+      "detail": "5c — One/two star hotels, guest houses, bars and restaurants — TZS 195,000"
+    },
+    {
+      "question": "Nina hoteli, mhudumu wangu analipwa TZS 250,000 — ni halali?",
+      "kind": "sector",
+      "detail": "sector 5 only — 6 candidate rates 195,000..375,000"
+    },
+    {
+      "question": "Nina hoteli ya nyota nne, mhudumu analipwa TZS 350,000.",
+      "kind": "row",
+      "detail": "5a — Five star and four star hotels — TZS 375,000"
+    },
+    {
+      "question": "Nina gesti ndogo, mfanyakazi analipwa TZS 190,000.",
+      "kind": "row",
+      "detail": "5c — One/two star hotels, guest houses, bars and restaurants — TZS 195,000"
+    },
+    {
+      "question": "Namlipa dereva wangu TZS 300,000 kwa mwezi — nakiuka sheria?",
+      "kind": "row",
+      "detail": "8c — Inland transport services — TZS 398,500"
+    },
+    {
+      "question": "Nina lori, dereva analipwa TZS 380,000.",
+      "kind": "row",
+      "detail": "8c — Inland transport services — TZS 398,500"
+    },
+    {
+      "question": "Nina kiwanda kidogo, fundi analipwa TZS 250,000.",
+      "kind": "row",
+      "detail": "13 — Industrial sector — TZS 200,000"
+    },
+    {
+      "question": "Nina duka la nguo, muuzaji analipwa TZS 190,000.",
+      "kind": "row",
+      "detail": "12a — Trade and finance — business — TZS 200,500"
+    },
+    {
+      "question": "Namlipa mlinzi wangu TZS 180,000 kwa mwezi.",
+      "kind": "sector",
+      "detail": "sector 6 only — 2 candidate rates 197,000..292,000"
+    },
+    {
+      "question": "Nina mfanyakazi wa ndani, namlipa TZS 90,000.",
+      "kind": "sector",
+      "detail": "sector 4 only — 4 candidate rates 80,000..328,000"
+    },
+    {
+      "question": "Nina dada wa kazi analipwa TZS 150,000 — ni halali?",
+      "kind": "sector",
+      "detail": "sector 4 only — 4 candidate rates 80,000..328,000"
+    },
+    {
+      "question": "Nina shule binafsi, mwalimu analipwa TZS 270,000.",
+      "kind": "sector",
+      "detail": "sector 11 only — 4 candidate rates 276,500..300,700"
+    },
+    {
+      "question": "Nina zahanati, muuguzi analipwa TZS 240,000.",
+      "kind": "row",
+      "detail": "2d — Dispensary — TZS 230,000"
+    },
+    {
+      "question": "Nina mgodi mdogo, mchimbaji analipwa TZS 400,000.",
+      "kind": "sector",
+      "detail": "sector 10 only — 4 candidate rates 333,500..695,000"
+    },
+    {
+      "question": "Namlipa mfanyakazi wa ujenzi TZS 450,000 kwa mwezi.",
+      "kind": "sector",
+      "detail": "sector 9 only — 3 candidate rates 398,500..515,000"
+    },
+    {
+      "question": "Nina saluni, mfanyakazi analipwa TZS 170,000 — ni halali?",
+      "kind": "none",
+      "detail": "unresolved"
+    },
+    {
+      "question": "Namlipa mfanyakazi wangu TZS 160,000 kwa mwezi, hii inaruhusiwa?",
+      "kind": "none",
+      "detail": "unresolved"
+    },
+    {
+      "question": "Nina bodaboda anayenifanyia kazi, namlipa TZS 200,000.",
+      "kind": "none",
+      "detail": "unresolved"
+    },
+    {
+      "question": "Nina mfanyakazi wa ofisi, analipwa TZS 300,000 — ni sawa?",
+      "kind": "none",
+      "detail": "unresolved"
+    }
+  ],
+  "counts": {
+    "row": 11,
+    "sector": 7,
+    "none": 4
+  }
+}

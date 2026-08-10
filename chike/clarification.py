@@ -30,6 +30,48 @@ AMBIGUOUS_LEVY = (
 
 _LEVY_NAME = {"paye": "PAYE", "sdl": "SDL", "nssf": "NSSF", "wcf": "WCF"}
 
+# --- minimum wage (GN 605A) -------------------------------------------------
+# NEVER-GUESS COPY LIVES HERE AND IS RETURNED BY THE DETERMINISTIC PATH — it is never an
+# instruction written into a fact and handed to the model. C4, measured: a locked fact
+# containing "usikisie, uliza" did NOT produce a refusal; the model answered anyway. A
+# never-guess contract has to be infrastructure, not a sentence in the index.
+
+# No occupation named at all. TZS 175,000 (First Schedule item 16) is NOT the answer here:
+# item 16 is the rate for a sector the ORDER does not list, not for a question the USER did
+# not answer, and it under-states for a hotel, bank or mine worker.
+MIN_WAGE_NO_SECTOR = (
+    "Kima cha chini cha mshahara kinatofautiana kwa sekta — GN 605A ina viwango 50, kuanzia "
+    "TZS 80,000 hadi TZS 765,900 kwa mwezi. Ili nikwambie kama unacholipa ni halali, niambie "
+    "mfanyakazi wako anafanya kazi ya aina gani (mfano: shamba, hoteli, ulinzi, duka, ujenzi)."
+)
+
+# The wage figure itself is not identifiable — no figure, or more than one and no way to tell
+# which is the wage.
+MIN_WAGE_NO_AMOUNT = (
+    "Ili nilinganishe na kima cha chini cha GN 605A, niambie mshahara unaomlipa mfanyakazi ni "
+    "shilingi ngapi, na kama ni kwa mwezi, kwa wiki au kwa siku."
+)
+
+# A figure with no period stated that is too small to be a plausible MONTHLY wage. Comparing
+# it against the monthly column would call a lawful daily wage unlawful.
+MIN_WAGE_PERIOD_UNCLEAR = (
+    "Sijaelewa kama kiasi ulichotaja ni cha mwezi, cha wiki au cha siku — GN 605A ina kiwango "
+    "tofauti kwa kila kipindi, hivyo jibu linabadilika kabisa. Tafadhali niambie kiasi hicho "
+    "ni cha kipindi gani."
+)
+
+# Employment STATUS is unsettled (bodaboda riders, gig work). Whether such a person is an
+# "employee" is decided by the Employment and Labour Relations Act Cap. 366, which GN 605A
+# para 3 defers to — a labour-law determination this project has not verified against a
+# primary source, and one whose answer is wrong in both directions if guessed. Deliberately
+# NOT resolved by a cue table.
+MIN_WAGE_STATUS_UNCLEAR = (
+    "Kima cha chini cha GN 605A kinawahusu WAAJIRIWA. Kama mtu huyu ni bodaboda au anafanya "
+    "kazi kwa makubaliano ya kujitegemea, kwanza inabidi ijulikane kama kisheria ni mwajiriwa "
+    "au la — hilo linaamuliwa chini ya Sheria ya Ajira na Mahusiano Kazini (Sura 366), na "
+    "sina uhakika nalo. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+)
+
 # Pay quoted PER UNIT rather than per month: per day/week/hour/shift, per trip/piece/job, or
 # fortnightly. Used only to pick which question to ask back — it never unlocks a computation
 # (turning a rate into a monthly figure is pattern D, still deferred), so a false positive

@@ -34,9 +34,10 @@ import re
 
 from . import swahili_numbers as swn
 
-# The four rules-engine computation types. 'ambiguous_multi' is compute-intent with an
-# unresolved specific levy; 'none' means fact/RAG.
-COMPUTE_TYPES = ("sdl", "nssf", "paye", "wcf")
+# The rules-engine computation types. 'ambiguous_multi' is compute-intent with an
+# unresolved specific levy; 'none' means fact/RAG. 'minimum_wage' is not a levy — see path 3
+# in detect_intent and chike/rules_engine/minimum_wage.py.
+COMPUTE_TYPES = ("sdl", "nssf", "paye", "wcf", "minimum_wage")
 
 # --- explicit identifiers (path 1) ------------------------------------------
 _EXPLICIT = {
@@ -99,6 +100,105 @@ _NONMONEY_ASK = ["asilimia ngapi", "siku ngapi", "muda gani", "miaka mingapi", "
 # question routes to compute deterministically (this is the residual the retired
 # extractor-emitted-intent backstop unreliably targeted — now a fixed lexical rule).
 _TAKEHOME_ASK = ["kitakachobaki", "kinachobaki", "mkononi", "baada ya kodi", "nitabaki na"]
+
+# --- minimum wage (GN 605A), path 3 -----------------------------------------
+# The figure must be presented as PAY, and specifically as pay SOMEONE IS BEING PAID —
+# a pay VERB, not the noun 'mshahara'. Two narrowings, both forced by evidence:
+#
+#   * Narrower than _PAYROLL_CTX: a bare 'mfanyakazi' plus a lawfulness word is a question
+#     about employment generally, not about the wage floor (mw_18).
+#   * Narrower than the noun 'mshahara': the first version of this list included it, and the
+#     blast-radius sweep caught it stealing FIVE real gate questions — eval_118/119/120/126/382,
+#     all GN 605A LOOKUPS ("wastani wa mshahara wa chini ... ulikuwa TZS ngapi?", "kima cha juu
+#     kabisa ... ni TZS ngapi?"). Every one of them says 'mshahara wa chini' and carries a 'TZS'
+#     token, so cue + magnitude were both satisfied while nobody was being paid anything. They
+#     would have been answered with "tell me what work your employee does", which is not an
+#     answer to any of them. A pay verb is the thing that distinguishes "I pay X" from "what is
+#     X" — the narrowest form that closes the case, per R17.
+#
+# 'analipa' (he PAYS) is excluded and only 'analipwa' (he IS PAID) kept: the active form
+# appears in "mfanyakazi analipa kodi", which is a levy question. Bare 'nalipa' is excluded
+# for the same reason — it is a substring of 'analipa'.
+_WAGE_PAY_CUES = ["namlipa", "ninalipa", "nawalipa", "namlipia", "nimemlipa", "nimemlipia",
+                  "tunamlipa", "tunawalipa", "kumlipa", "kuwalipa", "humlipa",
+                  "analipwa", "wanalipwa", "analipwaga", "hulipwa", "walipwa"]
+# Explicit floor vocabulary — enough on its own, with a pay cue and a magnitude.
+_MIN_WAGE_CUES = ["kima cha chini", "mshahara wa chini", "kiwango cha chini cha mshahara",
+                  "kima kidogo cha mshahara", "gn 605a", "gn605a", "minimum wage"]
+
+# The question's FRAME decides which lead word is correct for the SAME verdict:
+#   "…je ni halali?"      -> compliant = "Ndiyo"
+#   "…nakiuka sheria?"    -> compliant = "Hapana"
+# The yes/no scorer reads the polarity of the first paragraph, so getting this backwards is
+# the th_16 inversion arriving from the QUESTION side rather than the model side — a source
+# that blanking the model body does nothing about. Violation cues are tested FIRST, and a
+# question carrying BOTH frames resolves to 'unknown', which leads substantively instead.
+_WAGE_VIOLATION_CUES = ["nakiuka", "ninakiuka", "unakiuka", "tunakiuka", "navunja sheria",
+                        "ninavunja sheria", "ni kosa", "ni kinyume cha sheria",
+                        "nitaadhibiwa", "nitatozwa faini", "nitafungwa", "nakosea kisheria"]
+_WAGE_LAWFUL_CUES = ["ni halali", "si halali", "ni sawa", "iko sawa", "inaruhusiwa",
+                     "naruhusiwa", "ni sahihi kisheria", "nafuata sheria", "ni kihalali"]
+
+
+def wage_question_frame(text: str) -> str:
+    """'lawful' | 'violation' | 'unknown' — which way round a yes/no answer reads.
+
+    'unknown' is a first-class outcome, not a failure: the caller then leads with the
+    substantive comparison ("Mshahara wa TZS X uko CHINI ya kima cha chini cha TZS Y"), which
+    is correct under either frame and does not depend on this detector being right."""
+    ql = text.lower()
+    violation = any(c in ql for c in _WAGE_VIOLATION_CUES)
+    lawful = any(c in ql for c in _WAGE_LAWFUL_CUES)
+    if violation and lawful:
+        return "unknown"                       # both framings in one question — lead neutrally
+    if violation:
+        return "violation"
+    if lawful:
+        return "lawful"
+    return "unknown"
+
+
+# Pay quoted PER UNIT. The Order prescribes a rate for every one of these periods, so the
+# comparison is column-to-column and nothing is ever converted. Fortnight patterns are tested
+# BEFORE weekly ('kwa wiki mbili' contains 'kwa wiki').
+_WAGE_PERIOD_CUES = [
+    ("fortnightly", r"kwa\s+wiki\s+mbili|kila\s+wiki\s+mbili|kwa\s+siku\s+kumi\s+na\s+nne|"
+                    r"fortnight|bi-?weekly"),
+    ("hourly", r"kwa\s+saa\b|kila\s+saa\b|per\s+hour"),
+    ("daily", r"kwa\s+siku\b|kila\s+siku\b|per\s+day|kwa\s+kutwa\b"),
+    ("weekly", r"kwa\s+wiki\b|kila\s+wiki\b|per\s+week"),
+    ("monthly", r"kwa\s+mwezi\b|kila\s+mwezi\b|kwa\s+mwezi\s+mmoja|per\s+month"),
+]
+
+
+# Work arrangements whose EMPLOYMENT STATUS is unsettled. GN 605A applies to "employees",
+# and para 3 gives that word the meaning it has under the Employment and Labour Relations Act
+# Cap. 366 — so whether a bodaboda rider is covered at all is a labour-law determination, not
+# a wage question. Unverified against a primary source here, and wrong in either direction if
+# guessed, so it is routed to a clarification and logged as its own item rather than resolved
+# implicitly by a sector cue.
+_WAGE_STATUS_UNCLEAR_CUES = ["bodaboda", "boda boda", "boda-boda", "bajaji", "guta",
+                             "kujitegemea", "anajitegemea", "freelance", "gig",
+                             "kwa makubaliano ya kazi"]
+
+
+def wage_status_unclear(text: str) -> bool:
+    """True when the worker's status as an 'employee' under Cap. 366 is itself in question."""
+    ql = text.lower()
+    return any(c in ql for c in _WAGE_STATUS_UNCLEAR_CUES)
+
+
+def wage_period(text: str):
+    """The period a wage is quoted in, or None when the question does not say.
+
+    None is NOT 'monthly'. The caller decides whether the monthly reading is safe: a figure
+    below the Order's lowest monthly rate with no period stated is genuinely ambiguous
+    (TZS 10,000 is an unlawful month and a lawful day), and is clarified rather than judged."""
+    ql = text.lower()
+    for period, pattern in _WAGE_PERIOD_CUES:
+        if re.search(pattern, ql):
+            return period
+    return None
 
 # Swahili number words (so a compute question with no ASCII digit still counts as numeric).
 _SWA_NUM = (r"\b(moja|mbili|tatu|nne|tano|sita|saba|nane|tisa|kumi|ishirini|thelathini|"
@@ -248,6 +348,28 @@ def detect_intent(text: str) -> str:
         natural = _natural_levy(ql)
         if natural in ("sdl", "nssf", "wcf"):
             return natural
+
+    # Path 3 — MINIMUM WAGE (GN 605A). Not a levy: nothing is deducted and nothing is owed,
+    # so neither path above can reach it. "Je ni halali kisheria?" asks for a VERDICT, which
+    # _has_money_ask rejects (correctly — it is not a request for a shilling quantity), and no
+    # levy word is present, so these questions have always fallen through to fact/RAG. That is
+    # how th_16 came to be answered wrong in production.
+    #
+    # PLACED LAST, immediately before the fact fallthrough, so BY CONSTRUCTION this arm can
+    # only capture questions that route to fact today: every levy route above wins first, and
+    # the blast radius is bounded before the sweep runs rather than by it. A question naming
+    # both a levy and a wage ("...TZS 800,000 — je ni halali kukata NSSF?") keeps its levy
+    # route on path 1.
+    #
+    # Evidence required: a payroll MAGNITUDE (a real wage figure, not an incidental number),
+    # a PAY cue, and either an explicit floor term or a lawfulness/violation frame. The pay
+    # cue is deliberately NARROWER than _PAYROLL_CTX — the figure has to be presented as pay,
+    # so "je ni halali kulipa mfanyakazi bila mkataba" (a contract question that merely
+    # mentions an employee) is not diverted here.
+    if (_has_money_magnitude(ql) and any(c in ql for c in _WAGE_PAY_CUES)
+            and (any(c in ql for c in _MIN_WAGE_CUES)
+                 or wage_question_frame(text) != "unknown")):
+        return "minimum_wage"
 
     return "none"
 

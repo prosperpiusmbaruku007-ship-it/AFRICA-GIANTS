@@ -1,0 +1,16 @@
+{
+  "collisions": [
+    {
+      "phrase": "benki ya biashara",
+      "declared": "12b(i)",
+      "hits": [
+        "12b(i)",
+        "12None"
+      ],
+      "resolves": "row:(12, 'b(i)')",
+      "cross_sector": false
+    }
+  ],
+  "misroutes": [],
+  "non_wage_leaks": []
+}

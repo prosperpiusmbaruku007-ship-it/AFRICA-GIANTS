@@ -1,0 +1,185 @@
+{
+  "model_calls_on_wage_path": 0,
+  "rows": [
+    {
+      "id": "mw_01",
+      "shape": "row_below",
+      "truth": "unlawful",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Hapana, si halali. Mshahara wa TZS 150,000 kwa mwezi uko CHINI ya kima cha chini cha kilimo — mazao au mifugo, ambacho ni TZS 175,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Unatakiwa kupandisha mshahara hadi angalau TZS 175,000 kwa mwezi. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_02",
+      "shape": "row_above",
+      "truth": "lawful",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Ndiyo, ni halali. Mshahara wa TZS 200,000 kwa mwezi uko JUU ya kima cha chini cha kilimo — mazao au mifugo, ambacho ni TZS 175,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Kifungu cha 4(3) cha GN 605A kinaruhusu mwajiri kulipa mfanyakazi kiasi ZAIDI ya kima cha chini kilichowekwa. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_03",
+      "shape": "row_exact",
+      "truth": "lawful",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Ndiyo, ni halali. Mshahara wa TZS 175,000 kwa mwezi uko SAWA na kima cha chini cha kilimo — mazao au mifugo, ambacho ni TZS 175,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Kifungu cha 4(3) cha GN 605A kinaruhusu mwajiri kulipa mfanyakazi kiasi ZAIDI ya kima cha chini kilichowekwa. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_04",
+      "shape": "row_below_different_sector",
+      "truth": "unlawful",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Hapana, si halali. Mshahara wa TZS 350,000 kwa mwezi uko CHINI ya kima cha chini cha hoteli na ukarimu — hoteli ya nyota nne au tano, ambacho ni TZS 375,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Unatakiwa kupandisha mshahara hadi angalau TZS 375,000 kwa mwezi. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_05",
+      "shape": "row_above_different_sector",
+      "truth": "lawful",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Ndiyo, ni halali. Mshahara wa TZS 220,000 kwa mwezi uko JUU ya kima cha chini cha hoteli na ukarimu — hoteli ya nyota moja/mbili, gesti, baa au mgahawa, ambacho ni TZS 195,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Kifungu cha 4(3) cha GN 605A kinaruhusu mwajiri kulipa mfanyakazi kiasi ZAIDI ya kima cha chini kilichowekwa. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_06",
+      "shape": "violation_frame_compliant",
+      "truth": "lawful",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Hapana, hukiuki sheria. Mshahara wa TZS 450,000 kwa mwezi uko JUU ya kima cha chini cha usafirishaji — usafiri wa nchi kavu, ambacho ni TZS 398,500 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Kifungu cha 4(3) cha GN 605A kinaruhusu mwajiri kulipa mfanyakazi kiasi ZAIDI ya kima cha chini kilichowekwa. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_07",
+      "shape": "violation_frame_noncompliant",
+      "truth": "unlawful",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Ndiyo, unakiuka sheria. Mshahara wa TZS 300,000 kwa mwezi uko CHINI ya kima cha chini cha usafirishaji — usafiri wa nchi kavu, ambacho ni TZS 398,500 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Unatakiwa kupandisha mshahara hadi angalau TZS 398,500 kwa mwezi. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_08",
+      "shape": "never_guess_no_sector",
+      "truth": "clarify",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": true,
+      "text": "Kima cha chini cha mshahara kinatofautiana kwa sekta — GN 605A ina viwango 50, kuanzia TZS 80,000 hadi TZS 765,900 kwa mwezi. Ili nikwambie kama unacholipa ni halali, niambie mfanyakazi wako anafanya kazi ya aina gani (mfano: shamba, hoteli, ulinzi, duka, ujenzi)."
+    },
+    {
+      "id": "mw_09",
+      "shape": "never_guess_sector_only",
+      "truth": "clarify",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Sekta ya hoteli na ukarimu ina viwango zaidi ya kimoja, kuanzia TZS 195,000 hadi TZS 375,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026), hivyo siwezi kusema kama TZS 250,000 kwa mwezi ni halali bila kujua aina ya kazi hasa. Viwango ni: hoteli ya nyota nne au tano TZS 375,000; hoteli ya nyota tatu TZS 225,000; hoteli ya nyota moja/mbili, gesti, baa au mgahawa TZS 195,000; mbeba mizigo wa watalii TZS 225,000; mwongoza watalii TZS 320,000; uwindaji TZS 200,000. Niambie ni kipi kinakuhusu nami nitalinganisha. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_10",
+      "shape": "never_guess_sector_only_domestic",
+      "truth": "clarify",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Sekta ya kazi za nyumbani ina viwango zaidi ya kimoja, kuanzia TZS 80,000 hadi TZS 328,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026), hivyo siwezi kusema kama TZS 150,000 kwa mwezi ni halali bila kujua aina ya kazi hasa. Viwango ni: mwajiri ni mwanadiplomasia au mfanyabiashara mkubwa TZS 328,000; mwajiri ni afisa mwenye stahili TZS 265,000; haishi nyumbani kwa mwajiri TZS 160,000; kazi nyingine za nyumbani TZS 80,000. Niambie ni kipi kinakuhusu nami nitalinganisha. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_11",
+      "shape": "period_daily",
+      "truth": "lawful",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Ndiyo, ni halali. Mshahara wa TZS 10,000 kwa siku uko JUU ya kima cha chini cha kilimo — mazao au mifugo, ambacho ni TZS 6,731 kwa siku (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Kifungu cha 4(3) cha GN 605A kinaruhusu mwajiri kulipa mfanyakazi kiasi ZAIDI ya kima cha chini kilichowekwa. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_12",
+      "shape": "never_guess_period",
+      "truth": "clarify",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": true,
+      "text": "Sijaelewa kama kiasi ulichotaja ni cha mwezi, cha wiki au cha siku — GN 605A ina kiwango tofauti kwa kila kipindi, hivyo jibu linabadilika kabisa. Tafadhali niambie kiasi hicho ni cha kipindi gani."
+    },
+    {
+      "id": "mw_13",
+      "shape": "never_guess_employment_status",
+      "truth": "clarify",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": true,
+      "text": "Kima cha chini cha GN 605A kinawahusu WAAJIRIWA. Kama mtu huyu ni bodaboda au anafanya kazi kwa makubaliano ya kujitegemea, kwanza inabidi ijulikane kama kisheria ni mwajiriwa au la — hilo linaamuliwa chini ya Sheria ya Ajira na Mahusiano Kazini (Sura 366), na sina uhakika nalo. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_14",
+      "shape": "row_above_single_rate_sector",
+      "truth": "lawful",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Ndiyo, ni halali. Mshahara wa TZS 250,000 kwa mwezi uko JUU ya kima cha chini cha viwanda, ambacho ni TZS 200,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Kifungu cha 4(3) cha GN 605A kinaruhusu mwajiri kulipa mfanyakazi kiasi ZAIDI ya kima cha chini kilichowekwa. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_15",
+      "shape": "conflicting_sectors",
+      "truth": "clarify",
+      "model_calls": 0,
+      "model_text_leaked": false,
+      "needs_clarification": true,
+      "text": "Kima cha chini cha mshahara kinatofautiana kwa sekta — GN 605A ina viwango 50, kuanzia TZS 80,000 hadi TZS 765,900 kwa mwezi. Ili nikwambie kama unacholipa ni halali, niambie mfanyakazi wako anafanya kazi ya aina gani (mfano: shamba, hoteli, ulinzi, duka, ujenzi)."
+    },
+    {
+      "id": "mw_16",
+      "shape": "negative_control_gn487a",
+      "truth": "not_minimum_wage",
+      "model_calls": 1,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "NDIYO NI HALALI KABISA — model text that must never appear on this path."
+    },
+    {
+      "id": "mw_17",
+      "shape": "negative_control_levy",
+      "truth": "not_minimum_wage",
+      "model_calls": 1,
+      "model_text_leaked": false,
+      "needs_clarification": true,
+      "text": "Ili nihesabu PAYE, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi."
+    },
+    {
+      "id": "mw_18",
+      "shape": "negative_control_contract",
+      "truth": "not_minimum_wage",
+      "model_calls": 1,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "NDIYO NI HALALI KABISA — model text that must never appear on this path."
+    },
+    {
+      "id": "mw_19",
+      "shape": "multipart_carrier_compute_then_wage",
+      "truth": "unlawful",
+      "model_calls": 2,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "NDIYO NI HALALI KABISA — model text that must never appear on this path.\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500\n\nHapana, si halali. Mshahara wa TZS 150,000 kwa mwezi uko CHINI ya kima cha chini cha kilimo — mazao au mifugo, ambacho ni TZS 175,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Unatakiwa kupandisha mshahara hadi angalau TZS 175,000 kwa mwezi. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+    },
+    {
+      "id": "mw_20",
+      "shape": "multipart_carrier_wage_then_fact",
+      "truth": "lawful",
+      "model_calls": 1,
+      "model_text_leaked": false,
+      "needs_clarification": false,
+      "text": "Ndiyo, ni halali. Mshahara wa TZS 200,000 kwa mwezi uko JUU ya kima cha chini cha kilimo — mazao au mifugo, ambacho ni TZS 175,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Kifungu cha 4(3) cha GN 605A kinaruhusu mwajiri kulipa mfanyakazi kiasi ZAIDI ya kima cha chini kilichowekwa. Thibitisha na Ofisi ya Kazi (kazi.go.tz).\n\nNDIYO NI HALALI KABISA — model text that must never appear on this path."
+    }
+  ]
+}

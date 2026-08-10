@@ -18,7 +18,13 @@ from .periods import sdl_by_month
 from .rate_statement import levy_rate_statement, supports as rate_statement_supports
 from .paye import compute_paye, compute_paye_each
 from .wcf import compute_wcf, wcf_applies
+from .minimum_wage import compare_to_floor, sector_rates_statement
+from . import wage_schedule
 
+# 'minimum_wage' is deliberately ABSENT from SUPPORTED / _DISPATCH / _APPLICABILITY. It is not
+# a levy: nothing is owed, there are no REQUIRED_FIELDS for the slot extractor to fill, and its
+# inputs (the wage, the Schedule row, the period) are resolved deterministically without a
+# model. The orchestrator answers it on its own branch, ahead of the levy machinery.
 SUPPORTED = frozenset({"sdl", "nssf", "paye", "wcf"})
 
 _DISPATCH = {
@@ -77,4 +83,7 @@ __all__ = [
     "sdl_applies",
     "nssf_applies",
     "wcf_applies",
+    "compare_to_floor",
+    "sector_rates_statement",
+    "wage_schedule",
 ]

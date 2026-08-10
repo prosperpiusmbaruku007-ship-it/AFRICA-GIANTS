@@ -226,6 +226,14 @@ class Orchestrator:
         rules engine if every required field is present and high-confidence. A
         missing OR low-confidence required field routes to clarification — the
         rules engine is never handed a guessed value."""
+        # MINIMUM WAGE (GN 605A) — answered on its own branch, ahead of the levy machinery.
+        # It has no REQUIRED_FIELDS and never consults the slot extractor: the wage, the
+        # period and the Schedule row are all resolved deterministically, so no model is in
+        # this loop at all. See rules_engine/minimum_wage.py for why that is the fix rather
+        # than a nicety (six wordings of a locked fact were measured live and none of them
+        # produced the correct comparison).
+        if sq.computation_type == "minimum_wage":
+            return self._answer_minimum_wage(sq)
         # 'ambiguous_multi' (or any type the rules engine doesn't define) is compute-intent
         # with an unresolved levy — never guess which one; clarify.
         required = REQUIRED_FIELDS.get(sq.computation_type)
@@ -393,6 +401,51 @@ class Orchestrator:
         FIRST paragraph: _render joins body and working with a single newline, so a model
         preamble leading with the wrong word would flip a correct 'Hapana.' verdict."""
         return SubAnswer(sub_question=sq, text="", computation=result)
+
+    def _answer_minimum_wage(self, sq: SubQuestion) -> SubAnswer:
+        """GN 605A lawfulness — deterministic end to end, with four never-guess exits.
+
+        Every exit below declines rather than defaults, and each declines for a DIFFERENT
+        reason, which is the point: the one exit that would be easy to collapse is the
+        sector one. TZS 175,000 (First Schedule item 16) is a real gazette figure, and using
+        it when the user simply did not say what the work is would be answering a question we
+        cannot answer with a number the user could act on. Item 16 is the rate for a sector
+        the ORDER does not list — a different thing, and wage_schedule keeps them apart.
+
+        Ordering is by how fundamental the missing piece is: employment status (is the Order
+        engaged at all?) -> the wage figure -> the period -> the Schedule row."""
+        # 1. Is this person an 'employee' under Cap. 366 at all? Not our determination.
+        if routing.wage_status_unclear(sq.text):
+            return SubAnswer(sub_question=sq, text=clarification.MIN_WAGE_STATUS_UNCLEAR,
+                             needs_clarification=True)
+        # 2. The wage itself. sole_plausible_amount, not the extractor: exactly one plausible
+        #    figure or none — two figures and no deterministic way to say which is the wage.
+        paid = swn.sole_plausible_amount(sq.text)
+        if paid is None:
+            return SubAnswer(sub_question=sq, text=clarification.MIN_WAGE_NO_AMOUNT,
+                             needs_clarification=True)
+        # 3. The period. Absent, the monthly reading is assumed ONLY where it is plausible:
+        #    below the Order's lowest monthly rate the figure is as likely a daily wage, and
+        #    comparing it to the monthly column would call a lawful wage unlawful.
+        period = routing.wage_period(sq.text)
+        if period is None:
+            if paid < rules_engine.wage_schedule.LOWEST_MONTHLY:
+                return SubAnswer(sub_question=sq,
+                                 text=clarification.MIN_WAGE_PERIOD_UNCLEAR,
+                                 needs_clarification=True)
+            period = "monthly"
+        # 4. The Schedule row. ROW -> verdict; SECTOR -> the sector's rates, no verdict;
+        #    UNLISTED -> item 16; NONE -> ask what the work is.
+        outcome, value = rules_engine.wage_schedule.resolve(sq.text)
+        if outcome == rules_engine.wage_schedule.NONE:
+            return SubAnswer(sub_question=sq, text=clarification.MIN_WAGE_NO_SECTOR,
+                             needs_clarification=True)
+        if outcome == rules_engine.wage_schedule.SECTOR:
+            return self._deterministic_answer(
+                sq, rules_engine.sector_rates_statement(value, paid, period))
+        sector_no, sub = (16, '') if outcome == rules_engine.wage_schedule.UNLISTED else value
+        return self._deterministic_answer(sq, rules_engine.compare_to_floor(
+            paid, sector_no, sub, period, routing.wage_question_frame(sq.text)))
 
     def _answer_applicability(self, sq: SubQuestion) -> SubAnswer:
         """Deterministic yes/no for an applicability-only levy question. SDL needs the
