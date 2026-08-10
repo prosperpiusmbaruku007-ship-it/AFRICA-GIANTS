@@ -6,11 +6,15 @@ Last updated: 2026-08-10
 orchestrator pipeline now serves every request. Cutover entry immediately below — deployed
 commit, the two gate results that authorised it, and the rollback procedure.
 
-**➡️ QUEUE (founder-ordered, 2026-08-10): th_16 → D-FIDELITY-1 widening → VAT/EFD compute
-route.** SAFETY-3's investigation is done (written up below); its fix was approved for VAT and EFD
-only, staged. **th_16 attempt 1 shipped, broke its own control, and was rolled back — production
-is in its known state and th_16 is still open.** Entry immediately below. Minimum-wage sector
-rates and unit normalisation remain separate investigations.
+**➡️ QUEUE (founder-ordered, 2026-08-10): D-FIDELITY-1 widening → minimum-wage investigation
+→ VAT/EFD compute route.** D-FIDELITY-1 first because it is live and has been partly blind since
+it shipped, and because it is the guard that would catch a fabricated figure the moment an answer
+carries a working beside it.
+
+**⛔ th_16 IS STILL LIVE, BY DECISION, NOT BY OVERSIGHT.** Two fix attempts were made and both were
+rejected on evidence — the second because four of six candidate wordings fabricated **TZS 765,900
+as a legal maximum wage**, which is more dangerous than the nonsense phrase it would have replaced.
+The class fix is the only correct fix. Entries below; unit normalisation remains its own item.
 
 **Two findings from this cycle outrank the wiring itself and are written up as their own
 entries: CONTAINER-PATH-1** (wiring v16 with defaulted phrase lists would have silently
@@ -18,6 +22,237 @@ reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline 
 second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
+
+## 🧱 NEVER-GUESS CANNOT BE A SENTENCE IN THE INDEX — it has to be infrastructure (2026-08-10)
+
+**Promoted out of the th_16 write-up because it is an architectural claim, it now has measurement
+behind it, and it generalises well past minimum wage.**
+
+Candidate C4 was a locked fact that instructed the model, in Swahili, in capitals, to decline:
+
+> *"**SINA UHAKIKA** wa kujibu ndiyo au hapana kwa kiasi mahususi… **Usiseme mshahara ni halali au
+> si halali bila kuthibitisha sekta** kamili."*
+
+It was retrieved on 6 of 8 probes. **The model adjudicated anyway** — it answered "ni halali" or
+"ni chini ya kima cha chini" on every one of them, sometimes softening with *"thibitisha na
+MLYWF"* while still delivering the verdict the fact told it not to give. Declining is not a
+behaviour a retrieved fact can install.
+
+> **A refusal must be a code path that runs INSTEAD of generation, not an instruction the
+> generation is asked to obey.**
+
+This is why **R11** works: the OOC classifier intercepts before the model is called, and its
+docstring already says *"This cannot be broken by training — it is infrastructure not behavior."*
+C4 is the same claim from the other direction, measured: an instruction the model is free to
+override **is** overridden, and it is overridden precisely on the hard cases where the refusal
+mattered.
+
+Direct consequence for the approved **VAT/EFD route**: the never-guess branch — *when the period
+cannot be extracted, decline and state the rule conditionally* — must be implemented in the
+router/engine, as a path that returns a clarification without calling the model. Writing it into
+`locked_facts.json` or the system prompt would produce the C4 result: a fact that reads correctly,
+retrieves correctly, verifies correctly, and does nothing.
+
+---
+
+## ⛔ th_16 STAYS LIVE — the class fix is the only correct fix (2026-08-10)
+
+**Recorded explicitly so this does not read as an oversight.** th_16 — production telling an
+employer that paying *above* the minimum wage is illegal — **remains live and unfixed by
+decision, on evidence.** A same-day patch was tried, measured, and rejected.
+
+### What was measured
+
+Six candidate wordings, live against the real v15 weights via `generate_endpoint`, with throwaway
+indexes and **no deploy** — the loop MEASUREMENT-GAP-1 says this class of change requires. `C0` is
+attempt 1's shipped wording, kept as a fidelity control: it **reproduced the deployed answers
+byte-identically**, including the th_15 inversion, so the harness is production-faithful and the
+rest of the table means what it says.
+
+| probe | C0 shipped | C1 comparison-first | C2 procedure | C3 +table | C4 decline | C5 procedure+table |
+|---|---|---|---|---|---|---|
+| **below_farm** 150k vs 175k → unlawful | ✗ *lawful* | ✗ | ✓ | ✗ *lawful* | ✓ | ✗ *lawful* |
+| **above_farm** — th_16 itself | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **exact_farm** 175k → lawful | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ |
+| **sector_below** 180k vs 195k → unlawful | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |
+| **sector_above** 250k vs 200k → lawful | ✓ | ✗ | ✗ | ✓ | ✓ | ✓ |
+| **generic_below** 160k → unlawful | ✓ | ✗ | ✓ | ✗ | ✗ | ✗ |
+| semantics / no-max | ✓ ✓ | ✓ ✓ | ✓ ✓ | ✓ ✓ | ✓ ✓ | ✓ ✓ |
+| **total** | **6/8** | 4/8 | **6/8** | 4/8 | 5/8 | **6/8** |
+
+Controls 3/3 on every candidate — the injected-context noise flagged in attempt 1 never caused a
+failure. **No candidate reaches 7/8, and every one has at least one wrong-direction failure.**
+Which probe fails moves almost independently of the wording: `below_farm` is right on C2 and C4
+and wrong on C0, C3 and C5.
+
+### The two results that settle it
+
+**C3 carried the correct floor, recited it, and inverted the comparison anyway:**
+
+> *"kima cha chini cha sekta ya baa na migahawa ni **TZS 195,000** kwa mwezi. **TZS 180,000 ni
+> zaidi ya kima cha chini**, hivyo ni halali."*
+
+**C5 — one sentence, both numbers:**
+
+> *"Kima cha chini cha sekta ya kilimo ni **TZS 175,000**… mshahara wa **TZS 150,000 unazidi** kima
+> cha chini."*
+
+This is SAFETY-3's VAT mechanism, reproduced on a second levy family: **the right number is in
+context, recited correctly, in the sentence where it is misapplied.** Supplying the number does
+not produce the comparison. That is now measured twice, in two domains, and it is the argument for
+the compute route in its strongest available form.
+
+### Why nothing was shipped: the replacement was more dangerous than the original
+
+**Four of six candidates independently fabricated a maximum wage:**
+
+> *"kiwango cha juu kabisa kinachoruhusiwa ni **TZS 765,900** kwa mwezi. Malipo ya zaidi ya hapo
+> **yanaweza kuadhibiwa**."*
+
+The live defect invents a phrase that describes nothing (*kiwango cha juu cha chini*). The
+candidate fix asserts **a real figure from the gazette as a legal ceiling** — 765,900 is the
+genuine energy-sector *floor*. A user can act on that; they cannot act on a nonsense phrase. It
+appears whenever the candidate is not retrieved and the model falls back to parametric memory,
+which no wording controls.
+
+**Founder decision: leave the known defect live rather than ship a more actionable one.** The
+class fix is the only correct fix.
+
+### Carried forward to the minimum-wage investigation — do not redo it
+
+- **The retrieval finding stands and is necessary but not sufficient.** GN 605A is unreachable:
+  **0 of 7** realistic Swahili queries retrieved any GN 605A fact, best rank **#22–#52**, against
+  **7 of 8** other domains at rank 1. A route cannot compare against a floor it cannot find, so
+  the reachability work is a prerequisite to the route, not an alternative to it.
+- **Primary-source verification is done** and needs no repeat: the official gazette from
+  **kazi.go.tz** (Tier 1A), para 4(3) quoted verbatim, para 4(4), para 6, para 7 revoking **GN No.
+  687 of 2022**, and the entire Second Schedule checked against every locked sector rate — no
+  corrections needed. Recoverable in full from `2adbd4c`.
+- **Scope: a genuine `minimum_wage` computation type behind the rules engine, with sector
+  resolution.** That is what the evidence points at. It is the hardest member of the
+  threshold-comparison class — VAT and EFD are single scalars; this one has to resolve 16 sectors
+  and 46 sub-sectors before it can compare, and item 16 of the First Schedule ("any other sector
+  or area not specified") gives it a defined default of TZS 175,000 to fall back on.
+- **The never-guess branch must be infrastructure**, per the entry above: when the sector cannot
+  be resolved, the engine declines and the answer states the rule conditionally — as a code path,
+  not as a fact.
+- **The probe corpus is ready to reuse**: 8 targets + 22 authored R17 displacement probes in
+  `2adbd4c`, plus the six-candidate live matrix above and the harness that produced it
+  (`scratch/mw_attempt2.py`), which needs only a new candidate list to re-run.
+
+## 🧭 MEASUREMENT-GAP-1 — fact-in-prompt is not fact-applied, and every offline instrument here measures the first (2026-08-10)
+
+**The most generalisable thing this cycle produced.** Written as its own entry because it is not
+about minimum wage, VAT, or any one fact — it is about what this repo's tooling can and cannot
+see, and it has now been hit from both directions one work item apart.
+
+### The claim
+
+> Every offline instrument in this repo measures **whether a fact reaches the prompt**. None
+> measures **whether the model applies it correctly**. A completely green offline board is
+> therefore compatible with a live inversion — and has now produced one.
+
+### The two sides of the same gap
+
+| | SAFETY-3 (2026-08-09) | th_16 attempt 1 (2026-08-10) |
+|---|---|---|
+| what retrieval did | **worked** — RAG carried the VAT threshold | **worked** — the floor fact was retrieved on both arms |
+| what the model did | recited `200,000,000` correctly **in the sentence it misapplied** | read the lead clause and generalised "lawful" to a wage *below* the floor |
+| what the offline board said | n/a — found by live probing | 3/3 self-retrieval, 7/8 targets, 0 evictions / 30 probes, 625 tests |
+| the actual defect | comparison, in free generation | application, in free generation |
+
+SAFETY-3 concluded the fix was a **deterministic route** precisely because the fact was present
+and the reasoning over it was wrong. th_16 attempt 1 then tried to fix a reasoning failure **with
+a fact**, verified the fact arrived, and shipped. The gap did not move; only the direction of
+approach did.
+
+### Why the instruments cannot close it themselves
+
+Retrieval is cheap, deterministic, and reproducible offline: `numpy` and a cached embedder, no
+GPU, sub-second. Generation is none of those things locally — the 8B adapter needs the Modal GPU.
+So the tooling grew where it was cheap to grow, and the boundary of what is measured settled
+exactly at the boundary of what is convenient to measure. That is not a criticism of any one
+instrument; each is correct about what it reports. It is a statement about where the reported
+numbers stop meaning what they appear to mean.
+
+The specific trap: **"7/8 targets served" reads like "7/8 answers correct."** It is not. It means
+seven of eight prompts contained the fact. What the model then said about it was, at that point,
+entirely unmeasured.
+
+### The rule
+
+> **Any fix whose success depends on how the model REASONS over a fact needs a live generation
+> check inside the loop, not after it.**
+
+"Inside the loop" is the operative part. Attempt 1 *did* run a live check — R16 required it, it
+ran, and it caught the regression in minutes. But it ran **after** commit and deploy, so its only
+available outcome was a rollback. The same check, run against candidate wordings before anything
+was written to disk, is a wording-selection tool instead of an incident.
+
+This is affordable and there is no excuse for skipping it: `generate_endpoint` takes a finished
+prompt and returns the completion, so a candidate fact can be put in front of the **real weights
+with no deploy and no risk to production**, by building the prompt locally and binding a
+throwaway index. Cost is seconds per probe.
+
+### Which changes need it
+
+Needs a live check in the loop — the model reasons over the content:
+
+- a fact whose value must be **compared** against a user's number (thresholds, floors, bands)
+- a fact stating **semantics or a rule** rather than a value ("X is lawful", "A is not B")
+- any **disambiguation** fact whose job is to stop a conflation
+- prompt, system-prompt or generation-parameter changes
+
+Retrieval benching alone remains sufficient — the model only has to repeat the content:
+
+- a **value correction** to a fact already retrieved and already recited correctly
+- a pure **reachability** change with no semantic content
+
+### Corollary for R15
+
+R15's verification steps are all retrieval-shaped: self-retrieval plus critical known-failure
+queries. That is necessary and it is not sufficient. **R15 should gain a step: for any fact whose
+content is a rule rather than a value, verify a live generation before the index is committed.**
+
+---
+
+## ⚠️ INSTRUMENT-PARITY-1 — a near-miss: the instruments were built against the library default, not the deployed path (2026-08-10)
+
+Logged as a near-miss, not a defect: the conclusion survived. It survived by luck.
+
+**What happened.** Six instruments built for th_16 called `chike.retrieval.Retriever` — the
+**two-arm hybrid**: cosine top-3, plus one extra fact recovered from a number-stripped second arm
+on any numeric query. Production does not use it. `chike-inference/modal_app.py` builds the
+Orchestrator with `retriever=self.retrieve_facts`, its **own single-arm method**, and
+`orchestrator._answer_fact` calls it as `self.retriever(sq.text)` with no `top_k` — so a user gets
+a plain top-3 and nothing else. The comment at that line says single-arm is deliberate.
+
+**Why it mattered here specifically.** Every query in the bench carries a TZS amount, so every one
+of them is a numeric query, so the extra slot was live in the instrument on every single
+measurement — and that slot is exactly where a marginal fix would sit. "It's in the injected set"
+could have been true only of a slot production does not have.
+
+**How it was caught.** By reading the deploy path before deploying, not by any check. Re-running
+the acceptance criteria under production's own math (normalize, cosine, top-3, stop) gave the same
+result — 7/8 targets, 0 evictions — so nothing was invalidated.
+
+**What made the wrong retriever look like the right one.** The `edge20_v16_run1_prefix_67e9e4c`
+artifact records **4** retrieved facts for its row 17, which matches two-arm and not single-arm.
+That artifact was produced by `scratch/edge20_v16.py`, a LOCAL harness driving
+`Orchestrator(backend=LocalAdapter)` with the **default** retriever — not by the endpoint. A stored
+artifact from a local harness was read as evidence about production. (Same harness also leaves
+`ooc_phrases` / `system_prompt` defaulted, where production passes them explicitly — the
+CONTAINER-PATH-1 class again, on the measurement side rather than the deployment side.)
+
+**The lesson.**
+
+> **Offline instruments must be built against the DEPLOYED path, not the library default — and a
+> stored artifact is evidence about the harness that produced it, not about production, until its
+> harness is checked.**
+
+The regression test now parametrizes over both arms, so the two paths cannot silently diverge
+again in this area. The general audit — every scratch instrument that assumes a default where
+production passes an explicit — is not done, and belongs with the standing container-path audit.
 
 ## ⛔ th_16 ATTEMPT 1 — SHIPPED, BROKE ITS OWN CONTROL, ROLLED BACK (2026-08-10)
 

@@ -1,0 +1,245 @@
+{
+  "endpoint": "https://prosperpiusmbaruku007--chike-inference-generate-endpoint.modal.run",
+  "base_index_facts": 217,
+  "retriever": "single-arm cosine top-3 (production parity)",
+  "candidates": {
+    "C4_decline": {
+      "text": "Nampa mfanyakazi wangu mshahara kwa mwezi — je ni halali? SINA UHAKIKA wa kujibu ndiyo au hapana kwa kiasi mahususi, kwa sababu kima cha chini kinategemea sekta: GN 605A ina sekta 16 na sekta ndogo 46, kila moja na kiwango chake. Usiseme mshahara ni halali au si halali bila kuthibitisha sekta kamili. Kanuni: mshahara chini ya kima cha chini cha sekta husika ni kinyume cha sheria; hakuna kikomo cha juu, kulipa zaidi ni halali daima. Thibitisha kiwango cha sekta yako na MLYWF.",
+      "probes": [
+        {
+          "id": "below_farm",
+          "question": "Namlipa mfanyakazi wa shamba TZS 150,000 kwa mwezi — je ni halali kisheria?",
+          "truth": "unlawful",
+          "why": "agriculture floor 175,000; 150,000 is BELOW. Correct before attempt 1, inverted by it.",
+          "reply": "Kwa sekta ya kilimo cha mazao (crop farming), kima cha chini ni karibu TZS 175,000 kwa mwezi. Hivyo mshahara wa TZS 150,000 unaweza kuwa chini ya kima cha chini kwa sekta hiyo. Ni vizuri kupata uhakika wa kima cha chini cha sekta yako maalum kabla ya kutoa jibu sahihi. Thibitisha na MLYWF (mlywf.go.tz).",
+          "scored": "unlawful",
+          "pass": true,
+          "candidate_injected": true,
+          "secs": 15.5
+        },
+        {
+          "id": "above_farm",
+          "question": "Namlipa mfanyakazi wa shamba TZS 200,000 kwa mwezi — je ni halali kisheria?",
+          "truth": "lawful",
+          "why": "th_16 itself: 200,000 is ABOVE the 175,000 floor.",
+          "reply": "Kwa sekta ya kilimo cha mazao (crop farming), kima cha chini ni karibu TZS 175,000 kwa mwezi. Hivyo mshahara wa TZS 200,000 unazidi kima cha chini cha sekta ya kilimo, na ni halali kisheria. Thibitisha kiwango sahihi cha kima cha chini cha sekta yako na MLYWF.",
+          "scored": "lawful",
+          "pass": true,
+          "candidate_injected": true,
+          "secs": 10.4
+        },
+        {
+          "id": "exact_farm",
+          "question": "Namlipa mfanyakazi wa shamba TZS 175,000 kamili kwa mwezi — je ni halali kisheria?",
+          "truth": "lawful",
+          "why": "THE BOUNDARY: paying exactly the floor is compliant. >= not >.",
+          "reply": "Kwa sekta ya kilimo cha mazao (crop farming), kima cha chini ni karibu TZS 175,000 kwa mwezi — hivyo mshahara wako unakaribia kikomo cha chini. Lakini si lazima uwe chini kabisa — unaweza kuwa juu kidogo. Thibitisha kiwango sahihi cha sekta yako na MLYWF.",
+          "scored": "unclear",
+          "pass": false,
+          "candidate_injected": true,
+          "secs": 10.2
+        },
+        {
+          "id": "sector_below",
+          "question": "Nina baa na mgahawa, namlipa mhudumu TZS 180,000 kwa mwezi — je ni halali?",
+          "truth": "unlawful",
+          "why": "DIFFERENT RATE: hotel bars/restaurants floor is 195,000, so 180,000 is unlawful even though it is above the 175,000 agricultural floor. Catches a fact that teaches one number as if it were universal.",
+          "reply": "Kulingana na GN 605A, viwango vilivyothibitishwa kwa sekta ya 'Hoteli, migahawa na huduma za chakula' ni TZS 175,000 hadi TZS 765,900 kwa mwezi. TZS 180,000 ipo katika kiwango sahihi cha sekta hii. Thibitisha kiwango halisi cha sekta yako na MLYWF.",
+          "scored": "unclear",
+          "pass": false,
+          "candidate_injected": true,
+          "secs": 10.4
+        },
+        {
+          "id": "sector_above",
+          "question": "Nina kiwanda, namlipa fundi TZS 250,000 kwa mwezi — je ni halali?",
+          "truth": "lawful",
+          "why": "DIFFERENT RATE: industrial floor is 200,000; 250,000 is above it.",
+          "reply": "Kulingana na GN 605A, viwanda na uzalishaji vina kiwango cha chini cha wastani cha TZS 175,000 kwa mwezi. Kwa hivyo mshahara wa TZS 250,000 unazidi kiwango cha chini cha sekta hii, na ni halali. Hakuna kikomo cha juu katika GN 605A — unaweza kulipa zaidi. Thibitisha kiwango sahihi cha sekta yako na MLYWF.",
+          "scored": "lawful",
+          "pass": true,
+          "candidate_injected": true,
+          "secs": 12.4
+        },
+        {
+          "id": "generic_below",
+          "question": "Nampa mfanyakazi wangu TZS 160,000 kwa mwezi, hii inaruhusiwa?",
+          "truth": "unlawful",
+          "why": "edge20 row 17 verbatim: right conclusion, inverted reason, twice.",
+          "reply": "Hapana, malipo hayo yanazidi kiwango cha juu cha mshahara wa chini cha sekta binafsi kwa mujibu wa GN605A. Kwa mujibu wa GN605A, kiwango cha juu kabisa kinachoruhusiwa ni TZS 765,900 kwa mwezi. Malipo ya zaidi ya hapo yanaweza kuadhibiwa. Thibitisha na MLYWF.",
+          "scored": "unclear",
+          "pass": false,
+          "candidate_injected": false,
+          "secs": 10.5
+        },
+        {
+          "id": "semantics",
+          "question": "Je, ninaweza kumlipa mfanyakazi zaidi ya kima cha chini cha mshahara?",
+          "truth": "yes",
+          "why": "the rule asked directly.",
+          "reply": "Ndiyo, unaweza kumlipa mfanyakazi mshahara mkubwa zaidi ya kima cha chini cha mshahara. Hakuna kikomo cha juu katika Sheria ya Ajira na Mahusiano Kazini. Ni vizuri kuwalipa mishahara inayowatosheleza ili kuepuka malalamiko.",
+          "scored": "lawful",
+          "pass": true,
+          "candidate_injected": true,
+          "secs": 9.2
+        },
+        {
+          "id": "driver_no_max",
+          "question": "Namlipa dereva wangu TZS 300,000 kwa mwezi — nakiuka sheria yoyote?",
+          "truth": "no_max",
+          "why": "must not invent a maximum, and must not invent a sector floor either.",
+          "reply": "Hapana — hakuna sheria ya kuzuia malipo ya chini ya TZS 270,000 kwa mwezi. Sheria ya PAYE inasema unalipa asilimia 0 kwa kiwango cha hadi TZS 270,000. Malipo ya TZS 300,000 yanazidi kiwango hicho, ndipo PAYE inatumika. Thibitisha na TRA (tra.go.tz).",
+          "scored": "unclear",
+          "pass": true,
+          "candidate_injected": false,
+          "secs": 10.0
+        }
+      ],
+      "controls": [
+        {
+          "id": "ctl_paye",
+          "question": "Namlipa mfanyakazi wangu TZS 800,000 kwa mwezi — anakatwa PAYE kiasi gani?",
+          "needs": "78,000",
+          "reply": "Kwa mshahara wa TZS 800,000/mwezi, PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+          "pass": true
+        },
+        {
+          "id": "ctl_wcf",
+          "question": "Namlipa mfanyakazi mmoja kwa mwezi — je nalipa WCF?",
+          "needs": "ndiyo",
+          "reply": "Ndiyo. Tangu mfanyakazi wa kwanza, unatakiwa kulipa WCF. Thibitisha na WCF (wcf.go.tz).",
+          "pass": true
+        },
+        {
+          "id": "ctl_paye0",
+          "question": "Namlipa mfanyakazi TZS 250,000 kwa mwezi — anakatwa PAYE?",
+          "needs": "0",
+          "reply": "Hapana — mfanyakazi anayepata TZS 250,000 kwa mwezi hakatiwi PAYE. Mshahara wake uko ndani ya Bendi ya 0% — si katika bendi nyingine yoyote. Hakuna PAYE inayokatwa. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 0 (mshahara TZS 250,000 uko ndani ya bendi ya 0%)",
+          "pass": true
+        }
+      ],
+      "passed": 5,
+      "of": 8,
+      "controls_passed": 3
+    },
+    "C5_procedure_plus_table": {
+      "text": "Nampa mfanyakazi wangu mshahara kwa mwezi — je ni halali? Hatua: (1) tafuta kima cha chini cha sekta yake; (2) linganisha. Mshahara sawa na au zaidi ya kima cha chini = HALALI. Mshahara chini ya kima cha chini = KINYUME CHA SHERIA. Hakuna kikomo cha juu. Kima cha chini kwa mwezi (GN 605A): kilimo 175,000; baa, mgahawa na hoteli za nyota moja/mbili 195,000; kiwanda 200,000; usafirishaji wa ndani 398,500; hoteli za nyota nne/tano 375,000; sekta isiyotajwa 175,000.",
+      "probes": [
+        {
+          "id": "below_farm",
+          "question": "Namlipa mfanyakazi wa shamba TZS 150,000 kwa mwezi — je ni halali kisheria?",
+          "truth": "unlawful",
+          "why": "agriculture floor 175,000; 150,000 is BELOW. Correct before attempt 1, inverted by it.",
+          "reply": "Ndiyo, hilo ni halali kabisa. Kima cha chini cha sekta ya kilimo ni TZS 175,000 kwa mwezi, hivyo mshahara wa TZS 150,000 unazidi kima cha chini. Thibitisha na GN 605A (sekta ya kilimo: subsekta husika).",
+          "scored": "lawful",
+          "pass": false,
+          "candidate_injected": true,
+          "secs": 9.1
+        },
+        {
+          "id": "above_farm",
+          "question": "Namlipa mfanyakazi wa shamba TZS 200,000 kwa mwezi — je ni halali kisheria?",
+          "truth": "lawful",
+          "why": "th_16 itself: 200,000 is ABOVE the 175,000 floor.",
+          "reply": "Ndiyo, hilo ni halali kabisa. Kima cha chini cha sekta ya kilimo ni TZS 175,000 tu, kwa hiyo mshahara wa TZS 200,000 unazidi kima cha chini na ni halali. Thibitisha na GN 605A.",
+          "scored": "lawful",
+          "pass": true,
+          "candidate_injected": true,
+          "secs": 8.3
+        },
+        {
+          "id": "exact_farm",
+          "question": "Namlipa mfanyakazi wa shamba TZS 175,000 kamili kwa mwezi — je ni halali kisheria?",
+          "truth": "lawful",
+          "why": "THE BOUNDARY: paying exactly the floor is compliant. >= not >.",
+          "reply": "Ndiyo — mshahara huo ni sahihi kabisa. Ni karibu na kima cha chini cha sekta ya kilimo (TZS 175,000), lakini hakipungui chini ya hapo. Kima cha chini ni kiwango cha chini kabisa — unaweza kulipa zaidi bila kukiuka sheria. Thibitisha na GN 605A kwenye tanzlii.org.",
+          "scored": "lawful",
+          "pass": true,
+          "candidate_injected": true,
+          "secs": 10.7
+        },
+        {
+          "id": "sector_below",
+          "question": "Nina baa na mgahawa, namlipa mhudumu TZS 180,000 kwa mwezi — je ni halali?",
+          "truth": "unlawful",
+          "why": "DIFFERENT RATE: hotel bars/restaurants floor is 195,000, so 180,000 is unlawful even though it is above the 175,000 agricultural floor. Catches a fact that teaches one number as if it were universal.",
+          "reply": "Kulingana na GN 605A, kima cha chini cha sekta ya baa na migahawa ni TZS 195,000 kwa mwezi. Kwa hiyo, malipo ya TZS 180,000 kwa mfanyakazi huyu ni chini ya kima cha chini, na ni kinyume cha sheria. Ni lazima ulipie angalau TZS 195,000 ili uzingatie sheria. Thibitisha na GN 605A kupitia tanzlii.org.",
+          "scored": "unlawful",
+          "pass": true,
+          "candidate_injected": true,
+          "secs": 11.6
+        },
+        {
+          "id": "sector_above",
+          "question": "Nina kiwanda, namlipa fundi TZS 250,000 kwa mwezi — je ni halali?",
+          "truth": "lawful",
+          "why": "DIFFERENT RATE: industrial floor is 200,000; 250,000 is above it.",
+          "reply": "Kulingana na GN 605A, viwanda na uzalishaji vinatakiwa kulipa angalau TZS 200,000 kwa mwezi. Fundi anayepewa TZS 250,000 anaonekana kupita kiwango hicho, hivyo ni halali. Thibitisha na GN 605A (sekta ya viwanda na uzalishaji).",
+          "scored": "lawful",
+          "pass": true,
+          "candidate_injected": true,
+          "secs": 10.2
+        },
+        {
+          "id": "generic_below",
+          "question": "Nampa mfanyakazi wangu TZS 160,000 kwa mwezi, hii inaruhusiwa?",
+          "truth": "unlawful",
+          "why": "edge20 row 17 verbatim: right conclusion, inverted reason, twice.",
+          "reply": "Hapana, malipo hayo yanazidi kiwango cha juu cha mshahara wa chini cha sekta binafsi kwa mujibu wa GN605A. Kwa mujibu wa GN605A, kiwango cha juu kabisa kinachoruhusiwa ni TZS 765,900 kwa mwezi. Malipo ya zaidi ya hapo yanaweza kuadhibiwa. Thibitisha na MLYWF.",
+          "scored": "unclear",
+          "pass": false,
+          "candidate_injected": false,
+          "secs": 10.5
+        },
+        {
+          "id": "semantics",
+          "question": "Je, ninaweza kumlipa mfanyakazi zaidi ya kima cha chini cha mshahara?",
+          "truth": "yes",
+          "why": "the rule asked directly.",
+          "reply": "Ndiyo, unaweza kumlipa zaidi ya kima cha chini. Sheria ya GN 605A inaweka kima cha chini cha lazima — si kikomo cha juu. Thibitisha na GN 605A.",
+          "scored": "lawful",
+          "pass": true,
+          "candidate_injected": true,
+          "secs": 7.1
+        },
+        {
+          "id": "driver_no_max",
+          "question": "Namlipa dereva wangu TZS 300,000 kwa mwezi — nakiuka sheria yoyote?",
+          "truth": "no_max",
+          "why": "must not invent a maximum, and must not invent a sector floor either.",
+          "reply": "Hapana — hakuna sheria ya kuzuia malipo ya chini ya TZS 270,000 kwa mwezi. Sheria ya PAYE inasema unalipa asilimia 0 kwa kiwango cha hadi TZS 270,000. Malipo ya TZS 300,000 yanazidi kiwango hicho, ndipo PAYE inatumika. Thibitisha na TRA (tra.go.tz).",
+          "scored": "unclear",
+          "pass": true,
+          "candidate_injected": false,
+          "secs": 10.2
+        }
+      ],
+      "controls": [
+        {
+          "id": "ctl_paye",
+          "question": "Namlipa mfanyakazi wangu TZS 800,000 kwa mwezi — anakatwa PAYE kiasi gani?",
+          "needs": "78,000",
+          "reply": "Kwa mshahara wa TZS 800,000/mwezi, PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+          "pass": true
+        },
+        {
+          "id": "ctl_wcf",
+          "question": "Namlipa mfanyakazi mmoja kwa mwezi — je nalipa WCF?",
+          "needs": "ndiyo",
+          "reply": "Ndiyo. Tangu mfanyakazi wa kwanza, unatakiwa kulipa WCF. Thibitisha na WCF (wcf.go.tz).",
+          "pass": true
+        },
+        {
+          "id": "ctl_paye0",
+          "question": "Namlipa mfanyakazi TZS 250,000 kwa mwezi — anakatwa PAYE?",
+          "needs": "0",
+          "reply": "Hapana — mfanyakazi anayepata TZS 250,000 kwa mwezi hakatiwi PAYE. Mshahara wake uko ndani ya Bendi ya 0% — si katika bendi nyingine yoyote. Hakuna PAYE inayokatwa. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 0 (mshahara TZS 250,000 uko ndani ya bendi ya 0%)",
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "of": 8,
+      "controls_passed": 3
+    }
+  }
+}
