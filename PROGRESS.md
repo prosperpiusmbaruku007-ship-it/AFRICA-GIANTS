@@ -6,8 +6,8 @@ Last updated: 2026-08-10
 orchestrator pipeline now serves every request. Cutover entry immediately below — deployed
 commit, the two gate results that authorised it, and the rollback procedure.
 
-**➡️ QUEUE (founder-ordered, 2026-08-10): ~~D-FIDELITY-1 widening~~ **DONE** → minimum-wage
-investigation → VAT/EFD compute route.** D-FIDELITY-1 first because it is live and has been partly blind since
+**➡️ QUEUE (founder-ordered, 2026-08-10): ~~D-FIDELITY-1 widening~~ **DONE, DEPLOYED,
+VERIFIED LIVE** → minimum-wage investigation (NEXT) → VAT/EFD compute route.** D-FIDELITY-1 first because it is live and has been partly blind since
 it shipped, and because it is the guard that would catch a fabricated figure the moment an answer
 carries a working beside it.
 
@@ -109,6 +109,66 @@ Three of five punctuations of the same wrong figure. `_ATTRIBUTED` is now the sa
 - **0 of the 18 bodies recoverable from the current gate artifact change verdict** — no expected
   behaviour change on the measured gate
 - sweep artifact: `eval/results/dfid1_stored_body_sweep.json`
+
+---
+
+### ✅ DEPLOYED AND VERIFIED LIVE (2026-08-10)
+
+R16 procedure: `modal app stop chike-inference --yes` (verified `stopped`, then the new app
+`deployed`, 0 tasks), redeploy, then the same six probes run **before** and **after** and
+compared. `chike/` is mounted into the image, so this needed a deploy to reach production.
+
+| probe | direction | result |
+|---|---|---|
+| **pos_th19** | POSITIVE | **CHANGED, as intended.** Before: *"…SDL ni asilimia 3.5 ya jumla ya mishahara, **sawa na TZS 210,000**…"* above a working of TZS 17,500. After: **the body is gone**, `SDL = 3.5% × TZS 500,000 = TZS 17,500` stands alone |
+| neg_a_nssf_500k | FALSE-POSITIVE side | unchanged — correct split body survives |
+| neg_a_nssf_1m | FALSE-POSITIVE side | unchanged — correct split body survives |
+| **neg_a_paye_bands** | FALSE-POSITIVE side | unchanged — the richest colon-bearing body live (`Band 1 (0–270,000): TZS 0`, three `× rate% =` steps) is **not** newly blanked |
+| neg_b_paye / neg_b_sdl | untouched | byte-identical |
+| neg_c_ooc | CONTAINER-PATH-1 | refusal intact — the container loaded its config, not the 39-phrase fallback |
+
+**Exactly one of seven replies changed, and it is the one the fix was for.** Artifact:
+`eval/results/dfid1_live_check.json`.
+
+**One limitation, stated rather than implied.** The false-positive-clearing direction — three
+of the five measured changes, the larger half of the defect — is verified **offline on the
+stored bodies, not live.** Current generations do not emit the colon-total shape for those
+questions, so the live negatives can only establish that nothing NEW is being blanked. Four
+candidate phrasings were tried to elicit one; none reproduced it. The offline evidence stands
+on round-trip-verified recovered bodies, but it is a weaker link in the chain than the positive
+case and is recorded as such.
+
+---
+
+## 🧮 "PRESENCE OF THE CORRECT FIGURE" IS TOO WEAK WHEN THE FINAL FIGURE IS WRONG (2026-08-10)
+
+Found while hunting for a live colon-total body, so it is incidental to D-FIDELITY-1 — but it
+is a hole in the same guard and it is live. Asked to show PAYE step by step for TZS 800,000,
+production answers:
+
+> *…Band 4 (760,001–800,000): 40,000 × 25% = TZS 10,000. Jumla kabla ya punguzo = TZS 78,000.
+> **Punguzo la kibinafsi = TZS 26,000. PAYE inayolipwa = TZS 78,000 − TZS 26,000 = TZS 52,000.***
+
+Two things wrong at once. **TZS 26,000 "personal relief" does not exist in Tanzania** —
+CLAUDE.md §11 names it explicitly as a wrong pattern; the 0% first band IS the relief. And the
+**final asserted figure, TZS 52,000, is wrong**; the engine says 78,000.
+
+Neither guard fires, before or after the widening, and the reason is by design: the own-levy
+rule is `amount not in results and bool(results)` — *presence of the correct figure anywhere*
+clears the body. TZS 78,000 does appear, as an intermediate ("jumla kabla ya punguzo"), so the
+body passes while its **conclusion** is wrong. That robustness was chosen deliberately, to stop
+band bases and net-pay extras false-flagging (eval_092/191/360/395), and it is the right default
+— but it cannot distinguish "restates the correct figure and concludes with it" from "passes
+through the correct figure on the way to a wrong one".
+
+The shape of a fix is a **last-asserted-figure** check: the body's FINAL assertion should have
+to be authoritative, not merely present somewhere. That is a real semantic change with its own
+false-positive surface (net-pay answers legitimately end on take-home, not on the levy), so it
+needs its own investigation and its own probe set, not a bolt-on here.
+
+Logged as its own item. Note it also gives the phantom TZS 26,000 relief a live reproduction,
+which the locked-facts `wrong_patterns` for PAYE should be catching and currently are not
+applied to model output at all — they run over training pairs, not over answers.
 
 ---
 

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "pos_th19",
+    "kind": "POSITIVE",
+    "expect": "the SDL body asserted \"sawa na TZS 210,000\" against a working of TZS 17,500. After: the contradicting body must be GONE and the working must stand alone.",
+    "changed": true,
+    "before": "Kwa wafanyakazi 12, SDL ni asilimia 3.5 ya jumla ya mishahara, sawa na TZS 210,000. Kama mauzo yako ni TZS 30,000,000, unahitaji EFD. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 500,000 = TZS 17,500",
+    "after": "SDL = 3.5% × TZS 500,000 = TZS 17,500"
+  },
+  {
+    "id": "neg_a_nssf_500k",
+    "kind": "NEGATIVE-A",
+    "expect": "a CORRECT split whose total reads \"Jumla ya michango: TZS 100,000\". It was being blanked by the \"=\" -only pattern; after the fix the explanation must SURVIVE.",
+    "changed": false,
+    "before": "NSSF kwa TZS 500,000/mwezi: mwajiri anachangia TZS 50,000 (10%) na mfanyakazi anachangia TZS 50,000 (10%). Jumla ya NSSF ni TZS 100,000 kwa mwezi. Thibitisha na nssf.go.tz.\nNSSF = 20% × TZS 500,000 = TZS 100,000 (mwajiri TZS 50,000 + mfanyakazi TZS 50,000)",
+    "after": "NSSF kwa TZS 500,000/mwezi: mwajiri anachangia TZS 50,000 (10%) na mfanyakazi anachangia TZS 50,000 (10%). Jumla ya NSSF ni TZS 100,000 kwa mwezi. Thibitisha na nssf.go.tz.\nNSSF = 20% × TZS 500,000 = TZS 100,000 (mwajiri TZS 50,000 + mfanyakazi TZS 50,000)"
+  },
+  {
+    "id": "neg_a_nssf_1m",
+    "kind": "NEGATIVE-A",
+    "expect": "same shape, the second measured false positive.",
+    "changed": false,
+    "before": "NSSF kwa TZS 1,000,000/mwezi: mwajiri anachangia TZS 100,000; mfanyakazi anachangia TZS 100,000 (jumla TZS 200,000). Thibitisha na nssf.go.tz.\nNSSF = 20% × TZS 1,000,000 = TZS 200,000 (mwajiri TZS 100,000 + mfanyakazi TZS 100,000)",
+    "after": "NSSF kwa TZS 1,000,000/mwezi: mwajiri anachangia TZS 100,000; mfanyakazi anachangia TZS 100,000 (jumla TZS 200,000). Thibitisha na nssf.go.tz.\nNSSF = 20% × TZS 1,000,000 = TZS 200,000 (mwajiri TZS 100,000 + mfanyakazi TZS 100,000)"
+  },
+  {
+    "id": "neg_a_paye_bands",
+    "kind": "NEGATIVE-A",
+    "expect": "the richest colon-bearing body reproducible live: a full band breakdown with \"Band 1 (0-270,000): TZS 0\" and several \"N x rate% = TZS M\" steps. The widened pattern now sees figures here that the old one did not, so this is where an over-eager pattern would newly blank a body. It must survive.",
+    "changed": false,
+    "before": "Thibitisha na TRA.Mfano halisi wa PAYE kwa TZS 800,000/mwezi: Band 1 (0–270,000): TZS 0. Band 2 (270,001–520,000): 250,000 × 8% = TZS 20,000. Band 3 (520,001–760,000): 240,000 × 20% = TZS 48,000. Band 4 (760,001–800,000): 40,000 × 25% = TZS 10,000. Jumla kabla ya punguzo = TZS 78,000. Punguzo la kibinafsi = TZS 26,000. PAYE inayolipwa = TZS 78,000 − TZS 26,000 = TZS 52,000.\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+    "after": "Thibitisha na TRA.Mfano halisi wa PAYE kwa TZS 800,000/mwezi: Band 1 (0–270,000): TZS 0. Band 2 (270,001–520,000): 250,000 × 8% = TZS 20,000. Band 3 (520,001–760,000): 240,000 × 20% = TZS 48,000. Band 4 (760,001–800,000): 40,000 × 25% = TZS 10,000. Jumla kabla ya punguzo = TZS 78,000. Punguzo la kibinafsi = TZS 26,000. PAYE inayolipwa = TZS 78,000 − TZS 26,000 = TZS 52,000.\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000"
+  },
+  {
+    "id": "neg_b_paye",
+    "kind": "NEGATIVE-B",
+    "expect": "no contradiction, no colon total — must be byte-identical before and after.",
+    "changed": false,
+    "before": "Hesabu sahihi: TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+    "after": "Hesabu sahihi: TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000"
+  },
+  {
+    "id": "neg_b_sdl",
+    "kind": "NEGATIVE-B",
+    "expect": "a plain compute answer — must be byte-identical before and after.",
+    "changed": false,
+    "before": "Kwa hesabu sahihi: SDL = 3.5% × TZS 5,500,000 = TZS 192,500. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500",
+    "after": "Kwa hesabu sahihi: SDL = 3.5% × TZS 5,500,000 = TZS 192,500. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500"
+  },
+  {
+    "id": "neg_c_ooc",
+    "kind": "NEGATIVE-C",
+    "expect": "config-only OOC phrase — proves the container loaded its config, not the fallback (CONTAINER-PATH-1). Must refuse, before and after.",
+    "changed": false,
+    "before": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+    "after": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu."
+  }
+]
