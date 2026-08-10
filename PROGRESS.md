@@ -140,6 +140,89 @@ case and is recorded as such.
 
 ---
 
+## 👻 THE PHANTOM TZS 26,000 RELIEF IS PARAMETRIC — measured, and it overrides an in-context correction (2026-08-10)
+
+Logged on its own because it is evidence about the **training data**, not about any guard, and
+it should be known before anyone plans the next adapter version.
+
+CLAUDE.md §11 is explicit: *"No separate personal relief deduction in Tanzania. The 0% Band 1
+(first TZS 270,000/month) IS the effective tax-free threshold. Any pair mentioning 'TZS 26,000
+personal relief' is WRONG."* The locked fact `paye_personal_relief` says the same and carries
+eleven `wrong_patterns` for it. The model keeps producing it anyway.
+
+### Counted, not anecdotal
+
+Over **2,265 distinct stored model generations**:
+
+| | n |
+|---|---|
+| answers that SUBTRACT or name it as a deduction — the defect | **6** |
+| answers that DENY it — the system working | **0** |
+| other incidental mentions of 26,000 | 3 |
+
+Six sightings across three artifacts, three different question shapes, and **one of them is
+today's live production answer**. Zero corrections, ever. `eval/results/phantom_relief_26k_prevalence.json`.
+
+Shapes it has taken, each needing a different guard to catch it:
+- `PAYE = 8% × TZS 800,000 − TZS 26,000 = TZS 64,000` — inside a cross-levy enumeration (eval_320)
+- `Jumla = TZS 172,000. Punguzo la kibinafsi TZS 26,000. PAYE inayolipwa = TZS 146,000.`
+- `Jumla kabla ya punguzo = TZS 78,000 … PAYE inayolipwa = TZS 78,000 − TZS 26,000 = TZS 52,000` — live now
+- and, worse, **volunteered as a correction**: *"kuna makosa … inakosea kutozingatia punguzo la
+  kibinafsi la TZS 26,000"* — the model criticising a CORRECT answer for omitting the phantom
+
+### The part that settles it: it overrides an on-point fact that was already in the prompt
+
+The obvious counter-hypothesis is that the correction never reaches the model. Half true, and
+the half that is true is a separate defect:
+
+**The denial fact never retrieves.** Entry [2] (`paye personal relief: Tanzania has NO separate
+PAYE personal relief deduction…`) ranks **#64** for the live defect question, **#81** for the
+eval_320 shape, **#23** for a plain PAYE question — and **#18 when asked about it directly**
+(*"Je kuna punguzo la kibinafsi la TZS 26,000 kwenye PAYE?"*). It is another long English
+`key: value` fact, unreachable by the Swahili vocabulary of the questions that need it —
+**the same reachability shape as GN 605A**, in a second domain, which is now the third
+confirmed instance of that class.
+
+**But the model overrode a rank-1 fact that told it not to.** For all four of those queries the
+top-retrieved entry is [214]: *"PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. **Hii ni
+jibu la mwisho, si mahesabu ya ziada.**"* — "this is the final answer, not extra arithmetic",
+naming the exact salary and the exact correct figure. It was in the prompt, at rank 1, and the
+model still emitted `78,000 − 26,000 = 52,000`.
+
+An in-context, on-point, rank-1 instruction losing to the prior is what parametric means. **This
+is in the fine-tune.** Guards can catch each new shape it takes — D-FIDELITY-2 caught the
+enumeration form, and the intermediate-figure hole is why the live form still gets through — but
+every catch is reactive, one shape at a time, and the supply of shapes is the model's.
+
+### What follows
+
+- **For the next adapter version:** treat this as a training-data defect to hunt in the SFT set,
+  not a guard to widen. The 11 `wrong_patterns` in `paye_personal_relief` run over *training
+  pairs* at build time; **nothing applies them to model output**, which is why six live answers
+  carry a pattern the repo has explicitly banned since June.
+- **Cheap partial mitigation, not a fix:** make the denial retrievable (Swahili-first,
+  subject-keyed, the GN 605A treatment). Worth doing on reachability grounds alone. It should
+  NOT be expected to close this — entry [214] shows an on-point fact already losing.
+- **Related:** the `wrong_patterns` machinery being build-time-only is itself worth an item. It
+  is a corpus of known-wrong assertions that no runtime check consults.
+
+---
+
+## 🔺 QUEUE — the intermediate-figure hole is promoted above the other guard items (2026-08-10)
+
+Founder call, recorded with the reasoning. Of the open guard items, **"presence of the correct
+figure anywhere clears the body"** ranks first: an answer whose FINAL figure is wrong passes
+because the right number appeared mid-working, and **it is rendered directly above the
+deterministic working**, so the layer whose whole purpose is arithmetic authority is standing
+behind a wrong conclusion. A body that is merely unchecked carries no such endorsement. Live
+reproduction: the TZS 52,000 PAYE answer above.
+
+Order among the guard items: **intermediate-figure hole → D-FIDELITY-1 attribution follow-ups →
+the rest.** It sits behind the founder-ordered main queue (minimum wage → VAT/EFD route), not
+ahead of it.
+
+---
+
 ## 🧮 "PRESENCE OF THE CORRECT FIGURE" IS TOO WEAK WHEN THE FINAL FIGURE IS WRONG (2026-08-10)
 
 Found while hunting for a live colon-total body, so it is incidental to D-FIDELITY-1 — but it
