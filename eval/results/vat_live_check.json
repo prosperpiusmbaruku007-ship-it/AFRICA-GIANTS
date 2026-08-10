@@ -1,0 +1,148 @@
+{
+  "polarity_failures": 0,
+  "rows": [
+    {
+      "id": "above_annual",
+      "kind": "VERDICT",
+      "question": "Mauzo yangu yamefika TZS 450,000,000 kwa mwaka, je nahitaji kusajili VAT?",
+      "expect": "registration REQUIRED, stated unconditionally.",
+      "changed": true,
+      "polarity_expected": "final",
+      "polarity_ok": true,
+      "before": "Ndiyo, umefikia kiwango cha lazima cha usajili wa VAT. Thibitisha na TRA (tra.go.tz).",
+      "after": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 450,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "below_annual",
+      "kind": "VERDICT",
+      "question": "Mauzo yangu ya mwaka ni TZS milioni 150 — je nahitajika kusajili VAT?",
+      "expect": "below limb A and NOT settled: the 6-month limb must come back as an open condition, naming TZS 100,000,000. A flat \"hapana\" is the defect this route exists to remove.",
+      "changed": true,
+      "polarity_expected": "conditional",
+      "polarity_ok": true,
+      "before": "Ndiyo — umefikia kizingiti cha TZS 200M/mwaka au TZS 100M/6 miezi. Lazima usajili VAT na TRA ndani ya siku 14 baada ya kufikia kizingiti. Ukichelewa, unaweza kupata adhabu. Thibitisha na TRA (tra.go.tz).",
+      "after": "Kwa upande wa miezi 12: hapana, mauzo yako ya TZS 150,000,000 hayajafikia kizingiti cha TZS 200,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 6 mfululizo nami nitathibitisha. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "six_month_over",
+      "kind": "VERDICT",
+      "question": "Katika miezi 6 iliyopita nimeuza jumla ya TZS milioni 120 — je nimefika kiwango cha VAT?",
+      "expect": "REQUIRED on the 6-month limb although far below the 200M annual figure.",
+      "changed": true,
+      "polarity_expected": "final",
+      "polarity_ok": true,
+      "before": "Hapana, bado. TZS milioni 120 katika miezi 6 ni chini ya TZS 100,000,000 (kiwango cha miezi 6). Lazima uwe umefikisha angalau TZS 100,000,000 ndani ya miezi 6 ili kustahili kusajili VAT. Thibitisha na TRA (tra.go.tz).",
+      "after": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 120,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "boundary_200m",
+      "kind": "BOUNDARY",
+      "question": "Mapato yangu yamefika TZS 200,000,000 kamili kwa mwaka, je nalazimika kusajili VAT?",
+      "expect": "EXACTLY at the figure -> REQUIRED. The boundary is inclusive; the strict-> bug is the one a future edit is most likely to reintroduce.",
+      "changed": true,
+      "polarity_expected": "final",
+      "polarity_ok": true,
+      "before": "Ndiyo, unatakiwa kusajili VAT mara tu utakapofikia kizingiti cha TZS 200,000,000 kwa mwaka. Thibitisha na TRA (tra.go.tz).",
+      "after": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 200,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "monthly_rate",
+      "kind": "CLARIFY",
+      "question": "Biashara yangu ya vipuri inaingiza TZS milioni 25 kila mwezi — je nasajiliwa VAT au bado?",
+      "expect": "must CLARIFY and must NOT contain 300,000,000 — a monthly rate is not annualised.",
+      "changed": true,
+      "polarity_expected": null,
+      "polarity_ok": null,
+      "before": "HTTP 500",
+      "after": "Kizingiti cha VAT kinapimwa kwa jumla ya mauzo ya kipindi, si kwa mauzo ya mwezi mmoja: usajili ni wa lazima IKIWA mauzo yamefikia TZS 200,000,000 katika miezi 12, AU TZS 100,000,000 katika miezi 6 mfululizo. Sitakisii mauzo ya mwaka kwa kuzidisha ya mwezi mara 12 — mauzo hupanda na kushuka. Niambie jumla ya mauzo yako ya miezi 12 iliyopita, au ya miezi 6 mfululizo, nami nitalinganisha na kizingiti."
+    },
+    {
+      "id": "efd_over",
+      "kind": "VERDICT",
+      "question": "Mauzo yangu ya mwaka ni TZS milioni 15 na sijasajili VAT — je nahitaji mashine ya risiti?",
+      "expect": "EFD required on the turnover ground.",
+      "changed": true,
+      "polarity_expected": "final",
+      "polarity_ok": true,
+      "before": "Ndiyo — kwa kuwa mauzo yako yanazidi TZS 11,000,000 lakini hujasajili VAT, unatakiwa kutumia mashine ya risiti za kielektroniki (EFD). Ukifikisha TZS 200,000,000 utalazimika pia kusajili VAT. Thibitisha na TRA (tra.go.tz).",
+      "after": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "efd_registered",
+      "kind": "VERDICT",
+      "question": "Nimeshasajili VAT — je lazima niwe na mashine ya risiti hata kama mauzo ni madogo?",
+      "expect": "EFD required on registration alone; no turnover should be demanded.",
+      "changed": true,
+      "polarity_expected": "final",
+      "polarity_ok": true,
+      "before": "Ndiyo — mara unapofikia kizingiti cha VAT (TZS 200M/miezi 12 au TZS 100M/miezi 6), unapaswa kujiandikisha VAT na kutumia EFD. Thibitisha na TRA (tra.go.tz).",
+      "after": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Biashara iliyosajiliwa VAT inatakiwa kutumia EFD bila kujali kiasi cha mauzo. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "nc_05_profession",
+      "kind": "NEGATIVE",
+      "question": "Je, wakili aliyesajiliwa lazima asajilishe VAT hata kama mapato yake ya mwaka ni chini ya TZS milioni 200?",
+      "expect": "MUST STAY ON THE FACT PATH. Correct answer is \"yes regardless\"; the threshold engine would answer \"below the threshold\", which is flatly wrong.",
+      "changed": false,
+      "polarity_expected": null,
+      "polarity_ok": null,
+      "before": "Ndiyo — wakili aliyeidhinishwa (advocate) anasajiliwa VAT mara tu anapopata leseni yake ya kufanya kazi Tanzania, bila kujali kiasi cha mapato. Thibitisha na TRA (tra.go.tz).",
+      "after": "Ndiyo — wakili aliyeidhinishwa (advocate) anasajiliwa VAT mara tu anapopata leseni yake ya kufanya kazi Tanzania, bila kujali kiasi cha mapato. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "nc_lookup",
+      "kind": "NEGATIVE",
+      "question": "Kizingiti cha mauzo cha miezi 12 cha kusajilisha VAT kwa lazima ni TZS ngapi?",
+      "expect": "a threshold LOOKUP — the fact path owns it and must still answer TZS 200,000,000.",
+      "changed": false,
+      "polarity_expected": null,
+      "polarity_ok": null,
+      "before": "Kizingiti cha lazima cha kusajilisha VAT ni TZS 200,000,000 katika kipindi chochote cha miezi 12. Thibitisha na TRA (tra.go.tz).",
+      "after": "Kizingiti cha lazima cha kusajilisha VAT ni TZS 200,000,000 katika kipindi chochote cha miezi 12. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "neg_sdl",
+      "kind": "NEGATIVE",
+      "question": "Nina wafanyakazi 11 wenye mishahara TZS 5,500,000 — SDL ni kiasi gani?",
+      "expect": "levy route untouched, byte-identical.",
+      "changed": false,
+      "polarity_expected": null,
+      "polarity_ok": null,
+      "before": "Kwa hesabu sahihi: SDL = 3.5% × TZS 5,500,000 = TZS 192,500. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500",
+      "after": "Kwa hesabu sahihi: SDL = 3.5% × TZS 5,500,000 = TZS 192,500. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500"
+    },
+    {
+      "id": "neg_paye",
+      "kind": "NEGATIVE",
+      "question": "Mfanyakazi analipwa TZS 800,000 kwa mwezi — anakatwa PAYE kiasi gani?",
+      "expect": "levy route untouched, byte-identical.",
+      "changed": false,
+      "polarity_expected": null,
+      "polarity_ok": null,
+      "before": "Hesabu sahihi: TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+      "after": "Hesabu sahihi: TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000"
+    },
+    {
+      "id": "neg_gn487a",
+      "kind": "NEGATIVE",
+      "question": "Je ni halali kwa mgeni kufanya biashara ya rejareja Tanzania?",
+      "expect": "GN 487A route untouched, byte-identical.",
+      "changed": false,
+      "polarity_expected": null,
+      "polarity_ok": null,
+      "before": "Hapana, si halali. Biashara ya rejareja imezuiliwa kwa wasio raia chini ya Government Notice No. 487A (GN487A). Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+      "after": "Hapana, si halali. Biashara ya rejareja imezuiliwa kwa wasio raia chini ya Government Notice No. 487A (GN487A). Thibitisha na Idara ya Uhamiaji (immigration.go.tz)."
+    },
+    {
+      "id": "neg_ooc",
+      "kind": "CONTAINER-PATH",
+      "question": "Kodi ya majengo ni kiasi gani?",
+      "expect": "config-only OOC phrase — proves the container loaded its full config, not the 39-phrase fallback. Must refuse.",
+      "changed": false,
+      "polarity_expected": null,
+      "polarity_ok": null,
+      "before": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "after": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu."
+    }
+  ]
+}

@@ -6,10 +6,18 @@ Last updated: 2026-08-10
 orchestrator pipeline now serves every request. Cutover entry immediately below — deployed
 commit, the two gate results that authorised it, and the rollback procedure.
 
-**➡️ QUEUE (founder-ordered, 2026-08-10): ~~D-FIDELITY-1 widening~~ **DONE, DEPLOYED, VERIFIED
-LIVE** → ~~minimum wage~~ **DONE, DEPLOYED, VERIFIED LIVE** → VAT/EFD compute route (NEXT).**
-The guard items (intermediate-figure hole → D-FIDELITY-1 attribution follow-ups) sit behind the
-main queue.
+**➡️ QUEUE (founder-ordered, 2026-08-10): ~~D-FIDELITY-1 widening~~ → ~~minimum wage~~ →
+~~VAT/EFD compute route~~ — **ALL THREE DONE, DEPLOYED, VERIFIED LIVE.** The founder-ordered
+queue is empty. Next by standing priority: the **intermediate-figure hole** (an answer whose
+FINAL figure is wrong passes because the right number appeared mid-working), then D-FIDELITY-1
+attribution follow-ups. **Two new candidates were opened by this cycle: decomposition silently
+dropping a sub-question** (twice now — `mw_15`'s `na pia`, `th_24`'s `na`) and the
+build-time-only `wrong_patterns` machinery.
+
+**The threshold-comparison class is now closed on all three members.** SDL headcount, minimum
+wage and VAT/EFD registration are each a deterministic route with no generation on the path.
+The argument was the same every time and was measured three times: supplying the right number
+does not produce the right comparison.
 
 **✅ th_16 IS FIXED IN PRODUCTION (2026-08-10, `a372d2b` + copy fix).** Two wording fixes were
 tried first and both were rejected on evidence — the second because four of six candidate
@@ -26,6 +34,143 @@ reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline 
 second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
+
+## 💰 VAT/EFD THRESHOLDS ARE A DETERMINISTIC ROUTE — and the untested limb comes back as a derived condition (2026-08-10)
+
+**Built, committed, DEPLOYED, live-verified.** The third member of the threshold-comparison
+class, and the one SAFETY-3 was originally found on: production reciting `200,000,000`
+correctly **in the sentence where it misapplied it**.
+
+### What was live until today, in both directions
+
+| probe | BEFORE | AFTER |
+|---|---|---|
+| **below_annual** TZS 150M/year | *"**Ndiyo — umefikia kizingiti** cha TZS 200M/mwaka au TZS 100M/6 miezi. **Lazima usajili VAT** na TRA ndani ya siku 14… **Ukichelewa, unaweza kupata adhabu.**"* — tells a trader who is **under** the threshold that they have crossed it, and threatens penalties | *"Kwa upande wa miezi 12: hapana, mauzo yako ya TZS 150,000,000 hayajafikia kizingiti cha TZS 200,000,000. **LAKINI hili halijamalizika:** usajili ni wa lazima pia **IKIWA** mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo…"* |
+| **six_month_over** TZS 120M in 6 months | *"Hapana, bado. TZS milioni 120 katika miezi 6 ni **CHINI YA** TZS 100,000,000"* — **the SAFETY-3 shape verbatim**: the right threshold recited, the comparison inverted, and a trader who must register told they need not | *"Ndiyo, unatakiwa kujisajili VAT. …TZS 120,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000…"* |
+| **above_annual** TZS 450M/year | right verdict, no figures, no working | verdict with both operands and the limb named |
+| **boundary_200m** exactly TZS 200M | *"Ndiyo, unatakiwa kusajili VAT **mara tu utakapofikia** kizingiti"* — future tense; never says whether they have | *"Ndiyo… TZS 200,000,000 kwa miezi 12 **yamefikia au kuzidi** kizingiti…"* |
+| **monthly_rate** TZS 25M/month | **HTTP 500** | the never-guess clarification, with no annualised figure in it |
+
+**Both directions were wrong, on the same threshold, in the same week.** `below_annual` invents
+a crossing that has not happened; `six_month_over` denies one that has. Neither is a retrieval
+failure — the threshold is correct in both.
+
+### The two limbs are independent tests, and that is the whole design
+
+Registration is compulsory on **TZS 200M/12mo OR TZS 100M/any rolling 6mo**. A figure stated
+for one period carries **no information** about the other: 150M/year is below limb A and
+entirely consistent with 120M in one half-year, which is registrable. So *"150M < 200M,
+hapana"* is not a conservative approximation — it is the SAFETY-3 shape with a different
+number, and it is what production said.
+
+Founder decision (**Option 1**): test the limb the stated period addresses; when it does not
+establish registration, carry the other limb as an explicit open condition; when it does, no
+conditional at all, because one crossing settles it.
+
+> **The conditional is DERIVED, never authored.** `_LIMBS` is the only description of the two
+> limbs, `_untested_limb` picks the one not addressed, and the clause is emitted from that. No
+> code path can attach a conditional to a limb that WAS tested, or omit one for a limb that was
+> not — the same rule as the minimum-wage verdict word, for the same reason: a sentence that
+> could drift out of agreement with the verdict beside it must not be written twice.
+
+EFD is not a second copy of the comparison: its threshold is annual turnover TZS 11M, but a
+VAT-registered person needs an EFD **regardless**, so registration is tested first and
+short-circuits the turnover entirely — and below the threshold the derived open condition is
+VAT registration, not a second limb.
+
+**A monthly figure is a rate, not a period total, and is never annualised.** 25M/month × 12 =
+300M looks decisive and is an assumption about a seasonal trader's future. Those decline.
+
+### Three defects, each caught by a different instrument
+
+**1. The router sweep — 18 diverted rows, most of them wrong.** The first version required only
+`{obligation cue + magnitude}`. It stole threshold **lookups** (`eval_002/003/381`), **false-
+premise confirmations** (`eval_347/349` — *"kizingiti … ni TZS 200,000,000, sivyo?"*, where the
+figure is the misquoted THRESHOLD and not turnover), **projections** (`eval_006/007/010`), a
+**Kenyan-shilling** row, and gave `th_09/th_10` to VAT when the ask was EFD. Fixed with an
+own-turnover requirement — the `mshahara`→pay-verb narrowing in its second domain — plus an ask
+veto, a foreign-currency veto and EFD precedence. Final: **732 rows, 15 diverted, all genuine,
+`other_route_changes: 0`.**
+
+**2. The corpus caught a wrong boundary.** Written strict (`>`); `eval_351` is exactly TZS
+200,000,000 and its gold is explicit — *"Kufikia … **(SIYO TU KUZIDI)** kunalazimisha
+usajili"* — tagged `_why_hard: exactly at 200M — inclusive boundary`. The row exists to catch
+this and did. Now `>=` on both limbs and EFD, pinned by four parametrised boundary tests and
+by a live canary, since it is the edit most likely to be reintroduced.
+
+**3. INSTRUMENT-LIE #6 — see its own entry below.**
+
+### Verification
+
+- **26 new tests**; full suite **747 passed**
+- R17 probes: **18 rows, 0 failures** — 11 positive, 7 negative controls
+- offline orchestrator: 25 rows, **0 model calls, 0 model-text leaks, 0 polarity failures,
+  0 outcome mismatches**
+- **live**: 7 threshold rows CHANGED, **6 negative controls byte-identical**, and the polarity
+  reader run over the **actual deployed strings** — 6 assertions, **0 failures**. `neg_ooc`
+  byte-identical on a config-only phrase (CONTAINER-PATH-1 clear).
+- artifacts: `eval/results/vat_route_sweep.json`, `vat_orchestrator_offline.json`,
+  `vat_live_check.json`
+
+The negative control worth naming: **`nc_05`** — *"Je, wakili aliyesajiliwa lazima asajilishe
+VAT hata kama mapato yake ya mwaka ni chini ya TZS milioni 200?"* Registration vocabulary, a
+magnitude, an explicit annual period — and the correct answer is **yes regardless**, because
+listed professionals must register whatever their turnover. Routed to the engine it returns a
+confident *"below the threshold"* that is flatly wrong. It is byte-identical live, and it is
+the row to watch if this arm is ever widened.
+
+### Logged, not fixed
+
+- **`th_24` is answered by half.** *"…je nasajili VAT **na** je nahitaji EFD?"* returns the EFD
+  verdict; the VAT half is silently dropped — not answered wrong, not answered. Same connector
+  class as instrument-lie #5's `na pia`. **That is now twice that decomposition has silently
+  dropped a sub-question, which promotes it from an incident to a candidate for its own
+  investigation.** A dropped half is invisible in exactly the way D-FIDELITY-1's blanked bodies
+  were: nothing in any artifact says a question went unanswered.
+- **9 of 25 on-path rows are clarifications, 6 of them because turnover was quoted as a monthly
+  rate** (`nat_25`, `edge_p01`, `edge_p08`). **Recorded here because that number will look like
+  a regression to anyone reading the gate without the reasoning.** It is not: annualising
+  25M/month to 300M is a guess about a seasonal trader's future dressed as arithmetic, and
+  `vf_11` is the probe that pins it — there, annualising gives the RIGHT answer by the WRONG
+  method, which is precisely how a bad method gets adopted and then generalised to a case where
+  it is wrong.
+
+## 🪞 INSTRUMENT-LIE #6 — route-correct is not outcome-correct (2026-08-10)
+
+The VAT orchestrator harness reported **25 rows on path, 0 model calls, 0 leaks, 0 polarity
+failures** for a build in which **three rows silently clarified instead of answering**.
+`ya mwaka` — the genitive, and the commonest way a trader says annual turnover (*"mauzo yangu
+**ya mwaka** ni milioni 15"*) — was not matched; only `kwa mwaka` was. Those rows routed to the
+threshold arm **correctly**, and then fell out one stage later at the period test.
+
+Every number the instrument printed was true. None of them was the answer.
+
+> **The harness was asserting the checkpoint immediately before the one that broke.**
+
+Fixed by widening the harness to assert each probe's `truth` — the outcome the user actually
+gets — which surfaced it at once; rendered verdicts went **16 → 19**.
+
+### Pair it with MEASUREMENT-GAP-1: same failure shape, different stage
+
+| | MEASUREMENT-GAP-1 | instrument-lie #6 |
+|---|---|---|
+| what was measured | the fact **reaches the prompt** | the question **reaches the right route** |
+| what was assumed to follow | the model applies it | the engine answers it |
+| what actually happened | recited correctly, applied wrongly | routed correctly, clarified instead of answering |
+| how it read | "7/8 targets served" ≈ "7/8 correct" | "25 on path, 0 failures" ≈ "25 answered" |
+
+Two years of instrument design would not separate these: they are one error at two stages of
+the same pipeline. The general rule, which now covers both:
+
+> **An instrument must assert the OUTCOME THE USER GETS, not the last checkpoint before it.**
+> Every intermediate green is a claim about a stage, and the distance between that stage and
+> the user is unmeasured by construction.
+
+This is the sixth instrument this project has caught lying and the third caught by widening
+what a check asserts rather than by adding a new check. The table of the first five is in the
+`na_06` entry below.
+
+---
 
 ## ⚖️ MINIMUM WAGE IS NOW A DETERMINISTIC ROUTE — the comparison left the model (2026-08-10)
 
@@ -451,7 +596,9 @@ by the 23-probe suite built specifically to test it. Fixed with a digit boundary
 run to full length before the operand test, and pinned by
 `test_operand_exclusion_survives_backtracking`, whose docstring carries the mechanism.
 
-**This is now the fourth instrument this project has caught lying, and the pattern in how:**
+**This is now the fourth instrument this project has caught lying** (two more followed the same
+day — #5 in the minimum-wage cycle, #6 in the VAT/EFD one, both entries above)**, and the
+pattern in how:**
 
 | # | instrument | how it lied | what caught it |
 |---|---|---|---|
@@ -460,6 +607,7 @@ run to full length before the operand test, and pinned by
 | 3 | direction detector (SAFETY-3) | scored a whole answer against one threshold, crediting an SDL verdict to a VAT question | per-threshold attribution, added after the counts looked wrong |
 | 4 | `na_06` (this one) | green because backtracking renumbered the thing it was testing | a two-line print of the pattern's actual output |
 | 5 | probe `mw_15` (added 2026-08-10, minimum wage) | asserted the resolver's cross-sector conflict check, but was authored with `na pia` — a decomposition connector — so the clause was **split into two sub-questions before the resolver ever saw two sectors**. The check it existed to test was unreachable; it passed on a different code path | reading the decomposed sub-questions while debugging something else. A unit test of `resolve()` cannot see this: the resolver was always correct, the probe never got to it |
+| 6 | VAT orchestrator harness (2026-08-10) | reported 25-on-path / 0 failures for a build where **three rows silently clarified instead of answering** — it asserted route, model calls and polarity, i.e. **the checkpoint immediately before the stage that broke** | widening the harness to assert each probe's `truth` — the outcome the user gets. Same failure shape as MEASUREMENT-GAP-1, one stage further down the pipeline |
 
 **Not one was caught by itself.** Each was caught by a different instrument, a live run, or an
 ad-hoc check — never by the suite it belonged to. The corollary is not "write better probes",
