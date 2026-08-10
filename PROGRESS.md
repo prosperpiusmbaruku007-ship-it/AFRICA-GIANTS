@@ -6,19 +6,19 @@ Last updated: 2026-08-10
 orchestrator pipeline now serves every request. Cutover entry immediately below — deployed
 commit, the two gate results that authorised it, and the rollback procedure.
 
-**➡️ QUEUE (founder-ordered, 2026-08-10): ~~D-FIDELITY-1 widening~~ **DONE, DEPLOYED,
-VERIFIED LIVE** → ~~minimum-wage investigation~~ **BUILT, COMMITTED, NOT DEPLOYED** → VAT/EFD
-compute route (NEXT).** D-FIDELITY-1 first because it is live and has been partly blind since
-it shipped, and because it is the guard that would catch a fabricated figure the moment an answer
-carries a working beside it.
+**➡️ QUEUE (founder-ordered, 2026-08-10): ~~D-FIDELITY-1 widening~~ **DONE, DEPLOYED, VERIFIED
+LIVE** → ~~minimum wage~~ **DONE, DEPLOYED, VERIFIED LIVE** → VAT/EFD compute route (NEXT).**
+The guard items (intermediate-figure hole → D-FIDELITY-1 attribution follow-ups) sit behind the
+main queue.
 
-**⛔ th_16 IS STILL LIVE. The class fix is BUILT but NOT DEPLOYED.** Two wording fixes were made
-and both were rejected on evidence — the second because four of six candidate wordings fabricated
-**TZS 765,900 as a legal maximum wage**, which is more dangerous than the nonsense phrase it would
-have replaced. The class fix — a deterministic `minimum_wage` route that removes the model from
-the comparison entirely — is now built and green offline (entry immediately below). **Until it is
-deployed and live-verified per R16, th_16 is still answered wrong in production.** Unit
-normalisation remains its own item.
+**✅ th_16 IS FIXED IN PRODUCTION (2026-08-10, `a372d2b` + copy fix).** Two wording fixes were
+tried first and both were rejected on evidence — the second because four of six candidate
+wordings fabricated **TZS 765,900 as a legal maximum wage**, more dangerous than the nonsense
+phrase they would have replaced. The class fix shipped instead: a deterministic `minimum_wage`
+route with **no generation on the path at all**, live-verified on 12 canaries (8 wage rows
+changed, 4 controls byte-identical). Entry below carries the verbatim before/after — **three of
+the "before" answers were worse than th_16 and none was on any list**, including one instructing
+an employer to claw back lawfully paid wages. Unit normalisation remains its own item.
 
 **Two findings from this cycle outrank the wiring itself and are written up as their own
 entries: CONTAINER-PATH-1** (wiring v16 with defaulted phrase lists would have silently
@@ -92,7 +92,7 @@ correct on their own is not a shape authoring finds.
 
 ### Verification
 
-- **72 new tests** (`tests/test_minimum_wage.py`); full suite **720 passed** (648 + 72)
+- **73 new tests** (`tests/test_minimum_wage.py`); full suite **721 passed** (648 + 73)
 - `eval/results/mw_orchestrator_offline.json` — **20/20 probes correct end to end through the
   real orchestrator**, `model_calls_on_wage_path: 0`, `model_text_leaked: False` on every row
   including both multipart carriers (a stub model returning `"NDIYO NI HALALI KABISA"` sits on
@@ -102,6 +102,85 @@ correct on their own is not a shape authoring finds.
   question carrying a wage figure and `ni halali`, `mw_18` employment lawfulness with no figure)
 - `eval/results/mw_sector_resolution.json`, `mw_route_sweep.json`, `mw_r17_cue_probes.json`
 - primary source: `docs/domain_research/gn605a_2025_gazette_extract.txt` (kazi.go.tz, Tier 1A)
+
+### ✅ DEPLOYED AND VERIFIED LIVE (2026-08-10) — th_16 is fixed in production
+
+R16 procedure: `app stop --yes` (verified `stopped`, 0 tasks), redeploy, then **12 canaries run
+before and after** and compared. **All 8 wage rows CHANGED. All 4 controls BYTE-IDENTICAL.**
+That separation is the result: the deploy moved exactly the surface it was meant to move.
+
+**The "before" column is the most important thing this cycle produced, so it is quoted verbatim
+rather than characterised. This is what was live.**
+
+| probe | BEFORE (live in production until today) | AFTER |
+|---|---|---|
+| **th_16** 200,000, farm | *"**Hapana** — malipo hayo yanazidi kiwango cha juu cha chini cha lazima cha kisheria… mfanyakazi wa shamba anaweza kulipwa kiwango cha chini cha TZS 175,000 **tu**. **Malipo ya ziada juu ya hapo ni kinyume cha sheria.**"* | *"**Ndiyo, ni halali.** Mshahara wa TZS 200,000 kwa mwezi uko **JUU ya** kima cha chini cha kilimo — mazao au mifugo, ambacho ni TZS 175,000 (GN 605A, Jedwali la Pili…). **Kifungu cha 4(3)** kinaruhusu kulipa **ZAIDI** ya kima cha chini."* |
+| **th_15** 150,000, farm | *"Hapana — …Mshahara wa TZS 150,000 unakiuka sheria."* (right verdict, no schedule, no citation) | *"**Hapana, si halali.** …uko **CHINI ya**… Unatakiwa kupandisha mshahara hadi angalau TZS 175,000 kwa mwezi."* |
+| **floor_exact** 175,000 | *"Hapana — mshahara huo ni **chini sana** ya kiwango cha chini cha GN605A… kiwango cha **wastani** cha karibu TZS 175,000… lakini kwa mfanyakazi huyu, mshahara wa TZS 175,000 ni **chini ya** kiwango cha chini"* — the floor called below itself, and the floor called an *average* | *"**Ndiyo, ni halali.** …uko **SAWA na** kima cha chini…"* |
+| **hotel_4star** 350,000 vs 375,000 | *"Kwa mujibu wa **GN487A**, shughuli za huduma za malazi na utalii imepigwa marufuku kwa **wasio raia**…"* — the wrong statute entirely; answered a non-citizen question nobody asked | *"**Hapana, si halali.** …uko CHINI ya… hoteli ya nyota nne au tano, ambacho ni **TZS 375,000**…"* |
+| **bodaboda** | *"Hapana — malipo hayo yanazidi kiwango cha juu cha kisheria cha TZS 175,000… **Ni lazima umrudishe fedha zilizozidi** ili aweze kupata cheti sahihi cha kodi."* — **instructed an employer to claw back wages already paid** | the Cap. 366 status clarification: **zero figures, no verdict word** |
+| **frame_lawful** / **frame_violation** 450,000 | *"**Ndiyo**, ikiwa unalipa PAYE sahihi. TZS 450,000/mwezi = TZS 18,000,000/12 miezi…"* / *"**Ndiyo** — malipo hayo yanazidi kiwango cha juu cha PAYE cha asilimia 30…"* — **the same word for both framings**, both reasoning about PAYE, both arithmetically wrong | *"**Ndiyo, ni halali.**"* / *"**Hapana, hukiuki sheria.**"* — **opposite words, identical substance**, both against the 398,500 floor |
+| neg_gn487a · neg_sdl · neg_paye | correct | **byte-identical** — no levy or immigration question was diverted |
+| neg_ooc | refuses | **byte-identical.** `kodi ya majengo` is config-only and absent from the 39-phrase fallback, so this proves the container loaded its full config (CONTAINER-PATH-1 clear) |
+
+Three of those "before" answers are worse than th_16 itself, and none of them was on any list:
+**an instruction to claw back lawfully paid wages**, **an answer about non-citizen business
+prohibition to a question about a hotel waiter's pay**, and **the floor declared to be below the
+floor**. th_16 was the one that had been noticed, not the worst one. Artifact:
+`eval/results/mw_live_check.json`.
+
+### A spec disagreement, recorded with its resolution
+
+The canary spec written before the run required `hotel_no_star` to **"clarify and emit no
+figure."** It clarifies, asserts no verdict — and emits **nine figures**: the sector range plus
+all six sub-sector rates by name. Flagged as a deviation and **not** iterated on live.
+
+**Founder resolution: leave as designed, and the spec was the weaker instruction.** The
+distinction that settles it is worth keeping:
+
+> **A figure that RESOLVES the question versus figures that ENUMERATE the candidates.**
+
+The constraint exists to stop an unsourced rate being asserted as though it answered the
+question. Naming all six of the Order's sub-sector rates does the opposite of that: it is
+sourced, it is actionable, it hands the employer the means to resolve it themselves, and it is
+what a competent advisor says. The rule the codebase now carries is the distinction, not "no
+figures" — `MIN_WAGE_NO_SECTOR` and the bodaboda exit still emit nothing actionable, because
+there is no candidate set to enumerate in either.
+
+### The `ni halali` substring — fixed structurally, and the pin found a second one
+
+`sector_rates_statement` refused correctly while containing the affirmative cue: *"siwezi kusema
+kama TZS 250,000 … **ni halali** bila kujua aina ya kazi hasa."* Plain to a reader, invisible to
+a yes/no scorer reading the polarity of the first paragraph. Rephrased to *"siwezi
+**kulinganisha** …"* — **the substring is gone, not handled** — and pinned by
+`test_no_clarification_reads_as_a_verdict`, which runs `wage_question_frame` (the polarity
+reader itself) over our own output and asserts `unknown`, across **every sector**, plus a
+positive control so the test cannot pass on a build that stopped stating verdicts.
+
+**The pin immediately found a second instance the twelve live canaries had not surfaced:**
+`MIN_WAGE_NO_SECTOR` read *"Ili nikwambie kama unacholipa **ni halali**, niambie…"* → `lawful`.
+Written the same day, by the same hand, in copy explicitly designed to state no verdict. A
+lexical defect recurs wherever the vocabulary is natural, and a check that reads the mechanism's
+own output catches the recurrence for free — the cheapest instrument in the repo, again.
+
+### 🔌 OUTAGE — ~2 minutes, no wrong answers served (2026-08-10)
+
+`modal app stop chike-inference --yes` succeeded instantly. The `modal deploy` that was to
+replace it **aborted**: `'charmap' codec can't encode character '✓'` — the Modal CLI's own
+`✓` glyph, unprintable on a cp1252 Windows console. Both app records sat `stopped` and the
+endpoint was dead until a redeploy with `PYTHONIOENCODING=utf-8` succeeded in 12s. Production
+was **unavailable, not incorrect**.
+
+**The operational lesson outranks the incident, and R16 now carries it:** `app stop` followed by
+a deploy that CAN FAIL leaves production dead in the gap. The stop is instant and reliable; the
+deploy is neither. So `PYTHONIOENCODING=utf-8` belongs in the deploy command alongside
+`PYTHONUTF8=1`, and **the R16 sequence must state that the window exists** rather than reading
+as an atomic swap.
+
+**The same encoding fault also truncated a live canary run mid-pass, losing the artifact — twice
+in one session, in two different tools.** Any script that prints model replies now calls
+`sys.stdout.reconfigure(encoding='utf-8', errors='replace')`: a console encoding must never be
+able to destroy measured data or abort a deploy.
 
 ### Open, and deliberately left open
 

@@ -1,0 +1,110 @@
+[
+  {
+    "id": "th_16",
+    "kind": "PAIR",
+    "question": "Namlipa mfanyakazi wa shamba TZS 200,000 kwa mwezi — je ni halali kisheria?",
+    "expect": "ABOVE the 175,000 agriculture floor -> LAWFUL. This is the live defect: production currently calls paying above the floor unlawful.",
+    "changed": true,
+    "before": "Hapana — malipo hayo yanazidi kiwango cha juu cha chini cha lazima cha kisheria. Kwa mujibu wa Sheria ya Ajira na Mahusiano ya Kazini, mfanyakazi wa shamba anaweza kulipwa kiwango cha chini cha TZS 175,000 tu. Malipo ya ziada juu ya hapo ni kinyume cha sheria. Thibitisha na MLYWF.",
+    "after": "Ndiyo, ni halali. Mshahara wa TZS 200,000 kwa mwezi uko JUU ya kima cha chini cha kilimo — mazao au mifugo, ambacho ni TZS 175,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Kifungu cha 4(3) cha GN 605A kinaruhusu mwajiri kulipa mfanyakazi kiasi ZAIDI ya kima cha chini kilichowekwa. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+  },
+  {
+    "id": "th_15",
+    "kind": "PAIR",
+    "question": "Namlipa mfanyakazi wa shamba TZS 150,000 kwa mwezi — je ni halali kisheria?",
+    "expect": "BELOW the same floor -> UNLAWFUL. The matched half. Attempt 1 fixed th_16 and broke this; if it moves the wrong way the deploy is rolled back.",
+    "changed": true,
+    "before": "Hapana — kiwango cha chini kabisa cha mshahara kwa sekta ya kilimo ni TZS 175,000 kwa mwezi, kulingana na GN605A. Mshahara wa TZS 150,000 unakiuka sheria. Thibitisha na MLYWF.",
+    "after": "Hapana, si halali. Mshahara wa TZS 150,000 kwa mwezi uko CHINI ya kima cha chini cha kilimo — mazao au mifugo, ambacho ni TZS 175,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Unatakiwa kupandisha mshahara hadi angalau TZS 175,000 kwa mwezi. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+  },
+  {
+    "id": "floor_exact",
+    "kind": "BOUNDARY",
+    "question": "Namlipa mfanyakazi wa shamba TZS 175,000 kwa mwezi — je ni halali kisheria?",
+    "expect": "EXACTLY the floor -> LAWFUL. A comparison loosened enough to fix th_16 would flip this.",
+    "changed": true,
+    "before": "Hapana — mshahara huo ni chini sana ya kiwango cha chini cha GN605A. Kulingana na jedwali la GN605A, sekta ya kilimo ya mazao (crop farming) ina kiwango cha wastani cha karibu TZS 175,000 kwa mwezi, lakini hii ni wastani — wakulima wengine wa shamba wanaweza kulipwa zaidi. Lakini kwa mfanyakazi huyu wa shamba mahususi, mshahara wa TZS 175,000 ni chini ya kiwango cha chini cha kisheria. Thibitisha na PKF Eastern Africa au TanzLII.",
+    "after": "Ndiyo, ni halali. Mshahara wa TZS 175,000 kwa mwezi uko SAWA na kima cha chini cha kilimo — mazao au mifugo, ambacho ni TZS 175,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Kifungu cha 4(3) cha GN 605A kinaruhusu mwajiri kulipa mfanyakazi kiasi ZAIDI ya kima cha chini kilichowekwa. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+  },
+  {
+    "id": "hotel_4star",
+    "kind": "BELOW-BUT-LARGE",
+    "question": "Namlipa mhudumu wa hoteli ya nyota nne TZS 350,000 kwa mwezi — je ni halali kisheria?",
+    "expect": "a big number that is still BELOW its 375,000 floor -> UNLAWFUL. Any reasoning from the size of the figure rather than from the Schedule gets this wrong.",
+    "changed": true,
+    "before": "Kwa mujibu wa GN487A, shughuli za huduma za malazi na utalii (hospitality/hotel industry) imepigwa marufuku kwa wasio raia. Hivyo, kumlipa mtu asiye raia wa Tanzania kwa huduma za hoteli kunaweza kuwa kinyume cha sheria. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+    "after": "Hapana, si halali. Mshahara wa TZS 350,000 kwa mwezi uko CHINI ya kima cha chini cha hoteli na ukarimu — hoteli ya nyota nne au tano, ambacho ni TZS 375,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Unatakiwa kupandisha mshahara hadi angalau TZS 375,000 kwa mwezi. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+  },
+  {
+    "id": "hotel_no_star",
+    "kind": "CLARIFY",
+    "question": "Namlipa mhudumu wa hoteli TZS 250,000 kwa mwezi — je ni halali kisheria?",
+    "expect": "sector known, sub-sector not (195,000..375,000 spans the verdict) -> must CLARIFY, must state the sector rates, must assert NO verdict.",
+    "changed": true,
+    "before": "Kwa ujumla ndiyo — TZS 250,000/mwezi ni chini ya kiwango cha PAYE cha asilimia 8 (TZS 270,000). Hata hivyo, unapaswa kuangalia ikiwa huyu ni 'mwajiriwa' au 'mwenye biashara huru'. Ikiwa ni mwajiriwa (ana mkataba wa ajira, saa maalum za kufanya kazi, hakuna gharama za biashara zinazolipwa na mwajiri): PAYE ya 8% inatumika. Ikiwa ni mwenye biashara huru (anakupa huduma bila mkataba wa ajira rasmi): huenda akawa amejisajili NSSF na WCF — lakini PAYE inaweza kutotumika. Thibitisha hali yake ya kisheria na mwanasheria wa kazi.",
+    "after": "Sekta ya hoteli na ukarimu ina viwango zaidi ya kimoja, kuanzia TZS 195,000 hadi TZS 375,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026), hivyo siwezi kusema kama TZS 250,000 kwa mwezi ni halali bila kujua aina ya kazi hasa. Viwango ni: hoteli ya nyota nne au tano TZS 375,000; hoteli ya nyota tatu TZS 225,000; hoteli ya nyota moja/mbili, gesti, baa au mgahawa TZS 195,000; mbeba mizigo wa watalii TZS 225,000; mwongoza watalii TZS 320,000; uwindaji TZS 200,000. Niambie ni kipi kinakuhusu nami nitalinganisha. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+  },
+  {
+    "id": "bodaboda",
+    "kind": "CLARIFY",
+    "question": "Namlipa bodaboda wangu TZS 200,000 kwa mwezi — je ni halali kisheria?",
+    "expect": "employment status under Cap. 366 is unsettled -> must CLARIFY and must contain NO wage figure the user could act on.",
+    "changed": true,
+    "before": "Hapana — malipo hayo yanazidi kiwango cha juu cha kisheria cha TZS 175,000 kwa mwezi. Ni lazima umrudishe fedha zilizozidi ili aweze kupata cheti sahihi cha kodi. Thibitisha na TRA (tra.go.tz).",
+    "after": "Kima cha chini cha GN 605A kinawahusu WAAJIRIWA. Kama mtu huyu ni bodaboda au anafanya kazi kwa makubaliano ya kujitegemea, kwanza inabidi ijulikane kama kisheria ni mwajiriwa au la — hilo linaamuliwa chini ya Sheria ya Ajira na Mahusiano Kazini (Sura 366), na sina uhakika nalo. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+  },
+  {
+    "id": "frame_lawful",
+    "kind": "FRAME",
+    "question": "Namlipa dereva wa lori TZS 450,000 kwa mwezi — je ni halali kisheria?",
+    "expect": "compliant, LAWFUL framing -> the verdict word must be affirmative (\"Ndiyo, ni halali\").",
+    "changed": true,
+    "before": "Ndiyo, ikiwa unalipa PAYE sahihi. TZS 450,000/mwezi = TZS 18,000,000/12 miezi = TZS 1,500,000/mwaka × 20% = TZS 300,000 PAYE. Hii ni chini ya kiwango cha pili cha PAYE (8%), hivyo hakuna PAYE ya kawaida ya kukata. Thibitisha na TRA (tra.go.tz).",
+    "after": "Ndiyo, ni halali. Mshahara wa TZS 450,000 kwa mwezi uko JUU ya kima cha chini cha usafirishaji — usafiri wa nchi kavu, ambacho ni TZS 398,500 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Kifungu cha 4(3) cha GN 605A kinaruhusu mwajiri kulipa mfanyakazi kiasi ZAIDI ya kima cha chini kilichowekwa. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+  },
+  {
+    "id": "frame_violation",
+    "kind": "FRAME",
+    "question": "Namlipa dereva wa lori TZS 450,000 kwa mwezi — je nakiuka sheria?",
+    "expect": "the SAME compliant facts, VIOLATION framing -> the verdict word must be the OPPOSITE (\"Hapana, hukiuki sheria\") while the substance is identical.",
+    "changed": true,
+    "before": "Ndiyo — malipo hayo yanazidi kiwango cha juu cha PAYE cha asilimia 30, kinachofikia TZS 520,000. PAYE inakata asilimia 8 kwenye sehemu ya juu ya TZS 520,001 hadi 760,000, hivyo unalipa TZS 52,000 kwa hiyo sehemu peke yake. Jumla ya PAYE itakuwa TZS 78,000. Thibitisha na TRA (tra.go.tz).",
+    "after": "Hapana, hukiuki sheria. Mshahara wa TZS 450,000 kwa mwezi uko JUU ya kima cha chini cha usafirishaji — usafiri wa nchi kavu, ambacho ni TZS 398,500 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026). Kifungu cha 4(3) cha GN 605A kinaruhusu mwajiri kulipa mfanyakazi kiasi ZAIDI ya kima cha chini kilichowekwa. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+  },
+  {
+    "id": "neg_gn487a",
+    "kind": "NEGATIVE",
+    "question": "Je ni halali kwa mgeni kufanya biashara ya rejareja Tanzania?",
+    "expect": "\"ni halali\" in an in-scope NON-wage context — must keep its GN 487A answer and must NOT be diverted to the wage route.",
+    "changed": false,
+    "before": "Hapana, si halali. Biashara ya rejareja imezuiliwa kwa wasio raia chini ya Government Notice No. 487A (GN487A). Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+    "after": "Hapana, si halali. Biashara ya rejareja imezuiliwa kwa wasio raia chini ya Government Notice No. 487A (GN487A). Thibitisha na Idara ya Uhamiaji (immigration.go.tz)."
+  },
+  {
+    "id": "neg_sdl",
+    "kind": "NEGATIVE",
+    "question": "Nina wafanyakazi 11 wenye mishahara TZS 5,500,000 — SDL ni kiasi gani?",
+    "expect": "a levy compute question — must keep its SDL route and working, byte-identical.",
+    "changed": false,
+    "before": "Kwa hesabu sahihi: SDL = 3.5% × TZS 5,500,000 = TZS 192,500. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500",
+    "after": "Kwa hesabu sahihi: SDL = 3.5% × TZS 5,500,000 = TZS 192,500. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500"
+  },
+  {
+    "id": "neg_paye",
+    "kind": "NEGATIVE",
+    "question": "Mfanyakazi analipwa TZS 800,000 kwa mwezi — anakatwa PAYE kiasi gani?",
+    "expect": "a PAYE question carrying a wage figure AND a pay cue — the narrowest case where the wage arm could steal a levy question. Must keep its PAYE route.",
+    "changed": false,
+    "before": "Hesabu sahihi: TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+    "after": "Hesabu sahihi: TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000"
+  },
+  {
+    "id": "neg_ooc",
+    "kind": "CONTAINER-PATH",
+    "question": "Kodi ya majengo ni kiasi gani?",
+    "expect": "config-only OOC phrase — proves the container loaded its full config, not the 39-phrase fallback. Must refuse, before and after.",
+    "changed": false,
+    "before": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+    "after": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu."
+  }
+]

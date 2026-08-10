@@ -416,3 +416,30 @@ def test_never_guess_copy_names_what_is_missing_and_states_no_rate():
                  clarification.MIN_WAGE_PERIOD_UNCLEAR,
                  clarification.MIN_WAGE_STATUS_UNCLEAR):
         assert copy.strip() and copy.strip()[-1] in ".?"
+
+
+def test_no_clarification_reads_as_a_verdict():
+    """A clarification must be scored as NEITHER lawful nor unlawful, not merely be one.
+
+    Found live: `sector_rates_statement` refused correctly but did it with the words "siwezi
+    kusema kama TZS 250,000 ... NI HALALI bila kujua aina ya kazi hasa". The refusal is plain
+    to a reader and invisible to a yes/no scorer reading the polarity of the first paragraph,
+    which sees the affirmative cue and can credit a verdict that was never given.
+
+    `wage_question_frame` IS that polarity reader, so running it over our own output is the
+    scorer's own view of it. 'unknown' is the assertion: no lawful cue, no violation cue.
+    Every sector is checked, not one — the copy interpolates sub-sector labels, and a future
+    label containing 'ni sawa' would reintroduce this on one sector only.
+    """
+    for copy in (clarification.MIN_WAGE_NO_SECTOR, clarification.MIN_WAGE_NO_AMOUNT,
+                 clarification.MIN_WAGE_PERIOD_UNCLEAR,
+                 clarification.MIN_WAGE_STATUS_UNCLEAR):
+        assert routing.wage_question_frame(copy) == "unknown", copy[:60]
+    for sector_no in ws.BY_SECTOR:
+        text = rules_engine.sector_rates_statement(sector_no, 250_000).working
+        assert routing.wage_question_frame(text) == "unknown", sector_no
+
+    # And the verdict path must still read as a verdict — otherwise this test would pass on
+    # a build that had stopped stating verdicts at all.
+    assert routing.wage_question_frame(
+        rules_engine.compare_to_floor(200_000, 1, 'a', frame="lawful").working) == "lawful"

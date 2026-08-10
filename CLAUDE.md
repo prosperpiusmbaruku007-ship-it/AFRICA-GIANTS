@@ -519,6 +519,18 @@ correctly, proving config loading was fine and the container was simply stale.
    `python -m modal deploy chike-inference/modal_app.py` — **or** wait past the 300s
    `scaledown_window` with no traffic (test requests reset the idle timer, so "wait" means
    actually wait).
+
+   **ALWAYS set `PYTHONIOENCODING=utf-8` (alongside `PYTHONUTF8=1`) on the deploy command,
+   and know that step 1 opens a window where production is DEAD.** `app stop` succeeds
+   instantly; the deploy that is supposed to replace it can fail. On 2026-08-10 it did:
+   `modal deploy` aborted with `'charmap' codec can't encode character '✓'` — the CLI's
+   own `✓` glyph, unprintable on a cp1252 Windows console — leaving BOTH app records
+   `stopped` and the endpoint down for ~2 minutes until the redeploy with the env var set.
+   No wrong answers were served; it was unavailable, not incorrect. **The same encoding fault
+   truncated a live canary run mid-pass on the same day, losing the artifact — twice in one
+   session.** Any script that prints model replies must call
+   `sys.stdout.reconfigure(encoding='utf-8', errors='replace')`: a console encoding must
+   never be able to destroy measured data or abort a deploy.
 2. Run a **live check that exercises the specific change** — a request whose behaviour is
    different before and after. A health check, a sanity question, or the deploy log prove
    nothing about the change.

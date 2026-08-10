@@ -114,7 +114,13 @@ def sector_rates_statement(sector_no, paid, period="monthly") -> ComputationResu
     OPPOSITE legal answer. Listing the Order's own rates for the sector is fully sourced, lets
     the employer resolve it themselves, and is what a competent advisor would ask back.
 
-    No verdict is stated, so there is no lead word and the frame is irrelevant here.
+    No verdict is stated, so there is no lead word and the frame is irrelevant here. The copy
+    also avoids every word in the lawful/violation cue vocabulary — the first wording said
+    "siwezi kusema kama TZS 250,000 ... NI HALALI bila kujua aina ya kazi", which states a
+    refusal but contains the affirmative cue, and a yes/no scorer reading the polarity of the
+    first paragraph can credit it as a lawful verdict. Rephrased rather than guarded: the
+    substring is gone, not handled. `test_no_clarification_reads_as_a_verdict` pins it by
+    asserting wage_question_frame() sees 'unknown' in every clarification this module emits.
     """
     rows = ws.BY_SECTOR[sector_no]
     per = PERIOD_SW[period]
@@ -128,8 +134,8 @@ def sector_rates_statement(sector_no, paid, period="monthly") -> ComputationResu
         amount=None,
         working=(
             f"Sekta ya {ws.SECTOR_NAMES_SW[sector_no]} ina viwango zaidi ya kimoja, kuanzia "
-            f"{tzs(lo)} hadi {tzs(hi)} {per} ({_GAZETTE}, {_IN_FORCE}), hivyo siwezi kusema "
-            f"kama {tzs(Decimal(paid))} {per} ni halali bila kujua aina ya kazi hasa. "
+            f"{tzs(lo)} hadi {tzs(hi)} {per} ({_GAZETTE}, {_IN_FORCE}), hivyo siwezi "
+            f"kulinganisha {tzs(Decimal(paid))} {per} bila kujua aina ya kazi hasa. "
             f"Viwango ni: {options}. Niambie ni kipi kinakuhusu nami nitalinganisha. {_CONFIRM}"
         ),
         inputs={"paid": Decimal(paid), "period": period, "sector": sector_no,

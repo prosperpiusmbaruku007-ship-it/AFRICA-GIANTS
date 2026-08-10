@@ -41,7 +41,7 @@ _LEVY_NAME = {"paye": "PAYE", "sdl": "SDL", "nssf": "NSSF", "wcf": "WCF"}
 # not answer, and it under-states for a hotel, bank or mine worker.
 MIN_WAGE_NO_SECTOR = (
     "Kima cha chini cha mshahara kinatofautiana kwa sekta — GN 605A ina viwango 50, kuanzia "
-    "TZS 80,000 hadi TZS 765,900 kwa mwezi. Ili nikwambie kama unacholipa ni halali, niambie "
+    "TZS 80,000 hadi TZS 765,900 kwa mwezi. Ili nikupe jibu sahihi la kisheria, niambie "
     "mfanyakazi wako anafanya kazi ya aina gani (mfano: shamba, hoteli, ulinzi, duka, ujenzi)."
 )
 
