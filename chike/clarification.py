@@ -72,6 +72,55 @@ MIN_WAGE_STATUS_UNCLEAR = (
     "sina uhakika nalo. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
 )
 
+# --- VAT registration / EFD thresholds --------------------------------------
+# Same contract as the minimum-wage copy: returned BY THE DETERMINISTIC PATH, never written
+# into a fact and handed to the model (C4). Each states the thresholds — which are locked,
+# public and useful — while declining the comparison the question actually asked, because the
+# input needed to make it honestly is missing.
+
+# A MONTHLY (or weekly) rate. Deliberately NOT annualised: "milioni 25 kila mwezi" implies
+# 300M/year only if the rate holds all twelve months, which is an assumption about a seasonal
+# trader's future, not an arithmetic step. Both limbs are stated so the trader can check
+# themselves against whichever period they actually know.
+VAT_PERIOD_IS_A_RATE = (
+    "Kizingiti cha VAT kinapimwa kwa jumla ya mauzo ya kipindi, si kwa mauzo ya mwezi mmoja: "
+    "usajili ni wa lazima IKIWA mauzo yamefikia TZS 200,000,000 katika miezi 12, AU TZS "
+    "100,000,000 katika miezi 6 mfululizo. Sitakisii mauzo ya mwaka kwa kuzidisha ya mwezi "
+    "mara 12 — mauzo hupanda na kushuka. Niambie jumla ya mauzo yako ya miezi 12 iliyopita, "
+    "au ya miezi 6 mfululizo, nami nitalinganisha na kizingiti."
+)
+
+# A figure with no period at all.
+VAT_NO_PERIOD = (
+    "Ili nilinganishe na kizingiti cha VAT, niambie kiasi ulichotaja ni cha kipindi gani — "
+    "je ni jumla ya miezi 12, au ya miezi 6 mfululizo? Vizingiti ni viwili tofauti: TZS "
+    "200,000,000 kwa miezi 12, na TZS 100,000,000 kwa miezi 6 mfululizo, hivyo jibu "
+    "linategemea kipindi."
+)
+
+# No turnover figure that can be identified.
+VAT_NO_TURNOVER = (
+    "Ili nikwambie kama usajili wa VAT ni wa lazima kwako, niambie jumla ya mauzo ya biashara "
+    "yako — ya miezi 12 iliyopita, au ya miezi 6 mfululizo. Vizingiti ni TZS 200,000,000 kwa "
+    "miezi 12 na TZS 100,000,000 kwa miezi 6 mfululizo."
+)
+
+# EFD, monthly/weekly rate or a non-annual period. The EFD test is on ANNUAL turnover only.
+EFD_PERIOD_IS_A_RATE = (
+    "Kizingiti cha EFD kinapimwa kwa mauzo ya MWAKA: biashara yenye mauzo ya mwaka ya TZS "
+    "11,000,000 au zaidi inatakiwa kutumia mashine ya EFD, na biashara yoyote iliyosajiliwa "
+    "VAT inatakiwa kuwa nayo bila kujali mauzo. Sitakisii mauzo ya mwaka kutokana na ya mwezi "
+    "mmoja. Niambie jumla ya mauzo yako ya mwaka, au kama umesajiliwa VAT, nami nitathibitisha."
+)
+
+# EFD with neither a turnover figure nor a registration statement.
+EFD_NO_BASIS = (
+    "Ili nikwambie kama unatakiwa kuwa na mashine ya EFD, niambie mojawapo: jumla ya mauzo "
+    "yako ya mwaka, au kama biashara yako imesajiliwa VAT. Biashara iliyosajiliwa VAT "
+    "inatakiwa kuwa na EFD bila kujali mauzo; isiyosajiliwa inatakiwa ikiwa mauzo ya mwaka ni "
+    "TZS 11,000,000 au zaidi."
+)
+
 # Pay quoted PER UNIT rather than per month: per day/week/hour/shift, per trip/piece/job, or
 # fortnightly. Used only to pick which question to ask back — it never unlocks a computation
 # (turning a rate into a monthly figure is pattern D, still deferred), so a false positive

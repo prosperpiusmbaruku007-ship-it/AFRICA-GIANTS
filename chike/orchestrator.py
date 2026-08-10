@@ -234,6 +234,13 @@ class Orchestrator:
         # produced the correct comparison).
         if sq.computation_type == "minimum_wage":
             return self._answer_minimum_wage(sq)
+        # VAT REGISTRATION / EFD — same treatment, same reason (SAFETY-3: the threshold was
+        # recited correctly in the sentence that misapplied it). No REQUIRED_FIELDS, no slot
+        # extractor, no model on the path.
+        if sq.computation_type == "vat_registration":
+            return self._answer_vat_registration(sq)
+        if sq.computation_type == "efd_requirement":
+            return self._answer_efd_requirement(sq)
         # 'ambiguous_multi' (or any type the rules engine doesn't define) is compute-intent
         # with an unresolved levy — never guess which one; clarify.
         required = REQUIRED_FIELDS.get(sq.computation_type)
@@ -446,6 +453,46 @@ class Orchestrator:
         sector_no, sub = (16, '') if outcome == rules_engine.wage_schedule.UNLISTED else value
         return self._deterministic_answer(sq, rules_engine.compare_to_floor(
             paid, sector_no, sub, period, routing.wage_question_frame(sq.text)))
+
+    def _answer_vat_registration(self, sq: SubQuestion) -> SubAnswer:
+        """VAT registration — deterministic, with the period as the never-guess axis.
+
+        Ordering: the figure first (nothing to test without it), then the period. The period
+        exit is the one that matters and the one it would be easiest to collapse: assuming
+        'annual' when the question does not say, or annualising a monthly rate, both produce a
+        confident verdict on a limb the trader never addressed. Neither is done."""
+        turnover = swn.sole_plausible_amount(sq.text)
+        if turnover is None:
+            return SubAnswer(sub_question=sq, text=clarification.VAT_NO_TURNOVER,
+                             needs_clarification=True)
+        period = routing.turnover_period(sq.text)
+        if period is None:
+            return SubAnswer(sub_question=sq, text=clarification.VAT_NO_PERIOD,
+                             needs_clarification=True)
+        if period == rules_engine.registration_thresholds.MONTHLY:
+            return SubAnswer(sub_question=sq, text=clarification.VAT_PERIOD_IS_A_RATE,
+                             needs_clarification=True)
+        return self._deterministic_answer(
+            sq, rules_engine.vat_registration(turnover, period))
+
+    def _answer_efd_requirement(self, sq: SubQuestion) -> SubAnswer:
+        """EFD — VAT registration is tested FIRST and short-circuits the turnover entirely.
+
+        A VAT-registered trader needs an EFD whatever their turnover, so asking them for a
+        figure would be asking for something that cannot change the answer — the same defect
+        sdl_zero_below_threshold was written to fix."""
+        if routing.states_vat_registered(sq.text):
+            return self._deterministic_answer(sq, rules_engine.efd_required(vat_registered=True))
+        turnover = swn.sole_plausible_amount(sq.text)
+        if turnover is None:
+            return SubAnswer(sub_question=sq, text=clarification.EFD_NO_BASIS,
+                             needs_clarification=True)
+        # The EFD test is on ANNUAL turnover alone, so every non-annual period — including a
+        # stated 6-month total, which is a real period but not this one — declines.
+        if routing.turnover_period(sq.text) != rules_engine.registration_thresholds.ANNUAL:
+            return SubAnswer(sub_question=sq, text=clarification.EFD_PERIOD_IS_A_RATE,
+                             needs_clarification=True)
+        return self._deterministic_answer(sq, rules_engine.efd_required(turnover))
 
     def _answer_applicability(self, sq: SubQuestion) -> SubAnswer:
         """Deterministic yes/no for an applicability-only levy question. SDL needs the

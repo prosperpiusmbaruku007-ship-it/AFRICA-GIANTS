@@ -200,6 +200,128 @@ def wage_period(text: str):
             return period
     return None
 
+# --- VAT registration / EFD thresholds, path 4 ------------------------------
+# Registration is not a levy: nothing is deducted and nothing is owed, so no levy path can
+# reach these. "Je nahitajika kusajili VAT?" asks for a VERDICT, which _has_money_ask rejects.
+#
+# The vocabulary is deliberately split into WHICH-OBLIGATION and IS-IT-REQUIRED, and BOTH are
+# required, because either alone is far too broad: 'mauzo' appears in 178 corpus rows, most of
+# them VAT rate/withholding/definition questions that must keep their fact route.
+_VAT_REG_CUES = ["kusajili vat", "kujisajili vat", "kusajilisha vat", "kujisajilisha vat",
+                 "usajili wa vat", "usajilishaji wa vat", "nasajiliwa vat", "kusajiliwa vat",
+                 "kizingiti cha vat", "kufika kiwango cha vat", "nimefika kiwango cha vat",
+                 "register for vat", "vat registration", "vat threshold"]
+_EFD_CUES = ["mashine ya risiti", "mashine ya efd", "risiti ya mashine", "kuwa na efd",
+             "nahitaji efd", "lazima niwe na efd", "efd machine", "kutumia efd"]
+
+# THE FIGURE MUST BE THE TRADER'S OWN TURNOVER. This is the `mshahara` narrowing from the
+# minimum-wage arm, in its second domain and forced by the same instrument: the first version
+# required only {obligation cue + magnitude} and the sweep diverted 18 corpus rows, of which
+# most were wrong — threshold LOOKUPS ("kizingiti cha mauzo cha miezi 12 ... ni TZS ngapi?"),
+# false-premise confirmations ("kizingiti ... ni TZS 200,000,000, sivyo?"), and projections.
+# Every one of them contains a threshold, a period and VAT registration vocabulary while
+# nobody is stating their own sales. A possessive/first-person turnover claim is what
+# separates "my sales are X" from "what is X".
+_OWN_TURNOVER_CUES = ["mauzo yangu", "mauzo ya biashara yangu", "mauzo ya duka langu",
+                      "mapato yangu", "mzunguko wangu", "biashara yangu ina mauzo",
+                      "biashara yangu imepata", "biashara yangu inaingiza", "duka langu lina",
+                      "duka langu linaingiza", "nimeuza", "ninauza", "nauza", "naingiza",
+                      "ninaingiza", "nimepata mauzo", "tumeuza", "mauzo yetu", "mapato yetu",
+                      "my turnover", "my sales"]
+
+# Asks that are NOT "am I over the threshold?", even when every other cue is present. Each is
+# a question the comparison cannot answer, and answering it with a comparison is worse than
+# leaving it on the fact path:
+#   * a LOOKUP of the threshold itself ("ni TZS ngapi")
+#   * a PROJECTION ("after how many months", "how much MORE do I need")
+#   * a false-premise CONFIRMATION ("sivyo?"), which has its own machinery and whose correct
+#     answer is a correction, not a verdict
+_THRESHOLD_ASK_VETO = re.compile(
+    r"ni\s+tzs\s+ngapi|ni\s+kiasi\s+gani\s*\?|\bsivyo\s*\?|baada\s+ya\s+miezi\s+mingapi|"
+    r"mauzo\s+ya\s+ziada|kiasi\s+gani\s+zaidi|ngapi\s+kabla|vizingiti\s+viwili|"
+    r"kizingiti\s+cha\s+mauzo\s+cha|asilimia\s+ngapi")
+
+# A figure quoted in a FOREIGN currency is not TZS turnover and must never be compared against
+# a TZS threshold (eval_278 states Kenyan shillings). The existing money-magnitude test counts
+# them as money, correctly; they are simply not this comparison's operand.
+_FOREIGN_CURRENCY = re.compile(
+    r"shilingi\s+za\s+kenya|kenyan?\s+shilling|\bkes\b|\bugx\b|shilingi\s+za\s+uganda|"
+    r"\busd\b|dola|dollar|\beur\b|euro|\bgbp\b|paundi|rand")
+
+# Already-registered statements. EFD is required on VAT registration alone, so this is not a
+# nicety: it short-circuits the turnover test entirely.
+_VAT_REGISTERED_CUES = ["nimeshasajili vat", "nimesajili vat", "nimejisajili vat",
+                        "nimesajiliwa vat", "nimeshajisajili vat", "niko kwenye vat",
+                        "nina namba ya vat", "vat registered", "nimesajiliwa kwa vat"]
+
+# Turnover PERIOD. This is the crux: the two VAT limbs are separate tests, and a figure only
+# addresses the limb its period names. 'monthly' is recognised precisely so it can be REFUSED
+# — a monthly rate is not a period total and is never annualised (see registration_thresholds).
+# Six-month patterns are tested BEFORE annual ones ('miezi 6 ya mwaka' contains neither, but
+# 'nusu mwaka' contains 'mwaka').
+_TURNOVER_PERIOD_CUES = [
+    ("six_month", r"miezi\s+(?:6|sita)|nusu\s+mwaka|miezi\s+sita|half\s*-?\s*year|"
+                  r"robo\s+mbili"),
+    # 'ya/za/la mwaka' — the GENITIVE — is how annual turnover is actually said ("mauzo yangu
+    # YA MWAKA ni milioni 15"), and the first version matched only 'kwa mwaka'. The routing
+    # sweep could not see the gap because those rows route here correctly; they then failed at
+    # the PERIOD step and came back as clarifications. Caught by the offline orchestrator run
+    # asserting each probe's `truth`, not by the router sweep — the same lesson as instrument
+    # #2: a check that compares one stage cannot see a defect in the next.
+    ("annual", r"kwa\s+mwaka|(?:ya|za|la)\s+mwaka|kila\s+mwaka|mwaka\s+huu|mwaka\s+mmoja|"
+               r"miezi\s+(?:12|kumi\s+na\s+miwili)|per\s+year|annual|kwa\s+mwaka\s+mzima"),
+    ("monthly", r"kwa\s+mwezi|kila\s+mwezi|mwezi\s+huu|per\s+month|monthly|kwa\s+wiki|"
+                r"kila\s+wiki"),
+]
+
+
+def turnover_period(text: str):
+    """'annual' | 'six_month' | 'monthly' | None — the period a turnover figure is stated for.
+
+    None is NOT annual, and 'monthly' is NOT a twelfth of annual. Both are refusals at the
+    caller: the first because no limb is addressed, the second because annualising a rate
+    assumes the trader's turnover is flat, which for a seasonal market trader is a guess about
+    the future dressed up as arithmetic."""
+    ql = text.lower()
+    for period, pattern in _TURNOVER_PERIOD_CUES:
+        if re.search(pattern, ql):
+            return period
+    return None
+
+
+def states_vat_registered(text: str) -> bool:
+    """True when the trader says they are ALREADY VAT-registered."""
+    ql = text.lower()
+    return any(c in ql for c in _VAT_REGISTERED_CUES)
+
+
+# --- the polarity reader, asserted over our OWN threshold copy ---------------
+# A two-part answer ("no on the limb I tested, BUT the other limb is open") must not scan as a
+# flat no. This is the minimum-wage `ni halali` lesson applied before shipping rather than
+# after: a refusal that reads as a verdict is the failure this copy is most prone to, and the
+# copy is the thing under test, not the question.
+_VERDICT_NEG = ["hapana", "hutakiwi", "hauhitajiki", "huhitaji", "sio lazima", "si lazima"]
+_VERDICT_POS = ["ndiyo", "unatakiwa", "ni lazima", "unahitajika", "inatakiwa"]
+# A condition left OPEN — the marker that makes a negative partial rather than final.
+_CONDITIONAL_MARKERS = ["ikiwa", "endapo", "kama yamezidi", "kama umesajiliwa",
+                        "halijamalizika", "lakini hili", "niambie mauzo", "niambie kama"]
+
+
+def reads_as_unconditional(text: str) -> bool:
+    """True when an answer states a verdict with NO condition left open beside it.
+
+    Used as a TEST INSTRUMENT over our own generated copy, not over user questions. The
+    assertion it supports: every below-threshold answer must read as CONDITIONAL (this
+    returns False), and every above-threshold answer must read as final (returns True). A
+    future edit that drops the conditional clause, or that softens an unconditional verdict
+    into mush, fails on one side or the other.
+    """
+    tl = text.lower()
+    has_verdict = any(c in tl for c in _VERDICT_NEG + _VERDICT_POS)
+    has_condition = any(c in tl for c in _CONDITIONAL_MARKERS)
+    return has_verdict and not has_condition
+
+
 # Swahili number words (so a compute question with no ASCII digit still counts as numeric).
 _SWA_NUM = (r"\b(moja|mbili|tatu|nne|tano|sita|saba|nane|tisa|kumi|ishirini|thelathini|"
             r"arobaini|hamsini|sitini|sabini|themanini|tisini|laki|elfu|milioni|mia|robo|"
@@ -370,6 +492,35 @@ def detect_intent(text: str) -> str:
             and (any(c in ql for c in _MIN_WAGE_CUES)
                  or wage_question_frame(text) != "unknown")):
         return "minimum_wage"
+
+    # Path 4 — VAT REGISTRATION / EFD THRESHOLDS. Also not a levy: registering costs nothing
+    # and deducts nothing, so no path above can reach these, and they have always fallen
+    # through to fact/RAG. SAFETY-3 is what that produced — the threshold recited correctly in
+    # the sentence where it was misapplied.
+    #
+    # PLACED LAST, after minimum_wage and immediately before the fact fallthrough, for the same
+    # constructional reason: every levy and wage route wins first, so the blast radius is
+    # bounded before the sweep runs. A question mixing a levy with a threshold
+    # ("...mauzo milioni 300, SDL yangu ni ngapi?") keeps its levy route on path 1.
+    #
+    # Evidence required: an OBLIGATION cue (VAT-registration or EFD vocabulary, both narrow
+    # multi-word forms) AND a money magnitude, OR an already-registered statement with an EFD
+    # cue (which needs no figure at all — registration alone settles it). 'mauzo' on its own is
+    # NOT evidence: it appears in 178 corpus rows, nearly all of them rate, withholding and
+    # definition questions that must keep their fact route.
+    # EFD WINS WHEN THE ASK IS EFD. th_09/th_10 ("mauzo yangu ni TZS 15,000,000 kwa mwaka na
+    # SINA USAJILI WA VAT — je nahitaji EFD?") mention VAT registration only to say they do not
+    # have it; the question is the EFD one. First-version precedence gave VAT the row and
+    # answered the wrong obligation. The EFD cues are all forms of "do I need the machine",
+    # so their presence identifies the ask regardless of what else is named.
+    vat_reg = any(c in ql for c in _VAT_REG_CUES)
+    efd = any(c in ql for c in _EFD_CUES)
+    if (vat_reg or efd) and not _THRESHOLD_ASK_VETO.search(ql) \
+            and not _FOREIGN_CURRENCY.search(ql):
+        own = any(c in ql for c in _OWN_TURNOVER_CUES)
+        # EFD needs no figure when registration alone settles it; VAT always needs one.
+        if (own and _has_money_magnitude(ql)) or (efd and states_vat_registered(text)):
+            return "efd_requirement" if efd else "vat_registration"
 
     return "none"
 

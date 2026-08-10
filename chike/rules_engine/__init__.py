@@ -19,7 +19,9 @@ from .rate_statement import levy_rate_statement, supports as rate_statement_supp
 from .paye import compute_paye, compute_paye_each
 from .wcf import compute_wcf, wcf_applies
 from .minimum_wage import compare_to_floor, sector_rates_statement
+from .registration_thresholds import vat_registration, efd_required
 from . import wage_schedule
+from . import registration_thresholds
 
 # 'minimum_wage' is deliberately ABSENT from SUPPORTED / _DISPATCH / _APPLICABILITY. It is not
 # a levy: nothing is owed, there are no REQUIRED_FIELDS for the slot extractor to fill, and its
@@ -86,4 +88,7 @@ __all__ = [
     "compare_to_floor",
     "sector_rates_statement",
     "wage_schedule",
+    "vat_registration",
+    "efd_required",
+    "registration_thresholds",
 ]
