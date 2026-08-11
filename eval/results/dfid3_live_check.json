@@ -1,0 +1,227 @@
+{
+  "verdict": "VERIFIED — the defect was present before and is gone after.",
+  "defect_before": true,
+  "defect_after": false,
+  "negative_controls_changed": 0,
+  "rows": [
+    {
+      "id": "dfid3_paye_steps",
+      "kind": "THE CHANGE",
+      "question": "Nionyeshe hatua kwa hatua PAYE kwa mshahara wa TZS 800,000 kwa mwezi.",
+      "expect": "the live reproduction of the guarded shape. If the defect appears, TZS 52,000 must be GONE and TZS 78,000 present. If the model does not reproduce it, INCONCLUSIVE.",
+      "changed": true,
+      "before": "Thibitisha na TRA.Mfano halisi wa PAYE kwa TZS 800,000/mwezi: Band 1 (0–270,000): TZS 0. Band 2 (270,001–520,000): 250,000 × 8% = TZS 20,000. Band 3 (520,001–760,000): 240,000 × 20% = TZS 48,000. Band 4 (760,001–800,000): 40,000 × 25% = TZS 10,000. Jumla kabla ya punguzo = TZS 78,000. Punguzo la kibinafsi = TZS 26,000. PAYE inayolipwa = TZS 78,000 − TZS 26,000 = TZS 52,000.\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+      "after": "PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+      "figures_before": [
+        "800000",
+        "0",
+        "20000",
+        "48000",
+        "10000",
+        "78000",
+        "26000",
+        "78000",
+        "26000",
+        "52000",
+        "68000",
+        "800000",
+        "760000",
+        "78000"
+      ],
+      "figures_after": [
+        "68000",
+        "800000",
+        "760000",
+        "78000"
+      ]
+    },
+    {
+      "id": "dfid3_paye_steps_para",
+      "kind": "CONTROL",
+      "question": "Nionyeshe hatua kwa hatua jinsi PAYE inavyohesabiwa kwa mshahara wa TZS 800,000 kwa mwezi.",
+      "expect": "a PARAPHRASE of the same ask that came back clean on the before run. It must stay clean and byte-identical: the guard blanks a body only when the defect is present, so a body that never contained it must be untouched.",
+      "changed": false,
+      "before": "Thibitisha na TRA.Hesabu ya PAYE kwa TZS 800,000/mwezi:\nBand 1 (0–270,000): TZS 0\nBand 2 (270,001–520,000): 250,000 × 8% = TZS 20,000\nBand 3 (520,001–760,000): 240,000 × 20% = TZS 48,000\nBand 4 (760,001–800,000): 40,000 × 25% = TZS 10,000\nPAYE ya jumla: TZS 78,000\n\nThibitisha na TRA kupitia tra.go.tz.\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+      "after": "Thibitisha na TRA.Hesabu ya PAYE kwa TZS 800,000/mwezi:\nBand 1 (0–270,000): TZS 0\nBand 2 (270,001–520,000): 250,000 × 8% = TZS 20,000\nBand 3 (520,001–760,000): 240,000 × 20% = TZS 48,000\nBand 4 (760,001–800,000): 40,000 × 25% = TZS 10,000\nPAYE ya jumla: TZS 78,000\n\nThibitisha na TRA kupitia tra.go.tz.\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+      "figures_before": [
+        "800000",
+        "0",
+        "20000",
+        "48000",
+        "10000",
+        "78000",
+        "68000",
+        "800000",
+        "760000",
+        "78000"
+      ],
+      "figures_after": [
+        "800000",
+        "0",
+        "20000",
+        "48000",
+        "10000",
+        "78000",
+        "68000",
+        "800000",
+        "760000",
+        "78000"
+      ]
+    },
+    {
+      "id": "dfid3_paye_relief",
+      "kind": "FACT",
+      "question": "Je kuna punguzo la kibinafsi la TZS 26,000 kwenye PAYE?",
+      "expect": "must DENY the phantom relief — eval_230 shows the model can. Not a compute row.",
+      "changed": false,
+      "before": "Hapana — hakuna punguzo la kibinafsi la TZS 26,000 katika mfumo wa PAYE wa Tanzania. Punguzo la kibinafsi ni TZS 270,000 tu (TZS 26,000 × 10). Hakuna kiwango cha kati cha TZS 26,000 hadi TZS 520,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 0 (mshahara TZS 26,000 uko ndani ya bendi ya 0%)",
+      "after": "Hapana — hakuna punguzo la kibinafsi la TZS 26,000 katika mfumo wa PAYE wa Tanzania. Punguzo la kibinafsi ni TZS 270,000 tu (TZS 26,000 × 10). Hakuna kiwango cha kati cha TZS 26,000 hadi TZS 520,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 0 (mshahara TZS 26,000 uko ndani ya bendi ya 0%)",
+      "figures_before": [
+        "26000",
+        "270000",
+        "26000",
+        "26000",
+        "520000",
+        "0",
+        "26000"
+      ],
+      "figures_after": [
+        "26000",
+        "270000",
+        "26000",
+        "26000",
+        "520000",
+        "0",
+        "26000"
+      ]
+    },
+    {
+      "id": "nc_netpay",
+      "kind": "NEGATIVE",
+      "question": "Mshahara wangu ni TZS 800,000, nitabaki na kiasi gani mkononi baada ya PAYE?",
+      "expect": "the eval_395 net-pay family — byte-identical. The rejected last-figure rule broke this.",
+      "changed": false,
+      "before": "Ili nihesabu PAYE, thibitisha kama kiasi ulichotaja ni mshahara ghafi (kabla ya makato) au wa mkononi (baada ya makato).",
+      "after": "Ili nihesabu PAYE, thibitisha kama kiasi ulichotaja ni mshahara ghafi (kabla ya makato) au wa mkononi (baada ya makato).",
+      "figures_before": [],
+      "figures_after": []
+    },
+    {
+      "id": "nc_paye_plain",
+      "kind": "NEGATIVE",
+      "question": "PAYE ya mshahara wa TZS 800,000 kwa mwezi ni kiasi gani?",
+      "expect": "plain PAYE — byte-identical, and must still carry TZS 78,000.",
+      "changed": false,
+      "before": "Kwa mshahara wa TZS 800,000 kwa mwezi, PAYE inakokotolewa kwa kanda kama ifuatavyo:\n\nKanda 1 (0%): TZS 270,000\nKanda 2 (8%): TZS 250,000 (yaani TZS 760,000)\nKanda 3 (20%): TZS 240,000 (yaani TZS 800,000)\n\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000\n\nThibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+      "after": "Kwa mshahara wa TZS 800,000 kwa mwezi, PAYE inakokotolewa kwa kanda kama ifuatavyo:\n\nKanda 1 (0%): TZS 270,000\nKanda 2 (8%): TZS 250,000 (yaani TZS 760,000)\nKanda 3 (20%): TZS 240,000 (yaani TZS 800,000)\n\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000\n\nThibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+      "figures_before": [
+        "800000",
+        "270000",
+        "250000",
+        "760000",
+        "240000",
+        "800000",
+        "68000",
+        "800000",
+        "760000",
+        "78000",
+        "68000",
+        "800000",
+        "760000",
+        "78000"
+      ],
+      "figures_after": [
+        "800000",
+        "270000",
+        "250000",
+        "760000",
+        "240000",
+        "800000",
+        "68000",
+        "800000",
+        "760000",
+        "78000",
+        "68000",
+        "800000",
+        "760000",
+        "78000"
+      ]
+    },
+    {
+      "id": "nc_nssf",
+      "kind": "NEGATIVE",
+      "question": "Mchango wa NSSF kwa mshahara wa TZS 800,000 ni kiasi gani?",
+      "expect": "the eval_092 employer/employee split family — byte-identical.",
+      "changed": false,
+      "before": "Kwa mshahara wa TZS 800,000, mwajiri analipa asilimia 10 (TZS 80,000). Mfanyakazi naye anachangia asilimia 10 (pia TZS 80,000). Jumla ya mchango ni TZS 160,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz).\nNSSF = 20% × TZS 800,000 = TZS 160,000 (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)",
+      "after": "Kwa mshahara wa TZS 800,000, mwajiri analipa asilimia 10 (TZS 80,000). Mfanyakazi naye anachangia asilimia 10 (pia TZS 80,000). Jumla ya mchango ni TZS 160,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz).\nNSSF = 20% × TZS 800,000 = TZS 160,000 (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)",
+      "figures_before": [
+        "800000",
+        "80000",
+        "80000",
+        "160000",
+        "800000",
+        "160000",
+        "80000",
+        "80000"
+      ],
+      "figures_after": [
+        "800000",
+        "80000",
+        "80000",
+        "160000",
+        "800000",
+        "160000",
+        "80000",
+        "80000"
+      ]
+    },
+    {
+      "id": "nc_sdl",
+      "kind": "NEGATIVE",
+      "question": "Kampuni yangu ina wafanyakazi 15 na mishahara jumla TZS 45,000,000 — SDL ni kiasi gani?",
+      "expect": "untouched compute route — byte-identical.",
+      "changed": false,
+      "before": "Kwa hesabu sahihi: SDL = 3.5% × TZS 45,000,000 = TZS 1,575,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 45,000,000 = TZS 1,575,000",
+      "after": "Kwa hesabu sahihi: SDL = 3.5% × TZS 45,000,000 = TZS 1,575,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 45,000,000 = TZS 1,575,000",
+      "figures_before": [
+        "45000000",
+        "1575000",
+        "45000000",
+        "1575000"
+      ],
+      "figures_after": [
+        "45000000",
+        "1575000",
+        "45000000",
+        "1575000"
+      ]
+    },
+    {
+      "id": "nc_minwage",
+      "kind": "NEGATIVE",
+      "question": "Kima cha chini cha mshahara kwa mfanyakazi wa duka ni kiasi gani?",
+      "expect": "untouched deterministic route — byte-identical.",
+      "changed": false,
+      "before": "Kima cha chini cha mshahara kwa sekta ya rejareja (retail) ni karibu TZS 175,000 kwa mwezi. Thibitisha na GN605A.",
+      "after": "Kima cha chini cha mshahara kwa sekta ya rejareja (retail) ni karibu TZS 175,000 kwa mwezi. Thibitisha na GN605A.",
+      "figures_before": [
+        "175000"
+      ],
+      "figures_after": [
+        "175000"
+      ]
+    },
+    {
+      "id": "nc_ooc",
+      "kind": "CONTAINER-PATH",
+      "question": "Kodi ya majengo ni kiasi gani?",
+      "expect": "config-only OOC phrase — must refuse, proving full config load.",
+      "changed": false,
+      "before": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "after": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "figures_before": [],
+      "figures_after": []
+    }
+  ]
+}

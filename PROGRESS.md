@@ -90,6 +90,56 @@ not lexical, which is why it is the one narrowing in this cycle that survived pr
 - artifacts: `scratch/lastfig_sweep.json`, `lastfig_variants.json`, `lastfig_r17.json`,
   `lastfig_v6.json`, `lastfig_v6r.json`
 
+### R16 live verification — the defect was present before and is gone after
+
+`app stop --yes` + redeploy with `PYTHONIOENCODING=utf-8`, then the verbatim question:
+
+| | |
+|---|---|
+| **before** | *"…Band 4 (760,001–800,000): 40,000 × 25% = TZS 10,000. Jumla kabla ya punguzo = TZS 78,000. **Punguzo la kibinafsi = TZS 26,000. PAYE inayolipwa = TZS 78,000 − TZS 26,000 = TZS 52,000.**"* + the deterministic working |
+| **after** | *"PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000"* — body blanked, the working carries the answer alone |
+
+**7 controls byte-identical**, including the net-pay row (eval_395 family), the NSSF split row
+(eval_092 family), and `nc_ooc` on a config-only OOC phrase — CONTAINER-PATH-1 clear.
+`eval/results/dfid3_live_check.json`.
+
+**Decoding is greedy (`do_sample: False`), which makes this live check exact — and makes the
+question wording load-bearing.** The first draft of the canary asked a PARAPHRASE of the defect
+question, got a clean answer, and would have been recorded as "inconclusive" while the defect was
+reproducible all along. The paraphrase is now kept as a control: it was clean before and is
+byte-identical after, which is the negative half — the guard blanks a body only when the defect
+is in it.
+
+> **A third shape of R16's data-destruction lesson, and this one is not about encoding.** The
+> BEFORE run was piped through PowerShell `Select-Object -First N` twice. Both times the pipe
+> closed and killed the process **before it wrote its artifact**, silently — exit 0, output on
+> screen, no file. Production had already moved to the new code by the time this surfaced, so the
+> BEFORE artifact had to be rebuilt from the committed 2026-08-10 capture of the same question
+> under the old code, with per-row `provenance` recorded (`scratch/dfid3_repair_before.py`).
+> **Never pipe a measurement run through a truncating filter.** Use `Out-String` or read the
+> artifact afterwards. R16's rule should be read as: no console operation may stand between a
+> measurement and its file.
+
+### A new live defect the canaries found, NOT fixed here
+
+The fact row asking directly about the phantom relief is **wrong in production right now**, in a
+new shape, and was wrong identically before and after this deploy:
+
+> *"Hapana — hakuna punguzo la kibinafsi la TZS 26,000… **Punguzo la kibinafsi ni TZS 270,000 tu
+> (TZS 26,000 × 10).**"* — appended working: *"PAYE = TZS 0 (mshahara TZS 26,000 uko ndani ya
+> bendi ya 0%)"*
+
+It denies the TZS 26,000 relief correctly and then **invents a TZS 270,000 personal relief**,
+justified by arithmetic that does not even hold (26,000 × 10 = 260,000). CLAUDE.md §11 is
+explicit that **no personal relief exists**: the TZS 270,000 is the 0% band, not a relief. And the
+engine has extracted **TZS 26,000 as a SALARY** and computed PAYE on it, so a question about a
+deduction was routed to the compute path.
+
+This is the **seventh** shape of the phantom relief and the first where the wrong figure is
+270,000 rather than 26,000 — which means the locked `wrong_patterns`, all anchored on 26/27,000,
+cannot see it at all. It reinforces the paraphrase-family conclusion: guards catch shapes, the
+model supplies them. Logged for the next adapter version.
+
 ---
 
 ## 🔁 CUE-BASED NARROWING RELOCATES THE FAILURE — it does not remove it (2026-08-11)
