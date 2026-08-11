@@ -14,8 +14,10 @@ explicitly still open** (entry below — read the framing before citing this as 
 **~~decomposition silently dropping a sub-question~~ — DONE**: the orphan-connector split and
 its measure-matched preamble carry shipped 2026-08-11 (entry below), and the finding that
 bounds it is that **decomposition is less load-bearing than it looked** — four multi-domain
-questions are answered in full without being split at all. Next: the runtime `wrong_patterns`
-candidate, then D-FIDELITY-1 attribution follow-ups.
+questions are answered in full without being split at all. **Next is not yet chosen — see
+🧮 THE BOARD immediately below**, which lists every logged and unfixed item including six that
+are live and wrong in production today, with a recommendation (C1 → A1 → A3) rather than a
+decision.
 **Two new items were opened by this cycle: D-FIDELITY-1 blanks two CORRECT bodies** (its
 own-levy rule never consults `_acceptable`, unlike its sibling rule) and the **conclusion-
 labelling live check**, which is priced below and deferred to the next adapter version.
@@ -41,11 +43,88 @@ second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gat
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
 
+## 🧮 THE BOARD — everything logged and unfixed, 2026-08-11 (supersedes the 2026-08-10 queue)
+
+**Taking stock before choosing, at founder request.** Ordered by severity class first, then by
+cost within a class. Tier A is the only tier where a user acts on a false statement.
+
+### TIER A — LIVE AND WRONG IN PRODUCTION TODAY
+
+| # | item | what a user gets | age | fix cost |
+|---|---|---|---|---|
+| **A1** | **SAFETY-2 / D-RESIDENCY-1** — `paye_resident` does not read *"hana residence permit ya kudumu"* | non-resident taxed on resident bands: **TZS 1,028,000 instead of TZS 600,000**, rendered as the *deterministic working* | tracked **2026-08-06**, never implemented | medium — cue extension + R17 sweep; the entry warns a false *non-resident* detection is symmetrically dangerous |
+| **A2** | **Phantom TZS 26,000 relief** — parametric, 7 shapes | PAYE understated by TZS 26,000, or a correct answer "corrected" to add it | 2026-08-10, 6 live sightings / 2,314 | **low for 6 of 7** (union pattern already measured, 0 FPs); the 7th is outside the mechanism |
+| **A3** | **Invented effective dates** (new today) | *"kima cha chini … kuanzia Julai 2026"* — GN 605A is **1 Jan 2026**; 3 fabricated dates across 3 domains | 2026-08-11 | unpriced — **no guard in this repo can see a date at all** |
+| **A4** | **Paraphrase family** of the intermediate-figure hole | a wrong final figure with no arithmetic written out, printed directly above the deterministic working | 2026-08-11, named open by D-FIDELITY-3 | high as a guard — priced and deferred to the adapter |
+| **A5** | **No unit normalisation** (th_08) | *"you cross TZS 100M in 5.5 months"* → concludes **below** the threshold | 2026-08-10, VAT/EFD Phase 3 | medium — an extraction problem, deliberately not folded into the threshold route |
+| **A6** | **Wrong-source answers** — `nc_jengo` | a business-licence question answered by citing **GN 605A** and referred to **immigration.go.tz** | 2026-08-11 | unpriced — retrieval/routing, 1 sighting |
+
+### TIER B — DEGRADES CORRECT ANSWERS (content lost, nothing false asserted)
+
+| # | item | effect | cost |
+|---|---|---|---|
+| **B1** | **D-FIDELITY-1 blanks two correct bodies** — its own-levy rule never consults `_acceptable` | correct explanations deleted; user sees the bare working | medium — changes verdicts corpus-wide, needs its own sweep |
+| **B2** | **Multi-figure extraction corruption** (new today) | the general case behind th_19/th_20: extraction selects among figures belonging to two asks. Fixed for `na je`; **the `?`-split path still drops the preamble** (the documented Q6 limitation) — same class, still open | medium |
+| **B3** | **Swahili-numeral slot extraction** (*"kumi na wawili"*, *"laki tatu na nusu"*) | compute path clarifies instead of answering; the engine's correct figure never reaches the user | medium |
+
+### TIER C — MECHANISM AND MEASUREMENT DEBT
+
+- **C1 Runtime `wrong_patterns` check** — the vehicle for A2. Measured: 6/6 on known shapes, 0 FPs over 2,314. **Ship it with its ceiling in its own docstring** (see the bound added to that entry).
+- **C2 Judge overlay is mandatory** — the regex gate positively credits eval_318 and eval_320, the two worst defects of that cycle.
+- **C3 D-FIDELITY-1 attribution follow-ups.**
+- **C4 Reachability / R15** — the relief denial ranks #64 for the question that needs it; GN 605A had the same shape. Swahili-first, subject-keyed rewrites, batched into one RAG regen.
+- **C5 Divergence risk** — decompose/prompting/cleanup duplicated across `modal_app.py` + `eval.py`; plus the standing CONTAINER-PATH-1 audit of repo-relative reads inside the image.
+- **C6 Scored-number decisions** — eval_191 mislabel and the bank-loan OOC category. Both move the gate denominator or the product's scope; **decide outside a measurement cycle**, together.
+
+### TIER D — THE NEXT ADAPTER VERSION
+
+**D1** — the only real closure for A2 and A4. The evidence is assembled: the relief is parametric
+(an on-point rank-1 fact loses to it), the seventh shape shows the **concept** survives the
+number being denied, and cue-based narrowing relocates rather than removes. Guards catch shapes;
+the model supplies them.
+
+### What I would take next, and why
+
+**C1 → A1 → A3.** C1 first because it is the only item where the measurement is already done and
+the cost is an afternoon — it removes six live wrong-answer shapes at zero measured false
+positives, and A2 is otherwise unaddressed until D1. Then A1, because it is the oldest live wrong
+*number*, it is engine-authoritative (the worst presentation this system can produce), and its
+fix shape is known and bounded. Then A3, starting with measurement rather than a guard: how often
+does production state a compliance date at all, and how many are wrong? A6 and B2 are single
+sightings and should not outrank measured classes. **This is a recommendation, not a decision.**
+
+---
+
 ## ✂️ DECOMPOSITION DROPPED HALF OF A QUESTION BECAUSE ITS TWO CONNECTOR LISTS DISAGREED (2026-08-11)
 
 **Built, committed, DEPLOYED, live-verified.** Two parts: the `na je` split, and the
 measure-matched preamble carry — which is the load-bearing half, because splitting alone trades
 one silent failure for another.
+
+### 🔴 READ THIS FIRST — it is a WRONG-ANSWER defect that had been classified as a missing-answer one
+
+The item was opened as *"decomposition silently drops a sub-question"*. That is true and it is
+the smaller half. **An unsplit multi-part message also corrupts the half it does answer**,
+because slot extraction runs over the whole message and selects among figures belonging to two
+different questions:
+
+| | asked | production served |
+|---|---|---|
+| `th_19` | payroll **TZS 6,000,000**, 12 staff | *"SDL = 3.5% × **TZS 500,000** = TZS 17,500"* — a figure that is in neither ask |
+| `th_20` | payroll **TZS 9,000,000**, 15 staff | *"NSSF = 20% × **TZS 750,000** = TZS 150,000"* |
+
+Correct answers are TZS 210,000 and TZS 1,800,000; production was out by a factor of twelve on
+both, **stated with the deterministic working underneath it and no hedge**. A dropped ask is a
+user who notices they got half an answer. A wrong figure is a user who acts on it — this is the
+same severity class as th_16 and the phantom relief, not a completeness nit.
+
+> **The reclassification came from the LIVE CHECK, not the sweep.** The offline sweep measured
+> exactly what it was built to measure — how many parts a message decomposes into — and by that
+> instrument th_19 was one row of thirty-one, indistinguishable from the twenty-four false
+> positives. Nothing in the parts count says the answered half is wrong; the corruption is two
+> stages downstream, in extraction. It became visible only when the replies were read.
+> MEASUREMENT-GAP-1 in a third domain: **the structural instrument asserts the checkpoint before
+> the stage that actually harms the user.** Cost of finding it: nine live questions.
 
 ### The defect: one list decides, a different list acts
 
@@ -183,9 +262,63 @@ instead of the flags, and re-derived from the stored artifacts without re-asking
   is answered by citing **GN 605A** (the minimum-wage notice) about building ownership and
   referred to **immigration.go.tz**. Both wrong, byte-identical before and after, nothing to do
   with decomposition. A retrieval/routing item.
-- the BEFORE minimum-wage reply dated the agricultural floor *"kuanzia **Julai 2026**"*. GN 605A
-  is effective **1 Jan 2026** (CLAUDE.md §11). The date vanished from the after reply, but it was
-  not this change that removed it and the fact is reachable from other wordings.
+- the BEFORE minimum-wage reply dated the agricultural floor *"kuanzia **Julai 2026**"* when
+  GN 605A is effective **1 Jan 2026**. **Promoted to its own entry** — INVENTED EFFECTIVE DATES,
+  above — because the scan found it is a class of three across three domains, and because no
+  guard in this repo can currently see a wrong date at all.
+
+## 📅 INVENTED EFFECTIVE DATES — live, unguarded, and dates are what users act on (2026-08-11)
+
+**Its own item, promoted out of the decomposition write-up.** Found by the `na je` canaries;
+not caused by that change and not fixed by it.
+
+Production, on 2026-08-11, answering a minimum-wage question:
+
+> *"Kima cha chini cha mshahara kwa sekta ya kilimo ni karibu TZS 175,000 **kuanzia Julai
+> 2026**."*
+
+**GN 605A is effective 1 January 2026** (CLAUDE.md §11, R5). The figure is right, the date is
+invented, and it is six months late — an employer reading this underpays lawfully-owed wages for
+two quarters and believes they are compliant. R5 exists because wage errors hit every employee of
+every business that asks.
+
+### It is a class, not a row
+
+Scanning every stored artifact for `Julai 2026` returns **three distinct fabricated dates**, in
+three different domains:
+
+| claim | truth |
+|---|---|
+| agricultural minimum wage *"kuanzia Julai 2026"* | GN 605A effective **1 Jan 2026** |
+| B2C e-payment VAT *"utekelezaji uliahirishwa hadi Julai 2026"* | 16% from **1 Sep 2025**, rules pending a CG notice — no such deferral exists |
+| *"Finance Act 2026 iliweka tarehe ya mwisho ya 31 Julai 2026"* | there is no such deadline; the judge overlay caught this one and said so |
+
+### The shape is the phantom relief's shape, in a different field
+
+**Asked about the date directly, the model is right** — it correctly rejects a planted *"GN 605A
+began July 2025"* premise, names the 13 Oct 2025 gazettement and the 1 Jan 2026 commencement, and
+distinguishes GN 487A's 28 Jul 2025. The fabrication happens where the date is **incidental** to
+an answer about something else, which is exactly where the relief defect lives: the fact is
+present and inert on the path that isn't about it.
+
+### Why nothing catches it
+
+Every fidelity guard shipped so far compares a **figure** in the body against the engine's
+computed amount. D-FIDELITY-1, -2 and -3 all take `ComputationResult.amount` as their anchor.
+**A date has no anchor at all** — there is no engine output to contradict, `locked_facts.json`
+holds the correct dates but nothing compares an answer to them, and the `wrong_patterns`
+machinery is build-time-only and figure-shaped. The whole verification apparatus of this project
+is currently blind to a wrong date.
+
+### What it would take
+
+A date-fidelity check is **more tractable than the figure guards**, not less: the set of
+compliance dates is small, closed, and already in `locked_facts.json`; a date appearing in an
+answer is either one of them or it is not. The hard part is attribution — which fact a date is
+being claimed for — and that is the same attribution problem D-FIDELITY-2 solved for sibling
+levies with cue proximity. Unpriced; see the board.
+
+---
 
 ## 🧩 D-FIDELITY-3 SHIPPED AS A DELIBERATELY PARTIAL GUARD — one family closed, one named open (2026-08-11)
 
@@ -435,6 +568,37 @@ A bare subtraction pattern closes it:
 pattern, not a training-pair pattern — a training pair legitimately quoting the wrong figure in
 order to deny it would trip it, which is harmless at build time and matters at runtime only if
 the check is applied to input as well. Artifact: `scratch/relief_26k_evidence.json`.
+
+### ⛔ THE BOUND ON THE MECHANISM — meet this BEFORE designing the check, not after
+
+6-of-6 is the ceiling on the shapes we have measured, not on the defect. **The seventh shape
+(2026-08-11, live) cannot be reached by any pattern list at all**, and the argument is
+structural rather than a matter of finding a better regex:
+
+> *"Hapana — hakuna punguzo la kibinafsi la TZS 26,000… **Punguzo la kibinafsi ni TZS 270,000
+> tu (TZS 26,000 × 10).**"*
+
+- **Keyed on the wrong figure (26/27,000) → blind.** Both occurrences of 26,000 here sit inside
+  a *correct denial*. A pattern that fires on them fires on the system working, and the union
+  above would score **0 of 1** on this answer.
+- **Keyed on the right figure (270,000) → over-broad.** TZS 270,000 is the Band 1 ceiling and a
+  legitimate number in the locked facts. A pattern on it fires on every correct answer that
+  explains the tax-free threshold, which is most correct PAYE answers.
+- **Keyed on the word `punguzo la kibinafsi` → also over-broad**, for the same reason: the
+  correct answer to "is there a personal relief?" must use the phrase in order to deny it.
+
+The defect is the **concept** — *PAYE has a personal relief* — held independently of any number
+attached to it. A pattern list can only ever see a number or a word, so the class where the
+model keeps the concept and refills the figure is outside what the mechanism can express. This
+is the same result as CUE-BASED NARROWING RELOCATES THE FAILURE, reached from the other end: the
+model supplies the shapes, and each new shape is another reactive catch.
+
+**Consequence for whoever wires this:** the runtime check is still worth building — it closes 6
+of 7 measured shapes at 0 false positives over 2,314 generations, which is a real reduction in
+live wrong answers. **Build it, and write its ceiling into its own docstring.** Do not let it be
+described as closing the phantom relief; the closing move is the next adapter version (see the
+phantom-relief entry), and this check is what holds the line until then. Same shipping discipline
+as D-FIDELITY-3: partial, measured, and honest about the family it leaves open.
 
 ---
 
