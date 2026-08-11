@@ -138,6 +138,91 @@ def body_contradicts_working(body: str, result: ComputationResult) -> bool:
     return amount not in results and bool(results)
 
 
+# --- D-FIDELITY-3: the levy reduced by a phantom deduction ------------------------------
+#
+# THIS GUARD IS DELIBERATELY PARTIAL. It closes ONE family and must never be described as
+# closing the intermediate-figure hole. Read the misses below before extending it.
+#
+# THE HOLE. `body_contradicts_working` clears a positive-amount body when the authoritative
+# figure appears ANYWHERE in its asserted results. That permissiveness is correct and was
+# chosen on evidence — it is what stops band bases and net-pay tails false-flagging
+# eval_092/191/360/395 — but it cannot tell "restates the correct figure and concludes with
+# it" from "passes THROUGH the correct figure on the way to a wrong one":
+#
+#     "…Jumla kabla ya punguzo = TZS 78,000. Punguzo la kibinafsi = TZS 26,000.
+#       PAYE inayolipwa = TZS 78,000 - TZS 26,000 = TZS 52,000."
+#
+# 78,000 is present, so the body passes — while its CONCLUSION is wrong and is rendered
+# directly above the deterministic working, which lends it the engine's authority.
+#
+# WHY THIS IS NOT A LAST-ASSERTED-FIGURE RULE. That was the obvious candidate and it was
+# measured and rejected (2026-08-11). Over 121 recovered bodies it newly flagged 9, of which
+# 4 were already caught by D-FIDELITY-2 and 3 were false positives — including eval_191 and
+# eval_395, TWO of the four rows the permissiveness above exists to protect. Four cue-based
+# narrowings were then built and probed: each converted exactly one over-broad failure into
+# exactly one escape, with the total pinned at 5 of 16 probes. See the PROGRESS entry
+# "cue-based narrowing relocates the failure".
+#
+# The reason no positional rule can work is that the defect and its commonest false positive
+# are STRUCTURALLY IDENTICAL:
+#
+#     DEFECT   "… = TZS  78,000 - TZS 26,000 = TZS  52,000"   (taken FROM the levy)
+#     NET PAY  "… = TZS 800,000 - TZS 78,000 = TZS 722,000"   (the levy taken FROM the salary)
+#
+# Both assert the authoritative figure and then operate on it. They differ only in the LABEL
+# the model puts on the result, which is model phrasing — so separating them needs a live
+# conclusion-labelling check, not an offline string rule.
+#
+# WHAT THIS RULE USES INSTEAD. One structural difference a string CAN see: which side of the
+# operator the authoritative amount is on. In the defect it is the minuend — the thing being
+# reduced. In net pay it is the subtrahend — the thing taken away. Combined with the fact that
+# the engine's `amount` IS the final payable figure, so a body deriving a SMALLER figure from
+# it has contradicted the engine by construction, while a LARGER derived figure is usually a
+# legitimate conversion (per-year, per-employer, plus-sibling).
+#
+# WHAT IT MISSES — named, because a partial guard whose misses are unstated will be mistaken
+# for a complete one. Measured on the 18-probe regression set
+# (eval/fidelity_gate/lastfig_conclusion_018.jsonl), 8 of which this rule does NOT catch:
+#
+#   * THE PARAPHRASE FAMILY — every wrong conclusion whose arithmetic is not WRITTEN OUT.
+#     "Jumla ya bendi zote = TZS 78,000. PAYE ya kulipwa: TZS 52,000" has no expression for
+#     this rule to read, and the same holds for the `sawa na`, `itakuwa` and add-instead-of-
+#     subtract punctuations (probes pos_02..pos_05). THIS FAMILY IS STILL OPEN.
+#   * A wrong conclusion behind a net-pay tail, an example frame, or a repeated figure
+#     (probes adv_01..adv_04) — the escapes the rejected narrowings would have opened, which
+#     this rule does not open but also does not close.
+#
+# What it costs: ZERO. 0 false positives over 121 recovered bodies and over all 9 negative
+# probes, including all four protected rows. It adds exactly one catch — the live TZS 52,000
+# PAYE answer — and that catch is unique to it.
+
+# `TZS A <op> … = TZS C` — A is the FIRST operand, C the asserted result. The middle is
+# bounded and may not cross a '=' or a newline, so one match cannot span two expressions and
+# the subtrahend of an earlier expression can never be read as the minuend of a later one.
+_FIRST_OPERAND_EXPR = re.compile(
+    r"TZS\s*([\d,]+)\s*[-−+×x*/]\s*[^=\n]{0,80}?=\s*TZS\s*([\d,]+)" + _DIGIT_BOUNDARY + _OPERAND,
+    re.IGNORECASE,
+)
+
+
+def body_reduces_authoritative_amount(body: str, result: ComputationResult) -> bool:
+    """True iff `body` derives a SMALLER, non-authoritative figure FROM the engine's amount.
+
+    Deliberately partial — see the block comment above for the family it closes, the family it
+    leaves open, and why the last-asserted-figure rule was rejected in its favour.
+    """
+    if not body or result.amount is None:
+        return False
+    amount = int(result.amount)
+    ok = _acceptable(result)
+    for m in _FIRST_OPERAND_EXPR.finditer(body):
+        first = int(m.group(1).replace(",", ""))
+        asserted = int(m.group(2).replace(",", ""))
+        if first == amount and asserted < amount and asserted not in ok:
+            return True
+    return False
+
+
 # --- D-FIDELITY-2: sibling levies -------------------------------------------------------
 
 # The four levies the rules engine computes. Matched case-insensitively as whole words so

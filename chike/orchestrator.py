@@ -600,13 +600,22 @@ class Orchestrator:
         e.g. an SDL amount below the 10-employee threshold, or progressive PAYE for a non-resident),
         the body is BLANKED so _render emits the deterministic working alone. This upholds the
         arithmetic-never-trusted-to-the-model invariant (ADR 0001): a body proven to contradict the
-        engine is discarded whole, not partially salvaged. raw_text keeps the pre-clean generation."""
+        engine is discarded whole, not partially salvaged. raw_text keeps the pre-clean generation.
+
+        D-FIDELITY-3 runs at the same call site because the blanking is identical and idempotent.
+        It closes ONE family D-FIDELITY-1 cannot see — a body that asserts the correct figure and
+        then DERIVES A SMALLER ONE FROM IT (the phantom TZS 26,000 relief: 78,000 - 26,000 =
+        52,000), which the presence-of-correct rule clears by design. It is deliberately partial:
+        the paraphrase family, where the wrong conclusion is stated without writing the arithmetic
+        out, REMAINS OPEN. See chike.fidelity for the misses, named."""
         if sub.needs_clarification:
             return sub
         # Preserve the pre-clean generation in raw_text before overwriting text,
         # so future clean_reply changes can be rescored offline (see SubAnswer docstring).
         cleaned = generation_cleanup.clean_reply(sub.text, self.stop_strings)
-        if sub.computation is not None and fidelity.body_contradicts_working(cleaned, sub.computation):
+        if sub.computation is not None and (
+                fidelity.body_contradicts_working(cleaned, sub.computation)
+                or fidelity.body_reduces_authoritative_amount(cleaned, sub.computation)):
             cleaned = ""
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text)
 

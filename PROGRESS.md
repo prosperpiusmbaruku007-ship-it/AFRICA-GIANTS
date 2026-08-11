@@ -1,18 +1,21 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-10
+Last updated: 2026-08-11
 
 **🚀 v16 IS LIVE IN PRODUCTION (2026-08-09, `ec9cbb3`).** The router + rules engine +
 orchestrator pipeline now serves every request. Cutover entry immediately below — deployed
 commit, the two gate results that authorised it, and the rollback procedure.
 
-**➡️ QUEUE (founder-ordered, 2026-08-10): ~~D-FIDELITY-1 widening~~ → ~~minimum wage~~ →
-~~VAT/EFD compute route~~ — **ALL THREE DONE, DEPLOYED, VERIFIED LIVE.** The founder-ordered
-queue is empty. Next by standing priority: the **intermediate-figure hole** (an answer whose
-FINAL figure is wrong passes because the right number appeared mid-working), then D-FIDELITY-1
-attribution follow-ups. **Two new candidates were opened by this cycle: decomposition silently
-dropping a sub-question** (twice now — `mw_15`'s `na pia`, `th_24`'s `na`) and the
-build-time-only `wrong_patterns` machinery.
+**➡️ QUEUE (founder-ordered, 2026-08-11): ~~D-FIDELITY-1 widening~~ → ~~minimum wage~~ →
+~~VAT/EFD compute route~~ → ~~intermediate-figure hole~~ — **ALL FOUR DONE.** The
+intermediate-figure hole was **investigated and only PARTLY closed, deliberately**: D-FIDELITY-3
+ships the deduction-from-the-levy family at measured zero cost, and **the paraphrase family is
+explicitly still open** (entry below — read the framing before citing this as closed). Next:
+**decomposition silently dropping a sub-question** (twice now — `mw_15`'s `na pia`, `th_24`'s
+`na`). Then the runtime `wrong_patterns` candidate, then D-FIDELITY-1 attribution follow-ups.
+**Two new items were opened by this cycle: D-FIDELITY-1 blanks two CORRECT bodies** (its
+own-levy rule never consults `_acceptable`, unlike its sibling rule) and the **conclusion-
+labelling live check**, which is priced below and deferred to the next adapter version.
 
 **The threshold-comparison class is now closed on all three members.** SDL headcount, minimum
 wage and VAT/EFD registration are each a deterministic route with no generation on the path.
@@ -34,6 +37,187 @@ reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline 
 second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
+
+## 🧩 D-FIDELITY-3 SHIPPED AS A DELIBERATELY PARTIAL GUARD — one family closed, one named open (2026-08-11)
+
+**Built, committed, DEPLOYED, live-verified.** Read the scope sentence before citing this entry.
+
+**D-FIDELITY-3 closes the deduction-from-the-levy family at measured zero cost — 0 false
+positives across 121 recovered bodies and all 9 negative probes, including all four
+deliberately-protected rows — and it MUST NEVER be described as closing the intermediate-figure
+hole. The paraphrase family remains OPEN: every wrong conclusion whose arithmetic is not written
+out — `"Jumla ya bendi zote = TZS 78,000. PAYE ya kulipwa: TZS 52,000"`, and the same defect
+punctuated with `sawa na`, `itakuwa`, or an addition instead of a subtraction — passes this
+guard untouched, as do wrong conclusions hidden behind a net-pay tail, an example frame, or a
+repeated figure.** Eight of the eighteen committed probes record exactly that, by name.
+
+### The rule, and why it is not the obvious one
+
+The defect and its commonest false positive are **structurally identical**:
+
+```
+DEFECT   "… = TZS  78,000 − TZS 26,000 = TZS  52,000"   (taken FROM the levy)
+NET PAY  "… = TZS 800,000 − TZS 78,000 = TZS 722,000"   (the levy taken FROM the salary)
+```
+
+Both assert the authoritative figure and then operate on it. They differ only in **the label the
+model puts on the result** — model phrasing, so no offline string rule can separate them. What a
+string *can* see is which side of the operator the amount is on: in the defect it is the
+**minuend**, the thing being reduced; in net pay the **subtrahend**, the thing taken away. Add
+that the engine's `amount` IS the final payable figure — so a body deriving a **smaller** figure
+from it has contradicted the engine by construction, while a larger one is usually a legitimate
+conversion (per-year, per-employer, plus-sibling) — and the rule is:
+
+> flag when the authoritative amount is the **first operand** of a written-out expression whose
+> asserted result is **smaller** than it and not in `_acceptable`.
+
+The two false positives the un-constrained version had (`TZS 78,000 × 12 = TZS 936,000`
+annualisation, `TZS 78,000 + TZS 80,000 = TZS 158,000` aggregation) are both **increases**; the
+smaller-than constraint removes both without costing the catch. That constraint is principled,
+not lexical, which is why it is the one narrowing in this cycle that survived probing.
+
+### Verification
+
+- **30 new tests**; full suite **777 passed**
+- 18 R17 probes committed as `eval/fidelity_gate/lastfig_conclusion_018.jsonl` +
+  `tests/test_fidelity_conclusion.py`, wired to fail when a future widening trips a negative
+  **or** when the open set changes size
+- corpus: 121 round-trip-verified recovered bodies, **1 newly flagged, 0 false positives,
+  0 protected rows broken**; the one catch is the live TZS 52,000 PAYE answer and is unique to
+  this rule
+- **no dual-file sync needed**: `chike-inference/modal_app.py` and the v16 gate harnesses both
+  import `chike.orchestrator` from the package, so the guard has exactly one definition
+- artifacts: `scratch/lastfig_sweep.json`, `lastfig_variants.json`, `lastfig_r17.json`,
+  `lastfig_v6.json`, `lastfig_v6r.json`
+
+---
+
+## 🔁 CUE-BASED NARROWING RELOCATES THE FAILURE — it does not remove it (2026-08-11)
+
+**A general finding about tuning guards, logged on its own because it will apply to the next one
+someone tries to tune.** Not specific to fidelity.
+
+The obvious fix for the intermediate-figure hole was a **last-asserted-figure** rule: the body's
+FINAL assertion must be authoritative, not merely present. It was measured and **rejected**.
+
+Over 121 recovered bodies it newly flagged 9 — of which **4 were already caught by
+D-FIDELITY-2**, so its unique yield was 5: **2 genuine defects and 3 false positives.** Two of
+those three were **eval_191 and eval_395 — half of the four rows whose protection is the entire
+reason `body_contradicts_working` is permissive.** A fix that breaks two of the four rows the
+thing it is fixing exists to protect is not a fix.
+
+So four cue-based narrowings were built and probed against 16 authored probes:
+
+| variant | probe failures | over-broad | escaped |
+|---|---|---|---|
+| V0 last figure not acceptable | **5** / 16 | 5 | 0 |
+| V1 + must be a *new* figure | **5** | 4 | 1 |
+| V2 + no net-pay cue in the tail | **5** | 2 | 3 |
+| V3 + no example cue in the tail | **5** | 1 | 4 |
+
+**The total never moves.** Each narrowing converted exactly one over-broad failure into exactly
+one escape — and the escapes were not hypothetical: an adversarial probe was authored for each
+cue, and each one works. `adv_02` hides a wrong `PAYE = TZS 52,000` behind a legitimate take-home
+line, and V2's net-pay exclusion clears the entire body.
+
+**The lesson, stated generally: when a rule's false positives and its true positives are the same
+shape, adding cues to exclude the false positives hands the defect the same exclusions as an
+escape hatch.** The failure count is conserved; only its visibility changes — and it moves from
+the visible half (a correct answer blanked, which someone notices) to the invisible half (a wrong
+answer passed, which nobody does). **That is a strictly worse trade than not narrowing at all.**
+The only rules worth shipping are ones separating the two on a *structural* difference, as
+D-FIDELITY-3 does; if none exists, the honest answer is a partial guard plus a named open family.
+
+Corollary to R17, and the third confirmation of its core claim: V3 was still over-broad on
+`neg_06`, a monthly→annual conversion tail **the stored corpus does not contain at all.** Only an
+authored probe could find it.
+
+---
+
+## 🏷️ THE PARAPHRASE FAMILY — priced, and deferred to the next adapter version (2026-08-11)
+
+**Open, not scheduled.** Recorded with its cost so the next person does not rediscover it.
+
+What closing it would take: a **conclusion-labelling check** — determining, for the final figure
+in a body, whether the model is claiming it as *the levy payable* or as something else
+(take-home, an annual total, a band component, an example). That is a judgement about phrasing,
+so per MEASUREMENT-GAP-1 it cannot be validated by an offline sweep; it needs a **live check in
+the loop** on every candidate wording, in both polarities, on the scale the th_16 wording
+attempts used (6 candidates × 12 canaries before one was rejected on evidence).
+
+**The recommendation is that this is the wrong shape of fix.** It would be the **fifth**
+render-side guard on the same underlying problem — a model that re-derives arithmetic it was
+handed — and each of the four so far catches one shape while the supply of shapes belongs to the
+model. The phantom TZS 26,000 relief entry documents the same conclusion from the other
+direction: an on-point, rank-1, in-context fact lost to the prior. **Fix it in the SFT set for
+the next adapter version, not with a fifth guard.**
+
+If it must be guarded before then, the cheapest honest option is not a cleverer rule but
+**suppressing the body entirely for step-by-step compute questions** — the minimum-wage and
+VAT/EFD routes already prove a deterministic path with no generation on it is shippable, and the
+compute path is where every one of these defects lives.
+
+---
+
+## 🧾 THE `wrong_patterns` LIST IS INCOMPLETE FOR OUTPUT-CHECKING — in a way it is not for training pairs (2026-08-11)
+
+**For whoever wires the runtime check.** The build-time-only `wrong_patterns` machinery was
+already logged as a candidate; this is the measurement it needs, so it is not shipped incomplete
+in the belief that it is complete.
+
+The 11 patterns in `paye_personal_relief` catch **4 of the 6** phantom-relief sightings across
+2,314 stored generations. They **miss eval_320 entirely**:
+
+> `PAYE = 8% × TZS 800,000 − TZS 26,000 = TZS 64,000`
+
+There is no `punguzo` or `relief` word anywhere near the number — the model just subtracts it.
+Every one of the 11 patterns is anchored on the *vocabulary* of the relief, which is present in a
+training pair asserting it and routinely absent from an answer applying it. **That is the
+asymmetry: a list authored to audit training text is not a list that can audit output.**
+
+A bare subtraction pattern closes it:
+
+```
+[-−]\s*TZS\s*2[67],?000
+```
+
+| | |
+|---|---|
+| caught by the 11 named patterns | 4 / 6 |
+| caught by the bare subtraction pattern | 3 / 6 |
+| **caught by the union** | **6 / 6** |
+| false positives, union, over all 2,314 stored generations | **0** |
+
+**Add the bare-subtraction form when the runtime check is wired.** Note it is a *runtime output*
+pattern, not a training-pair pattern — a training pair legitimately quoting the wrong figure in
+order to deny it would trip it, which is harmless at build time and matters at runtime only if
+the check is applied to input as well. Artifact: `scratch/relief_26k_evidence.json`.
+
+---
+
+## ⚠️ D-FIDELITY-1 BLANKS TWO CORRECT BODIES — its own-levy rule never consults `_acceptable` (2026-08-11)
+
+**New, found by the D-FIDELITY-3 probes, NOT fixed.** Logged as its own item because fixing it
+changes verdicts across the recovered-body corpus and needs its own sweep.
+
+`body_contradicts_working` (own levy) tests `amount not in results`. `body_contradicts_siblings`
+tests `results & _acceptable(result)`. **The own-levy rule never consults `_acceptable` at all**,
+so neither the figures the engine's own working states nor the employer/employee split sum clear
+it — even though `_acceptable`'s docstring exists precisely to say a faithful NSSF body may
+legitimately quote either share. Two authored negatives are blanked today:
+
+| probe | body | why it is correct |
+|---|---|---|
+| `neg_05` | *"NSSF: mfanyakazi anachangia TZS 80,000, mwajiri anachangia TZS 80,000. **Jumla ya mchango: TZS 160,000.**"* | 160,000 is the split sum the working itself spells out — in `_acceptable`, invisible to the own-levy rule |
+| `neg_07` | *"PAYE ni TZS 78,000. Kumbuka mshahara wa TZS 800,000 unazidi TZS 760,000, ndiyo maana **Band 4 inatumika: TZS 760,000.**"* | 760,000 is in the working; and bare `ni` is not an assert-connector, so the correct 78,000 is not even in the asserted set |
+
+This is a **false-positive class — correct answers deleted, not wrong ones served** — which is why
+it is logged rather than hot-fixed. `neg_07` also shows the deliberate `ni` rejection (D-FIDELITY-1,
+2026-08-10) has a cost that was not measured when it was made: a body stating its result with bare
+`ni` has an EMPTY asserted set, so any other figure it mentions becomes the whole basis of the
+comparison. Pinned by `test_dfidelity1_blanks_two_correct_bodies`, which fails if the class grows.
+
+---
 
 ## 💰 VAT/EFD THRESHOLDS ARE A DETERMINISTIC ROUTE — and the untested limb comes back as a derived condition (2026-08-10)
 
@@ -481,11 +665,26 @@ Over **2,265 distinct stored model generations**:
 | | n |
 |---|---|
 | answers that SUBTRACT or name it as a deduction — the defect | **6** |
-| answers that DENY it — the system working | **0** |
+| answers that DENY it — the system working | ~~0~~ **1** (corrected 2026-08-11) |
 | other incidental mentions of 26,000 | 3 |
 
 Six sightings across three artifacts, three different question shapes, and **one of them is
-today's live production answer**. Zero corrections, ever. `eval/results/phantom_relief_26k_prevalence.json`.
+today's live production answer**. `eval/results/phantom_relief_26k_prevalence.json`.
+
+> **CORRECTION (2026-08-11) — "zero corrections, ever" was wrong, and the true number makes the
+> argument STRONGER, not weaker.** The `CORRECTIVE` detector had no `si X wala Y` construction, so
+> it miscounted a real denial as an incidental mention — an instrument under-reading its own
+> subject, the same class this project has now caught five times. The denial is **eval_230**:
+>
+> Q: *"Punguzo la kodi ya kibinafsi (personal relief) la PAYE… ni TZS ngapi kwa mwezi?"*
+> A: *"**Hakuna** punguzo tofauti la 'personal relief' … **si TZS 26,000 wala TZS 27,000.**"*
+>
+> **The model has the fact. Asked directly, it states it correctly.** What it does not do is
+> APPLY it: all six assertive sightings are inside computations, and the single correction
+> appears only where the relief is the SUBJECT of the question. So the defect is not a missing
+> fact, and not purely a retrieval failure — it is a fact that is inert on the compute path.
+> That is a sharper claim than the original entry made, and a more specific thing to hunt in the
+> SFT set. Re-measured over 2,314 generations: `scratch/relief_26k_evidence.json`.
 
 Shapes it has taken, each needing a different guard to catch it:
 - `PAYE = 8% × TZS 800,000 − TZS 26,000 = TZS 64,000` — inside a cross-levy enumeration (eval_320)
@@ -572,6 +771,12 @@ The shape of a fix is a **last-asserted-figure** check: the body's FINAL asserti
 to be authoritative, not merely present somewhere. That is a real semantic change with its own
 false-positive surface (net-pay answers legitimately end on take-home, not on the levy), so it
 needs its own investigation and its own probe set, not a bolt-on here.
+
+> **RESOLVED 2026-08-11 — and the last-asserted-figure check was REJECTED.** The investigation
+> ran; the guessed false-positive surface was real and larger than guessed (it breaks eval_191
+> and eval_395, two of the four protected rows). See "cue-based narrowing relocates the failure"
+> and "D-FIDELITY-3 shipped as a deliberately partial guard" above. The live TZS 52,000 answer
+> below is now caught; the paraphrase family is not.
 
 Logged as its own item. Note it also gives the phantom TZS 26,000 relief a live reproduction,
 which the locked-facts `wrong_patterns` for PAYE should be catching and currently are not
