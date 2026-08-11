@@ -531,6 +531,17 @@ correctly, proving config loading was fine and the container was simply stale.
    session.** Any script that prints model replies must call
    `sys.stdout.reconfigure(encoding='utf-8', errors='replace')`: a console encoding must
    never be able to destroy measured data or abort a deploy.
+
+   **NO CONSOLE OPERATION MAY STAND BETWEEN A MEASUREMENT AND ITS FILE.** The encoding fault
+   above is one instance of a wider rule, and the wider rule was proven on 2026-08-11 by a
+   fault that has nothing to do with encoding: a BEFORE run piped through PowerShell
+   `Select-Object -First N` was killed by the closing pipe **before it wrote its artifact** —
+   twice, silently, exit 0, full output on screen, no file. Production had already moved to
+   the new code by the time it surfaced, so that BEFORE could never be re-measured; it had to
+   be reconstructed from an older committed capture with per-row `provenance`. Never pipe a
+   measurement run through `Select-Object`, `head`, `more`, `Select-String`, or any other
+   truncating/filtering consumer. Let it write its JSON, then read the file. If the console
+   output is too long, that is what the artifact is for.
 2. Run a **live check that exercises the specific change** — a request whose behaviour is
    different before and after. A health check, a sanity question, or the deploy log prove
    nothing about the change.

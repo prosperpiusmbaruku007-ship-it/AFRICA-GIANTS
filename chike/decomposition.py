@@ -13,6 +13,12 @@ DIVERGENCE-RISK FOLLOW-UP (same as chike/prompting.py and chike/generation_clean
 this exact block is duplicated identically in modal_app.py AND eval.py. Extracting all
 three to import this module is the right end state but a cross-deployment change (modal
 bakes chike-inference/; eval fetches from GitHub) — tracked as a follow-up.
+
+NO DUAL-FILE SYNC IS NEEDED FOR CHANGES MADE HERE. Since the v16 cutover, production runs
+this module through chike.orchestrator (modal_app.py imports Orchestrator; it carries no
+decompose copy of its own), so this file has exactly one definition on the live path.
+kaggle/eval.py fetches chike/decomposition_v15.py — the FROZEN v15 arm — which must not
+gain v16 capabilities; tests/test_pipeline_v15.py enumerates the intended divergences.
 """
 
 import re
@@ -27,6 +33,124 @@ MULTI_PART_SIGNALS = [
 
 # Strong, unambiguous split points (never split on a bare "pia").
 _SPLIT_PATTERN = r'(?:na pia|pia pia|vilevile|zaidi ya hayo|swali lingine)'
+
+# --- `na je`: the orphan connector -----------------------------------------------------------
+#
+# THE DEFECT THIS CLOSES. MULTI_PART_SIGNALS (which DECIDES a message is multi-part) has ten
+# entries; _SPLIT_PATTERN (which actually SPLITS one) has five. Six connectors therefore detect
+# and never split, and a message whose only connector is one of them is recognised as multi-part
+# and then returned WHOLE by the `len(parts) == 1` fallback below. Silently: nothing in any
+# artifact records that half a question went unanswered, and the regex scorer credits the half
+# that was answered. Live-confirmed on three of them (th_19 SDL answered/EFD dropped, th_20 NSSF
+# answered/VAT dropped, th_24 EFD answered/VAT dropped) — all three carrying `na je`.
+#
+# THE BOUND, worth knowing before anyone widens this further. Four other multi-domain corpus
+# questions (eval_319/320/323/327) are NOT split and are answered in FULL anyway, because the
+# rules engine enumerates the payroll levies (PAYE/SDL/NSSF/WCF) independently of decomposition.
+# The drop happens only when the two asks live in DIFFERENT routes — one compute, one
+# threshold/registration — where decomposition is the only mechanism that could have separated
+# them. Decomposition is less load-bearing than it looks; this is the part of it that is.
+#
+# ONLY `na je` IS PROMOTED. The other five orphans appear in zero corpus questions, and bare
+# `pia` is adverbial ("also/too", eval_180) — deliberately left detecting-but-not-splitting.
+#
+# THREE ADMISSION TESTS, one per authored false positive (eval/decomposition_gate/
+# na_je_preamble_019.jsonl). The corpus cannot show any of them: all four of its `na je`
+# questions want splitting.
+#   \b boundaries   "na jengo" / "na jenereta" CONTAIN the literal "na je"; _SPLIT_PATTERN is
+#                   applied with no boundaries, so a bare alternative would cut a single
+#                   question mid-word.
+#   fragment floor  applied as a VETO, not a filter: if any segment falls under the floor the
+#                   message stays whole. The existing paths drop the short segment and split the
+#                   rest, which loses a sub-question — the failure this change exists to fix.
+#   ask marker      every segment must ask something. "Nimesajili biashara BRELA mwezi uliopita"
+#                   is context, not a sub-question, and must not get its own retrieval and its
+#                   own paragraph in the answer.
+#   anaphora        a segment opening with a back-reference ("na je hiyo inategemea mauzo?")
+#                   is not a standalone ask; split out it retrieves on nothing.
+_NA_JE = r'\bna\s+je\b'
+_FRAGMENT_FLOOR = 8
+_ASK_MARKER = re.compile(
+    r'\?|\bje\b|\bngapi\b|\bkiasi gani\b|\bnini\b|\blini\b|\bvipi\b|\bgani\b'
+    r'|\bnahitaji\b|\bnasajili\b|\bnaweza\b|\bnilazimika\b|\bnatakiwa\b|\bnastahili\b',
+    re.IGNORECASE)
+_ANAPHORIC_OPENER = re.compile(r'^(hiyo|hilo|hicho|hii|huo|hizo|hao|hivyo|ndiyo)\b',
+                               re.IGNORECASE)
+
+# --- preamble carrying, MEASURE-MATCHED ------------------------------------------------------
+#
+# Splitting alone trades one silent failure for another: th_24 splits into "…mauzo TZS
+# 50,000,000…" and "nahitaji EFD?" — self-contained by length, stripped of the turnover figure
+# the EFD threshold is tested against. _split_enumeration already carries its preamble for this
+# reason; the connector path never has.
+#
+# The carry is matched on the MEASURE, not on the presence of a figure, because "has a figure"
+# admits two corruptions the corpus cannot show:
+#   pre_02  "Mshahara … TZS 800,000 — PAYE ni kiasi gani, na je kima cha chini … ni kiasi gani?"
+#           A salary is a figure too. Carrying it into a question that asks only what the
+#           agricultural floor IS would hand the DETERMINISTIC minimum-wage route a wage to
+#           adjudicate, manufacturing a halali / si halali verdict about a wage nobody asked
+#           about.
+#   pre_03  "Mauzo … TZS 50,000,000 — VAT ni asilimia ngapi, na je nahitaji kusajili NSSF?"
+#           A real turnover figure, a real applicability ask with no figure of its own — every
+#           precondition of a naive rule is met, and NSSF registration is triggered by employing
+#           someone, not by turnover.
+# So: the preamble must name turnover, must carry a figure, must name no domain of its own, and
+# is carried only into a segment that has no figure AND belongs to a turnover-threshold domain.
+# One measure is mapped today (turnover -> VAT/EFD). Adding a second is a data change that needs
+# its own probes in both directions — see R17 and the probe file.
+_PREAMBLE_DELIM = re.compile(r'\s*[—–:]\s+|\s+-\s+')
+_TURNOVER_CUE = re.compile(r'\b(mauzo|mapato|mzunguko|turnover)\b', re.IGNORECASE)
+_TURNOVER_THRESHOLD_DOMAIN = re.compile(r'\bVAT\b|\bEFD\b|risiti|kodi ya ongezeko',
+                                        re.IGNORECASE)
+_ANY_DOMAIN = re.compile(r'\b(VAT|EFD|PAYE|SDL|NSSF|WCF|OSHA|BRELA|TIN|GN)\b', re.IGNORECASE)
+_HAS_FIGURE = re.compile(r'\d')
+
+
+def _measure_preamble(message: str) -> str:
+    """The message's leading context clause when it carries a TURNOVER figure, else ''.
+
+    Requires a delimiter ("— ", "- ", ": ") so the preamble is a clause the writer marked off,
+    not a guess at where the context ends; requires a figure and a turnover cue; and refuses
+    any head that names a domain, which would import one obligation into another's sub-query.
+    """
+    m = _PREAMBLE_DELIM.search(message)
+    if not m:
+        return ''
+    head = message[:m.start()].strip()
+    if not head or not _HAS_FIGURE.search(head) or not _TURNOVER_CUE.search(head):
+        return ''
+    if _ANY_DOMAIN.search(head):
+        return ''
+    return head
+
+
+def _split_na_je(message: str) -> list:
+    """Sub-queries for a message joined by `na je`, else [] (not this shape, or vetoed).
+
+    Returns segments in order, with the turnover preamble carried into any segment that lacks
+    a figure and asks about a turnover-threshold obligation. See the block comment above for
+    why each veto exists and which probe holds it.
+    """
+    if not re.search(_NA_JE, message, re.IGNORECASE):
+        return []
+    segments = [s.strip(' ,;:—–-')
+                for s in re.split(_NA_JE, message, flags=re.IGNORECASE)]
+    if len(segments) < 2:
+        return []
+    if any(len(s) <= _FRAGMENT_FLOOR for s in segments):
+        return []                      # veto, never split-and-discard
+    if not all(_ASK_MARKER.search(s) for s in segments):
+        return []
+    if any(_ANAPHORIC_OPENER.match(s) for s in segments[1:]):
+        return []
+    preamble = _measure_preamble(message)
+    if not preamble:
+        return segments
+    return [f'{preamble} {s}'
+            if not _HAS_FIGURE.search(s) and _TURNOVER_THRESHOLD_DOMAIN.search(s)
+            else s
+            for s in segments]
 
 # Enumeration: a single clause listing several obligations to compute in one breath,
 # e.g. "Nihesabie PAYE, SDL, na NSSF zote tatu". Such a message has no '?' and no
@@ -145,6 +269,13 @@ def decompose_query(message: str) -> List[str]:
     if not parts and has_connector:
         segments = re.split(_SPLIT_PATTERN, message, flags=re.IGNORECASE)
         parts = [s.strip() for s in segments if len(s.strip()) > 8]
+
+    # `na je` — the orphan connector, with its own admission tests and preamble carry.
+    # Placed after the '?' and _SPLIT_PATTERN paths so neither shipped behaviour moves.
+    if not parts or len(parts) == 1:
+        na_je_parts = _split_na_je(message)
+        if na_je_parts:
+            parts = na_je_parts
 
     # Enumeration list ("Nihesabie A, B, na C") — use when the '?'/connector paths
     # above produced nothing usable (no '?', no connector).

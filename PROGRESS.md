@@ -10,9 +10,12 @@ commit, the two gate results that authorised it, and the rollback procedure.
 ~~VAT/EFD compute route~~ → ~~intermediate-figure hole~~ — **ALL FOUR DONE.** The
 intermediate-figure hole was **investigated and only PARTLY closed, deliberately**: D-FIDELITY-3
 ships the deduction-from-the-levy family at measured zero cost, and **the paraphrase family is
-explicitly still open** (entry below — read the framing before citing this as closed). Next:
-**decomposition silently dropping a sub-question** (twice now — `mw_15`'s `na pia`, `th_24`'s
-`na`). Then the runtime `wrong_patterns` candidate, then D-FIDELITY-1 attribution follow-ups.
+explicitly still open** (entry below — read the framing before citing this as closed).
+**~~decomposition silently dropping a sub-question~~ — DONE**: the orphan-connector split and
+its measure-matched preamble carry shipped 2026-08-11 (entry below), and the finding that
+bounds it is that **decomposition is less load-bearing than it looked** — four multi-domain
+questions are answered in full without being split at all. Next: the runtime `wrong_patterns`
+candidate, then D-FIDELITY-1 attribution follow-ups.
 **Two new items were opened by this cycle: D-FIDELITY-1 blanks two CORRECT bodies** (its
 own-levy rule never consults `_acceptable`, unlike its sibling rule) and the **conclusion-
 labelling live check**, which is priced below and deferred to the next adapter version.
@@ -37,6 +40,107 @@ reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline 
 second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
+
+## ✂️ DECOMPOSITION DROPPED HALF OF A QUESTION BECAUSE ITS TWO CONNECTOR LISTS DISAGREED (2026-08-11)
+
+**Built, committed, DEPLOYED, live-verified.** Two parts: the `na je` split, and the
+measure-matched preamble carry — which is the load-bearing half, because splitting alone trades
+one silent failure for another.
+
+### The defect: one list decides, a different list acts
+
+`MULTI_PART_SIGNALS` (which DECIDES a message is multi-part) has **ten** entries.
+`_SPLIT_PATTERN` (which actually SPLITS one) has **five**. Six connectors therefore detect and
+never split, and a message whose only connector is one of them is recognised as multi-part, sent
+down the connector path, matched by nothing, and returned **whole** by the `len(parts) == 1`
+fallback. It then gets one whole-message top-3 retrieval, which covers one domain, and the model
+answers one half.
+
+Nothing anywhere records that a question went unanswered. The regex scorer credits the half that
+was answered. This is the same invisibility class as D-FIDELITY-1's blanked bodies.
+
+Live, before the change — three questions, three half-answers:
+
+| id | asked | production answered | dropped |
+|---|---|---|---|
+| `th_19` | SDL amount **+** EFD applicability | *"SDL = 3.5% × TZS 500,000 = TZS 17,500"* | EFD, entirely |
+| `th_20` | NSSF amount **+** VAT registration | *"NSSF = 20% × TZS 750,000 = TZS 150,000…"* | VAT, entirely |
+| `th_24` | VAT registration **+** EFD | *"Ndiyo, unatakiwa kuwa na mashine ya EFD…"* | VAT, entirely |
+
+All three carry `na je`. `scratch/naje_live_before.json`.
+
+### The bound — decomposition is less load-bearing than it looked, and that is the useful finding
+
+The sweep flagged 31 multi-domain messages returned whole. **24 of the 31 are false positives of
+my own domain-pair heuristic** — *"risiti ya EFD kwa biashara iliyosajiliwa VAT"* names two
+domains and asks one question. Structure cannot settle it, so the 7 survivors were asked live,
+and **four of them (eval_319/320/323/327) answer BOTH asks despite never being split**: the rules
+engine enumerates the payroll levies (PAYE/SDL/NSSF/WCF) independently of decomposition.
+
+> **The drop happens only when the two asks are in DIFFERENT routes** — one compute, one
+> threshold/registration — because that is the only case where decomposition is the mechanism
+> that had to separate them. Same-family payroll asks are covered downstream whatever
+> decomposition does.
+
+That bounds the fix and it bounds any future one: widening the connector list buys nothing for
+the four rows, and the three it does buy are all cross-route. Worth knowing before anyone treats
+decomposition as the general fix for multi-part questions.
+
+### R17 first: 19 probes authored BEFORE the rule, in both directions
+
+Four corpus questions carry `na je` and **all four want splitting** — so the corpus cannot show a
+single false positive of a split rule, and cannot exercise the preamble rule's FP direction at
+all. R17 has now been right five times running; the probes are
+`eval/decomposition_gate/na_je_preamble_019.jsonl`, wired by `tests/test_decomposition_na_je.py`.
+Every element of the shipped rule exists because one of them demanded it:
+
+| probe | what it does to a naive rule |
+|---|---|
+| `naje_neg_01_jengo`, `naje_neg_02_jenereta` | **"na jengo" / "na jenereta" contain the literal "na je".** `_SPLIT_PATTERN` is applied with no word boundaries, so a bare alternative cuts a single question mid-word and hands the model *"ngo langu mwenyewe…"* |
+| `naje_neg_04_short_tail` | *"…na je VAT?"* — the tail is 4 chars. The shipped paths **filter** short segments: they split the rest and the fragment is gone. On this path the floor is a **veto** — under-length means no split at all, never split-and-discard |
+| `naje_neg_05_statement` | *"Nimesajili biashara BRELA mwezi uliopita na je nahitaji TIN?"* — the first half is context, not an ask. Splitting invents a sub-question and gives the user a BRELA paragraph they never asked for. Hence: every segment must carry an ask marker |
+| `naje_neg_06_anaphora` | *"…na je hiyo inategemea mauzo?"* — the second half refers BACK to the first. Split out it retrieves on nothing. A connector between two asks is not the same token as a connector inside one |
+| `naje_neg_03`, `naje_neg_07` | message-initial *"Na je,"* is a discourse particle; a bare *"Je"* opener is the commonest interrogative in the corpus |
+
+### The preamble carry — matched on the MEASURE, not on the presence of a figure
+
+Splitting th_24 yields *"nahitaji EFD?"* — self-contained by length, **stripped of the turnover
+figure the EFD threshold is tested against**. `_split_enumeration` has carried its preamble since
+v15 for exactly this reason; the connector path never has.
+
+The obvious rule — *if a part has no figure and the preamble does, carry it* — is wrong in two
+ways the corpus cannot show, and both authored probes fail it:
+
+- **`pre_02`** *"Mshahara … TZS 800,000 — PAYE ni kiasi gani, na je kima cha chini … kilimo ni
+  kiasi gani?"* A salary is a figure too. The minimum-wage route is **deterministic and
+  adjudicates figures it is handed** (shipped 2026-08-10), so carrying it would manufacture a
+  *halali / si halali* verdict about a wage nobody asked about.
+- **`pre_03`** *"Mauzo … TZS 50,000,000 — VAT ni asilimia ngapi, na je nahitaji kusajili NSSF?"*
+  A real turnover figure, a real applicability ask with no figure of its own — every
+  precondition of the naive rule is met, and NSSF registration is triggered by **employing
+  someone**, not by turnover.
+
+So the carry is conditioned on the measure: the preamble must name turnover, carry a figure, and
+name no domain of its own; the receiving segment must have no figure and belong to a
+turnover-threshold domain. **One measure is mapped today** (turnover → VAT/EFD) and the test
+pins it, so adding a second is a deliberate edit that needs probes in both directions.
+
+### Verification
+
+- **43 new tests** (19 probes × contract + content-conservation, plus 5 pins); full suite
+  **820 passed**
+- candidate swept over **689 corpus questions** against a frozen copy of the pre-change
+  decomposer: **4 rows change, 0 lose content, 0 unintended** — the 4 are th_19/th_20/th_24 and
+  eval_332 (a genuine 3-part GN 487A question answered today as one). `scratch/naje_sweep.json`
+- **9 of the 19 probes fail on the pre-change decomposer** — that is the measured gap
+- **no dual-file sync needed:** since the v16 cutover production runs this module through
+  `chike.orchestrator`; `modal_app.py` carries no decompose copy. `kaggle/eval.py` fetches the
+  **frozen v15 arm**, which must not gain v16 capabilities — `test_pipeline_v15` now enumerates
+  the two intended divergences (eval_322 ordinal, eval_332 `na je`) instead of asserting one, so
+  an unintended one still fails
+- the sweep's own content-conservation check first reported the **shipped** `na pia` split as
+  content loss, because it counted the consumed connector. Instrument fixed before the result was
+  read; noted because it is the same class as everything in the instrument-lie table
 
 ## 🧩 D-FIDELITY-3 SHIPPED AS A DELIBERATELY PARTIAL GUARD — one family closed, one named open (2026-08-11)
 
@@ -139,6 +243,50 @@ This is the **seventh** shape of the phantom relief and the first where the wron
 270,000 rather than 26,000 — which means the locked `wrong_patterns`, all anchored on 26/27,000,
 cannot see it at all. It reinforces the paraphrase-family conclusion: guards catch shapes, the
 model supplies them. Logged for the next adapter version.
+
+---
+
+## 🎣 A CLEAN ANSWER TO A REPHRASED QUESTION IS NOT EVIDENCE THE DEFECT IS GONE (2026-08-11)
+
+**Promoted out of the D-FIDELITY-3 write-up because it is a rule about live checks, not a
+detail of that guard.** It is a near-miss: caught before it produced a recorded number, unlike
+the six entries in the instrument-lie table below — but the failure mode is theirs exactly, and
+had it not been caught it would have been the cheapest one yet to believe.
+
+The first draft of the D-FIDELITY-3 canary asked a **paraphrase** of the question that produced
+the live TZS 52,000 defect:
+
+| | |
+|---|---|
+| the defect question (2026-08-10) | *"Nionyeshe hatua kwa hatua **PAYE** kwa mshahara wa TZS 800,000 kwa mwezi."* |
+| what the canary asked | *"Nionyeshe hatua kwa hatua **jinsi PAYE inavyohesabiwa** kwa mshahara wa TZS 800,000 kwa mwezi."* |
+
+The paraphrase came back **clean**. Under the harness's own logic that is `defect_before =
+False` → **INCONCLUSIVE** — "the model did not reproduce the guarded shape on this run" — a
+verdict that reads as bad luck and closes the item. The defect was reproducible the whole time;
+the verbatim question produces it every single run.
+
+**Why the wording is load-bearing, and why this is not obvious:** decoding is greedy
+(`do_sample: False`). Greedy decoding is normally cited as what makes a live check *exact* —
+same prompt, same bytes, no sampling noise to average out. The same property makes it
+**brittle in the input**: a different prompt is a different deterministic trajectory, with no
+reason at all to pass through the same failure. Sampling would at least have given the defect
+several chances to appear; greedy gives it exactly one, on exactly one prompt.
+
+> **Rule: a live check for a specific defect must ask the VERBATIM question that produced it,
+> copied from the artifact, not retyped and not improved.** The paraphrase is not worthless —
+> it is now kept as the negative control, clean before and byte-identical after, which is the
+> half proving the guard blanks only bodies that contain the defect. But it is the control, and
+> it cannot be the positive case.
+
+**The general shape, which is the instrument-lie shape:** the harness would have reported a
+true fact (*this run did not reproduce the defect*) that answers a **different question** from
+the one being asked (*is the defect still there*). Every row in the table below is that same
+substitution — an instrument reporting truthfully about a checkpoint next to the one that
+matters. Recorded there as **#7 (near-miss)**.
+
+Cost of the rule: one `grep` through the artifact that recorded the defect. That is all it took
+here — `dfid1_live_after.json` had the exact string.
 
 ---
 
@@ -743,6 +891,39 @@ Shapes it has taken, each needing a different guard to catch it:
 - and, worse, **volunteered as a correction**: *"kuna makosa … inakosea kutozingatia punguzo la
   kibinafsi la TZS 26,000"* — the model criticising a CORRECT answer for omitting the phantom
 
+### 🔴 THE SEVENTH SHAPE (2026-08-11) — the first that NO locked pattern can see, and the strongest single item for the next adapter
+
+Found by the D-FIDELITY-3 canaries, live in production, identical before and after that deploy:
+
+> Q: *"Je kuna punguzo la kibinafsi la TZS 26,000 kwenye PAYE?"*
+> A: *"Hapana — hakuna punguzo la kibinafsi la TZS 26,000… **Punguzo la kibinafsi ni TZS 270,000
+> tu (TZS 26,000 × 10).**"* — appended working: *"PAYE = TZS 0 (mshahara TZS 26,000 uko ndani ya
+> bendi ya 0%)"*
+
+Three separate failures in one answer, and the order of them matters:
+
+1. It **denies the TZS 26,000 relief correctly** — the eval_230 behaviour, reproduced live. The
+   fact is there.
+2. It then **invents a TZS 270,000 personal relief**, with arithmetic that does not even hold
+   (26,000 × 10 = 260,000, not 270,000). CLAUDE.md §11 is explicit that **no personal relief
+   exists at all**: TZS 270,000 is the 0% band ceiling, not a deduction. So the model has
+   correctly rejected the false figure and kept the false *concept*, then refilled it from the
+   nearest number in the neighbourhood.
+3. The engine extracted **TZS 26,000 as a SALARY** and computed PAYE on it — a question about a
+   deduction routed to the compute path, so the deterministic working endorses the answer.
+
+**Why this one outranks the other six.** All eleven `wrong_patterns` on `paye_personal_relief`
+are anchored on the *figure* 26/27,000 and its vocabulary. This answer contains 26,000 only
+inside a **correct denial**, and carries the defect on a figure — 270,000 — that appears in the
+locked facts as a **legitimate** number. Any pattern list keyed on the wrong figure is blind to
+it, and any list keyed on 270,000 would fire on every correct answer about Band 1. The runtime
+`wrong_patterns` check proposed below would score **0 of 1** here, which is worth knowing before
+anyone builds it expecting coverage.
+
+It is the cleanest evidence yet that the concept — *PAYE has a personal relief* — is in the
+weights independently of the number attached to it. A guard can only ever catch the number.
+**This is the item to hunt in the SFT set for the next adapter version.**
+
 ### The part that settles it: it overrides an on-point fact that was already in the prompt
 
 The obvious counter-hypothesis is that the correction never reaches the model. Half true, and
@@ -863,6 +1044,7 @@ pattern in how:**
 | 4 | `na_06` (this one) | green because backtracking renumbered the thing it was testing | a two-line print of the pattern's actual output |
 | 5 | probe `mw_15` (added 2026-08-10, minimum wage) | asserted the resolver's cross-sector conflict check, but was authored with `na pia` — a decomposition connector — so the clause was **split into two sub-questions before the resolver ever saw two sectors**. The check it existed to test was unreachable; it passed on a different code path | reading the decomposed sub-questions while debugging something else. A unit test of `resolve()` cannot see this: the resolver was always correct, the probe never got to it |
 | 6 | VAT orchestrator harness (2026-08-10) | reported 25-on-path / 0 failures for a build where **three rows silently clarified instead of answering** — it asserted route, model calls and polarity, i.e. **the checkpoint immediately before the stage that broke** | widening the harness to assert each probe's `truth` — the outcome the user gets. Same failure shape as MEASUREMENT-GAP-1, one stage further down the pipeline |
+| 7 | D-FIDELITY-3 BEFORE canary (2026-08-11) — **NEAR-MISS, caught before it produced a number** | asked a **paraphrase** of the question that produced the defect, got a clean answer, and would have reported `INCONCLUSIVE — the model did not reproduce the guarded shape` while the defect was reproducible on every run of the verbatim question. Greedy decoding is what makes a live check exact and what makes it brittle in the input: a different prompt is a different deterministic trajectory | reading the committed 2026-08-10 artifact for the exact question string instead of retyping it. Full entry above |
 
 **Not one was caught by itself.** Each was caught by a different instrument, a live run, or an
 ad-hoc check — never by the suite it belonged to. The corollary is not "write better probes",

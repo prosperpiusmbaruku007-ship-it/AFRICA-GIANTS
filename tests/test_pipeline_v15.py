@@ -29,6 +29,7 @@ against the production web_endpoint, run over HTTP before the arm is declared fa
 """
 import json
 import os
+import re
 import sys
 
 import pytest
@@ -94,18 +95,28 @@ def test_decompose_is_byte_identical_to_the_eval_py_inline_copy_too():
 
 # ── the v15 arm must NOT inherit v16 capabilities ────────────────────────────────
 
-def test_v15_decomposer_lacks_the_v16_ordinal_split_on_exactly_eval_322():
-    """chike.decomposition (v16) splits the 'mambo matatu: kwanza/pili/tatu' enumeration;
-    chike.decomposition_v15 must not. If the v15 arm imported the v16 module it would gain a
-    capability production does not have and flatter itself in the paired comparison."""
+def test_v15_decomposer_lacks_the_v16_only_splits_on_exactly_two_questions():
+    """chike.decomposition (v16) has two capabilities chike.decomposition_v15 must never gain:
+    the 'mambo matatu: kwanza/pili/tatu' ordinal split (eval_322, shipped 2026-07-24) and the
+    `na je` connector split (eval_332, shipped 2026-08-11). If the v15 arm imported the v16
+    module it would gain capabilities production's v15 path does not have and flatter itself in
+    the paired comparison.
+
+    The divergence set is enumerated, not counted loosely: an UNINTENDED divergence still fails
+    here. When a third v16-only capability ships, add its question to this list in the same
+    commit — do not relax the assertion to a bare inequality."""
     differing = [q for q in ALL_QUESTIONS
                  if decomposition.decompose_query(q) != decomposition_v15.decompose_query(q)]
-    assert len(differing) == 1, f"expected exactly eval_322 to differ, got {len(differing)}"
+    assert len(differing) == 2, f"expected exactly eval_322 + eval_332, got {len(differing)}"
 
-    only = differing[0]
-    assert "kwanza" in only.lower() and "pili" in only.lower()
-    assert len(decomposition.decompose_query(only)) == 3      # v16 splits it 3 ways
-    assert len(decomposition_v15.decompose_query(only)) == 1  # v15 keeps it whole
+    ordinal = [q for q in differing if "kwanza" in q.lower() and "pili" in q.lower()]
+    na_je = [q for q in differing if re.search(r"\bna\s+je\b", q, re.IGNORECASE)]
+    assert len(ordinal) == 1 and len(na_je) == 1
+
+    assert len(decomposition.decompose_query(ordinal[0])) == 3      # v16 splits 3 ways
+    assert len(decomposition_v15.decompose_query(ordinal[0])) == 1  # v15 keeps it whole
+    assert len(decomposition.decompose_query(na_je[0])) == 3        # two `na je` -> 3 asks
+    assert len(decomposition_v15.decompose_query(na_je[0])) == 1
 
 
 def test_v15_decomposer_has_no_ordinal_split_symbols_at_all():

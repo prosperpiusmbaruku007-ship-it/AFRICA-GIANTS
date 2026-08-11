@@ -4,7 +4,9 @@ THIS IS NOT chike/decomposition.py. Read this before touching either.
 
   chike/decomposition.py      = the v16 decomposer. Production's logic PLUS
                                 _split_ordinal_enumeration (the eval_322 'mambo matatu:
-                                kwanza… pili… tatu…' split, shipped 2026-07-24).
+                                kwanza… pili… tatu…' split, shipped 2026-07-24) PLUS
+                                _split_na_je (the orphan-connector split and its
+                                measure-matched preamble carry, shipped 2026-08-11).
   chike/decomposition_v15.py  = THIS module. Exactly what production
                                 (chike-inference/modal_app.py) and the live gate
                                 (kaggle/eval.py) run today: '?'-splitting, Swahili
