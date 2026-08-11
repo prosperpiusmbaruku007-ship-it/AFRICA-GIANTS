@@ -142,6 +142,51 @@ pins it, so adding a second is a deliberate edit that needs probes in both direc
   content loss, because it counted the consumed connector. Instrument fixed before the result was
   read; noted because it is the same class as everything in the instrument-lie table
 
+### ✅ R16 LIVE VERIFICATION — 3 of 3 half-answers fixed, 5 controls byte-identical
+
+`app stop --yes` + redeploy with `PYTHONIOENCODING=utf-8`, questions read from the corpus files
+rather than retyped (instrument-lie #7). `eval/results/naje_live_check.json`.
+
+| | before | after |
+|---|---|---|
+| `th_19` | *"SDL = 3.5% × **TZS 500,000** = TZS 17,500"* — EFD absent | *"SDL = 3.5% × **TZS 6,000,000** = TZS 210,000"* **+** *"Ndiyo, unatakiwa kuwa na EFD kwa mauzo ya TZS 11 milioni au zaidi"* |
+| `th_20` | *"NSSF = 20% × **TZS 750,000** = TZS 150,000"* — VAT absent | *"NSSF = 20% × **TZS 9,000,000** = TZS 1,800,000"* **+** *"…umepita kizingiti cha TZS 200,000,000 tayari, hivyo lazima usajili VAT"* |
+| `th_24` | EFD answered — VAT absent | EFD answered **against the carried TZS 50,000,000** **+** *"Hapana — bado chini ya kizingiti cha TZS 100M/6 miezi"* |
+
+> **The drop was hiding a second defect, and this is the part I did not predict.** On th_19 and
+> th_20 the half that WAS answered was **answered on the wrong figure**: whole-message slot
+> extraction pulled TZS 500,000 and TZS 750,000 out of messages whose payroll figures are TZS
+> 6,000,000 and TZS 9,000,000. Splitting fixed the arithmetic as well as the omission. A
+> multi-part message does not merely lose the second ask — it corrupts the first, because the
+> extractor is choosing among figures belonging to two different questions.
+
+**Preamble carry, verified live:** th_24's EFD half arrives with the turnover and is answered
+against it. **Preamble false positive, verified live:** the minimum-wage reply is
+*"Kulingana na GN605A, kiwango cha chini cha mshahara kwa sekta ya kilimo ni karibu TZS 175,000
+kwa mwezi."* — no TZS 800,000, **no `halali` / `si halali` verdict**. That is the assertion
+`pre_02` exists to make, made against production rather than against the parser.
+
+**5 negative controls byte-identical**, including `nc_jengo` (the `na jengo` substring hazard —
+still one question), `nc_eval180` (adverbial `pia`, the orphan deliberately not promoted) and
+`nc_ooc` on a config-only OOC phrase — **CONTAINER-PATH-1 clear**.
+
+**One more instrument caught before it reported.** The `pre_minwage` row's B-marker was the
+phrase from the QUESTION (`kima cha chini`); the model answers with `kiwango cha chini`, so the
+row scored as a dropped ask while the reply plainly contained the answer — and the leak check
+split on the same absent phrase, so it read the whole reply and flagged TZS 800,000 from the
+PAYE half as a leak. Both were **false alarms of my own harness**, caught by reading the replies
+instead of the flags, and re-derived from the stored artifacts without re-asking. Table row #8.
+
+### Two pre-existing defects the canaries surfaced, NOT fixed here
+
+- `nc_jengo` — *"Nina duka na jengo langu mwenyewe — nahitaji leseni ya biashara ya aina gani?"*
+  is answered by citing **GN 605A** (the minimum-wage notice) about building ownership and
+  referred to **immigration.go.tz**. Both wrong, byte-identical before and after, nothing to do
+  with decomposition. A retrieval/routing item.
+- the BEFORE minimum-wage reply dated the agricultural floor *"kuanzia **Julai 2026**"*. GN 605A
+  is effective **1 Jan 2026** (CLAUDE.md §11). The date vanished from the after reply, but it was
+  not this change that removed it and the fact is reachable from other wordings.
+
 ## 🧩 D-FIDELITY-3 SHIPPED AS A DELIBERATELY PARTIAL GUARD — one family closed, one named open (2026-08-11)
 
 **Built, committed, DEPLOYED, live-verified.** Read the scope sentence before citing this entry.
@@ -1045,6 +1090,8 @@ pattern in how:**
 | 5 | probe `mw_15` (added 2026-08-10, minimum wage) | asserted the resolver's cross-sector conflict check, but was authored with `na pia` — a decomposition connector — so the clause was **split into two sub-questions before the resolver ever saw two sectors**. The check it existed to test was unreachable; it passed on a different code path | reading the decomposed sub-questions while debugging something else. A unit test of `resolve()` cannot see this: the resolver was always correct, the probe never got to it |
 | 6 | VAT orchestrator harness (2026-08-10) | reported 25-on-path / 0 failures for a build where **three rows silently clarified instead of answering** — it asserted route, model calls and polarity, i.e. **the checkpoint immediately before the stage that broke** | widening the harness to assert each probe's `truth` — the outcome the user gets. Same failure shape as MEASUREMENT-GAP-1, one stage further down the pipeline |
 | 7 | D-FIDELITY-3 BEFORE canary (2026-08-11) — **NEAR-MISS, caught before it produced a number** | asked a **paraphrase** of the question that produced the defect, got a clean answer, and would have reported `INCONCLUSIVE — the model did not reproduce the guarded shape` while the defect was reproducible on every run of the verbatim question. Greedy decoding is what makes a live check exact and what makes it brittle in the input: a different prompt is a different deterministic trajectory | reading the committed 2026-08-10 artifact for the exact question string instead of retyping it. Full entry above |
+
+| 8 | `na je` live canary (2026-08-11) — **NEAR-MISS, caught before it reported** | its "was the second ask answered" marker was the phrase from the QUESTION (`kima cha chini`); production answers with `kiwango cha chini`, so a correctly answered row scored as a DROPPED ask — and the paired leak check, splitting on the same absent phrase, read the whole reply and flagged a figure from the other half as a preamble leak | reading the replies instead of the flags. Both were re-derived from the stored artifacts without re-asking |
 
 **Not one was caught by itself.** Each was caught by a different instrument, a live run, or an
 ad-hoc check — never by the suite it belonged to. The corollary is not "write better probes",
