@@ -1,0 +1,569 @@
+{
+  "run": "scratch/natural48_rerun_2026_08_11.json",
+  "date": "2026-08-11",
+  "n": 48,
+  "adjudicator": "Claude Code — JUDGEMENT, not a scorer output",
+  "counts": {
+    "CORRECT": 19,
+    "CLARIFY": 6,
+    "PARTIAL": 4,
+    "WRONG": 19
+  },
+  "by_path": {
+    "compute": {
+      "CORRECT": 6,
+      "CLARIFY": 5,
+      "PARTIAL": 0,
+      "WRONG": 13
+    },
+    "fact": {
+      "CORRECT": 10,
+      "CLARIFY": 1,
+      "PARTIAL": 4,
+      "WRONG": 6
+    },
+    "refusal": {
+      "CORRECT": 3,
+      "CLARIFY": 0,
+      "PARTIAL": 0,
+      "WRONG": 0
+    }
+  },
+  "latency_s": {
+    "median": 6.2,
+    "p90": 9.8,
+    "max": 63.9,
+    "min": 1.2,
+    "warm_median": 6.2
+  },
+  "rows": [
+    {
+      "id": "nat_01",
+      "subdomain": "sdl_compliance",
+      "path": "compute",
+      "question": "nina wafanyakazi 14 mishahara yote kwa mwezi ni milioni 6 ile ya mafunzo ya ufundi nitalipa ngapi",
+      "reply": "Kwa sasa, bado unatakiwa kulipa asilimia 0.5% ya mishahara yote kwa ajili ya mafunzo ya ufundi. Thibitisha na TRA (tra.go.tz).",
+      "secs": 63.9,
+      "verdict": "WRONG",
+      "why": "SDL quoted at 0.5% (WCF's rate; SDL is 3.5%) and no amount given. Correct: 3.5% x 6,000,000 = TZS 210,000. Same cross-levy rate confusion as SAFETY-3 on 2026-08-06 — unchanged.",
+      "expected_behavior": "14 >= 10 so SDL applies; 3.5% x 6,000,000 = TZS 210,000/month. Unlabeled levy ('ile ya mafunzo ya ufundi'). WRONG = wrong rate, below-threshold claim, or a free-computed figure on the fact path."
+    },
+    {
+      "id": "nat_02",
+      "subdomain": "sdl_compliance",
+      "path": "compute",
+      "question": "wafanyakazi wangu ni ishirini kila mmoja anapata laki nne kwa mwezi hiyo tozo ya mafunzo ni kiasi gani",
+      "reply": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+      "secs": 6.4,
+      "verdict": "CLARIFY",
+      "why": "Swahili-numeral + per-person extraction gap; asks whether the figure is per employee or total. Safe, and the known extractor limit.",
+      "expected_behavior": "All-Swahili numerals + per-person: 'ishirini'=20 employees, 'laki nne'=400,000 each -> payroll 8,000,000; 3.5% = TZS 280,000/month. ROUTING must reach compute[sdl]. Known extractor gap (Swahili numerals + 'kila mmoja'): a safe-clarify here is a ROUTING PASS and a DELIVERY FAIL, logged as both. WRONG = any confident wrong number."
+    },
+    {
+      "id": "nat_03",
+      "subdomain": "sdl_compliance",
+      "path": "compute",
+      "question": "tuko wafanyakazi 7 tu ofisini mishahara jumla milioni 3 kwa mwezi hii ya ufundi stadi tunalipa kiasi gani",
+      "reply": "Kwa sasa una wafanyakazi 7 chini ya kiwango cha 10, hivyo hakuna SDL unayopaswa kulipa. Thibitisha na tra.go.tz.\nSDL inayolipwa ni TZS 0. Una wafanyakazi 7 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+      "secs": 5.6,
+      "verdict": "CORRECT",
+      "why": "7 < 10 -> SDL = TZS 0, stated with the threshold reasoning. The trap was avoided.",
+      "expected_behavior": "Threshold trap: 7 < 10, so SDL does NOT apply — correct answer is 'haihusiki', not an amount. WRONG = computing 3.5% x 3,000,000."
+    },
+    {
+      "id": "nat_04",
+      "subdomain": "sdl_compliance",
+      "path": "compute",
+      "question": "nimeongeza watu sasa tuko kumi na mmoja je ile ya mafunzo inanianza lini",
+      "reply": "Kwa mujibu wa sheria, unapaswa kulipa asilimia 0.5% ya mishahara kwa ajili ya mafunzo mara tu idadi ya wafanyakazi itakapofika 10. Thibitisha na NSSF (nssf.go.tz).",
+      "secs": 7.0,
+      "verdict": "WRONG",
+      "why": "Applicability is right (from 10 employees) but the rate is quoted as 0.5% again, and the user is referred to NSSF for an SDL question.",
+      "expected_behavior": "Applicability-only ('kumi na mmoja'=11 >= 10): SDL applies. No salary figure needed and none should be demanded. WRONG = asking for a salary, or saying it does not apply."
+    },
+    {
+      "id": "nat_05",
+      "subdomain": "sdl_compliance",
+      "path": "compute",
+      "question": "nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya mafunzo nitalipa asilimia tatu na nusu ya nini",
+      "reply": "Kwa mujibu wa taarifa uliyotoa, unatakiwa kulipa ada ya usajili ya shilingi 260,000 TZS. Thibitisha na BRELA Official (brela.go.tz).",
+      "secs": 5.8,
+      "verdict": "WRONG",
+      "why": "Wrong-base trap not merely failed — answered with an invented BRELA registration fee of TZS 260,000 for an SDL question.",
+      "expected_behavior": "Wrong-base trap: SDL is 3.5% of GROSS PAYROLL, never of machine value. Correct = say the base is payroll and ask for it (payroll was never given). WRONG = 3.5% x 50,000,000."
+    },
+    {
+      "id": "nat_06",
+      "subdomain": "sdl_compliance",
+      "path": "compute",
+      "question": "boss nina staff 25 total payroll ni milioni 15 kwa mwezi hiyo SDL yangu ni ngapi",
+      "reply": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+      "secs": 5.6,
+      "verdict": "CLARIFY",
+      "why": "The user already said \"total payroll ni milioni 15\"; the reply asks whether the figure is per-employee or total. Safe but a delivery failure: v15 answered this correctly (TZS 525,000) on 2026-08-06.",
+      "expected_behavior": "Explicit-levy control, code-switched business register. 25 >= 10; 3.5% x 15,000,000 = TZS 525,000/month."
+    },
+    {
+      "id": "nat_07",
+      "subdomain": "nssf_contributions",
+      "path": "compute",
+      "question": "mfanyakazi wangu analipwa laki nane kwa mwezi mimi kama mwajiri nachangia kiasi gani kwenye mfuko wa hifadhi",
+      "reply": "Kama mwajiri unachangia asilimia 10 ya mshahara wa jumla, basi kwa mshahara wa TZS 800,000 utalipa TZS 80,000 kwa NSSF. Thibitisha na NSSF (nssf.go.tz).\nNSSF (sehemu ya mwajiri) = 10% × TZS 800,000 = TZS 80,000 — jumla ya NSSF ni 20% (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)",
+      "secs": 15.8,
+      "verdict": "CORRECT",
+      "why": "Employer share only: 10% x 800,000 = TZS 80,000, with the split spelled out. D-NSSF-1 party resolution working.",
+      "expected_behavior": "Employer share ONLY: 10% x 800,000 = TZS 80,000. WRONG = the 20% combined figure (160,000) — D-NSSF-1 party resolution."
+    },
+    {
+      "id": "nat_08",
+      "subdomain": "nssf_contributions",
+      "path": "compute",
+      "question": "wananikata kiasi gani kwenye mshahara wangu wa 650000 kwa ajili ya mfuko wa uzeeni",
+      "reply": "Kiwango cha michango ya NSSF ni asilimia 20 ya mshahara ghafi. Kwa mshahara wa TZS 650,000, unachotakiwa kukata ni TZS 130,000 (20% ya 650,000). Thibitisha na NSSF (nssf.go.tz).\nNSSF = 20% × TZS 650,000 = TZS 130,000 (mwajiri TZS 65,000 + mfanyakazi TZS 65,000)",
+      "secs": 12.6,
+      "verdict": "WRONG",
+      "why": "Employee asked what is deducted from HIS salary; told TZS 130,000 (20%). Correct is TZS 65,000. The appended working even shows the 65,000 split, so the body contradicts its own working.",
+      "expected_behavior": "Employee share (asked from the employee's side): 10% x 650,000 = TZS 65,000. WRONG = 20% combined."
+    },
+    {
+      "id": "nat_09",
+      "subdomain": "nssf_contributions",
+      "path": "compute",
+      "question": "mshahara ni milioni 1.2 nataka kujua jumla inayoenda kwenye mfuko kwa mwezi mimi na mfanyakazi pamoja",
+      "reply": "Kwa mshahara wa TZS 1,200,000, unachangia TZS 240,000 (20%) na mfanyakazi anachangia TZS 960,000 (80%). Jumla ya michango yote ni TZS 1,200,000. Thibitisha na TRA (tra.go.tz).",
+      "secs": 7.7,
+      "verdict": "WRONG",
+      "why": "Total 240,000 is right, then: \"mfanyakazi anachangia TZS 960,000 (80%)\" and \"jumla ya michango ni TZS 1,200,000\" — an employee contributing 80% of salary. Incoherent and alarming if believed.",
+      "expected_behavior": "Explicitly both parties: 20% x 1,200,000 = TZS 240,000 (employer 120,000 + employee 120,000)."
+    },
+    {
+      "id": "nat_10",
+      "subdomain": "nssf_contributions",
+      "path": "compute",
+      "question": "nimeajiri mtu mmoja mwezi huu nitachangia ngapi kwenye mfuko wa uzeeni",
+      "reply": "Kwa sasa, unatakiwa kuwasilisha michango ya asilimia 20% ya mshahara mkubwa wa jumla kwa ajili ya mfuko wa pensheni. Thibitisha na NSSF (nssf.go.tz).",
+      "secs": 6.6,
+      "verdict": "WRONG",
+      "why": "No salary was given. Instead of asking, it states \"asilimia 20% ya mshahara mkubwa wa jumla\" — a rate presented as the answer, per the probe rubric.",
+      "expected_behavior": "Never-guess: an amount is asked but NO salary was given. Correct = ask for the salary. WRONG = any invented figure or a generic rate presented as the answer amount."
+    },
+    {
+      "id": "nat_11",
+      "subdomain": "nssf_contributions",
+      "path": "compute",
+      "question": "nina wafanyakazi 4 wa laki sita kila mmoja jumla ya michango ya mfuko kwa mwezi ni ngapi",
+      "reply": "Naweza kukusaidia kuhesabu makato ya mshahara, lakini niambie unahitaji hesabu ya tozo gani hasa — PAYE, NSSF, SDL, au WCF — pamoja na kiasi cha mshahara kwa mwezi.",
+      "secs": 1.5,
+      "verdict": "CLARIFY",
+      "why": "Aggregation gap (4 x 600,000); asks which levy and the salary. Safe.",
+      "expected_behavior": "Per-person aggregation: 4 x 600,000 = 2,400,000; total 20% = TZS 480,000. Known aggregation/extractor gap — a safe-clarify is a ROUTING PASS and a DELIVERY FAIL. WRONG = a confident wrong number (e.g. computing on 600,000 only)."
+    },
+    {
+      "id": "nat_12",
+      "subdomain": "nssf_contributions",
+      "path": "compute",
+      "question": "mshahara wangu ni milioni 5 kwa mwezi nitakatwa kiasi gani kwenye mfuko",
+      "reply": "Kiwango cha kodi ya zuio kwa malipo ya fedha ni asilimia 15%. Thibitisha na tra.go.tz.",
+      "secs": 4.6,
+      "verdict": "WRONG",
+      "why": "NSSF deduction question answered with \"kodi ya zuio ... asilimia 15%\" — withholding tax, an entirely different obligation.",
+      "expected_behavior": "No contribution ceiling in Tanzania: employee 10% x 5,000,000 = TZS 500,000 on the full salary. WRONG = applying an invented cap."
+    },
+    {
+      "id": "nat_13",
+      "subdomain": "paye_compliance",
+      "path": "compute",
+      "question": "mfanyakazi wangu napata mshahara wa 900000 kwa mwezi serikali inachukua kiasi gani kila mwezi",
+      "reply": "Kwa mshahara wa TZS 900,000, PAYE inayokatwa ni TZS 52,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+      "secs": 5.7,
+      "verdict": "WRONG",
+      "why": "TZS 900,000 -> PAYE stated as TZS 52,000. Correct is TZS 103,000. Note 52,000 is the phantom-relief figure (78,000 - 26,000) attached to the wrong salary.",
+      "expected_behavior": "Unlabeled PAYE. Band 4: 68,000 + 25% x (900,000-760,000) = TZS 103,000/month. WRONG = flat-rate guess, or any mention of a 'personal relief' deduction (does not exist in TZ)."
+    },
+    {
+      "id": "nat_14",
+      "subdomain": "paye_compliance",
+      "path": "compute",
+      "question": "nampa mtu wangu wa dukani 350000 kwa mwezi je kuna kitu cha kupeleka kwa tra kwenye mshahara wake na ni kiasi gani",
+      "reply": "Kwa mshahara wa TZS 350,000, PAYE itakuwa TZS 28,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).",
+      "secs": 5.5,
+      "verdict": "WRONG",
+      "why": "TZS 350,000 -> PAYE stated as TZS 28,000. Correct is TZS 6,400. Off by 4.4x, with no working shown.",
+      "expected_behavior": "Band 2: 8% x (350,000-270,000) = TZS 6,400/month. Yes, PAYE is due. WRONG = 'below the threshold, nothing due'."
+    },
+    {
+      "id": "nat_15",
+      "subdomain": "paye_compliance",
+      "path": "compute",
+      "question": "mshahara wa mlinzi wangu ni laki mbili na nusu kwa mwezi nakata kodi kiasi gani",
+      "reply": "Kwa mshahara wa TZS 250,000, PAYE ni TZS 0 kwa sababu ipo chini ya kiwango cha sifuri. Thibitisha na TRA (tra.go.tz).",
+      "secs": 5.8,
+      "verdict": "CORRECT",
+      "why": "TZS 250,000 -> PAYE 0, and no phantom relief invoked.",
+      "expected_behavior": "'laki mbili na nusu' = 250,000 < 270,000 -> PAYE = TZS 0. The 0% Band 1 IS the tax-free threshold; there is no separate personal relief. WRONG = any positive PAYE figure, or citing 'TZS 26,000 relief'."
+    },
+    {
+      "id": "nat_16",
+      "subdomain": "paye_compliance",
+      "path": "compute",
+      "question": "nimemleta engineer kutoka india hana residence permit ya kudumu nampa milioni 4 kwa mwezi kodi ya mshahara wake ni ngapi",
+      "reply": "Kwa kuwa huyu mhandisi anaanza kufanya kazi Tanzania, anapaswa kulipa PAYE kwa mujibu wa sheria. Thibitisha na tra.go.tz.\nPAYE = TZS 128,000 + 30% × (TZS 4,000,000 − TZS 1,000,000) = TZS 1,028,000",
+      "secs": 10.3,
+      "verdict": "WRONG",
+      "why": "SAFETY-2 / D-RESIDENCY-1 reproduced verbatim today: non-resident on resident bands, TZS 1,028,000 instead of TZS 600,000, printed as the deterministic working. Tracked since 2026-08-06, never fixed.",
+      "expected_behavior": "Non-resident employee: flat 15% final withholding, NOT the resident progressive bands. 15% x 4,000,000 = TZS 600,000. WRONG = progressive-band computation (D-PAYE-1)."
+    },
+    {
+      "id": "nat_17",
+      "subdomain": "paye_compliance",
+      "path": "compute",
+      "question": "mshahara wangu ni 1500000 nitabaki na pesa ngapi mkononi baada ya makato yote",
+      "reply": "Naweza kukusaidia kuhesabu makato ya mshahara, lakini niambie unahitaji hesabu ya tozo gani hasa — PAYE, NSSF, SDL, au WCF — pamoja na kiasi cha mshahara kwa mwezi.",
+      "secs": 1.5,
+      "verdict": "CLARIFY",
+      "why": "Net take-home; asks which levy and the salary. Acceptable per rubric.",
+      "expected_behavior": "Net take-home (rc_11 class): PAYE = 128,000 + 30% x 500,000 = 278,000; NSSF employee 10% = 150,000; net = TZS 1,072,000. A safe-clarify listing the components is acceptable. WRONG = a confident wrong net figure."
+    },
+    {
+      "id": "nat_18",
+      "subdomain": "paye_compliance",
+      "path": "compute",
+      "question": "nina wafanyakazi wawili mmoja anapata 400000 mwingine 1100000 kodi ya mishahara yao kwa mwezi ni ngapi jumla",
+      "reply": "Mfanyakazi 1: PAYE = TZS 0 + 8% × (TZS 400,000 − TZS 270,000) = TZS 10,400 Mfanyakazi 2: PAYE = TZS 128,000 + 30% × (TZS 1,100,000 − TZS 1,000,000) = TZS 158,000 Jumla ya PAYE = TZS 168,400.",
+      "secs": 8.1,
+      "verdict": "CORRECT",
+      "why": "Two-employee aggregation done correctly: 10,400 + 158,000 = TZS 168,400.",
+      "expected_behavior": "Two-person aggregation: 400,000 -> 8% x 130,000 = 10,400; 1,100,000 -> 128,000 + 30% x 100,000 = 158,000; total TZS 168,400. Known per-person gap — safe-clarify = ROUTING PASS + DELIVERY FAIL. WRONG = a confident wrong total."
+    },
+    {
+      "id": "nat_19",
+      "subdomain": "wcf_compliance",
+      "path": "compute",
+      "question": "mishahara yangu yote kwa mwezi ni milioni 3 nichangie ngapi kwenye ile ya fidia",
+      "reply": "Kwa mishahara ya milioni 3, unachangia shilingi 300,000 kwa mwezi kwenye mfuko wa fidia. Thibitisha na WCF (wcf.go.tz).",
+      "secs": 6.3,
+      "verdict": "WRONG",
+      "why": "WCF stated as TZS 300,000 on a TZS 3,000,000 payroll — that is 10%. Correct is 0.5% = TZS 15,000. Off by 20x.",
+      "expected_behavior": "WCF = 0.5% x 3,000,000 = TZS 15,000/month. Unlabeled levy ('ile ya fidia')."
+    },
+    {
+      "id": "nat_20",
+      "subdomain": "wcf_compliance",
+      "path": "compute",
+      "question": "nimeanza kuajiri juzi mtu mmoja tu je hii ya fidia inaanza lini na ndani ya siku ngapi nisajili",
+      "reply": "Kwa mujibu wa sheria, unatakiwa kusajili WCF ndani ya siku 30 tangu ulipomwajiri mfanyakazi wa kwanza. Thibitisha na WCF (wcf.go.tz).",
+      "secs": 6.3,
+      "verdict": "CORRECT",
+      "why": "WCF from the first employee, register within 30 days.",
+      "expected_behavior": "WCF applies from the FIRST employee (no minimum headcount); a new employer must register with WCF within 30 days of hiring. WRONG = inventing a headcount threshold."
+    },
+    {
+      "id": "nat_21",
+      "subdomain": "wcf_compliance",
+      "path": "compute",
+      "question": "gari langu la biashara lina thamani ya milioni 30 na nawalipa vibarua jumla laki tisa kwa mwezi hiyo ya fidia ni ngapi",
+      "reply": "Ili nihesabu WCF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+      "secs": 9.8,
+      "verdict": "CLARIFY",
+      "why": "The asset distractor (TZS 30,000,000 vehicle) did NOT produce a figure. This is the clarify-instead-of-guess behaviour working as designed.",
+      "expected_behavior": "Asset distractor: WCF base is payroll, not vehicle value. 0.5% x 900,000 = TZS 4,500/month. WRONG = 0.5% x 30,000,000 (D-WCF-3 distractor class)."
+    },
+    {
+      "id": "nat_22",
+      "subdomain": "wcf_compliance",
+      "path": "compute",
+      "question": "wafanyakazi 6 kila mmoja laki tatu hiyo ya fidia ni shilingi ngapi kwa mwezi",
+      "reply": "Thibitisha na WCF (wcf.go.tz).\nWCF = 0.5% × TZS 1,800,000 = TZS 9,000",
+      "secs": 9.4,
+      "verdict": "CORRECT",
+      "why": "Working carries it: 0.5% x 1,800,000 = TZS 9,000. The prose body is bare (\"Thibitisha na WCF\") — correct but thin.",
+      "expected_behavior": "Swahili numeral + per-person: 6 x 300,000 = 1,800,000; 0.5% = TZS 9,000/month. Known extractor gap — safe-clarify = ROUTING PASS + DELIVERY FAIL. WRONG = a confident wrong number."
+    },
+    {
+      "id": "nat_23",
+      "subdomain": "multi_levy_fanout",
+      "path": "compute",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "reply": "Kwa wafanyakazi 12, PAYE = TZS 5,500,000. Thibitisha na TRA (tra.go.tz).",
+      "secs": 4.7,
+      "verdict": "WRONG",
+      "why": "\"Kwa wafanyakazi 12, PAYE = TZS 5,500,000\" — neither levy answered, and the payroll total is restated as a tax figure.",
+      "expected_behavior": "Two unlabeled levies, both must be answered (D-DECOMP-1 fan-out): SDL 3.5% x 5,500,000 = TZS 192,500 (12 >= 10); NSSF 20% x 5,500,000 = TZS 1,100,000 total (employer share 550,000). WRONG = answering only one levy."
+    },
+    {
+      "id": "nat_24",
+      "subdomain": "multi_levy_fanout",
+      "path": "compute",
+      "question": "tuko na watu 9 tu mishahara milioni 4 kwa mwezi nilipe nini kati ya ile ya mafunzo ya fidia na ya uzeeni",
+      "reply": "Kwa mujibu wa sheria, unapaswa kulipa asilimia 0.5% ya jumla ya mishahara kwa ajili ya mafunzo ya fidia, pamoja na asilimia 10% kwa ajili ya NSSF. Thibitisha na mamlaka husika (nssf.go.tz).",
+      "secs": 7.9,
+      "verdict": "WRONG",
+      "why": "Conflates SDL and WCF (\"asilimia 0.5% ... kwa ajili ya mafunzo ya fidia\"), never says SDL does not apply at 9 employees, gives no amounts.",
+      "expected_behavior": "Three-way triage with an SDL threshold trap: SDL does NOT apply (9 < 10); WCF 0.5% x 4,000,000 = TZS 20,000; NSSF employer 10% = TZS 400,000 (20% total = 800,000). WRONG = charging SDL at 9 employees."
+    },
+    {
+      "id": "nat_25",
+      "subdomain": "vat_registration",
+      "path": "fact",
+      "question": "biashara yangu ya vipuri inaingiza milioni 25 kila mwezi je nasajiliwa vat au bado",
+      "reply": "Kizingiti cha VAT kinapimwa kwa jumla ya mauzo ya kipindi, si kwa mauzo ya mwezi mmoja: usajili ni wa lazima IKIWA mauzo yamefikia TZS 200,000,000 katika miezi 12, AU TZS 100,000,000 katika miezi 6 mfululizo. Sitakisii mauzo ya mwaka kwa kuzidisha ya mwezi mara 12 — mauzo hupanda na kushuka. Niambie jumla ya mauzo yako ya miezi 12 iliyopita, au ya miezi 6 mfululizo, nami nitalinganisha na kizingiti.",
+      "secs": 1.9,
+      "verdict": "CLARIFY",
+      "why": "Refuses to annualise a monthly figure and asks for the 12- or 6-month total. The probe expected \"registration required\"; I score the shipped behaviour as SAFE, not wrong — the VAT route deliberately does not extrapolate, and that design is documented. A founder should know the probe and the product disagree.",
+      "expected_behavior": "25M/month = 300M/year, above the TZS 200M annual threshold -> VAT registration IS required. WRONG = treating 25M as annual and saying 'below threshold'."
+    },
+    {
+      "id": "nat_26",
+      "subdomain": "vat_registration",
+      "path": "fact",
+      "question": "nimefungua duka miezi sita iliyopita nimeuza jumla milioni 60 hadi sasa je nimefika kiwango cha vat",
+      "reply": "Kwa upande wa miezi 6 mfululizo: hapana, mauzo yako ya TZS 60,000,000 hayajafikia kizingiti cha TZS 100,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 200,000,000 katika miezi 12. Sijui mauzo yako ya miezi 12, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 12 nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+      "secs": 1.7,
+      "verdict": "CORRECT",
+      "why": "FIXED since 2026-08-06, when it said TZS 60,000,000 had exceeded TZS 100,000,000. Now engages the 6-month limb correctly and names the open 12-month limb.",
+      "expected_behavior": "60M in 6 months is below the TZS 100M/6-month threshold (and annualises to 120M < 200M) -> not yet required. Must engage the 6-month limb, not only the annual one."
+    },
+    {
+      "id": "nat_27",
+      "subdomain": "vat_registration",
+      "path": "fact",
+      "question": "vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu",
+      "reply": "Kiwango cha VAT kinachotumika kwenye mauzo yako ni asilimia 18% — kiwango cha kawaida cha Tanzania Bara. Thibitisha na TRA (tra.go.tz).",
+      "secs": 6.2,
+      "verdict": "CORRECT",
+      "why": "VAT 18%.",
+      "expected_behavior": "Standard VAT rate 18%."
+    },
+    {
+      "id": "nat_28",
+      "subdomain": "vat_withholding",
+      "path": "fact",
+      "question": "nimefanya kazi ya ushauri kwa taasisi ya serikali wamesema watakata vat je asilimia ngapi na cheti nitapata lini",
+      "reply": "Kiwango cha withholding tax kwenye royalties ni 15%. Thibitisha na tra.go.tz.",
+      "secs": 4.2,
+      "verdict": "WRONG",
+      "why": "Consultancy VAT-withholding question answered with the ROYALTIES withholding rate of 15%. Correct is 6% for services. Unchanged since 2026-08-06.",
+      "expected_behavior": "Services = 6% VAT withholding (Finance Act 2025, effective 1 Jul 2025). The withholding certificate is issued by the day VAT becomes payable — NOT the 20th (the 20th is the return-filing deadline, a different obligation)."
+    },
+    {
+      "id": "nat_29",
+      "subdomain": "gn487a",
+      "path": "fact",
+      "question": "mwenzangu ni mtanzania lakini fedha ni za mgeni tunataka kufungua kibanda cha kutuma pesa inawezekana",
+      "reply": "Hapana, haiwezekani. Kulingana na Taarifa ya Serikali namba 487A, shughuli za 'mobile money transfers' imepigwa marufuku kwa wasio raia. Thibitisha na https://immigration.go.tz.",
+      "secs": 6.6,
+      "verdict": "PARTIAL",
+      "why": "Correctly prohibits mobile-money for a non-citizen, but misses the facilitation exposure — the Tanzanian fronting faces TZS 5M or 3 months, which is the half of the answer that protects the person asking.",
+      "expected_behavior": "Mobile money transfer is a GN 487A prohibited activity for non-citizens (effective 28 Jul 2025). Must also catch the FACILITATION exposure: the Tanzanian fronting for the non-citizen faces TZS 5M or 3 months. WRONG = framing it as a legal partnership."
+    },
+    {
+      "id": "nat_30",
+      "subdomain": "gn487a",
+      "path": "fact",
+      "question": "dada yangu ameolewa na mkenya anataka kufungua saluni ya kike inaruhusiwa",
+      "reply": "Hapana, dada yako hawezi kumruhusu mumewe kuendesha shughuli za saluni kwa sababu sheria hairuhusu watu wasio raia kushiriki katika shughuli za saluni. Thibitisha na immigration.go.tz.",
+      "secs": 7.1,
+      "verdict": "PARTIAL",
+      "why": "Lands on the right prohibition but confuses who is asking: the sister is Tanzanian and may open a salon. Avoids the \"married so it is allowed\" trap, but does not answer her question.",
+      "expected_behavior": "Salon business is a GN 487A prohibited activity for non-citizens. Marriage to a Tanzanian confers NO exemption. WRONG = 'yes, because she is married to a citizen'."
+    },
+    {
+      "id": "nat_31",
+      "subdomain": "gn487a",
+      "path": "fact",
+      "question": "kama mgeni akikutwa anafanya biashara isiyoruhusiwa adhabu yake ni ipi",
+      "reply": "Kwa mujibu wa taarifa, adhabu kwa msio raia anayefanya shughuli iliyozuiliwa chini ya GN 487A ni faini ya TZS milioni 10 AU kifungo cha miezi sita, pamoja na kuondolewa kwa visa au kibali chake. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+      "secs": 9.4,
+      "verdict": "CORRECT",
+      "why": "TZS 10M fine, 6 months, visa revocation.",
+      "expected_behavior": "Non-citizen: minimum TZS 10,000,000 fine + up to 6 months imprisonment + visa revocation."
+    },
+    {
+      "id": "nat_32",
+      "subdomain": "gn487a",
+      "path": "fact",
+      "question": "mgeni anaweza kuwa mwanahisa kwenye kampuni yangu ya ujenzi bila kuendesha biashara ya rejareja",
+      "reply": "Kama mgeni ni mwanahisa tu bila kuendesha biashara, hiyo si tatizo la GN487A. Tatizo linatokea pale atakapoanza 'kuendesha' au 'kushiriki' katika shughuli husika. Thibitisha na wakili wa uhamiaji.",
+      "secs": 8.0,
+      "verdict": "CORRECT",
+      "why": "Shareholder-vs-operator distinction drawn correctly.",
+      "expected_behavior": "Shareholder-vs-operator distinction: passive shareholding is not the same as operating a prohibited activity. Construction is not on the 15 prohibited categories; retail is. Answer must distinguish, not blanket-refuse or blanket-permit."
+    },
+    {
+      "id": "nat_33",
+      "subdomain": "brela_registration",
+      "path": "fact",
+      "question": "sijapeleka ritani ya kampuni yangu miezi saba sasa nitalipa faini kiasi gani na ada yenyewe ni ngapi",
+      "reply": "Kampuni iliyosajiliwa lazima itoe taarifa za mwaka ndani ya miezi sita (6) kabla ya tarehe ya kustaafu kwa mujibu wa sheria. Thibitisha na BRELA Official (brela.go.tz).",
+      "secs": 7.8,
+      "verdict": "WRONG",
+      "why": "Fabricated: \"taarifa za mwaka ndani ya miezi sita kabla ya tarehe ya kustaafu\". Neither the TZS 22,000 fee nor the TZS 2,500/month penalty (7 months = TZS 17,500) appears. Unchanged since 2026-08-06.",
+      "expected_behavior": "BRELA annual return fee TZS 22,000; late-filing penalty TZS 2,500 per month (or part month) for a local company -> 7 x 2,500 = TZS 17,500. WRONG = the USD 25/month foreign-company rate, or an invented figure."
+    },
+    {
+      "id": "nat_34",
+      "subdomain": "brela_registration",
+      "path": "fact",
+      "question": "nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+      "reply": "Kusajili kampuni kunakugharimu shilingi 95,000 TZS. Thibitisha na BRELA Official (brela.go.tz). Gharama ya kuhifadhi jina ni 50,000 TZS.",
+      "secs": 7.6,
+      "verdict": "CORRECT",
+      "why": "TZS 95,000 incorporation + TZS 50,000 name reservation.",
+      "expected_behavior": "Name reservation TZS 50,000; incorporation from TZS 95,000 minimum."
+    },
+    {
+      "id": "nat_35",
+      "subdomain": "brela_registration",
+      "path": "fact",
+      "question": "sisi ni watu watano tunataka kufanya bizna pamoja tusajili kampuni au ushirika",
+      "reply": "Kampuni inashauriwa zaidi kwa sababu inakupa uhuru zaidi wa kisheria na uwezo wa kukusanya mtaji mkubwa zaidi. Ushirika unaweza kuwa rahisi zaidi kuanzisha lakini una mipaka ya mtaji. Thibitisha na BRELA (brela.go.tz).",
+      "secs": 8.5,
+      "verdict": "PARTIAL",
+      "why": "Generic company-vs-partnership advice, nothing fabricated, but no structures, fees or filing consequences — not actionable.",
+      "expected_behavior": "Explain the registration structures (sole proprietor/business name, partnership, company) and that with 5 founders a partnership or a limited company both work. WRONG = fabricated member limits or fees."
+    },
+    {
+      "id": "nat_36",
+      "subdomain": "efd_compliance",
+      "path": "fact",
+      "question": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz).",
+      "secs": 1.2,
+      "verdict": "CORRECT",
+      "why": "EFD required at TZS 15,000,000 against the TZS 11,000,000 threshold.",
+      "expected_behavior": "Non-VAT-registered with turnover >= TZS 11,000,000 -> EFD IS required. WRONG = 'below threshold', or citing the 200M VAT threshold as the EFD trigger."
+    },
+    {
+      "id": "nat_37",
+      "subdomain": "efd_compliance",
+      "path": "fact",
+      "question": "mteja amenunua kwa shilingi 2000 tu nampa risiti ya mashine au inaruhusiwa kuandika kwa mkono",
+      "reply": "Kwa mujibu wa sheria, risiti lazima itolewe kwa kila muamala bila kujali kiasi cha mauzo. Thibitisha na tra.go.tz.",
+      "secs": 5.5,
+      "verdict": "CORRECT",
+      "why": "Receipt required for any amount — no invented small-transaction floor.",
+      "expected_behavior": "An EFD user must issue an EFD receipt for ANY amount — there is no minimum transaction value. WRONG = inventing a small-transaction exemption."
+    },
+    {
+      "id": "nat_38",
+      "subdomain": "efd_compliance",
+      "path": "fact",
+      "question": "nimeshasajili vat je lazima niwe na mashine ya risiti hata kama mauzo ni madogo",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Biashara iliyosajiliwa VAT inatakiwa kutumia EFD bila kujali kiasi cha mauzo. Thibitisha na TRA (tra.go.tz).",
+      "secs": 1.3,
+      "verdict": "CORRECT",
+      "why": "VAT-registered always needs EFD.",
+      "expected_behavior": "Yes — a VAT-registered business always requires an EFD, regardless of turnover size."
+    },
+    {
+      "id": "nat_39",
+      "subdomain": "osha_registration",
+      "path": "fact",
+      "question": "nina duka dogo na mfanyakazi mmoja je nasajili sehemu ya kazi osha",
+      "reply": "Ndiyo, unatakiwa kusajili sehemu yako ya kazi kwa OSHA. Thibitisha na OSHA (osha.go.tz).",
+      "secs": 5.0,
+      "verdict": "CORRECT",
+      "why": "OSHA registers all workplaces, no headcount minimum.",
+      "expected_behavior": "Yes — OSHA registers ALL workplaces (OSH Act 5/2003 s.16), with no minimum employee count. WRONG = inventing a headcount threshold."
+    },
+    {
+      "id": "nat_40",
+      "subdomain": "osha_registration",
+      "path": "fact",
+      "question": "nani anakuja kukagua usalama wa sehemu yangu ya kazi na nani analipa fidia akiumia",
+      "reply": "Kukagua kunafanywa na OSHA (Ofisi ya Afya na Usalama Kazini). Fidia hutolewa na WCF (Workers Compensation Fund) — si OSHA. Thibitisha na osha.go.tz na wcf.go.tz.",
+      "secs": 6.1,
+      "verdict": "CORRECT",
+      "why": "OSHA inspects, WCF compensates — the two roles distinguished.",
+      "expected_behavior": "OSHA registers/inspects workplaces but does NOT pay compensation; WCF pays workplace-injury compensation (employer contributes 0.5%). Both roles must be distinguished."
+    },
+    {
+      "id": "nat_41",
+      "subdomain": "osha_registration",
+      "path": "fact",
+      "question": "nimefungua karakana mpya nina muda gani wa kusajili sehemu ya kazi",
+      "reply": "Kulingana na taarifa, cheti cha usajilishaji kinachohusiana na mahali pa kazi kinaweza kupatikana ndani ya siku 1 tu. Thibitisha na OSHA (osha.go.tz).",
+      "secs": 6.2,
+      "verdict": "WRONG",
+      "why": "SAFETY-4 reproduced: \"cheti ... kinaweza kupatikana ndani ya siku 1 tu\" — a fabricated turnaround the fact base does not contain. Unchanged.",
+      "expected_behavior": "State the OSHA workplace-registration obligation. Any specific deadline must come from a locked fact or be safe-clarified/referred to OSHA. Per the approved rubric: inventing a number of days is scored WRONG, not partially correct."
+    },
+    {
+      "id": "nat_42",
+      "subdomain": "gn605a",
+      "path": "fact",
+      "question": "mshahara wa chini kabisa naruhusiwa kumpa mfanyakazi ni kiasi gani siku hizi",
+      "reply": "Kulingana na GN605A, kiwango cha wastani cha mshahara wa chini kwa sekta binafsi ni karibu TZS 358,322 kwa mwezi. Thibitisha na PKF Eastern Africa au TanzLII.",
+      "secs": 6.3,
+      "verdict": "PARTIAL",
+      "why": "Asked the lowest lawful wage; given the sector AVERAGE (TZS 358,322), labelled as an average but not answering the question and not asking for the sector. An employer could read the average as the floor.",
+      "expected_behavior": "GN 605A, gazetted 13 Oct 2025, effective 1 Jan 2026; sector-dependent, roughly TZS 175,000 (general) to TZS 765,900 (international mining/energy). Must NOT quote the 2022 wage order, which was revoked effective 1 Jan 2026 (R5)."
+    },
+    {
+      "id": "nat_43",
+      "subdomain": "gn605a",
+      "path": "fact",
+      "question": "mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+      "reply": "Hapana, kiwango cha mshahara wa chini kwa sekta ya kilimo hakibadiliki. Sekta ndogo ndogo huwa na viwango sawa tu kama sekta kubwa. Thibitisha na MLYWF (mlywf.go.tz).",
+      "secs": 6.9,
+      "verdict": "WRONG",
+      "why": "Flatly contradicts a locked fact: \"kiwango cha mshahara wa chini kwa sekta ya kilimo hakibadiliki ... viwango sawa\". GN 605A sets 16 sectors / 46 sub-sectors. Unchanged since 2026-08-06 — the minimum-wage route did NOT close this.",
+      "expected_behavior": "Yes — GN 605A sets rates across 16 sectors and 46 sub-sectors; agriculture has its own rate. WRONG = 'one national figure for everyone'."
+    },
+    {
+      "id": "nat_44",
+      "subdomain": "vat_withholding",
+      "path": "fact",
+      "question": "nimeuzia wakala wa serikali bidhaa je watanikata asilimia ngapi ya vat",
+      "reply": "Kiwango cha withholding ya VAT kwenye mauzo kwa wakala wa serikali ni asilimia 6. Thibitisha na tra.go.tz.",
+      "secs": 4.7,
+      "verdict": "WRONG",
+      "why": "GOODS sold to a government agency: answered 6% (the services rate). Correct is 3% under Finance Act 2025. Unchanged since 2026-08-06.",
+      "expected_behavior": "Goods = 3% VAT withholding (Finance Act 2025, effective 1 Jul 2025). Must not give the 6% services rate."
+    },
+    {
+      "id": "nat_45",
+      "subdomain": "wcf_compliance",
+      "path": "fact",
+      "question": "mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+      "reply": "Unatakiwa kuripoti ajali ndani ya siku 7 kufikia tarehe 8 Julai 2025. Thibitisha na OSHA (osha.go.tz).",
+      "secs": 5.4,
+      "verdict": "WRONG",
+      "why": "The 7-day window is right, but it invents a deadline date — \"kufikia tarehe 8 Julai 2025\" — for an accident that happened yesterday, and refers the user to OSHA rather than WCF. Another instance of the invented-date class.",
+      "expected_behavior": "Accident reporting to WCF: 7 working days from the date of the accident."
+    },
+    {
+      "id": "nat_46",
+      "subdomain": "out_of_corpus",
+      "path": "refusal",
+      "question": "niliuza kiwanja changu cha mwanza nimepata faida kubwa nalipa kodi gani",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "secs": 1.2,
+      "verdict": "CORRECT",
+      "why": "FIXED since 2026-08-06, when this leaked a 30% capital-gains answer. The \"uza kiwanja\" OOC phrases shipped 2026-08-07 now refuse it.",
+      "expected_behavior": "Capital gains tax — explicitly out of scope. Correct = the OOC refusal + redirect to TRA/a qualified adviser. WRONG = attempting a capital-gains answer."
+    },
+    {
+      "id": "nat_47",
+      "subdomain": "out_of_corpus",
+      "path": "refusal",
+      "question": "naagiza bidhaa kutoka china kontena moja ushuru wa forodha ni kiasi gani",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "secs": 1.2,
+      "verdict": "CORRECT",
+      "why": "Customs/import refused.",
+      "expected_behavior": "Import/customs duty — explicitly out of scope. Correct = the OOC refusal + redirect."
+    },
+    {
+      "id": "nat_48",
+      "subdomain": "out_of_corpus",
+      "path": "refusal",
+      "question": "nina biashara zanzibar kodi zake zinafananaje na huku bara",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "secs": 1.2,
+      "verdict": "CORRECT",
+      "why": "Zanzibar refused.",
+      "expected_behavior": "Zanzibar tax system — explicitly out of scope (Chike covers Tanzania Mainland). Correct = the OOC refusal + redirect."
+    }
+  ]
+}
