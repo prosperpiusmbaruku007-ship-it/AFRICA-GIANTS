@@ -441,6 +441,22 @@ Measured: **0 flags across the 400-row gate corpus** (8 preconditions), catches 
 10 authored probes, 4 positive / 6 negative — authored rather than swept, because 8 opportunities
 in 400 rows cannot support a sweep (R17). Suite **978 passed** (944 + 34 live).
 
+**DEPLOYED AND VERIFIED LIVE (`19199d0`)** — full R16 cycle, artifact in
+`scratch/guard_a_live_after.json`. The live case was forceable because `shingapi` still blocks
+the money-ask, so that question still reaches the fact path and the model still produces the
+contradiction:
+
+| probe | before | after |
+|---|---|---|
+| `ga_01` the verbatim 14-employee question | *"bado una wafanyakazi **chini ya 10**, hivyo hakuna ulazima wa kulipa SDL"* | *"nimeona umeandika **wafanyakazi 14**… nithibitishie"* |
+| `ga_02` a user with **9** employees | correct *"chini ya 10"* | **unchanged** — the guard does not fire on a TRUE claim |
+| `ga_03` BRELA control | TZS 22,000 | byte-identical |
+| `ga_04` `arzi` refusal from the previous deploy | refusal | still refusing — that change survived this deploy |
+
+`ga_02` is the negative that matters: the difference between "the answer says fewer than 10"
+and "the answer says fewer than 10 **and that is false**" is the entire guard, and it is now
+confirmed on live weights rather than on probes alone.
+
 ### 🚫 GUARD B IS NOT DEFERRED — IT IS IMPOSSIBLE AS SPECIFIED. This is a result.
 
 Recording this as a finding rather than a backlog item, because a deferral invites someone to
