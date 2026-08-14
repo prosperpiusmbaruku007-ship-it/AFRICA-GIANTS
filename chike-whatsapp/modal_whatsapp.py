@@ -23,17 +23,24 @@ completion with its own timeout, surviving the webhook container's death entirel
 This is strictly stronger than the Railway design it replaces: the answer path is
 DURABLE rather than best-effort.
 
-WHY FILE-PER-ROW TRANSCRIPTS
------------------------------
-Modal Volumes are NOT a POSIX shared filesystem. Writes need an explicit `commit()`,
-reads need `reload()`, and two containers appending to the same JSONL do not interleave
-— the last committer's version of the file wins and the other user's row is GONE. That
-is data loss at precisely the moment of interest (concurrent users). One file per row
-means no two containers ever write the same path, so nothing can be clobbered.
+WHY TRANSCRIPTS ARE A DICT AND NOT A VOLUME
+--------------------------------------------
+The Volume version LOST ROWS IN PRODUCTION (2026-08-14). File-per-row solved APPEND
+clobbering — two containers appending to one JSONL do not interleave, and the last
+committer wins — but it did NOT solve COMMIT clobbering. `volume.commit()` pushes a
+container's whole filesystem view, so a container that mounted the volume BEFORE another
+container's write can erase that write when it later commits. Two rejection rows were
+written, committed, read back verbatim, and then vanished; only the stdout echo preserved
+the diagnosis they carried.
+
+`modal.Dict` is concurrency-safe by construction: a put is a put, with no snapshot to
+clobber. This data is a key-value log, not a filesystem, and modelling it as one was the
+mistake — a Volume's whole-tree commit semantics are wrong for many small independent
+writes from many short-lived containers.
 
 The transcript store is a PILOT PREREQUISITE, not an improvement: Modal's Starter plan
-retains logs for ONE DAY. Without this volume, yesterday's conversations are not merely
-hard to query — they are deleted.
+retains logs for ONE DAY. Without a working store, yesterday's conversations are not
+merely hard to query — they are deleted.
 
 DEPLOY (R16b — the handler is now on Modal, so R16 applies to it in full):
     python -m modal app stop chike-whatsapp --yes
@@ -64,11 +71,21 @@ image = (
     .add_local_dir(_HERE, "/root/chike_whatsapp")
 )
 
-# Separate from chike-inference's `chike-storage`: transcripts have a different
-# lifecycle from model caches, and nothing here should be able to disturb the weights.
-# Storage is free at any pilot scale (Modal: $0.09/GiB/mo with 1 TiB/mo included).
-volume = modal.Volume.from_name("chike-transcripts", create_if_missing=True)
-TRANSCRIPT_ROOT = "/transcripts"
+# TRANSCRIPTS LIVE IN A DICT, NOT A VOLUME — and the Volume version lost two rows before
+# this was written (2026-08-14).
+#
+# File-per-row solved APPEND clobbering: two containers appending to one JSONL do not
+# interleave, and the last committer wins. It did NOT solve COMMIT clobbering.
+# `volume.commit()` pushes a container's whole filesystem view, so a container that
+# mounted the volume BEFORE another container's write can erase that write when it later
+# commits. With a 1200s webhook scaledown window and repeated deploys, that is the normal
+# case rather than a rare race. Two rejection rows were written, committed, read back
+# verbatim — and then vanished. Only the stdout echo preserved the diagnosis they carried.
+#
+# `modal.Dict` is concurrency-safe by construction: a put is a put, with no snapshot to
+# clobber. This data is a key-value log, not a filesystem, and modelling it as one was the
+# mistake. The old Volume rows remain readable via `modal volume get chike-transcripts`.
+transcripts = modal.Dict.from_name("chike-transcripts-kv", create_if_missing=True)
 
 # Lazy cross-app handle — resolved on first use, so a chike-inference redeploy does not
 # require a chike-whatsapp redeploy.
@@ -111,21 +128,17 @@ def _core():
 
 
 # ---------------------------------------------------------------------------
-# transcripts — file per row, never append-to-shared
+# transcripts — modal.Dict, one entry per row (see the module docstring)
 # ---------------------------------------------------------------------------
 
 def _write_row(row):
-    """Never raises. Always reaches stdout, so a volume failure degrades the record
-    rather than losing it — though stdout itself is deleted after 1 day on Starter."""
+    """Never raises. Always reaches stdout, so a store failure degrades the record rather
+    than losing it — though stdout itself is deleted after 1 day on Starter, which is why
+    the store has to actually work."""
     core = _core()
     line = core.row_to_line(row)
     try:
-        rel = core.transcript_filename(row)          # <month>/<ts>-<hash>-<uuid>.json
-        path = os.path.join(TRANSCRIPT_ROOT, rel)
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(line)
-        volume.commit()
+        transcripts[core.transcript_filename(row)] = row
     except Exception as e:                                           # noqa: BLE001
         print(f"[transcript] WRITE FAILED ({type(e).__name__}: {e})")
     print("[transcript] " + line, flush=True)
@@ -135,7 +148,7 @@ def _write_row(row):
 # the spawned jobs — Modal owns these, they survive the webhook container
 # ---------------------------------------------------------------------------
 
-@app.function(image=image, volumes={TRANSCRIPT_ROOT: volume}, secrets=[SECRET],
+@app.function(image=image, secrets=[SECRET],
               timeout=900, retries=0)
 async def answer_and_send(sender: str, text: str):
     """One question, end to end. timeout=900 leaves headroom over the 240s model wait
@@ -156,7 +169,7 @@ async def answer_and_send(sender: str, text: str):
     return {"fallback": row["fallback"], "error_class": row["error_class"]}
 
 
-@app.function(image=image, volumes={TRANSCRIPT_ROOT: volume}, secrets=[SECRET],
+@app.function(image=image, secrets=[SECRET],
               timeout=300, retries=0)
 async def greet_and_send(sender: str):
     core = _core()
@@ -192,7 +205,7 @@ async def _send_once(to: str, text: str):
 # against ~$5.68/mo always-warm, and the GPU's own cold start dwarfs the webhook's.
 # Buy warmth only if the transcripts show Wappfly retrying on slow delivery — the same
 # discipline as holding the GPU scaledown at 300.
-@app.function(image=image, secrets=[SECRET], volumes={TRANSCRIPT_ROOT: volume},
+@app.function(image=image, secrets=[SECRET],
               min_containers=0, scaledown_window=1200)
 @modal.fastapi_endpoint(method="POST")
 def webhook(item: dict, token: str = None):
@@ -256,19 +269,19 @@ def webhook(item: dict, token: str = None):
         return {"status": "error"}
 
 
-@app.function(image=image, volumes={TRANSCRIPT_ROOT: volume}, secrets=[SECRET])
+@app.function(image=image, secrets=[SECRET])
 @modal.fastapi_endpoint(method="GET")
 def health():
     """The deploy check. `build` is the git SHA baked at deploy time — Modal can serve
     a warm container running OLD code (R16), so confirming this against the commit you
     just pushed is the only proof the deploy took."""
     try:
-        volume.reload()
-        months = sorted(os.listdir(TRANSCRIPT_ROOT))
-        rows = sum(len(os.listdir(os.path.join(TRANSCRIPT_ROOT, m))) for m in months)
-        store = {"ok": True, "months": months, "rows": rows}
+        keys = list(transcripts.keys())
+        store = {"ok": True, "backend": "modal.Dict", "rows": len(keys),
+                 "months": sorted({str(k).split("/")[0] for k in keys})}
     except Exception as e:                                           # noqa: BLE001
-        store = {"ok": False, "error": f"{type(e).__name__}: {e}"}
+        store = {"ok": False, "backend": "modal.Dict",
+                 "error": f"{type(e).__name__}: {e}"}
     return {
         "status": "ok",
         "product": "Chike by Africa Giants",
@@ -338,7 +351,7 @@ def _token_fingerprint_flat(key: str) -> dict:
             f"{key.lower()}_has_whitespace": fp["has_whitespace"]}
 
 
-@app.function(image=image, volumes={TRANSCRIPT_ROOT: volume}, secrets=[SECRET])
+@app.function(image=image, secrets=[SECRET])
 @modal.fastapi_endpoint(method="GET")
 def transcripts(token: str = None, n: int = 50):
     """Read the pilot's record. Disabled entirely when ADMIN_TOKEN is unset — an open
@@ -346,22 +359,15 @@ def transcripts(token: str = None, n: int = 50):
     expected = os.environ.get("ADMIN_TOKEN", "")
     if not expected or token != expected:
         return {"status": "not found"}
-    import json
     try:
-        volume.reload()
+        keys = sorted(transcripts.keys())
     except Exception as e:                                           # noqa: BLE001
         return {"status": "error", "detail": f"{type(e).__name__}: {e}"}
-    paths = []
-    for month in sorted(os.listdir(TRANSCRIPT_ROOT)):
-        d = os.path.join(TRANSCRIPT_ROOT, month)
-        paths += [os.path.join(d, f) for f in sorted(os.listdir(d))]
-    paths = paths[-max(1, min(int(n), 500)):]
+    keys = keys[-max(1, min(int(n), 500)):]
     rows = []
-    for p in paths:
+    for k in keys:
         try:
-            with open(p, encoding="utf-8") as f:
-                rows.append(json.load(f))
+            rows.append(transcripts[k])
         except Exception as e:                                       # noqa: BLE001
-            rows.append({"unreadable": os.path.basename(p),
-                         "error": f"{type(e).__name__}: {e}"})
-    return {"count": len(rows), "rows": rows}
+            rows.append({"unreadable": str(k), "error": f"{type(e).__name__}: {e}"})
+    return {"count": len(rows), "backend": "modal.Dict", "rows": rows}
