@@ -126,6 +126,79 @@ sightings and should not outrank measured classes. **This is a recommendation, n
 
 ---
 
+## 🧭 THE "COMPUTE-PATH WRONG-NUMBER CLUSTER" IS MISNAMED — six of eight never reach the compute path, and zero are engine arithmetic failures (2026-08-14)
+
+**RENAME IT. The queue called this the compute-path wrong-number cluster. These questions never
+reach the compute path.** Anyone who goes looking for a bug in the rules engine on the strength
+of that name will find nothing, because there is nothing there: **the engine's arithmetic is not
+wrong in a single one of the eight rows.** The correct name is the **routing-and-cue-resolution
+cluster**.
+
+Two independent signals agree exactly, with no disagreement on any row:
+- **Reply shape** — six of the eight replies carry NO appended deterministic working. That
+  absence is the observable signature of the engine never having run.
+- **Offline routing** — `routing.detect_intent` on the verbatim questions returns `none` for
+  exactly those six (`scratch/p2_route_diag.py`, no GPU, no network).
+
+```
+NEVER REACHED COMPUTE : nat_01, nat_04, nat_09, nat_13, nat_14, nat_19
+REACHED, WRONG LEVY   : (none)
+ROUTED CORRECTLY      : nat_08, nat_16
+```
+
+**Three classes, four root causes:**
+
+| class | rows | root cause |
+|---|---|---|
+| **A1** money-ask cue gap | nat_01, nat_19 (+half of nat_09) | `_MONEY_ASK` carried `ngapi` only in the fixed phrase `"ni ngapi"`; an inflected verb before it matched nothing |
+| **A2** levy cue gap | nat_09, nat_13, nat_14 | `_natural_levy` returns None for *mfuko*, *serikali inachukua*, *kupeleka kwa TRA* |
+| **A3** applicability + payroll-context gap | nat_04 | `watu` is not in `_PAYROLL_CTX`; *"inanianza lini"* is not an applicability cue. Both gates fail |
+| **B** wrong engine input | nat_16 | every `_PAYE_NONRESIDENT_CUES` entry is built on *mkazi*; the question says *"hana residence permit ya kudumu"* — English |
+| **C** right levy, wrong party | nat_08 | `nssf_party` employee cues are third-person; the question is first-person-object (*"wana**ni**kata … mshahara **wangu**"*). Engine correctly computes the TOTAL; the employee share was asked. **Exact twin of the employer-side gap PREREQ-2 already closed** |
+
+### ⚖️ STANDING PRINCIPLE — for compute-cue widening, the safe direction is WIDER
+
+**Under-routing and over-routing are not symmetric, and the asymmetry should govern every cue
+decision on this path:**
+- **Under-routing** hands the question to the model, which free-computes and returns a confident
+  wrong figure with no working. All six Class A rows are this.
+- **Over-routing** hands it to the engine, which **clarifies rather than guesses** (never-guess /
+  R8 — demonstrated live by nat_21, which was offered a TZS 30,000,000 vehicle value as a WCF
+  base and asked for the payroll instead). It costs the user a turn.
+
+And the engine is the better half of the system — **91.6% on the compute path against 76.2% on
+fact** — so every question moved from fact to compute is moving to the stronger path.
+
+**QUALIFIER, and it is not decorative: safe-direction is an argument about the TYPICAL case, not
+a licence to skip the sweep.** A specific over-broad cue can still produce a wrong number rather
+than a clarification — see `edge_p05` in the A1 entry, where a widened route reaches a question
+carrying an asset distractor, and the failure mode would be a *new* wrong figure, not a
+clarification. Widen confidently; sweep anyway; author the probes the corpus cannot supply.
+
+---
+
+## 🔀 NATURALLY-NAMED LEVIES CANNOT FAN OUT — `all_explicit_levies` has no natural-cue twin (2026-08-14)
+
+D-DECOMP-1 fixed multi-levy compute parts by having the orchestrator fan out over
+`routing.all_explicit_levies`, which enumerates every **explicitly named** levy token (SDL, NSSF,
+PAYE, WCF) so a question naming two is computed twice rather than once. **There is no equivalent
+for naturally-named levies.** `_natural_levy` returns the FIRST cue that matches and stops, so
+*"ile ya mafunzo na ile ya uzeeni"* resolves to `nssf` alone and SDL is silently dropped.
+
+**Distinct from A2**, which is about levies that resolve to *nothing*; this is about levies that
+resolve to *one of several*. A2's fix adds cues; this one needs an `all_natural_levies` and an
+orchestrator path that consumes it.
+
+Caps two rows found by the A1 sweep:
+- **nat_23** — *"ile ya mafunzo na ile ya uzeeni"*, 12 staff, TZS 5,500,000. Probe demands both:
+  SDL 192,500 and NSSF 1,100,000. **Its live answer today is `"Kwa wafanyakazi 12, PAYE = TZS
+  5,500,000"` — a fabricated tax equal to the ENTIRE PAYROLL.** One correct levy is a large
+  improvement on that even while the fan-out stays open, and that comparison is the reason A1
+  ships without waiting for this.
+- **edge_p10** — same shape, plus an SDL applicability trap (5 staff, so SDL should not apply).
+
+---
+
 ## 💳 THE PILOT'S CAPACITY IS ~15 SESSIONS/DAY, AND THAT IS THE REAL ARGUMENT FOR HOLDING GPU SCALEDOWN AT 300 (2026-08-14)
 
 Priced from Modal's published rates, fetched 2026-08-14: **T4 $0.000164/s**, CPU
@@ -1488,6 +1561,20 @@ pattern in how:**
 | 7 | D-FIDELITY-3 BEFORE canary (2026-08-11) — **NEAR-MISS, caught before it produced a number** | asked a **paraphrase** of the question that produced the defect, got a clean answer, and would have reported `INCONCLUSIVE — the model did not reproduce the guarded shape` while the defect was reproducible on every run of the verbatim question. Greedy decoding is what makes a live check exact and what makes it brittle in the input: a different prompt is a different deterministic trajectory | reading the committed 2026-08-10 artifact for the exact question string instead of retyping it. Full entry above |
 
 | 8 | `na je` live canary (2026-08-11) — **NEAR-MISS, caught before it reported** | its "was the second ask answered" marker was the phrase from the QUESTION (`kima cha chini`); production answers with `kiwango cha chini`, so a correctly answered row scored as a DROPPED ask — and the paired leak check, splitting on the same absent phrase, read the whole reply and flagged a figure from the other half as a preamble leak | reading the replies instead of the flags. Both were re-derived from the stored artifacts without re-asking |
+| **9** | **Wappfly `GET /api/me` (2026-08-14) — THE FIRST ONE THAT WAS A VENDOR'S, NOT OURS. Not a near-miss: it cost two token rotations and a full WhatsApp session re-pair** | I recommended `/api/me` as "the decisive one-line test" of token validity, on the strength of Wappfly's own docs saying every endpoint takes the same `X-API-Token`. **It 401s on a token that sends successfully.** `POST /api/messages/send` with the identical token returns `{"sent":true,"status":"sent","msg_id":…}`. The read endpoint is broken; the auth was never the problem, and every rotation chased a fault in the instrument | the founder testing the SEND endpoint directly instead of trusting the check I proposed |
+
+**#9 extends the rule past our own code.** The first eight were instruments this project built,
+and the lesson was "an instrument cannot be its own control." #9 was a *vendor's* instrument,
+taken on the authority of the vendor's own documentation, and it was wrong in the direction that
+costs the most: it reported a failure that did not exist, so every remedy applied was aimed at a
+healthy system. **Verify the instrument before trusting its verdict applies to third-party
+diagnostics too — especially a diagnostic whose only evidence is that the docs say it works.**
+The cheap check was available the whole time: exercise the endpoint you actually depend on.
+
+⚠️ **OPERATIONAL RULE — never health-check Wappfly auth with `GET /api/me`.** It returns 401 for
+valid tokens. Any monitoring, any preflight, any "is the token still good" check must use a real
+`POST /api/messages/send`. Recorded here before someone builds monitoring on the read endpoint
+and spends the same two days.
 
 **Not one was caught by itself.** Each was caught by a different instrument, a live run, or an
 ad-hoc check — never by the suite it belonged to. The corollary is not "write better probes",

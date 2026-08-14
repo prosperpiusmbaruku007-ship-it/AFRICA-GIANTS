@@ -338,8 +338,31 @@ def _has_number(ql: str) -> bool:
     return bool(re.search(r"\d", ql)) or bool(re.search(_SWA_NUM, ql))
 
 
+# ROUTING-GAP-NGAPI (A1). `ngapi` IS the Swahili "how much" — and _MONEY_ASK only carried
+# it in the fixed phrases "ni ngapi" / "shilingi ngapi". An inflected verb before it
+# ("nitalipa ngapi", "nichangie ngapi", "nakatwa ngapi") matched nothing, so the question
+# never reached the compute path and the MODEL free-computed the figure: nat_01 answered SDL
+# at 0.5% with no amount at all, nat_19 answered WCF as TZS 300,000 on a 3,000,000 payroll
+# (10%, against the real 0.5%). Neither reply carried a deterministic working, which is the
+# observable signature of the engine never having run.
+#
+# VERB-QUALIFIED, NEVER A BARE `ngapi` (R17: prefer the narrowest form that closes the case,
+# chosen so one substring covers a whole inflection family). Two noun collisions exist and
+# only an AUTHORED probe could find them — the corpus contains neither:
+#   kata       = WARD (an administrative area), not only the deduct stem. Hence \w+kata with
+#                a REQUIRED prefix, so "kata ngapi zina ofisi za TRA" cannot match while
+#                "wananikata ngapi" does.
+#   changamoto = CHALLENGE, and it opens with the chang- contribute stem. Safe because the
+#                stem must sit immediately before the space: "changamoto ngapi" cannot match.
+# The _NONMONEY_ASK guard below still runs afterwards, so "asilimia/siku/mara ngapi" remain
+# non-money asks even when a verb form is also present — two independent layers, deliberately.
+_VERB_MONEY_ASK = re.compile(
+    r"\b(?:\w*lipa|\w*lipe|\w*lipwa|\w*changia|\w*changie|\w*changa|\w+katwa|\w+kata)"
+    r"\s+ngapi\b")
+
+
 def _has_money_ask(ql: str) -> bool:
-    ask = any(c in ql for c in _MONEY_ASK)
+    ask = any(c in ql for c in _MONEY_ASK) or bool(_VERB_MONEY_ASK.search(ql))
     # A bare 'ni ngapi'/'... ngapi' that is actually a rate/time/count ask does not count,
     # unless an explicit money phrase ('kiasi gani'/'shilingi ngapi') is also present.
     if any(nm in ql for nm in _NONMONEY_ASK) and not (
