@@ -10,6 +10,13 @@ path (DONE, entry below)** and **P2 the compute-path wrong-number cluster**. The
 severity board because *"which defect next"* and *"what stands between us and learning from real
 users"* are different questions with different answers.
 
+**P2 has its first landed item: the decimal separator fix (`ce677fa`, entry below).** Founder
+order from here (2026-08-14): **second ack** → `MODAL_API_TOKEN`/`HF_TOKEN` fingerprints → full
+percent exclusion → **then back to the routing cluster (B, C, A2, A3)**. The founder's reasoning
+on that last hop is on the record and outranks the infrastructure items: *the fingerprints are a
+precaution, the wrong answers are the product* — the first real message ever sent got a wrong
+answer, and the assessment puts natural-register accuracy at 39.6% wrong.
+
 **🚀 v16 IS LIVE IN PRODUCTION (2026-08-09, `ec9cbb3`).** The router + rules engine +
 orchestrator pipeline now serves every request. Cutover entry immediately below — deployed
 commit, the two gate results that authorised it, and the rollback procedure.
@@ -50,6 +57,206 @@ reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline 
 second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
+
+## 📱 THE FIRST MESSAGE THAT EVER REACHED A HANDSET GOT A WRONG ANSWER (2026-08-14)
+
+**Delivery works.** After four failed attempts across two days, one WhatsApp message completed
+end to end: ack at 14:53, answer at 14:54, build `f98fc67`. The transcript row, verbatim from
+the Dict:
+
+```
+sender_domain        lid           (Wappfly's linked-ID form, not @s.whatsapp.net)
+ack_sent             true
+send_ok              true
+fallback             false
+error_class          null
+model_latency_ms     93108
+total_latency_ms     94205
+cold_start_suspected true
+reply_chars          259
+```
+
+Every field the failure taxonomy was built to carry is populated, and the store survived the
+container. **The delivery half of pilot readiness is closed.**
+
+**The answer was wrong**, and it is the first user-facing wrong answer this project has ever
+produced on a real handset. Verbatim, both halves:
+
+> **Q:** `Efd ni lazima kwa biashara yenye mauzo ya milioni 15`
+>
+> **A:** `Hapana, si lazima. Biashara yenye mauzo ya TZS 15M+ kwa mwaka inaweza bado kutumia`
+> `risiti za mkono ikiwa imejisajili VAT. Mashine ya EFD inatakiwa tu pale unaposajiliwa VAT`
+> `au pale mauzo yako yanayofikia kiwango kinachohitajika. Thibitisha na TRA (tra.go.tz).`
+
+Against `efd_threshold_tzs_11m`: EFD is required at **TZS 11M annual turnover and above**, and
+VAT registration makes it mandatory **regardless of turnover**. 15M ≥ 11M, so the answer is
+required, and:
+
+1. **The verdict is inverted.** *"Hapana, si lazima"* — the one word the trader acts on is the
+   opposite of the rule. It advises a business that must have an EFD that it need not buy one.
+2. **Sentence 2 is backwards.** *"can still use handwritten receipts **if** it is VAT-
+   registered"* — VAT registration is the condition that makes EFD unconditional. The exemption
+   limb and the mandatory limb are swapped.
+3. **Sentence 3 states the rule correctly** — *"EFD is required only when you are VAT-registered
+   **or** when your sales reach the required threshold"* — and contradicts both sentences above
+   it. **The model holds the correct rule and applies it to the opposite conclusion.** Same
+   shape as SAFETY-3: correct fact, wrong application.
+4. **The threshold number never appears.** Sentence 3 says *"kiwango kinachohitajika"* (the
+   required level) without naming 11M — so the reply is unfalsifiable to the reader, and a
+   trader cannot check it against their own turnover.
+
+**The extraction was fine.** *"milioni 15"* was read as *"TZS 15M+"* correctly. This is not the
+decimal bug.
+
+### It is a routing failure, and the engine that would have got it right already exists
+
+`chike/rules_engine/registration_thresholds.py` — shipped `29eb965`, live-verified `90ac9e8` —
+is a deterministic threshold comparison with no generation on the path. It was never invoked.
+Offline `detect_intent`:
+
+```
+'Efd ni lazima kwa biashara yenye mauzo ya milioni 15'          -> none
+'Efd ni lazima kwa biashara yenye mauzo ya milioni 15?'         -> none
+'EFD ni lazima kwa biashara yenye mauzo ya TZS 15,000,000?'     -> none
+'Je, ninahitaji EFD kama mauzo yangu ni milioni 15 kwa mwaka?'  -> efd_requirement
+```
+
+**The missing question mark is not the cause** — adding it changes nothing, and neither does
+fully normalising the figure to `TZS 15,000,000`. Two independent gates reject it:
+
+- `_EFD_CUES` holds eight forms, all first-person or noun-phrase (`nahitaji efd`,
+  `lazima niwe na efd`, `kuwa na efd`). The **impersonal** `EFD ni lazima kwa biashara` — a
+  rule stated as a proposition and asked for confirmation — matches none of them.
+- `_OWN_TURNOVER_CUES` requires a possessive claim (`mauzo yangu`). *"biashara yenye mauzo ya
+  milioni 15"* is a third-person description, so `own` is false and the route would fail on
+  this gate even if the EFD cue matched.
+
+The second gate is **not obviously a defect**. It was added deliberately (see its comment: 18
+corpus rows were diverted when the route needed only `{obligation cue + magnitude}`) to keep
+threshold *lookups* off the comparison path. But this question is neither a lookup nor a
+personal claim — it is a **general rule with a concrete figure supplied**, which the comparison
+can answer exactly. Closing it needs a third shape, not a loosened cue. **Logged as its own
+item; not fixed in this pass.**
+
+**This is the fifth instance of the P2 headline finding** — *the compute path is misnamed; the
+failures are routing, not arithmetic.* The correct number was available, the correct engine was
+deployed and verified, and neither ran because the trader phrased the question the way traders
+phrase questions.
+
+### It is a stable wrong answer, not a coin flip — with one honest gap
+
+The founder observed this reply reproduce **byte-identically four times** — three direct queries
+to the model endpoint plus this WhatsApp delivery. Consistent with the greedy-decoding
+determinism proven 2026-08-14 (3/3 byte-identical across cold starts of 60.6s/60.8s/97.9s,
+through a redeploy and a routing change).
+
+**What is on record is sample four only.** A grep of every artifact in `scratch/` and `eval/`
+finds the exact reply string in exactly one file — the transcript dump. The first three samples
+were read off a console and never written to disk, so byte-identity across all four is the
+founder's observation, not a verifiable artifact. **This is R16's own rule turned on our manual
+probing:** the one-liner for querying the model endpoint directly must write its reply to a
+file, or every hand-run probe is a measurement that dies with the scrollback. The transcript
+store is why sample four survived at all.
+
+**And the sample-one arithmetic is the point.** The assessment put natural-register questions at
+**39.6% wrong**. The first question a real handset ever sent landed in that 39.6%. One sample
+proves nothing about the rate — but it is the rate arriving exactly on schedule, and it argues
+against any reading of the assessment as pessimistic.
+
+### The 82 seconds AFTER the ack — second-ack analysis (2026-08-14)
+
+The same transcript row prices the next user-facing improvement. The ack fired at 12s and the
+answer landed at **94.2s** (`model_latency_ms` 93,108, `cold_start_suspected` true), so the user
+sat through **82 seconds of silence after being told to wait a moment** — and the ack copy says
+*"subiri kidogo"*, which at 82 seconds reads as a broken promise rather than a reassurance.
+
+The bounds are measured, not guessed:
+
+| observation | value | source |
+|---|---|---|
+| warm p90 | **9.8s** | 48 questions, the same measurement that set `cold_start_suspected`'s 30s threshold |
+| cold starts observed | **60.6s / 60.8s / 97.9s** | 3/3 determinism run, 2026-08-14 |
+| the one real delivery | **94.2s** | transcript row, build `f98fc67` |
+
+**Second ack at 45s**, because 45 sits in the empty band between them: comfortably above warm
+p90, so a warm request never sees it, and below the earliest cold completion ever observed
+(60.6s), so a cold request always does. Anything under ~30s risks firing on a slow-warm request
+that is about to answer anyway; anything over 60s can arrive after the answer it was meant to
+cover.
+
+**One coroutine walking `[(12s, SLOW_ACK), (45s, SECOND_ACK)]`, exiting the moment the answer is
+sent, capped at two.** Not two independent timers — two timers can both be in flight when the
+answer lands and produce a reassurance *after* the answer, which is worse than silence. The cap
+is structural: the list has two entries and the loop cannot outlive it, so no failure mode ends
+with a user being told to wait indefinitely.
+
+The copy names the reason, hedges the bound, and ends on the one promise the architecture
+actually keeps — `.spawn()` makes Modal responsible for running the job to completion, and the
+fallback path sends something even when the model fails:
+
+> `Bado ninafanya kazi kwenye swali lako. Mara ya kwanza huchukua dakika moja hadi mbili kwa`
+> `sababu mfumo unaanza upya. Sitakuacha bila jibu — nitakutumia hapa hapa likiwa tayari.`
+
+It does **not** say "sekunde thelathini". A number we cannot keep is how the first ack became a
+broken promise at 82 seconds; the range plus the guarantee is what we can actually deliver.
+
+**This does not make the answer faster** — it makes a 94-second wait legible. Warmth costs
+~$212/mo for business hours and buys polish, not correctness (unchanged reasoning from the
+knobs table below). The second ack costs one Wappfly message on cold requests only.
+
+## 🔢 THE DECIMAL SEPARATOR FIX — `milioni 5,5` was 55,000,000 (`ce677fa`, 2026-08-14)
+
+**P2's first landed item.** Swahili writing uses both separator conventions and the parser used
+neither — it stripped separators and concatenated:
+
+| written | parsed before | direction |
+|---|---|---|
+| `milioni 5,5` | **55,000,000** | **10× OVERSTATEMENT** — every levy derived from it demands ten times what is owed |
+| `milioni 1.2` | **1,000,000** | truncated — the dot was not in the character class at all |
+
+Both forms are live in the corpus (`nat_09`, `nat_23`). The rule: a thousands group is always
+exactly three digits, so a one- or two-digit tail is unambiguously a decimal mark. A three-digit
+tail is a genuine collision — `milioni 1,500` is 1.5M or 1,500M, **a factor of a thousand** — and
+is **declined and surfaced to the user**, not guessed. The decline guard sits above the
+compute/fact fork because the ambiguity belongs to the question, not the route.
+
+Measured: 6,194 corpus questions, **only nat_09 and nat_23 change**; 4 declining rows, all inside
+the probe file; 24-row route blast radius unchanged; 65 tests in the file, 948 in the suite.
+
+### Two things the approved spec did not determine, and the measurement found both
+
+The fix was specified precisely and was still under-determined in two places. Both were caught by
+running the instruments rather than by reading the diff:
+
+1. **`%`-and-`asilimia` neighbours are not enough.** `Kiwango cha mchango wa NSSF ni asilimia
+   3.5, au ni 0.5?` (`eval_337`, a real corpus row) writes `asilimia` **once** and lets it govern
+   **both** figures. The specified neighbour test drops 3.5 and **keeps 0.5** — the one row of
+   the 24 it cannot hold, leaving a rate in the amount list. Closed by requiring the previous
+   figure to have been dropped as a rate with nothing but `au`/`ama` between them, **not** by
+   widening the backward search for `asilimia`, which would swallow the turnover in `asilimia 18
+   ya mauzo ya TZS 1,500,000`. `ds_28` is the negative that pins it.
+
+2. **The obvious end-to-end test would have passed while proving nothing.** The proposed check —
+   *"the question with the rate must compute 175,000"* — omits the headcount, and **SDL needs the
+   headcount independently**, so both the with-rate and without-rate forms clarify and the test
+   goes green on a fix that does not work. The probes and the test carry `wafanyakazi 12`.
+
+Same shape as the STANDING LIMITATION and as R17: **an instrument that cannot fail is not
+evidence**, whether it is a regex gate crediting a wrong answer, a sweep over a corpus lacking
+the vocabulary, or a test whose control and treatment collapse to the same branch.
+
+### Pattern worth keeping: when you defer a change, pin the rows it will alter
+
+Full percent exclusion — dropping **integer** rates (`asilimia 18`, `2%`) from the amount list
+too — is a real defect of the same family and probably a net improvement. It is **measured at 250
+rows changed, 89 of them ceasing to be multi-figure**, which is far too large to ride along on
+this commit. Deferred as its own item with its own sweep and canaries.
+
+`ds_25`/`ds_26` pin the rows that pass will change, with `guards_against` text saying so
+explicitly. **Generalise this:** a deferred change should leave behind probes asserting today's
+behaviour on the rows it will alter, so the future pass has to change them **visibly, with its
+own sweep**, rather than quietly. A deferral recorded only in prose is a deferral that gets
+re-derived from scratch or silently absorbed into an unrelated diff.
 
 ## 🧮 THE BOARD — everything logged and unfixed, 2026-08-11 (supersedes the 2026-08-10 queue)
 
