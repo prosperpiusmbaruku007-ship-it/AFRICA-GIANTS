@@ -85,7 +85,12 @@ image = (
 # `modal.Dict` is concurrency-safe by construction: a put is a put, with no snapshot to
 # clobber. This data is a key-value log, not a filesystem, and modelling it as one was the
 # mistake. The old Volume rows remain readable via `modal volume get chike-transcripts`.
-transcripts = modal.Dict.from_name("chike-transcripts-kv", create_if_missing=True)
+# NAME IT IN CAPS. A module-level `transcripts` was SHADOWED by the
+# `transcripts` web function below, so every write went to a Function object,
+# raised AttributeError, and was swallowed by _write_row's except -- a store
+# that deployed cleanly and recorded nothing. Caught by a round-trip test, not
+# by the deploy.
+TRANSCRIPTS = modal.Dict.from_name("chike-transcripts-kv", create_if_missing=True)
 
 # Lazy cross-app handle — resolved on first use, so a chike-inference redeploy does not
 # require a chike-whatsapp redeploy.
@@ -138,7 +143,7 @@ def _write_row(row):
     core = _core()
     line = core.row_to_line(row)
     try:
-        transcripts[core.transcript_filename(row)] = row
+        TRANSCRIPTS[core.transcript_filename(row)] = row
     except Exception as e:                                           # noqa: BLE001
         print(f"[transcript] WRITE FAILED ({type(e).__name__}: {e})")
     print("[transcript] " + line, flush=True)
@@ -276,7 +281,7 @@ def health():
     a warm container running OLD code (R16), so confirming this against the commit you
     just pushed is the only proof the deploy took."""
     try:
-        keys = list(transcripts.keys())
+        keys = list(TRANSCRIPTS.keys())
         store = {"ok": True, "backend": "modal.Dict", "rows": len(keys),
                  "months": sorted({str(k).split("/")[0] for k in keys})}
     except Exception as e:                                           # noqa: BLE001
@@ -360,14 +365,14 @@ def transcripts(token: str = None, n: int = 50):
     if not expected or token != expected:
         return {"status": "not found"}
     try:
-        keys = sorted(transcripts.keys())
+        keys = sorted(TRANSCRIPTS.keys())
     except Exception as e:                                           # noqa: BLE001
         return {"status": "error", "detail": f"{type(e).__name__}: {e}"}
     keys = keys[-max(1, min(int(n), 500)):]
     rows = []
     for k in keys:
         try:
-            rows.append(transcripts[k])
+            rows.append(TRANSCRIPTS[k])
         except Exception as e:                                       # noqa: BLE001
             rows.append({"unreadable": str(k), "error": f"{type(e).__name__}: {e}"})
     return {"count": len(rows), "backend": "modal.Dict", "rows": rows}

@@ -559,3 +559,25 @@ def test_the_received_token_is_fingerprinted_not_printed():
     # A percent-encoded arrival must fingerprint DIFFERENTLY from its decoded form --
     # that difference is the whole diagnostic.
     assert mw._fp("a-b_c") != mw._fp("a%2Db%5Fc")
+
+
+def test_the_transcript_store_is_not_shadowed_by_the_transcripts_function():
+    """The module-level Dict was originally named `transcripts`, identical to the
+    `transcripts` web function defined below it. Every write went to a Function object,
+    raised AttributeError, and was swallowed by _write_row's except -- a store that
+    deployed cleanly, reported no error to the caller, and recorded nothing.
+
+    A deploy cannot catch this. Only a round-trip read can, which is why one is run.
+    """
+    import modal
+    spec = importlib.util.spec_from_file_location(
+        "chike_modal_whatsapp_store",
+        os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"))
+    mw = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mw)
+    assert isinstance(mw.TRANSCRIPTS, modal.Dict), (
+        "the store must be a Dict, not whatever a later def rebound the name to")
+    assert "transcripts" in mw.app.registered_functions
+    src = open(os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"),
+               encoding="utf-8").read()
+    assert "\ntranscripts = " not in src, "never rebind the store to a lowercase name"
