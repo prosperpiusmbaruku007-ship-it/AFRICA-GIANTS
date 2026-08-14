@@ -50,9 +50,16 @@ _EXPLICIT = {
 # --- natural-path cues (path 2, Candidate C) --------------------------------
 # Generic obligation words -> levy. Ordered so a more specific cue wins; generic
 # deduction words ('makato','michango') map to ambiguous_multi, not a single levy.
+# ORTHOGRAPHIC VARIANTS (2026-08-14, dh->z). THE OBSERVED MISS: a real user wrote "mfuko wa
+# hifazi ya jamii". No cue matched, detect_intent returned none, and the question fell to the
+# fact path, which answered "TZS 20,000" against a stated salary of TZS 800,000 — the correct
+# employer share was TZS 80,000. The figure was extracted correctly (parse_amounts read "laki
+# nane" as 800000) and nssf_party read "employer"; ONE MISSPELLING was the entire blocker.
+# Hand-written per phrase, never generated — see tests/test_orthographic_variants.py.
 _LEVY_CUES = [
     ("nssf", ["pensheni", "uzeeni", "hifadhi ya jamii", "mchango wa hifadhi",
-              "mfuko wa hifadhi", "akiba ya baadaye"]),
+              "mfuko wa hifadhi", "akiba ya baadaye",
+              "hifazi ya jamii", "mchango wa hifazi", "mfuko wa hifazi"]),
     ("sdl", ["ufundi", "ujuzi", "mafunzo", "maendeleo ya ujuzi", "kuendeleza wafanyakazi"]),
     ("wcf", ["fidia", "bima ya ajali", "bima ya majeraha", "majeraha kazini", "ajali kazini"]),
     # ROUTING-GAP-PAYE: PAYE's everyday word is 'kodi' (tax), which is in neither the original
@@ -91,7 +98,8 @@ _PAYROLL_CTX = ["mshahara", "mishahara", "mfanyakazi", "wafanyakazi", "waajiriwa
                 "kumwajiri", "muajiri", "mwajiri", "waajiri", "kibarua", "vibarua", "mtumishi"]
 
 # Money 'how-much' cue: a request for a shilling QUANTITY.
-_MONEY_ASK = ["kiasi gani", "shilingi ngapi", "kinakatwa kiasi", "ni ngapi", "gharama gani"]
+_MONEY_ASK = ["kiasi gani", "shilingi ngapi", "kinakatwa kiasi", "ni ngapi", "gharama gani",
+              "garama gani"]                       # gh->g variant
 # Non-money quantity asks (rate / time / count) that must NOT count as a money ask.
 _NONMONEY_ASK = ["asilimia ngapi", "siku ngapi", "muda gani", "miaka mingapi", "idadi gani",
                  "wangapi", "mara ngapi"]
@@ -135,7 +143,8 @@ _MIN_WAGE_CUES = ["kima cha chini", "mshahara wa chini", "kiwango cha chini cha 
 # question carrying BOTH frames resolves to 'unknown', which leads substantively instead.
 _WAGE_VIOLATION_CUES = ["nakiuka", "ninakiuka", "unakiuka", "tunakiuka", "navunja sheria",
                         "ninavunja sheria", "ni kosa", "ni kinyume cha sheria",
-                        "nitaadhibiwa", "nitatozwa faini", "nitafungwa", "nakosea kisheria"]
+                        "nitaadhibiwa", "nitaazibiwa",          # dh->z variant
+                        "nitatozwa faini", "nitafungwa", "nakosea kisheria"]
 _WAGE_LAWFUL_CUES = ["ni halali", "si halali", "ni sawa", "iko sawa", "inaruhusiwa",
                      "naruhusiwa", "ni sahihi kisheria", "nafuata sheria", "ni kihalali"]
 

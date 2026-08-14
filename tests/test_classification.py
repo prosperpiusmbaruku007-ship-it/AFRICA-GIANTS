@@ -35,13 +35,19 @@ def _ooc_controls():
 
 # --- config-driven resolution ----------------------------------------------
 
-def test_resolve_phrases_yields_the_production_107_24_set():
+def test_resolve_phrases_yields_the_production_125_26_set():
     ooc, in_scope = classification.resolve_phrases(classification.load_local_config())
     # Finding 3 target: the full production set, not the former 8-phrase stub.
     # 53 -> 107 on 2026-08-06 (SAFETY-1 audit: +54 phrases closing the capital-gains leak
     # nat_46, swept for false positives over 483 questions with 1 classification change).
-    assert len(ooc) == 107
-    assert len(in_scope) == 24
+    # 107 -> 125 / 24 -> 26 on 2026-08-14: Swahili dh->z / th->s orthographic variants,
+    # after a real user's `hifazi` matched nothing and dropped an NSSF question onto the
+    # fact path. 18 OOC + 2 in-scope; THREE were deliberately WITHHELD because their
+    # standard spelling already over-refuses an in-scope question — see
+    # tests/test_orthographic_variants.py and eval/refusal_gate/
+    # orthographic_variant_in_scope_012.jsonl.
+    assert len(ooc) == 125
+    assert len(in_scope) == 26
 
 
 def test_resolve_phrases_unions_hardcoded_with_config_not_replace():
@@ -119,9 +125,10 @@ def test_paraphrased_ooc_controls_are_now_refused_by_the_phrase_gate():
 
 def test_orchestrator_classify_uses_the_full_production_set():
     orch = Orchestrator(backend=FakeBackend(), retriever=lambda q: [])
-    # Resolved from config, not the removed 8-phrase stub (107 after the SAFETY-1 audit).
-    assert len(orch.ooc_phrases) == 107
-    assert len(orch.in_scope_phrases) == 24
+    # Resolved from config, not the removed 8-phrase stub (107 after the SAFETY-1 audit,
+    # 125 after the 2026-08-14 orthographic-variant additions).
+    assert len(orch.ooc_phrases) == 125
+    assert len(orch.in_scope_phrases) == 26
     assert orch.classify("BRELA ada ni ngapi?") is True
     assert orch.classify("mrabaha wa madini ni ngapi?") is False
 

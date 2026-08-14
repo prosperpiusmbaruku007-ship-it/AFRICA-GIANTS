@@ -204,6 +204,241 @@ broken promise at 82 seconds; the range plus the guarantee is what we can actual
 ~$212/mo for business hours and buys polish, not correctness (unchanged reasoning from the
 knobs table below). The second ack costs one Wappfly message on cold requests only.
 
+### VERIFIED LIVE 2026-08-14, and the warm margin is 2.6s — not the comfortable gap implied
+
+R16b live check on build `ad1ed50`, four messages, both directions clean:
+
+| | cold 18:45:25 | warm 18:47:31 | warm 18:49:22 |
+|---|---|---|---|
+| `acks_sent` | **2** | **0** | **0** |
+| `cold_start_suspected` | true | false | false |
+| `model_latency_ms` | 64,742 | 9,406 | 5,766 |
+
+The positive fired both rungs and the answer arrived ~20s after rung two. The negative fired
+neither. **No secret change was needed and none was made** — 12s/45s are the production
+defaults, and shortening them would have made the warm case vacuous, since a warm request
+clearing a *shortened* rung proves nothing about the rung that actually ships. A forced-failure
+config (the `MODEL_TIMEOUT_S=1` pattern) is right for a path that cannot occur naturally; a cold
+start is not that path.
+
+⚠️ **RECORD THE MARGIN: the warm request cleared the 12s rung by 2.6 SECONDS.** The band was
+chosen against a warm p90 of 9.8s, and the first warm request ever measured came in at 9.4s —
+essentially at p90, not comfortably below it. The design reads as though there is a 2-3× gap
+between warm completion and rung one. There is not; there are 2.6 seconds.
+
+**Why this is written down rather than acted on:** any latency regression of ~28% on the warm
+path starts firing first acks on requests that are about to answer — the exact over-broad
+behaviour the negative case exists to prevent — and it will do so silently, because nothing
+alerts on it. `acks_sent` is in every transcript row precisely so this is checkable: **a warm
+row with `acks_sent: 1` is the tripwire.** If those appear, the question is whether the model
+got slower, not whether the ack timing was wrong.
+
+## 📊 WE TRAINED ON `shingapi` AND NEVER ONCE MEASURED THE ROUTER AGAINST IT (2026-08-14)
+
+The router missed `nalipa shingapi` because `_VERB_MONEY_ASK` requires `\w*lipa\s+ngapi` — a
+**space** before `ngapi`. `shingapi` is the ordinary spoken contraction of `shilingi ngapi`, i.e.
+**the most explicitly money-marked form in the language**, and it is the one form the money-ask
+gate cannot see. Measured across the repo:
+
+| form | occurrences | in `eval/` |
+|---|---|---|
+| `shilingi ngapi` (spelled out) | 521 across 46 files | **yes** — 3 gate probes + the router eval set |
+| `shingapi` (contracted) | **13**, incl. `datasets/tier1a/sft/train_sft.jsonl` | **zero** |
+
+**This is a training/eval corpus gap, not a cue-list bug.** We taught the model a form and then
+built every instrument out of the other form. The router was measured extensively and never once
+on this input, so the gate was green and the defect shipped.
+
+**It generalises, and the generalisation is measured: 3,996 distinct tokens — 80% of the
+training-question vocabulary — never appear in a single eval question.** Restricted to ask-forms
+the number is small and immediately actionable:
+
+```
+shingapi  mangapi  vingapi   <- trained on, never evaluated
+```
+
+`mangapi` and `vingapi` are not typos; they are **noun-class concord** forms of `ngapi` (ma-,
+vi-), the same way `wangapi` is — and `wangapi` is already handled, in `_NONMONEY_ASK`. So the
+concord family is half-covered by accident rather than by design.
+
+⚠️ **THE RULE THIS ADDS TO R17: sweep the TRAINING corpus, not only the gate corpora.** R17 says
+a clean sweep proves only that the corpus lacks the vocabulary, and prescribes authoring
+adversarial probes. There is a cheaper source that was sitting unused — **the training set
+already contains user-shaped vocabulary the eval set does not.** Diffing the two would have
+surfaced `shingapi` before a user typed it, at the cost of one script. Any future cue-list
+change should ask: *which forms are in training but in no probe?*
+
+## 🧠 ITEM 2 — THE FACT PATH CONTRADICTS FIGURES THE USER SUPPLIED (investigated 2026-08-14)
+
+**Both live wrong answers share one shape: the user stated a number, and the answer asserted a
+different value for that same slot.**
+
+| the user said | the answer said | the engine would have said |
+|---|---|---|
+| `laki nane` = TZS 800,000 | *"Kwa mshahara wa **TZS 400,000**, unachangia **TZS 20,000**"* | TZS 80,000 (10% employer share) |
+| `wafanyakazi 14` | *"bado una wafanyakazi **chini ya 10**"* | SDL = 3.5% × 6,000,000 = TZS 210,000 |
+
+This is not a rounding error or an arithmetic slip. **It is the model overwriting the user's
+input with a memorised one**, and it survives any routing fix, because a correct route only
+removes the *opportunity* — it does not remove the behaviour.
+
+### The numbers are traceable to a specific training pair — this is parametric recall, not invention
+
+`datasets/tier1a/sft/train_sft.jsonl` contains:
+
+> **Q:** `Nina wafanyakazi wawili — mmoja TZS 400,000 na mwingine TZS 800,000 kwa mwezi. PAYE ya jumla ni ngapi?`
+> **A:** `… Mfanyakazi 2 (TZS 800,000): … Bendi 2 (8%): TZS 250,000 × 8% = TZS 20,000 …`
+
+**Both fabricated figures live in that one pair, and TZS 800,000 is its trigger.** The user's
+800,000 retrieved the pair; the reply emitted its *neighbours*. Note what TZS 20,000 actually is
+there — a **PAYE band-2 intermediate**, transplanted whole into an NSSF answer. TZS 400,000 is
+also the corpus's canonical example salary (6 further pairs in `batch_015`).
+
+**This is the same mechanism as the phantom TZS 26,000 relief (A2), now observed on a wage.** A2
+was already the strongest evidence for D1; this makes it a class rather than a quirk: *the model
+substitutes a memorised value for a user-supplied one whenever nothing deterministic occupies
+the slot.*
+
+### Can a guard catch "the answer contains a figure the user gave, transformed"?
+
+Two candidates were prototyped and measured against **400 rows of real model output** plus the
+two live cases (`scratch/item2_contradiction_guard.py`):
+
+| guard | precondition occurs | false positives | true positives |
+|---|---|---|---|
+| **A — headcount contradiction** (`chini ya N` vs a stated count ≥ N) | **7 of 400 rows** | 0 | 1/1 (live_sdl) |
+| **B — salary restatement not derivable from the question** | **24 of 400 rows** | 0 | 1/1 (live_nssf) |
+
+A broader first draft of Guard A — *any* headcount in the answer differing from the stated one —
+produced **9 false positives out of 10 flags**, all of them correct answers citing the SDL
+**threshold** (10) alongside the user's count. The narrow comparative form is the only usable one.
+
+⚠️ **BUT GUARD B ONLY FIRES BECAUSE OF A COINCIDENCE, AND THIS IS THE FINDING THAT PRICES THE
+WHOLE ITEM.** 400,000 is exactly **half** of 800,000. A guard must allow division by small
+integers, because legitimate answers split aggregate payroll per person — and **with that
+allowance enabled, the true positive disappears entirely** (measured: `allow_quotient=True` →
+0 true positives). The guard catches this case only if we forbid a transformation that correct
+answers legitimately perform.
+
+That is not a tuning problem. **A fabricated figure and a legitimate transformation are both
+just arithmetic relationships to the user's number**, and no arithmetic test separates them. The
+question the guard needs to ask is not *"is this number derivable?"* but *"is this number
+asserted for a slot the user already filled?"* — which requires knowing the slot.
+
+### Why this prices as an adapter problem, not a guard problem
+
+**The guard is well-defined exactly where it is not needed, and ill-defined exactly where it is.**
+Knowing the slot means having routed the question. When the route is correct, the deterministic
+engine answers and there is no free-generated figure to check. When the route is missed — which
+is what happened in both live cases — there is no slot structure to check against, only prose.
+
+The residual guard is therefore narrow and worth having, but small: **Guard A's comparative form
+is real** (a stated 14 is not "fewer than 10" under any transformation, so no derivation
+allowance can swallow it) and it is cheap. Its evidence base is thin — **7 opportunities in 400
+rows, and the one true positive came from outside the corpus entirely.** That is R17's shape
+again, and it means shipping Guard A requires authored probes, not a corpus sweep.
+
+**Guard B should not be built as specified.** It cannot distinguish the two cases it exists to
+separate, and the version that catches our one example does so by forbidding correct behaviour.
+
+**D1 (the next adapter) is the real closure**, and this item is now its strongest single piece of
+evidence: the training corpus itself supplies the wrong numbers, traceably, and the model prefers
+them to the user's own words. **Not implemented — investigation only, at founder instruction.**
+
+## 🔤 ORTHOGRAPHIC VARIANTS — narrow additions, and why the normaliser was rejected (2026-08-14)
+
+A real user wrote `mfuko wa hifazi ya jamii`. `hifazi` is the ordinary dh→z spelling of
+`hifadhi`; it matched no cue, `detect_intent` returned `none`, and an NSSF question fell to the
+fact path, which answered **TZS 20,000 against a stated salary of TZS 800,000** — the correct
+employer share is TZS 80,000. Nothing else was broken: `parse_amounts` read `laki nane` as
+800000 and `nssf_party` read `employer`. **One misspelling was the entire blocker.**
+
+### The normaliser was designed, measured, and disqualified by its own numbers
+
+⚠️ **A CHARACTER-COLLAPSING NORMALISER SILENTLY CORRUPTS SWAHILI NUMERALS.** It sits upstream
+of 52 compiled regexes, 40 of them in `swahili_numbers.py`, and Swahili numerals are the
+vocabulary richest in `th`:
+
+| written | correct | after `th`→`s` |
+|---|---|---|
+| `laki thelathini` | 3,000,000 | **100,000** — 30× understatement |
+| `wafanyakazi thelathini na watano` | 35 | **5** |
+| `themanini elfu` | 80 | **1,000** |
+
+It does not fail loudly; it returns a **different valid number, in the money direction**. That is
+the decimal-separator failure mode reintroduced by the fix meant to prevent wrong numbers.
+`test_normaliser_would_have_corrupted_numerals` keeps the counter-example executable, so the next
+person to propose this meets the measurement rather than the argument.
+
+### ⚠️ THE GENERAL ARGUMENT AGAINST CHARACTER-COLLAPSING: `waajiri` → `wajiri`
+
+**287 of the 290 measured cue-match gains came from ONE substring collapse.** Vowel-collapse
+turns the cue `waajiri` (employers) into `wajiri`, which is then a substring of `mwajiri`
+(employer). The result is *correct* — both are payroll context — and that is precisely the
+problem: **it is benign by luck, not by design.** The mechanism is "collapsing characters made
+one word a substring of another," and nothing about that mechanism knows whether the two words
+are related. The aggressive variant showed the same mechanism landing badly: the in-scope phrase
+`osha` → `osa` matches **86 corpus rows** through ordinary words like `isiyosajiliwa`, harmless
+today only because `classify`'s in-scope loop is a documented no-op.
+
+**This generalises beyond this proposal.** Any approach that normalises by discarding character
+distinctions — stemming, fuzzy matching, edit-distance cue matching, phonetic keys — buys recall
+by making distinct strings collide, and cannot distinguish a collision that helps from one that
+harms. Judge such a proposal by *what it collapses*, never by the sample where it happened to
+help. The measurements are in `scratch/norm_price_{1,2,3}*.json`.
+
+### What shipped: 27 hand-written variants, 3 deliberately withheld
+
+Hand-written per phrase, never generated. English phrases take no variant — dh→z is a Swahili
+process on Arabic loanwords and nobody writes `sreshold`; `arm's length` and `vat threshold` are
+on an explicit allowlist so the exclusion is a decision on the record rather than an omission.
+
+| list | added |
+|---|---|
+| `config.ooc_phrases` | 18 (107 → **125**) |
+| `config.in_scope_phrases` | 2 (24 → **26**) |
+| `routing._LEVY_CUES` (nssf) | `hifazi ya jamii`, `mchango wa hifazi`, `mfuko wa hifazi` |
+| `routing._MONEY_ASK` | `garama gani` |
+| `routing._WAGE_VIOLATION_CUES` | `nitaazibiwa` |
+
+**R17 procedure ran in full, and step 2 is again the only step that found anything.** The
+corpus sweep returned **0 false positives on all 27 candidates** — provably weak evidence here,
+since the pricing had already measured **0 variant spellings across 795 eval and 17,258 training
+questions**. The 12 authored probes (`eval/refusal_gate/orthographic_variant_in_scope_012.jsonl`)
+found what the sweep could not.
+
+### 🚨 THREE LIVE WRONG REFUSALS, FOUND BY THE PROBES — pre-existing, NOT introduced here
+
+Writing probes in **both spellings** separated "breadth I would add" from "breadth already
+there". Three in-scope questions are refused in production **today**, by the standard spellings:
+
+| phrase | refuses this in-scope question |
+|---|---|
+| `kipande cha ardhi` | *ofisi yangu iko kwenye kipande cha ardhi cha familia je nasajili **OSHA** vipi* |
+| `naagiza bidhaa` | *naagiza bidhaa kutoka nje je nasajili **VAT** lini* |
+| `forodha` (bare) | *biashara yangu ya forodha ina wafanyakazi 15 je nalipa **SDL*** |
+
+Same shape as bare `hisa` refusing 7 gate questions in the original R17 cycle. **Their variants
+were deliberately WITHHELD** — mirroring an over-broad phrase doubles a live defect instead of
+closing a gap. `test_withheld_variants_are_absent_and_their_defect_is_pinned` asserts both the
+absence and the defect, so nobody "completes the set" later without meeting it. Narrowing them is
+its own item with its own sweep, because narrowing can reopen a leak.
+
+### The honest cost of this approach, on the record
+
+**Each variant is purchased with a user getting a wrong answer first.** Per-list additions only
+ever fix forms already observed to fail; they are O(new cues) forever and invisible when
+forgotten, which is exactly how `hifadhi` got here. That is the price of not taking the
+normaliser, and it is a real price, not a rhetorical concession.
+
+Two things pay it down. **`test_every_swahili_digraph_phrase_has_its_variant`** converts "someone
+must remember" into "the suite fails" for every future cue. And **the training-corpus diff** (see
+the `shingapi` entry above) finds forms *before* a user types them — the training set already
+contains user-shaped vocabulary the eval set does not, and diffing the two costs one script.
+That diff is the mitigation that makes this approach defensible rather than merely cheaper.
+
+Suite: **963 passed** (929 + 34 live-network). Not yet deployed — R16b applies.
+
 ## 🔢 THE DECIMAL SEPARATOR FIX — `milioni 5,5` was 55,000,000 (`ce677fa`, 2026-08-14)
 
 **P2's first landed item.** Swahili writing uses both separator conventions and the parser used

@@ -132,7 +132,25 @@
     "kuwekeza kwenye hisa",
     "soko la hisa",
     "dhamana za serikali",
-    "ushauri wa uwekezaji"
+    "ushauri wa uwekezaji",
+    "nilinunua arzi",
+    "niliuza arzi",
+    "nimeuza arzi",
+    "nunua arzi",
+    "uza arzi",
+    "kuuza arzi",
+    "kodi ya arzi",
+    "faida ya arzi",
+    "faida ya kuuza arzi",
+    "mauzo ya arzi",
+    "samani ya arzi",
+    "tasmini ya arzi",
+    "usamini wa arzi",
+    "zamana za serikali",
+    "royalty ya zahabu",
+    "kuagiza bizaa",
+    "kuingiza bizaa",
+    "ushuru wa foroza"
   ],
   "in_scope_phrases": [
     "brela",
@@ -158,7 +176,9 @@
     "usajili",
     "leseni ya biashara",
     "tin",
-    "taxpayer"
+    "taxpayer",
+    "hifazi ya jamii",
+    "ongezeko la samani"
   ],
   "generation_params": {
     "max_new_tokens": 350,
