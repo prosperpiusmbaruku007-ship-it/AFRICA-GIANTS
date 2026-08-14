@@ -1,0 +1,42 @@
+{
+  "questions_scanned": 6194,
+  "rows_that_would_decline": 4,
+  "hits": [
+    {
+      "file": "eval\\accuracy_gate\\decimal_separator_probes_019.jsonl",
+      "line": 10,
+      "id": "ds_10",
+      "flagged": [
+        "milioni 1,500"
+      ],
+      "q": "mishahara jumla ni milioni 1,500 kwa mwezi"
+    },
+    {
+      "file": "eval\\accuracy_gate\\decimal_separator_probes_019.jsonl",
+      "line": 11,
+      "id": "ds_11",
+      "flagged": [
+        "milioni 1.500"
+      ],
+      "q": "mauzo yangu ni milioni 1.500 kwa mwaka"
+    },
+    {
+      "file": "eval\\accuracy_gate\\decimal_separator_probes_019.jsonl",
+      "line": 12,
+      "id": "ds_12",
+      "flagged": [
+        "milioni 1.500,25"
+      ],
+      "q": "gharama ni milioni 1.500,25"
+    },
+    {
+      "file": "eval\\accuracy_gate\\decimal_separator_probes_019.jsonl",
+      "line": 21,
+      "id": "ds_21",
+      "flagged": [
+        "milioni 1,500"
+      ],
+      "q": "nina wafanyakazi 12 mishahara jumla milioni 1,500, SDL ni ngapi"
+    }
+  ]
+}

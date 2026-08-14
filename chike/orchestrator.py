@@ -217,9 +217,41 @@ class Orchestrator:
     # --- Stage 4: answer one sub-question ----------------------------------
 
     def _answer_sub(self, sq: SubQuestion) -> SubAnswer:
+        # A FIGURE WE CANNOT READ IS NOT THE SAME AS NO FIGURE, and declining to parse it is
+        # only half a never-guess contract. `milioni 1,500` is 1.5 million under one Swahili
+        # writing convention and 1,500 million under the other — a factor of a THOUSAND — so
+        # swahili_numbers refuses to resolve it. But a refusal that merely drops the number
+        # sends the question on with the figure MISSING: the compute path would clarify about
+        # a salary the user did in fact state, and the fact path would generate free-hand next
+        # to a number it never received. Both are worse than the guess they replaced.
+        #
+        # So the decline is surfaced HERE, above the compute/fact fork, because the ambiguity
+        # is a property of the QUESTION and not of the route it takes — ds_10 with a levy ask
+        # routes to `sdl` and the identical sentence without one routes to `none`.
+        unreadable = self._unreadable_figure_reply(sq)
+        if unreadable is not None:
+            return self._validate_and_clean(unreadable)
         sub = (self._answer_compute(sq) if sq.kind == "compute"
                else self._answer_fact(sq))
         return self._validate_and_clean(sub)
+
+    def _unreadable_figure_reply(self, sq: SubQuestion) -> Optional[SubAnswer]:
+        """The clarification for a figure whose convention cannot be determined, or None.
+
+        CALLED FROM TWO PLACES, and the second one is the point. An all-fact message never
+        passes through `_answer_sub` at all — it is collapsed into
+        `_answer_facts_single_pass` — so a guard on the fork alone leaves the commonest
+        route uncovered. The test that found this asserted the model was not called and it
+        was. The two `is_uncomputable_payroll_amount` guards below are duplicated across the
+        same pair of sites for exactly this reason; this is the third instance of the shape,
+        which is why it is a named helper rather than a third copied condition.
+        """
+        unreadable = swn.ambiguous_scale_figures(sq.text)
+        if not unreadable:
+            return None
+        return SubAnswer(sub_question=sq,
+                         text=clarification.ambiguous_figure(unreadable[0]),
+                         needs_clarification=True)
 
     def _answer_compute(self, sq: SubQuestion) -> SubAnswer:
         """Compute path: extract fields WITH confidence first, and only call the
@@ -556,6 +588,9 @@ class Orchestrator:
         Q1 empty-output and Q12 fabricated-turn regressions), and produces the pooled fact
         answer for the fact remainder of a mixed compute+fact message."""
         sq = SubQuestion(text=generation_question, kind="fact")
+        unreadable = self._unreadable_figure_reply(sq)
+        if unreadable is not None:
+            return self._validate_and_clean(unreadable)
         # Same never-guess fabrication guard as _answer_fact, applied to the collapsed
         # whole-question generation (rc_22 arrives here via the all-fact path).
         if routing.is_uncomputable_payroll_amount(generation_question):

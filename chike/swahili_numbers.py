@@ -78,9 +78,145 @@ def _value(tokens):
     return _value_small(tokens)
 
 
-_DIGIT_M = re.compile(r"(\d+(?:\.\d+)?)\s*m\b", re.IGNORECASE)          # "20m", "2.5m"
+_DIGIT_M = re.compile(r"(\d+(?:[.,]\d+)?)\s*m\b", re.IGNORECASE)        # "20m", "2.5m", "2,5m"
 _DIGITS = re.compile(r"\d[\d,\.]*")
-_SCALE_DIGIT = re.compile(r"\b(elfu|laki|milioni|bilioni)\s+(\d[\d,]*)", re.IGNORECASE)
+_SCALE_DIGIT = re.compile(r"\b(elfu|laki|milioni|bilioni)\s+(\d[\d,.]*)", re.IGNORECASE)
+
+# ── SEPARATORS: THE SAME MARK MEANS TWO THINGS, AND GUESSING COSTS A FACTOR OF 10 ──────
+#
+# Swahili writing uses BOTH conventions. `milioni 5,5` is five-and-a-half million to a
+# writer using the comma-decimal convention and a malformed thousands group to one using
+# the Anglo convention. Before this resolver the parser did neither: it stripped commas and
+# concatenated, so
+#     'milioni 5,5'  -> 55,000,000     TEN TIMES the intended figure, in the OVERSTATING
+#                                      direction — it turns a 5.5M payroll into 55M and
+#                                      every levy derived from it into a demand ten times
+#                                      what is owed.
+#     'milioni 5.5'  -> 5,000,000      the dot was not even matched, so the fraction was
+#                                      TRUNCATED — a 9% understatement, quieter and in the
+#                                      safer direction, which is why it survived longer.
+# Both are live in the corpus today (nat_09 `milioni 1.2`, nat_23 `milioni 5.5`).
+#
+# THE RULE: a thousands group is ALWAYS exactly three digits. So a single separator with a
+# one- or two-digit tail CANNOT be a thousands group and is unambiguously a decimal mark.
+# A three-digit tail is where the two conventions collide, and there the answer depends on
+# WHERE THE FIGURE SITS:
+#
+#   after a scale word   'milioni 1,500'  -> 1.5 million or 1,500 million? A factor of a
+#                        THOUSAND apart, and both readings are ordinary. DECLINE. Nothing
+#                        downstream may compute on a guess of this size, and no corpus row
+#                        uses the form (sweep: 0 of 100 corpora), so declining costs nothing
+#                        today and refuses to invent a number tomorrow.
+#
+#   standing alone       'TZS 500,000'    -> thousands grouping, and it is not a close call:
+#                        the decimal reading ("five hundred point zero-zero-zero") is not a
+#                        thing anyone writes in a money context, while grouped thousands are
+#                        the dominant form in the corpus. KEEP the existing reading.
+#
+# A trailing mark is SENTENCE PUNCTUATION, not a separator — 'mishahara ni milioni 4, SDL ni
+# ngapi' is four million followed by a comma. The sweep found four corpus rows of exactly
+# this shape and no other separator-bearing rows, so stripping it is load-bearing, not
+# defensive: without the strip they become 'AMBIGUOUS' and four rows that are correct today
+# would start declining.
+_SEP = re.compile(r"[.,]")
+
+# ── A RATE IS NOT AN AMOUNT, AND WIDENING THE BARE PATH MADE IT ONE ────────────────────
+#
+# Reading decimals on the bare-digit path is the whole point of this change — but a rate is
+# written with the same digits as money, and `3.5` in "SDL ya 3.5%" is not a figure anyone
+# is asking us to compute ON. HEAD dropped it for the wrong reason (it stripped separators
+# and demanded `isdigit()`, so every dotted number fell out, rate or not) and the widening
+# silently put it back:
+#
+#     'mishahara jumla TZS 5,000,000, SDL ya 3.5% ni ngapi'
+#         HEAD  ['5000000']            -> _amount_field is confident, SDL computes 175,000
+#         wide  ['5000000', '3.5']     -> TWO figures, so _amount_field returns LOW and the
+#                                        orchestrator CLARIFIES about a payroll the user
+#                                        stated plainly. The identical question WITHOUT the
+#                                        rate still computed, which is what makes it a
+#                                        regression rather than a limitation.
+#
+# 22 of the 24 corpus rows this change touches are rate rows of exactly this shape
+# (`asilimia 0.5`, `WCF 0.5%`, `2% au 3.5%`). Excluding them restores HEAD byte-for-byte on
+# all 22 and leaves the 2 rows the fix exists for (nat_09 `milioni 1.2`, nat_23 `milioni
+# 5.5`) changed as intended.
+#
+# DELIBERATELY NARROW — DECIMAL READINGS ONLY. An INTEGER rate ('asilimia 18', '2%') is
+# still returned as an amount, exactly as HEAD returned it. Excluding those too is a real
+# defect of the same family and probably a net improvement, but it is measured at 250 rows
+# changed with 89 ceasing to be multi-figure: its own change, its own sweep, its own
+# canaries. Scoping to the decimal reading is what makes THIS change provably parity-with-
+# HEAD everywhere except the two rows it targets.
+_PERCENT_AFTER = re.compile(r"\s*%")
+_ASILIMIA_BEFORE = re.compile(r"\basilimia\s*$")
+# THE MARKER IS ELLIPTICAL IN THE COMMONEST RATE QUESTION THERE IS — "is it X or Y?":
+#     'Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?'   (eval_337, a real row)
+# `asilimia` governs BOTH figures but is written once, so a marker that only looks at
+# immediate neighbours excludes 3.5 and keeps 0.5 — leaving that row parsing ['0.5'] where
+# HEAD parsed [], the one row of the 24 that a neighbours-only rule cannot hold.
+#
+# The alternation form is preferred over simply widening the backward search: an unbounded
+# 'asilimia appears earlier in the sentence' lookback would swallow the TURNOVER in
+# 'asilimia 18 ya mauzo ya 1.5m', which is money and not a rate. This requires the PREVIOUS
+# figure to have been excluded as a rate AND nothing between the two but the connector.
+_RATE_ALTERNATION = re.compile(r"^[\s,;]*(?:au|ama)\s+(?:ni\s+)?$")
+
+
+def _is_rate_marked(text_l, start, end, prev_rate_end=None):
+    """True if the figure at [start:end) is marked as a PERCENTAGE by its context.
+
+    Three markers, none of which subsumes another: 'asilimia 0.5' carries only the word,
+    'WCF 0.5%' carries only the sign, 'asilimia 0.5%' carries both, and the second figure
+    of 'asilimia 3.5, au ni 0.5' carries neither — only its alternation with the first.
+    """
+    if _PERCENT_AFTER.match(text_l[end:]) or _ASILIMIA_BEFORE.search(text_l[:start]):
+        return True
+    return (prev_rate_end is not None
+            and bool(_RATE_ALTERNATION.match(text_l[prev_rate_end:start])))
+
+
+def _resolve_figure(raw, after_scale_word):
+    """Digits-with-separators -> Decimal, or None meaning DECLINE (do not guess).
+
+    `after_scale_word` selects the three-digit-tail policy documented above.
+    """
+    raw = raw.strip().rstrip(".,")                   # sentence punctuation, not a separator
+    if not raw or not raw[0].isdigit():
+        return None
+    if not _SEP.search(raw):
+        return Decimal(raw) if raw.isdigit() else None
+    groups = _SEP.split(raw)
+    if not all(g.isdigit() for g in groups):
+        return None
+    tail = groups[-1]
+    if len(groups) == 2:
+        if len(tail) <= 2:
+            return Decimal(groups[0] + "." + tail)               # decimal mark
+        if len(tail) == 3:
+            return None if after_scale_word else Decimal(groups[0] + tail)
+        return None                                              # 4+ digit tail: neither
+    if all(len(g) == 3 for g in groups[1:]) and 1 <= len(groups[0]) <= 3:
+        return Decimal("".join(groups))                          # 5,500,000
+    return None                                                  # mixed/European: decline
+
+
+def ambiguous_scale_figures(text):
+    """Scale-word figures this parser REFUSES to read, e.g. 'milioni 1,500'.
+
+    Exposed so the caller can ask the user which convention they meant instead of
+    silently dropping the figure. A dropped figure and an unreadable one look identical
+    to `parse_amounts`, and only one of them deserves a clarification.
+    """
+    out = []
+    for m in _SCALE_DIGIT.finditer(text.lower()):
+        if _resolve_figure(m.group(2), after_scale_word=True) is None:
+            # rstrip because the regex is greedy over a trailing sentence comma:
+            # 'milioni 1,500, SDL ni ngapi' matches 'milioni 1,500,'. The resolver strips
+            # it internally so the DECISION is right either way, but this string is quoted
+            # back to the user verbatim and a stray comma in the quote reads as if we
+            # misread them — in a message whose entire job is to show we read them exactly.
+            out.append(m.group(0).rstrip(".,"))
+    return out
 
 
 def parse_amounts(text):
@@ -95,11 +231,16 @@ def parse_amounts(text):
 
     for m in _SCALE_DIGIT.finditer(text_l):              # "milioni 190" -> 190e6
         scale = BIG_SCALE[m.group(1)]
-        digits = Decimal(m.group(2).replace(",", ""))
+        digits = _resolve_figure(m.group(2), after_scale_word=True)
+        if digits is None:                               # 'milioni 1,500' — DECLINE, do not
+            continue                                     # guess; ambiguous_scale_figures()
         found.append((m.start(), Decimal(scale) * digits))
 
     for m in _DIGIT_M.finditer(text_l):                  # "20m" -> 20,000,000
-        found.append((m.start(), Decimal(m.group(1)) * 1000000))
+        digits = _resolve_figure(m.group(1), after_scale_word=True)
+        if digits is None:
+            continue
+        found.append((m.start(), digits * 1000000))
 
     # word-number runs (skip any that were already consumed by a scale+digit match)
     consumed = {i for m in _SCALE_DIGIT.finditer(text_l) for i in range(m.start(), m.end())}
@@ -144,6 +285,7 @@ def parse_amounts(text):
             consumed.update(range(start, start + len(" ".join(run))))
 
     # bare digit amounts not attached to a scale word (e.g. "250000", "500,000")
+    prev_rate_end = None                    # end of the last figure dropped AS A RATE
     for m in _DIGITS.finditer(text_l):
         if m.start() in consumed:
             continue
@@ -154,9 +296,17 @@ def parse_amounts(text):
         after = text_l[m.end()] if m.end() < len(text_l) else ""
         if before.isalpha() or after.isalpha():
             continue
-        raw = m.group(0).rstrip(".,").replace(",", "")
-        if raw.isdigit():
-            found.append((m.start(), Decimal(raw)))
+        # after_scale_word=False: a bare 'TZS 500,000' is grouped thousands, not a decimal.
+        val = _resolve_figure(m.group(0), after_scale_word=False)
+        if val is None:
+            continue
+        # The rate exclusion is applied to the DECIMAL reading only — an integer rate is
+        # kept, because HEAD kept it and this change is not the one that revisits that.
+        if val != val.to_integral_value() and _is_rate_marked(
+                text_l, m.start(), m.end(), prev_rate_end):
+            prev_rate_end = m.end()
+            continue
+        found.append((m.start(), val))
 
     found.sort(key=lambda x: x[0])
     # de-dup by (position) keeping order

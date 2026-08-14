@@ -30,6 +30,26 @@ AMBIGUOUS_LEVY = (
 
 _LEVY_NAME = {"paye": "PAYE", "sdl": "SDL", "nssf": "NSSF", "wcf": "WCF"}
 
+
+def ambiguous_figure(raw: str) -> str:
+    """A figure written with a separator that both conventions claim, e.g. 'milioni 1,500'.
+
+    QUOTES THE USER'S OWN TEXT BACK. The two readings are a THOUSAND apart, so a generic
+    "niambie mshahara" would look like we ignored the number they plainly wrote, and the
+    user would very likely retype it in exactly the same form. Naming both readings is what
+    makes the next message resolve it.
+
+    Deliberately does NOT pick the "more likely" one. Comma-decimals are ordinary in
+    Swahili writing and grouped thousands are ordinary in TRA documents; the same trader
+    may use both in one conversation.
+    """
+    return (
+        f"Sijaelewa vizuri kiasi ulichoandika — \"{raw}\". Kinaweza kumaanisha mambo "
+        f"mawili tofauti kabisa, na tofauti yake ni mara elfu moja. Tafadhali niandikie "
+        f"kwa tarakimu kamili (mfano: 1,500,000 au 1,500,000,000) ili nisikukosee "
+        f"katika hesabu."
+    )
+
 # --- minimum wage (GN 605A) -------------------------------------------------
 # NEVER-GUESS COPY LIVES HERE AND IS RETURNED BY THE DETERMINISTIC PATH — it is never an
 # instruction written into a fact and handed to the model. C4, measured: a locked fact

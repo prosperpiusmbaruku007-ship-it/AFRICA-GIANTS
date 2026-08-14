@@ -1,0 +1,30 @@
+{
+  "rows_examined": 24,
+  "routes_changed": 0,
+  "moved": [],
+  "amounts_changed": 2,
+  "amount_diffs": [
+    {
+      "row": "nat_09@eval\\accuracy_gate\\edge_probe_natural_048.jsonl:9",
+      "question": "mshahara ni milioni 1.2 nataka kujua jumla inayoenda kwenye mfuko kwa mwezi mimi na mfanyakazi pamoja",
+      "amounts_before": [
+        "1000000"
+      ],
+      "amounts_after": [
+        "1200000.0"
+      ]
+    },
+    {
+      "row": "nat_23@eval\\accuracy_gate\\edge_probe_natural_048.jsonl:23",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "amounts_before": [
+        "12",
+        "5000000"
+      ],
+      "amounts_after": [
+        "12",
+        "5500000.0"
+      ]
+    }
+  ]
+}
