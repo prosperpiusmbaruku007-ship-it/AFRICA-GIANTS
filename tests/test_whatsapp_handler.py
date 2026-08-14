@@ -541,3 +541,21 @@ def test_a_rejection_row_records_shape_but_never_content():
 def test_payload_shape_survives_junk():
     for junk in (None, "string", 42, [], {"event": "x", "data": "not-a-dict"}):
         core.payload_shape(junk)
+
+
+def test_the_received_token_is_fingerprinted_not_printed():
+    """Both ends hashed to 15d40b19 and the endpoint still rejected, so the value is
+    altered in transit -- and nothing could SEE the arriving value. Fingerprinting what
+    ARRIVED turns "they look the same but don't match" into a comparison."""
+    spec = importlib.util.spec_from_file_location(
+        "chike_modal_whatsapp_fp2",
+        os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"))
+    mw = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mw)
+    import hashlib
+    assert mw._fp("abc") == hashlib.sha256(b"abc").hexdigest()[:8]
+    assert mw._fp("") is None and mw._fp(None) is None
+    assert "abc" not in str(mw._fp("abc"))
+    # A percent-encoded arrival must fingerprint DIFFERENTLY from its decoded form --
+    # that difference is the whole diagnostic.
+    assert mw._fp("a-b_c") != mw._fp("a%2Db%5Fc")

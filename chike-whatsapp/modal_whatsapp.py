@@ -206,9 +206,26 @@ def webhook(item: dict, token: str = None):
                 # WAS SILENT. A rejected delivery returned 200 and printed nothing, so it
                 # was detectable only by noticing which log lines were ABSENT — which is
                 # how 2026-08-14's fourth failed send had to be diagnosed. Record it.
+                #
+                # THE RECEIVED-TOKEN FINGERPRINT is the point of this block. Both ends
+                # hashed to 15d40b19 and the endpoint still rejected, so the value is
+                # altered in transit — but nothing could SEE the arriving value, and
+                # neither party may print it. Fingerprinting what arrived turns
+                # "the tokens look the same but don't match" into a comparison.
+                # It goes in the ROW, not only the log: Modal Starter deletes logs after
+                # one day, and this is the evidence for a vendor conversation.
+                row = core.rejection_row("unauthorized", item, _settings(), BUILD)
+                row["supplied_token_fingerprint"] = _fp(token)
+                row["supplied_token_len"] = len(token or "")
+                row["expected_token_fingerprint"] = _fp(expected)
+                row["expected_token_len"] = len(expected)
                 print("[webhook] REJECTED: token mismatch "
-                      f"(supplied={'yes' if token else 'none'})")
-                _write_row(core.rejection_row("unauthorized", item, _settings(), BUILD))
+                      f"(supplied={'yes' if token else 'none'} "
+                      f"fp={row['supplied_token_fingerprint']} "
+                      f"len={row['supplied_token_len']} vs "
+                      f"expected fp={row['expected_token_fingerprint']} "
+                      f"len={row['expected_token_len']})")
+                _write_row(row)
                 return {"status": "unauthorized"}
         else:
             # Opt-in hardening. Unset preserves the Railway behaviour (an open webhook)
@@ -285,6 +302,15 @@ def health():
         # move out from under them.
         **_token_fingerprint_flat("WAPPFLY_TOKEN"),
     }
+
+
+def _fp(value) -> str:
+    """sha256[:8] of a value we must never print. Same construction as the credential
+    fingerprints, applied to a string in hand rather than one read from the environment."""
+    import hashlib
+    if not value:
+        return None
+    return hashlib.sha256(str(value).encode("utf-8")).hexdigest()[:8]
 
 
 def _token_fingerprint(key: str) -> dict:
