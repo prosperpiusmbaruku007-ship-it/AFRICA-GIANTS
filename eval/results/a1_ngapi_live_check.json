@@ -1,0 +1,137 @@
+{
+  "verdict": "VERIFIED",
+  "edge_p05_distractor_ok": true,
+  "negative_controls_changed": 0,
+  "forbidden_anywhere": {},
+  "rows": [
+    {
+      "id": "nat_01",
+      "kind": "THE CHANGE",
+      "question": "nina wafanyakazi 14 mishahara yote kwa mwezi ni milioni 6 ile ya mafunzo ya ufundi nitalipa ngapi",
+      "changed": true,
+      "before": "Kwa sasa, bado unatakiwa kulipa asilimia 0.5% ya mishahara yote kwa ajili ya mafunzo ya ufundi. Thibitisha na TRA (tra.go.tz).",
+      "after": "Kwa hesabu sahihi, thibitisha na tra.go.tz: SDL = 3.5% x TZS 6,000,000 = TZS 210,000. Thibitisha na tra.go.tz.\nSDL = 3.5% × TZS 6,000,000 = TZS 210,000",
+      "want_any_after": [
+        "3.5",
+        "210,000"
+      ],
+      "forbidden_after": [],
+      "has_working_before": false,
+      "has_working_after": true
+    },
+    {
+      "id": "nat_19",
+      "kind": "THE CHANGE",
+      "question": "mishahara yangu yote kwa mwezi ni milioni 3 nichangie ngapi kwenye ile ya fidia",
+      "changed": true,
+      "before": "Kwa mishahara ya milioni 3, unachangia shilingi 300,000 kwa mwezi kwenye mfuko wa fidia. Thibitisha na WCF (wcf.go.tz).",
+      "after": "Kwa mishahara ya TZS 3,000,000, kiwango cha WCF ni asilimia 0.5. Thibisha na WCF (wcf.go.tz).\nWCF = 0.5% × TZS 3,000,000 = TZS 15,000",
+      "want_any_after": [
+        "0.5",
+        "15,000"
+      ],
+      "forbidden_after": [],
+      "has_working_before": false,
+      "has_working_after": true
+    },
+    {
+      "id": "edge_p05",
+      "kind": "THE CHANGE",
+      "question": "nina saluni thamani ya vifaa vyangu ni milioni 20 na nawalipa wafanyakazi jumla ya milioni 2 kwa mwezi nichangie ngapi kwenye ile ya fidia za wafanyakazi",
+      "changed": true,
+      "before": "Kwa mujibu wa sheria, unapaswa kulipa asilimia 0.5% ya jumla ya mishahara yote kwa ajili ya WCF. Thibitisha na WCF (wcf.go.tz).",
+      "after": "Ili nihesabu WCF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+      "want_any_after": [],
+      "forbidden_after": [],
+      "has_working_before": false,
+      "has_working_after": false
+    },
+    {
+      "id": "nat_23",
+      "kind": "THE CHANGE",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "changed": true,
+      "before": "Kwa wafanyakazi 12, PAYE = TZS 5,500,000. Thibitisha na TRA (tra.go.tz).",
+      "after": "NSSF = 20% × TZS 5,000,000 = TZS 1,000,000 (mwajiri TZS 500,000 + mfanyakazi TZS 500,000)",
+      "want_any_after": [],
+      "forbidden_after": [],
+      "has_working_before": true,
+      "has_working_after": true
+    },
+    {
+      "id": "edge_p10",
+      "kind": "THE CHANGE",
+      "question": "nawalipa wafanyakazi watano jumla ya milioni 4 kwa mwezi nitalipa ngapi kwa ile ya mafunzo na ya uzeeni kwa pamoja",
+      "changed": true,
+      "before": "Kwa wafanyakazi 5, jumla ya mishahara ni TZS 4,000,000. Kiasi cha michango ya NSSF kinachotakiwa ni asilimia 20 ya jumla, sawa na TZS 800,000. Thibitisha na NSSF (nssf.go.tz).",
+      "after": "Kiasi kamili cha michango ya NSSF kwa wafanyakazi watano wenye mshahara wa TZS 4,000,000 kwa mwezi ni TZS 800,000. Thibitisha na NSSF (nssf.go.tz).\nNSSF = 20% × TZS 4,000,000 = TZS 800,000 (mwajiri TZS 400,000 + mfanyakazi TZS 400,000)",
+      "want_any_after": [
+        "400,000",
+        "800,000"
+      ],
+      "forbidden_after": [],
+      "has_working_before": false,
+      "has_working_after": true
+    },
+    {
+      "id": "nc_rate",
+      "kind": "NEGATIVE",
+      "question": "SDL ni asilimia ngapi ya mishahara ya wafanyakazi",
+      "changed": false,
+      "before": "SDL ni asilimia 3.5 ya jumla ya mishahara ya fedha ya wafanyakazi wote. Thibitisha na TRA (tra.go.tz).",
+      "after": "SDL ni asilimia 3.5 ya jumla ya mishahara ya fedha ya wafanyakazi wote. Thibitisha na TRA (tra.go.tz).",
+      "want_any_after": [],
+      "forbidden_after": [],
+      "has_working_before": false,
+      "has_working_after": false
+    },
+    {
+      "id": "nc_count",
+      "kind": "NEGATIVE",
+      "question": "nina wafanyakazi wangapi wanaohitajika ili SDL inianze kunihusu",
+      "changed": false,
+      "before": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Ukifikisha wafanyakazi 10, unatakiwa kulipa SDL. Thibitisha na TRA (tra.go.tz).",
+      "after": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Ukifikisha wafanyakazi 10, unatakiwa kulipa SDL. Thibitisha na TRA (tra.go.tz).",
+      "want_any_after": [],
+      "forbidden_after": [],
+      "has_working_before": false,
+      "has_working_after": false
+    },
+    {
+      "id": "nc_fee",
+      "kind": "NEGATIVE",
+      "question": "ada ya usajili wa kampuni BRELA nitalipa ngapi",
+      "changed": false,
+      "before": "Ada ya usajili wa kampuni BRELA ni TZS 260,000. Thibitisha na BRELA.go.tz.",
+      "after": "Ada ya usajili wa kampuni BRELA ni TZS 260,000. Thibitisha na BRELA.go.tz.",
+      "want_any_after": [],
+      "forbidden_after": [],
+      "has_working_before": false,
+      "has_working_after": false
+    },
+    {
+      "id": "nc_paye",
+      "kind": "NEGATIVE",
+      "question": "PAYE ya mshahara wa TZS 800,000 kwa mwezi ni kiasi gani?",
+      "changed": false,
+      "before": "Kwa mshahara wa TZS 800,000 kwa mwezi, PAYE inakokotolewa kwa kanda kama ifuatavyo:\n\nKanda 1 (0%): TZS 270,000\nKanda 2 (8%): TZS 250,000 (yaani TZS 760,000)\nKanda 3 (20%): TZS 240,000 (yaani TZS 800,000)\n\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000\n\nThibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+      "after": "Kwa mshahara wa TZS 800,000 kwa mwezi, PAYE inakokotolewa kwa kanda kama ifuatavyo:\n\nKanda 1 (0%): TZS 270,000\nKanda 2 (8%): TZS 250,000 (yaani TZS 760,000)\nKanda 3 (20%): TZS 240,000 (yaani TZS 800,000)\n\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000\n\nThibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+      "want_any_after": [],
+      "forbidden_after": [],
+      "has_working_before": true,
+      "has_working_after": true
+    },
+    {
+      "id": "nc_ooc",
+      "kind": "CONTAINER-PATH",
+      "question": "Kodi ya majengo ni kiasi gani?",
+      "changed": false,
+      "before": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "after": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "want_any_after": [],
+      "forbidden_after": [],
+      "has_working_before": false,
+      "has_working_after": false
+    }
+  ]
+}

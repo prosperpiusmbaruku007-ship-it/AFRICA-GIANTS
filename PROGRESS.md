@@ -126,6 +126,86 @@ sightings and should not outrank measured classes. **This is a recommendation, n
 
 ---
 
+## ✅ A1 SHIPPED AND LIVE-VERIFIED — two rows fixed including a 20× error, and the canary tried to revert it (2026-08-14)
+
+Deployed `b4a6537` to `chike-inference` under the full R16 cycle (`app stop --yes`,
+`PYTHONIOENCODING=utf-8`, before/after canary, negatives).
+Artifact: `eval/results/a1_ngapi_live_check.json`. **VERDICT: VERIFIED.**
+
+| row | before | after |
+|---|---|---|
+| **nat_01** | *"asilimia **0.5%**"*, no amount at all | `SDL = 3.5% × TZS 6,000,000 = TZS 210,000` + working — **FIXED** |
+| **nat_19** | *"unachangia shilingi **300,000**"* (10%) | `WCF = 0.5% × TZS 3,000,000 = TZS 15,000` — **FIXED, a 20× error** |
+| **edge_p05** | generic 0.5%, no amount | **clarifies** (per-employee vs total + headcount). **Did NOT touch the 20,000,000 distractor.** Unfixed but safe — the asymmetry principle behaving exactly as stated |
+| **edge_p10** | prose-only 800,000, no working | working present, employer share split, **SDL trap avoided** at 5 staff. Fan-out still open |
+| **nat_23** | *"PAYE = TZS 5,500,000"* — a fabricated tax equal to the whole payroll | `NSSF = 20% × TZS **5,000,000**` — see the decimal entry below |
+
+**All five negative controls byte-identical; CONTAINER-PATH clear.**
+
+**nat_23 is not a clean win and should not be recorded as one.** It moved from an *absurd*
+wrong figure to a *plausible* one carrying the engine's working — and by this project's own
+standard, an engine-authoritative wrong number is the worst presentation the system can
+produce. The absolute error shrank; the credibility of the error grew. Kept because the cause
+is upstream and independently fixable (next entry), but the shape is worth remembering: **a fix
+that routes a question to the engine inherits every defect between the question and the engine.**
+
+---
+
+## 🔢 DECIMAL MILLIONS ARE PARSED WRONG IN BOTH CONVENTIONS — and one of them is 10× HIGH (2026-08-14)
+
+Found by the A1 canary, **pre-existing in `chike/swahili_numbers.py`**, independent of A1:
+
+```
+milioni 5.5  -> 5,000,000      decimal TRUNCATED   (understates by 9%)
+milioni 1.2  -> 1,000,000      decimal TRUNCATED
+milioni 5,5  -> 55,000,000     comma read as a THOUSANDS SEPARATOR (overstates 10×)
+```
+
+**The comma form is the priority half.** Truncation understates by single-digit percentages;
+comma-as-separator overstates by an order of magnitude, and **comma decimals are common in
+Swahili writing** — so the more natural phrasing produces the larger error.
+
+**Ambiguity must clarify, not guess.** `milioni 1,500` cannot be resolved by rule: it is either
+1.5 million (comma decimal) or 1,500 million (comma separator), and those differ by 1000×. Where
+the convention cannot be determined from the text, decline — a clarification costs the user a
+turn, a guess costs them an order of magnitude.
+
+**Sequenced ahead of B (SAFETY-2) at founder decision, and the argument is nat_09:** *"mshahara
+ni milioni 1.2"* is in the A2 batch and will truncate to 1,000,000 **the moment its levy cue
+lands**. Fixing the parser first means B and A2 ship onto a sound base instead of compounding
+onto a known parser bug.
+
+---
+
+## 🪞 INSTRUMENT-LIE #10 — A CANARY WHOSE PASS CONDITION DID NOT MATCH THE AGREED REVERT TRIGGER (2026-08-14)
+
+**The A1 canary printed `NOT VERIFIED — REVERT` on a change that was correct.** Acting on that
+flag would have reverted a fix that had just corrected a **20× error** (nat_19: WCF 300,000 →
+15,000).
+
+The agreed revert trigger, in the founder's words, was: *"if extraction takes the 20,000,000
+distractor it's a new wrong number in the dangerous direction — reported as a failure and
+reverted."* **The trigger was about a WRONG NUMBER.** The pass condition I wrote was
+`'10,000' in reply` — i.e. *did edge_p05 ANSWER*. Those are different outcomes, and the
+instrument silently substituted the second for the first. edge_p05 clarified: it produced no
+figure at all, took nothing from the distractor, and `forbidden_present` was empty the whole time.
+
+**This is the first instrument in the catalogue that was wrong about a DECISION rather than
+about a measurement.** The measurement was fine — every string it captured was accurate. The
+verdict it derived pointed the opposite way from the evidence it had already collected.
+
+⚠️ **THE RULE: a canary's pass condition must be written from the decision it feeds, and stated
+in the same terms the decision was agreed in.** If the agreement says "revert on a wrong
+number", the condition tests for a wrong number — not for a right one. The two are not
+complements: between them sits *clarification*, which is the safe outcome this whole path is
+designed to produce, and which the negation quietly reclassifies as failure.
+
+Caught the same way #8 was: **reading the replies instead of the flags.** The corrected
+condition and the original mistake both live in `scratch/a1_live_canary.py`; the verdict was
+re-derived from the stored artifacts without re-asking.
+
+---
+
 ## 🧭 THE "COMPUTE-PATH WRONG-NUMBER CLUSTER" IS MISNAMED — six of eight never reach the compute path, and zero are engine arithmetic failures (2026-08-14)
 
 **RENAME IT. The queue called this the compute-path wrong-number cluster. These questions never
@@ -1562,6 +1642,8 @@ pattern in how:**
 
 | 8 | `na je` live canary (2026-08-11) — **NEAR-MISS, caught before it reported** | its "was the second ask answered" marker was the phrase from the QUESTION (`kima cha chini`); production answers with `kiwango cha chini`, so a correctly answered row scored as a DROPPED ask — and the paired leak check, splitting on the same absent phrase, read the whole reply and flagged a figure from the other half as a preamble leak | reading the replies instead of the flags. Both were re-derived from the stored artifacts without re-asking |
 | **9** | **Wappfly `GET /api/me` (2026-08-14) — THE FIRST ONE THAT WAS A VENDOR'S, NOT OURS. Not a near-miss: it cost two token rotations and a full WhatsApp session re-pair** | I recommended `/api/me` as "the decisive one-line test" of token validity, on the strength of Wappfly's own docs saying every endpoint takes the same `X-API-Token`. **It 401s on a token that sends successfully.** `POST /api/messages/send` with the identical token returns `{"sent":true,"status":"sent","msg_id":…}`. The read endpoint is broken; the auth was never the problem, and every rotation chased a fault in the instrument | the founder testing the SEND endpoint directly instead of trusting the check I proposed |
+
+| **10** | **A1 live canary (2026-08-14) — NOT a near-miss: it printed `NOT VERIFIED — REVERT` on a correct change** | its pass condition was `'10,000' in reply` — *did edge_p05 ANSWER* — while the agreed revert trigger was *did it compute on the 20,000,000 DISTRACTOR*. Between "answered" and "took the distractor" sits **clarification**, the safe outcome this path is built to produce, which the negation reclassified as failure. Acting on the flag would have reverted a fix that had just corrected a 20× error | reading the replies instead of the flags (again). Verdict re-derived from the stored artifacts without re-asking. **Full entry above** |
 
 **#9 extends the rule past our own code.** The first eight were instruments this project built,
 and the lesson was "an instrument cannot be its own control." #9 was a *vendor's* instrument,
