@@ -555,6 +555,47 @@ This applies to every config-only change, which R14 makes the NORMAL path for ph
 system prompt, generation params, and gate thresholds — precisely the changes with no code
 diff to remind you a deploy happened.
 
+**R16b — THE WHATSAPP HANDLER IS ON MODAL, SO R16 APPLIES TO IT IN FULL.**
+The handler moved off Railway on 2026-08-14 (trial ended; and Fly's free tier is gone, so
+the alternative was a second paid bill). It is now `chike-whatsapp/modal_whatsapp.py`, a
+**SEPARATE Modal app** — `chike-whatsapp`, not `chike-inference`. Every R16 rule applies:
+warm containers serve OLD code, and a config-only change has no diff to remind you.
+
+```
+python -m modal app stop chike-whatsapp --yes
+CHIKE_BUILD=$(git rev-parse --short HEAD) PYTHONIOENCODING=utf-8 PYTHONUTF8=1 \
+  python -m modal deploy chike-whatsapp/modal_whatsapp.py
+```
+
+1. `GET /health` returns `build` — the git SHA baked at deploy time (Modal injects no
+   commit SHA of its own, which is why the deploy command must pass it). **Confirm it
+   matches the commit you just pushed**, or you are looking at a warm container.
+2. Exercise the specific change live. For failure-path changes that means **forcing the
+   failure**: set `MODEL_TIMEOUT_S=1` in the `chike-whatsapp` Modal Secret, redeploy, send
+   one WhatsApp message, confirm FALLBACK arrives and `GET /transcripts?token=` records
+   `error_class: timeout`, then set it back and redeploy again.
+3. Negative case: after reverting, confirm a normal question still answers.
+
+**THE TWO APPS MUST STAY SEPARATE.** R16 requires `modal app stop chike-inference --yes`
+before a model redeploy. If the webhook lived in that app, every model deploy would take
+the WhatsApp front door down with it — and on 2026-08-10 that window was ~2 minutes of dead
+production when the replacing deploy failed on a console encoding error. They are joined
+only by `modal.Cls.from_name`, a lazy lookup, not a shared lifecycle.
+
+**NEVER `asyncio.create_task` INSIDE A MODAL FUNCTION** for work that must outlive the
+response. Modal's autoscaler tracks in-flight inputs; once the function returns, the
+container may be frozen or reclaimed and a detached coroutine dies with it. Use `.spawn()`,
+which makes Modal responsible for running the job to completion.
+
+**NEVER APPEND TO A SHARED FILE ON A MODAL VOLUME.** Volumes are not a POSIX shared
+filesystem: writes need `commit()`, reads need `reload()`, and two containers appending to
+one file do not interleave — the last committer wins and the other row is gone. Write one
+file per row.
+
+Founder-only steps (no CLI access from here): the `chike-whatsapp` Modal Secret
+(`WAPPFLY_TOKEN`, `WEBHOOK_TOKEN`, `ADMIN_TOKEN`, `SENDER_SALT`) and pointing Wappfly at
+the new webhook URL.
+
 ### R17 — A sweep can only find what the corpus contains. Author probes to contain it.
 
 Any lexical change (OOC phrases, router cue lists, levy cues, refusal phrases) must be swept

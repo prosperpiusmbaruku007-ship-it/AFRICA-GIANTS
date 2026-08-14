@@ -1,6 +1,14 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-11
+Last updated: 2026-08-14
+
+**🛑 FEATURE WORK IS STOPPED (founder, 2026-08-14) pending pilot readiness.** The assessment's
+verdict was **not yet**, on measured grounds: **39.6% of 48 natural-register questions were
+answered wrongly** (adjudicated 2026-08-11), 13 of 24 compute-path questions were wrong, and the
+WhatsApp handler could drop an answer in silence. Two blockers, in order — **P1 the silent-drop
+path (DONE, entry below)** and **P2 the compute-path wrong-number cluster**. They sit above the
+severity board because *"which defect next"* and *"what stands between us and learning from real
+users"* are different questions with different answers.
 
 **🚀 v16 IS LIVE IN PRODUCTION (2026-08-09, `ec9cbb3`).** The router + rules engine +
 orchestrator pipeline now serves every request. Cutover entry immediately below — deployed
@@ -85,6 +93,29 @@ the model supplies them.
 
 ### What I would take next, and why
 
+### ADDED 2026-08-14 — pilot-blocking, and they outrank the severity queue above
+
+The board above orders by *defect severity*. The pilot-readiness assessment asked a different
+question — **what stands between us and learning from real users** — and it gives a different
+answer, because a defect you cannot observe is worse than a defect you can. Founder decision:
+these two run first.
+
+| # | item | why it outranks A1 |
+|---|---|---|
+| **P1** | **The handler could drop a user's answer in silence** — `call_modal` unguarded inside a fire-and-forget task; no transcript store | **DONE 2026-08-14** (entry below). Until this landed, a pilot could not distinguish a wrong answer from a missing one, which makes every other measurement unreadable |
+| **P2** | **Compute-path wrong-number cluster** — 8 of the 13 compute failures in the 48-probe rerun: SAFETY-2 (A1), SDL-at-0.5% / WCF-at-10% (nat_01/04/19), PAYE band arithmetic (nat_13/14), NSSF employee share (nat_08/09) | investigated as ONE class rather than four items, because the assessment's read is that they share a shape — extraction and cue resolution, not the engine. A1 is a member of it, not a rival to it |
+
+- **C7 Network tests inside the unit suite** — `test_orchestrator.py::*_on_real_weights` (4 tests)
+  call the **live Modal endpoint**. Three of them failed under a full-suite run on 2026-08-14 and
+  **all four passed in isolation** 90 seconds later; the most likely cause is a cold start
+  colliding with the suite, i.e. a failure with no relation to the code under test.
+  **This is a measurement hazard in the instrument we rely on most.** A suite that can fail for
+  reasons unrelated to the code trains everyone to discount its failures — and the moment
+  red-means-maybe, the suite has stopped being evidence. Mark them (`@pytest.mark.live`,
+  deselected by default) or move them to a separate live-check file. Not yet done.
+
+### What I would take next, and why
+
 **C1 → A1 → A3.** C1 first because it is the only item where the measurement is already done and
 the cost is an afternoon — it removes six live wrong-answer shapes at zero measured false
 positives, and A2 is otherwise unaddressed until D1. Then A1, because it is the oldest live wrong
@@ -92,6 +123,207 @@ positives, and A2 is otherwise unaddressed until D1. Then A1, because it is the 
 fix shape is known and bounded. Then A3, starting with measurement rather than a guard: how often
 does production state a compliance date at all, and how many are wrong? A6 and B2 are single
 sightings and should not outrank measured classes. **This is a recommendation, not a decision.**
+
+---
+
+## 💳 THE PILOT'S CAPACITY IS ~15 SESSIONS/DAY, AND THAT IS THE REAL ARGUMENT FOR HOLDING GPU SCALEDOWN AT 300 (2026-08-14)
+
+Priced from Modal's published rates, fetched 2026-08-14: **T4 $0.000164/s**, CPU
+$0.0000131/core/s (min 0.125 cores), memory $0.00000222/GiB/s, Volumes $0.09/GiB/mo with
+**1 TiB/mo free**, Starter plan **$0 base with $30/month of credits**.
+
+**$30 ÷ $0.000164 = 182,927 GPU-seconds ≈ 50.8 T4-hours/month.**
+
+One user session ≈ **65s cold start + ~30s of answers + the 300s scaledown tail ≈ 395
+GPU-seconds.** So the credit covers **≈463 sessions/month ≈ 15 sessions/day.**
+
+**This is the pilot's binding constraint, and it is a headcount, not a bill.** Fifteen
+testers having one conversation a day each consumes essentially the entire monthly credit.
+Recruit twenty and this becomes a real invoice; recruit fifty and it is a meaningful one.
+Whatever the pilot's size, it should be chosen against this number rather than discovered
+through it.
+
+**It is also a better argument for holding `scaledown_window` at 300 than anything said
+before.** The earlier framing was "warmth buys polish, not correctness" — true, but soft.
+The hard version: the scaledown tail is **300 of the 395 seconds in a session — 76% of the
+GPU cost of a conversation is idle time after the user has stopped talking.** Raising it to
+600 drops what the credit covers from ~15 sessions/day to **~8.8**. It would nearly halve
+the pilot before a single answer improved.
+
+Corollary for the handler: at these rates the CPU webhook is **~$0.10/mo** at
+`min_containers=0` versus **$5.68/mo** always-warm. Both are noise against the GPU, which is
+why the handler-hosting decision was correctly made on architecture rather than cost.
+
+*(The dollar figures are arithmetic on Modal's published rates; the GPU-seconds per session
+are measured. Sessions/day assumes one conversation per tester per day — a guess, and the
+first thing the transcript store will replace with a fact.)*
+
+---
+
+## 🗑️ MODAL'S STARTER PLAN DELETES LOGS AFTER 1 DAY — the transcript store is a pilot PREREQUISITE, not an improvement (2026-08-14)
+
+Confirmed from Modal's pricing page, 2026-08-14: Starter plan log retention is **1 day**.
+
+The readiness assessment described the pre-existing position as *"Q&A exists only in Modal
+stdout … a pilot has nothing to review."* **That understated it.** The problem was never that
+stdout is unqueryable — it is that **yesterday's conversations are deleted.** A founder
+reviewing transcripts on Monday morning cannot see Friday, Saturday or Sunday. The daily
+hand-review that the pilot guardrails depend on would have been reviewing a 24-hour window
+and silently losing everything older, including the evidence for any user who reports a bad
+answer more than a day after receiving it.
+
+**This reclassifies the transcript store.** It was scoped as "a pilot with no transcript store
+is unmonitorable" — an argument about convenience and rigour. The correct statement is
+stronger: **without a durable store, the pilot's primary evidence has a 24-hour half-life by
+platform default**, and no amount of discipline compensates, because the data is gone before
+anyone can be disciplined about it.
+
+Two consequences already acted on:
+- The volume-backed store ships **with** the Modal move rather than after it (below).
+- Storage cost is not a reason to defer: Modal includes **1 TiB/mo free**, so a lifetime of
+  Swahili text transcripts costs **$0**.
+
+Same family as R16's "NO CONSOLE OPERATION MAY STAND BETWEEN A MEASUREMENT AND ITS FILE" and
+the 2026-08-11 `Select-Object` incident: **the measurement that quietly ceases to exist is
+the expensive one.** This is that failure mode with a 24-hour fuse and a platform default
+instead of a pipe.
+
+---
+
+## 📴 THE HANDLER COULD DROP A USER'S ANSWER IN SILENCE — and a pilot cannot read any other measurement until it stops (2026-08-14)
+
+**The defect.** `wappfly-function/handler.py:65` — `call_modal` had no exception handling and
+ran inside a fire-and-forget `asyncio.create_task`. On a timeout or any transport error the
+exception was **swallowed by the event loop** and the user received *nothing* — not even the
+`FALLBACK` string defined three lines above it, which only ever fired when Modal returned a
+200 whose JSON lacked a `reply` key. The webhook had already returned 200, so Wappfly never
+retried. Cold starts were measured at 64s (2026-08-11), 92.5s (2026-08-06) and up to 216s
+(runbook) against a **180s** ceiling, so this was not hypothetical: a cold start plus a compute
+question crossed it, and every crossing was a silently dropped answer.
+
+**Why this outranked every wrong-answer item on the board.** A defect you can see is a bug;
+a defect you cannot see is a blind instrument. With no transcript store — Q&A existed only in
+Modal stdout — a pilot could not tell a **wrong answer** from a **missing one**. Every daily
+transcript review, every "what would make you pull it" trigger, and every claim about real-user
+accuracy depends on the record existing first. This is the same principle as R16's
+"NO CONSOLE OPERATION MAY STAND BETWEEN A MEASUREMENT AND ITS FILE", applied to production
+rather than to a canary script: **the silent, exit-0 failure is the expensive one.**
+
+**Three invariants now hold, each proven by forcing the failure** (`tests/test_wappfly_handler.py`,
+22 tests — real stub HTTP servers, real httpx calls, assertions on what was *delivered to the
+user* and what *landed in the file*, never on the code's shape):
+
+1. **Nothing escapes the background task.** `call_modal` returns
+   `(reply | None, error_class, detail)` and cannot raise; `respond()` carries a belt-and-braces
+   `except` so even a bug in the handler itself still sends FALLBACK.
+2. **Failure causes are distinguishable:** `timeout` / `transport` / `http_status` / `bad_json` /
+   `no_reply_field` / `handler_bug`. These need different repairs — raise the ceiling, check
+   Railway egress, fix the token — and previously produced *identical silence*.
+   `httpx.TimeoutException` **subclasses** `TransportError`, so the catch order is load-bearing
+   and a test pins it.
+3. **Every message is recorded** — one JSONL row to `$TRANSCRIPT_DIR/chike-YYYY-MM.jsonl`
+   **and** to stdout, so a missing volume degrades the record rather than losing it.
+
+Forced in the tests: Modal sleeping past the timeout; a dead port; 401; 500; a junk body; a
+missing `reply`; a whitespace-only `reply`; an exception thrown inside the handler; a Wappfly
+send returning 500; an unwritable transcript directory.
+
+**`cold_start_suspected` is a proxy and its name has to keep saying so.** The handler cannot
+observe container age — Modal's response body carries no such field — so the flag is a latency
+threshold (30s; warm p90 was 9.8s over 48 questions). A test asserts the field is never renamed
+to `cold_start`. This is the same discipline as naming a judgement a judgement.
+
+**Three judgement calls, all confirmed by the founder:**
+- **Secrets are scrubbed from `error_detail`** — httpx puts the request URL, token query param
+  included, into some transport error strings, and transcripts get read and pasted around.
+  Non-negotiable here: this project has leaked that token twice.
+- **Senders are pseudonymous** — salted SHA-256 (12 hex) + last four digits. Enough to follow
+  one conversation and identify a pilot user you already know; not a raw phone-number dump.
+- **A slow-path ack** (one short "nimepokea swali lako, subiri kidogo" after 12s). Scope creep,
+  deliberately accepted: a user who hears nothing for three minutes concludes the service is
+  broken, and **one Wappfly message beats ~$200/month of warm GPU.** `SLOW_ACK_AFTER_S=0` disables.
+
+**The numbers, and why only one of them moved.**
+
+| knob | decision | reasoning |
+|---|---|---|
+| `MODAL_TIMEOUT_S` | **180 → 240** | costs **$0**. Modal's own function timeout is 600s, so nothing upstream cuts us off. A user waiting 4 minutes on WhatsApp is strictly better than a user getting nothing |
+| `scaledown_window` | **hold at 300** | 600s ≈ +$44/mo, 900s ≈ +$88/mo, business-hours warm ≈ $212/mo, `min_containers=1` ≈ $425/mo (assumed T4 rate $0.59/hr — *the GPU-seconds are measured, the dollars are arithmetic on that assumption*). With the 240s ceiling and the ack, **a cold start becomes slow-but-answered rather than nothing — so warmth now buys polish, not correctness** |
+
+The second row is the useful one: `cold_start_suspected` in the transcript **turns this into a
+measurement in two weeks of real traffic instead of a guess today.** `chike-inference/modal_app.py`
+was not touched.
+
+### …AND THE PLATFORM CHANGED UNDER IT THE SAME DAY — Railway → Modal
+
+Railway's trial ended before this shipped. Fly.io was assessed as the alternative and
+rejected on re-pricing: **Fly's free tier is gone** (2h/7d trial, then ~$2.17/mo for
+`shared-cpu-1x` 256MB + a 1GB volume), so the choice was a second paid bill versus half a
+day of porting. **Cost turned out to be noise on both sides** — the spread across every
+option considered was $0.10 to $5.68/month — which correctly removed money from the
+argument and left architecture and operational burden.
+
+**Modal won on three things, none of them financial:**
+1. **`.spawn()` makes the answer path DURABLE rather than best-effort.** Modal owns the job
+   and it survives the webhook container's death. Fly's `asyncio.create_task` in a
+   persistent VM is exactly as good as the Railway code and no better.
+2. **Two error classes stop being possible** rather than being handled — no network hop and
+   no token gate between handler and model, so `transport` and `http_status` are gone.
+3. **One platform, one bill, one place secrets live.**
+
+**The split that made the port cheap:** `handler_core.py` holds all conversation logic with
+`ask` and `send` injected, and `modal_whatsapp.py` is a thin wrapper. The platform changed;
+`deliver()` did not — and the tests, being written against the injected seam, went from 22
+to 34 and from 41s to 8s.
+
+**Three Modal-specific rules, now in CLAUDE.md, each of which fails SILENTLY if ignored:**
+- **Separate app (`chike-whatsapp`).** R16 requires `modal app stop chike-inference --yes`
+  before a model redeploy; a shared app would take the WhatsApp front door down with every
+  model deploy — and on 2026-08-10 that window was ~2 minutes of dead production when the
+  replacing deploy failed.
+- **`.spawn()`, never `asyncio.create_task`.** Modal's autoscaler tracks in-flight inputs;
+  once `webhook` returns its 200, a detached coroutine holding a 240s answer is invisible to
+  the scheduler and can be reclaimed. It would work *most of the time* — the exact class of
+  failure this handler was rewritten to abolish.
+- **One file per transcript row.** Modal Volumes are not a POSIX shared filesystem: two
+  containers appending to one JSONL do not interleave, the last committer wins, and the
+  other user's row is gone — data loss at precisely the moment of interest.
+
+`retries=0` on the spawned jobs is deliberate: a retry re-runs the GPU call and could deliver
+a **second answer to the same question**. A duplicate compliance answer is worse than one
+missing answer, and the transcript records the failure either way.
+
+**A defect the port's own test found on its first run.** `extract_reply` sat inside the try
+that classifies *model* failures, so a bug in our own parsing came back as
+`error_class: model_error` — **an error class lying about who failed**, which would have sent
+someone debugging `chike-inference` for a fault in the handler. The parse moved outside that
+try and a test forces it. Same family as the instrument-lie catalogue: the taxonomy that
+misattributes is worse than no taxonomy.
+
+**R16b INVERTS.** The note written earlier the same day — "the commit IS the deploy for this
+service" — was true of Railway and is now false. The handler is on Modal, so it needs
+`modal app stop chike-whatsapp --yes`, `PYTHONIOENCODING=utf-8`, a live forced-failure check
+and a negative case, on **every** handler change. `/health` returns `build`, but Modal injects
+no commit SHA, so the deploy command must pass `CHIKE_BUILD=$(git rev-parse --short HEAD)` —
+one more manual step than Railway, and one more thing to forget.
+
+**Founder-side steps (no CLI access from here):** the `chike-whatsapp` Modal Secret
+(`WAPPFLY_TOKEN`, `WEBHOOK_TOKEN`, `ADMIN_TOKEN`, `SENDER_SALT`), pointing Wappfly at the new
+webhook URL, and the production forced-failure check (`MODEL_TIMEOUT_S=1` → redeploy → send
+one message → confirm FALLBACK + a `timeout` row → revert → confirm a normal answer).
+
+**`wappfly-function/` is left untouched, in its pre-rewrite committed state.** The Railway
+platform is dead, so it is not a live rollback path, but deleting it is a separate decision
+and not one to fold into a move. Delete it once `chike-whatsapp` is verified live.
+
+**The webhook is currently OPEN unless `WEBHOOK_TOKEN` is set** — the same as the Railway
+handler always was, so not a regression, but on Modal the URL is guessable from the account
+name. Unset preserves day-one continuity and logs a warning; set it.
+
+**Still open on this path, deliberately not folded in:** no dedupe on webhook redelivery, no
+rate limit, no conversation memory, and Modal still serves **one input per container** with no
+`max_containers` cap — so concurrent users each pay a cold start. All three are 100-user
+problems, not 15-user problems.
 
 ---
 
