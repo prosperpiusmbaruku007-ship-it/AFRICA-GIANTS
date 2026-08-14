@@ -126,6 +126,49 @@ sightings and should not outrank measured classes. **This is a recommendation, n
 
 ---
 
+## 🔑 CREDENTIAL FINGERPRINTING IS PERMANENT INFRASTRUCTURE — not a debugging aid (2026-08-14)
+
+**Root cause of the three-day WhatsApp delivery outage: the Modal secret never held the
+working token.** Stored value 66 characters, fingerprint `314e083b`; the token that returns
+`{"sent":true}` is 64 characters, fingerprint `9665c495`. Two extra characters — almost
+certainly wrapping quotes carried in on a copy.
+
+**What it cost, all of it spent on a value nobody could see:** three failed sends, two token
+rotations, a full WhatsApp session re-pair, and a vendor nearly blamed for a fault that was
+ours. Every remedy was aimed at the far end because **no instrument existed that could compare
+a secret against a known-good value.**
+
+The first hypothesis on the very first 401 was *"the token is stale or mis-pasted"*. It was
+correct. It was abandoned because `/api/me` — independently broken — supplied a plausible
+rival explanation, and nothing could adjudicate between them. **A broken diagnostic does not
+merely fail to help; it redirects the investigation.** (Instrument-lie #9, now corrected there
+to record `/api/me` as an aggravating factor rather than the cause.)
+
+⚠️ **THE RULE — any credential that can fail silently needs a fingerprint exposed somewhere
+comparable, and the comparison must be RUN before concluding anything about the far end.**
+
+The implementation is four lines and belongs beside every secret this project uses:
+```python
+sha256(value.encode()).hexdigest()[:8]   # comparable, not reversible
+len(value)                               # catches truncation and wrapping characters
+value != value.strip()                   # catches a trailing newline on paste
+```
+Truncated SHA-256 is safe to publish and safe to paste into a support ticket. **Neither party
+ever prints the secret**, which is what made this checkable at all — the founder hashed their
+working token locally and compared eight hex characters.
+
+Live at `GET /health` on `chike-whatsapp` as `wappfly_token_fingerprint` / `_len` /
+`_has_whitespace`. **`MODAL_API_TOKEN`, `HF_TOKEN`, `WEBHOOK_TOKEN` and `ADMIN_TOKEN` have no
+equivalent yet** — each can fail the same silent way, and each would produce the same
+multi-day misdirection. Extending the pattern to them is open work.
+
+Generalises the R16 family. R16 says a deploy is not verification without a live check;
+this says **a credential is not verified by being present.** `/health` reported
+`WAPPFLY_TOKEN: true` throughout — presence-by-name answered the question it was built for
+(is the key spelled right?) and was silent on the one that mattered.
+
+---
+
 ## ✅ A1 SHIPPED AND LIVE-VERIFIED — two rows fixed including a 20× error, and the canary tried to revert it (2026-08-14)
 
 Deployed `b4a6537` to `chike-inference` under the full R16 cycle (`app stop --yes`,
@@ -1641,7 +1684,7 @@ pattern in how:**
 | 7 | D-FIDELITY-3 BEFORE canary (2026-08-11) — **NEAR-MISS, caught before it produced a number** | asked a **paraphrase** of the question that produced the defect, got a clean answer, and would have reported `INCONCLUSIVE — the model did not reproduce the guarded shape` while the defect was reproducible on every run of the verbatim question. Greedy decoding is what makes a live check exact and what makes it brittle in the input: a different prompt is a different deterministic trajectory | reading the committed 2026-08-10 artifact for the exact question string instead of retyping it. Full entry above |
 
 | 8 | `na je` live canary (2026-08-11) — **NEAR-MISS, caught before it reported** | its "was the second ask answered" marker was the phrase from the QUESTION (`kima cha chini`); production answers with `kiwango cha chini`, so a correctly answered row scored as a DROPPED ask — and the paired leak check, splitting on the same absent phrase, read the whole reply and flagged a figure from the other half as a preamble leak | reading the replies instead of the flags. Both were re-derived from the stored artifacts without re-asking |
-| **9** | **Wappfly `GET /api/me` (2026-08-14) — THE FIRST ONE THAT WAS A VENDOR'S, NOT OURS. Not a near-miss: it cost two token rotations and a full WhatsApp session re-pair** | I recommended `/api/me` as "the decisive one-line test" of token validity, on the strength of Wappfly's own docs saying every endpoint takes the same `X-API-Token`. **It 401s on a token that sends successfully.** `POST /api/messages/send` with the identical token returns `{"sent":true,"status":"sent","msg_id":…}`. The read endpoint is broken; the auth was never the problem, and every rotation chased a fault in the instrument | the founder testing the SEND endpoint directly instead of trusting the check I proposed |
+| **9** | **Wappfly `GET /api/me` (2026-08-14) — the first that was a VENDOR's, not ours** | I recommended `/api/me` as "the decisive one-line test" of token validity, on the strength of Wappfly's docs saying every endpoint takes the same `X-API-Token`. **It 401s on a token that sends successfully** — `POST /api/messages/send` with the identical token returns `{"sent":true,…}`. ⚠️ **CORRECTED 2026-08-14: this quirk is real and worth keeping, but it did NOT cause the delivery outage.** The cause was a plain value mismatch in the Modal secret (66 chars stored vs the 64-char working token). `/api/me` made it worse in the way a broken instrument does — it supplied a *plausible wrong explanation* that redirected two rotations and a session re-pair at the vendor, and nearly got them blamed. Recorded as an aggravating factor, not a root cause | the founder testing the SEND endpoint directly instead of trusting the check I proposed |
 
 | **10** | **A1 live canary (2026-08-14) — NOT a near-miss: it printed `NOT VERIFIED — REVERT` on a correct change** | its pass condition was `'10,000' in reply` — *did edge_p05 ANSWER* — while the agreed revert trigger was *did it compute on the 20,000,000 DISTRACTOR*. Between "answered" and "took the distractor" sits **clarification**, the safe outcome this path is built to produce, which the negation reclassified as failure. Acting on the flag would have reverted a fix that had just corrected a 20× error | reading the replies instead of the flags (again). Verdict re-derived from the stored artifacts without re-asking. **Full entry above** |
 
