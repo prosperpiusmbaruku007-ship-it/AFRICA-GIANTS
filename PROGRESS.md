@@ -268,6 +268,76 @@ already contains user-shaped vocabulary the eval set does not.** Diffing the two
 surfaced `shingapi` before a user typed it, at the cost of one script. Any future cue-list
 change should ask: *which forms are in training but in no probe?*
 
+## 🔠 CONCORD AUDIT — the router treats closed grammatical classes as open (2026-08-14)
+
+**Hypothesis confirmed, and it reorders the routing cluster.** The `shingapi` finding suggested
+the router's gates were grown one observed failure at a time. Enumerating the classes **from the
+grammar rather than from failures** shows coverage tracks *observed frequency*, not membership:
+
+| closed class | why it is closed | coverage |
+|---|---|---|
+| interrogative concord `-ngapi` | agreement prefix set is fixed by the noun-class system | **2/8 (25%)** |
+| money-ask contraction | `shilingi ngapi` → `shingapi` | **1/3 (33%)** |
+| possessive 1sg `-angu` | one form per noun class | **3/9 (33%)** |
+| **possessive 1pl `-etu`** | same | **1/8 (12.5%)** |
+| subject prefix `ni-`/`tu-` | I vs we | **4/9 (44%)** |
+
+**11 of 37 members recognised — 30%.** In every class the high-frequency members are covered and
+the rest are not, which is the signature of failure-driven growth.
+
+**The founder's hypothesis about `_OWN_TURNOVER_CUES` is correct.** Concretely missed today, with
+corpus frequencies: `zangu` (53 train), `kwangu` (16), `changu` (10), `wetu` (18), `tunalipa`
+(16). And **`nachangia` — the contribution verb in the live NSSF question — appears 6 times in
+the EVAL corpus and is in no cue list at all**; the whole `kuchangia` family (6 forms) is absent.
+
+### ⚠️ The cost is LINEAR, not quadratic — concord is functional, not free
+
+The obvious fear is a cross-product: 10 head nouns × 15 possessives = 150 entries. **That is
+wrong, and the correction is the useful part of this audit.** Each noun takes exactly ONE
+possessive form per person — `mauzo` → `yangu`/`yetu`, `duka` → `langu`/`letu`, `mzunguko` →
+`wangu`/`wetu`. `mauzo langu` is not a variant, it is ungrammatical. So closing the class means
+**adding each existing cue's counterpart**, which is linear in cues already written:
+
+| gate | missing counterparts |
+|---|---|
+| `_OWN_TURNOVER_CUES` | **8** (`mzunguko wetu`, `biashara yetu ina mauzo`, `duka letu lina`, …) |
+| `_WAGE_PAY_CUES` | **4** (`tunalipa`, `tunamlipia`, `tumemlipa`, `tumemlipia`) |
+| `kuchangia` family | **6** (absent entirely) |
+| interrogative concord | **3** with nonzero frequency (`vingapi`, `mangapi`, `shingapi`) |
+
+**~21 additions close every confirmed class.** The four queued cue fixes (B, C, A2, A3) are each
+**one member** of these classes. Doing them first pays the same review-and-deploy cost four times
+and still leaves the classes open.
+
+⚠️ **THE RULE: when a cue list is built around a grammatical feature, enumerate the feature. A
+closed class can be written down once from the grammar; an open lexical set cannot.** Growing a
+closed class from user complaints means every member costs one wrong answer — and Swahili
+concord guarantees there will always be more members.
+
+**Not implemented.** ~21 cue additions need their own R17 cycle (sweep + authored probes, since
+`vingapi`/`mangapi` have 4–5 corpus occurrences between them) and their own deploy.
+
+### The 456: `wakazi` at 26 occurrences and zero in eval is A1's own vocabulary
+
+Correcting my own number first: the "80% of training vocabulary unmeasured" headline is soft —
+**61% of those tokens appear exactly once**, and training has 6.4× more questions than eval, so
+most of the gap is Heaps' law. **The real figure is 455 tokens occurring 5+ times in training and
+never once in eval.** 18 of them are compliance-load-bearing:
+
+```
+34 refund    34 msamaha   32 input     26 wakazi    17 mwajiriwa
+ 9 uraia      8 resident   9 kutolipa
+```
+
+**`wakazi` (26), `resident` (8), `uraia` (9) are the entire distinguishing vocabulary of
+A1/SAFETY-2** — resident vs non-resident PAYE, the oldest live wrong *number* on the board,
+which renders TZS 1,028,000 instead of TZS 600,000 as deterministic working. Its vocabulary has
+never appeared in an eval question. **A1's guard could not have been validated by any instrument
+we own**, which is a better explanation for its two-week age than priority was.
+
+`msamaha` / `refund` / `input` (VAT exemption, refund, input tax) are the same shape at 100
+combined occurrences.
+
 ## 🧠 ITEM 2 — THE FACT PATH CONTRADICTS FIGURES THE USER SUPPLIED (investigated 2026-08-14)
 
 **Both live wrong answers share one shape: the user stated a number, and the answer asserted a
@@ -341,9 +411,80 @@ again, and it means shipping Guard A requires authored probes, not a corpus swee
 **Guard B should not be built as specified.** It cannot distinguish the two cases it exists to
 separate, and the version that catches our one example does so by forbidding correct behaviour.
 
-**D1 (the next adapter) is the real closure**, and this item is now its strongest single piece of
-evidence: the training corpus itself supplies the wrong numbers, traceably, and the model prefers
-them to the user's own words. **Not implemented — investigation only, at founder instruction.**
+### ✅ GUARD A IS BUILT (2026-08-14) — the comparative form only
+
+`fidelity.body_contradicts_stated_headcount` + `clarification.headcount_contradiction`, wired
+into `_validate_and_clean` on the **fact path** (the compute path already has D-FIDELITY-1/2/3).
+
+**The safety property, which is the whole reason this one is possible:**
+
+> **A stated 14 is not "fewer than 10" under any transformation.**
+
+No derivation allowance is needed because the claim is a **comparison, not a quantity** — which
+is exactly what Guard B lacked. The rule may therefore only ever compare a stated count against a
+`chini ya N` claim **about the user**; the subject-marker requirement (`una`, `biashara yako`, …)
+is load-bearing, because a bare `chini ya 10` is the *threshold*, which every correct SDL answer
+states.
+
+⚠️ **DO NOT WIDEN IT BACK.** The first draft — *any* headcount in the body differing from the
+stated one — was measured at **10 flags on 400 real rows, 9 of them false positives**, every one
+a correct answer citing the threshold beside the user's count. `hc_05` and `hc_09` preserve those
+shapes as probes so the widened rule cannot return quietly.
+
+**A fact body cannot be blanked** the way a compute body can — `_render` would emit nothing, and
+silence is worse than a wrong answer. It is replaced with clarification copy that quotes the
+user's own count back (the `ambiguous_figure` pattern) and declines to answer, because the reason
+the body was wrong is that the question never reached the engine, so no authoritative figure
+exists to substitute.
+
+Measured: **0 flags across the 400-row gate corpus** (8 preconditions), catches the live case.
+10 authored probes, 4 positive / 6 negative — authored rather than swept, because 8 opportunities
+in 400 rows cannot support a sweep (R17). Suite **978 passed** (944 + 34 live).
+
+### 🚫 GUARD B IS NOT DEFERRED — IT IS IMPOSSIBLE AS SPECIFIED. This is a result.
+
+Recording this as a finding rather than a backlog item, because a deferral invites someone to
+try again with more effort, and more effort will not help:
+
+> ⚠️ **A fabricated figure and a legitimate transformation are both just arithmetic relationships
+> to the user's number, so no arithmetic test separates them.**
+
+The measurement that proves it: Guard B catches our one live case **only** because TZS 400,000
+happens to be exactly half of TZS 800,000, and only if division by small integers is forbidden.
+But correct answers divide by small integers routinely — that is how aggregate payroll becomes a
+per-person wage. Enable the allowance that correctness requires and the true positive
+disappears (`allow_quotient=True` → 0 true positives). The guard can catch the defect or permit
+correct behaviour, never both. Had the model fabricated TZS 350,000 the guard would fire; that it
+fires on 400,000 is a coincidence about which memorised number surfaced, not a capability.
+
+**The corollary generalises well past this guard, and is the part worth keeping:**
+
+> ⚠️ **The check is well-defined exactly where it is not needed, and ill-defined exactly where it
+> is.** Asking *"is this number asserted for a slot the user already filled?"* requires knowing
+> the slot, which requires having routed. Where routing succeeds, a deterministic engine answers
+> and there is no free-generated figure to audit. Where routing fails — both live cases — there
+> is no slot structure at all, only prose.
+
+This shape recurs: a validator that needs the structure the failure destroyed. Expect it whenever
+a guard is proposed downstream of the thing that broke. Ask first *what does this guard need to
+already be true*, and if the answer is *"the bug did not happen"*, it is not a guard.
+
+### This is now the strongest evidence for D1
+
+**The training corpus supplies the wrong numbers, traceably, and the model prefers them to the
+user's own words.** That sentence is the case for the next adapter, and every clause of it is
+measured rather than argued:
+
+- **traceably** — TZS 400,000 and TZS 20,000 both live in one identifiable `train_sft.jsonl` pair,
+  with TZS 800,000 as its trigger, and TZS 20,000 is a PAYE band-2 intermediate emitted into an
+  NSSF answer.
+- **prefers them to the user's own words** — the user wrote `laki nane` in the same sentence.
+  Extraction read it correctly. The model overrode it.
+- **and no guard can close it** — the impossibility result above.
+
+A2's phantom TZS 26,000 relief was already the leading D1 evidence; this promotes it from a quirk
+about one memorised number to **a mechanism about all of them**. Guards catch shapes; the model
+supplies them. **Not implemented — investigation only, at founder instruction.**
 
 ## 🔤 ORTHOGRAPHIC VARIANTS — narrow additions, and why the normaliser was rejected (2026-08-14)
 
@@ -437,7 +578,46 @@ the `shingapi` entry above) finds forms *before* a user types them — the train
 contains user-shaped vocabulary the eval set does not, and diffing the two costs one script.
 That diff is the mitigation that makes this approach defensible rather than merely cheaper.
 
-Suite: **963 passed** (929 + 34 live-network). Not yet deployed — R16b applies.
+Suite: **963 passed** (929 + 34 live-network).
+
+### ✅ DEPLOYED AND VERIFIED (`a435cf5`, 2026-08-14) — and the BEFORE found more than expected
+
+Full R16 cycle: `modal app stop chike-inference --yes` → `PYTHONIOENCODING=utf-8 PYTHONUTF8=1
+modal deploy`. Paired BEFORE/AFTER artifacts in `scratch/variants_live_{before,after}.json`,
+written before any console output. The 62.1s first-probe latency confirms fresh containers.
+
+**The BEFORE was not just a baseline — it exposed a live leak producing fabricated tax rates.**
+Two `arzi` land-sale questions were not refused, and the model invented law:
+
+> `nimeuza arzi yangu ya mwanza nimepata faida nalipa kodi gani`
+> → **"Kodi ya zuio ya asilimia 10 inatumika kwenye mauzo ya ardhi ya muda mrefu."**
+>
+> `nataka kuuza arzi yangu je nalipa kodi kiasi gani`
+> → **"Kodi ya mauzo ya ardhi na majengo ni asilimia 2% ya thamani ya soko."**
+
+Both are fabricated rates on a capital-gains topic the OOC list exists to intercept, and the
+**only** thing standing between them and the refusal was one letter. Both now refuse correctly.
+This is the SAFETY-1 leak class reopening through orthography, and it means an OOC list is only
+as strong as its weakest spelling.
+
+| probe | before | after |
+|---|---|---|
+| `cfg_01/02` config-only phrases (`uza arzi`, not in the hardcoded fallback) | fabricated rates | **correct refusal** — proves the container read the CONFIG, not the baked list |
+| `chg_02` employer share on TZS 500,000 | *"asilimia 20 … TZS 100,000"* (the TOTAL, ignoring "kama mwajiri") | **TZS 50,000**, correct |
+| `neg_01` in-scope question containing `arzi` | in scope | in scope — no over-breadth |
+| `neg_02/03` BRELA 22,000 / SDL 3.5% controls | correct | byte-identical |
+
+⚠️ **`chg_01` — the verbatim user question — is a PARTIAL, and it is recorded as one.** The
+dangerous output is gone: `TZS 400,000` and `TZS 20,000` no longer appear, so the contradiction
+of the user's own figure is closed. But the reply now states the **rate** without applying it —
+*"Kama mwajiri, unachangia asilimia 10 ya mshahara"* — and never reaches TZS 80,000. The reason
+is the still-open `shingapi` gap: the levy and party now resolve, but with no money-ask the route
+answers as a rate statement rather than a computation. **Right rate, no arithmetic.** The
+`shingapi` fix completes this one; the variant fix alone was never going to.
+
+This is also the first time the 400,000/20,000 reply was captured to disk on both sides of a
+change — the gap flagged on 2026-08-14 (samples 1–3 died with the scrollback) is closed for this
+defect.
 
 ## 🔢 THE DECIMAL SEPARATOR FIX — `milioni 5,5` was 55,000,000 (`ce677fa`, 2026-08-14)
 

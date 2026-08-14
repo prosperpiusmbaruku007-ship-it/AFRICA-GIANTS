@@ -317,3 +317,73 @@ def body_contradicts_siblings(body: str, siblings: dict) -> bool:
                 # same presence-of-correct robustness the own-levy rule relies on.
                 return True
     return False
+
+
+# ---------------------------------------------------------------------------
+# GUARD A — the answer contradicts a headcount the USER STATED (2026-08-14)
+# ---------------------------------------------------------------------------
+# A different animal from everything above. D-FIDELITY-1/2/3 check the model body against
+# the ENGINE's working; this checks it against the QUESTION, and it exists for the fact
+# path, where there is no working to check against. The live case:
+#
+#     Q: "Nina wafanyakazi 14 mishahara yote kwa mwezi ni milioni 6 ... nalipa shingapi"
+#     A: "bado una wafanyakazi CHINI YA 10, hivyo hakuna ulazima wa kulipa SDL"
+#
+# The engine would have said TZS 210,000. It was never invoked (a `shingapi` routing miss),
+# so the fact path free-generated a claim contradicting a number in the same sentence.
+#
+# ⚠️ WHY THIS ONE IS SAFE AND ITS SIBLING (Guard B) IS IMPOSSIBLE. Guard B tried to catch
+# a fabricated *amount* by asking whether it was derivable from the user's figures. It
+# cannot work: a fabricated figure and a legitimate transformation are both just arithmetic
+# relationships to the user's number (TZS 400,000 is exactly half of the stated TZS 800,000,
+# and halving is what correct per-person answers do). THIS guard needs no derivation
+# allowance at all, because the claim is a COMPARISON, not a quantity:
+#
+#     A STATED 14 IS NOT "FEWER THAN 10" UNDER ANY TRANSFORMATION.
+#
+# That property is the whole safety argument. It is why the rule may only ever compare a
+# stated count against a `chini ya N` claim ABOUT THE USER.
+#
+# ⚠️ DO NOT WIDEN THIS TO "any headcount in the body differs from the stated one". That
+# version was written first and measured: 10 flags on 400 real rows, NINE of them FALSE
+# POSITIVES — every one a CORRECT answer citing the SDL threshold ("una wafanyakazi 9,
+# chini ya kiwango cha 10"). Citing the threshold is exactly what a correct SDL answer
+# does. The narrow comparative form flags 0 of those 400 and catches the live case.
+#
+# Evidence base is thin and that is on the record: the precondition (stated count + a
+# `chini ya N` claim) occurs in only 7 of 400 real rows, and the one true positive came
+# from a live user message, not the corpus. Hence authored probes, not a sweep — R17.
+
+_STATED_COUNT = re.compile(
+    r"\b(?:nina|tuna|ninao|tunao|ana|anao|wana|niliajiri|nimeajiri|nimewaajiri)\s+"
+    r"(?:wafanyakazi|waajiriwa|watumishi|vibarua)?\s*(\d{1,3})\b"
+    r"|\b(?:wafanyakazi|waajiriwa|watumishi|vibarua)\s+(\d{1,3})\b",
+    re.IGNORECASE)
+
+# 'chini ya N' asserted ABOUT THE USER. The subject markers are required: a bare
+# 'chini ya 10' is the THRESHOLD being stated, which every correct SDL answer does.
+_CLAIMS_BELOW = re.compile(
+    r"(?:una|unao|wewe|biashara yako|kampuni yako|duka lako|bado una)"
+    r"[^.!?]{0,40}?chini ya\s+(\d{1,3})\b",
+    re.IGNORECASE)
+
+
+def stated_headcount(question: str):
+    """The employee count the user asserts, or None. Max when several are present —
+    the largest stated count is the one a 'fewer than N' claim must not contradict."""
+    if not question:
+        return None
+    counts = [int(g) for m in _STATED_COUNT.finditer(question)
+              for g in m.groups() if g is not None]
+    return max(counts) if counts else None
+
+
+def body_contradicts_stated_headcount(body: str, question: str) -> bool:
+    """True iff the body tells the user they have FEWER THAN N employees when the
+    question states a count of N or more."""
+    if not body or not question:
+        return False
+    stated = stated_headcount(question)
+    if stated is None:
+        return False
+    return any(stated >= int(m.group(1)) for m in _CLAIMS_BELOW.finditer(body))

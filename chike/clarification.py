@@ -228,3 +228,26 @@ def compute_clarification(computation_type, reasons, question=""):
                 "wafanyakazi. Tafadhali nipe namba hizo mbili.")
     # Missing/vague amount, wrong-base, too-small, or any other blocker -> ask for the salary.
     return PAYROLL_AMOUNT
+
+
+# --- stated-headcount contradiction (Guard A, 2026-08-14) -------------------
+
+def headcount_contradiction(stated: int) -> str:
+    """The fact path told the user they have fewer employees than they just said they have.
+
+    QUOTES THE COUNT BACK, like ambiguous_figure does. The user wrote the number in the
+    same sentence, so a generic "niambie idadi ya wafanyakazi" would read as though we had
+    not been listening — and they would very likely retype the same figure.
+
+    DELIBERATELY DOES NOT ANSWER. The reason the body was wrong is that the question never
+    reached the rules engine, so we do not have an authoritative figure to substitute; and
+    the whole point of the guard is that this system had just asserted something false
+    about the user's own business. Asking them to confirm is the honest move, and it
+    routes the next message into the compute path where a real answer exists.
+    """
+    return (
+        f"Samahani — nimeona umeandika wafanyakazi {stated}, lakini jibu langu la awali "
+        f"halikuendana na idadi hiyo, hivyo sitalitumia. Tafadhali nithibitishie: una "
+        f"wafanyakazi {stated} na unataka hesabu ya tozo gani (SDL, NSSF, PAYE au WCF), "
+        f"pamoja na jumla ya mishahara kwa mwezi? Nitakuletea hesabu kamili."
+    )

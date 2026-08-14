@@ -642,7 +642,16 @@ class Orchestrator:
         then DERIVES A SMALLER ONE FROM IT (the phantom TZS 26,000 relief: 78,000 - 26,000 =
         52,000), which the presence-of-correct rule clears by design. It is deliberately partial:
         the paraphrase family, where the wrong conclusion is stated without writing the arithmetic
-        out, REMAINS OPEN. See chike.fidelity for the misses, named."""
+        out, REMAINS OPEN. See chike.fidelity for the misses, named.
+
+        GUARD A (2026-08-14) checks the FACT path against the QUESTION rather than against a
+        working, because on the fact path there is no working. It fires only when the body
+        tells the user they have FEWER THAN N employees while the question states N or more —
+        a claim no transformation can make true, which is what makes it safe to act on.
+        Unlike the compute path a fact body cannot simply be blanked: _render would emit
+        nothing and silence is worse than a wrong answer, so it is replaced with clarification
+        copy that quotes the user's own count back. See chike.fidelity for why its sibling
+        (fabricated AMOUNTS) is impossible rather than merely unbuilt."""
         if sub.needs_clarification:
             return sub
         # Preserve the pre-clean generation in raw_text before overwriting text,
@@ -652,6 +661,12 @@ class Orchestrator:
                 fidelity.body_contradicts_working(cleaned, sub.computation)
                 or fidelity.body_reduces_authoritative_amount(cleaned, sub.computation)):
             cleaned = ""
+        elif sub.computation is None and fidelity.body_contradicts_stated_headcount(
+                cleaned, sub.sub_question.text):
+            stated = fidelity.stated_headcount(sub.sub_question.text)
+            return dataclasses.replace(
+                sub, text=clarification.headcount_contradiction(stated),
+                raw_text=sub.text, needs_clarification=True)
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text)
 
     @staticmethod
