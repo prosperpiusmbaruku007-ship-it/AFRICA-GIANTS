@@ -461,3 +461,35 @@ def test_the_modal_app_declares_a_separate_app_and_spawns_rather_than_tasks():
     # create_task is wrong here, and a prose mention must not fail the pin.
     assert "asyncio.create_task(" not in src
     assert "retries=0" in src, "a retry would deliver a second answer to one question"
+
+
+def test_the_sender_domain_is_recorded_and_is_not_pii():
+    assert core.sender_domain("255712345678@s.whatsapp.net") == "s.whatsapp.net"
+    assert core.sender_domain("12345@lid") == "lid"
+    assert core.sender_domain("nodomain") == ""
+    out = Outbox()
+    row = run(replying("jibu"), out)
+    assert row["sender_domain"] == "s.whatsapp.net"
+    assert "255712345678" not in json.dumps(row)
+
+
+def test_the_token_fingerprint_is_comparable_but_not_reversible(monkeypatch):
+    """Three Wappfly 401s and two rotations failed to converge because nothing could
+    compare the secret's value against the token proven to work, and neither party may
+    print it. Truncated SHA-256 is comparable without being reversible."""
+    spec = importlib.util.spec_from_file_location(
+        "chike_modal_whatsapp_fp",
+        os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"))
+    mw = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mw)
+
+    monkeypatch.setenv("WAPPFLY_TOKEN", "abc123")
+    fp = mw._token_fingerprint("WAPPFLY_TOKEN")
+    import hashlib
+    assert fp["wappfly_token_fingerprint"] == hashlib.sha256(b"abc123").hexdigest()[:8]
+    assert fp["wappfly_token_len"] == 6
+    assert fp["wappfly_token_has_whitespace"] is False
+    assert "abc123" not in json.dumps(fp), "the value must never appear"
+
+    monkeypatch.setenv("WAPPFLY_TOKEN", "abc123\n")
+    assert mw._token_fingerprint("WAPPFLY_TOKEN")["wappfly_token_has_whitespace"] is True

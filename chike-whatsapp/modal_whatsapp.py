@@ -256,6 +256,24 @@ def health():
         # answerable from outside, before anyone starts debugging a value.
         "secret_keys_present": {k: bool(os.environ.get(k, "")) for k in EXPECTED_KEYS},
         "secret_keys_missing": [k for k in EXPECTED_KEYS if not os.environ.get(k, "")],
+        # THE CHECK WE NEVER HAD. Three Wappfly 401s and two token rotations failed to
+        # converge because nothing could compare the secret's VALUE against the token
+        # proven to work — and neither party may print it. A truncated SHA-256 is
+        # comparable without being reversible; the length and whitespace flags catch a
+        # trailing newline on paste, which Wappfly would see as a different string.
+        # Fingerprint the OUTBOUND token only: it is the one in dispute.
+        **_token_fingerprint("WAPPFLY_TOKEN"),
+    }
+
+
+def _token_fingerprint(key: str) -> dict:
+    import hashlib
+    raw = os.environ.get(key, "")
+    return {
+        f"{key.lower()}_fingerprint": (hashlib.sha256(raw.encode("utf-8")).hexdigest()[:8]
+                                       if raw else None),
+        f"{key.lower()}_len": len(raw),
+        f"{key.lower()}_has_whitespace": raw != raw.strip(),
     }
 
 

@@ -137,6 +137,16 @@ def sender_ids(sender: str, salt: str = ""):
     return h, digits[-4:]
 
 
+def sender_domain(sender) -> str:
+    """The part after '@' — `s.whatsapp.net`, `lid`, `g.us`. Not PII, and it decides
+    whether a send can land at all: Baileys-based gateways sometimes deliver a LINKED-ID
+    (`@lid`) form instead of the phone JID, and replying to that address is a
+    delivery-into-the-void that looks like SUCCESS rather than an error. Recorded so the
+    question is answerable from the transcript rather than from a live experiment."""
+    s = str(sender)
+    return s.split("@", 1)[1] if "@" in s else ""
+
+
 def parse_webhook(body):
     """Wappfly delivery -> {kind, sender, text} or None to ignore. Pure; no I/O."""
     if not isinstance(body, dict):
@@ -198,6 +208,7 @@ def _blank_row(kind, sender, settings, build):
         "kind": kind,
         "sender_hash": sender_hash,
         "sender_tail": sender_tail,
+        "sender_domain": sender_domain(sender),
         "question": None,
         "reply": None,
         "reply_chars": 0,
