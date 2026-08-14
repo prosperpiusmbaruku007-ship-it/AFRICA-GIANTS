@@ -192,15 +192,23 @@ async def _send_once(to: str, text: str):
 # against ~$5.68/mo always-warm, and the GPU's own cold start dwarfs the webhook's.
 # Buy warmth only if the transcripts show Wappfly retrying on slow delivery — the same
 # discipline as holding the GPU scaledown at 300.
-@app.function(image=image, secrets=[SECRET], min_containers=0, scaledown_window=1200)
+@app.function(image=image, secrets=[SECRET], volumes={TRANSCRIPT_ROOT: volume},
+              min_containers=0, scaledown_window=1200)
 @modal.fastapi_endpoint(method="POST")
 def webhook(item: dict, token: str = None):
     """Always returns 200. Wappfly must never see an error it might redeliver — there
     is still no dedupe on redelivery, so a retry would mean a duplicate answer."""
     try:
+        core = _core()
         expected = os.environ.get("WEBHOOK_TOKEN", "")
         if expected:
             if token != expected:
+                # WAS SILENT. A rejected delivery returned 200 and printed nothing, so it
+                # was detectable only by noticing which log lines were ABSENT — which is
+                # how 2026-08-14's fourth failed send had to be diagnosed. Record it.
+                print("[webhook] REJECTED: token mismatch "
+                      f"(supplied={'yes' if token else 'none'})")
+                _write_row(core.rejection_row("unauthorized", item, _settings(), BUILD))
                 return {"status": "unauthorized"}
         else:
             # Opt-in hardening. Unset preserves the Railway behaviour (an open webhook)
@@ -208,8 +216,13 @@ def webhook(item: dict, token: str = None):
             # open webhook lets anyone who guesses the URL burn GPU. Set it.
             print("[webhook] WARNING: WEBHOOK_TOKEN unset — this endpoint is OPEN")
 
-        parsed = _core().parse_webhook(item)
+        parsed = core.parse_webhook(item)
         if not parsed:
+            # WAS SILENT for the same reason. The recorded payload_shape (keys only, never
+            # values) says WHY the parse declined — wrong event, fromMe, missing text or
+            # missing JID — which settles next time what took three log-reads this time.
+            print("[webhook] IGNORED: parse_webhook declined the payload")
+            _write_row(core.rejection_row("ignored", item, _settings(), BUILD))
             return {"status": "ignored"}
 
         print(f"[chike] From: {parsed['sender']} — {parsed['text'][:80]}")
@@ -261,20 +274,42 @@ def health():
         # proven to work — and neither party may print it. A truncated SHA-256 is
         # comparable without being reversible; the length and whitespace flags catch a
         # trailing newline on paste, which Wappfly would see as a different string.
-        # Fingerprint the OUTBOUND token only: it is the one in dispute.
-        **_token_fingerprint("WAPPFLY_TOKEN"),
+        # EVERY credential, not just the one in dispute. WAPPFLY_TOKEN's mismatch cost
+        # three days; WEBHOOK_TOKEN's is suspected of costing the next send, one
+        # credential over and within days -- "present is not correct" twice, with
+        # nothing able to see either. A credential failure during a pilot is
+        # indistinguishable from a product failure without this.
+        "credentials": {k: _token_fingerprint(k) for k in EXPECTED_KEYS},
+        # Kept flat as well: the WAPPFLY_TOKEN comparison that settled 2026-08-14 was
+        # quoted from these key names, and a diagnostic people have used should not
+        # move out from under them.
+        **_token_fingerprint_flat("WAPPFLY_TOKEN"),
     }
 
 
 def _token_fingerprint(key: str) -> dict:
+    """Comparable, never reversible, and it never returns the value.
+
+    Truncated SHA-256 is safe to publish and safe to paste into a support ticket, which
+    is what makes a credential checkable by two parties who must both never print it.
+    `length` catches truncation and stray wrapping characters (WAPPFLY_TOKEN was stored
+    at 66 chars against a real 64); `has_whitespace` catches a trailing newline on paste,
+    which the far end sees as a different string.
+    """
     import hashlib
     raw = os.environ.get(key, "")
     return {
-        f"{key.lower()}_fingerprint": (hashlib.sha256(raw.encode("utf-8")).hexdigest()[:8]
-                                       if raw else None),
-        f"{key.lower()}_len": len(raw),
-        f"{key.lower()}_has_whitespace": raw != raw.strip(),
+        "fingerprint": hashlib.sha256(raw.encode("utf-8")).hexdigest()[:8] if raw else None,
+        "len": len(raw),
+        "has_whitespace": raw != raw.strip(),
     }
+
+
+def _token_fingerprint_flat(key: str) -> dict:
+    fp = _token_fingerprint(key)
+    return {f"{key.lower()}_fingerprint": fp["fingerprint"],
+            f"{key.lower()}_len": fp["len"],
+            f"{key.lower()}_has_whitespace": fp["has_whitespace"]}
 
 
 @app.function(image=image, volumes={TRANSCRIPT_ROOT: volume}, secrets=[SECRET])

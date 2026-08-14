@@ -331,6 +331,61 @@ async def deliver_greeting(sender, send_once, settings, build="dev"):
     return row
 
 
+def payload_shape(body) -> dict:
+    """The SHAPE of an inbound delivery — keys and which extraction candidates were
+    present — never the values. Enough to settle "did parse_webhook reject this, and
+    why", without putting message text or phone numbers in a rejection record."""
+    if not isinstance(body, dict):
+        return {"type": type(body).__name__}
+    # `data` is not guaranteed to be an object. A malformed delivery must produce a
+    # RECORD, not an exception -- an exception here would be caught by the webhook's
+    # outer handler and lose the very row this function exists to write.
+    data = body.get("data")
+    messages = data.get("messages") if isinstance(data, dict) else None
+    shape = {
+        "top_keys": sorted(body)[:12],
+        "event": body.get("event"),
+        "data_keys": sorted(data)[:12] if isinstance(data, dict) else None,
+        "messages_keys": sorted(messages)[:20] if isinstance(messages, dict) else None,
+    }
+    if isinstance(messages, dict):
+        shape["text_field_present"] = [k for k in ("conversation", "messageBody", "text")
+                                       if str(messages.get(k) or "").strip()]
+        shape["jid_field_present"] = (
+            [k for k in ("remoteJid",) if messages.get(k)]
+            + (["key.remoteJid"] if (messages.get("key") or {}).get("remoteJid") else []))
+        shape["from_me"] = bool(messages.get("fromMe")
+                                or (messages.get("key") or {}).get("fromMe"))
+    return shape
+
+
+def rejection_row(reason: str, body, settings, build="dev") -> dict:
+    """A delivery the webhook REFUSED, recorded rather than inferred.
+
+    Both refusal branches used to return 200 and print nothing, so a rejected
+    delivery was invisible — indistinguishable from a message that never arrived, and
+    detectable only by noticing which log lines were ABSENT. That is the same
+    silent-drop class the rest of this module exists to abolish, surviving in the one
+    function `deliver()`'s guarantee does not cover.
+    """
+    return {
+        "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "build": build,
+        "kind": "rejected",
+        "reject_reason": reason,          # 'unauthorized' | 'ignored'
+        "payload_shape": payload_shape(body),
+        "sender_hash": None,
+        "sender_tail": None,
+        "sender_domain": None,
+        "question": None,
+        "reply": None,
+        "fallback": False,
+        "error_class": reason,
+        "error_detail": None,
+        "send_ok": None,
+    }
+
+
 def row_to_line(row) -> str:
     return json.dumps(row, ensure_ascii=False)
 

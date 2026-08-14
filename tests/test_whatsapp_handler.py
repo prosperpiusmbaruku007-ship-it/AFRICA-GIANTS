@@ -486,10 +486,58 @@ def test_the_token_fingerprint_is_comparable_but_not_reversible(monkeypatch):
     monkeypatch.setenv("WAPPFLY_TOKEN", "abc123")
     fp = mw._token_fingerprint("WAPPFLY_TOKEN")
     import hashlib
-    assert fp["wappfly_token_fingerprint"] == hashlib.sha256(b"abc123").hexdigest()[:8]
-    assert fp["wappfly_token_len"] == 6
-    assert fp["wappfly_token_has_whitespace"] is False
+    assert fp["fingerprint"] == hashlib.sha256(b"abc123").hexdigest()[:8]
+    assert fp["len"] == 6
+    assert fp["has_whitespace"] is False
     assert "abc123" not in json.dumps(fp), "the value must never appear"
 
-    monkeypatch.setenv("WAPPFLY_TOKEN", "abc123\n")
-    assert mw._token_fingerprint("WAPPFLY_TOKEN")["wappfly_token_has_whitespace"] is True
+    monkeypatch.setenv("WAPPFLY_TOKEN", "abc123" + chr(10))
+    assert mw._token_fingerprint("WAPPFLY_TOKEN")["has_whitespace"] is True
+
+
+def test_every_credential_is_fingerprinted_not_just_the_one_in_dispute(monkeypatch):
+    """WAPPFLY_TOKEN's mismatch cost three days; WEBHOOK_TOKEN's is suspected of costing
+    the next send -- one credential over, within days, with nothing able to see either."""
+    spec = importlib.util.spec_from_file_location(
+        "chike_modal_whatsapp_all",
+        os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"))
+    mw = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mw)
+    for k in mw.EXPECTED_KEYS:
+        monkeypatch.setenv(k, "value-for-" + k)
+    h = mw.health.get_raw_f()()
+    assert set(h["credentials"]) == set(mw.EXPECTED_KEYS)
+    for k in mw.EXPECTED_KEYS:
+        assert h["credentials"][k]["fingerprint"]
+        assert "value-for-" not in json.dumps(h["credentials"][k])
+    assert h["wappfly_token_fingerprint"] == h["credentials"]["WAPPFLY_TOKEN"]["fingerprint"]
+
+
+def test_a_rejected_delivery_is_recorded_rather_than_inferred_from_missing_prints():
+    """Both refusal branches returned 200 and printed nothing, so a rejected delivery was
+    indistinguishable from one that never arrived -- diagnosable only by noticing which
+    log lines were ABSENT. Same silent-drop class the rest of the module abolishes."""
+    body = {"event": "messages.sent",
+            "data": {"messages": {"conversation": "habari", "remoteJid": SENDER}}}
+    row = core.rejection_row("ignored", body, settings(), "b")
+    assert row["kind"] == "rejected"
+    assert row["reject_reason"] == "ignored"
+    assert row["error_class"] == "ignored"
+    assert row["payload_shape"]["event"] == "messages.sent"
+    assert row["payload_shape"]["text_field_present"] == ["conversation"]
+    assert row["payload_shape"]["jid_field_present"] == ["remoteJid"]
+
+
+def test_a_rejection_row_records_shape_but_never_content():
+    body = {"event": "messages.received",
+            "data": {"messages": {"conversation": "mshahara wangu ni 900000",
+                                  "remoteJid": "255712345678@s.whatsapp.net"}}}
+    blob = json.dumps(core.rejection_row("unauthorized", body, settings(), "b"))
+    assert "255712345678" not in blob, "no phone numbers in a rejection record"
+    assert "900000" not in blob, "no message content in a rejection record"
+    assert "conversation" in blob, "but the SHAPE must be there"
+
+
+def test_payload_shape_survives_junk():
+    for junk in (None, "string", 42, [], {"event": "x", "data": "not-a-dict"}):
+        core.payload_shape(junk)
