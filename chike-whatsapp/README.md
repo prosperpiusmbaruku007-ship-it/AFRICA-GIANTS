@@ -54,7 +54,8 @@ missing answer, and the transcript records the failure either way.
 | `ADMIN_TOKEN` | recommended | when unset, `GET /transcripts` returns nothing |
 | `SENDER_SALT` | recommended | salt for the pseudonymous `sender_hash` |
 | `MODEL_TIMEOUT_S` | no (240) | raised from Railway's 180; cold starts measured 64–216s |
-| `SLOW_ACK_AFTER_S` | no (12) | "preparing an answer" on slow paths; `0` disables |
+| `SLOW_ACK_AFTER_S` | no (12) | "preparing an answer" on slow paths; `0` disables **the whole ladder** |
+| `SECOND_ACK_AFTER_S` | no (45) | second ack naming the cold start; sits between warm p90 (9.8s) and earliest observed cold completion (60.6s); `0` disables this rung only |
 | `COLD_START_SUSPECTED_S` | no (30) | threshold for the transcript's cold-start **proxy** |
 | `SEND_ATTEMPTS` | no (2) | one retry on a failed send |
 

@@ -238,6 +238,123 @@ def test_the_ack_can_be_disabled():
 
 
 # ---------------------------------------------------------------------------
+# the SECOND ack — the first one became a broken promise at 82 seconds
+# ---------------------------------------------------------------------------
+
+def test_a_very_slow_answer_gets_a_second_ack_that_explains_itself():
+    """The real delivery acked at 12s and answered at 94.2s. "Subiri kidogo" at 82
+    seconds of silence reads as a system that has stopped, not as reassurance."""
+    async def very_slow(_message):
+        await asyncio.sleep(0.9)
+        return {"reply": "jibu"}
+
+    out = Outbox()
+    row = run(very_slow, out, slow_ack_after_s=0.2, second_ack_after_s=0.5)
+    assert out.texts == [core.SLOW_ACK, core.SECOND_ACK, "jibu"]
+    assert row["acks_sent"] == 2
+    assert row["ack_sent"] is True, "the original field keeps its meaning for old readers"
+
+
+def test_the_second_ack_never_arrives_after_the_answer():
+    """THE FAILURE A PER-RUNG TIMER WOULD HAVE. Two independent timers can both be in
+    flight when the answer lands, and the loser then tells a user who has already been
+    answered that we are still working — worse than the silence it was meant to fill.
+    The single sequential walker re-checks `answered` before every rung."""
+    async def slow(_message):
+        await asyncio.sleep(0.4)
+        return {"reply": "jibu"}
+
+    out = Outbox()
+    row = run(slow, out, slow_ack_after_s=0.2, second_ack_after_s=0.6)
+    assert out.texts == [core.SLOW_ACK, "jibu"], \
+        "the answer beat the second rung, so it must never be sent"
+    assert row["acks_sent"] == 1
+    assert out.texts[-1] == "jibu", "the last thing the user hears is the answer"
+
+
+def test_the_ladder_is_capped_at_two_however_long_the_wait():
+    """Structural, not a counter: the ladder is a two-element list and the loop cannot
+    outlive it. No timeout, retry or error path ends with a user pinged indefinitely."""
+    async def never(_message):
+        await asyncio.sleep(30)
+
+    out = Outbox()
+    row = run(never, out, model_timeout_s=1.2, slow_ack_after_s=0.1,
+              second_ack_after_s=0.3)
+    assert row["acks_sent"] == 2, "two rungs over a wait many times longer than both"
+    assert out.texts == [core.SLOW_ACK, core.SECOND_ACK, core.FALLBACK]
+
+
+def test_the_kill_switch_disables_the_whole_ladder_not_half_of_it():
+    """`SLOW_ACK_AFTER_S=0` is the documented kill switch and people will reach for it
+    to stop the chatter. Leaving the second rung running would be the worst reading of
+    that instruction — the user still gets pinged, just later and once."""
+    async def very_slow(_message):
+        await asyncio.sleep(0.7)
+        return {"reply": "jibu"}
+
+    out = Outbox()
+    row = run(very_slow, out, slow_ack_after_s=0, second_ack_after_s=0.2)
+    assert out.texts == ["jibu"]
+    assert row["acks_sent"] == 0
+
+
+def test_the_second_rung_alone_can_be_disabled():
+    async def very_slow(_message):
+        await asyncio.sleep(0.7)
+        return {"reply": "jibu"}
+
+    out = Outbox()
+    row = run(very_slow, out, slow_ack_after_s=0.2, second_ack_after_s=0)
+    assert out.texts == [core.SLOW_ACK, "jibu"]
+    assert row["acks_sent"] == 1
+
+
+def test_the_second_ack_names_a_range_and_never_a_number_we_cannot_keep():
+    """The 12s ack broke at 82s precisely because "kidogo"/"one moment" implies a bound
+    the cold path cannot hold. The replacement hedges, names the cause, and ends on the
+    only guarantee the architecture actually provides."""
+    assert "dakika moja hadi mbili" in core.SECOND_ACK, "a range, not a point estimate"
+    assert "sekunde" not in core.SECOND_ACK, "no second-precision promise"
+    assert "unaanza upya" in core.SECOND_ACK, "name the reason — a wait with a cause"
+    assert "Sitakuacha bila jibu" in core.SECOND_ACK, \
+        "end on the promise .spawn() and the fallback path actually keep"
+
+
+def test_rung_timing_is_measured_from_the_start_not_summed_nominally():
+    """`send_with_retry` on rung one can take seconds. If rung two were scheduled by
+    sleeping the nominal gap afterwards, it would drift past the cold-start window it
+    exists to cover — so the second ack must land at ~second_ack_after_s from t0, not at
+    slow_ack_after_s + second_ack_after_s + however long the first send took."""
+    import time as _t
+
+    class SlowOutbox(Outbox):
+        async def send_once(self, to, text):
+            await asyncio.sleep(0.25)          # a sluggish Wappfly
+            return await super().send_once(to, text)
+
+    async def very_slow(_message):
+        await asyncio.sleep(1.4)
+        return {"reply": "jibu"}
+
+    out, t0 = SlowOutbox(), _t.monotonic()
+    stamps = []
+    original = out.send_once
+
+    async def stamping(to, text):
+        result = await original(to, text)
+        stamps.append((text, _t.monotonic() - t0))
+        return result
+
+    out.send_once = stamping
+    run(very_slow, out, slow_ack_after_s=0.2, second_ack_after_s=0.6)
+    second = [t for text, t in stamps if text == core.SECOND_ACK][0]
+    assert second < 1.0, (
+        f"second ack landed at {second:.2f}s; nominal summing would put it past "
+        f"0.2 + 0.25 + 0.6 = 1.05s")
+
+
+# ---------------------------------------------------------------------------
 # the outbound leg
 # ---------------------------------------------------------------------------
 
@@ -429,7 +546,8 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
     # Tunables carry safe defaults and are not secret material; CHIKE_BUILD is baked
     # at deploy time, not stored in the secret.
     tunables = {"CHIKE_BUILD", "WAPPFLY_SEND_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
-                "COLD_START_SUSPECTED_S", "SEND_ATTEMPTS", "WAPPFLY_TIMEOUT_S"}
+                "SECOND_ACK_AFTER_S", "COLD_START_SUSPECTED_S", "SEND_ATTEMPTS",
+                "WAPPFLY_TIMEOUT_S"}
     assert read - tunables == set(mw.EXPECTED_KEYS), (
         "a secret key is read but not reported by /health, or vice versa")
 

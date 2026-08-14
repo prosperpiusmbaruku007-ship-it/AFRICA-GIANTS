@@ -116,6 +116,7 @@ def _settings():
     return Settings(
         model_timeout_s=float(os.environ.get("MODEL_TIMEOUT_S", "240")),
         slow_ack_after_s=float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
+        second_ack_after_s=float(os.environ.get("SECOND_ACK_AFTER_S", "45")),
         cold_start_suspected_s=float(os.environ.get("COLD_START_SUSPECTED_S", "30")),
         send_attempts=int(os.environ.get("SEND_ATTEMPTS", "2")),
         sender_salt=os.environ.get("SENDER_SALT", ""),
@@ -295,6 +296,10 @@ def health():
         "app": "chike-whatsapp",
         "model_timeout_s": float(os.environ.get("MODEL_TIMEOUT_S", "240")),
         "slow_ack_after_s": float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
+        # Reported so the live check can prove WHICH ack timing is serving. R16: a
+        # config-only change has no code diff to remind you a deploy happened, and a
+        # warm container will happily keep the old value.
+        "second_ack_after_s": float(os.environ.get("SECOND_ACK_AFTER_S", "45")),
         "webhook_token_set": bool(os.environ.get("WEBHOOK_TOKEN", "")),
         "transcripts_endpoint": bool(os.environ.get("ADMIN_TOKEN", "")),
         "transcript_store": store,
