@@ -49,9 +49,18 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 
 app = modal.App("chike-whatsapp")
 
+# BUILD is baked at deploy time so /health can prove WHICH code is serving. Modal
+# injects no git SHA (Railway did, via RAILWAY_GIT_COMMIT_SHA), so the deploy command
+# passes it: CHIKE_BUILD=$(git rev-parse --short HEAD) modal deploy ...
+BUILD = os.environ.get("CHIKE_BUILD", "") or "dev"
+
+# ORDER MATTERS: every build step must precede `add_local_*`, or Modal refuses the
+# image outright ("tried to run a build step after using image.add_local_*"). The
+# first deploy failed exactly this way with .env() placed last.
 image = (
     modal.Image.debian_slim(python_version="3.11")
     .pip_install("fastapi[standard]", "httpx")
+    .env({"CHIKE_BUILD": BUILD})
     .add_local_dir(_HERE, "/root/chike_whatsapp")
 )
 
@@ -64,12 +73,6 @@ TRANSCRIPT_ROOT = "/transcripts"
 # Lazy cross-app handle — resolved on first use, so a chike-inference redeploy does not
 # require a chike-whatsapp redeploy.
 ChikeModel = modal.Cls.from_name("chike-inference", "ChikeModel")
-
-# BUILD is baked at deploy time so /health can prove WHICH code is serving. Modal
-# injects no git SHA (Railway did, via RAILWAY_GIT_COMMIT_SHA), so the deploy command
-# passes it: CHIKE_BUILD=$(git rev-parse --short HEAD) modal deploy ...
-BUILD = os.environ.get("CHIKE_BUILD", "") or "dev"
-image = image.env({"CHIKE_BUILD": BUILD})
 
 SECRET = modal.Secret.from_name("chike-whatsapp")
 
