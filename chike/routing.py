@@ -123,6 +123,107 @@ _GENERIC_LEVY = ["makato", "michango", "tozo", "malipo kwa serikali", "kulipa se
 # that lacks the vocabulary is not evidence).
 # ===========================================================================
 
+# ===========================================================================
+# OBJECT CONCORD (2026-08-15) — the THIRD person-marking paradigm, and the one the
+# 2026-08-15 audit did not enumerate.
+# ===========================================================================
+# Swahili marks the OBJECT with an infix between the tense marker and the verb stem, and the
+# class is CLOSED — exactly five members:
+#
+#     wa-na-NI-kata     they deduct from ME        -ni-  1sg   <- nat_08, live and wrong
+#     wa-na-KU-kata     they deduct from YOU       -ku-  2sg
+#     wa-na-M-kata      they deduct from HIM/HER   -m-   cl.1  (-mw- before a vowel)
+#     wa-na-TU-kata     they deduct from US        -tu-  1pl
+#     wa-na-WA-kata     they deduct from THEM      -wa-  cl.2
+#     i-na-NI-anza      it starts on ME                        <- nat_04, live and wrong
+#
+# `_APPLICABILITY_CUES` already closed it for ONE verb (`-nihusu`/`-kuhusu`/`-tuhusu`), so the
+# discipline existed in this file and had been applied in exactly one place — and even there
+# only three of the five members were present.
+#
+# WHY THIS IS A REGEX AND NOT A CUE LIST, WHICH IS THE WHOLE SAFETY ARGUMENT.
+# The obvious closure — put the bare infix+stem in the list, so one substring covers the
+# inflection family (R17 step 4) — is UNSAFE HERE, and measurably so. Swept over 5,549 corpus
+# questions, four of the five bare forms nest inside ordinary Swahili words:
+#
+#     `wakat`  ->  116 hits, ALL of them `waKATi` (time/when)
+#     `mkat`   ->   36 hits, ALL of them `MKATaba` (employment contract)
+#     `kukat`  ->   48 hits, ALL of them `kukata` (the infinitive, no object at all)
+#     `nikat`  ->   12 hits, 6 of them `nikatae` (if I refuse)
+#     `kuhusu` ->  154 hits, ALL of them the PREPOSITION "about"
+#
+# and a fifth trap has nothing to do with morphology: `lini anza` ("WHEN does it start")
+# written as one word is `linianza`, which any `-ni-anza` substring cue reads as object
+# concord. This is the FOURTH instance of the substring-nesting hazard CLAUDE.md records
+# (`waajiri`/`wajiri`, `naagiza`/`tunaagiza`, `si mkazi`/`si mkazi wa kudumu`) and the first
+# where it was found BEFORE shipping rather than after.
+#
+# Requiring the HOST — a subject prefix fused with a tense marker, or the tenseless habitual
+# `hu-`/infinitive `ku-`/negative `ha-` — kills every one of those. `wakati` has no tense
+# marker after `wa`; `mkataba` has no host at all; `kukata` has no infix between `ku` and the
+# stem; `linianza` has `ni` where a tense marker must be. The host is not decoration, it is
+# the discriminator.
+#
+# THE HONEST LIMIT, stated because the handover overstated it. The INFIX class is closed; the
+# VERB it attaches to is not. So this cannot be a generic object-concord detector — each stem
+# is named. The handover's "52 eval / 385 train rows exercise this" came from a bare
+# `(na|me|li|ta)(ni|ku|tu)` scan and is noise: `kaMPUNI`, `kiWAngo`, `kuTUmika`, `waKATi`,
+# `inaMAANisha` all match it and none contains an object infix. Host-qualified, the corpus
+# carries ~120 real occurrences and `-husu` alone is ~78 of them. The sweep below is
+# therefore real evidence for `-husu` and NEARLY BLIND for `-kata` and `-anza` — which is the
+# SAFETY-2 situation after all, and why the authored probes are load-bearing, not a ritual.
+_OBJECT_INFIX = ("ni", "ku", "m", "tu", "wa")
+# `-m-` is `-mw-` before a vowel-initial stem (inamwanza) and is commonly written `-mu-`
+# before a consonant (inamuhusu). Both are the SAME class member, not extra ones.
+_OBJECT_INFIX_ALT = {"m": ("m", "mu", "mw")}
+# HOSTS — what must sit in front of the infix for it to BE an infix. Three shapes, kept
+# SEPARATE rather than folded into one alternation, and the separation is the safety property:
+#
+#   affirmative  subject prefix + tense marker        wa+na+NI+kata, i+ta+NI+anza
+#   negative     ha- + optional subject + neg tense   ha+i+NI+husu, ha+ku+NI+husu
+#   tenseless    hu- (habitual), ku- (infinitive)     hu+NI+kata, ku+NI+husu
+#
+# THE NEGATIVE BRANCH EXCLUDES `-ku-` AS AN OBJECT, AND THE SWEEP IS WHY. The first version
+# put the negative tense in an OPTIONAL slot inside one shared host, and `haKUkata` /
+# `haiKUkata` ("did NOT deduct", 4 corpus rows) matched anyway — the regex simply backtracked,
+# declined to spend `ku` on the tense slot, and spent it on the object slot instead. An
+# optional group cannot forbid anything. The `ku` in `hakukata` is the negative PAST MARKER
+# and the word contains no object at all.
+#
+# The cost of the exclusion is `hakukuhusu` ("it did not concern YOU"), which is now unmatched.
+# That is a deliberate trade: the form is vanishingly rare, and it is genuinely ambiguous with
+# the tense reading even to a human reader, whereas `hakukata` is common and unambiguously not
+# object concord. Narrowest form that closes the case, per R17.
+_OC_AFFIRMATIVE = r"(?:ni|u|a|tu|m|wa|i|zi|li|ya|ki|vi)(?:na|me|li|ta|ki)"
+_OC_NEGATIVE = r"ha(?:tu|wa|ni|u|i|zi|li|ya|ki|vi)?(?:ku|ta|ja|li)?"
+_OC_TENSELESS = r"(?:hu|ku)"
+
+
+def _object_concord(stem: str, vowel_initial: bool = False) -> str:
+    """Regex source matching every object-concord form of one verb stem.
+
+    ALL FIVE MEMBERS, ALWAYS — the point of writing the class out is that it cannot be
+    half-populated by accident, which is how `_APPLICABILITY_CUES` came to hold three of five
+    and how `_NSSF_EMPLOYEE_CUES` came to hold none."""
+    infixes = []
+    for member in _OBJECT_INFIX:
+        for form in _OBJECT_INFIX_ALT.get(member, (member,)):
+            # -m- surfaces as -mw- before a vowel and as bare -m-/-mu- before a consonant.
+            if vowel_initial and member == "m" and form == "m":
+                continue
+            if not vowel_initial and form == "mw":
+                continue
+            infixes.append(form)
+    alt = "|".join(sorted(set(infixes), key=len, reverse=True))
+    # `ku` is dropped from the negative branch only — see the _OC_NEGATIVE note above.
+    alt_no_ku = "|".join(sorted(set(infixes) - {"ku"}, key=len, reverse=True))
+    return "|".join((
+        rf"\b{_OC_AFFIRMATIVE}(?:{alt}){stem}",
+        rf"\b{_OC_NEGATIVE}(?:{alt_no_ku}){stem}",
+        rf"\b{_OC_TENSELESS}(?:{alt}){stem}",
+    ))
+
+
 # Payroll context: the question is about wages/employees (needed for a payroll levy).
 _PAYROLL_CTX = ["mshahara", "mishahara", "mfanyakazi", "wafanyakazi", "waajiriwa",
                 "watumishi", "analipwa", "ninalipa", "kumlipa", "ajira", "payroll", "mlipwa",
@@ -136,7 +237,16 @@ _PAYROLL_CTX = ["mshahara", "mishahara", "mfanyakazi", "wafanyakazi", "waajiriwa
                 "kumwajiri", "muajiri", "mwajiri", "waajiri", "kibarua", "vibarua", "mtumishi",
                 # CONCORD: 1pl counterparts. `tunalipa` is the one with corpus presence
                 # (17 rows); the past/perfect pair is the tense gap substring luck misses.
-                "tunalipa", "tuliajiri", "tumeajiri"]
+                "tunalipa", "tuliajiri", "tumeajiri",
+                # OBJECT CONCORD (nat_04): headcount GROWTH is a payroll statement even when
+                # no payroll word is used — "nimeongeza watu sasa tuko kumi na mmoja" names
+                # neither mshahara nor mfanyakazi, so this gate rejected it and the SDL levy
+                # (already resolved from 'mafunzo') could never reach compute. ONE cue covers
+                # the whole inflection family, which is what R17 asks for: `ongeza watu` is a
+                # substring of nime-/nili-/nita-/nika-/tume-/tuli-/ku-ongeza watu. Kept as the
+                # verb+object pair, never bare `watu` — that word is in 178 corpus rows and
+                # most of them are not about employees.
+                "ongeza watu"]
 
 # Money 'how-much' cue: a request for a shilling QUANTITY.
 #
@@ -666,6 +776,29 @@ _APPLICABILITY_CUES = [
     "inanihusu", "inakuhusu", "inatuhusu",
 ]
 
+# OBJECT CONCORD on the applicability verbs. The three literals above are the `ina-` present
+# tense of THREE of the five class members on ONE verb — the signature of failure-driven
+# growth, in the one list that had already applied the paradigm once. Two independent gaps:
+#
+#   MEMBERS.  `-m-` ("inamhusu") and `-wa-` ("inawahusu") were absent, as were the `mu`/`mw`
+#             spellings of `-m-`, which are the commoner ones in this corpus.
+#   HOSTS.    Only `ina-` was covered. `itanihusu` (future), `hainihusu` (negative — "does it
+#             NOT concern me" is an applicability question), `zinanihusu` (cl.10 levies) and
+#             the attested infinitive `kunihusu` / `kuwahusu` ("SDL inaanza KUNIHUSU") all
+#             missed. Corpus-attested, not hypothetical.
+#
+# -ANZA is the SECOND VERB, and it is here because nat_04 says `inaNIanza` — "when does it
+# START on me". The verb axis is open (see the _object_concord docstring), so this is two
+# named stems and not a general mechanism; `-anza` is vowel-initial, so `-m-` surfaces as
+# `-mw-` and the builder handles it rather than the author remembering to.
+#
+# WHY A `lini` QUESTION IS AN APPLICABILITY QUESTION. "inanianza lini" presupposes the levy
+# applies and asks from when. The deterministic applicability answer ("SDL applies — you have
+# 11 employees, the threshold is 10") is correct and is what the probe expects; the amount
+# path, where this lands today, demands a salary that no answer to it needs.
+_APPLICABILITY_CONCORD = re.compile(
+    "|".join((_object_concord("husu"), _object_concord("anza", vowel_initial=True))))
+
 
 # Ordinal-hire / threshold-crossing phrasing ('ninaajiri mfanyakazi wa 10 katikati ya
 # mwezi') — the headcount CHANGES over the period, so a static count-vs-threshold check
@@ -738,7 +871,8 @@ def asks_applicability(text: str) -> bool:
     ql = text.lower()
     if _has_money_ask(ql):
         return False
-    return any(cue in ql for cue in _APPLICABILITY_CUES)
+    return (any(cue in ql for cue in _APPLICABILITY_CUES)
+            or bool(_APPLICABILITY_CONCORD.search(ql)))
 
 
 def count_transition_ordinal(text: str):
@@ -796,6 +930,39 @@ _NSSF_EMPLOYEE_CUES = [
     "wake wa nssf", "nssf yake", "mchango wake",
 ]
 
+# OBJECT CONCORD — item C, the wrong number this closes.
+#
+# Every literal above is THIRD PERSON. The list had SEVEN members and ZERO first-person ones,
+# so nat_08 — "wanaNIkata kiasi gani kwenye mshahara WANGU" — matched nothing, fell to the
+# `total` default and was answered TZS 130,000 where the employee share is TZS 65,000. It has
+# been live and wrong since the party resolver shipped.
+#
+# THIS IS WHY IT SURVIVED THE 2026-08-15 CONCORD CLOSURE, and the reason generalises:
+# `test_every_cue_with_a_person_form_has_its_concord_counterpart` derives a counterpart FROM
+# AN EXISTING MEMBER. A list at 0% has nothing to derive from, so a generative completeness
+# test closes PARTIAL coverage and is structurally blind to ABSENT coverage. Every list that
+# closure fixed was one somebody had already half-populated. The census test added in
+# tests/test_concord_closure.py is the fix for that, and it matters more than these cues.
+#
+# TWO PARADIGMS, ONE MEANING — "money taken out of somebody's pay".
+#   ACTIVE, object infix:   wana-NI-kata / ana-M-kata / wana-TU-kata / ...
+#   PASSIVE, subject prefix: ni-na-KATWA / tu-na-KATWA / a-na-KATWA / u-na-KATWA
+# The passive family is the same absence seen from the other side: `anayokatwa` was present
+# (3sg relative) and not one of the person-marked forms was.
+#
+# THE SEMANTIC WARRANT, which is what makes this safe rather than merely grammatical:
+# under the NSSF Act the employee's 10% is DEDUCTED FROM THE WAGE and the employer's 10% is
+# PAID BY THE EMPLOYER — it is not a deduction at all. So "how much is deducted from <a
+# person>'s pay" is ALWAYS the employee share, whoever is asking. That is why a `-wa-`/`-m-`
+# form (an EMPLOYER asking about their staff) still resolves to 'employee' and is not a bug.
+#
+# PRECEDENCE PROTECTS THE TOTAL. nssf_party tests TOTAL first and EMPLOYER second, so a
+# "jumla ya michango" or "mwajiri anachangia" question never reaches this branch.
+_NSSF_EMPLOYEE_CONCORD = re.compile(
+    _object_concord("kat")                                  # active + object infix
+    + r"|\b(?:ni|tu|u|a|wa|m|i|ki|zi)(?:na|me|li|ta|ki)katwa"   # passive + personal subject
+    + r"|\bnakatwa|\btunakatwa")                            # colloquial 1sg present, and 1pl
+
 
 def nssf_party(text: str) -> str:
     """Which NSSF figure the question asks for: 'employee' | 'employer' | 'total'.
@@ -810,7 +977,7 @@ def nssf_party(text: str) -> str:
         return "total"
     if any(cue in ql for cue in _NSSF_EMPLOYER_CUES):
         return "employer"
-    if any(cue in ql for cue in _NSSF_EMPLOYEE_CUES):
+    if any(cue in ql for cue in _NSSF_EMPLOYEE_CUES) or _NSSF_EMPLOYEE_CONCORD.search(ql):
         return "employee"
     return "total"
 

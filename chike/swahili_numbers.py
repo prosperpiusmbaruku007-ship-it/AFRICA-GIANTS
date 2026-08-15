@@ -570,6 +570,27 @@ _SINGULAR_PERSON = re.compile(
 # number — magnitude cannot be the discriminator (see the _COUNT_TOKEN note above).
 _COUNT_BY_PAY_VERB = re.compile(
     r"\b(\d{1,4})\s+(?:wanapata|wanalipwa|wanaopata|wanaolipwa|wenye|wana)\b")
+# THE COPULA HEADCOUNT — "tuko kumi na mmoja" (WE ARE eleven).
+#
+# Found while closing the object-concord routing gap (nat_04), and it had to be closed with
+# it: fixing the route alone sends the question to the SDL applicability branch, which needs
+# `employee_count` and would then clarify for a headcount THE QUESTION ALREADY STATES. A
+# routing fix that moves a wrong answer to a wrong question is not a fix.
+#
+# The surface is subject concord on the copula — `tuko`/`tupo` (we are), `wako`/`wapo` (they
+# are), `mko`/`mpo` (you are) — with the count as the complement and no people-noun anywhere
+# near it. Every existing parse_count pattern requires a people-noun adjacent to the number,
+# so this shape was invisible: "nimeongeza WATU sasa tuko KUMI NA MMOJA" has the noun and the
+# number five tokens apart.
+#
+# NARROW BY CONSTRUCTION: `ni-`/`u-` (I am / you-sg are) are excluded — one person is not a
+# headcount — and an intervening `na` blocks the match, which is what keeps "tuko NA vibarua
+# 8 wa kudumu na wawili wa muda" (edge_p04, a two-group question that must keep clarifying)
+# out of here. The `_has_second_group` and `has_multiple_groups` vetoes still run first, and
+# this pattern is tried LAST, so a stated plural headcount always wins over it.
+_COPULA_HEADCOUNT = re.compile(
+    rf"\b(?:tuko|tupo|wako|wapo|mko|mpo)\s+(?:{_PEOPLE_NOUN})?\s*"
+    rf"((?:{_SPELLED_COUNT})(?:\s+na\s+(?:{_SPELLED_COUNT}))?|\d{{1,4}})\b")
 
 
 def parse_count(text):
@@ -602,6 +623,14 @@ def parse_count(text):
         return int(m.group(1))
     if _SINGULAR_PERSON.search(text_l):
         return 1
+    m = _COPULA_HEADCOUNT.search(text_l)
+    if m:
+        token = m.group(1)
+        if token.isdigit():
+            return int(token)
+        v = _value_small(token.split())
+        if v > 0:
+            return int(v)
     return None
 
 
