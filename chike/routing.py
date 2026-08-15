@@ -310,6 +310,47 @@ _WAGE_PAY_CUES = ["namlipa", "ninalipa", "nawalipa", "namlipia", "nimemlipa", "n
                   # siblings were not — one class, half enumerated, exactly the pattern.
                   "tunalipa", "tumemlipa", "tumemlipia",
                   "analipwa", "wanalipwa", "analipwaga", "hulipwa", "walipwa"]
+
+# THE EMPLOYEE'S OWN SIDE — the th_16 class asked from the other direction.
+#
+# Every literal above is the EMPLOYER speaking ("I pay him", "we pay them") or a THIRD PERSON
+# being paid ("analipwa", "wanalipwa"). Not one is a worker asking about their OWN wage. So
+# "wananilipa laki mbili kwa mwezi je ni halali kisheria" — they pay ME 200,000, is that
+# lawful — matched nothing and fell through to fact/RAG, while the employer-side twin
+# "namlipa mlinzi wangu 200000 je ni halali" routes to the deterministic minimum_wage answer.
+# Measured before it was fixed: scratch/oc_wage_gap.json.
+#
+# ARGUABLY THE HIGHEST-STAKES QUESTION THIS PRODUCT GETS. th_16's own history says what the
+# generative path does with it: of six candidate wordings tried in 2026-08-10, FOUR fabricated
+# TZS 765,900 as a legal MAXIMUM wage, and one of the "before" answers instructed an employer
+# to claw back lawfully paid wages. A worker asking whether they are being underpaid is exactly
+# the person who cannot afford a fabricated number.
+#
+# TWO PARADIGMS, and both were at ZERO for first person — finding B a third time, in the list
+# where it costs the most:
+#
+#   ACTIVE + object infix   wana-NI-lipa, ana-NI-lipa, wana-TU-lipa, hu-NI-lipa
+#   PASSIVE + subject       ni-na-LIPWA, tu-na-LIPWA, u-na-LIPWA   (the list had only the
+#                           3sg/3pl `analipwa`/`wanalipwa`/`walipwa`)
+#
+# HOST-QUALIFIED, for the reason the object-concord commit records: the bare infix+stem nests.
+# `_object_concord` requires a subject+tense host, so `analipa` (he PAYS — a levy question,
+# deliberately excluded above), `kulipa` (the infinitive), `nilipa`/`walipa`/`tulipa` (I/they/we
+# PAID) and `wanalipa` all fail to match, because in every one of them the slot where an object
+# infix must sit holds nothing at all.
+#
+# `-lipia` (the applicative) is NOT generated here: `_object_concord('lipa')` will not match
+# `anamlipia`, and the applicative forms that matter are already literals above. Naming the
+# stem rather than inferring it is the honest limit recorded in the builder's docstring.
+_WAGE_PAY_CONCORD = re.compile(
+    _object_concord("lipa")                                   # active + object infix
+    + r"|\b(?:ni|tu|u)(?:na|me|li|ta|ki)lipwa"                 # passive + 1st/2nd person subject
+    + r"|\bnalipwa|\bnimelipwa")                               # colloquial 1sg present/perfect
+
+
+def _has_wage_pay_cue(ql: str) -> bool:
+    """A pay cue in either direction — the employer paying, or the worker being paid."""
+    return any(c in ql for c in _WAGE_PAY_CUES) or bool(_WAGE_PAY_CONCORD.search(ql))
 # Explicit floor vocabulary — enough on its own, with a pay cue and a magnitude.
 _MIN_WAGE_CUES = ["kima cha chini", "mshahara wa chini", "kiwango cha chini cha mshahara",
                   "kima kidogo cha mshahara", "gn 605a", "gn605a", "minimum wage"]
@@ -721,7 +762,7 @@ def detect_intent(text: str) -> str:
     # cue is deliberately NARROWER than _PAYROLL_CTX — the figure has to be presented as pay,
     # so "je ni halali kulipa mfanyakazi bila mkataba" (a contract question that merely
     # mentions an employee) is not diverted here.
-    if (_has_money_magnitude(ql) and any(c in ql for c in _WAGE_PAY_CUES)
+    if (_has_money_magnitude(ql) and _has_wage_pay_cue(ql)
             and (any(c in ql for c in _MIN_WAGE_CUES)
                  or wage_question_frame(text) != "unknown")):
         return "minimum_wage"

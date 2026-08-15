@@ -79,6 +79,12 @@ OBJECT_INFIX = {"ni": "me (1sg)", "ku": "you (2sg)", "m": "him/her (cl.1)",
 _CONCORD_REGEXES = {
     "routing._APPLICABILITY_CUES": routing._APPLICABILITY_CONCORD,
     "routing._NSSF_EMPLOYEE_CUES": routing._NSSF_EMPLOYEE_CONCORD,
+    # Registering the wage regex here is not bookkeeping — it is the difference between the
+    # generative test asking "is the counterpart IN the list" and asking the property that
+    # matters, "would the list MATCH it". Without this entry the test reported `nimekulipa`
+    # as missing while the route already answered it correctly: a FALSE ALARM from an
+    # instrument checking presence rather than effect, which is the family this session named.
+    "routing._WAGE_PAY_CUES": routing._WAGE_PAY_CONCORD,
 }
 
 # ---------------------------------------------------------------------------
@@ -125,9 +131,22 @@ _WITHHELD = {
 # The pin below is what stops this becoming a forgotten TODO: it asserts the defect is still
 # live, so whoever closes it will find this test failing and must remove the exemption in the
 # same commit.
+#
+# UPDATE — THE PIN FIRED AND DID ITS JOB. `_WAGE_PAY_CONCORD` closed the employee's side in its
+# own commit with its own sweep and its own 18 probes, exactly as the withholding demanded, and
+# this test failed on the same run that shipped it. FIVE of the nine counterparts are now
+# recognised (`nimekulipa`, `nimewalipa`, `tunakulipa`, `tumekulipa`, `tumewalipa`) and their
+# exemption is deleted rather than kept as a courtesy.
+#
+# FOUR REMAIN, and it is one family: the APPLICATIVE stem `-lipia` ("pay ON BEHALF OF"). The
+# object-concord builder is per-STEM by construction — the infix class is closed, the verb it
+# attaches to is not — and `_object_concord('lipa')` does not and must not match `anamlipia`.
+# Closing these needs `-lipia` named as a second stem, which is a real change with its own
+# blast radius (the applicative also carries the benefactive sense that shows up in school-fee
+# and rent questions, none of which are wage-floor questions). Same discipline as before: its
+# own commit, its own sweep.
 _WITHHELD_OBJECT = {
-    "nimekulipa", "nimewalipa", "nimekulipia", "nimewalipia", "tunakulipa",
-    "tumekulipa", "tumewalipa", "tumekulipia", "tumewalipia",
+    "nimekulipia", "nimewalipia", "tumekulipia", "tumewalipia",
 }
 
 # NOT WITHHELD, and the reason is worth recording because it looks like an omission:
@@ -280,22 +299,41 @@ def test_the_withheld_counterpart_still_has_a_live_reason():
         "delete this exemption together")
 
 
-def test_the_withheld_object_counterparts_still_name_a_live_defect():
-    """The pin on `_WITHHELD_OBJECT`. Same mechanism as the `tukiagiza` pin above.
+def test_the_employee_side_wage_gap_is_closed_and_stays_closed():
+    """Was the pin on `_WITHHELD_OBJECT`; it FIRED, and this is what replaced it.
 
-    An employee asking whether the wage they are PAID is lawful must reach the deterministic
-    minimum_wage route, and does not — because `_WAGE_PAY_CUES` knows `namlipa` (I pay HIM)
-    and not `wananilipa` (they pay ME). Ten counterparts are exempted from the generative
-    check on the grounds that closing them widens a different route and needs its own sweep.
-    When somebody does that work, this test fails and the exemption must go with it."""
+    The pin asserted the employee-side gap was still live so that whoever closed it would be
+    forced to remove the exemption in the same commit. That is exactly what happened: the
+    `_WAGE_PAY_CONCORD` commit broke this test, five of the nine counterparts were released,
+    and the assertion is now inverted to hold the closure shut instead of naming the defect.
+
+    Keeping the history rather than deleting the test is the R17 corollary: when live work
+    disproves a test's premise, invert it and keep the reason in its docstring.
+    """
     employee_side = "wananilipa laki mbili kwa mwezi je ni halali kisheria"
     employer_side = "nimemlipa mfanyakazi wangu 150000 kwa mwezi je ni halali"
     assert routing.detect_intent(employer_side) == "minimum_wage", (
-        "the control moved — if the employer side no longer routes, this exemption is "
-        "measuring the wrong thing")
-    assert routing.detect_intent(employee_side) != "minimum_wage", (
-        "the employee-side wage-floor gap is CLOSED — delete _WITHHELD_OBJECT and let the "
-        "generative check hold the class shut")
+        "the control moved — if the employer side no longer routes, this test is measuring "
+        "the wrong thing")
+    assert routing.detect_intent(employee_side) == "minimum_wage", (
+        "the employee-side wage-floor gap has REOPENED — a worker asking whether their own "
+        "wage is lawful is the highest-stakes question this product gets")
+
+
+def test_the_remaining_withheld_counterparts_are_the_applicative_family_only():
+    """The narrowed pin. Four `-lipia` forms stay exempt; nothing else may be added quietly.
+
+    If a future change closes the applicative stem, this fails and the exemption must go with
+    it — the same mechanism, aimed at what is actually still open.
+    """
+    assert _WITHHELD_OBJECT == {"nimekulipia", "nimewalipia", "tumekulipia", "tumewalipia"}, (
+        "the withheld set changed — an exemption set is the obvious place to hide a phrase "
+        "nobody wanted to think about")
+    for form in sorted(_WITHHELD_OBJECT):
+        q = f"{form} laki mbili kwa mwezi je ni halali kisheria"
+        assert routing.detect_intent(q) != "minimum_wage", (
+            f"`{form}` now routes — the applicative stem is closed, so delete it from "
+            "_WITHHELD_OBJECT in this same commit")
 
 
 def test_the_withholding_tool_cannot_protect_present_tense_1pl():
