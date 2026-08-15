@@ -6,14 +6,14 @@ Last updated: 2026-08-15
 
 # 🔄 SESSION HANDOVER — 2026-08-15 (second session)
 
-**HEAD `2ee31f5` · working tree clean · in sync with origin/main.**
+**HEAD `baf77b3` · working tree clean · in sync with origin/main.**
 
 | app | serving | note |
 |---|---|---|
-| `chike-inference` | **`2ee31f5`** | stopped and redeployed FIVE TIMES this session under R16; `oc_06`/`df_06`/`wl_06`/`neg_04` confirm the container read `chike_config.json` and is not warm-stale |
+| `chike-inference` | **`baf77b3`** | stopped and redeployed SIX TIMES this session under R16; `oc_06`/`df_06`/`wl_06`/`neg_04`/`d5_06` confirm the container read `chike_config.json` and is not warm-stale |
 | `chike-whatsapp` | **`ad1ed50`** | NOT redeployed and does not need to be — it reaches the model through `modal.Cls.from_name`, a lazy lookup, so the routing fix below is already live to WhatsApp users |
 
-Suite **1151 passed, 0 failed, 0 skipped** (`pytest -p no:randomly`). Pristine `ba09165` in the
+Suite **1166 passed, 0 failed, 0 skipped** (`pytest -p no:randomly`). Pristine `ba09165` in the
 **same worktree**: **1026 passed, 0 failed, 0 skipped**. Read INSTRUMENT-LIE #11 before quoting
 either number.
 
@@ -517,7 +517,121 @@ one, and the correction belongs on the record as firmly as a defect would.**
 Three different counts of three different things, all correct. **No conflict, and nothing to
 correct.** What was real is that the prose hardcodes numbers the schedule owns, so a **drift
 pin** now ties them together: if the schedule is ever corrected and the copy is not, the test
-fails.
+fails.## ✅ D-FIDELITY-5 (`baf77b3`) — nat_14 closed. P2's compute cluster is now closed.
+
+```
+BEFORE  A: "...hakuna PAYE ya kulipa kwa sababu kiwango cha sifuri kinatumika hadi
+            TZS 270,000."
+           PAYE = TZS 0 + 8% × (TZS 350,000 − TZS 270,000) = TZS 6,400
+
+AFTER   A: PAYE = TZS 0 + 8% × (TZS 350,000 − TZS 270,000) = TZS 6,400
+```
+
+Body blanked, working alone. **6/6 on the R16 cycle** (`scratch/dfid5_live_after.json`).
+
+### The finding, at family level
+
+> **A CONTRADICTION DOES NOT NEED A NUMBER.**
+
+Verified by direct call on nat_14's live body:
+
+```
+_asserted_results(body)             -> []      the body asserts NO figure at all
+body_contradicts_working            -> False
+body_reduces_authoritative_amount   -> False
+body_offers_total_as_own_obligation -> False
+```
+
+All three existing guards compare **figures** — which amounts the body asserts, and whether the
+authoritative one is among them. A body that asserts **nothing** and denies the obligation in
+words contradicts a positive engine amount completely, and satisfies **every one of them
+vacuously, because the set being checked is empty.**
+
+**Fourth instance of the presence-not-conclusion family, and the first where the instrument
+passes by having nothing to look at.** The earlier three each examined something and asked the
+wrong question of it. This one had nothing to examine and reported success — which is the
+degenerate case of the same design, and the one no amount of care about *how* you inspect the
+evidence will catch, because there is no evidence.
+
+### The false-positive surface, measured before the rule was designed
+
+A denial is the **correct** body whenever the engine's amount is zero. That surface is not
+hypothetical — it is most of what the corpus contains (`scratch/dfid5_sweep.json`):
+
+| candidate | corpus bodies | fire (amount > 0) | **correct denials (amount = 0)** |
+|---|---|---|---|
+| `hakuna paye` | 10 | 0 | **10 — all of them** |
+| `haikatwi` | 2 | 2 | 0 — **and both fires are CORRECT bodies** |
+
+`haikatwi` was disqualified by reading it: *"Hii inalipwa na mwajiri peke yake — **haikatwi**
+kutoka mshahara wa mfanyakazi"* denies the **deduction locus**, not the liability. It is a true
+statement about who bears SDL, and it is excluded from the phrase list entirely.
+
+**So the phrase can never be the discriminator; the engine amount is.** The rule fires only on
+a definite positive amount, which excludes all ten legitimate denials by construction —
+`body_contradicts_working` already owns the `amount == 0` case. Live `d5_02`/`d5_03` confirm
+both zero-band bodies survive untouched.
+
+**The denial must name the COMPUTED levy.** A PAYE answer may correctly say *"hakuna SDL"* in
+the same breath (fewer than ten employees); keyed on any levy this rule would blank a correct
+body. The pattern is built from `result.computation`, both directions are pinned as probes, and
+live `d5_04` shows a real mixed PAYE+SDL answer keeping its SDL denial.
+
+Rule run over all **190** recoverable body↔working pairs: **zero fires.** 10 probes, 7 of them
+negatives. Suite **1166 passed**.
+
+**Observed and NOT fixed here, logged instead:** `d5_04`'s PAYE half states *"unalipa TZS
+50,000"* while the deterministic path returned a **clarification** for that sub-question. The
+engine produced no amount, so `body_contradicts_working`'s `amount is None` branch is the one
+that should catch it — but that branch additionally requires `_has_naive_levy_compute`, and
+this body writes no `TZS N × R%` expression. **A body volunteering a figure where the engine
+declined to give one** is its own family; it is not caused by D-FIDELITY-5 and does not block it.
+
+---
+
+## ⚖️ REACHING THE ENGINE IS NOT A PROXY FOR BEING ANSWERED CORRECTLY
+
+**The counterweight to the asymmetry argument this week has been running on, and it belongs
+beside it so neither is ever quoted alone.**
+
+The argument all week has been: **under-routing costs a wrong figure, over-routing costs a
+turn.** A question that misses the deterministic route gets a fabricated number; a question
+wrongly routed to it gets a clarification the user must answer. Asymmetric, so route eagerly.
+
+**A2 produced the counterexample, and it is not a corner case.** `serikali inakata` is the exact
+sibling of the `serikali inachukua` cue that shipped, and it was withheld:
+
+```
+rc_10   "Ninalipwa laki mbili na hamsini kwa mwezi. Je serikali inakata kiasi gani...?"
+        gold                        PAYE on 250,000 -> ZERO
+        sole_plausible_amount(...)  -> 5,200,000        PAYE on that ~ TZS 1,388,000
+```
+
+And the live AFTER settles what the withholding bought:
+
+> `rc_10` on the **fact path**, today: *"Kiwango cha kodi ya PAYE kinachokatwa kwenye mshahara
+> wa **TZS 250,000** ni asilimia **sifuri (0%)**."* — **correct.**
+
+**Routing it would have replaced a correct answer with TZS 1,388,000 carrying a deterministic
+working.** The parser reads `mbili na hamsini` as 52 and multiplies by *laki*; the fact path
+read the numeral correctly and the engine would not have.
+
+> **Over-routing costs a turn ONLY when extraction is sound. Where extraction is wrong,
+> over-routing is worse than the fact path — because the engine's authority is lent to the
+> parser's defect, and a wrong number with a working is harder for a user to doubt than a
+> wrong number without one.**
+
+This is the presence-not-conclusion family arriving at the **route**: "reaches the engine" is a
+property that is cheap to check and easy to mistake for "is answered correctly". The three
+compute-path guards exist precisely because those two things come apart *after* the engine runs;
+rc_10 shows they come apart *before* it too.
+
+**Both statements are true and neither is safe alone.** The asymmetry argument justified every
+routing fix this week and should keep doing so. This entry is the boundary condition on it: a
+routing change must check that the row's slots extract correctly, not only that it reaches the
+right route. `test_the_withheld_serikali_inakata_cue_still_names_a_live_defect` pins the case
+until the `laki <n> na <m>` parser item is done.
+
 ## ✅ A2 (`2ee31f5`) — the levy said in everyday words. Two of three closed end to end.
 
 The last of the four, and the one where no paradigm helps. `mfuko`, `serikali inachukua`,
@@ -700,6 +814,7 @@ discovered one level down from the last, and each had been trusted in the interv
 | **MEASUREMENT-GAP-1** — the offline harness | fact **in prompt** | fact **applied** |
 | **INSTRUMENT-LIE #6** — the canary | **route** correct | **outcome** correct |
 | **D-FIDELITY-4** — the guard itself | authoritative figure **present** | authoritative figure **concluded with** |
+| **D-FIDELITY-5** — the same guards, again | **which figures** the body asserts | whether a CLAIM contradicts the amount — a body asserting NONE satisfies them all vacuously |
 
 The generalisation, and the reason to expect a fourth:
 
@@ -800,7 +915,7 @@ thing. Same shape, one more level out.
 | **C** wrong party | nat_08 | ✅ **closed end to end** — router (`73f2f9f`) + D-FIDELITY-4 (`25cd94f`); live headline is TZS 65,000 |
 | ~~**A2**~~ | nat_09 | ✅ **closed** (`2ee31f5`) — TZS 240,000, correct split, sourced to NSSF |
 | ~~**A2**~~ | nat_13 | ✅ **closed** — TZS 103,000 with the band working |
-| **A2** | nat_14 | ⚠️ router closed, **answer open** — working says TZS 6,400, prose says no PAYE is due → **D-FIDELITY-5** |
+| ~~**A2**~~ | nat_14 | ✅ **closed** (`baf77b3`) — body blanked, working alone: TZS 6,400 |
 | *(new)* `laki <n> na <m>` parse | rc_10 | ⏸ `laki mbili na hamsini` → 5,200,000; blocks the withheld `serikali inakata` cue |
 | ~~`_WAGE_PAY_CUES`~~ | — | ✅ **closed** (`32917f4`) — employee side reaches the deterministic route; BEFORE blamed NSSF for an unlawful wage |
 | ~~wage clarification copy~~ | wl_08/wl_09 | ✅ **closed** (`571cf1d`) — the worker is addressed as a worker; employer copy unchanged |
