@@ -57,9 +57,13 @@ _EXPLICIT = {
 # nane" as 800000) and nssf_party read "employer"; ONE MISSPELLING was the entire blocker.
 # Hand-written per phrase, never generated — see tests/test_orthographic_variants.py.
 _LEVY_CUES = [
+    # A2 (2026-08-15): `kwenye mfuko` — money going INTO the fund. Bare `mfuko` was measured
+    # and rejected: it is 29 corpus rows (pocket/bag/any fund) against the SAME 2 route
+    # changes, so the narrowing costs nothing in coverage and removes 20 rows of surface.
     ("nssf", ["pensheni", "uzeeni", "hifadhi ya jamii", "mchango wa hifadhi",
               "mfuko wa hifadhi", "akiba ya baadaye",
-              "hifazi ya jamii", "mchango wa hifazi", "mfuko wa hifazi"]),
+              "hifazi ya jamii", "mchango wa hifazi", "mfuko wa hifazi",
+              "kwenye mfuko"]),
     ("sdl", ["ufundi", "ujuzi", "mafunzo", "maendeleo ya ujuzi", "kuendeleza wafanyakazi"]),
     ("wcf", ["fidia", "bima ya ajali", "bima ya majeraha", "majeraha kazini", "ajali kazini"]),
     # ROUTING-GAP-PAYE: PAYE's everyday word is 'kodi' (tax), which is in neither the original
@@ -78,9 +82,36 @@ _LEVY_CUES = [
     # Sweep over 532: matches nat_18 (and its gp_05 probe twin) only. The OOC classifier runs
     # BEFORE routing, so a property/capital-gains 'kodi' is intercepted upstream and cannot
     # reach this cue.
+    # A2 (2026-08-15): what the GOVERNMENT takes from a wage, and what is SENT to TRA on a
+    # wage — the everyday phrasings for PAYE that name no tax at all. Each is one observed
+    # failure; see the A2 note below on why that is the honest ceiling here.
+    #
+    # `serikali` bare is 80 corpus rows and `kwa tra` is 34; verb-qualified they are ONE row
+    # each, with identical route coverage. The levy is PAYE and not `ambiguous_multi` because
+    # what the government takes FROM a salary is income tax: NSSF goes to a fund rather than
+    # to the state, and SDL is paid by the employer rather than deducted from the wage.
     ("paye", ["kodi ya mapato", "kodi ya mshahara", "kodi ya mishahara", "mapato ya ajira",
               "kodi ya serikali", "kodi ya kipato", "kodi ya ajira",
-              "kodi inayokatwa", "kodi ya mfanyakazi", "kodi yake"]),
+              "kodi inayokatwa", "kodi ya mfanyakazi", "kodi yake",
+              "serikali inachukua", "peleka kwa tra"]),
+# WITHHELD: `serikali inakata`. It is the exact sibling of `serikali inachukua` above, it is
+# corpus-attested (rc_10), and it is NOT ADDED — because routing that row to compute would be
+# WORSE than leaving it on the fact path.
+#
+#   rc_10  "Ninalipwa laki mbili na hamsini kwa mwezi. Je serikali inakata kiasi gani...?"
+#          gold: PAYE on 250,000 -> ZERO, below the 270,000 band.
+#          sole_plausible_amount("laki mbili na hamsini") -> 5,200,000
+#
+# The parser reads `mbili na hamsini` as 52 and multiplies by laki. Even the unambiguous
+# "laki mbili na hamsini ELFU" parses to 5,200,000. Routed to PAYE that yields roughly
+# TZS 1,388,000 — served WITH A DETERMINISTIC WORKING to somebody who owes nothing. A wrong
+# number on the fact path is bad; the same wrong number carrying the engine's authority is
+# worse, so the cue waits for the parse.
+#
+# This is a PRE-EXISTING parser defect that the A2 cue merely UNMASKS, and it is its own item:
+# `laki <n> na <m>` affects every money extraction in the product, so it needs its own sweep
+# and cannot ride along here. test_the_withheld_serikali_inakata_cue_still_names_a_live_defect
+# fails the moment the parse is fixed, which is when this line should be deleted.
 ]
 _GENERIC_LEVY = ["makato", "michango", "tozo", "malipo kwa serikali", "kulipa serikali",
                  "kwa serikali"]
@@ -260,8 +291,12 @@ _PAYROLL_CTX = ["mshahara", "mishahara", "mfanyakazi", "wafanyakazi", "waajiriwa
 # ambiguous (asilimia ngapi, siku ngapi, mara ngapi) which is why it is verb-qualified;
 # `shingapi` carries `shilingi` inside it and is money-marked on its own. There is no
 # non-money reading of it to guard against.
+# A2 (2026-08-15): `jumla inayoenda` — "the total that GOES [to]". nat_09 needed BOTH a levy
+# cue and this: it is the one A2 row where the levy word was not the only thing missing, and a
+# cue addition alone would have left it on the fact path still answering wrongly.
 _MONEY_ASK = ["kiasi gani", "shilingi ngapi", "shingapi", "kinakatwa kiasi", "ni ngapi",
-              "gharama gani", "garama gani"]       # gh->g variant
+              "gharama gani", "garama gani",       # gh->g variant
+              "jumla inayoenda"]
 # An EXPLICIT money ask — strong enough to survive a co-occurring rate/time/count ask below.
 # `shingapi` belongs here for the same reason it is bare above: it names the currency.
 _EXPLICIT_MONEY_ASK = ["kiasi gani", "shilingi ngapi", "shingapi"]
