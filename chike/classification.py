@@ -48,6 +48,15 @@ HARDCODED_OOC_PHRASES = [
     "capital gain", "faida ya mtaji", "kodi ya faida ya mtaji",
     "nilinunua ardhi", "nilinunua nyumba", "niliuza ardhi", "niliuza nyumba",
     "nilinunua arzi", "niliuza arzi",
+    # CONCORD (2026-08-15). The 1pl past forms. In production these are dead weight — the
+    # config list carries the shorter `nunua ardhi`/`uza ardhi`, which already match both
+    # persons by substring. They matter only on the FALLBACK path, i.e. when config loading
+    # fails, which is exactly when a leak would be least noticed.
+    # Deliberately the LONG forms: adding `uza ardhi`/`uza arzi` here would be shorter, but
+    # those two are the config-only phrases the R16 stale-container check depends on. A
+    # tidier list is not worth blinding the diagnostic that caught the 2026-08-07 incident.
+    "tulinunua ardhi", "tulinunua nyumba", "tuliuza ardhi", "tuliuza nyumba",
+    "tulinunua arzi", "tuliuza arzi",
     # Import / customs duty
     "import duty", "customs duty", "ushuru wa forodha", "ushuru wa uagizaji",
     "kodi ya uagizaji", "kuagiza bidhaa", "duty ya kuagiza",

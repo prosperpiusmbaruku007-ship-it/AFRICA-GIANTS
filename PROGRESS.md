@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-14
+Last updated: 2026-08-15
 
 **🛑 FEATURE WORK IS STOPPED (founder, 2026-08-14) pending pilot readiness.** The assessment's
 verdict was **not yet**, on measured grounds: **39.6% of 48 natural-register questions were
@@ -57,6 +57,209 @@ reopened SAFETY-1 — 39 OOC phrases instead of 107, invisible to every offline 
 second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gate positively
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
+
+## 🔠 CONCORD CLOSURE — the router now knows "we", in every tense (2026-08-15)
+
+**Approved ahead of B/C/A2/A3 on the argument that each of those four is one member of a
+class.** Doing them individually pays the review-and-deploy cost four times and leaves the
+classes open. Written from the grammar, not from the failures — which is the whole point,
+and which is why it found things no failure log contains.
+
+### The audit asked the wrong question, and under-counted by 2.4×
+
+The audit (11/37 members, 30%) tested WORD membership: does the router know `vingapi`? But a
+cue list is made of PHRASES. `mauzo yangu` was present and so was `mauzo yetu` — while
+`biashara yangu ina mauzo` was present and `biashara yetu ina mauzo` was not. No word-level
+audit can see that gap. Applying the paradigm to every cue phrase instead gives the honest
+number: **51 derived counterparts absent, not 21.**
+
+### Two corrections to the audit, both found by writing the paradigm out properly
+
+| audit said | the grammar says |
+|---|---|
+| the `-ngapi` class has **8** members | **5**: ngapi (cl.9/10), wangapi (cl.2), mingapi (cl.4), mangapi (cl.6), vingapi (cl.8). `yangapi`/`zangapi`/`kiangapi`/`pangapi` are not Swahili — cl.4 and cl.6 take mingapi/mangapi and cl.10 takes the bare form. Reported coverage 2/8; the honest figure is **3/5** |
+| the contraction class has 3 members (incl. `shngapi`) | **2**. `shngapi` was invented by the audit — 0 corpus occurrences and not a grammatical form |
+| `nachangia` "is in no cue list at all" | **it is in `_APPLICABILITY_CUES`.** The claim was wrong; the gap was in `_PAYROLL_CTX`/`_WAGE_PAY_CUES`, which is a different and smaller statement |
+
+### 27 of 58 counterparts were already handled — and only by luck
+
+Cue lists match with `phrase in text`. The colloquial 1sg present `na-` is a **substring** of
+the 1pl `tuna-`, so `tunauza` already matched `nauza` and `tunachangia` already matched
+`nachangia`. **The luck runs out at every other tense**: `nime-`, `nili-` and `nita-` are not
+substrings of `tume-`, `tuli-`, `tuta-`.
+
+> **The router understood "we pay" and never understood "we PAID" or "we WILL pay".**
+
+That gap has a precise shape, and no failure log would ever have named it, because it is a
+property of the paradigm rather than of any one question. It is also the `waajiri` → `wajiri`
+mechanism from the normaliser pricing, seen from the other side: a substring collapse that
+happens to be benign because the two strings are morphologically related. Benign here, by
+luck. (`tumemuajiri` was covered via the NOUN `muajiri` = employer — coincidence, not
+morphology, and the fragile kind.)
+
+### What shipped: 31 real additions, and the test asserts RECOGNITION not membership
+
+Requiring literal list membership would have added 27 lines that change no behaviour and
+taught the next maintainer that the check wants list-stuffing. `tests/test_concord_closure.py`
+applies the paradigm to whatever is in the cue lists today and demands each counterpart be
+**matched** — by itself or by a shorter existing cue. Add a cue tomorrow and forget its
+counterpart, and the suite fails. Same shape as `test_every_swahili_digraph_phrase_has_its_variant`.
+
+**The test found two gaps I had missed while writing the patch by hand** — `tuna namba ya vat`,
+and six 1pl past forms in the hardcoded OOC fallback. That is the check doing its job on its
+first run, against its own author.
+
+| list | added |
+|---|---|
+| `_OWN_TURNOVER_CUES` | 7 — the ownership gate is what makes the VAT comparison run at all |
+| `_VAT_REGISTERED_CUES` | 7 — every member was a `nime-` perfect; not one 1pl form existed |
+| `_WAGE_VIOLATION_CUES` | 4 — `tunakiuka` was added by hand once; its four future-tense siblings were not |
+| `_PAYROLL_CTX` / `_WAGE_PAY_CUES` | 3 + 3 |
+| `_NONMONEY_ASK` | 3 — mangapi, vingapi, mingapi |
+| `_MONEY_ASK` + `_EXPLICIT_MONEY_ASK` | `shingapi` |
+| `_VAT_REG_CUES`, `_TAKEHOME_ASK` | 1 + 1 |
+| `config.ooc_phrases` | 1 (`nunua shamba`) |
+| `HARDCODED_OOC_PHRASES` | 6 (fallback path only) |
+
+**Closure is LINEAR, not quadratic** — the reason this was affordable as one item. Concord is
+functional: `mauzo` takes `yangu`/`yetu` and nothing else; `mauzo langu` is ungrammatical, not
+an unhandled variant. Each cue gains exactly one counterpart. The cross-product fear (10 nouns
+× 15 possessives = 150) is not a real cost.
+
+### The semantic decision a mechanical closure would have got wrong
+
+`mingapi`/`mangapi`/`vingapi` went to `_NONMONEY_ASK`, **not** `_MONEY_ASK`. Money in Swahili
+is cl.9/10 (shilingi, fedha, pesa), so a money ask is always the bare `ngapi`; the other three
+count periods and objects. Adding them to the money list "to complete the class" would be a
+category error wearing a grammar costume. `cn_01`/`cn_02` pin it.
+
+`shingapi` went in **bare**, unlike `ngapi`, and that is not a relaxation of R17. Bare `ngapi`
+is ambiguous (asilimia/siku/mara ngapi) which is why it is verb-qualified; `shingapi` carries
+`shilingi` inside it and has no non-money reading to guard against. It also needed
+`_EXPLICIT_MONEY_ASK`, because otherwise the fix would have been silently conditional on no
+count word being present.
+
+### R17: sweep + authored probes
+
+**Blast radius over 5,529 corpus questions: 1 pre-existing row changed route** — the live SDL
+question of 2026-08-14, `none → sdl`, which is the fix. **0 classification changes. 0 changes
+across the 400-row gate corpus and 4,754 training questions.** The BEFORE was captured from a
+pristine `git worktree` of HEAD, not from a monkey-patch, because the patch and the edit had
+already diverged.
+
+That clean sweep is **weak evidence and known to be** (R17): 38 of the additions have zero
+corpus occurrences, so the sweep could not have found a defect in them. `eval/refusal_gate/
+concord_1pl_in_scope_020.jsonl` carries 20 authored probes — **10 paired, 10 negative**.
+
+The paired form is deliberate: each 1pl question must route **exactly like its 1sg twin**.
+That is stronger than pinning an expected route, which would pass by coincidence if both
+twins broke the same way.
+
+### The withholding tool does not work in the present tense
+
+`tunaagiza bidhaa` was going to be withheld, because `naagiza bidhaa` already over-refuses an
+in-scope question (ov_04). Withholding it buys **nothing**: `naagiza bidhaa` is a substring of
+`tu-naagiza bidhaa`, so the wrong refusal already reaches 1pl speakers. **The ov_04 defect is
+wider than ov_04 records.** `cn_10` pins it as a known wrong answer, not an endorsement.
+
+The exercise also found a **fourth over-broad OOC phrase** the digraph sweep could not have:
+`nikiagiza` refuses *"nikiagiza bidhaa kutoka nje je nasajili VAT lini"*, an in-scope VAT
+registration question. It has no digraph in it, so only the person paradigm could reach it.
+`tukiagiza` is withheld with that reason on the record.
+
+Suite: **1006 passed** (+28).
+
+---
+
+## 🔤 AN OOC LIST IS ONLY AS STRONG AS ITS WEAKEST SPELLING (2026-08-14, promoted 2026-08-15)
+
+**Promoted out of the variant-deploy entry because it is the finding, not a deploy note.** The
+BEFORE capture of `a435cf5` was not a baseline. One letter — `ardhi` written `arzi`, the
+ordinary dh→z spelling — stood between a user and fabricated capital-gains law. Verbatim, from
+`scratch/variants_live_before.json`:
+
+> `nimeuza arzi yangu ya mwanza nimepata faida nalipa kodi gani`
+> → **"Kodi ya zuio ya asilimia 10 inatumika kwenye mauzo ya ardhi ya muda mrefu."**
+>
+> `nataka kuuza arzi yangu je nalipa kodi kiasi gani`
+> → **"Kodi ya mauzo ya ardhi na majengo ni asilimia 2% ya thamani ya soko."**
+
+Neither rate exists. Both are stated as law, in the confident register, on a topic the OOC
+list exists precisely to intercept.
+
+**This is the SAFETY-1 leak class reopening — but not through a missing concept.** SAFETY-1 was
+closed by an audit that asked *"what topics are we failing to refuse?"* and added 54 phrases.
+That audit was complete at the level of concepts and could not have found this, because the
+concept was already covered. The hole was **orthographic**. A refusal list is a lexical
+instrument, and a lexical instrument is only as strong as its weakest spelling of its
+strongest phrase.
+
+### The second instance is the confirmation, and it arrived within 24 hours
+
+One instance is an anomaly. **Two is the axis.** The concord closure found the same class of
+hole on a different axis: `nikiagiza` refuses *"nikiagiza bidhaa kutoka nje je nasajili VAT
+lini"* — an in-scope VAT-registration question. It is not a spelling variant. It contains no
+digraph, so the orthographic sweep could not have reached it; it is an **inflection**, and only
+writing the person paradigm out found it.
+
+So the generalisable claim, now with evidence on both sides of it:
+
+> **A lexical guard has three independent axes — CONCEPTS, SPELLINGS, INFLECTIONS — and
+> completeness on one says nothing whatsoever about the other two.**
+
+SAFETY-1's audit is the proof by construction. It was a **complete** audit: it asked *"what
+topics are we failing to refuse?"*, enumerated them, and added 54 phrases. That completeness
+was real and it held — no capital-gains *concept* has leaked since. It was also **blind to the
+other two axes by construction**, because the question it asked cannot see them: a concept
+already covered will never show up as a missing concept, however it is spelled or inflected.
+
+That is why "we audited this" is not a defence, and why the two follow-on instruments are
+shaped the way they are — `test_every_swahili_digraph_phrase_has_its_variant` closes the
+spelling axis and `test_every_cue_with_a_person_form_has_its_concord_counterpart` closes the
+inflection axis, both by generating from a paradigm rather than by asking a human to remember.
+Neither could have been derived from the SAFETY-1 audit, and neither replaces it.
+
+**The open question this leaves:** are there other axes? Register and word order are the
+candidates — a phrase list keyed on `nimeuza ardhi` is equally blind to a passive
+(*"ardhi ilishauzwa"*) or a topicalisation (*"ardhi, niliiuza mwaka jana"*). Neither has been
+measured. Logged as a question, not a finding.
+
+---
+
+## 🔬 SAFETY-2 IS TWO WEEKS OLD BECAUSE NOTHING WE OWN COULD MEASURE IT (2026-08-15)
+
+**This reframes the oldest live wrong number on the board from a priority question to a
+measurement one.** A1 / SAFETY-2 / D-RESIDENCY-1 renders **TZS 1,028,000 instead of
+TZS 600,000** as deterministic working, tracked 2026-08-06, never implemented.
+
+The 455-token unmeasured list says why:
+
+```
+26 wakazi      9 uraia      8 resident        ← all zero in eval
+```
+
+**`wakazi` / `resident` / `uraia` are the entire distinguishing vocabulary of resident vs
+non-resident PAYE.** They occur 43 times across the training corpus and **not once in any eval
+question**. The eval set cannot pose a question whose answer depends on residency, so:
+
+> **No instrument we own could have validated A1's guard, before or after building it.**
+
+That is a better explanation for two weeks of inaction than priority was. It also **fixes the
+constraint on the fix**, before it is started:
+
+> **When SAFETY-2 is built, its probes must be AUTHORED. The corpus provably cannot exercise
+> it — there is no sweep to run, and a clean sweep would mean nothing if there were.**
+
+This is R17's rule arriving from the opposite direction. R17 was written because a clean sweep
+over 61 OOC candidates was weak evidence; here we know the sweep is worthless *in advance*,
+from the corpus statistics, rather than discovering it after 15 adversarial probes. Measuring
+the corpus for the vocabulary a fix depends on is now a cheap pre-flight for any lexical work.
+
+`msamaha` / `refund` / `input` (VAT exemption, refund, input tax) are the same shape at 100
+combined occurrences and have no tracked defect yet — which, given the above, is not
+reassuring.
+
+---
 
 ## 📱 THE FIRST MESSAGE THAT EVER REACHED A HANDSET GOT A WRONG ANSWER (2026-08-14)
 

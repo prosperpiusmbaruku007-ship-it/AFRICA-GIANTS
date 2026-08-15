@@ -85,6 +85,44 @@ _LEVY_CUES = [
 _GENERIC_LEVY = ["makato", "michango", "tozo", "malipo kwa serikali", "kulipa serikali",
                  "kwa serikali"]
 
+# ===========================================================================
+# CONCORD CLOSURE (2026-08-15) — the classes below are CLOSED, so they are closed here.
+# ===========================================================================
+# Every cue list in this file grew one observed failure at a time. That is fine for open
+# lexical sets, where you cannot know the next word a user will invent. It is a defect for
+# CLOSED grammatical classes, which can be enumerated from the grammar in one sitting — and
+# Swahili concord is exactly such a class. An audit found 11 of 37 members handled: the
+# high-frequency member of each class present, the rest absent, which is the signature of
+# failure-driven growth rather than of design.
+#
+# TWO PARADIGMS ARE CLOSED HERE:
+#   possessive  -angu (my) <-> -etu (our), agreeing in noun class:
+#               wangu/wetu, yangu/yetu, langu/letu, changu/chetu, vyangu/vyetu, zangu/zetu
+#   subject     ni- (I) <-> tu- (we), fused with tense:
+#               nina-/tuna-, nime-/tume-, nili-/tuli-, nita-/tuta-
+#
+# CLOSURE IS LINEAR, NOT QUADRATIC — the reason this was affordable. Concord is FUNCTIONAL:
+# `mauzo` takes `yangu`/`yetu` and nothing else; `mauzo langu` is ungrammatical, not an
+# unhandled variant. So each cue gains exactly ONE counterpart. The cross-product fear
+# (10 nouns x 15 possessives = 150) is not a real cost.
+#
+# 27 OF 58 DERIVED COUNTERPARTS WERE ALREADY MATCHED, AND ONLY BY LUCK. Cue lists match with
+# `phrase in text`, and the colloquial 1sg present `na-` is a substring of the 1pl `tuna-`:
+# "tunauza" already matched "nauza", "tunachangia" already matched "nachangia". The luck
+# runs out at every other tense — `nime-`/`nili-`/`nita-` are NOT substrings of
+# `tume-`/`tuli-`/`tuta-`. So the router understood "we pay" and never understood "we PAID"
+# or "we WILL pay", and no failure log would have named that pattern. Only the paradigm does.
+# The additions below are the 29 that are NOT already matched; the test asserts RECOGNITION,
+# not list membership, so the 27 free ones do not become 27 lines of noise.
+# (`tumemuajiri` was in the lucky set via the NOUN `muajiri` = employer — coincidence, not
+# morphology. It is the fragile kind and the test's recognition check is what holds it.)
+#
+# Blast radius over 5,510 corpus questions: ONE route change, and it is the live SDL wrong
+# answer moving none -> sdl. 38 of the additions have zero corpus occurrences, which is why
+# eval/refusal_gate/concord_1pl_in_scope_020.jsonl exists (R17: a clean sweep over a corpus
+# that lacks the vocabulary is not evidence).
+# ===========================================================================
+
 # Payroll context: the question is about wages/employees (needed for a payroll levy).
 _PAYROLL_CTX = ["mshahara", "mishahara", "mfanyakazi", "wafanyakazi", "waajiriwa",
                 "watumishi", "analipwa", "ninalipa", "kumlipa", "ajira", "payroll", "mlipwa",
@@ -95,19 +133,48 @@ _PAYROLL_CTX = ["mshahara", "mishahara", "mfanyakazi", "wafanyakazi", "waajiriwa
                 # sweep over 400 gate + 15 probe: routes edge_p02 none->paye (correct compute
                 # = TZS 78,000), ZERO other routing changes.
                 "kuajiri", "niliajiri", "nimeajiri", "nimemuajiri", "nimemwajiri", "kumuajiri",
-                "kumwajiri", "muajiri", "mwajiri", "waajiri", "kibarua", "vibarua", "mtumishi"]
+                "kumwajiri", "muajiri", "mwajiri", "waajiri", "kibarua", "vibarua", "mtumishi",
+                # CONCORD: 1pl counterparts. `tunalipa` is the one with corpus presence
+                # (17 rows); the past/perfect pair is the tense gap substring luck misses.
+                "tunalipa", "tuliajiri", "tumeajiri"]
 
 # Money 'how-much' cue: a request for a shilling QUANTITY.
-_MONEY_ASK = ["kiasi gani", "shilingi ngapi", "kinakatwa kiasi", "ni ngapi", "gharama gani",
-              "garama gani"]                       # gh->g variant
+#
+# CONCORD-1. `shingapi` is the spoken contraction of `shilingi ngapi`, and it was the last
+# blocker on BOTH live wrong answers of 2026-08-14: the SDL question that was told "bado una
+# wafanyakazi chini ya 10" against a stated 14, and the NSSF question answered TZS 20,000
+# against a stated TZS 800,000. `_VERB_MONEY_ASK` cannot reach it — that regex requires
+# `<verb> ngapi` with a SPACE, and the contraction removes exactly that space.
+#
+# Added BARE, unlike `ngapi`, and the difference is not a relaxation of R17. Bare `ngapi` is
+# ambiguous (asilimia ngapi, siku ngapi, mara ngapi) which is why it is verb-qualified;
+# `shingapi` carries `shilingi` inside it and is money-marked on its own. There is no
+# non-money reading of it to guard against.
+_MONEY_ASK = ["kiasi gani", "shilingi ngapi", "shingapi", "kinakatwa kiasi", "ni ngapi",
+              "gharama gani", "garama gani"]       # gh->g variant
+# An EXPLICIT money ask — strong enough to survive a co-occurring rate/time/count ask below.
+# `shingapi` belongs here for the same reason it is bare above: it names the currency.
+_EXPLICIT_MONEY_ASK = ["kiasi gani", "shilingi ngapi", "shingapi"]
 # Non-money quantity asks (rate / time / count) that must NOT count as a money ask.
+#
+# CONCORD-2. `-ngapi` takes the noun-class prefix of the thing counted, and the class is
+# CLOSED: ngapi (cl.9/10), wangapi (cl.2), mingapi (cl.4), mangapi (cl.6), vingapi (cl.8).
+# That is the whole set — `yangapi`/`zangapi`/`pangapi` are not Swahili, and an earlier audit
+# that listed them was over-enumerating.
+#
+# WHICH GATE each member belongs to is decided by SEMANTICS, not by the class system. Money
+# in Swahili is cl.9/10 (shilingi, fedha, pesa), so a money ask is ALWAYS the bare `ngapi`.
+# mingapi/mangapi/vingapi count periods and objects — they are non-money asks, and putting
+# them in _MONEY_ASK "for completeness" would be a category error wearing a grammar costume.
+# `miaka mingapi` was already here; the bare form generalises it to `miezi mingapi` etc.
 _NONMONEY_ASK = ["asilimia ngapi", "siku ngapi", "muda gani", "miaka mingapi", "idadi gani",
-                 "wangapi", "mara ngapi"]
+                 "wangapi", "mangapi", "mingapi", "vingapi", "mara ngapi"]
 # Net-take-home phrasing ("what remains in hand after tax") — a money 'how-much' request
 # that never uses an explicit 'kiasi gani'. rc_11's phrasing; caught here so a net-of-PAYE
 # question routes to compute deterministically (this is the residual the retired
 # extractor-emitted-intent backstop unreliably targeted — now a fixed lexical rule).
-_TAKEHOME_ASK = ["kitakachobaki", "kinachobaki", "mkononi", "baada ya kodi", "nitabaki na"]
+_TAKEHOME_ASK = ["kitakachobaki", "kinachobaki", "mkononi", "baada ya kodi", "nitabaki na",
+                 "tutabaki na"]                    # CONCORD-3: 1pl counterpart
 
 # --- minimum wage (GN 605A), path 3 -----------------------------------------
 # The figure must be presented as PAY, and specifically as pay SOMEONE IS BEING PAID —
@@ -129,6 +196,9 @@ _TAKEHOME_ASK = ["kitakachobaki", "kinachobaki", "mkononi", "baada ya kodi", "ni
 # for the same reason — it is a substring of 'analipa'.
 _WAGE_PAY_CUES = ["namlipa", "ninalipa", "nawalipa", "namlipia", "nimemlipa", "nimemlipia",
                   "tunamlipa", "tunawalipa", "kumlipa", "kuwalipa", "humlipa",
+                  # CONCORD: `tunamlipa`/`tunawalipa` were here and their perfect-tense
+                  # siblings were not — one class, half enumerated, exactly the pattern.
+                  "tunalipa", "tumemlipa", "tumemlipia",
                   "analipwa", "wanalipwa", "analipwaga", "hulipwa", "walipwa"]
 # Explicit floor vocabulary — enough on its own, with a pay cue and a magnitude.
 _MIN_WAGE_CUES = ["kima cha chini", "mshahara wa chini", "kiwango cha chini cha mshahara",
@@ -144,7 +214,10 @@ _MIN_WAGE_CUES = ["kima cha chini", "mshahara wa chini", "kiwango cha chini cha 
 _WAGE_VIOLATION_CUES = ["nakiuka", "ninakiuka", "unakiuka", "tunakiuka", "navunja sheria",
                         "ninavunja sheria", "ni kosa", "ni kinyume cha sheria",
                         "nitaadhibiwa", "nitaazibiwa",          # dh->z variant
-                        "nitatozwa faini", "nitafungwa", "nakosea kisheria"]
+                        "nitatozwa faini", "nitafungwa", "nakosea kisheria",
+                        # CONCORD: `tunakiuka` was added by hand at some point and its four
+                        # future-tense siblings were not — the same class, half closed.
+                        "tutaadhibiwa", "tutaazibiwa", "tutatozwa faini", "tutafungwa"]
 _WAGE_LAWFUL_CUES = ["ni halali", "si halali", "ni sawa", "iko sawa", "inaruhusiwa",
                      "naruhusiwa", "ni sahihi kisheria", "nafuata sheria", "ni kihalali"]
 
@@ -219,6 +292,7 @@ def wage_period(text: str):
 _VAT_REG_CUES = ["kusajili vat", "kujisajili vat", "kusajilisha vat", "kujisajilisha vat",
                  "usajili wa vat", "usajilishaji wa vat", "nasajiliwa vat", "kusajiliwa vat",
                  "kizingiti cha vat", "kufika kiwango cha vat", "nimefika kiwango cha vat",
+                 "tumefika kiwango cha vat",            # CONCORD: 1pl counterpart
                  "register for vat", "vat registration", "vat threshold"]
 _EFD_CUES = ["mashine ya risiti", "mashine ya efd", "risiti ya mashine", "kuwa na efd",
              "nahitaji efd", "lazima niwe na efd", "efd machine", "kutumia efd"]
@@ -231,11 +305,19 @@ _EFD_CUES = ["mashine ya risiti", "mashine ya efd", "risiti ya mashine", "kuwa n
 # Every one of them contains a threshold, a period and VAT registration vocabulary while
 # nobody is stating their own sales. A possessive/first-person turnover claim is what
 # separates "my sales are X" from "what is X".
+#
+# CONCORD. `mauzo yetu`/`mapato yetu`/`tumeuza` were here; the other eight 1pl forms were
+# not. This is the list where the omission cost the most, because the ownership gate is what
+# makes the VAT comparison run at all: a trader writing "biashara YETU ina mauzo ya TZS
+# 250,000,000" stated their own turnover in plain Swahili and got the fact path.
 _OWN_TURNOVER_CUES = ["mauzo yangu", "mauzo ya biashara yangu", "mauzo ya duka langu",
                       "mapato yangu", "mzunguko wangu", "biashara yangu ina mauzo",
                       "biashara yangu imepata", "biashara yangu inaingiza", "duka langu lina",
                       "duka langu linaingiza", "nimeuza", "ninauza", "nauza", "naingiza",
                       "ninaingiza", "nimepata mauzo", "tumeuza", "mauzo yetu", "mapato yetu",
+                      "mauzo ya biashara yetu", "mauzo ya duka letu", "mzunguko wetu",
+                      "biashara yetu ina mauzo", "biashara yetu imepata", "duka letu lina",
+                      "tumepata mauzo",
                       "my turnover", "my sales"]
 
 # Asks that are NOT "am I over the threshold?", even when every other cue is present. Each is
@@ -259,9 +341,14 @@ _FOREIGN_CURRENCY = re.compile(
 
 # Already-registered statements. EFD is required on VAT registration alone, so this is not a
 # nicety: it short-circuits the turnover test entirely.
+# CONCORD: every member here is a perfect-tense `nime-` statement, and a company says
+# `tume-`. Not one 1pl form was present, and the substring luck does not reach the perfect.
 _VAT_REGISTERED_CUES = ["nimeshasajili vat", "nimesajili vat", "nimejisajili vat",
                         "nimesajiliwa vat", "nimeshajisajili vat", "niko kwenye vat",
-                        "nina namba ya vat", "vat registered", "nimesajiliwa kwa vat"]
+                        "nina namba ya vat", "tuna namba ya vat",
+                        "vat registered", "nimesajiliwa kwa vat",
+                        "tumeshasajili vat", "tumesajili vat", "tumejisajili vat",
+                        "tumesajiliwa vat", "tumeshajisajili vat", "tumesajiliwa kwa vat"]
 
 # Turnover PERIOD. This is the crux: the two VAT limbs are separate tests, and a figure only
 # addresses the limb its period names. 'monthly' is recognised precisely so it can be REFUSED
@@ -373,9 +460,13 @@ _VERB_MONEY_ASK = re.compile(
 def _has_money_ask(ql: str) -> bool:
     ask = any(c in ql for c in _MONEY_ASK) or bool(_VERB_MONEY_ASK.search(ql))
     # A bare 'ni ngapi'/'... ngapi' that is actually a rate/time/count ask does not count,
-    # unless an explicit money phrase ('kiasi gani'/'shilingi ngapi') is also present.
-    if any(nm in ql for nm in _NONMONEY_ASK) and not (
-            "kiasi gani" in ql or "shilingi ngapi" in ql):
+    # unless an explicit money phrase is also present. The override list is named rather
+    # than spelled inline because CONCORD-1 added a third member to it: a question can
+    # legitimately carry both a count ask and a money ask ("maduka mangapi ... tunalipa
+    # shingapi"), and forgetting to widen this test alongside _MONEY_ASK would have made
+    # the contraction fix silently conditional on no count word being present.
+    if any(nm in ql for nm in _NONMONEY_ASK) and not any(
+            m in ql for m in _EXPLICIT_MONEY_ASK):
         ask = False
     # Net-take-home phrasing is a money 'how-much' request even with no explicit 'kiasi gani'.
     if any(t in ql for t in _TAKEHOME_ASK):

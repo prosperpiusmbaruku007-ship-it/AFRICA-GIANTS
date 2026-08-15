@@ -91,13 +91,18 @@ def test_a_partial_override_still_raises(config_unreadable):
 def test_the_real_config_still_yields_the_full_list():
     """Guards the guard: with the repo config readable, defaulting must still give the
     full list (107 after the SAFETY-1 audit; 125 after the 2026-08-14 orthographic
-    variants)."""
+    variants; 132 after the 2026-08-15 concord closure).
+
+    NOTE the closure deliberately kept `uza ardhi`/`uza arzi` OUT of the hardcoded fallback
+    even though adding them would have been the shorter fix. Those two are the config-only
+    phrases the R16 stale-container live check exercises; putting them in the fallback would
+    blind the diagnostic that settled the 2026-08-07 incident."""
     cfg = classification.load_local_config()
     assert cfg, 'repo config should be readable in the test environment'
     ooc, _ = classification.resolve_phrases(cfg)
     hardcoded, _ = classification.resolve_phrases({})
     assert len(ooc) > len(hardcoded), 'config-only phrases must exist for this guard to matter'
-    assert len(ooc) == 125, f'expected the full list of 125, got {len(ooc)}'
+    assert len(ooc) == 132, f'expected the full list of 132, got {len(ooc)}'
 
 
 # --- credential hygiene ----------------------------------------------------------------

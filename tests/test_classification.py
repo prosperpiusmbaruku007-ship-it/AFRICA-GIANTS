@@ -35,7 +35,7 @@ def _ooc_controls():
 
 # --- config-driven resolution ----------------------------------------------
 
-def test_resolve_phrases_yields_the_production_125_26_set():
+def test_resolve_phrases_yields_the_production_132_26_set():
     ooc, in_scope = classification.resolve_phrases(classification.load_local_config())
     # Finding 3 target: the full production set, not the former 8-phrase stub.
     # 53 -> 107 on 2026-08-06 (SAFETY-1 audit: +54 phrases closing the capital-gains leak
@@ -46,7 +46,13 @@ def test_resolve_phrases_yields_the_production_125_26_set():
     # standard spelling already over-refuses an in-scope question — see
     # tests/test_orthographic_variants.py and eval/refusal_gate/
     # orthographic_variant_in_scope_012.jsonl.
-    assert len(ooc) == 125
+    # 125 -> 132 on 2026-08-15 (concord closure): ONE config phrase (`nunua shamba`, a
+    # symmetry gap in the existing list — `nunua ardhi`/`nunua nyumba`/`uza shamba` were
+    # all present and only this member of the family was not), plus SIX 1pl past forms in
+    # the hardcoded FALLBACK, which is the only path where they are not already matched by
+    # the config's shorter `nunua ardhi`/`uza ardhi`. In-scope is unchanged at 26 — this
+    # change adds no in-scope vocabulary.
+    assert len(ooc) == 132
     assert len(in_scope) == 26
 
 
@@ -126,8 +132,9 @@ def test_paraphrased_ooc_controls_are_now_refused_by_the_phrase_gate():
 def test_orchestrator_classify_uses_the_full_production_set():
     orch = Orchestrator(backend=FakeBackend(), retriever=lambda q: [])
     # Resolved from config, not the removed 8-phrase stub (107 after the SAFETY-1 audit,
-    # 125 after the 2026-08-14 orthographic-variant additions).
-    assert len(orch.ooc_phrases) == 125
+    # 125 after the 2026-08-14 orthographic-variant additions, 132 after the 2026-08-15
+    # concord closure).
+    assert len(orch.ooc_phrases) == 132
     assert len(orch.in_scope_phrases) == 26
     assert orch.classify("BRELA ada ni ngapi?") is True
     assert orch.classify("mrabaha wa madini ni ngapi?") is False
