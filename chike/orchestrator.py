@@ -469,8 +469,13 @@ class Orchestrator:
         # 2. The wage itself. sole_plausible_amount, not the extractor: exactly one plausible
         #    figure or none — two figures and no deterministic way to say which is the wage.
         paid = swn.sole_plausible_amount(sq.text)
+        # WHO IS ASKING decides the wording, not the facts. Until _WAGE_PAY_CONCORD shipped
+        # only employers reached this route, so the copy addressed one; an employee asking
+        # about their own wage was told to describe "your employee".
+        worker = routing.wage_asker_is_worker(sq.text)
         if paid is None:
-            return SubAnswer(sub_question=sq, text=clarification.MIN_WAGE_NO_AMOUNT,
+            return SubAnswer(sub_question=sq,
+                             text=clarification.min_wage_no_amount(worker),
                              needs_clarification=True)
         # 3. The period. Absent, the monthly reading is assumed ONLY where it is plausible:
         #    below the Order's lowest monthly rate the figure is as likely a daily wage, and
@@ -486,7 +491,8 @@ class Orchestrator:
         #    UNLISTED -> item 16; NONE -> ask what the work is.
         outcome, value = rules_engine.wage_schedule.resolve(sq.text)
         if outcome == rules_engine.wage_schedule.NONE:
-            return SubAnswer(sub_question=sq, text=clarification.MIN_WAGE_NO_SECTOR,
+            return SubAnswer(sub_question=sq,
+                             text=clarification.min_wage_no_sector(worker),
                              needs_clarification=True)
         if outcome == rules_engine.wage_schedule.SECTOR:
             return self._deterministic_answer(

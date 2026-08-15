@@ -351,6 +351,75 @@ _WAGE_PAY_CONCORD = re.compile(
 def _has_wage_pay_cue(ql: str) -> bool:
     """A pay cue in either direction — the employer paying, or the worker being paid."""
     return any(c in ql for c in _WAGE_PAY_CUES) or bool(_WAGE_PAY_CONCORD.search(ql))
+
+
+# WHO IS ASKING — needed because the clarification copy addresses somebody, and until the
+# concord fix above only employers ever reached it.
+#
+# Live, straight after that fix shipped: an employee asking "ninalipwa laki moja na nusu je ni
+# halali" was answered "niambie MFANYAKAZI WAKO anafanya kazi ya aina gani" — tell me what YOUR
+# EMPLOYEE does. The route was right and the audience was wrong, which on this question is its
+# own kind of wrong answer: a worker told to describe "your employee" may reasonably conclude
+# the service is not for them, at the exact moment they are asking whether they are underpaid.
+#
+# ASYMMETRIC BY DESIGN. Employer cues WIN. The employer wording is the existing, well-tested
+# default, so this flips only on positive worker evidence and never on the absence of employer
+# evidence — an ambiguous question keeps the behaviour it has today.
+#
+# `wangu` ALONE IS NOT WORKER EVIDENCE, and this is the trap in the whole predicate:
+# "namlipa mlinzi WANGU 200000" is an EMPLOYER saying "my guard". Only the possessive bound to
+# the speaker's OWN wage or OWN employer counts — `mshahara wangu`, `mwajiri wangu`.
+_WAGE_WORKER_POSSESSIVE = ["mshahara wangu", "mshahara wetu", "mwajiri wangu", "mwajiri wetu",
+                           "ujira wangu", "ujira wetu"]
+# The employer's own side, stated explicitly rather than inferred from the absence of the above.
+_WAGE_EMPLOYER_CUES = ["mfanyakazi wangu", "wafanyakazi wangu", "mfanyakazi wetu",
+                       "wafanyakazi wetu", "namlipa", "ninalipa", "nawalipa", "namlipia",
+                       "nimemlipa", "nimemlipia", "tunamlipa", "tunawalipa", "kumlipa",
+                       "kuwalipa", "humlipa", "tumemlipa", "tumemlipia", "nimemwajiri",
+                       "mwajiri, ", "kama mwajiri", "mimi ni mwajiri",
+                       # CONCORD counterparts, added because the generative test demanded
+                       # them and was RIGHT to: every one is still the speaker doing the
+                       # paying, which is what makes this list employer-side.
+                       "tunalipa", "nimekulipa", "nimewalipa", "tunakulipa", "tumekulipa",
+                       "tumewalipa", "tumemwajiri", "nimekuajiri", "nimewaajiri",
+                       "tumekuajiri", "tumewaajiri"]
+# THE OBJECT INFIX ALONE DOES NOT SAY WHO IS ASKING — subject and object together do, and the
+# first version of this regex got it wrong in a way the generative concord test caught:
+#
+#   wana-NI-lipa   they pay ME     -> the speaker is PAID      worker
+#   wana-TU-lipa   they pay US     -> the speaker is PAID      worker
+#   nime-KU-lipa   I have paid YOU -> the speaker PAYS         EMPLOYER  <- was flagged worker
+#   wana-KU-lipa   they pay YOU    -> the addressee is paid    worker (asking on their behalf)
+#
+# `-ni-` and `-tu-` are unambiguous: nobody pays themselves, so whoever the subject is, the
+# speaker is on the receiving end. `-ku-` is ambiguous and resolves on the SUBJECT — so its
+# branch takes third-person subjects only. `-m-`/`-wa-` are the employer paying somebody else
+# and are excluded entirely, even though `_WAGE_PAY_CONCORD` matches them for ROUTING.
+_OC_SUBJ_3RD = r"(?:a|wa|i|zi|li|ya|ki|vi)(?:na|me|li|ta|ki)"
+_WAGE_WORKER_CONCORD = re.compile(
+    "|".join((
+        rf"\b{_OC_AFFIRMATIVE}(?:ni|tu)lipa",        # -ni-/-tu-: any subject
+        rf"\b{_OC_SUBJ_3RD}kulipa",                  # -ku-: third-person subject only
+        rf"\b{_OC_TENSELESS}(?:ni|tu)lipa",
+        # PASSIVE, 1sg/1pl ONLY. Bare `u-` was here and the sweep killed it: `u-` is also the
+        # class 3/11 subject agreement, so `ushuru unalipwa lini`, `mchango unalipwa TRA`,
+        # `umeme unalipwa VAT` all read as "YOU are paid". 28 corpus rows, none of them a
+        # person. Harmless today because this predicate is only consulted on the wage route,
+        # but a wage question mentioning `ushuru` would have picked up worker copy.
+        # The cost is the genuine 2sg "unalipwa 190000" — which stays on the EMPLOYER copy,
+        # the safe default, and is ambiguous anyway (an employer may equally be checking).
+        r"\b(?:ni|tu)(?:na|me|li|ta|ki)lipwa",
+        r"\bnalipwa|\bnimelipwa",                    # colloquial 1sg present/perfect
+    )))
+
+
+def wage_asker_is_worker(text: str) -> bool:
+    """True iff the minimum-wage question is asked BY the person whose wage it is."""
+    ql = text.lower()
+    if any(c in ql for c in _WAGE_EMPLOYER_CUES):
+        return False
+    return (bool(_WAGE_WORKER_CONCORD.search(ql))
+            or any(c in ql for c in _WAGE_WORKER_POSSESSIVE))
 # Explicit floor vocabulary — enough on its own, with a pay cue and a magnitude.
 _MIN_WAGE_CUES = ["kima cha chini", "mshahara wa chini", "kiwango cha chini cha mshahara",
                   "kima kidogo cha mshahara", "gn 605a", "gn605a", "minimum wage"]

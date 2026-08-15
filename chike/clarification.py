@@ -72,6 +72,33 @@ MIN_WAGE_NO_AMOUNT = (
     "shilingi ngapi, na kama ni kwa mwezi, kwa wiki au kwa siku."
 )
 
+# WORKER-FACING TWINS. Until `_WAGE_PAY_CONCORD` shipped, only employers could reach this
+# route, so both strings above address one — "mfanyakazi WAKO", "mshahara UNAOMLIPA mfanyakazi".
+# The first live run after that fix answered an employee's "ninalipwa laki moja na nusu je ni
+# halali" with "tell me what YOUR EMPLOYEE does".
+#
+# Same facts, same never-guess contract, same question asked — only the addressee changes. The
+# figures are deliberately identical strings to the employer copy so the two cannot drift: if
+# the range is corrected, it must be corrected in both, and a test asserts they agree.
+MIN_WAGE_NO_SECTOR_WORKER = (
+    "Kima cha chini cha mshahara kinatofautiana kwa sekta — GN 605A ina viwango 50, kuanzia "
+    "TZS 80,000 hadi TZS 765,900 kwa mwezi. Ili nikupe jibu sahihi la kisheria, niambie "
+    "unafanya kazi ya aina gani (mfano: shamba, hoteli, ulinzi, duka, ujenzi)."
+)
+
+MIN_WAGE_NO_AMOUNT_WORKER = (
+    "Ili nilinganishe na kima cha chini cha GN 605A, niambie unalipwa shilingi ngapi, na kama "
+    "ni kwa mwezi, kwa wiki au kwa siku."
+)
+
+
+def min_wage_no_sector(asker_is_worker: bool) -> str:
+    return MIN_WAGE_NO_SECTOR_WORKER if asker_is_worker else MIN_WAGE_NO_SECTOR
+
+
+def min_wage_no_amount(asker_is_worker: bool) -> str:
+    return MIN_WAGE_NO_AMOUNT_WORKER if asker_is_worker else MIN_WAGE_NO_AMOUNT
+
 # A figure with no period stated that is too small to be a plausible MONTHLY wage. Comparing
 # it against the monthly column would call a lawful daily wage unlawful.
 MIN_WAGE_PERIOD_UNCLEAR = (
