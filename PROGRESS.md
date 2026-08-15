@@ -6,14 +6,14 @@ Last updated: 2026-08-15
 
 # 🔄 SESSION HANDOVER — 2026-08-15 (second session)
 
-**HEAD `73f2f9f` · working tree clean · in sync with origin/main.**
+**HEAD `25cd94f` · working tree clean · in sync with origin/main.**
 
 | app | serving | note |
 |---|---|---|
-| `chike-inference` | **`73f2f9f`** | stopped and redeployed this session under R16; `oc_06` confirms the container read `chike_config.json` and is not warm-stale |
+| `chike-inference` | **`25cd94f`** | stopped and redeployed TWICE this session under R16; `oc_06`/`df_06` confirm the container read `chike_config.json` and is not warm-stale |
 | `chike-whatsapp` | **`ad1ed50`** | NOT redeployed and does not need to be — it reaches the model through `modal.Cls.from_name`, a lazy lookup, so the routing fix below is already live to WhatsApp users |
 
-Suite **1058 passed, 0 failed, 0 skipped** (`pytest -p no:randomly`). Pristine HEAD in the
+Suite **1074 passed, 0 failed, 0 skipped** (`pytest -p no:randomly`). Pristine `ba09165` in the
 **same worktree**: **1026 passed, 0 failed, 0 skipped**. Read INSTRUMENT-LIE #11 before quoting
 either number.
 
@@ -69,14 +69,20 @@ AFTER   A: … unapaswa kulipa TZS 130,000 kwa NSSF (sehemu ya mwajiri ni TZS 65
 
 **The deterministic working is now correct — `party=employee`, TZS 65,000. The generated prose
 still leads with TZS 130,000.** The router change landed and is verified; the generation
-ignores the engine sitting directly beneath it. So **C is closed in the router and open in the
-answer**, and the remaining half is the fact path preferring a memorised number to the user's
-own words — **D1, the next adapter**, already the logged owner of that class. nat_04 by
-contrast is clean end-to-end: prose and working both say SDL applies at **3.5%** on a stated 11.
+ignores the engine sitting directly beneath it. C was therefore **closed in the router and open
+in the answer** — for the length of one deploy cycle. nat_04 by contrast was clean end-to-end
+immediately: prose and working both say SDL applies at **3.5%** on a stated 11.
 
-Do not cite this row as evidence the cluster is closed. It is evidence that **route-correct is
-not outcome-correct** — the same shape as INSTRUMENT-LIE #6, now reconfirmed with the engine on
-the correct side of it.
+**The visible half was closed the same day by D-FIDELITY-4 (`25cd94f`, entry below), and NOT by
+D1.** The reframe is the load-bearing part: D1 owns the fact path preferring a memorised number
+**when there is no engine output at all**. Here there IS engine output, correct and immediately
+below the prose — which is the **D-FIDELITY family's** territory and exactly the case those
+guards were built for. Filing it under D1 would have parked a live wrong headline behind the
+next adapter.
+
+This row is still the cleanest demonstration on record that **route-correct is not
+outcome-correct** — the same shape as INSTRUMENT-LIE #6, reconfirmed with the engine on the
+correct side of it.
 
 ## 📐 CORRECTION TO THE PREVIOUS HANDOVER — "52 eval / 385 train rows exercise this" was wrong
 
@@ -207,13 +213,186 @@ then adding their withheld variants, and **D1 — the next adapter — which now
 half of nat_08 as well** as the fact path preferring a memorised wrong number to the user's own
 words.
 
+## ✅ D-FIDELITY-4 (`25cd94f`) — nat_08's VISIBLE half, closed the same day
+
+The router fix left nat_08 wrong where it counts. The engine resolved `party='employee'` and
+computed TZS 65,000; the body said:
+
+> *"unapaswa kulipa **TZS 130,000** kwa NSSF (sehemu ya mwajiri ni TZS 65,000 na sehemu ya
+> mfanyakazi ni TZS 65,000)"*
+
+**Every figure in it is TRUE.** 130,000 really is the NSSF total and the attribution is correct.
+It is wrong only relative to what was ASKED — *"how much do they cut from ME"* — and on WhatsApp
+the prose above the working **is** the answer.
+
+This was reframed off D1 deliberately. D1 owns the fact path preferring a memorised number
+**when there is no engine output at all**. Here there is engine output, correct, immediately
+below. That is the D-FIDELITY family's territory and precisely the case those guards exist for.
+
+### Why no existing guard could see it
+
+```
+body_contradicts_working  →  False
+same claim rewritten with '=' (asserts {65000, 130000})  →  STILL False
+wrong total ALONE with '='  (asserts {130000})           →  True
+```
+
+`scratch/oc01_fidelity_probe.json`, by direct call. Two layers, and the second is the wall:
+
+1. **A connector gap.** `unapaswa kulipa TZS 130,000` and bare `ni TZS 65,000` are not in
+   `_ASSERT_CONNECTORS`, so the asserted set is EMPTY and the guard is silent.
+2. **Widening the connectors would not have fixed it.** With both figures visible the
+   authoritative 65,000 **is** among them, and the rule clears the body by design.
+
+> **`body_contradicts_working` is a SET-MEMBERSHIP check, not a CONCLUSION check.** It asks
+> whether the authoritative figure is AMONG the figures the body asserts — never whether it is
+> the one the body CONCLUDES with. A body that states the correct share and leads with the wrong
+> headline satisfies it.
+
+D-FIDELITY-3 declines this direction on purpose: its own comment says a LARGER derived figure
+"is usually a legitimate conversion (per-year, per-employer, **plus-sibling**)", and the
+cross-party total is exactly the plus-sibling case.
+
+### Why the new rule is a different KIND, not a widening
+
+It settles the case from information **the body does not contain** — `result.inputs['party']`.
+Whether the cross-party total is a legitimate conversion or the wrong answer is a property of
+the **QUESTION**, so no amount of reading the body can decide it. The total is computed from the
+engine's own rates, never assumed to be 2× (a test pins asymmetric rates).
+
+### 🧪 THE SWEEP CAME OUT AGAINST ITS OWN HYPOTHESIS AND KILLED THE RULE IT WAS RUN TO JUSTIFY
+
+This is the method result, and it outranks the guard.
+
+The sweep was run to answer *"is this one row or a class?"* — expecting frequency to justify
+the obvious rule, **body states the cross-party total**. `scratch/dfid4_party_sweep.json`:
+
+| | |
+|---|---|
+| bodies pairing with a **party-specific** working | 24 |
+| of those, stating the cross-party total | 5 |
+| **of those, actually the defect** | **1** |
+| instrument artefact (2× collided with a per-employee salary) | 1 |
+| **CORRECT bodies that would have been blanked** | **3** |
+| bodies stating the total *without* the authoritative figure | **0** |
+
+The three correct bodies state the sum and the share side by side —
+*"Sehemu ya mfanyakazi: … TZS 250,000. Jumla ya michango: … TZS 500,000"* — and are entirely
+right. **A presence-keyed rule is 4-FOR-1 AGAINST**, the same trade shape that disqualified the
+SAFETY-2 cue extension at 3-for-1. And with zero rows in the "total only" column, the crisp
+signal has no corpus support and **would not have caught nat_08 either**, which states both.
+
+> **The version of this entry written without the sweep would have claimed a class and shipped a
+> 4-for-1 rule.** The hypothesis was frequency; the answer was one row. This is the case for
+> sweeping BEFORE designing rather than after — a sweep run to confirm a rule finds what the
+> rule expects, and this one was run early enough to change what got built.
+
+What actually separates the defect from the three correct bodies is what the total is ATTACHED
+to: a neutral sum label (`Jumla ya michango`) versus a **second-person obligation** addressed to
+the asker (`unapaswa kulipa`). Forms **harvested by frequency**, not invented — and the
+harvester's own first pass matched `u\w*` and returned `usajili`, `user`, `umepita` and **`umla`
+from *Jumla***. Fourth instance of the bare-cue nesting hazard in one session, this time inside
+the instrument. Full verb forms only.
+
+### 🔓 THE CONNECTOR GAP IS REAL, MEASURED, AND DELIBERATELY LEFT OPEN
+
+The founder's instruction was to close it in the same commit. **The measurement overruled the
+instruction, and the founder confirmed the overrule.** Adding the obligation verbs to
+`_ASSERT_CONNECTORS` changes 3 verdicts over 186 recoverable body↔working pairs
+(`scratch/dfid4_connector_sweep.json`): **1 true positive and 2 FALSE positives.** Both false
+positives are `party=total` questions whose bodies state the per-party components —
+*"kwa TZS 500,000 **utalipa TZS 50,000** kwa upande wa mwajiri na TZS 50,000 kwa upande wa
+mfanyakazi"* — which is CORRECT, and which the guard blanks because the positive-amount branch
+needs the authoritative figure PRESENT and cannot add 50,000 + 50,000.
+
+Same shape as bare levy-scoped `ni`, rejected on R17 evidence in 2026-08-10: frequency argued
+for it, the probes settled it.
+
+**THE HONEST CLOSURE, named so nobody re-derives it:** `_asserted_results` must return a
+**MULTISET** (it returns a set today, so the two 50,000s collapse to one) and the positive-amount
+branch needs a **COMPONENT-SUM acceptance** — a body whose asserted figures sum to the
+authoritative amount is faithful. **That is its own sweep and its own risk** to the permissiveness
+this file depends on, and it must not be smuggled in as part of something else. Recorded in
+`chike/fidelity.py` above `_ASSERT_CONNECTORS` as well as here.
+
+The one case that mattered is handled inside D-FIDELITY-4, where `party != 'total'` makes the
+same construction safe to read.
+
+### R16 verification — 7/7, `scratch/dfid4_live_before.json` / `_after.json`
+
+```
+BEFORE  df_01  A: … unapaswa kulipa TZS 130,000 kwa NSSF (sehemu ya mwajiri ni TZS 65,000 …)
+               NSSF (sehemu ya mfanyakazi) = 10% × TZS 650,000 = TZS 65,000 — …
+
+AFTER   df_01  A: NSSF (sehemu ya mfanyakazi) = 10% × TZS 650,000 = TZS 65,000 — jumla ya
+                  NSSF ni 20% (mwajiri TZS 65,000 + mfanyakazi TZS 65,000)
+```
+
+Body blanked, working alone, headline is the share. `df_02` is **adv_01 live** — the NSSF TOTAL
+question whose correct body states the two TZS 50,000 components, i.e. the case where the
+`party != 'total'` precondition is doing the work and one of the two bodies a generic connector
+widening would have blanked. It answers normally. `df_03`–`df_05` (two-part, employer share,
+plain employee share) are **byte-identical to BEFORE**. `df_06` confirms the container read
+`chike_config.json`.
+
+**The first version of the `df_01` probe scored the BEFORE run PASS**, because it asserted only
+that `65,000` appear — the reply led with 130,000. The check was rewritten as a conclusion check
+before the deploy. **The instrument built to verify a fix for presence-not-conclusion committed
+presence-not-conclusion.** See the family section below; it is why that section exists.
+
+13/13 on `eval/fidelity_gate/party_total_obligation_013.jsonl` (3 must-fire, 10 must-never-fire,
+three of the negatives real stored correct bodies). Suite **1074 passed**.
+
+---
+
+# 🧭 CHECK THAT THE RIGHT THING IS THERE, NOT THAT IT WON — a family, not three coincidences
+
+**Read this before building any instrument for this project.**
+
+Three times now, an instrument this project relies on has been found measuring **presence** of
+the correct thing where it needed to measure whether the correct thing **prevailed**. Each was
+discovered one level down from the last, and each had been trusted in the interval:
+
+| instrument | measured | needed to measure |
+|---|---|---|
+| **MEASUREMENT-GAP-1** — the offline harness | fact **in prompt** | fact **applied** |
+| **INSTRUMENT-LIE #6** — the canary | **route** correct | **outcome** correct |
+| **D-FIDELITY-4** — the guard itself | authoritative figure **present** | authoritative figure **concluded with** |
+
+The generalisation, and the reason to expect a fourth:
+
+> **Presence is cheap to check and always available. That is why every instrument reaches for
+> it — and it is never the property that matters.** "Is the right number in there?" can be
+> answered with a substring search against any artifact you happen to have. "Did the right
+> number win?" requires knowing what the question asked, what the alternatives were, and which
+> one the reader takes away. The first is a property of the text; the second is a property of
+> the text *relative to the question*. Instruments get built out of the first because the first
+> is what the data affords.
+
+It is not a bug that recurs. It is the **default shape of a cheap instrument**, and it will
+recur in whatever gets built next unless the author checks for it deliberately.
+
+**The recursion is the strongest evidence.** D-FIDELITY-4 exists because
+`body_contradicts_working` — a guard built to catch wrong answers — was a presence check. Its
+own R16 live probe was then written as a presence check and scored the known-bad BEFORE run as
+a PASS. The fix and the verification of the fix made the same mistake, hours apart, by the same
+author, with the finding already written down. **Knowing about this family does not protect you
+from it**; only inspecting the specific assertion does.
+
+**Practical test when building any instrument here:** write down the wrong answer you are
+afraid of, then ask whether your check would still pass if the artifact contained BOTH the right
+answer and the wrong one. If it would, you have built a presence check. The corpus method note
+already says this about eval harnesses — *"a figure-presence assertion is not a correctness
+check"* — and the point of this section is that it is not a fact about eval harnesses. It is a
+fact about instruments.
+
 ## The board after this session
 
 | item | row | live result |
 |---|---|---|
 | **B** SAFETY-2 | nat_16 | ✅ closed (`8b90b25`) |
 | **A3** applicability | nat_04 | ✅ **closed** (`73f2f9f`) — SDL applies, 11 employees, 3.5%, end to end |
-| **C** wrong party | nat_08 | ⚠️ **engine closed** (working = TZS 65,000); **prose still leads with 130,000** → D1 |
+| **C** wrong party | nat_08 | ✅ **closed end to end** — router (`73f2f9f`) + D-FIDELITY-4 (`25cd94f`); live headline is TZS 65,000 |
 | **A2** levy cue gap | nat_09 | *"mfanyakazi anachangia **TZS 960,000 (80%)**"* of a 1.2M salary |
 | **A2** | nat_13 | **TZS 52,000**; correct PAYE on 900,000 is **103,000** |
 | **A2** | nat_14 | **TZS 28,000**; correct PAYE on 350,000 is **6,400** |
