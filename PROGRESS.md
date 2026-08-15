@@ -2,6 +2,143 @@
 
 Last updated: 2026-08-15
 
+---
+
+# 🔄 SESSION HANDOVER — 2026-08-15
+
+**HEAD `f84ca89` · working tree clean · in sync with origin/main.**
+
+| app | serving | note |
+|---|---|---|
+| `chike-inference` | code as at **`8b90b25`** | `260a3e3` and `f84ca89` are **docs-only** (PROGRESS.md, 110 lines) — production is current with the code |
+| `chike-whatsapp` | **`ad1ed50`** | NOT redeployed and does not need to be — it reaches the model through `modal.Cls.from_name`, a lazy lookup, so every routing fix below is already live to WhatsApp users. `/health` green: acks 12s/45s, `MODEL_TIMEOUT_S=240` (production values, no test timers left set) |
+
+Suite **1025 passed, 1 skipped** (`pytest -p no:randomly` — see the faiss note at the end).
+
+## What shipped, all deployed and verified live
+
+**1. Concord closure (`c60a0b9`, 9/9 live).** The router understood *"we pay"* and never
+*"we PAID"* or *"we WILL pay"* — cue lists match with `phrase in text`, and the colloquial 1sg
+`na-` is a substring of the 1pl `tuna-`, so present-tense 1pl worked by accident while
+`nime-`/`nili-`/`nita-` are not substrings of `tume-`/`tuli-`/`tuta-`. 27 of 58 counterparts
+were already handled by that luck; 31 were real. The audit's 21 was really 51 — it tested WORD
+membership, but a cue list is made of PHRASES. Two audit corrections on the record: the
+`-ngapi` class has **5** members not 8, and `nachangia` **is** in `_APPLICABILITY_CUES`.
+Both live wrong answers of 2026-08-14 now compute (`TZS 210,000` SDL, `TZS 80,000` NSSF);
+`chg_01` is no longer a partial.
+
+**2. SAFETY-2 / D-RESIDENCY-1 (`8b90b25`, 8/8 live).** The oldest live wrong number, closed by
+**declining**. The proposed cue extension was disqualified three ways: citizenship is not
+residency (Tanzanian tax residency is decided by presence, never nationality); we hold the
+non-resident RATE and no definition of who is one; and the trade was 3-for-1 against on 144
+PAYE-routing rows. `TZS 600,000` would also have been a guess — *"hana residence permit YA
+KUDUMU"* says nothing about days present. nat_16 now names the 183-day test and states neither
+figure.
+
+> **`si mkazi wa kudumu` CONTAINS `si mkazi`** — so the engine read *"not a PERMANENT
+> resident"* (an immigration status) as *"not a resident"* (a tax determination) and applied
+> flat 15%. **A pre-existing live wrong figure nobody had logged**, found while writing the
+> probes. Fixed with `_strip_unclear_spans`, applied **inside `paye_resident()` itself** so the
+> second call site (`compute_paye_each`) cannot keep the bug.
+
+Third instance in one day of the same substring hazard: `waajiri`/`wajiri` (benign by luck),
+`naagiza bidhaa`/`tunaagiza bidhaa` (leaked a wrong refusal into 1pl), and this one.
+**Substring matching over a hand-written cue list is convenient exactly until two phrases in
+the language nest — and then it is silent.**
+
+## Three findings the next session should carry forward
+
+**A. THE THREE AXES.** A lexical guard has three independent axes — **concepts, spellings,
+inflections** — and completeness on one says nothing about the other two. SAFETY-1's audit is
+the proof by construction: it was a *complete* concept audit and held (no capital-gains concept
+has leaked since), and it was **blind to the other two by construction**, because a concept
+already covered never shows up as a missing concept however it is spelled or inflected.
+`nikiagiza` is the confirmation, not a footnote — it refuses an in-scope VAT-registration
+question, has no digraph, and only the person paradigm could reach it. One instance is an
+anomaly; two is the axis. **OPEN QUESTION, logged not answered:** are there more axes?
+**Register and word order** are the candidates — a list keyed on `nimeuza ardhi` is equally
+blind to a passive (*"ardhi ilishauzwa"*) or a topicalisation (*"ardhi, niliiuza mwaka jana"*).
+Neither has been measured.
+
+**B. THE GENERATIVE TEST'S BLIND SPOT.**
+`test_every_cue_with_a_person_form_has_its_concord_counterpart` derives a counterpart **from an
+existing member**, so **it closes PARTIAL coverage and is blind to ABSENT coverage.**
+`_NSSF_EMPLOYEE_CUES` (7 members) and `_NSSF_TOTAL_CUES` (10) have **zero** first-person
+members — nothing to derive from. **C survived the closure because its class was at 0%, not
+30%.** Every list the test fixed was one somebody had already half-populated. This is the same
+shape as finding A, and the second time this week the blind spot was *"the case where none of
+the thing exists yet"*.
+
+**C. C AND A3 ARE ONE ITEM, AND IT IS WELL MEASURED.** Both are **object concord** — the
+Swahili object infix between tense and stem, a closed class: `-ni-` (me), `-ku-`, `-m-`,
+`-tu-`, `-wa-`. nat_08 is *"wana**NI**kata … mshahara wangu"*; nat_04 is
+*"ina**NI**anza lini"*. `_APPLICABILITY_CUES` already closes it for exactly one verb
+(`-nihusu`/`-kuhusu`/`-tuhusu`), so the discipline exists in the codebase, applied once.
+**Unlike everything closed this week it is well measured: 52 eval and 385 train questions
+contain an object infix**, so an R17 sweep here is real evidence rather than a formality — the
+exact opposite of SAFETY-2, where the corpus was structurally blind and probes had to be
+authored.
+
+## The board after the re-check (`f84ca89`) — 5 of 6 still produce wrong numbers live
+
+| item | row | live result |
+|---|---|---|
+| **B** SAFETY-2 | nat_16 | ✅ closed |
+| **C** wrong party | nat_08 | **TZS 130,000** where the employee share asked for is **65,000** |
+| **A2** levy cue gap | nat_09 | *"mfanyakazi anachangia **TZS 960,000 (80%)**"* of a 1.2M salary |
+| **A2** | nat_13 | **TZS 52,000**; correct PAYE on 900,000 is **103,000** |
+| **A2** | nat_14 | **TZS 28,000**; correct PAYE on 350,000 is **6,400** |
+| **A3** applicability | nat_04 | SDL quoted at **0.5%** (it is 3.5%) and sourced to **NSSF** |
+
+**A2 IS GENUINELY AN OPEN LEXICAL SET, NOT A CLASS.** `mfuko`, `serikali inachukua`,
+`kupeleka kwa TRA` are synonyms for a levy — you cannot know the next phrasing from any
+paradigm. It is the one of the four that deserves the failure-driven treatment, and **it is
+the costliest: three rows, three confident wrong figures, no working on any of them.**
+
+Two items moved without closing: A1's `ngapi` fix gave nat_13/nat_14 `money_ask=True`, leaving
+the levy as the sole blocker; nat_04's levy now resolves to `sdl`, leaving payroll-context and
+applicability. The 2026-08-11 diagnosis is stale in two of its four rows.
+
+**Method note:** a figure-presence assertion is **not** a correctness check. nat_08 and nat_09
+both scored `has_expected=True` in the live harness and are badly wrong — the expected figure
+appeared in a parenthetical while the headline was wrong. Both had to be read.
+
+## ⚠️ Infrastructure: intermittent faiss crash under `pytest-randomly`
+
+`Windows fatal exception: access violation` aborts the full suite, in the faiss/numpy path.
+**Not caused by this session's work.**
+
+```
+REPRODUCTION:  python -m pytest tests/ -q          -> aborts, in tests/test_retrieval.py
+               (line 324 on one run, 353 on another — the line MOVES)
+CONTROL:       git stash && python -m pytest tests/ -q   -> still aborts, different line
+ISOLATED:      python -m pytest tests/test_retrieval.py -q  -> 18 passed
+WORKAROUND:    python -m pytest tests/ -q -p no:randomly    -> 1025 passed, 1 skipped
+```
+
+The moving line under random ordering is the signature of a native ordering/memory issue, not
+a logic one. Use `-p no:randomly` for a full-suite number until it is diagnosed.
+
+## ▶️ WHERE THE NEXT SESSION PICKS UP
+
+Start with **C + A3 as a single object-concord item**, because the re-check turned them from
+two entries on a stale list into one member-of-a-class problem with a measured corpus behind
+it: enumerate the object infix from the grammar (`-ni-`/`-ku-`/`-m-`/`-tu-`/`-wa-`), extend
+`_NSSF_EMPLOYEE_CUES` and the `_PAYROLL_CTX`/applicability gates that nat_04 fails, run a real
+R17 sweep (52 eval / 385 train rows genuinely exercise it, so a clean sweep here means
+something) plus authored probes for the members the corpus lacks, and — critically — **extend
+the generative concord test to cover ABSENT classes, not just partial ones**, since finding B
+is the reason C reached production twice. Then take **A2** on its own terms as an open lexical
+set with failure-driven cues, since it is the costliest of the four (three confident wrong
+figures with no working) and no paradigm will ever generate `kupeleka kwa TRA`. Both need
+their own R16 cycle against `chike-inference` only. Still queued behind those and unchanged:
+the `MODAL_API_TOKEN`/`HF_TOKEN` fingerprints, full percent exclusion, narrowing the four
+over-broad OOC phrases (`kipande cha ardhi`, `naagiza bidhaa`, `forodha`, `nikiagiza`) and
+then adding their withheld variants, and D1 — the next adapter — which remains the only real
+closure for the fact path preferring a memorised wrong number to the user's own words.
+
+---
+
 **🛑 FEATURE WORK IS STOPPED (founder, 2026-08-14) pending pilot readiness.** The assessment's
 verdict was **not yet**, on measured grounds: **39.6% of 48 natural-register questions were
 answered wrongly** (adjudicated 2026-08-11), 13 of 24 compute-path questions were wrong, and the
