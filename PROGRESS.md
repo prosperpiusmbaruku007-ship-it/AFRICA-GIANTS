@@ -401,6 +401,39 @@ class.
 
 Suite: **1025 passed, 1 skipped**.
 
+### ✅ DEPLOYED AND VERIFIED LIVE (`8b90b25`, 2026-08-15) — 8/8
+
+Full R16 cycle; artifact `scratch/safety2_live_after.json`. **80.0s first-probe latency
+confirms fresh containers.**
+
+**THE OLDEST LIVE WRONG NUMBER ON THE BOARD IS GONE.** `nat_16`, verbatim, on live weights:
+
+> **BEFORE** (tracked 2026-08-06): `TZS 1,028,000`, rendered as the deterministic *working*.
+>
+> **AFTER**: *"…kwa kodi ya Tanzania, mfanyakazi ni MKAZI au SI MKAZI, na hili **haliamuliwi na
+> uraia wala aina ya kibali** — linaamuliwa na muda anaokaa nchini. Mtu anayekaa Tanzania siku
+> **183** au zaidi… huhesabiwa kama mkazi, hata kama ni raia wa nchi nyingine."*
+
+Neither figure appears. Nine days from tracking to closure, and it closed by **declining**.
+
+| probe | result |
+|---|---|
+| `sf_01` nat_16 verbatim | **declines, names the 183-day test, states neither figure** |
+| `sf_02` the Swahili phrasing (`hana kibali cha ukaazi wa kudumu`) | same — it did not need its own cue |
+| `sf_03` `asiye mkazi` on TZS 5,000,000 | **`PAYE (asiye mkazi) = 15% × 5,000,000 = TZS 750,000`** — the explicit case still computes |
+| `sf_04` foreign employee paid in USD | currency clarification, **not** a residency one |
+| `sf_05` **`kibali kikubwa cha PAYE`** | **`PAYE = TZS 68,000 + 25% × (1,000,000 − 760,000) = TZS 128,000`** |
+| `sf_06` ordinary PAYE, laki sita | `TZS 36,000`, correct |
+| `sf_07`/`sf_08` BRELA + the concord SDL question | hold; `TZS 210,000` confirms the previous deploy survived |
+
+**`sf_05` is the negative worth naming.** *"unapoingia kwenye **kibali** kikubwa cha PAYE"*
+computes correctly on live weights — so the false positive the proposed cue list would have
+created is confirmed avoided, not merely predicted offline. A bare `kibali` cue would have
+turned a tax-band question into an immigration finding and taxed a resident at flat 15%.
+
+The three-for-one trade is now measured in production rather than argued: **one wrong answer
+removed, zero correct answers lost.**
+
 ### ⚠️ Unrelated: an intermittent native crash in `test_retrieval.py`
 
 A `Windows fatal exception: access violation` aborts the suite under pytest's random ordering,
