@@ -832,6 +832,93 @@ _PAYE_NONRESIDENT_CUES = [
 # non-resident 'asiye mkazi analipwa' and wrongly guard eval_367 back to resident.
 _PAYE_RESIDENT_CUES = ["ni mkazi", "ni wakazi"]
 
+# ===========================================================================
+# SAFETY-2 / D-RESIDENCY-1 (2026-08-15) — WHY THIS IS A CLARIFICATION AND NOT A CUE.
+# ===========================================================================
+# The tracked entry (2026-08-06) proposed extending _PAYE_NONRESIDENT_CUES with permit and
+# foreignness phrasings — "hana residence permit", "mfanyakazi wa kigeni", "amekuja kutoka",
+# "yuko kwa muda". Measurement disqualified that plan on three independent grounds.
+#
+# 1. CITIZENSHIP IS NOT RESIDENCY, and the proposed cues confuse them. Tanzanian tax
+#    residency is decided by PRESENCE (a permanent home plus presence in the year, or 183
+#    days, or an average 122 days over three years), never by nationality. A Kenyan who has
+#    lived in Dar for five years is a RESIDENT and pays progressive bands; a Tanzanian
+#    citizen living abroad may be non-resident. So `si raia wa tanzania`, `mfanyakazi wa
+#    kigeni`, `mgeni` and `expatriate` are not evidence of non-residency at all — they are a
+#    category error, and shipping them would create wrong numbers with the engine's authority
+#    behind them, which is exactly the defect being fixed.
+#
+# 2. WE DO NOT OWN THE TEST. scripts/locked_facts.json carries the non-resident RATE
+#    (`paye_nonresident_flat_rate`, 15% final withholding) and no definition of who is a
+#    non-resident. There are ZERO corpus occurrences of the 183-day test. A cue list cannot
+#    encode a rule the corpus has never verified, and R2/R4 discipline says do not invent one.
+#
+# 3. THE CORPUS SAYS THE TRADE IS BAD. 144 corpus rows route to `paye`; 8 mention
+#    foreignness. Three already resolve correctly through the explicit `asiye mkazi` cue, one
+#    is the deferred mixed-residency case, one is the nat_16 defect — and THREE would be
+#    BROKEN by the proposed cues:
+#      * "Mfanyakazi mgeni anapata mshahara wa USD 5,000" — foreign, residency never stated
+#      * "...analipwa laki sita kwa mwezi, PAYE ni ngapi, na kama MGENI angependa..." — the
+#        foreigner is a hypothetical aside, not the taxpayer
+#      * "Mshahara ... unapoingia kwenye KIBALI kikubwa cha PAYE" — here `kibali` means
+#        BRACKET, not permit. A bare `kibali` cue reads a tax band as an immigration document.
+#    A fix that breaks three correct answers to fix one wrong one is not a fix.
+#
+# AND THE COST IS ASYMMETRIC IN THE DIRECTION THAT MATTERS. A false NON-resident detection
+# applies flat 15% to a resident, and at the salaries our users actually have that is far
+# worse than the bug it would fix:
+#      TZS   300,000   resident 2,400   -> flat 45,000   = 18.75x OVERCHARGE
+#      TZS 4,000,000   resident 1,028,000 -> flat 600,000 = the tracked defect (0.58x)
+# The bug overcharges one high earner. The proposed fix would overcharge many low ones.
+#
+# SO THIS DETECTS ONLY *AMBIGUITY*, AND DECLINES. It fires on residency-ADJACENT permit
+# language — never on nationality, never on bare `kibali` — and routes to a clarification
+# instead of computing either figure. That is honest for nat_16 specifically: "hana residence
+# permit YA KUDUMU" says the engineer lacks PERMANENT residency and says nothing about days
+# present, so it does not establish non-residency either. TZS 600,000 would also be a guess.
+# Asking is the only answer the facts support.
+_PAYE_RESIDENCY_UNCLEAR_CUES = [
+    "hana residence permit", "hana kibali cha ukaazi", "hana kibali cha ukazi",
+    "hana kibali cha kuishi", "hana kibali cha makazi", "hana ukaazi", "hana ukazi",
+    "hana makazi ya kudumu", "si mkazi wa kudumu", "siyo mkazi wa kudumu",
+    "sio mkazi wa kudumu", "hana ukaazi wa kudumu", "no residence permit",
+]
+
+
+def _strip_unclear_spans(ql: str) -> str:
+    """Blank out the residency-AMBIGUOUS phrases before any explicit cue is tested.
+
+    ⚠️ THIS EXISTS BECAUSE `si mkazi wa kudumu` CONTAINS `si mkazi`, AND THEY ARE DIFFERENT
+    CLAIMS. "Not a PERMANENT resident" is an immigration status; "not a resident" is a tax
+    determination. Substring matching collapses the narrow claim into the broad one, so
+    before this the engine read a permanent-permit statement as a settled non-residency
+    finding and applied flat 15% — a wrong number with the engine's authority on it, from
+    the same family as the defect this whole item is about, and pre-existing.
+
+    Third instance today of the same hazard (`naagiza bidhaa` inside `tunaagiza bidhaa`;
+    `nauza` inside `tunauza`). Substring matching over a hand-written cue list is convenient
+    exactly until two phrases in the language nest, and then it is silent."""
+    for c in _PAYE_RESIDENCY_UNCLEAR_CUES:
+        ql = ql.replace(c, " ")
+    return ql
+
+
+def paye_residency_unclear(text: str) -> bool:
+    """True when the question raises residency WITHOUT settling it.
+
+    Suppressed when an explicit residency cue survives `_strip_unclear_spans` — i.e. the user
+    settled it somewhere OTHER than inside the ambiguous phrase itself. If they already said
+    `asiye mkazi` or `ni mkazi`, there is nothing to ask. Pure string logic."""
+    ql = text.lower()
+    if not any(c in ql for c in _PAYE_RESIDENCY_UNCLEAR_CUES):
+        return False
+    rest = _strip_unclear_spans(ql)
+    if any(c in rest for c in _PAYE_NONRESIDENT_CUES):
+        return False
+    if any(c in rest for c in _PAYE_RESIDENT_CUES):
+        return False
+    return True
+
 
 def paye_resident(text: str) -> bool:
     """True = resident (progressive bands, the default); False = non-resident (flat 15%).
@@ -840,8 +927,13 @@ def paye_resident(text: str) -> bool:
     (mixed-residency, two people), the scalar can't represent both — stay resident-default
     and let the decompose/merge path handle it (eval_326). Default True is byte-identical to
     the engine's prior single behaviour, so unmatched questions are unchanged. Pure string
-    logic, no model call."""
-    ql = text.lower()
+    logic, no model call.
+
+    SAFETY-2: the ambiguous spans are blanked FIRST, so `si mkazi wa kudumu` no longer reads
+    as `si mkazi`. This call site is reached only after the orchestrator's clarification exit
+    has declined the ambiguous case, but `compute_paye_each` also calls this and must not
+    keep the substring bug."""
+    ql = _strip_unclear_spans(text.lower())
     if not any(cue in ql for cue in _PAYE_NONRESIDENT_CUES):
         return True
     if any(cue in ql for cue in _PAYE_RESIDENT_CUES):  # mixed -> defer to decomposition

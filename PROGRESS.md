@@ -276,6 +276,142 @@ measured. Logged as a question, not a finding.
 
 ---
 
+## ✅ SAFETY-2 / D-RESIDENCY-1 CLOSED — by declining, because the obvious fix was worse (2026-08-15)
+
+**The oldest live wrong number on the board.** A1 rendered **TZS 1,028,000 instead of
+TZS 600,000** as deterministic *working* for `nat_16`, tracked 2026-08-06 and never
+implemented. D-FIDELITY-1 structurally cannot catch it: body and working agreed, because both
+derived from the same mis-resolved input.
+
+### Why it was two weeks old — a measurement answer, not a priority one
+
+`wakazi` (26 train / **0 eval**), `resident` (8/**0**), `uraia` (9/**0**). The eval set cannot
+pose a question whose answer depends on residency.
+
+> **No instrument we own could have validated A1's guard, before or after building it.**
+
+So the constraint was stated before the work started, not discovered during it: **the probes
+had to be authored, there was no sweep to run, and a clean sweep would have proved nothing.**
+That is R17 arriving from the opposite direction — corpus statistics told us the instrument
+was blind *in advance*, rather than 15 adversarial probes telling us afterwards. Measuring the
+corpus for the vocabulary a fix depends on is now a cheap pre-flight for any lexical work.
+
+### The premise needed correcting, and the correction made things worse
+
+The corpus is **not** empty of foreignness vocabulary — **71 eval rows carry it**, `mgeni`
+alone appearing in 46. But every one is a **GN 487A business-licensing** question. So:
+
+| vocabulary | eval presence | what it is about |
+|---|---|---|
+| residency (`wakazi`, `resident`, `uraia`) | **0** | — |
+| foreignness (`mgeni`, `raia`, `kigeni`) | **71 rows** | GN 487A, a different regulation entirely |
+
+**That is worse than an empty corpus.** The obvious cue candidates have plenty of corpus
+presence, all of it on questions where firing would be wrong.
+
+### THE PROPOSED FIX WAS DISQUALIFIED ON THREE INDEPENDENT GROUNDS
+
+The 2026-08-06 entry proposed extending `_PAYE_NONRESIDENT_CUES` with permit and foreignness
+phrasings. Its own warning — *"do not close this by fixing the cue list and declaring the class
+handled"* — turned out to be literally correct.
+
+**1. CITIZENSHIP IS NOT RESIDENCY, and the proposed cues confuse them.** Tanzanian tax
+residency is decided by **presence** — a permanent home plus presence in the year, or 183 days,
+or an average 122 days over three years — and never by nationality. A Kenyan living in Dar for
+five years is a **resident** on progressive bands; a Tanzanian citizen abroad may be
+non-resident. `si raia wa tanzania`, `mfanyakazi wa kigeni`, `mgeni` and `expatriate` are not
+evidence of non-residency. They are a category error, and shipping them would have produced
+wrong numbers *with the engine's authority behind them* — the very defect being fixed.
+
+**2. WE DO NOT OWN THE TEST.** `locked_facts.json` carries `paye_nonresident_flat_rate` (15%
+final withholding) and **no definition of who is a non-resident**. Zero corpus occurrences of
+the 183-day test. A cue list cannot encode a rule the corpus has never verified (R2/R4).
+
+**3. THE TRADE IS 3-FOR-1 AGAINST.** 144 corpus rows route to `paye`; 8 mention foreignness.
+Three already resolve correctly via the explicit `asiye mkazi` cue, one is the deferred
+mixed-residency case, one is `nat_16` — and **three would have been BROKEN**:
+
+| row | why the proposed cue breaks it |
+|---|---|
+| *"Mfanyakazi mgeni anapata mshahara wa USD 5,000"* | foreign employee, residency never raised |
+| *"…PAYE ni ngapi, na kama **mgeni** angependa kufanya kazi hapa…"* | the foreigner is a hypothetical aside, not the taxpayer |
+| *"…unapoingia kwenye **kibali** kikubwa cha PAYE"* | **`kibali` here means TAX BRACKET, not permit** |
+
+That last one is the clearest argument in this codebase for context-qualified cues over bare
+words: a bare `kibali` cue reads a tax band as an immigration document.
+
+### AND THE COST IS ASYMMETRIC IN THE DIRECTION THAT MATTERS
+
+| monthly salary | resident bands | flat 15% | if wrongly flagged non-resident |
+|---|---|---|---|
+| TZS 300,000 | 2,400 | 45,000 | **18.75× overcharge** |
+| TZS 400,000 | 10,400 | 60,000 | 5.8× |
+| TZS 4,000,000 | 1,028,000 | 600,000 | *(the tracked defect: 1.7× the other way)* |
+
+**The bug overcharges one high earner. The proposed fix would have overcharged many low ones,
+by an order of magnitude more.** A fix that is worse than the defect at the salaries our users
+actually have is not a fix.
+
+### SO THE FIX DECLINES — and that is the honest answer, not a fallback
+
+`routing.paye_residency_unclear()` detects residency raised **without being settled**, and the
+orchestrator returns `clarification.PAYE_RESIDENCY_UNCLEAR` instead of computing either figure.
+
+**TZS 600,000 would ALSO have been a guess.** *"hana residence permit ya kudumu"* says the
+engineer lacks **permanent** residency and says nothing about days present. An engineer on a
+one-year work permit who is here 200 days **is tax-resident**. Neither figure is supported by
+the question, so asking is not the cautious option — it is the only correct one.
+
+The copy names the **183-day test** explicitly, because a generic *"is he a resident?"* invites
+the answer *"he's Indian"* — the exact confusion that produced this defect. It deliberately
+states **neither figure**: offering both would hand over two numbers with our authority
+attached and invite the user to pick the smaller.
+
+14 authored probes (`eval/accuracy_gate/residency_unclear_probes_014.jsonl`), **4 positive and
+10 negative** — the negatives outnumber the positives deliberately, because the measured danger
+is over-triggering. 0 firings across the 400-row gate corpus.
+
+### 🔁 THE SUBSTRING HAZARD, THIRD INSTANCE TODAY — and this one was live
+
+Writing the probes exposed a **pre-existing wrong answer nobody had logged**: `si mkazi wa
+kudumu` **contains** `si mkazi`, so the engine read *"not a PERMANENT resident"* — an
+immigration status — as *"not a resident"*, a settled tax determination, and applied flat 15%.
+A wrong number with the engine's authority on it, from the same family as the defect this item
+is about, found by accident.
+
+That is the third instance in one day of the same mechanism:
+
+| | narrow phrase | swallowed by |
+|---|---|---|
+| orthographic work | `waajiri` | `wajiri` (benign, by luck) |
+| concord closure | `naagiza bidhaa` | `tunaagiza bidhaa` (leaked a wrong refusal into 1pl) |
+| **here** | **`si mkazi`** | **`si mkazi wa kudumu` (live wrong figure)** |
+
+> **Substring matching over a hand-written cue list is convenient exactly until two phrases in
+> the language nest — and then it is silent.**
+
+Fixed with `_strip_unclear_spans`, which blanks the ambiguous phrases before any explicit cue
+is tested, applied inside `paye_resident()` itself so the second call site
+(`compute_paye_each`) cannot keep the bug.
+
+**What is NOT closed:** the entry's deeper point stands. The class is *"engine authority applied
+to a mis-resolved input"*, and residency is one instance. This fix closes the instance and adds
+a pattern — **detect ambiguity and decline** — that the class can reuse; it does not close the
+class.
+
+Suite: **1025 passed, 1 skipped**.
+
+### ⚠️ Unrelated: an intermittent native crash in `test_retrieval.py`
+
+A `Windows fatal exception: access violation` aborts the suite under pytest's random ordering,
+in the faiss/numpy path. **It is not from this work** — it reproduces on stashed HEAD, and at a
+*different line* each time (324, then 353), which is the signature of a native ordering/memory
+issue rather than a logic one. `pytest tests/test_retrieval.py` alone passes 18/18, and
+`pytest -p no:randomly` gives a clean full run. Logged as an observation with the reproduction,
+not folded into this item.
+
+---
+
 ## 🔬 SAFETY-2 IS TWO WEEKS OLD BECAUSE NOTHING WE OWN COULD MEASURE IT (2026-08-15)
 
 **This reframes the oldest live wrong number on the board from a priority question to a

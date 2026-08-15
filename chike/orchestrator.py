@@ -419,6 +419,15 @@ class Orchestrator:
         # Resolve residency from the question (guarded against the mixed two-person case, which
         # defers to decompose/merge). Levy-gated like the NSSF branch; other levies untouched.
         if sq.computation_type == "paye":
+            # SAFETY-2 / D-RESIDENCY-1: the question RAISED residency without settling it.
+            # Both engine answers are defensible and they differ by up to 18.75x, so
+            # computing either one would attach the engine's authority to a coin flip.
+            # Declines instead — see routing._PAYE_RESIDENCY_UNCLEAR_CUES for why this is a
+            # clarification and not the cue extension the 2026-08-06 entry proposed.
+            if routing.paye_residency_unclear(sq.text):
+                return SubAnswer(sub_question=sq,
+                                 text=clarification.PAYE_RESIDENCY_UNCLEAR,
+                                 needs_clarification=True)
             inputs["resident"] = routing.paye_resident(sq.text)
         result = rules_engine.compute(sq.computation_type, **inputs)
         prompt = self._build_compute_prompt(sq.text, result)

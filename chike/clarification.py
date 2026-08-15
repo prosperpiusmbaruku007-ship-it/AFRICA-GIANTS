@@ -230,6 +230,30 @@ def compute_clarification(computation_type, reasons, question=""):
     return PAYROLL_AMOUNT
 
 
+# --- PAYE residency unclear (SAFETY-2 / D-RESIDENCY-1, 2026-08-15) ----------
+# The engine's two PAYE answers are FIVE TIMES apart at TZS 4,000,000 and nearly nineteen
+# times apart at TZS 300,000, and which one is right turns on a fact the question does not
+# contain. Tanzanian tax residency is decided by PRESENCE, not nationality or permit class —
+# so "hana residence permit ya kudumu" narrows nothing: an engineer on a one-year work permit
+# who is here 200 days IS tax-resident.
+#
+# NAMES THE TEST, because it is the one thing that lets the user answer in one message. A
+# generic "niambie kama ni mkazi" invites the answer "he's Indian", which is the confusion
+# that produced this defect. Days-present is a fact an employer actually knows.
+#
+# DELIBERATELY STATES NEITHER FIGURE. Offering "TZS 1,028,000 au TZS 600,000" would hand over
+# both numbers with our authority attached and let the user pick the smaller one — which is
+# the fabrication risk wearing a clarification costume.
+PAYE_RESIDENCY_UNCLEAR = (
+    "Kabla sijahesabu PAYE, nahitaji kujua kitu kimoja: kwa kodi ya Tanzania, mfanyakazi ni "
+    "MKAZI au SI MKAZI, na hili haliamuliwi na uraia wala aina ya kibali — linaamuliwa na "
+    "muda anaokaa nchini. Mtu anayekaa Tanzania siku 183 au zaidi katika mwaka wa kodi "
+    "huhesabiwa kama mkazi, hata kama ni raia wa nchi nyingine. Tafadhali niambie mfanyakazi "
+    "huyu anakaa Tanzania takriban siku ngapi kwa mwaka, kisha nitahesabu PAYE yake kwa "
+    "usahihi. Kwa uhakika zaidi, thibitisha na TRA (tra.go.tz)."
+)
+
+
 # --- stated-headcount contradiction (Guard A, 2026-08-14) -------------------
 
 def headcount_contradiction(stated: int) -> str:
