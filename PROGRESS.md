@@ -169,6 +169,56 @@ registration question. It has no digraph in it, so only the person paradigm coul
 
 Suite: **1006 passed** (+28).
 
+### ✅ DEPLOYED AND VERIFIED LIVE (`c60a0b9`, 2026-08-15) — 9/9
+
+Full R16 cycle: `modal app stop chike-inference --yes` → `PYTHONIOENCODING=utf-8 PYTHONUTF8=1
+modal deploy`. Artifact `scratch/concord_live_after.json`, written before any console output.
+**56.5s first-probe latency confirms fresh containers.**
+
+**The BEFORE was not re-measured this cycle** (founder skipped it) — and did not need to be,
+because both THE CHANGE probes have a documented prior state in artifacts committed yesterday.
+That is what per-run artifacts are for, and it is the second time this session they have stood
+in for a run that could not be repeated:
+
+| probe | documented BEFORE | AFTER (live, 2026-08-15) |
+|---|---|---|
+| `cl_01` the verbatim 2026-08-14 **SDL** question | `guard_a_live_after.json` → **the clarification** (*"nimeona umeandika wafanyakazi 14…"*) | **`SDL = 3.5% × TZS 6,000,000 = TZS 210,000`** — deterministic working |
+| `cl_02` the verbatim 2026-08-14 **NSSF** question | `variants_live_after.json` → *"unachangia asilimia 10 ya mshahara mkubwa wa jumla"* — rate stated, **never applied** | **`NSSF (sehemu ya mwajiri) = 10% × TZS 800,000 = TZS 80,000`** |
+| `cl_09` the `arzi` refusal | refusing (`cfg_01`) | still refusing |
+| `cl_08` BRELA control | TZS 22,000 | byte-identical |
+
+**BOTH LIVE WRONG ANSWERS OF 2026-08-14 ARE NOW CORRECT, AND BOTH TOOK THREE COMMITS.**
+`a435cf5` fixed the levy cue (`hifazi`), `19199d0` stopped the SDL one asserting a falsehood,
+and this one moved both onto the engine. **`chg_01` is no longer a partial** — the rate was
+right a day ago and the arithmetic was missing; the working is now there.
+
+Container-loaded proof: `cl_03` (`nunua shamba`, present in `chike_config.json` and absent
+from `HARDCODED_OOC_PHRASES`) refuses correctly — so the container read the CONFIG, not the
+baked fallback. `cl_04`/`cl_05` are 1pl questions the closure exists for; `cl_05` returns
+`SDL = 3.5% × TZS 4,000,000 = TZS 140,000` with working.
+
+`cl_06`/`cl_07` are the count-ask negatives and both hold: *"Vibarua vingapi ninaweza kuajiri
+bila kulipa SDL"* answers **"Kizingiti cha SDL ni wafanyakazi 10 AU ZAIDI"** — a threshold, not
+a shilling amount. The semantic placement of `vingapi` in `_NONMONEY_ASK` is confirmed on live
+weights.
+
+### ⚠️ ONE REPLY PASSED ITS ASSERTION AND IS STILL FABRICATED
+
+`cl_06` — *"Maduka mangapi yanatakiwa kuwa na EFD katika soko moja"* — returned:
+
+> **"Kiwango cha juu cha maduka yanayohitaji EFD katika soko moja ni 10."**
+
+**No such rule exists.** The probe passed because it asserts only what it was written to assert
+(no refusal, no money answer), and on that it is correct: the count ask did not become a money
+ask. But the fact path invented a threshold rather than declining, which is the Item 2 / D1
+class again — *the model prefers a confident number to an admission*.
+
+Two things worth separating. The question is one **I authored**, not a user's, so this is not a
+new live defect and does not change the board. And the probe was **not wrong to pass** — a
+negative probe that also policed truthfulness would have been testing two things and failed
+for the wrong reason. Logged here rather than folded into the probe, because the fix belongs to
+D1 (the next adapter) and not to a cue list.
+
 ---
 
 ## 🔤 AN OOC LIST IS ONLY AS STRONG AS ITS WEAKEST SPELLING (2026-08-14, promoted 2026-08-15)
