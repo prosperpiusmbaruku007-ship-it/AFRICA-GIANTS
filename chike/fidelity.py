@@ -346,6 +346,67 @@ def body_offers_total_as_own_obligation(body: str, result: ComputationResult) ->
     return any(int(m.replace(",", "")) == total for m in _OBLIGATION_2SG.findall(body))
 
 
+# --- D-FIDELITY-5: the obligation denied without a figure --------------------------------
+#
+# THE DEFECT (nat_14, live after A2 routed it correctly). The engine computed TZS 6,400 and
+# the body said:
+#
+#     "hakuna PAYE ya kulipa kwa sababu kiwango cha sifuri kinatumika hadi TZS 270,000"
+#
+# — the exact failure the row's own expected_behavior names ("WRONG = 'below the threshold,
+# nothing due'"). An employer is told no PAYE is owed when TZS 6,400 is.
+#
+# WHY NO EXISTING GUARD SEES IT, and this is the finding rather than the fix:
+#
+#     _asserted_results(body)             -> []        the body asserts NO figure at all
+#     body_contradicts_working            -> False
+#     body_reduces_authoritative_amount   -> False
+#     body_offers_total_as_own_obligation -> False
+#
+# A CONTRADICTION DOES NOT NEED A NUMBER. All three rules above compare FIGURES — which
+# amounts the body asserts, and whether the authoritative one is among them. A body that
+# asserts NOTHING and denies the obligation qualitatively contradicts a positive engine amount
+# completely, and satisfies every one of them VACUOUSLY, because the set being checked is
+# empty. That is presence-not-conclusion in its purest form: the instrument passes by having
+# nothing to look at.
+#
+# THE FALSE-POSITIVE SURFACE IS REAL AND WAS MEASURED FIRST (scratch/dfid5_sweep.json), because
+# a denial is the CORRECT body whenever the engine's own amount is zero:
+#
+#     `hakuna paye`   10 corpus bodies, ALL of them amount=0 and all of them RIGHT
+#                     ("Kwa mshahara wa TZS 250,000/mwezi, hakuna PAYE inayokatwa")
+#     `haikatwi`       2 corpus bodies with amount>0 — and BOTH ARE CORRECT:
+#                     "Hii inalipwa na mwajiri peke yake — haikatwi kutoka mshahara wa
+#                      mfanyakazi" denies the DEDUCTION LOCUS, not the liability
+#
+# So the phrase can never be the discriminator; the ENGINE AMOUNT is. This rule fires only on
+# a definite POSITIVE amount, which excludes all ten legitimate `hakuna paye` bodies by
+# construction — `body_contradicts_working` already owns the amount==0 case. And `haikatwi`
+# is excluded from the phrase list entirely: "not deducted from the wage" is a true statement
+# about who bears a levy, not a denial that it is owed.
+#
+# THE DENIAL MUST NAME THE COMPUTED LEVY. A PAYE answer may correctly say "hakuna SDL" (fewer
+# than ten employees) in the same breath; keyed on any levy this rule would blank it. So the
+# levy-specific form is built from `result.computation`, and only two levy-agnostic phrases —
+# both unambiguous denials of liability — are matched regardless.
+_DENIAL_ANY_LEVY = ("hakuna cha kulipa", "hakuna kinachotakiwa kulipwa")
+
+
+def body_denies_a_positive_obligation(body: str, result: ComputationResult) -> bool:
+    """True iff the body denies an obligation the engine computed as a positive amount.
+
+    Deliberately silent when `result.amount` is 0 or None: a denial is then the FAITHFUL body,
+    and ten corpus rows prove it.
+    """
+    if not body or result.amount is None or int(result.amount) <= 0:
+        return False
+    low = body.lower()
+    levy = (result.computation or "").lower()
+    if levy and re.search(rf"hakuna\s+(?:\w+\s+){{0,2}}?{re.escape(levy)}\b", low):
+        return True
+    return any(p in low for p in _DENIAL_ANY_LEVY)
+
+
 # --- D-FIDELITY-2: sibling levies -------------------------------------------------------
 
 # The four levies the rules engine computes. Matched case-insensitively as whole words so

@@ -659,6 +659,12 @@ class Orchestrator:
         the paraphrase family, where the wrong conclusion is stated without writing the arithmetic
         out, REMAINS OPEN. See chike.fidelity for the misses, named.
 
+        D-FIDELITY-5 closes the family none of the others can see: a body that asserts NO
+        figure and denies the obligation in words ("hakuna PAYE ya kulipa" against an engine
+        amount of TZS 6,400). Every rule above compares figures, so an empty asserted-set
+        satisfies all of them vacuously. It fires only on a POSITIVE amount — a denial is the
+        faithful body when the engine says zero, and ten corpus rows prove it.
+
         D-FIDELITY-4 runs here too, and is a different KIND of rule rather than a widening: it
         settles the case from information the body does not contain — the party the engine
         resolved — because whether the cross-party total is a legitimate conversion or the wrong
@@ -682,7 +688,8 @@ class Orchestrator:
         if sub.computation is not None and (
                 fidelity.body_contradicts_working(cleaned, sub.computation)
                 or fidelity.body_reduces_authoritative_amount(cleaned, sub.computation)
-                or fidelity.body_offers_total_as_own_obligation(cleaned, sub.computation)):
+                or fidelity.body_offers_total_as_own_obligation(cleaned, sub.computation)
+                or fidelity.body_denies_a_positive_obligation(cleaned, sub.computation)):
             cleaned = ""
         elif sub.computation is None and fidelity.body_contradicts_stated_headcount(
                 cleaned, sub.sub_question.text):
