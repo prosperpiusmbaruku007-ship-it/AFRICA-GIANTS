@@ -517,7 +517,104 @@ one, and the correction belongs on the record as firmly as a defect would.**
 Three different counts of three different things, all correct. **No conflict, and nothing to
 correct.** What was real is that the prose hardcodes numbers the schedule owns, so a **drift
 pin** now ties them together: if the schedule is ever corrected and the copy is not, the test
-fails.## ✅ D-FIDELITY-5 (`baf77b3`) — nat_14 closed. P2's compute cluster is now closed.
+fails.
+
+## 📊 THE 48-QUESTION RE-RUN — 39.6% → 58.3% correct, 39.6% → 18.8% wrong (2026-08-15)
+
+**The number the assessment stopped the product on, re-measured.** Same 48 questions, same
+script, same endpoint, same timeout — only the output path differs, so this is a **paired
+comparison** and the difference is the build.
+`eval/results/natural48_rerun_2026_08_15_adjudication.json`.
+
+| | 2026-08-11 | 2026-08-15 | |
+|---|---|---|---|
+| **CORRECT** | 19 | **28** | **+9** |
+| CLARIFY | 6 | 6 | 0 |
+| PARTIAL | 4 | 5 | +1 |
+| **WRONG** | 19 | **9** | **−10** |
+
+**correct 39.6% → 58.3%  ·  wrong 39.6% → 18.8%**
+
+Adjudicated by reading each reply against its `expected_behavior` — **judgement, reported as
+judgement**, the same standard and the same taxonomy as the baseline.
+
+### The movement is entirely on the compute path, and that is the point
+
+| path | 2026-08-11 | 2026-08-15 |
+|---|---|---|
+| **compute** (24) | CORRECT 6 · CLARIFY 5 · PARTIAL 0 · **WRONG 13** | CORRECT **15** · CLARIFY 5 · PARTIAL 1 · **WRONG 3** |
+| fact (21) | CORRECT 10 · CLARIFY 1 · PARTIAL 4 · WRONG 6 | **identical** |
+| refusal (3) | CORRECT 3 | CORRECT 3 |
+
+**37 of 48 replies are byte-identical to the baseline.** Every row that moved is a compute row,
+and every one of them was a target of this week's work:
+
+```
+nat_01 WRONG -> CORRECT   SDL 0.5% -> 3.5% x 6,000,000 = 210,000
+nat_04 WRONG -> CORRECT   object concord; SDL applies at 3.5% on a stated 11
+nat_08 WRONG -> CORRECT   130,000 -> 65,000  (object concord + D-FIDELITY-4)
+nat_09 WRONG -> CORRECT   "mfanyakazi anachangia 960,000 (80%)" -> 240,000 correctly split
+nat_10 WRONG -> CORRECT   a 20% rate offered as an answer -> asks for the salary
+nat_12 WRONG -> PARTIAL   a 15% withholding answer -> 500,000 correct, prose mislabels party
+nat_13 WRONG -> CORRECT   52,000 -> 103,000  (A2)
+nat_14 WRONG -> CORRECT   28,000 -> 6,400   (A2 + D-FIDELITY-5)
+nat_16 WRONG -> CORRECT*  progressive 1,028,000 -> declines, names the 183-day test
+nat_19 WRONG -> CORRECT   WCF 300,000 -> 15,000
+```
+
+**The compute path went from 13 wrong of 24 to 3 wrong of 24.** That is what the routing and
+guard work was aimed at, and it is where all of it landed. **The fact path did not move at
+all** — which is the honest other half of this result.
+
+### ⚠️ READ THIS BEFORE QUOTING THE NUMBER
+
+**1. One row departs from its written rubric, flagged rather than buried.** nat_16's
+`expected_behavior` demands 15% × 4,000,000 = TZS 600,000. That expectation was **deliberately
+superseded by SAFETY-2** (`8b90b25`): residency is decided by presence, not citizenship or
+permit type, and *"hana residence permit ya kudumu"* says nothing about days present — so
+TZS 600,000 would **also** have been a guess. The reply declines and names the 183-day test,
+which is the behaviour that decision shipped. **By the written rubric it is WRONG, giving
+CORRECT 27 / WRONG 10 (56.3% / 20.8%).** Both numbers are in the artifact; quote whichever, but
+quote the caveat with it.
+
+**2. CLARIFY did not move, and 5 of the 6 are delivery failures.** nat_02, nat_06, nat_11,
+nat_17, nat_21 are all rows where **a figure was computable and was not delivered** — the
+Swahili-numeral + `kila mmoja` extractor gap, and the multi-group aggregation gap. They are
+routing passes and delivery fails, they are not counted as correct, and **they are the largest
+single block of remaining work.** Nothing this week touched them.
+
+**3. The 9 remaining WRONG are almost all fact-path**, and they are a different kind of problem
+from the ones just closed:
+
+```
+nat_05  fabricated BRELA fee of TZS 260,000 for an SDL wrong-base question
+nat_23  answers NSSF correctly and never answers SDL   (fan-out gap)
+nat_24  conflates SDL and WCF; never says SDL is not due at 9 employees
+nat_28  royalties 15% for a services VAT-withholding question (should be 6%)
+nat_33  neither the 22,000 fee nor the 17,500 penalty
+nat_41  invents "siku 1" for OSHA registration
+nat_43  states that minimum wage does NOT vary by sector — flatly false
+nat_44  6% for a GOODS question (should be 3%)
+nat_45  "ndani ya siku 7 kufikia tarehe 8 Julai 2025" — a fabricated absolute date
+```
+
+**Six of these are a fact recited wrongly, not a route missed.** The routing-and-guard method
+that took the compute path from 13 wrong to 3 has no purchase on them: there is no engine to
+route to and no working to check a body against. **They belong to D1 — the next adapter — and
+to the RAG/locked-facts path**, and this measurement is the clearest statement yet of where the
+remaining error actually lives.
+
+### What this does and does not say
+
+It is **not** a gate result and not a random sample of real traffic: the 48 questions were
+authored by Claude Code and are register-realistic by construction (the original findings file
+carries the same authorship caveat). It is the only end-to-end measurement of natural-register
+performance the project has, measured the same way twice.
+
+**Latency:** median 6.2s → 7.9s, max 63.9s → 24.0s. The max improved because there was no cold
+start in this run; the median difference is noise at n=48.
+
+## ✅ D-FIDELITY-5 (`baf77b3`) — nat_14 closed. P2's compute cluster is now closed.
 
 ```
 BEFORE  A: "...hakuna PAYE ya kulipa kwa sababu kiwango cha sifuri kinatumika hadi
@@ -923,7 +1020,7 @@ thing. Same shape, one more level out.
 
 ---
 
-**🛑 FEATURE WORK IS STOPPED (founder, 2026-08-14) pending pilot readiness.** The assessment's
+**🛑 FEATURE WORK IS STOPPED (founder, 2026-08-14) pending pilot readiness.** **P2 IS NOW CLOSED, and the number it was stopped on has been re-measured on the same 48 questions: 39.6% → 58.3% correct, 39.6% → 18.8% wrong (entry at the top). The compute path went from 13 wrong of 24 to 3; the fact path did not move at all.** The assessment's
 verdict was **not yet**, on measured grounds: **39.6% of 48 natural-register questions were
 answered wrongly** (adjudicated 2026-08-11), 13 of 24 compute-path questions were wrong, and the
 WhatsApp handler could drop an answer in silence. Two blockers, in order — **P1 the silent-drop

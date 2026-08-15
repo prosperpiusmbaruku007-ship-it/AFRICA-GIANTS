@@ -1,0 +1,622 @@
+{
+  "run": "scratch/natural48_rerun_2026_08_15.json",
+  "date": "2026-08-15",
+  "paired_against": "eval/results/natural48_rerun_2026_08_11_adjudication.json",
+  "n": 48,
+  "adjudicator": "Claude Code — JUDGEMENT, not a scorer output",
+  "counts": {
+    "CORRECT": 28,
+    "CLARIFY": 6,
+    "WRONG": 9,
+    "PARTIAL": 5
+  },
+  "baseline_counts": {
+    "CORRECT": 19,
+    "CLARIFY": 6,
+    "PARTIAL": 4,
+    "WRONG": 19
+  },
+  "by_path": {
+    "compute": {
+      "CORRECT": 15,
+      "CLARIFY": 5,
+      "WRONG": 3,
+      "PARTIAL": 1
+    },
+    "fact": {
+      "CLARIFY": 1,
+      "CORRECT": 10,
+      "WRONG": 6,
+      "PARTIAL": 4
+    },
+    "refusal": {
+      "CORRECT": 3
+    }
+  },
+  "baseline_by_path": {
+    "compute": {
+      "CORRECT": 6,
+      "CLARIFY": 5,
+      "PARTIAL": 0,
+      "WRONG": 13
+    },
+    "fact": {
+      "CORRECT": 10,
+      "CLARIFY": 1,
+      "PARTIAL": 4,
+      "WRONG": 6
+    },
+    "refusal": {
+      "CORRECT": 3,
+      "CLARIFY": 0,
+      "PARTIAL": 0,
+      "WRONG": 0
+    }
+  },
+  "latency_s": {
+    "median": 7.9,
+    "max": 24.0
+  },
+  "baseline_latency_s": {
+    "median": 6.2,
+    "p90": 9.8,
+    "max": 63.9,
+    "min": 1.2,
+    "warm_median": 6.2
+  },
+  "nat_16_rubric_departure": "nat_16's expected_behavior demands 15% x 4,000,000 = TZS 600,000. That expectation was DELIBERATELY SUPERSEDED by SAFETY-2 (8b90b25, 2026-08-15): citizenship and permit type do not decide Tanzanian tax residency, presence does, and 'hana residence permit ya kudumu' says nothing about days present -- so TZS 600,000 would ALSO have been a guess. The reply declines and names the 183-day test, which is the behaviour that decision shipped. Counted CORRECT on that basis and flagged so the reader can undo it: by the WRITTEN rubric it is WRONG, giving CORRECT 27 / WRONG 10 instead of 28 / 9.",
+  "moves": [
+    {
+      "id": "nat_01",
+      "from": "WRONG",
+      "to": "CORRECT",
+      "path": "compute",
+      "why": "SDL 3.5% x 6,000,000 = 210,000 with working. Was 0.5%."
+    },
+    {
+      "id": "nat_04",
+      "from": "WRONG",
+      "to": "CORRECT",
+      "path": "compute",
+      "why": "SDL applies at 3.5% on a stated 11. Was 0.5% sourced to NSSF."
+    },
+    {
+      "id": "nat_08",
+      "from": "WRONG",
+      "to": "CORRECT",
+      "path": "compute",
+      "why": "body blanked by D-FIDELITY-4; working alone = employee 65,000. Was 130,000."
+    },
+    {
+      "id": "nat_09",
+      "from": "WRONG",
+      "to": "CORRECT",
+      "path": "compute",
+      "why": "240,000 with the correct 120k+120k split, sourced to NSSF. Was \"mfanyakazi anachangia 960,000 (80%)\" and a total equal to the whole salary."
+    },
+    {
+      "id": "nat_10",
+      "from": "WRONG",
+      "to": "CORRECT",
+      "path": "compute",
+      "why": "asks for the salary, which is what the rubric names as correct. Was a 20% rate presented as the answer."
+    },
+    {
+      "id": "nat_12",
+      "from": "WRONG",
+      "to": "PARTIAL",
+      "path": "compute",
+      "why": "figure and working correct (employee 500,000, no invented cap) but the prose labels it \"NSSF ya MWAJIRI\" for a question asking what is deducted from the asker. Was a 15% withholding answer."
+    },
+    {
+      "id": "nat_13",
+      "from": "WRONG",
+      "to": "CORRECT",
+      "path": "compute",
+      "why": "PAYE 103,000 with the band working. Was 52,000."
+    },
+    {
+      "id": "nat_14",
+      "from": "WRONG",
+      "to": "CORRECT",
+      "path": "compute",
+      "why": "body blanked by D-FIDELITY-5; working alone = 6,400. Was 28,000."
+    },
+    {
+      "id": "nat_16",
+      "from": "WRONG",
+      "to": "CORRECT",
+      "path": "compute",
+      "why": "DEPARTS FROM THE WRITTEN RUBRIC — flagged, see note. Declines and names the 183-day test instead of computing 15% x 4,000,000. Was a progressive-band 1,028,000."
+    },
+    {
+      "id": "nat_19",
+      "from": "WRONG",
+      "to": "CORRECT",
+      "path": "compute",
+      "why": "WCF 0.5% x 3,000,000 = 15,000 with working. Was 300,000."
+    }
+  ],
+  "rows": [
+    {
+      "id": "nat_01",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "CORRECT",
+      "why": "SDL 3.5% x 6,000,000 = 210,000 with working. Was 0.5%.",
+      "question": "nina wafanyakazi 14 mishahara yote kwa mwezi ni milioni 6 ile ya mafunzo ya ufundi nitalipa ngapi",
+      "reply": "Kwa hesabu sahihi, thibitisha na tra.go.tz: SDL = 3.5% x TZS 6,000,000 = TZS 210,000. Thibitisha na tra.go.tz.\nSDL = 3.5% × TZS 6,000,000 = TZS 210,000",
+      "reply_identical_to_baseline": false
+    },
+    {
+      "id": "nat_02",
+      "path": "compute",
+      "was": "CLARIFY",
+      "now": "CLARIFY",
+      "why": "unchanged: extractor gap on Swahili numerals + kila mmoja. Routing pass, delivery fail.",
+      "question": "wafanyakazi wangu ni ishirini kila mmoja anapata laki nne kwa mwezi hiyo tozo ya mafunzo ni kiasi gani",
+      "reply": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_03",
+      "path": "compute",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: 7 < 10, SDL does not apply.",
+      "question": "tuko wafanyakazi 7 tu ofisini mishahara jumla milioni 3 kwa mwezi hii ya ufundi stadi tunalipa kiasi gani",
+      "reply": "Kwa sasa una wafanyakazi 7 chini ya kiwango cha 10, hivyo hakuna SDL unayopaswa kulipa. Thibitisha na tra.go.tz.\nSDL inayolipwa ni TZS 0. Una wafanyakazi 7 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_04",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "CORRECT",
+      "why": "SDL applies at 3.5% on a stated 11. Was 0.5% sourced to NSSF.",
+      "question": "nimeongeza watu sasa tuko kumi na mmoja je ile ya mafunzo inanianza lini",
+      "reply": "Kuanzia unapofikisha wafanyakazi 10, unatakiwa kulipa SDL kwa asilimia 3.5 ya jumla ya mishahara. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 11 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+      "reply_identical_to_baseline": false
+    },
+    {
+      "id": "nat_05",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "WRONG",
+      "why": "unchanged: fabricated BRELA registration fee of TZS 260,000 for an SDL wrong-base question.",
+      "question": "nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya mafunzo nitalipa asilimia tatu na nusu ya nini",
+      "reply": "Kwa mujibu wa taarifa uliyotoa, unatakiwa kulipa ada ya usajili ya shilingi 260,000 TZS. Thibitisha na BRELA Official (brela.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_06",
+      "path": "compute",
+      "was": "CLARIFY",
+      "now": "CLARIFY",
+      "why": "unchanged: same extractor gap, explicit-levy control.",
+      "question": "boss nina staff 25 total payroll ni milioni 15 kwa mwezi hiyo SDL yangu ni ngapi",
+      "reply": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_07",
+      "path": "compute",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: employer share 80,000.",
+      "question": "mfanyakazi wangu analipwa laki nane kwa mwezi mimi kama mwajiri nachangia kiasi gani kwenye mfuko wa hifadhi",
+      "reply": "Kama mwajiri unachangia asilimia 10 ya mshahara wa jumla, basi kwa mshahara wa TZS 800,000 utalipa TZS 80,000 kwa NSSF. Thibitisha na NSSF (nssf.go.tz).\nNSSF (sehemu ya mwajiri) = 10% × TZS 800,000 = TZS 80,000 — jumla ya NSSF ni 20% (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_08",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "CORRECT",
+      "why": "body blanked by D-FIDELITY-4; working alone = employee 65,000. Was 130,000.",
+      "question": "wananikata kiasi gani kwenye mshahara wangu wa 650000 kwa ajili ya mfuko wa uzeeni",
+      "reply": "NSSF (sehemu ya mfanyakazi) = 10% × TZS 650,000 = TZS 65,000 — jumla ya NSSF ni 20% (mwajiri TZS 65,000 + mfanyakazi TZS 65,000)",
+      "reply_identical_to_baseline": false
+    },
+    {
+      "id": "nat_09",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "CORRECT",
+      "why": "240,000 with the correct 120k+120k split, sourced to NSSF. Was \"mfanyakazi anachangia 960,000 (80%)\" and a total equal to the whole salary.",
+      "question": "mshahara ni milioni 1.2 nataka kujua jumla inayoenda kwenye mfuko kwa mwezi mimi na mfanyakazi pamoja",
+      "reply": "Kiasi kinachoenda kwenye mfuko ni TZS 240,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz).\nNSSF = 20% × TZS 1,200,000 = TZS 240,000 (mwajiri TZS 120,000 + mfanyakazi TZS 120,000)",
+      "reply_identical_to_baseline": false
+    },
+    {
+      "id": "nat_10",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "CORRECT",
+      "why": "asks for the salary, which is what the rubric names as correct. Was a 20% rate presented as the answer.",
+      "question": "nimeajiri mtu mmoja mwezi huu nitachangia ngapi kwenye mfuko wa uzeeni",
+      "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+      "reply_identical_to_baseline": false
+    },
+    {
+      "id": "nat_11",
+      "path": "compute",
+      "was": "CLARIFY",
+      "now": "CLARIFY",
+      "why": "unchanged: aggregation gap.",
+      "question": "nina wafanyakazi 4 wa laki sita kila mmoja jumla ya michango ya mfuko kwa mwezi ni ngapi",
+      "reply": "Naweza kukusaidia kuhesabu makato ya mshahara, lakini niambie unahitaji hesabu ya tozo gani hasa — PAYE, NSSF, SDL, au WCF — pamoja na kiasi cha mshahara kwa mwezi.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_12",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "PARTIAL",
+      "why": "figure and working correct (employee 500,000, no invented cap) but the prose labels it \"NSSF ya MWAJIRI\" for a question asking what is deducted from the asker. Was a 15% withholding answer.",
+      "question": "mshahara wangu ni milioni 5 kwa mwezi nitakatwa kiasi gani kwenye mfuko",
+      "reply": "Kwa mshahara wa TZS 5,000,000, NSSF ya mwajiri ni asilimia 10 ya mshahara, sawa na TZS 500,000. Thibitisha na nssf.go.tz.\nNSSF (sehemu ya mfanyakazi) = 10% × TZS 5,000,000 = TZS 500,000 — jumla ya NSSF ni 20% (mwajiri TZS 500,000 + mfanyakazi TZS 500,000)",
+      "reply_identical_to_baseline": false
+    },
+    {
+      "id": "nat_13",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "CORRECT",
+      "why": "PAYE 103,000 with the band working. Was 52,000.",
+      "question": "mfanyakazi wangu napata mshahara wa 900000 kwa mwezi serikali inachukua kiasi gani kila mwezi",
+      "reply": "Kwa mshahara wa TZS 900,000, PAYE inayokatwa ni TZS 103,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 900,000 − TZS 760,000) = TZS 103,000",
+      "reply_identical_to_baseline": false
+    },
+    {
+      "id": "nat_14",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "CORRECT",
+      "why": "body blanked by D-FIDELITY-5; working alone = 6,400. Was 28,000.",
+      "question": "nampa mtu wangu wa dukani 350000 kwa mwezi je kuna kitu cha kupeleka kwa tra kwenye mshahara wake na ni kiasi gani",
+      "reply": "PAYE = TZS 0 + 8% × (TZS 350,000 − TZS 270,000) = TZS 6,400",
+      "reply_identical_to_baseline": false
+    },
+    {
+      "id": "nat_15",
+      "path": "compute",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: 250,000 -> PAYE 0.",
+      "question": "mshahara wa mlinzi wangu ni laki mbili na nusu kwa mwezi nakata kodi kiasi gani",
+      "reply": "Kwa mshahara wa TZS 250,000, PAYE ni TZS 0 kwa sababu ipo chini ya kiwango cha sifuri. Thibitisha na TRA (tra.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_16",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "CORRECT*",
+      "why": "DEPARTS FROM THE WRITTEN RUBRIC — flagged, see note. Declines and names the 183-day test instead of computing 15% x 4,000,000. Was a progressive-band 1,028,000.",
+      "question": "nimemleta engineer kutoka india hana residence permit ya kudumu nampa milioni 4 kwa mwezi kodi ya mshahara wake ni ngapi",
+      "reply": "Kabla sijahesabu PAYE, nahitaji kujua kitu kimoja: kwa kodi ya Tanzania, mfanyakazi ni MKAZI au SI MKAZI, na hili haliamuliwi na uraia wala aina ya kibali — linaamuliwa na muda anaokaa nchini. Mtu anayekaa Tanzania siku 183 au zaidi katika mwaka wa kodi huhesabiwa kama mkazi, hata kama ni raia wa nchi nyingine. Tafadhali niambie mfanyakazi huyu anakaa Tanzania takriban siku ngapi kwa mwaka, kisha nitahesabu PAYE yake kwa usahihi. Kwa uhakika zaidi, thibitisha na TRA (tra.go.tz).",
+      "reply_identical_to_baseline": false
+    },
+    {
+      "id": "nat_17",
+      "path": "compute",
+      "was": "CLARIFY",
+      "now": "CLARIFY",
+      "why": "unchanged: net take-home, components not listed.",
+      "question": "mshahara wangu ni 1500000 nitabaki na pesa ngapi mkononi baada ya makato yote",
+      "reply": "Naweza kukusaidia kuhesabu makato ya mshahara, lakini niambie unahitaji hesabu ya tozo gani hasa — PAYE, NSSF, SDL, au WCF — pamoja na kiasi cha mshahara kwa mwezi.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_18",
+      "path": "compute",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: two-person aggregation, 168,400.",
+      "question": "nina wafanyakazi wawili mmoja anapata 400000 mwingine 1100000 kodi ya mishahara yao kwa mwezi ni ngapi jumla",
+      "reply": "Mfanyakazi 1: PAYE = TZS 0 + 8% × (TZS 400,000 − TZS 270,000) = TZS 10,400 Mfanyakazi 2: PAYE = TZS 128,000 + 30% × (TZS 1,100,000 − TZS 1,000,000) = TZS 158,000 Jumla ya PAYE = TZS 168,400.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_19",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "CORRECT",
+      "why": "WCF 0.5% x 3,000,000 = 15,000 with working. Was 300,000.",
+      "question": "mishahara yangu yote kwa mwezi ni milioni 3 nichangie ngapi kwenye ile ya fidia",
+      "reply": "Kwa mishahara ya TZS 3,000,000, kiwango cha WCF ni asilimia 0.5. Thibisha na WCF (wcf.go.tz).\nWCF = 0.5% × TZS 3,000,000 = TZS 15,000",
+      "reply_identical_to_baseline": false
+    },
+    {
+      "id": "nat_20",
+      "path": "compute",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: 30 days from the first employee.",
+      "question": "nimeanza kuajiri juzi mtu mmoja tu je hii ya fidia inaanza lini na ndani ya siku ngapi nisajili",
+      "reply": "Kwa mujibu wa sheria, unatakiwa kusajili WCF ndani ya siku 30 tangu ulipomwajiri mfanyakazi wa kwanza. Thibitisha na WCF (wcf.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_21",
+      "path": "compute",
+      "was": "CLARIFY",
+      "now": "CLARIFY",
+      "why": "unchanged: asset distractor, clarifies rather than computing on the vehicle value.",
+      "question": "gari langu la biashara lina thamani ya milioni 30 na nawalipa vibarua jumla laki tisa kwa mwezi hiyo ya fidia ni ngapi",
+      "reply": "Ili nihesabu WCF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_22",
+      "path": "compute",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: WCF 9,000.",
+      "question": "wafanyakazi 6 kila mmoja laki tatu hiyo ya fidia ni shilingi ngapi kwa mwezi",
+      "reply": "Thibitisha na WCF (wcf.go.tz).\nWCF = 0.5% × TZS 1,800,000 = TZS 9,000",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_23",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "WRONG",
+      "why": "IMPROVED BUT STILL WRONG. NSSF now computes correctly (1,100,000) but SDL is not answered at all, and the rubric names answering only one levy as WRONG. Also misstates 5,500,000 as each employee wage. Was \"PAYE = TZS 5,500,000\".",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "reply": "NSSF kwa wafanyakazi 12 wenye mishahara TZS 5,500,000 kila mmoja: mwajiri anachangia 10% = TZS 550,000; mfanyakazi anachangia 10% = TZS 550,000. Jumla ya michango = TZS 1,100,000. Thibitisha na NSSF (nssf.go.tz).\nNSSF = 20% × TZS 5,500,000 = TZS 1,100,000 (mwajiri TZS 550,000 + mfanyakazi TZS 550,000)",
+      "reply_identical_to_baseline": false
+    },
+    {
+      "id": "nat_24",
+      "path": "compute",
+      "was": "WRONG",
+      "now": "WRONG",
+      "why": "unchanged: conflates SDL and WCF into \"mafunzo ya fidia\" and never says SDL does not apply at 9 employees.",
+      "question": "tuko na watu 9 tu mishahara milioni 4 kwa mwezi nilipe nini kati ya ile ya mafunzo ya fidia na ya uzeeni",
+      "reply": "Kwa mujibu wa sheria, unapaswa kulipa asilimia 0.5% ya jumla ya mishahara kwa ajili ya mafunzo ya fidia, pamoja na asilimia 10% kwa ajili ya NSSF. Thibitisha na mamlaka husika (nssf.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_25",
+      "path": "fact",
+      "was": "CLARIFY",
+      "now": "CLARIFY",
+      "why": "unchanged: refuses to annualise one month, asks for the 12- or 6-month total. Never-guess behaviour; a figure was computable.",
+      "question": "biashara yangu ya vipuri inaingiza milioni 25 kila mwezi je nasajiliwa vat au bado",
+      "reply": "Kizingiti cha VAT kinapimwa kwa jumla ya mauzo ya kipindi, si kwa mauzo ya mwezi mmoja: usajili ni wa lazima IKIWA mauzo yamefikia TZS 200,000,000 katika miezi 12, AU TZS 100,000,000 katika miezi 6 mfululizo. Sitakisii mauzo ya mwaka kwa kuzidisha ya mwezi mara 12 — mauzo hupanda na kushuka. Niambie jumla ya mauzo yako ya miezi 12 iliyopita, au ya miezi 6 mfululizo, nami nitalinganisha na kizingiti.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_26",
+      "path": "fact",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: engages the 6-month limb.",
+      "question": "nimefungua duka miezi sita iliyopita nimeuza jumla milioni 60 hadi sasa je nimefika kiwango cha vat",
+      "reply": "Kwa upande wa miezi 6 mfululizo: hapana, mauzo yako ya TZS 60,000,000 hayajafikia kizingiti cha TZS 100,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 200,000,000 katika miezi 12. Sijui mauzo yako ya miezi 12, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 12 nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_27",
+      "path": "fact",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: VAT 18%.",
+      "question": "vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu",
+      "reply": "Kiwango cha VAT kinachotumika kwenye mauzo yako ni asilimia 18% — kiwango cha kawaida cha Tanzania Bara. Thibitisha na TRA (tra.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_28",
+      "path": "fact",
+      "was": "WRONG",
+      "now": "WRONG",
+      "why": "unchanged: answers royalties withholding 15% to a services VAT withholding question. Should be 6% + certificate timing.",
+      "question": "nimefanya kazi ya ushauri kwa taasisi ya serikali wamesema watakata vat je asilimia ngapi na cheti nitapata lini",
+      "reply": "Kiwango cha withholding tax kwenye royalties ni 15%. Thibitisha na tra.go.tz.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_29",
+      "path": "fact",
+      "was": "PARTIAL",
+      "now": "PARTIAL",
+      "why": "unchanged: correct prohibition, misses the facilitation exposure.",
+      "question": "mwenzangu ni mtanzania lakini fedha ni za mgeni tunataka kufungua kibanda cha kutuma pesa inawezekana",
+      "reply": "Hapana, haiwezekani. Kulingana na Taarifa ya Serikali namba 487A, shughuli za 'mobile money transfers' imepigwa marufuku kwa wasio raia. Thibitisha na https://immigration.go.tz.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_30",
+      "path": "fact",
+      "was": "PARTIAL",
+      "now": "PARTIAL",
+      "why": "unchanged: correct refusal, garbled reasoning about who may do what; does not state that marriage confers no exemption.",
+      "question": "dada yangu ameolewa na mkenya anataka kufungua saluni ya kike inaruhusiwa",
+      "reply": "Hapana, dada yako hawezi kumruhusu mumewe kuendesha shughuli za saluni kwa sababu sheria hairuhusu watu wasio raia kushiriki katika shughuli za saluni. Thibitisha na immigration.go.tz.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_31",
+      "path": "fact",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: 10M fine, 6 months, visa revocation.",
+      "question": "kama mgeni akikutwa anafanya biashara isiyoruhusiwa adhabu yake ni ipi",
+      "reply": "Kwa mujibu wa taarifa, adhabu kwa msio raia anayefanya shughuli iliyozuiliwa chini ya GN 487A ni faini ya TZS milioni 10 AU kifungo cha miezi sita, pamoja na kuondolewa kwa visa au kibali chake. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_32",
+      "path": "fact",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: shareholder vs operator distinction drawn.",
+      "question": "mgeni anaweza kuwa mwanahisa kwenye kampuni yangu ya ujenzi bila kuendesha biashara ya rejareja",
+      "reply": "Kama mgeni ni mwanahisa tu bila kuendesha biashara, hiyo si tatizo la GN487A. Tatizo linatokea pale atakapoanza 'kuendesha' au 'kushiriki' katika shughuli husika. Thibitisha na wakili wa uhamiaji.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_33",
+      "path": "fact",
+      "was": "WRONG",
+      "now": "WRONG",
+      "why": "unchanged: neither the 22,000 fee nor the 17,500 penalty; states an unrelated filing window.",
+      "question": "sijapeleka ritani ya kampuni yangu miezi saba sasa nitalipa faini kiasi gani na ada yenyewe ni ngapi",
+      "reply": "Kampuni iliyosajiliwa lazima itoe taarifa za mwaka ndani ya miezi sita (6) kabla ya tarehe ya kustaafu kwa mujibu wa sheria. Thibitisha na BRELA Official (brela.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_34",
+      "path": "fact",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: 95,000 + 50,000.",
+      "question": "nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+      "reply": "Kusajili kampuni kunakugharimu shilingi 95,000 TZS. Thibitisha na BRELA Official (brela.go.tz). Gharama ya kuhifadhi jina ni 50,000 TZS.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_35",
+      "path": "fact",
+      "was": "PARTIAL",
+      "now": "PARTIAL",
+      "why": "unchanged: recommends a company but never lays out the structures.",
+      "question": "sisi ni watu watano tunataka kufanya bizna pamoja tusajili kampuni au ushirika",
+      "reply": "Kampuni inashauriwa zaidi kwa sababu inakupa uhuru zaidi wa kisheria na uwezo wa kukusanya mtaji mkubwa zaidi. Ushirika unaweza kuwa rahisi zaidi kuanzisha lakini una mipaka ya mtaji. Thibitisha na BRELA (brela.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_36",
+      "path": "fact",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: EFD required at 15M vs the 11M threshold.",
+      "question": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_37",
+      "path": "fact",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: no minimum transaction value.",
+      "question": "mteja amenunua kwa shilingi 2000 tu nampa risiti ya mashine au inaruhusiwa kuandika kwa mkono",
+      "reply": "Kwa mujibu wa sheria, risiti lazima itolewe kwa kila muamala bila kujali kiasi cha mauzo. Thibitisha na tra.go.tz.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_38",
+      "path": "fact",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: VAT-registered always needs EFD.",
+      "question": "nimeshasajili vat je lazima niwe na mashine ya risiti hata kama mauzo ni madogo",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Biashara iliyosajiliwa VAT inatakiwa kutumia EFD bila kujali kiasi cha mauzo. Thibitisha na TRA (tra.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_39",
+      "path": "fact",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: all workplaces register.",
+      "question": "nina duka dogo na mfanyakazi mmoja je nasajili sehemu ya kazi osha",
+      "reply": "Ndiyo, unatakiwa kusajili sehemu yako ya kazi kwa OSHA. Thibitisha na OSHA (osha.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_40",
+      "path": "fact",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: OSHA inspects, WCF compensates.",
+      "question": "nani anakuja kukagua usalama wa sehemu yangu ya kazi na nani analipa fidia akiumia",
+      "reply": "Kukagua kunafanywa na OSHA (Ofisi ya Afya na Usalama Kazini). Fidia hutolewa na WCF (Workers Compensation Fund) — si OSHA. Thibitisha na osha.go.tz na wcf.go.tz.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_41",
+      "path": "fact",
+      "was": "WRONG",
+      "now": "WRONG",
+      "why": "unchanged: invents \"siku 1\" for OSHA registration. The rubric scores an invented number of days as WRONG.",
+      "question": "nimefungua karakana mpya nina muda gani wa kusajili sehemu ya kazi",
+      "reply": "Kulingana na taarifa, cheti cha usajilishaji kinachohusiana na mahali pa kazi kinaweza kupatikana ndani ya siku 1 tu. Thibitisha na OSHA (osha.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_42",
+      "path": "fact",
+      "was": "PARTIAL",
+      "now": "PARTIAL",
+      "why": "unchanged: quotes the 358,322 AVERAGE as if it were the floor; does not give the sector range or the effective date.",
+      "question": "mshahara wa chini kabisa naruhusiwa kumpa mfanyakazi ni kiasi gani siku hizi",
+      "reply": "Kulingana na GN605A, kiwango cha wastani cha mshahara wa chini kwa sekta binafsi ni karibu TZS 358,322 kwa mwezi. Thibitisha na PKF Eastern Africa au TanzLII.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_43",
+      "path": "fact",
+      "was": "WRONG",
+      "now": "WRONG",
+      "why": "unchanged: says rates do NOT vary by sector. Flatly false — GN 605A has 16 sectors and 46 sub-sectors.",
+      "question": "mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+      "reply": "Hapana, kiwango cha mshahara wa chini kwa sekta ya kilimo hakibadiliki. Sekta ndogo ndogo huwa na viwango sawa tu kama sekta kubwa. Thibitisha na MLYWF (mlywf.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_44",
+      "path": "fact",
+      "was": "WRONG",
+      "now": "WRONG",
+      "why": "unchanged: 6% (services) for a GOODS question; should be 3%.",
+      "question": "nimeuzia wakala wa serikali bidhaa je watanikata asilimia ngapi ya vat",
+      "reply": "Kiwango cha withholding ya VAT kwenye mauzo kwa wakala wa serikali ni asilimia 6. Thibitisha na tra.go.tz.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_45",
+      "path": "fact",
+      "was": "WRONG",
+      "now": "WRONG",
+      "why": "unchanged: \"ndani ya siku 7 kufikia tarehe 8 Julai 2025\" — a fabricated absolute date, and sourced to OSHA rather than WCF.",
+      "question": "mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+      "reply": "Unatakiwa kuripoti ajali ndani ya siku 7 kufikia tarehe 8 Julai 2025. Thibitisha na OSHA (osha.go.tz).",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_46",
+      "path": "refusal",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: OOC refusal.",
+      "question": "niliuza kiwanja changu cha mwanza nimepata faida kubwa nalipa kodi gani",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_47",
+      "path": "refusal",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: OOC refusal.",
+      "question": "naagiza bidhaa kutoka china kontena moja ushuru wa forodha ni kiasi gani",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "reply_identical_to_baseline": true
+    },
+    {
+      "id": "nat_48",
+      "path": "refusal",
+      "was": "CORRECT",
+      "now": "CORRECT",
+      "why": "unchanged: OOC refusal.",
+      "question": "nina biashara zanzibar kodi zake zinafananaje na huku bara",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "reply_identical_to_baseline": true
+    }
+  ]
+}
