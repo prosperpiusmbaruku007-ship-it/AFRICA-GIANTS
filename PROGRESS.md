@@ -6,14 +6,14 @@ Last updated: 2026-08-15
 
 # 🔄 SESSION HANDOVER — 2026-08-15 (second session)
 
-**HEAD `571cf1d` · working tree clean · in sync with origin/main.**
+**HEAD `2ee31f5` · working tree clean · in sync with origin/main.**
 
 | app | serving | note |
 |---|---|---|
-| `chike-inference` | **`571cf1d`** | stopped and redeployed FOUR TIMES this session under R16; `oc_06`/`df_06`/`wl_06` confirm the container read `chike_config.json` and is not warm-stale |
+| `chike-inference` | **`2ee31f5`** | stopped and redeployed FIVE TIMES this session under R16; `oc_06`/`df_06`/`wl_06`/`neg_04` confirm the container read `chike_config.json` and is not warm-stale |
 | `chike-whatsapp` | **`ad1ed50`** | NOT redeployed and does not need to be — it reaches the model through `modal.Cls.from_name`, a lazy lookup, so the routing fix below is already live to WhatsApp users |
 
-Suite **1132 passed, 0 failed, 0 skipped** (`pytest -p no:randomly`). Pristine `ba09165` in the
+Suite **1151 passed, 0 failed, 0 skipped** (`pytest -p no:randomly`). Pristine `ba09165` in the
 **same worktree**: **1026 passed, 0 failed, 0 skipped**. Read INSTRUMENT-LIE #11 before quoting
 either number.
 
@@ -518,6 +518,145 @@ Three different counts of three different things, all correct. **No conflict, an
 correct.** What was real is that the prose hardcodes numbers the schedule owns, so a **drift
 pin** now ties them together: if the schedule is ever corrected and the copy is not, the test
 fails.
+## ✅ A2 (`2ee31f5`) — the levy said in everyday words. Two of three closed end to end.
+
+The last of the four, and the one where no paradigm helps. `mfuko`, `serikali inachukua`,
+`kupeleka kwa TRA` are synonyms for a levy — an **open lexical set**.
+
+### The BEFORE, captured before reading any predicate — 3 samples per row, all identical
+
+```
+nat_09  "unachangia TZS 240,000 (20%) na mfanyakazi anachangia TZS 960,000 (80%).
+         Jumla ya michango yote ni TZS 1,200,000."          -- sourced to TRA, for NSSF
+nat_13  "PAYE inayokatwa ni TZS 52,000"                     -- correct is 103,000
+nat_14  "PAYE itakuwa TZS 28,000"                           -- 8% of the WHOLE salary
+```
+
+**The board recorded only nat_09's `960,000 (80%)`. It did not record that the stated TOTAL
+NSSF bill equals the ENTIRE SALARY** — an employer told their monthly contribution is 100% of
+what they pay. Third time this session the BEFORE was worse than the item it was capturing.
+
+All nine samples had `working=False`: no engine ran, confirming the route-level diagnosis. Here,
+unlike the wage and `arzi` cases, the BEFORE **confirmed** the diagnosis rather than
+contradicting it — and still found severity the board understated.
+
+### 🎯 THE HONEST CEILING — stated so this is never read as a closure
+
+> **Every cue here fixes ONLY the phrasing already seen to fail, and each one is purchased with
+> a user having received a wrong figure first.**
+
+The candidate sweep makes that concrete rather than rhetorical: **every** money-ask candidate
+for nat_09 — `jumla inayoenda`, `inayoenda kwenye`, `nataka kujua jumla`, `kujua jumla` —
+matched **exactly one corpus row: nat_09 itself.** The corpus holds one instance of that
+phrasing because somebody wrote one probe after it failed. There is no distribution to
+generalise from, and no paradigm will ever generate `kupeleka kwa TRA`.
+
+**The mitigation is the TRAINING-CORPUS DIFF, not a cleverer rule** — widening what the corpus
+contains so the next phrasing is found by a sweep instead of by a user. That is a data task, and
+it is the only thing that changes the economics of this item.
+
+### Narrowest form, priced rather than asserted
+
+The original diagnosis warned that `mfuko`/`serikali`/`TRA` are common words. The sweep put
+numbers on the warning:
+
+| bare | rows | narrowed | rows | route changes |
+|---|---|---|---|---|
+| `mfuko` | 29 | `kwenye mfuko` | 9 | **the same 2** |
+| `serikali` | 80 | `serikali inachukua` | 1 | 1 |
+| `kwa tra` | 34 | `peleka kwa tra` | 1 | 1 |
+
+Narrowing cost **nothing** in coverage and removed ~130 rows of surface.
+
+**nat_09 needed TWO gaps closed, not one** — the levy cue *and* a money-ask (`jumla inayoenda`).
+A2 is two open lexical sets, not one; a cue addition alone would have left it wrong.
+
+**Three rows were not on the A2 board** — nat_12, edge_p14, rc_10, all found by the sweep.
+edge_p14 must reach the route and then SAFE-CLARIFY, and does.
+
+Sweep, both passes over the **same** 5,595 questions: `intent=6`, and `party`/`applic`/`count`/
+`in_scope` all **0**. (The BEFORE was re-run after the probe file landed — the harness compares
+by question text, so a corpus that grows between passes silently drops rows from the diff.)
+
+### 🔒 `serikali inakata` IS WITHHELD AND PINNED — the fact path is not uniformly worse
+
+Its exact sibling `serikali inachukua` shipped. This one did not, because routing its row to
+compute would be **worse than leaving it on the fact path**:
+
+```
+rc_10   "Ninalipwa laki mbili na hamsini kwa mwezi..."   gold: PAYE on 250,000 -> ZERO
+        sole_plausible_amount(...)  ->  5,200,000        PAYE on that ~ TZS 1,388,000
+```
+
+The parser reads `mbili na hamsini` as 52 and multiplies by *laki*; even the unambiguous
+`"laki mbili na hamsini ELFU"` parses the same way. A **pre-existing parser defect** this cue
+merely unmasks — `laki <n> na <m>` touches every money extraction in the product, so it is its
+own item with its own sweep.
+
+**And the live AFTER vindicated the withholding outright:**
+
+> `rc_10` → *"Kiwango cha kodi ya PAYE kinachokatwa kwenye mshahara wa **TZS 250,000** ni
+> asilimia **sifuri (0%)**."* — **correct.**
+
+The fact path read the numeral correctly and gave the right answer, while the compute path would
+have served TZS 1,388,000 **with a deterministic working** to somebody who owes nothing.
+**Routing a row to compute is an improvement only when extraction is sound; where it is not, the
+engine's authority makes the same wrong number worse.** That is a general caution against
+treating "reaches the engine" as a proxy for "answered correctly" — it is the presence-not-
+conclusion family arriving at the ROUTE.
+
+### ⚠️ nat_14 IS CLOSED IN THE ROUTER AND OPEN IN THE ANSWER
+
+Two of three board rows are closed end to end. nat_14 is not, and it must not be scored a pass:
+
+```
+A: "...hakuna PAYE ya kulipa kwa sababu kiwango cha sifuri kinatumika hadi TZS 270,000."
+   PAYE = TZS 0 + 8% × (TZS 350,000 − TZS 270,000) = TZS 6,400
+```
+
+**The working is right and the prose denies it.** The row's own `expected_behavior` names this
+exact failure: *"WRONG = 'below the threshold, nothing due'"*. An employer is told no PAYE is
+due when TZS 6,400 is.
+
+**No existing guard sees it, and the reason is a new family.** Verified by direct call:
+
+```
+_asserted_results(body)          -> []          (no figure asserted at all)
+body_contradicts_working         -> False
+body_reduces_authoritative_amount-> False
+body_offers_total_as_own_obligation -> False
+```
+
+> **A contradiction does not need a number.** Every D-FIDELITY guard compares FIGURES — it asks
+> which amounts the body asserts and whether the authoritative one is among them. A body that
+> asserts **no figure** and denies the obligation qualitatively (*"hakuna PAYE"*) contradicts a
+> positive engine amount completely, and passes every one of them by asserting nothing.
+
+This is the presence-not-conclusion family again, from a new direction: the guards check that
+the right figure is *present*; here the defect is that a **claim** is present instead. Proposed
+**D-FIDELITY-5**, narrow: when `result.amount > 0`, a body carrying a denial of the obligation
+(`hakuna PAYE`, `hakuna kodi`, `haulipi`, `hulipi`, `hakuna cha kulipa`) contradicts it. Needs
+its own sweep — a denial is legitimate whenever the engine's own amount is 0, which is the
+`rf_20`/`th_13` family and must not be blanked.
+
+**Minor, same class, not blocking:** nat_12's prose labels the figure *"NSSF ya **mwajiri**"*
+while the working correctly says *"sehemu ya **mfanyakazi**"*. Same amount either way, so no
+wrong number — but the label is wrong for a question that asked what is deducted from the
+asker's own pay.
+
+### Board after A2
+
+| row | live result |
+|---|---|
+| nat_09 | ✅ TZS 240,000, correct split, sourced to NSSF |
+| nat_13 | ✅ TZS 103,000 with the band working |
+| nat_14 | ⚠️ working correct at TZS 6,400; **prose says no PAYE is due** → D-FIDELITY-5 |
+| nat_12, edge_p14 | ✅ found by sweep; compute and clarify respectively |
+| rc_10 | ⏸ withheld and pinned behind the `laki <n> na <m>` parser item |
+
+Suite **1151 passed**. 12 probes, 6 of them negatives carrying the dangerous words in non-levy
+senses — including **`serikali inachukua HATUA`**, the identical cue string meaning "takes
+STEPS" rather than "takes MONEY", held out by the path-2 gate rather than by the cue.
 
 ---
 
@@ -659,9 +798,10 @@ thing. Same shape, one more level out.
 | **B** SAFETY-2 | nat_16 | ✅ closed (`8b90b25`) |
 | **A3** applicability | nat_04 | ✅ **closed** (`73f2f9f`) — SDL applies, 11 employees, 3.5%, end to end |
 | **C** wrong party | nat_08 | ✅ **closed end to end** — router (`73f2f9f`) + D-FIDELITY-4 (`25cd94f`); live headline is TZS 65,000 |
-| **A2** levy cue gap | nat_09 | *"mfanyakazi anachangia **TZS 960,000 (80%)**"* of a 1.2M salary |
-| **A2** | nat_13 | **TZS 52,000**; correct PAYE on 900,000 is **103,000** |
-| **A2** | nat_14 | **TZS 28,000**; correct PAYE on 350,000 is **6,400** |
+| ~~**A2**~~ | nat_09 | ✅ **closed** (`2ee31f5`) — TZS 240,000, correct split, sourced to NSSF |
+| ~~**A2**~~ | nat_13 | ✅ **closed** — TZS 103,000 with the band working |
+| **A2** | nat_14 | ⚠️ router closed, **answer open** — working says TZS 6,400, prose says no PAYE is due → **D-FIDELITY-5** |
+| *(new)* `laki <n> na <m>` parse | rc_10 | ⏸ `laki mbili na hamsini` → 5,200,000; blocks the withheld `serikali inakata` cue |
 | ~~`_WAGE_PAY_CUES`~~ | — | ✅ **closed** (`32917f4`) — employee side reaches the deterministic route; BEFORE blamed NSSF for an unlawful wage |
 | ~~wage clarification copy~~ | wl_08/wl_09 | ✅ **closed** (`571cf1d`) — the worker is addressed as a worker; employer copy unchanged |
 | ~~`MIN_WAGE_NO_SECTOR` figures~~ | — | ✅ **verified and cleared** — TZS 80,000 is sector 4d, `viwango 50` is the row count; CLAUDE.md counts different things. Drift pin added |
