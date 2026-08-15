@@ -6,14 +6,14 @@ Last updated: 2026-08-15
 
 # 🔄 SESSION HANDOVER — 2026-08-15 (second session)
 
-**HEAD `32917f4` · working tree clean · in sync with origin/main.**
+**HEAD `571cf1d` · working tree clean · in sync with origin/main.**
 
 | app | serving | note |
 |---|---|---|
-| `chike-inference` | **`32917f4`** | stopped and redeployed THREE TIMES this session under R16; `oc_06`/`df_06`/`wl_06` confirm the container read `chike_config.json` and is not warm-stale |
+| `chike-inference` | **`571cf1d`** | stopped and redeployed FOUR TIMES this session under R16; `oc_06`/`df_06`/`wl_06` confirm the container read `chike_config.json` and is not warm-stale |
 | `chike-whatsapp` | **`ad1ed50`** | NOT redeployed and does not need to be — it reaches the model through `modal.Cls.from_name`, a lazy lookup, so the routing fix below is already live to WhatsApp users |
 
-Suite **1107 passed, 0 failed, 0 skipped** (`pytest -p no:randomly`). Pristine `ba09165` in the
+Suite **1132 passed, 0 failed, 0 skipped** (`pytest -p no:randomly`). Pristine `ba09165` in the
 **same worktree**: **1026 passed, 0 failed, 0 skipped**. Read INSTRUMENT-LIE #11 before quoting
 either number.
 
@@ -452,6 +452,100 @@ times inside one item:
 
 Suite **1107 passed**.
 
+## ✅ THE WORKER IS ADDRESSED AS A WORKER (`571cf1d`) — the visible half of the wage fix
+
+`_WAGE_PAY_CUES` let employees reach the deterministic minimum-wage route. **The copy waiting
+for them was written for employers**, because until that commit only employers could get there.
+Live, immediately after it shipped:
+
+> **Q:** *ninalipwa laki moja na nusu kwa mwezi je ni halali kisheria* — I AM PAID…
+> **A:** *"…niambie **mfanyakazi wako** anafanya kazi ya aina gani"* — tell me what YOUR
+> EMPLOYEE does.
+
+Route right, audience wrong — and on this question that is its own kind of wrong answer. A
+worker told to describe "your employee" may reasonably conclude the service is not for them,
+at the exact moment they are asking whether they are underpaid. **10/10 on the R16 cycle**
+(`scratch/wage_live_copy_before.json` / `_after.json`); AFTER reads *"niambie **unafanya kazi**
+ya aina gani"*, and `wl_10` confirms an employer still gets the employer wording — the same
+defect with the roles reversed would be telling a business owner "how much are YOU paid".
+
+**ASYMMETRIC BY DESIGN.** Employer cues WIN, so the copy flips only on positive worker evidence
+and never on the absence of employer evidence: an ambiguous question keeps today's behaviour.
+**`wangu` alone is not worker evidence** — *"namlipa mlinzi **wangu** 200000"* is an employer
+saying "my guard". Only the possessive bound to the speaker's OWN wage or OWN employer counts.
+
+### Two bugs in the predicate, both found by instruments rather than by reading it
+
+**1. THE OBJECT INFIX ALONE DOES NOT SAY WHO IS ASKING — subject and object together do.**
+
+```
+wana-NI-lipa   they pay ME     -> the speaker is PAID      worker
+nime-KU-lipa   I have paid YOU -> the speaker PAYS         EMPLOYER   <- flagged worker
+wana-KU-lipa   they pay YOU    -> the addressee is paid    worker
+```
+
+`-ni-`/`-tu-` are unambiguous (nobody pays themselves, whoever the subject is). `-ku-` resolves
+on the SUBJECT and now takes third-person subjects only. **Surfaced by the generative concord
+test**, which also demanded eleven employer counterparts and was right about every one — and
+which cascaded twice before reaching fixpoint, exactly as a closure test should.
+
+**2. BARE `u-` IS THE CLASS 3/11 SUBJECT AGREEMENT, not only 2sg.** *"**Ushuru** wa stempu
+unalipwa lini"*, *"**mchango** unalipwa TRA"*, *"**umeme** unalipwa VAT"* — **28 corpus rows
+matched `unalipwa` and not one was a person being paid.** Harmless where it was found, because
+the predicate is only consulted on the wage route, and removed anyway: a wage question that
+happens to mention `ushuru` would have taken worker copy. The cost is the genuine 2sg reading,
+which is ambiguous in any case and now keeps the safe default.
+
+### Sweep
+
+Routing signals `intent`/`party`/`applic`/`count`/`in_scope` **all zero** over 5,588 questions
+against a pristine worktree — this selects copy, it does not route. On the wage route, 26 corpus
+rows: **7 worker, 19 employer, and every worker row is an authored probe**, so no pre-existing
+question changes audience. The 19 remaining off-route worker readings were each read: all are
+genuine worker questions (`mshahara wangu`, `mwajiri wangu`, `ninalipwa`).
+
+### ✅ MIN_WAGE_NO_SECTOR's FIGURES — QUERIED, VERIFIED, CLEARED, PINNED
+
+Raised in the previous entry as a suspected wrong number on a never-guess path. **It was not
+one, and the correction belongs on the record as firmly as a defect would.**
+
+| in the copy | actually | vs CLAUDE.md |
+|---|---|---|
+| `TZS 80,000` floor | **sector 4d, "Other domestic workers"** — the genuine lowest MONTHLY rate in the Order | §11's `~175,000 (general)` is **item 16**, the UNLISTED-sector rate. `BY_ROW[(16,'')]` = 175,000 exactly |
+| `viwango 50` | `len(BY_ROW)` = **50 rate rows** | §11's `16 sectors / 46 sub-sectors` = `BY_SECTOR` (16) and `SUB_LABELS_SW` (46) |
+
+Three different counts of three different things, all correct. **No conflict, and nothing to
+correct.** What was real is that the prose hardcodes numbers the schedule owns, so a **drift
+pin** now ties them together: if the schedule is ever corrected and the copy is not, the test
+fails.
+
+---
+
+# 🔬 THE BEFORE IS MANDATORY EVEN WHEN THE FIX IS WELL UNDERSTOOD
+
+**Twice this week the R16 BEFORE capture — not the fix, not the sweep, not any offline
+instrument — is the only thing that found a live defect worse than the item it was capturing.**
+
+| BEFORE run for | what it was supposed to capture | what it actually found |
+|---|---|---|
+| the OOC variant deploy (2026-08-14) | a baseline for a spelling change | **two fabricated tax rates stated as law** — *"kodi ya zuio ya asilimia 10 kwenye mauzo ya ardhi"*, *"kodi ya mauzo ya ardhi ni 2% ya thamani ya soko"*. Neither exists. One letter, `ardhi` spelled `arzi` |
+| `_WAGE_PAY_CUES` (2026-08-15) | a worker's wage question falling through to fact/RAG | **a worker earning TZS 200,000 told their wage was UNLAWFUL** — *"Hapana, si halali kisheria. Malipo ya NSSF yanatakiwa kuwa asilimia 20%"* — a confident wrong answer to a different question entirely |
+
+**In both cases the diagnosis going in was accurate and incomplete in the same direction: it
+named the routing defect and had nothing to say about what the system was ACTUALLY replying.**
+The wage item's own gap measurement (`scratch/oc_wage_gap.json`) reported `intent=none` and was
+right — `none` is what the router returned. It could not report that `none` produces a
+confident accusation of illegality, because an offline predicate has no reply to read.
+
+> **The argument this settles: the BEFORE is not a formality you skip when the fix is well
+> understood — it is the ONLY instrument in the kit that looks at what users are receiving
+> right now.** Every other instrument answers a question we already knew to ask. The BEFORE is
+> where the unasked question shows up, and it is most valuable precisely when the item is
+> well understood, because that is when nobody is looking.
+
+Both defects were **live in production and on no board.** Neither would have been found by the
+fix, the sweep, the probes, the suite, or the gate.
+
 ---
 
 # 🧭 CHECK THAT THE RIGHT THING IS THERE, NOT THAT IT WON — a family, not three coincidences
@@ -487,6 +581,32 @@ own R16 live probe was then written as a presence check and scored the known-bad
 a PASS. The fix and the verification of the fix made the same mistake, hours apart, by the same
 author, with the finding already written down. **Knowing about this family does not protect you
 from it**; only inspecting the specific assertion does.
+
+### 📈 THE FAMILY'S FIRST SUCCESSFUL PREDICTION — four faults inside one item
+
+Written up the same day it was named, because a framework that predicts its own next instance
+is worth more than any individual catch it enabled.
+
+The section above was written while closing D-FIDELITY-4. It predicted that the next instrument
+built here would reach for presence. **Within the next item — `_WAGE_PAY_CUES`, one commit —
+it happened four times:**
+
+| # | instrument | checked that the right thing was THERE | should have checked |
+|---|---|---|---|
+| 1 | `oc_blast_diff.py` | a difference existed between two files | that it was **THE** difference — it re-reported the previous item's diff, self-check passing |
+| 2 | the live probe (v1) | `765,900` was absent | that the conclusion was right — it asserted **nothing positive** and scored a "your wage is unlawful, NSSF is 20%" reply a **PASS** |
+| 3 | the live probe (v2) | `765,900` was absent | th_16's defect was 765,900 **presented as a legal maximum**; the route states the same number correctly as the top of the range. **A string marker for a semantic defect** |
+| 4 | the generative concord test | `nimekulipa` was in the list | whether the list would **MATCH** it — a false alarm, since the regex already did |
+
+Two more in the same item were not presence faults but the same carelessness about what an
+assertion means: `wp_14`'s expected route was authored wrong, and `wl_07` asserted TZS 103,000
+where the correct PAYE on 800,000 is 78,000 — **failing a correct engine answer.**
+
+> **The prediction held, and it held against an author who had just written the prediction
+> down.** That is the part worth keeping. Knowing about this family is not protection; the
+> temptation is structural, because presence is what the data affords and conclusion is what
+> costs work. Only inspecting the specific assertion helps — which is why the practical test
+> below is a procedure and not a principle.
 
 **Practical test when building any instrument here:** write down the wrong answer you are
 afraid of, then ask whether your check would still pass if the artifact contained BOTH the right
@@ -543,7 +663,8 @@ thing. Same shape, one more level out.
 | **A2** | nat_13 | **TZS 52,000**; correct PAYE on 900,000 is **103,000** |
 | **A2** | nat_14 | **TZS 28,000**; correct PAYE on 350,000 is **6,400** |
 | ~~`_WAGE_PAY_CUES`~~ | — | ✅ **closed** (`32917f4`) — employee side reaches the deterministic route; BEFORE blamed NSSF for an unlawful wage |
-| *(new)* wage clarification copy | wl_01/wl_02 | 🔴 route right, **audience wrong** — an employee is asked what *"your employee"* does |
+| ~~wage clarification copy~~ | wl_08/wl_09 | ✅ **closed** (`571cf1d`) — the worker is addressed as a worker; employer copy unchanged |
+| ~~`MIN_WAGE_NO_SECTOR` figures~~ | — | ✅ **verified and cleared** — TZS 80,000 is sector 4d, `viwango 50` is the row count; CLAUDE.md counts different things. Drift pin added |
 
 ---
 
