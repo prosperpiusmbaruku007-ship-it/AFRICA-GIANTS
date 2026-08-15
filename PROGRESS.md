@@ -58,6 +58,83 @@ second occurrence of R16's class) **and the STANDING LIMITATION** (the regex gat
 credits eval_318 and eval_320, the two worst defects the cycle found — which is why the judge
 overlay is now mandatory).
 
+## 🔁 B / C / A2 / A3 RE-CHECKED — one closed, five still live (2026-08-15)
+
+Re-measured with both signals the original 2026-08-11 diagnosis used: the offline routing
+predicates, and the reply itself (an appended deterministic *working* is the observable
+signature of the engine having run). `scratch/bca_recheck.json`, `scratch/bca_live_now.json`.
+
+| item | row | offline | live | verdict |
+|---|---|---|---|---|
+| **B** SAFETY-2 | nat_16 | `residency_unclear=True` | declines, names the 183-day test | ✅ **CLOSED** (`8b90b25`) |
+| **C** wrong party | nat_08 | routes `nssf`, `nssf_party='total'` | **TZS 130,000** where the employee share is **65,000** | 🔴 reproduces |
+| **A2** levy cue gap | nat_09 | `_natural_levy` → None | employee share stated as **TZS 960,000 (80%)** of a 1.2M salary | 🔴 reproduces |
+| **A2** | nat_13 | `_natural_levy` → None | **TZS 52,000**; correct PAYE is **103,000** | 🔴 reproduces |
+| **A2** | nat_14 | `_natural_levy` → None | **TZS 28,000**; correct PAYE is **6,400** | 🔴 reproduces |
+| **A3** applicability | nat_04 | `payroll_ctx=False`, `applic=False` | SDL quoted at **0.5%** (it is 3.5%), sourced to **NSSF** | 🔴 reproduces |
+| A1 controls | nat_01, nat_19 | `sdl`, `wcf` | — | ✅ stay fixed |
+
+**Five of six still produce a wrong number live.** Two have moved without closing: A1's
+`ngapi` fix gave nat_13/nat_14 `money_ask=True`, leaving the levy as the sole blocker, and
+nat_04's levy now resolves to `sdl`, leaving payroll-context and applicability. The
+diagnoses narrowed; the defects did not.
+
+### ⚠️ A FIGURE-PRESENCE CHECK IS NOT A CORRECTNESS CHECK
+
+Two rows scored `has_expected=True` in the live harness and are badly wrong. nat_08 contains
+`65,000` — inside the parenthetical split, while the **headline says TZS 130,000 is what is
+deducted from the user's pay**. nat_09 contains `240,000` — attributed to the employer, beside
+a fabricated *"mfanyakazi anachangia TZS 960,000 (80%)"* and a total equal to the entire
+salary. Substring-presence assertions are a smoke test, not a verdict; both rows had to be read.
+
+### 🔎 WHY THE CONCORD CLOSURE DID NOT SUBSUME C — the limit of a generative test
+
+C is an **object-concord** instance. Swahili marks the object with an infix between tense and
+stem, and the class is closed: `-ni-` (me), `-ku-` (you), `-m-` (him/her), `-tu-` (us),
+`-wa-` (them). nat_08 is *"wana**NI**kata … mshahara **wangu**"* — they cut **ME**. nat_04 is
+*"ile ya mafunzo ina**NI**anza lini"*.
+
+**The 2026-08-15 audit enumerated five paradigms and this was not one of them.** Subject
+prefix and possessive were closed; the object infix was missed. `_APPLICABILITY_CUES` already
+closes it for exactly one verb (`-nihusu`/`-kuhusu`/`-tuhusu`), so the discipline existed in
+the codebase and had been applied in one place.
+
+But the sharper reason C survived is a property of the instrument, and it generalises:
+
+| list | members | first-person members |
+|---|---|---|
+| `_NSSF_EMPLOYEE_CUES` | 7 | **0** |
+| `_NSSF_TOTAL_CUES` | 10 | **0** |
+| `_APPLICABILITY_CUES` | 13 | 5 |
+| `_WAGE_PAY_CUES` | 19 | 6 |
+| `_PAYROLL_CTX` | 28 | 5 |
+
+> **`test_every_cue_with_a_person_form_has_its_concord_counterpart` derives a counterpart FROM
+> an existing member. A list with ZERO first-person members has nothing to derive from — so a
+> generative completeness test closes PARTIAL coverage and is blind to ABSENT coverage.**
+
+C survived the closure because its class was at 0%, not 30%. Every list the test fixed was
+one somebody had already half-populated. This is the same shape as the SAFETY-1 finding —
+an instrument complete on its own axis and structurally blind off it — and it is the second
+time this week that the blind spot was *"the case where none of the thing exists yet"*.
+
+**A2 is NOT a class.** `mfuko`, `serikali inachukua`, `kupeleka kwa TRA` are synonyms for a
+levy — an open lexical set, where you genuinely cannot know the next phrasing. It is the one
+of the four that deserves the failure-driven treatment, and it is also the costliest: all
+three rows produce confident wrong figures with no working.
+
+### The pricing this implies
+
+Object concord is **well measured**, unlike everything else closed this week: **52 eval and
+385 train questions** contain an object infix. So a sweep here is real evidence rather than a
+formality — the opposite of SAFETY-2, where the corpus was structurally blind. R17's authored
+probes are still required for the members the corpus lacks, but the sweep is not a ritual.
+
+Not implemented. Recorded so the next cycle starts from the measurement rather than the
+2026-08-11 diagnosis, which is now stale in two of its four rows.
+
+---
+
 ## 🔠 CONCORD CLOSURE — the router now knows "we", in every tense (2026-08-15)
 
 **Approved ahead of B/C/A2/A3 on the argument that each of those four is one member of a
