@@ -6,14 +6,14 @@ Last updated: 2026-08-15
 
 # 🔄 SESSION HANDOVER — 2026-08-15 (second session)
 
-**HEAD `25cd94f` · working tree clean · in sync with origin/main.**
+**HEAD `32917f4` · working tree clean · in sync with origin/main.**
 
 | app | serving | note |
 |---|---|---|
-| `chike-inference` | **`25cd94f`** | stopped and redeployed TWICE this session under R16; `oc_06`/`df_06` confirm the container read `chike_config.json` and is not warm-stale |
+| `chike-inference` | **`32917f4`** | stopped and redeployed THREE TIMES this session under R16; `oc_06`/`df_06`/`wl_06` confirm the container read `chike_config.json` and is not warm-stale |
 | `chike-whatsapp` | **`ad1ed50`** | NOT redeployed and does not need to be — it reaches the model through `modal.Cls.from_name`, a lazy lookup, so the routing fix below is already live to WhatsApp users |
 
-Suite **1074 passed, 0 failed, 0 skipped** (`pytest -p no:randomly`). Pristine `ba09165` in the
+Suite **1107 passed, 0 failed, 0 skipped** (`pytest -p no:randomly`). Pristine `ba09165` in the
 **same worktree**: **1026 passed, 0 failed, 0 skipped**. Read INSTRUMENT-LIE #11 before quoting
 either number.
 
@@ -343,6 +343,115 @@ presence-not-conclusion.** See the family section below; it is why that section 
 13/13 on `eval/fidelity_gate/party_total_obligation_013.jsonl` (3 must-fire, 10 must-never-fire,
 three of the negatives real stored correct bodies). Suite **1074 passed**.
 
+## ✅ _WAGE_PAY_CUES (`32917f4`) — the employee's own side, deployed and verified
+
+th_16 from the other direction. Every cue in `_WAGE_PAY_CUES` was the EMPLOYER speaking
+(*"I pay him"*, *"we pay them"*) or a THIRD PERSON being paid (`analipwa`, `wanalipwa`,
+`walipwa`). Not one was a worker asking about their OWN wage. Two paradigms, both at **zero**
+for first person — **finding B a third time, in the list where it costs most:**
+
+```
+ACTIVE + object infix    wana-NI-lipa, ana-NI-lipa, wana-TU-lipa, wana-KU-lipa
+PASSIVE + subject        ni-na-LIPWA, tu-na-LIPWA, u-na-LIPWA
+```
+
+### The BEFORE was worse than "falls through to fact/RAG"
+
+That was the diagnosis carried in from the gap measurement. The live BEFORE is worse:
+
+> **Q:** *wananilipa laki mbili kwa mwezi je ni halali kisheria*
+> **A:** *"Hapana, si halali kisheria. Malipo ya **NSSF** yanatakiwa kuwa asilimia 20% ya
+> mshahara ghafi, si TZS 200,000."*
+
+A worker earning TZS 200,000 was told their wage is **unlawful**, for an NSSF percentage reason
+that answers a different question entirely. Not a fallthrough — a confident wrong answer on the
+highest-stakes question this product gets. **It was never on any board.**
+
+AFTER, the same question reaches the deterministic route, names GN 605A and the sector range,
+and asks which sector applies. `scratch/wage_live_before.json` / `_after.json`. The employer-side
+control (`wl_03`) is **byte-identical**, both GN 605A lookups are unmoved, `wl_07` keeps its levy
+route on path 1, and `wl_06` confirms the container read config.
+
+### 🧹 THE SWEEP WAS MANDATORY, AND ITS CLEANLINESS IS THE WEAKEST PART OF THIS ENTRY
+
+This is the list whose first version included the noun `mshahara` and stole **five real gate
+questions**, so a sweep was the entry price rather than a formality. `scratch/wage_blast_diff.json`,
+5,588 questions against a pristine worktree:
+
+```
+intent=8   party=0   applic=0   count=0   in_scope=0
+```
+
+**All eight changes are the authored probes. The 5,570 pre-existing corpus rows did not move at
+all.** That is not a safety result:
+
+> **A clean sweep here means the corpus does not contain the employee's side of this question —
+> which is exactly WHY the gap survived, not a reason to trust the fix.** The instrument returned
+> "nothing changed" because it has nothing to change. The 18 authored probes are the whole
+> evidence base; the sweep only proves the change did not damage what the corpus DOES contain.
+
+**Third item in a row where the sweep is structurally blind and authored probes carry the
+verification** — after SAFETY-2 and the `-kata`/`-anza` half of object concord. That is now a
+pattern rather than a coincidence, and it raises a question worth answering deliberately:
+
+> 📋 **QUEUED — how many of the router's gates have never been exercised by a single corpus
+> row?** Each of the last three gaps was invisible to every offline instrument for the same
+> reason: no question in 5,500 was phrased that way. A gate-by-gate coverage count would name
+> the next `wananilipa` **before a user finds it**, instead of after. Not started; queued
+> deliberately rather than folded into this commit.
+
+### The withheld pin fired and did its job
+
+Five of the nine counterparts are now recognised and their exemption is **deleted**. Four remain
+and are one family — the applicative stem `-lipia`, which `_object_concord('lipa')` deliberately
+does not generate (per-STEM by construction: the infix class is closed, the verb is not). The
+exemption is narrowed to those four and **re-pinned**; the old assertion is inverted rather than
+deleted, with the history kept in its docstring per the R17 corollary.
+
+### ⚠️ TWO THINGS THIS DEPLOY LEAVES OPEN
+
+**1. THE CLARIFICATION COPY IS WRITTEN FROM THE EMPLOYER'S SIDE, and employee questions now
+reach it.** Live, after the fix:
+
+> **Q:** *ninalipwa laki moja na nusu kwa mwezi je ni halali kisheria* (I AM PAID…)
+> **A:** *"…niambie **mfanyakazi wako** anafanya kazi ya aina gani"* — tell me what **YOUR
+> EMPLOYEE** does.
+
+The asker IS the worker. `clarification.MIN_WAGE_NO_SECTOR` and `MIN_WAGE_NO_AMOUNT`
+(*"mshahara **unaomlipa mfanyakazi**"*) are both employer-worded, and until this commit only
+employers reached them. **The route is right and the audience is wrong.** Not a wrong number,
+and a large net improvement on the NSSF answer it replaced — but it is on the highest-stakes
+path, and a worker told to describe "your employee" may reasonably conclude the service is not
+for them. Fix is contained: a party-aware copy selection at the two orchestrator call sites
+(lines 473 and 489), keyed on 1sg/1pl/2sg object infix or passive subject — `-m-`/`-wa-` object
+forms stay employer-side. **Needs its own probes and its own R16 cycle.**
+
+**2. QUEUED VERIFICATION — the range floor in `MIN_WAGE_NO_SECTOR` says TZS 80,000.**
+CLAUDE.md §11 records the GN 605A range as **~TZS 175,000 (general) to TZS 765,900**, and the
+copy also says "viwango 50" where §11 says 16 sectors / 46 sub-sectors. Pre-existing copy,
+untouched by this commit and unchanged across the deploy, so it is **not** a regression — but it
+is an unverified figure on a deterministic never-guess path, which is the one place a wrong
+number carries the engine's authority. Verify against TanzLII GN 605A before it is quoted again.
+
+### 🪞 THREE FAULTS IN MY OWN INSTRUMENTS, ALL THE SAME FAMILY
+
+Recorded because the family section below predicts exactly this, and the prediction held three
+times inside one item:
+
+1. **`oc_blast_diff.py` HARDCODES its input paths and ignores `argv`** — see its own entry
+   under the family section.
+2. **`wp_14`'s expected route was authored wrong.** `none` is pre-existing on both trees
+   (`asilimia ngapi` is a `_NONMONEY_ASK`); the probe, not the code, was corrected.
+3. **The live probe's `765,900` marker was a presence check, twice over.** First version
+   asserted **nothing positive** and only forbade the string — so it scored the known-bad
+   BEFORE run a **PASS** while the reply blamed NSSF. Rewritten to require the deterministic
+   `GN 605A` signature and forbid `nssf`. Then the AFTER run failed on `765,900` **appearing
+   legitimately** as the top of the GN 605A range, which is correct — th_16's fabrication was
+   765,900 presented as a legal *maximum wage*, a semantic claim the string cannot distinguish.
+   **A string marker for a semantic defect is a presence check with extra steps.**
+
+Suite **1107 passed**.
+
 ---
 
 # 🧭 CHECK THAT THE RIGHT THING IS THERE, NOT THAT IT WON — a family, not three coincidences
@@ -386,6 +495,43 @@ already says this about eval harnesses — *"a figure-presence assertion is not 
 check"* — and the point of this section is that it is not a fact about eval harnesses. It is a
 fact about instruments.
 
+## 🪞 THE SWEEP HARNESS THAT RE-REPORTED THE PREVIOUS ITEM'S DIFF — presence-not-conclusion at the instrument level (2026-08-15)
+
+`oc_blast_diff.py` **hardcodes** its two input paths (`scratch/oc_blast_before.json`,
+`scratch/oc_blast_after.json`) and never reads `argv`. Invoked with the wage sweep's arguments,
+it silently ignored them, re-read the object-concord files, and printed **that** diff — a full,
+plausible, correctly-formatted blast-radius report **for a change it had never seen.**
+
+**Its self-check passed while it did this.** The check asserts that nat_08's party and nat_04's
+intent differ between the two files — i.e. that the two trees are *distinguishable*. They were:
+they were the object-concord trees, and they had been for hours. **The check verified that a
+difference existed, not that it was THE difference the run was performed to measure.**
+
+> **A self-check must assert the property the run was performed to establish, not a proxy for
+> the run having happened.** The pass condition has to be written from the decision it feeds —
+> the same sentence as the canary rule (INSTRUMENT-LIE #10), arriving from the harness side.
+> "Did something change?" is a proxy. "Did *wp_01* move from `none` to `minimum_wage`?" is the
+> property. A self-check keyed on the PREVIOUS change cannot fail for the current one, and will
+> keep passing for every change that follows it.
+
+**IT WAS CAUGHT BY LUCK, and the luck should not be discounted.** The stale rows were all about
+`inamhusu` — applicability — and the wage patch touches nothing in that area, so the output was
+visibly about the wrong thing. **Had the two items overlapped even slightly** — two consecutive
+routing changes on neighbouring cue lists, which is exactly what this session has been doing all
+day — the stale diff would have read as a plausible result for the new change, and the wage
+patch would have been certified against a measurement of a different commit. The failure mode is
+silent by construction; nothing in the output says which files it read.
+
+Replaced by `scratch/wage_blast_diff.py`, which takes all three paths as arguments, asserts the
+two files carry **different labels**, and self-checks on **wp_01 moving `none` → `minimum_wage`**
+plus **a protected GN 605A lookup NOT moving** — one guard for the effect the change is for, one
+for the effect it must not have.
+
+**This is the fourth member of the family below and the first at the harness level.** The others
+were an eval harness, a canary, and a fidelity guard — all measuring an artifact. This one
+measured *itself*: it confirmed a run had occurred rather than that the run had measured the
+thing. Same shape, one more level out.
+
 ## The board after this session
 
 | item | row | live result |
@@ -396,7 +542,8 @@ fact about instruments.
 | **A2** levy cue gap | nat_09 | *"mfanyakazi anachangia **TZS 960,000 (80%)**"* of a 1.2M salary |
 | **A2** | nat_13 | **TZS 52,000**; correct PAYE on 900,000 is **103,000** |
 | **A2** | nat_14 | **TZS 28,000**; correct PAYE on 350,000 is **6,400** |
-| *(new)* `_WAGE_PAY_CUES` | — | employee-side wage-legality question does not reach the deterministic route |
+| ~~`_WAGE_PAY_CUES`~~ | — | ✅ **closed** (`32917f4`) — employee side reaches the deterministic route; BEFORE blamed NSSF for an unlawful wage |
+| *(new)* wage clarification copy | wl_01/wl_02 | 🔴 route right, **audience wrong** — an employee is asked what *"your employee"* does |
 
 ---
 
