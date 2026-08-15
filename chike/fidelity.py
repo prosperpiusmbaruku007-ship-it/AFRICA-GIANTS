@@ -46,6 +46,7 @@ fall back on, so blanking it would delete content rather than replace it with th
 """
 
 import re
+from decimal import Decimal
 from typing import Optional
 
 from .rules_engine.results import ComputationResult
@@ -70,6 +71,29 @@ from .rules_engine.results import ComputationResult
 # regex scorer passed and the judge called correct — and THREE are the guard firing on CORRECT
 # bodies and blanking them, because their total line was punctuated "Jumla ya mchango: TZS
 # 200,000" and `=`-only matching could not see it. Widening fixes both directions.
+# THE GAP THAT REMAINS, MEASURED AND DELIBERATELY LEFT OPEN (2026-08-15).
+# Second-person obligation verbs govern a TZS amount directly — "unapaswa kulipa TZS 130,000",
+# "utalipa TZS 50,000" — and nothing below can see a verb, so those bodies assert NOTHING and
+# the guard is silent on them. Real, and one construction further out than the `=`-only
+# blindness recorded above.
+#
+# IT WAS NOT CLOSED, ON EVIDENCE. Adding the obligation verbs here changes 3 verdicts over 186
+# recoverable body<->working pairs: 1 true positive and 2 FALSE positives
+# (scratch/dfid4_connector_sweep.json). Both false positives are `party=total` questions whose
+# bodies state the per-party components — "kwa TZS 500,000 utalipa TZS 50,000 kwa upande wa
+# mwajiri na TZS 50,000 kwa upande wa mfanyakazi" — which is CORRECT, and which the guard
+# blanks because the positive-amount branch needs the authoritative figure to be PRESENT and
+# cannot add 50,000 + 50,000. Same shape as the bare levy-scoped `ni` rejected on 2026-08-10:
+# frequency argued for it, the probes settled it.
+#
+# THE HONEST CLOSURE, named so nobody re-derives it: `_asserted_results` must return a MULTISET
+# (it returns a set today, so the two 50,000s collapse to one) and the positive-amount branch
+# needs a COMPONENT-SUM acceptance — a body whose asserted figures sum to the authoritative
+# amount is faithful. That is its own sweep and its own risk to the permissiveness this file
+# depends on, and it must not be smuggled in as part of something else.
+#
+# The one case that mattered is handled instead by D-FIDELITY-4 below, where the
+# `party != 'total'` precondition makes the same construction safe to read.
 _ASSERT_CONNECTORS = (
     r"=",                        # 703 — arithmetic result
     r":",                        # 198 — enumeration/total line; was in _ATTRIBUTED only
@@ -221,6 +245,105 @@ def body_reduces_authoritative_amount(body: str, result: ComputationResult) -> b
         if first == amount and asserted < amount and asserted not in ok:
             return True
     return False
+
+
+# --- D-FIDELITY-4: the cross-party total offered as the asker's own obligation -----------
+#
+# THE DEFECT (nat_08, live and wrong after the router was already fixed). The engine resolved
+# `party='employee'` and computed TZS 65,000. The body said:
+#
+#     "unapaswa kulipa TZS 130,000 kwa NSSF (sehemu ya mwajiri ni TZS 65,000 na
+#      sehemu ya mfanyakazi ni TZS 65,000)"
+#
+# Every figure in it is TRUE. 130,000 really is the NSSF total and the attribution is correct.
+# It is wrong only relative to what was ASKED — "how much do they cut from ME" — and on
+# WhatsApp the prose above the working IS the answer.
+#
+# WHY THE EXISTING GUARDS CANNOT SEE IT, which is the finding this rule exists to record:
+# `body_contradicts_working` is a SET-MEMBERSHIP check, not a CONCLUSION check. It asks whether
+# the authoritative figure is AMONG the figures the body asserts, never whether it is the one
+# the body concludes with — so a body that states the correct share and leads with the wrong
+# headline satisfies it. (Verified by direct call, not inferred: scratch/oc01_fidelity_probe.json
+# shows the same claim rewritten with `=` asserts {65000, 130000} and STILL does not fire.)
+# D-FIDELITY-3 declines this direction by design — its comment notes a LARGER derived figure is
+# "usually a legitimate conversion (per-year, per-employer, plus-sibling)", and the cross-party
+# total is exactly the plus-sibling case.
+#
+# THIS RULE IS DIFFERENT IN KIND, not a widening. It settles the question from information the
+# BODY DOES NOT CONTAIN — `result.inputs['party']`, the party the engine actually resolved.
+# Whether the total is a legitimate conversion or the wrong answer is a property of the
+# QUESTION, so no amount of reading the body can decide it. That is why this is a new rule.
+#
+# WHY IT IS NOT KEYED ON THE TOTAL BEING PRESENT — the obvious form, measured and REJECTED.
+# Swept over every stored generation (scratch/dfid4_party_sweep.json): 24 bodies pair with a
+# PARTY-SPECIFIC working, 5 of them state the cross-party total, and only ONE is the defect.
+# Of the other four, one is an instrument artefact and THREE ARE CORRECT BODIES that state the
+# sum and the share side by side:
+#
+#     "Sehemu ya mfanyakazi: ... = TZS 250,000. Jumla ya michango: ... = TZS 500,000"
+#     "Jumla ya NSSF: TZS 80,000 (mwajiri) + TZS 80,000 (mfanyakazi) = TZS 160,000"
+#
+# A presence rule is therefore 4-FOR-1 AGAINST — the same trade shape that disqualified the
+# SAFETY-2 cue extension at 3-for-1. And ZERO stored bodies state the total WITHOUT the
+# authoritative figure, so the crisp "leads with the total only" signal has no corpus support
+# and would not have caught nat_08 either, which states both.
+#
+# WHAT SEPARATES THE DEFECT FROM THE THREE CORRECT BODIES is what the total is ATTACHED to:
+# a neutral SUM label ("Jumla ya michango") versus a SECOND-PERSON OBLIGATION addressed to the
+# asker ("unapaswa kulipa"). fidelity.py's D-FIDELITY-3 comment says separating a defect from
+# its false positive on a LABEL needs a live conclusion-labelling check rather than an offline
+# string rule — true there, where the label was arbitrary model phrasing. Here the class is
+# second-person obligation, which is narrow and enumerable; the forms below were HARVESTED by
+# frequency from stored generations (scratch/dfid4_constructions.py), not invented.
+#
+# FULL VERB FORMS, NEVER THE `u-` PREFIX. The harvester's own first pass matched `u\w*` and
+# returned `usajili` (registration), `user` (a chat-template artefact), `umepita`, and `umla`
+# from *Jumla* — the bare-cue nesting hazard again, this time inside the instrument.
+_OBLIGATION_2SG = re.compile(
+    r"\b(?:unapaswa|unatakiwa|unachotakiwa|unachokatwa|unakatwa|unalipa|utalipa|ulipe)\b"
+    r"(?:\s+\w+){0,3}?\s*TZS\s*([\d,]+)" + _DIGIT_BOUNDARY,
+    re.IGNORECASE,
+)
+
+
+def cross_party_total(result: ComputationResult):
+    """The employer+employee total implied by the engine's own rates, or None.
+
+    Computed from `inputs` rather than assumed to be 2x the amount: the rates are both 10% for
+    NSSF today, but a rule that hard-codes the doubling would silently produce a wrong total
+    the day they diverge. The sweep instrument DID assume 2x and immediately collided with a
+    per-employee salary that happened to equal it (scratch/dfid4_party_sweep.json, hit 1).
+    """
+    inputs = result.inputs or {}
+    party = inputs.get("party")
+    if party not in ("employee", "employer"):
+        return None
+    employer_rate, employee_rate = inputs.get("employer_rate"), inputs.get("employee_rate")
+    if not employer_rate or not employee_rate or result.amount is None:
+        return None
+    own = employer_rate if party == "employer" else employee_rate
+    if not own:
+        return None
+    total = (Decimal(result.amount) / Decimal(own)) * (Decimal(employer_rate)
+                                                       + Decimal(employee_rate))
+    return int(total)
+
+
+def body_offers_total_as_own_obligation(body: str, result: ComputationResult) -> bool:
+    """True iff the body tells the ASKER they owe the CROSS-PARTY TOTAL, when the engine
+    resolved one specific party's share.
+
+    Fires only when `party` is employee or employer — never on a total question, which is what
+    keeps it clear of the permissiveness `body_contradicts_working` is measured onto, and what
+    excludes the two correct 'utalipa TZS 50,000' bodies a generic connector widening would
+    have blanked (scratch/dfid4_connector_sweep.json).
+    """
+    if not body:
+        return False
+    total = cross_party_total(result)
+    if total is None or total == int(result.amount):
+        return False
+    return any(int(m.replace(",", "")) == total for m in _OBLIGATION_2SG.findall(body))
 
 
 # --- D-FIDELITY-2: sibling levies -------------------------------------------------------

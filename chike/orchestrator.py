@@ -653,6 +653,13 @@ class Orchestrator:
         the paraphrase family, where the wrong conclusion is stated without writing the arithmetic
         out, REMAINS OPEN. See chike.fidelity for the misses, named.
 
+        D-FIDELITY-4 runs here too, and is a different KIND of rule rather than a widening: it
+        settles the case from information the body does not contain — the party the engine
+        resolved — because whether the cross-party total is a legitimate conversion or the wrong
+        answer is a property of the QUESTION. It fires only when a specific party's share was
+        computed and the body tells the ASKER they owe the total. See chike.fidelity for why the
+        obvious presence-of-the-total form was measured at 4-for-1 against and rejected.
+
         GUARD A (2026-08-14) checks the FACT path against the QUESTION rather than against a
         working, because on the fact path there is no working. It fires only when the body
         tells the user they have FEWER THAN N employees while the question states N or more —
@@ -668,7 +675,8 @@ class Orchestrator:
         cleaned = generation_cleanup.clean_reply(sub.text, self.stop_strings)
         if sub.computation is not None and (
                 fidelity.body_contradicts_working(cleaned, sub.computation)
-                or fidelity.body_reduces_authoritative_amount(cleaned, sub.computation)):
+                or fidelity.body_reduces_authoritative_amount(cleaned, sub.computation)
+                or fidelity.body_offers_total_as_own_obligation(cleaned, sub.computation)):
             cleaned = ""
         elif sub.computation is None and fidelity.body_contradicts_stated_headcount(
                 cleaned, sub.sub_question.text):
