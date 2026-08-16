@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-16
+Last updated: 2026-08-17
 
 ---
 
@@ -57,6 +57,155 @@ and no working to check a body against.
 It is **not** a gate result and not a random sample of real traffic — the 48 were authored and
 are register-realistic by construction. It is the only end-to-end natural-register measurement
 this project has, taken the same way twice.
+
+---
+
+## 🎯 THE FACT-PATH FAILURES ARE ONE CLASS, AND IT IS RETRIEVAL — NOT RECALL, NOT THE ADAPTER (2026-08-17)
+
+**The analysis the founder asked for before the three fact-set coverage items were written, on
+the reasoning that "if retrieval or override is the mechanism, adding five domains of facts may
+not fix the answers." That reasoning was right, and the answer is retrieval.**
+
+All nine WRONG rows from the 2026-08-15 re-run, partitioned by mechanism using **production's
+own retrieval** — the same `rag_embeddings.npy` and `rag_facts_text.json` that ship in
+`chike-inference/`, the same `intfloat/multilingual-e5-base` (cached locally), the same
+`query: ` prefix, the same cosine top-3, and the same decompose→pool(9) the orchestrator runs.
+`scratch/factpath_class_analysis.json`.
+
+| mechanism | meaning | count |
+|---|---|---|
+| **RANKING** | the correct fact **is in the index** and is **not retrieved** | **7 / 9** |
+| **ABSENCE** | no fact in the index answers it | 2 / 9 |
+| OVERRIDE | the fact was retrieved and the reply contradicted it | **0** |
+| UNUSED | retrieved, not contradicted, simply not applied | **0** |
+
+### The model was not hallucinating. It was reciting what it was handed.
+
+This is the part that changes the plan. Three of the wrong answers are **verbatim retrieved
+facts**:
+
+```
+nat_05  reply says "TZS 260,000"   <- rank 3 in its pool: `company registration fee 3: 260,000 TZS`
+nat_41  reply says "siku 1"        <- rank 1 in its pool: `registration certificate processing
+                                      time new: 1 days`
+nat_28  reply says "15%"           <- rank 1 in its pool: `royalties wht rate: ... 15% ...`
+nat_44  reply says "6%"            <- a services rate offered to a GOODS question
+```
+
+**Zero rows in the OVERRIDE bucket.** The adapter is not ignoring a correct fact sitting in its
+prompt; it is being handed the wrong fact and repeating it faithfully. **D1 — a new adapter —
+would not have fixed a single one of these**, and six of the nine remaining WRONG were on the
+board waiting for exactly that.
+
+> **"Fabricated" was the wrong word for these answers all along. They are TRACEABLE. The
+> figure the user was given exists, verbatim, in our own fact index — attached to a different
+> question.** A hallucination is a model defect and its fix is training. A misretrieval is a
+> corpus-and-index defect and its fix is neither.
+
+### It is not a top-k problem — the correct fact is buried
+
+Rank of the correct fact in the full 217-row index (`scratch/factpath_rank_depth.json`):
+
+```
+nat_45  wcf_accident_reporting_deadline    rank  19/217   score 0.793  (top 0.845)
+nat_28  vat_withholding_services           rank  33/217   score 0.806  (top 0.837)
+nat_44  vat_withholding_goods              rank  33/217   score 0.809  (top 0.845)
+nat_33  brela_annual_return_fee            rank 113/217   score 0.787  (top 0.832)
+nat_43  GN605A_sector_count                rank 127/217   score 0.765  (top 0.808)
+nat_05  sdl_rate_2025                      rank 150/217   score 0.768  (top 0.831)
+nat_23  sdl_rate_2025                      rank 164/217   score 0.772  (top 0.848)
+```
+
+Raising `top_k` from 3 to 9 reaches **none** of them. This is the same shape as the C4
+reachability item ("the relief denial ranks #64 for the question that needs it") — now measured
+across seven rows instead of one, and confirming C4 was not an isolated case.
+
+### 30% of the index wins 58% of the retrieval slots
+
+The pattern in every failing pool is the same: short `<key>: <number> <unit>` fee-schedule
+rows. Measured over all 48 questions (`scratch/factpath_feetable_dominance.json`):
+
+| | |
+|---|---|
+| fee-shape rows in the index | **66 / 217 = 30.4%** |
+| questions where a fee row is **top-1** | **24 / 48 = 50%** |
+| fee rows' share of all top-3 slots | **83 / 144 = 58%** |
+
+**Eighteen of those rows are trademark fees** — opposition notices, series-of-marks renewals —
+which no WhatsApp trader has ever asked about and none of the 48 questions touches. They are
+short, semantically thin, and numerically flavoured, so they sit close to any question
+containing a magnitude. **They are crowding out the payroll, VAT and OSHA facts that users
+actually ask about.**
+
+### And the similarity floor, as scoped, would have shipped and not worked
+
+The floor was scoped on 2026-08-16 as the pre-pilot safety net: refuse below a score
+threshold. **The scores make that impossible.** Across the 48 questions the top-1 score band is
+**0.790–0.859** — and the *correct* facts in the failing rows score **0.765–0.809**. The
+correct fact for one question scores LOWER than the irrelevant top-1 of another.
+
+> **Any global threshold that excludes the wrong facts also excludes the right ones. There is
+> no cut point.** A floor can still be built — but on a MARGIN (top-1 vs top-2 separation) or
+> on a re-ranked index, not on an absolute cosine score.
+
+**This is exactly what the founder ordered the analysis to find out, and it arrived one step
+before the money was spent.** The instruction was *"if retrieval or override is the mechanism,
+adding five domains of facts may not fix the answers, and we'd want to know that before writing
+them"* — the same reasoning applies one item further along, to the floor.
+
+### The second gap: 28 locked facts have no trace in the index
+
+`scratch/factpath_sync_gap.json`. **The RAG index is not a projection of `locked_facts.json`:**
+
+| | count |
+|---|---|
+| locked facts | 247 |
+| index rows | 217 |
+| exact key match in the index | 190 |
+| present only under a sibling key (`sdl_rate` → `sdl_rate_2025`) | 9 |
+| value figure appears somewhere in the index | 20 |
+| **no trace in the index at all** | **28** |
+
+Among the 28: **`sdl_threshold`, `sdl_employee_threshold`, `efd_threshold_tzs_11m`,
+`osha_registration_threshold_b004`, `OSHA_annual_inspection`, all twelve SDL exemption
+categories**, and the two facts written yesterday (expected — R15 regen pending). Two of the
+nine WRONG rows (nat_24, nat_41) are directly caused by this.
+
+⚠️ **THE 23% FIGURE THIS NEARLY BECAME.** A first pass matched index entries by key-slug prefix
+and a second by exact slug, and they disagreed — `sdl_rate` is absent as a key while
+`sdl_rate_2025` is present, so one matcher said "indexed" and the other "missing", producing a
+headline **57 of 247 (23%)**. The honest content-level number is **28 (11%)**. Re-derived
+before it was written down anywhere, because a number produced by a sloppy matcher is precisely
+how a wrong number enters this record — the same discipline as the "52 eval / 385 train rows"
+correction, applied to my own instrument on the same day it was built.
+
+### What this makes the fix, and what it does NOT make it
+
+Ordered by measured effect, all three needing one R15 Kaggle regeneration:
+
+1. **Segregate the fee-schedule rows from general retrieval.** 30% of the index, 58% of the
+   slots, near-zero conversational demand. Largest measured effect, smallest change.
+2. **Reachability rewrites (C4).** CLAUDE.md already records the mechanism from
+   `paye_bands_with_examples`: a fact embedded WITHOUT the `key: ` prefix, Swahili-first with
+   the value at the front, retrieves far better. Seven rows now show what the prefix form costs.
+3. **Close the 28-fact index gap**, and add a check that FAILS when `locked_facts.json` gains a
+   key the index does not carry — this gap was invisible because nothing compares the two.
+
+**NOT the fix: a new adapter, more training pairs, or a cleverer refusal.** Zero OVERRIDE rows
+is a strong negative result and it should be quoted whenever D1 is proposed for this cluster.
+
+### Consequence for the three fact-set coverage items — they stay paused
+
+Service levy bound, market-stall exclusions and TIN were sequenced behind this analysis. **The
+analysis says writing them changes nothing on its own**: a new fact would enter a 217-row index
+where fee rows take 58% of top-3 slots and correct facts sit at rank 19–164. They should be
+written **with** the retrieval fix and regenerated in the same R15 cycle, not before it.
+
+*(Caveat, stated rather than buried: this retrieval is RECOMPUTED, not the retrieval that
+actually ran on 2026-08-15. It is deterministic and the index has not changed since, but it is
+a reconstruction. MEASUREMENT-GAP-1 also still applies — a fact being in the prompt is not the
+same as it being applied — which is why OVERRIDE and UNUSED were kept as separate buckets
+rather than merged into "the model's fault".)*
 
 ---
 
@@ -1414,7 +1563,10 @@ thing. Same shape, one more level out.
 | *(new 2026-08-16)* licence FEE schedule | coverage | 🛑 **left uncovered** — no current consolidated First Schedule from any primary source; BRELA or OCR + 3 unchecked Acts |
 | *(new 2026-08-16)* decomposition FABRICATES a sub-question | all routes | ⏸ pre-existing, confirmed on `05e68b5`; pinned `xfail(strict=True)`; not fixed inside a coverage commit |
 | *(new 2026-08-16)* RAG similarity floor | pilot blocker | ⏸ scoped, agreed to ship **before any pilot**; needs the score distribution measured first |
-| *(new 2026-08-16)* fact-path class analysis | 6 of 9 remaining WRONG | ⏸ **next item**; the three fact-set coverage domains wait on its result |
+| *(new 2026-08-16)* fact-path class analysis | 6 of 9 remaining WRONG | ✅ **DONE 2026-08-17 — it is RETRIEVAL, 7/9 RANKING, 0/9 OVERRIDE.** Fee rows are 30% of the index and win 58% of top-3 slots |
+| *(new 2026-08-17)* segregate fee-schedule rows from retrieval | 7 rows | ⏸ **the fix**, largest measured effect; needs an R15 regen |
+| *(new 2026-08-17)* 28 locked facts absent from the RAG index | nat_24, nat_41 | ⏸ nothing compares the two files; needs a check that fails on drift |
+| *(new 2026-08-17)* similarity floor CANNOT use an absolute score | pilot blocker | ⏸ scores compress to 0.79-0.86; redesign on a MARGIN or a re-ranked index |
 
 ---
 
