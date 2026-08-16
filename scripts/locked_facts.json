@@ -2029,5 +2029,52 @@
     "correct_value": "NSSF total for 12 employees at 600,000 each = TZS 1,440,000 (NOT 120,000 which is per-employee)",
     "status": "CONFIRMED",
     "primary_source": "nssf.go.tz"
+  },
+  "business_licence_expiry_30_june": {
+    "fact": "Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara huisha tarehe 30 Juni kila mwaka, hivyo huhuishwa kila mwaka kabla ya tarehe hiyo.",
+    "correct_value": "expires 30 June annually",
+    "wrong_patterns": [
+      "leseni.*huisha.*disemba",
+      "leseni.*expire.*december",
+      "leseni ya biashara.*miaka (miwili|mitatu)"
+    ],
+    "primary_source": "Business Licensing Act s.3(4) as substituted by the Finance Act 2014 s.5 (Special Bill Supplement No. 5, 10 June 2014); confirmed against the Act text 2026-08-16",
+    "verified_date": "2026-08-16",
+    "status": "CONFIRMED"
+  },
+  "presumptive_tax_bands_2022": {
+    "fact": "Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: hadi TZS 4,000,000 = TZS 0; zaidi ya 4,000,000 hadi 7,000,000 = TZS 100,000 (asiyetunza kumbukumbu) au 3% ya mauzo yanayozidi 4,000,000 (anayetunza); zaidi ya 7,000,000 hadi 11,000,000 = TZS 250,000 (asiyetunza) au TZS 90,000 pamoja na 3% ya yanayozidi 7,000,000 (anayetunza); kuanzia 11,000,001 hadi 100,000,000 = 3.5% ya mauzo yote.",
+    "correct_value": "0 / 100,000 / 250,000 or 3% marginal / 3.5% of turnover above 11M",
+    "wrong_patterns": [
+      "450,?000.*3\\.5%",
+      "14,?000,?000.*presumptive",
+      "presumptive.*14 million",
+      "makadirio.*450,?000"
+    ],
+    "primary_source": "Income Tax Act Cap 332 First Schedule para 2(3) as SUBSTITUTED by the Finance Act 2022 (Act No. 5 of 2022) s.72(a)(ii), in force 1 July 2022; matches TRA 'Taxes and Duties at a Glance 2025/26' s.6.0. NOTE: Cap 332 R.E.2019 still prints the superseded five-band table and is WRONG for turnover above 11,000,000.",
+    "verified_date": "2026-08-16",
+    "status": "CONFIRMED"
+  },
+  "presumptive_tax_ceiling_100m": {
+    "fact": "Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 100,000,000 kwa mwaka. Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi.",
+    "correct_value": "TZS 100,000,000 annual turnover ceiling",
+    "wrong_patterns": [
+      "makadirio.*kikomo.*20,?000,?000",
+      "presumptive.*threshold.*50 million"
+    ],
+    "primary_source": "Income Tax Act Cap 332 First Schedule para 2(2); TRA Taxes and Duties at a Glance 2025/26",
+    "verified_date": "2026-08-16",
+    "status": "CONFIRMED"
+  },
+  "presumptive_excluded_services": {
+    "fact": "Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala watoa huduma za kitaalamu (technical), uendeshaji (management), ujenzi (construction) na mafunzo (training). Hawa hutozwa kodi kwa viwango vya kawaida vya mtu binafsi.",
+    "correct_value": "independent professionals, technical, management, construction and training services are excluded",
+    "wrong_patterns": [
+      "makadirio.*inatumika kwa kila biashara",
+      "presumptive.*applies to all businesses"
+    ],
+    "primary_source": "Income Tax Act Cap 332 First Schedule para 2(1)(a) as amended by the Finance Act 2022 s.72(a)(i). TRA's 2025/26 summary paraphrases this more narrowly ('professional services, construction industry and trainers') - the statute is wider and governs.",
+    "verified_date": "2026-08-16",
+    "status": "CONFIRMED"
   }
 }

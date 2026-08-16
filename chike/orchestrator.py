@@ -273,6 +273,10 @@ class Orchestrator:
             return self._answer_vat_registration(sq)
         if sq.computation_type == "efd_requirement":
             return self._answer_efd_requirement(sq)
+        # PRESUMPTIVE INCOME TAX — same treatment: no REQUIRED_FIELDS, no slot extractor, no
+        # model on the path. Added to close a COVERAGE gap rather than a wrong answer.
+        if sq.computation_type == "presumptive":
+            return self._answer_presumptive(sq)
         # 'ambiguous_multi' (or any type the rules engine doesn't define) is compute-intent
         # with an unresolved levy — never guess which one; clarify.
         required = REQUIRED_FIELDS.get(sq.computation_type)
@@ -540,6 +544,42 @@ class Orchestrator:
             return SubAnswer(sub_question=sq, text=clarification.EFD_PERIOD_IS_A_RATE,
                              needs_clarification=True)
         return self._deterministic_answer(sq, rules_engine.efd_required(turnover))
+
+    def _answer_presumptive(self, sq: SubQuestion) -> SubAnswer:
+        """Presumptive income tax — deterministic, with FOUR exits and one of them narrowed.
+
+        Order matters and is the same reasoning as the VAT arm: the exclusion first (an
+        excluded professional's turnover is irrelevant, so asking for it would be asking for
+        something that cannot change the answer), then the figure, then the period, then the
+        records axis.
+
+        THE RECORDS EXIT IS ASKED ONLY WHERE IT CHANGES THE FIGURE. Outside
+        4,000,001–11,000,000 the two columns of the statutory table are identical, so an
+        unstated records status is not a missing input at all — it is an input the answer does
+        not use. Clarifying anyway would be the delivery failure the 48-question re-run found
+        in five of its six CLARIFY rows: routing correct, figure computable, nothing delivered.
+        """
+        if routing.states_excluded_service(sq.text):
+            return self._deterministic_answer(
+                sq, rules_engine.compute_presumptive(0, False, excluded_service=True))
+        turnover = swn.sole_plausible_amount(sq.text)
+        if turnover is None:
+            return SubAnswer(sub_question=sq, text=clarification.PRESUMPTIVE_NO_TURNOVER,
+                             needs_clarification=True)
+        # Presumptive tax is on ANNUAL turnover alone. A monthly figure is not a twelfth of it
+        # and is never annualised; an unstated period addresses no year at all.
+        if routing.turnover_period(sq.text) != rules_engine.registration_thresholds.ANNUAL:
+            return SubAnswer(sub_question=sq, text=clarification.PRESUMPTIVE_PERIOD_IS_A_RATE,
+                             needs_clarification=True)
+        records = routing.keeps_records(sq.text)
+        if records is None:
+            if rules_engine.records_status_matters(turnover):
+                return SubAnswer(
+                    sub_question=sq, text=clarification.PRESUMPTIVE_NO_RECORDS_STATUS,
+                    needs_clarification=True)
+            records = False          # outside the window the column makes no difference
+        return self._deterministic_answer(
+            sq, rules_engine.compute_presumptive(turnover, records))
 
     def _answer_applicability(self, sq: SubQuestion) -> SubAnswer:
         """Deterministic yes/no for an applicability-only levy question. SDL needs the

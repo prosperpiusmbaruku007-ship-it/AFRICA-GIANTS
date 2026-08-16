@@ -38,3 +38,46 @@ PAYE_BANDS = [
     (Decimal("760000"),   Decimal("0.25"), Decimal("68000")),
     (Decimal("1000000"),  Decimal("0.30"), Decimal("128000")),
 ]
+
+# === PRESUMPTIVE INCOME TAX — individuals, annual TURNOVER (not profit, not monthly) ===
+#
+# SOURCE, AND READ THIS BEFORE CHANGING ANY FIGURE BELOW:
+#   Income Tax Act Cap 332, First Schedule para 2(3), AS SUBSTITUTED BY
+#   THE FINANCE ACT, 2022 (Act No. 5 of 2022) s.72(a)(ii), in force 1 July 2022.
+#
+# THE CONSOLIDATED STATUTE IS STALE AND WOULD HAVE GIVEN THE WRONG NUMBERS.
+# Cap 332 R.E. 2019 (tra.go.tz/images/uploads/acts/CAP_332_THE_INCOME_TAX_ACT_1.pdf) still
+# prints the PRE-2022 table with FIVE bands — an 11,000,001–14,000,000 band at TZS 450,000 /
+# 230,000+3%, and a 14,000,001–100,000,000 band at 450,000 + 3.5% OF THE EXCESS. Encoding the
+# revised edition, which is the natural thing to reach for, would have produced a wrong figure
+# for every turnover above 11M. FA2022 replaced both with a single flat 3.5% OF TURNOVER.
+# Every Finance Act from 2020 to 2025 was read directly: only FA2022 touches para 2(3).
+#
+# Each band: (upper_inclusive, no_records_spec, records_spec). A spec is one of
+#   ("nil",)                          -> zero
+#   ("fixed", amount)                 -> a flat shilling figure
+#   ("marginal", base, rate, from_)   -> base + rate x (turnover - from_)
+#   ("flat_on_turnover", rate)        -> rate x FULL turnover (NOT the excess)
+# "records" = compliance with section 35 of the Tax Administration Act (the statute's own
+# wording). NOTE the renumbering trap: in Cap 438 R.E. 2023 that provision is now section 43,
+# "Maintenance of documents" — the First Schedule still cites the old number. User-facing copy
+# must therefore describe the DUTY, never the section number.
+PRESUMPTIVE_TURNOVER_CEILING = Decimal("100000000")   # para 2(2): the 100M threshold
+PRESUMPTIVE_BANDS = [
+    (Decimal("4000000"),   ("nil",),                  ("nil",)),
+    (Decimal("7000000"),   ("fixed", Decimal("100000")),
+                           ("marginal", Decimal("0"), Decimal("0.03"), Decimal("4000000"))),
+    (Decimal("11000000"),  ("fixed", Decimal("250000")),
+                           ("marginal", Decimal("90000"), Decimal("0.03"), Decimal("7000000"))),
+    (PRESUMPTIVE_TURNOVER_CEILING, ("flat_on_turnover", Decimal("0.035")),
+                                   ("flat_on_turnover", Decimal("0.035"))),
+]
+# para 2(1)(a) as amended by FA2022 s.72(a)(i): the business income must be
+# "not including income derived by independent professionals and providers of, technical,
+# management, construction and training services". TRA's own 2025/26 summary paraphrases this
+# more narrowly as "professional services, construction industry and trainers" — the STATUTE
+# governs, and it is the wider of the two.
+PRESUMPTIVE_EXCLUDED_SERVICES = (
+    "independent professional", "technical service", "management service",
+    "construction service", "training service",
+)

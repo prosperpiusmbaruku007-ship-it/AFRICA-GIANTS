@@ -646,6 +646,106 @@ def states_vat_registered(text: str) -> bool:
     return any(c in ql for c in _VAT_REGISTERED_CUES)
 
 
+# === PRESUMPTIVE INCOME TAX — the tax a duka owner actually pays ==========================
+# Coverage item, not a defect fix: the 2026-08-16 coverage measurement found 12 of 12
+# questions from an ordinary trader's month reaching NO deterministic route and having NO
+# fact behind them, and presumptive tax is the most common of those. It is the first route
+# added to close a coverage gap rather than a wrong answer.
+#
+# NARROW BY CONSTRUCTION (R17 step 4). Named presumptive vocabulary only, plus one
+# context-gated second path. `makadirio` alone is NOT here: it is the ordinary word for
+# "estimate" and appears in budget/valuation senses; `kodi ya mapato` alone is NOT here
+# either — it covers employment and corporate income tax, neither of which this engine can
+# answer. The second path therefore demands BOTH a business-income-tax phrase AND the
+# trader's own-turnover claim, the same ownership gate the VAT arm needed.
+_PRESUMPTIVE_CUES = ["kodi ya makadirio", "kodi ya makisio", "makadirio ya kodi ya mapato",
+                     "kodi ya kadirio", "presumptive tax", "presumptive income tax"]
+_BUSINESS_INCOME_TAX_CUES = ["kodi ya mapato ya biashara", "kodi ya mapato ya duka",
+                             "kodi ya biashara yangu", "kodi ya biashara yetu",
+                             "business income tax"]
+
+# THE OWNERSHIP GATE, AND IT IS NOT A COPY OF THE VAT ONE. The first version of this route
+# required only {presumptive cue + magnitude} and the 5,595-row sweep diverted FOUR corpus
+# rows, THREE of which would have been answered wrongly:
+#   * "...ina mapato ya TZS 40,000,000 ... Ninatumia mfumo wa kodi ya makisio?" — asks WHICH
+#     REGIME applies, and states `mapato` (income), not `mauzo` (turnover)
+#   * "...nitajua vipi ikiwa ninapaswa kutumia presumptive tax AU MFUMO WA KAWAIDA?" — the
+#     ELECTION question of para 2(1)(c), which no amount answers
+#   * "'presumptive tax rate class a' kwa magari ya abiria ... TZS 250,000" — the TRANSPORT
+#     schedule (para 2(5)), which this engine does not implement; the 250,000 is a TAX figure,
+#     and computing on it returns "TZS 0" to a daladala owner
+# Hence: turnover vocabulary only. `mapato yangu` is deliberately ABSENT even though the VAT
+# arm carries it — `mapato` can mean profit, and 3.5% of profit is not 3.5% of turnover. The
+# narrower list is the cost of the engine's authority.
+_PRESUMPTIVE_TURNOVER_CUES = ["mauzo yangu", "mauzo yetu", "mauzo ya biashara yangu",
+                              "mauzo ya biashara yetu", "mauzo ya duka langu",
+                              "mauzo ya duka letu", "biashara yangu ina mauzo",
+                              "biashara yetu ina mauzo", "duka langu lina",
+                              "duka letu lina", "nauza", "ninauza", "tunauza",
+                              "nimeuza", "tumeuza", "mzunguko wangu", "mzunguko wetu",
+                              "my turnover", "my sales"]
+
+# Other schedules under the SAME paragraph that this engine does not implement, and the
+# regime-choice question that no figure answers. Vetoing is the honest behaviour: para 2(5)'s
+# per-vehicle table is a different computation, and returning the turnover table's answer for
+# it is a wrong number with the engine's authority behind it.
+_PRESUMPTIVE_VETO = re.compile(
+    r"daladala|abiria|magari|gari\s+la\s+biashara|bodaboda|bajaji|teksi|\btaxi\b|"
+    r"class\s+[abcd]\b|tour\s+service|kubeba\s+mizigo|\btani\b|tonne|"
+    r"au\s+mfumo\s+wa\s+kawaida|nitajua\s+vipi")
+
+# RECORD-KEEPING, the categorical axis of the statutory table. Consulted ONLY inside the
+# presumptive branch, so a false positive cannot leak into another route — but it CAN change
+# a figure, so both polarities are explicit and neither is a default: absent evidence returns
+# None and the caller clarifies (and only where the answer would differ — see
+# rules_engine.presumptive.records_status_matters).
+_KEEPS_RECORDS_CUES = ["natunza kumbukumbu", "ninatunza kumbukumbu", "tunatunza kumbukumbu",
+                       "naweka kumbukumbu", "ninaweka kumbukumbu", "tunaweka kumbukumbu",
+                       "nina vitabu vya mahesabu", "tuna vitabu vya mahesabu",
+                       "nina kumbukumbu za mauzo", "tuna kumbukumbu za mauzo",
+                       "natunza hesabu", "tunatunza hesabu",
+                       "i keep records", "keeping records", "keep proper records"]
+_NO_RECORDS_CUES = ["situnzi kumbukumbu", "hatutunzi kumbukumbu", "siwezi kutunza kumbukumbu",
+                    "sina kumbukumbu", "hatuna kumbukumbu", "sina vitabu vya mahesabu",
+                    "hatuna vitabu vya mahesabu", "siweki kumbukumbu", "hatuweki kumbukumbu",
+                    "situnzi hesabu", "sina hesabu za maandishi",
+                    "i do not keep records", "i don't keep records", "no records"]
+
+# EXCLUDED SERVICES — para 2(1)(a) as amended by FA2022 s.72(a)(i). A FIRST-PERSON
+# self-description only. The cost of a false positive here is telling a trader the regime
+# does not apply to them, which is a wrong answer carrying the engine's authority, so the
+# list refuses anything that could describe a customer, a supplier or a third party.
+_EXCLUDED_SERVICE_CUES = ["mimi ni mshauri", "mimi ni wakili", "mimi ni daktari",
+                          "mimi ni mhandisi", "mimi ni mkandarasi", "mimi ni mkufunzi",
+                          "mimi ni mtaalamu", "mimi ni mhasibu",
+                          "biashara yangu ni ushauri", "biashara yetu ni ushauri",
+                          "natoa huduma za ushauri",
+                          "natoa huduma za kitaalamu", "natoa mafunzo",
+                          "kampuni yangu ya ujenzi", "kampuni yetu ya ujenzi",
+                          "biashara yangu ya ujenzi", "biashara yetu ya ujenzi",
+                          "i am a consultant", "independent professional"]
+
+
+def keeps_records(text: str):
+    """True | False | None — whether the trader states they keep books of account.
+
+    None means UNSTATED and is never treated as False: the no-records column is the more
+    expensive one at low turnover (TZS 100,000 against TZS 30,000 at a turnover of 5M), so
+    defaulting would overstate the bill for exactly the trader least able to check it."""
+    ql = text.lower()
+    if any(c in ql for c in _NO_RECORDS_CUES):
+        return False
+    if any(c in ql for c in _KEEPS_RECORDS_CUES):
+        return True
+    return None
+
+
+def states_excluded_service(text: str) -> bool:
+    """True when the asker describes THEMSELVES as outside the presumptive regime."""
+    ql = text.lower()
+    return any(c in ql for c in _EXCLUDED_SERVICE_CUES)
+
+
 # --- the polarity reader, asserted over our OWN threshold copy ---------------
 # A two-part answer ("no on the limb I tested, BUT the other limb is open") must not scan as a
 # flat no. This is the minimum-wage `ni halali` lesson applied before shipping rather than
@@ -891,6 +991,20 @@ def detect_intent(text: str) -> str:
     # have it; the question is the EFD one. First-version precedence gave VAT the row and
     # answered the wrong obligation. The EFD cues are all forms of "do I need the machine",
     # so their presence identifies the ask regardless of what else is named.
+    # PRESUMPTIVE INCOME TAX. Placed AHEAD of the VAT/EFD block deliberately: its vocabulary
+    # is named and specific ("kodi ya makadirio"), while the VAT/EFD block can be entered by a
+    # question that merely mentions sales. A message asking both ("mauzo yangu ni milioni 30 —
+    # nahitaji EFD, na kodi ya makadirio ni ngapi?") is a decomposition case, and if it is not
+    # split the amount-ask is the one with a figure attached. Requires a money magnitude: a
+    # definition question ("kodi ya makadirio ni nini?") has nothing to compute and keeps its
+    # fact route.
+    if (_has_money_magnitude(ql)
+            and any(c in ql for c in _PRESUMPTIVE_TURNOVER_CUES)
+            and not _PRESUMPTIVE_VETO.search(ql)
+            and (any(c in ql for c in _PRESUMPTIVE_CUES)
+                 or any(c in ql for c in _BUSINESS_INCOME_TAX_CUES))):
+        return "presumptive"
+
     vat_reg = any(c in ql for c in _VAT_REG_CUES)
     efd = any(c in ql for c in _EFD_CUES)
     if (vat_reg or efd) and not _THRESHOLD_ASK_VETO.search(ql) \

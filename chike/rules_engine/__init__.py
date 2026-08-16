@@ -20,6 +20,7 @@ from .paye import compute_paye, compute_paye_each
 from .wcf import compute_wcf, wcf_applies
 from .minimum_wage import compare_to_floor, sector_rates_statement
 from .registration_thresholds import vat_registration, efd_required
+from .presumptive import compute_presumptive, records_status_matters
 from . import wage_schedule
 from . import registration_thresholds
 

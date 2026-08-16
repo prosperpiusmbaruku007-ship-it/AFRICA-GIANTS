@@ -157,6 +157,28 @@ _WITHHELD_OBJECT = {
 # already leaked it. The over-refusal logged as ov_04 is therefore wider than ov_04 records.
 _LEAKS_ANYWAY = "tunaagiza bidhaa"
 
+# NOT A GAP AND NOT WITHHELD — THE GENERATOR IS WRONG HERE, AND THIS IS THE NESTING TRAP
+# ARRIVING INSIDE THE INSTRUMENT.
+#
+# `_object_counterparts` reads `ninaTUnza kumbukumbu` as {subject `ni` + tense `na` + object
+# infix `-tu-` + stem `nza`} and dutifully offers `ninakunza`, `ninamnza`, `ninawanza`. None
+# of those is a Swahili word: the verb is `-tunza` (to keep/look after) and its stem simply
+# BEGINS with `tu`. It is exactly the `mkataba` / `wakati` / `kuhusu` trap the 2026-08-15
+# object-concord round documented — a closed grammatical class whose members are also common
+# letter sequences — except that this time the trap caught the census generator rather than a
+# cue list, and it caught it on the FIRST new cue list added after the round shipped.
+#
+# Recorded here rather than fixed in the generator: `_object_counterparts` requires a host
+# (subject+tense) precisely so it can reject nesting words, and that guard cannot distinguish
+# `ni-na-tu-nza` from `ni-na-tu-ma` (`ninatuma`, "I send", where `-tu-` genuinely IS an object
+# infix) without a verb lexicon this repo does not have. An explicit, documented exclusion is
+# the honest form. It must never be used for a real missing counterpart — every member below
+# is a string no Swahili speaker would write.
+_NOT_MORPHOLOGY = {
+    "ninakunza", "ninamnza", "ninawanza",       # from `ninatunza` — stem is `-tunza`
+    "tunakunza", "tunamnza", "tunawanza",       # from `tunatunza`
+}
+
 
 def _cue_lists():
     """{qualified name: [phrases]} for every cue list concord could apply to."""
@@ -268,7 +290,8 @@ def test_every_cue_with_a_person_form_has_its_concord_counterpart():
                               ("subject", _subject_counterparts),
                               ("object", _object_counterparts)):
                 for c in gen(p):
-                    if c in _WITHHELD or c in _WITHHELD_OBJECT or c == _LEAKS_ANYWAY:
+                    if (c in _WITHHELD or c in _WITHHELD_OBJECT or c == _LEAKS_ANYWAY
+                            or any(w in _NOT_MORPHOLOGY for w in c.split())):
                         continue
                     if not _recognised(c, phrases, lname):
                         missing.append((lname, kind, p, c))

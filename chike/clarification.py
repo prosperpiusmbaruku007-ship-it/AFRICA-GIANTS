@@ -168,6 +168,37 @@ EFD_NO_BASIS = (
     "TZS 11,000,000 au zaidi."
 )
 
+# === PRESUMPTIVE INCOME TAX (Cap 332 First Schedule para 2, as amended by FA2022 s.72) ===
+# Three exits, and only three. The records question is asked ONLY where the two columns of the
+# statutory table differ (turnover 4,000,001–11,000,000) — below and above that window the
+# figure is identical either way, and asking for an input that cannot change the answer is the
+# defect that put five of six CLARIFY rows in the 48-question set (see
+# presumptive.records_status_matters).
+
+# No turnover figure at all.
+PRESUMPTIVE_NO_TURNOVER = (
+    "Ili nikuhesabie kodi ya makadirio, niambie jumla ya MAUZO ya biashara yako kwa mwaka — "
+    "si faida, bali mauzo yote. Kodi ya makadirio hupigwa kwa mauzo ya mwaka, na hutumika tu "
+    "kwa mauzo yasiyozidi TZS 100,000,000."
+)
+
+# A figure whose period is monthly/weekly, or absent. NOT annualised: multiplying one month by
+# twelve is an assumption about the rest of the trader's year, not an arithmetic step — the
+# same reasoning as VAT_PERIOD_IS_A_RATE.
+PRESUMPTIVE_PERIOD_IS_A_RATE = (
+    "Kodi ya makadirio hupigwa kwa MAUZO YA MWAKA mzima, si ya mwezi mmoja. Sitakisii mauzo "
+    "ya mwaka kwa kuzidisha ya mwezi mara 12 — mauzo hupanda na kushuka. Niambie jumla ya "
+    "mauzo yako ya mwaka, nami nitakuhesabia."
+)
+
+# Turnover is inside the window where record-keeping changes the figure.
+PRESUMPTIVE_NO_RECORDS_STATUS = (
+    "Kwa mauzo ya kiwango hicho, kodi inategemea jambo moja zaidi: je unatunza kumbukumbu za "
+    "mahesabu ya biashara (vitabu vya mauzo na manunuzi) kama sheria inavyotaka? Anayetunza "
+    "kumbukumbu hulipa kwa asilimia ya mauzo yaliyozidi kiwango, na asiyetunza hulipa kiasi "
+    "kilichopangwa. Niambie, nami nitakupa kiasi kamili."
+)
+
 # Pay quoted PER UNIT rather than per month: per day/week/hour/shift, per trip/piece/job, or
 # fortnightly. Used only to pick which question to ask back — it never unlocks a computation
 # (turning a rate into a monthly figure is pattern D, still deferred), so a false positive

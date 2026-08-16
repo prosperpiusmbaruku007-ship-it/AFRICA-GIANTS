@@ -60,6 +60,327 @@ this project has, taken the same way twice.
 
 ---
 
+## 📚 COVERAGE ROUND 1 — presumptive tax shipped as an ENGINE; licence fees left uncovered on purpose (2026-08-16)
+
+**The first work in this project aimed at a coverage gap rather than a wrong answer.** The
+2026-08-16 readiness assessment measured what happens when a real trader asks something the
+corpus does not hold (`scratch/coverage_gap_2026_08_16.json`):
+
+| | result |
+|---|---|
+| questions from an ordinary duka owner's month | 12 |
+| passed the OOC classifier (→ the model answers) | **12 / 12** |
+| took a deterministic route | **0 / 12** |
+| had a fact behind them in `locked_facts` or the RAG index | **0 / 12** |
+
+And `retrieve_facts` (`modal_app.py:281`) applies **no similarity floor** — it returns the top-3
+at any score, pooled to 9. So the behaviour on an uncovered question is not "sina uhakika"; it
+is a confident answer synthesised from the three nearest unrelated facts. That is the `nat_05`
+mechanism (a fabricated TZS 260,000 BRELA fee answering an SDL question) as a *generic*
+property of the fact path, not a row-specific bug.
+
+Founder sequence: **coverage and the fact path first, similarity floor after** — *"a floor makes
+us safe on questions we can't answer, but answering them is better than refusing them."* The
+floor still ships before any pilot.
+
+### Scoping first, and it changed what got built
+
+`scratch/coverage_scoping_2026_08_16.md` — five domains scoped against primary sources before a
+line was written. The scoping is what separated the three that are national and answerable from
+the two that are council-by-council and mostly are not:
+
+| domain | national vs council | shape | verdict |
+|---|---|---|---|
+| presumptive/turnover tax | **100% national** | **rules engine** | ✅ **SHIPPED** |
+| business licence renewal date | **100% national** | one fact | ✅ **SHIPPED** (R15 regen pending) |
+| business licence FEES | fee national, collection council | lookup table | 🛑 **LEFT UNCOVERED — source, see below** |
+| local-government service levy | **cap national, rate council** | fact set | bound only, never an amount |
+| market stall dues | **council by-law, 180+ LGAs** | fact set | **not coverable for amounts** |
+| TIN registration | **100% national** | fact set, procedural | coverable, not yet written |
+
+---
+
+## 🧾 A CONSOLIDATED ACT IS A SNAPSHOT, AND THE SNAPSHOT WAS STALE (2026-08-16)
+
+**The single most valuable thing this round produced, and it came from one founder
+instruction:** *"Read Cap 332's First Schedule before encoding any band, per your typo catch."*
+The instruction was aimed at a typo. It caught a wrong table.
+
+Three documents, all primary, all authoritative-looking, **and they do not agree**:
+
+| source | 11M–100M band |
+|---|---|
+| **Cap 332 R.E. 2019** (tra.go.tz's own copy of the Act) | 11,000,001–14,000,000 → TZS 450,000 / 230,000+3%; **14,000,001–100,000,000 → 450,000 + 3.5% OF THE EXCESS** |
+| **TRA "Taxes and Duties at a Glance 2025/26"** | 11,000,001–100,000,000 → **3.5% of turnover** |
+| **Finance Act 2022 (Act No. 5 of 2022) s.72(a)(ii)** | **3.5% of turnover** — and it is the amending Act, so it governs |
+
+At a turnover of TZS 50,000,000 the stale table gives **TZS 1,710,000** and the current one
+gives **TZS 1,750,000**. Both are "the statute". Only the amending Act distinguishes them.
+
+**Every Finance Act from 2020 to 2025 was read directly** (fa2020 · fa2021 · fa2022 · fa2023 ·
+fa2024 · fa2025, all fetched from tra.go.tz or mof.go.tz): only FA2022 touches para 2(3), and
+FA2025 does not touch presumptive tax at all. That is why the table shipped is FA2022's.
+
+> **THE FINDING: a revised-edition Act is a CONSOLIDATION AS AT A DATE, and reaching for it is
+> the natural move precisely because it looks like the whole law. It is the same shape as
+> INSTRUMENT-LIE #11 — a number believed to be about the thing it names — in the source
+> domain rather than the measurement domain. The remedy is the same and is cheap: for any
+> figure, find the amending Act, not the consolidation.**
+
+**And TRA's own summary is not the statute either.** FA2024 s.46(a) substitutes Class A of the
+transport schedule as *"Up to 15 → 250,000"*; TRA's 2025/26 at-a-glance prints *"Up to 5 →
+120,000; 6 to 15 → 250,000"* — a row the enacted text does not contain. Not in scope here (the
+transport schedule is vetoed, below), but recorded: **the second-most-natural source to trust
+disagrees with the enacted law in the same document family, on the same page.**
+
+The at-a-glance also prints the third band's ceiling as **`11,000,0000`** — one digit too many,
+the typo that started this. The statute reads *"Turnover of Tshs. 11,000,001/= but does not
+exceed Tshs. 100,000,000/="*, so the intent was never in doubt; the point is that **the check
+run to resolve a typo is what surfaced the wrong table.**
+
+One incidental confirmation from the same fetch: TRA's 2025/26 document states *"A person whose
+turnover is TZS 11,000,000/= or above shall issue fiscal receipt"* — **`efd_threshold_tzs_11m`
+re-confirmed from a source we were not previously using.** The 11M-vs-14M question stays closed,
+and the 14,000,000 that has haunted it turns out to be a *presumptive band boundary* from the
+pre-2022 table, which is very likely where the confusion came from in the first place.
+
+---
+
+## ✅ PRESUMPTIVE INCOME TAX — a deterministic route where there was nothing at all
+
+`chike/rules_engine/presumptive.py`, `routing.detect_intent -> "presumptive"`,
+`orchestrator._answer_presumptive`, 20 authored probes, 62 tests.
+
+**Source of every figure:** Income Tax Act Cap 332 First Schedule para 2, as substituted by
+Finance Act 2022 s.72, in force 1 July 2022.
+
+**Why an engine and not facts:** it is a band table with marginal arithmetic in two bands —
+`paye.py`'s exact shape — and **an engine answer bypasses generation entirely, so it is immune
+to whatever the fact-path class analysis turns out to find.** That is the direct answer to the
+ordering question the founder raised: two of the five domains can be built without waiting.
+
+**Four exits, and one of them is deliberately NOT taken.** The records-kept axis only changes
+the figure between TZS 4,000,001 and 11,000,000 (`records_status_matters`); outside that window
+both columns of the statutory table are identical. So an unstated records status is **not a
+missing input, it is an input the answer does not use**, and clarifying anyway would be exactly
+the delivery failure the 48-question re-run found in five of its six CLARIFY rows. `pt_09`
+pins it: TZS 12,000,000 with records unstated answers **TZS 420,000** rather than asking.
+
+**The exclusions are as load-bearing as the bands, as instructed.** FA2022 s.72(a)(i) puts
+*"independent professionals and providers of, technical, management, construction and training
+services"* outside the regime. A professional told they owe presumptive tax gets a wrong answer
+carrying the engine's authority, wrong in the dangerous direction — they are on the ordinary
+individual rates instead. `applicable=False` is a correct answer here, not an error.
+
+### The sweep found three wrong answers before any user did
+
+5,595 rows, pristine-HEAD worktree BEFORE vs patched AFTER
+(`scratch/presumptive_blast_diff.json`). The **first** version — presumptive cue + magnitude,
+no ownership gate — diverted **four** corpus rows, of which **three would have been answered
+wrongly**:
+
+```
+tier1a_inc_tax_deep_002  "...ina mapato ya TZS 40,000,000 ... Ninatumia mfumo wa kodi ya
+                          makisio?"      -> asks WHICH REGIME, and states `mapato`, not `mauzo`
+tier1a_inc_tax_deep_003  "...nitajua vipi ikiwa ninapaswa kutumia presumptive tax AU MFUMO
+                          WA KAWAIDA?"   -> the ELECTION question of para 2(1)(c)
+cleaned_pairs_batch_014  "'presumptive tax rate class a' kwa magari ya abiria inayosema
+                          TZS 250,000"   -> the TRANSPORT schedule, para 2(5)
+```
+
+The third is the worst: para 2(5) is a per-vehicle table this engine does not implement, the
+TZS 250,000 in the question is a **tax** figure, and computing the turnover table on it returns
+**"kodi ya makadirio = TZS 0"** to a daladala owner. Narrowed to {turnover vocabulary +
+presumptive cue + magnitude, minus a transport/election veto}, the sweep is **0 intent changes**
+and all three keep their fact route.
+
+**`mapato yangu` is deliberately absent from the presumptive ownership gate even though the VAT
+arm carries it.** `mapato` can mean profit; the bands run on turnover; 3.5% of profit is not
+3.5% of turnover. The narrower list is the price of the engine's authority, and
+`test_mapato_is_not_mauzo` states the asymmetry so nobody "fixes" it by copying the VAT list.
+
+⚠️ **AND THE CLEAN SWEEP IS WEAK EVIDENCE, WHICH IS R17'S OWN POINT.** Zero intent changes
+after narrowing does not mean zero risk — **the corpus was authored before this domain existed
+and mostly cannot contain its vocabulary.** The 20 authored probes are the load-bearing
+instrument here, exactly as with the object-concord round.
+
+---
+
+## 🛑 LICENCE FEES — NOT obtainable from a primary source, so they stay uncovered
+
+Founder instruction: *"If the current schedule isn't obtainable from a primary source, say so
+and we'll leave it uncovered rather than ship an eleven-year-old table."* **It is not
+obtainable.** The chain, each link checked rather than assumed:
+
+1. **TanzLII's consolidation is as at 31 July 2002** and says so on its own cover page:
+   *"There are outstanding amendments that have not yet been applied: Act 2 of 2014, Act 15 of
+   2015, Act 4 of 2018, Act 12 of 2023."*
+2. The only machine-readable text of the substituted First Schedule is the **2014 Bill
+   supplement** (`trade.tanzania.go.tz`) — **a Bill, not an Act**, and not on the whitelist.
+3. The **enacted** Finance Act 2014 exists on the MoF repository — and is a **scanned image**:
+   45 pages, **361 characters** of extractable text. OCR of a fee table is a transcription job
+   needing human verification, not a fetch.
+4. **Finance Acts 2020–2025 do not touch the fee schedule** (all six read directly). FA2025
+   amends the Business Licensing Act at ss.3 and 4 and adds **s.14A — the statutory parent of
+   GN 487A** (*"A licensing authority shall not issue a business licence to a non-citizen
+   unless such business is allowed for non-citizens"*), but not the fees.
+5. **Acts 15/2015, 4/2018 and 12/2023 remain unchecked and unobtained**, and any of them could
+   have moved the figures.
+
+**So the honest position is: the fee is national and binding on councils** — Cap 290's Schedule
+permits *"Business Licence fee for general merchandising as prescribed under the Business
+Licensing Act"* and puts *"Fees exceeding the prescribed fee"* in the shall-not-impose column —
+**but we cannot state a current amount.** The resolution path is not another fetch: it is BRELA
+directly, or OCR plus the three unchecked Acts, with human sign-off.
+
+**What DID ship from this domain: the renewal date.** Finance Act 2014 s.5 substituted
+Business Licensing Act s.3(4): *"Every business licence granted under this Act shall expire on
+the 30th day of June of each year."* One national fact, no variation, no arithmetic — and it
+answers *"lini"* for every trader in the country.
+
+---
+
+## ⚖️ THE SERVICE LEVY: WE ARE NOT HEDGING BECAUSE WE ARE UNSURE. THE LAW IS UNCLEAR ABOUT THIS USER.
+
+Recorded as a finding in its own right at founder request, because the two are different and
+the second is worth saying out loud.
+
+**Local Government Finance Act CAP. 290 R.E. 2019, s.7(1)(u)** (and s.6 in identical terms for
+district councils), verbatim:
+
+> *"all monies derived from the service levy payable by **corporate entities or any person
+> conducting business with business licence** at the rate **not exceeding 0.3 percent** of the
+> turnover net of the value added tax and excise duty"*
+
+**The Schedule made under s.16(1)** — whose second column is what a council **shall not**
+impose, s.16(2) — item **4. Levies (a)**:
+
+| MAY impose | SHALL NOT impose |
+|---|---|
+| Service levy charges to **corporate entities** of cap 0.3% on turn-over, net of VAT and excise duty | • In excess of cap of 0.3% of turnover<br>• **Non-corporate entities** |
+
+**The operative section says "or any person conducting business with business licence". The
+Schedule says councils shall not impose it on non-corporate entities. A sole-proprietor duka
+owner is a non-corporate entity — so the statute disagrees with itself precisely about our
+single most common user.**
+
+Two consequences, and they are different in kind:
+
+1. **The rate is a CAP, not a rate.** Each council sets its own figure at or below 0.3%. Saying
+   *"the service levy is 0.3%"* is wrong in every council that charges less. This is an
+   ordinary council-variation limit.
+2. **The liability is genuinely unsettled in the text.** No amount of careful phrasing on our
+   side resolves a conflict between a section and its own Schedule.
+
+> **A hedge that comes from OUR uncertainty is a weakness to be fixed. A hedge that comes from
+> the LAW's uncertainty is the answer, and stating it plainly — "the Act's Schedule excludes
+> non-corporate entities; confirm your own status with your council" — is more useful to a
+> trader than either a confident yes or a confident no.** Filing both under "hedged copy"
+> would have lost the distinction.
+
+---
+
+## 🧨 DECOMPOSITION FABRICATES A SUB-QUESTION THE USER NEVER ASKED (found 2026-08-16, PRE-EXISTING, unfixed)
+
+Walked into while building the presumptive route; **confirmed on pristine HEAD `05e68b5`, so it
+is not caused by it.** `decompose_query`:
+
+```
+IN   "Mauzo yangu ya mwaka ni milioni 9, sina kumbukumbu za mahesabu. Kodi ya makadirio?"
+OUT  ['Mauzo yangu ya mwaka ni milioni 9',
+      'Mauzo yangu ya mwaka ni milioni sina kumbukumbu']      <- TEXT THE USER NEVER WROTE
+                                                              <- and the QUESTION is GONE
+```
+
+The unit preamble (`milioni`) is carried onto a comma clause that is not an enumeration item.
+**This is a category worse than the documented preamble-drop (B2): it does not merely lose a
+sub-question, it invents one**, and the invented one then goes to the fact path as though the
+user had asked it. The PAYE and SDL analogues (*"Mshahara wangu ni 900000, sina mkataba wa
+ajira. PAYE ni ngapi?"*) are untouched, so the trigger is narrow.
+
+Pinned as `test_the_comma_enumeration_split_corrupts_this_question`, an **`xfail(strict=True)`
+asserting the CORRECT behaviour** — so it fails loudly the day someone fixes decomposition, and
+it never asserts that the broken behaviour is right. (The alternative — a test asserting the
+current output — is the antipattern CLAUDE.md records: a test that instructs future maintainers
+not to fix a real defect.) **New board item; deliberately not fixed inside a coverage commit,
+because decomposition sits under every route.**
+
+---
+
+## 🔌 TWO OPERATIONAL FINDINGS FROM THE SOURCE FETCH (2026-08-16)
+
+**1. `WebFetch` cannot read the two most important primary-source hosts. `curl` can.** This is
+the more valuable of the two, because the failure mode is not "no data" — it is *falling back to
+practitioner summaries*, which is the exact thing the source discipline exists to prevent.
+
+| host | WebFetch | curl |
+|---|---|---|
+| `www.tra.go.tz` (Acts, at-a-glance, TAA) | ❌ `Parse Error: Invalid header value char` — every request | ✅ **200** |
+| `tanzlii.org` (HTML) | ❌ 403 | ❌ 403 (browser UA too — Cloudflare) |
+| `media.tanzlii.org` (source PDFs) | ❌ 403 | ✅ **200** |
+| `www.mof.go.tz` | ✅ (binary) | ✅ |
+| `repository.mof.go.tz` | ❌ certificate chain | ✅ with `-k` |
+
+Working recipe: `curl -sS -L --max-time 180 -o x.pdf <url>` then `pypdf`. Two TRA quirks —
+a missing file 302-redirects to **http**, which then fails on port 80 (so a `302` means "wrong
+filename", not "blocked"), and the 2024/25 at-a-glance is a **scanned image** (36 pages, 143
+characters) while the 2025/26 one has a real text layer.
+
+**2. The whitelist has real gaps, and no change is needed if we source with discipline.**
+`scripts/check_sources.py` `TRAINING_WHITELIST` carries `tra.go.tz`, `brela.go.tz` and
+`tanzlii.org` — enough for all five domains. It does **not** carry `mof.go.tz`,
+`tamisemi.go.tz`, `parliament.go.tz`, `trade.tanzania.go.tz` or `business.go.tz`. The mof.go.tz
+copies of Cap 290 and Finance Act 2022 used above are **scoping convenience mirrors**; any pair
+must cite the TanzLII or TRA original.
+
+---
+
+## ⏭️ NOT DONE, AND WHY
+
+- **R15 IS PENDING AND THE FACTS ARE NOT LIVE.** Four facts were added to
+  `scripts/locked_facts.json` (`business_licence_expiry_30_june`,
+  `presumptive_tax_bands_2022`, `presumptive_tax_ceiling_100m`,
+  `presumptive_excluded_services`) and **the RAG index has not been regenerated**, so the fact
+  path still cannot retrieve any of them. `kaggle/regenerate_rag_e5.py` runs on Kaggle
+  (local network blocks the e5 download) — founder step. **The engine does not depend on it**;
+  the licence renewal date does.
+- **Not deployed.** No R16 cycle has been run for this change, so none of it is live.
+- **The fact-path class analysis (item 4) has not started**, and the three fact-set coverage
+  items wait on its result, as agreed.
+
+---
+
+## 🔁 THE CONCORD CENSUS CAUGHT THE FIRST CUE LISTS ADDED AFTER IT SHIPPED (2026-08-16)
+
+`test_every_cue_with_a_person_form_has_its_concord_counterpart` failed on the presumptive
+commit, one day after the object-concord round closed. **This is the test working exactly as
+designed** — it derives counterparts from the grammar and demands the list recognise them, so a
+new list cannot quietly repeat the old omission. Four real 1pl gaps, added:
+
+```
+_KEEPS_RECORDS_CUES      "tuna kumbukumbu za mauzo"
+_EXCLUDED_SERVICE_CUES   "biashara yetu ni ushauri" · "kampuni yetu ya ujenzi"
+                         "biashara yetu ya ujenzi"
+```
+
+**And it also produced nine false alarms, which is the more interesting half.** The generator
+read `ninaTUnza kumbukumbu` as {`ni` + `na` + object infix `-tu-` + stem `nza`} and offered
+`ninakunza` / `ninamnza` / `ninawanza`. **None is a Swahili word** — the verb is `-tunza` and
+its stem simply begins with `tu`.
+
+> **This is the `mkataba` / `wakati` / `kuhusu` nesting trap the object-concord round was built
+> to defeat, arriving INSIDE the instrument that round shipped — and catching it on the very
+> first cue list added afterwards.** Host qualification (subject+tense) is what lets
+> `_object_counterparts` reject nesting words, and it cannot separate `ni-na-tu-nza` from
+> `ni-na-tu-ma` (`ninatuma`, "I send", where `-tu-` genuinely IS an object infix) without a
+> verb lexicon this repo does not have.
+
+Recorded as an explicit `_NOT_MORPHOLOGY` exclusion with that reasoning, deliberately kept
+SEPARATE from `_WITHHELD_OBJECT` — which has its own pin asserting its exact membership, so a
+generator artefact could not be smuggled in beside four real deferred gaps.
+
+---
+
 # 🔄 SESSION HANDOVER — 2026-08-15 (second session)
 
 **HEAD `5d7d88c` · working tree clean · in sync with origin/main.**
@@ -1088,6 +1409,12 @@ thing. Same shape, one more level out.
 | ~~`_WAGE_PAY_CUES`~~ | — | ✅ **closed** (`32917f4`) — employee side reaches the deterministic route; BEFORE blamed NSSF for an unlawful wage |
 | ~~wage clarification copy~~ | wl_08/wl_09 | ✅ **closed** (`571cf1d`) — the worker is addressed as a worker; employer copy unchanged |
 | ~~`MIN_WAGE_NO_SECTOR` figures~~ | — | ✅ **verified and cleared** — TZS 80,000 is sector 4d, `viwango 50` is the row count; CLAUDE.md counts different things. Drift pin added |
+| *(new 2026-08-16)* presumptive tax | coverage | ✅ **engine shipped** — Cap 332 First Sch. para 2 per FA2022 s.72; NOT deployed, no R16 cycle yet |
+| *(new 2026-08-16)* licence renewal date | coverage | ✅ fact written — **blocked on R15 RAG regen (Kaggle, founder step) so it is NOT retrievable yet** |
+| *(new 2026-08-16)* licence FEE schedule | coverage | 🛑 **left uncovered** — no current consolidated First Schedule from any primary source; BRELA or OCR + 3 unchecked Acts |
+| *(new 2026-08-16)* decomposition FABRICATES a sub-question | all routes | ⏸ pre-existing, confirmed on `05e68b5`; pinned `xfail(strict=True)`; not fixed inside a coverage commit |
+| *(new 2026-08-16)* RAG similarity floor | pilot blocker | ⏸ scoped, agreed to ship **before any pilot**; needs the score distribution measured first |
+| *(new 2026-08-16)* fact-path class analysis | 6 of 9 remaining WRONG | ⏸ **next item**; the three fact-set coverage domains wait on its result |
 
 ---
 

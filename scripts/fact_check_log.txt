@@ -911,3 +911,6 @@ Total: 50 | Flagged: 0
 
 [2026-07-06T13:45:52.666182] Checked C:/Users/jhjh/AppData/Local/Temp/b015_all.jsonl
 Total: 750 | Flagged: 0
+
+[2026-08-16T17:15:32.913450] Checked eval/accuracy_gate/presumptive_tax_probes_020.jsonl
+Total: 20 | Flagged: 0
