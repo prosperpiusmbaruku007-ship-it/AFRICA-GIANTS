@@ -146,6 +146,31 @@ Full machine-readable list: **sources/whitelist.json**
 
 Any URL not in sources/whitelist.json is rejected by the pipeline before a pair is created.
 
+### A CONSOLIDATED ACT IS NOT THE CURRENT LAW (added 2026-08-17)
+
+A whitelisted primary source can still be wrong. **A consolidated / Revised Edition Act is a
+snapshot at its revision date; the amending Finance Act governs.** Before encoding any schedule,
+band table, rate or fee from a consolidated Act:
+
+1. Note the Revised Edition year on the cover.
+2. Read every Finance Act from that year forward and find the section that substitutes the
+   schedule. Encode from the **amending Act's** text.
+3. Cite the amending Act in the fact, not the consolidation.
+
+**Proven on 2026-08-16, presumptive income tax.** Cap 332 R.E. 2019 — hosted on **tra.go.tz
+itself** — still prints the pre-2022 five-band table. Finance Act 2022 s.72 replaced it. At TZS
+50,000,000 turnover the stale table gives **1,710,000**, the governing text **1,750,000**; every
+figure above TZS 11,000,000 would have been wrong, from a whitelisted government source, with
+nothing downstream able to catch it.
+
+**The regulator's own summary is not the statute either.** TRA's "At a Glance 2025/26" prints a
+Class A transport row (*Up to 5 → 120,000*) that the enacted Finance Act 2024 s.46(a) does not
+contain.
+
+**Renumbering trap:** a cross-reference inside an old consolidation points at the old numbering.
+Cap 332's presumptive records test cites "section 35 of the Tax Administration Act"; in Cap 438
+R.E. 2023 that provision is **s.43**.
+
 ---
 
 # 5. DOMAIN SEQUENCE AND CURRENT ACTIVE TIER

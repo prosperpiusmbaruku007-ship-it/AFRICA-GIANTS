@@ -60,6 +60,121 @@ this project has, taken the same way twice.
 
 ---
 
+# 🧭 TWICE IN TWO DAYS, ANALYSIS-BEFORE-BUILD STOPPED WORK THAT WOULD NOT HAVE WORKED (2026-08-17)
+
+**This is the argument for the discipline itself, and it is now a measured argument rather than
+a stylistic preference. Two builds were queued, both plausible, both scoped, and both were
+stopped by a measurement that cost hours — not by taste, and not after the fact.**
+
+| the build that was queued | what it would have cost | what the measurement found |
+|---|---|---|
+| **D1 — a new adapter**, queued behind **6 of the 9** remaining WRONG rows | a Kaggle training cycle | **0 of 9 are OVERRIDE.** The adapter never contradicted a retrieved fact. It would have fixed **none** of them |
+| **A similarity floor on an absolute score**, agreed as the pre-pilot safety net | a build, a regen and a pilot gate | correct facts score **0.765–0.809**, irrelevant top-1s score **0.790–0.859**. **There is no cut point** |
+
+**Neither was a bad idea. Both were the obvious next move.** What made them wrong was invisible
+without instrumenting the thing itself — and in both cases the instrument was cheap relative to
+the build it stopped.
+
+## 1️⃣ ZERO OVERRIDE — the model was reciting what it was handed, not hallucinating
+
+All nine WRONG rows were partitioned by mechanism against **production's own retrieval**
+(full entry below). **OVERRIDE = 0. UNUSED = 0.** Every failing row is either a fact that exists
+in the index and is not retrieved (**RANKING, 7/9**) or a fact we do not hold (**ABSENCE, 2/9**).
+
+Three of the wrong answers are **verbatim index rows**: nat_05's *"TZS 260,000"* is
+`company registration fee 3`, nat_41's invented *"siku 1"* is
+`registration certificate processing time new: 1 days`, nat_28's *"15%"* is `royalties wht rate`.
+
+> **"Fabricated" was the wrong word for these answers all along.** The figure the user was given
+> exists, verbatim, in our own index — attached to a different question. A hallucination is a
+> model defect and its fix is training. **A misretrieval is an index defect and training cannot
+> touch it.**
+
+**That is a training cycle not spent, found by measurement.** It should be quoted whenever a new
+adapter is proposed for this cluster.
+
+## 2️⃣ THE FLOOR CANNOT BE AN ABSOLUTE SCORE
+
+Scoped 2026-08-16 as the pilot blocker: refuse below a threshold. The score distribution makes
+that impossible — the correct fact for one question scores *lower* than the irrelevant top-1 of
+another, so **any threshold that excludes the wrong facts also excludes the right ones**. The
+floor still ships before any pilot, but on a **margin** (top-1 vs top-2 separation) or on a
+**re-ranked index**. Had it shipped as scoped it would have passed its own tests and refused the
+questions it was built to protect.
+
+---
+
+# 🔌 WE CORRECTED FACTS THAT WERE NEVER RETRIEVABLE (2026-08-17)
+
+**28 of 247 locked facts have no trace in the RAG index.** Two of them are load-bearing and both
+were the subject of corrections we believed had landed:
+
+| key | the correction | in the index |
+|---|---|---|
+| `efd_threshold_tzs_11m` | **`f1e3d30`, 2026-07-27 — a commit literally titled `fix(rag)`**, splitting EFD into a pristine threshold key. Preceded by `2be52cd` (2026-06-16), "EFD threshold" among its applied corrections | ❌ **no trace** |
+| `sdl_threshold` | `a71ccd3`, 2026-06-07, locked-facts pattern tightening | ❌ **no trace** |
+
+Also absent: `osha_registration_threshold_b004`, `OSHA_annual_inspection`,
+`small_headcount_still_register`, all twelve SDL exemption categories, and four legal-citation
+keys. Two of the nine WRONG rows (nat_24, nat_41) are directly caused by this.
+
+> **A fact corrected in `locked_facts.json` and never carried into the index is not a corrected
+> fact. It is a corrected file.** Three weeks of believing the EFD threshold was fixed, in a
+> commit whose own subject line says `fix(rag)`, while the retrieval path it names could not
+> reach it.
+
+**Nothing in the pipeline compares `locked_facts.json` against the index.** Not
+`validate_dataset.py`, not `check_locked_facts.py`, not the gate. The two files drifted apart
+silently and the drift was found only because someone went looking for a different thing.
+
+**➡️ THIS COMPARISON BECOMES A PERMANENT CHECK, NOT A ONE-OFF SCAN.** A test that FAILS when
+`locked_facts.json` carries a key the index cannot reach, pinned to the current known-missing set
+so it fires on **drift** — i.e. so the next fact written and not regenerated is caught at commit
+time rather than three weeks later by an unrelated investigation. It lands with the index-gap
+item in the work order.
+
+### ⚠️ Method: the number was 57 before it was 28, and the correction happened before it was written
+
+A first pass matched index rows to locked keys by **key-slug prefix**, a second by **exact
+slug**, and they disagreed: `sdl_rate` is absent as a key while `sdl_rate_2025` is present, so
+one matcher called it indexed and the other called it missing. The headline that produced was
+**57 of 247 = 23%**. Re-derived at content level — exact key, sibling key, or value figure
+present anywhere in the index — the honest number is **28 of 247 = 11%**.
+
+**Half of the alarming figure was an artifact of my own matcher.** It was caught before it
+entered PROGRESS, the board, or a message to the founder, which is the only reason it is a method
+note and not a correction entry. Same discipline as the "52 eval / 385 train rows" correction,
+applied to an instrument on the day it was built: **a number produced by a sloppy matcher is
+exactly how a wrong number enters this record.**
+
+---
+
+# 📜 A CONSOLIDATED ACT IS NOT THE CURRENT LAW — a rule for whoever encodes the next schedule
+
+**Written as a rule because it will recur, and because the failure mode is silent.** Full entry
+with the working below; the rule is this:
+
+> **A consolidated / Revised Edition Act is a SNAPSHOT AT ITS REVISION DATE. The amending Finance
+> Act governs. Read the amending Act, not the consolidation, and never a practitioner summary of
+> either.**
+
+Cap 332 R.E. 2019 — hosted on **tra.go.tz itself** — still prints the pre-2022 five-band
+presumptive table. Finance Act 2022 s.72 replaced it. Both are "the statute"; only one is the law.
+
+| turnover | stale consolidation (R.E. 2019) | governing text (FA2022 s.72) |
+|---|---|---|
+| TZS 50,000,000 | 450,000 + 3.5% of the excess = **1,710,000** | 3.5% of turnover = **1,750,000** |
+
+**Every figure above TZS 11,000,000 would have been wrong**, encoded from a primary government
+source, and nothing downstream could have caught it. Reading the Act was ordered to check a
+typo (`11,000,0000`); **the typo was cosmetic and the table was wrong.**
+
+The corollary holds for the regulator's own summaries: TRA's *"At a Glance 2025/26"* prints a
+Class A *"Up to 5 → 120,000"* row for the transport schedule that **the enacted FA2024 s.46(a)
+does not contain**. Pinned by `test_the_stale_consolidated_table_would_have_been_wrong`.
+
+---
+
 ## 🎯 THE FACT-PATH FAILURES ARE ONE CLASS, AND IT IS RETRIEVAL — NOT RECALL, NOT THE ADAPTER (2026-08-17)
 
 **The analysis the founder asked for before the three fact-set coverage items were written, on
@@ -1567,6 +1682,23 @@ thing. Same shape, one more level out.
 | *(new 2026-08-17)* segregate fee-schedule rows from retrieval | 7 rows | ⏸ **the fix**, largest measured effect; needs an R15 regen |
 | *(new 2026-08-17)* 28 locked facts absent from the RAG index | nat_24, nat_41 | ⏸ nothing compares the two files; needs a check that fails on drift |
 | *(new 2026-08-17)* similarity floor CANNOT use an absolute score | pilot blocker | ⏸ scores compress to 0.79-0.86; redesign on a MARGIN or a re-ranked index |
+| *(new 2026-08-17)* permanent `locked_facts` ↔ RAG index check | pipeline | ⏸ **nothing compares the two files**; `efd_threshold_tzs_11m` was "fixed" on 2026-07-27 and has never been retrievable. Test must fail on DRIFT |
+| *(new 2026-08-17)* D1 / a new adapter for the fact cluster | 6 of 9 WRONG | ❌ **REMOVED from the queue — 0/9 OVERRIDE means it would have fixed none of them.** Do not re-queue without a new measurement |
+
+### ➡️ FOUNDER-ADOPTED WORK ORDER (2026-08-17) — retrieval before facts, floor last
+
+1. **Segregate the fee-schedule rows from general retrieval** — 30% of the index, 58% of top-3
+   slots, near-zero conversational demand. Largest measured effect, smallest change.
+2. **Reachability rewrites (C4)** — Swahili-first, value-at-front, no `key: ` prefix.
+3. **Close the 28-fact index gap**, and land the permanent drift check with it.
+4. **Then** the three fact-set domains (service-levy bound, market-stall exclusions, TIN) —
+   written **with** the retrieval fix and regenerated in **one** R15 Kaggle cycle, not before it.
+5. **Then the floor, on a MARGIN rather than an absolute score.** Still ships before any pilot.
+
+**Ordering rationale, on the record:** *"if retrieval or override is the mechanism, adding five
+domains of facts may not fix the answers, and we'd want to know that before writing them."* The
+mechanism is retrieval, so facts written today would enter an index where fee rows take 58% of
+the slots and correct facts sit at rank 19–164. **They stay paused on purpose.**
 
 ---
 
