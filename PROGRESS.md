@@ -1,12 +1,68 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-15
+Last updated: 2026-08-16
+
+---
+
+# 📊 THE HEADLINE RESULT OF THIS CYCLE — 39.6% → 58.3% correct, 39.6% → 18.8% wrong
+
+**The number feature work was stopped on, re-measured on the same 48 natural-register questions,
+same script, same endpoint, same conditions — a PAIRED comparison, so the difference is the
+build.** Full entry and per-row detail below; artifact
+`eval/results/natural48_rerun_2026_08_15_adjudication.json`.
+
+| | 2026-08-11 | 2026-08-15 | |
+|---|---|---|---|
+| **CORRECT** | 19 | **28** | **+9** |
+| CLARIFY | 6 | 6 | 0 |
+| PARTIAL | 4 | 5 | +1 |
+| **WRONG** | 19 | **9** | **−10** |
+
+| path | 2026-08-11 | 2026-08-15 |
+|---|---|---|
+| **compute** (24) | CORRECT 6 · **WRONG 13** | CORRECT **15** · **WRONG 3** |
+| fact (21) | 10 / 1 / 4 / 6 | **byte-identical** |
+| refusal (3) | 3 CORRECT | 3 CORRECT |
+
+**37 of 48 replies are byte-identical to the baseline. All ten rows that moved are compute rows,
+and every one was a named target of this cycle.** The programme did what it was aimed at and
+nothing else.
+
+### The three caveats travel with the number — always
+
+**1. One row departs from its written rubric.** nat_16's `expected_behavior` demands 15% ×
+4,000,000 = TZS 600,000; **SAFETY-2 (`8b90b25`) deliberately superseded that** — residency turns
+on presence, not permit type, so 600,000 would *also* have been a guess. The reply declines and
+names the 183-day test. **By the written rubric it is WRONG: CORRECT 27 / WRONG 10 = 56.3% /
+20.8%.** Both figures are in the artifact. Quote either; never quote it without this line.
+
+**2. CLARIFY did not move, and 5 of the 6 are DELIVERY FAILURES** (nat_02, nat_06, nat_11,
+nat_17, nat_21) — rows where a figure **was** computable and was not delivered: the
+Swahili-numeral + `kila mmoja` extractor gap and the multi-group aggregation gap. Routing passes,
+delivery fails, not counted as correct. **Largest single block of remaining work, and nothing
+this cycle touched it.**
+
+**3. THE STRATEGIC RESULT — six of the nine remaining WRONG are a fact recited wrongly, not a
+route missed** (nat_05, nat_28, nat_33, nat_41, nat_43, nat_44, nat_45 — royalties 15% for a
+services VAT question, 6% for a goods question, an invented *"siku 1"*, a fabricated absolute
+date, minimum wage stated as not varying by sector). **The routing-and-guard method that took
+the compute path from 13 wrong to 3 has NO purchase on them**: there is no engine to route to
+and no working to check a body against.
+
+> **The routing programme is complete, and the remaining error has moved house.** Two-thirds of
+> what is left is fact recall (D1 / RAG / `locked_facts`) and one-third is extraction. **Neither
+> is addressable by another cue list.** Any plan that answers this measurement with more routing
+> work is answering the previous measurement.
+
+It is **not** a gate result and not a random sample of real traffic — the 48 were authored and
+are register-realistic by construction. It is the only end-to-end natural-register measurement
+this project has, taken the same way twice.
 
 ---
 
 # 🔄 SESSION HANDOVER — 2026-08-15 (second session)
 
-**HEAD `baf77b3` · working tree clean · in sync with origin/main.**
+**HEAD `5d7d88c` · working tree clean · in sync with origin/main.**
 
 | app | serving | note |
 |---|---|---|
@@ -179,7 +235,22 @@ you have watched it fail before it.**
 
 ## ▶️ WHERE THE NEXT SESSION PICKS UP
 
-**`_WAGE_PAY_CUES` first — ahead of A2, by founder order, on stakes.** The gap is already
+**EVERYTHING IN THIS HANDOVER'S QUEUE IS CLOSED.** `_WAGE_PAY_CUES` (`32917f4`), the worker
+clarification copy (`571cf1d`), A2 (`2ee31f5`) and D-FIDELITY-5 (`baf77b3`) all shipped, each
+with its own R16 cycle. **P2 is closed** and the 48-question re-run at the top of this file is
+the measurement that closes it. Both pilot blockers named on 2026-08-14 (P1 silent-drop, P2
+compute cluster) are now closed.
+
+**The next decision is the founder's, not the queue's: whether to start the pilot.** A readiness
+assessment was requested and delivered 2026-08-16 against current state; the corpus-coverage
+measurement it rests on is `scratch/coverage_gap_2026_08_16.json` — **12 of 12 questions from an
+ordinary duka owner's month pass the OOC classifier, 0 of 12 take a deterministic route, and
+0 of 12 have a fact behind them in `locked_facts` or the RAG index — while `retrieve_facts`
+applies NO similarity floor and injects the three nearest facts anyway.**
+Read that before scheduling any further defect work: it is the one part of the product the 48
+questions cannot speak to, because the 48 were authored against domains we hold facts for.
+
+*(Superseded, kept for the reasoning it carries.)* **`_WAGE_PAY_CUES` first — ahead of A2, by founder order, on stakes.** The gap is already
 measured (`scratch/oc_wage_gap.json`): *"**wanani**lipa laki mbili kwa mwezi je ni halali
 kisheria"* routes to `none`, while the employer-side controls `namlipa` / `nimemlipa` route to
 `minimum_wage`. **This is the th_16 class from the employee's side** — an employee asking
