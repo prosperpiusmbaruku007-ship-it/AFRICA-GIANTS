@@ -110,7 +110,7 @@
     "status": "CONFIRMED"
   },
   "sdl_rate": {
-    "fact": "SDL rate is 3.5% of gross payroll — NOT 4%",
+    "fact": "SDL rate is 3.5% of gross cash emoluments effective 1 July 2023 (Finance Act 2023 reduced from 4%). Minimum 10 employees threshold applies.",
     "correct_value": "3.5%",
     "wrong_patterns": [
       "asilimia 4 ya",
@@ -126,9 +126,10 @@
       "kiwango cha SDL ni 5%"
     ],
     "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
-    "verified_by": "Finance Act 2023 — changed from 4% to 3.5%",
+    "verified_by": "Finance Act 2023 -- changed from 4% to 3.5%; PWC Tax Summaries 2025",
     "effective_date": "2023-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED -- merged with sdl_rate_2025 (2026-08-17, duplicate-key sweep)",
+    "verified_date": "2026-06-16"
   },
   "sdl_full_name": {
     "fact": "SDL stands for Skills Development Levy — NOT Service Delivery Levy and NOT short-term disability leave",
@@ -828,21 +829,6 @@
     "effective_date": "2025-07-01",
     "status": "CONFIRMED"
   },
-  "brela_annual_return_fee": {
-    "fact": "BRELA annual return filing fee is TZS 22,000. Late filing penalty is TZS 2,500 per month (local company) or USD 25/month (foreign Section XII company).",
-    "correct_value": "TZS 22,000 filing; TZS 2,500/month late penalty",
-    "wrong_patterns": [
-      "annual return.*brela.*bila malipo",
-      "brela.*annual return.*free of charge",
-      "brela.*annual return.*tzs 50,000",
-      "brela.*annual return.*tzs 5,000(?!\\b)",
-      "brela.*faini.*kurasa za mwaka.*tzs 10,000"
-    ],
-    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
-    "verified_by": "BRELA official fee schedule, Jun 2026",
-    "effective_date": "2025-01-01",
-    "status": "CONFIRMED"
-  },
   "brela_striking_off_non_filing": {
     "fact": "A company that fails to file annual returns with BRELA may be deemed defunct and struck off the Register of Companies. Procedure: the Registrar publishes a 30-day notice requiring proof the company is still operating; on failure the name is struck off under the Companies Act, Cap 212. The Registrar may also strike off on his own accord by written notice (2019 amendment). There is NO rule that a company must 'finish its term' before removal — companies have no fixed term. Restoring a struck-off company requires a High Court application.",
     "correct_value": "Non-filing -> defunct -> 30-day notice -> struck off (Companies Act Cap 212); restore via High Court. No 'fixed term' bar.",
@@ -1108,28 +1094,6 @@
     "primary_source": "nssf.go.tz — verify current deadline",
     "verified_date": "2026-06-16",
     "status": "CONFIRMED — use hedged language"
-  },
-  "sdl_rate_2025": {
-    "fact": "SDL rate is 3.5% of gross cash emoluments effective 1 July 2023 (Finance Act 2023 reduced from 4%). Minimum 10 employees threshold applies.",
-    "correct_value": "3.5% from 1 Jul 2023",
-    "wrong_patterns": [
-      "sdl.*4%(?! hadi| to | kabla)",
-      "sdl.*asilimia 4(?! hadi| to | kabla)"
-    ],
-    "primary_source": "PWC Tax Summaries 2025; Finance Act 2023",
-    "verified_date": "2026-06-16",
-    "status": "CONFIRMED — 3.5% is correct for 2025/26"
-  },
-  "sdl_employee_threshold": {
-    "fact": "SDL applies to employers with minimum 10 employees. Below 10 employees = no SDL obligation.",
-    "correct_value": "10 employees minimum",
-    "wrong_patterns": [
-      "sdl.*wafanyakazi 5(?! au zaidi| or more)",
-      "sdl.*wafanyakazi 4(?! au zaidi| or more)"
-    ],
-    "primary_source": "PWC Tax Summaries 2025; RSM Tax Guide 2025/26; TRA SDL official page",
-    "verified_date": "2026-06-16",
-    "status": "CONFIRMED — 10 is correct"
   },
   "paye_bands_monthly_2025_26": {
     "fact": "PAYE monthly bands 2025/26: Band 1: 0-270,000=0%; Band 2: 270,001-520,000=8%; Band 3: 520,001-760,000=20%; Band 4: 760,001-1,000,000=25%; Band 5: above 1,000,000=30%. No personal relief of TZS 26,000 exists.",
@@ -2076,5 +2040,45 @@
     "primary_source": "Income Tax Act Cap 332 First Schedule para 2(1)(a) as amended by the Finance Act 2022 s.72(a)(i). TRA's 2025/26 summary paraphrases this more narrowly ('professional services, construction industry and trainers') - the statute is wider and governs.",
     "verified_date": "2026-08-16",
     "status": "CONFIRMED"
+  },
+  "brela_foreign_late_filing_penalty": {
+    "fact": "Foreign (Section XII) company late filing penalty for annual return is USD 25 per month, distinct from the TZS 2,500/month penalty for local companies.",
+    "correct_value": "USD 25/month (foreign Section XII company)",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "BRELA official fee schedule, Jun 2026",
+    "effective_date": "2025-01-01",
+    "status": "CONFIRMED -- extracted from brela_annual_return_fee (2026-08-17, duplicate-key sweep)"
+  },
+  "osha_registration_before_operations": {
+    "fact": "A workplace/factory must be registered with OSHA BEFORE commencing business operations -- there is no grace period of N days after opening. Section 16(2), Occupational Health and Safety Act No. 5 of 2003.",
+    "correct_value": "Before commencing operations (OSH Act 2003 s.16(2)), not N days after",
+    "wrong_patterns": [
+      "osha.*siku 1",
+      "osha.*within 1 day",
+      "sajili.*osha.*ndani ya siku",
+      "osha.*registration.*deadline.*days after"
+    ],
+    "primary_source": "https://procedures.tiseza.go.tz/menu/437?l=en",
+    "verified_by": "Tanzania government business-procedures portal (tiseza.go.tz), cross-checked against independent search results quoting identical s.16(2) text",
+    "verified_date": "2026-08-17",
+    "status": "CONFIRMED"
+  },
+  "sdl_exemption_categories": {
+    "fact": "Employers/institutions exempt from SDL: government departments; local government authorities; diplomatic missions; the United Nations and its agencies; international/foreign aid organizations; religious institutions (spiritual activities only); registered educational institutions; charitable organizations; TaESA trainees; and farm employers for employees directly engaged in agricultural activities.",
+    "correct_value": "10 exemption categories -- see fact",
+    "source_keys": [
+      "exemption_category_government_departments",
+      "exemption_category_diplomatic_missions",
+      "exemption_category_religious_institutions",
+      "exemption_category_educational_institutions",
+      "exemption_category_farm_employers_agriculture",
+      "exemption_category_charitable_organizations",
+      "exemption_category_local_government_authorities",
+      "exemption_category_trainees_under_TAESA",
+      "exemption_category_un_and_agencies",
+      "exemption_category_international_organizations_aid"
+    ],
+    "primary_source": "source of the 10 individual exemption_category_* keys, unchanged",
+    "status": "CONFIRMED -- consolidated 2026-08-17 so the RAG index carries one retrievable Swahili fact instead of 10 English fallback rows; the 10 individual keys remain in locked_facts.json for training-pair generation but are excluded from the RAG index by an explicit reviewed list, not the old blanket noise regex"
   }
 }

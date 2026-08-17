@@ -62,7 +62,8 @@ INDEX_PATH = os.path.join(_REPO, "kaggle", "rag_facts_text.json")
 # absent / fragment / pending_r15: no index_row — genuinely not there, by different reasons.
 PINNED = {
     "sdl_threshold": ("present_elsewhere", 7, "wafanyakazi 10 au zaidi"),
-    "sdl_employee_threshold": ("present_elsewhere", 7, "wafanyakazi 10 au zaidi"),
+    # sdl_employee_threshold pin removed 2026-08-17 -- the key itself was deleted
+    # (merged into sdl_threshold, duplicate-key sweep; see PROGRESS "C4 applied").
     "efd_threshold_tzs_11m": ("present_elsewhere", 58, "TZS 11,000,000"),
     "osha_registration_threshold_b004": ("present_elsewhere", 53, "bila kikomo"),
     "small_headcount_still_register": ("present_elsewhere", 72, "OSHA husajili maeneo YOTE"),
@@ -99,6 +100,25 @@ PINNED = {
     "presumptive_excluded_services": ("pending_r15", None, None),
     "presumptive_tax_bands_2022": ("pending_r15", None, None),
     "presumptive_tax_ceiling_100m": ("pending_r15", None, None),
+
+    # Third pass, 2026-08-17, same day: tightening the sibling matcher (see
+    # _is_sibling's docstring -- a single-word slug like 'nssf' or 'brela' was letting
+    # unrelated keys ride on the SAME row) demoted 5 real, already-indexed keys out of
+    # "sibling" into unpinned drift. Re-verified each against its OWN correct row by
+    # reading the index directly (scratch/local_regen_verify.py's sibling-audit pass).
+    "nssf_employer_rate": ("present_elsewhere", 9, "mwajiri analipa asilimia 10"),
+    "nssf_total_rate": ("present_elsewhere", 10, "jumla: asilimia 20"),
+    "nssf_payment_deadline": ("present_elsewhere", 63, "ifikapo tarehe 10"),
+    "nssf_calculation_example": ("present_elsewhere", 216, "SI TZS 120,000"),
+    "brela_striking_off_non_filing": ("present_elsewhere", 45, "kufuta, kufunga au kuondoa"),
+
+    # C4 reachability cycle, 2026-08-17: three new keys written this cycle, absent BY
+    # DESIGN until the R15 regen runs (same discipline as the presumptive-tax pending
+    # keys above). brela_foreign_late_filing_penalty is the one the tightened sibling
+    # matcher above caught falsely riding on 'brela' -- it was NOT actually indexed.
+    "brela_foreign_late_filing_penalty": ("pending_r15", None, None),
+    "osha_registration_before_operations": ("pending_r15", None, None),
+    "sdl_exemption_categories": ("pending_r15", None, None),
 
     # --- Second pass, 2026-08-17: this script's own first run found 20 MORE unpinned
     # keys the earlier v1/v2/v3 investigation never touched -- v3 only re-checked the 28
@@ -139,6 +159,22 @@ def _key_slug(key):
     return key.replace("_", " ").strip().lower()
 
 
+def _is_sibling(key_slug, index_slug):
+    """A genuine sibling is a versioned variant (sdl_rate -> 'sdl rate 2025'), not any
+    shared word. Found 2026-08-17: a raw startswith() let a single generic label --
+    'nssf', 'brela', from CONCISE text like 'NSSF: ...' / 'BRELA: ...' -- silently
+    verify FOUR different nssf_* keys against the SAME row (only one was actually it)
+    and let a brand-new, not-yet-indexed key (brela_foreign_late_filing_penalty) pass
+    as if it were already reachable. Requiring the SHORTER slug to carry at least 2
+    words closes that: single-word index labels can no longer anchor a false sibling
+    match, while genuine versioned pairs (which always share a multi-word stem) still
+    match."""
+    if not (index_slug.startswith(key_slug) or key_slug.startswith(index_slug)):
+        return False
+    shorter = key_slug if len(key_slug) <= len(index_slug) else index_slug
+    return len(shorter.split()) >= 2
+
+
 def check(facts_path=FACTS_PATH, index_path=INDEX_PATH):
     locked = json.load(open(facts_path, encoding="utf-8"))
     index = json.load(open(index_path, encoding="utf-8"))
@@ -158,7 +194,7 @@ def check(facts_path=FACTS_PATH, index_path=INDEX_PATH):
         if slug in index_slugs:
             report["exact"].append(key)
             continue
-        if any(s.startswith(slug) or slug.startswith(s) for s in index_slugs):
+        if any(_is_sibling(slug, s) for s in index_slugs):
             report["sibling"].append(key)
             continue
 

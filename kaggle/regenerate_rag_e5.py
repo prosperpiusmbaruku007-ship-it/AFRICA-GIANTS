@@ -175,6 +175,29 @@ critical_queries = [
     ('OSHA/WCF small-count (Q14 verbatim)', 'query: Nina wafanyakazi wawili tu dukani, bado nasajiliwa mahali fulani?', ['osha husajili', 'wcf huanza', 'mfanyakazi wa kwanza']),
     # Q16 EFD: model said every shop needs an EFD regardless of sales.
     ('EFD not-every-business (Q16 verbatim)', 'query: Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?', ['si kila biashara', 'risiti za mkono']),
+    # ── C4 REACHABILITY CYCLE, 2026-08-17 ── one positive guard for the row that
+    # actually cleared top-3 after two rounds of wording (GN605A_sector_count, nat_43,
+    # rank 127->1); four negative/displacement guards for nat_26/27/34/36, whose pools
+    # sit downstream of the sdl_rate_2025/sdl_employee_threshold/brela_annual_return_fee
+    # deletions and the annual_return_filing_fee/late_filing_penalty_monthly_fee/GN605A
+    # rewrites. nat_27's guard is also what caught the vat_withholding_goods/services
+    # displacement (see the HELD BACK comment in precompute_rag_embeddings.py) -- it
+    # only passes because that rewrite was NOT applied; if anyone re-attempts it, this
+    # guard is what will catch the regression again.
+    #
+    # nat_37 and nat_38 were ORIGINALLY going to be guarded here too, per the founder's
+    # list of six. Local dry-run verification (scratch/local_regen_verify.py) found both
+    # ALREADY FAIL against the currently deployed index -- confirmed independent of any
+    # change in this cycle by testing them against kaggle/rag_facts_text.json as-is,
+    # before any of this session's edits. They are not protected by anything today,
+    # C4 or otherwise; wiring a guard for an already-failing row would only block this
+    # cycle's real wins from deploying. Named as their own item in PROGRESS instead of
+    # silently guarded here.
+    ('GN605A sector count (nat_43 verbatim, the row that clears)', 'query: Mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta?', ['mkulima', 'kilimo']),
+    ('VAT six-month threshold (nat_26 displacement guard)', 'query: Nimefungua duka miezi sita iliyopita nimeuza jumla milioni 60 hadi sasa je nimefika kiwango cha vat?', ['100,000,000']),
+    ('VAT standard rate (nat_27 displacement guard)', 'query: VAT ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu?', ['18%']),
+    ('Company registration fee (nat_34 displacement guard)', 'query: Nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina?', ['95,000']),
+    ('EFD threshold, VAT-unregistered (nat_36 displacement guard)', 'query: Mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti?', ['11,000,000']),
 ]
 
 print('\n' + '=' * 60)

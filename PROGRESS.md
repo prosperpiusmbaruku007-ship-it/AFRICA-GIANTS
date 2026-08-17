@@ -4,6 +4,154 @@ Last updated: 2026-08-17
 
 ---
 
+# ✅ C4 APPLIED — merges, two new facts, four rewrites landed; two held back on evidence (2026-08-17)
+
+**Applied to `scripts/locked_facts.json` + `scripts/precompute_rag_embeddings.py` +
+`kaggle/regenerate_rag_e5.py`. Not yet regenerated — needs the Kaggle GPU step (R15);
+everything below is verified against a LOCAL dry-run using the cached e5-base model
+(`scratch/local_regen_verify.py`), which mirrors the regen's own gate but does not
+replace it.**
+
+## Landed
+
+- **3 merges** (data hygiene, independent of wording): `sdl_rate_2025` deleted, its
+  precision folded into `sdl_rate`'s locked_facts.json record (not its CONCISE text —
+  see the citation-clutter rule below). `sdl_employee_threshold` deleted (near-duplicate
+  of `sdl_threshold`, nothing distinct to preserve). `brela_annual_return_fee` deleted;
+  its one genuine unique detail (foreign Section XII, USD 25/month) extracted into a
+  new key.
+- **3 new facts**: `brela_foreign_late_filing_penalty` (extracted above).
+  `osha_registration_before_operations` — genuinely new content, not a rewrite (OSH
+  Act 2003 s.16(2), verified against two independent Tanzania government sources
+  before writing). `sdl_exemption_categories` — one consolidated Swahili fact
+  absorbing 10 real exemption categories previously dropped whole by a noise regex
+  that was too broad for content it never read (see below).
+- **4 rewrites applied**: `sdl_rate` (nat_05, rank 150→24), `GN605A_sector_count`
+  (nat_43, rank 127→**1, clears top-3**), `annual_return_filing_fee` +
+  `late_filing_penalty_monthly_fee` (nat_33, best rank 113→25), plus the new
+  `osha_registration_before_operations` fact itself (nat_41, rank →5).
+- **Noise regex fixed at the mechanism**: `^exemption_category_` (a content-guessing
+  prefix) replaced by `_NOISE_KEYS_REVIEWED`, an explicit set of the 10 keys with a
+  comment on why each is excluded. The remaining patterns stay regex because they
+  target *shape* (bare citation, bare section) which is safe to guess regardless of
+  content; a content-bearing family is not.
+- **1 positive + 4 negative regen guards** wired into `regenerate_rag_e5.py`'s
+  `critical_queries`: nat_43 (the row that clears) as positive; nat_26/27/34/36 as
+  displacement negatives, all verified passing in the local dry-run.
+
+## Held back on evidence — nat_44 and nat_28's rate half did NOT land
+
+**This is a correction to the apply-list, found during verification, not a skip.**
+`vat_withholding_goods`/`vat_withholding_services` rewrites measured nat_44 33→4 and
+nat_28's rate half 33→8 in round 2 — real wins. But the local dry-run (built
+specifically to catch this class of thing before Kaggle) found a cost round 2's
+stage-1 harness never tested for: the same rewrite pulls **nat_27** (currently
+CORRECT — the standard 18% VAT rate, a different question from withholding) into the
+same neighbourhood and displaces its fact out of top-3.
+
+Three phrasings were tried to reconcile it:
+
+| variant | nat_27 | nat_44 | nat_28 |
+|---|---|---|---|
+| round-2 (bare rewrite) | FAIL | rank 4 | rank 8 |
+| + explicit "Si kiwango cha kawaida (18%)" contrast | **false PASS** (guard's `18%` substring matched the contrast clause itself — the actual retrieved content was still the withholding fact, not the rate fact) | rank 5 | rank 63 |
+| "makato" (deduction) framing | FAIL | rank 9 | rank 27 |
+
+The contrast attempt is the more interesting failure: it would have shipped as a
+passing guard while the underlying answer was still wrong — the same shape as the
+present_elsewhere/absent overlap and the drift check's own score-threshold finding,
+one level down at the level of a single keyword-substring test. **A guard that
+matches on a negation clause is not verifying the claim, only the vocabulary.**
+
+Both keys are left OUT of `CONCISE_BILINGUAL_FACTS`, on their original fallback text.
+nat_44 and nat_28's rate half stay wrong in production, unimproved from before this
+cycle, rather than trading a currently-correct row for them. This is a real,
+structural tradeoff — not a wording bug — and needs a decision, not another pass.
+
+## nat_37 / nat_38 — discovered unprotected, not caused by this cycle
+
+The founder's original list of six negative guards included nat_37 and nat_38. The
+local dry-run checked both against the **currently deployed** index (unmodified by
+anything in this cycle) before wiring anything, and both **already fail** — pre-existing
+gaps nobody had verified before because nothing had ever tested them this precisely.
+Not wired as guards (a guard for an already-failing row blocks every real win in this
+cycle from deploying); named here as a new, separate, unfixed item instead.
+
+## The citation-clutter rule (standing guidance, not a one-off note)
+
+Written into `precompute_rag_embeddings.py`'s module docstring so it survives past this
+session: **do not put effective dates, Act/section citations, or statutory-basis
+phrasing in CONCISE_BILINGUAL_FACTS text.** Measured directly this cycle — folding
+`sdl_rate_2025`'s citation precision into `sdl_rate`'s embedded text pulled it toward
+legal-citation-shaped neighbours and away from the conversational question a real user
+asks (nat_05 only reached rank 59 with that material included; stripped, rank 24;
+stripped AND with the query's own tokens echoed, rank 1 — the ceiling test). That
+precision is not lost, it moves to locked_facts.json's own fields (`verified_by`,
+`effective_date`, `primary_source`), which R13's training-pair generation reads
+directly and does not pass through this embedding at all. Every future fact will be
+tempted to include this material in the retrieval text for good reasons — completeness,
+auditability — and the rule exists because those reasons measurably lose.
+
+## The sibling-matcher bug this cycle's new keys exposed
+
+Wiring `brela_foreign_late_filing_penalty` into `check_facts_index_sync.py` should have
+produced `drift_unpinned` (it is genuinely not indexed yet) — instead it silently
+passed as `sibling`. The matcher's sibling check was a raw `startswith()`: a single
+generic label like `'brela'` or `'nssf'` (the slug of a CONCISE row that happens to
+begin `"BRELA: ..."` or `"NSSF: ..."`) satisfied it against *any* longer key sharing
+that first word. Auditing what else this let through found **four `nssf_*` keys and
+one `brela_*` key all "verified" against the SAME single row**, when each actually has
+its own distinct, correct row elsewhere in the index — the check was giving a real
+pass, but not for the reason it claimed, and would have given the same false pass to
+an actually-missing key with the bad luck to share a first word. Fixed by requiring the
+shorter of the two slugs to carry at least two words before a prefix match counts as a
+sibling (`_is_sibling()`); the five real keys were re-verified by reading their actual
+rows and pinned as `present_elsewhere` with the correct row numbers. This is the same
+lineage as v1→v2→v3→the drift check itself: a matcher that is right more often than it
+is checked will eventually be wrong in a way nobody was looking for.
+
+## THE THREE FLAT ROWS — a separate finding, not a residual (nat_24, nat_45, nat_23)
+
+**nat_24 (41→44→37), nat_45 (19→9→9), nat_23 (164→84→87) did not respond to two rounds
+of substantially different wording, while nat_05 — same SDL cluster, same rewrite
+discipline — went 150→24.** That asymmetry is the finding: something differentiates
+these three from a cluster-mate that moved freely, and the ceiling test run so far
+(on nat_05, which DID move) cannot answer what. **Per the founder's instruction: when
+this is picked up, run the ceiling test ON one of these three rows directly** — not on
+nat_05 again — because if a deliberately overfit, query-echoing text still can't move
+nat_24, the blocking mechanism is not wording and no further wording pass should be
+spent guessing at it. Text held at pre-2026-08-17 wording for `sdl_threshold` and
+`wcf_accident_reporting_deadline` deliberately, pending that test. `sdl_rate` (nat_23's
+shared target with nat_05) was updated for nat_05's sake and nat_23 still sits deep on
+the same new text — proof the text change alone isn't what nat_23 is waiting on either.
+
+## nat_41: the honest version of the class result
+
+The flip from RANKING back to ABSENCE (see "nat_41 flips back to ABSENCE" above) means
+**the partition is 8/9 RANKING, 1/9 ABSENCE — not 9/0.** The class claim survives,
+slightly weakened: eight of nine WRONG rows genuinely were retrieval failures on
+content that was already correct and already indexed. The ninth *looked* like one —
+key-adjacent content existed nearby — until someone read what that content actually
+said against what the question actually asked, and it didn't match. **That correction
+is the interesting part, not the weakening**: it is the same discipline that caught
+v1/v2's matcher fault and the sibling-matcher bug above, applied to a human
+adjudication step this time instead of a string-matching script. Nothing in this
+project's classification has yet been right on the first attempt at 9-for-9; it has
+been repeatedly correctable, which is a different and better property.
+
+## Next: the actual R15 Kaggle regen, then the full R16 cycle, then re-run the 48
+
+Everything above is local-only. `scripts/locked_facts.json` and
+`scripts/precompute_rag_embeddings.py` are the source of truth; `kaggle/rag_facts_text.json`
+and `kaggle/rag_embeddings.npy` (the DEPLOYED index) are untouched until the regen
+actually runs on Kaggle and uploads. After that: the full R16 cycle (force-fresh
+containers, live canaries exercising the specific changes, negative cases), then
+re-run the 48-question natural-register set — **that is the measurement that says
+whether this retrieval work moved the number the way the routing work did**, the same
+standard the routing/compute-path work was held to at the top of this file.
+
+---
+
 # 📊 THE HEADLINE RESULT OF THIS CYCLE — 39.6% → 58.3% correct, 39.6% → 18.8% wrong
 
 **The number feature work was stopped on, re-measured on the same 48 natural-register questions,
@@ -92,13 +240,32 @@ retrieval **surfaced none of them**:
 ```
 
 **Removing the fee rows didn't promote the correct fact — it promoted a DIFFERENT wrong one.**
-For nat_05, the SDL rate fact (rank 150 of 217 in the full index) is still outranked by roughly
-150 non-fee rows once the 66 fee rows are gone. The 58%-of-top-3-slots statistic describes the
-INDEX'S composition in aggregate; it is not proof that a fee row is *specifically* what blocks
-each of these nine. **For most of them it isn't.** The real blocker is the broader reachability
-problem already named as fix #2 (C4: Swahili-first, value-at-front phrasing beats an English
-`key: ` prefix) — the fee-row dominance is real and worth fixing on its own terms, but it is not
-*this* fix.
+The 58%-of-top-3-slots statistic describes the INDEX'S composition in aggregate; it is not proof
+that a fee row is *specifically* what blocks each of these nine. **For most of them it isn't —
+fee-shape rows are a symptom of general index breadth, not the mechanism.** Measured full-index
+rank of the correct fact against all 217 rows, not just the masked subset
+(`scratch/factpath_full_rank.py`, `scratch/factpath_full_rank.json`):
+
+| row | correct-fact rank / 217 |
+|---|---|
+| nat_45 | 19 |
+| nat_41 (row 72) | 22 |
+| nat_44 | 33 |
+| nat_28 | 33 |
+| nat_24 (row 7) | 41 |
+| nat_33 | 113 |
+| nat_43 | 127 |
+| nat_41 (row 53) | 128 |
+| nat_05 | 150 |
+| nat_23 | 164 |
+
+Not uniform: five of nine sit deep (100+ of 217 — genuinely swamped by the index's general
+breadth, no single competitor family to blame, consistent with "outranked by ~150 non-fee rows").
+The other four sit far closer (19–65) — a small phrasing/vocabulary fix is plausibly enough to
+clear top-3 for those, a materially different-sized job than the deep five. This reframes C4:
+reachability rewrites are not competing with fee-row segregation for the same effect — they are
+**the actual fix**, and whatever segregation benefit exists rides inside them as a byproduct of a
+correctly-phrased fact outranking a fee row on its own terms, not from removing the fee row.
 
 ## And it is not free — 3 confirmed regressions among currently-CORRECT rows
 
@@ -162,6 +329,20 @@ had originally flagged — because **v3 only re-checked the 28 keys v2 had alrea
 key v2 got right by accident — matched by exact or prefix key when it happened to line up, never
 independently verified against index *content* — was never looked at by anyone. This script
 checks all 246, unconditionally, every time, which is what exposed them.
+
+**This is the same shape as v2 inheriting v1's boundary, one level up.** v1 flagged 57. v2
+re-checked those 57 and corrected the number to 28 — but never independently re-swept the other
+190 keys v1 had passed; it only re-examined what v1 had already flagged wrong. v3 then re-checked
+v2's 28 and corrected again to 13 — but likewise never independently re-swept the 219 keys v2 had
+passed; it only re-examined what v2 had already flagged. This script is the first pass in the
+sequence to check all 246 unconditionally rather than re-auditing the previous pass's flagged
+subset, and that is exactly why it found 20 keys none of the first three ever looked at. **A
+correction inherits the scope of what it corrects unless it re-derives that scope from scratch —
+three iterations of this drift-check lineage adopted the previous pass's boundary unexamined, and
+each one was a smaller, more confident number that was still incomplete for the same reason.**
+This is the same shape as the credibility point above (a fix inherits credibility from the fix it
+replaces) — a correction that narrows a wrong number earns trust for the number, not for the
+boundary of what it checked, and those are different claims that are easy to conflate.
 
 All 20 were adjudicated the same way as the original 28 — read the locked value, search the
 index for the content, confirm by eye — and are now pinned in the script with their row and a
@@ -456,6 +637,33 @@ about SDL and NSSF for **9 employees** retrieves, at top-1:
 
 while *"Kizingiti cha SDL ni wafanyakazi 10 au zaidi"* — the exact answer, correctly written,
 correctly indexed — sits at **rank 41**.
+
+## nat_41 flips back to ABSENCE — but not for the reason v1/v2 thought (2026-08-17, same day)
+
+The C4 reachability work (below) found that nat_41's "content" — rows 72/53, *"OSHA registers ALL
+workplaces, no minimum headcount"* — **answers a different question than the one asked.** nat_41's
+question is *"nimefungua karakana mpya nina muda gani wa kusajili sehemu ya kazi"* — a **deadline**
+question (how much time do I have to register), not a **headcount-threshold** question. Verified
+against two independent Tanzania government sources (`procedures.tiseza.go.tz`, cross-checked by
+search): OSH Act 2003 s.16(2) requires registration **before** commencing operations — a fact that
+did not exist anywhere in the index, under any key, before today.
+
+So nat_41 is genuinely **ABSENCE** — just not the ABSENCE v1/v2 meant. v1/v2's key-slug matcher
+called it absent because no key *named* the right thing. This morning's recheck called that wrong
+because *related* content existed at rows 53/72. Both were reasoning about whether content existed
+near the key; **neither checked whether the content that existed actually answered the question
+asked.** nat_24 (the recheck's other flip) holds up under this stricter check — `sdl_threshold`'s
+content genuinely is the 10-employee answer nat_24 needs, just outranked (confirmed by the ceiling
+test below reaching rank 1 on the same content). nat_41 does not.
+
+**The corrected partition: RANKING 8/9 · ABSENCE 1/9 (nat_41) · OVERRIDE 0 · UNUSED 0.** The
+"0/9 need new facts" line above is superseded — one row did, and the reason it looked like RANKING
+is the general lesson: **a ranking failure and a genuine absence look identical from the outside
+when a superficially related fact sits nearby. Only checking whether the retrievable content
+actually answers the question — not just whether something with an adjacent key or topic exists —
+distinguishes them.** This is the same discipline as the present_elsewhere/absent pins in the drift
+check, applied one level deeper: content presence is necessary but not sufficient, relevance to the
+specific question is a separate check that has to be made by reading, not by matching.
 
 # 📜 A CONSOLIDATED ACT IS NOT THE CURRENT LAW — a rule for whoever encodes the next schedule
 
@@ -2006,6 +2214,14 @@ thing. Same shape, one more level out.
 | ~~*(new 2026-08-17)* permanent `locked_facts` ↔ RAG index check~~ | pipeline | ✅ **BUILT** — `scripts/check_facts_index_sync.py` + `tests/test_facts_index_sync.py`, pinned + content-verified, runs every `pytest` (1229 passed). Compares content, not keys |
 | *(new 2026-08-17)* presumptive transport schedule (para 2(5)) | lp_09, the daladala row | 🛑 **named coverage gap, not fixed** — production still invents *"asilimia 25%"* for Class A transport rates; the presumptive engine deliberately does not route to it (`_PRESUMPTIVE_VETO`) so the wrong answer doesn't spread, but the row itself stays wrong until this table is built |
 | *(new 2026-08-17)* D1 / a new adapter for the fact cluster | 6 of 9 WRONG | ❌ **REMOVED from the queue — 0/9 OVERRIDE means it would have fixed none of them.** Do not re-queue without a new measurement |
+| *(new 2026-08-17)* duplicate-key sweep, 246 facts | data hygiene | ✅ **first run — never done before.** 80 flagged by shared-number heuristic, 76 verified FALSE POSITIVE against BRELA's live fee schedule (standardized 22,000/50,000/60,000/30,000 fees across distinct categories, confirmed real). 4 genuine duplicate pairs found and dispositioned (2 merge, 1 scope-and-extract, 1 kept-as-is) |
+| *(new 2026-08-17)* `memorandum_articles_of_association_filing_fee` = 22,000 | locked-fact value accuracy | 🛑 **FLAGGED, NOT FIXED** — BRELA's live page (`brela.go.tz/pages/tozo-za-kampuni`) states memorandum/articles filing is **66,000** (22,000 × 3 documents), not a flat 22,000. Found as a side effect of the duplicate sweep, not chased further — a wrong figure in a locked, CONFIRMED-status fact, on the board so it doesn't sit only in a chat transcript |
+| *(new 2026-08-17)* nat_41 reclassified RANKING → ABSENCE (again) | fact-path class analysis | ✅ **corrected — see "nat_41 flips back to ABSENCE" above.** Partition is now RANKING 8/9 · ABSENCE 1/9, not 9/0. The content the recheck found (rows 53/72) answers a different question than the one asked; the real fact (OSH Act s.16(2), register BEFORE operating) never existed in the index |
+| *(new 2026-08-17)* C4 applied — 3 merges, 3 new facts, 4 rewrites, 5 guards | nat_05/33/41/43 + pipeline | ✅ **LANDED LOCALLY, not yet regenerated** — see "C4 APPLIED" above. `pytest` 1229 passed / 1 xfailed, unchanged. Awaiting R15 Kaggle regen |
+| *(new 2026-08-17)* nat_44 / nat_28 rate-half — vat_withholding rewrite | C4 apply-list | ❌ **HELD BACK — regresses nat_27** (currently correct). 3 phrasings tried, all fail or false-pass; see "THE VAT WITHHOLDING TRADEOFF" above. Needs a decision, not another wording pass |
+| *(new 2026-08-17)* nat_37 / nat_38 discovered unprotected | negative-guard candidates | 🛑 **NEW, unfixed** — already fail against the currently deployed index, confirmed independent of this cycle's changes. Not wired as guards; nobody had verified these two before |
+| *(new 2026-08-17)* `check_facts_index_sync.py` sibling-matcher bug | pipeline | ✅ **FOUND AND FIXED** — a single-word slug (`'brela'`, `'nssf'`) let a raw `startswith()` false-verify 5 keys against the wrong row, one of them a brand-new UNindexed key. `_is_sibling()` now requires a 2-word minimum; all 5 re-pinned against their real rows |
+| *(new 2026-08-17)* THE THREE FLAT ROWS (nat_24, nat_45, nat_23) | reachability, unresolved | 🛑 **named, not a residual** — flat across two rounds of substantially different wording while nat_05 (same cluster) moved 150→24. Next step is a ceiling test run ON one of these three, not on nat_05 again |
 
 ### ➡️ FOUNDER-ADOPTED WORK ORDER (2026-08-17) — retrieval before facts, floor last
 

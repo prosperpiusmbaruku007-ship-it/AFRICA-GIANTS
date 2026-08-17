@@ -11,6 +11,21 @@ low-value signatory fact are dropped as noise.
 build_fact_texts() is importable (used by the dry-run) WITHOUT triggering a rebuild;
 embedding + save only runs under `__main__`.
 
+STANDING RULE FOR CONCISE_BILINGUAL_FACTS TEXT (added 2026-08-17, C4 reachability
+cycle): do not put effective dates, Act/section citations, or statutory-basis phrasing
+("Finance Act 2023", "gross cash emoluments", "effective 1 July 2023") in the embedded
+text. Measured directly: folding sdl_rate_2025's citation precision into sdl_rate's
+CONCISE text pulled it toward legal-citation-shaped neighbours and away from the
+conversational question a real user asks (nat_05 only reached rank 59/217 with that
+material included; a version with it stripped reached rank 24; an overfit probe with
+it stripped and the query's own tokens echoed reached rank 1 -- see
+scratch/factpath_ceiling_and_topk.py). That precision is not lost: it belongs in
+locked_facts.json's own fields (verified_by, effective_date, primary_source), which
+downstream training-pair generation (R13, generate-from-facts) reads directly and
+does not go through this embedding at all. Every future fact will be tempted to
+include this material for good reasons (it IS more complete, more auditable) --
+resist it here specifically, in the text that gets embedded for retrieval.
+
 Run: python scripts/precompute_rag_embeddings.py
 """
 import json
@@ -87,14 +102,48 @@ CONCISE_BILINGUAL_FACTS = {
         'Mgeni aliyeoa Mtanzania bado ni mgeni na hawezi kufanya biashara ya rejareja iliyozuiliwa. '
         'Tafuta ushauri wa wakili wa uhamiaji.',
 
+    # C4 reachability rewrite, round 2 (2026-08-17). The round-1 draft folded in the
+    # merged sdl_rate_2025 duplicate's legal-citation precision (effective date, Finance
+    # Act reference, "gross cash emoluments") directly into this text and measured WORSE
+    # (nat_05 rank 150->59, barely better than baseline) than a version with that material
+    # stripped out. STANDING RULE (see module docstring): citation clutter belongs in
+    # locked_facts.json's other fields for audit/training-pair generation, never in the
+    # embedded CONCISE text -- it pulls the embedding toward legal-citation-shaped
+    # neighbours and away from the conversational question a real user asks. This version
+    # (lean, "mafunzo" colloquial anchor, word-form + digit-form rate) measured nat_05
+    # rank 150->24. Ceiling-tested separately (scratch/factpath_ceiling_and_topk.py): an
+    # overfit version of this same row reached rank 1, so the mechanism is real; this
+    # text is the readable, general point on that curve, not the maximum.
     'sdl_rate':
-        'SDL (Skills Development Levy) Tanzania: asilimia 3.5 ya mishahara yote. Si 4%, si 2%.',
+        'SDL, ambayo huitwa pia "mafunzo": kiwango cha mafunzo ni asilimia tatu na nusu '
+        '(asilimia 3.5) ya mishahara ya wafanyakazi. Si asilimia 4, si asilimia 2.',
 
     'sdl_employee_threshold':
         'Kizingiti cha SDL: mwajiri mwenye wafanyakazi 10 AU ZAIDI analipa SDL. Mwenye wafanyakazi 10 YUKO NDANI ya kizingiti na analipa SDL. Chini ya 10 (yaani 9 au pungufu) hawalipi SDL.',
 
+    # NOT rewritten this round (2026-08-17). nat_24 targets this row and moved 41->44->37
+    # across two rounds of substantially different wording -- flat, unlike nat_05 (same
+    # SDL cluster, same rewrite discipline, 150->24). Named as its own finding, not folded
+    # into this pass: see PROGRESS "THE THREE FLAT ROWS". Text held at its pre-2026-08-17
+    # wording deliberately, pending a ceiling test run ON nat_24 itself rather than on
+    # nat_05, to establish whether the mechanism here is even reachable by phrasing.
     'sdl_threshold':
         'Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.',
+
+    # NEW CONTENT (2026-08-17). Consolidates 10 individual exemption_category_* keys
+    # (real content, not fragments -- verified by reading each value) that a blanket
+    # noise regex (`^exemption_category_`) was previously dropping wholesale. One
+    # retrievable Swahili fact instead of 10 English fallback rows that would have
+    # recreated the ranking problem this whole cycle exists to fix. The 10 individual
+    # keys stay in locked_facts.json for training-pair generation; they are excluded
+    # from the RAG index by an explicit, individually-reviewed list in
+    # _NOISE_KEYS_REVIEWED below, not by the prefix pattern that swept them up before.
+    'sdl_exemption_categories':
+        'Waajiri/taasisi zisizolipa SDL (msamaha): idara za Serikali, mamlaka za Serikali '
+        'za Mitaa, taasisi za kidiplomasia, Umoja wa Mataifa na taasisi zake, mashirika ya '
+        'kimataifa ya misaada, taasisi za kidini (kwa shughuli za kiroho tu), taasisi za '
+        'elimu zilizosajiliwa, mashirika ya misaada (charitable), wanafunzi wa TaESA, na '
+        'waajiri wa mashambani kwa wafanyakazi wanaolima moja kwa moja.',
 
     'sdl_payment_deadline':
         'SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata.',
@@ -110,6 +159,23 @@ CONCISE_BILINGUAL_FACTS = {
 
     'vat_registration_threshold_annual':
         'Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.',
+
+    # vat_withholding_goods / vat_withholding_services: HELD BACK, not applied
+    # (2026-08-17). A round-2 rewrite (adding 'bidhaa'/'ushauri' vocabulary, the same
+    # pattern that worked for every other C4 row) measured nat_44 33->4 and nat_28's
+    # rate half 33->8 -- a real win. But local dry-run verification
+    # (scratch/local_regen_verify.py) caught a cost the earlier stage-1/round-2 passes
+    # never tested for: it also pulls nat_27 (a currently CORRECT row asking the
+    # STANDARD 18% rate, not withholding) into the same neighbourhood and displaces the
+    # 18% fact out of its own top-3. Three phrasings were tried to reconcile this (bare
+    # rewrite, an explicit "Si kiwango cha kawaida (18%)" contrast -- which also
+    # produced a FALSE keyword-match PASS, since the guard's '18%' substring check
+    # matched the contrast clause itself while the actual retrieved content was still
+    # wrong -- and a "makato"/deduction-framing variant); all three still displaced
+    # nat_27. Both keys are left OUT of this dict, on the original fallback text,
+    # rather than ship a nat_44/28 win that breaks a currently-correct row for zero net
+    # gain in what production is allowed to answer. See PROGRESS "THE VAT WITHHOLDING
+    # TRADEOFF" for the measured numbers on each attempt.
 
     # EFD-threshold Swahili grounding (eval_347). efd_threshold_tzs_11m was English-only
     # (key:value fallback), so a query naming EFD + "mauzo ya TZS 200,000,000" was hijacked
@@ -160,20 +226,56 @@ CONCISE_BILINGUAL_FACTS = {
     'vat_registration_threshold_six_months':
         'Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6.',
 
+    # C4 reachability, round 2 (2026-08-17). nat_33 best-of-two rank 113->25. Added
+    # 'ritani' as the colloquial synonym for 'annual return' -- nat_33's own question
+    # says 'ritani', not 'annual return'. Landed alongside the brela_annual_return_fee
+    # duplicate-key deletion (that key bundled the same TZS 22,000 + TZS 2,500/month
+    # content under a third name plus one genuine unique detail -- foreign Section XII
+    # USD 25/month -- now its own key, brela_foreign_late_filing_penalty, below).
     'annual_return_filing_fee':
-        'BRELA annual return ada: TZS 22,000 kwa mwaka.',
+        'BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni '
+        'TZS 22,000.',
 
     'late_filing_penalty_monthly_fee':
-        'BRELA: faini ya kuchelewa kuwasilisha annual return ni TZS 2,500 kwa kila mwezi.',
+        'BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni '
+        'TZS 2,500 kwa kila mwezi wa kuchelewa.',
+
+    'brela_foreign_late_filing_penalty':
+        'Kampuni ya kigeni (Section XII) ikichelewa kuwasilisha ritani ya mwaka: faini '
+        'ni USD 25 kwa kila mwezi (tofauti na kampuni za ndani ambazo hulipa TZS 2,500 '
+        'kwa mwezi).',
 
     'osha_registration_threshold_b004':
         'OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kikomo cha idadi ya wafanyakazi.',
+
+    # NEW CONTENT, not a rewrite (2026-08-17). nat_41 ("nimefungua karakana mpya nina
+    # muda gani wa kusajili sehemu ya kazi") was classified RANKING against rows 53/72
+    # (no minimum headcount) -- but those answer a DIFFERENT question. nat_41 asks about
+    # a DEADLINE; no locked fact stated one. Verified against OSH Act 2003 s.16(2) via
+    # two independent Tanzania government sources before writing this (see PROGRESS,
+    # "nat_41 flips back to ABSENCE"). Genuinely absent content, not a phrasing gap --
+    # ceiling-tested to rank 5/217 on the round-2 text, the closest of the non-clearing
+    # rows, but still new rather than reachable-by-rewording.
+    'osha_registration_before_operations':
+        'Umefungua karakana au sehemu mpya ya kazi? Usajili wa OSHA lazima ufanyike '
+        'KABLA ya kuanza biashara — hakuna muda wa siku baada ya kufungua. (Kifungu '
+        '16(2), Sheria ya Afya na Usalama Mahali pa Kazi Na.5 ya 2003.)',
 
     'OSHA_annual_inspection':
         'OSHA hufanya ukaguzi wa lazima kila mwaka (mara moja kwa mwaka) katika maeneo yote ya kazi Tanzania.',
 
     'wcf_rate_0_5_percent_confirmed':
         'WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi kisichobadilika — inategemea mishahara.',
+
+    # C4 reachability, round 2 (2026-08-17). nat_43 ("mimi ni mkulima ... je kima cha
+    # chini kinatofautiana kwa sekta") rank 127->1 -- the row that CLEARS top-3, the
+    # only one of nine. Added 'mkulima'/'kilimo' because that is nat_43's own framing
+    # (a farmer asking whether agriculture has its own rate). Wired as a positive
+    # critical_queries guard in regenerate_rag_e5.py.
+    'GN605A_sector_count':
+        'Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi nzima — '
+        'kila sekta ina chake, sekta 16 na sekta ndogo 46. Mkulima / sekta ya kilimo ina '
+        'kiwango chake tofauti na sekta nyingine.',
 
     'paye_bands_with_examples':
         'PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.',
@@ -208,9 +310,13 @@ CONCISE_BILINGUAL_FACTS = {
         'mfanyakazi wa kwanza — HAKUNA kizingiti cha wafanyakazi wawili.',
 }
 
-# --- Noise keys to drop (bare citations, sections, exemption lists, no-value fragments) ---
+# --- Noise keys to drop, two different mechanisms ---
+#
+# SHAPE-BASED (regex): safe to guess by pattern because the SHAPE alone -- bare
+# citation, bare section number, no independent value -- determines low retrieval
+# value regardless of what the content says. These patterns target structure, not
+# subject matter, so a new key matching one of them is safe to drop unread.
 _NOISE_KEY_PATTERNS = [
-    r'^exemption_category_',
     r'^legal_citation_',
     r'_act_citation$',
     r'_act_section$',
@@ -223,9 +329,33 @@ _NOISE_KEY_PATTERNS = [
     r'^gn487a_signatory$',  # low-value (who signed the order) — was outranking the 10M penalty
 ]
 
+# CONTENT-REVIEWED (explicit list, not a pattern): `^exemption_category_` used to be
+# a regex here. It swept up all 10 exemption_category_* keys on the strength of their
+# NAME alone -- but their CONTENT is real (ten genuine exempt-employer categories, verified
+# 2026-08-17 by reading each value), not the bare-citation shape the other patterns
+# target. A prefix guess cannot tell those apart; only reading the content can. These
+# 10 are excluded here because they are now consolidated into ONE retrievable fact
+# (sdl_exemption_categories, in CONCISE_BILINGUAL_FACTS above) -- not because the
+# prefix looks like the other noise patterns. THE LESSON, for whoever names the next
+# family: a key-name pattern is only safe for shape (a citation is always low-value no
+# matter what it cites); it is never safe for a content-bearing family -- add those
+# here, individually, after reading them, not as a regex.
+_NOISE_KEYS_REVIEWED = {
+    'exemption_category_government_departments',
+    'exemption_category_diplomatic_missions',
+    'exemption_category_religious_institutions',
+    'exemption_category_educational_institutions',
+    'exemption_category_farm_employers_agriculture',
+    'exemption_category_charitable_organizations',
+    'exemption_category_local_government_authorities',
+    'exemption_category_trainees_under_TAESA',
+    'exemption_category_un_and_agencies',
+    'exemption_category_international_organizations_aid',
+}
+
 
 def is_noise_key(key: str) -> bool:
-    return any(re.search(p, key) for p in _NOISE_KEY_PATTERNS)
+    return key in _NOISE_KEYS_REVIEWED or any(re.search(p, key) for p in _NOISE_KEY_PATTERNS)
 
 
 def fact_value(v) -> str:
