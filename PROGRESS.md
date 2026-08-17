@@ -4,6 +4,76 @@ Last updated: 2026-08-17
 
 ---
 
+# 🌐 THE REGEN HIT A SHARED, UNAUTHENTICATED RATE LIMIT — fixed in regenerate_rag_e5.py, logged for every other Kaggle harness (2026-08-17)
+
+**What happened:** the R15 regen 429'd twice in one run — once on the commit-SHA
+lookup, once on the `locked_facts.json` fetch two lines later — while running from a
+**fresh git clone where every file the script needed was already on disk.** The clone
+made the fetches redundant, not safer.
+
+## The fix: prefer the checkout, fetch only as fallback
+
+`kaggle/regenerate_rag_e5.py` now checks whether it's running inside a git checkout
+with both `scripts/locked_facts.json` and `scripts/precompute_rag_embeddings.py`
+already present. If so: use them directly, get the commit SHA via `git rev-parse HEAD`
+(no network), zero GitHub requests. Only when no usable checkout exists does it fall
+back to the original cache-busted raw-fetch path. This is not just fewer requests —
+it makes the clone path **self-consistent**: source and index now come from the SAME
+commit by construction, instead of a checkout plus two independent fetches that could
+in principle each land a different commit if main moved in between.
+
+## Q1 — can a mid-run 429 leave a partially-built index that still uploads?
+
+Traced every network call in the script. The two SOURCE fetches (`locked_facts.json`,
+`precompute_rag_embeddings.py`) both call `raise_for_status()` — a 429 there crashes
+before `build_fact_texts()` ever runs, so no half-old-half-new fact set can reach the
+embedder. **But the commit-SHA lookup did NOT** — `.json().get('sha', '?')` on a 429
+response (which still returns a JSON body, just an error one) silently produces `'?'`
+and the run **continues**, printing a HEAD stamp that means nothing. Not the failure
+mode asked about, but the same shape: a degraded run that looks complete. Fixed by
+adding `raise_for_status()` there too — a 429 on the SHA lookup now crashes loud
+instead of shipping an unauditable index.
+
+**The real version of this risk was downstream, at upload, not fetch.** The script
+uploaded `rag_embeddings.npy` and `rag_facts_text.json` as **two independent
+`api.upload_file()` calls**. These two files must correspond row-for-row — embedding
+*i* describes fact_text *i* — and every consumer (`modal_app.py`, `eval.py`) loads
+both and trusts that alignment without checking it. A failure between the two calls
+(rate limit, dropped connection) would leave the HF dataset repo with embeddings from
+the NEW build paired against fact text from the OLD one, or the reverse — silently
+misaligned, no exception anywhere, exactly the "silent failure shape" asked about.
+Fixed: replaced the two `upload_file()` calls with one `HfApi.create_commit()` call
+carrying both files as `CommitOperationAdd` operations — one Hub commit, so either
+both land or neither does.
+
+## Q2 — does the HEAD verification still mean anything in the clone path?
+
+No, not as originally written, which is why it changed rather than just adding a local
+short-circuit around it. `git rev-parse HEAD` and a fresh `api.github.com` lookup of
+`main`'s tip **answer different questions**: the API call says what `main` points to
+*right now*; `git rev-parse` says what commit the files *on disk* actually came from.
+In the clone path those can disagree — if main moved between the clone and the run,
+the API fetch would stamp the index with a SHA the on-disk files were never built
+from, a fabricated provenance record that looks exactly as trustworthy as a real one.
+`git rev-parse HEAD` is now used whenever the checkout exists, which is the only
+version of "what commit was this actually built from" that's true by construction. The
+API lookup is kept only for the no-checkout fallback, where there is no local answer
+to ask instead.
+
+## Logged as an operational item regardless of scope
+
+**Every Kaggle harness in this project (`eval.py`, `eval_orchestrator.py`, the probe
+scripts, this one) bootstraps the same way — unauthenticated `raw.githubusercontent.com`
+/ `api.github.com` requests, all sharing ONE per-IP rate budget.** Only
+`regenerate_rag_e5.py` was fixed here, because it's the one that just failed. The
+others still fetch unconditionally on every run and remain exposed to the same shared
+budget; a probe run earlier in a session can spend down the budget a regen needs
+later, or vice versa, with no relationship visible between the two failures. Not
+auditing or fixing all of them in this pass — named here so the next 429 in a
+different script isn't rediscovered as a surprise.
+
+---
+
 # ✅ C4 APPLIED — merges, two new facts, four rewrites landed; two held back on evidence (2026-08-17)
 
 **Applied to `scripts/locked_facts.json` + `scripts/precompute_rag_embeddings.py` +

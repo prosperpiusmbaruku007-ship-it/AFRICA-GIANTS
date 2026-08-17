@@ -7,8 +7,9 @@ network (ISP block stalls the transfer ~737 MB in), so the 768-dim embeddings mu
 be produced where the network works. This is the R15 workaround process.
 
 What it does:
-  1. Fetch scripts/locked_facts.json + scripts/precompute_rag_embeddings.py from GitHub
-     (single source of truth — the fact-build logic lives in precompute, never duplicated).
+  1. Resolve scripts/locked_facts.json + scripts/precompute_rag_embeddings.py — LOCAL
+     files if this is a git checkout with both present (self-consistent, no network),
+     GitHub raw fetch only otherwise (single source of truth in the no-checkout case).
   2. Build the fact texts via precompute.build_fact_texts() (importable, no side effects).
   3. Embed with e5-base (facts get the 'passage: ' prefix; queries get 'query: ').
   4. FULL VERIFICATION: every fact must self-retrieve at rank 1, AND all critical
@@ -16,10 +17,27 @@ What it does:
   5. Save + upload rag_embeddings.npy + rag_facts_text.json to the HF DATASET repo
      ONLY if verification passes. modal_app.py bakes these from chike-inference/ and
      eval.py fetches them from the dataset repo — so both consumers get the same index.
+     Both files land in ONE atomic Hub commit (create_commit, not two independent
+     upload_file calls) — see the OPERATIONAL note near the upload section for why.
 
 Run this in a Kaggle notebook cell, then paste the verification output back.
+
+OPERATIONAL (2026-08-17): every Kaggle harness in this project (eval.py, the probe
+scripts, this one) bootstraps by fetching from raw.githubusercontent.com / the GitHub
+API, all unauthenticated, all sharing ONE per-IP rate budget (GitHub: ~60 req/hr
+unauthenticated). A regen run on 2026-08-17 hit 429 twice in the SAME run — once on
+the commit-SHA lookup, once on the locked_facts.json fetch two lines later — while
+running from a fresh git clone where every file this script needed was already on
+disk. The clone made the fetches redundant, not safer: a checkout plus N independent
+re-fetches of files already in that checkout is its own drift risk (the fetch could
+in principle land a DIFFERENT commit than the one just cloned), on top of burning
+budget every other harness in this list draws from. This script now prefers the
+checkout when one exists; the other scripts in kaggle/ still fetch unconditionally
+and remain exposed to the same shared budget — not fixed here, logged so it isn't
+rediscovered as a surprise mid-run again.
 """
 import os
+import subprocess
 import sys
 import json
 import importlib.util
@@ -39,29 +57,51 @@ os.environ['HF_TOKEN'] = hf_token
 
 DATASET_REPO = 'prospAprospA007/africa-giants-dataset'
 RAW = 'https://raw.githubusercontent.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS/main'
+SOURCE_FILES = ['scripts/locked_facts.json', 'scripts/precompute_rag_embeddings.py']
 
-# ── FETCH SOURCE OF TRUTH FROM GITHUB ───────────────────────────────────────────
-# locked_facts.json (the facts) + precompute module (the build + noise-drop logic).
-# IMPORTANT: raw.githubusercontent.com sits behind a CDN (~5-min TTL). Fetching the
-# plain URL can serve a STALE copy right after a push — which silently regenerates
-# the index from OLD facts. Bust the cache with a unique query param + no-cache
-# headers, and log the live commit SHA so the run is auditable.
-import time
-_cb = str(int(time.time() * 1000))
-_nocache = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
+# ── RESOLVE SOURCE OF TRUTH: LOCAL CHECKOUT FIRST, RAW FETCH ONLY AS FALLBACK ────
+# A git checkout with both files already present is authoritative and self-consistent
+# by construction (they came from the SAME commit, on disk, no network needed). Only
+# fall back to the raw-fetch path (cache-busted, since raw.githubusercontent.com sits
+# behind a ~5-min CDN TTL and a stale copy would silently regenerate from old facts)
+# when there is no usable checkout — e.g. a bare Kaggle kernel with no `git clone`.
+# git rev-parse over the GitHub API for the SHA: it is the commit the ON-DISK files
+# actually came from, not a fresh lookup that could in principle name a DIFFERENT,
+# newer commit than the checkout if main moved between clone and run.
+def _git_head():
+    try:
+        out = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True,
+                              text=True, timeout=10)
+        return out.stdout.strip()[:7] if out.returncode == 0 else None
+    except Exception:
+        return None
 
-_live_sha = requests.get(
-    'https://api.github.com/repos/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS/commits/main',
-    headers=_nocache, timeout=30).json().get('sha', '?')[:7]
-print(f'[fetch] GitHub main HEAD = {_live_sha} (index will be built from THIS commit)')
 
-for name in ['scripts/locked_facts.json', 'scripts/precompute_rag_embeddings.py']:
-    r = requests.get(f'{RAW}/{name}?cb={_cb}', headers=_nocache, timeout=30)
-    r.raise_for_status()
-    os.makedirs(os.path.dirname(name), exist_ok=True)
-    with open(name, 'w', encoding='utf-8') as f:
-        f.write(r.text)
-    print(f'[fetch] {name} ({len(r.content)} bytes)')
+_local_head = _git_head() if all(os.path.exists(p) for p in SOURCE_FILES) else None
+
+if _local_head:
+    _live_sha = _local_head
+    print(f'[local] git checkout HEAD = {_live_sha} -- using on-disk source files, '
+          f'no GitHub fetch for {SOURCE_FILES}')
+else:
+    import time
+    _cb = str(int(time.time() * 1000))
+    _nocache = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
+
+    _sha_resp = requests.get(
+        'https://api.github.com/repos/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS/commits/main',
+        headers=_nocache, timeout=30)
+    _sha_resp.raise_for_status()  # a 429 here must crash loud, not silently become '?'
+    _live_sha = _sha_resp.json().get('sha', '?')[:7]
+    print(f'[fetch] GitHub main HEAD = {_live_sha} (index will be built from THIS commit)')
+
+    for name in SOURCE_FILES:
+        r = requests.get(f'{RAW}/{name}?cb={_cb}', headers=_nocache, timeout=30)
+        r.raise_for_status()
+        os.makedirs(os.path.dirname(name), exist_ok=True)
+        with open(name, 'w', encoding='utf-8') as f:
+            f.write(r.text)
+        print(f'[fetch] {name} ({len(r.content)} bytes)')
 
 # Import build_fact_texts from the fetched module (module-level is side-effect free;
 # embedding only runs under its own __main__, which we do NOT trigger by importing).
@@ -299,18 +339,28 @@ with open('rag_facts_text.json', 'w', encoding='utf-8') as f:
 print(f'[save] rag_embeddings.npy {embeddings_normalized.shape} + '
       f'rag_facts_text.json ({len(fact_texts_to_embed)} facts)')
 
-from huggingface_hub import HfApi
+# ATOMIC upload (2026-08-17): these two files must correspond row-for-row (embedding
+# i must describe fact_text i) -- they were two independent api.upload_file() calls,
+# so a failure between them (rate limit, network drop) landed embeddings from THIS
+# build alongside facts_text from the PREVIOUS one, or vice versa, with nothing
+# anywhere checking the two are still paired. Every downstream consumer (modal_app.py,
+# eval.py) loads both and trusts the row alignment; a mismatch is silent -- wrong or
+# index-shifted retrieval, no exception. create_commit() with both files as one Hub
+# commit means either both land or neither does.
+from huggingface_hub import HfApi, CommitOperationAdd
 api = HfApi()
-for fn in ['rag_embeddings.npy', 'rag_facts_text.json']:
-    api.upload_file(
-        path_or_fileobj=fn,
-        path_in_repo=fn,
-        repo_id=DATASET_REPO,
-        repo_type='dataset',
-        token=hf_token,
-        commit_message=f'e5-base RAG index ({embeddings_normalized.shape[0]}x{embeddings_normalized.shape[1]})',
-    )
-    print(f'[upload] {fn} -> {DATASET_REPO}')
+api.create_commit(
+    repo_id=DATASET_REPO,
+    repo_type='dataset',
+    operations=[
+        CommitOperationAdd(path_in_repo='rag_embeddings.npy', path_or_fileobj='rag_embeddings.npy'),
+        CommitOperationAdd(path_in_repo='rag_facts_text.json', path_or_fileobj='rag_facts_text.json'),
+    ],
+    commit_message=f'e5-base RAG index ({embeddings_normalized.shape[0]}x{embeddings_normalized.shape[1]}), '
+                    f'built from {_live_sha}',
+    token=hf_token,
+)
+print(f'[upload] rag_embeddings.npy + rag_facts_text.json -> {DATASET_REPO} (one commit)')
 
 print('\n[done] e5 RAG index regenerated, verified, and uploaded.')
 print(f'[done] FINAL SHAPE: {embeddings_normalized.shape}  |  facts: {len(fact_texts_to_embed)}')
