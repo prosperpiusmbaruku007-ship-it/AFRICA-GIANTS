@@ -60,6 +60,146 @@ this project has, taken the same way twice.
 
 ---
 
+# 🧪 THE FEE-ROW MASK: MEASURED, AND IT DOES NOT WORK (2026-08-17)
+
+**"A retrieval-side mask being testable offline against all 48 is a strong argument if it
+performs." Measured. It does not perform.** `scratch/feemask_experiment.py`,
+`scratch/feemask_experiment.json`.
+
+## The design
+
+Exclude the 66 fee-shape index rows (`<key>: <number> <unit>`) from the general retrieval
+pass; re-admit them only through a second, fee-only pass gated on a narrow fee-intent cue
+(`gharama`, `ada`, `faini`, `kusajili kampuni`, `hisa`…) present in the full question. Zero
+stored data changes — no regen, no GPU, deployable as an ordinary code change.
+
+## The result: 0 of 9 fixed
+
+Every target row was re-checked against its **confirmed exact index entry** (the same rows
+established in the class analysis and its correction). Masking the 66 fee rows out of general
+retrieval **surfaced none of them**:
+
+```
+[nat_05] STILL MISSING   baseline [121,122,123]  ->  masked [148,200,215]
+[nat_23] STILL MISSING   baseline [120,123,126]  ->  masked [148,201,216]
+[nat_24] STILL MISSING   baseline [117,174,200]  ->  masked [137,198,200]
+[nat_28] STILL MISSING   baseline [25,150,173]   ->  masked [25,55,151]
+[nat_33] STILL MISSING   baseline [197,199,203]  ->  masked [197,199,201,203,204,209]
+[nat_41] STILL MISSING   baseline [170,171,203]  ->  masked [151,163,201]
+[nat_43] STILL MISSING   baseline [131,185,197]  ->  masked [185,197,209]
+[nat_44] STILL MISSING   baseline [25,173,174]   ->  masked [25,151,196]
+[nat_45] STILL MISSING   baseline [150,171,203]  ->  masked [19,151,201]
+```
+
+**Removing the fee rows didn't promote the correct fact — it promoted a DIFFERENT wrong one.**
+For nat_05, the SDL rate fact (rank 150 of 217 in the full index) is still outranked by roughly
+150 non-fee rows once the 66 fee rows are gone. The 58%-of-top-3-slots statistic describes the
+INDEX'S composition in aggregate; it is not proof that a fee row is *specifically* what blocks
+each of these nine. **For most of them it isn't.** The real blocker is the broader reachability
+problem already named as fix #2 (C4: Swahili-first, value-at-front phrasing beats an English
+`key: ` prefix) — the fee-row dominance is real and worth fixing on its own terms, but it is not
+*this* fix.
+
+## And it is not free — 3 confirmed regressions among currently-CORRECT rows
+
+Checked against every fact-path/refusal-path row's actual pool contents, not just top-1 order
+(`scratch/feemask_pool_check.py`):
+
+| row | needs | in masked pool? |
+|---|---|---|
+| nat_34 (fee-cue matched) | company reg fee + name reservation fee | ✅ preserved via the fee-only second pass |
+| nat_26, nat_38 | VAT threshold / EFD-always-for-VAT | ✅ preserved (non-fee facts) |
+| **nat_27** | VAT 18% rate | ❌ **dropped from the pool** |
+| **nat_36** | EFD 11M threshold | ❌ **dropped from the pool** |
+| **nat_37** | no minimum EFD transaction value | ❌ **dropped from the pool** |
+
+nat_27/36/37 have no fee-cue in their questions, so the fee-only second pass never fires for
+them — and whatever fee row was quietly co-occurring in their baseline pool (Swahili duplicate
+facts and near-neighbours often sit inside the 66) is gone with no replacement. **Three currently
+CORRECT rows lose their supporting fact for zero rows fixed.** (nat_46/47/48 also flagged by
+the coarse top-1 diff but are refusal-path — retrieval doesn't drive their answer, so they carry
+no real risk; excluded from the count above.)
+
+## The choice, on the founder's own standard
+
+*"Measure the mask against the regen and choose on evidence."* The mask is cheap and ships
+without a regen — and it fixes 0 of 9 while introducing 3 new misses. **It loses on its own
+terms before the comparison to a regen is even needed.** Fee-row segregation stays queued, but
+as part of the C4 reachability rewrite + R15 regen, not as a retrieval-side patch. This is a
+negative result worth keeping for the same reason the two 2026-08-16/17 stopped builds were: it
+is the discipline finding something cheap that still didn't work, rather than something
+expensive that wouldn't have.
+
+---
+
+# 🔒 THE DRIFT CHECK IS BUILT — and it immediately found what the manual pass missed (2026-08-17)
+
+`scripts/check_facts_index_sync.py` + `tests/test_facts_index_sync.py`, wired into the normal
+`pytest` gate (1229 passed, up from 1227). **A fix inherits credibility from the fix it
+replaces, and v2 was never subjected to the check it was built to perform — that is the exact
+failure this script exists to close, and it is not a metaphor: it is the literal mechanism.**
+
+**The check does not score.** The 2026-08-17 correction already found that the embedding-cosine
+score cannot separate present-elsewhere facts from genuinely-absent ones — the `present_elsewhere`
+bucket's *lowest* score (0.851) sits *below* the `absent` bucket's *highest* (0.886). A threshold
+that excludes every false positive also excludes true positives — the same shape as the RAG
+similarity-floor finding, discovered independently twice in one day. **So the check resolves
+each locked fact one of three ways: exact key match, sibling key match, or a PINNED,
+human-verified verdict re-checked every run against the CURRENT index content** (a substring
+check against the pinned row — if the index changes under a pin, the check fails rather than
+trusting a stale row number).
+
+**The concrete cost, stated plainly per the founder's ask:** the drift check I was about to write
+this morning would have compared `locked_facts.json` **keys** against index **keys**. That check
+would have failed CI on all 24 `present_elsewhere` facts below — every one of them is real,
+correct, retrievable content, sitting in the index under a different key, usually in Swahili.
+**A key-based drift check would have shipped the exact bug it was built to catch, as a test.**
+
+## It immediately found 20 more keys neither v1, v2, nor v3 ever adjudicated
+
+The first run of this script did not come back clean. It flagged 20 keys beyond the 28 that v2
+had originally flagged — because **v3 only re-checked the 28 keys v2 had already flagged**. Any
+key v2 got right by accident — matched by exact or prefix key when it happened to line up, never
+independently verified against index *content* — was never looked at by anyone. This script
+checks all 246, unconditionally, every time, which is what exposed them.
+
+All 20 were adjudicated the same way as the original 28 — read the locked value, search the
+index for the content, confirm by eye — and are now pinned in the script with their row and a
+verification substring. Two are genuinely new gaps: `gn487a_marriage_no_exemption` (the index
+covers dual-nationality/naturalisation under Cap.357 but never marriage) and `gn487a_signatory`
+(the minister's name has zero hits anywhere in the index).
+
+## The honest, final accounting — 246 locked facts (not 247: `_unresolved_items` is metadata too)
+
+| | count |
+|---|---|
+| exact key match | 189 |
+| sibling key match (`sdl_rate` → `sdl_rate_2025`) | 9 |
+| **present_elsewhere** (right content, different key/language) | **24** |
+| **genuinely absent** | **15** |
+| fragment (bare clause — `"13 (7)"`, a bare year — never independently answerable) | 5 |
+| pending R15 regen (written this session, by design) | 4 |
+
+**189 + 9 + 24 = 222 of 246 (90%) are actually reachable.** The real gap is **15**, not 28, not
+57 — and 10 of the 15 are one family (SDL exemption categories). This is the number that should
+be quoted going forward; the 28 and the 13 in the entries above it are both superseded.
+
+## What makes this different from v1/v2/v3, and why it's the one that sticks
+
+v1, v2, and the embedding pass were each a **script run once, read once, and quoted**. This is a
+**pinned, committed, re-run-every-time** set of verdicts, checked against the live index content
+on every `pytest` invocation — not just today's. The pin for each `present_elsewhere` key carries
+the specific row number and a literal substring pulled from that row, so if the index is
+regenerated and a fact's phrasing changes or the fact silently drops out, the pin goes stale and
+the check **fails**, rather than continuing to report "present" against a row that no longer
+says what it used to. `test_pending_r15_keys_are_still_pending` closes the adjacent trap: when
+the R15 regen for the four presumptive-tax facts finally runs, those keys will start resolving
+via exact match and **fall out of the `pending_r15` bucket silently** unless PINNED is edited —
+so a dedicated test asserts none of the `pending_r15` pins have gone stale, forcing the pin set
+itself to get updated rather than just quietly becoming true.
+
+---
+
 # 🚀 PRESUMPTIVE TAX IS LIVE — and the BEFORE is the coverage argument in one screen (2026-08-17)
 
 Full R16 cycle on `chike-inference`: `app stop --yes` → `PYTHONIOENCODING=utf-8 PYTHONUTF8=1
@@ -124,6 +264,17 @@ now the live proof.
 rate, exactly as it did before. It passes as a NEGATIVE because the requirement was that the new
 route not steal it, and it did not. **A negative canary proves a change didn't spread. It does
 not launder the row it protects.** The transport schedule is now a named coverage gap.
+
+> **This is the right general standard, not a one-off note.** Every negative canary in every
+> R16 cycle this project has run — concord closure's `cl_06`/`cl_07` count-question guards,
+> D-FIDELITY-4's controls, this cycle's lp_09 through lp_13 — proves the SAME narrow claim: *the
+> new code did not change this answer.* None of them prove the answer was correct to begin with,
+> because none of them were written to. A canary set that is all green reads, at a glance, like
+> a system that is working; the honest read is narrower — a system where this particular change
+> didn't make anything WORSE. Where a negative happens to sit on a row that was already wrong
+> (lp_09 today; it will not be the last), that has to be said explicitly, in the entry, next to
+> the green — a passing board is not the same claim as a correct one, and it is easy to let a row
+> of checkmarks stand in for the second when it only ever proved the first.
 
 `lp_10`/`lp_11` (the `mapato`-not-`mauzo` row and the regime-election row) and `lp_12` (EFD
 precedence) are likewise byte-identical. `lp_14` is the CONTAINER-LOADED diagnostic: `nunua
@@ -218,10 +369,16 @@ row rather than with a cut-off.
 | fragment | 4 | the locked "fact" is a bare clause — `"13 (7)"`, `"commits an offence"` — not an answer to any question and never should have been counted as one |
 | pending_r15 | 2 | written 2026-08-16, absent **by design** until the Kaggle regen runs |
 
+⚠️ **SUPERSEDED AGAIN, SAME DAY — see "THE DRIFT CHECK IS BUILT" below.** This pass only
+re-checked the 28 keys v2 had already flagged; it never independently checked the other 218.
+The committed drift check found **20 more unpinned keys** neither this pass nor v2 had looked
+at. Final, checked-every-run numbers: **24 present_elsewhere, 15 absent, 5 fragment, 4
+pending_r15.** The number worth quoting from here on is **15 of 246**, not 13 of 247.
+
 **The real gap is 13 of 247, and 10 of the 13 are ONE family** — the SDL exemption categories
 (diplomatic missions, religious institutions, registered schools, TaESA trainees, farm
 employers…). The other three are legal citations: Cap 438 s.11, Cap 82 s.19, and the Workers
-Compensation Act Sura 263.
+Compensation Act Sura 263. *(Numbers above superseded — see the callout.)*
 
 **`gn487a_prohibited_activity_3` was nearly the fourteenth.** The embedding put activities 9, 2
 and 5 above it, because the locked value is English while index #182 states it **in Swahili with
@@ -250,13 +407,17 @@ about to write would have shipped this bug as a test.**
 |---|---|---|
 | v1 | key-slug **prefix** | 57 of 247 missing (23%) |
 | v2 | key-slug **exact** + figure-in-blob | 28 of 247 (11%) — **committed in `7ad737d`** |
-| v3 | **embedding match, then read every row** | **13 of 247 (5%)** |
+| v3 | **embedding match, then read every row** | 13 of 247 (5%) — **but only re-checked v2's 28** |
+| v4 | **`check_facts_index_sync.py`, pinned + re-run every `pytest`** | **15 of 246 (6%)** — see "THE DRIFT CHECK IS BUILT" below |
 
 **The 57→28 correction is the one I told the founder about as a method success. It happened
 before publication. The 28→13 correction did not — it went into PROGRESS, the board and a
-message before the instrument was checked.** The lesson is not "matchers are hard"; it is that
+message before the instrument was checked. Neither did 13→15: v3 only re-adjudicated the 28
+keys v2 had already flagged, so it inherited v2's blind spot for every key v2 happened to get
+right by luck rather than by checking.** The lesson is not "matchers are hard"; it is that
 **v2 was built to correct v1 and was never itself subjected to the check it was built to
-perform.** An instrument that corrects another instrument needs the same scrutiny as the first
+perform** — and neither, fully, was v3. An instrument that corrects another instrument needs
+the same scrutiny as the first
 one, and it did not get it because it arrived wearing the authority of a correction.
 
 The reason this is a correction entry rather than a method note is exactly that difference. The
@@ -1839,18 +2000,25 @@ thing. Same shape, one more level out.
 | *(new 2026-08-16)* decomposition FABRICATES a sub-question | all routes | ⏸ pre-existing, confirmed on `05e68b5`; pinned `xfail(strict=True)`; not fixed inside a coverage commit |
 | *(new 2026-08-16)* RAG similarity floor | pilot blocker | ⏸ scoped, agreed to ship **before any pilot**; needs the score distribution measured first |
 | *(new 2026-08-16)* fact-path class analysis | 6 of 9 remaining WRONG | ✅ **DONE 2026-08-17 — it is RETRIEVAL, 7/9 RANKING, 0/9 OVERRIDE.** Fee rows are 30% of the index and win 58% of top-3 slots |
-| *(new 2026-08-17)* segregate fee-schedule rows from retrieval | 7 rows | ⏸ **the fix**, largest measured effect; needs an R15 regen |
-| *(new 2026-08-17)* locked facts absent from the RAG index | SDL exemptions | ⏸ **13 of 247, not 28** (corrected same day) — 10 are the SDL exemption family; nothing compares the two files |
+| ~~*(new 2026-08-17)* segregate fee-schedule rows from retrieval~~ | 9 rows | ❌ **MEASURED, DOES NOT WORK** — a retrieval-side mask fixes 0/9 and regresses 3 currently-correct rows. Fee-row segregation folds into the C4 reachability rewrite + R15 regen instead |
+| *(new 2026-08-17)* locked facts absent from the RAG index | SDL exemptions | ✅ **FINAL: 15 of 246** (not 28, not 13 — drift check found 20 more keys nobody had checked). 10 of 15 are the SDL exemption family |
 | *(new 2026-08-17)* similarity floor CANNOT use an absolute score | pilot blocker | ⏸ scores compress to 0.79-0.86; redesign on a MARGIN or a re-ranked index |
-| *(new 2026-08-17)* permanent `locked_facts` ↔ RAG index check | pipeline | ⏸ **nothing compares the two files.** MUST compare CONTENT, not keys — a key-based check would false-alarm on the 9 facts indexed in Swahili under a different key, i.e. it would ship the bug it is meant to catch |
+| ~~*(new 2026-08-17)* permanent `locked_facts` ↔ RAG index check~~ | pipeline | ✅ **BUILT** — `scripts/check_facts_index_sync.py` + `tests/test_facts_index_sync.py`, pinned + content-verified, runs every `pytest` (1229 passed). Compares content, not keys |
+| *(new 2026-08-17)* presumptive transport schedule (para 2(5)) | lp_09, the daladala row | 🛑 **named coverage gap, not fixed** — production still invents *"asilimia 25%"* for Class A transport rates; the presumptive engine deliberately does not route to it (`_PRESUMPTIVE_VETO`) so the wrong answer doesn't spread, but the row itself stays wrong until this table is built |
 | *(new 2026-08-17)* D1 / a new adapter for the fact cluster | 6 of 9 WRONG | ❌ **REMOVED from the queue — 0/9 OVERRIDE means it would have fixed none of them.** Do not re-queue without a new measurement |
 
 ### ➡️ FOUNDER-ADOPTED WORK ORDER (2026-08-17) — retrieval before facts, floor last
 
-1. **Segregate the fee-schedule rows from general retrieval** — 30% of the index, 58% of top-3
-   slots, near-zero conversational demand. Largest measured effect, smallest change.
-2. **Reachability rewrites (C4)** — Swahili-first, value-at-front, no `key: ` prefix.
-3. **Close the 28-fact index gap**, and land the permanent drift check with it.
+1. ~~Segregate the fee-schedule rows from general retrieval~~ ✅ **measured — the offline mask
+   fixes 0/9 and regresses 3. It does not survive contact with evidence and is folded into
+   step 2 instead of standing alone.**
+2. **Reachability rewrites (C4)** — Swahili-first, value-at-front, no `key: ` prefix. **Now the
+   whole fix**, not step one of two: it must also carry the fee-row segregation the mask could
+   not deliver, since a rewrite that improves general reachability without addressing the
+   66-row fee block would still leave that block winning 58% of top-3 slots.
+3. ~~Close the 28-fact index gap, and land the permanent drift check with it.~~ ✅ **DONE** —
+   real gap is 15 of 246; `scripts/check_facts_index_sync.py` + `tests/test_facts_index_sync.py`
+   run on every `pytest`.
 4. **Then** the three fact-set domains (service-levy bound, market-stall exclusions, TIN) —
    written **with** the retrieval fix and regenerated in **one** R15 Kaggle cycle, not before it.
 5. **Then the floor, on a MARGIN rather than an absolute score.** Still ships before any pilot.
@@ -1859,6 +2027,12 @@ thing. Same shape, one more level out.
 domains of facts may not fix the answers, and we'd want to know that before writing them."* The
 mechanism is retrieval, so facts written today would enter an index where fee rows take 58% of
 the slots and correct facts sit at rank 19–164. **They stay paused on purpose.**
+
+**Step 1's measurement changes what step 2 has to be, not the order.** "Measure the mask against
+the regen and choose on evidence" was itself instruction #1 this round, on the reasoning that a
+cheap offline test could settle the question before committing to a GPU cycle. It settled it —
+against the cheap option. The regen was never in doubt as *a* requirement; what was open was
+whether it could be avoided for this specific piece, and the answer is no.
 
 ---
 
