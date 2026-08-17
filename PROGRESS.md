@@ -60,6 +60,85 @@ this project has, taken the same way twice.
 
 ---
 
+# 🚀 PRESUMPTIVE TAX IS LIVE — and the BEFORE is the coverage argument in one screen (2026-08-17)
+
+Full R16 cycle on `chike-inference`: `app stop --yes` → `PYTHONIOENCODING=utf-8 PYTHONUTF8=1
+modal deploy` → 14 live canaries against fresh containers. **14/14 pass. 5/5 negatives
+byte-identical to BEFORE.** Artifacts `scratch/presumptive_live_{before,after}.json`.
+
+## The BEFORE: eight questions off ONE statutory table, eight different wrong rates
+
+Nothing about these is a near miss. Production did not decline, did not hedge, and did not
+repeat itself — it invented a plausible percentage each time, in fluent Swahili, with
+*"Thibitisha na tra.go.tz"* attached:
+
+| asked | production said | correct |
+|---|---|---|
+| mauzo 50M | *"kodi ya makadirio ya **asilimia 30** ni TZS 15,000,000"* | TZS 1,750,000 |
+| mauzo 30M | *"kodi ya makadirio ya **asilimia 5**"* | TZS 1,050,000 |
+| mauzo 5M, no records | *"**asilimia 15%** ya mauzo hayo"* | TZS 100,000 |
+| mauzo 9M, records | *"chini ya TZS 200M/mwaka, **hakuna kodi ya makadirio**"* | TZS 150,000 |
+| tax consultant, 20M | *"kodi ya zuio ya **asilimia 6**, sawa na TZS 1,200,000"* | outside the regime entirely |
+| mauzo 150M | *"kodi ya makadirio ya **VAT** ni **asilimia 6.5%** = TZS 9,750,000"* | above the ceiling; presumptive does not apply |
+| mauzo 8M | *"**asilimia 6** ni TZS 480,000"* | depends on records — must ask |
+
+**TZS 15,000,000 demanded from a trader who owes 1,750,000.** An 8.6× overstatement, delivered
+with a source link. This is what "no fact behind it" looks like in production, and it is the
+strongest evidence yet for the coverage argument: **the failure mode of an uncovered domain is
+not silence, it is confident invention.**
+
+## The AFTER
+
+```
+Mauzo yangu ni milioni 50 kwa mwaka. Kodi ya makadirio ni kiasi gani?
+  -> Kodi ya makadirio = 3.5% × TZS 50,000,000 = TZS 1,750,000
+     (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la)
+
+Mauzo yangu ya mwaka ni milioni 9 na natunza kumbukumbu. Kodi ya makadirio?
+  -> Kodi ya makadirio = TZS 90,000 + 3% × (TZS 9,000,000 − TZS 7,000,000) = TZS 150,000
+
+Mimi ni mshauri wa kodi, mauzo yangu ni milioni 20 kwa mwaka...
+  -> Hapana. Kodi ya makadirio haitumiki kwa wataalamu huru...
+
+Mauzo yangu ni milioni 8 kwa mwaka. Kodi ya makadirio ni ngapi?
+  -> ...je unatunza kumbukumbu za mahesabu...? Niambie, nami nitakupa kiasi kamili.
+```
+
+**TZS 1,750,000 and not 1,710,000 is the stale-consolidation catch reaching a user.** The canary
+forbids `1,710,000` explicitly, so the Cap 332 R.E. 2019 table cannot come back without turning
+a canary red.
+
+**The 8M row is the records axis behaving correctly**: it asks, because there the two columns
+differ by TZS 220,000. The 12M row does not ask, because there they do not. Latency after the
+first cold call is **0.8–1.0s** — no model on the path.
+
+## The negatives, including the one the founder named
+
+**lp_09, the daladala row, is byte-identical before and after.** The transport schedule
+(para 2(5)) is a different table this engine does not implement; routing it here would compute
+the turnover table on a **tax** figure of TZS 250,000 and answer **"TZS 0"** to a daladala owner.
+The 5,595-row sweep caught that before deploy and `_PRESUMPTIVE_VETO` closed it; this canary is
+now the live proof.
+
+**Stated plainly: lp_09 is still WRONG.** It answers *"kiwango... cha asilimia 25%"*, an invented
+rate, exactly as it did before. It passes as a NEGATIVE because the requirement was that the new
+route not steal it, and it did not. **A negative canary proves a change didn't spread. It does
+not launder the row it protects.** The transport schedule is now a named coverage gap.
+
+`lp_10`/`lp_11` (the `mapato`-not-`mauzo` row and the regime-election row) and `lp_12` (EFD
+precedence) are likewise byte-identical. `lp_14` is the CONTAINER-LOADED diagnostic: `nunua
+shamba` lives in `chike_config.json` and **not** in the hardcoded fallback, so its refusal proves
+these containers read the config — the check that settled the 2026-08-07 stale-container
+incident.
+
+⚠️ **Still pending, and it is a founder step: the R15 Kaggle regen.** The engine is live, but the
+four locked facts written for this domain are **not retrievable** until
+`kaggle/regenerate_rag_e5.py` runs. The compute route does not need them; a user who asks about
+presumptive tax in words the router does not catch still gets the fact path, and the fact path
+still cannot see those four facts.
+
+---
+
 # 🧭 TWICE IN TWO DAYS, ANALYSIS-BEFORE-BUILD STOPPED WORK THAT WOULD NOT HAVE WORKED (2026-08-17)
 
 **This is the argument for the discipline itself, and it is now a measured argument rather than
@@ -79,7 +158,9 @@ the build it stopped.
 
 All nine WRONG rows were partitioned by mechanism against **production's own retrieval**
 (full entry below). **OVERRIDE = 0. UNUSED = 0.** Every failing row is either a fact that exists
-in the index and is not retrieved (**RANKING, 7/9**) or a fact we do not hold (**ABSENCE, 2/9**).
+in the index and is not retrieved (**RANKING, 9/9** — corrected the same day from 7/9; the
+other 2 were bucketed ABSENCE by a matcher fault and are also RANKING. **ABSENCE is now 0/9.**
+Correction entry above).
 
 Three of the wrong answers are **verbatim index rows**: nat_05's *"TZS 260,000"* is
 `company registration fee 3`, nat_41's invented *"siku 1"* is
@@ -104,50 +185,116 @@ questions it was built to protect.
 
 ---
 
-# 🔌 WE CORRECTED FACTS THAT WERE NEVER RETRIEVABLE (2026-08-17)
+# ❌ CORRECTION, SAME DAY: "WE CORRECTED FACTS THAT WERE NEVER RETRIEVABLE" WAS WRONG (2026-08-17)
 
-**28 of 247 locked facts have no trace in the RAG index.** Two of them are load-bearing and both
-were the subject of corrections we believed had landed:
+**Committed in `7ad737d`, disproved two hours later, corrected here before it was acted on.
+Both keys it named as evidence ARE in the index. The third matcher in the same investigation
+was wrong in the same way as the first two.**
 
-| key | the correction | in the index |
+| key | `7ad737d` claimed | actually |
 |---|---|---|
-| `efd_threshold_tzs_11m` | **`f1e3d30`, 2026-07-27 — a commit literally titled `fix(rag)`**, splitting EFD into a pristine threshold key. Preceded by `2be52cd` (2026-06-16), "EFD threshold" among its applied corrections | ❌ **no trace** |
-| `sdl_threshold` | `a71ccd3`, 2026-06-07, locked-facts pattern tightening | ❌ **no trace** |
+| `efd_threshold_tzs_11m` | ❌ no trace in the index | **index #58** — *"Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka"* |
+| `sdl_threshold` | ❌ no trace in the index | **index #7 / #65** — *"Kizingiti cha SDL ni wafanyakazi 10 au zaidi... Si 11, si 4."* |
 
-Also absent: `osha_registration_threshold_b004`, `OSHA_annual_inspection`,
-`small_headcount_still_register`, all twelve SDL exemption categories, and four legal-citation
-keys. Two of the nine WRONG rows (nat_24, nat_41) are directly caused by this.
+**The mechanism.** The v2 matcher counted a fact as reachable if its key slug matched an index
+slug **or a distinctive figure from its value appeared in the index**, with the figure regex
+`\d[\d,]{2,}` — three characters minimum. A fact whose value reads *"10 employees"* or
+*"TZS 11 million"* produces **no marks at all** and drops into the unreachable bucket
+automatically. **Both headline examples were facts stated in words rather than comma-formatted
+figures.** And PROGRESS records that #58 exists precisely *because* it was written: the eval_347
+fix added a Swahili-first `CONCISE_BILINGUAL_FACTS['efd_threshold_tzs_11m']` entry. **The
+correction did land. My instrument could not see it.**
 
-> **A fact corrected in `locked_facts.json` and never carried into the index is not a corrected
-> fact. It is a corrected file.** Three weeks of believing the EFD threshold was fixed, in a
-> commit whose own subject line says `fix(rag)`, while the retrieval path it names could not
-> reach it.
+### The adjudicated answer — read row by row, not thresholded
 
-**Nothing in the pipeline compares `locked_facts.json` against the index.** Not
-`validate_dataset.py`, not `check_locked_facts.py`, not the gate. The two files drifted apart
-silently and the drift was found only because someone went looking for a different thing.
+`scratch/factpath_sync_gap_v3.json`. Each of the 28 was embedded against the shipped index and
+its top matches **read**, with a written verdict per key so a future reader can disagree with a
+row rather than with a cut-off.
 
-**➡️ THIS COMPARISON BECOMES A PERMANENT CHECK, NOT A ONE-OFF SCAN.** A test that FAILS when
-`locked_facts.json` carries a key the index cannot reach, pinned to the current known-missing set
-so it fires on **drift** — i.e. so the next fact written and not regenerated is caught at commit
-time rather than three weeks later by an unrelated investigation. It lands with the index-gap
-item in the work order.
+| verdict | n | what it means |
+|---|---|---|
+| **present_elsewhere** | **9** | the content IS in the index, usually **in Swahili under a different key** |
+| **absent** | **13** | real compliance content, genuinely missing |
+| fragment | 4 | the locked "fact" is a bare clause — `"13 (7)"`, `"commits an offence"` — not an answer to any question and never should have been counted as one |
+| pending_r15 | 2 | written 2026-08-16, absent **by design** until the Kaggle regen runs |
 
-### ⚠️ Method: the number was 57 before it was 28, and the correction happened before it was written
+**The real gap is 13 of 247, and 10 of the 13 are ONE family** — the SDL exemption categories
+(diplomatic missions, religious institutions, registered schools, TaESA trainees, farm
+employers…). The other three are legal citations: Cap 438 s.11, Cap 82 s.19, and the Workers
+Compensation Act Sura 263.
 
-A first pass matched index rows to locked keys by **key-slug prefix**, a second by **exact
-slug**, and they disagreed: `sdl_rate` is absent as a key while `sdl_rate_2025` is present, so
-one matcher called it indexed and the other called it missing. The headline that produced was
-**57 of 247 = 23%**. Re-derived at content level — exact key, sibling key, or value figure
-present anywhere in the index — the honest number is **28 of 247 = 11%**.
+**`gn487a_prohibited_activity_3` was nearly the fourteenth.** The embedding put activities 9, 2
+and 5 above it, because the locked value is English while index #182 states it **in Swahili with
+no `prohibited activity` prefix** — *"Kutengeneza au ukarabati wa simu na vifaa vya
+kielektroniki…"*. Found only by reading all fifteen GN487A rows directly. **The third matcher
+artifact in one investigation, caught by the same method as the other two: stop trusting the
+matcher and read the rows.**
 
-**Half of the alarming figure was an artifact of my own matcher.** It was caught before it
-entered PROGRESS, the board, or a message to the founder, which is the only reason it is a method
-note and not a correction entry. Same discipline as the "52 eval / 385 train rows" correction,
-applied to an instrument on the day it was built: **a number produced by a sloppy matcher is
-exactly how a wrong number enters this record.**
+### What survives, and it is the part worth keeping
+
+The dramatic claim is dead. The structural one is not, and it is now better evidenced:
+
+> **THE RAG INDEX IS NOT A PROJECTION OF `locked_facts.json`.** 9 facts are reachable only under
+> a **different key, in a different language**, and 13 are not there at all. The two files have
+> no defined relationship, and **nothing in the pipeline compares them** — not
+> `validate_dataset.py`, not `check_locked_facts.py`, not the gate.
+
+**That is exactly why the drift check is still the right thing to build, and why it must compare
+CONTENT rather than keys.** A key-based check would have reported all 9 present_elsewhere rows as
+failures — the same false alarm, wired into CI where it would be believed. **The check I was
+about to write would have shipped this bug as a test.**
+
+### ⚠️ Method: 57 → 28 → 13, and only the first correction happened before publication
+
+| pass | matcher | said |
+|---|---|---|
+| v1 | key-slug **prefix** | 57 of 247 missing (23%) |
+| v2 | key-slug **exact** + figure-in-blob | 28 of 247 (11%) — **committed in `7ad737d`** |
+| v3 | **embedding match, then read every row** | **13 of 247 (5%)** |
+
+**The 57→28 correction is the one I told the founder about as a method success. It happened
+before publication. The 28→13 correction did not — it went into PROGRESS, the board and a
+message before the instrument was checked.** The lesson is not "matchers are hard"; it is that
+**v2 was built to correct v1 and was never itself subjected to the check it was built to
+perform.** An instrument that corrects another instrument needs the same scrutiny as the first
+one, and it did not get it because it arrived wearing the authority of a correction.
+
+The reason this is a correction entry rather than a method note is exactly that difference. The
+2026-08-15 rule stands and was under-applied here: **a number produced by a matcher is a claim
+about the matcher until something independent confirms it.**
 
 ---
+
+# 🎯 AND THE CLASS ANALYSIS GETS STRONGER: RANKING 9/9, ABSENCE 0/9 (2026-08-17)
+
+The same matcher fault ran through the class analysis, which resolved a locked key to an index
+row by **key-slug prefix**. It bucketed `nat_24` and `nat_41` as **ABSENCE** — "we hold no such
+fact" — when both facts are in the index in Swahili. Re-run against the content rows
+(`scratch/factpath_class_recheck.json`):
+
+| row | question | content | rank in the 217-row index | retrieved? |
+|---|---|---|---|---|
+| **nat_24** | *"tuko na watu 9 tu mishahara milioni 4…"* | SDL threshold = 10+ employees (#7, #65) | **41 / 217**, **65 / 217** | **NO** |
+| **nat_41** | *"nimefungua karakana mpya nina muda gani wa kusajili…"* | OSHA registers ALL workplaces (#72, #53) | **22 / 217**, **128 / 217** | **NO** |
+
+**ABSENCE 2/9 → RANKING 2/9. The partition is now RANKING 9 · ABSENCE 0 · OVERRIDE 0 ·
+UNUSED 0.**
+
+**Every single remaining wrong answer is a fact we hold and failed to retrieve.** The corrected
+result is *stronger* than the one it replaces and points the same way harder: it removes the last
+2/9 that argued for writing new facts, and the fix is entirely retrieval.
+
+And nat_24 is the cleanest illustration of the fee-row dominance in the whole set. A question
+about SDL and NSSF for **9 employees** retrieves, at top-1:
+
+```
+0.837  vat deferment minimum value: 10,000,000 TZS
+0.831  minimum monthly contributions maternity benefit: 36 monthly_contributions
+0.828  company registration fee 1: 95,000 TZS
+```
+
+while *"Kizingiti cha SDL ni wafanyakazi 10 au zaidi"* — the exact answer, correctly written,
+correctly indexed — sits at **rank 41**.
 
 # 📜 A CONSOLIDATED ACT IS NOT THE CURRENT LAW — a rule for whoever encodes the next schedule
 
@@ -189,10 +336,17 @@ own retrieval** — the same `rag_embeddings.npy` and `rag_facts_text.json` that
 
 | mechanism | meaning | count |
 |---|---|---|
-| **RANKING** | the correct fact **is in the index** and is **not retrieved** | **7 / 9** |
-| **ABSENCE** | no fact in the index answers it | 2 / 9 |
+| **RANKING** | the correct fact **is in the index** and is **not retrieved** | ~~7 / 9~~ **9 / 9** |
+| ~~**ABSENCE**~~ | ~~no fact in the index answers it~~ | ~~2 / 9~~ **0** |
 | OVERRIDE | the fact was retrieved and the reply contradicted it | **0** |
 | UNUSED | retrieved, not contradicted, simply not applied | **0** |
+
+⚠️ **CORRECTED THE SAME DAY.** The two ABSENCE rows were a matcher fault, not a missing fact —
+this script resolved a locked key to an index row by **key-slug prefix**, and both facts are in
+the index in **Swahili under a different key**. Re-checked against the content rows: neither is
+retrieved, so both are RANKING. See *"AND THE CLASS ANALYSIS GETS STRONGER"* at the top. **The
+corrected partition is stronger, not weaker — every remaining wrong answer is now a fact we hold
+and failed to retrieve.**
 
 ### The model was not hallucinating. It was reciting what it was handed.
 
@@ -268,7 +422,13 @@ before the money was spent.** The instruction was *"if retrieval or override is 
 adding five domains of facts may not fix the answers, and we'd want to know that before writing
 them"* — the same reasoning applies one item further along, to the floor.
 
-### The second gap: 28 locked facts have no trace in the index
+### The second gap: locked facts the index cannot reach
+
+⚠️ **THE NUMBERS IN THIS SECTION ARE SUPERSEDED — the honest figure is 13, not 28.** The table
+below is the v2 matcher's output, kept because the correction entry at the top of this file
+refers to it. `sdl_threshold`, `efd_threshold_tzs_11m`, `OSHA_annual_inspection` and six others
+listed here as missing **are in the index, in Swahili, under a different key.** Read
+*"CORRECTION, SAME DAY"* before quoting anything below.
 
 `scratch/factpath_sync_gap.json`. **The RAG index is not a projection of `locked_facts.json`:**
 
@@ -1673,16 +1833,16 @@ thing. Same shape, one more level out.
 | ~~`_WAGE_PAY_CUES`~~ | — | ✅ **closed** (`32917f4`) — employee side reaches the deterministic route; BEFORE blamed NSSF for an unlawful wage |
 | ~~wage clarification copy~~ | wl_08/wl_09 | ✅ **closed** (`571cf1d`) — the worker is addressed as a worker; employer copy unchanged |
 | ~~`MIN_WAGE_NO_SECTOR` figures~~ | — | ✅ **verified and cleared** — TZS 80,000 is sector 4d, `viwango 50` is the row count; CLAUDE.md counts different things. Drift pin added |
-| *(new 2026-08-16)* presumptive tax | coverage | ✅ **engine shipped** — Cap 332 First Sch. para 2 per FA2022 s.72; NOT deployed, no R16 cycle yet |
+| *(new 2026-08-16)* presumptive tax | coverage | ✅ **DEPLOYED AND LIVE-VERIFIED 2026-08-17** — full R16 cycle, 14/14 canaries, 5/5 negatives byte-identical. BEFORE invented eight different wrong rates |
 | *(new 2026-08-16)* licence renewal date | coverage | ✅ fact written — **blocked on R15 RAG regen (Kaggle, founder step) so it is NOT retrievable yet** |
 | *(new 2026-08-16)* licence FEE schedule | coverage | 🛑 **left uncovered** — no current consolidated First Schedule from any primary source; BRELA or OCR + 3 unchecked Acts |
 | *(new 2026-08-16)* decomposition FABRICATES a sub-question | all routes | ⏸ pre-existing, confirmed on `05e68b5`; pinned `xfail(strict=True)`; not fixed inside a coverage commit |
 | *(new 2026-08-16)* RAG similarity floor | pilot blocker | ⏸ scoped, agreed to ship **before any pilot**; needs the score distribution measured first |
 | *(new 2026-08-16)* fact-path class analysis | 6 of 9 remaining WRONG | ✅ **DONE 2026-08-17 — it is RETRIEVAL, 7/9 RANKING, 0/9 OVERRIDE.** Fee rows are 30% of the index and win 58% of top-3 slots |
 | *(new 2026-08-17)* segregate fee-schedule rows from retrieval | 7 rows | ⏸ **the fix**, largest measured effect; needs an R15 regen |
-| *(new 2026-08-17)* 28 locked facts absent from the RAG index | nat_24, nat_41 | ⏸ nothing compares the two files; needs a check that fails on drift |
+| *(new 2026-08-17)* locked facts absent from the RAG index | SDL exemptions | ⏸ **13 of 247, not 28** (corrected same day) — 10 are the SDL exemption family; nothing compares the two files |
 | *(new 2026-08-17)* similarity floor CANNOT use an absolute score | pilot blocker | ⏸ scores compress to 0.79-0.86; redesign on a MARGIN or a re-ranked index |
-| *(new 2026-08-17)* permanent `locked_facts` ↔ RAG index check | pipeline | ⏸ **nothing compares the two files**; `efd_threshold_tzs_11m` was "fixed" on 2026-07-27 and has never been retrievable. Test must fail on DRIFT |
+| *(new 2026-08-17)* permanent `locked_facts` ↔ RAG index check | pipeline | ⏸ **nothing compares the two files.** MUST compare CONTENT, not keys — a key-based check would false-alarm on the 9 facts indexed in Swahili under a different key, i.e. it would ship the bug it is meant to catch |
 | *(new 2026-08-17)* D1 / a new adapter for the fact cluster | 6 of 9 WRONG | ❌ **REMOVED from the queue — 0/9 OVERRIDE means it would have fixed none of them.** Do not re-queue without a new measurement |
 
 ### ➡️ FOUNDER-ADOPTED WORK ORDER (2026-08-17) — retrieval before facts, floor last
