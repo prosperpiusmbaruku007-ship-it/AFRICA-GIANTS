@@ -60,17 +60,32 @@ INDEX_PATH = os.path.join(_REPO, "kaggle", "rag_facts_text.json")
 #   substring stops matching, the index changed under this pin and the check must FAIL
 #   rather than trust a stale row number).
 # absent / fragment / pending_r15: no index_row — genuinely not there, by different reasons.
+#
+# RE-ADJUDICATED WHOLESALE, same day, after the R15 regen actually ran and deployed.
+# Every present_elsewhere row number above was resolved against the OLD 217-row index;
+# inserting/deleting keys mid-file shifted almost every row after the edit point in the
+# NEW 221-row index, so 23 of 26 present_elsewhere pins went stale in one regen — this is
+# exactly what drift_pin_stale exists to catch, and it caught all 23 the first run after
+# deploy. Re-located each by searching the new index for its (still-correct) substring,
+# disambiguating by content where a figure recurs (22,000/5,000,000/asilimia 3.5 all hit
+# multiple rows — see PROGRESS's "R15 CYCLE DEPLOYED" entry). The 3 pending_r15 keys from
+# the C4 cycle are promoted to present_elsewhere here since the regen that was pending has
+# now happened. Two new drift_unpinned keys (sdl_rate, GN605A_sector_count) surfaced
+# separately: their round-2 CONCISE rewrites lead with a conversational Swahili clause
+# before the first colon, so split(":")[0] no longer yields "sdl rate" / "gn605a sector
+# count" — a checker-matcher gap the readability-over-key-shape tradeoff will keep
+# producing, not a one-off.
 PINNED = {
     "sdl_threshold": ("present_elsewhere", 7, "wafanyakazi 10 au zaidi"),
     # sdl_employee_threshold pin removed 2026-08-17 -- the key itself was deleted
     # (merged into sdl_threshold, duplicate-key sweep; see PROGRESS "C4 applied").
     "efd_threshold_tzs_11m": ("present_elsewhere", 58, "TZS 11,000,000"),
-    "osha_registration_threshold_b004": ("present_elsewhere", 53, "bila kikomo"),
-    "small_headcount_still_register": ("present_elsewhere", 72, "OSHA husajili maeneo YOTE"),
-    "OSHA_annual_inspection": ("present_elsewhere", 88, "ukaguzi wa lazima kila mwaka"),
-    "legal_citation_sdl": ("present_elsewhere", 91, "Section 14"),
-    "gn487a_prohibited_activity_3": ("present_elsewhere", 182, "kielektroniki"),
-    "order_made_under_section": ("present_elsewhere", 178, "section 14A(2)"),
+    "osha_registration_threshold_b004": ("present_elsewhere", 52, "kila mwajiri lazima asajili"),
+    "small_headcount_still_register": ("present_elsewhere", 69, "OSHA husajili maeneo YOTE"),
+    "OSHA_annual_inspection": ("present_elsewhere", 85, "ukaguzi wa lazima kila mwaka"),
+    "legal_citation_sdl": ("present_elsewhere", 88, "Vocational Education Training Act"),
+    "gn487a_prohibited_activity_3": ("present_elsewhere", 179, "Prohibited activity 3"),
+    "order_made_under_section": ("present_elsewhere", 175, "section 14A(2)"),
 
     "legal_citation_tax_administration": ("absent", None, None),
     "legal_citation_amendment_act_sdl": ("absent", None, None),
@@ -91,15 +106,12 @@ PINNED = {
     "workers_compensation_amendment_rules_section": ("fragment", None, None),
     "offence_penalty_mention": ("fragment", None, None),
 
-    # Written 2026-08-16 for the presumptive-tax coverage item; absent BY DESIGN until
-    # the R15 regen runs. If this script is still reporting them PENDING long after that
-    # regen shipped, the regen silently missed them -- that is exactly the drift this
-    # check exists to catch, so do not raise this to "absent" or "present" without
-    # re-running the regen and re-verifying against the live index.
-    "business_licence_expiry_30_june": ("pending_r15", None, None),
-    "presumptive_excluded_services": ("pending_r15", None, None),
-    "presumptive_tax_bands_2022": ("pending_r15", None, None),
-    "presumptive_tax_ceiling_100m": ("pending_r15", None, None),
+    # Written 2026-08-16 for the presumptive-tax coverage item, pending_r15 until the R15
+    # regen ran. It ran on 2026-08-17 (the natural48 entry, PROGRESS.md) and all four keys
+    # now resolve by EXACT key match against the new index -- confirmed via check(), not
+    # assumed -- so their pins are removed rather than converted (exact match already
+    # covers them; a redundant pending_r15 entry would just be stale weight). This is
+    # test_pending_r15_keys_are_still_pending catching exactly what it was built to catch.
 
     # Third pass, 2026-08-17, same day: tightening the sibling matcher (see
     # _is_sibling's docstring -- a single-word slug like 'nssf' or 'brela' was letting
@@ -108,17 +120,19 @@ PINNED = {
     # reading the index directly (scratch/local_regen_verify.py's sibling-audit pass).
     "nssf_employer_rate": ("present_elsewhere", 9, "mwajiri analipa asilimia 10"),
     "nssf_total_rate": ("present_elsewhere", 10, "jumla: asilimia 20"),
-    "nssf_payment_deadline": ("present_elsewhere", 63, "ifikapo tarehe 10"),
-    "nssf_calculation_example": ("present_elsewhere", 216, "SI TZS 120,000"),
-    "brela_striking_off_non_filing": ("present_elsewhere", 45, "kufuta, kufunga au kuondoa"),
+    "nssf_payment_deadline": ("present_elsewhere", 62, "ifikapo tarehe 10"),
+    "nssf_calculation_example": ("present_elsewhere", 213, "SI TZS 120,000"),
+    "brela_striking_off_non_filing": ("present_elsewhere", 44, "kufuta, kufunga au kuondoa"),
 
-    # C4 reachability cycle, 2026-08-17: three new keys written this cycle, absent BY
-    # DESIGN until the R15 regen runs (same discipline as the presumptive-tax pending
-    # keys above). brela_foreign_late_filing_penalty is the one the tightened sibling
-    # matcher above caught falsely riding on 'brela' -- it was NOT actually indexed.
-    "brela_foreign_late_filing_penalty": ("pending_r15", None, None),
-    "osha_registration_before_operations": ("pending_r15", None, None),
-    "sdl_exemption_categories": ("pending_r15", None, None),
+    # C4 reachability cycle, 2026-08-17 -- three new keys written that cycle, PENDING_R15
+    # at the time because the regen had not yet run. The regen ran the same day (R15
+    # deploy entry, PROGRESS.md) and all three are now indexed -- promoted to
+    # present_elsewhere below with their real rows. brela_foreign_late_filing_penalty is
+    # the one the tightened sibling matcher above caught falsely riding on 'brela' before
+    # the regen; it is genuinely indexed now.
+    "brela_foreign_late_filing_penalty": ("present_elsewhere", 218, "USD 25"),
+    "osha_registration_before_operations": ("present_elsewhere", 219, "16(2)"),
+    "sdl_exemption_categories": ("present_elsewhere", 220, "zisizolipa SDL"),
 
     # --- Second pass, 2026-08-17: this script's own first run found 20 MORE unpinned
     # keys the earlier v1/v2/v3 investigation never touched -- v3 only re-checked the 28
@@ -126,20 +140,29 @@ PINNED = {
     # accident. Adjudicated the same way: read the locked value, search the index by
     # content, confirm by eye. ---
     "gn487a_penalty_noncitizen": ("present_elsewhere", 20, "10,000,000"),
-    "gn487a_penalty_citizen_facilitator": ("present_elsewhere", 94, "5,000,000"),
-    "gn487a_license_lending_is_facilitation": ("present_elsewhere", 94, "lending their name"),
-    "efd_not_every_business": ("present_elsewhere", 59, "Si lazima"),
-    "wcf_rate_0_5_percent_confirmed": ("present_elsewhere", 69, "asilimia 0.5"),
-    "osha_vs_wcf_roles": ("present_elsewhere", 71, "taasisi mbili tofauti"),
-    "sdl_payment_deadline": ("present_elsewhere", 98, "siku ya 7"),
-    "annual_return_filing_fee": ("present_elsewhere", 44, "22,000"),
-    "osiha_act_citation": ("present_elsewhere", 71, "Na.5 ya 2003"),
-    "health_and_safety_act_citation": ("present_elsewhere", 71, "Na.5 ya 2003"),
-    "business_licensing_act_citation": ("present_elsewhere", 178, "Cap. 101"),
-    "business_licensing_act_chapter": ("present_elsewhere", 178, "Cap. 101"),
-    "tanzania_citizenship_act_reference": ("present_elsewhere", 93, "Cap.357"),
-    "paye_bands_with_examples": ("present_elsewhere", 214, "TZS 800,000"),
-    "sdl_calculation_example": ("present_elsewhere", 215, "Mfano wa hesabu"),
+    "gn487a_penalty_citizen_facilitator": ("present_elsewhere", 21, "5,000,000 (milioni tano)"),
+    "gn487a_license_lending_is_facilitation": ("present_elsewhere", 91, "lending their name"),
+    "efd_not_every_business": ("present_elsewhere", 58, "Si lazima"),
+    "wcf_rate_0_5_percent_confirmed": ("present_elsewhere", 66, "asilimia 0.5"),
+    "osha_vs_wcf_roles": ("present_elsewhere", 68, "taasisi mbili tofauti"),
+    "sdl_payment_deadline": ("present_elsewhere", 95, "siku ya 7"),
+    "annual_return_filing_fee": ("present_elsewhere", 134, "ada ya kuwasilisha ritani"),
+    "osiha_act_citation": ("present_elsewhere", 219, "Na.5 ya 2003"),
+    "health_and_safety_act_citation": ("present_elsewhere", 219, "Na.5 ya 2003"),
+    "business_licensing_act_citation": ("present_elsewhere", 175, "Cap. 101"),
+    "business_licensing_act_chapter": ("present_elsewhere", 175, "Cap. 101"),
+    "tanzania_citizenship_act_reference": ("present_elsewhere", 90, "Cap.357"),
+    "paye_bands_with_examples": ("present_elsewhere", 211, "TZS 800,000"),
+    "sdl_calculation_example": ("present_elsewhere", 212, "Mfano wa hesabu"),
+    # sdl_rate / GN605A_sector_count: drift found post-R15-regen, 2026-08-17 (the natural48
+    # re-run entry, PROGRESS.md). Both rewritten this cycle into conversational Swahili
+    # lead-ins ('SDL, ambayo huitwa pia "mafunzo": ...', 'Kima cha chini cha mshahara (GN
+    # 605A): ...') that no longer split(":")[0] into "sdl rate" / "gn605a sector count" --
+    # exactly the citation-clutter-adjacent tradeoff the readability rule accepts. Content
+    # verified correct and present; needles chosen to avoid the OTHER row that shares the
+    # same generic figure (row 212's SDL worked example also says "asilimia 3.5").
+    "sdl_rate": ("present_elsewhere", 5, "Si asilimia 4, si asilimia 2"),
+    "GN605A_sector_count": ("present_elsewhere", 72, "sekta 16"),
 
     # gn487a_marriage_no_exemption: row 93 covers dual-nationality/naturalisation under
     # Cap.357 but never mentions marriage. A materially different claim -- genuinely absent.

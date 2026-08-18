@@ -4,6 +4,100 @@ Last updated: 2026-08-17
 
 ---
 
+# 📉 THE R15 CYCLE DEPLOYED AND MEASURED: +1 OF 48 — the retrieval work did not move the number the way the routing work did (2026-08-17)
+
+**Deploy chain, each link verified independently, not on trust:** Kaggle regen succeeded
+(221 facts, 0 self-retrieval failures, 26/26 `critical_queries`) and uploaded to HF as one
+atomic commit, `3977c186c1`, titled `e5-base RAG index (221x768), built from aae4ccb`. Before
+touching production: `git rev-parse HEAD` / `origin/main` / the HF commit title all agreed on
+`aae4ccb`, and — the strong check — `rag_facts_text.json` downloaded from the Hub is a
+**byte-for-byte match** against `build_fact_texts()` run fresh against this exact checkout
+(`scratch/verify_regen_structural.py`). That closes the loop the local-checkout fix
+(previous entry) was for: source and index provably came from one commit, not a
+commit-message string that happened to agree. (The model-based re-embedding double-check
+segfaulted reproducibly on this machine — ~2.8GB free of 8GB, an environment constraint, not
+a code defect — and wasn't pursued further given the content-equality result.) Dual-committed
+to `chike-inference/` + `kaggle/` at `32c2cd6`, pushed. `chike-inference` stopped and
+redeployed fresh (`aae4ccb..32c2cd6`, R16: force-fresh containers, not just `modal deploy`).
+
+## R16 live canaries — the fix that landed, and four that provably could not
+
+nat_43 (GN605A sector-variance) is fixed, confirmed live: *"Ndiyo, kima cha chini cha
+mshahara kwa sekta mbalimbali ni tofauti. Thibitisha na GN 605A."* — correctly says yes,
+matches the rubric, replaces the prior flat *"Hapana... hakibadiliki"*.
+
+nat_05, nat_33, nat_41, nat_28 — the other four rows this cycle targeted — came back **byte-
+identical** to their 2026-08-15 pre-cycle replies. Not "still wrong, differently." The exact
+same text, including nat_41's fabricated *"siku 1 tu"* OSHA certificate turnaround, which
+predates this entire cycle and which the newly-written, independently-verified
+`osha_registration_before_operations` fact (OSH Act 2003 s.16(2), confirmed present in the
+index) did not touch at all. The mechanism is not mysterious: `modal_app.py:305` injects
+exactly `top_k=3` into the prompt, in production, matching the guard's own cutoff. Round B's
+wording pass moved these rows' ranks (documented in the prior C4 entry) but none of the four
+crossed into top-3 — nat_43 did. A rank improvement that does not cross `top_k=3` is
+**mechanically invisible to production**, not partially helpful. This was asserted as a
+possibility when C4 shipped ("costs nothing to ship"); today's canaries are the empirical
+confirmation, not the theory.
+
+The SDL-exemption fact answered a live probe ("je mashirika ya kidini yanalipa SDL")
+correctly and proportionately — business activity vs purely spiritual activity, appropriately
+hedged, no invented number. The four displacement guards (nat_26/27/34/36) held live, byte-
+identical to their correct 08-15 replies — the vat_withholding rewrite that would have
+regressed nat_27 stayed held back, correctly. nat_37/nat_38 (named pre-existing, not this
+cycle's problem) are unchanged and not further broken. The container-freshness OOC probe
+(capital gains) refused correctly, confirming `chike_config.json` loads correctly in the live
+container — the `[config] chike_config.json not loaded (.../assets\chike_config.json)` line
+printed during `modal deploy` is local Windows-path noise from the deploy tool's own import of
+`modal_app.py` (`ntpath.join('/root/assets', ...)` locally), not a container-runtime fault;
+confirmed by the live refusal working correctly, not just by reading the code.
+
+## The 48, re-run — `eval/results/natural48_rerun_2026_08_17_adjudication.json`
+
+All 48 questions re-run live against the redeployed container. **Diffed programmatically
+against the 2026-08-15 baseline, not eyeballed: 47/48 replies are byte-identical. Only nat_43
+changed.**
+
+```
+CORRECT  28 -> 29   (+1, nat_43)
+WRONG     9 -> 8    (-1, nat_43)
+CLARIFY   6 -> 6    (unchanged)
+PARTIAL   5 -> 5    (unchanged)
+```
+
+That is the full live yield of the entire C4 retrieval cycle — the duplicate-key sweep, the
+nat_41 OSH Act verification, the SDL-exemption consolidation, the ceiling test, the top_k
+sweep, two rounds of CONCISE wording, three merges, three new/rewritten facts, the regen, the
+independent verification, the redeploy: **one row, out of six targeted.** This is the
+measurement the founder asked for — "the measurement that says whether the retrieval work
+moved the number the way the routing work did" — and the honest answer is **it did not**. The
+2026-08-11→08-15 routing/compute cycle moved 9 compute-path rows from WRONG to CORRECT in one
+pass. This retrieval cycle, working against a structurally different obstacle (facts most of
+which don't clear `top_k=3` no matter how they're worded — the fee-shape-dominance and
+seven-row-unreachable-at-k=9 findings earlier in this file), moved one.
+
+## THE nat_44 / nat_28 DECISION, now grounded in the 48's result
+
+The withheld `vat_withholding_goods`/`vat_withholding_services` rewrite (round-2 wording,
+held back because it regressed nat_27 in local dry-run) would have moved nat_44 33→~4 and
+nat_28's rate-half 33→~8 (`scratch/factpath_stage1_round2.json`). Today's result answers the
+open question directly: **rank 8 cannot reach a `top_k=3` production system — this is no
+longer a local-scoring inference, it's what just happened, empirically, to four other rows
+this exact cycle.** nat_44's ~rank 4 is closer but not confirmed to clear 3, and raising
+`top_k` itself was already measured and rejected (`top_k` 3→9 reaches **none** of this
+seven-row cluster, per the fee-table-dominance finding above, and the two-arm retriever work
+separately measured the dilution cost of a wider retrieval slot as 1 recovery vs 86
+dilutions — "not a demonstrated fact-path win"). So the trade is: apply the rewrite, take a
+**confirmed** regression on a **confirmed-live-correct** row (nat_27, byte-identical-correct
+in today's run), for an **unconfirmed, at-best-marginal** chance on nat_44 and a **provably
+zero** chance on nat_28. **Recommendation: leave both as-is.** Not a wording problem, and not
+a `top_k` problem either — both levers this cycle had have now been tried and both are spent
+for this specific cluster. Reopening it needs a structural change (the fee-shape-dominance
+30%-of-index-wins-58%-of-slots finding is the more likely lever, not touched this cycle) or
+the routing team's approach (deterministic intercept, the way the compute-path defects were
+actually fixed) rather than another retrieval-ranking pass.
+
+---
+
 # 🌐 THE REGEN HIT A SHARED, UNAUTHENTICATED RATE LIMIT — fixed in regenerate_rag_e5.py, logged for every other Kaggle harness (2026-08-17)
 
 **What happened:** the R15 regen 429'd twice in one run — once on the commit-SHA
