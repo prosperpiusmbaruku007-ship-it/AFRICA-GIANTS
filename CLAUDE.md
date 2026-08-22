@@ -657,6 +657,21 @@ green light.** Proven twice on 2026-08-06/07:
   **7 real gate questions**, and that bare `kiwanja`/`nyumba`/`shamba`/`bima`/`madini`/
   `bandari`/`hati` were all unusable.
 
+**🎯 THE CLEAREST CASE, AND THE ONE TO SHOW A SCEPTIC (2026-08-22, D-FIDELITY-6).**
+Two candidate attribution rules were written for the rate guard. **Both were wrong. The corpus
+sweep was CLEAN for both. Only authored probes found either.**
+
+| rule | what broke it | how the corpus behaved |
+|---|---|---|
+| **nearest-levy-wins** | probe `rg_01`, a **correct** three-levy breakdown: *"SDL ni asilimia 3.5…, NSSF ni asilimia 20, na WCF ni asilimia 0.5."* The `20` has NSSF 9 characters behind it and WCF 4 ahead, so the rule attributed NSSF's rate to WCF and **flagged a right answer** | 150 recorded replies, **0 false positives** — no recorded reply happened to contain that ordering |
+| **proximity-only** | real output where a leftover nickname captured a correct figure: *"…kwa ajili ya mafunzo ya **fidia**, pamoja na asilimia 10% kwa ajili ya **NSSF**"* — NSSF's correct 10% attributed to WCF | clean until the probe arm made the shape visible |
+
+**The compact argument:** a clean sweep tells you the corpus does not contain the failure. It does
+not tell you the rule is right — and here it was **twice wrong while sweeping clean**. Twelve of
+the sixteen probes were deliberately *correct* bodies, and that is the half that did the work: the
+probes designed to be flagged all passed on the first rule too. **Write the probes that should
+come back CLEAN, not just the ones that should flag.**
+
 **Procedure for any phrase/cue-list change:**
 1. Sweep candidates individually over all corpora (400 gate + every probe set).
 2. **Author adversarial probes that contain the risky vocabulary in an IN-SCOPE context**,
@@ -672,6 +687,39 @@ Corollary, from the same cycle: **a test that instructs future maintainers not t
 defect is worse than no test.** `test_paraphrased_ooc_controls_*` asserted a known OOC leak
 should pass the gate, on the assumption the model would refuse it. Live data disproved the
 assumption. When that happens, invert the test and keep the history in its docstring.
+
+### R19 — BEFORE BUILDING A FIDELITY GUARD, ASK WHETHER IT CHECKS A CONSTANT OR A DERIVED QUANTITY
+
+**This is the line that decides whether a guard is buildable at all**, and two guards have already
+fallen on opposite sides of it without the boundary being named. Name it before designing the next
+one.
+
+| | checks a **CONSTANT** (statute, threshold, rate) | checks a **DERIVED QUANTITY** (an amount computed from the user's figures) |
+|---|---|---|
+| example | GUARD A: *a stated 14 is not "fewer than 10"*. D-FIDELITY-6: *3.5% is not 0.5%* | Guard B: *is TZS 400,000 a fabrication or a legitimate halving of 800,000?* |
+| verdict | **BUILDABLE** | **IMPOSSIBLE** |
+| why | the claim is a **comparison against a fixed fact**. No transformation makes it true | a fabricated figure and a lawful transformation are the **same arithmetic relationship** to the user's number. Nothing distinguishes them |
+
+**The corollary that matters most, and the reason D-FIDELITY-6 exists:**
+
+> **A rule about a constant NEEDS NO ENGINE RESULT. A rule about a derived quantity cannot work
+> without one — and therefore goes VACUOUS exactly when there isn't one.**
+
+Every D-FIDELITY rule before the sixth compares the model's body against a `ComputationResult`.
+When `amount is None` — an **applicability** verdict, a clarification, or anything on the **fact
+path** — all of them are satisfied trivially. That is not a bug in any of them; it is the shape of
+what they check. It is also why `nat_24` shipped a live reply saying *"10% … kwa ajili ya WCF"*
+with four fidelity rules watching and none able to fire.
+
+**D-FIDELITY-6 compares against the statute instead of against a working, so it has no such hole.**
+It is the first rule in this file that can judge a body with no computation behind it at all.
+
+**Practical test for the next guard author.** Write the claim your guard would reject, then ask:
+*could this be true under some lawful transformation of the user's own numbers?*
+- **No** → it is a constant comparison. Build it, and it will also work on the fact path and on
+  applicability verdicts, which is where the current rules are blind.
+- **Yes** → it is Guard B. Do not build it. Find the constant underneath the claim and check that
+  instead — a wrong **rate** is checkable even when the wrong **amount** derived from it is not.
 
 ### R18 — COMMIT THE HARNESS BEFORE YOU WRITE UP ITS RESULT. No exceptions.
 

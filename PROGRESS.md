@@ -133,6 +133,52 @@ the live v16 pipeline.
 
 ---
 
+# 📌 BOARD — THE FACT-PATH RATE GAP IS KNOWN-LIVE, NOT THEORETICAL (2026-08-22)
+
+**D-FIDELITY-6 covers the compute path only, and the uncovered half has confirmed live instances.**
+
+**Why it is not covered:** on the compute path, blanking an offending body is safe because
+`_render` still emits the engine's authoritative working — the user loses a wrong sentence and
+keeps the right figure. **A fact body cannot be blanked**: there is no working underneath it, so
+`_render` would emit nothing, and GUARD A's rule stands — *silence is worse than a wrong answer*.
+Closing it requires replacement clarification copy, which is a design decision, not a line of code.
+
+**The instances are real, not hypothetical.** The sweep found levy-rate conflations on fact-path
+replies: `nat_01` and `nat_04` (2026-08-11) and the ad-hoc probe `nick_01`, which **reproduces on
+demand** — *"asilimia 0.5 kwa ajili ya mafunzo"*, three times out of three. `nick_01` will still
+show it after the guard deploys, and that is predicted rather than discovered.
+
+**What closing it needs:** copy that replaces a rate-conflating fact body without going silent —
+most likely the levy's correct rate stated plainly plus a referral, in the shape
+`chike/clarification.py` already uses for the headcount contradiction. **Scoped, not started.**
+
+---
+
+# ⚠️ BOARD — LOCAL FULL-SUITE RUNS ARE NO LONGER RELIABLE ON THIS MACHINE (2026-08-22)
+
+**Page-file exhaustion has now degraded three separate measurements in one session**, so this is an
+environment item rather than an aside:
+
+1. **e5 model loads fail** — `OSError: The paging file is too small for this operation to
+   complete`. `test_retrieval.py`'s two integration tests began skipping mid-session, having
+   passed earlier the same day.
+2. **pytest aborts with access violations** (`0xC0000005`, exit 5) partway through full runs,
+   intermittently.
+3. **A full-suite run reported a failure** —
+   `test_mixed_compound_end_to_end_on_real_weights` — **that passes in isolation and passes in its
+   own file.** Order- and resource-dependent, not reproducible.
+
+**Cause:** this session ran the e5 encoder locally many times (grounding, targeted rewrite, guard
+audit, nickname retrieval) alongside real-weights tests, and Windows never recovered the page file.
+
+**Rule, going forward: any claim resting on a local full-suite run needs a FRESH-SESSION
+confirmation before it is trusted.** Targeted runs remain reliable — `test_rate_guard`,
+`test_routing_gap_ab` and `test_orchestrator` pass together (72), including the real-weights
+end-to-end. **The suite has NOT been verified green since the rate guard landed, and re-running it
+first thing in a fresh session is the next session's first task, before anything depends on it.**
+
+---
+
 # 🛡️ D-FIDELITY-6 BUILT: THE RATE GUARD, SPECIFIED BY ONE LIVE ROW AND MEASURED BEFORE IT WAS WRITTEN (2026-08-22)
 
 **`nat_24` specified it.** All three mechanism gaps sat in that single row, so the guard had to
@@ -151,6 +197,31 @@ Sweep: `eval/fidelity/sweep_rate_guard.py` → `eval/results/rate_guard_sweep.js
 Every flag is a genuine conflation — `nat_24` live (WCF=10%), `nat_24` historic (SDL=0.5%),
 `nat_01` and `nat_04` from 2026-08-11 (SDL=0.5%), and the ad-hoc probe. **Zero false positives.**
 The historic hits matter: this defect class has been live before and nothing caught it.
+
+## The statute-comparison design is a REUSABLE PATTERN, now written up as R19
+
+**This is not a trick specific to rates.** Every D-FIDELITY rule before the sixth compares the
+model's body against a `ComputationResult`. When `amount is None` — an applicability verdict, a
+clarification, anything on the fact path — **all of them are satisfied trivially.** That is not a
+bug in any of them; it is the shape of what they check. It is also exactly how `nat_24` shipped a
+wrong rate with four fidelity rules watching.
+
+**The boundary, and GUARD A and Guard B fell on opposite sides of it without anyone naming it:**
+
+> **A rule about a CONSTANT needs no engine result. A rule about a DERIVED QUANTITY cannot work
+> without one — and goes vacuous precisely when there isn't one.**
+
+- *3.5% is not 0.5% under any transformation* → constant → **buildable**, and it works on the fact
+  path and on applicability verdicts, where the existing rules are blind.
+- *Is TZS 400,000 fabricated, or a lawful halving of the stated 800,000?* → derived → **Guard B** →
+  impossible, because a fabrication and a lawful transformation are the same arithmetic
+  relationship.
+
+**The practical test for the next guard author** — write the claim your guard would reject, then
+ask whether it could be true under some lawful transformation of the user's own numbers. If no,
+build it. If yes, **find the constant underneath the claim and check that instead**: a wrong *rate*
+is checkable even when the wrong *amount* derived from it is not. Recorded as **R19** in
+`CLAUDE.md` so it is met before the next guard is designed, not after.
 
 ## The R17 probes earned their keep twice, before any code shipped
 
