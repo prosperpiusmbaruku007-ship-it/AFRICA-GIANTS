@@ -133,6 +133,89 @@ the live v16 pipeline.
 
 ---
 
+# 🛡️ D-FIDELITY-6 BUILT: THE RATE GUARD, SPECIFIED BY ONE LIVE ROW AND MEASURED BEFORE IT WAS WRITTEN (2026-08-22)
+
+**`nat_24` specified it.** All three mechanism gaps sat in that single row, so the guard had to
+close all three. `chike/fidelity.py: body_states_wrong_levy_rate`, wired into
+`Orchestrator._validate_and_clean`. Tests: `tests/test_rate_guard.py` (23).
+Sweep: `eval/fidelity/sweep_rate_guard.py` → `eval/results/rate_guard_sweep.json`.
+
+| gap | how it is closed |
+|---|---|
+| **Direction** — `body_contradicts_siblings` scans for *other* levies' windows; the defect states a sibling's rate for its **own** levy | attribution is per-rate, not per-sibling |
+| **Vacuity** — WCF's sub-answer was an applicability verdict, `amount is None`, so every figure-comparing rule was trivially satisfied | **this rule takes no `ComputationResult` at all.** It compares against the **statute**, not a working — which is precisely why it reaches the case the others cannot |
+| **Window** — `_levy_windows` runs forward from the levy token, so `"kulipa 10% … kwa ajili ya WCF"` lands in no window | attribution is **bidirectional**; **all five real detections depended on the backward direction** |
+
+## Measured before it was written: 150 real replies, 5 flagged, 5 true positives
+
+Every flag is a genuine conflation — `nat_24` live (WCF=10%), `nat_24` historic (SDL=0.5%),
+`nat_01` and `nat_04` from 2026-08-11 (SDL=0.5%), and the ad-hoc probe. **Zero false positives.**
+The historic hits matter: this defect class has been live before and nothing caught it.
+
+## The R17 probes earned their keep twice, before any code shipped
+
+16 authored probes, **12 of them CORRECT bodies written specifically to break an over-broad
+version.** Two rules died to them:
+
+1. **Nearest-wins attribution** — `rg_01`, a correct three-levy breakdown
+   (*"SDL ni 3.5…, NSSF ni 20, na WCF ni 0.5"*), flagged, because `20` has NSSF 9 characters
+   behind it and WCF 4 ahead. Replaced by **a preceding levy always wins** — the asymmetry is
+   grammatical, since in *"X ni asilimia N"* the subject comes first, and forward attribution is
+   only the fallback for the defect's own shape.
+2. **Proximity-only** — real output containing *"…kwa ajili ya mafunzo ya **fidia**, pamoja na
+   asilimia 10% kwa ajili ya **NSSF**"* gave NSSF's correct 10% to WCF via the stray nickname.
+   Replaced by **an explicit attachment beats proximity**.
+
+**Neither was findable from the corpus** — the corpus sweep was clean at the time both rules were
+wrong. That is R17's whole claim, demonstrated twice in one sitting.
+
+**Safety argument, and why this is not the impossible Guard B:** Guard B (fabricated *amounts*)
+cannot work because a fabricated figure and a legitimate transformation are both arithmetic
+relationships to the user's numbers. **A statutory rate is a constant** — *3.5% is not 0.5% under
+any transformation* — which is GUARD A's property exactly. Zero is lawful for every levy (a
+non-liability claim), and denial against a positive engine amount stays D-FIDELITY-5's job.
+
+## Deliberately partial: the FACT path is not covered
+
+The sweep found real conflations on the fact path (`nat_01`, `nat_04`, the ad-hoc probe), and the
+guard **does not fire there.** A fact body cannot simply be blanked — `_render` would emit nothing,
+and GUARD A's rule applies: silence is worse than a wrong answer. Closing it needs replacement
+clarification copy, which is its own scoped work. **Named, not half-done.**
+
+## Test status, stated honestly
+
+23 new tests pass; `tests/test_orchestrator.py` passes complete (34, including the real-weights
+end-to-end). **A full-suite run reported 1266 passed with 1 failure —
+`test_mixed_compound_end_to_end_on_real_weights` — which passes in isolation and passes in its own
+file.** A second full-suite attempt aborted with an access violation. Both are consistent with the
+page-file exhaustion recorded above, not with the guard. **I am not claiming a clean full-suite
+pass on this machine; it should be re-run in a fresh session before this is trusted as green.**
+
+---
+
+# 📌 BOARD — nat_37 AND nat_38 ARE THE SAME LUCK CLASS AS nat_27. NEVER USE THEM AS CONTROLS (2026-08-22)
+
+**Two rows score CORRECT with no supporting fact in the index at all.** Searched, not assumed
+(2026-08-22): there is no fact stating a receipt is required for every transaction regardless of
+amount (`nat_37`), and none stating a VAT-registered business must use an EFD regardless of
+turnover (`nat_38`). `nat_38`'s only on-topic retrieved row says the **opposite** (*"Si lazima"*).
+
+**They are answering over an index GAP, from model weights.** That is the same class as `nat_27`,
+which was retired as a negative control for exactly this reason: **no index change can break them
+and no index change can protect them**, so using either to certify a change measures the base
+model's memory, not the change.
+
+**Retired as controls, effective now** — alongside `nat_27`. Usable controls are the measured
+GROUNDED rows (`nat_31`, `nat_34`, `nat_32`, `nat_39`, `nat_43`) or compute-path rows, which are
+engine-backed.
+
+**They are also two more ABSENCE rows than the class analysis recorded.** The 2026-08-17 partition
+found ABSENCE 1/9 (`nat_41`) among the failures. These two are ABSENCE among the *successes* —
+invisible to a partition that only looked at what was wrong. **Same blind spot as `nat_38`'s
+override finding, from a second direction.**
+
+---
+
 # 📊 THE DISCARD RATE IS LOW: ~1 IN 13. RETRIEVAL FIXES DO REACH THE ANSWER (2026-08-22)
 
 **nat_38's board item, measured on the deployed post-routing state.**
@@ -287,7 +370,32 @@ three named mechanism gaps to design against.
 
 ---
 
-# ⚖️ FOR FOUNDER ADJUDICATION — nat_24's rubric (2026-08-22)
+# ⚖️ SETTLED — nat_24 scores PARTIAL, and the RUBRIC was changed, not the score (2026-08-22)
+
+**Founder adjudication, recorded so nobody later reads it as a moved goalpost.**
+
+**1. The rubric was mis-specified, and it has been fixed.** *"Nilipe nini kati ya"* asks **which**
+levies apply, not how much. Answering **which** is the correct response to that question; the
+rubric demanded amounts, and that was the rubric's error rather than the system's.
+`eval/accuracy_gate/edge_probe_natural_048.jsonl` now expects the triage, with a
+`rubric_revision` field carrying the reasoning inline so the change is visible at the point of use
+and not only in this file.
+
+**2. The score is unchanged: `nat_24` is PARTIAL — and for a reason independent of the rubric.**
+Its live reply states **10% for WCF** (NSSF's employer share) where the statute says 0.5%. A wrong
+rate is wrong whatever the question asked. **Changing the rubric does not move this row's score,
+which is the point: the rubric fix and the score are separate findings and are recorded
+separately.**
+
+**3. What would move it to CORRECT:** D-FIDELITY-6 (built, above) blanks the offending body on the
+compute path, leaving the engine's correct *"WCF ni asilimia 0.5"* line standing. **Not yet
+verified live** — that needs the next deploy cycle.
+
+The original adjudication material is kept below for the record.
+
+---
+
+# ⚖️ The adjudication material as presented — nat_24's rubric (2026-08-22)
 
 **Not settled here, deliberately.** Whether the reply answers what the user meant is a judgement
 about intent, and it should be made explicitly rather than absorbed into a score.

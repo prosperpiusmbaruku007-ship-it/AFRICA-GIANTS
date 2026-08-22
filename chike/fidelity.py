@@ -504,6 +504,133 @@ def body_contradicts_siblings(body: str, siblings: dict) -> bool:
 
 
 # ---------------------------------------------------------------------------
+# D-FIDELITY-6 — the body states a WRONG STATUTORY RATE for a levy (2026-08-22)
+# ---------------------------------------------------------------------------
+# Specified by one live row. nat_24's WCF body said "unatakiwa kulipa 10% ya jumla ya mishahara
+# kwa ajili ya WCF" — 10% is NSSF's employer share — with the engine's correct 0.5% line
+# immediately below it. Three separate mechanisms let it through, and this rule closes all
+# three because they all sat in that one row:
+#
+#   1. DIRECTION. body_contradicts_siblings scans for OTHER levies' windows. Here the body
+#      volunteered a SIBLING'S rate for its OWN levy — the inverse case, uncovered.
+#   2. VACUITY. WCF's sub-answer was an APPLICABILITY verdict, so ComputationResult.amount is
+#      None and every figure-comparing rule above is satisfied trivially. Same shape as
+#      D-FIDELITY-5: there is nothing to compare against. THIS RULE NEEDS NO COMPUTATION AT
+#      ALL — it compares against the statute, not against a working, which is exactly why it
+#      reaches the case the others cannot.
+#   3. WINDOW. _levy_windows runs FORWARD from a levy token, so a rate stated BEFORE its levy
+#      ("kulipa 10% ... kwa ajili ya WCF") lands in no window. Attribution here is
+#      bidirectional, and every one of the five real detections in the sweep depended on it.
+#
+# ⚠️ WHY THIS IS SAFE AND GUARD B IS NOT. Guard B (fabricated AMOUNTS) is impossible because a
+# fabricated figure and a legitimate transformation are both just arithmetic relationships to
+# the user's numbers. A STATUTORY RATE IS A CONSTANT, not a derived quantity:
+#
+#     3.5% IS NOT 0.5% UNDER ANY TRANSFORMATION.
+#
+# That is GUARD A's property — a comparison, not a quantity — and it is the whole safety
+# argument. Zero is lawful for every levy (a non-liability claim), and denial against a
+# positive engine amount is D-FIDELITY-5's job, not this one.
+#
+# ATTRIBUTION RULE, and the asymmetry is grammatical rather than a fudge:
+#   * an EXPLICIT attachment wins first — "asilimia 10% kwa ajili ya NSSF" names its own
+#     subject, which must beat a levy word left over from the previous clause. Found in real
+#     output where a stray 'fidia' otherwise captured NSSF's correct 10%.
+#   * otherwise a PRECEDING levy wins — in "X ni asilimia N" the subject comes first. R17 probe
+#     rg_01 ("SDL ni 3.5..., NSSF ni 20, na WCF ni 0.5") broke a nearest-wins rule immediately,
+#     attributing NSSF's rate to WCF and flagging a correct breakdown.
+#   * a FOLLOWING levy is the fallback, which is the defect's own shape.
+#
+# MEASURED BEFORE IT WAS WRITTEN (eval/fidelity/sweep_rate_guard.py ->
+# eval/results/rate_guard_sweep.json): 150 recorded model replies swept, 5 flagged, ALL FIVE
+# true positives — nat_24 live, nat_24 historic, nat_01 and nat_04 (2026-08-11) and the ad-hoc
+# probe, every one a real levy-rate conflation. Plus 16 authored R17 probes, 16/16 as expected,
+# 12 of them correct bodies written specifically to break an over-broad version.
+_LEVY_RATES = {
+    "sdl": frozenset({Decimal("3.5"), Decimal(0)}),
+    # All three lawful employer/employee split arrangements (locked fact: 10+10, 15+5, 20+0).
+    "nssf": frozenset({Decimal(20), Decimal(15), Decimal(10), Decimal(5), Decimal(0)}),
+    "wcf": frozenset({Decimal("0.5"), Decimal(0)}),
+    "paye": frozenset({Decimal(0), Decimal(8), Decimal(15), Decimal(20), Decimal(25),
+                       Decimal(30)}),
+}
+# Swahili nicknames, so "kwa ajili ya mafunzo" is attributable. Same words as
+# routing._LEVY_CUES, restricted to the unambiguous ones: a nickname that also has an ordinary
+# reading ('fidia' = compensation) is fine HERE because attribution still requires a rate
+# adjacent to it, and a correct body naming that rate is allowed anyway.
+_RATE_NICKNAME = {
+    "mafunzo": "sdl", "ufundi": "sdl", "ujuzi": "sdl",
+    "uzeeni": "nssf", "pensheni": "nssf", "hifadhi ya jamii": "nssf",
+    "fidia": "wcf",
+}
+_RATE_NICK_TOKEN = re.compile(
+    "|".join(re.escape(k) for k in sorted(_RATE_NICKNAME, key=len, reverse=True)),
+    re.IGNORECASE)
+_RATE_FIGURE = re.compile(
+    r"(?:asilimia\s*([0-9]+(?:[.,][0-9]+)?)|([0-9]+(?:[.,][0-9]+)?)\s*%)", re.IGNORECASE)
+# A contrast clause states a rate in order to DENY it: "si asilimia 4", "NOT 14%". The
+# 18%-substring false-PASS proved these are real and must never be read as the body's claim.
+_RATE_NEGATION = re.compile(r"\b(?:si|sio|siyo|not|never|badala\s+ya|tofauti\s+na)\s*$",
+                            re.IGNORECASE)
+_RATE_ATTACH = re.compile(r"[\s,]*%?[\s,]*(?:kwa\s+ajili\s+ya|kwa|ya|ni\s+ya)?\s*",
+                          re.IGNORECASE)
+_RATE_BACKWARD_CHARS = 60
+_RATE_FORWARD_CHARS = 60
+
+
+def _rate_levy_marks(body: str):
+    marks = [(m.start(), m.group(1).lower()) for m in _LEVY_TOKEN.finditer(body)]
+    marks += [(m.start(), _RATE_NICKNAME[m.group(0).lower()])
+              for m in _RATE_NICK_TOKEN.finditer(body)]
+    return sorted(marks)
+
+
+def attributed_levy_rates(body: str):
+    """[(levy, Decimal rate)] for every rate the body attaches to a levy subject."""
+    marks = _rate_levy_marks(body)
+    if not marks:
+        return []
+    out = []
+    for m in _RATE_FIGURE.finditer(body):
+        raw = (m.group(1) or m.group(2)).replace(",", ".")
+        try:
+            rate = Decimal(raw)
+        except Exception:
+            continue
+        if _RATE_NEGATION.search(body[max(0, m.start() - 12):m.start()]):
+            continue
+        back = fwd = None
+        for pos, levy in marks:
+            if pos >= m.end():
+                dist = pos - m.end()
+                if dist <= _RATE_FORWARD_CHARS and (fwd is None or dist < fwd[0]):
+                    fwd = (dist, levy)
+            else:
+                dist = m.start() - pos
+                if dist <= _RATE_BACKWARD_CHARS and (back is None or dist < back[0]):
+                    back = (dist, levy)
+        attached = fwd is not None and _RATE_ATTACH.fullmatch(body[m.end():m.end() + fwd[0]])
+        best = fwd if attached else (back or fwd)
+        if best:
+            out.append((best[1], rate))
+    return out
+
+
+def body_states_wrong_levy_rate(body: str) -> bool:
+    """True iff the body attaches a rate to a levy that the statute does not give it.
+
+    Needs no ComputationResult, by design — see the block comment above.
+    """
+    if not body:
+        return False
+    for levy, rate in attributed_levy_rates(body):
+        allowed = _LEVY_RATES.get(levy)
+        if allowed is not None and rate not in allowed:
+            return True
+    return False
+
+
+# ---------------------------------------------------------------------------
 # GUARD A — the answer contradicts a headcount the USER STATED (2026-08-14)
 # ---------------------------------------------------------------------------
 # A different animal from everything above. D-FIDELITY-1/2/3 check the model body against

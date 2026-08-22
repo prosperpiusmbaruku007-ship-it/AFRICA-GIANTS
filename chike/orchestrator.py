@@ -729,7 +729,21 @@ class Orchestrator:
                 fidelity.body_contradicts_working(cleaned, sub.computation)
                 or fidelity.body_reduces_authoritative_amount(cleaned, sub.computation)
                 or fidelity.body_offers_total_as_own_obligation(cleaned, sub.computation)
-                or fidelity.body_denies_a_positive_obligation(cleaned, sub.computation)):
+                or fidelity.body_denies_a_positive_obligation(cleaned, sub.computation)
+                # D-FIDELITY-6 (2026-08-22): a wrong STATUTORY RATE for a levy. Deliberately
+                # inside the compute branch and NOT gated on `amount`: nat_24's WCF sub-answer
+                # was an APPLICABILITY verdict with amount=None, which made every rule above
+                # vacuous while the body said "10% ... kwa ajili ya WCF". Blanking is safe here
+                # for the same reason it is safe for the rules above — _render still emits the
+                # engine's authoritative working, so the user loses a wrong sentence and keeps
+                # the right figure.
+                #
+                # NOT applied to the FACT path, though the sweep found real conflations there
+                # (nat_01, nat_04, the ad-hoc probe). A fact body cannot simply be blanked —
+                # _render would emit nothing, and GUARD A's note applies: silence is worse than
+                # a wrong answer. Closing the fact-path case needs replacement copy, which is
+                # its own scoped piece of work. Named here rather than half-done.
+                or fidelity.body_states_wrong_levy_rate(cleaned)):
             cleaned = ""
         elif sub.computation is None and fidelity.body_contradicts_stated_headcount(
                 cleaned, sub.sub_question.text):

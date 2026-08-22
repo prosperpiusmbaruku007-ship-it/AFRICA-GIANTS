@@ -1,5 +1,33 @@
 # ADR 0002 — Retrieval structural scoping: five candidate mechanisms, two measured
 
+> # ✅ READ FIRST — THIS WORKSTREAM'S FOUNDING ASSUMPTION IS NOW MEASURED, AND IT HOLDS (2026-08-22)
+>
+> **Every mechanism scoped in this document — hybrid fusion, re-ranking, a bigger embedding
+> model, the routing intercept, index-content rewriting — rested on one untested assumption:
+> that getting the right content into context produces the right answer.** It was never
+> measured. `nat_38` (a row that answered correctly while its only on-topic retrieved fact said
+> the opposite) raised the possibility that it might not hold, and if it did not, every
+> retrieval fix here would be poor value however well it ranked.
+>
+> **It holds. Measured discard rate: ~1 in 13** (`eval/results/discard_rate.json`, run on the
+> live deployed pipeline). Correct facts forced into context for 13 fact-path rows; adjudicated
+> row by row, **one genuine discard** — `nat_33`, which drops TZS 22,000 and never computes
+> 7 × 2,500, and which is separately known to need a BRELA engine that does not exist.
+> **Content that reaches context is overwhelmingly used.**
+>
+> **And the payoff path is now end-to-end rather than inferred.** `nat_27` and `nat_36` — the two
+> rows measured as UNGROUNDED, answering correctly from model weights — became **grounded and
+> correct** the moment their fact was forced in. Combined with the measured ask-first rewrite
+> (rank 15 → 2 and 17 → 1), the full chain is evidenced: *rewrite the fact ask-first → it
+> retrieves → the model uses it → the row stops depending on model memory.*
+>
+> **⚠️ WHY THIS BANNER IS AT THE TOP.** The reversal table further down records four occasions
+> where measurement overturned a scoped recommendation, and a future session skimming it could
+> reasonably conclude the whole retrieval workstream was a dead end. **That conclusion is now
+> contradicted by measurement.** What the reversals show is that *individual mechanisms* were
+> mis-ranked on unmeasured numbers — not that the workstream's premise was wrong. The premise
+> was the one thing nobody had tested, and it survived the test.
+
 - **Status:** Interleave (§5) shipped, live-regressed on one of its own protected rows, and
   reverted the same day (2026-08-22) — production confirmed back on pre-ship code. The ship
   decision itself is now understood to have rested on a false distinction (§5(d)): rank-level

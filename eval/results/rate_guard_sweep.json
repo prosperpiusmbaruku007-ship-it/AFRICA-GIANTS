@@ -1,0 +1,335 @@
+{
+  "measured": "2026-08-22",
+  "harness": "eval/fidelity/sweep_rate_guard.py",
+  "purpose": "measure the FALSE-POSITIVE surface of a rate-conflation guard before writing one into chike/fidelity.py",
+  "specified_by": "nat_24 live WCF 10% (canary, 2026-08-22)",
+  "window": {
+    "backward_chars": 60,
+    "forward_chars": 60
+  },
+  "levy_rates": {
+    "sdl": [
+      0,
+      3.5
+    ],
+    "nssf": [
+      0,
+      5,
+      10,
+      15,
+      20
+    ],
+    "wcf": [
+      0,
+      0.5
+    ],
+    "paye": [
+      0,
+      8,
+      15,
+      20,
+      25,
+      30
+    ],
+    "vat": [
+      0,
+      3,
+      6,
+      12,
+      15,
+      16,
+      18
+    ]
+  },
+  "replies_swept": 150,
+  "flagged_count": 5,
+  "flagged_by_file": {
+    "gap_ab_canary_live.json": 1,
+    "grounding_48.json": 1,
+    "natural48_rerun_2026_08_11_adjudication.json": 2,
+    "nickname_live_probes.json": 1
+  },
+  "flagged": [
+    {
+      "file": "gap_ab_canary_live.json",
+      "id": "nat_24",
+      "reply": "Kwa sasa, hakuna taarifa kamili kuhusu kiwango cha malipo kinachohusiana na idadi ya wafanyakazi au mshahara. Thibitisha na NSSF (nssf.go.tz).\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).\n\nKwa sasa, unatakiwa kulipa asilimia 0% ya SDL kwa kuwa una chini ya wafanyakazi 10. Thibitisha na tra.go.tz.\nHapana. SDL haihusiki: una wafanyakazi 9 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.\n\nKwa mujibu wa taarifa ulizonipa, unatakiwa kulipa 10% ya jumla ya mishahara kwa ajili ya WCF. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+      "violations": [
+        {
+          "levy": "wcf",
+          "rate": 10.0,
+          "via": "WCF",
+          "direction": "forward",
+          "allowed": [
+            0,
+            0.5
+          ]
+        }
+      ]
+    },
+    {
+      "file": "grounding_48.json",
+      "id": "nat_24",
+      "reply": "Kwa mujibu wa sheria, unapaswa kulipa asilimia 0.5% ya jumla ya mishahara kwa ajili ya mafunzo ya fidia, pamoja na asilimia 10% kwa ajili ya NSSF. Thibitisha na mamlaka husika (nssf.go.tz).",
+      "violations": [
+        {
+          "levy": "sdl",
+          "rate": 0.5,
+          "via": "mafunzo",
+          "direction": "forward",
+          "allowed": [
+            0,
+            3.5
+          ]
+        }
+      ]
+    },
+    {
+      "file": "natural48_rerun_2026_08_11_adjudication.json",
+      "id": "nat_01",
+      "reply": "Kwa sasa, bado unatakiwa kulipa asilimia 0.5% ya mishahara yote kwa ajili ya mafunzo ya ufundi. Thibitisha na TRA (tra.go.tz).",
+      "violations": [
+        {
+          "levy": "sdl",
+          "rate": 0.5,
+          "via": "mafunzo",
+          "direction": "forward",
+          "allowed": [
+            0,
+            3.5
+          ]
+        }
+      ]
+    },
+    {
+      "file": "natural48_rerun_2026_08_11_adjudication.json",
+      "id": "nat_04",
+      "reply": "Kwa mujibu wa sheria, unapaswa kulipa asilimia 0.5% ya mishahara kwa ajili ya mafunzo mara tu idadi ya wafanyakazi itakapofika 10. Thibitisha na NSSF (nssf.go.tz).",
+      "violations": [
+        {
+          "levy": "sdl",
+          "rate": 0.5,
+          "via": "mafunzo",
+          "direction": "forward",
+          "allowed": [
+            0,
+            3.5
+          ]
+        }
+      ]
+    },
+    {
+      "file": "nickname_live_probes.json",
+      "id": "nick_01",
+      "reply": "Kulingana na taarifa uliyopewa, unatakiwa kuwa na wafanyakazi 10 ili kulazimika kulipa asilimia 0.5 kwa ajili ya mafunzo. Thibitisha na mamlaka husika (nssf.go.tz).",
+      "violations": [
+        {
+          "levy": "sdl",
+          "rate": 0.5,
+          "via": "mafunzo",
+          "direction": "forward",
+          "allowed": [
+            0,
+            3.5
+          ]
+        }
+      ]
+    }
+  ],
+  "probes_total": 16,
+  "probes_failed": 0,
+  "probe_failures": [],
+  "probes": [
+    {
+      "id": "rg_01",
+      "expect": "clean",
+      "body": "SDL ni asilimia 3.5 ya jumla ya mishahara, NSSF ni asilimia 20, na WCF ni asilimia 0.5.",
+      "guards_against": "a correct three-levy breakdown must not flag — the whole binding constraint is attaching each rate to its own levy",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_02",
+      "expect": "clean",
+      "body": "Kwa mishahara ya TZS 1,000,000: SDL = 3.5% = TZS 35,000; NSSF = 20% = TZS 200,000; WCF = 0.5% = TZS 5,000.",
+      "guards_against": "the engine's own breakdown shape, rates and amounts interleaved",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_03",
+      "expect": "clean",
+      "body": "WCF ni asilimia 0.5 ya mishahara, si asilimia 10 kama NSSF.",
+      "guards_against": "a CONTRAST clause naming a sibling's rate to correct a known confusion — the 18%-contrast false-PASS precedent",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_04",
+      "expect": "clean",
+      "body": "Unalipa asilimia 3.5 kwa ajili ya mafunzo.",
+      "guards_against": "correct SDL stated via NICKNAME with the rate BEFORE the token — same ordering as the defect, but right",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_05",
+      "expect": "clean",
+      "body": "Asilimia 20 ya mshahara huenda NSSF; kati ya hiyo asilimia 10 ni ya mwajiri na asilimia 10 ya mfanyakazi.",
+      "guards_against": "the NSSF split, where two different lawful percentages attach to one levy",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_06",
+      "expect": "clean",
+      "body": "Mwajiri anaweza kuchagua kulipa asilimia 15 na mfanyakazi asilimia 5 kwa NSSF.",
+      "guards_against": "the 15+5 lawful split arrangement (locked fact 77) — a rate that looks wrong unless the arrangement is known",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_07",
+      "expect": "clean",
+      "body": "PAYE kwa kipato cha TZS 300,000 ni asilimia 8 ya kiasi kinachozidi TZS 270,000.",
+      "guards_against": "a PAYE band rate",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_08",
+      "expect": "clean",
+      "body": "Mfanyakazi asiye raia analipa PAYE ya asilimia 15 — kiwango kimoja, si mabano.",
+      "guards_against": "the non-resident PAYE flat rate, which differs from every band",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_09",
+      "expect": "clean",
+      "body": "VAT withholding kwa huduma ni asilimia 6, na kwa bidhaa ni asilimia 3.",
+      "guards_against": "two different lawful VAT withholding rates in one sentence",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_10",
+      "expect": "clean",
+      "body": "Kiwango cha kawaida cha VAT ni asilimia 18. Hakijabadilika tangu 2015.",
+      "guards_against": "the standard VAT rate plus a bare year that must not be read as a rate",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_11",
+      "expect": "clean",
+      "body": "Kwa kuwa una wafanyakazi 9, SDL haihusiki — unalipa asilimia 0.",
+      "guards_against": "a NON-LIABILITY statement; zero is lawful for every levy and is checked by D-FIDELITY-5, not here",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_12",
+      "expect": "clean",
+      "body": "OSHA hukagua mahali pa kazi; WCF hulipa fidia, na mwajiri huchangia asilimia 0.5 ya mishahara.",
+      "guards_against": "'fidia' appearing as the WCF nickname AND as the ordinary word for compensation in the same sentence",
+      "got": "clean",
+      "violations": [],
+      "ok": true
+    },
+    {
+      "id": "rg_13",
+      "expect": "flag",
+      "body": "Unatakiwa kulipa asilimia 10 ya jumla ya mishahara kwa ajili ya WCF.",
+      "guards_against": "THE LIVE DEFECT (nat_24). Must flag: 10% is NSSF's employer share, stated for WCF, rate BEFORE the token",
+      "got": "flag",
+      "violations": [
+        {
+          "levy": "wcf",
+          "rate": 10.0,
+          "via": "WCF",
+          "direction": "forward",
+          "allowed": [
+            0,
+            0.5
+          ]
+        }
+      ],
+      "ok": true
+    },
+    {
+      "id": "rg_14",
+      "expect": "flag",
+      "body": "Unatakiwa kulipa asilimia 0.5 kwa ajili ya mafunzo.",
+      "guards_against": "the reproducible ad-hoc probe: WCF's rate stated for SDL via nickname",
+      "got": "flag",
+      "violations": [
+        {
+          "levy": "sdl",
+          "rate": 0.5,
+          "via": "mafunzo",
+          "direction": "forward",
+          "allowed": [
+            0,
+            3.5
+          ]
+        }
+      ],
+      "ok": true
+    },
+    {
+      "id": "rg_15",
+      "expect": "flag",
+      "body": "SDL ni asilimia 4 ya mishahara.",
+      "guards_against": "the pre-2023 SDL rate, superseded by Finance Act 2023 — wrong under any transformation",
+      "got": "flag",
+      "violations": [
+        {
+          "levy": "sdl",
+          "rate": 4.0,
+          "via": "SDL",
+          "direction": "backward",
+          "allowed": [
+            0,
+            3.5
+          ]
+        }
+      ],
+      "ok": true
+    },
+    {
+      "id": "rg_16",
+      "expect": "flag",
+      "body": "NSSF ni asilimia 30 ya mshahara ghafi.",
+      "guards_against": "a rate belonging to no levy at all",
+      "got": "flag",
+      "violations": [
+        {
+          "levy": "nssf",
+          "rate": 30.0,
+          "via": "NSSF",
+          "direction": "backward",
+          "allowed": [
+            0,
+            5,
+            10,
+            15,
+            20
+          ]
+        }
+      ],
+      "ok": true
+    }
+  ]
+}
