@@ -1,0 +1,166 @@
+{
+  "measured": "2026-08-22",
+  "purpose": "isolate whether Swahili word-numerals change fact-path retrieval",
+  "harness": "eval/routing/measure_numeral_form_retrieval.py",
+  "embedding_model": "intfloat/multilingual-e5-base",
+  "index": "chike-inference/rag_embeddings.npy",
+  "top_k": 3,
+  "pairs_with_different_topk": [
+    "six_generalisation",
+    "twelve_above_threshold"
+  ],
+  "rows": [
+    {
+      "pair": "nick_01_vs_02",
+      "word_query": "nimeajiri watu watano tu je nalipa ile ya mafunzo",
+      "digit_query": "nimeajiri watu 5 tu je nalipa ile ya mafunzo",
+      "word_topk": [
+        {
+          "rank": 1,
+          "position": 154,
+          "score": 0.823,
+          "text": "minimum shareholders: 2 employees"
+        },
+        {
+          "rank": 2,
+          "position": 193,
+          "score": 0.8214,
+          "text": "unpaid contribution penalty rate: five %"
+        },
+        {
+          "rank": 3,
+          "position": 153,
+          "score": 0.8124,
+          "text": "minimum directors: 2 employees"
+        }
+      ],
+      "digit_topk": [
+        {
+          "rank": 1,
+          "position": 193,
+          "score": 0.8273,
+          "text": "unpaid contribution penalty rate: five %"
+        },
+        {
+          "rank": 2,
+          "position": 154,
+          "score": 0.8239,
+          "text": "minimum shareholders: 2 employees"
+        },
+        {
+          "rank": 3,
+          "position": 153,
+          "score": 0.813,
+          "text": "minimum directors: 2 employees"
+        }
+      ],
+      "identical": true,
+      "only_in_word": [],
+      "only_in_digit": []
+    },
+    {
+      "pair": "six_generalisation",
+      "word_query": "nimeajiri watu sita tu je nalipa ile ya mafunzo",
+      "digit_query": "nimeajiri watu 6 tu je nalipa ile ya mafunzo",
+      "word_topk": [
+        {
+          "rank": 1,
+          "position": 154,
+          "score": 0.8243,
+          "text": "minimum shareholders: 2 employees"
+        },
+        {
+          "rank": 2,
+          "position": 153,
+          "score": 0.8136,
+          "text": "minimum directors: 2 employees"
+        },
+        {
+          "rank": 3,
+          "position": 160,
+          "score": 0.8087,
+          "text": "trademark renewal period: saba years"
+        }
+      ],
+      "digit_topk": [
+        {
+          "rank": 1,
+          "position": 154,
+          "score": 0.8238,
+          "text": "minimum shareholders: 2 employees"
+        },
+        {
+          "rank": 2,
+          "position": 100,
+          "score": 0.8129,
+          "text": "trademark fee for single mark registration: 60,000 TZS"
+        },
+        {
+          "rank": 3,
+          "position": 153,
+          "score": 0.8127,
+          "text": "minimum directors: 2 employees"
+        }
+      ],
+      "identical": false,
+      "only_in_word": [
+        160
+      ],
+      "only_in_digit": [
+        100
+      ]
+    },
+    {
+      "pair": "twelve_above_threshold",
+      "word_query": "nimeajiri watu kumi na wawili je nalipa ile ya mafunzo",
+      "digit_query": "nimeajiri watu 12 je nalipa ile ya mafunzo",
+      "word_topk": [
+        {
+          "rank": 1,
+          "position": 164,
+          "score": 0.8274,
+          "text": "course fee: 250,000 TZS"
+        },
+        {
+          "rank": 2,
+          "position": 209,
+          "score": 0.8246,
+          "text": "contribution rate emplyees: 10 %"
+        },
+        {
+          "rank": 3,
+          "position": 154,
+          "score": 0.8242,
+          "text": "minimum shareholders: 2 employees"
+        }
+      ],
+      "digit_topk": [
+        {
+          "rank": 1,
+          "position": 198,
+          "score": 0.8352,
+          "text": "duration of maternity cash benefit: 12 weeks"
+        },
+        {
+          "rank": 2,
+          "position": 164,
+          "score": 0.8265,
+          "text": "course fee: 250,000 TZS"
+        },
+        {
+          "rank": 3,
+          "position": 154,
+          "score": 0.8242,
+          "text": "minimum shareholders: 2 employees"
+        }
+      ],
+      "identical": false,
+      "only_in_word": [
+        209
+      ],
+      "only_in_digit": [
+        198
+      ]
+    }
+  ]
+}

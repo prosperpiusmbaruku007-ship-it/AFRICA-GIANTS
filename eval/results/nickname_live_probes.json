@@ -1,0 +1,151 @@
+{
+  "measured": "2026-08-22",
+  "purpose": "does the SDL/WCF/NSSF conflation reproduce across adjacent phrasings, and is the compute-routed shape immune?",
+  "harness": "eval/routing/run_live_nickname_probes.py",
+  "local_measurement": "eval/results/nickname_routing_measurement.json",
+  "repeats_per_probe": 2,
+  "rows": [
+    {
+      "id": "nick_01",
+      "attempt": 1,
+      "question": "nimeajiri watu watano tu je nalipa ile ya mafunzo",
+      "local_routes_to": "fact",
+      "local_detect_intent": "none",
+      "local_blocking_gate": "path2/2b: no number",
+      "expect_levy": "sdl",
+      "reply": "Kulingana na taarifa uliyopewa, unatakiwa kuwa na wafanyakazi 10 ili kulazimika kulipa asilimia 0.5 kwa ajili ya mafunzo. Thibitisha na mamlaka husika (nssf.go.tz).",
+      "rates_stated": [
+        "0.5"
+      ],
+      "mentions_nssf_domain": true,
+      "mentions_tra_domain": false
+    },
+    {
+      "id": "nick_01",
+      "attempt": 2,
+      "question": "nimeajiri watu watano tu je nalipa ile ya mafunzo",
+      "local_routes_to": "fact",
+      "local_detect_intent": "none",
+      "local_blocking_gate": "path2/2b: no number",
+      "expect_levy": "sdl",
+      "reply": "Kulingana na taarifa uliyopewa, unatakiwa kuwa na wafanyakazi 10 ili kulazimika kulipa asilimia 0.5 kwa ajili ya mafunzo. Thibitisha na mamlaka husika (nssf.go.tz).",
+      "rates_stated": [
+        "0.5"
+      ],
+      "mentions_nssf_domain": true,
+      "mentions_tra_domain": false
+    },
+    {
+      "id": "nick_02",
+      "attempt": 1,
+      "question": "nimeajiri watu 5 tu je nalipa ile ya mafunzo",
+      "local_routes_to": "fact",
+      "local_detect_intent": "none",
+      "local_blocking_gate": "path2: no money-ask AND path2b: not an applicability question",
+      "expect_levy": "sdl",
+      "reply": "Kama una wafanyakazi chini ya 10, hakuna ulazima wa kulipa SDL. Thibitisha na tra.go.tz.",
+      "rates_stated": [],
+      "mentions_nssf_domain": false,
+      "mentions_tra_domain": true
+    },
+    {
+      "id": "nick_02",
+      "attempt": 2,
+      "question": "nimeajiri watu 5 tu je nalipa ile ya mafunzo",
+      "local_routes_to": "fact",
+      "local_detect_intent": "none",
+      "local_blocking_gate": "path2: no money-ask AND path2b: not an applicability question",
+      "expect_levy": "sdl",
+      "reply": "Kama una wafanyakazi chini ya 10, hakuna ulazima wa kulipa SDL. Thibitisha na tra.go.tz.",
+      "rates_stated": [],
+      "mentions_nssf_domain": false,
+      "mentions_tra_domain": true
+    },
+    {
+      "id": "nick_03",
+      "attempt": 1,
+      "question": "nimeajiri watu 5 tu je nalipa SDL",
+      "local_routes_to": "fact",
+      "local_detect_intent": "none",
+      "local_blocking_gate": "path1: explicit levy + number, but NO compute-intent cue (no money-ask, not applicability, no magnitude, no count-transition, no derivation cue)",
+      "expect_levy": "sdl",
+      "reply": "Kwa mujibu wa taarifa, unatakiwa kuwa na wafanyakazi 10 au zaidi ili kulazimika kulipa SDL. Thibitisha na tra.go.tz.",
+      "rates_stated": [],
+      "mentions_nssf_domain": false,
+      "mentions_tra_domain": true
+    },
+    {
+      "id": "nick_03",
+      "attempt": 2,
+      "question": "nimeajiri watu 5 tu je nalipa SDL",
+      "local_routes_to": "fact",
+      "local_detect_intent": "none",
+      "local_blocking_gate": "path1: explicit levy + number, but NO compute-intent cue (no money-ask, not applicability, no magnitude, no count-transition, no derivation cue)",
+      "expect_levy": "sdl",
+      "reply": "Kwa mujibu wa taarifa, unatakiwa kuwa na wafanyakazi 10 au zaidi ili kulazimika kulipa SDL. Thibitisha na tra.go.tz.",
+      "rates_stated": [],
+      "mentions_nssf_domain": false,
+      "mentions_tra_domain": true
+    },
+    {
+      "id": "nick_12",
+      "attempt": 1,
+      "question": "je kampuni yangu inalipa ile ya mafunzo",
+      "local_routes_to": "fact",
+      "local_detect_intent": "none",
+      "local_blocking_gate": "path2/2b: no number",
+      "expect_levy": "sdl",
+      "reply": "Kiwango cha mafunzo ni asilimia 3.5% ya mishahara ghafi. Thibitisha na TRA (tra.go.tz).",
+      "rates_stated": [
+        "3.5"
+      ],
+      "mentions_nssf_domain": false,
+      "mentions_tra_domain": true
+    },
+    {
+      "id": "nick_12",
+      "attempt": 2,
+      "question": "je kampuni yangu inalipa ile ya mafunzo",
+      "local_routes_to": "fact",
+      "local_detect_intent": "none",
+      "local_blocking_gate": "path2/2b: no number",
+      "expect_levy": "sdl",
+      "reply": "Kiwango cha mafunzo ni asilimia 3.5% ya mishahara ghafi. Thibitisha na TRA (tra.go.tz).",
+      "rates_stated": [
+        "3.5"
+      ],
+      "mentions_nssf_domain": false,
+      "mentions_tra_domain": true
+    },
+    {
+      "id": "nick_08",
+      "attempt": 1,
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nilipe kiasi gani kwenye ile ya mafunzo",
+      "local_routes_to": "compute",
+      "local_detect_intent": "sdl",
+      "local_blocking_gate": null,
+      "expect_levy": "sdl",
+      "reply": "Kwa hesabu sahihi, thibitisha na tra.go.tz.\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500",
+      "rates_stated": [
+        "3.5"
+      ],
+      "mentions_nssf_domain": false,
+      "mentions_tra_domain": true
+    },
+    {
+      "id": "nick_08",
+      "attempt": 2,
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nilipe kiasi gani kwenye ile ya mafunzo",
+      "local_routes_to": "compute",
+      "local_detect_intent": "sdl",
+      "local_blocking_gate": null,
+      "expect_levy": "sdl",
+      "reply": "Kwa hesabu sahihi, thibitisha na tra.go.tz.\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500",
+      "rates_stated": [
+        "3.5"
+      ],
+      "mentions_nssf_domain": false,
+      "mentions_tra_domain": true
+    }
+  ]
+}

@@ -133,6 +133,73 @@ the live v16 pipeline.
 
 ---
 
+# 🔴 RETRIEVAL RETURNS NOTHING RELEVANT FOR A PLAIN SDL QUESTION — AND ~40% OF THE INDEX IS IN THE SHAPE R15 SAYS RETRIEVES WORSE (2026-08-22)
+
+**This started as a follow-up on the "asilimia 0.5" conflation and ended somewhere else. Every
+diagnosis offered for that defect — mine included — was wrong, and the measurement says so.**
+
+Harnesses committed before results (R18): `eval/routing/measure_nickname_routing.py` (16 probes,
+4 of them R17 adversarial), `eval/routing/run_live_nickname_probes.py`,
+`eval/routing/measure_numeral_form_retrieval.py`, `eval/index_quality/scan_fragment_rows.py`.
+Artifacts in `eval/results/`.
+
+## The conflation is not a guard gap and not a routing gap
+
+| probe | difference | live answer (2 attempts each) | verdict |
+|---|---|---|---|
+| `nick_01` | *watu **watano*** (word numeral) | *"…asilimia **0.5** kwa ajili ya mafunzo… **nssf.go.tz**"* | **WRONG** 2/2 — 4/4 with the originals |
+| `nick_02` | *watu **5*** — otherwise identical | *"…chini ya 10, hakuna ulazima wa kulipa SDL. Thibitisha na tra.go.tz."* | **CORRECT** 2/2 |
+| `nick_03` | digit + **SDL named explicitly** | *"…unatakiwa kuwa na wafanyakazi 10 au zaidi…"* | **CORRECT** 2/2 |
+| `nick_08` | reaches compute | engine appends `SDL = 3.5% × TZS 5,500,000 = TZS 192,500` | **CORRECT** 2/2 |
+
+`nick_01` and `nick_02` **route identically** (`detect_intent → none`, fact path), so the routing
+miss is not the differentiator — and they **retrieve the identical top-3** (measured against the
+production index with production's own e5 query encoding; ranks 1 and 2 merely swap), so retrieval
+content is not either. Same route, same facts, opposite answers, each stable under greedy decoding.
+**The divergence is generation-side and its trigger is the surface form of a numeral.**
+
+## The bigger finding: both phrasings were handed nothing usable
+
+The top-3 that *both* receive:
+
+```
+1  minimum shareholders: 2 employees
+2  unpaid contribution penalty rate: five %
+3  minimum directors: 2 employees
+```
+
+**No SDL fact. No rate, no threshold.** So `nick_02`'s and `nick_03`'s "correct" answers are
+**ungrounded generations that happened to land right**, and `nick_01` is the same process landing
+wrong. **A passing answer here is luck, not a working system** — and any future measurement that
+uses these as passing controls is measuring luck.
+
+## ~40% of the index is in the shape R15 warns against
+
+Counted, with a heuristic that is labelled as one (`eval/results/index_fragment_scan.json`):
+**89 of 221 rows (40.3%) are terse English `key: value` fragments** — the exact shape R15's own note
+says retrieves *far worse* than short Swahili-first text with the value at the front. Plus 6 rows
+with a spelled-out numeral where a figure belongs (`trademark renewal period: **saba** years`,
+`unpaid contribution penalty rate: **five** %`, `…: six months **null**`) and 3 with a wrong unit
+noun (`minimum directors: 2 **employees**`) — **one of which is a false positive**, which is why the
+scan is labelled heuristic and none of the 89 has been adjudicated individually.
+
+**This promotes §1 (index-content rewriting) from a tidy-up that "folds into the next regen" to a
+candidate lead item.** Not scoped, not started.
+
+## What this does to the routing extension
+
+It does **not** kill it — `nick_08` shows the compute path is deterministic and immune, and §8's
+three routing misses are still real. But the routing extension is no longer the obvious lead:
+**§1 now has a measured case and the routing extension's 6–7 of 8 remains an inference from §8, not
+a measured yield.** Both are labelled accordingly in ADR 0002 §9.8 and the standing order. **Nothing
+has been built or scoped further, and the next step for either is a measurement.**
+
+Full scoping — three distinct routing gaps (only one of which matches the "nicknamed multi-levy"
+framing), why relaxing the number gate is measured to be unsafe, and a candidate fact-path rate
+guard — in `docs/decisions/0002-retrieval-structural-scoping.md` §9.
+
+---
+
 # ✅ §8 RE-MEASURED ON LIVE v16 WITH A COMMITTED HARNESS: THE SPLIT HOLDS, TWO ROWS' FAILURE MODES DON'T — AND ONE HEADLINE CLAIM IS WRONG (2026-08-22)
 
 **This supersedes the provisional entry below.** Instrument committed *before* the run (R18) at
@@ -233,6 +300,15 @@ Debug method removed and redeployed. Verified live, not from a deploy log
 question I had composed from memory while labelling it `nat_32`. Any verdict from it would have
 been meaningless as a regression check — the same mistake-shape this whole cycle is about, one
 level down. The check was re-run with the verbatim row text; the results above are from that run.
+
+## ⚠️ FOLLOWED UP — and it was not the defect it looked like. See the entry above this one.
+
+**The finding below was recorded as an incidental cross-levy conflation. Followed up on
+instruction, and the diagnosis in it is wrong.** It is not a `_cross_levy_guard` gap, and it is not
+caused by the routing miss: the digit variant of the *same sentence* misses routing identically and
+answers correctly, and both phrasings retrieve the **identical** top-3. The real finding is worse
+and is written up in **"RETRIEVAL RETURNS NOTHING RELEVANT FOR A PLAIN SDL QUESTION"** above. The
+text below is kept unedited as the original observation.
 
 ## ⚠️ Incidental finding, NOT a gate row, NOT scoped — a reproducible cross-levy error
 

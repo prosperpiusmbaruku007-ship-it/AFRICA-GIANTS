@@ -528,6 +528,165 @@ better retrieval score, and no such mechanism is scoped anywhere in this documen
 
 ---
 
+## 9. ROUTING EXTENSION — SCOPED FROM MEASUREMENT, NOTHING BUILT (2026-08-22)
+
+**Measured first, per the standing order.** Harness `eval/routing/measure_nickname_routing.py`,
+probes `eval/routing/nickname_probes.jsonl` (16, including 4 R17 adversarial/negative controls),
+artifact `eval/results/nickname_routing_measurement.json`. Pure inspection of the deterministic
+routing stack — no model, no deploy, re-runnable in a second. **This section is scoping. Nothing in
+it has been built, and it needs its own go-ahead.**
+
+### 9.1 The nickname machinery is NOT the gap
+
+The first framing — "the decomposer doesn't split nicknamed multi-levy phrasing" — is true but is
+not the binding constraint. Measured: `nick_08/09/10` (nickname + digit + payroll context +
+explicit money-ask) route to compute correctly as `sdl`, `nssf`, `wcf`. **`_natural_levy` resolves
+`mafunzo`→sdl, `uzeeni`→nssf, `fidia`→wcf today, and `_LEVY_CUES` already contains all three.**
+Any scoping that starts by adding nickname cues is solving a solved problem.
+
+### 9.2 Three distinct gaps, not one
+
+| gap | probes | what actually blocks it | shape of fix |
+|---|---|---|---|
+| **A. Fan-out is blind to nicknames** | `nick_04` (nat_23), `nick_11` | `_fan_out_multi_levy` fans out on `routing.all_explicit_levies`, which matches only the four explicit levy tokens. **There is no `all_natural_levies` counterpart.** `_natural_levy` returns a FIRST match over `_LEVY_CUES`, so a 2-nickname question resolves to one levy and the other is invisible | add the natural-cue counterpart and fan out on the union. The fan-out itself needs no change — it is already reachable from a nickname-resolved compute route |
+| **B. The compute-intent gate rejects real asks** | `nick_02`, `nick_06` (nat_24), `nick_07` (nat_05), **`nick_03`** | path 2 needs `_has_money_ask`; path 2b needs `is_applicability_question`. *"nilipe nini kati ya…"* (which of these do I pay), *"nitalipa asilimia tatu na nusu ya nini"* (of what), and *"je nalipa SDL"* (do I pay X) satisfy neither | widen the ask-shape recognisers. **Not a levy-cue change** |
+| **C. The number requirement** | `nick_01`, `nick_12` | paths 2/2b require `_has_number`. `watano` is a Swahili numeral word, not a digit | **DO NOT relax — see 9.3** |
+
+**`nick_03` is the load-bearing result.** It names **SDL explicitly**, states a headcount, and still
+routes to fact — blocked in path 1 for having no compute-intent cue. **So gap B is not about
+nicknames at all.** The live conflation probe would still miss with the levy spelled out. Framing
+this workstream as "nicknamed multi-levy decomposition" would have fixed gap A and left the gap that
+actually produced the observed defect untouched.
+
+### 9.3 The obvious fix for gap C is measured to be unsafe
+
+Relaxing `_has_number` to accept Swahili numeral words would capture `nick_01` and `nick_12`. It
+would also capture **both R17 adversarial probes**, which are currently held out by that gate alone:
+
+- `nick_15` — *"natoa **mafunzo** ya kompyuta kwa wanafunzi je nasajili biashara yangu wapi"* —
+  training as a **service**, not the Skills Development Levy. Cue resolves `sdl`.
+- `nick_16` — *"mfanyakazi wangu ameumia je **fidia** yake italipwa na nani"* — a compensation
+  **claim**, not a WCF levy amount. Cue resolves `wcf`.
+
+Both would be pulled into levy compute. **This is the R17 lesson holding exactly: the corpus sweep
+was clean and the authored probes were not.** Gap C should be left closed, or opened only behind a
+context qualifier that these two probes are wired to fail against.
+
+### 9.4 What actually causes the conflation — measured, and NOT what this section first said
+
+**An earlier draft of this subsection blamed the routing miss and the missing fact-path guard.
+Measurement contradicts it, and the draft is corrected rather than quietly adjusted.**
+
+Live, 2 attempts each (`eval/results/nickname_live_probes.json`):
+
+| probe | phrasing difference | live answer | verdict |
+|---|---|---|---|
+| `nick_01` | *watu **watano*** (word numeral) | *"…asilimia **0.5** kwa ajili ya mafunzo… **nssf.go.tz**"* | **WRONG**, 2/2 (4/4 including the original two) |
+| `nick_02` | *watu **5*** (digit) — otherwise identical | *"Kama una wafanyakazi chini ya 10, hakuna ulazima wa kulipa SDL. Thibitisha na tra.go.tz."* | **CORRECT**, 2/2 |
+| `nick_03` | digit + **SDL named explicitly** | *"…unatakiwa kuwa na wafanyakazi 10 au zaidi ili kulazimika kulipa SDL…"* | **CORRECT**, 2/2 |
+| `nick_08` | compute-routed | model body content-free; **engine appends `SDL = 3.5% × TZS 5,500,000 = TZS 192,500`** | **CORRECT**, 2/2 |
+
+**`nick_01` and `nick_02` route identically** (`detect_intent → none`, fact path) — so the routing
+miss cannot be the differentiator. **And they retrieve the IDENTICAL top-3** (measured directly
+against the production index with production's own e5 query encoding,
+`eval/results/numeral_form_retrieval.json`: same three facts, ranks 1 and 2 merely swapped) — so
+retrieval content is not the differentiator either. Same route, same facts, opposite answers,
+each stable across repeats under greedy decoding. **The divergence is generation-side, and its
+trigger is the surface form of the numeral.**
+
+### 9.5 The much larger finding underneath it: retrieval fails this question completely
+
+The top-3 that BOTH phrasings receive is:
+
+```
+1  minimum shareholders: 2 employees
+2  unpaid contribution penalty rate: five %
+3  minimum directors: 2 employees
+```
+
+**Not one of them is an SDL fact.** No rate, no threshold. The correct answer `nick_02` gives is not
+grounded in its context at all — it comes from model memory, and `nick_01` shows what happens when
+that memory lands wrong. **A "correct" answer here is a coin-flip that happened to land, not a
+working system**, which is a materially worse finding than the conflation that surfaced it.
+
+Two consequences:
+
+- **The `nick_02`/`nick_03` "CORRECT" verdicts must not be read as the system working.** They are
+  ungrounded generations that happened to be right. Any future measurement using them as passing
+  controls is measuring luck.
+- **The index contains malformed rows that win top-1 on payroll questions**, and they are now
+  counted rather than gestured at (`eval/index_quality/scan_fragment_rows.py` →
+  `eval/results/index_fragment_scan.json`, a **heuristic shape detector — it flags shapes, not
+  wrongness, and every hit needs human adjudication**):
+
+  | signal | hits / 221 | notes |
+  |---|---|---|
+  | terse English `key: value` fragment rows | **89 (40.3%)** | the shape R15 explicitly documents as retrieving *worse* than short Swahili-first text with the value at the front |
+  | spelled-out numeral where a figure belongs | 6 | `trademark renewal period: **saba** years`, `unpaid contribution penalty rate: **five** %`, `penalty imprisonment non citizen: six months **null**` |
+  | count/period carrying the wrong unit noun | 3 | `minimum directors: 2 **employees**`, `minimum shareholders: 2 **employees**` — **and one false positive** (`duration of maternity cash benefit: 12 weeks`, which is correct), which is why this is labelled a heuristic |
+
+  **Any signal: 90 of 221 rows (40.7%).** The headline number is the 89: R15's own note says a fact
+  embedded without the `key: ` prefix, Swahili-first with the value at the front, retrieves far
+  better — and roughly two fifths of the live index is in the shape that note warns against.
+  **This is §1 (index-content rewriting), and it now looks under-rated rather than a tidy-up
+  that folds into the next regen.** It is not scoped further here and the 89 have not been
+  adjudicated one by one.
+
+### 9.6 The guard gap is real, but it is not the cause
+
+Stated correctly this time: the conflation reply got past `_cross_levy_guard` because **the guard
+was never invoked.** It is called only inside `answer()`'s compute branch and returns early on
+`len(by_levy) < 2`. A fact-routed question produces no `ComputationResult`, so every D-FIDELITY rule
+that compares a body against `sub.computation` is **vacuously satisfied**. The only fact-path check
+is GUARD A, which compares a stated headcount against a `chini ya N` claim — here the headcount
+claim was *correct*; the **rate** was wrong. So there is a genuine hole. **It is a missing safety
+net, not the cause** — the cause is 9.5.
+
+**This is D-FIDELITY-5's shape, one level out.** D-FIDELITY-5 exists because "a contradiction
+doesn't need a number" — a body that denies an obligation in words defeats every figure-comparing
+rule. Here a body that states a **wrong rate for a named levy** defeats them the same way, and for
+the same structural reason: nothing to compare against.
+
+**A rate check is not Guard B.** Guard B (fabricated amounts) is impossible because a fabricated
+figure and a legitimate transformation are both just arithmetic relationships to the user's number.
+**A levy rate is a constant, not a derived quantity** — SDL is 3.5%, WCF 0.5%, NSSF 10/20% — so
+"3.5% is not 0.5% under any transformation" has exactly GUARD A's safety property. **That makes a
+fact-path rate/levy-consistency guard worth scoping.** The obvious risk, which must be measured
+before anything is built: a correct multi-levy fact answer legitimately states several rates, so the
+check has to bind a rate to its adjacent levy subject and not merely detect a wrong number
+somewhere in the body. Untested. Not scoped further here.
+
+### 9.7 A rate guard is worth scoping, and it is NOT the impossible Guard B
+
+Guard B (fabricated *amounts*) is impossible because a fabricated figure and a legitimate
+transformation are both just arithmetic relationships to the user's number. **A levy rate is a
+constant, not a derived quantity** — SDL 3.5%, WCF 0.5%, NSSF 10/20% — so *"3.5% is not 0.5% under
+any transformation"* has exactly GUARD A's safety property, and this is D-FIDELITY-5's shape one
+level out: a wrong **rate** defeats every figure-comparing rule for the same structural reason a
+worded denial does — there is nothing to compare against. The measured risk to test first: a correct
+multi-levy fact answer legitimately states several rates, so the check must bind a rate to its
+adjacent levy subject rather than detect a wrong number anywhere in the body. **Untested. Belongs to
+`chike/fidelity.py`, not routing.**
+
+### 9.8 What this workstream is, stated honestly
+
+- **Gap A** (fan-out blind to nicknames) is real and matches the original framing. Small fix:
+  an `all_natural_levies` counterpart; the fan-out itself needs no change.
+- **Gap B** (ask-shape) is real and **affects explicitly-named levies too** (`nick_03`), so the
+  "nicknamed multi-levy" framing would have missed it.
+- **Gap C** (number requirement) should stay shut — 9.3.
+- **9.5 is the biggest item found here and it is not routing work at all.** Retrieval returns zero
+  relevant facts for a plain SDL applicability question, and malformed index rows out-rank real
+  ones. That is §1, and it now looks under-rated rather than a tidy-up.
+- **9.7** is a candidate guard in `chike/fidelity.py`.
+
+**Expected yield is NOT measured.** §8 says `nat_23`/`nat_24`/`nat_05` become reachable, but no
+before/after has been run, so **6–7 of 8 is an inference from §8, labelled as one** per the standing
+order — it is not a measured yield and must not be ranked as though it were. The next step for this
+workstream is a measurement, not a build.
+
+---
+
 ## SUMMARY (updated 2026-08-22, post-ship-attempt)
 
 | # | mechanism | status this round | priority |
@@ -539,6 +698,38 @@ better retrieval score, and no such mechanism is scoped anywhere in this documen
 | 7 | Different/bigger embedding model | scoped only, unchanged — this is what R15 was | LOW, not scheduled |
 | 8 | Generation-side / engine-routing failure after successful retrieval | **✅ SETTLED — re-measured on live v16 with a committed instrument (R18). Split reproduced 4/1/3; `nat_23` routed to `compute` and the NSSF engine computed correctly with SDL dropped; `nat_24` deferred ("Thibitisha na TRA"); `nat_05` is a third routing miss. Three of eight are routing misses, only `nat_33` is a capability gap.** Originally measured by an uncommitted harness, then re-diagnosed the same day. Forced the correct fact(s) into context for all 8 remaining rows: 4 correct, 1 partial, 3 clearly wrong. Checked whether the 3 failures are engine-shaped before calling them generation-side (they weren't fully checked first pass): **`nat_33` has no engine at all (BRELA isn't a `COMPUTE_TYPES` member) — a real capability gap. `nat_23`/`nat_24` have working engines (SDL/NSSF/WCF), and v16 — which owns them and IS the deployed pipeline (`chike_config.json: "pipeline": "v16"`) — still doesn't route to them, because the decomposer doesn't split nicknamed multi-levy phrasing and `detect_intent` returns `nssf`/`none`.** 2 of 3 are a routing gap with a known fix pattern, not a model ceiling. (An earlier version of this row claimed production runs v15 with zero compute routing — **retracted, false**; see §8's retraction. The engine-shape half of the diagnosis stands on its own — it was checked against the code and re-verified. The half that says these rows *failed* is provisional, from the table.) Also the headline pilot-safety finding: these failures carry maximum retrieval confidence (fact forced directly into context) and no visible hedge, so no retrieval-confidence floor could ever catch them — see PROGRESS.md's dedicated pilot-precondition entry, not just this ADR. | The routing/decomposition extension for nicknamed multi-levy fanouts is a separate go-ahead, owned by `chike/routing.py`/`chike/decomposition.py`, not this ADR. A new BRELA engine (`nat_33`) is separately scoped-able, smallest of the three. |
 
+## STANDING ORDER: MEASURE, THEN SCOPE — NOT SCOPE, THEN MEASURE (2026-08-22)
+
+**Measurement has now reordered this queue against the prior recommendation four separate
+times.** That is no longer a run of bad luck; it is the base rate, and the ordering discipline
+should follow it.
+
+| # | item | what the recommendation was | what measuring did to it |
+|---|---|---|---|
+| 1 | **Fee-mask** (`87606cb`) | scoped as a fix worth building | **measured and rejected outright** |
+| 2 | **Margin as a similarity floor** (`5149e9b`) | the leading floor design after the absolute threshold died | **measured: it INVERTS** — the correct row had the smallest margin of 21, three known-wrong rows scored larger margins than every correct one. Retired at its original scoping location |
+| 3 | **Interleave / hybrid fusion** (`5de044d`, `f171363`) | shipped, on a structural guarantee that was real | **the guarantee certified the wrong quantity.** Live-regressed, reverted, §5 declined in all forms |
+| 4 | **§2 vs the routing extension** (`e22cdcd`, this cycle) | §2 was the lead candidate on an expected ~5–6 of 8 | **re-measured on live v16: §2 alone is 4–5 of 8; the routing extension takes it to 6–7. The comparison inverted.** The provisional numbers §2 led on were produced by an uncommitted harness |
+
+**The shared shape:** in every case a design was scoped, ranked and — twice — nearly or actually
+built, on a number or a premise that had not been measured on the live system. In every case the
+measurement, when it finally happened, did not refine the estimate; it **reversed the decision**.
+Three of the four reversals were cheap because they happened before or shortly after a build. The
+fourth was cheap only because §8 was re-run before §2 started.
+
+**So the order is: measure, then scope, then build.** Concretely, before an item may be ranked in
+the table below:
+
+1. Its expected yield is measured on the **live** pipeline, not estimated from a related number.
+2. The instrument is **committed before the result is written up** (R18) — three of these four
+   reversals turned on evidence nobody could re-derive.
+3. The measurement includes **R17 adversarial probes authored to contain the risky vocabulary**,
+   because a clean sweep over an existing corpus is weak evidence, not a green light.
+4. Anything built ships under the **§5(d) standing bar**: an answer-level regression check across
+   the currently-correct set, never a rank check or a structural guarantee alone.
+
+A ranking in the table below that does not satisfy 1–2 is a hypothesis, and must be labelled one.
+
 ## Recommended order, updated after the ship-and-revert and the §8 measurement (2026-08-22)
 
 **✅ ORDERING PRECONDITION SATISFIED (2026-08-22): §8 is settled on the live v16 pipeline.** It was
@@ -547,20 +738,26 @@ three of the eight rows are routing misses, one (`nat_33`) is a capability gap, 
 handled every fact-shaped row correctly once retrieval succeeded. Items below are now actionable on
 measured evidence. **Nothing here has been started; each remains a separate go-ahead.**
 
-1. **§2 (routing intercept)** — named for what it actually is: closes retrieval for 8 known rows,
-   measured to convert **4–5 of them to CORRECT** per §8, not all 8, and **lower than the ~5–6
-   previously estimated**. Not a guard for §5 (§5 is declined outright) — evaluated on its own
+**⚠️ ITEMS 1 AND 2 SWAPPED (2026-08-22), on the measurement, not on preference.** §2 led this list
+on a provisional ~5–6 of 8 produced by an uncommitted harness. Measured: §2 alone is **4–5 of 8**,
+the routing extension takes it to **6–7 of 8**, and **three of the eight rows are routing misses**
+with a fix pattern this project has already executed successfully (D-DECOMP-1, GUARD A, the
+applicability arm, the concord classes). The routing extension is now the lead item. This is
+reversal #4 in the table above.
+
+1. **The routing/decomposition extension is now the LEAD item.** It is NOT retrieval work and does
+   not belong to this ADR — it is owned by `chike/routing.py` / `chike/decomposition.py` /
+   `chike/orchestrator.py` — but it outranks everything here on measured yield, so this ADR defers
+   to it rather than competing with it. **Scoped in its own section below (§9); nothing built.**
+2. **§2 (routing intercept)** — named for what it actually is: closes retrieval for 8 known rows,
+   measured to convert **4–5 of them to CORRECT** per §8, not all 8, and **lower than the ~5–6 it
+   was ranked on**. Not a guard for §5 (§5 is declined outright) — evaluated on its own
    bounded-blast-radius merit. Needs its own R17 adversarial-probe pass per key before shipping,
    and **must ship under the §5(d) standing bar**: an answer-level regression check across the
    currently-correct set, not just a rank check on the 8 target rows, before it is called safe.
-   **Note the measured yield weakens the case relative to item 2** — the routing extension now
-   looks like the better-value item of the two, which was not true on the provisional numbers.
-2. **A routing/decomposition extension for nicknamed multi-levy fanouts (`nat_23`/`nat_24`-shaped
-   questions) is a separately-scopeable, HIGH-value item** discovered by §8's engine-shape check —
-   it is NOT retrieval work and does not belong in this ADR, but it is cheap to name here because
-   the payoff is concrete: it would let 2 already-working engines (SDL, NSSF/WCF) reach questions
-   they currently can't, for both this nine-row set and, plausibly, other nicknamed-levy phrasings
-   outside it. Owned by `chike/routing.py` / `chike/decomposition.py` / `chike/orchestrator.py`.
+   **Overlaps item 1 and should be re-costed after it** — if the routing extension lands first,
+   several of §2's target rows reach an engine without any allowlist entry, and §2's remaining
+   yield is smaller than 4–5 of 8.
 3. **A new BRELA rules-engine module (`nat_33`)** is the smallest of the three §8 gaps — same
    shape as `sdl.py`/`nssf.py`/`wcf.py`, one flat rate times a stated duration — but still a
    capability the codebase doesn't have today, not a routing fix. Separately scopeable.

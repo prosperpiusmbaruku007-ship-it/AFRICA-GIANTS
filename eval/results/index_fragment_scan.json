@@ -1,0 +1,505 @@
+{
+  "measured": "2026-08-22",
+  "index": "chike-inference/rag_facts_text.json",
+  "total_rows": 221,
+  "method": "HEURISTIC shape detector — flags shapes, not wrongness; every hit needs human adjudication before any rewrite",
+  "counts": {
+    "english_key_value": 89,
+    "spelled_numeral": 6,
+    "suspect_unit": 3
+  },
+  "rows_matching_any": 90,
+  "share_of_index": 0.407,
+  "positions_matching_any": [
+    19,
+    53,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    147,
+    148,
+    149,
+    150,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171,
+    172,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209
+  ],
+  "hits": {
+    "english_key_value": [
+      {
+        "position": 19,
+        "text": "gn487a effective date: GN 487A came into effect on 28 July 2025"
+      },
+      {
+        "position": 96,
+        "text": "trademark fee for explanation of decision: 50,000 TZS"
+      },
+      {
+        "position": 97,
+        "text": "trademark fee for opposition notice: 60,000 TZS"
+      },
+      {
+        "position": 98,
+        "text": "trademark fee for responding to opposition: 50,000 TZS"
+      },
+      {
+        "position": 99,
+        "text": "trademark fee for hearing opposition: 70,000 TZS"
+      },
+      {
+        "position": 100,
+        "text": "trademark fee for single mark registration: 60,000 TZS"
+      },
+      {
+        "position": 101,
+        "text": "trademark fee for series of marks first mark: 60,000 TZS"
+      },
+      {
+        "position": 102,
+        "text": "trademark fee for series of marks subsequent mark: 30,000 TZS"
+      },
+      {
+        "position": 103,
+        "text": "trademark fee for renewal of registration: 30,000 TZS"
+      },
+      {
+        "position": 104,
+        "text": "trademark fee for renewal of series of marks first mark: 30,000 TZS"
+      },
+      {
+        "position": 105,
+        "text": "trademark fee for renewal of series of marks subsequent mark: 10,000 TZS"
+      },
+      {
+        "position": 106,
+        "text": "trademark fee for additional fee by regulation 54: 30,000 TZS"
+      },
+      {
+        "position": 107,
+        "text": "trademark fee for refund of fee: 30,000 TZS"
+      },
+      {
+        "position": 108,
+        "text": "trademark fee for registration of subsequent proprietor: 50,000 TZS"
+      },
+      {
+        "position": 109,
+        "text": "trademark fee for change of proprietor or user same address: 50,000 TZS"
+      },
+      {
+        "position": 110,
+        "text": "trademark fee for any other entry: 10,000 TZS"
+      },
+      {
+        "position": 111,
+        "text": "trademark fee for change of business address: 20,000 TZS"
+      },
+      {
+        "position": 112,
+        "text": "trademark fee for dissolution of partnership: 50,000 TZS"
+      },
+      {
+        "position": 113,
+        "text": "company share value threshold 1 max: 1,000,000 TZS"
+      },
+      {
+        "position": 114,
+        "text": "company registration fee 1: 95,000 TZS"
+      },
+      {
+        "position": 115,
+        "text": "company share value threshold 2 min: 1,000,000 TZS"
+      },
+      {
+        "position": 116,
+        "text": "company share value threshold 2 max: 5,000,000 TZS"
+      },
+      {
+        "position": 117,
+        "text": "company registration fee 2: 175,000 TZS"
+      },
+      {
+        "position": 118,
+        "text": "company share value threshold 3 min: 5,000,000 TZS"
+      },
+      {
+        "position": 119,
+        "text": "company share value threshold 3 max: 20,000,000 TZS"
+      },
+      {
+        "position": 120,
+        "text": "company registration fee 3: 260,000 TZS"
+      },
+      {
+        "position": 121,
+        "text": "company share value threshold 4 min: 20,000,000 TZS"
+      },
+      {
+        "position": 122,
+        "text": "company share value threshold 4 max: 50,000,000 TZS"
+      },
+      {
+        "position": 123,
+        "text": "company registration fee 4: 290,000 TZS"
+      },
+      {
+        "position": 124,
+        "text": "company share value threshold 5 min: 50,000,000 TZS"
+      },
+      {
+        "position": 125,
+        "text": "company registration fee 5: 440,000 TZS"
+      },
+      {
+        "position": 126,
+        "text": "company registration fee no share capital: 300,000 TZS"
+      },
+      {
+        "position": 127,
+        "text": "memorandum articles of association filing fee: 22,000 TZS"
+      },
+      {
+        "position": 128,
+        "text": "stamp duty per copy memorandum articles copy: 10,000 TZS"
+      },
+      {
+        "position": 129,
+        "text": "stamp duty form 14b fee: 1,200 TZS"
+      },
+      {
+        "position": 130,
+        "text": "company name reservation fee: 50,000 TZS"
+      },
+      {
+        "position": 131,
+        "text": "company name change fee: 22,000 TZS"
+      },
+      {
+        "position": 132,
+        "text": "document acceptance registration fee: 22,000 TZS"
+      },
+      {
+        "position": 135,
+        "text": "document certification fee per page: 3,000 TZS"
+      },
+      {
+        "position": 136,
+        "text": "file search fee: 3,000 TZS"
+      },
+      {
+        "position": 137,
+        "text": "file search report fee: 22,000 TZS"
+      },
+      {
+        "position": 138,
+        "text": "certified copy agreement law constitution fee: 750 USD"
+      },
+      {
+        "position": 139,
+        "text": "document filing fee section 12 act excluding balance sheet: 220 USD"
+      },
+      {
+        "position": 140,
+        "text": "balance sheet filing fee section 12 act: 220 USD"
+      },
+      {
+        "position": 141,
+        "text": "late filing penalty monthly fee section 12 act: 25 USD"
+      },
+      {
+        "position": 142,
+        "text": "certified copy certificate of registration fee: 4,000 TZS"
+      },
+      {
+        "position": 143,
+        "text": "act section 12: Kifungu XII cha Sheria"
+      },
+      {
+        "position": 144,
+        "text": "risk assessment frequency: mara moja kwa mwaka"
+      },
+      {
+        "position": 147,
+        "text": "vat registration notification deadline commissioner: 14 days"
+      },
+      {
+        "position": 148,
+        "text": "vat return submission deadline: 20 days_of_month"
+      },
+      {
+        "position": 149,
+        "text": "form number payment credit slip: ITX 300.01.E"
+      },
+      {
+        "position": 150,
+        "text": "late payment penalty rate: 2 %"
+      },
+      {
+        "position": 153,
+        "text": "minimum directors: 2 employees"
+      },
+      {
+        "position": 154,
+        "text": "minimum shareholders: 2 employees"
+      },
+      {
+        "position": 155,
+        "text": "registration certificate processing time: 3 days"
+      },
+      {
+        "position": 156,
+        "text": "annual return form number: 128"
+      },
+      {
+        "position": 157,
+        "text": "beneficial owner information penalty maximum: 10000000 TZS"
+      },
+      {
+        "position": 158,
+        "text": "business name maintenance fee: 5,000 TZS"
+      },
+      {
+        "position": 159,
+        "text": "name similarity threshold: 50 %"
+      },
+      {
+        "position": 160,
+        "text": "trademark renewal period: saba years"
+      },
+      {
+        "position": 161,
+        "text": "application fee patent: 12000 TZS"
+      },
+      {
+        "position": 162,
+        "text": "patent term: 20 years"
+      },
+      {
+        "position": 163,
+        "text": "company director minimum age: 18"
+      },
+      {
+        "position": 164,
+        "text": "course fee: 250,000 TZS"
+      },
+      {
+        "position": 165,
+        "text": "electrical test fee reduction initial: 650,000 TZS"
+      },
+      {
+        "position": 166,
+        "text": "electrical test fee reduction final: 150,000 TZS"
+      },
+      {
+        "position": 167,
+        "text": "registration certificate processing time new: 1 days"
+      },
+      {
+        "position": 168,
+        "text": "compliance license processing time old: 28 days"
+      },
+      {
+        "position": 169,
+        "text": "vat deferment limit date: 30 June 2026"
+      },
+      {
+        "position": 170,
+        "text": "vat deferment threshold percentage: 90 %"
+      },
+      {
+        "position": 171,
+        "text": "vat deferment minimum value: 10,000,000 TZS"
+      },
+      {
+        "position": 172,
+        "text": "vat deferment form number: ITX 247.02.E"
+      },
+      {
+        "position": 193,
+        "text": "unpaid contribution penalty rate: five %"
+      },
+      {
+        "position": 194,
+        "text": "unpaid contribution penalty frequency: each month or a part of a month null"
+      },
+      {
+        "position": 195,
+        "text": "minimum monthly contributions for retirement pension: 180 monthly contributions"
+      },
+      {
+        "position": 196,
+        "text": "minimum contribution months health insurance: 3 months"
+      },
+      {
+        "position": 197,
+        "text": "minimum monthly contributions maternity benefit: 36 monthly_contributions"
+      },
+      {
+        "position": 198,
+        "text": "duration of maternity cash benefit: 12 weeks"
+      },
+      {
+        "position": 199,
+        "text": "maternity cash benefit rate: 100 %"
+      },
+      {
+        "position": 200,
+        "text": "employer notification deadline before retirement: 6 months"
+      },
+      {
+        "position": 201,
+        "text": "fund payment deadline after retirement notification: 60 days"
+      },
+      {
+        "position": 202,
+        "text": "pensionable age: 60 years"
+      },
+      {
+        "position": 203,
+        "text": "fine limit: one hundred thousand TZS"
+      },
+      {
+        "position": 204,
+        "text": "imprisonment term limit: two years"
+      },
+      {
+        "position": 205,
+        "text": "penalty fine non citizen: ten million TZS"
+      },
+      {
+        "position": 206,
+        "text": "penalty imprisonment non citizen: six months null"
+      },
+      {
+        "position": 207,
+        "text": "penalty fine tanzanian citizen: five million TZS"
+      },
+      {
+        "position": 208,
+        "text": "penalty imprisonment tanzanian citizen: three months null"
+      },
+      {
+        "position": 209,
+        "text": "contribution rate emplyees: 10 %"
+      }
+    ],
+    "spelled_numeral": [
+      {
+        "position": 53,
+        "text": "dse 25 rate three years only: DSE 25% CIT rate applies for THREE YEARS ONLY from listing date"
+      },
+      {
+        "position": 160,
+        "text": "trademark renewal period: saba years"
+      },
+      {
+        "position": 193,
+        "text": "unpaid contribution penalty rate: five %"
+      },
+      {
+        "position": 204,
+        "text": "imprisonment term limit: two years"
+      },
+      {
+        "position": 206,
+        "text": "penalty imprisonment non citizen: six months null"
+      },
+      {
+        "position": 208,
+        "text": "penalty imprisonment tanzanian citizen: three months null"
+      }
+    ],
+    "suspect_unit": [
+      {
+        "position": 153,
+        "text": "minimum directors: 2 employees"
+      },
+      {
+        "position": 154,
+        "text": "minimum shareholders: 2 employees"
+      },
+      {
+        "position": 198,
+        "text": "duration of maternity cash benefit: 12 weeks"
+      }
+    ]
+  }
+}
