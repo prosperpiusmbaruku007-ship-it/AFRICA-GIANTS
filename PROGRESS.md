@@ -133,6 +133,90 @@ the live v16 pipeline.
 
 ---
 
+# 🚨 GROUNDING MEASURED ACROSS THE 48: FEWER THAN HALF THE RETRIEVAL-DEPENDENT CORRECT ANSWERS ARE ACTUALLY SUPPORTED BY WHAT RETRIEVAL RETURNED (2026-08-22)
+
+**The luck finding generalises. It is not one probe.** Harness
+`eval/grounding/measure_grounding_48.py`, hand adjudication
+`eval/grounding/adjudication_no_figures.json`, artifact `eval/results/grounding_48.json`.
+Offline, production e5 encoding, production index, production pooling.
+
+## First: only 11 of the 29 correct rows depend on retrieval at all
+
+This narrows the question before it widens it. From the 2026-08-17 adjudication:
+
+| path | CORRECT | grounded by |
+|---|---|---|
+| compute | **15** | the rules engine — the working is appended deterministically |
+| refusal | **3** | the OOC classifier |
+| **fact** | **11** | **retrieval — the only rows where "was it grounded?" is even a question** |
+
+**The engine-backed 15 are safe by construction, and that is the reassuring half of this
+entry.** Everything below concerns the 11.
+
+## Of those 11, retrieval actually supported 5
+
+| grounding | rows | n |
+|---|---|---|
+| **GROUNDED** | `nat_31`, `nat_34`, `nat_32`, `nat_39`, `nat_43` | **5** |
+| **PARTIAL** | `nat_26` (6-month/100M half retrieved, 12-month/200M half not), `nat_40` (both bodies in context, the specific claim carried by a fact that wasn't retrieved) | **2** |
+| **UNGROUNDED** | `nat_27`, `nat_36`, `nat_37`, `nat_38` | **4** |
+
+**Four correct answers came out of model weights with no supporting fact in context, and two
+more were only half-supported.** The worked examples:
+
+- **`nat_27` — "vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu"** retrieved
+  *vat deferment threshold percentage: 90 %*, *maternity cash benefit rate: 100 %*, *vat
+  deferment minimum value: 10,000,000 TZS*. **The 18% standard rate is not in there.** The right
+  answer was recited from memory. **This row has been used as a "must stay correct" negative
+  control in R16 checks — including twice by me today.** It is a luck control, and every past
+  check that leaned on it proved less than it appeared to.
+- **`nat_36` — EFD threshold** retrieved *vat deferment minimum value: **10,000,000** TZS*, a
+  royalties WHT rate, and a company registration fee. The real threshold is **11,000,000**, which
+  was never retrieved. The model got it right next to a plausible wrong neighbour it could just as
+  easily have copied.
+- **`nat_38` is the sharpest case: the model was right and its context pointed the other way.**
+  The question is about an already VAT-registered business; the only on-topic retrieved row says a
+  small shop does *not* necessarily need an EFD (*"Si lazima"*). **Better retrieval-following would
+  have made this answer worse.**
+
+## What this does and does not mean
+
+- **It does not mean 29/48 is wrong.** The answers were adjudicated correct and they are correct.
+- **It means the measurement basis is softer than it reads.** ~5–6 of 29 correct answers are
+  ungrounded or partly so, and of the correct answers that depend on retrieval, **fewer than half
+  were actually supported.** These rows are not evidence that the pipeline works; they are evidence
+  that the base model knows some Tanzanian tax facts.
+- **It means ungrounded rows are silently fragile.** Nothing in the system distinguishes
+  "answered from a retrieved fact" from "answered from weights". A model swap, a quantisation
+  change, or a temperature change could move them with no index change to point at — and no gate
+  would predict it.
+- **It sharpens R10's premise.** The architecture decision says facts come from RAG and the model's
+  role is "Swahili response formatting and persona, not fact storage." **On these rows the model
+  IS the fact store.** That is the opposite of the stated design, and it is currently invisible.
+
+## Method, and its two blind spots — stated, not buried
+
+Figure-presence test: every figure the reply *asserts* (question-supplied figures subtracted) must
+appear in the retrieved context, normalised across digit / English-word / Swahili-word forms and
+scale words (*milioni 10* = *ten million* = *10,000,000*). Rows asserting no new figure were
+**adjudicated by hand**, recorded row-by-row.
+
+It cannot see a wrong-but-unnumbered claim, and it can count a coincidental figure as support.
+**Three instrument bugs were found and fixed before any of this was written up** — user-supplied
+figures counted as unsupported assertions; English scale words unhandled (`penalty fine non
+citizen: ten million TZS` scored a false UNGROUNDED); substring matching that would have scored
+`18` as present inside `180000`. Production pooling across sub-questions was added and **changed
+nothing, because no fact-path row in the 48 decomposes at all** — the whole-question top-3 *is*
+the production context for every one of them.
+
+## Consequence for the queue
+
+**This raises §1 further and lowers the value of any accuracy number not accompanied by grounding.**
+It also means the §1 sample-rewrite measurement (next) has a sharper success criterion than "do
+ranks move": it should ask whether the *specific* facts these 11 rows need start being retrieved.
+
+---
+
 # 🔴 RETRIEVAL RETURNS NOTHING RELEVANT FOR A PLAIN SDL QUESTION — AND ~40% OF THE INDEX IS IN THE SHAPE R15 SAYS RETRIEVES WORSE (2026-08-22)
 
 **This started as a follow-up on the "asilimia 0.5" conflation and ended somewhere else. Every

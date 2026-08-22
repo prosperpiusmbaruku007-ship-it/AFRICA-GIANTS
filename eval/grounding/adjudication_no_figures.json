@@ -1,0 +1,37 @@
+{
+  "purpose": "Human adjudication of the 6 CORRECT fact-path rows the figure-presence test cannot judge (the reply asserts no new figure). Read alongside eval/results/grounding_48.json, which carries the retrieved context for each.",
+  "adjudicated": "2026-08-22",
+  "method": "Read each reply against the facts actually retrieved for it. GROUNDED = a retrieved fact directly supports the reply's claim. PARTIAL = a retrieved fact is on-topic but does not carry the specific claim. UNGROUNDED = no retrieved fact supports it; the answer came from model weights.",
+  "rows": {
+    "nat_32": {
+      "verdict": "GROUNDED",
+      "why": "[210] 'gn487a shareholder vs operator distinction' is exactly the claim the reply makes — passive shareholding vs conducting/operating."
+    },
+    "nat_39": {
+      "verdict": "GROUNDED",
+      "why": "[69] is the near-identical question ('Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili?') answering Ndiyo, OSHA registers all workplaces with no headcount threshold."
+    },
+    "nat_43": {
+      "verdict": "GROUNDED",
+      "why": "[72] states GN 605A has no single national rate and each sector has its own — precisely the reply's claim."
+    },
+    "nat_40": {
+      "verdict": "PARTIAL",
+      "why": "[69] mentions both OSHA registration and that WCF starts from the first employee, so the two bodies are present in context — but the reply's actual claims (OSHA inspects; WCF pays compensation, not OSHA) are carried by [68], which was NOT retrieved. The other two retrieved rows are trademark and file-search fees. On-topic context, specific claim unsupported."
+    },
+    "nat_37": {
+      "verdict": "UNGROUNDED",
+      "why": "Retrieved: trademark fee for any other entry, memorandum/articles filing fee, document acceptance fee. None concerns receipts or EFD. The reply's claim (a receipt is required for every transaction regardless of amount) came entirely from model weights."
+    },
+    "nat_38": {
+      "verdict": "UNGROUNDED_AND_CONTRARY",
+      "why": "The one on-topic retrieved row, [58], says a small shop with small turnover does NOT necessarily need an EFD ('Si lazima'). The question asks about an already VAT-REGISTERED business, for which the answer IS yes — but the fact carrying that (VAT-registered implies EFD) was not retrieved. The model answered correctly while its most relevant context pointed the other way. Worth separating from plain UNGROUNDED: this is the shape where better retrieval-following would have made the answer WORSE."
+    }
+  },
+  "tally_of_all_11_fact_path_correct_rows": {
+    "GROUNDED": ["nat_31", "nat_34", "nat_32", "nat_39", "nat_43"],
+    "PARTIAL": ["nat_26", "nat_40"],
+    "UNGROUNDED": ["nat_27", "nat_36", "nat_37", "nat_38"],
+    "note": "nat_31/nat_34 from the figure test; nat_32/nat_39/nat_43/nat_40/nat_37/nat_38 by hand here. nat_26 is PARTIAL because the 6-month/100M half WAS retrieved ([146]) and the 12-month/200M half was not. nat_27 and nat_36 are from the figure test and were re-read to confirm: neither the VAT 18% standard rate nor the EFD 11,000,000 threshold appears anywhere in their retrieved context."
+  }
+}

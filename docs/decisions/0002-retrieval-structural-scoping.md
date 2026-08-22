@@ -698,6 +698,37 @@ workstream is a measurement, not a build.
 | 7 | Different/bigger embedding model | scoped only, unchanged — this is what R15 was | LOW, not scheduled |
 | 8 | Generation-side / engine-routing failure after successful retrieval | **✅ SETTLED — re-measured on live v16 with a committed instrument (R18). Split reproduced 4/1/3; `nat_23` routed to `compute` and the NSSF engine computed correctly with SDL dropped; `nat_24` deferred ("Thibitisha na TRA"); `nat_05` is a third routing miss. Three of eight are routing misses, only `nat_33` is a capability gap.** Originally measured by an uncommitted harness, then re-diagnosed the same day. Forced the correct fact(s) into context for all 8 remaining rows: 4 correct, 1 partial, 3 clearly wrong. Checked whether the 3 failures are engine-shaped before calling them generation-side (they weren't fully checked first pass): **`nat_33` has no engine at all (BRELA isn't a `COMPUTE_TYPES` member) — a real capability gap. `nat_23`/`nat_24` have working engines (SDL/NSSF/WCF), and v16 — which owns them and IS the deployed pipeline (`chike_config.json: "pipeline": "v16"`) — still doesn't route to them, because the decomposer doesn't split nicknamed multi-levy phrasing and `detect_intent` returns `nssf`/`none`.** 2 of 3 are a routing gap with a known fix pattern, not a model ceiling. (An earlier version of this row claimed production runs v15 with zero compute routing — **retracted, false**; see §8's retraction. The engine-shape half of the diagnosis stands on its own — it was checked against the code and re-verified. The half that says these rows *failed* is provisional, from the table.) Also the headline pilot-safety finding: these failures carry maximum retrieval confidence (fact forced directly into context) and no visible hedge, so no retrieval-confidence floor could ever catch them — see PROGRESS.md's dedicated pilot-precondition entry, not just this ADR. | The routing/decomposition extension for nicknamed multi-levy fanouts is a separate go-ahead, owned by `chike/routing.py`/`chike/decomposition.py`, not this ADR. A new BRELA engine (`nat_33`) is separately scoped-able, smallest of the three. |
 
+## 10. GROUNDING ACROSS THE 48 — THE ACCURACY BASE IS SOFTER THAN IT READS (2026-08-22)
+
+Measured after the `nick_02`/`nick_03` luck finding, to see whether it generalises. It does.
+Harness `eval/grounding/measure_grounding_48.py`, hand adjudication
+`eval/grounding/adjudication_no_figures.json`, artifact `eval/results/grounding_48.json`.
+
+**Only 11 of the 29 CORRECT rows depend on retrieval.** 15 are compute rows grounded by the rules
+engine (deterministic working appended), 3 are classifier refusals. **The engine-backed 15 are safe
+by construction.**
+
+**Of the 11 that do depend on retrieval: 5 GROUNDED, 2 PARTIAL, 4 UNGROUNDED.** `nat_27` (VAT 18%)
+and `nat_36` (EFD 11,000,000) recited correct figures that appear nowhere in their retrieved
+context; `nat_37` had no on-topic fact at all; **`nat_38` answered correctly while its only on-topic
+retrieved fact pointed the other way** — better retrieval-following would have made it worse.
+
+**Consequences for this ADR:**
+
+1. **§1 rises again.** Ungrounded rows are exactly what an index that cannot surface its own facts
+   produces. §1's success criterion is now sharper than "do ranks move": does the *specific* fact
+   each of these 11 rows needs start being retrieved?
+2. **Any yield estimate built on "currently CORRECT" rows is weaker than it looks.** Five of the
+   fact-path correct rows are not demonstrations that retrieval works. A mechanism measured as
+   "no regression on the currently-correct set" is partly measuring rows retrieval never touched.
+3. **The §5(d) standing bar needs a companion.** An answer-level regression check confirms answers
+   did not change; it cannot see that an answer was never grounded to begin with. **Grounding should
+   be reported alongside accuracy from here on**, not as a separate exercise.
+4. **It contradicts R10's stated premise on these rows** — "facts come from RAG, the model formats"
+   — because on them the model *is* the fact store, invisibly.
+
+---
+
 ## STANDING ORDER: MEASURE, THEN SCOPE — NOT SCOPE, THEN MEASURE (2026-08-22)
 
 **Measurement has now reordered this queue against the prior recommendation four separate
@@ -710,12 +741,16 @@ should follow it.
 | 2 | **Margin as a similarity floor** (`5149e9b`) | the leading floor design after the absolute threshold died | **measured: it INVERTS** — the correct row had the smallest margin of 21, three known-wrong rows scored larger margins than every correct one. Retired at its original scoping location |
 | 3 | **Interleave / hybrid fusion** (`5de044d`, `f171363`) | shipped, on a structural guarantee that was real | **the guarantee certified the wrong quantity.** Live-regressed, reverted, §5 declined in all forms |
 | 4 | **§2 vs the routing extension** (`e22cdcd`, this cycle) | §2 was the lead candidate on an expected ~5–6 of 8 | **re-measured on live v16: §2 alone is 4–5 of 8; the routing extension takes it to 6–7. The comparison inverted.** The provisional numbers §2 led on were produced by an uncommitted harness |
+| 5 | **The "nicknamed multi-levy" framing of the routing extension** (`405789d`) | the workstream was named and scoped as nickname decomposition | **measuring it found three gaps, and the framing covered only one.** `nick_03` — SDL named **outright**, headcount stated — still routes to fact. **The nickname framing would have fixed gap A and left gap B, the one that produced the observed defect, untouched.** Named at the founder's instruction rather than absorbed silently |
 
 **The shared shape:** in every case a design was scoped, ranked and — twice — nearly or actually
 built, on a number or a premise that had not been measured on the live system. In every case the
 measurement, when it finally happened, did not refine the estimate; it **reversed the decision**.
-Three of the four reversals were cheap because they happened before or shortly after a build. The
-fourth was cheap only because §8 was re-run before §2 started.
+
+**At five instances the pattern is predictive, not anecdotal.** The prior on "a scoped-but-unmeasured
+item is correctly ranked" is now demonstrably poor, and #5 shows it applies to a workstream's
+*framing* — the name it is given, and therefore which sub-problems get looked at — not only to its
+yield number. **Treat the framing as an unmeasured claim too.**
 
 **So the order is: measure, then scope, then build.** Concretely, before an item may be ranked in
 the table below:
