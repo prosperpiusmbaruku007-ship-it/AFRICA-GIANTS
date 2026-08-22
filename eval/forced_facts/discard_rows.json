@@ -1,0 +1,255 @@
+{
+  "purpose": "discard-rate measurement: when a correct fact reaches context, how often is it not used?",
+  "denominator_note": "ONLY the FORCEABLE rows belong in the discard denominator. ABSENCE rows have no fact to discard; COMPUTE_NOW rows no longer depend on retrieval.",
+  "counts": {
+    "FORCEABLE": 13,
+    "ABSENCE": 3,
+    "COMPUTE_NOW": 3
+  },
+  "rows": [
+    {
+      "id": "nat_26",
+      "class": "FORCEABLE",
+      "question": "nimefungua duka miezi sita iliyopita nimeuza jumla milioni 60 hadi sasa je nimefika kiwango cha vat",
+      "verdict_2026_08_17": "CORRECT",
+      "grounding_2026_08_22": "PARTIAL",
+      "forced_fact_positions": [
+        146,
+        145
+      ],
+      "forced_facts": [
+        "Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6.",
+        "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12."
+      ],
+      "why": "VAT 100M/6mo (was retrieved) + 200M/12mo (was not)"
+    },
+    {
+      "id": "nat_27",
+      "class": "FORCEABLE",
+      "question": "vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu",
+      "verdict_2026_08_17": "CORRECT",
+      "grounding_2026_08_22": "UNGROUNDED",
+      "forced_fact_positions": [
+        13
+      ],
+      "forced_facts": [
+        "vat standard rate: Tanzania VAT standard rate is 18% — unchanged since 2015. It was NEVER 14%."
+      ],
+      "why": "VAT standard rate 18% — never retrieved, answered from weights"
+    },
+    {
+      "id": "nat_31",
+      "class": "FORCEABLE",
+      "question": "kama mgeni akikutwa anafanya biashara isiyoruhusiwa adhabu yake ni ipi",
+      "verdict_2026_08_17": "CORRECT",
+      "grounding_2026_08_22": "GROUNDED",
+      "forced_fact_positions": [
+        20
+      ],
+      "forced_facts": [
+        "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni kumi), na/au kifungo miezi 6, na kufutwa kwa visa."
+      ],
+      "why": "GN487A non-citizen fine — control, already retrieved"
+    },
+    {
+      "id": "nat_32",
+      "class": "FORCEABLE",
+      "question": "mgeni anaweza kuwa mwanahisa kwenye kampuni yangu ya ujenzi bila kuendesha biashara ya rejareja",
+      "verdict_2026_08_17": "CORRECT",
+      "grounding_2026_08_22": "GROUNDED",
+      "forced_fact_positions": [
+        210
+      ],
+      "forced_facts": [
+        "gn487a shareholder vs operator distinction: GN487A prohibits non-citizens from CONDUCTING or OPERATING the listed business activities. Passive shareholding or investment in a Tanzanian-owned and operated company is not explicitly prohibited by GN487A - the prohibition targets the person carrying out the activity, not the investor. However, a non-citizen who is a shareholder AND actively manages or operates the business would be covered. Consult an immigration lawyer for specific structures."
+      ],
+      "why": "shareholder-vs-operator — control"
+    },
+    {
+      "id": "nat_34",
+      "class": "FORCEABLE",
+      "question": "nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+      "verdict_2026_08_17": "CORRECT",
+      "grounding_2026_08_22": "GROUNDED",
+      "forced_fact_positions": [
+        114,
+        130
+      ],
+      "forced_facts": [
+        "company registration fee 1: 95,000 TZS",
+        "company name reservation fee: 50,000 TZS"
+      ],
+      "why": "company reg fee + name reservation — control"
+    },
+    {
+      "id": "nat_36",
+      "class": "FORCEABLE",
+      "question": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "verdict_2026_08_17": "CORRECT",
+      "grounding_2026_08_22": "UNGROUNDED",
+      "forced_fact_positions": [
+        57
+      ],
+      "forced_facts": [
+        "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD bila kujali kiwango cha mauzo."
+      ],
+      "why": "EFD threshold 11M — never retrieved, answered from weights"
+    },
+    {
+      "id": "nat_39",
+      "class": "FORCEABLE",
+      "question": "nina duka dogo na mfanyakazi mmoja je nasajili sehemu ya kazi osha",
+      "verdict_2026_08_17": "CORRECT",
+      "grounding_2026_08_22": "GROUNDED",
+      "forced_fact_positions": [
+        69
+      ],
+      "forced_facts": [
+        "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo YOTE ya kazi bila kikomo cha idadi ya wafanyakazi, na WCF huanza tangu mfanyakazi wa kwanza. Idadi ndogo ya wafanyakazi HAIONDOI wajibu wa kujisajili OSHA na WCF (mfuko wa fidia)."
+      ],
+      "why": "OSHA registers all workplaces — control"
+    },
+    {
+      "id": "nat_40",
+      "class": "FORCEABLE",
+      "question": "nani anakuja kukagua usalama wa sehemu yangu ya kazi na nani analipa fidia akiumia",
+      "verdict_2026_08_17": "CORRECT",
+      "grounding_2026_08_22": "PARTIAL",
+      "forced_fact_positions": [
+        68
+      ],
+      "forced_facts": [
+        "OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (kifungu 16, Sheria ya OSHA Na.5 ya 2003), hukagua, na hutoa leseni ya utii kila mwaka — OSHA HAILIPI fidia ya ajali. Fidia ya ajali na magonjwa ya kazini hulipwa na WCF (mwajiri huchangia 0.5% ya mishahara). Usajili wa OSHA na wa WCF ni tofauti; vyote vinahitajika. WCF huanza tangu mfanyakazi wa kwanza — HAKUNA kizingiti cha wafanyakazi wawili."
+      ],
+      "why": "OSHA-vs-WCF distinction — the fact carrying the claim was NOT retrieved"
+    },
+    {
+      "id": "nat_43",
+      "class": "FORCEABLE",
+      "question": "mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+      "verdict_2026_08_17": "CORRECT",
+      "grounding_2026_08_22": "GROUNDED",
+      "forced_fact_positions": [
+        72
+      ],
+      "forced_facts": [
+        "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi nzima — kila sekta ina chake, sekta 16 na sekta ndogo 46. Mkulima / sekta ya kilimo ina kiwango chake tofauti na sekta nyingine."
+      ],
+      "why": "GN605A sector variance — control"
+    },
+    {
+      "id": "nat_44",
+      "class": "FORCEABLE",
+      "question": "nimeuzia wakala wa serikali bidhaa je watanikata asilimia ngapi ya vat",
+      "verdict_2026_08_17": "WRONG",
+      "grounding_2026_08_22": "GROUNDED",
+      "forced_fact_positions": [
+        16
+      ],
+      "forced_facts": [
+        "vat withholding goods: VAT withholding on goods is 3% of the consideration (invoice value exclusive of VAT) — effective 1 July 2025 (Finance Act 2025, VAT Act s.5(5)). The standard 18% VAT rate is split: the withholding agent remits 3% to TRA and the supplier receives the remaining 15%."
+      ],
+      "why": "VAT withholding goods 3% — SS8 row, was CORRECT forced"
+    },
+    {
+      "id": "nat_45",
+      "class": "FORCEABLE",
+      "question": "mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+      "verdict_2026_08_17": "WRONG",
+      "grounding_2026_08_22": "GROUNDED",
+      "forced_fact_positions": [
+        51
+      ],
+      "forced_facts": [
+        "wcf accident reporting deadline: 7 working days from date of accident. Source: Workers Compensation Act / portal.wcf.go.tz"
+      ],
+      "why": "WCF 7 working days — SS8 row, was CORRECT forced"
+    },
+    {
+      "id": "nat_28",
+      "class": "FORCEABLE",
+      "question": "nimefanya kazi ya ushauri kwa taasisi ya serikali wamesema watakata vat je asilimia ngapi na cheti nitapata lini",
+      "verdict_2026_08_17": "WRONG",
+      "grounding_2026_08_22": "GROUNDED",
+      "forced_fact_positions": [
+        17,
+        79
+      ],
+      "forced_facts": [
+        "vat withholding services: VAT withholding on services is 6% of the consideration (invoice value exclusive of VAT) — effective 1 July 2025 (Finance Act 2025, VAT Act s.5(5)). The standard 18% VAT rate is split: the withholding agent remits 6% to TRA and the supplier receives the remaining 12% (the statute states this 12% expressly).",
+        "vat withholding certificate timing: VAT withholding certificate must be issued NOT LATER THAN the date on which VAT becomes payable under section 15 of the VAT Act — NOT on the 20th of the following month. The 20th deadline applies to filing the VAT return and remitting the withheld amount, which are separate obligations. A withholding agent must issue the certificate in an approved system format containing: TIN, registration number, supply description, consideration amount, withholding rate and withholding amount."
+      ],
+      "why": "VAT withholding services 6% + certificate timing — SS8 row"
+    },
+    {
+      "id": "nat_33",
+      "class": "FORCEABLE",
+      "question": "sijapeleka ritani ya kampuni yangu miezi saba sasa nitalipa faini kiasi gani na ada yenyewe ni ngapi",
+      "verdict_2026_08_17": "WRONG",
+      "grounding_2026_08_22": "GROUNDED",
+      "forced_fact_positions": [
+        133,
+        134
+      ],
+      "forced_facts": [
+        "BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni TZS 2,500 kwa kila mwezi wa kuchelewa.",
+        "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni TZS 22,000."
+      ],
+      "why": "BRELA late fee + annual fee — SS8 row, was WRONG forced"
+    },
+    {
+      "id": "nat_37",
+      "class": "ABSENCE",
+      "question": "mteja amenunua kwa shilingi 2000 tu nampa risiti ya mashine au inaruhusiwa kuandika kwa mkono",
+      "verdict_2026_08_17": "CORRECT",
+      "why": "No index fact states a receipt is required for EVERY transaction regardless of amount. The only on-topic row [58] says a small business is NOT always required to use an EFD. Searched 2026-08-22; nothing carries this claim.",
+      "forced_facts": [],
+      "forced_fact_positions": []
+    },
+    {
+      "id": "nat_38",
+      "class": "ABSENCE",
+      "question": "nimeshasajili vat je lazima niwe na mashine ya risiti hata kama mauzo ni madogo",
+      "verdict_2026_08_17": "CORRECT",
+      "why": "No index fact states that a VAT-REGISTERED business must use an EFD regardless of turnover. [58] addresses small businesses and points the other way. This row scored CORRECT while its only on-topic context contradicted it — the finding that opened this measurement.",
+      "forced_facts": [],
+      "forced_fact_positions": []
+    },
+    {
+      "id": "nat_41",
+      "class": "ABSENCE",
+      "question": "nimefungua karakana mpya nina muda gani wa kusajili sehemu ya kazi",
+      "verdict_2026_08_17": "WRONG",
+      "why": "Recorded ABSENCE by the 2026-08-17 class analysis: the OSH Act s.16(2) register-BEFORE-operating fact never existed in the index.",
+      "forced_facts": [],
+      "forced_fact_positions": []
+    },
+    {
+      "id": "nat_05",
+      "class": "COMPUTE_NOW",
+      "question": "nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya mafunzo nitalipa asilimia tatu na nusu ya nini",
+      "verdict_2026_08_17": "WRONG",
+      "why": "routes compute[sdl] after ROUTING-GAP-B",
+      "forced_facts": [],
+      "forced_fact_positions": []
+    },
+    {
+      "id": "nat_23",
+      "class": "COMPUTE_NOW",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "verdict_2026_08_17": "WRONG",
+      "why": "routes compute[nssf]+[sdl] after ROUTING-GAP-A",
+      "forced_facts": [],
+      "forced_fact_positions": []
+    },
+    {
+      "id": "nat_24",
+      "class": "COMPUTE_NOW",
+      "question": "tuko na watu 9 tu mishahara milioni 4 kwa mwezi nilipe nini kati ya ile ya mafunzo ya fidia na ya uzeeni",
+      "verdict_2026_08_17": "WRONG",
+      "why": "routes compute[nssf]+[sdl]+[wcf] after ROUTING-GAP-B",
+      "forced_facts": [],
+      "forced_fact_positions": []
+    }
+  ]
+}
