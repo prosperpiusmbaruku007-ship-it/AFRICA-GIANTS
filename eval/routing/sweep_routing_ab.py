@@ -112,6 +112,20 @@ def main():
         routing._GAP_B_APPLICABILITY_CUES), 'BEFORE arm did not actually disable the cues'
     try:
         before = route_snapshot(rows)
+        # PREVENTIVE RULE (2026-08-22): a BEFORE arm must be asserted to REPRODUCE A KNOWN
+        # PRE-CHANGE RESULT, not merely to differ from AFTER. These four routings were
+        # measured on pristine code before any of this was written
+        # (eval/results/nickname_routing_measurement.json). If the arm fails to reproduce
+        # them it is not the pre-change state and its radius is meaningless.
+        known_pre_change = {'nick_02': 'none', 'nick_03': 'none',
+                            'nick_04': 'nssf', 'nick_08': 'sdl'}
+        for pid, expected in known_pre_change.items():
+            if pid in before:
+                assert before[pid]['intent'] == expected, (
+                    f'BEFORE arm is NOT the pre-change state: {pid} routed '
+                    f"{before[pid]['intent']!r}, pristine code routed {expected!r}")
+        assert before['nick_04']['fanout'] == [], (
+            'BEFORE arm still has the gap-A fan-out enabled')
     finally:
         (routing.all_compute_levies, routing._WHICH_LEVY_ASK,
          routing._RATE_BASE_ASK, routing._APPLICABILITY_CUES) = saved

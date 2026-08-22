@@ -212,6 +212,7 @@ what followed from it.
 | 1 | **ship criterion** | interleave's zero-dilution instrument | the target fact kept its rank in all 8 rows | that the **other two injected slots changed for all 8**, and one row flipped to a wrong live answer. It measured one fact's presence, not the answer's stability |
 | 2 | **regen guard, keyword** | `nat_27`: `'18%' in fact_text` | the string `18%` was in the top-3 | that it was in **[64], the withholding-formula fact** — not [13], the standard-rate fact it names. **Six** index facts contain `18%` |
 | 3 | **regen guard, displacement** | `VAT registration threshold`: `'200,000,000' in fact_text` | the string `200,000,000` was in the top-3 | **that the displacement it was written to catch was happening.** [57], the EFD fact that mentions 200M only as a contrast, sits at **rank 1** — above [145], the fact actually asked for. The anchor matched [15], [57] and [145] alike |
+| 4 | **blast-radius sweep** | routing A/B's first sweep: BEFORE vs AFTER over 854 questions | that **a difference existed** between two arms | **that the two arms were the right two states.** Its BEFORE arm disabled two of the change's three mechanisms and left the third — the new `je nalipa` cues — switched on in *both* arms. It reported a radius of **4**; the real one is **13** |
 
 **Instance 3 is the purest form yet**, and it is worth stating exactly: *a guard whose entire
 purpose was to detect one fact displacing another passed while that displacement was occurring,
@@ -225,8 +226,29 @@ further the check must be anchored to something that can only be true of the int
 which is exactly the property `NEVER 14%` has and `18%` does not, and the property an answer-level
 regression check has and a rank check does not.
 
-**Where this is already enforced:** the §5(d) standing bar (answer-level, not rank), the R18
-committed-harness rule, and now the regen gate's runtime anchor-uniqueness assertion.
+**Instance 4 is the one that generalises furthest, and it was caught by a human noticing, not by
+any check.** Nothing failed. The sweep ran clean, produced a plausible number, and the number was
+three times too small. What surfaced it was reading the output and thinking *"nick_02 and nick_03
+should have moved and they didn't."* Instances 1–3 are about a check that cannot identify WHICH
+item it matched; instance 4 is about a comparison that cannot identify WHICH TWO STATES it
+compared. Same defect, one level up: **a difference is evidence of a difference. It is not evidence
+that you measured the two things you meant to.**
+
+**⚠️ PREVENTIVE RULE, from instance 4 — a sweep's BEFORE arm must be asserted to REPRODUCE A KNOWN
+PRE-CHANGE RESULT, not merely to differ from AFTER.** A BEFORE arm reconstructed by switching the
+change off is only trustworthy if something independently confirms it actually switched off. Two
+cheap forms, both now used in `eval/routing/sweep_routing_ab.py`:
+
+- assert the disabling actually happened (`len(cues_after_removal) == len(before) - len(new_cues)`),
+  which is what catches a mechanism the arm forgot to touch; and
+- pin at least one row whose PRE-change routing is independently known, and assert BEFORE
+  reproduces it.
+
+Without one of those, a contaminated BEFORE arm reports a small radius and looks like good news.
+
+**Where this family is already enforced:** the §5(d) standing bar (answer-level, not rank), the R18
+committed-harness rule, the regen gate's runtime anchor-uniqueness assertion, and now the
+BEFORE-arm assertion above.
 
 ---
 
@@ -264,8 +286,12 @@ iterate an imported constant and a file the test itself writes. Fine.
 **The residual risk is the 25 unresolvable loops** — they iterate a call or comprehension, so
 nothing static can say whether they will still have members after the next data change. **The
 one-line fix that converts "can go quiet" into "fails loudly": assert the collection is non-empty
-before looping.** Not applied — 25 edits across the suite is its own piece of work, and none is
-currently broken. **On the board, with the census as its worklist.**
+before looping.**
+
+**📌 QUEUED — closes a CLASS, not an instance.** 25 one-line edits with a ready worklist
+(`eval/results/inert_check_census.json`), no design decisions, and it removes the possibility of a
+silent vacuous test rather than fixing one. **Scheduled after the rate guard.** Worth doing as a
+single pass with the census re-run afterwards to confirm the `UNRESOLVED` count goes to zero.
 
 ---
 
