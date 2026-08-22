@@ -1,0 +1,124 @@
+{
+  "purpose": "SS8 forced-fact re-measurement on the live v16 pipeline. Retrieval is replaced by a constant; everything else — classifier, decomposition, routing, rules engines, prompt build, generation, cleanup — is the production path untouched.",
+  "index_source": "chike-inference/rag_facts_text.json",
+  "index_fact_count": 221,
+  "supersedes": "the provisional 2026-08-22 table produced by an uncommitted harness whose own description says it ran the non-live v15 arm",
+  "rows": [
+    {
+      "id": "nat_44",
+      "question": "nimeuzia wakala wa serikali bidhaa je watanikata asilimia ngapi ya vat",
+      "forced_facts": [
+        "vat withholding goods: VAT withholding on goods is 3% of the consideration (invoice value exclusive of VAT) — effective 1 July 2025 (Finance Act 2025, VAT Act s.5(5)). The standard 18% VAT rate is split: the withholding agent remits 3% to TRA and the supplier receives the remaining 15%."
+      ],
+      "forced_fact_positions": [
+        16
+      ],
+      "forced_fact_rationale": "vat withholding goods (3%)",
+      "expected_behavior": "Goods = 3% VAT withholding (Finance Act 2025, effective 1 Jul 2025). Must not give the 6% services rate.",
+      "provisional_2026_08_22_outcome": "CORRECT"
+    },
+    {
+      "id": "nat_45",
+      "question": "mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+      "forced_facts": [
+        "wcf accident reporting deadline: 7 working days from date of accident. Source: Workers Compensation Act / portal.wcf.go.tz"
+      ],
+      "forced_fact_positions": [
+        51
+      ],
+      "forced_fact_rationale": "wcf accident reporting deadline (7 working days)",
+      "expected_behavior": "Accident reporting to WCF: 7 working days from the date of the accident.",
+      "provisional_2026_08_22_outcome": "CORRECT"
+    },
+    {
+      "id": "nat_41",
+      "question": "nimefungua karakana mpya nina muda gani wa kusajili sehemu ya kazi",
+      "forced_facts": [
+        "Umefungua karakana au sehemu mpya ya kazi? Usajili wa OSHA lazima ufanyike KABLA ya kuanza biashara — hakuna muda wa siku baada ya kufungua. (Kifungu 16(2), Sheria ya Afya na Usalama Mahali pa Kazi Na.5 ya 2003.)",
+        "OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kikomo cha idadi ya wafanyakazi."
+      ],
+      "forced_fact_positions": [
+        219,
+        52
+      ],
+      "forced_fact_rationale": "OSHA registration-before-opening + no employee-count threshold",
+      "expected_behavior": "State the OSHA workplace-registration obligation. Any specific deadline must come from a locked fact or be safe-clarified/referred to OSHA. Per the approved rubric: inventing a number of days is scored WRONG, not partially correct.",
+      "provisional_2026_08_22_outcome": "CORRECT"
+    },
+    {
+      "id": "nat_28",
+      "question": "nimefanya kazi ya ushauri kwa taasisi ya serikali wamesema watakata vat je asilimia ngapi na cheti nitapata lini",
+      "forced_facts": [
+        "vat withholding services: VAT withholding on services is 6% of the consideration (invoice value exclusive of VAT) — effective 1 July 2025 (Finance Act 2025, VAT Act s.5(5)). The standard 18% VAT rate is split: the withholding agent remits 6% to TRA and the supplier receives the remaining 12% (the statute states this 12% expressly).",
+        "vat withholding certificate timing: VAT withholding certificate must be issued NOT LATER THAN the date on which VAT becomes payable under section 15 of the VAT Act — NOT on the 20th of the following month. The 20th deadline applies to filing the VAT return and remitting the withheld amount, which are separate obligations. A withholding agent must issue the certificate in an approved system format containing: TIN, registration number, supply description, consideration amount, withholding rate and withholding amount."
+      ],
+      "forced_fact_positions": [
+        17,
+        79
+      ],
+      "forced_fact_rationale": "vat withholding services (6%) + certificate timing",
+      "expected_behavior": "Services = 6% VAT withholding (Finance Act 2025, effective 1 Jul 2025). The withholding certificate is issued by the day VAT becomes payable — NOT the 20th (the 20th is the return-filing deadline, a different obligation).",
+      "provisional_2026_08_22_outcome": "CORRECT"
+    },
+    {
+      "id": "nat_05",
+      "question": "nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya mafunzo nitalipa asilimia tatu na nusu ya nini",
+      "forced_facts": [
+        "SDL, ambayo huitwa pia \"mafunzo\": kiwango cha mafunzo ni asilimia tatu na nusu (asilimia 3.5) ya mishahara ya wafanyakazi. Si asilimia 4, si asilimia 2."
+      ],
+      "forced_fact_positions": [
+        5
+      ],
+      "forced_fact_rationale": "sdl rate (3.5% of payroll) — the wrong-base trap",
+      "expected_behavior": "Wrong-base trap: SDL is 3.5% of GROSS PAYROLL, never of machine value. Correct = say the base is payroll and ask for it (payroll was never given). WRONG = 3.5% x 50,000,000.",
+      "provisional_2026_08_22_outcome": "PARTIAL"
+    },
+    {
+      "id": "nat_33",
+      "question": "sijapeleka ritani ya kampuni yangu miezi saba sasa nitalipa faini kiasi gani na ada yenyewe ni ngapi",
+      "forced_facts": [
+        "BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni TZS 2,500 kwa kila mwezi wa kuchelewa.",
+        "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni TZS 22,000."
+      ],
+      "forced_fact_positions": [
+        133,
+        134
+      ],
+      "forced_fact_rationale": "BRELA late fee (2,500/month) + annual return fee (22,000)",
+      "expected_behavior": "BRELA annual return fee TZS 22,000; late-filing penalty TZS 2,500 per month (or part month) for a local company -> 7 x 2,500 = TZS 17,500. WRONG = the USD 25/month foreign-company rate, or an invented figure.",
+      "provisional_2026_08_22_outcome": "WRONG"
+    },
+    {
+      "id": "nat_24",
+      "question": "tuko na watu 9 tu mishahara milioni 4 kwa mwezi nilipe nini kati ya ile ya mafunzo ya fidia na ya uzeeni",
+      "forced_facts": [
+        "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+        "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+        "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi kisichobadilika — inategemea mishahara."
+      ],
+      "forced_fact_positions": [
+        7,
+        10,
+        66
+      ],
+      "forced_fact_rationale": "sdl threshold (10+) + NSSF 20% + WCF 0.5%",
+      "expected_behavior": "Three-way triage with an SDL threshold trap: SDL does NOT apply (9 < 10); WCF 0.5% x 4,000,000 = TZS 20,000; NSSF employer 10% = TZS 400,000 (20% total = 800,000). WRONG = charging SDL at 9 employees.",
+      "provisional_2026_08_22_outcome": "WRONG"
+    },
+    {
+      "id": "nat_23",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "forced_facts": [
+        "SDL, ambayo huitwa pia \"mafunzo\": kiwango cha mafunzo ni asilimia tatu na nusu (asilimia 3.5) ya mishahara ya wafanyakazi. Si asilimia 4, si asilimia 2.",
+        "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz)."
+      ],
+      "forced_fact_positions": [
+        5,
+        10
+      ],
+      "forced_fact_rationale": "sdl rate + NSSF rate",
+      "expected_behavior": "Two unlabeled levies, both must be answered (D-DECOMP-1 fan-out): SDL 3.5% x 5,500,000 = TZS 192,500 (12 >= 10); NSSF 20% x 5,500,000 = TZS 1,100,000 total (employer share 550,000). WRONG = answering only one levy.",
+      "provisional_2026_08_22_outcome": "WRONG"
+    }
+  ]
+}

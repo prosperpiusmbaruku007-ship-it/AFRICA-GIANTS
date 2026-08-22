@@ -480,6 +480,73 @@ class ChikeModel:
         )
 
     @modal.method()
+    def run_forced_facts(self, message: str, facts: list) -> dict:
+        """SS8 INSTRUMENT — forced-fact probe. Additive-only; run() is untouched.
+
+        Answers `message` through the SAME pipeline run() serves, with ONE substitution:
+        retrieval returns `facts` verbatim instead of ranking the index. Everything else —
+        the OOC classifier, decomposition, routing, the rules engines, prompt build,
+        generation, stop-splitting, cleanup — is the production path. That makes the
+        measurement 'what does the live system do when retrieval is guaranteed to succeed',
+        which is the only question §8 is asking.
+
+        R18 — THIS METHOD IS COMMITTED BEFORE IT IS RUN, and removed in a follow-up commit,
+        so the exact instrument sits in git history at a named SHA. Its predecessor was
+        deployed, used and deleted without ever being committed; the entire §8 result had to
+        be marked provisional because nobody could re-read it. That is the whole reason this
+        docstring exists.
+
+        Reports `pipeline` so the artifact records which arm actually answered — the
+        ambiguity that invalidated the first attempt cannot recur silently.
+        """
+        import sys
+        if '/root' not in sys.path:
+            sys.path.insert(0, '/root')
+
+        if not message or not message.strip():
+            return {'error': 'No message provided'}
+
+        forced = list(facts or ())
+
+        if PIPELINE == 'v16':
+            orch = self._orchestrator()
+            original = orch.retriever
+            try:
+                orch.retriever = lambda _q: tuple(forced)
+                reply = orch.answer(message)
+            finally:
+                # Restore before returning: the orchestrator is cached per container
+                # (self._orch), so leaking the stub would poison every later run() call
+                # served by this same warm container.
+                orch.retriever = original
+            return {
+                'reply': reply.text,
+                'pipeline': 'v16',
+                'refused': reply.refused,
+                'needs_clarification': reply.needs_clarification,
+                'sub_answer_count': len(reply.sub_answers),
+                'sub_answer_kinds': [
+                    getattr(sa.sub_question, 'kind', '?') for sa in reply.sub_answers
+                ],
+                'forced_facts': forced,
+            }
+
+        from chike import pipeline_v15
+        out = pipeline_v15.answer(
+            message,
+            generate=self._generate,
+            retrieve_facts=lambda _q, top_k=3: list(forced),
+            system_prompt=BASE_SYSTEM_PROMPT,
+            tokenizer=self.tokenizer,
+            stop_strings=STOP_STRINGS,
+            config=CONFIG,
+            log=print,
+        )
+        out['pipeline'] = 'v15'
+        out['forced_facts'] = forced
+        return out
+
+    @modal.method()
     def generate_raw(self, prompt: str, params: dict = None) -> dict:
         """RAW completion primitive: tokenize -> generate -> decode. NO classify /
         decompose / RAG / system prompt / cleaning.
