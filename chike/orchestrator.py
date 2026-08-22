@@ -787,16 +787,23 @@ class Orchestrator:
 
     @staticmethod
     def _fan_out_multi_levy(routed: list) -> list:
-        """D-DECOMP-1: expand any compute sub-question that names >=2 explicit levies into one
-        compute sub-question per levy (same text, distinct computation_type), preserving order.
+        """D-DECOMP-1: expand any compute sub-question that names >=2 levies into one compute
+        sub-question per levy (same text, distinct computation_type), preserving order.
         Single-levy compute parts and all fact parts pass through unchanged, so every question
         that did not name multiple levies produces a byte-identical `routed` list. The first
         named levy keeps the position detect_intent already assigned; the remaining levies are
-        inserted immediately after it."""
+        inserted immediately after it.
+
+        ROUTING-GAP-A (2026-08-22): now fans out on `all_compute_levies`, which enumerates
+        NICKNAMED levies as well as explicitly-named ones. Previously this used
+        `all_explicit_levies`, so a question reaching compute through a nickname could never
+        fan out — measured live on nat_23 ("ile ya mafunzo na ile ya uzeeni"), where the NSSF
+        engine computed correctly and SDL was silently dropped. Explicit names still lead the
+        list, so any question naming >=2 levies outright fans out exactly as before."""
         out = []
         for sq in routed:
             if sq.kind == "compute":
-                levies = routing.all_explicit_levies(sq.text)
+                levies = routing.all_compute_levies(sq.text)
                 if len(levies) >= 2:
                     out.extend(dataclasses.replace(sq, computation_type=lv) for lv in levies)
                     continue

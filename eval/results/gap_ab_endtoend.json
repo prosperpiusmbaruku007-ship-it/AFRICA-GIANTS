@@ -1,0 +1,115 @@
+{
+  "measured": "2026-08-22",
+  "harness": "eval/routing/verify_gap_ab_endtoend.py",
+  "note": "Orchestrator + FakeBackend; model prose stubbed so the deterministic engine half is what is measured. NOT the §5(d) live answer-level bar.",
+  "rows": [
+    {
+      "id": "nat_23",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "expectation": "SDL 3.5% x 5,500,000 = 192,500 AND NSSF 20% x 5,500,000 = 1,100,000. Both levies, 12 >= 10 so SDL applies.",
+      "text": "NSSF = 20% × TZS 5,500,000 = TZS 1,100,000 (mwajiri TZS 550,000 + mfanyakazi TZS 550,000)\n\nSDL = 3.5% × TZS 5,500,000 = TZS 192,500",
+      "needs_clarification": false,
+      "sub_answers": [
+        {
+          "kind": "compute",
+          "computation_type": "nssf",
+          "working": "NSSF = 20% × TZS 5,500,000 = TZS 1,100,000 (mwajiri TZS 550,000 + mfanyakazi TZS 550,000)",
+          "needs_clarification": false,
+          "text": ""
+        },
+        {
+          "kind": "compute",
+          "computation_type": "sdl",
+          "working": "SDL = 3.5% × TZS 5,500,000 = TZS 192,500",
+          "needs_clarification": false,
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "nat_24",
+      "question": "tuko na watu 9 tu mishahara milioni 4 kwa mwezi nilipe nini kati ya ile ya mafunzo ya fidia na ya uzeeni",
+      "expectation": "SDL must NOT apply (9 < 10); WCF 0.5% x 4,000,000 = 20,000; NSSF employer 10% = 400,000.",
+      "text": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).\n\nHapana. SDL haihusiki: una wafanyakazi 9 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.\n\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+      "needs_clarification": false,
+      "sub_answers": [
+        {
+          "kind": "compute",
+          "computation_type": "nssf",
+          "working": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+          "needs_clarification": false,
+          "text": ""
+        },
+        {
+          "kind": "compute",
+          "computation_type": "sdl",
+          "working": "Hapana. SDL haihusiki: una wafanyakazi 9 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.",
+          "needs_clarification": false,
+          "text": ""
+        },
+        {
+          "kind": "compute",
+          "computation_type": "wcf",
+          "working": "Ndiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+          "needs_clarification": false,
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "nat_05",
+      "question": "nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya mafunzo nitalipa asilimia tatu na nusu ya nini",
+      "expectation": "Base is GROSS PAYROLL, never machine value. Correct = name the base and ask for it.",
+      "text": "Ndiyo. Una wafanyakazi 12 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+      "needs_clarification": false,
+      "sub_answers": [
+        {
+          "kind": "compute",
+          "computation_type": "sdl",
+          "working": "Ndiyo. Una wafanyakazi 12 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+          "needs_clarification": false,
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "edge_p10",
+      "question": "nawalipa wafanyakazi watano jumla ya milioni 4 kwa mwezi nitalipa ngapi kwa ile ya mafunzo na ya uzeeni kwa pamoja",
+      "expectation": "Unplanned beneficiary found by the sweep. 5 employees so SDL must NOT apply; NSSF 20% x 4,000,000 = 800,000.",
+      "text": "NSSF = 20% × TZS 4,000,000 = TZS 800,000 (mwajiri TZS 400,000 + mfanyakazi TZS 400,000)\n\nSDL inayolipwa ni TZS 0. Una wafanyakazi 5 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+      "needs_clarification": false,
+      "sub_answers": [
+        {
+          "kind": "compute",
+          "computation_type": "nssf",
+          "working": "NSSF = 20% × TZS 4,000,000 = TZS 800,000 (mwajiri TZS 400,000 + mfanyakazi TZS 400,000)",
+          "needs_clarification": false,
+          "text": ""
+        },
+        {
+          "kind": "compute",
+          "computation_type": "sdl",
+          "working": "SDL inayolipwa ni TZS 0. Una wafanyakazi 5 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+          "needs_clarification": false,
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "th_12",
+      "question": "Nina wafanyakazi 9 — je nalipa SDL?",
+      "expectation": "Unplanned beneficiary. 9 < 10, so the answer is NO, deterministically.",
+      "text": "Hapana. SDL haihusiki: una wafanyakazi 9 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.",
+      "needs_clarification": false,
+      "sub_answers": [
+        {
+          "kind": "compute",
+          "computation_type": "sdl",
+          "working": "Hapana. SDL haihusiki: una wafanyakazi 9 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.",
+          "needs_clarification": false,
+          "text": ""
+        }
+      ]
+    }
+  ]
+}

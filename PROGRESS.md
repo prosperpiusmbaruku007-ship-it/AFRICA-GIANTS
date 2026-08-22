@@ -133,6 +133,74 @@ the live v16 pipeline.
 
 ---
 
+# 🛠️ ROUTING GAPS A AND B BUILT — MEASURED LOCALLY, **NOT DEPLOYED** (2026-08-22)
+
+**⚠️ PRODUCTION STILL RUNS THE OLD ROUTING.** This is built, swept, tested and verified locally.
+It has NOT been through an R16 cycle and has NOT met the §5(d) answer-level bar, which requires a
+live run. **Do not describe this as shipped.**
+
+Code: `chike/routing.py` (`all_natural_levies`, `all_compute_levies`,
+`_GAP_B_APPLICABILITY_CUES`, `_WHICH_LEVY_ASK`, `_RATE_BASE_ASK`), `chike/orchestrator.py`
+(`_fan_out_multi_levy` now fans on `all_compute_levies`). Tests: `tests/test_routing_gap_ab.py`
+(15). Sweep: `eval/routing/sweep_routing_ab.py`. End-to-end:
+`eval/routing/verify_gap_ab_endtoend.py`.
+
+## Blast radius: 13 changes across 854 questions, 32 sources — all one family
+
+| | n | rows |
+|---|---|---|
+| **intent changes** (fact → compute) | **9** | `nat_05`, `nat_24`, **`th_11`, `th_12`, `ov_08`** (unplanned), + 4 probe twins |
+| **fan-out changes** (compute, now multi-levy) | **4** | `nat_23`, **`edge_p10`** (unplanned), + 2 probes |
+| **negative / adversarial controls tripped** | **0** | — |
+
+**All four unplanned changes are the same defect being fixed on rows nobody targeted.** `th_11`
+(*"wafanyakazi 11 — je nalipa SDL?"*), `th_12` (*"wafanyakazi 9"*) and `ov_08` (*"wafanyakazi 15"*)
+are threshold questions that were being free-generated; `edge_p10` is a two-levy question
+(*"ile ya mafunzo na ya uzeeni kwa pamoja"*) that **was silently answering only NSSF** — D-DECOMP-1
+on an untargeted row.
+
+**The R17 adversarial probes did not trip.** `nick_15` (*mafunzo* = training as a service) and
+`nick_16` (*fidia* = a compensation claim) both resolve a levy cue and are held off compute by the
+`_has_number` gate alone. **Gap C stayed shut and those two are now asserted in the test suite**, so
+a future widening that captures them fails loudly.
+
+## What the engines actually produce (Orchestrator + FakeBackend, model prose stubbed)
+
+| row | before | after |
+|---|---|---|
+| `nat_23` | NSSF computed, **SDL silently dropped** | **NSSF 1,100,000 + SDL 192,500** — both, correct |
+| `nat_24` | bare *"Thibitisha na TRA"* | **three-way triage, all correct**: NSSF applies, **SDL "Hapana… chini ya 10"**, WCF applies |
+| `edge_p10` | NSSF only | **NSSF 800,000 + "SDL inayolipwa ni TZS 0"** with the 5-employee reason |
+| `th_12` | free-generated | **"Hapana. SDL haihusiki: una wafanyakazi 9"** |
+| `nat_05` | model-guessed | engine names the base (*asilimia 3.5 ya jumla ya mishahara*) |
+
+**The honest caveats, before anyone counts this as 8/8:**
+
+- **`nat_05` is still PARTIAL.** Its rubric wants the answer to name the base **and ask for the
+  payroll figure**, which was never given. The engine names the base and does not ask. Better
+  mechanism, same verdict.
+- **`nat_24` may score PARTIAL, not CORRECT.** It now answers *which* levies apply, correctly and
+  deterministically — but its rubric also wants the amounts (WCF 20,000, NSSF employer 400,000).
+  The question asks *"nilipe nini kati ya"* (which of these do I pay), so the triage is arguably
+  the right answer to the question asked; that is a rubric judgement, not mine to settle.
+- **This is not the §5(d) bar.** Model prose was stubbed deliberately so the deterministic half was
+  what got measured. The live check is the next step.
+
+## Instrument bug found and fixed before the write-up
+
+**The first sweep reported a blast radius of 4 and it was wrong.** Its BEFORE arm disabled the two
+new regexes but left the new `je nalipa` cues active in *both* arms, so Gap B's first form was
+invisible to it — **a false clean sweep, the one result R17 says never to trust.** Caught by
+noticing that two probes which should have moved were reported unchanged. The cues are now a
+separately-named list (`_GAP_B_APPLICABILITY_CUES`) precisely so a sweep can subtract them, the
+sweep asserts it actually disabled them, and a test pins that arrangement. **Corrected radius: 13,
+not 4.**
+
+**Next for this item: R16 deploy cycle + live answer-level regression across the currently-correct
+set.** Suite: 1229 passed, 1 xfailed, plus 15 new.
+
+---
+
 # 🧩 PRESENCE-NOT-CONCLUSION, NOW A THREE-INSTANCE SET AT THREE DIFFERENT LAYERS (2026-08-22)
 
 **The same error, three times, in three places that do not look alike.** Each check confirmed that

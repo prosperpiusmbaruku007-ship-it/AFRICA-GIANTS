@@ -889,6 +889,45 @@ def _natural_levy(ql: str):
     return None
 
 
+def all_natural_levies(text: str):
+    """Every levy resolved by NATURAL CUE, in canonical _LEVY_CUES order.
+
+    ROUTING-GAP-A (2026-08-22). `all_explicit_levies` had no natural-cue counterpart, so
+    `Orchestrator._fan_out_multi_levy` — which fans a multi-levy compute part into one compute
+    per levy — was structurally blind to nicknamed levies. `_natural_levy` returns the FIRST
+    cue match and nothing records the rest.
+
+    THE MEASURED CONSEQUENCE: nat_23 ("...ile ya mafunzo na ile ya uzeeni") routes to compute
+    as `nssf` because 'uzeeni' precedes 'mafunzo' in _LEVY_CUES order, the NSSF engine computes
+    correctly, and SDL is silently dropped. Confirmed on the live v16 pipeline, not inferred —
+    the reply carried NSSF's deterministic working and no SDL at all
+    (eval/results/ss8_forced_facts_v16_2026_08_22.json).
+
+    Deliberately NOT a change to `_natural_levy` itself: detect_intent must keep returning ONE
+    intent, because every caller downstream assumes a single computation_type. This is the
+    enumeration the fan-out needs, exposed alongside it, exactly as all_explicit_levies sits
+    alongside _explicit_levy. Pure string logic, no model call.
+    """
+    ql = text.lower()
+    out = []
+    for levy, cues in _LEVY_CUES:
+        if levy not in out and any(c in ql for c in cues):
+            out.append(levy)
+    return out
+
+
+def all_compute_levies(text: str):
+    """Every levy named in the text, explicit first then natural, no duplicates.
+
+    What `_fan_out_multi_levy` fans out on. Explicit names lead so the ordering the
+    D-DECOMP-1 fan-out already relied on is preserved byte-for-byte for questions that name
+    their levies outright — a question with >=2 explicit levies produces the identical list it
+    did before this function existed.
+    """
+    explicit = all_explicit_levies(text)
+    return explicit + [lv for lv in all_natural_levies(text) if lv not in explicit]
+
+
 def detect_intent(text: str) -> str:
     """Return the routing intent: one of COMPUTE_TYPES, 'ambiguous_multi', or 'none'.
 
@@ -1035,6 +1074,53 @@ _APPLICABILITY_CUES = [
     "inanihusu", "inakuhusu", "inatuhusu",
 ]
 
+# ROUTING-GAP-B (2026-08-22), first form. Kept as its OWN named list, appended below, so a
+# blast-radius sweep can subtract exactly this set to reconstruct the before-state. An
+# earlier version of the sweep inlined these into _APPLICABILITY_CUES and could not turn
+# them off, so it reported a zero blast radius for this form — a false clean sweep, which is
+# the one result R17 says never to trust.
+_GAP_B_APPLICABILITY_CUES = [
+    # The everyday yes/no form "je nalipa X" — "do I pay X" — matched NOTHING, so an
+    # applicability question fell to the fact path and the model free-generated the answer.
+    #
+    # THIS IS NOT A NICKNAME GAP, which is why it is here rather than in _LEVY_CUES. Probe
+    # nick_03 names the levy OUTRIGHT — "nimeajiri watu 5 tu je nalipa SDL" — and still routed
+    # to fact, blocked in path 1 for carrying no compute-intent cue. Framing this workstream as
+    # "nicknamed multi-levy decomposition" would have fixed the fan-out and left this untouched.
+    # Measured: eval/results/nickname_routing_measurement.json.
+    #
+    # QUESTION-PARTICLE QUALIFIED, never a bare "nalipa"/"nilipe". Bare forms appear in
+    # deadline and mechanism facts ("deadline ya kulipa michango"), which is the same reason
+    # the cues above are all multi-word. "je " anchors it to an actual yes/no question.
+    "je nalipa", "je nilipe", "je tunalipa", "je tulipe",
+    "je nachangia", "je tunachangia", "je nalazimika", "je tunalazimika",
+]
+
+_APPLICABILITY_CUES = _APPLICABILITY_CUES + _GAP_B_APPLICABILITY_CUES
+
+# ROUTING-GAP-B, second form: "nilipe nini kati ya A na B" — WHICH of these do I pay.
+# nat_24's shape. Not a money 'how-much' ask (no shilling quantity is requested) and not an
+# applicability cue above (it presupposes SOME obligation and asks which), so it satisfied
+# neither gate and fell to fact, where it produced a bare "Thibitisha na TRA" with all three
+# correct facts forced into context.
+#
+# Requires the CHOICE frame ("kati ya" / "au"), never a bare "nilipe nini" — without the
+# choice frame the question is an open-ended "what do I pay", which has no single deterministic
+# answer and belongs on the fact path.
+_WHICH_LEVY_ASK = re.compile(
+    r"\b(?:ni|tu)(?:lipe|nalipa|talipa|takiwa\s+kulipa)\s+(?:nini|kipi|gani)\b"
+    r"[^?]{0,60}?\b(?:kati\s+ya|au)\b")
+
+# ROUTING-GAP-B, third form: "asilimia tatu na nusu ya nini" — a stated RATE whose BASE is
+# being asked for. nat_05's shape, and the wrong-base trap: the question states a machine
+# purchase and a headcount, and the rubric wants the answer to name gross payroll as the base
+# and ask for it. `asilimia ngapi` sits in _NONMONEY_ASK so this could never be a money ask,
+# and it carries no applicability cue, so it fell to fact.
+#
+# Narrow by construction: a percentage token, then 'ya nini' within a short window. "asilimia
+# ngapi ya mshahara" cannot match (no 'nini'), and a bare 'ya nini' cannot match either.
+_RATE_BASE_ASK = re.compile(r"asilimia\b[^?]{0,40}?\bya\s+nini\b")
+
 # OBJECT CONCORD on the applicability verbs. The three literals above are the `ina-` present
 # tense of THREE of the five class members on ONE verb — the signature of failure-driven
 # growth, in the one list that had already applied the paradigm once. Two independent gaps:
@@ -1131,7 +1217,12 @@ def asks_applicability(text: str) -> bool:
     if _has_money_ask(ql):
         return False
     return (any(cue in ql for cue in _APPLICABILITY_CUES)
-            or bool(_APPLICABILITY_CONCORD.search(ql)))
+            or bool(_APPLICABILITY_CONCORD.search(ql))
+            # ROUTING-GAP-B: the which-of-these and rate-base forms. Both sit behind the
+            # money-ask veto above, exactly like every other cue here, so a question that
+            # does ask for a shilling quantity keeps the amount path.
+            or bool(_WHICH_LEVY_ASK.search(ql))
+            or bool(_RATE_BASE_ASK.search(ql)))
 
 
 def count_transition_ordinal(text: str):

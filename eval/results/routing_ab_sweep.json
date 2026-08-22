@@ -1,0 +1,285 @@
+{
+  "measured": "2026-08-22",
+  "harness": "eval/routing/sweep_routing_ab.py",
+  "change": "ROUTING-GAP-A (fan out on nicknamed levies) + ROUTING-GAP-B (je-nalipa applicability, which-levy ask, rate-base ask)",
+  "questions_swept": 854,
+  "sources": [
+    "accuracy_gate/a2_levy_cues_012.jsonl",
+    "accuracy_gate/applicability_adversarial_in_scope_017.jsonl",
+    "accuracy_gate/clarification_copy_probes_008.jsonl",
+    "accuracy_gate/decimal_separator_probes_019.jsonl",
+    "accuracy_gate/edge_probe_natural_048.jsonl",
+    "accuracy_gate/edge_probe_plain_sw_005b.jsonl",
+    "accuracy_gate/edge_probe_plain_sw_015.jsonl",
+    "accuracy_gate/employment_type_probes_008.jsonl",
+    "accuracy_gate/eval_questions_001.jsonl",
+    "accuracy_gate/eval_questions_002_additions.jsonl",
+    "accuracy_gate/eval_questions_003.jsonl",
+    "accuracy_gate/extraction_adversarial_in_scope_016.jsonl",
+    "accuracy_gate/extraction_fraction_probes_008.jsonl",
+    "accuracy_gate/faithfulness_leseni_probes.jsonl",
+    "accuracy_gate/faithfulness_probes.jsonl",
+    "accuracy_gate/gn487a_inversion_probes.jsonl",
+    "accuracy_gate/group_payroll_probes_008.jsonl",
+    "accuracy_gate/headcount_contradiction_probes_010.jsonl",
+    "accuracy_gate/headcount_extraction_probes_012.jsonl",
+    "accuracy_gate/minimum_wage_probes_018.jsonl",
+    "accuracy_gate/output_shape_probes_010.jsonl",
+    "accuracy_gate/presumptive_tax_probes_020.jsonl",
+    "accuracy_gate/rate_period_probes_016.jsonl",
+    "accuracy_gate/residency_unclear_probes_014.jsonl",
+    "accuracy_gate/threshold_comparison_probes_024.jsonl",
+    "accuracy_gate/vat_efd_probes_019.jsonl",
+    "accuracy_gate/wage_pay_concord_018.jsonl",
+    "refusal_gate/concord_1pl_in_scope_020.jsonl",
+    "refusal_gate/object_concord_in_scope_022.jsonl",
+    "refusal_gate/ooc_adversarial_in_scope_015.jsonl",
+    "refusal_gate/orthographic_variant_in_scope_012.jsonl",
+    "routing/nickname_probes.jsonl"
+  ],
+  "intent_change_count": 9,
+  "fanout_change_count": 4,
+  "intent_changes_by_source": {
+    "accuracy_gate/edge_probe_natural_048.jsonl": 2,
+    "accuracy_gate/threshold_comparison_probes_024.jsonl": 2,
+    "refusal_gate/orthographic_variant_in_scope_012.jsonl": 1,
+    "routing/nickname_probes.jsonl": 4
+  },
+  "fanout_changes_by_source": {
+    "accuracy_gate/edge_probe_natural_048.jsonl": 1,
+    "accuracy_gate/edge_probe_plain_sw_015.jsonl": 1,
+    "routing/nickname_probes.jsonl": 2
+  },
+  "intent_changes": [
+    {
+      "id": "nat_05",
+      "source": "accuracy_gate/edge_probe_natural_048.jsonl",
+      "question": "nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya mafunzo nitalipa asilimia tatu na nusu ya nini",
+      "guards_against": "",
+      "before": {
+        "intent": "none",
+        "kind": "fact",
+        "fanout": []
+      },
+      "after": {
+        "intent": "sdl",
+        "kind": "compute",
+        "fanout": []
+      }
+    },
+    {
+      "id": "nat_24",
+      "source": "accuracy_gate/edge_probe_natural_048.jsonl",
+      "question": "tuko na watu 9 tu mishahara milioni 4 kwa mwezi nilipe nini kati ya ile ya mafunzo ya fidia na ya uzeeni",
+      "guards_against": "",
+      "before": {
+        "intent": "none",
+        "kind": "fact",
+        "fanout": []
+      },
+      "after": {
+        "intent": "nssf",
+        "kind": "compute",
+        "fanout": [
+          "nssf",
+          "sdl",
+          "wcf"
+        ]
+      }
+    },
+    {
+      "id": "th_11",
+      "source": "accuracy_gate/threshold_comparison_probes_024.jsonl",
+      "question": "Nina wafanyakazi 11 — je nalipa SDL?",
+      "guards_against": "",
+      "before": {
+        "intent": "none",
+        "kind": "fact",
+        "fanout": []
+      },
+      "after": {
+        "intent": "sdl",
+        "kind": "compute",
+        "fanout": []
+      }
+    },
+    {
+      "id": "th_12",
+      "source": "accuracy_gate/threshold_comparison_probes_024.jsonl",
+      "question": "Nina wafanyakazi 9 — je nalipa SDL?",
+      "guards_against": "",
+      "before": {
+        "intent": "none",
+        "kind": "fact",
+        "fanout": []
+      },
+      "after": {
+        "intent": "sdl",
+        "kind": "compute",
+        "fanout": []
+      }
+    },
+    {
+      "id": "ov_08",
+      "source": "refusal_gate/orthographic_variant_in_scope_012.jsonl",
+      "question": "biashara yangu ya foroza ina wafanyakazi 15 je nalipa SDL",
+      "guards_against": "",
+      "before": {
+        "intent": "none",
+        "kind": "fact",
+        "fanout": []
+      },
+      "after": {
+        "intent": "sdl",
+        "kind": "compute",
+        "fanout": []
+      }
+    },
+    {
+      "id": "nick_02",
+      "source": "routing/nickname_probes.jsonl",
+      "question": "nimeajiri watu 5 tu je nalipa ile ya mafunzo",
+      "guards_against": "",
+      "before": {
+        "intent": "none",
+        "kind": "fact",
+        "fanout": []
+      },
+      "after": {
+        "intent": "sdl",
+        "kind": "compute",
+        "fanout": []
+      }
+    },
+    {
+      "id": "nick_03",
+      "source": "routing/nickname_probes.jsonl",
+      "question": "nimeajiri watu 5 tu je nalipa SDL",
+      "guards_against": "",
+      "before": {
+        "intent": "none",
+        "kind": "fact",
+        "fanout": []
+      },
+      "after": {
+        "intent": "sdl",
+        "kind": "compute",
+        "fanout": []
+      }
+    },
+    {
+      "id": "nick_06",
+      "source": "routing/nickname_probes.jsonl",
+      "question": "tuko na watu 9 tu mishahara milioni 4 kwa mwezi nilipe nini kati ya ile ya mafunzo ya fidia na ya uzeeni",
+      "guards_against": "",
+      "before": {
+        "intent": "none",
+        "kind": "fact",
+        "fanout": []
+      },
+      "after": {
+        "intent": "nssf",
+        "kind": "compute",
+        "fanout": [
+          "nssf",
+          "sdl",
+          "wcf"
+        ]
+      }
+    },
+    {
+      "id": "nick_07",
+      "source": "routing/nickname_probes.jsonl",
+      "question": "nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya mafunzo nitalipa asilimia tatu na nusu ya nini",
+      "guards_against": "",
+      "before": {
+        "intent": "none",
+        "kind": "fact",
+        "fanout": []
+      },
+      "after": {
+        "intent": "sdl",
+        "kind": "compute",
+        "fanout": []
+      }
+    }
+  ],
+  "fanout_changes": [
+    {
+      "id": "nat_23",
+      "source": "accuracy_gate/edge_probe_natural_048.jsonl",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "guards_against": "",
+      "before": {
+        "intent": "nssf",
+        "kind": "compute",
+        "fanout": []
+      },
+      "after": {
+        "intent": "nssf",
+        "kind": "compute",
+        "fanout": [
+          "nssf",
+          "sdl"
+        ]
+      }
+    },
+    {
+      "id": "edge_p10",
+      "source": "accuracy_gate/edge_probe_plain_sw_015.jsonl",
+      "question": "nawalipa wafanyakazi watano jumla ya milioni 4 kwa mwezi nitalipa ngapi kwa ile ya mafunzo na ya uzeeni kwa pamoja",
+      "guards_against": "",
+      "before": {
+        "intent": "nssf",
+        "kind": "compute",
+        "fanout": []
+      },
+      "after": {
+        "intent": "nssf",
+        "kind": "compute",
+        "fanout": [
+          "nssf",
+          "sdl"
+        ]
+      }
+    },
+    {
+      "id": "nick_04",
+      "source": "routing/nickname_probes.jsonl",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "guards_against": "",
+      "before": {
+        "intent": "nssf",
+        "kind": "compute",
+        "fanout": []
+      },
+      "after": {
+        "intent": "nssf",
+        "kind": "compute",
+        "fanout": [
+          "nssf",
+          "sdl"
+        ]
+      }
+    },
+    {
+      "id": "nick_11",
+      "source": "routing/nickname_probes.jsonl",
+      "question": "nina wafanyakazi 3 mishahara jumla milioni 2 nilipe kiasi gani kwenye ile ya mafunzo na ile ya fidia",
+      "guards_against": "",
+      "before": {
+        "intent": "sdl",
+        "kind": "compute",
+        "fanout": []
+      },
+      "after": {
+        "intent": "sdl",
+        "kind": "compute",
+        "fanout": [
+          "sdl",
+          "wcf"
+        ]
+      }
+    }
+  ]
+}
