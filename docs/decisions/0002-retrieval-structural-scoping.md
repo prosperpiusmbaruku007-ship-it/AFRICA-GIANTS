@@ -382,6 +382,18 @@ redeployed again**, confirming `nat_43`/`nat_32` still answer correctly and `run
 longer exists. Production was never left running debug-only code; nothing about `run()` or
 `retrieve_facts()` was touched.
 
+> **⚠️ FLAGGED, NOT FIXED — the arm this table was measured on is unverified.** The description
+> above says `run_forced_facts` ran `chike.pipeline_v15.answer`. Production serves **v16** (see the
+> retraction in the CORRECTION below), so on that description this table measured the *non-live*
+> arm. It cannot be settled from the repo: `run_forced_facts` was deployed, used and removed
+> **without ever being committed** — `git log -S'run_forced_facts' --all` returns nothing. The
+> table is **left standing and flagged rather than re-measured or deleted**: its conclusion is
+> arm-independent for the two rows that carry the pilot-safety finding (`detect_intent` returns
+> `nssf`/`none` for `nat_23`/`nat_24`, so both arms send them down the same pooled-fact
+> generation and neither would have computed the fanout), and re-measuring costs a full R16 deploy
+> cycle, which is separately scoped work. **Re-run these rows on the v16 path — with the harness
+> committed — before building on the per-row outcomes.**
+
 | row | facts forced | outcome |
 |---|---|---|
 | `nat_44` | vat_withholding_goods (3%) | **CORRECT** — states 3%, doesn't confuse with 6% |
@@ -414,25 +426,40 @@ it. Checked directly against `chike/routing.py` and `chike/rules_engine/`:
   multiplication in free text reliably (it currently doesn't), or a new engine has to be built.
 - **`nat_23` and `nat_24` ARE engine-shaped — the arithmetic they need (SDL 3.5%, NSSF 20%, WCF
   0.5% of payroll) already has real, working engines** (`chike/rules_engine/sdl.py`, `nssf.py`,
-  `wcf.py`) that ADR 0001 documents as the mechanism that already fixed 9 compute rows once. **But
-  neither production nor the alternative pipeline that owns those engines currently reaches them
-  for these two questions, for two separate, more fundamental reasons:**
-  1. **Production (v15, live) has zero compute-engine routing of any kind.** `chike.pipeline_v15.answer`
-     — the function `chike-inference/modal_app.py` actually calls — never invokes
-     `routing.detect_intent` or any rules-engine module; confirmed by grep, zero matches in both
-     files. Every arithmetic reply in production today, including the ones that happen to look
-     "computed," is the raw model free-handing it in text, grounded only by whatever facts got
-     RAG-injected. This is a foundational architectural fact independent of these three rows.
-  2. **Even the pipeline that DOES own a real compute engine (`chike/orchestrator.py`, v16, not
-     live) would not route these two correctly today either.** Ran `chike.decomposition.decompose_query`
-     + `chike.routing.detect_intent` directly on both questions: neither splits into separate
-     sub-questions (both stay one whole sentence — the decomposer doesn't split on nicknamed
-     levy references like *"ile ya mafunzo na ile ya uzeeni"*, only on `?`-splits and explicit
-     enumerated lists), and `detect_intent` returns `nssf` (single levy, not the 2-levy fanout
-     `nat_23`'s gold answer needs) and `none` (nat_24 — the 3-way threshold-trap phrasing doesn't
-     fire the natural-levy cue detector at all) respectively. **The gap is real, but it is a
-     routing/decomposition gap — nicknamed multi-levy phrasing isn't recognized yet — not a limit
-     on what the engines themselves can compute.**
+  `wcf.py`) that ADR 0001 documents as the mechanism that already fixed 9 compute rows once.
+  **The engines are live and the router still does not reach them for these two questions.**
+  Ran `chike.decomposition.decompose_query` + `chike.routing.detect_intent` directly on both
+  (artifact: `scratch/verify_v16_routing_2026_08_22.json`): neither splits into separate
+  sub-questions — both stay one whole sentence, because the decomposer doesn't split on nicknamed
+  levy references like *"ile ya mafunzo na ile ya uzeeni"*, only on `?`-splits and explicit
+  enumerated lists — and `detect_intent` returns `nssf` (a single levy, not the 2-levy fanout
+  `nat_23`'s gold answer needs) and `none` (`nat_24` — the 3-way threshold-trap phrasing doesn't
+  fire the natural-levy cue detector at all) respectively. `Orchestrator._fan_out_multi_levy`
+  (`orchestrator.py:832`) would split a multi-levy compute part into one compute per levy, but it
+  fans out only what `detect_intent`/`_explicit_levy` already named — a nicknamed levy that was
+  never detected cannot reach it. **The gap is real, and it is a routing/decomposition gap —
+  nicknamed multi-levy phrasing isn't recognized yet — not a limit on what the engines themselves
+  can compute.**
+
+  > **RETRACTION (same day, after a crash mid-edit).** This bullet previously gave two reasons
+  > instead of one, and the first was wrong: it claimed *"production (v15, live) has zero
+  > compute-engine routing of any kind"* and described `chike/orchestrator.py` as *"v16, not
+  > live."* **Both are false.** `kaggle/chike_config.json` carries `"pipeline": "v16"` — set at
+  > `ec9cbb3` (*"config(pipeline): v16 — the cutover flip"*) and unchanged since;
+  > `chike-inference/modal_app.py:153` reads it into `PIPELINE`; `:458` branches on it and calls
+  > `self._orchestrator().answer(message)`; `_orchestrator()` builds
+  > `Orchestrator(backend=..., retriever=self.retrieve_facts, ...)` — production's own bound
+  > retriever, identical to the v15 arm's — and `Orchestrator.answer()` runs
+  > `decompose → route → rules_engine` (`orchestrator.py:824-850`). **v16 is deployed, the live
+  > path does reach the rules engines, and every 48-run measurement this cycle was of the real
+  > system.** The `pipeline_v15.answer` grep behind the false claim was run against a code path
+  > the config selector no longer chooses.
+  >
+  > The routing diagnosis above is unaffected: it was never derived from which pipeline is live,
+  > only from direct calls to `decompose_query`/`detect_intent` — the exact modules
+  > `Orchestrator.decompose()`/`.route()` invoke — and was re-verified after the crash. The
+  > correction makes the gap *worse*, not better: the pipeline that owns these engines is already
+  > in production, so there is no pending cutover that closes it.
 
 **Revised framing: 1 of 3 failures is a model/engine-coverage capability gap (`nat_33`); 2 of 3 are
 an architectural routing gap with a known, existing fix pattern (`nat_23`, `nat_24`) — not a raw
@@ -475,7 +502,7 @@ better retrieval score, and no such mechanism is scoped anywhere in this documen
 | 1 | Fee-shape rows rewritten at index-content level | scoped only, unchanged. Same §8 ceiling applies to `nat_33` (no engine exists); `nat_23`/`nat_24` are engine-shaped, blocked on routing not retrieval. | HIGH (folds into next regen) |
 | 6 | Re-ranking (cross-encoder) | scoped only, unchanged — flagged that it likely shares §5(d)'s blast-radius problem (re-scores every query's shortlist) and needs its own explicit old-vs-new test before being assumed safer | MEDIUM |
 | 7 | Different/bigger embedding model | scoped only, unchanged — this is what R15 was | LOW, not scheduled |
-| 8 | Generation-side / engine-routing failure after successful retrieval | **MEASURED, then re-diagnosed the same day.** Forced the correct fact(s) into context for all 8 remaining rows: 4 correct, 1 partial, 3 clearly wrong. Checked whether the 3 failures are engine-shaped before calling them generation-side (they weren't fully checked first pass): **`nat_33` has no engine at all (BRELA isn't a `COMPUTE_TYPES` member) — a real capability gap. `nat_23`/`nat_24` have working engines (SDL/NSSF/WCF) but nothing routes to them — production has zero compute routing, and even v16's router doesn't split/detect these nicknamed multi-levy phrasings.** 2 of 3 are a routing gap with a known fix pattern, not a model ceiling. Also the headline pilot-safety finding: these failures carry maximum retrieval confidence (fact forced directly into context) and no visible hedge, so no retrieval-confidence floor could ever catch them — see PROGRESS.md's dedicated pilot-precondition entry, not just this ADR. | The routing/decomposition extension for nicknamed multi-levy fanouts is a separate go-ahead, owned by `chike/routing.py`/`chike/decomposition.py`, not this ADR. A new BRELA engine (`nat_33`) is separately scoped-able, smallest of the three. |
+| 8 | Generation-side / engine-routing failure after successful retrieval | **MEASURED, then re-diagnosed the same day.** Forced the correct fact(s) into context for all 8 remaining rows: 4 correct, 1 partial, 3 clearly wrong. Checked whether the 3 failures are engine-shaped before calling them generation-side (they weren't fully checked first pass): **`nat_33` has no engine at all (BRELA isn't a `COMPUTE_TYPES` member) — a real capability gap. `nat_23`/`nat_24` have working engines (SDL/NSSF/WCF), and v16 — which owns them and IS the deployed pipeline (`chike_config.json: "pipeline": "v16"`) — still doesn't route to them, because the decomposer doesn't split nicknamed multi-levy phrasing and `detect_intent` returns `nssf`/`none`.** 2 of 3 are a routing gap with a known fix pattern, not a model ceiling. (An earlier version of this row claimed production runs v15 with zero compute routing — **retracted, false**; see §8's retraction. The forced-fact table itself is flagged: the harness was never committed, so its arm is unverified.) Also the headline pilot-safety finding: these failures carry maximum retrieval confidence (fact forced directly into context) and no visible hedge, so no retrieval-confidence floor could ever catch them — see PROGRESS.md's dedicated pilot-precondition entry, not just this ADR. | The routing/decomposition extension for nicknamed multi-levy fanouts is a separate go-ahead, owned by `chike/routing.py`/`chike/decomposition.py`, not this ADR. A new BRELA engine (`nat_33`) is separately scoped-able, smallest of the three. |
 
 ## Recommended order, updated after the ship-and-revert and the §8 measurement (2026-08-22)
 
