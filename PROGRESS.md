@@ -4,10 +4,27 @@ Last updated: 2026-08-22
 
 ---
 
-# 🛑 INTERLEAVE SHIPPED, LIVE-TESTED, AND REVERTED: THE STRUCTURAL GUARANTEE WAS REAL BUT NARROWER THAN THE DECISION NEEDED (2026-08-22)
+# 🛑 THE PREMISE WAS FALSE, NOT JUST THE SHIP: A ZERO-DILUTION INSTRUMENT THAT MEASURED THE WRONG QUANTITY (2026-08-22)
 
-**Production is currently the pre-ship code, confirmed live.** Full account below; nothing is
-shipped as of this entry.
+**Lead finding, ahead of the regression that surfaced it:** interleave's structural guarantee held
+*perfectly* — the target fact's retrieval rank was preserved in all 8 rows tested, no exception —
+and a live answer still broke. The guarantee was real and it was insufficient, because it only
+ever covered whether **one fact** kept its rank; generation is sensitive to the **whole injected
+set**, and the instrument that certified "zero dilution" never looked at the other two slots. This
+is the **presence-not-conclusion family** arriving at a **ship criterion**, not just a guard or an
+instrument: "the target fact is present at rank ≤3" was cheap to check and easy to mistake for "the
+answer this row will produce is unchanged" — the same shape of mistake this project has now made
+at the level of a test assertion, a sweep harness, and a routing check, and today, for the first
+time, at the level of the decision to ship.
+
+**The ship decision itself rested on that false distinction.** The choice to prefer interleave
+over RRF was built entirely on "RRF dilutes 3 named rows, interleave dilutes 0" — but RRF and
+interleave never actually differed on the quantity that determines whether an answer stays
+correct. Both change which two facts occupy the non-target slots for virtually every query; only
+RRF's version of that change happened to have been measured and named. Interleave's was assumed
+zero because the instrument only checked target-fact rank. **The distinction the decision was made
+on was not a real distinction between the two mechanisms — it was a real difference between which
+one had been measured properly.**
 
 **What happened, in order.** Interleave fusion (dense/lexical, §5 of the ADR) was added to
 `chike-inference/modal_app.py`'s `retrieve_facts` and mirrored into `kaggle/eval.py` (R14
@@ -24,20 +41,16 @@ tests). Called twice, byte-identical both times (`do_sample=False`, greedy decod
 deterministic, not noise).
 
 **Root cause, diagnosed before reverting:** the CORRECT fact (row 210, the shareholder-vs-operator
-distinction) stayed at retrieval rank 1 under BOTH the old and new code — the structural guarantee
-held exactly as designed. The regression came from the OTHER two injected slots: old top-3 was
-`[210, 176, 179]` (179 = phone-repair prohibition); new top-3 was `[210, 92, 176]` (92 = "marriage
-doesn't exempt a non-citizen"). Swapping one filler fact for another — with the primary correct
-fact unchanged and present both times — was enough to flip the model's completion from correct to
-wrong. **Generation depends on the whole injected set, not only on whether one target fact's rank
-survived**, and the original §5 measurement (`scratch/item5_lexical_measurement.py`) only ever
-checked the latter.
+distinction) stayed at retrieval rank 1 under BOTH the old and new code. The regression came from
+the OTHER two injected slots: old top-3 was `[210, 176, 179]` (179 = phone-repair prohibition); new
+top-3 was `[210, 92, 176]` (92 = "marriage doesn't exempt a non-citizen"). Swapping one filler fact
+for another — with the primary correct fact unchanged and present both times — was enough to flip
+the model's completion from correct to wrong.
 
-**Checked how widespread this is, not just the one instance found:** re-ran the retrieval
-comparison (old dense-only vs. new interleave) for all 8 rows canaried as "must stay correct"
-(`nat_31, nat_32, nat_34, nat_43, nat_26, nat_27, nat_36, nat_38`). **Every single one had its
-top-3 SET change** (`old` vs. `new` below) despite the target fact's rank being preserved in all
-eight:
+**The more actionable result: 8 of 8 canary rows changed context; only 1 flipped.** Re-ran the
+retrieval comparison (old dense-only vs. new interleave) for all 8 rows canaried as "must stay
+correct" (`nat_31, nat_32, nat_34, nat_43, nat_26, nat_27, nat_36, nat_38`). **Every single one had
+its top-3 SET change**, despite the target fact's rank being preserved in all eight:
 
 | row | old top-3 | new top-3 |
 |---|---|---|
@@ -50,26 +63,32 @@ eight:
 | nat_36 | 171, 25, 126 | 171, **58**, 25 |
 | nat_38 | 171, 58, 148 | 171, 58, **57** |
 
-**This falsifies the operating premise, not just the specific ship.** The reason interleave looked
-categorically safer than RRF was "the dense-rank-1 fact is always preserved, so already-correct
-answers can't be disturbed." That reasoning is now shown to be incomplete: the *target* fact's
-position is preserved, but the *other two slots* are NOT — they always shift whenever the lexical
-order disagrees with the dense order at all, which real Swahili questions do almost universally.
-Only 1 of the 8 tested happened to be sensitive enough to flip on generation, but since 8/8 had a
-changed context, "1 broke" is a small-sample observation, not a bound — any of the ~28 other
-correct rows in the 48 could carry the same latent sensitivity, untested. **Neither RRF nor
-interleave has a narrower blast radius than the other where it actually matters (answer
-stability); both change the fact context on nearly every query, and only RRF's cost was ever
-actually enumerated.**
+8/8 changed, 1/8 flipped. **That ratio is the real signal, not "1 broke."** It means any retrieval
+change that touches pooled context has a blast radius across the whole currently-correct set that
+no offline instrument this project owns can see — rank stability doesn't detect it (all 8 passed
+that check), and the 48-question live run only reveals it after the fact, one deploy at a time.
+Neither RRF nor interleave has a narrower blast radius than the other on the metric that actually
+matters (answer stability); only RRF's cost was ever enumerated, because interleave's was wrongly
+assumed to be zero.
 
-**Also: the "recovered" rows didn't uniformly deliver, even before the regression was found.**
-Live canaries on the 3 target rows: `nat_41` gave the expected correct answer cleanly. `nat_05`
-returned a bare non-answer ("Thibitisha na tra.go.tz") instead of the expected base-ambiguity
-clarification — not wrong, but not the credited answer either. `nat_23` answered only the NSSF
-half of a two-levy question and silently dropped the SDL half — a real omission, unrelated to
-retrieval (a decomposition/multi-part-handling gap the rank fix could not have touched). Rank
-crossing `top_k=3` is necessary but was, again, not sufficient for a correct delivered answer —
-the same lesson the original R15 cycle already established, now confirmed a second way.
+**STANDING BAR, going forward: rank-level measurement is not sufficient to ship a retrieval
+change.** Any future retrieval mechanism (fusion, re-ranking, a bigger model, anything that can
+reorder which facts accompany an already-correct target) needs an **answer-level** regression check
+— old vs. new generated reply, not old vs. new fact rank — across the full currently-correct set
+before it ships, not just on the rows it targets. This is the check that would have stopped this
+ship: target-fact rank was clean on all 8; the generated answer was not. Recorded as the standing
+bar in `docs/decisions/0002-retrieval-structural-scoping.md`.
+
+**A second, separate finding: reaching top-3 is not sufficient even before any regression.** Of
+the 3 rows interleave was measured to recover, only `nat_41` delivered the expected correct answer
+live. `nat_05` returned a bare non-answer instead of the expected base-ambiguity clarification.
+`nat_23` answered only the NSSF half of a two-levy question and silently dropped the SDL half — a
+decomposition/multi-part-handling gap, not a retrieval one. **Two of three recovery targets failed
+on the generation side even after retrieval succeeded** — a failure mode entirely downstream of
+retrieval, which no retrieval mechanism (§1, §2, §5, §6, or a bigger model) can touch. If this
+ratio holds, it implies a meaningful share of the remaining 8 known-buried rows may still fail
+after a correct retrieval fix, for reasons that have nothing to do with retrieval. Recorded as its
+own item, `docs/decisions/0002-retrieval-structural-scoping.md` §8.
 
 **Reverted immediately, verified live.** `git restore` on both files (nothing had been committed),
 full R16 cycle again (`modal app stop --yes` → deploy), then re-tested `nat_32`, `nat_31`, `nat_34`,
@@ -77,13 +96,11 @@ full R16 cycle again (`modal app stop --yes` → deploy), then re-tested `nat_32
 pre-ship, dense-only single-arm code as of this entry.**
 
 **Where this leaves the decision:** general fusion (RRF, weighted, AND interleave) is declined —
-not just RRF. The property that actually matters for a ship decision is whether a mechanism
-changes the injected context for rows it isn't trying to fix, and every fusion variant measured
-so far does that for virtually every question. The mechanisms that don't share this problem are
-the ones that touch a bounded, named set of rows on purpose: §1 (rewrite specific fee-row text)
-and §2 (a routing intercept scoped to specific fact keys) — both already scoped, neither built.
-Full account, the corrected table, and the revised recommendation in
-`docs/decisions/0002-retrieval-structural-scoping.md` §5(d).
+not just RRF. §2 (the routing intercept) is the mechanism that doesn't share this problem, because
+it touches a named, bounded set of rows on purpose rather than re-scoring every query — but its
+honest purpose is named plainly in the ADR update: it fixes the 6 known keys behind these 8 rows
+and nothing else, not a general retrieval solution. Full account, the corrected table, and the
+revised recommendation in `docs/decisions/0002-retrieval-structural-scoping.md` §5(d)–§8.
 
 ---
 
