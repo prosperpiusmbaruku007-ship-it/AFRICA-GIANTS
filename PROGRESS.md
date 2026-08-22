@@ -133,6 +133,74 @@ the live v16 pipeline.
 
 ---
 
+# 🧩 PRESENCE-NOT-CONCLUSION, NOW A THREE-INSTANCE SET AT THREE DIFFERENT LAYERS (2026-08-22)
+
+**The same error, three times, in three places that do not look alike.** Each check confirmed that
+**something was present** and was **structurally incapable of establishing which thing it was**, or
+what followed from it.
+
+| # | layer | the check | what it confirmed | what it could not see |
+|---|---|---|---|---|
+| 1 | **ship criterion** | interleave's zero-dilution instrument | the target fact kept its rank in all 8 rows | that the **other two injected slots changed for all 8**, and one row flipped to a wrong live answer. It measured one fact's presence, not the answer's stability |
+| 2 | **regen guard, keyword** | `nat_27`: `'18%' in fact_text` | the string `18%` was in the top-3 | that it was in **[64], the withholding-formula fact** — not [13], the standard-rate fact it names. **Six** index facts contain `18%` |
+| 3 | **regen guard, displacement** | `VAT registration threshold`: `'200,000,000' in fact_text` | the string `200,000,000` was in the top-3 | **that the displacement it was written to catch was happening.** [57], the EFD fact that mentions 200M only as a contrast, sits at **rank 1** — above [145], the fact actually asked for. The anchor matched [15], [57] and [145] alike |
+
+**Instance 3 is the purest form yet**, and it is worth stating exactly: *a guard whose entire
+purpose was to detect one fact displacing another passed while that displacement was occurring,
+because its anchor matched the displacer and the displaced equally well.* It could not fail. It had
+never been able to fail.
+
+**The generalisation, across all three:** a check that tests for the PRESENCE OF A STRING OR AN ITEM
+cannot tell you WHICH item carried it, and therefore cannot support a conclusion about identity,
+ranking, or consequence. **Presence is evidence of presence. Nothing else.** To conclude anything
+further the check must be anchored to something that can only be true of the intended thing —
+which is exactly the property `NEVER 14%` has and `18%` does not, and the property an answer-level
+regression check has and a rank check does not.
+
+**Where this is already enforced:** the §5(d) standing bar (answer-level, not rank), the R18
+committed-harness rule, and now the regen gate's runtime anchor-uniqueness assertion.
+
+---
+
+# 🕳️ THE DEAD-ANCHOR CLASS: A GREEN GATE CAN CONTAIN CHECKS THAT NEVER FIRE (2026-08-22)
+
+**Three regen anchors matched ZERO facts.** `elfu 22`, `28 julai`, `efd threshold tzs 11m` could
+never have fired, in any run, ever. Each was concealed by a sibling anchor in the same guard that
+always passed — so the guard was green, and two thirds of what it claimed to check was inert.
+
+**Stated as a general risk, not a fixed fault: a passing gate carries no information about how much
+of it is actually running.** Green means "nothing that ran, failed". It does not mean anything ran.
+
+**This is the census test's blind spot from the other direction.**
+`test_every_cue_with_a_person_form_has_its_concord_counterpart` derived its cases **from existing
+members**, so a class with **zero** members produced zero cases and passed silently — which is how
+class C survived the 2026-08-15 closure at 0% coverage. Same failure, mirrored: there, the
+*generator* was empty; here, the *matcher* was.
+
+## So I looked for the shape elsewhere — census of the whole codebase
+
+`eval/index_quality/scan_inert_checks.py` → `eval/results/inert_check_census.json`. AST scan over
+`tests/`, `scripts/`, `chike/` (196 files) for three mechanically-detectable inert-capable shapes.
+
+| shape | found | inert right now |
+|---|---|---|
+| `VACUOUS_LOOP` — `for x in COLL: assert …` with nothing establishing `COLL` is non-empty | **31** | **0** (6 resolve to non-empty literals; **25 unresolvable statically**) |
+| `EMPTY_PARAMS` — `@parametrize` over a runtime-built name | **38** | **0** — pytest collection reports **no** "empty parameter set" across 1230 collected tests |
+| `ANY_OVER_ALTS` — `assert any(... for kw in [a, b, c])`, the exact dead-anchor shape | **0** | — |
+
+**Result: 69 structures with the dead-anchor property; none currently silent.** The suite is not
+lying to us today. Spot-checked the highest-risk cluster by hand (`test_instruction_dataset.py`,
+where CLAUDE.md's "Tier 1A — 0 pairs written" made an empty-corpus loop plausible): its loops
+iterate an imported constant and a file the test itself writes. Fine.
+
+**The residual risk is the 25 unresolvable loops** — they iterate a call or comprehension, so
+nothing static can say whether they will still have members after the next data change. **The
+one-line fix that converts "can go quiet" into "fails loudly": assert the collection is non-empty
+before looping.** Not applied — 25 edits across the suite is its own piece of work, and none is
+currently broken. **On the board, with the census as its worklist.**
+
+---
+
 # ✅ THE REGEN GATE NOW CHECKS WHAT IT CLAIMS: ALL 26 GUARDS MIGRATED (R10 change, approved and applied 2026-08-22)
 
 **Applied with explicit founder approval to `kaggle/regenerate_rag_e5.py` (R10-protected).**

@@ -1,0 +1,643 @@
+{
+  "measured": "2026-08-22",
+  "harness": "eval/index_quality/scan_inert_checks.py",
+  "method": "AST shape detection — every hit is a SHAPE that CAN go inert, not a proven defect. A worklist for reading, not a defect list.",
+  "roots": [
+    "tests",
+    "scripts",
+    "chike"
+  ],
+  "files_scanned": 196,
+  "counts": {
+    "VACUOUS_LOOP": 31,
+    "ANY_OVER_ALTS": 0,
+    "EMPTY_PARAMS": 38
+  },
+  "counts_in_test_functions": {
+    "VACUOUS_LOOP": 31,
+    "ANY_OVER_ALTS": 0,
+    "EMPTY_PARAMS": 38
+  },
+  "by_file": {
+    "tests/test_minimum_wage.py": {
+      "VACUOUS_LOOP": 5,
+      "EMPTY_PARAMS": 2
+    },
+    "tests/test_concord_closure.py": {
+      "VACUOUS_LOOP": 4,
+      "EMPTY_PARAMS": 2
+    },
+    "tests/test_decomposition_na_je.py": {
+      "VACUOUS_LOOP": 4,
+      "EMPTY_PARAMS": 2
+    },
+    "tests/test_instruction_dataset.py": {
+      "VACUOUS_LOOP": 4
+    },
+    "tests/test_orthographic_variants.py": {
+      "VACUOUS_LOOP": 4
+    },
+    "tests/test_wage_pay_concord.py": {
+      "EMPTY_PARAMS": 4
+    },
+    "tests/test_applicability_routing.py": {
+      "VACUOUS_LOOP": 1,
+      "EMPTY_PARAMS": 2
+    },
+    "tests/test_presumptive.py": {
+      "VACUOUS_LOOP": 1,
+      "EMPTY_PARAMS": 2
+    },
+    "tests/test_fidelity_assertion_widening.py": {
+      "EMPTY_PARAMS": 3
+    },
+    "tests/test_pipeline_v15.py": {
+      "VACUOUS_LOOP": 2
+    },
+    "tests/test_registration_thresholds.py": {
+      "VACUOUS_LOOP": 2
+    },
+    "tests/test_decimal_separators.py": {
+      "EMPTY_PARAMS": 2
+    },
+    "tests/test_fidelity_cross_levy.py": {
+      "EMPTY_PARAMS": 2
+    },
+    "tests/test_group_payroll.py": {
+      "EMPTY_PARAMS": 2
+    },
+    "tests/test_headcount_extraction.py": {
+      "EMPTY_PARAMS": 2
+    },
+    "tests/test_classification.py": {
+      "VACUOUS_LOOP": 1
+    },
+    "tests/test_retrieval.py": {
+      "VACUOUS_LOOP": 1
+    },
+    "tests/test_routing.py": {
+      "VACUOUS_LOOP": 1
+    },
+    "tests/test_whatsapp_handler.py": {
+      "VACUOUS_LOOP": 1
+    },
+    "tests/test_a2_levy_cues.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_clarification_copy.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_employment_type_markers.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_extraction_tiers12.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_fidelity_conclusion.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_fidelity_denial.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_fidelity_party_total.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_fractions.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_headcount_contradiction.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_output_shape.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_rate_period_patterns.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_residency_clarification.py": {
+      "EMPTY_PARAMS": 1
+    },
+    "tests/test_routing_ngapi.py": {
+      "EMPTY_PARAMS": 1
+    }
+  },
+  "findings": {
+    "VACUOUS_LOOP": [
+      {
+        "file": "tests/test_applicability_routing.py",
+        "func": "test_path_2b_can_never_reach_the_production_fabrication_guard",
+        "line": 188,
+        "iterable": "PROBES",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_classification.py",
+        "func": "test_resolve_phrases_unions_hardcoded_with_config_not_replace",
+        "line": 65,
+        "iterable": "HARDCODED_OOC_PHRASES",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_concord_closure.py",
+        "func": "test_the_english_exemptions_are_actually_english",
+        "line": 306,
+        "iterable": "_ENGLISH",
+        "is_test": true,
+        "literal_size": 11,
+        "state": "ACTIVE"
+      },
+      {
+        "file": "tests/test_concord_closure.py",
+        "func": "test_the_remaining_withheld_counterparts_are_the_applicative_family_only",
+        "line": 355,
+        "iterable": "sorted",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_concord_closure.py",
+        "func": "test_the_ngapi_class_is_complete_and_correctly_split",
+        "line": 386,
+        "iterable": "NGAPI",
+        "is_test": true,
+        "literal_size": 5,
+        "state": "ACTIVE"
+      },
+      {
+        "file": "tests/test_concord_closure.py",
+        "func": "test_the_object_infix_builder_emits_all_five_members_and_the_vowel_rule",
+        "line": 582,
+        "iterable": "OBJECT_INFIX",
+        "is_test": true,
+        "literal_size": 5,
+        "state": "ACTIVE"
+      },
+      {
+        "file": "tests/test_decomposition_na_je.py",
+        "func": "test_probe_contract",
+        "line": 75,
+        "iterable": "enumerate",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_decomposition_na_je.py",
+        "func": "test_probe_contract",
+        "line": 79,
+        "iterable": "enumerate",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_decomposition_na_je.py",
+        "func": "test_probe_contract",
+        "line": 76,
+        "iterable": "needles",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_decomposition_na_je.py",
+        "func": "test_probe_contract",
+        "line": 80,
+        "iterable": "needles",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_instruction_dataset.py",
+        "func": "test_seed_examples_have_required_fields",
+        "line": 10,
+        "iterable": "SEED_EXAMPLES",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_instruction_dataset.py",
+        "func": "test_seed_examples_not_forum_continuations",
+        "line": 21,
+        "iterable": "SEED_EXAMPLES",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_instruction_dataset.py",
+        "func": "test_seed_examples_not_forum_continuations",
+        "line": 22,
+        "iterable": "bad_patterns",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_instruction_dataset.py",
+        "func": "test_build_instruction_dataset_valid_jsonl",
+        "line": 55,
+        "iterable": "f",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_minimum_wage.py",
+        "func": "test_every_period_column_is_reachable_for_every_row",
+        "line": 251,
+        "iterable": "BY_ROW",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_minimum_wage.py",
+        "func": "test_every_routing_probe_routes_as_the_probe_file_says",
+        "line": 365,
+        "iterable": "_probes",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_minimum_wage.py",
+        "func": "test_multipart_probes_reach_the_wage_route_on_their_own_part",
+        "line": 379,
+        "iterable": "_probes",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_minimum_wage.py",
+        "func": "test_every_row_probe_gets_the_verdict_the_probe_file_asserts",
+        "line": 398,
+        "iterable": "_probes",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_minimum_wage.py",
+        "func": "test_no_clarification_reads_as_a_verdict",
+        "line": 438,
+        "iterable": "BY_SECTOR",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_orthographic_variants.py",
+        "func": "test_the_english_allowlist_is_actually_english",
+        "line": 124,
+        "iterable": "_ENGLISH_NO_VARIANT",
+        "is_test": true,
+        "literal_size": 2,
+        "state": "ACTIVE"
+      },
+      {
+        "file": "tests/test_orthographic_variants.py",
+        "func": "test_no_variant_refuses_an_in_scope_question",
+        "line": 149,
+        "iterable": "_probes",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_orthographic_variants.py",
+        "func": "test_withheld_variants_are_absent_and_their_defect_is_pinned",
+        "line": 166,
+        "iterable": "_WITHHELD_PENDING_NARROWING",
+        "is_test": true,
+        "literal_size": 3,
+        "state": "ACTIVE"
+      },
+      {
+        "file": "tests/test_orthographic_variants.py",
+        "func": "test_withheld_variants_are_absent_and_their_defect_is_pinned",
+        "line": 176,
+        "iterable": "_probes",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_pipeline_v15.py",
+        "func": "test_pool_facts_matches_the_inline_pooling_loop_across_the_corpus",
+        "line": 173,
+        "iterable": "ALL_QUESTIONS",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_pipeline_v15.py",
+        "func": "test_build_messages_is_byte_identical_to_the_inline_build_across_the_corpus",
+        "line": 203,
+        "iterable": "ALL_QUESTIONS",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_presumptive.py",
+        "func": "test_the_presumptive_path_never_calls_the_model",
+        "line": 183,
+        "iterable": "_rows",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_registration_thresholds.py",
+        "func": "test_every_probe_routes_where_it_says",
+        "line": 124,
+        "iterable": "_probes",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_registration_thresholds.py",
+        "func": "test_the_threshold_path_never_calls_the_model",
+        "line": 193,
+        "iterable": "_probes",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_retrieval.py",
+        "func": "test_hybrid_keeps_all_guards_and_recovers_evicted_topic_fact",
+        "line": 358,
+        "iterable": "_CRITICAL_QUERIES",
+        "is_test": true,
+        "literal_size": 14,
+        "state": "ACTIVE"
+      },
+      {
+        "file": "tests/test_routing.py",
+        "func": "test_explicit_guard_preserves_genuine_compute_questions",
+        "line": 248,
+        "iterable": "checks",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      },
+      {
+        "file": "tests/test_whatsapp_handler.py",
+        "func": "test_every_credential_is_fingerprinted_not_just_the_one_in_dispute",
+        "line": 628,
+        "iterable": "EXPECTED_KEYS",
+        "is_test": true,
+        "literal_size": null,
+        "state": "UNRESOLVED"
+      }
+    ],
+    "ANY_OVER_ALTS": [],
+    "EMPTY_PARAMS": [
+      {
+        "file": "tests/test_a2_levy_cues.py",
+        "func": "test_a2_probe_routes_as_expected",
+        "line": 47,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_applicability_routing.py",
+        "func": "test_adversarial_in_scope_probe_keeps_its_branch",
+        "line": 88,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_applicability_routing.py",
+        "func": "test_no_probe_ever_gets_a_base_rejection",
+        "line": 97,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_clarification_copy.py",
+        "func": "test_every_probe_carries_a_guards_against_note",
+        "line": 116,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_concord_closure.py",
+        "func": "test_a_person_resolving_consumer_sees_every_member_of_the_class",
+        "line": 524,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_concord_closure.py",
+        "func": "test_every_cue_list_a_person_resolving_consumer_reads_is_accounted_for",
+        "line": 542,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_decimal_separators.py",
+        "func": "test_probe_amounts",
+        "line": 26,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_decimal_separators.py",
+        "func": "test_probe_ambiguity_flag",
+        "line": 37,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_decomposition_na_je.py",
+        "func": "test_probe_contract",
+        "line": 68,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_decomposition_na_je.py",
+        "func": "test_no_probe_loses_content",
+        "line": 91,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_employment_type_markers.py",
+        "func": "test_employment_type_probe",
+        "line": 45,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_extraction_tiers12.py",
+        "func": "test_adversarial_extraction_probe",
+        "line": 94,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_fidelity_assertion_widening.py",
+        "func": "test_non_assertions_are_not_read_as_results",
+        "line": 90,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_fidelity_assertion_widening.py",
+        "func": "test_assertions_are_read_as_results",
+        "line": 96,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_fidelity_assertion_widening.py",
+        "func": "test_sibling_guard_catches_every_punctuation_of_the_same_wrong_figure",
+        "line": 141,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_fidelity_conclusion.py",
+        "func": "test_conclusion_guard_matches_pinned_contract",
+        "line": 73,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_fidelity_cross_levy.py",
+        "func": "test_faithful_body_is_not_blanked",
+        "line": 133,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_fidelity_cross_levy.py",
+        "func": "test_contradicting_body_is_blanked",
+        "line": 139,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_fidelity_denial.py",
+        "func": "test_denial_probe",
+        "line": 44,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_fidelity_party_total.py",
+        "func": "test_party_total_obligation_probe",
+        "line": 59,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_fractions.py",
+        "func": "test_fraction_probe",
+        "line": 33,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_group_payroll.py",
+        "func": "test_group_probe",
+        "line": 46,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_group_payroll.py",
+        "func": "test_the_nine_instances_answer_with_the_gold_figure",
+        "line": 86,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_headcount_contradiction.py",
+        "func": "test_guard_a_decides_each_probe_correctly",
+        "line": 58,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_headcount_extraction.py",
+        "func": "test_probe_headcount_expectation",
+        "line": 60,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_headcount_extraction.py",
+        "func": "test_every_probe_carries_a_guards_against_note",
+        "line": 72,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_minimum_wage.py",
+        "func": "test_every_sector_can_state_its_options",
+        "line": 97,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_minimum_wage.py",
+        "func": "test_every_period_column_is_reachable_for_every_row",
+        "line": 250,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_output_shape.py",
+        "func": "test_output_shape_probe",
+        "line": 50,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_presumptive.py",
+        "func": "test_probe_routes_as_specified",
+        "line": 36,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_presumptive.py",
+        "func": "test_every_cell_of_the_statutory_table",
+        "line": 64,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_rate_period_patterns.py",
+        "func": "test_every_probe_carries_a_guards_against_note",
+        "line": 65,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_residency_clarification.py",
+        "func": "test_residency_ambiguity_is_detected_exactly",
+        "line": 66,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_routing_ngapi.py",
+        "func": "test_probe_routes_as_specified",
+        "line": 25,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_wage_pay_concord.py",
+        "func": "test_wage_pay_probe_routes_as_expected",
+        "line": 44,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_wage_pay_concord.py",
+        "func": "test_every_object_infix_member_reaches_the_wage_route",
+        "line": 52,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_wage_pay_concord.py",
+        "func": "test_worker_side_questions_are_recognised",
+        "line": 136,
+        "is_test": true
+      },
+      {
+        "file": "tests/test_wage_pay_concord.py",
+        "func": "test_employer_side_questions_keep_the_default",
+        "line": 141,
+        "is_test": true
+      }
+    ]
+  },
+  "vacuous_loop_states": {
+    "UNRESOLVED": 25,
+    "ACTIVE": 6
+  },
+  "inert_now": []
+}
