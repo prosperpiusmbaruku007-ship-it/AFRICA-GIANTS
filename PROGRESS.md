@@ -133,6 +133,172 @@ the live v16 pipeline.
 
 ---
 
+# ⛔ nat_27 IS RETIRED AS A NEGATIVE CONTROL — AND EVERY CHECK THAT LEANED ON IT PROVED LESS THAN IT REPORTED (2026-08-22)
+
+**A luck row cannot certify anything.** `nat_27`'s correct answer comes from model weights: the VAT
+18% fact sits at rank 15 for its own question and is never retrieved. **No index change can break
+it and no index change can protect it.** Using it as a must-stay-correct control measures the base
+model's memory, not the change under test.
+
+**Retired, effective now. Do not use `nat_27` as a negative control, a displacement guard, or a
+canary.** Same contagion rule as the provisional marking: every conclusion that rested on it is
+weakened, and they are named here rather than left for someone to rediscover.
+
+| check | what it claimed | corrected status |
+|---|---|---|
+| **The `nat_44`/`nat_28` withholding-rewrite decision** (2026-08-17) | the rewrite was **held back** because it "regresses `nat_27`", trading a confirmed regression for an unconfirmed gain | ⛔ **RE-OPEN.** The protected row is ungrounded, and the guard that detected the "regression" is the substring guard that matches [64], not [13]. Two independent reasons the trade was mis-priced. Real wins (33→4, 33→8) were declined on it |
+| **The interleave canary set** (2026-08-22) | 8 rows canaried as "must stay correct"; `nat_27` among them; its top-3 set changed but it stayed correct | ⚠️ **weakened.** `nat_27` staying correct through a top-3 change is exactly what an ungrounded row does — it was never going to flip. One of the 8 canaries carried no signal |
+| **The fee-mask rejection** (2026-08-17) | fee-mask dropped the supporting fact for three CORRECT rows (`nat_27`, `nat_36`, `nat_37`) for zero rows fixed | ⚠️ **weakened, conclusion probably survives.** All three are now measured ungrounded, so "loses its supporting fact" was not what was happening. The rejection had other grounds; the `nat_27`/`nat_36`/`nat_37` limb of it does not hold |
+| **The four displacement guards `nat_26/27/34/36`** (R15 regen, 2026-08-17) | all four held live, byte-identical | ⚠️ **weakened for `nat_27` and `nat_36`** — and the guards themselves are unsound (next entry). `nat_34` and `nat_26` are measured GROUNDED/PARTIAL and stand |
+| **Today's R16 close-out negative check** (this session) | `nat_27` VAT 18% correct after removing the SS8 instrument | ⚠️ **weakened — mine.** The redeploy conclusion still holds on `nat_32`, `nat_43` and the OOC probe, all of which are grounded or classifier-backed. But I cited a luck row as evidence production still worked, and it proved nothing |
+
+**`nat_36` is a borderline case and is NOT retired**: its fact reaches rank 2 under one phrasing and
+rank 17 under the verbatim one, so it is unstable rather than inert. Usable only with the verbatim
+text and only alongside a grounding check.
+
+**Replacement controls should be grounded rows**: `nat_31`, `nat_34`, `nat_32`, `nat_39`, `nat_43`
+are measured GROUNDED and can carry a real signal. Compute-path rows are stronger still.
+
+---
+
+# 🔀 nat_38 — AN OVERRIDE AMONG THE SUCCESSES. D1'S "ZERO OVERRIDE" WAS ONLY EVER MEASURED ON THE FAILURES (2026-08-22)
+
+**On the board as its own item, per instruction.** `nat_38` answered **correctly** while the only
+on-topic fact it retrieved pointed the **other way**.
+
+- Q: *"nimeshasajili vat je lazima niwe na mashine ya risiti hata kama mauzo ni madogo"* — an
+  already-VAT-registered business.
+- Retrieved [58]: *"Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine ya risiti
+  (EFD)? **Si lazima.** Si kila biashara…"*
+- Reply: *"**Ndiyo**, unatakiwa kuwa na mashine ya EFD. Biashara iliyosajiliwa VAT inatakiwa kutumia
+  EFD bila kujali kiasi cha mauzo."* — **correct**, and the fact carrying it was never retrieved.
+
+**Why this matters to D1's framing.** The class analysis partitioned all nine WRONG rows and found
+**OVERRIDE = 0** — the model never contradicted a retrieved fact — and that zero is what killed the
+queued adapter build (it would have fixed none of them). **That measurement was run only over the
+failures.** `nat_38` is an override among the *successes*, and nobody looked there.
+
+**What changes and what doesn't:**
+
+- **D1's conclusion still holds.** Zero override among the failures is still true, and an adapter
+  still fixes none of the nine. The decision not to build it was correct.
+- **But "the model recites what it is handed" is now false as a general claim.** It was the
+  headline framing of that analysis. The model demonstrably *does* override retrieved content — it
+  just happened to override toward the right answer in the one case anyone has measured.
+- **The override capability exists in both directions**, which cuts both ways: it is why ungrounded
+  rows can be right, and it is a mechanism by which a *correct* retrieved fact could be discarded.
+  **Nobody has measured the second case**, because the failure analysis found no OVERRIDE and the
+  success analysis was never run.
+
+**The measurement nobody has done: partition the CORRECT rows by mechanism the way D1 partitioned
+the wrong ones.** This entry has done it for the fact path by grounding (5 grounded / 2 partial /
+4 ungrounded, one of which is a contrary-override) but not by override-vs-recite across the whole
+set. **Not scoped, not started.** Named so it is not rediscovered a third time.
+
+---
+
+# 🎯 §1 TESTED ON TWO FALSIFIABLE TARGETS: THE FRAGMENT HYPOTHESIS IS REAL BUT INSUFFICIENT — AND TWO R15 VERIFICATION GUARDS ARE UNSOUND (2026-08-22)
+
+Targeted at `nat_27` (needs fact **[13]**, VAT 18%) and `nat_36` (needs fact **[57]**, EFD
+11,000,000) instead of sampling the 89 — both facts are in the index, neither is retrieved for its
+own question, so the hypothesis is cheap to falsify. Harness
+`eval/index_quality/measure_targeted_rewrite.py`, artifact `eval/results/targeted_rewrite.json`.
+**Measurement only — nothing written back to the index.**
+
+| | `nat_27` → [13] | `nat_36` → [57] |
+|---|---|---|
+| baseline rank, **verbatim** question | **15** | **17** |
+| competitors above target | 14 (10 fragments, 71%) | 16 (14 fragments, 88%) |
+| **ARM A** — rewrite the fragment competitors, target untouched | 15 → **12** (+3) | 17 → **6** (+11) |
+| **ARM B** — rewrite the target itself, competitors untouched | 15 → **2** ✅ | 17 → **1** ✅ |
+
+**Verdict: the fragment hypothesis is real and insufficient.** Clearing fragment noise moves ranks
+in the right direction — materially for `nat_36`, +11 places — so the 89 genuinely are suppressing
+real facts. **But neither row reaches top-3 that way.** Rewriting the *target fact itself* does, in
+both cases, decisively.
+
+**So §1 is not "rewrite the 89".** It is **"rewrite the specific facts that failing rows need, led by
+the ask, in Swahili, value at the front"** — per-row, testable, far cheaper than a bulk pass, and
+with a pass/fail criterion per row. `nat_36` is the instructive case: [57] was **already**
+Swahili-first with the value near the front, so language was never its problem. What moved it 17→1
+was **front-loading what the user asks about** (*mashine ya risiti / EFD*) instead of the
+regulatory label (*Kizingiti cha kuanza kutumia*). **Topic alignment, not translation.**
+
+Also note: [13] is **not** in my 89-row fragment count (its value exceeds the scan's length cut) yet
+it is plainly an English `key: value` row. **The scan under-counts the real population** — the
+defect is the English key-first framing generally, not just short fragments.
+
+## ⛔ Two R15 verification guards are unsound, in two different ways
+
+`kaggle/regenerate_rag_e5.py` ships guards asserting exactly these two facts retrieve in the top-3.
+The R15 regen was certified as passing them. The grounding measurement said they are not retrieved.
+Both are true, because **the guards do not test what they claim**:
+
+- **`nat_36`'s guard passes on a phrasing production never sends.** The guard asks
+  *"**M**auzo yangu … mashine ya risiti**?**"* — capitalised, question mark. That phrasing puts [57]
+  at **rank 2**. The verbatim eval/production text (lowercase, no `?`) puts it at **rank 17**.
+  Capitalisation and one punctuation mark move a fact fifteen places.
+- **`nat_27`'s guard passes on the WRONG FACT.** Its keyword test is `'18%' in fact_text`. The
+  guard-phrasing top-3 is [170] *vat deferment threshold percentage: 90 %*, [171] *vat deferment
+  minimum value*, **[64] *vat withholding formula correct*** — and [64] contains the string `18%`
+  inside "the standard 18% VAT is split…". **The guard matches a withholding-formula fact and
+  reports the standard-rate fact as retrieved.** [13] is at rank 8 even on the guard's own phrasing.
+
+**This is the documented false-PASS mode recurring** — PROGRESS already records a `18%` substring
+matching a contrast clause during the C4 wording work. It was fixed for that one dry-run and the
+same defect shipped in the regen guard.
+
+**NOT FIXED HERE: `kaggle/` is R10-protected.** The guards need (a) verbatim production phrasing and
+(b) a keyword distinctive to the intended fact (`NEVER 14%` / `unchanged since 2015` for [13]).
+Making them verbatim will make `nat_27`'s guard **fail**, which is correct — but a failing critical
+query aborts the regen, so this needs an explicit known-failing bucket rather than a silent pass.
+**Founder decision, flagged not taken.**
+
+## Consequence: the nat_44 / nat_28 decision should be re-opened
+
+The `vat_withholding_goods`/`services` rewrite — which measured `nat_44` rank 33→4 and `nat_28`'s
+rate half 33→8, real wins — **was held back because it "regresses nat_27".** That protection now
+looks unsound in two independent ways: `nat_27`'s supporting fact **is not retrieved in production
+anyway** (rank 15, and the row answers correctly from model weights regardless), and the guard used
+to detect the regression is the substring guard shown above to match [64] rather than [13].
+**Flagged for re-opening, not re-opened here** — it needs its own measurement with a sound guard.
+
+---
+
+# 🏛️ WHERE THIS SYSTEM'S RELIABILITY ACTUALLY LIVES: THE DETERMINISTIC PARTS CARRY IT (2026-08-22)
+
+**Stated as the headline because it is the clearest single fact we have about this system, and it
+has been sitting inside a caveat.** Of the 29 correct answers in the 48-row set:
+
+| source of the correct answer | n | grounded by |
+|---|---|---|
+| **rules engine** (compute path) | **15** | deterministic arithmetic, working appended — cannot drift |
+| **OOC classifier** (refusal path) | **3** | a phrase list, infrastructure not behaviour (R11) |
+| **retrieval + model** (fact path) | **11** | the only rows where correctness is contingent |
+
+**18 of 29 correct answers — 62% — come from parts of the system that cannot be wrong by
+accident.** And of the 11 that are contingent, **4 are ungrounded and 2 partial**: the answer came
+out of model weights, not out of anything retrieved (measured below).
+
+**So the honest picture is: retrieval-dependent rows are 11 of 48, and fewer than half of those are
+actually supported by retrieval.** The system works mainly where it is deterministic.
+
+**The strategic reading, and it cuts against the last three weeks of work.** Every mechanism in ADR
+0002 — hybrid fusion, re-ranking, a bigger embedding model, the routing intercept, index rewriting —
+is an attempt to improve **the weakest and smallest surface**. The measured alternative is to
+**extend the deterministic surface**: more rules engines, more routing into them, more classifier
+coverage. §8 already pointed this way (three of eight failures are routing misses into engines that
+already work, and `nat_33` needs an engine that doesn't exist yet). This entry says the same thing
+from the successes instead of the failures.
+
+**This is not a decision, and nothing is scoped from it.** It is the strongest available argument
+for a direction the project has not been taking, recorded so the next scoping starts from it. The
+counter-argument it must answer: the deterministic surface only covers what someone has written an
+engine for, and the corpus moat is supposed to be broad. Extending determinism trades breadth for
+reliability, and nobody has costed that trade.
+
+---
+
 # 🚨 GROUNDING MEASURED ACROSS THE 48: FEWER THAN HALF THE RETRIEVAL-DEPENDENT CORRECT ANSWERS ARE ACTUALLY SUPPORTED BY WHAT RETRIEVAL RETURNED (2026-08-22)
 
 **The luck finding generalises. It is not one probe.** Harness

@@ -1,0 +1,267 @@
+{
+  "measured": "2026-08-22",
+  "harness": "eval/index_quality/measure_targeted_rewrite.py",
+  "note": "measurement only — nothing written back to the index",
+  "rows": [
+    {
+      "row": "nat_27",
+      "target_position": 13,
+      "target_text": "vat standard rate: Tanzania VAT standard rate is 18% — unchanged since 2015. It was NEVER 14%.",
+      "target_is_english_fragment": false,
+      "baseline_verbatim": {
+        "question": "vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu",
+        "target_rank": 15,
+        "target_score": 0.8145,
+        "top3": [
+          {
+            "position": 170,
+            "score": 0.8517,
+            "text": "vat deferment threshold percentage: 90 %"
+          },
+          {
+            "position": 199,
+            "score": 0.835,
+            "text": "maternity cash benefit rate: 100 %"
+          },
+          {
+            "position": 171,
+            "score": 0.8331,
+            "text": "vat deferment minimum value: 10,000,000 TZS"
+          }
+        ],
+        "in_top3": false
+      },
+      "baseline_guard_phrasing": {
+        "question": "VAT ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu?",
+        "target_rank": 8,
+        "target_score": 0.8222,
+        "top3": [
+          {
+            "position": 170,
+            "score": 0.8464,
+            "text": "vat deferment threshold percentage: 90 %"
+          },
+          {
+            "position": 171,
+            "score": 0.834,
+            "text": "vat deferment minimum value: 10,000,000 TZS"
+          },
+          {
+            "position": 64,
+            "score": 0.8327,
+            "text": "vat withholding formula correct: VAT withholding rate applies to the CONSIDERATION (invoice value exclusive of"
+          }
+        ],
+        "in_top3": false
+      },
+      "competitors_above_target": 14,
+      "fragment_competitors_above_target": 10,
+      "fragment_share_of_competitors": 0.714,
+      "arm_a_rewrite_competitors": {
+        "n_rewritten": 10,
+        "target_rank": 12,
+        "target_score": 0.8145,
+        "in_top3": false,
+        "top3": [
+          {
+            "position": 170,
+            "score": 0.8539,
+            "text": "vat deferment threshold percentage: 90 %"
+          },
+          {
+            "position": 209,
+            "score": 0.8407,
+            "text": "contribution rate emplyees: 10 %"
+          },
+          {
+            "position": 199,
+            "score": 0.8362,
+            "text": "maternity cash benefit rate: 100 %"
+          }
+        ],
+        "rank_change": 3,
+        "samples": [
+          {
+            "position": 170,
+            "from": "vat deferment threshold percentage: 90 %",
+            "to": "90 % — vat deferment threshold percentage."
+          },
+          {
+            "position": 199,
+            "from": "maternity cash benefit rate: 100 %",
+            "to": "100 % — maternity cash benefit rate."
+          },
+          {
+            "position": 171,
+            "from": "vat deferment minimum value: 10,000,000 TZS",
+            "to": "10,000,000 TZS — vat deferment minimum value."
+          },
+          {
+            "position": 209,
+            "from": "contribution rate emplyees: 10 %",
+            "to": "10 % — contribution rate emplyees."
+          },
+          {
+            "position": 193,
+            "from": "unpaid contribution penalty rate: five %",
+            "to": "five % — unpaid contribution penalty rate."
+          }
+        ]
+      },
+      "arm_b_rewrite_target": {
+        "new_text": "Kiwango cha kawaida cha VAT Tanzania Bara ni asilimia 18 (18%). Hiki ndicho kiwango unachoweka kwenye bei ya bidhaa unazouza. Hakijabadilika tangu mwaka 2015 — si asilimia 14, si asilimia 16.",
+        "target_rank": 2,
+        "target_score": 0.8356,
+        "in_top3": true,
+        "top3": [
+          {
+            "position": 170,
+            "score": 0.8517,
+            "text": "vat deferment threshold percentage: 90 %"
+          },
+          {
+            "position": 13,
+            "score": 0.8356,
+            "text": "vat standard rate: Tanzania VAT standard rate is 18% — unchanged since 2015. It was NEVER 14%."
+          },
+          {
+            "position": 199,
+            "score": 0.835,
+            "text": "maternity cash benefit rate: 100 %"
+          }
+        ],
+        "rank_change": 13
+      }
+    },
+    {
+      "row": "nat_36",
+      "target_position": 57,
+      "target_text": "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD bila kujali kiwango cha mauzo.",
+      "target_is_english_fragment": false,
+      "baseline_verbatim": {
+        "question": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+        "target_rank": 17,
+        "target_score": 0.826,
+        "top3": [
+          {
+            "position": 171,
+            "score": 0.8418,
+            "text": "vat deferment minimum value: 10,000,000 TZS"
+          },
+          {
+            "position": 25,
+            "score": 0.8395,
+            "text": "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residents"
+          },
+          {
+            "position": 126,
+            "score": 0.838,
+            "text": "company registration fee no share capital: 300,000 TZS"
+          }
+        ],
+        "in_top3": false
+      },
+      "baseline_guard_phrasing": {
+        "question": "Mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti?",
+        "target_rank": 2,
+        "target_score": 0.8407,
+        "top3": [
+          {
+            "position": 58,
+            "score": 0.8547,
+            "text": "Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine ya risiti (EFD)? Si lazima. Si kila biash"
+          },
+          {
+            "position": 57,
+            "score": 0.8407,
+            "text": "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka. Si TZS "
+          },
+          {
+            "position": 25,
+            "score": 0.8352,
+            "text": "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residents"
+          }
+        ],
+        "in_top3": true
+      },
+      "competitors_above_target": 16,
+      "fragment_competitors_above_target": 14,
+      "fragment_share_of_competitors": 0.875,
+      "arm_a_rewrite_competitors": {
+        "n_rewritten": 14,
+        "target_rank": 6,
+        "target_score": 0.826,
+        "in_top3": false,
+        "top3": [
+          {
+            "position": 25,
+            "score": 0.8395,
+            "text": "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residents"
+          },
+          {
+            "position": 58,
+            "score": 0.8347,
+            "text": "Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine ya risiti (EFD)? Si lazima. Si kila biash"
+          },
+          {
+            "position": 126,
+            "score": 0.8328,
+            "text": "company registration fee no share capital: 300,000 TZS"
+          }
+        ],
+        "rank_change": 11,
+        "samples": [
+          {
+            "position": 171,
+            "from": "vat deferment minimum value: 10,000,000 TZS",
+            "to": "10,000,000 TZS — vat deferment minimum value."
+          },
+          {
+            "position": 126,
+            "from": "company registration fee no share capital: 300,000 TZS",
+            "to": "300,000 TZS — company registration fee no share capital."
+          },
+          {
+            "position": 147,
+            "from": "vat registration notification deadline commissioner: 14 days",
+            "to": "14 days — vat registration notification deadline commissioner."
+          },
+          {
+            "position": 205,
+            "from": "penalty fine non citizen: ten million TZS",
+            "to": "ten million TZS — penalty fine non citizen."
+          },
+          {
+            "position": 137,
+            "from": "file search report fee: 22,000 TZS",
+            "to": "22,000 TZS — file search report fee."
+          }
+        ]
+      },
+      "arm_b_rewrite_target": {
+        "new_text": "Unahitaji mashine ya risiti (EFD) ikiwa mauzo yako ya mwaka yamefikia TZS 11,000,000 (milioni kumi na moja) — hata kama hujasajili VAT. Kizingiti cha EFD ni TZS 11,000,000 kwa mwaka; si TZS 200,000,000, hicho ni kizingiti cha kusajili VAT.",
+        "target_rank": 1,
+        "target_score": 0.8514,
+        "in_top3": true,
+        "top3": [
+          {
+            "position": 57,
+            "score": 0.8514,
+            "text": "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka. Si TZS "
+          },
+          {
+            "position": 171,
+            "score": 0.8418,
+            "text": "vat deferment minimum value: 10,000,000 TZS"
+          },
+          {
+            "position": 25,
+            "score": 0.8395,
+            "text": "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residents"
+          }
+        ],
+        "rank_change": 16
+      }
+    }
+  ]
+}
