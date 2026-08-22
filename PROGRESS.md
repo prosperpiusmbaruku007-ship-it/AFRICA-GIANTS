@@ -133,11 +133,198 @@ the live v16 pipeline.
 
 ---
 
-# 🛠️ ROUTING GAPS A AND B BUILT — MEASURED LOCALLY, **NOT DEPLOYED** (2026-08-22)
+# 📊 THE DISCARD RATE IS LOW: ~1 IN 13. RETRIEVAL FIXES DO REACH THE ANSWER (2026-08-22)
 
-**⚠️ PRODUCTION STILL RUNS THE OLD ROUTING.** This is built, swept, tested and verified locally.
-It has NOT been through an R16 cycle and has NOT met the §5(d) answer-level bar, which requires a
-live run. **Do not describe this as shipped.**
+**nat_38's board item, measured on the deployed post-routing state.**
+`eval/forced_facts/run_discard_rate.py` → `eval/results/discard_rate.json`, fixture
+`eval/forced_facts/discard_rows.json`. All 13 rows report `pipeline: v16`.
+
+**The question it answers:** every retrieval mechanism in ADR 0002 assumes right-content-in-context
+produces right-answer. If a meaningful share of correct facts get discarded, retrieval fixes don't
+reliably reach the answer even when they work — and §1 would be poor value.
+
+## Adjudicated result: 1 genuine discard in 13
+
+The mechanical figure-presence tally reads **USED 3 / PARTIAL 7 / NO_FIGURES 2 / NOT_USED 1**, and
+**that tally is misleading** — as the harness's own caveat predicted. Forced facts carry contrast
+figures (*"It was NEVER **14%**"*, *"Si TZS **200,000,000**"*) and citation years that a correct
+reply has no reason to restate, so "PARTIAL" mostly means "didn't echo the contrast clause". Read
+row by row:
+
+| row | verdict | why |
+|---|---|---|
+| **`nat_33`** | **DISCARDED** | Both facts forced. Reply states the 2,500/month penalty and **omits TZS 22,000 entirely**, never computing 7 × 2,500. Reproduces SS8 exactly |
+| `nat_27` | USED | states 18% — the missing "14" is the fact's own contrast clause |
+| `nat_36` | USED | states 11,000,000 — the missing figures are the "si 200,000,000" contrast |
+| `nat_43` | USED in substance | *"kuna viwango tofauti kulingana na sekta"* is the claim; "46 sub-sectors" was never needed *(minor: cites mlywf.go.tz rather than GN 605A)* |
+| `nat_40` | USED in substance | correctly separates OSHA-inspects from WCF-pays; the 0.5% was not needed to answer who does what |
+| others | USED | figures present or not required |
+
+**Discard rate ≈ 1/13 ≈ 8%.** A lower bound on use and therefore an upper bound on discard is not
+what this is — the figure test bounds it the other way, so the true rate is **at most** this.
+
+## Two consequences, both load-bearing
+
+**1. The retrieval workstream is vindicated. §1 in particular.** Content that reaches context is
+overwhelmingly used. The assumption under §1, §2 and the intercept holds.
+
+**2. `nat_27` and `nat_36` — the two ungrounded rows — became GROUNDED and correct once their fact
+was forced.** They were not merely luck-compatible; **their facts work when retrieved.** Combined
+with the measured ask-first rewrite (rank 15 → 2 and 17 → 1), there is now a complete evidenced
+path: *rewrite the fact ask-first → it retrieves → the model uses it → the row stops depending on
+model memory.* That is the strongest case yet for the per-row §1 work, and it is end-to-end rather
+than inferred.
+
+## Reconciling with SS8's "3 of 8 failed with facts forced"
+
+Not a contradiction — the denominators differ, and the difference is itself the result.
+SS8's three failures were `nat_05`, `nat_23`, `nat_24` and `nat_33`. **Three of those four now route
+to the rules engines** after ROUTING-GAP-A/B and are excluded from a *retrieval* discard measurement
+by construction. What remains on the fact path is `nat_33` — one genuine discard, and the one row
+whose gap needs a BRELA engine that does not exist. **The routing change shrank the
+retrieval-dependent surface, and the residual discard is concentrated in the row already known to
+need an engine.**
+
+## R16 close-out for both deploys
+
+Instrument removed and redeployed. Verified live: `run_forced_facts` raises `NotFoundError`;
+`nat_32`, `nat_43`, `nat_27` and the OOC probe all answer correctly.
+
+**The ad-hoc conflation probe still reproduces (third time out of three)** — *"asilimia 0.5 …
+kwa ajili ya mafunzo … nssf.go.tz"*. **Expected and deliberate:** its headcount is *watano*, a word
+numeral, so `_has_number` is false and gap C — which stayed shut on measured evidence — keeps it on
+the fact path. **Leaving that row broken is the trade the R17 probes bought:** opening the number
+gate would fix it and simultaneously mis-route `nick_15` (training-as-a-service) and `nick_16`
+(a compensation claim) into levy compute.
+
+**⚠️ Local test-environment note, not a code defect.** The suite now reports **1242 passed, 2
+skipped** where it reported 1244 passed earlier today. The two are `test_retrieval.py`'s e5
+integration tests, and they skip because the model can no longer load on this machine:
+`OSError: The paging file is too small for this operation to complete` — Windows memory exhaustion
+after this session's many local e5 loads. Intermittent pytest access violations (`0xC0000005`) have
+the same cause. **The tests skip cleanly through a guarded `pytest.skip`, which is the correct
+behaviour and a working example of the pattern the dead-anchor census was worried about.** The
+1244-pass figure is the valid one for the code; this run differs only by environment. Fix is
+freeing memory or raising the page file, not a code change.
+
+## Excluded, with reasons recorded rather than assumed
+
+- **ABSENCE (3): `nat_37`, `nat_38`, `nat_41`.** No index fact answers these, so there is nothing to
+  discard. **Searched, not assumed** — there is no fact stating a receipt is required for every
+  transaction regardless of amount, and none stating a VAT-registered business must use an EFD
+  regardless of turnover. `nat_37` and `nat_38` are scored CORRECT while **answering over an index
+  gap from model weights.** Counting them would have inflated the discard rate with rows that had
+  nothing to discard.
+- **COMPUTE_NOW (3): `nat_05`, `nat_23`, `nat_24`** — retrieval no longer decides them.
+
+---
+
+# 🚀 ROUTING GAPS A AND B ARE LIVE — §5(d) BAR MET, 28/28 NEGATIVES BYTE-IDENTICAL, AND ONE NEW LIVE DEFECT (2026-08-22)
+
+**Deployed and verified.** Canary: `eval/routing/canary_gap_ab_live.py` →
+`eval/results/gap_ab_canary_live.json`. 36 live calls in four groups.
+
+## The §5(d) answer-level bar: PASSED
+
+**28 of 28 currently-CORRECT rows came back BYTE-IDENTICAL to their 2026-08-17 replies.** Not a
+rank check, not the target rows — the actual replies of the set that already works. Zero
+regressions. `nat_27` was excluded as a retired luck control and the exclusion is recorded in the
+artifact rather than left silent. Container freshness confirmed via the config-only OOC phrase,
+which refused correctly.
+
+## Targets and unplanned rows
+
+| row | group | live result |
+|---|---|---|
+| `nat_23` | target | **NSSF 1,100,000 + SDL 192,500** — both levies. **WRONG → CORRECT** |
+| `nat_05` | target | avoids the 50M wrong-base trap, names payroll as the base, still does not ask for it — **PARTIAL, as predicted** |
+| `nat_24` | target | three-way triage, engine text all correct — **but see the defect below** |
+| `edge_p10` | unplanned | **NSSF 800,000 + "SDL inayolipwa ni TZS 0"** with the 5-employee reason |
+| `th_11` | unplanned | correct, plus the filing deadline |
+| `th_12` | unplanned | correct — *"Hapana… una wafanyakazi 9"* |
+| `ov_08` | unplanned | correct |
+
+**The four unplanned rows all behaved as the local measurement predicted**, which is the part that
+was least predicted and therefore most worth checking.
+
+## 🔴 NEW LIVE DEFECT, found by the canary: nat_24's WCF prose states 10%, not 0.5%
+
+> *"…unatakiwa kulipa **10%** ya jumla ya mishahara kwa ajili ya **WCF**."*
+> immediately followed by the engine's own line:
+> *"Ndiyo. WCF inahusu waajiri wote… WCF ni asilimia **0.5** ya jumla ya mishahara."*
+
+**10% is NSSF's employer share.** The authoritative engine text directly below it is correct, so
+the reply contains the right answer and a wrong rate in the same breath. **Stated plainly: this row
+did not previously contain a wrong figure — it was a content-free deferral. The change moved it
+from "says nothing" to "says three correct things and one wrong rate."** Net much better; not
+strictly better.
+
+**Why no guard caught it — diagnosed, and it hands the rate guard a live case:**
+
+1. **`_cross_levy_guard` checks the wrong direction.** `body_contradicts_siblings` scans the body
+   for windows belonging to *other* levies and checks figures there. Here the body volunteers **a
+   sibling's rate for its OWN levy** — the inverse case. Not covered.
+2. **The own-levy rules are vacuous here.** WCF's sub-answer is an **applicability** verdict, so
+   its `ComputationResult.amount` is `None`, and every D-FIDELITY rule that compares figures is
+   satisfied trivially. **This is D-FIDELITY-5's shape exactly** — nothing to compare against — and
+   it is why a wrong *rate* passes where a wrong *amount* would not.
+3. **`_levy_windows` is forward-only.** A window runs from a levy token to the next one, so
+   *"kulipa 10% … kwa ajili ya WCF"* puts the figure **before** the token, in no window at all.
+   Even a rate check built on the existing machinery would miss this ordering without widening the
+   window backwards.
+
+**This does not reverse the deploy** — nothing that worked broke, and the row improved. It makes the
+rate-conflation guard concrete and urgent rather than theoretical, with a reproducible live case and
+three named mechanism gaps to design against.
+
+## Still open on these rows, not settled here
+
+- **`nat_05` stays PARTIAL.** Its rubric wants the base named **and** the payroll figure asked for.
+- **`nat_24`'s rubric is a founder call, not mine.** Reply and rubric are set out below for
+  adjudication — the question asks *"nilipe nini kati ya"* (which of these do I pay), the rubric
+  also wants the amounts, and whether the triage answers what the user meant is a judgement to be
+  made explicitly rather than absorbed into a score.
+
+---
+
+# ⚖️ FOR FOUNDER ADJUDICATION — nat_24's rubric (2026-08-22)
+
+**Not settled here, deliberately.** Whether the reply answers what the user meant is a judgement
+about intent, and it should be made explicitly rather than absorbed into a score.
+
+**The question:** *"tuko na watu 9 tu mishahara milioni 4 kwa mwezi **nilipe nini kati ya** ile ya
+mafunzo ya fidia na ya uzeeni"*
+
+**The rubric (`eval/accuracy_gate/edge_probe_natural_048.jsonl`):**
+> *"Three-way triage with an SDL threshold trap: SDL does NOT apply (9 < 10); WCF 0.5% ×
+> 4,000,000 = TZS 20,000; NSSF employer 10% = TZS 400,000 (20% total = 800,000). WRONG =
+> charging SDL at 9 employees."*
+
+**The live reply (engine lines only; the model prose is quoted in the entry above):**
+> *Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa
+> kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).*
+> *Hapana. SDL haihusiki: una wafanyakazi 9 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi
+> 10 au zaidi.*
+> *Ndiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya
+> wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.*
+
+**The case for CORRECT:** *"nilipe nini kati ya"* asks **which** of these I pay, not how much. The
+reply triages all three correctly and does not charge SDL at 9 — the rubric's named WRONG condition
+is avoided outright.
+
+**The case for PARTIAL:** the rubric explicitly lists the two amounts (20,000 and 400,000), and the
+reply states rates without applying them to the stated TZS 4,000,000.
+
+**A third option worth naming:** the rubric may be mis-specified for its own question — it was
+written expecting an amount answer to a which-one question. If so the fix is the rubric, not the
+system.
+
+**Separately and NOT a rubric question: the model prose states 10% for WCF, which is wrong under
+any reading.** That defect stands regardless of how the rubric is settled.
+
+---
+
+# 🛠️ ROUTING GAPS A AND B — the local build (2026-08-22)
 
 Code: `chike/routing.py` (`all_natural_levies`, `all_compute_levies`,
 `_GAP_B_APPLICABILITY_CUES`, `_WHICH_LEVY_ASK`, `_RATE_BASE_ASK`), `chike/orchestrator.py`
