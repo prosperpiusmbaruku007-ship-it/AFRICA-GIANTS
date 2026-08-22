@@ -382,7 +382,33 @@ redeployed again**, confirming `nat_43`/`nat_32` still answer correctly and `run
 longer exists. Production was never left running debug-only code; nothing about `run()` or
 `retrieve_facts()` was touched.
 
-> # ⛔ PROVISIONAL — EVERY RESULT IN THIS SECTION. NOT A BASIS FOR SCOPING.
+> # ✅ SETTLED — re-measured on live v16 with a committed instrument (2026-08-22)
+>
+> **The provisional results below have been re-run and are superseded.** Instrument committed
+> before the run (R18) at `9be20c7`; artifact `eval/results/ss8_forced_facts_v16_2026_08_22.json`;
+> fixture `eval/forced_facts/ss8_rows.json`; runner `eval/forced_facts/run_ss8_forced_facts.py`.
+> Every row reports `pipeline: "v16"`.
+>
+> **The 4 CORRECT / 1 PARTIAL / 3 WRONG split reproduced exactly.** Two failure-mode descriptions
+> did not:
+> - **`nat_23` routed to `compute`** — the NSSF engine fired and computed correctly (20% ×
+>   5,500,000 = 1,100,000); **SDL was silently dropped.** Not a generation ceiling; the routing
+>   fan-out miss, confirmed live.
+> - **`nat_24` returned a bare "Thibitisha na TRA" deferral**, not the "no hedge, no uncertainty
+>   signal" the provisional entry described. This overturns the PROGRESS.md headline's "no route to
+>   a refusal of any kind" claim, corrected there.
+> - **`nat_05` is also a routing miss** (`detect_intent → "none"`, routed `fact`, so the compute
+>   path's clarification never fires). **Three of eight rows are routing misses; only `nat_33` is a
+>   genuine capability gap.**
+>
+> **§2's yield, now measured not estimated: 4–5 of 8 alone (not ~5–6); 6–7 of 8 with a routing/
+> decomposition extension; `nat_33` out of reach of both.** §2's §8 precondition is satisfied.
+>
+> The historical record of the superseded attempt follows.
+>
+> ---
+>
+> # ⛔ SUPERSEDED / PROVISIONAL — the original attempt, kept for audit trail
 >
 > **The instrument is uninspectable and by its own description ran the wrong pipeline.**
 > `run_forced_facts` was deployed, used and removed **without ever being committed** —
@@ -507,27 +533,28 @@ better retrieval score, and no such mechanism is scoped anywhere in this documen
 | # | mechanism | status this round | priority |
 |---|---|---|---|
 | 5 | Hybrid lexical+dense fusion (RRF/weighted/interleave) | **SHIPPED (interleave), LIVE-REGRESSED, REVERTED.** Target-fact rank preservation held for all 8 rows tested; the OTHER two injected slots changed for all 8 anyway, and one (`nat_32`) flipped to a wrong live answer. Neither RRF's nor interleave's real blast radius (answer stability, not rank) was ever fully enumerated — interleave's was wrongly assumed zero. | **DECLINED, all forms** |
-| 2 | Routing-layer fact intercept | **SCOPED, purpose named honestly:** a hand-maintained allowlist that closes 6 known fact keys / 8 known rows and nothing else — not a general retrieval fix, no broader version escapes that ceiling. Leading candidate because it's the only mechanism here with a *provably* bounded blast radius (explicit cue match short-circuits RAG; everything else untouched — no fusion variant could claim that after §5(d)). **⛔ Expected real yield per §8 is PROVISIONAL and must not justify building this: ~5–6 of 8 alone; ~7 of 8 if paired with a separate routing/decomposition fix (not scoped here) — both figures are arithmetic on §8's provisional table, produced by an uninspectable harness that may have run the non-live arm. Placeholders until the v16 re-run lands.** | **HIGH, as a named small objective, not a solution to retrieval** |
+| 2 | Routing-layer fact intercept | **SCOPED, purpose named honestly:** a hand-maintained allowlist that closes 6 known fact keys / 8 known rows and nothing else — not a general retrieval fix, no broader version escapes that ceiling. Leading candidate because it's the only mechanism here with a *provably* bounded blast radius (explicit cue match short-circuits RAG; everything else untouched — no fusion variant could claim that after §5(d)). **✅ Expected real yield per §8, MEASURED on live v16 (`eval/results/ss8_forced_facts_v16_2026_08_22.json`): 4–5 of 8 alone — lower than the ~5–6 previously estimated; 6–7 of 8 if paired with a separate routing/decomposition fix (not scoped here); `nat_33` out of reach of both. No longer provisional.** | **HIGH, as a named small objective, not a solution to retrieval** |
 | 1 | Fee-shape rows rewritten at index-content level | scoped only, unchanged. Same §8 ceiling applies to `nat_33` (no engine exists); `nat_23`/`nat_24` are engine-shaped, blocked on routing not retrieval. | HIGH (folds into next regen) |
 | 6 | Re-ranking (cross-encoder) | scoped only, unchanged — flagged that it likely shares §5(d)'s blast-radius problem (re-scores every query's shortlist) and needs its own explicit old-vs-new test before being assumed safer | MEDIUM |
 | 7 | Different/bigger embedding model | scoped only, unchanged — this is what R15 was | LOW, not scheduled |
-| 8 | Generation-side / engine-routing failure after successful retrieval | **⛔ PROVISIONAL — being re-measured on v16. The harness was never committed and its own description says it ran the non-live v15 arm; no artifact exists.** Measured, then re-diagnosed the same day. Forced the correct fact(s) into context for all 8 remaining rows: 4 correct, 1 partial, 3 clearly wrong. Checked whether the 3 failures are engine-shaped before calling them generation-side (they weren't fully checked first pass): **`nat_33` has no engine at all (BRELA isn't a `COMPUTE_TYPES` member) — a real capability gap. `nat_23`/`nat_24` have working engines (SDL/NSSF/WCF), and v16 — which owns them and IS the deployed pipeline (`chike_config.json: "pipeline": "v16"`) — still doesn't route to them, because the decomposer doesn't split nicknamed multi-levy phrasing and `detect_intent` returns `nssf`/`none`.** 2 of 3 are a routing gap with a known fix pattern, not a model ceiling. (An earlier version of this row claimed production runs v15 with zero compute routing — **retracted, false**; see §8's retraction. The engine-shape half of the diagnosis stands on its own — it was checked against the code and re-verified. The half that says these rows *failed* is provisional, from the table.) Also the headline pilot-safety finding: these failures carry maximum retrieval confidence (fact forced directly into context) and no visible hedge, so no retrieval-confidence floor could ever catch them — see PROGRESS.md's dedicated pilot-precondition entry, not just this ADR. | The routing/decomposition extension for nicknamed multi-levy fanouts is a separate go-ahead, owned by `chike/routing.py`/`chike/decomposition.py`, not this ADR. A new BRELA engine (`nat_33`) is separately scoped-able, smallest of the three. |
+| 8 | Generation-side / engine-routing failure after successful retrieval | **✅ SETTLED — re-measured on live v16 with a committed instrument (R18). Split reproduced 4/1/3; `nat_23` routed to `compute` and the NSSF engine computed correctly with SDL dropped; `nat_24` deferred ("Thibitisha na TRA"); `nat_05` is a third routing miss. Three of eight are routing misses, only `nat_33` is a capability gap.** Originally measured by an uncommitted harness, then re-diagnosed the same day. Forced the correct fact(s) into context for all 8 remaining rows: 4 correct, 1 partial, 3 clearly wrong. Checked whether the 3 failures are engine-shaped before calling them generation-side (they weren't fully checked first pass): **`nat_33` has no engine at all (BRELA isn't a `COMPUTE_TYPES` member) — a real capability gap. `nat_23`/`nat_24` have working engines (SDL/NSSF/WCF), and v16 — which owns them and IS the deployed pipeline (`chike_config.json: "pipeline": "v16"`) — still doesn't route to them, because the decomposer doesn't split nicknamed multi-levy phrasing and `detect_intent` returns `nssf`/`none`.** 2 of 3 are a routing gap with a known fix pattern, not a model ceiling. (An earlier version of this row claimed production runs v15 with zero compute routing — **retracted, false**; see §8's retraction. The engine-shape half of the diagnosis stands on its own — it was checked against the code and re-verified. The half that says these rows *failed* is provisional, from the table.) Also the headline pilot-safety finding: these failures carry maximum retrieval confidence (fact forced directly into context) and no visible hedge, so no retrieval-confidence floor could ever catch them — see PROGRESS.md's dedicated pilot-precondition entry, not just this ADR. | The routing/decomposition extension for nicknamed multi-levy fanouts is a separate go-ahead, owned by `chike/routing.py`/`chike/decomposition.py`, not this ADR. A new BRELA engine (`nat_33`) is separately scoped-able, smallest of the three. |
 
 ## Recommended order, updated after the ship-and-revert and the §8 measurement (2026-08-22)
 
-**⛔ ORDERING PRECONDITION (2026-08-22): §8 must be settled on the live v16 pipeline before item 1
-starts.** §8 is the item that decides whether the generation ceiling is real, and it is currently
-provisional — so it constrains work on both sides of that question, §2 included. Nothing below is
-actionable until the v16 re-run lands.
+**✅ ORDERING PRECONDITION SATISFIED (2026-08-22): §8 is settled on the live v16 pipeline.** It was
+the item deciding whether the generation ceiling is real. Measured answer: **mostly it is not** —
+three of the eight rows are routing misses, one (`nat_33`) is a capability gap, and the model
+handled every fact-shaped row correctly once retrieval succeeded. Items below are now actionable on
+measured evidence. **Nothing here has been started; each remains a separate go-ahead.**
 
-1. **§2 (routing intercept) is the priority once §8 is settled** — named for what it actually is:
-   closes retrieval for 8 known rows, expected to convert **~5–6 of them to CORRECT** per §8 alone,
-   not all 8 — **that figure is PROVISIONAL (§8's harness was never committed) and is not a
-   sufficient basis to start building.** Not a guard for §5 (§5 is declined outright) — evaluated
-   on its own bounded-blast-radius merit. Needs its own R17 adversarial-probe pass per key before
-   shipping, and **must ship under the §5(d) standing bar**: an answer-level regression check
-   across the currently-correct set, not just a rank check on the 8 target rows, before it is
-   called safe.
+1. **§2 (routing intercept)** — named for what it actually is: closes retrieval for 8 known rows,
+   measured to convert **4–5 of them to CORRECT** per §8, not all 8, and **lower than the ~5–6
+   previously estimated**. Not a guard for §5 (§5 is declined outright) — evaluated on its own
+   bounded-blast-radius merit. Needs its own R17 adversarial-probe pass per key before shipping,
+   and **must ship under the §5(d) standing bar**: an answer-level regression check across the
+   currently-correct set, not just a rank check on the 8 target rows, before it is called safe.
+   **Note the measured yield weakens the case relative to item 2** — the routing extension now
+   looks like the better-value item of the two, which was not true on the provisional numbers.
 2. **A routing/decomposition extension for nicknamed multi-levy fanouts (`nat_23`/`nat_24`-shaped
    questions) is a separately-scopeable, HIGH-value item** discovered by §8's engine-shape check —
    it is NOT retrieval work and does not belong in this ADR, but it is cheap to name here because

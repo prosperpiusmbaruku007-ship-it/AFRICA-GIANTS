@@ -4,7 +4,27 @@ Last updated: 2026-08-22
 
 ---
 
-# 🚨 THE PILOT'S SAFE-ON-UNCOVERED-TOPICS PRECONDITION IS CURRENTLY UNMET: THERE IS NO MEASURED ROUTE TO "SINA UHAKIKA" OF ANY KIND (2026-08-22)
+# 🚨 THE PILOT'S SAFE-ON-UNCOVERED-TOPICS PRECONDITION IS UNMET — BUT NOT FOR THE REASON THIS ENTRY FIRST GAVE (2026-08-22, corrected same day)
+
+> **CORRECTION APPLIED TO THIS HEADLINE — read this before the rest of the entry.** The original
+> title said *"THERE IS NO MEASURED ROUTE TO 'SINA UHAKIKA' OF ANY KIND."* **That claim is
+> disproved by the v16 re-measurement** (§8 re-run, `eval/results/ss8_forced_facts_v16_2026_08_22.json`):
+> `nat_24`, with all three correct facts forced into context, returned exactly *"Thibitisha na TRA
+> (tra.go.tz)"* — a bare deferral, the project's own referral formula. Not a classified refusal
+> (`refused: false`), but as user-visible behaviour it is a deferral, not a confident wrong answer.
+> A route exists; it is unreliable and unmeasured, which is a different and smaller problem than
+> "none exists."
+>
+> **The precondition is still unmet**, on the narrower and better-evidenced ground below:
+> `nat_23` produced a **confidently incomplete** answer — correct NSSF arithmetic, an entire second
+> levy (SDL) missing, no signal at all that half the question went unanswered. No retrieval-side
+> floor can catch that, because nothing about retrieval was uncertain. **But the mechanism is now
+> named: it is a routing fan-out miss, not a general generation ceiling** — and the very check this
+> entry proposes below ("does the reply address every part of a multi-part question") would catch
+> it. Three of §8's eight rows are routing misses, not generation failures.
+>
+> Read the two claims that follow with that correction applied: **the floor designs really are all
+> dead or unbuilt (items 1–3, unaffected), and the fourth point below overstates its case.**
 
 **This is the single most consequential open item in the project right now — more consequential
 than any retrieval-ranking work — and it is stated here as its own headline so it can be found
@@ -28,12 +48,15 @@ not just one design:
 3. **A re-ranked-index confidence signal** — the third named design — remains unbuilt and
    untested.
 
-**And now a fourth, more fundamental problem, discovered today (§8 below): even a hypothetically
-perfect retrieval-confidence signal could not catch a whole class of failure that was just
+**And now a fourth problem, discovered today (§8 below) — ⚠️ RESTATED AFTER THE v16 RE-RUN, which
+narrowed it: a retrieval-confidence signal, however perfect, cannot catch a failure class that was
 measured directly.** `nat_23` and `nat_24` had the exact correct fact(s) placed directly into the
 model's context — not just retrieved with a good score, but forced in, guaranteeing maximum
-possible retrieval confidence by construction — and the model still produced a wrong or empty
-answer with **no hedge, no "sijui," no visible sign of uncertainty at all.** This is not a gap in
+possible retrieval confidence by construction — and neither produced a correct answer. **The
+original wording here said both failed with "no hedge, no 'sijui,' no visible sign of uncertainty
+at all." Measured on v16 that is true of `nat_23` only: `nat_24` returned a bare "Thibitisha na
+TRA" deferral.** The surviving case is `nat_23`'s **confident incompleteness** — correct arithmetic
+on one levy, a second levy silently absent. This is not a gap in
 today's floor designs; it is a proof that the entire *category* of retrieval-side floor cannot
 address this failure mode, because the defect is not "the system wasn't sure which fact to use" —
 it is "the system had the right fact and still didn't produce a correct answer." No signal computed
@@ -45,27 +68,29 @@ scoped anywhere in this project closes it.** A safety net for "refuse when we do
 need a signal from the *generation* side — e.g. a post-hoc check that a reply addresses every part
 of a multi-part question, or a self-consistency check on the answer itself — not a better retrieval
 score. No such mechanism exists or is scoped. Until one does, the 2026-08-16 assessment's own
-stated condition for a safe pilot on uncovered topics has not been satisfied.
+stated condition for a safe pilot on uncovered topics has not been satisfied. **The v16 re-run
+sharpens this rather than softening it: the "addresses every part of a multi-part question" check
+named above is now the specific thing that would have caught the one surviving case (`nat_23`), so
+the missing mechanism has a concrete shape instead of being a general worry.**
 
-**Re-checked after a crash mid-correction (same day) — this headline stands, with one flag on its
-evidence and one strengthening.** The §8 entry below originally supported this with a claim that
-production runs v15 and has no compute-engine routing at all. **That claim was false and has been
-retracted** — `chike_config.json` sets `"pipeline": "v16"`, `modal_app.py` branches on it into
-`Orchestrator.answer()`, and the live path does reach the rules engines. Two consequences for this
-headline, in opposite directions:
+## Evidence status after the v16 re-measurement (settled — no longer provisional)
 
-- **The evidence is PROVISIONAL (the conclusion is narrowly defensible; the table it came from is
-  not):** the forced-fact harness that produced the `nat_23`/`nat_24` result is described as having
-  run the v15 arm, and it was **never committed** — there is no artifact to re-read. §8 is
-  therefore marked provisional in full and is being re-measured on v16 now. This headline survives
-  the flag *only* on the narrow ground that `detect_intent` returns `nssf`/`none` for these two
-  rows specifically, so both pipelines send them down the same pooled-fact generation. **That
-  ground covers these two rows and nothing else — it does not rescue the rest of §8, and this
-  headline is restated as confirmed only when the v16 re-run reproduces these two rows.**
-- **Strengthening (the conclusion gets worse, not better):** the pipeline that owns the SDL/NSSF/WCF
-  engines is *already in production*. So this is not "the good pipeline isn't live yet" — the good
-  pipeline **is** live, and it still produced a confident wrong answer with the right facts in
-  context. There is no pending cutover that closes this.
+The forced-fact harness behind this headline was uncommitted and its results were marked
+provisional. **They have now been re-measured on the live v16 pipeline with a committed instrument**
+(`eval/results/ss8_forced_facts_v16_2026_08_22.json`). Three outcomes for this entry:
+
+- **Overturned:** the "no route to a refusal of any kind" claim. `nat_24` deferred — see the
+  correction box at the top.
+- **Confirmed:** `nat_23` fails with the right facts in context and gives no uncertainty signal, so
+  a retrieval-side floor still cannot catch it. The precondition remains unmet.
+- **Corrected mechanism:** the earlier assumption that both rows "go down the same pooled-fact
+  generation on either pipeline" was itself wrong. Measured, **`nat_23` routed to `compute`** — the
+  NSSF rules engine fired and computed correctly, and SDL was dropped. The failure is a routing
+  fan-out miss, not the generation ceiling this entry originally implied.
+
+**And the pipeline that owns the SDL/NSSF/WCF engines is already in production** — `chike_config.json`
+sets `"pipeline": "v16"` and `modal_app.py` branches into `Orchestrator.answer()`. There is no
+pending cutover that closes any of this.
 
 Full technical detail on both threads (margin inversion; the forced-fact generation-failure
 finding) in the entry immediately below and `docs/decisions/0002-retrieval-structural-scoping.md`
@@ -108,7 +133,131 @@ the live v16 pipeline.
 
 ---
 
-# 🎯 §8 MEASURED: RETRIEVAL IS BINDING FOR MOST OF THE REMAINING 8 ROWS, NOT ALL — A THIRD FAIL EVEN WITH THE RIGHT FACT FORCED IN (2026-08-22) — ⛔ PROVISIONAL, BEING RE-MEASURED
+# ✅ §8 RE-MEASURED ON LIVE v16 WITH A COMMITTED HARNESS: THE SPLIT HOLDS, TWO ROWS' FAILURE MODES DON'T — AND ONE HEADLINE CLAIM IS WRONG (2026-08-22)
+
+**This supersedes the provisional entry below.** Instrument committed *before* the run (R18) at
+`9be20c7`, run on the live deployed pipeline, artifact at
+`eval/results/ss8_forced_facts_v16_2026_08_22.json`, fixture at `eval/forced_facts/ss8_rows.json`,
+runner at `eval/forced_facts/run_ss8_forced_facts.py`. **Every row reports `pipeline: "v16"` in the
+artifact** — the arm ambiguity that invalidated the first attempt is closed by measurement, not
+assertion. Container freshness is proven structurally: `run_forced_facts` did not exist on the
+previous deployment, so a stale container could not have answered these calls at all.
+
+| row | v16 reply (abridged) | routed as | verdict | vs provisional |
+|---|---|---|---|---|
+| `nat_44` | "VAT withholding kwenye bidhaa ni asilimia 3" | fact | **CORRECT** | same |
+| `nat_45` | "Kuna siku saba tu za kuwasilisha taarifa" | fact | **CORRECT** (drops *working* from "7 working days") | same |
+| `nat_41` | "Hakuna muda maalumu… fanya haraka… Thibitisha na OSHA" | fact | **CORRECT** (invents no deadline) | same |
+| `nat_28` | "asilimia 6… cheti si baadaye ya tarehe VAT inakuwa ya kulipwa (si tarehe 20)" | fact | **CORRECT** | same |
+| `nat_05` | "asilimia 3.5% ya mishahara ghafi" — right base, never asks for payroll | **fact** | **PARTIAL** | same verdict |
+| `nat_33` | "faini ya shilingi 2500 kwa kila mwezi" — drops the 22,000 fee, never computes 7× | fact | **WRONG** | same |
+| `nat_24` | "**Thibitisha na TRA (tra.go.tz).**" — bare referral, no content | fact | **WRONG** | same verdict, **different mode** |
+| `nat_23` | NSSF computed correctly (20% × 5,500,000 = 1,100,000; employer 550,000) — **SDL absent entirely** | **compute** | **WRONG** | same verdict, **materially different mode** |
+
+**The 4 CORRECT / 1 PARTIAL / 3 WRONG split reproduces exactly on the live pipeline.** The
+provisional table's headline number was right. That is worth saying plainly: the re-measurement
+vindicated the count.
+
+**But two of the three failures are not what the provisional table said they were, and one of them
+overturns a headline claim.**
+
+**1. `nat_23` — the compute engine fired, and worked.** Provisional: *"restates the input and stops;
+no arithmetic on either levy."* Measured: the row routed to **compute** (`sub_answer_kinds:
+["compute"]`), the NSSF rules engine produced correct, authoritative arithmetic, and **SDL was
+silently dropped.** This is exactly what `detect_intent → "nssf"` predicts — one levy detected, one
+levy answered, the other invisible. **The routing diagnosis is now confirmed live, on production
+behaviour, not just by calling the modules directly.** `nat_23` is not a generation ceiling: the
+engine was flawless on the half it was given.
+*(Separate defect, newly visible: the reply renders "wafanyakazi 12 wenye mishahara TZS 5,500,000
+**kila mmoja**" — asserting each of 12 employees earns the full 5.5M payroll. The arithmetic on the
+total is right; the verbal framing of the base is wrong. That is a slot/render defect, not a
+routing one, and it is not in any current work item.)*
+
+**2. `nat_05` is also a routing miss — a new finding.** Its rubric expects `compute[sdl]`; it routed
+to **fact**. Confirmed directly: `detect_intent("nat_05") → "none"`, and
+`is_uncomputable_payroll_amount → False`. The v16 orchestrator deliberately drops v15's never-guess
+guard *because the compute path's own clarification is supposed to cover it* — but the row never
+reaches the compute path, so nothing asks for the missing payroll figure. **That makes three of the
+eight rows routing misses (`nat_05`, `nat_23`, `nat_24`), not generation failures — and leaves
+`nat_33` as the only genuine capability gap** (no BRELA engine exists; `detect_intent → "none"`).
+
+**3. ⚠️ THE PILOT-SAFETY HEADLINE OVERSTATES ITS CASE, AND THIS RUN SHOWS IT.** That entry says
+`nat_23` and `nat_24` both failed *"with no hedge, no 'sijui,' no visible sign of uncertainty at
+all"* and that there is *"no measured route to 'sina uhakika' of any kind."* **Measured on v16,
+`nat_24` returned exactly one thing: "Thibitisha na TRA (tra.go.tz)" — a bare deferral.** That is
+the project's own referral formula. It is not a classified refusal (`refused: false`,
+`needs_clarification: false`) — it is the model producing a content-free referral on the fact path
+— but as user-visible behaviour it is a deferral, not a confident wrong answer. **The "no route of
+any kind" claim is not supported and is corrected in that entry.**
+
+**What survives, from `nat_23` alone:** a **confidently incomplete** answer — right facts in
+context, correct arithmetic on one levy, an entire second levy missing, no signal of any kind that
+half the question went unanswered. That still defeats a *retrieval-confidence* floor, because
+nothing about retrieval was uncertain. **But the mechanism is now named, and it is narrower than
+"the generation side is unreliable": it is a routing fan-out miss, and the generation-side check
+the headline itself proposed — "does the reply address every part of a multi-part question" —
+would catch it.** The pilot-safety picture is worse than "solved" and materially better than "no
+route exists."
+
+## §2's yield, now measured rather than estimated
+
+Forcing the correct facts in *is* the ceiling §2 can reach, since §2 closes retrieval for exactly
+these rows. So §2's yield is no longer an estimate:
+
+- **§2 alone: 4 of 8 CORRECT, plus `nat_05` partial — call it 4–5 of 8, not the ~5–6 previously
+  claimed.** The provisional figure was slightly optimistic.
+- **§2 + a routing/decomposition extension: 6–7 of 8.** `nat_23` needs multi-levy fan-out from
+  nicknamed phrasing; `nat_24` needs threshold-trap detection (`detect_intent → "none"` today);
+  `nat_05` needs to reach the compute path at all so its clarification can fire.
+- **`nat_33` is out of reach of both** — it needs a BRELA engine that does not exist.
+
+These figures are measured, cite a committed artifact, and are no longer provisional. **§2 is now
+unblocked on evidence** — the §8 precondition is satisfied — but nothing has been scoped or started,
+and that remains a separate go-ahead.
+
+## R16 close-out: instrument removed, production verified
+
+Debug method removed and redeployed. Verified live, not from a deploy log
+(`scratch/ss8_post_removal_check.py` → `.json`):
+
+- **Positive — the instrument is gone:** `run_forced_facts.remote(...)` now raises `NotFoundError`.
+- **Negative — production still answers.** `nat_32` (shareholder-vs-operator, verbatim) correctly
+  distinguishes passive shareholding from operating; `nat_43` (GN605A sector variance) correct;
+  `nat_27` VAT 18% correct; the OOC probe (`kodi ya faida ya mtaji`) still refuses through the
+  config-only phrase path.
+- Full local suite: **1229 passed, 1 xfailed**, unchanged. (Bare `pytest` exits 2 on a pre-existing
+  collection error — `kaggle/extraction_stress_test.py` is Kaggle-only. `pytest tests/` is the
+  gate.)
+
+**Process note, recorded rather than quietly fixed:** the first pass of this negative check sent a
+question I had composed from memory while labelling it `nat_32`. Any verdict from it would have
+been meaningless as a regression check — the same mistake-shape this whole cycle is about, one
+level down. The check was re-run with the verbatim row text; the results above are from that run.
+
+## ⚠️ Incidental finding, NOT a gate row, NOT scoped — a reproducible cross-levy error
+
+The invented probe was re-sent once deliberately, and **it reproduces exactly**:
+
+> Q: *nimeajiri watu watano tu je nalipa ile ya mafunzo*
+> A: *"…unatakiwa kuwa na wafanyakazi 10 ili kulazimika kulipa **asilimia 0.5** kwa ajili ya
+> mafunzo. Thibitisha na mamlaka husika (**nssf.go.tz**)."*
+
+The SDL threshold (10 employees) is right. **The rate is WCF's 0.5%, not SDL's 3.5%, and the
+authority cited is NSSF, not TRA** — a three-way levy conflation on a plainly in-scope question,
+twice out of two attempts. `chike/orchestrator.py` has a `_cross_levy_guard`; this got past it.
+**Recorded only.** It is not one of the 48 rows, it was measured twice with n=1 phrasing, and
+nothing here is scoped to fix it — but it should not be lost, and it belongs to the same routing
+workstream as `nat_23`/`nat_24`.
+
+---
+
+# 🗄️ SUPERSEDED — the provisional §8 entry, kept for audit trail (2026-08-22)
+
+**Everything below was produced by the uncommitted harness and is retained only so the correction
+is legible.** Its split turned out to be right; two of its failure-mode descriptions turned out to
+be wrong. Read the entry above instead.
+
+# 🎯 §8 MEASURED: RETRIEVAL IS BINDING FOR MOST OF THE REMAINING 8 ROWS, NOT ALL — A THIRD FAIL EVEN WITH THE RIGHT FACT FORCED IN (2026-08-22) — ⛔ SUPERSEDED, PROVISIONAL
 
 **Scoped as a measurement, not a fix, per instruction — nothing shipped.** Two rows forced into
 `top_k=3` during the interleave ship's live canaries (`nat_05`, `nat_23`) had both still failed to
