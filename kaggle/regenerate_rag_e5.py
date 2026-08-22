@@ -170,25 +170,37 @@ if failures:
 
 # Also run the critical known-failure queries as a secondary check.
 critical_queries = [
-    ('GN487A penalty', 'query: Faini kwa raia wa kigeni anayevunja GN487A ni kiasi gani hasa?', ['10,000,000', 'milioni kumi']),
-    ('SDL rate', 'query: SDL rate Tanzania ni asilimia ngapi?', ['3.5']),
-    ('NSSF employer', 'query: Mwajiri analipa asilimia ngapi NSSF kila mwezi?', ['10%', 'asilimia 10']),
-    ('BRELA annual return', 'query: Ada ya annual return BRELA ni shilingi ngapi?', ['22,000', 'elfu 22']),
-    ('VAT withholding services', 'query: VAT withholding kwenye huduma ni asilimia ngapi?', ['6%', 'services is 6']),
-    ('Zero-rated input VAT', 'query: Naweza kudai input VAT kwenye bidhaa zilizo zero-rated?', ['ndiyo', 'input vat', 'can claim']),
-    ('GN487A effective date', 'query: GN487A ilianza kutekelezwa tarehe gani?', ['28 july', '28 julai']),
-    ('GN487A full name', 'query: Jina kamili la GN487A ni nini?', ['business licensing', 'prohibition']),
-    ('Facilitator penalty', 'query: Adhabu ya raia wa Tanzania anayemsaidia mgeni ni nini?', ['5,000,000', 'milioni tano']),
+    # ── ANCHORS MIGRATED TO UNIQUE SUBSTRINGS, 2026-08-22 (R10 change, approved) ──
+    # Every anchor below was verified to occur in EXACTLY ONE index fact, and that is
+    # re-asserted at runtime by the GUARD ANCHOR UNIQUENESS block. The previous anchors were
+    # ambiguous -- '3.5' matched 6 facts, '22,000' 6, '5,000,000' 6, '18%' 6 -- so a guard
+    # could pass on a neighbouring fact and report success for one it never retrieved. That is
+    # not hypothetical: the 'SDL rate' guard was satisfied by THREE different facts at once
+    # (88, 212, 5), and nothing said which. See eval/results/regen_guard_audit.json.
+    #
+    # THREE DEAD ANCHORS were also found and removed -- 'elfu 22', '28 julai' and
+    # 'efd threshold tzs 11m' matched ZERO facts, so they had never contributed anything and
+    # would never have fired. A dead anchor is invisible while a live sibling carries the
+    # guard; both of these sat behind an ambiguous one that always passed.
+    ('GN487A penalty', 'query: Faini kwa raia wa kigeni anayevunja GN487A ni kiasi gani hasa?', ['Faini kwa mgeni']),
+    ('SDL rate', 'query: SDL rate Tanzania ni asilimia ngapi?', ['asilimia tatu na nusu']),
+    ('NSSF employer', 'query: Mwajiri analipa asilimia ngapi NSSF kila mwezi?', ['asilimia 10']),
+    ('BRELA annual return', 'query: Ada ya annual return BRELA ni shilingi ngapi?', ['kila mwaka ni TZS 22,000']),
+    ('VAT withholding services', 'query: VAT withholding kwenye huduma ni asilimia ngapi?', ['services is 6']),
+    ('Zero-rated input VAT', 'query: Naweza kudai input VAT kwenye bidhaa zilizo zero-rated?', ['input vat']),
+    ('GN487A effective date', 'query: GN487A ilianza kutekelezwa tarehe gani?', ['came into effect on 28 July']),
+    ('GN487A full name', 'query: Jina kamili la GN487A ni nini?', ['gn487a full legal name']),
+    ('Facilitator penalty', 'query: Adhabu ya raia wa Tanzania anayemsaidia mgeni ni nini?', ['milioni tano']),
     ('Phone repair activity', 'query: Mgeni anaweza kutengeneza simu?', ['phone', 'simu', 'activity 3']),
     # lv_01/fp_01 narrow faithfulness fix: the license-lending fact must WIN for the
     # kukopesha+leseni trigger (its distinctive tokens), while NOT displacing
     # 'Phone repair activity' above — the two guards together bracket the over-match fix.
-    ('License lending facilitation', 'query: Raia anayekopesha leseni yake kwa mgeni anaadhibiwa?', ['leseni', 'kukopesha']),
+    ('License lending facilitation', 'query: Raia anayekopesha leseni yake kwa mgeni anaadhibiwa?', ['kukopesha']),
     # Marriage-exemption Swahili grounding (eval_175): the previously English-only
     # gn487a_marriage_no_exemption fact must now WIN its own Swahili query. kuoa/kuolewa
     # are distinctive to this fact (no other fact uses them), so this is unambiguous.
     ('GN487A marriage no exemption', 'query: Ninaoa Mtanzania, naweza kufanya biashara ya rejareja?', ['kuoa', 'kuolewa']),
-    ('PAYE 800K band', 'query: PAYE kwa mshahara wa TZS 800,000 ni kiasi gani?', ['760', '25%', '78,000']),
+    ('PAYE 800K band', 'query: PAYE kwa mshahara wa TZS 800,000 ni kiasi gani?', ['78,000']),
     ('SDL 12-employee calculation', 'query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, SDL jumla ni kiasi gani?', ['252,000']),
     ('NSSF 12-employee calculation', 'query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, NSSF jumla ni kiasi gani?', ['1,440,000']),
     # Number-selection regression guard: the compound query where the model kept
@@ -198,12 +210,18 @@ critical_queries = [
     ('NSSF compound (120k selection bug)', 'query: Kampuni ina wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja. NSSF jumla ya kampuni ni kiasi gani?', ['1,440,000']),
     # EFD-threshold Swahili grounding (eval_347): the concise efd_threshold_tzs_11m fact must
     # WIN its own query — previously the 200M-magnitude vat_registration fact hijacked it.
-    ('EFD threshold', 'query: Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?', ['11,000,000', 'milioni kumi na moja', 'efd threshold tzs 11m']),
+    ('EFD threshold', 'query: Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?', ['milioni kumi na moja']),
     # Anti-displacement guard (bracket): the new concise EFD fact mentions 200M/kusajili-VAT,
     # which could displace the real VAT-registration fact from a genuine VAT-reg query — the
     # exact failure mode the GN487A concise facts hit. This must still return the 200M VAT-reg
     # fact. If it FAILS, narrow the EFD fact's 200M contrast (GN487A narrowing precedent).
-    ('VAT registration threshold (displacement guard)', 'query: Kizingiti cha kusajili VAT ni mauzo ya kiasi gani kwa mwaka?', ['200,000,000']),
+    # NOTE 2026-08-22: this guard PASSES, and the displacement it was written to catch is
+    # nonetheless HAPPENING -- [57] (the EFD fact, which mentions 200M as a contrast) is at
+    # RANK 1 for this VAT-registration query, above [145], the fact actually asked for. The
+    # old '200,000,000' anchor matched all three of [15], [57], [145], so the guard could not
+    # see that its own feared displacement had occurred. Anchored to [145] now. It still
+    # passes (rank 2), but a future slip to rank 4 will now be caught.
+    ('VAT registration threshold (displacement guard)', 'query: Kizingiti cha kusajili VAT ni mauzo ya kiasi gani kwa mwaka?', ['200,000,000 kwa miezi 12']),
     # ── FACT-ACCURACY 2026-07-27: the three VERBATIM edge questions must each retrieve ──
     # These are the EXACT questions from the 20-edge probe that produced the fabrications
     # (not lexically-easy paraphrases — an earlier draft used paraphrases too close to the
@@ -212,6 +230,14 @@ critical_queries = [
     # Q13 BRELA striking-off: model fabricated a "must finish its term first" bar.
     ('BRELA striking-off (Q13 verbatim)', 'query: Kampuni yangu imesajiliwa miaka sita iliyopita, naweza kuifuta sasa?', ['defunct', 'mahakama kuu', 'sura 212']),
     # Q14 OSHA/WCF: model answered wrong agency + invented a 2-employee WCF threshold.
+    # ACCEPTED AMBIGUITY, 2026-08-22 — deliberately NOT migrated to a unique anchor.
+    # Its three anchors each match two facts, [68] and [69], and BOTH state the thing the
+    # guard exists to protect (OSHA registers all workplaces; WCF starts from the first
+    # employee). Either one is a correct answer to this question, so passing on "the other"
+    # fact is not a false pass. Pinning it to [69] alone would make the guard fail spuriously
+    # if [68] were retrieved instead — a worse outcome than the ambiguity.
+    # The lesson generalises: ambiguity is a fault when the alternative fact would be a WRONG
+    # answer, not merely when more than one fact matches.
     ('OSHA/WCF small-count (Q14 verbatim)', 'query: Nina wafanyakazi wawili tu dukani, bado nasajiliwa mahali fulani?', ['osha husajili', 'wcf huanza', 'mfanyakazi wa kwanza']),
     # Q16 EFD: model said every shop needs an EFD regardless of sales.
     ('EFD not-every-business (Q16 verbatim)', 'query: Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?', ['si kila biashara', 'risiti za mkono']),
@@ -220,10 +246,17 @@ critical_queries = [
     # rank 127->1); four negative/displacement guards for nat_26/27/34/36, whose pools
     # sit downstream of the sdl_rate_2025/sdl_employee_threshold/brela_annual_return_fee
     # deletions and the annual_return_filing_fee/late_filing_penalty_monthly_fee/GN605A
-    # rewrites. nat_27's guard is also what caught the vat_withholding_goods/services
-    # displacement (see the HELD BACK comment in precompute_rag_embeddings.py) -- it
-    # only passes because that rewrite was NOT applied; if anyone re-attempts it, this
-    # guard is what will catch the regression again.
+    # rewrites.
+    #
+    # ⚠️ CORRECTED 2026-08-22. This block used to claim nat_27's guard "is what caught the
+    # vat_withholding_goods/services displacement ... if anyone re-attempts it, this guard is
+    # what will catch the regression again." BOTH HALVES WERE FALSE and the claim cost real
+    # wins. Measured (eval/index_quality/reopen_nat44_nat28.py): the rewrite moves nat_27's
+    # fact by ONE rank (15 -> 16), on a row whose fact is not retrieved either way -- there was
+    # no regression to catch. And the guard could not have caught one: it tested `'18%' in
+    # fact_text`, which SIX index facts satisfy, including [64] vat_withholding_formula_correct
+    # -- the very fact the rewrite touches. It reported the standard-rate fact as retrieved
+    # while matching the withholding fact. See eval/results/regen_guard_audit.json.
     #
     # nat_37 and nat_38 were ORIGINALLY going to be guarded here too, per the founder's
     # list of six. Local dry-run verification (scratch/local_regen_verify.py) found both
@@ -233,18 +266,94 @@ critical_queries = [
     # C4 or otherwise; wiring a guard for an already-failing row would only block this
     # cycle's real wins from deploying. Named as their own item in PROGRESS instead of
     # silently guarded here.
-    ('GN605A sector count (nat_43 verbatim, the row that clears)', 'query: Mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta?', ['mkulima', 'kilimo']),
-    ('VAT six-month threshold (nat_26 displacement guard)', 'query: Nimefungua duka miezi sita iliyopita nimeuza jumla milioni 60 hadi sasa je nimefika kiwango cha vat?', ['100,000,000']),
-    ('VAT standard rate (nat_27 displacement guard)', 'query: VAT ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu?', ['18%']),
-    ('Company registration fee (nat_34 displacement guard)', 'query: Nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina?', ['95,000']),
-    ('EFD threshold, VAT-unregistered (nat_36 displacement guard)', 'query: Mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti?', ['11,000,000']),
+    #
+    # ⚠️ REWRITTEN 2026-08-22 (R10 change, approved). These five previously used PARAPHRASED
+    # query text and AMBIGUOUS keywords, and both faults were live:
+    #   * Phrasing: they differed from their eval rows by capitalisation and a '?'. That is not
+    #     cosmetic -- for nat_36 the guard phrasing puts its fact at rank 2 and the verbatim
+    #     eval text puts it at rank 17. A guard that only passes on a phrasing no user sends
+    #     certifies nothing.
+    #   * Keywords: '18%' matches 6 facts, '11,000,000' matches 3, '95,000' matches 3,
+    #     '100,000,000' matches 4. A guard could pass on a neighbour and report success.
+    # Now: VERBATIM text from eval/accuracy_gate/edge_probe_natural_048.jsonl, and anchors
+    # verified to occur in exactly ONE index fact (asserted at runtime below, so this cannot
+    # rot silently when facts are edited).
+    ('GN605A sector count (nat_43 verbatim, the row that clears)', 'query: mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta', ['hakina kiwango kimoja']),
+    ('VAT six-month threshold (nat_26 displacement guard)', 'query: nimefungua duka miezi sita iliyopita nimeuza jumla milioni 60 hadi sasa je nimefika kiwango cha vat', ['100,000,000 kwa miezi 6']),
+    ('VAT standard rate (nat_27 displacement guard)', 'query: vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu', ['NEVER 14%']),
+    ('Company registration fee (nat_34 displacement guard)', 'query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina', ['company registration fee 1']),
+    ('EFD threshold, VAT-unregistered (nat_36 displacement guard)', 'query: mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti', ['milioni kumi na moja']),
 ]
+
+# ── KNOWN-FAILING GUARDS (2026-08-22) ────────────────────────────────────────────
+# A guard here is a KNOWN, TRACKED retrieval defect: it is reported every run as
+# [KNOWN-FAIL] and does NOT block the regen. It is not a passing guard and not an absent one.
+#
+# Removing a name from this set is how a defect gets CLOSED. Adding one requires a PROGRESS
+# entry naming why. A name here that starts PASSING is itself reported as a defect
+# ([STALE-KNOWN-FAIL]) and DOES block -- otherwise this set becomes the place guards go to be
+# forgotten, which is the failure mode it exists to prevent.
+KNOWN_FAILING = {
+    # [13] vat_standard_rate is rank 15 for the verbatim nat_27 question and is never
+    # retrieved. nat_27 answers correctly FROM MODEL WEIGHTS, not from retrieval -- see the
+    # 2026-08-22 grounding entry in PROGRESS.md. Closing this means rewriting [13] ask-first,
+    # measured at rank 15 -> 2 (eval/results/targeted_rewrite.json).
+    'VAT standard rate (nat_27 displacement guard)',
+    # [57] efd_threshold is rank 17 for the verbatim nat_36 question (rank 2 only under the
+    # old paraphrase, which is exactly why the paraphrase was a fault). nat_36 also answers
+    # from weights. Closing this means rewriting [57] to lead with 'mashine ya risiti (EFD)'
+    # rather than 'Kizingiti cha kuanza kutumia', measured at rank 17 -> 1.
+    'EFD threshold, VAT-unregistered (nat_36 displacement guard)',
+}
+
+# Anchor uniqueness is a PRECONDITION, not an assumption: if a fact edit makes an anchor match
+# two rows, the guard silently regains the exact fault this change removed. Checked here, on
+# the texts actually being embedded, before any guard runs.
+print('\n' + '=' * 60)
+print('GUARD ANCHOR UNIQUENESS')
+print('=' * 60)
+# Guards whose ambiguity has been ADJUDICATED AS BENIGN: every fact their anchors match is a
+# correct answer to the guard's question, so passing on "the other one" is not a false pass.
+# A name here needs the reasoning written at the guard itself, not just this set.
+ACCEPTED_AMBIGUOUS = {
+    # anchors match [68] and [69]; both carry OSHA-registers-all-workplaces and
+    # WCF-from-first-employee. Pinning to one would fail spuriously on the other.
+    'OSHA/WCF small-count (Q14 verbatim)',
+}
+
+_anchor_pass = True
+_dead, _ambiguous = [], []
+for _name, _query, _expected in critical_queries:
+    for _kw in _expected:
+        _hits = [i for i, t in enumerate(fact_texts_to_embed) if _kw.lower() in t.lower()]
+        if not _hits:
+            # An anchor matching nothing can never fire. Three of these were found on
+            # 2026-08-22 ('elfu 22', '28 julai', 'efd threshold tzs 11m'), each hidden
+            # behind a live sibling anchor that always passed.
+            _dead.append((_name, _kw))
+            _anchor_pass = False
+        elif len(_hits) > 1 and _name not in ACCEPTED_AMBIGUOUS:
+            _ambiguous.append((_name, _kw, _hits))
+            _anchor_pass = False
+
+for _name, _kw in _dead:
+    print(f'[DEAD-ANCHOR] {_name}: anchor {_kw!r} matches ZERO facts -- it can never fire')
+for _name, _kw, _hits in _ambiguous:
+    print(f'[AMBIGUOUS] {_name}: anchor {_kw!r} matches {len(_hits)} facts {_hits[:8]}')
+if _anchor_pass:
+    print(f'[OK] every anchor across {len(critical_queries)} guards resolves to exactly one '
+          f'fact ({len(ACCEPTED_AMBIGUOUS)} adjudicated-benign exception(s))')
+else:
+    print('[WARN] the anchors above CANNOT do the job they claim -- a dead anchor never')
+    print('       fires, and an ambiguous one can pass on a fact it does not mean.')
+    print('       See eval/results/regen_guard_audit.json and PROGRESS.md 2026-08-22.')
 
 print('\n' + '=' * 60)
 print('CRITICAL KNOWN-FAILURE QUERIES')
 print('=' * 60)
 
 critical_pass = True
+_known_fail_seen = set()
 for name, query, expected in critical_queries:
     q_emb = model.encode([query])[0]
     q_norm = q_emb / (np.linalg.norm(q_emb) + 1e-10)
@@ -257,13 +366,36 @@ for name, query, expected in critical_queries:
             found = True
             break
 
-    status = 'PASS' if found else 'FAIL'
-    print(f'[{status}] {name}')
-    if not found:
-        critical_pass = False
-        # show what WAS retrieved so a fail is diagnosable, not just a red X
+    if not found and name in KNOWN_FAILING:
+        # Tracked defect: visible every run, does not block the regen.
+        _known_fail_seen.add(name)
+        print(f'[KNOWN-FAIL] {name}')
         for r, idx in enumerate(top3_idx, 1):
             print(f'        top{r}: {fact_texts_to_embed[idx][:90]}')
+    elif found and name in KNOWN_FAILING:
+        # The defect was fixed and nobody removed it from the set. That is a real problem:
+        # a stale entry means a genuine future regression on this row would be swallowed as
+        # "known". Block until the set is updated.
+        _known_fail_seen.add(name)
+        critical_pass = False
+        print(f'[STALE-KNOWN-FAIL] {name} now PASSES -- remove it from KNOWN_FAILING')
+    else:
+        status = 'PASS' if found else 'FAIL'
+        print(f'[{status}] {name}')
+        if not found:
+            critical_pass = False
+            # show what WAS retrieved so a fail is diagnosable, not just a red X
+            for r, idx in enumerate(top3_idx, 1):
+                print(f'        top{r}: {fact_texts_to_embed[idx][:90]}')
+
+# Summary, so the tracked-defect count is visible rather than buried in the log.
+print(f'\n{len(KNOWN_FAILING)} known-failing guard(s) tracked: {sorted(KNOWN_FAILING)}')
+_orphans = KNOWN_FAILING - _known_fail_seen
+if _orphans:
+    # A name in the set that matches no guard at all -- renamed or deleted guard. Same
+    # forgetting failure as a stale pass, so it blocks too.
+    critical_pass = False
+    print(f'[ORPHAN-KNOWN-FAIL] not found among the guards: {sorted(_orphans)}')
 
 # ── CONTRAST-LANGUAGE GUARD — NSSF 120k number-selection regression ──────────────
 # The compound query must retrieve a fact that carries BOTH the correct scaled total

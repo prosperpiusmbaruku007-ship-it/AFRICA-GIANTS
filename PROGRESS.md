@@ -133,7 +133,92 @@ the live v16 pipeline.
 
 ---
 
-# 🔁 nat_44 / nat_28 RE-OPENED: THE STATED BASIS WAS WRONG, THE DECISION SURVIVES ON A BETTER ONE (2026-08-22)
+# ✅ THE REGEN GATE NOW CHECKS WHAT IT CLAIMS: ALL 26 GUARDS MIGRATED (R10 change, approved and applied 2026-08-22)
+
+**Applied with explicit founder approval to `kaggle/regenerate_rag_e5.py` (R10-protected).**
+Proposal: `docs/decisions/proposed-r10-change-regen-guards.md`. Local dry-run before it ever runs on
+Kaggle: `eval/index_quality/verify_regen_guards_local.py` →
+`eval/results/regen_guards_local_dryrun.json` (AST-parses the guard block and replays it against the
+committed index — no Kaggle cycle needed to know what it will do).
+
+| before | after |
+|---|---|
+| 2 of 26 guards clean | **26 of 26 sound** |
+| 18 could pass on a fact they did not mean | **0** (1 adjudicated benign) |
+| 3 dead anchors matching zero facts | **0** |
+| 5 guards on paraphrased phrasing | **0** — verbatim eval text |
+| 0 failing, and that was the problem | **2 KNOWN-FAIL, tracked and visible** |
+
+Dry-run result: **24 PASS · 0 FAIL · 2 KNOWN-FAIL · 0 STALE · 0 ORPHAN · regen not blocked.**
+
+**What changed:**
+
+1. **Five displacement guards → verbatim eval text + unique anchors.** The phrasing fault was not
+   cosmetic: `nat_36`'s fact is rank 2 under the old paraphrase and **rank 17** under the text its
+   eval row actually uses.
+2. **All remaining ambiguous anchors → substrings verified to match exactly one fact**, re-asserted
+   at runtime so a future fact edit cannot silently restore the fault. The worst case was
+   `SDL rate`, whose `3.5` anchor was satisfied by **three different facts at once** ([88], [212],
+   [5]) with nothing recording which.
+3. **THREE DEAD ANCHORS FOUND AND REMOVED** — `elfu 22`, `28 julai`, `efd threshold tzs 11m` matched
+   **zero** facts. They could never have fired. Each sat behind a live ambiguous sibling that always
+   passed, so nothing ever revealed them. **A new `[DEAD-ANCHOR]` check now blocks on this.**
+4. **`KNOWN_FAILING` bucket** — `nat_27` and `nat_36`. *(Correction to my own proposal, which listed
+   only `nat_27`: once `nat_36`'s guard uses verbatim phrasing it fails too, at rank 17.)* Reported
+   every run as `[KNOWN-FAIL]`, does not block.
+5. **`[STALE-KNOWN-FAIL]` and `[ORPHAN-KNOWN-FAIL]`** — a bucketed guard that starts passing, or a
+   name matching no guard, **blocks**. This is what stops the bucket becoming where guards go to be
+   forgotten.
+6. **One ambiguity accepted, with reasoning at the guard.** `OSHA/WCF small-count`'s anchors match
+   [68] and [69] and **both** state what it protects, so pinning to one would fail spuriously on the
+   other. **The general rule, now written down: ambiguity is a fault when the alternative fact would
+   be a WRONG answer — not merely when more than one fact matches.**
+
+**What this does not do:** it does not fix `nat_27` or `nat_36`. It makes their breakage *visible*
+instead of reported as a pass. Closing them means the ask-first rewrite measured at rank 15 → 2 and
+17 → 1 — which is index work, not guard work.
+
+---
+
+# 🧭 THE 69-RANK SWING: ASK-ALIGNMENT IS THE DOMINANT RETRIEVABILITY FACTOR (2026-08-22)
+
+**Recorded as its own result, because it is the strongest evidence this project has about what
+makes a fact retrievable — and it should be met before anyone proposes bulk index work again.**
+
+Two rewrites of **the same two facts**, carrying **the same regulatory content**, both Swahili,
+both value-forward. The only difference is **whose vocabulary they lead with.**
+
+| | leads with | `nat_28`'s fact rank |
+|---|---|---|
+| **v1** | the rate and the legal framing — *"Ukifanya kazi ya HUDUMA … VAT withholding ya asilimia 6 … Finance Act 2025"* | **79** |
+| **v2** | the asker's own words — *"Ukifanya kazi ya **ushauri** … watakukata VAT … utapewa **CHETI**"* | **10** |
+
+**69 ranks, from vocabulary alone.** `nat_28`'s question contains *ushauri* and *cheti*; v1 dropped
+both for the regulatory register, and the fact fell 46 places **below where it started**. v1 would
+have shipped a severe regression while reading like a perfectly sensible rewrite.
+
+**Corroborated independently on `nat_36`**: its fact was **already** Swahili-first with the value
+near the front and sat at **rank 17**. Re-leading it with *mashine ya risiti (EFD)* — the object the
+user asks about — instead of *"Kizingiti cha kuanza kutumia"* took it to **rank 1**.
+
+**The ranking of factors, as measured:**
+
+1. **Ask-alignment — dominant.** 69 ranks (`nat_28`), 16 ranks (`nat_36`), 13 ranks (`nat_27`).
+2. **Swahili-first / value-forward — necessary, not sufficient.** `nat_36`'s fact satisfied it
+   fully and was still unretrievable.
+3. **Clearing competing `key: value` fragments — real but small.** +3 and +11 ranks; closed
+   neither row.
+
+**What a future session must meet before proposing a bulk rewrite of the index:** a bulk pass
+optimises (2) and (3), the two weaker factors, and cannot optimise (1) — because ask-alignment is
+defined per question, not per fact. **Index work is per-row: take the row that fails, rewrite the
+fact it needs in the asker's words, measure the rank.** Evidence:
+`eval/results/targeted_rewrite.json`, `eval/results/reopen_nat44_nat28.json`. Authoring rule
+recorded in `CLAUDE.md` R15.
+
+---
+
+# 🔁 nat_44 / nat_28 RE-OPENED: DEFERRED ON A SOUND REASON, NOT CLOSED ON A FALSE ONE (2026-08-22)
 
 Re-measured with the faults removed — verbatim phrasings, anchors **asserted unique in the index at
 runtime**, ranks read by fact position so no substring can stand in.
@@ -150,10 +235,20 @@ runtime**, ranks read by fact position so no substring can stand in.
 model weights**. There was no live behaviour to regress. Real wins were declined against a
 regression that does not exist, detected by a guard that could not tell [13] from [64].
 
-**2. The decision outcome survives anyway, for a better reason: neither variant reaches top-3.**
-`nat_44` gets to rank 4, `nat_28` to rank 10; production reads `top_k=3`. This is the same ceiling
-already proven empirically — rank 8 never reaches a `top_k=3` system. **So: don't ship it, but for
-the right reason, and `nat_44` at rank 4 is one iteration away rather than hopeless.**
+**2. The outcome stands; the reasoning is REPLACED.** Recorded plainly, because the difference
+matters to anyone who reads this later:
+
+> **Not shipped — because neither variant reaches top-3 against production's `top_k=3`
+> (`nat_44` rank 4, `nat_28` rank 10). NOT because it regresses `nat_27`; that regression never
+> existed.**
+
+This is the same ceiling already proven empirically: rank 8 never reaches a `top_k=3` system.
+
+**3. STATUS: DEFERRAL, NOT CLOSURE.** `nat_44` moved 33 → 4. It is **one rank** outside the window
+and one alignment iteration from viable — v2 already gained 29 places over v1's 28 by adding the
+asker's words, and that lever is not exhausted. This should be picked up again, not filed as
+decided. `nat_28` at rank 10 is further out and needs the certificate half of its question handled
+too, since the row asks two things.
 
 **3. The wording result is the most valuable part, and it is a direct confirmation of the
 topic-alignment finding.** The two variants rewrite the SAME facts and differ only in whether they

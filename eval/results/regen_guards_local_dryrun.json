@@ -1,0 +1,916 @@
+{
+  "measured": "2026-08-22",
+  "harness": "eval/index_quality/verify_regen_guards_local.py",
+  "source": "kaggle/regenerate_rag_e5.py (AST parse, read-only)",
+  "total_guards": 26,
+  "status_counts": {
+    "PASS": 24,
+    "FAIL": 0,
+    "KNOWN-FAIL": 2,
+    "STALE-KNOWN-FAIL": 0
+  },
+  "known_failing": [
+    "EFD threshold, VAT-unregistered (nat_36 displacement guard)",
+    "VAT standard rate (nat_27 displacement guard)"
+  ],
+  "orphan_known_failing": [],
+  "guards_with_ambiguous_anchors": [],
+  "ambiguous_count": 0,
+  "accepted_ambiguous": [
+    "OSHA/WCF small-count (Q14 verbatim)"
+  ],
+  "guards_with_dead_anchors": [],
+  "regen_would_block": false,
+  "blocked_by": [],
+  "rows": [
+    {
+      "name": "GN487A penalty",
+      "status": "PASS",
+      "query": "query: Faini kwa raia wa kigeni anayevunja GN487A ni kiasi gani hasa?",
+      "expected": [
+        "Faini kwa mgeni"
+      ],
+      "anchor_hits": {
+        "Faini kwa mgeni": [
+          20
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 20,
+          "text": "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni "
+        },
+        {
+          "position": 21,
+          "text": "Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini si zaidi ya TZS 5,0"
+        },
+        {
+          "position": 22,
+          "text": "Kukopesha, kukodisha au kukabidhi leseni yako ya biashara kwa mgeni ni kosa chini ya GN4"
+        }
+      ],
+      "satisfied_by": [
+        20
+      ]
+    },
+    {
+      "name": "SDL rate",
+      "status": "PASS",
+      "query": "query: SDL rate Tanzania ni asilimia ngapi?",
+      "expected": [
+        "asilimia tatu na nusu"
+      ],
+      "anchor_hits": {
+        "asilimia tatu na nusu": [
+          5
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 88,
+          "text": "SDL source law: SDL (Skills Development Levy) is imposed under Section 14 of the Vocatio"
+        },
+        {
+          "position": 212,
+          "text": "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3."
+        },
+        {
+          "position": 5,
+          "text": "SDL, ambayo huitwa pia \"mafunzo\": kiwango cha mafunzo ni asilimia tatu na nusu (asilimia"
+        }
+      ],
+      "satisfied_by": [
+        5
+      ]
+    },
+    {
+      "name": "NSSF employer",
+      "status": "PASS",
+      "query": "query: Mwajiri analipa asilimia ngapi NSSF kila mwezi?",
+      "expected": [
+        "asilimia 10"
+      ],
+      "anchor_hits": {
+        "asilimia 10": [
+          9
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 9,
+          "text": "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni"
+        },
+        {
+          "position": 66,
+          "text": "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote"
+        },
+        {
+          "position": 10,
+          "text": "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nss"
+        }
+      ],
+      "satisfied_by": [
+        9
+      ]
+    },
+    {
+      "name": "BRELA annual return",
+      "status": "PASS",
+      "query": "query: Ada ya annual return BRELA ni shilingi ngapi?",
+      "expected": [
+        "kila mwaka ni TZS 22,000"
+      ],
+      "anchor_hits": {
+        "kila mwaka ni TZS 22,000": [
+          134
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 134,
+          "text": "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni TZS 22,000."
+        },
+        {
+          "position": 133,
+          "text": "BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni TZS 2,500 kwa "
+        },
+        {
+          "position": 78,
+          "text": "BRELA fees hedge: BRELA registration and filing fees change periodically via ministerial"
+        }
+      ],
+      "satisfied_by": [
+        134
+      ]
+    },
+    {
+      "name": "VAT withholding services",
+      "status": "PASS",
+      "query": "query: VAT withholding kwenye huduma ni asilimia ngapi?",
+      "expected": [
+        "services is 6"
+      ],
+      "anchor_hits": {
+        "services is 6": [
+          17
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 17,
+          "text": "vat withholding services: VAT withholding on services is 6% of the consideration (invoic"
+        },
+        {
+          "position": 64,
+          "text": "vat withholding formula correct: VAT withholding rate applies to the CONSIDERATION (invo"
+        },
+        {
+          "position": 76,
+          "text": "VAT withholding base disputed: RESOLVED (2026-07-25) by primary legislation: the base is"
+        }
+      ],
+      "satisfied_by": [
+        17
+      ]
+    },
+    {
+      "name": "Zero-rated input VAT",
+      "status": "PASS",
+      "query": "query: Naweza kudai input VAT kwenye bidhaa zilizo zero-rated?",
+      "expected": [
+        "input vat"
+      ],
+      "anchor_hits": {
+        "input vat": [
+          89
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 89,
+          "text": "VAT zero rated vs exempt input VAT: Zero-rated supplies are taxable at 0% VAT rate — sup"
+        },
+        {
+          "position": 171,
+          "text": "vat deferment minimum value: 10,000,000 TZS"
+        },
+        {
+          "position": 148,
+          "text": "vat return submission deadline: 20 days_of_month"
+        }
+      ],
+      "satisfied_by": [
+        89
+      ]
+    },
+    {
+      "name": "GN487A effective date",
+      "status": "PASS",
+      "query": "query: GN487A ilianza kutekelezwa tarehe gani?",
+      "expected": [
+        "came into effect on 28 July"
+      ],
+      "anchor_hits": {
+        "came into effect on 28 July": [
+          19
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 19,
+          "text": "gn487a effective date: GN 487A came into effect on 28 July 2025"
+        },
+        {
+          "position": 174,
+          "text": "gn487a vs gn605a disambiguation: GN 487A and GN 605A are two DIFFERENT Government Notice"
+        },
+        {
+          "position": 179,
+          "text": "Kutengeneza au ukarabati wa simu na vifaa vya kielektroniki ni shughuli iliyozuiliwa kwa"
+        }
+      ],
+      "satisfied_by": [
+        19
+      ]
+    },
+    {
+      "name": "GN487A full name",
+      "status": "PASS",
+      "query": "query: Jina kamili la GN487A ni nini?",
+      "expected": [
+        "gn487a full legal name"
+      ],
+      "anchor_hits": {
+        "gn487a full legal name": [
+          173
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 173,
+          "text": "gn487a full legal name: GN 487A is Government Notice No. 487A. Its full legal name is: T"
+        },
+        {
+          "position": 174,
+          "text": "gn487a vs gn605a disambiguation: GN 487A and GN 605A are two DIFFERENT Government Notice"
+        },
+        {
+          "position": 20,
+          "text": "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni "
+        }
+      ],
+      "satisfied_by": [
+        173
+      ]
+    },
+    {
+      "name": "Facilitator penalty",
+      "status": "PASS",
+      "query": "query: Adhabu ya raia wa Tanzania anayemsaidia mgeni ni nini?",
+      "expected": [
+        "milioni tano"
+      ],
+      "anchor_hits": {
+        "milioni tano": [
+          21
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 21,
+          "text": "Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini si zaidi ya TZS 5,0"
+        },
+        {
+          "position": 92,
+          "text": "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa"
+        },
+        {
+          "position": 22,
+          "text": "Kukopesha, kukodisha au kukabidhi leseni yako ya biashara kwa mgeni ni kosa chini ya GN4"
+        }
+      ],
+      "satisfied_by": [
+        21
+      ]
+    },
+    {
+      "name": "Phone repair activity",
+      "status": "PASS",
+      "query": "query: Mgeni anaweza kutengeneza simu?",
+      "expected": [
+        "phone",
+        "simu",
+        "activity 3"
+      ],
+      "anchor_hits": {
+        "phone": [
+          179
+        ],
+        "simu": [
+          179
+        ],
+        "activity 3": [
+          179
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 179,
+          "text": "Kutengeneza au ukarabati wa simu na vifaa vya kielektroniki ni shughuli iliyozuiliwa kwa"
+        },
+        {
+          "position": 92,
+          "text": "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa"
+        },
+        {
+          "position": 20,
+          "text": "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni "
+        }
+      ],
+      "satisfied_by": [
+        179
+      ]
+    },
+    {
+      "name": "License lending facilitation",
+      "status": "PASS",
+      "query": "query: Raia anayekopesha leseni yake kwa mgeni anaadhibiwa?",
+      "expected": [
+        "kukopesha"
+      ],
+      "anchor_hits": {
+        "kukopesha": [
+          22
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 22,
+          "text": "Kukopesha, kukodisha au kukabidhi leseni yako ya biashara kwa mgeni ni kosa chini ya GN4"
+        },
+        {
+          "position": 92,
+          "text": "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa"
+        },
+        {
+          "position": 20,
+          "text": "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni "
+        }
+      ],
+      "satisfied_by": [
+        22
+      ]
+    },
+    {
+      "name": "GN487A marriage no exemption",
+      "status": "PASS",
+      "query": "query: Ninaoa Mtanzania, naweza kufanya biashara ya rejareja?",
+      "expected": [
+        "kuoa",
+        "kuolewa"
+      ],
+      "anchor_hits": {
+        "kuoa": [
+          92
+        ],
+        "kuolewa": [
+          92
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 92,
+          "text": "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa"
+        },
+        {
+          "position": 214,
+          "text": "business licence expiry 30 june: Every business licence in Tanzania expires on 30 June e"
+        },
+        {
+          "position": 44,
+          "text": "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? N"
+        }
+      ],
+      "satisfied_by": [
+        92
+      ]
+    },
+    {
+      "name": "PAYE 800K band",
+      "status": "PASS",
+      "query": "query: PAYE kwa mshahara wa TZS 800,000 ni kiasi gani?",
+      "expected": [
+        "78,000"
+      ],
+      "anchor_hits": {
+        "78,000": [
+          211
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 211,
+          "text": "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesab"
+        },
+        {
+          "position": 213,
+          "text": "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (S"
+        },
+        {
+          "position": 212,
+          "text": "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3."
+        }
+      ],
+      "satisfied_by": [
+        211
+      ]
+    },
+    {
+      "name": "SDL 12-employee calculation",
+      "status": "PASS",
+      "query": "query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, SDL jumla ni kiasi gani?",
+      "expected": [
+        "252,000"
+      ],
+      "anchor_hits": {
+        "252,000": [
+          212
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 212,
+          "text": "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3."
+        },
+        {
+          "position": 213,
+          "text": "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (S"
+        },
+        {
+          "position": 7,
+          "text": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako nda"
+        }
+      ],
+      "satisfied_by": [
+        212
+      ]
+    },
+    {
+      "name": "NSSF 12-employee calculation",
+      "status": "PASS",
+      "query": "query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, NSSF jumla ni kiasi gani?",
+      "expected": [
+        "1,440,000"
+      ],
+      "anchor_hits": {
+        "1,440,000": [
+          213
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 213,
+          "text": "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (S"
+        },
+        {
+          "position": 10,
+          "text": "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nss"
+        },
+        {
+          "position": 212,
+          "text": "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3."
+        }
+      ],
+      "satisfied_by": [
+        213
+      ]
+    },
+    {
+      "name": "NSSF compound (120k selection bug)",
+      "status": "PASS",
+      "query": "query: Kampuni ina wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja. NSSF jumla ya kampuni ni kiasi gani?",
+      "expected": [
+        "1,440,000"
+      ],
+      "anchor_hits": {
+        "1,440,000": [
+          213
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 213,
+          "text": "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (S"
+        },
+        {
+          "position": 10,
+          "text": "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nss"
+        },
+        {
+          "position": 9,
+          "text": "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni"
+        }
+      ],
+      "satisfied_by": [
+        213
+      ]
+    },
+    {
+      "name": "EFD threshold",
+      "status": "PASS",
+      "query": "query: Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?",
+      "expected": [
+        "milioni kumi na moja"
+      ],
+      "anchor_hits": {
+        "milioni kumi na moja": [
+          57
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 57,
+          "text": "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na mo"
+        },
+        {
+          "position": 137,
+          "text": "file search report fee: 22,000 TZS"
+        },
+        {
+          "position": 145,
+          "text": "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12."
+        }
+      ],
+      "satisfied_by": [
+        57
+      ]
+    },
+    {
+      "name": "VAT registration threshold (displacement guard)",
+      "status": "PASS",
+      "query": "query: Kizingiti cha kusajili VAT ni mauzo ya kiasi gani kwa mwaka?",
+      "expected": [
+        "200,000,000 kwa miezi 12"
+      ],
+      "anchor_hits": {
+        "200,000,000 kwa miezi 12": [
+          145
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 57,
+          "text": "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na mo"
+        },
+        {
+          "position": 145,
+          "text": "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12."
+        },
+        {
+          "position": 15,
+          "text": "vat registration threshold: VAT registration threshold is TZS 200,000,000 per year OR TZ"
+        }
+      ],
+      "satisfied_by": [
+        145
+      ]
+    },
+    {
+      "name": "BRELA striking-off (Q13 verbatim)",
+      "status": "PASS",
+      "query": "query: Kampuni yangu imesajiliwa miaka sita iliyopita, naweza kuifuta sasa?",
+      "expected": [
+        "defunct",
+        "mahakama kuu",
+        "sura 212"
+      ],
+      "anchor_hits": {
+        "defunct": [
+          44
+        ],
+        "mahakama kuu": [
+          44
+        ],
+        "sura 212": [
+          44
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 160,
+          "text": "trademark renewal period: saba years"
+        },
+        {
+          "position": 200,
+          "text": "employer notification deadline before retirement: 6 months"
+        },
+        {
+          "position": 44,
+          "text": "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? N"
+        }
+      ],
+      "satisfied_by": [
+        44
+      ]
+    },
+    {
+      "name": "OSHA/WCF small-count (Q14 verbatim)",
+      "status": "PASS",
+      "query": "query: Nina wafanyakazi wawili tu dukani, bado nasajiliwa mahali fulani?",
+      "expected": [
+        "osha husajili",
+        "wcf huanza",
+        "mfanyakazi wa kwanza"
+      ],
+      "anchor_hits": {
+        "osha husajili": [
+          68,
+          69
+        ],
+        "wcf huanza": [
+          68,
+          69
+        ],
+        "mfanyakazi wa kwanza": [
+          68,
+          69
+        ]
+      },
+      "anchor_unique": false,
+      "dead_anchors": [],
+      "accepted_ambiguous": true,
+      "top3": [
+        {
+          "position": 69,
+          "text": "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. "
+        },
+        {
+          "position": 154,
+          "text": "minimum shareholders: 2 employees"
+        },
+        {
+          "position": 153,
+          "text": "minimum directors: 2 employees"
+        }
+      ],
+      "satisfied_by": [
+        69
+      ]
+    },
+    {
+      "name": "EFD not-every-business (Q16 verbatim)",
+      "status": "PASS",
+      "query": "query: Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?",
+      "expected": [
+        "si kila biashara",
+        "risiti za mkono"
+      ],
+      "anchor_hits": {
+        "si kila biashara": [
+          58
+        ],
+        "risiti za mkono": [
+          58
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 58,
+          "text": "Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine ya risiti (EFD)? Si"
+        },
+        {
+          "position": 194,
+          "text": "unpaid contribution penalty frequency: each month or a part of a month null"
+        },
+        {
+          "position": 168,
+          "text": "compliance license processing time old: 28 days"
+        }
+      ],
+      "satisfied_by": [
+        58
+      ]
+    },
+    {
+      "name": "GN605A sector count (nat_43 verbatim, the row that clears)",
+      "status": "PASS",
+      "query": "query: mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+      "expected": [
+        "hakina kiwango kimoja"
+      ],
+      "anchor_hits": {
+        "hakina kiwango kimoja": [
+          72
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 72,
+          "text": "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi nzima — kila sekta"
+        },
+        {
+          "position": 128,
+          "text": "stamp duty per copy memorandum articles copy: 10,000 TZS"
+        },
+        {
+          "position": 182,
+          "text": "gn487a prohibited activity 6: Prohibited activity 6: Small-scale mining"
+        }
+      ],
+      "satisfied_by": [
+        72
+      ]
+    },
+    {
+      "name": "VAT six-month threshold (nat_26 displacement guard)",
+      "status": "PASS",
+      "query": "query: nimefungua duka miezi sita iliyopita nimeuza jumla milioni 60 hadi sasa je nimefika kiwango cha vat",
+      "expected": [
+        "100,000,000 kwa miezi 6"
+      ],
+      "anchor_hits": {
+        "100,000,000 kwa miezi 6": [
+          146
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 171,
+          "text": "vat deferment minimum value: 10,000,000 TZS"
+        },
+        {
+          "position": 101,
+          "text": "trademark fee for series of marks first mark: 60,000 TZS"
+        },
+        {
+          "position": 146,
+          "text": "Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6."
+        }
+      ],
+      "satisfied_by": [
+        146
+      ]
+    },
+    {
+      "name": "VAT standard rate (nat_27 displacement guard)",
+      "status": "KNOWN-FAIL",
+      "query": "query: vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu",
+      "expected": [
+        "NEVER 14%"
+      ],
+      "anchor_hits": {
+        "NEVER 14%": [
+          13
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 170,
+          "text": "vat deferment threshold percentage: 90 %"
+        },
+        {
+          "position": 199,
+          "text": "maternity cash benefit rate: 100 %"
+        },
+        {
+          "position": 171,
+          "text": "vat deferment minimum value: 10,000,000 TZS"
+        }
+      ],
+      "satisfied_by": []
+    },
+    {
+      "name": "Company registration fee (nat_34 displacement guard)",
+      "status": "PASS",
+      "query": "query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+      "expected": [
+        "company registration fee 1"
+      ],
+      "anchor_hits": {
+        "company registration fee 1": [
+          114
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 130,
+          "text": "company name reservation fee: 50,000 TZS"
+        },
+        {
+          "position": 131,
+          "text": "company name change fee: 22,000 TZS"
+        },
+        {
+          "position": 114,
+          "text": "company registration fee 1: 95,000 TZS"
+        }
+      ],
+      "satisfied_by": [
+        114
+      ]
+    },
+    {
+      "name": "EFD threshold, VAT-unregistered (nat_36 displacement guard)",
+      "status": "KNOWN-FAIL",
+      "query": "query: mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "expected": [
+        "milioni kumi na moja"
+      ],
+      "anchor_hits": {
+        "milioni kumi na moja": [
+          57
+        ]
+      },
+      "anchor_unique": true,
+      "dead_anchors": [],
+      "accepted_ambiguous": false,
+      "top3": [
+        {
+          "position": 171,
+          "text": "vat deferment minimum value: 10,000,000 TZS"
+        },
+        {
+          "position": 25,
+          "text": "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-resid"
+        },
+        {
+          "position": 126,
+          "text": "company registration fee no share capital: 300,000 TZS"
+        }
+      ],
+      "satisfied_by": []
+    }
+  ]
+}

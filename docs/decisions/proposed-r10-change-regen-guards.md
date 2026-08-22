@@ -1,7 +1,29 @@
-# PROPOSED R10 CHANGE — fix the regen verification guards (awaiting explicit approval)
+# R10 CHANGE — fix the regen verification guards
 
-**Status: NOT APPLIED.** `kaggle/` is R10-protected. This file describes exactly what would change
-in `kaggle/regenerate_rag_e5.py` and why. Nothing has been written to `kaggle/`.
+**Status: ✅ APPROVED BY THE FOUNDER AND APPLIED, 2026-08-22.** Applied to
+`kaggle/regenerate_rag_e5.py`, plus the follow-up pass over the remaining ambiguous guards, which
+the founder directed to be done immediately rather than deferred.
+
+**Two departures from the proposal below, both recorded rather than silently absorbed:**
+
+1. **`KNOWN_FAILING` needed TWO entries, not one.** The proposal listed only the `nat_27` guard.
+   Once `nat_36`'s guard uses verbatim phrasing it fails too (its fact is rank 17 on the real
+   question, rank 2 only on the paraphrase). Both are bucketed.
+2. **A third fault class was found during the follow-up pass: DEAD ANCHORS.** `elfu 22`,
+   `28 julai` and `efd threshold tzs 11m` match **zero** index facts and could never have fired.
+   Each hid behind a live ambiguous sibling that always passed. A `[DEAD-ANCHOR]` check was added
+   and blocks.
+
+**Also added beyond the proposal:** `[ORPHAN-KNOWN-FAIL]` (a bucketed name matching no guard) and
+`ACCEPTED_AMBIGUOUS` (one guard whose ambiguity is adjudicated benign — see §5 below).
+
+Verified by local dry-run before any Kaggle run: `eval/index_quality/verify_regen_guards_local.py`
+→ **24 PASS · 0 FAIL · 2 KNOWN-FAIL · 0 STALE · 0 ORPHAN · 0 ambiguous · 0 dead · regen not
+blocked.**
+
+---
+
+## Original proposal follows
 
 Evidence: `eval/index_quality/audit_regen_guards.py` → `eval/results/regen_guard_audit.json`
 (read-only AST parse of the regen script; no import, no execution, no network).
@@ -123,3 +145,44 @@ any other `kaggle/` file. No change to the index, the facts, or production.
 Explicit approval to edit `kaggle/regenerate_rag_e5.py` for 2a, 2b (the five displacement guards)
 and 2c (the bucket). The 13 remaining ambiguous guards are proposed as a separate follow-up, since
 each needs a decision about what it was meant to protect.
+
+---
+
+## 5. FOLLOW-UP PASS — the remaining ambiguous guards (done 2026-08-22, same session)
+
+It was **14**, not 13 — `VAT registration threshold (displacement guard)` is also ambiguous and was
+not in the original five. Each was resolved by identifying the fact it was meant to protect and
+anchoring to a substring unique to that fact:
+
+| guard | intended fact | new anchor |
+|---|---|---|
+| GN487A penalty | [20] | `Faini kwa mgeni` |
+| SDL rate | [5] | `asilimia tatu na nusu` |
+| NSSF employer | [9] | `asilimia 10` (dropped ambiguous `10%`) |
+| BRELA annual return | [134] | `kila mwaka ni TZS 22,000` (dropped dead `elfu 22`) |
+| VAT withholding services | [17] | `services is 6` (dropped ambiguous `6%`) |
+| Zero-rated input VAT | [89] | `input vat` (dropped ambiguous `ndiyo`) |
+| GN487A effective date | [19] | `came into effect on 28 July` (dropped dead `28 julai`) |
+| GN487A full name | [173] | `gn487a full legal name` |
+| Facilitator penalty | [21] | `milioni tano` (dropped ambiguous `5,000,000`) |
+| License lending facilitation | [22] | `kukopesha` (dropped ambiguous `leseni`) |
+| PAYE 800K band | [211] | `78,000` (dropped ambiguous `760`, `25%`) |
+| EFD threshold | [57] | `milioni kumi na moja` (dropped dead `efd threshold tzs 11m`) |
+| VAT registration threshold | [145] | `200,000,000 kwa miezi 12` |
+| OSHA/WCF small-count | [68] **or** [69] | **left ambiguous — adjudicated benign** |
+
+**Every guard's purpose was identifiable, so none was deleted.** The founder's instruction was that
+a guard nobody can state the purpose of should be deleted rather than repaired; that case did not
+arise. All 26 have a stateable purpose and a fact they protect.
+
+**One finding worth carrying:** the `VAT registration threshold` guard **passes while the
+displacement it was written to catch is happening.** [57] (the EFD fact, which mentions 200M only as
+a contrast) is at **rank 1** for the VAT-registration query, above [145], the fact actually asked
+for. The old `200,000,000` anchor matched [15], [57] and [145] alike, so the guard could not see its
+own feared displacement had occurred. It now anchors to [145] and still passes at rank 2 — but a
+further slip will be caught.
+
+**The general rule, from the one accepted ambiguity:** *ambiguity is a fault when the alternative
+fact would be a **wrong** answer, not merely when more than one fact matches.* `OSHA/WCF
+small-count` matches [68] and [69]; both state the thing it protects, so pinning it to one would
+fail spuriously on the other.
