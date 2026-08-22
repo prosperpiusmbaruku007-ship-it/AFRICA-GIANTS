@@ -133,6 +133,41 @@ the live v16 pipeline.
 
 ---
 
+# 🔁 nat_44 / nat_28 RE-OPENED: THE STATED BASIS WAS WRONG, THE DECISION SURVIVES ON A BETTER ONE (2026-08-22)
+
+Re-measured with the faults removed — verbatim phrasings, anchors **asserted unique in the index at
+runtime**, ranks read by fact position so no substring can stand in.
+`eval/index_quality/reopen_nat44_nat28.py` → `eval/results/reopen_nat44_nat28.json`.
+
+| row | before | v1 (rate-led) | v2 (ask-led) |
+|---|---|---|---|
+| `nat_44` | 33 | 5 (+28) | **4 (+29)** |
+| `nat_28` | 33 | **79 (−46)** | **10 (+23)** |
+| `nat_27` | 15 | 16 (−1) | 16 (−1) |
+
+**1. The stated reason for declining is dead.** The rewrite's measured effect on `nat_27` is
+**one rank**, on a row sitting at 15 that is **not retrieved either way and answers correctly from
+model weights**. There was no live behaviour to regress. Real wins were declined against a
+regression that does not exist, detected by a guard that could not tell [13] from [64].
+
+**2. The decision outcome survives anyway, for a better reason: neither variant reaches top-3.**
+`nat_44` gets to rank 4, `nat_28` to rank 10; production reads `top_k=3`. This is the same ceiling
+already proven empirically — rank 8 never reaches a `top_k=3` system. **So: don't ship it, but for
+the right reason, and `nat_44` at rank 4 is one iteration away rather than hopeless.**
+
+**3. The wording result is the most valuable part, and it is a direct confirmation of the
+topic-alignment finding.** The two variants rewrite the SAME facts and differ only in whether they
+use the asker's vocabulary. Rate-led wording sent `nat_28` to **79**. Ask-led wording — including
+*ushauri* and *cheti*, the words the question actually contains — put it at **10**. **A 69-rank
+swing from vocabulary choice alone, on identical facts.** V1 would have shipped a severe regression
+while looking like a reasonable rewrite.
+
+**Recorded into `CLAUDE.md` R15 authoring guidance:** Swahili-first is necessary and not sufficient;
+lead with the user's vocabulary, not the regulatory label; index work is per-row and testable, not
+a bulk rewrite.
+
+---
+
 # ⛔ nat_27 IS RETIRED AS A NEGATIVE CONTROL — AND EVERY CHECK THAT LEANED ON IT PROVED LESS THAN IT REPORTED (2026-08-22)
 
 **A luck row cannot certify anything.** `nat_27`'s correct answer comes from model weights: the VAT
@@ -194,6 +229,29 @@ failures.** `nat_38` is an override among the *successes*, and nobody looked the
 the wrong ones.** This entry has done it for the fact path by grounding (5 grounded / 2 partial /
 4 ungrounded, one of which is a contrary-override) but not by override-vs-recite across the whole
 set. **Not scoped, not started.** Named so it is not rediscovered a third time.
+
+## 📌 BOARD ITEM — THE DISCARD RATE: how often does a CORRECT retrieved fact get ignored?
+
+**This is the item to carry forward, and it is a precondition for valuing every retrieval fix in
+ADR 0002.**
+
+`nat_38` proves the model overrides retrieved content. It overrode *toward* the right answer, which
+is the harmless direction. **The harmful direction — a correct fact retrieved and then discarded —
+has never been measured, in either analysis.** D1 looked only at failures and found no override
+there; this entry looked at successes and found one. Nobody has asked how often a *correct* fact
+reaches context and fails to reach the answer.
+
+**Why it gates everything else:** if the discard rate is non-trivial, then **retrieval fixes do not
+reliably reach the answer even when they work.** §1's rank improvements, §2's intercept, the
+routing extension's engine reach — all of them assume that getting the right content into context
+produces the right answer. `nat_38` shows that assumption is not free, and §8's forced-fact test
+already showed three rows failing with the correct facts *placed directly in context*. **That is
+arguably a discard measurement already, and it came out 3 of 8.**
+
+**Cheapest way to measure it properly:** the SS8 instrument already exists and is committed
+(`9be20c7`, `eval/forced_facts/`). Force the correct fact into context for the rows that currently
+answer correctly *and* for a sample of the fact path, and count how often the reply uses it. Not
+scoped, not started — but the harness is built and the method is proven.
 
 ---
 

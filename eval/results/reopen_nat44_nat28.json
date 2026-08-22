@@ -1,0 +1,226 @@
+{
+  "measured": "2026-08-22",
+  "harness": "eval/index_quality/reopen_nat44_nat28.py",
+  "note": "measurement only — nothing written back to the index",
+  "anchor_uniqueness_verified": {
+    "withholding on goods is 3%": [
+      16
+    ],
+    "withholding on services is 6%": [
+      17
+    ],
+    "NEVER 14%": [
+      13
+    ]
+  },
+  "before": {
+    "nat_44": {
+      "target_position": 16,
+      "rank": 33,
+      "score": 0.8088,
+      "top3": [
+        {
+          "position": 170,
+          "text": "vat deferment threshold percentage: 90 %"
+        },
+        {
+          "position": 25,
+          "text": "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residen"
+        },
+        {
+          "position": 171,
+          "text": "vat deferment minimum value: 10,000,000 TZS"
+        }
+      ],
+      "in_top3": false
+    },
+    "nat_28": {
+      "target_position": 17,
+      "rank": 33,
+      "score": 0.8057,
+      "top3": [
+        {
+          "position": 25,
+          "text": "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residen"
+        },
+        {
+          "position": 147,
+          "text": "vat registration notification deadline commissioner: 14 days"
+        },
+        {
+          "position": 170,
+          "text": "vat deferment threshold percentage: 90 %"
+        }
+      ],
+      "in_top3": false
+    },
+    "nat_27": {
+      "target_position": 13,
+      "rank": 15,
+      "score": 0.8145,
+      "top3": [
+        {
+          "position": 170,
+          "text": "vat deferment threshold percentage: 90 %"
+        },
+        {
+          "position": 199,
+          "text": "maternity cash benefit rate: 100 %"
+        },
+        {
+          "position": 171,
+          "text": "vat deferment minimum value: 10,000,000 TZS"
+        }
+      ],
+      "in_top3": false
+    }
+  },
+  "arms": {
+    "v1_rate_led": {
+      "rewrites": {
+        "16": "Wakala wa serikali akikununulia bidhaa atakukata VAT withholding ya asilimia 3 (3%) ya thamani ya bidhaa bila VAT. Hii ni kwa BIDHAA — huduma ni asilimia 6. Ilianza tarehe 1 Julai 2025 (Finance Act 2025).",
+        "17": "Ukifanya kazi ya HUDUMA kwa taasisi ya serikali watakukata VAT withholding ya asilimia 6 (6%) ya thamani ya huduma bila VAT. Hii ni kwa HUDUMA — bidhaa ni asilimia 3. Ilianza tarehe 1 Julai 2025 (Finance Act 2025)."
+      },
+      "ranks": {
+        "nat_44": {
+          "target_position": 16,
+          "rank": 5,
+          "score": 0.8255,
+          "top3": [
+            {
+              "position": 170,
+              "text": "vat deferment threshold percentage: 90 %"
+            },
+            {
+              "position": 25,
+              "text": "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residen"
+            },
+            {
+              "position": 171,
+              "text": "vat deferment minimum value: 10,000,000 TZS"
+            }
+          ],
+          "in_top3": false
+        },
+        "nat_28": {
+          "target_position": 17,
+          "rank": 79,
+          "score": 0.7919,
+          "top3": [
+            {
+              "position": 25,
+              "text": "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residen"
+            },
+            {
+              "position": 147,
+              "text": "vat registration notification deadline commissioner: 14 days"
+            },
+            {
+              "position": 170,
+              "text": "vat deferment threshold percentage: 90 %"
+            }
+          ],
+          "in_top3": false
+        },
+        "nat_27": {
+          "target_position": 13,
+          "rank": 16,
+          "score": 0.8145,
+          "top3": [
+            {
+              "position": 170,
+              "text": "vat deferment threshold percentage: 90 %"
+            },
+            {
+              "position": 16,
+              "text": "vat withholding goods: VAT withholding on goods is 3% of the consideration (invoice value "
+            },
+            {
+              "position": 199,
+              "text": "maternity cash benefit rate: 100 %"
+            }
+          ],
+          "in_top3": false
+        }
+      },
+      "deltas": {
+        "nat_44": 28,
+        "nat_28": -46,
+        "nat_27": -1
+      }
+    },
+    "v2_ask_led": {
+      "rewrites": {
+        "16": "Ukiuzia wakala au taasisi ya serikali BIDHAA, watakukata VAT ya asilimia 3 (3%) ya thamani ya bidhaa bila VAT. Kwa bidhaa ni asilimia 3; kwa huduma ni asilimia 6. Ilianza 1 Julai 2025 (Finance Act 2025).",
+        "17": "Ukifanya kazi ya ushauri au huduma nyingine kwa taasisi ya serikali, watakukata VAT ya asilimia 6 (6%) ya thamani ya huduma bila VAT, na utapewa CHETI cha VAT withholding. Kwa huduma ni asilimia 6; kwa bidhaa ni asilimia 3. Ilianza 1 Julai 2025 (Finance Act 2025)."
+      },
+      "ranks": {
+        "nat_44": {
+          "target_position": 16,
+          "rank": 4,
+          "score": 0.8294,
+          "top3": [
+            {
+              "position": 170,
+              "text": "vat deferment threshold percentage: 90 %"
+            },
+            {
+              "position": 25,
+              "text": "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residen"
+            },
+            {
+              "position": 171,
+              "text": "vat deferment minimum value: 10,000,000 TZS"
+            }
+          ],
+          "in_top3": false
+        },
+        "nat_28": {
+          "target_position": 17,
+          "rank": 10,
+          "score": 0.8161,
+          "top3": [
+            {
+              "position": 25,
+              "text": "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents and non-residen"
+            },
+            {
+              "position": 147,
+              "text": "vat registration notification deadline commissioner: 14 days"
+            },
+            {
+              "position": 170,
+              "text": "vat deferment threshold percentage: 90 %"
+            }
+          ],
+          "in_top3": false
+        },
+        "nat_27": {
+          "target_position": 13,
+          "rank": 16,
+          "score": 0.8145,
+          "top3": [
+            {
+              "position": 170,
+              "text": "vat deferment threshold percentage: 90 %"
+            },
+            {
+              "position": 16,
+              "text": "vat withholding goods: VAT withholding on goods is 3% of the consideration (invoice value "
+            },
+            {
+              "position": 199,
+              "text": "maternity cash benefit rate: 100 %"
+            }
+          ],
+          "in_top3": false
+        }
+      },
+      "deltas": {
+        "nat_44": 29,
+        "nat_28": 23,
+        "nat_27": -1
+      }
+    }
+  }
+}

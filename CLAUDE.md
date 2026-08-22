@@ -530,6 +530,30 @@ Note: a fact registered in CONCISE_BILINGUAL_FACTS (precompute_rag_embeddings.py
 embedded WITHOUT the 'key: ' prefix — short Swahili-first text with the value at the
 front retrieves far better than a long English fact (see paye_bands_with_examples).
 
+**SWAHILI-FIRST IS NECESSARY AND NOT SUFFICIENT. LEAD WITH THE USER'S VOCABULARY, NOT THE
+REGULATORY LABEL.** (Measured 2026-08-22: `eval/index_quality/measure_targeted_rewrite.py`,
+`eval/index_quality/reopen_nat44_nat28.py`.)
+
+The lever is **topic alignment**, not translation:
+
+- `nat_36`'s fact was **already** Swahili-first with the value near the front and still sat at
+  **rank 17**. Re-leading it with what the user actually asks about — *mashine ya risiti (EFD)* —
+  instead of the regulatory label *"Kizingiti cha kuanza kutumia…"* moved it to **rank 1**.
+- Two rewrites of the SAME facts, differing only in whether they used the asker's words:
+  rate-led wording put `nat_28`'s fact at **rank 79**; ask-led wording including the words the
+  question actually contains (*ushauri*, *cheti*) put it at **rank 10**. **A 69-rank swing from
+  vocabulary choice alone.**
+- Clearing competing `key: value` fragment rows helps but does not close the gap on its own
+  (+3 and +11 ranks; neither row reached top-3). **Rewriting the target fact does.**
+
+**When authoring or rewriting a fact, open it with the words a Mariamu or an Asha would type**
+— the object they are asking about and the verb they would use — then the value, then the
+qualifier and the citation. The regulatory label belongs later in the text, not at the front.
+
+Corollary for scoping: index-content work is **per-row and testable**, not a bulk rewrite.
+Pick the row that fails, rewrite the fact it needs, measure the rank. Do not re-word in bulk
+and hope.
+
 ### R16 — "✓ App deployed" is NOT verification. Warm containers serve the OLD code.
 
 Learned the hard way on 2026-08-07 shipping the OOC phrase-list fix. `modal deploy` returned
