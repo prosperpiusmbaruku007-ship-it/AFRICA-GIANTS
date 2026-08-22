@@ -4,6 +4,89 @@ Last updated: 2026-08-22
 
 ---
 
+# 🛑 INTERLEAVE SHIPPED, LIVE-TESTED, AND REVERTED: THE STRUCTURAL GUARANTEE WAS REAL BUT NARROWER THAN THE DECISION NEEDED (2026-08-22)
+
+**Production is currently the pre-ship code, confirmed live.** Full account below; nothing is
+shipped as of this entry.
+
+**What happened, in order.** Interleave fusion (dense/lexical, §5 of the ADR) was added to
+`chike-inference/modal_app.py`'s `retrieve_facts` and mirrored into `kaggle/eval.py` (R14
+dual-sync), full R16 cycle run (`modal app stop --yes` → deploy, forced-fresh containers), and
+live-tested per the founder's explicit instruction: canaries on the 3 rows interleave was measured
+to recover, the 3 rows RRF was measured to break (the invariant being claimed, tested rather than
+asserted), a sample of the 48's other currently-correct rows, and a config-only phrase.
+
+**The invariant test failed, live, reproducibly.** `nat_32` — one of the three rows the ship was
+specifically supposed to protect — returned a wrong, hallucinated answer under the new code
+("Kampuni ya ujenzi ni shughuli namba 15... anaweza kuadhibiwa" — construction is NOT one of
+GN487A's 15 prohibited activities, and passive shareholding is explicitly the fact this question
+tests). Called twice, byte-identical both times (`do_sample=False`, greedy decoding — this is
+deterministic, not noise).
+
+**Root cause, diagnosed before reverting:** the CORRECT fact (row 210, the shareholder-vs-operator
+distinction) stayed at retrieval rank 1 under BOTH the old and new code — the structural guarantee
+held exactly as designed. The regression came from the OTHER two injected slots: old top-3 was
+`[210, 176, 179]` (179 = phone-repair prohibition); new top-3 was `[210, 92, 176]` (92 = "marriage
+doesn't exempt a non-citizen"). Swapping one filler fact for another — with the primary correct
+fact unchanged and present both times — was enough to flip the model's completion from correct to
+wrong. **Generation depends on the whole injected set, not only on whether one target fact's rank
+survived**, and the original §5 measurement (`scratch/item5_lexical_measurement.py`) only ever
+checked the latter.
+
+**Checked how widespread this is, not just the one instance found:** re-ran the retrieval
+comparison (old dense-only vs. new interleave) for all 8 rows canaried as "must stay correct"
+(`nat_31, nat_32, nat_34, nat_43, nat_26, nat_27, nat_36, nat_38`). **Every single one had its
+top-3 SET change** (`old` vs. `new` below) despite the target fact's rank being preserved in all
+eight:
+
+| row | old top-3 | new top-3 |
+|---|---|---|
+| nat_31 | 205, 206, 193 | 205, **21**, 206 |
+| nat_32 | 210, 176, 179 | 210, **92**, 176 — **this one flipped the answer** |
+| nat_34 | 130, 131, 114 | 130, **44**, 131 |
+| nat_43 | 72, 128, 182 | 72, 128, **7** |
+| nat_26 | 171, 101, 146 | 171, **57**, 101 |
+| nat_27 | 170, 199, 171 | 170, **5**, 199 |
+| nat_36 | 171, 25, 126 | 171, **58**, 25 |
+| nat_38 | 171, 58, 148 | 171, 58, **57** |
+
+**This falsifies the operating premise, not just the specific ship.** The reason interleave looked
+categorically safer than RRF was "the dense-rank-1 fact is always preserved, so already-correct
+answers can't be disturbed." That reasoning is now shown to be incomplete: the *target* fact's
+position is preserved, but the *other two slots* are NOT — they always shift whenever the lexical
+order disagrees with the dense order at all, which real Swahili questions do almost universally.
+Only 1 of the 8 tested happened to be sensitive enough to flip on generation, but since 8/8 had a
+changed context, "1 broke" is a small-sample observation, not a bound — any of the ~28 other
+correct rows in the 48 could carry the same latent sensitivity, untested. **Neither RRF nor
+interleave has a narrower blast radius than the other where it actually matters (answer
+stability); both change the fact context on nearly every query, and only RRF's cost was ever
+actually enumerated.**
+
+**Also: the "recovered" rows didn't uniformly deliver, even before the regression was found.**
+Live canaries on the 3 target rows: `nat_41` gave the expected correct answer cleanly. `nat_05`
+returned a bare non-answer ("Thibitisha na tra.go.tz") instead of the expected base-ambiguity
+clarification — not wrong, but not the credited answer either. `nat_23` answered only the NSSF
+half of a two-levy question and silently dropped the SDL half — a real omission, unrelated to
+retrieval (a decomposition/multi-part-handling gap the rank fix could not have touched). Rank
+crossing `top_k=3` is necessary but was, again, not sufficient for a correct delivered answer —
+the same lesson the original R15 cycle already established, now confirmed a second way.
+
+**Reverted immediately, verified live.** `git restore` on both files (nothing had been committed),
+full R16 cycle again (`modal app stop --yes` → deploy), then re-tested `nat_32`, `nat_31`, `nat_34`,
+`nat_43` live: all four back to their correct pre-ship answers. **Production is confirmed on the
+pre-ship, dense-only single-arm code as of this entry.**
+
+**Where this leaves the decision:** general fusion (RRF, weighted, AND interleave) is declined —
+not just RRF. The property that actually matters for a ship decision is whether a mechanism
+changes the injected context for rows it isn't trying to fix, and every fusion variant measured
+so far does that for virtually every question. The mechanisms that don't share this problem are
+the ones that touch a bounded, named set of rows on purpose: §1 (rewrite specific fee-row text)
+and §2 (a routing intercept scoped to specific fact keys) — both already scoped, neither built.
+Full account, the corrected table, and the revised recommendation in
+`docs/decisions/0002-retrieval-structural-scoping.md` §5(d).
+
+---
+
 # 🛑 THE RETRIEVAL CYCLE'S VERDICT, STATED PLAINLY: RANK MOVEMENT THAT DOESN'T CROSS TOP-3 BUYS NOTHING (2026-08-22)
 
 **This is the workstream's verdict, not a small gain to note in passing.** The full C4→R15→R16

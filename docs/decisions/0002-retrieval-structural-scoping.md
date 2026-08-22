@@ -1,7 +1,9 @@
 # ADR 0002 — Retrieval structural scoping: five candidate mechanisms, two measured
 
-- **Status:** Scoping + one measurement complete (2026-08-22). No mechanism shipped. Two items
-  (#5 measurement, #2 scoping) executed per founder go-ahead; #1/#3/#4 remain scoped-only.
+- **Status:** Interleave (§5) shipped, live-regressed on one of its own protected rows, and
+  reverted the same day (2026-08-22) — production confirmed back on pre-ship code. General fusion
+  (RRF/weighted/interleave) is now DECLINED in all forms; §2 (routing intercept) is the leading
+  candidate. §1/§6/§7 remain scoped-only, not built.
 - **Deciders:** Founder + Claude Code.
 - **Supersedes:** nothing. Promoted from `scratch/retrieval_structural_scoping_2026_08_22.md`
   (moved out of scratch on founder instruction — this is a decision record, not a throwaway
@@ -238,6 +240,72 @@ live. **The ship decision is: interleave (weaker recovery, self-maintaining safe
 a pin list that must be manually re-derived every time a fact changes (stronger recovery,
 maintenance liability) — a separate go-ahead, not decided here.**
 
+### (d) Interleave was shipped, live-tested, and reverted — the safety property was real but the wrong shape (2026-08-22)
+
+Given the go-ahead, interleave was implemented (`chike-inference/modal_app.py`'s `retrieve_facts`
++ `kaggle/eval.py`, R14 dual-sync), deployed through the full R16 cycle, and live-canaried per the
+founder's explicit instruction: test the claimed invariant rather than assert it. It failed.
+
+**`nat_32` — one of the three rows this ship was specifically supposed to protect — returned a
+wrong, live, reproducible (2/2 identical calls, `do_sample=False`) answer**, asserting construction
+is one of GN487A's 15 prohibited activities and that passive shareholding is punishable — the
+opposite of the correct distinction this row tests. Diagnosis: the target fact (row 210, the
+shareholder-vs-operator distinction) **stayed at rank 1 under both old and new code** — the
+structural guarantee held exactly as designed. The regression came from the other two slots: old
+top-3 `[210, 176, 179]` → new top-3 `[210, 92, 176]`. One filler fact swapped for a different one,
+with the correct fact present and unchanged both times, was enough to flip the model's completion.
+
+**Checked how general this is before concluding anything:** compared old-vs-new top-3 for all 8
+rows canaried as "must stay correct." **Every one of the 8 had its set change** despite the target
+fact's rank surviving in each case:
+
+| row | old top-3 | new top-3 | live outcome |
+|---|---|---|---|
+| nat_31 | 205, 206, 193 | 205, 21, 206 | stayed correct |
+| nat_32 | 210, 176, 179 | 210, 92, 176 | **flipped to wrong** |
+| nat_34 | 130, 131, 114 | 130, 44, 131 | stayed correct |
+| nat_43 | 72, 128, 182 | 72, 128, 7 | stayed correct |
+| nat_26 | 171, 101, 146 | 171, 57, 101 | not re-tested live |
+| nat_27 | 170, 199, 171 | 170, 5, 199 | not re-tested live |
+| nat_36 | 171, 25, 126 | 171, 58, 25 | not re-tested live |
+| nat_38 | 171, 58, 148 | 171, 58, 57 | not re-tested live |
+
+**This is the finding, not the one regression alone.** The reasoning in (c) that made interleave
+look categorically safer than RRF — "the dense-rank-1 fact is always preserved, so an already-
+correct answer can't be disturbed" — is *incomplete*, not wrong: it correctly describes the
+*target fact's position*, but says nothing about the *other two slots*, which shift on nearly
+every question because real queries almost always disagree with the dense order somewhere in the
+lexical signal. **8 of 8 tested had a changed context; only 1 of 8 sampled happened to flip the
+generated answer — meaning "1 broke" is a small-sample point, not a bound.** Any untested row
+among the 48's other ~28 currently-correct answers could carry the same latent sensitivity.
+**Neither interleave nor RRF has a smaller blast radius than the other on the metric that actually
+matters (answer stability, not target-fact rank) — both change the injected context on virtually
+every query, and only RRF's cost was ever enumerated because interleave's was wrongly assumed to
+be zero by the rank-only measurement.**
+
+**Also, independent of the regression:** the three rows interleave was measured to recover did not
+uniformly deliver a correct live answer even before this was found. `nat_41` was clean. `nat_05`
+returned a bare non-answer instead of the expected base-ambiguity clarification. `nat_23` answered
+only the NSSF half of a two-part question and dropped the SDL half (a decomposition gap, not a
+retrieval one). Crossing `top_k=3` is necessary but was again not sufficient for a correct
+delivered answer — R15 already established this once; this ship attempt confirms it a second way,
+independently of the regression.
+
+**Reverted and verified live within the same session** — both files restored (nothing had been
+committed), full R16 cycle repeated, `nat_32`/`nat_31`/`nat_34`/`nat_43` re-tested live and
+confirmed back to their correct pre-ship answers. Production is on the pre-ship, dense-only
+single-arm code as of this entry.
+
+**Revised verdict: neither RRF nor interleave ships.** Not because interleave's structural
+guarantee was false — it held in every single test — but because the guarantee was scoped to the
+wrong thing (one fact's rank) for what a ship decision actually needs (the full injected set's
+stability for rows not being fixed). §1 (rewrite the fee-row text directly) and §2 (a routing
+intercept scoped to named fact keys) remain the two candidates that don't share this problem,
+because both touch a bounded, named set of rows *on purpose* rather than reshaping every query's
+retrieved context as a side effect of a general merge rule. **Priority for general fusion
+(RRF/weighted/interleave), all forms: DECLINED pending a mechanism that can change a target row's
+rank without touching any other row's supporting context — no such mechanism is scoped yet.**
+
 ---
 
 ## 6. RE-RANKING (cross-encoder) — scoped only, unchanged from original scoping
@@ -246,8 +314,15 @@ Named as a design direction by the similarity-floor scoping (2026-08-16: top-1 s
 0.790–0.859, failing-row correct-fact scores 0.765–0.809 — no absolute threshold separates them)
 but never built or measured. Cost: a small multilingual cross-encoder on the existing T4
 container, cheap relative to the 8B model's dominant latency (7.3s median), but requires a new
-harness and a new model dependency. **Priority: MEDIUM**, below §5 now that §5 has an actual
-positive, costed measurement and this does not.
+harness and a new model dependency. **Priority: MEDIUM, unchanged, and flagged with the same
+caution §5(d) just surfaced:** a cross-encoder re-ranking every query's dense shortlist has the
+same general shape as fusion — it re-scores and can reorder the top-3 for questions that were
+already correct, not only for the nine target rows. It is NOT automatically exempt from the
+blast-radius problem §5(d) found; that would need its own explicit test (old-vs-new top-3 set
+across a broad sample, not just the target rows) before it could be called safer than fusion. A
+version gated to fire only when dense is "uncertain" would need a reliable uncertainty signal —
+and §5(c)'s margin experiment already found none exists on this index. Re-ranking is untested on
+this exact question and should not be assumed safer than what was just measured.
 
 ---
 
@@ -260,29 +335,32 @@ LOW. Not scheduled.**
 
 ---
 
-## SUMMARY (updated)
+## SUMMARY (updated 2026-08-22, post-ship-attempt)
 
 | # | mechanism | status this round | priority |
 |---|---|---|---|
-| 5 | Hybrid lexical+dense fusion (RRF/weighted/interleave) | **MEASURED** — RRF recovers 4/8 known-buried rows (one from rank 94) at a cost of 3 named live regressions; interleave recovers 3/8 at zero measured dilution | **HIGH** |
-| 4 | Routing-layer fact intercept | **SCOPED**, disanalogy to compute-path named honestly — it's a hand-maintained allowlist, coverage ceiling = known failures only | MEDIUM (as a dilution guard for §5, not standalone) |
+| 5 | Hybrid lexical+dense fusion (RRF/weighted/interleave) | **SHIPPED (interleave), LIVE-REGRESSED, REVERTED.** Target-fact rank preservation held for all 8 rows tested; the OTHER two injected slots changed for all 8 anyway, and one (`nat_32`) flipped to a wrong live answer. Neither RRF's nor interleave's real blast radius (answer stability, not rank) was ever fully enumerated — interleave's was wrongly assumed zero. | **DECLINED, all forms** |
+| 2 | Routing-layer fact intercept | **SCOPED**, disanalogy to compute-path named honestly — a hand-maintained allowlist, coverage ceiling = known failures only. Now the leading candidate for a different reason: it is the only mechanism scoped so far with a *provably* bounded blast radius (an explicit cue match short-circuits RAG entirely; everything else is untouched — no other candidate here can make that claim after §5(d)). | **HIGH** |
 | 1 | Fee-shape rows rewritten at index-content level | scoped only, unchanged | HIGH (folds into next regen) |
-| 6 | Re-ranking (cross-encoder) | scoped only, unchanged | MEDIUM |
+| 6 | Re-ranking (cross-encoder) | scoped only, unchanged — flagged that it likely shares §5(d)'s blast-radius problem (re-scores every query's shortlist) and needs its own explicit old-vs-new test before being assumed safer | MEDIUM |
 | 7 | Different/bigger embedding model | scoped only, unchanged — this is what R15 was | LOW, not scheduled |
 
-## Recommended order, updated after this round's measurement
+## Recommended order, updated after the ship-and-revert (2026-08-22)
 
-1. **Ship-decision needed on §5+§4 as a pair**, not on §5 alone: pin `nat_31`/`nat_32`/`nat_34`
-   (and any other rank-1 exact matches at risk) via a routing intercept, THEN re-measure RRF's
-   dilution count with that guard in place. If dilution drops to ~0 with the guard, RRF recovering
-   4 of 8 known-buried rows — including one from rank 94 — is the strongest single result this
-   whole retrieval cycle has produced.
-2. **§1 folds into the next regen** regardless of §5/§4's outcome — independent content fix,
-   tooling already exists.
-3. **§6 (re-ranking) only if §1/§4/§5 leave rows unresolved** — `nat_24` (91→37 under RRF, still
-   the deepest holdout) and `nat_28`/`nat_44`/`nat_45` (improved but not crossing top-3 under any
-   strategy tested) are the likely remaining candidates.
-4. **§7 not scheduled.**
+1. **§2 (routing intercept) is now the priority**, not as a guard for §5 (§5 is declined) but as
+   its own mechanism — the only one scoped so far whose blast radius on unrelated rows is zero by
+   construction rather than by measurement. Covers 6 known fact keys / 8 known rows. Needs its own
+   R17 adversarial-probe pass per key before shipping.
+2. **§1 folds into the next regen**, independent of §2 — content fix, tooling already exists, and
+   like §2 it changes only the rows it targets rather than reshaping general retrieval.
+3. **§5 (general fusion, any variant) is closed for now.** Not because the structural argument in
+   (c) was false, but because it answered the wrong question (does the target's rank survive?)
+   instead of the one that matters (does everything else stay stable?). Do not re-propose RRF,
+   weighted, or interleave without first designing a measurement that checks full injected-set
+   stability across a broad sample, not just target-fact rank on the known-buried rows.
+4. **§6 (re-ranking) only after §1/§2**, and only with the blast-radius caveat above tested first
+   — do not assume it is safer than fusion just because it wasn't the mechanism that just broke.
+5. **§7 not scheduled.**
 
-**Nothing above is authorized to build yet beyond the §5 measurement already run.** A ship
-decision on §5+§4 needs a separate go-ahead, same discipline as the rest of this document.
+**Nothing above is authorized to build without a separate go-ahead.** §5 was built, deployed, and
+reverted this round under an explicit go-ahead; that go-ahead is spent, not standing.
