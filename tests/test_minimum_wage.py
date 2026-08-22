@@ -24,7 +24,12 @@ PROBES = pathlib.Path("eval/accuracy_gate/minimum_wage_probes_018.jsonl")
 
 def _probes():
     with PROBES.open(encoding="utf-8") as fh:
-        return [json.loads(line) for line in fh if line.strip()]
+        rows = [json.loads(line) for line in fh if line.strip()]
+    # NON-EMPTY ASSERTION (2026-08-22, dead-anchor census). Four tests loop over this and
+    # assert inside the loop; an empty probe file would make all four pass having checked
+    # nothing. Asserted in the loader so one line covers every caller.
+    assert rows, f"{PROBES} is empty — the tests looping over it would pass vacuously"
+    return rows
 
 
 # --- the Schedule itself ----------------------------------------------------------------
@@ -248,6 +253,7 @@ def test_periods_are_compared_column_to_column_never_converted():
 
 @pytest.mark.parametrize("period", ws.PERIODS)
 def test_every_period_column_is_reachable_for_every_row(period):
+    assert ws.BY_ROW, "BY_ROW is empty — this loop would assert nothing (2026-08-22 census)"
     for no, sub in ws.BY_ROW:
         r = rules_engine.compare_to_floor(1, no, sub, period, "lawful")
         assert r.applicable is False        # TZS 1 is below every rate in the Order
@@ -435,6 +441,7 @@ def test_no_clarification_reads_as_a_verdict():
                  clarification.MIN_WAGE_PERIOD_UNCLEAR,
                  clarification.MIN_WAGE_STATUS_UNCLEAR):
         assert routing.wage_question_frame(copy) == "unknown", copy[:60]
+    assert ws.BY_SECTOR, "BY_SECTOR is empty — this loop would assert nothing (2026-08-22 census)"
     for sector_no in ws.BY_SECTOR:
         text = rules_engine.sector_rates_statement(sector_no, 250_000).working
         assert routing.wage_question_frame(text) == "unknown", sector_no

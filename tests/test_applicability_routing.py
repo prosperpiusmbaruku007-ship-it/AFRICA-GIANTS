@@ -185,6 +185,7 @@ def test_path_2b_can_never_reach_the_production_fabrication_guard():
     disjoint by construction. Verified empirically over 500 questions (483 corpora + these 17)
     with zero differences against HEAD before the change; this test pins the invariant so a
     future widening of path 2b cannot silently alter production behaviour."""
+    assert PROBES, "PROBES is empty -- this loop would assert nothing (dead-anchor census, 2026-08-22)"
     for probe in PROBES:
         q = probe["question"]
         if routing.is_uncomputable_payroll_amount(q):

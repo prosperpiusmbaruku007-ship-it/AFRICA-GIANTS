@@ -245,6 +245,7 @@ def test_explicit_guard_preserves_genuine_compute_questions():
         ("Mshahara wa mfanyakazi ni TZS 300,000, je kujiunga na NSSF ni hiari au lazima?",
          "nssf"),                                                                                  # eval_309
     ]
+    assert checks, "checks is empty -- this loop would assert nothing (dead-anchor census, 2026-08-22)"
     for q, expected in checks:
         assert routing.detect_intent(q) == expected
 

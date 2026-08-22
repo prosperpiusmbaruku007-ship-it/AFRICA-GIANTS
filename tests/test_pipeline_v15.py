@@ -170,6 +170,7 @@ def test_pool_facts_matches_the_inline_pooling_loop_across_the_corpus():
         base = abs(hash(sub_query)) % 7
         return [f"f{(base + i) % 11}" for i in range(4)]
 
+    assert ALL_QUESTIONS, "ALL_QUESTIONS is empty -- this loop would assert nothing (dead-anchor census, 2026-08-22)"
     for q in ALL_QUESTIONS:
         subs = decomposition_v15.decompose_query(q)
         assert (pipeline_v15.pool_facts(fake_retrieve, subs)
@@ -200,6 +201,7 @@ class _StubTokenizer:
 def test_build_messages_is_byte_identical_to_the_inline_build_across_the_corpus():
     system_prompt = prompting.load_system_prompt()
     facts = ["ukweli mmoja", "ukweli mbili"]
+    assert ALL_QUESTIONS, "ALL_QUESTIONS is empty -- this loop would assert nothing (dead-anchor census, 2026-08-22)"
     for q in ALL_QUESTIONS:
         assert (pipeline_v15.build_messages(q, facts, system_prompt)
                 == baseline.baseline_build_messages(

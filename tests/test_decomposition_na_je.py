@@ -72,6 +72,12 @@ def test_probe_contract(probe):
         f"-> {parts}\nguards_against: {probe['guards_against']}")
     assert len(parts) == probe["expect_n_parts"], f"{probe['id']}: {parts}"
 
+    # NO non-empty assertion on `needles` here, deliberately: a probe part may legitimately
+    # have NO expectations, and the per-part lists are positional — an empty entry means "this
+    # part is unconstrained", not "nothing was checked". The 2026-08-22 census pass inserted
+    # `assert needles` here mechanically and broke 11 probes; reverted, and recorded, because
+    # the distinction between "empty by design" and "empty by accident" is exactly the
+    # judgement a scripted pass cannot make.
     for i, needles in enumerate(probe.get("expect_part_contains") or []):
         for needle in needles:
             assert needle.lower() in parts[i].lower(), (

@@ -625,6 +625,8 @@ def test_every_credential_is_fingerprinted_not_just_the_one_in_dispute(monkeypat
         monkeypatch.setenv(k, "value-for-" + k)
     h = mw.health.get_raw_f()()
     assert set(h["credentials"]) == set(mw.EXPECTED_KEYS)
+    assert mw.EXPECTED_KEYS, (
+        "EXPECTED_KEYS is empty — this loop would assert nothing (2026-08-22 census)")
     for k in mw.EXPECTED_KEYS:
         assert h["credentials"][k]["fingerprint"]
         assert "value-for-" not in json.dumps(h["credentials"][k])

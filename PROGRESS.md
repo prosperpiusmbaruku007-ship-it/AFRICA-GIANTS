@@ -179,6 +179,28 @@ first thing in a fresh session is the next session's first task, before anything
 
 ---
 
+# ✅ D-FIDELITY-6 IS LIVE AND THE DEFECT IS GONE — full R16 cycle, §5(d) bar met (2026-08-22)
+
+Forced-fresh containers (`app stop --yes` → deploy, since a warm container was present).
+Canary: `eval/fidelity/canary_rate_guard_live.py` → `eval/results/rate_guard_canary_live.json`.
+
+| check | result |
+|---|---|
+| **`nat_24`'s WCF 10%** | **GONE.** The offending sentence is blanked; the engine's *"WCF ni asilimia 0.5 ya jumla ya mishahara"* stands alone. `guard_flags=False`, `wcf_10pct_present=False` |
+| **§5(d) answer-level bar** | **26 / 26 byte-identical.** Zero regressions across the currently-correct set |
+| `nat_01`, `nat_04` | now correct — SDL 3.5%, unflagged (compute path) |
+| `nick_01` | **still flagged — predicted in advance.** Fact path, deliberately uncovered |
+| freshness | config-only OOC phrase refuses correctly |
+
+**The blanking behaves exactly as designed:** the user loses a wrong sentence and keeps the right
+figure, because `_render` still emits the engine's authoritative working underneath. That is the
+whole reason the guard is safe on the compute path and not on the fact path.
+
+**`nick_01` staying broken is the honest half of this result.** It was predicted in the canary
+before the run, not explained afterwards — the fact-path gap is on the board as known-live.
+
+---
+
 # 🛡️ D-FIDELITY-6 BUILT: THE RATE GUARD, SPECIFIED BY ONE LIVE ROW AND MEASURED BEFORE IT WAS WRITTEN (2026-08-22)
 
 **`nat_24` specified it.** All three mechanism gaps sat in that single row, so the guard had to
@@ -654,10 +676,38 @@ nothing static can say whether they will still have members after the next data 
 one-line fix that converts "can go quiet" into "fails loudly": assert the collection is non-empty
 before looping.**
 
-**📌 QUEUED — closes a CLASS, not an instance.** 25 one-line edits with a ready worklist
-(`eval/results/inert_check_census.json`), no design decisions, and it removes the possibility of a
-silent vacuous test rather than fixing one. **Scheduled after the rate guard.** Worth doing as a
-single pass with the census re-run afterwards to confirm the `UNRESOLVED` count goes to zero.
+**✅ DONE (2026-08-22). `UNRESOLVED` 25 → 1**, and the one remaining is a deliberate decision, not
+a gap. 488 tests pass across every touched file.
+
+| how it was closed | n |
+|---|---|
+| asserted at a **shared loader** (`_probes()` / `_rows()`) — one line covers every caller | 8 |
+| asserted at the loop, bare-name sites | 8 |
+| asserted at the loop, attribute sites (`ws.BY_ROW`, `mw.EXPECTED_KEYS`, …) | 4 |
+| **judged: an assertion would be WRONG or INERT** | 5 |
+
+**"No design decisions" was wrong, and the pass proved it three times:**
+
+1. **`assert f` on a file handle is always true.** The scripted pass inserted one — a *vacuous
+   assertion*, which is worse than none because it looks like protection. Replaced with a check on
+   the file's actual lines.
+2. **`assert bad_patterns` on a literal defined two lines above can never fail.** Removed rather
+   than kept: adding an inert check while removing inert checks is self-defeating. It is the one
+   remaining `UNRESOLVED`, and the comment says why.
+3. **`assert needles` broke 11 passing probes.** An empty per-part expectation list means *"this
+   part is unconstrained"*, not *"nothing was checked"* — **empty by design, not by accident.**
+   Reverted, with the reason recorded at the site. **This is exactly the judgement a scripted pass
+   cannot make, and it is why the census is a worklist rather than an autofix.**
+
+**The census itself had the same defect it hunts.** It matched only `id='NAME'`, so
+`assert ws.BY_ROW` — an attribute — was invisible and it kept reporting sites already closed. It
+also read `for x in sorted(COLL)` as a loop over *"sorted"*. Both fixed: attribute matching,
+wrapper unwrapping (`sorted`/`enumerate`/`list`/…), and loader-level coverage detection. **A
+worklist that cannot see its own fixes is the same class it exists to find.**
+
+**Known scanner limitation, stated:** a loop whose iterable is an unnameable expression
+(`enumerate(x.get(...) or [])`) is no longer reported at all, because the scanner only reports what
+it can name. Those sites are neither checked nor flagged.
 
 ---
 

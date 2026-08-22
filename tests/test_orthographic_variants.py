@@ -61,7 +61,10 @@ _WITHHELD_PENDING_NARROWING = {"kipande cha ardhi", "naagiza bidhaa", "forodha"}
 
 def _probes():
     with open(_PROBES, encoding="utf-8") as fh:
-        return [json.loads(line) for line in fh if line.strip()]
+        rows = [json.loads(line) for line in fh if line.strip()]
+    # NON-EMPTY ASSERTION (2026-08-22, dead-anchor census) — see test_minimum_wage._probes.
+    assert rows, f"{_PROBES} is empty — the tests looping over it would pass vacuously"
+    return rows
 
 
 def _all_phrases():

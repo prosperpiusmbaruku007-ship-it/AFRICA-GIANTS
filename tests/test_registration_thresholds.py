@@ -20,7 +20,10 @@ PROBES = "eval/accuracy_gate/vat_efd_probes_019.jsonl"
 
 
 def _probes():
-    return [json.loads(line) for line in open(PROBES, encoding="utf-8") if line.strip()]
+    rows = [json.loads(line) for line in open(PROBES, encoding="utf-8") if line.strip()]
+    # NON-EMPTY ASSERTION (2026-08-22, dead-anchor census) — see test_minimum_wage._probes.
+    assert rows, f"{PROBES} is empty — the tests looping over it would pass vacuously"
+    return rows
 
 
 # --- the limbs ---------------------------------------------------------------

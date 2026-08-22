@@ -7,6 +7,7 @@ from src.process.build_instruction_dataset import SEED_EXAMPLES, build_instructi
 
 
 def test_seed_examples_have_required_fields():
+    assert SEED_EXAMPLES, "SEED_EXAMPLES is empty -- this loop would assert nothing (dead-anchor census, 2026-08-22)"
     for ex in SEED_EXAMPLES:
         assert "instruction" in ex, f"Missing instruction: {ex}"
         assert "output" in ex, f"Missing output: {ex}"
@@ -18,7 +19,10 @@ def test_seed_examples_have_required_fields():
 def test_seed_examples_not_forum_continuations():
     """Ensure no example output starts with forum artefacts."""
     bad_patterns = ["JamiiForums", "Discussion in", "started by", "| The Home of"]
+    assert SEED_EXAMPLES, "SEED_EXAMPLES is empty -- this loop would assert nothing (dead-anchor census, 2026-08-22)"
     for ex in SEED_EXAMPLES:
+        # (no assertion on bad_patterns: it is a literal defined two lines above, so an
+        # assertion on it could never fail — an inert check by construction.)
         for pattern in bad_patterns:
             assert pattern not in ex["output"], f"Forum artefact in seed example: {ex['instruction']}"
 
@@ -52,7 +56,11 @@ def test_build_instruction_dataset_valid_jsonl(tmp_path):
     out = str(tmp_path / "valid.jsonl")
     build_instruction_dataset(include_forums=False, output_path=out)
     with open(out, "r", encoding="utf-8") as f:
-        for line in f:
+        # NON-EMPTY ASSERTION on the CONTENT, not the handle. `assert f` would be always-true
+        # — an inert check, which is the very thing the 2026-08-22 census was removing.
+        written = f.readlines()
+        assert written, f"{out} has no lines — this loop would assert nothing"
+        for line in written:
             if not line.strip():
                 continue
             row = json.loads(line)

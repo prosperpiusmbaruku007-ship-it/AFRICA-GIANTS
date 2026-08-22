@@ -29,7 +29,11 @@ PROBES = pathlib.Path(__file__).resolve().parents[1] / (
 
 def _rows():
     with PROBES.open(encoding='utf-8') as f:
-        return [json.loads(ln) for ln in f if ln.strip()]
+        rows = [json.loads(ln) for ln in f if ln.strip()]
+    # NON-EMPTY ASSERTION (2026-08-22, dead-anchor census) — see test_minimum_wage._probes.
+    # This one also feeds a @parametrize, where an empty list yields ZERO test cases.
+    assert rows, f"{PROBES} is empty — the tests looping over it would pass vacuously"
+    return rows
 
 
 @pytest.mark.parametrize('row', _rows(), ids=lambda r: r['id'])

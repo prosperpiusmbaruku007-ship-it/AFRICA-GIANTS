@@ -62,6 +62,8 @@ def test_resolve_phrases_unions_hardcoded_with_config_not_replace():
     cfg = {"ooc_phrases": ["a-brand-new-ooc-phrase"], "in_scope_phrases": []}
     ooc, in_scope = classification.resolve_phrases(cfg)
     assert "a-brand-new-ooc-phrase" in ooc
+    assert classification.HARDCODED_OOC_PHRASES, (
+        "HARDCODED_OOC_PHRASES is empty — this loop would assert nothing (2026-08-22 census)")
     for p in classification.HARDCODED_OOC_PHRASES:
         assert p in ooc                       # nothing hardcoded is lost
     assert in_scope == classification.HARDCODED_IN_SCOPE_PHRASES

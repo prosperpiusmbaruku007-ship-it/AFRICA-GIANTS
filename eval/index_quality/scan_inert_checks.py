@@ -40,19 +40,37 @@ def has_assert(node):
     return any(isinstance(n, ast.Assert) for n in ast.walk(node))
 
 
-def guards_nonempty(func, target_src):
+def guards_nonempty(func, name):
     """Does anything in the function establish that the iterable is non-empty?
 
-    Accepts `assert COLL`, `assert len(COLL)`, `assert len(COLL) > 0`, `assert COLL, msg`,
-    or a comparison mentioning both len( and the collection name.
+    Matches `assert COLL`, `assert obj.COLL`, `assert len(COLL)`, `assert COLL != []`.
+
+    BOTH `id='NAME'` AND `attr='NAME'` (fixed 2026-08-22). The first version matched only
+    `id=`, so `assert ws.BY_ROW` — an attribute — was invisible and the census kept reporting
+    sites that had already been closed. A worklist that cannot see its own fixes is the same
+    defect class it exists to find.
     """
+    if not name:
+        return False
     for n in ast.walk(func):
         if isinstance(n, ast.Assert):
             src = ast.dump(n.test)
-            if target_src and target_src in src:
-                # `assert COLL` / `assert len(COLL) ...` / `assert COLL != []`
+            if f"id='{name}'" in src or f"attr='{name}'" in src:
                 if isinstance(n.test, (ast.Name, ast.Attribute, ast.Compare, ast.Call)):
                     return True
+    return False
+
+
+def helper_asserts(tree, helper_name):
+    """True if a same-file helper function asserts before returning.
+
+    A loop over `_probes()` is covered when `_probes` itself asserts its result is non-empty —
+    one assertion at the loader protects every caller, which is why several sites were closed
+    that way rather than one line at a time.
+    """
+    for n in ast.walk(tree):
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name == helper_name:
+            return any(isinstance(x, ast.Assert) for x in ast.walk(n))
     return False
 
 
@@ -76,8 +94,17 @@ def module_literals(tree):
     return sizes
 
 
+_WRAPPERS = {'sorted', 'enumerate', 'list', 'tuple', 'set', 'reversed'}
+
+
 def iterable_name(node):
     it = node.iter
+    # Unwrap a pure wrapper so `for x in sorted(COLL)` is attributed to COLL, not to
+    # 'sorted'. Without this the census reported an assertion-covered site as unresolved,
+    # which made its own worklist wrong.
+    while (isinstance(it, ast.Call) and isinstance(it.func, ast.Name)
+           and it.func.id in _WRAPPERS and len(it.args) == 1):
+        it = it.args[0]
     if isinstance(it, ast.Name):
         return it.id
     if isinstance(it, ast.Attribute):
@@ -122,15 +149,21 @@ def main():
                         # --- A. vacuous loop ---
                         if isinstance(node, ast.For) and has_assert(node):
                             name = iterable_name(node)
-                            if name and not guards_nonempty(func, f"id='{name}'"):
-                                size = lits.get(name)
-                                findings['VACUOUS_LOOP'].append({
-                                    'file': rel, 'func': func.name, 'line': node.lineno,
-                                    'iterable': name, 'is_test': is_test,
-                                    'literal_size': size,
-                                    'state': ('INERT_NOW' if size == 0 else
-                                              'ACTIVE' if size else 'UNRESOLVED'),
-                                })
+                            if not name:
+                                continue
+                            if guards_nonempty(func, name):
+                                continue                      # asserted at the loop
+                            if (isinstance(node.iter, ast.Call)
+                                    and helper_asserts(tree, name)):
+                                continue                      # asserted at the loader
+                            size = lits.get(name)
+                            findings['VACUOUS_LOOP'].append({
+                                'file': rel, 'func': func.name, 'line': node.lineno,
+                                'iterable': name, 'is_test': is_test,
+                                'literal_size': size,
+                                'state': ('INERT_NOW' if size == 0 else
+                                          'ACTIVE' if size else 'UNRESOLVED'),
+                            })
                         # --- B. any() over a literal list of alternatives ---
                         if isinstance(node, ast.Assert):
                             for c in ast.walk(node.test):

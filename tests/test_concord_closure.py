@@ -352,6 +352,10 @@ def test_the_remaining_withheld_counterparts_are_the_applicative_family_only():
     assert _WITHHELD_OBJECT == {"nimekulipia", "nimewalipia", "tumekulipia", "tumewalipia"}, (
         "the withheld set changed — an exemption set is the obvious place to hide a phrase "
         "nobody wanted to think about")
+    assert _WITHHELD_OBJECT, (
+        "_WITHHELD_OBJECT is empty — this loop would assert nothing. If the withheld set is "
+        "ever emptied deliberately, delete this test rather than letting it pass silently "
+        "(2026-08-22 census)")
     for form in sorted(_WITHHELD_OBJECT):
         q = f"{form} laki mbili kwa mwezi je ni halali kisheria"
         assert routing.detect_intent(q) != "minimum_wage", (
