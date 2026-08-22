@@ -4,6 +4,55 @@ Last updated: 2026-08-22
 
 ---
 
+# 🚨 THE PILOT'S SAFE-ON-UNCOVERED-TOPICS PRECONDITION IS CURRENTLY UNMET: THERE IS NO MEASURED ROUTE TO "SINA UHAKIKA" OF ANY KIND (2026-08-22)
+
+**This is the single most consequential open item in the project right now — more consequential
+than any retrieval-ranking work — and it is stated here as its own headline so it can be found
+without reading an ADR.**
+
+The 2026-08-16 assessment set an explicit precondition for a safe pilot: *"a floor makes us safe
+on questions we can't answer, but answering them is better than refusing them... the floor still
+ships before any pilot."* Three independent, separately-dated attempts to build that floor have
+now all failed or gone unbuilt, and the most recent one closes the door on the entire APPROACH,
+not just one design:
+
+1. **An absolute similarity-score threshold** (scoped and rejected 2026-08-16): the score
+   distribution makes it impossible — the correct fact for one question scores *lower* than the
+   irrelevant top-1 of another, so any threshold that excludes wrong facts also excludes right
+   ones.
+2. **A margin (top-1 vs top-2 separation) threshold** (measured 2026-08-22,
+   `scratch/item5b_margin_guard.py`): **it inverts, not just fails to separate.** `nat_32`, correct
+   today, has the single smallest margin of all 21 fact-path questions tested, while three
+   known-buried (wrong) rows score *larger* margins than every currently-correct row. A margin
+   floor would flag the wrong rows as the trustworthy ones.
+3. **A re-ranked-index confidence signal** — the third named design — remains unbuilt and
+   untested.
+
+**And now a fourth, more fundamental problem, discovered today (§8 below): even a hypothetically
+perfect retrieval-confidence signal could not catch a whole class of failure that was just
+measured directly.** `nat_23` and `nat_24` had the exact correct fact(s) placed directly into the
+model's context — not just retrieved with a good score, but forced in, guaranteeing maximum
+possible retrieval confidence by construction — and the model still produced a wrong or empty
+answer with **no hedge, no "sijui," no visible sign of uncertainty at all.** This is not a gap in
+today's floor designs; it is a proof that the entire *category* of retrieval-side floor cannot
+address this failure mode, because the defect is not "the system wasn't sure which fact to use" —
+it is "the system had the right fact and still didn't produce a correct answer." No signal computed
+from retrieval confidence, however well-built, can distinguish that case from a genuinely correct
+answer.
+
+**Plain statement of where this leaves the pilot precondition: it is unmet, and no work currently
+scoped anywhere in this project closes it.** A safety net for "refuse when we don't know" would
+need a signal from the *generation* side — e.g. a post-hoc check that a reply addresses every part
+of a multi-part question, or a self-consistency check on the answer itself — not a better retrieval
+score. No such mechanism exists or is scoped. Until one does, the 2026-08-16 assessment's own
+stated condition for a safe pilot on uncovered topics has not been satisfied.
+
+Full technical detail on both threads (margin inversion; the forced-fact generation-failure
+finding) in the entry immediately below and `docs/decisions/0002-retrieval-structural-scoping.md`
+§5(c) and §8.
+
+---
+
 # 🎯 §8 MEASURED: RETRIEVAL IS BINDING FOR MOST OF THE REMAINING 8 ROWS, NOT ALL — A THIRD FAIL EVEN WITH THE RIGHT FACT FORCED IN (2026-08-22)
 
 **Scoped as a measurement, not a fix, per instruction — nothing shipped.** Two rows forced into
@@ -38,28 +87,47 @@ worth doing.** But a full **3 of 8 (37.5%) fail even with the exact right facts 
 the model** — for these three, retrieval was never going to be sufficient, regardless of which
 retrieval mechanism eventually ships.
 
-**The failures aren't random — they cluster on arithmetic/multi-fact synthesis.** `nat_23`,
-`nat_24`, and `nat_33` all require either applying a percentage to a stated amount, multiplying a
-monthly penalty by a stated number of months, or merging 2–3 distinct obligations into one
-complete reply. The 4 clean successes are single-fact statements or facts presented side by side
-with no arithmetic between them. This is not a retrieval defect and no mechanism in the ADB scoping
-(§1, §2, §5, §6, a bigger model) can fix it — it sits in generation/decomposition, and needs its
-own separate investigation to size and name precisely.
+**CORRECTION, same session — checked whether the 3 failures are engine-shaped before calling this
+"generation-side," and it changes the diagnosis for 2 of 3.** The first pass grouped all three
+under "arithmetic/multi-fact synthesis" and filed it as a model-capability question. That skipped
+a prior question: does a deterministic engine exist for this arithmetic, and does anything route
+to it? Checked directly against `chike/routing.py` (`COMPUTE_TYPES =
+("sdl","nssf","paye","wcf","minimum_wage")`) and `chike/rules_engine/`:
 
-**Consequence: §2's (the routing intercept's) expected real yield is revised to ~5 of 8, not 8 of
-8.** It still closes retrieval for all 8 rows by construction, but `nat_23`, `nat_24`, and likely
-`nat_33` should be expected to stay wrong or partial after it ships — report it that way, not as a
-clean sweep.
+- **`nat_33` (BRELA, 7×2,500) has no engine at all** — BRELA isn't a `COMPUTE_TYPES` member, no
+  `rules_engine/brela.py` exists. Nothing to route to. This one really is a capability gap.
+- **`nat_23` and `nat_24` have real, working engines** (`rules_engine/sdl.py`, `nssf.py`, `wcf.py`
+  — the same ones ADR 0001 credits with fixing 9 compute rows once) **but nothing currently routes
+  to them, for two separate reasons.** First: production (v15, live) has ZERO compute-engine
+  routing of any kind — `chike.pipeline_v15.answer`, the function `modal_app.py` actually calls,
+  never invokes `routing.detect_intent` or any rules-engine module (confirmed by grep, zero
+  matches). Every "computed" reply in production today is the raw model free-handing arithmetic in
+  text. Second: even `chike/orchestrator.py` (v16, the pipeline that DOES own these engines, not
+  live) wouldn't route these two correctly today either — ran `decompose_query` +
+  `detect_intent` directly on both questions: neither splits into sub-questions (the decomposer
+  doesn't split nicknamed levy references like *"ile ya mafunzo na ile ya uzeeni,"* only `?`-splits
+  and explicit enumerations), and `detect_intent` returns `nssf` (single levy, not `nat_23`'s
+  2-levy fanout) and `none` (`nat_24`'s 3-way threshold trap doesn't fire the cue detector at all).
 
-**Consequence for the pilot-safety floor:** this closes a gap the margin experiment left open.
-`nat_23` and `nat_24` had the correct facts placed directly in context — maximum possible retrieval
-confidence, by construction — and the model still produced a bare non-answer with no hedge, no
-"sijui," no visible uncertainty. **A retrieval-confidence floor cannot catch this failure class
-even in principle**, because the defect isn't "unsure which fact to use" — it's "had the fact and
-didn't use it correctly." The pilot's "refuse when we don't know" safety net needs a signal from
-the generation side, not a better retrieval score, and none is scoped anywhere yet. Combined with
-margin's inversion (previous entry) and re-ranking's absence, **there is currently no working route
-to a safety floor of any kind** — retrieval-side or otherwise.
+**Revised: 1 of 3 is a genuine capability gap (`nat_33`); 2 of 3 are a routing/decomposition gap
+with a known fix pattern (`nat_23`, `nat_24`), not a raw generation ceiling as first stated.** This
+is the same mistake-shape flagged earlier this week, caught before it became a wrong build
+decision rather than after.
+
+**Consequence: §2's (the routing intercept's) expected real yield is revised again — up, and
+conditionally.** Alone, it still only reaches ~5–6 of 8 (closing retrieval doesn't help if nothing
+downstream can compute a fanout from the facts). But a separate routing/decomposition extension —
+splitting nicknamed multi-levy phrasing and detecting fanouts/threshold-traps from natural cues,
+not just explicit levy names — would let the EXISTING SDL/NSSF/WCF engines reach `nat_23`/`nat_24`,
+putting real yield near **7 of 8**, with only `nat_33` (a new BRELA engine, smallest of the three
+gaps) left over. **Neither the routing extension nor the BRELA engine is scoped or built here** —
+both belong to `chike/routing.py`/`chike/decomposition.py`/`chike/orchestrator.py`, a separate
+workstream and a separate go-ahead.
+
+**Consequence for the pilot-safety floor: see the headline entry immediately above** — this
+measurement (`nat_23`/`nat_24` failing with maximum forced retrieval confidence and no hedge) is
+the finding that closes the door on retrieval-side floors as a category, not just on margin as one
+design. Recorded there as its own headline per instruction, not left as a note here.
 
 Full account, per-row detail, and the revised recommended order in
 `docs/decisions/0002-retrieval-structural-scoping.md` §8.

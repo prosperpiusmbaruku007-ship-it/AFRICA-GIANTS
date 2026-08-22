@@ -6,11 +6,13 @@
   measurement cannot certify answer stability. A standing bar for future retrieval ships is
   recorded in §5(d). General fusion (RRF/weighted/interleave) is DECLINED in all forms; §2
   (routing intercept) is the leading candidate, named explicitly as a small fix for 6 known fact
-  keys, not a general retrieval solution. §8 (generation-side failure ceiling) is now MEASURED,
-  not just discovered: forcing the correct fact(s) into context for all 8 remaining rows produced
-  4 correct, 1 partial, 3 clearly wrong — retrieval is a binding constraint for most of these rows
-  but not all of them, and §2's expected real yield is revised to ~5 of 8, not 8 of 8. §1/§6/§7
-  remain scoped-only, not built.
+  keys, not a general retrieval solution. §8 (generation-side failure ceiling) is now MEASURED AND
+  re-diagnosed: forcing the correct fact(s) into context for all 8 remaining rows produced 4
+  correct, 1 partial, 3 clearly wrong — but an engine-shape check on those 3 found only 1
+  (`nat_33`) is a genuine capability gap (no BRELA engine exists); the other 2 (`nat_23`, `nat_24`)
+  have working SDL/NSSF/WCF engines nothing currently routes to — a routing/decomposition gap, not
+  a model ceiling. §2's expected yield is ~5–6 of 8 alone, ~7 of 8 if paired with a separately
+  scoped routing fix. §1/§6/§7 remain scoped-only, not built.
 - **Deciders:** Founder + Claude Code.
 - **Supersedes:** nothing. Promoted from `scratch/retrieval_structural_scoping_2026_08_22.md`
   (moved out of scratch on founder instruction — this is a decision record, not a throwaway
@@ -398,24 +400,57 @@ it (§1, §2) is worth doing. But a full **3 of 8 (37.5%) fail even with the exa
 handed to the model directly** — retrieval was never going to be sufficient for these three,
 regardless of which retrieval mechanism eventually ships.
 
-**The failures cluster on a clean, nameable property: arithmetic/multi-fact synthesis, not simple
-lookup.** The 3 clear failures (`nat_23`, `nat_24`, `nat_33`) all require either applying a
-percentage to a given amount, multiplying a monthly penalty by a stated number of months, or
-merging two-to-three distinct obligations into one complete reply. The 4 clear successes
-(`nat_44`, `nat_45`, `nat_41`, `nat_28`) are single-fact statements or two facts presented side by
-side with no arithmetic between them. `nat_05` (partial) needs an inferential move (recognize the
-given figure is the wrong base) rather than arithmetic, and got the recognition right without
-closing the loop. **This is not retrieval's problem, and no mechanism in §1–§7 can fix it** — it
-sits in generation/decomposition, downstream of a successful retrieval, and needs its own
-investigation (why does the model drop facts or refuse to compute when multiple obligations are in
-play) before it can be sized precisely. What's now known is its approximate SIZE on this sample:
-roughly a third of the remaining known-buried rows.
+**CORRECTION, same day — the first framing above called this a "generation-side" ceiling before
+checking whether it was actually a routing gap. It wasn't fully checked. Checked now, and it
+changes the diagnosis for 2 of the 3 failures.** The three all involve arithmetic, so the first
+pass filed them together as one model-capability property. That conflated two different questions:
+(a) does a deterministic engine exist for this arithmetic at all, and (b) does anything route to
+it. Checked directly against `chike/routing.py` and `chike/rules_engine/`:
 
-**Consequence for §2's expected yield:** the routing intercept (§4) closes retrieval for all 8
-known rows by construction, but this measurement predicts it converts roughly **5 of 8 to
-CORRECT, not 8 of 8** — `nat_23`, `nat_24`, and likely `nat_33` should be expected to remain wrong
-or partial after §2 ships, for reasons the intercept cannot touch. Report it that way when §2
-ships: partial success against its own target set, not a clean sweep.
+- **`nat_33` (BRELA, 7×2,500) is genuinely NOT engine-shaped.** `COMPUTE_TYPES =
+  ("sdl","nssf","paye","wcf","minimum_wage")` — BRELA is not one of them, and no
+  `chike/rules_engine/brela.py` (or equivalent) exists anywhere in the codebase. There is nothing to
+  route to. This one really is a capability gap: either the model has to synthesize the
+  multiplication in free text reliably (it currently doesn't), or a new engine has to be built.
+- **`nat_23` and `nat_24` ARE engine-shaped — the arithmetic they need (SDL 3.5%, NSSF 20%, WCF
+  0.5% of payroll) already has real, working engines** (`chike/rules_engine/sdl.py`, `nssf.py`,
+  `wcf.py`) that ADR 0001 documents as the mechanism that already fixed 9 compute rows once. **But
+  neither production nor the alternative pipeline that owns those engines currently reaches them
+  for these two questions, for two separate, more fundamental reasons:**
+  1. **Production (v15, live) has zero compute-engine routing of any kind.** `chike.pipeline_v15.answer`
+     — the function `chike-inference/modal_app.py` actually calls — never invokes
+     `routing.detect_intent` or any rules-engine module; confirmed by grep, zero matches in both
+     files. Every arithmetic reply in production today, including the ones that happen to look
+     "computed," is the raw model free-handing it in text, grounded only by whatever facts got
+     RAG-injected. This is a foundational architectural fact independent of these three rows.
+  2. **Even the pipeline that DOES own a real compute engine (`chike/orchestrator.py`, v16, not
+     live) would not route these two correctly today either.** Ran `chike.decomposition.decompose_query`
+     + `chike.routing.detect_intent` directly on both questions: neither splits into separate
+     sub-questions (both stay one whole sentence — the decomposer doesn't split on nicknamed
+     levy references like *"ile ya mafunzo na ile ya uzeeni"*, only on `?`-splits and explicit
+     enumerated lists), and `detect_intent` returns `nssf` (single levy, not the 2-levy fanout
+     `nat_23`'s gold answer needs) and `none` (nat_24 — the 3-way threshold-trap phrasing doesn't
+     fire the natural-levy cue detector at all) respectively. **The gap is real, but it is a
+     routing/decomposition gap — nicknamed multi-levy phrasing isn't recognized yet — not a limit
+     on what the engines themselves can compute.**
+
+**Revised framing: 1 of 3 failures is a model/engine-coverage capability gap (`nat_33`); 2 of 3 are
+an architectural routing gap with a known, existing fix pattern (`nat_23`, `nat_24`) — not a raw
+generation-capability ceiling as first stated.** `nat_05` (partial) is unaffected by this
+correction — it needs an inferential move (recognize the given figure is the wrong base), not
+arithmetic dispatch, and is unrelated to engine routing.
+
+**Consequence for §2's expected yield — revised again, upward, and conditionally.** If a routing/
+decomposition extension is later built to (a) split nicknamed multi-levy phrasing and (b) detect
+multi-levy fanouts and threshold traps from natural cues the way it does from explicit levy names,
+`nat_23` and `nat_24` become reachable by the EXISTING sdl/nssf/wcf engines — not a new engine, a
+routing fix. That would put §2's real yield back close to **7 of 8**, not the ~5/8 estimated before
+this check, with only `nat_33` needing either a new BRELA engine or a genuine generation-side fix.
+**This routing/decomposition extension is NOT scoped or built here** — it belongs to the routing
+workstream (`chike/routing.py`, `chike/decomposition.py`, `chike/orchestrator.py`), not this
+retrieval ADR, and is a separate go-ahead. Until it exists, §2 alone still only reaches ~5–6 of 8,
+because closing retrieval doesn't help if nothing downstream can use SDL/NSSF/WCF facts to compute
+a fanout answer.
 
 **Consequence for the pilot-safety floor (§5(c)):** this closes a gap the margin experiment left
 open. A retrieval-confidence floor — even a hypothetically working one, which margin is not — is
@@ -436,39 +471,42 @@ better retrieval score, and no such mechanism is scoped anywhere in this documen
 | # | mechanism | status this round | priority |
 |---|---|---|---|
 | 5 | Hybrid lexical+dense fusion (RRF/weighted/interleave) | **SHIPPED (interleave), LIVE-REGRESSED, REVERTED.** Target-fact rank preservation held for all 8 rows tested; the OTHER two injected slots changed for all 8 anyway, and one (`nat_32`) flipped to a wrong live answer. Neither RRF's nor interleave's real blast radius (answer stability, not rank) was ever fully enumerated — interleave's was wrongly assumed zero. | **DECLINED, all forms** |
-| 2 | Routing-layer fact intercept | **SCOPED, purpose named honestly:** a hand-maintained allowlist that closes 6 known fact keys / 8 known rows and nothing else — not a general retrieval fix, no broader version escapes that ceiling. Leading candidate because it's the only mechanism here with a *provably* bounded blast radius (explicit cue match short-circuits RAG; everything else untouched — no fusion variant could claim that after §5(d)). **Expected real yield per §8: ~5 of 8, not 8 of 8.** | **HIGH, as a named small objective, not a solution to retrieval** |
-| 1 | Fee-shape rows rewritten at index-content level | scoped only, unchanged. Same §8 ceiling applies — closing retrieval for `nat_23`/`nat_24`/`nat_33` won't make them correct. | HIGH (folds into next regen) |
+| 2 | Routing-layer fact intercept | **SCOPED, purpose named honestly:** a hand-maintained allowlist that closes 6 known fact keys / 8 known rows and nothing else — not a general retrieval fix, no broader version escapes that ceiling. Leading candidate because it's the only mechanism here with a *provably* bounded blast radius (explicit cue match short-circuits RAG; everything else untouched — no fusion variant could claim that after §5(d)). **Expected real yield per §8 (revised after the engine-shape check): ~5–6 of 8 alone; ~7 of 8 if paired with a separate routing/decomposition fix for nicknamed multi-levy fanouts (not scoped here).** | **HIGH, as a named small objective, not a solution to retrieval** |
+| 1 | Fee-shape rows rewritten at index-content level | scoped only, unchanged. Same §8 ceiling applies to `nat_33` (no engine exists); `nat_23`/`nat_24` are engine-shaped, blocked on routing not retrieval. | HIGH (folds into next regen) |
 | 6 | Re-ranking (cross-encoder) | scoped only, unchanged — flagged that it likely shares §5(d)'s blast-radius problem (re-scores every query's shortlist) and needs its own explicit old-vs-new test before being assumed safer | MEDIUM |
 | 7 | Different/bigger embedding model | scoped only, unchanged — this is what R15 was | LOW, not scheduled |
-| 8 | Generation-side failure after successful retrieval | **MEASURED** (`ChikeModel.run_forced_facts`, temporary/removed): forced the correct fact(s) into context for all 8 remaining rows. **4 correct, 1 partial, 3 clearly wrong (`nat_23`, `nat_24`, `nat_33`) despite exact facts present.** Failures cluster on arithmetic/multi-fact synthesis, not simple lookup. Also closes a gap in the pilot-safety floor: these failures carry maximum retrieval confidence and no visible hedge, so no retrieval-confidence floor could ever catch them. | Root cause (why generation drops facts / declines to compute) needs its own investigation, outside this ADR's scope |
+| 8 | Generation-side / engine-routing failure after successful retrieval | **MEASURED, then re-diagnosed the same day.** Forced the correct fact(s) into context for all 8 remaining rows: 4 correct, 1 partial, 3 clearly wrong. Checked whether the 3 failures are engine-shaped before calling them generation-side (they weren't fully checked first pass): **`nat_33` has no engine at all (BRELA isn't a `COMPUTE_TYPES` member) — a real capability gap. `nat_23`/`nat_24` have working engines (SDL/NSSF/WCF) but nothing routes to them — production has zero compute routing, and even v16's router doesn't split/detect these nicknamed multi-levy phrasings.** 2 of 3 are a routing gap with a known fix pattern, not a model ceiling. Also the headline pilot-safety finding: these failures carry maximum retrieval confidence (fact forced directly into context) and no visible hedge, so no retrieval-confidence floor could ever catch them — see PROGRESS.md's dedicated pilot-precondition entry, not just this ADR. | The routing/decomposition extension for nicknamed multi-levy fanouts is a separate go-ahead, owned by `chike/routing.py`/`chike/decomposition.py`, not this ADR. A new BRELA engine (`nat_33`) is separately scoped-able, smallest of the three. |
 
 ## Recommended order, updated after the ship-and-revert and the §8 measurement (2026-08-22)
 
 1. **§2 (routing intercept) is the priority**, named for what it actually is: closes retrieval for
-   8 known rows, expected to convert **~5 of them to CORRECT** per §8, not all 8. Not a guard for
-   §5 (§5 is declined outright) — evaluated on its own bounded-blast-radius merit. Needs its own
-   R17 adversarial-probe pass per key before shipping, and **must ship under the §5(d) standing
-   bar**: an answer-level regression check across the currently-correct set, not just a rank check
-   on the 8 target rows, before it is called safe.
-2. **§1 folds into the next regen**, independent of §2 — content fix, tooling already exists, and
+   8 known rows, expected to convert **~5–6 of them to CORRECT** per §8 alone, not all 8. Not a
+   guard for §5 (§5 is declined outright) — evaluated on its own bounded-blast-radius merit. Needs
+   its own R17 adversarial-probe pass per key before shipping, and **must ship under the §5(d)
+   standing bar**: an answer-level regression check across the currently-correct set, not just a
+   rank check on the 8 target rows, before it is called safe.
+2. **A routing/decomposition extension for nicknamed multi-levy fanouts (`nat_23`/`nat_24`-shaped
+   questions) is a separately-scopeable, HIGH-value item** discovered by §8's engine-shape check —
+   it is NOT retrieval work and does not belong in this ADR, but it is cheap to name here because
+   the payoff is concrete: it would let 2 already-working engines (SDL, NSSF/WCF) reach questions
+   they currently can't, for both this nine-row set and, plausibly, other nicknamed-levy phrasings
+   outside it. Owned by `chike/routing.py` / `chike/decomposition.py` / `chike/orchestrator.py`.
+3. **A new BRELA rules-engine module (`nat_33`)** is the smallest of the three §8 gaps — same
+   shape as `sdl.py`/`nssf.py`/`wcf.py`, one flat rate times a stated duration — but still a
+   capability the codebase doesn't have today, not a routing fix. Separately scopeable.
+4. **§1 folds into the next regen**, independent of §2 — content fix, tooling already exists, and
    like §2 it changes only the rows it targets rather than reshaping general retrieval. Same
-   standing-bar requirement applies, and the same §8 ceiling: expect it to help `nat_44`-shaped
-   rows, not `nat_23`/`nat_24`/`nat_33`-shaped ones.
-3. **§5 (general fusion, any variant) is closed for now.** Not because the structural argument in
+   standing-bar requirement applies.
+5. **§5 (general fusion, any variant) is closed for now.** Not because the structural argument in
    (c) was false, but because it answered the wrong question (does the target's rank survive?)
    instead of the one that matters (does everything else stay stable?). Do not re-propose RRF,
    weighted, or interleave without first designing a measurement that checks full injected-set
    stability across a broad sample, not just target-fact rank on the known-buried rows.
-4. **§6 (re-ranking) only after §1/§2**, and only with the blast-radius caveat above tested first
+6. **§6 (re-ranking) only after §1/§2**, and only with the blast-radius caveat above tested first
    — do not assume it is safer than fusion just because it wasn't the mechanism that just broke.
-5. **§7 not scheduled.**
-6. **§8's root cause is the next open question, and it now sits ahead of §1/§2 in importance even
-   though it isn't retrieval work**: why does generation drop a fact or decline to compute when 2–3
-   obligations are in play, on `nat_23`/`nat_24`/`nat_33`-shaped questions specifically? That
-   investigation determines the real ceiling of the whole workstream, not just these 3 rows — if
-   it's a general multi-fact/arithmetic weakness, it likely affects rows outside this specific
-   nine-row set too.
+7. **§7 not scheduled.**
 
-**Nothing above is authorized to build without a separate go-ahead.** §5 was built, deployed, and
-reverted this round under an explicit go-ahead; §8 was measured (not built — `run_forced_facts`
-was removed after use) under this round's go-ahead to investigate, not to ship.
+**Nothing above is authorized to build without a separate go-ahead — including items 2 and 3,
+which are named here for the first time but not scoped in the depth §1–§7 received.** §5 was
+built, deployed, and reverted this round under an explicit go-ahead; §8 was measured (not built —
+`run_forced_facts` was removed after use) under this round's go-ahead to investigate, not to ship.
