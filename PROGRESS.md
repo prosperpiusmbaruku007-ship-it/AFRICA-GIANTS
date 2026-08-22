@@ -876,6 +876,17 @@ floor still ships before any pilot, but on a **margin** (top-1 vs top-2 separati
 **re-ranked index**. Had it shipped as scoped it would have passed its own tests and refused the
 questions it was built to protect.
 
+**MARGIN IS RETIRED (2026-08-22) — do not pick this back up.** Of the two floor designs named
+above, margin was the last one still untested. It was measured (`scratch/item5b_margin_guard.py`,
+full account in `docs/decisions/0002-retrieval-structural-scoping.md` §5(c)) and it does not just
+fail to separate confident-correct from uncertain-wrong — **it inverts.** `nat_32`, correct today,
+has the single smallest margin of all 21 fact-path questions measured (0.0002), while three
+known-buried rows score larger margins than every currently-correct row. A margin threshold built
+to trust confident dense hits would flag the wrong rows as the trustworthy ones. **Neither of this
+entry's two named floor designs is viable now** — margin inverts, and re-ranking (the other) is
+still unbuilt and unmeasured (§6 of the same ADR). The next attempt at a floor needs a third
+signal, not a retry of either of these two.
+
 ---
 
 # ❌ CORRECTION, SAME DAY: "WE CORRECTED FACTS THAT WERE NEVER RETRIEVABLE" WAS WRONG (2026-08-17)
