@@ -382,17 +382,26 @@ redeployed again**, confirming `nat_43`/`nat_32` still answer correctly and `run
 longer exists. Production was never left running debug-only code; nothing about `run()` or
 `retrieve_facts()` was touched.
 
-> **⚠️ FLAGGED, NOT FIXED — the arm this table was measured on is unverified.** The description
-> above says `run_forced_facts` ran `chike.pipeline_v15.answer`. Production serves **v16** (see the
-> retraction in the CORRECTION below), so on that description this table measured the *non-live*
-> arm. It cannot be settled from the repo: `run_forced_facts` was deployed, used and removed
-> **without ever being committed** — `git log -S'run_forced_facts' --all` returns nothing. The
-> table is **left standing and flagged rather than re-measured or deleted**: its conclusion is
-> arm-independent for the two rows that carry the pilot-safety finding (`detect_intent` returns
-> `nssf`/`none` for `nat_23`/`nat_24`, so both arms send them down the same pooled-fact
-> generation and neither would have computed the fanout), and re-measuring costs a full R16 deploy
-> cycle, which is separately scoped work. **Re-run these rows on the v16 path — with the harness
-> committed — before building on the per-row outcomes.**
+> # ⛔ PROVISIONAL — EVERY RESULT IN THIS SECTION. NOT A BASIS FOR SCOPING.
+>
+> **The instrument is uninspectable and by its own description ran the wrong pipeline.**
+> `run_forced_facts` was deployed, used and removed **without ever being committed** —
+> `git log -S'run_forced_facts' --all` returns nothing, on any branch. No artifact exists. The
+> method description above says it ran `chike.pipeline_v15.answer`; production serves **v16** (see
+> the retraction in the CORRECTION below). The results here may therefore be measurements of a
+> non-production pipeline, taken by an instrument that cannot be re-read.
+>
+> **Provisional in full:** the 4/1/3 split, every per-row outcome, the arithmetic-clustering
+> pattern, and **§2's revised yield in the SUMMARY table and Recommended-order item 1, which is
+> arithmetic on this table and inherits its defect.**
+>
+> **The narrow defence covers two rows only.** `detect_intent` returns `nssf`/`none` for
+> `nat_23`/`nat_24`, so both arms route those two to the same pooled-fact generation and the
+> pilot-safety finding drawn from them survives either way. That is a statement about two rows. It
+> does not extend to the other six, to the split, or to the clustering claim.
+>
+> **Being re-measured now:** harness committed first, run on the live v16 path, all eight rows.
+> **§2 does not start until that lands.**
 
 | row | facts forced | outcome |
 |---|---|---|
@@ -498,20 +507,27 @@ better retrieval score, and no such mechanism is scoped anywhere in this documen
 | # | mechanism | status this round | priority |
 |---|---|---|---|
 | 5 | Hybrid lexical+dense fusion (RRF/weighted/interleave) | **SHIPPED (interleave), LIVE-REGRESSED, REVERTED.** Target-fact rank preservation held for all 8 rows tested; the OTHER two injected slots changed for all 8 anyway, and one (`nat_32`) flipped to a wrong live answer. Neither RRF's nor interleave's real blast radius (answer stability, not rank) was ever fully enumerated — interleave's was wrongly assumed zero. | **DECLINED, all forms** |
-| 2 | Routing-layer fact intercept | **SCOPED, purpose named honestly:** a hand-maintained allowlist that closes 6 known fact keys / 8 known rows and nothing else — not a general retrieval fix, no broader version escapes that ceiling. Leading candidate because it's the only mechanism here with a *provably* bounded blast radius (explicit cue match short-circuits RAG; everything else untouched — no fusion variant could claim that after §5(d)). **Expected real yield per §8 (revised after the engine-shape check): ~5–6 of 8 alone; ~7 of 8 if paired with a separate routing/decomposition fix for nicknamed multi-levy fanouts (not scoped here).** | **HIGH, as a named small objective, not a solution to retrieval** |
+| 2 | Routing-layer fact intercept | **SCOPED, purpose named honestly:** a hand-maintained allowlist that closes 6 known fact keys / 8 known rows and nothing else — not a general retrieval fix, no broader version escapes that ceiling. Leading candidate because it's the only mechanism here with a *provably* bounded blast radius (explicit cue match short-circuits RAG; everything else untouched — no fusion variant could claim that after §5(d)). **⛔ Expected real yield per §8 is PROVISIONAL and must not justify building this: ~5–6 of 8 alone; ~7 of 8 if paired with a separate routing/decomposition fix (not scoped here) — both figures are arithmetic on §8's provisional table, produced by an uninspectable harness that may have run the non-live arm. Placeholders until the v16 re-run lands.** | **HIGH, as a named small objective, not a solution to retrieval** |
 | 1 | Fee-shape rows rewritten at index-content level | scoped only, unchanged. Same §8 ceiling applies to `nat_33` (no engine exists); `nat_23`/`nat_24` are engine-shaped, blocked on routing not retrieval. | HIGH (folds into next regen) |
 | 6 | Re-ranking (cross-encoder) | scoped only, unchanged — flagged that it likely shares §5(d)'s blast-radius problem (re-scores every query's shortlist) and needs its own explicit old-vs-new test before being assumed safer | MEDIUM |
 | 7 | Different/bigger embedding model | scoped only, unchanged — this is what R15 was | LOW, not scheduled |
-| 8 | Generation-side / engine-routing failure after successful retrieval | **MEASURED, then re-diagnosed the same day.** Forced the correct fact(s) into context for all 8 remaining rows: 4 correct, 1 partial, 3 clearly wrong. Checked whether the 3 failures are engine-shaped before calling them generation-side (they weren't fully checked first pass): **`nat_33` has no engine at all (BRELA isn't a `COMPUTE_TYPES` member) — a real capability gap. `nat_23`/`nat_24` have working engines (SDL/NSSF/WCF), and v16 — which owns them and IS the deployed pipeline (`chike_config.json: "pipeline": "v16"`) — still doesn't route to them, because the decomposer doesn't split nicknamed multi-levy phrasing and `detect_intent` returns `nssf`/`none`.** 2 of 3 are a routing gap with a known fix pattern, not a model ceiling. (An earlier version of this row claimed production runs v15 with zero compute routing — **retracted, false**; see §8's retraction. The forced-fact table itself is flagged: the harness was never committed, so its arm is unverified.) Also the headline pilot-safety finding: these failures carry maximum retrieval confidence (fact forced directly into context) and no visible hedge, so no retrieval-confidence floor could ever catch them — see PROGRESS.md's dedicated pilot-precondition entry, not just this ADR. | The routing/decomposition extension for nicknamed multi-levy fanouts is a separate go-ahead, owned by `chike/routing.py`/`chike/decomposition.py`, not this ADR. A new BRELA engine (`nat_33`) is separately scoped-able, smallest of the three. |
+| 8 | Generation-side / engine-routing failure after successful retrieval | **⛔ PROVISIONAL — being re-measured on v16. The harness was never committed and its own description says it ran the non-live v15 arm; no artifact exists.** Measured, then re-diagnosed the same day. Forced the correct fact(s) into context for all 8 remaining rows: 4 correct, 1 partial, 3 clearly wrong. Checked whether the 3 failures are engine-shaped before calling them generation-side (they weren't fully checked first pass): **`nat_33` has no engine at all (BRELA isn't a `COMPUTE_TYPES` member) — a real capability gap. `nat_23`/`nat_24` have working engines (SDL/NSSF/WCF), and v16 — which owns them and IS the deployed pipeline (`chike_config.json: "pipeline": "v16"`) — still doesn't route to them, because the decomposer doesn't split nicknamed multi-levy phrasing and `detect_intent` returns `nssf`/`none`.** 2 of 3 are a routing gap with a known fix pattern, not a model ceiling. (An earlier version of this row claimed production runs v15 with zero compute routing — **retracted, false**; see §8's retraction. The engine-shape half of the diagnosis stands on its own — it was checked against the code and re-verified. The half that says these rows *failed* is provisional, from the table.) Also the headline pilot-safety finding: these failures carry maximum retrieval confidence (fact forced directly into context) and no visible hedge, so no retrieval-confidence floor could ever catch them — see PROGRESS.md's dedicated pilot-precondition entry, not just this ADR. | The routing/decomposition extension for nicknamed multi-levy fanouts is a separate go-ahead, owned by `chike/routing.py`/`chike/decomposition.py`, not this ADR. A new BRELA engine (`nat_33`) is separately scoped-able, smallest of the three. |
 
 ## Recommended order, updated after the ship-and-revert and the §8 measurement (2026-08-22)
 
-1. **§2 (routing intercept) is the priority**, named for what it actually is: closes retrieval for
-   8 known rows, expected to convert **~5–6 of them to CORRECT** per §8 alone, not all 8. Not a
-   guard for §5 (§5 is declined outright) — evaluated on its own bounded-blast-radius merit. Needs
-   its own R17 adversarial-probe pass per key before shipping, and **must ship under the §5(d)
-   standing bar**: an answer-level regression check across the currently-correct set, not just a
-   rank check on the 8 target rows, before it is called safe.
+**⛔ ORDERING PRECONDITION (2026-08-22): §8 must be settled on the live v16 pipeline before item 1
+starts.** §8 is the item that decides whether the generation ceiling is real, and it is currently
+provisional — so it constrains work on both sides of that question, §2 included. Nothing below is
+actionable until the v16 re-run lands.
+
+1. **§2 (routing intercept) is the priority once §8 is settled** — named for what it actually is:
+   closes retrieval for 8 known rows, expected to convert **~5–6 of them to CORRECT** per §8 alone,
+   not all 8 — **that figure is PROVISIONAL (§8's harness was never committed) and is not a
+   sufficient basis to start building.** Not a guard for §5 (§5 is declined outright) — evaluated
+   on its own bounded-blast-radius merit. Needs its own R17 adversarial-probe pass per key before
+   shipping, and **must ship under the §5(d) standing bar**: an answer-level regression check
+   across the currently-correct set, not just a rank check on the 8 target rows, before it is
+   called safe.
 2. **A routing/decomposition extension for nicknamed multi-levy fanouts (`nat_23`/`nat_24`-shaped
    questions) is a separately-scopeable, HIGH-value item** discovered by §8's engine-shape check —
    it is NOT retrieval work and does not belong in this ADR, but it is cheap to name here because

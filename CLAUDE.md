@@ -649,6 +649,48 @@ defect is worse than no test.** `test_paraphrased_ooc_controls_*` asserted a kno
 should pass the gate, on the assumption the model would refuse it. Live data disproved the
 assumption. When that happens, invert the test and keep the history in its docstring.
 
+### R18 — COMMIT THE HARNESS BEFORE YOU WRITE UP ITS RESULT. No exceptions.
+
+**Any instrument whose output enters the record — PROGRESS.md, an ADR, a gate number, a scoping
+decision — must be committed to git BEFORE its result is written up.** Harness code, the row/input
+fixture, and the raw output artifact. If it measured something you are going to cite, it is not
+scratch, whatever directory it lives in.
+
+This is cheap — one `git add` before one `git commit` you were writing anyway — and it is the
+single thing that would have prevented **five separate incidents**, each one a result carried on
+something nobody could re-derive:
+
+1. **The stale pins** (2026-08-17) — human verdicts pinned to index *row numbers*. The index moved
+   underneath them and the pin kept asserting the old verdict. Closed by re-checking each pin's
+   *content* every run, so a pin fails loudly instead of decaying silently.
+2. **The drift check's predecessor** (2026-08-17) — v2's fact-index sync verdict came from a manual
+   pass that was never re-runnable. v3 then only re-checked the 28 keys v2 had flagged, so any key
+   v2 got right *by accident* was never adjudicated by anyone. Building
+   `scripts/check_facts_index_sync.py` — which checks all 246 unconditionally, every run — found 20
+   more on its first execution.
+3. **The interleave premise** (2026-08-22) — the zero-dilution instrument measured one fact's rank
+   and was taken to certify the whole injected set. The guarantee was real and it certified the
+   wrong quantity; a live answer broke anyway.
+4. **The v15/v16 claim** (2026-08-22) — "production has zero compute routing" came from a grep
+   against `chike.pipeline_v15.answer`, a code path the config selector no longer chooses. Nobody
+   re-derived it before it was written into an ADR and a headline.
+5. **SS8's forced-fact table** (2026-08-22) — the worst of the five, and the reason this rule
+   exists: `ChikeModel.run_forced_facts` was deployed, used, and deleted **without ever being
+   committed**. `git log -S` finds it on no branch. **The artifact does not exist at all**, and its
+   own method paragraph says it ran the non-live arm — so an entire section's results, the split,
+   the pattern drawn from it, and a downstream yield estimate that was about to justify building
+   §2, all rest on an instrument no one can inspect.
+
+**The rule in practice:**
+- Commit the harness, fixture and artifact in the same commit as (or a commit before) the write-up.
+- A temporary debug method on a deployed file still gets committed before the run; remove it in a
+  *follow-up* commit, so the exact instrument is in history at a named SHA. "It's temporary" is the
+  reason to commit it, not a reason not to.
+- Cite the artifact path in the write-up, so the claim and its evidence are one lookup apart.
+- **A result whose harness was never committed is PROVISIONAL, and provisionality is contagious:**
+  anything downstream that cites it — including yield estimates, priority orderings and build
+  decisions — is provisional too, and must say so. Do not scope work on a provisional number.
+
 ---
 
 See PROGRESS.md for current project status and next actions.

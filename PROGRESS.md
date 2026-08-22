@@ -54,12 +54,14 @@ retracted** — `chike_config.json` sets `"pipeline": "v16"`, `modal_app.py` bra
 `Orchestrator.answer()`, and the live path does reach the rules engines. Two consequences for this
 headline, in opposite directions:
 
-- **Flag (weakens the evidence, not the conclusion):** the forced-fact harness that produced the
-  `nat_23`/`nat_24` result is described as having run the v15 arm, and it was never committed, so
-  which arm it actually ran cannot be verified from the repo. The mechanism still holds on either
-  arm — `detect_intent` returns `nssf`/`none` for these two, so both pipelines route them to the
-  same pooled-fact generation — but **the specific outcomes should be re-measured on the v16 path
-  before anything is built on them.**
+- **The evidence is PROVISIONAL (the conclusion is narrowly defensible; the table it came from is
+  not):** the forced-fact harness that produced the `nat_23`/`nat_24` result is described as having
+  run the v15 arm, and it was **never committed** — there is no artifact to re-read. §8 is
+  therefore marked provisional in full and is being re-measured on v16 now. This headline survives
+  the flag *only* on the narrow ground that `detect_intent` returns `nssf`/`none` for these two
+  rows specifically, so both pipelines send them down the same pooled-fact generation. **That
+  ground covers these two rows and nothing else — it does not rescue the rest of §8, and this
+  headline is restated as confirmed only when the v16 re-run reproduces these two rows.**
 - **Strengthening (the conclusion gets worse, not better):** the pipeline that owns the SDL/NSSF/WCF
   engines is *already in production*. So this is not "the good pipeline isn't live yet" — the good
   pipeline **is** live, and it still produced a confident wrong answer with the right facts in
@@ -71,7 +73,42 @@ finding) in the entry immediately below and `docs/decisions/0002-retrieval-struc
 
 ---
 
-# 🎯 §8 MEASURED: RETRIEVAL IS BINDING FOR MOST OF THE REMAINING 8 ROWS, NOT ALL — A THIRD FAIL EVEN WITH THE RIGHT FACT FORCED IN (2026-08-22)
+# 🧾 FIVE INSTANCES OF ONE PATTERN: A RESULT CARRIED ON SOMETHING NOBODY COULD RE-DERIVE — NOW A RULE (R18, 2026-08-22)
+
+**Named plainly because it has now happened five times, and the fifth was about to drive a build
+decision.** Every one of these is the same shape: a claim entered the record, was believed, and was
+then used — while the thing that produced it could not be re-read by anyone, including the person
+who wrote it.
+
+| # | instance | what carried the result | how it surfaced |
+|---|---|---|---|
+| 1 | **Stale pins** (2026-08-17) | a human verdict pinned to an index *row number* | the index moved; the pin kept asserting the old verdict silently |
+| 2 | **Drift check's predecessor** (2026-08-17) | v2's manual, non-re-runnable fact-index pass; v3 then only re-checked v2's own flags | building the real check found **20 more keys** on its first run — keys v2 had got right by accident and nobody had ever adjudicated |
+| 3 | **Interleave premise** (2026-08-22) | an instrument that measured one fact's rank, read as certifying the whole injected set | the guarantee held perfectly and a live answer broke anyway |
+| 4 | **v15/v16 claim** (2026-08-22) | a grep against `chike.pipeline_v15.answer` — a path the config selector no longer chooses | caught mid-write-up, after it had already reached an ADR and a headline |
+| 5 | **SS8 forced-fact table** (2026-08-22) | **nothing — the harness was deployed, used and deleted without ever being committed** | `git log -S'run_forced_facts' --all` returns nothing, on any branch |
+
+**Instance 5 is the worst of the five and the reason this is now a rule rather than an
+observation.** In 1–4 something re-derivable existed: a row could be re-checked, a grep re-run, a
+rank re-measured. In 5 **the artifact does not exist at all**, and the instrument's own description
+says it ran the non-live arm — so §8's split, the arithmetic-clustering pattern drawn from it, and
+§2's revised yield (which was about to justify building §2) all rest on an instrument no one can
+inspect, measuring a pipeline that may not be production.
+
+**The rule, now `CLAUDE.md` R18:** *any harness whose output enters the record gets committed
+before its result is written up* — harness, fixture, and raw artifact. It costs one `git add`. It
+is the one measure that would have prevented all five. A temporary debug method is not an
+exception: commit it before the run and remove it in a follow-up commit, so the exact instrument
+sits in history at a named SHA.
+
+**And provisionality is contagious.** A result whose harness was never committed is provisional,
+and so is everything downstream that cites it — yield estimates, priority orderings, build
+decisions. §8 is marked provisional in full below, and §2 does not start until §8 is re-measured on
+the live v16 pipeline.
+
+---
+
+# 🎯 §8 MEASURED: RETRIEVAL IS BINDING FOR MOST OF THE REMAINING 8 ROWS, NOT ALL — A THIRD FAIL EVEN WITH THE RIGHT FACT FORCED IN (2026-08-22) — ⛔ PROVISIONAL, BEING RE-MEASURED
 
 **Scoped as a measurement, not a fix, per instruction — nothing shipped.** Two rows forced into
 `top_k=3` during the interleave ship's live canaries (`nat_05`, `nat_23`) had both still failed to
@@ -87,18 +124,30 @@ it, ran all 8 rows, then **removed the method and redeployed again**, confirming
 still answer correctly and the debug method no longer exists. `run()` and `retrieve_facts()`
 themselves were never touched.
 
-> **⚠️ FLAGGED, NOT FIXED — which arm this table was measured on is unverified.** The method
-> description above says it ran `chike.pipeline_v15.answer`. Production serves **v16** (see the
-> retraction further down this entry), so if that description is accurate, this table measured the
-> *non-live* arm. It cannot be settled from the repo: `run_forced_facts` was a temporary debug
-> method that was deployed, used, and removed **without ever being committed** — `git log -S` finds
-> it in no commit on any branch. **The table is left standing and flagged rather than re-measured
-> or deleted**, because (a) its own conclusion is arm-independent for the rows that matter — with
-> the correct facts forced into context and `detect_intent` returning `nssf`/`none`, both arms send
-> `nat_23`/`nat_24` down the same pooled-fact generation, so neither would have computed the
-> fanout; and (b) re-measuring means another full R16 deploy cycle, which is a scoped piece of work
-> and not something to start inside a record correction. Anyone building on the per-row outcomes
-> below should re-run them on the v16 path first, with the harness committed this time.
+> # ⛔ PROVISIONAL — EVERY RESULT IN THIS ENTRY. DO NOT SCOPE WORK ON IT.
+>
+> **The instrument that produced this entire section cannot be inspected, and by its own
+> description it ran the wrong pipeline.** `ChikeModel.run_forced_facts` was deployed, used and
+> deleted **without ever being committed** — `git log -S'run_forced_facts' --all` returns nothing,
+> on any branch. There is no artifact. The method paragraph above says it ran
+> `chike.pipeline_v15.answer`; production serves **v16** (see the retraction below). So the numbers
+> below may be measurements of a pipeline that is not the one in production, taken by an instrument
+> nobody can re-read.
+>
+> **What is provisional: all of it.** The 4-correct / 1-partial / 3-wrong split. The
+> arithmetic-clustering pattern. Every per-row outcome. And **§2's revised yield (~5–6 of 8 alone,
+> ~7 of 8 with a routing extension), which is derived from this table and is therefore provisional
+> too** — it must not be used to justify building §2.
+>
+> **The narrow defence does not travel.** It is true that `detect_intent` returns `nssf`/`none` for
+> `nat_23`/`nat_24`, so both pipelines route those two to the same pooled-fact generation, and the
+> pilot-safety finding drawn from those two rows survives on either arm. **That covers two rows and
+> nothing else.** It says nothing about the other six, nothing about the split, and nothing about
+> the clustering pattern — all of which sit on the uninspectable instrument.
+>
+> **Status: being re-measured now** — harness committed first, run on the live v16 path, all eight
+> rows. Until that lands, cite anything in this entry as provisional or not at all. **§2 does not
+> start until §8 is settled on the live pipeline.**
 
 | row | facts forced | outcome |
 |---|---|---|
@@ -111,7 +160,8 @@ themselves were never touched.
 | `nat_24` | SDL threshold + NSSF rate + WCF rate (3 facts) | **WRONG** — bare non-answer, no content |
 | `nat_23` | SDL rate + NSSF rate (2 facts) | **WRONG** — restates the input and stops; no arithmetic on either levy |
 
-**The honest read is mixed, not clean either way.** 4 clearly correct, 1 partial, 3 clearly wrong —
+**The honest read is mixed, not clean either way — and PROVISIONAL, see the block above.** 4
+clearly correct, 1 partial, 3 clearly wrong —
 **most (4–5 of 8) do produce a correct answer once retrieval is forced to succeed, so retrieval
 genuinely is the binding constraint for the majority of these rows, and closing it (§1, §2) is
 worth doing.** But a full **3 of 8 (37.5%) fail even with the exact right facts handed directly to
@@ -165,11 +215,16 @@ to it? Checked directly against `chike/routing.py` (`COMPUTE_TYPES =
 **Revised: 1 of 3 is a genuine capability gap (`nat_33`); 2 of 3 are a routing/decomposition gap
 with a known fix pattern (`nat_23`, `nat_24`), not a raw generation ceiling as first stated.** This
 is the same mistake-shape flagged earlier this week, caught before it became a wrong build
-decision rather than after.
+decision rather than after. **The engine-shape half of this is solid — it was checked against
+`chike/routing.py` and `chike/rules_engine/` directly and re-verified after the crash. The half
+that says these three rows FAILED is provisional, because that comes from the table above.**
 
 **Consequence: §2's (the routing intercept's) expected real yield is revised again — up, and
-conditionally.** Alone, it still only reaches ~5–6 of 8 (closing retrieval doesn't help if nothing
-downstream can compute a fanout from the facts). But a separate routing/decomposition extension —
+conditionally. ⛔ THIS REVISION IS PROVISIONAL AND MUST NOT BE USED TO JUSTIFY BUILDING §2:** it is
+arithmetic on the provisional table above, so it inherits that table's defect exactly. Both figures
+below are placeholders pending the v16 re-measurement. Alone, it still only reaches ~5–6 of 8
+(closing retrieval doesn't help if nothing downstream can compute a fanout from the facts). But a
+separate routing/decomposition extension —
 splitting nicknamed multi-levy phrasing and detecting fanouts/threshold-traps from natural cues,
 not just explicit levy names — would let the EXISTING SDL/NSSF/WCF engines reach `nat_23`/`nat_24`,
 putting real yield near **7 of 8**, with only `nat_33` (a new BRELA engine, smallest of the three
