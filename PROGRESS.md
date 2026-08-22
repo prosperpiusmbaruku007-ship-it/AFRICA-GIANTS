@@ -1,6 +1,101 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-17
+Last updated: 2026-08-22
+
+---
+
+# 🛑 THE RETRIEVAL CYCLE'S VERDICT, STATED PLAINLY: RANK MOVEMENT THAT DOESN'T CROSS TOP-3 BUYS NOTHING (2026-08-22)
+
+**This is the workstream's verdict, not a small gain to note in passing.** The full C4→R15→R16
+cycle — duplicate-key sweep, three merges, three new/rewritten facts, two rounds of CONCISE
+wording, the fee-row mask experiment, the top_k sweep, the Kaggle regen, independent verification,
+force-fresh redeploy, and a live re-run of all 48 natural-register questions — moved **one row of
+48**. Three separate target facts had their rank improve substantially in the same cycle —
+`sdl_rate` 150→24, `GN605A_sector_count` 127→1, `annual_return_filing_fee` 113→25 — and only the
+one that reached rank 1 (`GN605A_sector_count`, nat_43) changed the live answer. The other two,
+despite the same rewrite discipline and comparable rank gains, produced **byte-identical replies**
+to the pre-cycle baseline, because `chike-inference/modal_app.py`'s `top_k=3` never sees rank 24
+or rank 25. **Phrasing is a real, proven lever — nat_43 and the ceiling test (query-echoing text
+reaching rank 1) both demonstrate that directly — but it is a per-row lever against a field where
+the correct fact routinely sits 20–150 rows deep, and per-row is not a viable shape for a
+nine-row problem, let alone whatever is behind it.** This is now measured across nine rows
+(`nat_05, nat_23, nat_24, nat_28, nat_33, nat_41, nat_43, nat_44, nat_45`), not argued from one.
+
+**THE nat_44 / nat_28 ITEM IS CLOSED.** Recommendation accepted: both left as-is. Shipping the
+withheld `vat_withholding_goods`/`services` rewrite would trade a **confirmed live regression** on
+nat_27 (currently correct) for an unconfirmed, at-best-marginal chance on nat_44 (rank 33→~4,
+unconfirmed against top_k=3) and a provably zero chance on nat_28's rate half (rank 33→~8, and
+rank 8 has now been shown empirically, not just argued, to never reach a top_k=3 production
+system — four other rows this exact cycle proved that). No further wording pass against this
+cluster. The full cost table and the three phrasings tried are in the entry below
+("THE nat_44 / nat_28 DECISION"); this line is the closure, not a re-argument.
+
+**The remaining question is entirely structural, and it is scoped — with one item now
+measured — in `docs/decisions/0002-retrieval-structural-scoping.md`** (promoted out of scratch/
+on founder instruction: a decision record documenting what was tried and rejected doesn't belong
+somewhere gitignored). Five candidate mechanisms costed against evidence already held; see the
+entry below ("ITEM #5 MEASURED...") for what changed since this paragraph was first written.
+**Nothing beyond the §5 measurement is authorized to build yet — analysis first, same discipline
+as the coverage scoping, pending a separate go-ahead per item.**
+
+## ITEM #5 MEASURED: general hybrid lexical+dense fusion recovers 4 of 8 remaining buried rows — at a named, live-verified cost (2026-08-22)
+
+Full detail and per-row tables in `docs/decisions/0002-retrieval-structural-scoping.md` §5.
+Headline, reported as both halves together, not the positive alone (per instruction): against
+the current 221-fact index, **RRF fusion (dense + token-overlap lexical, k=60) crosses
+`top_k=3` on 4 of the 8 still-unresolved known rows** — `nat_05` (dense rank 15→1), `nat_23`
+(94→3), `nat_33` (48→3), `nat_41` (5→1) — including one row (`nat_23`) buried past rank 90, which
+no wording pass this entire cycle reached. This is the first mechanism tested against this
+cluster that moves more than one buried row in a single change.
+
+**The cost, named specifically:** RRF (and the weighted variant) also push `nat_31`, `nat_32`,
+`nat_34` from rank 1 down to rank 8–16 — out of `top_k=3`. These are not hypothetical rows: all
+three are **live-verified CORRECT today** (`natural48_rerun_2026_08_17_adjudication.json`).
+Shipping RRF as-is risks breaking three confirmed-correct production answers to gain roughly
+four. A fourth strategy (dense/lexical interleave) measured **zero dilution** on the 21-question
+fact-path set, at the cost of weaker recovery (3 of 8, misses `nat_33`).
+
+**Item #2 (routing-layer fact intercept) was scoped in parallel, and the disanalogy the founder
+named is confirmed, not waved away:** compute-path routing works because it targets a *closed
+four-member set* (sdl/nssf/paye/wcf) with a deterministic engine behind it — the cue list only
+disambiguates "which of 4," the engine does the real work. A fact intercept has no such engine:
+the cue list itself maps straight to a fact key, so it **is** a hand-maintained allowlist, exactly
+as the founder suspected — cheap and reliable for the 6 known fact keys behind these rows, worth
+zero for any future fact-recall failure not yet observed. That is the failure-driven approach
+with extra steps. Its one real edge over a wording rewrite: one cue-list entry covers several
+*phrasings* of an already-known-broken question, where an embedding rewrite optimizes for close
+to one canonical phrasing. **Recommendation revised accordingly:** not a standalone structural
+fix — pair it narrowly with §5, to pin `nat_31`/`nat_32`/`nat_34` (and any other rank-1 exact
+match) as a dilution guard before RRF is considered for shipping.
+
+**Neither mechanism is shipped.** This is a measurement and a scoping revision; a ship decision
+on the §5+§4 pairing needs a separate go-ahead.
+
+## The exit-127 crash: confirmed environmental, not a code defect — the second time this pattern has appeared
+
+Reproduced independently this session (not just re-read from the prior session's logs): running
+the full `pytest` suite in one process crashes at the same point twice — inside
+`tests/test_orchestrator.py`'s `@_real_weights` tests, which load the real
+`intfloat/multilingual-e5-base` embedder and the AfriqueLlama tokenizer. The actual error, isolated
+by re-running that single test alone: `OSError: The paging file is too small for this operation to
+complete. (os error 1455)` — a Windows-level memory/pagefile exhaustion, not a pytest bug and not a
+regression in `chike/orchestrator.py`. Machine state at the time: ~3.1GB physical / ~522MB virtual
+memory free of 8GB physical / 32GB virtual.
+
+**Proven environmental, not assumed, by a split-suite reproduction:** the 1230-test suite run in
+two 27-file batches passed clean (614 passed; 609 passed + 2 skipped + 4 deselected + 1 xfailed —
+all 1230 accounted for), and each of the four `@_real_weights` tests individually passed when run
+alone with memory headroom (including the exact test that failed with the pagefile OSError inside
+the full-suite run, re-run standalone immediately after). The failure is a function of how much
+model-loading happens back-to-back inside one long-lived process on this specific machine, not of
+what the code does. **This is the second time an environment fault in this project has been
+mistaken for — or at risk of being mistaken for — a code-state problem**, the first being the R15
+verification's local re-embedding segfault (~2.8GB free of 8GB, logged in the R15 deploy entry
+below). Both share the same shape: a real, reproducible failure that looks exactly like a defect
+until the memory constraint is checked and the same operation is shown to succeed with headroom.
+**Standing note for future sessions: before treating a crash inside this project's test/regen
+tooling as a code bug, check available physical and virtual memory first** — both confirmed
+instances so far were environmental.
 
 ---
 
