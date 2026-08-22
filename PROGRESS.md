@@ -55,6 +55,25 @@ Shipping RRF as-is risks breaking three confirmed-correct production answers to 
 four. A fourth strategy (dense/lexical interleave) measured **zero dilution** on the 21-question
 fact-path set, at the cost of weaker recovery (3 of 8, misses `nat_33`).
 
+**Follow-up, tested against a real constraint before either option was allowed to look done:** can
+the guard that would protect `nat_31`/`nat_32`/`nat_34` be GENERAL (a property of the score
+vector) instead of an enumerated list of those three keys — because a guard that only lists the
+keys we already know RRF breaks makes the "0 dilution" number circular. Tested the one candidate
+named but never measured in the 2026-08-16 floor scoping: **margin** (top-1 minus top-2 dense
+score). Result: **no clean threshold exists** — the currently-correct rows' margins (0.0002–0.0037)
+overlap, and partly invert, the known-buried rows' margins (0.0004–0.0101); `nat_32` (correct
+today) has the single smallest margin of all 21 fact-path questions measured. **The guard can only
+be an enumerated key list.** That means: a fact added or reworded a year from now that lands at
+dense rank 1 gets no protection from this guard — nothing detects that it needs to be added to the
+list, and it stays silently exposed to RRF's dilution until someone happens to re-run a full live
+adjudication. **Interleave's zero dilution, by contrast, is a proven structural guarantee, not an
+empirical one:** by construction it always consults the dense-rank-1 candidate first, so any
+question dense already gets right at rank 1 stays at rank 1 — true for every future fact the same
+way it's true for today's three, with nothing to re-derive. Full tables and the ship-framing in
+`docs/decisions/0002-retrieval-structural-scoping.md` §5(c). **Still not shipped** — the decision
+is interleave (weaker, self-maintaining) vs. RRF+list (stronger, a maintenance liability that can
+fail silently), and that decision is a separate go-ahead.
+
 **Item #2 (routing-layer fact intercept) was scoped in parallel, and the disanalogy the founder
 named is confirmed, not waved away:** compute-path routing works because it targets a *closed
 four-member set* (sdl/nssf/paye/wcf) with a deterministic engine behind it — the cue list only

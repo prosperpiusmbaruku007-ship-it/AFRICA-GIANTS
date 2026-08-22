@@ -174,19 +174,69 @@ hand-verified correct row (rank 1), because the two are textually close. The (a)
 hand-verified and is the reliable number; (b)'s aggregate is directionally consistent but should
 be read as approximate, not exact.
 
-**Verdict:** general hybrid fusion is real, and — unlike every mechanism tried this cycle so
-far — it moves more than one buried row at once, including one buried past rank 90. It is not
-free: RRF's and weighted's gains come paired with a specific, named, live-verified regression
-risk on three other rows. That risk is exactly what §4's routing intercept can absorb (pin
-`nat_31`/`nat_32`/`nat_34` deterministically, then the dilution cost drops out). Interleave is
-the safe-but-weaker fallback if the intercept isn't shipped first.
+### (c) Can the guard be general, or only an enumerated list? — tested, answer is negative
 
-**Priority: HIGH — measured, not hypothetical, and the standout finding of this scoping round.**
-Recommend pairing with §4 before shipping (pin the three known-correct exact matches first), and
-re-running the same measurement including that guard before any go-ahead to build.
+The obvious objection to "pair RRF with a guard that pins `nat_31`/`nat_32`/`nat_34`": if the
+guard is defined as exactly those three keys, the dilution count reads zero because the casualties
+were named in advance — circular, not a measurement. Tested whether a **general, property-based**
+guard exists instead: the candidate named but never measured in the similarity-floor scoping
+(PROGRESS.md, 2026-08-16) was **margin** (top-1 score minus top-2 score under plain dense
+ranking) — high margin meaning dense is unambiguous and should be trusted outright, low margin
+meaning dense is uncertain, which is exactly the condition fusion is meant to help.
+`scratch/item5b_margin_guard.py` computed margin for all 21 fact-path questions:
+
+| group | margin range | n |
+|---|---|---|
+| currently-correct, dense rank 1 (`nat_31`, `nat_32`, `nat_34`, `nat_43`) | 0.0002 – 0.0037 | 4 |
+| known-buried (the eight unresolved rows) | 0.0004 – 0.0101 | 8 |
+
+**The ranges overlap, and the direction is inverted from what a naive rule would assume:**
+`nat_32` (currently correct) has the single smallest margin of all 21 questions measured
+(0.0002), while three known-buried rows (`nat_44`, `nat_41`, `nat_45`) have *larger* margins than
+every currently-correct row. A margin threshold built to "trust confident dense hits" would get
+this backwards — it would flag the known-buried rows as more trustworthy than the ones actually
+worth protecting. **No general threshold on this signal separates the two groups.** This is a
+finding in its own right, not just a null result: it says the compressed-score-band problem named
+in the 2026-08-16 floor scoping isn't just "everything is close together" — confidence-by-margin
+specifically fails to track correctness here.
+
+**Consequence, stated as the founder asked:** the guard, if built, can only be an enumerated key
+list — not a property computed from the score vector. **What that means a year from now:** when a
+new fact is added or reworded and happens to land at dense rank 1 for its natural phrasing (which
+this measurement shows is common and not reliably distinguishable from a "risky" rank-1 by
+margin), nothing about the guard notices. It stays unprotected under RRF/weighted until someone
+independently re-runs a full live adjudication and spots the regression — there is no automated
+signal comparable to `check_facts_index_sync.py`'s drift check for "which facts need pinning."
+The list has to be manually re-derived by a human remembering to do it, every time the index
+changes. **The earlier "guarded dilution = 0" number is therefore a floor for these three
+specific keys today, not a measurement that generalizes.**
+
+**Interleave's zero dilution is different in kind — proven structural, not empirical, and it
+needs no guard at all.** By construction (`chike/retrieval.py`-style interleave: alternately pull
+from the dense order and the lexical order, dedup), **the dense-rank-1 candidate is always
+consulted first and placed at position 1 of the merged list**, before the lexical order is ever
+read. Any question dense already gets right at rank 1 stays at rank 1 under interleave,
+*regardless of what the lexical signal says* — this is a property of the merge algorithm, true
+for every future fact the same way it's true for `nat_31`/`nat_32`/`nat_34`/`nat_43` today, with
+no list to maintain and nothing to silently miss.
+
+**Verdict, holding both options side by side rather than picking the bigger number:**
+
+| | recovers (of 8 known-buried) | dilution | how the safety holds |
+|---|---|---|---|
+| RRF + enumerated pin list | 4 (`nat_05`, `nat_23`, `nat_33`, `nat_41`) | 0, but only for the 3 named keys — a floor, re-derived by hand on every future change | manual, silently stale |
+| Interleave, no guard | 3 (`nat_05`, `nat_23`, `nat_41`) | 0, proven structural for any dense-rank-1 fact, present or future | automatic, self-maintaining |
+
+Three recovered at zero-by-construction dilution is arguably worth more than four recovered at
+zero-by-patching dilution, exactly because the patch's safety depends on a list nobody is
+guaranteed to update. **Priority: HIGH for interleave as the lower-risk option; RRF+pin-list
+scoped and measured but flagged as carrying an unbounded, silent maintenance liability that
+interleave does not have.**
 
 **Not yet built. This is a measurement only** — no retriever code changed, no fusion strategy is
-live. A ship decision is a separate go-ahead.
+live. **The ship decision is: interleave (weaker recovery, self-maintaining safety) vs. RRF with
+a pin list that must be manually re-derived every time a fact changes (stronger recovery,
+maintenance liability) — a separate go-ahead, not decided here.**
 
 ---
 
