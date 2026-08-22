@@ -6,8 +6,11 @@
   measurement cannot certify answer stability. A standing bar for future retrieval ships is
   recorded in §5(d). General fusion (RRF/weighted/interleave) is DECLINED in all forms; §2
   (routing intercept) is the leading candidate, named explicitly as a small fix for 6 known fact
-  keys, not a general retrieval solution. §8 records a generation-side failure ceiling, discovered
-  live, that no retrieval mechanism can close. §1/§6/§7 remain scoped-only, not built.
+  keys, not a general retrieval solution. §8 (generation-side failure ceiling) is now MEASURED,
+  not just discovered: forcing the correct fact(s) into context for all 8 remaining rows produced
+  4 correct, 1 partial, 3 clearly wrong — retrieval is a binding constraint for most of these rows
+  but not all of them, and §2's expected real yield is revised to ~5 of 8, not 8 of 8. §1/§6/§7
+  remain scoped-only, not built.
 - **Deciders:** Founder + Claude Code.
 - **Supersedes:** nothing. Promoted from `scratch/retrieval_structural_scoping_2026_08_22.md`
   (moved out of scratch on founder instruction — this is a decision record, not a throwaway
@@ -363,37 +366,68 @@ LOW. Not scheduled.**
 
 ---
 
-## 8. GENERATION-SIDE FAILURE AFTER SUCCESSFUL RETRIEVAL — a ceiling on every mechanism above, discovered live during §5(d)
+## 8. GENERATION-SIDE FAILURE AFTER SUCCESSFUL RETRIEVAL — MEASURED across all 8 remaining rows (2026-08-22)
 
-**No retrieval mechanism can fix this, and it may cover a meaningful share of the remaining 8
-rows.** The interleave ship's live canaries forced two previously-buried target facts into
-`top_k=3` for the first time this cycle — `nat_05` (rank 15→2) and `nat_23` (rank 94→2) — a direct
-test of what happens once retrieval actually succeeds for these specific rows, rather than a
-simulation of it. **Both still failed to produce the correct answer, for reasons unrelated to
-retrieval:**
+**Measured, not left as a live-canary hint.** Two rows forced into `top_k=3` during §5(d)'s live
+canaries (`nat_05`, `nat_23`) both still failed despite reaching context — enough to warrant a
+direct test, run as its own measurement rather than another retrieval build. Added a temporary,
+additive-only debug method (`ChikeModel.run_forced_facts`, `chike-inference/modal_app.py`) that
+runs the real v15 pipeline (`chike.pipeline_v15.answer`, the actual generation model, the actual
+prompt builder) with `retrieve_facts` replaced by a constant — the correct fact(s) for that row,
+supplied directly, bypassing ranking entirely. Deployed via full R16 cycle, ran all 8 remaining
+known-buried rows (`nat_43` excluded — already fixed by R15), then **removed the debug method and
+redeployed again**, confirming `nat_43`/`nat_32` still answer correctly and `run_forced_facts` no
+longer exists. Production was never left running debug-only code; nothing about `run()` or
+`retrieve_facts()` was touched.
 
-- `nat_05` returned a bare non-answer ("Thibitisha na tra.go.tz") instead of the expected
-  base-ambiguity clarification (the question gives a machine-purchase amount, not payroll, and the
-  correct answer must say so and ask for payroll). The fact was present; the model did not use it
-  to construct the expected response.
-- `nat_23` answered only the NSSF ("uzeeni") half of a two-levy question and silently dropped the
-  SDL ("mafunzo") half — a decomposition/multi-part-handling gap. Retrieval delivered what was
-  asked; the pipeline upstream of generation did not preserve both parts of the question.
+| row | facts forced | outcome |
+|---|---|---|
+| `nat_44` | vat_withholding_goods (3%) | **CORRECT** — states 3%, doesn't confuse with 6% |
+| `nat_45` | wcf_accident_reporting_deadline (7 days) | **CORRECT** — states 7 days |
+| `nat_41` | OSHA registration-before-opening + no-threshold | **CORRECT** — no specific deadline, correctly refers to OSHA, invents nothing |
+| `nat_28` | vat_withholding_services (6%) + certificate-timing | **CORRECT** — both facts stated accurately, no arithmetic required |
+| `nat_05` | sdl_rate (3.5% of payroll) | **PARTIAL** — states the rate is of "mishahara ghafi" (gross payroll), correctly avoiding the wrong-base trap, but does not ask for the payroll figure the rubric wants |
+| `nat_33` | BRELA late-fee (2,500/mo) + annual fee (22,000) | **WRONG** — states only the penalty rate; drops the annual fee entirely despite it being forced into context, and never computes 7×2,500 |
+| `nat_24` | sdl_threshold + NSSF rate + WCF rate (3 facts) | **WRONG** — bare non-answer ("Thibitisha na TRA"), no content at all despite all three facts present |
+| `nat_23` | sdl_rate + NSSF rate (2 facts) | **WRONG** — restates the input salary and stops; no arithmetic on either levy, despite both facts present |
 
-Only `nat_41` — the third row forced into top-3 this cycle — delivered the expected answer
-cleanly. **2 of 3 rows that reached the context still failed.** If this ratio holds across the
-other known-buried rows, it means a correct retrieval fix (§1, §2, a future re-ranker, anything)
-may only convert a fraction of the 8 to CORRECT, not all 8 — some share of them may be gated on a
-generation-side defect (fabrication-guard behavior, decomposition/multi-part merging, or something
-not yet named) that sits entirely outside the retrieval workstream's reach. **This is the same
-lesson R15 already established once (rank crossing `top_k=3` is necessary but not sufficient) —
-confirmed again here, on different rows, by a different mechanism, which is what makes it a
-standing property of this system rather than one row's idiosyncrasy.**
+**Result: 4 clearly correct, 1 partial, 3 clearly wrong — a mixed finding, not a clean answer
+either way.** Most (4–5 of 8) DO produce a correct or acceptable answer once retrieval is forced to
+succeed — retrieval genuinely is a binding constraint for the majority of these rows, and closing
+it (§1, §2) is worth doing. But a full **3 of 8 (37.5%) fail even with the exact right facts
+handed to the model directly** — retrieval was never going to be sufficient for these three,
+regardless of which retrieval mechanism eventually ships.
 
-**Not scoped further here** — this belongs to the generation/decomposition side of the codebase,
-not retrieval, and needs its own investigation (which rows fail this way, and why) before it can
-be sized. Recorded so the retrieval workstream's own ceiling is visible: even a hypothetically
-perfect retrieval fix for all 8 rows should not be expected to move all 8 to CORRECT on the 48.
+**The failures cluster on a clean, nameable property: arithmetic/multi-fact synthesis, not simple
+lookup.** The 3 clear failures (`nat_23`, `nat_24`, `nat_33`) all require either applying a
+percentage to a given amount, multiplying a monthly penalty by a stated number of months, or
+merging two-to-three distinct obligations into one complete reply. The 4 clear successes
+(`nat_44`, `nat_45`, `nat_41`, `nat_28`) are single-fact statements or two facts presented side by
+side with no arithmetic between them. `nat_05` (partial) needs an inferential move (recognize the
+given figure is the wrong base) rather than arithmetic, and got the recognition right without
+closing the loop. **This is not retrieval's problem, and no mechanism in §1–§7 can fix it** — it
+sits in generation/decomposition, downstream of a successful retrieval, and needs its own
+investigation (why does the model drop facts or refuse to compute when multiple obligations are in
+play) before it can be sized precisely. What's now known is its approximate SIZE on this sample:
+roughly a third of the remaining known-buried rows.
+
+**Consequence for §2's expected yield:** the routing intercept (§4) closes retrieval for all 8
+known rows by construction, but this measurement predicts it converts roughly **5 of 8 to
+CORRECT, not 8 of 8** — `nat_23`, `nat_24`, and likely `nat_33` should be expected to remain wrong
+or partial after §2 ships, for reasons the intercept cannot touch. Report it that way when §2
+ships: partial success against its own target set, not a clean sweep.
+
+**Consequence for the pilot-safety floor (§5(c)):** this closes a gap the margin experiment left
+open. A retrieval-confidence floor — even a hypothetically working one, which margin is not — is
+built on a signal from the RETRIEVAL side (how sure is the index that it found the right fact).
+`nat_23` and `nat_24` had the correct fact(s) placed directly in context, i.e. **maximum possible
+retrieval confidence by construction**, and the model still produced a bare non-answer with no
+hedge, no "sijui," no visible uncertainty marker at all. **A retrieval-side floor cannot catch this
+failure class even in principle** — the defect is not "the model wasn't sure which fact to use,"
+it is "the model had the fact and did not use it correctly." The pilot's "refuse when we don't
+know" safety net would need a signal from the GENERATION side (e.g., a post-hoc check that the
+reply actually addresses every part of a multi-part question, or a self-consistency check), not a
+better retrieval score, and no such mechanism is scoped anywhere in this document.
 
 ---
 
@@ -402,22 +436,24 @@ perfect retrieval fix for all 8 rows should not be expected to move all 8 to COR
 | # | mechanism | status this round | priority |
 |---|---|---|---|
 | 5 | Hybrid lexical+dense fusion (RRF/weighted/interleave) | **SHIPPED (interleave), LIVE-REGRESSED, REVERTED.** Target-fact rank preservation held for all 8 rows tested; the OTHER two injected slots changed for all 8 anyway, and one (`nat_32`) flipped to a wrong live answer. Neither RRF's nor interleave's real blast radius (answer stability, not rank) was ever fully enumerated — interleave's was wrongly assumed zero. | **DECLINED, all forms** |
-| 2 | Routing-layer fact intercept | **SCOPED, purpose named honestly:** a hand-maintained allowlist that closes 6 known fact keys / 8 known rows and nothing else — not a general retrieval fix, no broader version escapes that ceiling. Leading candidate because it's the only mechanism here with a *provably* bounded blast radius (explicit cue match short-circuits RAG; everything else untouched — no fusion variant could claim that after §5(d)). | **HIGH, as a named small objective, not a solution to retrieval** |
-| 1 | Fee-shape rows rewritten at index-content level | scoped only, unchanged | HIGH (folds into next regen) |
+| 2 | Routing-layer fact intercept | **SCOPED, purpose named honestly:** a hand-maintained allowlist that closes 6 known fact keys / 8 known rows and nothing else — not a general retrieval fix, no broader version escapes that ceiling. Leading candidate because it's the only mechanism here with a *provably* bounded blast radius (explicit cue match short-circuits RAG; everything else untouched — no fusion variant could claim that after §5(d)). **Expected real yield per §8: ~5 of 8, not 8 of 8.** | **HIGH, as a named small objective, not a solution to retrieval** |
+| 1 | Fee-shape rows rewritten at index-content level | scoped only, unchanged. Same §8 ceiling applies — closing retrieval for `nat_23`/`nat_24`/`nat_33` won't make them correct. | HIGH (folds into next regen) |
 | 6 | Re-ranking (cross-encoder) | scoped only, unchanged — flagged that it likely shares §5(d)'s blast-radius problem (re-scores every query's shortlist) and needs its own explicit old-vs-new test before being assumed safer | MEDIUM |
 | 7 | Different/bigger embedding model | scoped only, unchanged — this is what R15 was | LOW, not scheduled |
-| 8 | Generation-side failure after successful retrieval | **DISCOVERED, not scoped** — 2 of 3 rows forced into `top_k=3` live during §5(d) still failed (bare non-answer; dropped half of a two-part question), for reasons outside retrieval entirely | Needs its own investigation, separate from this ADR |
+| 8 | Generation-side failure after successful retrieval | **MEASURED** (`ChikeModel.run_forced_facts`, temporary/removed): forced the correct fact(s) into context for all 8 remaining rows. **4 correct, 1 partial, 3 clearly wrong (`nat_23`, `nat_24`, `nat_33`) despite exact facts present.** Failures cluster on arithmetic/multi-fact synthesis, not simple lookup. Also closes a gap in the pilot-safety floor: these failures carry maximum retrieval confidence and no visible hedge, so no retrieval-confidence floor could ever catch them. | Root cause (why generation drops facts / declines to compute) needs its own investigation, outside this ADR's scope |
 
-## Recommended order, updated after the ship-and-revert (2026-08-22)
+## Recommended order, updated after the ship-and-revert and the §8 measurement (2026-08-22)
 
-1. **§2 (routing intercept) is the priority**, named for what it actually is: closes 8 known rows,
-   nothing else. Not a guard for §5 (§5 is declined outright) — evaluated on its own bounded-blast-
-   radius merit. Needs its own R17 adversarial-probe pass per key before shipping, and **must ship
-   under the §5(d) standing bar**: an answer-level regression check across the currently-correct
-   set, not just a rank check on the 8 target rows, before it is called safe.
+1. **§2 (routing intercept) is the priority**, named for what it actually is: closes retrieval for
+   8 known rows, expected to convert **~5 of them to CORRECT** per §8, not all 8. Not a guard for
+   §5 (§5 is declined outright) — evaluated on its own bounded-blast-radius merit. Needs its own
+   R17 adversarial-probe pass per key before shipping, and **must ship under the §5(d) standing
+   bar**: an answer-level regression check across the currently-correct set, not just a rank check
+   on the 8 target rows, before it is called safe.
 2. **§1 folds into the next regen**, independent of §2 — content fix, tooling already exists, and
    like §2 it changes only the rows it targets rather than reshaping general retrieval. Same
-   standing-bar requirement applies.
+   standing-bar requirement applies, and the same §8 ceiling: expect it to help `nat_44`-shaped
+   rows, not `nat_23`/`nat_24`/`nat_33`-shaped ones.
 3. **§5 (general fusion, any variant) is closed for now.** Not because the structural argument in
    (c) was false, but because it answered the wrong question (does the target's rank survive?)
    instead of the one that matters (does everything else stay stable?). Do not re-propose RRF,
@@ -426,10 +462,13 @@ perfect retrieval fix for all 8 rows should not be expected to move all 8 to COR
 4. **§6 (re-ranking) only after §1/§2**, and only with the blast-radius caveat above tested first
    — do not assume it is safer than fusion just because it wasn't the mechanism that just broke.
 5. **§7 not scheduled.**
-6. **§8 needs its own investigation** (which rows fail on the generation side, and why) before
-   anyone can say how much of the remaining 8 rows §1/§2 can actually close. Sizing this changes
-   what "done" means for the whole retrieval workstream — it may have a ceiling below 8/8 that no
-   retrieval fix can cross.
+6. **§8's root cause is the next open question, and it now sits ahead of §1/§2 in importance even
+   though it isn't retrieval work**: why does generation drop a fact or decline to compute when 2–3
+   obligations are in play, on `nat_23`/`nat_24`/`nat_33`-shaped questions specifically? That
+   investigation determines the real ceiling of the whole workstream, not just these 3 rows — if
+   it's a general multi-fact/arithmetic weakness, it likely affects rows outside this specific
+   nine-row set too.
 
 **Nothing above is authorized to build without a separate go-ahead.** §5 was built, deployed, and
-reverted this round under an explicit go-ahead; that go-ahead is spent, not standing.
+reverted this round under an explicit go-ahead; §8 was measured (not built — `run_forced_facts`
+was removed after use) under this round's go-ahead to investigate, not to ship.

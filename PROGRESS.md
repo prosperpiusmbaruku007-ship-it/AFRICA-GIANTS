@@ -4,6 +4,68 @@ Last updated: 2026-08-22
 
 ---
 
+# 🎯 §8 MEASURED: RETRIEVAL IS BINDING FOR MOST OF THE REMAINING 8 ROWS, NOT ALL — A THIRD FAIL EVEN WITH THE RIGHT FACT FORCED IN (2026-08-22)
+
+**Scoped as a measurement, not a fix, per instruction — nothing shipped.** Two rows forced into
+`top_k=3` during the interleave ship's live canaries (`nat_05`, `nat_23`) had both still failed to
+produce a correct answer, despite reaching context. That was reason enough to test all 8 remaining
+known-buried rows directly, before proposing anything built on the assumption that retrieval is
+the binding constraint.
+
+**Method:** added a temporary, additive-only debug method to `chike-inference/modal_app.py`
+(`ChikeModel.run_forced_facts`) that runs the real v15 pipeline — the actual model, the actual
+prompt builder, the actual post-processing — with retrieval replaced by a constant: the correct
+fact(s) for that row, handed to the model directly, no ranking involved. Full R16 cycle to deploy
+it, ran all 8 rows, then **removed the method and redeployed again**, confirming `nat_43`/`nat_32`
+still answer correctly and the debug method no longer exists. `run()` and `retrieve_facts()`
+themselves were never touched.
+
+| row | facts forced | outcome |
+|---|---|---|
+| `nat_44` | VAT withholding on goods (3%) | **CORRECT** |
+| `nat_45` | WCF accident reporting deadline (7 days) | **CORRECT** |
+| `nat_41` | OSHA registration-before-opening | **CORRECT** |
+| `nat_28` | VAT withholding services (6%) + certificate timing | **CORRECT** |
+| `nat_05` | SDL rate (3.5% of payroll) | **PARTIAL** — avoids the wrong-base trap, doesn't close the loop by asking for payroll |
+| `nat_33` | BRELA late fee (2,500/mo) + annual fee (22,000) | **WRONG** — drops the annual fee entirely; never computes 7×2,500 |
+| `nat_24` | SDL threshold + NSSF rate + WCF rate (3 facts) | **WRONG** — bare non-answer, no content |
+| `nat_23` | SDL rate + NSSF rate (2 facts) | **WRONG** — restates the input and stops; no arithmetic on either levy |
+
+**The honest read is mixed, not clean either way.** 4 clearly correct, 1 partial, 3 clearly wrong —
+**most (4–5 of 8) do produce a correct answer once retrieval is forced to succeed, so retrieval
+genuinely is the binding constraint for the majority of these rows, and closing it (§1, §2) is
+worth doing.** But a full **3 of 8 (37.5%) fail even with the exact right facts handed directly to
+the model** — for these three, retrieval was never going to be sufficient, regardless of which
+retrieval mechanism eventually ships.
+
+**The failures aren't random — they cluster on arithmetic/multi-fact synthesis.** `nat_23`,
+`nat_24`, and `nat_33` all require either applying a percentage to a stated amount, multiplying a
+monthly penalty by a stated number of months, or merging 2–3 distinct obligations into one
+complete reply. The 4 clean successes are single-fact statements or facts presented side by side
+with no arithmetic between them. This is not a retrieval defect and no mechanism in the ADB scoping
+(§1, §2, §5, §6, a bigger model) can fix it — it sits in generation/decomposition, and needs its
+own separate investigation to size and name precisely.
+
+**Consequence: §2's (the routing intercept's) expected real yield is revised to ~5 of 8, not 8 of
+8.** It still closes retrieval for all 8 rows by construction, but `nat_23`, `nat_24`, and likely
+`nat_33` should be expected to stay wrong or partial after it ships — report it that way, not as a
+clean sweep.
+
+**Consequence for the pilot-safety floor:** this closes a gap the margin experiment left open.
+`nat_23` and `nat_24` had the correct facts placed directly in context — maximum possible retrieval
+confidence, by construction — and the model still produced a bare non-answer with no hedge, no
+"sijui," no visible uncertainty. **A retrieval-confidence floor cannot catch this failure class
+even in principle**, because the defect isn't "unsure which fact to use" — it's "had the fact and
+didn't use it correctly." The pilot's "refuse when we don't know" safety net needs a signal from
+the generation side, not a better retrieval score, and none is scoped anywhere yet. Combined with
+margin's inversion (previous entry) and re-ranking's absence, **there is currently no working route
+to a safety floor of any kind** — retrieval-side or otherwise.
+
+Full account, per-row detail, and the revised recommended order in
+`docs/decisions/0002-retrieval-structural-scoping.md` §8.
+
+---
+
 # 🛑 THE PREMISE WAS FALSE, NOT JUST THE SHIP: A ZERO-DILUTION INSTRUMENT THAT MEASURED THE WRONG QUANTITY (2026-08-22)
 
 **Lead finding, ahead of the regression that surfaced it:** interleave's structural guarantee held
