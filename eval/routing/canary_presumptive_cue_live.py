@@ -53,10 +53,19 @@ UNCHANGED_IDS = ['pic_13', 'pic_14', 'pic_15', 'pic_10', 'pic_12']
 FRESHNESS = ('freshness_ooc', 'nataka kujua kodi ya faida ya mtaji nikiuza nyumba',
              'config-only OOC phrase; must refuse')
 
-# What each target's reply must contain to count as "the engine answered", and what a company
-# reply must NOT contain. Deliberately checked on the ENGINE's own working string rather than on
-# a figure: the engine appends its authoritative working via _render, so its presence is the
-# evidence that the compute path ran at all.
+# What a reply must contain to count as "the engine produced a FIGURE", and what a company reply
+# must NOT contain.
+#
+# THE MARKER IS NARROWER THAN "THE ENGINE RAN", and the 2026-08-23 run proved it: pic_02 scored
+# engine_marker_present=False while being entirely CORRECT. Turnover of TZS 8,000,000 sits in a
+# band whose rate depends on record-keeping, so compute_presumptive never-guesses and returns a
+# clarification asking the user whether they keep books — the right behaviour, with no figure and
+# no "kodi ya makadirio" string. The run's headline therefore read 2/3 when all three targets
+# reached the engine.
+#
+# Left as-is rather than widened, because a marker that also matched the clarification copy would
+# stop distinguishing "computed" from "asked", which is the distinction the target group exists
+# to show. Read the replies, not the count — the count is a pointer.
 ENGINE_MARKER = 'kodi ya makadirio'
 
 

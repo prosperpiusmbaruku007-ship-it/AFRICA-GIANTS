@@ -224,10 +224,65 @@ make deliberately, and a bad one to make by default.
 
 ---
 
-# 🛠️ THE PRESUMPTIVE ENGINE NOW ANSWERS THE WAY A DUKA OWNER ASKS — and a clean 475-row sweep proved nothing again (2026-08-23)
+# 🚨 A VETO WITHOUT A COVERAGE GATE JUST CHANGES WHICH WRONG ANSWER YOU GET — four instances in one canary, none of them planned (2026-08-23)
 
-**Built, swept, probed and tested. NOT YET DEPLOYED** — it is a `chike/routing.py` change and
-needs its own R16 cycle against `chike-inference`.
+**This is the most consequential thing the presumptive deploy produced, and it was not what the
+deploy was testing.** `eval/results/presumptive_cue_canary_live.json`.
+
+The router's vetoes worked **perfectly**. Every question that must not reach the presumptive
+engine was kept off it. And **every single one then received a confidently wrong answer from the
+fact path instead:**
+
+| row | correctly vetoed off the engine | what the fact path said | the truth |
+|---|---|---|---|
+| `pic_04` company, turnover 50M | ✅ entity veto | *"kodi ya mapato ya **kampuni** ni asilimia 30 = **TZS 15,000,000**"* | 30% of **profit**, not turnover. The figure is invented |
+| `pic_05` partnership, 30M | ✅ (routed to PAYE — the boarded defect) | *"asilimia **25%**"* **and** *"PAYE = 128,000 + 30% × (**TZS 2,500,000** − 1,000,000) = **TZS 578,000**"* | a salary of 2,500,000 the user never stated — the annual turnover silently divided by 12 |
+| `pic_10` daladala tickets, 20M | ✅ transport-schedule veto | *"unatumia kiwango cha **3.5%**"* | para 2(5) is a **per-vehicle** table; the turnover rate is the wrong instrument |
+| `pic_12` **profit** 10M | ✅ no turnover cue | *"asilimia **30**, sawa na **TZS 3,000,000**"* | an individual pays the progressive bands on profit, not 30% |
+
+**The vetoes are not wrong and should not be removed.** The point is narrower and worse: **a veto
+does not make a question safe, it only makes it someone else's problem — and the someone else is
+the fact path, which has no floor.** Four rows chosen to test a routing change turned into four
+fresh instances of the `nat_05` mechanism.
+
+**Two consequences, stated now so they are not rediscovered later:**
+
+1. **This is the strongest argument the coverage gate has produced**, and it arrived by accident.
+   Corporate income tax, partnership tax, the transport presumptive schedule and profit-based
+   individual tax are **four uncovered topics**, and the product answers all four with a figure.
+   Every future veto anywhere in the router inherits this problem until the gate ships.
+2. **It exposes a flaw in the scoped allowlist that the corpora did not.** `kodi ya mapato` is
+   currently a cue for topic **`paye`**, so the gate as scoped would have **passed** `pic_04` and
+   `pic_12` — matching the wrong topic and letting the wrong answer through. This is the
+   "passes for the wrong reason" case already flagged for the presumptive row, now with live
+   evidence behind it. **The PAYE cue must be the qualified forms, and the effect of narrowing it
+   must be measured on the held-out probes, not on the gate corpora.**
+
+---
+
+# 🛠️ THE PRESUMPTIVE ENGINE NOW ANSWERS THE WAY A DUKA OWNER ASKS — deployed and verified live (2026-08-23)
+
+**Full R16 cycle: `app stop --yes` → deploy with `PYTHONIOENCODING=utf-8 PYTHONUTF8=1`.**
+Canary: `eval/results/presumptive_cue_canary_live.json`.
+
+| check | result |
+|---|---|
+| `pic_01` *"…mauzo yangu ni milioni 30… nalipa **kodi ya mapato** kiasi gani?"* | **`Kodi ya makadirio = 3.5% × TZS 30,000,000 = TZS 1,050,000`** — engine, was the fact path |
+| `pic_03` *"Mzunguko wangu ni milioni 60…"* | **`= TZS 2,100,000`** — engine |
+| `pic_02` turnover 8M | **engine's never-guess clarification** — the band's rate depends on record-keeping, so it asks instead of guessing |
+| **`pic_04` company — the veto** | **held live.** No individual turnover table (but see the entry above) |
+| **§5(d) negatives** | **28 / 28 byte-identical** |
+| `pic_13`/`pic_14`/`pic_15` controls | `makadirio` → TZS 0 band, VAT registration, SDL 3.5% — all unchanged |
+| freshness | config-only OOC phrase refuses correctly → the container is not warm-stale |
+
+**The canary's own headline was wrong and the replies were right.** It printed *"targets reaching
+the engine: 2/3"* because `ENGINE_MARKER` looks for the string `kodi ya makadirio` — a marker for
+*"the engine produced a figure"*, not *"the engine ran"*. `pic_02` correctly returned the
+clarification, which contains no figure and no marker. **All three targets reached the engine.**
+The marker was left narrow on purpose (widening it would stop distinguishing *computed* from
+*asked*) with the trap written at the definition. Recorded rather than silently corrected,
+because a summary line that disagrees with its own rows is exactly how a wrong number enters a
+record.
 
 ## The gap
 
@@ -294,13 +349,20 @@ and both are correct: `compute_presumptive` returns *"Hapana… yamezidi kikomo 
 Putting either exclusion in the ROUTER would send the user back to the fact path and lose the
 explanation. Both probes exist to guard against that.
 
-## One pre-existing defect found, boarded not bundled
+## One pre-existing defect found, boarded not bundled — and the live run made it worse
 
 `pic_05` — *"**Ubia wetu unauza** milioni 30 kwa mwaka, kodi ya mapato **tunalipa** ngapi?"* —
 routes to **`paye`**, and it does so on the BEFORE arm too, so this change did not cause it.
 Mechanism: `tunalipa` is in `_PAYROLL_CTX`, `_natural_levy` resolves *"kodi ya mapato"* to PAYE,
 and path 2 fires and wins before the presumptive arm is reached. **A partnership asking about its
 turnover income tax is answered with an employee payroll computation.**
+
+**Live, it is worse than the router alone suggested — severity raised.** The deployed reply was
+*"kodi ya mapato ni asilimia **25%**"* followed by
+*"PAYE = TZS 128,000 + 30% × (**TZS 2,500,000** − TZS 1,000,000) = TZS 578,000"*. **The user never
+stated a salary.** TZS 2,500,000 is their annual turnover of 30,000,000 divided by twelve and
+relabelled as a monthly wage — a wrong-base extraction dressed in the rules engine's working. A
+fabricated rate and a fabricated base, both presented with authority.
 
 The fix is a `_PAYROLL_CTX` narrowing — `tunalipa` is generic *"we pay"*, not payroll vocabulary —
 which is a broad change needing its own sweep. **Boarded, not bundled.** The probe's expectation
