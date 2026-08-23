@@ -41,6 +41,7 @@ from . import routing
 from . import classification
 from . import clarification
 from . import fidelity
+from . import coverage
 
 # --- Stage-level configuration ---------------------------------------------
 
@@ -91,6 +92,10 @@ class SubAnswer:
     facts: tuple = ()
     computation: Optional[ComputationResult] = None
     needs_clarification: bool = False
+    # Set when the coverage gate refused this part: the corpus holds no facts on its topic, so
+    # no model call was made. Structured rather than inferred from the text, because a
+    # transcript review needs to count these without string-matching Swahili copy.
+    coverage_refused: bool = False
 
 
 @dataclass(frozen=True)
@@ -854,20 +859,52 @@ class Orchestrator:
         compute_parts = [sq for sq in routed if sq.kind == "compute"]
         fact_parts = [sq for sq in routed if sq.kind == "fact"]
 
+        # THE COVERAGE GATE, applied PER PART and only on the fact path.
+        #
+        # Per part, not wholesale, for two reasons that point the same way. Refusing a whole
+        # message because half of it is uncovered DISCARDS a correct answer we already have —
+        # and answering it wholesale is the nat_23 failure, where correct NSSF arithmetic
+        # shipped with an entire second levy silently absent and no signal that half the
+        # question went unanswered. Both mistakes are cured by being explicit about each part.
+        #
+        # Compute parts are never gated: an engine result is grounded by construction, not by
+        # retrieval, which is also why 18 of the 29 correct rows on the natural set come from
+        # the deterministic surface.
+        covered_fact_parts = [sq for sq in fact_parts if coverage.is_covered(sq.text)]
+        uncovered_fact_parts = [sq for sq in fact_parts if sq not in covered_fact_parts]
+        refusals = [SubAnswer(sub_question=sq, text=coverage.refusal_text(sq.text),
+                              coverage_refused=True)
+                    for sq in uncovered_fact_parts]
+
         if not compute_parts:
-            # All-fact -> collapse to v15's single whole-question pass.
-            sub_answers = (self._answer_facts_single_pass(
-                [sq.text for sq in fact_parts], question),)
+            if not uncovered_fact_parts:
+                # UNCHANGED PATH, byte-identical: all-fact and all-covered collapses to v15's
+                # single whole-question pass over `question` exactly as before. The gate can
+                # only alter a message that actually contains an uncovered part, which is what
+                # keeps the §5(d) answer-level bar meetable.
+                sub_answers = (self._answer_facts_single_pass(
+                    [sq.text for sq in fact_parts], question),)
+            elif covered_fact_parts:
+                # Mixed: generate over the COVERED parts only — never over `question`, or the
+                # model would answer the part we just refused — then append the refusals.
+                covered_text = " ".join(sq.text for sq in covered_fact_parts)
+                sub_answers = tuple(
+                    [self._answer_facts_single_pass(
+                        [sq.text for sq in covered_fact_parts], covered_text)] + refusals)
+            else:
+                # Nothing covered: refusals only, and no model call at all.
+                sub_answers = tuple(refusals)
         else:
             # Any compute part present -> per-part compute (rules engine), then AT MOST one
             # pooled fact generation over the fact sub-questions only. Compute parts are
             # NEVER folded into the fact generation (that would forfeit the authoritative
             # deterministic figure — the one load-bearing reason per-part generation exists).
             subs = self._cross_levy_guard([self._answer_sub(sq) for sq in compute_parts])
-            if fact_parts:
-                fact_question = " ".join(sq.text for sq in fact_parts)
+            if covered_fact_parts:
+                fact_question = " ".join(sq.text for sq in covered_fact_parts)
                 subs.append(self._answer_facts_single_pass(
-                    [sq.text for sq in fact_parts], fact_question))
+                    [sq.text for sq in covered_fact_parts], fact_question))
+            subs.extend(refusals)
             sub_answers = tuple(subs)
 
         merged = "\n\n".join(self._render(sa) for sa in sub_answers)
@@ -883,8 +920,14 @@ class Orchestrator:
             merged = self._render(fallback)
             merged_raw = self._raw_render(fallback)
 
+        # `refused` is True only when EVERY part was refused. A mixed message answered its
+        # covered half, and calling that a refusal would erase the half we got right — which is
+        # the same error, in the reporting layer, that per-part gating exists to avoid in the
+        # answering layer. `in_scope` stays True: the classifier accepted it; we simply hold no
+        # facts on the topic, which is a different statement.
+        all_refused = bool(sub_answers) and all(sa.coverage_refused for sa in sub_answers)
         return Reply(
-            question=question, in_scope=True, refused=False,
+            question=question, in_scope=True, refused=all_refused,
             text=merged, raw_text=merged_raw, sub_answers=sub_answers,
             needs_clarification=any(sa.needs_clarification for sa in sub_answers),
         )
