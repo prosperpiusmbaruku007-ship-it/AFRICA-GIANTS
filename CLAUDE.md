@@ -866,6 +866,34 @@ paraphrase.
   something through is cheap to iterate on. A mechanism that can fail by BLOCKING something is
   not, because the cost lands on a real user and is invisible to us.
 
+### R22 — MEASURE A REMEDY ON THE POPULATION THAT NEEDS IT, NOT THE ONE THAT IS CHEAPEST TO SAMPLE.
+
+**Distinct from R21 and it will recur.** R21 is about *vocabulary*: our corpora are aligned with our
+facts, so a lexical mechanism is tested against text it already matches. **R22 is about
+OUTCOME-CONDITIONED SAMPLING**: measuring a remedial mechanism on rows where the outcome was
+already good, and reporting the result as if it described the rows that need remedy.
+
+**Twice in two days, and both times the flattering number came first:**
+
+| mechanism | measured on | said | measured on the population that needs it | said |
+|---|---|---|---|---|
+| **fact use / "discard rate"** | 13 rows from the natural 48 — a set the model was **mostly RIGHT on** | fact at rank 1 → correct ~**12 of 13**, "~1 in 13 discard" | rows the model answers **WRONG** with the fact in reach | **0 of 2** |
+| **coverage gate** | 411 gate-corpus questions | **1.9%** false refusals | 21 held-out questions | **71%** |
+
+**The tell is the same in both: the sample was drawn from where the thing already worked.** A
+remedy measured on rows that do not need remedying reports the base rate of success, not the
+remedy's effect — and reads as evidence for exactly the work it cannot justify.
+
+**In practice:**
+- **Name the population a mechanism is FOR, before measuring it.** A fix for wrong answers is
+  measured on wrong answers. A fix for refusals is measured on questions that must not be refused.
+- **A measurement drawn from a corpus you already score well on is a BASE-RATE measurement.** Report
+  it as such, and never as the mechanism's effect.
+- **When a number is favourable, ask what population it came from before citing it.** Both instances
+  above were caught only because someone re-asked the question on the hard half.
+- **Attach the population to the number, permanently.** Not *"~1 in 13"* but *"~1 in 13 on rows the
+  model answers correctly"*. A bare figure travels; its caveat does not, unless it is inside it.
+
 ---
 
 See PROGRESS.md for current project status and next actions.
