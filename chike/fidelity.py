@@ -698,3 +698,111 @@ def body_contradicts_stated_headcount(body: str, question: str) -> bool:
     if stated is None:
         return False
     return any(stated >= int(m.group(1)) for m in _CLAIMS_BELOW.finditer(body))
+
+
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+# D-FIDELITY-7 — A STATED THRESHOLD THAT IS NOT THE STATUTORY ONE
+#
+# WHY THIS EXISTS, AND WHY IT IS BUILDABLE WHEN SO LITTLE ELSE IS. `pic_11`, live 2026-08-23:
+#
+#     reply: "Presumptive tax inatumika kwa mauzo CHINI YA MILIONI 10."
+#     fact in its own context, at rank 1: "mauzo yasiyozidi TZS 100,000,000"
+#
+# An order of magnitude wrong, with the correct figure at the top of the prompt. The
+# prompt/generation/adapter separation could not recover it under ANY arm — the fact alone, an
+# instruction to use only that fact, or the question rephrased — which made it the first
+# measured justification for a retrain in this project.
+#
+# R19 SAYS TRY THE CHEAP MECHANISM FIRST, AND R19 IS WHY THIS ONE IS POSSIBLE. A stated
+# threshold is a STATUTORY CONSTANT, not a quantity derived from the user's figures: no lawful
+# transformation of anything the user typed makes "milioni 10" the presumptive ceiling. So this
+# is a constant comparison exactly like D-FIDELITY-6's rate check, it needs no ComputationResult,
+# and it works on the FACT path where every rule before the sixth goes vacuous.
+#
+# THE TWO NARROWING DECISIONS, both chosen as the smallest thing that closes the case (R17):
+#
+#   1. A THRESHOLD FRAME IS REQUIRED. A subject cue near a number is not enough — a correct
+#      computation ("Kodi ya makadirio = 3.5% x TZS 30,000,000") carries both. Only
+#      kizingiti / kikomo / yasiyozidi / chini ya / zaidi ya and their English forms count.
+#      `hadi` and `kuanzia` are DELIBERATELY EXCLUDED: they are equally at home in a band
+#      recitation and in a sentence about the user's own turnover, so including them would
+#      attribute the user's figure to the statute.
+#   2. IF ANY AMOUNT IN THE SENTENCE IS A LAWFUL THRESHOLD, THE SENTENCE PASSES. Probe tf_11 is
+#      the reason: "Mauzo yako ya TZS 250,000,000 yamezidi kizingiti cha TZS 200,000,000" is
+#      CORRECT and contains a non-statutory number (the user's own). A body that has stated the
+#      right threshold is not making a wrong threshold claim.
+#      THE COST OF THAT CHOICE, STATED: a body stating BOTH a correct and an incorrect threshold
+#      escapes. Accepted — it errs toward silence, which is the only direction a guard that
+#      blanks text may err in.
+_STATUTORY_THRESHOLDS = {
+    # presumptive: the First Schedule band edges AND the para 2(2) ceiling. Band edges belong
+    # here because a correct answer may legitimately state one.
+    "presumptive": frozenset({4_000_000, 7_000_000, 11_000_000, 100_000_000}),
+    # VAT registration: both limbs — 200M/12mo OR 100M/6mo.
+    "vat_registration": frozenset({100_000_000, 200_000_000}),
+    "efd": frozenset({11_000_000}),
+}
+_THRESHOLD_SUBJECT = {
+    "makadirio": "presumptive", "makisio": "presumptive", "presumptive": "presumptive",
+    "kusajili vat": "vat_registration", "kujisajili vat": "vat_registration",
+    "usajili wa vat": "vat_registration", "kizingiti cha vat": "vat_registration",
+    "vat registration": "vat_registration",
+    "efd": "efd", "mashine ya risiti": "efd",
+}
+_THRESHOLD_SUBJECT_RE = re.compile(
+    "|".join(re.escape(k) for k in sorted(_THRESHOLD_SUBJECT, key=len, reverse=True)),
+    re.IGNORECASE)
+_THRESHOLD_FRAME = re.compile(
+    r"kizingiti|kikomo|yasiyozidi|isiyozidi|hayazidi|chini\s+ya|zaidi\s+ya|"
+    r"\bthreshold\b|\bexceed", re.IGNORECASE)
+_SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+|\n+")
+
+
+# Every statutory threshold in the table is >= TZS 4,000,000. A small integer next to a frame
+# word is a PERIOD or a COUNT, not a threshold — the sweep caught a clarification reading
+# "je ni jumla ya miezi 12, au ya miezi 6 mfululizo?" and attributed 12 and 6 as VAT thresholds.
+_THRESHOLD_MONEY_FLOOR = 1_000_000
+
+
+def stated_wrong_thresholds(body: str):
+    """[(subject, stated_amount)] for every sentence making a non-statutory threshold claim.
+
+    THE LAWFUL-AMOUNT ESCAPE IS BODY-LEVEL, NOT SENTENCE-LEVEL, and the sweep is why. A recorded
+    reply stated the correct threshold in one sentence and compared against it in the next:
+
+        "…kizingiti chako cha usajili wa VAT ni TZS 200,000,000 tu.
+         Mapato ya TZS 205,000,000 hayazidi kizingiti hicho…"
+
+    Sentence-level, the second sentence carries only 205,000,000 and flags. That reply IS wrong —
+    205M plainly exceeds 200M — but it is wrong about a COMPARISON, which is a derived quantity
+    and Guard B territory (R19), not a wrong constant. Catching it here would be the right verdict
+    for the wrong reason, and the same shape with a CORRECT comparison ("TZS 150,000,000
+    hayazidi…") would be a plain false positive. **A body that has stated the right threshold
+    anywhere is not making a wrong threshold claim.**
+    """
+    if not body:
+        return []
+    from .swahili_numbers import parse_amounts
+    body_amounts = {int(a) for a in parse_amounts(body)}
+    out = []
+    for sentence in _SENTENCE_SPLIT.split(body):
+        subjects = {_THRESHOLD_SUBJECT[m.group(0).lower()]
+                    for m in _THRESHOLD_SUBJECT_RE.finditer(sentence)}
+        if not subjects or not _THRESHOLD_FRAME.search(sentence):
+            continue
+        amounts = [int(a) for a in parse_amounts(sentence)
+                   if int(a) >= _THRESHOLD_MONEY_FLOOR]
+        if not amounts:
+            continue
+        for subject in sorted(subjects):
+            lawful = _STATUTORY_THRESHOLDS[subject]
+            if body_amounts & lawful:
+                continue                      # narrowing decision 2 — see the header
+            for a in amounts:
+                out.append((subject, a))
+    return out
+
+
+def body_states_wrong_threshold(body: str) -> bool:
+    """True iff the body claims a statutory threshold that is not the statutory threshold."""
+    return bool(stated_wrong_thresholds(body))
