@@ -301,12 +301,30 @@ the one the founder named as making the product worse rather than safer.
 2. **A different topic signal.** The candidate that survives R19 and does not need a score is a
    **model-side topic classifier**: *"which of these 21 topics is this about, or none?"* That is
    a generation-side mechanism, which is where the 2026-08-22 headline already said the missing
-   safety signal has to live. It costs one extra call per fact question — a real price against
-   the ~15 sessions/day the credit buys, and a founder decision, not a queue decision.
+   safety signal has to live. **Scoped, not built** — see the scoping entry.
 
 **Nothing about the pilot verdict changes.** The precondition remains unmet; what changed is that
 the fifth candidate design has now been measured rather than assumed, and it failed honestly and
 early instead of in front of a tester.
+
+## The general lesson, now R21: every clean sweep in this workstream is a LOWER BOUND
+
+**The gate corpora share vocabulary with the facts by construction** — they were authored from the
+same source families — so a lexical mechanism swept over them is being tested against text it is
+already aligned with. **None of our sweeps has ever measured paraphrase space.**
+
+That reframes a lot of prior confidence, and it should be read as a reframing rather than a
+retraction. The OOC phrase sweeps, the router cue lists, the levy cues, the refusal phrases: none
+of them are wrong and none should be reopened on suspicion. But every one of them is a **lower
+bound on cost and an upper bound on confidence**. The rule now says to write *"0 of 475 corpus
+rows moved"* and never *"the change is safe"*, and it names the asymmetry that decides when a
+held-out set is mandatory: **a mechanism that can only fail by letting something through is cheap
+to iterate on; a mechanism that can fail by BLOCKING a real user is not, because that cost lands
+on them and is invisible to us.**
+
+**And the burn condition is precise: this held-out set is spent because its results were READ, not
+because it was used.** Running it again changes nothing. Reading the fifteen failures is what makes
+every subsequent cue a fit.
 
 ---
 
@@ -331,7 +349,31 @@ does not make a question safe, it only makes it someone else's problem — and t
 the fact path, which has no floor.** Four rows chosen to test a routing change turned into four
 fresh instances of the `nat_05` mechanism.
 
-**Two consequences, stated now so they are not rediscovered later:**
+## The consequence that reaches backwards, and it is the largest thing in this entry
+
+**Every never-guess improvement shipped on the compute path has been handing its declined
+questions to an unguarded path — and that has been true the whole time.** The never-guess
+discipline is one of this project's strongest assets: the extractor's gross/net veto, the
+fabrication guard, the `_PRESUMPTIVE_VETO` schedule arm, the VAT threshold-ask veto, the
+foreign-currency veto, the unreadable-figure decline. Each was built, swept and shipped as a
+refusal to invent a number. **Each one's actual effect is to route the question somewhere that
+invents one anyway.**
+
+Read that against how those changes were written up. They were recorded as *"the engine declines
+rather than guessing"* — true of the engine, and measured on the engine. **Nobody measured what
+happened next.** The declined question did not stop; it went to the fact path, which retrieves the
+three nearest facts at any score and writes a confident answer.
+
+**This reclassifies the coverage gate.** It has been carried as a *pilot precondition* — a safety
+net for questions we cannot answer. It is more than that: **it is the mechanism that makes every
+compute-path veto safe rather than merely correct.** Without it, a veto is a redirection, not a
+refusal. That raises its priority above "blocked on the pilot" and makes it load-bearing for work
+already shipped.
+
+**Sized, not assumed: see the veto-diversion measurement entry.** Four rows are a sample, and a
+sample is not a rate.
+
+## Two further consequences, stated now so they are not rediscovered later
 
 1. **This is the strongest argument the coverage gate has produced**, and it arrived by accident.
    Corporate income tax, partnership tax, the transport presumptive schedule and profit-based

@@ -803,6 +803,41 @@ loader silently returned nothing must be. The two are byte-identical at the AST 
   and it kept reporting sites already closed. **A worklist that cannot see its own fixes is the
   defect class it exists to find.**
 
+### R21 — A SWEEP OVER OUR OWN CORPORA IS A LOWER BOUND. It has never measured paraphrase space.
+
+**Every gate corpus in this repo was authored from the same source families as the facts, so it
+shares their vocabulary by construction.** A lexical mechanism swept over those corpora is
+therefore being tested against text it is already aligned with. The sweep tells you the change
+does not break what you have. **It tells you nothing about what a stranger will type.**
+
+**Measured 2026-08-23, and the size of the gap is the reason this is a rule:**
+
+| corpus | false-refusal cost of the SAME cue list |
+|---|---|
+| 411 answerable gate-corpus questions | 8 — **1.9%** |
+| 21 held-out questions, authored fresh, about topics the corpus **does** hold | **15 — 71%** |
+
+**A ~37× gap on one mechanism.** The 1.9% was not a measurement of safety; it was a measurement
+of how well a cue list matches text derived from the same source it was derived from.
+
+**This reframes prior confidence across the whole workstream.** Every "clean sweep" recorded in
+this file — OOC phrases, router cue lists, levy cues, refusal phrases — was measured the same way.
+None of them are wrong, and none of them should be reopened on suspicion. But each one is a
+**LOWER BOUND on cost and an UPPER BOUND on confidence**, and none has been tested against
+paraphrase.
+
+**In practice:**
+- **State the bound.** Write *"0 of 475 corpus rows moved"* — never *"the change is safe"*.
+- **R17 step 2 is the partial remedy and it is not sufficient.** Authored adversarial probes find
+  what the corpus never exercises; they are still authored by the person who wrote the mechanism.
+- **For anything whose failure mode is REFUSING A REAL USER, a held-out set is the entry price.**
+  Author it, freeze it in git, then build. The order is the whole point.
+- **A held-out set is burned once its results are read**, not once it is used. Reading the failures
+  is what makes any subsequent cue a fit. A second iteration needs a new set.
+- **The asymmetry that decides when this matters:** a mechanism that can only fail by letting
+  something through is cheap to iterate on. A mechanism that can fail by BLOCKING something is
+  not, because the cost lands on a real user and is invisible to us.
+
 ---
 
 See PROGRESS.md for current project status and next actions.
