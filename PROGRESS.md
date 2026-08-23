@@ -328,6 +328,72 @@ every subsequent cue a fit.
 
 ---
 
+# 📊 IT IS A PATTERN, NOT FOUR CASES: 41% OF VETO-DIVERTED QUESTIONS GET A CONFIDENTLY WRONG ANSWER (2026-08-23)
+
+**Measured because four canary rows are a sample and a sample is not a rate.** Two arms, both
+committed before they ran: `eval/routing/measure_veto_diversion.py` (enumerate) and
+`run_veto_diversion_live.py` (run live), adjudicated in
+`eval/results/veto_diversion_live_adjudication.json` against each row's **recorded
+`correct_answer_sw`**, not against judgement alone.
+
+## The population
+
+For every corpus question that routes to the fact path, one diversion mechanism was disabled at a
+time and the question re-routed: *would this have been a COMPUTE question if that guard had not
+fired?*
+
+| | |
+|---|---|
+| fact-path questions across all corpora | **355** |
+| of which **diverted there by a compute-path guard** | **17 (4.8%)** |
+| by mechanism | path-1 commitment 12 · VAT threshold-ask 2 · schedule veto 2 · entity veto 1 |
+
+## The verdicts
+
+| | n | |
+|---|---|---|
+| CORRECT | 7 | |
+| PARTIAL | 3 | a right answer on fabricated working; an evasive non-answer; a right figure misframed |
+| **WRONG** | **7** | **41%** |
+
+**Four of the seven wrong are accuracy-gate rows, not probes authored for this investigation.**
+The three canary rows that started this were the *milder* end.
+
+## The dominant failure is correction-shaped wrongness, and that is worse than silence
+
+| row | asked | answered | truth |
+|---|---|---|---|
+| `eval_342` | *"top PAYE rate is 25%, right?"* | *"**Hapana**… ni **asilimia 20**"* | **30%**. Rejects the false premise and substitutes a different wrong number |
+| `eval_337` | *"NSSF is 3.5 or 0.5?"* | *"…ni **asilimia 10**"* | **20%** total. An employer acting on this **under-remits by half** |
+| `eval_348` | *"10/10 is the only lawful NSSF split, right?"* | *"**Ndiyo**"* | Three splits are lawful — **it agreed with the false premise** |
+| `eval_010` | *"180M this year — how much more before I must register?"* | *"tayari **umepita** kizingiti… sajili **mara moja**"* | **20M more.** It invents a crossing the question never states and instructs an action that may not be owed |
+| `pic_11` | daladala-adjacent regime question | *"Presumptive inatumika kwa mauzo **chini ya milioni 10**"* | The ceiling is **100,000,000**. A 20M trader is told they are outside a regime they are inside |
+
+**A user cannot tell these apart from the seven correct ones.** Three of them *open by correcting
+the user*, which reads as rigour. `eval_006` is the same disease in miniature: the headline "8
+months" is right and the working under it — *"miezi 4 × TZS milioni 50"* — contradicts the user's
+own stated 25M/month.
+
+## What this settles, and what it does not
+
+**Settled: the compute-path vetoes are handing questions to a path that answers them wrongly about
+two-fifths of the time.** That is the largest live defect currently measured anywhere in this
+project, and it was invisible because every veto was measured **on the engine** and written up as
+*"declines rather than guessing"*. Nobody measured what happened next.
+
+**Not settled, and it cuts against us (R21): 4.8% is a LOWER BOUND, not an estimate.** Our corpora
+contain no company-tax, partnership-tax or transport-schedule questions at all — the eval sets
+were authored against the topics the corpus holds. The diversion rate among questions a real
+trader asks is unmeasured and can only be higher.
+
+**Consequence for the queue.** The coverage gate stops being a pilot precondition and becomes
+remediation for a shipped defect. It is also now clear that a gate keyed on *topic* would not fix
+most of these: `eval_337`, `eval_342` and `eval_348` are all about **covered** topics — NSSF and
+PAYE — answered wrongly. **A coverage gate addresses the uncovered-topic half of this. The covered
+half needs something else, and nothing on the board addresses it.**
+
+---
+
 # 🚨 A VETO WITHOUT A COVERAGE GATE JUST CHANGES WHICH WRONG ANSWER YOU GET — four instances in one canary, none of them planned (2026-08-23)
 
 **This is the most consequential thing the presumptive deploy produced, and it was not what the

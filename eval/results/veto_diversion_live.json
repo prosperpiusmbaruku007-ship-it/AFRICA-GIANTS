@@ -1,0 +1,333 @@
+{
+  "measured": "2026-08-23",
+  "harness": "eval/routing/run_veto_diversion_live.py",
+  "population_artifact": "eval/results/veto_diversion_population.json",
+  "target": "live chike-inference, pipeline as deployed",
+  "adjudication": "PENDING — verdicts are Claude Code JUDGEMENT, added in a follow-up commit against `expected_sw` where the corpus carries one.",
+  "n": 17,
+  "rows": [
+    {
+      "id": "eval_006",
+      "corpus": "gate_400",
+      "question": "Biashara inaingiza TZS milioni 25 kwa mwezi — baada ya miezi mingapi inafika kizingiti cha VAT cha TZS milioni 200?",
+      "causes": [
+        {
+          "mechanism": "vat_threshold_ask",
+          "would_have_routed_to": "vat_registration"
+        }
+      ],
+      "subdomain": "vat_registration",
+      "expected_sw": "Baada ya miezi 8 (25M × 8 = 200M). Lazima ujisajilishe mara mauzo yakifika kizingiti — usiendelee bila usajilishaji. Thibitisha tarehe ya kuzidi na TRA.",
+      "expected_en": "After 8 months (25M × 8 = 200M). You must register as soon as sales reach the threshold — do not continue unregistered. Confirm the crossing date with TRA.",
+      "would_have_routed_to": [
+        "vat_registration"
+      ],
+      "reply": "Baada ya miezi 8 (miezi 4 × TZS milioni 50 = TZS milioni 200). Kwa sababu unazidi TZS milioni 200 katika kipindi chochote cha miezi 6, lazima usajili VAT mara moja. Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 71.2
+    },
+    {
+      "id": "eval_010",
+      "corpus": "gate_400",
+      "question": "Biashara yangu ina mauzo ya TZS milioni 180 mwaka huu — ninahitaji mauzo ya ziada ya TZS ngapi kabla ya usajilishaji wa VAT wa lazima?",
+      "causes": [
+        {
+          "mechanism": "vat_threshold_ask",
+          "would_have_routed_to": "vat_registration"
+        }
+      ],
+      "subdomain": "vat_registration",
+      "expected_sw": "TZS milioni 20 zaidi (200M − 180M). Lakini fuatilia pia kizingiti cha miezi 6 cha TZS milioni 100 — inawezekana ufike kizingiti hicho mapema zaidi. Thibitisha na TRA.",
+      "expected_en": "TZS 20 million more (200M − 180M). But also monitor the 6-month threshold of TZS 100 million — you may reach that sooner. Confirm with TRA.",
+      "would_have_routed_to": [
+        "vat_registration"
+      ],
+      "reply": "Kwa mauzo ya TZS 180,000,000, tayari umepita kizingiti cha TZS 100,000,000/6 miezi. Lazima usajilishe VAT mara moja. Hakuna kipindi kingine cha mpito kinachoweza kukusaidia kupita kwa siku 30. Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 8.2
+    },
+    {
+      "id": "eval_095",
+      "corpus": "gate_400",
+      "question": "Mfanyabiashara anayejitegemea (self-employed) anapojiunga NSSF kwa hiari — analipa asilimia ngapi ya mchango wake wote (sehemu zote mbili)?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "nssf"
+        }
+      ],
+      "subdomain": "nssf_contributions",
+      "expected_sw": "Asilimia 20 ya mapato yao (10% ya sehemu ya mwajiri + 10% ya sehemu ya mfanyakazi). Kama mwanachama wa hiari, wewe unalipa sehemu zote mbili peke yako. Kiasi cha msingi cha mapato kinachodhibitiwa kinaweza kutofautiana — thibitisha na NSSF kwenye nssf.or.tz.",
+      "expected_en": "20% of their income (10% employer portion + 10% employee portion). As a voluntary member, you pay both portions yourself. The base income amount used may vary — confirm with NSSF at nssf.or.tz.",
+      "would_have_routed_to": [
+        "nssf"
+      ],
+      "reply": "Mwanachama wa hiari wa NSSF analipa asilimia 20 ya mshahara wake mkubwa wa jumla. Sehemu ya mwajiri (asilimia 10) na sehemu ya mfanyakazi (asilimia 10) zinakadiriwa kulingana na mshahara unaolipwa. Thibitisha na NSSF (nssf.go.tz).",
+      "elapsed_s": 8.7
+    },
+    {
+      "id": "eval_099",
+      "corpus": "gate_400",
+      "question": "Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "nssf"
+        }
+      ],
+      "subdomain": "nssf_contributions",
+      "expected_sw": "Hapana. Sehemu ya mwajiri (asilimia 10) inalipwa na mwajiri kutoka pesa zake mwenyewe — si kukatwa mshahara wa mfanyakazi. Sehemu inayokatwa mshahara wa mfanyakazi ni asilimia 10 yake mwenyewe. Jumla inayopelekwa NSSF ni asilimia 20, lakini asilimia 10 tu inakatwa mshahara wa mfanyakazi.",
+      "expected_en": "No. The employer's 10% share is paid by the employer from their own funds — it is not deducted from the employee's salary. What is deducted from the employee's salary is only the employee's own 10% share. The total remitted to NSSF is 20%, but only 10% comes from salary deduction.",
+      "would_have_routed_to": [
+        "nssf"
+      ],
+      "reply": "Hapana. Mchango wa mwajiri (asilimia 10) unalipwa na MWAJIRI peke yake — si kukatwa kwenye mshahara wa mfanyakazi. Ni gharama ya ziada ya mwajiri juu ya mshahara wa msingi. Thibitisha na NSSF (nssf.go.tz).",
+      "elapsed_s": 8.0
+    },
+    {
+      "id": "eval_102",
+      "corpus": "gate_400",
+      "question": "Je, deadline ya kulipa michango ya NSSF kila mwezi ni siku ya 20 ya mwezi unaofuata?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "nssf"
+        }
+      ],
+      "subdomain": "nssf_contributions",
+      "expected_sw": "Hapana. Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata — si siku ya 20. Siku ya 20 ni deadline ya VAT return, tofauti kabisa. Thibitisha tarehe sahihi na nssf.or.tz.",
+      "expected_en": "No. Under the NSSF Act, contributions must be paid within one month of salary payment. In practice, NSSF generally expects payment by the 10th of the following month — not the 20th. The 20th is the VAT return deadline, completely different. Confirm the exact date at nssf.or.tz.",
+      "would_have_routed_to": [
+        "nssf"
+      ],
+      "reply": "Hapana. Siku ya 20 ni tarehe ya mwisho ya kuwasilisha taarifa ya mishahara (monthly return) — si malipo ya michango. Malipo ya michango yanapaswa kufanyika ndani ya mwezi mmoja baada ya mwisho wa mwezi wa mishahara. Thibitisha na NSSF (nssf.go.tz).",
+      "elapsed_s": 8.4
+    },
+    {
+      "id": "eval_127",
+      "corpus": "gate_400",
+      "question": "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "sdl"
+        }
+      ],
+      "subdomain": "sdl_compliance",
+      "expected_sw": "Ndiyo. SDL na PAYE zote mbili zinalipwa TRA ifikapo siku ya 7 ya mwezi unaofuata. Thibitisha tarehe hii na TRA kwenye tra.go.tz kwani inaweza kubadilika.",
+      "expected_en": "Yes. Both SDL and PAYE are due to TRA by the 7th of the following month. Confirm this date with TRA at tra.go.tz as it may change.",
+      "would_have_routed_to": [
+        "sdl"
+      ],
+      "reply": "Ndiyo — zinawasilishwa kwa wakati mmoja katika fomu tofauti kupitia mfumo wa TRA Online. Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 5.2
+    },
+    {
+      "id": "eval_335",
+      "corpus": "gate_400",
+      "question": "Kiwango cha WCF ni asilimia 3.5 ya mishahara, sivyo?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "wcf"
+        }
+      ],
+      "subdomain": "wcf_compliance",
+      "expected_sw": "Hapana. Asilimia 3.5 ni kiwango cha SDL, siyo WCF. WCF ni asilimia 0.5 ya jumla ya mishahara. Thibitisha na WCF (wcf.go.tz).",
+      "expected_en": "No. 3.5% is the SDL rate, not WCF. WCF is 0.5% of gross payroll. Confirm with WCF.",
+      "would_have_routed_to": [
+        "wcf"
+      ],
+      "reply": "Hapana. Kiwango cha WCF ni asilimia 0.5 ya mishahara — si 3.5%. Thibitisha na WCF (wcf.go.tz).",
+      "elapsed_s": 4.6
+    },
+    {
+      "id": "eval_337",
+      "corpus": "gate_400",
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "nssf"
+        }
+      ],
+      "subdomain": "nssf_contributions",
+      "expected_sw": "Hakuna. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi). Asilimia 3.5 ni SDL na 0.5 ni WCF. Thibitisha na NSSF (nssf.go.tz).",
+      "expected_en": "Neither. NSSF is 20% of gross (10% employer + 10% employee). 3.5% is SDL and 0.5% is WCF. Confirm with NSSF.",
+      "would_have_routed_to": [
+        "nssf"
+      ],
+      "reply": "Kiwango sahihi ni asilimia 10, si asilimia 3.5 wala asilimia 0.5. Thibitisha na NSSF (nssf.go.tz).",
+      "elapsed_s": 5.0
+    },
+    {
+      "id": "eval_341",
+      "corpus": "gate_400",
+      "question": "Kizingiti cha SDL ni wafanyakazi 4, sivyo?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "sdl"
+        }
+      ],
+      "subdomain": "sdl_compliance",
+      "expected_sw": "Hapana. Kizingiti cha SDL ni wafanyakazi 10 au zaidi Tanzania Bara. Chini ya 10 hakuna wajibu wa SDL. Thibitisha na TRA (tra.go.tz).",
+      "expected_en": "No. The SDL threshold is 10 or more employees on the Mainland. Below 10 there is no SDL obligation. Confirm with TRA.",
+      "would_have_routed_to": [
+        "sdl"
+      ],
+      "reply": "Hapana, kizingiti sahihi ni wafanyakazi 10 au zaidi. Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 4.2
+    },
+    {
+      "id": "eval_342",
+      "corpus": "gate_400",
+      "question": "Kiwango cha juu kabisa cha PAYE ni asilimia 25, sivyo?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "paye"
+        }
+      ],
+      "subdomain": "paye_compliance",
+      "expected_sw": "Hapana. Kiwango cha juu kabisa cha PAYE ni asilimia 30 (kwa mapato yanayozidi TZS 1,000,000 kwa mwezi). Asilimia 25 ni kundi la nne. Thibitisha na TRA (tra.go.tz).",
+      "expected_en": "No. The top PAYE rate is 30% (income above TZS 1,000,000/month). 25% is the fourth band. Confirm with TRA.",
+      "would_have_routed_to": [
+        "paye"
+      ],
+      "reply": "Hapana, si sahihi. Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 20 — si 25%. Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 4.9
+    },
+    {
+      "id": "eval_343",
+      "corpus": "gate_400",
+      "question": "Ajali ya kazini WCF lazima itolewe taarifa ndani ya siku 30, sivyo?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "wcf"
+        }
+      ],
+      "subdomain": "wcf_compliance",
+      "expected_sw": "Hapana. Ajali ya kazini lazima itolewe taarifa WCF ndani ya siku 7 za kazi. Siku 30 ni muda wa mwajiri mpya kujisajili WCF baada ya kuajiri mtu wa kwanza. Thibitisha na WCF (wcf.go.tz).",
+      "expected_en": "No. A workplace accident must be reported to WCF within 7 working days. 30 days is the new-employer WCF registration window. Confirm with WCF.",
+      "would_have_routed_to": [
+        "wcf"
+      ],
+      "reply": "Hapana, si lazima kuwa 'ndani ya siku 30' hasa. Ni lazima utaarifiwe WCF ndani ya muda unaotakiwa kulingana na sheria husika. Thibitisha na WCF (wcf.go.tz).",
+      "elapsed_s": 6.0
+    },
+    {
+      "id": "eval_344",
+      "corpus": "gate_400",
+      "question": "PAYE ya mfanyakazi asiye mkazi ni asilimia 30, sivyo?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "paye"
+        }
+      ],
+      "subdomain": "paye_compliance",
+      "expected_sw": "Hapana. Mfanyakazi asiye mkazi hulipa PAYE kwa kiwango tambarare cha asilimia 15 (mkato wa mwisho), siyo mabano wala 30%. Thibitisha na TRA (tra.go.tz).",
+      "expected_en": "No. A non-resident pays PAYE at a flat 15% (final withholding), not the bands or 30%. Confirm with TRA.",
+      "would_have_routed_to": [
+        "paye"
+      ],
+      "reply": "Hapana, si asilimia 30. Kwa mfanyakazi asiye mkazi, kiwango cha kwanza cha PAYE ni asilimia 15, si asilimia 30. Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 5.7
+    },
+    {
+      "id": "eval_345",
+      "corpus": "gate_400",
+      "question": "SDL inalipwa ifikapo tarehe 20 ya mwezi kama VAT withholding, sivyo?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "sdl"
+        }
+      ],
+      "subdomain": "sdl_compliance",
+      "expected_sw": "Hapana. SDL inawasilishwa ifikapo siku ya 7 ya mwezi unaofuata. Tarehe 20 ni ya VAT withholding na return ya VAT. Thibitisha na TRA (tra.go.tz).",
+      "expected_en": "No. SDL is remitted by the 7th of the following month. The 20th is for VAT withholding and the VAT return. Confirm with TRA.",
+      "would_have_routed_to": [
+        "sdl"
+      ],
+      "reply": "Hapana. SDL inalipwa ifikapo tarehe 7 ya mwezi unaofuata — si tarehe 20. Tarehe 20 ni ya VAT withholding na VAT return. Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 6.0
+    },
+    {
+      "id": "eval_348",
+      "corpus": "gate_400",
+      "question": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "nssf"
+        }
+      ],
+      "subdomain": "nssf_contributions",
+      "expected_sw": "Hapana. Jumla ni asilimia 20 daima, lakini kuna migawanyo mitatu halali: 10% mwajiri + 10% mfanyakazi, au 15% + 5%, au 20% + 0%. Thibitisha na NSSF (nssf.go.tz).",
+      "expected_en": "No. The total is always 20%, but there are three valid splits: 10%+10%, 15%+5%, or 20%+0%. Confirm with NSSF.",
+      "would_have_routed_to": [
+        "nssf"
+      ],
+      "reply": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10%. Thibitisha na NSSF (nssf.go.tz).",
+      "elapsed_s": 4.9
+    },
+    {
+      "id": "pic_04",
+      "corpus": "presumptive_probes",
+      "question": "Kampuni yangu inauza bidhaa za milioni 50 kwa mwaka, kodi ya mapato ni kiasi gani?",
+      "causes": [
+        {
+          "mechanism": "entity_veto",
+          "would_have_routed_to": "presumptive"
+        }
+      ],
+      "subdomain": "probe",
+      "expected_sw": null,
+      "expected_en": null,
+      "would_have_routed_to": [
+        "presumptive"
+      ],
+      "reply": "Kwa mauzo ya TZS 50,000,000, kodi ya mapato ya kampuni ni asilimia 30 = TZS 15,000,000. Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 5.3
+    },
+    {
+      "id": "pic_10",
+      "corpus": "presumptive_probes",
+      "question": "Nauza tiketi za daladala, mauzo yangu ni milioni 20, kodi ya mapato ni ngapi?",
+      "causes": [
+        {
+          "mechanism": "schedule_veto",
+          "would_have_routed_to": "presumptive"
+        }
+      ],
+      "subdomain": "probe",
+      "expected_sw": null,
+      "expected_en": null,
+      "would_have_routed_to": [
+        "presumptive"
+      ],
+      "reply": "Kwa mauzo ya milioni 20, unatumia kiwango cha 3.5%. Thibitisha na tra.go.tz.",
+      "elapsed_s": 4.2
+    },
+    {
+      "id": "pic_11",
+      "corpus": "presumptive_probes",
+      "question": "Mauzo yangu ni milioni 20 kwa mwaka, nitajua vipi ikiwa nalipa kodi ya mapato kwa makadirio au mfumo wa kawaida?",
+      "causes": [
+        {
+          "mechanism": "schedule_veto",
+          "would_have_routed_to": "presumptive"
+        }
+      ],
+      "subdomain": "probe",
+      "expected_sw": null,
+      "expected_en": null,
+      "would_have_routed_to": [
+        "presumptive"
+      ],
+      "reply": "Kwa mauzo ya milioni 20, unalipa kodi ya mapato kwa mfumo wa kawaida (normal progressive rates). Presumptive tax inatumika kwa mauzo chini ya milioni 10. Thibitisha na tra.go.tz.",
+      "elapsed_s": 6.1
+    }
+  ]
+}

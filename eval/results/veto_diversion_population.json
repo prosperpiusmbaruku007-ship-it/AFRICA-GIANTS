@@ -1,0 +1,304 @@
+{
+  "measured": "2026-08-23",
+  "harness": "eval/routing/measure_veto_diversion.py",
+  "question": "how many fact-path questions are there BECAUSE a compute-path guard declined them?",
+  "method": "per-question counterfactual: disable one diversion mechanism at a time and re-route. ENUMERATION ONLY — being diverted is not evidence of harm; arm 2 runs these live and adjudicates.",
+  "mechanisms": [
+    "entity_veto",
+    "schedule_veto",
+    "vat_threshold_ask",
+    "foreign_currency",
+    "path1_commitment"
+  ],
+  "per_corpus": {
+    "gate_400": {
+      "n": 400,
+      "fact_path": 292,
+      "diverted": 14
+    },
+    "natural_48": {
+      "n": 48,
+      "fact_path": 23,
+      "diverted": 0
+    },
+    "inscope_69": {
+      "n": 27,
+      "fact_path": 24,
+      "diverted": 0
+    },
+    "uncovered_12": {
+      "n": 12,
+      "fact_path": 10,
+      "diverted": 0
+    },
+    "presumptive_probes": {
+      "n": 16,
+      "fact_path": 6,
+      "diverted": 3
+    }
+  },
+  "total_fact_path": 355,
+  "total_diverted": 17,
+  "by_mechanism": {
+    "vat_threshold_ask": {
+      "n": 2,
+      "ids": [
+        "eval_006",
+        "eval_010"
+      ]
+    },
+    "path1_commitment": {
+      "n": 12,
+      "ids": [
+        "eval_095",
+        "eval_099",
+        "eval_102",
+        "eval_127",
+        "eval_335",
+        "eval_337",
+        "eval_341",
+        "eval_342",
+        "eval_343",
+        "eval_344",
+        "eval_345",
+        "eval_348"
+      ]
+    },
+    "entity_veto": {
+      "n": 1,
+      "ids": [
+        "pic_04"
+      ]
+    },
+    "schedule_veto": {
+      "n": 2,
+      "ids": [
+        "pic_10",
+        "pic_11"
+      ]
+    }
+  },
+  "diverted": [
+    {
+      "corpus": "gate_400",
+      "id": "eval_006",
+      "question": "Biashara inaingiza TZS milioni 25 kwa mwezi — baada ya miezi mingapi inafika kizingiti cha VAT cha TZS milioni 200?",
+      "subdomain": "vat_registration",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "vat_threshold_ask",
+          "would_have_routed_to": "vat_registration"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_010",
+      "question": "Biashara yangu ina mauzo ya TZS milioni 180 mwaka huu — ninahitaji mauzo ya ziada ya TZS ngapi kabla ya usajilishaji wa VAT wa lazima?",
+      "subdomain": "vat_registration",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "vat_threshold_ask",
+          "would_have_routed_to": "vat_registration"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_095",
+      "question": "Mfanyabiashara anayejitegemea (self-employed) anapojiunga NSSF kwa hiari — analipa asilimia ngapi ya mchango wake wote (sehemu zote mbili)?",
+      "subdomain": "nssf_contributions",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "nssf"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_099",
+      "question": "Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?",
+      "subdomain": "nssf_contributions",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "nssf"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_102",
+      "question": "Je, deadline ya kulipa michango ya NSSF kila mwezi ni siku ya 20 ya mwezi unaofuata?",
+      "subdomain": "nssf_contributions",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "nssf"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_127",
+      "question": "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?",
+      "subdomain": "sdl_compliance",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "sdl"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_335",
+      "question": "Kiwango cha WCF ni asilimia 3.5 ya mishahara, sivyo?",
+      "subdomain": "wcf_compliance",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "wcf"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_337",
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "subdomain": "nssf_contributions",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "nssf"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_341",
+      "question": "Kizingiti cha SDL ni wafanyakazi 4, sivyo?",
+      "subdomain": "sdl_compliance",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "sdl"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_342",
+      "question": "Kiwango cha juu kabisa cha PAYE ni asilimia 25, sivyo?",
+      "subdomain": "paye_compliance",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "paye"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_343",
+      "question": "Ajali ya kazini WCF lazima itolewe taarifa ndani ya siku 30, sivyo?",
+      "subdomain": "wcf_compliance",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "wcf"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_344",
+      "question": "PAYE ya mfanyakazi asiye mkazi ni asilimia 30, sivyo?",
+      "subdomain": "paye_compliance",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "paye"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_345",
+      "question": "SDL inalipwa ifikapo tarehe 20 ya mwezi kama VAT withholding, sivyo?",
+      "subdomain": "sdl_compliance",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "sdl"
+        }
+      ]
+    },
+    {
+      "corpus": "gate_400",
+      "id": "eval_348",
+      "question": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+      "subdomain": "nssf_contributions",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "path1_commitment",
+          "would_have_routed_to": "nssf"
+        }
+      ]
+    },
+    {
+      "corpus": "presumptive_probes",
+      "id": "pic_04",
+      "question": "Kampuni yangu inauza bidhaa za milioni 50 kwa mwaka, kodi ya mapato ni kiasi gani?",
+      "subdomain": "probe",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "entity_veto",
+          "would_have_routed_to": "presumptive"
+        }
+      ]
+    },
+    {
+      "corpus": "presumptive_probes",
+      "id": "pic_10",
+      "question": "Nauza tiketi za daladala, mauzo yangu ni milioni 20, kodi ya mapato ni ngapi?",
+      "subdomain": "probe",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "schedule_veto",
+          "would_have_routed_to": "presumptive"
+        }
+      ]
+    },
+    {
+      "corpus": "presumptive_probes",
+      "id": "pic_11",
+      "question": "Mauzo yangu ni milioni 20 kwa mwaka, nitajua vipi ikiwa nalipa kodi ya mapato kwa makadirio au mfumo wa kawaida?",
+      "subdomain": "probe",
+      "verdict_2026_08_17": null,
+      "causes": [
+        {
+          "mechanism": "schedule_veto",
+          "would_have_routed_to": "presumptive"
+        }
+      ]
+    }
+  ]
+}
