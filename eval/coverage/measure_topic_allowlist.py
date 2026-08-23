@@ -84,13 +84,50 @@ COVERED = {
     'employment': ['mkataba wa ajira', 'mfanyakazi', 'wafanyakazi', 'kuajiri', 'likizo'],
 }
 
+# --- v2 CORRECTIONS, and why each one is NOT fitting to the test set -------------------------
+# v1 scored 34 false refusals. Reading all 34 (rather than the count) showed that only a
+# minority were the design failing; the rest were two authoring faults and one measurement
+# fault. The corrections below are admitted ONLY because each is justified from the CORPUS
+# side and would have been written by anyone who had checked the list against locked_facts:
+#
+#   (a) THE TOPIC'S OWN NAME WAS MISSING. Nineteen of the 34 were GN 487A questions containing
+#       the literal string "GN 487A" — the largest cluster in locked_facts (32 facts) and I
+#       omitted its name. Likewise `miliki ya akili` (trademark, 18 facts) and provisional tax.
+#       Adding a topic's own name is completing the list, not tuning it.
+#   (b) SWAHILI NOUN-CLASS PLURALS. `mshahara`->`mishahara` (m-/mi-) and `kibali`->`vibali`
+#       (ki-/vi-) are the standard plural forms; a substring cue on the singular cannot match
+#       them. This is THE THIRD AXIS from the concord work — a cue list is blind to inflection
+#       unless the inflections are enumerated — arriving in a new list.
+#
+# ANY FURTHER CUE ADDED BY READING THIS CORPUS WOULD BE FITTING TO THE TEST SET, and its cost
+# would have to be priced on held-out probes instead (R17 step 2). The residue after these two
+# classes is reported separately below and is the design's honest irreducible cost.
+CORRECTIONS = {
+    'gn487a': ['gn 487', 'gn487', '487a'],
+    'trademark': ['miliki ya akili', 'intellectual property'],
+    'minimum_wage': ['mishahara'],
+    'permit': ['vibali'],
+    'provisional_tax': ['provisional tax', 'kodi ya awali'],
+}
+
+COVERED_V2 = {t: list(c) for t, c in COVERED.items()}
+for t, cues in CORRECTIONS.items():
+    COVERED_V2.setdefault(t, [])
+    COVERED_V2[t] += [c for c in cues if c not in COVERED_V2[t]]
+
+# Rows in the accuracy-gate files whose subdomain is `out_of_corpus` are questions the product
+# is SUPPOSED to refuse (import duty, Zanzibar, Bitcoin). v1 counted a coverage-gate refusal on
+# those as a FALSE refusal, which is backwards — a measurement fault, not a design one.
+CORRECT_TO_REFUSE = 'out_of_corpus'
+
 _ALL_CUES = [(topic, cue) for topic, cues in COVERED.items() for cue in cues]
+_ALL_CUES_V2 = [(topic, cue) for topic, cues in COVERED_V2.items() for cue in cues]
 
 
-def matched_topics(text, word_bounded):
+def matched_topics(text, word_bounded, cues=None):
     ql = text.lower()
     out = []
-    for topic, cue in _ALL_CUES:
+    for topic, cue in (cues if cues is not None else _ALL_CUES):
         if word_bounded:
             hit = re.search(r'(?<![a-z])' + re.escape(cue) + r'(?![a-z])', ql) is not None
         else:
@@ -114,19 +151,26 @@ def main():
                 'verdict': r.get('verdict'), 'route': route,
                 'topics_substring': matched_topics(r['q'], word_bounded=False),
                 'topics_wordbound': matched_topics(r['q'], word_bounded=True),
+                'v2_substring': matched_topics(r['q'], False, _ALL_CUES_V2),
+                'v2_wordbound': matched_topics(r['q'], True, _ALL_CUES_V2),
             })
         results[name] = out_rows
 
     candidates = []
-    for rule in ('topics_substring', 'topics_wordbound'):
+    for rule in ('topics_substring', 'topics_wordbound', 'v2_substring', 'v2_wordbound'):
         for fpo in (True, False):
             c = {'rule': rule, 'fact_path_only': fpo, 'per_corpus': {}}
             for name, rows in results.items():
                 ref = [r for r in rows
                        if (not (fpo and r['route'] != 'none')) and not r[rule]]
+                # An `out_of_corpus` row refused by the coverage gate is a CORRECT refusal, not
+                # a false one — it belongs in the catch column, not the cost column.
+                ooc_ref = [r for r in ref if r.get('subdomain') == CORRECT_TO_REFUSE]
+                ref = [r for r in ref if r.get('subdomain') != CORRECT_TO_REFUSE]
                 entry = {'n': len(rows), 'refused': len(ref),
+                         'correctly_refused_ooc': len(ooc_ref),
                          'rate': round(len(ref) / len(rows), 4),
-                         'refused_ids': [r['id'] for r in ref][:30]}
+                         'refused_ids': [r['id'] for r in ref][:40]}
                 if name == 'natural_48':
                     entry['refused_that_were_CORRECT'] = sum(
                         1 for r in ref if r['verdict'] == 'CORRECT')
@@ -135,6 +179,8 @@ def main():
                     entry['missed'] = [{'id': r['id'], 'matched': r[rule]}
                                        for r in rows if r not in ref]
                 c['per_corpus'][name] = entry
+            c['ooc_correctly_refused'] = sum(
+                v.get('correctly_refused_ooc', 0) for v in c['per_corpus'].values())
             c['false_refusals_total'] = (c['per_corpus']['gate_400']['refused']
                                          + c['per_corpus']['inscope_69']['refused']
                                          + c['per_corpus']['natural_48']
@@ -150,7 +196,15 @@ def main():
                    'evaluation questions.',
         'n_topics': len(COVERED),
         'n_cues': len(_ALL_CUES),
+        'n_cues_v2': len(_ALL_CUES_V2),
         'allowlist': COVERED,
+        'corrections_v2': CORRECTIONS,
+        'v2_rationale': "v1's 34 false refusals were read individually rather than counted. "
+                        "Two authoring faults (a topic's own name missing; Swahili noun-class "
+                        "plurals) and one measurement fault (out_of_corpus rows counted as "
+                        "false refusals). v2 fixes all three. No cue was added by reading a "
+                        "question the design should have answered but did not for any other "
+                        "reason — that would be fitting to the test set.",
         'candidates': candidates,
         'rows': results,
     }
@@ -158,16 +212,20 @@ def main():
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
 
-    print(f'{len(COVERED)} topics, {len(_ALL_CUES)} cues')
+    print(f'v1: {len(COVERED)} topics, {len(_ALL_CUES)} cues | v2: {len(_ALL_CUES_V2)} cues')
     print(f"\n  {'rule':<20}{'factOnly':>9}{'falseRef':>10}{'caught/12':>11}"
-          f"{'gate400':>9}{'insc69':>8}{'nat48ok':>9}")
+          f"{'oocOK':>7}{'gate400':>9}{'insc69':>8}{'nat48ok':>9}")
     for c in candidates:
         p = c['per_corpus']
         print(f"  {c['rule']:<20}{str(c['fact_path_only']):>9}"
               f"{c['false_refusals_total']:>10}{c['caught_of_12']:>11}"
+              f"{c['ooc_correctly_refused']:>7}"
               f"{p['gate_400']['refused']:>9}{p['inscope_69']['refused']:>8}"
               f"{p['natural_48']['refused_that_were_CORRECT']:>9}")
-    best = min(candidates, key=lambda c: (c['false_refusals_total'], -c['caught_of_12']))
+    best = min((c for c in candidates if c['rule'].startswith('v2')),
+               key=lambda c: (c['false_refusals_total'], -c['caught_of_12']))
+    print(f"\n=== lowest-cost v2 variant: {best['rule']} fact_path_only="
+          f"{best['fact_path_only']} ===")
     print('\n--- lowest-cost variant, what it MISSED on the 12 ---')
     for m in best['per_corpus']['uncovered_12']['missed']:
         print(f"  {m['id'][:44]:<46} matched {m['matched']}")
