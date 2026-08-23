@@ -45,6 +45,15 @@ single row**. Every claim about what a pilot would surface is therefore a claim 
 is the single largest untested assumption in the whole plan, and it is untestable without either a
 pilot or a deliberate synthetic run through the real webhook.
 
+> **BOARDED 2026-08-23 (founder): DRY-RUN THE DAILY REVIEW AGAINST OURSELVES BEFORE REAL USERS,
+> NOT AFTER.** Every guardrail in §3 and §4 below assumes a workflow nobody has ever run once.
+> Send a day's worth of messages through the real Wappfly → `chike-whatsapp` → `chike-inference`
+> path, then actually do the review: pull `GET /transcripts?token=`, read every reply, count
+> ungrounded figures, and see whether twenty minutes is the real number. **A guardrail that has
+> never been executed is a plan, not a control** — and this is the cheapest possible place to
+> discover that the transcript rows are missing a field the review needs, or that the review
+> takes an hour.
+
 **On covered topics they would mostly get a good answer. [M]**
 `eval/results/natural48_rerun_2026_08_17_adjudication.json`, 48 natural questions, live:
 
@@ -212,6 +221,97 @@ Two candidates, both generation-side, both consistent with R19's buildable half:
 Neither is scoped. **[J]** Until one exists, a pilot is a decision to accept that most testers'
 first question gets a fluent answer with nothing behind it — which is a legitimate founder call to
 make deliberately, and a bad one to make by default.
+
+---
+
+# 🛠️ THE PRESUMPTIVE ENGINE NOW ANSWERS THE WAY A DUKA OWNER ASKS — and a clean 475-row sweep proved nothing again (2026-08-23)
+
+**Built, swept, probed and tested. NOT YET DEPLOYED** — it is a `chike/routing.py` change and
+needs its own R16 cycle against `chike-inference`.
+
+## The gap
+
+Measured in the coverage re-run, not inferred:
+
+| question | before |
+|---|---|
+| *"Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa **kodi ya mapato** kiasi gani?"* | **`none`** — the fact path, no engine |
+| *"Biashara yangu inauza milioni 4 kwa mwaka, **kodi ya makadirio** ni ngapi?"* | `presumptive` |
+
+`_BUSINESS_INCOME_TAX_CUES` required the qualified forms — *"kodi ya mapato **ya biashara / ya
+duka**"*. Bare *"kodi ya mapato"* with a turnover figure and a shop in the sentence was not
+enough. **An engine reachable only by the technical term serves the users who least need it:** a
+duka owner does not know that `makadirio` is the word that works, and the presumptive engine was
+built for exactly that person.
+
+## The sweep was clean. The probe found the defect. Again.
+
+`eval/routing/sweep_presumptive_income_cue.py` → `eval/results/presumptive_income_cue_sweep.json`.
+
+| arm | gate_400 | natural_48 | inscope_27 | authored probes |
+|---|---|---|---|---|
+| cue only | **0** | **0** | **0** | 14/16 |
+| cue + entity veto | **0** | **0** | **0** | **15/16** |
+
+**Zero corpus rows move on either arm.** Read alone that is a green light, and it would have been
+wrong — `pic_04` fails on the cue-only arm:
+
+> *"**Kampuni yangu inauza** bidhaa za milioni 50 kwa mwaka, kodi ya mapato ni kiasi gani?"*
+> → **`presumptive`**
+
+**Presumptive is First Schedule para 2's regime for a resident INDIVIDUAL; a company pays 30% on
+PROFIT.** And the mechanism is a substring, which is why no amount of reading the cue list would
+have caught it: `_PRESUMPTIVE_TURNOVER_CUES` contains **`nauza`**, which sits inside
+**`i-nauza`** — so the turnover gate was *already* satisfied for every company sentence, and had
+been since before this change. The bare cue simply opened the door. **A company would have got
+the resident-individual turnover table: a wrong figure carrying the rules engine's authority.**
+No corpus row has that shape, so nothing but an authored probe could have found it.
+
+**This is the fourth entry in R17's ledger**, and it is the cleanest instance yet of the specific
+sub-claim: *ten of the sixteen probes are deliberately CORRECT bodies that must not move*, and
+that is the half that did the work. The six positives passed on the broken arm too.
+
+## What shipped in the code
+
+- **`kodi ya mapato`** added to `_BUSINESS_INCOME_TAX_CUES`. Broad on its own, safe only in the
+  conjunction it sits in: turnover cue **AND** money magnitude **AND** no veto. Pinned by a test
+  that removes each of the three in turn.
+- **`_PRESUMPTIVE_ENTITY_VETO_PATTERN`** — `kampuni|shirika|company|ltd|plc|ubia|partnership` —
+  kept as its **own named pattern** and composed into `_PRESUMPTIVE_VETO`, so a sweep can
+  subtract exactly this arm to rebuild the before-state. That is not tidiness: the routing A/B
+  sweep once reported a **false blast radius of 4** because its BEFORE arm could not switch one
+  mechanism off independently of another.
+- **`tests/test_presumptive_income_cue.py`**, 22 tests, including a pin that fails if a future
+  edit lets the control arm become the minority.
+- The sweep is **re-runnable after the ship** — its `before` arm reconstructs the pre-change
+  router from the live module rather than from a local copy, and reproduces the same table.
+
+## Above the ceiling and excluded services route to the engine ON PURPOSE
+
+`pic_09` (turnover 300M) and `pic_16` (an independent professional) both route to `presumptive`,
+and both are correct: `compute_presumptive` returns *"Hapana… yamezidi kikomo cha TZS
+100,000,000"* and the para 2(1)(a) *"haitumiki kwa wataalamu huru"* verdict **with the reason**.
+Putting either exclusion in the ROUTER would send the user back to the fact path and lose the
+explanation. Both probes exist to guard against that.
+
+## One pre-existing defect found, boarded not bundled
+
+`pic_05` — *"**Ubia wetu unauza** milioni 30 kwa mwaka, kodi ya mapato **tunalipa** ngapi?"* —
+routes to **`paye`**, and it does so on the BEFORE arm too, so this change did not cause it.
+Mechanism: `tunalipa` is in `_PAYROLL_CTX`, `_natural_levy` resolves *"kodi ya mapato"* to PAYE,
+and path 2 fires and wins before the presumptive arm is reached. **A partnership asking about its
+turnover income tax is answered with an employee payroll computation.**
+
+The fix is a `_PAYROLL_CTX` narrowing — `tunalipa` is generic *"we pay"*, not payroll vocabulary —
+which is a broad change needing its own sweep. **Boarded, not bundled.** The probe's expectation
+stays pinned at the CORRECT route with the defect in a `known_failing` field, and a test asserts
+the row still reproduces it, so nobody can park the defect by relaxing the expectation.
+
+## Coverage effect
+
+`eval/results/coverage_12_rerun.json` re-run after the change: deterministic routes on the twelve
+go **1 → 2**, both presumptive rows now reaching the engine. Suite: **1286 passed**, 4 deselected,
+exit 0.
 
 ---
 

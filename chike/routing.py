@@ -662,7 +662,21 @@ _PRESUMPTIVE_CUES = ["kodi ya makadirio", "kodi ya makisio", "makadirio ya kodi 
                      "kodi ya kadirio", "presumptive tax", "presumptive income tax"]
 _BUSINESS_INCOME_TAX_CUES = ["kodi ya mapato ya biashara", "kodi ya mapato ya duka",
                              "kodi ya biashara yangu", "kodi ya biashara yetu",
-                             "business income tax"]
+                             "business income tax",
+                             # BARE `kodi ya mapato` (added 2026-08-23). The qualified forms
+                             # above require the user to say "...YA BIASHARA / YA DUKA", so the
+                             # commonest phrasing of the commonest duka tax question —
+                             # "mauzo yangu ni milioni 30... nalipa KODI YA MAPATO kiasi gani?"
+                             # — fell to the fact path while the technical term `makadirio`
+                             # reached the engine. AN ENGINE REACHABLE ONLY BY THE TECHNICAL
+                             # TERM SERVES THE USERS WHO LEAST NEED IT.
+                             #
+                             # It is broad on its own, which is why it is safe only in the
+                             # conjunction it sits in: a turnover cue AND a money magnitude AND
+                             # no veto. Sweep of 475 corpus rows: ZERO moved. The one hazard the
+                             # corpus could not show was found by an authored probe — see
+                             # _PRESUMPTIVE_VETO's entity arm.
+                             "kodi ya mapato"]
 
 # THE OWNERSHIP GATE, AND IT IS NOT A COPY OF THE VAT ONE. The first version of this route
 # required only {presumptive cue + magnitude} and the 5,595-row sweep diverted FOUR corpus
@@ -689,10 +703,31 @@ _PRESUMPTIVE_TURNOVER_CUES = ["mauzo yangu", "mauzo yetu", "mauzo ya biashara ya
 # regime-choice question that no figure answers. Vetoing is the honest behaviour: para 2(5)'s
 # per-vehicle table is a different computation, and returning the turnover table's answer for
 # it is a wrong number with the engine's authority behind it.
-_PRESUMPTIVE_VETO = re.compile(
+_PRESUMPTIVE_SCHEDULE_VETO_PATTERN = (
     r"daladala|abiria|magari|gari\s+la\s+biashara|bodaboda|bajaji|teksi|\btaxi\b|"
     r"class\s+[abcd]\b|tour\s+service|kubeba\s+mizigo|\btani\b|tonne|"
     r"au\s+mfumo\s+wa\s+kawaida|nitajua\s+vipi")
+
+# ENTITY ARM (2026-08-23), required by the bare `kodi ya mapato` cue and found by an AUTHORED
+# PROBE after a completely clean 475-row corpus sweep — R17 exactly.
+#
+# Presumptive is First Schedule para 2's regime for a resident INDIVIDUAL. A company pays 30% on
+# PROFIT. And `_PRESUMPTIVE_TURNOVER_CUES` contains "nauza", which is a SUBSTRING of "i-nauza" —
+# so "Kampuni yangu INAUZA bidhaa za milioni 50" already satisfied the turnover gate before this
+# cue existed. With the bare cue and without this arm, probe pic_04 routed a company to the
+# individual turnover table: a wrong figure carrying the engine's authority. No corpus row has
+# that shape, so nothing but the probe could have found it.
+#
+# KEPT AS ITS OWN NAMED PATTERN, and composed below, for the same reason ROUTING-GAP-B's cues
+# are: a blast-radius sweep must be able to subtract exactly this arm to reconstruct the
+# before-state. An earlier sweep inlined a mechanism it could not turn off and reported a false
+# zero radius for it.
+_PRESUMPTIVE_ENTITY_VETO_PATTERN = (
+    r"kampuni|shirika|\bcompany\b|\bltd\b|\bplc\b|ubia|ushirikiano\s+wa\s+kibiashara|"
+    r"partnership")
+
+_PRESUMPTIVE_VETO = re.compile(
+    _PRESUMPTIVE_SCHEDULE_VETO_PATTERN + r"|" + _PRESUMPTIVE_ENTITY_VETO_PATTERN)
 
 # RECORD-KEEPING, the categorical axis of the statutory table. Consulted ONLY inside the
 # presumptive branch, so a false positive cannot leak into another route — but it CAN change

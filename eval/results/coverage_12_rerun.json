@@ -7,7 +7,7 @@
   "summary": {
     "n": 12,
     "passed_ooc_classifier": 12,
-    "took_a_deterministic_route": 1,
+    "took_a_deterministic_route": 2,
     "lexical_hit_only_NOT_coverage": 6,
     "have_a_fact_behind_them_UPPER_BOUND": 3,
     "baseline_2026_08_16": {
@@ -31,12 +31,12 @@
       },
       "now": {
         "ooc_classifier": "pass_to_model",
-        "deterministic_route": "none",
+        "deterministic_route": "presumptive",
         "decomposed_parts": [
           "Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa kodi ya mapato kiasi gani?"
         ],
         "part_intents": [
-          "none"
+          "presumptive"
         ],
         "lexical_hit": true,
         "answers_the_question": true,
@@ -60,7 +60,7 @@
         "n_index_hits": 3
       },
       "changed": {
-        "route": false,
+        "route": true,
         "has_fact": true
       }
     },

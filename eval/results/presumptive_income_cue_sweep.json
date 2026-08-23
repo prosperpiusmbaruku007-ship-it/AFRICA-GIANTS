@@ -1,0 +1,220 @@
+{
+  "measured": "2026-08-23",
+  "harness": "eval/routing/sweep_presumptive_income_cue.py",
+  "probe_file": "eval/routing/presumptive_income_cue_probes.jsonl",
+  "candidate_cue": "kodi ya mapato",
+  "entity_veto_pattern": "kampuni|shirika|\\bcompany\\b|\\bltd\\b|\\bplc\\b|ubia|ushirikiano\\s+wa\\s+kibiashara|partnership",
+  "corpora": {
+    "gate_400": 400,
+    "natural_48": 48,
+    "inscope_69": 27,
+    "uncovered_12": 12,
+    "authored_probes": 16
+  },
+  "blast_radius": {
+    "cue_only": {
+      "gate_400": 0,
+      "natural_48": 0,
+      "inscope_69": 0,
+      "uncovered_12": 1,
+      "authored_probes": 6
+    },
+    "cue_plus_veto": {
+      "gate_400": 0,
+      "natural_48": 0,
+      "inscope_69": 0,
+      "uncovered_12": 1,
+      "authored_probes": 5
+    }
+  },
+  "changes": {
+    "cue_only": {
+      "gate_400": [],
+      "natural_48": [],
+      "inscope_69": [],
+      "uncovered_12": [
+        {
+          "id": "kodi ya makisio (presumptive income tax)",
+          "q": "Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa kodi ya mapato kiasi gani?",
+          "from": "none",
+          "to": "presumptive"
+        }
+      ],
+      "authored_probes": [
+        {
+          "id": "pic_01",
+          "q": "Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa kodi ya mapato kiasi gani?",
+          "from": "none",
+          "to": "presumptive"
+        },
+        {
+          "id": "pic_02",
+          "q": "Nauza vitu dukani, mauzo yangu kwa mwaka ni milioni 8, kodi ya mapato nalipa shingapi?",
+          "from": "none",
+          "to": "presumptive"
+        },
+        {
+          "id": "pic_03",
+          "q": "Mzunguko wangu ni milioni 60 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "from": "none",
+          "to": "presumptive"
+        },
+        {
+          "id": "pic_04",
+          "q": "Kampuni yangu inauza bidhaa za milioni 50 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "from": "none",
+          "to": "presumptive"
+        },
+        {
+          "id": "pic_09",
+          "q": "Mauzo yangu ni milioni 300 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "from": "none",
+          "to": "presumptive"
+        },
+        {
+          "id": "pic_16",
+          "q": "Mimi ni mhasibu huru, mauzo yangu ni milioni 20 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "from": "none",
+          "to": "presumptive"
+        }
+      ]
+    },
+    "cue_plus_veto": {
+      "gate_400": [],
+      "natural_48": [],
+      "inscope_69": [],
+      "uncovered_12": [
+        {
+          "id": "kodi ya makisio (presumptive income tax)",
+          "q": "Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa kodi ya mapato kiasi gani?",
+          "from": "none",
+          "to": "presumptive"
+        }
+      ],
+      "authored_probes": [
+        {
+          "id": "pic_01",
+          "q": "Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa kodi ya mapato kiasi gani?",
+          "from": "none",
+          "to": "presumptive"
+        },
+        {
+          "id": "pic_02",
+          "q": "Nauza vitu dukani, mauzo yangu kwa mwaka ni milioni 8, kodi ya mapato nalipa shingapi?",
+          "from": "none",
+          "to": "presumptive"
+        },
+        {
+          "id": "pic_03",
+          "q": "Mzunguko wangu ni milioni 60 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "from": "none",
+          "to": "presumptive"
+        },
+        {
+          "id": "pic_09",
+          "q": "Mauzo yangu ni milioni 300 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "from": "none",
+          "to": "presumptive"
+        },
+        {
+          "id": "pic_16",
+          "q": "Mimi ni mhasibu huru, mauzo yangu ni milioni 20 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "from": "none",
+          "to": "presumptive"
+        }
+      ]
+    }
+  },
+  "probe_results": {
+    "before": {
+      "passed": 10,
+      "n": 16,
+      "failures": [
+        {
+          "id": "pic_01",
+          "expected": "presumptive",
+          "got": "none",
+          "pass": false,
+          "question": "Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa kodi ya mapato kiasi gani?",
+          "guards_against": "THE GAP ITSELF, verbatim from eval/results/coverage_12_rerun.json. The commonest duka tax question, phrased the way a duka owner phrases it. Routes to `none` before the cue."
+        },
+        {
+          "id": "pic_02",
+          "expected": "presumptive",
+          "got": "none",
+          "pass": false,
+          "question": "Nauza vitu dukani, mauzo yangu kwa mwaka ni milioni 8, kodi ya mapato nalipa shingapi?",
+          "guards_against": "Same gap, market register, `shingapi` rather than `kiasi gani`. The sub-11M band is where most duka owners actually sit."
+        },
+        {
+          "id": "pic_03",
+          "expected": "presumptive",
+          "got": "none",
+          "pass": false,
+          "question": "Mzunguko wangu ni milioni 60 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "guards_against": "`mzunguko` as the turnover word instead of `mauzo`. The turnover cue list carries it; the sweep must confirm the new cue reaches it too."
+        },
+        {
+          "id": "pic_05",
+          "expected": "none",
+          "got": "paye",
+          "pass": false,
+          "question": "Ubia wetu unauza milioni 30 kwa mwaka, kodi ya mapato tunalipa ngapi?",
+          "guards_against": "CORRECT BODY. A partnership is outside para 2 for the same reason as a company, and `u-nauza` satisfies the turnover cue by substring exactly as `i-nauza` does."
+        },
+        {
+          "id": "pic_09",
+          "expected": "presumptive",
+          "got": "none",
+          "pass": false,
+          "question": "Mauzo yangu ni milioni 300 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "guards_against": "ABOVE THE CEILING, AND ROUTING IT IS STILL RIGHT. compute_presumptive returns a correct `haitumiki` verdict above TZS 100,000,000 with the reason, which is better than the fact path's synthesis. Guards against someone adding a ceiling veto to the ROUTER, where it would lose that answer."
+        },
+        {
+          "id": "pic_16",
+          "expected": "presumptive",
+          "got": "none",
+          "pass": false,
+          "question": "Mimi ni mhasibu huru, mauzo yangu ni milioni 20 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "guards_against": "EXCLUDED SERVICE, AND ROUTING IT IS STILL RIGHT. compute_presumptive returns the para 2(1)(a) `haitumiki kwa wataalamu huru` verdict when the exclusion is detected. Guards against putting the professional-services exclusion in the ROUTER, where the user would lose the explanation."
+        }
+      ]
+    },
+    "cue_only": {
+      "passed": 14,
+      "n": 16,
+      "failures": [
+        {
+          "id": "pic_04",
+          "expected": "none",
+          "got": "presumptive",
+          "pass": false,
+          "question": "Kampuni yangu inauza bidhaa za milioni 50 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "guards_against": "CORRECT BODY, AND THE REASON THE VETO EXISTS. Presumptive is First Schedule para 2's regime for a resident INDIVIDUAL; a company pays 30% on PROFIT. `_PRESUMPTIVE_TURNOVER_CUES` contains `nauza`, which is a substring of `i-nauza`, so the turnover gate is ALREADY satisfied here — the bare cue alone would route a company to the individual table and return a wrong figure with the engine's authority behind it."
+        },
+        {
+          "id": "pic_05",
+          "expected": "none",
+          "got": "paye",
+          "pass": false,
+          "question": "Ubia wetu unauza milioni 30 kwa mwaka, kodi ya mapato tunalipa ngapi?",
+          "guards_against": "CORRECT BODY. A partnership is outside para 2 for the same reason as a company, and `u-nauza` satisfies the turnover cue by substring exactly as `i-nauza` does."
+        }
+      ]
+    },
+    "cue_plus_veto": {
+      "passed": 15,
+      "n": 16,
+      "failures": [
+        {
+          "id": "pic_05",
+          "expected": "none",
+          "got": "paye",
+          "pass": false,
+          "question": "Ubia wetu unauza milioni 30 kwa mwaka, kodi ya mapato tunalipa ngapi?",
+          "guards_against": "CORRECT BODY. A partnership is outside para 2 for the same reason as a company, and `u-nauza` satisfies the turnover cue by substring exactly as `i-nauza` does."
+        }
+      ]
+    }
+  }
+}

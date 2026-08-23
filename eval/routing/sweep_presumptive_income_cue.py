@@ -52,14 +52,6 @@ PROBES = os.path.join(HERE, 'presumptive_income_cue_probes.jsonl')
 
 CANDIDATE_CUE = 'kodi ya mapato'
 
-# Candidate entity veto. Presumptive is para 2's regime for a resident INDIVIDUAL; a company or
-# a partnership is outside it entirely. Kept as its OWN named list so the sweep can turn it on
-# and off independently and report the cue's radius with and without it — the routing A/B sweep
-# reported a false radius of 4 precisely because its BEFORE arm could not disable one mechanism
-# separately from another.
-ENTITY_VETO = ['kampuni', 'company', 'shirika', 'ubia', 'ushirikiano wa kibiashara',
-               'partnership', 'ltd', 'plc']
-
 
 def route_of(text):
     parts = decomposition.decompose_query(text)
@@ -68,19 +60,31 @@ def route_of(text):
 
 
 def with_patch(cue_on, veto_on):
-    """Temporarily install the candidate cue / veto, yielding a route function.
+    """Install the requested arm, yielding the same code path with one variable changed.
 
-    Patches the module lists in place and restores them, so BEFORE and AFTER are the same code
-    path with one variable changed. Each mechanism is independently switchable.
+    RE-RUNNABLE AFTER THE SHIP, which is the point. Both mechanisms are now in routing.py, so
+    each arm is built by ADDING OR REMOVING them from the live module rather than by bolting a
+    local copy on top. `before` genuinely reconstructs the pre-change router; a sweep that can
+    only be run once, before the commit, is a result nobody can re-derive (R18).
+
+    The entity veto is composed from `_PRESUMPTIVE_ENTITY_VETO_PATTERN`, kept separate in
+    routing.py precisely so this function can subtract exactly that arm.
     """
+    import re as _re
     orig_cues = list(routing._BUSINESS_INCOME_TAX_CUES)
     orig_veto = routing._PRESUMPTIVE_VETO
-    import re as _re
-    if cue_on and CANDIDATE_CUE not in routing._BUSINESS_INCOME_TAX_CUES:
-        routing._BUSINESS_INCOME_TAX_CUES.append(CANDIDATE_CUE)
+
+    if cue_on:
+        if CANDIDATE_CUE not in routing._BUSINESS_INCOME_TAX_CUES:
+            routing._BUSINESS_INCOME_TAX_CUES.append(CANDIDATE_CUE)
+    else:
+        routing._BUSINESS_INCOME_TAX_CUES[:] = [
+            c for c in orig_cues if c != CANDIDATE_CUE]
+
+    pattern = routing._PRESUMPTIVE_SCHEDULE_VETO_PATTERN
     if veto_on:
-        routing._PRESUMPTIVE_VETO = _re.compile(
-            orig_veto.pattern + r'|' + r'|'.join(ENTITY_VETO))
+        pattern += r'|' + routing._PRESUMPTIVE_ENTITY_VETO_PATTERN
+    routing._PRESUMPTIVE_VETO = _re.compile(pattern)
     return orig_cues, orig_veto
 
 
@@ -145,7 +149,7 @@ def main():
         'harness': 'eval/routing/sweep_presumptive_income_cue.py',
         'probe_file': 'eval/routing/presumptive_income_cue_probes.jsonl',
         'candidate_cue': CANDIDATE_CUE,
-        'entity_veto': ENTITY_VETO,
+        'entity_veto_pattern': routing._PRESUMPTIVE_ENTITY_VETO_PATTERN,
         'corpora': {k: len(v) for k, v in corpora.items()},
         'blast_radius': {arm: {name: len(m) for name, m in per.items()}
                          for arm, per in changes.items()},
