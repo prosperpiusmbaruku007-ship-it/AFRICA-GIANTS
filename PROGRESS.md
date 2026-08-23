@@ -1,6 +1,298 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-22
+Last updated: 2026-08-23
+
+---
+
+# 🧭 PILOT RE-DERIVATION, 2026-08-23 — VERDICT: **FURTHER FROM A PILOT THAN SIX DAYS AGO.** Not because anything regressed, but because the one step that remained has been shown to have no known route.
+
+**Re-derived from scratch against current state, not updated from the 2026-08-16 assessment.**
+Every claim below is tagged **[M]** (measured, with its artifact) or **[J]** (judgement). Where a
+number was quoted from an earlier entry it was re-run today rather than carried — the coverage
+figure in particular, because R18 instance 4 is exactly the shape of citing a number nobody
+re-derived.
+
+## The verdict, stated plainly first
+
+**Further.** On 2026-08-16 the pilot had one stated, believed-buildable precondition — a safety
+floor so the product is safe on questions it cannot answer — and a plan to meet it. **Today that
+precondition still stands and every route to it that has been measured since has failed.** A plan
+with one step remaining now has **zero known steps**. That is a move away from a pilot, and it is
+the move that dominates, because it is the only open item that governs whether a pilot is *safe*
+rather than merely *good*.
+
+Nothing regressed. Six days of work improved almost everything it touched **[M]**. But the work
+improved the numerator — accuracy on domains we hold facts for — while the denominator, what a real
+tester actually types, got *measured* and came back worse than the 08-16 plan assumed. **The
+position did not get worse; the estimate of the position did, and it moved against us.**
+
+The honest one-line restatement: *we are not further from shipping, we are further from being able
+to believe we could ship* — and for a compliance product those are the same thing.
+
+---
+
+## 1. What would 10 recruited testers experience
+
+**Delivery works and is current. [M]** `GET /health` on `chike-whatsapp` returns
+`build: ad1ed50`, and `git log ad1ed50..HEAD -- chike-whatsapp/` is **empty** — the deployed
+handler is at the tip of its own app's history, not a stale container. `webhook_token_set: true`,
+`transcript_store: {ok: true, backend: modal.Dict}`, `model_timeout_s: 240`.
+
+**No real user has ever used it. [M]** The same health payload reports
+`transcript_store.rows: 0`, `months: []`. The store is deployed, healthy, and **has never carried a
+single row**. Every claim about what a pilot would surface is therefore a claim about an
+**unexercised path** — including the daily-review workflow the guardrails depend on. **[J]** This
+is the single largest untested assumption in the whole plan, and it is untestable without either a
+pilot or a deliberate synthetic run through the real webhook.
+
+**On covered topics they would mostly get a good answer. [M]**
+`eval/results/natural48_rerun_2026_08_17_adjudication.json`, 48 natural questions, live:
+
+| path | CORRECT | CLARIFY | WRONG | PARTIAL |
+|---|---|---|---|---|
+| compute | 15 | 5 | 3 | 1 |
+| fact | 11 | 1 | 5 | 4 |
+| refusal | 3 | – | – | – |
+| **total** | **29** | **6** | **8** | **5** |
+
+**On their own topics they would mostly get an answer with nothing behind it. [M]** Re-measured
+today, `eval/results/coverage_12_rerun.json`, twelve questions from an ordinary duka owner's month:
+
+| | 2026-08-16 | **2026-08-23** |
+|---|---|---|
+| passed the OOC classifier (→ the model answers) | 12 / 12 | **12 / 12** |
+| took a deterministic route | 0 / 12 | **1 / 12** |
+| had a fact behind them | 0 / 12 | **3 / 12** *(upper bound)* |
+
+The three that gained a fact are presumptive tax (×2) and the business-licence renewal date. The
+nine that did not: licence **fee**, LGA service levy, market stall dues, fire safety, weights and
+measures, rent withholding, TIN registration, a TRA audit visit, tax on mobile-money receipts.
+**`retrieve_facts` still applies no similarity floor** — on those nine the reply is a confident
+answer synthesised from the three nearest *unrelated* facts. That is the `nat_05` mechanism (a
+fabricated TZS 260,000 BRELA fee answering an SDL question) as a **generic property of the fact
+path**, not a row-specific bug.
+
+**And the engine we built for those traders misses the way they ask. [M]** Measured today in the
+same run: *"Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa **kodi ya mapato** kiasi
+gani?"* routes to **`none`** — the fact path — while the sibling row saying *"kodi ya **makadirio**"*
+routes to `presumptive`. `_BUSINESS_INCOME_TAX_CUES` requires *"kodi ya mapato **ya biashara/ya
+duka**"*; bare *"kodi ya mapato"* with a turnover figure and a shop in the sentence is not enough.
+**[J]** A trader does not know the phrase *makadirio* is the one that works. This is a one-cue fix
+with a mandatory R17 sweep, and it is now on the board.
+
+---
+
+## 2. What breaks first
+
+**[J], grounded on §1.** Not accuracy on payroll or VAT — that is the part six days of work
+actually improved. **The first break is a confident, well-formed, entirely unfounded answer to an
+uncovered question, and it arrives in the first two or three messages of most testers' first
+conversation.** The reasoning is arithmetic on measured numbers: 9 of 12 natural trader topics have
+no fact, 12 of 12 pass the classifier, there is no floor, and the fact path fabricates plausibly
+rather than declining.
+
+**Second: the failure is invisible to the tester and nearly invisible to us. [M]** The fidelity
+guards that shipped compare the model's body against the engine's `ComputationResult`, so on the
+fact path — where `amount is None` — **they are satisfied trivially** (R19). D-FIDELITY-6 is the
+first rule that judges a body with no computation behind it, and its coverage is **deliberately
+partial**: the `nick_01` canary was predicted to stay flagged *before* the run and did, because the
+fact path was left uncovered on purpose.
+
+**Third, and only if the first two are survived: capacity. [M]** ~395 GPU-seconds/session against
+$30/month of credit ≈ **463 sessions/month ≈ 15/day**. Ten testers at one conversation a day is
+**~67% of the credit** — workable, with no headroom for a tester who enjoys it.
+
+---
+
+## 3. What I would monitor
+
+Ordered by what would actually catch the failure in §2, not by what is easy to plot.
+
+1. **Every reply, read by hand, daily.** Ten testers × ~5 messages ≈ 50 replies/day — readable in
+   twenty minutes, and the only instrument that can see a fluent wrong answer. Via
+   `GET /transcripts?token=`. **[J]** Automation here is a trap: the whole failure class is
+   *plausible* output.
+2. **The ungrounded-figure rate.** Every figure in a reply that appears neither in `locked_facts`
+   nor in an engine working. The instrument already exists and has been run once —
+   `eval/grounding/measure_grounding_48.py`, and it already knows the two traps (a user-supplied
+   figure is not a fabrication; `18` must not match inside `180000`).
+3. **The uncovered-topic rate, live.** What fraction of real messages hit a topic with no fact.
+   Today's proxy is 9/12; the pilot replaces the proxy with the fact.
+4. **Guard-blanking rate.** Every sentence D-FIDELITY-6 removes is a **near miss that reached
+   generation** — the count is a leading indicator, not a success metric.
+5. **`error_class` in the transcript rows** (timeout / fallback), which is the P1 silent-drop
+   guarantee actually being exercised for the first time.
+6. **GPU-second burn against 463/month**, weekly.
+
+---
+
+## 4. What would make me pull it
+
+Any one of these, immediately, not on a threshold:
+
+- **One wrong figure on a wage or payroll question that a user could act on.** The `th_16` class is
+  the precedent and it is not hypothetical: four of six candidate wordings once **fabricated TZS
+  765,900 as a legal maximum wage**, and one "before" answer instructed an employer to **claw back
+  lawfully paid wages** **[M]**. An employer acting on that harms a worker who cannot undo it.
+- **Any answer that cites TANePS, a revoked wage order, or a pre-Jul-2025 rate** (R1/R2/R5). One
+  such answer in a screenshot ends the institutional path this product exists to walk.
+- **A fabricated amount on an uncovered topic reaching a user twice.** Once is the known §2 defect;
+  twice means the pilot is generating the harm faster than we are reading it.
+- **Ungrounded figures in ≥1 in 10 replies.**
+- **Any day the transcripts cannot be read** — a store outage makes every other guardrail
+  unobservable, which is precisely why the store was reclassified a prerequisite.
+
+---
+
+## 5. The honest chance the first thing they ask has no fact behind it
+
+**Roughly two in three to three in four. [J], anchored on 9/12 measured.**
+
+Stated with its bound, because the fixture matters: the twelve questions were **authored to probe
+the coverage gap**, so 75% is the top of the range, not the centre. But it is the better proxy for
+an *unprompted first message* than the 48 natural questions, which were written against domains we
+hold facts for and cannot speak to this at all. **[J]** If testers are handed a topic prompt
+("ask about payroll, VAT, registration"), the rate collapses — and that is a real option, at the
+cost of the pilot no longer measuring the thing that would break it.
+
+**A caveat that cuts the other way, in our favour:** *no fact* is not *no answer*. The payroll
+levies answer from the rules engine with no retrieval at all, and 18 of the 29 correct rows come
+from the deterministic surface (15 compute + 3 refusal) **[M]**. The exposure is concentrated on
+the fact path, which is where 5 of 8 WRONG and 4 of 5 PARTIAL already sit.
+
+---
+
+## 6. The two columns, and why they do not net to "closer"
+
+**Genuinely better since 2026-08-16 — all measured:**
+compute cluster closed (39.6% → 58.3% correct on the 48); routing gaps A+B live (13 behaviour
+changes, 0 controls tripped, 28/28 correct set byte-identical); three fidelity guards shipped;
+**discard rate ~1 in 13** (`eval/results/discard_rate.json` — when a correct fact reaches the
+prompt the model almost always uses it, which is the measurement that *vindicates* the retrieval
+workstream rather than the reverse); a presumptive-tax engine; the regen gate actually verifying
+(26 guards migrated after two were found unsound and three anchors found dead); coverage 0→3 of 12.
+
+**Worse or newly known — all measured:**
+the safety floor is unbuildable by **every route tried**: an absolute score threshold (correct facts
+score 0.765–0.809, irrelevant top-1s 0.790–0.859 — **no cut point**), a margin threshold (**it
+inverts** — the correct row has the smallest margin of 21 tested, three known-wrong rows have larger
+margins than every correct one), and forced **maximum** retrieval confidence, where the exact
+correct facts placed directly in context **still** produced `nat_23`'s confidently incomplete
+answer — correct NSSF arithmetic with an entire second levy silently absent. Plus: **3 of the 11
+correct fact rows are correct without being grounded** (`nat_26`, `nat_27`, `nat_36` — 27% of that
+column is luck), `nat_27` is retired as a negative control, `nat_37`/`nat_38` answer over index
+gaps, and the fact-path rate gap is known-live.
+
+**Why this does not net to "closer":** the better column is almost entirely *depth on ground we
+already held* — the same domains, answered more reliably. The worse column is *the ground a pilot
+actually stands on*. A pilot is not a test of whether we answer VAT questions well; it is a test of
+what we do when a stranger asks something we have never heard of, and on that question the only
+thing that changed in six days is that **three ways of being safe were ruled out and none were
+ruled in**.
+
+---
+
+## 7. What would move it back, and it is not more retrieval work
+
+**[J], and it follows directly from the measurements above rather than from preference.** The
+retrieval workstream is *working* — the ~1-in-13 discard rate says a fact that reaches the prompt
+gets used. That is exactly why more of it does not help here: **the problem is not that good facts
+fail to arrive, it is that bad facts arrive with the same confidence.**
+
+Two candidates, both generation-side, both consistent with R19's buildable half:
+
+1. **A coverage gate on the fact path.** Not a similarity floor — those are dead. An explicit check
+   that the question's *topic* is one the corpus holds, and a `Sina uhakika, thibitisha na TRA`
+   when it is not. This is a **constant comparison** (does a fact about X exist?), so R19 says it is
+   buildable and works with no engine result. **It is the only design named anywhere in this file
+   that survives all four floor failures**, because it never consults a score.
+2. **The multi-part completeness check** — does the reply address every part of the question. Named
+   in the 08-22 headline as the thing that would have caught `nat_23`, still unbuilt.
+
+Neither is scoped. **[J]** Until one exists, a pilot is a decision to accept that most testers'
+first question gets a fluent answer with nothing behind it — which is a legitimate founder call to
+make deliberately, and a bad one to make by default.
+
+---
+
+# ✅ THE SUITE IS GREEN, AND THE THING THAT MADE IT UNRELIABLE IS NOT WHAT WE THOUGHT (2026-08-23)
+
+Run first thing in a fresh session, before anything was allowed to depend on it, per the standing
+environment rule. **Three runs, and the third settles it.**
+
+| run | result |
+|---|---|
+| 1 — full suite | **1267 passed**, 1 xfailed, exit 0, 214s |
+| 2 — full suite, identical command | **1 FAILED**, 1266 passed, 170s |
+| 3 — full suite, 4 network tests deselected | **1263 passed**, 4 deselected, 1 xfailed, exit 0, **79s** |
+
+**The failure is not a code defect and not the page-file exhaustion the environment rule blamed.**
+`test_mixed_compound_end_to_end_on_real_weights` died on
+`ConnectTimeoutError: Connection to prosperpiusmbaruku007--chike-inference-generate-endpoint.modal.run
+timed out (connect timeout=180.0)`. It passes in isolation. **It is a live HTTPS call to production
+sitting inside the unit suite** — this is **C7**, the network-tests-in-the-unit-suite hazard already
+logged and still open, and it has now cost a full-suite verdict.
+
+**Four tests are in that class**, all in `tests/test_orchestrator.py`, all gated only on a Modal
+token being *present* — and the token file exists on this machine, so they run by default here and
+skip on a machine without it. **The suite is therefore green or red depending on the Tanzanian
+network**, which is the worst possible property for the one instrument everything else is checked
+against.
+
+**Corrected statement of the environment rule:** the offline suite is **deterministic and fast** —
+1263 tests, 79 seconds, twice. What is unreliable is the four live-network tests inside it. **Board
+item:** mark them so `-m "not network"` deselects them by default, rather than relying on token
+presence, so the default run is the deterministic one. Until that lands, the verifiable claim is
+*"1263 offline tests pass"*, and the four live ones are a separate, deliberate check.
+
+---
+
+# 🔁 PRESENCE-NOT-CONCLUSION, INSTANCE 5 — AND I BUILT IT INTO THE COVERAGE INSTRUMENT ITSELF (2026-08-23)
+
+The coverage re-run harness (`eval/coverage/rerun_coverage_12.py`) was committed before it ran
+(R18) and its **first version was wrong in the direction that flatters us**: bare substring matching
+with no adjudication, reporting **7 of 12 covered**. Four of those seven did not survive reading:
+
+| row | what matched | why it is not coverage |
+|---|---|---|
+| TIN registration | `tin` inside **lis·TIN·g**, **conduc·TIN·g** — 29 locked facts | none of them is about obtaining a TIN |
+| mobile-money tax | `gn487a_prohibited_activity_2` only | a prohibition on non-citizens, not a tax answer — **and the 2026-08-16 baseline had already adjudicated this exact hit as False** |
+| TRA audit visit | `ukaguzi` in OSHA's annual workplace inspection | different regulator, different event |
+| licence **fee** | `business_licence_expiry_30_june` | answers the renewal **date**; the fee was left uncovered on purpose |
+
+**Corrected: 3 of 12.** v2 uses word-bounded regex plus a per-row `answers` verdict with its
+reasoning stored inline, and asserts that the adjudication stage **can only ever remove a row, never
+add one** — a fact that does not exist lexically cannot be adjudicated into existence.
+
+**Why this is worth an entry rather than a quiet fix.** It is the same pattern as the other four
+instances — *a thing being present is not the thing being true* — committed **inside the instrument
+built to measure coverage**, by the person who had written the rule down four times. Recorded
+because the useful lesson is not "be careful with substrings"; it is that **the pattern reappears at
+whatever layer you are currently not suspicious of**, and today that layer was the measuring tool.
+
+---
+
+# 🧰 R20 — A MECHANICAL PASS MAY NOT INSERT A CHECK THAT CANNOT FAIL (2026-08-23)
+
+Recorded in CLAUDE.md as R20, from the three design decisions inside the 25-site non-empty census
+pass. **The asymmetry is the whole rule: the gap is visible in a census, the vacuous check that
+replaces it is not.** A scripted pass that closes twenty-five sites has not strengthened the suite
+if some insertions can never fail — it has made the census report zero remaining work while the
+protection is still absent.
+
+**This is the dead-anchor lesson arriving from the direction of the fix rather than the audit.** Of
+the twenty-five, three insertions were wrong: `assert f` on a file handle (always truthy), `assert
+bad_patterns` on a module literal (cannot be empty), and `assert needles` inside a per-part loop —
+which was not merely vacuous but **actively wrong, breaking 11 passing probes**, because an empty
+expectation list means *"this part is unconstrained"*. **Empty by design is not empty by accident,
+and the two are byte-identical at the AST level** — which is exactly the judgement a script cannot
+make.
+
+Also recorded there: *"no assertion needed here" is a valid recordable outcome* (5 of 25 closed that
+way), *prefer one assertion at a shared loader over N at call sites* (8 of 25), and **watch the
+census fail before you trust it** — this pass's own scanner matched only `id='NAME'`, so attribute
+assertions were invisible and it kept re-raising sites already closed. A worklist that cannot see
+its own fixes is the defect class it exists to find.
 
 ---
 

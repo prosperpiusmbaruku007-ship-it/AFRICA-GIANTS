@@ -763,6 +763,46 @@ something nobody could re-derive:
   anything downstream that cites it — including yield estimates, priority orderings and build
   decisions — is provisional too, and must say so. Do not scope work on a provisional number.
 
+### R20 — A MECHANICAL PASS MAY NOT INSERT A CHECK THAT CANNOT FAIL. The vacuous fix is worse than the gap.
+
+**The gap is visible in a census; the vacuous check that replaces it is not.** That asymmetry is the
+whole rule. A scripted pass that closes twenty-five sites by inserting an assertion at each one has
+not made the suite stronger if some of those assertions can never fail — it has made the *census*
+report zero remaining work while the protection is still absent, and nothing downstream will ever
+say otherwise.
+
+**This is the dead-anchor lesson arriving from the direction of the fix rather than the audit.**
+Dead anchors were three regen guards that matched zero facts, each concealed by a sibling that
+always passed — found by auditing. R20 is the same defect *manufactured on purpose*, at speed, by a
+tool whose output looks like progress.
+
+**Proven on 2026-08-22, closing the 25-site non-empty census. Three of the twenty-five insertions
+were wrong, in three distinct ways:**
+
+| inserted | why it cannot fail | what it should have been |
+|---|---|---|
+| `assert f` on an open file handle | a file object is **always** truthy — this asserts that `open()` returned an object | assert on the *parsed rows*, not the handle |
+| `assert bad_patterns` on a module-level literal list | a literal written three lines above cannot be empty at runtime | nothing — the site needs no assertion, and saying so is the correct outcome |
+| `assert needles` inside a per-part loop | **not vacuous — actively wrong.** It broke 11 passing probes | nothing: an empty expectation list means *"this part is unconstrained"* |
+
+**The third is the one to remember, because it is the judgement a script structurally cannot make:
+EMPTY BY DESIGN IS NOT EMPTY BY ACCIDENT.** A collection that is empty because the case is
+deliberately unconstrained must not be asserted non-empty; a collection that is empty because a
+loader silently returned nothing must be. The two are byte-identical at the AST level.
+
+**The rule in practice:**
+- **Every site closed by a mechanical pass gets read individually before the commit.** If you cannot
+  state, in one sentence, the failure the assertion would catch, do not insert it.
+- **"No assertion needed here" is a valid, recordable outcome.** Record it *at the site*, with the
+  reason, so the census does not re-raise it and the next reader does not re-insert it. Five of the
+  twenty-five closed this way.
+- **Prefer one assertion at a shared loader over N at the call sites** — it protects every caller
+  and there is one place to get it right. Eight of the twenty-five closed this way.
+- **Watch the census fail before you trust it.** The scanner in this same pass had the exact defect
+  it hunts: it matched only `id='NAME'`, so attribute assertions (`assert ws.BY_ROW`) were invisible
+  and it kept reporting sites already closed. **A worklist that cannot see its own fixes is the
+  defect class it exists to find.**
+
 ---
 
 See PROGRESS.md for current project status and next actions.

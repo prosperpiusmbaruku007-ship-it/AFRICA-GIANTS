@@ -1,0 +1,483 @@
+{
+  "measured": "2026-08-23",
+  "harness": "eval/coverage/rerun_coverage_12.py",
+  "baseline_artifact": "scratch/coverage_gap_2026_08_16.json",
+  "method": "OOC + route re-derived from live repo code (no model, no network). has_fact is TWO-STAGE: word-bounded regex anchors, then a per-row adjudication of whether any hit ANSWERS the question. Still an UPPER BOUND: it proves a fact exists in the corpus, NOT that retrieval reaches it at top-3.",
+  "v1_defect": "The first version of this harness used bare substring matching with no adjudication and reported 7/12 covered. Three were false (tin inside lis-TIN-g; mobile money matching only a GN487A prohibition; ukaguzi matching OSHA inspections) and a fourth conflated the licence renewal date with the licence fee. Corrected: 3/12. This is the presence-not-conclusion pattern committed inside the coverage instrument itself.",
+  "summary": {
+    "n": 12,
+    "passed_ooc_classifier": 12,
+    "took_a_deterministic_route": 1,
+    "lexical_hit_only_NOT_coverage": 6,
+    "have_a_fact_behind_them_UPPER_BOUND": 3,
+    "baseline_2026_08_16": {
+      "passed_ooc_classifier": 12,
+      "took_a_deterministic_route": 0,
+      "have_a_fact_behind_them": 0,
+      "locked_facts_total": 243,
+      "rag_index_total": 217
+    },
+    "locked_facts_total": 247,
+    "rag_index_total": 221
+  },
+  "rows": [
+    {
+      "topic": "kodi ya makisio (presumptive income tax)",
+      "question": "Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa kodi ya mapato kiasi gani?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "decomposed_parts": [
+          "Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa kodi ya mapato kiasi gani?"
+        ],
+        "part_intents": [
+          "none"
+        ],
+        "lexical_hit": true,
+        "answers_the_question": true,
+        "adjudication": "presumptive_tax_bands_2022 + ceiling + exclusions carry the whole regime.",
+        "anchors": [
+          "\\bmakadirio\\b",
+          "\\bmakisio\\b",
+          "\\bpresumptive\\b"
+        ],
+        "locked_fact_hits": [
+          "presumptive_tax_bands_2022",
+          "presumptive_tax_ceiling_100m",
+          "presumptive_excluded_services"
+        ],
+        "index_hits": [
+          "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+          "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 100,00",
+          "presumptive excluded services: Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala"
+        ],
+        "n_locked_hits": 3,
+        "n_index_hits": 3
+      },
+      "changed": {
+        "route": false,
+        "has_fact": true
+      }
+    },
+    {
+      "topic": "presumptive band, micro turnover",
+      "question": "Biashara yangu inauza milioni 4 kwa mwaka, kodi ya makadirio ni ngapi?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "presumptive",
+        "decomposed_parts": [
+          "Biashara yangu inauza milioni 4 kwa mwaka, kodi ya makadirio ni ngapi?"
+        ],
+        "part_intents": [
+          "presumptive"
+        ],
+        "lexical_hit": true,
+        "answers_the_question": true,
+        "adjudication": "same three facts; the sub-4M band is stated explicitly (hadi 4,000,000 = TZS 0).",
+        "anchors": [
+          "\\bmakadirio\\b",
+          "\\bmakisio\\b",
+          "\\bpresumptive\\b"
+        ],
+        "locked_fact_hits": [
+          "presumptive_tax_bands_2022",
+          "presumptive_tax_ceiling_100m",
+          "presumptive_excluded_services"
+        ],
+        "index_hits": [
+          "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+          "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 100,00",
+          "presumptive excluded services: Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala"
+        ],
+        "n_locked_hits": 3,
+        "n_index_hits": 3
+      },
+      "changed": {
+        "route": true,
+        "has_fact": true
+      }
+    },
+    {
+      "topic": "business licence fee",
+      "question": "Leseni ya biashara ya duka la vyakula inagharimu shilingi ngapi?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "decomposed_parts": [
+          "Leseni ya biashara ya duka la vyakula inagharimu shilingi ngapi?"
+        ],
+        "part_intents": [
+          "none"
+        ],
+        "lexical_hit": true,
+        "answers_the_question": false,
+        "adjudication": "hits are business_licence_expiry_30_june (the renewal DATE) and two GN487A facts. The FEE was left uncovered on purpose — collection is council-by-council. A date is not a price.",
+        "anchors": [
+          "leseni ya biashara",
+          "business licen[cs]e"
+        ],
+        "locked_fact_hits": [
+          "gn487a_license_lending_is_facilitation",
+          "gn487a_msaidizi_definition",
+          "business_licence_expiry_30_june"
+        ],
+        "index_hits": [
+          "gn487a msaidizi definition: Under GN487A, a 'msaidizi' (facilitator) is a Tanzanian citizen who assists or aid",
+          "business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi"
+        ],
+        "n_locked_hits": 3,
+        "n_index_hits": 2
+      },
+      "changed": {
+        "route": false,
+        "has_fact": false
+      }
+    },
+    {
+      "topic": "business licence renewal",
+      "question": "Naomba kujua leseni ya biashara inahuishwa lini kila mwaka?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "decomposed_parts": [
+          "Naomba kujua leseni ya biashara inahuishwa lini kila mwaka?"
+        ],
+        "part_intents": [
+          "none"
+        ],
+        "lexical_hit": true,
+        "answers_the_question": true,
+        "adjudication": "business_licence_expiry_30_june answers it directly and nationally.",
+        "anchors": [
+          "leseni ya biashara",
+          "business licen[cs]e"
+        ],
+        "locked_fact_hits": [
+          "gn487a_license_lending_is_facilitation",
+          "gn487a_msaidizi_definition",
+          "business_licence_expiry_30_june"
+        ],
+        "index_hits": [
+          "gn487a msaidizi definition: Under GN487A, a 'msaidizi' (facilitator) is a Tanzanian citizen who assists or aid",
+          "business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi"
+        ],
+        "n_locked_hits": 3,
+        "n_index_hits": 2
+      },
+      "changed": {
+        "route": false,
+        "has_fact": true
+      }
+    },
+    {
+      "topic": "local government service levy",
+      "question": "Halmashauri inadai ushuru wa huduma asilimia ngapi ya mauzo yangu?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "decomposed_parts": [
+          "Halmashauri inadai ushuru wa huduma asilimia ngapi ya mauzo yangu?"
+        ],
+        "part_intents": [
+          "none"
+        ],
+        "lexical_hit": false,
+        "answers_the_question": false,
+        "adjudication": "scoped 2026-08-16 as cap-national/rate-council; bound only, never an amount, and not written.",
+        "anchors": [
+          "ushuru wa huduma",
+          "service levy",
+          "\\bhalmashauri\\b"
+        ],
+        "locked_fact_hits": [],
+        "index_hits": [],
+        "n_locked_hits": 0,
+        "n_index_hits": 0
+      },
+      "changed": {
+        "route": false,
+        "has_fact": false
+      }
+    },
+    {
+      "topic": "market / stall fee",
+      "question": "Ushuru wa soko kwa genge langu ni kiasi gani kwa siku?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "decomposed_parts": [
+          "Ushuru wa soko kwa genge langu ni kiasi gani kwa siku?"
+        ],
+        "part_intents": [
+          "none"
+        ],
+        "lexical_hit": false,
+        "answers_the_question": false,
+        "adjudication": "council by-law across 180+ LGAs; adjudicated not coverable for amounts.",
+        "anchors": [
+          "ushuru wa soko",
+          "\\bgenge\\b",
+          "market stall"
+        ],
+        "locked_fact_hits": [],
+        "index_hits": [],
+        "n_locked_hits": 0,
+        "n_index_hits": 0
+      },
+      "changed": {
+        "route": false,
+        "has_fact": false
+      }
+    },
+    {
+      "topic": "fire safety certificate",
+      "question": "Zimamoto wananidai cheti cha usalama kwa duka langu, ni lazima?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "decomposed_parts": [
+          "Zimamoto wananidai cheti cha usalama kwa duka langu, ni lazima?"
+        ],
+        "part_intents": [
+          "none"
+        ],
+        "lexical_hit": false,
+        "answers_the_question": false,
+        "adjudication": "zero facts, unchanged since the baseline.",
+        "anchors": [
+          "\\bzimamoto\\b",
+          "fire safety",
+          "fire certificate"
+        ],
+        "locked_fact_hits": [],
+        "index_hits": [],
+        "n_locked_hits": 0,
+        "n_index_hits": 0
+      },
+      "changed": {
+        "route": false,
+        "has_fact": false
+      }
+    },
+    {
+      "topic": "weights and measures",
+      "question": "Mizani yangu inatakiwa kupimwa na Wakala wa Vipimo kila baada ya muda gani?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "decomposed_parts": [
+          "Mizani yangu inatakiwa kupimwa na Wakala wa Vipimo kila baada ya muda gani?"
+        ],
+        "part_intents": [
+          "none"
+        ],
+        "lexical_hit": false,
+        "answers_the_question": false,
+        "adjudication": "zero facts, unchanged since the baseline.",
+        "anchors": [
+          "\\bvipimo\\b",
+          "\\bmizani\\b",
+          "weights and measures"
+        ],
+        "locked_fact_hits": [],
+        "index_hits": [],
+        "n_locked_hits": 0,
+        "n_index_hits": 0
+      },
+      "changed": {
+        "route": false,
+        "has_fact": false
+      }
+    },
+    {
+      "topic": "withholding tax on shop rent",
+      "question": "Nalipa kodi ya pango laki tano kwa mwezi kwa mwenye jengo, je nakata withholding?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "decomposed_parts": [
+          "Nalipa kodi ya pango laki tano kwa mwezi kwa mwenye jengo, je nakata withholding?"
+        ],
+        "part_intents": [
+          "none"
+        ],
+        "lexical_hit": false,
+        "answers_the_question": false,
+        "adjudication": "wht_deadline exists; the 10% rent rate does not. Unchanged.",
+        "anchors": [
+          "kodi ya pango",
+          "rent withholding",
+          "withholding tax on rent"
+        ],
+        "locked_fact_hits": [],
+        "index_hits": [],
+        "n_locked_hits": 0,
+        "n_index_hits": 0
+      },
+      "changed": {
+        "route": false,
+        "has_fact": false
+      }
+    },
+    {
+      "topic": "TIN registration process",
+      "question": "Nifanyeje kupata TIN ya biashara yangu mpya?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "decomposed_parts": [
+          "Nifanyeje kupata TIN ya biashara yangu mpya?"
+        ],
+        "part_intents": [
+          "none"
+        ],
+        "lexical_hit": true,
+        "answers_the_question": false,
+        "adjudication": "word-bounded, only two hits and neither is about getting a TIN: vat_withholding_certificate_timing and brela_partnership_registration mention one in passing. v1 substring-matched 29 facts via lis-TIN-g / conduc-TIN-g.",
+        "anchors": [
+          "\\bTIN\\b",
+          "namba ya mlipakodi",
+          "taxpayer identification"
+        ],
+        "locked_fact_hits": [
+          "vat_withholding_certificate_timing",
+          "brela_partnership_registration"
+        ],
+        "index_hits": [
+          "vat withholding certificate timing: VAT withholding certificate must be issued NOT LATER THAN the date on whic",
+          "brela partnership registration: A general partnership (ushirikiano wa kibiashara) in Tanzania can be registere"
+        ],
+        "n_locked_hits": 2,
+        "n_index_hits": 2
+      },
+      "changed": {
+        "route": false,
+        "has_fact": false
+      }
+    },
+    {
+      "topic": "TRA audit at the shop",
+      "question": "TRA wamekuja kukagua duka langu, nifanye nini?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "decomposed_parts": [
+          "TRA wamekuja kukagua duka langu, nifanye nini?"
+        ],
+        "part_intents": [
+          "none"
+        ],
+        "lexical_hit": false,
+        "answers_the_question": false,
+        "adjudication": "no hits at all under word boundaries. v1 matched OSHA's annual workplace inspection (ukaguzi) — a different regulator and a different event.",
+        "anchors": [
+          "ukaguzi wa TRA",
+          "TRA audit",
+          "\\baudit\\b"
+        ],
+        "locked_fact_hits": [],
+        "index_hits": [],
+        "n_locked_hits": 0,
+        "n_index_hits": 0
+      },
+      "changed": {
+        "route": false,
+        "has_fact": false
+      }
+    },
+    {
+      "topic": "tax on mobile-money receipts",
+      "question": "Nikipokea malipo kwa mtandao wa simu, nalipa kodi gani?",
+      "baseline": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "has_fact": false
+      },
+      "now": {
+        "ooc_classifier": "pass_to_model",
+        "deterministic_route": "none",
+        "decomposed_parts": [
+          "Nikipokea malipo kwa mtandao wa simu, nalipa kodi gani?"
+        ],
+        "part_intents": [
+          "none"
+        ],
+        "lexical_hit": true,
+        "answers_the_question": false,
+        "adjudication": "only gn487a_prohibited_activity_2 — a prohibition on non-citizens, not a tax answer. The 2026-08-16 baseline adjudicated this same hit as not coverage.",
+        "anchors": [
+          "mobile money",
+          "\\bmiamala\\b",
+          "pesa kwa simu"
+        ],
+        "locked_fact_hits": [
+          "gn487a_prohibited_activity_2"
+        ],
+        "index_hits": [
+          "gn487a prohibited activity 2: Prohibited activity 2: Mobile money transfers"
+        ],
+        "n_locked_hits": 1,
+        "n_index_hits": 1
+      },
+      "changed": {
+        "route": false,
+        "has_fact": false
+      }
+    }
+  ]
+}
