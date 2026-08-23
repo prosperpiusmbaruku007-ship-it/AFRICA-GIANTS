@@ -129,8 +129,17 @@ def load_corpora():
         adj = {r['id']: r for r in json.load(f)['rows']}
     for r in nat:
         a = adj.get(r['id'], {})
-        r['verdict'] = a.get('verdict')
+        # THE FIELD IS `now`, NOT `verdict` (fixed 2026-08-23). The first version read
+        # a.get('verdict'), which does not exist in that artifact, so every row came back None
+        # and `refused_that_were_CORRECT` was STRUCTURALLY ZERO in both arms — a cost column
+        # that could never register a cost. R20's shape, in the instrument rather than a test:
+        # a check that cannot fail is worse than the gap, because the gap is visible.
+        assert 'now' in a, f"{r['id']} missing from the adjudication artifact"
+        r['verdict'] = a['now']
+        r['verdict_before'] = a.get('was')
         r['path'] = a.get('path')
+    seen = {r['verdict'] for r in nat}
+    assert seen <= {'CORRECT', 'WRONG', 'PARTIAL', 'CLARIFY'} and 'CORRECT' in seen, seen
 
     inscope = []
     for fn in ('concord_1pl_in_scope_020.jsonl', 'object_concord_in_scope_022.jsonl',
