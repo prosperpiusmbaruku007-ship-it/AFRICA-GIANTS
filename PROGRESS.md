@@ -151,6 +151,41 @@ Any one of these, immediately, not on a threshold:
 - **Any day the transcripts cannot be read** — a store outage makes every other guardrail
   unobservable, which is precisely why the store was reclassified a prerequisite.
 
+### ⚠️ REVISED 2026-08-23 — THE TRIGGERS ABOVE ASSUMED A WRONG NUMBER INVITES A SECOND OPINION. IT DOES NOT.
+
+**That assumption is disproved by measurement, so two triggers are added and one existing one is
+demoted.** `eval/results/veto_diversion_live_adjudication.json`.
+
+**The disproof.** Three of seven wrong answers **open by correcting the user's own belief**, in the
+same sentence shape, register and citation as a correct one. `eval_337`: an employer arrives
+suspecting NSSF might be 3.5%, is told *"Kiwango sahihi ni asilimia 10"*, and **remits half of the
+20% they owe — having been talked out of checking.** The corrective framing does not merely fail to
+invite a second opinion; **it actively suppresses one**, because the user has just been shown they
+were wrong once already.
+
+**ADDED — pull immediately on either:**
+
+- **Any reply that contradicts a user's stated figure and gives a different one, where ours is
+  wrong.** Not a rate — one instance. This class carries more conviction than a plain wrong answer
+  and reaches a user who has just been primed to defer.
+- **Any reply that AGREES with a figure or premise the user asserted, where the premise is wrong**
+  (`eval_348`: *"is 10/10 the only lawful NSSF split?"* → *"Ndiyo"*; three splits are lawful). Same
+  disease, opposite polarity — the reply tracks the user's framing rather than the statute.
+
+**DEMOTED — "ungrounded figures in ≥1 in 10 replies" is no longer a sufficient monitor, and must
+not be read as covering this.** **Every instance of this class cites a source and states a specific
+figure**, so an ungrounded-figure count scores all of them as clean. `eval_337`, `eval_342` and
+`eval_348` each name their regulator and their number. The trigger stays because it catches a
+*different* failure; it is not evidence about this one.
+
+**Consequence for §3, and it is the second independent reason the daily review cannot be
+automated.** The first was that the failure class is *plausible* output. The second is now
+measured: **apparent confidence is anti-correlated with accuracy on this class** — the rows where
+the system hedges are merely incomplete, and the rows where it is most assertive are where it is
+wrong. **A review that ranks or samples replies by confidence, hedging, or figure-groundedness
+will systematically look at the safe ones.** The only instrument that finds this class is a human
+reading the reply **against the statute**, every reply, every day.
+
 ---
 
 ## 5. The honest chance the first thing they ask has no fact behind it
@@ -176,7 +211,9 @@ the fact path, which is where 5 of 8 WRONG and 4 of 5 PARTIAL already sit.
 **Genuinely better since 2026-08-16 — all measured:**
 compute cluster closed (39.6% → 58.3% correct on the 48); routing gaps A+B live (13 behaviour
 changes, 0 controls tripped, 28/28 correct set byte-identical); three fidelity guards shipped;
-**discard rate ~1 in 13** (`eval/results/discard_rate.json` — when a correct fact reaches the
+**discard rate ~1 in 13 ON ROWS THE MODEL ANSWERS CORRECTLY** (`eval/results/discard_rate.json`;
+bounded 2026-08-23 — on rows it answers wrongly, the fact being at rank 1 did not help in either
+measured case — when a correct fact reaches the
 prompt the model almost always uses it, which is the measurement that *vindicates* the retrieval
 workstream rather than the reverse); a presumptive-tax engine; the regen gate actually verifying
 (26 guards migrated after two were found unsound and three anchors found dead); coverage 0→3 of 12.
@@ -204,7 +241,8 @@ ruled in**.
 ## 7. What would move it back, and it is not more retrieval work
 
 **[J], and it follows directly from the measurements above rather than from preference.** The
-retrieval workstream is *working* — the ~1-in-13 discard rate says a fact that reaches the prompt
+retrieval workstream is *working* on the rows it was measured on — the ~1-in-13 discard rate
+(bounded: mostly-correct rows only) says a fact that reaches the prompt
 gets used. That is exactly why more of it does not help here: **the problem is not that good facts
 fail to arrive, it is that bad facts arrive with the same confidence.**
 
@@ -325,6 +363,155 @@ on them and is invisible to us.**
 **And the burn condition is precise: this held-out set is spent because its results were READ, not
 because it was used.** Running it again changes nothing. Reading the fifteen failures is what makes
 every subsequent cue a fit.
+
+---
+
+# 🆕 BOARD ITEM — **ADJACENT-FACT SELECTION**: two true facts in context, the wrong one chosen (2026-08-23)
+
+**A new defect class, named because nothing in this file described it and the framing we had was
+structurally unable to see it.**
+
+**The definition.** The retrieved context contains **two or more true facts about the same subject
+that state different quantities**, differing in *which* quantity they name — a total versus a
+share, a rate versus a threshold, one party's obligation versus both. The model answers with the
+wrong one. **Retrieval is complete and correct. The failure is selection.**
+
+**The specimen** — `eval_337`, live 2026-08-23:
+
+| | |
+|---|---|
+| question | *"Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?"* |
+| top-1 (0.8577) | *"**NSSF jumla: asilimia 20** ya mshahara (10% mwajiri + 10% mfanyakazi)"* |
+| top-2 (0.8471) | *"NSSF: **mwajiri analipa asilimia 10** ya mshahara wa mfanyakazi"* |
+| reply | *"Kiwango sahihi ni **asilimia 10**…"* |
+| harm | an employer remits **half** of what they owe |
+
+**Why the discard framing could not see it.** The discard measurement asked *"was the retrieved
+fact used?"* — and here **it was**. A fact from the top-3 appears in the reply, correctly quoted.
+The question that needed asking is *"was the RIGHT one of several used?"*, which no
+presence-or-absence test can answer. **This is presence-not-conclusion at the fact-selection
+layer**, and it is the fifth member of that family.
+
+**Measured exposure: 54 of 487 corpus questions (11.1%)**, of which **44 are the NSSF total-versus-
+share pattern verbatim** — `eval/results/defect_exposure.json`. The remaining 10 are VAT and
+weaker; at least one is a cross-row refutation rather than true competition, so **44 (9.0%) is the
+defensible core figure**, not 54.
+
+**No mechanism exists**, and the two nearest candidates are already excluded: better retrieval
+cannot help when both facts are already present, and a fidelity rule comparing the body to a
+`ComputationResult` goes vacuous on the fact path (R19). **The slot is deliberately empty.**
+
+**What must be measured before anything is proposed:** whether this is *prompt shape* (facts are
+pooled with nothing telling the model which quantity the question asks for), *generation* (the
+model cannot hold a distinction it was handed), or *adapter* (v15 was never trained to choose
+between adjacent facts). **Three different fixes, and nothing currently distinguishes them.**
+
+---
+
+# 🥇 ORDER OF ATTACK, MEASURED: ONE OF THE FOUR HAS A MECHANISM. THE OTHER THREE DO NOT. (2026-08-23)
+
+**Proposed, not built. Ranked by measured exposure over 487 corpus questions rather than by
+argument** — `eval/routing/measure_defect_exposure.py` → `eval/results/defect_exposure.json`.
+**Two of the presumed levers were tested and one of them failed**, which is why this is a
+measurement and not the ordering I would have written down.
+
+**EXPOSURE IS NOT INCIDENCE.** These count questions whose retrieved context has the *shape* that
+produced a wrong answer. Most exposed questions are answered correctly. Exposure is an upper bound
+on how often a defect *can* fire — the right quantity for ordering work, not a defect count.
+
+| rank | defect | exposure | mechanism | evidence it works |
+|---|---|---|---|---|
+| **1** | **D3 fragment displacement** | **142 / 487 (29.2%)**, and **54 questions have all three slots** taken by fragments | exclude fragment rows from retrieval | **reach measured; benefit measured NEGATIVE in 2026-08-17** |
+| **2** | **D1 adjacent-fact selection** | **54 (11.1%)** — 44 of them the verbatim `eval_337` shape | **NONE AVAILABLE** | — |
+| **3** | **D4 refutation out of reach** | 21 (4.3%) | top_k — **TESTED AND IT FAILS** | **negative** |
+| **4** | **D2 rank-1 contradiction** | **UNMEASURED** | **NONE AVAILABLE** | — |
+
+## ⚠️ THE HEADLINE, CORRECTED WHILE WRITING THIS: **ZERO of the four have a mechanism with positive measured evidence.**
+
+I drafted this entry with D3 as *"the one with a lever"*. **Checking the board before publishing
+it says otherwise, and the correction is the finding.** The fee-row mask —
+`scratch/feemask_experiment.json`, 2026-08-17 — was already built and measured: it **fixed 0 of 9
+target rows and regressed 3 currently-correct ones**, and was folded into the C4 rewrite rather
+than shipped.
+
+So the honest table is: **one mechanism measured negative (D3), one measured negative (D4), and two
+with no mechanism at all.** Nothing here has a green light.
+
+**Two things keep D3 at rank 1 anyway, and neither is "it works":** its exposure is nearly three
+times the next defect's, and **`eval_342` is a target the mask was never tested against.** The 2026-
+08-17 targets were `nat_05`/`nat_23`/`nat_24` — rows since reclassified as **compute-path** and
+closed by ROUTING-GAP-A/B — plus `nat_28`. A mask that failed on rows whose real problem was
+routing has not been tested on a row whose problem is genuinely fragment displacement. **That is a
+reason to re-test, not a reason to believe.** The three regressions were real and remain the cost.
+
+## D3's counterfactual measures REACH, not BENEFIT — stated so it is not over-read
+
+84 of 221 index rows (**38%**) are bare `key: value` quantity fragments. They occupy **288 of
+1,461 top-3 slots (19.7%)**, and for **54 questions they occupy all three**, which is `eval_342`'s
+exact situation: a question containing the word PAYE retrieved *"unpaid contribution penalty rate:
+five %"*, *"late payment penalty rate: 2 %"* and *"vat deferment threshold percentage: 90 %"*,
+with the PAYE band fact at rank 51.
+
+The counterfactual — re-rank with fragments removed — changes the top-3 for **142 of 142** exposed
+questions. **That measures REACH, not BENEFIT.** Changing what is retrieved is not the same as
+improving the answer, and treating it as such would be presence-not-conclusion in this very
+ranking — which is precisely the error the corrected headline above catches: a 142/142 reach number
+sitting next to a 0/9 benefit number, and only one of them was in my draft.
+
+**The only measured evidence that better retrieval improves an ANSWER comes from a different
+mechanism** — ask-aligned rewriting (`nat_36` rank 17→1, `nat_28` a 69-rank swing) — and from the
+~1-in-13 discard rate, which is itself now bounded to rows the model already answers correctly.
+**Exclusion and rewriting are not the same lever and the evidence for one is not evidence for the
+other.**
+
+**So the first thing to run is not a build: it is a re-test of the mask against `eval_342` and the
+54 all-three-slots questions, live, with the three known regressions as the standing cost.** If it
+fixes `eval_342` it earns a second look. If it does not, D3 joins D1, D2 and D4 and this project
+has **four measured defects and no mechanism for any of them** — which would be a hard thing to
+read and a true one.
+
+*(Discrepancy noted rather than buried: the 2026-08-15 analysis put fee rows at 30% of the index
+and 58% of top-3 slots. This says 38% and 19.7%. Different definition — mine counts only
+bare-quantity values, not every prefixed row — and the index has changed since. Neither number is
+wrong; they are not the same measurement.)*
+
+## D4 drops because its lever was measured and it does not work
+
+The hypothesis was that `eval_348`'s refuting fact sitting at rank 10 meant a wider window would
+help. **Measured across all 21 false-premise confirmation questions:**
+
+| window | questions with a contradicting row available |
+|---|---|
+| top-3 | **18 / 21** |
+| top-5 | 18 / 21 |
+| top-10 | 21 / 21 |
+
+**The contradicting row is already in reach for 18 of 21 at the CURRENT top_k.** Widening buys
+three questions. So D4 is not a retrieval problem at all — **it is a use problem wearing retrieval
+clothes**, and it belongs with D1 and D2 rather than with D3. That reclassification is the single
+most useful thing this measurement produced, and I would have got it wrong by reasoning.
+
+## Three of four have no available mechanism, and that is the honest state
+
+**Not two — three.** D1, D2 and D4 are all *the model failing to use what it was given*:
+
+- **D1** — two true facts in context, the wrong one chosen (`NSSF jumla 20%` at rank 1, `mwajiri
+  analipa 10%` at rank 2, answer "10%").
+- **D2** — the rank-1 fact directly contradicted (`100,000,000` in context, "milioni 10" in the
+  reply).
+- **D4** — a contradicting row present and not used to challenge the premise.
+
+**No mechanism in this repo addresses any of them, and the two obvious candidates are already
+disproved:** better retrieval cannot help when the fact was at rank 1 (D2, and SS8 showed forced
+maximum confidence does not fix it), and a coverage gate passes all three because the topics are
+covered. **The slots are empty and I am leaving them empty** rather than proposing a fidelity rule
+that would go vacuous on the fact path (R19) or a classifier that addresses a different defect.
+
+**What would have to be measured before anything is proposed for D1/D2/D4:** whether the failure is
+prompt-shape (facts pooled with no statement of which quantity the question wants), generation
+(the model cannot hold a distinction it was given), or adapter (v15 never trained on
+choose-between-adjacent-facts). **Those three have different fixes and nothing currently
+distinguishes them.** That is a measurement, and it is the next one.
 
 ---
 
@@ -546,7 +733,16 @@ before anyone wanted the answer to come out a particular way.
 
 ---
 
-# 📊 IT IS A PATTERN, NOT FOUR CASES: 41% OF VETO-DIVERTED QUESTIONS GET A CONFIDENTLY WRONG ANSWER (2026-08-23)
+# 📊 FOUR DEFECTS WEARING ONE SYMPTOM — 41% of veto-diverted questions get a confidently wrong answer, and it is NOT one problem (2026-08-23)
+
+> **READ THE HEADLINE AS WRITTEN.** The natural reading of *"the fact path is wrong 41% of the time
+> on diverted rows"* is that there is one thing to fix. **There is not.** The class analysis below
+> splits these seven rows into **four distinct defects** — selection between competing facts,
+> contradiction of a rank-1 fact, retrieval displaced by fragment rows, and a refutation the model
+> holds but does not use — plus coverage. **Three of the four have nothing on the board, and two of
+> them are unreachable by retrieval work of any kind**, because in those the fact was already at
+> rank 1 in the model's own context. Anyone who fixes "the 41%" as a single item will fix at most
+> one quarter of it and believe they are done.
 
 **Measured because four canary rows are a sample and a sample is not a rate.** Two arms, both
 committed before they ran: `eval/routing/measure_veto_diversion.py` (enumerate) and
@@ -1328,6 +1524,32 @@ row by row:
 
 **Discard rate ≈ 1/13 ≈ 8%.** A lower bound on use and therefore an upper bound on discard is not
 what this is — the figure test bounds it the other way, so the true rate is **at most** this.
+
+> ## ⚠️ BOUNDED 2026-08-23 — THIS NUMBER HOLDS ONLY ON ROWS THE MODEL GETS RIGHT, AND MUST NEVER BE CITED WITHOUT THAT QUALIFIER
+>
+> **The 13 rows here were drawn from the natural 48, a set the model was MOSTLY RIGHT on.** The
+> covered-half class analysis re-asked the same question on rows where the model is **WRONG** and
+> the fact was in reach:
+>
+> | population | fact at rank 1 → answer correct |
+> |---|---|
+> | natural 48 (mostly-correct rows) | ~12 of 13 |
+> | the wrong veto-diverted rows | **0 of 2** |
+>
+> `pic_11` had *"mauzo yasiyozidi TZS 100,000,000"* at rank 1 and replied *"chini ya milioni 10"*.
+> `eval_337` had *"NSSF jumla: asilimia 20"* at rank 1 and reported the rank-2 employer share as
+> the total.
+>
+> **This is the SECOND time a favourable measurement in this workstream turned out to have been
+> taken on the easy half** — the first was the coverage gate's 1.9% false-refusal rate, measured on
+> corpora that share vocabulary with the facts, against 71% on a held-out set (R21). The pattern is
+> the same: *the population that was cheapest to measure was the population where the mechanism
+> already worked.*
+>
+> **Required qualifier for any citation of ~1-in-13:** *"on rows the model answers correctly. On
+> rows it answers wrongly the fact being at rank 1 did not help in either measured case."* Quoting
+> the bare number to justify retrieval work is quoting it about the population where retrieval work
+> was never needed.
 
 ## Two consequences, both load-bearing
 
