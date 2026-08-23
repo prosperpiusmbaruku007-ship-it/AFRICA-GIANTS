@@ -328,6 +328,92 @@ every subsequent cue a fit.
 
 ---
 
+# 🔬 SCOPED, NOT BUILT — THE MODEL-SIDE TOPIC CLASSIFIER, PRICED HONESTLY AND WITH ITS FALSIFIERS NAMED FIRST (2026-08-23)
+
+**The last four floor designs each looked sound until measured. This one is written up before a
+line of it exists, with the numbers that would kill it stated in advance, so it cannot be talked
+into existence afterwards.**
+
+## What it is
+
+One extra model call on the fact path, before generation: *"Which of these ~21 topics is this
+question about? Answer with one label, or `none`."* If `none`, the coverage refusal fires; if a
+label, generation proceeds. No similarity score anywhere — a **constant comparison** in R19's
+sense, so it works where every D-FIDELITY rule before the sixth goes vacuous. It is
+**generation-side**, which is where the 2026-08-22 headline concluded the missing safety signal
+has to live, and it replaces the one component of the shipped gate that failed: the **signal**,
+not the shape. Per-part firing, refusal copy, authority routing and the off-by-default flag all
+carry over unchanged.
+
+## The price, in measured numbers
+
+**Latency. [M]** Live today: median **5.5s** warm (`veto_diversion_live.json`, 17 rows) and
+**4.9s** (`presumptive_cue_canary_live.json`, 39 rows), with first-call cold starts of **71.2s**
+and **86.7s**. A classifier call is short — a handful of output tokens — so call it **+1 to 2s
+warm**, a **20–40% increase on a warm fact answer**, and negligible against a cold start. **[J]**
+On WhatsApp, where the handler already sends a slow-ack at 12s, that is tolerable warm and
+irrelevant cold.
+
+**Cost. [M]** ~43% of natural questions take the fact path (21 of 48; refusals and compute take
+the rest), so the classifier runs on **fewer than half** of all messages. Against **463
+sessions/month**, a short extra call adds single-digit GPU-seconds per session — **low single-digit
+percent of the credit**, not a step change. **The binding constraint stays the 300s scaledown
+tail, which is 76% of a session's GPU cost.** Cost is not the reason to refuse this.
+
+**Complexity. [J]** It puts the model inside the safety mechanism. Everything protecting users
+today is deterministic — the OOC phrase list, the router, the rules engine, the fidelity guards.
+This would be the first guard that can be wrong because a generation was wrong, and R16's
+"config-only changes have no diff to remind you a deploy happened" problem gets worse when the
+config is a prompt.
+
+## What happens when it is wrong, in each direction
+
+| direction | effect | who absorbs it |
+|---|---|---|
+| **False `none`** — labels a covered question uncovered | the shipped gate's failure, unchanged: **a user we could have helped is refused**, invisibly to us | the user, silently |
+| **False label** — labels an uncovered question with a covered topic | the current defect, unchanged: **a confident wrong answer** | the user, silently |
+| **Wrong label** — covered question, wrong topic | generation proceeds with the right facts anyway (retrieval is unchanged) — **mostly harmless**, but it makes the classifier's output useless for the transcript-review metric | us, in the review |
+
+**The asymmetry that matters, and it is not symmetric:** a false `none` is *recoverable* — the user
+is told to check with TRA and is not misled. A false label is *not* — the user acts on a wrong
+figure. **So the classifier must be tuned to over-refuse**, which is precisely the direction the
+founder named as making the product worse. That tension is the design's central problem and it is
+not resolved by scoping it.
+
+## What would falsify it — stated BEFORE building
+
+Any one of these kills it. They are thresholds, not impressions.
+
+1. **False-`none` rate above ~10% on a FRESH held-out arm A.** The cue list scored **15/21 = 71%**.
+   Anything that does not clear an order of magnitude better is the same failure with a bigger bill.
+2. **Any false label on the four `hoD` rows** — company tax, partnership tax, profit-based
+   individual tax, transport presumptive. These are the shapes production is **measured wrong on
+   today**. A classifier that cannot separate them fixes nothing that matters.
+3. **Non-determinism across repeats.** Same question, same container, different label. A guard
+   that is not reproducible cannot be regression-tested, and every guard in this project is pinned
+   by a test.
+4. **Label instability under paraphrase within a topic.** If *"mfuko wa uzeeni"* and *"NSSF"* get
+   different labels, it has the cue list's disease with none of its transparency.
+5. **Latency above +3s warm at p90.**
+
+**And the prerequisite that is not negotiable: a FRESH held-out set.** The 40-row set is burned —
+its results have been read — and re-using it would make falsifier 1 a fit, which is the exact
+error this entry exists to prevent.
+
+## The honest limit, and it is the reason not to start yet
+
+**The diversion measurement changed what this is worth.** Of the seven confidently wrong answers
+found there, **three are about topics the corpus DOES hold** — `eval_337` (NSSF at 10% instead of
+20%), `eval_342` (top PAYE at 20% instead of 30%), `eval_348` (agreeing that 10/10 is the only
+lawful split). **A topic classifier passes all three, correctly, and they stay wrong.**
+
+So the classifier addresses **the uncovered half of a defect whose measured majority is in the
+covered half**. Building it first would be scoping work by which mechanism is available rather
+than by where the harm is. **Nothing on the board addresses the covered half**, and naming that
+gap is more valuable right now than starting the build.
+
+---
+
 # 📊 IT IS A PATTERN, NOT FOUR CASES: 41% OF VETO-DIVERTED QUESTIONS GET A CONFIDENTLY WRONG ANSWER (2026-08-23)
 
 **Measured because four canary rows are a sample and a sample is not a rate.** Two arms, both
