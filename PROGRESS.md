@@ -215,6 +215,130 @@ make deliberately, and a bad one to make by default.
 
 ---
 
+# 🎯 COVERAGE GATE SCOPED — ONE SIGNAL SURVIVES, AND IT COSTS ~1.5% IN FALSE REFUSALS (2026-08-23)
+
+**The pilot has been blocked on this precondition since 2026-08-16 and every previous design
+died on a similarity score. This one does not consult a score at all, and it is the first
+candidate whose measured cost is small enough to build.** Two arms, both committed before they
+ran (R18): `eval/coverage/measure_coverage_gate_signals.py` →
+`eval/results/coverage_gate_signals.json`, and `eval/coverage/measure_topic_allowlist.py` →
+`eval/results/coverage_gate_allowlist.json`.
+
+**The cost side was priced first and deliberately made larger than the catch side**, because the
+failure mode that matters is refusing something we can answer — the bare-`hisa` shape, where one
+over-broad phrase would have refused seven real gate questions. Corpora: **400** accuracy-gate
+questions (any refusal is false by construction), the **48** natural probes joined to their
+adjudicated verdicts, **27** R17 in-scope adversarial probes authored to look refusable while
+being answerable, and the **12** uncovered questions, the only corpus where refusing is right.
+
+## S1 — the route is free, and it halves the problem before any gate exists
+
+A deterministic route means the answer comes from an engine, not the index, so the gate need
+never apply. Measured: **52% of the natural 48** and **27% of the 400** already route. The gate
+is a fact-path mechanism only, which is also why it reaches the place every fidelity rule goes
+vacuous (R19).
+
+## Arm 1 — generic term overlap. DEAD, and for a structural reason
+
+Three variants, each measured under exact-token and stem matching, none reading a similarity
+value: does any question term appear in the index at all; does the **top-1** retrieved fact share
+a term with the question; does any of the **top-3**.
+
+| to catch… | best false-refusal cost |
+|---|---|
+| 1 of 12 | 7 |
+| 3 of 12 | 31 |
+| 4 of 12 | 43 |
+| **7 of 12** | **74** |
+
+**Why it fails is not a tuning problem.** The index is 221 rows of dense compliance prose, so
+nearly every Swahili business question shares *some* content token with *some* fact — covered or
+not. Overlap does not separate the two populations, and no threshold on it will. **This is the
+fourth dead design for the safety floor and the first one that died without consulting a score**,
+which is worth recording precisely: it rules out the whole *lexical-similarity* family, not just
+the score family.
+
+## Arm 2 — a curated covered-topic allowlist. THIS ONE WORKS
+
+Twenty-one topics, cues derived from the `locked_facts` clusters (gn487a 32 facts, vat 19,
+trademark 18, company/brela 24, minimum wage 13, exemptions 10, paye/sdl/nssf/wcf 7–8 each…) and
+**authored without reading the evaluation questions** — cues written from the test set would
+measure the author, not the design.
+
+| | false refusals | caught of 12 | OOC caught free |
+|---|---|---|---|
+| generic overlap, best at equal catch | **74** | 7 | — |
+| **allowlist** | **8** | **7** | **6** |
+
+**A ninefold reduction in cost at identical catch.** And the eight do not all survive reading:
+
+- **`eval_223`** asks about the **EAC Simplified Trade Regime** — Tier 1B, deliberately not in
+  the corpus. Refusing it is **correct**.
+- **`eval_212`** asks whether **TFDA** still regulates medicines. Defunct agency, no fact.
+  Refusing is defensible.
+- **The genuine residue is six**: `eval_145` and `eval_175` (GN487A *concepts* — a nominee
+  arrangement, marriage to a citizen — with none of GN487A's vocabulary), `eval_366` (a VAT
+  threshold question that never says VAT), `adv_12` (*"kodi **gani** ya mapato"* — word order
+  defeats a fixed cue), `ov_09` (*"hifa**z**i"*, a deliberate misspelling probe) and `nat_10`
+  (*"mfuko wa **uzeeni**"* — an NSSF synonym the list lacks).
+
+**Six false refusals across 411 answerable questions ≈ 1.5%.** For comparison, the fact path
+today produces 5 WRONG and 4 PARTIAL out of 21.
+
+## What it MISSES, and the limit that names
+
+Two of the nine genuinely-uncovered rows get through: the **business licence fee** and
+**withholding tax on shop rent**. Both are cases where the corpus holds the **topic** but not the
+**sub-fact** — we have the licence renewal date but not the fee, `wht` facts but not the rent
+rate. **A topic-granularity gate cannot see that distinction**, and pretending otherwise would be
+the next version of presence-not-conclusion. It is a real limit, it is not fatal, and it should
+be stated in the design rather than discovered later.
+
+**One row passes for the wrong reason:** the presumptive 30M question matched topic `paye` via
+*"kodi ya mapato"*. The outcome is right — presumptive **is** covered — but the reason is wrong,
+and a cue that fires on the wrong topic is a latent false negative.
+
+## Three faults found in my own instruments, and one of them is R20 again
+
+Stated because a scoping number is only as good as the thing that produced it.
+
+1. **The adjudication join read a field that does not exist.** Both arms joined the natural-48
+   verdicts via `a.get('verdict')`; that artifact's field is **`now`**. Every row came back
+   `None`, so `refused_that_were_CORRECT` — the column that prices refusing a question we answer
+   **correctly** — was **structurally incapable of registering a cost**. That is R20's shape
+   inside a measuring instrument rather than a test, and it is the second time in two days.
+   Now asserted: the key must exist and the verdict set must contain `CORRECT`.
+2. **`out_of_corpus` rows were counted as false refusals.** Sixteen of the 400 gate questions are
+   questions the product is *supposed* to refuse (import duty, Zanzibar, Bitcoin). Refusing them
+   is a **catch**, not a cost. Fixed in both arms so their totals are comparable.
+3. **The v1 allowlist omitted the topic's own name.** Nineteen of v1's 34 refusals were GN 487A
+   questions containing the literal string *"GN 487A"* — the largest cluster in `locked_facts`,
+   and I had not put its name in its cue list. Also missing: `miliki ya akili` for trademark, and
+   the **Swahili noun-class plurals** `mshahara`→`mishahara` (m-/mi-) and `kibali`→`vibali`
+   (ki-/vi-). **That is THE THIRD AXIS from the concord work arriving in a new list** — a cue set
+   is blind to inflection unless the inflections are enumerated, and this is the second list to
+   demonstrate it.
+
+**Both allowlist versions are reported in the artifact**, so the correction is in the record
+rather than overwriting the first number.
+
+## What this does NOT license, and the entry price
+
+**No further cue may be added by reading these corpora.** The three corrections above are
+admitted because each is justified from the *corpus* side — a topic's own name, a standard
+plural — and any additional cue tuned against a question the design failed would be fitting to
+the test set. **The remaining false-refusal cost must be priced on held-out authored probes
+(R17 step 2)**, one per topic, written to be answerable while avoiding the obvious cue — exactly
+the `nat_10`/`adv_12` shape. That probe set is the build's entry price, not an optional extra.
+
+**Open design questions, deliberately not settled here:** what the gate *says* (a `Sina uhakika,
+thibitisha na TRA` refusal, or a softer "I don't hold facts on this — here is who does"), whether
+it fires on the whole question or per decomposed part, and whether the two granularity misses
+justify sub-topic cues or are accepted. **Scoping ends here; the design decision is the
+founder's.**
+
+---
+
 # ✅ THE SUITE IS GREEN, AND THE THING THAT MADE IT UNRELIABLE IS NOT WHAT WE THOUGHT (2026-08-23)
 
 Run first thing in a fresh session, before anything was allowed to depend on it, per the standing
