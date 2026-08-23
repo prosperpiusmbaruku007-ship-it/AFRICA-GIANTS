@@ -366,6 +366,51 @@ every subsequent cue a fit.
 
 ---
 
+# ❌ D3 RE-TESTED: THE MASK FAILS ITS OWN FALSIFIER — and the arm that passed points somewhere else (2026-08-23)
+
+**Falsifiers were named before the run** (`eval/routing/retest_fragment_mask.py`, committed first).
+**F1 fails, so the mask does not ship.** `eval/results/fragment_mask_retest.json`.
+
+| falsifier | result |
+|---|---|
+| **F1 — `eval_342`'s anchor must reach top-3** | ❌ **rank 51 → 14. Better, and still not in reach.** |
+| F2 — must not hurt more correct rows than it helps targets | ✅ passed |
+| F3 — net improvement on the target rows must be positive | ✅ passed |
+
+**The specimen the re-test existed for is not fixed.** Under the mask, `eval_342`'s top-3 becomes a
+PAYE worked example, the NSSF total and the WCF rate — **still no PAYE band table.** The fragments
+were only part of that row's problem.
+
+## The awkward part, stated rather than smoothed: the other two arms are strong
+
+| arm | improved | worsened | unchanged | net |
+|---|---|---|---|---|
+| **target** (54 all-three-slots rows; 19 had a recorded expected answer to score against) | **17** | **0** | 2 | **+63 terms** |
+| **cost** (180 currently-correct rows) | 2 | **1** | 177 | +1 |
+
+**The mask is nearly free and improves almost every scorable target row on the proxy — and still
+fails the one row it was re-tested for.** That is not a contradiction, it is the finding: **the
+fragment problem is real, and exclusion is the wrong instrument for it.** `eval_342`'s anchor
+reaching only rank 14 with every fragment removed means the PAYE band fact is **poorly reachable on
+its own terms** — the ask-alignment problem, whose measured lever is *rewriting* (`nat_36` 17→1,
+`nat_28` a 69-rank swing), not *exclusion*.
+
+**This converges with the 2026-08-17 decision instead of reversing it.** That entry folded fee-row
+segregation into the C4 reachability rewrite rather than shipping it standalone. Six days and one
+new specimen later the evidence says the same thing from a different direction — and the earlier
+call was made on 9 target rows, this one on 54 plus a 180-row cost arm.
+
+*(Cost-arm discrepancy noted: 2026-08-17 found **3** regressions, this finds **1**. Different mask —
+84 bare-quantity rows here versus 66 fee-shape rows there — and a different cost population.
+Neither number is wrong; they are not the same experiment.)*
+
+**Board effect: D3 keeps its exposure (142/487) and loses its mechanism.** All four covered-half
+defects now have **no available mechanism with positive evidence**. The remaining candidate for D3
+is the C4 rewrite, which is a Kaggle R15 regen cycle, not a code change — and it is the only item of
+the four with any measured lever behind it at all.
+
+---
+
 # 🆕 BOARD ITEM — **ADJACENT-FACT SELECTION**: two true facts in context, the wrong one chosen (2026-08-23)
 
 **A new defect class, named because nothing in this file described it and the framing we had was

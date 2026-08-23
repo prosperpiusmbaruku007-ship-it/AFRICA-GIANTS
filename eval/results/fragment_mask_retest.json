@@ -1,0 +1,4586 @@
+{
+  "measured": "2026-08-23",
+  "harness": "eval/routing/retest_fragment_mask.py",
+  "prior": "scratch/feemask_experiment.json (2026-08-17) — 0/9 fixed, 3 regressed. Its targets were nat_05/23/24 (since reclassified COMPUTE and closed by ROUTING-GAP-A/B) plus nat_28.",
+  "benefit_measure": "expected-answer term overlap in the top-3. A PROXY, not an outcome: the 2026-08-17 mask improved retrieval on paper and fixed nothing.",
+  "fragment_rows": 84,
+  "index_rows": 221,
+  "F1_eval_342": {
+    "anchor_index": 42,
+    "rank_base": 51,
+    "rank_masked": 14,
+    "in_top3_base": false,
+    "in_top3_masked": false,
+    "top3_masked_text": [
+      "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+      "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+      "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi kisichobad"
+    ]
+  },
+  "target_arm_all_three_slots": {
+    "n": 54,
+    "scored": 19,
+    "improved": 17,
+    "worsened": 0,
+    "unchanged": 2,
+    "net_terms": 63
+  },
+  "cost_arm_currently_correct": {
+    "n": 180,
+    "scored": 180,
+    "improved": 2,
+    "worsened": 1,
+    "unchanged": 177,
+    "net_terms": 1
+  },
+  "falsifiers": {
+    "F1_eval342_anchor_reaches_top3": false,
+    "F2_hurts_more_than_it_helps": false,
+    "F3_no_net_improvement_on_targets": false,
+    "mask_survives": false
+  },
+  "target_rows": [
+    {
+      "id": "eval_166",
+      "corpus": "gate_400",
+      "question": "Kama nililipa faini ya TZS milioni 10, naweza kuendelea na biashara yangu ya saluni kama mgeni?",
+      "top3_base": [
+        110,
+        205,
+        171
+      ],
+      "top3_masked": [
+        218,
+        133,
+        20
+      ],
+      "changed": true,
+      "expected_terms": 14,
+      "overlap_base": 0,
+      "overlap_masked": 3,
+      "delta": 3
+    },
+    {
+      "id": "eval_225",
+      "corpus": "gate_400",
+      "question": "Je, kuomba kuongezewa muda wa siku 30 wa kuwasilisha pingamizi ni jambo la nadra sana?",
+      "top3_base": [
+        148,
+        168,
+        147
+      ],
+      "top3_masked": [
+        31,
+        219,
+        44
+      ],
+      "changed": true,
+      "expected_terms": 13,
+      "overlap_base": 0,
+      "overlap_masked": 3,
+      "delta": 3
+    },
+    {
+      "id": "eval_252",
+      "corpus": "gate_400",
+      "question": "Nina mtaji wa TZS 15,000,000 nimeuwekeza kwenye biashara, NSSF yangu naichangiaje kutoka hapo?",
+      "top3_base": [
+        112,
+        96,
+        116
+      ],
+      "top3_masked": [
+        11,
+        25,
+        146
+      ],
+      "changed": true,
+      "expected_terms": 14,
+      "overlap_base": 0,
+      "overlap_masked": 1,
+      "delta": 1
+    },
+    {
+      "id": "eval_253",
+      "corpus": "gate_400",
+      "question": "Nimechukua deni la benki TZS 6,700,000 kwa ajili ya biashara, hii inaongeza SDL yangu kiasi gani?",
+      "top3_base": [
+        100,
+        110,
+        120
+      ],
+      "top3_masked": [
+        146,
+        212,
+        211
+      ],
+      "changed": true,
+      "expected_terms": 11,
+      "overlap_base": 0,
+      "overlap_masked": 4,
+      "delta": 4
+    },
+    {
+      "id": "eval_254",
+      "corpus": "gate_400",
+      "question": "Bei ya soko ya duka langu ni TZS 25,000,000, WCF nailipa kutokana na thamani hiyo?",
+      "top3_base": [
+        137,
+        171,
+        164
+      ],
+      "top3_masked": [
+        145,
+        211,
+        66
+      ],
+      "changed": true,
+      "expected_terms": 15,
+      "overlap_base": 0,
+      "overlap_masked": 4,
+      "delta": 4
+    },
+    {
+      "id": "eval_256",
+      "corpus": "gate_400",
+      "question": "Thamani ya hisa za kampuni yangu ni TZS 4,500,000, nawezaje kupata SDL kutoka humo?",
+      "top3_base": [
+        122,
+        125,
+        121
+      ],
+      "top3_masked": [
+        212,
+        88,
+        7
+      ],
+      "changed": true,
+      "expected_terms": 11,
+      "overlap_base": 0,
+      "overlap_masked": 4,
+      "delta": 4
+    },
+    {
+      "id": "eval_258",
+      "corpus": "gate_400",
+      "question": "Nalipa kodi ya pango TZS 850,000 kwa mwezi kwa ofisi, hii inaingia kwenye hesabu ya SDL?",
+      "top3_base": [
+        114,
+        100,
+        137
+      ],
+      "top3_masked": [
+        211,
+        212,
+        216
+      ],
+      "changed": true,
+      "expected_terms": 11,
+      "overlap_base": 0,
+      "overlap_masked": 5,
+      "delta": 5
+    },
+    {
+      "id": "eval_259",
+      "corpus": "gate_400",
+      "question": "Magari yangu ya biashara yana thamani ya TZS 40,000,000 kwa jumla, WCF yake naikadiriaje?",
+      "top3_base": [
+        121,
+        122,
+        171
+      ],
+      "top3_masked": [
+        211,
+        146,
+        66
+      ],
+      "changed": true,
+      "expected_terms": 12,
+      "overlap_base": 0,
+      "overlap_masked": 4,
+      "delta": 4
+    },
+    {
+      "id": "eval_261",
+      "corpus": "gate_400",
+      "question": "Gharama za umeme mwezi huu ni TZS 1,200,000, je zinabadilisha kiasi cha SDL ninachodaiwa?",
+      "top3_base": [
+        131,
+        165,
+        166
+      ],
+      "top3_masked": [
+        211,
+        212,
+        57
+      ],
+      "changed": true,
+      "expected_terms": 9,
+      "overlap_base": 0,
+      "overlap_masked": 4,
+      "delta": 4
+    },
+    {
+      "id": "eval_265",
+      "corpus": "gate_400",
+      "question": "Nina matawi 6 nchini kote, PAYE ya wafanyakazi wangu naipataje kutoka idadi hiyo?",
+      "top3_base": [
+        197,
+        200,
+        101
+      ],
+      "top3_masked": [
+        151,
+        25,
+        182
+      ],
+      "changed": true,
+      "expected_terms": 13,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_268",
+      "corpus": "gate_400",
+      "question": "Nina wateja 1,500 kwa mwezi, je hii inanifanya nilazimike kusajili VAT?",
+      "top3_base": [
+        171,
+        98,
+        147
+      ],
+      "top3_masked": [
+        15,
+        146,
+        25
+      ],
+      "changed": true,
+      "expected_terms": 14,
+      "overlap_base": 0,
+      "overlap_masked": 6,
+      "delta": 6
+    },
+    {
+      "id": "eval_278",
+      "corpus": "gate_400",
+      "question": "Biashara yangu ilipata shilingi za Kenya 1,200,000 kama mapato, nimefika kizingiti cha VAT?",
+      "top3_base": [
+        117,
+        111,
+        171
+      ],
+      "top3_masked": [
+        57,
+        145,
+        146
+      ],
+      "changed": true,
+      "expected_terms": 16,
+      "overlap_base": 0,
+      "overlap_masked": 6,
+      "delta": 6
+    },
+    {
+      "id": "eval_306",
+      "corpus": "gate_400",
+      "question": "Mfanyakazi wangu analipwa TZS 1,500,000, sasa faida ya mtaji (capital gains) yangu inatozwaje?",
+      "top3_base": [
+        115,
+        113,
+        157
+      ],
+      "top3_masked": [
+        211,
+        213,
+        218
+      ],
+      "changed": true,
+      "expected_terms": 12,
+      "overlap_base": 0,
+      "overlap_masked": 1,
+      "delta": 1
+    },
+    {
+      "id": "eval_307",
+      "corpus": "gate_400",
+      "question": "Tuna mishahara ya TZS 4,000,000, je hii inatuweka kwenye kundi la kulipa ushuru wa forodha (import duty)?",
+      "top3_base": [
+        121,
+        123,
+        125
+      ],
+      "top3_masked": [
+        211,
+        215,
+        146
+      ],
+      "changed": true,
+      "expected_terms": 10,
+      "overlap_base": 0,
+      "overlap_masked": 0,
+      "delta": 0
+    },
+    {
+      "id": "eval_311",
+      "corpus": "gate_400",
+      "question": "Nina mfanyakazi mmoja tu anayelipwa TZS 500,000, je bado nachangia WCF?",
+      "top3_base": [
+        171,
+        98,
+        158
+      ],
+      "top3_masked": [
+        66,
+        211,
+        69
+      ],
+      "changed": true,
+      "expected_terms": 12,
+      "overlap_base": 0,
+      "overlap_masked": 5,
+      "delta": 5
+    },
+    {
+      "id": "eval_322",
+      "corpus": "gate_400",
+      "question": "Nataka kujua mambo matatu: kwanza kizingiti cha VAT, pili kiwango cha SDL, tatu je nitoe risiti ya EFD kwa muamala wa TZS 5,000?",
+      "top3_base": [
+        96,
+        107,
+        136
+      ],
+      "top3_masked": [
+        146,
+        145,
+        15
+      ],
+      "changed": true,
+      "expected_terms": 21,
+      "overlap_base": 0,
+      "overlap_masked": 5,
+      "delta": 5
+    },
+    {
+      "id": "eval_342",
+      "corpus": "gate_400",
+      "question": "Kiwango cha juu kabisa cha PAYE ni asilimia 25, sivyo?",
+      "top3_base": [
+        193,
+        150,
+        170
+      ],
+      "top3_masked": [
+        211,
+        10,
+        66
+      ],
+      "changed": true,
+      "expected_terms": 11,
+      "overlap_base": 0,
+      "overlap_masked": 2,
+      "delta": 2
+    },
+    {
+      "id": "eval_343",
+      "corpus": "gate_400",
+      "question": "Ajali ya kazini WCF lazima itolewe taarifa ndani ya siku 30, sivyo?",
+      "top3_base": [
+        168,
+        155,
+        147
+      ],
+      "top3_masked": [
+        45,
+        50,
+        46
+      ],
+      "changed": true,
+      "expected_terms": 14,
+      "overlap_base": 0,
+      "overlap_masked": 2,
+      "delta": 2
+    },
+    {
+      "id": "eval_344",
+      "corpus": "gate_400",
+      "question": "PAYE ya mfanyakazi asiye mkazi ni asilimia 30, sivyo?",
+      "top3_base": [
+        209,
+        199,
+        170
+      ],
+      "top3_masked": [
+        9,
+        10,
+        211
+      ],
+      "changed": true,
+      "expected_terms": 15,
+      "overlap_base": 0,
+      "overlap_masked": 4,
+      "delta": 4
+    },
+    {
+      "id": "nat_03",
+      "corpus": "natural_48",
+      "question": "tuko wafanyakazi 7 tu ofisini mishahara jumla milioni 3 kwa mwezi hii ya ufundi stadi tunalipa kiasi gani",
+      "top3_base": [
+        197,
+        171,
+        135
+      ],
+      "top3_masked": [
+        211,
+        146,
+        9
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_05",
+      "corpus": "natural_48",
+      "question": "nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya mafunzo nitalipa asilimia tatu na nusu ya nini",
+      "top3_base": [
+        118,
+        119,
+        120
+      ],
+      "top3_masked": [
+        145,
+        212,
+        5
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_07",
+      "corpus": "natural_48",
+      "question": "mfanyakazi wangu analipwa laki nane kwa mwezi mimi kama mwajiri nachangia kiasi gani kwenye mfuko wa hifadhi",
+      "top3_base": [
+        195,
+        197,
+        198
+      ],
+      "top3_masked": [
+        194,
+        1,
+        11
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_08",
+      "corpus": "natural_48",
+      "question": "wananikata kiasi gani kwenye mshahara wangu wa 650000 kwa ajili ya mfuko wa uzeeni",
+      "top3_base": [
+        98,
+        100,
+        97
+      ],
+      "top3_masked": [
+        146,
+        211,
+        0
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_09",
+      "corpus": "natural_48",
+      "question": "mshahara ni milioni 1.2 nataka kujua jumla inayoenda kwenye mfuko kwa mwezi mimi na mfanyakazi pamoja",
+      "top3_base": [
+        197,
+        198,
+        115
+      ],
+      "top3_masked": [
+        218,
+        145,
+        133
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_10",
+      "corpus": "natural_48",
+      "question": "nimeajiri mtu mmoja mwezi huu nitachangia ngapi kwenye mfuko wa uzeeni",
+      "top3_base": [
+        197,
+        195,
+        198
+      ],
+      "top3_masked": [
+        194,
+        218,
+        63
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_12",
+      "corpus": "natural_48",
+      "question": "mshahara wangu ni milioni 5 kwa mwezi nitakatwa kiasi gani kwenye mfuko",
+      "top3_base": [
+        193,
+        197,
+        171
+      ],
+      "top3_masked": [
+        146,
+        66,
+        218
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_14",
+      "corpus": "natural_48",
+      "question": "nampa mtu wangu wa dukani 350000 kwa mwezi je kuna kitu cha kupeleka kwa tra kwenye mshahara wake na ni kiasi gani",
+      "top3_base": [
+        197,
+        107,
+        136
+      ],
+      "top3_masked": [
+        133,
+        134,
+        194
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_17",
+      "corpus": "natural_48",
+      "question": "mshahara wangu ni 1500000 nitabaki na pesa ngapi mkononi baada ya makato yote",
+      "top3_base": [
+        96,
+        112,
+        98
+      ],
+      "top3_masked": [
+        25,
+        211,
+        145
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_19",
+      "corpus": "natural_48",
+      "question": "mishahara yangu yote kwa mwezi ni milioni 3 nichangie ngapi kwenye ile ya fidia",
+      "top3_base": [
+        197,
+        136,
+        196
+      ],
+      "top3_masked": [
+        146,
+        133,
+        145
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_21",
+      "corpus": "natural_48",
+      "question": "gari langu la biashara lina thamani ya milioni 30 na nawalipa vibarua jumla laki tisa kwa mwezi hiyo ya fidia ni ngapi",
+      "top3_base": [
+        103,
+        107,
+        119
+      ],
+      "top3_masked": [
+        146,
+        218,
+        145
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_22",
+      "corpus": "natural_48",
+      "question": "wafanyakazi 6 kila mmoja laki tatu hiyo ya fidia ni shilingi ngapi kwa mwezi",
+      "top3_base": [
+        197,
+        136,
+        135
+      ],
+      "top3_masked": [
+        194,
+        146,
+        213
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_23",
+      "corpus": "natural_48",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "top3_base": [
+        120,
+        123,
+        117
+      ],
+      "top3_masked": [
+        145,
+        213,
+        218
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_24",
+      "corpus": "natural_48",
+      "question": "tuko na watu 9 tu mishahara milioni 4 kwa mwezi nilipe nini kati ya ile ya mafunzo ya fidia na ya uzeeni",
+      "top3_base": [
+        171,
+        197,
+        114
+      ],
+      "top3_masked": [
+        218,
+        133,
+        211
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_27",
+      "corpus": "natural_48",
+      "question": "vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu",
+      "top3_base": [
+        170,
+        199,
+        171
+      ],
+      "top3_masked": [
+        64,
+        16,
+        76
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_29",
+      "corpus": "natural_48",
+      "question": "mwenzangu ni mtanzania lakini fedha ni za mgeni tunataka kufungua kibanda cha kutuma pesa inawezekana",
+      "top3_base": [
+        110,
+        111,
+        112
+      ],
+      "top3_masked": [
+        178,
+        25,
+        21
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_30",
+      "corpus": "natural_48",
+      "question": "dada yangu ameolewa na mkenya anataka kufungua saluni ya kike inaruhusiwa",
+      "top3_base": [
+        198,
+        168,
+        199
+      ],
+      "top3_masked": [
+        178,
+        160,
+        182
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_31",
+      "corpus": "natural_48",
+      "question": "kama mgeni akikutwa anafanya biashara isiyoruhusiwa adhabu yake ni ipi",
+      "top3_base": [
+        205,
+        206,
+        193
+      ],
+      "top3_masked": [
+        22,
+        92,
+        20
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_34",
+      "corpus": "natural_48",
+      "question": "nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+      "top3_base": [
+        130,
+        131,
+        114
+      ],
+      "top3_masked": [
+        160,
+        44,
+        194
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_35",
+      "corpus": "natural_48",
+      "question": "sisi ni watu watano tunataka kufanya bizna pamoja tusajili kampuni au ushirika",
+      "top3_base": [
+        112,
+        98,
+        125
+      ],
+      "top3_masked": [
+        182,
+        160,
+        191
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_37",
+      "corpus": "natural_48",
+      "question": "mteja amenunua kwa shilingi 2000 tu nampa risiti ya mashine au inaruhusiwa kuandika kwa mkono",
+      "top3_base": [
+        110,
+        127,
+        132
+      ],
+      "top3_masked": [
+        178,
+        194,
+        25
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_41",
+      "corpus": "natural_48",
+      "question": "nimefungua karakana mpya nina muda gani wa kusajili sehemu ya kazi",
+      "top3_base": [
+        167,
+        200,
+        168
+      ],
+      "top3_masked": [
+        219,
+        160,
+        44
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_42",
+      "corpus": "natural_48",
+      "question": "mshahara wa chini kabisa naruhusiwa kumpa mfanyakazi ni kiasi gani siku hizi",
+      "top3_base": [
+        154,
+        193,
+        171
+      ],
+      "top3_masked": [
+        213,
+        211,
+        9
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_45",
+      "corpus": "natural_48",
+      "question": "mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+      "top3_base": [
+        168,
+        200,
+        147
+      ],
+      "top3_masked": [
+        19,
+        160,
+        50
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_46",
+      "corpus": "natural_48",
+      "question": "niliuza kiwanja changu cha mwanza nimepata faida kubwa nalipa kodi gani",
+      "top3_base": [
+        157,
+        199,
+        198
+      ],
+      "top3_masked": [
+        25,
+        216,
+        215
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_47",
+      "corpus": "natural_48",
+      "question": "naagiza bidhaa kutoka china kontena moja ushuru wa forodha ni kiasi gani",
+      "top3_base": [
+        113,
+        136,
+        171
+      ],
+      "top3_masked": [
+        218,
+        211,
+        20
+      ],
+      "changed": true
+    },
+    {
+      "id": "nat_48",
+      "corpus": "natural_48",
+      "question": "nina biashara zanzibar kodi zake zinafananaje na huku bara",
+      "top3_base": [
+        131,
+        111,
+        158
+      ],
+      "top3_masked": [
+        160,
+        211,
+        215
+      ],
+      "changed": true
+    },
+    {
+      "id": "adv_02",
+      "corpus": "inscope_69",
+      "question": "duka langu liko kwenye kiwanja cha familia je naomba leseni ya biashara wapi",
+      "top3_base": [
+        111,
+        110,
+        130
+      ],
+      "top3_masked": [
+        214,
+        160,
+        187
+      ],
+      "changed": true
+    },
+    {
+      "id": "adv_09",
+      "corpus": "inscope_69",
+      "question": "nimepangisha sehemu ya duka langu je hiyo inaathiri usajili wangu wa VAT",
+      "top3_base": [
+        148,
+        170,
+        171
+      ],
+      "top3_masked": [
+        25,
+        194,
+        93
+      ],
+      "changed": true
+    },
+    {
+      "id": "adv_11",
+      "corpus": "inscope_69",
+      "question": "mgeni anataka kuwa mwanahisa kwenye kampuni yangu inaruhusiwa",
+      "top3_base": [
+        154,
+        163,
+        168
+      ],
+      "top3_masked": [
+        160,
+        22,
+        218
+      ],
+      "changed": true
+    },
+    {
+      "id": "ov_01",
+      "corpus": "inscope_69",
+      "question": "duka langu limejengwa kwenye arzi ya babu je naomba leseni ya biashara wapi",
+      "top3_base": [
+        111,
+        110,
+        107
+      ],
+      "top3_masked": [
+        214,
+        160,
+        178
+      ],
+      "changed": true
+    },
+    {
+      "id": "ov_04",
+      "corpus": "inscope_69",
+      "question": "naagiza bizaa kutoka nje je nasajili VAT lini",
+      "top3_base": [
+        148,
+        147,
+        169
+      ],
+      "top3_masked": [
+        37,
+        93,
+        79
+      ],
+      "changed": true
+    },
+    {
+      "id": "ov_11",
+      "corpus": "inscope_69",
+      "question": "nitaazibiwa kama sitalipa SDL kwa wakati",
+      "top3_base": [
+        193,
+        150,
+        136
+      ],
+      "top3_masked": [
+        160,
+        95,
+        194
+      ],
+      "changed": true
+    },
+    {
+      "id": "local government service levy",
+      "corpus": "uncovered_12",
+      "question": "Halmashauri inadai ushuru wa huduma asilimia ngapi ya mauzo yangu?",
+      "top3_base": [
+        170,
+        159,
+        209
+      ],
+      "top3_masked": [
+        217,
+        9,
+        10
+      ],
+      "changed": true
+    },
+    {
+      "id": "TRA audit at the shop",
+      "corpus": "uncovered_12",
+      "question": "TRA wamekuja kukagua duka langu, nifanye nini?",
+      "top3_base": [
+        136,
+        171,
+        98
+      ],
+      "top3_masked": [
+        160,
+        178,
+        93
+      ],
+      "changed": true
+    }
+  ],
+  "cost_rows": [
+    {
+      "id": "eval_001",
+      "corpus": "gate_400",
+      "question": "Kiwango cha VAT Tanzania kwa bidhaa na huduma za kawaida ni asilimia ngapi?",
+      "top3_base": [
+        13,
+        57,
+        14
+      ],
+      "top3_masked": [
+        13,
+        57,
+        14
+      ],
+      "changed": false,
+      "expected_terms": 14,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_002",
+      "corpus": "gate_400",
+      "question": "Kizingiti cha mauzo cha miezi 12 cha kusajilisha VAT kwa lazima ni TZS ngapi?",
+      "top3_base": [
+        57,
+        145,
+        146
+      ],
+      "top3_masked": [
+        57,
+        145,
+        146
+      ],
+      "changed": false,
+      "expected_terms": 13,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_003",
+      "corpus": "gate_400",
+      "question": "Kizingiti cha mauzo cha miezi 6 cha kusajilisha VAT kwa lazima ni TZS ngapi?",
+      "top3_base": [
+        57,
+        146,
+        145
+      ],
+      "top3_masked": [
+        57,
+        146,
+        145
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_004",
+      "corpus": "gate_400",
+      "question": "Kiwango cha VAT kwa malipo ya kidijitali ya B2C (biashara-kwa-mteja) tangu 1 Septemba 2025 ni asilimia ngapi?",
+      "top3_base": [
+        57,
+        145,
+        215
+      ],
+      "top3_masked": [
+        57,
+        145,
+        215
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_005",
+      "corpus": "gate_400",
+      "question": "Deadline ya kuwasilisha VAT return kila mwezi ni tarehe ngapi?",
+      "top3_base": [
+        148,
+        60,
+        37
+      ],
+      "top3_masked": [
+        60,
+        37,
+        145
+      ],
+      "changed": true,
+      "expected_terms": 12,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_006",
+      "corpus": "gate_400",
+      "question": "Biashara inaingiza TZS milioni 25 kwa mwezi — baada ya miezi mingapi inafika kizingiti cha VAT cha TZS milioni 200?",
+      "top3_base": [
+        57,
+        145,
+        146
+      ],
+      "top3_masked": [
+        57,
+        145,
+        146
+      ],
+      "changed": false,
+      "expected_terms": 15,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_007",
+      "corpus": "gate_400",
+      "question": "Biashara inapata TZS milioni 20 kwa mwezi — baada ya miezi mingapi inazidi kizingiti cha VAT cha miezi 6 (TZS milioni 100)?",
+      "top3_base": [
+        57,
+        146,
+        145
+      ],
+      "top3_masked": [
+        57,
+        146,
+        145
+      ],
+      "changed": false,
+      "expected_terms": 14,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_008",
+      "corpus": "gate_400",
+      "question": "VAT ya matokeo ni TZS 950,000 na VAT ya pembejeo ni TZS 320,000 — ninapeleka kiasi gani TRA?",
+      "top3_base": [
+        211,
+        215,
+        57
+      ],
+      "top3_masked": [
+        211,
+        215,
+        57
+      ],
+      "changed": false,
+      "expected_terms": 13,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_009",
+      "corpus": "gate_400",
+      "question": "Tofauti ya asilimia kati ya kiwango cha kawaida cha VAT (18%) na kiwango cha B2C cha kidijitali (16%) ni ngapi?",
+      "top3_base": [
+        57,
+        58,
+        145
+      ],
+      "top3_masked": [
+        57,
+        58,
+        145
+      ],
+      "changed": false,
+      "expected_terms": 14,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_010",
+      "corpus": "gate_400",
+      "question": "Biashara yangu ina mauzo ya TZS milioni 180 mwaka huu — ninahitaji mauzo ya ziada ya TZS ngapi kabla ya usajilishaji wa VAT wa lazima?",
+      "top3_base": [
+        57,
+        58,
+        211
+      ],
+      "top3_masked": [
+        57,
+        58,
+        211
+      ],
+      "changed": false,
+      "expected_terms": 14,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_011",
+      "corpus": "gate_400",
+      "question": "Finance Act ya mwaka gani ilianzisha utaratibu mpya wa VAT withholding nchini Tanzania?",
+      "top3_base": [
+        93,
+        13,
+        17
+      ],
+      "top3_masked": [
+        93,
+        13,
+        17
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_012",
+      "corpus": "gate_400",
+      "question": "Kiwango cha VAT ya B2C ya kidijitali cha asilimia 16 kilianza kutumika tarehe ngapi?",
+      "top3_base": [
+        57,
+        145,
+        58
+      ],
+      "top3_masked": [
+        57,
+        145,
+        58
+      ],
+      "changed": false,
+      "expected_terms": 13,
+      "overlap_base": 0,
+      "overlap_masked": 0,
+      "delta": 0
+    },
+    {
+      "id": "eval_013",
+      "corpus": "gate_400",
+      "question": "Je, mfanyabiashara ambaye bado hajafika kizingiti cha VAT anaweza kujisajilisha VAT kwa hiari?",
+      "top3_base": [
+        69,
+        58,
+        57
+      ],
+      "top3_masked": [
+        69,
+        58,
+        57
+      ],
+      "changed": false,
+      "expected_terms": 12,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_014",
+      "corpus": "gate_400",
+      "question": "Je, wakili aliyesajiliwa lazima asajilishe VAT hata kama mapato yake ya mwaka ni chini ya TZS milioni 200?",
+      "top3_base": [
+        15,
+        57,
+        145
+      ],
+      "top3_masked": [
+        15,
+        57,
+        145
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_015",
+      "corpus": "gate_400",
+      "question": "Huduma za 'exempt' (zisizo na VAT) — je, mfanyabiashara anaweza kudai VAT ya pembejeo inayohusiana nazo?",
+      "top3_base": [
+        58,
+        57,
+        217
+      ],
+      "top3_masked": [
+        58,
+        57,
+        217
+      ],
+      "changed": false,
+      "expected_terms": 15,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_016",
+      "corpus": "gate_400",
+      "question": "Je, biashara isiyosajiliwa VAT inaweza kuweka VAT ya asilimia 18 kwenye invoice zake na kukusanya pesa hiyo kutoka wateja?",
+      "top3_base": [
+        58,
+        57,
+        64
+      ],
+      "top3_masked": [
+        58,
+        57,
+        64
+      ],
+      "changed": false,
+      "expected_terms": 17,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_017",
+      "corpus": "gate_400",
+      "question": "Je, biashara inayouza bidhaa za zero-rated inaweza kudai VAT ya pembejeo kwenye gharama zake?",
+      "top3_base": [
+        89,
+        58,
+        57
+      ],
+      "top3_masked": [
+        89,
+        58,
+        57
+      ],
+      "changed": false,
+      "expected_terms": 17,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_018",
+      "corpus": "gate_400",
+      "question": "Je, kiwango cha VAT ya B2C ya kidijitali cha asilimia 16 kimetekelezwa kikamilifu nchini Tanzania kufikia katikati ya 2026?",
+      "top3_base": [
+        13,
+        57,
+        145
+      ],
+      "top3_masked": [
+        13,
+        57,
+        145
+      ],
+      "changed": false,
+      "expected_terms": 22,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_019",
+      "corpus": "gate_400",
+      "question": "Biashara yangu imepata mauzo ya TZS milioni 95 katika miezi 6 — je, nimevuka kizingiti cha VAT cha lazima?",
+      "top3_base": [
+        57,
+        146,
+        58
+      ],
+      "top3_masked": [
+        57,
+        146,
+        58
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_020",
+      "corpus": "gate_400",
+      "question": "Je, mhasibu aliyeidhinishwa (CPA) lazima asajilishe VAT hata kama ana wateja wachache na mapato madogo sana?",
+      "top3_base": [
+        69,
+        58,
+        216
+      ],
+      "top3_masked": [
+        69,
+        58,
+        216
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_021",
+      "corpus": "gate_400",
+      "question": "'Mnunuzi anayehitimu' (qualifying buyer) katika mfumo wa VAT withholding wa Tanzania maana yake nini?",
+      "top3_base": [
+        93,
+        91,
+        92
+      ],
+      "top3_masked": [
+        93,
+        91,
+        92
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_022",
+      "corpus": "gate_400",
+      "question": "Tofauti kati ya bidhaa za 'zero-rated' na 'exempt' katika VAT ya Tanzania ni nini?",
+      "top3_base": [
+        89,
+        14,
+        13
+      ],
+      "top3_masked": [
+        89,
+        14,
+        13
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_023",
+      "corpus": "gate_400",
+      "question": "'VAT ya matokeo' (output VAT) kwa mfanyabiashara aliyesajiliwa maana yake nini?",
+      "top3_base": [
+        93,
+        58,
+        57
+      ],
+      "top3_masked": [
+        93,
+        58,
+        57
+      ],
+      "changed": false,
+      "expected_terms": 15,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_024",
+      "corpus": "gate_400",
+      "question": "'Kipindi cha miezi 12 kinachozunguka' (rolling 12-month period) katika kizingiti cha VAT maana yake nini?",
+      "top3_base": [
+        145,
+        198,
+        146
+      ],
+      "top3_masked": [
+        145,
+        146,
+        57
+      ],
+      "changed": true,
+      "expected_terms": 19,
+      "overlap_base": 3,
+      "overlap_masked": 2,
+      "delta": -1
+    },
+    {
+      "id": "eval_025",
+      "corpus": "gate_400",
+      "question": "Kwa nini fani kama wakili na wahandisi zinahitajika kusajilisha VAT bila kujali mauzo yao?",
+      "top3_base": [
+        25,
+        69,
+        93
+      ],
+      "top3_masked": [
+        25,
+        69,
+        93
+      ],
+      "changed": false,
+      "expected_terms": 29,
+      "overlap_base": 0,
+      "overlap_masked": 0,
+      "delta": 0
+    },
+    {
+      "id": "eval_026",
+      "corpus": "gate_400",
+      "question": "Biashara yangu imezidi kizingiti cha VAT wiki hii — hatua ya kwanza ninayopaswa kuchukua ni nini?",
+      "top3_base": [
+        57,
+        58,
+        171
+      ],
+      "top3_masked": [
+        57,
+        58,
+        146
+      ],
+      "changed": true,
+      "expected_terms": 19,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_027",
+      "corpus": "gate_400",
+      "question": "Ninauza huduma za ushauri kwa wizara ya serikali — utaratibu sahihi wa invoice ya VAT kwa mnunuzi anayehitimu ni upi?",
+      "top3_base": [
+        93,
+        57,
+        64
+      ],
+      "top3_masked": [
+        93,
+        57,
+        64
+      ],
+      "changed": false,
+      "expected_terms": 38,
+      "overlap_base": 10,
+      "overlap_masked": 10,
+      "delta": 0
+    },
+    {
+      "id": "eval_028",
+      "corpus": "gate_400",
+      "question": "Jinsi gani ya kuomba kujisajilisha VAT kwa hiari kabla ya kufikia kizingiti?",
+      "top3_base": [
+        148,
+        215,
+        57
+      ],
+      "top3_masked": [
+        215,
+        57,
+        216
+      ],
+      "changed": true,
+      "expected_terms": 29,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_029",
+      "corpus": "gate_400",
+      "question": "VAT ya pembejeo yangu inazidi VAT ya matokeo kwa mwezi huu — nifanye nini?",
+      "top3_base": [
+        148,
+        146,
+        93
+      ],
+      "top3_masked": [
+        146,
+        93,
+        215
+      ],
+      "changed": true,
+      "expected_terms": 26,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_030",
+      "corpus": "gate_400",
+      "question": "Certificate ya VAT withholding inatolewa lini kwa msambazaji — je, ni siku ya 20 ya mwezi unaofuata?",
+      "top3_base": [
+        79,
+        148,
+        93
+      ],
+      "top3_masked": [
+        79,
+        93,
+        62
+      ],
+      "changed": true,
+      "expected_terms": 16,
+      "overlap_base": 5,
+      "overlap_masked": 6,
+      "delta": 1
+    },
+    {
+      "id": "eval_031",
+      "corpus": "gate_400",
+      "question": "Kiwango cha VAT withholding kwenye bidhaa chini ya Finance Act 2025 ni asilimia ngapi?",
+      "top3_base": [
+        16,
+        76,
+        17
+      ],
+      "top3_masked": [
+        16,
+        76,
+        17
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_032",
+      "corpus": "gate_400",
+      "question": "Kiwango cha VAT withholding kwenye huduma chini ya Finance Act 2025 ni asilimia ngapi?",
+      "top3_base": [
+        76,
+        17,
+        16
+      ],
+      "top3_masked": [
+        76,
+        17,
+        16
+      ],
+      "changed": false,
+      "expected_terms": 22,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_033",
+      "corpus": "gate_400",
+      "question": "Utaratibu wa VAT withholding wa Finance Act 2025 ulianza lini?",
+      "top3_base": [
+        16,
+        76,
+        17
+      ],
+      "top3_masked": [
+        16,
+        76,
+        17
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_034",
+      "corpus": "gate_400",
+      "question": "Mnunuzi anayehitimu ananunua bidhaa za TZS milioni 5 — kiasi gani cha VAT withholding kinakatwa?",
+      "top3_base": [
+        64,
+        93,
+        57
+      ],
+      "top3_masked": [
+        64,
+        93,
+        57
+      ],
+      "changed": false,
+      "expected_terms": 17,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_035",
+      "corpus": "gate_400",
+      "question": "Taasisi ya serikali inayohitimu inalipa TZS milioni 3 kwa huduma za ushauri — kiasi gani cha VAT withholding kinakatwa?",
+      "top3_base": [
+        64,
+        93,
+        15
+      ],
+      "top3_masked": [
+        64,
+        93,
+        15
+      ],
+      "changed": false,
+      "expected_terms": 15,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_036",
+      "corpus": "gate_400",
+      "question": "Aina tatu za wanunuzi wanaohitimu (qualifying buyers) chini ya mfumo wa VAT withholding wa Finance Act 2025 ni zipi?",
+      "top3_base": [
+        93,
+        57,
+        58
+      ],
+      "top3_masked": [
+        93,
+        57,
+        58
+      ],
+      "changed": false,
+      "expected_terms": 22,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_037",
+      "corpus": "gate_400",
+      "question": "Chini ya mfumo wa VAT withholding, ni upande gani — mnunuzi au msambazaji — anayepeleka VAT iliyozuiwa TRA?",
+      "top3_base": [
+        93,
+        64,
+        215
+      ],
+      "top3_masked": [
+        93,
+        64,
+        215
+      ],
+      "changed": false,
+      "expected_terms": 14,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_038",
+      "corpus": "gate_400",
+      "question": "Tofauti ya kiwango cha VAT withholding kati ya bidhaa (asilimia 3) na huduma (asilimia 6) ni pointi ngapi za asilimia?",
+      "top3_base": [
+        64,
+        76,
+        93
+      ],
+      "top3_masked": [
+        64,
+        76,
+        93
+      ],
+      "changed": false,
+      "expected_terms": 15,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_039",
+      "corpus": "gate_400",
+      "question": "Je, kiwango cha VAT withholding ni sawa kwa bidhaa na huduma?",
+      "top3_base": [
+        64,
+        93,
+        76
+      ],
+      "top3_masked": [
+        64,
+        93,
+        76
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_040",
+      "corpus": "gate_400",
+      "question": "Je, msambazaji anapoteza haki ya kudai VAT ya pembejeo wakati mnunuzi anayehitimu anakata VAT withholding?",
+      "top3_base": [
+        93,
+        76,
+        64
+      ],
+      "top3_masked": [
+        93,
+        76,
+        64
+      ],
+      "changed": false,
+      "expected_terms": 23,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_041",
+      "corpus": "gate_400",
+      "question": "Je, utaratibu wa VAT withholding wa Finance Act 2025 ulianza kutumika tangu 1 Januari 2025?",
+      "top3_base": [
+        17,
+        93,
+        76
+      ],
+      "top3_masked": [
+        17,
+        93,
+        76
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_042",
+      "corpus": "gate_400",
+      "question": "Je, certificate ya VAT withholding inatakiwa ifikishwe msambazaji ifikapo siku ya 20 ya mwezi unaofuata?",
+      "top3_base": [
+        79,
+        148,
+        93
+      ],
+      "top3_masked": [
+        79,
+        93,
+        37
+      ],
+      "changed": true,
+      "expected_terms": 15,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_043",
+      "corpus": "gate_400",
+      "question": "Je, kampuni ya kawaida ya biashara (isiyo ya serikali) inaweza kuwa mnunuzi anayehitimu wa VAT withholding kiotomatiki?",
+      "top3_base": [
+        93,
+        58,
+        64
+      ],
+      "top3_masked": [
+        93,
+        58,
+        64
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_044",
+      "corpus": "gate_400",
+      "question": "Je, kiwango cha asilimia 3 cha VAT withholding kinatumika pia kwa ununuzi wa huduma za IT kutoka kwa msambazaji aliyesajiliwa VAT?",
+      "top3_base": [
+        93,
+        64,
+        76
+      ],
+      "top3_masked": [
+        93,
+        64,
+        76
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_045",
+      "corpus": "gate_400",
+      "question": "Je, Wizara ya Fedha Tanzania ni mnunuzi anayehitimu kwa madhumuni ya VAT withholding kiotomatiki?",
+      "top3_base": [
+        93,
+        57,
+        13
+      ],
+      "top3_masked": [
+        93,
+        57,
+        13
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_046",
+      "corpus": "gate_400",
+      "question": "'Wakala wa VAT withholding' (VAT withholding agent) maana yake nini?",
+      "top3_base": [
+        93,
+        76,
+        64
+      ],
+      "top3_masked": [
+        93,
+        76,
+        64
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_047",
+      "corpus": "gate_400",
+      "question": "Tofauti kati ya tarehe ya kufungua VAT return (siku ya 20) na tarehe ya certificate ya VAT withholding ni nini?",
+      "top3_base": [
+        148,
+        79,
+        60
+      ],
+      "top3_masked": [
+        79,
+        60,
+        93
+      ],
+      "changed": true,
+      "expected_terms": 19,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_048",
+      "corpus": "gate_400",
+      "question": "Maana ya 'VAT withholding si VAT yote' kwa msambazaji ni nini?",
+      "top3_base": [
+        93,
+        64,
+        76
+      ],
+      "top3_masked": [
+        93,
+        64,
+        76
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_049",
+      "corpus": "gate_400",
+      "question": "Mnunuzi anayehitimu akishindwa kukata na kupeleka VAT withholding TRA — matokeo yake ni nini?",
+      "top3_base": [
+        93,
+        92,
+        217
+      ],
+      "top3_masked": [
+        93,
+        92,
+        217
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_050",
+      "corpus": "gate_400",
+      "question": "Msambazaji akidanganya kiwango cha VAT kwenye invoice kwa mnunuzi anayehitimu — hatari ni nini?",
+      "top3_base": [
+        93,
+        215,
+        57
+      ],
+      "top3_masked": [
+        93,
+        215,
+        57
+      ],
+      "changed": false,
+      "expected_terms": 17,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_051",
+      "corpus": "gate_400",
+      "question": "Kiwango cha chini cha thamani ya muamala ambacho kinahitaji risiti ya EFD kwa biashara zilizosajiliwa VAT ni kiasi gani?",
+      "top3_base": [
+        58,
+        57,
+        171
+      ],
+      "top3_masked": [
+        58,
+        57,
+        145
+      ],
+      "changed": true,
+      "expected_terms": 18,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_052",
+      "corpus": "gate_400",
+      "question": "Kiwango cha kawaida cha VAT kinachoonekana kwenye risiti ya EFD ya muamala wa kawaida unaolipwa VAT ni asilimia ngapi?",
+      "top3_base": [
+        57,
+        58,
+        13
+      ],
+      "top3_masked": [
+        57,
+        58,
+        13
+      ],
+      "changed": false,
+      "expected_terms": 12,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_053",
+      "corpus": "gate_400",
+      "question": "EFD machine ikiharibika — biashara ina muda gani wa kuripoti TRA kabla ya kuendelea kufanya mauzo?",
+      "top3_base": [
+        58,
+        57,
+        84
+      ],
+      "top3_masked": [
+        58,
+        57,
+        84
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_054",
+      "corpus": "gate_400",
+      "question": "VAT return inayohusiana na rekodi za EFD iwasilishwe TRA ifikapo tarehe ngapi kila mwezi?",
+      "top3_base": [
+        148,
+        57,
+        58
+      ],
+      "top3_masked": [
+        57,
+        58,
+        60
+      ],
+      "changed": true,
+      "expected_terms": 12,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_055",
+      "corpus": "gate_400",
+      "question": "Kiwango gani cha VAT kinapaswa kuonekana kwenye risiti za EFD za malipo ya kidijitali ya B2C kuanzia 1 Septemba 2025?",
+      "top3_base": [
+        57,
+        58,
+        145
+      ],
+      "top3_masked": [
+        57,
+        58,
+        145
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_056",
+      "corpus": "gate_400",
+      "question": "Wateja wangu wanalipa pesa taslimu — naweza kusema muamala mdogo wa taslimu chini ya TZS 10,000 hauhitaji risiti ya EFD?",
+      "top3_base": [
+        58,
+        57,
+        216
+      ],
+      "top3_masked": [
+        58,
+        57,
+        216
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_057",
+      "corpus": "gate_400",
+      "question": "Je, biashara inahitaji ruhusa ya TRA kabla ya kuendelea kufanya mauzo wakati EFD ikiwa imeharibika?",
+      "top3_base": [
+        58,
+        84,
+        94
+      ],
+      "top3_masked": [
+        58,
+        84,
+        94
+      ],
+      "changed": false,
+      "expected_terms": 17,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_058",
+      "corpus": "gate_400",
+      "question": "Je, wateja wana haki ya kisheria ya kudai risiti ya EFD kutoka kwa biashara iliyosajiliwa VAT?",
+      "top3_base": [
+        58,
+        57,
+        69
+      ],
+      "top3_masked": [
+        58,
+        57,
+        69
+      ],
+      "changed": false,
+      "expected_terms": 14,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_059",
+      "corpus": "gate_400",
+      "question": "Mteja akilipa kupitia mobile money — je, ninaweza kutoa risiti iliyoandikwa kwa mkono badala ya risiti ya EFD?",
+      "top3_base": [
+        58,
+        57,
+        22
+      ],
+      "top3_masked": [
+        58,
+        57,
+        22
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_060",
+      "corpus": "gate_400",
+      "question": "Je, TRA inaweza kufunga biashara kwa kutotoa risiti za EFD mara kwa mara?",
+      "top3_base": [
+        58,
+        94,
+        57
+      ],
+      "top3_masked": [
+        58,
+        94,
+        57
+      ],
+      "changed": false,
+      "expected_terms": 22,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_061",
+      "corpus": "gate_400",
+      "question": "Je, mashine ya EFD inatuma taarifa za miamala moja kwa moja TRA bila mfanyabiashara kufanya chochote zaidi?",
+      "top3_base": [
+        58,
+        57,
+        84
+      ],
+      "top3_masked": [
+        58,
+        57,
+        84
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_062",
+      "corpus": "gate_400",
+      "question": "EFD ikiwa imeharibika na inasubiri ukarabati — je, biashara inaweza kutumia risiti za kawaida bila kuomba ruhusa ya TRA?",
+      "top3_base": [
+        58,
+        57,
+        84
+      ],
+      "top3_masked": [
+        58,
+        57,
+        84
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_063",
+      "corpus": "gate_400",
+      "question": "Je, ni jukumu la mteja kuomba risiti ya EFD, au biashara inapaswa kuitoa moja kwa moja bila kuombwa?",
+      "top3_base": [
+        58,
+        57,
+        69
+      ],
+      "top3_masked": [
+        58,
+        57,
+        69
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_064",
+      "corpus": "gate_400",
+      "question": "EFD machine yangu imeharibika ghafla — hatua sahihi ni zipi?",
+      "top3_base": [
+        58,
+        57,
+        84
+      ],
+      "top3_masked": [
+        58,
+        57,
+        84
+      ],
+      "changed": false,
+      "expected_terms": 28,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_065",
+      "corpus": "gate_400",
+      "question": "Biashara mpya iliyosajiliwa VAT inapata EFD machine vipi?",
+      "top3_base": [
+        58,
+        57,
+        84
+      ],
+      "top3_masked": [
+        58,
+        57,
+        84
+      ],
+      "changed": false,
+      "expected_terms": 24,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_066",
+      "corpus": "gate_400",
+      "question": "Mteja anakataa kukubali risiti ya EFD — nifanye nini?",
+      "top3_base": [
+        58,
+        57,
+        92
+      ],
+      "top3_masked": [
+        58,
+        57,
+        92
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_067",
+      "corpus": "gate_400",
+      "question": "TRA kawaida hugundua vipi biashara ambazo hazitoi risiti za EFD?",
+      "top3_base": [
+        58,
+        57,
+        84
+      ],
+      "top3_masked": [
+        58,
+        57,
+        84
+      ],
+      "changed": false,
+      "expected_terms": 31,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_068",
+      "corpus": "gate_400",
+      "question": "Adhabu za TRA kwa biashara inayokataa kutoa risiti za EFD mara kwa mara ni zipi?",
+      "top3_base": [
+        58,
+        57,
+        94
+      ],
+      "top3_masked": [
+        58,
+        57,
+        94
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_069",
+      "corpus": "gate_400",
+      "question": "Mteja akiripoti biashara kwa TRA kwa kutotoa risiti ya EFD — TRA inaweza kufanya nini?",
+      "top3_base": [
+        58,
+        57,
+        84
+      ],
+      "top3_masked": [
+        58,
+        57,
+        84
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_070",
+      "corpus": "gate_400",
+      "question": "Je, kukosa kutoa risiti ya EFD kunaweza kuchukuliwa kama udanganyifu wa kodi (tax evasion) na TRA?",
+      "top3_base": [
+        58,
+        57,
+        217
+      ],
+      "top3_masked": [
+        58,
+        57,
+        217
+      ],
+      "changed": false,
+      "expected_terms": 21,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_071",
+      "corpus": "gate_400",
+      "question": "BRELA inasajilisha aina kuu ngapi za miundo ya biashara Tanzania?",
+      "top3_base": [
+        80,
+        87,
+        44
+      ],
+      "top3_masked": [
+        80,
+        87,
+        44
+      ],
+      "changed": false,
+      "expected_terms": 24,
+      "overlap_base": 9,
+      "overlap_masked": 9,
+      "delta": 0
+    },
+    {
+      "id": "eval_072",
+      "corpus": "gate_400",
+      "question": "Mara ngapi kampuni iliyosajiliwa na BRELA inahitajika kuwasilisha annual return (ripoti ya kila mwaka)?",
+      "top3_base": [
+        134,
+        44,
+        133
+      ],
+      "top3_masked": [
+        134,
+        44,
+        133
+      ],
+      "changed": false,
+      "expected_terms": 27,
+      "overlap_base": 7,
+      "overlap_masked": 7,
+      "delta": 0
+    },
+    {
+      "id": "eval_073",
+      "corpus": "gate_400",
+      "question": "Jina la biashara (sole trader) linalosajiliwa BRELA linaweza kumilikiwa na watu wangapi?",
+      "top3_base": [
+        134,
+        44,
+        81
+      ],
+      "top3_masked": [
+        134,
+        44,
+        81
+      ],
+      "changed": false,
+      "expected_terms": 23,
+      "overlap_base": 9,
+      "overlap_masked": 9,
+      "delta": 0
+    },
+    {
+      "id": "eval_074",
+      "corpus": "gate_400",
+      "question": "Mfanyabiashara anahitaji nyaraka kuu ngapi kutoka taasisi tofauti (BRELA na TRA) ili kufanya biashara rasmi Tanzania?",
+      "top3_base": [
+        80,
+        87,
+        58
+      ],
+      "top3_masked": [
+        80,
+        87,
+        58
+      ],
+      "changed": false,
+      "expected_terms": 22,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_075",
+      "corpus": "gate_400",
+      "question": "Je, mfanyabiashara anayefanya kazi peke yake kwa jina lake la kawaida bado anahitaji kusajilisha jina la biashara na BRELA?",
+      "top3_base": [
+        81,
+        80,
+        44
+      ],
+      "top3_masked": [
+        81,
+        80,
+        44
+      ],
+      "changed": false,
+      "expected_terms": 22,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_076",
+      "corpus": "gate_400",
+      "question": "Je, certificate ya BRELA peke yake inatosha kufanya biashara kikamilifu bila kupata TIN kutoka TRA?",
+      "top3_base": [
+        80,
+        44,
+        87
+      ],
+      "top3_masked": [
+        80,
+        44,
+        87
+      ],
+      "changed": false,
+      "expected_terms": 23,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_077",
+      "corpus": "gate_400",
+      "question": "Je, mfanyabiashara anaweza kutafuta jina la biashara kwenye tovuti ya BRELA kabla ya kusajilisha ili kujua kama linachukuliwa tayari?",
+      "top3_base": [
+        44,
+        80,
+        81
+      ],
+      "top3_masked": [
+        44,
+        80,
+        81
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_078",
+      "corpus": "gate_400",
+      "question": "Je, kampuni inaweza kufutwa usajilishaji wake BRELA kwa kushindwa kuwasilisha annual return?",
+      "top3_base": [
+        44,
+        134,
+        133
+      ],
+      "top3_masked": [
+        44,
+        134,
+        133
+      ],
+      "changed": false,
+      "expected_terms": 23,
+      "overlap_base": 9,
+      "overlap_masked": 9,
+      "delta": 0
+    },
+    {
+      "id": "eval_079",
+      "corpus": "gate_400",
+      "question": "Je, ushirikiano (partnership) wa watu wawili wanaomiliki duka pamoja unahitaji kusajiliwa BRELA?",
+      "top3_base": [
+        80,
+        69,
+        44
+      ],
+      "top3_masked": [
+        80,
+        69,
+        44
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_080",
+      "corpus": "gate_400",
+      "question": "BRELA ni nini na kazi yake kuu ni nini?",
+      "top3_base": [
+        134,
+        133,
+        87
+      ],
+      "top3_masked": [
+        134,
+        133,
+        87
+      ],
+      "changed": false,
+      "expected_terms": 28,
+      "overlap_base": 11,
+      "overlap_masked": 11,
+      "delta": 0
+    },
+    {
+      "id": "eval_081",
+      "corpus": "gate_400",
+      "question": "Tofauti kuu kati ya jina la biashara (sole trader) na kampuni yenye ukomo (limited company) kuhusiana na wajibu wa kisheria ni nini?",
+      "top3_base": [
+        44,
+        210,
+        81
+      ],
+      "top3_masked": [
+        44,
+        210,
+        81
+      ],
+      "changed": false,
+      "expected_terms": 22,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_082",
+      "corpus": "gate_400",
+      "question": "Annual return ya BRELA (ripoti ya kila mwaka) ni nini?",
+      "top3_base": [
+        134,
+        133,
+        78
+      ],
+      "top3_masked": [
+        134,
+        133,
+        78
+      ],
+      "changed": false,
+      "expected_terms": 27,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_083",
+      "corpus": "gate_400",
+      "question": "Usajilishaji wa miliki ya akili (intellectual property) nchini Tanzania hufanywa na taasisi gani?",
+      "top3_base": [
+        87,
+        52,
+        214
+      ],
+      "top3_masked": [
+        87,
+        52,
+        214
+      ],
+      "changed": false,
+      "expected_terms": 27,
+      "overlap_base": 17,
+      "overlap_masked": 17,
+      "delta": 0
+    },
+    {
+      "id": "eval_084",
+      "corpus": "gate_400",
+      "question": "Hatua za kusajilisha jina la biashara (sole trader) na BRELA ni zipi?",
+      "top3_base": [
+        44,
+        80,
+        81
+      ],
+      "top3_masked": [
+        44,
+        80,
+        81
+      ],
+      "changed": false,
+      "expected_terms": 26,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_085",
+      "corpus": "gate_400",
+      "question": "Kampuni ilishindwa kuwasilisha annual return kwa miaka 2 — matokeo yanayoweza kutokea ni yapi?",
+      "top3_base": [
+        44,
+        134,
+        133
+      ],
+      "top3_masked": [
+        44,
+        134,
+        133
+      ],
+      "changed": false,
+      "expected_terms": 31,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_086",
+      "corpus": "gate_400",
+      "question": "Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?",
+      "top3_base": [
+        10,
+        9,
+        213
+      ],
+      "top3_masked": [
+        10,
+        9,
+        213
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 8,
+      "overlap_masked": 8,
+      "delta": 0
+    },
+    {
+      "id": "eval_087",
+      "corpus": "gate_400",
+      "question": "Kiwango cha mchango wa NSSF kwa upande wa mfanyakazi ni asilimia ngapi ya mshahara wake wa jumla?",
+      "top3_base": [
+        10,
+        9,
+        213
+      ],
+      "top3_masked": [
+        10,
+        9,
+        213
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 9,
+      "overlap_masked": 9,
+      "delta": 0
+    },
+    {
+      "id": "eval_088",
+      "corpus": "gate_400",
+      "question": "Jumla ya mchango wa NSSF (mwajiri + mfanyakazi) ni asilimia ngapi ya mshahara wa jumla?",
+      "top3_base": [
+        10,
+        213,
+        9
+      ],
+      "top3_masked": [
+        10,
+        213,
+        9
+      ],
+      "changed": false,
+      "expected_terms": 10,
+      "overlap_base": 8,
+      "overlap_masked": 8,
+      "delta": 0
+    },
+    {
+      "id": "eval_089",
+      "corpus": "gate_400",
+      "question": "Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?",
+      "top3_base": [
+        62,
+        95,
+        9
+      ],
+      "top3_masked": [
+        62,
+        95,
+        9
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 7,
+      "overlap_masked": 7,
+      "delta": 0
+    },
+    {
+      "id": "eval_090",
+      "corpus": "gate_400",
+      "question": "Mfanyakazi ana mshahara wa jumla wa TZS 500,000 kwa mwezi — mwajiri anachangia kiasi gani NSSF kwa sehemu yake?",
+      "top3_base": [
+        9,
+        213,
+        10
+      ],
+      "top3_masked": [
+        9,
+        213,
+        10
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 7,
+      "overlap_masked": 7,
+      "delta": 0
+    },
+    {
+      "id": "eval_091",
+      "corpus": "gate_400",
+      "question": "Mfanyakazi anapata mshahara wa jumla wa TZS 800,000 — kiasi gani kinakatwa mshahara wake kwa ajili ya NSSF?",
+      "top3_base": [
+        213,
+        211,
+        10
+      ],
+      "top3_masked": [
+        213,
+        211,
+        10
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 9,
+      "overlap_masked": 9,
+      "delta": 0
+    },
+    {
+      "id": "eval_092",
+      "corpus": "gate_400",
+      "question": "Wafanyakazi 5 kila mmoja anapata TZS 400,000 kwa mwezi — mwajiri anachangia kiasi gani NSSF kwa sehemu yake peke yake?",
+      "top3_base": [
+        213,
+        9,
+        10
+      ],
+      "top3_masked": [
+        213,
+        9,
+        10
+      ],
+      "changed": false,
+      "expected_terms": 21,
+      "overlap_base": 8,
+      "overlap_masked": 8,
+      "delta": 0
+    },
+    {
+      "id": "eval_093",
+      "corpus": "gate_400",
+      "question": "Mchango wa NSSF wa Januari unapaswa kupelekwa NSSF ifikapo tarehe ngapi?",
+      "top3_base": [
+        62,
+        213,
+        9
+      ],
+      "top3_masked": [
+        62,
+        213,
+        9
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 8,
+      "overlap_masked": 8,
+      "delta": 0
+    },
+    {
+      "id": "eval_094",
+      "corpus": "gate_400",
+      "question": "Mwajiri akikosa kulipa NSSF — ni taasisi gani (TRA au NSSF) inayofuatilia na kutoza adhabu?",
+      "top3_base": [
+        220,
+        9,
+        10
+      ],
+      "top3_masked": [
+        220,
+        9,
+        10
+      ],
+      "changed": false,
+      "expected_terms": 23,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_095",
+      "corpus": "gate_400",
+      "question": "Mfanyabiashara anayejitegemea (self-employed) anapojiunga NSSF kwa hiari — analipa asilimia ngapi ya mchango wake wote (sehemu zote mbili)?",
+      "top3_base": [
+        9,
+        213,
+        10
+      ],
+      "top3_masked": [
+        9,
+        213,
+        10
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 6,
+      "overlap_masked": 6,
+      "delta": 0
+    },
+    {
+      "id": "eval_096",
+      "corpus": "gate_400",
+      "question": "Je, ni kosa la kisheria kwa mwajiri kutosajilisha wafanyakazi wake NSSF?",
+      "top3_base": [
+        9,
+        69,
+        213
+      ],
+      "top3_masked": [
+        9,
+        69,
+        213
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_097",
+      "corpus": "gate_400",
+      "question": "Je, wafanyakazi wa nyumbani (domestic workers) kama wasichana wa nyumba wanaostahili NSSF?",
+      "top3_base": [
+        213,
+        9,
+        10
+      ],
+      "top3_masked": [
+        213,
+        9,
+        10
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_098",
+      "corpus": "gate_400",
+      "question": "Je, mfanyabiashara anayejitegemea (self-employed) anaweza kujiunga NSSF kwa hiari bila mwajiri?",
+      "top3_base": [
+        9,
+        10,
+        69
+      ],
+      "top3_masked": [
+        9,
+        10,
+        69
+      ],
+      "changed": false,
+      "expected_terms": 25,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_099",
+      "corpus": "gate_400",
+      "question": "Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?",
+      "top3_base": [
+        9,
+        10,
+        213
+      ],
+      "top3_masked": [
+        9,
+        10,
+        213
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 7,
+      "overlap_masked": 7,
+      "delta": 0
+    },
+    {
+      "id": "eval_100",
+      "corpus": "gate_400",
+      "question": "Mfanyakazi anapata mshahara wa jumla wa TZS milioni 2 kwa mwezi — je, NSSF inahusika na mshahara wote?",
+      "top3_base": [
+        213,
+        9,
+        10
+      ],
+      "top3_masked": [
+        213,
+        9,
+        10
+      ],
+      "changed": false,
+      "expected_terms": 17,
+      "overlap_base": 6,
+      "overlap_masked": 6,
+      "delta": 0
+    },
+    {
+      "id": "eval_101",
+      "corpus": "gate_400",
+      "question": "Je, NSSF inatoa mafao ya uzazi kwa wanawake wanaohitimu?",
+      "top3_base": [
+        10,
+        9,
+        213
+      ],
+      "top3_masked": [
+        10,
+        9,
+        213
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_102",
+      "corpus": "gate_400",
+      "question": "Je, deadline ya kulipa michango ya NSSF kila mwezi ni siku ya 20 ya mwezi unaofuata?",
+      "top3_base": [
+        62,
+        9,
+        10
+      ],
+      "top3_masked": [
+        62,
+        9,
+        10
+      ],
+      "changed": false,
+      "expected_terms": 24,
+      "overlap_base": 8,
+      "overlap_masked": 8,
+      "delta": 0
+    },
+    {
+      "id": "eval_103",
+      "corpus": "gate_400",
+      "question": "Je, mwajiri anaweza kuahirisha malipo ya NSSF wakati wa msongo wa kifedha bila adhabu?",
+      "top3_base": [
+        9,
+        66,
+        213
+      ],
+      "top3_masked": [
+        9,
+        66,
+        213
+      ],
+      "changed": false,
+      "expected_terms": 21,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_104",
+      "corpus": "gate_400",
+      "question": "Mwajiri anahitaji nyaraka gani kuwasilisha NSSF ili kusajilisha wafanyakazi wake?",
+      "top3_base": [
+        213,
+        9,
+        69
+      ],
+      "top3_masked": [
+        213,
+        9,
+        69
+      ],
+      "changed": false,
+      "expected_terms": 15,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_105",
+      "corpus": "gate_400",
+      "question": "Ninajua sitaweza kulipa NSSF kwa wakati mwezi huu kwa sababu ya tatizo la mtiririko wa pesa — nifanye nini?",
+      "top3_base": [
+        9,
+        62,
+        11
+      ],
+      "top3_masked": [
+        9,
+        62,
+        11
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_106",
+      "corpus": "gate_400",
+      "question": "NSSF inampa mwajiri nini baada ya usajilishaji kukamilika?",
+      "top3_base": [
+        9,
+        10,
+        213
+      ],
+      "top3_masked": [
+        9,
+        10,
+        213
+      ],
+      "changed": false,
+      "expected_terms": 15,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_107",
+      "corpus": "gate_400",
+      "question": "Mfanyabiashara anayejitegemea anachukua hatua gani kujiunga NSSF kama mwanachama wa hiari?",
+      "top3_base": [
+        9,
+        69,
+        213
+      ],
+      "top3_masked": [
+        9,
+        69,
+        213
+      ],
+      "changed": false,
+      "expected_terms": 25,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_108",
+      "corpus": "gate_400",
+      "question": "NSSF inatoza riba kiasi gani kwenye michango iliyochelewa ya mwajiri?",
+      "top3_base": [
+        9,
+        10,
+        213
+      ],
+      "top3_masked": [
+        9,
+        10,
+        213
+      ],
+      "changed": false,
+      "expected_terms": 21,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_109",
+      "corpus": "gate_400",
+      "question": "Je, mkurugenzi wa kampuni anaweza kuwajibika binafsi kwa michango ya NSSF isiyolipwa?",
+      "top3_base": [
+        9,
+        213,
+        217
+      ],
+      "top3_masked": [
+        9,
+        213,
+        217
+      ],
+      "changed": false,
+      "expected_terms": 21,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_110",
+      "corpus": "gate_400",
+      "question": "Mwajiri anayoendelea kutosajilisha wafanyakazi wake NSSF — NSSF inaweza kuchukua hatua gani?",
+      "top3_base": [
+        69,
+        9,
+        213
+      ],
+      "top3_masked": [
+        69,
+        9,
+        213
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_111",
+      "corpus": "gate_400",
+      "question": "Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?",
+      "top3_base": [
+        5,
+        212,
+        7
+      ],
+      "top3_masked": [
+        5,
+        212,
+        7
+      ],
+      "changed": false,
+      "expected_terms": 14,
+      "overlap_base": 7,
+      "overlap_masked": 7,
+      "delta": 0
+    },
+    {
+      "id": "eval_112",
+      "corpus": "gate_400",
+      "question": "Kiwango cha WCF ni asilimia ngapi ya jumla ya mishahara ya jumla?",
+      "top3_base": [
+        66,
+        10,
+        213
+      ],
+      "top3_masked": [
+        66,
+        10,
+        213
+      ],
+      "changed": false,
+      "expected_terms": 13,
+      "overlap_base": 8,
+      "overlap_masked": 8,
+      "delta": 0
+    },
+    {
+      "id": "eval_113",
+      "corpus": "gate_400",
+      "question": "SDL inaanza kulipwa mwajiri ana wafanyakazi wangapi au zaidi?",
+      "top3_base": [
+        7,
+        212,
+        5
+      ],
+      "top3_masked": [
+        7,
+        212,
+        5
+      ],
+      "changed": false,
+      "expected_terms": 13,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_114",
+      "corpus": "gate_400",
+      "question": "SDL inalipwa pamoja na kodi gani nyingine na inawasilishwa TRA ifikapo tarehe ngapi kila mwezi?",
+      "top3_base": [
+        95,
+        7,
+        88
+      ],
+      "top3_masked": [
+        95,
+        7,
+        88
+      ],
+      "changed": false,
+      "expected_terms": 11,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_115",
+      "corpus": "gate_400",
+      "question": "GN 605A ya mishahara ya chini ya sekta binafsi inaanza kutumika tarehe ngapi?",
+      "top3_base": [
+        23,
+        72,
+        71
+      ],
+      "top3_masked": [
+        23,
+        72,
+        71
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_116",
+      "corpus": "gate_400",
+      "question": "Ongezeko la wastani la mishahara ya chini ya sekta binafsi chini ya GN 605A ni asilimia ngapi?",
+      "top3_base": [
+        72,
+        24,
+        47
+      ],
+      "top3_masked": [
+        72,
+        24,
+        47
+      ],
+      "changed": false,
+      "expected_terms": 12,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_117",
+      "corpus": "gate_400",
+      "question": "GN 605A inashughulikia sekta ngapi na sekta ndogo ngapi za mishahara ya chini?",
+      "top3_base": [
+        72,
+        73,
+        74
+      ],
+      "top3_masked": [
+        72,
+        73,
+        74
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 8,
+      "overlap_masked": 8,
+      "delta": 0
+    },
+    {
+      "id": "eval_118",
+      "corpus": "gate_400",
+      "question": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania KABLA ya GN 605A kuanza kutumika ulikuwa TZS ngapi kwa mwezi?",
+      "top3_base": [
+        73,
+        47,
+        72
+      ],
+      "top3_masked": [
+        73,
+        47,
+        72
+      ],
+      "changed": false,
+      "expected_terms": 17,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_119",
+      "corpus": "gate_400",
+      "question": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania BAADA ya GN 605A kuanza ni TZS ngapi kwa mwezi?",
+      "top3_base": [
+        73,
+        72,
+        47
+      ],
+      "top3_masked": [
+        73,
+        72,
+        47
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_120",
+      "corpus": "gate_400",
+      "question": "Kiwango cha juu zaidi cha mshahara wa chini chini ya GN 605A ni TZS ngapi na ni kwa sekta gani?",
+      "top3_base": [
+        72,
+        73,
+        47
+      ],
+      "top3_masked": [
+        72,
+        73,
+        47
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 6,
+      "overlap_masked": 6,
+      "delta": 0
+    },
+    {
+      "id": "eval_121",
+      "corpus": "gate_400",
+      "question": "Je, mwajiri mwenye wafanyakazi 8 ana wajibu wa kulipa SDL?",
+      "top3_base": [
+        7,
+        212,
+        5
+      ],
+      "top3_masked": [
+        7,
+        212,
+        5
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_122",
+      "corpus": "gate_400",
+      "question": "Je, SDL inakatwa kutoka mshahara wa mfanyakazi na kulipwa TRA?",
+      "top3_base": [
+        212,
+        5,
+        88
+      ],
+      "top3_masked": [
+        212,
+        5,
+        88
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_123",
+      "corpus": "gate_400",
+      "question": "Je, WCF na SDL ni ushuru ule ule unaolipwa mahali pamoja?",
+      "top3_base": [
+        68,
+        69,
+        67
+      ],
+      "top3_masked": [
+        68,
+        69,
+        67
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 8,
+      "overlap_masked": 8,
+      "delta": 0
+    },
+    {
+      "id": "eval_124",
+      "corpus": "gate_400",
+      "question": "Biashara yangu ina wafanyakazi 9 na ninaajiri mfanyakazi wa 10 katikati ya mwezi — je, SDL inatakiwa kulipwa mwezi huo huo?",
+      "top3_base": [
+        7,
+        212,
+        95
+      ],
+      "top3_masked": [
+        7,
+        212,
+        95
+      ],
+      "changed": false,
+      "expected_terms": 15,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_125",
+      "corpus": "gate_400",
+      "question": "Je, amri ya mishahara ya chini ya sekta binafsi ya mwaka 2022 bado ina nguvu tangu Januari 2026?",
+      "top3_base": [
+        152,
+        72,
+        215
+      ],
+      "top3_masked": [
+        152,
+        72,
+        215
+      ],
+      "changed": false,
+      "expected_terms": 25,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_126",
+      "corpus": "gate_400",
+      "question": "Je, mshahara wa chini wa TZS 500,000 kwa sekta ya umma umetokana na GN 605A?",
+      "top3_base": [
+        72,
+        73,
+        74
+      ],
+      "top3_masked": [
+        72,
+        73,
+        74
+      ],
+      "changed": false,
+      "expected_terms": 29,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_127",
+      "corpus": "gate_400",
+      "question": "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?",
+      "top3_base": [
+        95,
+        5,
+        212
+      ],
+      "top3_masked": [
+        95,
+        5,
+        212
+      ],
+      "changed": false,
+      "expected_terms": 11,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_128",
+      "corpus": "gate_400",
+      "question": "Je, mwajiri anaweza kulipa WCF moja kwa moja TRA badala ya Mamlaka ya WCF?",
+      "top3_base": [
+        66,
+        68,
+        69
+      ],
+      "top3_masked": [
+        66,
+        68,
+        69
+      ],
+      "changed": false,
+      "expected_terms": 10,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_129",
+      "corpus": "gate_400",
+      "question": "Mpangilio sahihi wa makato ya mishahara na malipo ya kodi za mwajiri kwa mwezi ni upi?",
+      "top3_base": [
+        66,
+        216,
+        215
+      ],
+      "top3_masked": [
+        66,
+        216,
+        215
+      ],
+      "changed": false,
+      "expected_terms": 28,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_130",
+      "corpus": "gate_400",
+      "question": "Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?",
+      "top3_base": [
+        212,
+        7,
+        95
+      ],
+      "top3_masked": [
+        212,
+        7,
+        95
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 7,
+      "overlap_masked": 7,
+      "delta": 0
+    },
+    {
+      "id": "eval_131",
+      "corpus": "gate_400",
+      "question": "Mwajiri anagundua vipi kiwango cha mshahara wa chini cha GN 605A kinachofaa kwa kila mfanyakazi wake?",
+      "top3_base": [
+        72,
+        73,
+        9
+      ],
+      "top3_masked": [
+        72,
+        73,
+        9
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_132",
+      "corpus": "gate_400",
+      "question": "Nimegundua nimekuwa nikalipa mishahara chini ya viwango vya GN 605A tangu Januari 2026 — nifanye nini?",
+      "top3_base": [
+        23,
+        73,
+        72
+      ],
+      "top3_masked": [
+        23,
+        73,
+        72
+      ],
+      "changed": false,
+      "expected_terms": 30,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_133",
+      "corpus": "gate_400",
+      "question": "Matokeo ya kisheria ya mwajiri anayolipa mshahara chini ya viwango vya GN 605A ni yapi?",
+      "top3_base": [
+        72,
+        20,
+        21
+      ],
+      "top3_masked": [
+        72,
+        20,
+        21
+      ],
+      "changed": false,
+      "expected_terms": 27,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_134",
+      "corpus": "gate_400",
+      "question": "TRA inatoza adhabu gani kwa mwajiri aliyechelewa kulipa SDL?",
+      "top3_base": [
+        88,
+        220,
+        5
+      ],
+      "top3_masked": [
+        88,
+        220,
+        5
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_135",
+      "corpus": "gate_400",
+      "question": "Mwajiri anadai viwango vya amri ya mishahara ya 2022 bado vinatumika kwa wafanyakazi wake mwaka 2026 — hali yake ya kisheria ni nini?",
+      "top3_base": [
+        152,
+        151,
+        52
+      ],
+      "top3_masked": [
+        152,
+        151,
+        52
+      ],
+      "changed": false,
+      "expected_terms": 26,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_136",
+      "corpus": "gate_400",
+      "question": "GN 487A inazuia aina ngapi za biashara kwa wageni?",
+      "top3_base": [
+        179,
+        22,
+        92
+      ],
+      "top3_masked": [
+        179,
+        22,
+        92
+      ],
+      "changed": false,
+      "expected_terms": 6,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_137",
+      "corpus": "gate_400",
+      "question": "Faini ya chini kabisa kwa mgeni anayefanya biashara iliyokatazwa ni TZS ngapi?",
+      "top3_base": [
+        20,
+        22,
+        92
+      ],
+      "top3_masked": [
+        20,
+        22,
+        92
+      ],
+      "changed": false,
+      "expected_terms": 4,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_138",
+      "corpus": "gate_400",
+      "question": "Mgeni aliyekamatwa akifanya biashara iliyokatazwa anaweza kufungwa miezi mingapi?",
+      "top3_base": [
+        21,
+        20,
+        22
+      ],
+      "top3_masked": [
+        21,
+        20,
+        22
+      ],
+      "changed": false,
+      "expected_terms": 4,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_139",
+      "corpus": "gate_400",
+      "question": "Mtanzania anayenusuru mgeni kufanya biashara haramu atalipia faini ya TZS ngapi?",
+      "top3_base": [
+        21,
+        92,
+        20
+      ],
+      "top3_masked": [
+        21,
+        92,
+        20
+      ],
+      "changed": false,
+      "expected_terms": 7,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_140",
+      "corpus": "gate_400",
+      "question": "Mtanzania anayenusuru mgeni kufanya biashara haramu anaweza kufungwa miezi mingapi?",
+      "top3_base": [
+        21,
+        92,
+        20
+      ],
+      "top3_masked": [
+        21,
+        92,
+        20
+      ],
+      "changed": false,
+      "expected_terms": 6,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_141",
+      "corpus": "gate_400",
+      "question": "GN 487A ilianza kutumika tarehe ngapi?",
+      "top3_base": [
+        19,
+        20,
+        174
+      ],
+      "top3_masked": [
+        19,
+        20,
+        174
+      ],
+      "changed": false,
+      "expected_terms": 7,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_142",
+      "corpus": "gate_400",
+      "question": "Zoezi la utekelezaji wa GN 487A lilianza tarehe ngapi?",
+      "top3_base": [
+        19,
+        20,
+        21
+      ],
+      "top3_masked": [
+        19,
+        20,
+        21
+      ],
+      "changed": false,
+      "expected_terms": 7,
+      "overlap_base": 0,
+      "overlap_masked": 0,
+      "delta": 0
+    },
+    {
+      "id": "eval_143",
+      "corpus": "gate_400",
+      "question": "Zoezi la utekelezaji wa GN 487A liliishia tarehe ngapi?",
+      "top3_base": [
+        19,
+        20,
+        92
+      ],
+      "top3_masked": [
+        19,
+        20,
+        92
+      ],
+      "changed": false,
+      "expected_terms": 7,
+      "overlap_base": 0,
+      "overlap_masked": 0,
+      "delta": 0
+    },
+    {
+      "id": "eval_144",
+      "corpus": "gate_400",
+      "question": "Mke wangu ni Mtanzania — kama mgeni mwenye mwenzi wa Kitanzania, GN 487A haitanigusia?",
+      "top3_base": [
+        92,
+        21,
+        20
+      ],
+      "top3_masked": [
+        92,
+        21,
+        20
+      ],
+      "changed": false,
+      "expected_terms": 8,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_145",
+      "corpus": "gate_400",
+      "question": "Naweza kumwomba rafiki yangu Mtanzania asajili biashara kwa jina lake, niendelee mimi kuendeshea — inafanya kazi?",
+      "top3_base": [
+        92,
+        44,
+        69
+      ],
+      "top3_masked": [
+        92,
+        44,
+        69
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_146",
+      "corpus": "gate_400",
+      "question": "Serikali ilitoa muda wa kujiandaa baada ya GN 487A kutangazwa mnamo Julai 2025?",
+      "top3_base": [
+        19,
+        174,
+        92
+      ],
+      "top3_masked": [
+        19,
+        174,
+        92
+      ],
+      "changed": false,
+      "expected_terms": 12,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_147",
+      "corpus": "gate_400",
+      "question": "Biashara ya rejareja — kama duka la nguo — iko kwenye orodha ya biashara zilizokatazwa kwa wageni?",
+      "top3_base": [
+        92,
+        179,
+        22
+      ],
+      "top3_masked": [
+        92,
+        179,
+        22
+      ],
+      "changed": false,
+      "expected_terms": 7,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_148",
+      "corpus": "gate_400",
+      "question": "Biashara ya jumla — kuuza bidhaa kwa maduka mengine — imekatazwa kwa wageni?",
+      "top3_base": [
+        92,
+        179,
+        22
+      ],
+      "top3_masked": [
+        92,
+        179,
+        22
+      ],
+      "changed": false,
+      "expected_terms": 5,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_149",
+      "corpus": "gate_400",
+      "question": "Rafiki yangu wa Ethiopia ana duka la kutengeneza simu Kariakoo — GN 487A inamfunika?",
+      "top3_base": [
+        179,
+        21,
+        20
+      ],
+      "top3_masked": [
+        179,
+        21,
+        20
+      ],
+      "changed": false,
+      "expected_terms": 9,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_150",
+      "corpus": "gate_400",
+      "question": "Saluni yangu ya nywele — mimi ni mgeni — imekatazwa na GN 487A?",
+      "top3_base": [
+        22,
+        20,
+        179
+      ],
+      "top3_masked": [
+        22,
+        20,
+        179
+      ],
+      "changed": false,
+      "expected_terms": 6,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_151",
+      "corpus": "gate_400",
+      "question": "Kama wakala wa mobile money — mimi ni mgeni — GN 487A inanikataza?",
+      "top3_base": [
+        20,
+        179,
+        21
+      ],
+      "top3_masked": [
+        20,
+        179,
+        21
+      ],
+      "changed": false,
+      "expected_terms": 8,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_152",
+      "corpus": "gate_400",
+      "question": "Kampuni yangu ya usafi wa nyumba na ofisi — mimi si raia wa Tanzania — inakabiliwa na GN 487A?",
+      "top3_base": [
+        21,
+        92,
+        22
+      ],
+      "top3_masked": [
+        21,
+        92,
+        22
+      ],
+      "changed": false,
+      "expected_terms": 7,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_153",
+      "corpus": "gate_400",
+      "question": "Mimi ni raia wa Tanzania — ninaweza kuendelea kufanya biashara ya rejareja bila tatizo la GN 487A?",
+      "top3_base": [
+        92,
+        179,
+        210
+      ],
+      "top3_masked": [
+        92,
+        179,
+        210
+      ],
+      "changed": false,
+      "expected_terms": 10,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_154",
+      "corpus": "gate_400",
+      "question": "Kama mgeni amekamatwa akifanya biashara iliyokatazwa, kibali chake cha kuingia Tanzania kinafutwa?",
+      "top3_base": [
+        92,
+        21,
+        22
+      ],
+      "top3_masked": [
+        92,
+        21,
+        22
+      ],
+      "changed": false,
+      "expected_terms": 8,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_155",
+      "corpus": "gate_400",
+      "question": "Zoezi la utekelezaji wa GN 487A bado linaendelea — lazima niwe makini sana sasa hivi?",
+      "top3_base": [
+        92,
+        19,
+        174
+      ],
+      "top3_masked": [
+        92,
+        19,
+        174
+      ],
+      "changed": false,
+      "expected_terms": 11,
+      "overlap_base": 0,
+      "overlap_masked": 0,
+      "delta": 0
+    },
+    {
+      "id": "eval_156",
+      "corpus": "gate_400",
+      "question": "Jina kamili la GN 487A ni nini?",
+      "top3_base": [
+        173,
+        174,
+        20
+      ],
+      "top3_masked": [
+        173,
+        174,
+        20
+      ],
+      "changed": false,
+      "expected_terms": 10,
+      "overlap_base": 7,
+      "overlap_masked": 7,
+      "delta": 0
+    },
+    {
+      "id": "eval_157",
+      "corpus": "gate_400",
+      "question": "GN 487A inasema nini hasa — inazuia nini kwa wageni?",
+      "top3_base": [
+        92,
+        22,
+        20
+      ],
+      "top3_masked": [
+        92,
+        22,
+        20
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_158",
+      "corpus": "gate_400",
+      "question": "Katika GN 487A, 'msaidizi' (facilitator) ni nani?",
+      "top3_base": [
+        91,
+        22,
+        21
+      ],
+      "top3_masked": [
+        91,
+        22,
+        21
+      ],
+      "changed": false,
+      "expected_terms": 11,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_159",
+      "corpus": "gate_400",
+      "question": "GN 487A ilipigwa marufuku tarehe gani na ilitekelezwa lini — ni tarehe moja au mbili tofauti?",
+      "top3_base": [
+        19,
+        20,
+        174
+      ],
+      "top3_masked": [
+        19,
+        20,
+        174
+      ],
+      "changed": false,
+      "expected_terms": 10,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_160",
+      "corpus": "gate_400",
+      "question": "Chombo gani cha serikali kiliongoza zoezi la utekelezaji wa GN 487A Septemba-Oktoba 2025?",
+      "top3_base": [
+        19,
+        174,
+        92
+      ],
+      "top3_masked": [
+        19,
+        174,
+        92
+      ],
+      "changed": false,
+      "expected_terms": 9,
+      "overlap_base": 1,
+      "overlap_masked": 1,
+      "delta": 0
+    },
+    {
+      "id": "eval_161",
+      "corpus": "gate_400",
+      "question": "GN 487A inataja 'biashara ya jumla' na 'biashara ya rejareja' — tofauti yao ni nini?",
+      "top3_base": [
+        72,
+        211,
+        22
+      ],
+      "top3_masked": [
+        72,
+        211,
+        22
+      ],
+      "changed": false,
+      "expected_terms": 15,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_162",
+      "corpus": "gate_400",
+      "question": "'Mgeni' katika GN 487A inamaanisha nani hasa?",
+      "top3_base": [
+        22,
+        20,
+        92
+      ],
+      "top3_masked": [
+        22,
+        20,
+        92
+      ],
+      "changed": false,
+      "expected_terms": 14,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_163",
+      "corpus": "gate_400",
+      "question": "GN 487A inasema nini kuhusu mpango wa 'jina la mkopo' (nominee) — kwanini unazuiwa?",
+      "top3_base": [
+        92,
+        22,
+        20
+      ],
+      "top3_masked": [
+        92,
+        22,
+        20
+      ],
+      "changed": false,
+      "expected_terms": 20,
+      "overlap_base": 8,
+      "overlap_masked": 8,
+      "delta": 0
+    },
+    {
+      "id": "eval_164",
+      "corpus": "gate_400",
+      "question": "Adhabu kamili kwa mgeni anayekamatwa akifanya biashara ya rejareja ni nini?",
+      "top3_base": [
+        92,
+        22,
+        21
+      ],
+      "top3_masked": [
+        92,
+        22,
+        21
+      ],
+      "changed": false,
+      "expected_terms": 14,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_165",
+      "corpus": "gate_400",
+      "question": "Jirani yangu Mtanzania amekopa leseni yake kwa mfanyabiashara wa China — adhabu yake ni nini?",
+      "top3_base": [
+        22,
+        21,
+        92
+      ],
+      "top3_masked": [
+        22,
+        21,
+        92
+      ],
+      "changed": false,
+      "expected_terms": 10,
+      "overlap_base": 7,
+      "overlap_masked": 7,
+      "delta": 0
+    },
+    {
+      "id": "eval_167",
+      "corpus": "gate_400",
+      "question": "Mgeni aliyebanwa akitumia jina la Mtanzania kuendesha duka — adhabu inabeba yeye au yule Mtanzania?",
+      "top3_base": [
+        92,
+        21,
+        20
+      ],
+      "top3_masked": [
+        92,
+        21,
+        20
+      ],
+      "changed": false,
+      "expected_terms": 19,
+      "overlap_base": 8,
+      "overlap_masked": 8,
+      "delta": 0
+    },
+    {
+      "id": "eval_168",
+      "corpus": "gate_400",
+      "question": "Visa ya mgeni inafutwa kama sehemu ya adhabu ya GN 487A — au ni uamuzi tofauti wa mahakama?",
+      "top3_base": [
+        20,
+        22,
+        21
+      ],
+      "top3_masked": [
+        20,
+        22,
+        21
+      ],
+      "changed": false,
+      "expected_terms": 9,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    },
+    {
+      "id": "eval_169",
+      "corpus": "gate_400",
+      "question": "Mtanzania msaidizi atalipa faini ya TZS milioni 5 NA kufungwa miezi 3, au ni moja tu kati ya hizo?",
+      "top3_base": [
+        21,
+        208,
+        207
+      ],
+      "top3_masked": [
+        21,
+        20,
+        11
+      ],
+      "changed": true,
+      "expected_terms": 11,
+      "overlap_base": 4,
+      "overlap_masked": 5,
+      "delta": 1
+    },
+    {
+      "id": "eval_170",
+      "corpus": "gate_400",
+      "question": "Faini ya mgeni (TZS milioni 10 kiwango cha chini) ni kubwa zaidi au ndogo kuliko faini ya msaidizi Mtanzania (TZS milioni 5)?",
+      "top3_base": [
+        21,
+        218,
+        20
+      ],
+      "top3_masked": [
+        21,
+        218,
+        20
+      ],
+      "changed": false,
+      "expected_terms": 10,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_171",
+      "corpus": "gate_400",
+      "question": "Mimi ni mgeni ninayefanya biashara ya rejareja — GN 487A tayari imetangazwa. Nifanye nini sasa?",
+      "top3_base": [
+        92,
+        22,
+        179
+      ],
+      "top3_masked": [
+        92,
+        22,
+        179
+      ],
+      "changed": false,
+      "expected_terms": 31,
+      "overlap_base": 7,
+      "overlap_masked": 7,
+      "delta": 0
+    },
+    {
+      "id": "eval_172",
+      "corpus": "gate_400",
+      "question": "Chombo gani cha serikali kinaendesha utekelezaji wa GN 487A?",
+      "top3_base": [
+        179,
+        174,
+        92
+      ],
+      "top3_masked": [
+        179,
+        174,
+        92
+      ],
+      "changed": false,
+      "expected_terms": 9,
+      "overlap_base": 2,
+      "overlap_masked": 2,
+      "delta": 0
+    },
+    {
+      "id": "eval_173",
+      "corpus": "gate_400",
+      "question": "Kama mgeni, naweza kuanzisha kampuni Tanzania na kumiliki hisa — hii inaruhusiwa chini ya GN 487A?",
+      "top3_base": [
+        92,
+        22,
+        179
+      ],
+      "top3_masked": [
+        92,
+        22,
+        179
+      ],
+      "changed": false,
+      "expected_terms": 23,
+      "overlap_base": 7,
+      "overlap_masked": 7,
+      "delta": 0
+    },
+    {
+      "id": "eval_174",
+      "corpus": "gate_400",
+      "question": "Nilikuwa sijui kuhusu GN 487A — polisi walisimamisha duka langu Septemba 2025. Nini kilifanyika?",
+      "top3_base": [
+        19,
+        20,
+        21
+      ],
+      "top3_masked": [
+        19,
+        20,
+        21
+      ],
+      "changed": false,
+      "expected_terms": 23,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_175",
+      "corpus": "gate_400",
+      "question": "Ninaoa Mtanzania — ni hatua gani za kisheria ambazo zingenipa ruhusa kufanya biashara ya rejareja?",
+      "top3_base": [
+        92,
+        22,
+        44
+      ],
+      "top3_masked": [
+        92,
+        22,
+        44
+      ],
+      "changed": false,
+      "expected_terms": 18,
+      "overlap_base": 9,
+      "overlap_masked": 9,
+      "delta": 0
+    },
+    {
+      "id": "eval_176",
+      "corpus": "gate_400",
+      "question": "Kutoka wafanyakazi wangapi OSHA inasema ninahitaji kumwajiri afisa wa usalama mahali pa kazi?",
+      "top3_base": [
+        69,
+        68,
+        52
+      ],
+      "top3_masked": [
+        69,
+        68,
+        52
+      ],
+      "changed": false,
+      "expected_terms": 16,
+      "overlap_base": 3,
+      "overlap_masked": 3,
+      "delta": 0
+    },
+    {
+      "id": "eval_177",
+      "corpus": "gate_400",
+      "question": "Ukaguzi wa mahali pa kazi wa OSHA unafanyika mara ngapi kwa mwaka?",
+      "top3_base": [
+        85,
+        68,
+        82
+      ],
+      "top3_masked": [
+        85,
+        68,
+        82
+      ],
+      "changed": false,
+      "expected_terms": 6,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_178",
+      "corpus": "gate_400",
+      "question": "Biashara yangu ina wafanyakazi 2 tu — kiwango cha chini cha wafanyakazi kwa usajili wa OSHA ni wangapi?",
+      "top3_base": [
+        69,
+        68,
+        219
+      ],
+      "top3_masked": [
+        69,
+        68,
+        219
+      ],
+      "changed": false,
+      "expected_terms": 13,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_179",
+      "corpus": "gate_400",
+      "question": "Duka langu la vifaa lina wafanyakazi 3 tu — bado nahitaji kusajili mahali pa kazi na OSHA?",
+      "top3_base": [
+        69,
+        68,
+        52
+      ],
+      "top3_masked": [
+        69,
+        68,
+        52
+      ],
+      "changed": false,
+      "expected_terms": 8,
+      "overlap_base": 5,
+      "overlap_masked": 5,
+      "delta": 0
+    },
+    {
+      "id": "eval_180",
+      "corpus": "gate_400",
+      "question": "Nilisajili biashara yangu BRELA tayari — hiyo inamaanisha nimesajili OSHA pia?",
+      "top3_base": [
+        69,
+        219,
+        44
+      ],
+      "top3_masked": [
+        69,
+        219,
+        44
+      ],
+      "changed": false,
+      "expected_terms": 11,
+      "overlap_base": 7,
+      "overlap_masked": 7,
+      "delta": 0
+    },
+    {
+      "id": "eval_181",
+      "corpus": "gate_400",
+      "question": "Mahali pa kazi lazima kuwe na cheti halali cha usajili wa OSHA?",
+      "top3_base": [
+        69,
+        52,
+        68
+      ],
+      "top3_masked": [
+        69,
+        52,
+        68
+      ],
+      "changed": false,
+      "expected_terms": 7,
+      "overlap_base": 4,
+      "overlap_masked": 4,
+      "delta": 0
+    }
+  ]
+}
