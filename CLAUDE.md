@@ -645,6 +645,31 @@ Founder-only steps (no CLI access from here): the `chike-whatsapp` Modal Secret
 (`WAPPFLY_TOKEN`, `WEBHOOK_TOKEN`, `ADMIN_TOKEN`, `SENDER_SALT`) and pointing Wappfly at
 the new webhook URL.
 
+### ⛔ BEFORE PROPOSING ANY MECHANISM THAT CAN REFUSE A USER — read this, then R21.
+
+**Applies to: refusal phrases, OOC lists, coverage gates, similarity floors, confidence
+thresholds, topic classifiers, and anything else whose failure mode is DECLINING TO ANSWER.**
+
+> **A mechanism that fails by letting something through is cheap to iterate on. A mechanism that
+> fails by BLOCKING a real user is not — because that cost lands on them, and it is invisible to
+> us.** A wrong answer can be found in a transcript. A wrongly-refused question looks exactly like
+> a question nobody asked.
+
+Three consequences, each of which has already cost this project a cycle:
+
+1. **A sweep over our own corpora cannot price it.** They share vocabulary with the facts by
+   construction. Same cue list: **1.9%** false refusals on 411 corpus questions, **71%** on 21
+   held-out ones — a **~37× gap** (R21).
+2. **A held-out set, authored and FROZEN IN GIT BEFORE the mechanism exists, is the entry price.**
+   Not a nice-to-have. It is burned once its results are read, so a second iteration needs a new
+   one.
+3. **Choose the mechanism by where the harm is MEASURED to be, not by which mechanism is
+   available.** Every dead safety-floor design in this project was picked because a signal was
+   sitting there — an absolute score, a margin, a re-ranked index, term overlap. None was chosen
+   because anyone had measured that it separated right answers from wrong ones. When that was
+   finally measured, it did not. **"It is the only design left" is a fact about our list, not
+   about the defect.**
+
 ### R17 — A sweep can only find what the corpus contains. Author probes to contain it.
 
 Any lexical change (OOC phrases, router cue lists, levy cues, refusal phrases) must be swept
@@ -689,6 +714,9 @@ should pass the gate, on the assumption the model would refuse it. Live data dis
 assumption. When that happens, invert the test and keep the history in its docstring.
 
 ### R19 — BEFORE BUILDING A FIDELITY GUARD, ASK WHETHER IT CHECKS A CONSTANT OR A DERIVED QUANTITY
+
+*(If the guard can REFUSE rather than merely flag, read the ⛔ block above R17 first — buildable
+and safe-to-build are different questions, and R19 only answers the first.)*
 
 **This is the line that decides whether a guard is buildable at all**, and two guards have already
 fallen on opposite sides of it without the boundary being named. Name it before designing the next

@@ -328,6 +328,127 @@ every subsequent cue a fit.
 
 ---
 
+# 🔎 THE COVERED HALF, CLASSIFIED: TWO OF FIVE HAD THE ANSWER AT RANK 1 AND GOT IT WRONG ANYWAY (2026-08-23)
+
+**Reported before any fix is proposed, per founder instruction.**
+`eval/routing/analyse_covered_half.py` → `eval/results/covered_half_class_analysis.json`.
+For each of the seven WRONG veto-diverted rows: was the anchor fact retrieved, was it in the
+prompt, and what did the model do with it. Anchor facts are hand-identified with the reason
+recorded per row — **judgement, labelled** — and index positions are resolved by **text match,
+never a stored row number** (R18 instance 1).
+
+**First, a correction to this file's own earlier count.** The diversion entry said *three* of the
+seven wrong rows are about covered topics. **It is five.** `eval_010` (VAT threshold) and `pic_11`
+(presumptive ceiling) both have anchor facts in the index; only `pic_04` (corporate income tax)
+and `pic_10` (transport presumptive schedule) genuinely have none. The covered half is larger than
+first stated, which sharpens rather than softens the finding.
+
+## The split
+
+| class | n | rows |
+|---|---|---|
+| **RETRIEVED_AND_DISCARDED** | **2** | `eval_337`, `pic_11` — **anchor at rank 1 in both** |
+| NOT_RETRIEVED | 3 | `eval_010` (rank 8), `eval_348` (rank 10), `eval_342` (**rank 51**) |
+| NO_FACT_EXISTS | 2 | `pic_04`, `pic_10` |
+
+## The two rank-1 rows are the ones that matter, and they are not the same failure
+
+**`pic_11` — contradicted at rank 1.** Top-1 was *"Kodi ya makadirio hutumika tu kwa mtu binafsi
+mwenye mauzo yasiyozidi **TZS 100,000,000**"* at 0.8512. The reply: *"Presumptive tax inatumika kwa
+mauzo **chini ya milioni 10**."* **An order of magnitude off, with the correct figure sitting at
+the top of its own context.** This is a true discard.
+
+**`eval_337` — not a discard at all, a WRONG CHOICE BETWEEN TWO ADJACENT FACTS.** The top-3 held
+*both* `NSSF jumla: asilimia 20 (10% mwajiri + 10% mfanyakazi)` at rank 1 **and** `NSSF: mwajiri
+analipa asilimia 10` at rank 2. Asked for the NSSF rate, the model reported the **employer share
+from rank 2 as if it were the total**. Retrieval was perfect and the failure is *selection*: two
+facts differ by which quantity they name, and nothing in the prompt tells the model which one the
+question wants. **No retrieval improvement can fix this**, and it is a category the discard
+measurement never had to consider — it counted whether a fact was USED, not whether the right one
+of several was chosen.
+
+**Consequence for the ~1-in-13 discard rate: it does not generalise here.** That figure came from
+the natural 48, a set the model was **mostly right on**. On rows where the model is wrong and the
+fact was in reach, having it at rank 1 saved it **0 times out of 2**.
+
+## The three retrieval failures each have a different named cause
+
+| row | anchor rank | what the top-3 actually contained |
+|---|---|---|
+| `eval_342` | **51** | *"unpaid contribution penalty rate: five %"*, *"late payment penalty rate: 2 %"*, *"vat deferment threshold percentage: 90 %"* — **three bare `key: value` percentage fragments, none about PAYE.** The model then answered "20%", a real PAYE band rate, apparently from weights |
+| `eval_010` | 8 | the **EFD** threshold twice, plus a PAYE worked example. The top-1 even contains *"Si TZS 200,000,000 — hiyo ni kizingiti cha VAT"* — the VAT threshold appears only inside a clause **denying** it |
+| `eval_348` | 10 | two NSSF facts that are both **consistent with the false premise**. The one row that refutes it — `NSSF split triggers`, enumerating 10+10, 15+5, 20+0 — sat at rank 10 |
+
+**`eval_342` is the strongest live evidence yet for fragment-row segregation**, an item already on
+the board from the 2026-08-15 analysis (fee rows: 30% of the index, 58% of top-3 slots, near-zero
+conversational demand). It has never before had a wrong answer attached to it this cleanly: a
+question containing the word PAYE retrieved three unrelated percentages.
+
+**`eval_348` is not really a retrieval bug either.** The retrieved facts were true and on-topic;
+they simply did not contain the refutation. **A question whose only correct answer is "your premise
+is incomplete" needs the refuting fact, and top-3 has no way to know that.**
+
+## What the two no-fact rows show about the synthesis mechanism
+
+`pic_04` (a company) received *presumptive ceiling* + *BRELA annual-return fee* + *foreign-company
+late-filing penalty* and produced a corporate tax rate. `pic_10` (a daladala) received the two
+presumptive rows plus **`trademark fee for change of business address: 20,000 TZS`** and produced
+"3.5%". This is `nat_05` in its purest form and it is the half a coverage gate does address.
+
+## The class, stated plainly, with no fix proposed
+
+The seven rows are **four different defects wearing one symptom**:
+
+1. **Selection between competing facts** (`eval_337`) — retrieval-complete, unaddressed by anything on the board, and invisible to the discard framing.
+2. **Contradiction of a rank-1 fact** (`pic_11`) — the generation ceiling, on the covered half.
+3. **Retrieval displaced by fragment rows** (`eval_342`, `eval_010`) — a measured lever exists.
+4. **Refutation not held at top-3 granularity** (`eval_348`) — a corpus/retrieval-shape problem, not a ranking one.
+
+Plus **coverage** (`pic_04`, `pic_10`), which is the only one of the five with a design already
+scoped. **Three of the four covered-half defects have nothing on the board, and two of them cannot
+be fixed by better retrieval at all.**
+
+---
+
+# 🎭 CORRECTION-SHAPED WRONGNESS: ON THESE ROWS CONFIDENCE IS ANTI-CORRELATED WITH ACCURACY, AND THE USER CANNOT SEE IT (2026-08-23)
+
+**Named separately because it defeats an assumption the pull triggers rest on.**
+
+Three of the seven wrong answers **open by rejecting the user's premise**:
+
+> *"**Hapana**, si sahihi. Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 20 — si 25%."*
+> *"Kiwango sahihi ni **asilimia 10**, si asilimia 3.5 wala asilimia 0.5."*
+> *"**Hapana**. Kiwango cha WCF ni asilimia 0.5 ya mishahara — si 3.5%."*
+
+**The third one is correct. The first two are wrong.** They are the same sentence shape, the same
+register, the same citation, the same confidence. A user has no signal that separates them — and
+the *corrective* framing makes the wrong ones read as **more** authoritative than a plain
+statement would, because the system appears to be catching the user's error.
+
+**On this class the model's apparent confidence is anti-correlated with its accuracy.** The rows
+where it hedges (`eval_343`'s evasive *"ndani ya muda unaotakiwa kulingana na sheria husika"*) are
+merely incomplete. The rows where it is most assertive — correcting the user with a specific
+figure — are where it is wrong.
+
+**Why this matters beyond the individual rows.** The pilot's pull triggers assume that a wrong
+number is *challengeable*: that a user who is told something surprising asks someone else. **A
+correction inverts that.** The user arrived holding a belief, was told it was wrong, and now holds
+the system's number with *more* conviction than they held their own. `eval_337` is the sharpest
+case: an employer arrives believing NSSF might be 3.5%, is corrected to 10%, and remits **half**
+of the 20% they owe — having been talked out of checking.
+
+**`eval_348` is the same disease with the polarity flipped**: asked whether 10/10 is the only
+lawful split, it says *"Ndiyo"* — **agreeing** with a false premise rather than correcting a true
+one. Either way the reply's shape tracks the user's framing rather than the statute.
+
+**Consequence for monitoring, recorded now:** the transcript review cannot rank replies by apparent
+confidence, and an ungrounded-figure count will not catch these — every one of them cites a source
+and states a specific number. **The only instrument that finds this class is reading the reply
+against the statute**, which is the daily hand-review, and this is a second independent reason it
+cannot be automated.
+
+---
+
 # 🔬 SCOPED, NOT BUILT — THE MODEL-SIDE TOPIC CLASSIFIER, PRICED HONESTLY AND WITH ITS FALSIFIERS NAMED FIRST (2026-08-23)
 
 **The last four floor designs each looked sound until measured. This one is written up before a
@@ -400,17 +521,28 @@ Any one of these kills it. They are thresholds, not impressions.
 its results have been read — and re-using it would make falsifier 1 a fit, which is the exact
 error this entry exists to prevent.
 
-## The honest limit, and it is the reason not to start yet
+## 🛑 DECIDED 2026-08-23 (founder): DO NOT BUILD IT. And the reason is the reason, not the price.
 
 **The diversion measurement changed what this is worth.** Of the seven confidently wrong answers
-found there, **three are about topics the corpus DOES hold** — `eval_337` (NSSF at 10% instead of
-20%), `eval_342` (top PAYE at 20% instead of 30%), `eval_348` (agreeing that 10/10 is the only
-lawful split). **A topic classifier passes all three, correctly, and they stay wrong.**
+found there, **five are about topics the corpus DOES hold** (corrected from three — see the class
+analysis): `eval_010`, `eval_337`, `eval_342`, `eval_348`, `pic_11`. **A topic classifier passes
+all five, correctly, and they stay wrong.** It addresses `pic_04` and `pic_10` — two of seven.
 
-So the classifier addresses **the uncovered half of a defect whose measured majority is in the
-covered half**. Building it first would be scoping work by which mechanism is available rather
-than by where the harm is. **Nothing on the board addresses the covered half**, and naming that
-gap is more valuable right now than starting the build.
+**THE ERROR THIS AVOIDS, NAMED SO IT IS RECOGNISABLE NEXT TIME: scoping work by which mechanism is
+available rather than by where the harm is.** That is the error every dead floor design made. The
+absolute threshold, the margin, the re-ranked index and the term-overlap gate were each chosen
+because a similarity score was *sitting there* — not because anyone had measured that retrieval
+confidence was the thing separating right answers from wrong ones. When it was finally measured,
+it wasn't: forced maximum confidence still produced a wrong answer.
+
+**The classifier is the same move one layer up.** It survives R19, it is generation-side, it is
+the only surviving candidate — all true, and none of it is evidence that it addresses the measured
+harm. **"It is the only design left" is a fact about our list, not about the defect.** Availability
+is not relevance, and a mechanism should be chosen by where the harm is measured to be.
+
+The scoping above stands as scoping: if the covered half is ever closed and the uncovered half
+becomes the binding constraint, the price and the falsifiers are already written and were written
+before anyone wanted the answer to come out a particular way.
 
 ---
 

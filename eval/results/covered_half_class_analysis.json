@@ -1,0 +1,242 @@
+{
+  "measured": "2026-08-23",
+  "harness": "eval/routing/analyse_covered_half.py",
+  "source": [
+    "eval/results/veto_diversion_live.json",
+    "eval/results/veto_diversion_live_adjudication.json"
+  ],
+  "method": "Anchor facts hand-identified with the reason recorded per row (JUDGEMENT, labelled). Index positions resolved by TEXT MATCH, never by a stored row number. Retrieval is the production path: e5-base, query:/passage: prefixes, cosine, top_k=3.",
+  "top_k": 3,
+  "index_rows": 221,
+  "counts": {
+    "NOT_RETRIEVED": 3,
+    "RETRIEVED_AND_DISCARDED": 2,
+    "NO_FACT_EXISTS": 2
+  },
+  "rows": [
+    {
+      "id": "eval_010",
+      "question": "Biashara yangu ina mauzo ya TZS milioni 180 mwaka huu — ninahitaji mauzo ya ziada ya TZS ngapi kabla ya usajilishaji wa VAT wa lazima?",
+      "reply": "Kwa mauzo ya TZS 180,000,000, tayari umepita kizingiti cha TZS 100,000,000/6 miezi. Lazima usajilishe VAT mara moja. Hakuna kipindi kingine cha mpito kinachoweza kukusaidia kupita kwa siku 30. Thibitisha na TRA (tra.go.tz).",
+      "expected_sw": "TZS milioni 20 zaidi (200M − 180M). Lakini fuatilia pia kizingiti cha miezi 6 cha TZS milioni 100 — inawezekana ufike kizingiti hicho mapema zaidi. Thibitisha na TRA.",
+      "mechanism": [
+        "vat_threshold_ask"
+      ],
+      "anchor_needle": "vat registration threshold: VAT registration threshold is TZS 200,000,000",
+      "anchor_why": "The reply asserts the trader has already crossed the 100M/6-month threshold. This fact states BOTH limbs — 200M/12mo OR 100M/6mo — and the question gives only an annual figure, so having it in context is what separates \"20M more\" from \"you have already crossed\".",
+      "anchor_index_pos": 15,
+      "anchor_rank": 8,
+      "anchor_score": 0.8492,
+      "class": "NOT_RETRIEVED",
+      "top3": [
+        {
+          "pos": 57,
+          "score": 0.8912,
+          "text": "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti cha kusa"
+        },
+        {
+          "pos": 58,
+          "score": 0.8737,
+          "text": "Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine ya risiti (EFD)? Si lazima. Si kila biashara inalazimika kutumia mashine ya risit"
+        },
+        {
+          "pos": 211,
+          "score": 0.8701,
+          "text": "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada."
+        }
+      ]
+    },
+    {
+      "id": "eval_337",
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "reply": "Kiwango sahihi ni asilimia 10, si asilimia 3.5 wala asilimia 0.5. Thibitisha na NSSF (nssf.go.tz).",
+      "expected_sw": "Hakuna. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi). Asilimia 3.5 ni SDL na 0.5 ni WCF. Thibitisha na NSSF (nssf.go.tz).",
+      "mechanism": [
+        "path1_commitment"
+      ],
+      "anchor_needle": "NSSF jumla: asilimia 20 ya mshahara",
+      "anchor_why": "The reply gives the NSSF rate as 10%. This fact states the total as 20% and names the 10+10 split, which is exactly the distinction the reply collapses.",
+      "anchor_index_pos": 10,
+      "anchor_rank": 1,
+      "anchor_score": 0.8577,
+      "class": "RETRIEVED_AND_DISCARDED",
+      "top3": [
+        {
+          "pos": 10,
+          "score": 0.8577,
+          "text": "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz)."
+        },
+        {
+          "pos": 9,
+          "score": 0.8471,
+          "text": "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz)."
+        },
+        {
+          "pos": 213,
+          "score": 0.8402,
+          "text": "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo ni kwa mfanyakazi mmoja tu). Hesabu: kila"
+        }
+      ]
+    },
+    {
+      "id": "eval_342",
+      "question": "Kiwango cha juu kabisa cha PAYE ni asilimia 25, sivyo?",
+      "reply": "Hapana, si sahihi. Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 20 — si 25%. Thibitisha na TRA (tra.go.tz).",
+      "expected_sw": "Hapana. Kiwango cha juu kabisa cha PAYE ni asilimia 30 (kwa mapato yanayozidi TZS 1,000,000 kwa mwezi). Asilimia 25 ni kundi la nne. Thibitisha na TRA (tra.go.tz).",
+      "mechanism": [
+        "path1_commitment"
+      ],
+      "anchor_needle": "paye all bands sequence",
+      "anchor_why": "The reply says the top PAYE rate is 20%. This fact carries the whole band sequence ending \"30% above TZS 1M\", so the top rate is legible from it without any arithmetic.",
+      "anchor_index_pos": 42,
+      "anchor_rank": 51,
+      "anchor_score": 0.7964,
+      "class": "NOT_RETRIEVED",
+      "top3": [
+        {
+          "pos": 193,
+          "score": 0.8452,
+          "text": "unpaid contribution penalty rate: five %"
+        },
+        {
+          "pos": 150,
+          "score": 0.8356,
+          "text": "late payment penalty rate: 2 %"
+        },
+        {
+          "pos": 170,
+          "score": 0.8327,
+          "text": "vat deferment threshold percentage: 90 %"
+        }
+      ]
+    },
+    {
+      "id": "eval_348",
+      "question": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+      "reply": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10%. Thibitisha na NSSF (nssf.go.tz).",
+      "expected_sw": "Hapana. Jumla ni asilimia 20 daima, lakini kuna migawanyo mitatu halali: 10% mwajiri + 10% mfanyakazi, au 15% + 5%, au 20% + 0%. Thibitisha na NSSF (nssf.go.tz).",
+      "mechanism": [
+        "path1_commitment"
+      ],
+      "anchor_needle": "NSSF split triggers",
+      "anchor_why": "The reply agrees that 10/10 is the only lawful split. This fact enumerates all three — 10+10, 15+5, 20+0 — and is the single row that refutes the premise.",
+      "anchor_index_pos": 77,
+      "anchor_rank": 10,
+      "anchor_score": 0.8103,
+      "class": "NOT_RETRIEVED",
+      "top3": [
+        {
+          "pos": 9,
+          "score": 0.8514,
+          "text": "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz)."
+        },
+        {
+          "pos": 10,
+          "score": 0.8334,
+          "text": "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz)."
+        },
+        {
+          "pos": 62,
+          "score": 0.8243,
+          "text": "NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata."
+        }
+      ]
+    },
+    {
+      "id": "pic_04",
+      "question": "Kampuni yangu inauza bidhaa za milioni 50 kwa mwaka, kodi ya mapato ni kiasi gani?",
+      "reply": "Kwa mauzo ya TZS 50,000,000, kodi ya mapato ya kampuni ni asilimia 30 = TZS 15,000,000. Thibitisha na TRA (tra.go.tz).",
+      "expected_sw": null,
+      "mechanism": [
+        "entity_veto"
+      ],
+      "anchor_needle": null,
+      "anchor_why": "Corporate income tax is not in the corpus at all. 30% of PROFIT for a company appears in no fact, so no retrieval could have prevented this reply.",
+      "anchor_index_pos": null,
+      "anchor_rank": null,
+      "anchor_score": null,
+      "class": "NO_FACT_EXISTS",
+      "top3": [
+        {
+          "pos": 216,
+          "score": 0.8384,
+          "text": "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 100,000,000 kwa mwaka. Zaidi ya hapo hutozwa k"
+        },
+        {
+          "pos": 134,
+          "score": 0.8306,
+          "text": "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni TZS 22,000."
+        },
+        {
+          "pos": 218,
+          "score": 0.8288,
+          "text": "Kampuni ya kigeni (Section XII) ikichelewa kuwasilisha ritani ya mwaka: faini ni USD 25 kwa kila mwezi (tofauti na kampuni za ndani ambazo hulipa TZS "
+        }
+      ]
+    },
+    {
+      "id": "pic_10",
+      "question": "Nauza tiketi za daladala, mauzo yangu ni milioni 20, kodi ya mapato ni ngapi?",
+      "reply": "Kwa mauzo ya milioni 20, unatumia kiwango cha 3.5%. Thibitisha na tra.go.tz.",
+      "expected_sw": null,
+      "mechanism": [
+        "schedule_veto"
+      ],
+      "anchor_needle": null,
+      "anchor_why": "The presumptive TRANSPORT schedule (First Schedule para 2(5), a per-vehicle table) is not in the corpus and the engine does not implement it.",
+      "anchor_index_pos": null,
+      "anchor_rank": null,
+      "anchor_score": null,
+      "class": "NO_FACT_EXISTS",
+      "top3": [
+        {
+          "pos": 216,
+          "score": 0.8371,
+          "text": "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 100,000,000 kwa mwaka. Zaidi ya hapo hutozwa k"
+        },
+        {
+          "pos": 215,
+          "score": 0.8366,
+          "text": "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: hadi TZS 4,000,000 = TZS 0; zaidi ya 4,000"
+        },
+        {
+          "pos": 111,
+          "score": 0.8355,
+          "text": "trademark fee for change of business address: 20,000 TZS"
+        }
+      ]
+    },
+    {
+      "id": "pic_11",
+      "question": "Mauzo yangu ni milioni 20 kwa mwaka, nitajua vipi ikiwa nalipa kodi ya mapato kwa makadirio au mfumo wa kawaida?",
+      "reply": "Kwa mauzo ya milioni 20, unalipa kodi ya mapato kwa mfumo wa kawaida (normal progressive rates). Presumptive tax inatumika kwa mauzo chini ya milioni 10. Thibitisha na tra.go.tz.",
+      "expected_sw": null,
+      "mechanism": [
+        "schedule_veto"
+      ],
+      "anchor_needle": "presumptive tax ceiling 100m",
+      "anchor_why": "The reply invents a presumptive ceiling of \"milioni 10\". This fact states TZS 100,000,000 and is the direct contradiction.",
+      "anchor_index_pos": 216,
+      "anchor_rank": 1,
+      "anchor_score": 0.8512,
+      "class": "RETRIEVED_AND_DISCARDED",
+      "top3": [
+        {
+          "pos": 216,
+          "score": 0.8512,
+          "text": "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 100,000,000 kwa mwaka. Zaidi ya hapo hutozwa k"
+        },
+        {
+          "pos": 148,
+          "score": 0.8296,
+          "text": "vat return submission deadline: 20 days_of_month"
+        },
+        {
+          "pos": 215,
+          "score": 0.8285,
+          "text": "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: hadi TZS 4,000,000 = TZS 0; zaidi ya 4,000"
+        }
+      ]
+    }
+  ]
+}
