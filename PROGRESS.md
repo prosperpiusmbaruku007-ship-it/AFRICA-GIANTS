@@ -224,6 +224,92 @@ make deliberately, and a bad one to make by default.
 
 ---
 
+# 🧊 THE HELD-OUT SET PAID FOR ITSELF ON ITS FIRST RUN: THE COVERAGE GATE'S 1.9% WAS A FIT, AND THE REAL NUMBER IS 15 OF 21 (2026-08-23)
+
+**The gate is built, tested and SHIPS DISABLED.** `Orchestrator(coverage_gate=False)`. With the
+flag off every path is byte-identical to the pre-gate orchestrator, so nothing in production
+moved.
+
+**This entry exists because of one decision — freeze the probes before writing the gate — and it
+is the single most valuable thing this session produced.** `eval/coverage/coverage_gate_heldout_040.jsonl`
+was authored and committed at `c8b46a9`, **before `chike/coverage.py` existed**. Nothing in the
+cue list was tuned against the 48, the 400-question gate corpus or the 12.
+
+## The two numbers, and the gap between them
+
+| corpus | false refusals | rate |
+|---|---|---|
+| 411 answerable **gate-corpus** questions | 8 | **1.9%** |
+| 21 **held-out** questions about topics the corpus DOES hold | **15** | **71%** |
+
+**A ~37× gap.** And it has a plain cause: the gate corpora were authored from the same source
+families as the facts, so they share the corpus's vocabulary by construction. **The 1.9% was
+never a measurement of anything except how well a cue list matches text it was derived from.**
+
+## Worse than the headline: four of the six "passes" are accidents
+
+`eval/results/coverage_gate_shipped.json`, arm A row by row:
+
+| outcome | rows |
+|---|---|
+| passed, **matching the right topic** | **2** — `hoA_trademark`, `hoA_osha` |
+| passed **via the wrong topic** | 4 — SDL and NSSF on `mfanyakazi` (topic `employment`); permit and filing on `kampuni` (topic `brela_company`) |
+| **refused** | 15 |
+
+**A question that passes for the wrong reason is a latent false negative**, and that is not a
+theoretical worry — it is the exact shape the same day's canary caught in production, where
+`kodi ya mapato` matched `paye` for four different obligations, three of them uncovered.
+
+The other arms, for completeness: **B 5/10** (three uncovered obligations pass on a covered
+topic's word, exactly as the probes were authored to test — `kibali`/TMDA, `stempu`/ETS,
+`wageni`/tourism levy), **C 4/5** on the per-part contract, **D 1/4** — the company and
+partnership rows pass via `kampuni`/`ubia`, and `hoD_transport_presumptive` fails **as
+predicted**, which is the stated granularity limit behaving exactly as documented.
+
+## What is sound, and what is not
+
+**The SHAPE is sound and should be kept.** Per-part; fact-path only; consults no similarity
+score; a constant comparison in R19's sense, so it works where every D-FIDELITY rule before the
+sixth goes vacuous; and a refusal that routes rather than dead-ends —
+
+> *"Sina uhakika kuhusu **ada ya matangazo** — hili ni la **halmashauri yako**, si mada yangu,
+> hivyo **sitakupa kiwango wala kiasi**. Thibitisha na halmashauri yako. Mimi ninashughulikia
+> BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A."*
+
+**The SIGNAL is not.** A hand-authored cue list cannot cover paraphrase space. This is **the
+three-axes problem at corpus scale** — concepts, spellings, inflections — and arm A is the
+demonstration: every one of the 15 refusals is a user describing the thing rather than naming it
+(*"karatasi ya malipo kutoka kwenye mashine"* for an EFD receipt, *"serikali inachukua kiasi
+gani"* for PAYE, *"ipitiwe upya"* for an objection).
+
+## The honest bound, stated in both directions
+
+Arm A was **authored adversarially** — every row deliberately avoids the obvious cue — so **71%
+is an upper bound, not the expected production rate.** Real users sometimes use the obvious word.
+But **1.9% is a lower bound and is definitely a fit**, and nobody knows where between them the
+truth sits. **That uncertainty is itself disqualifying for a mechanism whose entire job is to
+make refusal safe.** Shipping it would trade a known harm (a confident wrong answer on an
+uncovered topic) for an unquantified one (refusing questions we can answer), and the second is
+the one the founder named as making the product worse rather than safer.
+
+## What a second iteration needs
+
+1. **A FRESH held-out set.** This one is burned — its results have now been read, so any cue
+   added with them in mind is a fit. Recorded in `tests/test_coverage_gate.py`, whose arm-A
+   parametrised test pins **what is measured, not what is desired**, so a row flipping to covered
+   must be an explicit edit — the same discipline as `pic_05` and `nat_44`/`nat_28`.
+2. **A different topic signal.** The candidate that survives R19 and does not need a score is a
+   **model-side topic classifier**: *"which of these 21 topics is this about, or none?"* That is
+   a generation-side mechanism, which is where the 2026-08-22 headline already said the missing
+   safety signal has to live. It costs one extra call per fact question — a real price against
+   the ~15 sessions/day the credit buys, and a founder decision, not a queue decision.
+
+**Nothing about the pilot verdict changes.** The precondition remains unmet; what changed is that
+the fifth candidate design has now been measured rather than assumed, and it failed honestly and
+early instead of in front of a tester.
+
+---
+
 # 🚨 A VETO WITHOUT A COVERAGE GATE JUST CHANGES WHICH WRONG ANSWER YOU GET — four instances in one canary, none of them planned (2026-08-23)
 
 **This is the most consequential thing the presumptive deploy produced, and it was not what the

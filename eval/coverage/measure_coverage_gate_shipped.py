@@ -44,7 +44,11 @@ HELDOUT = os.path.join(HERE, 'coverage_gate_heldout_040.jsonl')
 
 
 def part_verdicts(text):
-    """Per-part gate outcome, mirroring Orchestrator.answer.
+    """Per-part gate outcome, mirroring Orchestrator.answer WITH THE GATE ENABLED.
+
+    The orchestrator ships with `coverage_gate=False` — this harness measures what the gate
+    WOULD do, which is the only way to price a mechanism before turning it on. It calls
+    chike.coverage directly rather than the orchestrator so the measurement needs no model.
 
     Returns a list of dicts, one per decomposed part.
     """

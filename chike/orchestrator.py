@@ -135,8 +135,25 @@ class Orchestrator:
         gen_params: Optional[dict] = None,
         extractor: Optional[SlotExtractor] = None,
         system_prompt: Optional[str] = None,
+        coverage_gate: bool = False,
     ):
         self.backend = backend
+        # THE COVERAGE GATE IS OFF BY DEFAULT AND MUST STAY OFF UNTIL ITS SIGNAL IMPROVES.
+        #
+        # Measured 2026-08-23 on the held-out probe set frozen before the gate existed
+        # (eval/results/coverage_gate_shipped.json): of 21 realistic questions about topics the
+        # corpus DOES hold, it refuses 15 and passes only 2 for the right reason. The same
+        # mechanism costs 8 false refusals across 411 corpus questions — 1.9% — because the
+        # gate corpora were authored from the same source families as the facts and share their
+        # vocabulary. **The 1.9% was a fit; the held-out number is the measurement.**
+        #
+        # The gate's SHAPE is sound and worth keeping: per-part, fact-path only, no similarity
+        # score, a constant comparison in R19's sense, and a refusal that routes the user to the
+        # right authority. What fails is the SIGNAL — a hand-authored cue list cannot cover
+        # paraphrase space, which is the three-axes problem at corpus scale.
+        #
+        # With the flag off, every path below is byte-identical to the pre-gate orchestrator.
+        self.coverage_gate = coverage_gate
         # Default to the real v15 retrieval; an injected retriever overrides it.
         self.retriever = retriever if retriever is not None else default_retrieve
         # OOC classifier phrase lists: default to the production set resolved from
@@ -870,8 +887,11 @@ class Orchestrator:
         # Compute parts are never gated: an engine result is grounded by construction, not by
         # retrieval, which is also why 18 of the 29 correct rows on the natural set come from
         # the deterministic surface.
-        covered_fact_parts = [sq for sq in fact_parts if coverage.is_covered(sq.text)]
-        uncovered_fact_parts = [sq for sq in fact_parts if sq not in covered_fact_parts]
+        if self.coverage_gate:
+            covered_fact_parts = [sq for sq in fact_parts if coverage.is_covered(sq.text)]
+            uncovered_fact_parts = [sq for sq in fact_parts if sq not in covered_fact_parts]
+        else:
+            covered_fact_parts, uncovered_fact_parts = fact_parts, []
         refusals = [SubAnswer(sub_question=sq, text=coverage.refusal_text(sq.text),
                               coverage_refused=True)
                     for sq in uncovered_fact_parts]

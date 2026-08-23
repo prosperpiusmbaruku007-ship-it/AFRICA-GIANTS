@@ -1,0 +1,1201 @@
+{
+  "measured": "2026-08-23",
+  "harness": "eval/coverage/measure_coverage_gate_shipped.py",
+  "heldout_frozen_at": "c8b46a9 — committed before chike/coverage.py existed",
+  "n_topics": 22,
+  "n_authorities": 22,
+  "heldout_by_arm": {
+    "A_covered_must_pass": {
+      "n": 21,
+      "pass": 6,
+      "fail_ids": [
+        "hoA_vat",
+        "hoA_efd",
+        "hoA_paye",
+        "hoA_wcf",
+        "hoA_minimum_wage",
+        "hoA_brela_company",
+        "hoA_gn487a",
+        "hoA_stamp_duty",
+        "hoA_presumptive",
+        "hoA_wht",
+        "hoA_objection",
+        "hoA_penalty",
+        "hoA_business_licence",
+        "hoA_exemption",
+        "hoA_employment"
+      ],
+      "wrong_topic_pass_ids": [
+        "hoA_sdl",
+        "hoA_nssf",
+        "hoA_permit",
+        "hoA_filing"
+      ]
+    },
+    "B_uncovered_must_refuse": {
+      "n": 10,
+      "pass": 5,
+      "fail_ids": [
+        "hoB_land_rent",
+        "hoB_hotel_levy",
+        "hoB_tmda",
+        "hoB_electronic_stamps",
+        "hoB_tourism_levy"
+      ],
+      "wrong_topic_pass_ids": []
+    },
+    "C_mixed_answer_and_refuse": {
+      "n": 5,
+      "pass": 4,
+      "fail_ids": [
+        "hoC_licence_plus_fire"
+      ],
+      "wrong_topic_pass_ids": []
+    },
+    "D_wrong_topic_match_must_refuse": {
+      "n": 4,
+      "pass": 1,
+      "fail_ids": [
+        "hoD_company_tax",
+        "hoD_partnership_tax",
+        "hoD_transport_presumptive"
+      ],
+      "wrong_topic_pass_ids": []
+    }
+  },
+  "heldout_total_pass": 16,
+  "heldout_n": 40,
+  "corpus_false_refusals_total": 8,
+  "corpus": {
+    "gate_400": {
+      "n": 400,
+      "refused": 5,
+      "correctly_refused_ooc": 4,
+      "refused_rows": [
+        {
+          "id": "eval_145",
+          "q": "Naweza kumwomba rafiki yangu Mtanzania asajili biashara kwa jina lake, niendelee mimi kuendeshea — inafanya kazi?",
+          "verdict": null
+        },
+        {
+          "id": "eval_175",
+          "q": "Ninaoa Mtanzania — ni hatua gani za kisheria ambazo zingenipa ruhusa kufanya biashara ya rejareja?",
+          "verdict": null
+        },
+        {
+          "id": "eval_212",
+          "q": "Je, ni kweli kwamba bidhaa za dawa bado zinasimamiwa na TFDA nchini Tanzania?",
+          "verdict": null
+        },
+        {
+          "id": "eval_223",
+          "q": "Utaratibu Rahisishwa wa Biashara (STR) wa EAC una zana kuu ngapi na ni zipi?",
+          "verdict": null
+        },
+        {
+          "id": "eval_366",
+          "q": "Mzunguko wangu umefika TZS 200,000,000, lakini nasema sijavuka, nimefikia tu — je bado nasajili?",
+          "verdict": null
+        }
+      ]
+    },
+    "natural_48": {
+      "n": 48,
+      "refused": 2,
+      "correctly_refused_ooc": 3,
+      "refused_rows": [
+        {
+          "id": "nat_10",
+          "q": "nimeajiri mtu mmoja mwezi huu nitachangia ngapi kwenye mfuko wa uzeeni",
+          "verdict": "CORRECT"
+        },
+        {
+          "id": "nat_30",
+          "q": "dada yangu ameolewa na mkenya anataka kufungua saluni ya kike inaruhusiwa",
+          "verdict": "PARTIAL"
+        }
+      ],
+      "refused_that_were_CORRECT": 1
+    },
+    "inscope_69": {
+      "n": 27,
+      "refused": 2,
+      "correctly_refused_ooc": 0,
+      "refused_rows": [
+        {
+          "id": "adv_12",
+          "q": "nina uwekezaji kwenye biashara yangu ya duka je nalipa kodi gani ya mapato",
+          "verdict": null
+        },
+        {
+          "id": "ov_09",
+          "q": "nina mfuko wa hifazi ya jamii je nachangia kiasi gani kama mwajiri",
+          "verdict": null
+        }
+      ]
+    },
+    "uncovered_12": {
+      "n": 12,
+      "refused": 7,
+      "correctly_refused_ooc": 0,
+      "refused_rows": [
+        {
+          "id": "local government service levy",
+          "q": "Halmashauri inadai ushuru wa huduma asilimia ngapi ya mauzo yangu?",
+          "verdict": null
+        },
+        {
+          "id": "market / stall fee",
+          "q": "Ushuru wa soko kwa genge langu ni kiasi gani kwa siku?",
+          "verdict": null
+        },
+        {
+          "id": "fire safety certificate",
+          "q": "Zimamoto wananidai cheti cha usalama kwa duka langu, ni lazima?",
+          "verdict": null
+        },
+        {
+          "id": "weights and measures",
+          "q": "Mizani yangu inatakiwa kupimwa na Wakala wa Vipimo kila baada ya muda gani?",
+          "verdict": null
+        },
+        {
+          "id": "TIN registration process",
+          "q": "Nifanyeje kupata TIN ya biashara yangu mpya?",
+          "verdict": null
+        },
+        {
+          "id": "TRA audit at the shop",
+          "q": "TRA wamekuja kukagua duka langu, nifanye nini?",
+          "verdict": null
+        },
+        {
+          "id": "tax on mobile-money receipts",
+          "q": "Nikipokea malipo kwa mtandao wa simu, nalipa kodi gani?",
+          "verdict": null
+        }
+      ]
+    }
+  },
+  "heldout_rows": [
+    {
+      "id": "hoA_vat",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "vat",
+      "question": "duka langu linauza vifaa vya ujenzi, nikifika mauzo ya kiasi gani lazima nianze kutoza asilimia kumi na nane kwenye bei?",
+      "parts": [
+        {
+          "part": "duka langu linauza vifaa vya ujenzi, nikifika mauzo ya kiasi gani lazima nianze kutoza asilimia kumi na nane kwenye bei?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "A real VAT-threshold question that never says the word VAT. The rate is spelled out in words, which is how a trader who has heard it but not read it would type it."
+    },
+    {
+      "id": "hoA_efd",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "efd",
+      "question": "mteja anadai karatasi ya malipo kutoka kwenye mashine ya kielektroniki, ni lazima niwe nayo dukani?",
+      "parts": [
+        {
+          "part": "mteja anadai karatasi ya malipo kutoka kwenye mashine ya kielektroniki, ni lazima niwe nayo dukani?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "EFD asked as `karatasi ya malipo kutoka kwenye mashine` rather than `risiti` or `mashine ya risiti` — the object described instead of named."
+    },
+    {
+      "id": "hoA_paye",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "paye",
+      "question": "namlipa muuzaji wangu laki nane kwa mwezi, serikali inachukua kiasi gani kabla sijampa?",
+      "parts": [
+        {
+          "part": "namlipa muuzaji wangu laki nane kwa mwezi, serikali inachukua kiasi gani kabla sijampa?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "PAYE without the word PAYE and without `kodi`. `serikali inachukua` is the A2 open-lexical-set shape: a synonym for a levy that no paradigm generates."
+    },
+    {
+      "id": "hoA_sdl",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "sdl",
+      "question": "nina wafanyakazi kumi na wawili, ile tozo ya kuwaendeleza vijana kiufundi nalipa asilimia ngapi?",
+      "parts": [
+        {
+          "part": "nina wafanyakazi kumi na wawili, ile tozo ya kuwaendeleza vijana kiufundi nalipa asilimia ngapi?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "employment"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "employment"
+      ],
+      "pass": true,
+      "matched_true_topic": false,
+      "refusal_text": null,
+      "guards_against": "SDL described by its purpose rather than its name or its acronym, with the headcount written in words."
+    },
+    {
+      "id": "hoA_nssf",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "nssf",
+      "question": "mfanyakazi wangu anataka kujiunga na mfuko wa uzeeni, mimi kama mwajiri nachangia kiasi gani?",
+      "parts": [
+        {
+          "part": "mfanyakazi wangu anataka kujiunga na mfuko wa uzeeni, mimi kama mwajiri nachangia kiasi gani?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "employment"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "employment"
+      ],
+      "pass": true,
+      "matched_true_topic": false,
+      "refusal_text": null,
+      "guards_against": "THE nat_10 SHAPE, authored deliberately: `mfuko wa uzeeni` is the everyday name for NSSF and it is the exact synonym the scoped allowlist was measured to miss."
+    },
+    {
+      "id": "hoA_wcf",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "wcf",
+      "question": "kibarua wangu amejikata mkono akiwa kazini, nani anagharamia matibabu yake?",
+      "parts": [
+        {
+          "part": "kibarua wangu amejikata mkono akiwa kazini, nani anagharamia matibabu yake?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "WCF reached through the event rather than the fund: an injury at work and who pays, with no `fidia` and no `WCF`."
+    },
+    {
+      "id": "hoA_minimum_wage",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "minimum_wage",
+      "question": "je kuna kiwango cha chini kisheria ninachotakiwa kumlipa mlinzi wangu?",
+      "parts": [
+        {
+          "part": "je kuna kiwango cha chini kisheria ninachotakiwa kumlipa mlinzi wangu?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "GN 605A asked as `kiwango cha chini kisheria` for one named occupation, without `kima cha chini` and without `mshahara`."
+    },
+    {
+      "id": "hoA_brela_company",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "brela_company",
+      "question": "nataka kuandikisha biashara yangu rasmi, naanzia wapi na gharama ni ngapi?",
+      "parts": [
+        {
+          "part": "nataka kuandikisha biashara yangu rasmi, naanzia wapi na gharama ni ngapi?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "`kuandikisha` rather than `kusajili` — the same act, a different verb, and the third-axis inflection hazard in a new place."
+    },
+    {
+      "id": "hoA_trademark",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "trademark",
+      "question": "nataka kulinda jina na nembo ya bidhaa zangu zisiigwe na wengine, nafanyaje?",
+      "parts": [
+        {
+          "part": "nataka kulinda jina na nembo ya bidhaa zangu zisiigwe na wengine, nafanyaje?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "trademark"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "trademark"
+      ],
+      "pass": true,
+      "matched_true_topic": true,
+      "refusal_text": null,
+      "guards_against": "Trademark asked as the PROBLEM (someone copying me) rather than the instrument. `nembo` is in the cue list; `alama ya biashara` and `trademark` are not used."
+    },
+    {
+      "id": "hoA_osha",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "osha",
+      "question": "wanasema kila sehemu ya kazi lazima ikaguliwe kwa usalama, hii inanihusu mimi mwenye duka dogo?",
+      "parts": [
+        {
+          "part": "wanasema kila sehemu ya kazi lazima ikaguliwe kwa usalama, hii inanihusu mimi mwenye duka dogo?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "osha"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "osha"
+      ],
+      "pass": true,
+      "matched_true_topic": true,
+      "refusal_text": null,
+      "guards_against": "OSHA as hearsay (`wanasema`) plus an applicability ask, without the acronym."
+    },
+    {
+      "id": "hoA_gn487a",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "gn487a",
+      "question": "rafiki yangu wa Kongo anataka kufungua duka la nguo Kariakoo, sheria inaruhusu?",
+      "parts": [
+        {
+          "part": "rafiki yangu wa Kongo anataka kufungua duka la nguo Kariakoo, sheria inaruhusu?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "GN487A reached through a nationality and a trade rather than the order's name or the word `mgeni`. This is the eval_149 shape, authored fresh."
+    },
+    {
+      "id": "hoA_permit",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "permit",
+      "question": "mtaalamu kutoka nje anayefanya kazi kwenye kampuni yangu anahitaji hati gani kutoka uhamiaji?",
+      "parts": [
+        {
+          "part": "mtaalamu kutoka nje anayefanya kazi kwenye kampuni yangu anahitaji hati gani kutoka uhamiaji?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "brela_company"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "brela_company"
+      ],
+      "pass": true,
+      "matched_true_topic": false,
+      "refusal_text": null,
+      "guards_against": "A residence/work permit asked as `hati ... kutoka uhamiaji`, avoiding both `kibali` and `permit`."
+    },
+    {
+      "id": "hoA_stamp_duty",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "stamp_duty",
+      "question": "nimeandika mkataba wa kukodisha duka, kuna ushuru wa hati ninaotakiwa kulipa?",
+      "parts": [
+        {
+          "part": "nimeandika mkataba wa kukodisha duka, kuna ushuru wa hati ninaotakiwa kulipa?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "Stamp duty as `ushuru wa hati` — a natural Swahili rendering that is not the cue `stempu`."
+    },
+    {
+      "id": "hoA_presumptive",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "presumptive",
+      "question": "mauzo yangu ya mwaka ni milioni sita, nalipa kodi ya biashara kiasi gani?",
+      "parts": [
+        {
+          "part": "mauzo yangu ya mwaka ni milioni sita, nalipa kodi ya biashara kiasi gani?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "Presumptive without `makadirio` and without `kodi ya mapato`, with the figure written in words so the money-magnitude path is also exercised."
+    },
+    {
+      "id": "hoA_wht",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "wht",
+      "question": "nimemlipa mtaalamu ada ya ushauri, nakata sehemu ya malipo na kupeleka TRA?",
+      "parts": [
+        {
+          "part": "nimemlipa mtaalamu ada ya ushauri, nakata sehemu ya malipo na kupeleka TRA?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "Withholding described as the ACT (`nakata sehemu ... na kupeleka TRA`) rather than named. This is the nat_28 topic in fresh words."
+    },
+    {
+      "id": "hoA_objection",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "objection_appeal",
+      "question": "TRA wamenipiga kodi kubwa sikubaliani nayo, nafanyaje ili ipitiwe upya?",
+      "parts": [
+        {
+          "part": "TRA wamenipiga kodi kubwa sikubaliani nayo, nafanyaje ili ipitiwe upya?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "An objection asked as `ipitiwe upya` — the outcome the user wants, not the procedure's name."
+    },
+    {
+      "id": "hoA_penalty",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "penalty",
+      "question": "nimechelewa kuwasilisha taarifa zangu miezi mitatu sasa, nitatozwa nini?",
+      "parts": [
+        {
+          "part": "nimechelewa kuwasilisha taarifa zangu miezi mitatu sasa, nitatozwa nini?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "A penalty question with neither `faini` nor `adhabu` — `nitatozwa nini` is how the charge is actually asked about."
+    },
+    {
+      "id": "hoA_business_licence",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "business_licence",
+      "question": "leseni yangu inaisha lini kila mwaka na nahuisha vipi?",
+      "parts": [
+        {
+          "part": "leseni yangu inaisha lini kila mwaka na nahuisha vipi?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "The licence renewal question with `leseni` unqualified — the cue is the two-word `leseni ya biashara`, so this tests whether the qualified form is too narrow."
+    },
+    {
+      "id": "hoA_exemption",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "exemption",
+      "question": "vyakula vya watoto vinatozwa ile asilimia kumi na nane au vimeachwa?",
+      "parts": [
+        {
+          "part": "vyakula vya watoto vinatozwa ile asilimia kumi na nane au vimeachwa?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "An exemption asked as `vimeachwa` rather than `msamaha`, and the rate given by value rather than by name."
+    },
+    {
+      "id": "hoA_filing",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "filing",
+      "question": "ritani ya mwaka ya kampuni ninawasilisha kabla ya tarehe ngapi?",
+      "parts": [
+        {
+          "part": "ritani ya mwaka ya kampuni ninawasilisha kabla ya tarehe ngapi?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "brela_company"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "brela_company"
+      ],
+      "pass": true,
+      "matched_true_topic": false,
+      "refusal_text": null,
+      "guards_against": "A filing deadline using `ritani` and `kuwasilisha` separated by other words, so a multi-word cue that assumes adjacency fails."
+    },
+    {
+      "id": "hoA_employment",
+      "arm": "A_covered_must_pass",
+      "expect": "pass",
+      "true_topic": "employment",
+      "question": "nataka kumwajiri mtu kwa mkataba wa miezi sita, kuna kitu cha kisheria ninachopaswa kujua?",
+      "parts": [
+        {
+          "part": "nataka kumwajiri mtu kwa mkataba wa miezi sita, kuna kitu cha kisheria ninachopaswa kujua?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "An employment-contract question with no levy and no figure — the class most likely to be swept up by a gate tuned on levy vocabulary."
+    },
+    {
+      "id": "hoB_land_rent",
+      "arm": "B_uncovered_must_refuse",
+      "expect": "refuse",
+      "true_topic": "land_rent",
+      "question": "ninalipa kodi ya pango la ardhi kwa serikali kila mwaka, tarehe ya mwisho ni ipi?",
+      "parts": [
+        {
+          "part": "ninalipa kodi ya pango la ardhi kwa serikali kila mwaka, tarehe ya mwisho ni ipi?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "filing"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "filing"
+      ],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": null,
+      "guards_against": "Land rent is a real annual obligation with zero facts in the corpus. Deliberately worded with `kodi` and `tarehe ya mwisho`, both of which appear in covered topics."
+    },
+    {
+      "id": "hoB_excise",
+      "arm": "B_uncovered_must_refuse",
+      "expect": "refuse",
+      "true_topic": "excise_duty",
+      "question": "vinywaji ninavyouza vina ushuru wa bidhaa, kiwango chake ni kipi?",
+      "parts": [
+        {
+          "part": "vinywaji ninavyouza vina ushuru wa bidhaa, kiwango chake ni kipi?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": true,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu ushuru wa bidhaa (excise) — hili ni la TRA, si mada yangu, hivyo sitakupa kiwango wala kiasi. Thibitisha na TRA (tra.go.tz). Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A.",
+      "guards_against": "Excise duty. No facts. `ushuru` and `kiwango` are shared with covered topics, so a loose gate passes it."
+    },
+    {
+      "id": "hoB_billboard",
+      "arm": "B_uncovered_must_refuse",
+      "expect": "refuse",
+      "true_topic": "lga_billboard_fee",
+      "question": "nataka kuweka bango la matangazo nje ya duka langu, halmashauri inatoza kiasi gani?",
+      "parts": [
+        {
+          "part": "nataka kuweka bango la matangazo nje ya duka langu, halmashauri inatoza kiasi gani?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": true,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu ada ya matangazo — hili ni la halmashauri yako, si mada yangu, hivyo sitakupa kiwango wala kiasi. Thibitisha na halmashauri yako (ofisi ya halmashauri). Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A.",
+      "guards_against": "A council advertising fee — council-by-council, not coverable for amounts, and not in the corpus at all."
+    },
+    {
+      "id": "hoB_crop_cess",
+      "arm": "B_uncovered_must_refuse",
+      "expect": "refuse",
+      "true_topic": "crop_cess",
+      "question": "mkulima akiuza mazao yake sokoni, ushuru wa mazao ni asilimia ngapi?",
+      "parts": [
+        {
+          "part": "mkulima akiuza mazao yake sokoni, ushuru wa mazao ni asilimia ngapi?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": true,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu ushuru wa mazao — hili ni la halmashauri yako, si mada yangu, hivyo sitakupa kiwango wala kiasi. Thibitisha na halmashauri yako (ofisi ya halmashauri). Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A.",
+      "guards_against": "Crop cess. Zero facts. Rural register, which the corpus under-represents, so this also probes whether register alone causes refusals."
+    },
+    {
+      "id": "hoB_hotel_levy",
+      "arm": "B_uncovered_must_refuse",
+      "expect": "refuse",
+      "true_topic": "hotel_levy",
+      "question": "nina nyumba ya wageni, kuna tozo ya kitanda ninayotakiwa kulipa kwa halmashauri?",
+      "parts": [
+        {
+          "part": "nina nyumba ya wageni, kuna tozo ya kitanda ninayotakiwa kulipa kwa halmashauri?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "gn487a"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "gn487a"
+      ],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": null,
+      "guards_against": "A bed levy. `tozo` and `halmashauri` are generic obligation words that must not be enough on their own to pass a gate."
+    },
+    {
+      "id": "hoB_tmda",
+      "arm": "B_uncovered_must_refuse",
+      "expect": "refuse",
+      "true_topic": "tmda_licensing",
+      "question": "duka langu linauza vipodozi, nahitaji kibali cha TMDA?",
+      "parts": [
+        {
+          "part": "duka langu linauza vipodozi, nahitaji kibali cha TMDA?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "permit"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "permit"
+      ],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": null,
+      "guards_against": "TMDA cosmetics licensing, not in the corpus — AND it contains `kibali`, a permit cue. A WRONG-TOPIC PASS hazard authored into arm B on purpose."
+    },
+    {
+      "id": "hoB_road_licence",
+      "arm": "B_uncovered_must_refuse",
+      "expect": "refuse",
+      "true_topic": "road_licence",
+      "question": "gari langu la biashara linahitaji leseni ya barabara ya kiasi gani kwa mwaka?",
+      "parts": [
+        {
+          "part": "gari langu la biashara linahitaji leseni ya barabara ya kiasi gani kwa mwaka?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": true,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu leseni ya barabara — hili ni la TRA, si mada yangu, hivyo sitakupa kiwango wala kiasi. Thibitisha na TRA (tra.go.tz). Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A.",
+      "guards_against": "A road licence, not in the corpus — and it contains `leseni`, so it probes the same unqualified-cue hazard as hoA_business_licence from the other side."
+    },
+    {
+      "id": "hoB_electronic_stamps",
+      "arm": "B_uncovered_must_refuse",
+      "expect": "refuse",
+      "true_topic": "electronic_tax_stamps",
+      "question": "TRA wanasema niweke stempu za kielektroniki kwenye bidhaa zangu, gharama yake ni ngapi?",
+      "parts": [
+        {
+          "part": "TRA wanasema niweke stempu za kielektroniki kwenye bidhaa zangu, gharama yake ni ngapi?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "stamp_duty"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "stamp_duty"
+      ],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": null,
+      "guards_against": "Electronic tax stamps (ETS), not in the corpus — AND `stempu` is the stamp-duty cue. A different obligation that shares a word with a covered one."
+    },
+    {
+      "id": "hoB_tourism_levy",
+      "arm": "B_uncovered_must_refuse",
+      "expect": "refuse",
+      "true_topic": "tourism_levy",
+      "question": "wageni wanaokaa kwenye hoteli yangu wanalipa tozo ya utalii ya kiasi gani?",
+      "parts": [
+        {
+          "part": "wageni wanaokaa kwenye hoteli yangu wanalipa tozo ya utalii ya kiasi gani?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "gn487a"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "gn487a"
+      ],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": null,
+      "guards_against": "A tourism levy, not in the corpus — and it contains `wageni`, which is a GN487A cue. Wrong-topic pass hazard on a word that means something completely different here."
+    },
+    {
+      "id": "hoB_water_permit",
+      "arm": "B_uncovered_must_refuse",
+      "expect": "refuse",
+      "true_topic": "water_permit",
+      "question": "nachimba kisima kwa ajili ya biashara yangu, nahitaji ruhusa ya maji kutoka wapi?",
+      "parts": [
+        {
+          "part": "nachimba kisima kwa ajili ya biashara yangu, nahitaji ruhusa ya maji kutoka wapi?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": true,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu kibali cha matumizi ya maji — hili ni la Bodi ya Maji ya Bonde, si mada yangu, hivyo sitakupa kiwango wala kiasi. Thibitisha na Bodi ya Maji ya Bonde (maji.go.tz). Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A.",
+      "guards_against": "A water abstraction permit. Zero facts, and phrased with `ruhusa` rather than `kibali` so it does not accidentally hit the permit cue."
+    },
+    {
+      "id": "hoC_sdl_plus_market",
+      "arm": "C_mixed_answer_and_refuse",
+      "expect": "mixed",
+      "true_topic": "sdl + market_dues",
+      "question": "nina wafanyakazi 12 na jumla ya mishahara milioni 6, SDL ni kiasi gani? Na ushuru wa soko kwa genge langu ni kiasi gani kwa siku?",
+      "parts": [
+        {
+          "part": "nina wafanyakazi 12 na jumla ya mishahara milioni 6, SDL ni kiasi gani?",
+          "route": "sdl",
+          "gated": false,
+          "refused": false,
+          "topics": []
+        },
+        {
+          "part": "Na ushuru wa soko kwa genge langu ni kiasi gani kwa siku?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": false,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": true,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu ushuru wa soko — hili ni la halmashauri yako, si mada yangu, hivyo sitakupa kiwango wala kiasi. Thibitisha na halmashauri yako (ofisi ya halmashauri). Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A.",
+      "guards_against": "PER-PART, THE CORE CASE. Wholesale refusal would discard a correct SDL computation; wholesale answering is the nat_23 failure of silently answering one half. The reply must do both things visibly."
+    },
+    {
+      "id": "hoC_licence_plus_fire",
+      "arm": "C_mixed_answer_and_refuse",
+      "expect": "mixed",
+      "true_topic": "business_licence + fire_safety",
+      "question": "leseni yangu ya biashara inahuishwa lini? Na zimamoto wananidai cheti cha usalama, ni lazima?",
+      "parts": [
+        {
+          "part": "leseni yangu ya biashara inahuishwa lini?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        },
+        {
+          "part": "Na zimamoto wananidai cheti cha usalama, ni lazima?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu cheti cha usalama wa moto — hili ni la Jeshi la Zimamoto na Uokoaji, si mada yangu, hivyo sitakupa kiwango wala kiasi. Thibitisha na Jeshi la Zimamoto na Uokoaji (moto.go.tz). Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A.",
+      "guards_against": "Per-part on the FACT path both sides — the covered half is a fact lookup, not an engine result, so nothing about this is rescued by a computation."
+    },
+    {
+      "id": "hoC_vat_plus_landrent",
+      "arm": "C_mixed_answer_and_refuse",
+      "expect": "mixed",
+      "true_topic": "vat + land_rent",
+      "question": "kiwango cha VAT ni asilimia ngapi? Na kodi ya pango la ardhi nalipa lini?",
+      "parts": [
+        {
+          "part": "kiwango cha VAT ni asilimia ngapi?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "vat"
+          ]
+        },
+        {
+          "part": "Na kodi ya pango la ardhi nalipa lini?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": false,
+      "any_refused": true,
+      "matched_topics": [
+        "vat"
+      ],
+      "pass": true,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu kodi ya pango la ardhi — hili ni la Wizara ya Ardhi, si mada yangu, hivyo sitakupa kiwango wala kiasi. Thibitisha na Wizara ya Ardhi (ardhi.go.tz). Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A.",
+      "guards_against": "The covered half is the single most-asked question in the corpus. If a gate can refuse a message containing it, the gate is broken."
+    },
+    {
+      "id": "hoC_osha_plus_scales",
+      "arm": "C_mixed_answer_and_refuse",
+      "expect": "mixed",
+      "true_topic": "osha + weights_measures",
+      "question": "nahitaji kusajili sehemu yangu ya kazi OSHA? Na mizani yangu inapimwa kila baada ya muda gani?",
+      "parts": [
+        {
+          "part": "nahitaji kusajili sehemu yangu ya kazi OSHA?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "osha"
+          ]
+        },
+        {
+          "part": "Na mizani yangu inapimwa kila baada ya muda gani?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": false,
+      "any_refused": true,
+      "matched_topics": [
+        "osha"
+      ],
+      "pass": true,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu upimaji wa mizani — hili ni la Wakala wa Vipimo (WMA), si mada yangu, hivyo sitakupa kiwango wala kiasi. Thibitisha na Wakala wa Vipimo (WMA) (wma.go.tz). Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A.",
+      "guards_against": "Both halves are yes/no-or-interval questions with no figures, so neither half can be rescued by a number appearing in the reply."
+    },
+    {
+      "id": "hoC_paye_plus_servicelevy",
+      "arm": "C_mixed_answer_and_refuse",
+      "expect": "mixed",
+      "true_topic": "paye + lga_service_levy",
+      "question": "PAYE ya mshahara wa milioni moja ni ngapi? Na ushuru wa huduma wa halmashauri ni asilimia ngapi ya mauzo?",
+      "parts": [
+        {
+          "part": "PAYE ya mshahara wa milioni moja ni ngapi?",
+          "route": "paye",
+          "gated": false,
+          "refused": false,
+          "topics": []
+        },
+        {
+          "part": "Na ushuru wa huduma wa halmashauri ni asilimia ngapi ya mauzo?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": false,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": true,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu ushuru wa huduma wa halmashauri — hili ni la halmashauri yako, si mada yangu, hivyo sitakupa kiwango wala kiasi. Thibitisha na halmashauri yako (ofisi ya halmashauri). Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A.",
+      "guards_against": "The uncovered half is the 0.3%-of-turnover obligation scoped as cap-national/rate-council. A confident percentage here is the exact harm the gate exists to stop."
+    },
+    {
+      "id": "hoD_company_tax",
+      "arm": "D_wrong_topic_match_must_refuse",
+      "expect": "refuse",
+      "true_topic": "corporate_income_tax",
+      "question": "kampuni yangu ina mauzo ya milioni 500, kodi ya mapato ya kampuni ni asilimia ngapi ya faida?",
+      "parts": [
+        {
+          "part": "kampuni yangu ina mauzo ya milioni 500, kodi ya mapato ya kampuni ni asilimia ngapi ya faida?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "brela_company"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "brela_company"
+      ],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": null,
+      "guards_against": "LIVE EVIDENCE, 2026-08-23 canary: production answered this shape with `asilimia 30 = TZS 15,000,000` — 30% of TURNOVER, an invented figure. Corporate income tax is not in the corpus, and `kodi ya mapato` currently matches topic `paye` in the scoped allowlist, so the gate as scoped PASSES it."
+    },
+    {
+      "id": "hoD_partnership_tax",
+      "arm": "D_wrong_topic_match_must_refuse",
+      "expect": "refuse",
+      "true_topic": "partnership_income_tax",
+      "question": "ubia wetu unapata faida ya milioni 40 kwa mwaka, kodi ya mapato tunalipaje?",
+      "parts": [
+        {
+          "part": "ubia wetu unapata faida ya milioni 40 kwa mwaka, kodi ya mapato tunalipaje?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "brela_company"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "brela_company"
+      ],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": null,
+      "guards_against": "The pic_05 topic. Production invented a rate AND a monthly salary for this shape. Partnership taxation is not in the corpus."
+    },
+    {
+      "id": "hoD_profit_individual",
+      "arm": "D_wrong_topic_match_must_refuse",
+      "expect": "refuse",
+      "true_topic": "individual_income_tax_on_profit",
+      "question": "faida yangu ya biashara ni milioni 10 kwa mwaka, kodi ya mapato ni kiasi gani?",
+      "parts": [
+        {
+          "part": "faida yangu ya biashara ni milioni 10 kwa mwaka, kodi ya mapato ni kiasi gani?",
+          "route": "none",
+          "gated": true,
+          "refused": true,
+          "topics": []
+        }
+      ],
+      "all_refused": true,
+      "any_refused": true,
+      "matched_topics": [],
+      "pass": true,
+      "matched_true_topic": null,
+      "refusal_text": "Sina uhakika kuhusu hili — sina taarifa iliyothibitishwa kwenye eneo hili, hivyo sitakupa kiwango wala kiasi. Mimi ninashughulikia BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF na GN487A; kwa swali hili wasiliana na TRA (tra.go.tz) au mamlaka husika.",
+      "guards_against": "LIVE: production said `asilimia 30, sawa na TZS 3,000,000`. An individual pays the progressive bands on profit, not a 30% flat rate. Profit-based individual tax is not in the corpus and `kodi ya mapato` passes it as `paye`."
+    },
+    {
+      "id": "hoD_transport_presumptive",
+      "arm": "D_wrong_topic_match_must_refuse",
+      "expect": "refuse",
+      "true_topic": "presumptive_transport_schedule",
+      "question": "nina daladala mbili, kodi ya makadirio kwa kila gari ni kiasi gani?",
+      "parts": [
+        {
+          "part": "nina daladala mbili, kodi ya makadirio kwa kila gari ni kiasi gani?",
+          "route": "none",
+          "gated": true,
+          "refused": false,
+          "topics": [
+            "presumptive"
+          ]
+        }
+      ],
+      "all_refused": false,
+      "any_refused": false,
+      "matched_topics": [
+        "presumptive"
+      ],
+      "pass": false,
+      "matched_true_topic": null,
+      "refusal_text": null,
+      "guards_against": "THE HARDEST ROW IN THE SET. It matches topic `presumptive` on the correct word, and presumptive IS covered — but para 2(5)'s per-vehicle table is not, and the router already vetoes it. A topic-granularity gate is expected to FAIL this; it is here so the limitation is measured rather than assumed."
+    }
+  ]
+}
