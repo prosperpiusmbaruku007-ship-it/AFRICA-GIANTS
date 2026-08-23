@@ -242,7 +242,13 @@ def main():
                      'fact_path_only': fpo, 'per_corpus': {}}
                 for name, rows in results.items():
                     ref = [r for r in rows if refuses(r, field, thr, fpo)]
+                    # An `out_of_corpus` gate row refused by the coverage gate is a CORRECT
+                    # refusal, not a false one. Applied in BOTH arms so their false-refusal
+                    # totals are directly comparable.
+                    ooc_ref = [r for r in ref if r.get('subdomain') == 'out_of_corpus']
+                    ref = [r for r in ref if r.get('subdomain') != 'out_of_corpus']
                     entry = {'n': len(rows), 'refused': len(ref),
+                             'correctly_refused_ooc': len(ooc_ref),
                              'rate': round(len(ref) / len(rows), 4)}
                     if name == 'natural_48':
                         entry['refused_that_were_CORRECT'] = sum(
