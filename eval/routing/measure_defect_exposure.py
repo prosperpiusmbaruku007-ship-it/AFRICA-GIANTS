@@ -102,19 +102,38 @@ def percentages(text):
 
 
 def competing_quantities(top_texts):
-    """Subjects for which the top-3 states two or more DIFFERENT percentages."""
+    """Subjects for which TWO DIFFERENT ROWS in the top-3 state different percentages.
+
+    THE ACROSS-ROWS REQUIREMENT IS THE WHOLE DETECTOR, and the first version got it wrong. That
+    version pooled every percentage for a subject across the top-3 and flagged when the pool held
+    more than one value — which fires on a SINGLE fact that names a wrong value in order to refute
+    it: `vat standard rate: ... is 18% — it was NEVER 14%` looks like {14, 18}. It reported 26.3%
+    exposure, almost all of it that shape.
+
+    `eval_337` is two SEPARATE facts — `NSSF jumla: 20%` and `mwajiri analipa 10%` — each true,
+    neither refuting the other, and the model picked the wrong one. A refutation inside one fact
+    is the opposite situation: the fact is doing the disambiguation for us.
+    """
     hits = {}
     for subject, cues in _SUBJECTS.items():
-        vals, rows = set(), []
+        per_row = []
         for t in top_texts:
-            tl = t.lower()
-            if any(c in tl for c in cues):
+            if any(c in t.lower() for c in cues):
                 p = percentages(t)
                 if p:
-                    vals |= p
-                    rows.append(t[:90])
-        if len(vals) > 1:
-            hits[subject] = {'values': sorted(vals), 'rows': rows}
+                    per_row.append((t, p))
+        if len(per_row) < 2:
+            continue
+        # Two rows compete when neither's value set contains the other's — i.e. a reader
+        # choosing between them gets a different number depending on which they pick.
+        competing_rows = [(a, b) for i, a in enumerate(per_row) for b in per_row[i + 1:]
+                          if a[1] != b[1] and not (a[1] <= b[1] or b[1] <= a[1])]
+        if competing_rows:
+            hits[subject] = {
+                'values': sorted({v for _, p in per_row for v in p}),
+                'rows': [t[:90] for t, _ in per_row],
+                'n_rows': len(per_row),
+            }
     return hits
 
 
