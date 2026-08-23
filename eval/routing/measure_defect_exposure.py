@@ -186,12 +186,33 @@ def main():
         changed = top_nofrag != top
 
         is_confirm = bool(_CONFIRM.search(q))
+        # D4 LEVER, measured: for a false-premise confirmation, does WIDENING the window bring a
+        # CONTRADICTING row into reach? A contradicting row shares a subject cue with the
+        # question and states a number the question does not. eval_348's refuting fact sat at
+        # rank 10, so this asks whether that is typical or a one-off.
+        widen = {}
+        if is_confirm:
+            asserted = percentages(q) | set(re.findall(r'\b(\d{1,3})\b', q))
+            subj_cues = [c for cues in _SUBJECTS.values() for c in cues
+                         if c in q.lower()]
+            for k in (3, 5, 10):
+                found = 0
+                for j in order[:k]:
+                    t = texts[j]
+                    tl = t.lower()
+                    if subj_cues and not any(c in tl for c in subj_cues):
+                        continue
+                    nums = percentages(t) | set(re.findall(r'\b(\d{1,3})\b', t))
+                    if nums - asserted:
+                        found += 1
+                widen[f'top{k}'] = found
 
         rec = {'corpus': corpus, 'id': qid, 'question': q,
                'top3': top, 'n_fragment_in_top3': n_frag_in_top,
                'competing_subjects': list(competing),
                'top3_changes_without_fragments': changed,
-               'is_false_premise_confirmation': is_confirm}
+               'is_false_premise_confirmation': is_confirm,
+               'contradicting_rows_by_window': widen}
         if competing:
             rec['competing_detail'] = competing
             d1_hits.append(rec)
@@ -243,8 +264,14 @@ def main():
         },
         'D4_refutation_out_of_reach': {
             'exposed': len(d4_hits), 'rate': round(len(d4_hits) / n, 4),
-            'lever': 'raise top_k — measured separately below',
-            'examples': [{'id': r['id'], 'q': r['question'][:100]} for r in d4_hits[:10]],
+            'lever': 'raise top_k — MEASURED: how many confirmation questions have a '
+                     'CONTRADICTING row (same subject, different number) inside each window.',
+            'questions_with_a_contradicting_row': {
+                f'top{k}': sum(1 for r in d4_hits
+                               if r['contradicting_rows_by_window'].get(f'top{k}', 0) > 0)
+                for k in (3, 5, 10)},
+            'examples': [{'id': r['id'], 'q': r['question'][:100],
+                          'windows': r['contradicting_rows_by_window']} for r in d4_hits[:12]],
         },
         'rows': rows,
     }
@@ -262,7 +289,9 @@ def main():
           f"lever reach {d3_changed} ({d3_changed / n:.1%})")
     print(f"   fragments hold {slots_frag}/{slots_total} top-3 slots "
           f"({slots_frag / slots_total:.1%});  by count {d3_by_count}")
-    print(f"D4 refutation out of reach   exposed {len(d4_hits):>4}  ({len(d4_hits) / n:.1%})")
+    d4w = out['D4_refutation_out_of_reach']['questions_with_a_contradicting_row']
+    print(f"D4 refutation out of reach   exposed {len(d4_hits):>4}  ({len(d4_hits) / n:.1%})   "
+          f"contradicting row available: {d4w}")
     print('\n--- D1 examples ---')
     for r in d1_hits[:8]:
         print(f"  {r['id']:<12}{r['question'][:70]}")
