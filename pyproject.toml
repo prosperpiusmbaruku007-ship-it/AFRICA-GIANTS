@@ -35,6 +35,19 @@ dependencies = [
 where = ["src"]
 
 [tool.pytest.ini_options]
+# DESELECT LIVE-NETWORK TESTS BY DEFAULT. Four tests in test_orchestrator.py call the real
+# chike-inference Modal endpoint over HTTPS. They were gated only on a Modal token being
+# PRESENT — a property of the machine, not of the run — so on a developer machine with a token
+# the whole suite's colour depended on the Tanzanian network. On 2026-08-23 that produced two
+# consecutive full-suite runs with different verdicts (1267 passed, then 1 failed on a 180s
+# connect timeout), and the failure had already been misattributed twice, once to page-file
+# exhaustion and once to a non-reproducible defect.
+#
+# The default run is now deterministic: 1263 tests, ~79s, no sockets. To run the live ones
+# deliberately (a CLI -m wins over this one):
+#     pytest tests/ -m network
+addopts = "-m 'not network'"
 markers = [
     "integration: requires the real RAG index + e5 model (network/GPU); auto-skipped when unavailable",
+    "network: makes a LIVE call to a deployed endpoint. Deselected by default via addopts — run with `-m network`. A failure here is evidence about the network or production, NEVER about the code under test.",
 ]

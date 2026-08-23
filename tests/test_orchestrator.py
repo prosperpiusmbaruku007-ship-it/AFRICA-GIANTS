@@ -1,7 +1,11 @@
 """Tests for chike.orchestrator — pipeline shape + dependency injection.
 
-Every test injects a FakeBackend (no network, no GPU), proving the orchestrator is
-fully exercisable via the model abstraction layer built in item 1.
+Every test injects a FakeBackend (no network, no GPU), proving the orchestrator is fully
+exercisable via the model abstraction layer built in item 1 — WITH ONE EXCEPTION, stated here
+because the docstring used to claim otherwise and the claim went stale: the four
+`*_on_real_weights` tests at the bottom of this file make LIVE HTTPS calls to the deployed
+chike-inference endpoint. They are marked `network` and deselected by default (pyproject
+addopts). See `_live_modal` for why token-presence gating alone was not enough.
 """
 import os
 from decimal import Decimal
@@ -450,6 +454,50 @@ _real_weights = pytest.mark.skipif(
 )
 
 
+def _live_modal(fn):
+    """ONE decorator carrying BOTH gates, so a new live test cannot acquire one without the other.
+
+    WHY THE SKIPIF WAS NOT ENOUGH (2026-08-23). Token presence is a property of the MACHINE, not
+    of the run: on a developer machine with `~/.chike_modal_token.txt` these tests ran by
+    default, so the verdict of the entire suite depended on whether a Tanzanian ISP could reach
+    modal.run. Two consecutive identical full-suite runs disagreed — 1267 passed, then 1 failed
+    on a 180s connect timeout — and the failure was misattributed twice before the cause was
+    read. A suite whose colour depends on the network cannot be the instrument other claims are
+    checked against.
+
+      * `network` — deselected by default (`addopts = "-m 'not network'"`). This is the gate
+        that fixes it. Run these deliberately with `pytest tests/ -m network`.
+      * `skipif` no token — still required, so `-m network` on a token-less machine skips
+        cleanly instead of failing on auth and looking like a product defect.
+
+    A failure in this block is evidence about the network or about production. It is NEVER
+    evidence about the code under test, and must not be read as such.
+    """
+    return pytest.mark.network(_real_weights(fn))
+
+
+def test_every_real_weights_test_carries_both_live_gates():
+    """FAILS when a new live test is added with only one gate — or with none.
+
+    The count assert is not decoration: if the naming convention changes, `live` goes empty and
+    the loop below would pass having checked nothing (R20 — a check that cannot fail is worse
+    than the gap it closed). Empty here would be empty BY ACCIDENT, so it is asserted.
+    """
+    import sys
+    mod = sys.modules[__name__]
+    live = sorted(n for n in dir(mod)
+                  if n.startswith("test_") and n.endswith("_on_real_weights"))
+    assert len(live) == 4, f"expected 4 live-Modal tests, found {live}"
+    for name in live:
+        marks = {m.name for m in getattr(getattr(mod, name), "pytestmark", [])}
+        assert "network" in marks, (
+            f"{name} calls the live endpoint but is not marked `network` — it would run in the "
+            f"default suite and make its verdict depend on the network")
+        assert "skipif" in marks, (
+            f"{name} is missing the token skipif — `-m network` on a token-less machine would "
+            f"fail on auth instead of skipping")
+
+
 def _real_orchestrator():
     """Orchestrator wired to the REAL v15 model via LocalAdapter -> generate_endpoint,
     with the AfriqueLlama tokenizer loaded (CPU) so prompts match production byte-for-byte
@@ -467,7 +515,7 @@ def _computations(reply):
     return [s.computation for s in reply.sub_answers if s.computation is not None]
 
 
-@_real_weights
+@_live_modal
 def test_net_take_home_routed_to_compute_and_never_guesses_on_real_weights():
     # rc_11: net-of-PAYE take-home ("...mshahara wa mwezi ni milioni moja na nusu ...
     # kitakachobaki mkononi baada ya kodi ya mshahara"). The router's net-take-home extension
@@ -486,7 +534,7 @@ def test_net_take_home_routed_to_compute_and_never_guesses_on_real_weights():
     assert sub.needs_clarification is True                 # clarify, not a fabricated take-home
 
 
-@_real_weights
+@_live_modal
 def test_fabrication_guard_never_guesses_on_real_weights():
     # rc_22: a payroll amount with NO salary given ("Nina duka lenye wafanyakazi wanne.
     # Makato ya mshahara ninayotakiwa kulipa kila mwezi ni kiasi gani?"). The fabrication
@@ -504,7 +552,7 @@ def test_fabrication_guard_never_guesses_on_real_weights():
         "expected the fabrication guard to clarify (missing salary), not answer"
 
 
-@_real_weights
+@_live_modal
 def test_q1_q12_regressions_resolved_on_real_weights():
     orch = _real_orchestrator()
     # Q1 (was empty output): single GN 487A fact — non-citizen salon restriction.
@@ -527,7 +575,7 @@ def test_q1_q12_regressions_resolved_on_real_weights():
         assert r12.text.count(marker) <= 1, f"fabricated follow-up turn ({marker!r})"
 
 
-@_real_weights
+@_live_modal
 def test_mixed_compound_end_to_end_on_real_weights():
     # Mixed compute+fact: SDL computation AND a BRELA annual-fee fact must both survive
     # the route-aware merge as two distinct sources (Phase B structural guarantee). Uses a
