@@ -831,6 +831,38 @@ loader silently returned nothing must be. The two are byte-identical at the AST 
   and it kept reporting sites already closed. **A worklist that cannot see its own fixes is the
   defect class it exists to find.**
 
+### R23 — A CONTROL MUST USE A VALUE THE SYSTEM WOULD NOT PRODUCE BY DEFAULT, or its pass proves nothing.
+
+**Third member of the same family as R20's vacuous asserts and the dead anchors — this time in a
+VALIDITY CHECK, which is the one place it is least likely to be noticed**, because a control that
+passes is read as licence to trust everything downstream of it.
+
+**Proven 2026-08-23.** The prompt/generation/adapter separation carried a control arm: feed the
+model *only* the competing fact (NSSF employer share, 10%) and confirm its figure comes back,
+proving the model reads its context. **It came back. The control passed.** It was worthless:
+
+| arm | context given | reply |
+|---|---|---|
+| A1 | only the CORRECT fact (20%) | *"asilimia 10"* |
+| **A2 — the control** | only the COMPETITOR (10%) | *"asilimia 10"* ✅ "passed" |
+| A3 | both, order reversed | *"asilimia 10"* |
+
+**The model returned 10% regardless of what it was given.** The control passed because the value it
+was checking for happened to be the model's default — so its pass is **indistinguishable from the
+total context-blindness it existed to rule out.**
+
+**The rule:** a control's expected value must be one the system would **not** produce on its own.
+- Prefer a **fabricated but plausible** value — a rate, threshold or date that appears nowhere in
+  the corpus and nowhere in plausible weights. Reproducing *that* is unambiguous evidence.
+- If the control value must be real, **first establish the default** by running the same question
+  with no context, and reject any control whose expected value equals it.
+- **State what a FAILED control would have looked like** when you write it. If you cannot describe
+  a failure distinguishable from the pass, it is not a control.
+
+**And the meta-rule, which is why this is worth a rule and not a note:** the failure was invisible
+until the *other* arms were read side by side. **Always read a control against its siblings, never
+on its own** — a control interpreted in isolation can only ever confirm itself.
+
 ### R21 — A SWEEP OVER OUR OWN CORPORA IS A LOWER BOUND. It has never measured paraphrase space.
 
 **Every gate corpus in this repo was authored from the same source families as the facts, so it

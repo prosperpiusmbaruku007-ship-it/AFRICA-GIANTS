@@ -491,15 +491,31 @@ the four with any measured lever behind it at all.
 
 ---
 
-# 🆕 BOARD ITEM — **ADJACENT-FACT SELECTION**: two true facts in context, the wrong one chosen (2026-08-23)
+# 🆕 BOARD ITEM — **D1 QUANTITY-AXIS BLINDNESS** *(renamed 2026-08-23 from "adjacent-fact selection")*
 
-**A new defect class, named because nothing in this file described it and the framing we had was
-structurally unable to see it.**
+> ## 🔁 THE RENAME, AND WHY IT IS ATTRIBUTED
+>
+> **The original name described what the defect looked like and misnamed what it is.** I proposed
+> "adjacent-fact selection" from the specimen's appearance — two true facts in context, the wrong
+> one in the reply — and the founder approved it on that appearance. **Both of us were reading a
+> symptom.** The separation run then measured it: given the correct fact **alone**, the competitor
+> **alone**, or both in either order, the model returned **the same answer every time**. It was
+> never selecting.
+>
+> **This is attributed rather than quietly corrected because the next symptom-named item will be
+> just as convincing.** A name taken from appearance carries an implicit causal claim — "selection"
+> asserts a choice was made — and that claim then shapes which fixes get considered. Under the old
+> name the obvious remedies were retrieval-side: dedupe competitors, re-rank, drop one. **All three
+> would have failed**, because A1 had already shown that removing the competitor changes nothing.
+>
+> **What survives the rename: the exposure figure.** 54 of 487 questions (11.1%), 44 of them the
+> NSSF total-versus-share pattern, still measure the population where the axis is live. **What does
+> not survive: the mechanism.** Exposure was measured; mechanism was inferred.
 
-**The definition.** The retrieved context contains **two or more true facts about the same subject
-that state different quantities**, differing in *which* quantity they name — a total versus a
-share, a rate versus a threshold, one party's obligation versus both. The model answers with the
-wrong one. **Retrieval is complete and correct. The failure is selection.**
+**The corrected definition.** The question asks for one of several measures of the same subject —
+a **total** versus one **party's share**, an employer's cost versus an employee's deduction — and
+**the model does not resolve which one is being asked for.** It emits a default figure, and the
+retrieved facts do not move it. **Retrieval is complete, correct, and irrelevant.**
 
 **The specimen** — `eval_337`, live 2026-08-23:
 
@@ -511,25 +527,38 @@ wrong one. **Retrieval is complete and correct. The failure is selection.**
 | reply | *"Kiwango sahihi ni **asilimia 10**…"* |
 | harm | an employer remits **half** of what they owe |
 
-**Why the discard framing could not see it.** The discard measurement asked *"was the retrieved
-fact used?"* — and here **it was**. A fact from the top-3 appears in the reply, correctly quoted.
-The question that needed asking is *"was the RIGHT one of several used?"*, which no
-presence-or-absence test can answer. **This is presence-not-conclusion at the fact-selection
-layer**, and it is the fifth member of that family.
+**Why the discard framing could not see it — and this survives the rename.** The discard
+measurement asked *"was the retrieved fact used?"*, and a figure from the top-3 does appear in the
+reply. **Presence-not-conclusion at the fact layer.** What the rename changes is the follow-up
+question: not *"was the right one of several used?"* but *"did the context influence the answer at
+all?"* — and measured, it did not.
 
 **Measured exposure: 54 of 487 corpus questions (11.1%)**, of which **44 are the NSSF total-versus-
 share pattern verbatim** — `eval/results/defect_exposure.json`. The remaining 10 are VAT and
 weaker; at least one is a cross-row refutation rather than true competition, so **44 (9.0%) is the
 defensible core figure**, not 54.
 
-**No mechanism exists**, and the two nearest candidates are already excluded: better retrieval
-cannot help when both facts are already present, and a fidelity rule comparing the body to a
-`ComputationResult` goes vacuous on the fact path (R19). **The slot is deliberately empty.**
+## MECHANISM SETTLED, AND A FIX WITH POSITIVE EVIDENCE — the first on this board in some time
 
-**What must be measured before anything is proposed:** whether this is *prompt shape* (facts are
-pooled with nothing telling the model which quantity the question asks for), *generation* (the
-model cannot hold a distinction it was handed), or *adapter* (v15 was never trained to choose
-between adjacent facts). **Three different fixes, and nothing currently distinguishes them.**
+**Verdict: GENERATION, prompt-sensitive** — `eval/results/prompt_generation_adapter_adjudication.json`.
+
+- **Not prompt shape.** A1 gave the model the correct fact **alone** and it still said 10%. Removing
+  the competitor changes nothing, so context construction is not the fix.
+- **Not the adapter.** A4 added **one sentence naming the quantity wanted** and the reply became
+  *"asilimia **20** ya mshahara ghafi (10 mwajiri + 10 mfanyakazi)"* — fully correct, including the
+  split. The weights can do this.
+
+**The fix is an instruction — an R14 config change, no retrain and no retrieval work.** But A4's
+sentence names the answer's shape for *one* question; a shippable change is a **general** system-
+prompt instruction, and whether a general form reproduces A4's result is a separate empirical
+question. Assuming it does is the reach-versus-benefit error that has already cost two cycles.
+
+**So the wording is being chosen by measurement, not taste**, against
+`eval/accuracy_gate/quantity_instruction_heldout_024.jsonl` — **frozen at `121b128`, before any
+candidate wording existed** (R21). Ten probes on the total-versus-share axis that demand
+*different* correct answers from the same facts, so a candidate that fixes the total by biasing
+toward totals breaks four of them; fourteen with no party axis at all, because an instruction runs
+on **every** generation and that is where its blast radius is priced.
 
 ---
 
