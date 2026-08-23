@@ -84,7 +84,13 @@ def main():
             # about. Passing via the wrong topic is a latent false negative — the shape the
             # 2026-08-23 canary caught live, where `kodi ya mapato` matched `paye` for four
             # different obligations.
-            right_topic = p['true_topic'] in matched
+            #
+            # ONLY DEFINED FOR ROWS THAT ACTUALLY PASSED (fixed after the first run). The first
+            # version computed it for every arm-A row, so a REFUSED row — whose matched-topic
+            # list is empty by definition — was reported as a "wrong-topic pass". That put 19
+            # of 21 rows in a bucket that should have held only the handful that passed for the
+            # wrong reason, and it understated the real problem by burying it in noise.
+            right_topic = (p['true_topic'] in matched) if ok else None
         elif p['expect'] == 'refuse':
             ok = all_ref
             right_topic = None
@@ -155,10 +161,19 @@ def main():
 
     print(f"HELD-OUT: {out['heldout_total_pass']}/{out['heldout_n']}")
     for arm, a in sorted(by_arm.items()):
-        print(f"  {arm:<34}{a['pass']}/{a['n']}"
-              f"   fail={a['fail_ids']}"
-              + (f"   wrong-topic pass={a['wrong_topic_pass_ids']}"
-                 if a['wrong_topic_pass_ids'] else ''))
+        print(f"  {arm:<34}{a['pass']}/{a['n']}")
+        if a['fail_ids']:
+            print(f"      FAIL: {a['fail_ids']}")
+        if a['wrong_topic_pass_ids']:
+            print(f"      PASSED VIA THE WRONG TOPIC: {a['wrong_topic_pass_ids']}")
+    print('\n--- arm A, why each row landed where it did ---')
+    for r in heldout_rows:
+        if r['arm'] != 'A_covered_must_pass':
+            continue
+        verdict = 'REFUSED' if r['any_refused'] else (
+            'pass' if r['matched_true_topic'] else 'pass(WRONG TOPIC)')
+        print(f"  {r['id']:<24}{verdict:<20}true={r['true_topic']:<18}"
+              f"matched={r['matched_topics']}")
     print('\nCORPUS COST (shipped list)')
     for name, e in corpus.items():
         extra = (f"  correct-refused-as-CORRECT={e['refused_that_were_CORRECT']}"
