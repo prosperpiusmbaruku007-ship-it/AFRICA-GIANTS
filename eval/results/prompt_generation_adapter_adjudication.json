@@ -1,0 +1,64 @@
+{
+  "adjudicated": "2026-08-23",
+  "source": "eval/results/prompt_generation_adapter_separation.json",
+  "adjudicator": "Claude Code — JUDGEMENT, not a scorer output",
+  "decision_rule": "As named in the harness docstring BEFORE the run, unmoved.",
+  "headline": "THREE SPECIMENS, THREE DIFFERENT ANSWERS. D1 is generation (prompt-sensitive), D4 is prompt shape (context construction), D2 recovered under no arm. A single label would have been wrong.",
+  "validity_control": {
+    "arm": "A2_competitor_alone",
+    "nominal_result": "PASSED — it reproduced the competitor's figure (asilimia 10)",
+    "actual_status": "CONFOUNDED, and the confound is itself the finding. A1 (only the 20% fact), A2 (only the 10% fact) and A3 (both, reversed) returned the SAME answer. The control was designed to show the model reads context; it passed only because the competitor's value coincides with the model's default. A control whose pass is indistinguishable from the failure it screens for is not a control.",
+    "what_to_do_differently": "Choose a control fact whose value the model would NOT produce by default — ideally a fabricated plausible figure — so that reproducing it is unambiguous evidence of context use."
+  },
+  "specimens": [
+    {
+      "specimen": "eval_337",
+      "defect": "D1 adjacent-fact selection",
+      "verdict": "GENERATION — prompt-sensitive",
+      "evidence": {
+        "A0_both_facts": "asilimia 10 — WRONG",
+        "A1_correct_fact_alone": "asilimia 10 — WRONG. The 20% fact was the ONLY thing in context.",
+        "A2_competitor_alone": "asilimia 10 — identical to A1",
+        "A3_order_reversed": "asilimia 10 — identical to A1 and A2",
+        "A4_instruction_naming_the_quantity": "asilimia 20 ya mshahara ghafi (10 mwajiri + 10 mfanyakazi) — CORRECT"
+      },
+      "reading": "A1 kills 'context construction is the fix': removing the competitor changed nothing. A4 kills 'the adapter cannot do it': one sentence naming the quantity produced a fully correct answer including the split. What separates them is the INSTRUCTION, not the facts.",
+      "correction_to_the_board": "The name 'adjacent-fact SELECTION' overstates what happens on this specimen. The model did not choose the wrong fact of two — it returned the same answer with the right fact alone, the wrong fact alone, and both in either order. On this row it is not reading the context at all. The EXPOSURE measurement (54 questions with competing facts) stands; the MECHANISM on the specimen is context-blindness, not mis-selection.",
+      "fix_class": "R14 config change — the system prompt or the question wrapper must state which quantity is being asked for. No retrain. No retrieval work.",
+      "caveat": "A4's reply carried a stray leading 'Thibitisha na TRA (tra.go.tz).' before the answer — a cleanup artifact, not a correctness one, but it would need handling before shipping any instruction change."
+    },
+    {
+      "specimen": "pic_11",
+      "defect": "D2 rank-1 contradiction",
+      "verdict": "NO ARM RECOVERED IT — the deepest of the three",
+      "evidence": {
+        "B0_production_top3": "'Presumptive tax inatumika kwa mauzo chini ya milioni 10' — WRONG",
+        "B1_ceiling_fact_alone": "'chini ya milioni 10 (TZS 10M/mwaka)' — WRONG, and it ELABORATED the wrong figure into an explicit gloss while the fact in its context said TZS 100,000,000",
+        "B2_instructed_to_use_only_the_fact": "'Thibitisha na tra.go.tz.' — degenerate, no answer at all",
+        "B3_either_or_framing_removed": "'unazidi kiwango cha juu... asilimia 30 kuanzia milioni 10 hadi 20' — WRONG, same 10M belief under a different question shape"
+      },
+      "reading": "The model holds a wrong belief — presumptive ceiling = 10 million — strongly enough to contradict a fact sitting alone in its context, under three different phrasings, and to elaborate the wrong figure rather than merely repeat it. This is the arm the decision rule assigned to ADAPTER.",
+      "but": "R19 CUTS ACROSS THIS AND MATTERS MORE THAN THE LABEL. The claim is a STATUTORY CONSTANT — a stated threshold of 10,000,000 against a locked 100,000,000 — not a derived quantity. R19 says a rule about a constant is BUILDABLE and needs no engine result, which is exactly how D-FIDELITY-6 checks levy rates against _LEVY_RATES. A threshold-comparison sibling would catch this reply. A retrain is therefore NOT the only option and should not be the first.",
+      "fix_class": "UNDECIDED. A constant-comparison fidelity rule is buildable per R19 and is cheap; a retrain is the heavy option and is now measurably justifiable for the first time, but has not been shown to be necessary."
+    },
+    {
+      "specimen": "eval_348",
+      "defect": "D4 refutation held, premise agreed with",
+      "verdict": "PROMPT SHAPE — context construction",
+      "evidence": {
+        "C0_production_top3": "'Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10%' — WRONG, agrees with the false premise",
+        "C1_refuting_fact_supplied": "'Hapana, si lazima kuwa 10/10 pekee. Sheria inaruhusu... 15/5, 20/0' — SUBSTANTIALLY CORRECT",
+        "C2_refuting_fact_and_premise_removed": "'10%+10%, 15%+5%, au 20%+0%' — CORRECT, all three enumerated",
+        "C3_original_facts_premise_removed": "'mgawanyo wa kawaida 10+10... unaweza kuwa tofauti' — vague, does not enumerate; not wrong but incomplete"
+      },
+      "reading": "Supplying the refuting fact fixes it. C3 shows that removing the premise alone does NOT — with the original facts the reply stays vague. So the failure is that the refuting fact never reached the context, not that the premise overpowered it.",
+      "fix_class": "Retrieval / context construction — the refuting fact sat at rank 10. This is the one of the three where getting the right row into the prompt is the whole fix.",
+      "incidental_defect_found": "C1 invented a fourth split ('12/8') that is not lawful, and BOTH C1 and C2 cited nssf.or.tz — the domain CLAUDE.md explicitly flags as DNS-failing, with .go.tz as the correct one. A live wrong-source defect, found incidentally, on a reply that is otherwise correct."
+    }
+  ],
+  "conclusion": [
+    "THE THREE-WAY QUESTION HAS THREE DIFFERENT ANSWERS AND ANY SINGLE LABEL WOULD HAVE BEEN WRONG. D1 -> generation, fixable in config. D4 -> prompt shape, fixable in retrieval. D2 -> recovered under no arm.",
+    "A RETRAIN IS NOW MEASURABLY JUSTIFIABLE FOR THE FIRST TIME, AND STILL IS NOT THE NEXT STEP. Only pic_11 resisted every arm, and its error is a wrong CONSTANT, which R19 says is checkable without a retrain. The cheap mechanism must be tried and shown to fail before the expensive one is scoped.",
+    "TWO OF THE THREE EMPTY SLOTS NOW HAVE A CANDIDATE MECHANISM, and neither is the one that was being argued for. D1 needs an instruction, not better retrieval. D4 needs better retrieval, not an instruction. They are opposites, and the exposure ranking could not have told them apart."
+  ]
+}

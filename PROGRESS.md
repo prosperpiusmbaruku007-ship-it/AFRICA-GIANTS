@@ -366,6 +366,86 @@ every subsequent cue a fit.
 
 ---
 
+# 🧭 PROMPT / GENERATION / ADAPTER — SEPARATED. THREE SPECIMENS, THREE DIFFERENT ANSWERS (2026-08-23)
+
+**The measurement that decides whether a retrain is justified.** Decision rule named in the harness
+docstring **before** the run and unmoved after it —
+`eval/forced_facts/separate_prompt_generation_adapter.py` →
+`eval/results/prompt_generation_adapter_separation.json`, adjudicated in
+`..._adjudication.json`. Instrument: the already-deployed `generate_raw` with a locally-built
+production prompt wrapper, so **the only variable is the context**.
+
+| specimen | defect | verdict | fix class |
+|---|---|---|---|
+| `eval_337` | D1 adjacent-fact | **GENERATION — prompt-sensitive** | an **instruction**. R14 config change. No retrain, no retrieval work |
+| `eval_348` | D4 refutation unused | **PROMPT SHAPE** | **retrieval / context construction**. No instruction needed |
+| `pic_11` | D2 rank-1 contradiction | **no arm recovered it** | undecided — see below |
+
+**A single label would have been wrong, and D1 and D4 need OPPOSITE fixes.** The exposure ranking
+could not have told them apart, and neither could argument.
+
+## `eval_337` — the model was not choosing badly. It was not reading the context at all.
+
+| arm | context | reply |
+|---|---|---|
+| A0 | both facts | *"asilimia **10**"* ❌ |
+| **A1** | **only the correct 20% fact** | *"asilimia **10**"* ❌ |
+| A2 | only the competitor 10% fact | *"asilimia **10**"* |
+| A3 | both, order reversed | *"asilimia **10**"* |
+| **A4** | both **+ one sentence naming the quantity wanted** | *"asilimia **20** ya mshahara ghafi (10 mwajiri + 10 mfanyakazi)"* ✅ |
+
+**A1, A2 and A3 are the same answer.** Right fact alone, wrong fact alone, both in either order —
+no difference. **A1 kills "context construction is the fix"; A4 kills "the adapter cannot do it".**
+What separates them is the *instruction*, not the facts.
+
+**Board correction: the name "adjacent-fact SELECTION" overstates this specimen.** The model did
+not pick the wrong one of two. **The exposure figure (54 questions with competing facts) stands;
+the mechanism on the specimen is context-blindness, not mis-selection.**
+
+**And the validity control was confounded — the confound is the finding.** A2 was meant to prove
+the model reads context by feeding only the competitor and checking its figure came back. It came
+back — but so did the same figure from A1 and A3. **A control whose pass is indistinguishable from
+the failure it screens for is not a control.** Next time the control fact must carry a value the
+model would not produce by default.
+
+## `pic_11` — three phrasings, one wrong belief, and it elaborated rather than repeated
+
+| arm | reply |
+|---|---|
+| B1, ceiling fact **alone** in context | *"…chini ya milioni 10 **(TZS 10M/mwaka)**"* — it **glossed** the wrong figure while the fact in front of it said 100,000,000 |
+| B2, instructed to use only the fact | *"Thibitisha na tra.go.tz."* — degenerate, no answer |
+| B3, either/or framing removed | *"…asilimia 30 kuanzia milioni 10 hadi 20"* — same 10M belief |
+
+By the decision rule that is the **ADAPTER** arm, and **it is the first measured justification for a
+retrain in this project.**
+
+**It is still not the next step, and R19 is why.** The claim is a **statutory CONSTANT** — a stated
+threshold of 10,000,000 against a locked 100,000,000 — not a derived quantity. R19 says a rule
+about a constant is buildable and needs no engine result; that is exactly how D-FIDELITY-6 checks
+levy rates. **A threshold-comparison sibling would catch this reply.** The cheap mechanism has to
+be tried and shown to fail before the expensive one is scoped.
+
+## `eval_348` — supplying the refuting fact is the whole fix
+
+C1 (refuting fact alone): *"**Hapana**, si lazima kuwa 10/10 pekee… 15/5, 20/0"* ✅.
+C2 (refuting fact, premise removed): all three splits enumerated ✅.
+C3 (**original** facts, premise removed): vague, no enumeration — **so removing the premise alone
+does not fix it.** The failure is that the refuting fact never reached the context. It sat at
+rank 10.
+
+**Incidental live defect, found on an otherwise-correct reply:** C1 invented a fourth split
+(*"12/8"*) that is not lawful, and **both C1 and C2 cited `nssf.or.tz`** — the domain CLAUDE.md
+flags as DNS-failing, with `.go.tz` as correct. On the board.
+
+## Where this leaves the four empty slots
+
+**Two of three now have a candidate mechanism, and neither is the one being argued for.** D1 needs
+an **instruction**, not better retrieval. D4 needs **better retrieval**, not an instruction. They
+are opposites. D2 has a buildable candidate (a constant-comparison guard) that has not been tried.
+**Nothing here is built, and the retrain stays unscoped until the cheap options are measured.**
+
+---
+
 # ❌ D3 RE-TESTED: THE MASK FAILS ITS OWN FALSIFIER — and the arm that passed points somewhere else (2026-08-23)
 
 **Falsifiers were named before the run** (`eval/routing/retest_fragment_mask.py`, committed first).

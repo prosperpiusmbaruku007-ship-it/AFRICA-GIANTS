@@ -1,0 +1,216 @@
+{
+  "measured": "2026-08-23",
+  "harness": "eval/forced_facts/separate_prompt_generation_adapter.py",
+  "instrument": "ChikeModel.generate_raw (already deployed) + chike.prompting.build_chat_prompt — production wrapper, local context",
+  "adapter": "prospAprospA007/africa-giants-adapter-v15",
+  "decision_rule": "See the module docstring. Named BEFORE the run and not to be moved afterwards. A2 is a validity control: if it does not reproduce the competitor figure the run is VOID, not informative.",
+  "adjudication": "PENDING — verdicts are Claude Code JUDGEMENT, added in a follow-up commit.",
+  "n": 13,
+  "rows": [
+    {
+      "id": "A0_baseline",
+      "specimen": "eval_337",
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "facts": [
+        "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+        "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+        "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo ni kwa mfanyakazi mmoja tu). Hesabu: kila mfanyakazi analipa NSSF ya TZS 120,000 (asilimia 20 ya mshahara wake), kisha zidisha kwa wafanyakazi 12 = TZS 1,440,000 jumla."
+      ],
+      "expect": "asilimia 20 (jumla)",
+      "varies": "nothing — reproduces production top-3",
+      "n_facts": 3,
+      "reply": {
+        "completion": "Kiwango sahihi ni asilimia 10, si asilimia 3.5 wala asilimia 0.5. Thibitisha na NSSF (nssf.go.tz).<|end_of_text|>"
+      },
+      "elapsed_s": 64.6
+    },
+    {
+      "id": "A1_correct_alone",
+      "specimen": "eval_337",
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "facts": [
+        "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz)."
+      ],
+      "expect": "asilimia 20 (jumla)",
+      "varies": "competitor REMOVED",
+      "n_facts": 1,
+      "reply": {
+        "completion": "Kiwango sahihi ni asilimia 10. Hakuna kiwango cha asilimia 3.5 wala asilimia 0.5 katika historia ya NSSF Tanzania. Thibitisha na NSSF (nssf.go.tz).<|end_of_text|>"
+      },
+      "elapsed_s": 5.5
+    },
+    {
+      "id": "A2_competitor_alone",
+      "specimen": "eval_337",
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "facts": [
+        "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz)."
+      ],
+      "expect": "asilimia 10 (mwajiri)",
+      "varies": "CONTROL — must reproduce the competitor or the run is void",
+      "n_facts": 1,
+      "reply": {
+        "completion": "Kiwango sahihi ni asilimia 10. Hakuna kiwango cha asilimia 3.5 wala asilimia 0.5 katika historia ya NSSF Tanzania. Thibitisha na NSSF (nssf.go.tz).<|end_of_text|>"
+      },
+      "elapsed_s": 7.5
+    },
+    {
+      "id": "A3_order_reversed",
+      "specimen": "eval_337",
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "facts": [
+        "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+        "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz)."
+      ],
+      "expect": "asilimia 20 (jumla)",
+      "varies": "ORDER only",
+      "n_facts": 2,
+      "reply": {
+        "completion": "Kiwango sahihi ni asilimia 10. Hakuna kiwango cha asilimia 3.5 wala asilimia 0.5 katika historia ya NSSF Tanzania. Thibitisha na NSSF (nssf.go.tz).<|end_of_text|>"
+      },
+      "elapsed_s": 5.6
+    },
+    {
+      "id": "A4_instructed",
+      "specimen": "eval_337",
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5? Nataka JUMLA ya mchango (mwajiri pamoja na mfanyakazi), si sehemu ya upande mmoja.",
+      "facts": [
+        "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+        "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz)."
+      ],
+      "expect": "asilimia 20 (jumla)",
+      "varies": "instruction naming the quantity wanted",
+      "n_facts": 2,
+      "reply": {
+        "completion": "Thibitisha na TRA (tra.go.tz).Kiwango cha mchango wa NSSF ni asilimia 20 ya mshahara ghafi (asilimia 10 kutoka kwa mwajiri na asilimia 10 kutoka kwa mfanyakazi). Si asilimia 3.5 wala asilimia 0.5. Jumla ya mchango ni asilimia 20 ya mshahara ghafi. Thibitisha na NSSF (nssf.go.tz).<|end_of_text|>"
+      },
+      "elapsed_s": 15.3
+    },
+    {
+      "id": "B0_baseline",
+      "specimen": "pic_11",
+      "question": "Mauzo yangu ni milioni 20 kwa mwaka, nitajua vipi ikiwa nalipa kodi ya mapato kwa makadirio au mfumo wa kawaida?",
+      "facts": [
+        "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 100,000,000 kwa mwaka. Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi.",
+        "vat return submission deadline: 20 days_of_month",
+        "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: hadi TZS 4,000,000 = TZS 0; zaidi ya 4,000,000 hadi 7,000,000 = TZS 100,000 (asiyetunza kumbukumbu) au 3% ya mauzo yanayozidi 4,000,000 (anayetunza); zaidi ya 7,000,000 hadi 11,000,000 = TZS 250,000 (asiyetunza) au TZS 90,000 pamoja na 3% ya yanayozidi 7,000,000 (anayetunza); kuanzia 11,000,001 hadi 100,000,000 = 3.5% ya mauzo yote."
+      ],
+      "expect": "kikomo TZS 100,000,000 — makadirio yanahusika",
+      "varies": "nothing — reproduces production top-3",
+      "n_facts": 3,
+      "reply": {
+        "completion": "Kwa mauzo ya milioni 20, unalipa kodi ya mapato kwa mfumo wa kawaida (normal progressive rates). Presumptive tax inatumika kwa mauzo chini ya milioni 10. Thibitisha na tra.go.tz.<|end_of_text|>"
+      },
+      "elapsed_s": 5.8
+    },
+    {
+      "id": "B1_ceiling_alone",
+      "specimen": "pic_11",
+      "question": "Mauzo yangu ni milioni 20 kwa mwaka, nitajua vipi ikiwa nalipa kodi ya mapato kwa makadirio au mfumo wa kawaida?",
+      "facts": [
+        "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 100,000,000 kwa mwaka. Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi."
+      ],
+      "expect": "kikomo TZS 100,000,000 — makadirio yanahusika",
+      "varies": "distractors REMOVED",
+      "n_facts": 1,
+      "reply": {
+        "completion": "Kwa mauzo ya milioni 20, unalipa kodi ya mapato kwa mfumo wa kawaida (normal progressive rates). Presumptive tax hutumika kwa mauzo chini ya milioni 10 (TZS 10M/mwaka). Thibitisha na tra.go.tz.<|end_of_text|>"
+      },
+      "elapsed_s": 6.2
+    },
+    {
+      "id": "B2_only_fact_instruction",
+      "specimen": "pic_11",
+      "question": "Mauzo yangu ni milioni 20 kwa mwaka, nitajua vipi ikiwa nalipa kodi ya mapato kwa makadirio au mfumo wa kawaida? Jibu ukitumia UKWELI uliopewa pekee, usitumie taarifa nyingine.",
+      "facts": [
+        "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 100,000,000 kwa mwaka. Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi."
+      ],
+      "expect": "kikomo TZS 100,000,000",
+      "varies": "instruction to use only the fact",
+      "n_facts": 1,
+      "reply": {
+        "completion": "Thibitisha na tra.go.tz.<|end_of_text|>"
+      },
+      "elapsed_s": 3.1
+    },
+    {
+      "id": "B3_no_either_or",
+      "specimen": "pic_11",
+      "question": "Mauzo yangu ni milioni 20 kwa mwaka, kodi ya makadirio inanihusu?",
+      "facts": [
+        "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 100,000,000 kwa mwaka. Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi."
+      ],
+      "expect": "ndiyo, kikomo ni 100,000,000",
+      "varies": "either/or framing REMOVED from the question",
+      "n_facts": 1,
+      "reply": {
+        "completion": "Hapana, unazidi kiwango cha juu cha presumptive tax. Utatakiwa kulipa kodi ya mapato ya asilimia 30 kuanzia mauzo ya milioni 10 hadi milioni 20. Thibitisha na tra.go.tz.<|end_of_text|>"
+      },
+      "elapsed_s": 18.5
+    },
+    {
+      "id": "C0_baseline",
+      "specimen": "eval_348",
+      "question": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+      "facts": [
+        "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+        "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+        "NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata."
+      ],
+      "expect": "hapana — kuna migawanyo mitatu",
+      "varies": "nothing — reproduces production top-3",
+      "n_facts": 3,
+      "reply": {
+        "completion": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10%. Thibitisha na NSSF (nssf.go.tz).<|end_of_text|>"
+      },
+      "elapsed_s": 3.8
+    },
+    {
+      "id": "C1_refuting_alone",
+      "specimen": "eval_348",
+      "question": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+      "facts": [
+        "NSSF split triggers: NSSF total is always 20% of gross wage. Three valid employer-employee split arrangements: (a) 10% employer + 10% employee — standard default; (b) 15% employer + 5% employee — employer elects to contribute more; (c) 20% employer + 0% employee — employer pays the full 20%, employee pays nothing. Employee share must never exceed 10%. All three arrangements are legal under the NSSF Act."
+      ],
+      "expect": "hapana — 10+10, 15+5, 20+0",
+      "varies": "the REFUTING fact supplied",
+      "n_facts": 1,
+      "reply": {
+        "completion": "Hapana, si lazima kuwa 10/10 pekee. Sheria inaruhusu mgawanyo wowote unaofikia 20% ya jumla, ikiwa ni pamoja na 15/5, 20/0, 12/8, n.k. Mgawanyo wa 10/10 ndiyo mgawanyo rasmi uliotolewa na NSSF, lakini sheria haizuizi kuchagua mgawanyo mwingine. Thibitisha na NSSF (nssf.or.tz).<|end_of_text|>"
+      },
+      "elapsed_s": 10.2
+    },
+    {
+      "id": "C2_refuting_no_premise",
+      "specimen": "eval_348",
+      "question": "NSSF ina migawanyo gani halali kati ya mwajiri na mfanyakazi?",
+      "facts": [
+        "NSSF split triggers: NSSF total is always 20% of gross wage. Three valid employer-employee split arrangements: (a) 10% employer + 10% employee — standard default; (b) 15% employer + 5% employee — employer elects to contribute more; (c) 20% employer + 0% employee — employer pays the full 20%, employee pays nothing. Employee share must never exceed 10%. All three arrangements are legal under the NSSF Act."
+      ],
+      "expect": "10+10, 15+5, 20+0",
+      "varies": "refuting fact AND premise removed",
+      "n_facts": 1,
+      "reply": {
+        "completion": "NSSF inakubali mgawanyo wa 10%+10% (mwajiri anachangia 10% na mfanyakazi anachangia 10%), 15%+5%, au 20%+0% (mwajiri analipa 20%). Mgawanyo wa 5%+15% si sahihi chini ya sheria ya NSSF. Thibitisha na nssf.or.tz.<|end_of_text|>"
+      },
+      "elapsed_s": 8.2
+    },
+    {
+      "id": "C3_baseline_no_premise",
+      "specimen": "eval_348",
+      "question": "NSSF ina migawanyo gani halali kati ya mwajiri na mfanyakazi?",
+      "facts": [
+        "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+        "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+        "NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata."
+      ],
+      "expect": "migawanyo — ideally three",
+      "varies": "premise removed, ORIGINAL facts kept",
+      "n_facts": 3,
+      "reply": {
+        "completion": "NSSF ina mgawanyo wa kawaida: mwajiri anachangia asilimia 10 na mfanyakazi anachangia asilimia 10, jumla asilimia 20. Mgawanyo huu unaweza kuwa tofauti na makubaliano ya pamoja (collective agreement) yanayoruhusu mgawanyo mwingine. Thibitisha na NSSF (nssf.go.tz).<|end_of_text|>"
+      },
+      "elapsed_s": 8.8
+    }
+  ]
+}
