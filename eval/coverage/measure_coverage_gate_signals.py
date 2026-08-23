@@ -139,7 +139,11 @@ def load_corpora():
         r['verdict_before'] = a.get('was')
         r['path'] = a.get('path')
     seen = {r['verdict'] for r in nat}
-    assert seen <= {'CORRECT', 'WRONG', 'PARTIAL', 'CLARIFY'} and 'CORRECT' in seen, seen
+    # `CORRECT*` is nat_16, whose rubric was deliberately superseded by SAFETY-2 and flagged
+    # rather than silently rescored. For THIS measurement it counts as correct: refusing a
+    # question we answer well is a false refusal regardless of which rubric adjudicated it.
+    assert seen <= {'CORRECT', 'CORRECT*', 'WRONG', 'PARTIAL', 'CLARIFY'}, seen
+    assert 'CORRECT' in seen, seen
 
     inscope = []
     for fn in ('concord_1pl_in_scope_020.jsonl', 'object_concord_in_scope_022.jsonl',
@@ -242,7 +246,7 @@ def main():
                              'rate': round(len(ref) / len(rows), 4)}
                     if name == 'natural_48':
                         entry['refused_that_were_CORRECT'] = sum(
-                            1 for r in ref if r['verdict'] == 'CORRECT')
+                            1 for r in ref if (r['verdict'] or '').startswith('CORRECT'))
                         entry['refused_that_were_WRONG'] = sum(
                             1 for r in ref if r['verdict'] == 'WRONG')
                     if name in ('gate_400', 'inscope_69'):

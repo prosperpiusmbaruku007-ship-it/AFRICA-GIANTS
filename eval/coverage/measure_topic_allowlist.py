@@ -173,7 +173,7 @@ def main():
                          'refused_ids': [r['id'] for r in ref][:40]}
                 if name == 'natural_48':
                     entry['refused_that_were_CORRECT'] = sum(
-                        1 for r in ref if r['verdict'] == 'CORRECT')
+                        1 for r in ref if (r['verdict'] or '').startswith('CORRECT'))
                 if name == 'uncovered_12':
                     entry['caught'] = [r['id'] for r in ref]
                     entry['missed'] = [{'id': r['id'], 'matched': r[rule]}
