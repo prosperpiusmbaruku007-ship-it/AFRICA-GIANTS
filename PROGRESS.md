@@ -366,6 +366,122 @@ every subsequent cue a fit.
 
 ---
 
+# 🪞 A SERVING-SIDE REWRITE CONCEALED AN AUTHORING DEFECT FOR THE WHOLE LIFE OF THE CORPUS — and the audit found a second rewrite that CREATES one (2026-08-24)
+
+**Promoted from a gap-closed note, because the shape is general and it was found by accident.**
+`eval/index_quality/audit_cleanup_masking.py` → `eval/results/cleanup_masking_audit.json`.
+
+**The mechanism, stated once so it is recognisable elsewhere: a repair makes a symptom disappear
+without touching its cause, and a defect with no symptom is never looked for.** `nssf.or.tz` was
+flagged in CLAUDE.md, emitted by the model, and rewritten to `.go.tz` on every reply. Nobody saw
+it for the entire life of the corpus. It surfaced only because a diagnostic used `generate_raw`,
+which bypasses cleaning **by design**.
+
+## What the audit found
+
+**Two content rewrites exist.** The rest of the cleanup layer repairs decoding artefacts — special
+tokens, role junk, glued-domain loops, a leading echoed question — and those cannot conceal an
+authored defect, because no training pair contains `<|end_of_text|>` as content. That scope
+boundary is stated in the harness rather than assumed.
+
+| rewrite | corpus occurrences | verdict |
+|---|---|---|
+| `nssf.or.tz` → `nssf.go.tz` | **1,374** | masks a real defect — **and it is worse than first counted** |
+| `.go.ke` → `.go.tz` | 21 | **does NOT mask a defect. It CREATES one.** |
+
+**The `nssf.or.tz` count is 1,374, not 786.** The first scan looked only at `datasets/`. **590 of
+them are in the EVAL CORPORA** — 23 files, including 19 in `eval_questions_001.jsonl`. **The
+accuracy gate's own ground-truth answers cite the dead domain.** Training data teaching it is bad;
+*the scoring key* teaching it means the gate cannot mark a correct `.go.tz` answer as correct on a
+string comparison. *(The two occurrences in the RAG index are benign — both are rows that name the
+dead domain in order to refute it.)*
+
+## The second rewrite is the finding the audit was worth running for
+
+`.go.ke` → `.go.tz` fires on **21 legitimate rows**, and legitimate is the problem. They are
+**correct out-of-scope referrals**:
+
+> *"Kwa maswali ya Kenya tafadhali wasiliana na Kenya Revenue Authority (KRA) kwa **kra.go.ke**"*
+
+Run through the cleanup layer:
+
+> *"…wasiliana na Kenya Revenue Authority (KRA) kwa **kra.go.tz**"*
+
+**A real Kenyan authority becomes a fabricated Tanzanian domain.** The model did the right thing —
+declined an out-of-scope question and named the correct foreign regulator — and the repair layer
+turned its correct citation into a URL that does not exist. **This rewrite has no upstream defect
+to justify it and should be deleted or narrowed**; it is not on the board as a maybe.
+
+## The general rule this earns
+
+**Every content rewrite in a cleanup layer is a place where an upstream defect can live
+unobserved, and a place where a correct output can be silently corrupted.** Both directions were
+present here, one in each of the only two rules. **Any future rewrite must be added with the
+question answered in writing: what does the corpus contain that this repairs, and what correct
+output could it damage?** Neither of these two had that recorded.
+
+---
+
+# ☠️ THE FALSE-PREMISE HYPOTHESIS IS DEAD — killed by its own falsifier, on probes frozen before the harness existed (2026-08-24)
+
+**Established properly rather than provisionally, as instructed, and the answer is no.**
+`eval/forced_facts/establish_premise_frame.py` → `eval/results/premise_frame_established.json`.
+Pairs frozen at `cfd3b33`; falsifier named before the run: *if the no-premise halves are wrong at a
+similar rate, the hypothesis is dead.*
+
+| frame | correct |
+|---|---|
+| **with** premise (*"…sivyo?"*) | **8 / 8** |
+| **without** premise | **7 / 8** — and the one miss is a scorer artefact: fp_03b answered *"milioni 200 katika kipindi cha mwaka mmoja"*, which is right; the matcher wanted the digits |
+
+**Pairs flipped (wrong with the premise, right without): 0 of 8.**
+
+The pairs spanned **rate, threshold, headcount, fee, deadline and date** precisely so a positive
+result could not be an artefact of one quantity type. Every with-premise half **correctly refuted
+the false premise** — *"Hapana, kiwango sahihi ni asilimia 3.5"*, *"Hapana — ada ni TZS 22,000 tu,
+si TZS 50,000"*, *"Hapana… ni asilimia 18 — si asilimia 16"*. **The frame is not the variable.**
+
+**And the specimens agree.** `eval_348` with its premise **removed** still answers *"Hakuna
+mgawanyo mwingine ulioidhinishwa rasmi"* — still wrong. The `eval_342` flip that suggested the
+hypothesis was a **single observation through `generate_raw`**, and through the full production
+path it does not reproduce.
+
+**What this leaves standing, and it points back where the evidence already was.** The eight probe
+topics are all facts that retrieve cleanly. The three failing specimens are not: `eval_342`'s
+anchor sits at **rank 51**, `eval_348`'s refuting row at **rank 10**. **The specimens' failures
+track retrieval quality, not question framing** — which re-elevates D3 and the ask-aligned
+rewriting lever, the one item on this board with a measured positive effect.
+
+## R24 earned its keep on its first run: 1 of 3 baselines reproduced
+
+| specimen | baseline vs recorded live reply |
+|---|---|
+| `eval_342` | ✅ **byte-identical** |
+| `eval_348` | ❌ close but not identical — an extra clause |
+| `eval_337` | ❌ **and the reconstruction is CORRECT where live is WRONG** |
+
+**Two of three variant arms were therefore uninterpretable and are reported as such rather than
+averaged in.** Without the R24 gate this run would have produced three confident conclusions from
+one valid baseline.
+
+## Two new threads, both opened by the gate rather than by the experiment
+
+**1. A REPRODUCIBLE DIVERGENCE BETWEEN DEPLOYED PRODUCTION AND THE LOCAL ORCHESTRATOR.** Same
+question, same weights, same retriever: deployed `ChikeModel.run` answers *"asilimia **10**"* and a
+local `Orchestrator` + `LocalAdapter` answers *"asilimia **20** ya mshahara ghafi (10 mwajiri + 10
+mfanyakazi)"* — **correctly**. Greedy decoding, so not sampling. **Something in the deployed path
+differs from `chike/orchestrator.py` as this repo has it**, and that difference is where `eval_337`'s
+defect actually lives. This is the R12 / dual-file-sync hazard with a live instance attached, and
+it outranks the defect it was found under: *if the deployed pipeline is not the pipeline in the
+repo, every offline reconstruction in this workstream inherits the doubt.*
+
+**2. A PLAIN QUESTION RETURNING AN EMPTY REPLY.** `"Kiwango cha juu kabisa cha PAYE ni asilimia
+ngapi?"` through the full orchestrator returns **`""`** — the same question through `generate_raw`
+returns *"Asilimia 30"*. The merge-time empty guard exists for exactly this and did not save it.
+On the board.
+
+---
+
 # ⚠️ THE D1 VERDICT IS PROVISIONAL — MY SEPARATION BASELINE WAS NOT PRODUCTION'S BASELINE (2026-08-23)
 
 **Found while running a follow-up, and it retracts a conclusion from the same day.**
@@ -471,12 +587,23 @@ The sweep also killed a real false positive: a clarification asking *"je ni juml
 au ya miezi **6**?"* had 12 and 6 read as VAT thresholds. Fixed with a money floor — **every
 statutory threshold in the table is ≥ TZS 4,000,000**.
 
-**Consequence for the retrain: the justification weakens but does not vanish.** `pic_11` was the
-only specimen that survived every arm of the separation, and a cheap constant-comparison guard
-catches its output. **The guard does not make the model right — it stops the wrong figure reaching
-a user**, which is the same bargain D-FIDELITY-6 already ships on. **Not yet wired into
-`_validate_and_clean` and not deployed**; that belongs in one R16 cycle with whatever comes out of
-the premise-frame work.
+**Consequence for the retrain: the justification WEAKENS, it does not vanish — and the distinction
+is the whole point.** `pic_11` was the only specimen that survived every arm of the separation.
+A cheap constant-comparison guard catches its **output**.
+
+> **THE GUARD IS CONTAINMENT, NOT A FIX.** The model still believes the presumptive ceiling is TZS
+> 10,000,000. It will still act on that belief anywhere the guard does not reach — in a sentence
+> shaped differently, in a levy the table does not cover, in a computation that uses the wrong
+> ceiling without stating it. **What ships is a wrong figure not reaching a user; what remains is a
+> wrong figure being generated.** That is the same bargain D-FIDELITY-6 already runs on, and it is
+> an acceptable one, but it must never be recorded as the defect being closed.
+>
+> **So the retrain case stands, reduced.** `pic_11` is no longer an *unmitigated* failure, which
+> removes the urgency. It is still an instance of the model contradicting a fact in its own context
+> under every phrasing tried, which is what a retrain would address and a guard cannot.
+
+**Not yet wired into `_validate_and_clean` and not deployed**; held for one R16 cycle, per founder
+instruction, with whatever comes out of the premise-frame work.
 
 ---
 

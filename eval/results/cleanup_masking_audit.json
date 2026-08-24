@@ -1,0 +1,119 @@
+{
+  "measured": "2026-08-23",
+  "harness": "eval/index_quality/audit_cleanup_masking.py",
+  "question": "for each CONTENT rewrite in the cleanup layer: what would reach a user if it were removed, and does the corpus contain the thing it repairs?",
+  "scope_note": "FORMATTING repairs (special tokens, role junk, glued-domain loops, the leading echoed question) are deliberately excluded: they repair a DECODING artefact, and no authored pair contains one as content, so there is no upstream defect for them to conceal.",
+  "n_content_rewrites": 2,
+  "rows": [
+    {
+      "rewrite": "nssf_or_tz",
+      "pattern": "nssf\\.or\\.tz",
+      "rewrites_to": "nssf.go.tz",
+      "why": "CLAUDE.md section 4: nssf.or.tz fails DNS. KNOWN INSTANCE — this is the one that was found by accident and prompted the audit.",
+      "rewrite_is_live": true,
+      "probe_in": "Thibitisha na nssf.or.tz.",
+      "probe_out": "Thibitisha na nssf.go.tz.",
+      "corpus_occurrences_total": 1374,
+      "by_area": {
+        "rag_index": {
+          "occurrences": 2,
+          "files": 1,
+          "examples": [
+            {
+              "file": "chike-inference/rag_facts_text.json",
+              "context": "analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).\",   \"NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi "
+            }
+          ]
+        },
+        "locked_facts": {
+          "occurrences": 0,
+          "files": 0,
+          "examples": []
+        },
+        "datasets": {
+          "occurrences": 782,
+          "files": 32,
+          "examples": [
+            {
+              "file": "datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl",
+              "context": " kisha anapeleka jumla (asilimia 20) kwa NSSF. Thibitisha viwango vya sasa na NSSF kwenye nssf.or.tz.\", \"question_en\": \"What are the NSSF contribution rates for employer and employee?\", \"ans"
+            },
+            {
+              "file": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+              "context": "ibutions go into the employee's single NSSF account.\", \"primary_source_url\": \"https://www.nssf.or.tz/pages/payment-of-contributions\", \"primary_source_name\": \"NSSF Contributions Page\", \"sourc"
+            },
+            {
+              "file": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+              "context": "o NSSF. The employee's agreement is not a condition.\", \"primary_source_url\": \"https://www.nssf.or.tz\", \"primary_source_name\": \"NSSF — National Social Security Fund\", \"source_type\": \"governme"
+            }
+          ]
+        },
+        "eval_corpora": {
+          "occurrences": 590,
+          "files": 23,
+          "examples": [
+            {
+              "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+              "context": "yewe — haikatwi kutoka mshahara wa mfanyakazi. Thibitisha kiwango cha sasa na NSSF kwenye nssf.or.tz.\", \"correct_answer_en\": \"10% of the employee's gross salary. The employer pays this from "
+            },
+            {
+              "file": "eval/forced_facts/ss8_rows.json",
+              "context": ": asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).\",         \"WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mi"
+            },
+            {
+              "file": "eval/results/coverage_gate_signals.json",
+              "context": ": asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).\",         \"top1_score\": 0.9118       },       {         \"id\": \"eval_087\",         \"q\": "
+            }
+          ]
+        }
+      },
+      "masks_a_real_defect": true
+    },
+    {
+      "rewrite": "go_ke",
+      "pattern": "\\.go\\.ke\\b",
+      "rewrites_to": ".go.tz",
+      "why": "A Kenyan government domain in Tanzanian compliance output. If the corpus contains any, the model is being taught to cite the wrong country and the rewrite hides it.",
+      "rewrite_is_live": true,
+      "probe_in": "Thibitisha na tra.go.ke.",
+      "probe_out": "Thibitisha na tra.go.tz.",
+      "corpus_occurrences_total": 21,
+      "by_area": {
+        "rag_index": {
+          "occurrences": 0,
+          "files": 0,
+          "examples": []
+        },
+        "locked_facts": {
+          "occurrences": 0,
+          "files": 0,
+          "examples": []
+        },
+        "datasets": {
+          "occurrences": 21,
+          "files": 6,
+          "examples": [
+            {
+              "file": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+              "context": "ia Bara. Kwa maswali ya Kenya tafadhali wasiliana na Kenya Revenue Authority (KRA) kwa kra.go.ke. Je, una swali kuhusu VAT Tanzania? Kiwango cha VAT Tanzania ni asilimia 18.\", \"question_"
+            },
+            {
+              "file": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl",
+              "context": "a maswali ya biashara nchini Kenya: wasiliana na Kenya Revenue Authority (KRA) au biashara.go.ke. Ninaweza kukusaidia kuhusu mahitaji ya Tanzania kwa bidhaa zinazotoka Tanzania kwenda Ke"
+            },
+            {
+              "file": "datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl",
+              "context": "ia Bara. Kwa maswali ya Kenya tafadhali wasiliana na Kenya Revenue Authority (KRA) kwa kra.go.ke. Je, una swali kuhusu VAT Tanzania? Kiwango cha VAT Tanzania ni asilimia 18.\", \"question_"
+            }
+          ]
+        },
+        "eval_corpora": {
+          "occurrences": 0,
+          "files": 0,
+          "examples": []
+        }
+      },
+      "masks_a_real_defect": true
+    }
+  ]
+}

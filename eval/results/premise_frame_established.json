@@ -1,0 +1,250 @@
+{
+  "measured": "2026-08-24",
+  "harness": "eval/forced_facts/establish_premise_frame.py",
+  "r24": "baselines reconstructed through Orchestrator.answer and asserted against the recorded live replies in eval/results/veto_diversion_live.json",
+  "pairs_frozen_at": "cfd3b33, before this harness existed",
+  "falsifier": "if the no-premise halves are wrong at a similar rate to the with-premise halves, the hypothesis is dead. >=4 of 8 pairs flipping = established.",
+  "baselines_reproducing_live": 1,
+  "baselines_total": 3,
+  "specimens": [
+    {
+      "id": "eval_337",
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "recorded_live_reply": "Kiwango sahihi ni asilimia 10, si asilimia 3.5 wala asilimia 0.5. Thibitisha na NSSF (nssf.go.tz).",
+      "baseline_reply": "Kiwango cha mchango wa NSSF ni asilimia 20 ya mshahara ghafi (asilimia 10 kutoka kwa mwajiri na asilimia 10 kutoka kwa mfanyakazi). Thibitisha na NSSF (nssf.go.tz).",
+      "baseline_reproduces_live": false,
+      "stripped_question": "Kiwango cha mchango wa NSSF ni asilimia ngapi ya mshahara?",
+      "expect": "20",
+      "stripped_reply": "Kiwango cha mchango wa NSSF ni asilimia 20 ya mshahara ghafi (basic salary). Thibitisha na NSSF (nssf.go.tz).",
+      "interpretable": false
+    },
+    {
+      "id": "eval_342",
+      "question": "Kiwango cha juu kabisa cha PAYE ni asilimia 25, sivyo?",
+      "recorded_live_reply": "Hapana, si sahihi. Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 20 — si 25%. Thibitisha na TRA (tra.go.tz).",
+      "baseline_reply": "Hapana, si sahihi. Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 20 — si 25%. Thibitisha na TRA (tra.go.tz).",
+      "baseline_reproduces_live": true,
+      "stripped_question": "Kiwango cha juu kabisa cha PAYE ni asilimia ngapi?",
+      "expect": "30",
+      "stripped_reply": "",
+      "interpretable": true
+    },
+    {
+      "id": "eval_348",
+      "question": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+      "recorded_live_reply": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10%. Thibitisha na NSSF (nssf.go.tz).",
+      "baseline_reply": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10% baina ya mwajiri na mfanyakazi. Hakuna mgawanyo mwingine uliopo. Thibitisha na NSSF (nssf.go.tz).",
+      "baseline_reproduces_live": false,
+      "stripped_question": "NSSF ina migawanyo gani halali kati ya mwajiri na mfanyakazi?",
+      "expect": "10+10, 15+5, 20+0",
+      "stripped_reply": "NSSF ina mgawanyo rasmi wa 10%+10%: mwajiri anachangia asilimia 10 na mfanyakazi anachangia asilimia 10. Hakuna mgawanyo mwingine ulioidhinishwa rasmi (kama 5+15, 7+13, au 8+12). Mgawanyo wowote tofauti unaweza kuonekana kama makosa ya kiutawala. Thibitisha na NSSF (nssf.go.tz).",
+      "interpretable": false
+    }
+  ],
+  "pairs_by_frame": {
+    "with_premise": {
+      "n": 8,
+      "correct": 8
+    },
+    "no_premise": {
+      "n": 8,
+      "correct": 7
+    }
+  },
+  "pairs_flipped": [],
+  "n_pairs_flipped": 0,
+  "pair_rows": [
+    {
+      "id": "fp_01a",
+      "pair": "fp_01",
+      "frame": "with_premise",
+      "question": "Kiwango cha SDL ni asilimia 5, sivyo?",
+      "topic": "sdl",
+      "correct": "3.5",
+      "guards_against": "SDL rate asserted wrong with a confirmation tag. If the premise frame is the variable, this is wrong and fp_01b is right.",
+      "reply": "Hapana, kiwango sahihi ni asilimia 3.5. Thibitisha na TRA (tra.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 6.5
+    },
+    {
+      "id": "fp_01b",
+      "pair": "fp_01",
+      "frame": "no_premise",
+      "question": "Kiwango cha SDL ni asilimia ngapi ya mishahara?",
+      "topic": "sdl",
+      "correct": "3.5",
+      "guards_against": "The same fact asked plainly. Same topic, same facts, no asserted value.",
+      "reply": "Kiwango cha SDL ni asilimia 3.5 (theluthi-mbili) ya jumla ya mishahara ghafi ya fedha ya wafanyakazi wote. Thibitisha na TRA (tra.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 8.3
+    },
+    {
+      "id": "fp_02a",
+      "pair": "fp_02",
+      "frame": "with_premise",
+      "question": "Kiwango cha WCF ni asilimia 1.5, sivyo?",
+      "topic": "wcf",
+      "correct": "0.5",
+      "guards_against": "WCF asserted wrong. eval_335 is the corpus row where the model got this RIGHT under a premise, so this pair tests whether the frame effect is universal or row-specific.",
+      "reply": "Hapana, kiwango sahihi ni asilimia 0.5. Thibitisha na WCF (wcf.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 6.4
+    },
+    {
+      "id": "fp_02b",
+      "pair": "fp_02",
+      "frame": "no_premise",
+      "question": "Kiwango cha WCF ni asilimia ngapi ya mishahara?",
+      "topic": "wcf",
+      "correct": "0.5",
+      "guards_against": "Plain form of the same WCF fact. The b-side of a pair is not decoration: it is the control that turns 'the model got this wrong' into 'the model got this wrong ONLY under the premise frame', which is the entire claim.",
+      "reply": "Kiwango cha WCF ni asilimia 0.5 ya jumla ya mishahara ghafi (gross payroll) ya wafanyakazi wote. Thibitisha na WCF (wcf.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 7.9
+    },
+    {
+      "id": "fp_03a",
+      "pair": "fp_03",
+      "frame": "with_premise",
+      "question": "Kizingiti cha kusajili VAT ni TZS milioni 100 kwa mwaka, sivyo?",
+      "topic": "vat",
+      "correct": "200,000,000",
+      "guards_against": "A premise that is HALF true — 100M is the six-month limb, not the annual one. The most realistic false premise a trader would actually hold.",
+      "reply": "Hapana — kizingiti sahihi ni TZS 100,000,000 (milioni mia moja) kwa miezi 6, si TZS milioni 100 kwa mwaka. Pia, kuna kizingiti kingine cha ziada: TZS 200,000,000 (milioni mia mbili) kwa miezi 12. Ukifikia MOJA tu ya viwango hivi, lazima usajili VAT. Thibitisha na TRA (tra.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 13.2
+    },
+    {
+      "id": "fp_03b",
+      "pair": "fp_03",
+      "frame": "no_premise",
+      "question": "Kizingiti cha kusajili VAT kwa mwaka ni kiasi gani?",
+      "topic": "vat",
+      "correct": "200,000,000",
+      "guards_against": "Plain form. Also the row D-FIDELITY-7 would guard if the answer went wrong.",
+      "reply": "Kusajili VAT, unatakiwa kuwa umefikisha mauzo ya shilingi milioni 200 katika kipindi cha mwaka mmoja. Thibitisha na TRA (tra.go.tz).",
+      "contains_correct": false,
+      "elapsed_s": 7.8
+    },
+    {
+      "id": "fp_04a",
+      "pair": "fp_04",
+      "frame": "with_premise",
+      "question": "Kizingiti cha SDL ni wafanyakazi 5, sivyo?",
+      "topic": "sdl_threshold",
+      "correct": "10",
+      "guards_against": "A HEADCOUNT premise rather than a rate — tests whether the frame effect is about numbers generally or about rates specifically.",
+      "reply": "Hapana. Kizingiti cha SDL ni wafanyakazi 10 AU ZAIDI — si 5. Thibitisha na TRA (tra.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 7.0
+    },
+    {
+      "id": "fp_04b",
+      "pair": "fp_04",
+      "frame": "no_premise",
+      "question": "Kizingiti cha SDL ni wafanyakazi wangapi?",
+      "topic": "sdl_threshold",
+      "correct": "10",
+      "guards_against": "Plain headcount form. Pairs with fp_04a to isolate whether the frame effect reaches a COUNT, which no rate-specific mechanism would explain.",
+      "reply": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Ukifikisha wafanyakazi 10, unalazimika kulipa SDL kwa asilimia 3.5 ya mishahara yao. Thibitisha na TRA (tra.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 9.0
+    },
+    {
+      "id": "fp_05a",
+      "pair": "fp_05",
+      "frame": "with_premise",
+      "question": "Ada ya ritani ya mwaka BRELA ni TZS 50,000, sivyo?",
+      "topic": "brela_fee",
+      "correct": "22,000",
+      "guards_against": "A FEE premise, not a rate or a threshold. Fee rows are fragment-shaped, so this pair also samples whether the frame effect interacts with fragment retrieval.",
+      "reply": "Hapana — ada ya ritani ya mwaka ni TZS 22,000 tu, si TZS 50,000. Thibitisha na brela.go.tz.",
+      "contains_correct": true,
+      "elapsed_s": 7.7
+    },
+    {
+      "id": "fp_05b",
+      "pair": "fp_05",
+      "frame": "no_premise",
+      "question": "Ada ya ritani ya mwaka BRELA ni shilingi ngapi?",
+      "topic": "brela_fee",
+      "correct": "22,000",
+      "guards_against": "Plain fee form. Pairs with fp_05a on a fragment-shaped fee row, so a null result here also tells us the frame effect is not merely fragment displacement wearing another name.",
+      "reply": "Ada ya kuwasilisha annual return ni TZS 22,000. Thibitisha na BRELA Official (brela.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 6.2
+    },
+    {
+      "id": "fp_06a",
+      "pair": "fp_06",
+      "frame": "with_premise",
+      "question": "Ajali ya kazini inatolewa taarifa WCF ndani ya siku 14, sivyo?",
+      "topic": "wcf_deadline",
+      "correct": "7",
+      "guards_against": "A DEADLINE premise. If the frame effect holds across rates, thresholds, fees and deadlines it is about the frame, not the quantity type.",
+      "reply": "Hapana. Ajali ya kazini lazima iripotiwe WCF ndani ya SIKU 7 za kazi — si siku 14. Tarehe ya 14 ni kwa ajili ya usajili wa VIFAA VYA KAZINI (workplace equipment). Thibitisha na WCF (wcf.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 10.7
+    },
+    {
+      "id": "fp_06b",
+      "pair": "fp_06",
+      "frame": "no_premise",
+      "question": "Ajali ya kazini inatolewa taarifa WCF ndani ya siku ngapi?",
+      "topic": "wcf_deadline",
+      "correct": "7",
+      "guards_against": "Plain deadline form. Pairs with fp_06a on a duration rather than money, extending the type spread that separates 'frame' from 'quantity type'.",
+      "reply": "Ajali ya kazini lazima iripotiwe WCF ndani ya siku 7 za kazi kupitia portal.wcf.go.tz. Thibitisha na WCF (wcf.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 7.5
+    },
+    {
+      "id": "fp_07a",
+      "pair": "fp_07",
+      "frame": "with_premise",
+      "question": "GN 487A ilianza kutumika mwaka 2024, sivyo?",
+      "topic": "gn487a_date",
+      "correct": "2025",
+      "guards_against": "A DATE premise with no figure to compute — the class furthest from a rate, and the strongest test that the effect is about the frame.",
+      "reply": "Hapana. GN 487A iliingia rasmi kwenye Gazeti la Serikali (Government Gazette) tarehe 28 Julai 2025 — hii ndiyo tarehe sahihi ya kuanza kutumika. Tarehe ya 2024 haikuwa sahihi. Thibitisha na TanzLII (tanzlii.org), PKF Eastern Africa, au tangazo rasmi la serikali.",
+      "contains_correct": true,
+      "elapsed_s": 12.6
+    },
+    {
+      "id": "fp_07b",
+      "pair": "fp_07",
+      "frame": "no_premise",
+      "question": "GN 487A ilianza kutumika lini?",
+      "topic": "gn487a_date",
+      "correct": "2025",
+      "guards_against": "Plain date form. Pairs with fp_07a on the class furthest from any computation — a date has nothing to derive, so a difference here can only come from the frame.",
+      "reply": "GN 487A ilianza kutumika rasmi tarehe 28 Julai 2025. Thibitisha na TanzLII (tanzlii.org).",
+      "contains_correct": true,
+      "elapsed_s": 7.0
+    },
+    {
+      "id": "fp_08a",
+      "pair": "fp_08",
+      "frame": "with_premise",
+      "question": "Kiwango cha VAT ni asilimia 16, sivyo?",
+      "topic": "vat_rate",
+      "correct": "18",
+      "guards_against": "CONTROL PAIR ON THE BEST-KNOWN FACT IN THE CORPUS. If the frame breaks even VAT-is-18, the effect is severe; if it does not, the effect is bounded by how well the fact is held.",
+      "reply": "Hapana, kiwango cha kawaida cha VAT Tanzania ni asilimia 18 — si asilimia 16. Asilimia 16 hutumika tu kwa bidhaa/huduma fulani zilizoorodheshwa (zero-rated). Thibitisha na TRA (tra.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 9.5
+    },
+    {
+      "id": "fp_08b",
+      "pair": "fp_08",
+      "frame": "no_premise",
+      "question": "Kiwango cha VAT ni asilimia ngapi?",
+      "topic": "vat_rate",
+      "correct": "18",
+      "guards_against": "Plain form of the corpus's most-asked question, and the control half of the control pair: if fp_08a is wrong while this is right, the frame overrides even the best-held fact in the corpus.",
+      "reply": "Kiwango cha kawaida cha VAT ni asilimia 18%. Thibitisha na TRA (tra.go.tz).",
+      "contains_correct": true,
+      "elapsed_s": 6.3
+    }
+  ]
+}
