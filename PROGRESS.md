@@ -1,6 +1,212 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-23
+Last updated: 2026-08-24
+
+---
+
+# 🧭 PILOT RE-DERIVATION, 2026-08-24 — VERDICT: **FURTHER, BUT ONLY SLIGHTLY** — and for the first time the reason has nothing to do with accuracy.
+
+**Re-derived from scratch against today's state, not updated from the 2026-08-23 assessment.**
+Every claim is tagged **[M]** (measured, artifact named) or **[J]** (judgement). The 48-row
+accuracy base was **re-pulled from the live endpoint today**, not carried
+(`eval/results/ab_retriever_full.json`, single-arm arm = production).
+
+## The verdict, plainly
+
+**Further.** But the move is small, and it is a different *kind* of move than last time.
+
+On 2026-08-23 the verdict was FURTHER because the pilot's one remaining precondition — a safety
+floor for questions we cannot answer — **lost every route it had**. That was a large move.
+
+**Today that precondition is exactly where it was: zero known routes.** Nothing this cycle
+addressed it, and the cycle's real work was elsewhere. So the precondition is not the move.
+
+**The move is that the guardrail inventory shrank.** We found that a production control we
+believed we had **is not there** — and, separately, that the mechanism which would *authorise* a
+pilot has never been demonstrated capable of refusing one. **Neither was on the board yesterday.
+Both are now.** A pilot is a bet on guardrails, and today we know of one fewer than we thought.
+
+**Set against that:** 17 controls were *demonstrated* to fire, including the single most
+pilot-relevant one — the OOC classifier. That is a real gain in confidence and it is measured, not
+assumed. It does not outweigh a missing control, but it means the remaining floor is now
+**verified rather than believed**, which is the first time that has been true.
+
+**The honest one-line version:** *nothing got worse; our inventory of what protects a tester got
+one item shorter, and the item that would let us ship has never been shown to say no.*
+
+---
+
+## 1. What ten recruited testers would experience
+
+**Delivery works and is current. [M, today]** `GET /health` on `chike-whatsapp` returns
+`build: ad1ed50`, and `git log ad1ed50..HEAD -- chike-whatsapp/` is **empty** — the deployed
+handler is at the tip of its own app's history. All four Modal Secret keys present,
+`webhook_token_set: true`, `transcript_store: {ok: true, backend: modal.Dict}`,
+`model_timeout_s: 240`.
+
+**Still no real user has ever used it. [M, today]** The same payload reports
+`transcript_store.rows: 0`, `months: []`. Deployed, healthy, and **has never carried a single real
+message.** Every number below is from probes I authored.
+
+**On natural Swahili phrasing — the closest proxy to a tester — today's live replies: [M]**
+
+| | n | share |
+|---|---|---|
+| **CORRECT** | **29** (+1 `CORRECT*`) | **60%** |
+| PARTIAL | 6 | 13% |
+| CLARIFY (asks rather than guesses) | 6 | 13% |
+| **WRONG** | **7** | **15%** |
+
+**45 of the 48 replies came back byte-identical to 2026-08-17**, so those verdicts carry
+unchanged; the three that moved are adjudicated fresh **[J]**: `nat_23` now answers **both**
+unlabelled levies correctly (WRONG → CORRECT, the D-DECOMP-1 fan-out); `nat_05` now names payroll
+as the SDL base instead of returning a BRELA fee (WRONG → PARTIAL — it still does not ask for the
+payroll it needs); `nat_24` is still incomplete (WRONG).
+
+**Net accuracy movement since 2026-08-22: one row in forty-eight. [M]**
+
+**Where the answers come from matters more than the total. [M, `grounding_48.json`]** Of the 48,
+**24 take the compute path** (the rules engine, no retrieval), 21 the fact path, 3 refuse. The
+compute surface is where the reliability is: **15 of 24 correct with an authoritative working
+appended**. The fact path is **11 of 21** — and of those 11, **3 are right for the wrong reason**
+(`nat_26`, `nat_27`, `nat_36` are measured **UNGROUNDED**: the figure did not come from a
+retrieved fact).
+
+**So a tester's experience splits by what they ask, not by how well they ask it. [J]** Payroll
+arithmetic is solid. Anything answered from the corpus is a coin-flip with a bias.
+
+## 2. What breaks first
+
+**The first thing to break is a question that sounds in-domain and has no fact behind it — and
+the product will answer it anyway, fluently. [M+J]**
+
+This is the same first-breaker as 2026-08-16 and 2026-08-23, and it is unmoved because every
+route to fixing it has now been measured and failed:
+
+| route | outcome |
+|---|---|
+| absolute similarity floor | ❌ scores compress to 0.79–0.86; distributions overlap **[M]** |
+| margin-based floor | ❌ retired at its own scoping location **[M]** |
+| re-ranked index / term overlap | ❌ no measured separation of right from wrong **[M]** |
+| **topic coverage gate** | ⚠️ **built, measured, SHIPPED DISABLED** — 1.9% false refusals on 411 corpus questions vs **71% on 21 held-out**, a **~37× gap [M]** |
+| model-side topic classifier | ❌ **not built, deliberately** — scoping by available mechanism rather than by measured harm is the error every dead floor made |
+
+**The 37× gap is the single most important number for a pilot [M]**, because it prices the
+obvious fix: a coverage gate tuned on our own corpora would have refused **fifteen of twenty-one**
+questions about topics we *do* hold facts for. **A wrongly-refused question is invisible** — it
+looks exactly like a question nobody asked — so this failure mode cannot be found in a transcript
+review afterwards.
+
+**The second breaker is confident wrongness on adjacent facts. [M]** On the veto-diverted rows —
+questions the routing veto sends to the fact path — **41% of live replies are confidently wrong**.
+`eval_337` is the standing example and it is **still wrong in production today [M]**: asked the
+NSSF contribution rate, it answers *"asilimia 10"*. An employer acting on that **under-remits by
+half.**
+
+**The four named defect classes behind it, with mechanisms — or without: [M, `defect_exposure.json`]**
+
+| class | exposure | lever |
+|---|---|---|
+| D1 adjacent-fact selection | 11.1% | **none available** |
+| D2 rank-1 contradiction | unmeasured by design | **none available** — forced maximum retrieval confidence did not fix it |
+| D3 fragment displacement | 29.2% | measured **NEGATIVE** (fixes 0 of 9, regresses 3) |
+| D4 refutation out of reach | 4.3% | raise `top_k` — reaches 21 of 21 only at top-10 |
+
+**Two of four have no mechanism at all**, and that was stated plainly rather than filling the slot.
+
+## 3. What I would monitor
+
+1. **Refusals, as the primary metric — not accuracy. [J, forced by the 37× gap]** Every refusal,
+   with the question. A refusal rate that climbs is the only visible symptom of the invisible
+   failure. The transcript endpoint already records these.
+2. **Any reply containing a rate, threshold or deadline, against `locked_facts.json`. [J]** The
+   two live fabrication classes are both constants: `eval_208`'s invented *"TZS milioni 90"* VAT
+   threshold, `eval_337`'s halved NSSF rate. Both are **checkable against a fixed number** (R19),
+   which is what makes monitoring them cheap.
+3. **`GET /health` → `build`, and `transcript_store.ok`, before every session. [M]** Warm
+   containers serve old code (R16), and the handler's own history must match the SHA.
+4. **The `[rag] loaded N` count in the container log. [M, today — new]** Production has **no
+   assertion** on it, so this line is currently the *only* signal that the index is intact. See §5.
+5. **Empty replies.** A plain PAYE question returns `""` through the orchestrator while
+   `generate_raw` answers it correctly — boarded, uninvestigated.
+
+## 4. What would make me pull it
+
+- **Any reply asserting a rate or threshold that is not in `locked_facts.json`.** Immediate. This
+  is not a quality issue; it is the product inventing law. **Two distinct live instances are
+  already recorded [M].**
+- **A wrongly-refused question reported by a tester.** One is enough — because it means the
+  invisible failure is now visible, and every instance we cannot see sits behind it.
+- **Any reply about payroll that a tester acts on and is wrong.** The compute path is the one
+  surface we present as reliable; a defect there costs more than ten fact-path errors.
+- **`[rag] loaded 0`, or a reply with no facts where facts exist.** ⚠️ **NEW TRIGGER, added
+  today.** Production would not raise, log an error, or refuse — it would answer everything from
+  weights alone, which presents as a quality collapse rather than a config error. See §5.
+- **The R7 gate reporting GATE PASSED on a run whose per-question output disagrees.** ⚠️ **NEW
+  TRIGGER.** Until the gate is demonstrated to refuse, its pass is a claim, not a verification.
+
+## 5. ⚠️ What changed today, and why it moves the verdict
+
+**Two controls we believed protected a pilot do not do what was assumed. [M,
+`control_fire_audit.json`]**
+
+**(a) The fail-loud index contract is INERT IN PRODUCTION.** `chike/retrieval.py` carries a
+contract its own docstring calls a *pre-launch blocker*, written to stop exactly one catastrophe:
+a wiring mistake that returns `[]` from every retrieval, so the model answers with **no facts at
+all**, *"presenting as a total quality collapse rather than a config error, with nothing in the
+logs saying so."* **It fires on all three limbs. Production does not call it** —
+`modal_app.ChikeModel` loads the index itself and keeps the exact silent fallback the contract was
+written to remove, with no shape assertion and no `expected_fact_count`. Verified by parsing the
+deployed file: no import, no `configure()`, no call.
+
+**(b) The R7 launch gate has never been demonstrated to refuse.** `run_eval.py` must print
+`GATE PASSED` only when in-corpus > 85% **and** refusal > 70%. Its arithmetic is a visible
+three-line conjunction and I have **no evidence it is broken [J]** — but there is **no recorded
+instance of it ever printing `GATE FAILED`**, and it exits **0** on an empty corpus. By R26's
+standard that is unverified, and it is the mechanism that would authorise the pilot. *Proportionate
+statement: low risk, real gap, trivially closable by planting an under-threshold run.*
+
+**Set against these, 17 controls were demonstrated to fire today [M]**, including the OOC
+classifier (refuses a capital-gains question, passes an SDL one), all six repo gates, and
+D-FIDELITY-1/3/5/6. **That is a genuine gain** — the remaining floor is verified rather than
+believed, for the first time.
+
+## 6. The honest chance the first thing they ask has no fact behind it
+
+**Unchanged: roughly two in three to three in four. [J, anchored on 3/12 measured]**
+
+**Re-derived, not carried — and it lands in the same place because nothing this cycle touched
+coverage.** `coverage_12_rerun.json` still stands: of twelve real-world questions, **all 12 pass
+the OOC classifier** (none is refused), **2 take a deterministic route**, and only **3 have a fact
+behind them — and that is an UPPER BOUND**, since it proves a fact *exists*, not that retrieval
+reaches it at top-3. The locked-fact count moved 243 → 247 and the index 217 → 221; **four facts
+do not move a coverage number.**
+
+Stated with its bound: those twelve were **authored to probe the coverage gap**, so 75% is the top
+of the range, not the centre. It remains a better proxy for an unprompted first message than the
+48 natural questions, which were written against domains we hold facts for and cannot speak to
+this at all.
+
+**The caveat that cuts in our favour is also unchanged: [M]** *no fact* is not *no answer*. **18 of
+the 29 correct rows come from the deterministic surface** (15 compute + 3 refusal), which needs no
+retrieval. The exposure is concentrated on the fact path — where **5 of 7 WRONG** and most PARTIAL
+rows already sit.
+
+## 7. The ledger since 2026-08-22
+
+| moved us **closer** | moved us **further** |
+|---|---|
+| 17 controls **demonstrated** to fire, incl. the OOC classifier **[M]** | ⛔ the fail-loud index contract is **inert in production** **[M]** |
+| the pre-push gate exists and has blocked two red pushes **[M]** | ⚠️ the R7 launch gate has never been shown to refuse **[M]** |
+| the secret scan now actually scans **[M]** | `eval_355` wrong on both arms despite being recorded resolved **[M]** |
+| the retriever question **closed on evidence** — no longer a source of churn **[M]** | `eval_208`: a live, reproducing **fabricated statutory threshold** **[M]** |
+| the premise-frame hypothesis **killed** (0/8 pairs flipped) — a false lead removed **[M]** | four defect classes named; **two have no mechanism** **[M]** |
+| `nat_23` fixed: 28 → 29 correct on the 48 **[M]** | the safety-floor precondition: **still zero routes** (unchanged) |
+| D-FIDELITY-7 built (containment, not wired) **[M]** | |
+
+**The left column is hygiene and knowledge. The right column contains the only item that decides
+whether a pilot is *safe* rather than merely *good* — and it did not move.** That is the verdict
+in one sentence.
 
 ---
 
