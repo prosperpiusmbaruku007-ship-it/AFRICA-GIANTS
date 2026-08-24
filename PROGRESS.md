@@ -572,6 +572,109 @@ every subsequent cue a fit.
 
 ---
 
+# 🧩 SCOPING NOTE (NOT A PROPOSAL, NOT A DECISION): does the evidence support shipping WITHOUT a floor, by making the boundary the PRODUCT rather than a runtime judgement? (2026-08-24)
+
+**Asked by the founder; this is the evidence read only.** ⚠️ **R12 applies and is not satisfied:**
+`docs/reference_narrative.md` has NOT been re-read this session, and no strategic decision may be
+taken on this note without it.
+
+## The structural argument is strong, and it is measured
+
+**Every unsolved defect in this project is a RETRIEVAL defect. The compute path does not retrieve.**
+
+| path | n | CORRECT | **WRONG** |
+|---|---|---|---|
+| **compute** (rules engine, no retrieval) | 24 | 16 (67%) | **1 (4%)** |
+| **fact** (RAG) | 21 | 11 (52%) | **5 (24%)** |
+
+**A six-fold difference in wrong-answer rate [M, natural 48, live replies 2026-08-24].** And the
+four named defect classes — D1 adjacent-fact selection, D2 rank-1 contradiction, D3 fragment
+displacement, D4 refutation out of reach, **two of which have no mechanism at all** — apply *only*
+to the fact path.
+
+**The deeper point, and the reason this is not just "do less":** every dead floor design (absolute
+score, margin, re-ranked index, term overlap, coverage gate) was a **runtime classification
+problem** — deciding, per question, whether we know. The 37× gap is a measurement of how hard that
+classification is in paraphrase space. **A boundary declared in advance does not classify
+anything**, because the user was told what the product does.
+
+**And it inverts the failure mode into the cheap one.** R21's own asymmetry: a mechanism that fails
+by BLOCKING a real user is expensive and invisible; one that fails by LETTING SOMETHING THROUGH is
+cheap to iterate on and shows up in a transcript. A floor fails the first way. **A declared boundary
+fails the second way.**
+
+## ⛔ But the specific boundary the question named — employer-only — is contradicted by the data
+
+**Of the 12 real coverage-gap questions, ZERO are payroll questions. Not one mentions PAYE, SDL,
+NSSF or WCF. [M, `coverage_12_rerun.json`]**
+
+They are: presumptive income tax (×2), business licence fee and renewal (×2), council service levy,
+market levy for a *genge*, a fire-safety certificate, weights-and-measures calibration, rental
+withholding, getting a TIN, a TRA inspection, and mobile-money tax.
+
+**That sample depicts a SOLE TRADER WITH A SHOP. Payroll is an EMPLOYER's concern.** An
+employer-only product would refuse roughly eleven of those twelve first messages.
+
+**Stated with its bound, because symmetry demands it (R22 cuts both ways):** those twelve were
+**authored to probe the coverage gap**, so they are the deliberately-hard half and 1/12 is a
+**LOWER** bound on hit rate, not the population rate. I will not treat an unflattering number as
+population truth when I would refuse to treat a flattering one that way.
+
+## 🎯 The reframing this produces — and it is the actual finding
+
+> **There is a boundary question underneath the boundary question, and it is about WHO, not WHAT.**
+> A payroll product serves employers. Our own coverage probe depicts non-employers. We have never
+> measured which population would show up — **and tester selection is a lever we fully control and
+> have never used.**
+
+**The scoped-product question is really *"can we choose the users to match the corpus?"* rather than
+*"can we choose a boundary to match the users?"* — and choosing users is free.** Ten testers who
+each employ ten or more staff make the payroll boundary relevant to them **by construction**.
+
+**Correction to the framing, from the same data: the deterministic surface is not only payroll.**
+The presumptive income-tax engine is live (deployed and verified 2026-08-17) and is exactly what
+questions 1 and 2 of the twelve ask about. So the boundary that matches the *observed* users is
+**presumptive income tax + payroll + registration**, which is wider than "employer-only" and
+reaches 3 of 12 rather than 1. Its known gaps are named: the Class A transport schedule is not
+built (`pic_10` invents a rate), and `pic_04` computes corporate tax on turnover.
+
+## The consequence nobody has noticed: a narrower product makes the SHELVED coverage gate shippable
+
+**The coverage gate's fatal number is only fatal against a GENERAL product.** Its 71% false-refusal
+rate came from distinguishing ~21 topics in paraphrase space. **A gate's difficulty scales with the
+number of topics it must tell apart, and a declared boundary cuts that number to three or four.**
+
+**[J], with a named test rather than optimism:** re-run the held-out probes restricted to boundary
+topics and see whether the false-refusal rate collapses. ⚠️ **That set is BURNED** — its results
+were read — so this needs a fresh one (R21).
+
+## What it would cost to find out
+
+| step | cost | what it settles |
+|---|---|---|
+| **1. Classify all 400+ corpus questions by candidate boundary** | **free, offline, hours** | corpus-side hit rate — but self-authored, so a **lower bound on confidence** (R21) |
+| **2. Held-out first-messages authored in the voice of a RECRUITED EMPLOYER** (~40, frozen before measuring, burned once) | ~a day | the real hit rate and in-boundary accuracy. **The decisive measurement** |
+| **3. A fresh held-out set for the narrowed coverage gate** | ~a day, burned once | whether the shelved gate becomes shippable under a boundary |
+| **4. Build** | **mostly SUBTRACTION** | boundary copy in the system prompt + welcome message; the already-verified OOC classifier; restrict or disable the fact path outside the boundary. Nothing new to invent — the risk is at the boundary's EDGES, not its middle |
+
+**And the cheapest decisive test is not a measurement at all: a scoped pilot IS the measurement.**
+Because a declared boundary fails by *answering out of scope* — visible in transcripts within days —
+where a floor fails by *silently refusing*, which is invisible forever. **The thing that made the
+general product unshippable is the same thing that makes the scoped one cheap to learn from.**
+
+## The honest summary
+
+**The evidence supports the STRUCTURE and contradicts the SPECIFIC BOUNDARY as stated.** Compute
+beats fact six-to-one on wrong answers, and the unsolved defects are all on the side a boundary
+would exclude — that is real. But *employer-only* is aimed at a user our own probe does not depict,
+and the fix for that is **recruitment, not architecture**.
+
+**What would kill it:** if step 2 shows that even recruited employers' first messages mostly fall
+outside the boundary, then a scoped product is one almost nobody's first question fits, and the
+pilot measures a wall rather than a product. **That is checkable before building anything.**
+
+---
+
 # 🚨 A SECURITY CONTROL THAT COULD NEVER FIRE — and the audit that followed found a second one (2026-08-24)
 
 **`eval/controls/audit_control_fires.py` → `eval/results/control_fire_audit.json`.**
