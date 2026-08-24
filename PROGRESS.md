@@ -366,6 +366,74 @@ every subsequent cue a fit.
 
 ---
 
+# 🧨 TWO RULES PROMOTED, AND THE SECOND ONE IS THE DANGEROUS KIND (2026-08-24)
+
+**Neither is a new discovery. Both are a third or fourth instance of something already written
+down, and the promotion is the point: at three instances a pattern stops being a list of mistakes
+and starts being something to check for before a number is cited.**
+
+## 1. R22 is now PREDICTIVE, with a procedural consequence
+
+Three independent workstreams, three days, three mechanisms with nothing in common:
+
+| mechanism | measured where it worked | said | measured where the harm is | said |
+|---|---|---|---|---|
+| fact use / "discard rate" | 13 rows the model was mostly RIGHT on | ~**12 of 13** correct, "~1 in 13 discard" | rows answered **WRONG** with the fact in reach | **0 of 2** |
+| coverage gate | 411 gate-corpus questions | **1.9%** false refusals | 21 held-out questions | **71%** |
+| **the retriever choice** | the natural 48 | *"no two-arm benefit"* — **1 reply in 22** | the veto-diverted rows | **12 of 16**, 2 wrong→right |
+
+**The consequence, now in CLAUDE.md as the operative half of R22:**
+
+> **Any measurement offered in support of a decision must NAME THE POPULATION IT WAS TAKEN ON, and
+> state WHY THAT POPULATION IS WHERE THE DECISION APPLIES.** A measurement that cannot answer the
+> second half is not evidence for the decision it is being cited for — whatever it measured, and
+> however correctly it measured it.
+
+And it is enacted in the instrument rather than remembered: `eval/routing/ab_retriever_full.py`
+carries a `why_each_population` block **inside its own artifact**, so the caveat cannot be
+separated from the number by being quoted.
+
+### ⚠️ The third instance is WORSE than the other two, and the difference is the whole lesson
+
+The discard rate and the coverage gate were **unrepresentative samples** — a familiar error with a
+familiar smell. **The 2026-08-17 retriever decision was made on a CORRECT measurement and was still
+wrong.** Four measurements, all sound; re-run seven days later they **reproduce exactly**. The
+question asked was *"does the two-arm retriever help?"*. The question answered was *"does it help on
+rows we already answer correctly?"* — and the honest answer to **that** is no.
+
+> **A right answer to the wrong question is far harder to catch than an error**, because every check
+> you would run against it passes. Re-deriving it reproduces it. Auditing the harness vindicates it.
+> Its age makes it look settled rather than untested. Nothing *inside* the measurement is wrong, so
+> nothing inside the measurement can flag it — **only re-asking it on a different population can**,
+> and that is a step no verification pass will ever prompt you to take.
+
+Hence the new closing line of R22: **a settled decision's age is not evidence.** When one is
+re-opened, re-run the rows it actually cites rather than re-reading its summary. The prior evidence
+is a population too, and it is the one population nobody thinks to test.
+
+## 2. The destroyed-measurement family has a FOURTH member, and it touches no console
+
+R16 carries three instances of a measurement dying between being taken and being recorded — a
+`cp1252` codec on a `✓`, and twice a run killed by a closing `Select-Object` pipe. All three are
+console operations, and **reading them as a rule about consoles read them too narrowly.**
+
+On 2026-08-24 a live A/B died 20 rows in on `ConnectionResetError(10054)` — the Tanzanian link
+dropped mid-flight — and **wrote nothing**, because its artifact was dumped once at the end.
+Everything it had measured was gone. **The harness already had `reconfigure(encoding='utf-8')` and
+used no pipe.** Both defensive fixes were in place; both were fixes for the previous instance.
+
+> **ANY HARNESS WHOSE OUTPUT IS WRITTEN ONCE AT THE END CAN LOSE EVERYTHING TO ANYTHING.** A codec,
+> a pipe, a dropped TCP connection, a machine that sleeps, `Ctrl-C` on the wrong window. The four
+> instances share no mechanism — so enumerating mechanisms is the wrong defence, and it is exactly
+> the defence that failed here.
+
+**The fix is structural: write the artifact after EVERY ROW, capture per-row errors instead of
+aborting, and RESUME from the existing artifact on restart.** Then a fault costs one row, never the
+run. Recorded in R16 alongside the three console instances rather than as a separate rule, because
+it is the same failure and the generalisation is the useful part.
+
+---
+
 # 🔁 THE SINGLE-ARM DECISION NEEDS REOPENING — the two-arm benefit is real and it lives exactly where production is wrong (2026-08-24)
 
 **Not a curiosity. A class — and the reason it was missed is R22 for the third time.**

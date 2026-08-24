@@ -591,6 +591,25 @@ correctly, proving config loading was fine and the container was simply stale.
    measurement run through `Select-Object`, `head`, `more`, `Select-String`, or any other
    truncating/filtering consumer. Let it write its JSON, then read the file. If the console
    output is too long, that is what the artifact is for.
+
+   **AND THE GENERAL FORM, PROVEN 2026-08-24 BY A FAULT THAT TOUCHES NO CONSOLE AT ALL.** The
+   three instances above are all console operations, and reading them as a rule about consoles
+   is reading them too narrowly. A live A/B run died 20 rows in on `ConnectionResetError(10054)`
+   — the Tanzanian link dropped mid-flight — and **wrote nothing**, because its artifact was
+   dumped once at the end. Every row it had measured was gone; the console output was the only
+   trace, and the console is not a file.
+
+   > **ANY HARNESS WHOSE OUTPUT IS WRITTEN ONCE AT THE END CAN LOSE EVERYTHING TO ANYTHING.** A
+   > codec, a pipe, a dropped TCP connection, a machine that sleeps, `Ctrl-C` on the wrong
+   > window. The four instances share no mechanism — enumerating mechanisms is therefore the
+   > wrong defence, and it is the defence that failed here: the harness had `reconfigure(...)`
+   > and no pipe, and still lost the run.
+
+   **The fix is STRUCTURAL, not defensive. A long or live measurement writes its artifact after
+   EVERY ROW, captures per-row errors instead of aborting the run, and RESUMES from the existing
+   artifact on restart.** Then a fault costs one row, never the run. Defensive fixes — don't
+   pipe, set the env var, keep the link up — are each correct and each only close the instance
+   that already happened.
 2. Run a **live check that exercises the specific change** — a request whose behaviour is
    different before and after. A health check, a sanity question, or the deploy log prove
    nothing about the change.
@@ -967,26 +986,54 @@ facts, so a lexical mechanism is tested against text it already matches. **R22 i
 OUTCOME-CONDITIONED SAMPLING**: measuring a remedial mechanism on rows where the outcome was
 already good, and reporting the result as if it described the rows that need remedy.
 
-**Twice in two days, and both times the flattering number came first:**
+**THIS RULE IS NOW PREDICTIVE, NOT DESCRIPTIVE.** Three independent workstreams, three days, three
+mechanisms with nothing in common — a fact-use statistic, a lexical refusal gate, and a retrieval
+configuration. **Every one was measured on a population where the mechanism already worked, and
+every one reversed when measured where the harm was.** At three, this stops being a list of
+mistakes and becomes something to check for *before* a number is cited.
 
 | mechanism | measured on | said | measured on the population that needs it | said |
 |---|---|---|---|---|
 | **fact use / "discard rate"** | 13 rows from the natural 48 — a set the model was **mostly RIGHT on** | fact at rank 1 → correct ~**12 of 13**, "~1 in 13 discard" | rows the model answers **WRONG** with the fact in reach | **0 of 2** |
 | **coverage gate** | 411 gate-corpus questions | **1.9%** false refusals | 21 held-out questions | **71%** |
+| **the retriever choice** | the natural 48 — where the model is mostly right | *"no two-arm benefit"*, **1 reply in 22 moves** | the veto-diverted rows, where production is **wrong** | **12 of 16 replies move**, 2 wrong→right |
 
-**The tell is the same in both: the sample was drawn from where the thing already worked.** A
-remedy measured on rows that do not need remedying reports the base rate of success, not the
-remedy's effect — and reads as evidence for exactly the work it cannot justify.
+**⛔ THE PROCEDURAL CONSEQUENCE — this is the part that has teeth.**
+
+> **Any measurement offered in support of a decision must NAME THE POPULATION IT WAS TAKEN ON, and
+> state WHY THAT POPULATION IS WHERE THE DECISION APPLIES.** Both halves, in the artifact and in the
+> write-up. A measurement that cannot answer the second half is not evidence for the decision it is
+> being cited for — whatever it measured, and however correctly it measured it.
+
+Put the population in the instrument, not only in the prose: `eval/routing/ab_retriever_full.py`
+carries a `why_each_population` block that ships inside its own artifact, so the caveat cannot be
+separated from the number by being quoted.
+
+**THE THIRD INSTANCE IS WORSE THAN THE OTHER TWO, AND THE DIFFERENCE IS THE WHOLE LESSON.** The
+discard rate and the coverage gate were *unrepresentative samples* — a familiar error with a
+familiar smell. **The 2026-08-17 retriever decision was made on a CORRECT measurement and was still
+wrong.** Four measurements, all sound, all reproducing exactly when re-run seven days later. The
+question asked was *"does the two-arm retriever help?"* The question answered was *"does it help on
+rows we already answer correctly?"* — and the honest answer to that is **no**.
+
+> **A right answer to the wrong question is far harder to catch than an error**, because every
+> check you would run against it passes. Re-deriving it reproduces it. Auditing the harness
+> vindicates it. Its age makes it look settled rather than untested. Nothing inside the
+> measurement is wrong, so nothing inside the measurement can flag it — **only re-asking it on a
+> different population can**, and that is a step no verification pass will ever prompt you to take.
 
 **In practice:**
 - **Name the population a mechanism is FOR, before measuring it.** A fix for wrong answers is
   measured on wrong answers. A fix for refusals is measured on questions that must not be refused.
 - **A measurement drawn from a corpus you already score well on is a BASE-RATE measurement.** Report
   it as such, and never as the mechanism's effect.
-- **When a number is favourable, ask what population it came from before citing it.** Both instances
-  above were caught only because someone re-asked the question on the hard half.
+- **When a number is favourable, ask what population it came from before citing it.** All three
+  instances above were caught only because someone re-asked the question on the hard half.
 - **Attach the population to the number, permanently.** Not *"~1 in 13"* but *"~1 in 13 on rows the
   model answers correctly"*. A bare figure travels; its caveat does not, unless it is inside it.
+- **A settled decision's age is not evidence.** When a decision is re-opened, re-run the rows it
+  actually cites rather than re-reading its summary — the prior evidence is a population too, and
+  it is the one population nobody thinks to test.
 
 ---
 
