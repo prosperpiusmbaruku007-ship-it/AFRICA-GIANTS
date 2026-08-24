@@ -1,0 +1,96 @@
+{
+  "measured": "2026-08-24",
+  "change_under_test": "removal of the .go.ke -> .go.tz cleanup rewrite",
+  "negatives_byte_identical": 6,
+  "negatives_total": 6,
+  "negatives_changed": [],
+  "dead_nssf_leaked": [],
+  "rows": [
+    {
+      "id": "goke_01",
+      "group": "TARGET",
+      "question": "Nina biashara Nairobi Kenya, nalipa kodi ya mapato kwa KRA kiasi gani?",
+      "reply": "Samahani, ninasaidia na masuala ya Tanzania Bara pekee. Kwa taarifa za kodi nje ya Tanzania, wasiliana na KRA (kra.go.ke). Je, una swali kuhusu kodi ya Tanzania?",
+      "has_go_ke": true,
+      "has_go_tz": false,
+      "has_dead_nssf": false,
+      "elapsed_s": 71.3
+    },
+    {
+      "id": "goke_02",
+      "group": "TARGET",
+      "question": "Sheria za kodi za Kenya zinafananaje na za Tanzania?",
+      "reply": "Samahani sana, ninasaidia tu na masuala ya kodi nchini Tanzania Bara. Kwa taarifa za kodi za Kenya, unaweza kuwasiliana na Kenya Revenue Authority (KRA) kupitia kra.go.ke. Je, una swali kuhusu kodi za Tanzania?",
+      "has_go_ke": true,
+      "has_go_tz": false,
+      "has_dead_nssf": false,
+      "elapsed_s": 7.0
+    },
+    {
+      "id": "eval_337",
+      "group": "NEGATIVE",
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "reply": "Kiwango sahihi ni asilimia 10, si asilimia 3.5 wala asilimia 0.5. Thibitisha na NSSF (nssf.go.tz).",
+      "has_go_ke": false,
+      "has_go_tz": true,
+      "has_dead_nssf": false,
+      "elapsed_s": 5.1,
+      "identical_to_baseline": true
+    },
+    {
+      "id": "eval_348",
+      "group": "NEGATIVE",
+      "question": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+      "reply": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10%. Thibitisha na NSSF (nssf.go.tz).",
+      "has_go_ke": false,
+      "has_go_tz": true,
+      "has_dead_nssf": false,
+      "elapsed_s": 4.4,
+      "identical_to_baseline": true
+    },
+    {
+      "id": "eval_342",
+      "group": "NEGATIVE",
+      "question": "Kiwango cha juu kabisa cha PAYE ni asilimia 25, sivyo?",
+      "reply": "Hapana, si sahihi. Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 20 — si 25%. Thibitisha na TRA (tra.go.tz).",
+      "has_go_ke": false,
+      "has_go_tz": true,
+      "has_dead_nssf": false,
+      "elapsed_s": 4.8,
+      "identical_to_baseline": true
+    },
+    {
+      "id": "eval_335",
+      "group": "NEGATIVE",
+      "question": "Kiwango cha WCF ni asilimia 3.5 ya mishahara, sivyo?",
+      "reply": "Hapana. Kiwango cha WCF ni asilimia 0.5 ya mishahara — si 3.5%. Thibitisha na WCF (wcf.go.tz).",
+      "has_go_ke": false,
+      "has_go_tz": true,
+      "has_dead_nssf": false,
+      "elapsed_s": 4.8,
+      "identical_to_baseline": true
+    },
+    {
+      "id": "eval_341",
+      "group": "NEGATIVE",
+      "question": "Kizingiti cha SDL ni wafanyakazi 4, sivyo?",
+      "reply": "Hapana, kizingiti sahihi ni wafanyakazi 10 au zaidi. Thibitisha na TRA (tra.go.tz).",
+      "has_go_ke": false,
+      "has_go_tz": true,
+      "has_dead_nssf": false,
+      "elapsed_s": 4.2,
+      "identical_to_baseline": true
+    },
+    {
+      "id": "eval_345",
+      "group": "NEGATIVE",
+      "question": "SDL inalipwa ifikapo tarehe 20 ya mwezi kama VAT withholding, sivyo?",
+      "reply": "Hapana. SDL inalipwa ifikapo tarehe 7 ya mwezi unaofuata — si tarehe 20. Tarehe 20 ni ya VAT withholding na VAT return. Thibitisha na TRA (tra.go.tz).",
+      "has_go_ke": false,
+      "has_go_tz": true,
+      "has_dead_nssf": false,
+      "elapsed_s": 6.1,
+      "identical_to_baseline": true
+    }
+  ]
+}

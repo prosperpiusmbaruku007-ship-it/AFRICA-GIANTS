@@ -366,6 +366,121 @@ every subsequent cue a fit.
 
 ---
 
+# ✅ THE DEPLOYED PIPELINE **IS** THIS REPO'S CODE — the divergence was my reconstruction, and the blast radius is three harnesses (2026-08-24)
+
+**Settled by measurement, 3/3 byte-identical.** `eval/forced_facts/verify_deployed_path.py` →
+`eval/results/deployed_path_verification.json`.
+
+| specimen | single-arm reconstruction vs recorded live reply |
+|---|---|
+| `eval_337` | ✅ byte-identical |
+| `eval_348` | ✅ byte-identical |
+| `eval_342` | ✅ byte-identical |
+
+**The cause, and it is documented in the file I was reconstructing.** `modal_app.py:421-430` builds
+the same `Orchestrator` class from this repo and **injects its own retriever**:
+
+```python
+retriever=self.retrieve_facts,   # SINGLE-ARM top-3
+```
+
+`Orchestrator`'s **class default** is `chike.retrieval.retrieve` — a **two-arm hybrid** that, on a
+query containing digits, runs a second pass over the number-stripped query and appends the first
+new fact, giving **top_k + 1**. `eval_337` carries *"3.5"* and *"0.5"*, so the two-arm path hands
+the model **four** facts and production hands it **three**. That is the entire divergence.
+
+**So: no deployment drift, no stale container, no unexplained behaviour. A reconstruction error —
+I used the class default where production injects.** Same class as the retraction before it, one
+layer down.
+
+## Blast radius, enumerated rather than estimated
+
+| harness | retriever | affected |
+|---|---|---|
+| `measure_grounding_48` | own single-arm + production pooling | ✅ clean |
+| `analyse_covered_half`, `measure_defect_exposure`, `retest_fragment_mask`, `measure_coverage_gate_signals` | own single-arm top-3 | ✅ clean |
+| **`measure_quantity_instruction`**, **`test_premise_frame`**, **`establish_premise_frame`** | **two-arm default** | ⚠️ **divergent path** |
+
+**The load-bearing measurements are unaffected** — grounding, the discard rate, SS8, the class
+analysis, the exposure ranking and the mask re-test all used single-arm. **Three harnesses from the
+last two days used the two-arm default**, all in the premise/instruction thread.
+
+**What that does to their conclusions: less than it might.** Both arms of each comparison used the
+same retriever, so the *contrasts* hold — 0 of 8 pairs flipped, no candidate instruction improved
+arm P. What does not carry is any claim about **production's** behaviour on those rows. The
+premise hypothesis is falsified **on the two-arm path**; production is untested for it, and given
+the hypothesis was about generation rather than retrieval that is a narrow gap — but it is stated
+rather than waved away.
+
+## An unplanned finding that cuts against a settled decision
+
+**On `eval_337` the two-arm retriever is RIGHT and single-arm is WRONG:**
+
+> two-arm: *"asilimia **20** ya mshahara ghafi (10 mwajiri + 10 mfanyakazi)"* ✅
+> single-arm (production): *"Kiwango sahihi ni asilimia **10**"* ❌
+
+Production chose single-arm deliberately — *"four measurements have failed to show a two-arm
+benefit and the only two genuine non-clarification regressions ever recorded were its artefacts"*.
+**That decision was made on evidence and this does not overturn it.** But it is the first recorded
+case where the two-arm arm produces the correct answer and the shipped one does not, and it lands
+on `eval_337`, a row whose defect has its own board item. **On the board as evidence against a
+settled decision, not as a proposal to reverse it.**
+
+---
+
+# 🧹 THE `.go.ke` REWRITE IS DELETED AND THE FIX IS LIVE (2026-08-24)
+
+**Standalone R16 cycle, as instructed — `app stop --yes` → deploy → canary.**
+`eval/results/goke_removal_canary.json`.
+
+| check | result |
+|---|---|
+| **`kra.go.ke` survives** | ✅ *"…wasiliana na **KRA (kra.go.ke)**"* — before the deletion this became `kra.go.tz`, a domain that does not exist |
+| second Kenya probe | ✅ *"…Kenya Revenue Authority (KRA) kupitia **kra.go.ke**"* |
+| **§5(d) negatives** | **6 / 6 byte-identical** |
+| dead `nssf.or.tz` leaked anywhere | **none** — the justified rewrite still fires |
+
+**The model was already doing the right thing** — declining an out-of-scope question and naming the
+correct foreign regulator — and the repair layer was replacing its correct citation with a
+fabricated one. That is the class the OOC work exists to protect, defeated by a cleanup rule.
+
+**A test was pinning the defect in place** (`test_corrects_memorized_domain_tokens` asserted
+`.go.ke` → `.go.tz`). Inverted, with the history kept in its docstring per the R17 corollary.
+
+**Recorded rather than amended away: the commit that removed the rewrite was pushed with that test
+RED.** The pytest run was piped through `tail`, which consumed the exit status, and the `&&` chain
+committed and pushed anyway. It is the R16 lesson — never let a console operation stand between a
+measurement and its verdict — reappearing as a build-status error instead of a data-loss one. Fixed
+in the next commit with the exit code checked explicitly.
+
+---
+
+# 🎯 THE EVAL GROUND TRUTH CITED A DEAD DOMAIN — 19 rows, decided and fixed (2026-08-24)
+
+**The 590 needed reading, not counting, and reading changed the decision.** Of 599 occurrences
+across 24 files under `eval/`:
+
+- **~560 are in `eval/results/*.json`** — historical run artifacts. **Immutable by definition**:
+  they record what the system said on a given day, and editing them would be falsifying a
+  measurement. Untouched.
+- **38 fields across 19 rows of `eval/accuracy_gate/eval_questions_001.jsonl`** — `correct_answer_sw`
+  and `correct_answer_en`. **This is the scoring key.**
+
+**So the actionable set is 19 rows in one file, not 590.**
+
+**Decision: fix them.** The domain is DNS-failing (CLAUDE.md §4) and there is no reading on which
+`nssf.or.tz` is a correct citation, so this is a **factual correction to ground truth**, not
+tuning — the distinction that matters is that the corpus was wrong about the world, not that the
+key was inconvenient. Left alone, the gate's own answer key teaches a dead link, and any
+string-comparison scorer marks a **correct** `.go.tz` answer as a mismatch.
+
+`19 rows rewritten, 38 fields, 0 remaining in the scoring key.` Suite 1342 passed.
+
+**What it does not do:** it changes no rate, threshold or date, so **every accuracy figure recorded
+against this corpus stands unchanged.** The defect was always in the citation, never in the answer.
+
+---
+
 # 🪞 A SERVING-SIDE REWRITE CONCEALED AN AUTHORING DEFECT FOR THE WHOLE LIFE OF THE CORPUS — and the audit found a second rewrite that CREATES one (2026-08-24)
 
 **Promoted from a gap-closed note, because the shape is general and it was found by accident.**
