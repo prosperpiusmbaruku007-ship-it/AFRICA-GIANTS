@@ -144,18 +144,45 @@ def main():
 
     orch_single, orch_two = build(one), build(two_arm)
 
+    # INCREMENTAL WRITE AFTER EVERY ROW, and per-row error capture. The first attempt at this
+    # run died 20 rows in on `ConnectionResetError(10054)` — the Tanzanian link dropped mid-flight
+    # — and wrote NOTHING, because the artifact was dumped once at the end. Everything measured
+    # was lost and the console output was the only trace.
+    #
+    # That is R16's family arriving from a new direction: the first three instances were console
+    # operations standing between a measurement and its file; this one is a NETWORK FAULT doing
+    # the same thing to a harness that had no partial-write. A long live run must be crash-safe
+    # by construction, not by the link staying up.
     live_rows = []
+
+    def flush(status):
+        with open(OUT, 'w', encoding='utf-8') as fh:
+            json.dump({'measured': '2026-08-24', 'status': status,
+                       'harness': 'eval/routing/measure_two_arm_effect.py',
+                       'population': len(population), 'fact_sets_differ': len(differing),
+                       'stage1': stage1, 'live_rows': live_rows}, fh,
+                      ensure_ascii=False, indent=2)
+
     for r in differing:
         t0 = time.time()
-        s = orch_single.answer(r['q']).text.strip()
-        t = orch_two.answer(r['q']).text.strip()
+        try:
+            s = orch_single.answer(r['q']).text.strip()
+            t = orch_two.answer(r['q']).text.strip()
+            err = None
+        except Exception as exc:                       # network drop, timeout, anything
+            s = t = ''
+            err = f'{type(exc).__name__}: {exc}'
+            print(f"  [{r['id']}] ERROR {err}")
         rec = {**r,
                'single_arm_reply': s, 'two_arm_reply': t,
-               'replies_differ': s != t,
-               'single_matches_recorded_live': (s == r['recorded_live']
-                                                if r['recorded_live'] else None),
+               'error': err,
+               'replies_differ': (s != t) if err is None else None,
+               'single_matches_recorded_live': ((s == r['recorded_live'])
+                                                if (err is None and r['recorded_live'])
+                                                else None),
                'elapsed_s': round(time.time() - t0, 1)}
         live_rows.append(rec)
+        flush('IN_PROGRESS')                           # the artifact survives the next fault
         print(f"\n=== {r['id']} ({r['set']}) facts {r['n_single']}->{r['n_two_arm']}  "
               f"replies_differ={rec['replies_differ']}  "
               f"baseline_ok={rec['single_matches_recorded_live']}")
@@ -163,6 +190,7 @@ def main():
             print(f"  SINGLE: {s[:170]}")
             print(f"  TWOARM: {t[:170]}")
 
+    errors = [r['id'] for r in live_rows if r.get('error')]
     changed = [r for r in live_rows if r['replies_differ']]
     baseline_ok = [r for r in live_rows if r['single_matches_recorded_live'] is True]
     baseline_bad = [r['id'] for r in live_rows if r['single_matches_recorded_live'] is False]
@@ -176,6 +204,8 @@ def main():
                           'measurements showing no two-arm benefit and two regressions.',
         'adjudication': 'PENDING — direction is JUDGEMENT and is added in a follow-up commit. '
                         '"The answer changed" is not "the answer improved".',
+        'status': 'COMPLETE' if not errors else 'COMPLETE_WITH_ERRORS',
+        'rows_with_errors': errors,
         'population': len(population),
         'fact_sets_differ': len(differing),
         'replies_differ': len(changed),
