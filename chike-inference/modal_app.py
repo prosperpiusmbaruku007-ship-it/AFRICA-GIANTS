@@ -217,17 +217,64 @@ class ChikeModel:
         else:
             print('[chike] WARNING: HF_TOKEN not set -- model may fail to load')
 
-        # --- RAG: load pre-computed embeddings (only the query is embedded at run time) ---
+        # --- RAG: load the index through the CANONICAL LOADER, which validates it ------------
+        #
+        # ⛔ WHY THIS CHANGED (2026-08-24). What stood here was:
+        #
+        #     if os.path.exists(...): load
+        #     else: self.fact_texts = []; print('[rag] WARNING: ... RAG disabled')
+        #
+        # and `retrieve_facts` then returned [] for EVERY question, so the model answered from
+        # weights alone with no facts at all. `chike/retrieval.py` has carried a "FAIL-LOUD INDEX
+        # CONTRACT (2026-08-06, PRE-LAUNCH BLOCKER)" against exactly that outcome since before
+        # this app was written, in its own words: *"the model would answer with NO facts at all,
+        # presenting as a total quality collapse rather than a config error, with nothing in the
+        # logs saying so."*
+        #
+        # THE CONTRACT WORKED. PRODUCTION NEVER CALLED IT. The guard lived in a module the
+        # deployed container does not import, so a pre-launch blocker protected local harnesses
+        # and never once protected a request. Found 2026-08-24 by the control-fire audit
+        # (eval/controls/audit_control_fires.py) — the SECOND inert control found that day, and
+        # the one no unit test of chike/retrieval.py could ever have revealed. See R26.
+        #
+        # A PRINT IS NOT A CONTROL. This now raises and the container fails to start, which is
+        # the trade the contract states outright: an outage is recoverable and visible; silently
+        # serving 221 facts' worth of compliance advice with zero facts is neither.
+        #
+        # WHAT THIS DOES *NOT* CHANGE: retrieval behaviour. `Retriever` here is used ONLY as the
+        # loader/validator; `retrieve_facts` below still does production's own SINGLE-ARM top-3
+        # scoring over the same arrays. chike.retrieval.Retriever.retrieve() is the TWO-ARM
+        # hybrid and is deliberately NOT called — the full A/B on 2026-08-24 kept single-arm
+        # (eval/results/ab_retriever_full_adjudication.json). A control fix must not smuggle in a
+        # behaviour change, and tests/test_modal_index_contract.py pins the facts byte-identical.
         self.embed_model = None  # lazy
-        if os.path.exists(_EMB_PATH) and os.path.exists(_TEXTS_PATH):
-            self.fact_embeddings = np.load(_EMB_PATH)
-            with open(_TEXTS_PATH, encoding='utf-8') as f:
-                self.fact_texts = json.load(f)
-            print(f'[rag] loaded {len(self.fact_texts)} pre-computed embeddings from repo')
-        else:
-            self.fact_embeddings = None
-            self.fact_texts = []
-            print('[rag] WARNING: rag_embeddings.npy not found -- RAG disabled')
+        from chike.retrieval import Retriever, RetrievalIndexError
+
+        expected = CONFIG.get('rag_fact_count')
+        if not isinstance(expected, int) or expected <= 0:
+            # Absent is NOT "skip the check" — that is how a control gets silently weakened.
+            # The config is baked into this image from kaggle/chike_config.json at deploy time
+            # (R14), so config and index always ship together and there is no ordering hazard.
+            raise RuntimeError(
+                f'[rag] chike_config.json has no usable `rag_fact_count` (got {expected!r}). '
+                'Set it to the number of rows in rag_facts_text.json so a stale or '
+                'half-regenerated R15 index fails at startup instead of serving silently.')
+
+        _retriever = Retriever(emb_path=_EMB_PATH, texts_path=_TEXTS_PATH,
+                               require_index=True, expected_fact_count=expected)
+        try:
+            n_facts = _retriever.preflight()      # existence + shape + count, all raising
+        except RetrievalIndexError as exc:
+            # Re-raised, not swallowed. The container dies here and Modal surfaces it; the
+            # WhatsApp handler's failure path turns that into a FALLBACK message rather than a
+            # confidently factless answer.
+            print(f'[rag] FATAL: {exc}')
+            raise
+        self.fact_embeddings = _retriever.fact_embeddings
+        self.fact_texts = _retriever.fact_texts
+        print(f'[rag] loaded {n_facts} pre-computed embeddings — index VALIDATED '
+              f'(exists, {n_facts} embeddings == {n_facts} texts, matches configured '
+              f'rag_fact_count={expected})')
 
         # --- Model: tokenizer + 4-bit load with float16 fallback (verbatim from main.py) ---
         print('[chike] Loading tokenizer ...')
@@ -280,8 +327,14 @@ class ChikeModel:
 
     def retrieve_facts(self, question: str, top_k: int = 3) -> list:
         import numpy as np
+        # The startup contract above guarantees a validated, non-empty index, so this can only
+        # be reached if something mutated it after boot. Raise rather than return [] — the
+        # silent-[] path is the exact defect the contract closes, and leaving one here would
+        # reopen it one layer down.
         if self.fact_embeddings is None or not self.fact_texts:
-            return []
+            raise RuntimeError(
+                '[rag] index vanished after a validated startup — refusing to answer with no '
+                'facts. This should be unreachable; investigate before restarting.')
         try:
             if self.embed_model is None:
                 from sentence_transformers import SentenceTransformer
@@ -307,8 +360,17 @@ class ChikeModel:
                 print(f'[RAG] rank {i+1} score={scores[idx]:.3f}: {self.fact_texts[idx][:80]}')
             return [self.fact_texts[i] for i in top_indices]
         except Exception as e:
-            print(f'[rag] retrieve_facts error: {e}')
-            return []
+            # ⛔ THE SECOND SILENT-[] PATH, closed in the same pass (2026-08-24). This used to
+            # `print(...); return []`, so ANY runtime fault — a failed embedder download, an
+            # OOM, a dtype error — degraded the answer to "no facts" with a log line nobody
+            # reads and a fluent, confident, ungrounded reply going to the user.
+            #
+            # The trade, stated: a raised error becomes a FAILED request (the WhatsApp handler
+            # sends its FALLBACK), which the user sees and can retry. A returned [] becomes a
+            # WRONG ANSWER, which they cannot see at all. For a compliance product that is not
+            # a close call.
+            print(f'[rag] FATAL retrieve_facts error: {e}')
+            raise
 
     def _generate(self, prompt: str) -> str:
         """The ONE environment-specific stage: tokenize -> generate -> decode.

@@ -355,11 +355,31 @@ def test_modal_app_no_longer_defines_its_own_pipeline_or_decomposer():
 
 
 def test_modal_app_passes_its_own_single_arm_retriever_not_the_two_arm_hybrid():
-    # The two-arm hybrid (chike.retrieval) must not be IMPORTED into production, only
-    # mentioned in the comment explaining why it isn't.
-    assert "retrieve_facts=self.retrieve_facts" in _src("chike-inference/modal_app.py")
-    assert not [m for m in _imported_modules("chike-inference/modal_app.py")
-                if m.endswith("retrieval")]
+    """NARROWED 2026-08-24, and the reason is the R17 corollary about proxies.
+
+    This used to assert that `chike.retrieval` is not IMPORTED at all, as a proxy for 'does not
+    use the two-arm hybrid'. The proxy was wrong: the module contains TWO separable things — the
+    two-arm `Retriever.retrieve()` (which production must not use) and the FAIL-LOUD INDEX
+    LOADER (which production must use, and did not).
+
+    Production's own loader kept the exact silent fallback the contract was written to remove —
+    a missing index printed a warning and every answer was generated with no facts at all. The
+    import ban is part of why that was never fixed: it made the correct fix look like a
+    violation. So the assertion now pins the thing it actually cares about — WHICH RETRIEVER IS
+    INJECTED — and says nothing about imports.
+    """
+    src = _src("chike-inference/modal_app.py")
+    code = "\n".join(ln for ln in src.splitlines()
+                     if ln.strip() and not ln.strip().startswith("#"))
+    # the v15 path and the v16 orchestrator must BOTH be handed production's own method
+    assert "retrieve_facts=self.retrieve_facts" in code
+    assert "retriever=self.retrieve_facts" in code
+    # and the two-arm hybrid must never be CALLED, however the module is imported
+    assert ".retrieve(" not in code, (
+        "modal_app calls a Retriever.retrieve() — that is the TWO-ARM hybrid. The 2026-08-24 "
+        "full A/B kept single-arm (eval/results/ab_retriever_full_adjudication.json)."
+    )
+    assert "chike.retrieval import retrieve" not in code
 
 
 def test_eval_py_uses_the_shared_leaf_decomposer():
