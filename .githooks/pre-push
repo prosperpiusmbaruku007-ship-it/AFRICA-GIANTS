@@ -32,9 +32,38 @@ REPO="$(git rev-parse --show-toplevel)"
 LOG_DIR="$REPO/.git/prepush"
 mkdir -p "$LOG_DIR"
 
+# --- what is actually being pushed --------------------------------------------------------
+# THE SCAN USED TO BE VACUOUS (found 2026-08-24, one day after this hook shipped). It called
+# scan_for_keys.py with no argument, which scans `git diff --cached` -- and at push time NOTHING
+# IS STAGED. It printed "No files to scan" and exited 0 on every push, whatever was in it. The
+# test for it asserted the hook mentions the script and branches on its status; both were true,
+# and neither says the check can fail. R20, inside the gate built to enforce R20's family.
+#
+# git feeds pre-push lines of "<local ref> <local sha> <remote ref> <remote sha>" on stdin. The
+# remote sha is all zeros for a branch the remote has never seen, in which case there is no
+# range to diff and we fall back to scanning every tracked file rather than scanning nothing.
+RANGE=""
+while read -r _local_ref local_sha _remote_ref remote_sha; do
+    [ -z "${local_sha:-}" ] && continue
+    case "$local_sha" in *[!0]*) ;; *) continue ;; esac      # deleting a ref: nothing to scan
+    case "$remote_sha" in
+        *[!0]*) RANGE="$remote_sha..$local_sha" ;;
+        *)      RANGE="" ;;
+    esac
+done
+
 echo "[pre-push] secret scan ..."
-PYTHONIOENCODING=utf-8 PYTHONUTF8=1 python "$REPO/scripts/scan_for_keys.py" > "$LOG_DIR/scan.txt" 2>&1
+if [ -n "$RANGE" ]; then
+    echo "[pre-push]   range $RANGE"
+    PYTHONIOENCODING=utf-8 PYTHONUTF8=1 python "$REPO/scripts/scan_for_keys.py" \
+        --range "$RANGE" > "$LOG_DIR/scan.txt" 2>&1
+else
+    echo "[pre-push]   no remote baseline -- scanning all tracked files"
+    PYTHONIOENCODING=utf-8 PYTHONUTF8=1 python "$REPO/scripts/scan_for_keys.py" \
+        --all-tracked > "$LOG_DIR/scan.txt" 2>&1
+fi
 SCAN=$?
+tail -n 1 "$LOG_DIR/scan.txt"
 if [ $SCAN -ne 0 ]; then
     echo "[pre-push] BLOCKED: scan_for_keys.py exited $SCAN"
     cat "$LOG_DIR/scan.txt"

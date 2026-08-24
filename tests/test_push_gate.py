@@ -47,6 +47,70 @@ def test_the_hook_also_gates_the_secret_scan():
     assert re.search(r'if \[ \$SCAN -ne 0 \]', src)
 
 
+def test_the_secret_scan_is_not_invoked_with_no_target():
+    """⚠️ THE ORIGINAL VERSION OF THIS GATE COULD NOT FAIL — and the two assertions above both
+    passed while it couldn't.
+
+    The hook called `scan_for_keys.py` bare. Bare means `git diff --cached`, and AT PUSH TIME
+    NOTHING IS STAGED: it printed 'No files to scan' and exited 0 on every push, whatever the
+    push contained. 'The hook mentions the script' and 'the hook branches on its status' are
+    statements about wiring, not about whether the check can fire — which is R20 exactly, found
+    one day after this gate shipped, inside the gate built to enforce that family of discipline.
+
+    So this asserts the invocation has a TARGET: a commit range (what is actually being pushed)
+    or --all-tracked (the fallback when the remote has never seen the branch)."""
+    src = open(HOOK, encoding='utf-8').read()
+    invocations = [ln for ln in src.splitlines()
+                   if 'scan_for_keys.py' in ln and not ln.strip().startswith('#')
+                   and 'python' in ln]          # the call, not the echo that names it
+    assert invocations, 'the hook no longer runs the secret scan'
+    for ln in invocations:
+        assert ('--range' in ln or '--all-tracked' in ln or ln.rstrip().endswith('\\')), (
+            f'the secret scan is invoked with no target, so it scans nothing at push time: {ln!r}')
+    assert '--range' in src and '--all-tracked' in src, (
+        'the hook must scan the pushed range, and fall back to all tracked files when the '
+        'remote has no baseline for the branch')
+
+
+def test_the_secret_scan_actually_FAILS_on_a_key():
+    """Watch the check fail before trusting it (R20). Everything else here inspects text; this
+    runs the scanner against a crafted key and asserts a non-zero exit.
+
+    The key below is fabricated — it matches the OpenRouter pattern and is not a credential."""
+    import subprocess
+    import sys
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as d:
+        planted = os.path.join(d, 'leak.py')
+        with open(planted, 'w', encoding='utf-8') as f:
+            f.write('KEY = "sk-or-' + 'v1abcdefghijklmnopqrstuvwxyz0123456789' + '"\n')
+        out = subprocess.run(
+            [sys.executable, os.path.join('scripts', 'scan_for_keys.py'), '--files', planted],
+            capture_output=True, text=True, timeout=60)
+    assert out.returncode == 1, (
+        f'scan_for_keys.py did NOT flag a planted key (exit {out.returncode}). '
+        f'stdout: {out.stdout!r}')
+    assert 'BLOCKED' in out.stdout
+
+
+def test_the_secret_scan_passes_a_clean_file():
+    """The negative case, per R17: a change that only proves the new behaviour can be silently
+    over-broad. A scanner that flags everything is as useless as one that flags nothing."""
+    import subprocess
+    import sys
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as d:
+        clean = os.path.join(d, 'ok.py')
+        with open(clean, 'w', encoding='utf-8') as f:
+            f.write('import os\nKEY = os.environ.get("OPENROUTER_API_KEY", "")\n')
+        out = subprocess.run(
+            [sys.executable, os.path.join('scripts', 'scan_for_keys.py'), '--files', clean],
+            capture_output=True, text=True, timeout=60)
+    assert out.returncode == 0, f'clean file was flagged: {out.stdout!r}'
+
+
 def test_the_bypass_exists_and_is_loud():
     """A gate with no escape hatch gets disabled wholesale the first time it is inconvenient.
     A LOUD one is the compromise — and it must not be the default."""

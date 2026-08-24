@@ -432,6 +432,36 @@ aborting, and RESUME from the existing artifact on restart.** Then a fault costs
 run. Recorded in R16 alongside the three console instances rather than as a separate rule, because
 it is the same failure and the generalisation is the useful part.
 
+## 3. ⚠️ Found while writing the above: THE PUSH GATE'S SECRET SCAN COULD NOT FAIL
+
+**One day after shipping it.** Noticed because `python scripts/scan_for_keys.py` printed *"No files
+to scan"* before a commit — and the pre-push hook invokes it **exactly the same way**:
+
+```sh
+python "$REPO/scripts/scan_for_keys.py"      # bare == `git diff --cached`
+```
+
+**At push time nothing is staged.** So the hook's secret scan scanned **zero files and exited 0 on
+every push**, whatever the push contained. The pytest half of the gate was real — it has blocked two
+of my pushes — but the secret half was decoration.
+
+**And its test passed the whole time**, because of what it asserted:
+
+| asserted | true? | says the check can fail? |
+|---|---|---|
+| the hook contains `scan_for_keys.py` | ✅ | ❌ |
+| the hook branches on `$SCAN -ne 0` | ✅ | ❌ |
+
+**Both are statements about WIRING.** This is **R20 inside the gate built to enforce R20's family**
+— and the specific sub-lesson is R20's own: *watch the census fail before you trust it.*
+
+**Fixed:** `scan_for_keys.py` gains `--range A..B`, `--all-tracked` and `--files`; the hook reads
+git's pre-push stdin (`<local ref> <local sha> <remote ref> <remote sha>`) and scans **the commits
+actually being pushed**, falling back to all tracked files when the remote has never seen the branch.
+Three new tests: one asserts the invocation carries a target at all, one **plants a fabricated key
+and asserts exit 1**, and one asserts a clean file still passes (R17's negative case — a scanner that
+flags everything is as useless as one that flags nothing). `tests/test_push_gate.py` 8 passed.
+
 ---
 
 # 🔁 THE SINGLE-ARM DECISION NEEDS REOPENING — the two-arm benefit is real and it lives exactly where production is wrong (2026-08-24)
