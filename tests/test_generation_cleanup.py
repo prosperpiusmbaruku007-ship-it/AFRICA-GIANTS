@@ -13,10 +13,24 @@ def test_strips_all_leading_fabricated_questions_in_a_loop():
     assert clean_generated_reply(text) == "Jibu halisi ni TZS 22,000."
 
 
-def test_corrects_memorized_domain_tokens():
+def test_corrects_the_dead_nssf_domain():
+    """INVERTED 2026-08-24 — this test used to assert the `.go.ke` rewrite as well, and the
+    history is kept here because the R17 corollary says a test that instructs future maintainers
+    not to fix a real defect is worse than no test.
+
+    It asserted `.go.ke` -> `.go.tz` and `".go.ke" not in ...`. That rewrite was measured to be
+    CORRUPTING CORRECT OUTPUT: 21 corpus rows carry a `.go.ke` domain and every one is an
+    out-of-scope refusal naming Kenya's own regulator, so `kra.go.ke` became `kra.go.tz` — a
+    domain that does not exist. The assertion was pinning a defect in place, and it did exactly
+    what such a pin does: it failed when the defect was removed.
+
+    What remains is the rewrite that IS justified — `nssf.or.tz` is DNS-failing (CLAUDE.md
+    section 4) with 1,374 corpus occurrences behind it, and there is no context in which it is a
+    correct citation. The positive pin for the removal lives in tests/test_cleaning.py.
+    """
     assert "nssf.go.tz" in clean_generated_reply("Wasiliana na nssf.or.tz kwa NSSF.")
-    assert ".go.tz" in clean_generated_reply("Angalia osha.go.ke kwa taarifa.")
-    assert ".go.ke" not in clean_generated_reply("Angalia osha.go.ke kwa taarifa.")
+    assert clean_generated_reply("Angalia osha.go.ke kwa taarifa.") == (
+        "Angalia osha.go.ke kwa taarifa.")
 
 
 # --- truncate_at_stops ------------------------------------------------------
