@@ -70,3 +70,49 @@ def test_deduplicate_keeps_different_docs():
     ]
     unique = deduplicate_documents(docs)
     assert len(unique) == 2
+
+
+# ── the .go.ke rewrite, removed 2026-08-24 ───────────────────────────────────────
+
+def test_a_kenyan_authority_domain_survives_cleaning():
+    """REGRESSION PIN for a rewrite that manufactured a wrong citation.
+
+    `.go.ke` -> `.go.tz` was live and fired on 21 corpus rows, every one of them CORRECT: an
+    out-of-scope refusal naming Kenya's own regulator. It turned `kra.go.ke` into `kra.go.tz`, a
+    domain that does not exist — the model declined a question outside its scope, named the right
+    foreign authority, and the repair layer replaced its citation with a fabrication.
+
+    If anyone reinstates it, this fails first.
+    """
+    from chike.generation_cleanup import clean_generated_reply
+    body = ("Kwa maswali ya Kenya tafadhali wasiliana na Kenya Revenue Authority (KRA) "
+            "kwa kra.go.ke.")
+    assert clean_generated_reply(body) == body
+    assert "kra.go.tz" not in clean_generated_reply(body)
+
+
+def test_the_dead_nssf_domain_is_still_rewritten():
+    """The OTHER content rewrite stays. Unlike .go.ke it contains a real authoring defect —
+    1,374 corpus occurrences of a domain CLAUDE.md records as DNS-failing — and there is no
+    context in which nssf.or.tz is the correct citation, so it can damage nothing."""
+    from chike.generation_cleanup import clean_generated_reply
+    assert clean_generated_reply("Thibitisha na nssf.or.tz.") == "Thibitisha na nssf.go.tz."
+
+
+def test_exactly_two_content_rewrites_exist_and_both_are_justified_in_writing():
+    """R25 pin. A content rewrite may only be added with its justification recorded AT THE SITE:
+    what corpus defect it repairs, and what correct output it could damage. Neither of the two
+    original rewrites had that, and one of them turned out to be corrupting correct answers.
+
+    Counting the substitutions in the source is crude, and deliberately so — it fails when
+    someone adds a third without touching this test, which is the moment to write the
+    justification down."""
+    import inspect
+    from chike import generation_cleanup
+    src = inspect.getsource(generation_cleanup.clean_generated_reply)
+    domain_subs = [ln for ln in src.splitlines()
+                   if "re.sub(" in ln and (".tz" in ln or ".ke" in ln)]
+    assert len(domain_subs) == 1, (
+        f"expected exactly 1 domain rewrite, found {len(domain_subs)}: {domain_subs}\n"
+        f"If you added one, record at the site what corpus defect it repairs and what correct "
+        f"output it could damage (R25), then update this count in the same commit.")

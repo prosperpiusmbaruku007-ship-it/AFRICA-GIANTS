@@ -206,8 +206,33 @@ def clean_generated_reply(text: str) -> str:
     while prev != text:
         prev = text
         text = re.sub(r"^\(\d+\)\s*[^.!?]*\?\s*", "", text.strip())
+    # nssf.or.tz -> nssf.go.tz. KEPT, and its justification is now written down (R25): the corpus
+    # carries 1,374 occurrences of a domain CLAUDE.md section 4 records as DNS-failing, so without
+    # this a user is handed a dead link. What it could damage: nothing — there is no context in
+    # which nssf.or.tz is the correct citation. The rewrite is a containment for an authoring
+    # defect, not a fix for it; the 1,374 rows are tracked separately.
     text = re.sub(r"nssf\.or\.tz", "nssf.go.tz", text, flags=re.IGNORECASE)
-    text = re.sub(r"\.go\.ke\b", ".go.tz", text, flags=re.IGNORECASE)
+
+    # ---------------------------------------------------------------------------------------
+    # REMOVED 2026-08-24: `.go.ke` -> `.go.tz`.
+    #
+    # IT DID NOT MASK A DEFECT. IT CREATED ONE. The audit
+    # (eval/index_quality/audit_cleanup_masking.py) found 21 corpus rows carrying a `.go.ke`
+    # domain and every one of them is CORRECT — an out-of-scope refusal naming Kenya's own
+    # regulator:
+    #
+    #     "Kwa maswali ya Kenya tafadhali wasiliana na Kenya Revenue Authority (KRA) kwa
+    #      kra.go.ke"
+    #
+    # The rewrite turned `kra.go.ke` into `kra.go.tz`, a domain that does not exist. The model
+    # did the right thing — declined a question outside its scope and named the correct foreign
+    # authority — and the repair layer replaced its correct citation with a fabricated one. A
+    # cleanup rule manufacturing wrong citations on out-of-scope refusals is precisely the class
+    # the OOC work exists to prevent.
+    #
+    # No replacement is needed: there is no defect here to contain. If a Kenyan domain is ever
+    # emitted where a Tanzanian one belongs, that is a corpus problem and belongs upstream.
+    # ---------------------------------------------------------------------------------------
     return text.strip()
 
 

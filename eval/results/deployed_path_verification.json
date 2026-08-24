@@ -1,0 +1,59 @@
+{
+  "measured": "2026-08-24",
+  "harness": "eval/forced_facts/verify_deployed_path.py",
+  "question": "is the deployed pipeline the code in this repo, or has it drifted?",
+  "hypothesis": "reconstruction error, not deployment drift — production INJECTS a single-arm retriever (modal_app.py:421-430) where the Orchestrator class default is the two-arm hybrid",
+  "specimens": [
+    "eval_337",
+    "eval_348",
+    "eval_342"
+  ],
+  "single_arm_matches_live": 3,
+  "two_arm_matches_live": 1,
+  "n": 3,
+  "verdict": "DEPLOYED PATH CONFIRMED AS REPO CODE — divergence fully explained by the injected retriever",
+  "rows": [
+    {
+      "id": "eval_337",
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "recorded_live_reply": "Kiwango sahihi ni asilimia 10, si asilimia 3.5 wala asilimia 0.5. Thibitisha na NSSF (nssf.go.tz).",
+      "single_arm_reply": "Kiwango sahihi ni asilimia 10, si asilimia 3.5 wala asilimia 0.5. Thibitisha na NSSF (nssf.go.tz).",
+      "default_two_arm_reply": "Kiwango cha mchango wa NSSF ni asilimia 20 ya mshahara ghafi (asilimia 10 kutoka kwa mwajiri na asilimia 10 kutoka kwa mfanyakazi). Thibitisha na NSSF (nssf.go.tz).",
+      "single_arm_matches_live": true,
+      "two_arm_matches_live": false,
+      "arms_differ": true,
+      "n_facts_single": 3,
+      "n_facts_two_arm": 4,
+      "elapsed_single_s": 57.2,
+      "elapsed_two_arm_s": 24.5
+    },
+    {
+      "id": "eval_348",
+      "question": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+      "recorded_live_reply": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10%. Thibitisha na NSSF (nssf.go.tz).",
+      "single_arm_reply": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10%. Thibitisha na NSSF (nssf.go.tz).",
+      "default_two_arm_reply": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10% baina ya mwajiri na mfanyakazi. Hakuna mgawanyo mwingine uliopo. Thibitisha na NSSF (nssf.go.tz).",
+      "single_arm_matches_live": true,
+      "two_arm_matches_live": false,
+      "arms_differ": true,
+      "n_facts_single": 3,
+      "n_facts_two_arm": 4,
+      "elapsed_single_s": 5.8,
+      "elapsed_two_arm_s": 7.9
+    },
+    {
+      "id": "eval_342",
+      "question": "Kiwango cha juu kabisa cha PAYE ni asilimia 25, sivyo?",
+      "recorded_live_reply": "Hapana, si sahihi. Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 20 — si 25%. Thibitisha na TRA (tra.go.tz).",
+      "single_arm_reply": "Hapana, si sahihi. Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 20 — si 25%. Thibitisha na TRA (tra.go.tz).",
+      "default_two_arm_reply": "Hapana, si sahihi. Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 20 — si 25%. Thibitisha na TRA (tra.go.tz).",
+      "single_arm_matches_live": true,
+      "two_arm_matches_live": true,
+      "arms_differ": false,
+      "n_facts_single": 3,
+      "n_facts_two_arm": 4,
+      "elapsed_single_s": 6.5,
+      "elapsed_two_arm_s": 7.5
+    }
+  ]
+}

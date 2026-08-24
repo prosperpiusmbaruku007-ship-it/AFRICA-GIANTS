@@ -831,6 +831,38 @@ loader silently returned nothing must be. The two are byte-identical at the AST 
   and it kept reporting sites already closed. **A worklist that cannot see its own fixes is the
   defect class it exists to find.**
 
+### R25 — A CONTENT REWRITE IN THE CLEANUP LAYER NEEDS ITS JUSTIFICATION IN WRITING, AT THE SITE.
+
+**Two questions, answered in a comment beside the rule, before it is added:**
+
+1. **What corpus defect does this repair?** Name it and count it. If nothing in the corpus produces
+   the thing being repaired, the rule is repairing a decoding artefact — say so — or it is
+   repairing nothing.
+2. **What CORRECT output could this damage?** Write the sentence the rule would corrupt, or state
+   that none exists and why.
+
+**Neither of the only two content rewrites in this repo had that recorded, and both turned out to
+be doing something nobody had stated:**
+
+| rewrite | question 1 | question 2 |
+|---|---|---|
+| `nssf.or.tz` → `nssf.go.tz` | **1,374 corpus occurrences** of a DNS-failing domain — a real defect, and nobody knew the number until it was asked | nothing; there is no context where `nssf.or.tz` is correct |
+| `.go.ke` → `.go.tz` | **none** | **21 rows** — every one a CORRECT out-of-scope refusal naming Kenya's regulator. It turned `kra.go.ke` into `kra.go.tz`, **a domain that does not exist**. Deleted 2026-08-24 |
+
+**The two failure modes are opposite and both were present**, one in each rule. That is the whole
+argument for asking both questions rather than one.
+
+**And the deeper hazard, which is why this is a rule and not a checklist item:**
+
+> **A repair makes a symptom disappear without touching its cause, and a defect with no symptom is
+> never looked for.** `nssf.or.tz` was flagged in this file, emitted by the model, and silently
+> corrected on every reply for the entire life of the corpus. It surfaced only because a diagnostic
+> used `generate_raw`, which bypasses cleaning **by design** — that is, by accident.
+
+**So: prefer fixing the cause. A rewrite is CONTAINMENT and must be labelled as one**, with the
+upstream defect tracked separately, or it will be mistaken for a fix by the next reader — including
+by whoever wrote it.
+
 ### R24 — A SPECIMEN HARNESS MUST PROVE ITS BASELINE REPRODUCES THE RECORDED LIVE REPLY, BEFORE VARYING ANYTHING.
 
 **A standing precondition, not a lesson.** Any harness that reconstructs a production path in order
