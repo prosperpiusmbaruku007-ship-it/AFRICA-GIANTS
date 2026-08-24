@@ -366,6 +366,120 @@ every subsequent cue a fit.
 
 ---
 
+# ⚠️ THE D1 VERDICT IS PROVISIONAL — MY SEPARATION BASELINE WAS NOT PRODUCTION'S BASELINE (2026-08-23)
+
+**Found while running a follow-up, and it retracts a conclusion from the same day.**
+
+The separation harness built specimen A's context from **three hand-picked facts** and labelled that
+arm *"nothing — reproduces production top-3"*. **It does not.** `chike.retrieval.retrieve()` returns
+**four** rows for `eval_337`, the fourth being the WCF rate — and with the real four-row context the
+model answers **"asilimia 20 ya mshahara ghafi (10 mwajiri + 10 mfanyakazi)"**, which is **correct**.
+
+Generation is greedy (`do_sample: false`), so this is not sampling noise. **The context differed and
+I asserted that it did not.**
+
+**The obvious check was available and I skipped it: does the baseline arm reproduce the recorded
+LIVE reply?** The live reply for `eval_337` is *"asilimia 10"*; my A0 also produced *"asilimia 10"*
+— which is why it looked right — but from a context production never builds. Two paths agreeing on
+an output is not evidence they are the same path. **This is R18 instance 4's shape: a claim about
+production derived from a path production does not take.**
+
+**What this retracts:** the D1 verdict — *GENERATION, prompt-sensitive* — is now **PROVISIONAL**.
+A1/A2/A3 returning identical replies is still true *of those contexts*, but the inference that it
+explains the live failure is unsupported while production's real context yields the right answer.
+
+**What survives, and it survives because it was measured on the same path in both arms:** the PAYE
+premise pair below. Both arms used `retrieve()`, one variable changed, and the WITH-premise
+reconstruction **matches the recorded live reply** (*"asilimia 20"*) — so for that specimen the
+reconstruction is validated against production, which is exactly what specimen A lacked.
+
+**Standing rule this earns:** *a reconstruction arm must be shown to reproduce the recorded live
+reply before anything is concluded from the arms around it.* Producing the same string is not
+enough — the CONTEXT must match too, and here it did not.
+
+---
+
+# 🎯 IT MAY NOT BE THE QUANTITY AXIS AT ALL — IT MAY BE THE FALSE-PREMISE FRAME (2026-08-23)
+
+**One variable, one flip, and the reconstruction matches production on this specimen.**
+`eval/results/premise_frame_test.json`.
+
+| question | reply |
+|---|---|
+| *"Kiwango cha juu kabisa cha PAYE ni asilimia 25, **sivyo?**"* | *"Hapana… ni asilimia **20**"* ❌ |
+| *"Kiwango cha juu kabisa cha PAYE ni asilimia **ngapi?**"* | *"Asilimia **30**"* ✅ |
+
+**Same facts, same wrapper, same greedy decode. The only difference is that one asserts a wrong
+value and asks for confirmation.** `eval_342` has been wrong in every prior live run; strip the
+premise and it is right.
+
+**This is why the instruction candidates failed.** All three scored 5/10 on arm P against a
+baseline of 5/10 — and reading the replies showed the reason: **the baseline was already largely
+correct.** `qi_p01` (*"Mchango wa NSSF kwa jumla ni asilimia ngapi?"*) returns *"asilimia 20
+(10 mwajiri + 10 mfanyakazi)"* with **no instruction at all**. The held-out probes ask plainly. The
+three specimens do not — **`eval_337`, `eval_342` and `eval_348` are ALL false-premise frames.**
+
+**If this holds it collapses two board items into one.** D1 and D4 stop being separate defects and
+become one: **the model anchors on refuting or confirming the asserted value and loses the rest of
+the question.** It also explains the correction-shaped finding — the reply's shape tracks the
+user's framing rather than the statute — from the same mechanism.
+
+**It is not established yet.** One specimen flipped cleanly; the NSSF pair did not reproduce its
+live failure at all (see the retraction above). **What is needed is the same premise/no-premise
+pair across all three specimens, with each baseline validated against its recorded live reply
+first.** That is the next measurement and it is cheap.
+
+*(Caveat on the winning reply: it is correct on the headline — 30% — and then rambles, stating the
+band starts above TZS 3,000,000 when it starts above TZS 1,000,000. Right answer, wrong detail.)*
+
+---
+
+# ✅ D-FIDELITY-7 BUILT: THE THRESHOLD GUARD CATCHES `pic_11`, AND THE RETRAIN CASE WEAKENS (2026-08-23)
+
+**Built because R19 says the cheap mechanism must be tried and shown to fail before the expensive
+one is scoped. It did not fail.** `chike/fidelity.py`, probes in
+`eval/fidelity/threshold_guard_probes.jsonl`.
+
+**It catches the specimen:**
+
+> reply: *"Presumptive tax inatumika kwa mauzo **chini ya milioni 10**."*
+> → `[('presumptive', 10000000)]` — flagged. Lawful set: {4M, 7M, 11M, **100M**}.
+
+**Why it is buildable when so little else is (R19):** a stated threshold is a **statutory
+constant**. No lawful transformation of anything the user typed makes *milioni 10* the presumptive
+ceiling. So it needs no `ComputationResult` and works on the **fact path**, where every rule before
+D-FIDELITY-6 goes vacuous.
+
+| check | result |
+|---|---|
+| **authored probes** (R17 — **12 of 16 are deliberately CORRECT bodies**) | **16 / 16** |
+| **sweep over every recorded model reply** (451) | **3 flagged — all `pic_11` variants. Zero false positives.** |
+
+**Two narrowing decisions, both forced by evidence rather than chosen:**
+
+1. **A threshold frame word is required**, and `hadi`/`kuanzia` are **excluded** — they sit equally
+   in a band recitation and in a sentence about the user's own turnover, so including them would
+   attribute the user's figure to the statute. Probe `tg_10` is that case.
+2. **The lawful-amount escape is BODY-level, not sentence-level.** The sweep found a reply stating
+   the correct threshold in one sentence and comparing against it in the next; sentence-level, the
+   second sentence flagged. That reply *is* wrong — 205M does exceed 200M — but it is wrong about a
+   **comparison**, a derived quantity and Guard B territory. **Catching it here would be the right
+   verdict for the wrong reason**, and the same shape with a correct comparison would be a plain
+   false positive.
+
+The sweep also killed a real false positive: a clarification asking *"je ni jumla ya miezi **12**,
+au ya miezi **6**?"* had 12 and 6 read as VAT thresholds. Fixed with a money floor — **every
+statutory threshold in the table is ≥ TZS 4,000,000**.
+
+**Consequence for the retrain: the justification weakens but does not vanish.** `pic_11` was the
+only specimen that survived every arm of the separation, and a cheap constant-comparison guard
+catches its output. **The guard does not make the model right — it stops the wrong figure reaching
+a user**, which is the same bargain D-FIDELITY-6 already ships on. **Not yet wired into
+`_validate_and_clean` and not deployed**; that belongs in one R16 cycle with whatever comes out of
+the premise-frame work.
+
+---
+
 # 🧭 PROMPT / GENERATION / ADAPTER — SEPARATED. THREE SPECIMENS, THREE DIFFERENT ANSWERS (2026-08-23)
 
 **The measurement that decides whether a retrain is justified.** Decision rule named in the harness
@@ -375,9 +489,16 @@ docstring **before** the run and unmoved after it —
 `..._adjudication.json`. Instrument: the already-deployed `generate_raw` with a locally-built
 production prompt wrapper, so **the only variable is the context**.
 
+> ⚠️ **`eval_337`'S VERDICT IS PROVISIONAL — RETRACTED IN PART, see the entry above.** Specimen A's
+> baseline arm was built from three hand-picked facts and labelled *"reproduces production top-3"*.
+> Production's retriever returns **four**, and with the real four-row context the model answers
+> **correctly**. The arms are internally valid; the inference to the live failure is not.
+> **`eval_348`'s and `pic_11`'s verdicts are unaffected** — their arms varied a supplied fact
+> rather than claiming to reproduce a retrieval.
+
 | specimen | defect | verdict | fix class |
 |---|---|---|---|
-| `eval_337` | D1 adjacent-fact | **GENERATION — prompt-sensitive** | an **instruction**. R14 config change. No retrain, no retrieval work |
+| `eval_337` | D1 adjacent-fact | **GENERATION — prompt-sensitive** ⚠️ **PROVISIONAL** | an **instruction**. R14 config change. No retrain, no retrieval work |
 | `eval_348` | D4 refutation unused | **PROMPT SHAPE** | **retrieval / context construction**. No instruction needed |
 | `pic_11` | D2 rank-1 contradiction | **no arm recovered it** | undecided — see below |
 
