@@ -366,6 +366,125 @@ every subsequent cue a fit.
 
 ---
 
+# 🚨 A SECURITY CONTROL THAT COULD NEVER FIRE — and the audit that followed found a second one (2026-08-24)
+
+**`eval/controls/audit_control_fires.py` → `eval/results/control_fire_audit.json`.**
+
+## The incident, stated as plainly as it deserves
+
+**The pre-push hook's secret scan has never scanned anything.** It invoked
+`scripts/scan_for_keys.py` with no argument. Bare means `git diff --cached`. **At push time
+nothing is staged.** So on every push in this project's history it printed *"No files to scan"*
+and exited 0 — whatever the push contained.
+
+**And a test certified it.** `test_the_hook_also_gates_the_secret_scan` asserted two things:
+
+| asserted | true? | says the check can fire? |
+|---|---|---|
+| the hook contains the string `scan_for_keys.py` | ✅ | ❌ |
+| the hook branches on `$SCAN -ne 0` | ✅ | ❌ |
+
+**Both are statements about wiring.** A hook that mentions a script and branches on its exit
+status is precisely what an inert control looks like from the outside.
+
+**Three things make this worse than the dead anchors and R20's vacuous asserts:**
+
+1. **The exposure is real, not a measurement.** A dead anchor costs you a wrong number. This one
+   is the only automated thing standing between an API key and a public GitHub repository.
+2. **It was found BY ACCIDENT** — noticed because a manual run printed *"No files to scan"* while
+   doing something else entirely. **Nothing in this repo was looking for it, and nothing would
+   have.**
+3. **It shipped one day earlier, inside the gate built to make discipline mechanical**, in a
+   session whose whole subject was checks that cannot fail.
+
+Fixed: `--range A..B`, `--all-tracked`, `--files`; the hook reads git's pre-push stdin and scans
+**the commits actually being pushed**. Verified live — the next push scanned 8 files. Three tests,
+one of which **plants a fabricated key and asserts exit 1**.
+
+## The audit that had to follow: what else has never demonstrably fired?
+
+**Method is R23's, applied to controls.** For every guard, gate and check that claims to block
+something: plant the thing it exists to catch (**must block**) and a clean case (**must pass**).
+Both are required — positive-only certifies a control that blocks everything; **negative-only is
+exactly what the secret scan had.**
+
+**Result across 23 controls: `FIRES 17 · DISABLED 1 · NOT_WIRED 1 · INERT_IN_PRODUCTION 1 ·
+OBSERVED 1 · NOT_EXERCISABLE 2`.**
+
+**Every control that could be planted into fires.** The repo gates are real: `validate_dataset`
+blocks a pair missing a schema field and a `medium.com` URL; `check_sources` blocks Wikipedia and
+blocks `nssf.or.tz` **inside answer text**; `check_locked_facts` blocks a locked wrong value;
+`check_eval_split` blocks a held-out question planted into the SFT file; `check_facts_index_sync`
+blocks an unadjudicated fact; `clean_temp_files --scan` blocks a planted draft. The OOC classifier
+refuses a capital-gains question and passes an SDL one. D-FIDELITY-1/3/5/6 all flag their planted
+body and clear the correct one.
+
+## ⛔ But a second inert control turned up, and it is inert for a subtler reason
+
+**`chike/retrieval.py` carries what its own docstring calls a "FAIL-LOUD INDEX CONTRACT
+(2026-08-06, pre-launch blocker)".** It exists to prevent one specific catastrophe, in its words:
+
+> *"a wiring mistake there returned `[]` from every `retrieve()` call — the model would answer
+> with NO facts at all, presenting as a total quality collapse rather than a config error, with
+> nothing in the logs saying so."*
+
+**It works. It fires on all three limbs — missing index, inconsistent index, wrong fact count.**
+
+**Production does not call it.** `modal_app.ChikeModel` loads the index itself and keeps the exact
+behaviour the contract was written to remove:
+
+```python
+if os.path.exists(_EMB_PATH) and os.path.exists(_TEXTS_PATH): ...
+else:
+    self.fact_embeddings = None; self.fact_texts = []
+    print('[rag] WARNING: rag_embeddings.npy not found -- RAG disabled')
+```
+
+`retrieve_facts` then returns `[]` for every question. **A print is not a control.** There is also
+**no shape assertion** (`n_emb == n_txt`) and **no `expected_fact_count`**, so a half-regenerated
+R15 index serves silently in production too.
+
+**The first inert control was a wiring typo. This one is inert because the fix was applied to a
+module production does not use** — and no test of `chike/retrieval.py`, however thorough, can ever
+reveal that. Verified by parsing `modal_app.py`: no import, no `configure()`, no `retrieve()` call.
+
+## ⚠️ And the audit had to audit itself first
+
+**Six of the first eight adverse verdicts were BAD SPECIMENS, not defects.** Reported unchecked,
+this pass would have raised **four inert controls and one overbroad guard, all false**:
+
+| control | first verdict | actual cause |
+|---|---|---|
+| `check_locked_facts` | INERT | specimen said *"Faini ya OSHA ni TZS 500,000"*; the pattern is `osha.*faini.*TZS 500,000` — **word order** |
+| `check_eval_split` | INERT | specimen used a `messages` chat shape; the real SFT format is `instruction/input/output/system` |
+| OOC classifier | INERT | specimen contained no phrase actually on the list — bare `hisa` was deliberately rejected by R17 |
+| coverage gate | "logic broken" | specimen asked about **mining royalties**, which the OOC classifier handles; `UNCOVERED_AUTHORITIES` holds council levies, fire, weights, TMDA, TBS, land rent |
+| D-FIDELITY-1 | INERT | specimen used *"SDL yako **ni** TZS 500,000"*; a bare `ni` is not in `_ASSERT_CONNECTORS` **by design** |
+| D-FIDELITY-6 | OVERBROAD | specimen **paraphrased** the committed probe `rg_01`, dropping five words and pulling NSSF's `20` inside WCF's ±60-char window |
+
+**The lesson is symmetrical with the one that prompted the audit:** when a control fails to fire,
+the *first* hypothesis is that the specimen is wrong, and it must be eliminated before the finding
+is recorded. And the instrument had the presence-not-conclusion defect too — its first
+production-usage check matched `chike.retrieval` **in two comment lines saying production does not
+use it**.
+
+**Two specimen failures are kept as real notes rather than discarded:** a bare *"ni"* — the
+plainest Swahili assertion form — is outside D-FIDELITY-1; and D-FIDELITY-6's proximity window
+flips a *correct* three-levy body to flagged when five words are removed.
+
+## What remains open
+
+| item | state |
+|---|---|
+| **`modal_app` fail-loud index contract** | ⛔ **INERT IN PRODUCTION.** The guard exists, fires, and protects local harnesses only |
+| **`run_eval.py` R7 launch gates** | ⚠️ **NEVER PLANTED INTO.** Its arithmetic is unit-tested; whether it *blocks an under-threshold model* has never been demonstrated. **Same shape as the secret scan, still unresolved** |
+| **D-FIDELITY-7** | NOT_WIRED — by decision, held one R16 cycle. But `eval_208` shows the exact defect it targets, live |
+| **coverage gate** | DISABLED on purpose (1.9% vs 71%, the ~37× gap). Logic verified working if switched on |
+| **`validate_dataset` empty-corpus path** | HAZARD recorded: with zero cleaned_pairs files it counts 0 pairs, 0 errors and prints `VALIDATION PASSED`. Non-vacuous today only because 4,562 pairs exist; **four of five tier dirs are empty and would pass on nothing** |
+| **WhatsApp webhook token** | not audited — needs the live app and its Modal Secret |
+
+---
+
 # ⚖️ THE FULL RETRIEVER A/B: NEITHER ARM WINS — KEEP SINGLE-ARM, AND CLOSE THE QUESTION (2026-08-24)
 
 **73 rows, both arms live, zero errors.** `eval/routing/ab_retriever_full.py` →
@@ -375,6 +494,18 @@ every subsequent cue a fit.
 
 **Keep single-arm. Do not switch production. And stop re-opening this** — the 2026-08-17 decision is
 now settled *on evidence* rather than by its own age, which is the thing it lacked.
+
+> # ⚠️ THE WORKSTREAM'S CONCLUSION, IN ONE LINE
+>
+> **KEEP SINGLE-ARM IS NOT "SINGLE-ARM IS GOOD".** Two-arm **invents regulatory content**;
+> single-arm **under-reports what it holds**; switching **trades one failure class for the
+> other**. The decision is that neither is worth paying to switch to — **not that the shipped
+> one is safe.**
+>
+> *Recorded in this form deliberately. A future session reading "single-arm confirmed" as an
+> endorsement would be drawing the opposite conclusion from the evidence: `eval_337` — where
+> single-arm tells an employer to remit **10%** instead of **20%** — is still wrong in
+> production today, and it is one of the rows this measurement chose not to fix.*
 
 **Decisive rows: 4 to two-arm, 3 to single-arm.** (Full tally 6 / 5 / 8 equivalent across 19
 differing rows; the weak rows are preferences between two imperfect answers.)

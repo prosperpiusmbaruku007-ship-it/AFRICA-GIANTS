@@ -810,6 +810,60 @@ something nobody could re-derive:
   anything downstream that cites it — including yield estimates, priority orderings and build
   decisions — is provisional too, and must say so. Do not scope work on a provisional number.
 
+### R26 — A CONTROL IS NOT WORKING UNTIL YOU HAVE WATCHED IT BLOCK THE THING IT EXISTS TO BLOCK.
+
+**R20 is about a mechanical pass inserting a check that cannot fail. R26 is the standing question
+that follows from it: WHICH OF THE CONTROLS WE ALREADY HAVE HAS NEVER DEMONSTRABLY FIRED?**
+
+**Proven 2026-08-24, on the only automated thing standing between an API key and a public repo.**
+The pre-push hook invoked `scripts/scan_for_keys.py` bare. Bare means `git diff --cached`. **At
+push time nothing is staged.** Every push in this project's history was scanned by nothing.
+
+**Its test passed the whole time**, asserting that the hook *contains* the string
+`scan_for_keys.py` and *branches* on `$SCAN -ne 0`. Both true. **Both are statements about
+wiring, and wiring is exactly what an inert control looks like from the outside.**
+
+Three things make it worse than a dead anchor: the exposure is **real, not a measurement**; it was
+found **by accident** and nothing here was looking for it; and it shipped **one day earlier inside
+the gate built to make discipline mechanical**, in a session about checks that cannot fail.
+
+**THE TEST, and it is R23's applied to controls.** For anything that claims to block — a hook, a
+gate, a validator, a classifier, a fidelity rule, a threshold:
+
+1. **Plant the exact thing it exists to catch. It MUST block.**
+2. **Give it a clean case. It MUST pass.** Positive-only certifies a control that blocks
+   everything; **negative-only is what the secret scan had.**
+3. **Assert both in a committed test**, so the demonstration survives the session.
+
+**AND THE VERDICT MUST DISTINGUISH FIVE STATES, because "not firing" has five different causes
+and only two are defects:** `FIRES` · `INERT` (cannot block) · `OVERBROAD` (blocks correct input)
+· `NOT_WIRED` (fires when called; nothing calls it) · `DISABLED` (off by a recorded decision).
+
+**⛔ THE SECOND INERT CONTROL FOUND BY THAT AUDIT IS THE ONE TO REMEMBER, BECAUSE NO UNIT TEST
+COULD EVER HAVE FOUND IT.** `chike/retrieval.py`'s "FAIL-LOUD INDEX CONTRACT (2026-08-06,
+pre-launch blocker)" fires on all three limbs. **Production does not call it.**
+`modal_app.ChikeModel` loads the index itself and keeps the exact silent-`[]` fallback the
+contract was written to remove. **The first inert control was a wiring typo; this one is inert
+because the fix was applied to a module production does not use.** So the audit must ask *what
+does production actually call*, not *does the guard work* — and must answer it by parsing the
+deployed file, not by grepping for a name. (The audit's own first attempt matched
+`chike.retrieval` **in two comment lines saying production does not use it**.)
+
+**⚠️ AND AUDIT YOUR SPECIMENS BEFORE YOU BELIEVE A FAILURE. Six of the first eight adverse
+verdicts in that audit were BAD SPECIMENS, not defects** — a Swahili word order that did not match
+the pattern, a `messages` shape where the corpus uses `instruction`, an OOC probe containing no
+listed phrase, a coverage probe aimed at the wrong list, an assertion form outside a guard's
+designed scope, and a five-word paraphrase of a committed probe. Reported unchecked it would have
+raised **four inert controls and one overbroad guard, all false**. **When a control fails to fire,
+the FIRST hypothesis is that the specimen is wrong.** Eliminate it before recording the finding.
+
+Standing harness: `eval/controls/audit_control_fires.py` → `eval/results/control_fire_audit.json`.
+**Add a row to it whenever a new control is built** — and list what cannot be exercised offline
+rather than dropping it, because *a census that quietly omits what it cannot test reports a
+cleaner result than it earned.* Two remain unplanted: `run_eval.py`'s R7 launch gates (never shown
+to block an under-threshold model — **the same shape as the secret scan, still open**) and the
+WhatsApp webhook token.
+
 ### R20 — A MECHANICAL PASS MAY NOT INSERT A CHECK THAT CANNOT FAIL. The vacuous fix is worse than the gap.
 
 **The gap is visible in a census; the vacuous check that replaces it is not.** That asymmetry is the

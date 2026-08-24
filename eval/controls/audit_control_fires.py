@@ -67,7 +67,7 @@ def record(cid, layer, claims, verdict, positive='', negative='', note=''):
                     'negative_specimen': negative, 'note': note})
     mark = {'FIRES': 'OK  ', 'INERT': 'INERT', 'OVERBROAD': 'WIDE', 'NOT_WIRED': 'UNWIRED',
             'DISABLED': 'OFF ', 'OBSERVED': 'SEEN', 'NOT_EXERCISABLE': 'N/A ',
-            'ERROR': 'ERR '}.get(verdict, '?')
+            'ERROR': 'ERR ', 'INERT_IN_PRODUCTION': 'INERT!'}.get(verdict, '?')
     print(f'  [{mark:<7}] {cid:<34} {note[:90]}')
 
 
@@ -173,7 +173,10 @@ def audit_repo_gates(tmp):
         'a pair asserting a value locked_facts.json marks as WRONG',
         ['scripts/check_locked_facts.py', '--file',
          jsonl(os.path.join(tmp, 'lf_bad.jsonl'),
-               [valid_pair(answer_sw='Faini ya OSHA ni TZS 500,000.')])],
+               # word ORDER matters: the pattern is `osha.*faini.*TZS 500,000`. The audit's
+               # first specimen said "Faini ya OSHA ni TZS 500,000" and did NOT match — a BAD
+               # SPECIMEN reported as an inert control. See `audit_self_corrections`.
+               [valid_pair(answer_sw='OSHA inatoza faini ya TZS 500,000.')])],
         ['scripts/check_locked_facts.py', '--file',
          jsonl(os.path.join(tmp, 'lf_ok.jsonl'), [valid_pair()])])
 
@@ -183,12 +186,15 @@ def audit_repo_gates(tmp):
     jsonl(os.path.join(ev_dir, 'batch.jsonl'),
           [valid_pair(id='e1', eval_set=True, question_sw='SWALI LA EVAL PEKEE?'),
            valid_pair(id='t1')])
+    # THE SFT FORMAT IS instruction/input/output/system — confirmed against the real
+    # datasets/tier1a/sft/train_sft.jsonl (4,096 rows). The audit's first specimen used a
+    # `messages` chat shape and was not seen, which reported this gate INERT when it is not.
     contaminated = os.path.join(tmp, 'train_bad.jsonl')
-    jsonl(contaminated, [{'messages': [{'role': 'user', 'content': 'SWALI LA EVAL PEKEE?'},
-                                       {'role': 'assistant', 'content': 'jibu'}]}])
+    jsonl(contaminated, [{'instruction': 'SWALI LA EVAL PEKEE?', 'input': '',
+                          'output': 'jibu', 'system': ''}])
     clean_train = os.path.join(tmp, 'train_ok.jsonl')
-    jsonl(clean_train, [{'messages': [{'role': 'user', 'content': 'SDL ni asilimia ngapi?'},
-                                      {'role': 'assistant', 'content': 'jibu'}]}])
+    jsonl(clean_train, [{'instruction': 'SDL ni asilimia ngapi?', 'input': '',
+                         'output': 'jibu', 'system': ''}])
     script_control(
         'check_eval_split.py',
         'a held-out eval question leaking into the SFT training file (R6)',
@@ -301,7 +307,10 @@ def audit_runtime():
 
     # --- the OOC classifier (R11 — infrastructure, not behaviour) ----------------------------
     ooc, in_scope = classification.resolve_phrases(classification.load_local_config())
-    pos = classification.classify('Nilipa kodi gani nikiuza hisa za kampuni sokoni?',
+    # the specimen must contain a phrase that is ACTUALLY on the list. The audit's first
+    # attempt ("nikiuza hisa za kampuni") contained none — bare `hisa` was deliberately
+    # rejected as unusable by R17 — and reported this control INERT when it is not.
+    pos = classification.classify('Nililipa kodi gani kwenye faida ya mtaji mwaka jana?',
                                   ooc, in_scope)
     neg = classification.classify('SDL ni asilimia ngapi kwa wafanyakazi 12?', ooc, in_scope)
     pos_blocked = (pos is False)      # classify() returns True = in scope, False = intercept
@@ -314,13 +323,16 @@ def audit_runtime():
            f'{len(ooc)} ooc / {len(in_scope)} in-scope phrases loaded')
 
     # --- the coverage gate — SHIPPED DISABLED, and that is a decision, not a defect ----------
-    unc = coverage.uncovered_authority('Nilipa mrabaha gani wa madini kwa dhahabu?')
+    # UNCOVERED_AUTHORITIES holds council levies, fire safety, weights, TMDA, TBS and land
+    # rent -- NOT mining royalties, which the OOC classifier handles instead. The audit's
+    # first specimen asked about mining and reported the gate's logic broken.
+    unc = coverage.uncovered_authority('Nalipa ushuru wa soko kiasi gani kwa genge langu?')
     cov = coverage.is_covered('SDL ni asilimia ngapi?')
     logic_ok = bool(unc) and cov
     record('coverage gate', 'runtime',
            'answering a question whose topic the corpus holds no facts for',
            'DISABLED',
-           'mining royalty question', 'SDL rate question',
+           'ushuru wa soko (council market levy)', 'SDL rate question',
            f'logic works when called (uncovered detected: {bool(unc)}, covered passes: {cov}) '
            f'but Orchestrator(coverage_gate=False) by default. Measured cost: 1.9% false '
            f'refusals on 411 corpus questions vs 71% on 21 held-out — a ~37x gap. Off ON '
@@ -393,7 +405,13 @@ def _fidelity_rules(fidelity):
         cases = [
             ('D-FIDELITY-1', 'a compute body asserting a figure the engine did not compute',
              fidelity.body_contradicts_working,
-             'SDL yako ni TZS 500,000 kwa mwezi.', 'SDL yako ni TZS 192,500 kwa mwezi.', (r,)),
+             # NOTE THE FORM. _ASSERT_CONNECTORS is '=', ':', 'sawa na', 'itakuwa',
+             # 'kitakuwa', '->', 'ni karibu'. A bare 'ni' is NOT one, so
+             # "SDL yako ni TZS 500,000" is invisible to this rule BY DESIGN (that widening
+             # was measured in dfid1_stored_body_sweep.json). The audit's first specimen used
+             # exactly that form and reported the rule INERT. Recorded as a scope note, not a
+             # defect -- but the plainest Swahili assertion form is outside the guard.
+             'SDL = TZS 500,000.', 'SDL = TZS 192,500.', (r,)),
             ('D-FIDELITY-3', 'the authoritative amount silently reduced by a phantom deduction',
              fidelity.body_reduces_authoritative_amount,
              'SDL = TZS 192,500 − TZS 92,500 = TZS 100,000.',
@@ -414,8 +432,15 @@ def _fidelity_rules(fidelity):
     # D-FIDELITY-6 — a wrong statutory RATE. Constant comparison, needs no engine result.
     try:
         p = fidelity.body_states_wrong_levy_rate('Kiwango cha WCF ni asilimia 3.5 ya mishahara.')
+        # THE COMMITTED PROBE, verbatim from eval/fidelity/rate_guard_probes.jsonl rg_01 --
+        # not a paraphrase. The audit's first attempt compressed it by five words
+        # ("ya jumla ya mishahara"), which pulled NSSF's 20 inside WCF's +/-60-char window and
+        # reported this rule OVERBROAD. The rule is fine; the specimen was not. What the near
+        # miss DOES show is real and worth keeping: the proximity window is sensitive to
+        # wording at that distance.
         ngd = fidelity.body_states_wrong_levy_rate(
-            'SDL ni asilimia 3.5, NSSF ni asilimia 20, na WCF ni asilimia 0.5.')
+            'SDL ni asilimia 3.5 ya jumla ya mishahara, NSSF ni asilimia 20, '
+            'na WCF ni asilimia 0.5.')
         record('D-FIDELITY-6', 'runtime', 'a WRONG statutory rate attributed to a levy',
                'INERT' if not p else 'OVERBROAD' if ngd else 'FIRES',
                'WCF ni asilimia 3.5', 'a correct three-levy breakdown',
@@ -452,12 +477,46 @@ def _fidelity_rules(fidelity):
 def audit_unexercisable():
     with open(os.path.join(REPO, 'chike-inference', 'modal_app.py'), encoding='utf-8') as f:
         modal_src = f.read()
-    record('modal_app: retrieval index wiring', 'runtime',
-           'the deployed container serving with a wrong/stale baked index',
-           'NOT_EXERCISABLE', '', '',
-           'requires a deploy. STATIC CHECK: expected_fact_count passed in modal_app.py: '
-           f'{"expected_fact_count" in modal_src}. If False, the R15 stale-index limb audited '
-           'above protects nobody in production.')
+    # ⛔ THE SECOND INERT CONTROL, and it is inert for a subtler reason than the first.
+    #
+    # chike/retrieval.py carries a "FAIL-LOUD INDEX CONTRACT (2026-08-06, PRE-LAUNCH BLOCKER)".
+    # Its own docstring states the failure it exists to prevent: "a wiring mistake there
+    # returned [] from every retrieve() call -- the model would answer with NO facts at all,
+    # presenting as a total quality collapse rather than a config error, with nothing in the
+    # logs saying so. A missing/corrupt index now RAISES RetrievalIndexError by default."
+    #
+    # It fires. It is audited above and it fires on all three limbs.
+    #
+    # PRODUCTION DOES NOT CALL IT. modal_app.ChikeModel loads the index itself
+    # (modal_app.py:221-230) and keeps the EXACT behaviour the contract was written to remove:
+    #
+    #     if os.path.exists(_EMB_PATH) and os.path.exists(_TEXTS_PATH):  ... else:
+    #         self.fact_embeddings = None; self.fact_texts = []
+    #         print('[rag] WARNING: rag_embeddings.npy not found -- RAG disabled')
+    #
+    # and retrieve_facts then returns [] for every question. A print is not a control.
+    # There is also no shape assertion (n_emb == n_txt) and no expected_fact_count, so a
+    # half-regenerated R15 index serves silently in production as well.
+    #
+    # The first inert control was a wiring typo. THIS ONE IS INERT BECAUSE THE FIX WAS APPLIED
+    # TO A MODULE PRODUCTION DOES NOT USE -- which no test of chike/retrieval.py can ever show.
+    # SUBSTRING PRESENCE IS NOT USE. The first version of this check matched 'chike.retrieval'
+    # anywhere in the file and reported True — from TWO COMMENT LINES saying production does
+    # NOT use it. Presence-not-conclusion, in the instrument auditing instruments. Match an
+    # actual import or call, on a non-comment line.
+    uses_module = any(
+        (('import' in ln and 'retrieval' in ln) or 'retrieval.configure(' in ln
+         or 'retrieval.retrieve(' in ln)
+        for ln in modal_src.splitlines() if not ln.strip().startswith('#'))
+    has_count = 'expected_fact_count' in modal_src
+    silent_fallback = 'RAG disabled' in modal_src
+    record('modal_app: fail-loud index contract', 'runtime',
+           'serving every answer with ZERO facts because the baked index is missing or stale '
+           '(chike/retrieval.py calls this a PRE-LAUNCH BLOCKER)',
+           'INERT_IN_PRODUCTION', 'a missing/short baked index', '',
+           f'production calls chike.retrieval: {uses_module}; passes expected_fact_count: '
+           f'{has_count}; retains the silent RAG-disabled fallback: {silent_fallback}. '
+           f'The guard fires in the module audited above and protects LOCAL HARNESSES ONLY.')
 
     record('pre-push hook: pytest half', 'process',
            'a red build reaching main',
@@ -508,6 +567,38 @@ def main():
                        'scanned zero files on every push in this project\'s history, while a '
                        'passing test certified it by checking the hook mentioned the script.',
         'tally': dict(tally),
+        'audit_self_corrections': [
+            {'control': 'check_locked_facts.py', 'first_verdict': 'INERT',
+             'cause': "the specimen said 'Faini ya OSHA ni TZS 500,000' but the locked pattern "
+                      "is `osha.*faini.*TZS 500,000` — WORD ORDER. Reversing it fires."},
+            {'control': 'check_eval_split.py', 'first_verdict': 'INERT',
+             'cause': 'the specimen used a `messages` chat shape; the real SFT format is '
+                      'instruction/input/output/system (confirmed against the 4,096-row '
+                      'train_sft.jsonl). With the right shape it fires.'},
+            {'control': 'classification.classify (OOC)', 'first_verdict': 'INERT',
+             'cause': "the specimen ('nikiuza hisa za kampuni') contained no phrase that is "
+                      "actually on the list — bare `hisa` was deliberately rejected by R17. "
+                      "A specimen containing 'faida ya mtaji' fires."},
+            {'control': 'coverage gate', 'first_verdict': 'logic broken',
+             'cause': 'the specimen asked about MINING ROYALTIES, which the OOC classifier '
+                      'handles; UNCOVERED_AUTHORITIES holds council levies, fire, weights, '
+                      'TMDA, TBS and land rent. A council-levy specimen resolves correctly.'},
+            {'control': 'D-FIDELITY-1', 'first_verdict': 'INERT',
+             'cause': "the specimen used 'SDL yako ni TZS 500,000'. A bare 'ni' is not in "
+                      "_ASSERT_CONNECTORS by design. With '=' it fires. KEPT AS A SCOPE NOTE: "
+                      "the plainest Swahili assertion form is outside this guard."},
+            {'control': 'D-FIDELITY-6', 'first_verdict': 'OVERBROAD',
+             'cause': 'the specimen paraphrased the committed probe rg_01, dropping five words '
+                      "('ya jumla ya mishahara') and pulling NSSF's 20 inside WCF's ±60-char "
+                      'window. The verbatim probe passes clean. KEPT AS A ROBUSTNESS NOTE: the '
+                      'proximity window is sensitive to wording at that distance.'},
+        ],
+        'self_correction_lesson':
+            'SIX of the first eight adverse verdicts were BAD SPECIMENS, not defects. An audit '
+            'that reported them unchecked would have raised four inert controls and one '
+            'overbroad guard, all false. A control audit needs the same discipline as the '
+            'controls it audits: when a control fails to fire, the FIRST hypothesis is that the '
+            'specimen is wrong, and it must be eliminated before the finding is recorded.',
         'controls': RESULTS,
     }
     with open(OUT, 'w', encoding='utf-8') as f:
