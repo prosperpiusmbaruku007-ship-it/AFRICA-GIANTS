@@ -831,6 +831,36 @@ loader silently returned nothing must be. The two are byte-identical at the AST 
   and it kept reporting sites already closed. **A worklist that cannot see its own fixes is the
   defect class it exists to find.**
 
+### R24 — A SPECIMEN HARNESS MUST PROVE ITS BASELINE REPRODUCES THE RECORDED LIVE REPLY, BEFORE VARYING ANYTHING.
+
+**A standing precondition, not a lesson.** Any harness that reconstructs a production path in order
+to vary one thing — forced facts, swapped contexts, altered prompts, patched cue lists — must FIRST
+show that its unvaried arm reproduces the **recorded live reply for that row**, and it must assert
+it, not eyeball it. **If the baseline arm does not match, every conclusion drawn from the arms
+around it is about a system we do not ship.**
+
+**Matching the OUTPUT is not enough. The INPUT must match too.** 2026-08-23: specimen A's baseline
+was built from three hand-picked facts and labelled *"reproduces production top-3"*. It produced the
+same string as the live reply, which is why it looked right. `chike.retrieval.retrieve()` returns
+**four** rows for that question, and with the real context the model answers **correctly** —
+greedy decoding, so not sampling noise. **Two paths agreeing on an output is not evidence they are
+the same path**, and the entire D1 verdict had to be marked provisional.
+
+**This is the FOURTH instance of an arm agreeing with production for the wrong reason** — after the
+stale pins, the v15/v16 grep, and the interleave premise. The check that catches all four is the
+same one and it costs one assertion.
+
+**In practice:**
+- **Assert it in code.** `assert reconstructed_baseline.strip() == recorded_live_reply.strip()`, and
+  fail the run rather than reporting from it. A printed comparison nobody reads is not a check.
+- **Build the context with the PRODUCTION call**, never by hand. `retrieve(q)` — not a hand-picked
+  list of what you believe it returns. If you must hand-pick, diff it against the production call
+  and assert equality.
+- **Record the live reply's provenance** — which artifact, which run, which SHA — in the harness, so
+  the baseline is checkable against something specific rather than against memory.
+- **When the baseline does NOT reproduce, that is a finding in itself** and often a bigger one than
+  the experiment: it means production does something you did not model.
+
 ### R23 — A CONTROL MUST USE A VALUE THE SYSTEM WOULD NOT PRODUCE BY DEFAULT, or its pass proves nothing.
 
 **Third member of the same family as R20's vacuous asserts and the dead anchors — this time in a
