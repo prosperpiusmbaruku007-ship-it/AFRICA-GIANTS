@@ -1,0 +1,40 @@
+{
+  "adjudicated": "2026-08-24",
+  "source": "eval/results/two_arm_effect.json",
+  "adjudicator": "Claude Code — JUDGEMENT, not a scorer output",
+  "method": "Each of the 13 differing replies read against the row's recorded expected answer where the corpus carries one, and against CLAUDE.md section 11 locked facts otherwise. 'The answer changed' is not 'the answer improved'; direction is assigned per row and the wrong->wrong cases are kept separate from the wrong->right ones.",
+  "headline": "The two-arm benefit is REAL and it is CONCENTRATED where production is currently wrong. On the diverted set it changes 12 of 16 replies; on the natural 48 it changes 1 of 22. The 2026-08-17 measurements that found no benefit were taken on the 48.",
+  "effect_rate_by_population": {
+    "diverted": {"fact_sets_differ": 16, "of": 17, "replies_differ": 12, "rate": 0.75},
+    "natural_48": {"fact_sets_differ": 22, "of": 48, "replies_differ": 1, "rate": 0.045}
+  },
+  "direction_tally": {"TWO_ARM_BETTER": 4, "SINGLE_ARM_BETTER": 2, "EQUIVALENT": 7},
+  "asymmetry": "The two decisive two-arm wins are WRONG -> RIGHT. Both single-arm 'wins' are WRONG -> WRONG, where the two-arm reply is merely more emphatically wrong. That asymmetry is the substance: one arm converts errors into correct answers, the other only varies the wording of errors.",
+  "rows": [
+    {"id": "eval_337", "verdict": "TWO_ARM_BETTER", "severity": "decisive",
+     "why": "single-arm 'Kiwango sahihi ni asilimia 10' is WRONG — it reports the employer share as the total, and an employer acting on it under-remits by half. two-arm 'asilimia 20 ya mshahara ghafi (10 mwajiri + 10 mfanyakazi)' is CORRECT. The fourth fact is the WCF rate, which appears to break the NSSF total/share tie rather than supply the answer."},
+    {"id": "eval_343", "verdict": "TWO_ARM_BETTER", "severity": "decisive",
+     "why": "single-arm rejects the 30-day premise and then declines to give any deadline — 'ndani ya muda unaotakiwa kulingana na sheria husika', an evasive non-answer. two-arm gives 'ndani ya siku 7 tu', which is the statutory figure."},
+    {"id": "eval_127", "verdict": "TWO_ARM_BETTER", "severity": "clear",
+     "why": "both affirm that SDL and PAYE go to TRA together; only two-arm states the 7th, which is what the question asked to confirm. The extra fact was the NSSF 10th deadline — an adjacent date that did NOT contaminate the answer."},
+    {"id": "eval_006", "verdict": "TWO_ARM_BETTER", "severity": "weak",
+     "why": "both reach 8 months. single-arm's working is fabricated and contradicts the user's own figure ('miezi 4 x TZS milioni 50' against a stated 25M/month); two-arm names both threshold limbs instead. Its own arithmetic gloss ('siku 120') is muddled, so this is a preference, not a correction."},
+    {"id": "eval_348", "verdict": "SINGLE_ARM_BETTER", "severity": "weak",
+     "why": "BOTH ARE WRONG — both agree with the false premise that 10/10 is the only lawful split. two-arm adds 'Hakuna mgawanyo mwingine uliopo', making it more emphatically wrong. A worse wording of the same error, not a worse answer."},
+    {"id": "pic_10", "verdict": "SINGLE_ARM_BETTER", "severity": "weak",
+     "why": "BOTH ARE WRONG. single-arm gives a daladala operator 3.5% (the turnover-table rate, wrong instrument); two-arm gives 25%, which is not a presumptive rate at all. Both fail; two-arm's figure is further from anything real."},
+    {"id": "eval_010", "verdict": "EQUIVALENT", "why": "both assert the trader has already crossed the 100M/6-month threshold, which the question never states. Same error, shorter in two-arm."},
+    {"id": "eval_099", "verdict": "EQUIVALENT", "why": "both correct; the only difference is 'mshahara wa msingi' versus 'mshahara wa mfanyakazi'."},
+    {"id": "eval_102", "verdict": "EQUIVALENT", "why": "single-arm separates the 20th (return filing) from the contribution payment and gives 'ndani ya mwezi mmoja', matching the recorded expectation; two-arm asserts the 10th, which the same expectation names as NSSF's practical deadline. Both defensible, neither wrong."},
+    {"id": "eval_335", "verdict": "EQUIVALENT", "why": "both correctly reject 3.5% and give WCF as 0.5%."},
+    {"id": "eval_341", "verdict": "EQUIVALENT", "why": "both correctly reject 4 and give the SDL threshold as 10 or more."},
+    {"id": "pic_04", "verdict": "EQUIVALENT", "why": "both compute corporate tax as 30% of TURNOVER — TZS 15,000,000 on sales of 50M — when it is 30% of profit. Identical error."},
+    {"id": "nat_37", "verdict": "EQUIVALENT", "why": "both say a receipt is required for every transaction regardless of amount; two-arm specifies 'risiti ya EFD'. The only natural-48 row that moved at all."}
+  ],
+  "reading": [
+    "THE 2026-08-17 DECISION IS NOT WRONG ON ITS OWN EVIDENCE. Measured on the natural 48, the two-arm retriever changes 1 reply in 22 — which is exactly the 'no benefit' those four measurements recorded. Nothing here contradicts them.",
+    "BUT THE 48 IS THE WRONG POPULATION FOR THE QUESTION, AND THIS IS R22 FOR THE THIRD TIME. The 48 is a set the model is mostly RIGHT on. The diverted rows are where it is wrong, and there the two-arm arm changes 12 of 16 replies and converts two wrong answers into correct ones. The population cheapest to measure was again the population where the effect was not.",
+    "THE COST SIDE IS NOT ZERO AND IS NOT DISMISSED. Two rows come out worse, both wrong->wrong. The 2026-08-17 regressions were real and are not re-litigated here; this measurement did not reproduce them because it did not cover the rows they were found on.",
+    "WHAT THIS DOES NOT ESTABLISH: that switching production to two-arm is net positive. 13 differing rows with 4/2/7 is a signal, not a gate. The decision needs the two recorded regressions re-run on the current index, and a live A/B on the full 48 plus the diverted set with adjudication — which is a bigger measurement than this one and should be scoped as such."
+  ]
+}

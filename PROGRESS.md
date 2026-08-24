@@ -366,6 +366,60 @@ every subsequent cue a fit.
 
 ---
 
+# 🔁 THE SINGLE-ARM DECISION NEEDS REOPENING — the two-arm benefit is real and it lives exactly where production is wrong (2026-08-24)
+
+**Not a curiosity. A class — and the reason it was missed is R22 for the third time.**
+`eval/routing/measure_two_arm_effect.py` → `eval/results/two_arm_effect.json`, adjudicated in
+`..._adjudication.json`.
+
+## The split that decides it
+
+| population | fact sets differ | **replies differ** |
+|---|---|---|
+| **veto-diverted rows** (where production is wrong) | 16 / 17 | **12 / 16 — 75%** |
+| **natural 48** (where production is mostly right) | 22 / 48 | **1 / 22 — 4.5%** |
+
+**A fifteen-fold difference in effect rate between the two populations.** The 2026-08-17
+measurements that found *"no two-arm benefit"* were taken on the 48 — and **on the 48 this
+measurement agrees with them exactly: one reply in twenty-two moves.** Nothing here contradicts
+that evidence. **It was simply taken on the population where the effect is not.**
+
+**That is R22 a third time**, after the discard rate (12/13 on mostly-correct rows, 0/2 on wrong
+ones) and the coverage gate (1.9% on aligned corpora, 71% held out). Same shape every time: *the
+population cheapest to measure was the population where the thing already worked.*
+
+## Direction, adjudicated rather than counted
+
+**4 two-arm better · 2 single-arm better · 7 equivalent** — and the asymmetry is the substance:
+
+| | |
+|---|---|
+| **Both decisive two-arm wins are WRONG → RIGHT** | `eval_337`: *"asilimia **10**"* → *"asilimia **20** (10 mwajiri + 10 mfanyakazi)"* — the row where an employer under-remits by half. `eval_343`: an evasive non-answer → *"ndani ya **siku 7**"* |
+| **Both single-arm wins are WRONG → WRONG** | `eval_348` and `pic_10`: the two-arm reply is merely *more emphatically* wrong. A worse wording of the same error, not a worse answer |
+
+One arm converts errors into correct answers; the other varies the wording of errors.
+
+## What this does and does not license
+
+**Does:** reopen the 2026-08-17 decision **on evidence**, rather than leaving it defended by its
+own age. The finding is not that the old measurements were wrong — they reproduce — but that they
+never covered the rows this product actually gets wrong.
+
+**Does not:** justify switching production. **13 differing rows at 4/2/7 is a signal, not a gate.**
+The two recorded regressions were real, this run did not cover the rows they were found on, and
+they must be re-run on the current index before anything moves. A proper decision needs a live
+A/B across the full 48 **and** the diverted set with adjudication — a bigger measurement than this
+one, and it should be scoped as one rather than smuggled in on a 13-row result.
+
+**Nothing changed in production.** `modal_app.py` still injects single-arm.
+
+*(R24 note: three baselines — `nat_05`, `nat_23`, `nat_24` — did not reproduce their recorded live
+replies. All three were reclassified to the **compute** path by ROUTING-GAP-A/B, so their recorded
+replies predate the change. A stale baseline, not a divergence, and recorded as such rather than
+counted as a failure.)*
+
+---
+
 # 🔒 THE PUSH GATE — the third time a console operation stood between a measurement and its verdict, so it is now mechanical (2026-08-24)
 
 **The first two were written up as lessons. The third happened anyway. Recording it a third time
