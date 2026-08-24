@@ -4,12 +4,11 @@
   "method": "R23 applied to controls: plant the thing each control exists to catch (POSITIVE, must block) and a clean case (NEGATIVE, must pass). A control needs both to count as working.",
   "prompted_by": "the pre-push secret scan, which invoked scan_for_keys.py bare and so scanned zero files on every push in this project's history, while a passing test certified it by checking the hook mentioned the script.",
   "tally": {
-    "FIRES": 17,
+    "FIRES": 19,
     "DISABLED": 1,
     "NOT_WIRED": 1,
-    "INERT_IN_PRODUCTION": 1,
     "OBSERVED": 1,
-    "NOT_EXERCISABLE": 2
+    "NOT_EXERCISABLE": 1
   },
   "audit_self_corrections": [
     {
@@ -50,8 +49,8 @@
       "layer": "repo_gate",
       "claims_to_block": "an API key committed into a source file",
       "verdict": "FIRES",
-      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\leak.py",
-      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\clean.py",
+      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\leak.py",
+      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\clean.py",
       "note": "planted -> exit 1; clean -> exit 0. FIXED 2026-08-24; the bare invocation this replaced was INERT"
     },
     {
@@ -68,8 +67,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a training pair citing a banned, eval-only or DNS-dead source",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\src_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\src_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\src_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\src_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -77,8 +76,8 @@
       "layer": "repo_gate",
       "claims_to_block": "nssf.or.tz (DNS-failing) anywhere in a pair, including answer TEXT",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\dead_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\dead_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\dead_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\dead_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -86,8 +85,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a pair asserting a value locked_facts.json marks as WRONG",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\lf_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\lf_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\lf_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\lf_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -95,8 +94,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a held-out eval question leaking into the SFT training file (R6)",
       "verdict": "FIRES",
-      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\train_bad.jsonl",
-      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\train_ok.jsonl",
+      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\train_bad.jsonl",
+      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\train_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -104,7 +103,7 @@
       "layer": "repo_gate",
       "claims_to_block": "a locked fact that is neither in the RAG index nor human-adjudicated",
       "verdict": "FIRES",
-      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3ecdjrtz\\facts_drift.json",
+      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpheslmwm4\\facts_drift.json",
       "negative_specimen": "",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
@@ -220,10 +219,10 @@
       "id": "modal_app: fail-loud index contract",
       "layer": "runtime",
       "claims_to_block": "serving every answer with ZERO facts because the baked index is missing or stale (chike/retrieval.py calls this a PRE-LAUNCH BLOCKER)",
-      "verdict": "INERT_IN_PRODUCTION",
-      "positive_specimen": "a missing/short baked index",
-      "negative_specimen": "",
-      "note": "production calls chike.retrieval: False; passes expected_fact_count: False; retains the silent RAG-disabled fallback: True. The guard fires in the module audited above and protects LOCAL HARNESSES ONLY."
+      "verdict": "FIRES",
+      "positive_specimen": "rag_fact_count set to a value the baked index does not have",
+      "negative_specimen": "the real index",
+      "note": "WIRED 2026-08-24 and VERIFIED LIVE. production calls chike.retrieval: True; passes expected_fact_count: True; retains the silent RAG-disabled fallback: False. Live R16 cycle (eval/results/index_contract_live_verification.json): BAD expectation -> HTTP 500, REFUSED TO SERVE; RESTORE -> HTTP 200 with the correct answer. Before the fix the same state returned 200 with a factless reply."
     },
     {
       "id": "pre-push hook: pytest half",
@@ -238,10 +237,10 @@
       "id": "run_eval.py accuracy/refusal gates",
       "layer": "process",
       "claims_to_block": "a product launch on a model below 85% in-corpus or 70% refusal (R7)",
-      "verdict": "NOT_EXERCISABLE",
-      "positive_specimen": "",
-      "negative_specimen": "",
-      "note": "needs a live endpoint + GPU. NOT planted. Its threshold arithmetic is unit-tested; whether it BLOCKS an under-threshold model has never been demonstrated by planting one, and that is exactly the shape of the secret-scan defect."
+      "verdict": "FIRES",
+      "positive_specimen": "planted corpora scoring 0% on each limb in turn",
+      "negative_specimen": "a corpus that scores above both thresholds",
+      "note": "accuracy limb refuses: True; refusal limb refuses: True; gate can also PASS: True; empty corpus is not a pass: True (it exited 0 before 2026-08-24). NEAR-MISS: tests/test_eval_gate.py passes and names a failing case, but it tests src/evaluate/eval_gate.py -- a different module with different thresholds."
     },
     {
       "id": "Wappfly/WhatsApp webhook token",

@@ -250,9 +250,16 @@ def main():
     print(f"Refusal gate pairs loaded:  {refusal_count}")
 
     if in_corpus_count == 0 and refusal_count == 0:
+        # EXIT 2, NOT 0 (changed 2026-08-24). This used to exit 0, which is indistinguishable
+        # from "the gate passed" to any `&&` chain or CI step — the same vacuous-success shape
+        # as validate_dataset.py printing VALIDATION PASSED over an empty corpus, and the same
+        # family as the pre-push secret scan exiting 0 having scanned nothing.
+        # CANNOT EVALUATE IS NOT PASSED. A distinct non-zero code so a caller can tell "no
+        # corpus" (2) from "gate failed" (1).
         print("\n0 eval pairs found. Build eval sets before running gate.")
         print("See PROGRESS.md Section 9 for eval source URLs.")
-        sys.exit(0)
+        print("GATE NOT RUN — no eval pairs. This is NOT a pass.")
+        sys.exit(2)
 
     model = None
     if not args.dry_run:

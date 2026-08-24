@@ -678,12 +678,62 @@ use it**.
 plainest Swahili assertion form — is outside D-FIDELITY-1; and D-FIDELITY-6's proximity window
 flips a *correct* three-levy body to flagged when five words are removed.
 
+## ✅ BOTH INERT CONTROLS CLOSED THE SAME DAY — by forcing the failure, not by reading the code
+
+**Re-audited after the fixes: `FIRES 19 · DISABLED 1 · NOT_WIRED 1 · OBSERVED 1 ·
+NOT_EXERCISABLE 1`. Zero inert.**
+
+**(1) The index contract is wired and LIVE-VERIFIED.** `modal_app.ChikeModel` now loads through
+`chike.retrieval.Retriever(..., expected_fact_count=CONFIG['rag_fact_count']).preflight()`, a
+missing `rag_fact_count` is fatal rather than "skip the check", and **both** silent-`[]` paths now
+raise — including `retrieve_facts`' bare `except`, which had been degrading any runtime fault into
+a factless answer. Full R16 cycle, forced failure and all
+(`eval/results/index_contract_live_verification.json`):
+
+| arm | result |
+|---|---|
+| `rag_fact_count` = 999 against a 221-row index | **HTTP 500 — REFUSED TO SERVE** ✅ |
+| restored to 221 | **HTTP 200** — *"Kampuni yenye wafanyakazi 12 inalipa SDL kwa asilimia 3.5."* ✅ |
+
+**Before the fix, the same broken state returned 200 with a fluent, confident, factless answer.**
+Retrieval behaviour is unchanged byte-for-byte — `Retriever` is the loader/validator only, the
+single-arm top-3 scoring is untouched, and 11 tests pin both halves.
+
+**An existing test had to be narrowed, and the reason matters.** `test_modal_app_passes_its_own_
+single_arm_retriever` asserted that `chike.retrieval` **must not be imported at all**, as a proxy
+for "must not use the two-arm hybrid". **That proxy is part of why this was never fixed: it made
+the correct fix look like a violation.** The module holds two separable things — the two-arm
+retriever (production must not use) and the fail-loud loader (production must use). The assertion
+now pins *which retriever is injected* and says nothing about imports. **The push gate caught this,
+and I did not bypass it.**
+
+**(2) The R7 launch gate has now said NO.** `eval/controls/exercise_r7_gate.py` plants corpora
+whose verdict is known in advance and runs the **real** `main()` — only `transformers` is faked, so
+the model-loading branch executes rather than being skipped:
+
+| arm | result |
+|---|---|
+| accuracy 0%, refusal fine | **`GATE FAILED`, exit 1** ✅ |
+| accuracy fine, refusal 0% | **`GATE FAILED`, exit 1** ✅ (both limbs independently) |
+| both above threshold | `GATE PASSED`, exit 0 ✅ (R17's negative case) |
+| **empty corpus** | **was exit 0 — fixed to exit 2** |
+
+**The empty-corpus path was a vacuous success.** Exit 0 is indistinguishable from a pass to any
+`&&` chain or CI step — the same shape as `validate_dataset.py` printing `VALIDATION PASSED` over
+an empty corpus, and the same family as the secret scan exiting 0 having scanned nothing. It now
+exits **2** with *"GATE NOT RUN — no eval pairs. This is NOT a pass."* **Cannot evaluate is not
+passed**, and a distinct code so a caller can tell it from a real failure.
+
+**⚠️ A near-miss found while doing it.** `tests/test_eval_gate.py` passes and contains
+`test_gate_fails_low_accuracy` — but it tests **`src/evaluate/eval_gate.py`**, a different module
+with different thresholds (0.75 accuracy, a hallucination rate, a latency ceiling). It says nothing
+about R7's 0.85/0.70 gate. **A reassuring name over a different mechanism makes the untested thing
+look tested** — the same family as a test that asserts wiring.
+
 ## What remains open
 
 | item | state |
 |---|---|
-| **`modal_app` fail-loud index contract** | ⛔ **INERT IN PRODUCTION.** The guard exists, fires, and protects local harnesses only |
-| **`run_eval.py` R7 launch gates** | ⚠️ **NEVER PLANTED INTO.** Its arithmetic is unit-tested; whether it *blocks an under-threshold model* has never been demonstrated. **Same shape as the secret scan, still unresolved** |
 | **D-FIDELITY-7** | NOT_WIRED — by decision, held one R16 cycle. But `eval_208` shows the exact defect it targets, live |
 | **coverage gate** | DISABLED on purpose (1.9% vs 71%, the ~37× gap). Logic verified working if switched on |
 | **`validate_dataset` empty-corpus path** | HAZARD recorded: with zero cleaned_pairs files it counts 0 pairs, 0 errors and prints `VALIDATION PASSED`. Non-vacuous today only because 4,562 pairs exist; **four of five tier dirs are empty and would pass on nothing** |

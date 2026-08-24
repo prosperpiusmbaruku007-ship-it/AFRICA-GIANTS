@@ -508,15 +508,24 @@ def audit_unexercisable():
         (('import' in ln and 'retrieval' in ln) or 'retrieval.configure(' in ln
          or 'retrieval.retrieve(' in ln)
         for ln in modal_src.splitlines() if not ln.strip().startswith('#'))
-    has_count = 'expected_fact_count' in modal_src
-    silent_fallback = 'RAG disabled' in modal_src
+    # CODE LINES ONLY — for the third time in this file, a substring check would otherwise
+    # match the COMMENT that quotes the old defect while explaining why it was removed.
+    _code = "\n".join(ln for ln in modal_src.splitlines()
+                      if ln.strip() and not ln.strip().startswith('#'))
+    has_count = 'expected_fact_count' in _code
+    silent_fallback = 'RAG disabled' in _code
+    v = ('FIRES' if (uses_module and has_count and not silent_fallback)
+         else 'INERT_IN_PRODUCTION')
     record('modal_app: fail-loud index contract', 'runtime',
            'serving every answer with ZERO facts because the baked index is missing or stale '
            '(chike/retrieval.py calls this a PRE-LAUNCH BLOCKER)',
-           'INERT_IN_PRODUCTION', 'a missing/short baked index', '',
-           f'production calls chike.retrieval: {uses_module}; passes expected_fact_count: '
-           f'{has_count}; retains the silent RAG-disabled fallback: {silent_fallback}. '
-           f'The guard fires in the module audited above and protects LOCAL HARNESSES ONLY.')
+           v, 'rag_fact_count set to a value the baked index does not have', 'the real index',
+           f'WIRED 2026-08-24 and VERIFIED LIVE. production calls chike.retrieval: '
+           f'{uses_module}; passes expected_fact_count: {has_count}; retains the silent '
+           f'RAG-disabled fallback: {silent_fallback}. Live R16 cycle '
+           f'(eval/results/index_contract_live_verification.json): BAD expectation -> HTTP 500, '
+           f'REFUSED TO SERVE; RESTORE -> HTTP 200 with the correct answer. Before the fix the '
+           f'same state returned 200 with a factless reply.')
 
     record('pre-push hook: pytest half', 'process',
            'a red build reaching main',
@@ -524,12 +533,27 @@ def audit_unexercisable():
            'not planted here — it BLOCKED TWO REAL PUSHES on 2026-08-24, one a genuine failure '
            'and one an exit-139 access violation under memory pressure. Fired on real input.')
 
+    # EXERCISED 2026-08-24 by eval/controls/exercise_r7_gate.py, which plants corpora whose
+    # verdict is known in advance and runs the REAL main() with only `transformers` faked, so
+    # the model-loading branch executes rather than being skipped.
+    try:
+        with open(os.path.join(REPO, 'eval', 'results', 'r7_gate_exercised.json'),
+                  encoding='utf-8') as f:
+            r7 = json.load(f)['verdict']
+        v = 'FIRES' if r7.get('R7_GATE_VERIFIED') else 'INERT'
+        note = (f'accuracy limb refuses: {r7["accuracy_limb_can_refuse"]}; refusal limb '
+                f'refuses: {r7["refusal_limb_can_refuse"]}; gate can also PASS: '
+                f'{r7["gate_can_also_pass"]}; empty corpus is not a pass: '
+                f'{r7["empty_corpus_is_not_a_pass"]} (it exited 0 before 2026-08-24). '
+                f'NEAR-MISS: tests/test_eval_gate.py passes and names a failing case, but it '
+                f'tests src/evaluate/eval_gate.py -- a different module with different '
+                f'thresholds.')
+    except Exception as exc:
+        v, note = 'NOT_EXERCISABLE', f'r7_gate_exercised.json unreadable: {exc}'
     record('run_eval.py accuracy/refusal gates', 'process',
            'a product launch on a model below 85% in-corpus or 70% refusal (R7)',
-           'NOT_EXERCISABLE', '', '',
-           'needs a live endpoint + GPU. NOT planted. Its threshold arithmetic is unit-tested; '
-           'whether it BLOCKS an under-threshold model has never been demonstrated by planting '
-           'one, and that is exactly the shape of the secret-scan defect.')
+           v, 'planted corpora scoring 0% on each limb in turn', 'a corpus that scores above '
+           'both thresholds', note)
 
     record('Wappfly/WhatsApp webhook token', 'process',
            'an unauthenticated caller posting to the WhatsApp webhook',

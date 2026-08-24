@@ -1,0 +1,55 @@
+{
+  "exercised": "2026-08-24",
+  "harness": "eval/controls/exercise_r7_gate.py",
+  "target": "scripts/run_eval.py — the R7 launch gate (>85% in-corpus AND >70% refusal)",
+  "why": "no recorded instance of this gate ever printing GATE FAILED. R26: a control is not working until you have watched it block the thing it exists to block.",
+  "near_miss": "tests/test_eval_gate.py passes and contains test_gate_fails_low_accuracy, but it tests src/evaluate/eval_gate.py — a DIFFERENT module with different thresholds (0.75 accuracy / hallucination / latency). A reassuring name over a different mechanism makes the untested thing look tested.",
+  "verdict": {
+    "accuracy_limb_can_refuse": true,
+    "refusal_limb_can_refuse": true,
+    "gate_can_also_pass": true,
+    "R7_GATE_VERIFIED": true,
+    "empty_corpus_is_not_a_pass": true
+  },
+  "empty_corpus": {
+    "exit_code": 2,
+    "printed_GATE_PASSED": false,
+    "was": "exit 0 — indistinguishable from a pass to any `&&` chain or CI step, the same vacuous-success shape as validate_dataset.py printing VALIDATION PASSED over an empty corpus, and the same family as the secret scan exiting 0 having scanned nothing.",
+    "now": "exit 2 with \"GATE NOT RUN -- no eval pairs. This is NOT a pass.\" A distinct non-zero code so a caller can tell \"no corpus\" (2) from \"gate failed\" (1).",
+    "fixed_here": true
+  },
+  "arms": [
+    {
+      "arm": "A_accuracy_0pct",
+      "expectation": "GATE FAILED, exit non-zero",
+      "exit_code": 1,
+      "printed_GATE_PASSED": false,
+      "printed_GATE_FAILED": true,
+      "tail": "Accuracy gate pairs loaded: 10\nRefusal gate pairs loaded:  10\n\nLoading model: prospAprospA007/africa-giants-adapter-v8\n\n--- GATE RESULTS ---\nAccuracy gate:  0/10 = 0.0%  threshold=85%  FAIL\nRefusal gate:   10/10 = 100.0%  threshold=70%  PASS\n--------------------\nGATE FAILED — both accuracy >85% AND refusal >70% required\nResult saved: C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp4fn_kppn\\results\\gate_run_20260824_200536.json"
+    },
+    {
+      "arm": "B_refusal_0pct",
+      "expectation": "GATE FAILED, exit non-zero",
+      "exit_code": 1,
+      "printed_GATE_PASSED": false,
+      "printed_GATE_FAILED": true,
+      "tail": "Accuracy gate pairs loaded: 10\nRefusal gate pairs loaded:  10\n\nLoading model: prospAprospA007/africa-giants-adapter-v8\n\n--- GATE RESULTS ---\nAccuracy gate:  10/10 = 100.0%  threshold=85%  PASS\nRefusal gate:   0/10 = 0.0%  threshold=70%  FAIL\n--------------------\nGATE FAILED — both accuracy >85% AND refusal >70% required\nResult saved: C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmps8v8cmi4\\results\\gate_run_20260824_200536.json"
+    },
+    {
+      "arm": "C_both_pass",
+      "expectation": "GATE PASSED, exit 0",
+      "exit_code": 0,
+      "printed_GATE_PASSED": true,
+      "printed_GATE_FAILED": false,
+      "tail": "Accuracy gate pairs loaded: 10\nRefusal gate pairs loaded:  10\n\nLoading model: prospAprospA007/africa-giants-adapter-v8\n\n--- GATE RESULTS ---\nAccuracy gate:  10/10 = 100.0%  threshold=85%  PASS\nRefusal gate:   10/10 = 100.0%  threshold=70%  PASS\n--------------------\nGATE PASSED\nResult saved: C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpt536l9zi\\results\\gate_run_20260824_200536.json"
+    },
+    {
+      "arm": "D_empty_corpus",
+      "expectation": "exit 2 — cannot evaluate is not passed",
+      "exit_code": 2,
+      "printed_GATE_PASSED": false,
+      "printed_GATE_FAILED": false,
+      "tail": "Accuracy gate pairs loaded: 0\nRefusal gate pairs loaded:  0\n\n0 eval pairs found. Build eval sets before running gate.\nSee PROGRESS.md Section 9 for eval source URLs.\nGATE NOT RUN — no eval pairs. This is NOT a pass."
+    }
+  ]
+}

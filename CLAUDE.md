@@ -849,20 +849,62 @@ does production actually call*, not *does the guard work* — and must answer it
 deployed file, not by grepping for a name. (The audit's own first attempt matched
 `chike.retrieval` **in two comment lines saying production does not use it**.)
 
-**⚠️ AND AUDIT YOUR SPECIMENS BEFORE YOU BELIEVE A FAILURE. Six of the first eight adverse
-verdicts in that audit were BAD SPECIMENS, not defects** — a Swahili word order that did not match
-the pattern, a `messages` shape where the corpus uses `instruction`, an OOC probe containing no
-listed phrase, a coverage probe aimed at the wrong list, an assertion form outside a guard's
-designed scope, and a five-word paraphrase of a committed probe. Reported unchecked it would have
-raised **four inert controls and one overbroad guard, all false**. **When a control fails to fire,
-the FIRST hypothesis is that the specimen is wrong.** Eliminate it before recording the finding.
+### ⛔⛔ R26's SECOND HALF IS THE MORE VALUABLE ONE: WHEN A CONTROL DOESN'T FIRE, SUSPECT THE SPECIMEN FIRST.
+
+**The first half tells you to test your controls. The second half is what stops that testing from
+doing more harm than the gap it was looking for.**
+
+**Six of the first eight adverse verdicts in the audit were BAD SPECIMENS, not defects** — a
+Swahili word order that did not match the pattern, a `messages` shape where the corpus uses
+`instruction`, an OOC probe containing no listed phrase, a coverage probe aimed at the wrong list,
+an assertion form outside a guard's designed scope, and a five-word paraphrase of a committed probe.
+
+**Reported unchecked, that audit would have raised four inert controls and one overbroad guard, all
+false — and it would have been WORSE THAN NO AUDIT.** Not because the number was wrong, but because
+of what a false INERT causes someone to do next: **it sends them to rewrite a guard that already
+works.** A missed defect leaves the system where it was. A fabricated defect gets *acted on* — the
+"fix" lands in a working control, the real behaviour changes, and the change is made by someone who
+believes they are repairing something. **An audit's false positives are more expensive than its
+false negatives, because only the false positives generate edits.**
+
+**So the discipline is asymmetric, and deliberately so:**
+- **A control that FIRES may be recorded immediately.** The specimen did its job; nothing follows.
+- **A control that does NOT fire may not be recorded until the specimen is eliminated as the
+  cause.** Re-read the pattern, the field names, the actual list contents, the committed probe.
+  Use the **verbatim** committed probe, never a paraphrase — a five-word paraphrase was enough to
+  flip a correct body into a flagged one here.
+- **Keep the near-misses that turn out to be real.** Two of the six were not defects but were worth
+  recording anyway: a bare *"ni"* — the plainest Swahili assertion form — sits outside
+  D-FIDELITY-1; and D-FIDELITY-6's proximity window is sensitive to wording at ±60 characters.
+
+**⚠️ AND WHERE A CONTROL LIVES MATTERS MORE THAN WHETHER IT WORKS.** The two inert controls found
+on 2026-08-24 had *nothing wrong with their logic*. `scan_for_keys.py` scans correctly — it was
+handed no files. `chike/retrieval.py`'s contract raises correctly — production never imported it.
+**Both were perfect and both protected nothing**, so any audit that asks *"does the guard work?"*
+finds them clean. **Ask instead: what does the deployed path actually call, and with what
+arguments?** Answer it by parsing the deployed file — and by code lines only. **Three separate
+checks in this audit matched the COMMENT explaining why a defect was removed**, including one
+introduced while fixing the previous two.
 
 Standing harness: `eval/controls/audit_control_fires.py` → `eval/results/control_fire_audit.json`.
 **Add a row to it whenever a new control is built** — and list what cannot be exercised offline
 rather than dropping it, because *a census that quietly omits what it cannot test reports a
-cleaner result than it earned.* Two remain unplanted: `run_eval.py`'s R7 launch gates (never shown
-to block an under-threshold model — **the same shape as the secret scan, still open**) and the
-WhatsApp webhook token.
+cleaner result than it earned.*
+
+**Current state (2026-08-24, after both fixes): `FIRES 19 · DISABLED 1 · NOT_WIRED 1 · OBSERVED 1 ·
+NOT_EXERCISABLE 1`. Zero inert.** The `DISABLED` one is the coverage gate (off by decision, 37×
+gap); the `NOT_WIRED` one is D-FIDELITY-7 (held by decision); the only unplanted control left is
+the WhatsApp webhook token, which needs the live app and its Secret.
+
+**Both inert controls were closed by forcing the failure, not by reading the code:**
+- the index contract, live: `rag_fact_count` set to a value the baked index does not have →
+  **HTTP 500, refused to serve**; restored → HTTP 200 with the correct answer
+  (`eval/results/index_contract_live_verification.json`). Before the fix, the same state returned
+  **200 with a fluent factless answer**.
+- the R7 launch gate: planted corpora scoring 0% on each limb in turn → **`GATE FAILED`, exit 1 on
+  both**, and a passing corpus → `GATE PASSED`, exit 0 (`eval/results/r7_gate_exercised.json`).
+  Its empty-corpus path **used to exit 0** — indistinguishable from a pass to any `&&` chain — and
+  now exits **2** with *"GATE NOT RUN — this is NOT a pass"*. **Cannot evaluate is not passed.**
 
 ### R20 — A MECHANICAL PASS MAY NOT INSERT A CHECK THAT CANNOT FAIL. The vacuous fix is worse than the gap.
 

@@ -28,9 +28,10 @@ nothing and would be discovered the first time it mattered.
   A  accuracy 0%, refusal fine      -> GATE FAILED, exit 1
   B  accuracy fine, refusal 0%      -> GATE FAILED, exit 1   (BOTH limbs, not just one)
   C  both above threshold           -> GATE PASSED, exit 0   (R17's negative case)
-  D  empty corpus                   -> whatever it does, RECORDED. It exits 0 without printing
-                                       GATE PASSED, which is safe for a human reader and unsafe
-                                       for an `&&` chain.
+  D  empty corpus                   -> must NOT exit 0. FIXED in this same pass: it used to
+                                       exit 0, indistinguishable from a pass to any `&&` chain.
+                                       Now exit 2 — "cannot evaluate" is not "passed", and a
+                                       distinct code so a caller can tell it from a real fail.
 
 R18: committed before it runs.
 Artifact: eval/results/r7_gate_exercised.json
@@ -169,7 +170,8 @@ def main():
         lambda q: GOOD_REFUSAL if 'faida ya mtaji' in q else RIGHT_ANSWER))
 
     # --- D: empty corpus — record what it does, do not assume ---------------------------------
-    arms.append(run_arm('D_empty_corpus', 'RECORD the behaviour', [], lambda q: RIGHT_ANSWER))
+    arms.append(run_arm('D_empty_corpus', 'exit 2 — cannot evaluate is not passed',
+                        [], lambda q: RIGHT_ANSWER))
 
     a, b, c, d = arms
     verdict = {
@@ -181,12 +183,17 @@ def main():
     empty = {
         'exit_code': d['exit_code'],
         'printed_GATE_PASSED': d['printed_GATE_PASSED'],
-        'hazard': 'exits 0 without printing GATE PASSED. Safe for a human reading the output; '
-                  'UNSAFE for any `&&` chain or CI step that treats exit 0 as authorisation. '
-                  'The same shape as validate_dataset.py on an empty corpus.'
-                  if d['exit_code'] == 0 and not d['printed_GATE_PASSED'] else
-                  'see exit_code — behaviour differs from the 2026-08-24 reading',
+        'was': 'exit 0 — indistinguishable from a pass to any `&&` chain or CI step, the same '
+               'vacuous-success shape as validate_dataset.py printing VALIDATION PASSED over an '
+               'empty corpus, and the same family as the secret scan exiting 0 having scanned '
+               'nothing.',
+        'now': 'exit 2 with "GATE NOT RUN -- no eval pairs. This is NOT a pass." A distinct '
+               'non-zero code so a caller can tell "no corpus" (2) from "gate failed" (1).',
+        'fixed_here': d['exit_code'] == 2,
     }
+    verdict['empty_corpus_is_not_a_pass'] = (d['exit_code'] == 2)
+    verdict['R7_GATE_VERIFIED'] = all(v for k, v in verdict.items()
+                                      if k != 'R7_GATE_VERIFIED')
 
     blob = {
         'exercised': '2026-08-24',
