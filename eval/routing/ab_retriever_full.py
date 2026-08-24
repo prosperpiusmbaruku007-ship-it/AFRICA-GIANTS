@@ -171,6 +171,71 @@ def _path_of(reply):
     return 'compute' if 'compute' in kinds else ('fact' if kinds else 'refusal')
 
 
+def baseline_verdict(err, recorded_live, recorded_path, reply_single, path_single):
+    """The R24 verdict for one row. BYTE-IDENTITY IS CHECKED FIRST, AND THAT ORDERING IS THE
+    WHOLE CORRECTNESS OF THIS FUNCTION.
+
+    ⚠️ FIXED MID-RUN, 2026-08-24, and the bug is worth keeping in view. The first version tested
+    the staleness rule BEFORE byte-identity, so a row whose reply reproduced the recorded live
+    reply EXACTLY was still thrown out if the two path labels disagreed. `nat_10` and `nat_15`
+    both did: byte-identical replies, labelled STALE_EXCLUDED. That is the wrong direction — an
+    exclusion rule may only ever excuse a MISMATCH; it must never discard a match.
+
+    And the reason the labels disagreed at all is the deeper caution. `recorded_path` is carried
+    forward through three adjudication files from an origin nobody can now point at; `path_single`
+    is derived here from the live `sub_answers`. **They are two different instruments**, so a
+    disagreement between them is at least as likely to be about the labelling as about the
+    pipeline. Hence: identity decides; the path label is only ever an EXPLANATION for a
+    difference, never evidence on its own, and every STALE_EXCLUDED row is listed individually in
+    the write-up rather than silently dropped.
+    """
+    if err is not None:
+        return 'ERROR'
+    if not recorded_live:
+        return 'NO_BASELINE'
+    if reply_single == recorded_live:
+        return 'REPRODUCES'
+    if recorded_path and recorded_path != path_single:
+        return 'STALE_EXCLUDED'
+    return 'FAILS'
+
+
+def rescore(path=OUT):
+    """Re-derive every row's baseline verdict from the stored fields, in place.
+
+    This exists because the ordering bug above was found while the run was in flight. Every
+    input the verdict needs — both replies, both paths, the recorded reply — is already on the
+    row, so the correction is a pure function of the artifact and needs no live calls. Storing
+    the raw fields rather than only the verdict is what makes that possible; a harness that
+    persists conclusions instead of evidence would have had to re-run.
+    """
+    with open(path, encoding='utf-8') as f:
+        blob = json.load(f)
+    changes = []
+    for r in blob['rows']:
+        before = r.get('baseline')
+        after = baseline_verdict(r.get('error'), r.get('recorded_live', ''),
+                                 r.get('recorded_path'), r.get('single_arm_reply', ''),
+                                 r.get('path_single'))
+        if before != after:
+            changes.append((r['id'], before, after))
+        r['baseline'] = after
+        r['evidence_admissible'] = after != 'FAILS' and not r.get('error')
+    blob['rescored'] = {
+        'date': '2026-08-24',
+        'why': 'baseline_verdict originally tested staleness BEFORE byte-identity, so rows that '
+               'reproduced the recorded live reply exactly were excluded when the two path '
+               'labels disagreed. Re-derived from the stored fields; no live calls.',
+        'changes': [{'id': i, 'from': b, 'to': a} for i, b, a in changes],
+    }
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(blob, f, ensure_ascii=False, indent=2)
+    print(f'rescored {len(blob["rows"])} rows; {len(changes)} verdicts changed')
+    for i, b, a in changes:
+        print(f'  {i}: {b} -> {a}')
+    return blob
+
+
 def load_population():
     rows = []
 
@@ -245,7 +310,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--fresh', action='store_true',
                     help='ignore any existing artifact instead of resuming from it')
+    ap.add_argument('--rescore', action='store_true',
+                    help='re-derive baseline verdicts from the existing artifact and exit; '
+                         'no live calls')
     args = ap.parse_args()
+
+    if args.rescore:
+        rescore()
+        return
 
     from transformers import AutoTokenizer
     from chike.retrieval import retrieve as two_arm
@@ -319,17 +391,7 @@ def main():
             err = f'{type(exc).__name__}: {exc}'
             print(f"  [{r['id']}] ERROR {err}")
 
-        # --- R24 baseline verdict, with the staleness rule applied mechanically -------------
-        if err is not None:
-            baseline = 'ERROR'
-        elif not r['recorded_live']:
-            baseline = 'NO_BASELINE'
-        elif r['recorded_path'] and r['recorded_path'] != path_s:
-            baseline = 'STALE_EXCLUDED'
-        elif s == r['recorded_live']:
-            baseline = 'REPRODUCES'
-        else:
-            baseline = 'FAILS'
+        baseline = baseline_verdict(err, r['recorded_live'], r['recorded_path'], s, path_s)
 
         rec = {**r,
                'n_facts_single': None if facts_s is None else len(facts_s),
