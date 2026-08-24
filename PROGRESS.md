@@ -366,6 +366,37 @@ every subsequent cue a fit.
 
 ---
 
+# 🔒 THE PUSH GATE — the third time a console operation stood between a measurement and its verdict, so it is now mechanical (2026-08-24)
+
+**The first two were written up as lessons. The third happened anyway. Recording it a third time
+would buy nothing.**
+
+| # | what stood in the way | cost |
+|---|---|---|
+| 1 | PowerShell `Select-Object -First N` closed the pipe before a measurement wrote its artifact | **twice, silently, exit 0** — a BEFORE that could never be re-measured |
+| 2 | a cp1252 console encoding on a `✓` glyph | aborted a deploy (~2 min of dead production) and truncated a live canary mid-pass |
+| 3 | **`pytest … \| tail -2`** consumed pytest's exit status | an `&&` chain **committed and pushed a red build** |
+
+`.githooks/pre-push` runs the secret scan and the offline suite, **writes their output to files
+rather than piping them**, reads pytest's status directly, and exits non-zero — which aborts the
+push. Versioned in `.githooks/` rather than `.git/hooks/` so it survives a clone, wired via
+`core.hooksPath` by `scripts/install_hooks.py`.
+
+**Watched failing before being trusted (R20):** with a deliberately failing test the hook exits
+**1** and prints `BLOCKED`; with it removed, **0**. Both directions verified, then the gate ran on
+a real push — `1347 passed … [pre-push] OK`.
+
+**`tests/test_push_gate.py` pins the specific defect, not the general intention:** no `|` on any
+pytest line in the hook, the exit status captured, the failure branch present, the secret scan
+gated, the bypass defaulting to OFF and warning in plain words — and **`core.hooksPath` actually
+set in this clone**, because the hook file can be present and completely inert.
+
+**The bypass is deliberate and loud.** A gate with no escape hatch gets disabled wholesale the
+first time it is inconvenient; `CHIKE_SKIP_PREPUSH=1` prints *"If a test is failing, this is how a
+red build reaches main."*
+
+---
+
 # ✅ THE DEPLOYED PIPELINE **IS** THIS REPO'S CODE — the divergence was my reconstruction, and the blast radius is three harnesses (2026-08-24)
 
 **Settled by measurement, 3/3 byte-identical.** `eval/forced_facts/verify_deployed_path.py` →
