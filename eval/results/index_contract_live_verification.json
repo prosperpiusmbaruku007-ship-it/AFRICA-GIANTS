@@ -1,0 +1,49 @@
+{
+  "verified": "2026-08-24",
+  "harness": "eval/controls/verify_index_contract_live.py",
+  "target": "chike-inference (production)",
+  "limb_forced": "expected_fact_count mismatch",
+  "limbs_not_forced_here": [
+    "missing index files",
+    "n_embeddings != n_texts"
+  ],
+  "good_count": 221,
+  "bad_count": 999,
+  "arms": {
+    "bad": {
+      "deploy_ok": true,
+      "probe": {
+        "outcome": "ERROR",
+        "status": null,
+        "body": "HTTPError: HTTP Error 500: Internal Server Error",
+        "elapsed_s": 305.4
+      },
+      "verdict": "REFUSED (correct)"
+    },
+    "restore": {
+      "deploy_ok": true,
+      "probe": {
+        "outcome": "HTTP_200",
+        "status": 200,
+        "body": "{\"reply\":\"Kampuni yenye wafanyakazi 12 inalipa SDL kwa asilimia 3.5. Thibitisha na TRA (tra.go.tz).\"}",
+        "elapsed_s": 67.9
+      },
+      "verdict": "ANSWERS AGAIN (correct)"
+    }
+  },
+  "log": [
+    "[config] rag_fact_count 221 -> 999",
+    "[BAD] modal app stop chike-inference --yes",
+    "[BAD] modal deploy",
+    "[BAD] deploy rc=0",
+    "[BAD] probing — a 200 with a fluent answer here means the contract is NOT protecting production",
+    "[BAD] ERROR in 305.4s :: HTTPError: HTTP Error 500: Internal Server Error",
+    "[config] rag_fact_count 999 -> 221",
+    "[RESTORE] modal app stop chike-inference --yes",
+    "[RESTORE] modal deploy",
+    "[RESTORE] deploy rc=0",
+    "[RESTORE] HTTP_200 in 67.9s :: {\"reply\":\"Kampuni yenye wafanyakazi 12 inalipa SDL kwa asilimia 3.5. Thibitisha na TRA (tra.go.tz).\"}"
+  ],
+  "config_rag_fact_count_after": 221,
+  "status": "COMPLETE"
+}
