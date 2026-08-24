@@ -1,0 +1,58 @@
+#!/bin/sh
+# Refuse to push a red build. MECHANICAL, because remembering did not work.
+#
+# WHY THIS EXISTS. Three times a console operation has stood between a measurement and its
+# verdict:
+#   1. a PowerShell `Select-Object -First N` killed a measurement run before it wrote its
+#      artifact -- twice, silently, exit 0 (R16);
+#   2. a cp1252 console encoding aborted a deploy and truncated a live canary mid-pass (R16);
+#   3. 2026-08-24: `pytest ... | tail -2` consumed pytest's exit status, so an `&&` chain
+#      committed and PUSHED with a failing test. The suite was red and the push succeeded.
+#
+# The first two were written up as lessons. The third happened anyway. A rule you have to
+# recall is not a fix; this is the fix.
+#
+# WHAT IT DOES. Runs the offline suite (pyproject addopts already deselects the live-network
+# tests) and the secret scan, writes their output to files rather than piping them, and exits
+# non-zero on any failure -- which aborts the push.
+#
+# TO INSTALL:  python scripts/install_hooks.py
+# TO BYPASS:   CHIKE_SKIP_PREPUSH=1 git push     (prints a loud warning; use only when the
+#              suite cannot run at all, never to push past a real failure)
+
+set -u
+
+if [ "${CHIKE_SKIP_PREPUSH:-0}" = "1" ]; then
+    echo "!! CHIKE_SKIP_PREPUSH=1 -- pushing WITHOUT running the suite."
+    echo "!! If a test is failing, this is how a red build reaches main."
+    exit 0
+fi
+
+REPO="$(git rev-parse --show-toplevel)"
+LOG_DIR="$REPO/.git/prepush"
+mkdir -p "$LOG_DIR"
+
+echo "[pre-push] secret scan ..."
+PYTHONIOENCODING=utf-8 PYTHONUTF8=1 python "$REPO/scripts/scan_for_keys.py" > "$LOG_DIR/scan.txt" 2>&1
+SCAN=$?
+if [ $SCAN -ne 0 ]; then
+    echo "[pre-push] BLOCKED: scan_for_keys.py exited $SCAN"
+    cat "$LOG_DIR/scan.txt"
+    exit 1
+fi
+
+echo "[pre-push] offline suite (this takes ~90s) ..."
+# NO PIPE. The exit status of pytest is read directly; nothing consumes it.
+PYTHONIOENCODING=utf-8 PYTHONUTF8=1 python -m pytest "$REPO/tests" -q > "$LOG_DIR/pytest.txt" 2>&1
+STATUS=$?
+tail -n 3 "$LOG_DIR/pytest.txt"
+
+if [ $STATUS -ne 0 ]; then
+    echo ""
+    echo "[pre-push] BLOCKED: pytest exited $STATUS. Full output: $LOG_DIR/pytest.txt"
+    echo "[pre-push] Fix the failure, or CHIKE_SKIP_PREPUSH=1 if the suite cannot run at all."
+    exit 1
+fi
+
+echo "[pre-push] OK"
+exit 0
