@@ -1,0 +1,141 @@
+{
+  "adjudicated": "2026-08-24",
+  "source": "eval/results/ab_retriever_full.json",
+  "harness": "eval/routing/ab_retriever_full.py",
+  "adjudicator": "Claude Code — JUDGEMENT, not a scorer output",
+  "method": "Each of the 19 differing replies read against the ground_truth carried on its row (expected_sw for the diverted set, expected_behavior for the natural 48, correct_answer_sw for the prior-decision rows) and against CLAUDE.md section 11 / scripts/locked_facts.json where the corpus carries none. 'The answer changed' is not 'the answer improved'. Severity is recorded separately from direction, because a weak preference and a wrong-answer flip must not cancel in a tally.",
+
+  "headline": "NEITHER ARM WINS. 4 decisive rows to two-arm, 3 decisive rows to single-arm, and the three single-arm wins only became visible because this measurement included the rows the prior decision rests on. Yesterday's 4/2/7 was itself population-limited — R22 applied to my own measurement one day later.",
+
+  "the_correction_that_matters_most": {
+    "what": "The 2026-08-24 measurement (eval/results/two_arm_effect.json) drew its population from the veto-diverted rows and the natural 48 ONLY. It reported 4 two-arm better / 2 single-arm better / 7 equivalent, with BOTH decisive wins going to two-arm and BOTH single-arm wins being wrong->wrong.",
+    "why_that_was_incomplete": "The rows on which the two-arm retriever is KNOWN to harm were not in that population. They live in the 400-question gate corpus, which that measurement did not sample. Adding them moves the decisive count from 2:0 in two-arm's favour to 4:3 — roughly halving the case.",
+    "the_shape": "This is R22 one level up, and it is the third instance in three days plus this fourth: a measurement drawn from where the mechanism looked good. It was caught only by deliberately re-running the prior decision's own cited rows, which is now R22's closing clause: a settled decision's age is not evidence, so re-run what it cites rather than re-reading its summary."
+  },
+
+  "populations": {
+    "diverted": {"n": 17, "fact_sets_differ": 16, "replies_differ": 12},
+    "natural_48": {"n": 48, "fact_sets_differ": 22, "replies_differ": 1},
+    "prior_cost": {"n": 1, "note": "eval_208; eval_127 is the other and arrives via the diverted set"},
+    "prior_benefit": {"n": 6, "replies_differ": 4},
+    "prior_guard": {"n": 1, "note": "eval_355"}
+  },
+
+  "determinism_control": {
+    "identical_fact_sets": 27,
+    "of_those_replies_differ": 0,
+    "verdict": "PASS",
+    "reading": "27 rows received byte-identical fact sets from both retrievers and returned byte-identical replies from both arms. The predecessor's stage-1 exclusion was therefore sound, and greedy decoding (do_sample: false, R14) is confirmed deterministic end-to-end over the live endpoint rather than assumed. A FAILED control would have been a non-empty list here, and would have invalidated every paired A/B in this repo."
+  },
+
+  "r24_baselines": {
+    "REPRODUCES": 62,
+    "NO_BASELINE": 8,
+    "FAILS": 3,
+    "STALE_EXCLUDED_by_the_path_rule": 0,
+    "reading": "62 of 65 rows carrying a recorded live reply reproduced it BYTE-IDENTICALLY through the single-arm arm. That is the proof this harness is production and not a reconstruction of it — the failure mode R24 exists for. The 8 NO_BASELINE rows are the prior-decision rows, which have no recorded reply on the current pipeline at all; they are unverified rather than verified, and that is stated rather than glossed.",
+    "the_three_failures_and_an_earlier_claim_they_correct": {
+      "rows": ["nat_05", "nat_23", "nat_24"],
+      "the_correction": "On 2026-08-24 I attributed these three to ROUTING-GAP-A/B having moved them to the compute path after their replies were recorded. THAT IS WRONG ON THE FACTS. All three were ALREADY labelled 'compute' in the 2026-08-17 adjudication and all three are on the compute path today, which is why the mechanical staleness rule does not excuse any of them.",
+      "what_actually_happened": "The compute path itself changed in the seven days since, and the CONTENT of each change says so: nat_23 now answers BOTH unlabelled levies (SDL 192,500 AND NSSF 1,100,000) where the recorded reply answered only NSSF — the D-DECOMP-1 fan-out; nat_05 now correctly names payroll as the SDL base where the recorded reply returned a BRELA registration fee; nat_24 no longer mis-attributes 10% to WCF, the exact defect D-FIDELITY-6 was built for. All three recorded verdicts were WRONG; two now look correct.",
+      "what_that_says_about_the_rule": "The path-comparison staleness rule is a LOWER BOUND. It detects only staleness that surfaces as a path change, and none of these did. It is kept because it is mechanical and cannot be argued with, not because it is complete — and its incompleteness is why every failure is listed individually with its content evidence instead of being swept into a count.",
+      "does_it_affect_the_A_B": "No. Both arms ran today against the same deployment, so the contrast is unaffected. Only the seven-day-old reference is stale."
+    },
+    "an_instrument_bug_found_mid_run": "baseline_verdict originally tested the staleness rule BEFORE byte-identity, so seven rows (nat_10/15/20/25/26/36/38) whose replies reproduced EXACTLY were thrown out because two path labels disagreed. An exclusion rule may only ever excuse a mismatch, never discard a match. Fixed in bb373ac and re-derived offline via --rescore, which was possible only because the harness persists the evidence rather than the conclusion."
+  },
+
+  "direction_tally": {
+    "TWO_ARM_BETTER": 6,
+    "SINGLE_ARM_BETTER": 5,
+    "EQUIVALENT": 8,
+    "decisive_only": {"TWO_ARM": 4, "SINGLE_ARM": 3},
+    "note": "19 differing rows of 73. The decisive counts are the ones that carry weight; the weak rows are preferences between two imperfect answers and are reported for completeness, not to pad a side."
+  },
+
+  "the_two_2026_08_17_regressions_re_adjudicated": [
+    {
+      "id": "eval_208",
+      "prior_claim": "two-arm invented a 'TZS milioni 90' six-month VAT threshold that does not exist",
+      "verdict": "HOLDS — REPRODUCES VERBATIM",
+      "severity": "decisive",
+      "single_arm": "Hapana — ... Mauzo ya TZS 95,000,000 katika miezi 6 ni chini ya kizingiti cha TZS 100M/6 miezi. CORRECT on the question asked (it muddles a second limb, but the answer is right).",
+      "two_arm": "Ndiyo — mauzo ya TZS milioni 95 katika miezi 6 ni zaidi ya kizingiti cha TZS milioni 90. THE FABRICATED 90M THRESHOLD IS BACK, WORD FOR WORD, and it flips the answer from 'you have not crossed' to 'you must register'.",
+      "why_it_matters": "This is the single most severe row in the measurement. It is not a wording difference: two-arm invents a statutory constant that appears in no source, and the invention changes a compliance obligation. Seven days and an index regeneration later it reproduces exactly."
+    },
+    {
+      "id": "eval_127",
+      "prior_claim": "two-arm produced a self-contradictory SDL/PAYE deadline answer — 'zinawasilishwa kwa nyakati tofauti' followed by the same date twice",
+      "verdict": "DOES NOT HOLD — IT REVERSES",
+      "severity": "decisive",
+      "single_arm": "Ndiyo — zinawasilishwa kwa wakati mmoja katika fomu tofauti kupitia mfumo wa TRA Online. Affirms simultaneity but NEVER CONFIRMS THE 7th, which is what the question asks.",
+      "two_arm": "Ndiyo — ... malipo yanaweza kuwasilishwa pamoja katika tarehe ya mwisho ya 7 ya mwezi unaofuata. CORRECT and complete against the recorded expectation.",
+      "why_it_matters": "No self-contradiction is present in either arm. The recorded regression is gone, and on this row the shipped arm is now the weaker one. One of the two pillars of the prior decision no longer stands."
+    }
+  ],
+
+  "the_prior_benefit_rows_re_adjudicated": [
+    {"id": "eval_187", "prior": "judge-confirmed two-arm win", "verdict": "HOLDS — TWO_ARM_BETTER", "severity": "decisive",
+     "why": "two-arm supplies the LOCKED OSHA penalty — 'faini ya TZS 1,000,000 hadi TZS 5,000,000 pamoja na faini ya ziada ya TZS 100,000 kwa kila siku' — which matches scripts/locked_facts.json OSHA_penalties (OHS Act No. 5 of 2003) exactly. Single-arm gives only a vague 'kunaweza kuongeza gharama za ziada'. Verified against the locked fact rather than assumed to be a fabrication."},
+    {"id": "eval_008", "prior": "two-arm-only pass JUDGED WRONG — illusory", "verdict": "HOLDS, AND HARDENS — SINGLE_ARM_BETTER", "severity": "decisive",
+     "why": "single-arm computes 950,000 − 320,000 = 630,000, the correct answer. two-arm emits an incoherent formula ('VAT ya matokeo = VAT ya pembejeo + VAT ya matokeo − VAT ya manunuzi iliyokatwa') and no figure at all. The prior judgement called this pass illusory; today it is not merely illusory, it is a clear loss."},
+    {"id": "eval_034", "prior": "two-arm-only pass JUDGED WRONG — illusory", "verdict": "HOLDS — SINGLE_ARM_BETTER", "severity": "decisive",
+     "why": "ground truth is 3% × 5,000,000 = TZS 150,000. two-arm invents a formula that appears in no source — '3% × (5,000,000 − VAT iliyolipwa)' — and produces TZS 135,000. single-arm declines and refers to TRA. In a compliance product an evasion beats a confidently wrong figure derived from a fabricated rule."},
+    {"id": "eval_186", "prior": "two-arm-only pass JUDGED WRONG — illusory", "verdict": "TWO_ARM_BETTER", "severity": "weak",
+     "why": "the corpus expectation is that the headcount threshold for a safety officer is NOT clearly established. single-arm asserts one anyway ('kwa biashara yenye wafanyakazi 60+, unapaswa kuwa na afisa wa usalama'); two-arm does not. Both share a polarity problem ('Hapana' to a question the corpus says is unsettled), so this is a preference, not a correction."},
+    {"id": "eval_019", "prior": "judge-confirmed two-arm win", "verdict": "NO LONGER DISCRIMINATES",
+     "why": "both arms now return BYTE-IDENTICAL replies. Whatever separated them in part 3 has been closed by other work; the row can no longer be evidence for either side."},
+    {"id": "eval_331", "prior": "two-arm-only pass JUDGED WRONG — illusory", "verdict": "NO LONGER DISCRIMINATES",
+     "why": "both arms byte-identical. Same as eval_019."}
+  ],
+
+  "the_guard_row": {
+    "id": "eval_355",
+    "purpose": "the rank-3 EFD fact the rejected INTERLEAVE merge evicted; the standing check that the shipped append-only merge cannot drop a baseline fact",
+    "merge_verdict": "APPEND-ONLY HOLDS. Both arms retrieve the same first three facts; two-arm appends a fourth. Nothing was dropped, which is what this row exists to check.",
+    "but": "⚠️ BOTH ARMS ANSWER THE ROW WRONG. Sales of TZS 10,999,000 against an TZS 11,000,000 EFD threshold: single-arm says 'Ndiyo, kwa kuwa umefikia kizingiti cha mauzo cha milioni 11', two-arm says 'Ndiyo, kwa mauzo hayo unatakiwa kutumia EFD'. The corpus expectation is the opposite — 10,999,000 is BELOW the threshold and EFD is not yet mandatory. Earlier entries record this row as resolved (2026-08-11).",
+    "why_it_is_a_separate_finding": "It is not a retrieval failure. The correct threshold IS retrieved and single-arm even states it correctly — it then compares the user's figure against it wrongly. D-FIDELITY-7 checks whether a STATED threshold matches the statute and would pass this body, because the stated threshold is right. The defect is the COMPARISON.",
+    "and_it_is_buildable": "Under R19 this is a CONSTANT comparison, not a derived quantity: 10,999,000 < 11,000,000 is decidable from the user's own stated figure and a fixed statutory number, and no lawful transformation makes 'you have reached it' true. So a guard of the form 'if the body asserts the user has crossed a threshold, compare their stated figure against the statutory one' is buildable, works on the fact path, and needs no ComputationResult."
+  },
+
+  "rows": [
+    {"id": "eval_127", "population": "diverted / prior_cost", "verdict": "TWO_ARM_BETTER", "severity": "decisive", "why": "single-arm never confirms the 7th, which is the question. two-arm does."},
+    {"id": "eval_337", "population": "diverted", "verdict": "TWO_ARM_BETTER", "severity": "decisive", "why": "single-arm 'asilimia 10' reports the employer share as the total — an employer acting on it under-remits by half. two-arm gives 'asilimia 20 ... (10 mwajiri + 10 mfanyakazi)', correct."},
+    {"id": "eval_343", "population": "diverted", "verdict": "TWO_ARM_BETTER", "severity": "decisive", "why": "single-arm rejects the 30-day premise then declines to give any deadline. two-arm gives 'ndani ya siku 7 tu', the statutory figure."},
+    {"id": "eval_187", "population": "prior_benefit", "verdict": "TWO_ARM_BETTER", "severity": "decisive", "why": "two-arm supplies the locked OSHA penalty schedule; single-arm is vague."},
+    {"id": "eval_006", "population": "diverted", "verdict": "TWO_ARM_BETTER", "severity": "weak", "why": "both reach 8 months. single-arm's working is fabricated and contradicts the user's own 25M/month figure; two-arm names both threshold limbs but its own arithmetic gloss is muddled."},
+    {"id": "eval_186", "population": "prior_benefit", "verdict": "TWO_ARM_BETTER", "severity": "weak", "why": "single-arm asserts a 60+ safety-officer threshold the corpus says is unestablished; two-arm does not."},
+
+    {"id": "eval_208", "population": "prior_cost", "verdict": "SINGLE_ARM_BETTER", "severity": "decisive", "why": "two-arm fabricates a 'TZS milioni 90' six-month VAT threshold and flips the obligation. single-arm answers correctly."},
+    {"id": "eval_008", "population": "prior_benefit", "verdict": "SINGLE_ARM_BETTER", "severity": "decisive", "why": "single-arm gives the correct 630,000; two-arm emits an incoherent formula and no figure."},
+    {"id": "eval_034", "population": "prior_benefit", "verdict": "SINGLE_ARM_BETTER", "severity": "decisive", "why": "two-arm invents '3% × (5,000,000 − VAT iliyolipwa)' = 135,000 against a ground truth of 150,000; single-arm declines."},
+    {"id": "eval_348", "population": "diverted", "verdict": "SINGLE_ARM_BETTER", "severity": "weak", "why": "BOTH WRONG — both endorse the false premise that 10/10 is the only lawful split. two-arm adds 'Hakuna mgawanyo mwingine uliopo', a worse wording of the same error."},
+    {"id": "pic_10", "population": "diverted", "verdict": "SINGLE_ARM_BETTER", "severity": "weak", "why": "BOTH WRONG on a daladala operator — a named coverage gap (the presumptive Class A transport schedule is not built). single-arm's 3.5% is at least a real presumptive rate; two-arm's 25% is not a presumptive rate at all."},
+
+    {"id": "eval_010", "population": "diverted", "verdict": "EQUIVALENT", "why": "both assert the trader has already crossed the 100M/6-month threshold, which the question never states. Same error, shorter in two-arm."},
+    {"id": "eval_099", "population": "diverted", "verdict": "EQUIVALENT", "why": "both correct; 'mshahara wa msingi' versus 'mshahara wa mfanyakazi'."},
+    {"id": "eval_102", "population": "diverted", "verdict": "EQUIVALENT", "why": "single-arm gives the statutory form ('ndani ya mwezi mmoja'), two-arm the practical one ('siku ya 10'). The recorded expectation names both."},
+    {"id": "eval_335", "population": "diverted", "verdict": "EQUIVALENT", "why": "both correctly reject 3.5% and give WCF as 0.5%."},
+    {"id": "eval_341", "population": "diverted", "verdict": "EQUIVALENT", "why": "both correctly reject 4 and give the SDL threshold as 10 or more."},
+    {"id": "pic_04", "population": "diverted", "verdict": "EQUIVALENT", "why": "BOTH WRONG identically — corporate tax computed as 30% of TURNOVER (TZS 15,000,000 on sales of 50M) when it is 30% of profit."},
+    {"id": "nat_37", "population": "natural_48", "verdict": "EQUIVALENT", "why": "both say a receipt is required for every transaction regardless of amount; two-arm specifies 'risiti ya EFD'. The only natural-48 row that moved at all."},
+    {"id": "eval_355", "population": "prior_guard", "verdict": "EQUIVALENT", "why": "BOTH WRONG — both say EFD is mandatory at TZS 10,999,000, which is below the TZS 11,000,000 threshold. See the_guard_row."}
+  ],
+
+  "recommendation": {
+    "verdict": "KEEP SINGLE-ARM. Do not switch production.",
+    "and_close_the_question": "The 2026-08-17 decision is now settled ON EVIDENCE rather than by its own age, which is what it lacked. It should not be re-opened again without a new mechanism — not merely a new population.",
+    "the_grounds": [
+      "4 decisive rows to two-arm, 3 decisive rows to single-arm. That is not a mandate, and it is nowhere near enough to justify an R16 cycle on the retrieval path.",
+      "BOTH ARMS FABRICATE, on different rows and in different ways. Two-arm invents regulatory content — a 90M VAT threshold that exists nowhere (eval_208), a withholding formula that exists nowhere (eval_034). Single-arm under-reports — the NSSF employer share as the total (eval_337), a deadline it holds but will not state (eval_343). Neither failure class is acceptable and switching trades one for the other.",
+      "The prior decision's cost evidence PARTLY HOLDS and the surviving half is the most severe row in the set. eval_208 reproduces verbatim seven days and an index regeneration later.",
+      "8 of the 19 differing rows are EQUIVALENT and several are equivalently WRONG — pic_04 (30% of turnover), eval_355 (EFD below threshold), eval_010 (an unstated crossing), eval_348 (a false premise endorsed). The retriever does not touch any of them."
+    ],
+    "the_reframing_that_is_the_real_output": "This measurement was scoped to answer 'which retriever?'. Its most useful finding is that THE RETRIEVER IS NOT THE LEVER. Across 73 rows the choice moves 19 replies and improves a net of one row on decisive readings, while the failures that remain — wrong bases, wrong comparisons, endorsed false premises, fabricated formulas — sit downstream of retrieval in both arms. Further effort on the retrieval slot is competing for the wrong defect.",
+    "what_this_does_NOT_say": "It does not say two-arm is worse. It does not say the eval_337 class is closed — that row is still wrong in production and still has its own board item. It says the evidence does not support paying for a switch, and that the question has now been asked properly enough to stop asking it.",
+    "follow_ons_this_measurement_surfaced": [
+      "eval_355: both arms say EFD is mandatory at TZS 10,999,000. Earlier entries record this row as resolved. Needs its own check — is this a regression, or was the earlier resolution on a different path?",
+      "A threshold-COMPARISON guard is buildable under R19 (constant comparison, no ComputationResult needed) and would cover eval_355 and eval_010, which D-FIDELITY-7 cannot reach because the threshold they state is correct and the comparison is not.",
+      "nat_05 and nat_23 were adjudicated WRONG on 2026-08-17 and now look correct. Two possible gains on the natural 48 that no adjudication has counted — a full re-adjudication of the 48, not a claim made here."
+    ]
+  }
+}

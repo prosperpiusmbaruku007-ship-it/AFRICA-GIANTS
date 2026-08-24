@@ -366,6 +366,129 @@ every subsequent cue a fit.
 
 ---
 
+# ⚖️ THE FULL RETRIEVER A/B: NEITHER ARM WINS — KEEP SINGLE-ARM, AND CLOSE THE QUESTION (2026-08-24)
+
+**73 rows, both arms live, zero errors.** `eval/routing/ab_retriever_full.py` →
+`eval/results/ab_retriever_full.json`, adjudicated in `..._adjudication.json`.
+
+## The verdict first
+
+**Keep single-arm. Do not switch production. And stop re-opening this** — the 2026-08-17 decision is
+now settled *on evidence* rather than by its own age, which is the thing it lacked.
+
+**Decisive rows: 4 to two-arm, 3 to single-arm.** (Full tally 6 / 5 / 8 equivalent across 19
+differing rows; the weak rows are preferences between two imperfect answers.)
+
+## ⚠️ AND YESTERDAY'S MEASUREMENT WAS ITSELF POPULATION-LIMITED
+
+**This is the finding that matters most, and it is against my own work from one day ago.**
+
+`two_arm_effect.json` reported **4 two-arm / 2 single-arm / 7 equivalent**, with **both** decisive
+wins going to two-arm and **both** single-arm wins being wrong→wrong. That measurement drew its
+population from the veto-diverted rows and the natural 48 only. **The rows on which the two-arm
+retriever is KNOWN to harm live in the 400-question gate corpus, which it did not sample.**
+
+Adding them moves the decisive count from **2:0 in two-arm's favour to 4:3**. Roughly half the case
+disappears.
+
+**That is R22 one level up — the fourth instance in three days, and this one is mine, made while
+writing R22's own promotion.** It was caught by exactly the clause that promotion added: *a settled
+decision's age is not evidence; re-run the rows it cites rather than re-reading its summary.*
+
+## The two 2026-08-17 regressions, re-adjudicated
+
+| row | prior claim | verdict |
+|---|---|---|
+| **`eval_208`** | two-arm invented a *"TZS milioni 90"* six-month VAT threshold | ✅ **HOLDS — REPRODUCES VERBATIM** |
+| **`eval_127`** | two-arm gave a self-contradictory SDL/PAYE deadline | ❌ **DOES NOT HOLD — IT REVERSES** |
+
+**`eval_208` is the most severe row in the set.** Seven days and an index regeneration later, two-arm
+still answers *"Ndiyo — mauzo ya TZS milioni 95 … ni zaidi ya kizingiti cha **TZS milioni 90**"*. That
+threshold **exists in no source**, and the invention flips a compliance obligation from *"you have not
+crossed"* to *"you must register"*. Single-arm answers correctly.
+
+**`eval_127` reverses.** No self-contradiction is present in either arm; single-arm affirms
+simultaneity but **never confirms the 7th**, which is what the question asks, and two-arm does. One
+of the prior decision's two pillars no longer stands.
+
+**The benefit side splits the same way.** `eval_187` **holds** — two-arm supplies the *locked* OSHA
+penalty (TZS 1M–5M plus TZS 100,000/day, OHS Act No. 5 of 2003, verified against
+`locked_facts.json` rather than assumed to be fabrication) where single-arm is vague. `eval_008` and
+`eval_034` **hold and harden** — two-arm emits an incoherent VAT formula, and invents
+*"3% × (5,000,000 − VAT iliyolipwa)"* for a withholding question whose answer is a flat 3%.
+`eval_019` and `eval_331` **no longer discriminate**: both arms are now byte-identical on them.
+
+## Why "keep single-arm" is not "single-arm is good"
+
+**BOTH ARMS FABRICATE, on different rows and in different ways:**
+
+| | two-arm | single-arm |
+|---|---|---|
+| failure class | **invents regulatory content** | **under-reports what it holds** |
+| examples | a 90M VAT threshold that exists nowhere (`eval_208`); a withholding formula that exists nowhere (`eval_034`) | the NSSF employer share reported as the total (`eval_337` — an employer under-remits by half); a statutory deadline it holds but will not state (`eval_343`) |
+
+Neither class is acceptable. Switching trades one for the other and costs an R16 cycle on the
+retrieval path.
+
+## 🎯 The real output: THE RETRIEVER IS NOT THE LEVER
+
+The measurement was scoped to answer *"which retriever?"*. Its most useful finding is that the
+question is the wrong one. Across 73 rows the choice moves **19 replies for a net of one decisive
+row**, while **8 of those 19 are EQUIVALENT and several are equivalently WRONG**:
+
+- `pic_04` — corporate tax computed as **30% of turnover** instead of profit, identically in both arms
+- `eval_355` — **EFD declared mandatory at TZS 10,999,000**, below the TZS 11,000,000 threshold, in both
+- `eval_010` — both assert a threshold crossing the question never states
+- `eval_348` — both endorse the false premise that 10/10 is NSSF's only lawful split
+
+**Retrieval touches none of them.** Further work on the retrieval slot is competing for the wrong
+defect.
+
+## Two controls and a bug in my own instrument
+
+**The determinism control PASSES.** 27 rows received byte-identical fact sets from both retrievers
+and returned **byte-identical replies** — so the predecessor's stage-1 exclusion was sound, and
+greedy decoding is now *confirmed* deterministic end-to-end over the live endpoint rather than
+assumed. A failure here would have invalidated every paired A/B in this repo.
+
+**R24: 62 of 65 rows with a recorded reply reproduced it BYTE-IDENTICALLY** through the single-arm
+arm. That is the proof this harness *is* production rather than a reconstruction of it.
+
+**⚠️ And a correction to a claim I made yesterday.** I attributed the three baseline failures
+(`nat_05`, `nat_23`, `nat_24`) to ROUTING-GAP-A/B having moved them to the compute path. **That is
+wrong on the facts** — all three were *already* labelled `compute` on 2026-08-17 and all three are on
+the compute path today, which is why the mechanical staleness rule refuses to excuse them. What
+actually changed is the compute path itself, and the *content* of each change says so: `nat_23` now
+answers **both** unlabelled levies where it answered only NSSF (the D-DECOMP-1 fan-out); `nat_05` now
+names payroll as the SDL base where it had returned a BRELA registration fee; `nat_24` no longer
+mis-attributes 10% to WCF. All three were adjudicated WRONG on 08-17; two now look correct.
+
+**The instrument had the R20 defect in miniature.** `baseline_verdict` tested staleness *before*
+byte-identity, so **seven rows whose replies reproduced exactly were discarded** because two path
+labels disagreed. An exclusion rule may only ever excuse a mismatch — **never discard a match.**
+Fixed in `bb373ac`; the verdicts were re-derived offline with `--rescore`, which was possible only
+because the harness persists the *evidence* (both replies, both paths, the recorded reply) rather
+than the conclusion. And the reason those labels disagreed at all is worth keeping: `recorded_path`
+is carried forward through three adjudication files from an origin nobody can point at, while
+`path_single` is derived live. **Two different instruments** — so a disagreement is at least as
+likely to be about the labelling as about the pipeline.
+
+## Follow-ons this surfaced (boarded, not started)
+
+1. **`eval_355` answers WRONG on both arms** — EFD called mandatory at TZS 10,999,000. Earlier
+   entries record this row as resolved (2026-08-11). Needs its own check: a regression, or was the
+   earlier resolution on a different path?
+2. **A threshold-COMPARISON guard is BUILDABLE under R19** and D-FIDELITY-7 cannot reach it.
+   D-FIDELITY-7 checks whether a *stated* threshold matches the statute; on `eval_355` the stated
+   threshold is **correct** and the **comparison** is wrong. `10,999,000 < 11,000,000` is decidable
+   from the user's own figure against a fixed statutory number, and no lawful transformation makes
+   *"you have reached it"* true — so it is a **constant** comparison, buildable, and it works on the
+   fact path where the existing rules go vacuous. Covers `eval_355` and `eval_010`.
+3. **`nat_05` and `nat_23` may be two uncounted gains** on the natural 48. Flagged, not claimed —
+   it needs a full re-adjudication of the 48, not an inference from three rows.
+
+---
+
 # 🧨 TWO RULES PROMOTED, AND THE SECOND ONE IS THE DANGEROUS KIND (2026-08-24)
 
 **Neither is a new discovery. Both are a third or fourth instance of something already written
