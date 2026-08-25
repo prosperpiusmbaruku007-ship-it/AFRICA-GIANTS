@@ -87,6 +87,11 @@ KEEP = {
     'scripts/precompute_rag_embeddings.py': 'carries two corrective facts naming the dead domain',
     'CLAUDE.md': 'documents the defect deliberately',
     'PROGRESS.md': 'documents the defect deliberately',
+    # ⚠️ THIS FILE. Found in the dry run: the docstring above names the dead domain outside any
+    # negation the guard recognises, so the pass would have rewritten its own explanation of what
+    # it does — leaving a script whose docstring says it fixes a domain it no longer mentions.
+    # A mechanical pass that can reach its own source is one edit away from erasing its rationale.
+    'scripts/correct_corpus_defects.py': 'the pass would rewrite its own docstring',
 }
 # R10-protected files, excluded by name so a glob can never reach them.
 R10 = {'scripts/fixed_cell_model.py', 'scripts/fixed_cell_data.py', 'scripts/fixed_cell_train.py',
