@@ -4,6 +4,393 @@ Last updated: 2026-08-25
 
 ---
 
+# 🧭 THREE WORKSTREAMS SCOPED, 2026-08-25 — the boundary is dropped; the product stays general and the gap closes from both sides.
+
+**Direction change recorded by the founder.** Step 2a is **not** being run as a boundary decision.
+The scoped-product line is closed: the evidence read stands (`eval/results/boundary_classification.json`)
+but the route is not taken. Nothing in this entry is built. **Scopes only, for reading before any
+build.**
+
+## ✅ R12 SATISFIED — `docs/reference_narrative.md` re-read in full before interpreting any of this. Three things in it change the reading:
+
+1. **The retrain is not "on the table". It is DUE, by the strategy document's own schedule.**
+   *"At Tier 1A, failure looks like regulatory decay… A model not retrained by August 2026 gives
+   wrong answers about Finance Act 2026 changes to users who trust it with real decisions. The
+   countermeasure is the annual retraining cycle, locked to the Finance Act calendar."* **Today is
+   2026-08-25.** That is the single strongest argument for (C) and it has nothing to do with any
+   defect on the board.
+2. **Corpus expansion is COMPLETING Tier 1A, not jumping a tier.** The narrative's Tier 1A target
+   is **600 verified pairs**; we hold **247 locked facts / 221 index rows**. And all twelve
+   coverage-gap questions are TRA-compliance/licensing/local-levy — **inside** Tier 1A's stated
+   scope. *"Where Not to Waste Time"* forbids **1B and 1C** before the 1A gate, not depth within 1A.
+   So (B) is narrative-endorsed. **[J]**
+3. **The narrative itself carries the dead domain.** `nssf.or.tz` appears in its whitelist twice
+   (lines 83 and 255). That is the *root* of the 611 dataset rows in (C) below. **The narrative
+   needs the same correction as the corpus**, or the next person to author from it re-introduces it.
+   Boarded.
+
+Also load-bearing and unchanged: *"The dataset is the product. The model is the delivery mechanism
+for the dataset's value."* That sentence orders (B) before (C) on its own, and the measurement in
+(C) turns the ordering into a hard dependency rather than a preference.
+
+---
+
+# (A) GROUNDING-TRIGGERED CLARIFICATION — scoped, priced, and the price is bad. Do not build yet; two cheap measurements can kill or save it.
+
+**Harness (committed before its run, R18): `eval/scoping/price_grounding_trigger.py` →
+`eval/results/grounding_trigger_price.json`. It builds and runs nothing** — it cross-tabulates
+`grounding_48.json` against `adjudication_no_figures.json`.
+
+## The mechanism passes R19 cleanly, and that is worth saying first
+
+*"Does every figure this reply ASSERTS appear in the retrieved facts or the engine's working?"* is
+a **comparison against a fixed input**. No lawful transformation of the user's numbers makes an
+absent figure present. It needs **no `ComputationResult`**, so it works on the **fact path**, where
+every fidelity rule before D-FIDELITY-6 goes vacuous. **It is buildable, and it is the right shape.**
+Five dead floors asked *"how confident am I about this topic?"*; this one does not ask that at all.
+
+**And clarifying rather than refusing is the right behaviour** — it is what the compute path already
+does, and it is engagement rather than a wall.
+
+## ⛔ But priced on the population that pays, it fires MORE on right answers than on wrong ones
+
+**[M, `eval/results/grounding_trigger_price.json`, fact path of the natural 48, n=21]**
+
+| | fires | of | which |
+|---|---|---|---|
+| **on WRONG rows** — the population the remedy is FOR | **2** | 5 | `nat_44`, `nat_45` |
+| **misses WRONG** — grounded, so the trigger is silent | **3** | 5 | `nat_28`, `nat_33`, `nat_41` |
+| **on CORRECT rows** — the population that PAYS | **4** | 11 | `nat_27`, `nat_36`, `nat_37`, `nat_38` |
+
+> **Two catches against four false clarifications.** That is the number the coverage gate never had
+> before it shipped, and it is available today for free.
+
+## 🎯 THE CEILING, AND IT IS STRUCTURAL — a recited wrong fact IS grounded
+
+The nine wrong fact-path rows partition **RANKING 8 · ABSENCE 1 · OVERRIDE 0 · UNUSED 0**. In a
+RANKING failure the model is **handed the wrong fact and repeats it faithfully**:
+
+```
+nat_28   "15%"        <- rank 1 in its pool:  royalties wht rate: … 15% …
+nat_41   "siku 1"     <- rank 1 in its pool:  registration certificate processing time new: 1 days
+nat_05   "TZS 260,000"<- rank 3 in its pool:  company registration fee 3: 260,000 TZS
+```
+
+**Those replies are GROUNDED. The trigger is silent on them by construction** — not because it is
+badly built, but because the figure genuinely came from the context. *"Fabricated" was the wrong
+word for these answers all along; they are TRACEABLE.* **The dominant defect class is out of the
+mechanism's reach as a matter of definition, not of tuning.**
+
+**⚠️ And the one caveat the zero-OVERRIDE number needs, because it is an R22 instance already on
+the board:** that zero was measured **only over the failures**. `nat_38` is an override among the
+*successes*. So the zero supports *"an adapter fixes none of these nine"*; it does **not** support
+*"the model recites what it is handed"* as a general claim.
+
+## Three things that would decide it, and none of them has been decided
+
+1. **`nat_38` is the case to hold in mind.** It answered **correctly** while its one on-topic
+   retrieved fact said the **opposite** (*"Si lazima"* on EFD, to a question about an
+   already-VAT-registered business). A grounding trigger clarifies it — **and better
+   retrieval-following would have made it worse.** Some of our correct answers are correct
+   *because* the model ignored its context.
+2. **top-3 or the pool of nine? The answer changes the mechanism.** Grounding above is at
+   `top_k=3`; the orchestrator assembles a **decompose→pool of 9**. Against the larger pool more
+   figures count as grounded, so it catches **fewer** wrong answers **and** raises **fewer** false
+   clarifications. **Decide by measurement, not by convenience.**
+3. **⚠️ THE CLARIFICATION COPY SMUGGLES THE DEAD MECHANISM BACK IN.** *"sina uhakika, unauliza
+   kuhusu **X au Y**?"* is only better than a wall **if X and Y are named**. Naming them means
+   deciding what the question might be about — **which is the topic-classification problem that
+   killed all five floors.** The only mechanical version names the **subjects of the retrieved
+   facts**, which on an ABSENCE row are trademark fees and memorandum filing fees. *"Sina uhakika —
+   unauliza kuhusu ada ya alama ya biashara?"* is worse than silence. **A generic "uliza tena" is a
+   wall with a question mark.** This is a copy problem with a real answer and it is unsolved.
+
+## 💥 The gate arithmetic, and it is a hard constraint nobody has stated
+
+`scripts/run_eval.py::score_question` dispatches on `answer_type`; **only `out_of_corpus_refusal`
+consults `is_correct_refusal`.** So:
+
+| | effect of a clarification |
+|---|---|
+| **Gate 1 (in-corpus, ≥0.85)** | scores exactly like a **WRONG ANSWER** |
+| **Gate 2 (OOC, ≥0.70)** | scores as a **PASS** — the proposed copy opens with *"sina uhakika"*, which **is** in `refusal_phrases` |
+
+**Gate 1 last recorded 0.879 against a 0.85 floor over a 200-question eval — about SIX questions
+of headroom. [M]** Gate 2 is at 1.00.
+
+> **The mechanism makes the gate we already clear by 30 points easier, and the gate we clear by six
+> questions harder.** If it clarifies more than ~6 in-corpus eval questions, **R7 fails and no pilot
+> is authorised.** That is not a reason it is wrong. It is a number that must exist before a line
+> is written.
+
+## What to do, in order — the first step is free and could close this in an afternoon
+
+| # | step | cost | what it settles |
+|---|---|---|---|
+| **A0** | Re-derive grounding over every recorded reply we already hold (2,265 distinct generations; 7,904 reply strings across `eval/results/`). Count how many **currently-correct in-corpus answers** would clarify. | **free, offline** | the **Gate 1 exposure**, directly against the ~6-question headroom. **If it exceeds the headroom, the mechanism cannot ship in this form and the question is closed for the cost of one script.** |
+| **A1** | ⛔ **The entry price (R21).** A held-out set **authored against the user**, frozen in git **before** the mechanism exists, of questions the corpus **does** hold. Measure the false-clarification rate there. | ~a day, **burned once** | the real cost. Expect a large gap from A0 — the coverage gate's was **37×** (1.9% → 71%). |
+| **A2** | Run both pool arms (top-3 vs pool-9) on the same rows. | hours | which pool, decided by measurement. |
+| **A3** | Resolve the copy problem in (3) above, or record that it cannot be resolved mechanically. | ~half a day | whether a clarification is a door or a wall with a question mark. |
+
+**Honest position on the evidence available today [J]:** the mechanism is the right *shape* and the
+wrong *reach*. It cannot see the defect class that produces 8 of 9 wrong fact answers, and on the
+one population where it has been priced it fires twice as often on right answers as on wrong ones.
+**A0 is free and decides a lot. Run A0 before anything else in this workstream.**
+
+**And the constructive read, because the same evidence points somewhere:** the fact path's dominant
+failure is **RANKING**, and the measured remedy for RANKING is the **ask-alignment lever** — a
+**69-rank swing** from vocabulary alone, per-question and testable. **The fact path's never-guess
+problem may be a retrieval problem wearing a guard's clothes.** That is workstream (B).
+
+---
+
+# (B) CORPUS EXPANSION — costed, not started. The unit is DOMAINS, not facts, and the first move is DELETION.
+
+## The one end-to-end datapoint we have
+
+**Coverage round 1, 2026-08-16.** Five domains scoped against primary sources *before* a line was
+written; **two shipped, three closed with reasons**. The 12-question probe moved **0 → 3**
+(`have_a_fact_behind_them` = 3, an **upper** bound; `took_a_deterministic_route` = 2).
+
+**The scoping is what created the value, not the writing.** It separated national-and-answerable
+from council-by-council-and-not, and that separation is reusable.
+
+## 🛑 What is UNANSWERABLE IN PRINCIPLE — a finding, and it closes three of the twelve
+
+| domain | why | the CORRECT product behaviour |
+|---|---|---|
+| **Market stall dues** (`genge`) | **council by-law, 180+ LGAs.** There is no national figure to hold. | name the authority, give **no figure**. Not a refusal — a correct answer. |
+| **Council service levy** | **cap is national** (statutory ceiling), **rate is council** | give the **bound** and the redirect. Answerable as a bound, never as an amount. |
+| **Business licence FEES** | fee national, **collection council**; the fee schedule source was never obtained | **BLOCKED ON SOURCE, not on principle.** See below. |
+
+> **This is not a gap in the corpus. It is a property of Tanzanian local government finance**, and
+> the product's job there is to say *which office*, not *how much*. Recording it as a coverage gap
+> would keep it on a worklist forever.
+
+## The two blocked domains and exactly what unblocks them
+
+| blocked | what would unblock it |
+|---|---|
+| **Business licence fees** | the Business Licensing Act fee schedule + the current GN. One document, and the domain becomes a lookup table. |
+| **Presumptive TRANSPORT schedule** (para 2(5), Class A) | the enacted **FA2024 s.46(a)** text. Production still invents *"asilimia 25%"*; `_PRESUMPTIVE_VETO` contains it so the wrong answer does not spread, but `lp_09` stays wrong until the table exists. ⚠️ **CLAUDE.md already records that TRA's own "At a Glance 2025/26" prints a Class A row the enacted Act does not contain** — so the summary is not a usable substitute here. |
+
+## ⚠️ ENGINE-SHAPED BEATS FACT-SHAPED, AND IT IS NOT CLOSE. This is the ordering principle.
+
+**[M, `eval/results/natural48_readjudicated_2026_08_24.json`]**
+
+| path | n | WRONG | WRONG+PARTIAL |
+|---|---|---|---|
+| **compute** (rules engine, no retrieval) | 24 | **0%** | **12.5%** |
+| **fact** (RAG) | 21 | 23.8% | **42.9%** |
+
+**A domain that can be an engine is worth several fact-shaped ones**, because it exits the
+retrieval system entirely — and every unsolved defect class (D1–D4) is a retrieval defect.
+**Rank candidate domains by whether they can be computed, not by how many facts they contain.**
+
+## 🔻 THE RETRIEVAL QUESTION — and the honest answer is that growth is a RISK, not a neutral cost
+
+**Measured on today's deployed index [M]:**
+
+| | |
+|---|---|
+| index rows | **221** |
+| `key: number` fee-shaped rows | **64 (29%)** |
+| **trademark-fee rows** | **20** |
+
+**And measured previously at 217 rows:** fee-shaped rows were **30.4% of the index** but took
+**58% of all top-3 slots** and were **top-1 on 50% of the 48 questions**. The correct fact for the
+seven failing rows ranks **19, 33, 33, 113, 127, 150, 164** — and **raising `top_k` from 3 to 9
+reaches none of them.**
+
+> **The index is already dominated by short, numerically-flavoured rows nobody asks about. Twenty of
+> them are trademark fees — opposition notices, series-of-marks renewals — which no WhatsApp trader
+> has ever asked about and which none of the 48 questions touches. Adding 380 rows to that is not a
+> neutral act.**
+
+**Two consequences, and the first is the cheapest win on this board:**
+
+1. **The first move in (B) is DELETION, not addition. [J], with a named test.** Remove the 20
+   trademark rows and re-measure the seven known ranks. **Cost: about an hour plus one R15 regen.**
+   If they move, index *composition* is a lever we have never pulled and it is free.
+2. **Measure the growth curve before committing to 600.** Proposed:
+   `eval/index_quality/measure_rank_vs_index_size.py` — resolve the seven known-correct facts'
+   ranks at simulated index sizes (100 / 150 / 221 / 300 / 450 / 600) by sampling subsets that
+   always retain the anchor. **Free, offline, and it turns "600 could make it worse" from a worry
+   into a number.** ⚠️ **State its limit in the harness:** subsets of today's rows are not the
+   *distribution* 600 real rows would have, so it bounds the effect rather than predicting it.
+
+## Per-domain cost model — from the one domain we have taken end to end
+
+| component | cost | notes |
+|---|---|---|
+| **Source pass** (governing Act **+ every amending Finance Act**) | **~½ day, irreducible** | CLAUDE.md's consolidated-act rule makes this mandatory, and it is what caught the stale presumptive table (1,710,000 vs 1,750,000 at TZS 50M) |
+| **Engine-shaped build** (+ probes + tests) | ~½–1 day | pays back at 0% wrong |
+| **Fact-shaped authoring** | ~2–4 h per small set | **plus ask-alignment rewriting and rank verification, which is where the time actually goes** — the 69-rank swing is per-QUESTION, not per-fact, so each fact needs its own rank check |
+| **R15 regen + verify + fetch + commit ×2 + Modal redeploy + gate re-run** | **fixed PER BATCH** | ⚠️ therefore **batch the facts; never drip them.** This is the cost that makes 20 small additions far more expensive than one batch of 20 |
+
+**Candidate domains for a general product**, from the 12 probes plus the gate corpus's own arm-A
+failures. **All national, all Tier 1A:**
+
+| domain | shape | note |
+|---|---|---|
+| **Rental withholding tax** | engine (10%/15%) | national, high real-world frequency, clean |
+| **Corporate / partnership income tax** | engine | `hoD_company_tax`, `hoD_partnership_tax` currently wrong-topic-matched; also fixes `pic_04` |
+| **Penalties & interest** (Tax Administration Act) | fact set | `hoA_penalty` false-refuses today |
+| **Objections & appeals** | fact set, procedural | `hoA_objection` false-refuses today |
+| **TIN registration** | fact set, procedural | scoped 2026-08-16, "coverable, not yet written" |
+| **TRA inspection / taxpayer rights** | fact set, procedural | Cap 438 |
+| **Mobile-money / electronic transfer levy** | fact set | ⚠️ `decay_risk: annual` — changes with each Finance Act |
+| **Weights & measures calibration** | fact (interval) | national agency, national interval |
+| **Fire-safety certificate** | **unknown — needs a source pass first** | do not estimate before the source pass |
+| **Stamp duty** | fact set | currently on the OOC list; moving it in-scope is a **classifier change**, so R17 applies in full |
+| **Business licence fees** | lookup table | **blocked on source** |
+| **Presumptive transport schedule** | engine table | **blocked on source** |
+
+**Rough total [J]:** ~10–12 domains at roughly **½–1 day each**, so **7–12 working days of
+authoring**, **plus 3–4 batched regen+gate cycles**. That is the estimate; the retrieval curve in
+(B)(2) could change it materially, which is why it comes first.
+
+---
+
+# (C) THE RETRAIN — the case, assembled. And the strongest argument is not the one that was being made.
+
+## 1️⃣ The calendar argument, which stands alone
+
+The narrative sets an **annual retrain locked to the Finance Act calendar** and names **August 2026**
+as the point past which the model gives wrong answers about Finance Act 2026 changes. **It is 2026-08-25.**
+This argument needs no defect at all.
+
+## 2️⃣ 🔴 WHAT IS DEMONSTRABLY A TRAINING-DATA DEFECT — measured today, and this is new
+
+**[M, measured 2026-08-25 over all 15,354 dataset rows]**
+
+| defect | rows in corpus | **in `train_sft.jsonl`** | **in `val_sft.jsonl`** |
+|---|---|---|---|
+| asserts a **TZS 26,000/27,000 personal relief** | **64** | **16** | **2** |
+| computes **PAYE band 2 at 9%** (locked rate: **8%**) | **32** | **6** | **2** |
+| carries **`nssf.or.tz`** (DNS-failing domain) | **611** | **115** | **16** |
+
+**CLAUDE.md §11 is categorical: *"Any pair mentioning 'TZS 26,000 personal relief' is WRONG."*
+Sixty-four rows of our own corpus say it.**
+
+**And the causal link is not inferred — it is a structural match.** Training row
+`datasets/tier1a/sft/train_sft.jsonl:1202`:
+
+> *"Kundi la 2 (TZS 270,001–520,000): 250,000 × **9%** = TZS 22,500. … **Jumla kabla ya punguzo** =
+> TZS 36,000. **Punguzo la kibinafsi = TZS 26,000.** PAYE inayolipwa = TZS 36,000 − TZS 26,000…"*
+
+Live reply recorded 2026-08-10:
+
+> *"… **Jumla kabla ya punguzo** = TZS 78,000. **Punguzo la kibinafsi = TZS 26,000.** PAYE
+> inayolipwa = TZS 78,000 − TZS 26,000 = TZS 52,000."*
+
+**Same template, same phrase, different arithmetic. This is not a hallucination. It is recall.**
+That is the cleanest "training-data defect" evidence this project has produced, and it is exactly
+the class a retrain fixes and a guard cannot.
+
+**Two things to notice about the val set.** `val_sft.jsonl` carries **all three** defects (2 + 2 +
+16 rows). **Validation loss therefore REWARDED reproducing them.** The training loop could not have
+detected any of this.
+
+**And the 9% band rate is LATENT, not live: 0 sightings across 7,904 recorded reply strings** — while
+the phantom relief has **6 assertive sightings in 2,265 distinct generations (0.26%)**
+[`eval/results/phantom_relief_26k_prevalence.json`]. **A latent training-data defect is an argument
+for fixing the data BEFORE the retrain, not for ignoring it** — a retrain is exactly the event that
+could make it live.
+
+**⚠️ And `nssf.or.tz` is contained by a cleanup rewrite, which R25 labels containment, not a fix.**
+It was flagged in CLAUDE.md, emitted by the model, and silently corrected on every reply for the
+corpus's whole life. It surfaced only because a diagnostic bypassed cleaning **by accident**.
+
+## 3️⃣ ⛔ WHAT A RETRAIN DOES **NOT** FIX — and the founder's framing is right
+
+**The nine wrong fact-path rows partition RANKING 8 · ABSENCE 1 · OVERRIDE 0 · UNUSED 0.**
+Three of the wrong figures are **verbatim retrieved facts**. **An adapter fixes none of the nine.**
+Six of them were on the board waiting for exactly that build.
+
+**Also untouched by a retrain:** D1 adjacent-fact selection, D2 rank-1 contradiction, D3 fragment
+displacement, D4 refutation out of reach — **all four are retrieval defects, two with no mechanism
+at all.**
+
+**The precision the founder asked for, stated as a partition:**
+
+| defect | training-data defect? | fixed by a retrain? |
+|---|---|---|
+| phantom TZS 26,000 relief (64 rows) | **YES — measured in the SFT files** | **yes**, if the data is corrected first |
+| PAYE band 2 at 9% (32 rows) | **YES — latent** | **yes**, same condition |
+| `nssf.or.tz` (611 rows) | **YES** | **yes** — and it removes a containment |
+| `pic_11`'s TZS 10,000,000 presumptive ceiling | **a BELIEF defect, not a data defect** — D2 rank-1 contradiction, anchor at rank 1, **no arm of the separation recovered it** | **probably** — it is the one specimen that survived every non-training arm. D-FIDELITY-7 is **containment**: the belief remains, only one output shape is caught |
+| the 9 wrong fact-path rows | **NO** — RANKING/ABSENCE | **no. Zero of nine.** |
+| D1 · D2 · D3 · D4 | **NO** — retrieval | **no** |
+
+**⚠️ One caveat on the zero, and it is already on the board as an R22 instance:** OVERRIDE=0 was
+measured **only over the failures**. `nat_38` is an override among the successes. So the zero
+supports *"an adapter fixes none of these nine"* — it does **not** support *"an adapter changes
+nothing"*, and **the discard rate on the successes has never been measured.**
+
+## 4️⃣ 🔗 THE ORDERING IS A HARD DEPENDENCY, NOT A PREFERENCE
+
+> **Retraining on today's SFT files bakes in 16 phantom-relief rows, 6 wrong-band rows and 115
+> dead-domain rows — and `val_sft.jsonl` carries all three, so the run cannot detect them.**
+
+**Corpus correction is a PRECONDITION of the retrain.** The narrative agrees from the other
+direction: *"The dataset is the product."* This also means the (B) corpus work and the (C) data
+correction share a regen/export cycle and should be sequenced together.
+
+## 5️⃣ Cost, and where the real risk sits
+
+Config: **LoRA r=128 / α=128, lr 2e-5, 1 epoch, bs 1 × ga 8, seq 2048, seed 3407**, over ~**4,096**
+train / **456** val rows. One Kaggle cycle. Around it:
+
+`clean_temp_files --scan` → `check_eval_split` → `generate_sft.py` → HF upload → the **8-point
+training-preflight checklist (founder confirmation, blocking)** → train → adapter to HF →
+`adapter_repo` in `chike_config.json` → **R16 deploy cycle** → **full gate re-run**.
+
+> **The gate re-run is the cost and the risk, not the GPU time.** The current adapter passed at
+> **87.9% / 100%**. A new adapter must **re-pass both gates before it can ship**, and Gate 1's
+> headroom is ~6 questions. **A retrain that fails the gate costs the whole cycle and ships
+> nothing** — and the old adapter stays live, which is the correct failure mode but not a free one.
+
+## The honest summary of (C)
+
+**The retrain is justified by the CALENDAR and the CORPUS — not by the failure analysis.** The
+failure analysis says the opposite: zero of nine. That is a different and considerably better
+argument than the one that was being made, and it comes with a precondition attached.
+
+---
+
+# 📌 CARRIED FORWARD THROUGH THE PIVOT — nothing below is superseded by the direction change
+
+- **Rules R16–R26** in CLAUDE.md, all live. Especially **R21** (a held-out set is the entry price
+  for anything that fails by blocking a user — which **(A) is**), **R22** (measure on the
+  population that needs the remedy; three instances, now predictive), **R24** (a specimen
+  harness's baseline must reproduce the recorded live reply), **R26** (plant the thing it exists to
+  block; **suspect the specimen first**; where a control *lives* matters more than whether it works).
+- **The four defect classes** — D1 adjacent-fact selection · D2 rank-1 contradiction · D3 fragment
+  displacement · D4 refutation out of reach. **Three of four have no mechanism; two are unreachable
+  by retrieval.** All four are fact-path, which is why (A) and (B) are the same fight.
+- **The ask-alignment lever** — **69-rank swing** from vocabulary alone, the dominant retrievability
+  factor, **per-question not per-fact**. Now an explicit line item in (B)'s cost model.
+- **Correction-shaped wrongness**, and the **revised pull triggers** it defeated.
+- **The coverage gate, shipped-disabled**, with its **37× contamination gap** — **evidence, not a
+  dead end**, and the precedent that prices (A)'s A0→A1 expected gap. And now also
+  `eval/results/coverage_gate_recut_by_boundary.json`: **narrowing the topic count does not revive
+  it.**
+- **D-FIDELITY-7 — built, NOT_WIRED**, held one R16 cycle. Still unwired. **Containment, not a fix.**
+- **Board:** `eval_355` wrong on both arms despite being recorded resolved · the empty-reply guard
+  gap · `pic_05`'s `_PAYROLL_CTX` narrowing (*"tunalipa"* is generic "we pay") · the transport
+  schedule · the dead-domain rows in `datasets/` (**611 rows today**) · the transcript store at
+  **0 rows** with an **unexercised daily review** · the WhatsApp webhook token, the one control
+  never planted into · **`nat_23`'s "kila mmoja"** — a correct computation wrapped in a wrong
+  sentence, which no D-FIDELITY rule covers.
+- **The single-arm decision, closed on evidence**, with its honest framing intact: **"keep
+  single-arm" is not "single-arm is good"** — two-arm invents regulatory content, single-arm
+  under-reports what it holds, and switching trades one class for the other.
+- **NEW, boarded today:** `docs/reference_narrative.md` carries **`nssf.or.tz`** in its own
+  whitelist (lines 83, 255). The strategy document needs the same correction as the corpus.
+
+---
+
 # 📐 STEP 1 OF THE SCOPED-PRODUCT QUESTION, 2026-08-25 — the corpus IS shaped like a payroll product, and the boundary does NOT revive the shelved floor.
 
 **Free, offline, and BOUNDING only.** Harnesses: `eval/scoping/classify_boundary.py`,

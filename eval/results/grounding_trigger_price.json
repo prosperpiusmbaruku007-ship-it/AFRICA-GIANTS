@@ -1,0 +1,222 @@
+{
+  "measured": "2026-08-25",
+  "harness": "eval/scoping/price_grounding_trigger.py",
+  "purpose": "price scope (A) BEFORE building it -- no mechanism is built or run here",
+  "sources": [
+    "eval/results/grounding_48.json",
+    "eval/grounding/adjudication_no_figures.json"
+  ],
+  "why_each_population": {
+    "benefit": "WRONG fact rows -- R22: a remedy for wrong answers is measured on wrong answers, never on the base rate.",
+    "cost": "CORRECT fact rows -- the users who would be clarified at instead of answered. This is the cost the coverage gate was never priced on.",
+    "NOT_MEASURED": "paraphrase space. Both populations are the self-authored natural 48, so the cost figure is a LOWER BOUND (R21, 37x precedent). A held-out set authored against the user, frozen before the mechanism exists, is the entry price."
+  },
+  "top_k_sensitivity": "grounding here is at top_k=3; the orchestrator pools NINE. Against the larger pool more figures are grounded, so the trigger catches FEWER wrong answers and raises FEWER false clarifications. Decide by measurement, not by convenience.",
+  "cross_tab_verdict_x_grounding": {
+    "CLARIFY|UNGROUNDED": 1,
+    "CORRECT|GROUNDED": 2,
+    "CORRECT|NO_FIGURES": 6,
+    "CORRECT|UNGROUNDED": 3,
+    "PARTIAL|NO_FIGURES": 3,
+    "PARTIAL|UNGROUNDED": 1,
+    "WRONG|GROUNDED": 3,
+    "WRONG|UNGROUNDED": 2
+  },
+  "verdict": {
+    "benefit_population": "fact-path rows adjudicated WRONG -- the population the remedy is FOR",
+    "catches_wrong": {
+      "n": 2,
+      "of": 5,
+      "which": [
+        "nat_44",
+        "nat_45"
+      ]
+    },
+    "misses_wrong": {
+      "n": 3,
+      "of": 5,
+      "which": [
+        "nat_28",
+        "nat_33",
+        "nat_41"
+      ],
+      "why": "GROUNDED -- the wrong figure really was in the retrieved context"
+    },
+    "cost_population": "fact-path rows adjudicated CORRECT -- the population that PAYS",
+    "clarifies_correct_figure_bearing": {
+      "n": 3,
+      "of": 5,
+      "which": [
+        "nat_26",
+        "nat_27",
+        "nat_36"
+      ]
+    },
+    "clarifies_correct_all_11_by_human_adjudication": {
+      "n": 4,
+      "of": 11,
+      "which": [
+        "nat_27",
+        "nat_36",
+        "nat_37",
+        "nat_38"
+      ],
+      "note": "adds nat_37 and nat_38, which the figure test scores NO_FIGURES. nat_38 is UNGROUNDED_AND_CONTRARY -- it answered CORRECTLY while its one on-topic retrieved fact said the opposite. A grounding trigger clarifies it, and better retrieval-following would have made it WORSE."
+    },
+    "headline": "On the measured population the trigger fires on 2 of 5 WRONG fact rows and on 4 of 11 CORRECT ones. IT FIRES MORE OFTEN ON RIGHT ANSWERS THAN ON WRONG ONES."
+  },
+  "class_analysis_ceiling": {
+    "partition_of_the_9_wrong_fact_rows": {
+      "RANKING": 8,
+      "ABSENCE": 1,
+      "OVERRIDE": 0,
+      "UNUSED": 0
+    },
+    "traceable_wrong_figures": {
+      "nat_05": "TZS 260,000 <- rank 3 in its pool: `company registration fee 3: 260,000 TZS`",
+      "nat_41": "\"siku 1\"    <- rank 1: `registration certificate processing time new: 1 days`",
+      "nat_28": "15%         <- rank 1: `royalties wht rate: ... 15% ...`",
+      "nat_44": "6%          <- a services rate offered to a GOODS question"
+    },
+    "why_this_caps_the_mechanism": "A recited wrong fact is GROUNDED. The dominant defect class is therefore invisible to a grounding trigger by construction -- not because the trigger is badly built, but because the figure really did come from the context. \"Fabricated\" was the wrong word for these answers all along: they are TRACEABLE.",
+    "r22_caveat_on_the_zero": "OVERRIDE=0 was measured ONLY over the failures. nat_38 is an override among the SUCCESSES (it answered correctly while its one on-topic retrieved fact pointed the other way). So the zero supports \"an adapter fixes none of these nine\"; it does NOT support \"the model recites what it is handed\" as a general claim."
+  },
+  "gate_interaction": {
+    "gate_1_in_corpus_threshold": 0.85,
+    "gate_1_last_recorded": 0.879,
+    "eval_set_size": 200,
+    "headroom_questions": 6,
+    "gate_2_out_of_corpus_threshold": 0.7,
+    "gate_2_last_recorded": 1.0,
+    "clarification_copy_contains_a_refusal_phrase": "sina uhakika"
+  },
+  "gate_interaction_note": "Gate 1 has ~6 questions of headroom (0.879 against a 0.85 floor over 200 questions). Every in-corpus question this mechanism clarifies is a direct Gate 1 loss, because score_question does not treat a clarification as anything but a wrong answer. Meanwhile the proposed copy opens with 'sina uhakika', which IS in refusal_phrases, so on OOC rows it scores as a PASS. The mechanism makes the gate we already clear easier and the gate we barely clear harder.",
+  "per_row": [
+    {
+      "id": "nat_25",
+      "verdict": "CLARIFY",
+      "grounding": "UNGROUNDED",
+      "fires": true
+    },
+    {
+      "id": "nat_26",
+      "verdict": "CORRECT",
+      "grounding": "UNGROUNDED",
+      "fires": true
+    },
+    {
+      "id": "nat_27",
+      "verdict": "CORRECT",
+      "grounding": "UNGROUNDED",
+      "fires": true
+    },
+    {
+      "id": "nat_28",
+      "verdict": "WRONG",
+      "grounding": "GROUNDED",
+      "fires": false
+    },
+    {
+      "id": "nat_29",
+      "verdict": "PARTIAL",
+      "grounding": "NO_FIGURES",
+      "fires": false
+    },
+    {
+      "id": "nat_30",
+      "verdict": "PARTIAL",
+      "grounding": "NO_FIGURES",
+      "fires": false
+    },
+    {
+      "id": "nat_31",
+      "verdict": "CORRECT",
+      "grounding": "GROUNDED",
+      "fires": false
+    },
+    {
+      "id": "nat_32",
+      "verdict": "CORRECT",
+      "grounding": "NO_FIGURES",
+      "fires": false
+    },
+    {
+      "id": "nat_33",
+      "verdict": "WRONG",
+      "grounding": "GROUNDED",
+      "fires": false
+    },
+    {
+      "id": "nat_34",
+      "verdict": "CORRECT",
+      "grounding": "GROUNDED",
+      "fires": false
+    },
+    {
+      "id": "nat_35",
+      "verdict": "PARTIAL",
+      "grounding": "NO_FIGURES",
+      "fires": false
+    },
+    {
+      "id": "nat_36",
+      "verdict": "CORRECT",
+      "grounding": "UNGROUNDED",
+      "fires": true
+    },
+    {
+      "id": "nat_37",
+      "verdict": "CORRECT",
+      "grounding": "NO_FIGURES",
+      "fires": false
+    },
+    {
+      "id": "nat_38",
+      "verdict": "CORRECT",
+      "grounding": "NO_FIGURES",
+      "fires": false
+    },
+    {
+      "id": "nat_39",
+      "verdict": "CORRECT",
+      "grounding": "NO_FIGURES",
+      "fires": false
+    },
+    {
+      "id": "nat_40",
+      "verdict": "CORRECT",
+      "grounding": "NO_FIGURES",
+      "fires": false
+    },
+    {
+      "id": "nat_41",
+      "verdict": "WRONG",
+      "grounding": "GROUNDED",
+      "fires": false
+    },
+    {
+      "id": "nat_42",
+      "verdict": "PARTIAL",
+      "grounding": "UNGROUNDED",
+      "fires": true
+    },
+    {
+      "id": "nat_43",
+      "verdict": "CORRECT",
+      "grounding": "NO_FIGURES",
+      "fires": false
+    },
+    {
+      "id": "nat_44",
+      "verdict": "WRONG",
+      "grounding": "UNGROUNDED",
+      "fires": true
+    },
+    {
+      "id": "nat_45",
+      "verdict": "WRONG",
+      "grounding": "UNGROUNDED",
+      "fires": true
+    }
+  ]
+}
