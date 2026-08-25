@@ -227,7 +227,7 @@ pairs.append({
         f"{NSSF_RATE} "
         "Kiwango: 10% kwa mwajiri + 10% kwa mfanyakazi = 20% ya jumla. "
         "Hakuna kiwango kingine — si 5%, si 15%, si 7.5%. "
-        "Chanzo: NSSF Act na kanuni za NSSF (nssf.or.tz)."
+        "Chanzo: NSSF Act na kanuni za NSSF (nssf.go.tz)."
     )
 })
 pairs.append({
@@ -255,7 +255,7 @@ pairs.append({
     "output": (
         f"{NSSF_RATE} "
         "Tarehe ya kulipa NSSF: tarehe 9 ya mwezi unaofuata (kwa makampuni mengi). "
-        "Thibitisha tarehe yako halisi na NSSF (nssf.or.tz) kwa sababu inaweza kutofautiana. "
+        "Thibitisha tarehe yako halisi na NSSF (nssf.go.tz) kwa sababu inaweza kutofautiana. "
         "Kuchelewa kulipa NSSF kunasababisha faini — lipa mapema."
     )
 })
@@ -286,7 +286,7 @@ pairs.append({
         f"{NSSF_RATE} "
         "Ndio — hata wafanyakazi 3 wanastahili NSSF. Hakuna kizingiti cha ukubwa. "
         "Ukiwa na wafanyakazi 3, unapaswa: "
-        "(1) Sajili kampuni yako kwa NSSF (nssf.or.tz). "
+        "(1) Sajili kampuni yako kwa NSSF (nssf.go.tz). "
         "(2) Sajili wafanyakazi wako wote. "
         "(3) Lipa NSSF kila mwezi (10% mwajiri + 10% mfanyakazi)."
     )
@@ -305,7 +305,7 @@ pairs.append({
     "instruction": "NSSF, WCF, na SDL — tofauti yao ni nini kwa kifupi?",
     "output": (
         "NSSF (National Social Security Fund): "
-        "10% mwajiri + 10% mfanyakazi | wafanyakazi wote | nssf.or.tz. "
+        "10% mwajiri + 10% mfanyakazi | wafanyakazi wote | nssf.go.tz. "
         "Kusudi: pensheni na usalama wa jamii. "
         "\nWCF (Workers' Compensation Fund): "
         "0.5% mwajiri | waajiri WOTE (hata mfanyakazi 1) | portal.wcf.go.tz. "

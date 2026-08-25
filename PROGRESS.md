@@ -4,6 +4,247 @@ Last updated: 2026-08-25
 
 ---
 
+# 🔨 EXECUTION, 2026-08-25 — (A) killed, curation measured, growth curved, corpus corrected, three "gaps" reclassified as answered.
+
+**Sequence as instructed: deletion + re-measure → corpus correction → growth curve → retrain
+scoping.** Everything below is measured with a committed harness (R18) or applied by a committed
+script. **The retrain itself is not started; its precondition now is.**
+
+## 🪦 (A) GROUNDING-TRIGGERED CLARIFICATION — KILLED DESIGN, not deferred
+
+**Recorded as killed, with the mechanism, so it is not re-proposed.**
+
+> **The design:** *do the figures in this reply appear in the retrieved facts or the engine's
+> working? If not, they came from weights — so clarify rather than answer.* It passes R19 cleanly:
+> a comparison against a fixed input, no `ComputationResult` needed, works on the fact path where
+> every fidelity rule before D-FIDELITY-6 goes vacuous.
+>
+> **Why it dies:** the fact path's failure is **RANKING, not fabrication**. Eight of nine wrong
+> fact rows are the model **reciting a retrieved WRONG fact** — `nat_28`'s 15% at rank 1,
+> `nat_41`'s *"siku 1"* at rank 1, `nat_05`'s 260,000 at rank 3. **A recited wrong fact IS
+> grounded, so the trigger is silent on 8 of 9 by construction** — not by tuning, by definition.
+> Priced on the populations that matter it fires on **2 of 5** WRONG fact rows and **4 of 11**
+> CORRECT ones (`eval/results/grounding_trigger_price.json`).
+
+**⛔ AND THE PART WORTH KEEPING: IT WAS KILLED BY THE POPULATION TEST, BEFORE A BUILD, NOT AFTER.**
+R22 has three recorded instances, all of them post-hoc — a fact-use statistic, a coverage gate and
+a retriever choice, each measured where the mechanism already worked and each reversing when
+measured where the harm was. **This is the first time the question *"what population does this
+remedy serve, and how does it behave THERE?"* was asked while the design was still on paper.** It
+cost one script reading two committed artifacts. It saved a build, an R21 held-out set, and a gate
+cycle.
+
+**The premise was mine and the correction belongs with it:** the fact path was assumed to fabricate.
+It recites. *"Fabricated" was the wrong word for these answers all along — they are TRACEABLE.*
+
+**A0 is not run.** Its purpose was to price a mechanism that is not shipping.
+
+## 🔴 A SCORING DEFECT, INDEPENDENT OF THAT PROPOSAL AND INHERITED BY ANY FUTURE ONE
+
+`scripts/run_eval.py::score_question` dispatches on `answer_type` and **only
+`out_of_corpus_refusal` consults `is_correct_refusal`.** Therefore, for **any** clarification
+mechanism this project ever builds:
+
+| gate | a clarification scores as |
+|---|---|
+| **Gate 1** (in-corpus, ≥0.85) | **a WRONG ANSWER** |
+| **Gate 2** (OOC, ≥0.70) | **a PASS** — the natural copy opens *"sina uhakika"*, which **is** in `refusal_phrases` |
+
+**Gate 1 last recorded 0.879 over 200 questions — about six questions of headroom. Gate 2 is at
+1.00.** So the scoring makes the gate we clear by thirty points easier and the gate we clear by six
+questions harder. **A clarification is neither a right answer nor a refusal, and the scorer has no
+third category.** Any clarification design must either add one or accept a Gate-1 hit per
+clarification. **Boarded as a defect in its own right.**
+
+## 🧹 INDEX CURATION IS A LEVER — measured twice, and the second arm is the one to act on
+
+**Unblock first: `intfloat/multilingual-e5-base` LOADS AND RUNS LOCALLY.** R15's note that the
+local network blocks it is **stale**. Every measurement below ran offline, with no Kaggle round
+trip. That changes the cost of all index work.
+
+### Arm 1 — delete the 17 trademark fee rows (`eval/results/feerow_curation.json`)
+
+**R25 was applied before the change and it changed the design.** Sweeping both corpora found
+**28 rows that DO ask trademark fee questions — all in `datasets/`, ZERO in `eval/`.** So deletion
+costs no *measured* accuracy and still removes content a real user can ask for. Hence a
+consolidate arm.
+
+Result: **6 of 7 anchors moved up, 0 entered the top-3.** `nat_23`'s delta was **exactly 17** —
+**every single trademark fee row outranked the SDL rate fact for a question about the SDL rate.**
+The crowding is real; seventeen rows is just not enough of it.
+
+### Arm 2 — consolidate the whole class (`eval/results/feegroup_curation.json`) ✅ **the result**
+
+**42 rows absorbed into 3 grouped passages. Index 221 → 182.**
+
+| row | rank before | after | delta |
+|---|---|---|---|
+| `nat_23` SDL rate | 86 | **45** | **+41** |
+| `nat_33` BRELA annual return | 48 | **23** | +25 |
+| `nat_44` goods withholding | 33 | **16** | +17 |
+| `nat_28` services withholding | 33 | **19** | +14 |
+| `nat_05` SDL rate | 24 | **8** | +16 |
+| `nat_45` WCF deadline | 19 | **16** | +3 |
+| `nat_43` **(R24 baseline control)** | **1** | **1** | reproduces its recorded state ✅ |
+
+**Controls: 2 GAINED, 0 REGRESSED.** The trade I expected did not exist — a grouped passage made
+*more* fee questions answerable, because it carries the band context a bare `key: number` row has
+no room for.
+
+> **A `key: number` row is retrieved for the wrong questions and fails the right ones.** The
+> property that makes it crowd real facts out of the top-3 is the same property that makes it a
+> poor answer to the fee question it exists for. **Consolidation is not a trade. It is strictly
+> better on both sides.**
+
+**⛔ AND THE CLASS IS WORSE THAN CROWDING — four of these rows are TRACEABLE SOURCES of named
+defects:**
+
+| row | defect |
+|---|---|
+| `[167] registration certificate processing time new: 1 days` | **`nat_41`'s fabricated *"siku 1"* for OSHA registration.** It is a BRELA row. `[155]` says 3 days for a same-sounding thing |
+| `[120] company registration fee 3: 260,000 TZS` | `nat_05`'s fabricated BRELA fee answering an SDL question |
+| `[209] contribution rate emplyees: 10 %` | the NSSF **10%-vs-20%** collapse. **Note the typo in the key.** A context-free half-rate with no *"of 20% total"* beside it |
+| `[157] beneficial owner information penalty maximum: 10000000 TZS` | ⚠️ **HYPOTHESIS ONLY, untested** — an unformatted ten million, and `pic_11` believes the presumptive ceiling is *"milioni 10"* |
+
+**Awaiting approval:** applying the consolidation is a `locked_facts` edit + **R15 regen** + R16
+deploy + gate re-run. It is a **different and larger change than the deletion authorised**, so it
+is put back for a decision rather than substituted silently.
+
+## 📈 GROWTH CURVE — burial is a stable PERCENTILE, and wording beats size
+
+`eval/index_quality/measure_rank_vs_index_size.py` → `eval/results/rank_vs_index_size.json`.
+Sizes 40/80/120/160/221, 40 trials each, subsets always retaining the anchor.
+
+**`rank / n` is flat for all seven (spread < 0.03). Burial is a fixed percentile, so growth scales
+it LINEARLY:**
+
+| row | rank @ 221 | **extrapolated @ 600** |
+|---|---|---|
+| `nat_23` | 86 | **~234** |
+| `nat_33` | 48 | ~130 |
+| `nat_28` / `nat_44` | 33 | ~90 |
+| `nat_05` | 24 | ~65 |
+
+**⚠️ THE CONTROL IS THE FINDING. `nat_43` sits at rank 1 at EVERY size measured — 40, 80, 120, 160,
+221.** It is the row that got the ask-alignment rewrite. **A row that wins outright is immune to
+index growth in a way a buried row is not.**
+
+> **Curation buys a constant factor. Ask-alignment changes which curve you are on.** An
+> un-aligned fact added at n=600 is **born buried**; an aligned one is not. **Growth is affordable
+> only for facts that are ask-aligned — that is the gate on any 600-fact target.**
+
+**And a self-correction on my own instrument, recorded rather than left standing:** the harness's
+`percentile_is_stable` flag labelled `nat_43` stable too, and its `EXTRAPOLATED_rank` of **2.7** is
+an artifact of applying the percentile model to a row the model does not fit. For six rows the
+**ratio** is flat; for `nat_43` the **rank** is flat. **An instrument that misclassifies its own
+control is exactly what R23 is about**, and the number should be read as "≈1", not 2.7.
+
+## 🧼 CORPUS CORRECTION — applied. The retrain precondition is now met.
+
+`scripts/correct_corpus_defects.py` → `eval/results/corpus_correction.json`.
+
+| | |
+|---|---|
+| PAYE-defect rows **quarantined** | **75** → `datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl` (17 from `train_sft`, 12 from `train_sft_balanced`, **4 from `val_sft`**) |
+| dead-domain occurrences **rewritten** | **841** across **47** files |
+| skipped by the **negation guard** | **2** |
+| skipped by the **keep-list** | **3** |
+| verification after | relief **0** · band-9 **0** · unnegated dead domain **0** ✅ |
+
+**Quarantined, not rewritten** — correcting means recomputing each PAYE calculation, and R20's
+lesson is that a mechanical pass manufacturing a plausible wrong fix is worse than the gap, in
+training data, silently, forever. **R13 (`generate-from-facts`) is the pipeline-native
+replacement**, and it regenerates from the locked table rather than from prose. Cost: 75 of 15,354
+rows (0.5%), reversible and auditable.
+
+**⛔ THE NEGATION GUARD EARNED ITS PLACE ON THE FIRST RUN.** Two rows are corrective *training
+pairs* — *"Je tovuti ya NSSF ni nssf.or.tz?"* → *"Hapana — tovuti sahihi ni nssf.go.tz, si
+nssf.or.tz."* **A blanket replace would have turned those into a pair asserting the CORRECT domain
+is wrong.** That is R25's damage case, caught by the guard rather than by a reader.
+
+**And the pass could rewrite its own docstring** — found in the dry run, added to the keep-list.
+*A mechanical pass that can reach its own source is one edit away from erasing its rationale.*
+
+**⛔ `sources/whitelist.json` — the machine-readable whitelist the pipeline ENFORCES — LISTED THE
+DEAD DOMAIN** (`https://www.nssf.or.tz`). CLAUDE.md §4 has said use `nssf.go.tz` for months; the
+file the code reads said otherwise. **And so did `docs/reference_narrative.md`, twice (lines 83 and
+255) — which is the ROOT: the corpus learned it from the strategy document.** All three fixed.
+
+**What is deliberately NOT done:** `chike/generation_cleanup.py`'s containment **stays**. The
+deployed adapter still emits the dead domain, so removing containment before the retrain exposes
+users. **Fixing the data is the cause fix (R25); the containment comes out AFTER the retrain, not
+with it.** Recorded replies in `eval/results/*.json` are untouched — rewriting a measurement
+falsifies it.
+
+**Validator: 48,647 errors before and after, 21 fewer pairs. Zero new errors introduced.**
+`check_eval_split.py` CLEAN.
+
+## ✅ THE THREE "UNANSWERABLE" DOMAINS — RECLASSIFIED AS ANSWERED, and the facts are written
+
+`scripts/add_local_levy_facts.py`. **locked_facts 247 → 252.** All content from the 2026-08-16
+source pass, which read **Local Government Finance Act Cap 290 R.E. 2019** in full and quotes it
+verbatim. Nothing newly asserted.
+
+| fact | what it says |
+|---|---|
+| `council_service_levy_is_a_cap_not_a_rate` | **0.3% is a CEILING, not a rate** (s.7(1)(u) urban / s.6 district: *"at the rate not exceeding 0.3 percent of the turnover net of VAT and excise duty"*). Most councils charge less |
+| `council_service_levy_non_corporate_conflict` | **the statute contradicts itself on our most common user.** The operative section says *"corporate entities or any person conducting business with business licence"*; the Schedule forbids charging non-corporate entities. **A sole-proprietor duka is non-corporate.** Ask, and get it in writing |
+| `market_dues_no_national_amount` | no national figure exists — Markets Ordinance Cap 106 + 180+ council by-laws. Names the office, states no amount |
+| `market_dues_exemptions` | ⭐ **the national half nobody had written**: councils may NOT charge peasants selling produce on-and-off, village-council *magulio*, or **small vendors of cooked food — maandazi, fried fish.** A *genge* may simply be exempt |
+| `business_licence_fee_national_schedule_local_collection` | **fee set nationally, licence issued and collected locally, council may not exceed the prescribed fee.** No amount encoded — the current First Schedule is the named blocker |
+
+> **A council-set fee has no national amount, so naming the office and the rule IS the answer.**
+> Filing them as coverage gaps kept a permanent worklist of things that cannot exist.
+
+**⛔ A WHITELIST GAP, SURFACED RATHER THAN PAPERED OVER.** Cap 290 was read from **`mof.go.tz`** — a
+`.go.tz` government portal **not in `sources/whitelist.json`**. Cap 290 is also on TanzLII, which
+IS whitelisted, **but that URL has not been fetched and will not be invented — that is precisely
+the citation-laundering pattern §3 exists to stop.** Each fact cites what was actually read and
+carries `_pending_whitelist`. **Adding `mof.go.tz` is a change to a control and is a founder
+decision.** It is also *why* local-levy facts could never be sourced cleanly before.
+
+### And a guard that had to be narrowed twice, both times measured first
+
+`minimum_turnover_tax` carried bare `0.3%` / `asilimia 0.3` / `0.3 percent` patterns. **`check_pair`
+matches every pattern against the whole answer with NO topical scoping**, so a **correct**
+service-levy body quoting the statutory cap was flagged as a locked-fact violation. Same shape as
+bare `hisa` in the OOC list. **Cost of narrowing, measured before doing it: the bare patterns
+matched exactly ONE corpus row — a held-out probe QUESTION, which `check_pair` never scans. Zero
+live detections lost.**
+
+**Then the probes found a second one I had not predicted.** The `0.5` patterns escaped only
+*"kutoka asilimia 0.5"* / *"from 0.5"* — **not *"ILIKUWA asilimia 0.5"*, the plainest Swahili way
+to say "it WAS 0.5%", which is what the locked fact itself asserts.** A correct historical
+statement was being flagged. Same family as the recorded near-miss where a bare *"ni"* sits outside
+D-FIDELITY-1's connectors.
+
+**10 probes, both directions, wired as `tests/test_local_levy_guard.py` (12 tests).** `llp_09` and
+`llp_10` exist because **a narrowing that only proves the false positive is gone is
+indistinguishable from disabling the guard.**
+
+**And the drift check fired on my own commit**, correctly: 5 new locked facts with no index row.
+Pinned `pending_r15`. **They are INERT until the regen** — which is deliberately batched with the
+fee consolidation rather than run twice.
+
+## Where the sequence stands
+
+| step | state |
+|---|---|
+| deletion + re-measure | ✅ **done** — and it says *consolidate*, not delete. **Awaiting a decision**, because it is a bigger change than the one authorised |
+| corpus correction | ✅ **applied and verified** |
+| growth curve | ✅ **done** — growth is affordable only for ask-aligned facts |
+| retrain scoping | **next.** Precondition met. Gate re-run costed as the real risk: ~6 questions of Gate-1 headroom, and a failed retrain costs the cycle and ships nothing |
+
+**Batched and pending one R15 regen:** the fee consolidation (42→3) **and** the five local-levy
+facts. **One regen, not two** — the regen is a fixed per-batch cost, which is the whole reason to
+batch.
+
+**The retrain's honest justification, unchanged and on the record: CALENDAR and CORPUS, not the
+failure analysis, which argues the other way — zero of nine wrong fact rows are OVERRIDE, so an
+adapter fixes none of them.**
+
+---
+
 # 🧭 THREE WORKSTREAMS SCOPED, 2026-08-25 — the boundary is dropped; the product stays general and the gap closes from both sides.
 
 **Direction change recorded by the founder.** Step 2a is **not** being run as a boundary decision.

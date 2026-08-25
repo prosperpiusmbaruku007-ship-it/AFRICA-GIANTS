@@ -624,7 +624,7 @@ p("tier1a_mix_rc_003_20260609","nssf_contributions",
   "refuse NSSF contributions — it is the employer's legal obligation to DEDUCT the "
   "employee's contribution (10%) and ADD the employer's contribution (10%) and "
   "remit to NSSF. The employee's agreement is not a condition.",
-  "https://www.nssf.or.tz", "NSSF — National Social Security Fund",
+  "https://www.nssf.go.tz", "NSSF — National Social Security Fund",
   GP, "2018-01-01", ANN, "NSSF Act amendment",
   "rural_conversational", "standard"),
 

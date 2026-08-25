@@ -955,3 +955,17 @@ Total: 1 | Flagged: 1
 
 [2026-08-24T23:07:34.443564] Checked C:\Users\jhjh\AppData\Local\Temp\tmpheslmwm4\lf_ok.jsonl
 Total: 1 | Flagged: 0
+
+[2026-08-25T15:33:55.666174] Checked eval/fidelity/local_levy_probes.jsonl
+Total: 8 | Flagged: 3
+  FLAG [llp_03] minimum_turnover_tax: (kodi ndogo|mauzo ghafi|turnover)[^.]{0,60}asilimia 0\.3
+  FLAG [llp_04] minimum_turnover_tax: (minimum turnover tax|turnover tax|kodi ndogo ya mauzo)[^.]{0,60}0\.3%
+  FLAG [llp_08] minimum_turnover_tax: kodi ndogo.*(?<!kutoka )(?<!from )0\.5(?! hadi)(?! to )
+
+[2026-08-25T15:34:35.499189] Checked eval/fidelity/local_levy_probes.jsonl
+Total: 10 | Flagged: 4
+  FLAG [llp_03] minimum_turnover_tax: (kodi ndogo|mauzo ghafi|turnover)[^.]{0,60}asilimia 0\.3
+  FLAG [llp_04] minimum_turnover_tax: (minimum turnover tax|turnover tax|kodi ndogo ya mauzo)[^.]{0,60}0\.3%
+  FLAG [llp_09] minimum_turnover_tax: kodi ndogo.*(?<!kutoka )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\.5(?! hadi)(?! to )
+  FLAG [llp_10] minimum_turnover_tax: minimum.*tax.*(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\.5(?! hadi)(?! to )
+  FLAG [llp_10] minimum_turnover_tax: turnover.*tax.*(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\.5(?! hadi)(?! to )

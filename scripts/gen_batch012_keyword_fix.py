@@ -82,7 +82,7 @@ p("Ni nani anachangia zaidi kwenye NSSF — mwajiri au mfanyakazi?",
   "Kwa mgawanyo wa kawaida, wote wawili wanachangia kwa kiasi sawa — mwajiri anachangia asilimia 10 na mfanyakazi anachangia asilimia 10, jumla asilimia 20. Hata hivyo, mwajiri anaweza kuchagua kuchangia zaidi: mgawanyo wa 15+5 (mwajiri zaidi) au 20+0 (mwajiri analipa yote). Mfanyakazi hawezi kuchangia zaidi ya asilimia 10 — kikomo chake ni asilimia 10 tu. Kiasi kinachopelekwa NSSF daima ni asilimia 20 ya mshahara wa jumla."),
 
 p("Malipo ya NSSF inayopelekwa lazima yawe kamili — nifanyeje kama sijaweza kulipa yote?",
-  "Kama huwezi kulipa NSSF yote kwa wakati, wasiliana na NSSF (nssf.or.tz) mapema — kabla ya tarehe ya mwisho ikipita. NSSF inaweza kukusaidia kupanga mpango wa malipo. Kuchelewa bila taarifa kunasababisha adhabu ya asilimia 5 kwa kila mwezi wa uchelewaji wa malipo inayopelekwa. Usiache bila kutoa taarifa — NSSF inashughulika vyema zaidi na wajiri wanaowasiliana mapema."),
+  "Kama huwezi kulipa NSSF yote kwa wakati, wasiliana na NSSF (nssf.go.tz) mapema — kabla ya tarehe ya mwisho ikipita. NSSF inaweza kukusaidia kupanga mpango wa malipo. Kuchelewa bila taarifa kunasababisha adhabu ya asilimia 5 kwa kila mwezi wa uchelewaji wa malipo inayopelekwa. Usiache bila kutoa taarifa — NSSF inashughulika vyema zaidi na wajiri wanaowasiliana mapema."),
 ]
 nssf_clean = [x for x in nssf_fix if dedup_check(x)]
 for x in nssf_clean: register(x)

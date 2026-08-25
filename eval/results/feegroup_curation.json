@@ -1,0 +1,386 @@
+{
+  "measured": "2026-08-25",
+  "harness": "eval/index_quality/measure_feegroup_curation.py",
+  "index_rows_before": 221,
+  "index_rows_after": 182,
+  "rows_absorbed": 42,
+  "groups": {
+    "trademark_fees": {
+      "rows_absorbed": 17,
+      "indices": [
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112
+      ],
+      "replacement_chars": 609
+    },
+    "company_registration_ladder": {
+      "rows_absorbed": 14,
+      "indices": [
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126
+      ],
+      "replacement_chars": 450
+    },
+    "brela_filing_fees": {
+      "rows_absorbed": 11,
+      "indices": [
+        127,
+        128,
+        129,
+        132,
+        135,
+        136,
+        137,
+        139,
+        140,
+        141,
+        142
+      ],
+      "replacement_chars": 476
+    }
+  },
+  "traceable_defect_sources_in_this_class": {
+    "row_167_registration_certificate_processing_time_new_1_days": "nat_41's 'siku 1'",
+    "row_120_company_registration_fee_3_260000": "nat_05's fabricated BRELA fee",
+    "row_209_contribution_rate_emplyees_10pct": "the NSSF 10%-vs-20% collapse (note the typo in the key)",
+    "row_157_beneficial_owner_penalty_10000000": "HYPOTHESIS ONLY — untested as a source for pic_11's 'milioni 10' belief"
+  },
+  "C2_baseline_control": {
+    "expected": "nat_43 anchor at rank 1 in the BASELINE arm",
+    "observed": 1,
+    "baseline_reproduces_recorded_state": true
+  },
+  "summary": {
+    "anchors": 7,
+    "moved_up": 6,
+    "entered_top_3": 0,
+    "controls_regressed": 0,
+    "controls_gained": 2
+  },
+  "rows": [
+    {
+      "id": "nat_05",
+      "question": "nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya mafunzo nitalipa asilimia tatu na nusu ya nini",
+      "why": "SDL rate",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 24,
+          "in_top_3": false,
+          "top_3": [
+            "company share value threshold 3 min: 5,000,000 TZS",
+            "company share value threshold 3 max: 20,000,000 TZS",
+            "company registration fee 3: 260,000 TZS"
+          ]
+        },
+        "A3_consolidate_all": {
+          "anchor_rank": 8,
+          "in_top_3": false,
+          "top_3": [
+            "minimum monthly contributions maternity benefit: 36 monthly_contributions",
+            "electrical test fee reduction final: 150,000 TZS",
+            "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12."
+          ]
+        }
+      },
+      "delta": 16
+    },
+    {
+      "id": "nat_23",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "why": "SDL rate",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 86,
+          "in_top_3": false,
+          "top_3": [
+            "company registration fee 3: 260,000 TZS",
+            "company registration fee 4: 290,000 TZS",
+            "company registration fee 2: 175,000 TZS"
+          ]
+        },
+        "A3_consolidate_all": {
+          "anchor_rank": 45,
+          "in_top_3": false,
+          "top_3": [
+            "course fee: 250,000 TZS",
+            "duration of maternity cash benefit: 12 weeks",
+            "company name change fee: 22,000 TZS"
+          ]
+        }
+      },
+      "delta": 41
+    },
+    {
+      "id": "nat_28",
+      "question": "nimefanya kazi ya ushauri kwa taasisi ya serikali wamesema watakata vat je asilimia ngapi na cheti nitapata lini",
+      "why": "services WHT",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 33,
+          "in_top_3": false,
+          "top_3": [
+            "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents ",
+            "vat registration notification deadline commissioner: 14 days",
+            "vat deferment threshold percentage: 90 %"
+          ]
+        },
+        "A3_consolidate_all": {
+          "anchor_rank": 19,
+          "in_top_3": false,
+          "top_3": [
+            "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents ",
+            "vat registration notification deadline commissioner: 14 days",
+            "vat deferment threshold percentage: 90 %"
+          ]
+        }
+      },
+      "delta": 14
+    },
+    {
+      "id": "nat_33",
+      "question": "sijapeleka ritani ya kampuni yangu miezi saba sasa nitalipa faini kiasi gani na ada yenyewe ni ngapi",
+      "why": "BRELA annual return fee",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 48,
+          "in_top_3": false,
+          "top_3": [
+            "unpaid contribution penalty frequency: each month or a part of a month null",
+            "employer notification deadline before retirement: 6 months",
+            "minimum contribution months health insurance: 3 months"
+          ]
+        },
+        "A3_consolidate_all": {
+          "anchor_rank": 23,
+          "in_top_3": false,
+          "top_3": [
+            "unpaid contribution penalty frequency: each month or a part of a month null",
+            "employer notification deadline before retirement: 6 months",
+            "minimum contribution months health insurance: 3 months"
+          ]
+        }
+      },
+      "delta": 25
+    },
+    {
+      "id": "nat_43",
+      "question": "mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+      "why": "C2 BASELINE CONTROL — recorded FIXED at rank 1",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 1,
+          "in_top_3": true,
+          "top_3": [
+            "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi nzima",
+            "stamp duty per copy memorandum articles copy: 10,000 TZS",
+            "gn487a prohibited activity 6: Prohibited activity 6: Small-scale mining"
+          ]
+        },
+        "A3_consolidate_all": {
+          "anchor_rank": 1,
+          "in_top_3": true,
+          "top_3": [
+            "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi nzima",
+            "gn487a prohibited activity 6: Prohibited activity 6: Small-scale mining",
+            "unpaid contribution penalty frequency: each month or a part of a month null"
+          ]
+        }
+      },
+      "delta": 0
+    },
+    {
+      "id": "nat_44",
+      "question": "nimeuzia wakala wa serikali bidhaa je watanikata asilimia ngapi ya vat",
+      "why": "goods WHT",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 33,
+          "in_top_3": false,
+          "top_3": [
+            "vat deferment threshold percentage: 90 %",
+            "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents ",
+            "vat deferment minimum value: 10,000,000 TZS"
+          ]
+        },
+        "A3_consolidate_all": {
+          "anchor_rank": 16,
+          "in_top_3": false,
+          "top_3": [
+            "vat deferment threshold percentage: 90 %",
+            "royalties wht rate: Withholding tax on royalties is 15% for BOTH residents ",
+            "vat deferment minimum value: 10,000,000 TZS"
+          ]
+        }
+      },
+      "delta": 17
+    },
+    {
+      "id": "nat_45",
+      "question": "mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+      "why": "WCF accident deadline",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 19,
+          "in_top_3": false,
+          "top_3": [
+            "compliance license processing time old: 28 days",
+            "employer notification deadline before retirement: 6 months",
+            "vat registration notification deadline commissioner: 14 days"
+          ]
+        },
+        "A3_consolidate_all": {
+          "anchor_rank": 16,
+          "in_top_3": false,
+          "top_3": [
+            "compliance license processing time old: 28 days",
+            "employer notification deadline before retirement: 6 months",
+            "vat registration notification deadline commissioner: 14 days"
+          ]
+        }
+      },
+      "delta": 3
+    }
+  ],
+  "C1_controls": [
+    {
+      "question": "Nataka kusajili kampuni yenye mtaji wa hisa milioni moja, ada ni shilingi ngapi na kuhifadhi jina ni ngapi?",
+      "must_contain": [
+        "95,000",
+        "50,000"
+      ],
+      "why": "nat_34 is adjudicated CORRECT and GROUNDED off this ladder. If consolidation breaks it, the arm traded one wrong answer for another.",
+      "arms": {
+        "A0_baseline": {
+          "answerable": false,
+          "top_3": [
+            "company share value threshold 2 min: 1,000,000 TZS",
+            "company name change fee: 22,000 TZS",
+            "company share value threshold 1 max: 1,000,000 TZS"
+          ]
+        },
+        "A3_consolidate_all": {
+          "answerable": true,
+          "top_3": [
+            "Ada ya kusajili kampuni BRELA hutegemea thamani ya hisa (share capital): ha",
+            "company name change fee: 22,000 TZS",
+            "company name reservation fee: 50,000 TZS"
+          ]
+        }
+      },
+      "preserved": true,
+      "regressed": false,
+      "gained": true
+    },
+    {
+      "question": "Hiyo ada ya marejesho ya alama ya biashara kuchelewa, ni shilingi ngapi hasa?",
+      "must_contain": [
+        "30,000"
+      ],
+      "why": "trademark renewal fee — answered in the BASELINE arm, so it must survive.",
+      "arms": {
+        "A0_baseline": {
+          "answerable": false,
+          "top_3": [
+            "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni T",
+            "trademark fee for change of business address: 20,000 TZS",
+            "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwish"
+          ]
+        },
+        "A3_consolidate_all": {
+          "answerable": true,
+          "top_3": [
+            "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000;",
+            "Ada ya kusajili kampuni BRELA hutegemea thamani ya hisa (share capital): ha",
+            "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articl"
+          ]
+        }
+      },
+      "preserved": true,
+      "regressed": false,
+      "gained": true
+    },
+    {
+      "question": "Huyu Chike, hiki kiwango cha ada ya kuomba hati miliki ya biashara (trademark) ni elfu 50,000 TZS sio?",
+      "must_contain": [
+        "60,000"
+      ],
+      "why": "the trademark arm LOST this one. Recorded so the loss is priced, not hidden.",
+      "arms": {
+        "A0_baseline": {
+          "answerable": false,
+          "top_3": [
+            "trademark fee for explanation of decision: 50,000 TZS",
+            "trademark fee for dissolution of partnership: 50,000 TZS",
+            "trademark fee for refund of fee: 30,000 TZS"
+          ]
+        },
+        "A3_consolidate_all": {
+          "answerable": false,
+          "top_3": [
+            "company name reservation fee: 50,000 TZS",
+            "business name maintenance fee: 5,000 TZS",
+            "vat deferment minimum value: 10,000,000 TZS"
+          ]
+        }
+      },
+      "preserved": true,
+      "regressed": false,
+      "gained": false
+    },
+    {
+      "question": "Ada ya kuwasilisha memorandum na articles of association ni shilingi ngapi?",
+      "must_contain": [
+        "22,000"
+      ],
+      "why": "BRELA filing fee — must survive its own consolidation.",
+      "arms": {
+        "A0_baseline": {
+          "answerable": true,
+          "top_3": [
+            "memorandum articles of association filing fee: 22,000 TZS",
+            "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni T",
+            "stamp duty per copy memorandum articles copy: 10,000 TZS"
+          ]
+        },
+        "A3_consolidate_all": {
+          "answerable": true,
+          "top_3": [
+            "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articl",
+            "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000;",
+            "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni T"
+          ]
+        }
+      },
+      "preserved": true,
+      "regressed": false,
+      "gained": false
+    }
+  ]
+}

@@ -379,7 +379,7 @@ SD = "nssf_contributions"
 
 nssf_ck1 = [
 p("Mwajiri mpya anapaswa kusajili na NSSF lini?",
-  "Kila mwajiri lazima asajiliwe NSSF haraka iwezekanavyo baada ya kuanza kuajiri. Usajilishaji wa NSSF lazima ufanyike kabla ya kuanza kulipa mishahara ya kwanza ya wafanyakazi. Kwa tarehe halisi ya mwisho ya usajilishaji na hati zinazohitajika, thibitisha na NSSF (nssf.or.tz) moja kwa moja — mahitaji yanaweza kubadilika. Kuchelewa kusajili kunaweza kusababisha adhabu na malipo ya nyuma."),
+  "Kila mwajiri lazima asajiliwe NSSF haraka iwezekanavyo baada ya kuanza kuajiri. Usajilishaji wa NSSF lazima ufanyike kabla ya kuanza kulipa mishahara ya kwanza ya wafanyakazi. Kwa tarehe halisi ya mwisho ya usajilishaji na hati zinazohitajika, thibitisha na NSSF (nssf.go.tz) moja kwa moja — mahitaji yanaweza kubadilika. Kuchelewa kusajili kunaweza kusababisha adhabu na malipo ya nyuma."),
 
 p("NSSF inakokotolewa kutoka kwa mshahara gani na ni asilimia ngapi?",
   "NSSF jumla ni asilimia 20 ya mshahara wa jumla (gross wage). Mgawanyo wa kawaida: mwajiri anachangia asilimia 10 na mfanyakazi anachangia asilimia 10. Hata hivyo, kuna mgawanyo mwingine halali: mwajiri asilimia 15 na mfanyakazi asilimia 5; au mwajiri asilimia 20 na mfanyakazi asilimia 0 (mwajiri analipa yote). Chaguo la mgawanyo ni la mwajiri — lakini jumla lazima iwe asilimia 20."),
@@ -391,10 +391,10 @@ p("Je, mfanyakazi anaweza kukataa mchango wake wa NSSF?",
   "Hapana. Uanachama wa NSSF ni wa lazima kwa wafanyakazi wote wa sekta binafsi Tanzania — si chaguo. Mwajiri lazima asajili mfanyakazi katika NSSF mara tu anapoanza kazi. Mfanyakazi hawezi kuomba kutokuwa mwanachama. Kutowasilisha mchango wa NSSF ni ukiukwaji wa kisheria ambao unaweza kusababisha adhabu kwa mwajiri."),
 
 p("Malipo ya NSSF yanawasilishwa TRA au NSSF moja kwa moja?",
-  "Malipo ya NSSF yanawasilishwa moja kwa moja kwa NSSF — si TRA. NSSF ina mfumo wake wa ukusanyaji. Mwajiri anaweza kulipa kupitia benki au mtandaoni kupitia mfumo wa NSSF (nssf.or.tz). Tofauti na PAYE na SDL ambazo zinakwenda TRA, NSSF inakwenda shirika lake la mfuko wa pensheni. Hakikisha unapeleka malipo kwenye akaunti sahihi ya NSSF."),
+  "Malipo ya NSSF yanawasilishwa moja kwa moja kwa NSSF — si TRA. NSSF ina mfumo wake wa ukusanyaji. Mwajiri anaweza kulipa kupitia benki au mtandaoni kupitia mfumo wa NSSF (nssf.go.tz). Tofauti na PAYE na SDL ambazo zinakwenda TRA, NSSF inakwenda shirika lake la mfuko wa pensheni. Hakikisha unapeleka malipo kwenye akaunti sahihi ya NSSF."),
 
 p("Tarehe ya mwisho ya kupeleka malipo ya NSSF ni lini kila mwezi?",
-  "Malipo ya NSSF inayopelekwa lazima ifikapo mwishoni mwa mwezi unaofuata mwezi wa malipo ya mishahara. Kwa mfano, mishahara ya Januari — NSSF inayopelekwa ifikapo mwishoni mwa Februari. Kwa tarehe halisi ya mwisho ya sasa, thibitisha na NSSF (nssf.or.tz) moja kwa moja kwani tarehe inaweza kubadilika."),
+  "Malipo ya NSSF inayopelekwa lazima ifikapo mwishoni mwa mwezi unaofuata mwezi wa malipo ya mishahara. Kwa mfano, mishahara ya Januari — NSSF inayopelekwa ifikapo mwishoni mwa Februari. Kwa tarehe halisi ya mwisho ya sasa, thibitisha na NSSF (nssf.go.tz) moja kwa moja kwani tarehe inaweza kubadilika."),
 
 p("NSSF haijalipiwa kwa miezi mitatu — adhabu ni nini?",
   "Adhabu ya kutolipa NSSF kwa wakati ni asilimia 5 kwa kila mwezi wa uchelewaji wa malipo. Adhabu hukusanyika kila mwezi — uchelewaji wa miezi mitatu unaweza kuwa na adhabu ya asilimia 15 ya kiasi kilichokosekana. Zaidi ya hayo, NSSF inaweza kufungua kesi dhidi ya mwajiri. Lipa malipo yote pamoja na adhabu haraka iwezekanavyo na wasiliana na NSSF kupanga mpango wa ulipaji kama haiwezekani kulipa mara moja."),
@@ -403,10 +403,10 @@ p("Je, mwajiri mdogo mwenye wafanyakazi 3 tu anahitaji kulipa NSSF?",
   "Ndiyo. NSSF inatumika kwa wajiri WOTE wanaomiliki wafanyakazi Tanzania — hakuna kizingiti cha chini cha idadi ya wafanyakazi. Hata mwajiri mwenye mfanyakazi 1 lazima asajili na kulipa NSSF. Tofauti na SDL (ambayo inahitaji wafanyakazi 10+), NSSF inatoka mfanyakazi wa kwanza. Sajili na NSSF mara tu unapoajiri mtu wa kwanza."),
 
 p("Wafanyakazi wa muda (part-time/casual) — lazima walipwe NSSF?",
-  "Ndiyo, wafanyakazi wa muda au wa msimu wanaofanya kazi Tanzania kwa malipo wanastahili mchango wa NSSF. Mwajiri lazima aadhimishe wajibu huu. Kwa taratibu maalum za aina tofauti za ajira (casual, contract, part-time), thibitisha na NSSF (nssf.or.tz) — kuna kanuni maalum zinazoweza kutofautiana."),
+  "Ndiyo, wafanyakazi wa muda au wa msimu wanaofanya kazi Tanzania kwa malipo wanastahili mchango wa NSSF. Mwajiri lazima aadhimishe wajibu huu. Kwa taratibu maalum za aina tofauti za ajira (casual, contract, part-time), thibitisha na NSSF (nssf.go.tz) — kuna kanuni maalum zinazoweza kutofautiana."),
 
 p("Kampuni yangu ina wafanyakazi wanaolipwa kwa wakati na wanaolipwa kwa kipande — wote wanalipwa NSSF?",
-  "Kwa ujumla, wafanyakazi wote wanaoajiriwa na kampuni — iwe wanalipwa kwa wakati au kwa kipande — wana haki ya NSSF. Msingi wa hesabu ni malipo halisi wanayopokea. Kwa hali maalum ya aina tofauti za malipo na jinsi ya kuhesabu NSSF, thibitisha na NSSF (nssf.or.tz) au mshauri wa HR ili kuhakikisha unazingatia sheria vizuri."),
+  "Kwa ujumla, wafanyakazi wote wanaoajiriwa na kampuni — iwe wanalipwa kwa wakati au kwa kipande — wana haki ya NSSF. Msingi wa hesabu ni malipo halisi wanayopokea. Kwa hali maalum ya aina tofauti za malipo na jinsi ya kuhesabu NSSF, thibitisha na NSSF (nssf.go.tz) au mshauri wa HR ili kuhakikisha unazingatia sheria vizuri."),
 ]
 
 nssf_ck1_clean = [x for x in nssf_ck1 if dedup_check(x)]
@@ -415,31 +415,31 @@ save_ck(nssf_ck1_clean, SD, 1)
 
 nssf_ck2 = [
 p("Mwajiri anaweza kubadilisha mgawanyo wa NSSF kutoka 10+10 hadi 15+5 — ni rahisi?",
-  "Ndiyo, mwajiri anaweza kubadilisha mgawanyo wa NSSF kwa kuchagua mgawanyo mpya — 10+10 (kawaida), 15+5, au 20+0 (mwajiri analipa yote). Mabadiliko yanafanywa kwa taarifa kwa NSSF na kwa wafanyakazi. Jumla lazima ibaki asilimia 20. Kwa utaratibu rasmi wa kubadilisha mgawanyo, wasiliana na NSSF (nssf.or.tz) au ofisi ya NSSF karibu nawe."),
+  "Ndiyo, mwajiri anaweza kubadilisha mgawanyo wa NSSF kwa kuchagua mgawanyo mpya — 10+10 (kawaida), 15+5, au 20+0 (mwajiri analipa yote). Mabadiliko yanafanywa kwa taarifa kwa NSSF na kwa wafanyakazi. Jumla lazima ibaki asilimia 20. Kwa utaratibu rasmi wa kubadilisha mgawanyo, wasiliana na NSSF (nssf.go.tz) au ofisi ya NSSF karibu nawe."),
 
 p("NSSF inanisaidia vipi wakati wa kustaafu?",
-  "NSSF inatoa mafao ya pensheni ukitimia umri wa miaka 60 (55 kwa sekta ya madini) na ukiwa na angalau miezi 180 ya mchango (miaka 15). Mafao yanajumuisha: pensheni ya kila mwezi, mafao ya ulemavu, mafao ya kufiwa. Kwa mafao kamili na jinsi ya kudai, thibitisha na NSSF (nssf.or.tz) — masharti yanaweza kuwa na masharti zaidi kulingana na muda wa uanachama."),
+  "NSSF inatoa mafao ya pensheni ukitimia umri wa miaka 60 (55 kwa sekta ya madini) na ukiwa na angalau miezi 180 ya mchango (miaka 15). Mafao yanajumuisha: pensheni ya kila mwezi, mafao ya ulemavu, mafao ya kufiwa. Kwa mafao kamili na jinsi ya kudai, thibitisha na NSSF (nssf.go.tz) — masharti yanaweza kuwa na masharti zaidi kulingana na muda wa uanachama."),
 
 p("Nikiwa na biashara yangu mwenyewe (self-employed), naweza kujisajili NSSF?",
-  "Ndiyo. Wajasiriamali wanaojitegemea (self-employed) wanaweza kujisajili NSSF kwa hiari. Hii inakupa mwenyewe ufikiaji wa mafao ya pensheni na ulinzi baadaye. Kwa taratibu za usajilishaji wa kujitegemea na viwango vya mchango, thibitisha na NSSF (nssf.or.tz) moja kwa moja. Usajilishaji huu si wa lazima kwa self-employed, lakini unapendekezwa kwa usalama wa baadaye."),
+  "Ndiyo. Wajasiriamali wanaojitegemea (self-employed) wanaweza kujisajili NSSF kwa hiari. Hii inakupa mwenyewe ufikiaji wa mafao ya pensheni na ulinzi baadaye. Kwa taratibu za usajilishaji wa kujitegemea na viwango vya mchango, thibitisha na NSSF (nssf.go.tz) moja kwa moja. Usajilishaji huu si wa lazima kwa self-employed, lakini unapendekezwa kwa usalama wa baadaye."),
 
 p("Je, NSSF na PPF (Parastatal Pensions Fund) ni tofauti — wafanyakazi wa sekta gani wanakwenda wapi?",
   "Ndiyo, ni tofauti: NSSF inahudumia wafanyakazi wa sekta binafsi Tanzania. PPF inahudumia wafanyakazi wa mashirika ya umma (parastatal) na serikali. Wafanyakazi wa sekta binafsi wanachangia NSSF — si PPF. Kama mfanyakazi anasogea kati ya sekta binafsi na serikali, anachangia shirika linalolingana na mwajiri wake wa wakati huo. Kwa shaka kuhusu shirika gani, thibitisha na mwajiri wako au NSSF/PPF moja kwa moja."),
 
 p("Mwajiri wangu hakusajili NSSF tangu nilipoingia kazi — nina haki ya kudai chochote?",
-  "Ndiyo. Una haki ya kudai mchango wako wote wa NSSF uliokosekana. Hatua: (1) ripoti kwa NSSF (nssf.or.tz) ukitoa ushahidi wa miaka ya kazi (karatasi za mshahara, barua ya ajira, n.k.); (2) NSSF itachunguza na kuamrisha mwajiri wako kulipa mchango wote pamoja na adhabu; (3) unaweza pia wasiliana na Ofisi ya Kazi. Haki yako ya uanachama wa NSSF inalindwa kisheria — usikae kimya."),
+  "Ndiyo. Una haki ya kudai mchango wako wote wa NSSF uliokosekana. Hatua: (1) ripoti kwa NSSF (nssf.go.tz) ukitoa ushahidi wa miaka ya kazi (karatasi za mshahara, barua ya ajira, n.k.); (2) NSSF itachunguza na kuamrisha mwajiri wako kulipa mchango wote pamoja na adhabu; (3) unaweza pia wasiliana na Ofisi ya Kazi. Haki yako ya uanachama wa NSSF inalindwa kisheria — usikae kimya."),
 
 p("Malipo ya NSSF yanaingia kwenye akaunti yangu ya NSSF mara moja?",
-  "Malipo ya mwajiri yanaingia kwenye akaunti yako ya NSSF baada ya kuthibitishwa — mara nyingi ndani ya siku chache hadi wiki moja baada ya mwajiri kulipa. Unaweza kuangalia akaunti yako na mizania ya mchango kupitia mfumo wa mtandaoni wa NSSF (nssf.or.tz) au ofisi yoyote ya NSSF. Kama malipo hayaonekani kwa muda mrefu, wasiliana na NSSF moja kwa moja."),
+  "Malipo ya mwajiri yanaingia kwenye akaunti yako ya NSSF baada ya kuthibitishwa — mara nyingi ndani ya siku chache hadi wiki moja baada ya mwajiri kulipa. Unaweza kuangalia akaunti yako na mizania ya mchango kupitia mfumo wa mtandaoni wa NSSF (nssf.go.tz) au ofisi yoyote ya NSSF. Kama malipo hayaonekani kwa muda mrefu, wasiliana na NSSF moja kwa moja."),
 
 p("Je, kampuni inahitaji kutoa slip ya NSSF kwa kila mfanyakazi kila mwezi?",
   "Mwajiri ana wajibu wa kumwarifu mfanyakazi kuhusu mchango wake wa NSSF — mara nyingi hufanywa kupitia pay slip ya kila mwezi inayoonyesha mchango wa mfanyakazi na mwajiri. Ingawa sheria haielezi aina maalum ya taarifa, uwazi katika malipo ya NSSF ni sehemu ya haki za mfanyakazi. Fanya desturi ya kutoa pay slip inayoonyesha NSSF kwa uwazi."),
 
 p("Mwajiri wangu analipa NSSF kwa kiwango cha chini (underpaying). Ninajuaje?",
-  "Angalia pay slip yako — thibitisha asilimia 10 au mgawanyo uliokubaliwa unakokotolewa kutoka mshahara wako wa jumla halisi. Kisha thibitisha na rekodi zako za akaunti ya NSSF kwamba kiasi kilichokatwa kweli kweli kimepelekwa NSSF. Kama mwajiri analipa kiasi kidogo kuliko inavyopaswa, ripoti tofauti kwa NSSF (nssf.or.tz) au Ofisi ya Kazi. Underpayment wa NSSF ni ukiukwaji wa kisheria."),
+  "Angalia pay slip yako — thibitisha asilimia 10 au mgawanyo uliokubaliwa unakokotolewa kutoka mshahara wako wa jumla halisi. Kisha thibitisha na rekodi zako za akaunti ya NSSF kwamba kiasi kilichokatwa kweli kweli kimepelekwa NSSF. Kama mwajiri analipa kiasi kidogo kuliko inavyopaswa, ripoti tofauti kwa NSSF (nssf.go.tz) au Ofisi ya Kazi. Underpayment wa NSSF ni ukiukwaji wa kisheria."),
 
 p("NSSF inatoa mafao ya kifo — familia yangu itanufaika vipi?",
-  "Ndiyo. NSSF inatoa mafao ya kifo (death benefits) kwa familia ya mwanachama aliyefariki. Mafao yanaweza kujumuisha: malipo ya mkupuo kwa wahusika walioorodheshwa, msaada wa mazishi, na pensheni kwa watoto au mwenzi. Kiasi na masharti ya mafao yanategemea muda wa uanachama na michango iliyolipwa. Kwa maelezo kamili ya mafao ya kifo na jinsi ya kudai, thibitisha na NSSF (nssf.or.tz)."),
+  "Ndiyo. NSSF inatoa mafao ya kifo (death benefits) kwa familia ya mwanachama aliyefariki. Mafao yanaweza kujumuisha: malipo ya mkupuo kwa wahusika walioorodheshwa, msaada wa mazishi, na pensheni kwa watoto au mwenzi. Kiasi na masharti ya mafao yanategemea muda wa uanachama na michango iliyolipwa. Kwa maelezo kamili ya mafao ya kifo na jinsi ya kudai, thibitisha na NSSF (nssf.go.tz)."),
 
 p("Je, mchango wa NSSF unaweza kukatwa kutoka pensheni au malipo mengine ya mwisho wa ajira?",
   "Hapana — mchango wa NSSF hautolipiwa pensheni au malipo ya mwisho (end of service benefits). Mchango wa NSSF unakokotolewa kutoka mshahara wa kawaida (gross wages) tu. Malipo ya mwisho wa ajira kama vile gratuity, severance pay, au malipo ya likizo yanajumuishwa au hayajumuishwi kulingana na sheria ya kazi na mkataba — thibitisha hali maalum na mshauri wa HR au Ofisi ya Kazi."),

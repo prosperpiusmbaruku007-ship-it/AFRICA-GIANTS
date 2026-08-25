@@ -24,7 +24,7 @@ extra = [
     {
         "instruction": "Mtu alilalamika NSSF kwa mwajiri wake ambaye hakumlipa — NSSF inafanya nini?",
         "input": "",
-        "output": "NSSF ina uwezo wa kuchunguza malalamiko ya wafanyakazi kuhusu mwajiri asiye kulipa michango: (1) NSSF inachunguza rekodi za mwajiri — wanakagua michango iliyowasilishwa dhidi ya wafanyakazi waliopo; (2) Kama uthibitisho unakutwa — NSSF inatoa notisi ya malipo kwa mwajiri; (3) Kama mwajiri halipi — NSSF inaweza kuchukua hatua za kisheria ikiwa ni pamoja na madai ya mahakama; (4) Wakurugenzi wa kampuni wanaweza kushikiliwa kibinafsi. Mfanyakazi ana haki ya: kulalamika moja kwa moja kwa NSSF (nssf.or.tz), kulalamika kwa Mahakama ya Kazi (Labour Court), au kupitia Mkurugenzi wa Kazi (Director of Labour). Thibitisha na nssf.or.tz."
+        "output": "NSSF ina uwezo wa kuchunguza malalamiko ya wafanyakazi kuhusu mwajiri asiye kulipa michango: (1) NSSF inachunguza rekodi za mwajiri — wanakagua michango iliyowasilishwa dhidi ya wafanyakazi waliopo; (2) Kama uthibitisho unakutwa — NSSF inatoa notisi ya malipo kwa mwajiri; (3) Kama mwajiri halipi — NSSF inaweza kuchukua hatua za kisheria ikiwa ni pamoja na madai ya mahakama; (4) Wakurugenzi wa kampuni wanaweza kushikiliwa kibinafsi. Mfanyakazi ana haki ya: kulalamika moja kwa moja kwa NSSF (nssf.go.tz), kulalamika kwa Mahakama ya Kazi (Labour Court), au kupitia Mkurugenzi wa Kazi (Director of Labour). Thibitisha na nssf.go.tz."
     },
     {
         "instruction": "Biashara ya mgeni imekwishakamatwa na GN 487A — mnunuzi wa biashara (Mtanzania) anaweza kuendelea nayo?",
@@ -74,7 +74,7 @@ extra = [
     {
         "instruction": "NSSF inaweza kukatalia mafao kama mfanyakazi hakuchangia miezi 180?",
         "input": "",
-        "output": "Ndiyo — pensheni ya uzeeni ya NSSF inahitaji angalau miezi 180 (miaka 15) ya michango. Kama mfanyakazi ana miezi 100 tu ya michango na aناfikia umri wa kustaafu — hatapata pensheni kamili. Katika hali hiyo, NSSF inaweza: (1) Kulipa kiasi kidogo cha mafao kama lump sum (malipo moja ya wakati mmoja) badala ya pensheni ya kila mwezi — hii inategemea NSSF Act; (2) Kusubiri hadi mfanyakazi anapofikia miezi 180 (kama bado anafanya kazi). Kwa mfanyakazi aliyeachishwa kazi kabla ya miezi 180 — anashauriwa kuwasiliana na NSSF moja kwa moja kwa mwongozo. Thibitisha na nssf.or.tz."
+        "output": "Ndiyo — pensheni ya uzeeni ya NSSF inahitaji angalau miezi 180 (miaka 15) ya michango. Kama mfanyakazi ana miezi 100 tu ya michango na aناfikia umri wa kustaafu — hatapata pensheni kamili. Katika hali hiyo, NSSF inaweza: (1) Kulipa kiasi kidogo cha mafao kama lump sum (malipo moja ya wakati mmoja) badala ya pensheni ya kila mwezi — hii inategemea NSSF Act; (2) Kusubiri hadi mfanyakazi anapofikia miezi 180 (kama bado anafanya kazi). Kwa mfanyakazi aliyeachishwa kazi kabla ya miezi 180 — anashauriwa kuwasiliana na NSSF moja kwa moja kwa mwongozo. Thibitisha na nssf.go.tz."
     },
     {
         "instruction": "Wakati mwajiri anakusanya PAYE na hatuitumi TRA — mfanyakazi anapoteza kitu gani?",

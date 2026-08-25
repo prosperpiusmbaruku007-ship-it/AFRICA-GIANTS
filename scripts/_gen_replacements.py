@@ -127,7 +127,7 @@ pairs = [
   "answer_sw": "Ndiyo — wajibu wa NSSF unaendelea wakati wa likizo ya ugonjwa inayolipwa. Mwajiri analipa asilimia 10 na mfanyakazi analipa asilimia 10 ya mshahara wote unaolipwa wakati wa kipindi cha ugonjwa. Kama mfanyakazi yuko likizoni bila malipo (unpaid leave) hakuna mshahara kwa hiyo hakuna msingi wa NSSF. Lakini ukwa unamlipa mshahara wa sehemu au kamili wakati wa ugonjwa, NSSF inahesabiwa kwenye kiasi kinachopwa na inalipwa ndani ya mwezi mmoja baada ya mwezi wa malipo.",
   "question_en": "My employee has been on sick leave for two months but is still receiving salary. Do I pay NSSF during this period?",
   "answer_en": "Yes — NSSF obligations continue during paid sick leave. The employer pays 10% and the employee pays 10% of all wages paid during the sick leave period. If the employee is on unpaid leave there is no wage and therefore no NSSF base. But if you pay partial or full salary during illness, NSSF is calculated on the amount actually paid and must be remitted within one month after the salary payment month.",
-  "primary_source_url": "https://www.nssf.or.tz",
+  "primary_source_url": "https://www.nssf.go.tz",
   "primary_source_name": "National Social Security Fund Tanzania",
   "source_type": "government_portal",
   "effective_date": "2025-01-01",

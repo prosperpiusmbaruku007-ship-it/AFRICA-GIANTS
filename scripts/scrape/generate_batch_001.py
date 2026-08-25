@@ -886,7 +886,7 @@ PAIRS = [
             "Jumla ya mchango: asilimia 20 ya mshahara wa jumla kila mwezi. "
             "Mwajiri anakata mchango wa mfanyakazi kutoka mshahara na anachangia sehemu yake mwenyewe, "
             "kisha anapeleka jumla (asilimia 20) kwa NSSF. "
-            "Thibitisha viwango vya sasa na NSSF kwenye nssf.or.tz."
+            "Thibitisha viwango vya sasa na NSSF kwenye nssf.go.tz."
         ),
         "question_en": "What are the NSSF contribution rates for employer and employee?",
         "answer_en": (
@@ -896,9 +896,9 @@ PAIRS = [
             "Total contribution: 20% of gross salary per month. "
             "The employer deducts the employee's share from their salary and adds their own contribution, "
             "then remits the combined 20% to NSSF. "
-            "Confirm current rates with NSSF at nssf.or.tz."
+            "Confirm current rates with NSSF at nssf.go.tz."
         ),
-        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_url": "https://www.nssf.go.tz",
         "primary_source_name": "National Social Security Fund Tanzania",
         "source_type": "government_portal",
         "effective_date": "2026-01-01",
@@ -921,7 +921,7 @@ PAIRS = [
             "Hii inajumuisha wafanyakazi wa kudumu (permanent), wa mkataba (contract), "
             "na hata wafanyakazi wa nyumbani (domestic workers) kwa mujibu wa sheria ya NSSF. "
             "Usajilishaji unapaswa kufanywa haraka baada ya mfanyakazi kuanza kazi. "
-            "Thibitisha mahitaji yako na NSSF kwenye nssf.or.tz."
+            "Thibitisha mahitaji yako na NSSF kwenye nssf.go.tz."
         ),
         "question_en": "Is every employer required to register their employees with NSSF?",
         "answer_en": (
@@ -930,9 +930,9 @@ PAIRS = [
             "This includes permanent employees, contract workers, "
             "and even domestic workers under the NSSF Act. "
             "Registration must be done promptly after an employee starts work. "
-            "Confirm your requirements with NSSF at nssf.or.tz."
+            "Confirm your requirements with NSSF at nssf.go.tz."
         ),
-        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_url": "https://www.nssf.go.tz",
         "primary_source_name": "National Social Security Fund Tanzania",
         "source_type": "government_portal",
         "effective_date": "2026-01-01",
@@ -955,7 +955,7 @@ PAIRS = [
             "Ucheleweshaji unaweza kusababisha faini na riba kwenye kiasi kilichochelewa. "
             "Hakikisha unakata michango ya mfanyakazi kabla ya kulipa mshahara "
             "na upeleke jumla (sehemu ya mwajiri + sehemu ya mfanyakazi) kwa NSSF kwa wakati. "
-            "Thibitisha tarehe hii na NSSF kwenye nssf.or.tz."
+            "Thibitisha tarehe hii na NSSF kwenye nssf.go.tz."
         ),
         "question_en": "What is the monthly deadline for remitting NSSF contributions?",
         "answer_en": (
@@ -964,9 +964,9 @@ PAIRS = [
             "Late payment can result in penalties and interest on the overdue amount. "
             "Ensure you deduct the employee's share before paying salaries "
             "and submit the combined total (employer + employee share) to NSSF on time. "
-            "Confirm this deadline with NSSF at nssf.or.tz."
+            "Confirm this deadline with NSSF at nssf.go.tz."
         ),
-        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_url": "https://www.nssf.go.tz",
         "primary_source_name": "National Social Security Fund Tanzania",
         "source_type": "government_portal",
         "effective_date": "2026-01-01",
@@ -990,7 +990,7 @@ PAIRS = [
             "Katika hali mbaya, mkurugenzi wa kampuni binafsi anaweza kuwajibika kisheria. "
             "Usifike hapo — lipa NSSF kwa wakati kila mwezi. "
             "Kama una matatizo ya kifedha, wasiliana na NSSF mapema ili kujadili mpango wa malipo. "
-            "Thibitisha adhabu halisi na NSSF kwenye nssf.or.tz."
+            "Thibitisha adhabu halisi na NSSF kwenye nssf.go.tz."
         ),
         "question_en": "If I have not paid NSSF for three months — what is the penalty?",
         "answer_en": (
@@ -1000,9 +1000,9 @@ PAIRS = [
             "In serious cases, company directors may be personally liable. "
             "Avoid reaching that point — pay NSSF on time every month. "
             "If you are facing financial difficulties, contact NSSF early to discuss a payment plan. "
-            "Confirm the specific penalties with NSSF at nssf.or.tz."
+            "Confirm the specific penalties with NSSF at nssf.go.tz."
         ),
-        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_url": "https://www.nssf.go.tz",
         "primary_source_name": "National Social Security Fund Tanzania",
         "source_type": "government_portal",
         "effective_date": "2026-01-01",
@@ -1025,7 +1025,7 @@ PAIRS = [
             "ikiwa ni pamoja na wale wa mkataba wa muda mfupi — wanaweza kuhitimu ufikiwa wa NSSF. "
             "Hata hivyo, sheria inaweza kutofautisha kati ya 'casual' na 'mfanyakazi wa kudumu'. "
             "Usifanye uamuzi bila kuuliza NSSF moja kwa moja. "
-            "Wasiliana na NSSF kwenye nssf.or.tz kwa mwongozo wa hali yako maalum."
+            "Wasiliana na NSSF kwenye nssf.go.tz kwa mwongozo wa hali yako maalum."
         ),
         "question_en": "If I hire casual (temporary) workers — must I pay NSSF for them?",
         "answer_en": (
@@ -1034,9 +1034,9 @@ PAIRS = [
             "including those on short-term contracts — may qualify for NSSF coverage. "
             "However, the law may distinguish between 'casual' and 'permanent' employees. "
             "Do not make assumptions — ask NSSF directly. "
-            "Contact NSSF at nssf.or.tz for guidance on your specific situation."
+            "Contact NSSF at nssf.go.tz for guidance on your specific situation."
         ),
-        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_url": "https://www.nssf.go.tz",
         "primary_source_name": "National Social Security Fund Tanzania",
         "source_type": "government_portal",
         "effective_date": "2026-01-01",
@@ -1055,24 +1055,24 @@ PAIRS = [
         "question_sw": "Jinsi ya kusajilisha biashara yangu na wafanyakazi wake na NSSF?",
         "answer_sw": (
             "Hatua za kusajilisha na NSSF ni: "
-            "1) Tembelea ofisi ya NSSF iliyo karibu nawe au tovuti nssf.or.tz. "
+            "1) Tembelea ofisi ya NSSF iliyo karibu nawe au tovuti nssf.go.tz. "
             "2) Wasilisha fomu ya usajilishaji wa mwajiri pamoja na nakala ya certificate ya BRELA, "
             "TIN, na vitambulisho vya wafanyakazi. "
             "3) Kila mfanyakazi atasajiliwa na kupewa nambari yake ya NSSF. "
             "4) Baada ya usajilishaji, utapewa akaunti ya kulipa michango kila mwezi. "
-            "Thibitisha nyaraka zinazohitajika na NSSF kwenye nssf.or.tz kabla ya kwenda."
+            "Thibitisha nyaraka zinazohitajika na NSSF kwenye nssf.go.tz kabla ya kwenda."
         ),
         "question_en": "How do I register my business and employees with NSSF?",
         "answer_en": (
             "Steps to register with NSSF: "
-            "1) Visit your nearest NSSF office or the website nssf.or.tz. "
+            "1) Visit your nearest NSSF office or the website nssf.go.tz. "
             "2) Submit an employer registration form along with copies of your BRELA certificate, "
             "TIN, and employees' identification. "
             "3) Each employee will be registered and assigned their own NSSF number. "
             "4) After registration, you will be given an account for monthly contribution payments. "
-            "Confirm the required documents with NSSF at nssf.or.tz before going."
+            "Confirm the required documents with NSSF at nssf.go.tz before going."
         ),
-        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_url": "https://www.nssf.go.tz",
         "primary_source_name": "National Social Security Fund Tanzania",
         "source_type": "government_portal",
         "effective_date": "2026-01-01",
@@ -1097,7 +1097,7 @@ PAIRS = [
             "Mafao ya mazishi (funeral grant) — msaada wa mazishi. "
             "Mafao ya uzazi (maternity benefit) — kwa wanawake wajawazito wanaohitimu. "
             "Kiasi cha mafao kinategemea michango yako na muda wa uanachama wako. "
-            "Thibitisha mafao ya sasa na NSSF kwenye nssf.or.tz."
+            "Thibitisha mafao ya sasa na NSSF kwenye nssf.go.tz."
         ),
         "question_en": "What benefits does NSSF give me as an employee in the future?",
         "answer_en": (
@@ -1108,9 +1108,9 @@ PAIRS = [
             "Funeral grant — assistance with burial costs. "
             "Maternity benefit — for qualifying pregnant women members. "
             "The amount of benefits depends on your contributions and length of membership. "
-            "Confirm current benefits with NSSF at nssf.or.tz."
+            "Confirm current benefits with NSSF at nssf.go.tz."
         ),
-        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_url": "https://www.nssf.go.tz",
         "primary_source_name": "National Social Security Fund Tanzania",
         "source_type": "government_portal",
         "effective_date": "2026-01-01",
@@ -1133,7 +1133,7 @@ PAIRS = [
             "Kama mwanachama wa hiari, unaweza kuchangia peke yako na kupata haki ya mafao "
             "wakati wa kustaafu, ulemavu, au mazingira mengine. "
             "Thibitisha taratibu za uanachama wa hiari na viwango vya mchango "
-            "na NSSF kwenye nssf.or.tz."
+            "na NSSF kwenye nssf.go.tz."
         ),
         "question_en": "Can I join NSSF on my own as a self-employed business owner?",
         "answer_en": (
@@ -1142,9 +1142,9 @@ PAIRS = [
             "As a voluntary member, you contribute independently and earn entitlement to benefits "
             "at retirement, disability, or other qualifying circumstances. "
             "Confirm voluntary membership procedures and contribution rates "
-            "with NSSF at nssf.or.tz."
+            "with NSSF at nssf.go.tz."
         ),
-        "primary_source_url": "https://www.nssf.or.tz",
+        "primary_source_url": "https://www.nssf.go.tz",
         "primary_source_name": "National Social Security Fund Tanzania",
         "source_type": "government_portal",
         "effective_date": "2026-01-01",

@@ -1,0 +1,109 @@
+{
+  "measured": "2026-08-25",
+  "dry_run": false,
+  "harness": "scripts/correct_corpus_defects.py",
+  "kept_untouched": {
+    "chike/generation_cleanup.py": "the runtime containment — must survive until after the retrain",
+    "scripts/check_sources.py": "the blocklist that REJECTS the dead domain",
+    "scripts/precompute_rag_embeddings.py": "carries two corrective facts naming the dead domain",
+    "CLAUDE.md": "documents the defect deliberately",
+    "PROGRESS.md": "documents the defect deliberately",
+    "scripts/correct_corpus_defects.py": "the pass would rewrite its own docstring"
+  },
+  "quarantine_file": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+  "A_quarantine": {
+    "rows": 75,
+    "by_file": {
+      "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl": 15,
+      "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl": 6,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl": 15,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_008.jsonl": 6,
+      "datasets/tier1a/sft/train_sft.jsonl": 17,
+      "datasets/tier1a/sft/train_sft_balanced.jsonl": 12,
+      "datasets/tier1a/sft/val_sft.jsonl": 4
+    }
+  },
+  "B_dead_domain": {
+    "occurrences_rewritten": 841,
+    "files_touched": 47,
+    "by_file": {
+      "datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl": 38,
+      "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl": 52,
+      "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl": 27,
+      "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl": 2,
+      "datasets/tier1a/cleaned_pairs/batch_007_replacements.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_009.jsonl": 15,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_011.jsonl": 4,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_012.jsonl": 14,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl": 192,
+      "datasets/tier1a/flagged/needs_human_review/batch_003_founder_sample.jsonl": 3,
+      "datasets/tier1a/flagged/needs_human_review/batch_005_founder_sample.jsonl": 4,
+      "datasets/tier1a/raw_sources/_verify_batch004_pairs21_300.jsonl": 1,
+      "datasets/tier1a/raw_sources/_verify_batch006_all.jsonl": 2,
+      "datasets/tier1a/raw_sources/batch_009_checkpoints/checkpoint_003.jsonl": 1,
+      "datasets/tier1a/raw_sources/batch_009_checkpoints/checkpoint_005.jsonl": 1,
+      "datasets/tier1a/raw_sources/batch_009_checkpoints/checkpoint_006.jsonl": 12,
+      "datasets/tier1a/raw_sources/batch_011_checkpoints/ckpt_225.jsonl": 4,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_003.jsonl": 52,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl": 1,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl": 27,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl": 2,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl": 15,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_011.jsonl": 4,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_012.jsonl": 14,
+      "datasets/tier1a/raw_sources/raw_pairs_replacements.jsonl": 1,
+      "datasets/tier1a/sft/train_sft.jsonl": 118,
+      "datasets/tier1a/sft/train_sft_balanced.jsonl": 141,
+      "datasets/tier1a/sft/val_sft.jsonl": 16,
+      "datasets/tier1a/sft/val_sft_balanced.jsonl": 10,
+      "docs/reference_narrative.md": 2,
+      "scripts/_gen_batch_003_nssf_deep.py": 3,
+      "scripts/_gen_batch_004_part6.py": 1,
+      "scripts/_gen_batch_005_part4.py": 1,
+      "scripts/_gen_batch_005_part6.py": 1,
+      "scripts/_gen_batch_006_part6.py": 1,
+      "scripts/_gen_replacements.py": 1,
+      "scripts/add_chunk5.py": 1,
+      "scripts/add_chunk6.py": 3,
+      "scripts/apply_batch009_corrections.py": 1,
+      "scripts/apply_batch_001_fixes.py": 5,
+      "scripts/gen_batch012_keyword_fix.py": 1,
+      "scripts/gen_batch012_remaining.py": 12,
+      "scripts/generate_batch_011_s4.py": 4,
+      "scripts/scrape/generate_batch_001.py": 26,
+      "scripts/scrape/scrape_tier1a.py": 2,
+      "sources/whitelist.json": 1
+    },
+    "skipped_because_NEGATED": [
+      {
+        "file": "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_015.jsonl",
+        "line": 212,
+        "why": "occurrence sits inside a NEGATION — rewriting it would destroy a correct statement",
+        "text": "{\"instruction\": \"Je tovuti ya NSSF ni nssf.or.tz?\", \"input\": \"\", \"output\": \"Hapana — tovuti sahihi ya NSSF ni nssf.go.tz, si nssf.or.tz. Tumia nssf.go.tz kwa ta"
+      },
+      {
+        "file": "datasets/tier1a/sft/train_sft.jsonl",
+        "line": 2878,
+        "why": "occurrence sits inside a NEGATION — rewriting it would destroy a correct statement",
+        "text": "{\"instruction\": \"Je tovuti ya NSSF ni nssf.or.tz?\", \"input\": \"\", \"output\": \"Hapana — tovuti sahihi ya NSSF ni nssf.go.tz, si nssf.or.tz. Tumia nssf.go.tz kwa ta"
+      }
+    ],
+    "skipped_because_KEPT": {
+      "scripts/check_sources.py": 1,
+      "scripts/correct_corpus_defects.py": 1,
+      "scripts/precompute_rag_embeddings.py": 1
+    }
+  },
+  "verification_after": {
+    "datasets_rows_still_asserting_relief": 0,
+    "datasets_rows_still_at_9pct": 0,
+    "datasets_rows_still_dead_domain_unnegated": 0,
+    "clean": true
+  },
+  "what_this_does_NOT_do": [
+    "It does not rebuild the RAG index. The two index rows naming the dead domain are CORRECTIVE facts and stay. The fee-row consolidation is a separate, measured change awaiting approval; both would ride the same R15 regen.",
+    "It does not remove chike/generation_cleanup.py's containment. The deployed adapter still emits the dead domain — the containment comes out AFTER the retrain, not with it.",
+    "It does not regenerate the SFT files. generate_sft.py must be re-run (behind check_eval_split.py) before any training, or the quarantined rows are still in the exported training set."
+  ]
+}

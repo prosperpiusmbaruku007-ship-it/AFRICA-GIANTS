@@ -11,7 +11,7 @@ OUT = "datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl"
 SRC_TRA = "https://www.tra.go.tz/page/value-added-tax"
 SRC_PAYE = "https://www.tra.go.tz/page/pay-as-you-earn-paye"
 SRC_BRELA = "https://www.brela.go.tz/"
-SRC_NSSF = "https://www.nssf.or.tz/"
+SRC_NSSF = "https://www.nssf.go.tz/"
 SRC_GN487 = "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28"
 SRC_SDL = "https://www.tra.go.tz/page/skills-development-levy"
 

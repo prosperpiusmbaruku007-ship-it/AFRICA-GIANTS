@@ -1,0 +1,406 @@
+{
+  "measured": "2026-08-25",
+  "harness": "eval/index_quality/measure_feerow_curation.py",
+  "index_rows": 221,
+  "fee_rows_removed": 17,
+  "fee_row_indices": [
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112
+  ],
+  "r25_justification": {
+    "q1_defect_repaired": "seventeen short `key: number` trademark fee rows; fee-shaped rows were 30.4% of a 217-row index and took 58% of top-3 slots",
+    "q2_correct_output_at_risk": "28 rows in datasets/ DO ask trademark fee questions (renewal cost, late-renewal penalty, registration fee). ZERO in eval/. So deletion costs no MEASURED accuracy and still removes content a real user can ask for — which is why the consolidate arm exists."
+  },
+  "note_on_method": "A0/A1 need no re-embedding: cosine is per-row, so dropping rows cannot change a surviving row's score. A2 embeds exactly one new row with the build-time `passage: ` prefix and the production e5-base model.",
+  "C2_baseline_control": {
+    "expected": "nat_43 anchor at rank 1 in the BASELINE arm (recorded FIXED after its ask-alignment rewrite)",
+    "observed_rank": 1,
+    "baseline_reproduces_recorded_state": true
+  },
+  "summary": {
+    "rows": 7,
+    "delete_moved_anchor_up": 6,
+    "consolidate_moved_anchor_up": 6,
+    "delete_brought_anchor_INTO_top3": 0,
+    "consolidate_brought_anchor_INTO_top3": 0
+  },
+  "rows": [
+    {
+      "id": "nat_05",
+      "question": "nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya mafunzo nitalipa asilimia tatu na nusu ya nini",
+      "anchor_why": "SDL rate — the wrong-base row",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 24,
+          "anchor_score": 0.8161,
+          "in_top_3": false,
+          "top_3": [
+            "company share value threshold 3 min: 5,000,000 TZS",
+            "company share value threshold 3 max: 20,000,000 TZS",
+            "company registration fee 3: 260,000 TZS"
+          ]
+        },
+        "A1_delete": {
+          "anchor_rank": 20,
+          "anchor_score": 0.8161,
+          "in_top_3": false,
+          "top_3": [
+            "company share value threshold 3 min: 5,000,000 TZS",
+            "company share value threshold 3 max: 20,000,000 TZS",
+            "company registration fee 3: 260,000 TZS"
+          ]
+        },
+        "A2_consolidate": {
+          "anchor_rank": 20,
+          "anchor_score": 0.8161,
+          "in_top_3": false,
+          "top_3": [
+            "company share value threshold 3 min: 5,000,000 TZS",
+            "company share value threshold 3 max: 20,000,000 TZS",
+            "company registration fee 3: 260,000 TZS"
+          ]
+        }
+      },
+      "delta_delete": 4,
+      "delta_consolidate": 4
+    },
+    {
+      "id": "nat_23",
+      "question": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+      "anchor_why": "SDL rate — the two-levy row",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 86,
+          "anchor_score": 0.803,
+          "in_top_3": false,
+          "top_3": [
+            "company registration fee 3: 260,000 TZS",
+            "company registration fee 4: 290,000 TZS",
+            "company registration fee 2: 175,000 TZS"
+          ]
+        },
+        "A1_delete": {
+          "anchor_rank": 69,
+          "anchor_score": 0.803,
+          "in_top_3": false,
+          "top_3": [
+            "company registration fee 3: 260,000 TZS",
+            "company registration fee 4: 290,000 TZS",
+            "company registration fee 2: 175,000 TZS"
+          ]
+        },
+        "A2_consolidate": {
+          "anchor_rank": 69,
+          "anchor_score": 0.803,
+          "in_top_3": false,
+          "top_3": [
+            "company registration fee 3: 260,000 TZS",
+            "company registration fee 4: 290,000 TZS",
+            "company registration fee 2: 175,000 TZS"
+          ]
+        }
+      },
+      "delta_delete": 17,
+      "delta_consolidate": 17
+    },
+    {
+      "id": "nat_28",
+      "question": "nimefanya kazi ya ushauri kwa taasisi ya serikali wamesema watakata vat je asilimia ngapi na cheti nitapata lini",
+      "anchor_why": "services withholding — the reply gave royalties 15%",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 33,
+          "anchor_score": 0.8057,
+          "in_top_3": false,
+          "top_3": [
+            "royalties wht rate: Withholding tax on royalties is 15% for BOTH resid",
+            "vat registration notification deadline commissioner: 14 days",
+            "vat deferment threshold percentage: 90 %"
+          ]
+        },
+        "A1_delete": {
+          "anchor_rank": 26,
+          "anchor_score": 0.8057,
+          "in_top_3": false,
+          "top_3": [
+            "royalties wht rate: Withholding tax on royalties is 15% for BOTH resid",
+            "vat registration notification deadline commissioner: 14 days",
+            "vat deferment threshold percentage: 90 %"
+          ]
+        },
+        "A2_consolidate": {
+          "anchor_rank": 26,
+          "anchor_score": 0.8057,
+          "in_top_3": false,
+          "top_3": [
+            "royalties wht rate: Withholding tax on royalties is 15% for BOTH resid",
+            "vat registration notification deadline commissioner: 14 days",
+            "vat deferment threshold percentage: 90 %"
+          ]
+        }
+      },
+      "delta_delete": 7,
+      "delta_consolidate": 7
+    },
+    {
+      "id": "nat_33",
+      "question": "sijapeleka ritani ya kampuni yangu miezi saba sasa nitalipa faini kiasi gani na ada yenyewe ni ngapi",
+      "anchor_why": "BRELA annual return fee",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 48,
+          "anchor_score": 0.8104,
+          "in_top_3": false,
+          "top_3": [
+            "unpaid contribution penalty frequency: each month or a part of a month",
+            "employer notification deadline before retirement: 6 months",
+            "minimum contribution months health insurance: 3 months"
+          ]
+        },
+        "A1_delete": {
+          "anchor_rank": 38,
+          "anchor_score": 0.8104,
+          "in_top_3": false,
+          "top_3": [
+            "unpaid contribution penalty frequency: each month or a part of a month",
+            "employer notification deadline before retirement: 6 months",
+            "minimum contribution months health insurance: 3 months"
+          ]
+        },
+        "A2_consolidate": {
+          "anchor_rank": 38,
+          "anchor_score": 0.8104,
+          "in_top_3": false,
+          "top_3": [
+            "unpaid contribution penalty frequency: each month or a part of a month",
+            "employer notification deadline before retirement: 6 months",
+            "minimum contribution months health insurance: 3 months"
+          ]
+        }
+      },
+      "delta_delete": 10,
+      "delta_consolidate": 10
+    },
+    {
+      "id": "nat_43",
+      "question": "mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+      "anchor_why": "GN605A sector count — RECORDED FIXED to rank 1; this is the C2 baseline control",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 1,
+          "anchor_score": 0.811,
+          "in_top_3": true,
+          "top_3": [
+            "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi ",
+            "stamp duty per copy memorandum articles copy: 10,000 TZS",
+            "gn487a prohibited activity 6: Prohibited activity 6: Small-scale minin"
+          ]
+        },
+        "A1_delete": {
+          "anchor_rank": 1,
+          "anchor_score": 0.811,
+          "in_top_3": true,
+          "top_3": [
+            "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi ",
+            "stamp duty per copy memorandum articles copy: 10,000 TZS",
+            "gn487a prohibited activity 6: Prohibited activity 6: Small-scale minin"
+          ]
+        },
+        "A2_consolidate": {
+          "anchor_rank": 1,
+          "anchor_score": 0.811,
+          "in_top_3": true,
+          "top_3": [
+            "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi ",
+            "stamp duty per copy memorandum articles copy: 10,000 TZS",
+            "gn487a prohibited activity 6: Prohibited activity 6: Small-scale minin"
+          ]
+        }
+      },
+      "delta_delete": 0,
+      "delta_consolidate": 0
+    },
+    {
+      "id": "nat_44",
+      "question": "nimeuzia wakala wa serikali bidhaa je watanikata asilimia ngapi ya vat",
+      "anchor_why": "goods withholding — the reply gave the services rate",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 33,
+          "anchor_score": 0.8088,
+          "in_top_3": false,
+          "top_3": [
+            "vat deferment threshold percentage: 90 %",
+            "royalties wht rate: Withholding tax on royalties is 15% for BOTH resid",
+            "vat deferment minimum value: 10,000,000 TZS"
+          ]
+        },
+        "A1_delete": {
+          "anchor_rank": 25,
+          "anchor_score": 0.8088,
+          "in_top_3": false,
+          "top_3": [
+            "vat deferment threshold percentage: 90 %",
+            "royalties wht rate: Withholding tax on royalties is 15% for BOTH resid",
+            "vat deferment minimum value: 10,000,000 TZS"
+          ]
+        },
+        "A2_consolidate": {
+          "anchor_rank": 25,
+          "anchor_score": 0.8088,
+          "in_top_3": false,
+          "top_3": [
+            "vat deferment threshold percentage: 90 %",
+            "royalties wht rate: Withholding tax on royalties is 15% for BOTH resid",
+            "vat deferment minimum value: 10,000,000 TZS"
+          ]
+        }
+      },
+      "delta_delete": 8,
+      "delta_consolidate": 8
+    },
+    {
+      "id": "nat_45",
+      "question": "mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+      "anchor_why": "WCF accident deadline — the reply fabricated an absolute date",
+      "arms": {
+        "A0_baseline": {
+          "anchor_rank": 19,
+          "anchor_score": 0.7931,
+          "in_top_3": false,
+          "top_3": [
+            "compliance license processing time old: 28 days",
+            "employer notification deadline before retirement: 6 months",
+            "vat registration notification deadline commissioner: 14 days"
+          ]
+        },
+        "A1_delete": {
+          "anchor_rank": 18,
+          "anchor_score": 0.7931,
+          "in_top_3": false,
+          "top_3": [
+            "compliance license processing time old: 28 days",
+            "employer notification deadline before retirement: 6 months",
+            "vat registration notification deadline commissioner: 14 days"
+          ]
+        },
+        "A2_consolidate": {
+          "anchor_rank": 18,
+          "anchor_score": 0.7931,
+          "in_top_3": false,
+          "top_3": [
+            "compliance license processing time old: 28 days",
+            "employer notification deadline before retirement: 6 months",
+            "vat registration notification deadline commissioner: 14 days"
+          ]
+        }
+      },
+      "delta_delete": 1,
+      "delta_consolidate": 1
+    }
+  ],
+  "C1_content_preservation_controls": [
+    {
+      "question": "Nikiwa na Alama ya Biashara, baada ya kusajiliwa, nina muda gani wa kuhuisha taarifa na itanigharimu shilingi ngapi?",
+      "arms": {
+        "A0_baseline": {
+          "a_fee_answer_is_in_top_3": false,
+          "top_3": [
+            "fund payment deadline after retirement notification: 60 days",
+            "employer notification deadline before retirement: 6 months",
+            "vat registration notification deadline commissioner: 14 days"
+          ]
+        },
+        "A1_delete": {
+          "a_fee_answer_is_in_top_3": false,
+          "top_3": [
+            "fund payment deadline after retirement notification: 60 days",
+            "employer notification deadline before retirement: 6 months",
+            "vat registration notification deadline commissioner: 14 days"
+          ]
+        },
+        "A2_consolidate": {
+          "a_fee_answer_is_in_top_3": false,
+          "top_3": [
+            "fund payment deadline after retirement notification: 60 days",
+            "employer notification deadline before retirement: 6 months",
+            "vat registration notification deadline commissioner: 14 days"
+          ]
+        }
+      }
+    },
+    {
+      "question": "Hiyo ada ya marejesho ya alama ya biashara kuchelewa, ni shilingi ngapi hasa?",
+      "arms": {
+        "A0_baseline": {
+          "a_fee_answer_is_in_top_3": true,
+          "top_3": [
+            "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka",
+            "trademark fee for change of business address: 20,000 TZS",
+            "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la "
+          ]
+        },
+        "A1_delete": {
+          "a_fee_answer_is_in_top_3": false,
+          "top_3": [
+            "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka",
+            "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la ",
+            "Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine y"
+          ]
+        },
+        "A2_consolidate": {
+          "a_fee_answer_is_in_top_3": true,
+          "top_3": [
+            "Ada za alama ya biashara (trademark) BRELA/COSOTA: kusajili alama moja",
+            "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka",
+            "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la "
+          ]
+        }
+      }
+    },
+    {
+      "question": "Huyu Chike, hiki kiwango cha ada ya kuomba hati miliki ya biashara (trademark) ni elfu 50,000 TZS sio?",
+      "arms": {
+        "A0_baseline": {
+          "a_fee_answer_is_in_top_3": true,
+          "top_3": [
+            "trademark fee for explanation of decision: 50,000 TZS",
+            "trademark fee for dissolution of partnership: 50,000 TZS",
+            "trademark fee for refund of fee: 30,000 TZS"
+          ]
+        },
+        "A1_delete": {
+          "a_fee_answer_is_in_top_3": false,
+          "top_3": [
+            "company name reservation fee: 50,000 TZS",
+            "company registration fee 1: 95,000 TZS",
+            "company registration fee 5: 440,000 TZS"
+          ]
+        },
+        "A2_consolidate": {
+          "a_fee_answer_is_in_top_3": false,
+          "top_3": [
+            "company name reservation fee: 50,000 TZS",
+            "company registration fee 1: 95,000 TZS",
+            "company registration fee 5: 440,000 TZS"
+          ]
+        }
+      }
+    }
+  ]
+}

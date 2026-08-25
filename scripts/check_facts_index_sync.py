@@ -124,6 +124,22 @@ PINNED = {
     "nssf_calculation_example": ("present_elsewhere", 213, "SI TZS 120,000"),
     "brela_striking_off_non_filing": ("present_elsewhere", 44, "kufuta, kufunga au kuondoa"),
 
+    # ---- Added 2026-08-25: the three council-fee domains reclassified from COVERAGE GAP to
+    # ANSWERED (scripts/add_local_levy_facts.py). A council-set fee has no national amount, so
+    # naming the office and the rule IS the correct answer.
+    #
+    # These are pending_r15 by construction, and THIS CHECK CAUGHT THEM ON THE SAME COMMIT that
+    # added them -- which is the drift check doing exactly the job it was built for. They become
+    # retrievable only when kaggle/regenerate_rag_e5.py runs; that regen is deliberately BATCHED
+    # with the fee-row consolidation (eval/results/feegroup_curation.json) rather than run twice.
+    # test_pending_r15_keys_are_still_pending will fail once the regen lands, which is the signal
+    # to remove these five pins rather than convert them.
+    "council_service_levy_is_a_cap_not_a_rate": ("pending_r15", None, None),
+    "council_service_levy_non_corporate_conflict": ("pending_r15", None, None),
+    "market_dues_no_national_amount": ("pending_r15", None, None),
+    "market_dues_exemptions": ("pending_r15", None, None),
+    "business_licence_fee_national_schedule_local_collection": ("pending_r15", None, None),
+
     # C4 reachability cycle, 2026-08-17 -- three new keys written that cycle, PENDING_R15
     # at the time because the regen had not yet run. The regen ran the same day (R15
     # deploy entry, PROGRESS.md) and all three are now indexed -- promoted to

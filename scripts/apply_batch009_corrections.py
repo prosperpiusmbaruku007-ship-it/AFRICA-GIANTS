@@ -233,7 +233,7 @@ for p in pairs:
     if "tarehe 10 au mwishoni mwa mwezi" in out:
         out = out.replace(
             "Baadhi ya vyanzo vinasema tarehe 10 au mwishoni mwa mwezi — tarehe halisi imetangazwa na NSSF mara kwa mara.",
-            "Thibitisha tarehe halisi ya sasa na nssf.or.tz — tarehe inaweza kubadilika."
+            "Thibitisha tarehe halisi ya sasa na nssf.go.tz — tarehe inaweza kubadilika."
         )
     if out != orig:
         counts["C11"] += 1

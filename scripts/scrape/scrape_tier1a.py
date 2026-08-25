@@ -6,7 +6,7 @@ Approved sources (sources/whitelist.json):
   - https://www.tra.go.tz/index.php/tax-information
   - https://www.tra.go.tz/index.php/filing-returns
   - https://www.brela.go.tz
-  - https://www.nssf.or.tz
+  - https://www.nssf.go.tz
   - https://www.osha.go.tz
 
 Usage: python scripts/scrape/scrape_tier1a.py
@@ -51,7 +51,7 @@ TARGETS = [
     },
     {
         "id": "nssf_home",
-        "url": "https://www.nssf.or.tz",
+        "url": "https://www.nssf.go.tz",
         "institution": "National Social Security Fund Tanzania",
         "filename": "nssf_home.html",
     },

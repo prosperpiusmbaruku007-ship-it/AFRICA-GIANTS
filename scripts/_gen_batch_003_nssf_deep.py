@@ -1,7 +1,7 @@
 """Generate 50 NSSF deep-dive pairs (batch_003 pairs 201-250)."""
 import json
 
-SRC_URL = "https://www.nssf.or.tz/pages/payment-of-contributions"
+SRC_URL = "https://www.nssf.go.tz/pages/payment-of-contributions"
 SRC_NAME = "NSSF Contributions Page"
 DATE = "20260608"
 
@@ -391,9 +391,9 @@ pairs.append(p(49,"nssf_registration",
 
 pairs.append(p(50,"nssf_registration",
     "NSSF return inawasilishwa kwa njia gani Tanzania?",
-    "NSSF return (orodha ya malipo ya michango) inawasilishwa: (1) Kwa njia ya mtandao kupitia mfumo wa NSSF Online (nssf.or.tz); (2) Ofisini — kwa kuleta fomu na malipo ya moja kwa moja; (3) Benki zilizoidhinishwa. Malipo yanaweza kufanywa kwa njia ya benki, simu za mkononi, au ofisi ya NSSF. Tarehe ya mwisho: ndani ya mwezi mmoja baada ya mwezi wa mshahara. Kiwango: mwajiri 10% + mfanyakazi 10% = 20% ya mshahara mkubwa wa jumla.",
+    "NSSF return (orodha ya malipo ya michango) inawasilishwa: (1) Kwa njia ya mtandao kupitia mfumo wa NSSF Online (nssf.go.tz); (2) Ofisini — kwa kuleta fomu na malipo ya moja kwa moja; (3) Benki zilizoidhinishwa. Malipo yanaweza kufanywa kwa njia ya benki, simu za mkononi, au ofisi ya NSSF. Tarehe ya mwisho: ndani ya mwezi mmoja baada ya mwezi wa mshahara. Kiwango: mwajiri 10% + mfanyakazi 10% = 20% ya mshahara mkubwa wa jumla.",
     "How is an NSSF return submitted in Tanzania?",
-    "NSSF returns (contribution payment schedules) are submitted: (1) Online through the NSSF Online system (nssf.or.tz); (2) In-person — by bringing forms and direct payment to an NSSF office; (3) At authorised banks. Payments can be made by bank, mobile money, or at an NSSF office. Deadline: within one month after the salary month. Rate: employer 10% + employee 10% = 20% of gross wage.",
+    "NSSF returns (contribution payment schedules) are submitted: (1) Online through the NSSF Online system (nssf.go.tz); (2) In-person — by bringing forms and direct payment to an NSSF office; (3) At authorised banks. Payments can be made by bank, mobile money, or at an NSSF office. Deadline: within one month after the salary month. Rate: employer 10% + employee 10% = 20% of gross wage.",
     "business_market"))
 
 # ── WRITE ──────────────────────────────────────────────────────────────────────

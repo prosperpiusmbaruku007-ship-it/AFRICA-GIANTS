@@ -559,18 +559,19 @@
     "fact": "Tanzania minimum turnover tax is 1% of gross turnover effective 1 July 2025 — was 0.5%, never 0.3%",
     "correct_value": "1% WEF 1 July 2025",
     "wrong_patterns": [
-      "asilimia 0.3",
-      "0.3%",
-      "0.3 percent",
-      "minimum.*tax.*(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to )",
-      "kodi ndogo.*(?<!kutoka )(?<!from )0\\.5(?! hadi)(?! to )",
-      "turnover.*tax.*(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to )",
-      "(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to ).*minimum.*tax"
+      "(kodi ndogo|mauzo ghafi|turnover)[^.]{0,60}asilimia 0\\.3",
+      "(minimum turnover tax|turnover tax|kodi ndogo ya mauzo)[^.]{0,60}0\\.3%",
+      "(minimum turnover|turnover tax|kodi ndogo)[^.]{0,60}0\\.3 percent",
+      "minimum.*tax.*(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\\.5(?! hadi)(?! to )",
+      "kodi ndogo.*(?<!kutoka )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\\.5(?! hadi)(?! to )",
+      "turnover.*tax.*(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\\.5(?! hadi)(?! to )",
+      "(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\\.5(?! hadi)(?! to ).*minimum.*tax"
     ],
     "primary_source": "https://habibadvisory.com/tanzania-tax-guide-2025-26",
     "verified_by": "Habib Advisory 2025/26 Tax Guide",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "_narrowing_note": "Narrowed 2026-08-25. The bare forms `0.3%` / `asilimia 0.3` / `0.3 percent` matched with NO topical scoping, so a CORRECT council-service-levy pair quoting the statutory 0.3% CAP (Cap 290 s.7(1)(u)) would have been flagged as a locked-fact violation. Measured cost of narrowing: the bare patterns matched exactly ONE corpus row, a held-out probe QUESTION, which check_pair never scans. Zero live detections lost. Both directions are exercised in eval/fidelity/local_levy_probes.jsonl. SECOND NARROWING, same day, found by probe llp_08: the 0.5 patterns escaped only \"kutoka asilimia 0.5\" / \"from 0.5\", not \"ILIKUWA asilimia 0.5\" — the plainest Swahili way to say \"it WAS 0.5%\", which is exactly what the locked fact itself asserts. A correct historical statement was being flagged. Same shape as the recorded near-miss where a bare \"ni\" sits outside D-FIDELITY-1's connectors. Probe llp_09 holds the line: a plain \"is 0.5%\" assertion must still flag."
   },
   "commissioner_objection_deadline": {
     "fact": "TRA Commissioner must determine an objection within 6 months from date of admission — NOT 90 days",
@@ -2080,5 +2081,64 @@
     ],
     "primary_source": "source of the 10 individual exemption_category_* keys, unchanged",
     "status": "CONFIRMED -- consolidated 2026-08-17 so the RAG index carries one retrievable Swahili fact instead of 10 English fallback rows; the 10 individual keys remain in locked_facts.json for training-pair generation but are excluded from the RAG index by an explicit reviewed list, not the old blanket noise regex"
+  },
+  "council_service_levy_is_a_cap_not_a_rate": {
+    "fact": "Ushuru wa huduma wa halmashauri (service levy): sheria inaweka KIKOMO cha asilimia 0.3 ya mauzo (bila VAT na ushuru wa bidhaa) — si kiwango kimoja cha kitaifa. Kila halmashauri hupanga chake kwa sheria ndogo, na nyingi hutoza chini ya kikomo hicho. Uliza ofisi ya mapato ya halmashauri yako kwa kiwango halisi.",
+    "correct_value": "a CEILING of 0.3% of turnover net of VAT and excise — not a rate",
+    "wrong_patterns": [
+      "ushuru wa huduma[^.]{0,40}(?<!kikomo cha )(?<!hauzidi )(?<!si zaidi ya )ni asilimia 0\\.3",
+      "service levy[^.]{0,40}(?<!cap of )(?<!not exceeding )is 0\\.3%"
+    ],
+    "primary_source": "https://www.mof.go.tz/uploads/documents/en-1676544247-CHAPTER_290-THE_LOCAL_GOVERNMENT_FINANCE_ACT-01.pdf",
+    "source_note": "Local Government Finance Act Cap 290 R.E. 2019, s.7(1)(u) for urban authorities and s.6 in identical terms for district councils: \"...at the rate not exceeding 0.3 percent of the turnover net of the value added tax and excise duty\".",
+    "verified_by": "source pass 2026-08-16, full 62pp Act read and quoted verbatim",
+    "effective_date": "2019-01-01",
+    "status": "CONFIRMED",
+    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision."
+  },
+  "council_service_levy_non_corporate_conflict": {
+    "fact": "Je mfanyabiashara mmoja mmoja hulipa ushuru wa huduma? Sheria yenyewe inagongana. Kifungu 7(1)(u) cha Cap 290 kinasema hulipwa na \"corporate entities au mtu yeyote anayefanya biashara akiwa na leseni\", lakini Jedwali la sheria hiyo hiyo linakataza halmashauri kutoza wasio-corporate. Duka la mtu mmoja ni non-corporate. Uliza halmashauri yako na omba maelezo kwa maandishi.",
+    "correct_value": "the operative section and the Schedule disagree — do not state a single answer",
+    "wrong_patterns": [],
+    "primary_source": "https://www.mof.go.tz/uploads/documents/en-1676544247-CHAPTER_290-THE_LOCAL_GOVERNMENT_FINANCE_ACT-01.pdf",
+    "source_note": "Cap 290 s.7(1)(u) versus the Schedule made under s.16(1), whose \"shall not impose\" column lists non-corporate entities. A sole-proprietor duka is non-corporate. No phrasing on our side resolves a conflict inside the statute.",
+    "verified_by": "source pass 2026-08-16",
+    "effective_date": "2019-01-01",
+    "status": "CONFIRMED",
+    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision."
+  },
+  "market_dues_no_national_amount": {
+    "fact": "Ushuru wa soko au genge ni kiasi gani? Hakuna kiwango kimoja cha kitaifa. Kiasi hupangwa chini ya Sheria ya Masoko (Cap 106) na sheria ndogo za kila halmashauri — zaidi ya halmashauri 180, kila moja na yake, na hubadilika mara kwa mara. Uliza meneja wa soko au ofisi ya mapato ya halmashauri yako.",
+    "correct_value": "no national figure exists — name the office, never an amount",
+    "wrong_patterns": [],
+    "primary_source": "https://www.mof.go.tz/uploads/documents/en-1676544247-CHAPTER_290-THE_LOCAL_GOVERNMENT_FINANCE_ACT-01.pdf",
+    "source_note": "Cap 290 Schedule item 5(b): market stall and slab dues \"as prescribed under the Markets Ordinance (Cap.106)\". Set by council by-law across 180+ LGAs with no consolidated national publication.",
+    "verified_by": "source pass 2026-08-16",
+    "effective_date": "2019-01-01",
+    "status": "CONFIRMED",
+    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision."
+  },
+  "market_dues_exemptions": {
+    "fact": "Nani hatozwi ushuru wa soko: Jedwali la Sheria ya Fedha za Serikali za Mitaa (Cap 290) linakataza halmashauri kutoza wakulima wanaouza mazao yao mara kwa mara, magulio yanayosimamiwa na halmashauri za vijiji, na wauzaji wadogo wa vyakula vilivyopikwa kama maandazi na samaki wa kukaanga. Ukiwa katika makundi haya na unadaiwa, omba maelezo kwa maandishi.",
+    "correct_value": "peasants selling produce on-and-off, village-council magulio, and small cooked-food vendors are excluded",
+    "wrong_patterns": [],
+    "primary_source": "https://www.mof.go.tz/uploads/documents/en-1676544247-CHAPTER_290-THE_LOCAL_GOVERNMENT_FINANCE_ACT-01.pdf",
+    "source_note": "Cap 290 Schedule item 5(b), \"shall not impose\" column, verbatim.",
+    "verified_by": "source pass 2026-08-16",
+    "effective_date": "2019-01-01",
+    "status": "CONFIRMED",
+    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision."
+  },
+  "business_licence_fee_national_schedule_local_collection": {
+    "fact": "Leseni ya biashara inagharimu kiasi gani? Ada imepangwa KITAIFA chini ya Sheria ya Leseni za Biashara, lakini leseni hutolewa na kukusanywa na halmashauri, na halmashauri hairuhusiwi kutoza zaidi ya ada iliyopangwa. Ada hutegemea aina ya biashara na eneo — jiji/manispaa, wilaya/mji, au kijiji — na kama ni leseni kuu au ya tawi. Uliza halmashauri yako kwa ada ya aina yako.",
+    "correct_value": "fee set nationally, licence issued and collected locally; council may not exceed the prescribed fee",
+    "wrong_patterns": [],
+    "primary_source": "https://www.mof.go.tz/uploads/documents/en-1676544247-CHAPTER_290-THE_LOCAL_GOVERNMENT_FINANCE_ACT-01.pdf",
+    "source_note": "Cap 290 Schedule: a council MAY charge the \"Business Licence fee for general merchandising as prescribed under the Business Licensing Act\", and \"Fees exceeding the prescribed fee\" sits in the SHALL-NOT-IMPOSE column. Schedule structure (2014 text): ~31 categories, priced by geography tier and principal-vs-subsidiary, local and foreign columns. A duka sits in category 29, General Trading.",
+    "verified_by": "source pass 2026-08-16",
+    "effective_date": "2019-01-01",
+    "status": "STRUCTURE CONFIRMED — AMOUNT BLOCKED",
+    "unresolved_note": "The CURRENT First Schedule has not been obtained, so NO amount is encoded. This is the named blocker: one document unblocks the whole domain as a lookup table.",
+    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision."
   }
 }

@@ -1,0 +1,42 @@
+{
+  "measured": "2026-08-25",
+  "harness": "scripts/add_local_levy_facts.py",
+  "reclassification": "market dues, council service levy and business licence fees move from COVERAGE GAP to ANSWERED. A council-set fee has no national amount, so naming the office and the rule IS the correct answer.",
+  "facts_added": [
+    "council_service_levy_is_a_cap_not_a_rate",
+    "council_service_levy_non_corporate_conflict",
+    "market_dues_no_national_amount",
+    "market_dues_exemptions",
+    "business_licence_fee_national_schedule_local_collection"
+  ],
+  "fact_count_before": 247,
+  "fact_count_after": 252,
+  "guard_narrowed": {
+    "key": "minimum_turnover_tax",
+    "before": [
+      "asilimia 0.3",
+      "0.3%",
+      "0.3 percent",
+      "minimum.*tax.*(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to )",
+      "kodi ndogo.*(?<!kutoka )(?<!from )0\\.5(?! hadi)(?! to )",
+      "turnover.*tax.*(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to )",
+      "(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to ).*minimum.*tax"
+    ],
+    "after": [
+      "(kodi ndogo|mauzo ghafi|turnover)[^.]{0,60}asilimia 0\\.3",
+      "(minimum turnover tax|turnover tax|kodi ndogo ya mauzo)[^.]{0,60}0\\.3%",
+      "(minimum turnover|turnover tax|kodi ndogo)[^.]{0,60}0\\.3 percent",
+      "minimum.*tax.*(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to )",
+      "kodi ndogo.*(?<!kutoka )(?<!from )0\\.5(?! hadi)(?! to )",
+      "turnover.*tax.*(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to )",
+      "(?<!kutoka asilimia )(?<!from )0\\.5(?! hadi)(?! to ).*minimum.*tax"
+    ],
+    "why": "Narrowed 2026-08-25. The bare forms `0.3%` / `asilimia 0.3` / `0.3 percent` matched with NO topical scoping, so a CORRECT council-service-levy pair quoting the statutory 0.3% CAP (Cap 290 s.7(1)(u)) would have been flagged as a locked-fact violation. Measured cost of narrowing: the bare patterns matched exactly ONE corpus row, a held-out probe QUESTION, which check_pair never scans. Zero live detections lost. Both directions are exercised in eval/fidelity/local_levy_probes.jsonl."
+  },
+  "whitelist_gap": {
+    "domain": "mof.go.tz",
+    "detail": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision.",
+    "action": "FOUNDER DECISION — not taken by this script"
+  },
+  "INERT_UNTIL_REGEN": "R15: locked_facts.json has changed, so these facts are NOT retrievable until kaggle/regenerate_rag_e5.py runs and the index is rebuilt, verified, committed to BOTH chike-inference/ and kaggle/, and Modal is redeployed. Batch this with the fee-row consolidation rather than running two regens."
+}

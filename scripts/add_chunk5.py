@@ -74,7 +74,7 @@ extra = [
     {
         "instruction": "SDL na NSSF — zinafanana vipi?",
         "input": "",
-        "output": "SDL na NSSF zinafanana kwa kuwa zote ni malipo yanayohusiana na wafanyakazi — lakini ni tofauti kabisa: SDL (→ TRA): 3.5% ya mishahara ya fedha; MWAJIRI peke yake; inaenda mfuko wa mafunzo; kizingiti: wafanyakazi 10+. NSSF (→ NSSF Fund): 10% mwajiri + 10% mfanyakazi = 20% jumla; wote wanashiriki; inaenda mfuko wa pensheni; hakuna kizingiti cha idadi ya wafanyakazi. Tofauti muhimu: SDL ni mwajiri peke yake, NSSF ni mwajiri + mfanyakazi. SDL ni kwa waajiri wenye 10+ wafanyakazi; NSSF ni kwa waajiri WOTE. Vyote vinachangia usafi wa biashara lakini kwa madhumuni tofauti kabisa. Thibitisha na TRA na nssf.or.tz."
+        "output": "SDL na NSSF zinafanana kwa kuwa zote ni malipo yanayohusiana na wafanyakazi — lakini ni tofauti kabisa: SDL (→ TRA): 3.5% ya mishahara ya fedha; MWAJIRI peke yake; inaenda mfuko wa mafunzo; kizingiti: wafanyakazi 10+. NSSF (→ NSSF Fund): 10% mwajiri + 10% mfanyakazi = 20% jumla; wote wanashiriki; inaenda mfuko wa pensheni; hakuna kizingiti cha idadi ya wafanyakazi. Tofauti muhimu: SDL ni mwajiri peke yake, NSSF ni mwajiri + mfanyakazi. SDL ni kwa waajiri wenye 10+ wafanyakazi; NSSF ni kwa waajiri WOTE. Vyote vinachangia usafi wa biashara lakini kwa madhumuni tofauti kabisa. Thibitisha na TRA na nssf.go.tz."
     },
     {
         "instruction": "Mwajiri anaweza kulipa SDL kabla ya mwisho wa mwezi badala ya tarehe ya 7?",
