@@ -1,6 +1,195 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-24
+Last updated: 2026-08-25
+
+---
+
+# 📐 STEP 1 OF THE SCOPED-PRODUCT QUESTION, 2026-08-25 — the corpus IS shaped like a payroll product, and the boundary does NOT revive the shelved floor.
+
+**Free, offline, and BOUNDING only.** Harnesses: `eval/scoping/classify_boundary.py`,
+`eval/scoping/recut_coverage_gate_by_boundary.py`, `eval/scoping/readjudicate_changed_48.py`.
+Artifacts: `eval/results/boundary_classification.json`,
+`eval/results/coverage_gate_recut_by_boundary.json`,
+`eval/results/natural48_readjudicated_2026_08_24.json`. All committed **before** their results
+were written up (R18).
+
+## ⛔ What this step can and cannot answer — and it must be read before any number below
+
+| | |
+|---|---|
+| **CAN** | *Is our corpus shaped like a scoped product?* A question about **our own construction choices**. |
+| **CANNOT** | *Would a scoped product hit?* That needs first messages from real employers — a population this project **has never held**. Checked live 2026-08-25: the WhatsApp transcript store returns **`rows: 0`**. There is no user data at all. |
+| **why it still matters** | if the corpus were **not** shaped like any candidate boundary, the boundary would be refuted before a user was ever recruited, and step 2 need not run. |
+
+**The classification axis is the STATUTORY TRIGGER, not our subdomain labels** — classifying by our
+own labels would make any boundary we drew look well-covered by construction. Route labels come from
+the production `decompose` + `route` calls, not a keyword proxy.
+
+## 1. The corpus is half employer-conditioned, and the compute path is the payroll path
+
+**[M, 420 questions: the 400-row gate corpus + 20 presumptive probes]**
+
+| actor class (statutory trigger) | n | compute | fact |
+|---|---|---|---|
+| **employer_only** — obligation exists ONLY because there are employees | **201 (48%)** | **102** | 99 |
+| **any_business** — arises with or without staff | 149 (35%) | 20 | **129** |
+| non_citizen (GN 487A) | 54 | 0 | 54 |
+| out_of_corpus | 16 | 1 | 15 |
+
+**The structural argument survives contact with the data, and this is the number that carries it:**
+
+| boundary | covers | **compute share inside it** |
+|---|---|---|
+| B1 payroll only | 177/404 (43.8%) | **57.6%** |
+| B2 + OSHA | 201/404 (49.8%) | 50.7% |
+| B3 + BRELA | 223/404 (55.2%) | 45.7% |
+| B4 + presumptive | 243/404 (60.1%) | 48.1% |
+| **B5 today's product, no boundary** | 404/404 | **30.2%** |
+
+**A payroll boundary nearly doubles the share of questions that take the deterministic path**
+(57.6% vs 30.2%). It does this because `any_business` is fact-dominated 129:20 while `employer_only`
+is compute-majority 102:99. **The safe path and the payroll domain are close to the same set.**
+
+## 2. ⚠️ THE SUPERSET FINDING — and it is the strongest argument against the boundary as stated
+
+**An employer is not a user with only payroll obligations.** An employer with 12 staff still
+registers a business, still issues EFD receipts, still crosses the VAT threshold. So *"our users are
+employers"* and *"our product answers payroll"* are **different scopes**, and the gap between them is
+the cost:
+
+| boundary | of everything an employer might ask, share it would REFUSE |
+|---|---|
+| B1 payroll only | **49.4%** (173/350) |
+| B2 + OSHA | 42.6% |
+| B3 + BRELA | 36.3% |
+| B4 + presumptive | **30.6%** (107/350) |
+
+**Even the widest candidate boundary declines three in ten of what its own users are entitled to
+ask.** What B4 still refuses is exactly: VAT registration (54), VAT withholding (28), EFD (25).
+
+## 3. 🎯 A CORRECTION TO MY OWN SCOPING NOTE — the coverage-gap argument was overstated
+
+The scoping note (1e77aae) said an employer-only product *"would refuse roughly eleven of those
+twelve first messages"*, and read that as the boundary's failure. **The control was missing.**
+
+**[M] Coverage-gap 12 hits: B1–B3 = 0/12. B4 = 2/12. B5, TODAY'S PRODUCT WITH NO BOUNDARY = 2/12.**
+
+**Today's unbounded product covers exactly two of those twelve as well.** The boundary's *cost* on
+that population is **two questions, not eleven** — B5 fails the other ten too, it just fails them by
+**answering wrong** instead of by **declining**. Ten of twelve first messages have no fact behind
+them either way; the only thing a boundary changes is whether the user is told.
+
+That reframing does not rescue the boundary — 2/12 is a bad hit rate for anybody — but the
+comparison I drew was against a baseline I never measured, which is the same error as measuring a
+remedy on the population that does not need it (R22), taken from the other end.
+
+## 4. ❌ THE REVIVED FLOOR IS DEAD — my own hypothesis, refuted on the data that inspired it
+
+The scoping note argued the coverage gate's fatal 71% false-refusal rate *"is only fatal against a
+GENERAL product"*, since it came from separating ~22 topics in paraphrase space and a boundary
+leaves five or six. **If true it would have been the first route to a safety floor that survives
+measurement.** It is not true.
+
+**[M] Arm A (covered topics that MUST pass), re-cut by boundary. Nothing re-run, nothing re-judged
+— the only thing that changes is which rows are counted:**
+
+| | false refusals | rate |
+|---|---|---|
+| unrestricted (the number that shelved the gate) | 15/21 | **71%** |
+| **restricted to B1, payroll only** | **4/6** | **67%** |
+| best case, B2/B3 | 5/10 | 50% |
+
+**`hoA_paye`, `hoA_wcf`, `hoA_minimum_wage` and `hoA_employment` all false-refuse — the four most
+central topics a payroll product exists to answer.** Narrowing the topic count does not fix a
+mechanism that fails on the topics it kept.
+
+**The deeper point, which generalises past this gate:**
+
+> **Look at WHICH ARMS a boundary helps.** Arms B, C and D are cases the boundary refuses **by
+> declaration**, before any gate runs — so there the gate becomes **redundant, not better**. Arm A
+> is where the gate's failure lives, and it is exactly the arm a boundary **cannot touch**, because
+> an in-boundary topic is in-boundary whether or not a boundary is declared. **The boundary
+> substitutes for the gate on the cases the gate already got right, and cannot help on the cases it
+> got wrong.**
+
+**Evidence class, stated rather than assumed:** this is a **re-cut of a BURNED set** (R21 — its
+results were read on 2026-08-23). It cannot license shipping the gate. It **can** refute the
+hypothesis, because a hypothesis that fails on the data that inspired it does not need fresh data
+to die.
+
+## 5. 🔧 AN R18 HOLE I OPENED, CLOSED — and the number moved twice
+
+The scoping note headlines *"compute 4% wrong vs fact 24% — six-fold"*, cited as
+`[M, natural 48, live replies 2026-08-24]`. **No such artifact exists.** The adjudication was done
+in-session and never written to disk. That makes it **provisional**, and provisionality is
+contagious — the boundary argument resting on it was provisional too. **Fifth instance of the
+pattern R18 exists for, and it is mine.**
+
+Re-derived and committed: diffing the 2026-08-17 adjudication against the 2026-08-24 single-arm
+replies shows **exactly three of 48 replies changed** — and they are exactly the three the earlier
+pass marked WRONG on the compute path. The other 45 are byte-identical, so their verdicts cannot
+have moved. The whole question was three replies.
+
+| path | n | WRONG before → after | **WRONG+PARTIAL after** |
+|---|---|---|---|
+| **compute** | 24 | 12.5% → **0%** | **12.5%** |
+| **fact** | 21 | 23.8% → 23.8% | **42.9%** |
+
+- **`nat_24` WRONG → CORRECT.** The triage is now fully right: SDL does not apply at 9 staff and it
+  says so with the reason; WCF 0.5% from the first employee; NSSF 20% = 10+10. **This is the row
+  D-FIDELITY-6 and the rate guard were built for, and it landed on its target.**
+- **`nat_05` WRONG → PARTIAL.** The wrong-base trap is cleared and the fabricated TZS 260,000 BRELA
+  fee is gone; it names the base as gross payroll but does not ask for the figure.
+- **`nat_23` WRONG → PARTIAL.** Both levies now answered, both figures right (SDL 192,500, NSSF
+  1,100,000) — but it **still says 5.5M is what each of 12 employees earns**, contradicting its own
+  arithmetic. **Boarded:** a correct computation wrapped in a wrong sentence, which no D-FIDELITY
+  rule covers because they compare figures, not the prose framing them.
+
+**The number was quoted three different ways in eight days (12.5%, 4%, 0%). A bare ratio on n=24 is
+unstable, which is why WRONG+PARTIAL is now reported beside it — 12.5% vs 42.9%, a 3.4× gap.**
+
+## 5b. 🔓 AND THE SECRET SCAN'S OTHER HALF — found while running it, not while auditing it
+
+Running `scan_for_keys.py --all-tracked` in the course of this work — **the fallback the pre-push
+hook takes when git hands it no range, i.e. the first push of a new branch** — returned
+**BLOCKED on `handover.md:695`**, which records a HuggingFace secret as `hf_xxxxxxxxxxxxxxxxxxxxxxxxx`.
+**A redaction.** That push would have been blocked by the *absence* of a key.
+
+**R26's five-state vocabulary calls this OVERBROAD, and it is the half yesterday's fix skipped:**
+the control was planted into (*it MUST block*) but never given a clean case *on the path that
+actually runs it*. Positive-only certifies a control that blocks everything — which is what this
+was, on that one path. Closed with the narrowest form that works (R17 step 4): a token body that
+is x's **and nothing else**. `tests/test_push_gate.py` now asserts both directions, because
+asserting only the pass would license a scanner that has quietly stopped seeing `hf_` tokens at
+all. **9 tests, all passing; `--all-tracked` now CLEAN over 731 files.**
+
+## 6. Where this leaves the direction question
+
+**Supported [M]:** the corpus is half employer-conditioned; a payroll boundary nearly doubles
+compute-path share; compute is 3.4× cleaner than fact on WRONG+PARTIAL and has **zero** outright
+wrongs.
+
+**Against [M]:** the widest candidate boundary still refuses **30.6%** of what an employer may ask,
+and the narrow one **49.4%**. The boundary does **not** revive the coverage gate. And on the
+coverage-gap population, a boundary and today's product are **2/12 either way**.
+
+**Undecided, and it is the whole question [not measured]:** *would a real employer's first message
+land inside the boundary?* Composition determines that number, so **a set I author cannot produce
+it** — writing 20 payroll questions and 12 others makes the boundary hit 50% by construction. **That
+is step 2a, and it is a founder task**: ~40 verbatim first messages from 10–15 real employers, asked
+one question — *"ungemuuliza nini kwanza?"* — **without being told what the product answers.** The
+moment the topic is suggested, the hit rate is constructed rather than measured.
+
+**Proposal for the rest of step 2, awaiting approval:** `eval/scoping/STEP2_PROPOSAL.md`, with the
+40-row frozen set at `eval/scoping/heldout_employer_first_messages_040.jsonl` (20 in-boundary /
+12 out-of-boundary refusal-copy / 4 genuine-OOC control / 4 mixed). **29 of the 40 use no
+regulatory label at all**, and accuracy will be reported split by `label_form`, which is the closest
+a self-authored set can get to paraphrase space. It measures in-boundary accuracy and refusal copy
+only; it is explicitly **not** a hit rate.
+
+⚠️ **R12 still not satisfied.** `docs/reference_narrative.md` has not been re-read. Per the
+founder's instruction it is to be read **before the decision, not before the evidence** — this
+entry is evidence.
 
 ---
 

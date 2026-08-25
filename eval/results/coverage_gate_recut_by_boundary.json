@@ -1,0 +1,490 @@
+{
+  "measured": "2026-08-25",
+  "harness": "eval/scoping/recut_coverage_gate_by_boundary.py",
+  "source_verdicts": "eval/results/coverage_gate_shipped.json (2026-08-23) -- nothing re-run, nothing re-judged; the ONLY thing that changes is which rows are counted",
+  "heldout_set": "eval/coverage/coverage_gate_heldout_040.jsonl -- BURNED 2026-08-23",
+  "topic_map": {
+    "paye": "paye_compliance",
+    "sdl": "sdl_compliance",
+    "nssf": "nssf_contributions",
+    "wcf": "wcf_compliance",
+    "minimum_wage": "gn605a",
+    "employment": "gn605a",
+    "osha": "osha_registration",
+    "permit": "osha_registration",
+    "brela_company": "brela_registration",
+    "trademark": "brela_registration",
+    "presumptive": "presumptive_tax",
+    "vat": "vat_registration",
+    "efd": "efd_compliance",
+    "wht": "vat_withholding",
+    "gn487a": "gn487a"
+  },
+  "verdict": {
+    "original_arm_A": {
+      "n": 21,
+      "false_refusals": 15,
+      "rate": 0.714,
+      "this_is_the_number_that_shelved_the_gate": true
+    },
+    "arm_A_restricted_to_each_boundary": {
+      "B1_payroll_only": {
+        "n": 6,
+        "false_refusals": 4,
+        "rate": 0.667,
+        "which": [
+          "hoA_paye",
+          "hoA_wcf",
+          "hoA_minimum_wage",
+          "hoA_employment"
+        ]
+      },
+      "B2_payroll_workplace": {
+        "n": 8,
+        "false_refusals": 4,
+        "rate": 0.5,
+        "which": [
+          "hoA_paye",
+          "hoA_wcf",
+          "hoA_minimum_wage",
+          "hoA_employment"
+        ]
+      },
+      "B3_payroll_registration": {
+        "n": 10,
+        "false_refusals": 5,
+        "rate": 0.5,
+        "which": [
+          "hoA_paye",
+          "hoA_wcf",
+          "hoA_minimum_wage",
+          "hoA_brela_company",
+          "hoA_employment"
+        ]
+      },
+      "B4_observed_user": {
+        "n": 11,
+        "false_refusals": 6,
+        "rate": 0.545,
+        "which": [
+          "hoA_paye",
+          "hoA_wcf",
+          "hoA_minimum_wage",
+          "hoA_brela_company",
+          "hoA_presumptive",
+          "hoA_employment"
+        ]
+      },
+      "B5_all_covered": {
+        "n": 15,
+        "false_refusals": 10,
+        "rate": 0.667,
+        "which": [
+          "hoA_vat",
+          "hoA_efd",
+          "hoA_paye",
+          "hoA_wcf",
+          "hoA_minimum_wage",
+          "hoA_brela_company",
+          "hoA_gn487a",
+          "hoA_presumptive",
+          "hoA_wht",
+          "hoA_employment"
+        ]
+      }
+    },
+    "hypothesis": "a declared boundary revives the shelved coverage gate, because the gate's 71% came from separating ~22 topics and a boundary leaves 5-6",
+    "REFUTED": true,
+    "why": "The false refusals are NOT concentrated outside the boundary. Restricted to the payroll boundary's own core topics, the gate still false-refuses at a rate indistinguishable from the full set. PAYE, WCF, minimum wage and employment -- the four most central topics a payroll product exists to answer -- all false-refuse. Narrowing the topic count does not fix a mechanism that fails on the topics it kept.",
+    "the_deeper_point": "Look at which arms a boundary helps. Arms B, C and D are cases the boundary refuses BY DECLARATION, before any gate runs -- so there the gate becomes REDUNDANT, not better. Arm A is where the gate's failure lives, and it is exactly the arm a boundary cannot touch, because an in-boundary topic is in-boundary whether or not a boundary is declared. THE BOUNDARY SUBSTITUTES FOR THE GATE ON THE CASES THE GATE ALREADY GOT RIGHT, AND CANNOT HELP ON THE CASES IT GOT WRONG.",
+    "evidence_class": "RE-CUT OF A BURNED SET (R21). Cannot license shipping the gate. Can refute the hypothesis, because a hypothesis that fails on the data that inspired it does not need fresh data to die.",
+    "sensitivity_hoA_employment": {
+      "if_employment_is_NOT_counted_in_B1": {
+        "n": 5,
+        "false_refusals": 3
+      },
+      "note": "the verdict does not turn on it -- PAYE, WCF and minimum wage fail regardless."
+    }
+  },
+  "per_boundary_by_arm": {
+    "B1_payroll_only": {
+      "A_covered_must_pass": {
+        "in_boundary_n": 6,
+        "in_boundary_pass": 2,
+        "in_boundary_fail": 4,
+        "fail_rate_in_boundary": 0.667,
+        "fail_ids_in_boundary": [
+          "hoA_paye",
+          "hoA_wcf",
+          "hoA_minimum_wage",
+          "hoA_employment"
+        ],
+        "dropped_as_out_of_boundary": 15,
+        "dropped_ids": [
+          "hoA_vat",
+          "hoA_efd",
+          "hoA_brela_company",
+          "hoA_trademark",
+          "hoA_osha",
+          "hoA_gn487a",
+          "hoA_permit",
+          "hoA_stamp_duty",
+          "hoA_presumptive",
+          "hoA_wht",
+          "hoA_objection",
+          "hoA_penalty",
+          "hoA_business_licence",
+          "hoA_exemption",
+          "hoA_filing"
+        ]
+      },
+      "B_uncovered_must_refuse": {
+        "in_boundary_n": 0,
+        "in_boundary_pass": 0,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": null,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 10,
+        "dropped_ids": [
+          "hoB_land_rent",
+          "hoB_excise",
+          "hoB_billboard",
+          "hoB_crop_cess",
+          "hoB_hotel_levy",
+          "hoB_tmda",
+          "hoB_road_licence",
+          "hoB_electronic_stamps",
+          "hoB_tourism_levy",
+          "hoB_water_permit"
+        ]
+      },
+      "C_mixed_answer_and_refuse": {
+        "in_boundary_n": 2,
+        "in_boundary_pass": 2,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": 0.0,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 3,
+        "dropped_ids": [
+          "hoC_licence_plus_fire",
+          "hoC_vat_plus_landrent",
+          "hoC_osha_plus_scales"
+        ]
+      },
+      "D_wrong_topic_match_must_refuse": {
+        "in_boundary_n": 0,
+        "in_boundary_pass": 0,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": null,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 4,
+        "dropped_ids": [
+          "hoD_company_tax",
+          "hoD_partnership_tax",
+          "hoD_profit_individual",
+          "hoD_transport_presumptive"
+        ]
+      }
+    },
+    "B2_payroll_workplace": {
+      "A_covered_must_pass": {
+        "in_boundary_n": 8,
+        "in_boundary_pass": 4,
+        "in_boundary_fail": 4,
+        "fail_rate_in_boundary": 0.5,
+        "fail_ids_in_boundary": [
+          "hoA_paye",
+          "hoA_wcf",
+          "hoA_minimum_wage",
+          "hoA_employment"
+        ],
+        "dropped_as_out_of_boundary": 13,
+        "dropped_ids": [
+          "hoA_vat",
+          "hoA_efd",
+          "hoA_brela_company",
+          "hoA_trademark",
+          "hoA_gn487a",
+          "hoA_stamp_duty",
+          "hoA_presumptive",
+          "hoA_wht",
+          "hoA_objection",
+          "hoA_penalty",
+          "hoA_business_licence",
+          "hoA_exemption",
+          "hoA_filing"
+        ]
+      },
+      "B_uncovered_must_refuse": {
+        "in_boundary_n": 0,
+        "in_boundary_pass": 0,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": null,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 10,
+        "dropped_ids": [
+          "hoB_land_rent",
+          "hoB_excise",
+          "hoB_billboard",
+          "hoB_crop_cess",
+          "hoB_hotel_levy",
+          "hoB_tmda",
+          "hoB_road_licence",
+          "hoB_electronic_stamps",
+          "hoB_tourism_levy",
+          "hoB_water_permit"
+        ]
+      },
+      "C_mixed_answer_and_refuse": {
+        "in_boundary_n": 3,
+        "in_boundary_pass": 3,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": 0.0,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 2,
+        "dropped_ids": [
+          "hoC_licence_plus_fire",
+          "hoC_vat_plus_landrent"
+        ]
+      },
+      "D_wrong_topic_match_must_refuse": {
+        "in_boundary_n": 0,
+        "in_boundary_pass": 0,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": null,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 4,
+        "dropped_ids": [
+          "hoD_company_tax",
+          "hoD_partnership_tax",
+          "hoD_profit_individual",
+          "hoD_transport_presumptive"
+        ]
+      }
+    },
+    "B3_payroll_registration": {
+      "A_covered_must_pass": {
+        "in_boundary_n": 10,
+        "in_boundary_pass": 5,
+        "in_boundary_fail": 5,
+        "fail_rate_in_boundary": 0.5,
+        "fail_ids_in_boundary": [
+          "hoA_paye",
+          "hoA_wcf",
+          "hoA_minimum_wage",
+          "hoA_brela_company",
+          "hoA_employment"
+        ],
+        "dropped_as_out_of_boundary": 11,
+        "dropped_ids": [
+          "hoA_vat",
+          "hoA_efd",
+          "hoA_gn487a",
+          "hoA_stamp_duty",
+          "hoA_presumptive",
+          "hoA_wht",
+          "hoA_objection",
+          "hoA_penalty",
+          "hoA_business_licence",
+          "hoA_exemption",
+          "hoA_filing"
+        ]
+      },
+      "B_uncovered_must_refuse": {
+        "in_boundary_n": 0,
+        "in_boundary_pass": 0,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": null,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 10,
+        "dropped_ids": [
+          "hoB_land_rent",
+          "hoB_excise",
+          "hoB_billboard",
+          "hoB_crop_cess",
+          "hoB_hotel_levy",
+          "hoB_tmda",
+          "hoB_road_licence",
+          "hoB_electronic_stamps",
+          "hoB_tourism_levy",
+          "hoB_water_permit"
+        ]
+      },
+      "C_mixed_answer_and_refuse": {
+        "in_boundary_n": 3,
+        "in_boundary_pass": 3,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": 0.0,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 2,
+        "dropped_ids": [
+          "hoC_licence_plus_fire",
+          "hoC_vat_plus_landrent"
+        ]
+      },
+      "D_wrong_topic_match_must_refuse": {
+        "in_boundary_n": 0,
+        "in_boundary_pass": 0,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": null,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 4,
+        "dropped_ids": [
+          "hoD_company_tax",
+          "hoD_partnership_tax",
+          "hoD_profit_individual",
+          "hoD_transport_presumptive"
+        ]
+      }
+    },
+    "B4_observed_user": {
+      "A_covered_must_pass": {
+        "in_boundary_n": 11,
+        "in_boundary_pass": 5,
+        "in_boundary_fail": 6,
+        "fail_rate_in_boundary": 0.545,
+        "fail_ids_in_boundary": [
+          "hoA_paye",
+          "hoA_wcf",
+          "hoA_minimum_wage",
+          "hoA_brela_company",
+          "hoA_presumptive",
+          "hoA_employment"
+        ],
+        "dropped_as_out_of_boundary": 10,
+        "dropped_ids": [
+          "hoA_vat",
+          "hoA_efd",
+          "hoA_gn487a",
+          "hoA_stamp_duty",
+          "hoA_wht",
+          "hoA_objection",
+          "hoA_penalty",
+          "hoA_business_licence",
+          "hoA_exemption",
+          "hoA_filing"
+        ]
+      },
+      "B_uncovered_must_refuse": {
+        "in_boundary_n": 0,
+        "in_boundary_pass": 0,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": null,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 10,
+        "dropped_ids": [
+          "hoB_land_rent",
+          "hoB_excise",
+          "hoB_billboard",
+          "hoB_crop_cess",
+          "hoB_hotel_levy",
+          "hoB_tmda",
+          "hoB_road_licence",
+          "hoB_electronic_stamps",
+          "hoB_tourism_levy",
+          "hoB_water_permit"
+        ]
+      },
+      "C_mixed_answer_and_refuse": {
+        "in_boundary_n": 3,
+        "in_boundary_pass": 3,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": 0.0,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 2,
+        "dropped_ids": [
+          "hoC_licence_plus_fire",
+          "hoC_vat_plus_landrent"
+        ]
+      },
+      "D_wrong_topic_match_must_refuse": {
+        "in_boundary_n": 0,
+        "in_boundary_pass": 0,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": null,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 4,
+        "dropped_ids": [
+          "hoD_company_tax",
+          "hoD_partnership_tax",
+          "hoD_profit_individual",
+          "hoD_transport_presumptive"
+        ]
+      }
+    },
+    "B5_all_covered": {
+      "A_covered_must_pass": {
+        "in_boundary_n": 15,
+        "in_boundary_pass": 5,
+        "in_boundary_fail": 10,
+        "fail_rate_in_boundary": 0.667,
+        "fail_ids_in_boundary": [
+          "hoA_vat",
+          "hoA_efd",
+          "hoA_paye",
+          "hoA_wcf",
+          "hoA_minimum_wage",
+          "hoA_brela_company",
+          "hoA_gn487a",
+          "hoA_presumptive",
+          "hoA_wht",
+          "hoA_employment"
+        ],
+        "dropped_as_out_of_boundary": 6,
+        "dropped_ids": [
+          "hoA_stamp_duty",
+          "hoA_objection",
+          "hoA_penalty",
+          "hoA_business_licence",
+          "hoA_exemption",
+          "hoA_filing"
+        ]
+      },
+      "B_uncovered_must_refuse": {
+        "in_boundary_n": 0,
+        "in_boundary_pass": 0,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": null,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 10,
+        "dropped_ids": [
+          "hoB_land_rent",
+          "hoB_excise",
+          "hoB_billboard",
+          "hoB_crop_cess",
+          "hoB_hotel_levy",
+          "hoB_tmda",
+          "hoB_road_licence",
+          "hoB_electronic_stamps",
+          "hoB_tourism_levy",
+          "hoB_water_permit"
+        ]
+      },
+      "C_mixed_answer_and_refuse": {
+        "in_boundary_n": 4,
+        "in_boundary_pass": 4,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": 0.0,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 1,
+        "dropped_ids": [
+          "hoC_licence_plus_fire"
+        ]
+      },
+      "D_wrong_topic_match_must_refuse": {
+        "in_boundary_n": 0,
+        "in_boundary_pass": 0,
+        "in_boundary_fail": 0,
+        "fail_rate_in_boundary": null,
+        "fail_ids_in_boundary": [],
+        "dropped_as_out_of_boundary": 4,
+        "dropped_ids": [
+          "hoD_company_tax",
+          "hoD_partnership_tax",
+          "hoD_profit_individual",
+          "hoD_transport_presumptive"
+        ]
+      }
+    }
+  }
+}

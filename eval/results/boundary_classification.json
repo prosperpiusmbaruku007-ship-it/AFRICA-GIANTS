@@ -1,0 +1,882 @@
+{
+  "measured": "2026-08-25",
+  "harness": "eval/scoping/classify_boundary.py",
+  "step": "STEP 1 of the scoped-product question -- free, offline, and BOUNDING only",
+  "what_this_can_and_cannot_answer": {
+    "can": "IS OUR CORPUS SHAPED LIKE A SCOPED PRODUCT -- a question about our own construction choices.",
+    "cannot": "WOULD A SCOPED PRODUCT HIT -- that needs first messages from real employers, a population this project has never held. Step 2.",
+    "why_it_still_matters": "if the corpus is NOT shaped like any candidate boundary, the boundary is refuted before a user is ever recruited, and step 2 need not be run at all."
+  },
+  "why_each_population": {
+    "A_gate_corpus_400": "AUTHORED BY US from the same source families as the facts (R21). Coverage here measures what we BUILT.",
+    "B_natural_48": "the only population with live routes AND adjudicated verdicts, so the only one where in-boundary ACCURACY is knowable.",
+    "C_coverage_gap_12": "authored as the deliberately HARD half. A hit rate here is a LOWER bound (R22 cuts both ways).",
+    "NOT_MEASURED": "real employers' first messages. The decision applies there."
+  },
+  "classification_axis": "statutory trigger (who owes the obligation), NOT our subdomain labels -- classifying by our own labels would make any boundary we drew look well-covered by construction.",
+  "actor_map": {
+    "paye_compliance": {
+      "actor": "employer_only",
+      "statutory_trigger": "ITA Cap 332: withholding on employment income. No employment income, no PAYE."
+    },
+    "sdl_compliance": {
+      "actor": "employer_only",
+      "statutory_trigger": "SDL is charged on the payroll of an employer with >=10 employees. Threshold is a headcount."
+    },
+    "nssf_contributions": {
+      "actor": "employer_only",
+      "statutory_trigger": "NSSF Act: 10%+10% on an employee's wage. Contribution presupposes an employee."
+    },
+    "wcf_compliance": {
+      "actor": "employer_only",
+      "statutory_trigger": "WCF Act: 0.5% of payroll; registration is triggered within 30 days of hiring the FIRST employee."
+    },
+    "gn605a": {
+      "actor": "employer_only",
+      "statutory_trigger": "Minimum wage order binds a person who PAYS wages."
+    },
+    "osha_registration": {
+      "actor": "employer_only",
+      "statutory_trigger": "OSHA Act 2003: duties of an employer to persons at work. DISPUTABLE -- a sole trader's premises is also a workplace."
+    },
+    "vat_registration": {
+      "actor": "any_business",
+      "statutory_trigger": "Turnover threshold (TZS 200M/12mo or 100M/6mo). Headcount is irrelevant."
+    },
+    "vat_withholding": {
+      "actor": "any_business",
+      "statutory_trigger": "Attaches to appointed withholding agents / payers. Not employment-conditioned."
+    },
+    "efd_compliance": {
+      "actor": "any_business",
+      "statutory_trigger": "Receipting obligation of a business making sales."
+    },
+    "brela_registration": {
+      "actor": "any_business",
+      "statutory_trigger": "Registration/annual return of the entity itself."
+    },
+    "presumptive_tax": {
+      "actor": "any_business",
+      "statutory_trigger": "Cap 332 s.35 presumptive regime applies to small non-VAT-registered traders. Structurally a SOLE TRADER regime -- the opposite of employer-conditioned."
+    },
+    "gn487a": {
+      "actor": "non_citizen",
+      "statutory_trigger": "Business Licensing (Prohibition ... for Non-Citizens) Order: trigger is the owner's nationality."
+    },
+    "out_of_corpus": {
+      "actor": "ooc",
+      "statutory_trigger": "Outside the corpus by design."
+    }
+  },
+  "route_labels_from": "chike.orchestrator.Orchestrator.decompose + .route -- the production calls, not a keyword proxy",
+  "population_A": {
+    "n": 420,
+    "by_actor": {
+      "any_business": 149,
+      "employer_only": 201,
+      "non_citizen": 54,
+      "ooc": 16
+    },
+    "by_actor_and_route": {
+      "any_business": {
+        "fact": 129,
+        "compute": 20
+      },
+      "employer_only": {
+        "fact": 99,
+        "compute": 102
+      },
+      "non_citizen": {
+        "fact": 54
+      },
+      "ooc": {
+        "compute": 1,
+        "fact": 15
+      }
+    },
+    "sensitivity_osha_moved_to_any_business": {
+      "any_business": 173,
+      "employer_only": 177,
+      "non_citizen": 54,
+      "ooc": 16
+    },
+    "boundaries": {
+      "B1_payroll_only": {
+        "label": "Employer payroll only (PAYE, SDL, NSSF, WCF, minimum wage)",
+        "copy": "\"Mishahara na makato ya wafanyakazi\" -- the question as literally asked.",
+        "in_boundary": 177,
+        "outside_boundary": 227,
+        "share_of_answerable": 0.438,
+        "route_mix_in_boundary": {
+          "fact": 75,
+          "compute": 102
+        },
+        "compute_share_in_boundary": 0.576,
+        "outside_by_subdomain": {
+          "vat_registration": 54,
+          "vat_withholding": 28,
+          "efd_compliance": 25,
+          "brela_registration": 22,
+          "gn487a": 54,
+          "osha_registration": 24,
+          "presumptive_tax": 20
+        }
+      },
+      "B2_payroll_workplace": {
+        "label": "B1 + workplace registration (OSHA)",
+        "copy": "Everything that follows from HAVING STAFF.",
+        "in_boundary": 201,
+        "outside_boundary": 203,
+        "share_of_answerable": 0.498,
+        "route_mix_in_boundary": {
+          "fact": 99,
+          "compute": 102
+        },
+        "compute_share_in_boundary": 0.507,
+        "outside_by_subdomain": {
+          "vat_registration": 54,
+          "vat_withholding": 28,
+          "efd_compliance": 25,
+          "brela_registration": 22,
+          "gn487a": 54,
+          "presumptive_tax": 20
+        }
+      },
+      "B3_payroll_registration": {
+        "label": "B2 + business registration (BRELA)",
+        "copy": "\"Kusajili biashara na kulipa wafanyakazi.\"",
+        "in_boundary": 223,
+        "outside_boundary": 181,
+        "share_of_answerable": 0.552,
+        "route_mix_in_boundary": {
+          "fact": 121,
+          "compute": 102
+        },
+        "compute_share_in_boundary": 0.457,
+        "outside_by_subdomain": {
+          "vat_registration": 54,
+          "vat_withholding": 28,
+          "efd_compliance": 25,
+          "gn487a": 54,
+          "presumptive_tax": 20
+        }
+      },
+      "B4_observed_user": {
+        "label": "B3 + presumptive income tax (the boundary matching the OBSERVED coverage-gap user)",
+        "copy": "\"Kodi ya makadirio, usajili, na mishahara.\"",
+        "in_boundary": 243,
+        "outside_boundary": 161,
+        "share_of_answerable": 0.601,
+        "route_mix_in_boundary": {
+          "fact": 126,
+          "compute": 117
+        },
+        "compute_share_in_boundary": 0.481,
+        "outside_by_subdomain": {
+          "vat_registration": 54,
+          "vat_withholding": 28,
+          "efd_compliance": 25,
+          "gn487a": 54
+        }
+      },
+      "B5_all_covered": {
+        "label": "Everything the corpus covers (today's product, no boundary)",
+        "copy": "No declared boundary -- the runtime-judgement product that needs a floor.",
+        "in_boundary": 404,
+        "outside_boundary": 0,
+        "share_of_answerable": 1.0,
+        "route_mix_in_boundary": {
+          "fact": 282,
+          "compute": 122
+        },
+        "compute_share_in_boundary": 0.302,
+        "outside_by_subdomain": {}
+      }
+    },
+    "n_answerable": 404,
+    "superset_what_an_employer_would_be_refused": {
+      "B1_payroll_only": {
+        "employer_relevant_rows": 350,
+        "would_be_refused": 173,
+        "refused_share_for_an_employer": 0.494,
+        "refused_by_subdomain": {
+          "vat_registration": 54,
+          "vat_withholding": 28,
+          "efd_compliance": 25,
+          "brela_registration": 22,
+          "osha_registration": 24,
+          "presumptive_tax": 20
+        }
+      },
+      "B2_payroll_workplace": {
+        "employer_relevant_rows": 350,
+        "would_be_refused": 149,
+        "refused_share_for_an_employer": 0.426,
+        "refused_by_subdomain": {
+          "vat_registration": 54,
+          "vat_withholding": 28,
+          "efd_compliance": 25,
+          "brela_registration": 22,
+          "presumptive_tax": 20
+        }
+      },
+      "B3_payroll_registration": {
+        "employer_relevant_rows": 350,
+        "would_be_refused": 127,
+        "refused_share_for_an_employer": 0.363,
+        "refused_by_subdomain": {
+          "vat_registration": 54,
+          "vat_withholding": 28,
+          "efd_compliance": 25,
+          "presumptive_tax": 20
+        }
+      },
+      "B4_observed_user": {
+        "employer_relevant_rows": 350,
+        "would_be_refused": 107,
+        "refused_share_for_an_employer": 0.306,
+        "refused_by_subdomain": {
+          "vat_registration": 54,
+          "vat_withholding": 28,
+          "efd_compliance": 25
+        }
+      },
+      "B5_all_covered": {
+        "employer_relevant_rows": 350,
+        "would_be_refused": 0,
+        "refused_share_for_an_employer": 0.0,
+        "refused_by_subdomain": {}
+      }
+    }
+  },
+  "population_B_natural_48": {
+    "note": "verdicts are the COMMITTED 2026-08-17 adjudication. The 2026-08-24 compute/fact figure quoted in the scoping note was NEVER COMMITTED and is therefore provisional (R18); it is re-adjudicated separately.",
+    "rows": [
+      {
+        "id": "nat_01",
+        "q": "nina wafanyakazi 14 mishahara yote kwa mwezi ni milioni 6 ile ya mafunzo ya ufundi nitalipa ngapi",
+        "subdomain": "sdl_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_02",
+        "q": "wafanyakazi wangu ni ishirini kila mmoja anapata laki nne kwa mwezi hiyo tozo ya mafunzo ni kiasi gani",
+        "subdomain": "sdl_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CLARIFY"
+      },
+      {
+        "id": "nat_03",
+        "q": "tuko wafanyakazi 7 tu ofisini mishahara jumla milioni 3 kwa mwezi hii ya ufundi stadi tunalipa kiasi gani",
+        "subdomain": "sdl_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_04",
+        "q": "nimeongeza watu sasa tuko kumi na mmoja je ile ya mafunzo inanianza lini",
+        "subdomain": "sdl_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_05",
+        "q": "nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya mafunzo nitalipa asilimia tatu na nusu ya nini",
+        "subdomain": "sdl_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "WRONG"
+      },
+      {
+        "id": "nat_06",
+        "q": "boss nina staff 25 total payroll ni milioni 15 kwa mwezi hiyo SDL yangu ni ngapi",
+        "subdomain": "sdl_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CLARIFY"
+      },
+      {
+        "id": "nat_07",
+        "q": "mfanyakazi wangu analipwa laki nane kwa mwezi mimi kama mwajiri nachangia kiasi gani kwenye mfuko wa hifadhi",
+        "subdomain": "nssf_contributions",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_08",
+        "q": "wananikata kiasi gani kwenye mshahara wangu wa 650000 kwa ajili ya mfuko wa uzeeni",
+        "subdomain": "nssf_contributions",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_09",
+        "q": "mshahara ni milioni 1.2 nataka kujua jumla inayoenda kwenye mfuko kwa mwezi mimi na mfanyakazi pamoja",
+        "subdomain": "nssf_contributions",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_10",
+        "q": "nimeajiri mtu mmoja mwezi huu nitachangia ngapi kwenye mfuko wa uzeeni",
+        "subdomain": "nssf_contributions",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_11",
+        "q": "nina wafanyakazi 4 wa laki sita kila mmoja jumla ya michango ya mfuko kwa mwezi ni ngapi",
+        "subdomain": "nssf_contributions",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CLARIFY"
+      },
+      {
+        "id": "nat_12",
+        "q": "mshahara wangu ni milioni 5 kwa mwezi nitakatwa kiasi gani kwenye mfuko",
+        "subdomain": "nssf_contributions",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "PARTIAL"
+      },
+      {
+        "id": "nat_13",
+        "q": "mfanyakazi wangu napata mshahara wa 900000 kwa mwezi serikali inachukua kiasi gani kila mwezi",
+        "subdomain": "paye_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_14",
+        "q": "nampa mtu wangu wa dukani 350000 kwa mwezi je kuna kitu cha kupeleka kwa tra kwenye mshahara wake na ni kiasi gani",
+        "subdomain": "paye_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_15",
+        "q": "mshahara wa mlinzi wangu ni laki mbili na nusu kwa mwezi nakata kodi kiasi gani",
+        "subdomain": "paye_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_16",
+        "q": "nimemleta engineer kutoka india hana residence permit ya kudumu nampa milioni 4 kwa mwezi kodi ya mshahara wake ni ngapi",
+        "subdomain": "paye_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT*"
+      },
+      {
+        "id": "nat_17",
+        "q": "mshahara wangu ni 1500000 nitabaki na pesa ngapi mkononi baada ya makato yote",
+        "subdomain": "paye_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CLARIFY"
+      },
+      {
+        "id": "nat_18",
+        "q": "nina wafanyakazi wawili mmoja anapata 400000 mwingine 1100000 kodi ya mishahara yao kwa mwezi ni ngapi jumla",
+        "subdomain": "paye_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_19",
+        "q": "mishahara yangu yote kwa mwezi ni milioni 3 nichangie ngapi kwenye ile ya fidia",
+        "subdomain": "wcf_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_20",
+        "q": "nimeanza kuajiri juzi mtu mmoja tu je hii ya fidia inaanza lini na ndani ya siku ngapi nisajili",
+        "subdomain": "wcf_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_21",
+        "q": "gari langu la biashara lina thamani ya milioni 30 na nawalipa vibarua jumla laki tisa kwa mwezi hiyo ya fidia ni ngapi",
+        "subdomain": "wcf_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CLARIFY"
+      },
+      {
+        "id": "nat_22",
+        "q": "wafanyakazi 6 kila mmoja laki tatu hiyo ya fidia ni shilingi ngapi kwa mwezi",
+        "subdomain": "wcf_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_23",
+        "q": "nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya mafunzo na ile ya uzeeni",
+        "subdomain": "multi_levy_fanout",
+        "actor": "UNMAPPED",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "WRONG"
+      },
+      {
+        "id": "nat_24",
+        "q": "tuko na watu 9 tu mishahara milioni 4 kwa mwezi nilipe nini kati ya ile ya mafunzo ya fidia na ya uzeeni",
+        "subdomain": "multi_levy_fanout",
+        "actor": "UNMAPPED",
+        "route_2026_08_17": "compute",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "WRONG"
+      },
+      {
+        "id": "nat_25",
+        "q": "biashara yangu ya vipuri inaingiza milioni 25 kila mwezi je nasajiliwa vat au bado",
+        "subdomain": "vat_registration",
+        "actor": "any_business",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CLARIFY"
+      },
+      {
+        "id": "nat_26",
+        "q": "nimefungua duka miezi sita iliyopita nimeuza jumla milioni 60 hadi sasa je nimefika kiwango cha vat",
+        "subdomain": "vat_registration",
+        "actor": "any_business",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_27",
+        "q": "vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu",
+        "subdomain": "vat_registration",
+        "actor": "any_business",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_28",
+        "q": "nimefanya kazi ya ushauri kwa taasisi ya serikali wamesema watakata vat je asilimia ngapi na cheti nitapata lini",
+        "subdomain": "vat_withholding",
+        "actor": "any_business",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "WRONG"
+      },
+      {
+        "id": "nat_29",
+        "q": "mwenzangu ni mtanzania lakini fedha ni za mgeni tunataka kufungua kibanda cha kutuma pesa inawezekana",
+        "subdomain": "gn487a",
+        "actor": "non_citizen",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "PARTIAL"
+      },
+      {
+        "id": "nat_30",
+        "q": "dada yangu ameolewa na mkenya anataka kufungua saluni ya kike inaruhusiwa",
+        "subdomain": "gn487a",
+        "actor": "non_citizen",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "PARTIAL"
+      },
+      {
+        "id": "nat_31",
+        "q": "kama mgeni akikutwa anafanya biashara isiyoruhusiwa adhabu yake ni ipi",
+        "subdomain": "gn487a",
+        "actor": "non_citizen",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_32",
+        "q": "mgeni anaweza kuwa mwanahisa kwenye kampuni yangu ya ujenzi bila kuendesha biashara ya rejareja",
+        "subdomain": "gn487a",
+        "actor": "non_citizen",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_33",
+        "q": "sijapeleka ritani ya kampuni yangu miezi saba sasa nitalipa faini kiasi gani na ada yenyewe ni ngapi",
+        "subdomain": "brela_registration",
+        "actor": "any_business",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "WRONG"
+      },
+      {
+        "id": "nat_34",
+        "q": "nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+        "subdomain": "brela_registration",
+        "actor": "any_business",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_35",
+        "q": "sisi ni watu watano tunataka kufanya bizna pamoja tusajili kampuni au ushirika",
+        "subdomain": "brela_registration",
+        "actor": "any_business",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "PARTIAL"
+      },
+      {
+        "id": "nat_36",
+        "q": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+        "subdomain": "efd_compliance",
+        "actor": "any_business",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_37",
+        "q": "mteja amenunua kwa shilingi 2000 tu nampa risiti ya mashine au inaruhusiwa kuandika kwa mkono",
+        "subdomain": "efd_compliance",
+        "actor": "any_business",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_38",
+        "q": "nimeshasajili vat je lazima niwe na mashine ya risiti hata kama mauzo ni madogo",
+        "subdomain": "efd_compliance",
+        "actor": "any_business",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "compute",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_39",
+        "q": "nina duka dogo na mfanyakazi mmoja je nasajili sehemu ya kazi osha",
+        "subdomain": "osha_registration",
+        "actor": "employer_only",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_40",
+        "q": "nani anakuja kukagua usalama wa sehemu yangu ya kazi na nani analipa fidia akiumia",
+        "subdomain": "osha_registration",
+        "actor": "employer_only",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_41",
+        "q": "nimefungua karakana mpya nina muda gani wa kusajili sehemu ya kazi",
+        "subdomain": "osha_registration",
+        "actor": "employer_only",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "WRONG"
+      },
+      {
+        "id": "nat_42",
+        "q": "mshahara wa chini kabisa naruhusiwa kumpa mfanyakazi ni kiasi gani siku hizi",
+        "subdomain": "gn605a",
+        "actor": "employer_only",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "PARTIAL"
+      },
+      {
+        "id": "nat_43",
+        "q": "mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+        "subdomain": "gn605a",
+        "actor": "employer_only",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_44",
+        "q": "nimeuzia wakala wa serikali bidhaa je watanikata asilimia ngapi ya vat",
+        "subdomain": "vat_withholding",
+        "actor": "any_business",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "WRONG"
+      },
+      {
+        "id": "nat_45",
+        "q": "mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+        "subdomain": "wcf_compliance",
+        "actor": "employer_only",
+        "route_2026_08_17": "fact",
+        "route_live_2026_08_24": "fact",
+        "verdict_2026_08_17": "WRONG"
+      },
+      {
+        "id": "nat_46",
+        "q": "niliuza kiwanja changu cha mwanza nimepata faida kubwa nalipa kodi gani",
+        "subdomain": "out_of_corpus",
+        "actor": "ooc",
+        "route_2026_08_17": "refusal",
+        "route_live_2026_08_24": "refusal",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_47",
+        "q": "naagiza bidhaa kutoka china kontena moja ushuru wa forodha ni kiasi gani",
+        "subdomain": "out_of_corpus",
+        "actor": "ooc",
+        "route_2026_08_17": "refusal",
+        "route_live_2026_08_24": "refusal",
+        "verdict_2026_08_17": "CORRECT"
+      },
+      {
+        "id": "nat_48",
+        "q": "nina biashara zanzibar kodi zake zinafananaje na huku bara",
+        "subdomain": "out_of_corpus",
+        "actor": "ooc",
+        "route_2026_08_17": "refusal",
+        "route_live_2026_08_24": "refusal",
+        "verdict_2026_08_17": "CORRECT"
+      }
+    ],
+    "by_boundary": {
+      "B1_payroll_only": {
+        "n": 25,
+        "verdicts_2026_08_17": {
+          "CORRECT": 15,
+          "CLARIFY": 5,
+          "WRONG": 2,
+          "PARTIAL": 2,
+          "CORRECT*": 1
+        },
+        "wrong_share": 0.08,
+        "route_live": {
+          "compute": 19,
+          "fact": 6
+        }
+      },
+      "B2_payroll_workplace": {
+        "n": 28,
+        "verdicts_2026_08_17": {
+          "CORRECT": 17,
+          "CLARIFY": 5,
+          "WRONG": 3,
+          "PARTIAL": 2,
+          "CORRECT*": 1
+        },
+        "wrong_share": 0.107,
+        "route_live": {
+          "compute": 19,
+          "fact": 9
+        }
+      },
+      "B3_payroll_registration": {
+        "n": 31,
+        "verdicts_2026_08_17": {
+          "CORRECT": 18,
+          "CLARIFY": 5,
+          "WRONG": 4,
+          "PARTIAL": 3,
+          "CORRECT*": 1
+        },
+        "wrong_share": 0.129,
+        "route_live": {
+          "compute": 19,
+          "fact": 12
+        }
+      },
+      "B4_observed_user": {
+        "n": 31,
+        "verdicts_2026_08_17": {
+          "CORRECT": 18,
+          "CLARIFY": 5,
+          "WRONG": 4,
+          "PARTIAL": 3,
+          "CORRECT*": 1
+        },
+        "wrong_share": 0.129,
+        "route_live": {
+          "compute": 19,
+          "fact": 12
+        }
+      },
+      "B5_all_covered": {
+        "n": 43,
+        "verdicts_2026_08_17": {
+          "CORRECT": 25,
+          "CLARIFY": 6,
+          "WRONG": 6,
+          "PARTIAL": 5,
+          "CORRECT*": 1
+        },
+        "wrong_share": 0.14,
+        "route_live": {
+          "compute": 23,
+          "fact": 20
+        }
+      }
+    }
+  },
+  "population_C_coverage_gap_12": {
+    "rows": [
+      {
+        "q": "Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa kodi ya mapato kiasi gani?",
+        "mapped_subdomain": "presumptive_tax",
+        "why": "income tax for a duka on 30M turnover -> presumptive regime",
+        "route": "compute",
+        "in_corpus_subdomains": true
+      },
+      {
+        "q": "Biashara yangu inauza milioni 4 kwa mwaka, kodi ya makadirio ni ngapi?",
+        "mapped_subdomain": "presumptive_tax",
+        "why": "kodi ya makadirio on 4M turnover",
+        "route": "compute",
+        "in_corpus_subdomains": true
+      },
+      {
+        "q": "Leseni ya biashara ya duka la vyakula inagharimu shilingi ngapi?",
+        "mapped_subdomain": "business_licence",
+        "why": "business licence FEE -- NOT IN CORPUS at all",
+        "route": "fact",
+        "in_corpus_subdomains": false
+      },
+      {
+        "q": "Naomba kujua leseni ya biashara inahuishwa lini kila mwaka?",
+        "mapped_subdomain": "business_licence",
+        "why": "business licence RENEWAL -- NOT IN CORPUS",
+        "route": "fact",
+        "in_corpus_subdomains": false
+      },
+      {
+        "q": "Halmashauri inadai ushuru wa huduma asilimia ngapi ya mauzo yangu?",
+        "mapped_subdomain": "council_levy",
+        "why": "council service levy % -- NOT IN CORPUS",
+        "route": "fact",
+        "in_corpus_subdomains": false
+      },
+      {
+        "q": "Ushuru wa soko kwa genge langu ni kiasi gani kwa siku?",
+        "mapped_subdomain": "council_levy",
+        "why": "market levy for a genge -- NOT IN CORPUS",
+        "route": "fact",
+        "in_corpus_subdomains": false
+      },
+      {
+        "q": "Zimamoto wananidai cheti cha usalama kwa duka langu, ni lazima?",
+        "mapped_subdomain": "fire_safety",
+        "why": "fire-safety certificate -- NOT IN CORPUS",
+        "route": "fact",
+        "in_corpus_subdomains": false
+      },
+      {
+        "q": "Mizani yangu inatakiwa kupimwa na Wakala wa Vipimo kila baada ya muda gani?",
+        "mapped_subdomain": "weights_measures",
+        "why": "scale calibration interval -- NOT IN CORPUS",
+        "route": "fact",
+        "in_corpus_subdomains": false
+      },
+      {
+        "q": "Nalipa kodi ya pango laki tano kwa mwezi kwa mwenye jengo, je nakata withholding?",
+        "mapped_subdomain": "rental_withholding",
+        "why": "withholding on rent paid to a landlord -- NOT IN CORPUS",
+        "route": "fact",
+        "in_corpus_subdomains": false
+      },
+      {
+        "q": "Nifanyeje kupata TIN ya biashara yangu mpya?",
+        "mapped_subdomain": "tin_registration",
+        "why": "getting a business TIN -- NOT IN CORPUS",
+        "route": "fact",
+        "in_corpus_subdomains": false
+      },
+      {
+        "q": "TRA wamekuja kukagua duka langu, nifanye nini?",
+        "mapped_subdomain": "tra_inspection",
+        "why": "what to do in a TRA inspection -- NOT IN CORPUS",
+        "route": "fact",
+        "in_corpus_subdomains": false
+      },
+      {
+        "q": "Nikipokea malipo kwa mtandao wa simu, nalipa kodi gani?",
+        "mapped_subdomain": "mobile_money_tax",
+        "why": "tax on mobile-money receipts -- NOT IN CORPUS",
+        "route": "fact",
+        "in_corpus_subdomains": false
+      }
+    ],
+    "by_boundary": {
+      "B1_payroll_only": {
+        "hits_of_12": 0,
+        "hit_questions": []
+      },
+      "B2_payroll_workplace": {
+        "hits_of_12": 0,
+        "hit_questions": []
+      },
+      "B3_payroll_registration": {
+        "hits_of_12": 0,
+        "hit_questions": []
+      },
+      "B4_observed_user": {
+        "hits_of_12": 2,
+        "hit_questions": [
+          "Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa kodi ya ma",
+          "Biashara yangu inauza milioni 4 kwa mwaka, kodi ya makadirio ni ngapi?"
+        ]
+      },
+      "B5_all_covered": {
+        "hits_of_12": 2,
+        "hit_questions": [
+          "Nina duka dogo, mauzo yangu ni milioni 30 kwa mwaka. Nalipa kodi ya ma",
+          "Biashara yangu inauza milioni 4 kwa mwaka, kodi ya makadirio ni ngapi?"
+        ]
+      }
+    }
+  }
+}

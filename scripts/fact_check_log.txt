@@ -914,3 +914,44 @@ Total: 750 | Flagged: 0
 
 [2026-08-16T17:15:32.913450] Checked eval/accuracy_gate/presumptive_tax_probes_020.jsonl
 Total: 20 | Flagged: 0
+
+[2026-08-24T22:06:20.904073] Checked C:\Users\jhjh\AppData\Local\Temp\tmpuluu0e63\lf_bad.jsonl
+Total: 1 | Flagged: 0
+
+[2026-08-24T22:06:21.069599] Checked C:\Users\jhjh\AppData\Local\Temp\tmpuluu0e63\lf_ok.jsonl
+Total: 1 | Flagged: 0
+
+[2026-08-24T22:08:45.532368] Checked C:\Users\jhjh\AppData\Local\Temp\tmpz9w1mloh\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-08-24T22:08:45.722704] Checked C:\Users\jhjh\AppData\Local\Temp\tmpz9w1mloh\lf_ok.jsonl
+Total: 1 | Flagged: 0
+
+[2026-08-24T22:10:41.736040] Checked C:\Users\jhjh\AppData\Local\Temp\tmpu4y2gdyj\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-08-24T22:10:41.922256] Checked C:\Users\jhjh\AppData\Local\Temp\tmpu4y2gdyj\lf_ok.jsonl
+Total: 1 | Flagged: 0
+
+[2026-08-24T22:11:04.104080] Checked C:\Users\jhjh\AppData\Local\Temp\tmp3ecdjrtz\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-08-24T22:11:04.284439] Checked C:\Users\jhjh\AppData\Local\Temp\tmp3ecdjrtz\lf_ok.jsonl
+Total: 1 | Flagged: 0
+
+[2026-08-24T23:06:27.079188] Checked C:\Users\jhjh\AppData\Local\Temp\tmppx5mm_ly\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-08-24T23:06:27.289588] Checked C:\Users\jhjh\AppData\Local\Temp\tmppx5mm_ly\lf_ok.jsonl
+Total: 1 | Flagged: 0
+
+[2026-08-24T23:07:34.252084] Checked C:\Users\jhjh\AppData\Local\Temp\tmpheslmwm4\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-08-24T23:07:34.443564] Checked C:\Users\jhjh\AppData\Local\Temp\tmpheslmwm4\lf_ok.jsonl
+Total: 1 | Flagged: 0

@@ -111,6 +111,40 @@ def test_the_secret_scan_passes_a_clean_file():
     assert out.returncode == 0, f'clean file was flagged: {out.stdout!r}'
 
 
+def test_the_secret_scan_does_not_block_on_a_REDACTION(tmp_path):
+    """R26's other half, and the half yesterday's fix skipped.
+
+    The scan was planted into (it MUST block) but never given a clean case on the path that
+    actually runs it. Running `--all-tracked` — the fallback the pre-push hook takes when git
+    hands it no range, i.e. THE FIRST PUSH OF A NEW BRANCH — found `handover.md:695` recording a
+    HuggingFace secret as `hf_xxxx...`. A redaction. That push would have been blocked by the
+    absence of a key, which is the OVERBROAD state in R26's vocabulary and the one that trains
+    people to reach for --no-verify.
+
+    Both directions are asserted here, because only asserting the pass would license a scanner
+    that has quietly stopped seeing hf_ tokens at all."""
+    import subprocess
+    import sys
+
+    redacted = tmp_path / 'notes.md'
+    redacted.write_text('Value: hf_' + 'x' * 25 + '\n', encoding='utf-8')
+    out = subprocess.run(
+        [sys.executable, os.path.join('scripts', 'scan_for_keys.py'), '--files', str(redacted)],
+        capture_output=True, text=True, timeout=60)
+    assert out.returncode == 0, f'a redaction placeholder was flagged as a key: {out.stdout!r}'
+
+    # ...and a real-shaped token that merely CONTAINS x's must still block. The exemption is for
+    # a body that is x's and nothing else, never for a token with an x in it.
+    real = tmp_path / 'leak.md'
+    real.write_text('Value: hf_' + 'xAbC9xyzQ7rT2mLp4vNs8kWd3' + '\n', encoding='utf-8')
+    out = subprocess.run(
+        [sys.executable, os.path.join('scripts', 'scan_for_keys.py'), '--files', str(real)],
+        capture_output=True, text=True, timeout=60)
+    assert out.returncode == 1, (
+        f'a real-shaped hf_ token was NOT flagged (exit {out.returncode}) — the redaction '
+        f'exemption is too wide. stdout: {out.stdout!r}')
+
+
 def test_the_bypass_exists_and_is_loud():
     """A gate with no escape hatch gets disabled wholesale the first time it is inconvenient.
     A LOUD one is the compromise — and it must not be the default."""

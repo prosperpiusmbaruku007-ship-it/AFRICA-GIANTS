@@ -47,6 +47,17 @@ SAFE_LINE_PATTERNS = [
     r'hf_your',
     r'#\s*(example|Example|your key|placeholder)',
     r'sk-or-v1-\.\.\.',
+    # A REDACTION PLACEHOLDER: a token body that is ENTIRELY x's. Found 2026-08-25 by running
+    # --all-tracked, which is the fallback the pre-push hook takes when git gives it no range —
+    # i.e. THE FIRST PUSH OF A NEW BRANCH. `handover.md:695` records a HuggingFace secret as
+    # `hf_xxxxxxxxxxxxxxxxxxxxxxxxx`, so that push would have been blocked by a redaction.
+    # R26's five-state vocabulary calls this OVERBROAD, and it is the half of R26 that yesterday's
+    # fix skipped: the control was planted into (it MUST block) but never given a clean case (it
+    # MUST pass).
+    #
+    # Deliberately the NARROWEST form that closes it (R17 step 4): the body after the prefix must
+    # be x's and NOTHING else. A real key is mixed-case with digits, so `hf_xAbC...` still blocks.
+    r'(?:hf_|sk-ant-|sk-or-v1-|gsk_|AIza)[xX]{8,}(?![A-Za-z0-9])',
 ]
 
 
