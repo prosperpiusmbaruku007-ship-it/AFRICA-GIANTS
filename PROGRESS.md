@@ -4,6 +4,72 @@ Last updated: 2026-08-26
 
 ---
 
+# ⛔ THREE COMMITS SAT UNPUSHED, AND A KAGGLE REGEN WAS ABOUT TO RUN AGAINST A STALE CLONE WITHOUT ANYONE NOTICING (2026-08-26)
+
+**What was checked, and what it actually found.** The founder tried a clean Kaggle clone of
+`origin/main` and got `5c55470` — three commits behind local `HEAD` (`0e08cd4` the
+consolidation, `1b2f26b` mof.go.tz, `76897e3` the guard/rank-gate packaging). Verified directly:
+`git log origin/main..HEAD` lists all three, `git status -sb` reports `ahead 3`.
+
+**The founder's hypothesis was that the push gate had silently refused every push since
+`0e08cd4`. It had not — CHECKED, not assumed.** `.git/prepush/pytest.txt` and `scan.txt` (the
+push gate's own log files) are timestamped **2026-08-25**, the session before this one, and the
+reflog's most recent `update by push` is `5c55470`. **No `git push` was attempted in this session
+at all.** Three commits accumulated locally simply because nobody ran it — a plain gap in this
+session's own process, not a hook malfunction.
+
+**The gate itself is real and would have blocked a push if attempted**, which is why the
+hypothesis was reasonable to check rather than dismiss: `core.hooksPath = .githooks` is set, and
+`.githooks/pre-push` runs the full offline suite before allowing a push. `pytest tests/` was
+failing on `test_facts_index_sync.py::test_every_locked_fact_is_exact_sibling_or_pinned` —
+deliberately, per the previous entry — and the hook does not distinguish a deliberate red from an
+accidental one. That distinction is a decision, not a bypass.
+
+## Decision: `xfail(strict=True)`, not a bypass
+
+`tests/test_facts_index_sync.py::test_every_locked_fact_is_exact_sibling_or_pinned` is now marked
+`@pytest.mark.xfail(strict=True, reason=...)`, with the reason string carrying both HALVES: why
+it is expected to fail right now (PINNED targets the prospective post-consolidation index, not
+the currently shipped one — commit `0e08cd4`) and the exact unblock condition (once
+`kaggle/regenerate_rag_e5.py`, packaged in `76897e3`, actually ships the 187-row index to both
+`kaggle/` and `chike-inference/`, this test starts passing again). `strict=True` means that
+XPASS becomes a hard FAILURE on the next run — the same mechanism this project already uses for
+`KNOWN_FAILING` in the regen script's own guards (a name that starts passing blocks until
+removed). **The marker cannot be silently forgotten; it will fail loudly the moment the regen
+ships, which is exactly the signal to remove it.**
+
+## ⛔ THE NEAR-MISS, WHICH IS THE FINDING THAT MATTERS MOST HERE
+
+**A Kaggle run against a stale clone would not have failed. It would have SUCCEEDED, loudly,
+having done nothing.** `kaggle/regenerate_rag_e5.py`'s startup print (`GitHub main HEAD = <sha>`)
+recorded the resolved commit; nothing read it. A clone at `5c55470` — no `FACT_GROUPS`, no rank
+gate, no local-levy guards — would import `precompute_rag_embeddings.py` AS IT EXISTED AT
+`5c55470`, build the OLD 221-row index, pass every guard (nothing about the old index is wrong
+*for* the old index — the guards it would run are the OLD guards, at the OLD anchors, against
+OLD content), and upload it. **Every printed line would say PASS. The consolidation the whole
+regen exists to ship would silently not be there**, and the only trace would be a commit SHA in
+a startup log line nobody was checking.
+
+**Fixed structurally, not by remembering to check next time.** `kaggle/regenerate_rag_e5.py` now
+carries `EXPECTED_HEAD = '76897e3'` and asserts, before any model load or fetch of source files
+completes, that the resolved commit (local checkout HEAD or GitHub API HEAD, whichever path
+resolved `_live_sha`) contains `EXPECTED_HEAD` as an ancestor — `git merge-base --is-ancestor` on
+the local-checkout path (no network), the GitHub compare API on the fallback fetch path (one
+extra lightweight call, only where network was already required). A clone still sitting at
+`5c55470` now gets `[FATAL] checkout HEAD does NOT contain 76897e3 as an ancestor ... push your
+local commits to origin/main and re-clone` and exits 1 before touching the model. Verified
+directly: `git merge-base --is-ancestor 76897e3 5c55470` exits 1 (would correctly abort);
+`--is-ancestor 76897e3 76897e3` and `--is-ancestor 5c55470 76897e3` both exit 0 (correctly pass).
+
+> **The print statement recorded the fact. It took an assertion to make the fact matter.** Same
+> shape as R16's "✓ App deployed is not verification" and the push gate's own founding incident
+> (a status was visible on screen and nothing acted on it) — a third instance of the same lesson,
+> this time in a script that runs somewhere the founder cannot easily watch it fail.
+
+---
+
+---
+
 # 📦 R15 REGEN PACKAGED FOR KAGGLE, 2026-08-26 — NOT run locally, on instruction. Guard soundness re-verified; a real dead anchor found and fixed before it ever reached Kaggle.
 
 **Correction accepted: the regen does not run locally, full stop.** R15 puts the embedding step

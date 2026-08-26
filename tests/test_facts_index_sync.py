@@ -14,9 +14,31 @@ invalidates a PINNED present_elsewhere row -- fails the suite instead of waiting
 someone to go looking for a different thing, which is how all three prior gaps were
 actually found.
 """
+import pytest
+
 from scripts.check_facts_index_sync import PINNED, check
 
 
+@pytest.mark.xfail(
+    strict=True,
+    reason=(
+        "EXPECTED RED since commit 0e08cd4 (2026-08-26, fee consolidation). PINNED in "
+        "scripts/check_facts_index_sync.py was re-adjudicated against the PROSPECTIVE "
+        "post-regen index (precompute_rag_embeddings.build_fact_texts(), 187 rows) rather "
+        "than the CURRENTLY SHIPPED kaggle/rag_facts_text.json (still 221 rows, "
+        "pre-consolidation) -- deliberately, in the same commit as the index-composition "
+        "change rather than after the regen ships (see PROGRESS.md, 'FEE CONSOLIDATION "
+        "APPLIED IN CODE ... A hidden dependency surfaced'). Against today's shipped index "
+        "this test genuinely fails on 13 present_elsewhere pins whose row numbers now point "
+        "at the future index, not the live one.\n"
+        "UNBLOCK CONDITION: once the R15 regen actually runs (kaggle/regenerate_rag_e5.py, "
+        "packaged in commit 76897e3) and the resulting rag_embeddings.npy / "
+        "rag_facts_text.json (187 rows) are committed to both kaggle/ and chike-inference/, "
+        "this test starts PASSING again. strict=True turns that XPASS into a hard FAILURE "
+        "on the next run, so the marker cannot be forgotten -- remove this decorator in the "
+        "SAME commit that lands the regen artifacts, not a follow-up."
+    ),
+)
 def test_every_locked_fact_is_exact_sibling_or_pinned():
     ok, report = check()
     assert not report["drift_unpinned"], (

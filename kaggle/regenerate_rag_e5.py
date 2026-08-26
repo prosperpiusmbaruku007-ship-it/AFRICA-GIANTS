@@ -56,8 +56,71 @@ except Exception as e:
 os.environ['HF_TOKEN'] = hf_token
 
 DATASET_REPO = 'prospAprospA007/africa-giants-dataset'
-RAW = 'https://raw.githubusercontent.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS/main'
+GH_REPO = 'prosperpiusmbaruku007-ship-it/AFRICA-GIANTS'
+RAW = f'https://raw.githubusercontent.com/{GH_REPO}/main'
 SOURCE_FILES = ['scripts/locked_facts.json', 'scripts/precompute_rag_embeddings.py']
+
+# ── EXPECTED_HEAD — the commit this package was packaged FOR ────────────────────
+# Found 2026-08-26: this script printed 'GitHub main HEAD = <sha>' at startup and NOTHING
+# read it. Three commits (the fee consolidation, mof.go.tz, and the guards/rank-gate this
+# very check lives in) sat local-only, unpushed, while this notebook was being prepared to
+# run on Kaggle -- a clean clone of origin/main would have resolved to 5c55470, BEFORE the
+# consolidation existed, and this script would have happily rebuilt the OLD 221-row index,
+# printed [OK] on every guard (nothing about the old index is wrong FOR the old index), and
+# uploaded it -- a fully successful-looking run that shipped exactly nothing of what it was
+# run for. The print statement recorded the fact; it did not stop anything.
+#
+# Set this to the short SHA of the commit that most recently changed what this script
+# DEPENDS ON being present (FACT_GROUPS, the rank-regression gate, the five local-levy
+# guards) whenever this file is intentionally repackaged. It is NOT the SHA of the commit
+# that contains this line (that commit cannot know its own hash) -- it is the commit this
+# packaging assumes as a floor. A clone at that commit OR ANY DESCENDANT of it is fine; a
+# clone that does not contain it as an ancestor means the required commits were never
+# pushed, and this script must refuse to run rather than quietly build the wrong index.
+EXPECTED_HEAD = '76897e3'
+
+
+def _assert_expected_head_present(local_head, live_sha):
+    """Abort BEFORE any model load or embedding work if the resolved commit does not
+    contain EXPECTED_HEAD as an ancestor (or equal it). Two paths, matching the two ways
+    _live_sha above gets resolved -- local git checkout (no network) or GitHub API fetch
+    (one extra lightweight call, only on the fallback path that already hits the network)."""
+    if local_head:
+        try:
+            out = subprocess.run(
+                ['git', 'merge-base', '--is-ancestor', EXPECTED_HEAD, 'HEAD'],
+                capture_output=True, text=True, timeout=10)
+        except Exception as e:
+            print(f'[FATAL] could not verify HEAD ancestry locally ({e}) -- refusing to '
+                  f'guess. Push and re-clone, or fix git availability.')
+            sys.exit(1)
+        if out.returncode != 0:
+            print(f'[FATAL] checkout HEAD ({live_sha}) does NOT contain {EXPECTED_HEAD} as '
+                  f'an ancestor. This script was packaged assuming {EXPECTED_HEAD} (fee '
+                  f'consolidation + rank gate + local-levy guards) is already on the branch '
+                  f'being built from. Push your local commits to origin/main and re-clone '
+                  f'before running this notebook -- otherwise this run silently rebuilds '
+                  f'the OLD index and reports success.')
+            sys.exit(1)
+    else:
+        try:
+            cmp_resp = requests.get(
+                f'https://api.github.com/repos/{GH_REPO}/compare/{EXPECTED_HEAD}...{live_sha}',
+                timeout=30)
+            cmp_resp.raise_for_status()
+            status = cmp_resp.json().get('status')
+        except Exception as e:
+            print(f'[FATAL] could not verify HEAD ancestry via GitHub compare API ({e}) -- '
+                  f'refusing to guess.')
+            sys.exit(1)
+        if status not in ('identical', 'ahead'):
+            print(f'[FATAL] GitHub main ({live_sha}) does not contain {EXPECTED_HEAD} as an '
+                  f'ancestor (compare status={status!r}). The required commits (fee '
+                  f'consolidation + rank gate + local-levy guards) are not on origin/main -- '
+                  f'push them first. Otherwise this run silently rebuilds the OLD index and '
+                  f'reports success.')
+            sys.exit(1)
+    print(f'[OK] HEAD ({live_sha}) contains the expected baseline {EXPECTED_HEAD}')
 
 # ── RESOLVE SOURCE OF TRUTH: LOCAL CHECKOUT FIRST, RAW FETCH ONLY AS FALLBACK ────
 # A git checkout with both files already present is authoritative and self-consistent
@@ -102,6 +165,10 @@ else:
         with open(name, 'w', encoding='utf-8') as f:
             f.write(r.text)
         print(f'[fetch] {name} ({len(r.content)} bytes)')
+
+# The print above records the resolved commit; on its own it never stopped anything (this
+# is the exact gap found 2026-08-26). This is the check that does.
+_assert_expected_head_present(_local_head, _live_sha)
 
 # Import build_fact_texts from the fetched module (module-level is side-effect free;
 # embedding only runs under its own __main__, which we do NOT trigger by importing).
