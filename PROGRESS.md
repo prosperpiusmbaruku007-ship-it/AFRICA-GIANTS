@@ -4,6 +4,97 @@ Last updated: 2026-08-26
 
 ---
 
+# 🧮 (B) RE-COSTED ON THE GROWTH-CURVE CONSTRAINT — the estimate doesn't change, its BASIS does. Plus (C) RETRAIN SCOPING RE-CONFIRMED.
+
+**Both outstanding punch-list items from before regen work took over the session.** Neither
+required a new measurement — both are read off artifacts already committed this session and
+2026-08-25 (`eval/results/rank_vs_index_size.json`, `feegroup_curation.json`, and this session's
+own nat_34/nat_23 cycle as a first real data point on the cost the growth-curve entry only
+gestured at).
+
+## (B) — what the growth curve actually constrains, now that consolidation has run once
+
+**The growth curve (`eval/results/rank_vs_index_size.json`, measured 2026-08-25) was measured
+against the OLD 221-row, pre-consolidation index.** Its headline numbers — `nat_23` extrapolated
+to rank ~234 at n=600 — describe what happens if 380 more rows are added the way the OLD index's
+rows were shaped: short, uncurated, `key: number` fragments that crowd each other. **This session
+falsified that trajectory for the rows it touched, not by growing past it but by NOT following
+it**: `nat_23` sits at rank 46 in a 187-row index — better than its rank-221 measurement of 86,
+in an index with FEWER rows — because consolidation removed crowding rather than adding volume.
+**The curve's PROPERTY still holds (burial is a percentile, ask-alignment escapes it — `nat_43`
+at rank 1 regardless of n); its SPECIFIC extrapolation no longer describes the index we are
+actually building.**
+
+**What this changes about the (B) cost model, concretely:**
+
+1. **"10–12 domains, 7–12 authoring days, 3–4 batched regen cycles" stands as the headline
+   number — but the growth curve reclassifies where the risk in that estimate actually sits.**
+   It is not authoring time. It is: does each new domain's facts get the same group+align
+   treatment this session gave `company_registration_ladder`, or do they get added as raw rows
+   the way the original 42 trademark/ladder/BRELA rows were? **The former is on the curve
+   `nat_43` sits on (immune to growth). The latter is on the curve `nat_23` sat on (rank ~234 at
+   n=600, i.e. functionally unretrievable at production `top_k=3`).** Adding facts without the
+   discipline this session applied does not just cost accuracy on the new facts — it re-crowds
+   the index for facts already answered, the same way the original 42 rows did to `nat_05`/
+   `nat_23`/`nat_33` before they were ever touched.
+2. **The per-domain line item "fact-shaped authoring... plus ask-alignment rewriting and rank
+   verification, which is where the time actually goes" now has a real number instead of a
+   gesture.** This session's `nat_34` fix: 5 candidate rewrites, 2 rank-check passes
+   (`verify_regen_guard_retrievability.py` across both guard families), one Kaggle round-trip to
+   discover it in the first place. **Call the wording-search-and-verify cycle its own line item:
+   roughly 30–60 minutes of iteration per fact-GROUP once the mechanism is understood (this
+   session, with a specific target already diagnosed), and up to a full Kaggle cycle when found
+   cold** — which is the argument for running the retrievability checker BEFORE packaging, not
+   after, on every future batch.
+3. **A rewrite or addition must be checked against every existing guard, not just its own** — the
+   nat_23 perturbation (this same session's other entry) is the concrete proof. This is a FIXED
+   per-batch cost regardless of how many facts are in the batch, which is exactly why "batch,
+   never drip" was already the rule — it now has a second, independent reason: the verification
+   pass is per-batch, not per-fact, so more batches multiplies it for no benefit.
+4. **Engine-shaped domains get a SECOND reason to go first, independent of the 0%-vs-23.8%-wrong
+   accuracy argument already on the board.** An engine-shaped domain (rental withholding tax,
+   corporate/partnership income tax) adds no index rows at all — it is structurally immune to the
+   growth curve because it never competes for a retrieval slot. **Rank candidate domains by
+   retrieval-safety as well as by whether they can be computed; for engine-shaped domains the two
+   arguments point the same way.**
+
+**Revised protocol per domain (supersedes the bare cost-model line, same total time budget):**
+source pass (½ day, unchanged) → prefer engine-shaped where possible (immune to this entire
+constraint) → for fact-shaped domains, author as GROUPED passages with an ask-aligned lead from
+the start, not a schedule-framed one to be fixed later → run the (now dual-family)
+retrievability checker across the WHOLE guard suite before packaging, budgeting the 30–60 minute
+iteration cycle per group as a named cost rather than an unplanned one → batch multiple domains
+into one regen, both because the R15 fixed cost rewards it and because the verification pass is
+now known to be per-batch.
+
+**The number does not move (7–12 days, 3–4 cycles) because the wording-search tax was already
+folded into the vague "plus rewriting" line — what changes is that it is now a named, budgeted
+step with a measured order of magnitude, not a risk nobody had priced.**
+
+## (C) — retrain scoping re-confirmed, precondition unchanged, nothing new blocks it
+
+**The full scoping already exists** (`(C) THE RETRAIN`, 2026-08-25, this file) — calendar
+argument, the three measured training-data defects, the RANKING/ABSENCE partition showing an
+adapter fixes zero of the nine wrong fact-path rows, the hard corpus-correction-before-retrain
+dependency, and the cost/risk section naming the gate re-run (not GPU time) as the real risk
+against Gate 1's ~6-question headroom. **Nothing in this session's work changes any of it.**
+
+**What this session's work resolves, for the record:** the corpus-correction precondition was
+already met before this session started (`scripts/correct_corpus_defects.py`, applied and
+verified 2026-08-25, committed at `5c55470`). This session's regen work — the fee consolidation,
+the five local-levy facts, the nat_34 fix — is the **RAG index**, a separate mechanism from the
+**SFT training files** a retrain consumes (R10: facts are delivered by RAG injection, not
+retrained into weights). **The two do not block each other and neither was waiting on the other
+this session** — the retrain's precondition (corpus correction) and this session's precondition
+(the regen) were independent all along; they only *share a review moment* because both happened
+in the same window.
+
+**Retrain remains scoped and ready pending an explicit founder go/no-go.** Starting it is gated
+by the 8-point training-preflight checklist (`training-preflight` skill, blocking, founder
+confirmation required) — that gate is not satisfied by anything in this entry, by design.
+
+---
+
 # 🚀 R15 REGEN #2 PASSED AND SHIPPED — 187 FACTS, nat_34 CLEARS, INDEX LANDED IN BOTH DIRS, SYNC-CHECK CLEAN. Stopped before Modal, as agreed.
 
 **The founder's second Kaggle run against `origin/main@3cd3924`:** 187 facts, `nat_34` clears,
