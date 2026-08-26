@@ -4,6 +4,63 @@ Last updated: 2026-08-26
 
 ---
 
+# 🔗 THE FULL SHAPE OF THE NEAR-MISS: A SILENT-SUCCESS CHAIN, NOT AN INERT CONTROL (2026-08-26)
+
+**The previous entry recorded the fix. This records the shape of what almost happened, because
+it is a different failure class from anything else on this board and worth naming as its own
+thing.**
+
+**The chain, link by link, if the Kaggle clone had gone unchecked:**
+
+1. `git clone` resolves `origin/main` to `5c55470` — a real commit, three behind local `HEAD`.
+2. `regenerate_rag_e5.py` imports `precompute_rag_embeddings.py` **as it existed at `5c55470`**
+   — no `FACT_GROUPS`, no consolidation, no local-levy facts.
+3. `build_fact_texts()` builds the OLD 221-row set. **Correctly** — that function has no idea a
+   newer version of itself exists.
+4. e5-base embeds it. **Correctly** — the model does not know what commit it is running from.
+5. Every guard in `critical_queries` runs and **PASSES** — because the guards that ran are also
+   the OLD guards (no rank-regression gate, no local-levy guards, the `nat_34` anchor still
+   pointing at its own un-consolidated row), tested against OLD content they were written for.
+   **They are not wrong to pass. The index they are checking really does satisfy them.**
+6. Self-retrieval passes. Nothing is wrong with the old index, *for itself*.
+7. The script prints `VERIFICATION PASSED` and uploads to the HF dataset repo.
+8. The founder reads `VERIFICATION PASSED`, reasonably concludes the consolidation shipped.
+9. **The only way this becomes visible is someone independently noticing the index still has
+   221 rows instead of 187, or noticing `nat_23`/`nat_33`/`nat_05`'s ranks never moved** — days
+   later, disconnected from the run that produced the number, with no error anywhere to trace
+   back to.
+
+## Why this is NOT an R26 inert control, and needs its own name
+
+**R26's inert controls fail to fire.** `scan_for_keys.py` scanning nothing staged, the retrieval
+fail-loud contract nobody imports — asked to do their job, structurally unable to. The defect is
+locatable: one component that does not work.
+
+**Every link in this chain fires correctly.** Git genuinely resolves a real commit. The import
+genuinely succeeds. `build_fact_texts()` genuinely builds a valid index from that commit's actual
+content. The guards genuinely check what they claim to check, against the content that is
+actually there, and genuinely pass. Self-retrieval genuinely retrieves. **Nothing is broken.
+Every component did its job correctly — on an input nobody intended it to run against.** There is
+no single failing part to point at, because the question "did each step do what it claims" is
+answered YES all the way down.
+
+> **This is the general form worth keeping: a fully-functioning pipeline, verified at every
+> internal step, pointed at the wrong version of itself.** No per-component test catches it,
+> because every component is only ever asked *"does this pass for the input you were given"* —
+> never *"was this the right input to be given."* That second question is about PROVENANCE, not
+> content, and no amount of content-level guarding (self-retrieval, critical queries, rank
+> gates — all of it) closes a provenance gap. They are answering a different question.
+
+**This is also why the fix could not be "add another content guard."** Every guard already in
+the file, and the new rank-regression gate added this session, all check *whether the index says
+the right things*. `EXPECTED_HEAD` is the first check in this pipeline that verifies *which
+commit the index was built from* — a category the rest of the file had no representative of at
+all, because until this near-miss, nothing had ever asked the question.
+
+---
+
+---
+
 # ⛔ THREE COMMITS SAT UNPUSHED, AND A KAGGLE REGEN WAS ABOUT TO RUN AGAINST A STALE CLONE WITHOUT ANYONE NOTICING (2026-08-26)
 
 **What was checked, and what it actually found.** The founder tried a clean Kaggle clone of

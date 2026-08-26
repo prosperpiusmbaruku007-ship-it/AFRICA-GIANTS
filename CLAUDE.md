@@ -3,9 +3,16 @@
 Every time you start a new session you MUST:
 1. Read this entire CLAUDE.md file
 2. Read PROGRESS.md immediately after
-3. Summarize current project state before doing anything
-4. State what the next step is based on PROGRESS.md
-5. Ask for confirmation before starting any work
+3. Run `git status` AND `git log origin/main..HEAD` together, every time — not `git status`
+   alone. `git status` does not show unpushed commits sitting ahead of origin/main; they are
+   invisible unless you diff against the remote explicitly. Proven costly 2026-08-26: three
+   commits accumulated local-only for a full session with no signal, and a Kaggle regen was
+   about to run against a stale clone of origin/main as a result (see PROGRESS.md, "THREE
+   COMMITS SAT UNPUSHED"). Fetch first (`git fetch origin`) so the comparison isn't stale.
+4. Summarize current project state before doing anything, including whether local HEAD is
+   ahead of origin/main and by what
+5. State what the next step is based on PROGRESS.md
+6. Ask for confirmation before starting any work
 
 Do not skip this. Do not assume. Always read both files first.
 
