@@ -9,7 +9,12 @@ import json, sys, argparse, os
 TRAINING_WHITELIST = [
     "tra.go.tz", "nssf.go.tz", "brela.go.tz",
     "immigration.go.tz", "mlywf.go.tz", "osha.go.tz",
-    "tanzlii.org", "nest.go.tz", "ppra.go.tz", "wcf.go.tz"
+    "tanzlii.org", "nest.go.tz", "ppra.go.tz", "wcf.go.tz",
+    # mof.go.tz: added 2026-08-26, same decision as sources/whitelist.json's
+    # tier1a_mof_001 entry -- the Local Government Finance Act Cap 290 host. Without
+    # this, the five local-levy facts (add_local_levy_facts.py) would pass
+    # validate_dataset.py's whitelist check but still get flagged UNKNOWN SOURCE here.
+    "mof.go.tz",
 ]
 
 # THE FLAG WAS ENFORCED AT SERVING AND NOT AT AUTHORING — removed 2026-08-23.

@@ -328,5 +328,20 @@
     "last_verified": "2026-06-08",
     "re_scrape_trigger": "After new GN or immigration policy update",
     "notes": "GN 487A prohibition order, residence permits"
+  },
+  {
+    "id": "tier1a_mof_001",
+    "url": "https://www.mof.go.tz/uploads/documents/en-1676544247-CHAPTER_290-THE_LOCAL_GOVERNMENT_FINANCE_ACT-01.pdf",
+    "institution": "Ministry of Finance (Tanzania)",
+    "source_type": "government_portal",
+    "approved_for": [
+      "tier1a"
+    ],
+    "use_for": "training",
+    "content_type": "pdf_act",
+    "decay_risk": "Event-triggered",
+    "last_verified": "2026-08-16",
+    "re_scrape_trigger": "When Cap 290 is amended by a Finance Act or new GN",
+    "notes": "Local Government Finance Act Cap 290 R.E. 2019 -- the only source read for the five council-fee/market-dues/business-licence facts added 2026-08-25 (scripts/add_local_levy_facts.py). Cap 290 is also on tanzlii.org (already whitelisted) but that copy was not fetched and is not cited -- adding this exact URL rather than substituting the tanzlii domain is deliberate: R25/S3 forbid citing a source that was not actually read. Added 2026-08-26 per founder approval (PROGRESS.md, 'A WHITELIST GAP, SURFACED RATHER THAN PAPERED OVER')."
   }
 ]
