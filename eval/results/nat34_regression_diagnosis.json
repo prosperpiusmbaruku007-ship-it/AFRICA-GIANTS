@@ -1,0 +1,128 @@
+{
+  "nat_34_query": "query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+  "pre_consolidation": {
+    "index_rows": 221,
+    "target_row": "company_registration_fee_1 (95,000 TZS, own standalone row)",
+    "rank": 3,
+    "in_top_3": true,
+    "top_10": [
+      {
+        "rank": 1,
+        "row": 130,
+        "text": "company name reservation fee: 50,000 TZS"
+      },
+      {
+        "rank": 2,
+        "row": 131,
+        "text": "company name change fee: 22,000 TZS"
+      },
+      {
+        "rank": 3,
+        "row": 114,
+        "text": "company registration fee 1: 95,000 TZS"
+      },
+      {
+        "rank": 4,
+        "row": 120,
+        "text": "company registration fee 3: 260,000 TZS"
+      },
+      {
+        "rank": 5,
+        "row": 112,
+        "text": "trademark fee for dissolution of partnership: 50,000 TZS"
+      },
+      {
+        "rank": 6,
+        "row": 103,
+        "text": "trademark fee for renewal of registration: 30,000 TZS"
+      },
+      {
+        "rank": 7,
+        "row": 111,
+        "text": "trademark fee for change of business address: 20,000 TZS"
+      },
+      {
+        "rank": 8,
+        "row": 117,
+        "text": "company registration fee 2: 175,000 TZS"
+      },
+      {
+        "rank": 9,
+        "row": 158,
+        "text": "business name maintenance fee: 5,000 TZS"
+      },
+      {
+        "rank": 10,
+        "row": 123,
+        "text": "company registration fee 4: 290,000 TZS"
+      }
+    ]
+  },
+  "post_consolidation_prospective": {
+    "index_rows": 187,
+    "target_row": "company_registration_ladder (group passage, absorbs the same fee)",
+    "rank": 4,
+    "in_top_3": false,
+    "top_10": [
+      {
+        "rank": 1,
+        "row": 96,
+        "text": "company name reservation fee: 50,000 TZS"
+      },
+      {
+        "rank": 2,
+        "row": 97,
+        "text": "company name change fee: 22,000 TZS"
+      },
+      {
+        "rank": 3,
+        "row": 116,
+        "text": "business name maintenance fee: 5,000 TZS"
+      },
+      {
+        "rank": 4,
+        "row": 185,
+        "text": "Ada ya kusajili kampuni BRELA hutegemea thamani ya hisa (share capital): hadi TZS 1,000,000 ni TZS 9"
+      },
+      {
+        "rank": 5,
+        "row": 119,
+        "text": "application fee patent: 12000 TZS"
+      },
+      {
+        "rank": 6,
+        "row": 129,
+        "text": "vat deferment minimum value: 10,000,000 TZS"
+      },
+      {
+        "rank": 7,
+        "row": 115,
+        "text": "beneficial owner information penalty maximum: 10000000 TZS"
+      },
+      {
+        "rank": 8,
+        "row": 113,
+        "text": "registration certificate processing time: 3 days"
+      },
+      {
+        "rank": 9,
+        "row": 118,
+        "text": "trademark renewal period: saba years"
+      },
+      {
+        "rank": 10,
+        "row": 184,
+        "text": "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha (renewal) TZS 3"
+      }
+    ]
+  },
+  "displacing_mechanism": {
+    "row": "business_name_maintenance_fee (5,000 TZS) -- NOT a FACT_GROUPS member, text unchanged old vs new",
+    "rank_pre_consolidation": 9,
+    "rank_post_consolidation": 3,
+    "explanation": "Its own text never changed. Its RANK improved (9 -> 3) purely because consolidation removed 14 other short company/trademark-fee rows that used to sit between it and the top of the ranking. That vacated slot is what pushed the ladder passage from rank 3 to rank 4 -- a side effect of REMOVING competing content, not of the ladder itself becoming less relevant."
+  },
+  "production_top_k": 3,
+  "genuinely_unreachable": false,
+  "verdict": "NOT unreachable -- displaced by exactly one position (rank 3 -> rank 4), just outside the top-3 window production actually uses by default. This is a REAL, measurable regression caused by the consolidation, not a guard-anchoring problem: the starting registration-fee figure nat_34 asks for was retrievable in top-3 before consolidation and is not after, for this exact verbatim question."
+}

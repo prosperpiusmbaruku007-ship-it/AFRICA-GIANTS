@@ -1,0 +1,286 @@
+{
+  "measured": "2026-08-26",
+  "harness": "eval/index_quality/verify_regen_guard_retrievability.py",
+  "prospective_index_rows": 187,
+  "top_k": 3,
+  "total_guards": 31,
+  "status_counts": {
+    "PASS": 28,
+    "RETRIEVAL_REGRESSION": 1,
+    "KNOWN-FAIL": 2,
+    "STALE-KNOWN-FAIL": 0,
+    "DEAD_ANCHOR": 0
+  },
+  "regressions": [
+    {
+      "name": "Company registration fee (nat_34 displacement guard)",
+      "query": "query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+      "best_rank": 4,
+      "top_3": [
+        {
+          "rank": 1,
+          "text": "company name reservation fee: 50,000 TZS"
+        },
+        {
+          "rank": 2,
+          "text": "company name change fee: 22,000 TZS"
+        },
+        {
+          "rank": 3,
+          "text": "business name maintenance fee: 5,000 TZS"
+        }
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "name": "GN487A penalty",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "20": 1
+      }
+    },
+    {
+      "name": "SDL rate",
+      "status": "PASS",
+      "best_rank": 3,
+      "ranks": {
+        "5": 3
+      }
+    },
+    {
+      "name": "NSSF employer",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "9": 1
+      }
+    },
+    {
+      "name": "BRELA annual return",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "99": 1
+      }
+    },
+    {
+      "name": "VAT withholding services",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "17": 1
+      }
+    },
+    {
+      "name": "Zero-rated input VAT",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "89": 1
+      }
+    },
+    {
+      "name": "GN487A effective date",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "19": 1
+      }
+    },
+    {
+      "name": "GN487A full name",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "131": 1
+      }
+    },
+    {
+      "name": "Facilitator penalty",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "21": 1
+      }
+    },
+    {
+      "name": "Phone repair activity",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "137": 1
+      }
+    },
+    {
+      "name": "License lending facilitation",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "22": 1
+      }
+    },
+    {
+      "name": "GN487A marriage no exemption",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "92": 1
+      }
+    },
+    {
+      "name": "PAYE 800K band",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "169": 1
+      }
+    },
+    {
+      "name": "SDL 12-employee calculation",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "170": 1
+      }
+    },
+    {
+      "name": "NSSF 12-employee calculation",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "171": 1
+      }
+    },
+    {
+      "name": "NSSF compound (120k selection bug)",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "171": 1
+      }
+    },
+    {
+      "name": "EFD threshold",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "57": 1
+      }
+    },
+    {
+      "name": "VAT registration threshold (displacement guard)",
+      "status": "PASS",
+      "best_rank": 2,
+      "ranks": {
+        "103": 2
+      }
+    },
+    {
+      "name": "BRELA striking-off (Q13 verbatim)",
+      "status": "PASS",
+      "best_rank": 3,
+      "ranks": {
+        "44": 3
+      }
+    },
+    {
+      "name": "OSHA/WCF small-count (Q14 verbatim)",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "68": 19,
+        "69": 1
+      }
+    },
+    {
+      "name": "EFD not-every-business (Q16 verbatim)",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "58": 1
+      }
+    },
+    {
+      "name": "GN605A sector count (nat_43 verbatim, the row that clears)",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "72": 1
+      }
+    },
+    {
+      "name": "VAT six-month threshold (nat_26 displacement guard)",
+      "status": "PASS",
+      "best_rank": 2,
+      "ranks": {
+        "104": 2
+      }
+    },
+    {
+      "name": "VAT standard rate (nat_27 displacement guard)",
+      "status": "KNOWN-FAIL",
+      "best_rank": 14,
+      "ranks": {
+        "13": 14
+      }
+    },
+    {
+      "name": "Company registration fee (nat_34 displacement guard)",
+      "status": "RETRIEVAL_REGRESSION",
+      "best_rank": 4,
+      "ranks": {
+        "185": 4
+      }
+    },
+    {
+      "name": "EFD threshold, VAT-unregistered (nat_36 displacement guard)",
+      "status": "KNOWN-FAIL",
+      "best_rank": 10,
+      "ranks": {
+        "57": 10
+      }
+    },
+    {
+      "name": "Council service levy is a ceiling (new fact)",
+      "status": "PASS",
+      "best_rank": 2,
+      "ranks": {
+        "179": 2
+      }
+    },
+    {
+      "name": "Council service levy non-corporate conflict (new fact)",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "180": 1
+      }
+    },
+    {
+      "name": "Market dues no national amount (new fact)",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "181": 1
+      }
+    },
+    {
+      "name": "Market dues exemptions (new fact)",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "182": 1
+      }
+    },
+    {
+      "name": "Business licence fee national schedule, local collection (new fact)",
+      "status": "PASS",
+      "best_rank": 1,
+      "ranks": {
+        "183": 1
+      }
+    }
+  ]
+}

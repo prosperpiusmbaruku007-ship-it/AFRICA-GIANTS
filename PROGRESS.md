@@ -4,6 +4,104 @@ Last updated: 2026-08-26
 
 ---
 
+# 🔬 KAGGLE REGEN RUN #1 — RANK GATE EXACT, PROVENANCE CHECK FIRED, ONE GUARD FAILED. Diagnosed, not fixed. Nothing uploaded.
+
+**The founder ran the packaged notebook against `origin/main` at `1aa2525`.** Outcome:
+
+| check | result |
+|---|---|
+| `[OK] HEAD (...) contains the expected baseline 76897e3` | **fired** — the provenance check from the near-miss entry worked on its first real run |
+| index size | **187 facts**, matching the prospective count |
+| GUARD ANCHOR UNIQUENESS | **31/31 unique** |
+| self-retrieval | **0 failures** |
+| RANK-REGRESSION GATE (`nat_23`/`nat_33`/`nat_05`) | **EXACT** — 45 / 23 / 8, zero drift from the offline-measured values |
+| `Company registration fee (nat_34 displacement guard)` | **FAILED** — top-3 was name reservation / name change / business name maintenance; the ladder passage not retrieved at all |
+| upload | **did not happen** — `overall_pass=False` hit `sys.exit(1)` before the save/upload section, exactly as designed |
+
+## ✅ A SIGNIFICANT SECONDARY RESULT, STATED PLAINLY BECAUSE IT CHANGES WHAT CAN BE TRUSTED GOING FORWARD
+
+**Local `intfloat/multilingual-e5-base` and Kaggle's now provably produce IDENTICAL rankings for
+this content, not merely "assumed compatible."** Three independent anchors (`nat_23`, `nat_33`,
+`nat_05`), reconstructed offline via `eval/results/feegroup_curation.json`'s local scoring
+harness, reproduced EXACTLY against embeddings a real Kaggle GPU produced from the real
+187-row index. **This is the first direct proof, not an assumption**, and it means every rank
+number this workstream has cited from the local harness — `feerow_curation.json`,
+`feegroup_curation.json`, `measure_rank_vs_index_size.json`, the growth-curve entry — inherits
+that validation. It does NOT relicense running the regen (building + shipping an index) locally;
+R15's reason for keeping that step on Kaggle is unrelated to numerical accuracy (the download
+size). It DOES license using local e5 for **diagnosis** — reading a rank, not shipping an
+index — with the same confidence as reading a Kaggle log directly. That is what the two
+diagnostics below rely on.
+
+## 🩺 DIAGNOSIS 1 — is the ladder genuinely unreachable for `nat_34`, or merely below rank 3?
+
+`eval/index_quality/diagnose_nat34_regression.py` → `eval/results/nat34_regression_diagnosis.json`.
+
+**Answer: NOT unreachable. Displaced by exactly one position — rank 3 (pre) → rank 4 (post) —
+for the verbatim `nat_34` question.** `production_top_k = 3` in both `chike/retrieval.py` and
+`chike-inference/modal_app.py` (confirmed by reading the defaults), and `nat_34`'s question
+contains no digits, so the two-arm numeric-query pool extension does not apply — production
+would see exactly 3 facts for this question, and post-consolidation the ladder is not one of
+them.
+
+**The mechanism, measured rather than guessed — this IS a real regression, not a guard-anchoring
+problem:**
+
+| | pre-consolidation (n=221) | post-consolidation (n=187, prospective) |
+|---|---|---|
+| target row | `company_registration_fee_1` (95,000 TZS), own standalone row | `company_registration_ladder` group passage, same fee absorbed into it |
+| rank for `nat_34`'s verbatim question | **3** (in top-3) | **4** (just outside) |
+| `business_name_maintenance_fee`'s OWN rank (untouched text, not a group member) | 9 | **3** |
+
+**`business_name_maintenance_fee`'s text never changed between the two indices.** Its rank moved
+from 9 to 3 purely because consolidation removed 14 other short company/trademark-fee rows that
+used to sit between it and the top of the ranking for this query. The vacated slots are what
+pushed the ladder passage from rank 3 to rank 4 — **a side effect of removing competing content
+elsewhere in the index, not of the ladder itself being a worse answer.** This is the same
+crowding dynamic the whole consolidation was measured to fix, now landing on a row the
+consolidation did not touch.
+
+**Why the offline `feegroup_curation.json` measurement never caught this.** Its `nat_34` C1
+control used a **different, hand-authored question** ("Nataka kusajili kampuni yenye mtaji wa
+hisa milioni moja, ada ni shilingi ngapi na kuhifadhi jina ni ngapi?") — not the verbatim
+`nat_34` NAT48 text the Kaggle guard actually checks. The two wordings rank differently; the
+control's "controls_regressed: 0" was a true statement about a question that was never the one
+that broke.
+
+## 🩺 DIAGNOSIS 2 — closing the verification gap structurally, and checking whether nat_34 is the only casualty
+
+`eval/index_quality/verify_regen_guard_retrievability.py` →
+`eval/results/regen_guard_retrievability_post_consolidation.json`. Extends the 2026-08-26
+anchor-uniqueness check (`verify_regen_guards_post_consolidation.py`, text-only, no model) with
+the check it was missing: for every guard, encode its query against the prospective index with
+local e5 (licensed above) and confirm the anchor's best rank is actually **within top-3**, not
+merely a unique substring somewhere in the text.
+
+**Ran across all 31 guards: 28 PASS, 2 KNOWN-FAIL (unchanged, tracked), 1 RETRIEVAL_REGRESSION —
+`nat_34`, rank 4. No other guard is affected.** The gap that let `nat_34` through is now closed
+as a reusable check, not a one-off diagnosis: run this alongside the text-uniqueness check on
+every future index-composition change, before packaging for Kaggle.
+
+> **The general lesson, stated once so it does not need re-deriving:** a text-level uniqueness
+> check answers "does this anchor still identify one row." A retrieval-level check answers "is
+> that row still found when someone asks." Consolidation can leave the first answer unchanged
+> while flipping the second — exactly what happened here — because rank is a property of the
+> WHOLE index's competition, not of the anchor row in isolation. Any check that stops at
+> uniqueness is only checking half of what "the guard still works" requires.
+
+## What has NOT been decided, and is not this entry's job to decide
+
+No fix has been proposed or applied. Two live questions for the founder: (1) is a rank-4 fact
+missing the guard's top-3 window an acceptable, priced cost of the 42→3 consolidation (re-anchor
+the guard to accept rank ≤4, or accept the gap and track it), or (2) does it call for narrowing
+what's absorbed into `company_registration_ladder`, or widening production's `top_k`, or
+something else entirely. Nothing was uploaded; the shipped index is still the pre-consolidation
+221-row one. No re-run has happened.
+
+---
+
+---
+
 # 🔗 THE FULL SHAPE OF THE NEAR-MISS: A SILENT-SUCCESS CHAIN, NOT AN INERT CONTROL (2026-08-26)
 
 **The previous entry recorded the fix. This records the shape of what almost happened, because
