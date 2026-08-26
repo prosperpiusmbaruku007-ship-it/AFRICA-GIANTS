@@ -310,6 +310,134 @@ CONCISE_BILINGUAL_FACTS = {
         'mfanyakazi wa kwanza — HAKUNA kizingiti cha wafanyakazi wawili.',
 }
 
+# --- FACT GROUPS: many `key: number` rows collapsed into ONE contextual passage ------------
+#
+# THIS IS NOT NOISE-DROPPING. Every figure below stays in locked_facts.json (it is still the
+# truth table that check_locked_facts.py enforces) and every figure stays IN THE INDEX -- what
+# changes is that 42 context-free rows become 3 rows that say what the numbers are about.
+#
+# ⛔ THE TRADE I EXPECTED DID NOT EXIST, and that is the finding worth recording here rather
+# than in a commit message. Deletion vs consolidation was framed as "crowding removed" against
+# "answer lost". Measured (eval/results/feerow_curation.json, eval/results/feegroup_curation.json,
+# 2026-08-25) the second half is not real:
+#
+#     a `key: number` row is retrieved for the WRONG questions AND fails the RIGHT ones.
+#
+# Deleting 17 trademark rows moved 6/7 buried anchors and REGRESSED 1 control. Consolidating all
+# 42 moved 7/7 (nat_23: 86 -> 45, nat_05: 24 -> 8) and GAINED 2 controls with 0 regressed --
+# including a trademark-fee question the BASELINE index could not answer, because "trademark fee
+# for single mark registration: 60,000 TZS" does not look like the question a person types. So
+# there was never a coverage cost to weigh against the crowding: consolidation wins on BOTH sides
+# and the deliberation about the trade-off was deliberation about a trade that does not exist.
+#
+# ⚠️ FOUR OF THE ABSORBED ROWS ARE TRACEABLE SOURCES OF NAMED LIVE DEFECTS:
+#   [167] `registration certificate processing time new: 1 days`  -> nat_41's fabricated "siku 1"
+#         for OSHA registration. It is a BRELA row; [155] says 3 days for a same-sounding thing.
+#         (Absorbed by no group below -- see the BOARDED note at the bottom of this block.)
+#   [120] `company registration fee 3: 260,000 TZS`               -> nat_05's fabricated BRELA fee
+#         offered in answer to an SDL question.
+#   [209] `contribution rate emplyees: 10 %`                      -> the NSSF 10%-vs-20% collapse.
+#   [157] `beneficial owner information penalty maximum: 10000000 TZS` -> HYPOTHESIS ONLY for
+#         pic_11's "milioni 10" presumptive-ceiling belief. Untested; do not cite as established.
+#
+# 🔑 AND [209] DESERVES ITS OWN LINE: THE KEY IS MISSPELLED -- `contribution_rate_emplyees`.
+# A typo in a key is not cosmetic here, because build_fact_text() renders the KEY as the
+# retrievable label: the row a user's NSSF question matches literally reads "contribution rate
+# emplyees: 10 %". It is context-free (no "of 20% total", no "employee share"), it is highly
+# retrievable on any NSSF rate question, and it is one of the two rows behind a live wrong
+# answer. That argues for a KEY-HYGIENE PASS across all 252 locked facts -- boarded, not done
+# here, because renaming keys moves what the drift check and the guards match on and deserves
+# its own measured cycle. [209] and [167] are NOT in the groups below for the same reason:
+# they are not fee-schedule rows and each needs its own fix, not absorption.
+FACT_GROUPS = {
+    'trademark_fees': {
+        'keys': [
+            'trademark_fee_for_single_mark_registration',
+            'trademark_fee_for_renewal_of_registration',
+            'trademark_fee_for_series_of_marks_first_mark',
+            'trademark_fee_for_series_of_marks_subsequent_mark',
+            'trademark_fee_for_renewal_of_series_of_marks_first_mark',
+            'trademark_fee_for_renewal_of_series_of_marks_subsequent_mark',
+            'trademark_fee_for_opposition_notice',
+            'trademark_fee_for_responding_to_opposition',
+            'trademark_fee_for_hearing_opposition',
+            'trademark_fee_for_explanation_of_decision',
+            'trademark_fee_for_registration_of_subsequent_proprietor',
+            'trademark_fee_for_change_of_proprietor_or_user_same_address',
+            'trademark_fee_for_change_of_business_address',
+            'trademark_fee_for_dissolution_of_partnership',
+            'trademark_fee_for_refund_of_fee',
+            'trademark_fee_for_additional_fee_by_regulation_54',
+            'trademark_fee_for_any_other_entry',
+        ],
+        'text': (
+            'Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha '
+            '(renewal) TZS 30,000; mfululizo wa alama — ya kwanza TZS 60,000, zinazofuata TZS '
+            '30,000; kuhuisha mfululizo — ya kwanza TZS 30,000, zinazofuata TZS 10,000; taarifa '
+            'ya pingamizi TZS 60,000; kujibu pingamizi TZS 50,000; kusikiliza pingamizi TZS '
+            '70,000; maelezo ya uamuzi TZS 50,000; kusajili mmiliki mpya TZS 50,000; kubadili '
+            'mmiliki au mtumiaji TZS 50,000; kubadili anwani ya biashara TZS 20,000; kuvunja '
+            'ubia TZS 50,000; kurejeshewa ada TZS 30,000; ada ya nyongeza kanuni 54 TZS 30,000; '
+            'kiingizo kingine chochote TZS 10,000.'),
+    },
+    'company_registration_ladder': {
+        # A LADDER belongs in one passage anyway: the fee is meaningless without the share-capital
+        # band it attaches to, and split across 14 rows the bands and fees can be paired wrongly
+        # by whatever retrieves three of them.
+        'keys': [
+            'company_share_value_threshold_1_max', 'company_registration_fee_1',
+            'company_share_value_threshold_2_min', 'company_share_value_threshold_2_max',
+            'company_registration_fee_2',
+            'company_share_value_threshold_3_min', 'company_share_value_threshold_3_max',
+            'company_registration_fee_3',
+            'company_share_value_threshold_4_min', 'company_share_value_threshold_4_max',
+            'company_registration_fee_4',
+            'company_share_value_threshold_5_min', 'company_registration_fee_5',
+            'company_registration_fee_no_share_capital',
+        ],
+        'text': (
+            'Ada ya kusajili kampuni BRELA hutegemea thamani ya hisa (share capital): hadi TZS '
+            '1,000,000 ni TZS 95,000; zaidi ya TZS 1,000,000 hadi TZS 5,000,000 ni TZS 175,000; '
+            'zaidi ya TZS 5,000,000 hadi TZS 20,000,000 ni TZS 260,000; zaidi ya TZS 20,000,000 '
+            'hadi TZS 50,000,000 ni TZS 290,000; zaidi ya TZS 50,000,000 ni TZS 440,000. Kampuni '
+            'isiyo na mtaji wa hisa ni TZS 300,000. Kuhifadhi jina (name reservation) ni TZS '
+            '50,000 na kubadili jina ni TZS 22,000.'),
+    },
+    'brela_filing_fees': {
+        'keys': [
+            'memorandum_articles_of_association_filing_fee',
+            'stamp_duty_per_copy_memorandum_articles_copy',
+            'stamp_duty_form_14b_fee',
+            'document_acceptance_registration_fee',
+            'document_certification_fee_per_page',
+            'file_search_fee', 'file_search_report_fee',
+            'certified_copy_certificate_of_registration_fee',
+            'document_filing_fee_section_12_act_excluding_balance_sheet',
+            'balance_sheet_filing_fee_section_12_act',
+            'late_filing_penalty_monthly_fee_section_12_act',
+        ],
+        'text': (
+            'Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS '
+            '22,000; stempu kwa kila nakala ya memorandum TZS 10,000; fomu 14B TZS 1,200; '
+            'kupokea/kusajili nyaraka TZS 22,000; kuthibitisha nyaraka kwa ukurasa TZS 3,000; '
+            'kutafuta faili TZS 3,000 na ripoti ya utafutaji TZS 22,000; nakala iliyothibitishwa '
+            'ya cheti cha usajili TZS 4,000. Kampuni ya kigeni (kifungu 12): kuwasilisha nyaraka '
+            'USD 220, mizania USD 220, na faini ya kuchelewa USD 25 kwa mwezi.'),
+    },
+}
+
+# Every member key must exist, and every member's FIGURE must survive into the group text.
+# R20: this assertion can fail -- drop a band from the ladder text and the build stops. That is
+# the only thing standing between "consolidated" and "silently lost a fee".
+_GROUP_MEMBERS = {k: g for g, spec in FACT_GROUPS.items() for k in spec['keys']}
+
+
+def _figure_of(value: str):
+    """The number a fee row asserts, normalised for containment in the group text."""
+    m = re.search(r'([\d][\d,]*(?:\.\d+)?)', value or '')
+    return m.group(1) if m else None
+
+
 # --- Noise keys to drop, two different mechanisms ---
 #
 # SHAPE-BASED (regex): safe to guess by pattern because the SHAPE alone -- bare
@@ -374,18 +502,43 @@ def build_fact_text(key: str, value: str) -> str:
 
 
 def build_fact_texts():
-    """Return (kept_texts, kept_keys, dropped_keys) — importable without side effects."""
+    """Return (kept_texts, kept_keys, dropped_keys) — importable without side effects.
+
+    Rows are emitted per fact key, EXCEPT that FACT_GROUPS members are absorbed into one
+    consolidated passage per group, appended after the per-key rows (the position the
+    2026-08-25 measurement used).
+    """
     with open(FACTS_PATH, encoding='utf-8') as f:
         facts = json.load(f)
-    texts, keys, dropped = [], [], []
+
+    missing = [k for k in _GROUP_MEMBERS if k not in facts]
+    assert not missing, (
+        f'FACT_GROUPS names {len(missing)} key(s) absent from locked_facts.json: {missing}. '
+        f'A renamed or removed fact would otherwise be silently dropped from the index.')
+
+    texts, keys, dropped, absorbed = [], [], [], []
     for k, v in facts.items():
         if k == '_meta':
             continue
         if is_noise_key(k):
             dropped.append(k)
             continue
+        if k in _GROUP_MEMBERS:
+            absorbed.append(k)
+            continue
         texts.append(build_fact_text(k, fact_value(v)))
         keys.append(k)
+
+    for gname, spec in FACT_GROUPS.items():
+        lost = [k for k in spec['keys']
+                if (fig := _figure_of(fact_value(facts[k]))) and fig not in spec['text']]
+        assert not lost, (
+            f"group '{gname}' drops the figure asserted by {lost} — consolidation must carry "
+            f'every absorbed value into the passage, or the index has lost a fee.')
+        texts.append(spec['text'])
+        keys.append(gname)
+
+    assert len(absorbed) == len(_GROUP_MEMBERS), (absorbed, sorted(_GROUP_MEMBERS))
     return texts, keys, dropped
 
 

@@ -28,11 +28,16 @@ This is the same shape as the similarity-floor finding for the retrieval gate it
 (PROGRESS.md, "THE FLOOR CANNOT BE AN ABSOLUTE SCORE") — the two findings are the same
 fact about this embedding space, discovered independently twice in one day.
 
-SO THIS CHECK DOES NOT SCORE. It resolves each locked fact one of three ways:
+SO THIS CHECK DOES NOT SCORE. It resolves each locked fact one of four ways:
   1. EXACT key match against an index row's key prefix       -> automatic pass
   2. SIBLING key match (index carries a versioned variant,
      e.g. sdl_rate -> sdl_rate_2025)                          -> automatic pass
-  3. a PINNED, human-verified verdict below, re-checked EVERY RUN against the CURRENT
+  3. GROUPED: the key is a member of a FACT_GROUPS consolidation (2026-08-25), so it has
+     no row of its own by design. Verified BY CONTENT, every run: the group's passage must
+     be in the index AND must still contain this key's own figure. Not a row-number pin --
+     R18's first incident was exactly that, verdicts pinned to row numbers that decayed
+     silently when the index moved underneath them.
+  4. a PINNED, human-verified verdict below, re-checked EVERY RUN against the CURRENT
      index content (not trusted blindly forever) — present_elsewhere / absent /
      fragment / pending_r15
 
@@ -79,13 +84,13 @@ PINNED = {
     "sdl_threshold": ("present_elsewhere", 7, "wafanyakazi 10 au zaidi"),
     # sdl_employee_threshold pin removed 2026-08-17 -- the key itself was deleted
     # (merged into sdl_threshold, duplicate-key sweep; see PROGRESS "C4 applied").
-    "efd_threshold_tzs_11m": ("present_elsewhere", 58, "TZS 11,000,000"),
+    "efd_threshold_tzs_11m": ("present_elsewhere", 57, "TZS 11,000,000"),
     "osha_registration_threshold_b004": ("present_elsewhere", 52, "kila mwajiri lazima asajili"),
     "small_headcount_still_register": ("present_elsewhere", 69, "OSHA husajili maeneo YOTE"),
     "OSHA_annual_inspection": ("present_elsewhere", 85, "ukaguzi wa lazima kila mwaka"),
     "legal_citation_sdl": ("present_elsewhere", 88, "Vocational Education Training Act"),
-    "gn487a_prohibited_activity_3": ("present_elsewhere", 179, "Prohibited activity 3"),
-    "order_made_under_section": ("present_elsewhere", 175, "section 14A(2)"),
+    "gn487a_prohibited_activity_3": ("present_elsewhere", 137, "Prohibited activity 3"),
+    "order_made_under_section": ("present_elsewhere", 133, "section 14A(2)"),
 
     "legal_citation_tax_administration": ("absent", None, None),
     "legal_citation_amendment_act_sdl": ("absent", None, None),
@@ -121,7 +126,7 @@ PINNED = {
     "nssf_employer_rate": ("present_elsewhere", 9, "mwajiri analipa asilimia 10"),
     "nssf_total_rate": ("present_elsewhere", 10, "jumla: asilimia 20"),
     "nssf_payment_deadline": ("present_elsewhere", 62, "ifikapo tarehe 10"),
-    "nssf_calculation_example": ("present_elsewhere", 213, "SI TZS 120,000"),
+    "nssf_calculation_example": ("present_elsewhere", 171, "SI TZS 120,000"),
     "brela_striking_off_non_filing": ("present_elsewhere", 44, "kufuta, kufunga au kuondoa"),
 
     # ---- Added 2026-08-25: the three council-fee domains reclassified from COVERAGE GAP to
@@ -146,30 +151,48 @@ PINNED = {
     # present_elsewhere below with their real rows. brela_foreign_late_filing_penalty is
     # the one the tightened sibling matcher above caught falsely riding on 'brela' before
     # the regen; it is genuinely indexed now.
-    "brela_foreign_late_filing_penalty": ("present_elsewhere", 218, "USD 25"),
-    "osha_registration_before_operations": ("present_elsewhere", 219, "16(2)"),
-    "sdl_exemption_categories": ("present_elsewhere", 220, "zisizolipa SDL"),
+    "brela_foreign_late_filing_penalty": ("present_elsewhere", 176, "USD 25"),
+    "osha_registration_before_operations": ("present_elsewhere", 177, "16(2)"),
+    "sdl_exemption_categories": ("present_elsewhere", 178, "zisizolipa SDL"),
+
+    # late_filing_penalty_monthly_fee: found 2026-08-26, by the sibling-match audit the fee
+    # consolidation prompted (eval/results/sibling_match_audit.json). This key was NEVER
+    # actually verified -- it was silently riding _is_sibling's match against
+    # `late_filing_penalty_monthly_fee_section_12_act`'s row purely because the two slugs
+    # share a multi-word prefix ("late filing penalty monthly fee"). The two facts are
+    # UNRELATED: this one is the TZS 2,500/month domestic BRELA late-filing fee; the sibling
+    # it was riding is the USD 25/month foreign-company (Section XII) fee. Consolidating the
+    # foreign-company key into the brela_filing_fees group deletes its standalone row and
+    # the coincidental sibling match with it -- exposing that this key's OWN row (a
+    # CONCISE_BILINGUAL_FACTS Swahili sentence that does not slug-match its own key) was
+    # never independently confirmed. Row verified against the PROSPECTIVE post-regen index
+    # (build_fact_texts(), row 98) since this pin is being added in the same commit as the
+    # consolidation it depends on.
+    "late_filing_penalty_monthly_fee": ("present_elsewhere", 98, "TZS 2,500 kwa kila mwezi"),
 
     # --- Second pass, 2026-08-17: this script's own first run found 20 MORE unpinned
     # keys the earlier v1/v2/v3 investigation never touched -- v3 only re-checked the 28
     # keys v2 had flagged, so it inherited v2's blind spot for everything v2 got right by
     # accident. Adjudicated the same way: read the locked value, search the index by
     # content, confirm by eye. ---
-    "gn487a_penalty_noncitizen": ("present_elsewhere", 20, "10,000,000"),
+    # needle tightened 2026-08-26: bare "10,000,000" also matches vat_deferment_minimum_value's
+    # row in the post-consolidation index (the sibling-match audit's disambiguation pass found
+    # this collision while relocating pins) -- "(milioni kumi)" is unique to this fact's text.
+    "gn487a_penalty_noncitizen": ("present_elsewhere", 20, "10,000,000 (milioni kumi)"),
     "gn487a_penalty_citizen_facilitator": ("present_elsewhere", 21, "5,000,000 (milioni tano)"),
     "gn487a_license_lending_is_facilitation": ("present_elsewhere", 91, "lending their name"),
     "efd_not_every_business": ("present_elsewhere", 58, "Si lazima"),
     "wcf_rate_0_5_percent_confirmed": ("present_elsewhere", 66, "asilimia 0.5"),
     "osha_vs_wcf_roles": ("present_elsewhere", 68, "taasisi mbili tofauti"),
     "sdl_payment_deadline": ("present_elsewhere", 95, "siku ya 7"),
-    "annual_return_filing_fee": ("present_elsewhere", 134, "ada ya kuwasilisha ritani"),
-    "osiha_act_citation": ("present_elsewhere", 219, "Na.5 ya 2003"),
-    "health_and_safety_act_citation": ("present_elsewhere", 219, "Na.5 ya 2003"),
-    "business_licensing_act_citation": ("present_elsewhere", 175, "Cap. 101"),
-    "business_licensing_act_chapter": ("present_elsewhere", 175, "Cap. 101"),
+    "annual_return_filing_fee": ("present_elsewhere", 99, "ada ya kuwasilisha ritani"),
+    "osiha_act_citation": ("present_elsewhere", 177, "Na.5 ya 2003"),
+    "health_and_safety_act_citation": ("present_elsewhere", 177, "Na.5 ya 2003"),
+    "business_licensing_act_citation": ("present_elsewhere", 133, "Cap. 101"),
+    "business_licensing_act_chapter": ("present_elsewhere", 133, "Cap. 101"),
     "tanzania_citizenship_act_reference": ("present_elsewhere", 90, "Cap.357"),
-    "paye_bands_with_examples": ("present_elsewhere", 211, "TZS 800,000"),
-    "sdl_calculation_example": ("present_elsewhere", 212, "Mfano wa hesabu"),
+    "paye_bands_with_examples": ("present_elsewhere", 169, "TZS 800,000"),
+    "sdl_calculation_example": ("present_elsewhere", 170, "Mfano wa hesabu"),
     # sdl_rate / GN605A_sector_count: drift found post-R15-regen, 2026-08-17 (the natural48
     # re-run entry, PROGRESS.md). Both rewritten this cycle into conversational Swahili
     # lead-ins ('SDL, ambayo huitwa pia "mafunzo": ...', 'Kima cha chini cha mshahara (GN
@@ -194,6 +217,18 @@ PINNED = {
 }
 
 
+# The consolidation is DEFINED in precompute_rag_embeddings.py -- the module that builds the
+# index -- and imported here rather than restated. A second copy of the group membership would
+# drift from the first, and this check would then certify an index it no longer describes.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from precompute_rag_embeddings import (  # noqa: E402
+    FACT_GROUPS as _FACT_GROUPS,
+    _GROUP_MEMBERS,
+    _figure_of,
+    fact_value as _fact_value,
+)
+
+
 def _key_slug(key):
     return key.replace("_", " ").strip().lower()
 
@@ -214,13 +249,34 @@ def _is_sibling(key_slug, index_slug):
     return len(shorter.split()) >= 2
 
 
+def _grouped_verdict(key, locked, index):
+    """GROUPED, verified by content. Returns ('grouped', None) | ('drift', reason).
+
+    Two ways this fails loudly, and both are real regressions rather than bookkeeping:
+      - the group's passage is not in the index at all (a regen that did not run, or ran
+        against a stale commit -- R15's CDN-cache trap);
+      - the passage is there but no longer carries THIS member's figure, i.e. somebody
+        edited the consolidated text and dropped a fee. That is the failure the whole
+        consolidation is exposed to and the only automatic thing that would catch it.
+    """
+    spec = _FACT_GROUPS[_GROUP_MEMBERS[key]]
+    stem = spec["text"][:40]
+    rows = [r for r in index if r.startswith(stem)]
+    if not rows:
+        return "drift", f"group passage '{stem}...' is not in the index"
+    fig = _figure_of(_fact_value(locked[key]))
+    if fig and not any(fig in r for r in rows):
+        return "drift", f"group passage no longer contains this key's figure {fig!r}"
+    return "grouped", None
+
+
 def check(facts_path=FACTS_PATH, index_path=INDEX_PATH):
     locked = json.load(open(facts_path, encoding="utf-8"))
     index = json.load(open(index_path, encoding="utf-8"))
     index_slugs = [f.split(":")[0].strip().lower() for f in index]
 
     report = {
-        "exact": [], "sibling": [], "present_elsewhere": [],
+        "exact": [], "sibling": [], "grouped": [], "present_elsewhere": [],
         "absent": [], "fragment": [], "pending_r15": [],
         "drift_unpinned": [], "drift_pin_stale": [],
     }
@@ -235,6 +291,15 @@ def check(facts_path=FACTS_PATH, index_path=INDEX_PATH):
             continue
         if any(_is_sibling(slug, s) for s in index_slugs):
             report["sibling"].append(key)
+            continue
+        if key in _GROUP_MEMBERS:
+            verdict, reason = _grouped_verdict(key, locked, index)
+            if verdict == "grouped":
+                report["grouped"].append(key)
+            else:
+                report["drift_pin_stale"].append(
+                    {"key": key, "pinned_row": None, "expected_substring": reason,
+                     "row_now": None})
             continue
 
         pin = PINNED.get(key)
@@ -270,6 +335,7 @@ def main():
     print(f"locked facts checked: {sum(len(v) for v in report.values())}")
     print(f"  exact key match          {len(report['exact'])}")
     print(f"  sibling key match        {len(report['sibling'])}")
+    print(f"  grouped (consolidated)   {len(report['grouped'])}")
     print(f"  pinned present_elsewhere {len(report['present_elsewhere'])}")
     print(f"  pinned absent (known)    {len(report['absent'])}")
     print(f"  pinned fragment (n/a)    {len(report['fragment'])}")

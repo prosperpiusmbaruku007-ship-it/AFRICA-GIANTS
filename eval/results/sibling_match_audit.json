@@ -1,0 +1,50 @@
+{
+  "index_path": "C:\\Users\\jhjh\\AFRICA-GIANTS\\kaggle\\rag_facts_text.json",
+  "summary": {
+    "total_sibling_keys": 3,
+    "figure_confirmed": 2,
+    "no_figure_to_check": 0,
+    "figure_NOT_found": 1
+  },
+  "rows": [
+    {
+      "key": "late_filing_penalty_monthly_fee",
+      "fact_value": "2,500 TZS",
+      "figure": "2,500",
+      "matched_rows": [
+        {
+          "row": 141,
+          "index_slug": "late filing penalty monthly fee section 12 act",
+          "text": "late filing penalty monthly fee section 12 act: 25 USD"
+        }
+      ],
+      "verdict": "figure_NOT_found"
+    },
+    {
+      "key": "vat_registration_threshold_annual",
+      "fact_value": "200,000,000 TZS",
+      "figure": "200,000,000",
+      "matched_rows": [
+        {
+          "row": 15,
+          "index_slug": "vat registration threshold",
+          "text": "vat registration threshold: VAT registration threshold is TZS 200,000,000 per year OR TZS 100,000,000 per 6 months"
+        }
+      ],
+      "verdict": "figure_confirmed"
+    },
+    {
+      "key": "vat_registration_threshold_six_months",
+      "fact_value": "100,000,000 TZS",
+      "figure": "100,000,000",
+      "matched_rows": [
+        {
+          "row": 15,
+          "index_slug": "vat registration threshold",
+          "text": "vat registration threshold: VAT registration threshold is TZS 200,000,000 per year OR TZS 100,000,000 per 6 months"
+        }
+      ],
+      "verdict": "figure_confirmed"
+    }
+  ]
+}

@@ -1,6 +1,111 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-25
+Last updated: 2026-08-26
+
+---
+
+# 🔧 FEE CONSOLIDATION APPLIED IN CODE, 2026-08-26 — and its own readiness test caught a real bug before the regen ran.
+
+**Crash recovery context.** Session crashed after `5c55470` (pushed, 1374 tests passing). The
+42→3 consolidation approved in that entry survived uncommitted in the working tree, along with
+`tests/test_fact_group_consolidation.py` (7 tests). One of the seven failed. Investigated,
+fixed, and generalised into a standing finding rather than a one-line patch.
+
+## 🐛 THE BUG: consolidating one key silently broke the sync verdict for an UNRELATED key
+
+`late_filing_penalty_monthly_fee_section_12_act` (the foreign-company/Section XII USD 25/month
+fee) is a member of the new `brela_filing_fees` group, so its standalone index row is absorbed.
+That row was never checked out by anyone as belonging to `late_filing_penalty_monthly_fee` (the
+*different*, domestic TZS 2,500/month fee) — but `_is_sibling` was silently resolving the second
+key against the first key's row anyway, because the two slugs share the multi-word prefix
+"late filing penalty monthly fee". Remove the row the group absorbs, and the coincidental sibling
+match disappears with it: `late_filing_penalty_monthly_fee` would ship as `drift_unpinned` the
+moment the regen ran, even though its own row (a hand-written Swahili sentence that doesn't
+slug-match its own key) is untouched and correct.
+
+**This is not a new failure mode.** It is the identical shape `_is_sibling` was already tightened
+for once, 2026-08-17 (a bare `nssf`/`brela` label letting unrelated keys ride the same row). The
+tightening (require the shorter slug to carry ≥2 words) closed the single-word case; it did not
+and could not close a two-key coincidence where both slugs are genuinely multi-word and one
+happens to be a prefix of the other.
+
+## 🔍 THE FINDING ASKED FOR: how many OTHER sibling matches are unverified by content?
+
+`eval/index_quality/audit_sibling_matches.py` → `eval/results/sibling_match_audit.json`. For
+every key currently resolving via `sibling` against the shipped 221-row index, extract the key's
+own figure and check whether it actually appears in the row the checker accepted.
+
+| verdict | count | keys |
+|---|---|---|
+| figure CONFIRMED in matched row | 2 | `vat_registration_threshold_annual`, `vat_registration_threshold_six_months` — both genuinely answered by the same combined row |
+| figure NOT found (suspect) | 1 | `late_filing_penalty_monthly_fee` — the bug above |
+| **total sibling-resolved keys today** | **3** | |
+
+**Good news, not a systemic gap:** the 2026-08-17 tightening already closed the broad version of
+this failure. Only one coincidence survived it, and it took a second index-composition change to
+expose it. The class is real (proven twice now) but it is rare, not rampant — sibling match is not
+overstating its resolution rate at scale, it failed exactly once, on exactly the row this
+consolidation removed.
+
+**Fix:** `late_filing_penalty_monthly_fee` added to `PINNED` as `present_elsewhere`, pointing at
+its own row in the **prospective post-regen index** (`build_fact_texts()` row 98, substring
+"TZS 2,500 kwa kila mwezi") rather than at any other key's row. Verified: pre-regen it still
+resolves via the (currently valid) sibling match and never touches this pin; post-regen, sibling
+disappears and this pin takes over. Both states checked.
+
+## ⛔ THE BIGGER DEPENDENCY THE FIRST FIX EXPOSED: applying the readiness test for real breaks nearly every OTHER pin at once
+
+Fixing the one bug and re-running `test_sync_check_resolves_every_member_as_GROUPED_on_the_post_regen_index`
+— which asserts **zero drift anywhere** against the prospective index, not just among the 42 group
+members — surfaced that **13 of the 33 pre-existing `present_elsewhere` pins go stale** the moment
+42 rows are removed and 3 group rows + 5 pending local-levy rows are added (221 → 187). Every row
+number after the first edit point shifts, exactly as the file's own 2026-08-17 history already
+records happening once before ("23 of 26 present_elsewhere pins went stale in one regen"). **This
+is the second time the same mechanism has fired, and this time it was caught before the regen
+shipped, not after.**
+
+Re-derived every pin against `build_fact_texts()`'s prospective output by searching for its pinned
+substring: **29 of 33 relocated to a single unambiguous new row.** 5 needle searches returned more
+than one candidate row and needed a real disambiguation, not just the first match:
+
+| key | ambiguous between | resolved to | why |
+|---|---|---|---|
+| `efd_threshold_tzs_11m` | its own row (57) vs. `efd_not_every_business`'s row (58), which also cites 11,000,000 | **57 — its own row** | a key's own row is always the correct anchor when it exists |
+| `brela_foreign_late_filing_penalty` | its own row (176) vs. the new `brela_filing_fees` group row (186), which also carries USD 25 | **176 — its own row** | same reasoning; the group text is a coincidence, not this key's home |
+| `gn487a_penalty_noncitizen` | its own row (20) vs. `vat_deferment_minimum_value` (129), which coincidentally also reads 10,000,000 | **20 — its own row**, needle tightened to `"10,000,000 (milioni kumi)"` | bare `"10,000,000"` was never a safe needle; this consolidation just happened to be what surfaced it |
+| `osiha_act_citation` | row 68 (OSHA Act citation) vs. row 177 (`osha_registration_before_operations`, also cites the same Act) | **177** | matches the ORIGINAL adjudication: both this key and `health_and_safety_act_citation` were pinned to the same old row 219, which is `osha_registration_before_operations`'s content, confirmed by re-reading the 2026-08-17 comment history rather than guessing |
+| `health_and_safety_act_citation` | same as above | **177** | same fact, same reasoning |
+
+All 34 present_elsewhere pins (33 relocated + the 1 new one) now verified against
+`build_fact_texts()`'s actual prospective output — not assumed, checked by
+`test_sync_check_resolves_every_member_as_GROUPED_on_the_post_regen_index`, which now passes
+clean (`ok=True`, zero `drift_unpinned`, zero `drift_pin_stale`) against the index the regen will
+produce. All 7 tests in `tests/test_fact_group_consolidation.py` pass.
+
+## 🧭 THE STANDING LESSON, generalised past this one consolidation
+
+> **A row's ABSENCE can break a check about a DIFFERENT row, and this is not obvious from reading
+> either row in isolation.** `late_filing_penalty_monthly_fee_section_12_act`'s row and
+> `late_filing_penalty_monthly_fee`'s row look unrelated — different facts, different figures,
+> different currencies. The dependency exists only in the CHECKER's matching logic, which neither
+> row's author had reason to think about. And it is not confined to the one row removed: **every
+> row inserted or deleted shifts every present_elsewhere pin positioned after it**, which is why
+> fixing one exposed thirteen.
+
+**Rule going forward: any future index-composition change (row added, removed, reordered, or
+absorbed into a group) re-runs `check_facts_index_sync.check()` against the PROSPECTIVE post-change
+index and re-adjudicates every resulting `drift_pin_stale` entry IN THE SAME COMMIT as the
+composition change — never deferred to "after the regen ships."** Deferring it is exactly how the
+2026-08-17 incident happened (23 of 26 pins found stale only after the index was already live).
+Doing it in the same commit turns a silent post-deploy discovery into a pre-commit gate failure —
+which is a test failing on a laptop instead of a production RAG serving an unverifiable row.
+
+**Known, deliberate, temporary consequence of doing it this way:** this commit's `PINNED` row
+numbers are correct against the **prospective** (post-regen) index, not the currently **shipped**
+one. `tests/test_facts_index_sync.py::test_every_locked_fact_is_exact_sibling_or_pinned` — the
+standing gate, which checks the default `kaggle/rag_facts_text.json` — is EXPECTED to fail between
+this commit and the regen commit that ships the new index files. That gap is closed in the very
+next commit (the batched R15 regen), not left open.
 
 ---
 
