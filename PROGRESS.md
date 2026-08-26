@@ -4,6 +4,91 @@ Last updated: 2026-08-26
 
 ---
 
+# 📦 R15 REGEN PACKAGED FOR KAGGLE, 2026-08-26 — NOT run locally, on instruction. Guard soundness re-verified; a real dead anchor found and fixed before it ever reached Kaggle.
+
+**Correction accepted: the regen does not run locally, full stop.** R15 puts the embedding step
+on Kaggle for a reason (the ~1.1GB e5-base download stalls on the local network) and this
+project has independently been bitten by local-vs-Kaggle divergence before. Everything below is
+either (a) pure text/substring computation — deterministic, identical in any Python environment,
+no model needed — or (b) code packaged INTO `kaggle/regenerate_rag_e5.py` to run there. No
+embeddings were produced locally and nothing was uploaded.
+
+## 🔍 GUARD-SOUNDNESS RE-VERIFICATION — the question asked directly: does consolidation break any existing anchor?
+
+`eval/index_quality/verify_regen_guards_post_consolidation.py` →
+`eval/results/regen_guard_anchors_post_consolidation.json`. Loads `critical_queries` out of
+`kaggle/regenerate_rag_e5.py` by AST parse (same technique as the 2026-08-22 dry-run tool) and
+re-runs the ANCHOR UNIQUENESS check — dead / ambiguous / unique — against
+`build_fact_texts()`'s prospective 187-row output instead of the shipped 221-row index. No
+embeddings involved; this is the part of guard verification that is pure text and therefore safe
+to run anywhere.
+
+**Found one real regression, exactly the class this check exists to catch:**
+
+| guard | old anchor | fate under consolidation |
+|---|---|---|
+| `Company registration fee (nat_34 displacement guard)` | `'company registration fee 1'` | **DEAD** — the standalone row is now absorbed into `company_registration_ladder`. The anchor would match zero facts and could never fire again, silently. |
+
+**Fixed before packaging:** re-anchored to `'hadi TZS 1,000,000 ni TZS 95,000'`, a phrase unique
+to the new ladder passage (verified: exactly 1 hit in the prospective index). Re-ran the check —
+**zero dead, zero ambiguous, zero regressions** across all 26 pre-existing guards plus the 5 new
+ones added below (31 total). The other 5 "dead in old / live in new" entries in the raw diff are
+the five brand-new local-levy guards themselves — expected, since those facts don't exist in the
+index until this regen runs, not a defect.
+
+> **This is the second time this exact failure class has been found by asking the question
+> directly rather than assuming.** 2026-08-22 found three dead anchors hiding behind live
+> siblings; today's consolidation created a fourth, immediately, the first time the index shape
+> changed again. The check earns its keep precisely because index-shape changes keep happening.
+
+## 🎯 THE RANK-REGRESSION GATE — nat_23/nat_33/nat_05 checked against a REAL index for the first time
+
+The entire justification for shipping the 42→3 consolidation is
+`eval/results/feegroup_curation.json`'s offline measurement: `nat_23` 86→45, `nat_33` 48→23,
+`nat_05` 24→8. That measurement reconstructs what a regen would produce by editing the
+already-embedded 221-row matrix locally — it has never been checked against embeddings Kaggle
+actually produced from the real 187-row prospective index. Added a new gating block to
+`regenerate_rag_e5.py` (`RANK-REGRESSION GATE`) that:
+
+1. Uses the **verbatim** NAT48 question text for each of the three rows (copied from
+   `measure_feegroup_curation.py`'s own `ANCHORS`/question source, not re-typed).
+2. Locates the anchor fact by the same unique needle strings used in the offline measurement
+   (re-verified unique against the prospective index by the harness above).
+3. Computes the anchor's actual rank in the newly-built embeddings and requires it to land
+   **within +5 of the measured value AND strictly better than the pre-consolidation rank** —
+   the second condition exists so a number that happens to be "close to the target" by
+   coincidence, on the wrong row or for the wrong reason, cannot pass on proximity alone.
+4. **Blocks the upload on failure** — wired into `overall_pass` alongside the existing guards.
+
+**Also made `_anchor_pass` (the anchor-uniqueness precondition) BLOCKING**, not just a printed
+`[WARN]`. It previously computed and reported dead/ambiguous anchors but did not stop the
+upload — exactly the "pass silently" risk this session's own nat_34 finding demonstrates is real,
+not hypothetical.
+
+## 📎 Five new critical-query guards for the local-levy facts
+
+One per fact added in `add_local_levy_facts.py` (`council_service_levy_is_a_cap_not_a_rate`,
+`council_service_levy_non_corporate_conflict`, `market_dues_no_national_amount`,
+`market_dues_exemptions`, `business_licence_fee_national_schedule_local_collection`). Each
+anchor verified unique against the prospective index before packaging. These are the guards
+that will retire the five `pending_r15` pins in `check_facts_index_sync.py` once this regen
+ships — `test_pending_r15_keys_are_still_pending` is the automated tripwire that will fail (as
+designed) and signal their removal.
+
+## What ships in this package, and what does not
+
+`kaggle/regenerate_rag_e5.py` now carries: the git-clone-first source resolution (unchanged), the
+GitHub main HEAD print at startup (unchanged), the existing self-retrieval + critical-query gate
+(one dead anchor fixed), the five new local-levy guards, and the new rank-regression gate for
+nat_23/nat_33/nat_05. **Nothing has been run.** No embeddings, no `rag_facts_text.json`, no HF
+upload. The founder runs this notebook on Kaggle next. We stop before Modal redeploy and the
+full gate re-run, per R16 — those are the next, separate, production-facing steps after the
+regen artifact and its verification output are back.
+
+---
+
+---
+
 # 🔧 FEE CONSOLIDATION APPLIED IN CODE, 2026-08-26 — and its own readiness test caught a real bug before the regen ran.
 
 **Crash recovery context.** Session crashed after `5c55470` (pushed, 1374 tests passing). The

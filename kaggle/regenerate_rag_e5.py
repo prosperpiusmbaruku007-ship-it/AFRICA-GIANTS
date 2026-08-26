@@ -281,8 +281,27 @@ critical_queries = [
     ('GN605A sector count (nat_43 verbatim, the row that clears)', 'query: mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta', ['hakina kiwango kimoja']),
     ('VAT six-month threshold (nat_26 displacement guard)', 'query: nimefungua duka miezi sita iliyopita nimeuza jumla milioni 60 hadi sasa je nimefika kiwango cha vat', ['100,000,000 kwa miezi 6']),
     ('VAT standard rate (nat_27 displacement guard)', 'query: vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu', ['NEVER 14%']),
-    ('Company registration fee (nat_34 displacement guard)', 'query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina', ['company registration fee 1']),
+    # anchor UPDATED 2026-08-26 (fee consolidation): 'company registration fee 1' matched
+    # ZERO facts once the ladder's 14 rows were absorbed into company_registration_ladder --
+    # the exact dead-anchor failure mode this uniqueness check exists to catch, found by
+    # eval/index_quality/verify_regen_guards_post_consolidation.py before this ever reached
+    # Kaggle. The old row (company_registration_fee_1: 95,000 TZS) is now inside the group
+    # passage; anchored to a phrase from that passage instead, verified unique among the
+    # prospective 187 rows.
+    ('Company registration fee (nat_34 displacement guard)', 'query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina', ['hadi TZS 1,000,000 ni TZS 95,000']),
     ('EFD threshold, VAT-unregistered (nat_36 displacement guard)', 'query: mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti', ['milioni kumi na moja']),
+    # ── FEE-CONSOLIDATION BATCH, 2026-08-26 -- the five council-fee/market-dues/business-
+    # licence facts reclassified from GAP to ANSWERED (add_local_levy_facts.py, PROGRESS.md
+    # 'THE THREE UNANSWERABLE DOMAINS'). Pinned pending_r15 in check_facts_index_sync.py
+    # until THIS regen runs. Anchors verified unique against build_fact_texts()'s prospective
+    # 187-row output before this file was packaged (all five resolve to exactly one row each,
+    # since none is in CONCISE_BILINGUAL_FACTS -- default key:value rendering, EXACT-key-
+    # matchable once the row exists, which is why no PINNED entry survives past this regen).
+    ('Council service levy is a ceiling (new fact)', 'query: Halmashauri wananitoza ushuru wa huduma asilimia 0.3 ya mauzo yangu, ni sahihi?', ['KIKOMO cha asilimia 0.3']),
+    ('Council service levy non-corporate conflict (new fact)', 'query: Mimi ni mfanyabiashara mmoja mmoja, ninatakiwa kulipa ushuru wa huduma wa halmashauri?', ['non-corporate']),
+    ('Market dues no national amount (new fact)', 'query: Ushuru wa genge langu sokoni ni shilingi ngapi?', ['Sheria ya Masoko (Cap 106)']),
+    ('Market dues exemptions (new fact)', 'query: Ninauza maandazi sokoni, ninatakiwa kulipa ushuru wa soko?', ['maandazi na samaki wa kukaanga']),
+    ('Business licence fee national schedule, local collection (new fact)', 'query: Leseni ya biashara yangu inagharimu kiasi gani, na nani hutoa?', ['Ada imepangwa KITAIFA']),
 ]
 
 # ── KNOWN-FAILING GUARDS (2026-08-22) ────────────────────────────────────────────
@@ -449,9 +468,78 @@ if not disambig_pass:
     for r, idx in enumerate(_dtop3, 1):
         print(f'        top{r}: {fact_texts_to_embed[idx][:110]}')
 
+# ── RANK-REGRESSION GATE — the fee consolidation (nat_05/nat_23/nat_33) ──────────
+# eval/results/feegroup_curation.json measured OFFLINE (2026-08-25, the deployed 221-row
+# index vs. a locally-reconstructed 182-row consolidated arm) that the SDL-rate and BRELA
+# annual-return-fee anchors move: nat_23 86->45, nat_33 48->23, nat_05 24->8. That measurement
+# is the entire justification for shipping this consolidation -- and it has never been checked
+# against a REAL regenerated index, only a local scoring harness reconstructing what a regen
+# would produce. This is the first time it is.
+#
+# Verbatim question text and anchor-identification needles below are copied EXACTLY from
+# eval/index_quality/measure_feegroup_curation.py's NAT48/ANCHORS (R24: a paraphrase is not
+# the same check). Anchor uniqueness against the prospective 187-row index was confirmed
+# offline before this file was packaged
+# (eval/results/regen_guard_anchors_post_consolidation.json) -- re-asserted here at runtime
+# too, since that is exactly the kind of thing a future fact edit could silently break.
+#
+# Tolerance: +5 ranks around the measured target. e5-base inference has no dropout, so
+# local and Kaggle runs of the identical model are expected to reproduce near-identically;
+# the tolerance absorbs float/BLAS-order noise, not a real regression. The baseline check
+# (new rank must clearly beat the PRE-consolidation rank, not just be "close to" the target)
+# is the second half of the gate for exactly that reason -- a number close to the target for
+# the wrong reason is not evidence.
+print('\n' + '=' * 60)
+print('RANK-REGRESSION GATE — fee consolidation (nat_05/nat_23/nat_33)')
+print('=' * 60)
+RANK_GATE_CASES = [
+    # (name, verbatim question, anchor needle, pre-consolidation rank, measured post rank)
+    ('nat_23 (SDL rate)',
+     'query: nina wafanyakazi 12 mishahara jumla milioni 5.5 nitalipa ngapi kwenye ile ya '
+     'mafunzo na ile ya uzeeni',
+     'kiwango cha mafunzo ni asilimia tatu na nusu', 86, 45),
+    ('nat_33 (BRELA annual return fee)',
+     'query: sijapeleka ritani ya kampuni yangu miezi saba sasa nitalipa faini kiasi gani na '
+     'ada yenyewe ni ngapi',
+     'ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni TZS 22,000', 48, 23),
+    ('nat_05 (SDL rate)',
+     'query: nimenunua mashine za kiwanda za milioni 50 na nina wafanyakazi 12 hiyo ya '
+     'mafunzo nitalipa asilimia tatu na nusu ya nini',
+     'kiwango cha mafunzo ni asilimia tatu na nusu', 24, 8),
+]
+RANK_TOLERANCE = 5
+rank_gate_pass = True
+for name, q, needle, pre_rank, measured_rank in RANK_GATE_CASES:
+    hits = [i for i, t in enumerate(fact_texts_to_embed) if needle in t]
+    if len(hits) != 1:
+        rank_gate_pass = False
+        print(f'[FAIL] {name}: anchor {needle!r} matches {len(hits)} facts (expected exactly '
+              f'1) -- cannot locate the fact whose rank this gate is supposed to check')
+        continue
+    anchor_idx = hits[0]
+    qv = model.encode([q])[0]
+    qv = qv / (np.linalg.norm(qv) + 1e-10)
+    sims = np.dot(embeddings_normalized, qv)
+    order = np.argsort(-sims)
+    observed_rank = int(np.where(order == anchor_idx)[0][0]) + 1
+    within_tolerance = observed_rank <= measured_rank + RANK_TOLERANCE
+    beats_baseline = observed_rank < pre_rank
+    ok = within_tolerance and beats_baseline
+    rank_gate_pass = rank_gate_pass and ok
+    print(f'[{"PASS" if ok else "FAIL"}] {name}: pre-consolidation {pre_rank} -> measured '
+          f'{measured_rank} (offline) -> observed {observed_rank} (this build, tolerance '
+          f'+{RANK_TOLERANCE})')
+    if not ok:
+        for r, idx in enumerate(order[:5], 1):
+            print(f'        top{r}: {fact_texts_to_embed[int(idx)][:90]}')
+if rank_gate_pass:
+    print(f'[OK] all {len(RANK_GATE_CASES)} consolidation anchors reproduce the offline-'
+          f'measured movement within tolerance')
+
 print()
 # allow <10% self-retrieval noise (near-duplicate facts can surface a sibling at rank 1)
-overall_pass = (critical_pass and contrast_pass and disambig_pass
+overall_pass = (critical_pass and contrast_pass and disambig_pass and rank_gate_pass
+                and _anchor_pass
                 and len(failures) < len(fact_texts_to_embed) * 0.1)
 if overall_pass:
     print(f'VERIFICATION PASSED — {len(fact_texts_to_embed) - len(failures)}/{len(fact_texts_to_embed)} '
@@ -460,7 +548,8 @@ if overall_pass:
 else:
     print('VERIFICATION FAILED — review failures before saving')
     print(f'  critical_pass={critical_pass} | contrast_pass={contrast_pass} | '
-          f'disambig_pass={disambig_pass} | self_retrieval_failures={len(failures)} '
+          f'disambig_pass={disambig_pass} | rank_gate_pass={rank_gate_pass} | '
+          f'anchor_pass={_anchor_pass} | self_retrieval_failures={len(failures)} '
           f'(tolerance={int(len(fact_texts_to_embed) * 0.1)})')
     sys.exit(1)   # do NOT upload a broken index
 

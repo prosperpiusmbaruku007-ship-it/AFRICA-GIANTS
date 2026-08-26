@@ -1,0 +1,70 @@
+{
+  "measured": "2026-08-26",
+  "harness": "eval/index_quality/verify_regen_guards_post_consolidation.py",
+  "old_index_rows": 221,
+  "new_index_rows_prospective": 187,
+  "old_dead_anchors": [
+    [
+      "Company registration fee (nat_34 displacement guard)",
+      "hadi TZS 1,000,000 ni TZS 95,000"
+    ],
+    [
+      "Council service levy is a ceiling (new fact)",
+      "KIKOMO cha asilimia 0.3"
+    ],
+    [
+      "Council service levy non-corporate conflict (new fact)",
+      "non-corporate"
+    ],
+    [
+      "Market dues no national amount (new fact)",
+      "Sheria ya Masoko (Cap 106)"
+    ],
+    [
+      "Market dues exemptions (new fact)",
+      "maandazi na samaki wa kukaanga"
+    ],
+    [
+      "Business licence fee national schedule, local collection (new fact)",
+      "Ada imepangwa KITAIFA"
+    ]
+  ],
+  "old_ambiguous_anchors": [],
+  "new_dead_anchors": [],
+  "new_ambiguous_anchors": [],
+  "newly_broken_by_consolidation": [],
+  "sound": true,
+  "curation_rank_gate_anchors": {
+    "nat_05/nat_23 (SDL rate)": {
+      "needle": "kiwango cha mafunzo ni asilimia tatu na nusu",
+      "old_hits": [
+        5
+      ],
+      "new_hits": [
+        5
+      ],
+      "still_unique": true
+    },
+    "nat_33 (BRELA annual return fee)": {
+      "needle": "ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni TZS 22,000",
+      "old_hits": [
+        134
+      ],
+      "new_hits": [
+        99
+      ],
+      "still_unique": true
+    },
+    "nat_43 (GN605A sector count, existing guard)": {
+      "needle": "sekta 16 na sekta ndogo 46",
+      "old_hits": [
+        72
+      ],
+      "new_hits": [
+        72
+      ],
+      "still_unique": true
+    }
+  },
+  "curation_anchors_all_unique": true
+}
