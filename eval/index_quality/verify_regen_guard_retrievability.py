@@ -21,8 +21,20 @@ run reproduced this repo's local e5 EXACTLY on three independent anchors -- 45/2
 -- which licenses using it to DIAGNOSE rank here, though never to build or ship an index; nothing
 here is saved or uploaded).
 
-Run this on EVERY future index-composition change, before packaging for Kaggle -- not only when
-something is suspected. `nat_34` was found by a real Kaggle failure, which is the expensive way.
+SECOND GAP, CLOSED 2026-08-26 (found the same day, by the same mechanism, in the OTHER
+direction). Fixing nat_34 by rewriting `company_registration_ladder`'s text moved `nat_23` from
+rank 45 to 46 between Kaggle runs -- within RANK_TOLERANCE, but the only change between the two
+runs was the ladder rewrite, so the rewrite itself displaced a neighbour by one position. THE
+GENERAL PROPERTY: an ask-alignment rewrite is not a local edit to "its own" row -- it is an
+INDEX-COMPOSITION CHANGE like consolidation was, and it must be checked against every guard's
+rank, not just the row being rewritten. This script originally only walked `critical_queries`
+(the top-3 guards); it now ALSO walks `RANK_GATE_CASES` (the tolerance-banded consolidation
+anchors), because a rewrite can perturb either kind, and checking only the guard you meant to fix
+is exactly the blind spot that let nat_34 reach Kaggle broken the first time.
+
+Run this on EVERY future index-composition change, INCLUDING a content rewrite to a single
+existing row, before packaging for Kaggle -- not only when something is suspected. `nat_34` was
+found by a real Kaggle failure, which is the expensive way.
 
 R18: committed before its result is written up.
 Artifact: eval/results/regen_guard_retrievability_post_consolidation.json
@@ -62,12 +74,40 @@ def main():
     guards = load_from_regen('critical_queries')
     known_failing = set(load_from_regen('KNOWN_FAILING'))
     accepted_ambiguous = set(load_from_regen('ACCEPTED_AMBIGUOUS'))
+    rank_gate_cases = load_from_regen('RANK_GATE_CASES')
+    rank_tolerance = load_from_regen('RANK_TOLERANCE')
 
     texts, _keys, _dropped = pre.build_fact_texts()
     model = SentenceTransformer('intfloat/multilingual-e5-base')
     prefixed = ['passage: ' + t for t in texts]
     emb = np.array(model.encode(prefixed, show_progress_bar=False))
     emb = emb / (np.linalg.norm(emb, axis=1, keepdims=True) + 1e-10)
+
+    rank_gate_rows, rank_gate_regressions = [], []
+    for name, query, needle, pre_rank, measured_rank in rank_gate_cases:
+        hits = [i for i, t in enumerate(texts) if needle in t]
+        if len(hits) != 1:
+            rank_gate_regressions.append({
+                'name': name, 'status': 'DEAD_OR_AMBIGUOUS_ANCHOR', 'matches': len(hits),
+            })
+            continue
+        anchor_idx = hits[0]
+        qv = model.encode([query])[0]
+        qv = qv / (np.linalg.norm(qv) + 1e-10)
+        sims = emb @ qv
+        order = np.argsort(-sims)
+        observed_rank = int(np.where(order == anchor_idx)[0][0]) + 1
+        within_tolerance = observed_rank <= measured_rank + rank_tolerance
+        beats_baseline = observed_rank < pre_rank
+        ok = within_tolerance and beats_baseline
+        row = {
+            'name': name, 'status': 'PASS' if ok else 'RANK_GATE_REGRESSION',
+            'pre_consolidation_rank': pre_rank, 'measured_rank': measured_rank,
+            'observed_rank': observed_rank, 'tolerance': rank_tolerance,
+        }
+        rank_gate_rows.append(row)
+        if not ok:
+            rank_gate_regressions.append(row)
 
     rows, regressions = [], []
     for name, query, expected in guards:
@@ -111,6 +151,15 @@ def main():
                                     'STALE-KNOWN-FAIL', 'DEAD_ANCHOR')},
         'regressions': regressions,
         'rows': rows,
+        'rank_gate_cases': {
+            'total': len(rank_gate_cases),
+            'status_counts': {
+                'PASS': sum(1 for r in rank_gate_rows if r['status'] == 'PASS'),
+                'RANK_GATE_REGRESSION': len(rank_gate_regressions),
+            },
+            'regressions': rank_gate_regressions,
+            'rows': rank_gate_rows,
+        },
     }
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
@@ -123,8 +172,19 @@ def main():
             print(f"  {r['name']}: best_rank={r['best_rank']}")
     else:
         print(f'\n[OK] every guard anchor ranks within top-{TOP_K} for its own query')
+
+    print(f"\nRANK_GATE_CASES: {out['rank_gate_cases']['status_counts']}")
+    if rank_gate_regressions:
+        print(f'[RANK GATE REGRESSION] {len(rank_gate_regressions)} case(s) outside tolerance '
+              f'or baseline:')
+        for r in rank_gate_regressions:
+            print(f"  {r['name']}: {r}")
+    else:
+        print('[OK] every RANK_GATE_CASES anchor within tolerance and beats its pre-'
+              'consolidation baseline')
+
     print(f'\n[saved] {OUT}')
-    return 0 if not regressions else 1
+    return 0 if not regressions and not rank_gate_regressions else 1
 
 
 if __name__ == '__main__':

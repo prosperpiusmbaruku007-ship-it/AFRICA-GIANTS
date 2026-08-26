@@ -4,6 +4,71 @@ Last updated: 2026-08-26
 
 ---
 
+# 🚀 R15 REGEN #2 PASSED AND SHIPPED — 187 FACTS, nat_34 CLEARS, INDEX LANDED IN BOTH DIRS, SYNC-CHECK CLEAN. Stopped before Modal, as agreed.
+
+**The founder's second Kaggle run against `origin/main@3cd3924`:** 187 facts, `nat_34` clears,
+no new KNOWN-FAILs, self-retrieval 0, 31/31 anchors unique, uploaded to
+`prospAprospA007/africa-giants-dataset`.
+
+## A property, not an incident: `nat_23` moved 45 → 46 between runs
+
+Run #1 reproduced the offline harness EXACTLY (45/23/8, see the entry below). The only change
+between run #1 and run #2 was the `company_registration_ladder` rewrite — and `nat_23` moved by
+one position. Within `RANK_TOLERANCE=5`, but the mechanism is the same one that cost `nat_34` its
+slot in run #1, now caused by a FIX instead of a consolidation: **an ask-alignment rewrite is not
+a local edit to "its own" row. It is an index-composition change**, exactly like adding or
+removing rows is, and it perturbs whatever else competes for the query's neighborhood.
+
+**Closed structurally, not just re-measured once.** `verify_regen_guard_retrievability.py`
+previously only walked `critical_queries` (the 31 top-3 guards). It now ALSO walks
+`RANK_GATE_CASES` (the tolerance-banded consolidation anchors) — the class `nat_23` belongs to —
+using the same tolerance/beats-baseline logic as the gate itself. Re-run against the shipped
+187-row index: **`critical_queries` 29 PASS / 0 REGRESSION, `RANK_GATE_CASES` 3 PASS / 0
+REGRESSION.** (The prior turn's citation of "nat_23 45→46, within tolerance" in this file came
+from an uncommitted one-off script — an R18 lapse corrected here by folding the check into the
+standing, committed tool instead of leaving it as a claim nobody can re-run.)
+
+**Standing rule for every future index-composition change, including a single-row content
+rewrite:** run the retrievability checker across BOTH guard families, not just the one guard you
+meant to fix. Checking only the target is the same blind spot that let `nat_34` reach Kaggle
+broken the first time, mirrored onto the row that fixed it.
+
+## Index landed in both directories, sync-check clean, xfail removed
+
+- Fetched `rag_embeddings.npy` (187×768) and `rag_facts_text.json` (187 rows) from
+  `prospAprospA007/africa-giants-dataset` and committed identical copies (md5-verified) to both
+  `chike-inference/` and `kaggle/`, per R15 step 4.
+- `scripts/check_facts_index_sync.py` against the shipped index: **CLEAN** — 153 exact, 2
+  sibling, 42 grouped (14+17+11, matching the three consolidated families), 34 pinned
+  present_elsewhere, 15 pinned absent, 5 pinned fragment, **0 pending_r15**.
+- Removed the `xfail(strict=True)` marker from `test_every_locked_fact_is_exact_sibling_or_pinned`
+  (`tests/test_facts_index_sync.py`) in this same commit, per its own written unblock condition —
+  it now passes for real rather than being expected-red.
+- `test_pending_r15_keys_are_still_pending` caught the follow-on: the five council-fee pins
+  (`council_service_levy_is_a_cap_not_a_rate` and siblings) now resolve via exact/sibling match,
+  so their `PINNED` entries were stale by the test's own design. Removed all five from
+  `scripts/check_facts_index_sync.py` — exactly the signal their 2026-08-25 comment said to watch
+  for.
+- **A second, independent control fired during this same pass:** `test_modal_index_contract.py`'s
+  `test_config_rag_fact_count_matches_the_baked_index` failed (`chike_config.json`
+  `rag_fact_count=221` vs the shipped index's 187 rows) until `kaggle/chike_config.json` was
+  updated — R14's single-source-of-truth config catching exactly the drift it exists to catch,
+  on its first real exercise against this regen.
+- Full suite: **1381 passed, 1 xfailed** (unrelated — D-FIDELITY-7, held by decision), 0 failed.
+
+## What has NOT been decided / done
+
+- **Stopping before Modal redeploy, as agreed.** No redeploy, no gate re-run yet.
+- When the Modal redeploy does happen, R16's live-check requirement needs canaries for: the three
+  consolidated row families (trademark fees, `company_registration_ladder`, BRELA filing fees),
+  `nat_34` specifically (the row just fixed), the five new local-levy facts (council service
+  levy ×2, market dues ×2, business licence fee), the standard negative case, and one config-only
+  phrase — so the deploy check exercises everything this cycle touched, not just the happy path.
+- (B) re-costing on the growth-curve constraint, and retrain scoping with the gate-rerun risk
+  stated — both still outstanding from the original punch list, next after this.
+
+---
+
 # ✅ nat_34 FIXED AT THE ROW, NOT THE GUARD — ASK-ALIGNMENT LEVER APPLIED, PLUS A CONTROL-VERBATIM FINDING ONE LAYER OVER
 
 **Decision, per the founder:** don't re-anchor the guard, don't unwind the consolidation. Apply

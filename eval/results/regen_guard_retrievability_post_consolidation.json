@@ -262,5 +262,39 @@
         "183": 1
       }
     }
-  ]
+  ],
+  "rank_gate_cases": {
+    "total": 3,
+    "status_counts": {
+      "PASS": 3,
+      "RANK_GATE_REGRESSION": 0
+    },
+    "regressions": [],
+    "rows": [
+      {
+        "name": "nat_23 (SDL rate)",
+        "status": "PASS",
+        "pre_consolidation_rank": 86,
+        "measured_rank": 45,
+        "observed_rank": 46,
+        "tolerance": 5
+      },
+      {
+        "name": "nat_33 (BRELA annual return fee)",
+        "status": "PASS",
+        "pre_consolidation_rank": 48,
+        "measured_rank": 23,
+        "observed_rank": 23,
+        "tolerance": 5
+      },
+      {
+        "name": "nat_05 (SDL rate)",
+        "status": "PASS",
+        "pre_consolidation_rank": 24,
+        "measured_rank": 8,
+        "observed_rank": 8,
+        "tolerance": 5
+      }
+    ]
+  }
 }
