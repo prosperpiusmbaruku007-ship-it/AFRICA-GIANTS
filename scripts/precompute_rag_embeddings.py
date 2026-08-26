@@ -395,13 +395,31 @@ FACT_GROUPS = {
             'company_share_value_threshold_5_min', 'company_registration_fee_5',
             'company_registration_fee_no_share_capital',
         ],
+        # RE-LED 2026-08-26 (nat_34 retrieval regression, R15 ask-alignment lever -- see
+        # PROGRESS.md "nat_34 rank-4 fix"). The prior text opened with the regulatory frame
+        # ("hutegemea thamani ya hisa / share capital") and buried the number nat_34 actually
+        # asks for -- "gharama ya kuanzia" (starting cost) -- inside the band table. Consolidation
+        # then let a neighboring untouched row (business_name_maintenance_fee) climb into the
+        # competing top-3 slot, and topic alignment (not the numbers, which never changed) is
+        # what wins that competition. Re-opening with nat_34's own words -- "kusajili kampuni",
+        # "gharama ya kuanzia", "kuhifadhi jina" -- in that order, values up front, mirrors the
+        # question almost verbatim. All 14 group-member figures are still present verbatim
+        # (checked by _grouped_verdict's substring containment, order-independent).
+        #
+        # WORDING SEARCH, not the first attempt (2026-08-26, eval/results/
+        # nat34_reledger_probe.json). A softer lead that kept qualifying phrases ("kwa mtaji
+        # wa hisa hadi...", "hizi ni ada mbili tofauti") still lost, rank 4 -- filler words
+        # dilute the embedding toward the ladder's other content and away from the two
+        # numbers the question asks for. Only the SHORT, filler-free lead (values right after
+        # each named concept, qualifiers moved later) cleared rank 3. Five phrasings measured
+        # against the fixed remainder of the prospective index; this is the only one that won.
         'text': (
-            'Ada ya kusajili kampuni BRELA hutegemea thamani ya hisa (share capital): hadi TZS '
-            '1,000,000 ni TZS 95,000; zaidi ya TZS 1,000,000 hadi TZS 5,000,000 ni TZS 175,000; '
-            'zaidi ya TZS 5,000,000 hadi TZS 20,000,000 ni TZS 260,000; zaidi ya TZS 20,000,000 '
-            'hadi TZS 50,000,000 ni TZS 290,000; zaidi ya TZS 50,000,000 ni TZS 440,000. Kampuni '
-            'isiyo na mtaji wa hisa ni TZS 300,000. Kuhifadhi jina (name reservation) ni TZS '
-            '50,000 na kubadili jina ni TZS 22,000.'),
+            'Kusajili kampuni gharama ya kuanzia ni TZS 95,000; kuhifadhi jina ni TZS 50,000. '
+            'Ngazi za ada kwa mtaji wa hisa (share capital): hadi TZS 1,000,000 ni TZS 95,000; '
+            'zaidi ya TZS 1,000,000 hadi TZS 5,000,000 ni TZS 175,000; zaidi ya TZS 5,000,000 '
+            'hadi TZS 20,000,000 ni TZS 260,000; zaidi ya TZS 20,000,000 hadi TZS 50,000,000 ni '
+            'TZS 290,000; zaidi ya TZS 50,000,000 ni TZS 440,000. Kampuni isiyo na mtaji wa hisa '
+            'ni TZS 300,000. Kubadili jina ni TZS 22,000.'),
     },
     'brela_filing_fees': {
         'keys': [

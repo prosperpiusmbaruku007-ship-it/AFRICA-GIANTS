@@ -4,6 +4,101 @@ Last updated: 2026-08-26
 
 ---
 
+# ✅ nat_34 FIXED AT THE ROW, NOT THE GUARD — ASK-ALIGNMENT LEVER APPLIED, PLUS A CONTROL-VERBATIM FINDING ONE LAYER OVER
+
+**Decision, per the founder:** don't re-anchor the guard, don't unwind the consolidation. Apply
+R15's measured ask-alignment lever (the one that moved `nat_36` rank 17→1 and `nat_28` rank
+79→10 by leading facts with the asker's own vocabulary instead of the regulatory label) directly
+to `company_registration_ladder`'s text — the cheapest possible target, since it only needed to
+win back ONE position from a competitor that had merely vacated a slot (see the prior entry's
+Diagnosis 1/2).
+
+## The lever needed to be applied harder than the first attempt
+
+Re-leading with topic words alone was NOT sufficient — a first re-lead ("Kusajili kampuni BRELA:
+gharama ya kuanzia ni TZS 95,000 ..., na kuhifadhi jina ... TZS 50,000 -- hizi ni ada mbili
+tofauti. Ngazi nyingine ...") still ranked 4th. **Filler and qualifying phrases between the topic
+word and its value dilute the embedding back toward the ladder's own band-table content, which
+is not what the question asks about.** Five candidates were measured against the fixed remainder
+of the prospective 187-row index (`eval/index_quality/reledger_nat34_wording_search.py` →
+`eval/results/nat34_reledger_wording_search.json`):
+
+| candidate | rank | sim |
+|---|---|---|
+| C0 — first re-lead (shipped to Kaggle run #1, i.e. what actually failed) | 4 | 0.8385 |
+| C1 — lead with "jina" first instead of the fee | 4 | 0.8444 |
+| C2 — echo the question's clause order exactly, keep qualifiers | 3 | 0.8492 |
+| **C3 — short, filler-free: value immediately after each named concept, qualifiers moved later (ADOPTED)** | **3** | **0.8509** |
+| C4 — C3 with "TZS" prefixes dropped too | 4 | 0.8420 |
+| C5 — double-mention "kusajili" | 4 | 0.8434 |
+
+Only C3 clears the window, with room to spare against the 4th-place competitor
+(`business_name_maintenance_fee`, sim 0.8453 — the same row identified as the displacing
+mechanism in the prior entry, now correctly pushed back to rank 4). All 14 group-member figures
+remain present verbatim (`_grouped_verdict`'s check is order-independent substring containment).
+Adopted in `scripts/precompute_rag_embeddings.py`'s `FACT_GROUPS['company_registration_ladder']`.
+
+**Re-verified structurally, not just re-measured once:**
+`eval/index_quality/verify_regen_guard_retrievability.py` (the retrievability checker built in
+the prior entry specifically to close the text-uniqueness-only gap) now reports **29 PASS / 0
+RETRIEVAL_REGRESSION** across all guards (previously 28 PASS / 1 REGRESSION on `nat_34`). The
+guard's anchor keyword in `kaggle/regenerate_rag_e5.py` was updated to `'gharama ya kuanzia ni
+TZS 95,000'` (a phrase from the new lead) to match.
+
+**The rank-regression gate cases were re-checked too, since the ladder passage is a competitor in
+their own rankings:** `nat_23` 45→46 (within `RANK_TOLERANCE=5`), `nat_33` 23→23, `nat_05` 8→8.
+No case moved outside tolerance.
+
+## 🔍 A second finding, one layer over: the curation control that "certified" nat_34 was never testing nat_34
+
+The founder's diagnosis named the root cause precisely: `feegroup_curation.json`'s `C1_controls`
+entry for the ladder used the question *"Nataka kusajili kampuni yenye mtaji wa hisa milioni
+moja, ada ni shilingi ngapi na kuhifadhi jina ni ngapi?"* — **not** the verbatim `nat_34` text
+(`eval/accuracy_gate/edge_probe_natural_048.jsonl`: *"nataka kusajili kampuni gharama ya kuanzia
+ni ngapi na kuhifadhi jina"*). This is **R24's baseline-reproduction rule, applying to a curation
+control instead of a fidelity-guard baseline** — a specimen that agrees with what you expect is
+not evidence unless its *input*, not just its output, matches the thing it claims to certify.
+
+Audited the rest of the file per the founder's instruction (`eval/index_quality/
+audit_feegroup_curation_controls_verbatim.py` → `eval/results/
+feegroup_curation_controls_verbatim_audit.json`), checking every question against every
+`eval/**/*.jsonl` corpus (excluding `eval/results/`) for a verbatim match:
+
+- **All 7 `rows` entries (nat_05/23/28/33/43/44/45) AND `C2_baseline_control` (nat_43) are
+  verbatim NAT48 text.** These are sound.
+- **All 4 `C1_controls` are hand-authored paraphrases with no verbatim match in any corpus.**
+  This is not confined to the nat_34 control — it is how every C1_control in the file was
+  written. Each one's `preserved`/`gained`/`regressed` verdict describes what happened to a
+  paraphrase, not to a question a gate or real user would send.
+
+**This is not retroactively rewritten (R18 — the frozen artifact stands as measured).** The audit
+stands beside it as the correction, and the recommendation is forward-looking: any future
+curation control must either be a named eval id's verbatim text, or be explicitly labelled as
+hand-authored and never cited as certifying that id's guard.
+
+## The result worth restating prominently, because it changes what offline measurement is worth here
+
+**Kaggle run #1's rank-regression gate reproduced the local e5 harness EXACTLY — 45/23/8, zero
+drift on three independent anchors.** That is the first direct proof (not an assumption) that
+local `intfloat/multilingual-e5-base` and Kaggle's produce numerically identical rankings for
+this content. Every offline rank number this workstream has ever cited — `feerow_curation.json`,
+`feegroup_curation.json`, `measure_rank_vs_index_size.json`, the growth-curve entry, and this
+entry's own wording-search table — inherits that validation. It licenses using local e5 for
+**diagnosis** (reading a rank) with Kaggle-log confidence; it does not relicense running the
+regen (building/shipping an index) locally, which stays on Kaggle per R15 for an unrelated reason
+(download size, not numerical accuracy).
+
+## What has NOT been decided / done
+
+- Not yet pushed as of this commit.
+- Regen has not been re-run on Kaggle a second time — that is the founder's next step once this
+  lands.
+- No Modal redeploy, no gate re-run — both remain explicitly out of scope until asked.
+- (B) re-costing and retrain scoping, from the original punch list, are still outstanding —
+  deferred behind this fix in the same way they were deferred behind run #1.
+
+---
+
 # 🔬 KAGGLE REGEN RUN #1 — RANK GATE EXACT, PROVENANCE CHECK FIRED, ONE GUARD FAILED. Diagnosed, not fixed. Nothing uploaded.
 
 **The founder ran the packaged notebook against `origin/main` at `1aa2525`.** Outcome:

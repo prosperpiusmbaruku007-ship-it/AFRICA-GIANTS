@@ -355,7 +355,20 @@ critical_queries = [
     # Kaggle. The old row (company_registration_fee_1: 95,000 TZS) is now inside the group
     # passage; anchored to a phrase from that passage instead, verified unique among the
     # prospective 187 rows.
-    ('Company registration fee (nat_34 displacement guard)', 'query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina', ['hadi TZS 1,000,000 ni TZS 95,000']),
+    #
+    # anchor UPDATED AGAIN 2026-08-26 (nat_34 RETRIEVAL regression, not a text/anchor
+    # problem): text-uniqueness passed on Kaggle run #1 and the guard still FAILED --
+    # the passage ranked 4th, one place outside top-3, because consolidation let an
+    # untouched neighbour (business_name_maintenance_fee) climb into the vacated
+    # competing slot (eval/results/nat34_regression_diagnosis.json). Fixed at the source
+    # by RE-LEADING the group passage with nat_34's own vocabulary -- "kusajili kampuni",
+    # "gharama ya kuanzia", "kuhifadhi jina" -- instead of the regulatory share-capital
+    # frame (R15's topic-alignment lever, the same one that moved nat_36 17->1 and
+    # nat_28 79->10; see precompute_rag_embeddings.py FACT_GROUPS['company_registration_
+    # ladder']). Anchor updated to the new lead phrase; re-verified unique AND in top-3
+    # against the prospective index by verify_regen_guard_retrievability.py before this
+    # file was repackaged.
+    ('Company registration fee (nat_34 displacement guard)', 'query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina', ['gharama ya kuanzia ni TZS 95,000']),
     ('EFD threshold, VAT-unregistered (nat_36 displacement guard)', 'query: mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti', ['milioni kumi na moja']),
     # ── FEE-CONSOLIDATION BATCH, 2026-08-26 -- the five council-fee/market-dues/business-
     # licence facts reclassified from GAP to ANSWERED (add_local_levy_facts.py, PROGRESS.md

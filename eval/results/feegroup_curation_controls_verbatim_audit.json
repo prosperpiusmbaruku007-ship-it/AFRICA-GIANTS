@@ -1,0 +1,65 @@
+{
+  "measured": "2026-08-26",
+  "harness": "C:\\Users\\jhjh\\AFRICA-GIANTS\\eval\\index_quality\\audit_feegroup_curation_controls_verbatim.py",
+  "finding": "C1_controls in feegroup_curation.json are hand-authored paraphrases, not verbatim eval-corpus questions -- R24s baseline-reproduction gap, applied to a curation control rather than a fidelity-guard baseline. This is what let the nat_34 C1 control report \"preserved/gained\" while the real, verbatim NAT48 question regressed on the actual Kaggle regen.",
+  "rows_all_verbatim": true,
+  "rows": [
+    {
+      "id": "nat_05",
+      "verbatim": true
+    },
+    {
+      "id": "nat_23",
+      "verbatim": true
+    },
+    {
+      "id": "nat_28",
+      "verbatim": true
+    },
+    {
+      "id": "nat_33",
+      "verbatim": true
+    },
+    {
+      "id": "nat_43",
+      "verbatim": true
+    },
+    {
+      "id": "nat_44",
+      "verbatim": true
+    },
+    {
+      "id": "nat_45",
+      "verbatim": true
+    }
+  ],
+  "c2_baseline_control_is_nat_43_verbatim": true,
+  "c1_controls_none_verbatim": true,
+  "c1_controls": [
+    {
+      "index": 0,
+      "question": "Nataka kusajili kampuni yenye mtaji wa hisa milioni moja, ada ni shilingi ngapi na kuhifadhi jina ni ngapi?",
+      "why": "nat_34 is adjudicated CORRECT and GROUNDED off this ladder. If consolidation breaks it, the arm traded one wrong answer for another.",
+      "verbatim_in_any_corpus": false
+    },
+    {
+      "index": 1,
+      "question": "Hiyo ada ya marejesho ya alama ya biashara kuchelewa, ni shilingi ngapi hasa?",
+      "why": "trademark renewal fee — answered in the BASELINE arm, so it must survive.",
+      "verbatim_in_any_corpus": false
+    },
+    {
+      "index": 2,
+      "question": "Huyu Chike, hiki kiwango cha ada ya kuomba hati miliki ya biashara (trademark) ni elfu 50,000 TZS sio?",
+      "why": "the trademark arm LOST this one. Recorded so the loss is priced, not hidden.",
+      "verbatim_in_any_corpus": false
+    },
+    {
+      "index": 3,
+      "question": "Ada ya kuwasilisha memorandum na articles of association ni shilingi ngapi?",
+      "why": "BRELA filing fee — must survive its own consolidation.",
+      "verbatim_in_any_corpus": false
+    }
+  ],
+  "recommendation": "Any FUTURE curation control must either (a) be the verbatim question text of a named eval id, or (b) if hand-authored for a case no corpus id covers, be labelled as such in the artifact and never cited as certifying a specific eval id's guard. Do not retroactively rewrite this frozen artifact (R18) -- this audit stands beside it as the correction."
+}

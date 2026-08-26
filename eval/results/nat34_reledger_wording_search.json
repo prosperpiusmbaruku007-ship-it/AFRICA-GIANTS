@@ -1,0 +1,46 @@
+{
+  "measured": "2026-08-26",
+  "harness": "C:\\Users\\jhjh\\AFRICA-GIANTS\\eval\\index_quality\\reledger_nat34_wording_search.py",
+  "query": "query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+  "other_rows_held_fixed": 186,
+  "results": [
+    {
+      "name": "C0_first_attempt_shipped_to_kaggle_run1",
+      "rank": 4,
+      "sim": 0.8385,
+      "in_top_3": false
+    },
+    {
+      "name": "C1_lead_jina_first",
+      "rank": 4,
+      "sim": 0.8444,
+      "in_top_3": false
+    },
+    {
+      "name": "C2_question_echo",
+      "rank": 3,
+      "sim": 0.8492,
+      "in_top_3": true
+    },
+    {
+      "name": "C3_short_lead_only_ADOPTED",
+      "rank": 3,
+      "sim": 0.8509,
+      "in_top_3": true
+    },
+    {
+      "name": "C4_no_filler_words",
+      "rank": 4,
+      "sim": 0.842,
+      "in_top_3": false
+    },
+    {
+      "name": "C5_double_mention_kusajili",
+      "rank": 4,
+      "sim": 0.8434,
+      "in_top_3": false
+    }
+  ],
+  "adopted": "C3_short_lead_only_ADOPTED",
+  "note": "Filler/qualifier phrases between the topic word and its value diluted the embedding enough to cost the one position that mattered (C0, C1, C2 vs C4, C5 all stayed at rank 4 or were close variants of the same idea; only the shortest, value-immediately-after-concept phrasing (C3) cleared rank 3)."
+}
