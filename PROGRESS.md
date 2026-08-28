@@ -4,6 +4,163 @@ Last updated: 2026-08-28
 
 ---
 
+# 📋 SCOPING: RENTAL WITHHOLDING TAX + CORPORATE/PARTNERSHIP INCOME TAX — the two engine-shaped domains, before either is built
+
+**Decision, per founder: (B) before retrain, engine-shaped domains first.** The sequencing
+argument corrected from the prior entry's version: it is **not** that retrieval quality matters
+more than weights (retrain fixes what it fixes regardless of index quality, and its precondition
+was already met). **It is that a retrain and a corpus expansion both move the same measurement**
+— the gate — **so running one between the other's before/after makes the gate delta
+unattributable to either.** Doing (B) first makes the eventual retrain gate run a clean
+single-variable comparison against Gate 1's ~6-question headroom. Filed as the reason for the
+order; the retrieval-vs-weights framing in the prior entry is superseded by this one.
+
+**This entry is scoping only. Nothing below is built** — no fact authored, no engine coded, no
+cue added, per the founder's explicit "report the scoping before building either."
+
+## What already exists that changes the shape of both builds
+
+Two findings from reading the current router and fact base before writing any new code — both
+change what "build the engine" means for these domains specifically, and neither was visible
+from the domain list alone.
+
+**1. The corporate-tax router problem is already half-solved by a veto that currently leads
+nowhere.** `chike/routing.py`'s `_PRESUMPTIVE_ENTITY_VETO_PATTERN`
+(`kampuni|shirika|company|ltd|plc|ubia|ushirikiano wa kibiashara|partnership`) already exists and
+already fires correctly — it stops a company or partnership from being routed into the
+*individual* presumptive-tax table (the bug it was built to close, 2026-08-23, entity arm). But
+today that veto's only job is to say "not this engine"; nothing catches what it excludes, so the
+question falls to the fact path and fabricates (`pic_04`, `pic_10` — measured, `NO_FACT_EXISTS`,
+2026-08-23). **The corporate/partnership engine's router integration is not a new cue design from
+scratch — it is giving this existing, already-correct veto's population somewhere to land.**
+
+**2. The corporate-tax fact already in `locked_facts.json` was verified against TRA's summary
+page, not the Act — exactly the pattern the consolidated-Act rule exists to catch.**
+`corporate_tax_rate` (`"verified_by": "TRA Corporation Tax page"`, 30% standard / 25% DSE-listed,
+`effective_date: 2025-07-01`) predates this domain's formal source pass. Per the Cap 332
+presumptive-tax precedent in this same file (a whitelisted government page gave a stale table
+even hosted on tra.go.tz itself) and the explicit warning that **"the regulator's own summary is
+not the statute either"** (TRA's own "At a Glance" mis-stated a Finance Act 2024 provision) —
+this fact is a hypothesis to re-verify against Cap 332 + every amending Finance Act, not a
+pre-cleared input. It is not wrong on its face; it is simply unverified against the standard this
+project holds every other rate to.
+
+**3. `kodi ya pango` is not a free cue for rental withholding — it already means something else
+in the corpus.** `eval_258` (gate corpus, `sdl_compliance`): *"Nalipa kodi ya pango TZS 850,000 kwa
+mwezi kwa ofisi, hii inaingia kwenye hesabu ya SDL?"* — a TENANT asking whether office rent counts
+toward SDL payroll. This is a different question (an expense-as-payroll-base question) from the
+new domain (a LANDLORD's rental income being withheld). It was already found once, from the other
+direction: `kodi ya pango` was rejected as a SAFETY-1 OOC-refusal candidate for exactly this
+collision (2026-08-06). **The rental-withholding cue cannot be bare `kodi ya pango`** — it needs a
+landlord/receipt-side marker (collecting rent, being paid rent, a withholding-agent relationship)
+conjoined with the tax cue, the same "qualified phrase + ownership/direction gate" shape
+`_BUSINESS_INCOME_TAX_CUES`/`_PRESUMPTIVE_TURNOVER_CUES` already use for the sibling domains, and
+`eval_258` is now a **named, committed adversarial-in-scope probe requirement**, not a hypothetical
+one — the collision is already proven to exist in the gate corpus.
+
+## Corporate / partnership income tax — scope
+
+- **Source pass (½ day, per CLAUDE.md's consolidated-Act rule, not skippable):** read the Income
+  Tax Act Cap 332 itself — the charging section and the Third Schedule rate table — plus **every**
+  Finance Act from 2019 forward that touches it, with particular attention to Finance Act 2025's
+  1 Jul / 1 Sep 2025 effective-date split (R2). Confirm, from the Act text and not from
+  `tra.go.tz`'s summary page: the standard rate, the DSE-listed rate and its qualifying conditions,
+  and — the part most likely to be gotten backward — **how a partnership is actually taxed**.
+  Tanzanian partnerships are typically tax-transparent (partners taxed individually on their
+  share, not the partnership itself); if the Act confirms this, encoding "partnerships pay 30%"
+  would be a structural entity-type error of exactly the `nat_05` shape, just at the level of
+  which entity owes tax at all rather than which rate applies.
+- **Engine shape, confirmed before authoring anything:** this is very likely a **rate-statement**
+  engine (`rules_engine/rate_statement.py`'s pattern — SDL/NSSF/WCF already do this), not a
+  turnover-to-shillings computation like `presumptive.py`. Profit is not derivable from a
+  turnover figure a user supplies, so the engine states the applicable rate/regime and does **not**
+  attempt to compute a TZS amount from a turnover number — echoing the same caution already coded
+  into the presumptive veto's own comments ("`mapato` can mean profit, and 3.5% of profit is not
+  3.5% of turnover"). If a company states turnover and asks for its tax, the correct engine
+  behaviour is to state the rate and decline to compute an amount, not to guess a profit margin.
+- **Router integration:** reuse `_PRESUMPTIVE_ENTITY_VETO_PATTERN`'s cue set as the new intent's
+  **positive** entity gate (a company/partnership self-identifying), conjoined with an
+  income/profit-tax cue built the same way `_BUSINESS_INCOME_TAX_CUES` was: qualified forms first
+  (*"kodi ya mapato ya kampuni"*, *"corporate tax"*), then the **bare-cue reachability question
+  asked explicitly, before shipping** — does a company owner asking plain *"kodi ya mapato kiasi
+  gani"* reach this engine, or does it still fall to the `paye` cue's current claim on that phrase
+  (measured live, `pic_04`/`pic_12`, 2026-08-23)? This is the same failure mode the presumptive
+  engine already had and fixed one domain over — building it in now means not rediscovering it
+  post-deploy the way `kodi ya makadirio`-only reachability was.
+- **Never-guess placement:** any exclusion (EPZ status — already OOC per the system prompt; a
+  tax-holiday claim; an unverifiable partnership-share question) is an engine/router branch
+  returning `applicable=False` with a stated reason, per `base_rejection.py`'s and
+  `presumptive.py`'s existing pattern — never a `locked_facts.json` instruction to the model, per
+  C4 (a fact that tells the model to decline is not a refusal; a code path that runs instead of
+  generation is).
+
+## Rental withholding tax — scope
+
+- **Source pass:** Cap 332's rental-income withholding provisions (the WHT section and rate,
+  resident vs non-resident, individual vs corporate landlord, final vs non-final tax treatment,
+  any registration/exemption threshold) plus every amending Finance Act, same discipline as above.
+  No locked fact exists for this domain yet — a clean build, not a re-verification.
+- **Engine shape, confirmed before authoring anything:** if the WHT is a flat rate on the rent
+  amount with a small number of clean branches (resident/non-resident, individual/corporate
+  tenant-as-agent), this is genuinely engine-shaped, `presumptive.py`'s style — WHT amount =
+  rate × rent, computed, not looked up. Confirm this in the source pass rather than assuming it;
+  if the branching turns out to depend on facts the router cannot extract cleanly (e.g.
+  agent-vs-direct collection), a rate-statement engine is the fallback, same as corporate tax.
+- **Router integration:** the cue **must not be bare `kodi ya pango`** (see finding 3 above).
+  Build the landlord/receipt-side qualified forms first (*"nakusanya kodi ya pango"*, *"mpangaji
+  ananilipa"*, *"nimepokea kodi ya pango"*, *"mwenye nyumba"*), sweep them against the full
+  corpus, and run `eval_258` as a **named, committed adversarial-in-scope probe** before
+  considering the cue closed — not as a footnote, since the collision is already proven to exist
+  rather than merely suspected.
+- **Never-guess placement:** same rule — any exemption or non-final-tax branch is engine
+  infrastructure, not a locked fact.
+
+## Common discipline, carried in from this session, applying to both domains equally
+
+1. **Ask-alignment is a per-fact authoring requirement, not overhead to fix after a rank-check
+   failure.** Every fact either domain needs (remittance deadlines, registration duties, the
+   corporate/DSE rate split, any threshold) gets written topic-word-first, value immediately
+   after, from the first draft — the `nat_34` cost (five candidates, two rank-check passes, one
+   Kaggle round-trip to discover it cold) is what re-leading AFTER the fact costs; writing it
+   right the first time is what the 30–60-minute-per-group estimate assumes happens, not what it
+   discovers.
+2. **An engine that cannot be reached is worth nothing, and cue coverage is part of the build, not
+   a follow-up.** The presumptive engine shipped correct and was reachable only by the technical
+   term *makadirio* until the bare `kodi ya mapato` reachability gap was found and closed
+   (2026-08-23) — after deploy, by measurement, not by design. Both new domains have a NAMED
+   version of the same risk already identified above (corporate tax's `kodi ya mapato` collision
+   with `paye`; rental withholding's `kodi ya pango` collision with `eval_258`'s SDL question) —
+   the reachability sweep against natural trader phrasing is a build-blocking step for both, not a
+   post-deploy discovery to make twice.
+3. **R17 in full, for every cue added:** sweep every candidate individually over the full 400-row
+   gate corpus plus every existing probe set; then **author adversarial in-scope probes**
+   containing the risky vocabulary in a context that must NOT reach the new engine (`eval_258` is
+   already one, verbatim, for rental withholding; an equivalent needs authoring for corporate tax
+   — e.g. an individual presumptive-eligible trader using the word "kampuni" loosely, or a PAYE
+   question mentioning an employer's company name); commit the probes with a `guards_against` note
+   and wire a test that fails if a future cue trips one, matching
+   `ooc_adversarial_in_scope_015.jsonl` + `test_classification.py`'s existing pattern.
+4. **R18:** commit every sweep harness and probe set before citing its result.
+5. **Whitelist:** once the exact Act sections and Finance Act sections are identified, add their
+   `tanzlii.org`/`tra.go.tz` URLs to `sources/whitelist.json` tagged for `tier1a` training, same as
+   Cap 332's presumptive-tax provisions already are.
+
+## Instrument note: the 2026-08-28 canary miss, filed as the fourth instance of its class
+
+`eval/controls/canary_post_r15_regen_deploy.py`'s one keyword-miss
+(`council_service_levy_non_corporate_conflict`) was the keyword list, not the reply — the model's
+answer (*"unawahusu hasa makampuni (Corporate Entities)... huenda usitegemee kulipa"*) was
+substantively correct and appropriately hedged; the check's exact-case, narrow keyword list just
+didn't anticipate that phrasing. Resolved by reading the full reply rather than trusting the flag.
+**This is the fourth recorded instance of that exact resolution mechanism** in this file (after the
+D-FIDELITY-3 BEFORE canary's paraphrase near-miss, the `na je` live canary's marker-phrase
+mismatch, and the A1 live canary's pass-condition/revert-trigger mismatch — see this file's
+"reading the replies instead of the flags" table). Filed as a property of live-reply canaries
+generally, not a defect in this one checker: **a keyword list is a cheap first pass, and the
+reply is still the authority it approximates.**
+
+---
+
 # 🚀 R16 REDEPLOY OF `chike-inference` — 187-ROW INDEX LIVE, FAIL-LOUD CONTRACT RE-VERIFIED, 9/10 CANARIES HIT
 
 **The deferred Modal redeploy from the R15 regen #2 entry, now done.** Full R16 cycle: `app stop
