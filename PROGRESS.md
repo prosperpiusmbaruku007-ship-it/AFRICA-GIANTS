@@ -4,6 +4,69 @@ Last updated: 2026-08-28
 
 ---
 
+# 🔍 AUDIT: locked_facts.json's `verified_by` PROVENANCE — 36 of 253 facts share corporate_tax_rate's defect
+
+**Requested before either engine-shaped domain is built:** does `corporate_tax_rate`'s
+verification-against-a-summary-page problem generalise across the corpus? Count first, decide
+after. `scripts/audit_locked_facts_verification_provenance.py` →
+`eval/results/locked_facts_verification_provenance_audit.json`.
+
+## The count
+
+Of **253** total locked facts, **75** carry a `verified_by` field at all (**178** have none — a
+separate, adjacent data-hygiene gap: no verification record, rather than a summary-sourced one;
+not what was asked, flagged for a separate decision). Of the 75:
+
+| bucket | count | meaning |
+|---|---|---|
+| **GROUNDED** | 28 | `verified_by` names an Act, Cap number, GN number, statute section, or gazette text directly |
+| **SUMMARY-ONLY (net)** | **36** | names only a government portal page, a practitioner firm's advisory, or a foreign payroll SaaS vendor — no statute/gazette reference anywhere |
+| doc-gap-only (excluded from the 36) | 9 | `verified_by` under-states real grounding — the fact/source_note/primary_source independently cites the statute; a documentation gap, not a provenance gap |
+| unclear/no source | 2 | `manual_review` or an internal retrieval-targeting note, no source named at all |
+
+**36 of 75 (48%) of facts that make any verification claim are summary-sourced, not statute- or
+gazette-verified.** As a share of the whole 253-fact file it is 14% — but the founder's own
+framing ("a handful" vs "most of the file") is about facts that claim verification at all, and
+against that denominator this is not a handful. **Filed as a corpus-wide finding, not a quick
+fix — decision deferred to the founder, per instruction. Nothing in the 36 has been re-verified
+or touched.**
+
+## Two corrections made to the mechanical classification before trusting it
+
+A first regex pass over `fact`/`source_note`/`primary_source` text found 11 "doc-gap" exclusions;
+manual review removed two:
+
+- **`gn605a_average_increase`** — the fact names "GN 605A" as its topic and `primary_source`
+  points at the gazette URL, so the regex saw statute markers. But the SPECIFIC NUMBER in the
+  fact (33.4% average across 46 sub-sectors) is a computed aggregate, and `verified_by` names
+  only a press briefing. Naming the gazette is not evidence the aggregate was independently
+  computed from it rather than taken from the briefing.
+- **`gn487a_mgeni_cap357_definition`** — `verified_by` is "Clyde & Co practical implications
+  article", a practitioner's citation of Cap.357, not our own read of it — the same one-hop-
+  removed problem `corporate_tax_rate` has, just with a correctly-named Act attached. The fact's
+  own closing line ("this is a legal interpretation that must be verified with an immigration
+  lawyer") is itself an admission it was never independently verified.
+
+Both are now a named, permanent exception in the script (`_MANUAL_KEEP_SUMMARY_ONLY`) rather than
+a one-off hand-edit to the artifact, so a re-run reproduces the corrected count. **The general
+shape both corrections share: a fact NAMING the right statute is not the same claim as a fact
+VERIFIED against it** — the same distinction the Cap 332 finding drew between a consolidated Act
+and the law currently in force, one level up, applied to citation quality rather than citation
+currency.
+
+## Spot-check: the highest-risk entries (rates) have no statute citation anywhere, at any level
+
+Checked `fact`, `source_note`, and `primary_source` (not just `verified_by`) for every rate-
+bearing entry in the summary-only set — `corporate_tax_rate`, `vat_standard_rate`,
+`paye_band_2_rate`, `nssf_employer_rate`, `nssf_total_rate`, `royalties_wht_rate`, `sdl_payer`,
+`wcf_rate_0_5_percent_confirmed`, `brela_foreign_late_filing_penalty`,
+`provisional_tax_instalments`, `minimum_turnover_tax`, `stamp_duty_property_transfer`,
+`vat_registration_threshold`, `vat_threshold_200m_july2024_increase`. **None of the 14 cite an
+Act, Cap, section or GN anywhere, at any field.** This is not a documentation gap on these
+rows — the statute was never read for any of them, at any level this audit could see.
+
+---
+
 # 📋 SCOPING: RENTAL WITHHOLDING TAX + CORPORATE/PARTNERSHIP INCOME TAX — the two engine-shaped domains, before either is built
 
 **Decision, per founder: (B) before retrain, engine-shaped domains first.** The sequencing
