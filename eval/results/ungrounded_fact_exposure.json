@@ -1,0 +1,2211 @@
+{
+  "measured": "2026-08-28",
+  "harness": "scripts/size_ungrounded_fact_exposure.py",
+  "input_ungrounded_set": "eval/results/locked_facts_verification_provenance_audit_v2.json",
+  "total_ungrounded": 151,
+  "questions_swept": 1007,
+  "index_rows": 187,
+  "tier_counts": {
+    "served_non_actionable": 80,
+    "in_index_never_served": 22,
+    "SERVED_ACTIONABLE_HIGH_TRAFFIC": 21,
+    "served_actionable_peripheral": 12,
+    "not_in_index": 16
+  },
+  "domain_counts": {
+    "core": 49,
+    "peripheral": 96,
+    "pending_core_on_corporate_tax_build": 6
+  },
+  "top_priority_served_actionable_high_traffic": [
+    {
+      "key": "nssf_calculation_example",
+      "top3_hit_count": 179,
+      "domain": "core"
+    },
+    {
+      "key": "paye_bands_with_examples",
+      "top3_hit_count": 142,
+      "domain": "core"
+    },
+    {
+      "key": "sdl_calculation_example",
+      "top3_hit_count": 137,
+      "domain": "core"
+    },
+    {
+      "key": "efd_threshold_tzs_11m",
+      "top3_hit_count": 111,
+      "domain": "core"
+    },
+    {
+      "key": "nssf_employer_rate",
+      "top3_hit_count": 86,
+      "domain": "core"
+    },
+    {
+      "key": "nssf_total_rate",
+      "top3_hit_count": 70,
+      "domain": "core"
+    },
+    {
+      "key": "wcf_rate_0_5_percent_confirmed",
+      "top3_hit_count": 47,
+      "domain": "core"
+    },
+    {
+      "key": "brela_foreign_late_filing_penalty",
+      "top3_hit_count": 40,
+      "domain": "core"
+    },
+    {
+      "key": "vat_registration_threshold",
+      "top3_hit_count": 27,
+      "domain": "core"
+    },
+    {
+      "key": "vat_standard_rate",
+      "top3_hit_count": 8,
+      "domain": "core"
+    },
+    {
+      "key": "VAT_zero_rated_vs_exempt_input_VAT",
+      "top3_hit_count": 3,
+      "domain": "core"
+    },
+    {
+      "key": "gn605a_average_increase",
+      "top3_hit_count": 3,
+      "domain": "core"
+    },
+    {
+      "key": "wcf_accident_reporting",
+      "top3_hit_count": 3,
+      "domain": "core"
+    },
+    {
+      "key": "corporate_tax_rate",
+      "top3_hit_count": 2,
+      "domain": "pending_core_on_corporate_tax_build"
+    },
+    {
+      "key": "paye_band_2_rate",
+      "top3_hit_count": 2,
+      "domain": "core"
+    },
+    {
+      "key": "paye_personal_relief",
+      "top3_hit_count": 2,
+      "domain": "core"
+    },
+    {
+      "key": "amt_loss_companies_only",
+      "top3_hit_count": 1,
+      "domain": "pending_core_on_corporate_tax_build"
+    },
+    {
+      "key": "nssf_retirement_age",
+      "top3_hit_count": 1,
+      "domain": "core"
+    },
+    {
+      "key": "objection_deposit_requirement",
+      "top3_hit_count": 1,
+      "domain": "core"
+    },
+    {
+      "key": "wcf_disease_reporting_deadline",
+      "top3_hit_count": 1,
+      "domain": "core"
+    },
+    {
+      "key": "wcf_new_employer_registration",
+      "top3_hit_count": 1,
+      "domain": "core"
+    }
+  ],
+  "rows": [
+    {
+      "key": "BRELA_COSOTA_split",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        87
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "BRELA_fees_hedge",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        78
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "OSHA_safety_officer_threshold",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        86
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "VAT_zero_rated_vs_exempt_input_VAT",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        89
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 3,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "act_section_12",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        101
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "amt_loss_companies_only",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        54
+      ],
+      "actionable_figure": true,
+      "domain": "pending_core_on_corporate_tax_build",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "annual_return_filing_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        99
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 21,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "annual_return_form_number",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        114
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 3,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "application_fee_patent",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        119
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 23,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "balance_sheet_filing_fee_section_12_act",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        186
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 29,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "beneficial_owner_information_penalty_maximum",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        115
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 11,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "brave_search_blocked_tanzania",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        41
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "brela_foreign_late_filing_penalty",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        176
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 40,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "business_name_maintenance_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        116
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "certified_copy_agreement_law_constitution_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        100
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "certified_copy_certificate_of_registration_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        186
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 29,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_director_minimum_age",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        121
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 4,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_name_change_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        97
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 35,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_name_reservation_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        96
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 31,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_registration_fee_1",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_registration_fee_2",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_registration_fee_3",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_registration_fee_4",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_registration_fee_5",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_registration_fee_no_share_capital",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_share_value_threshold_1_max",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_share_value_threshold_2_max",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_share_value_threshold_2_min",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_share_value_threshold_3_max",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_share_value_threshold_3_min",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_share_value_threshold_4_max",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_share_value_threshold_4_min",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "company_share_value_threshold_5_min",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        185
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 25,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "compliance_license_processing_time_old",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        126
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 42,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "corporate_tax_rate",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        36
+      ],
+      "actionable_figure": true,
+      "domain": "pending_core_on_corporate_tax_build",
+      "served": true,
+      "top3_hit_count": 2,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "course_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        122
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 22,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "document_acceptance_registration_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        186
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 29,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "document_certification_fee_per_page",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        186
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 29,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "document_filing_fee_section_12_act_excluding_balance_sheet",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        186
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 29,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "dse_25_rate_three_years_only",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        53
+      ],
+      "actionable_figure": true,
+      "domain": "pending_core_on_corporate_tax_build",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "efd_approved_supplier_verification",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        84
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 9,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "efd_threshold_tzs_11m",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        57
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 111,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "electrical_test_fee_reduction_final",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        124
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 5,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "electrical_test_fee_reduction_initial",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        123
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 7,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "exemption_category_charitable_organizations",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "exemption_category_diplomatic_missions",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "exemption_category_educational_institutions",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "exemption_category_farm_employers_agriculture",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "exemption_category_government_departments",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "exemption_category_international_organizations_aid",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "exemption_category_local_government_authorities",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "exemption_category_religious_institutions",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "exemption_category_trainees_under_TAESA",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "exemption_category_un_and_agencies",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "file_search_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        186
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 29,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "file_search_report_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        186
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 29,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "form_number_payment_credit_slip",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        107
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "gn487a_mgeni_cap357_definition",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        90
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "gn487a_transitional_provision",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        56
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "gn487a_visa_revocation",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        59
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "gn605a_average_increase",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        24
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 3,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "health_and_safety_act_citation",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        177
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 27,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "late_filing_penalty_monthly_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        98
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 15,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "late_filing_penalty_monthly_fee_section_12_act",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        186
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 29,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "late_payment_penalty_rate",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        108
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 6,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "legal_citation_amendment_act_sdl",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "legal_citation_sdl",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        88
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 7,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "legal_citation_tax_administration",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "memorandum_articles_of_association_filing_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        186
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 29,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "minimum_directors",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        111
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 6,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "minimum_shareholders",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        112
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "minimum_turnover_tax",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        27
+      ],
+      "actionable_figure": true,
+      "domain": "pending_core_on_corporate_tax_build",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "name_similarity_threshold",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        117
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 6,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "nssf_calculation_example",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        171
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 179,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "nssf_employer_rate",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        9
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 86,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "nssf_payment_deadline",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        62
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 11,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "nssf_retirement_age",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        12
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "nssf_total_rate",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        10
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 70,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "objection_deposit_requirement",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        30
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "objection_extension_statutory_right",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        31
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "osha_registration_threshold_b004",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        52
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 21,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "osiha_act_citation",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        177
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 27,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "p45_not_tanzanian",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        4
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "patent_term",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        120
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "paye_all_bands_sequence",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        42
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "paye_band_2_rate",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        0
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 2,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "paye_bands_monthly_2025_26",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        63
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "paye_bands_with_examples",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        169
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 142,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "paye_nonresident_flat_rate",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        43
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "paye_p9_deadline",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        3
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "paye_penalty_rate",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        1
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "paye_personal_relief",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        2
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 2,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "permit_class_a_investor",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        34
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "permit_class_b_employed",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        33
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "permit_class_c_categories",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        35
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "permit_class_d_does_not_exist",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        55
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "provisional_tax_instalments",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        26
+      ],
+      "actionable_figure": false,
+      "domain": "pending_core_on_corporate_tax_build",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "registration_certificate_processing_time",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        113
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 15,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "registration_certificate_processing_time_new",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        125
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 8,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "risk_assessment_frequency",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        102
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 2,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "royalties_wht_rate",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        25
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 12,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "sdl_calculation_example",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        170
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 137,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "sdl_exemption_categories",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        178
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 2,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "sdl_full_name",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        6
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "sdl_payer",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        8
+      ],
+      "actionable_figure": false,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 4,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "sdl_payment_deadline",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        95
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 14,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "stamp_duty_form_14b_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        186
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 29,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "stamp_duty_per_copy_memorandum_articles_copy",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        186
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 29,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "stamp_duty_property_transfer",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        32
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "tmda_replaces_tfda",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        40
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 3,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trab_appeal_two_steps",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        29
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "trademark_fee_for_additional_fee_by_regulation_54",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_any_other_entry",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_change_of_business_address",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_change_of_proprietor_or_user_same_address",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_dissolution_of_partnership",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "pending_core_on_corporate_tax_build",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_explanation_of_decision",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_hearing_opposition",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_opposition_notice",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_refund_of_fee",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_registration_of_subsequent_proprietor",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_renewal_of_registration",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_renewal_of_series_of_marks_first_mark",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_renewal_of_series_of_marks_subsequent_mark",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_responding_to_opposition",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_series_of_marks_first_mark",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_series_of_marks_subsequent_mark",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_fee_for_single_mark_registration",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "grouped",
+      "index_rows": [
+        184
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 33,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "trademark_renewal_period",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        118
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 12,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "vat_deferment_form_number",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        130
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "vat_deferment_limit_date",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        127
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 3,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "vat_deferment_minimum_value",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        129
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 156,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "vat_deferment_threshold_percentage",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        128
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 21,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "vat_registration_notification_deadline_commissioner",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        105
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 13,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "vat_registration_threshold",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        15
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 27,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "vat_registration_threshold_annual",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "sibling",
+      "index_rows": [
+        15
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 27,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "vat_registration_threshold_six_months",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "sibling",
+      "index_rows": [
+        15
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 27,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "vat_return_submission_deadline",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        106
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 22,
+      "tier": "served_actionable_peripheral"
+    },
+    {
+      "key": "vat_standard_rate",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        13
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 8,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "vat_threshold_200m_july2024_increase",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        70
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "wcf_accident_reporting",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        50
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 3,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "wcf_disease_reporting_deadline",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        46
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "wcf_new_employer_registration",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        45
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 1,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "wcf_rate_0_5_percent_confirmed",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "pinned_present_elsewhere",
+      "index_rows": [
+        66
+      ],
+      "actionable_figure": true,
+      "domain": "core",
+      "served": true,
+      "top3_hit_count": 47,
+      "tier": "SERVED_ACTIONABLE_HIGH_TRAFFIC"
+    },
+    {
+      "key": "wht_director_fees",
+      "is_bare_value": false,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        49
+      ],
+      "actionable_figure": true,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "in_index_never_served"
+    },
+    {
+      "key": "workers_compensation_act_citation",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "absent",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "workers_compensation_act_section",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "fragment",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "workers_compensation_amendment_rules_citation",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        110
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 3,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "workers_compensation_amendment_rules_section",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "fragment",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    },
+    {
+      "key": "workers_compensation_rules_citation",
+      "is_bare_value": true,
+      "in_index": true,
+      "index_match_kind": "exact",
+      "index_rows": [
+        109
+      ],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": true,
+      "top3_hit_count": 3,
+      "tier": "served_non_actionable"
+    },
+    {
+      "key": "workers_compensation_rules_section",
+      "is_bare_value": true,
+      "in_index": false,
+      "index_match_kind": "fragment",
+      "index_rows": [],
+      "actionable_figure": false,
+      "domain": "peripheral",
+      "served": false,
+      "top3_hit_count": 0,
+      "tier": "not_in_index"
+    }
+  ]
+}

@@ -4,6 +4,132 @@ Last updated: 2026-08-28
 
 ---
 
+# 🛑 EXPOSURE SIZED: 100 of 251 locked facts (39.8%) are traceable to statute. All domain builds stopped until this is addressed.
+
+**Founder's framing, recorded at the level it deserves:** the fact base is the product, per the
+narrative's own words, and every accuracy figure this project has produced (Gate 1, Gate 2, every
+canary, every regen check) measures agreement with THIS corpus, not with Tanzanian law. Those are
+different things and have been quoted as if they were the same one. **This entry corrects the
+count twice before trusting it, then sizes what the ungrounded 60.2% actually exposes** — not
+whether each fact is wrong (expensive, per-fact), but how much it matters if it is.
+
+## The count needed two corrections before it was trustworthy — both found by using it, not by re-reading it
+
+**v1** (`audit_locked_facts_verification_provenance.py`, previous entry) checked only the
+`verified_by` field: 28/253 grounded (11%). **The founder restated this number back as the
+finding.** It was incomplete, and the incompleteness was found while building the exposure
+analysis this entry is about, not by a second read of v1:
+
+- **v1→v2:** `locked_facts.json` carries a second, older provenance scheme v1 never checked —
+  `source` (a downloaded Act/gazette PDF path, e.g. `data/source_documents/nssf/nssf_act_cap50.pdf`)
+  plus `section` (the exact clause read, e.g. `"Payment 14.-(3)"`). 44 facts use this scheme, and
+  most are MORE rigorously grounded than several of v1's own 28 — a literal copy of the Act
+  itself with a clause citation is a stronger claim than a URL to a government summary page. v1
+  counted every one of these as "no verified_by," i.e. ungrounded. Corrected count: 87/251
+  grounded (34.7%).
+- **v2's own bug, found while sizing exposure on v2's output:** `\b` (word boundary) treats
+  underscore as a word character, so `\bAct\b` never matches inside `nssf_act_cap50.pdf` — there
+  is no boundary between `_` and `act`. 13 facts whose ONLY grounding is exactly this kind of
+  underscored file path (the NSSF Act citations: `pensionable_age`, `unpaid_contribution_penalty_rate`,
+  `duration_of_maternity_cash_benefit`, and 10 siblings) were misclassified as ungrounded by the
+  tool built to correct v1's undercount — the same failure mode, one layer down. Fixed by
+  normalising underscores/path separators to spaces before matching (`_statute_search`), verified
+  by diff against the prior run: **13 moved from ungrounded to grounded, zero moved the other
+  way.** Final, corrected count: **100/251 grounded (39.8%), 151/251 ungrounded (60.2%).**
+
+**Both corrections moved in the SAME direction (more grounded than previously counted), which is
+the opposite direction from every other finding in this exercise — worth stating plainly so the
+correction doesn't read as motivated. 39.8% is still not close to a passing number, and it is the
+number this analysis is built on**, not the founder's restated 11% or this entry's own
+first-draft 34.7%.
+
+## Exposure sizing on the corrected 151 ungrounded facts
+
+`eval/results/ungrounded_fact_exposure.json`. For each of the 151: is it reachable at all from
+the current 187-row RAG index (using `check_facts_index_sync.py`'s own exact/sibling/grouped/
+pinned matching, so "reachable" means the identical mechanism production uses); does it ever
+surface in a top-3 retrieval across **1007 unique questions from every committed eval/probe
+corpus** (400-gate plus every adversarial/canary/coverage set this project has authored — an
+offline proxy for traffic, since no live production logs exist); does it carry a figure a user
+could act on; does it sit in a domain (BRELA/VAT/PAYE/SDL/NSSF/OSHA/EFD/WCF/GN487A/GN605A, plus
+the measured "ordinary duka owner's month" topics) a trader actually asks about.
+
+| tier | count | meaning |
+|---|---|---|
+| **SERVED_ACTIONABLE_HIGH_TRAFFIC** | **21** | in the index, actually surfaces in top-3 for a real question, carries a figure, core domain — **live risk, not documentation debt** |
+| served_actionable_peripheral | 12 | same, but a peripheral topic (trademark/IP, immigration permit classes, stamp duty, TRAB) |
+| in_index_never_served | 22 | reachable in principle, never won top-3 for any of 1007 questions — theoretical exposure |
+| served_non_actionable | 80 | surfaces sometimes, but the fact is procedural/descriptive, no figure to get wrong |
+| not_in_index | 16 | never retrievable via RAG at all — pure documentation debt regardless of correctness |
+
+Domain split: 49 core, 96 peripheral, **6 "pending_core_on_corporate_tax_build"** — facts
+(`corporate_tax_rate`, `amt_loss_companies_only`, `dse_25_rate_three_years_only`,
+`provisional_tax_instalments`, `minimum_turnover_tax`, and one partnership-adjacent key) that are
+peripheral by CURRENT measured traffic but are about to become core the moment the corporate/
+partnership domain ships — flagged separately rather than silently filed as low-priority.
+
+## The 21, ranked by how often they actually surface (top3_hit_count over the 1007-question sweep)
+
+`nssf_calculation_example` (179) · `paye_bands_with_examples` (142) · `sdl_calculation_example`
+(137) · `efd_threshold_tzs_11m` (111) · `nssf_employer_rate` (86) · `nssf_total_rate` (70) ·
+`wcf_rate_0_5_percent_confirmed` (47) · `brela_foreign_late_filing_penalty` (40) ·
+`vat_registration_threshold` (27) · `vat_standard_rate` (8) · `VAT_zero_rated_vs_exempt_input_VAT`
+(3) · `gn605a_average_increase` (3) · `wcf_accident_reporting` (3) · `corporate_tax_rate` (2) ·
+`paye_band_2_rate` (2) · `paye_personal_relief` (2) · `amt_loss_companies_only` (1) ·
+`nssf_retirement_age` (1) · `objection_deposit_requirement` (1) · `wcf_disease_reporting_deadline`
+(1) · `wcf_new_employer_registration` (1).
+
+**`corporate_tax_rate` sits near the bottom of this list by measured traffic (2 hits) — and is
+still re-verified today, regardless of triage, per the founder's instruction.** The ranking
+measures PAST exposure across authored corpora; the corporate/partnership engine about to be
+built makes this fact load-bearing for FUTURE exposure the sweep cannot see yet. A forward
+dependency overrides a backward-looking traffic count — the ranking is for ordering the other 20,
+not for excusing this one. `amt_loss_companies_only` sits in the same `pending_core` bucket and
+should be checked in the same pass, for the same reason.
+
+## Remediation shape, not a list
+
+Re-verifying all 151 against statute is a weeks-scale project (each needs its Act/Cap identified,
+the amending Finance Acts checked per the consolidated-Act rule, and the current text read — the
+same ½-day-per-domain source pass already budgeted for new domains, applied backward). **Triaged
+by the tiers above, it is days, not weeks:**
+
+1. **Now, regardless of triage:** `corporate_tax_rate` + `amt_loss_companies_only` (forward
+   dependency — the next build needs them) — 2 facts, part of the corporate/partnership tax
+   domain's own source pass, not separate work.
+2. **First tier, days-scale:** the other 19 `SERVED_ACTIONABLE_HIGH_TRAFFIC` facts. These are
+   answering real questions with real figures in the product's core domains RIGHT NOW. Several
+   share an Act already partly verified elsewhere in the file (NSSF Act Cap.50 covers the NSSF
+   entries; the Finance Act 2025 PAYE work already done for other facts covers `paye_bands_with_examples`/
+   `paye_band_2_rate`/`paye_personal_relief`) — re-verification cost here is largely re-reading
+   sections already partially open, not starting cold.
+3. **Second tier:** `served_actionable_peripheral` (12) + `in_index_never_served` (22) = 34 facts.
+   Actionable and either peripheral or currently unseen — real risk, lower urgency. A second
+   days-scale batch.
+4. **Lowest priority, ongoing hygiene rather than urgent remediation:** `served_non_actionable`
+   (80, no figure to get wrong) and `not_in_index` (16, no live exposure at all — pure
+   documentation debt). These can be worked through as background cleanup, not blocking anything.
+
+**Nothing in tiers 2–4 has been touched.** Only the classifier itself was corrected twice; no
+fact's correctness has been re-checked. Per instruction: **all domain builds (corporate/
+partnership tax, rental withholding) remain stopped until this is addressed**, with the single
+carve-out already named — the two `pending_core` facts get re-verified as part of, not before,
+the corporate/partnership tax domain's own already-scoped source pass.
+
+## Instruments, committed per R18
+
+`scripts/audit_locked_facts_verification_provenance_v2.py` (supersedes v1, not deleted — the
+correction chain is the record) → `eval/results/locked_facts_verification_provenance_audit_v2.json`.
+`scripts/size_ungrounded_fact_exposure.py` → `eval/results/ungrounded_fact_exposure.json`. The
+exposure script segfaulted three times during the e5 model load before succeeding on the fourth
+attempt (cause not fully isolated — plausible resource pressure in a long session, since an
+identical standalone reproduction of the same import chain succeeded twice in isolation); fixed
+structurally rather than by retrying blind, per R16's standing rule: a stage-1 checkpoint now
+saves the cheap classification pass before the expensive embedding step, so a crash there costs
+only the embedding stage on retry, never the classification.
+
+---
+
 # 🔍 AUDIT: locked_facts.json's `verified_by` PROVENANCE — 36 of 253 facts share corporate_tax_rate's defect
 
 **Requested before either engine-shaped domain is built:** does `corporate_tax_rate`'s
