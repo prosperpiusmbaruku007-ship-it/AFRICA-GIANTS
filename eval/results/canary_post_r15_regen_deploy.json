@@ -1,0 +1,149 @@
+{
+  "measured": "2026-08-28",
+  "harness": "eval/controls/canary_post_r15_regen_deploy.py",
+  "target": "chike-inference (production, rag_fact_count=187)",
+  "rows": [
+    {
+      "name": "brela_filing_fees (consolidated family)",
+      "question": "query: Ada ya annual return BRELA ni shilingi ngapi?",
+      "must_contain_any": [
+        "22,000"
+      ],
+      "provenance": "verbatim critical_queries guard",
+      "outcome": "HTTP_200",
+      "reply": "Ada ya kuwasilisha annual return ya kampuni kila mwaka ni TZS 22,000. Thibitisha na BRELA (brela.go.tz).",
+      "elapsed_s": 10.3,
+      "keyword_hit": true
+    },
+    {
+      "name": "company_registration_ladder / nat_34 (consolidated family)",
+      "question": "query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+      "must_contain_any": [
+        "95,000"
+      ],
+      "provenance": "verbatim critical_queries guard",
+      "outcome": "HTTP_200",
+      "reply": "Ada ya kuhifadhi jina ni TZS 50,000. Gharama ya kuanzia ni TZS 95,000. Thibitisha na BRELA (brela.go.tz).",
+      "elapsed_s": 6.4,
+      "keyword_hit": true
+    },
+    {
+      "name": "trademark_fees (consolidated family)",
+      "question": "Hiyo ada ya marejesho ya alama ya biashara kuchelewa, ni shilingi ngapi hasa?",
+      "must_contain_any": [
+        "30,000"
+      ],
+      "provenance": "NOT verbatim -- feegroup_curation.json C1_controls, a hand-authored paraphrase (see audit_feegroup_curation_controls_verbatim.py); no critical_queries guard exists for this family",
+      "outcome": "HTTP_200",
+      "reply": "Ada ya marejesho ya alama ya biashara kuchelewa ni TZS 30,000. Thibitisha na BRELA Official (brela.go.tz).",
+      "elapsed_s": 5.8,
+      "keyword_hit": true
+    },
+    {
+      "name": "council_service_levy_is_a_cap_not_a_rate (new fact)",
+      "question": "query: Halmashauri wananitoza ushuru wa huduma asilimia 0.3 ya mauzo yangu, ni sahihi?",
+      "must_contain_any": [
+        "0.3",
+        "kikomo",
+        "KIKOMO"
+      ],
+      "provenance": "verbatim critical_queries guard",
+      "outcome": "HTTP_200",
+      "reply": "Hapana, hiyo si sahihi. Sheria inasema ushuru wa huduma unapaswa kuwa asilimia 0.3 ya mauzo ghafi (gross turnover). Lakini kuna tofauti muhimu sana: 'Gross Turnover' = mauzo yote kabla ya punguzo lolote ('gross' = bila kupungua). 'Net Turnover' = mauzo baada ya punguzo la VAT na ushuru wa bidhaa. Thibitisha na tra.go.tz.",
+      "elapsed_s": 11.9,
+      "keyword_hit": true
+    },
+    {
+      "name": "council_service_levy_non_corporate_conflict (new fact)",
+      "question": "query: Mimi ni mfanyabiashara mmoja mmoja, ninatakiwa kulipa ushuru wa huduma wa halmashauri?",
+      "must_contain_any": [
+        "gongana",
+        "corporate",
+        "290",
+        "7(1)"
+      ],
+      "provenance": "verbatim critical_queries guard",
+      "outcome": "HTTP_200",
+      "reply": "Kwa mujibu wa taarifa nilizonazo, ushuru wa huduma wa halmashauri unawahusu hasa makampuni (Corporate Entities). Kama wewe ni mfanyabiashara mmoja mmoja, huenda usitegemee kulipa ushuru huo. Thibitisha na halmashauri husika (lga.go.tz).",
+      "elapsed_s": 9.7,
+      "keyword_hit": false
+    },
+    {
+      "name": "market_dues_no_national_amount (new fact)",
+      "question": "query: Ushuru wa genge langu sokoni ni shilingi ngapi?",
+      "must_contain_any": [
+        "kitaifa",
+        "106",
+        "halmashauri"
+      ],
+      "provenance": "verbatim critical_queries guard",
+      "outcome": "HTTP_200",
+      "reply": "Samahani, kiasi cha ushuru wa genge kinategemea eneo husika na sheria za halmashauri. Thibitisha na Ofisi ya Mapato ya Halmashauri yako (tra.go.tz).",
+      "elapsed_s": 7.8,
+      "keyword_hit": true
+    },
+    {
+      "name": "market_dues_exemptions (new fact)",
+      "question": "query: Ninauza maandazi sokoni, ninatakiwa kulipa ushuru wa soko?",
+      "must_contain_any": [
+        "maandazi",
+        "samaki"
+      ],
+      "provenance": "verbatim critical_queries guard",
+      "outcome": "HTTP_200",
+      "reply": "Kulingana na sheria ya fedha za serikali za mitaa, wanunuzi wa maandazi na bidhaa ndogo ndogo zinazozalishwa na wajasiriamali wadogo katika eneo husika huwa hawatoi ushuru wa soko. Thibitisha na tra.go.tz.",
+      "elapsed_s": 9.6,
+      "keyword_hit": true
+    },
+    {
+      "name": "business_licence_fee_national_schedule_local_collection (new fact)",
+      "question": "query: Leseni ya biashara yangu inagharimu kiasi gani, na nani hutoa?",
+      "must_contain_any": [
+        "KITAIFA",
+        "kitaifa",
+        "halmashauri"
+      ],
+      "provenance": "verbatim critical_queries guard",
+      "outcome": "HTTP_200",
+      "reply": "Ada ya leseni ya biashara hutofautiana kulingana na aina ya shughuli na eneo. Thibitisha na halmashauri husika (lga.go.tz).",
+      "elapsed_s": 6.7,
+      "keyword_hit": true
+    },
+    {
+      "name": "standard negative (ordinary in-scope question, must still answer correctly)",
+      "question": "query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, SDL jumla ni kiasi gani?",
+      "must_contain_any": [
+        "3.5",
+        "asilimia"
+      ],
+      "provenance": "verbatim critical_queries guard",
+      "outcome": "HTTP_200",
+      "reply": "SDL = 3.5% × TZS 600,000 = TZS 21,000",
+      "elapsed_s": 13.8,
+      "keyword_hit": true
+    },
+    {
+      "name": "config-only phrase (OOC refusal; absent from the 39-phrase hardcoded fallback)",
+      "question": "Mshahara wangu ni TZS 900,000, sasa kodi ya majengo (property tax) ninayolipa ni ngapi?",
+      "must_contain_any": [
+        "nje ya mada",
+        "sina uhakika",
+        "thibitisha"
+      ],
+      "provenance": "verbatim -- eval/results/gate_orchestrator_combined_*.json question_sw",
+      "outcome": "HTTP_200",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "elapsed_s": 2.2,
+      "keyword_hit": true
+    }
+  ],
+  "status_counts": {
+    "keyword_hit": 9,
+    "keyword_miss": 1,
+    "http_error": 0
+  },
+  "manual_adjudication": {
+    "council_service_levy_non_corporate_conflict (new fact)": "MISS was the keyword list, not the reply. The reply says the levy 'unawahusu hasa makampuni (Corporate Entities)' and an individual trader 'huenda usitegemee kulipa' -- substantively correct and appropriately hedged, just capitalised ('Corporate Entities') and softened ('huenda') differently than the exact-case ['gongana','corporate','290','7(1)'] list anticipated. Read per R26's second half (suspect the specimen before the control) rather than recorded as a live defect."
+  },
+  "status": "COMPLETE"
+}

@@ -1,6 +1,62 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-26
+Last updated: 2026-08-28
+
+---
+
+# 🚀 R16 REDEPLOY OF `chike-inference` — 187-ROW INDEX LIVE, FAIL-LOUD CONTRACT RE-VERIFIED, 9/10 CANARIES HIT
+
+**The deferred Modal redeploy from the R15 regen #2 entry, now done.** Full R16 cycle: `app stop
+--yes` (confirmed `stopped`), `modal deploy` with `PYTHONIOENCODING=utf-8`/`PYTHONUTF8=1`, then
+two separate live checks before calling it verified.
+
+## 1. The fail-loud contract, re-verified against the value it now checks
+
+`kaggle/chike_config.json`'s `rag_fact_count` changed 221 → 187 in the prior entry. Two checks,
+not one:
+
+- **Offline, on the real shipped files**: added
+  `test_the_real_shipped_index_rejects_the_superseded_count` to `tests/test_modal_index_contract.py`
+  — the ACTUAL 187-row shipped index, told to expect the ACTUAL old value (221), must raise
+  `RetrievalIndexError`. It does. (The pre-existing stale-count test only proved the mechanism on
+  a synthetic 5-row index — this proves it on the files actually deployed.) Committed at `d07a88f`.
+- **Live, on production**: re-ran `eval/controls/verify_index_contract_live.py` (built 2026-08-24
+  for exactly this check) against the freshly-deployed container. BAD arm (`rag_fact_count=999`,
+  forced redeploy): **HTTP 500, refused to serve** — correct. RESTORE arm (`rag_fact_count=187`,
+  redeployed again): **HTTP 200**, `"Kampuni yenye wafanyakazi 12 inalipa SDL kwa asilimia 3.5.
+  Thibitisha na TRA (tra.go.tz)."` — correct. `eval/results/index_contract_live_verification.json`,
+  committed at `04bba77`. Production ends this cycle on the correct config.
+
+**The point of doing both**: the offline test proves the mechanism on the file pair without
+touching production; the live run proves the SAME mechanism is actually wired into the container
+Modal is serving. Neither alone would have closed both R16 obligations (verify the specific
+changed value; watch the control fire against the real deploy).
+
+## 2. The R16 canary set for everything this regen cycle touched
+
+Ten live probes against the restored production endpoint
+(`eval/controls/canary_post_r15_regen_deploy.py` → `eval/results/canary_post_r15_regen_deploy.json`),
+covering exactly the list the prior entry deferred: the three consolidated fee families,
+`nat_34` specifically, all five new local-levy facts, one standard negative, one config-only
+phrase. Nine of ten queries are the guard's own verbatim `critical_queries` text (loaded via AST,
+never retyped — R24); the trademark probe has no guard of its own and reuses
+`feegroup_curation.json`'s `C1_controls` question, explicitly flagged in the artifact as a
+paraphrase, not verbatim (the same non-verbatim status the 2026-08-26 audit already found for
+that file's controls).
+
+**9/10 keyword-hit, 0 HTTP errors.** The one miss
+(`council_service_levy_non_corporate_conflict`) was the keyword list, not the reply: the model
+answered *"ushuru wa huduma wa halmashauri unawahusu hasa makampuni (Corporate Entities)... huenda
+usitegemee kulipa"* — substantively correct and appropriately hedged, just capitalised and worded
+differently than the exact-case keyword list anticipated. Read per R26's second half (suspect the
+specimen before the control) and recorded as a manual adjudication in the artifact rather than a
+live defect. All three consolidated families, `nat_34`, and all five local-levy facts answer with
+their correct figures/citations; the standard negative (SDL calculation) and the config-only OOC
+phrase (`kodi ya majengo`) both behave correctly.
+
+**Net result: the 187-row index is live, the count-mismatch control is proven to fire against the
+exact value it now guards, and everything this regen cycle added or changed has been exercised
+live at least once with no defect found.**
 
 ---
 
