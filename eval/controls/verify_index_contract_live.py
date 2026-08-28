@@ -47,7 +47,7 @@ CONFIG = os.path.join(REPO, 'kaggle', 'chike_config.json')
 OUT = os.path.join(REPO, 'eval', 'results', 'index_contract_live_verification.json')
 ENDPOINT = 'https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run'
 PROBE = 'SDL ni asilimia ngapi kwa kampuni yenye wafanyakazi 12?'
-BAD_COUNT = 999          # the baked index has 221 rows
+BAD_COUNT = 999          # the baked index has 187 rows (R15 regen #2, 2026-08-26)
 
 ENV = dict(os.environ, PYTHONIOENCODING='utf-8', PYTHONUTF8='1')
 LOG = []
