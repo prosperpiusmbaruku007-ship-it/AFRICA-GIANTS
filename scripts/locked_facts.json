@@ -306,8 +306,8 @@
     "correction_note": "Prior fact was a blanket '18% unchanged since 2015' with no mention of the 16% B2C e-payment carve-out that CLAUDE.md §11 has separately tracked since Finance Act 2025 (effective 1 Sep 2025) -- the correct information existed elsewhere in the project but was never folded into this locked fact, so RAG-served answers about 'the VAT rate' risked omitting a real narrower rate a B2C trader using e-payments needs to know. Root cause: a sync gap between two provenance stores (locked_facts.json vs CLAUDE.md), not a wrong statute reading. NOTE: the sibling fact 'vat_reduced_rates' ('Only 18% standard, 0% zero-rated, and exempt -- no 5%/10% reduced rates exist') has the same omission and was not edited in this pass; flagged for the founder to decide whether it also needs the 16% carve-out folded in."
   },
   "vat_reduced_rates": {
-    "fact": "Tanzania does NOT have reduced VAT rates of 5% or 10%. Only 18% standard, 0% zero-rated, and exempt.",
-    "correct_value": "No 5% or 10% reduced rates exist in Tanzania",
+    "fact": "Tanzania does NOT have reduced VAT rates of 5% or 10% for any product category (food, electricity, etc.) — there is no such thing as a category-based reduced VAT rate. The only rates are 18% standard, 0% zero-rated, and exempt (no VAT). SEPARATELY, a narrower 16% rate applies to a specific TRANSACTION TYPE, not a product category: B2C taxable supplies to a person in Mainland Tanzania who is NOT VAT-registered, paid through a bank or electronic payment system approved by the Commissioner General, effective 1 Sep 2025 (Finance Act 2025). This does not contradict 'no 5%/10% category rates' — it is a payment-channel/customer-type carve-out on top of the standard rate, not a reduced rate for a good or service category.",
+    "correct_value": "No 5% or 10% category-based reduced rates exist. 18% standard / 0% zero-rated / exempt, PLUS a narrow 16% B2C e-payment carve-out (transaction-type, not product-category) effective 1 Sep 2025.",
     "wrong_patterns": [
       "Tanzania ina kiwango cha 5% cha VAT",
       "Tanzania has a 5% VAT rate",
@@ -326,11 +326,12 @@
       "Tanzania has a reduced VAT rate",
       "kiwango kilichopunguzwa cha VAT kinapatikana"
     ],
-    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
-    "verified_by": "TRA VAT Act — only standard 18%, zero-rated 0%, exempt",
-    "effective_date": "2015-07-01",
-    "status": "CONFIRMED",
-    "adversarial_note": "CRITICAL — inference test showed model confidently saying 5% for food and 10% for utilities. Needs 40+ adversarial pairs in batch_003"
+    "primary_source": "VAT Act Cap.148 s.5(1) (18%/0%/exempt structure); Finance Act 2025 B2C e-payment provision effective 1 Sep 2025 per CLAUDE.md §11 / EY / KPMG Finance Act 2025 summaries (secondary for the 16% carve-out specifically — see vat_standard_rate)",
+    "verified_by": "TRA VAT Act — only standard 18%, zero-rated 0%, exempt (category basis); 16% transaction-carve-out per CLAUDE.md §11, cross-referenced with vat_standard_rate's correction",
+    "effective_date": "2015-07-01 (category structure); 2025-09-01 (16% transaction carve-out)",
+    "status": "CONFIRMED -- amended 2026-08-29 to fold in the 16% carve-out already tracked on vat_standard_rate (see correction_note)",
+    "adversarial_note": "CRITICAL — inference test showed model confidently saying 5% for food and 10% for utilities. Needs 40+ adversarial pairs in batch_003",
+    "correction_note": "This fact's blanket '18% standard, 0% zero-rated, exempt' had the same omission as vat_standard_rate: no mention of the 16% B2C e-payment carve-out (Finance Act 2025, eff. 1 Sep 2025). Fixed here by scoping the 'no reduced rates' claim explicitly to PRODUCT CATEGORIES (food, electricity, etc. — the claim this fact exists to guard) and stating the 16% carve-out as a separate transaction-type exception that does not contradict it. Folded in immediately after correcting its twin, per instruction, so a sibling fact does not carry the identical gap into the next audit."
   },
   "vat_registration_threshold": {
     "fact": "VAT registration threshold is TZS 200,000,000 per year OR TZS 100,000,000 per 6 months",
