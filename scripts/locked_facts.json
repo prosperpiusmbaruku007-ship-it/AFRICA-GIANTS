@@ -258,8 +258,8 @@
     "status": "CONFIRMED"
   },
   "nssf_retirement_age": {
-    "fact": "NSSF retirement age is 60 (55 for mining/early retirement), minimum 180 months contributions for full pension",
-    "correct_value": "60 years (55 mining), 180 months minimum",
+    "fact": "NSSF pensionable (retirement) age is 60 (Cap.50 s.2, definition of 'pensionable age'). Early retirement is available from age 55 to ANY insured person within 5 years of pensionable age who has paid at least 180 monthly contributions (ss.25(c), 29) -- this is a GENERAL early-retirement provision, NOT a mining-sector-specific rate. Minimum 180 months (15 years) of contributions is required for a retirement pension (s.25(b)).",
+    "correct_value": "60 years (pensionable age, s.2); 55 years = general early retirement for anyone within 5 years of pensionable age with 180+ months contributions (ss.25(c),29) -- NOT mining-specific; 180 months minimum for full pension (s.25(b))",
     "wrong_patterns": [
       "umri wa 65",
       "age 65",
@@ -268,16 +268,22 @@
       "55 for everyone",
       "miezi 120",
       "120 months",
-      "miezi 240"
+      "miezi 240",
+      "55.*madini",
+      "mining.*55",
+      "umri wa 55 kwa sekta ya madini",
+      "55 for mining sector",
+      "55 for mining"
     ],
-    "primary_source": "https://www.nssf.go.tz",
-    "verified_by": "Mywage.org + US SSA Tanzania profile",
+    "primary_source": "National Social Security Fund Act, Cap. 50 R.E. 2023, ss.2, 25, 29",
+    "verified_by": "Direct read of Cap.50 text (OAG-compiled R.E. 2023 PDF via nssf.go.tz), 2026-08-29 -- supersedes prior verification against Mywage.org + US SSA Tanzania country profile, neither of which mentions mining at all",
     "effective_date": "2018-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED -- corrected 2026-08-29 (see correction_note)",
+    "correction_note": "Prior fact paired the correct 55-year early-retirement figure with 'mining' as its justification. The word 'mining' does NOT appear anywhere in NSSF Act Cap.50 Part V (Benefits), nor in either of the two secondary sources the fact was originally verified against (Mywage.org, US SSA Tanzania country profile) -- both describe 55 as a general voluntary/early-retirement age available to any insured person, not a sector-specific rate. This was not a stale-citation error: it was a claim invented during authoring with no source at all, general or otherwise -- a different defect class from every other correction in this batch. No mining-specific NSSF retirement provision was found anywhere in the Act."
   },
   "vat_standard_rate": {
-    "fact": "Tanzania VAT standard rate is 18% — unchanged since 2015. It was NEVER 14%.",
-    "correct_value": "18% unchanged since 2015",
+    "fact": "Tanzania's GENERAL VAT standard rate is 18% — unchanged since 2015 (VAT Act, Cap.148, s.5(1)). It was NEVER 14%. EXCEPTION: effective 1 September 2025 (Finance Act 2025), a narrower 16% rate applies specifically to B2C taxable supplies made to a person in Mainland Tanzania who is NOT VAT-registered, where payment is made through a bank or electronic payment system approved by the Commissioner General — this is a transaction-specific carve-out, not a general rate change, and does not apply to B2B, exports, or cash transactions.",
+    "correct_value": "18% general standard rate (s.5(1), unchanged since 2015); 16% narrow carve-out for B2C sales to unregistered customers paid via approved e-payment channel, effective 1 Sep 2025",
     "wrong_patterns": [
       "kutoka asilimia 14",
       "from 14%",
@@ -288,13 +294,16 @@
       "kiwango cha kawaida cha VAT ni asilimia 16",
       "standard VAT rate is 16%",
       "Tanzania VAT ni 16% kwa bidhaa zote",
-      "vat.*asilimia 20|kodi.*ongezeko.*asilimia 20"
+      "vat.*asilimia 20|kodi.*ongezeko.*asilimia 20",
+      "16%.*malipo yote ya kielektroniki",
+      "16%.*all electronic payments"
     ],
-    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
-    "verified_by": "TRA VAT page — history section confirms 18% since 2015",
-    "effective_date": "2015-07-01",
-    "status": "CONFIRMED",
-    "adversarial_note": "Inference test showed model inventing 5% food VAT and 10% utilities VAT — needs adversarial pairs"
+    "primary_source": "VAT Act, Cap. 148, s.5(1) (18% general rate — read directly); Finance Act 2025 B2C e-payment VAT provision effective 1 Sep 2025 per EY/KPMG/Global VAT Compliance Finance Act 2025 summaries — the Finance Act 2025 provision's own text could not be rendered this pass, so the 16% carve-out itself remains one hop removed even though the 18% general rate is now primary-confirmed",
+    "verified_by": "VAT Act Cap.148 s.5(1), direct read, 2026-08-29 (18% general rate — primary); 16% carve-out per CLAUDE.md §11 / EY Tanzania Finance Act 2025 analysis / KPMG Tax News Flash Oct 2025 (secondary — not yet independently confirmed against Finance Act 2025's own text)",
+    "effective_date": "2015-07-01 (18% general rate); 2025-09-01 (16% carve-out)",
+    "status": "CONFIRMED (18% general rate, primary); 16% carve-out CONFIRMED-SECONDARY -- corrected 2026-08-29 (see correction_note)",
+    "adversarial_note": "Inference test showed model inventing 5% food VAT and 10% utilities VAT — needs adversarial pairs",
+    "correction_note": "Prior fact was a blanket '18% unchanged since 2015' with no mention of the 16% B2C e-payment carve-out that CLAUDE.md §11 has separately tracked since Finance Act 2025 (effective 1 Sep 2025) -- the correct information existed elsewhere in the project but was never folded into this locked fact, so RAG-served answers about 'the VAT rate' risked omitting a real narrower rate a B2C trader using e-payments needs to know. Root cause: a sync gap between two provenance stores (locked_facts.json vs CLAUDE.md), not a wrong statute reading. NOTE: the sibling fact 'vat_reduced_rates' ('Only 18% standard, 0% zero-rated, and exempt -- no 5%/10% reduced rates exist') has the same omission and was not edited in this pass; flagged for the founder to decide whether it also needs the 16% carve-out folded in."
   },
   "vat_reduced_rates": {
     "fact": "Tanzania does NOT have reduced VAT rates of 5% or 10%. Only 18% standard, 0% zero-rated, and exempt.",
@@ -611,18 +620,23 @@
     "status": "CONFIRMED"
   },
   "objection_deposit_requirement": {
-    "fact": "Before TRA objection is admitted taxpayer must pay the HIGHER of undisputed tax OR one-third of assessed tax within 15 days",
-    "correct_value": "Pay higher of undisputed OR 1/3 assessed within 15 days",
+    "fact": "Before a TRA objection to a tax assessment is admitted, the taxpayer must pay the HIGHER of the undisputed tax OR one-third of the assessed tax. This payment is due CONCURRENTLY with lodging the objection -- i.e., within the same 30-day period allowed for filing the objection itself (Tax Administration Act, Cap.438 R.E.2023, s.51) -- NOT on a separate 15-day clock.",
+    "correct_value": "Pay higher of undisputed tax OR 1/3 of assessed tax, concurrently with lodging the objection, within the 30-day objection-filing window (not a separate 15-day deadline)",
     "wrong_patterns": [
       "huhitajiki kulipa",
       "no payment required before objection",
       "unaweza kukata rufaa bila kulipa",
-      "can appeal without paying"
+      "can appeal without paying",
+      "kulipa.*ndani ya siku 15.*pingamizi",
+      "pay.*within 15 days.*objection",
+      "siku 15.*kabla ya pingamizi",
+      "15 days.*before.*objection.*admitted"
     ],
-    "primary_source": "https://www.tra.go.tz/page/objections-and-appeals",
-    "verified_by": "TRA Objections page + FB Attorneys Tanzania. Was MISSING from original batch_002 pairs.",
+    "primary_source": "Tax Administration Act, Cap. 438 R.E. 2023, s.51 (objection to tax decision)",
+    "verified_by": "Direct read of TAA Cap.438 s.51 text (tanzanialaws.com transcription, cross-checked against an independent practitioner summary), 2026-08-29 -- supersedes prior verification against a TRA portal page + a law firm site, neither of which quoted the section text or stated a distinct 15-day figure. CAUTION: tanzanialaws.com is a third-party legal database, not a .go.tz or tanzlii.org original (both were inaccessible this pass) -- re-confirm against a directly-opened primary copy when access allows.",
     "effective_date": "2020-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED -- corrected 2026-08-29 (see correction_note)",
+    "correction_note": "Prior fact stated a separate 15-day payment deadline, sourced to a TRA portal page + a law firm's site, neither quoting the section text. Re-verified 2026-08-29 against Cap.438 s.51: the section ties the deposit to the SAME 30-day window used to lodge the objection -- there is no independent 15-day clock. Origin of the '15 days' figure is unclear; it may be confusion with an unrelated TAA provision governing return-filing extension requests, which does use a 15-day figure for a different purpose."
   },
   "objection_extension_statutory_right": {
     "fact": "Extension of the 30-day objection period is a STATUTORY RIGHT — NOT very rare. Apply within 7 days before expiry.",
@@ -859,20 +873,23 @@
     "status": "CONFIRMED"
   },
   "wcf_disease_reporting_deadline": {
-    "fact": "Occupational disease must be reported to WCF within 7 working days of diagnosis. Workplace death must be reported within 12 months. Compensation claim must be filed within 12 months of accident or disease discovery.",
-    "correct_value": "Disease: 7 working days; Death & claim: 12 months",
+    "fact": "Occupational disease reporting to WCF is a TWO-STAGE chain, not a flat 7-day deadline. Per the Workers Compensation Regulations, 2016 (GN 185/2016), Reg.16: the EMPLOYEE must notify the EMPLOYER within 14 working days of diagnosis (Reg.16(1)); the EMPLOYER must then notify WCF within 7 working days of RECEIVING that employee notice (Reg.16(2)) -- so the true worst-case window from diagnosis to WCF notification is up to 21 working days, NOT 7. Workplace death must be reported to WCF within 12 months (Reg.17(2)). Compensation claim must be filed within 12 months of accident or disease discovery (Reg.19(1)).",
+    "correct_value": "Disease: employee-to-employer 14 working days, then employer-to-WCF 7 more working days (worst case 21 working days total from diagnosis, NOT 7); Death & claim: 12 months",
     "wrong_patterns": [
       "ugonjwa wa kazini.*wcf.*siku 30",
       "occupational disease.*wcf.*30 days",
       "kifo.*wcf.*siku 7(?! za kazi)",
       "wcf.*dai.*miaka 2",
       "wcf.*claim.*2 years",
-      "wcf.*dai.*miaka mitatu"
+      "wcf.*dai.*miaka mitatu",
+      "ugonjwa wa kazini.*siku 7 tangu.*(utambuzi|kugundulika)",
+      "occupational disease.*7 working days.*diagnosis(?!.*14)"
     ],
-    "primary_source": "https://www.wcf.go.tz",
-    "verified_by": "WCF official website, Jun 2026",
-    "effective_date": "2015-07-01",
-    "status": "CONFIRMED"
+    "primary_source": "Workers Compensation Regulations, 2016 (Government Notice No. 185 of 2016), Regulations 16, 17, 19 -- made under Workers Compensation Act No. 20 of 2008 ss.35, 39, 40",
+    "verified_by": "Direct read of GN 185/2016 text (media.tanzlii.org), 2026-08-29 -- supersedes prior verification against the wcf.go.tz portal page, which stated only the employer-side 7-day leg and omitted the employee-side 14-day leg",
+    "effective_date": "2016 (GN 185/2016 -- exact gazette date not independently confirmed this pass; prior entry's 2015-07-01 was the Act's commencement date, not this regulation's gazette date)",
+    "status": "CONFIRMED -- corrected 2026-08-29 (see correction_note)",
+    "correction_note": "Prior fact stated a flat 7 working days from diagnosis, sourced only to the wcf.go.tz portal page (no regulation citation). Re-verified 2026-08-29 against GN 185/2016 Reg.16 directly: the 7-working-day figure is real but attaches to the EMPLOYER's leg after receiving the employee's notice, not to the diagnosis date itself -- the employee has a separate, prior 14-working-day window to notify the employer first. Root cause: the portal-sourced summary compressed a two-step regulatory chain into its second step only, understating the true diagnosis-to-WCF window by up to two-thirds (7 vs 21 working days). This is the highest-harm correction in this batch: a wrong deadline surfaces when a real claim is refused for being late, not when someone checks arithmetic."
   },
   "gn605a_increment_range": {
     "fact": "GN 605A individual sector increments range from TZS 20,000 (lowest sector) to TZS 195,000 (highest sector) per month",
@@ -1141,18 +1158,22 @@
     "status": "CONFIRMED"
   },
   "wcf_rate_0_5_percent_confirmed": {
-    "fact": "WCF rate is 0.5% of gross cash emoluments for ALL employers (both private and public sector) as of 1 July 2022. History: was 1% before 2021, then 0.6% July 2021, then equalized to 0.5% for all sectors from July 2022.",
-    "correct_value": "0.5% — confirmed current rate for all sectors",
+    "fact": "WCF rate is 0.5% of gross cash emoluments for ALL employers (both private and public sector), current as of 1 July 2022. History (corrected): the PUBLIC sector rate was already 0.5% since the tariff was first set (GN 169/2015, effective 1 Jul 2015). The PRIVATE sector rate was 1% from 2015, cut to 0.6% from 1 July 2021, then equalized to 0.5% (matching the public sector) from 1 July 2022. It was never '1% for all employers' at any point.",
+    "correct_value": "0.5% for all sectors, current since 1 Jul 2022. Public sector was ALREADY 0.5% since 2015 -- only the private-sector rate changed (1% -> 0.6% -> 0.5%).",
     "wrong_patterns": [
       "wcf.*1%(?! before| kabla| was| ilikuwa)",
       "wcf.*0.6%(?! before| kabla| was| ilikuwa)",
       "wcf.*asilimia 1(?! kabla| before)",
-      "wcf.*rate.*0.6"
+      "wcf.*rate.*0.6",
+      "sekta zote.*1%.*kabla ya 2021",
+      "all sectors.*1%.*before 2021",
+      "sekta ya umma.*ilikuwa.*1%"
     ],
-    "primary_source": "wcf.go.tz official website; Sage payroll July 2022 announcement; WCF Director General May 2025 press briefing; PWC Tax Summaries 2025",
-    "verified_by": "WCF official, Sage July 2022, WCF DG May 2025, PWC 2025",
+    "primary_source": "Workers Compensation (Payment of Tariff) Regulations, 2015 (GN 169/2015), made under Workers Compensation Act 2008 s.94 -- sets the base public/private split; the specific 2021 and 2022 amending regulations that produced the current 0.5%-for-all figure could not be located/read this pass and remain unconfirmed at the primary-text level",
+    "verified_by": "GN 169/2015 direct read (media.tanzlii.org), 2026-08-29, for the base 2015 rates (public 0.5% / private 1%) -- this corrects the prior fact's history claim. The CURRENT 0.5%-for-all-sectors figure remains corroborated only by secondary sources (Sage payroll announcement, WCF DG press briefing, PWC Tax Summaries) -- the actual 2021/2022 amending GN was not located this pass, so the current number is not yet primary-confirmed, only its 2015 baseline is.",
     "effective_date": "2022-07-01",
-    "status": "CONFIRMED"
+    "status": "PARTIAL -- current 0.5% figure CONFIRMED (secondary-corroborated, amending GN not yet located); history CORRECTED 2026-08-29 against primary GN 169/2015 (see correction_note)",
+    "correction_note": "Prior fact's history line said the pre-2021 rate 'was 1% before 2021' without specifying sector -- read against GN 169/2015 directly, this is only true for the PRIVATE sector; the PUBLIC sector was already at 0.5% from the tariff's original 2015 gazettal. Root cause: history was likely generalized from private-sector payroll-vendor commentary (the sector employers actually feel a rate cut in) without checking whether the public-sector rate had been different all along. The amending regulation that produced the current 0.5%-for-all figure (reportedly 2021 and 2022) could not be located in this pass and should be found and read directly in a follow-up before this fact can be called fully primary-verified."
   },
   "wcf_paid_to_fund_not_tra": {
     "fact": "WCF (Workers Compensation Fund) contributions are paid by the employer DIRECTLY to the Fund via its portal (portal.wcf.go.tz), NOT to TRA. WCF and SDL are different levies collected by different institutions: WCF = 0.5% of gross emoluments, paid to the WCF Fund, funds workplace-injury compensation; SDL = 3.5% of gross emoluments (employers with 10+ employees), paid to TRA, funds skills development. The employee does NOT contribute to WCF — it is a criminal offence for an employer to deduct a WCF contribution from an employee.",
