@@ -80,34 +80,40 @@ def test_a_monthly_rate_is_refused_not_annualised():
         rules_engine.vat_registration(25_000_000, rt.MONTHLY)
 
 
-# --- EFD ---------------------------------------------------------------------
+# --- EFD -----------------------------------------------------------------------
+# Corrected 2026-08-29: TAA Cap.438 s.44 (renumbered from s.36 by Finance Act 2023 s.54) sets no
+# turnover threshold at all -- fiscal-receipt issuance is the default for everyone, exemption is
+# only by a Commissioner-General public notice this engine cannot evaluate. The old tests below
+# asserted the fabricated TZS 11,000,000 threshold as ground truth; replaced with tests for the
+# one-ground contract: `efd_required()` always returns `applicable is True`, whatever a trader's
+# turnover is or isn't, and `vat_registered` changes only the wording, never the outcome.
 
-def test_vat_registration_short_circuits_efd_entirely():
-    r = rules_engine.efd_required(vat_registered=True)
-    assert r.applicable is True
-    assert r.inputs["ground"] == "vat_registered"
-    assert "turnover" not in r.inputs, "turnover must not be consulted when registration settles it"
-
-
-def test_efd_below_threshold_leaves_vat_registration_open():
-    r = rules_engine.efd_required(8_000_000)
-    assert r.applicable is False
-    assert r.inputs["condition_open"] == "vat_registration"
-
-
-def test_efd_boundary_is_inclusive():
-    assert rules_engine.efd_required(11_000_000).applicable is True
-    assert rules_engine.efd_required(10_999_999).applicable is False
+def test_efd_is_always_required_regardless_of_vat_registration():
+    r_vat = rules_engine.efd_required(vat_registered=True)
+    r_no_vat = rules_engine.efd_required(vat_registered=False)
+    assert r_vat.applicable is True
+    assert r_no_vat.applicable is True
+    assert r_vat.inputs["ground"] == "vat_registered_and_default"
+    assert r_no_vat.inputs["ground"] == "default_requirement"
 
 
-def test_efd_refuses_a_non_annual_period():
-    with pytest.raises(ValueError, match="ANNUAL turnover test"):
-        rules_engine.efd_required(500_000, period=rt.MONTHLY)
+def test_efd_takes_no_turnover_argument():
+    """The fabricated threshold is gone; so is the parameter that fed it. A caller cannot pass
+    a turnover figure back in by accident -- there is no comparison left for it to feed."""
+    import inspect
+    params = inspect.signature(rules_engine.efd_required).parameters
+    assert "turnover" not in params
+    assert "period" not in params
 
 
-def test_efd_with_no_basis_at_all_raises_rather_than_guessing():
-    with pytest.raises(ValueError, match="nothing to test"):
-        rules_engine.efd_required()
+def test_efd_never_states_a_turnover_threshold():
+    """Neither branch may reintroduce a TZS figure as if it were the EFD threshold -- that is
+    exactly the defect this correction removed. (TZS figures from an unrelated presumptive-tax
+    example elsewhere are not this function's concern; this checks EFD's own working text.)"""
+    for r in (rules_engine.efd_required(vat_registered=True),
+              rules_engine.efd_required(vat_registered=False)):
+        assert "11,000,000" not in r.working and "14,000,000" not in r.working
+        assert "kizingiti cha mauzo" not in r.working or "hakuna kizingiti" in r.working
 
 
 # --- routing -----------------------------------------------------------------
@@ -161,29 +167,34 @@ def test_a_conditional_answer_must_not_read_as_a_flat_verdict():
     "hutakiwi kusajili ... LAKINI kama ..." must not scan as an unconditional no to a scorer
     reading first-paragraph polarity. `reads_as_unconditional` is that reader; running it over
     our own copy is the scorer's own view of it.
+
+    EFD has no negative/conditional case to test here since 2026-08-29 -- it is always
+    unconditionally required (see test_efd_is_always_required_regardless_of_vat_registration) --
+    so only VAT registration exercises the conditional-negative branch below. EFD still needs
+    its own positive-control check, since a build that hedged its now-always-True answer into
+    mush would still deserve to fail this test.
     """
     for turnover, period in [(150_000_000, rt.ANNUAL), (95_000_000, rt.SIX_MONTH)]:
         r = rules_engine.vat_registration(turnover, period)
         assert r.applicable is False
         assert routing.reads_as_unconditional(r.working) is False, r.working[:80]
 
-    below_efd = rules_engine.efd_required(8_000_000)
-    assert routing.reads_as_unconditional(below_efd.working) is False
-
     # …and the positive control: a settled verdict must still READ as settled, otherwise this
     # test would pass on a build that had hedged every answer into mush.
     for r in (rules_engine.vat_registration(250_000_000, rt.ANNUAL),
-              rules_engine.efd_required(15_000_000),
+              rules_engine.efd_required(vat_registered=False),
               rules_engine.efd_required(vat_registered=True)):
         assert r.applicable is True
         assert routing.reads_as_unconditional(r.working) is True, r.working[:80]
 
 
 def test_no_threshold_clarification_reads_as_a_verdict():
-    """Never-guess copy states thresholds; it must not state an ANSWER."""
+    """Never-guess copy states thresholds; it must not state an ANSWER.
+
+    EFD_PERIOD_IS_A_RATE and EFD_NO_BASIS were removed 2026-08-29 along with the fabricated
+    threshold they asked about -- there is no EFD clarification left to check here."""
     for copy in (clarification.VAT_PERIOD_IS_A_RATE, clarification.VAT_NO_PERIOD,
-                 clarification.VAT_NO_TURNOVER, clarification.EFD_PERIOD_IS_A_RATE,
-                 clarification.EFD_NO_BASIS):
+                 clarification.VAT_NO_TURNOVER):
         assert routing.reads_as_unconditional(copy) is False, copy[:70]
         assert copy.strip() and copy.strip()[-1] in ".?"
 
@@ -204,10 +215,25 @@ def test_the_threshold_path_never_calls_the_model():
 
 
 def test_monthly_rate_probes_clarify_rather_than_annualise():
-    for pid in ("vf_05", "vf_11"):
+    """vf_11 (EFD, monthly rate) is EXCLUDED here since 2026-08-29: EFD no longer has a period
+    test to decline on (TAA Cap.438 s.44 sets no turnover threshold at all), so a monthly
+    figure no longer triggers a clarification -- see test_efd_never_clarifies_on_a_monthly_rate
+    below for what vf_11 is now expected to do instead. VAT (vf_05) is unaffected; its period
+    logic (vat_registration's MONTHLY -> VAT_PERIOD_IS_A_RATE) was never part of this defect."""
+    for pid in ("vf_05",):
         p = next(x for x in _probes() if x["id"] == pid)
         orch = Orchestrator(backend=FakeBackend(scripted_reply="X"), retriever=lambda q: [])
         reply = orch.answer(p["question_sw"])
         assert reply.sub_answers[0].needs_clarification is True, pid
-        # the annualised figure must not appear anywhere in the reply
-        assert "300,000,000" not in reply.text and "6,000,000" not in reply.text, pid
+
+
+def test_efd_never_clarifies_on_a_monthly_rate():
+    """The replacement for vf_11's half of the test above: a monthly-rate EFD question gets an
+    immediate unconditional answer now, not a clarification request, because no turnover or
+    period figure can change the verdict."""
+    p = next(x for x in _probes() if x["id"] == "vf_11")
+    orch = Orchestrator(backend=FakeBackend(scripted_reply="X"), retriever=lambda q: [])
+    reply = orch.answer(p["question_sw"])
+    assert reply.sub_answers[0].needs_clarification is False, p["id"]
+    assert "6,000,000" not in reply.text and "500,000" not in reply.text, (
+        "no turnover figure of any kind should be echoed back -- it isn't consulted")

@@ -549,23 +549,18 @@ class Orchestrator:
             sq, rules_engine.vat_registration(turnover, period))
 
     def _answer_efd_requirement(self, sq: SubQuestion) -> SubAnswer:
-        """EFD — VAT registration is tested FIRST and short-circuits the turnover entirely.
+        """EFD — no turnover figure is ever consulted (corrected 2026-08-29).
 
-        A VAT-registered trader needs an EFD whatever their turnover, so asking them for a
-        figure would be asking for something that cannot change the answer — the same defect
-        sdl_zero_below_threshold was written to fix."""
-        if routing.states_vat_registered(sq.text):
-            return self._deterministic_answer(sq, rules_engine.efd_required(vat_registered=True))
-        turnover = swn.sole_plausible_amount(sq.text)
-        if turnover is None:
-            return SubAnswer(sub_question=sq, text=clarification.EFD_NO_BASIS,
-                             needs_clarification=True)
-        # The EFD test is on ANNUAL turnover alone, so every non-annual period — including a
-        # stated 6-month total, which is a real period but not this one — declines.
-        if routing.turnover_period(sq.text) != rules_engine.registration_thresholds.ANNUAL:
-            return SubAnswer(sub_question=sq, text=clarification.EFD_PERIOD_IS_A_RATE,
-                             needs_clarification=True)
-        return self._deterministic_answer(sq, rules_engine.efd_required(turnover))
+        TAA Cap.438 s.44 makes fiscal-receipt issuance the default for every supplier of goods
+        or services; there is no turnover threshold in the Act, so there is nothing a stated
+        turnover figure could change the answer to. Asking for one, or declining on a non-annual
+        period, would be asking for input that cannot move the verdict — exactly the defect this
+        route removed for the VAT-registered case, now removed for the turnover case too. The
+        only thing that varies is whether the trader mentioned VAT registration, which changes
+        the WORDING (a real, common-enough rule to state explicitly) but never the verdict."""
+        vat_registered = routing.states_vat_registered(sq.text)
+        return self._deterministic_answer(
+            sq, rules_engine.efd_required(vat_registered=vat_registered))
 
     def _answer_presumptive(self, sq: SubQuestion) -> SubAnswer:
         """Presumptive income tax — deterministic, with FOUR exits and one of them narrowed.

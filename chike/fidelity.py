@@ -740,7 +740,17 @@ _STATUTORY_THRESHOLDS = {
     "presumptive": frozenset({4_000_000, 7_000_000, 11_000_000, 100_000_000}),
     # VAT registration: both limbs — 200M/12mo OR 100M/6mo.
     "vat_registration": frozenset({100_000_000, 200_000_000}),
-    "efd": frozenset({11_000_000}),
+    # EFD: EMPTY, not a typo (2026-08-29). This used to be frozenset({11_000_000}) -- the same
+    # fabrication as locked_facts.json's efd_threshold_tzs_11m and rules_engine's now-removed
+    # EFD_ANNUAL constant. Re-verified against TAA Cap.438 s.44 directly: NO turnover figure is
+    # lawful for EFD, at any level -- fiscal-receipt issuance is the default for everyone, and
+    # the only exemption is a Commissioner-General public notice naming a class, not a number.
+    # An empty lawful set means ANY amount asserted as "the EFD threshold" is now correctly
+    # flagged as wrong (see narrowing decision 2 above: `body_amounts & lawful` can never be
+    # non-empty against an empty set, so the escape never fires for this subject) -- tg_08,
+    # this project's own former example of a "correct" EFD-threshold statement, is the specimen
+    # that proves it (see tests/test_threshold_guard.py).
+    "efd": frozenset(),
 }
 _THRESHOLD_SUBJECT = {
     "makadirio": "presumptive", "makisio": "presumptive", "presumptive": "presumptive",

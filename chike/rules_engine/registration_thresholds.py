@@ -42,10 +42,24 @@ this product serves. So a monthly figure declines to a never-guess exit that sta
 thresholds and asks for the actual period total. That is the same never-guess-as-infrastructure
 rule C4 established: the decline is a code path, not a sentence the model is asked to obey.
 
-EFD IS NOT A SECOND COPY OF THE SAME COMPARISON. Its threshold is annual turnover TZS 11M, but
-it has an OVERRIDE that has no analogue in VAT: a VAT-registered person needs an EFD regardless
-of turnover. So `efd_required` tests the override FIRST and the turnover second, and below the
-threshold the derived conditional is the VAT-registration one — again from state, not authored.
+EFD HAS NO THRESHOLD AT ALL, AND THIS IS A CORRECTION, NOT THE ORIGINAL DESIGN (2026-08-29).
+`EFD_ANNUAL = Decimal(11_000_000)` used to sit here, tested the same way as the VAT limbs above,
+and it was fabricated: re-verifying the locked fact behind it against Tax Administration Act
+Cap.438 s.44 ("Issuance of Fiscal Receipt", renumbered from s.36 by Finance Act 2023 s.54) found
+NO turnover figure anywhere in the Act. Fiscal-receipt issuance is the DEFAULT for every supplier
+of goods or services; the only exemption is a Commissioner-General public notice naming a
+specific person or class (s.44(2)) -- something this engine has no digitized list to check a
+turnover figure against. TZS 11,000,000 and TZS 14,000,000, both at various points treated as
+"the EFD threshold" in this project, are actually adjacent band edges of the Income Tax Act's
+UNRELATED presumptive-income-tax table (First Schedule para.2(3)).
+
+So `efd_required` no longer takes or tests a turnover figure — there is nothing to compare it
+against, and a function that keeps the comparison shape because the shape wants one is exactly
+how a fabricated constant survives a fact correction: the number gets removed but the branch
+stays, waiting to be re-filled with the next available number. `vat_registered` is kept as an
+explicit ground because it is a real rule and a common way this question is asked, not because
+it changes the verdict — every caller gets "required by default," and the wording, not the
+outcome, is what differs.
 """
 
 from decimal import Decimal
@@ -60,8 +74,8 @@ COMPUTATION_EFD = "efd_requirement"
 # jurisdiction and is out of corpus — never reachable from here.
 VAT_ANNUAL = Decimal(200_000_000)
 VAT_SIX_MONTH = Decimal(100_000_000)
-# Locked: efd_threshold_tzs_11m.
-EFD_ANNUAL = Decimal(11_000_000)
+# NO EFD constant here. efd_threshold_tzs_11m was corrected 2026-08-29: TAA Cap.438 s.44 sets no
+# turnover figure at all, so there is nothing to lock. See efd_required()'s docstring.
 
 ANNUAL, SIX_MONTH, MONTHLY = "annual", "six_month", "monthly"
 
@@ -140,54 +154,42 @@ def vat_registration(turnover, period: str) -> ComputationResult:
     )
 
 
-def efd_required(turnover=None, period: str = ANNUAL,
-                 vat_registered: bool = False) -> ComputationResult:
+def efd_required(vat_registered: bool = False) -> ComputationResult:
     """Does this business need an EFD machine?
 
-    Two independent grounds, tested in the order that lets the stronger one short-circuit:
-      1. VAT-registered -> YES regardless of turnover. No threshold comparison happens at all,
-         so no conditional is emitted; there is nothing left open.
-      2. annual turnover above TZS 11M -> YES.
-    Below the threshold and not VAT-registered the answer is no — but VAT registration would
-    change it, so THAT is the derived conditional here. Same rule as the VAT limbs: the open
-    condition is emitted from what was not established, not authored alongside it.
+    NO TURNOVER FIGURE IS ACCEPTED OR CONSULTED. TAA Cap.438 s.44 makes fiscal-receipt issuance
+    the DEFAULT for every person who supplies goods or renders services -- there is no turnover
+    threshold in the Act to compare against, at any level. The only exemption is a Commissioner-
+    General public notice naming a specific person or class (s.44(2)); this engine has no
+    digitized list of such notices, so it can never evaluate a trader's exemption status and
+    must never return "no" from a number. The correct verdict is therefore the SAME for a trader
+    at TZS 5,000,000 and one at TZS 50,000,000: required by default, exemption only by named CG
+    notice, confirm with TRA.
+
+    `vat_registered` is kept because it is a real rule and the single most common way this
+    question is asked -- but it no longer changes the OUTCOME (`applicable` is always True),
+    only the WORDING. There is exactly one ground now, not two: the default requirement.
     """
     if vat_registered:
-        return ComputationResult(
-            computation=COMPUTATION_EFD, applicable=True, amount=None,
-            working=("Ndiyo, unatakiwa kuwa na mashine ya EFD. Biashara iliyosajiliwa VAT "
-                     "inatakiwa kutumia EFD bila kujali kiasi cha mauzo. " + _CONFIRM),
-            inputs={"vat_registered": True, "ground": "vat_registered"},
-            note="EFD required on VAT registration alone — turnover not consulted")
-
-    if turnover is None:
-        raise ValueError("efd_required: no turnover and not VAT-registered — nothing to test; "
-                         "this is the caller's clarification case, not a computation")
-    if period != ANNUAL:
-        raise ValueError(
-            f"efd_required: the EFD threshold is an ANNUAL turnover test; {period!r} does not "
-            "address it and must not be annualised — route to the never-guess exit.")
-
-    turnover = Decimal(turnover)
-    over = turnover >= EFD_ANNUAL                    # the ONE place the verdict is decided
-    if over:
-        working = (f"Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya "
-                   f"{tzs(turnover)} yamefikia au kuzidi kizingiti cha {tzs(EFD_ANNUAL)}. "
-                   f"{_CONFIRM}")
+        working = (
+            "Ndiyo, unatakiwa kuwa na mashine ya EFD. Biashara iliyosajiliwa VAT inatakiwa "
+            "kutumia EFD -- na hii ni sehemu ya wajibu mpana zaidi: EFD inahitajika kwa kila "
+            "mfanyabiashara anayeuza bidhaa au huduma, bila kujali mauzo. Msamaha unatolewa TU "
+            "na TRA kupitia taarifa rasmi (kwa jina lako au kundi lako maalum). " + _CONFIRM)
+        ground = "vat_registered_and_default"
     else:
         working = (
-            f"Kwa upande wa mauzo: hapana, mauzo yako ya mwaka ya {tzs(turnover)} hayajafikia "
-            f"kizingiti cha EFD cha {tzs(EFD_ANNUAL)}, hivyo unaweza kutumia risiti za "
-            f"kuandika kwa mkono. LAKINI hili halijamalizika: IKIWA umesajiliwa VAT, EFD ni "
-            f"ya lazima bila kujali mauzo. Niambie kama umesajiliwa VAT nami nitathibitisha. "
-            f"{_CONFIRM}")
+            "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo "
+            "yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia "
+            "taarifa rasmi (Commissioner-General public notice) inayotaja jina lako au kundi "
+            "lako maalum. Thibitisha na TRA kama taarifa kama hiyo inakuhusu. " + _CONFIRM)
+        ground = "default_requirement"
 
     return ComputationResult(
-        computation=COMPUTATION_EFD, applicable=over, amount=None, working=working,
-        inputs={"turnover": turnover, "period": ANNUAL, "threshold": EFD_ANNUAL,
-                "vat_registered": False,
-                "ground": "turnover" if over else None,
-                "condition_open": None if over else "vat_registration"},
-        note=("annual turnover at or above the EFD threshold" if over else
-              "below the EFD turnover threshold; VAT registration stated conditionally"),
+        computation=COMPUTATION_EFD, applicable=True, amount=None, working=working,
+        inputs={"vat_registered": vat_registered, "ground": ground},
+        note="EFD required by default for everyone; turnover is never consulted because no "
+             "turnover threshold exists in the Act (TAA Cap.438 s.44). Exemption is only by "
+             "Commissioner-General public notice naming a class, which this engine cannot "
+             "evaluate from a turnover figure.",
     )

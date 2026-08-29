@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-29
+Last updated: 2026-08-30
 
 ---
 
@@ -132,6 +132,104 @@ check against. **Not changed in this pass** — redesigning this function is a b
 decision than a fact-text correction and needs the founder's call on what `efd_required()` should
 return when there is no threshold to test. Flagged here, prominently, rather than patched
 quietly.
+
+## ⚙️ RESOLVED (2026-08-30): the engine fixed, the eval scoring keys corrected, and a THIRD site found
+
+Per founder instruction: engine first, both before tier 2.
+
+### `chike/rules_engine/registration_thresholds.py` — `EFD_ANNUAL` removed, not patched
+
+`efd_required()` no longer takes a `turnover` or `period` argument at all — there is nothing to
+compare either against. It now always returns `applicable=True`: required by default for
+everyone, with the VAT-registered ground kept (a real rule, common enough to word explicitly) but
+no longer changing the OUTCOME, only the wording. **The turnover ground has no correct replacement
+of the same shape**, per the founder's framing: a trader at 5M and one at 50M get the identical
+answer, so the comparison itself is gone, not re-pointed at a different number. `EFD_ANNUAL =
+Decimal(11_000_000)` is deleted outright — the module docstring records why, so the constant
+cannot quietly reappear the next time someone reaches for "the EFD threshold" without re-reading
+this history.
+
+`chike/orchestrator.py:_answer_efd_requirement` simplified to match: no turnover extraction, no
+period check, no clarification path — every EFD-routed question gets an immediate, unconditional
+answer now, because no stated figure or period can change it. `chike/clarification.py`'s
+`EFD_PERIOD_IS_A_RATE` and `EFD_NO_BASIS` are deleted; both asked the trader for a turnover figure
+that no longer matters, and both asserted the fabricated 11M figure in their own copy.
+
+`tests/test_registration_thresholds.py` rewritten for the one-ground contract: EFD is always
+`applicable=True`; a new test asserts the function signature no longer accepts `turnover`/`period`
+at all (so a caller cannot reintroduce a comparison by accident); a new test asserts neither
+11,000,000 nor 14,000,000 nor a "kizingiti cha mauzo" claim (other than explicitly rejecting one)
+appears in the working text of either branch. `eval/accuracy_gate/vat_efd_probes_019.jsonl`'s
+`vf_09` (8M turnover) and `vf_11` (monthly-rate shape) both had their `truth` fields flipped from
+`not_on_this_ground`/`clarify` to `required` — the same genuine verdict flips as the accuracy-gate
+rows below, `_scoring_key_correction` recorded on each. **Full suite: 1379 passed, 0 failed**,
+both before and after — no regression anywhere else in the codebase from this redesign.
+
+### Sweep of `chike/rules_engine/*.py` for other constants tracing to a corrected-or-ungrounded fact
+
+Checked every `Decimal(...)` constant carrying a `# Locked: <fact>` comment against today's
+corrections and the broader provenance audit's ungrounded list:
+
+| constant | file | fact | status |
+|---|---|---|---|
+| `NSSF_TOTAL_RATE`/`EMPLOYER_RATE`/`EMPLOYEE_RATE` | rates.py | nssf_total_rate, nssf_employer_rate | **CONFIRMED CLEAN** this session (Cap.50 First Schedule, direct read) |
+| `WCF_RATE = 0.005` | rates.py | wcf_rate_0_5_percent_confirmed | current figure unaffected — only the fact's HISTORY line was corrected, not the rate itself |
+| `SDL_RATE = 0.035` | rates.py | sdl_rate (comment) / sdl_calculation_example (Tier-1 audit) | **STILL UNGROUNDED, not confirmed wrong** — same status as the Tier-1 report: corroborated by multiple practitioner sources, but the only Act text opened (VETA Cap.82 s.14) is itself 3 amendments stale. `sdl_rate`'s own `verified_by` names "Finance Act 2023" directly (better than most), but `primary_source` is still the tra.go.tz portal. Not changed — no evidence it's wrong. |
+| `PAYE_NONRESIDENT_RATE = 0.15` | rates.py | paye_nonresident_flat_rate | **NEVER GROUNDED, newly noticed** — `verified_by` is a PwC portal page only, no Act citation at any level. Not part of the original 19; not confirmed wrong; flagged for a future tier's source pass, not changed here. |
+| PAYE band table (270k/8%, 520k/20%, 760k/25%, 1M/30%) | rates.py | paye_bands_with_examples, paye_band_2_rate | **STILL UNGROUNDED**, exactly as the Tier-1 report already found — figures match current practitioner guides, but TRA's own hosted Cap.332 consolidation shows a different, older 9%-band table. Code value (8%) is very likely right and was NOT changed to match the stale document; flagged, not touched. |
+| presumptive-tax band table (4M/7M/11M/100M-ceiling-flat-3.5%) | rates.py | (unnamed in comments; matches CLAUDE.md's FA2022 s.72 fix) | **CONFIRMED CLEAN by cross-check**: reproduces CLAUDE.md's own documented correct figure (50M turnover → 1,750,000) exactly. Worth recording a refinement found while checking this: the EFD-resolution research pass's quoted "11M–14M: fixed 450,000" band does NOT appear in this current table — 14,000,000 only appears in what looks like the STALE pre-FA2022 schedule, not the current one. Doesn't change the EFD correction's conclusion (11M/14M are still not EFD figures either way), but the citation "First Schedule para.2(3)" in `efd_threshold_tzs_11m` may be pointing at superseded text for the 14M half specifically — noted for a future cleanup pass, not urgent. |
+| WCF disease-reporting deadline (7/14/21 days) | — | wcf_disease_reporting_deadline | **not coded anywhere** — this fact is purely RAG-served, never computed, so there was nothing in `wcf.py` to fix alongside the fact correction. |
+| VAT standard rate (18%/16%) | — | vat_standard_rate | **not coded anywhere** — no VAT-rate constant exists in `rules_engine/` at all; purely fact-served. |
+
+**One constant was fabricated (`EFD_ANNUAL`), now removed. Two are never-grounded-but-unconfirmed
+(`PAYE_NONRESIDENT_RATE`, and `SDL_RATE`/`sdl_calculation_example` already on the board). Nothing
+else in `rules_engine/` needed a code change.**
+
+### ⛔ A THIRD SITE, FOUND BY A FAILING TEST, NOT BY READING CODE
+
+Flipping `tg_08`'s `expect_flag` (below) broke `tests/test_threshold_guard.py::test_probe_contract`
+— `chike/fidelity.py`'s `_STATUTORY_THRESHOLDS["efd"] = frozenset({11_000_000})` was a THIRD
+production site encoding the exact same fabrication, this time inside the fidelity guard that
+exists to catch a reply stating a wrong statutory constant (D-FIDELITY-7). It had been treating
+11,000,000 as the one LAWFUL EFD figure — meaning the guard would have PASSED a reply asserting
+the fabricated threshold and FLAGGED a reply correctly saying no threshold exists, exactly
+backwards. Changed to `frozenset()` (empty): no amount is lawful for EFD now, so any stated EFD
+threshold is correctly flagged. **This was not found by inspection — it was found because
+correcting an eval probe made a real test fail**, which is the sweep this project already
+documents as R26 in miniature: a control's blind spot surfaces when something touching it changes,
+not when someone re-reads it. Full suite re-confirmed green after the fix: 1379 passed.
+
+### Eval scoring-key corrections — 13 rows across 6 files, `eval/results/` untouched
+
+Per founder: correct the gate/probe files, record it as a scoring-key correction with reasoning
+in each row, leave `eval/results/` alone (R18 — a measurement is not rewritten after the fact),
+and record plainly that gate figures spanning this date are not comparable on these rows.
+
+| file | rows | what changed |
+|---|---|---|
+| `eval/accuracy_gate/edge_probe_natural_048.jsonl` | nat_36 | reasoning only — verdict (required) unchanged |
+| `eval/accuracy_gate/eval_questions_003.jsonl` | eval_331 | **verdict flipped** No → Yes |
+| | eval_347 | reasoning only — verdict (No, 200M isn't it) unchanged, but no longer names 11M as the real one |
+| | eval_354 | reasoning only — verdict (Yes) unchanged; its "exactly at the boundary" design intent is now moot |
+| | eval_355 | **verdict flipped** No → Yes; this is the exact row PROGRESS.md previously recorded as a "known-minor accepted, no further regen" generation-boundary flip (2026-07-28) — it was the fabricated threshold surfacing the whole time, not a quirk |
+| `eval/accuracy_gate/quantity_instruction_heldout_024.jsonl` | qi_n07 | `expect_value` changed from a number to "hakuna kizingiti" (no threshold) |
+| `eval/accuracy_gate/threshold_comparison_probes_024.jsonl` | th_09, th_10, th_19 | `T=11000000` removed from all three; `truth` changed to `required_by_default`; **th_10 verdict flipped** (not mandatory → required) |
+| `eval/fidelity/threshold_guard_probes.jsonl` | tg_03 | `expect_flag` unchanged (still wrong), reasoning corrected |
+| | tg_08 | **`expect_flag` flipped false → true** — this project's own former canonical example of a "correct" EFD statement is now the guard's example of what it must catch |
+| `eval/accuracy_gate/vat_efd_probes_019.jsonl` | vf_09, vf_11 | `truth` flipped (below/clarify → required) — covered above with the engine fix |
+
+**Every row's correction is recorded in the row itself** (`_scoring_key_correction` field), not
+only here — so the reasoning travels with the data.
+
+**⛔ NON-COMPARABILITY, STATED PLAINLY:** any gate or fidelity-guard score computed on these 13
+rows before 2026-08-30 is not comparable to a score computed after. A reply that was correct under
+the old key (e.g., "no, below 11M") is now wrong, and vice versa. This is the same precedent as
+the `nssf.or.tz` scoring-key correction: a key asserting a non-existent threshold has no reading on
+which side of it a reply falls, so the old scores were not measuring compliance with law on these
+rows — they were measuring agreement with a fabrication. Any historical accuracy figure that
+includes `efd_compliance` subdomain rows (nat_36, eval_331/347/354/355, qi_n07, th_09/10/19,
+tg_03/08, vf_09/11) should be read with that caveat attached, per R22's standing rule: name the
+population a number was measured on before citing it.
 
 **Corpus impact swept and quarantined** (`scripts/correct_corpus_defects_v2.py` for the mining/wcf
 defects, `_v3.py` for this one, both 2026-08-29) — see the CORPUS CORRECTION v2/v3 entries below

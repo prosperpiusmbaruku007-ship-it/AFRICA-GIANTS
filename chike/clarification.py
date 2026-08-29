@@ -152,21 +152,13 @@ VAT_NO_TURNOVER = (
     "miezi 12 na TZS 100,000,000 kwa miezi 6 mfululizo."
 )
 
-# EFD, monthly/weekly rate or a non-annual period. The EFD test is on ANNUAL turnover only.
-EFD_PERIOD_IS_A_RATE = (
-    "Kizingiti cha EFD kinapimwa kwa mauzo ya MWAKA: biashara yenye mauzo ya mwaka ya TZS "
-    "11,000,000 au zaidi inatakiwa kutumia mashine ya EFD, na biashara yoyote iliyosajiliwa "
-    "VAT inatakiwa kuwa nayo bila kujali mauzo. Sitakisii mauzo ya mwaka kutokana na ya mwezi "
-    "mmoja. Niambie jumla ya mauzo yako ya mwaka, au kama umesajiliwa VAT, nami nitathibitisha."
-)
-
-# EFD with neither a turnover figure nor a registration statement.
-EFD_NO_BASIS = (
-    "Ili nikwambie kama unatakiwa kuwa na mashine ya EFD, niambie mojawapo: jumla ya mauzo "
-    "yako ya mwaka, au kama biashara yako imesajiliwa VAT. Biashara iliyosajiliwa VAT "
-    "inatakiwa kuwa na EFD bila kujali mauzo; isiyosajiliwa inatakiwa ikiwa mauzo ya mwaka ni "
-    "TZS 11,000,000 au zaidi."
-)
+# REMOVED 2026-08-29 (EFD_PERIOD_IS_A_RATE, EFD_NO_BASIS): both asked the trader for a turnover
+# figure or period before answering the EFD question, and both asserted the TZS 11,000,000
+# figure as the threshold their answer would depend on. TAA Cap.438 s.44 has no turnover
+# threshold at all -- fiscal-receipt issuance is the default for everyone -- so there is no
+# figure or period that could change the verdict, and no clarification to ask for. See
+# chike/rules_engine/registration_thresholds.py:efd_required(), which now takes no turnover
+# argument at all.
 
 # === PRESUMPTIVE INCOME TAX (Cap 332 First Schedule para 2, as amended by FA2022 s.72) ===
 # Three exits, and only three. The records question is asked ONLY where the two columns of the
