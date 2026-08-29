@@ -44,21 +44,98 @@ s.14, is itself 3 amendments stale), `vat_registration_threshold` (12mo/6mo stru
 s.28, exact TZS 200M figure lives in an inaccessible regulation), `brela_foreign_late_filing_penalty`,
 `gn605a_average_increase` (access-blocked both, no contradicting evidence either).
 
-**`efd_threshold_tzs_11m` — spun out, resolved to a finding, not a number.** Dedicated pass read
-TAA Cap.438 s.36 ("Use of electronic fiscal device") in full: it makes EFD the default for
-everyone, delegates exemptions to a Commissioner-General public notice, and **contains no TZS
-figure at all**. 11,000,000 and 14,000,000 both exist in the Act — but as adjacent band edges in
-the First Schedule's PRESUMPTIVE INCOME TAX table (paragraph 2(3)), not as an EFD threshold.
-Practitioner guides appear to have conflated the record-keeping/presumptive-tax boundary with the
-EFD mandate because both sit in the same Part of the Act. A renumbering trap was also found
-mid-pass (s.36 is now s.44 per a Finance Act 2024 Lexology summary) and not fully chased down.
-**Recommendation taken as the finding, not yet acted on:** the defensible fact is structural (EFD
-is the universal default; exemptions are by CG notice, not a fixed figure) — a specific TZS
-threshold cannot currently be locked as "the EFD requirement" without either the actual CG notice
-or a citation that is honest about pointing at the presumptive-tax table instead.
+**`efd_threshold_tzs_11m` — RESOLVED AND CORRECTED (2026-08-29), outranks tier 2 per founder: this
+fact serves 111 times and had been telling traders a threshold exists where the statute sets
+none.**
 
-**Corpus impact swept and quarantined** (`scripts/correct_corpus_defects_v2.py`, 2026-08-29) — see
-the CORPUS CORRECTION v2 entry below for the full breakdown and the new fabrication-class board
+**Renumbering chased before writing anything, per instruction.** The prior pass's s.36 citation
+is confirmed STALE. Current in-force text: **Tax Administration Act, Cap.438 R.E.2023, s.44
+"Issuance of Fiscal Receipt"** (OSG e-library, elibrary.osg.go.tz — the authoritative host for the
+2023 consolidation; tanzlii.org still only serves the older `eng@2019-11-30` expression).
+Renumbered from s.36 by **Finance Act 2023 s.54** — confirmed by two independent fetches of the
+same PDF plus a corroborating Lexology summary of an unrelated Finance Act 2024 amendment that
+cited the new number in passing. Renumbering map recovered for the surrounding block too (§42
+electronic document system, §43 maintenance of documents — the old s.35/43 renumbering already
+documented elsewhere in this file — §44 fiscal receipt, §45 tax return, §46 e-filing): the whole
+block shifted +7/+8 as new Tax Ombudsman provisions were inserted ahead of it in R.E.2023. Section
+44 itself: **still no TZS figure anywhere, both editions** — universal default (s.44(1)), CG
+public-notice exemption only (s.44(2)), manual receipt if excluded (s.44(3)-(4)). One wording
+difference flagged, not fully triple-confirmed: R.E.2019 said "issue fiscal receipt **or fiscal
+invoice by using electronic fiscal device**"; R.E.2023 drops that clause to just "issue fiscal
+receipt."
+
+**Fact rewritten to say what the law says, not to hedge.** `efd_threshold_tzs_11m` now asserts:
+EFD is the default for everyone regardless of turnover (s.44(1)); the only exemption is a
+Commissioner-General public notice naming a class (s.44(2)); TZS 11,000,000 and TZS 14,000,000 are
+explicitly REJECTED as "the EFD threshold" and named as what they actually are — adjacent band
+edges in the Income Tax Act's presumptive-income-tax table (First Schedule para.2(3)), a different
+provision about tax rates for non-compliant record-keepers. The correct answer to "do I need an
+EFD at my turnover?" is now "Ndiyo, kwa default — isipokuwa TRA imetoa taarifa rasmi
+inayokuondolea wewe/kundi lako. Thibitisha na TRA." — a real answer, not a turnover comparison.
+Sibling fact `efd_not_every_business` — built in 2026-07-28 specifically to win RAG retrieval
+against `efd_threshold_tzs_11m` for eval_347 (see FACT-ACCURACY Q16 below) — rewritten the same
+way; it was internally consistent with the wrong fact, not with the statute.
+
+**Two things recorded per founder instruction, both inside `efd_threshold_tzs_11m`'s
+`correction_note` in `scripts/locked_facts.json`:**
+1. The founder approved TZS 11,000,000 on 2026-07-27 on the strength of TRA's own live portal
+   pages agreeing with it **twice** (`tra.go.tz/page/know-about-e-fiscal-devices-efd` and
+   `tra.go.tz/page/efd-vfd-suppliers`). Both pages were wrong the same way for the same reason:
+   **two agreeing secondary sources that share a lineage are one source, not two.**
+2. The 2026-07-28 FACT-ACCURACY Q16 resolution explicitly invoked a "primary-over-practitioner"
+   hierarchy (D-VATWH-1 precedent) to pick 11M over practitioners' 14M, and still landed on the
+   wrong answer — **because the "primary source" it actually consulted was TRA's portal, not the
+   Act.** The rule was right; the source it was applied to wasn't primary at all.
+
+**Corpus swept — largest defect found in this entire line of work.** `scripts/correct_corpus_defects_v3.py`
+found **58 rows** asserting an EFD requirement tied to TZS 11M or 14M turnover, across 12 files —
+**including 1 row in `val_sft.jsonl`**, unlike the mining/wcf-deadline defects, which val did not
+carry. Both digit form ("11,000,000") and spelled Swahili form ("milioni 11") had to be matched;
+the spelled form accounts for most of the corpus's actual phrasing and was missing from the first
+regex draft. A rejection guard (protecting a future pair that correctly says "TZS 11,000,000 is
+NOT the threshold") was itself wrong on its first version — it matched generic "si"/"kizingiti"
+proximity and let 6 real defects through, because *"Kizingiti sahihi ni TZS milioni 11 — si
+40M"* ("The correct threshold IS 11M — not 40M") rejects a DIFFERENT number while asserting the
+exact defect. Fixed by requiring the rejection word to sit directly against the number itself, not
+merely near the word "threshold" — caught and fixed before running for real, per the same
+discipline as v2's regex miss. All 58 read in context before quarantining; 0 remain after.
+
+**Eval corpora carry the SAME defect as ground truth — identified, not changed.** A gate question
+whose expected answer cites a non-existent threshold scores a now-correct reply as wrong. Found in:
+`eval/accuracy_gate/edge_probe_natural_048.jsonl` (nat_36 — `expected_behavior` requires "TZS
+11,000,000" as the cutoff), `eval/accuracy_gate/eval_questions_003.jsonl` (eval_331, eval_347,
+eval_354, eval_355 — `correct_answer_sw` fields assert 11,000,000 as the boundary; **eval_347
+specifically is the "200M is not the EFD threshold, 11M is" contrast row `efd_not_every_business`
+was purpose-built to win retrieval for** — its own gold answer likely still supplies 11M as "the
+right one" even though the question's own point, that 200M is wrong, stays valid),
+`eval/accuracy_gate/quantity_instruction_heldout_024.jsonl` (qi_n07 — `expect_value: "11,000,000"`),
+`eval/accuracy_gate/threshold_comparison_probes_024.jsonl` (th_09, th_10, th_19 — `T: 11000000`
+used as the comparison constant), `eval/fidelity/threshold_guard_probes.jsonl` (tg_03, tg_08 —
+tg_08 is a fidelity guard's own canonical CORRECT-BODY example, built around the now-falsified
+threshold — *"the row whose ask-aligned rewrite moved it from rank 17 to rank 1,"* a past
+retrieval-quality win now standing on a wrong fact). **Not edited.** Rewriting gate ground truth
+changes what every future gate run measures — a bigger, separate decision than a training-data
+quarantine, left for the founder.
+
+**⛔ NEW, HIGHER-SEVERITY FINDING SURFACED WHILE CHECKING FOR OTHER REFERENCES: this is not only a
+RAG-served fact, it is PRODUCTION COMPUTE LOGIC.** `chike/rules_engine/registration_thresholds.py`
+hardcodes `EFD_ANNUAL = Decimal(11_000_000)` and `efd_required()` computes a deterministic
+yes/no verdict by comparing a trader's stated turnover against it (`over = turnover >= EFD_ANNUAL`)
+— a real branch in a real function, not text served from an index. Per R19, this is a CONSTANT
+comparison (buildable), but the constant itself is now known to be fabricated, and the whole
+computational SHAPE assumes a turnover test exists to run at all. The VAT-registration override
+ground (`vat_registered=True` → always required) remains correct and untouched. The turnover
+ground does not have a correct replacement of the same shape — the statute's actual rule
+("yes by default, unless a named CG notice exempts your class") is not a threshold comparison the
+engine can evaluate from a turnover number, since no digitized exemption-class list exists to
+check against. **Not changed in this pass** — redesigning this function is a bigger engineering
+decision than a fact-text correction and needs the founder's call on what `efd_required()` should
+return when there is no threshold to test. Flagged here, prominently, rather than patched
+quietly.
+
+**Corpus impact swept and quarantined** (`scripts/correct_corpus_defects_v2.py` for the mining/wcf
+defects, `_v3.py` for this one, both 2026-08-29) — see the CORPUS CORRECTION v2/v3 entries below
+for the full breakdown and the fabrication-class board
 item this raised.
 
 **Next: Tier 2** (`served_actionable_peripheral` 12 + `in_index_never_served` 22 = 34 facts).
@@ -1304,10 +1381,12 @@ pair, none is a correct two-stage explanation. The first regex draft missed 4 of
 wa" the other phrasings use) — found and fixed before running for real, not after.
 
 **⛔ THE RETRAIN PRECONDITION TABLE BELOW IS NOW STALE.** It was correct on 2026-08-25 for the
-three defects then known. **A retrain on today's SFT files would still bake in 17 mining-55 rows
-and 6 wcf-7-day rows** on top of whatever the 2026-08-25 pass already closed. Combined open count
-across both passes as of 2026-08-29: **98 quarantined rows** (75 + 23) across five defect classes,
-none in `val_sft` for the two new ones (unlike the original three, which val carried all of).
+three defects then known. **A retrain on today's SFT files would still bake in 17 mining-55 rows,
+6 wcf-7-day rows, and 58 EFD-threshold rows** on top of whatever the 2026-08-25 pass already
+closed. Combined open count across all three 2026-08-29 passes plus the original: **156
+quarantined rows** (75 + 23 + 58) across six defect classes. `val_sft` carries the original three
+defects in full and the EFD-threshold defect (1 row); mining-55 and wcf-7-day are the only two
+that never reached `val_sft`.
 
 **A NEW BOARD ITEM, ABOVE TIER 2, per founder instruction:** two confirmed instances now exist —
 `nssf_retirement_age`'s "mining" and the corpus's PAYE-band-2-at-9% — of a claim that is in the
@@ -1332,6 +1411,41 @@ something other than a sector, or a fabrication whose citation was invented to m
 9%-band corpus defect, for instance, is not something this locked-facts audit could ever see,
 since `paye_band_2_rate` itself correctly says 8%; that defect lives in the corpus, not in the
 fact, and is only found by the kind of lineage-tracing done above, not by a metadata-text check.
+
+---
+
+## 🧼 CORPUS CORRECTION v3 (2026-08-29) — the EFD-threshold fabrication, largest defect found in this entire line of work
+
+`scripts/correct_corpus_defects_v3.py` → `eval/results/corpus_correction_v3.json`. Companion to
+v1 and v2, same date, same disposition, different defect.
+
+**58 rows** across 12 files asserted an EFD requirement tied to TZS 11,000,000 or TZS 14,000,000
+turnover — Tax Administration Act Cap.438 s.44 (renumbered from s.36 by Finance Act 2023 s.54,
+chased down before this fact was rewritten) makes EFD the default for everyone with no turnover
+figure anywhere in the Act; both TZS figures belong to an unrelated presumptive-income-tax table.
+See the Tier 1 report above for the full statute finding and the two founder-instructed
+retrospective notes. **Unlike the mining/wcf-deadline defects, this one reaches `val_sft.jsonl`
+(1 row)** — validation loss has been rewarding this specific wrong claim, the same shape as the
+2026-08-25 PAYE defects.
+
+| | |
+|---|---|
+| EFD-threshold rows **quarantined** | **58** → `datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl` (14 from `train_sft`, 2 from `train_sft_balanced`, **1 from `val_sft`**) |
+| verification after | **0** remaining ✅ |
+
+**Both digit form ("11,000,000") and spelled Swahili form ("milioni 11") had to be matched** — the
+spelled form accounts for most of the corpus's actual phrasing and was absent from the first regex
+draft (which found only 4 hits; the full pattern found 58). **A rejection guard (meant to protect
+a future pair correctly stating "TZS 11,000,000 is NOT the threshold") was itself wrong on its
+first version, and this is worth reading closely because of what kind of wrong it was**: it
+matched generic "si"/"kizingiti" proximity and would have let 6 real defects through, because
+*"Kizingiti sahihi ni TZS milioni 11 — si 40M"* ("The correct threshold IS 11M — not 40M") rejects
+a DIFFERENT number while asserting the exact defect. A guard checking only "is there a negation
+word near the word 'threshold'" cannot tell "this number is wrong" from "this number is right, a
+different one is wrong" — it has to check what is actually being negated. Fixed by requiring the
+rejection word to sit directly against THE NUMBER ITSELF, not merely near the word "threshold";
+caught by testing the guard against a real corpus sentence before trusting it, not by reasoning
+about the regex in the abstract.
 
 ---
 
