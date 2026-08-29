@@ -1,0 +1,35 @@
+{
+  "measured": "2026-08-29",
+  "dry_run": false,
+  "harness": "scripts/correct_corpus_defects_v2.py",
+  "supersedes": null,
+  "companion_of": "scripts/correct_corpus_defects.py (v1)",
+  "quarantine_file": "datasets/tier1a/rejected/fabrication_and_deadline_defect_quarantine_2026_08_29.jsonl",
+  "quarantine": {
+    "rows": 23,
+    "by_file": {
+      "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_012.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_015.jsonl": 5,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl": 1,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl": 1,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_012.jsonl": 1,
+      "datasets/tier1a/sft/train_sft.jsonl": 8,
+      "datasets/tier1a/sft/train_sft_balanced.jsonl": 3
+    }
+  },
+  "skipped_because_NEGATED": [],
+  "skipped_because_TWO_STAGE_CORRECT": [],
+  "verification_after": {
+    "datasets_rows_still_asserting_mining_55": 0,
+    "datasets_rows_still_at_flat_wcf_7day": 0,
+    "clean": true
+  },
+  "what_this_does_NOT_do": [
+    "It does not regenerate the SFT files. generate_sft.py must be re-run (behind check_eval_split.py) before any training, or the quarantined rows are still in the exported training set.",
+    "It does not touch the RAG index. locked_facts.json was corrected 2026-08-29 (commit cb34a2e); R15 regeneration is separate, pending.",
+    "It does not resolve GN605A_rate_range or osha_vs_wcf_roles, the two flags from scripts/audit_fact_claim_grounding.py -- one is a confirmed false positive (title match), the other is plausible-but-unconfirmed and not a corpus defect."
+  ]
+}

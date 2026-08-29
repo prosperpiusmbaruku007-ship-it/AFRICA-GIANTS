@@ -1,6 +1,67 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-28
+Last updated: 2026-08-29
+
+---
+
+# ✅ TIER 1 (the 19 SERVED_ACTIONABLE_HIGH_TRAFFIC facts, minus corporate_tax_rate/amt_loss_companies_only) — RE-VERIFIED AGAINST STATUTE. 5 corrected, 4 unresolved, rest confirmed clean. EFD threshold spun out separately, resolved to "not sourceable at either figure."
+
+Batch re-verified section-by-section against governing Act/Regulation text (not portal summaries),
+grouped by statute per founder instruction. Corrections landed in `scripts/locked_facts.json`
+(commit `cb34a2e`), ordered by harm (wrong deadline > wrong deadline > incomplete rate > invented
+qualifier > wrong history line):
+
+1. `wcf_disease_reporting_deadline` — was "7 working days of diagnosis"; GN 185/2016 Reg.16 is a
+   two-stage chain, true worst case 21 working days.
+2. `objection_deposit_requirement` — was "within 15 days"; TAA Cap.438 s.51 ties the deposit to
+   the 30-day objection-filing window, no separate clock.
+3. `vat_standard_rate` — 18% confirmed (VAT Act s.5(1)), but omitted the 16% B2C e-payment
+   carve-out (Finance Act 2025, eff. 1 Sep 2025) that CLAUDE.md §11 already tracked separately.
+   Sibling fact `vat_reduced_rates` had the identical omission — folded in immediately after, so
+   it doesn't carry the same gap into the next audit.
+4. `nssf_retirement_age` — "(55 for mining/early retirement)"; "mining" is in NSSF Act Cap.50
+   Part V nowhere, and in neither of the fact's own two cited sources either. **Invented during
+   authoring, not a stale citation** — see the new board item below.
+5. `wcf_rate_0_5_percent_confirmed` — history line wrongly implied 1% applied to all sectors
+   pre-2021; GN 169/2015 shows the public sector was already 0.5% since 2015. Current 0.5% figure
+   itself unaffected.
+
+**Confirmed clean against primary text:** `nssf_employer_rate`, `nssf_total_rate`,
+`nssf_calculation_example` (Cap.50 s.12(1) + First Schedule), `VAT_zero_rated_vs_exempt_input_VAT`
+(strongest-grounded fact in the batch — VAT Act ss.2,5,68,70), `paye_personal_relief` (confirmed
+by direct search of Cap.332 AND all five Finance Acts 2022–2026, no relief provision anywhere),
+`wcf_new_employer_registration`, `wcf_accident_reporting`.
+
+**Still ungrounded, not contradicted — figures look right, citation chain is broken:**
+`paye_bands_with_examples` / `paye_band_2_rate` (8% band confirmed by current practitioner guides,
+but no Finance Act 2022–2026 touches this table and **TRA's own hosted Cap.332 consolidation shows
+a different, older 9%-band table** — checked whether this is where the corpus's 32-row 9%-band
+defect came from: **it isn't**; all 32 rows cite the live TRA portal page with the CURRENT band
+thresholds, only the rate swapped, while the stale PDF's old table uses entirely different
+thresholds — coincidental match, not lineage. The 9% defect is fabrication, same class as
+"mining"), `sdl_calculation_example` (3.5% corroborated but the only Act text opened, VETA Cap.82
+s.14, is itself 3 amendments stale), `vat_registration_threshold` (12mo/6mo structure confirmed in
+s.28, exact TZS 200M figure lives in an inaccessible regulation), `brela_foreign_late_filing_penalty`,
+`gn605a_average_increase` (access-blocked both, no contradicting evidence either).
+
+**`efd_threshold_tzs_11m` — spun out, resolved to a finding, not a number.** Dedicated pass read
+TAA Cap.438 s.36 ("Use of electronic fiscal device") in full: it makes EFD the default for
+everyone, delegates exemptions to a Commissioner-General public notice, and **contains no TZS
+figure at all**. 11,000,000 and 14,000,000 both exist in the Act — but as adjacent band edges in
+the First Schedule's PRESUMPTIVE INCOME TAX table (paragraph 2(3)), not as an EFD threshold.
+Practitioner guides appear to have conflated the record-keeping/presumptive-tax boundary with the
+EFD mandate because both sit in the same Part of the Act. A renumbering trap was also found
+mid-pass (s.36 is now s.44 per a Finance Act 2024 Lexology summary) and not fully chased down.
+**Recommendation taken as the finding, not yet acted on:** the defensible fact is structural (EFD
+is the universal default; exemptions are by CG notice, not a fixed figure) — a specific TZS
+threshold cannot currently be locked as "the EFD requirement" without either the actual CG notice
+or a citation that is honest about pointing at the presumptive-tax table instead.
+
+**Corpus impact swept and quarantined** (`scripts/correct_corpus_defects_v2.py`, 2026-08-29) — see
+the CORPUS CORRECTION v2 entry below for the full breakdown and the new fabrication-class board
+item this raised.
+
+**Next: Tier 2** (`served_actionable_peripheral` 12 + `in_index_never_served` 22 = 34 facts).
 
 ---
 
@@ -1203,7 +1264,78 @@ an artifact of applying the percentile model to a row the model does not fit. Fo
 **ratio** is flat; for `nat_43` the **rank** is flat. **An instrument that misclassifies its own
 control is exactly what R23 is about**, and the number should be read as "≈1", not 2.7.
 
-## 🧼 CORPUS CORRECTION — applied. The retrain precondition is now met.
+## 🧼 CORPUS CORRECTION v2 (2026-08-29) — two MORE defect classes found re-verifying Tier 1; the retrain precondition below is now STALE, not met
+
+`scripts/correct_corpus_defects_v2.py` → `eval/results/corpus_correction_v2.json`. Companion to,
+not a replacement of, the pass below — same disposition (quarantine, not rewrite), same R20
+reasoning, different date and different defect shapes.
+
+**Found while re-verifying the Tier 1 SERVED_ACTIONABLE_HIGH_TRAFFIC facts against statute
+(founder-ordered batch, 5 corrections landed in `scripts/locked_facts.json` commit `cb34a2e`).**
+Two of the five corrections turned out to already be live in the training corpus, not just in the
+locked fact:
+
+1. **NSSF "mining" retirement fabrication.** `nssf_retirement_age` claimed "(55 for mining/early
+   retirement)". Re-verified against NSSF Act Cap.50 Part V directly: no mining-specific
+   provision exists anywhere in the Act, and neither of the two sources the fact was originally
+   verified against (Mywage.org, a US SSA Tanzania country profile) mentions mining either. **This
+   is the SAME defect class as the PAYE-band-2-at-9% row below: a claim with no source anywhere,
+   not a stale citation** — confirmed by checking the 9%-band lineage this session (all 32
+   quarantined rows below cite the live TRA PAYE portal page and use the CURRENT band thresholds
+   with only the rate swapped; the stale tra.go.tz Cap 332 PDF's old table uses entirely different
+   thresholds — the two 9%s are coincidental, not copied). **17 occurrences** across 10 files, **8
+   inside `train_sft.jsonl`**, **3 inside `train_sft_balanced.jsonl`**. Zero in `val_sft.jsonl`.
+2. **WCF occupational-disease "flat 7 working days of diagnosis."** `wcf_disease_reporting_deadline`
+   claimed a flat 7-day window; GN 185/2016 Reg.16 is a two-stage chain (employee→employer 14
+   working days, then employer→WCF 7 more) — true worst case is **21 working days**, not 7. This
+   is a stale-source-COMPRESSION defect, not a fabrication: the 7-day figure is real, just
+   mis-attached to the wrong reference point. **6 occurrences**, all in `train_sft.jsonl` (3) and
+   `cleaned_pairs_batch_015.jsonl` (3). Zero in `val_sft.jsonl`.
+
+| | |
+|---|---|
+| Mining-55 + WCF-7-day rows **quarantined** | **23** → `datasets/tier1a/rejected/fabrication_and_deadline_defect_quarantine_2026_08_29.jsonl` (11 from `train_sft`, 3 from `train_sft_balanced`, 0 from `val_sft`) |
+| verification after | mining-55 **0** · flat wcf-7-day **0** ✅ |
+
+**Every match was read in context before quarantining, not assumed from a bare grep** — all 17
+mining hits and all 6 WCF hits are genuine assertions of the wrong claim; none is a corrective
+pair, none is a correct two-stage explanation. The first regex draft missed 4 of the 17 (the bare
+"miaka 60 (55 kwa sekta ya madini)" parenthetical shape, which drops the repeated "miaka"/"umri
+wa" the other phrasings use) — found and fixed before running for real, not after.
+
+**⛔ THE RETRAIN PRECONDITION TABLE BELOW IS NOW STALE.** It was correct on 2026-08-25 for the
+three defects then known. **A retrain on today's SFT files would still bake in 17 mining-55 rows
+and 6 wcf-7-day rows** on top of whatever the 2026-08-25 pass already closed. Combined open count
+across both passes as of 2026-08-29: **98 quarantined rows** (75 + 23) across five defect classes,
+none in `val_sft` for the two new ones (unlike the original three, which val carried all of).
+
+**A NEW BOARD ITEM, ABOVE TIER 2, per founder instruction:** two confirmed instances now exist —
+`nssf_retirement_age`'s "mining" and the corpus's PAYE-band-2-at-9% — of a claim that is in the
+corpus and in NO source anywhere, with the 9% lineage check proving it wasn't copied from a stale
+document. **This is a different defect class from everything else in this file.** The provenance
+audit (v1/v2) distinguishes GROUNDED from UNGROUNDED; it cannot distinguish
+ungrounded-but-true from INVENTED, and the second is the one that puts a figure in front of a
+user that no Tanzanian authority has ever published. `scripts/audit_fact_claim_grounding.py`
+(2026-08-29) is a first, narrowly-scoped answer: it flags a PARENTHETICAL QUALIFIER naming a
+specific economic sector that appears nowhere in the fact's own citation fields — exactly
+`nssf_retirement_age`'s shape. R26-tested (fires on a synthetic case shaped like the known
+fabrication; stays clean on a legitimately-cited sector claim; stays clean on the generic-scope
+false positive its OWN first draft produced — "(private and public sector)" — before this
+narrower version replaced it). First run over all 253 facts: **2 flags**, both manually triaged
+in the script itself (`MANUAL_TRIAGE`) — `osha_vs_wcf_roles` is a confirmed false positive (the
+word "health" matched inside OSHA's own institutional name, not a sector claim); `GN605A_rate_range`
+is plausible-but-unconfirmed (its only citation is a named PDF that would very plausibly discuss
+the energy sector, but the citation string itself doesn't repeat the word). **Stated scope, not
+oversold: this catches ONE shape of fabrication (a sector name in parentheses with no textual
+support in its own citation fields). It does not catch fabrication outside a parenthetical, naming
+something other than a sector, or a fabrication whose citation was invented to match it** — the
+9%-band corpus defect, for instance, is not something this locked-facts audit could ever see,
+since `paye_band_2_rate` itself correctly says 8%; that defect lives in the corpus, not in the
+fact, and is only found by the kind of lineage-tracing done above, not by a metadata-text check.
+
+---
+
+## 🧼 CORPUS CORRECTION — applied 2026-08-25. Superseded in scope by v2 above (2026-08-29) — three defect classes here, two more found since.
 
 `scripts/correct_corpus_defects.py` → `eval/results/corpus_correction.json`.
 

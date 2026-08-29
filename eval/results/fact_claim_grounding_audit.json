@@ -1,0 +1,47 @@
+{
+  "measured": "2026-08-29",
+  "harness": "scripts/audit_fact_claim_grounding.py",
+  "scope_statement": "Flags a PARENTHETICAL QUALIFIER that names a SPECIFIC ECONOMIC SECTOR (curated list) which appears nowhere in that fact's own citation fields. Does not verify against the live source document. Does not catch fabrications outside a parenthetical, fabrications naming something other than a sector, or a fabrication whose citation was invented to match it. Triage signal, not a verdict -- every flag needs manual triage (see MANUAL_TRIAGE) before being treated as a confirmed defect.",
+  "self_test": {
+    "fires_on_known_bad": [
+      "55 for mining/early retirement"
+    ],
+    "clean_on_cited_sector_claim": true,
+    "clean_on_generic_scope_regression": true
+  },
+  "facts_checked": 131,
+  "facts_flagged": 2,
+  "flagged": [
+    {
+      "key": "GN605A_rate_range",
+      "unsupported_qualifiers": [
+        "energy sector international companies"
+      ],
+      "fact": "GN 605A monthly rates range from TZS 80,000 (other domestic workers) to TZS 765,900 (energy sector international companies). Agricultural/general floor is TZS 175,000. Any sector not explicitly specified in the Order defaults to TZS 175,000 per month.",
+      "citation_fields_present": [
+        "primary_source"
+      ],
+      "manual_triage": {
+        "flagged": "energy sector international companies",
+        "verdict": "PLAUSIBLE, UNCONFIRMED -- not a false positive, not yet verified either",
+        "why": "The only citation is \"PKF Eastern Africa GN 605A PDF Oct 2025\" -- a document that would very plausibly contain a per-sector wage table naming the energy sector, but the citation STRING itself does not repeat the word \"energy,\" so this audit (which checks metadata text, not document content) cannot confirm it. Exactly the audit's stated limitation: a real sector carve-out with a citation that is right but under-specific reads the same as an invented one."
+      }
+    },
+    {
+      "key": "osha_vs_wcf_roles",
+      "unsupported_qualifiers": [
+        "Occupational Safety and Health Authority"
+      ],
+      "fact": "OSHA and WCF are two separate institutions with different roles. OSHA (Occupational Safety and Health Authority) registers workplaces (s.16, OSH Act No.5 of 2003, before commencing operations), inspects, and issues the annual Compliance Licence; OSHA does NOT pay injury compensation. Compensation for occupational injuries and diseases is paid by the WCF (Workers Compensation Fund) under the Workers Compensation Act, Cap 263, funded by the employer's 0.5% monthly wage contribution. OSHA registration and WCF registration are separate obligations and both apply. WCF applies from the first employee — there is NO 2-employee or other minimum-count threshold for WCF.",
+      "citation_fields_present": [
+        "verified_by",
+        "primary_source"
+      ],
+      "manual_triage": {
+        "flagged": "Occupational Safety and Health Authority",
+        "verdict": "FALSE POSITIVE -- bad specimen, not a defect",
+        "why": "\"Health\" matched the sector-term list, but this is OSHA's own institutional name (\"Occupational Safety and HEALTH Authority\"), not a sector-scope claim. The parenthetical is a proper noun, not a qualifier needing separate citation."
+      }
+    }
+  ]
+}
