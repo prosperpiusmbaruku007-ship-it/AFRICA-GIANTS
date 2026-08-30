@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-30
+Last updated: 2026-08-30 (duplication-across-layers check + accepted-quirk audit)
 
 ---
 
@@ -230,6 +230,93 @@ rows — they were measuring agreement with a fabrication. Any historical accura
 includes `efd_compliance` subdomain rows (nat_36, eval_331/347/354/355, qi_n07, th_09/10/19,
 tg_03/08, vf_09/11) should be read with that caveat attached, per R22's standing rule: name the
 population a number was measured on before citing it.
+
+### ⛔ THE GENERAL LESSON: a fabricated value that reaches three layers is ONE defect with three enforcement points, not three bugs
+
+The EFD fabrication was found in `locked_facts.json`, then in `chike/rules_engine/registration_thresholds.py`
+(`EFD_ANNUAL`), then — only after a probe correction broke a test — in `chike/fidelity.py`
+(`_STATUTORY_THRESHOLDS["efd"]`). All three encoded the same false claim: that TZS 11,000,000 is a
+lawful EFD figure. **That is the most complete instance in this project of a defect defending
+itself.** Correcting the fact alone would have left two mechanisms actively re-asserting it:
+
+- The rules-engine constant would have kept *computing* a wrong verdict from a live turnover figure
+  — worse than the fact, because a computed answer carries authority a served fact doesn't.
+- The fidelity guard would have kept *validating* any reply that repeated the fabrication as
+  correct, and *flagging* a corrected reply that stated no threshold exists — exactly backwards,
+  and silently, since a guard that passes clean text generates no signal that it is wrong.
+
+**The general form:** whenever a regulatory constant is important enough to be worth guarding, it
+tends to accumulate exactly the layers that make it important — a fact to serve it, an engine to
+compute with it, a guard to check replies against it. Each layer was added for a good reason and
+each one is a second place the same wrong number can hide after the first is fixed. **A correction
+that touches only the layer where the defect was first noticed is not a correction, it is a partial
+one that looks complete.** The fidelity-guard site was found this time only because an unrelated
+edit (correcting an eval probe) broke a test that happened to depend on it — not because anyone
+asked "where else does this number live." That is not a reliable detection method for the next one.
+
+### Duplication-across-layers check: is any OTHER constant repeated the same way?
+
+Asked directly, per founder instruction, rather than waiting for the next accidental discovery.
+Checked every subject in `fidelity.py`'s `_STATUTORY_THRESHOLDS` guard table (the only guard with a
+"lawful value" list, i.e. the only place a stale value could silently keep validating a corrected
+fact as correct) against `locked_facts.json` and `chike/rules_engine/*.py`:
+
+| subject | `fidelity.py` lawful set | `rules_engine` copy | `locked_facts.json` copies | grounding status |
+|---|---|---|---|---|
+| `efd` | `frozenset()` (fixed) | deleted (`EFD_ANNUAL` removed) | `efd_threshold_tzs_11m` (corrected 2026-08-29) | **was fabricated, now single-sourced to "no threshold" in all three layers — the only subject actually fixed** |
+| `vat_registration` | `{100_000_000, 200_000_000}` | `registration_thresholds.py`: `VAT_ANNUAL = 200_000_000`, `VAT_SIX_MONTH = 100_000_000` | **FOUR separate keys** repeat the same two numbers: `vat_registration_threshold`, `vat_threshold_200m_july2024_increase`, `vat_registration_threshold_annual`, `vat_registration_threshold_six_months` | **NOT confirmed wrong, but NOT fully grounded either** — Tier 1 (above) found the 12mo/6mo *structure* confirmed in VAT Act s.28, but "the exact TZS 200M figure lives in an inaccessible regulation." This is the EFD shape one step earlier: a number duplicated across a fact (four times), an engine, and a guard, resting on a citation that names the right section but hasn't been read directly. |
+| `presumptive` | `{4_000_000, 7_000_000, 11_000_000, 100_000_000}` | `rates.py`'s actual band table (same four edges) **and independently** `presumptive.py`'s own `_RECORDS_MATTER_ABOVE = 4_000_000` / `_RECORDS_MATTER_UPTO = 11_000_000` — a second, hand-copied pair rather than an import from `rates.py` | `presumptive_tax_bands_2022`, `presumptive_tax_ceiling_100m` | **CONFIRMED CLEAN** — Income Tax Act Cap 332 First Schedule, cross-checked directly against CLAUDE.md's own documented FA2022 s.72 figure. Lower risk than the other two rows, but `presumptive.py` hand-copying two of the four edges instead of importing them from `rates.py` is still a maintenance hazard on its own: if `rates.py`'s table were ever corrected, `presumptive.py`'s redundant constants could silently diverge from it with nothing to catch the drift. |
+
+**Answer to the founder's question: yes, there is a pattern, and it is the VAT-registration row.**
+It has the identical shape to what EFD was before this session's audit found it — a number that
+several layers agree on, where the agreement comes from shared lineage (the same TRA portal page
+cited four times under four different fact names) rather than from independent verification against
+the regulation itself. It is **not** being changed in this pass — nothing found it *wrong*, only
+under-verified, and Tier 1's own rule is to report differences before changing anything and this is
+not yet a difference. Flagged as a **Tier 2 / future-source-pass priority**: read the regulation
+that sets the exact TZS 200,000,000 figure directly, the same way `efd_threshold_tzs_11m` was
+finally resolved by reading TAA s.44 directly instead of trusting a portal page twice.
+
+**Recommendation, not yet executed:** the founder's framing — "if there's a pattern, the fix is
+single-sourcing rather than a sweep" — is right, and the single-sourcing fix here is mechanical:
+`fidelity.py`'s guard tables and `presumptive.py`'s hand-copied constants should both **import** their
+numbers from `rates.py`/`registration_thresholds.py` rather than re-declaring them, so a future
+correction to the canonical constant propagates automatically instead of requiring a second,
+rediscoverable sweep. This is a small refactor, not a fact correction, and is left for explicit
+founder sign-off before touching passing code — noted here so it doesn't have to be rediscovered.
+
+### The "accepted quirk" pass: what else in this project was explained rather than root-caused
+
+Per founder instruction — `eval_355` was carried in this file since 2026-07-28 as a "known-minor
+accepted, no further regen" **generation-boundary flip**, on the explicit stated reasoning that
+*"both correct EFD facts are still retrieved."* Both of the facts named in that sentence
+(`efd_threshold_tzs_11m` and `efd_not_every_business`) are now known to have been wrong — there was
+no boundary to flip across, because the 11,000,000/10,999,000 distinction the probe was designed to
+test does not exist in the statute at all. **The explanation was accepted because nothing available
+at the time could distinguish a genuine retrieval-boundary artifact from a wrong scoring key built
+on a wrong fact** — the same shape of gap R21/R22 already name for measurements: a plausible-sounding
+mechanism was available (retrieval ranking shifted) and nobody asked whether the two facts doing the
+shifting were themselves correct.
+
+Grepped this file for every other place a gate discrepancy was dismissed as a "scorer artifact,"
+"boundary flip," "run-to-run noise," or similar, to check whether any other one shares that shape —
+an explanation that assumes a cited fact is correct without that fact having been independently
+verified:
+
+| item | dismissal given | fact-dependent? | verdict |
+|---|---|---|---|
+| **`eval_355`** | "generation-boundary flip… both correct EFD facts still retrieved" | **yes — assumed both EFD facts correct** | **CONFIRMED same shape. Now corrected above.** |
+| `eval_383` / `eval_208` / `eval_378` | "run-to-run gen/judge noise (…vat/sdl untouched by any fact change)" | yes — the dismissal explicitly leans on the VAT/SDL facts being fine | **NOT cleared, WATCH.** `vat_registration_threshold` is the same under-verified figure flagged in the duplication check above, and `sdl_calculation_example` is Tier 1's own still-ungrounded fact. Neither is confirmed wrong, so this is not a second instance of the EFD defect — but the dismissal was reached the same way eval_355's was, by trusting the fact rather than checking it, and both facts are still open items. |
+| `eval_304` | "scorer artifact… passed by number-overlap luck" | no — mechanism is the regex/judge overlap, independent of fact content | cleared |
+| `eval_332` / `eval_365` | "scorer artifact… framing-polarity mismatch" | no — model's own stated content agreed with gold; only surface polarity classification disagreed | cleared |
+| `eval_260` + `eval_191` mislabel | `_YN_NEG` parser gap / `out_of_corpus` mislabel | no — root-caused to a specific parser/label defect, not left as an unexplained flip, and already logged as "not to be reopened piecemeal" with the actual cause named | cleared — already correctly diagnosed, not a hidden ambiguity |
+| `fp_04` marriage-fact displacement | "accepted low-severity retrieval-hygiene trade-off" | no — fully explained by a named displacing fact (license-lending) with the mechanism traced, not an unresolved "which side is wrong" gap | cleared — a real, understood trade-off, different shape from an unverified dismissal |
+
+**One new watch item, not a new defect:** the `eval_383`/`eval_208`/`eval_378` group's dismissal
+rests on the same two currently-open, not-yet-independently-verified facts as the VAT-registration
+duplication finding above. If a future source pass finds either fact wrong, that 2026-07-26 dismissal
+needs re-reading the same way eval_355's did — logged here so it's found by reading this entry, not
+by a second accident.
 
 **Corpus impact swept and quarantined** (`scripts/correct_corpus_defects_v2.py` for the mining/wcf
 defects, `_v3.py` for this one, both 2026-08-29) — see the CORPUS CORRECTION v2/v3 entries below
