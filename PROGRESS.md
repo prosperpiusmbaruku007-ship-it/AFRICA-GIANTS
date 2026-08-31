@@ -889,6 +889,56 @@ one — the collision is already proven to exist in the gate corpus.
   C4 (a fact that tells the model to decline is not a refusal; a code path that runs instead of
   generation is).
 
+## ✅ UNBLOCKED 2026-08-31 — corporate/partnership build is next, rental withholding stays scoped-not-built
+
+The precondition that stopped this build ("all domain builds remain stopped until [exposure] is
+addressed, with the single carve-out already named — the two `pending_core` facts get re-verified
+as part of...the corporate/partnership tax domain's own already-scoped source pass") is now met:
+Tier 1 (the 19 `SERVED_ACTIONABLE_HIGH_TRAFFIC` facts) and Tier 2 (the 34 `served_actionable_peripheral`
++ `in_index_never_served` facts) are both re-verified against statute, per the tables above. Tier 3
+(96 facts, no figure or no exposure) is deliberately NOT a precondition — see the opportunistic-only
+decision above; it never blocked anything and doesn't start blocking anything now.
+
+**Per founder instruction, the corporate/partnership build proceeds first — not rental withholding.**
+Reasoning, stated plainly: the scope above already identified `corporate_tax_rate` and
+`amt_loss_companies_only` as forward dependencies of this exact build, and both were DEFERRED out of
+Tier 1 on 2026-08-27 specifically so they'd be verified as part of this domain's own source pass
+rather than twice. Building this domain now means that source pass finally happens — closing the
+last two deferred Tier 1 facts **as a side effect of shipping something users can use**, not as a
+separate verification cycle. Rental withholding's scope (above) stays as scoped-not-built; nothing
+about it has changed and nothing here reopens it.
+
+**The scope above (§"Corporate / partnership income tax — scope") is confirmed current and is the
+plan — nothing in Tier 1/Tier 2's findings touches Income Tax Act corporate-rate provisions, the
+DSE-listed rate, or partnership tax-transparency, so none of it needs re-deriving.** One update
+folded in from this session's own Tier 2 work: `dse_25_rate_three_years_only` (25% DSE rate for 3
+years from listing, Income Tax Act First Schedule para 3(2)(a)) was independently CONFIRMED CLEAN
+during Tier 2's Income Tax Act cluster pass — it no longer needs re-verification inside this domain's
+source pass, one fewer unknown than the scope entry above assumed when it was written.
+
+**Execution order, unchanged from the existing scope, restated for this build specifically:**
+1. Source pass (½ day): read Income Tax Act Cap 332's charging section + Third Schedule directly,
+   every Finance Act 2019→2026 that touches it, confirm standard rate / DSE-listed rate+conditions /
+   how a partnership is actually taxed (transparency vs entity-level) — re-verifying
+   `corporate_tax_rate` and `amt_loss_companies_only` against the Act as part of this, not before it.
+2. Engine shape: a rate-statement engine (`rate_statement.py`'s pattern), not a turnover-to-shillings
+   computation — profit isn't derivable from a turnover figure, so the engine states the rate/regime
+   and declines to compute a TZS amount from turnover, same caution already coded into the
+   presumptive veto.
+3. Router integration: `_PRESUMPTIVE_ENTITY_VETO_PATTERN`'s existing cue set becomes the new intent's
+   positive entity gate, conjoined with an income/profit-tax cue built `_BUSINESS_INCOME_TAX_CUES`-style
+   — qualified forms first, then an explicit bare-cue reachability check against the `paye` cue's
+   current claim on plain "kodi ya mapato kiasi gani" (measured live pre-build, not discovered
+   post-deploy).
+4. `eval_258` (the `kodi ya pango`/SDL collision) is a required committed adversarial probe before
+   ship, per the existing scope — not optional, not hypothetical.
+
+**Not started yet — this is the scope confirmation the founder asked for, execution begins on
+explicit go-ahead**, consistent with every other phase in this file (report/scope first, build on
+instruction).
+
+---
+
 ## Rental withholding tax — scope
 
 - **Source pass:** Cap 332's rental-income withholding provisions (the WHT section and rate,
