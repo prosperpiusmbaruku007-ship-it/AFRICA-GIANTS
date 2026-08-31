@@ -413,7 +413,8 @@ All facts below are locked from verified primary sources. Encode these exactly.
 **BRELA Annual Return and Fees (brela.go.tz/pages/tozo-za-kampuni, confirmed Jun 2026):**
 - Annual return filing fee: TZS 22,000
 - Late filing penalty: TZS 2,500 per month (or partial month) for local companies
-- Foreign company (Section XII) late filing penalty: USD 25 per month
+- Foreign company (Companies Act Cap.212, Part XIII, ss.320-328 -- NOT "Section XII"; corrected
+  2026-08-31, see PROGRESS.md) late filing penalty: USD 25 per month
 - Company without share capital: TZS 300,000 registration fee
 - (Name reservation TZS 50,000, incorporation min TZS 95,000, foreign branch USD 750+220 — unchanged)
 
@@ -1137,6 +1138,37 @@ rows we already answer correctly?"* — and the honest answer to that is **no**.
 - **A settled decision's age is not evidence.** When a decision is re-opened, re-run the rows it
   actually cites rather than re-reading its summary — the prior evidence is a population too, and
   it is the one population nobody thinks to test.
+
+---
+
+### R27 — CORRECTING A FACT AMENDS ITS FIELDS. IT DOES NOT REPLACE THE OBJECT.
+
+**Proven 2026-08-31, Tier 2 fix phase.** `minimum_turnover_tax` needed its scope narrowed (it was
+framed as a general turnover tax; the provision it cites is the Alternative Minimum Tax on
+chronically loss-making corporations specifically). The correction was written as a full-object
+replacement in `locked_facts.json` — new `fact`, `correct_value`, `wrong_patterns`, `primary_source`,
+all assigned at once. That silently dropped the fact's existing `wrong_patterns` (a regex family
+with `ilikuwa`/`was` lookbehind escapes) and its `_narrowing_note`, both there for a specific,
+already-tested reason: a 2026-08-25 narrowing pass, and two committed probes
+(`eval/fidelity/local_levy_probes.jsonl` `llp_09`/`llp_10`) built specifically to hold the line on
+it. `tests/test_local_levy_guard.py` caught the drop on the very next full test run — not because
+anyone reviewed the diff for it, but because the probes happened to exist.
+
+**The general form:** a locked fact accumulates fields for reasons that have nothing to do with
+whatever specific defect is being fixed today — a prior narrowing, a prior regression fix, a prior
+false-positive guard. A correction that touches only the fields relevant to TODAY's defect is safe.
+A correction that reconstructs the whole object from scratch — even when every field it sets is
+individually correct — throws away every field it doesn't set, and nothing announces the loss
+unless a test happens to cover the exact thing dropped. **Two of 253 facts (`minimum_turnover_tax`
+and one other narrowed fact) currently have that kind of test coverage. Most facts have none** — a
+silent drop on an uncovered fact would have shipped clean.
+
+**In practice: any correction to `locked_facts.json` amends the specific fields the defect
+requires (`fact`, `correct_value`, the specific `wrong_patterns` entries, `primary_source`,
+`verified_by`, `correction_note`) and leaves every other field — especially `wrong_patterns` entries
+unrelated to today's defect, `_narrowing_note`, and any other underscore-prefixed provenance field
+— untouched. Read the full existing object before writing the correction, and diff mentally against
+it, rather than composing a clean replacement from the verification findings alone.**
 
 ---
 

@@ -738,7 +738,12 @@ _STATUTORY_THRESHOLDS = {
     # presumptive: the First Schedule band edges AND the para 2(2) ceiling. Band edges belong
     # here because a correct answer may legitimately state one.
     "presumptive": frozenset({4_000_000, 7_000_000, 11_000_000, 100_000_000}),
-    # VAT registration: both limbs — 200M/12mo OR 100M/6mo.
+    # VAT registration: both limbs — 200M/12mo OR 100M/6mo. RE-SOURCED 2026-08-31: found and
+    # read directly — GN 448Y of 2023 s.4, amending Reg.14 of GN 225/2015 (VAT Act s.94) —
+    # confirming both figures are real (unlike EFD, this constant was duplicated-but-not-
+    # fabricated). Only the effective date was wrong everywhere it was duplicated: 1 July
+    # 2023, not July 2024. See locked_facts.json's vat_threshold_200m_july2024_increase
+    # correction_note for the full sweep.
     "vat_registration": frozenset({100_000_000, 200_000_000}),
     # EFD: EMPTY, not a typo (2026-08-29). This used to be frozenset({11_000_000}) -- the same
     # fabrication as locked_facts.json's efd_threshold_tzs_11m and rules_engine's now-removed

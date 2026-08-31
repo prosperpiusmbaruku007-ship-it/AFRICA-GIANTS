@@ -70,24 +70,23 @@
     "correction_note": "Original entry incorrectly asserted 26,000 was correct. Session 11 (2026-06-12) confirmed no such relief exists in Tanzania law."
   },
   "paye_p9_deadline": {
-    "fact": "Annual PAYE reconciliation Form P9 deadline is 31 March of following year — NOT 31 January",
-    "correct_value": "31 March",
+    "fact": "The annual employment-income withholding certificate is due by 30 January of the following year (Income Tax Act Cap.332, s.85(3)(b)). 'Form P9' is Kenyan (KRA) terminology -- Tanzania's TRA has no form by that name; do not use it.",
+    "correct_value": "30 January (not 31 March, and not 'Form P9' -- that is a Kenyan KRA term, not a Tanzanian TRA one)",
     "wrong_patterns": [
-      "p9.*inawasilishwa.*31 januari",
-      "p9.*deadline is 31 january",
-      "p9.*due on 31 january",
-      "p9.*submitted by 31 january",
-      "p9.*due.*31 january",
-      "p9.*kwa tarehe.*31 januari",
-      "tarehe ya mwisho ya p9.*januari",
-      "January 31",
-      "Januari 31",
-      "tarehe 31 ya Januari"
+      "p9.*31 machi",
+      "p9.*31 march",
+      "p9.*deadline is 31 march",
+      "p9.*due.*31 march",
+      "cheti.*ajira.*31 machi",
+      "tarehe ya mwisho.*31 machi",
+      "withholding certificate.*31 march",
+      "cheti cha makato.*31 machi"
     ],
-    "primary_source": "https://www.payspace.com/tz",
-    "verified_by": "PaySpace, Deel, Rivermate — multiple sources confirmed 31 March",
-    "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "primary_source": "Income Tax Act, Cap.332, s.85(3)(b)",
+    "verified_by": "Direct read of ITA Cap.332 s.85(3)(b), 2026-08-31; checked every Finance Act 2021-2026 for an amendment to s.85 -- none found. Supersedes payspace.com/Deel/Rivermate (three multi-country payroll SaaS vendors sharing one likely lineage, none an Act citation).",
+    "effective_date": "2020-07-01",
+    "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note); TENTATIVE, recommend a TRA-registered tax consultant spot-check",
+    "correction_note": "Prior fact asserted a 'Form P9' deadline of 31 March, and blocked '31 January' as a wrong_pattern. 'P9' is Kenyan KRA terminology -- no evidence was found that TRA uses this form name at all. Tanzania's actual equivalent obligation, the annual employment-income withholding certificate under Income Tax Act Cap.332 s.85(3)(b), is due 30 January -- one day earlier than the '31 January' pattern this fact used to reject as wrong. Likely origin: payspace.com (a multi-country payroll SaaS vendor) imported Kenyan P9 terminology and deadline logic wholesale; the fact's own 'correction' from 31 January to 31 March then compounded the error rather than catching it. Flagged CORRECTED but TENTATIVE by the verifying researcher -- s.85(3)(b) was read directly and no amendment was found in any Finance Act 2021-2026, but this fact would benefit from an independent tax-consultant confirmation given how far from the primary text the original three-vendor citation chain had drifted."
   },
   "p45_not_tanzanian": {
     "fact": "Form P45 does not exist in Tanzania — it is a UK payroll form. Use P9 or leaving certificate.",
@@ -347,10 +346,10 @@
       "register.*vat.*50,000,000",
       "vat.*register.*50,000,000"
     ],
-    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
-    "verified_by": "TRA VAT page confirmed matching RSM 2025/26 guide",
-    "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "primary_source": "Government Notice No. 448Y of 2023 (The Value Added Tax (General) (Amendment) Regulations, 2023), s.4, amending Regulation 14 of the VAT (General) Regulations 2015 (GN 225/2015), made under VAT Act Cap.148 s.94/s.28(4)",
+    "verified_by": "Direct read of GN 448Y/2023 (tra.go.tz) and the original GN 225/2015 Reg.14 (tanzlii.org), 2026-08-31. GN 448Y s.4: \"deleting the phrase 'one hundred million shillings' and substituting for it the phrase 'two hundred million shillings'\" -- confirmed against Reg.14's original 2015 text (100M). Commencement clause: \"deemed to have come into operation on the 1st day of July, 2023.\" Two other candidate amending GNs from the same period (GN 714/2021, GN 352K/2025) were read and ruled out -- neither touches Reg.14.",
+    "effective_date": "2023-07-01",
+    "status": "CONFIRMED -- re-sourced 2026-08-31 (see correction_note on vat_threshold_200m_july2024_increase)"
   },
   "vat_withholding_goods": {
     "fact": "VAT withholding on goods is 3% of the consideration (invoice value exclusive of VAT) — effective 1 July 2025 (Finance Act 2025, VAT Act s.5(5)). The standard 18% VAT rate is split: the withholding agent remits 3% to TRA and the supplier receives the remaining 15%.",
@@ -529,21 +528,23 @@
     "status": "CONFIRMED"
   },
   "royalties_wht_rate": {
-    "fact": "Withholding tax on royalties is 15% for BOTH residents and non-residents",
-    "correct_value": "15% resident AND 15% non-resident",
+    "fact": "The DEFAULT withholding tax rate on royalty payments is 15% for BOTH residents and non-residents (Income Tax Act Cap.332 First Schedule para 4(b), via s.82). TWO CARVE-OUTS exist: royalties for cinematographic films/video tapes/sound recordings are 10% (added by Finance Act 2022 s.72(b)(i)); royalties paid to a resident sports entity or the Tanzania Football Federation are 5% (added by Finance Act 2024 s.46(b)(i)).",
+    "correct_value": "15% default (both residents and non-residents); 10% for film/video/sound recording royalties; 5% for resident sports entities/TFF",
     "wrong_patterns": [
       "asilimia 10 kwa wasio wakazi.*mrabaha",
       "10% non-resident.*royalt",
       "royalties.{0,20}non.{0,5}resident.{0,10}is 10%",
-      "royalties.{0,20}wasio wakazi.{0,10}ni asilimia 10(?! si| — si)",
-      "royalties.{0,15}wasio wakazi.{0,15}asilimia 10(?! si| — si)",
+      "royalties.{0,20}wasio wakazi.{0,10}ni asilimia 10(?! si| – si)",
+      "royalties.{0,15}wasio wakazi.{0,15}asilimia 10(?! si| – si)",
       "royalties.*wht is 10%",
-      "mrabaha.*wasio wakazi.*10"
+      "mrabaha.*wasio wakazi.*10",
+      "mrabaha yote.*asilimia 15.*bila ubaguzi"
     ],
-    "primary_source": "https://www.tra.go.tz/page/withholding-tax",
-    "verified_by": "Auditax International Tanzania confirmed both 15%",
+    "primary_source": "Income Tax Act, Cap.332, First Schedule para 4(b), as amended by Finance Act 2022 s.72(b) and Finance Act 2024 s.46(b)",
+    "verified_by": "Direct read of First Schedule para 4(b) and the amending Finance Act 2022/2024 clauses, 2026-08-31. Supersedes Auditax International (practitioner, only confirmed the default 15%/15%, did not surface the carve-outs).",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED -- corrected 2026-08-31 (carve-outs added, see correction_note)",
+    "correction_note": "The default 15%/15% figure was already correct. It was INCOMPLETE: two statutory carve-outs (10% film/video/sound; 5% resident sports entities/TFF) were missing, which would produce a wrong answer for those specific fact patterns even though the general-case answer was right."
   },
   "provisional_tax_instalments": {
     "fact": "Provisional tax is paid in FOUR equal instalments at end of months 3, 6, 9, and 12 from start of financial year",
@@ -566,9 +567,12 @@
     "status": "CONFIRMED"
   },
   "minimum_turnover_tax": {
-    "fact": "Tanzania minimum turnover tax is 1% of gross turnover effective 1 July 2025 — was 0.5%, never 0.3%",
-    "correct_value": "1% WEF 1 July 2025",
+    "fact": "The Alternative Minimum Tax (AMT) on chronically loss-making corporations is 1% of the turnover of the third consecutive year of unrelieved tax loss, effective 1 July 2025 (Income Tax Act Cap.332 First Schedule para 3(3), as amended by Finance Act 2025 s.60(d)(ii), which raised it from 0.5% to 1%). This applies ONLY to a corporation with THREE CONSECUTIVE YEARS of perpetual unrelieved loss -- it is NOT a general turnover tax on all businesses. Do not confuse with the presumptive (small-business) turnover tax, a different regime under First Schedule para 2.",
+    "correct_value": "1% WEF 1 July 2025, applies only to corporations with 3 consecutive years of unrelieved tax loss",
     "wrong_patterns": [
+      "kodi ndogo ya mauzo.*kampuni zote",
+      "minimum turnover tax applies to all businesses",
+      "kila biashara.*1%.*mauzo.*chini",
       "(kodi ndogo|mauzo ghafi|turnover)[^.]{0,60}asilimia 0\\.3",
       "(minimum turnover tax|turnover tax|kodi ndogo ya mauzo)[^.]{0,60}0\\.3%",
       "(minimum turnover|turnover tax|kodi ndogo)[^.]{0,60}0\\.3 percent",
@@ -577,11 +581,12 @@
       "turnover.*tax.*(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\\.5(?! hadi)(?! to )",
       "(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\\.5(?! hadi)(?! to ).*minimum.*tax"
     ],
-    "primary_source": "https://habibadvisory.com/tanzania-tax-guide-2025-26",
-    "verified_by": "Habib Advisory 2025/26 Tax Guide",
+    "primary_source": "Income Tax Act, Cap.332, First Schedule para 3(3), as amended by Finance Act 2025 s.60(d)(ii)",
+    "verified_by": "Direct read of Finance Act 2025 s.60(d)(ii) (\"deleting the figure '0.5' ... and substituting ... '1'\") and First Schedule para 3(3), 2026-08-31. Checked Finance Act 2026 -- does not touch this paragraph.",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED",
-    "_narrowing_note": "Narrowed 2026-08-25. The bare forms `0.3%` / `asilimia 0.3` / `0.3 percent` matched with NO topical scoping, so a CORRECT council-service-levy pair quoting the statutory 0.3% CAP (Cap 290 s.7(1)(u)) would have been flagged as a locked-fact violation. Measured cost of narrowing: the bare patterns matched exactly ONE corpus row, a held-out probe QUESTION, which check_pair never scans. Zero live detections lost. Both directions are exercised in eval/fidelity/local_levy_probes.jsonl. SECOND NARROWING, same day, found by probe llp_08: the 0.5 patterns escaped only \"kutoka asilimia 0.5\" / \"from 0.5\", not \"ILIKUWA asilimia 0.5\" — the plainest Swahili way to say \"it WAS 0.5%\", which is exactly what the locked fact itself asserts. A correct historical statement was being flagged. Same shape as the recorded near-miss where a bare \"ni\" sits outside D-FIDELITY-1's connectors. Probe llp_09 holds the line: a plain \"is 0.5%\" assertion must still flag."
+    "status": "CONFIRMED -- corrected 2026-08-31 (scope narrowed, see correction_note)",
+    "correction_note": "Rate and date (1%, WEF 1 July 2025) were already correct. Scope/framing was misleading: this key's name and prior fact text read as a general turnover tax on all businesses, when the underlying provision (First Schedule para 3(3)) is the Alternative Minimum Tax, applying only to corporations with 3 consecutive years of unrelieved loss -- the general small-business turnover regime is a DIFFERENT provision (First Schedule para 2, presumptive tax). DUPLICATE FLAG: this fact and `amt_loss_companies_only` describe the same provision -- not merged in this pass (a merge would need to confirm nothing downstream keys off either name specifically), but flagged for a future consolidation.",
+    "_narrowing_note": "Narrowed 2026-08-25. The bare forms `0.3%` / `asilimia 0.3` / `0.3 percent` matched with NO topical scoping, so a CORRECT council-service-levy pair quoting the statutory 0.3% CAP (Cap 290 s.7(1)(u)) would have been flagged as a locked-fact violation. Measured cost of narrowing: the bare patterns matched exactly ONE corpus row, a held-out probe QUESTION, which check_pair never scans. Zero live detections lost. Both directions are exercised in eval/fidelity/local_levy_probes.jsonl. SECOND NARROWING, same day, found by probe llp_08: the 0.5 patterns escaped only \"kutoka asilimia 0.5\" / \"from 0.5\", not \"ILIKUWA asilimia 0.5\" -- the plainest Swahili way to say \"it WAS 0.5%\", which is exactly what the locked fact itself asserts. A correct historical statement was being flagged. Same shape as the recorded near-miss where a bare \"ni\" sits outside D-FIDELITY-1's connectors. Probe llp_09 holds the line: a plain \"is 0.5%\" assertion must still flag. PRESERVED VERBATIM through the 2026-08-31 Tier 2 scope correction (which only narrowed the fact's SCOPE description -- AMT on 3-years-loss corporations, not a general turnover tax -- and added 'applies to all businesses' as a new wrong_pattern; the 0.3%/0.5% regex family below is untouched and still what llp_09/llp_10 test against)."
   },
   "commissioner_objection_deadline": {
     "fact": "TRA Commissioner must determine an objection within 6 months from date of admission — NOT 90 days",
@@ -621,7 +626,7 @@
     "status": "CONFIRMED"
   },
   "objection_deposit_requirement": {
-    "fact": "Before a TRA objection to a tax assessment is admitted, the taxpayer must pay the HIGHER of the undisputed tax OR one-third of the assessed tax. This payment is due CONCURRENTLY with lodging the objection -- i.e., within the same 30-day period allowed for filing the objection itself (Tax Administration Act, Cap.438 R.E.2023, s.51) -- NOT on a separate 15-day clock.",
+    "fact": "Before a TRA objection to a tax assessment is admitted, the taxpayer must pay the HIGHER of the undisputed tax OR one-third of the assessed tax. This payment is due CONCURRENTLY with lodging the objection -- i.e., within the same 30-day period allowed for filing the objection itself (Tax Administration Act, Cap.438 R.E.2023, s.62(7)-(9)) -- NOT on a separate 15-day clock.",
     "correct_value": "Pay higher of undisputed tax OR 1/3 of assessed tax, concurrently with lodging the objection, within the 30-day objection-filing window (not a separate 15-day deadline)",
     "wrong_patterns": [
       "huhitajiki kulipa",
@@ -631,13 +636,15 @@
       "kulipa.*ndani ya siku 15.*pingamizi",
       "pay.*within 15 days.*objection",
       "siku 15.*kabla ya pingamizi",
-      "15 days.*before.*objection.*admitted"
+      "15 days.*before.*objection.*admitted",
+      "section 51.*deposit",
+      "s\\.?\\s*51.*objection deposit"
     ],
-    "primary_source": "Tax Administration Act, Cap. 438 R.E. 2023, s.51 (objection to tax decision)",
-    "verified_by": "Direct read of TAA Cap.438 s.51 text (tanzanialaws.com transcription, cross-checked against an independent practitioner summary), 2026-08-29 -- supersedes prior verification against a TRA portal page + a law firm site, neither of which quoted the section text or stated a distinct 15-day figure. CAUTION: tanzanialaws.com is a third-party legal database, not a .go.tz or tanzlii.org original (both were inaccessible this pass) -- re-confirm against a directly-opened primary copy when access allows.",
+    "primary_source": "Tax Administration Act, Cap. 438 R.E. 2023, s.62(7)-(9) (objection to tax decision -- deposit requirement)",
+    "verified_by": "Direct read of TAA Cap.438 current consolidation, 2026-08-31 -- the deposit requirement sits at s.62(7)-(9) in the current numbering. Cross-checked against GN 101/2016 reg.92 and the Tax Revenue Appeals Act s.16(6), both of which still internally cite 'section 51(5)' -- confirming s.51 is the PRE-Finance-Act (2017/2020/2021) numbering, preserved in the current Act text only as a historical '[s. 51]' footnote after s.62.",
     "effective_date": "2020-07-01",
-    "status": "CONFIRMED -- corrected 2026-08-29 (see correction_note)",
-    "correction_note": "Prior fact stated a separate 15-day payment deadline, sourced to a TRA portal page + a law firm's site, neither quoting the section text. Re-verified 2026-08-29 against Cap.438 s.51: the section ties the deposit to the SAME 30-day window used to lodge the objection -- there is no independent 15-day clock. Origin of the '15 days' figure is unclear; it may be confusion with an unrelated TAA provision governing return-filing extension requests, which does use a 15-day figure for a different purpose."
+    "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note); supersedes the 2026-08-29 correction, which fixed the deposit-timing rule but carried forward a stale section citation",
+    "correction_note": "2026-08-29 correction: fixed the substantive rule (deposit tied to the 30-day objection window, not a separate 15-day clock) but cited TAA s.51 -- itself a still-wrong citation. 2026-08-31: re-verification for Tier 2 read the current TAA Cap.438 R.E.2023 text directly and found the deposit provision now sits at s.62(7)-(9); s.51 is the numbering from before Finance Act amendments (2017/2020/2021) renumbered this part of the Act, and survives today only as a historical cross-reference footnote. Both GN 101/2016 (subsidiary legislation, drafted under the old numbering) and the Tax Revenue Appeals Act s.16(6) still say 'section 51(5)' internally -- which is almost certainly how the stale number propagated into the 2026-08-29 'correction' despite that pass reading the Act's substance correctly. THE LESSON: a correction that fixes the rule but inherits its citation from a source using old numbering is not a complete correction -- the same renumbering trap CLAUDE.md documents for Cap.332 (old s.36 -> current s.44) caught a correction pass that already knew the trap existed. Found only because Tier 2's independent verification of a different, unrelated fact (objection_extension_statutory_right) happened to read the surrounding TAA text and noticed the discrepancy -- not because anyone re-audited this fact specifically."
   },
   "objection_extension_statutory_right": {
     "fact": "Extension of the 30-day objection period is a STATUTORY RIGHT — NOT very rare. Apply within 7 days before expiry.",
@@ -655,21 +662,21 @@
     "status": "CONFIRMED"
   },
   "stamp_duty_property_transfer": {
-    "fact": "Stamp duty on transfer of land or buildings is a FLAT 1% of consideration or market value — NOT tiered 0.5%/1%",
-    "correct_value": "Flat 1% of value",
+    "fact": "Stamp duty on transfer/conveyance of land or buildings is TIERED: 0.5% on the first TZS 100,000 of consideration/market value, then 1% on the value in excess of TZS 100,000 (Stamp Duty Act, Cap.189, Schedule, Article 22(b) 'CONVEYANCE') -- NOT a flat 1%.",
+    "correct_value": "Tiered: 0.5% on first TZS 100,000, then 1% on the excess",
     "wrong_patterns": [
-      "0.5% ya kwanza",
-      "0.5% on first",
-      "asilimia 0.5.*100,000",
-      "(?:is|are|ina|ni) tiered",
-      "graduated.{0,30}(?:stamp|stempu)|(?:stamp|stempu).{0,30}graduated",
-      "stamp.{0,60} is.{0,5}0\\.5%",
-      "stempu.{0,60}ni.{0,5}asilimia 0\\.5"
+      "flat 1%.*stamp duty",
+      "stamp duty.*flat 1%",
+      "stempu.*asilimia 1 tu",
+      "asilimia 1 pekee.*stempu",
+      "stamp duty.*not tiered",
+      "not.*0.5%.*1%.*stamp"
     ],
-    "primary_source": "https://www.tra.go.tz/page/stamp-duty",
-    "verified_by": "Auditax International Tanzania confirmed flat 1%",
-    "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "primary_source": "Stamp Duty Act, Cap.189, Schedule, Article 22(b) (\"CONVEYANCE\")",
+    "verified_by": "Direct read of Stamp Duty Act Cap.189 Schedule Article 22(b), 2026-08-31. Checked the amendment chain per this project's own consolidated-Act discipline: Finance Act 2021 re-enacted the entire Schedule and kept item 22(b) verbatim; Finance Act 2026 (most current) amends Article 22 only at sub-item (c) -- agricultural land conveyance -- leaving 22(b), the general conveyance rate, untouched. Confirmed unchanged across Finance Acts 2021-2026.",
+    "effective_date": "2018-01-01",
+    "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note); SCOPING FLAG for founder",
+    "correction_note": "Prior fact asserted the OPPOSITE of statute: it stated a flat 1% and listed the correct tiered 0.5%/1% rate as a wrong_pattern to reject, sourced only to a single practitioner claim (Auditax International) that does not match the Act's own Schedule text. Direct read of Cap.189 Schedule Article 22(b) confirms the tiered rate is correct and has been unchanged since at least the 2018 baseline read, re-enacted verbatim by Finance Act 2021, and untouched by Finance Act 2026's amendment to a different sub-item. SCOPING FLAG (not resolved here, founder decision): 'stamp duty' / 'stempu' / 'ushuru wa stempu' are already on the production OOC refusal list (kaggle/chike_config.json) per CLAUDE.md's documented out-of-corpus topics -- this fact is corrected for accuracy, but whether it belongs in the training corpus at all, given the classifier already refuses this topic before the model is ever called, is a separate open question."
   },
   "permit_class_b_employed": {
     "fact": "Class B Residence Permit is for EMPLOYED EXPATRIATES working for companies — NOT for investors",
@@ -700,19 +707,22 @@
     "status": "CONFIRMED"
   },
   "permit_class_c_categories": {
-    "fact": "Class C Residence Permit is for researchers, retired persons, missionaries, volunteers — NOT for employed foreign workers",
-    "correct_value": "Class C = researchers, missionaries, volunteers, retired",
+    "fact": "Class C Residence Permit is for researchers, students, retired persons, missionaries, volunteers, and other similar categories -- NOT for employed foreign workers.",
+    "correct_value": "Class C = researchers, students, missionaries, volunteers, retired persons",
     "wrong_patterns": [
       "daraja C.*mfanyakazi ajiriwa",
       "Class C for workers",
       "Class C.{0,40}kazi ya(?! utafiti)",
       "employed.{0,30}Class C(?! is for| ni kwa| \\(short| is a short)",
-      "wafanyakazi.{0,50}daraja C"
+      "wafanyakazi.{0,50}daraja C",
+      "Class C.*does not include students",
+      "wanafunzi.*hawaruhusiwi.*daraja C"
     ],
     "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
-    "verified_by": "Tanzania Immigration Department official website",
+    "verified_by": "Tanzania Immigration Department official website; corroborated 2026-08-31 via three government embassy sub-portals (un.tzembassy.go.tz, us.tzembassy.go.tz, in.tzembassy.go.tz) mirroring the Department's category listing, which explicitly includes 'students' -- immigration.go.tz's own page returns a JS shell to automated fetch, so the embassy mirrors were used as corroboration.",
     "effective_date": "2025-07-28",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note)",
+    "correction_note": "The category list was INCOMPLETE: it omitted 'students' as an explicit Class C category, which the government's own embassy-portal mirrors of the Immigration Department's listing include. A question about a student on a Class C permit would have scored a correct 'yes' answer as wrong under the prior wrong_patterns."
   },
   "corporate_tax_rate": {
     "fact": "Tanzania standard corporate income tax rate is 30%. DSE-listed companies pay 25%.",
@@ -1039,9 +1049,11 @@
       "hakuna kipindi cha mazoea rasmi",
       "wamekuwa wakikosea sheria tangu 28 julai"
     ],
-    "primary_source": "Bowmans Jul 2025; MAK Africa Legal Aug 2025; TanzaniaInvest Jul 2025; The Citizen Jul 2025",
+    "primary_source": "GN No. 487A of 2025, ss.3(2) and 4 (\"licensing authorities shall not issue or renew a licence...\" / \"a non-citizen who holds a valid licence...shall continue...up to such time when the licence expires\")",
     "verified_date": "2026-06-16",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_by": "Direct read of GN487A ss.3(2) and 4, 2026-08-31 -- all three claims (continue-to-expiry / no renewal / no new licences) map exactly onto the Order's own text.",
+    "correction_note": "R6 NOTE (2026-08-31): prior primary_source listed 'Bowmans Jul 2025' first among four sources -- Bowmans is an eval-reserved source family per CLAUDE.md R6. The underlying claim was independently confirmed CONFIRMED CLEAN against GN487A ss.3(2) and 4 directly, but citing an eval-family firm as primary_source was a methodology violation regardless of correctness. Re-grounded on the Order's own text; MAK Africa Legal, TanzaniaInvest and The Citizen may remain as corroboration but no longer carry the primary_source role."
   },
   "efd_threshold_tzs_11m": {
     "fact": "EFD (fiscal receipt) issuance is the DEFAULT LEGAL REQUIREMENT for every person who supplies goods or renders services, REGARDLESS OF TURNOVER (Tax Administration Act, Cap.438 R.E.2023, s.44(1) 'Issuance of Fiscal Receipt' -- renumbered from s.36 in the R.E.2019 edition by Finance Act 2023 s.54). The ONLY exemption mechanism is a Commissioner-General public notice, published in a newspaper of wide circulation or other public media, naming a specific person or class of persons excluded from the requirement (s.44(2)) -- there is NO turnover threshold written anywhere in this section, or anywhere else in the Act. A person actually excluded by such a notice issues a manual receipt instead (s.44(3)-(4)). REJECT both TZS 11,000,000 and TZS 14,000,000 as 'the EFD threshold': both figures are real, but they are the turnover BAND EDGES in the Income Tax Act's PRESUMPTIVE INCOME TAX table (First Schedule, para.2(3)) -- a different provision entirely, about tax rates for individuals who don't keep adequate records, not about EFD issuance. Practitioner guides (RSM, Habib, Auditax, VATupdate) appear to have conflated the two because both sit in the same Part of the same Act. CORRECT ANSWER to 'do I need an EFD at my turnover?': 'Ndiyo, kwa default -- isipokuwa TRA imetoa taarifa rasmi (Commissioner-General public notice) inayokuondolea wewe/kundi lako. Thibitisha na TRA kama taarifa hiyo inakuhusu.' (Yes, by default -- unless TRA has issued a public notice exempting you/your class. Confirm with TRA whether such a notice applies to you.) This is a correct, non-hedging answer, not an evasion -- turnover does not change it.",
@@ -1078,16 +1090,25 @@
     "correction_note": "This fact was deliberately kept as a '200M-free companion to efd_threshold_tzs_11m' to win retrieval for eval_347 (PROGRESS.md, FACT-ACCURACY Q16, 2026-07-28) -- i.e. it was built to be internally consistent with the wrong fact, not with the statute. Rewritten 2026-08-29 to match the corrected understanding instead. eval_347's own correct_answer_sw text likely still needs updating (it tests '200M is not the EFD threshold' but its own gold answer may still supply 11M as the right one) -- flagged in the Tier-1 EFD sweep report for the founder to review before the gate is re-run, not changed here."
   },
   "gn487a_visa_revocation": {
-    "fact": "Visa revocation is a possible consequence — not universally mandatory in all sources. Bowmans says AND/mandatory. The Star and The Citizen say possible/risk. Train model to say CAN be revoked not WILL always be revoked.",
-    "correct_value": "kunaweza kutokea (can happen) — not ni lazima daima (always mandatory)",
+    "fact": "Visa and resident-permit revocation is a MANDATORY consequence upon conviction under GN487A s.3(3)(a) -- the Order's own text says a convicted non-citizen 'shall be liable to' a fine or imprisonment 'AND revocation of visa and resident permit.' It only attaches on CONVICTION, not on mere accusation, investigation, or GN487A's existence.",
+    "correct_value": "Lazima (mandatory) baada ya HUKUMU (conviction) -- si hiari ya mahakama, lakini hakuna kinachotokea kabla ya hukumu",
     "wrong_patterns": [
-      "visa ni lazima daima",
-      "visa itafutwa lazima",
-      "kufutwa kwa visa ni lazima daima bila exception"
+      "visa.*inaweza kufutwa.*si lazima",
+      "revocation is merely possible",
+      "revocation is discretionary.*conviction",
+      "visa is optional upon conviction",
+      "kufutwa kwa visa si hakika hata baada ya hukumu",
+      "visa inafutwa moja kwa moja bila hukumu",
+      "automatic revocation without conviction",
+      "revocation.*before conviction",
+      "kufutwa visa kabla ya hukumu"
     ],
-    "primary_source": "Bowmans 30 Jul 2025 (mandatory); The Star Jul 2025 (possible); The Citizen Jul 2025 (risk)",
-    "verified_date": "2026-06-16",
-    "status": "CONFIRMED — sources disagree, use softer language"
+    "primary_source": "GN No. 487A of 2025 (Business Licensing (Prohibition of Business Activities for Non-Citizens) Order), s.3(3)(a) -- fbattorneys.co.tz/gn487a",
+    "verified_by": "Direct read of GN487A s.3(3)(a) text, 2026-08-31 -- supersedes a three-way secondary-source average (Bowmans said mandatory; The Star and The Citizen said possible/risk) that was never checked against the Order's own text.",
+    "effective_date": "2025-07-28",
+    "verified_date": "2026-08-31",
+    "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note)",
+    "correction_note": "Prior fact hedged 'possible, not mandatory,' constructed entirely by averaging three disagreeing secondary sources without ever reading GN487A's own text -- exactly the pattern this project's Tier-1/Tier-2 methodology exists to catch. Direct read of s.3(3)(a): the clause structure is 'shall be liable to [fine OR imprisonment] AND [revocation]' -- mandatory-on-conviction drafting, joined by 'and,' not discretionary language. Bowmans' 'mandatory' reading was correct; The Star/Citizen's 'possible/risk' framing was not. The averaging methodology that produced the prior hedge is the defect, not the underlying claim. One precondition the corrected fact retains, which the old fact also lacked: revocation is mandatory ONLY upon conviction, not automatic on accusation or on GN487A's mere existence. R6 NOTE: Bowmans (bowmans.com) is an eval-reserved source family per CLAUDE.md R6 -- even though its claim held up here, citing it as primary_source/verified_by is independently a methodology violation regardless of correctness. Re-grounded on the Order's own text (fbattorneys.co.tz/gn487a, a whitelisted domain) rather than any of the three law-firm/press sources."
   },
   "vat_withholding_remittance_deadline": {
     "fact": "VAT withholding remitted to TRA by 20th of following month — same deadline as VAT return. NOT 7 days after month end.",
@@ -1225,18 +1246,21 @@
     "status": "CONFIRMED"
   },
   "vat_threshold_200m_july2024_increase": {
-    "fact": "VAT registration threshold was increased from TZS 100M to TZS 200M in July 2024. Current thresholds: TZS 200M per 12 months OR TZS 100M per any 6-month rolling period. Zanzibar threshold is separate (TZS 100M) — different jurisdiction. Any pair showing TZS 100M/year or TZS 50M/6mo is citing pre-July-2024 rules.",
-    "correct_value": "TZS 200M/12mo or TZS 100M/6mo (effective July 2024)",
+    "fact": "VAT registration threshold was increased from TZS 100M to TZS 200M effective 1 JULY 2023 (NOT July 2024) by Government Notice No. 448Y of 2023, amending Regulation 14 of the VAT (General) Regulations 2015. Current thresholds: TZS 200M per 12 months OR TZS 100M per any 6-month rolling period (the 6-month figure is structurally half of the 12-month figure, per VAT Act s.28(2)(b)). Zanzibar has its own, separately-administered VAT threshold, reported by the Zanzibar Revenue Authority's own site as TZS 100,000,000 under the Zanzibar VAT Act No. 4 of 1998 -- sourced to ZRA directly, but not yet pinned to a specific section/GN. Any pair showing TZS 100M/year or TZS 50M/6mo mainland is citing pre-July-2023 rules.",
+    "correct_value": "TZS 200M/12mo or TZS 100M/6mo, mainland, effective 1 July 2023 (not July 2024)",
     "wrong_patterns": [
       "vat.*kizingiti.*100,000,000 kwa mwaka(?! wa 2023| wa 2022| kabla)",
       "vat.*kizingiti.*50,000,000.*miezi 6",
-      "vat registration.*100M per year(?! before 2024| was)",
-      "vat.*50M.*6 months(?! before 2024| was)"
+      "vat registration.*100M per year(?! before 2023| was)",
+      "vat.*50M.*6 months(?! before 2023| was)",
+      "increased.*july 2024",
+      "iliongezwa.*julai 2024"
     ],
-    "primary_source": "TRA official (tra.go.tz); PWC Tax Summaries 2025; TanzaniaInvest August 2025",
-    "verified_by": "TRA official, PWC 2025, TanzaniaInvest Aug 2025",
-    "effective_date": "2024-07-01",
-    "status": "CONFIRMED"
+    "primary_source": "Government Notice No. 448Y of 2023 (The Value Added Tax (General) (Amendment) Regulations, 2023), s.4, amending Regulation 14 of the VAT (General) Regulations 2015 (GN 225/2015), made under VAT Act Cap.148 s.94/s.28(4)",
+    "verified_by": "Direct read of GN 448Y/2023 (tra.go.tz) and the original GN 225/2015 Reg.14 (tanzlii.org), 2026-08-31. GN 448Y s.4: \"deleting the phrase 'one hundred million shillings' and substituting for it the phrase 'two hundred million shillings'\" -- confirmed against Reg.14's original 2015 text (100M). Commencement clause: \"deemed to have come into operation on the 1st day of July, 2023.\" Two other candidate amending GNs from the same period (GN 714/2021, GN 352K/2025) were read and ruled out -- neither touches Reg.14.",
+    "effective_date": "2023-07-01",
+    "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note)",
+    "correction_note": "This fact carried the same shape as the fabricated EFD threshold before it: duplicated across 7 places (4 locked_facts keys, 2 rules_engine constants, 1 fidelity-guard entry), citing only secondary sources (TRA portal, PwC, TanzaniaInvest) sharing likely lineage, and never read against the instrument that actually sets the figure -- VAT Act s.28(4) delegates the exact TZS amount to regulations, not to the Act or a Finance Act. UNLIKE EFD, the underlying number was not fabricated: GN 448Y of 2023 s.4 was found and read directly, confirming 100M->200M is real and unambiguous. TWO things were still wrong: (1) the date was off by exactly one year -- GN 448Y's own commencement clause says 1 July 2023, not July 2024 as the prior fact claimed; (2) the instrument type was wrong -- prior sources implied a Finance Act change, when it is a ministerial regulation made under VAT Act s.94, which is also why EY/KPMG Finance Act alerts for 2023 and 2024 are silent on it. A conflation risk with an unrelated presumptive-income-tax threshold change (also 100M->200M, via Finance Act 2026) was investigated and RULED OUT as the source of the date error -- the two are legally and mechanically distinct instruments under distinct Acts with distinct effective dates (2023 vs ~2026); the 'July 2024' figure appears to be a plain dating error, not a cross-tax mixup, though the coincidence of matching round numbers across two regimes remains a real risk worth watching elsewhere. Zanzibar: a genuine Zanzibar-specific source was found this time (Zanzibar Revenue Authority's own site, zanrevenue.org, citing Zanzibar VAT Act No. 4 of 1998) -- better grounded than 'no Zanzibar source at all', but the specific section/amending-GN was not located, so the Zanzibar figure is regulator-sourced, not yet statute-pinpointed. Sweep of the other 6 duplication sites (rules_engine/registration_thresholds.py's VAT_ANNUAL/VAT_SIX_MONTH; fidelity.py's _STATUTORY_THRESHOLDS['vat_registration']; the two bare-string sibling keys) done in the same pass -- see PROGRESS.md."
   },
   "GN605A_effective_date": {
     "fact": "GN 605A (Government Notice No. 605A) gazetted 13 October 2025, effective 1 January 2026. Revokes and replaces the Minimum Wage Order 2022 in its entirety. The 2022 order has NO force after 31 December 2025.",
@@ -1533,12 +1557,13 @@
       "dual citizen.*automatically excluded from gn487a",
       "uraia mbili.*hakuna tatizo la gn487a"
     ],
-    "primary_source": "Clyde & Co July 2025 citing Tanzania Citizenship Act Cap.357 R.E.2023",
-    "verified_by": "Clyde & Co practical implications article July 2025",
+    "primary_source": "GN No. 487A of 2025, s.2 (Interpretation) -- \"'non-citizen' has the meaning ascribed to it under the Tanzania Citizenship Act\"; Tanzania Citizenship Act Cap.357, ss.3-12 (citizen by birth/descent/naturalisation)",
+    "verified_by": "Direct read of GN487A s.2 and Cap.357 ss.3(1), 8-12, 30(1)(b), 2026-08-31. R.E.2002 text used (tanzlii.org 403'd on automated fetch for the R.E.2023 edition); the three-category structure is foundational and untouched by any amendment found, but the R.E.2023 pagination/wording itself was not directly confirmed -- residual gap, not a contradiction.",
     "effective_date": "2025-07-28",
     "verified_date": "2026-06-20",
     "status": "HEDGE — dual citizen scenario requires legal interpretation; direct to immigration lawyer",
-    "training_instruction": "Do not state definitively that dual citizens are exempt from GN487A. Use: 'thibitisha hali yako na wakili wa uhamiaji'."
+    "training_instruction": "Do not state definitively that dual citizens are exempt from GN487A. Use: 'thibitisha hali yako na wakili wa uhamiaji'.",
+    "correction_note": " R6 NOTE (2026-08-31): prior primary_source was 'Clyde & Co July 2025' -- Clyde & Co is an eval-reserved source family per CLAUDE.md R6. The underlying claim was independently confirmed correct against GN487A s.2 and Cap.357 directly, but citing an eval-family firm as primary_source was a methodology violation regardless of correctness. Re-grounded on the Order and the Act themselves."
   },
   "gn487a_msaidizi_definition": {
     "fact": "Under GN487A, a 'msaidizi' (facilitator) is a Tanzanian citizen who assists or aids a non-citizen to carry out any of the 15 prohibited business activities. This includes but may not be limited to lending their name, business licence, or identity to allow a non-citizen to operate a prohibited business. Penalty for msaidizi: TZS 5,000,000 fine OR imprisonment not exceeding 3 months. The facilitator and the non-citizen are BOTH penalised.",
@@ -1653,7 +1678,20 @@
   "balance_sheet_filing_fee_section_12_act": "220 USD",
   "late_filing_penalty_monthly_fee_section_12_act": "25 USD",
   "certified_copy_certificate_of_registration_fee": "4,000 TZS",
-  "act_section_12": "Kifungu XII cha Sheria",
+  "act_section_12": {
+    "fact": "Foreign/external companies carrying on business in Tanzania are governed by Part XIII (ss.320-328) of the Companies Act, Cap.212 -- NOT Part XII, which governs winding up of unregistered companies (ss.314-319). This includes the obligation to deliver documents/balance sheets to the Registrar and the late-filing penalty regime.",
+    "correct_value": "Companies Act Cap.212, Part XIII, ss.320-328 (\"Companies incorporated outside Tanzania carrying on business within Tanzania\")",
+    "wrong_patterns": [
+      "part xii.*foreign compan",
+      "section xii.*foreign compan",
+      "kifungu xii.*kampuni za kigeni",
+      "part 12.*external compan"
+    ],
+    "primary_source": "Companies Act, Cap.212 -- Part XIII heading and s.328 (\"Interpretation of Part XIII\")",
+    "verified_by": "Direct read of Companies Act Cap.212 table of contents and body text, 2026-08-31. Part XII (ss.314-319) is confirmed to be \"Winding up of unregistered companies\" -- unrelated to foreign companies. Secondary sources checked (multiple law-firm articles) were themselves inconsistent, citing 'Part XI' or 'Part XII' variously -- none matched a direct read of Part XIII.",
+    "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note)",
+    "correction_note": "Original bare value was 'Kifungu XII cha Sheria' (Section/Part XII of the Act), with no Act name given -- reconstructed from context (neighbouring keys document_filing_fee_section_12_act_excluding_balance_sheet, balance_sheet_filing_fee_section_12_act, late_filing_penalty_monthly_fee_section_12_act, and CLAUDE.md Section 11's own 'Foreign company (Section XII) late filing penalty: USD 25 per month' line) to be about the Companies Act's foreign/external-company regime. Direct read of the Act found this regime is Part XIII (ss.320-328), not Part XII. THE SAME ERROR IS BAKED INTO CLAUDE.md SECTION 11 ITSELF, and this fact very likely originated from that document rather than the other way around -- corrected there in the same pass (see PROGRESS.md). NOT YET RESOLVED: the three neighbouring fee-figure keys (document_filing_fee_section_12_act_excluding_balance_sheet, balance_sheet_filing_fee_section_12_act, late_filing_penalty_monthly_fee_section_12_act) still carry the wrong part number IN THEIR KEY NAMES, and their USD 220/220/25 figures were not independently confirmed against a primary Fees Regulation during this pass (that regulation could not be located). Renaming these keys touches scripts/precompute_rag_embeddings.py's embedding-group list and would need a coordinated fix + re-verification of the dollar figures, not a name-only patch -- flagged for a future pass rather than done here."
+  },
   "osiha_act_citation": "Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003",
   "health_and_safety_act_citation": "Sheria ya Afya na Usalama ya mwaka 2003",
   "risk_assessment_frequency": "mara moja kwa mwaka",
@@ -1688,10 +1726,38 @@
   "annual_return_form_number": "128",
   "beneficial_owner_information_penalty_maximum": "10000000 TZS",
   "business_name_maintenance_fee": "5,000 TZS",
-  "name_similarity_threshold": "50 %",
+  "name_similarity_threshold": {
+    "fact": "BRELA does not use a numeric similarity percentage as a legal rule for rejecting a proposed company name. The actual test (Companies Rules 2006 rr.2-3, under Companies Act Cap.212; and the Business Names (Registration) Act Cap.213) is QUALITATIVE: a name is rejected if it is 'identical with or similar to' an existing name such that it is 'likely to mislead the public,' or is otherwise undesirable, at the Registrar's discretion. A commonly-cited '50%' figure is an ORS (Online Registration System) on-screen UI similarity indicator, not a codified legal threshold.",
+    "correct_value": "Qualitative 'likely to mislead the public' / Registrar-discretion test (Companies Rules 2006 rr.2-3; Business Names (Registration) Act Cap.213) -- NOT a numeric percentage cutoff. If a numeric ORS indicator is mentioned at all, it must be labelled explicitly as a UI feature, not a legal rule.",
+    "wrong_patterns": [
+      "kizingiti cha asilimia 50.*jina",
+      "50% similarity.*legal",
+      "jina.*lisilozidi asilimia 50.*sheria",
+      "similarity threshold.*law",
+      "50 percent.*rejected by law"
+    ],
+    "primary_source": "Companies Rules 2006, rr.2-3 (Companies Act Cap.212); Business Names (Registration) Act, Cap.213",
+    "verified_by": "Secondary-source paraphrase of Companies Rules 2006 rr.2-3, cross-checked for consistency across sources, 2026-08-31 -- direct TanzLII PDF fetch 403'd; recommend re-confirming against a directly-opened TanzLII/gazette copy before treating as fully closed. The '50%' figure's origin was traced to miamia.co.tz, a non-authoritative aggregator, describing it explicitly as informal advice about the ORS system's on-screen indicator ('It is advisable to have a business name with less than 50% similarity') -- a UI heuristic, not a legal citation.",
+    "status": "CONFIRMED (mechanism) -- corrected 2026-08-31; NUMBER STILL UNGROUNDED as a legal rule because no such number exists in law",
+    "correction_note": "Prior fact stated a bare '50%' with no context, sourced only to an aggregator site describing a product UI feature. This is a DEFECT CLASS NOT YET NAMED in this project's prior audits: not fabricated (the number is real -- it genuinely appears on the ORS screen), not a stale citation (nothing has changed over time), but A TOOL'S BEHAVIOUR RECORDED AS A LEGAL RULE. The underlying legal test is categorically different in kind (qualitative discretion, not a numeric cutoff), so no amount of 'finding the right percentage' would have fixed this fact -- the fix has to change what KIND of claim the fact makes, not just its value. Worth watching for elsewhere: any locked fact whose only source is a product/portal screen description (a UI label, an on-screen message, a form's placeholder text) rather than a legal instrument is a candidate for this same class."
+  },
   "trademark_renewal_period": "saba years",
   "application_fee_patent": "12000 TZS",
-  "patent_term": "20 years",
+  "patent_term": {
+    "fact": "A Tanzanian patent's BASE term is 10 years from the filing date (Patents (Registration) Act, Cap.217, s.39(1)). The owner/licensee may apply for up to TWO separate 5-year extensions (application required 1-12 months before each expiry, and only if the invention is being 'worked' in Tanzania or a legitimate reason for not working it is proven), reaching a MAXIMUM of 20 years only if both extensions are sought and granted. A patent that lapses at year 10 with no extension application simply expires -- 20 years is NOT an automatic term.",
+    "correct_value": "10-year base term, extendable via two discretionary 5-year extensions to a maximum of 20 years -- not an automatic flat 20 years",
+    "wrong_patterns": [
+      "hataza.*miaka 20.*moja kwa moja",
+      "patent term is 20 years$",
+      "muda wa hataza ni miaka 20 tu",
+      "automatic 20.year patent",
+      "20 years.*no renewal needed"
+    ],
+    "primary_source": "Patents (Registration) Act, Cap.217 R.E.2002, s.39(1)-(3)",
+    "verified_by": "Direct read of Patents (Registration) Act Cap.217 s.39(1)-(3), 2026-08-31. Cross-checked separately via web search that '20 years' as a flat term is the ARIPO regional term (Harare Protocol), not Tanzania's domestic Act -- a plausible source of the conflation. Note: a historical '[s.38]' footnote follows s.39 in the text, the same old-numbering-preserved-as-footnote pattern found twice elsewhere this session.",
+    "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note); SCOPING FLAG for founder",
+    "correction_note": "Prior fact stated a bare, uncited '20 years' with no distinction between base term and extension. Direct read of Cap.217 s.39(1) found the true structure is a 10-year base term with two discretionary 5-year extensions (subject to a 'working' requirement), reaching 20 years only in the maximal case -- a flat '20 years' answer would mislead a patent holder into not renewing at year 10 and losing protection entirely. SCOPING FLAG (not resolved here, founder decision): patents/IP registration falls under no current or planned domain in CLAUDE.md Section 5 (Tier1A/1B/1C/2A/2B) -- this fact appears to belong to no active workstream."
+  },
   "company_director_minimum_age": "18",
   "course_fee": "250,000 TZS",
   "electrical_test_fee_reduction_initial": "650,000 TZS",
@@ -1699,8 +1765,32 @@
   "registration_certificate_processing_time_new": "1 days",
   "compliance_license_processing_time_old": "28 days",
   "vat_deferment_limit_date": "30 June 2026",
-  "vat_deferment_threshold_percentage": "90 %",
-  "vat_deferment_minimum_value": "10,000,000 TZS",
+  "vat_deferment_threshold_percentage": {
+    "fact": "VAT deferment on imported capital goods (VAT Act Cap.148 s.11) is available only if the applicant's turnover IS or IS EXPECTED TO BE at least 90% taxable supplies -- this is an ELIGIBILITY TEST on the importer's business mix, not a percentage of VAT that gets deferred.",
+    "correct_value": "At least 90% of turnover must be taxable supplies to qualify (not '90% of VAT is deferred')",
+    "wrong_patterns": [
+      "90%.*ya vat.*inaahirishwa",
+      "90% of the vat.*deferred",
+      "deferment.*90%.*tax amount"
+    ],
+    "primary_source": "VAT Act, Cap.148, s.11",
+    "verified_by": "Cross-checked TRA's VAT Deferment page and Breakthrough Attorneys, both quoting matching statutory phrasing (\"at least ninety percent of taxable supplies\"), 2026-08-31. Section number per tanzanialaws.com's section-numbered summary, not independently confirmed against raw Act text.",
+    "status": "CONFIRMED (value) -- corrected 2026-08-31 (label only, see correction_note)",
+    "correction_note": "The 90% figure itself was already correct; the fact's own framing was misleading -- it read as \"90% of VAT is deferred\" when it actually means \"90%+ of turnover must be taxable supplies to qualify for deferment.\" Relabelled to state what the 90% is a percentage OF."
+  },
+  "vat_deferment_minimum_value": {
+    "fact": "The minimum VAT payable per unit of imported capital goods for VAT deferment eligibility (VAT Act Cap.148 s.11 scheme) is TZS 20,000,000 -- NOT TZS 10,000,000.",
+    "correct_value": "TZS 20,000,000",
+    "wrong_patterns": [
+      "kiwango cha chini.*10,000,000.*ahirisho",
+      "minimum.*10,000,000.*deferment",
+      "vat deferment.*10 million"
+    ],
+    "primary_source": "VAT Act, Cap.148, s.11 scheme (via TRA VAT Deferment guidance and Breakthrough Attorneys)",
+    "verified_by": "Multiple non-lineage-linked sources converge on TZS 20,000,000 for this figure, 2026-08-31 -- found incidentally while verifying vat_deferment_threshold_percentage, the same s.11 scheme. NOT independently read against the raw Act/regulation text -- flagged as convergent-secondary-source confirmation, not primary-text confirmation.",
+    "status": "CORRECTED 2026-08-31 (see correction_note); STILL PARTIALLY UNGROUNDED -- value not read from raw statute text",
+    "correction_note": "Prior fact stated TZS 10,000,000. Found while verifying a neighbouring fact in the same VAT deferment scheme (s.11): every source located for this specific figure states TZS 20,000,000, not 10,000,000. Corrected on convergent-secondary-source strength; recommend upgrading to a direct primary-text read (VAT Act s.11 or the VAT General Regulations) before treating this as fully closed, per this project's own standard for numeric thresholds."
+  },
   "vat_deferment_form_number": "ITX 247.02.E",
   "gn487a_full_legal_name": {
     "fact": "GN 487A is Government Notice No. 487A. Its full legal name is: The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025. GN 487A is NOT Government Notice No. 605A. Government Notice No. 605A is a completely different instrument -- the 2026 minimum wage order. Never state that GN 487A's name or number is 605A.",

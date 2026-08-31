@@ -72,6 +72,14 @@ COMPUTATION_EFD = "efd_requirement"
 # Locked: vat_threshold_200m_july2024_increase / vat_registration_threshold_annual /
 # vat_registration_threshold_six_months. Zanzibar's separate TZS 100M is a DIFFERENT
 # jurisdiction and is out of corpus — never reachable from here.
+# RE-SOURCED 2026-08-31: this figure had the same duplication-without-primary-verification
+# shape as the fabricated EFD threshold (locked_facts.json's key name above still says
+# "july2024_increase" — left unrenamed, see that fact's correction_note for why). UNLIKE
+# EFD, the number itself is real: Government Notice No. 448Y of 2023 s.4 (VAT (General)
+# (Amendment) Regulations, 2023), amending Reg.14 of GN 225/2015 under VAT Act Cap.148 s.94,
+# read directly and confirmed 100M -> 200M. The only correction is the DATE: GN 448Y's own
+# commencement clause is 1 July 2023, not July 2024 as previously believed everywhere this
+# constant was duplicated.
 VAT_ANNUAL = Decimal(200_000_000)
 VAT_SIX_MONTH = Decimal(100_000_000)
 # NO EFD constant here. efd_threshold_tzs_11m was corrected 2026-08-29: TAA Cap.438 s.44 sets no

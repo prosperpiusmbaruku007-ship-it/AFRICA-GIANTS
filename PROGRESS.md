@@ -1,6 +1,50 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-30 (duplication-across-layers check + accepted-quirk audit)
+Last updated: 2026-08-31 (Tier 2 verification + fixes; corporate/partnership build unblocked)
+
+---
+
+# 🧾 RETRAIN PRECONDITION — REBUILT 2026-08-31, SINGLE SOURCE OF TRUTH
+
+**This table replaces every prior "STALE" annotation scattered through this file (v2's note at the
+old CORPUS CORRECTION v2 entry, and any future one).** Per founder instruction: stop re-annotating
+staleness inline each time a new defect class is found — maintain ONE table instead, and update
+THIS table (not add a new annotation) the next time a corpus correction script runs. The per-pass
+sections below (CORPUS CORRECTION v1/v2/v3/v4) remain as the historical record of each script and
+its own artifact (R18) — this table is the rolled-up current state, not a replacement for them.
+
+| defect class | discovered | rows quarantined | val_sft / val_sft_balanced impact | quarantine file |
+|---|---|---|---|---|
+| PAYE phantom TZS 26,000 relief + PAYE band-2-at-9% (combined bucket) | 2026-08-25 | 75 | 4 | `paye_defect_quarantine_2026_08_25.jsonl` |
+| `nssf.or.tz` dead domain — **REWRITTEN, not quarantined** (841 occurrences, 47 files; not an SFT-row count, listed for completeness) | 2026-08-25 | — | — | (in-place rewrite, `scripts/correct_corpus_defects.py`) |
+| `nssf_retirement_age` "mining" fabrication | 2026-08-29 | 17 | 0 | `fabrication_and_deadline_defect_quarantine_2026_08_29.jsonl` |
+| WCF disease-reporting flat "7 working days" (vs the true 14+7 chain) | 2026-08-29 | 6 | 0 | same file as above |
+| EFD threshold fabrication (TZS 11M/14M — no such threshold exists) | 2026-08-29 | 58 | 1 | `efd_threshold_fabrication_quarantine_2026_08_29.jsonl` |
+| GN487A visa revocation softened to "possible" (real rule: mandatory upon conviction) | 2026-08-31 | 129 | 8 | `tier2_confirmed_wrong_quarantine_2026_08_31.jsonl` |
+| PAYE "Form P9" due 31 March (Kenyan term; real deadline 30 Jan, ITA s.85(3)(b)) | 2026-08-31 | 45 | 1 | same file as above |
+| Stamp duty stated as flat 1% (real rate: tiered 0.5%/1%, Cap.189 Art.22(b)) | 2026-08-31 | 13 | 0 | same file as above |
+| VAT threshold increase dated "July 2024" (real date: 1 July 2023, GN 448Y/2023) | 2026-08-31 | 6 | 1 | same file as above |
+| Patent term stated as flat 20 years (real: 10-year base + 2 discretionary 5-yr extensions) | 2026-08-31 | 2 | 0 | same file as above |
+| **TOTAL QUARANTINED** | | **351** | **15** | 4 files, `datasets/tier1a/rejected/` |
+
+**The number to sit with, per founder instruction: the GN487A softened-visa defect alone (129 rows)
+is larger than the mining fabrication (17), the WCF deadline (6), and the 9%-band share of the
+2026-08-25 bucket combined.** It is also the largest single-fact defect found in this entire line of
+work by row count (the EFD threshold, previously the largest at 58, is less than half its size).
+**10 of its 129 rows reached `val_sft`/`val_sft_balanced`** — validation loss has been rewarding a
+claim that understates a mandatory legal consequence.
+
+**What this table means for a retrain: NOT MET.** 351 rows are quarantined out of the working set
+(`datasets/tier1a/{cleaned_pairs,raw_sources}/`), but `datasets/tier1a/sft/{train,val}_sft*.jsonl`
+still physically contain them until `generate_sft.py` is re-run (behind `check_eval_split.py`, per
+R14/the standing pipeline order) to re-export from the now-clean `cleaned_pairs/`. **A retrain run
+against the CURRENT sft/ files would still bake in all 351 rows.** This has been true since v1
+(2026-08-25) and remains true today — re-running `generate_sft.py` is the one remaining step this
+table cannot shortcut, and it has not been run in this pass.
+
+**Maintenance rule for this table going forward:** the next corpus-correction script (v5 and
+beyond) adds a row here with its own date, count, and file — and updates the TOTAL — instead of
+writing a new "STALE" paragraph elsewhere in this file. This table is now the retrain precondition.
 
 ---
 
@@ -323,7 +367,246 @@ defects, `_v3.py` for this one, both 2026-08-29) — see the CORPUS CORRECTION v
 for the full breakdown and the fabrication-class board
 item this raised.
 
-**Next: Tier 2** (`served_actionable_peripheral` 12 + `in_index_never_served` 22 = 34 facts).
+**Tier 2 started and completed 2026-08-31** — see the section immediately below.
+
+---
+
+# ✅ TIER 2 (34 facts: `served_actionable_peripheral` 12 + `in_index_never_served` 22) — RE-VERIFIED AGAINST STATUTE. 1 Tier-1 correction re-opened and fixed, 1 EFD-shaped duplication resolved, 6 confirmed-wrong facts fixed, 4 framing corrections, 195 corpus rows quarantined, 1 new defect class named.
+
+Five research groups (batched by Act, same discipline as Tier 1) ran in parallel against the 34
+Tier 2 facts pulled from `eval/results/ungrounded_fact_exposure.json`: Income Tax Act cluster (11
+facts); TAA/Appeals/Stamp Duty/Patents (6); VAT Act + SDL (5); BRELA/Companies Act (5); GN487A +
+Immigration Act (6); plus `brave_search_blocked_tanzania`, flagged immediately as a non-regulatory
+infra note sitting in `locked_facts.json` by mistake — not a statute question, not touched this
+pass, needs its own hygiene cleanup.
+
+## The most serious finding: a Tier 1 "fix" was itself wrong
+
+`objection_deposit_requirement` — corrected in Tier 1 (2026-08-29) to tie the deposit deadline to
+TAA's 30-day objection window instead of a fabricated separate 15-day clock — carried the citation
+**s.51**. Tier 2's independent read of the current TAA Cap.438 R.E.2023 text (while verifying an
+unrelated neighbouring fact) found the deposit provision now sits at **s.62(7)-(9)**; s.51 is the
+pre-Finance-Act (2017/2020/2021) numbering, surviving today only as a historical `[s. 51]` footnote
+— and both GN 101/2016 and the Tax Revenue Appeals Act s.16(6) still cite "section 51(5)"
+internally, which is almost certainly how the stale number propagated into a correction that had
+already read the Act's substance correctly. **Fixed 2026-08-31** — same renumbering trap CLAUDE.md
+documents for Cap.332 (old s.36 → current s.44), this time catching a pass that already knew the
+trap existed. Founder's framing, verbatim: *"a Tier 1 correction that's still wrong is worse than
+an unfixed fact, because it's now recorded as verified."* Fixed first, ahead of everything else in
+this batch, per that ordering.
+
+## `vat_threshold_200m_july2024_increase` — treated as EFD-shaped from the start, and resolved
+
+This fact had every warning sign the EFD threshold had before it was found fabricated: duplicated
+across **7 places** (4 `locked_facts.json` keys, 2 `rules_engine` constants, 1 fidelity-guard
+entry), the exact TZS figure delegated to a regulation rather than stated in the Act or a Finance
+Act (VAT Act s.28(4)), a date that didn't match any Finance Act analysis, and a conflatable
+neighbour (an unrelated presumptive-income-tax threshold also moving 100M→200M, via Finance Act
+2026). Per founder instruction, the regulation was chased directly rather than accepting another
+summary.
+
+**Found: Government Notice No. 448Y of 2023** — *The Value Added Tax (General) (Amendment)
+Regulations, 2023*, s.4, amending Regulation 14 of the VAT (General) Regulations 2015 (GN 225/2015,
+made under VAT Act Cap.148 s.94/s.28(4)). Read directly (tra.go.tz for GN 448Y, tanzlii.org for the
+2015 original): s.4 quotes the "before" text as "one hundred million shillings," matching the 2015
+original exactly, and substitutes "two hundred million shillings." Commencement clause: **"deemed
+to have come into operation on the 1st day of July, 2023."**
+
+**Unlike EFD, the number was not fabricated — 100M→200M is real and confirmed.** Two things were
+still wrong everywhere this constant was duplicated: **(1) the date** — every copy said July 2024;
+GN 448Y's own commencement clause says 1 July 2023, one year off. **(2) the instrument type** — the
+figure was implicitly attributed to a Finance Act; it is a ministerial regulation under VAT Act
+s.94, which is also why EY/KPMG Finance Act alerts for both 2023 and 2024 are silent on it.
+
+**The presumptive-tax conflation risk was investigated and RULED OUT as the mechanism**, though the
+underlying suspicion was sound: the VAT change (GN 448Y, 2023, VAT Act) and the presumptive-tax
+change (Finance Act 2026, Income Tax Act First Schedule) are legally and mechanically distinct
+instruments under distinct Acts with distinct dates (2023 vs ~2026) — the "July 2024" figure
+matches neither and looks like a plain dating error, not a cross-tax mixup. Still worth watching:
+two regimes sharing round before/after numbers is exactly the shape that produces this class of
+error, even where it didn't this time.
+
+**Zanzibar:** a genuine Zanzibar-specific source was found this time — the Zanzibar Revenue
+Authority's own site (zanrevenue.org) states the threshold as TZS 100,000,000 under the Zanzibar
+VAT Act No. 4 of 1998. Better grounded than "no Zanzibar source at all," but the specific
+section/amending-GN was not located — **regulator-sourced, not yet statute-pinpointed**, recorded
+as such rather than overstated.
+
+**All 7 duplication sites corrected in the same pass, per the EFD-lesson requirement to sweep
+before touching anything just the fact:**
+- `vat_registration_threshold`, `vat_threshold_200m_july2024_increase`, `vat_registration_threshold_annual`,
+  `vat_registration_threshold_six_months` — `primary_source`/`verified_by`/`effective_date` (2023-07-01,
+  not 2024-07-01) corrected in `scripts/locked_facts.json`.
+- `chike/rules_engine/registration_thresholds.py`'s `VAT_ANNUAL`/`VAT_SIX_MONTH` — values unchanged
+  (200M/100M were already correct), comment re-sourced to GN 448Y and the corrected date.
+- `chike/fidelity.py`'s `_STATUTORY_THRESHOLDS["vat_registration"]` — same: values unchanged,
+  comment re-sourced.
+
+**Key-name flag, not fixed:** `vat_threshold_200m_july2024_increase`'s own key name still says
+"july2024" — left unrenamed. It's referenced by name in `scripts/precompute_rag_embeddings.py`
+(the R15 embedding-group list) and would need a coordinated rename + regen, not a name-only patch.
+Same deferred-rename treatment as the `_section_12_act` keys below.
+
+## Six confirmed-wrong facts, fixed in the founder's specified order
+
+1. **`paye_p9_deadline`** — was "Form P9, 31 March"; "P9" is Kenyan (KRA) terminology, Tanzania has
+   no such form. Real obligation: annual employment-income withholding certificate, Income Tax Act
+   Cap.332 s.85(3)(b), due **30 January** — one day earlier than the "31 January" the old fact
+   blocked as a wrong pattern. Flagged by the verifying researcher as CORRECTED but TENTATIVE;
+   recommend a tax-consultant spot-check.
+2. **`gn487a_visa_revocation`** — was "possible, not mandatory," built entirely from averaging
+   three disagreeing secondary sources without ever reading GN487A's own text. s.3(3)(a): "shall be
+   liable to [fine OR imprisonment] AND revocation" — **mandatory upon conviction**, joined by
+   "and," not discretionary. Bowmans' reading was right; the averaging methodology that produced
+   the hedge was the defect. Precondition retained: revocation attaches on conviction, not on
+   accusation or the Order's mere existence.
+3. **`act_section_12`** — was "Kifungu XII" (Part XII); Part XII of the Companies Act Cap.212 is
+   winding up of unregistered companies. The actual foreign/external-company regime is **Part XIII**
+   (ss.320-328). **The same error is baked into CLAUDE.md Section 11 itself** ("Foreign company
+   (Section XII) late filing penalty") — fixed there in the same pass (see below). Reviewed the rest
+   of CLAUDE.md §11 for the same shape (a cited Section/Part number that might be wrong) — this is
+   the only instance found; the other locked facts in §11 don't cite section numbers at all, just
+   portal pages, so they don't share this specific defect shape (they share a different one —
+   not-verified-against-the-Act — already tracked separately).
+4. **`name_similarity_threshold`** — was a bare "50%" cited to an aggregator describing an ORS
+   on-screen UI indicator. The actual legal test (Companies Rules 2006 rr.2-3; Business Names
+   (Registration) Act Cap.213) is **qualitative** — "likely to mislead the public" / Registrar
+   discretion — not a numeric cutoff. **Named as a new defect class, per founder instruction: not
+   fabricated (the number is real — it genuinely appears on the ORS screen), not stale (nothing
+   changed over time), but A TOOL'S BEHAVIOUR RECORDED AS A LEGAL RULE.** The fix isn't "find the
+   right percentage" — no percentage is the legal rule, so the claim has to change kind, not value.
+   Watch for elsewhere: any locked fact whose only source is a product/portal screen description (a
+   UI label, an on-screen message, form placeholder text) rather than a legal instrument.
+5. **`stamp_duty_property_transfer`** — was backwards: asserted a flat 1% and listed the correct
+   tiered rate as a wrong_pattern to reject. Stamp Duty Act Cap.189 Schedule Art.22(b) sets a tiered
+   0.5%/1% rate, confirmed unchanged FA2021→FA2026. SCOPING FLAG carried into the fix: "stamp duty"
+   is already on the production OOC refusal list — corrected for accuracy regardless, but whether it
+   belongs in the corpus at all is a separate open question.
+6. **`patent_term`** — was a flat "20 years." Patents (Registration) Act Cap.217 s.39(1): 10-year
+   base term, extendable via two discretionary 5-year extensions to a max of 20 — 20 years flat is
+   the *ARIPO regional* term, not Tanzania's domestic Act. SCOPING FLAG: patents/IP fall under no
+   current or planned domain (CLAUDE.md §5).
+
+## Framing corrections (value already correct or close; description/scope was wrong)
+
+- **`vat_deferment_threshold_percentage`** — 90% confirmed, but relabelled: it's "90%+ of turnover
+  must be taxable supplies to qualify for deferment," not "90% of VAT is deferred."
+- **`vat_deferment_minimum_value`** — found incidentally while verifying the sibling fact above:
+  every source located states **TZS 20,000,000**, not the locked TZS 10,000,000. Corrected on
+  convergent-secondary-source strength; not yet read against raw statute/regulation text — flagged
+  as such rather than overstated.
+- **`minimum_turnover_tax`** — rate/date (1%, WEF 1 July 2025) confirmed against Finance Act 2025
+  s.60(d)(ii) directly. Scope was misleading: this is the Alternative Minimum Tax on corporations
+  with 3 consecutive years of unrelieved loss, not a general turnover tax on all businesses.
+  **Duplicate flag:** describes the same provision as `amt_loss_companies_only` — not merged this
+  pass, flagged for a future consolidation.
+- **`royalties_wht_rate`** — default 15%/15% confirmed, but incomplete: missing two statutory
+  carve-outs (10% film/video/sound recordings, Finance Act 2022 s.72(b)(i); 5% resident sports
+  entities/TFF, Finance Act 2024 s.46(b)(i)). Added.
+- **`permit_class_c_categories`** — missing "students" as an explicit category; the government's
+  own embassy-portal mirrors of the Immigration Department's listing include it. Added.
+
+## R6 contamination — recorded and re-grounded, independent of correctness
+
+Three GN487A facts (`gn487a_mgeni_cap357_definition`, `gn487a_transitional_provision`,
+`gn487a_visa_revocation`) all cited Bowmans and/or Clyde & Co as `primary_source` — both on this
+project's own R6 eval-reserved list (`data/source_documents/immigration_eval_family/`). Per founder
+instruction, this is recorded as a real finding independent of whether the underlying claims were
+correct: **eval-reserved firms cited as primary_source means those facts can't be used to validate
+anything those firms also touch**, regardless of accuracy. Two of the three checked out as CONFIRMED
+CLEAN against the actual GN487A/Cap.357 text; the third (`gn487a_visa_revocation`) needed correcting
+anyway (above). All three `primary_source`/`verified_by` fields re-pointed at the Order/Act text
+directly, with the R6 finding recorded in each fact's `correction_note`.
+
+## Corpus sweep — `scripts/correct_corpus_defects_v4.py`, 195 rows quarantined
+
+Same discipline as v1-v3: quarantine, don't rewrite (R20 — the correct answer needs a structurally
+different sentence, not a word swap; `run.py generate-from-facts`, R13, regenerates from the
+now-corrected facts). Five of the six confirmed-wrong facts had corpus impact (`objection_deposit_requirement`,
+`act_section_12`, `name_similarity_threshold` swept and found clean — zero hits):
+
+| defect class | rows | worst file |
+|---|---|---|
+| `GN487A_VISA` (softened "kunaweza kutokea" framing) | 129 | `cleaned_pairs_batch_009.jsonl` (37) |
+| `PAYE_P9_31MARCH` | 45 | `train_sft.jsonl` (49 incl. balanced split) |
+| `STAMP_DUTY_FLAT1` | 13 | spread across batches 002-015 |
+| `VAT_JULY2024` | 6 | `cleaned_pairs_batch_014.jsonl` |
+| `PATENT_20FLAT` | 2 | `cleaned_pairs_batch_015.jsonl` |
+
+**`val_sft.jsonl` carries 6 rows and `val_sft_balanced.jsonl` carries 4** — validation loss has
+been rewarding these wrong claims, same shape as the EFD defect's `val_sft.jsonl` impact (v3) and
+the 2026-08-25 PAYE-relief/band-9 defects. Verification-after: **0 rows remain matching any defect
+class.** Artifact: `eval/results/corpus_correction_v4.json`. Quarantine file:
+`datasets/tier1a/rejected/tier2_confirmed_wrong_quarantine_2026_08_31.jsonl`.
+
+Two secondary risk categories (royalty carve-out omission, Class C students omission, minimum
+turnover "applies to all businesses" framing) were swept separately and found **zero corpus hits**
+— the framing corrections above needed no corpus quarantine.
+
+## CLAUDE.md corrected
+
+Section 11's BRELA entry — "Foreign company (Section XII) late filing penalty: USD 25 per month" —
+corrected to Part XIII (Companies Act Cap.212 ss.320-328), with a pointer to this entry. The rest of
+Section 11 was reviewed for the same shape (a cited Section/Part number that could be independently
+wrong) and no other instance was found.
+
+## Still ungrounded, not contradicted — carried forward, not fixed this pass
+
+`compliance_license_processing_time_old` (28 days — likely conflates an unrelated 28-day
+post-registration notification duty with certificate turnover, not merely stale),
+`registration_certificate_processing_time` (3 days) / `_new` (1 days) (neither figure matches any
+source found, no disambiguation of which is current), `vat_registration_notification_deadline_commissioner`
+(14 days — likely belongs to a different obligation than the one it's meant to answer; evidence
+points to 30 days for the actual trigger), `sdl_payment_deadline` (7th confirmed by day-of-month,
+exact section unconfirmed, same VETA-Act staleness risk Tier 1 already flagged), `late_payment_penalty_rate`
+(bare "2%", no obligation identifiable from context — possibly a stray typo of the 2.5% TAA figure
+confirmed elsewhere in this batch), `form_number_payment_credit_slip` (CONFIRMED clean on substance,
+missing metadata only), `paye_all_bands_sequence`/`paye_bands_monthly_2025_26` (both CONFIRMED clean
+against Finance Act 2021 s.25, flagged as duplicates of each other — not merged), `BRELA_fees_hedge`
+(CONFIRMED clean as policy, real evidenced tension against CLAUDE.md §11's own locked BRELA fees —
+founder scoping call, not resolved here).
+
+**Deferred renames, not executed this pass (both touch `scripts/precompute_rag_embeddings.py`'s
+embedding-group list and would need a coordinated rename + R15 regen, not a name-only patch):**
+`document_filing_fee_section_12_act_excluding_balance_sheet` / `balance_sheet_filing_fee_section_12_act`
+/ `late_filing_penalty_monthly_fee_section_12_act` (key names still say "section_12_act"; their
+USD 220/220/25 figures were also not independently confirmed against a primary Fees Regulation this
+pass); `vat_threshold_200m_july2024_increase` (key name still says "july2024").
+
+**Not routed through statute verification:** `brave_search_blocked_tanzania` remains flagged as a
+non-regulatory infra note sitting in the fact store — a data-hygiene item, not fixed this pass.
+
+## Test suite and validation after all Tier 2 changes
+
+`scripts/audit_fact_claim_grounding.py` re-run after all edits: same 2 pre-existing MANUAL_TRIAGE
+flags as before (`GN605A_rate_range`, `osha_vs_wcf_roles`), zero new fabrication-shaped flags from
+today's changes.
+
+**One real regression caught by the first test run, not by inspection.** The `minimum_turnover_tax`
+scope correction was written as a full-object replacement, which silently dropped the fact's
+existing `wrong_patterns` (the 0.3%/0.5% regex family with `ilikuwa`/`was` lookbehind escapes) and
+its `_narrowing_note` — both there for a specific, already-tested reason (2026-08-25's local-levy
+guard narrowing, documented in that note). `tests/test_local_levy_guard.py::test_local_levy_probe_behaves_as_specified[llp_09]`
+and `[llp_10]` failed immediately, because those probes exist precisely to hold the line on that
+narrowing. Fixed by restoring the original `wrong_patterns`/`_narrowing_note` verbatim and layering
+the new scope-clarification pattern (`minimum turnover tax applies to all businesses`) on top,
+rather than replacing the object. **Lesson for this pass specifically: correcting a fact's scope or
+framing is not the same operation as correcting its value, and a full-object rewrite risks
+discarding unrelated, already-tested fields that happen to share the same key.** Full suite re-run
+clean after the fix: **1381 passed, 0 failed, 4 deselected, 1 xfailed.**
+
+## Tier 3 — NOT a pass. Recorded as documentation debt, taken opportunistically.
+
+**96 facts** (`served_non_actionable` 80 + `not_in_index` 16, per the tier table above) carry either
+no figure a user could act on wrongly, or no live retrieval exposure at all. Per founder instruction:
+this is documentation debt, not risk — and this project has just spent a long stretch on
+verification while the product itself hasn't moved. Running it as a scheduled batch, the way Tier
+1 and Tier 2 were run, would be more verification work for a population that by construction carries
+no measured exposure. **Decision: no Tier 3 pass. Instead, opportunistic grounding** — the next time
+any of these 96 facts is touched for any other reason (a corpus expansion references it, a bug
+report names it, an audit script happens to flag it), it gets verified against statute then, as part
+of that work, not scheduled separately. This keeps the debt visible (the count is written down here)
+without spending a dedicated cycle on facts nobody is currently being served wrong information from.
 
 ---
 
@@ -1565,7 +1848,12 @@ pair, none is a correct two-stage explanation. The first regex draft missed 4 of
 "miaka 60 (55 kwa sekta ya madini)" parenthetical shape, which drops the repeated "miaka"/"umri
 wa" the other phrasings use) — found and fixed before running for real, not after.
 
-**⛔ THE RETRAIN PRECONDITION TABLE BELOW IS NOW STALE.** It was correct on 2026-08-25 for the
+**⛔ SUPERSEDED 2026-08-31 — see "🧾 RETRAIN PRECONDITION — REBUILT" at the top of this file, the
+single current source of truth. This paragraph and the "stale" annotation pattern it started are
+kept here only as historical record; do not re-annotate this pattern again — update the rebuilt
+table instead.**
+
+~~THE RETRAIN PRECONDITION TABLE BELOW IS NOW STALE.~~ It was correct on 2026-08-25 for the
 three defects then known. **A retrain on today's SFT files would still bake in 17 mining-55 rows,
 6 wcf-7-day rows, and 58 EFD-threshold rows** on top of whatever the 2026-08-25 pass already
 closed. Combined open count across all three 2026-08-29 passes plus the original: **156

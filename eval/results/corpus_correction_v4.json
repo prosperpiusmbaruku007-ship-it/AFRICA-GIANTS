@@ -1,0 +1,62 @@
+{
+  "measured": "2026-08-31",
+  "dry_run": false,
+  "harness": "scripts/correct_corpus_defects_v4.py",
+  "companion_of": [
+    "scripts/correct_corpus_defects.py (v1)",
+    "scripts/correct_corpus_defects_v2.py (v2)",
+    "scripts/correct_corpus_defects_v3.py (v3)"
+  ],
+  "quarantine_file": "datasets/tier1a/rejected/tier2_confirmed_wrong_quarantine_2026_08_31.jsonl",
+  "defect_classes": [
+    "GN487A_VISA",
+    "PAYE_P9_31MARCH",
+    "STAMP_DUTY_FLAT1",
+    "VAT_JULY2024",
+    "PATENT_20FLAT"
+  ],
+  "quarantine": {
+    "rows": 195,
+    "by_file": {
+      "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl": 2,
+      "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl": 4,
+      "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl": 4,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_009.jsonl": 37,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_011.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl": 6,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_015.jsonl": 4,
+      "datasets/tier1a/flagged/needs_human_review/batch_005_founder_sample.jsonl": 1,
+      "datasets/tier1a/raw_sources/_verify_batch004_pairs21_300.jsonl": 2,
+      "datasets/tier1a/raw_sources/_verify_batch006_all.jsonl": 4,
+      "datasets/tier1a/raw_sources/batch_011_checkpoints/ckpt_225.jsonl": 1,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl": 1,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl": 2,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl": 4,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl": 4,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl": 37,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_011.jsonl": 1,
+      "datasets/tier1a/sft/train_sft.jsonl": 49,
+      "datasets/tier1a/sft/train_sft_balanced.jsonl": 20,
+      "datasets/tier1a/sft/val_sft.jsonl": 6,
+      "datasets/tier1a/sft/val_sft_balanced.jsonl": 4
+    },
+    "by_defect_class": {
+      "PAYE_P9_31MARCH": 45,
+      "STAMP_DUTY_FLAT1": 13,
+      "GN487A_VISA": 129,
+      "VAT_JULY2024": 6,
+      "PATENT_20FLAT": 2
+    }
+  },
+  "verification_after": {
+    "datasets_rows_still_matching_any_defect_class": 0,
+    "clean": true
+  },
+  "what_this_does_NOT_do": [
+    "It does not regenerate the SFT files. generate_sft.py must be re-run (behind check_eval_split.py) before any training, or the quarantined rows are still in the exported training set.",
+    "It does not touch eval gate definition files -- none were found to assert any of these five defect classes as ground truth in this pass (unlike the EFD threshold, which did).",
+    "It does not touch the RAG index. All six Tier-2 corrections were made 2026-08-31; R15 regeneration is pending and covers them together.",
+    "It does NOT cover objection_deposit_requirement, act_section_12, or name_similarity_threshold -- swept separately and found to have zero corpus hits."
+  ]
+}
