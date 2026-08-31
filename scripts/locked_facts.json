@@ -89,8 +89,8 @@
     "correction_note": "Prior fact asserted a 'Form P9' deadline of 31 March, and blocked '31 January' as a wrong_pattern. 'P9' is Kenyan KRA terminology -- no evidence was found that TRA uses this form name at all. Tanzania's actual equivalent obligation, the annual employment-income withholding certificate under Income Tax Act Cap.332 s.85(3)(b), is due 30 January -- one day earlier than the '31 January' pattern this fact used to reject as wrong. Likely origin: payspace.com (a multi-country payroll SaaS vendor) imported Kenyan P9 terminology and deadline logic wholesale; the fact's own 'correction' from 31 January to 31 March then compounded the error rather than catching it. Flagged CORRECTED but TENTATIVE by the verifying researcher -- s.85(3)(b) was read directly and no amendment was found in any Finance Act 2021-2026, but this fact would benefit from an independent tax-consultant confirmation given how far from the primary text the original three-vendor citation chain had drifted."
   },
   "p45_not_tanzanian": {
-    "fact": "Form P45 does not exist in Tanzania — it is a UK payroll form. Use P9 or leaving certificate.",
-    "correct_value": "No P45 in Tanzania — use P9 or leaving certificate",
+    "fact": "Form P45 does not exist in Tanzania -- it is a UK payroll form. Tanzania's actual equivalent, on employment termination, is the annual employment-income withholding certificate (Income Tax Act Cap.332 s.85(3)(b)) -- there is no 'P9' form name in Tanzanian law either; 'P9' is Kenyan (KRA) terminology, the same defect already found and corrected in this project's paye_p9_deadline fact.",
+    "correct_value": "No P45 in Tanzania; the TZ equivalent is the annual employment-income withholding certificate (ITA Cap.332 s.85(3)(b)), not a 'P9' or a named 'leaving certificate' form",
     "wrong_patterns": [
       "p45 inatumiwa tanzania",
       "p45 form is used in tanzania",
@@ -101,12 +101,17 @@
       "p45 form exists in tanzania",
       "P-45",
       "kutoa P45",
-      "issue P45"
+      "issue P45",
+      "tumia P9(?! form is Kenyan| ni neno la Kenya)",
+      "use P9(?! is Kenyan| form is Kenyan)",
+      "P45.*P9",
+      "badala ya P45.*P9"
     ],
-    "primary_source": "https://www.tra.go.tz/page/pay-as-you-earn-paye",
-    "verified_by": "TRA website — P45 not mentioned anywhere in Tanzania tax law",
+    "primary_source": "https://www.tra.go.tz/page/pay-as-you-earn-paye; Income Tax Act Cap.332 s.85(3)(b)",
+    "verified_by": "TRA website -- P45 not mentioned anywhere in Tanzania tax law. 'P9' half independently corroborated wrong 2026-09-01 by PwC's Tanzania tax-administration page (taxsummaries.pwc.com), which names TRA's Revenue Gateway System as the certificate-generation mechanism and never uses 'P9' -- consistent with this project's own paye_p9_deadline correction (Tier 2, 2026-08-31), which found 'P9' to be Kenyan KRA terminology.",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CORRECTED 2026-09-01 (Tier 3)",
+    "correction_note": "This fact exists specifically to correct payroll-form terminology, and was itself carrying the same wrong terminology ('P9') that paye_p9_deadline was corrected out of in Tier 2. 'P45 does not exist in Tanzania' remains true and well-attested (TRA's own PAYE page). The prior fact's proposed Tanzanian alternative, 'P9', does not exist either -- replaced with the actual TZ mechanism, the annual employment-income withholding certificate under ITA Cap.332 s.85(3)(b). 'Leaving certificate' language removed as an unverified addition with no located citation."
   },
   "sdl_rate": {
     "fact": "SDL rate is 3.5% of gross cash emoluments effective 1 July 2023 (Finance Act 2023 reduced from 4%). Minimum 10 employees threshold applies.",
@@ -1477,19 +1482,14 @@
     "status": "LOCKED"
   },
   "OSHA_safety_officer_threshold": {
-    "fact": "The specific employee threshold requiring a dedicated safety officer is NOT confirmed from authoritative sources. Training pairs must NOT state a specific number (e.g. 50 employees). Direct users to osha.go.tz for current requirements.",
-    "correct_value": "HEDGE — do not state specific threshold; direct to osha.go.tz",
-    "wrong_patterns": [
-      "osha.*afisa wa usalama.*wafanyakazi 50",
-      "safety officer.*required.*50 employees",
-      "50 employees.*osha.*safety officer",
-      "osha.*lazima.*afisa usalama.*wafanyakazi 50",
-      "wafanyakazi zaidi ya 50.*afisa wa usalama wa osha"
-    ],
-    "primary_source": "https://www.osha.go.tz",
-    "verified_date": "2026-06-20",
-    "status": "HEDGE — threshold not confirmed from primary source",
-    "training_instruction": "Do not state a specific employee count for safety officer requirement. Use: 'thibitisha mahitaji ya afisa wa usalama na OSHA (osha.go.tz)'."
+    "fact": "Occupational Health and Safety Act Cap.297 s.11(1) requires an employer with MORE THAN 20 EMPLOYEES to designate a 'health and safety representative' -- an existing employee given this role, NOT a professionally hired/dedicated 'safety officer'. Ratios for how many representatives: 1 per 100 employees in shops/offices, 1 per 50 in a factory/other workplace (s.11(4)). An OSHA inspector may also COMPEL designation even at 4 or fewer employees (s.11(5)). A safety committee (s.13) is required once 2+ representatives exist. Do NOT phrase this as 'must hire a safety officer above N employees' -- it is a representative/committee scheme built from existing staff, triggered at >20 employees as the general rule, with inspector discretion below that.",
+    "correct_value": ">20 employees triggers mandatory designation of a health-and-safety REPRESENTATIVE (not a hired officer) -- Cap.297 s.11(1); inspector may compel designation even below that (s.11(5))",
+    "primary_source": "Occupational Health and Safety Act, Cap.297 R.E.2023, s.11",
+    "verified_by": "Direct read of Cap.297 s.11 primary text, 2026-09-01.",
+    "verified_date": "2026-09-01",
+    "status": "CORRECTED 2026-09-01 (Tier 3) -- un-hedged, with mechanism stated explicitly, not a bare number",
+    "correction_note": "Prior fact was a blanket hedge ('not confirmed, do not state a specific number, direct to osha.go.tz') because earlier passes could not find a threshold. Tier 3 re-verification read Cap.297 s.11 directly and found a real, specific threshold. Per explicit instruction: replacing a hedge with a bare number is itself the direction that ships a wrong answer if the mechanism differs from what a bare number implies -- so this correction states the MECHANISM (designated existing-employee representative, ratio-based, inspector-compellable below the general threshold) rather than only the number 20, to avoid the fact being read as 'must hire a dedicated safety officer above 20 staff', which it does not say.",
+    "training_instruction": "Do not phrase this as hiring a safety officer. Use: 'zaidi ya wafanyakazi 20 -- mwajiri lazima ateue mfanyakazi kuwa mwakilishi wa afya na usalama (siyo kuajiri afisa maalum), kwa mujibu wa Kifungu cha 11(1) cha Sheria ya Afya na Usalama Mahali pa Kazi.'"
   },
   "BRELA_COSOTA_split": {
     "fact": "Intellectual property in Tanzania is split between two bodies. BRELA (Business Registrations and Licensing Agency) administers: trademarks (alama za biashara), patents (hati miliki), and industrial designs (miundo ya viwanda). COSOTA (Copyright Society of Tanzania) administers: copyright and neighbouring rights (haki za ubunifu na haki jirani). There is NO body called ORT — ort.go.tz does not exist as a Tanzanian IP registry.",
@@ -1674,8 +1674,24 @@
   "file_search_fee": "3,000 TZS",
   "file_search_report_fee": "22,000 TZS",
   "certified_copy_agreement_law_constitution_fee": "750 USD",
-  "document_filing_fee_section_12_act_excluding_balance_sheet": "220 USD",
-  "balance_sheet_filing_fee_section_12_act": "220 USD",
+  "document_filing_fee_section_12_act_excluding_balance_sheet": {
+    "fact": "Foreign company document filing fee (excluding the separate balance-sheet filing fee) is USD 220 (Companies Act Cap.212, Part XIII, ss.320-328 -- NOT 'Section XII'/'Section 12', the same stale-name error already corrected elsewhere in this project, e.g. act_section_12). Amount confirmed directly on BRELA's own current fee schedule.",
+    "correct_value": "USD 220 (Companies Act Cap.212 Part XIII, ss.320-328)",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni; Companies Act Cap.212 Part XIII, ss.320-328",
+    "verified_by": "Direct read of BRELA's own fee schedule, 2026-09-01: two distinct USD 220 line items for foreign companies ('Document filing' and 'File opening').",
+    "verified_date": "2026-09-01",
+    "status": "CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, key naming/citation fixed",
+    "correction_note": "Amount (220 USD) was already correct. The key name and any 'Section 12/XII' framing carried the same stale-name defect this project already fixed on act_section_12 and in CLAUDE.md Section 11 -- Part XIII, ss.320-328 is the correct citation, not 'Section XII'."
+  },
+  "balance_sheet_filing_fee_section_12_act": {
+    "fact": "Foreign company balance-sheet filing fee is USD 220 (Companies Act Cap.212, Part XIII, ss.320-328 -- NOT 'Section XII'/'Section 12', a stale-name error already corrected elsewhere in this project, e.g. act_section_12). Amount confirmed directly on BRELA's own current fee schedule.",
+    "correct_value": "USD 220 (Companies Act Cap.212 Part XIII, ss.320-328)",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni; Companies Act Cap.212 Part XIII, ss.320-328",
+    "verified_by": "Direct read of BRELA's own fee schedule, 2026-09-01: two distinct USD 220 line items for foreign companies ('Document filing' and 'File opening').",
+    "verified_date": "2026-09-01",
+    "status": "CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, key naming/citation fixed",
+    "correction_note": "Amount (220 USD) was already correct. The key name and any 'Section 12/XII' framing carried the same stale-name defect this project already fixed on act_section_12 and in CLAUDE.md Section 11 -- Part XIII, ss.320-328 is the correct citation, not 'Section XII'."
+  },
   "late_filing_penalty_monthly_fee_section_12_act": "25 USD",
   "certified_copy_certificate_of_registration_fee": "4,000 TZS",
   "act_section_12": {
@@ -1693,15 +1709,44 @@
     "correction_note": "Original bare value was 'Kifungu XII cha Sheria' (Section/Part XII of the Act), with no Act name given -- reconstructed from context (neighbouring keys document_filing_fee_section_12_act_excluding_balance_sheet, balance_sheet_filing_fee_section_12_act, late_filing_penalty_monthly_fee_section_12_act, and CLAUDE.md Section 11's own 'Foreign company (Section XII) late filing penalty: USD 25 per month' line) to be about the Companies Act's foreign/external-company regime. Direct read of the Act found this regime is Part XIII (ss.320-328), not Part XII. THE SAME ERROR IS BAKED INTO CLAUDE.md SECTION 11 ITSELF, and this fact very likely originated from that document rather than the other way around -- corrected there in the same pass (see PROGRESS.md). NOT YET RESOLVED: the three neighbouring fee-figure keys (document_filing_fee_section_12_act_excluding_balance_sheet, balance_sheet_filing_fee_section_12_act, late_filing_penalty_monthly_fee_section_12_act) still carry the wrong part number IN THEIR KEY NAMES, and their USD 220/220/25 figures were not independently confirmed against a primary Fees Regulation during this pass (that regulation could not be located). Renaming these keys touches scripts/precompute_rag_embeddings.py's embedding-group list and would need a coordinated fix + re-verification of the dollar figures, not a name-only patch -- flagged for a future pass rather than done here."
   },
   "osiha_act_citation": "Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003",
-  "health_and_safety_act_citation": "Sheria ya Afya na Usalama ya mwaka 2003",
-  "risk_assessment_frequency": "mara moja kwa mwaka",
+  "health_and_safety_act_citation": {
+    "fact": "Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003, Sura 297 (Occupational Health and Safety Act, Act No.5 of 2003, Cap.297 R.E.2023) -- same Act as osiha_act_citation; this key is kept as a separate retrieval entry point but must carry the same, fuller citation, not a generic 'Health and Safety Act' name that risks confusion with the Public Health Act.",
+    "correct_value": "Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003, Sura 297",
+    "primary_source": "Occupational Health and Safety Act, Cap.297 R.E.2023, s.1",
+    "verified_by": "Direct read of Cap.297 R.E.2023 primary text, 2026-09-01.",
+    "verified_date": "2026-09-01",
+    "status": "CORRECTED 2026-09-01 (Tier 3)",
+    "correction_note": "Prior value ('Sheria ya Afya na Usalama ya mwaka 2003') dropped 'Occupational'/'Mahali pa Kazi' (at the workplace) and the Act number, reading as a generic health-and-safety Act name that could be confused with the Public Health Act. This key duplicated osiha_act_citation, which already carried the fuller, correct citation -- reconciled to match it rather than deleting either key, since both are separate retrieval entry points."
+  },
+  "risk_assessment_frequency": {
+    "fact": "Workplace risk assessment (Occupational Health and Safety Act Cap.297, s.60) applies specifically to factories/workplaces involving HAZARDOUS processes, hazardous equipment, or hazardous chemicals likely to cause adverse health effects or serious damage -- NOT a universal requirement for every workplace. Required frequency: at least once a year ('mara moja kwa mwaka'), OR more often whenever circumstances make it necessary. The assessment must be carried out by an approved inspection authority, not by the employer alone.",
+    "correct_value": "At least once/year for hazardous-activity workplaces (Cap.297 s.60); more often if needed; must be done by an approved inspection authority",
+    "primary_source": "Occupational Health and Safety Act, Cap.297 R.E.2023, s.60",
+    "verified_by": "Direct read of Cap.297 s.60 primary text, 2026-09-01.",
+    "verified_date": "2026-09-01",
+    "status": "CORRECTED 2026-09-01 (Tier 3)",
+    "correction_note": "Prior fact stated only the once-a-year floor with no scope. s.60 is scoped to hazardous-activity workplaces, sets 'or more often when necessary' as an escalation, and requires an approved inspection authority (not the employer) to perform it -- all three qualifiers were missing from the prior fact."
+  },
   "vat_registration_threshold_annual": "200,000,000 TZS",
   "vat_registration_threshold_six_months": "100,000,000 TZS",
   "vat_registration_notification_deadline_commissioner": "14 days",
   "vat_return_submission_deadline": "20 days_of_month",
   "form_number_payment_credit_slip": "ITX 300.01.E",
   "legal_citation_sdl": "Sheria ya Elimu na Mafunzo ya Ufundi, Sura ya 82, Kifungu cha 14",
-  "legal_citation_tax_administration": "Sheria ya Usimamizi wa Kodi, Sura ya 438, Kifungu cha 11",
+  "legal_citation_tax_administration": {
+    "fact": "Sheria ya Usimamizi wa Kodi, Sura ya 438, Kifungu cha 43 (Tax Administration Act, Cap.438, s.43 -- 'Maintenance of Documents'). Section 11 (the prior citation) is 'Private and Class Rulings', an unrelated provision.",
+    "correct_value": "Sheria ya Usimamizi wa Kodi, Sura ya 438, Kifungu cha 43",
+    "wrong_patterns": [
+      "Sura ya 438, Kifungu cha 11",
+      "Cap\\.?\\s?438.{0,15}[Ss]ection 11(?!\\d)",
+      "TAA.{0,15}[Ss]ection 11(?!\\d)"
+    ],
+    "primary_source": "Tax Administration Act, Cap.438 R.E.2023, s.43 ('Maintenance of Documents')",
+    "verified_by": "Direct read of TRA's own hosted TAA PDF (tra.go.tz), 2026-09-01. Independently corroborated by this project's own rules_engine/presumptive.py and rules_engine/rates.py, both of which already document s.43 (renumbered from old s.35) as the records-keeping provision, predating this fix.",
+    "effective_date": "2023-01-01",
+    "status": "CORRECTED 2026-09-01 (Tier 3)",
+    "correction_note": "Prior fact cited s.11, which is 'Private and Class Rulings' -- an entirely unrelated provision, not a record-keeping requirement. This is the THIRD stale/wrong TAA Cap.438 section number found in this project (after objection_deposit_requirement's s.51->s.62 and efd_threshold_tzs_11m's s.36->s.44), confirming the same renumbering-trap shape recurring across independently-authored facts. A full sweep of every locked_facts.json entry citing Cap.438 (7 facts total) and of chike/rules_engine + chike/fidelity.py found no further stale TAA section numbers -- these three are the complete set."
+  },
   "legal_citation_amendment_act_sdl": "Sheria ya Elimu na Mafunzo ya Ufundi, Sura ya 82, Kifungu cha 19",
   "exemption_category_government_departments": "Idara za Serikali au taasisi za umma zinazofadhiliwa kikamilifu na Serikali",
   "exemption_category_diplomatic_missions": "Misheni za Kidiplomasia",
@@ -1711,7 +1756,13 @@
   "exemption_category_charitable_organizations": "Mashirika ya misaada (charitable organizations)",
   "exemption_category_educational_institutions": "Taasisi za elimu zilizosajiliwa, zikiwemo: shule za awali, msingi na sekondari; vyuo vya ufundi na mafunzo; vyuo vikuu na taasisi za elimu ya juu",
   "exemption_category_local_government_authorities": "Mamlaka za Serikali za Mitaa",
-  "exemption_category_trainees_under_TAESA": "Wanafunzi wa mafunzo kwa vitendo walio chini ya mpango wa Wakala wa Huduma za Ajira Tanzania (TaESA)",
+  "exemption_category_trainees_under_TAESA": {
+    "fact": "UNCONFIRMED: a TaESA-trainee SDL exemption is commonly cited, but a direct read of VETA Act Cap.82 s.19(1) (2019 primary consolidation) does NOT list this category among the SDL exemptions. The only source claiming it is a non-primary AI search synthesis, which also independently misstated the SDL employer threshold and rate on the same page -- disqualifying it as a citation. May have been added by Act No.5 of 2022 (Finance Act), which was not reachable this pass. Do not assert this exemption as confirmed until read directly against Act No.5 of 2022 or a tanzlii consolidation dated after 1 Jul 2022.",
+    "correct_value": "HEDGE -- not confirmed in the 2019 primary text of s.19(1); do not assert as a confirmed SDL exemption",
+    "primary_source": "Wanted: VETA Act Cap.82 s.19(1) as amended by Act No.5 of 2022 -- not yet reached",
+    "verified_date": "2026-09-01",
+    "status": "HEDGE -- Tier 3 (2026-09-01): re-verification against VETA Act Cap.82 s.19(1) 2019 primary text found no TaESA category; recommend excluding from training pairs until confirmed against the 2022 amendment."
+  },
   "exemption_category_farm_employers_agriculture": "Waajiri wa mashambani ambao wafanyakazi wao wanajihusisha moja kwa moja na shughuli za kilimo (isipokuwa wale wanaosimamia au kushughulika na usindikaji wa mazao)",
   "late_payment_penalty_rate": "2 %",
   "workers_compensation_act_citation": "Sheria ya Fidia kwa Wafanyakazi [Sura 263]",
@@ -1720,12 +1771,35 @@
   "workers_compensation_rules_section": "13 (7)",
   "workers_compensation_amendment_rules_citation": "Kanuni za Sheria ya Fidia kwa Wafanyakazi Marekebisho ya mwaka 2021",
   "workers_compensation_amendment_rules_section": "13 (7)",
-  "minimum_directors": "2 employees",
-  "minimum_shareholders": "2 employees",
+  "minimum_directors": {
+    "fact": "A company under the Companies Act Cap.212 must have a minimum of 2 directors. Directors are PERSONS (natural persons appointed to the board), NOT 'employees' -- a director need not be, and often is not, an employee of the company. This minimum-of-2 figure is confirmed via secondary corroboration for both private and public companies (s.186, 'Number of directors'); whether the 2021 amendment permitting single-shareholder private companies (s.26A) also permits a single-DIRECTOR company has NOT been confirmed and should not be assumed either way.",
+    "correct_value": "2 (persons/directors, not 'employees')",
+    "primary_source": "Companies Act, Cap.212, s.186 ('Number of directors')",
+    "verified_by": "Secondary-source corroboration (law-firm/BRELA-adjacent summaries of Written Laws (Miscellaneous Amendments) Act No.5 of 2021), 2026-09-01 -- section text itself not directly read this pass.",
+    "verified_date": "2026-09-01",
+    "status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- wording fixed, number retained at medium confidence",
+    "correction_note": "Prior fact said '2 employees' -- wrong terminology (directors are persons, not employees) and served in retrieval, where this exact wording had already produced a wrong answer once. The number 2 itself is not being changed, but its confidence is downgraded from unstated to medium (secondary corroboration only, primary s.186 text not read this pass). Open question, NOT resolved here: whether a single-shareholder private company (permitted since s.26A, 2021 amendment) may also have just 1 director -- do not assert either a single-director exception or its absence until s.186 is read directly."
+  },
+  "minimum_shareholders": {
+    "fact": "A private company under the Companies Act Cap.212 requires a minimum of 2 shareholders (members) -- EXCEPT that since the 2021 amendment (s.26A, 'Single shareholder'), a private company may now be formed or continued with just 1 shareholder as an exception to the general rule. A PUBLIC company requires a minimum of 7 shareholders, not 2. Shareholders are PERSONS/MEMBERS, NOT 'employees' -- a shareholder need not be an employee of the company.",
+    "correct_value": "Private: 2 (or 1, under the s.26A single-shareholder exception); Public: 7. Term is 'persons'/'members', not 'employees'.",
+    "primary_source": "Companies Act, Cap.212, ss.27/45 (private/public company minimum membership); s.26A (single shareholder, added by Written Laws (Miscellaneous Amendments) Act No.5 of 2021)",
+    "verified_by": "Secondary-source corroboration (law-firm/BRELA-adjacent summaries of the 2021 amending Act), 2026-09-01 -- section text itself not directly read this pass.",
+    "verified_date": "2026-09-01",
+    "status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- wording and public/private distinction fixed, numbers retained at medium confidence",
+    "correction_note": "Prior fact said a flat '2 employees' with no distinction between private and public companies, and no mention of the single-shareholder exception. Corrected: 'employees' -> 'persons/members' (a director/shareholder need not be an employee); added the public-company minimum of 7 (prior fact only covered the private-company case, the more common context in this product); added the s.26A single-shareholder exception for private companies. This exact wording was served in retrieval and had already produced a wrong answer once, per founder instruction. Numbers at medium confidence -- ss.27/45/26A not directly read this pass, only secondary corroboration."
+  },
   "registration_certificate_processing_time": "3 days",
   "annual_return_form_number": "128",
   "beneficial_owner_information_penalty_maximum": "10000000 TZS",
-  "business_name_maintenance_fee": "5,000 TZS",
+  "business_name_maintenance_fee": {
+    "fact": "The BRELA annual business-name maintenance/operating fee ('ada ya uendeshaji', paid every year to keep a registered business name active) is TZS 5,000. This is separate from the initial application/registration fee, which is TZS 15,000.",
+    "correct_value": "TZS 5,000/year (maintenance); TZS 15,000 (separate initial application fee)",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-majina-ya-biashara",
+    "verified_by": "Direct read of BRELA's own business-name fee page, 2026-09-01: 'Ada ya maombi: 15,000.00' (application) and 'Ada ya uendeshaji (inalipwa kila mwaka): 5,000.00' (annual maintenance).",
+    "verified_date": "2026-09-01",
+    "status": "CONFIRMED -- Tier 3 (2026-09-01): value unchanged from prior fact (5,000 TZS was already correct), previously uncited. A secondary-source pass (non-primary) had suggested 1,000 TZS for maintenance/5,000 for application -- checked directly against BRELA's own page and found wrong; superseded here rather than acted on, per instruction to confirm primary before editing."
+  },
   "name_similarity_threshold": {
     "fact": "BRELA does not use a numeric similarity percentage as a legal rule for rejecting a proposed company name. The actual test (Companies Rules 2006 rr.2-3, under Companies Act Cap.212; and the Business Names (Registration) Act Cap.213) is QUALITATIVE: a name is rejected if it is 'identical with or similar to' an existing name such that it is 'likely to mislead the public,' or is otherwise undesirable, at the Registrar's discretion. A commonly-cited '50%' figure is an ORS (Online Registration System) on-screen UI similarity indicator, not a codified legal threshold.",
     "correct_value": "Qualitative 'likely to mislead the public' / Registrar-discretion test (Companies Rules 2006 rr.2-3; Business Names (Registration) Act Cap.213) -- NOT a numeric percentage cutoff. If a numeric ORS indicator is mentioned at all, it must be labelled explicitly as a UI feature, not a legal rule.",
@@ -1741,7 +1815,14 @@
     "status": "CONFIRMED (mechanism) -- corrected 2026-08-31; NUMBER STILL UNGROUNDED as a legal rule because no such number exists in law",
     "correction_note": "Prior fact stated a bare '50%' with no context, sourced only to an aggregator site describing a product UI feature. This is a DEFECT CLASS NOT YET NAMED in this project's prior audits: not fabricated (the number is real -- it genuinely appears on the ORS screen), not a stale citation (nothing has changed over time), but A TOOL'S BEHAVIOUR RECORDED AS A LEGAL RULE. The underlying legal test is categorically different in kind (qualitative discretion, not a numeric cutoff), so no amount of 'finding the right percentage' would have fixed this fact -- the fix has to change what KIND of claim the fact makes, not just its value. Worth watching for elsewhere: any locked fact whose only source is a product/portal screen description (a UI label, an on-screen message, a form's placeholder text) rather than a legal instrument is a candidate for this same class."
   },
-  "trademark_renewal_period": "saba years",
+  "trademark_renewal_period": {
+    "fact": "UNCONFIRMED: the trademark registration/renewal term length in Tanzania (previously stated as 'saba years'/7 years) could not be sourced. BRELA's own fee schedule confirms a renewal fee (TZS 30,000) and Form TM/SM 9 'Renewal of Registration of a Mark' exist, but does not state the term length. tanzlii.org (the Trade and Service Marks Act/Regulations primary text) was unreachable. Do not assert a specific number of years until this is confirmed against primary text.",
+    "correct_value": "HEDGE -- term length not confirmed; do not state a number of years",
+    "primary_source": "Wanted: Trade and Service Marks Act Cap.326 / Regulations -- not yet reached",
+    "verified_date": "2026-09-01",
+    "status": "HEDGE -- Tier 3 (2026-09-01): 'saba years'/7 years could not be confirmed against primary or working secondary sources; recommend hedging in training pairs (direct to BRELA) until re-verified.",
+    "training_instruction": "Do not state a specific renewal-period number of years. Use: 'thibitisha muda wa uhalali wa usajili wa alama ya biashara na BRELA (brela.go.tz)'."
+  },
   "application_fee_patent": "12000 TZS",
   "patent_term": {
     "fact": "A Tanzanian patent's BASE term is 10 years from the filing date (Patents (Registration) Act, Cap.217, s.39(1)). The owner/licensee may apply for up to TWO separate 5-year extensions (application required 1-12 months before each expiry, and only if the invention is being 'worked' in Tanzania or a legitimate reason for not working it is proven), reaching a MAXIMUM of 20 years only if both extensions are sought and granted. A patent that lapses at year 10 with no extension application simply expires -- 20 years is NOT an automatic term.",
@@ -1759,9 +1840,32 @@
     "correction_note": "Prior fact stated a bare, uncited '20 years' with no distinction between base term and extension. Direct read of Cap.217 s.39(1) found the true structure is a 10-year base term with two discretionary 5-year extensions (subject to a 'working' requirement), reaching 20 years only in the maximal case -- a flat '20 years' answer would mislead a patent holder into not renewing at year 10 and losing protection entirely. SCOPING FLAG (not resolved here, founder decision): patents/IP registration falls under no current or planned domain in CLAUDE.md Section 5 (Tier1A/1B/1C/2A/2B) -- this fact appears to belong to no active workstream."
   },
   "company_director_minimum_age": "18",
-  "course_fee": "250,000 TZS",
-  "electrical_test_fee_reduction_initial": "650,000 TZS",
-  "electrical_test_fee_reduction_final": "150,000 TZS",
+  "course_fee": {
+    "fact": "UNCONFIRMED: '250,000 TZS' does not match any OSHA training course fee actually checked on osha.go.tz -- 'Safe Use of Chemicals at Work', 'OHS in Construction Industry', and 'Safety and Health in Oil and Gas Industry' are all priced at TZS 300,000. Which course (if any) '250,000 TZS' refers to could not be identified.",
+    "correct_value": "HEDGE -- could not identify which course this refers to; sampled OSHA courses are TZS 300,000, not 250,000",
+    "primary_source": "osha.go.tz training pages",
+    "verified_date": "2026-09-01",
+    "status": "HEDGE -- Tier 3 (2026-09-01): every OSHA course fee sampled came back at TZS 300,000; 250,000 TZS is unexplained and should not be asserted until the specific course is identified.",
+    "training_instruction": "Do not state 250,000 TZS for an unnamed OSHA course. If a specific course is asked about, direct to osha.go.tz for its current fee."
+  },
+  "electrical_test_fee_reduction_initial": {
+    "fact": "TZS 650,000 was the fee for OSHA electrical-system inspection at RURAL FUEL STATIONS specifically, before a 2025 fee reduction -- NOT a general/universal OSHA electrical inspection fee for all workplaces. Cap.297 s.66(2) separately requires ANNUAL electrical inspection for every factory/workplace using electricity at 'a prescribed fee' -- that general fee is a different, unconfirmed figure.",
+    "correct_value": "TZS 650,000 (pre-reduction rural fuel-station electrical inspection fee only)",
+    "primary_source": "The Citizen (Tanzania), reporting OSHA's Chief Executive on the 2025 fee reduction",
+    "verified_by": "Secondary source (national newspaper quoting OSHA's CEO directly), 2026-09-01 -- underlying OSHA fee-schedule/Government Notice not located.",
+    "verified_date": "2026-09-01",
+    "status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, scope narrowed",
+    "correction_note": "Prior fact implied a general OSHA electrical-test fee. Narrowed to rural-fuel-station-specific per the only source located; the general Cap.297 s.66(2) annual-inspection fee remains a separate, unconfirmed figure and must not be conflated with this one."
+  },
+  "electrical_test_fee_reduction_final": {
+    "fact": "TZS 150,000 is the REDUCED fee for OSHA electrical-system inspection at RURAL FUEL STATIONS specifically (reduced from TZS 650,000 in 2025 to encourage rural investment) -- NOT a general/universal OSHA electrical inspection fee. This is old-fee-vs-new-fee, not 'first test vs re-test' as previously assumed.",
+    "correct_value": "TZS 150,000 (post-2025-reduction rural fuel-station electrical inspection fee only)",
+    "primary_source": "The Citizen (Tanzania), reporting OSHA's Chief Executive on the 2025 fee reduction",
+    "verified_by": "Secondary source (national newspaper quoting OSHA's CEO directly), 2026-09-01 -- underlying OSHA fee-schedule/Government Notice not located.",
+    "verified_date": "2026-09-01",
+    "status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, scope narrowed and mechanism corrected",
+    "correction_note": "Prior fact's 'initial vs final' framing was a guess at 'first test vs retest'; the actual relationship is 2025 fee reduction (old 650,000 -> new 150,000) for rural fuel stations specifically, not a test-sequence distinction."
+  },
   "registration_certificate_processing_time_new": "1 days",
   "compliance_license_processing_time_old": "28 days",
   "vat_deferment_limit_date": "30 June 2026",
@@ -2187,8 +2291,8 @@
     "status": "CONFIRMED"
   },
   "sdl_exemption_categories": {
-    "fact": "Employers/institutions exempt from SDL: government departments; local government authorities; diplomatic missions; the United Nations and its agencies; international/foreign aid organizations; religious institutions (spiritual activities only); registered educational institutions; charitable organizations; TaESA trainees; and farm employers for employees directly engaged in agricultural activities.",
-    "correct_value": "10 exemption categories -- see fact",
+    "fact": "Employers/institutions exempt from SDL (VETA Act Cap.82 s.19(1), 9 categories CONFIRMED against the 2019 primary consolidation text): government departments/public institutions wholly financed by Government; local government authorities; diplomatic missions; the United Nations and its agencies; international/foreign aid organizations; religious institutions (employees solely engaged in administering worship/religious instruction); registered educational institutions (nursery through higher learning); charitable organizations (per the Act's own s.19(2) definition); and farm employers for employees directly and solely engaged in agricultural activities (excluding management/processing staff). A 10th category, TaESA trainees, is commonly cited but is NOT present in the 2019 primary text read for this fact -- see exemption_category_trainees_under_TAESA (HEDGE) -- and must not be asserted as confirmed until checked against Act No.5 of 2022.",
+    "correct_value": "9 exemption categories CONFIRMED against primary text; a 10th (TaESA) is unconfirmed -- see fact",
     "source_keys": [
       "exemption_category_government_departments",
       "exemption_category_diplomatic_missions",
@@ -2202,7 +2306,8 @@
       "exemption_category_international_organizations_aid"
     ],
     "primary_source": "source of the 10 individual exemption_category_* keys, unchanged",
-    "status": "CONFIRMED -- consolidated 2026-08-17 so the RAG index carries one retrievable Swahili fact instead of 10 English fallback rows; the 10 individual keys remain in locked_facts.json for training-pair generation but are excluded from the RAG index by an explicit reviewed list, not the old blanket noise regex"
+    "status": "PARTIALLY CONFIRMED -- Tier 3 (2026-09-01): 9 of 10 categories read directly against VETA Act Cap.82 s.19(1)'s 2019 primary consolidation text; the 2026-08-17 RAG-consolidation rationale (one retrievable Swahili fact instead of 10 English fallback rows) still holds and is unchanged.",
+    "correction_note": "Prior fact asserted all 10 categories as settled without distinguishing verification status. Tier 3 re-verification (2026-09-01) read VETA Act Cap.82 s.19(1) directly and confirmed 9; TaESA trainees could not be confirmed in that text and is now hedged separately, not asserted here. source_keys list unchanged -- exemption_category_trainees_under_TAESA remains a source_key so it still generates training pairs, but those pairs must now carry its HEDGE status, not a confirmed claim."
   },
   "council_service_levy_is_a_cap_not_a_rate": {
     "fact": "Ushuru wa huduma wa halmashauri (service levy): sheria inaweka KIKOMO cha asilimia 0.3 ya mauzo (bila VAT na ushuru wa bidhaa) — si kiwango kimoja cha kitaifa. Kila halmashauri hupanga chake kwa sheria ndogo, na nyingi hutoza chini ya kikomo hicho. Uliza ofisi ya mapato ya halmashauri yako kwa kiwango halisi.",

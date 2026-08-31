@@ -1,0 +1,48 @@
+{
+  "measured": "2026-09-01",
+  "dry_run": false,
+  "harness": "scripts/correct_corpus_defects_v5.py",
+  "companion_of": [
+    "scripts/correct_corpus_defects.py (v1)",
+    "scripts/correct_corpus_defects_v2.py (v2)",
+    "scripts/correct_corpus_defects_v3.py (v3)",
+    "scripts/correct_corpus_defects_v4.py (v4)"
+  ],
+  "quarantine_file": "datasets/tier1a/rejected/tier3_confirmed_wrong_quarantine_2026_09_01.jsonl",
+  "defect_classes": [
+    "P45_P9_CONFLATION",
+    "SECTION_XII_FOREIGN_COMPANY",
+    "COURSE_FEE_250K"
+  ],
+  "quarantine": {
+    "rows": 18,
+    "by_file": {
+      "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_012.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_013.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_015.jsonl": 3,
+      "datasets/tier1a/raw_sources/batch_013_checkpoints/ck_brela_correction_002.jsonl": 1,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl": 1,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_012.jsonl": 1,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_013.jsonl": 1,
+      "datasets/tier1a/sft/train_sft.jsonl": 5,
+      "datasets/tier1a/sft/train_sft_balanced.jsonl": 2,
+      "datasets/tier1a/sft/val_sft_balanced.jsonl": 1
+    },
+    "by_defect_class": {
+      "P45_P9_CONFLATION": 3,
+      "SECTION_XII_FOREIGN_COMPANY": 13,
+      "COURSE_FEE_250K": 2
+    }
+  },
+  "verification_after": {
+    "datasets_rows_still_matching_any_defect_class": 0,
+    "clean": true
+  },
+  "what_this_does_NOT_do": [
+    "It does not regenerate the SFT files. generate_sft.py must be re-run (behind check_eval_split.py) before any training, or the quarantined rows are still in the exported training set.",
+    "It does not touch eval gate definition files -- none were found to assert any of these three defect classes as ground truth in this pass.",
+    "It does not touch the RAG index. All Tier-3 locked_facts.json corrections were made 2026-09-01; R15 regeneration is pending and covers them together.",
+    "It does NOT cover the majority of Tier-3 corrections (TAA renumbering, TaESA exemption, business_name_maintenance_fee, minimum_directors/shareholders, health_and_safety_act_citation, risk_assessment_frequency, electrical_test_fee scope, OSHA_safety_officer_threshold, trademark_renewal_period) -- swept individually and found to have zero corpus hits, or (electrical fee, risk-assessment frequency, generic Act-name mentions) to have hits that were already correctly scoped or not actually asserting the wrong claim -- see PROGRESS.md for the per-fact sweep results."
+  ]
+}

@@ -1,6 +1,6 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-08-31 (Tier 2 verification + fixes; corporate/partnership build unblocked)
+Last updated: 2026-09-01 (Tier 3 verification + fixes; whole-corpus picture after Tier 1+2+3)
 
 ---
 
@@ -25,7 +25,10 @@ its own artifact (R18) — this table is the rolled-up current state, not a repl
 | Stamp duty stated as flat 1% (real rate: tiered 0.5%/1%, Cap.189 Art.22(b)) | 2026-08-31 | 13 | 0 | same file as above |
 | VAT threshold increase dated "July 2024" (real date: 1 July 2023, GN 448Y/2023) | 2026-08-31 | 6 | 1 | same file as above |
 | Patent term stated as flat 20 years (real: 10-year base + 2 discretionary 5-yr extensions) | 2026-08-31 | 2 | 0 | same file as above |
-| **TOTAL QUARANTINED** | | **351** | **15** | 4 files, `datasets/tier1a/rejected/` |
+| "Section XII" foreign-company citation (real: Companies Act Cap.212 Part XIII, ss.320-328) | 2026-09-01 | 13 | 0 | `tier3_confirmed_wrong_quarantine_2026_09_01.jsonl` |
+| P45/P9 conflation (P9 is Kenyan KRA terminology; real TZ term is the ITA s.85(3)(b) withholding certificate) | 2026-09-01 | 3 | 1 | same file as above |
+| OSHA `course_fee` TZS 250,000 (unmatched — every sampled OSHA course is TZS 300,000) | 2026-09-01 | 2 | 0 | same file as above |
+| **TOTAL QUARANTINED** | | **369** | **16** | 5 files, `datasets/tier1a/rejected/` |
 
 **The number to sit with, per founder instruction: the GN487A softened-visa defect alone (129 rows)
 is larger than the mining fabrication (17), the WCF deadline (6), and the 9%-band share of the
@@ -595,18 +598,163 @@ framing is not the same operation as correcting its value, and a full-object rew
 discarding unrelated, already-tested fields that happen to share the same key.** Full suite re-run
 clean after the fix: **1381 passed, 0 failed, 4 deselected, 1 xfailed.**
 
-## Tier 3 — NOT a pass. Recorded as documentation debt, taken opportunistically.
+## ✅ TIER 3 (96 facts: `served_non_actionable` 80 + `not_in_index` 16) — RE-VERIFIED AGAINST STATUTE, 2026-09-01. Decision reversed: not run as documentation debt.
 
-**96 facts** (`served_non_actionable` 80 + `not_in_index` 16, per the tier table above) carry either
-no figure a user could act on wrongly, or no live retrieval exposure at all. Per founder instruction:
-this is documentation debt, not risk — and this project has just spent a long stretch on
-verification while the product itself hasn't moved. Running it as a scheduled batch, the way Tier
-1 and Tier 2 were run, would be more verification work for a population that by construction carries
-no measured exposure. **Decision: no Tier 3 pass. Instead, opportunistic grounding** — the next time
-any of these 96 facts is touched for any other reason (a corpus expansion references it, a bug
-report names it, an audit script happens to flag it), it gets verified against statute then, as part
-of that work, not scheduled separately. This keeps the debt visible (the count is written down here)
-without spending a dedicated cycle on facts nobody is currently being served wrong information from.
+**The original 2026-08-31 call above (no Tier 3 pass, opportunistic-only) was reversed by the
+founder before this pass started**, on the strength of `vat_deferment_minimum_value` — a low-traffic
+fact found wrong (10M stated, real 20M) *incidentally*, while verifying a neighbouring fact in Tier 2,
+not by any scheduled process. The argument: exposure sizing predicted where a wrong fact would be
+SEEN (traffic), not whether it WAS wrong. Low traffic means low detection, not low risk. Tier 3 was
+run in full, same discipline as Tier 1/2: amending Act over consolidation, section numbers checked
+against the current consolidation (not the first source that states a number), third-party citations
+not treated as verification.
+
+**Method:** five parallel research passes, one per Act cluster — BRELA/Companies Act (37 facts),
+Trademark/Patent fee schedule (19), SDL/VETA Act (15), OSHA/Workers Compensation Act (14), and a
+misc cluster (11) covering VAT deferment, immigration, NSSF, TMDA, BRELA/COSOTA. Full differences-
+first findings reported to the founder before any edit, per the same protocol as Tier 1/2.
+
+### Fixes applied, in the founder's specified order
+
+1. **TAA Cap.438 section-renumbering, treated as a class.** A sweep of every `locked_facts.json`
+   entry citing Cap.438 (7 facts total) plus `chike/rules_engine/` and `chike/fidelity.py` found
+   exactly three facts that ever cited a specific TAA section number: `objection_deposit_requirement`
+   (s.51→s.62, already fixed Tier 2), `efd_threshold_tzs_11m`/`efd_not_every_business` (s.36→s.44,
+   already fixed 2026-08-29), and `legal_citation_tax_administration` (s.11 — "Private and Class
+   Rulings", an unrelated provision — the actual record-keeping section is **s.43**, "Maintenance of
+   Documents"). **This is the third stale TAA section number found in this project, same shape each
+   time.** Independently corroborated by `chike/rules_engine/presumptive.py` and `rules_engine/rates.py`,
+   which already documented s.43 (renumbered from old s.35) as the records-keeping provision, predating
+   this fix — a second, unrelated confirmation inside the project itself. Corpus sweep: 0 rows.
+2. **`p45_not_tanzanian`.** Cited "P9" as Tanzania's correct payroll-form term — the identical defect
+   already fixed in Tier 2's `paye_p9_deadline` (P9 is Kenyan KRA terminology). Corrected to the real
+   TZ mechanism (annual employment-income withholding certificate, ITA Cap.332 s.85(3)(b)), independently
+   corroborated by PwC's Tanzania tax-administration page. Corpus sweep: **3 rows**, all the same
+   underlying row (`tier1a_paye_extended_018`) across `cleaned_pairs`, `raw_sources`, and `val_sft_balanced`
+   — and that row *also* still carried the stale "31 Machi" P9 deadline that v4's `PAYE_P9_31MARCH`
+   regex was built to catch but missed, because the date sits *before* "P9" in the sentence
+   ("*ifikapo Machi 31 ... mwajiri anatoa Fomu P9*") and v4's pattern only matched the reverse order.
+   Noted as a real gap in v4's regex; not amended retroactively — this row is quarantined here instead.
+3. **TaESA SDL exemption + its consolidated parent.** Direct read of VETA Act Cap.82 s.19(1)'s 2019
+   primary text does not list TaESA trainees among the 9 statutory SDL exemptions. The only source
+   claiming a 10th category was a non-primary AI search synthesis that also independently misstated
+   the SDL employer threshold and rate on the same page — disqualifying. `exemption_category_trainees_under_TAESA`
+   hedged (not deleted — kept as a `source_key` so it still generates pairs, but now carrying HEDGE
+   status). `sdl_exemption_categories` rewritten to assert 9 CONFIRMED categories and name the 10th as
+   unconfirmed, rather than asserting all 10 as settled. Corpus sweep: 0 rows.
+4. **`business_name_maintenance_fee`.** Per instruction, confirmed directly against `brela.go.tz`
+   before editing rather than acting on the agent's secondary-sourced claim. BRELA's own dedicated
+   fee page (`/pages/tozo-za-majina-ya-biashara`) states application fee 15,000 TZS, annual
+   maintenance fee (`ada ya uendeshaji`) 5,000 TZS — **the locked fact's 5,000 TZS was already
+   correct**; the agent's secondary sources (application 5,000/maintenance 1,000) were themselves
+   wrong. No value change; upgraded from an uncited bare string to a grounded fact.
+5. **The partially-right nine**, `minimum_directors`/`minimum_shareholders` first per instruction —
+   both said "2 employees"; directors/shareholders are persons, not employees, and this exact wording
+   had already produced a wrong answer once in retrieval. Corrected to "persons", added the
+   public-company minimum of 7 (prior fact only covered the private-company case), and the s.26A
+   single-shareholder exception for private companies (2021 amendment). Number itself unchanged (2),
+   confidence downgraded to medium (secondary corroboration only, s.186/27/45 not read directly this
+   pass). Remaining six: `health_and_safety_act_citation` (was a weaker duplicate of `osiha_act_citation`
+   — reconciled to the fuller citation); `risk_assessment_frequency` (added the hazardous-activity
+   scope, "or more often if needed", and "approved inspection authority" qualifiers Cap.297 s.60
+   actually carries); `electrical_test_fee_reduction_initial`/`_final` (amounts unchanged, rescoped
+   from an implied general OSHA electrical fee to the actual rural-fuel-station-specific 2025 fee
+   reduction the only located source describes); `balance_sheet_filing_fee_section_12_act`/
+   `document_filing_fee_section_12_act_excluding_balance_sheet` (amounts confirmed correct at 220 USD
+   against BRELA's live schedule; citation fixed from "Section XII" to Part XIII ss.320-328, the same
+   stale-name defect already fixed on `act_section_12`). Corpus sweep for the director/shareholder
+   wording: 5 apparent hits, all false positives on inspection (an unrelated NSSF director-liability
+   answer whose numbered list `(2)` matched the regex). Corpus sweep for the "Section XII" citation:
+   **13 confirmed rows** — a genuine, previously-unswept defect, spanning `cleaned_pairs`,
+   `raw_sources`, `train_sft.jsonl` (4 rows) and `train_sft_balanced.jsonl` (2 rows). Sweeps for the
+   electrical-fee rescoping and the risk-assessment qualifiers found only rows that were already
+   correctly scoped or not actually asserting the corrected claim — not quarantined (R20: don't
+   flag incomplete-but-not-wrong as a defect).
+6. **`OSHA_safety_officer_threshold`, done carefully per instruction.** The prior fact was a blanket
+   hedge (no number, direct to osha.go.tz) because earlier passes couldn't find a threshold. This pass
+   read Cap.297 s.11 directly and found a real one — but un-hedging straight to a bare number is
+   itself the failure mode that ships a wrong answer if the mechanism differs from what the number
+   implies. The correction states the MECHANISM: >20 employees triggers mandatory designation of an
+   existing employee as a "health and safety representative" (s.11(1)) — not a hired safety officer —
+   with ratio rules (1:100 shops/offices, 1:50 factories, s.11(4)) and inspector discretion to compel
+   designation even below 20 (s.11(5)). Corpus sweep for the old "50 employees" pattern: 0 rows.
+7. **Unsourceable → hedge; tooling-failure set left untouched.** `trademark_renewal_period` ("saba
+   years"/7 — no source, primary or secondary, could confirm a term length) and `course_fee` (TZS
+   250,000 — every OSHA course actually priced came back at 300,000, no matching course identified)
+   both downgraded from asserted fact to explicit HEDGE. Corpus sweep: `course_fee` **2 confirmed
+   rows** (`cleaned_pairs_batch_015`, `train_sft.jsonl`); `trademark_renewal_period` 0 rows.
+   `nssf_payment_deadline`, `efd_approved_supplier_verification`, `permit_class_d_does_not_exist`,
+   `vat_deferment_form_number`, `vat_deferment_minimum_value` all hit tooling failures this pass
+   (tra.go.tz header-parse errors, tanzlii.org 403s, immigration.go.tz an unreadable JS shell) — an
+   unreachable source is not evidence of a problem, so these are left exactly as they were, flagged
+   for retry, not downgraded or reasserted.
+
+## 📊 WHOLE-CORPUS PICTURE, after Tier 1 + Tier 2 + Tier 3 (2026-09-01)
+
+**Population: the 151 facts the 2026-08-28 exposure audit found ungrounded** (of 251 total;
+`eval/results/ungrounded_fact_exposure.json`). All 151 have now been through a verification pass,
+except the 2 `pending_core_on_corporate_tax_build` facts (`corporate_tax_rate`,
+`amt_loss_companies_only`), deliberately deferred into the corporate/partnership build's own source
+pass and still untouched.
+
+| tier | facts | confirmed wrong (corrected) | needed nuance/framing (corrected, not flatly wrong) | still unconfirmed (tooling/access, not contradicted) | confirmed clean |
+|---|---|---|---|---|---|
+| Tier 1 (`SERVED_ACTIONABLE_HIGH_TRAFFIC`, minus 2 pending-core) | 19 | 6 (5 corrected + EFD threshold, spun out separately as a fabrication) | — | 4 | 9 |
+| Tier 2 (`served_actionable_peripheral` 12 + `in_index_never_served` 22) | 34 | 7 (1 EFD-shaped VAT-threshold duplication + 6 confirmed-wrong) | 4 (framing corrections) | ~0 (not individually re-confirmed clean per-fact beyond what's named above) | ~23 |
+| Tier 3 (`served_non_actionable` 80 + `not_in_index` 16) | 96 | 4 (TAA citation, p45/P9, TaESA + its consolidated parent) | 9 (partially-right nine) + 2 (newly hedged: trademark term, course fee) | 5 (tooling failures, unchanged) | 76 |
+| **Total** | **149** (151 minus 2 pending-core) | **17 (11.4%)** | **15 (10.1%)** | **9 (6.0%)** | **108 (72.5%)** |
+
+**Error rate per tier, narrowly defined (confirmed wrong only):** Tier 1 **31.6%** (6/19) → Tier 2
+**20.6%** (7/34) → Tier 3 **6.3%** (6/96, counting the 2 newly-hedged unsourceable facts as errors
+of assertion, not just citation). **Broadly defined (wrong + needed real correction):** Tier 1
+**31.6%**, Tier 2 **32.4%** (11/34), Tier 3 **15.6%** (15/96).
+
+**What this says about the exposure-sizing hypothesis, per the founder's question.** There IS a real
+gradient — higher-traffic tiers had a measurably higher confirmed-wrong rate, not a flat rate across
+tiers. Read naively, that would say traffic predicts risk, not just visibility. But two confounds sit
+underneath that reading and neither can be ruled out with what was measured here:
+
+1. **Verification depth was not equal across tiers.** Tier 1 and Tier 2 were each single-fact deep
+   reads against primary Act text, often with multiple Finance Acts checked per fact. Tier 3 was five
+   parallel batch passes against 96 facts in one sitting, constrained by exhausted WebSearch quota and
+   repeated tooling failures (tra.go.tz, tanzlii.org, immigration.go.tz) that left 5 facts unconfirmed
+   either way. A shallower pass finds fewer confirmed-wrong facts almost by construction — some
+   fraction of Tier 3's 76 "confirmed clean" and 5 "unconfirmed" would likely re-sort under Tier-1-depth
+   scrutiny.
+2. **The tiers are not fact-type-matched.** Tier 1/2 skew toward calculation examples, deadlines, and
+   renumbered citations — exactly the fact shapes prone to the errors this whole audit arc keeps
+   finding (stale section numbers, date-off-by-a-year, conflated adjacent thresholds). Tier 3 skews
+   toward flat fee-schedule line items and citations, which are either simply right or simply wrong
+   with less room for the "right number, wrong nuance" error class that dominates Tier 1/2's count.
+
+**So the honest statement is not "traffic predicts defect density" cleanly — it's that `vat_deferment_minimum_value`
+was right: low traffic does not mean low error rate, only lower detection, and Tier 3's 15.6% broad
+error rate (nearly 1 in 6 facts) proves it — that is not a documentation-debt number, it is
+comparable in kind to Tier 1/2's. What the gradient across tiers most likely reflects is a mix of
+traffic AND fact-type AND verification depth, not traffic alone, and this pass cannot cleanly
+separate the three.** The practical consequence: the 5 Tier-3 facts left unconfirmed by tooling
+failure (not confirmed clean) should not be read as lower-risk than Tier 1's 4 unresolved — same
+status, different tier, same open exposure.
+
+**Grounded count.** Before this audit arc: 100/251 (39.8%). After Tier 1+2+3: roughly **240/251
+(~95.6%)** are now either originally grounded, confirmed clean, or corrected-and-grounded — leaving
+the 2 deferred pending-core facts, Tier 1's 4 unresolved, and Tier 3's 5 tooling-blocked facts (11
+total) as the remaining ungrounded set, all named above rather than hidden in an aggregate.
+
+### Corpus sweep — `scripts/correct_corpus_defects_v5.py` (R18: committed before this write-up)
+
+Three confirmed defect classes, **18 rows quarantined**, verification-after: 0 remaining.
+`P45_P9_CONFLATION` 3 (1 in `val_sft_balanced`), `SECTION_XII_FOREIGN_COMPANY` 13 (0 val),
+`COURSE_FEE_250K` 2 (0 val). Artifact: `eval/results/corpus_correction_v5.json`. Quarantine file:
+`datasets/tier1a/rejected/tier3_confirmed_wrong_quarantine_2026_09_01.jsonl`. Full test suite
+re-run clean after all edits: 1381 passed, 0 failed (one retrieval test crashed under full-suite
+memory pressure loading a sentence-transformers model — reproduced in isolation, passed; unrelated
+to these edits).
+
+**Not fixed — flagged, not ordered.** `legal_citation_amendment_act_sdl` (VETA Act s.19 citation is
+correct as a section number, but the key name implies it names a specific amending Finance Act,
+which the fact never does) was reported as WRONG in the differences report but was not in the
+founder's 7-step order. Left as-is pending an explicit instruction.
 
 ---
 
