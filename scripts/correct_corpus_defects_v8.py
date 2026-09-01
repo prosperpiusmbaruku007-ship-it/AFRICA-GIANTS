@@ -45,23 +45,69 @@ OUT = os.path.join(REPO, 'eval', 'results', 'corpus_correction_v8.json')
 QUARANTINE = os.path.join(REPO, 'datasets', 'tier1a', 'rejected',
                           'vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl')
 
-_VATWH_CTX = re.compile(
-    r'vat withholding|withholding.{0,6}vat|kodi ya zuio.{0,10}vat|vat.{0,10}kodi ya zuio|'
-    r'vat ya (ku)?zuio|vat (i)?li(cho)?zuiliwa|zuio la vat', re.I)
-_REMIT_VERB = re.compile(
-    r'lipa|kulipa|peleka|kupeleka|wasilish|kuwasilisha|remit|pay\b|submit', re.I)
+# PROXIMITY, not bare co-occurrence -- found necessary by manual spot-check (R17), not assumed
+# safe. A first draft matched on "VAT withholding" + "tarehe 20" + any remit verb ANYWHERE in
+# the row, which caught tier1a_vat_006 -- a row that correctly says the CERTIFICATE is NOT due
+# on the 20th, and whose only remit-shaped word ("kuwasilisha") describes the (unchanged, still
+# correct) VAT RETURN deadline, not the withholding remittance. Requires the remit verb to sit
+# within 60 characters of the WITHHELD-AMOUNT phrase specifically (kiasi kilichozuiliwa/VAT
+# withholding itself/kodi ya zuio/VAT ya kuzuia), and covers both Swahili verb-stem forms
+# ("zuio" the noun, "zuia" the infinitive) since a bare-word match missed passive conjugations
+# (kilipwa, inawasilishwa) that a plain "lipa"/"wasilisha" substring does not contain.
+_REMIT_AMOUNT = re.compile(
+    r'(kiasi\s+(kilicho)?(zuiliwa|katwa)|vat\s+(i)?li(cho)?(zuiliwa|katwa)|withheld\s+(vat|amount)|'
+    r'vat\s+withholding|kodi\s+ya\s+zuio|vat\s+ya\s+(ku)?zui[ao])[^.!?]{0,60}'
+    r'(lip|pelek|wasilish|remit|pay\b|submit)'
+    r'|(lip|pelek|wasilish|remit|pay\b|submit)[^.!?]{0,60}'
+    r'(kiasi\s+(kilicho)?(zuiliwa|katwa)|vat\s+(i)?li(cho)?(zuiliwa|katwa)|withheld\s+(vat|amount)|'
+    r'vat\s+withholding|kodi\s+ya\s+zuio|vat\s+ya\s+(ku)?zui[ao])',
+    re.I)
 _DAY20 = re.compile(
     r'(?<!kabla ya )(?<!ilikuwa )(?<!kutoka )(?<!before )(?<!was )(?<!from )'
     r'tarehe 20\b|(?<!kabla ya )(?<!ilikuwa )(?<!kutoka )(?<!before )(?<!was )(?<!from )20th\b',
     re.I)
+# A row that explicitly says tarehe 20 is NOT the answer for what it's discussing (the
+# certificate) -- protects tier1a_vat_006/similar rows correctly rejecting the 20th for the
+# certificate, which a proximity match alone still caught (the certificate's own "day VAT
+# becomes payable" trigger clause sits within 60 chars of "kodi ya zuio").
+_NEGATED_20 = re.compile(r'si\s+tarehe\s+20|siyo\s+tarehe\s+20|not\s+the\s+20th|si\s+20th', re.I)
+
+
+_TEXT_FIELDS = ('question_sw', 'answer_sw', 'question_en', 'answer_en',
+                'instruction', 'input', 'output')
+
+
+def _field_is_defect(text):
+    if not text or not isinstance(text, str):
+        return False
+    if _NEGATED_20.search(text):
+        return False
+    return bool(_REMIT_AMOUNT.search(text)) and bool(_DAY20.search(text))
 
 
 def _is_defect(line):
-    if not _VATWH_CTX.search(line):
+    """Checks each text FIELD independently, never the raw JSON line as one string.
+
+    FOUND NECESSARY BY A LIVE FALSE POSITIVE (R17), not a defensive guess: v8's first draft
+    matched the whole raw line, and tier1a_vat_006 -- a row that correctly says the CERTIFICATE
+    is NOT due on the 20th -- was flagged anyway. The commas and quote marks between JSON field
+    values are not '.', '!' or '?', so the proximity window bridged from one field's tail into
+    the next field's head across a field boundary a human reader would never cross (e.g. from
+    the end of `question_sw`'s value straight into `answer_sw`'s opening words). Checking each
+    field's own text independently, rather than the concatenated raw line, closes that gap at
+    its structural cause instead of patching the symptom with a wider exclusion list.
+    """
+    try:
+        obj = json.loads(line)
+    except Exception:
+        # Not parseable JSON (e.g. malformed line) -- fall back to the raw-line check so a
+        # genuinely broken row is not silently skipped, matching v1-v7's tolerance elsewhere.
+        if _NEGATED_20.search(line):
+            return False
+        return bool(_REMIT_AMOUNT.search(line)) and bool(_DAY20.search(line))
+    if not isinstance(obj, dict):
         return False
-    if not _DAY20.search(line):
-        return False
-    return bool(_REMIT_VERB.search(line))
+    return any(_field_is_defect(obj.get(f)) for f in _TEXT_FIELDS)
 
 
 DEFECTS = {
