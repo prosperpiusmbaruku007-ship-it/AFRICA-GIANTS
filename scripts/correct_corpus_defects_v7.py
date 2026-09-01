@@ -102,7 +102,15 @@ def main():
     quarantined, per_file, per_class = [], Counter(), Counter()
     for f in sorted(glob.glob(os.path.join(REPO, 'datasets', '**', '*.jsonl'), recursive=True)):
         r = rel(f)
-        if r in KEEP or r == rel(QUARANTINE):
+        # EXCLUDES THE WHOLE rejected/ DIRECTORY, not just this script's own output file.
+        # A dry-run of this exact script found 2 rows inside an EARLIER pass's quarantine file
+        # (v4's EFD-threshold quarantine) matching this defect class -- already-rejected rows
+        # must never be re-processed by a later pass; they are historical record, not live
+        # corpus. Checked: no prior v1-v6 script actually double-quarantined anything (all
+        # existing rejected/ files have zero list-shaped `_quarantine` fields), so this is a
+        # latent bug in the shared pattern, caught here before it did any damage, not a repeat
+        # of a defect that already happened.
+        if r in KEEP or r == rel(QUARANTINE) or 'datasets/tier1a/rejected/' in r:
             continue
         if not os.path.exists(f):
             continue
@@ -151,7 +159,8 @@ def main():
 
     left = 0
     for f in glob.glob(os.path.join(REPO, 'datasets', '**', '*.jsonl'), recursive=True):
-        if rel(f) == rel(QUARANTINE) or not os.path.exists(f):
+        if rel(f) == rel(QUARANTINE) or not os.path.exists(f) \
+                or 'datasets/tier1a/rejected/' in rel(f):
             continue
         for l in open(f, encoding='utf-8'):
             if classify(l):
