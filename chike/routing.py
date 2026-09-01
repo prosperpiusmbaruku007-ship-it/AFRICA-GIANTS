@@ -36,8 +36,10 @@ from . import swahili_numbers as swn
 
 # The rules-engine computation types. 'ambiguous_multi' is compute-intent with an
 # unresolved specific levy; 'none' means fact/RAG. 'minimum_wage' is not a levy — see path 3
-# in detect_intent and chike/rules_engine/minimum_wage.py.
-COMPUTE_TYPES = ("sdl", "nssf", "paye", "wcf", "minimum_wage")
+# in detect_intent and chike/rules_engine/minimum_wage.py. 'corporate_tax'/'partnership_tax'
+# are rate statements, not levies — see path 1b below and chike/rules_engine/corporate_tax.py.
+COMPUTE_TYPES = ("sdl", "nssf", "paye", "wcf", "minimum_wage", "corporate_tax",
+                 "partnership_tax")
 
 # --- explicit identifiers (path 1) ------------------------------------------
 _EXPLICIT = {
@@ -646,6 +648,105 @@ def states_vat_registered(text: str) -> bool:
     return any(c in ql for c in _VAT_REGISTERED_CUES)
 
 
+# === CORPORATE / PARTNERSHIP INCOME TAX — a company/partnership asking about its own tax ====
+# Built alongside the presumptive engine's own entity veto (below), which excludes exactly the
+# entities this route exists to serve — a company/partnership routed to the individual
+# turnover table gets a wrong figure with the engine's authority (probe pic_04, 2026-08-23).
+# This route gives those entities somewhere correct to land instead of falling through to fact.
+#
+# REACHABILITY, MEASURED BEFORE SHIPPING, NOT ASSUMED (per the plan this route was scoped
+# under). PAYE's natural path (path 2 below, unchanged) claims bare `kodi ya mapato` whenever
+# {number + PAYROLL context + money-ask} all hold — e.g. "Kampuni yangu ina wafanyakazi 20,
+# kodi ya mapato ni ngapi?" satisfies path 2 (payroll context = "wafanyakazi") and would return
+# "paye" before any check placed after path 2 could ever run. This route is placed as path 1b,
+# BEFORE path 2, specifically so entity evidence wins regardless of what else the message
+# mentions. Swept live against the full 400-row gate + probe corpora after being added (see
+# tests/test_corporate_tax_routing.py): zero PAYE rows diverted — none of the recorded gate
+# corpus phrasings for PAYE name an entity word, so this route's positive gate and PAYE's path 2
+# do not currently compete for the same real question, only for the constructed one above.
+#
+# NARROW BY CONSTRUCTION (R17 step 4): the entity word is the gate, not the tax phrase alone.
+# Bare `kodi ya mapato` without a named entity behaves exactly as it did before this route
+# existed — falls to path 2's PAYE claim if payroll context is present, otherwise to fact/RAG.
+_CORPORATE_ENTITY_CUES = ["kampuni", "shirika", r"\bcompany\b", r"\bltd\b", r"\bplc\b"]
+_PARTNERSHIP_ENTITY_CUES = ["ubia", "ushirikiano wa kibiashara", r"\bpartnership\b"]
+_CORPORATE_INCOME_TAX_CUES = ["kodi ya mapato ya kampuni", "kodi ya mapato ya shirika",
+                              "kodi ya kampuni", "kodi ya shirika", "corporate tax",
+                              "corporation tax", "kodi ya mapato"]
+
+_DSE_CUES = ["dse", "dar es salaam stock exchange", "soko la hisa"]
+_DSE_NEGATED_CUES = ["haijaorodheshwa", "hatujaorodheshwa", "sijaorodheshwa", "not listed",
+                     "sijaorodhesha"]
+
+# Loss-year count ("miaka mitatu mfululizo ya hasara") — digit form plus the small set of
+# spelled numerals this context plausibly uses (a loss-year count is never large). Outside this
+# set, corporate_loss_years returns None and the engine's ordinary-rate branch governs — never
+# a guessed AMT trigger.
+_YEAR_WORDS = {"mwaka mmoja": 1, "miaka miwili": 2, "miaka mitatu": 3, "miaka minne": 4,
+              "miaka mitano": 5, "miaka sita": 6, "miaka saba": 7, "miaka minane": 8,
+              "miaka tisa": 9, "miaka kumi": 10}
+_LOSS_YEARS_DIGIT = re.compile(r"(?:mwaka|miaka)\s+(\d{1,2})\s+mfululizo")
+_LOSS_CUE = re.compile(r"hasara|loss")
+
+
+def is_corporate_entity(text: str) -> bool:
+    """True when the question names a company/corporation as the entity asking."""
+    ql = text.lower()
+    return any(re.search(c, ql) if c.startswith(r"\b") else c in ql
+              for c in _CORPORATE_ENTITY_CUES)
+
+
+def is_partnership_entity(text: str) -> bool:
+    """True when the question names a partnership as the entity asking."""
+    ql = text.lower()
+    return any(re.search(c, ql) if c.startswith(r"\b") else c in ql
+              for c in _PARTNERSHIP_ENTITY_CUES)
+
+
+def asks_corporate_income_tax(text: str) -> bool:
+    ql = text.lower()
+    return any(c in ql for c in _CORPORATE_INCOME_TAX_CUES)
+
+
+def is_dse_listed(text: str):
+    """True | False | None — whether the question states the corporation is DSE-listed."""
+    ql = text.lower()
+    if not any(c in ql for c in _DSE_CUES):
+        return None
+    if any(c in ql for c in _DSE_NEGATED_CUES):
+        return False
+    return True
+
+
+_DSE_FLOAT_PCT = re.compile(r"asilimia\s*(\d{1,3})\s*ya\s*hisa|(\d{1,3})\s*%\s*ya\s*hisa")
+
+
+def dse_public_float_percent(text: str):
+    """The stated public-float percentage as a raw int, or None. Comparison against the
+    current 25% qualifying threshold is the engine's job (rules_engine.rates), not the
+    router's — this function only reads what the question states."""
+    m = _DSE_FLOAT_PCT.search(text.lower())
+    if not m:
+        return None
+    return int(m.group(1) or m.group(2))
+
+
+def corporate_loss_years(text: str):
+    """Consecutive loss-year count as a raw int, or None. Requires an explicit loss cue
+    ('hasara') in addition to the year phrase, so a question naming years for an unrelated
+    reason (a listing anniversary, a licence term) is not misread as a loss history."""
+    ql = text.lower()
+    if not _LOSS_CUE.search(ql):
+        return None
+    for phrase, value in _YEAR_WORDS.items():
+        if phrase in ql:
+            return value
+    m = _LOSS_YEARS_DIGIT.search(ql)
+    if m:
+        return int(m.group(1))
+    return None
+
+
 # === PRESUMPTIVE INCOME TAX — the tax a duka owner actually pays ==========================
 # Coverage item, not a defect fix: the 2026-08-16 coverage measurement found 12 of 12
 # questions from an ordinary trader's month reaching NO deterministic route and having NO
@@ -992,6 +1093,29 @@ def detect_intent(text: str) -> str:
             or _has_money_magnitude(ql)
             or _COUNT_TRANSITION.search(ql) or _DERIVE_CUE.search(ql)):
         return explicit
+
+    # Path 1b — CORPORATE / PARTNERSHIP INCOME TAX. Placed here, BEFORE path 2, specifically so
+    # a named entity wins over PAYE's bare `kodi ya mapato` natural-path claim regardless of
+    # what payroll context the same message happens to mention — see the reachability note on
+    # the cue definitions above. Partnership checked first: a partnership entity mentioning a
+    # 'kampuni'-adjacent word (e.g. describing a corporate partner) must not steal the route
+    # from the more specific partnership question.
+    if is_partnership_entity(text) and asks_corporate_income_tax(ql):
+        return "partnership_tax"
+    # `corporate_loss_years` is DELIBERATELY NOT a trigger on its own here — found by the live
+    # reachability sweep (eval/routing/sweep_corporate_tax_routing.py), not assumed safe.
+    # eval_211 ("Kampuni yangu imekuwa na hasara miaka 4 mfululizo — je nitaweza kupunguza
+    # mapato ya mwaka wa 5 kwa hasara zote bila kikomo?") mentions loss-years but is asking
+    # about the LOSS-CARRYFORWARD OFFSET LIMIT (a different, unimplemented FA2024 provision),
+    # not AMT applicability. Routing it to corporate_tax on the loss-year mention alone made
+    # the engine answer AMT applicability with its full authority to a question it was never
+    # asked — a wrong-topic answer, not a wrong number, but the same class of harm. The gate
+    # is the income-tax/DSE cue; loss-years is read by the engine only to REFINE an answer to
+    # a question already confirmed to be about corporate tax, never to trigger the route by
+    # itself.
+    if is_corporate_entity(text) and (
+            asks_corporate_income_tax(ql) or is_dse_listed(text) is not None):
+        return "corporate_tax"
 
     # Path 2 — Candidate C: number + payroll context + a money 'how-much' cue.
     # Only a compute route when _natural_levy actually resolves a levy — a specific one,

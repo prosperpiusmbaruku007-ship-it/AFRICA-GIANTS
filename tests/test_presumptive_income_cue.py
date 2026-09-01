@@ -23,11 +23,17 @@ TEN OF THE SIXTEEN PROBES ARE DELIBERATELY CORRECT BODIES that must keep their e
 (PAYE, VAT registration, SDL, the fact path). That is the half R17 says does the work, and it is
 the half that caught this.
 
-ONE ROW IS KNOWN-FAILING AND STAYS THAT WAY ON PURPOSE. `pic_05` routes a partnership turnover
-question to `paye` — on the BEFORE arm too, so this change did not cause it. Its expectation is
-pinned to the CORRECT route with the defect recorded in `known_failing`, so the row fails loudly
-if anyone ever "fixes" it by relaxing the expectation. See the probe's own note for the
-mechanism and why the fix is boarded rather than bundled.
+UPDATE 2026-09-01, corporate/partnership tax engine build. `pic_05` WAS known-failing (routed a
+partnership turnover question to `paye`) and is now GENUINELY FIXED — path 1b (corporate/
+partnership tax, chike/routing.py) is checked BEFORE path 2 and wins on entity evidence
+regardless of payroll-context words in the same sentence, so `known_failing` was removed per
+this file's own policy (see `test_known_failing_rows_still_name_a_live_defect`'s docstring:
+"FAILS when a known-failing row starts passing — which is the good outcome, and must be an
+explicit edit rather than a silent one"). `pic_04`'s expectation moved too, from `none` to
+`corporate_tax` — a company asking about its own income tax used to correctly fall through to
+the (honest, but thin) fact path; it now gets a real engine answer, which supersedes that
+fallback the same way every other engine in this codebase supersedes fact-path synthesis. See
+each probe's own `guards_against` note for the mechanism.
 """
 import json
 import os
@@ -66,7 +72,8 @@ def test_probe_file_is_intact():
     for p in PROBES:
         assert p['guards_against'].strip(), f"{p['id']} has no guards_against note"
         assert p['expect_route'] in {
-            'presumptive', 'paye', 'sdl', 'vat_registration', 'none'}, p['expect_route']
+            'presumptive', 'paye', 'sdl', 'vat_registration', 'none',
+            'corporate_tax', 'partnership_tax'}, p['expect_route']
 
 
 def test_the_majority_of_probes_are_correct_bodies_that_must_not_move():

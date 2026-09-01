@@ -299,6 +299,13 @@ class Orchestrator:
         # model on the path. Added to close a COVERAGE gap rather than a wrong answer.
         if sq.computation_type == "presumptive":
             return self._answer_presumptive(sq)
+        # CORPORATE / PARTNERSHIP INCOME TAX — same treatment: no REQUIRED_FIELDS, no slot
+        # extractor. A rate statement, not a levy computation (see rules_engine/corporate_tax.py
+        # for why a turnover-to-shillings figure is never produced here).
+        if sq.computation_type == "corporate_tax":
+            return self._answer_corporate_tax(sq)
+        if sq.computation_type == "partnership_tax":
+            return self._answer_partnership_tax(sq)
         # 'ambiguous_multi' (or any type the rules engine doesn't define) is compute-intent
         # with an unresolved levy — never guess which one; clarify.
         required = REQUIRED_FIELDS.get(sq.computation_type)
@@ -597,6 +604,35 @@ class Orchestrator:
             records = False          # outside the window the column makes no difference
         return self._deterministic_answer(
             sq, rules_engine.compute_presumptive(turnover, records))
+
+    def _answer_corporate_tax(self, sq: SubQuestion) -> SubAnswer:
+        """Corporate income tax rate statement — deterministic, no model in the loop.
+
+        Reads whatever DSE-listing/public-float/loss-year signals routing.py could find in the
+        text (each independently None when unstated — never-guess per field, not per question)
+        and hands them straight to the engine, which is itself built to answer usefully even
+        when every optional field is None (the plain 30%/25% statement)."""
+        return self._deterministic_answer(
+            sq, rules_engine.corporate_tax_rate_statement(
+                is_dse_listed=routing.is_dse_listed(sq.text),
+                meets_public_float=self._dse_float_verdict(sq.text),
+                loss_years=routing.corporate_loss_years(sq.text)))
+
+    def _dse_float_verdict(self, text: str) -> Optional[bool]:
+        """The stated public-float percentage, compared against the CURRENT qualifying
+        threshold — the comparison lives here (orchestrator), not in routing.py, which only
+        ever reads raw text and must not know a tax-law threshold (see rates.py for why that
+        threshold itself has a change date attached, not just a value)."""
+        pct = routing.dse_public_float_percent(text)
+        if pct is None:
+            return None
+        from decimal import Decimal
+        return (Decimal(pct) / 100) >= rates.CORPORATE_DSE_PUBLIC_FLOAT_CURRENT
+
+    def _answer_partnership_tax(self, sq: SubQuestion) -> SubAnswer:
+        """A partnership is not itself taxed (Cap 332 s.48(1)) — deterministic, no model."""
+        return self._deterministic_answer(
+            sq, rules_engine.partnership_tax_statement())
 
     def _answer_applicability(self, sq: SubQuestion) -> SubAnswer:
         """Deterministic yes/no for an applicability-only levy question. SDL needs the

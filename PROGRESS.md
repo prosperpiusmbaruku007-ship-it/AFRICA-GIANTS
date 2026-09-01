@@ -1300,6 +1300,104 @@ re-checked properly rather than treated as already covered.
 
 ---
 
+## ✅ ENGINE BUILT, 2026-09-01 — corporate/partnership rate-statement engine, router integration, reachability sweep, one live misroute found and fixed before ship
+
+**Partnership transparency, sourced and not previously verified in this file.** The scope always
+assumed Tanzanian partnerships are tax-transparent; this session located and read the actual
+provision rather than continuing on the assumption. Income Tax Act Cap.332, Subdivision A
+"Partnerships", **ss.48-51**:
+
+- **s.48(1), quoted verbatim: "Notwithstanding section 4 but subject to the rest of this Act, a
+  partnership shall NOT be liable to pay income tax with respect to its total income and shall
+  not be entitled to any tax credit with respect to that income."** Unambiguous, no interpretation
+  needed.
+- s.48(2) + ss.49-50: partnership income/loss is allocated to and taxed on each PARTNER
+  individually, at whatever rate applies to THAT partner (individual bands, presumptive, or
+  corporate — depends who the partner is).
+- Checked against every Finance Act 2020-2026 for an s.48-51 touch, scoped to each Act's OWN
+  Income Tax Act amendment block specifically — **a bare "section 48" grep without that scoping
+  hit a Copyright Act amendment in FA2022's earlier PART**, the exact renumbering-adjacent trap
+  this project's discipline exists to catch. Confirmed clean once correctly scoped. No amendment
+  found in any year.
+
+**Engine: `chike/rules_engine/corporate_tax.py`, `rate_statement.py`'s pattern, not
+`presumptive.py`'s.** Two functions, both declining to ever compute a TZS amount from turnover —
+profit is not derivable from a turnover figure, the same caution presumptive.py already codes for
+one branch, applied here to the whole domain:
+- `corporate_tax_rate_statement()` — states 30% standard / 25% DSE-listed (with the public-float
+  condition, both directions: met, not-met, unstated-so-asks), and the AMT branch (First Schedule
+  para 3(3), s.4(8) exemptions including the tea-processing sunset) when a loss-year count is
+  given.
+- `partnership_tax_statement()` — states s.48(1) and declines to name a rate, since the real one
+  depends on who the partner is, which the function is never given enough to determine.
+
+**Router: path 1b in `chike/routing.py`, placed BEFORE path 2 (PAYE's natural `kodi ya mapato`
+claim), per the reachability requirement the plan named explicitly.** An entity-named question
+(`kampuni`/`shirika`/`company`/`ltd`/`plc` for corporate, `ubia`/`ushirikiano wa
+kibiashara`/`partnership` for partnership) plus an income-tax or DSE cue now wins regardless of
+what payroll-context words the same message also contains — measured, not assumed:
+`eval/routing/sweep_corporate_tax_routing.py` (R18: committed before run) diffs
+`routing.detect_intent()` before/after over the 400-row gate corpus + probes via `git stash`
+(package-relative imports meant the standalone-file-load approach tried first could not run the
+committed baseline at all — fixed, not worked around).
+`eval/results/corporate_tax_routing_reachability_2026_09_01.json`: **zero unexpected route
+changes** — no PAYE (or any other) row diverted. One question gained the corporate_tax route
+(`eval_209`, "does every company pay 25%?" — `none`→`corporate_tax`, and the answer correctly
+states 30% standard with the 25% condition, addressing the false premise).
+
+**One live misroute found by the sweep's OWN first run and fixed before this reached anyone,
+which is the sweep doing its job.** The first version of path 1b also triggered on a bare
+loss-year mention (`corporate_loss_years(text) is not None`, with no income-tax cue required).
+`eval_211` ("Kampuni yangu imekuwa na hasara miaka 4 mfululizo — je nitaweza kupunguza mapato ya
+mwaka wa 5 kwa hasara zote bila kikomo?") asks about the loss-carryforward **offset limit** — an
+unimplemented FA2024 provision (the 60%-of-taxable-income cap found earlier in this session's
+source pass, not built into this engine) — not AMT applicability. Routing it to `corporate_tax`
+on the loss-year mention alone made the engine answer AMT applicability with full authority to a
+question it was never asked: a wrong-topic answer wearing the engine's confidence, the same class
+of harm as a wrong number. **Fixed by requiring the income-tax/DSE cue to trigger the route at
+all; loss-years is now read only to REFINE an already-triggered corporate_tax answer, never to
+trigger it alone.** Re-swept clean (0 unexpected changes, `eval_211` correctly falls through to
+`none` — the same honest fallback it had before this engine existed, not a regression).
+
+**Two known-failing probes genuinely fixed, updated per each file's own stale-pin policy rather
+than left stale:** `eval/routing/presumptive_income_cue_probes.jsonl` pic_04 (`none`→
+`corporate_tax`: a company asking its own income tax now gets a real engine answer instead of the
+honest-but-thin fact-path fallback) and pic_05 (`none`+`known_failing: paye`→`partnership_tax`,
+`known_failing` removed: the pre-existing defect — `tunalipa` sitting in `_PAYROLL_CTX` let PAYE's
+path 2 claim a partnership's turnover question before presumptive's veto was ever reached — is
+closed by path 1b's placement, not by the narrower `_PAYROLL_CTX` fix this probe used to point at
+as the boarded remedy). `tests/test_presumptive_income_cue.py` updated to match, per its own
+`test_known_failing_rows_still_name_a_live_defect`: *"FAILS when a known-failing row starts
+passing — which is the good outcome, and must be an explicit edit rather than a silent one."*
+
+**`eval_258` (kodi ya pango/SDL collision) checked, not skipped, despite belonging to a different
+domain's scope (rental withholding, still not built).** It's already inside
+`eval_questions_003.jsonl`, one of the three files the reachability sweep ran against. Confirmed
+directly: still routes to `sdl`, unaffected — no entity word, no income-tax cue in its text, so
+it was never at risk, but the plan named it explicitly and it is pinned in
+`tests/test_corporate_tax_routing.py::test_eval_258_kodi_ya_pango_sdl_collision_still_routes_sdl`
+rather than left to an absence in a report.
+
+**New test file, `tests/test_corporate_tax_routing.py` (16 tests)**, covering the reachability
+case, the eval_211 regression, the eval_258 pin, engine correctness on every branch (standard
+rate, DSE met/not-met/unstated, AMT at/below the 3-year threshold, both exemption classes, the
+partnership never-guess), and the never-computes-a-TZS-amount invariant across every input
+combination. **Full offline suite: 1395 passed, 1 skipped, 4 deselected, 1 xfailed — the one
+pre-existing failure is the RAG-index pin cascade from the `amt_loss_companies_only` retirement
+(documented above under the retrain-precondition entry), unrelated to this build and not
+reopened by it.**
+
+**Not yet done, and worth naming rather than leaving implicit:** the AMT branch's loss-year and
+sector reading is router-level text matching (no slot extractor), matching presumptive.py's own
+"no REQUIRED_FIELDS" design note — this is a deliberate scope match, not a shortcut. The
+loss-carryforward 60%-offset-limit provision (FA2024) that `eval_211` actually asks about remains
+unimplemented; the fix here was to stop answering it wrong, not to build it. This engine is
+compute-only and never touches the RAG index, so it does not depend on the R15 regeneration still
+pending from the retrain-precondition section above — that item stays open for the fact-path
+domains it actually affects, unrelated to this build.
+
+---
+
 ## Rental withholding tax — scope
 
 - **Source pass:** Cap 332's rental-income withholding provisions (the WHT section and rate,
