@@ -1,10 +1,115 @@
 # Africa Giants — Project Progress
 
 Last updated: 2026-09-01 (Tier 3 verification + fixes; whole-corpus picture after Tier 1+2+3;
-corporate/partnership tax source pass complete — corporate_tax_rate/amt_loss_companies_only
-closed, DSE float defect quarantined, retrain precondition reopened pending re-regeneration;
-🔴 PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT found and fixed same day — shipped compute engine
-was serving wrong figures since 2026-07-01)
+corporate/partnership tax source pass complete; 🔴 PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT
+found and fixed same day; Finance Act 2026 read in full and the staleness-check mechanism built
+— see "GROUNDED IS A SNAPSHOT, NOT A PROPERTY" below, the more valuable finding of the two)
+
+---
+
+# 📐 GROUNDED IS A SNAPSHOT, NOT A PROPERTY — the class closed, not just the instance, 2026-09-01
+
+**The framing, stated once so it can be cited rather than re-derived:** this project has spent
+weeks measuring whether a fact traces to law. The presumptive-tax incident (below) was a fact
+that traced to law correctly — and the law had since changed. **Grounded and stale are
+different failures, and the whole-corpus audit (240/251 "grounded") only ever measured the
+first.** A fact can pass every check this project has built — primary source read directly,
+citation correct, section number current, no fabrication — and still be wrong today, because
+"grounded" records a fact about the PAST tense of a verification, not a standing guarantee.
+**The 240/251 figure is a snapshot dated to when each fact was checked, not a property that
+holds going forward on its own.** Nothing before today made that distinction explicit; it is
+recorded here so future reads of that number carry the caveat with them.
+
+## The mechanism: `chike/rules_engine/rates.py`'s `FINANCE_ACT_VERIFIED_THROUGH` + `tests/test_finance_act_freshness.py`
+
+Closes the CLASS the presumptive-tax incident was one INSTANCE of. Every constant group
+(SDL/NSSF/WCF/PAYE_BANDS/PAYE_NONRESIDENT_RATE/PRESUMPTIVE/CORPORATE_AND_PARTNERSHIP) now
+carries the last Finance Act year it was actually checked against, which provision, and how —
+and a test fails the instant `CURRENT_FINANCE_ACT_YEAR` moves ahead of any group, the same
+strict-xfail shape (a marker that cannot outlive its reason) already used elsewhere in this
+file. Both controls proven to fire (R23/R26): a planted stale group registers as stale; a
+planted unregistered constant is caught by the group-membership test. Full detail, commit
+`14d0104`.
+
+**This mechanism covers `rates.py` only.** It does NOT cover the other ~245 `locked_facts.json`
+entries that cite a Finance Act year in `verified_by`/`effective_date` text — those are a
+structured-text audit problem, not a Python-constant one, and building an equivalent mechanism
+for them is a separate, scoped decision, not assumed done here. What follows is a one-time
+manual pass over that surface, not a standing check.
+
+## Finance Act 2026, read in full — every Part checked against what CHIKE actually encodes
+
+28 Parts total (Bank of Tanzania, Electronic Transactions, Excise, Export Tax, Fair Competition,
+Gaming, Imports Control, **Income Tax**, Investment/SEZ, Land, LGA Rating, **Local Government
+Finance**, Mining, Motor Vehicle, National Planning Commission, Railways, Road Fuel Tolls, Road
+Traffic, **Stamp Duty**, **Tax Administration**, TCA-AIDS, Tax Revenue Appeals, **TRA Act**,
+Universal Health Insurance, **VAT**, **VETA**, Wildlife). Bolded Parts read in full — the ones
+whose governing Act CHIKE's domain touches at all (TRA/BRELA/NSSF/OSHA/SDL/PAYE/VAT/EFD/WCF/
+GN605A/GN487A). **NSSF Act, WCF Act, OSHA Act, Employment and Labour Relations Act, Companies
+Act, Business Names Registration Act, Business Licensing Act and the Immigration Act are ALL
+ABSENT from this list** — a Finance Act cannot silently amend an Act it does not name as one of
+its own Parts, so those domains are confirmed untouched by FA2026 on that basis alone, without
+reading a single further word.
+
+### Confirmed CHANGED, both already fixed this session
+| provision | change | status |
+|---|---|---|
+| First Schedule para 2 (presumptive tax) | ceiling 100M→200M, top rate 3.5%→4.0%, new first-12-months exemption (not automatic, needs Commissioner grant) | **FIXED** — engine, facts, corpus (10 rows), tests. commit `c2f3cdb` |
+| VAT Act s.71(5) (withholding remittance deadline) | 20th of following month → within 10 days of tax-period end | **FIXED** — fact, corpus (50 rows). commit `264f9bf`/`546a37c` |
+
+### Confirmed UNCHANGED — verified directly, not assumed, no action needed
+- First Schedule para 1 (PAYE bands) — confirmed untouched; band 2 (8%) separately re-confirmed
+  against Finance Act 2021 s.25's own verbatim text (closes the `paye_band2_final_confirmation`
+  `_unresolved_items` flag, marked CRITICAL, open since before this session).
+- First Schedule para 3 (corporate tax rate) and ss.48-51 (partnership transparency) — confirmed
+  untouched, consistent with this session's earlier corporate/partnership source pass.
+- First Schedule para 2(1) (presumptive excluded services) — confirmed untouched.
+- VAT Act s.5(5) withholding RATES (3%/6%) — confirmed unchanged. FA2026 s.91(a) only adds an
+  explicit "goods supplier receives 15%" clause for symmetry with the already-explicit "services
+  supplier receives 12%" — a clarifying amendment, not a rate change. Verified by reconstructing
+  the full amended sentence from both Finance Acts' verbatim text side by side, not from the
+  diff fragment alone (which read ambiguously on first pass and could easily have been
+  misreported as a rate hike without this check).
+- Stamp Duty Act Schedule Article 22(b) (general conveyance rate, 0.5%/1% tiered) — confirmed
+  unchanged; FA2026 touches only 22(c) (agricultural land conveyance, a different sub-item).
+  **This one was already correctly verified against FA2026 in a PRIOR pass (2026-08-31,
+  `stamp_duty_property_transfer`'s own `verified_by`)** — re-confirmed today, a positive proof
+  the freshness discipline can also validate a claim rather than only ever finding it wrong.
+- VETA Act Cap.82 s.14 (SDL rate) — confirmed unchanged; FA2026 Part XXVII touches only s.19
+  (a funding-source wording change).
+
+### New provisions found, NOT currently encoded anywhere — informational, no fix needed since nothing asserts otherwise, listed so they are not silently absent from the record
+- Deemed-distribution rate on undistributed corporate profits: 30%→15% (ITA s.33A, FA2026 s.22).
+- Capital-gains cost-basis carryover for previously-exempted assets (ITA s.44, s.23) — investment-scale, likely out of scope.
+- Single instalment tax on forest produce sales, 2% (new ITA s.116A, s.25) — niche, out of scope.
+- **TIN registration deadline: 15 days from commencing business/employment (TAA s.22(1), s.72)** — a real gap worth authoring; BRELA/registration domain, plausibly high-traffic.
+- Construction/extractive-industry contractor disclosure duty, 30 days (TAA s.54, s.73) — large-business, likely out of scope.
+- TAA s.62(11) cross-reference renumbered "17(2)(a)"→"16(1)" — another instance of the renumbering trap; no locked fact currently cites the old number, so nothing to fix, but named for the pattern.
+- Transfer-pricing adjustment penalty restructured (TAA s.90(2)(c), s.77) — out of scope (transfer pricing is large-business/OOC).
+- New offence for framework-agreement exemption abuse (new TAA s.94A, s.78) — out of scope.
+- Stamp duty: item 44 "PARTNERSHIP instrument" fee, NEW — TZS 5,000 (capital ≤1M) / 10,000 (capital >1M); items 11/13/20/59 various fee changes — none currently encoded.
+- VAT: new s.5(7) apportionment rule (3:2 goods:services ratio for mixed supplies) — not encoded, could be a valuable addition.
+- VAT: new s.51 digital-marketplace deemed-supplier rule — relevant to e-commerce, outside CHIKE's current scope.
+- LGFA: councils must set aside 15% of own-source revenue (10% women/youth/disability, 5% market/business infrastructure funding) — informational, not something a business is taxed on directly.
+
+### Found, could not resolve either way — flagged rather than guessed
+- **LGFA s.6(1)(s) and s.7(1)(x): "twenty percent"→"ten percent"** — subject matter NOT
+  determined from the fragments available; confirmed this is NOT s.7(1)(u) (the 0.3%
+  council-service-levy cap already encoded and confirmed untouched), but what these two
+  paragraphs actually govern remains open. Needs a direct read of LGFA ss.6-7 primary text.
+- `_unresolved_items.moa_stamp_duty` (Memorandum of Association stamp duty, TZS 10,000 claimed) —
+  FA2026's Stamp Duty Schedule changes reviewed; no item matching "Memorandum of Association"
+  specifically was identified among them. Inconclusive, not confirmed either direction — status
+  unchanged, not silently marked resolved.
+- `_unresolved_items.wht_penalty_rate` — TAA s.90(2)(c) found is specifically about the
+  transfer-pricing adjustment penalty, not a general withholding-tax late-payment penalty. Does
+  not resolve this item; status unchanged.
+
+### `PAYE_NONRESIDENT_RATE` — a different, worse status than stale, surfaced not created
+Never verified against primary statute at all (secondary PWC source only) — already flagged in
+an earlier Tier 1 pass, now made structurally visible via `rates.NEVER_GROUNDED` rather than
+left to be re-discovered by accident again. Not a Finance-Act freshness question; needs its own
+primary-source read to identify which ITA section actually governs it.
 
 ---
 
