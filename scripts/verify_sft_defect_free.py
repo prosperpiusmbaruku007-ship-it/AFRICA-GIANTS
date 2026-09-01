@@ -30,8 +30,6 @@ VERSIONS = [
 SFT_FILES = [
     'datasets/tier1a/sft/train_sft.jsonl',
     'datasets/tier1a/sft/val_sft.jsonl',
-    'datasets/tier1a/sft/train_sft_balanced.jsonl',
-    'datasets/tier1a/sft/val_sft_balanced.jsonl',
 ]
 
 

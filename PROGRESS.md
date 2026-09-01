@@ -4,6 +4,30 @@ Last updated: 2026-09-01 (Tier 3 verification + fixes; whole-corpus picture afte
 
 ---
 
+# ✅ MILESTONE 2026-09-01 — RETRAIN PRECONDITION MET, AFTER WEEKS MARKED STALE THREE TIMES
+
+**This is the blocking item finally closed, not another status update on it.** The table below
+was rebuilt 2026-08-31 and had already been marked stale three separate times before that as new
+defect classes surfaced (PAYE relief, EFD threshold, GN487A softened visa, and the rest). As of
+this session it is **MET**, and the closure is worth stating plainly rather than leaving it to be
+read out of the table:
+
+- `train_sft.jsonl`/`val_sft.jsonl` **regenerated from scratch** via `generate_sft.py`, drawing
+  from `cleaned_pairs/`'s current 4,442 non-eval pairs (3,997 train / 445 val) — not patched, not
+  hand-edited, a fresh export after every quarantine pass.
+- Verified by **counting defect-pattern hits in the regenerated output, not by trusting the
+  regeneration**: `scripts/verify_sft_defect_free.py`, a new harness committed alongside the
+  result (R18), imports all five quarantine scripts' own defect patterns (v1–v5) and sweeps all
+  four `datasets/tier1a/sft/*.jsonl` files against all five. **0 hits, every version, every file.**
+- The training pipeline can now be re-run against a corpus that has actually had 369 quarantined
+  rows' worth of fabrications, mislabels and stale citations removed — the thing the last several
+  weeks of fact-audit work was for.
+
+See the rebuilt precondition table immediately below for the itemized defect classes and counts,
+and the "balanced-file gap" entry further down for the one open question this closure surfaced.
+
+---
+
 # 🧾 RETRAIN PRECONDITION — REBUILT 2026-08-31, SINGLE SOURCE OF TRUTH
 
 **This table replaces every prior "STALE" annotation scattered through this file (v2's note at the
@@ -82,6 +106,43 @@ not because anything keeps it in sync with `cleaned_pairs/`. If `cleaned_pairs/`
 (a correction, a new batch) and nobody remembers to hand-edit or regenerate the `_balanced` files,
 they will silently drift stale with no pipeline step to catch it. Flagged here rather than fixed —
 building a `_balanced` generator is a separate, scoped decision, not part of closing this precondition.
+
+**Investigated 2026-09-01, per founder instruction, before treating this as closed. Three
+questions asked: what depends on them, does a retrain read them, can they be regenerated or do
+they need reconstructing.**
+
+- **Nothing in the live pipeline reads them.** `kaggle/train_ddp.py:310` — the actual training
+  data loader — hardcodes `data_files={"train": "train_sft.jsonl", "validation": "val_sft.jsonl"}`.
+  `scripts/upload_dataset.py`, `scripts/hf_clean_upload.py`, `scripts/check_eval_split.py`, and
+  `run.py` all reference only the unbalanced pair. The `_balanced` files appear in exactly one
+  place in code: `verify_sft_defect_free.py`'s own sweep list (it checks them for defects, it does
+  not feed them anywhere). **A retrain does not consume them. This is not a precondition of the
+  retrain closed above — it is a separate, orphaned artifact.**
+- **Origin traced via `git log --follow`:** created whole-cloth in commit `ca17114` (2026-06-21),
+  message *"balanced 1841 pairs across 11 canonical subdomains — 200-pair cap per subdomain for
+  v9 training"*. The commit adds only the two output files — no script. **No generator was ever
+  committed at any point in this repo's history; the balancing logic that produced them exists
+  nowhere but in that one commit's output.** They predate the RAG-first architecture (R10,
+  2026-07-03) and were built for v9, which failed gate (80.0% in-corpus / 40% refusal, per the
+  Gate History table) and was superseded by v11→v16. No commit since has touched them except the
+  quarantine scripts' incidental `datasets/**/*.jsonl` glob.
+- **They cannot be mechanically regenerated from the unbalanced files** — "regenerate" would mean
+  writing a *new* script that reimplements the unrecorded 200-per-subdomain cap against the
+  *current* `cleaned_pairs/` (4,442 pairs, subdomain set has grown since v9's 11 canonical
+  subdomains) — a fresh build, not a reproduction of the original artifact. Reconstructing the
+  *original* 1,841-pair file exactly is not possible; the input state (`cleaned_pairs/` as it
+  stood 2026-06-21) is itself long since superseded by every correction since.
+
+**Decided and executed 2026-09-01: DELETED.** Per founder instruction — an unreproducible training
+artifact sitting in the repo is a trap for whoever finds it next and assumes it's current, same
+class of defect as everything else this audit has been closing, one level up (fabricated facts,
+mislabeled citations, now an unlineaged data file). `train_sft_balanced.jsonl` and
+`val_sft_balanced.jsonl` removed via `git rm`; the pair also dropped from
+`verify_sft_defect_free.py`'s `SFT_FILES` sweep list — a defect check run against a file nothing
+consumes is a check that can only ever pass, which is its own quiet trap. If a subdomain-balanced
+training run is wanted later, it gets a real generator committed against the *current*
+`cleaned_pairs/` — a different piece of work with a different input, not a resurrection of this
+pair.
 
 **Maintenance rule for this table going forward:** the next corpus-correction script (v6 and
 beyond) adds a row here with its own date, count, and file — and updates the TOTAL — instead of
