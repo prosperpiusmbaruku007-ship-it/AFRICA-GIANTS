@@ -2,8 +2,87 @@
 
 Last updated: 2026-09-01 (Tier 3 verification + fixes; whole-corpus picture after Tier 1+2+3;
 corporate/partnership tax source pass complete; 🔴 PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT
-found and fixed same day; Finance Act 2026 read in full and the staleness-check mechanism built
-— see "GROUNDED IS A SNAPSHOT, NOT A PROPERTY" below, the more valuable finding of the two)
+found and fixed same day; Finance Act 2026 read in full and the staleness-check mechanism built;
+PAYE_NONRESIDENT_RATE grounded; verified_as_at bootstrap census run across all 250 locked
+facts, extended to the 28 Finance-Act-bound ones — see "GROUNDED IS A SNAPSHOT, NOT A
+PROPERTY" below)
+
+---
+
+## ✅ verified_as_at bootstrap census + PAYE_NONRESIDENT_RATE grounded, 2026-09-01
+
+**PAYE_NONRESIDENT_RATE grounded first, per instruction — same starting position as the EFD
+threshold, different outcome.** Never checked against primary statute at any point (secondary
+PWC-portal source only, despite a "CONFIRMED" status). Direct read of Cap.332 R.E.2019: s.81's
+own heading is literally *"Withholding by employers"* — the PAYE mechanism. First Schedule
+para 4(a)(ii): non-resident withholdee flat 15%; resident withholdee follows the progressive
+para 1 bands. Checked every Finance Act touching the First Schedule, 2021–2026 individually —
+none touches para 4(a). **The value held.** Unlike the EFD threshold, "probably right" turned
+out to be right this time — but it was checked, not assumed, which is the only thing that
+makes that outcome mean anything. Citation upgraded from portal page to primary Act (R28).
+`rates.NEVER_GROUNDED` is now empty as a result — the mechanism working, not evidence nothing
+is left to ground.
+
+**The bootstrap census, run exactly as scoped.** `verified_as_at` added to every locked fact.
+Populated ONLY where `verified_by` shows explicit primary-source-read language (direct/verbatim
+read, quoted verbatim, a source pass that read the Act in full) **with an explicit date in that
+same string** — never inferred from `verified_date`/`effective_date`, which this session proved
+unreliable (`paye_nonresident_flat_rate` itself carried a `verified_date` that was edit-metadata,
+not verification evidence). Real population: **250 facts**, not the 172 first reported — a
+second undercounting bug in the census script's own first two runs, found and fixed before the
+result was cited (78 facts are bare strings with no metadata structure at all, e.g.
+`vat_deferment_form_number: "ITX 247.02.E"`, invisible to a script that only walks dict-shaped
+values). **Result: 31 of 172 dict-shaped facts (18%) honestly datable; 141 unknown; 78
+unstructured and can't even carry the field without a schema migration.** An honest small
+number, as asked for — `eval/results/verified_as_at_bootstrap_census_2026_09_01.json`,
+guarded by three structural-invariant tests (`tests/test_verified_as_at_bootstrap.py`),
+including one that independently re-derives every date from its own `verified_by` text rather
+than trusting the census wrote itself correctly.
+
+**Extended to the 28 Finance-Act-bound facts — the cheap direct extension, built.** Same
+mechanism as `rates.py`'s registry, applied to the one category proven to bite twice this
+session. 14 of 28 already pass outright (real 2026 dates from the census). The other 14 are
+tracked in `KNOWN_GAPS` (`tests/test_locked_facts_finance_act_freshness.py`) with individual
+reasons and `xfail` rather than silently passing or blocking the suite — same shape as
+`presumptive_income_cue_probes.jsonl`'s `known_failing` field, and a companion test fails the
+moment a gap starts passing without `KNOWN_GAPS` being updated in the same commit. Both
+controls proven to fire before commit (a stale-but-untracked gap, and a stale-and-untracked
+*passing* fact simulated on `vat_standard_rate`), values reverted after.
+
+**Confirmed, not assumed: the whole-corpus grounded/ungrounded audit is unaffected by the
+`verified_date` ambiguity.** Checked `scripts/audit_fact_claim_grounding.py`'s own
+`CITATION_FIELDS` constant — `('verified_by', 'primary_source', 'source', 'section',
+'source_note', ...)` — no date field anywhere in the classification logic. Checked
+`PROGRESS.md` itself: zero mentions of `verified_date` in the entire Tier 1/2/3 write-up. The
+240/251 figure was built from citation TEXT, not date fields, so it does not need revisiting on
+this account — it remains exactly what the "grounded is a snapshot" entry above already says it
+is: correct about tracing to law when checked, silent about whether that law has since moved.
+
+### GN registry and periodic-cadence groups — scoped, not built
+
+Per instruction, findable rather than rediscovered. The Finance-Act mechanism (a single
+incrementing `CURRENT_FINANCE_ACT_YEAR`) does not transfer to either remaining group:
+
+- **61 GN-bound facts.** GNs land per-topic, ad hoc, on no shared schedule — GN605A (wages),
+  GN487A (immigration), GN448Y (VAT threshold) are unrelated instruments with unrelated
+  numbering. There is no single counter to compare a `verified_as_at` year against. The
+  mechanism this group needs is a **registry of the current GN per topic**, maintained by
+  whoever notices a new one supersedes an old one — a watchlist, not a comparison. Cheapest
+  version: a dict of `{topic: (current_GN_number, verified_as_at)}` and a test asserting every
+  GN-citing fact's number matches the registry's current one for its topic — catches a fact
+  left pointing at a superseded GN, but the registry's OWN currency still depends on a human
+  noticing a new GN exists, which no mechanism here can automate.
+- **The remainder (~83 facts): BRELA/Companies Act, OSHA Act, immigration procedural facts,
+  fee schedules with no amending-Act lineage.** No event triggers a recheck — these drift on
+  whatever cadence the underlying institution changes its own administrative practice, which is
+  irregular and unannounced (e.g. `electrical_test_fee_reduction_initial/_final`'s only source
+  is a newspaper quoting OSHA's CEO — no GN or Government fee schedule was ever located for
+  it). This group needs a **periodic re-verification cadence** (e.g. re-touch every N months),
+  not an event trigger — closer to the existing "run every July when Finance Act published"
+  skill in spirit, but with no natural annual anchor to hang it on.
+
+Neither is a proposal; both are named so the next person scoping this doesn't re-derive the GN
+per-topic / no-single-counter constraint from scratch.
 
 ---
 
