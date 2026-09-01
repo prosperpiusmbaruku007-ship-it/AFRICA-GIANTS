@@ -2,7 +2,135 @@
 
 Last updated: 2026-09-01 (Tier 3 verification + fixes; whole-corpus picture after Tier 1+2+3;
 corporate/partnership tax source pass complete — corporate_tax_rate/amt_loss_companies_only
-closed, DSE float defect quarantined, retrain precondition reopened pending re-regeneration)
+closed, DSE float defect quarantined, retrain precondition reopened pending re-regeneration;
+🔴 PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT found and fixed same day — shipped compute engine
+was serving wrong figures since 2026-07-01)
+
+---
+
+# 🔴 PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT, 2026-09-01 — a shipped compute engine returned wrong figures for two months
+
+**Severity note, stated plainly because it outranked everything else queued this session:** this
+is not a documentation gap or an ungrounded fact. `chike/rules_engine/presumptive.py` computes a
+real TZS figure and hands it to the user with the engine's full deterministic authority — no
+model in the loop, nothing to catch it downstream. It has been wrong, for real turnover
+questions, since **1 July 2026**. Found 2026-09-01 while verifying an unrelated PAYE fact
+(Finance Act 2021 s.25's 8% band), not by any scheduled check.
+
+## What Finance Act 2026 s.27(a) actually changed — read verbatim in full, not from the first change found
+
+The whole point of reading the full paragraph rather than stopping at the first diff: a ceiling
+change + a rate change + a new exemption arriving in ONE amendment is exactly where a fourth
+change hides. It was checked for, and there is one — s.27(c) touches paragraph 4 (withholding
+rates), unrelated to this engine, noted and not actioned.
+
+Three changes to First Schedule para 2, all confirmed independently against the amending Act's
+own verbatim text (fetched in fragments to force literal quotation rather than a paraphrased
+summary):
+
+1. **para 2(2): the presumptive turnover ceiling.** TZS 100,000,000 → **200,000,000**. Quoted:
+   *"deleting the figure '100,000,000' and substituting for it the figure '200,000,000'."*
+2. **para 2(3): the top band's rate.** 3.5% → **4.0%** of full turnover, and the band now runs
+   to the new 200M ceiling instead of stopping at 100M. The **4M–7M and 7M–11M bands are
+   CONFIRMED UNCHANGED** — same fixed/marginal specs, same boundaries, verified by direct
+   line-by-line comparison against the amended table, not assumed from the ceiling/rate change
+   alone.
+3. **NEW para 2(3) row 2 + para 2(4): a first-12-months exemption for a new business.** An
+   individual's turnover in the 4,000,001–200,000,000 range is NIL for the first 12 months from
+   the date they obtained a TIN "for purposes of commencing a business" — **but this is NOT
+   automatic**. Para 2(4), quoted: the individual "shall apply to the Commissioner for exemption
+   ... and the Commissioner shall grant such exemption where he is satisfied that the applicant
+   fulfils the specified conditions." Two independent facts no question states by default: the
+   TIN date, and whether the Commissioner has actually granted the application.
+
+## The founder's three questions, answered
+
+**1. Does the records-kept axis survive unchanged? Did band boundaries move?**
+No boundary moved. The records-kept divergence window is exactly the 4,000,001–11,000,000 range
+it always was — `presumptive.records_status_matters()`'s constants are untouched, and this is
+now a direct, executable assertion
+(`test_rates_table_matches_the_finance_act_2026_shape`), not an inference from "the ceiling
+changed so probably nothing else did." FA2026 did not touch the two bands where records status
+matters; it only touched the top band above 11M (rate + ceiling) and inserted a new row that
+sits ABOVE and ACROSS all three existing bands (the new-business exemption, when granted,
+pre-empts the whole table for that individual — it does not modify any band's own arithmetic).
+
+**2. What does the 12-month exemption need to be answerable? Never-guess in both directions.**
+Two independent unknowns, both required before the engine can assert TZS 0: the TIN date (never
+stated by a question unprompted) and Commissioner grant status (an administrative fact, not
+derivable from anything a user would say). `compute_presumptive()`'s new
+`new_business_exemption_granted` parameter is `True`/`False`/`None`, and `None` — the only safe
+default absent explicit confirmation of BOTH facts — does not silently drop the exemption from
+the reply: it computes the ordinary band figure as the correct fallback answer AND appends an
+explicit note that TZS 0 may apply, naming the application/grant requirement, so the reply
+neither over-claims (asserting NIL on an unconfirmed exemption) nor under-claims (staying silent
+about a real possibility). This is the same never-guess discipline `records_status_matters`
+already enforces, applied to a second, independent axis.
+
+**3. How did this get missed — and what does it mean for every other engine constant?**
+Traced precisely, not guessed at: `chike/rules_engine/rates.py`'s presumptive-tax section carried
+the comment *"Every Finance Act from 2020 to 2025 was read directly: only FA2022 touches para
+2(3)"* — **true when written, and a silent trap the moment a Finance Act outside that fixed range
+came into force.** Finance Act 2026 was enacted 30 June 2026 and came into force 1 July 2026 —
+**six weeks before this engine's own build date, 2026-08-16.** The verification that produced
+`presumptive_tax_bands_2022`/`presumptive_tax_ceiling_100m` (both dated 2026-08-16 in
+`locked_facts.json`) checked a **fixed historical year range** rather than **every Finance Act
+gazetted as of the actual date the check ran** — an already-existing Act was never read because
+the range that defined "done" was written before it needed to include this year at all.
+
+**Why the corporate/partnership source pass (this same session) didn't catch it either, and why
+that is not the same failure:** that pass read Finance Acts 2019→2026 and correctly confirmed
+FA2026 does not touch First Schedule **paragraph 3** (corporate rates) — true, and verified the
+same way this incident's own fix was verified, by reading the amending text directly. It never
+looked at **paragraph 2** at all, because paragraph 2 (presumptive tax) was outside that pass's
+scope. This is a scope boundary, not a miss inside the boundary — the two are different failure
+shapes and worth keeping distinct: the presumptive engine's incident is "checked a range that
+stopped short of today"; the corporate pass's paragraph-2 blindness is "correctly scoped to
+paragraph 3, never claimed to cover paragraph 2."
+
+**The general lesson, stated as a standing risk rather than a one-off fix:** every rate/threshold
+constant in `rates.py`, and every `locked_facts.json` entry citing a Finance Act, carries an
+implicit "verified through year Y" boundary. Nothing in this repo currently re-checks that
+boundary against the calendar — the existing "when Finance Act or new GN is published" skill
+(CLAUDE.md skills list) updates `locked_facts.json` but **has no step for `rates.py` or any
+`rules_engine` constant**, and the compute engines are newer than that skill's original scope.
+**A constant's own comment recording the year range it was checked against is not a mechanism —
+it is a claim that ages exactly as fast as the next Finance Act, and nothing currently reads that
+claim against today's date.** Not fixed in this pass (a standing-process gap needs its own scoped
+decision, not a reflexive addition here); recorded so it is chosen deliberately rather than
+inherited by accident the way this incident was.
+
+## What was fixed, and what remains
+
+- `chike/rules_engine/rates.py` / `presumptive.py`: ceiling, rate, and the new exemption (full
+  never-guess treatment) — see commit `c2f3cdb`.
+- `chike/clarification.py`: the one hardcoded-ceiling clarification string.
+- `tests/test_presumptive.py`: every pinned figure updated (67 tests, +5 new for the exemption's
+  three states); `eval/accuracy_gate/presumptive_tax_probes_020.jsonl`: pt_01/07/08/09 amounts,
+  pt_11's turnover moved off the now-in-range 150M to a genuinely-above-ceiling 250M.
+- `scripts/locked_facts.json`: `presumptive_tax_bands_2022` and `presumptive_tax_ceiling_100m`
+  corrected per R27 (amended fields only); `presumptive_excluded_services` independently
+  confirmed UNCHANGED by FA2026 (s.27(a) does not touch para 2(1) at all).
+- Corpus: `scripts/correct_corpus_defects_v7.py` (R18: committed before running) — 10 rows
+  quarantined asserting the stale 100M ceiling and/or 3.5% rate as current fact. **Found and
+  fixed a latent bug in the shared v1–v6 quarantine pattern in the same pass**: the KEEP-list
+  only ever excluded a script's own output file, never the rest of `datasets/tier1a/rejected/`,
+  so this defect class's first dry-run matched 2 rows inside an *earlier* pass's quarantine file.
+  Checked whether this had silently corrupted any prior quarantine: no — zero
+  list-shaped `_quarantine` fields exist anywhere in `rejected/` today, so no prior script ever
+  actually hit this path; it was closed before it did any damage, not after. Added to the
+  retrain-precondition table above with the rest.
+- **Not done, flagged rather than silently skipped:** `presumptive_tax_bands_2022` and
+  `presumptive_tax_ceiling_100m` are not in `CONCISE_BILINGUAL_FACTS` (they embed via the
+  `key:value` fallback), so an R15 regen is needed to refresh their retrieval text with the
+  corrected figures — batched with the other pending R15 items, not run separately. Ask-alignment
+  (the discipline applied to `corporate_tax_rate`/`minimum_turnover_tax` earlier this session) was
+  not requested for these two and is a natural follow-up, not done here.
+- **Not implemented, by design:** the loss-carryforward 60%-offset-limit provision (FA2024,
+  unrelated to this incident, found during the corporate source pass) remains unimplemented — this
+  fix closes the presumptive-tax defect it was scoped to, not every open item in `rates.py`.
+
+---
 
 ---
 
@@ -56,7 +184,8 @@ its own artifact (R18) — this table is the rolled-up current state, not a repl
 | OSHA `course_fee` TZS 250,000 (unmatched — every sampled OSHA course is TZS 300,000) | 2026-09-01 | 2 | 0 | same file as above |
 | DSE public-float threshold stated as stale 30% (FA2025 s.60(d)(i) lowered it to 25%, coincidentally the same number as the unaffected tax rate) — found by the corporate/partnership tax source pass, corpus swept before it reached retrain | 2026-09-01 | 6 | 0 | `dse_stale_float_quarantine_2026_09_01.jsonl` |
 | DSE conflation, RE-VERIFIED COMPREHENSIVELY (the other shape — "25% rate requires 25% float" stated as one rule, containing no wrong digit, invisible to the stale-30% regex above) — all 26 remaining DSE-mentioning corpus rows read in context and classified; 6 are the corporate-rate topic, 0 defective | 2026-09-01 | **0 — confirmed clean** | 0 | `eval/results/dse_conflation_verification_2026_09_01.json` (verification only, nothing to quarantine) |
-| **TOTAL QUARANTINED** | | **375** | **16** | 6 files, `datasets/tier1a/rejected/` |
+| Presumptive-tax stale ceiling/rate (100,000,000/3.5% asserted as current fact — Finance Act 2026 s.27(a) raised them to 200,000,000/4.0% WEF 2026-07-01; the SHIPPED COMPUTE ENGINE carried the same stale values, corrected same session — see "PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT" below) | 2026-09-01 | 10 | 0 | `presumptive_stale_ceiling_rate_quarantine_2026_09_01.jsonl` |
+| **TOTAL QUARANTINED** | | **385** | **16** | 7 files, `datasets/tier1a/rejected/` |
 
 **This table's own maintenance rule fired within hours of the "MET" milestone above being
 written**, and is left visible rather than smoothed over: v6 quarantined 6 more rows (2 pairs ×
@@ -68,6 +197,11 @@ the 2 DSE-float rows v6 has since removed from `cleaned_pairs/`. `generate_sft.p
 again before this precondition is MET a second time; not done yet as part of this pass, since the
 router/engine work ahead of ship is the current priority and a regeneration this small is cheap to
 batch with the next one rather than run in isolation.
+
+**Same story again, same day, v7: the presumptive-tax stale-ceiling/rate quarantine (10 more
+rows) landed after the above, for the same reason.** Batching confirmed rather than assumed —
+`generate_sft.py` has not been re-run since v6, so this is the SAME open regeneration, not a
+second one to track separately.
 
 **Separate, larger consequence of the SAME session's `locked_facts.json` edit — surfaced by the
 test suite, not by inspection, and left failing rather than patched around:** retiring

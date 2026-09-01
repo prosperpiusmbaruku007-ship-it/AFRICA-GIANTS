@@ -1,0 +1,39 @@
+{
+  "measured": "2026-09-01",
+  "dry_run": false,
+  "harness": "scripts/correct_corpus_defects_v7.py",
+  "companion_of": [
+    "scripts/correct_corpus_defects.py",
+    "scripts/correct_corpus_defects_v2.py",
+    "scripts/correct_corpus_defects_v3.py",
+    "scripts/correct_corpus_defects_v4.py",
+    "scripts/correct_corpus_defects_v5.py",
+    "scripts/correct_corpus_defects_v6.py"
+  ],
+  "quarantine_file": "datasets/tier1a/rejected/presumptive_stale_ceiling_rate_quarantine_2026_09_01.jsonl",
+  "defect_classes": [
+    "PRESUMPTIVE_STALE_CEILING_OR_RATE"
+  ],
+  "quarantine": {
+    "rows": 10,
+    "by_file": {
+      "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl": 2,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl": 2,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl": 2,
+      "datasets/tier1a/sft/train_sft.jsonl": 4
+    },
+    "by_defect_class": {
+      "PRESUMPTIVE_STALE_CEILING_OR_RATE": 10
+    }
+  },
+  "verification_after": {
+    "datasets_rows_still_matching_any_defect_class": 0,
+    "clean": true
+  },
+  "what_this_does_NOT_do": [
+    "It does not regenerate the SFT files. generate_sft.py must be re-run (behind check_eval_split.py) before any training, or the quarantined rows are still in the exported training set.",
+    "It does not touch eval gate definition files -- none were found asserting the stale ceiling/rate as ground truth in this pass.",
+    "It does not touch the RAG index -- presumptive_tax_bands_2022/presumptive_tax_ceiling_100m are not in CONCISE_BILINGUAL_FACTS, so they embed via the key:value fallback; an R15 regen is still needed to refresh their index text, batched with the other pending R15 items.",
+    "It does not implement the new-business exemption in any authored training pair -- the engine (compute_presumptive) handles it deterministically; no fact/pair needed."
+  ]
+}
