@@ -1,0 +1,37 @@
+{
+  "measured": "2026-09-01",
+  "dry_run": false,
+  "harness": "scripts/correct_corpus_defects_v6.py",
+  "companion_of": [
+    "scripts/correct_corpus_defects.py (v1)",
+    "scripts/correct_corpus_defects_v2.py (v2)",
+    "scripts/correct_corpus_defects_v3.py (v3)",
+    "scripts/correct_corpus_defects_v4.py (v4)",
+    "scripts/correct_corpus_defects_v5.py (v5)"
+  ],
+  "quarantine_file": "datasets/tier1a/rejected/dse_stale_float_quarantine_2026_09_01.jsonl",
+  "defect_classes": [
+    "DSE_STALE_FLOAT_30"
+  ],
+  "quarantine": {
+    "rows": 6,
+    "by_file": {
+      "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl": 2,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl": 2,
+      "datasets/tier1a/sft/train_sft.jsonl": 2
+    },
+    "by_defect_class": {
+      "DSE_STALE_FLOAT_30": 6
+    }
+  },
+  "verification_after": {
+    "datasets_rows_still_matching_any_defect_class": 0,
+    "clean": true
+  },
+  "excluded_false_positive": "tier1a_income_tax_adv_... GN487A pair \"Mimi mgeni nataka kumiliki asilimia 30 ya hisa katika kampuni ya Kitanzania inayofanya rejareja\" contains the literal substring \"asilimia 30 ya hisa\" with no DSE mention at all -- an unrelated non-citizen-ownership question, correctly excluded by the DSE-context requirement. Found during pattern development, not assumed absent (R17).",
+  "what_this_does_NOT_do": [
+    "It does not regenerate the SFT files. generate_sft.py must be re-run (behind check_eval_split.py) before any training, or the quarantined rows are still in the exported training set.",
+    "It does not touch eval gate definition files -- none were found to assert the stale 30% DSE float threshold as ground truth in this pass.",
+    "It does not touch the RAG index. R15 regeneration is pending and covers this together with the other 2026-09-01 locked_facts.json corrections."
+  ]
+}

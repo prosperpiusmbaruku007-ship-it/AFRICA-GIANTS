@@ -1,6 +1,8 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-09-01 (Tier 3 verification + fixes; whole-corpus picture after Tier 1+2+3)
+Last updated: 2026-09-01 (Tier 3 verification + fixes; whole-corpus picture after Tier 1+2+3;
+corporate/partnership tax source pass complete — corporate_tax_rate/amt_loss_companies_only
+closed, DSE float defect quarantined, retrain precondition reopened pending re-regeneration)
 
 ---
 
@@ -52,7 +54,50 @@ its own artifact (R18) — this table is the rolled-up current state, not a repl
 | "Section XII" foreign-company citation (real: Companies Act Cap.212 Part XIII, ss.320-328) | 2026-09-01 | 13 | 0 | `tier3_confirmed_wrong_quarantine_2026_09_01.jsonl` |
 | P45/P9 conflation (P9 is Kenyan KRA terminology; real TZ term is the ITA s.85(3)(b) withholding certificate) | 2026-09-01 | 3 | 1 | same file as above |
 | OSHA `course_fee` TZS 250,000 (unmatched — every sampled OSHA course is TZS 300,000) | 2026-09-01 | 2 | 0 | same file as above |
-| **TOTAL QUARANTINED** | | **369** | **16** | 5 files, `datasets/tier1a/rejected/` |
+| DSE public-float threshold stated as stale 30% (FA2025 s.60(d)(i) lowered it to 25%, coincidentally the same number as the unaffected tax rate) — found by the corporate/partnership tax source pass, corpus swept before it reached retrain | 2026-09-01 | 6 | 0 | `dse_stale_float_quarantine_2026_09_01.jsonl` |
+| **TOTAL QUARANTINED** | | **375** | **16** | 6 files, `datasets/tier1a/rejected/` |
+
+**This table's own maintenance rule fired within hours of the "MET" milestone above being
+written**, and is left visible rather than smoothed over: v6 quarantined 6 more rows (2 pairs ×
+3 files: `cleaned_pairs`, `raw_sources`, `train_sft.jsonl` — `val_sft.jsonl` unaffected) found by
+the corporate/partnership source pass, after the MET declaration above and before any retrain ran.
+**The MET declaration above is therefore now STALE with respect to `train_sft.jsonl`** — it was
+regenerated from `cleaned_pairs/` on 2026-09-01 *before* v6 ran, so it still physically contains
+the 2 DSE-float rows v6 has since removed from `cleaned_pairs/`. `generate_sft.py` must be re-run
+again before this precondition is MET a second time; not done yet as part of this pass, since the
+router/engine work ahead of ship is the current priority and a regeneration this small is cheap to
+batch with the next one rather than run in isolation.
+
+**Separate, larger consequence of the SAME session's `locked_facts.json` edit — surfaced by the
+test suite, not by inspection, and left failing rather than patched around:** retiring
+`amt_loss_companies_only` (consolidation into `minimum_turnover_tax`, per R27, this pass) removed
+one standalone key from the middle of the file. `build_fact_texts()` assigns index rows by walking
+`locked_facts.json` in order, so every fact after the removed key's old position shifted down by
+one row. `scripts/check_facts_index_sync.py`'s `PINNED` dict hardcodes row numbers for facts that
+resolve as `present_elsewhere` rather than by exact-text match — **29 of those pins are now stale**,
+confirmed by running the check locally against the prospective (not-yet-shipped) index:
+`gn487a_license_lending_is_facilitation` moved row 91→90, and every pin at or after that position
+shifted the same way. `tests/test_fact_group_consolidation.py::test_sync_check_resolves_every_
+member_as_GROUPED_on_the_post_regen_index` now fails, correctly — this is the pin system doing
+exactly what R18's "stale pins" fix was built to do: fail loudly rather than silently serve a wrong
+row number.
+
+**Deliberately NOT hand-patched.** Updating 29 row numbers in `PINNED` to match a locally-computed
+prospective index would make the test green without making its underlying claim true — the actual
+SHIPPED `rag_embeddings.npy`/`rag_facts_text.json` in `chike-inference/` and `kaggle/` have not
+been regenerated at all, so patching the pins locally would be exactly the vacuous-fix shape R20
+warns against: the test passes, the census looks clean, and production is still unverified against
+the new fact set. **The correct fix is R15 in full** (Kaggle regen → verify → fetch embeddings →
+commit to both dirs → redeploy Modal → re-run the eval gate), which was already going to be needed
+to make the corrected `minimum_turnover_tax`/`corporate_tax_rate` content retrievable in the first
+place. Batching that regen with the pin re-verification is the same discipline as the local-levy
+facts' `pending_r15` precedent — one cycle, not two.
+
+**This blocks the next push.** The pre-push hook runs the full offline suite; this test is part of
+it. Either run R15 (which will also require recomputing and committing new pin values against the
+actually-shipped index, not the prospective one) before the next push, or explicitly accept the red
+test as a known, recorded gap if a push is needed sooner for unrelated reasons — not silently
+skipped or worked around.
 
 **The number to sit with, per founder instruction: the GN487A softened-visa defect alone (129 rows)
 is larger than the mining fabrication (17), the WCF deadline (6), and the 9%-band share of the
@@ -1183,6 +1228,75 @@ source pass, one fewer unknown than the scope entry above assumed when it was wr
 **Not started yet — this is the scope confirmation the founder asked for, execution begins on
 explicit go-ahead**, consistent with every other phase in this file (report/scope first, build on
 instruction).
+
+---
+
+## ✅ SOURCE PASS COMPLETE, 2026-09-01 — corporate_tax_rate and amt_loss_companies_only closed, one scoping error caught in the process
+
+**Scoping correction, found by the pass itself, not assumed correct going in:** the scope above
+(and the execution-order step 1 above it) named "Cap 332's charging section + Third Schedule" as
+what to read. **That instruction was wrong.** Corporate tax RATES live in the **First Schedule**,
+paragraph 3 — s.4(3)(a) cross-references it explicitly ("applying the relevant rates of income tax
+determined under paragraph 1, 3(1) or 3(3) of the First Schedule"). The **Third Schedule** governs
+capital allowances / depreciation (written-down-value pools, a different topic; the only Third
+Schedule hit found in any Finance Act 2019–2026 was FA2024 s.47, a wording fix adding "equal" to
+"two portions" in its own paragraph 2(3) — capital-allowance housekeeping, unrelated to rates).
+**This is the direction verification is supposed to run in — the instruction was checked against
+primary text rather than assumed, and it was the instruction that was wrong.** Recorded per
+founder instruction, not corrected silently.
+
+**Method:** R.E.2019 baseline (First Schedule para 3) read in full from a clean MOF-hosted PDF,
+then every Finance Act 2020→2026 checked individually against it for amendments touching
+paragraph 3 or s.4(8) (the charging-section AMT exemption). R.E.2023's consolidation was
+cross-checked where legible — several vendors' copies of it (TRA, elibrary.osg.go.tz, WCTPA) share
+a font-corruption fault across the same passages, so it was not relied on alone anywhere it
+mattered.
+
+**Paragraph 3, current state, verified through Finance Act 2026:**
+
+| provision | rate/rule | last touched |
+|---|---|---|
+| 3(1) standard rate | **30%** | unchanged 2019→2026 |
+| 3(2)(a) DSE-listed | **25%** for 3 years from listing, if **≥25%** of equity issued to public | float threshold **30%→25%**, FA2025 s.60(d)(i) — the RATE (25%) is unchanged, only the qualifying float condition moved, coincidentally to the same number |
+| 3(2)(b) new vehicle/tractor/boat-engine assembly plant | 10%, 5 years | unchanged |
+| 3(2)(c) new pharma/leather manufacturer | 20%, 5 years | unchanged |
+| 3(2)(d) sanitary pads manufacturer | 25%, but only 1 Jul 2019–30 Jun 2021 | **window expired**; not locked as a fact, flagged so it isn't authored as current if this domain expands later |
+| 3(3) AMT / perpetual-loss corporations | **1%** of 3rd-year turnover | raised from 0.5%, FA2025 s.60(d)(ii) — already matched `minimum_turnover_tax`'s existing 2026-08-31 verification exactly |
+| 3(4) repatriated income, non-resident's domestic PE | 10% | unchanged |
+
+**FA2020 is corroborated, not verified — recorded as such rather than silently upgraded.** Every
+primary link (tra.go.tz, tcra.go.tz, the RSM highlights PDF) was dead or blocked. RSM's practitioner
+summary of that Act's Income Tax Act changes (PAYE threshold to 270,000; beneficial-ownership/s.69A
+non-resident deeming; s.10 strategic-project exemption power; interest-free-loan restriction) reads
+as complete and mentions no rate change, which is corroboration — a secondary source agreeing with
+absence of change is not the same evidentiary weight as reading the amending text, per this
+project's own standard (R28). If FA2020's primary text ever becomes reachable, it should be
+re-checked properly rather than treated as already covered.
+
+### Corrections applied
+
+1. **`corporate_tax_rate` (30% standard / 25% DSE-listed) — value CONFIRMED correct.** Citation
+   upgraded from a bare TRA portal page to First Schedule para 3(1)/3(2)(a) + Finance Act 2025
+   s.60(d)(i), per R28: verification earns the citation upgrade even when the value doesn't
+   change. This closes the last Tier 1 deferral.
+2. **`minimum_turnover_tax` and `amt_loss_companies_only` consolidated** onto `minimum_turnover_tax`
+   per R27 (amended fields only — the existing 0.3%/0.5% `wrong_patterns` family and
+   `_narrowing_note` untouched; `amt_loss_companies_only`'s 4 patterns folded in verbatim; the key
+   retired). **Real gap found and fixed in the same pass:** s.4(8) exempts agriculture, health and
+   education (permanent, no sunset) and tea processing (Finance Act 2024 s.34, explicit sunset —
+   quoted verbatim in the fact's `verified_by` — 1 Jul 2024 to 30 Jun 2027) from the AMT regardless
+   of loss history. Neither fact mentioned this. An omitted exemption reads exactly as authoritative
+   as a wrong rate: it tells a qualifying corporation it owes a tax it doesn't.
+3. **Corpus swept for the DSE float/rate conflation before it reached retrain**, per founder
+   instruction — the exact kind of defect that "looks right" because FA2025 moved the float
+   threshold to the same digits as the unaffected rate. Found 2 pairs (6 file occurrences:
+   `cleaned_pairs`, `raw_sources`, `train_sft.jsonl`) asserting the stale pre-2025 30% float
+   condition in the present tense. `scripts/correct_corpus_defects_v6.py` (R18: committed before
+   run) quarantined all 6, verification-after confirms 0 remaining —
+   `eval/results/corpus_correction_v6.json`. **This reopens the retrain-precondition table above**
+   (see the note directly under it) — `train_sft.jsonl` was regenerated hours before v6 ran and
+   still physically contains the 2 rows v6 removed from `cleaned_pairs/`; `generate_sft.py` needs a
+   second re-run before the precondition is MET again.
 
 ---
 
