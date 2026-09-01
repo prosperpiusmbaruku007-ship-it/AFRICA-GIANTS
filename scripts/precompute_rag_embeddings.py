@@ -308,6 +308,29 @@ CONCISE_BILINGUAL_FACTS = {
         'ya ajali. Fidia ya ajali na magonjwa ya kazini hulipwa na WCF (mwajiri huchangia 0.5% ya '
         'mishahara). Usajili wa OSHA na wa WCF ni tofauti; vyote vinahitajika. WCF huanza tangu '
         'mfanyakazi wa kwanza — HAKUNA kizingiti cha wafanyakazi wawili.',
+
+    # ASK-ALIGNED FROM THE FIRST DRAFT, not retrofitted after a rank-check failure — the nat_34
+    # cost (five candidates, two rank-check passes) is what re-leading AFTER the fact costs, so
+    # this was written topic-word-first per the standing rule (CLAUDE.md, "SWAHILI-FIRST IS
+    # NECESSARY AND NOT SUFFICIENT"). Leads with 'Kodi ya kampuni' (what a company owner types),
+    # not the regulatory label ('First Schedule para 3'); the citation stays in locked_facts.json
+    # only, per the standing "no citation clutter in the embedded text" rule two entries above.
+    'corporate_tax_rate':
+        'Kodi ya kampuni Tanzania ni asilimia 30 kwa kampuni za kawaida. Kampuni zilizoorodheshwa '
+        'DSE (Soko la Hisa la Dar es Salaam) zenye angalau asilimia 25 ya hisa zao kwa umma '
+        'hulipa asilimia 25 kwa miaka mitatu tangu tarehe ya kuorodheshwa.',
+
+    # ASK-ALIGNED FROM THE FIRST DRAFT. Leads with the SITUATION a company owner would describe
+    # ('kampuni yenye hasara miaka mitatu mfululizo') rather than the technical term 'Alternative
+    # Minimum Tax' or 'AMT', which is not vocabulary a Tanzanian trader searches in. Includes the
+    # s.4(8) exemptions found missing from both source facts during the 2026-09-01 corporate/
+    # partnership source pass — an omitted exemption is as misleading as a wrong rate, so it
+    # belongs in the retrieval-facing text too, not only in locked_facts.json's fuller `fact`
+    # field.
+    'minimum_turnover_tax':
+        'Kampuni yenye hasara miaka mitatu mfululizo hulipa kodi ya chini (AMT) ya asilimia 1 '
+        'ya mauzo ya mwaka wa tatu, tangu Julai 2025 (awali ilikuwa asilimia 0.5). Haitumiki kwa '
+        'kampuni za kilimo, afya, elimu, wala kampuni za usindikaji chai hadi Juni 2027.',
 }
 
 # --- FACT GROUPS: many `key: number` rows collapsed into ONE contextual passage ------------

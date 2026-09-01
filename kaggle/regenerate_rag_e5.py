@@ -382,6 +382,13 @@ critical_queries = [
     ('Market dues no national amount (new fact)', 'query: Ushuru wa genge langu sokoni ni shilingi ngapi?', ['Sheria ya Masoko (Cap 106)']),
     ('Market dues exemptions (new fact)', 'query: Ninauza maandazi sokoni, ninatakiwa kulipa ushuru wa soko?', ['maandazi na samaki wa kukaanga']),
     ('Business licence fee national schedule, local collection (new fact)', 'query: Leseni ya biashara yangu inagharimu kiasi gani, na nani hutoa?', ['Ada imepangwa KITAIFA']),
+    # ── CORPORATE/PARTNERSHIP TAX SOURCE PASS, 2026-09-01 ──────────────────────────
+    # corporate_tax_rate and minimum_turnover_tax moved into CONCISE_BILINGUAL_FACTS this
+    # session (ask-aligned from the first draft, not retrofitted -- see the comments beside
+    # each entry in scripts/precompute_rag_embeddings.py). Anchors verified unique against
+    # build_fact_texts()'s prospective 188-row output before this file was packaged.
+    ('Corporate tax rate (ask-aligned)', 'query: Kodi ya kampuni Tanzania ni asilimia ngapi?', ['kampuni za kawaida']),
+    ('AMT loss-making corporation (ask-aligned)', 'query: Kampuni yangu ina hasara miaka mitatu mfululizo, nalipa kodi gani?', ['hasara miaka mitatu mfululizo']),
 ]
 
 # ── KNOWN-FAILING GUARDS (2026-08-22) ────────────────────────────────────────────

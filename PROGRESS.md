@@ -1391,10 +1391,74 @@ reopened by it.**
 sector reading is router-level text matching (no slot extractor), matching presumptive.py's own
 "no REQUIRED_FIELDS" design note — this is a deliberate scope match, not a shortcut. The
 loss-carryforward 60%-offset-limit provision (FA2024) that `eval_211` actually asks about remains
-unimplemented; the fix here was to stop answering it wrong, not to build it. This engine is
-compute-only and never touches the RAG index, so it does not depend on the R15 regeneration still
-pending from the retrain-precondition section above — that item stays open for the fact-path
-domains it actually affects, unrelated to this build.
+unimplemented; the fix here was to stop answering it wrong, not to build it. The engine itself is
+compute-only and never touches the RAG index; `corporate_tax_rate` and `minimum_turnover_tax` as
+FACTS do (see the ask-alignment work below), which is the R15-dependent half of this build.
+
+**⭐ THE MOST VALUABLE FINDING IN THIS BUILD, RECORDED EXPLICITLY RATHER THAN LEFT INSIDE A LIST
+ITEM: eval_211 is R18 working exactly as designed, not a footnote to the routing work.** A bare
+loss-year mention (`hasara miaka 4 mfululizo`, no income-tax cue anywhere in the sentence) was
+enough to trigger the first version of path 1b. The question was actually about the
+loss-carryforward OFFSET LIMIT — an unimplemented FA2024 provision — and the engine answered AMT
+applicability instead, with full deterministic authority, to a question that was never asked. A
+wrong-topic answer wearing the engine's confidence is the same class of harm as a wrong number,
+and it would have shipped invisibly: nothing about the reply would have looked wrong to read,
+only to someone who knew what was actually asked. **It was caught because
+`eval/routing/sweep_corporate_tax_routing.py` was committed BEFORE it ran, on the first pass, as
+routine practice rather than as a response to a known risk** — the sweep was not written because
+anyone suspected this defect; it was written because R17/R18 require it for any router change,
+and running it is what surfaced eval_211 as a diff instead of a live incident. This is the
+argument for the discipline in its purest form: the catch was cheap specifically because the
+harness existed and ran before anything shipped, not after.
+
+---
+
+## ✅ PRE-REGEN VERIFICATION, 2026-09-01 — ask-alignment written first-draft, retrievability swept across all guards before the Kaggle regen runs
+
+Two checks requested before the R15 regen, both done here rather than deferred to after the
+regen ships (which is the wrong direction for the ask-alignment lesson to run — nat_34 cost two
+rank-check passes precisely because it was fixed after a failure instead of written right the
+first time).
+
+**1. Ask-alignment, written first-draft, not retrofitted.** `corporate_tax_rate` and
+`minimum_turnover_tax` had no `CONCISE_BILINGUAL_FACTS` entry at all before this — they would
+have embedded via the default `key: value` fallback, the exact rendering CLAUDE.md's R15 note
+says retrieves worse. Two entries added to `scripts/precompute_rag_embeddings.py`, each opening
+with the object/situation a real asker would type before the value, the regulatory label held
+until the end (which in both cases means it isn't in the embedded text at all — citations stay
+in `locked_facts.json` only, per the standing "no citation clutter in the embedded text" rule):
+- `corporate_tax_rate`: *"Kodi ya kampuni Tanzania ni asilimia 30 kwa kampuni za kawaida..."* —
+  leads with "kodi ya kampuni" (what a company owner types), not "First Schedule para 3".
+- `minimum_turnover_tax`: *"Kampuni yenye hasara miaka mitatu mfululizo hulipa kodi ya chini
+  (AMT)..."* — leads with the loss SITUATION a trader would describe, not the technical term
+  "Alternative Minimum Tax", which is not vocabulary a Tanzanian trader searches. Also folds in
+  the s.4(8) exemptions (agriculture/health/education/tea-processing) found missing from the
+  fuller `locked_facts.json` text during the source pass — an omitted exemption belongs in the
+  retrieval-facing text too, not only in the field used for validation.
+
+**2. Retrievability swept across ALL guards, not just the two new ones — the nat_23 lesson
+applied before shipping instead of after.** Two new `critical_queries` entries added to
+`kaggle/regenerate_rag_e5.py` (`Corporate tax rate (ask-aligned)`,
+`AMT loss-making corporation (ask-aligned)`), anchors verified unique against the prospective
+188-row index before packaging. Then `eval/index_quality/verify_regen_guard_retrievability.py`
+run across the FULL guard set — the tool built specifically because a content rewrite is an
+index-composition change that can perturb a neighbour's rank (nat_23 moved 45→46 from a
+DIFFERENT row's rewrite, within tolerance but real, and only visible because that script walks
+every guard, not only the one being changed). Result, `eval/results/regen_guard_retrievability_
+post_consolidation.json`: **33 total guards, 31 PASS, 2 KNOWN-FAIL (both pre-existing,
+unaffected), 0 RETRIEVAL_REGRESSION, 0 STALE-KNOWN-FAIL, 0 DEAD_ANCHOR.** Both new guards pass at
+**rank 1** — the best outcome, not merely inside the top-3 window — and zero existing guards were
+displaced by adding the two new rows. RANK_GATE_CASES: 3/3 pass, 0 regressions.
+
+**Still pending, unblocked by this:** the actual Kaggle R15 regen (embeddings computation,
+verification against `GitHub main HEAD`, HuggingFace fetch, commit to both `chike-inference/` and
+`kaggle/`, Modal redeploy, eval-gate re-run) — everything above was the local, offline-computable
+half (text authoring + local-e5 diagnostic rank check, which this repo's 2026-08-26 three-anchor
+zero-drift reproduction licenses for diagnosis though never for shipping an index). The
+retrain-precondition table's reopened state and the `test_sync_check_resolves_every_member_as_
+GROUPED_on_the_post_regen_index` xfail marker are both still exactly where the last section left
+them — this section closes the pre-regen content-quality checks the founder asked for, not the
+regen itself.
 
 ---
 
