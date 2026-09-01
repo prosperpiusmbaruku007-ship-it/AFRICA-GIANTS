@@ -850,7 +850,7 @@
     "status": "CONFIRMED"
   },
   "paye_nonresident_flat_rate": {
-    "fact": "Non-resident employees pay PAYE at a flat 15% rate — NOT the progressive bands. This is a final withholding tax.",
+    "fact": "Non-resident employees pay PAYE at a flat 15% rate — NOT the progressive bands. This is a final withholding tax (Income Tax Act Cap.332, First Schedule para 4(a)(ii), the rate table for section 81 'Withholding by employers' -- a resident withholdee follows 'the rates prescribed in regulations' i.e. the First Schedule para 1 progressive bands; a non-resident withholdee is flat 15%. Para 4 sits under Division II of Part VII, the final-withholding-payments framework, which is the statutory basis for calling this withholding final rather than an on-account payment.)",
     "correct_value": "15% flat for non-residents",
     "wrong_patterns": [
       "non-resident.*paye.*30%(?!.*resident)",
@@ -859,10 +859,11 @@
       "non-resident.{0,30}paye.{0,30}progressive",
       "wasio wakazi.*paye.*kwa viwango"
     ],
-    "primary_source": "https://taxsummaries.pwc.com/tanzania/individual/taxes-on-personal-income",
-    "verified_by": "PWC Tanzania Individual Tax Summary, Jan 2026",
+    "primary_source": "Income Tax Act, Cap.332, First Schedule para 4(a)(ii) (rate table for s.81 'Withholding by employers')",
+    "verified_by": "Direct read of Cap.332 R.E.2019 baseline text, 2026-09-01, during the PAYE_NONRESIDENT_RATE grounding pass (this constant had never been checked against primary statute at all -- previously sourced only to a PWC portal summary, flagged NEVER_GROUNDED in rates.py). s.81's heading is literally 'Withholding by employers', confirming this is the PAYE-withholding provision, not a different withholding mechanism. Checked every Finance Act that touches the First Schedule (FA2021 s.25 touches only para 1(1); FA2022 s.72 touches para 2(3) and 4(b); FA2023 s.31 touches para 2(5) and 4(c); FA2024 s.46 touches para 2(5) and 4(b)/(c); FA2025 s.60 touches para 2(5), 3(d) and 4(c); FA2026 s.27(c) touches para 4(b) and adds a new 4(d)) -- NONE touches para 4(a), the non-resident-employee rate, which is therefore confirmed unchanged since at least the R.E.2019 baseline through Finance Act 2026.",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED -- grounded to primary statute 2026-09-01 (was previously CONFIRMED on a secondary source only; see correction_note)",
+    "correction_note": "Not a correction to the VALUE -- 15% was already right. This is the R28-adjacent case where the prior secondary-sourced verdict held up under primary-source scrutiny (see business_name_maintenance_fee, R28), upgraded from an ungrounded PWC-portal citation to a primary Act citation. Requested explicitly per founder instruction after this constant was flagged NEVER_GROUNDED in the 2026-09-01 Finance-Act-freshness audit: 'a never-grounded constant in an engine that computes real figures is the same starting position as EFD_ANNUAL, which turned out to be a fabrication defended by three layers... probably right is what we said about the EFD threshold too.' It was not a fabrication this time, but the discipline of checking rather than trusting the prior CONFIRMED status is the same regardless of outcome."
   },
   "brela_striking_off_non_filing": {
     "fact": "A company that fails to file annual returns with BRELA may be deemed defunct and struck off the Register of Companies. Procedure: the Registrar publishes a 30-day notice requiring proof the company is still operating; on failure the name is struck off under the Companies Act, Cap 212. The Registrar may also strike off on his own accord by written notice (2019 amendment). There is NO rule that a company must 'finish its term' before removal — companies have no fixed term. Restoring a struck-off company requires a High Court application.",

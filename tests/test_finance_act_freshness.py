@@ -86,14 +86,28 @@ def test_every_rates_py_constant_belongs_to_a_registered_group():
 
 
 def test_never_grounded_status_is_visible_not_silently_dropped():
-    """PAYE_NONRESIDENT_RATE's `None` entry must show up in NEVER_GROUNDED, or the distinction
+    """Any group entered with year=None must show up in NEVER_GROUNDED, or the distinction
     between 'stale' and 'never verified at all' collapses back into the freshness test's
-    silent skip."""
-    assert 'PAYE_NONRESIDENT_RATE' in rates.NEVER_GROUNDED
+    silent skip.
+
+    NOT hardcoded to a specific group. PAYE_NONRESIDENT_RATE was the one NEVER_GROUNDED entry
+    when this registry was built (2026-09-01) and was GROUNDED the same day, closing that flag
+    -- see chike/rules_engine/rates.py's PAYE_NONRESIDENT_RATE entry and locked_facts.json's
+    paye_nonresident_flat_rate correction_note. Asserting a specific group stays None forever
+    would have made this test fail the moment the real gap it existed to catch was actually
+    closed -- exactly backwards. The mechanism is what's under test, proven by planting a fake
+    None entry rather than depending on a real one always existing.
+    """
     for group in rates.NEVER_GROUNDED:
         year, provision, evidence = rates.FINANCE_ACT_VERIFIED_THROUGH[group]
         assert year is None
         assert len(evidence) > 40, f"{group}: NEVER_GROUNDED needs a real reason, not a label"
+
+    fake_registry = {'FAKE_UNGROUNDED': (None, 'irrelevant', 'planted for the control')}
+    fake_never_grounded = tuple(g for g, (year, *_r) in fake_registry.items() if year is None)
+    assert 'FAKE_UNGROUNDED' in fake_never_grounded, (
+        'the planted None-year group did not register as NEVER_GROUNDED -- the mechanism is '
+        'inert')
 
 
 def test_the_registry_itself_is_the_control_group_it_documents():

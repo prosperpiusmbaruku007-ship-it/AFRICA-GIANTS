@@ -36,12 +36,17 @@ alone — a Finance Act cannot silently amend an Act it does not list as one of 
 so absence from the list is itself a completed, citable check, not an assumption.
 
 `None` in `FINANCE_ACT_VERIFIED_THROUGH` means "never independently verified against primary
-statute text at all" — a different, worse status than "stale": PAYE_NONRESIDENT_RATE is the
-one entry with this status, flagged during this same 2026-09-01 audit, not a new discovery
-about it (it was already noted ungrounded in an earlier Tier 1 pass — see PROGRESS.md). The
-freshness test does not fail on `None` entries; they are a separate, pre-existing item, not a
-staleness incident, and are listed in `NEVER_GROUNDED` so they are not silently invisible to
-anyone reading this registry.
+statute text at all" — a different, worse status than "stale". PAYE_NONRESIDENT_RATE carried
+this status for the first few hours of this registry's existence (2026-09-01): flagged, not a
+new discovery about it (it was already noted ungrounded in an earlier Tier 1 pass), then
+GROUNDED the same day per explicit founder instruction — a never-grounded constant in an engine
+computing real figures is the same starting position the EFD-threshold fabrication had, and
+"probably right" was said about that one too. Value held (15%, First Schedule para 4(a)(ii));
+only the citation moved from secondary to primary. `NEVER_GROUNDED` is currently empty as a
+result — that is the mechanism working, not evidence nothing is left to ground; the next
+constant added without a primary-source check will repopulate it. The freshness test does not
+fail on `None` entries; they are a separate status from staleness, tracked so they are never
+silently invisible to anyone reading this registry.
 """
 
 from decimal import Decimal
@@ -69,13 +74,20 @@ FINANCE_ACT_VERIFIED_THROUGH = {
                    'not touched by s.27(a) at all -- confirmed directly, not inferred from the '
                    'paragraph-2/3/4 changes it does make. Second band (8%) separately '
                    're-confirmed against Finance Act 2021 s.25\'s own verbatim text.'),
-    'PAYE_NONRESIDENT_RATE': (None, 'Income Tax Act Cap.332 (specific section not identified)',
-                              'NEVER GROUNDED to primary statute text at any point -- verified_'
-                              'by is a PwC portal page only (locked_facts.json, paye_nonresident'
-                              '_flat_rate). Flagged in an earlier Tier 1 pass as ungrounded, '
-                              're-flagged here rather than silently carried forward as if this '
-                              'freshness registry had checked it. Needs its own primary-source '
-                              'read, not a Finance-Act diff.'),
+    'PAYE_NONRESIDENT_RATE': (2026, "Income Tax Act Cap.332 First Schedule para 4(a)(ii) "
+                              "(rate table for s.81 'Withholding by employers')",
+                              'GROUNDED 2026-09-01, closing the NEVER_GROUNDED flag this same '
+                              'registry raised earlier the same day. Was secondary-sourced only '
+                              '(a PwC portal page) despite a prior "CONFIRMED" status. Direct '
+                              "read of Cap.332 R.E.2019: s.81's own heading is 'Withholding by "
+                              'employers\' (the PAYE mechanism); First Schedule para 4(a)(ii) '
+                              'sets a non-resident withholdee at flat 15%, resident withholdees '
+                              'follow the progressive para 1 bands. Checked every Finance Act '
+                              'touching the First Schedule (2021-2026): none touches para 4(a) '
+                              '-- see locked_facts.json paye_nonresident_flat_rate\'s '
+                              'verified_by for the per-Act breakdown. Value was already correct; '
+                              'only the citation was upgraded (R28: verification earns the '
+                              'citation upgrade even when the value holds).'),
     'PRESUMPTIVE': (2026, 'Income Tax Act Cap.332 First Schedule para 2',
                     'THE 2026-09-01 INCIDENT ITSELF. FA2026 s.27(a) read verbatim in full and '
                     'the engine corrected the same session -- see the section below for the '
