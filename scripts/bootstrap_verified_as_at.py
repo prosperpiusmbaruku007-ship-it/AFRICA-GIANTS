@@ -94,11 +94,25 @@ def main():
     with io.open(FACTS_PATH, encoding='utf-8') as f:
         facts = json.load(f)
 
-    rows = []
+    # THE POPULATION IS BIGGER THAN THE FIRST RUN COUNTED. locked_facts.json has 252 top-level
+    # keys: 2 underscore-prefixed metadata blocks (_meta, _unresolved_items, not facts), 172
+    # dict-shaped facts (which carry verified_by/primary_source/etc. and are what this script
+    # classifies), and 78 BARE-STRING facts (e.g. vat_deferment_form_number: "ITX 247.02.E")
+    # with no metadata structure at all -- not even a verified_by field to be absent FROM. The
+    # first run of this script silently only reported on the 172, understating the true unknown
+    # backlog by counting a smaller population than actually exists. Fixed here rather than
+    # left uncorrected: the 78 are counted and listed explicitly as their own category, not
+    # folded into "unknown" (they cannot carry a verified_as_at field without a dict-conversion
+    # schema migration, which is a separate, bigger decision than adding one field to an
+    # existing dict) and not silently omitted either.
+    unstructured, rows = [], []
     verified_count = 0
     unknown_count = 0
     for key, obj in facts.items():
-        if key.startswith('_') or not isinstance(obj, dict):
+        if key.startswith('_'):
+            continue
+        if not isinstance(obj, dict):
+            unstructured.append({'key': key, 'value': obj})
             continue
         status, date, reason = classify(obj)
         obj['verified_as_at'] = date if status == 'primary_verified' else 'unknown'
@@ -118,12 +132,22 @@ def main():
         'purpose': 'Bootstrap census: verified_as_at populated ONLY from explicit primary-'
                    'source-read language + an explicit date in the SAME verified_by string. '
                    'Never inferred from verified_date/effective_date.',
-        'total_facts': len(rows),
+        'total_top_level_keys': len(facts),
+        'metadata_blocks_excluded': [k for k in facts if k.startswith('_')],
+        'dict_shaped_facts_classified': len(rows),
         'primary_verified': verified_count,
-        'unknown_backlog': unknown_count,
+        'unknown_backlog_dict_shaped': unknown_count,
+        'unstructured_string_valued_facts': len(unstructured),
+        'unstructured_facts_note': (
+            'These carry no verified_by/primary_source/any metadata field at all -- not '
+            'processed as "unknown" alongside the dict-shaped facts because they cannot carry '
+            'a verified_as_at field without first being converted from a bare string to a '
+            'dict, which is a schema-migration decision bigger than this bootstrap census. '
+            'Effectively unknown-or-worse; listed separately so they are not silently invisible.'),
+        'unstructured_facts': unstructured,
         'rows': rows,
     }
-    print(json.dumps({k: v for k, v in report.items() if k != 'rows'},
+    print(json.dumps({k: v for k, v in report.items() if k not in ('rows', 'unstructured_facts')},
                      ensure_ascii=False, indent=1))
     with io.open(OUT, 'w', encoding='utf-8') as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
