@@ -1172,6 +1172,34 @@ it, rather than composing a clean replacement from the verification findings alo
 
 ---
 
+### R28 — A CORRECTION CANDIDATE CAN BE THE WRONG PARTY. VERIFY AGAINST PRIMARY SOURCE BEFORE EDITING, NOT AFTER.
+
+**Proven 2026-09-01, Tier 3 fix phase — the exception that proves every other case in this file.**
+Every other correction across Tier 1/2/3 moved in one direction: a locked fact was found wrong
+against primary text and fixed. `business_name_maintenance_fee` did not. A research agent, working
+from secondary sources, reported the locked fact's `5,000 TZS` was mislabeled — that it was really
+the application fee, and the true maintenance fee was `1,000 TZS`. Per standing instruction, this
+was NOT edited on that claim alone; BRELA's own dedicated fee page
+(`brela.go.tz/pages/tozo-za-majina-ya-biashara`) was fetched directly first. It states application
+fee `15,000 TZS`, annual maintenance fee (`ada ya uendeshaji`) `5,000 TZS` — **the locked fact was
+already correct. The secondary-sourced correction candidate was the one that was wrong.**
+
+**The general form: a correction candidate is a claim, not a verdict, exactly like the fact it
+proposes to replace.** Everywhere else in this project's correction discipline, the asymmetry runs
+one way — a locked fact is guilty until read against primary text. This case is the reminder that
+the thing telling you the fact is wrong carries the identical burden. A confident secondary source
+(here: two independent-seeming lookups that happened to agree with each other, sharing a lineage
+neither disclosed) is exactly as unverified as the original unlineaged fact it's correcting, and
+"two sources agree" was already ruled insufficient by the EFD threshold precedent (`efd_threshold_tzs_11m`,
+2026-08-29) — this is that same failure mode arriving from the correction side rather than the
+authoring side.
+
+**In practice: before editing a locked fact on a correction candidate's word, fetch the actual
+primary source yourself and read what it says.** If it confirms the candidate, edit per R27. If it
+confirms the incumbent instead, the correct action is recording that the fact survived verification
+— upgrading its citation/`verified_by` from absent to primary-sourced — not editing its value. A
+pass that only ever edits never earns the confidence to also NOT edit when the evidence says not to.
+
 See PROGRESS.md for current project status and next actions.
 
 ---

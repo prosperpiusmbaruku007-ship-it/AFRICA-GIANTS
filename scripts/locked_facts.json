@@ -1747,7 +1747,15 @@
     "status": "CORRECTED 2026-09-01 (Tier 3)",
     "correction_note": "Prior fact cited s.11, which is 'Private and Class Rulings' -- an entirely unrelated provision, not a record-keeping requirement. This is the THIRD stale/wrong TAA Cap.438 section number found in this project (after objection_deposit_requirement's s.51->s.62 and efd_threshold_tzs_11m's s.36->s.44), confirming the same renumbering-trap shape recurring across independently-authored facts. A full sweep of every locked_facts.json entry citing Cap.438 (7 facts total) and of chike/rules_engine + chike/fidelity.py found no further stale TAA section numbers -- these three are the complete set."
   },
-  "legal_citation_amendment_act_sdl": "Sheria ya Elimu na Mafunzo ya Ufundi, Sura ya 82, Kifungu cha 19",
+  "legal_citation_amendment_act_sdl": {
+    "fact": "Sheria ya Elimu na Mafunzo ya Ufundi, Sura ya 82, Kifungu cha 19 (VETA Act, Cap.82, s.19, 'Exemption from levy') -- this is the SUBSTANTIVE SDL exemptions section itself (see sdl_exemption_categories), NOT a citation naming any single amending Finance Act. The key name is a mislabel: s.19 has in fact been amended multiple times -- Acts Nos. 4 of 2013 s.61, 6 of 2014 s.53, 16 of 2015 s.38, 4 of 2017 s.73, and an outstanding, not-yet-applied Act 5 of 2022 -- so there is no single 'the amending Act' this key could correctly name even if it tried to.",
+    "correct_value": "Cap.82 s.19 is the exemptions section itself, amended by five separate Acts over time (2013/2014/2015/2017/2022) -- not a citation to one specific amending Act",
+    "primary_source": "Vocational Education and Training Act, Cap.82 (VETA Act), s.19",
+    "verified_by": "Direct read of Cap.82's 2019 primary consolidation text, 2026-09-01 -- s.19's own amendment-history bracket lists the five Acts above.",
+    "verified_date": "2026-09-01",
+    "status": "CORRECTED 2026-09-01 (Tier 3, follow-up) -- section number was already correct; the key's implied claim (that it names a specific amending Act) was wrong",
+    "correction_note": "Flagged WRONG in the Tier 3 differences report but omitted from the founder's fix order by oversight; fixed as a follow-up. Section 19 (unchanged) is correct as the current exemptions provision, but the key name 'legal_citation_amendment_act_sdl' implies a citation to a specific amending Finance Act, which the fact never provided and which does not exist as a single instrument -- s.19 has been amended five separate times. Key NOT renamed this pass (would need the same coordinated precompute_rag_embeddings.py + R15 regen treatment already deferred for act_section_12's siblings and vat_threshold_200m_july2024_increase) -- content corrected to state what s.19 actually is rather than implying a citation it doesn't carry."
+  },
   "exemption_category_government_departments": "Idara za Serikali au taasisi za umma zinazofadhiliwa kikamilifu na Serikali",
   "exemption_category_diplomatic_missions": "Misheni za Kidiplomasia",
   "exemption_category_un_and_agencies": "Umoja wa Mataifa na taasisi zake",

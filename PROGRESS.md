@@ -37,15 +37,53 @@ work by row count (the EFD threshold, previously the largest at 58, is less than
 **10 of its 129 rows reached `val_sft`/`val_sft_balanced`** — validation loss has been rewarding a
 claim that understates a mandatory legal consequence.
 
-**What this table means for a retrain: NOT MET.** 351 rows are quarantined out of the working set
-(`datasets/tier1a/{cleaned_pairs,raw_sources}/`), but `datasets/tier1a/sft/{train,val}_sft*.jsonl`
-still physically contain them until `generate_sft.py` is re-run (behind `check_eval_split.py`, per
-R14/the standing pipeline order) to re-export from the now-clean `cleaned_pairs/`. **A retrain run
-against the CURRENT sft/ files would still bake in all 351 rows.** This has been true since v1
-(2026-08-25) and remains true today — re-running `generate_sft.py` is the one remaining step this
-table cannot shortcut, and it has not been run in this pass.
+**✅ MET, as of 2026-09-01 — `generate_sft.py` re-run, verified by counting, not by trusting.**
 
-**Maintenance rule for this table going forward:** the next corpus-correction script (v5 and
+**The "NOT MET" framing above was itself wrong in one respect, found while closing it.** It assumed
+`sft/{train,val}_sft*.jsonl` still physically contained all 369 quarantined rows, untouched since
+generation. They did not: every `correct_corpus_defects*.py` script (v1-v5) globs
+`datasets/**/*.jsonl`, which includes `datasets/tier1a/sft/`, and each one surgically deleted its
+own matching lines from the sft files in place as it ran — 33 rows by v1, 11 by v2, 17 by v3, 79 by
+v4, 8 by v5 (148 of the 369 total, counted directly from each version's own `by_file` breakdown in
+its artifact). So `sft/` was already substantially pre-cleaned before this step, by accident of how
+the quarantine scripts glob, not by design.
+
+**What was actually run, in R14 pipeline order:** `check_eval_split.py` (CLEAN — 4442 training
+pairs, 10 eval pairs, 20 unique eval question strings, no contamination) → `generate_sft.py`
+(re-exports `train_sft.jsonl`/`val_sft.jsonl` fresh from `cleaned_pairs/`'s current 4442 non-eval
+pairs, 90/10 split: 3997 train / 445 val).
+
+**Verified by counting the defect patterns in the regenerated files, not by trusting the
+regeneration**, per instruction — `scripts/verify_sft_defect_free.py` (new, R18-committed) imports
+every quarantine script v1 through v5 (adapting v1-v3's bare module-level regexes and v4/v5's
+`classify()` functions to one interface, without editing any of the five committed harnesses) and
+sweeps all four `datasets/tier1a/sft/*.jsonl` files against all five defect-pattern sets.
+**Result: 0 hits, all five versions, all four files — `eval/results/sft_regeneration_verification_2026_09_01.json`.**
+
+**The row count does NOT land at "old total minus 369", and that expectation was the wrong one to
+hold, for a reason worth recording rather than silently correcting.** `train_sft.jsonl` +
+`val_sft.jsonl` went from 4448 rows (pre-regen, already reflecting the 148 sft-specific deletions
+above) to 4442 (fresh regen) — a delta of **6**, not 369. The 369 figure counts QUARANTINE
+OCCURRENCES across the whole `datasets/` tree — `cleaned_pairs/`, `raw_sources/`, checkpoints, AND
+`sft/` — and the same underlying training row typically appears in three or four of those files at
+once (a `cleaned_pairs` row, its `raw_sources` origin, and its `sft` export are usually the SAME
+pair, counted once per file it appears in). `generate_sft.py` draws only from `cleaned_pairs/`,
+which the quarantine scripts had already fully cleaned; a correct verification therefore counts
+DEFECT-PATTERN HITS in the output (0, confirmed above), not a row-count delta against a
+multi-file occurrence total — those are different quantities and conflating them is what produced
+the wrong expectation in the first place.
+
+**A real gap surfaced by this exercise, not previously documented: `train_sft_balanced.jsonl` and
+`val_sft_balanced.jsonl` have NO generator anywhere in this repo.** `generate_sft.py` only ever
+writes `train_sft.jsonl`/`val_sft.jsonl`. The `_balanced` pair (1619 + 178 = 1797 rows) is a
+disconnected artifact from earlier in the project; it currently shows 0 defect-pattern hits only
+because the same quarantine scripts' `datasets/**/*.jsonl` glob happened to edit it in place too —
+not because anything keeps it in sync with `cleaned_pairs/`. If `cleaned_pairs/` changes again
+(a correction, a new batch) and nobody remembers to hand-edit or regenerate the `_balanced` files,
+they will silently drift stale with no pipeline step to catch it. Flagged here rather than fixed —
+building a `_balanced` generator is a separate, scoped decision, not part of closing this precondition.
+
+**Maintenance rule for this table going forward:** the next corpus-correction script (v6 and
 beyond) adds a row here with its own date, count, and file — and updates the TOTAL — instead of
 writing a new "STALE" paragraph elsewhere in this file. This table is now the retrain precondition.
 

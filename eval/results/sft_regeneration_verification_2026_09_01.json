@@ -1,0 +1,60 @@
+{
+  "measured": "2026-09-01",
+  "harness": "scripts/verify_sft_defect_free.py",
+  "purpose": "post-generate_sft.py regeneration check -- count, do not trust",
+  "per_file": {
+    "datasets/tier1a/sft/train_sft.jsonl": {
+      "row_count": 3997,
+      "hits_by_version": {
+        "v1": 0,
+        "v2": 0,
+        "v3": 0,
+        "v4": 0,
+        "v5": 0
+      },
+      "total_hits": 0
+    },
+    "datasets/tier1a/sft/val_sft.jsonl": {
+      "row_count": 445,
+      "hits_by_version": {
+        "v1": 0,
+        "v2": 0,
+        "v3": 0,
+        "v4": 0,
+        "v5": 0
+      },
+      "total_hits": 0
+    },
+    "datasets/tier1a/sft/train_sft_balanced.jsonl": {
+      "row_count": 1619,
+      "hits_by_version": {
+        "v1": 0,
+        "v2": 0,
+        "v3": 0,
+        "v4": 0,
+        "v5": 0
+      },
+      "total_hits": 0
+    },
+    "datasets/tier1a/sft/val_sft_balanced.jsonl": {
+      "row_count": 178,
+      "hits_by_version": {
+        "v1": 0,
+        "v2": 0,
+        "v3": 0,
+        "v4": 0,
+        "v5": 0
+      },
+      "total_hits": 0
+    }
+  },
+  "totals_by_version": {
+    "v1": 0,
+    "v2": 0,
+    "v3": 0,
+    "v4": 0,
+    "v5": 0
+  },
+  "grand_total_hits": 0,
+  "clean": true
+}
