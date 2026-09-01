@@ -7,9 +7,92 @@ in the same commit (dual-file-sync rule, CLAUDE.md). The rules engine is only
 
 Money is Decimal throughout — never float — because a rounding error on a
 compliance figure is a wrong answer, not a cosmetic bug.
+
+=== FINANCE-ACT FRESHNESS REGISTRY, added 2026-09-01 ===
+
+WHY THIS EXISTS. The presumptive-tax engine (this file) served a wrong ceiling and rate for
+two months after Finance Act 2026 changed them, because its own "verified through Finance Act
+2020-2025" comment was true when written and became a silent trap the moment an Act outside
+that fixed range came into force. A comment recording a year range is a CLAIM, not a mechanism
+— nothing re-checked it against the calendar. This registry, and the test that reads it
+(tests/test_finance_act_freshness.py), are that mechanism: every group of constants below
+declares the last Finance Act year it was actually checked against, and the test fails the
+moment CURRENT_FINANCE_ACT_YEAR moves ahead of any of them — a marker that cannot outlive its
+reason, the same shape as this project's strict-xfail convention.
+
+HOW TO USE THIS, THE NEXT TIME A FINANCE ACT IS GAZETTED:
+  1. Bump CURRENT_FINANCE_ACT_YEAR. Every entry below now fails the freshness test.
+  2. For each group, read the new Finance Act's relevant Part in full (not a summary) and
+     confirm whether it touches that group's governing provision.
+  3. Bump that group's year in FINANCE_ACT_VERIFIED_THROUGH to match, whether or not the Act
+     touched it — "checked and found unchanged" is still a completed check. Update the
+     constant's own value and the `evidence` string if it DID change.
+  4. Do not bump a group's year without having actually read the Act. The whole point of this
+     registry is that a year number is a claim someone can be asked to justify.
+
+A group whose governing Act is CONFIRMED ABSENT from a given Finance Act's own list of
+amended Acts (its table of Parts) may be marked verified through that year on that basis
+alone — a Finance Act cannot silently amend an Act it does not list as one of its own Parts,
+so absence from the list is itself a completed, citable check, not an assumption.
+
+`None` in `FINANCE_ACT_VERIFIED_THROUGH` means "never independently verified against primary
+statute text at all" — a different, worse status than "stale": PAYE_NONRESIDENT_RATE is the
+one entry with this status, flagged during this same 2026-09-01 audit, not a new discovery
+about it (it was already noted ungrounded in an earlier Tier 1 pass — see PROGRESS.md). The
+freshness test does not fail on `None` entries; they are a separate, pre-existing item, not a
+staleness incident, and are listed in `NEVER_GROUNDED` so they are not silently invisible to
+anyone reading this registry.
 """
 
 from decimal import Decimal
+
+# The most recent Finance Act known to be in force. Bump this the moment a new one is gazetted
+# -- see the module docstring for what happens next. 2026-09-01: Finance Act 2026 (in force
+# 1 July 2026) is current.
+CURRENT_FINANCE_ACT_YEAR = 2026
+
+# group name -> (last Finance Act year checked, which governing Act/provision, how the check
+# was done this session). Every SDL_*/NSSF_*/WCF_*/PAYE_BANDS/PRESUMPTIVE_*/CORPORATE_*/AMT_*/
+# PARTNERSHIP_IS_TRANSPARENT constant belongs to exactly one group below.
+FINANCE_ACT_VERIFIED_THROUGH = {
+    'SDL': (2026, 'Vocational Education and Training Act Cap.82 s.14',
+            'FA2026 Part XXVII (ss.97-98) read in full: touches only s.19 (funding-source '
+            'wording), not s.14 (the SDL rate). Confirmed unchanged.'),
+    'NSSF': (2026, 'National Social Security Fund Act',
+             'NSSF Act is ABSENT from Finance Act 2026\'s own list of 28 amended Acts (Parts '
+             'I-XXVIII) -- confirmed by reading that list in full. A Finance Act cannot amend '
+             'an Act it does not list as one of its own Parts.'),
+    'WCF': (2026, 'Workers Compensation Act / Workers Compensation Regulations 2016',
+            'Same basis as NSSF: absent from FA2026\'s Parts list entirely.'),
+    'PAYE_BANDS': (2026, 'Income Tax Act Cap.332 First Schedule para 1',
+                   'FA2026 Part IX (ss.20-27) read in full: para 1 (individual PAYE table) is '
+                   'not touched by s.27(a) at all -- confirmed directly, not inferred from the '
+                   'paragraph-2/3/4 changes it does make. Second band (8%) separately '
+                   're-confirmed against Finance Act 2021 s.25\'s own verbatim text.'),
+    'PAYE_NONRESIDENT_RATE': (None, 'Income Tax Act Cap.332 (specific section not identified)',
+                              'NEVER GROUNDED to primary statute text at any point -- verified_'
+                              'by is a PwC portal page only (locked_facts.json, paye_nonresident'
+                              '_flat_rate). Flagged in an earlier Tier 1 pass as ungrounded, '
+                              're-flagged here rather than silently carried forward as if this '
+                              'freshness registry had checked it. Needs its own primary-source '
+                              'read, not a Finance-Act diff.'),
+    'PRESUMPTIVE': (2026, 'Income Tax Act Cap.332 First Schedule para 2',
+                    'THE 2026-09-01 INCIDENT ITSELF. FA2026 s.27(a) read verbatim in full and '
+                    'the engine corrected the same session -- see the section below for the '
+                    'complete change log. This is the freshest entry in this registry precisely '
+                    'because it is the one that was found stale.'),
+    'CORPORATE_AND_PARTNERSHIP': (2026, 'Income Tax Act Cap.332 First Schedule para 3, s.4(8), '
+                                  'ss.48-51',
+                                  'Corporate/partnership tax source pass (2026-09-01) read every '
+                                  'Finance Act 2019-2026 for para 3 and ss.48-51 individually; '
+                                  'this session\'s freshness audit additionally confirmed FA2026 '
+                                  's.27(a) does not touch para 3 (only paras 2 and 4) by reading '
+                                  'the full text, not inferring it from the paragraph-2 changes.'),
+}
+# Groups whose FINANCE_ACT_VERIFIED_THROUGH entry is None -- listed explicitly so this status
+# is visible without scanning the dict above for the sentinel value.
+NEVER_GROUNDED = tuple(g for g, (year, *_rest) in FINANCE_ACT_VERIFIED_THROUGH.items()
+                       if year is None)
 
 # SDL — Skills Development Levy (collected by TRA)
 SDL_RATE = Decimal("0.035")           # sdl_rate / sdl_rate_2025 : 3.5% of gross cash emoluments
