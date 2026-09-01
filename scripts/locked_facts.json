@@ -572,8 +572,8 @@
     "status": "CONFIRMED"
   },
   "minimum_turnover_tax": {
-    "fact": "The Alternative Minimum Tax (AMT) on chronically loss-making corporations is 1% of the turnover of the third consecutive year of unrelieved tax loss, effective 1 July 2025 (Income Tax Act Cap.332 First Schedule para 3(3), as amended by Finance Act 2025 s.60(d)(ii), which raised it from 0.5% to 1%). This applies ONLY to a corporation with THREE CONSECUTIVE YEARS of perpetual unrelieved loss -- it is NOT a general turnover tax on all businesses. Do not confuse with the presumptive (small-business) turnover tax, a different regime under First Schedule para 2.",
-    "correct_value": "1% WEF 1 July 2025, applies only to corporations with 3 consecutive years of unrelieved tax loss",
+    "fact": "The Alternative Minimum Tax (AMT) on chronically loss-making corporations is 1% of the turnover of the third consecutive year of unrelieved tax loss, effective 1 July 2025 (Income Tax Act Cap.332 First Schedule para 3(3), as amended by Finance Act 2025 s.60(d)(ii), which raised it from 0.5% to 1%). This applies ONLY to a corporation with THREE CONSECUTIVE YEARS of perpetual unrelieved loss -- it is NOT a general turnover tax on all businesses. Do not confuse with the presumptive (small-business) turnover tax, a different regime under First Schedule para 2. EXEMPT from this AMT regardless of loss history (Income Tax Act s.4(8)): a corporation conducting agricultural business, or engaged in the provision of health or education -- no sunset on these three -- and a corporation conducting tea processing, but ONLY for the period 1 July 2024 to 30 June 2027 (added by Finance Act 2024 s.34; the sunset is explicit in the proviso, not an inference).",
+    "correct_value": "1% WEF 1 July 2025, applies only to corporations with 3 consecutive years of unrelieved tax loss; exempt regardless of loss history: agriculture, health, education (permanent) and tea processing (1 Jul 2024 - 30 Jun 2027 only) under s.4(8) as amended by FA2024 s.34",
     "wrong_patterns": [
       "kodi ndogo ya mauzo.*kampuni zote",
       "minimum turnover tax applies to all businesses",
@@ -584,13 +584,17 @@
       "minimum.*tax.*(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\\.5(?! hadi)(?! to )",
       "kodi ndogo.*(?<!kutoka )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\\.5(?! hadi)(?! to )",
       "turnover.*tax.*(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\\.5(?! hadi)(?! to )",
-      "(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\\.5(?! hadi)(?! to ).*minimum.*tax"
+      "(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\\.5(?! hadi)(?! to ).*minimum.*tax",
+      "kampuni zote.*1%.*mauzo",
+      "all companies.*1%.*turnover",
+      "any company.*minimum.*1%",
+      "kampuni yoyote.*kodi ya chini.*1"
     ],
-    "primary_source": "Income Tax Act, Cap.332, First Schedule para 3(3), as amended by Finance Act 2025 s.60(d)(ii)",
-    "verified_by": "Direct read of Finance Act 2025 s.60(d)(ii) (\"deleting the figure '0.5' ... and substituting ... '1'\") and First Schedule para 3(3), 2026-08-31. Checked Finance Act 2026 -- does not touch this paragraph.",
+    "primary_source": "Income Tax Act, Cap.332, First Schedule para 3(3) (rate/scope), as amended by Finance Act 2025 s.60(d)(ii); s.4(8) (exemptions), as amended by Finance Act 2024 s.34 (tea-processing carve-out)",
+    "verified_by": "Direct read of Finance Act 2025 s.60(d)(ii) (\"deleting the figure '0.5' ... and substituting ... '1'\") and First Schedule para 3(3), 2026-08-31. Checked Finance Act 2026 -- does not touch this paragraph. s.4(8) exemption (agriculture/health/education, permanent since the Cap.332 R.E.2019 baseline; tea processing added by Finance Act 2024 s.34, quoted verbatim: \"adding the words 'tea processing' immediately after the word 'business'\" with proviso limiting it to \"1st day of July, 2024 to 30th day of June, 2027\") confirmed by direct read of both texts, 2026-09-01, as part of the corporate/partnership tax source pass.",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED -- corrected 2026-08-31 (scope narrowed, see correction_note)",
-    "correction_note": "Rate and date (1%, WEF 1 July 2025) were already correct. Scope/framing was misleading: this key's name and prior fact text read as a general turnover tax on all businesses, when the underlying provision (First Schedule para 3(3)) is the Alternative Minimum Tax, applying only to corporations with 3 consecutive years of unrelieved loss -- the general small-business turnover regime is a DIFFERENT provision (First Schedule para 2, presumptive tax). DUPLICATE FLAG: this fact and `amt_loss_companies_only` describe the same provision -- not merged in this pass (a merge would need to confirm nothing downstream keys off either name specifically), but flagged for a future consolidation.",
+    "status": "CONFIRMED -- corrected 2026-08-31 (scope narrowed); corrected 2026-09-01 (s.4(8) exemptions added, amt_loss_companies_only folded in per R27)",
+    "correction_note": "Rate and date (1%, WEF 1 July 2025) were already correct. Scope/framing was misleading: this key's name and prior fact text read as a general turnover tax on all businesses, when the underlying provision (First Schedule para 3(3)) is the Alternative Minimum Tax, applying only to corporations with 3 consecutive years of unrelieved loss -- the general small-business turnover regime is a DIFFERENT provision (First Schedule para 2, presumptive tax). DUPLICATE FLAG (2026-08-31): this fact and `amt_loss_companies_only` describe the same provision -- not merged in that pass, flagged for a future consolidation. RESOLVED 2026-09-01, as part of the corporate/partnership tax source pass: `amt_loss_companies_only` folded in here per founder instruction (its 4 wrong_patterns appended above, its content superseded by this fact's fuller text) and the key retired. Also added: the s.4(8) charging-section exemption (agriculture/health/education permanent, tea processing 2024-07-01 to 2027-06-30 only) was found missing from BOTH facts during the source pass -- an omitted exemption reads as authoritative as a wrong rate, since it tells a qualifying corporation it owes an AMT it doesn't. Not yet guarded by a wrong_pattern (no probe has been authored for a false 'tea processing owes AMT' claim); flagged for a future R17 pass rather than adding an untested pattern here.",
     "_narrowing_note": "Narrowed 2026-08-25. The bare forms `0.3%` / `asilimia 0.3` / `0.3 percent` matched with NO topical scoping, so a CORRECT council-service-levy pair quoting the statutory 0.3% CAP (Cap 290 s.7(1)(u)) would have been flagged as a locked-fact violation. Measured cost of narrowing: the bare patterns matched exactly ONE corpus row, a held-out probe QUESTION, which check_pair never scans. Zero live detections lost. Both directions are exercised in eval/fidelity/local_levy_probes.jsonl. SECOND NARROWING, same day, found by probe llp_08: the 0.5 patterns escaped only \"kutoka asilimia 0.5\" / \"from 0.5\", not \"ILIKUWA asilimia 0.5\" -- the plainest Swahili way to say \"it WAS 0.5%\", which is exactly what the locked fact itself asserts. A correct historical statement was being flagged. Same shape as the recorded near-miss where a bare \"ni\" sits outside D-FIDELITY-1's connectors. Probe llp_09 holds the line: a plain \"is 0.5%\" assertion must still flag. PRESERVED VERBATIM through the 2026-08-31 Tier 2 scope correction (which only narrowed the fact's SCOPE description -- AMT on 3-years-loss corporations, not a general turnover tax -- and added 'applies to all businesses' as a new wrong_pattern; the 0.3%/0.5% regex family below is untouched and still what llp_09/llp_10 test against)."
   },
   "commissioner_objection_deadline": {
@@ -1020,17 +1024,6 @@
       "daima.*asilimia 25.*dse",
       "indefinitely.*25.*listed",
       "dse.*25.*permanently"
-    ],
-    "primary_source": "tra.go.tz income tax page",
-    "verified_date": "2026-06-12"
-  },
-  "amt_loss_companies_only": {
-    "fact": "AMT 1% applies ONLY to companies with 3 consecutive years of tax losses",
-    "wrong_patterns": [
-      "kampuni zote.*1%.*mauzo",
-      "all companies.*1%.*turnover",
-      "any company.*minimum.*1%",
-      "kampuni yoyote.*kodi ya chini.*1"
     ],
     "primary_source": "tra.go.tz income tax page",
     "verified_date": "2026-06-12"
