@@ -1,0 +1,444 @@
+{
+  "measured": "2026-09-01",
+  "harness": "scripts/verify_dse_conflation_2026_09_01.py",
+  "purpose": "Re-verify the DSE public-float/rate conflation is fully swept, not just the stale-30% shape v6 already quarantined -- run comprehensively rather than assumed closed.",
+  "total_unique_dse_rows_outside_rejected": 26,
+  "by_label": {
+    "DIVIDEND_WITHHOLDING_NOT_CORPORATE_RATE": 6,
+    "CORPORATE_RATE_TOPIC": 6,
+    "COMPANY_LAW_NOT_TAX": 4,
+    "REFUSAL_NOT_A_CLAIM": 4,
+    "OUT_OF_SCOPE_REFUSAL": 3,
+    "CAPITAL_GAINS_NOT_CORPORATE_RATE": 3
+  },
+  "corporate_rate_topic_rows": 6,
+  "unclassified_rows": 0,
+  "defect_hits": [],
+  "clean": true,
+  "rows": [
+    {
+      "id": "tier1a_wh_004_20260603",
+      "text": "Kiwango cha kodi ya zuio ya gawio kwa kampuni zilizoorodheshwa kwenye Soko la Hisa la Dar es Salaam (DSE) ni asilimia 5 — kwa wakazi na wasio wakazi. Thibitisha na TRA.",
+      "label": "DIVIDEND_WITHHOLDING_NOT_CORPORATE_RATE",
+      "reason": "First Schedule para 4(b) dividend withholding rate for DSE-listed companies (5%) -- a different provision from the para 3(1)/3(2)(a) corporate income tax rate.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+          "line": 63
+        },
+        {
+          "file": "datasets/tier1a/cleaned_pairs/batch_002b_cleaned.jsonl",
+          "line": 14
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl",
+          "line": 63
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_002b.jsonl",
+          "line": 14
+        }
+      ]
+    },
+    {
+      "id": "tier1a_wh_005_20260603",
+      "text": "Kiwango cha kodi ya zuio ya gawio kwa kampuni zisizoorodheshwa DSE ni asilimia 10 kwa wakazi na asilimia 10 kwa wasio wakazi. Kama kampuni inayopokea gawio inamiliki zaidi ya asilimia 25 ya hisa — kiwango ni asilimia 5. Thibitisha na TRA.",
+      "label": "DIVIDEND_WITHHOLDING_NOT_CORPORATE_RATE",
+      "reason": "Substantial-shareholding (>25% ownership) dividend withholding exemption -- s.82 area, unrelated to the DSE-listing corporate rate condition. The 25% here is a shareholding threshold for a WITHHOLDING rate, not a public-float condition for the CORPORATE rate.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+          "line": 64
+        },
+        {
+          "file": "datasets/tier1a/cleaned_pairs/batch_002b_cleaned.jsonl",
+          "line": 15
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl",
+          "line": 64
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_002b.jsonl",
+          "line": 15
+        }
+      ]
+    },
+    {
+      "id": "tier1a_income_tax_001_20260603",
+      "text": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi. Kampuni zilizoorodheshwa kwenye Soko la Hisa la Dar es Salaam (DSE) zinapata kiwango cha pungufu cha asilimia 25. Kampuni ndogo zinazofanya biashara kwa njia ya mfumo wa kodi ya makisio (presumptive tax) zinalipa kwa njia tofauti kulingana na mapato. Kiwango hiki kinaweza kubadilika kufuatia Sheria ",
+      "label": "CORPORATE_RATE_TOPIC",
+      "reason": "States the 25% DSE rate but NO float percentage at all -- incomplete, not wrong. Makes no claim about the qualifying condition, so nothing to quarantine.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+          "line": 118
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl",
+          "line": 118
+        }
+      ]
+    },
+    {
+      "id": "tier1a_inc_tax_deep_001_20260603",
+      "text": "Kodi ya mapato ya kampuni (corporation tax) kwa faida ya TZS 50,000,000: Kiwango cha kawaida = 30%. Kodi = TZS 50,000,000 × 30% = TZS 15,000,000. Hii inalipwa: kwa awali (provisional tax) kwa awamu nne wakati wa mwaka — Machi, Juni, Septemba, Desemba. Tofauti yoyote kati ya kodi ya awali iliyolipwa na kodi halisi ya mwaka inalipwa au kurudishwa wakati return ya mwisho inawasilishwa ndani ya miezi ",
+      "label": "CORPORATE_RATE_TOPIC",
+      "reason": "Standard-rate worked example (30% of TZS 50M profit) -- does not mention DSE listing, the 25% rate, or any float condition at all.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+          "line": 201
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl",
+          "line": 201
+        }
+      ]
+    },
+    {
+      "id": "tier1a_brela_deep_012_20260609",
+      "text": "Hisa za kampuni ya binafsi (private company) zinauzwa kwa idhini ya bodi ya wakurugenzi au kwa mujibu wa Articles of Association. Mara nyingi, wanahisa wengine wa kampuni wana haki ya kwanza ya kununua (pre-emption rights). Mauzi ya hisa yanabidi kusajiliwa na BRELA. Kampuni ya umma (public company) inaweza kuuza hisa kwa umma kupitia DSE (Dar es Salaam Stock Exchange).",
+      "label": "COMPANY_LAW_NOT_TAX",
+      "reason": "BRELA/Companies Act share-transfer mechanics (private vs public company), no tax rate or float percentage of any kind.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+          "line": 219
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/_verify_batch004_pairs21_300.jsonl",
+          "line": 200
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl",
+          "line": 219
+        }
+      ]
+    },
+    {
+      "id": "tier1a_brela_deep_039_20260609",
+      "text": "Kampuni ya BINAFSI: idadi ya wanahisa imepunguzwa (kawaida hadi 50), hisa haziwezi kuuzwa hadharani, na AGM inaweza kuwa rahisi zaidi. Kampuni ya UMMA: hisa zinaweza kuuzwa hadharani (ikiwa ni pamoja na kwenye DSE), idadi ya wanahisa isio na kikomo, na mahitaji ya uwazi na utawala wa shirika ni magumu zaidi.",
+      "label": "COMPANY_LAW_NOT_TAX",
+      "reason": "Private vs public company structural differences, no tax figure.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+          "line": 246
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/_verify_batch004_pairs21_300.jsonl",
+          "line": 227
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl",
+          "line": 246
+        }
+      ]
+    },
+    {
+      "id": "tier1a_income_tax_adv_092_20260609",
+      "text": "Umiliki na kiwango cha kodi ya DSE ni mambo tofauti. Kiwango cha asilimia 25 kinatokana na ORODHA ya hisa kwenye DSE kwa umma Tanzania — si umiliki wa kigeni. Kampuni inayomilikiwa na Uingereza asilimia 100 ambayo haijaorodhesha DSE inalipa kiwango cha kawaida cha asilimia 30. Umiliki wa kigeni peke yake haupunguzi kiwango cha kodi.",
+      "label": "CORPORATE_RATE_TOPIC",
+      "reason": "States the 25% rate derives from DSE LISTING, correctly distinguishing it from foreign OWNERSHIP -- but asserts no float percentage number at all, so there is nothing to conflate. Correctly contrasts with the 30% standard rate for an unlisted, 100%-foreign-owned company.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl",
+          "line": 90
+        },
+        {
+          "file": "datasets/tier1a/flagged/needs_human_review/batch_005_founder_sample.jsonl",
+          "line": 4
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl",
+          "line": 90
+        }
+      ]
+    },
+    {
+      "id": "b006_refusal_014",
+      "text": "Miamala ya hisa kwenye Dar es Salaam Stock Exchange (DSE) inaweza kuwa na kodi ya mauzo ya hisa (capital gains tax) au msamaha maalum. Mfumo wa kodi wa soko la hisa Tanzania una kanuni maalum. Sina uhakika wa mwelekeo wa sasa. Thibitisha na DSE, TRA, au mshauri wa fedha.",
+      "label": "REFUSAL_NOT_A_CLAIM",
+      "reason": "Explicit \"sina uhakika\" refusal on DSE capital-gains tax treatment -- states no rate or percentage as fact.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+          "line": 260
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/_verify_batch006_all.jsonl",
+          "line": 260
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_006.jsonl",
+          "line": 260
+        }
+      ]
+    },
+    {
+      "id": "b008_refusal_014_20260612",
+      "text": "Kodi ya gawio (dividend withholding tax) kwa hisa za DSE na uwekezaji wa DSE kwa ujumla ni eneo linaloenda zaidi ya mipaka yangu ya sasa. Mada hii iko nje ya mipaka yangu ya sasa. Thibitisha na TRA au mshauri wa kodi aliyehitimu. Ninajua kwamba Tanzania ina kodi ya zuio kwa gawio lakini kiwango kinachofaa kwa hali yako (raia wa Tanzania, mgeni, mtu binafsi, kampuni) kinatofautiana. Wasiliana na br",
+      "label": "REFUSAL_NOT_A_CLAIM",
+      "reason": "Explicit refusal, states no rate as fact.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl",
+          "line": 110
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_008.jsonl",
+          "line": 112
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Swali hili liko nje ya maarifa yangu. Kununua hisa katika masoko ya kimataifa kama NYSE kunahusisha kanuni za fedha za kimataifa, ruhusa za Benki Kuu ya Tanzania, na sheria za mabadiliko ya fedha. Nje ya maarifa yangu ya ushauri wa kodi na biashara Tanzania. Wasiliana na mshauri wa fedha aliyehitimu au Benki Kuu ya Tanzania (bot.go.tz) kwa mwelekeo sahihi.",
+      "label": "OUT_OF_SCOPE_REFUSAL",
+      "reason": "NYSE/international markets, not Tanzania DSE.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_012.jsonl",
+          "line": 77
+        },
+        {
+          "file": "datasets/tier1a/raw_sources/raw_pairs_batch_012.jsonl",
+          "line": 77
+        },
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 3491
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Ni lazima ukatae kodi ya zuio ya 5% kwa wasio wakazi wanaopata mgao kutoka kampuni zilizo orodheshwa. Kushindwa kufanya hivyo kunaweza kusababisha adhabu. Maelezo zaidi kuhusu adhabu husika, tafadhali wasiliana na TRA moja kwa moja au rejelea sheria husika za kodi. Thibitisha na tra.go.tz.",
+      "label": "DIVIDEND_WITHHOLDING_NOT_CORPORATE_RATE",
+      "reason": "Non-resident dividend WHT compliance duty, not the corporate rate.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl",
+          "line": 269
+        },
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 40
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Ndiyo, kiwango cha kodi ya zuio kwa gawio la kampuni ambazo hisa zake zinauzwa kwenye Soko la Hisa la Dar es Salaam (DSE) ni 5%. Thibitisha na TRA (tra.go.tz).",
+      "label": "DIVIDEND_WITHHOLDING_NOT_CORPORATE_RATE",
+      "reason": "Confirms the 5% dividend WHT rate for DSE-listed companies -- para 4(b), not para 3.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl",
+          "line": 337
+        },
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 1691
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Ndiyo, kama unamiliki chini ya 25% ya hisa za DSE na wewe ni mkazi, unaweza kuombwa msamaha wa kodi kwa faida ya mauzo ya hizo hisa. Thibitisha na TRA (tra.go.tz).",
+      "label": "CAPITAL_GAINS_NOT_CORPORATE_RATE",
+      "reason": "Capital-gains exemption on realising DSE shares for a <25%-owning resident -- a DIFFERENT statutory threshold (Second Schedule realisation-gains exemption), not the para 3(2)(a) public-float condition for the corporate RATE.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl",
+          "line": 379
+        },
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 1507
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Kimaanishacho ni kwamba umiliki wako wa hisa za DSE ni mdogo, chini ya robo ya hisa zote za kampuni husika. Hii inaweza kukupa sifa ya kupata msamaha wa kodi ya faida ya mauzo. Thibitisha na TRA (tra.go.tz).",
+      "label": "CAPITAL_GAINS_NOT_CORPORATE_RATE",
+      "reason": "Same capital-gains-exemption topic as above.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl",
+          "line": 380
+        },
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 3551
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Utawala wa kodi kuhusu mauzo ya hisa za DSE kwa wenye umiliki chini ya asilimia 25, hasa kuhusu kikomo cha faida ambacho hakihusishwi na kodi, unahitaji uthibitisho zaidi kutoka kwa TRA. Kwa sasa, taarifa hizo husika za namba hazipo wazi kabisa. Thibitisha na TRA (tra.go.tz).",
+      "label": "CAPITAL_GAINS_NOT_CORPORATE_RATE",
+      "reason": "Same capital-gains-exemption topic, hedged (\"haipo wazi\") rather than asserted as settled.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl",
+          "line": 381
+        },
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 566
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Samahani, ushauri wa uwekezaji kwenye hisa za soko liko nje ya mada yangu. Mamlaka husika ni CMSA na Soko la Hisa la Dar es Salaam (dse.co.tz) kwa mwongozo wa uwekezaji. Naweza kukusaidia na BRELA, VAT, PAYE, SDL, NSSF au GN487A.",
+      "label": "OUT_OF_SCOPE_REFUSAL",
+      "reason": "Investment-advice refusal, no tax claim.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_015.jsonl",
+          "line": 43
+        },
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 2853
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Samahani, ushauri wa uchaguzi wa hisa za soko liko nje ya mada yangu. Tafadhali wasiliana na CMSA au broker aliyesajiliwa wa DSE (dse.co.tz) kwa ushauri wa uwekezaji. Naweza kukusaidia na BRELA, VAT, PAYE, SDL, NSSF au GN487A.",
+      "label": "OUT_OF_SCOPE_REFUSAL",
+      "reason": "Investment-advice refusal, no tax claim.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_015.jsonl",
+          "line": 45
+        },
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 3
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Umiliki na kiwango cha kodi ya DSE ni mambo tofauti. Kiwango cha asilimia 25 kinatokana na ORODHA ya hisa kwenye DSE kwa umma Tanzania — si umiliki wa kigeni. Kampuni inayomilikiwa na Uingereza asilimia 100 ambayo haijaorodhesha DSE inalipa kiwango cha kawaida cha asilimia 30. Umiliki wa kigeni peke yake haupunguzi kiwango cha kodi.",
+      "label": "CORPORATE_RATE_TOPIC",
+      "reason": "States the 25% rate derives from DSE LISTING, correctly distinguishing it from foreign OWNERSHIP -- but asserts no float percentage number at all, so there is nothing to conflate. Correctly contrasts with the 30% standard rate for an unlisted, 100%-foreign-owned company.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 25
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Kiwango cha kodi ya zuio ya gawio kwa kampuni zilizoorodheshwa kwenye Soko la Hisa la Dar es Salaam (DSE) ni asilimia 5 — kwa wakazi na wasio wakazi. Thibitisha na TRA.",
+      "label": "DIVIDEND_WITHHOLDING_NOT_CORPORATE_RATE",
+      "reason": "First Schedule para 4(b) dividend withholding rate for DSE-listed companies (5%) -- a different provision from the para 3(1)/3(2)(a) corporate income tax rate.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 33
+        },
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 2744
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Miamala ya hisa kwenye Dar es Salaam Stock Exchange (DSE) inaweza kuwa na kodi ya mauzo ya hisa (capital gains tax) au msamaha maalum. Mfumo wa kodi wa soko la hisa Tanzania una kanuni maalum. Sina uhakika wa mwelekeo wa sasa. Thibitisha na DSE, TRA, au mshauri wa fedha.",
+      "label": "REFUSAL_NOT_A_CLAIM",
+      "reason": "Explicit \"sina uhakika\" refusal on DSE capital-gains tax treatment -- states no rate or percentage as fact.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 2293
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Kiwango cha kodi ya zuio ya gawio kwa kampuni zisizoorodheshwa DSE ni asilimia 10 kwa wakazi na asilimia 10 kwa wasio wakazi. Kama kampuni inayopokea gawio inamiliki zaidi ya asilimia 25 ya hisa — kiwango ni asilimia 5. Thibitisha na TRA.",
+      "label": "DIVIDEND_WITHHOLDING_NOT_CORPORATE_RATE",
+      "reason": "Substantial-shareholding (>25% ownership) dividend withholding exemption -- s.82 area, unrelated to the DSE-listing corporate rate condition. The 25% here is a shareholding threshold for a WITHHOLDING rate, not a public-float condition for the CORPORATE rate.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 2462
+        },
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 3740
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Hisa za kampuni ya binafsi (private company) zinauzwa kwa idhini ya bodi ya wakurugenzi au kwa mujibu wa Articles of Association. Mara nyingi, wanahisa wengine wa kampuni wana haki ya kwanza ya kununua (pre-emption rights). Mauzi ya hisa yanabidi kusajiliwa na BRELA. Kampuni ya umma (public company) inaweza kuuza hisa kwa umma kupitia DSE (Dar es Salaam Stock Exchange).",
+      "label": "COMPANY_LAW_NOT_TAX",
+      "reason": "BRELA/Companies Act share-transfer mechanics (private vs public company), no tax rate or float percentage of any kind.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 2965
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Kodi ya gawio (dividend withholding tax) kwa hisa za DSE na uwekezaji wa DSE kwa ujumla ni eneo linaloenda zaidi ya mipaka yangu ya sasa. Mada hii iko nje ya mipaka yangu ya sasa. Thibitisha na TRA au mshauri wa kodi aliyehitimu. Ninajua kwamba Tanzania ina kodi ya zuio kwa gawio lakini kiwango kinachofaa kwa hali yako (raia wa Tanzania, mgeni, mtu binafsi, kampuni) kinatofautiana. Wasiliana na br",
+      "label": "REFUSAL_NOT_A_CLAIM",
+      "reason": "Explicit refusal, states no rate as fact.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 3224
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi. Kampuni zilizoorodheshwa kwenye Soko la Hisa la Dar es Salaam (DSE) zinapata kiwango cha pungufu cha asilimia 25. Kampuni ndogo zinazofanya biashara kwa njia ya mfumo wa kodi ya makisio (presumptive tax) zinalipa kwa njia tofauti kulingana na mapato. Kiwango hiki kinaweza kubadilika kufuatia Sheria ",
+      "label": "CORPORATE_RATE_TOPIC",
+      "reason": "States the 25% DSE rate but NO float percentage at all -- incomplete, not wrong. Makes no claim about the qualifying condition, so nothing to quarantine.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 3385
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Kodi ya mapato ya kampuni (corporation tax) kwa faida ya TZS 50,000,000: Kiwango cha kawaida = 30%. Kodi = TZS 50,000,000 × 30% = TZS 15,000,000. Hii inalipwa: kwa awali (provisional tax) kwa awamu nne wakati wa mwaka — Machi, Juni, Septemba, Desemba. Tofauti yoyote kati ya kodi ya awali iliyolipwa na kodi halisi ya mwaka inalipwa au kurudishwa wakati return ya mwisho inawasilishwa ndani ya miezi ",
+      "label": "CORPORATE_RATE_TOPIC",
+      "reason": "Standard-rate worked example (30% of TZS 50M profit) -- does not mention DSE listing, the 25% rate, or any float condition at all.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/sft/train_sft.jsonl",
+          "line": 3460
+        }
+      ]
+    },
+    {
+      "id": null,
+      "text": "Kampuni ya BINAFSI: idadi ya wanahisa imepunguzwa (kawaida hadi 50), hisa haziwezi kuuzwa hadharani, na AGM inaweza kuwa rahisi zaidi. Kampuni ya UMMA: hisa zinaweza kuuzwa hadharani (ikiwa ni pamoja na kwenye DSE), idadi ya wanahisa isio na kikomo, na mahitaji ya uwazi na utawala wa shirika ni magumu zaidi.",
+      "label": "COMPANY_LAW_NOT_TAX",
+      "reason": "Private vs public company structural differences, no tax figure.",
+      "occurrences": [
+        {
+          "file": "datasets/tier1a/sft/val_sft.jsonl",
+          "line": 312
+        }
+      ]
+    }
+  ]
+}

@@ -55,6 +55,7 @@ its own artifact (R18) — this table is the rolled-up current state, not a repl
 | P45/P9 conflation (P9 is Kenyan KRA terminology; real TZ term is the ITA s.85(3)(b) withholding certificate) | 2026-09-01 | 3 | 1 | same file as above |
 | OSHA `course_fee` TZS 250,000 (unmatched — every sampled OSHA course is TZS 300,000) | 2026-09-01 | 2 | 0 | same file as above |
 | DSE public-float threshold stated as stale 30% (FA2025 s.60(d)(i) lowered it to 25%, coincidentally the same number as the unaffected tax rate) — found by the corporate/partnership tax source pass, corpus swept before it reached retrain | 2026-09-01 | 6 | 0 | `dse_stale_float_quarantine_2026_09_01.jsonl` |
+| DSE conflation, RE-VERIFIED COMPREHENSIVELY (the other shape — "25% rate requires 25% float" stated as one rule, containing no wrong digit, invisible to the stale-30% regex above) — all 26 remaining DSE-mentioning corpus rows read in context and classified; 6 are the corporate-rate topic, 0 defective | 2026-09-01 | **0 — confirmed clean** | 0 | `eval/results/dse_conflation_verification_2026_09_01.json` (verification only, nothing to quarantine) |
 | **TOTAL QUARANTINED** | | **375** | **16** | 6 files, `datasets/tier1a/rejected/` |
 
 **This table's own maintenance rule fired within hours of the "MET" milestone above being
