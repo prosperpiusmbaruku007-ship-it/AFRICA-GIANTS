@@ -938,10 +938,10 @@
     "paye_band2_final_confirmation": {
       "claim": "PAYE second band rate is definitively 8% not 9%",
       "current_assumption": "8% confirmed AfroTools July 2025",
-      "status": "NEEDS_TRA_CHECK",
+      "status": "RESOLVED 2026-09-01",
       "resolution_source": "TRA IDRAS system — log in and check PAYE calculator directly",
       "priority": "CRITICAL",
-      "note": "One Perplexity source disputed — confirm via IDRAS before batch_004 PAYE pairs"
+      "note": "One Perplexity source disputed — confirm via IDRAS before batch_004 PAYE pairs RESOLVED: direct verbatim read of Finance Act 2021 s.25 (primary statute, not IDRAS) during the 2026-09-01 Finance-Act-freshness audit -- quoted, second band \"8% of the amount in excess of Tshs. 3,240,000/=\". Confirmed no Finance Act 2022-2026 touches First Schedule paragraph 1 (individual/PAYE rates) at all -- FA2026 s.27(a) only touches paragraphs 2-4. 8% stands, definitively, from primary text."
     },
     "moa_stamp_duty": {
       "claim": "Memorandum of Association stamp duty is TZS 10,000",
@@ -1109,16 +1109,18 @@
     "correction_note": "Prior fact hedged 'possible, not mandatory,' constructed entirely by averaging three disagreeing secondary sources without ever reading GN487A's own text -- exactly the pattern this project's Tier-1/Tier-2 methodology exists to catch. Direct read of s.3(3)(a): the clause structure is 'shall be liable to [fine OR imprisonment] AND [revocation]' -- mandatory-on-conviction drafting, joined by 'and,' not discretionary language. Bowmans' 'mandatory' reading was correct; The Star/Citizen's 'possible/risk' framing was not. The averaging methodology that produced the prior hedge is the defect, not the underlying claim. One precondition the corrected fact retains, which the old fact also lacked: revocation is mandatory ONLY upon conviction, not automatic on accusation or on GN487A's mere existence. R6 NOTE: Bowmans (bowmans.com) is an eval-reserved source family per CLAUDE.md R6 -- even though its claim held up here, citing it as primary_source/verified_by is independently a methodology violation regardless of correctness. Re-grounded on the Order's own text (fbattorneys.co.tz/gn487a, a whitelisted domain) rather than any of the three law-firm/press sources."
   },
   "vat_withholding_remittance_deadline": {
-    "fact": "VAT withholding remitted to TRA by 20th of following month — same deadline as VAT return. NOT 7 days after month end.",
-    "correct_value": "20th of following month",
+    "fact": "VAT withholding remitted to TRA within 10 days after the end of each tax period (WEF 1 July 2026, Finance Act 2026 s.95, repealing and replacing VAT Act s.71(5)). Before 1 July 2026 the deadline was the 20th of the following month, same as the VAT return (Finance Act 2025's original s.71(5): remit 'at the time when the value added tax return is due to be filed') -- that was correct THEN, it is not correct NOW. A withholding VAT statement (a new, separate filing obligation, s.71(6)) is also due within 10 days of the month following the tax period.",
+    "correct_value": "Within 10 days after the end of the tax period (WEF 2026-07-01); was 20th of following month before that date",
     "wrong_patterns": [
-      "siku 7 baada ya mwisho wa mwezi.*withholding",
-      "withholding.*siku 7 baada ya mwisho",
-      "ndani ya siku 7.*withholding.*tra"
+      "(?<!kabla ya )(?<!ilikuwa )(?<!kutoka )(?<!before )(?<!was )(?<!from )tarehe 20.{0,20}(withholding|zuio)",
+      "(?<!kabla ya )(?<!ilikuwa )(?<!kutoka )(?<!before )(?<!was )(?<!from )(withholding|zuio).{0,30}tarehe 20",
+      "20th of.{0,10}following month.{0,20}withholding(?! -- was| before| kabla)"
     ],
-    "primary_source": "PWC Tax Summaries 2025; Finance Act 2025 analysis (Lexology); Habib Advisory Tax Guide 2025/26",
+    "primary_source": "Value Added Tax Act, Cap.148, s.71(5), as repealed and replaced by Finance Act 2026 s.95, in force 1 July 2026",
+    "verified_by": "Direct verbatim read of Finance Act 2026 s.95, 2026-09-01, during the Finance-Act-freshness audit: 'deleting subsection (5) and substituting for it the following: \"(5) A withholding agent shall, within ten days after the end of each tax period, pay to the Commissioner any value added tax that has been withheld...\"'. Compared directly against the PRE-amendment text (Finance Act 2025's own enacting text, read the same session): 'the withholding agent shall account for and remit output tax withheld ... at the time when the value added tax return is due to be filed' -- confirming this is a genuine deadline change, not a wording tweak.",
     "verified_date": "2026-06-16",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED -- corrected 2026-09-01 (deadline changed by FA2026, see correction_note)",
+    "correction_note": "STALE-CONSTANT INCIDENT, same class as the presumptive-tax engine found the same day. The 2026-06-16 verification (PWC/Lexology/Habib, all secondary) was correct for its own date but was never re-checked against Finance Act 2026, which changed this exact deadline effective 1 July 2026 -- found only because this session's Finance-Act-freshness audit read Part XXVI of FA2026 in full rather than provision-by-provision. The OLD wrong_patterns rejected '7 days' framing without historical-tense allowance; the NEW correct answer (10 days) is close to but not the same as that old rejected value, so the patterns were rebuilt with historical-tense guards rather than simply widened, to avoid re-flagging a now-correct 'was 20th, kabla ya Julai 2026' statement."
   },
   "vat_late_registration_penalty": {
     "fact": "Penalty for failure to register VAT: fine up to TZS 200,000 AND/OR imprisonment 2-12 months PLUS interest on unpaid VAT. NO 2.5% monthly rate exists in the VAT Act.",
