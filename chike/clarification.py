@@ -160,7 +160,8 @@ VAT_NO_TURNOVER = (
 # chike/rules_engine/registration_thresholds.py:efd_required(), which now takes no turnover
 # argument at all.
 
-# === PRESUMPTIVE INCOME TAX (Cap 332 First Schedule para 2, as amended by FA2022 s.72) ===
+# === PRESUMPTIVE INCOME TAX (Cap 332 First Schedule para 2, as amended by FA2022 s.72,
+# further amended by FA2026 s.27(a), WEF 2026-07-01) ===
 # Three exits, and only three. The records question is asked ONLY where the two columns of the
 # statutory table differ (turnover 4,000,001–11,000,000) — below and above that window the
 # figure is identical either way, and asking for an input that cannot change the answer is the
@@ -171,7 +172,7 @@ VAT_NO_TURNOVER = (
 PRESUMPTIVE_NO_TURNOVER = (
     "Ili nikuhesabie kodi ya makadirio, niambie jumla ya MAUZO ya biashara yako kwa mwaka — "
     "si faida, bali mauzo yote. Kodi ya makadirio hupigwa kwa mauzo ya mwaka, na hutumika tu "
-    "kwa mauzo yasiyozidi TZS 100,000,000."
+    "kwa mauzo yasiyozidi TZS 200,000,000."
 )
 
 # A figure whose period is monthly/weekly, or absent. NOT annualised: multiplying one month by

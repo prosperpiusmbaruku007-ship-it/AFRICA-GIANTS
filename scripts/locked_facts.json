@@ -2235,28 +2235,35 @@
     "status": "CONFIRMED"
   },
   "presumptive_tax_bands_2022": {
-    "fact": "Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: hadi TZS 4,000,000 = TZS 0; zaidi ya 4,000,000 hadi 7,000,000 = TZS 100,000 (asiyetunza kumbukumbu) au 3% ya mauzo yanayozidi 4,000,000 (anayetunza); zaidi ya 7,000,000 hadi 11,000,000 = TZS 250,000 (asiyetunza) au TZS 90,000 pamoja na 3% ya yanayozidi 7,000,000 (anayetunza); kuanzia 11,000,001 hadi 100,000,000 = 3.5% ya mauzo yote.",
-    "correct_value": "0 / 100,000 / 250,000 or 3% marginal / 3.5% of turnover above 11M",
+    "fact": "Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: hadi TZS 4,000,000 = TZS 0; zaidi ya 4,000,000 hadi 7,000,000 = TZS 100,000 (asiyetunza kumbukumbu) au 3% ya mauzo yanayozidi 4,000,000 (anayetunza); zaidi ya 7,000,000 hadi 11,000,000 = TZS 250,000 (asiyetunza) au TZS 90,000 pamoja na 3% ya yanayozidi 7,000,000 (anayetunza); kuanzia 11,000,001 hadi 200,000,000 = 4.0% ya mauzo yote (ilikuwa asilimia 3.5, ilipanda WEF 1 Julai 2026). Pia: mfanyabiashara mpya mwenye TIN aliyoipata kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 anaweza kustahili msamaha wa TZS 0 (hadi TZS 200,000,000 za mauzo) -- LAKINI si wa moja kwa moja, lazima aombe kwa Kamishna na aidhinishwe (First Schedule para 2(4), mpya).",
+    "correct_value": "0 / 100,000 / 250,000 or 3% marginal / 4.0% of turnover above 11M (WEF 2026-07-01, was 3.5%); new-business first-12-months exemption available on application+grant, para 2(3)-(4)",
     "wrong_patterns": [
       "450,?000.*3\\.5%",
       "14,?000,?000.*presumptive",
       "presumptive.*14 million",
-      "makadirio.*450,?000"
+      "makadirio.*450,?000",
+      "(?<!kutoka asilimia )(?<!ilikuwa asilimia )(?<!was )(?<!from )3\\.5%.*mauzo.*(yote|turnover)",
+      "(?<!kutoka asilimia )(?<!ilikuwa asilimia )(?<!was )(?<!from )asilimia 3\\.5.*mauzo yote"
     ],
-    "primary_source": "Income Tax Act Cap 332 First Schedule para 2(3) as SUBSTITUTED by the Finance Act 2022 (Act No. 5 of 2022) s.72(a)(ii), in force 1 July 2022; matches TRA 'Taxes and Duties at a Glance 2025/26' s.6.0. NOTE: Cap 332 R.E.2019 still prints the superseded five-band table and is WRONG for turnover above 11,000,000.",
+    "primary_source": "Income Tax Act Cap 332 First Schedule para 2(3) as SUBSTITUTED by the Finance Act 2022 (Act No. 5 of 2022) s.72(a)(ii), in force 1 July 2022, AS FURTHER AMENDED by the Finance Act 2026 s.27(a)(ii)-(iii), in force 1 July 2026; matches TRA 'Taxes and Duties at a Glance 2025/26' s.6.0 for the pre-2026 figures. NOTE: Cap 332 R.E.2019 still prints the superseded five-band table and is WRONG for turnover above 11,000,000.",
     "verified_date": "2026-08-16",
-    "status": "CONFIRMED"
+    "verified_by": "Direct verbatim read of Finance Act 2026 s.27(a), 2026-09-01, fetched in full (not summarized) specifically because a ceiling change + rate change + new exemption in one amendment is where a further change could hide -- confirmed no other change to this paragraph beyond the three named. Quoted: 'deleting the figure \"100,000,000\" and substituting for it the figure \"200,000,000\"' (ceiling); new top-band row reads '4.0% of turnover'; new row 2 states the exemption 'NIL - for the first twelve months from the date of obtaining the Taxpayer Identification Number', new para 2(4) requires application and Commissioner grant, not automatic.",
+    "status": "CONFIRMED -- corrected 2026-09-01 (rate/ceiling/new exemption, see correction_note)",
+    "correction_note": "STALE-CONSTANT INCIDENT, found 2026-09-01 while verifying an unrelated PAYE fact, not by any scheduled recheck. This fact (and its sibling presumptive_tax_ceiling_100m) were verified 2026-08-16 against 'Finance Act 2020 to 2025' -- a comment that was true when written but became a silent trap the moment Finance Act 2026 (enacted 30 June 2026, IN FORCE 1 July 2026 -- before this fact's own 2026-08-16 verification date) touched the same paragraph and was never re-checked. The verification checked a fixed historical year range instead of every Finance Act gazetted as of the actual verification date. Root cause and the general lesson for every other locked fact and rates.py constant citing a Finance Act range: PROGRESS.md, 'PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT', 2026-09-01. The shipped compute engine (chike/rules_engine/presumptive.py) carried the same stale 3.5%/100,000,000 values and has been corrected in the same pass -- see rates.py's module comment for the full verbatim amendment text."
   },
   "presumptive_tax_ceiling_100m": {
-    "fact": "Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 100,000,000 kwa mwaka. Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi.",
-    "correct_value": "TZS 100,000,000 annual turnover ceiling",
+    "fact": "Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,000,000 kwa mwaka (ilikuwa TZS 100,000,000, iliongezwa WEF 1 Julai 2026). Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi.",
+    "correct_value": "TZS 200,000,000 annual turnover ceiling (WEF 2026-07-01, was TZS 100,000,000)",
     "wrong_patterns": [
       "makadirio.*kikomo.*20,?000,?000",
-      "presumptive.*threshold.*50 million"
+      "presumptive.*threshold.*50 million",
+      "(?<!kutoka )(?<!ilikuwa )(?<!was )(?<!from )(kikomo|threshold|ceiling).{0,30}(TZS )?100,?000,?000.{0,20}(makadirio|presumptive)",
+      "(?<!kutoka )(?<!ilikuwa )(?<!was )(?<!from )(makadirio|presumptive).{0,30}(kikomo|threshold|ceiling).{0,20}(TZS )?100,?000,?000"
     ],
-    "primary_source": "Income Tax Act Cap 332 First Schedule para 2(2); TRA Taxes and Duties at a Glance 2025/26",
+    "primary_source": "Income Tax Act Cap 332 First Schedule para 2(2), as amended by the Finance Act 2026 s.27(a)(i), in force 1 July 2026; TRA Taxes and Duties at a Glance 2025/26 for the pre-2026 figure.",
     "verified_date": "2026-08-16",
-    "status": "CONFIRMED"
+    "verified_by": "Direct verbatim read of Finance Act 2026 s.27(a)(i), 2026-09-01: 'deleting the figure \"100,000,000\" and substituting for it the figure \"200,000,000\"'.",
+    "status": "CONFIRMED -- corrected 2026-09-01 (ceiling doubled, see presumptive_tax_bands_2022's correction_note for the full stale-constant incident)"
   },
   "presumptive_excluded_services": {
     "fact": "Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala watoa huduma za kitaalamu (technical), uendeshaji (management), ujenzi (construction) na mafunzo (training). Hawa hutozwa kodi kwa viwango vya kawaida vya mtu binafsi.",

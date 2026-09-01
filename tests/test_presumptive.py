@@ -46,6 +46,10 @@ def test_probe_routes_as_specified(row):
 
 # --- the statutory table, cell by cell ------------------------------------------------
 # (annual_turnover, keeps_records, expected_amount)
+# TOP-BAND RATE AND CEILING UPDATED 2026-09-01 per Finance Act 2026 s.27(a)(i)-(ii), WEF
+# 2026-07-01: rate 3.5%->4.0%, ceiling 100,000,000->200,000,000. The 4M-7M and 7M-11M bands
+# are CONFIRMED UNCHANGED (same fixed/marginal specs) -- see rates.py's module comment for the
+# full verbatim amendment and the stale-constant incident this correction closes.
 _STATUTORY_CELLS = [
     (0, False, 0), (0, True, 0),
     (4_000_000, False, 0), (4_000_000, True, 0),            # "does not exceed" — inclusive
@@ -57,10 +61,11 @@ _STATUTORY_CELLS = [
     (9_000_000, True, 150_000),                             # 90,000 + 3% x 2,000,000
     (11_000_000, False, 250_000),
     (11_000_000, True, 210_000),                            # 90,000 + 3% x 4,000,000
-    (11_000_001, False, 385_000),                           # 3.5% of FULL turnover
-    (11_000_001, True, 385_000),
-    (30_000_000, False, 1_050_000), (30_000_000, True, 1_050_000),
-    (100_000_000, True, 3_500_000),
+    (11_000_001, False, 440_000),                           # 4.0% of FULL turnover (was 3.5%)
+    (11_000_001, True, 440_000),
+    (30_000_000, False, 1_200_000), (30_000_000, True, 1_200_000),
+    (100_000_000, True, 4_000_000),
+    (200_000_000, True, 8_000_000),                         # the NEW ceiling itself, inclusive
 ]
 
 
@@ -73,7 +78,8 @@ def test_every_cell_of_the_statutory_table(turnover, records, expected):
 
 def test_the_stale_consolidated_table_would_have_been_wrong():
     """Cap 332 R.E. 2019 prints an 11,000,001-14,000,000 band and a 14,000,001-100,000,000
-    band at 450,000 + 3.5% OF THE EXCESS. FA2022 replaced both with 3.5% of turnover.
+    band at 450,000 + 3.5% OF THE EXCESS. FA2022 replaced both with a single flat rate of
+    turnover (4.0% since FA2026 s.27(a)(ii), WEF 2026-07-01; was 3.5%).
 
     Kept executable because the failure mode is silent: both tables are 'the statute', both
     look authoritative, and only the amending Act distinguishes them.
@@ -81,19 +87,22 @@ def test_the_stale_consolidated_table_would_have_been_wrong():
     stale_at_50m = Decimal("450000") + Decimal("0.035") * (Decimal("50000000")
                                                            - Decimal("14000000"))
     assert stale_at_50m == Decimal("1710000")
-    assert compute_presumptive(50_000_000, True).amount == Decimal("1750000")
+    assert compute_presumptive(50_000_000, True).amount == Decimal("2000000")
     assert compute_presumptive(50_000_000, True).amount != stale_at_50m
 
     stale_at_12m = Decimal("230000") + Decimal("0.03") * (Decimal("12000000")
                                                           - Decimal("11000000"))
     assert stale_at_12m == Decimal("260000")
-    assert compute_presumptive(12_000_000, True).amount == Decimal("420000")
+    assert compute_presumptive(12_000_000, True).amount == Decimal("480000")
 
 
 def test_above_the_ceiling_presumptive_does_not_apply():
-    result = compute_presumptive(100_000_001, True)
+    """Ceiling 200,000,000, WEF 2026-07-01 (FA2026 s.27(a)(i); was 100,000,000) — updated
+    2026-09-01. The probe turnover itself moved (100,000,001 was above the OLD ceiling but is
+    now comfortably inside the new one) so this still genuinely tests above-ceiling behaviour."""
+    result = compute_presumptive(200_000_001, True)
     assert result.applicable is False and result.amount is None
-    assert "100,000,000" in result.working
+    assert "200,000,000" in result.working
 
 
 def test_an_excluded_professional_is_outside_the_regime_whatever_the_turnover():
@@ -128,6 +137,52 @@ def test_unstated_records_is_never_silently_read_as_no_records():
     assert routing.keeps_records("mauzo yangu ni milioni 5, situnzi kumbukumbu") is False
 
 
+# --- new-business first-year exemption, FA2026 s.27(a)(ii)-(iii)/(a)(4) -------------------
+# Added 2026-09-01, same day as the ceiling/rate fix. TWO independent unknowns (TIN date,
+# Commissioner grant), never guessed either direction — see presumptive.py's module docstring
+# and compute_presumptive's own docstring for why None is the only safe default.
+
+def test_new_business_exemption_confirmed_granted_is_zero():
+    result = compute_presumptive(30_000_000, True, new_business_exemption_granted=True)
+    assert result.applicable is True
+    assert result.amount == Decimal("0")
+    assert "2(3)-(4)" in result.working
+
+
+def test_new_business_exemption_confirmed_granted_applies_up_to_the_new_ceiling():
+    """The exemption's own upper bound is the same 200M ceiling, not a smaller figure."""
+    result = compute_presumptive(200_000_000, True, new_business_exemption_granted=True)
+    assert result.amount == Decimal("0")
+
+
+def test_new_business_exemption_NOT_granted_computes_the_ordinary_figure():
+    """False means confirmed not eligible or not granted -- the ordinary band governs, and
+    nothing about the exemption is mentioned since there is nothing left uncertain."""
+    result = compute_presumptive(30_000_000, True, new_business_exemption_granted=False)
+    assert result.amount == Decimal("1200000")
+    assert "TIN" not in result.working and "Kamishna" not in result.working
+
+
+def test_new_business_exemption_UNSTATED_computes_the_fallback_and_flags_the_possibility():
+    """The never-guess case, and the one the founder asked for explicitly: unconfirmed must
+    neither assert TZS 0 nor silently omit that TZS 0 might be the real answer."""
+    result = compute_presumptive(30_000_000, True)          # default: unstated
+    assert result.amount == Decimal("1200000"), (
+        "the ordinary band figure is still the correct fallback to STATE")
+    assert "TIN" in result.working and "Kamishna" in result.working, (
+        "the exemption's possible applicability must be stated, not silently assumed absent")
+    assert "TZS 0" in result.working, "the possible outcome must be named, not just hinted at"
+
+
+def test_new_business_exemption_note_never_fires_outside_its_own_window():
+    """Below 4M is already NIL for an unrelated reason (para 2(3) row 1); above the ceiling
+    presumptive does not apply at all. The note would be noise, not never-guess, in either case."""
+    below = compute_presumptive(2_000_000, True)
+    assert "TIN" not in below.working
+    above = compute_presumptive(250_000_000, True)
+    assert "TIN" not in above.working
+
+
 def test_the_transport_schedule_is_vetoed_rather_than_answered_wrongly():
     """para 2(5) is a per-vehicle table this engine does not implement. The corpus row that
     exposed it quotes TZS 250,000 — a TAX figure — and computing on it returns TZS 0."""
@@ -151,7 +206,8 @@ def test_the_clarification_copy_never_states_a_figure_it_has_not_computed():
     answering, and it is answering without the input it just said it needed — which is the
     `body volunteers a figure where the engine declined` family already on the board."""
     import re as _re
-    allowed = {'100,000,000'}                       # the statutory ceiling, structural only
+    allowed = {'200,000,000'}                       # the statutory ceiling, structural only
+                                                      # (was 100,000,000; FA2026 s.27(a)(i))
     for copy in (clarification.PRESUMPTIVE_NO_TURNOVER,
                  clarification.PRESUMPTIVE_PERIOD_IS_A_RATE,
                  clarification.PRESUMPTIVE_NO_RECORDS_STATUS):
@@ -163,14 +219,19 @@ def test_the_clarification_copy_never_states_a_figure_it_has_not_computed():
     assert 'kumbukumbu' in clarification.PRESUMPTIVE_NO_RECORDS_STATUS.lower()
 
 
-def test_rates_table_matches_the_finance_act_2022_shape():
-    """Four bands, ceiling 100M. The pre-2022 table had five."""
+def test_rates_table_matches_the_finance_act_2026_shape():
+    """Four bands (structure unchanged since FA2022), ceiling 200M (raised from 100M by
+    FA2026 s.27(a)(i), WEF 2026-07-01 -- updated 2026-09-01). The pre-2022 table had five."""
     assert len(rates.PRESUMPTIVE_BANDS) == 4
-    assert rates.PRESUMPTIVE_TURNOVER_CEILING == Decimal("100000000")
+    assert rates.PRESUMPTIVE_TURNOVER_CEILING == Decimal("200000000")
     uppers = [b[0] for b in rates.PRESUMPTIVE_BANDS]
     assert uppers == sorted(uppers), 'bands must be in ascending order for the lookup to work'
     assert Decimal("14000000") not in uppers, (
         'a 14,000,000 boundary means the STALE R.E.2019 table has been re-encoded')
+    # The top band's RATE changed (3.5%->4.0%) but the 4M/11M boundaries where the records-kept
+    # axis matters did NOT move -- confirmed directly, not assumed from the ceiling change alone.
+    assert Decimal("4000000") in uppers and Decimal("11000000") in uppers
+    assert rates.PRESUMPTIVE_BANDS[-1][1] == ("flat_on_turnover", Decimal("0.04"))
 
 
 # --- end to end, no model -----------------------------------------------------------
