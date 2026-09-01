@@ -1,0 +1,49 @@
+{
+  "measured": "2026-09-01",
+  "dry_run": false,
+  "harness": "scripts/correct_corpus_defects_v8.py",
+  "companion_of": [
+    "scripts/correct_corpus_defects.py",
+    "scripts/correct_corpus_defects_v2.py",
+    "scripts/correct_corpus_defects_v3.py",
+    "scripts/correct_corpus_defects_v4.py",
+    "scripts/correct_corpus_defects_v5.py",
+    "scripts/correct_corpus_defects_v6.py",
+    "scripts/correct_corpus_defects_v7.py"
+  ],
+  "quarantine_file": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+  "defect_classes": [
+    "VATWH_REMITTANCE_STALE_20TH"
+  ],
+  "quarantine": {
+    "rows": 50,
+    "by_file": {
+      "datasets/tier1a/cleaned_pairs/batch_007_replacements.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_009.jsonl": 2,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_012.jsonl": 1,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_013.jsonl": 3,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl": 6,
+      "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_015.jsonl": 7,
+      "datasets/tier1a/raw_sources/batch_009_checkpoints/checkpoint_005.jsonl": 1,
+      "datasets/tier1a/raw_sources/batch_013_checkpoints/ck_vat_withholding_correction_001.jsonl": 2,
+      "datasets/tier1a/raw_sources/batch_013_checkpoints/ck_vat_withholding_correction_002.jsonl": 1,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl": 2,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_012.jsonl": 1,
+      "datasets/tier1a/raw_sources/raw_pairs_batch_013.jsonl": 3,
+      "datasets/tier1a/raw_sources/raw_pairs_replacements.jsonl": 1,
+      "datasets/tier1a/sft/train_sft.jsonl": 19
+    },
+    "by_defect_class": {
+      "VATWH_REMITTANCE_STALE_20TH": 50
+    }
+  },
+  "verification_after": {
+    "datasets_rows_still_matching_any_defect_class": 0,
+    "clean": true
+  },
+  "what_this_does_NOT_do": [
+    "It does not regenerate the SFT files. generate_sft.py must be re-run before any training, or the quarantined rows are still in the exported training set.",
+    "It does not touch the VAT withholding CERTIFICATE timing fact/rows -- that obligation (VAT Act s.15, \"day VAT becomes payable\") is confirmed unaffected by Finance Act 2026, and rows correctly stating it are not quarantined merely for mentioning the 20th in CONTRAST to the certificate date, only for asserting the 20th AS the remittance deadline itself.",
+    "It does not touch the ordinary VAT RETURN deadline (still the 20th, unchanged) -- the pattern requires VAT-withholding-specific context, not bare \"VAT return\"."
+  ]
+}
