@@ -1,0 +1,1535 @@
+{
+  "measured": "2026-09-01",
+  "harness": "scripts/bootstrap_verified_as_at.py",
+  "purpose": "Bootstrap census: verified_as_at populated ONLY from explicit primary-source-read language + an explicit date in the SAME verified_by string. Never inferred from verified_date/effective_date.",
+  "total_top_level_keys": 252,
+  "metadata_blocks_excluded": [
+    "_meta",
+    "_unresolved_items"
+  ],
+  "dict_shaped_facts_classified": 172,
+  "primary_verified": 31,
+  "unknown_backlog_dict_shaped": 141,
+  "unstructured_string_valued_facts": 78,
+  "unstructured_facts_note": "These carry no verified_by/primary_source/any metadata field at all -- not processed as \"unknown\" alongside the dict-shaped facts because they cannot carry a verified_as_at field without first being converted from a bare string to a dict, which is a schema-migration decision bigger than this bootstrap census. Effectively unknown-or-worse; listed separately so they are not silently invisible.",
+  "unstructured_facts": [
+    {
+      "key": "sdl_payment_deadline",
+      "value": "7 days_of_month"
+    },
+    {
+      "key": "trademark_fee_for_explanation_of_decision",
+      "value": "50,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_opposition_notice",
+      "value": "60,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_responding_to_opposition",
+      "value": "50,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_hearing_opposition",
+      "value": "70,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_single_mark_registration",
+      "value": "60,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_series_of_marks_first_mark",
+      "value": "60,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_series_of_marks_subsequent_mark",
+      "value": "30,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_renewal_of_registration",
+      "value": "30,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_renewal_of_series_of_marks_first_mark",
+      "value": "30,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_renewal_of_series_of_marks_subsequent_mark",
+      "value": "10,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_additional_fee_by_regulation_54",
+      "value": "30,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_refund_of_fee",
+      "value": "30,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_registration_of_subsequent_proprietor",
+      "value": "50,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_change_of_proprietor_or_user_same_address",
+      "value": "50,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_any_other_entry",
+      "value": "10,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_change_of_business_address",
+      "value": "20,000 TZS"
+    },
+    {
+      "key": "trademark_fee_for_dissolution_of_partnership",
+      "value": "50,000 TZS"
+    },
+    {
+      "key": "company_share_value_threshold_1_max",
+      "value": "1,000,000 TZS"
+    },
+    {
+      "key": "company_registration_fee_1",
+      "value": "95,000 TZS"
+    },
+    {
+      "key": "company_share_value_threshold_2_min",
+      "value": "1,000,000 TZS"
+    },
+    {
+      "key": "company_share_value_threshold_2_max",
+      "value": "5,000,000 TZS"
+    },
+    {
+      "key": "company_registration_fee_2",
+      "value": "175,000 TZS"
+    },
+    {
+      "key": "company_share_value_threshold_3_min",
+      "value": "5,000,000 TZS"
+    },
+    {
+      "key": "company_share_value_threshold_3_max",
+      "value": "20,000,000 TZS"
+    },
+    {
+      "key": "company_registration_fee_3",
+      "value": "260,000 TZS"
+    },
+    {
+      "key": "company_share_value_threshold_4_min",
+      "value": "20,000,000 TZS"
+    },
+    {
+      "key": "company_share_value_threshold_4_max",
+      "value": "50,000,000 TZS"
+    },
+    {
+      "key": "company_registration_fee_4",
+      "value": "290,000 TZS"
+    },
+    {
+      "key": "company_share_value_threshold_5_min",
+      "value": "50,000,000 TZS"
+    },
+    {
+      "key": "company_registration_fee_5",
+      "value": "440,000 TZS"
+    },
+    {
+      "key": "company_registration_fee_no_share_capital",
+      "value": "300,000 TZS"
+    },
+    {
+      "key": "memorandum_articles_of_association_filing_fee",
+      "value": "22,000 TZS"
+    },
+    {
+      "key": "stamp_duty_per_copy_memorandum_articles_copy",
+      "value": "10,000 TZS"
+    },
+    {
+      "key": "stamp_duty_form_14b_fee",
+      "value": "1,200 TZS"
+    },
+    {
+      "key": "company_name_reservation_fee",
+      "value": "50,000 TZS"
+    },
+    {
+      "key": "company_name_change_fee",
+      "value": "22,000 TZS"
+    },
+    {
+      "key": "document_acceptance_registration_fee",
+      "value": "22,000 TZS"
+    },
+    {
+      "key": "late_filing_penalty_monthly_fee",
+      "value": "2,500 TZS"
+    },
+    {
+      "key": "annual_return_filing_fee",
+      "value": "22,000 TZS"
+    },
+    {
+      "key": "document_certification_fee_per_page",
+      "value": "3,000 TZS"
+    },
+    {
+      "key": "file_search_fee",
+      "value": "3,000 TZS"
+    },
+    {
+      "key": "file_search_report_fee",
+      "value": "22,000 TZS"
+    },
+    {
+      "key": "certified_copy_agreement_law_constitution_fee",
+      "value": "750 USD"
+    },
+    {
+      "key": "late_filing_penalty_monthly_fee_section_12_act",
+      "value": "25 USD"
+    },
+    {
+      "key": "certified_copy_certificate_of_registration_fee",
+      "value": "4,000 TZS"
+    },
+    {
+      "key": "osiha_act_citation",
+      "value": "Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003"
+    },
+    {
+      "key": "vat_registration_threshold_annual",
+      "value": "200,000,000 TZS"
+    },
+    {
+      "key": "vat_registration_threshold_six_months",
+      "value": "100,000,000 TZS"
+    },
+    {
+      "key": "vat_registration_notification_deadline_commissioner",
+      "value": "14 days"
+    },
+    {
+      "key": "vat_return_submission_deadline",
+      "value": "20 days_of_month"
+    },
+    {
+      "key": "form_number_payment_credit_slip",
+      "value": "ITX 300.01.E"
+    },
+    {
+      "key": "legal_citation_sdl",
+      "value": "Sheria ya Elimu na Mafunzo ya Ufundi, Sura ya 82, Kifungu cha 14"
+    },
+    {
+      "key": "exemption_category_government_departments",
+      "value": "Idara za Serikali au taasisi za umma zinazofadhiliwa kikamilifu na Serikali"
+    },
+    {
+      "key": "exemption_category_diplomatic_missions",
+      "value": "Misheni za Kidiplomasia"
+    },
+    {
+      "key": "exemption_category_un_and_agencies",
+      "value": "Umoja wa Mataifa na taasisi zake"
+    },
+    {
+      "key": "exemption_category_international_organizations_aid",
+      "value": "Taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi"
+    },
+    {
+      "key": "exemption_category_religious_institutions",
+      "value": "Taasisi za kidini ambazo wafanyakazi wake wanajihusisha tu na:kuendesha ibada; kutoa mafundisho ya dini; kusimamia shughuli za kidini; kutoa huduma za afya ya jamii"
+    },
+    {
+      "key": "exemption_category_charitable_organizations",
+      "value": "Mashirika ya misaada (charitable organizations)"
+    },
+    {
+      "key": "exemption_category_educational_institutions",
+      "value": "Taasisi za elimu zilizosajiliwa, zikiwemo: shule za awali, msingi na sekondari; vyuo vya ufundi na mafunzo; vyuo vikuu na taasisi za elimu ya juu"
+    },
+    {
+      "key": "exemption_category_local_government_authorities",
+      "value": "Mamlaka za Serikali za Mitaa"
+    },
+    {
+      "key": "exemption_category_farm_employers_agriculture",
+      "value": "Waajiri wa mashambani ambao wafanyakazi wao wanajihusisha moja kwa moja na shughuli za kilimo (isipokuwa wale wanaosimamia au kushughulika na usindikaji wa mazao)"
+    },
+    {
+      "key": "late_payment_penalty_rate",
+      "value": "2 %"
+    },
+    {
+      "key": "workers_compensation_act_citation",
+      "value": "Sheria ya Fidia kwa Wafanyakazi [Sura 263]"
+    },
+    {
+      "key": "workers_compensation_act_section",
+      "value": "75 (2)"
+    },
+    {
+      "key": "workers_compensation_rules_citation",
+      "value": "Kanuni za Sheria ya Fidia kwa Wafanyakazi za mwaka 2016"
+    },
+    {
+      "key": "workers_compensation_rules_section",
+      "value": "13 (7)"
+    },
+    {
+      "key": "workers_compensation_amendment_rules_citation",
+      "value": "Kanuni za Sheria ya Fidia kwa Wafanyakazi Marekebisho ya mwaka 2021"
+    },
+    {
+      "key": "workers_compensation_amendment_rules_section",
+      "value": "13 (7)"
+    },
+    {
+      "key": "registration_certificate_processing_time",
+      "value": "3 days"
+    },
+    {
+      "key": "annual_return_form_number",
+      "value": "128"
+    },
+    {
+      "key": "beneficial_owner_information_penalty_maximum",
+      "value": "10000000 TZS"
+    },
+    {
+      "key": "application_fee_patent",
+      "value": "12000 TZS"
+    },
+    {
+      "key": "company_director_minimum_age",
+      "value": "18"
+    },
+    {
+      "key": "registration_certificate_processing_time_new",
+      "value": "1 days"
+    },
+    {
+      "key": "compliance_license_processing_time_old",
+      "value": "28 days"
+    },
+    {
+      "key": "vat_deferment_limit_date",
+      "value": "30 June 2026"
+    },
+    {
+      "key": "vat_deferment_form_number",
+      "value": "ITX 247.02.E"
+    }
+  ],
+  "rows": [
+    {
+      "key": "paye_band_2_rate",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "AfroTools TRA 2025/26 verified July 2025"
+    },
+    {
+      "key": "paye_penalty_rate",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "PWC Tanzania Tax Summaries"
+    },
+    {
+      "key": "paye_personal_relief",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "PWC Tanzania Individual Tax Summary Jan 2026 + Habib Advisory 2025/26 — NO personal relief line item exists"
+    },
+    {
+      "key": "paye_p9_deadline",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of ITA Cap.332 s.85(3)(b), 2026-08-31; checked every Finance Act 2021-2026 for an amendment to s.85 -- none found. Supersedes payspace.com/Deel/Rive"
+    },
+    {
+      "key": "p45_not_tanzanian",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TRA website -- P45 not mentioned anywhere in Tanzania tax law. 'P9' half independently corroborated wrong 2026-09-01 by PwC's Tanzania tax-administration page ("
+    },
+    {
+      "key": "sdl_rate",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Finance Act 2023 -- changed from 4% to 3.5%; PWC Tax Summaries 2025"
+    },
+    {
+      "key": "sdl_full_name",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TRA official SDL page"
+    },
+    {
+      "key": "sdl_threshold",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Finance Act 2021 — changed threshold from 4 to 10"
+    },
+    {
+      "key": "sdl_payer",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TRA SDL page"
+    },
+    {
+      "key": "nssf_employer_rate",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "NSSF official website — inference test after 300 pairs confirmed 10% is now learned"
+    },
+    {
+      "key": "nssf_total_rate",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "NSSF official website"
+    },
+    {
+      "key": "nssf_penalty",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "NSSF Act Cap.50"
+    },
+    {
+      "key": "nssf_retirement_age",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-29",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of Cap.50 text (OAG-compiled R.E. 2023 PDF via nssf.go.tz), 2026-08-29 -- supersedes prior verification against Mywage.org + US SSA Tanzania country"
+    },
+    {
+      "key": "vat_standard_rate",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-29",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "VAT Act Cap.148 s.5(1), direct read, 2026-08-29 (18% general rate — primary); 16% carve-out per CLAUDE.md §11 / EY Tanzania Finance Act 2025 analysis / KPMG Tax"
+    },
+    {
+      "key": "vat_reduced_rates",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TRA VAT Act — only standard 18%, zero-rated 0%, exempt (category basis); 16% transaction-carve-out per CLAUDE.md §11, cross-referenced with vat_standard_rate's "
+    },
+    {
+      "key": "vat_registration_threshold",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of GN 448Y/2023 (tra.go.tz) and the original GN 225/2015 Reg.14 (tanzlii.org), 2026-08-31. GN 448Y s.4: \"deleting the phrase 'one hundred million sh"
+    },
+    {
+      "key": "vat_withholding_goods",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5); GN 352K of 30/6/2025 reg 31B — primary legislation, TRA-hosted"
+    },
+    {
+      "key": "vat_withholding_services",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5); GN 352K of 30/6/2025 reg 31B — primary legislation, TRA-hosted"
+    },
+    {
+      "key": "gn487a_nature",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TanzLII gazette text + Bowmans Tanzania legal update"
+    },
+    {
+      "key": "gn487a_effective_date",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TanzLII gazette"
+    },
+    {
+      "key": "gn487a_penalty_noncitizen",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TanzLII gazette text"
+    },
+    {
+      "key": "gn487a_penalty_citizen_facilitator",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TanzLII gazette text; Bowmans 30 Jul 2025; Clyde & Co Jul 2025; VELMA Law; ChimpReports"
+    },
+    {
+      "key": "gn487a_license_lending_is_facilitation",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TanzLII gazette text; derived from gn487a_msaidizi_definition + gn487a_penalty_citizen_facilitator (no new figure)"
+    },
+    {
+      "key": "gn605a_effective_date",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TanzLII gazette"
+    },
+    {
+      "key": "gn605a_average_increase",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Business and Human Rights Centre — Minister Kikwete press briefing October 2025"
+    },
+    {
+      "key": "royalties_wht_rate",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of First Schedule para 4(b) and the amending Finance Act 2022/2024 clauses, 2026-08-31. Supersedes Auditax International (practitioner, only confirm"
+    },
+    {
+      "key": "provisional_tax_instalments",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TRA Paying Taxes page + PWC Tanzania + Auditax International"
+    },
+    {
+      "key": "minimum_turnover_tax",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of Finance Act 2025 s.60(d)(ii) (\"deleting the figure '0.5' ... and substituting ... '1'\") and First Schedule para 3(3), 2026-08-31. Checked Finance"
+    },
+    {
+      "key": "commissioner_objection_deadline",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Finance Act 2020 amendment to Tax Administration Act confirmed by PWC"
+    },
+    {
+      "key": "trab_appeal_two_steps",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TRAB official website"
+    },
+    {
+      "key": "objection_deposit_requirement",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of TAA Cap.438 current consolidation, 2026-08-31 -- the deposit requirement sits at s.62(7)-(9) in the current numbering. Cross-checked against GN 1"
+    },
+    {
+      "key": "objection_extension_statutory_right",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TRA Objections page — extension explicitly provided by law"
+    },
+    {
+      "key": "stamp_duty_property_transfer",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of Stamp Duty Act Cap.189 Schedule Article 22(b), 2026-08-31. Checked the amendment chain per this project's own consolidated-Act discipline: Financ"
+    },
+    {
+      "key": "permit_class_b_employed",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Tanzania Immigration Department official website"
+    },
+    {
+      "key": "permit_class_a_investor",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Tanzania Immigration Department official website"
+    },
+    {
+      "key": "permit_class_c_categories",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Tanzania Immigration Department official website; corroborated 2026-08-31 via three government embassy sub-portals (un.tzembassy.go.tz, us.tzembassy.go.tz, in.t"
+    },
+    {
+      "key": "corporate_tax_rate",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TRA Corporation Tax page"
+    },
+    {
+      "key": "wht_deadline",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Income Tax Act s.84"
+    },
+    {
+      "key": "loss_carryforward_finance_act_2024",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Finance Act 2024 amendment"
+    },
+    {
+      "key": "brela_share_transfer_legal_effect",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Companies Act 2002"
+    },
+    {
+      "key": "tmda_replaces_tfda",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TMDA official website"
+    },
+    {
+      "key": "brave_search_blocked_tanzania",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Brave Software public statement 2025"
+    },
+    {
+      "key": "paye_all_bands_sequence",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "PWC Tanzania Individual Tax Summary, last reviewed Jan 2026"
+    },
+    {
+      "key": "paye_nonresident_flat_rate",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of Cap.332 R.E.2019 baseline text, 2026-09-01, during the PAYE_NONRESIDENT_RATE grounding pass (this constant had never been checked against primary"
+    },
+    {
+      "key": "brela_striking_off_non_filing",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "BRELA gazette notice (30-day defunct notice + s.400(3) strike-off); Written Laws (Misc. Amendments)(No.3) Act 2019 s.400A own-accord + s.400A(5) High Court rest"
+    },
+    {
+      "key": "wcf_new_employer_registration",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "WCF official website, Jun 2026"
+    },
+    {
+      "key": "wcf_disease_reporting_deadline",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-29",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of GN 185/2016 text (media.tanzlii.org), 2026-08-29 -- supersedes prior verification against the wcf.go.tz portal page, which stated only the employ"
+    },
+    {
+      "key": "gn605a_increment_range",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "PKF Eastern Africa GN 605A analysis, Oct 2025"
+    },
+    {
+      "key": "wht_director_fees",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "wcf_accident_reporting",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "wcf_accident_reporting_deadline",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "osha_registration_threshold_b004",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "dse_25_rate_three_years_only",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "permit_class_d_does_not_exist",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_transitional_provision",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of GN487A ss.3(2) and 4, 2026-08-31 -- all three claims (continue-to-expiry / no renewal / no new licences) map exactly onto the Order's own text."
+    },
+    {
+      "key": "efd_threshold_tzs_11m",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-29",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of TAA Cap.438 R.E.2023 s.44 text (OSG e-library PDF via r.jina.ai proxy; cross-checked against the R.E.2019 s.36 text still hosted on tra.go.tz to "
+    },
+    {
+      "key": "efd_not_every_business",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-29",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of TAA Cap.438 s.44(2), 2026-08-29 -- supersedes the 2026-07-27 version of this fact, which encoded TZS 11M as the exemption line 'per the primary-o"
+    },
+    {
+      "key": "gn487a_visa_revocation",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of GN487A s.3(3)(a) text, 2026-08-31 -- supersedes a three-way secondary-source average (Bowmans said mandatory; The Star and The Citizen said possi"
+    },
+    {
+      "key": "vat_withholding_remittance_deadline",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct verbatim read of Finance Act 2026 s.95, 2026-09-01, during the Finance-Act-freshness audit: 'deleting subsection (5) and substituting for it the followin"
+    },
+    {
+      "key": "vat_late_registration_penalty",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "nssf_payment_deadline",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "paye_bands_monthly_2025_26",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "vat_withholding_formula_correct",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5) — statute states withheld 3%/6% and supplier's 12% (services) as components of the 18% rate "
+    },
+    {
+      "key": "wcf_threshold_no_minimum",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "WCF official portal, VELMA Law, V.A Business Consultants July 2025"
+    },
+    {
+      "key": "wcf_rate_0_5_percent_confirmed",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-29",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "GN 169/2015 direct read (media.tanzlii.org), 2026-08-29, for the base 2015 rates (public 0.5% / private 1%) -- this corrects the prior fact's history claim. The"
+    },
+    {
+      "key": "wcf_paid_to_fund_not_tra",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "wcf.go.tz/pages/contribution — 'Mwajiri anaweza kulipa katika Mfuko kwa njia ya mtandao (portal.wcf.go.tz)', employer-only contribution, no TRA; Workers Compens"
+    },
+    {
+      "key": "osha_vs_wcf_roles",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "osha.go.tz/frequent-asked-questions (eng) item 17 directs injured workers to WCF; OSH Act No.5/2003 s.16; Workers Compensation Act Cap 263; cross-ref wcf_thresh"
+    },
+    {
+      "key": "small_headcount_still_register",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "retrieval-targeted companion for the small-headcount registration phrasing; does NOT restate company-incorporation minimums (minimum_shareholders — different to"
+    },
+    {
+      "key": "vat_threshold_200m_july2024_increase",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of GN 448Y/2023 (tra.go.tz) and the original GN 225/2015 Reg.14 (tanzlii.org), 2026-08-31. GN 448Y s.4: \"deleting the phrase 'one hundred million sh"
+    },
+    {
+      "key": "GN605A_effective_date",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "GN605A_sector_count",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "GN605A_rate_range",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "GN605A_key_sector_rates",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "OSHA_penalties",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "VAT_withholding_base_disputed",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5); GN 352K of 30/6/2025 reg 31B — primary legislation, TRA-hosted"
+    },
+    {
+      "key": "NSSF_split_triggers",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "BRELA_fees_hedge",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "vat_withholding_certificate_timing",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "brela_partnership_registration",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "brela_business_structures",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Business Names (Registration) Act Cap.213 s.2 ('business name' = style under which business carried on, whether in partnership or otherwise; applies to firms, i"
+    },
+    {
+      "key": "osha_licence_renewal_frequency",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "nssf_employer_registration_deadline",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "efd_approved_supplier_verification",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "OSHA_annual_inspection",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "tiseza.go.tz eregulations; Revocatus Mandago citing OHS Act"
+    },
+    {
+      "key": "OSHA_safety_officer_threshold",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of Cap.297 s.11 primary text, 2026-09-01."
+    },
+    {
+      "key": "BRELA_COSOTA_split",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "ARIPO; WIPO; US Trade.gov; IBA"
+    },
+    {
+      "key": "SDL_source_law",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TRA SDL page; Vocational Education Training Act Cap. 82"
+    },
+    {
+      "key": "VAT_zero_rated_vs_exempt_input_VAT",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TanzaniaInvest VAT Guide; PwC Tax Summaries Tanzania; TRA.go.tz"
+    },
+    {
+      "key": "gn487a_mgeni_cap357_definition",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of GN487A s.2 and Cap.357 ss.3(1), 8-12, 30(1)(b), 2026-08-31. R.E.2002 text used (tanzlii.org 403'd on automated fetch for the R.E.2023 edition); t"
+    },
+    {
+      "key": "gn487a_msaidizi_definition",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "VELMA Law citing GN487A text; Bowmans Tanzania legal update"
+    },
+    {
+      "key": "gn487a_marriage_no_exemption",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Clyde & Co article confirms citizenship categories do not include marriage; Cap.357 naturalisation process is separate"
+    },
+    {
+      "key": "vat_withholding_buyer_remits_directly",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TRA VAT page confirmed June 2026 — 'withholding agent shall remit to Commissioner General'"
+    },
+    {
+      "key": "efd_tra_closure_authority",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "TRA EFD page unavailable — based on VAT Act Cap.148 enforcement framework"
+    },
+    {
+      "key": "document_filing_fee_section_12_act_excluding_balance_sheet",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of BRELA's own fee schedule, 2026-09-01: two distinct USD 220 line items for foreign companies ('Document filing' and 'File opening')."
+    },
+    {
+      "key": "balance_sheet_filing_fee_section_12_act",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of BRELA's own fee schedule, 2026-09-01: two distinct USD 220 line items for foreign companies ('Document filing' and 'File opening')."
+    },
+    {
+      "key": "act_section_12",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of Companies Act Cap.212 table of contents and body text, 2026-08-31. Part XII (ss.314-319) is confirmed to be \"Winding up of unregistered companies"
+    },
+    {
+      "key": "health_and_safety_act_citation",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of Cap.297 R.E.2023 primary text, 2026-09-01."
+    },
+    {
+      "key": "risk_assessment_frequency",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of Cap.297 s.60 primary text, 2026-09-01."
+    },
+    {
+      "key": "legal_citation_tax_administration",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of TRA's own hosted TAA PDF (tra.go.tz), 2026-09-01. Independently corroborated by this project's own rules_engine/presumptive.py and rules_engine/r"
+    },
+    {
+      "key": "legal_citation_amendment_act_sdl",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of Cap.82's 2019 primary consolidation text, 2026-09-01 -- s.19's own amendment-history bracket lists the five Acts above."
+    },
+    {
+      "key": "exemption_category_trainees_under_TAESA",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "minimum_directors",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Secondary-source corroboration (law-firm/BRELA-adjacent summaries of Written Laws (Miscellaneous Amendments) Act No.5 of 2021), 2026-09-01 -- section text itsel"
+    },
+    {
+      "key": "minimum_shareholders",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Secondary-source corroboration (law-firm/BRELA-adjacent summaries of the 2021 amending Act), 2026-09-01 -- section text itself not directly read this pass."
+    },
+    {
+      "key": "business_name_maintenance_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of BRELA's own business-name fee page, 2026-09-01: 'Ada ya maombi: 15,000.00' (application) and 'Ada ya uendeshaji (inalipwa kila mwaka): 5,000.00' "
+    },
+    {
+      "key": "name_similarity_threshold",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Secondary-source paraphrase of Companies Rules 2006 rr.2-3, cross-checked for consistency across sources, 2026-08-31 -- direct TanzLII PDF fetch 403'd; recommen"
+    },
+    {
+      "key": "trademark_renewal_period",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "patent_term",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-31",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of Patents (Registration) Act Cap.217 s.39(1)-(3), 2026-08-31. Cross-checked separately via web search that '20 years' as a flat term is the ARIPO r"
+    },
+    {
+      "key": "course_fee",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "electrical_test_fee_reduction_initial",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Secondary source (national newspaper quoting OSHA's CEO directly), 2026-09-01 -- underlying OSHA fee-schedule/Government Notice not located."
+    },
+    {
+      "key": "electrical_test_fee_reduction_final",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Secondary source (national newspaper quoting OSHA's CEO directly), 2026-09-01 -- underlying OSHA fee-schedule/Government Notice not located."
+    },
+    {
+      "key": "vat_deferment_threshold_percentage",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Cross-checked TRA's VAT Deferment page and Breakthrough Attorneys, both quoting matching statutory phrasing (\"at least ninety percent of taxable supplies\"), 202"
+    },
+    {
+      "key": "vat_deferment_minimum_value",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Multiple non-lineage-linked sources converge on TZS 20,000,000 for this figure, 2026-08-31 -- found incidentally while verifying vat_deferment_threshold_percent"
+    },
+    {
+      "key": "gn487a_full_legal_name",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_vs_gn605a_disambiguation",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_legal_authority",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_salon_exception",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_1",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_2",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_3",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_4",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_5",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_6",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_7",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_8",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_9",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_10",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_11",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_12",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_13",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_14",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_prohibited_activity_15",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_total_prohibited_activities",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_signatory",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "unpaid_contribution_penalty_rate",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "unpaid_contribution_penalty_frequency",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "minimum_monthly_contributions_for_retirement_pension",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "minimum_contribution_months_health_insurance",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "minimum_monthly_contributions_maternity_benefit",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "duration_of_maternity_cash_benefit",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "maternity_cash_benefit_rate",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "employer_notification_deadline_before_retirement",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "fund_payment_deadline_after_retirement_notification",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "pensionable_age",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "fine_limit",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "imprisonment_term_limit",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "business_licensing_act_citation",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "order_made_under_section",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "prohibited_business_activities_for_non_citizens_order_year",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "business_licensing_act_chapter",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "tanzania_citizenship_act_reference",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "offence_penalty_mention",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "penalty_fine_non_citizen",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "penalty_imprisonment_non_citizen",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "penalty_fine_tanzanian_citizen",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "penalty_imprisonment_tanzanian_citizen",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "contribution_rate_emplyees",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "gn487a_shareholder_vs_operator_distinction",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "manual_review - high-value edge case, common real user question"
+    },
+    {
+      "key": "paye_bands_with_examples",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "sdl_calculation_example",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "nssf_calculation_example",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "business_licence_expiry_30_june",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "presumptive_tax_bands_2022",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct verbatim read of Finance Act 2026 s.27(a), 2026-09-01, fetched in full (not summarized) specifically because a ceiling change + rate change + new exempti"
+    },
+    {
+      "key": "presumptive_tax_ceiling_100m",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct verbatim read of Finance Act 2026 s.27(a)(i), 2026-09-01: 'deleting the figure \"100,000,000\" and substituting for it the figure \"200,000,000\"'."
+    },
+    {
+      "key": "presumptive_excluded_services",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "brela_foreign_late_filing_penalty",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "BRELA official fee schedule, Jun 2026"
+    },
+    {
+      "key": "osha_registration_before_operations",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Tanzania government business-procedures portal (tiseza.go.tz), cross-checked against independent search results quoting identical s.16(2) text"
+    },
+    {
+      "key": "sdl_exemption_categories",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "no verified_by field at all",
+      "verified_by_excerpt": ""
+    },
+    {
+      "key": "council_service_levy_is_a_cap_not_a_rate",
+      "status": "primary_verified",
+      "verified_as_at": "2026-08-16",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "source pass 2026-08-16, full 62pp Act read and quoted verbatim"
+    },
+    {
+      "key": "council_service_levy_non_corporate_conflict",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "source pass 2026-08-16"
+    },
+    {
+      "key": "market_dues_no_national_amount",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "source pass 2026-08-16"
+    },
+    {
+      "key": "market_dues_exemptions",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "source pass 2026-08-16"
+    },
+    {
+      "key": "business_licence_fee_national_schedule_local_collection",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "source pass 2026-08-16"
+    }
+  ]
+}

@@ -27,7 +27,8 @@
     "verified_by": "AfroTools TRA 2025/26 verified July 2025",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "unresolved_note": "Confirm via TRA IDRAS calculator before batch_004"
+    "unresolved_note": "Confirm via TRA IDRAS calculator before batch_004",
+    "verified_as_at": "unknown"
   },
   "paye_penalty_rate": {
     "fact": "Late PAYE remittance penalty is 2.5% per month of unpaid amount",
@@ -45,7 +46,8 @@
     "primary_source": "https://taxsummaries.pwc.com/tanzania/corporate/tax-administration",
     "verified_by": "PWC Tanzania Tax Summaries",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "paye_personal_relief": {
     "fact": "Tanzania has NO separate PAYE personal relief deduction. The 0% band on first TZS 270,000/month IS the effective tax-free amount. Both TZS 26,000 and TZS 27,000 'personal relief' figures are WRONG.",
@@ -67,7 +69,8 @@
     "verified_by": "PWC Tanzania Individual Tax Summary Jan 2026 + Habib Advisory 2025/26 — NO personal relief line item exists",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "correction_note": "Original entry incorrectly asserted 26,000 was correct. Session 11 (2026-06-12) confirmed no such relief exists in Tanzania law."
+    "correction_note": "Original entry incorrectly asserted 26,000 was correct. Session 11 (2026-06-12) confirmed no such relief exists in Tanzania law.",
+    "verified_as_at": "unknown"
   },
   "paye_p9_deadline": {
     "fact": "The annual employment-income withholding certificate is due by 30 January of the following year (Income Tax Act Cap.332, s.85(3)(b)). 'Form P9' is Kenyan (KRA) terminology -- Tanzania's TRA has no form by that name; do not use it.",
@@ -86,7 +89,8 @@
     "verified_by": "Direct read of ITA Cap.332 s.85(3)(b), 2026-08-31; checked every Finance Act 2021-2026 for an amendment to s.85 -- none found. Supersedes payspace.com/Deel/Rivermate (three multi-country payroll SaaS vendors sharing one likely lineage, none an Act citation).",
     "effective_date": "2020-07-01",
     "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note); TENTATIVE, recommend a TRA-registered tax consultant spot-check",
-    "correction_note": "Prior fact asserted a 'Form P9' deadline of 31 March, and blocked '31 January' as a wrong_pattern. 'P9' is Kenyan KRA terminology -- no evidence was found that TRA uses this form name at all. Tanzania's actual equivalent obligation, the annual employment-income withholding certificate under Income Tax Act Cap.332 s.85(3)(b), is due 30 January -- one day earlier than the '31 January' pattern this fact used to reject as wrong. Likely origin: payspace.com (a multi-country payroll SaaS vendor) imported Kenyan P9 terminology and deadline logic wholesale; the fact's own 'correction' from 31 January to 31 March then compounded the error rather than catching it. Flagged CORRECTED but TENTATIVE by the verifying researcher -- s.85(3)(b) was read directly and no amendment was found in any Finance Act 2021-2026, but this fact would benefit from an independent tax-consultant confirmation given how far from the primary text the original three-vendor citation chain had drifted."
+    "correction_note": "Prior fact asserted a 'Form P9' deadline of 31 March, and blocked '31 January' as a wrong_pattern. 'P9' is Kenyan KRA terminology -- no evidence was found that TRA uses this form name at all. Tanzania's actual equivalent obligation, the annual employment-income withholding certificate under Income Tax Act Cap.332 s.85(3)(b), is due 30 January -- one day earlier than the '31 January' pattern this fact used to reject as wrong. Likely origin: payspace.com (a multi-country payroll SaaS vendor) imported Kenyan P9 terminology and deadline logic wholesale; the fact's own 'correction' from 31 January to 31 March then compounded the error rather than catching it. Flagged CORRECTED but TENTATIVE by the verifying researcher -- s.85(3)(b) was read directly and no amendment was found in any Finance Act 2021-2026, but this fact would benefit from an independent tax-consultant confirmation given how far from the primary text the original three-vendor citation chain had drifted.",
+    "verified_as_at": "2026-08-31"
   },
   "p45_not_tanzanian": {
     "fact": "Form P45 does not exist in Tanzania -- it is a UK payroll form. Tanzania's actual equivalent, on employment termination, is the annual employment-income withholding certificate (Income Tax Act Cap.332 s.85(3)(b)) -- there is no 'P9' form name in Tanzanian law either; 'P9' is Kenyan (KRA) terminology, the same defect already found and corrected in this project's paye_p9_deadline fact.",
@@ -111,7 +115,8 @@
     "verified_by": "TRA website -- P45 not mentioned anywhere in Tanzania tax law. 'P9' half independently corroborated wrong 2026-09-01 by PwC's Tanzania tax-administration page (taxsummaries.pwc.com), which names TRA's Revenue Gateway System as the certificate-generation mechanism and never uses 'P9' -- consistent with this project's own paye_p9_deadline correction (Tier 2, 2026-08-31), which found 'P9' to be Kenyan KRA terminology.",
     "effective_date": "2025-07-01",
     "status": "CORRECTED 2026-09-01 (Tier 3)",
-    "correction_note": "This fact exists specifically to correct payroll-form terminology, and was itself carrying the same wrong terminology ('P9') that paye_p9_deadline was corrected out of in Tier 2. 'P45 does not exist in Tanzania' remains true and well-attested (TRA's own PAYE page). The prior fact's proposed Tanzanian alternative, 'P9', does not exist either -- replaced with the actual TZ mechanism, the annual employment-income withholding certificate under ITA Cap.332 s.85(3)(b). 'Leaving certificate' language removed as an unverified addition with no located citation."
+    "correction_note": "This fact exists specifically to correct payroll-form terminology, and was itself carrying the same wrong terminology ('P9') that paye_p9_deadline was corrected out of in Tier 2. 'P45 does not exist in Tanzania' remains true and well-attested (TRA's own PAYE page). The prior fact's proposed Tanzanian alternative, 'P9', does not exist either -- replaced with the actual TZ mechanism, the annual employment-income withholding certificate under ITA Cap.332 s.85(3)(b). 'Leaving certificate' language removed as an unverified addition with no located citation.",
+    "verified_as_at": "unknown"
   },
   "sdl_rate": {
     "fact": "SDL rate is 3.5% of gross cash emoluments effective 1 July 2023 (Finance Act 2023 reduced from 4%). Minimum 10 employees threshold applies.",
@@ -133,7 +138,8 @@
     "verified_by": "Finance Act 2023 -- changed from 4% to 3.5%; PWC Tax Summaries 2025",
     "effective_date": "2023-07-01",
     "status": "CONFIRMED -- merged with sdl_rate_2025 (2026-08-17, duplicate-key sweep)",
-    "verified_date": "2026-06-16"
+    "verified_date": "2026-06-16",
+    "verified_as_at": "unknown"
   },
   "sdl_full_name": {
     "fact": "SDL stands for Skills Development Levy — NOT Service Delivery Levy and NOT short-term disability leave",
@@ -162,7 +168,8 @@
     "verified_by": "TRA official SDL page",
     "effective_date": "2023-07-01",
     "status": "CONFIRMED",
-    "adversarial_note": "Base model inference test after 300 pairs STILL said disability leave — needs 50+ adversarial pairs in batch_003"
+    "adversarial_note": "Base model inference test after 300 pairs STILL said disability leave — needs 50+ adversarial pairs in batch_003",
+    "verified_as_at": "unknown"
   },
   "sdl_threshold": {
     "fact": "SDL applies to employers with 10 or more employees on Mainland Tanzania — NOT 4 employees",
@@ -184,7 +191,8 @@
     "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
     "verified_by": "Finance Act 2021 — changed threshold from 4 to 10",
     "effective_date": "2021-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "sdl_payer": {
     "fact": "SDL is paid by the employer only — NOT deducted from employee wages",
@@ -203,7 +211,8 @@
     "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
     "verified_by": "TRA SDL page",
     "effective_date": "2023-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "nssf_employer_rate": {
     "fact": "NSSF employer contribution is 10% of gross wage — NOT 6%",
@@ -223,7 +232,8 @@
     "verified_by": "NSSF official website — inference test after 300 pairs confirmed 10% is now learned",
     "effective_date": "2018-07-01",
     "status": "CONFIRMED",
-    "adversarial_note": "Base model frequently says 6% — confirmed fixed after 300-pair training"
+    "adversarial_note": "Base model frequently says 6% — confirmed fixed after 300-pair training",
+    "verified_as_at": "unknown"
   },
   "nssf_total_rate": {
     "fact": "NSSF total contribution is 20% of gross wage (10% employer + 10% employee)",
@@ -241,7 +251,8 @@
     "primary_source": "https://www.nssf.go.tz/pages/payment-of-contributions",
     "verified_by": "NSSF official website",
     "effective_date": "2018-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "nssf_penalty": {
     "fact": "NSSF late payment penalty is 5% per month of unpaid contributions",
@@ -259,7 +270,8 @@
     "primary_source": "https://www.nssf.go.tz/pages/payment-of-contributions",
     "verified_by": "NSSF Act Cap.50",
     "effective_date": "2018-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "nssf_retirement_age": {
     "fact": "NSSF pensionable (retirement) age is 60 (Cap.50 s.2, definition of 'pensionable age'). Early retirement is available from age 55 to ANY insured person within 5 years of pensionable age who has paid at least 180 monthly contributions (ss.25(c), 29) -- this is a GENERAL early-retirement provision, NOT a mining-sector-specific rate. Minimum 180 months (15 years) of contributions is required for a retirement pension (s.25(b)).",
@@ -283,7 +295,8 @@
     "verified_by": "Direct read of Cap.50 text (OAG-compiled R.E. 2023 PDF via nssf.go.tz), 2026-08-29 -- supersedes prior verification against Mywage.org + US SSA Tanzania country profile, neither of which mentions mining at all",
     "effective_date": "2018-07-01",
     "status": "CONFIRMED -- corrected 2026-08-29 (see correction_note)",
-    "correction_note": "Prior fact paired the correct 55-year early-retirement figure with 'mining' as its justification. The word 'mining' does NOT appear anywhere in NSSF Act Cap.50 Part V (Benefits), nor in either of the two secondary sources the fact was originally verified against (Mywage.org, US SSA Tanzania country profile) -- both describe 55 as a general voluntary/early-retirement age available to any insured person, not a sector-specific rate. This was not a stale-citation error: it was a claim invented during authoring with no source at all, general or otherwise -- a different defect class from every other correction in this batch. No mining-specific NSSF retirement provision was found anywhere in the Act."
+    "correction_note": "Prior fact paired the correct 55-year early-retirement figure with 'mining' as its justification. The word 'mining' does NOT appear anywhere in NSSF Act Cap.50 Part V (Benefits), nor in either of the two secondary sources the fact was originally verified against (Mywage.org, US SSA Tanzania country profile) -- both describe 55 as a general voluntary/early-retirement age available to any insured person, not a sector-specific rate. This was not a stale-citation error: it was a claim invented during authoring with no source at all, general or otherwise -- a different defect class from every other correction in this batch. No mining-specific NSSF retirement provision was found anywhere in the Act.",
+    "verified_as_at": "2026-08-29"
   },
   "vat_standard_rate": {
     "fact": "Tanzania's GENERAL VAT standard rate is 18% — unchanged since 2015 (VAT Act, Cap.148, s.5(1)). It was NEVER 14%. EXCEPTION: effective 1 September 2025 (Finance Act 2025), a narrower 16% rate applies specifically to B2C taxable supplies made to a person in Mainland Tanzania who is NOT VAT-registered, where payment is made through a bank or electronic payment system approved by the Commissioner General — this is a transaction-specific carve-out, not a general rate change, and does not apply to B2B, exports, or cash transactions.",
@@ -307,7 +320,8 @@
     "effective_date": "2015-07-01 (18% general rate); 2025-09-01 (16% carve-out)",
     "status": "CONFIRMED (18% general rate, primary); 16% carve-out CONFIRMED-SECONDARY -- corrected 2026-08-29 (see correction_note)",
     "adversarial_note": "Inference test showed model inventing 5% food VAT and 10% utilities VAT — needs adversarial pairs",
-    "correction_note": "Prior fact was a blanket '18% unchanged since 2015' with no mention of the 16% B2C e-payment carve-out that CLAUDE.md §11 has separately tracked since Finance Act 2025 (effective 1 Sep 2025) -- the correct information existed elsewhere in the project but was never folded into this locked fact, so RAG-served answers about 'the VAT rate' risked omitting a real narrower rate a B2C trader using e-payments needs to know. Root cause: a sync gap between two provenance stores (locked_facts.json vs CLAUDE.md), not a wrong statute reading. NOTE: the sibling fact 'vat_reduced_rates' ('Only 18% standard, 0% zero-rated, and exempt -- no 5%/10% reduced rates exist') has the same omission and was not edited in this pass; flagged for the founder to decide whether it also needs the 16% carve-out folded in."
+    "correction_note": "Prior fact was a blanket '18% unchanged since 2015' with no mention of the 16% B2C e-payment carve-out that CLAUDE.md §11 has separately tracked since Finance Act 2025 (effective 1 Sep 2025) -- the correct information existed elsewhere in the project but was never folded into this locked fact, so RAG-served answers about 'the VAT rate' risked omitting a real narrower rate a B2C trader using e-payments needs to know. Root cause: a sync gap between two provenance stores (locked_facts.json vs CLAUDE.md), not a wrong statute reading. NOTE: the sibling fact 'vat_reduced_rates' ('Only 18% standard, 0% zero-rated, and exempt -- no 5%/10% reduced rates exist') has the same omission and was not edited in this pass; flagged for the founder to decide whether it also needs the 16% carve-out folded in.",
+    "verified_as_at": "2026-08-29"
   },
   "vat_reduced_rates": {
     "fact": "Tanzania does NOT have reduced VAT rates of 5% or 10% for any product category (food, electricity, etc.) — there is no such thing as a category-based reduced VAT rate. The only rates are 18% standard, 0% zero-rated, and exempt (no VAT). SEPARATELY, a narrower 16% rate applies to a specific TRANSACTION TYPE, not a product category: B2C taxable supplies to a person in Mainland Tanzania who is NOT VAT-registered, paid through a bank or electronic payment system approved by the Commissioner General, effective 1 Sep 2025 (Finance Act 2025). This does not contradict 'no 5%/10% category rates' — it is a payment-channel/customer-type carve-out on top of the standard rate, not a reduced rate for a good or service category.",
@@ -335,7 +349,8 @@
     "effective_date": "2015-07-01 (category structure); 2025-09-01 (16% transaction carve-out)",
     "status": "CONFIRMED -- amended 2026-08-29 to fold in the 16% carve-out already tracked on vat_standard_rate (see correction_note)",
     "adversarial_note": "CRITICAL — inference test showed model confidently saying 5% for food and 10% for utilities. Needs 40+ adversarial pairs in batch_003",
-    "correction_note": "This fact's blanket '18% standard, 0% zero-rated, exempt' had the same omission as vat_standard_rate: no mention of the 16% B2C e-payment carve-out (Finance Act 2025, eff. 1 Sep 2025). Fixed here by scoping the 'no reduced rates' claim explicitly to PRODUCT CATEGORIES (food, electricity, etc. — the claim this fact exists to guard) and stating the 16% carve-out as a separate transaction-type exception that does not contradict it. Folded in immediately after correcting its twin, per instruction, so a sibling fact does not carry the identical gap into the next audit."
+    "correction_note": "This fact's blanket '18% standard, 0% zero-rated, exempt' had the same omission as vat_standard_rate: no mention of the 16% B2C e-payment carve-out (Finance Act 2025, eff. 1 Sep 2025). Fixed here by scoping the 'no reduced rates' claim explicitly to PRODUCT CATEGORIES (food, electricity, etc. — the claim this fact exists to guard) and stating the 16% carve-out as a separate transaction-type exception that does not contradict it. Folded in immediately after correcting its twin, per instruction, so a sibling fact does not carry the identical gap into the next audit.",
+    "verified_as_at": "unknown"
   },
   "vat_registration_threshold": {
     "fact": "VAT registration threshold is TZS 200,000,000 per year OR TZS 100,000,000 per 6 months",
@@ -354,7 +369,8 @@
     "primary_source": "Government Notice No. 448Y of 2023 (The Value Added Tax (General) (Amendment) Regulations, 2023), s.4, amending Regulation 14 of the VAT (General) Regulations 2015 (GN 225/2015), made under VAT Act Cap.148 s.94/s.28(4)",
     "verified_by": "Direct read of GN 448Y/2023 (tra.go.tz) and the original GN 225/2015 Reg.14 (tanzlii.org), 2026-08-31. GN 448Y s.4: \"deleting the phrase 'one hundred million shillings' and substituting for it the phrase 'two hundred million shillings'\" -- confirmed against Reg.14's original 2015 text (100M). Commencement clause: \"deemed to have come into operation on the 1st day of July, 2023.\" Two other candidate amending GNs from the same period (GN 714/2021, GN 352K/2025) were read and ruled out -- neither touches Reg.14.",
     "effective_date": "2023-07-01",
-    "status": "CONFIRMED -- re-sourced 2026-08-31 (see correction_note on vat_threshold_200m_july2024_increase)"
+    "status": "CONFIRMED -- re-sourced 2026-08-31 (see correction_note on vat_threshold_200m_july2024_increase)",
+    "verified_as_at": "2026-08-31"
   },
   "vat_withholding_goods": {
     "fact": "VAT withholding on goods is 3% of the consideration (invoice value exclusive of VAT) — effective 1 July 2025 (Finance Act 2025, VAT Act s.5(5)). The standard 18% VAT rate is split: the withholding agent remits 3% to TRA and the supplier receives the remaining 15%.",
@@ -376,7 +392,8 @@
     "verified_by": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5); GN 352K of 30/6/2025 reg 31B — primary legislation, TRA-hosted",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "formula_note": "The 3% applies to the CONSIDERATION (invoice value excl. VAT), NOT the VAT amount. Example: TZS 5M goods invoice, VAT = TZS 900,000; withholding = 3% x 5,000,000 = TZS 150,000 (= 1/6 of the VAT). Supplier receives the remaining 15% x 5,000,000 = TZS 750,000 of VAT (3% + 15% = 18%). NOT 3% x the VAT amount."
+    "formula_note": "The 3% applies to the CONSIDERATION (invoice value excl. VAT), NOT the VAT amount. Example: TZS 5M goods invoice, VAT = TZS 900,000; withholding = 3% x 5,000,000 = TZS 150,000 (= 1/6 of the VAT). Supplier receives the remaining 15% x 5,000,000 = TZS 750,000 of VAT (3% + 15% = 18%). NOT 3% x the VAT amount.",
+    "verified_as_at": "unknown"
   },
   "vat_withholding_services": {
     "fact": "VAT withholding on services is 6% of the consideration (invoice value exclusive of VAT) — effective 1 July 2025 (Finance Act 2025, VAT Act s.5(5)). The standard 18% VAT rate is split: the withholding agent remits 6% to TRA and the supplier receives the remaining 12% (the statute states this 12% expressly).",
@@ -397,7 +414,8 @@
     "verified_by": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5); GN 352K of 30/6/2025 reg 31B — primary legislation, TRA-hosted",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "formula_note": "The 6% applies to the CONSIDERATION (invoice value excl. VAT), NOT the VAT amount. Example: TZS 3M services invoice, VAT = TZS 540,000; withholding = 6% x 3,000,000 = TZS 180,000 (= 1/3 of the VAT). Supplier receives the remaining 12% x 3,000,000 = TZS 360,000 of VAT (6% + 12% = 18%). NOT 6% x the VAT amount."
+    "formula_note": "The 6% applies to the CONSIDERATION (invoice value excl. VAT), NOT the VAT amount. Example: TZS 3M services invoice, VAT = TZS 540,000; withholding = 6% x 3,000,000 = TZS 180,000 (= 1/3 of the VAT). Supplier receives the remaining 12% x 3,000,000 = TZS 360,000 of VAT (6% + 12% = 18%). NOT 6% x the VAT amount.",
+    "verified_as_at": "unknown"
   },
   "gn487a_nature": {
     "fact": "GN487A is a BUSINESS PROHIBITION ORDER listing 15 activities non-citizens cannot conduct. It is NOT about immigration or residence permits.",
@@ -428,7 +446,8 @@
     "verified_by": "TanzLII gazette text + Bowmans Tanzania legal update",
     "effective_date": "2025-07-28",
     "status": "CONFIRMED",
-    "adversarial_note": "CRITICAL — inference test after 300 pairs showed model STILL saying GN487A is about residence permits. Needs 80 adversarial pairs in batch_003. HIGHEST PRIORITY."
+    "adversarial_note": "CRITICAL — inference test after 300 pairs showed model STILL saying GN487A is about residence permits. Needs 80 adversarial pairs in batch_003. HIGHEST PRIORITY.",
+    "verified_as_at": "unknown"
   },
   "gn487a_effective_date": {
     "fact": "GN 487A came into effect on 28 July 2025",
@@ -443,7 +462,8 @@
     "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
     "verified_by": "TanzLII gazette",
     "effective_date": "2025-07-28",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "gn487a_penalty_noncitizen": {
     "fact": "GN 487A penalty for non-citizen: minimum TZS 10,000,000 fine AND/OR up to 6 months imprisonment AND visa revocation",
@@ -458,7 +478,8 @@
     "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
     "verified_by": "TanzLII gazette text",
     "effective_date": "2025-07-28",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "gn487a_penalty_citizen_facilitator": {
     "fact": "GN 487A penalty for Tanzanian citizen who assists or aids a non-citizen in any GN487A prohibited business activity: TZS 5,000,000 fine OR imprisonment not exceeding 3 months. This is SEPARATE from the non-citizen penalty (TZS 10M minimum fine OR 6 months OR both, plus visa revocation). BOTH parties are penalised — the non-citizen AND the Tanzanian facilitator.",
@@ -475,7 +496,8 @@
     "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
     "verified_by": "TanzLII gazette text; Bowmans 30 Jul 2025; Clyde & Co Jul 2025; VELMA Law; ChimpReports",
     "effective_date": "2025-07-28",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "gn487a_license_lending_is_facilitation": {
     "fact": "Lending, renting, or transferring your business licence to a non-citizen so they can run a GN487A-prohibited activity is itself facilitation ('kumsaidia') under GN487A. The Tanzanian licence-holder is penalised as a facilitator: TZS 5,000,000 fine OR imprisonment not exceeding 3 months. Being a citizen does NOT exempt them — the penalty is for facilitating, not for operating. Same penalty as gn487a_penalty_citizen_facilitator, restated for the licence-lending case.",
@@ -489,7 +511,8 @@
     "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/487a/eng@2025-07-28",
     "verified_by": "TanzLII gazette text; derived from gn487a_msaidizi_definition + gn487a_penalty_citizen_facilitator (no new figure)",
     "effective_date": "2025-07-28",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "gn605a_effective_date": {
     "fact": "GN 605A Private Sector Wage Order came into effect on 1 January 2026",
@@ -512,7 +535,8 @@
     "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/605a/eng@2025-10-13",
     "verified_by": "TanzLII gazette",
     "effective_date": "2026-01-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "gn605a_average_increase": {
     "fact": "GN 605A average increase is 33.4% from TZS 275,060 to TZS 358,322 per month",
@@ -530,7 +554,8 @@
     "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/605a/eng@2025-10-13",
     "verified_by": "Business and Human Rights Centre — Minister Kikwete press briefing October 2025",
     "effective_date": "2026-01-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "royalties_wht_rate": {
     "fact": "The DEFAULT withholding tax rate on royalty payments is 15% for BOTH residents and non-residents (Income Tax Act Cap.332 First Schedule para 4(b), via s.82). TWO CARVE-OUTS exist: royalties for cinematographic films/video tapes/sound recordings are 10% (added by Finance Act 2022 s.72(b)(i)); royalties paid to a resident sports entity or the Tanzania Football Federation are 5% (added by Finance Act 2024 s.46(b)(i)).",
@@ -549,7 +574,8 @@
     "verified_by": "Direct read of First Schedule para 4(b) and the amending Finance Act 2022/2024 clauses, 2026-08-31. Supersedes Auditax International (practitioner, only confirmed the default 15%/15%, did not surface the carve-outs).",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED -- corrected 2026-08-31 (carve-outs added, see correction_note)",
-    "correction_note": "The default 15%/15% figure was already correct. It was INCOMPLETE: two statutory carve-outs (10% film/video/sound; 5% resident sports entities/TFF) were missing, which would produce a wrong answer for those specific fact patterns even though the general-case answer was right."
+    "correction_note": "The default 15%/15% figure was already correct. It was INCOMPLETE: two statutory carve-outs (10% film/video/sound; 5% resident sports entities/TFF) were missing, which would produce a wrong answer for those specific fact patterns even though the general-case answer was right.",
+    "verified_as_at": "2026-08-31"
   },
   "provisional_tax_instalments": {
     "fact": "Provisional tax is paid in FOUR equal instalments at end of months 3, 6, 9, and 12 from start of financial year",
@@ -569,7 +595,8 @@
     "primary_source": "https://www.tra.go.tz/page/corporation-tax",
     "verified_by": "TRA Paying Taxes page + PWC Tanzania + Auditax International",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "minimum_turnover_tax": {
     "fact": "The Alternative Minimum Tax (AMT) on chronically loss-making corporations is 1% of the turnover of the third consecutive year of unrelieved tax loss, effective 1 July 2025 (Income Tax Act Cap.332 First Schedule para 3(3), as amended by Finance Act 2025 s.60(d)(ii), which raised it from 0.5% to 1%). This applies ONLY to a corporation with THREE CONSECUTIVE YEARS of perpetual unrelieved loss -- it is NOT a general turnover tax on all businesses. Do not confuse with the presumptive (small-business) turnover tax, a different regime under First Schedule para 2. EXEMPT from this AMT regardless of loss history (Income Tax Act s.4(8)): a corporation conducting agricultural business, or engaged in the provision of health or education -- no sunset on these three -- and a corporation conducting tea processing, but ONLY for the period 1 July 2024 to 30 June 2027 (added by Finance Act 2024 s.34; the sunset is explicit in the proviso, not an inference).",
@@ -595,7 +622,8 @@
     "effective_date": "2025-07-01",
     "status": "CONFIRMED -- corrected 2026-08-31 (scope narrowed); corrected 2026-09-01 (s.4(8) exemptions added, amt_loss_companies_only folded in per R27)",
     "correction_note": "Rate and date (1%, WEF 1 July 2025) were already correct. Scope/framing was misleading: this key's name and prior fact text read as a general turnover tax on all businesses, when the underlying provision (First Schedule para 3(3)) is the Alternative Minimum Tax, applying only to corporations with 3 consecutive years of unrelieved loss -- the general small-business turnover regime is a DIFFERENT provision (First Schedule para 2, presumptive tax). DUPLICATE FLAG (2026-08-31): this fact and `amt_loss_companies_only` describe the same provision -- not merged in that pass, flagged for a future consolidation. RESOLVED 2026-09-01, as part of the corporate/partnership tax source pass: `amt_loss_companies_only` folded in here per founder instruction (its 4 wrong_patterns appended above, its content superseded by this fact's fuller text) and the key retired. Also added: the s.4(8) charging-section exemption (agriculture/health/education permanent, tea processing 2024-07-01 to 2027-06-30 only) was found missing from BOTH facts during the source pass -- an omitted exemption reads as authoritative as a wrong rate, since it tells a qualifying corporation it owes an AMT it doesn't. Not yet guarded by a wrong_pattern (no probe has been authored for a false 'tea processing owes AMT' claim); flagged for a future R17 pass rather than adding an untested pattern here.",
-    "_narrowing_note": "Narrowed 2026-08-25. The bare forms `0.3%` / `asilimia 0.3` / `0.3 percent` matched with NO topical scoping, so a CORRECT council-service-levy pair quoting the statutory 0.3% CAP (Cap 290 s.7(1)(u)) would have been flagged as a locked-fact violation. Measured cost of narrowing: the bare patterns matched exactly ONE corpus row, a held-out probe QUESTION, which check_pair never scans. Zero live detections lost. Both directions are exercised in eval/fidelity/local_levy_probes.jsonl. SECOND NARROWING, same day, found by probe llp_08: the 0.5 patterns escaped only \"kutoka asilimia 0.5\" / \"from 0.5\", not \"ILIKUWA asilimia 0.5\" -- the plainest Swahili way to say \"it WAS 0.5%\", which is exactly what the locked fact itself asserts. A correct historical statement was being flagged. Same shape as the recorded near-miss where a bare \"ni\" sits outside D-FIDELITY-1's connectors. Probe llp_09 holds the line: a plain \"is 0.5%\" assertion must still flag. PRESERVED VERBATIM through the 2026-08-31 Tier 2 scope correction (which only narrowed the fact's SCOPE description -- AMT on 3-years-loss corporations, not a general turnover tax -- and added 'applies to all businesses' as a new wrong_pattern; the 0.3%/0.5% regex family below is untouched and still what llp_09/llp_10 test against)."
+    "_narrowing_note": "Narrowed 2026-08-25. The bare forms `0.3%` / `asilimia 0.3` / `0.3 percent` matched with NO topical scoping, so a CORRECT council-service-levy pair quoting the statutory 0.3% CAP (Cap 290 s.7(1)(u)) would have been flagged as a locked-fact violation. Measured cost of narrowing: the bare patterns matched exactly ONE corpus row, a held-out probe QUESTION, which check_pair never scans. Zero live detections lost. Both directions are exercised in eval/fidelity/local_levy_probes.jsonl. SECOND NARROWING, same day, found by probe llp_08: the 0.5 patterns escaped only \"kutoka asilimia 0.5\" / \"from 0.5\", not \"ILIKUWA asilimia 0.5\" -- the plainest Swahili way to say \"it WAS 0.5%\", which is exactly what the locked fact itself asserts. A correct historical statement was being flagged. Same shape as the recorded near-miss where a bare \"ni\" sits outside D-FIDELITY-1's connectors. Probe llp_09 holds the line: a plain \"is 0.5%\" assertion must still flag. PRESERVED VERBATIM through the 2026-08-31 Tier 2 scope correction (which only narrowed the fact's SCOPE description -- AMT on 3-years-loss corporations, not a general turnover tax -- and added 'applies to all businesses' as a new wrong_pattern; the 0.3%/0.5% regex family below is untouched and still what llp_09/llp_10 test against).",
+    "verified_as_at": "2026-08-31"
   },
   "commissioner_objection_deadline": {
     "fact": "TRA Commissioner must determine an objection within 6 months from date of admission — NOT 90 days",
@@ -618,7 +646,8 @@
     "primary_source": "https://taxsummaries.pwc.com/tanzania/corporate/tax-administration",
     "verified_by": "Finance Act 2020 amendment to Tax Administration Act confirmed by PWC",
     "effective_date": "2020-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "trab_appeal_two_steps": {
     "fact": "TRAB appeal requires TWO steps: (1) Notice of Intention within 30 days AND (2) Statement of Appeal within 45 days",
@@ -632,7 +661,8 @@
     "primary_source": "https://www.trab.go.tz/pages/how-to-appeals",
     "verified_by": "TRAB official website",
     "effective_date": "2020-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "objection_deposit_requirement": {
     "fact": "Before a TRA objection to a tax assessment is admitted, the taxpayer must pay the HIGHER of the undisputed tax OR one-third of the assessed tax. This payment is due CONCURRENTLY with lodging the objection -- i.e., within the same 30-day period allowed for filing the objection itself (Tax Administration Act, Cap.438 R.E.2023, s.62(7)-(9)) -- NOT on a separate 15-day clock.",
@@ -653,7 +683,8 @@
     "verified_by": "Direct read of TAA Cap.438 current consolidation, 2026-08-31 -- the deposit requirement sits at s.62(7)-(9) in the current numbering. Cross-checked against GN 101/2016 reg.92 and the Tax Revenue Appeals Act s.16(6), both of which still internally cite 'section 51(5)' -- confirming s.51 is the PRE-Finance-Act (2017/2020/2021) numbering, preserved in the current Act text only as a historical '[s. 51]' footnote after s.62.",
     "effective_date": "2020-07-01",
     "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note); supersedes the 2026-08-29 correction, which fixed the deposit-timing rule but carried forward a stale section citation",
-    "correction_note": "2026-08-29 correction: fixed the substantive rule (deposit tied to the 30-day objection window, not a separate 15-day clock) but cited TAA s.51 -- itself a still-wrong citation. 2026-08-31: re-verification for Tier 2 read the current TAA Cap.438 R.E.2023 text directly and found the deposit provision now sits at s.62(7)-(9); s.51 is the numbering from before Finance Act amendments (2017/2020/2021) renumbered this part of the Act, and survives today only as a historical cross-reference footnote. Both GN 101/2016 (subsidiary legislation, drafted under the old numbering) and the Tax Revenue Appeals Act s.16(6) still say 'section 51(5)' internally -- which is almost certainly how the stale number propagated into the 2026-08-29 'correction' despite that pass reading the Act's substance correctly. THE LESSON: a correction that fixes the rule but inherits its citation from a source using old numbering is not a complete correction -- the same renumbering trap CLAUDE.md documents for Cap.332 (old s.36 -> current s.44) caught a correction pass that already knew the trap existed. Found only because Tier 2's independent verification of a different, unrelated fact (objection_extension_statutory_right) happened to read the surrounding TAA text and noticed the discrepancy -- not because anyone re-audited this fact specifically."
+    "correction_note": "2026-08-29 correction: fixed the substantive rule (deposit tied to the 30-day objection window, not a separate 15-day clock) but cited TAA s.51 -- itself a still-wrong citation. 2026-08-31: re-verification for Tier 2 read the current TAA Cap.438 R.E.2023 text directly and found the deposit provision now sits at s.62(7)-(9); s.51 is the numbering from before Finance Act amendments (2017/2020/2021) renumbered this part of the Act, and survives today only as a historical cross-reference footnote. Both GN 101/2016 (subsidiary legislation, drafted under the old numbering) and the Tax Revenue Appeals Act s.16(6) still say 'section 51(5)' internally -- which is almost certainly how the stale number propagated into the 2026-08-29 'correction' despite that pass reading the Act's substance correctly. THE LESSON: a correction that fixes the rule but inherits its citation from a source using old numbering is not a complete correction -- the same renumbering trap CLAUDE.md documents for Cap.332 (old s.36 -> current s.44) caught a correction pass that already knew the trap existed. Found only because Tier 2's independent verification of a different, unrelated fact (objection_extension_statutory_right) happened to read the surrounding TAA text and noticed the discrepancy -- not because anyone re-audited this fact specifically.",
+    "verified_as_at": "2026-08-31"
   },
   "objection_extension_statutory_right": {
     "fact": "Extension of the 30-day objection period is a STATUTORY RIGHT — NOT very rare. Apply within 7 days before expiry.",
@@ -668,7 +699,8 @@
     "primary_source": "https://www.tra.go.tz/page/objections-and-appeals",
     "verified_by": "TRA Objections page — extension explicitly provided by law",
     "effective_date": "2020-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "stamp_duty_property_transfer": {
     "fact": "Stamp duty on transfer/conveyance of land or buildings is TIERED: 0.5% on the first TZS 100,000 of consideration/market value, then 1% on the value in excess of TZS 100,000 (Stamp Duty Act, Cap.189, Schedule, Article 22(b) 'CONVEYANCE') -- NOT a flat 1%.",
@@ -685,7 +717,8 @@
     "verified_by": "Direct read of Stamp Duty Act Cap.189 Schedule Article 22(b), 2026-08-31. Checked the amendment chain per this project's own consolidated-Act discipline: Finance Act 2021 re-enacted the entire Schedule and kept item 22(b) verbatim; Finance Act 2026 (most current) amends Article 22 only at sub-item (c) -- agricultural land conveyance -- leaving 22(b), the general conveyance rate, untouched. Confirmed unchanged across Finance Acts 2021-2026.",
     "effective_date": "2018-01-01",
     "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note); SCOPING FLAG for founder",
-    "correction_note": "Prior fact asserted the OPPOSITE of statute: it stated a flat 1% and listed the correct tiered 0.5%/1% rate as a wrong_pattern to reject, sourced only to a single practitioner claim (Auditax International) that does not match the Act's own Schedule text. Direct read of Cap.189 Schedule Article 22(b) confirms the tiered rate is correct and has been unchanged since at least the 2018 baseline read, re-enacted verbatim by Finance Act 2021, and untouched by Finance Act 2026's amendment to a different sub-item. SCOPING FLAG (not resolved here, founder decision): 'stamp duty' / 'stempu' / 'ushuru wa stempu' are already on the production OOC refusal list (kaggle/chike_config.json) per CLAUDE.md's documented out-of-corpus topics -- this fact is corrected for accuracy, but whether it belongs in the training corpus at all, given the classifier already refuses this topic before the model is ever called, is a separate open question."
+    "correction_note": "Prior fact asserted the OPPOSITE of statute: it stated a flat 1% and listed the correct tiered 0.5%/1% rate as a wrong_pattern to reject, sourced only to a single practitioner claim (Auditax International) that does not match the Act's own Schedule text. Direct read of Cap.189 Schedule Article 22(b) confirms the tiered rate is correct and has been unchanged since at least the 2018 baseline read, re-enacted verbatim by Finance Act 2021, and untouched by Finance Act 2026's amendment to a different sub-item. SCOPING FLAG (not resolved here, founder decision): 'stamp duty' / 'stempu' / 'ushuru wa stempu' are already on the production OOC refusal list (kaggle/chike_config.json) per CLAUDE.md's documented out-of-corpus topics -- this fact is corrected for accuracy, but whether it belongs in the training corpus at all, given the classifier already refuses this topic before the model is ever called, is a separate open question.",
+    "verified_as_at": "2026-08-31"
   },
   "permit_class_b_employed": {
     "fact": "Class B Residence Permit is for EMPLOYED EXPATRIATES working for companies — NOT for investors",
@@ -700,7 +733,8 @@
     "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
     "verified_by": "Tanzania Immigration Department official website",
     "effective_date": "2025-07-28",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "permit_class_a_investor": {
     "fact": "Class A Residence Permit is for SELF-EMPLOYED FOREIGN INVESTORS — NOT Class B",
@@ -713,7 +747,8 @@
     "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
     "verified_by": "Tanzania Immigration Department official website",
     "effective_date": "2025-07-28",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "permit_class_c_categories": {
     "fact": "Class C Residence Permit is for researchers, students, retired persons, missionaries, volunteers, and other similar categories -- NOT for employed foreign workers.",
@@ -731,7 +766,8 @@
     "verified_by": "Tanzania Immigration Department official website; corroborated 2026-08-31 via three government embassy sub-portals (un.tzembassy.go.tz, us.tzembassy.go.tz, in.tzembassy.go.tz) mirroring the Department's category listing, which explicitly includes 'students' -- immigration.go.tz's own page returns a JS shell to automated fetch, so the embassy mirrors were used as corroboration.",
     "effective_date": "2025-07-28",
     "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note)",
-    "correction_note": "The category list was INCOMPLETE: it omitted 'students' as an explicit Class C category, which the government's own embassy-portal mirrors of the Immigration Department's listing include. A question about a student on a Class C permit would have scored a correct 'yes' answer as wrong under the prior wrong_patterns."
+    "correction_note": "The category list was INCOMPLETE: it omitted 'students' as an explicit Class C category, which the government's own embassy-portal mirrors of the Immigration Department's listing include. A question about a student on a Class C permit would have scored a correct 'yes' answer as wrong under the prior wrong_patterns.",
+    "verified_as_at": "unknown"
   },
   "corporate_tax_rate": {
     "fact": "Tanzania standard corporate income tax rate is 30%. DSE-listed companies pay 25%.",
@@ -750,7 +786,8 @@
     "primary_source": "https://www.tra.go.tz/page/corporation-tax",
     "verified_by": "TRA Corporation Tax page",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "wht_deadline": {
     "fact": "Withholding tax must be remitted within 7 DAYS after end of the calendar month — NOT 7th of following month",
@@ -772,7 +809,8 @@
     "verified_by": "Income Tax Act s.84",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "note": "PAYE deadline = 7th of following month. WHT deadline = 7 DAYS after month end. These are different."
+    "note": "PAYE deadline = 7th of following month. WHT deadline = 7 DAYS after month end. These are different.",
+    "verified_as_at": "unknown"
   },
   "loss_carryforward_finance_act_2024": {
     "fact": "After 4 consecutive years of tax losses only 60% of year 5 income can be offset against losses (Finance Act 2024)",
@@ -786,7 +824,8 @@
     "primary_source": "https://www.tra.go.tz/page/corporation-tax",
     "verified_by": "Finance Act 2024 amendment",
     "effective_date": "2024-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "brela_share_transfer_legal_effect": {
     "fact": "Share transfer without BRELA notification MAY LACK LEGAL EFFECT AGAINST THIRD PARTIES — it is not absolutely void",
@@ -801,7 +840,8 @@
     "primary_source": "https://www.brela.go.tz",
     "verified_by": "Companies Act 2002",
     "effective_date": "2025-01-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "tmda_replaces_tfda": {
     "fact": "TMDA (Tanzania Medicines and Medical Devices Authority) is the current name — TFDA no longer exists",
@@ -817,7 +857,8 @@
     "primary_source": "https://www.tmda.go.tz",
     "verified_by": "TMDA official website",
     "effective_date": "2019-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "brave_search_blocked_tanzania": {
     "fact": "Brave Search API is blocked in Tanzania. TRA required Brave Software to register as non-resident electronic service provider. Brave blocked Tanzania access instead of registering.",
@@ -827,7 +868,8 @@
     "verified_by": "Brave Software public statement 2025",
     "effective_date": "2025-01-01",
     "status": "CONFIRMED",
-    "note": "This is a project configuration fact not a regulatory fact. Do NOT install Brave Search MCP."
+    "note": "This is a project configuration fact not a regulatory fact. Do NOT install Brave Search MCP.",
+    "verified_as_at": "unknown"
   },
   "paye_all_bands_sequence": {
     "fact": "PAYE bands (monthly): 0% up to TZS 270K | 8% TZS 270K-520K | 20% TZS 520K-760K | 25% TZS 760K-1M | 30% above TZS 1M",
@@ -847,7 +889,8 @@
     "primary_source": "https://taxsummaries.pwc.com/tanzania/individual/taxes-on-personal-income",
     "verified_by": "PWC Tanzania Individual Tax Summary, last reviewed Jan 2026",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "paye_nonresident_flat_rate": {
     "fact": "Non-resident employees pay PAYE at a flat 15% rate — NOT the progressive bands. This is a final withholding tax (Income Tax Act Cap.332, First Schedule para 4(a)(ii), the rate table for section 81 'Withholding by employers' -- a resident withholdee follows 'the rates prescribed in regulations' i.e. the First Schedule para 1 progressive bands; a non-resident withholdee is flat 15%. Para 4 sits under Division II of Part VII, the final-withholding-payments framework, which is the statutory basis for calling this withholding final rather than an on-account payment.)",
@@ -863,7 +906,8 @@
     "verified_by": "Direct read of Cap.332 R.E.2019 baseline text, 2026-09-01, during the PAYE_NONRESIDENT_RATE grounding pass (this constant had never been checked against primary statute at all -- previously sourced only to a PWC portal summary, flagged NEVER_GROUNDED in rates.py). s.81's heading is literally 'Withholding by employers', confirming this is the PAYE-withholding provision, not a different withholding mechanism. Checked every Finance Act that touches the First Schedule (FA2021 s.25 touches only para 1(1); FA2022 s.72 touches para 2(3) and 4(b); FA2023 s.31 touches para 2(5) and 4(c); FA2024 s.46 touches para 2(5) and 4(b)/(c); FA2025 s.60 touches para 2(5), 3(d) and 4(c); FA2026 s.27(c) touches para 4(b) and adds a new 4(d)) -- NONE touches para 4(a), the non-resident-employee rate, which is therefore confirmed unchanged since at least the R.E.2019 baseline through Finance Act 2026.",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED -- grounded to primary statute 2026-09-01 (was previously CONFIRMED on a secondary source only; see correction_note)",
-    "correction_note": "Not a correction to the VALUE -- 15% was already right. This is the R28-adjacent case where the prior secondary-sourced verdict held up under primary-source scrutiny (see business_name_maintenance_fee, R28), upgraded from an ungrounded PWC-portal citation to a primary Act citation. Requested explicitly per founder instruction after this constant was flagged NEVER_GROUNDED in the 2026-09-01 Finance-Act-freshness audit: 'a never-grounded constant in an engine that computes real figures is the same starting position as EFD_ANNUAL, which turned out to be a fabrication defended by three layers... probably right is what we said about the EFD threshold too.' It was not a fabrication this time, but the discipline of checking rather than trusting the prior CONFIRMED status is the same regardless of outcome."
+    "correction_note": "Not a correction to the VALUE -- 15% was already right. This is the R28-adjacent case where the prior secondary-sourced verdict held up under primary-source scrutiny (see business_name_maintenance_fee, R28), upgraded from an ungrounded PWC-portal citation to a primary Act citation. Requested explicitly per founder instruction after this constant was flagged NEVER_GROUNDED in the 2026-09-01 Finance-Act-freshness audit: 'a never-grounded constant in an engine that computes real figures is the same starting position as EFD_ANNUAL, which turned out to be a fabrication defended by three layers... probably right is what we said about the EFD threshold too.' It was not a fabrication this time, but the discipline of checking rather than trusting the prior CONFIRMED status is the same regardless of outcome.",
+    "verified_as_at": "2026-09-01"
   },
   "brela_striking_off_non_filing": {
     "fact": "A company that fails to file annual returns with BRELA may be deemed defunct and struck off the Register of Companies. Procedure: the Registrar publishes a 30-day notice requiring proof the company is still operating; on failure the name is struck off under the Companies Act, Cap 212. The Registrar may also strike off on his own accord by written notice (2019 amendment). There is NO rule that a company must 'finish its term' before removal — companies have no fixed term. Restoring a struck-off company requires a High Court application.",
@@ -877,7 +921,8 @@
     "primary_source": "Companies Act Cap 212 ss.128/400/400A; BRELA gazette notice brela.go.tz/uploads/documents/sw-1653651054-1.pdf",
     "verified_by": "BRELA gazette notice (30-day defunct notice + s.400(3) strike-off); Written Laws (Misc. Amendments)(No.3) Act 2019 s.400A own-accord + s.400A(5) High Court restoration; R.E.2023 renumbers to s.403 (section numbers kept in metadata only, per CLAUDE.md answer-text discipline)",
     "verified_date": "2026-07-27",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "wcf_new_employer_registration": {
     "fact": "A new employer must register with WCF within 30 days of hiring their first employee",
@@ -891,7 +936,8 @@
     "primary_source": "https://www.wcf.go.tz",
     "verified_by": "WCF official website, Jun 2026",
     "effective_date": "2015-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "wcf_disease_reporting_deadline": {
     "fact": "Occupational disease reporting to WCF is a TWO-STAGE chain, not a flat 7-day deadline. Per the Workers Compensation Regulations, 2016 (GN 185/2016), Reg.16: the EMPLOYEE must notify the EMPLOYER within 14 working days of diagnosis (Reg.16(1)); the EMPLOYER must then notify WCF within 7 working days of RECEIVING that employee notice (Reg.16(2)) -- so the true worst-case window from diagnosis to WCF notification is up to 21 working days, NOT 7. Workplace death must be reported to WCF within 12 months (Reg.17(2)). Compensation claim must be filed within 12 months of accident or disease discovery (Reg.19(1)).",
@@ -910,7 +956,8 @@
     "verified_by": "Direct read of GN 185/2016 text (media.tanzlii.org), 2026-08-29 -- supersedes prior verification against the wcf.go.tz portal page, which stated only the employer-side 7-day leg and omitted the employee-side 14-day leg",
     "effective_date": "2016 (GN 185/2016 -- exact gazette date not independently confirmed this pass; prior entry's 2015-07-01 was the Act's commencement date, not this regulation's gazette date)",
     "status": "CONFIRMED -- corrected 2026-08-29 (see correction_note)",
-    "correction_note": "Prior fact stated a flat 7 working days from diagnosis, sourced only to the wcf.go.tz portal page (no regulation citation). Re-verified 2026-08-29 against GN 185/2016 Reg.16 directly: the 7-working-day figure is real but attaches to the EMPLOYER's leg after receiving the employee's notice, not to the diagnosis date itself -- the employee has a separate, prior 14-working-day window to notify the employer first. Root cause: the portal-sourced summary compressed a two-step regulatory chain into its second step only, understating the true diagnosis-to-WCF window by up to two-thirds (7 vs 21 working days). This is the highest-harm correction in this batch: a wrong deadline surfaces when a real claim is refused for being late, not when someone checks arithmetic."
+    "correction_note": "Prior fact stated a flat 7 working days from diagnosis, sourced only to the wcf.go.tz portal page (no regulation citation). Re-verified 2026-08-29 against GN 185/2016 Reg.16 directly: the 7-working-day figure is real but attaches to the EMPLOYER's leg after receiving the employee's notice, not to the diagnosis date itself -- the employee has a separate, prior 14-working-day window to notify the employer first. Root cause: the portal-sourced summary compressed a two-step regulatory chain into its second step only, understating the true diagnosis-to-WCF window by up to two-thirds (7 vs 21 working days). This is the highest-harm correction in this batch: a wrong deadline surfaces when a real claim is refused for being late, not when someone checks arithmetic.",
+    "verified_as_at": "2026-08-29"
   },
   "gn605a_increment_range": {
     "fact": "GN 605A individual sector increments range from TZS 20,000 (lowest sector) to TZS 195,000 (highest sector) per month",
@@ -923,7 +970,8 @@
     "primary_source": "https://www.pkfea.com/publications/2025/new-minimum-wage-order-2025-key-highlights-for-tanzania-s-private-sector/",
     "verified_by": "PKF Eastern Africa GN 605A analysis, Oct 2025",
     "effective_date": "2026-01-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "_unresolved_items": {
     "commercial_rent_wht_nonresident": {
@@ -976,7 +1024,8 @@
       "ada za mkurugenzi.*wasio wakazi.*ni asilimia 20",
       "wasio wakazi.*ada.*mkurugenzi.*ni asilimia 20",
       "mkurugenzi.*kwa wasio wakazi.*ni asilimia 20"
-    ]
+    ],
+    "verified_as_at": "unknown"
   },
   "wcf_accident_reporting": {
     "fact": "Employer must notify WCF of a workplace accident within 7 WORKING DAYS — via WCF online portal (portal.wcf.go.tz). Different deadline for occupational illness. Source: WCF portal.",
@@ -989,7 +1038,8 @@
       "30 days.*wcf",
       "wcf.*siku 14(?! za magonjwa)",
       "wcf.*14 days(?! for occupational)"
-    ]
+    ],
+    "verified_as_at": "unknown"
   },
   "wcf_accident_reporting_deadline": {
     "fact": "7 working days from date of accident. Source: Workers Compensation Act / portal.wcf.go.tz",
@@ -1002,7 +1052,8 @@
       "30 days.*wcf",
       "wcf.*siku 14(?! za magonjwa)",
       "wcf.*14 days(?! for occupational)"
-    ]
+    ],
+    "verified_as_at": "unknown"
   },
   "osha_registration_threshold_b004": {
     "fact": "OSHA applies to ALL workplaces — no minimum employee threshold",
@@ -1015,7 +1066,8 @@
       "biashara zenye wafanyakazi chini ya 10.*osha"
     ],
     "primary_source": "osha.go.tz",
-    "verified_date": "2026-06-12"
+    "verified_date": "2026-06-12",
+    "verified_as_at": "unknown"
   },
   "dse_25_rate_three_years_only": {
     "fact": "DSE 25% CIT rate applies for THREE YEARS ONLY from listing date",
@@ -1027,7 +1079,8 @@
       "dse.*25.*permanently"
     ],
     "primary_source": "tra.go.tz income tax page",
-    "verified_date": "2026-06-12"
+    "verified_date": "2026-06-12",
+    "verified_as_at": "unknown"
   },
   "permit_class_d_does_not_exist": {
     "fact": "Tanzania has NO Class D permit — only Class A (investor), Class B (employed expatriate), Class C (researcher/voluntary)",
@@ -1038,7 +1091,8 @@
       "kibali cha darasa d"
     ],
     "primary_source": "immigration.go.tz",
-    "verified_date": "2026-06-12"
+    "verified_date": "2026-06-12",
+    "verified_as_at": "unknown"
   },
   "gn487a_transitional_provision": {
     "fact": "Non-citizens with valid licences at 28 July 2025 may continue until licence expiry. No renewal permitted. No new licences issued for prohibited activities.",
@@ -1052,7 +1106,8 @@
     "verified_date": "2026-06-16",
     "status": "CONFIRMED",
     "verified_by": "Direct read of GN487A ss.3(2) and 4, 2026-08-31 -- all three claims (continue-to-expiry / no renewal / no new licences) map exactly onto the Order's own text.",
-    "correction_note": "R6 NOTE (2026-08-31): prior primary_source listed 'Bowmans Jul 2025' first among four sources -- Bowmans is an eval-reserved source family per CLAUDE.md R6. The underlying claim was independently confirmed CONFIRMED CLEAN against GN487A ss.3(2) and 4 directly, but citing an eval-family firm as primary_source was a methodology violation regardless of correctness. Re-grounded on the Order's own text; MAK Africa Legal, TanzaniaInvest and The Citizen may remain as corroboration but no longer carry the primary_source role."
+    "correction_note": "R6 NOTE (2026-08-31): prior primary_source listed 'Bowmans Jul 2025' first among four sources -- Bowmans is an eval-reserved source family per CLAUDE.md R6. The underlying claim was independently confirmed CONFIRMED CLEAN against GN487A ss.3(2) and 4 directly, but citing an eval-family firm as primary_source was a methodology violation regardless of correctness. Re-grounded on the Order's own text; MAK Africa Legal, TanzaniaInvest and The Citizen may remain as corroboration but no longer carry the primary_source role.",
+    "verified_as_at": "2026-08-31"
   },
   "efd_threshold_tzs_11m": {
     "fact": "EFD (fiscal receipt) issuance is the DEFAULT LEGAL REQUIREMENT for every person who supplies goods or renders services, REGARDLESS OF TURNOVER (Tax Administration Act, Cap.438 R.E.2023, s.44(1) 'Issuance of Fiscal Receipt' -- renumbered from s.36 in the R.E.2019 edition by Finance Act 2023 s.54). The ONLY exemption mechanism is a Commissioner-General public notice, published in a newspaper of wide circulation or other public media, naming a specific person or class of persons excluded from the requirement (s.44(2)) -- there is NO turnover threshold written anywhere in this section, or anywhere else in the Act. A person actually excluded by such a notice issues a manual receipt instead (s.44(3)-(4)). REJECT both TZS 11,000,000 and TZS 14,000,000 as 'the EFD threshold': both figures are real, but they are the turnover BAND EDGES in the Income Tax Act's PRESUMPTIVE INCOME TAX table (First Schedule, para.2(3)) -- a different provision entirely, about tax rates for individuals who don't keep adequate records, not about EFD issuance. Practitioner guides (RSM, Habib, Auditax, VATupdate) appear to have conflated the two because both sit in the same Part of the same Act. CORRECT ANSWER to 'do I need an EFD at my turnover?': 'Ndiyo, kwa default -- isipokuwa TRA imetoa taarifa rasmi (Commissioner-General public notice) inayokuondolea wewe/kundi lako. Thibitisha na TRA kama taarifa hiyo inakuhusu.' (Yes, by default -- unless TRA has issued a public notice exempting you/your class. Confirm with TRA whether such a notice applies to you.) This is a correct, non-hedging answer, not an evasion -- turnover does not change it.",
@@ -1070,7 +1125,8 @@
     "verified_by": "Direct read of TAA Cap.438 R.E.2023 s.44 text (OSG e-library PDF via r.jina.ai proxy; cross-checked against the R.E.2019 s.36 text still hosted on tra.go.tz to confirm the renumbering), 2026-08-29 -- confirms no turnover figure exists anywhere in the Act. Supersedes prior verification against tra.go.tz PORTAL pages + RSM/Auditax/Habib practitioner guides, none of which ever cited the Act itself.",
     "effective_date": "current (s.44, renumbered by Finance Act 2023 s.54; substance -- universal default + CG-notice exemption -- unchanged from R.E.2019 s.36). NOTE: R.E.2023 s.44(1) drops the R.E.2019 phrase 'by using electronic fiscal device', reading only 'shall issue fiscal receipt' -- confirmed by two independent fetches of the same PDF but not yet triple-confirmed against a third independent source; flag if this wording matters for a future pair.",
     "status": "CORRECTED 2026-08-29 -- prior fact asserted a fabricated turnover threshold with zero statute support at any level (see correction_note)",
-    "correction_note": "Prior fact asserted 'EFD required for turnover TZS 11 million and above,' cited only to two tra.go.tz portal pages plus RSM/Auditax practitioner guides -- no statute or regulation was ever consulted for it, at any point in this fact's history. Re-verified 2026-08-29 directly against TAA Cap.438: s.44 (renumbered from s.36 by Finance Act 2023 s.54) makes fiscal-receipt issuance the DEFAULT for everyone, with exemption ONLY by Commissioner-General public notice naming a class (s.44(2)) -- no turnover figure appears anywhere in the Act. TZS 11,000,000 and TZS 14,000,000 both exist in the Income Tax Act, but as adjacent band edges of the PRESUMPTIVE INCOME TAX table (First Schedule para.2(3)) -- a different provision about tax rates for non-compliant record-keepers, not an EFD threshold at all.\n\nTWO THINGS RECORDED PER FOUNDER INSTRUCTION, 2026-08-29:\n(1) The founder originally approved TZS 11,000,000 on 2026-07-27 on the strength of TRA's own live portal pages agreeing with it TWICE (tra.go.tz/page/know-about-e-fiscal-devices-efd AND tra.go.tz/page/efd-vfd-suppliers). Both pages were wrong in the same way for the same reason: two agreeing secondary sources that share a lineage (the same institutional restatement, repeated across two pages of the same portal) are ONE source, not two independent confirmations.\n(2) A 2026-07-28 resolution (FACT-ACCURACY Q16, PROGRESS.md, 'D-VATWH-1 precedent') explicitly invoked a 'primary-over-practitioner' hierarchy to choose 11M over practitioners' 14M, and still reached the wrong answer -- because the 'primary source' actually consulted was TRA's PORTAL, not the Act. The rule (primary beats practitioner) was right; the source it was applied to was never primary at all.\n\nwrong_patterns 'kila biashara tanzania lazima iwe na efd machine' and 'kila biashara inahitaji efd bila kizingiti' REMOVED: under the corrected understanding these are now approximately TRUE (EFD is the default, no turnover threshold exists) -- flagging them as wrong would suppress correct future training pairs. Replaced with patterns flagging the OLD wrong belief instead (an asserted 11M/14M EFD threshold)."
+    "correction_note": "Prior fact asserted 'EFD required for turnover TZS 11 million and above,' cited only to two tra.go.tz portal pages plus RSM/Auditax practitioner guides -- no statute or regulation was ever consulted for it, at any point in this fact's history. Re-verified 2026-08-29 directly against TAA Cap.438: s.44 (renumbered from s.36 by Finance Act 2023 s.54) makes fiscal-receipt issuance the DEFAULT for everyone, with exemption ONLY by Commissioner-General public notice naming a class (s.44(2)) -- no turnover figure appears anywhere in the Act. TZS 11,000,000 and TZS 14,000,000 both exist in the Income Tax Act, but as adjacent band edges of the PRESUMPTIVE INCOME TAX table (First Schedule para.2(3)) -- a different provision about tax rates for non-compliant record-keepers, not an EFD threshold at all.\n\nTWO THINGS RECORDED PER FOUNDER INSTRUCTION, 2026-08-29:\n(1) The founder originally approved TZS 11,000,000 on 2026-07-27 on the strength of TRA's own live portal pages agreeing with it TWICE (tra.go.tz/page/know-about-e-fiscal-devices-efd AND tra.go.tz/page/efd-vfd-suppliers). Both pages were wrong in the same way for the same reason: two agreeing secondary sources that share a lineage (the same institutional restatement, repeated across two pages of the same portal) are ONE source, not two independent confirmations.\n(2) A 2026-07-28 resolution (FACT-ACCURACY Q16, PROGRESS.md, 'D-VATWH-1 precedent') explicitly invoked a 'primary-over-practitioner' hierarchy to choose 11M over practitioners' 14M, and still reached the wrong answer -- because the 'primary source' actually consulted was TRA's PORTAL, not the Act. The rule (primary beats practitioner) was right; the source it was applied to was never primary at all.\n\nwrong_patterns 'kila biashara tanzania lazima iwe na efd machine' and 'kila biashara inahitaji efd bila kizingiti' REMOVED: under the corrected understanding these are now approximately TRUE (EFD is the default, no turnover threshold exists) -- flagging them as wrong would suppress correct future training pairs. Replaced with patterns flagging the OLD wrong belief instead (an asserted 11M/14M EFD threshold).",
+    "verified_as_at": "2026-08-29"
   },
   "efd_not_every_business": {
     "fact": "The exemption from EFD/fiscal-receipt issuance is NOT a turnover figure -- it is a Commissioner-General public notice naming a specific person or class of persons (Tax Administration Act Cap.438 R.E.2023, s.44(2)). A business is excused ONLY if it falls within a class TRA has actually named in such a notice; there is no general 'below TZS 11M' or 'below TZS 14M' escape, because no turnover figure appears in the Act at all -- see efd_threshold_tzs_11m for the full correction. Do NOT tell a trader they are safe below some TZS figure; the honest answer when their exemption status is unknown is 'yes by default, unless TRA has named your class in a public notice -- confirm with TRA', not a turnover comparison.",
@@ -1086,7 +1142,8 @@
     "verified_by": "Direct read of TAA Cap.438 s.44(2), 2026-08-29 -- supersedes the 2026-07-27 version of this fact, which encoded TZS 11M as the exemption line 'per the primary-over-practitioner hierarchy (D-VATWH-1 precedent)' against TRA's PORTAL pages, not the Act. The hierarchy was right; the source it was applied to wasn't primary. See efd_threshold_tzs_11m's correction_note for the full record.",
     "verified_date": "2026-08-29",
     "status": "CORRECTED 2026-08-29 -- was calibrated for eval_347 retrieval against a now-known-wrong TZS 11M figure; eval_347's own expected answer is flagged separately for the founder's review, not yet changed",
-    "correction_note": "This fact was deliberately kept as a '200M-free companion to efd_threshold_tzs_11m' to win retrieval for eval_347 (PROGRESS.md, FACT-ACCURACY Q16, 2026-07-28) -- i.e. it was built to be internally consistent with the wrong fact, not with the statute. Rewritten 2026-08-29 to match the corrected understanding instead. eval_347's own correct_answer_sw text likely still needs updating (it tests '200M is not the EFD threshold' but its own gold answer may still supply 11M as the right one) -- flagged in the Tier-1 EFD sweep report for the founder to review before the gate is re-run, not changed here."
+    "correction_note": "This fact was deliberately kept as a '200M-free companion to efd_threshold_tzs_11m' to win retrieval for eval_347 (PROGRESS.md, FACT-ACCURACY Q16, 2026-07-28) -- i.e. it was built to be internally consistent with the wrong fact, not with the statute. Rewritten 2026-08-29 to match the corrected understanding instead. eval_347's own correct_answer_sw text likely still needs updating (it tests '200M is not the EFD threshold' but its own gold answer may still supply 11M as the right one) -- flagged in the Tier-1 EFD sweep report for the founder to review before the gate is re-run, not changed here.",
+    "verified_as_at": "2026-08-29"
   },
   "gn487a_visa_revocation": {
     "fact": "Visa and resident-permit revocation is a MANDATORY consequence upon conviction under GN487A s.3(3)(a) -- the Order's own text says a convicted non-citizen 'shall be liable to' a fine or imprisonment 'AND revocation of visa and resident permit.' It only attaches on CONVICTION, not on mere accusation, investigation, or GN487A's existence.",
@@ -1107,7 +1164,8 @@
     "effective_date": "2025-07-28",
     "verified_date": "2026-08-31",
     "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note)",
-    "correction_note": "Prior fact hedged 'possible, not mandatory,' constructed entirely by averaging three disagreeing secondary sources without ever reading GN487A's own text -- exactly the pattern this project's Tier-1/Tier-2 methodology exists to catch. Direct read of s.3(3)(a): the clause structure is 'shall be liable to [fine OR imprisonment] AND [revocation]' -- mandatory-on-conviction drafting, joined by 'and,' not discretionary language. Bowmans' 'mandatory' reading was correct; The Star/Citizen's 'possible/risk' framing was not. The averaging methodology that produced the prior hedge is the defect, not the underlying claim. One precondition the corrected fact retains, which the old fact also lacked: revocation is mandatory ONLY upon conviction, not automatic on accusation or on GN487A's mere existence. R6 NOTE: Bowmans (bowmans.com) is an eval-reserved source family per CLAUDE.md R6 -- even though its claim held up here, citing it as primary_source/verified_by is independently a methodology violation regardless of correctness. Re-grounded on the Order's own text (fbattorneys.co.tz/gn487a, a whitelisted domain) rather than any of the three law-firm/press sources."
+    "correction_note": "Prior fact hedged 'possible, not mandatory,' constructed entirely by averaging three disagreeing secondary sources without ever reading GN487A's own text -- exactly the pattern this project's Tier-1/Tier-2 methodology exists to catch. Direct read of s.3(3)(a): the clause structure is 'shall be liable to [fine OR imprisonment] AND [revocation]' -- mandatory-on-conviction drafting, joined by 'and,' not discretionary language. Bowmans' 'mandatory' reading was correct; The Star/Citizen's 'possible/risk' framing was not. The averaging methodology that produced the prior hedge is the defect, not the underlying claim. One precondition the corrected fact retains, which the old fact also lacked: revocation is mandatory ONLY upon conviction, not automatic on accusation or on GN487A's mere existence. R6 NOTE: Bowmans (bowmans.com) is an eval-reserved source family per CLAUDE.md R6 -- even though its claim held up here, citing it as primary_source/verified_by is independently a methodology violation regardless of correctness. Re-grounded on the Order's own text (fbattorneys.co.tz/gn487a, a whitelisted domain) rather than any of the three law-firm/press sources.",
+    "verified_as_at": "2026-08-31"
   },
   "vat_withholding_remittance_deadline": {
     "fact": "VAT withholding remitted to TRA within 10 days after the end of each tax period (WEF 1 July 2026, Finance Act 2026 s.95, repealing and replacing VAT Act s.71(5)). Before 1 July 2026 the deadline was the 20th of the following month, same as the VAT return (Finance Act 2025's original s.71(5): remit 'at the time when the value added tax return is due to be filed') -- that was correct THEN, it is not correct NOW. A withholding VAT statement (a new, separate filing obligation, s.71(6)) is also due within 10 days of the month following the tax period.",
@@ -1121,7 +1179,8 @@
     "verified_by": "Direct verbatim read of Finance Act 2026 s.95, 2026-09-01, during the Finance-Act-freshness audit: 'deleting subsection (5) and substituting for it the following: \"(5) A withholding agent shall, within ten days after the end of each tax period, pay to the Commissioner any value added tax that has been withheld...\"'. Compared directly against the PRE-amendment text (Finance Act 2025's own enacting text, read the same session): 'the withholding agent shall account for and remit output tax withheld ... at the time when the value added tax return is due to be filed' -- confirming this is a genuine deadline change, not a wording tweak.",
     "verified_date": "2026-06-16",
     "status": "CONFIRMED -- corrected 2026-09-01 (deadline changed by FA2026, see correction_note)",
-    "correction_note": "STALE-CONSTANT INCIDENT, same class as the presumptive-tax engine found the same day. The 2026-06-16 verification (PWC/Lexology/Habib, all secondary) was correct for its own date but was never re-checked against Finance Act 2026, which changed this exact deadline effective 1 July 2026 -- found only because this session's Finance-Act-freshness audit read Part XXVI of FA2026 in full rather than provision-by-provision. The OLD wrong_patterns rejected '7 days' framing without historical-tense allowance; the NEW correct answer (10 days) is close to but not the same as that old rejected value, so the patterns were rebuilt with historical-tense guards rather than simply widened, to avoid re-flagging a now-correct 'was 20th, kabla ya Julai 2026' statement."
+    "correction_note": "STALE-CONSTANT INCIDENT, same class as the presumptive-tax engine found the same day. The 2026-06-16 verification (PWC/Lexology/Habib, all secondary) was correct for its own date but was never re-checked against Finance Act 2026, which changed this exact deadline effective 1 July 2026 -- found only because this session's Finance-Act-freshness audit read Part XXVI of FA2026 in full rather than provision-by-provision. The OLD wrong_patterns rejected '7 days' framing without historical-tense allowance; the NEW correct answer (10 days) is close to but not the same as that old rejected value, so the patterns were rebuilt with historical-tense guards rather than simply widened, to avoid re-flagging a now-correct 'was 20th, kabla ya Julai 2026' statement.",
+    "verified_as_at": "2026-09-01"
   },
   "vat_late_registration_penalty": {
     "fact": "Penalty for failure to register VAT: fine up to TZS 200,000 AND/OR imprisonment 2-12 months PLUS interest on unpaid VAT. NO 2.5% monthly rate exists in the VAT Act.",
@@ -1133,7 +1192,8 @@
     ],
     "primary_source": "VAT Act Tanzania Cap 148",
     "verified_date": "2026-06-16",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "nssf_payment_deadline": {
     "fact": "NSSF due by end of month following payroll month. Dataset had inconsistent dates (10th vs end of month) — always direct users to nssf.go.tz to confirm current deadline.",
@@ -1144,7 +1204,8 @@
     ],
     "primary_source": "nssf.go.tz — verify current deadline",
     "verified_date": "2026-06-16",
-    "status": "CONFIRMED — use hedged language"
+    "status": "CONFIRMED — use hedged language",
+    "verified_as_at": "unknown"
   },
   "paye_bands_monthly_2025_26": {
     "fact": "PAYE monthly bands 2025/26: Band 1: 0-270,000=0%; Band 2: 270,001-520,000=8%; Band 3: 520,001-760,000=20%; Band 4: 760,001-1,000,000=25%; Band 5: above 1,000,000=30%. No personal relief of TZS 26,000 exists.",
@@ -1157,7 +1218,8 @@
     ],
     "primary_source": "PWC Tax Summaries Tanzania (reviewed Jan 2026); Habib Advisory Tax Guide 2025/26",
     "verified_date": "2026-06-16",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "vat_withholding_formula_correct": {
     "fact": "VAT withholding rate applies to the CONSIDERATION (invoice value exclusive of VAT), NOT the VAT amount. The standard 18% VAT is split between TRA and the supplier. Goods: 3% x consideration withheld, supplier receives 15% x consideration (3 + 15 = 18). Services: 6% x consideration withheld, supplier receives 12% x consideration (6 + 12 = 18). Example goods: TZS 5M invoice, VAT = TZS 900,000; withholding = 3% x 5,000,000 = TZS 150,000; supplier receives TZS 750,000 of the VAT. Example services: TZS 3M invoice, VAT = TZS 540,000; withholding = 6% x 3,000,000 = TZS 180,000; supplier receives TZS 360,000 of the VAT.",
@@ -1173,7 +1235,8 @@
     "primary_source": "https://www.tra.go.tz/images/uploads/acts/THE_FINANCE_ACT,_2025.pdf",
     "verified_by": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5) — statute states withheld 3%/6% and supplier's 12% (services) as components of the 18% rate on the supply; GN 352K of 30/6/2025 reg 31B — primary legislation, TRA-hosted. (Corrected 2026-07-25: earlier VAT-amount-base reading, sourced to practitioner summaries, was wrong.)",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "wcf_threshold_no_minimum": {
     "fact": "WCF (Workers Compensation Fund) applies to ALL employers in Mainland Tanzania from the first employee. There is NO minimum employee count threshold. Contrast with SDL which requires 10+ employees. WCF: 0.5% of gross cash emoluments, from employee 1. SDL: 3.5% of gross cash emoluments, from employee 10.",
@@ -1188,7 +1251,8 @@
     "primary_source": "wcf.go.tz official portal; VELMA Law; Workers Compensation Act No.20 of 2008; V.A Business Consultants July 2025; Lenvica.com",
     "verified_by": "WCF official portal, VELMA Law, V.A Business Consultants July 2025",
     "effective_date": "2008-01-01",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "wcf_rate_0_5_percent_confirmed": {
     "fact": "WCF rate is 0.5% of gross cash emoluments for ALL employers (both private and public sector), current as of 1 July 2022. History (corrected): the PUBLIC sector rate was already 0.5% since the tariff was first set (GN 169/2015, effective 1 Jul 2015). The PRIVATE sector rate was 1% from 2015, cut to 0.6% from 1 July 2021, then equalized to 0.5% (matching the public sector) from 1 July 2022. It was never '1% for all employers' at any point.",
@@ -1206,7 +1270,8 @@
     "verified_by": "GN 169/2015 direct read (media.tanzlii.org), 2026-08-29, for the base 2015 rates (public 0.5% / private 1%) -- this corrects the prior fact's history claim. The CURRENT 0.5%-for-all-sectors figure remains corroborated only by secondary sources (Sage payroll announcement, WCF DG press briefing, PWC Tax Summaries) -- the actual 2021/2022 amending GN was not located this pass, so the current number is not yet primary-confirmed, only its 2015 baseline is.",
     "effective_date": "2022-07-01",
     "status": "PARTIAL -- current 0.5% figure CONFIRMED (secondary-corroborated, amending GN not yet located); history CORRECTED 2026-08-29 against primary GN 169/2015 (see correction_note)",
-    "correction_note": "Prior fact's history line said the pre-2021 rate 'was 1% before 2021' without specifying sector -- read against GN 169/2015 directly, this is only true for the PRIVATE sector; the PUBLIC sector was already at 0.5% from the tariff's original 2015 gazettal. Root cause: history was likely generalized from private-sector payroll-vendor commentary (the sector employers actually feel a rate cut in) without checking whether the public-sector rate had been different all along. The amending regulation that produced the current 0.5%-for-all figure (reportedly 2021 and 2022) could not be located in this pass and should be found and read directly in a follow-up before this fact can be called fully primary-verified."
+    "correction_note": "Prior fact's history line said the pre-2021 rate 'was 1% before 2021' without specifying sector -- read against GN 169/2015 directly, this is only true for the PRIVATE sector; the PUBLIC sector was already at 0.5% from the tariff's original 2015 gazettal. Root cause: history was likely generalized from private-sector payroll-vendor commentary (the sector employers actually feel a rate cut in) without checking whether the public-sector rate had been different all along. The amending regulation that produced the current 0.5%-for-all figure (reportedly 2021 and 2022) could not be located in this pass and should be found and read directly in a follow-up before this fact can be called fully primary-verified.",
+    "verified_as_at": "2026-08-29"
   },
   "wcf_paid_to_fund_not_tra": {
     "fact": "WCF (Workers Compensation Fund) contributions are paid by the employer DIRECTLY to the Fund via its portal (portal.wcf.go.tz), NOT to TRA. WCF and SDL are different levies collected by different institutions: WCF = 0.5% of gross emoluments, paid to the WCF Fund, funds workplace-injury compensation; SDL = 3.5% of gross emoluments (employers with 10+ employees), paid to TRA, funds skills development. The employee does NOT contribute to WCF — it is a criminal offence for an employer to deduct a WCF contribution from an employee.",
@@ -1218,7 +1283,8 @@
     "primary_source": "https://www.wcf.go.tz/pages/contribution; Workers Compensation Act No.20 of 2008",
     "verified_by": "wcf.go.tz/pages/contribution — 'Mwajiri anaweza kulipa katika Mfuko kwa njia ya mtandao (portal.wcf.go.tz)', employer-only contribution, no TRA; Workers Compensation Act No.20 of 2008 — primary source, WCF-hosted",
     "verified_date": "2026-07-25",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "osha_vs_wcf_roles": {
     "fact": "OSHA and WCF are two separate institutions with different roles. OSHA (Occupational Safety and Health Authority) registers workplaces (s.16, OSH Act No.5 of 2003, before commencing operations), inspects, and issues the annual Compliance Licence; OSHA does NOT pay injury compensation. Compensation for occupational injuries and diseases is paid by the WCF (Workers Compensation Fund) under the Workers Compensation Act, Cap 263, funded by the employer's 0.5% monthly wage contribution. OSHA registration and WCF registration are separate obligations and both apply. WCF applies from the first employee — there is NO 2-employee or other minimum-count threshold for WCF.",
@@ -1232,7 +1298,8 @@
     "primary_source": "osha.go.tz FAQ (OSHA does not compensate; refer to WCF) item 17; osha.go.tz services (s.16 OSH Act 2003); wcf.go.tz",
     "verified_by": "osha.go.tz/frequent-asked-questions (eng) item 17 directs injured workers to WCF; OSH Act No.5/2003 s.16; Workers Compensation Act Cap 263; cross-ref wcf_threshold_no_minimum + wcf_paid_to_fund_not_tra",
     "verified_date": "2026-07-27",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "small_headcount_still_register": {
     "fact": "A very small employer (one or two employees) is still required to register: OSHA registers ALL workplaces with no minimum employee count, and WCF applies from the first employee. A small number of employees does NOT remove the obligation to register with OSHA and WCF. This is distinct from company incorporation, which requires a minimum of 2 shareholders/directors — a separate matter, not a WCF/OSHA registration threshold.",
@@ -1244,7 +1311,8 @@
     "primary_source": "osha.go.tz (all workplaces, s.16 OSH Act 2003); wcf.go.tz (from first employee); cross-ref osha_vs_wcf_roles + wcf_threshold_no_minimum",
     "verified_by": "retrieval-targeted companion for the small-headcount registration phrasing; does NOT restate company-incorporation minimums (minimum_shareholders — different topic) nor the WCF levy threshold (wcf_threshold_no_minimum)",
     "verified_date": "2026-07-27",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "vat_threshold_200m_july2024_increase": {
     "fact": "VAT registration threshold was increased from TZS 100M to TZS 200M effective 1 JULY 2023 (NOT July 2024) by Government Notice No. 448Y of 2023, amending Regulation 14 of the VAT (General) Regulations 2015. Current thresholds: TZS 200M per 12 months OR TZS 100M per any 6-month rolling period (the 6-month figure is structurally half of the 12-month figure, per VAT Act s.28(2)(b)). Zanzibar has its own, separately-administered VAT threshold, reported by the Zanzibar Revenue Authority's own site as TZS 100,000,000 under the Zanzibar VAT Act No. 4 of 1998 -- sourced to ZRA directly, but not yet pinned to a specific section/GN. Any pair showing TZS 100M/year or TZS 50M/6mo mainland is citing pre-July-2023 rules.",
@@ -1261,7 +1329,8 @@
     "verified_by": "Direct read of GN 448Y/2023 (tra.go.tz) and the original GN 225/2015 Reg.14 (tanzlii.org), 2026-08-31. GN 448Y s.4: \"deleting the phrase 'one hundred million shillings' and substituting for it the phrase 'two hundred million shillings'\" -- confirmed against Reg.14's original 2015 text (100M). Commencement clause: \"deemed to have come into operation on the 1st day of July, 2023.\" Two other candidate amending GNs from the same period (GN 714/2021, GN 352K/2025) were read and ruled out -- neither touches Reg.14.",
     "effective_date": "2023-07-01",
     "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note)",
-    "correction_note": "This fact carried the same shape as the fabricated EFD threshold before it: duplicated across 7 places (4 locked_facts keys, 2 rules_engine constants, 1 fidelity-guard entry), citing only secondary sources (TRA portal, PwC, TanzaniaInvest) sharing likely lineage, and never read against the instrument that actually sets the figure -- VAT Act s.28(4) delegates the exact TZS amount to regulations, not to the Act or a Finance Act. UNLIKE EFD, the underlying number was not fabricated: GN 448Y of 2023 s.4 was found and read directly, confirming 100M->200M is real and unambiguous. TWO things were still wrong: (1) the date was off by exactly one year -- GN 448Y's own commencement clause says 1 July 2023, not July 2024 as the prior fact claimed; (2) the instrument type was wrong -- prior sources implied a Finance Act change, when it is a ministerial regulation made under VAT Act s.94, which is also why EY/KPMG Finance Act alerts for 2023 and 2024 are silent on it. A conflation risk with an unrelated presumptive-income-tax threshold change (also 100M->200M, via Finance Act 2026) was investigated and RULED OUT as the source of the date error -- the two are legally and mechanically distinct instruments under distinct Acts with distinct effective dates (2023 vs ~2026); the 'July 2024' figure appears to be a plain dating error, not a cross-tax mixup, though the coincidence of matching round numbers across two regimes remains a real risk worth watching elsewhere. Zanzibar: a genuine Zanzibar-specific source was found this time (Zanzibar Revenue Authority's own site, zanrevenue.org, citing Zanzibar VAT Act No. 4 of 1998) -- better grounded than 'no Zanzibar source at all', but the specific section/amending-GN was not located, so the Zanzibar figure is regulator-sourced, not yet statute-pinpointed. Sweep of the other 6 duplication sites (rules_engine/registration_thresholds.py's VAT_ANNUAL/VAT_SIX_MONTH; fidelity.py's _STATUTORY_THRESHOLDS['vat_registration']; the two bare-string sibling keys) done in the same pass -- see PROGRESS.md."
+    "correction_note": "This fact carried the same shape as the fabricated EFD threshold before it: duplicated across 7 places (4 locked_facts keys, 2 rules_engine constants, 1 fidelity-guard entry), citing only secondary sources (TRA portal, PwC, TanzaniaInvest) sharing likely lineage, and never read against the instrument that actually sets the figure -- VAT Act s.28(4) delegates the exact TZS amount to regulations, not to the Act or a Finance Act. UNLIKE EFD, the underlying number was not fabricated: GN 448Y of 2023 s.4 was found and read directly, confirming 100M->200M is real and unambiguous. TWO things were still wrong: (1) the date was off by exactly one year -- GN 448Y's own commencement clause says 1 July 2023, not July 2024 as the prior fact claimed; (2) the instrument type was wrong -- prior sources implied a Finance Act change, when it is a ministerial regulation made under VAT Act s.94, which is also why EY/KPMG Finance Act alerts for 2023 and 2024 are silent on it. A conflation risk with an unrelated presumptive-income-tax threshold change (also 100M->200M, via Finance Act 2026) was investigated and RULED OUT as the source of the date error -- the two are legally and mechanically distinct instruments under distinct Acts with distinct effective dates (2023 vs ~2026); the 'July 2024' figure appears to be a plain dating error, not a cross-tax mixup, though the coincidence of matching round numbers across two regimes remains a real risk worth watching elsewhere. Zanzibar: a genuine Zanzibar-specific source was found this time (Zanzibar Revenue Authority's own site, zanrevenue.org, citing Zanzibar VAT Act No. 4 of 1998) -- better grounded than 'no Zanzibar source at all', but the specific section/amending-GN was not located, so the Zanzibar figure is regulator-sourced, not yet statute-pinpointed. Sweep of the other 6 duplication sites (rules_engine/registration_thresholds.py's VAT_ANNUAL/VAT_SIX_MONTH; fidelity.py's _STATUTORY_THRESHOLDS['vat_registration']; the two bare-string sibling keys) done in the same pass -- see PROGRESS.md.",
+    "verified_as_at": "2026-08-31"
   },
   "GN605A_effective_date": {
     "fact": "GN 605A (Government Notice No. 605A) gazetted 13 October 2025, effective 1 January 2026. Revokes and replaces the Minimum Wage Order 2022 in its entirety. The 2022 order has NO force after 31 December 2025.",
@@ -1275,7 +1344,8 @@
     "primary_source": "PKF Eastern Africa Oct 2025; kazi.go.tz",
     "verified_date": "2026-06-19",
     "effective_date": "2026-01-01",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "GN605A_sector_count": {
     "fact": "GN 605A establishes minimum wages across 16 main sectors with multiple subsectors. There is no single flat national rate — each sector and subsector has its own distinct monthly minimum. Training pairs must not state a single flat rate as applying to all workers.",
@@ -1289,7 +1359,8 @@
     "primary_source": "PKF Eastern Africa GN 605A PDF Oct 2025",
     "verified_date": "2026-06-19",
     "effective_date": "2026-01-01",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "GN605A_rate_range": {
     "fact": "GN 605A monthly rates range from TZS 80,000 (other domestic workers) to TZS 765,900 (energy sector international companies). Agricultural/general floor is TZS 175,000. Any sector not explicitly specified in the Order defaults to TZS 175,000 per month.",
@@ -1303,7 +1374,8 @@
     "primary_source": "PKF Eastern Africa GN 605A PDF Oct 2025",
     "verified_date": "2026-06-19",
     "effective_date": "2026-01-01",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "GN605A_key_sector_rates": {
     "fact": "Selected confirmed GN 605A monthly minimum rates: Agricultural (crop/animal): TZS 175,000. Hotel 5-star/4-star: TZS 375,000. Hotel bars/restaurants: TZS 195,000. Mining (prospecting): TZS 695,000. Energy international: TZS 765,900. Commercial banks: TZS 733,000. Construction Class I: TZS 515,000. Telecommunication: TZS 644,000. Industrial: TZS 200,000.",
@@ -1317,7 +1389,8 @@
     "primary_source": "PKF Eastern Africa GN 605A PDF Oct 2025",
     "verified_date": "2026-06-19",
     "effective_date": "2026-01-01",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "OSHA_penalties": {
     "fact": "Failure to register or obtain OSHA compliance licence: fine TZS 1,000,000 to TZS 5,000,000 OR imprisonment up to 12 months OR both. Continuing offence: additional TZS 100,000 per day. Source: OHS Act No. 5 of 2003.",
@@ -1333,7 +1406,8 @@
     "primary_source": "OHS Act No. 5 of 2003, TanzLII (tanzlii.org)",
     "verified_date": "2026-06-19",
     "effective_date": "2003-01-01",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "VAT_withholding_base_disputed": {
     "fact": "RESOLVED (2026-07-25) by primary legislation: the base is the CONSIDERATION (invoice value exclusive of VAT), not the VAT amount. Finance Act 2025 s.124 (VAT Act s.5(5)) splits the 18% standard rate — the withholding agent withholds 3% (goods) / 6% (services) of the supply and the supplier receives 15% / 12% respectively (3+15 = 6+12 = 18). The earlier 'dispute' arose from practitioner summaries loosely phrasing the split as '3% of the VAT'; the VAT-amount reading is inconsistent with the statute's express 12% supplier share for services. Training pairs SHOULD now use the consideration formula. See vat_withholding_formula_correct.",
@@ -1348,7 +1422,8 @@
     "verified_by": "Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5); GN 352K of 30/6/2025 reg 31B — primary legislation, TRA-hosted",
     "verified_date": "2026-07-25",
     "status": "RESOLVED — consideration base confirmed by primary law",
-    "training_instruction": "State the consideration-base formula: goods 3% x consideration (supplier 15%); services 6% x consideration (supplier 12%). May still add 'thibitisha na TRA kwa hesabu sahihi' as a safety hedge, but the formula itself is now confirmed and may be encoded."
+    "training_instruction": "State the consideration-base formula: goods 3% x consideration (supplier 15%); services 6% x consideration (supplier 12%). May still add 'thibitisha na TRA kwa hesabu sahihi' as a safety hedge, but the formula itself is now confirmed and may be encoded.",
+    "verified_as_at": "unknown"
   },
   "NSSF_split_triggers": {
     "fact": "NSSF total is always 20% of gross wage. Three valid employer-employee split arrangements: (a) 10% employer + 10% employee — standard default; (b) 15% employer + 5% employee — employer elects to contribute more; (c) 20% employer + 0% employee — employer pays the full 20%, employee pays nothing. Employee share must never exceed 10%. All three arrangements are legal under the NSSF Act.",
@@ -1363,7 +1438,8 @@
     "primary_source": "nssf.go.tz official website — payment of contributions page",
     "verified_date": "2026-06-19",
     "effective_date": "2018-07-01",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "BRELA_fees_hedge": {
     "fact": "BRELA registration and filing fees change periodically via ministerial order. Training pairs must direct users to brela.go.tz or the ORS portal for current fees rather than stating specific TZS amounts. The annual return filing fee has been approximately TZS 22,000 but this must be verified before quoting in any business context.",
@@ -1372,7 +1448,8 @@
     "primary_source": "miamia.co.tz 2024; brela.go.tz ORS portal",
     "verified_date": "2026-06-19",
     "status": "HEDGE — do not state specific amounts in training pairs",
-    "training_instruction": "Replace specific TZS fee amounts with: 'angalia ratiba rasmi ya ada kwenye brela.go.tz' or 'thibitisha ada halisi kupitia mfumo wa ORS (ors.brela.go.tz)'."
+    "training_instruction": "Replace specific TZS fee amounts with: 'angalia ratiba rasmi ya ada kwenye brela.go.tz' or 'thibitisha ada halisi kupitia mfumo wa ORS (ors.brela.go.tz)'.",
+    "verified_as_at": "unknown"
   },
   "vat_withholding_certificate_timing": {
     "fact": "VAT withholding certificate must be issued NOT LATER THAN the date on which VAT becomes payable under section 15 of the VAT Act — NOT on the 20th of the following month. The 20th deadline applies to filing the VAT return and remitting the withheld amount, which are separate obligations. A withholding agent must issue the certificate in an approved system format containing: TIN, registration number, supply description, consideration amount, withholding rate and withholding amount.",
@@ -1388,7 +1465,8 @@
     "verified_date": "2026-06-19",
     "effective_date": "2025-07-01",
     "status": "LOCKED",
-    "training_instruction": "Pairs about certificate timing must distinguish: certificate = same day VAT becomes payable; remittance to TRA = 20th of following month. Never conflate the two."
+    "training_instruction": "Pairs about certificate timing must distinguish: certificate = same day VAT becomes payable; remittance to TRA = 20th of following month. Never conflate the two.",
+    "verified_as_at": "unknown"
   },
   "brela_partnership_registration": {
     "fact": "A general partnership (ushirikiano wa kibiashara) in Tanzania can be registered with BRELA under the Business Names Registration Act or incorporated as a Limited Partnership. Required documents typically include: partnership deed, names and addresses of all partners, business name, nature of business, TIN for each partner. Exact current procedure and fees must be verified at brela.go.tz or via the ORS portal (ors.brela.go.tz) as requirements change by ministerial order.",
@@ -1402,7 +1480,8 @@
     "primary_source": "brela.go.tz — ORS portal",
     "verified_date": "2026-06-19",
     "status": "HEDGE — specific steps unverifiable from primary source; direct users to brela.go.tz",
-    "training_instruction": "Do not state specific fees or step counts for partnership registration. Use: 'thibitisha hatua za usajilishaji kwenye brela.go.tz au mfumo wa ORS (ors.brela.go.tz)'."
+    "training_instruction": "Do not state specific fees or step counts for partnership registration. Use: 'thibitisha hatua za usajilishaji kwenye brela.go.tz au mfumo wa ORS (ors.brela.go.tz)'.",
+    "verified_as_at": "unknown"
   },
   "brela_business_structures": {
     "fact": "BRELA registers businesses in THREE main legal forms: (1) sole proprietorship / individual — registered as a business name under the Business Names (Registration) Act Cap.213; (2) partnership (firm) — also registered as a business name under Cap.213 (a firm is two or more persons in partnership); (3) limited liability company — incorporated under the Companies Act Cap.212. The choice between a business name and a company depends on the desired legal structure and liability, NOT on the number of employees or the amount of capital — there is no employee-count or capital threshold that forces incorporation. BRELA separately administers trademarks, patents and industrial designs (intellectual property); these are NOT business structures.",
@@ -1416,7 +1495,8 @@
     "verified_by": "Business Names (Registration) Act Cap.213 s.2 ('business name' = style under which business carried on, whether in partnership or otherwise; applies to firms, individuals, corporations); Companies Act Cap.212 — primary legislation, BRELA-hosted; brela.go.tz business-name service page",
     "verified_date": "2026-07-25",
     "status": "CONFIRMED",
-    "training_instruction": "How many business structures BRELA registers -> the three legal forms (sole proprietor, partnership, company). Do NOT answer with trademarks/patents/designs (that is IP). The company-vs-business-name choice does not depend on employee count or capital."
+    "training_instruction": "How many business structures BRELA registers -> the three legal forms (sole proprietor, partnership, company). Do NOT answer with trademarks/patents/designs (that is IP). The company-vs-business-name choice does not depend on employee count or capital.",
+    "verified_as_at": "unknown"
   },
   "osha_licence_renewal_frequency": {
     "fact": "OSHA workplace compliance certificate (cheti cha usajilishaji) renewal frequency is not explicitly stated on osha.go.tz. The OHS Act 2003 requires employers to maintain workplace registration. In practice OSHA conducts annual risk assessments and inspections. Training pairs must direct employers to osha.go.tz to confirm current renewal period rather than stating a specific interval.",
@@ -1431,7 +1511,8 @@
     "primary_source": "https://www.osha.go.tz",
     "verified_date": "2026-06-19",
     "status": "HEDGE — renewal period not confirmed from primary source; direct to osha.go.tz",
-    "training_instruction": "Do not state a specific renewal interval. Use: 'thibitisha muda wa uhuishaji na OSHA (osha.go.tz)' or direct to osha.go.tz."
+    "training_instruction": "Do not state a specific renewal interval. Use: 'thibitisha muda wa uhuishaji na OSHA (osha.go.tz)' or direct to osha.go.tz.",
+    "verified_as_at": "unknown"
   },
   "nssf_employer_registration_deadline": {
     "fact": "Every employer in Tanzania must register with NSSF before or within a reasonable period of commencing business. The NSSF Act Cap. 50 imposes a registration obligation but the exact number of days is not confirmed from the primary source (nssf.go.tz was unreachable during verification). Training pairs must direct employers to nssf.go.tz to confirm current registration deadline and avoid stating a specific day count.",
@@ -1445,7 +1526,8 @@
     "primary_source": "https://www.nssf.go.tz — unverifiable at time of writing",
     "verified_date": "2026-06-19",
     "status": "HEDGE — specific deadline unverifiable from primary source; direct to nssf.go.tz",
-    "training_instruction": "Do not state a specific day count for NSSF registration deadline. Use: 'sajili na NSSF haraka iwezekanavyo baada ya kuanza biashara. Thibitisha tarehe ya mwisho kwenye nssf.go.tz'."
+    "training_instruction": "Do not state a specific day count for NSSF registration deadline. Use: 'sajili na NSSF haraka iwezekanavyo baada ya kuanza biashara. Thibitisha tarehe ya mwisho kwenye nssf.go.tz'.",
+    "verified_as_at": "unknown"
   },
   "efd_approved_supplier_verification": {
     "fact": "To verify that an EFD supplier/distributor (msambazaji) is TRA-approved, businesses should check the official TRA website (tra.go.tz) for the current list of approved EFD dealers. TRA publishes a register of approved EFD suppliers. Businesses should only purchase EFD machines from TRA-approved dealers — purchasing from unapproved suppliers may result in the machine not being activated by TRA. The TRA EFD page URL changed and was unavailable at time of writing.",
@@ -1459,7 +1541,8 @@
     "primary_source": "https://www.tra.go.tz — EFD page unavailable at time of writing",
     "verified_date": "2026-06-19",
     "status": "HEDGE — specific supplier list URL unverifiable; direct to tra.go.tz",
-    "training_instruction": "Direct businesses to tra.go.tz to verify current list of approved EFD suppliers. Use: 'angalia orodha ya wasambazaji walioidhinishwa na TRA kwenye tra.go.tz'."
+    "training_instruction": "Direct businesses to tra.go.tz to verify current list of approved EFD suppliers. Use: 'angalia orodha ya wasambazaji walioidhinishwa na TRA kwenye tra.go.tz'.",
+    "verified_as_at": "unknown"
   },
   "OSHA_annual_inspection": {
     "fact": "OSHA conducts mandatory annual inspections of all workplaces in Tanzania. The OSHA compliance licence must be renewed every year.",
@@ -1475,7 +1558,8 @@
     "verified_by": "tiseza.go.tz eregulations; Revocatus Mandago citing OHS Act",
     "effective_date": "2003-01-01",
     "verified_date": "2026-06-20",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "OSHA_safety_officer_threshold": {
     "fact": "Occupational Health and Safety Act Cap.297 s.11(1) requires an employer with MORE THAN 20 EMPLOYEES to designate a 'health and safety representative' -- an existing employee given this role, NOT a professionally hired/dedicated 'safety officer'. Ratios for how many representatives: 1 per 100 employees in shops/offices, 1 per 50 in a factory/other workplace (s.11(4)). An OSHA inspector may also COMPEL designation even at 4 or fewer employees (s.11(5)). A safety committee (s.13) is required once 2+ representatives exist. Do NOT phrase this as 'must hire a safety officer above N employees' -- it is a representative/committee scheme built from existing staff, triggered at >20 employees as the general rule, with inspector discretion below that.",
@@ -1485,7 +1569,8 @@
     "verified_date": "2026-09-01",
     "status": "CORRECTED 2026-09-01 (Tier 3) -- un-hedged, with mechanism stated explicitly, not a bare number",
     "correction_note": "Prior fact was a blanket hedge ('not confirmed, do not state a specific number, direct to osha.go.tz') because earlier passes could not find a threshold. Tier 3 re-verification read Cap.297 s.11 directly and found a real, specific threshold. Per explicit instruction: replacing a hedge with a bare number is itself the direction that ships a wrong answer if the mechanism differs from what a bare number implies -- so this correction states the MECHANISM (designated existing-employee representative, ratio-based, inspector-compellable below the general threshold) rather than only the number 20, to avoid the fact being read as 'must hire a dedicated safety officer above 20 staff', which it does not say.",
-    "training_instruction": "Do not phrase this as hiring a safety officer. Use: 'zaidi ya wafanyakazi 20 -- mwajiri lazima ateue mfanyakazi kuwa mwakilishi wa afya na usalama (siyo kuajiri afisa maalum), kwa mujibu wa Kifungu cha 11(1) cha Sheria ya Afya na Usalama Mahali pa Kazi.'"
+    "training_instruction": "Do not phrase this as hiring a safety officer. Use: 'zaidi ya wafanyakazi 20 -- mwajiri lazima ateue mfanyakazi kuwa mwakilishi wa afya na usalama (siyo kuajiri afisa maalum), kwa mujibu wa Kifungu cha 11(1) cha Sheria ya Afya na Usalama Mahali pa Kazi.'",
+    "verified_as_at": "2026-09-01"
   },
   "BRELA_COSOTA_split": {
     "fact": "Intellectual property in Tanzania is split between two bodies. BRELA (Business Registrations and Licensing Agency) administers: trademarks (alama za biashara), patents (hati miliki), and industrial designs (miundo ya viwanda). COSOTA (Copyright Society of Tanzania) administers: copyright and neighbouring rights (haki za ubunifu na haki jirani). There is NO body called ORT — ort.go.tz does not exist as a Tanzanian IP registry.",
@@ -1505,7 +1590,8 @@
     "verified_by": "ARIPO; WIPO; US Trade.gov; IBA",
     "effective_date": "2025-01-01",
     "verified_date": "2026-06-20",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "SDL_source_law": {
     "fact": "SDL (Skills Development Levy) is imposed under Section 14 of the Vocational Education Training Act, Cap. 82. It is collected by TRA. Rate: 3.5% of gross cash emoluments (reduced from 4% by Finance Act 2023, effective 1 July 2023). Applies to employers with 10 or more employees on Mainland Tanzania.",
@@ -1522,7 +1608,8 @@
     "verified_by": "TRA SDL page; Vocational Education Training Act Cap. 82",
     "effective_date": "2023-07-01",
     "verified_date": "2026-06-20",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "VAT_zero_rated_vs_exempt_input_VAT": {
     "fact": "Zero-rated supplies are taxable at 0% VAT rate — suppliers CAN claim input VAT on their purchases. Exempt supplies are not subject to VAT at all — suppliers CANNOT claim input VAT on their purchases. These are fundamentally different categories. The model previously inverted this rule (eval_017 failure: stated zero-rated businesses cannot claim input VAT).",
@@ -1542,7 +1629,8 @@
     "effective_date": "2015-07-01",
     "verified_date": "2026-06-20",
     "status": "LOCKED",
-    "training_instruction": "Pairs on this topic must explicitly state: zero-rated = CAN claim input VAT; exempt = CANNOT claim input VAT. Never conflate the two categories."
+    "training_instruction": "Pairs on this topic must explicitly state: zero-rated = CAN claim input VAT; exempt = CANNOT claim input VAT. Never conflate the two categories.",
+    "verified_as_at": "unknown"
   },
   "gn487a_mgeni_cap357_definition": {
     "fact": "GN487A defines 'non-citizen' by reference to the Tanzania Citizenship Act Cap.357 R.E.2023. Cap.357 recognises three citizen categories: citizen by birth, citizen by descent, and citizen by naturalisation. A person holding Tanzanian citizenship under any of these three categories is NOT a non-citizen for GN487A purposes. Whether dual nationals holding a Tanzanian passport qualify as citizens depends on Cap.357 — this is a legal interpretation that must be verified with an immigration lawyer.",
@@ -1559,7 +1647,8 @@
     "verified_date": "2026-06-20",
     "status": "HEDGE — dual citizen scenario requires legal interpretation; direct to immigration lawyer",
     "training_instruction": "Do not state definitively that dual citizens are exempt from GN487A. Use: 'thibitisha hali yako na wakili wa uhamiaji'.",
-    "correction_note": " R6 NOTE (2026-08-31): prior primary_source was 'Clyde & Co July 2025' -- Clyde & Co is an eval-reserved source family per CLAUDE.md R6. The underlying claim was independently confirmed correct against GN487A s.2 and Cap.357 directly, but citing an eval-family firm as primary_source was a methodology violation regardless of correctness. Re-grounded on the Order and the Act themselves."
+    "correction_note": " R6 NOTE (2026-08-31): prior primary_source was 'Clyde & Co July 2025' -- Clyde & Co is an eval-reserved source family per CLAUDE.md R6. The underlying claim was independently confirmed correct against GN487A s.2 and Cap.357 directly, but citing an eval-family firm as primary_source was a methodology violation regardless of correctness. Re-grounded on the Order and the Act themselves.",
+    "verified_as_at": "2026-08-31"
   },
   "gn487a_msaidizi_definition": {
     "fact": "Under GN487A, a 'msaidizi' (facilitator) is a Tanzanian citizen who assists or aids a non-citizen to carry out any of the 15 prohibited business activities. This includes but may not be limited to lending their name, business licence, or identity to allow a non-citizen to operate a prohibited business. Penalty for msaidizi: TZS 5,000,000 fine OR imprisonment not exceeding 3 months. The facilitator and the non-citizen are BOTH penalised.",
@@ -1575,7 +1664,8 @@
     "verified_by": "VELMA Law citing GN487A text; Bowmans Tanzania legal update",
     "effective_date": "2025-07-28",
     "verified_date": "2026-06-20",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "gn487a_marriage_no_exemption": {
     "fact": "Marriage to a Tanzanian citizen does NOT grant GN487A exemption. Citizenship under Tanzania Citizenship Act Cap.357 requires formal naturalisation — marriage alone does not confer citizenship. A foreign national married to a Tanzanian remains a non-citizen for GN487A purposes and is still prohibited from conducting the 15 listed business activities. The path to GN487A exemption is acquiring Tanzanian citizenship through formal naturalisation, not marriage.",
@@ -1591,7 +1681,8 @@
     "verified_by": "Clyde & Co article confirms citizenship categories do not include marriage; Cap.357 naturalisation process is separate",
     "effective_date": "2025-07-28",
     "verified_date": "2026-06-20",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "vat_withholding_buyer_remits_directly": {
     "fact": "The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits VAT withholding DIRECTLY to TRA — not through the supplier's VAT return. TRA states: 'the withholding agent shall withhold 3%/6% and remit it to the Commissioner General.' The supplier receives a VAT Withholding Certificate as proof that the withheld amount has been remitted, which it then subtracts as output tax withheld in its VAT return (Finance Act 2025 s.71 amendment). The formula base is the consideration (invoice value excl. VAT) — see vat_withholding_formula_correct.",
@@ -1607,7 +1698,8 @@
     "verified_by": "TRA VAT page confirmed June 2026 — 'withholding agent shall remit to Commissioner General'",
     "effective_date": "2025-07-01",
     "verified_date": "2026-06-20",
-    "status": "LOCKED"
+    "status": "LOCKED",
+    "verified_as_at": "unknown"
   },
   "efd_tra_closure_authority": {
     "fact": "TRA has enforcement authority against businesses that repeatedly fail to issue EFD receipts. Enforcement actions can include: written warnings, imposition of fines, suspension of EFD device/licence, and closure of business premises. The TRA EFD page was unavailable at time of verification (June 2026) but closure authority is grounded in the VAT Act Cap.148 enforcement provisions and general TRA administrative powers under the Tax Administration Act.",
@@ -1624,7 +1716,8 @@
     "effective_date": "2025-07-01",
     "verified_date": "2026-06-20",
     "status": "HEDGE — TRA EFD page unavailable; grounded in VAT Act Cap.148",
-    "training_instruction": "Always write 'kufunga' (close) never 'kufungua' (open) when describing TRA closure authority. Pairs must state TRA CAN close — answer yes_no questions with Ndiyo."
+    "training_instruction": "Always write 'kufunga' (close) never 'kufungua' (open) when describing TRA closure authority. Pairs must state TRA CAN close — answer yes_no questions with Ndiyo.",
+    "verified_as_at": "unknown"
   },
   "sdl_payment_deadline": "7 days_of_month",
   "trademark_fee_for_explanation_of_decision": "50,000 TZS",
@@ -1677,7 +1770,8 @@
     "verified_by": "Direct read of BRELA's own fee schedule, 2026-09-01: two distinct USD 220 line items for foreign companies ('Document filing' and 'File opening').",
     "verified_date": "2026-09-01",
     "status": "CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, key naming/citation fixed",
-    "correction_note": "Amount (220 USD) was already correct. The key name and any 'Section 12/XII' framing carried the same stale-name defect this project already fixed on act_section_12 and in CLAUDE.md Section 11 -- Part XIII, ss.320-328 is the correct citation, not 'Section XII'."
+    "correction_note": "Amount (220 USD) was already correct. The key name and any 'Section 12/XII' framing carried the same stale-name defect this project already fixed on act_section_12 and in CLAUDE.md Section 11 -- Part XIII, ss.320-328 is the correct citation, not 'Section XII'.",
+    "verified_as_at": "2026-09-01"
   },
   "balance_sheet_filing_fee_section_12_act": {
     "fact": "Foreign company balance-sheet filing fee is USD 220 (Companies Act Cap.212, Part XIII, ss.320-328 -- NOT 'Section XII'/'Section 12', a stale-name error already corrected elsewhere in this project, e.g. act_section_12). Amount confirmed directly on BRELA's own current fee schedule.",
@@ -1686,7 +1780,8 @@
     "verified_by": "Direct read of BRELA's own fee schedule, 2026-09-01: two distinct USD 220 line items for foreign companies ('Document filing' and 'File opening').",
     "verified_date": "2026-09-01",
     "status": "CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, key naming/citation fixed",
-    "correction_note": "Amount (220 USD) was already correct. The key name and any 'Section 12/XII' framing carried the same stale-name defect this project already fixed on act_section_12 and in CLAUDE.md Section 11 -- Part XIII, ss.320-328 is the correct citation, not 'Section XII'."
+    "correction_note": "Amount (220 USD) was already correct. The key name and any 'Section 12/XII' framing carried the same stale-name defect this project already fixed on act_section_12 and in CLAUDE.md Section 11 -- Part XIII, ss.320-328 is the correct citation, not 'Section XII'.",
+    "verified_as_at": "2026-09-01"
   },
   "late_filing_penalty_monthly_fee_section_12_act": "25 USD",
   "certified_copy_certificate_of_registration_fee": "4,000 TZS",
@@ -1702,7 +1797,8 @@
     "primary_source": "Companies Act, Cap.212 -- Part XIII heading and s.328 (\"Interpretation of Part XIII\")",
     "verified_by": "Direct read of Companies Act Cap.212 table of contents and body text, 2026-08-31. Part XII (ss.314-319) is confirmed to be \"Winding up of unregistered companies\" -- unrelated to foreign companies. Secondary sources checked (multiple law-firm articles) were themselves inconsistent, citing 'Part XI' or 'Part XII' variously -- none matched a direct read of Part XIII.",
     "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note)",
-    "correction_note": "Original bare value was 'Kifungu XII cha Sheria' (Section/Part XII of the Act), with no Act name given -- reconstructed from context (neighbouring keys document_filing_fee_section_12_act_excluding_balance_sheet, balance_sheet_filing_fee_section_12_act, late_filing_penalty_monthly_fee_section_12_act, and CLAUDE.md Section 11's own 'Foreign company (Section XII) late filing penalty: USD 25 per month' line) to be about the Companies Act's foreign/external-company regime. Direct read of the Act found this regime is Part XIII (ss.320-328), not Part XII. THE SAME ERROR IS BAKED INTO CLAUDE.md SECTION 11 ITSELF, and this fact very likely originated from that document rather than the other way around -- corrected there in the same pass (see PROGRESS.md). NOT YET RESOLVED: the three neighbouring fee-figure keys (document_filing_fee_section_12_act_excluding_balance_sheet, balance_sheet_filing_fee_section_12_act, late_filing_penalty_monthly_fee_section_12_act) still carry the wrong part number IN THEIR KEY NAMES, and their USD 220/220/25 figures were not independently confirmed against a primary Fees Regulation during this pass (that regulation could not be located). Renaming these keys touches scripts/precompute_rag_embeddings.py's embedding-group list and would need a coordinated fix + re-verification of the dollar figures, not a name-only patch -- flagged for a future pass rather than done here."
+    "correction_note": "Original bare value was 'Kifungu XII cha Sheria' (Section/Part XII of the Act), with no Act name given -- reconstructed from context (neighbouring keys document_filing_fee_section_12_act_excluding_balance_sheet, balance_sheet_filing_fee_section_12_act, late_filing_penalty_monthly_fee_section_12_act, and CLAUDE.md Section 11's own 'Foreign company (Section XII) late filing penalty: USD 25 per month' line) to be about the Companies Act's foreign/external-company regime. Direct read of the Act found this regime is Part XIII (ss.320-328), not Part XII. THE SAME ERROR IS BAKED INTO CLAUDE.md SECTION 11 ITSELF, and this fact very likely originated from that document rather than the other way around -- corrected there in the same pass (see PROGRESS.md). NOT YET RESOLVED: the three neighbouring fee-figure keys (document_filing_fee_section_12_act_excluding_balance_sheet, balance_sheet_filing_fee_section_12_act, late_filing_penalty_monthly_fee_section_12_act) still carry the wrong part number IN THEIR KEY NAMES, and their USD 220/220/25 figures were not independently confirmed against a primary Fees Regulation during this pass (that regulation could not be located). Renaming these keys touches scripts/precompute_rag_embeddings.py's embedding-group list and would need a coordinated fix + re-verification of the dollar figures, not a name-only patch -- flagged for a future pass rather than done here.",
+    "verified_as_at": "2026-08-31"
   },
   "osiha_act_citation": "Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003",
   "health_and_safety_act_citation": {
@@ -1712,7 +1808,8 @@
     "verified_by": "Direct read of Cap.297 R.E.2023 primary text, 2026-09-01.",
     "verified_date": "2026-09-01",
     "status": "CORRECTED 2026-09-01 (Tier 3)",
-    "correction_note": "Prior value ('Sheria ya Afya na Usalama ya mwaka 2003') dropped 'Occupational'/'Mahali pa Kazi' (at the workplace) and the Act number, reading as a generic health-and-safety Act name that could be confused with the Public Health Act. This key duplicated osiha_act_citation, which already carried the fuller, correct citation -- reconciled to match it rather than deleting either key, since both are separate retrieval entry points."
+    "correction_note": "Prior value ('Sheria ya Afya na Usalama ya mwaka 2003') dropped 'Occupational'/'Mahali pa Kazi' (at the workplace) and the Act number, reading as a generic health-and-safety Act name that could be confused with the Public Health Act. This key duplicated osiha_act_citation, which already carried the fuller, correct citation -- reconciled to match it rather than deleting either key, since both are separate retrieval entry points.",
+    "verified_as_at": "2026-09-01"
   },
   "risk_assessment_frequency": {
     "fact": "Workplace risk assessment (Occupational Health and Safety Act Cap.297, s.60) applies specifically to factories/workplaces involving HAZARDOUS processes, hazardous equipment, or hazardous chemicals likely to cause adverse health effects or serious damage -- NOT a universal requirement for every workplace. Required frequency: at least once a year ('mara moja kwa mwaka'), OR more often whenever circumstances make it necessary. The assessment must be carried out by an approved inspection authority, not by the employer alone.",
@@ -1721,7 +1818,8 @@
     "verified_by": "Direct read of Cap.297 s.60 primary text, 2026-09-01.",
     "verified_date": "2026-09-01",
     "status": "CORRECTED 2026-09-01 (Tier 3)",
-    "correction_note": "Prior fact stated only the once-a-year floor with no scope. s.60 is scoped to hazardous-activity workplaces, sets 'or more often when necessary' as an escalation, and requires an approved inspection authority (not the employer) to perform it -- all three qualifiers were missing from the prior fact."
+    "correction_note": "Prior fact stated only the once-a-year floor with no scope. s.60 is scoped to hazardous-activity workplaces, sets 'or more often when necessary' as an escalation, and requires an approved inspection authority (not the employer) to perform it -- all three qualifiers were missing from the prior fact.",
+    "verified_as_at": "2026-09-01"
   },
   "vat_registration_threshold_annual": "200,000,000 TZS",
   "vat_registration_threshold_six_months": "100,000,000 TZS",
@@ -1741,7 +1839,8 @@
     "verified_by": "Direct read of TRA's own hosted TAA PDF (tra.go.tz), 2026-09-01. Independently corroborated by this project's own rules_engine/presumptive.py and rules_engine/rates.py, both of which already document s.43 (renumbered from old s.35) as the records-keeping provision, predating this fix.",
     "effective_date": "2023-01-01",
     "status": "CORRECTED 2026-09-01 (Tier 3)",
-    "correction_note": "Prior fact cited s.11, which is 'Private and Class Rulings' -- an entirely unrelated provision, not a record-keeping requirement. This is the THIRD stale/wrong TAA Cap.438 section number found in this project (after objection_deposit_requirement's s.51->s.62 and efd_threshold_tzs_11m's s.36->s.44), confirming the same renumbering-trap shape recurring across independently-authored facts. A full sweep of every locked_facts.json entry citing Cap.438 (7 facts total) and of chike/rules_engine + chike/fidelity.py found no further stale TAA section numbers -- these three are the complete set."
+    "correction_note": "Prior fact cited s.11, which is 'Private and Class Rulings' -- an entirely unrelated provision, not a record-keeping requirement. This is the THIRD stale/wrong TAA Cap.438 section number found in this project (after objection_deposit_requirement's s.51->s.62 and efd_threshold_tzs_11m's s.36->s.44), confirming the same renumbering-trap shape recurring across independently-authored facts. A full sweep of every locked_facts.json entry citing Cap.438 (7 facts total) and of chike/rules_engine + chike/fidelity.py found no further stale TAA section numbers -- these three are the complete set.",
+    "verified_as_at": "2026-09-01"
   },
   "legal_citation_amendment_act_sdl": {
     "fact": "Sheria ya Elimu na Mafunzo ya Ufundi, Sura ya 82, Kifungu cha 19 (VETA Act, Cap.82, s.19, 'Exemption from levy') -- this is the SUBSTANTIVE SDL exemptions section itself (see sdl_exemption_categories), NOT a citation naming any single amending Finance Act. The key name is a mislabel: s.19 has in fact been amended multiple times -- Acts Nos. 4 of 2013 s.61, 6 of 2014 s.53, 16 of 2015 s.38, 4 of 2017 s.73, and an outstanding, not-yet-applied Act 5 of 2022 -- so there is no single 'the amending Act' this key could correctly name even if it tried to.",
@@ -1750,7 +1849,8 @@
     "verified_by": "Direct read of Cap.82's 2019 primary consolidation text, 2026-09-01 -- s.19's own amendment-history bracket lists the five Acts above.",
     "verified_date": "2026-09-01",
     "status": "CORRECTED 2026-09-01 (Tier 3, follow-up) -- section number was already correct; the key's implied claim (that it names a specific amending Act) was wrong",
-    "correction_note": "Flagged WRONG in the Tier 3 differences report but omitted from the founder's fix order by oversight; fixed as a follow-up. Section 19 (unchanged) is correct as the current exemptions provision, but the key name 'legal_citation_amendment_act_sdl' implies a citation to a specific amending Finance Act, which the fact never provided and which does not exist as a single instrument -- s.19 has been amended five separate times. Key NOT renamed this pass (would need the same coordinated precompute_rag_embeddings.py + R15 regen treatment already deferred for act_section_12's siblings and vat_threshold_200m_july2024_increase) -- content corrected to state what s.19 actually is rather than implying a citation it doesn't carry."
+    "correction_note": "Flagged WRONG in the Tier 3 differences report but omitted from the founder's fix order by oversight; fixed as a follow-up. Section 19 (unchanged) is correct as the current exemptions provision, but the key name 'legal_citation_amendment_act_sdl' implies a citation to a specific amending Finance Act, which the fact never provided and which does not exist as a single instrument -- s.19 has been amended five separate times. Key NOT renamed this pass (would need the same coordinated precompute_rag_embeddings.py + R15 regen treatment already deferred for act_section_12's siblings and vat_threshold_200m_july2024_increase) -- content corrected to state what s.19 actually is rather than implying a citation it doesn't carry.",
+    "verified_as_at": "2026-09-01"
   },
   "exemption_category_government_departments": "Idara za Serikali au taasisi za umma zinazofadhiliwa kikamilifu na Serikali",
   "exemption_category_diplomatic_missions": "Misheni za Kidiplomasia",
@@ -1765,7 +1865,8 @@
     "correct_value": "HEDGE -- not confirmed in the 2019 primary text of s.19(1); do not assert as a confirmed SDL exemption",
     "primary_source": "Wanted: VETA Act Cap.82 s.19(1) as amended by Act No.5 of 2022 -- not yet reached",
     "verified_date": "2026-09-01",
-    "status": "HEDGE -- Tier 3 (2026-09-01): re-verification against VETA Act Cap.82 s.19(1) 2019 primary text found no TaESA category; recommend excluding from training pairs until confirmed against the 2022 amendment."
+    "status": "HEDGE -- Tier 3 (2026-09-01): re-verification against VETA Act Cap.82 s.19(1) 2019 primary text found no TaESA category; recommend excluding from training pairs until confirmed against the 2022 amendment.",
+    "verified_as_at": "unknown"
   },
   "exemption_category_farm_employers_agriculture": "Waajiri wa mashambani ambao wafanyakazi wao wanajihusisha moja kwa moja na shughuli za kilimo (isipokuwa wale wanaosimamia au kushughulika na usindikaji wa mazao)",
   "late_payment_penalty_rate": "2 %",
@@ -1782,7 +1883,8 @@
     "verified_by": "Secondary-source corroboration (law-firm/BRELA-adjacent summaries of Written Laws (Miscellaneous Amendments) Act No.5 of 2021), 2026-09-01 -- section text itself not directly read this pass.",
     "verified_date": "2026-09-01",
     "status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- wording fixed, number retained at medium confidence",
-    "correction_note": "Prior fact said '2 employees' -- wrong terminology (directors are persons, not employees) and served in retrieval, where this exact wording had already produced a wrong answer once. The number 2 itself is not being changed, but its confidence is downgraded from unstated to medium (secondary corroboration only, primary s.186 text not read this pass). Open question, NOT resolved here: whether a single-shareholder private company (permitted since s.26A, 2021 amendment) may also have just 1 director -- do not assert either a single-director exception or its absence until s.186 is read directly."
+    "correction_note": "Prior fact said '2 employees' -- wrong terminology (directors are persons, not employees) and served in retrieval, where this exact wording had already produced a wrong answer once. The number 2 itself is not being changed, but its confidence is downgraded from unstated to medium (secondary corroboration only, primary s.186 text not read this pass). Open question, NOT resolved here: whether a single-shareholder private company (permitted since s.26A, 2021 amendment) may also have just 1 director -- do not assert either a single-director exception or its absence until s.186 is read directly.",
+    "verified_as_at": "unknown"
   },
   "minimum_shareholders": {
     "fact": "A private company under the Companies Act Cap.212 requires a minimum of 2 shareholders (members) -- EXCEPT that since the 2021 amendment (s.26A, 'Single shareholder'), a private company may now be formed or continued with just 1 shareholder as an exception to the general rule. A PUBLIC company requires a minimum of 7 shareholders, not 2. Shareholders are PERSONS/MEMBERS, NOT 'employees' -- a shareholder need not be an employee of the company.",
@@ -1791,7 +1893,8 @@
     "verified_by": "Secondary-source corroboration (law-firm/BRELA-adjacent summaries of the 2021 amending Act), 2026-09-01 -- section text itself not directly read this pass.",
     "verified_date": "2026-09-01",
     "status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- wording and public/private distinction fixed, numbers retained at medium confidence",
-    "correction_note": "Prior fact said a flat '2 employees' with no distinction between private and public companies, and no mention of the single-shareholder exception. Corrected: 'employees' -> 'persons/members' (a director/shareholder need not be an employee); added the public-company minimum of 7 (prior fact only covered the private-company case, the more common context in this product); added the s.26A single-shareholder exception for private companies. This exact wording was served in retrieval and had already produced a wrong answer once, per founder instruction. Numbers at medium confidence -- ss.27/45/26A not directly read this pass, only secondary corroboration."
+    "correction_note": "Prior fact said a flat '2 employees' with no distinction between private and public companies, and no mention of the single-shareholder exception. Corrected: 'employees' -> 'persons/members' (a director/shareholder need not be an employee); added the public-company minimum of 7 (prior fact only covered the private-company case, the more common context in this product); added the s.26A single-shareholder exception for private companies. This exact wording was served in retrieval and had already produced a wrong answer once, per founder instruction. Numbers at medium confidence -- ss.27/45/26A not directly read this pass, only secondary corroboration.",
+    "verified_as_at": "unknown"
   },
   "registration_certificate_processing_time": "3 days",
   "annual_return_form_number": "128",
@@ -1802,7 +1905,8 @@
     "primary_source": "https://www.brela.go.tz/pages/tozo-za-majina-ya-biashara",
     "verified_by": "Direct read of BRELA's own business-name fee page, 2026-09-01: 'Ada ya maombi: 15,000.00' (application) and 'Ada ya uendeshaji (inalipwa kila mwaka): 5,000.00' (annual maintenance).",
     "verified_date": "2026-09-01",
-    "status": "CONFIRMED -- Tier 3 (2026-09-01): value unchanged from prior fact (5,000 TZS was already correct), previously uncited. A secondary-source pass (non-primary) had suggested 1,000 TZS for maintenance/5,000 for application -- checked directly against BRELA's own page and found wrong; superseded here rather than acted on, per instruction to confirm primary before editing."
+    "status": "CONFIRMED -- Tier 3 (2026-09-01): value unchanged from prior fact (5,000 TZS was already correct), previously uncited. A secondary-source pass (non-primary) had suggested 1,000 TZS for maintenance/5,000 for application -- checked directly against BRELA's own page and found wrong; superseded here rather than acted on, per instruction to confirm primary before editing.",
+    "verified_as_at": "2026-09-01"
   },
   "name_similarity_threshold": {
     "fact": "BRELA does not use a numeric similarity percentage as a legal rule for rejecting a proposed company name. The actual test (Companies Rules 2006 rr.2-3, under Companies Act Cap.212; and the Business Names (Registration) Act Cap.213) is QUALITATIVE: a name is rejected if it is 'identical with or similar to' an existing name such that it is 'likely to mislead the public,' or is otherwise undesirable, at the Registrar's discretion. A commonly-cited '50%' figure is an ORS (Online Registration System) on-screen UI similarity indicator, not a codified legal threshold.",
@@ -1817,7 +1921,8 @@
     "primary_source": "Companies Rules 2006, rr.2-3 (Companies Act Cap.212); Business Names (Registration) Act, Cap.213",
     "verified_by": "Secondary-source paraphrase of Companies Rules 2006 rr.2-3, cross-checked for consistency across sources, 2026-08-31 -- direct TanzLII PDF fetch 403'd; recommend re-confirming against a directly-opened TanzLII/gazette copy before treating as fully closed. The '50%' figure's origin was traced to miamia.co.tz, a non-authoritative aggregator, describing it explicitly as informal advice about the ORS system's on-screen indicator ('It is advisable to have a business name with less than 50% similarity') -- a UI heuristic, not a legal citation.",
     "status": "CONFIRMED (mechanism) -- corrected 2026-08-31; NUMBER STILL UNGROUNDED as a legal rule because no such number exists in law",
-    "correction_note": "Prior fact stated a bare '50%' with no context, sourced only to an aggregator site describing a product UI feature. This is a DEFECT CLASS NOT YET NAMED in this project's prior audits: not fabricated (the number is real -- it genuinely appears on the ORS screen), not a stale citation (nothing has changed over time), but A TOOL'S BEHAVIOUR RECORDED AS A LEGAL RULE. The underlying legal test is categorically different in kind (qualitative discretion, not a numeric cutoff), so no amount of 'finding the right percentage' would have fixed this fact -- the fix has to change what KIND of claim the fact makes, not just its value. Worth watching for elsewhere: any locked fact whose only source is a product/portal screen description (a UI label, an on-screen message, a form's placeholder text) rather than a legal instrument is a candidate for this same class."
+    "correction_note": "Prior fact stated a bare '50%' with no context, sourced only to an aggregator site describing a product UI feature. This is a DEFECT CLASS NOT YET NAMED in this project's prior audits: not fabricated (the number is real -- it genuinely appears on the ORS screen), not a stale citation (nothing has changed over time), but A TOOL'S BEHAVIOUR RECORDED AS A LEGAL RULE. The underlying legal test is categorically different in kind (qualitative discretion, not a numeric cutoff), so no amount of 'finding the right percentage' would have fixed this fact -- the fix has to change what KIND of claim the fact makes, not just its value. Worth watching for elsewhere: any locked fact whose only source is a product/portal screen description (a UI label, an on-screen message, a form's placeholder text) rather than a legal instrument is a candidate for this same class.",
+    "verified_as_at": "unknown"
   },
   "trademark_renewal_period": {
     "fact": "UNCONFIRMED: the trademark registration/renewal term length in Tanzania (previously stated as 'saba years'/7 years) could not be sourced. BRELA's own fee schedule confirms a renewal fee (TZS 30,000) and Form TM/SM 9 'Renewal of Registration of a Mark' exist, but does not state the term length. tanzlii.org (the Trade and Service Marks Act/Regulations primary text) was unreachable. Do not assert a specific number of years until this is confirmed against primary text.",
@@ -1825,7 +1930,8 @@
     "primary_source": "Wanted: Trade and Service Marks Act Cap.326 / Regulations -- not yet reached",
     "verified_date": "2026-09-01",
     "status": "HEDGE -- Tier 3 (2026-09-01): 'saba years'/7 years could not be confirmed against primary or working secondary sources; recommend hedging in training pairs (direct to BRELA) until re-verified.",
-    "training_instruction": "Do not state a specific renewal-period number of years. Use: 'thibitisha muda wa uhalali wa usajili wa alama ya biashara na BRELA (brela.go.tz)'."
+    "training_instruction": "Do not state a specific renewal-period number of years. Use: 'thibitisha muda wa uhalali wa usajili wa alama ya biashara na BRELA (brela.go.tz)'.",
+    "verified_as_at": "unknown"
   },
   "application_fee_patent": "12000 TZS",
   "patent_term": {
@@ -1841,7 +1947,8 @@
     "primary_source": "Patents (Registration) Act, Cap.217 R.E.2002, s.39(1)-(3)",
     "verified_by": "Direct read of Patents (Registration) Act Cap.217 s.39(1)-(3), 2026-08-31. Cross-checked separately via web search that '20 years' as a flat term is the ARIPO regional term (Harare Protocol), not Tanzania's domestic Act -- a plausible source of the conflation. Note: a historical '[s.38]' footnote follows s.39 in the text, the same old-numbering-preserved-as-footnote pattern found twice elsewhere this session.",
     "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note); SCOPING FLAG for founder",
-    "correction_note": "Prior fact stated a bare, uncited '20 years' with no distinction between base term and extension. Direct read of Cap.217 s.39(1) found the true structure is a 10-year base term with two discretionary 5-year extensions (subject to a 'working' requirement), reaching 20 years only in the maximal case -- a flat '20 years' answer would mislead a patent holder into not renewing at year 10 and losing protection entirely. SCOPING FLAG (not resolved here, founder decision): patents/IP registration falls under no current or planned domain in CLAUDE.md Section 5 (Tier1A/1B/1C/2A/2B) -- this fact appears to belong to no active workstream."
+    "correction_note": "Prior fact stated a bare, uncited '20 years' with no distinction between base term and extension. Direct read of Cap.217 s.39(1) found the true structure is a 10-year base term with two discretionary 5-year extensions (subject to a 'working' requirement), reaching 20 years only in the maximal case -- a flat '20 years' answer would mislead a patent holder into not renewing at year 10 and losing protection entirely. SCOPING FLAG (not resolved here, founder decision): patents/IP registration falls under no current or planned domain in CLAUDE.md Section 5 (Tier1A/1B/1C/2A/2B) -- this fact appears to belong to no active workstream.",
+    "verified_as_at": "2026-08-31"
   },
   "company_director_minimum_age": "18",
   "course_fee": {
@@ -1850,7 +1957,8 @@
     "primary_source": "osha.go.tz training pages",
     "verified_date": "2026-09-01",
     "status": "HEDGE -- Tier 3 (2026-09-01): every OSHA course fee sampled came back at TZS 300,000; 250,000 TZS is unexplained and should not be asserted until the specific course is identified.",
-    "training_instruction": "Do not state 250,000 TZS for an unnamed OSHA course. If a specific course is asked about, direct to osha.go.tz for its current fee."
+    "training_instruction": "Do not state 250,000 TZS for an unnamed OSHA course. If a specific course is asked about, direct to osha.go.tz for its current fee.",
+    "verified_as_at": "unknown"
   },
   "electrical_test_fee_reduction_initial": {
     "fact": "TZS 650,000 was the fee for OSHA electrical-system inspection at RURAL FUEL STATIONS specifically, before a 2025 fee reduction -- NOT a general/universal OSHA electrical inspection fee for all workplaces. Cap.297 s.66(2) separately requires ANNUAL electrical inspection for every factory/workplace using electricity at 'a prescribed fee' -- that general fee is a different, unconfirmed figure.",
@@ -1859,7 +1967,8 @@
     "verified_by": "Secondary source (national newspaper quoting OSHA's CEO directly), 2026-09-01 -- underlying OSHA fee-schedule/Government Notice not located.",
     "verified_date": "2026-09-01",
     "status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, scope narrowed",
-    "correction_note": "Prior fact implied a general OSHA electrical-test fee. Narrowed to rural-fuel-station-specific per the only source located; the general Cap.297 s.66(2) annual-inspection fee remains a separate, unconfirmed figure and must not be conflated with this one."
+    "correction_note": "Prior fact implied a general OSHA electrical-test fee. Narrowed to rural-fuel-station-specific per the only source located; the general Cap.297 s.66(2) annual-inspection fee remains a separate, unconfirmed figure and must not be conflated with this one.",
+    "verified_as_at": "unknown"
   },
   "electrical_test_fee_reduction_final": {
     "fact": "TZS 150,000 is the REDUCED fee for OSHA electrical-system inspection at RURAL FUEL STATIONS specifically (reduced from TZS 650,000 in 2025 to encourage rural investment) -- NOT a general/universal OSHA electrical inspection fee. This is old-fee-vs-new-fee, not 'first test vs re-test' as previously assumed.",
@@ -1868,7 +1977,8 @@
     "verified_by": "Secondary source (national newspaper quoting OSHA's CEO directly), 2026-09-01 -- underlying OSHA fee-schedule/Government Notice not located.",
     "verified_date": "2026-09-01",
     "status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, scope narrowed and mechanism corrected",
-    "correction_note": "Prior fact's 'initial vs final' framing was a guess at 'first test vs retest'; the actual relationship is 2025 fee reduction (old 650,000 -> new 150,000) for rural fuel stations specifically, not a test-sequence distinction."
+    "correction_note": "Prior fact's 'initial vs final' framing was a guess at 'first test vs retest'; the actual relationship is 2025 fee reduction (old 650,000 -> new 150,000) for rural fuel stations specifically, not a test-sequence distinction.",
+    "verified_as_at": "unknown"
   },
   "registration_certificate_processing_time_new": "1 days",
   "compliance_license_processing_time_old": "28 days",
@@ -1884,7 +1994,8 @@
     "primary_source": "VAT Act, Cap.148, s.11",
     "verified_by": "Cross-checked TRA's VAT Deferment page and Breakthrough Attorneys, both quoting matching statutory phrasing (\"at least ninety percent of taxable supplies\"), 2026-08-31. Section number per tanzanialaws.com's section-numbered summary, not independently confirmed against raw Act text.",
     "status": "CONFIRMED (value) -- corrected 2026-08-31 (label only, see correction_note)",
-    "correction_note": "The 90% figure itself was already correct; the fact's own framing was misleading -- it read as \"90% of VAT is deferred\" when it actually means \"90%+ of turnover must be taxable supplies to qualify for deferment.\" Relabelled to state what the 90% is a percentage OF."
+    "correction_note": "The 90% figure itself was already correct; the fact's own framing was misleading -- it read as \"90% of VAT is deferred\" when it actually means \"90%+ of turnover must be taxable supplies to qualify for deferment.\" Relabelled to state what the 90% is a percentage OF.",
+    "verified_as_at": "unknown"
   },
   "vat_deferment_minimum_value": {
     "fact": "The minimum VAT payable per unit of imported capital goods for VAT deferment eligibility (VAT Act Cap.148 s.11 scheme) is TZS 20,000,000 -- NOT TZS 10,000,000.",
@@ -1897,7 +2008,8 @@
     "primary_source": "VAT Act, Cap.148, s.11 scheme (via TRA VAT Deferment guidance and Breakthrough Attorneys)",
     "verified_by": "Multiple non-lineage-linked sources converge on TZS 20,000,000 for this figure, 2026-08-31 -- found incidentally while verifying vat_deferment_threshold_percentage, the same s.11 scheme. NOT independently read against the raw Act/regulation text -- flagged as convergent-secondary-source confirmation, not primary-text confirmation.",
     "status": "CORRECTED 2026-08-31 (see correction_note); STILL PARTIALLY UNGROUNDED -- value not read from raw statute text",
-    "correction_note": "Prior fact stated TZS 10,000,000. Found while verifying a neighbouring fact in the same VAT deferment scheme (s.11): every source located for this specific figure states TZS 20,000,000, not 10,000,000. Corrected on convergent-secondary-source strength; recommend upgrading to a direct primary-text read (VAT Act s.11 or the VAT General Regulations) before treating this as fully closed, per this project's own standard for numeric thresholds."
+    "correction_note": "Prior fact stated TZS 10,000,000. Found while verifying a neighbouring fact in the same VAT deferment scheme (s.11): every source located for this specific figure states TZS 20,000,000, not 10,000,000. Corrected on convergent-secondary-source strength; recommend upgrading to a direct primary-text read (VAT Act s.11 or the VAT General Regulations) before treating this as fully closed, per this project's own standard for numeric thresholds.",
+    "verified_as_at": "unknown"
   },
   "vat_deferment_form_number": "ITX 247.02.E",
   "gn487a_full_legal_name": {
@@ -1909,7 +2021,8 @@
       "487a.{0,30}(mishahara ya chini|minimum wage|wage order)",
       "487a.{0,30}business licensing order(?!.*prohibition)"
     ],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_vs_gn605a_disambiguation": {
     "fact": "GN 487A and GN 605A are two DIFFERENT Government Notices and must never be conflated. GN 487A = Government Notice No. 487A = The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025 (effective 28 July 2025; bars non-citizens from 15 business activities). GN 605A = Government Notice No. 605A = the Private Sector Minimum Wage Order (gazetted 13 October 2025, effective 1 January 2026; sets minimum wages, revokes the 2022 wage order). Different numbers, different subjects, different Ministries. Asking for GN 487A's name must NOT return 605A, and asking about minimum wage must NOT return 487A.",
@@ -1918,282 +2031,325 @@
       "487a.{0,20}(ni sawa na|is the same as|same as).{0,20}605a",
       "605a.{0,20}(ni sawa na|is the same as|same as).{0,20}487a"
     ],
-    "source": "GN487A Official Gazette (Govt Notice No.487A, 28/7/2025); GN605A (PKF Eastern Africa, Oct 2025) -- both verified from primary sources"
+    "source": "GN487A Official Gazette (Govt Notice No.487A, 28/7/2025); GN605A (PKF Eastern Africa, Oct 2025) -- both verified from primary sources",
+    "verified_as_at": "unknown"
   },
   "gn487a_legal_authority": {
     "fact": "GN487A is made under the Business Licensing Act (Cap. 101), section 14A(2)",
     "correct_value": "Business Licensing Act Cap. 101, section 14A(2)",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_salon_exception": {
     "fact": "Salon business is prohibited for non-citizens UNLESS conducted in a hotel or for tourism purposes",
     "correct_value": "Salon prohibited unless in a hotel or for tourism purposes",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_1": {
     "fact": "Prohibited activity 1: Sale of goods on a wholesale and retail basis, excluding supermarkets, specialised product outlets, and wholesale centers for local producers",
     "correct_value": "wholesale and retail sale of goods (excl. supermarkets, specialised outlets, wholesale centers for local producers)",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_2": {
     "fact": "Prohibited activity 2: Mobile money transfers",
     "correct_value": "Mobile money transfers",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_3": {
     "fact": "Prohibited activity 3: Repair of mobile phones and electronic devices",
     "correct_value": "Repair of mobile phones and electronic devices",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_4": {
     "fact": "Prohibited activity 4: Salon business unless conducted in a hotel or for tourism purposes",
     "correct_value": "Salon business (unless hotel/tourism)",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_5": {
     "fact": "Prohibited activity 5: Home, office and environmental cleanliness",
     "correct_value": "Home, office and environmental cleanliness",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_6": {
     "fact": "Prohibited activity 6: Small-scale mining",
     "correct_value": "Small-scale mining",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_7": {
     "fact": "Prohibited activity 7: Postal activities and parcel delivery within the country",
     "correct_value": "Postal activities and parcel delivery within the country",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_8": {
     "fact": "Prohibited activity 8: Tour guiding within the country",
     "correct_value": "Tour guiding within the country",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_9": {
     "fact": "Prohibited activity 9: Establishment and operation of radio and television",
     "correct_value": "Establishment and operation of radio and television",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_10": {
     "fact": "Prohibited activity 10: Operation of museums or curio shops",
     "correct_value": "Operation of museums or curio shops",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_11": {
     "fact": "Prohibited activity 11: Brokerage or agency in businesses and real estate",
     "correct_value": "Brokerage or agency in businesses and real estate",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_12": {
     "fact": "Prohibited activity 12: Clearing and forwarding services",
     "correct_value": "Clearing and forwarding services",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_13": {
     "fact": "Prohibited activity 13: On-farm crop purchasing operations",
     "correct_value": "On-farm crop purchasing operations",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_14": {
     "fact": "Prohibited activity 14: Ownership or operation of gambling machines or devices, except within casino premises",
     "correct_value": "Gambling machines/devices ownership or operation (except within casino premises)",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_prohibited_activity_15": {
     "fact": "Prohibited activity 15: Ownership and operation of micro and small industries",
     "correct_value": "Ownership and operation of micro and small industries",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_total_prohibited_activities": {
     "fact": "GN487A Schedule lists exactly 15 prohibited business activities for non-citizens",
     "correct_value": "15 prohibited activities",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "gn487a_signatory": {
     "fact": "GN487A was signed by Selemani Saidi Jafo, Minister for Industry and Trade, at Dodoma on 25 July 2025",
     "correct_value": "Selemani Saidi Jafo, Minister for Industry and Trade, 25 July 2025",
     "wrong_patterns": [],
-    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF"
+    "source": "GN487A Official Gazette -- Govt Notice No. 487A, Special Gazette No.5 Vol.106, published 28/7/2025; verified from primary PDF",
+    "verified_as_at": "unknown"
   },
   "unpaid_contribution_penalty_rate": {
     "correct_value": "five %",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "Payment 14.-(3)",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "unpaid_contribution_penalty_frequency": {
     "correct_value": "each month or a part of a month null",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "Payment 14.-(3)",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "minimum_monthly_contributions_for_retirement_pension": {
     "correct_value": "180 monthly contributions",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "Condi tions for retirement pension",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "minimum_contribution_months_health_insurance": {
     "correct_value": "3 months",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "Health insurance benefit",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "minimum_monthly_contributions_maternity_benefit": {
     "correct_value": "36 monthly_contributions",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "Conditions for maternity benefit",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "duration_of_maternity_cash_benefit": {
     "correct_value": "12 weeks",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "Types of maternity benefit",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "maternity_cash_benefit_rate": {
     "correct_value": "100 %",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "Types of maternity benefit",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "employer_notification_deadline_before_retirement": {
     "correct_value": "6 months",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "49.-( I) An employer shall, within six months before the date of Penalty",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "fund_payment_deadline_after_retirement_notification": {
     "correct_value": "60 days",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "49.-(2) The Fund shall ensure that, within sixty days following the date of",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "pensionable_age": {
     "correct_value": "60 years",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "Definitions",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "fine_limit": {
     "correct_value": "one hundred thousand TZS",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "(1)",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "imprisonment_term_limit": {
     "correct_value": "two years",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "(1)",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "business_licensing_act_citation": {
     "correct_value": "THE BUSINESS LICENSING ACT, (CAP. 101)",
     "status": "CONFIRMED",
     "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
     "section": "THE BUSINESS LICENSING ACT,\n(CAP. 101)",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "order_made_under_section": {
     "correct_value": "section 14A(2)",
     "status": "CONFIRMED",
     "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
     "section": "ORDER\n(Made under section 14A(2))",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "prohibited_business_activities_for_non_citizens_order_year": {
     "correct_value": "2025",
     "status": "CONFIRMED",
     "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
     "section": "THE BUSINESS LICENSING (PROHIBITION OF BUSINESS ACTIVITIES FOR NON-\nCITIZENS) OR",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "business_licensing_act_chapter": {
     "correct_value": "CAP. 101",
     "status": "CONFIRMED",
     "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
     "section": "THE BUSINESS LICENSING ACT,\n(CAP. 101)",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "tanzania_citizenship_act_reference": {
     "correct_value": "Cap. 357",
     "status": "CONFIRMED",
     "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
     "section": "Interpretation",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "offence_penalty_mention": {
     "correct_value": "commits an offence",
     "status": "CONFIRMED",
     "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
     "section": "Prohibited\nbusiness\nactivities",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "penalty_fine_non_citizen": {
     "correct_value": "ten million TZS",
     "status": "CONFIRMED",
     "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
     "section": "Business Licensing (Prohibition of Business Activities for Non-Citizens GN. NO.4",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "penalty_imprisonment_non_citizen": {
     "correct_value": "six months null",
     "status": "CONFIRMED",
     "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
     "section": "Business Licensing (Prohibition of Business Activities for Non-Citizens GN. NO.4",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "penalty_fine_tanzanian_citizen": {
     "correct_value": "five million TZS",
     "status": "CONFIRMED",
     "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
     "section": "Business Licensing (Prohibition of Business Activities for Non-Citizens GN. NO.4",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "penalty_imprisonment_tanzanian_citizen": {
     "correct_value": "three months null",
     "status": "CONFIRMED",
     "source": "data/source_documents\\immigration\\gn487a_official_gazette.pdf",
     "section": "Business Licensing (Prohibition of Business Activities for Non-Citizens GN. NO.4",
-    "approved": "manual_review — Tier 1 employer-facing compliance facts"
+    "approved": "manual_review — Tier 1 employer-facing compliance facts",
+    "verified_as_at": "unknown"
   },
   "contribution_rate_emplyees": {
     "correct_value": "10 %",
     "status": "CONFIRMED",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
     "section": "CONTRIBUTIONS FOR EMPLOYEES",
-    "approved": "manual_review — NSSF employee contribution rate 10%, unit corrected from cents to %"
+    "approved": "manual_review — NSSF employee contribution rate 10%, unit corrected from cents to %",
+    "verified_as_at": "unknown"
   },
   "gn487a_shareholder_vs_operator_distinction": {
     "fact": "GN487A prohibits non-citizens from CONDUCTING or OPERATING the listed business activities. Passive shareholding or investment in a Tanzanian-owned and operated company is not explicitly prohibited by GN487A - the prohibition targets the person carrying out the activity, not the investor. However, a non-citizen who is a shareholder AND actively manages or operates the business would be covered. Consult an immigration lawyer for specific structures.",
@@ -2205,25 +2361,29 @@
     "primary_source": "GN487A Official Gazette 28 July 2025 - Section 3(1): activities shall not be CARRIED OUT by non-citizens; legal interpretation",
     "verified_by": "manual_review - high-value edge case, common real user question",
     "effective_date": "2025-07-28",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "paye_bands_with_examples": {
     "fact": "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
     "correct_value": "PAYE on TZS 800,000 = TZS 78,000 (final answer)",
     "status": "CONFIRMED",
-    "primary_source": "tra.go.tz"
+    "primary_source": "tra.go.tz",
+    "verified_as_at": "unknown"
   },
   "sdl_calculation_example": {
     "fact": "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wafanyakazi 12 wenye mshahara huo huo, SDL jumla ni TZS 252,000 (12 × 21,000).",
     "correct_value": "SDL = 3.5% per employee salary, sum across all employees",
     "status": "CONFIRMED",
-    "primary_source": "tra.go.tz"
+    "primary_source": "tra.go.tz",
+    "verified_as_at": "unknown"
   },
   "nssf_calculation_example": {
     "fact": "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo ni kwa mfanyakazi mmoja tu). Hesabu: kila mfanyakazi analipa NSSF ya TZS 120,000 (asilimia 20 ya mshahara wake), kisha zidisha kwa wafanyakazi 12 = TZS 1,440,000 jumla.",
     "correct_value": "NSSF total for 12 employees at 600,000 each = TZS 1,440,000 (NOT 120,000 which is per-employee)",
     "status": "CONFIRMED",
-    "primary_source": "nssf.go.tz"
+    "primary_source": "nssf.go.tz",
+    "verified_as_at": "unknown"
   },
   "business_licence_expiry_30_june": {
     "fact": "Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara huisha tarehe 30 Juni kila mwaka, hivyo huhuishwa kila mwaka kabla ya tarehe hiyo.",
@@ -2235,7 +2395,8 @@
     ],
     "primary_source": "Business Licensing Act s.3(4) as substituted by the Finance Act 2014 s.5 (Special Bill Supplement No. 5, 10 June 2014); confirmed against the Act text 2026-08-16",
     "verified_date": "2026-08-16",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "presumptive_tax_bands_2022": {
     "fact": "Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: hadi TZS 4,000,000 = TZS 0; zaidi ya 4,000,000 hadi 7,000,000 = TZS 100,000 (asiyetunza kumbukumbu) au 3% ya mauzo yanayozidi 4,000,000 (anayetunza); zaidi ya 7,000,000 hadi 11,000,000 = TZS 250,000 (asiyetunza) au TZS 90,000 pamoja na 3% ya yanayozidi 7,000,000 (anayetunza); kuanzia 11,000,001 hadi 200,000,000 = 4.0% ya mauzo yote (ilikuwa asilimia 3.5, ilipanda WEF 1 Julai 2026). Pia: mfanyabiashara mpya mwenye TIN aliyoipata kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 anaweza kustahili msamaha wa TZS 0 (hadi TZS 200,000,000 za mauzo) -- LAKINI si wa moja kwa moja, lazima aombe kwa Kamishna na aidhinishwe (First Schedule para 2(4), mpya).",
@@ -2252,7 +2413,8 @@
     "verified_date": "2026-08-16",
     "verified_by": "Direct verbatim read of Finance Act 2026 s.27(a), 2026-09-01, fetched in full (not summarized) specifically because a ceiling change + rate change + new exemption in one amendment is where a further change could hide -- confirmed no other change to this paragraph beyond the three named. Quoted: 'deleting the figure \"100,000,000\" and substituting for it the figure \"200,000,000\"' (ceiling); new top-band row reads '4.0% of turnover'; new row 2 states the exemption 'NIL - for the first twelve months from the date of obtaining the Taxpayer Identification Number', new para 2(4) requires application and Commissioner grant, not automatic.",
     "status": "CONFIRMED -- corrected 2026-09-01 (rate/ceiling/new exemption, see correction_note)",
-    "correction_note": "STALE-CONSTANT INCIDENT, found 2026-09-01 while verifying an unrelated PAYE fact, not by any scheduled recheck. This fact (and its sibling presumptive_tax_ceiling_100m) were verified 2026-08-16 against 'Finance Act 2020 to 2025' -- a comment that was true when written but became a silent trap the moment Finance Act 2026 (enacted 30 June 2026, IN FORCE 1 July 2026 -- before this fact's own 2026-08-16 verification date) touched the same paragraph and was never re-checked. The verification checked a fixed historical year range instead of every Finance Act gazetted as of the actual verification date. Root cause and the general lesson for every other locked fact and rates.py constant citing a Finance Act range: PROGRESS.md, 'PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT', 2026-09-01. The shipped compute engine (chike/rules_engine/presumptive.py) carried the same stale 3.5%/100,000,000 values and has been corrected in the same pass -- see rates.py's module comment for the full verbatim amendment text."
+    "correction_note": "STALE-CONSTANT INCIDENT, found 2026-09-01 while verifying an unrelated PAYE fact, not by any scheduled recheck. This fact (and its sibling presumptive_tax_ceiling_100m) were verified 2026-08-16 against 'Finance Act 2020 to 2025' -- a comment that was true when written but became a silent trap the moment Finance Act 2026 (enacted 30 June 2026, IN FORCE 1 July 2026 -- before this fact's own 2026-08-16 verification date) touched the same paragraph and was never re-checked. The verification checked a fixed historical year range instead of every Finance Act gazetted as of the actual verification date. Root cause and the general lesson for every other locked fact and rates.py constant citing a Finance Act range: PROGRESS.md, 'PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT', 2026-09-01. The shipped compute engine (chike/rules_engine/presumptive.py) carried the same stale 3.5%/100,000,000 values and has been corrected in the same pass -- see rates.py's module comment for the full verbatim amendment text.",
+    "verified_as_at": "2026-09-01"
   },
   "presumptive_tax_ceiling_100m": {
     "fact": "Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,000,000 kwa mwaka (ilikuwa TZS 100,000,000, iliongezwa WEF 1 Julai 2026). Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi.",
@@ -2266,7 +2428,8 @@
     "primary_source": "Income Tax Act Cap 332 First Schedule para 2(2), as amended by the Finance Act 2026 s.27(a)(i), in force 1 July 2026; TRA Taxes and Duties at a Glance 2025/26 for the pre-2026 figure.",
     "verified_date": "2026-08-16",
     "verified_by": "Direct verbatim read of Finance Act 2026 s.27(a)(i), 2026-09-01: 'deleting the figure \"100,000,000\" and substituting for it the figure \"200,000,000\"'.",
-    "status": "CONFIRMED -- corrected 2026-09-01 (ceiling doubled, see presumptive_tax_bands_2022's correction_note for the full stale-constant incident)"
+    "status": "CONFIRMED -- corrected 2026-09-01 (ceiling doubled, see presumptive_tax_bands_2022's correction_note for the full stale-constant incident)",
+    "verified_as_at": "2026-09-01"
   },
   "presumptive_excluded_services": {
     "fact": "Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala watoa huduma za kitaalamu (technical), uendeshaji (management), ujenzi (construction) na mafunzo (training). Hawa hutozwa kodi kwa viwango vya kawaida vya mtu binafsi.",
@@ -2277,7 +2440,8 @@
     ],
     "primary_source": "Income Tax Act Cap 332 First Schedule para 2(1)(a) as amended by the Finance Act 2022 s.72(a)(i). TRA's 2025/26 summary paraphrases this more narrowly ('professional services, construction industry and trainers') - the statute is wider and governs.",
     "verified_date": "2026-08-16",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "brela_foreign_late_filing_penalty": {
     "fact": "Foreign (Section XII) company late filing penalty for annual return is USD 25 per month, distinct from the TZS 2,500/month penalty for local companies.",
@@ -2285,7 +2449,8 @@
     "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
     "verified_by": "BRELA official fee schedule, Jun 2026",
     "effective_date": "2025-01-01",
-    "status": "CONFIRMED -- extracted from brela_annual_return_fee (2026-08-17, duplicate-key sweep)"
+    "status": "CONFIRMED -- extracted from brela_annual_return_fee (2026-08-17, duplicate-key sweep)",
+    "verified_as_at": "unknown"
   },
   "osha_registration_before_operations": {
     "fact": "A workplace/factory must be registered with OSHA BEFORE commencing business operations -- there is no grace period of N days after opening. Section 16(2), Occupational Health and Safety Act No. 5 of 2003.",
@@ -2299,7 +2464,8 @@
     "primary_source": "https://procedures.tiseza.go.tz/menu/437?l=en",
     "verified_by": "Tanzania government business-procedures portal (tiseza.go.tz), cross-checked against independent search results quoting identical s.16(2) text",
     "verified_date": "2026-08-17",
-    "status": "CONFIRMED"
+    "status": "CONFIRMED",
+    "verified_as_at": "unknown"
   },
   "sdl_exemption_categories": {
     "fact": "Employers/institutions exempt from SDL (VETA Act Cap.82 s.19(1), 9 categories CONFIRMED against the 2019 primary consolidation text): government departments/public institutions wholly financed by Government; local government authorities; diplomatic missions; the United Nations and its agencies; international/foreign aid organizations; religious institutions (employees solely engaged in administering worship/religious instruction); registered educational institutions (nursery through higher learning); charitable organizations (per the Act's own s.19(2) definition); and farm employers for employees directly and solely engaged in agricultural activities (excluding management/processing staff). A 10th category, TaESA trainees, is commonly cited but is NOT present in the 2019 primary text read for this fact -- see exemption_category_trainees_under_TAESA (HEDGE) -- and must not be asserted as confirmed until checked against Act No.5 of 2022.",
@@ -2318,7 +2484,8 @@
     ],
     "primary_source": "source of the 10 individual exemption_category_* keys, unchanged",
     "status": "PARTIALLY CONFIRMED -- Tier 3 (2026-09-01): 9 of 10 categories read directly against VETA Act Cap.82 s.19(1)'s 2019 primary consolidation text; the 2026-08-17 RAG-consolidation rationale (one retrievable Swahili fact instead of 10 English fallback rows) still holds and is unchanged.",
-    "correction_note": "Prior fact asserted all 10 categories as settled without distinguishing verification status. Tier 3 re-verification (2026-09-01) read VETA Act Cap.82 s.19(1) directly and confirmed 9; TaESA trainees could not be confirmed in that text and is now hedged separately, not asserted here. source_keys list unchanged -- exemption_category_trainees_under_TAESA remains a source_key so it still generates training pairs, but those pairs must now carry its HEDGE status, not a confirmed claim."
+    "correction_note": "Prior fact asserted all 10 categories as settled without distinguishing verification status. Tier 3 re-verification (2026-09-01) read VETA Act Cap.82 s.19(1) directly and confirmed 9; TaESA trainees could not be confirmed in that text and is now hedged separately, not asserted here. source_keys list unchanged -- exemption_category_trainees_under_TAESA remains a source_key so it still generates training pairs, but those pairs must now carry its HEDGE status, not a confirmed claim.",
+    "verified_as_at": "unknown"
   },
   "council_service_levy_is_a_cap_not_a_rate": {
     "fact": "Ushuru wa huduma wa halmashauri (service levy): sheria inaweka KIKOMO cha asilimia 0.3 ya mauzo (bila VAT na ushuru wa bidhaa) — si kiwango kimoja cha kitaifa. Kila halmashauri hupanga chake kwa sheria ndogo, na nyingi hutoza chini ya kikomo hicho. Uliza ofisi ya mapato ya halmashauri yako kwa kiwango halisi.",
@@ -2332,7 +2499,8 @@
     "verified_by": "source pass 2026-08-16, full 62pp Act read and quoted verbatim",
     "effective_date": "2019-01-01",
     "status": "CONFIRMED",
-    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision."
+    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision.",
+    "verified_as_at": "2026-08-16"
   },
   "council_service_levy_non_corporate_conflict": {
     "fact": "Je mfanyabiashara mmoja mmoja hulipa ushuru wa huduma? Sheria yenyewe inagongana. Kifungu 7(1)(u) cha Cap 290 kinasema hulipwa na \"corporate entities au mtu yeyote anayefanya biashara akiwa na leseni\", lakini Jedwali la sheria hiyo hiyo linakataza halmashauri kutoza wasio-corporate. Duka la mtu mmoja ni non-corporate. Uliza halmashauri yako na omba maelezo kwa maandishi.",
@@ -2343,7 +2511,8 @@
     "verified_by": "source pass 2026-08-16",
     "effective_date": "2019-01-01",
     "status": "CONFIRMED",
-    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision."
+    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision.",
+    "verified_as_at": "unknown"
   },
   "market_dues_no_national_amount": {
     "fact": "Ushuru wa soko au genge ni kiasi gani? Hakuna kiwango kimoja cha kitaifa. Kiasi hupangwa chini ya Sheria ya Masoko (Cap 106) na sheria ndogo za kila halmashauri — zaidi ya halmashauri 180, kila moja na yake, na hubadilika mara kwa mara. Uliza meneja wa soko au ofisi ya mapato ya halmashauri yako.",
@@ -2354,7 +2523,8 @@
     "verified_by": "source pass 2026-08-16",
     "effective_date": "2019-01-01",
     "status": "CONFIRMED",
-    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision."
+    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision.",
+    "verified_as_at": "unknown"
   },
   "market_dues_exemptions": {
     "fact": "Nani hatozwi ushuru wa soko: Jedwali la Sheria ya Fedha za Serikali za Mitaa (Cap 290) linakataza halmashauri kutoza wakulima wanaouza mazao yao mara kwa mara, magulio yanayosimamiwa na halmashauri za vijiji, na wauzaji wadogo wa vyakula vilivyopikwa kama maandazi na samaki wa kukaanga. Ukiwa katika makundi haya na unadaiwa, omba maelezo kwa maandishi.",
@@ -2365,7 +2535,8 @@
     "verified_by": "source pass 2026-08-16",
     "effective_date": "2019-01-01",
     "status": "CONFIRMED",
-    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision."
+    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision.",
+    "verified_as_at": "unknown"
   },
   "business_licence_fee_national_schedule_local_collection": {
     "fact": "Leseni ya biashara inagharimu kiasi gani? Ada imepangwa KITAIFA chini ya Sheria ya Leseni za Biashara, lakini leseni hutolewa na kukusanywa na halmashauri, na halmashauri hairuhusiwi kutoza zaidi ya ada iliyopangwa. Ada hutegemea aina ya biashara na eneo — jiji/manispaa, wilaya/mji, au kijiji — na kama ni leseni kuu au ya tawi. Uliza halmashauri yako kwa ada ya aina yako.",
@@ -2377,6 +2548,7 @@
     "effective_date": "2019-01-01",
     "status": "STRUCTURE CONFIRMED — AMOUNT BLOCKED",
     "unresolved_note": "The CURRENT First Schedule has not been obtained, so NO amount is encoded. This is the named blocker: one document unblocks the whole domain as a lookup table.",
-    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision."
+    "_pending_whitelist": "mof.go.tz is a .go.tz government portal but is NOT in sources/whitelist.json. Cap 290 is also on TanzLII (whitelisted) but that URL has not been fetched and will not be invented (CLAUDE.md section 3). Whitelist change = founder decision.",
+    "verified_as_at": "unknown"
   }
 }
