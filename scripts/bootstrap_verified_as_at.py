@@ -38,8 +38,16 @@ FACTS_PATH = os.path.join(REPO, 'scripts', 'locked_facts.json')
 OUT = os.path.join(REPO, 'eval', 'results', 'verified_as_at_bootstrap_census_2026_09_01.json')
 
 # Strong positive: language that only makes sense if someone actually opened the primary text.
+# "direct\s+(verbatim\s+)?read\b" WITHOUT requiring "of" immediately after -- broadened from an
+# initial "read of" requirement after a live miss (R17-style spot-check, not assumed correct):
+# vat_standard_rate ("direct read, 2026-08-29") and wcf_rate_0_5_percent_confirmed ("direct
+# read (media.tanzlii.org), 2026-08-29") both use "direct read" without a following "of" and
+# were wrongly bucketed into unknown on the first pass. Checked this broadening does NOT
+# accidentally match the negated form: minimum_directors/minimum_shareholders both contain
+# "not directly read" -- "directly" has no whitespace after "direct" (direct-LY), so
+# "direct\s+read" cannot match inside it. Confirmed by re-running against all four rows.
 _PRIMARY_READ = re.compile(
-    r'direct\s+(verbatim\s+)?read\s+of|'
+    r'direct\s+(verbatim\s+)?read\b|'
     r'read\s+[^.]{0,40}\bverbatim\b|'
     r'quoted\s+verbatim|'
     r'fetched\s+in\s+full|'
