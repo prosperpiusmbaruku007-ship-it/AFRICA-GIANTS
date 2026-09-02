@@ -1,15 +1,156 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-09-02 ("the eleven" re-examined — 9 of 11 originally-ungrounded facts closed
-or genuinely-confirmed-unreachable, and 🔴 a LIVE CONTRADICTION found on a fact "corrected" only
-9 days ago (`vat_deferment_minimum_value`) — see below, action needed. Also: pre-push hook crash
-fixed at the marker level — `integration` deselected by default alongside `network`, and the
-skipif that couldn't actually protect it documented as such. Carries forward 2026-09-01: Tier 3
-verification + fixes; whole-corpus picture after Tier 1+2+3; corporate/partnership tax source
-pass complete; 🔴 PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT found and fixed same day; Finance
-Act 2026 read in full and the staleness-check mechanism built; PAYE_NONRESIDENT_RATE grounded;
-verified_as_at bootstrap census run across all 250 locked facts, extended to the 28
-Finance-Act-bound ones — see "GROUNDED IS A SNAPSHOT, NOT A PROPERTY" below)
+Last updated: 2026-09-02 (`vat_deferment_minimum_value` RESOLVED — reverted to 10,000,000,
+recorded as OUR error not a source dispute, root cause found (GN 608/2018 halved a stale
+2015 figure); corpus swept, 0 contaminated rows. 🔴 NEW FLAG surfaced by the same sweep,
+NOT yet actioned: `vat_deferment_limit_date` ("30 June 2026") may itself be stale — evidence
+suggests Finance Act 2026 made the VAT deferment scheme permanent, and today's date is already
+past the stated cutoff; this claim sits in `train_sft.jsonl`/`val_sft.jsonl` today. "The eleven"
+fully closed out — see below for the whole-corpus standing. Also: pre-push hook crash fixed at
+the marker level — `integration` deselected by default alongside `network`, and the skipif that
+couldn't actually protect it documented as such. Carries forward 2026-09-01: Tier 3 verification
++ fixes; whole-corpus picture after Tier 1+2+3; corporate/partnership tax source pass complete;
+🔴 PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT found and fixed same day; Finance Act 2026 read in
+full and the staleness-check mechanism built; PAYE_NONRESIDENT_RATE grounded; verified_as_at
+bootstrap census run across all 250 locked facts, extended to the 28 Finance-Act-bound ones —
+see "GROUNDED IS A SNAPSHOT, NOT A PROPERTY" below)
+
+---
+
+# 🔴 NEW, NOT YET ACTIONED: `vat_deferment_limit_date` ("30 June 2026") is plausibly stale, and unlike everything else in this entry, it's already inside `train_sft.jsonl`.
+
+**Found by the corpus sweep run to check the 20M defect below, not by design.** The sweep
+surfaced 52 corpus rows mentioning VAT deferment; several — in `train_sft.jsonl` (multiple
+copies), `val_sft.jsonl`, `datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl` and
+`_015.jsonl`, `data/reviewed/hand_coded_batch_015_b08.jsonl`, `data/reviewed/recovered_from_flags.jsonl`
+— assert, near-verbatim: *"Mpango wa VAT deferment una tarehe ya ukomo ya tarehe 30 Juni 2026"*
+(the VAT deferment scheme has a cutoff date of 30 June 2026), matching the locked fact
+`vat_deferment_limit_date: "30 June 2026"` exactly.
+
+**Why this is suspect, not confirmed.** Two independent web searches plus a live re-fetch of
+TRA's own VAT Deferment page (the same page already trusted above for the 10M/20M question):
+1. The 30 June 2026 cutoff traces to **Finance Act 2023**, which introduced VAT deferral on
+   *locally manufactured* capital goods and set that date as the point *imported* capital goods
+   deferment would cease.
+2. A dated VAT-news aggregator (vatupdate.com, 2026-08-20) states Finance Act 2026 "made
+   permanent the VAT deferment for imported capital goods — a measure repeatedly extended in
+   prior years," separately corroborated by the same source describing FA2026 as having "kept
+   the VAT deferment regime" (quoted directly from a second, dated FA2026-summary article).
+3. TRA's own live VAT Deferment page, fetched today, **names no expiry date at all** — asked
+   directly ("does this page mention any cessation date"), it does not.
+
+**Not confirmed, because:** none of this is FA2026's own text, read directly — this session's
+earlier "Finance Act 2026 read in full" pass (see "GROUNDED IS A SNAPSHOT" below) covered the
+VAT Part of FA2026, but the deferment scheme's sunset was set by the VAT Act via a Finance Act
+**2023** amendment, and it isn't clear from what's in hand here whether FA2026's VAT Part is
+even where a reversal of that specific 2023 sunset clause would live, or whether it's addressed
+elsewhere. Two secondary sources agreeing is exactly the strength that was wrong on
+`vat_deferment_minimum_value` above.
+
+**Why it outranks the 20M defect anyway.** The 20M error, corrected 9 days ago, never reached a
+single corpus row (swept, confirmed below) — it was caught before it could matter. This one is
+different in kind: if it's wrong, it isn't a threshold a business gets slightly wrong on a form,
+it's telling every business that asks about VAT deferment that a **real, currently-available tax
+benefit no longer exists**, on a date that has already passed, and it is sitting in
+`train_sft.jsonl` right now — the file a training run actually consumes.
+
+**Not fixed, not touched.** `locked_facts.json`'s `vat_deferment_limit_date` and the corpus rows
+above are UNCHANGED pending a decision, for the same reason `vat_deferment_minimum_value` wasn't
+silently re-flipped before its root cause was found: two-source agreement has already produced
+one wrong correction in this exact fact family today. Recommend reading FA2026's actual VAT Part
+text for the deferment-scheme provision specifically (not just re-confirming via secondary
+sources) before touching either the fact or the corpus rows.
+
+---
+
+## ✅ `vat_deferment_minimum_value` RESOLVED, 2026-09-02 — reverted to 10,000,000, recorded as our error
+
+**Reverted per instruction, and the root cause was found, not just reverted-and-moved-on.**
+20,000,000 was never a fabrication — it was the REAL, but SUPERSEDED, 2015 figure. The VAT
+(General) (Amendment) Regulations, 2018 — **GN 608 of 2018**, gazetted 19 October 2018 —
+**reduced** the minimum VAT-payable-per-unit threshold from TZS 20,000,000 to TZS 10,000,000.
+TRA's live page reflects the current (post-2018) figure; the 2026-08-31 correction's two
+secondary sources ("TRA VAT Deferment guidance and Breakthrough Attorneys") were reading the
+pre-2018 figure without either source disclosing that it was describing superseded law. Second,
+independent, dated, named confirmation of the 2018 change (not part of the original correction,
+found fresh today): EY's tax alert (`globaltaxnews.ey.com`, a Tier 1A eval-whitelisted source,
+read here for verification only, not to author a pair — R6): *"reduced and can be applied for if
+the VAT payable... is... TZS 10 million or more. Previously, approval could only be granted if
+the VAT payable was at least TZS20 million."* GN 608/2018's own text was NOT reached (tanzlii.org
+CAPTCHA-blocked this fetch too; the TRA-hosted PDF a web search surfaced is now a dead 404
+link) — the fact remains portal + dated-practitioner tier, not statute-tier, exactly the gap the
+original correction's own note already flagged and this pass narrowed but did not close.
+
+**This is our error, recorded as one, not a source dispute.** Per instruction: the identical
+reasoning failure as `efd_threshold_tzs_11m` — agreeing secondary sources were treated as
+independent confirmation when they in fact shared a stale lineage (both reflecting pre-2018
+regulation text) — and this project already has a standing rule (demonstrated on the 10M/20M
+question itself, just three paragraphs up in last turn's write-up) that the regulator's own live
+page outranks practitioner agreement when the two conflict. **The rule existed and was applied
+backwards on 2026-08-31.** Full conflict history — what it said, what it was changed to, why
+that was wrong, what's still not statute-grounded — is kept in the fact's own `correction_note`
+in `locked_facts.json`, per instruction that the history is worth more than the number.
+
+**Corpus swept for the 20,000,000 figure — 0 contaminated rows, confirmed two ways.** An
+automated regex sweep (amount pattern × deferment-context pattern) across all 176 non-rejected
+`.jsonl` files repo-wide found zero matches. A manual read of all 52 rows anywhere mentioning
+VAT deferment (broader net, context word alone) confirmed every one already asserts TZS
+10,000,000 — the 9-day-old error never reached a single generated, cleaned, reviewed, or
+SFT-formatted row. Unlike the presumptive-tax incident, this one was caught before it could
+propagate — the correction sat on a low-traffic fact with no batch generation run against it
+in the nine days it was wrong.
+
+**`vat_deferment_form_number` ("ITX 247.02.E"), confirmed already correct, no edit needed** —
+TRA's live page: *"The importer shall apply for deferment by duly filling form ITX 247.02.E
+(filled online in TanESW)"*. This same fetch is what surfaced both the minimum-value conflict
+and the `vat_deferment_limit_date` flag above.
+
+---
+
+## ✅ `gn605a_average_increase` — formalized as a PERMANENT hedge; the block is a CAPTCHA, not a dead link, and that distinction is now recorded
+
+Per instruction: a dead link or timeout is *absence* of a source; a CAPTCHA is a source that
+*exists and is refusing automated access* — a different, worse signal, because it will not
+resolve with time the way a temporary outage would. Retried tanzlii.org (this fact's own
+`primary_source`) four ways today — direct fetch, the `/akn/...` path without the point-in-time
+suffix, the `media.tanzlii.org` PDF mirror, and the r.jina.ai proxy — all four returned the same
+live CAPTCHA bot-check page. `status` field now explicitly reads "HEDGE (permanent, not a
+scheduled retry)"; `verified_by` and `correction_note` record the four-way retry and the
+CAPTCHA-vs-absence distinction directly, so a future pass doesn't waste time re-trying a dead
+end without knowing it already was one.
+
+**Worth naming at the project level, not just on this one fact:** every GN-numbered fact whose
+only host is tanzlii.org (GN605A among them) has a **mechanical dependency on one site's bot
+policy** that this project does not control. That's a structural exposure worth remembering
+the next time a GN-sourced fact needs (re)grounding, not a one-off inconvenience.
+
+---
+
+## 📌 Process lesson, precisely scoped: 2 of "the eleven" sat ungrounded not because a local
+cache went unchecked, but because the cache didn't EXIST YET at first-check time — and nothing
+re-checks a hedged fact when a neighbouring source lands later.
+
+Worth recording accurately rather than as the tidier story it might sound like at a glance.
+**Only 2 of the nine facts closed today** — `permit_class_d_does_not_exist` and
+`nssf_payment_deadline` — were closed against local caches
+(`data/source_documents/immigration/residence_permit_guidelines.pdf`,
+`data/source_documents/nssf/nssf_act_cap50.pdf`); the other two "closed by retry" facts
+(`brela_foreign_late_filing_penalty`, `efd_approved_supplier_verification`) were live portal
+re-fetches, not cache hits. And checking file timestamps against each fact's own first-check
+date shows the caches weren't sitting there unused the whole time: `permit_class_d_does_not_exist`
+was first marked verified/hedged 2026-06-12; `residence_permit_guidelines.pdf` is dated
+2026-06-30 — it didn't exist yet when the fact was first checked, and was cached **18 days
+later**, almost certainly while scraping for the neighbouring GN487A immigration work (the same
+directory holds `gn487a_official_gazette.pdf`). Same pattern for `nssf_payment_deadline`
+(first checked 2026-06-16) against `nssf_act_cap50.pdf` (cached 2026-07-01, 15 days later).
+
+**The real gap, then, isn't "nobody thought to check the local cache" — it's that nothing
+re-visits a hedged or tooling-blocked fact when a NEW source document lands for a neighbouring
+topic that happens to also ground it.** A scrape run for GN487A incidentally solved a stuck
+immigration fact three weeks later and nothing noticed for two months. Worth a line in the
+next blocked-source pass's own instructions either way: check `data/source_documents/<topic>/`
+for anything newer than the fact's own last-check date before recording a fresh tooling
+failure — cheap, and it would have closed two of today's nine facts weeks earlier for free.
 
 ---
 
@@ -54,9 +195,11 @@ direction. Corpus exposure not yet checked either way (blocked on knowing which 
 
 ---
 
-## ✅ "The eleven" re-examined, 2026-09-02 — 9 closed (6 grounded, 1 form-number confirmed
-correct with no edit needed, 2 genuinely still unreachable), 1 conflict surfaced (above), 1
-retired before this pass started.
+## ✅ "The eleven" re-examined, 2026-09-02 — full detail. Outcome: 6 grounded, 2 portal-confirmed,
+1 form-number already correct, 1 conflict found-and-resolved (above, `vat_deferment_minimum_value`),
+1 genuinely unreachable (`gn605a_average_increase`), 1 already grounded before this pass
+(`vat_registration_threshold`), 1 retired (`amt_loss_companies_only`) — 13 facts total across
+the full "eleven" scope. Whole-corpus standing further below.
 
 Population, as named in the 2026-09-01 whole-corpus entry ("the remaining ungrounded set,
 all named above rather than hidden in an aggregate"): 2 pending-core + Tier 1's 4 unresolved +
@@ -115,22 +258,60 @@ statute/document-tier):**
 **Checked opportunistically, confirmed correct as-is, no edit needed (1):** `vat_deferment_form_number`
 ("ITX 247.02.E") — TRA's live VAT Deferment page states verbatim: *"The importer shall apply for
 deferment by duly filling form ITX 247.02.E (filled online in TanESW)"*. This same fetch is what
-surfaced the `vat_deferment_minimum_value` conflict above.
+surfaced both the `vat_deferment_minimum_value` conflict (found and resolved, see above) and the
+`vat_deferment_limit_date` flag (found, NOT yet resolved, see above).
 
 **Genuinely still unreachable, tried multiple ways, not evidence of anything wrong (1):**
-`gn605a_average_increase` — tanzlii.org (four URL variants tried: direct, `/akn/tz/act/gn/...`
-without the point-in-time suffix, `media.tanzlii.org` PDF path, and the r.jina.ai proxy) returns
-a live CAPTCHA bot-check on every attempt, not a 403 or timeout — a materially different signal
-from the original "access-blocked" tooling failure logged 2026-09-01: this is an active block,
-not a dead link, and time alone will not resolve it. Left exactly as it was (secondary
-corroboration only, no contradicting evidence either).
+`gn605a_average_increase` — see its own dedicated entry above (formalized as a permanent hedge,
+CAPTCHA distinguished from a dead link). The only one of the thirteen that ends this pass no
+better grounded than it started, and correctly so — there was nothing to find, only a block to
+document accurately.
 
-**Full offline suite green throughout:** 1427 passed (up from 1422 pre-pass — new facts
-satisfying existing parametrized checks), 0 failed, 6 deselected, 16 xfailed.
-`scripts/audit_fact_claim_grounding.py` re-run: same 2 pre-existing flags, 0 new. Secret scan
-clean. `scripts/bootstrap_verified_as_at.py` re-run to refresh the count (its own `measured`
-label still reads 2026-09-01 — the harness date is hardcoded, not dynamic; noted, not fixed,
-out of scope for this pass).
+**Full offline suite green throughout, including after the `vat_deferment_minimum_value`
+revert:** 1427 passed (up from 1422 pre-pass — new facts satisfying existing parametrized
+checks), 0 failed, 6 deselected, 16 xfailed. `scripts/audit_fact_claim_grounding.py` re-run:
+same 2 pre-existing flags, 0 new. Secret scan clean. `scripts/bootstrap_verified_as_at.py`
+re-run to refresh the count (its own `measured` label still reads 2026-09-01 — the harness date
+is hardcoded, not dynamic; noted, not fixed, out of scope for this pass).
+
+---
+
+## 📊 Whole-corpus standing, 2026-09-02
+
+**Two different, both-legitimate measurements, named separately per R22 (never cite a number
+without the population/method it came from) — they answer different questions and should not
+be averaged or conflated:**
+
+| method | what it actually checks | current result |
+|---|---|---|
+| **Manual Tier 1+2+3 narrative** (2026-09-01 whole-corpus entry, updated for today) | Human verification against primary/practitioner text, fact-by-fact, recorded in `correction_note`/`verified_by` prose — the strongest claim, but a one-time tally, not mechanically re-run | **250 total** (251 minus `amt_loss_companies_only`, retired). Baseline was 240 grounded / 11 ungrounded (95.6%); today closed 9 of those 11 fact-level items (7 to statute/document-tier, 2 to portal-tier, both counted grounded under this narrative standard) and left 1 permanent hedge (`gn605a_average_increase`) → **249/250 (99.6%) grounded or correctly-hedged under the narrative standard, 1 permanent hedge remaining.** |
+| **`audit_locked_facts_verification_provenance_v2.py`** (mechanical, re-runnable, checks `verified_by`/`primary_source`/`source`/`section`/`source_note`/`fact` text for statute-shaped markers — Act/Cap/GN/section/gazette/tanzlii) | Whether a fact's OWN stored text contains a citable statute marker, regardless of whether a human ever actually read that statute | Re-run today: **141/250 (56.4%) GROUNDED**, up from this script's own last recorded baseline of ~100/251 (39.8%) before the Tier 1+2+3 arc began — real forward movement on the same mechanical yardstick, driven by the Tier 1+2+3 corrections and today's "the eleven" citation upgrades adding actual Act/Cap/section text into `verified_by` fields. |
+
+**The gap between 99.6% and 56.4% is real and not yet reconciled — flagged, not resolved.** The
+narrative count is a stronger individual claim (a human read primary text) but isn't
+mechanically checkable each time; the v2 script is mechanically checkable but only credits a
+fact if its OWN stored fields happen to contain a statute-shaped word, which undercounts facts
+that were genuinely verified against primary text but whose `verified_by` field still names a
+portal or practitioner source in its own wording (common where a manual verification pass
+confirmed a figure without rewriting the citation field to match). Closing this gap — auditing
+which of the v2 "summary_only" facts are actually narrative-grounded and just need their
+`verified_by` text brought up to the same citation standard as today's four rates.py-sourced
+upgrades — is real, scoped work, not assumed done here.
+
+**Hedges (deliberate, not oversights) — 3 named, permanent unless a route to the source opens:**
+`gn605a_average_increase` (tanzlii.org CAPTCHA), `nssf.go.tz`-family facts already hedged
+elsewhere in the corpus (unchanged this pass), and any fact carrying `_MANUAL_KEEP_SUMMARY_ONLY`
+in the v2 script (currently 2: `gn605a_average_increase`, `gn487a_mgeni_cap357_definition`).
+
+**Genuinely unreachable, tried and confirmed blocked (not merely untried):** tanzlii.org
+generally, for any fact whose only host is that domain and where no local cache or alternate
+mirror exists — a standing, structural constraint (see the CAPTCHA note above), not a per-fact
+failure to retry harder.
+
+**Open, not closed by today's pass:** the 141-vs-249 reconciliation above; the `vat_deferment_limit_date`
+flag (top of this file); the 135 dict-shaped facts still `verified_as_at: "unknown"` and the 78
+bare-string facts that cannot carry the field without a schema-migration decision (both scoped,
+not built — see "GN registry and periodic-cadence groups" below).
 
 ---
 

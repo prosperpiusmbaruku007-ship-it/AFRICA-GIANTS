@@ -500,7 +500,7 @@
       "status": "unknown",
       "verified_as_at": "unknown",
       "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "Business and Human Rights Centre — Minister Kikwete press briefing October 2025"
+      "verified_by_excerpt": "Business and Human Rights Centre — Minister Kikwete press briefing October 2025 | 2026-09-02: retried tanzlii.org (the fact's own primary_source) four ways -- d"
     },
     {
       "key": "royalties_wht_rate",
@@ -1109,7 +1109,7 @@
       "status": "unknown",
       "verified_as_at": "unknown",
       "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "Multiple non-lineage-linked sources converge on TZS 20,000,000 for this figure, 2026-08-31 -- found incidentally while verifying vat_deferment_threshold_percent"
+      "verified_by_excerpt": "Live re-fetch (2026-09-02) of https://www.tra.go.tz/page/value-added-tax-vat-deferment via the r.jina.ai proxy: \"VAT element on the imported capital goods is at"
     },
     {
       "key": "gn487a_full_legal_name",

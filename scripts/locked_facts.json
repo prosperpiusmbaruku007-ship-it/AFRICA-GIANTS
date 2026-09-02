@@ -552,10 +552,11 @@
       "from TZS 200,000"
     ],
     "primary_source": "https://tanzlii.org/akn/tz/act/gn/2025/605a/eng@2025-10-13",
-    "verified_by": "Business and Human Rights Centre — Minister Kikwete press briefing October 2025",
+    "verified_by": "Business and Human Rights Centre — Minister Kikwete press briefing October 2025 | 2026-09-02: retried tanzlii.org (the fact's own primary_source) four ways -- direct fetch, the /akn path without the point-in-time suffix, the media.tanzlii.org PDF mirror path, and the r.jina.ai proxy. All four returned the SAME live CAPTCHA bot-check page, not a 403 or a timeout. This is a materially different signal from the original 2026-09-01 \"access-blocked\" tooling-failure entry: a dead link or a timeout is absence of access; a CAPTCHA is a source that exists, is reachable, and is actively refusing automated access. Time alone will not resolve this -- it depends on tanzlii.org's own bot policy, which this project has no control over. Marked a PERMANENT hedge, not a retry-later item, unless someone reaches tanzlii by a different route (a logged-in session, a different IP/network, or an alternate mirror).",
     "effective_date": "2026-01-01",
-    "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "status": "HEDGE (permanent, not a scheduled retry) -- secondary corroboration only, tanzlii.org actively refuses access",
+    "verified_as_at": "unknown",
+    "correction_note": "2026-09-02: no value change. Status formalized from an implicit \"access-blocked\" note to an explicit permanent HEDGE, because the block itself changed character (see verified_by) -- CAPTCHA, not absence. Worth naming at the project level, not just on this one fact: this project's primary-source discipline for every GN-numbered fact that only tanzlii.org hosts (GN605A among them) now has a mechanical dependency on one site's bot policy, which is a single point of failure this project does not control and should not assume will resolve on its own."
   },
   "royalties_wht_rate": {
     "fact": "The DEFAULT withholding tax rate on royalty payments is 15% for BOTH residents and non-residents (Income Tax Act Cap.332 First Schedule para 4(b), via s.82). TWO CARVE-OUTS exist: royalties for cinematographic films/video tapes/sound recordings are 10% (added by Finance Act 2022 s.72(b)(i)); royalties paid to a resident sports entity or the Tanzania Football Federation are 5% (added by Finance Act 2024 s.46(b)(i)).",
@@ -2001,17 +2002,17 @@
     "verified_as_at": "unknown"
   },
   "vat_deferment_minimum_value": {
-    "fact": "The minimum VAT payable per unit of imported capital goods for VAT deferment eligibility (VAT Act Cap.148 s.11 scheme) is TZS 20,000,000 -- NOT TZS 10,000,000.",
-    "correct_value": "TZS 20,000,000",
+    "fact": "The minimum VAT payable per unit of imported capital goods for VAT deferment eligibility (VAT Act Cap.148 s.11 scheme) is TZS 10,000,000.",
+    "correct_value": "TZS 10,000,000",
     "wrong_patterns": [
-      "kiwango cha chini.*10,000,000.*ahirisho",
-      "minimum.*10,000,000.*deferment",
-      "vat deferment.*10 million"
+      "kiwango cha chini.{0,20}20,000,000.{0,20}ahirisho",
+      "minimum.{0,20}20,000,000.{0,20}deferment",
+      "vat deferment.{0,20}20 million"
     ],
-    "primary_source": "VAT Act, Cap.148, s.11 scheme (via TRA VAT Deferment guidance and Breakthrough Attorneys)",
-    "verified_by": "Multiple non-lineage-linked sources converge on TZS 20,000,000 for this figure, 2026-08-31 -- found incidentally while verifying vat_deferment_threshold_percentage, the same s.11 scheme. NOT independently read against the raw Act/regulation text -- flagged as convergent-secondary-source confirmation, not primary-text confirmation.",
-    "status": "CORRECTED 2026-08-31 (see correction_note); STILL PARTIALLY UNGROUNDED -- value not read from raw statute text",
-    "correction_note": "Prior fact stated TZS 10,000,000. Found while verifying a neighbouring fact in the same VAT deferment scheme (s.11): every source located for this specific figure states TZS 20,000,000, not 10,000,000. Corrected on convergent-secondary-source strength; recommend upgrading to a direct primary-text read (VAT Act s.11 or the VAT General Regulations) before treating this as fully closed, per this project's own standard for numeric thresholds.",
+    "primary_source": "TRA official VAT Deferment page (portal-tier); historically, VAT (General) Regulations, 2015 as amended by the VAT (General) (Amendment) Regulations, 2018 (GN 608 of 2018) -- GN 608 itself not yet directly read, see verified_by.",
+    "verified_by": "Live re-fetch (2026-09-02) of https://www.tra.go.tz/page/value-added-tax-vat-deferment via the r.jina.ai proxy: \"VAT element on the imported capital goods is at least Tshs 10,000,000/=\" -- verbatim. Corroborated by EY's dated tax alert (globaltaxnews.ey.com/news/2018-6418-tanzania-issues-new-value-added-tax-regulations, read for verification only, not as a pair source -- R6): \"The threshold for deferment of VAT on imported capital goods has been reduced and can be applied for if the VAT payable for each unit of the capital goods is Tanzanian shillings (TZS) 10 million or more. Previously, approval could only be granted if the VAT payable was at least TZS20 million,\" dated to the VAT (General) (Amendment) Regulations, 2018 (GN 608 of 2018, gazetted 19 Oct 2018), which amended the VAT (General) Regulations, 2015. GN 608/2018 itself NOT directly read: tanzlii.org CAPTCHA-blocked this fetch (same block as gn605a_average_increase, 2026-09-02); the TRA-hosted PDF URL a web search surfaced for it (tra.go.tz/IMAGES/headers/Value-Added-Tax-General-Amendment-Regulations-2018--new-version.pdf) is now itself a dead link (404). Still portal + dated-practitioner tier, not raw regulation text -- the same gap the 2026-08-31 correction flagged in its own correction_note remains open; this pass narrowed it (found the GN number and the change history) but did not close it.",
+    "status": "CONFIRMED (portal + corroborating practitioner citation) -- NOT statute-text-grounded, see verified_by",
+    "correction_note": "CONFLICT HISTORY, kept because it is worth more than the number: (1) ORIGINAL fact stated TZS 10,000,000, uncontested for the life of the corpus. (2) 2026-08-31: changed to TZS 20,000,000 on the strength of \"multiple non-lineage-linked sources\" (named: \"TRA VAT Deferment guidance and Breakthrough Attorneys\"), convergent-secondary confirmation only, explicitly not checked against raw statute/regulation text (that gap was flagged in the correction's own note at the time). (3) 2026-09-02: found to directly CONTRADICT TRA's own current live VAT Deferment page while grounding a neighbouring fact (vat_deferment_form_number). Investigated rather than silently re-flipped: the 20,000,000 figure was real, but it was the PRE-2018 figure -- GN 608 of 2018 (VAT (General) (Amendment) Regulations, 2018, gazetted 19 Oct 2018) reduced it to 10,000,000, confirmed by an independent, dated, named practitioner source (EY) that had no part in the 2026-08-31 correction. (4) REVERTED to 10,000,000 here. THIS WAS OUR ERROR, not a source dispute -- the identical reasoning failure as efd_threshold_tzs_11m: agreeing secondary sources were assumed to be independent confirmation when they in fact shared a stale lineage (both reflecting a pre-2018 regulation text), and the regulator's own live page -- which this project already has a standing rule to weight above practitioner agreement when the two conflict -- was overridden instead of followed. The rule existed and was applied backwards. Neither 10,000,000 nor 20,000,000 has yet been read from raw regulation text (GN 608/2018 itself); this fact should be upgraded to statute-tier the next time tanzlii.org is reachable without a CAPTCHA challenge, or via any other primary-text route.",
     "verified_as_at": "unknown"
   },
   "vat_deferment_form_number": "ITX 247.02.E",
