@@ -8,8 +8,8 @@
     "_unresolved_items"
   ],
   "dict_shaped_facts_classified": 224,
-  "primary_verified": 96,
-  "unknown_backlog_dict_shaped": 128,
+  "primary_verified": 97,
+  "unknown_backlog_dict_shaped": 127,
   "unstructured_string_valued_facts": 26,
   "unstructured_facts_note": "These carry no verified_by/primary_source/any metadata field at all -- not processed as \"unknown\" alongside the dict-shaped facts because they cannot carry a verified_as_at field without first being converted from a bare string to a dict, which is a schema-migration decision bigger than this bootstrap census. Effectively unknown-or-worse; listed separately so they are not silently invisible.",
   "unstructured_facts": [
@@ -135,9 +135,9 @@
     },
     {
       "key": "paye_personal_relief",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
       "verified_by_excerpt": "PWC Tanzania Individual Tax Summary Jan 2026 + Habib Advisory 2025/26 — NO personal relief line item exists | Backfilled 2026-09-02, sync-gap: this session's Ti"
     },
     {

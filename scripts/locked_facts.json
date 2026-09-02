@@ -66,11 +66,11 @@
       "relief ya kibinafsi.*26"
     ],
     "primary_source": "Income Tax Act, Cap.332 R.E.2019 (no personal relief provision found); Finance Acts 2022, 2023, 2024, 2025, 2026 (none introduces one)",
-    "verified_by": "PWC Tanzania Individual Tax Summary Jan 2026 + Habib Advisory 2025/26 — NO personal relief line item exists | Backfilled 2026-09-02, sync-gap: this session's Tier 1 pass (PROGRESS.md, 2026-09-01) recorded 'confirmed by direct search of Cap.332 AND all five Finance Acts 2022-2026, no relief provision anywhere' after a direct primary-text read, but the citation was never written into this object's own verified_by field until now. No new research; recording work already done.",
+    "verified_by": "PWC Tanzania Individual Tax Summary Jan 2026 + Habib Advisory 2025/26 — NO personal relief line item exists | Backfilled 2026-09-02, sync-gap: this session's Tier 1 pass (PROGRESS.md, 2026-09-01) recorded 'confirmed by direct search of Cap.332 AND all five Finance Acts 2022-2026, no relief provision anywhere' after a direct read (2026-09-02) of the primary text, but the citation was never written into this object's own verified_by field until now. No new research; recording work already done.",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED (statute-tier, absence-of-provision, 2026-09-02) -- was CONFIRMED (portal-tier citation only)",
     "correction_note": "Original entry incorrectly asserted 26,000 was correct. Session 11 (2026-06-12) confirmed no such relief exists in Tanzania law.",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "paye_p9_deadline": {
     "fact": "The annual employment-income withholding certificate is due by 30 January of the following year (Income Tax Act Cap.332, s.85(3)(b)). 'Form P9' is Kenyan (KRA) terminology -- Tanzania's TRA has no form by that name; do not use it.",
