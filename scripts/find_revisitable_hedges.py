@@ -70,9 +70,17 @@ _TOPIC_KEYWORDS = [
 
 
 def _guess_topic(key, fact_text):
+    # LEADING word-boundary only, not `kw in blob` -- found live 2026-09-02:
+    # `efd_tra_closure_authority`'s fact text says "suspension of EFD device/licence", and a bare
+    # substring check for 'pension' (an nssf keyword) matches inside "suspension", misrouting a
+    # pure TRA/EFD fact to the nssf topic. `\bpension` requires a boundary before the match, which
+    # "suspension" never has (s-u-s-PENSION has no non-word character before "pension"), while
+    # still matching a real standalone "pension". No trailing boundary requirement, deliberately:
+    # several keywords ('vat_', 'efd_', 'company_') are intentional prefixes ending in `_`, and a
+    # trailing \b would never fire there since `_` and the following letter are both \w chars.
     blob = (key + ' ' + fact_text).lower()
     for keywords, topic in _TOPIC_KEYWORDS:
-        if any(kw in blob for kw in keywords):
+        if any(re.search(r'\b' + re.escape(kw), blob) for kw in keywords):
             return topic
     return None
 

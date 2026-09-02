@@ -1,19 +1,70 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-09-02 (`vat_deferment_limit_date` RESOLVED — read 4 Finance Acts (2023-2026)
-directly rather than trusting secondary agreement; the cutoff stands, unrevoked, and is now in
-the past; fact converted from a bare string to a full grounded fact, 11 corpus rows quarantined
-including 4 in `train_sft.jsonl`. `vat_deferment_minimum_value` also RESOLVED — reverted to
-10,000,000, recorded as OUR error not a source dispute, root cause found (GN 608/2018 halved a
-stale 2015 figure); corpus swept, 0 contaminated rows. "The eleven" fully closed out — see below
-for the whole-corpus standing. Also: pre-push hook crash fixed at the marker level —
-`integration` deselected by default alongside `network`, and the skipif that couldn't actually
-protect it documented as such. Carries forward 2026-09-01: Tier 3 verification + fixes;
-whole-corpus picture after Tier 1+2+3; corporate/partnership tax source pass complete; 🔴
-PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT found and fixed same day; Finance Act 2026 read in
-full and the staleness-check mechanism built; PAYE_NONRESIDENT_RATE grounded; verified_as_at
-bootstrap census run across all 250 locked facts, extended to the 28 Finance-Act-bound ones —
-see "GROUNDED IS A SNAPSHOT, NOT A PROPERTY" below)
+Last updated: 2026-09-02 (four follow-ups closed in order: `vat_deferment_limit_date` RESOLVED —
+read 4 Finance Acts (2023-2026) directly, the cutoff stands unrevoked and is now in the past, 11
+corpus rows quarantined incl. 4 in `train_sft.jsonl`; the 141-vs-249 grounding gap RECONCILED —
+sampled 20 disagreements, found 5 distinct causes, adopted the mechanical number (~57%) as the
+real one and retired the 99.6% narrative headline, fixed one decayed provenance-script override
+in the process; CLAUDE.md R29 added — the superseded-instrument failure class, worked example
+`vat_deferment_minimum_value`; `scripts/find_revisitable_hedges.py` built — a standing mechanism
+for the "nothing re-checks a hedge when new material lands" gap, caught and fixed its own
+word-boundary bug on first run, first live output: 10 facts worth a look. `vat_deferment_minimum_value`
+also RESOLVED — reverted to 10,000,000, recorded as OUR error not a source dispute, root cause
+found (GN 608/2018 halved a stale 2015 figure); corpus swept, 0 contaminated rows. "The eleven"
+fully closed out. Also: pre-push hook crash fixed at the marker level — `integration` deselected
+by default alongside `network`, and the skipif that couldn't actually protect it documented as
+such. Carries forward 2026-09-01: Tier 3 verification + fixes; whole-corpus picture after
+Tier 1+2+3; corporate/partnership tax source pass complete; 🔴 PRESUMPTIVE ENGINE STALE-CONSTANT
+INCIDENT found and fixed same day; Finance Act 2026 read in full and the staleness-check
+mechanism built; PAYE_NONRESIDENT_RATE grounded; verified_as_at bootstrap census run across all
+250 locked facts, extended to the 28 Finance-Act-bound ones — see "GROUNDED IS A SNAPSHOT, NOT A
+PROPERTY" below)
+
+---
+
+## 🔧 Revisit-gap mechanism built, 2026-09-02 — caught its own bug on first run
+
+**Built per instruction: "worth a mechanism rather than a note."** `scripts/find_revisitable_hedges.py`
+finds every dict-shaped fact currently marked a tooling-blocked hedge (`verified_as_at ==
+"unknown"` AND its own text names an access failure — unavailable, blocked, JS shell, CAPTCHA,
+403, "could not locate") and checks whether a plausibly-matching `data/source_documents/<topic>/`
+cache exists that the fact's own citation fields never reference. This is the mechanism version
+of what closed `permit_class_d_does_not_exist` and `nssf_payment_deadline` for free earlier
+today: a local document existed, nobody thought to check it against the open hedge.
+
+**Deliberately not date-based.** All of `data/source_documents/`'s current files cluster in a
+single ~2-day scrape window (2026-06-30/07-01); comparing file mtimes against a fact's own
+last-check date would be noise for anything checked after that window and would have MISSED
+both of today's actual closures (both first checked mid-June, closed by a cache populated three
+weeks later — the gap that matters is "a fallback exists and was never tried," not "new material
+arrived after a specific date"). The mechanism checks existence-and-never-referenced instead.
+
+**Caught its own bug on the first real run, before the result was trusted.** `_guess_topic`'s
+first version used a bare `keyword in blob` substring check; `efd_tra_closure_authority`'s own
+fact text — "suspension of EFD device/licence" — matched the nssf keyword `'pension'` **inside
+the word "suspension"**, misrouting a pure TRA/EFD fact to the nssf topic directory. Same class
+of bug as `audit_locked_facts_verification_provenance_v2.py`'s own documented underscore/word-
+boundary fix (`_statute_search`'s `\bAct\b` missing `nssf_act_cap50.pdf`) — this project's third
+instance of a word-boundary substring trap, and worth naming as a pattern: **any keyword-list
+matcher over free text in this codebase should default to a leading-word-boundary regex, not a
+bare `in` check, until proven safe.** Fixed with `\b` + escaped keyword (leading boundary only —
+prefix-style keywords like `'vat_'`, `'efd_'`, `'company_'` intentionally have no trailing
+boundary, since `_` and the following letter are both `\w` and a trailing `\b` would never fire).
+Regression test `tests/test_find_revisitable_hedges.py` (4 tests) includes the exact
+"suspension"/"pension" case verbatim, not a paraphrase.
+
+**First live, correct output — 10 facts flagged, not yet actioned:** `permit_class_c_categories`,
+`brela_striking_off_non_filing`, `efd_approved_supplier_verification`, `efd_tra_closure_authority`,
+`name_similarity_threshold`, `electrical_test_fee_reduction_initial`, `electrical_test_fee_reduction_final`,
+`vat_deferment_minimum_value`, `brela_foreign_late_filing_penalty`, `business_licence_fee_national_schedule_local_collection`.
+Three of these (`efd_approved_supplier_verification`, `vat_deferment_minimum_value`,
+`brela_foreign_late_filing_penalty`) were already resolved today at PORTAL-tier via live web
+fetches — the mechanism correctly still flags them, because their local-cache route was never
+tried and `verified_as_at` genuinely is still `"unknown"` by design (portal-tier, not
+statute-tier, see "the eleven" above). The other 7 are net-new candidates, unexamined — checking
+them is the mechanism's first real backlog, not started in this pass; running the checks is
+future work, the same shape as today's `permit_class_d_does_not_exist`/`nssf_payment_deadline`
+closures. Artifact: `eval/results/revisitable_hedges_2026_09_02.json`.
 
 ---
 
