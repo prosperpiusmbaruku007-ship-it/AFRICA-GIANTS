@@ -2220,9 +2220,30 @@
     "correction_note": "Prior fact said a flat '2 employees' with no distinction between private and public companies, and no mention of the single-shareholder exception. Corrected: 'employees' -> 'persons/members' (a director/shareholder need not be an employee); added the public-company minimum of 7 (prior fact only covered the private-company case, the more common context in this product); added the s.26A single-shareholder exception for private companies. This exact wording was served in retrieval and had already produced a wrong answer once, per founder instruction. Numbers at medium confidence -- ss.27/45/26A not directly read this pass, only secondary corroboration.",
     "verified_as_at": "unknown"
   },
-  "registration_certificate_processing_time": "3 days",
-  "annual_return_form_number": "128",
-  "beneficial_owner_information_penalty_maximum": "10000000 TZS",
+  "registration_certificate_processing_time": {
+    "fact": "3 days -- company registration certificate processing time",
+    "correct_value": "3 days",
+    "primary_source": "data/source_documents/brela/brela_faq_official.pdf (BRELA official FAQ)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official FAQ document, cached locally at data/source_documents/brela/brela_faq_official.pdf (1343 lines, covers companies, beneficial ownership, patents, industrial licences). Found via source-first draining. Verbatim: Q8: \"Endapo taarifa zilizoingizwa katika mfumo zitakuwa sahihi kwa mujibu wa sheria, cheti hutolewa kwa njia ya mfumo ndani ya siku tatu\" -- if the information entered is correct, the certificate is issued through the system within three days.",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "annual_return_form_number": {
+    "fact": "Form No. 128 -- annual return submission form",
+    "correct_value": "128",
+    "primary_source": "data/source_documents/brela/brela_faq_official.pdf (BRELA official FAQ)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official FAQ document, cached locally at data/source_documents/brela/brela_faq_official.pdf (1343 lines, covers companies, beneficial ownership, patents, industrial licences). Found via source-first draining. Verbatim: Q11: \"Ninawezaje kuwasilisha taarifa ya mwaka ya Kampuni? Kwa kujaza fomu Na. 128 inayopatikana katika mfumo wa ORS\" -- how to submit the Company's annual return: by filling Form No. 128, available in the ORS system.",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "beneficial_owner_information_penalty_maximum": {
+    "fact": "10,000,000 TZS -- maximum penalty for beneficial-owner non-disclosure",
+    "correct_value": "10000000 TZS",
+    "primary_source": "data/source_documents/brela/brela_faq_official.pdf (BRELA official FAQ)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official FAQ document, cached locally at data/source_documents/brela/brela_faq_official.pdf (1343 lines, covers companies, beneficial ownership, patents, industrial licences). Found via source-first draining. Verbatim: Q13: \"Kampuni itakapokutwa na hatia ya kutowasilisha, kutotunza, kutotoa taarifa za mabadiliko, au kutoa taarifa za uongo kuhusu Wamiliki Manufaa, itawajibika kulipa faini isiyopungua shilingi Milioni Tano (TZS 5,000,000) lakini isiyozidi Shilingi Milioni kumi (TZS 10,000,000)\" -- fine of not less than 5,000,000 but not exceeding 10,000,000 for beneficial-ownership non-disclosure/false information.",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
   "business_name_maintenance_fee": {
     "fact": "The BRELA annual business-name maintenance/operating fee ('ada ya uendeshaji', paid every year to keep a registered business name active) is TZS 5,000. This is separate from the initial application/registration fee, which is TZS 15,000.",
     "correct_value": "TZS 5,000/year (maintenance); TZS 15,000 (separate initial application fee)",
@@ -2257,7 +2278,14 @@
     "training_instruction": "Do not state a specific renewal-period number of years. Use: 'thibitisha muda wa uhalali wa usajili wa alama ya biashara na BRELA (brela.go.tz)'.",
     "verified_as_at": "unknown"
   },
-  "application_fee_patent": "12000 TZS",
+  "application_fee_patent": {
+    "fact": "12,000 TZS -- patent application fee",
+    "correct_value": "12000 TZS",
+    "primary_source": "data/source_documents/brela/brela_faq_official.pdf (BRELA official FAQ)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official FAQ document, cached locally at data/source_documents/brela/brela_faq_official.pdf (1343 lines, covers companies, beneficial ownership, patents, industrial licences). Found via source-first draining. Verbatim: Q7(a): \"Ada ya maombi ya Hataza ni TZS 12,000/= na ada ya ulinzi/usajili TZS. 10,000/=\" -- patent APPLICATION fee is 12,000, separate and distinct from the 10,000 registration/protection fee.",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
   "patent_term": {
     "fact": "A Tanzanian patent's BASE term is 10 years from the filing date (Patents (Registration) Act, Cap.217, s.39(1)). The owner/licensee may apply for up to TWO separate 5-year extensions (application required 1-12 months before each expiry, and only if the invention is being 'worked' in Tanzania or a legitimate reason for not working it is proven), reaching a MAXIMUM of 20 years only if both extensions are sought and granted. A patent that lapses at year 10 with no extension application simply expires -- 20 years is NOT an automatic term.",
     "correct_value": "10-year base term, extendable via two discretionary 5-year extensions to a maximum of 20 years -- not an automatic flat 20 years",
