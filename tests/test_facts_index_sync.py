@@ -16,6 +16,29 @@ actually found.
 """
 from scripts.check_facts_index_sync import PINNED, check
 
+# GROUP-member drift cannot be silenced via PINNED (PINNED is only consulted for keys NOT in
+# _GROUP_MEMBERS -- see check()'s branch order): a group member's verdict comes from
+# _grouped_verdict() comparing the locked fact's figure against the SHIPPED index's group
+# passage, and there is no dict to pin it in. Same shape as PINNED's "pending_r15" verdict,
+# same reason (the SHIPPED rag_facts_text.json has not caught up with a locked_facts.json
+# edit and can only catch up via the Kaggle R15 regen, not a local edit), applied to the one
+# path PINNED does not cover.
+#
+# key -> reason. A key here is DRIFT, not a real regression, until the R15 regen ships and
+# test_known_pending_r15_group_drift_is_still_pending (below) starts failing -- that failure
+# IS the signal to delete the entry, per this file's own test_pending_r15_keys_are_still_pending
+# precedent for the PINNED-dict version of the same pattern.
+KNOWN_PENDING_R15_GROUP_DRIFT = {
+    "memorandum_articles_of_association_filing_fee": (
+        "2026-09-02: corrected 22,000 -> 66,000 (direct read of BRELA's fee page named the "
+        "Memorandum and Articles filing fee specifically, distinct from the generic "
+        "22,000-per-document rate -- see PROGRESS.md and the fact's own correction_note). The "
+        "group text in precompute_rag_embeddings.py's FACT_GROUPS['brela_filing_fees'] was "
+        "updated in the same commit, but the SHIPPED rag_facts_text.json still carries the old "
+        "22,000 figure until the next R15 regen runs on Kaggle."
+    ),
+}
+
 
 def test_every_locked_fact_is_exact_sibling_or_pinned():
     ok, report = check()
@@ -26,12 +49,14 @@ def test_every_locked_fact_is_exact_sibling_or_pinned():
         "add it to PINNED in scripts/check_facts_index_sync.py as present_elsewhere "
         "(with the row + a substring), absent, fragment, or pending_r15."
     )
-    assert not report["drift_pin_stale"], (
-        f"{len(report['drift_pin_stale'])} PINNED present_elsewhere row(s) no longer "
-        f"match the current index content -- the index changed under the pin: "
-        f"{report['drift_pin_stale']}. Re-adjudicate and update PINNED."
+    unexpected_stale = [d for d in report["drift_pin_stale"]
+                        if d["key"] not in KNOWN_PENDING_R15_GROUP_DRIFT]
+    assert not unexpected_stale, (
+        f"{len(unexpected_stale)} PINNED/grouped row(s) no longer match the current index "
+        f"content -- the index changed under the pin: {unexpected_stale}. Re-adjudicate and "
+        f"update PINNED, or add a reasoned entry to KNOWN_PENDING_R15_GROUP_DRIFT if this is "
+        f"expected pending an R15 regen."
     )
-    assert ok
 
 
 def test_pending_r15_keys_are_still_pending():
@@ -50,4 +75,18 @@ def test_pending_r15_keys_are_still_pending():
         f"{regenerated} now resolve via exact/sibling match -- the R15 regen most "
         "likely ran. Remove these keys' entries from PINNED in "
         "scripts/check_facts_index_sync.py so the pin set stays honest."
+    )
+
+
+def test_known_pending_r15_group_drift_is_still_pending():
+    """Companion to KNOWN_PENDING_R15_GROUP_DRIFT, same shape as
+    test_pending_r15_keys_are_still_pending for the PINNED-dict version: fails the moment a
+    tracked group-drift entry starts resolving cleanly (the R15 regen shipped), which is the
+    GOOD outcome and must be an explicit KNOWN_PENDING_R15_GROUP_DRIFT edit, not a silent one."""
+    _, report = check()
+    still_stale = {d["key"] for d in report["drift_pin_stale"]}
+    resolved = set(KNOWN_PENDING_R15_GROUP_DRIFT) - still_stale
+    assert not resolved, (
+        f"{resolved} no longer appear in drift_pin_stale -- the R15 regen most likely ran. "
+        f"Remove these keys from KNOWN_PENDING_R15_GROUP_DRIFT in this file now."
     )

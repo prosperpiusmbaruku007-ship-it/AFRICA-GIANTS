@@ -1724,49 +1724,355 @@
     "correction_note": "2026-09-02: upgraded from a hedge (vague statutory gesture, TRA EFD page unreachable at the time) to a specific statute citation, found via scripts/find_revisitable_hedges.py prompting a fresh live-source attempt using curl instead of WebFetch. No value change (the mechanism was always correctly asserted as \"yes, TRA can close\"); the citation is now real and specific rather than a general gesture at two Acts."
   },
   "sdl_payment_deadline": "7 days_of_month",
-  "trademark_fee_for_explanation_of_decision": "50,000 TZS",
-  "trademark_fee_for_opposition_notice": "60,000 TZS",
-  "trademark_fee_for_responding_to_opposition": "50,000 TZS",
-  "trademark_fee_for_hearing_opposition": "70,000 TZS",
-  "trademark_fee_for_single_mark_registration": "60,000 TZS",
-  "trademark_fee_for_series_of_marks_first_mark": "60,000 TZS",
-  "trademark_fee_for_series_of_marks_subsequent_mark": "30,000 TZS",
-  "trademark_fee_for_renewal_of_registration": "30,000 TZS",
-  "trademark_fee_for_renewal_of_series_of_marks_first_mark": "30,000 TZS",
-  "trademark_fee_for_renewal_of_series_of_marks_subsequent_mark": "10,000 TZS",
-  "trademark_fee_for_additional_fee_by_regulation_54": "30,000 TZS",
-  "trademark_fee_for_refund_of_fee": "30,000 TZS",
-  "trademark_fee_for_registration_of_subsequent_proprietor": "50,000 TZS",
-  "trademark_fee_for_change_of_proprietor_or_user_same_address": "50,000 TZS",
-  "trademark_fee_for_any_other_entry": "10,000 TZS",
-  "trademark_fee_for_change_of_business_address": "20,000 TZS",
-  "trademark_fee_for_dissolution_of_partnership": "50,000 TZS",
-  "company_share_value_threshold_1_max": "1,000,000 TZS",
-  "company_registration_fee_1": "95,000 TZS",
-  "company_share_value_threshold_2_min": "1,000,000 TZS",
-  "company_share_value_threshold_2_max": "5,000,000 TZS",
-  "company_registration_fee_2": "175,000 TZS",
-  "company_share_value_threshold_3_min": "5,000,000 TZS",
-  "company_share_value_threshold_3_max": "20,000,000 TZS",
-  "company_registration_fee_3": "260,000 TZS",
-  "company_share_value_threshold_4_min": "20,000,000 TZS",
-  "company_share_value_threshold_4_max": "50,000,000 TZS",
-  "company_registration_fee_4": "290,000 TZS",
-  "company_share_value_threshold_5_min": "50,000,000 TZS",
-  "company_registration_fee_5": "440,000 TZS",
-  "company_registration_fee_no_share_capital": "300,000 TZS",
-  "memorandum_articles_of_association_filing_fee": "22,000 TZS",
-  "stamp_duty_per_copy_memorandum_articles_copy": "10,000 TZS",
-  "stamp_duty_form_14b_fee": "1,200 TZS",
-  "company_name_reservation_fee": "50,000 TZS",
-  "company_name_change_fee": "22,000 TZS",
-  "document_acceptance_registration_fee": "22,000 TZS",
-  "late_filing_penalty_monthly_fee": "2,500 TZS",
-  "annual_return_filing_fee": "22,000 TZS",
-  "document_certification_fee_per_page": "3,000 TZS",
-  "file_search_fee": "3,000 TZS",
-  "file_search_report_fee": "22,000 TZS",
-  "certified_copy_agreement_law_constitution_fee": "750 USD",
+  "trademark_fee_for_explanation_of_decision": {
+    "fact": "trademark fee for explanation of decision: 50,000 TZS",
+    "correct_value": "50,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 4: \"Kumwomba Msajili kueleza sababu za uamuzi... SHT 50,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_opposition_notice": {
+    "fact": "trademark fee for opposition notice: 60,000 TZS",
+    "correct_value": "60,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 5: \"Kutoa notisi ya pingamizi kwa Msajili chini ya kifungu na. 27... TSHS 60,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_responding_to_opposition": {
+    "fact": "trademark fee for responding to opposition: 50,000 TZS",
+    "correct_value": "50,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 6: \"Kutoa kauli inayojibu Notisi ya pingamizi chini ya kifungu na. 27... SHT 50,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_hearing_opposition": {
+    "fact": "trademark fee for hearing opposition: 70,000 TZS",
+    "correct_value": "70,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 7: \"Kusikiliza kila pingamizi... chini ya vifungu na. 29, 30, 35 na 36... SHT. 70,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_single_mark_registration": {
+    "fact": "trademark fee for single mark registration: 60,000 TZS",
+    "correct_value": "60,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 8: \"Usajili mmoja wa alama kwa ajili ya maelezo ya bidhaa katika daraja moja. SHT. 60,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_series_of_marks_first_mark": {
+    "fact": "trademark fee for series of marks first mark: 60,000 TZS",
+    "correct_value": "60,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 9: \"Usajili wa mfululizo wa alama chini ya kifungu na. 24(2)... Kwa alama ya kwanza. SHT. 60,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_series_of_marks_subsequent_mark": {
+    "fact": "trademark fee for series of marks subsequent mark: 30,000 TZS",
+    "correct_value": "30,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 10: \"Kwa kila alama inayofuata. SHT 30,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_renewal_of_registration": {
+    "fact": "trademark fee for renewal of registration: 30,000 TZS",
+    "correct_value": "30,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 11: \"Kuhuisha usajili wa alama baada ya muda wake wa usajili kuisha. SHT 30,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_renewal_of_series_of_marks_first_mark": {
+    "fact": "trademark fee for renewal of series of marks first mark: 30,000 TZS",
+    "correct_value": "30,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 12: \"Kuhuisha usajili wa mfululizo wa alama chini ya kifungu 24(2)... Kwa alama ya kwanza. SHT 30,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_renewal_of_series_of_marks_subsequent_mark": {
+    "fact": "trademark fee for renewal of series of marks subsequent mark: 10,000 TZS",
+    "correct_value": "10,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 13: \"Kwa kila alama nyingine katika zinazofuata. SHT. 10,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_additional_fee_by_regulation_54": {
+    "fact": "trademark fee for additional fee by regulation 54: 30,000 TZS",
+    "correct_value": "30,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 14: \"Ada ya ziada chini ya Sheria ndogo na. 54. SHT. 30,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_refund_of_fee": {
+    "fact": "trademark fee for refund of fee: 30,000 TZS",
+    "correct_value": "30,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 15: \"Kurejesha ada chini ya hii Sheria ndogo. SHT. 30,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_registration_of_subsequent_proprietor": {
+    "fact": "trademark fee for registration of subsequent proprietor: 50,000 TZS",
+    "correct_value": "50,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 16: \"Maombi ya kusajili mmiliki anayefuata katika muktadha wa kutoa au kubadilisha alama moja. SHT. 50,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_change_of_proprietor_or_user_same_address": {
+    "fact": "trademark fee for change of proprietor or user same address: 50,000 TZS",
+    "correct_value": "50,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 17: \"Kubadili ingizo moja au zaidi ya alama ya biashara ya mmiliki aliyesajiliwa au mtumiaji aliyesajiliwa ambapo anwani ni ileile... SHT. 50,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_any_other_entry": {
+    "fact": "trademark fee for any other entry: 10,000 TZS",
+    "correct_value": "10,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 18: \"Kwa ingizo lingine lolote. SHT 10,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_change_of_business_address": {
+    "fact": "trademark fee for change of business address: 20,000 TZS",
+    "correct_value": "20,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 19: \"Maombi ya kubadili anwani ya biashara katika usajili wa Alama SHT. 20,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "trademark_fee_for_dissolution_of_partnership": {
+    "fact": "trademark fee for dissolution of partnership: 50,000 TZS",
+    "correct_value": "50,000 TZS",
+    "primary_source": "data/source_documents/brela/brela_ada_alama.html (BRELA trademark/service mark fee schedule; live URL not yet located, local cache only)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_documents/brela/brela_ada_alama.html (a 57-item fee schedule under the Trade and Service Marks Act). Found via source-first draining, per instruction. Verbatim: Item 20: \"Maombi ya kuvunja ushirika baina ya washirika wenye alama zilizosajiliwa. SHT 50,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_share_value_threshold_1_max": {
+    "fact": "1,000,000 TZS -- share value band 1 ceiling",
+    "correct_value": "1,000,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 1: \"Zaidi ya Tsh. 20,000/= lakini si zaidi ya Tsh. 1,000,000/= ... Tsh. 95,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_registration_fee_1": {
+    "fact": "95,000 TZS -- company registration fee, share value up to TZS 1,000,000",
+    "correct_value": "95,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 1 fee: same quote as above -- Tsh. 95,000/=",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_share_value_threshold_2_min": {
+    "fact": "1,000,000 TZS -- share value band 2 floor",
+    "correct_value": "1,000,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 2 floor: \"Zaidi ya Tsh. 1,000,000/= lakini si zaidi ya Tsh. 5,000,000/= ... Tsh. 175,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_share_value_threshold_2_max": {
+    "fact": "5,000,000 TZS -- share value band 2 ceiling",
+    "correct_value": "5,000,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 2 ceiling: same quote as above",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_registration_fee_2": {
+    "fact": "175,000 TZS -- company registration fee, share value TZS 1,000,000 to 5,000,000",
+    "correct_value": "175,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 2 fee: same quote as above -- Tsh. 175,000/=",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_share_value_threshold_3_min": {
+    "fact": "5,000,000 TZS -- share value band 3 floor",
+    "correct_value": "5,000,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 3 floor: \"Zaidi ya Tsh. 5,000,000/= lakini si zaidi ya Tsh. 20,000,000/= ... Tsh. 260,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_share_value_threshold_3_max": {
+    "fact": "20,000,000 TZS -- share value band 3 ceiling",
+    "correct_value": "20,000,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 3 ceiling: same quote as above",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_registration_fee_3": {
+    "fact": "260,000 TZS -- company registration fee, share value TZS 5,000,000 to 20,000,000",
+    "correct_value": "260,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 3 fee: same quote as above -- Tsh. 260,000/=",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_share_value_threshold_4_min": {
+    "fact": "20,000,000 TZS -- share value band 4 floor",
+    "correct_value": "20,000,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 4 floor: \"Zaidi ya Tsh. 20,000,000/= lakini si zaidi ya Tsh. 50,000,000/= ... Tsh. 290,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_share_value_threshold_4_max": {
+    "fact": "50,000,000 TZS -- share value band 4 ceiling",
+    "correct_value": "50,000,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 4 ceiling: same quote as above",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_registration_fee_4": {
+    "fact": "290,000 TZS -- company registration fee, share value TZS 20,000,000 to 50,000,000",
+    "correct_value": "290,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 4 fee: same quote as above -- Tsh. 290,000/=",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_share_value_threshold_5_min": {
+    "fact": "50,000,000 TZS -- share value band 5 floor",
+    "correct_value": "50,000,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 5 floor: \"Zaidi ya Tsh. 50,000,000/= ... Tsh. 440,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_registration_fee_5": {
+    "fact": "440,000 TZS -- company registration fee, share value above TZS 50,000,000",
+    "correct_value": "440,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 1, band 5 fee: same quote as above -- Tsh. 440,000/=",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_registration_fee_no_share_capital": {
+    "fact": "company registration fee no share capital: 300,000 TZS",
+    "correct_value": "300,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 2: \"Usajili wa kampuni ambayo haina mtaji wa hisa ambapo idadi ya washirika ni kama ilivyoelezwa katika Malengo na Katiba ya Kampuni: Tsh. 300,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "memorandum_articles_of_association_filing_fee": {
+    "fact": "Filing fee for the Memorandum and Articles of Association specifically is TZS 66,000 -- NOT the generic TZS 22,000-per-document rate that applies to other filings.",
+    "correct_value": "66,000 TZS (Memorandum and Articles specifically)",
+    "wrong_patterns": [
+      "memorandum.{0,30}articles.{0,30}22,000",
+      "malengo na katiba.{0,30}22,000"
+    ],
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim, item 3: \"Ada ya kufungua jalada kwa ajili ya maombi, maana yake Tsh. 22,000/= kwa kila waraka, yaani Malengo na Katiba ya Kampuni. Tsh. 66,000/=\" -- read as: the generic per-document filing fee is 22,000, but the Memorandum and Articles specifically (named directly, \"yaani\" = \"that is/namely\") totals 66,000, not the generic rate. The general per-document rate (22,000) is separately and unambiguously confirmed as item 8's `document_acceptance_registration_fee` -- these are two different fees in the same source, not a duplicate or a contradiction.",
+    "status": "CORRECTED (2026-09-02) -- was an unverified bare-string guess at 22,000",
+    "verified_as_at": "2026-09-02",
+    "correction_note": "2026-09-02: this fact was a bare string, never individually verified before today (part of the 62-fact \"never examined\" population named in the shape-of-108 analysis). Direct read of BRELA's own fee page finds 66,000 specifically named against \"Malengo na Katiba ya Kampuni\" (Memorandum and Articles), distinct from the generic 22,000-per-document rate that applies elsewhere on the same page. This is a first verification producing a different value than the unverified guess, not a correction of a previously-checked fact."
+  },
+  "stamp_duty_per_copy_memorandum_articles_copy": {
+    "fact": "stamp duty per copy memorandum articles copy: 10,000 TZS",
+    "correct_value": "10,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 4: \"Gharama ya kila Ushuru wa stempu katika kila nakala ya Malengo na Katiba ya Kampuni ni Tsh. 10,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "stamp_duty_form_14b_fee": {
+    "fact": "stamp duty form 14b fee: 1,200 TZS",
+    "correct_value": "1,200 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 5: \"Gharama za ushuru wa stempu katika Fomu na. 14b Tsh. 1,200/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_name_reservation_fee": {
+    "fact": "company name reservation fee: 50,000 TZS",
+    "correct_value": "50,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 6: \"Kulinda jina la kampuni ni Tsh. 50,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "company_name_change_fee": {
+    "fact": "company name change fee: 22,000 TZS",
+    "correct_value": "22,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 7: \"Kubadilisha jina la kampuni Tsh. 22,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "document_acceptance_registration_fee": {
+    "fact": "document acceptance registration fee: 22,000 TZS",
+    "correct_value": "22,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 8: \"Gharama za upokeaji na/au usajili wa waraka wowote kwa Msajili chini ya Sheria ni Tsh. 22,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "late_filing_penalty_monthly_fee": {
+    "fact": "late filing penalty monthly fee: 2,500 TZS",
+    "correct_value": "2,500 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 9: \"Gharama za kuchelewa kufungua faili/usajili wa waraka wowote zinalipwa kwa Msajili (kwa mwezi au sehemu ya siku za mwezi) TSHS 2,500/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "annual_return_filing_fee": {
+    "fact": "annual return filing fee: 22,000 TZS",
+    "correct_value": "22,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 10: \"Gharama za kujaza taarifa ya mwaka Tsh. 22,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "document_certification_fee_per_page": {
+    "fact": "document certification fee per page: 3,000 TZS",
+    "correct_value": "3,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 11: \"Gharama za ithibati ya waraka wowote kwa ukurasa ni Tsh. 3,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "file_search_fee": {
+    "fact": "file search fee: 3,000 TZS",
+    "correct_value": "3,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 12: \"Gharama za kutafuta jalada lolote/au kupekua kitu chochote ni Tsh. 3,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "file_search_report_fee": {
+    "fact": "file search report fee: 22,000 TZS",
+    "correct_value": "22,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 13: \"Gharama kwa ajili ya ripoti ya utafutaji kwa faili ni Tsh. 22,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "certified_copy_agreement_law_constitution_fee": {
+    "fact": "certified copy agreement law constitution fee: 750 USD",
+    "correct_value": "750 USD",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 14 (foreign/\"Kifungu XII\" companies): \"Gharama za usajili wa nakala yenye ithibati ya mkataba, sheria au malengo na katiba ya kampuni... ni Dola za Kimarekani 750/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
   "document_filing_fee_section_12_act_excluding_balance_sheet": {
     "fact": "Foreign company document filing fee (excluding the separate balance-sheet filing fee) is USD 220 (Companies Act Cap.212, Part XIII, ss.320-328 -- NOT 'Section XII'/'Section 12', the same stale-name error already corrected elsewhere in this project, e.g. act_section_12). Amount confirmed directly on BRELA's own current fee schedule.",
     "correct_value": "USD 220 (Companies Act Cap.212 Part XIII, ss.320-328)",
@@ -1787,8 +2093,22 @@
     "correction_note": "Amount (220 USD) was already correct. The key name and any 'Section 12/XII' framing carried the same stale-name defect this project already fixed on act_section_12 and in CLAUDE.md Section 11 -- Part XIII, ss.320-328 is the correct citation, not 'Section XII'.",
     "verified_as_at": "2026-09-01"
   },
-  "late_filing_penalty_monthly_fee_section_12_act": "25 USD",
-  "certified_copy_certificate_of_registration_fee": "4,000 TZS",
+  "late_filing_penalty_monthly_fee_section_12_act": {
+    "fact": "late filing penalty monthly fee section 12 act: 25 USD",
+    "correct_value": "25 USD",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 14 (foreign companies): \"Ada ya kuchelewa kufungua jalada/usajili wa waraka wowote inalipwa kwa Msajili (kwa mwezi au sehemu ya siku za mwezi) ni Dola za Kimarekani 25/=\" -- matches brela_foreign_late_filing_penalty (already grounded 2026-09-02), independent cross-confirmation.",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
+  "certified_copy_certificate_of_registration_fee": {
+    "fact": "certified copy certificate of registration fee: 4,000 TZS",
+    "correct_value": "4,000 TZS",
+    "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND re-fetched live at https://www.brela.go.tz/pages/tozo-za-kampuni via curl (scripts/fetch_primary_source.py) -- byte-identical wording confirms the local cache is not stale (R29). Found via scripts/find_revisitable_hedges.py-style source-first draining, per instruction: this one already-cached page independently confirms the values of at least 14 bare-string facts that had never been individually verified. Verbatim: Item 15: \"Gharama ya kupata nakala ya Cheti cha Usajili Tsh. 4,000/=\"",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
   "act_section_12": {
     "fact": "Foreign/external companies carrying on business in Tanzania are governed by Part XIII (ss.320-328) of the Companies Act, Cap.212 -- NOT Part XII, which governs winding up of unregistered companies (ss.314-319). This includes the obligation to deliver documents/balance sheets to the Registrar and the late-filing penalty regime.",
     "correct_value": "Companies Act Cap.212, Part XIII, ss.320-328 (\"Companies incorporated outside Tanzania carrying on business within Tanzania\")",

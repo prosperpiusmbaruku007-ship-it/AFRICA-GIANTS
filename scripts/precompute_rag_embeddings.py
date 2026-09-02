@@ -459,7 +459,7 @@ FACT_GROUPS = {
         ],
         'text': (
             'Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS '
-            '22,000; stempu kwa kila nakala ya memorandum TZS 10,000; fomu 14B TZS 1,200; '
+            '66,000; stempu kwa kila nakala ya memorandum TZS 10,000; fomu 14B TZS 1,200; '
             'kupokea/kusajili nyaraka TZS 22,000; kuthibitisha nyaraka kwa ukurasa TZS 3,000; '
             'kutafuta faili TZS 3,000 na ripoti ya utafutaji TZS 22,000; nakala iliyothibitishwa '
             'ya cheti cha usajili TZS 4,000. Kampuni ya kigeni (kifungu 12): kuwasilisha nyaraka '

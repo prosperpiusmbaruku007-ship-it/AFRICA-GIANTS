@@ -1,0 +1,12 @@
+{
+  "measured": "2026-09-02",
+  "harness": "scripts/correct_corpus_defects_v10.py",
+  "defect_class": "MEMORANDUM_ARTICLES_FEE_STALE_22000",
+  "total_rows_quarantined": 2,
+  "per_file_removed": {
+    "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl": 1,
+    "datasets/tier1a/sft/train_sft.jsonl": 1
+  },
+  "quarantine_file": "datasets/tier1a/rejected/memorandum_articles_fee_stale_22000_quarantine_2026_09_02.jsonl",
+  "remaining_live_after_fix": 0
+}
