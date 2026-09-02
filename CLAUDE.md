@@ -1234,6 +1234,55 @@ current AS OF is not fully dated, even if it names a real, checkable instrument*
 date, or find the instrument's own gazette date, before trusting convergence between two such
 sources as confirmation.
 
+### R30 — A TOOL FAILURE RECORDED AS A PROPERTY OF THE SOURCE DECAYS EXACTLY LIKE AN UNTESTED CONTROL, AND IT ALREADY DID, ONCE, SILENTLY.
+
+**"TRA unreachable" was never true. `WebFetch` failing against tra.go.tz with `Parse Error:
+Invalid header value char` was a bug in one tool's HTTP client — `curl` reaches every tra.go.tz
+page and PDF tried (2026-09-02) with a plain 200, matched content, no special handling needed.
+The same is true of brela.go.tz, osha.go.tz, mof.go.tz, nssf.go.tz, wcf.go.tz, kazi.go.tz —
+tested directly, not assumed.** tanzlii.org is different and stays different: a genuine
+Cloudflare Turnstile challenge (confirmed with a real browser User-Agent), not fixable by
+switching tools. immigration.go.tz is different again: a genuine client-rendered SPA shell (806
+bytes via curl too), not fixable by switching tools either. **Three domains, three independent
+verdicts — the fix here is not "always use curl," it is "test the actual failure before writing
+down what kind of failure it is."**
+
+**The finding above is not new. It was made once already, on 2026-08-16** (PROGRESS.md, "TWO
+OPERATIONAL FINDINGS FROM THE SOURCE FETCH"), with the same diagnosis, the same tanzlii/media.tanzlii
+split, and a working `curl` recipe already written down. **It was never turned into a script, a
+skill, or a standing check — so it was never re-applied, and every session between 2026-08-16 and
+2026-09-02 that hit the same `Parse Error` re-recorded it as "TRA page unavailable," "tooling
+issue," or a permanent hedge, as though the diagnosis had never happened.** One of those
+re-recordings (`gn605a_average_increase`, 2026-09-02, same day as this rule) went further: a
+retry against `media.tanzlii.org` used a GUESSED URL that 404'd, and the 404 was written up as
+confirming the CAPTCHA-block diagnosis, without the guess itself being checked against the
+already-documented working pattern. **A correct finding, written down faithfully, decayed anyway
+— not because anyone doubted it, but because nothing forced the next person who hit the same
+symptom to go looking for it first.** This is R26's "inert control" shape arriving from the
+research layer instead of the test layer: R26 asks whether a control that claims to block
+actually fires; this is the same question asked of a DIAGNOSIS that claims to explain a failure
+— does anyone re-check it before acting on it, or does it just get believed because it's already
+written down?
+
+**In practice:**
+1. **A domain-reachability failure is a claim about ONE request, not about the domain.** Before
+   recording "X is unreachable" anywhere — a fact's `verified_by`, a hedge's `status`, a
+   PROGRESS.md write-up — retry with a different tool (`curl` with a real User-Agent, at minimum)
+   and check the actual HTTP status and byte count, not just whether the first tool errored.
+2. **A working-around-a-failure finding is not done when it's written down. It is done when it
+   is impossible for the next session to not know it.** A tool bug documented only in prose in an
+   18,000-line file is exactly as durable as an unenforced convention — which this project has
+   already ruled, repeatedly, is not durable at all. Prefer a script (a callable fetch helper that
+   already knows the working recipe) or a skill over a paragraph, the same preference R18 already
+   states for measurement harnesses.
+3. **A single failed URL guess is not a confirmed block.** `media.tanzlii.org` uses a numeric
+   legislation ID plus a hash, not a predictable slug — a guessed URL will 404 whether or not the
+   domain is reachable, and a 404 on a guess proves nothing about the domain. Find the real URL
+   (search, or a working example already in this project) before concluding a route is closed.
+4. **Before trusting an old "unreachable"/"blocked"/"tooling issue" note anywhere in this project,
+   retry it.** Every one is now suspect on exactly the terms this rule states, not just the ones
+   already re-checked.
+
 See PROGRESS.md for current project status and next actions.
 
 ---
