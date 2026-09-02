@@ -65,10 +65,10 @@
       "26,000 per month.*relief",
       "relief ya kibinafsi.*26"
     ],
-    "primary_source": "https://taxsummaries.pwc.com/tanzania/individual/taxes-on-personal-income",
-    "verified_by": "PWC Tanzania Individual Tax Summary Jan 2026 + Habib Advisory 2025/26 — NO personal relief line item exists",
+    "primary_source": "Income Tax Act, Cap.332 R.E.2019 (no personal relief provision found); Finance Acts 2022, 2023, 2024, 2025, 2026 (none introduces one)",
+    "verified_by": "PWC Tanzania Individual Tax Summary Jan 2026 + Habib Advisory 2025/26 — NO personal relief line item exists | Backfilled 2026-09-02, sync-gap: this session's Tier 1 pass (PROGRESS.md, 2026-09-01) recorded 'confirmed by direct search of Cap.332 AND all five Finance Acts 2022-2026, no relief provision anywhere' after a direct primary-text read, but the citation was never written into this object's own verified_by field until now. No new research; recording work already done.",
     "effective_date": "2025-07-01",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, absence-of-provision, 2026-09-02) -- was CONFIRMED (portal-tier citation only)",
     "correction_note": "Original entry incorrectly asserted 26,000 was correct. Session 11 (2026-06-12) confirmed no such relief exists in Tanzania law.",
     "verified_as_at": "unknown"
   },
@@ -1628,11 +1628,11 @@
       "zero.rated.*haijalishi.*input vat",
       "hakuna tofauti.*zero.rated.*exempt"
     ],
-    "primary_source": "https://www.tra.go.tz/page/value-added-tax",
-    "verified_by": "TanzaniaInvest VAT Guide; PwC Tax Summaries Tanzania; TRA.go.tz",
+    "primary_source": "VAT Act, Cap.148 R.E.2019, ss.2, 5, 68, 70",
+    "verified_by": "TanzaniaInvest VAT Guide; PwC Tax Summaries Tanzania; TRA.go.tz | Backfilled 2026-09-02, sync-gap: this session's Tier 1 pass (PROGRESS.md, 2026-09-01) called this fact 'the strongest-grounded fact in the batch -- VAT Act ss.2,5,68,70' after a direct primary-text read, but the citation was never written into this object's own verified_by field until now. No new research; recording work already done.",
     "effective_date": "2015-07-01",
     "verified_date": "2026-06-20",
-    "status": "LOCKED",
+    "status": "CONFIRMED (statute-tier, 2026-09-02) -- was LOCKED (portal-tier citation only)",
     "training_instruction": "Pairs on this topic must explicitly state: zero-rated = CAN claim input VAT; exempt = CANNOT claim input VAT. Never conflate the two categories.",
     "verified_as_at": "unknown"
   },

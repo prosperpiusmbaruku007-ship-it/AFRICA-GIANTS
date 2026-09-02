@@ -7,199 +7,15 @@
     "_meta",
     "_unresolved_items"
   ],
-  "dict_shaped_facts_classified": 173,
-  "primary_verified": 42,
-  "unknown_backlog_dict_shaped": 131,
-  "unstructured_string_valued_facts": 77,
+  "dict_shaped_facts_classified": 224,
+  "primary_verified": 96,
+  "unknown_backlog_dict_shaped": 128,
+  "unstructured_string_valued_facts": 26,
   "unstructured_facts_note": "These carry no verified_by/primary_source/any metadata field at all -- not processed as \"unknown\" alongside the dict-shaped facts because they cannot carry a verified_as_at field without first being converted from a bare string to a dict, which is a schema-migration decision bigger than this bootstrap census. Effectively unknown-or-worse; listed separately so they are not silently invisible.",
   "unstructured_facts": [
     {
       "key": "sdl_payment_deadline",
       "value": "7 days_of_month"
-    },
-    {
-      "key": "trademark_fee_for_explanation_of_decision",
-      "value": "50,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_opposition_notice",
-      "value": "60,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_responding_to_opposition",
-      "value": "50,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_hearing_opposition",
-      "value": "70,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_single_mark_registration",
-      "value": "60,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_series_of_marks_first_mark",
-      "value": "60,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_series_of_marks_subsequent_mark",
-      "value": "30,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_renewal_of_registration",
-      "value": "30,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_renewal_of_series_of_marks_first_mark",
-      "value": "30,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_renewal_of_series_of_marks_subsequent_mark",
-      "value": "10,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_additional_fee_by_regulation_54",
-      "value": "30,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_refund_of_fee",
-      "value": "30,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_registration_of_subsequent_proprietor",
-      "value": "50,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_change_of_proprietor_or_user_same_address",
-      "value": "50,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_any_other_entry",
-      "value": "10,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_change_of_business_address",
-      "value": "20,000 TZS"
-    },
-    {
-      "key": "trademark_fee_for_dissolution_of_partnership",
-      "value": "50,000 TZS"
-    },
-    {
-      "key": "company_share_value_threshold_1_max",
-      "value": "1,000,000 TZS"
-    },
-    {
-      "key": "company_registration_fee_1",
-      "value": "95,000 TZS"
-    },
-    {
-      "key": "company_share_value_threshold_2_min",
-      "value": "1,000,000 TZS"
-    },
-    {
-      "key": "company_share_value_threshold_2_max",
-      "value": "5,000,000 TZS"
-    },
-    {
-      "key": "company_registration_fee_2",
-      "value": "175,000 TZS"
-    },
-    {
-      "key": "company_share_value_threshold_3_min",
-      "value": "5,000,000 TZS"
-    },
-    {
-      "key": "company_share_value_threshold_3_max",
-      "value": "20,000,000 TZS"
-    },
-    {
-      "key": "company_registration_fee_3",
-      "value": "260,000 TZS"
-    },
-    {
-      "key": "company_share_value_threshold_4_min",
-      "value": "20,000,000 TZS"
-    },
-    {
-      "key": "company_share_value_threshold_4_max",
-      "value": "50,000,000 TZS"
-    },
-    {
-      "key": "company_registration_fee_4",
-      "value": "290,000 TZS"
-    },
-    {
-      "key": "company_share_value_threshold_5_min",
-      "value": "50,000,000 TZS"
-    },
-    {
-      "key": "company_registration_fee_5",
-      "value": "440,000 TZS"
-    },
-    {
-      "key": "company_registration_fee_no_share_capital",
-      "value": "300,000 TZS"
-    },
-    {
-      "key": "memorandum_articles_of_association_filing_fee",
-      "value": "22,000 TZS"
-    },
-    {
-      "key": "stamp_duty_per_copy_memorandum_articles_copy",
-      "value": "10,000 TZS"
-    },
-    {
-      "key": "stamp_duty_form_14b_fee",
-      "value": "1,200 TZS"
-    },
-    {
-      "key": "company_name_reservation_fee",
-      "value": "50,000 TZS"
-    },
-    {
-      "key": "company_name_change_fee",
-      "value": "22,000 TZS"
-    },
-    {
-      "key": "document_acceptance_registration_fee",
-      "value": "22,000 TZS"
-    },
-    {
-      "key": "late_filing_penalty_monthly_fee",
-      "value": "2,500 TZS"
-    },
-    {
-      "key": "annual_return_filing_fee",
-      "value": "22,000 TZS"
-    },
-    {
-      "key": "document_certification_fee_per_page",
-      "value": "3,000 TZS"
-    },
-    {
-      "key": "file_search_fee",
-      "value": "3,000 TZS"
-    },
-    {
-      "key": "file_search_report_fee",
-      "value": "22,000 TZS"
-    },
-    {
-      "key": "certified_copy_agreement_law_constitution_fee",
-      "value": "750 USD"
-    },
-    {
-      "key": "late_filing_penalty_monthly_fee_section_12_act",
-      "value": "25 USD"
-    },
-    {
-      "key": "certified_copy_certificate_of_registration_fee",
-      "value": "4,000 TZS"
-    },
-    {
-      "key": "osiha_act_citation",
-      "value": "Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003"
     },
     {
       "key": "vat_registration_threshold_annual",
@@ -220,10 +36,6 @@
     {
       "key": "form_number_payment_credit_slip",
       "value": "ITX 300.01.E"
-    },
-    {
-      "key": "legal_citation_sdl",
-      "value": "Sheria ya Elimu na Mafunzo ya Ufundi, Sura ya 82, Kifungu cha 14"
     },
     {
       "key": "exemption_category_government_departments",
@@ -290,22 +102,6 @@
       "value": "13 (7)"
     },
     {
-      "key": "registration_certificate_processing_time",
-      "value": "3 days"
-    },
-    {
-      "key": "annual_return_form_number",
-      "value": "128"
-    },
-    {
-      "key": "beneficial_owner_information_penalty_maximum",
-      "value": "10000000 TZS"
-    },
-    {
-      "key": "application_fee_patent",
-      "value": "12000 TZS"
-    },
-    {
       "key": "company_director_minimum_age",
       "value": "18"
     },
@@ -342,7 +138,7 @@
       "status": "unknown",
       "verified_as_at": "unknown",
       "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "PWC Tanzania Individual Tax Summary Jan 2026 + Habib Advisory 2025/26 — NO personal relief line item exists"
+      "verified_by_excerpt": "PWC Tanzania Individual Tax Summary Jan 2026 + Habib Advisory 2025/26 — NO personal relief line item exists | Backfilled 2026-09-02, sync-gap: this session's Ti"
     },
     {
       "key": "paye_p9_deadline",
@@ -388,17 +184,17 @@
     },
     {
       "key": "nssf_employer_rate",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "NSSF official website — inference test after 300 pairs confirmed 10% is now learned"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of NSSF Act Cap.50, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf. NSSF Act Cap.50 First Schedule (made under ss.5A(c"
     },
     {
       "key": "nssf_total_rate",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "NSSF official website"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of NSSF Act Cap.50, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf. NSSF Act Cap.50 First Schedule (made under ss.5A(c"
     },
     {
       "key": "nssf_penalty",
@@ -937,7 +733,7 @@
       "status": "unknown",
       "verified_as_at": "unknown",
       "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "TanzaniaInvest VAT Guide; PwC Tax Summaries Tanzania; TRA.go.tz"
+      "verified_by_excerpt": "TanzaniaInvest VAT Guide; PwC Tax Summaries Tanzania; TRA.go.tz | Backfilled 2026-09-02, sync-gap: this session's Tier 1 pass (PROGRESS.md, 2026-09-01) called t"
     },
     {
       "key": "gn487a_mgeni_cap357_definition",
@@ -975,6 +771,307 @@
       "verified_by_excerpt": "Direct read (2026-09-02) of Tax Administration Act, Cap.438 R.E.2019, s.64 (\"Restraint of assets\"), downloaded directly via curl from tra.go.tz/images/uploads/a"
     },
     {
+      "key": "trademark_fee_for_explanation_of_decision",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_opposition_notice",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_responding_to_opposition",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_hearing_opposition",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_single_mark_registration",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_series_of_marks_first_mark",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_series_of_marks_subsequent_mark",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_renewal_of_registration",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_renewal_of_series_of_marks_first_mark",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_renewal_of_series_of_marks_subsequent_mark",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_additional_fee_by_regulation_54",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_refund_of_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_registration_of_subsequent_proprietor",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_change_of_proprietor_or_user_same_address",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_any_other_entry",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_change_of_business_address",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "trademark_fee_for_dissolution_of_partnership",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Alama za Biashara na Huduma\" (Trademark and Service Mark Fees) page, cached locally at data/source_document"
+    },
+    {
+      "key": "company_share_value_threshold_1_max",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_registration_fee_1",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_share_value_threshold_2_min",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_share_value_threshold_2_max",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_registration_fee_2",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_share_value_threshold_3_min",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_share_value_threshold_3_max",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_registration_fee_3",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_share_value_threshold_4_min",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_share_value_threshold_4_max",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_registration_fee_4",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_share_value_threshold_5_min",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_registration_fee_5",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_registration_fee_no_share_capital",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "memorandum_articles_of_association_filing_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "stamp_duty_per_copy_memorandum_articles_copy",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "stamp_duty_form_14b_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_name_reservation_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "company_name_change_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "document_acceptance_registration_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "late_filing_penalty_monthly_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "annual_return_filing_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "document_certification_fee_per_page",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "file_search_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "file_search_report_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "certified_copy_agreement_law_constitution_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
       "key": "document_filing_fee_section_12_act_excluding_balance_sheet",
       "status": "primary_verified",
       "verified_as_at": "2026-09-01",
@@ -989,11 +1086,32 @@
       "verified_by_excerpt": "Direct read of BRELA's own fee schedule, 2026-09-01: two distinct USD 220 line items for foreign companies ('Document filing' and 'File opening')."
     },
     {
+      "key": "late_filing_penalty_monthly_fee_section_12_act",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
+      "key": "certified_copy_certificate_of_registration_fee",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official \"Ada za Kampuni\" (Company Fees) page, cached locally at data/source_documents/brela/brela_ada_kampuni_v2.html AND r"
+    },
+    {
       "key": "act_section_12",
       "status": "primary_verified",
       "verified_as_at": "2026-08-31",
       "reason": "direct/verbatim primary-source read with an explicit date",
       "verified_by_excerpt": "Direct read of Companies Act Cap.212 table of contents and body text, 2026-08-31. Part XII (ss.314-319) is confirmed to be \"Winding up of unregistered companies"
+    },
+    {
+      "key": "osiha_act_citation",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Cross-referenced (2026-09-02) against this same session's OSHA_safety_officer_threshold grounding ('Occupational Health and Safety Act Cap.297 s.11(1)...', dire"
     },
     {
       "key": "health_and_safety_act_citation",
@@ -1008,6 +1126,13 @@
       "verified_as_at": "2026-09-01",
       "reason": "direct/verbatim primary-source read with an explicit date",
       "verified_by_excerpt": "Direct read of Cap.297 s.60 primary text, 2026-09-01."
+    },
+    {
+      "key": "legal_citation_sdl",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Cross-referenced (2026-09-02) against chike/rules_engine/rates.py FINANCE_ACT_VERIFIED_THROUGH['SDL'], grounded earlier this same session during the Finance Act"
     },
     {
       "key": "legal_citation_tax_administration",
@@ -1045,6 +1170,27 @@
       "verified_by_excerpt": "Secondary-source corroboration (law-firm/BRELA-adjacent summaries of the 2021 amending Act), 2026-09-01 -- section text itself not directly read this pass."
     },
     {
+      "key": "registration_certificate_processing_time",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official FAQ document, cached locally at data/source_documents/brela/brela_faq_official.pdf (1343 lines, covers companies, b"
+    },
+    {
+      "key": "annual_return_form_number",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official FAQ document, cached locally at data/source_documents/brela/brela_faq_official.pdf (1343 lines, covers companies, b"
+    },
+    {
+      "key": "beneficial_owner_information_penalty_maximum",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official FAQ document, cached locally at data/source_documents/brela/brela_faq_official.pdf (1343 lines, covers companies, b"
+    },
+    {
       "key": "business_name_maintenance_fee",
       "status": "primary_verified",
       "verified_as_at": "2026-09-01",
@@ -1064,6 +1210,13 @@
       "verified_as_at": "unknown",
       "reason": "no verified_by field at all",
       "verified_by_excerpt": ""
+    },
+    {
+      "key": "application_fee_patent",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of BRELA's official FAQ document, cached locally at data/source_documents/brela/brela_faq_official.pdf (1343 lines, covers companies, b"
     },
     {
       "key": "patent_term",
@@ -1445,10 +1598,10 @@
     },
     {
       "key": "nssf_calculation_example",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "no verified_by field at all",
-      "verified_by_excerpt": ""
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of NSSF Act Cap.50, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf. NSSF Act Cap.50 First Schedule (made under ss.5A(c"
     },
     {
       "key": "business_licence_expiry_30_june",

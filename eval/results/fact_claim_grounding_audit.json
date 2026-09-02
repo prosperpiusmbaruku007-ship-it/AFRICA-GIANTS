@@ -9,7 +9,7 @@
     "clean_on_cited_sector_claim": true,
     "clean_on_generic_scope_regression": true
   },
-  "facts_checked": 150,
+  "facts_checked": 201,
   "facts_flagged": 2,
   "flagged": [
     {
