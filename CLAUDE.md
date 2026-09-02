@@ -1200,6 +1200,40 @@ confirms the incumbent instead, the correct action is recording that the fact su
 — upgrading its citation/`verified_by` from absent to primary-sourced — not editing its value. A
 pass that only ever edits never earns the confidence to also NOT edit when the evidence says not to.
 
+### R29 — A CITATION CAN BE REAL AND STILL BE WRONG, IF THE INSTRUMENT IT NAMES HAS SINCE BEEN AMENDED. THREE DISTINCT FAILURE MODES SHARE ONE SYMPTOM AND NEED THREE DIFFERENT CHECKS.
+
+**Every provenance check this project has built — R4's citation-laundering list, R28's
+"verify the candidate before editing," the whole-corpus grounding audits — asks one question:
+does this number trace to something real?** `vat_deferment_minimum_value` (2026-09-02) is proof
+that "yes" is not the same claim as "yes, and it's still current." Name the three modes
+separately, because they need different checks and none of the checks this project already has
+would have caught the third one:
+
+| mode | what's wrong | example | what catches it |
+|---|---|---|---|
+| **UNTRACEABLE** | the citation names nothing real — fabrication or laundering | `efd_threshold_tzs_11m` (2026-08-29): a plausible figure with an invented citation chain | R4's laundering list; fetching the named source and finding it doesn't say what's claimed |
+| **OUT-OF-DATE** | the citation is real, but it's a superseded EDITION of the same instrument (a consolidated Act printing an old table) | Cap.332 R.E.2019 hosted on tra.go.tz itself, still printing the pre-2022 presumptive-tax bands (see "A CONSOLIDATED ACT IS NOT THE CURRENT LAW", above) | reading every amending Act forward from the edition's cover date, per that section's own protocol |
+| **CORRECTLY-CITED-BUT-SUPERSEDED** | the citation is real, dated correctly AS OF WHEN IT WAS WRITTEN, and simply predates a LATER, DIFFERENT instrument that changed the figure | `vat_deferment_minimum_value`: two secondary sources agreed on TZS 20,000,000 — real, and correct from 2015 until GN 608/2018 halved it to 10,000,000. Neither source disclosed which regime it was describing; neither disclosed a date the figure was current AS OF. The correction that "fixed" 10M to 20M was itself wrong, produced by exactly this failure — **a wrong correction, not a missed one.** | **nothing this project already had.** Not R4 (both sources were real, whitelisted-adjacent, non-laundered). Not R28's single-candidate-verification (the candidate WAS checked against a primary-ish source — TRA's own portal — and still lost, because the check compared two undated claims to each other, not to a dated instrument). Not the out-of-date-Act protocol (there is no single consolidated document to walk forward from; the superseding instrument is a DIFFERENT numbered GN, not a later edition of the same one). |
+
+**Why the third mode is the dangerous one.** The first two modes fail by being CAUGHT — a
+citation-laundering check flags mode 1, the "read every amending Act" protocol closes mode 2. Mode
+3 fails by **agreeing with itself**: two independently-worded sources converge on the same
+number, which is exactly the signal this project's own R28/EFD precedent treats as reassuring. It
+isn't. **Two sources agreeing is evidence they're both right, or evidence they're both frozen at
+the same earlier date — and nothing about the agreement itself tells you which.**
+
+**In practice: before treating a real, correctly-cited figure as current, ask what would make it
+WRONG despite being correctly cited — a later, separate instrument amending the same subject
+matter, not a later edition of the same document.** For a rate, threshold, or fee sourced to a
+Regulation or GN specifically (as opposed to the parent Act), search for AMENDING Regulations/GNs
+by name and date, the same discipline "A CONSOLIDATED ACT IS NOT THE CURRENT LAW" already applies
+to Acts — a Regulation can be amended by a later Regulation exactly as an Act is amended by a
+later Finance Act, and this project had a protocol for the Act case and none for the Regulation
+case until this incident. **A source that states a figure without also stating the date it was
+current AS OF is not fully dated, even if it names a real, checkable instrument** — ask for that
+date, or find the instrument's own gazette date, before trusting convergence between two such
+sources as confirmation.
+
 See PROGRESS.md for current project status and next actions.
 
 ---
