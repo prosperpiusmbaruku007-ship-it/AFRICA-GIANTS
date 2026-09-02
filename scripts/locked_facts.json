@@ -228,12 +228,12 @@
       "mwajiri.*nssf.*asilimia 12(?!\\s*/)",
       "nssf.*asilimia 12(?!\\s*/)"
     ],
-    "primary_source": "https://www.nssf.go.tz/pages/payment-of-contributions",
-    "verified_by": "NSSF official website — inference test after 300 pairs confirmed 10% is now learned",
+    "primary_source": "NSSF Act, Cap.50 R.E.2015, First Schedule (ss.5A(c), 12(1)), G.N. No. 286 of 2000",
+    "verified_by": "Direct read (2026-09-02) of NSSF Act Cap.50, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf. NSSF Act Cap.50 First Schedule (made under ss.5A(c) and 12(1)), G.N. No. 286 of 2000: \"Employers share deductible from wages by Employer: Ten cents for every complete shilling of wages [10%]. Statutory Contributions for each employee: Twenty cents for every complete shilling of wages [20%].\" Confirms employer share 10%, total statutory contribution 20% (implying employee share 20%-10%=10% by construction, matching the already-locked nssf_split_triggers documentation of the standard 10/10 split).",
     "effective_date": "2018-07-01",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, 2026-09-02) -- was CONFIRMED",
     "adversarial_note": "Base model frequently says 6% — confirmed fixed after 300-pair training",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "nssf_total_rate": {
     "fact": "NSSF total contribution is 20% of gross wage (10% employer + 10% employee)",
@@ -248,11 +248,11 @@
       "10% only total",
       "nssf.*asilimia 16|asilimia 16.*nssf"
     ],
-    "primary_source": "https://www.nssf.go.tz/pages/payment-of-contributions",
-    "verified_by": "NSSF official website",
+    "primary_source": "NSSF Act, Cap.50 R.E.2015, First Schedule (ss.5A(c), 12(1)), G.N. No. 286 of 2000",
+    "verified_by": "Direct read (2026-09-02) of NSSF Act Cap.50, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf. NSSF Act Cap.50 First Schedule (made under ss.5A(c) and 12(1)), G.N. No. 286 of 2000: \"Employers share deductible from wages by Employer: Ten cents for every complete shilling of wages [10%]. Statutory Contributions for each employee: Twenty cents for every complete shilling of wages [20%].\" Confirms employer share 10%, total statutory contribution 20% (implying employee share 20%-10%=10% by construction, matching the already-locked nssf_split_triggers documentation of the standard 10/10 split).",
     "effective_date": "2018-07-01",
-    "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "status": "CONFIRMED (statute-tier, 2026-09-02) -- was CONFIRMED",
+    "verified_as_at": "2026-09-02"
   },
   "nssf_penalty": {
     "fact": "NSSF late payment penalty is 5% per month of unpaid contributions",
@@ -2124,7 +2124,14 @@
     "correction_note": "Original bare value was 'Kifungu XII cha Sheria' (Section/Part XII of the Act), with no Act name given -- reconstructed from context (neighbouring keys document_filing_fee_section_12_act_excluding_balance_sheet, balance_sheet_filing_fee_section_12_act, late_filing_penalty_monthly_fee_section_12_act, and CLAUDE.md Section 11's own 'Foreign company (Section XII) late filing penalty: USD 25 per month' line) to be about the Companies Act's foreign/external-company regime. Direct read of the Act found this regime is Part XIII (ss.320-328), not Part XII. THE SAME ERROR IS BAKED INTO CLAUDE.md SECTION 11 ITSELF, and this fact very likely originated from that document rather than the other way around -- corrected there in the same pass (see PROGRESS.md). NOT YET RESOLVED: the three neighbouring fee-figure keys (document_filing_fee_section_12_act_excluding_balance_sheet, balance_sheet_filing_fee_section_12_act, late_filing_penalty_monthly_fee_section_12_act) still carry the wrong part number IN THEIR KEY NAMES, and their USD 220/220/25 figures were not independently confirmed against a primary Fees Regulation during this pass (that regulation could not be located). Renaming these keys touches scripts/precompute_rag_embeddings.py's embedding-group list and would need a coordinated fix + re-verification of the dollar figures, not a name-only patch -- flagged for a future pass rather than done here.",
     "verified_as_at": "2026-08-31"
   },
-  "osiha_act_citation": "Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003",
+  "osiha_act_citation": {
+    "fact": "Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003 (Occupational Health and Safety Act No.5 of 2003, Cap.297) -- OSHA's governing Act.",
+    "correct_value": "Occupational Health and Safety Act No.5 of 2003 (Cap.297)",
+    "primary_source": "Occupational Health and Safety Act, Cap.297 R.E.2019",
+    "verified_by": "Cross-referenced (2026-09-02) against this same session's OSHA_safety_officer_threshold grounding ('Occupational Health and Safety Act Cap.297 s.11(1)...', direct read) and the already-shipped RAG group passage text ('Kifungu 16(2), Sheria ya Afya na Usalama Mahali pa Kazi Na.5 ya 2003') -- both independently use the identical citation. A sync-gap backfill, not new research.",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
   "health_and_safety_act_citation": {
     "fact": "Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003, Sura 297 (Occupational Health and Safety Act, Act No.5 of 2003, Cap.297 R.E.2023) -- same Act as osiha_act_citation; this key is kept as a separate retrieval entry point but must carry the same, fuller citation, not a generic 'Health and Safety Act' name that risks confusion with the Public Health Act.",
     "correct_value": "Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003, Sura 297",
@@ -2150,7 +2157,14 @@
   "vat_registration_notification_deadline_commissioner": "14 days",
   "vat_return_submission_deadline": "20 days_of_month",
   "form_number_payment_credit_slip": "ITX 300.01.E",
-  "legal_citation_sdl": "Sheria ya Elimu na Mafunzo ya Ufundi, Sura ya 82, Kifungu cha 14",
+  "legal_citation_sdl": {
+    "fact": "Sheria ya Elimu na Mafunzo ya Ufundi, Sura ya 82, Kifungu cha 14 (Vocational Education and Training Act, Cap.82, s.14) -- the SDL rate provision.",
+    "correct_value": "Vocational Education and Training Act, Cap.82, s.14",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2019, s.14",
+    "verified_by": "Cross-referenced (2026-09-02) against chike/rules_engine/rates.py FINANCE_ACT_VERIFIED_THROUGH['SDL'], grounded earlier this same session during the Finance Act 2026 freshness audit: 'Vocational Education and Training Act Cap.82 s.14' -- 'FA2026 Part XXVII (ss.97-98) read in full: touches only s.19 (funding-source wording), not s.14 (the SDL rate). Confirmed unchanged.' Same citation, same provision, backfilled into this fact's own object rather than left in the engine constant's comment only (a sync-gap, same shape as the reconciliation entry above).",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "verified_as_at": "2026-09-02"
+  },
   "legal_citation_tax_administration": {
     "fact": "Sheria ya Usimamizi wa Kodi, Sura ya 438, Kifungu cha 43 (Tax Administration Act, Cap.438, s.43 -- 'Maintenance of Documents'). Section 11 (the prior citation) is 'Private and Class Rulings', an unrelated provision.",
     "correct_value": "Sheria ya Usimamizi wa Kodi, Sura ya 438, Kifungu cha 43",
@@ -2751,9 +2765,10 @@
   "nssf_calculation_example": {
     "fact": "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo ni kwa mfanyakazi mmoja tu). Hesabu: kila mfanyakazi analipa NSSF ya TZS 120,000 (asilimia 20 ya mshahara wake), kisha zidisha kwa wafanyakazi 12 = TZS 1,440,000 jumla.",
     "correct_value": "NSSF total for 12 employees at 600,000 each = TZS 1,440,000 (NOT 120,000 which is per-employee)",
-    "status": "CONFIRMED",
-    "primary_source": "nssf.go.tz",
-    "verified_as_at": "unknown"
+    "status": "CONFIRMED (statute-tier, 2026-09-02) -- was CONFIRMED (portal-tier)",
+    "primary_source": "NSSF Act, Cap.50 R.E.2015, First Schedule (ss.5A(c), 12(1))",
+    "verified_as_at": "2026-09-02",
+    "verified_by": "Direct read (2026-09-02) of NSSF Act Cap.50, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf. NSSF Act Cap.50 First Schedule (made under ss.5A(c) and 12(1)), G.N. No. 286 of 2000: \"Employers share deductible from wages by Employer: Ten cents for every complete shilling of wages [10%]. Statutory Contributions for each employee: Twenty cents for every complete shilling of wages [20%].\" Confirms employer share 10%, total statutory contribution 20% (implying employee share 20%-10%=10% by construction, matching the already-locked nssf_split_triggers documentation of the standard 10/10 split). The 20% total rate directly supports this example's arithmetic (TZS 600,000 x 20% = TZS 120,000 per employee; x 12 employees = TZS 1,440,000 total)."
   },
   "business_licence_expiry_30_june": {
     "fact": "Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara huisha tarehe 30 Juni kila mwaka, hivyo huhuishwa kila mwaka kabla ya tarehe hiyo.",
