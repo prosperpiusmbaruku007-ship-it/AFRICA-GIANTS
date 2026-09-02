@@ -287,6 +287,21 @@ def test_numeric_query_does_not_duplicate_when_topic_already_in_top3():
 
 
 # --- Integration: real index + real e5 model (skipped if unavailable) -------
+#
+# STRUCTURAL LIMIT, recorded 2026-09-02 after it was hit for real. The skipif below only
+# catches file-absence; the try/except around the model load only catches a clean Python
+# exception (network failure, missing package). NEITHER CAN CATCH A NATIVE SEGFAULT inside the
+# model load itself — that crashes the whole interpreter before any except clause runs. These
+# two tests sat "safely skipped" for months, but only because the e5 model had never been
+# cached on this machine; the moment unrelated verification work cached it, `pytest tests/`
+# stopped skipping and started segfaulting, taking the pre-push hook down with it. A guard
+# whose skip path depends on a dependency staying absent was never actually proving these tests
+# were safe to run by default — the same family as the dead RAG-regen anchors and the
+# once-unstaged secret scan (CLAUDE.md R26). The real fix is `pyproject.toml`'s addopts now
+# deselecting `integration` alongside `network` by default (see the comment there): this file's
+# skipif/try-except pair is a courtesy for someone running `-m integration` deliberately, not a
+# safety net for the default suite. Do not restore `integration` to the default run on the
+# strength of this skipif — it cannot cover the failure mode that actually happened.
 
 # Copied VERBATIM from kaggle/regenerate_rag_e5.py (critical_queries, lines ~132-151)
 # — reused, not invented. The 'query: ' prefix is stripped here because

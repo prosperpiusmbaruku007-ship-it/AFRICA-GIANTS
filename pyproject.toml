@@ -43,11 +43,26 @@ where = ["src"]
 # connect timeout), and the failure had already been misattributed twice, once to page-file
 # exhaustion and once to a non-reproducible defect.
 #
-# The default run is now deterministic: 1263 tests, ~79s, no sockets. To run the live ones
-# deliberately (a CLI -m wins over this one):
+# `integration` deselected too, for a related but distinct reason (2026-09-02). Its two tests
+# (tests/test_retrieval.py) guard themselves with a skipif on index-file existence plus a
+# try/except around the e5 model load — a pattern that only catches a clean failure (network
+# down, model absent). It CANNOT catch a native segfault inside the model load, which bypasses
+# Python exception handling entirely. That is exactly what happened: the e5 model got cached
+# locally as a side effect of unrelated verification work, the load stopped raising a catchable
+# exception, and the pre-push hook's plain `pytest tests/` crashed the whole suite with SIGSEGV.
+# The tests were dormant for months not because they were safe, but because the model was never
+# cached — a test that only passes/skips when a dependency is absent was never actually proving
+# anything, the same family as the dead RAG-regen anchors and the unstaged secret scan (R26).
+# `integration` was always meant to gate exactly this — GPU/heavy-model tests — so excluding it
+# by default is the marker doing its stated job, not a new bypass; run it deliberately with
+# `pytest tests/ -m integration` on a machine prepared to eat the crash risk.
+#
+# The default run is now deterministic: no sockets, no native model load. To run either
+# excluded group deliberately (a CLI -m wins over this one):
 #     pytest tests/ -m network
-addopts = "-m 'not network'"
+#     pytest tests/ -m integration
+addopts = "-m 'not network and not integration'"
 markers = [
-    "integration: requires the real RAG index + e5 model (network/GPU); auto-skipped when unavailable",
+    "integration: requires the real RAG index + e5 model (network/GPU). Deselected by default via addopts, same as `network` — NOT because its skipif reliably protects a bare `pytest tests/` run, but because it can't: the skipif only catches file-absence, and the try/except around the model load can't catch a native segfault (see the comment above `addopts`). Run deliberately with `-m integration` on a machine that can accept the crash risk.",
     "network: makes a LIVE call to a deployed endpoint. Deselected by default via addopts — run with `-m network`. A failure here is evidence about the network or production, NEVER about the code under test.",
 ]

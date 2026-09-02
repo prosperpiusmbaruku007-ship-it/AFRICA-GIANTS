@@ -1,11 +1,60 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-09-01 (Tier 3 verification + fixes; whole-corpus picture after Tier 1+2+3;
-corporate/partnership tax source pass complete; 🔴 PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT
-found and fixed same day; Finance Act 2026 read in full and the staleness-check mechanism built;
-PAYE_NONRESIDENT_RATE grounded; verified_as_at bootstrap census run across all 250 locked
-facts, extended to the 28 Finance-Act-bound ones — see "GROUNDED IS A SNAPSHOT, NOT A
-PROPERTY" below)
+Last updated: 2026-09-02 (pre-push hook crash fixed at the marker level — `integration`
+deselected by default alongside `network`, and the skipif that couldn't actually protect it
+documented as such; see below. Carries forward 2026-09-01: Tier 3 verification + fixes;
+whole-corpus picture after Tier 1+2+3; corporate/partnership tax source pass complete; 🔴
+PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT found and fixed same day; Finance Act 2026 read in
+full and the staleness-check mechanism built; PAYE_NONRESIDENT_RATE grounded; verified_as_at
+bootstrap census run across all 250 locked facts, extended to the 28 Finance-Act-bound ones —
+see "GROUNDED IS A SNAPSHOT, NOT A PROPERTY" below)
+
+---
+
+## 🔧 Pre-push hook crash: `integration` deselected by default, its skipif was never a real guard, 2026-09-02
+
+**What happened.** `git push` runs `.githooks/pre-push`, which runs a plain `pytest tests/`.
+That crashed with a Windows SIGSEGV inside `torch.storage.py` during a `SentenceTransformer`
+load in `tests/test_retrieval.py`'s two `@pytest.mark.integration` tests. Root cause fully
+traced, not guessed: those tests guard themselves with a `skipif` on index-file existence and a
+`try/except` around the actual model load. Both only catch a *clean* failure — missing files,
+a network-download exception. **Neither can catch a native segfault**, which crashes the
+interpreter before any Python `except` clause runs. The tests had been silently "safe" for
+months only because the e5 model was never cached locally on this machine; this same session's
+earlier ask-alignment verification work (`eval/index_quality/verify_regen_guard_retrievability.py`)
+cached it for the first time, which is what flipped the load from "fails cleanly, skip" to
+"crashes the process."
+
+**The fix, and why it's the right one rather than the bypass.** `CHIKE_SKIP_PREPUSH=1` was
+available and declined — it would have pushed unverified past a *known-red* offline suite
+whenever anyone hit this again, for the whole life of the repo. Instead: `pyproject.toml`'s
+`addopts` now reads `-m 'not network and not integration'` (was `-m 'not network'` only). The
+`integration` marker already existed and already meant "requires the real RAG index + e5 model
+(network/GPU)" — deselecting it by default is that marker finally doing the job its own
+docstring always claimed, not a new carve-out. The two tests remain runnable deliberately via
+`pytest tests/ -m integration` for anyone who wants to exercise them on a machine prepared to
+eat the crash risk. Commit: (this commit).
+
+**Two things recorded, per instruction, not just fixed:**
+
+1. **The skipif's stated protection was structurally unavailable, and now says so at the site.**
+   `tests/test_retrieval.py`, directly above both integration tests, now documents that the
+   skipif/try-except pair cannot cover a native segfault and was never a safety net for the
+   *default* suite — only a courtesy for someone running `-m integration` on purpose. Restoring
+   `integration` to the default run on the strength of that skipif would be re-introducing
+   exactly the failure that just happened; the comment exists so nobody does that without
+   rereading this.
+2. **A third instance of "a test that passes because a dependency is missing was never actually
+   passing."** The dead RAG-regen anchors (matched zero facts, concealed by an always-passing
+   sibling) and the unstaged `scan_for_keys.py` pre-push scan (scanned nothing, branched
+   correctly on a status that was always 0) are the first two — both audited and closed under
+   R26. This is the same shape arriving from a different direction: not a control that fires on
+   nothing, but a **test whose green/skip verdict depended on an environment fact (no cached
+   model) nobody had reason to track**, so the suite's colour silently depended on which
+   verification scripts had been run earlier in the same session. R26's audit
+   (`eval/controls/audit_control_fires.py`) covers controls that block; this is the same family
+   for tests that gate — worth a mention there next time that harness is extended, not a new
+   harness of its own.
 
 ---
 
