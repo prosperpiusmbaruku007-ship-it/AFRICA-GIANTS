@@ -8,8 +8,8 @@
     "_unresolved_items"
   ],
   "dict_shaped_facts_classified": 172,
-  "primary_verified": 31,
-  "unknown_backlog_dict_shaped": 141,
+  "primary_verified": 37,
+  "unknown_backlog_dict_shaped": 135,
   "unstructured_string_valued_facts": 78,
   "unstructured_facts_note": "These carry no verified_by/primary_source/any metadata field at all -- not processed as \"unknown\" alongside the dict-shaped facts because they cannot carry a verified_as_at field without first being converted from a bare string to a dict, which is a schema-migration decision bigger than this bootstrap census. Effectively unknown-or-worse; listed separately so they are not silently invisible.",
   "unstructured_facts": [
@@ -329,10 +329,10 @@
   "rows": [
     {
       "key": "paye_band_2_rate",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "AfroTools TRA 2025/26 verified July 2025"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-01) of Income Tax Act Cap.332 First Schedule para 1, band 2, re-confirmed against Finance Act 2021 s.25's own verbatim text (the Act that s"
     },
     {
       "key": "paye_penalty_rate",
@@ -581,10 +581,10 @@
     },
     {
       "key": "corporate_tax_rate",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "TRA Corporation Tax page"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read of Income Tax Act Cap.332 First Schedule para 3 -- corporate source pass, 2026-09-01. Every Finance Act 2019-2026 individually checked for changes t"
     },
     {
       "key": "wht_deadline",
@@ -700,10 +700,10 @@
     },
     {
       "key": "permit_class_d_does_not_exist",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "no verified_by field at all",
-      "verified_by_excerpt": ""
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of the Immigration Service Department's own \"Residence Permit Guidelines\" PDF, cached locally at data/source_documents/immigration/resi"
     },
     {
       "key": "gn487a_transitional_provision",
@@ -749,10 +749,10 @@
     },
     {
       "key": "nssf_payment_deadline",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "no verified_by field at all",
-      "verified_by_excerpt": ""
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of NSSF Act Cap.50 R.E.2015 s.14, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf: \"A contributing employer shall pay c"
     },
     {
       "key": "paye_bands_monthly_2025_26",
@@ -905,8 +905,8 @@
       "key": "efd_approved_supplier_verification",
       "status": "unknown",
       "verified_as_at": "unknown",
-      "reason": "no verified_by field at all",
-      "verified_by_excerpt": ""
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Live re-fetch (2026-09-02) of https://www.tra.go.tz/page/efd-vfd-suppliers via the r.jina.ai proxy (tra.go.tz direct fetch still fails with \"Parse Error: Invali"
     },
     {
       "key": "OSHA_annual_inspection",
@@ -1428,17 +1428,17 @@
     },
     {
       "key": "paye_bands_with_examples",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "no verified_by field at all",
-      "verified_by_excerpt": ""
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-01) of Income Tax Act Cap.332 First Schedule para 1 (individual PAYE table). FA2026 Part IX (ss.20-27) read in full: para 1 is not touched "
     },
     {
       "key": "sdl_calculation_example",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "no verified_by field at all",
-      "verified_by_excerpt": ""
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-01",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-01) of Vocational Education and Training Act Cap.82 s.14 (SDL rate). FA2026 Part XXVII (ss.97-98) read in full: touches only s.19 (funding-"
     },
     {
       "key": "nssf_calculation_example",
@@ -1480,7 +1480,7 @@
       "status": "unknown",
       "verified_as_at": "unknown",
       "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "BRELA official fee schedule, Jun 2026"
+      "verified_by_excerpt": "Live re-fetch of BRELA official fee page (2026-09-02), retrying the prior tooling-failure entry -- succeeded this time. Page (Swahili) states: \"Ada ya kuchelewa"
     },
     {
       "key": "osha_registration_before_operations",

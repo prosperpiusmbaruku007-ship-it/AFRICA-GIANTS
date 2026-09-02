@@ -23,12 +23,12 @@
       "9% kwa kipato cha paye",
       "second band.*9%(?! is incorrect| is wrong)"
     ],
-    "primary_source": "https://www.tra.go.tz/page/pay-as-you-earn-paye",
-    "verified_by": "AfroTools TRA 2025/26 verified July 2025",
+    "primary_source": "Income Tax Act, Cap.332 R.E.2019, First Schedule para 1; Finance Act 2021 s.25",
+    "verified_by": "Direct read (2026-09-01) of Income Tax Act Cap.332 First Schedule para 1, band 2, re-confirmed against Finance Act 2021 s.25's own verbatim text (the Act that set the current 8% rate). FA2026 Part IX read in full: para 1 not touched by s.27(a). See chike/rules_engine/rates.py FINANCE_ACT_VERIFIED_THROUGH['PAYE_BANDS']. Supersedes the prior secondary \"AfroTools\" citation.",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "unresolved_note": "Confirm via TRA IDRAS calculator before batch_004",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-01",
+    "correction_note": "2026-09-02: citation upgrade, no value change -- superseded the secondary \"AfroTools\" source with the primary Act text this session already read. Removed the stale unresolved_note (\"Confirm via TRA IDRAS calculator before batch_004\") since that confirmation has now happened, against a stronger source than the one the note asked for. Closes membership in \"the eleven\" (PROGRESS.md)."
   },
   "paye_penalty_rate": {
     "fact": "Late PAYE remittance penalty is 2.5% per month of unpaid amount",
@@ -783,11 +783,12 @@
       "kiwango.{0,20}kampuni.{0,20}35",
       "asilimia 35.{0,30}kodi.{0,20}kampuni"
     ],
-    "primary_source": "https://www.tra.go.tz/page/corporation-tax",
-    "verified_by": "TRA Corporation Tax page",
+    "primary_source": "Income Tax Act, Cap.332 R.E.2019, First Schedule para 3",
+    "verified_by": "Direct read of Income Tax Act Cap.332 First Schedule para 3 -- corporate source pass, 2026-09-01. Every Finance Act 2019-2026 individually checked for changes to para 3; this session's freshness audit additionally confirmed FA2026 s.27(a) touches only paras 2 and 4, not para 3. See chike/rules_engine/rates.py FINANCE_ACT_VERIFIED_THROUGH['CORPORATE_AND_PARTNERSHIP'] for the registry entry this citation mirrors (dual-file-sync). Value unchanged (30% standard / 25% DSE-listed); only the citation moved from a TRA portal page to the primary Act (R28).",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-01",
+    "correction_note": "2026-09-02: citation upgrade only, no value change -- closes this fact's membership in the \"still ungrounded\" list carried since the whole-corpus audit (PROGRESS.md \"the eleven\"). Grounding evidence already existed in rates.py from the same-day corporate/partnership source pass; this just cross-references it into the fact object rather than performing a new check."
   },
   "wht_deadline": {
     "fact": "Withholding tax must be remitted within 7 DAYS after end of the calendar month — NOT 7th of following month",
@@ -1090,9 +1091,10 @@
       "daraja d",
       "kibali cha darasa d"
     ],
-    "primary_source": "immigration.go.tz",
-    "verified_date": "2026-06-12",
-    "verified_as_at": "unknown"
+    "primary_source": "data/source_documents/immigration/residence_permit_guidelines.pdf (Immigration Service Department)",
+    "verified_as_at": "2026-09-02",
+    "verified_by": "Direct read (2026-09-02) of the Immigration Service Department's own \"Residence Permit Guidelines\" PDF, cached locally at data/source_documents/immigration/residence_permit_guidelines.pdf (immigration.go.tz itself is an unreadable JS shell, as the original Tier 3 pass found -- the guideline document was already cached from an earlier session and simply hadn't been checked as an alternative to the live site). Page 1: \"There are three types of Residence Permits which are Residence Permit Class A, B and C.\" Class A = self-employed/investor, Class B = \"expatriates working in company/private institutions\", Class C = \"researchers, retired persons, Missionaries, Volunteers etc.\" Section heading later in the document reads \"SPECIFIC REQUIREMENTS FOR REFUGEES FOR RESIDENCE PERMIT CLASS A, B, C AND PASSES\" -- confirming the closed set is A/B/C (+ a separate, non-class \"Passes\" category), no Class D anywhere in the document.",
+    "correction_note": "2026-09-02: grounded against the primary guideline document (cached locally, not fetched live -- immigration.go.tz itself remains an unreadable JS shell). No value change. Closes membership in \"the eleven\" (PROGRESS.md)."
   },
   "gn487a_transitional_provision": {
     "fact": "Non-citizens with valid licences at 28 July 2025 may continue until licence expiry. No renewal permitted. No new licences issued for prohibited activities.",
@@ -1196,16 +1198,17 @@
     "verified_as_at": "unknown"
   },
   "nssf_payment_deadline": {
-    "fact": "NSSF due by end of month following payroll month. Dataset had inconsistent dates (10th vs end of month) — always direct users to nssf.go.tz to confirm current deadline.",
-    "correct_value": "End of month following payroll — verify at nssf.go.tz",
+    "fact": "NSSF contributions are due \"within one month after the end of the month in respect of which the contributions are due and payable\" (NSSF Act Cap.50 s.14(1)) -- i.e. employers must remit within one calendar month of the payroll month ending. A contribution unpaid within that period draws a 5% per-month-or-part-month penalty (s.14(3)).",
+    "correct_value": "Within one month after the payroll month ends (NSSF Act Cap.50 s.14(1)); 5%/month penalty if late (s.14(3))",
     "wrong_patterns": [
       "nssf.*tarehe 10 au mwishoni mwa mwezi",
       "nssf.*tarehe 10 au mwisho wa mwezi"
     ],
-    "primary_source": "nssf.go.tz — verify current deadline",
-    "verified_date": "2026-06-16",
-    "status": "CONFIRMED — use hedged language",
-    "verified_as_at": "unknown"
+    "primary_source": "NSSF Act, Cap.50 R.E.2015, s.14(1) and (3)",
+    "status": "CONFIRMED -- grounded against primary Act text, hedge removed",
+    "verified_as_at": "2026-09-02",
+    "verified_by": "Direct read (2026-09-02) of NSSF Act Cap.50 R.E.2015 s.14, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf: \"A contributing employer shall pay contributions to the Fund... within one month after the end of the month in respect of which the contributions are due and payable\" (s.14(1)); \"If any contribution is not paid within the period stated under subsection (1), a sum equal to five per centum of the amount unpaid shall be added as penalty for each month or a part of a month\" (s.14(3)). Corroborated by NSSF's own cached payment-of-contributions page (data/source_documents/nssf/nssf_payment_contributions.html): \"The employer is required to remit contributions within one month from the month of payment of salaries.\" Neither source mentions a \"10th\" of the month anywhere -- the prior hedge's \"10th vs end of month\" conflict traces to somewhere else in the corpus, not to either of these two sources. NSSF Act confirmed ABSENT from Finance Act 2026's own list of amended Acts this same session (rates.py FINANCE_ACT_VERIFIED_THROUGH['NSSF']), so s.14 is current, not stale.",
+    "correction_note": "2026-09-02: upgraded from a deliberate hedge (portal-only, \"verify at nssf.go.tz\") to a grounded statutory citation. Value direction unchanged (\"end of month following payroll month\" was already the working assumption); now backed by the Act's own text plus the penalty detail. Closes membership in \"the eleven\" (PROGRESS.md)."
   },
   "paye_bands_monthly_2025_26": {
     "fact": "PAYE monthly bands 2025/26: Band 1: 0-270,000=0%; Band 2: 270,001-520,000=8%; Band 3: 520,001-760,000=20%; Band 4: 760,001-1,000,000=25%; Band 5: above 1,000,000=30%. No personal relief of TZS 26,000 exists.",
@@ -1530,19 +1533,19 @@
     "verified_as_at": "unknown"
   },
   "efd_approved_supplier_verification": {
-    "fact": "To verify that an EFD supplier/distributor (msambazaji) is TRA-approved, businesses should check the official TRA website (tra.go.tz) for the current list of approved EFD dealers. TRA publishes a register of approved EFD suppliers. Businesses should only purchase EFD machines from TRA-approved dealers — purchasing from unapproved suppliers may result in the machine not being activated by TRA. The TRA EFD page URL changed and was unavailable at time of writing.",
-    "correct_value": "Verify approved EFD supplier list at tra.go.tz — only purchase from TRA-registered dealers",
+    "fact": "To verify that an EFD supplier/distributor (msambazaji) is TRA-approved, businesses should check tra.go.tz/page/efd-vfd-suppliers, which publishes a \"List of Approved EFD/VFD Suppliers\" PDF. TRA defines an approved supplier as a certified entity \"by commissioner General for import, distribute and sell EFD/VFD, install, configure, integrate, train users\" and provide related support. Businesses should only purchase EFD machines from TRA-approved dealers -- purchasing from unapproved suppliers may result in the machine not being activated by TRA.",
+    "correct_value": "Verify approved EFD supplier list at tra.go.tz/page/efd-vfd-suppliers (published \"List of Approved EFD/VFD Suppliers\" PDF)",
     "wrong_patterns": [
       "unaweza kununua efd kutoka kwa muuzaji yeyote",
       "any supplier can sell EFD machines",
       "efd machine inaweza kununuliwa ovyo",
       "no need to verify EFD supplier with TRA"
     ],
-    "primary_source": "https://www.tra.go.tz — EFD page unavailable at time of writing",
-    "verified_date": "2026-06-19",
-    "status": "HEDGE — specific supplier list URL unverifiable; direct to tra.go.tz",
-    "training_instruction": "Direct businesses to tra.go.tz to verify current list of approved EFD suppliers. Use: 'angalia orodha ya wasambazaji walioidhinishwa na TRA kwenye tra.go.tz'.",
-    "verified_as_at": "unknown"
+    "primary_source": "https://www.tra.go.tz/page/efd-vfd-suppliers",
+    "status": "CONFIRMED -- specific URL now reachable, hedge resolved",
+    "verified_as_at": "unknown",
+    "verified_by": "Live re-fetch (2026-09-02) of https://www.tra.go.tz/page/efd-vfd-suppliers via the r.jina.ai proxy (tra.go.tz direct fetch still fails with \"Parse Error: Invalid header value char\", a known tooling issue for this domain, not a content issue). Page confirms: \"List of Approved EFD/VFD Suppliers\" with a direct link to a PDF roster, and defines an approved supplier as certified \"by commissioner General for import, distribute and sell EFD/VFD, install, configure, integrate, train users\". The specific URL that was \"unavailable at time of writing\" in the prior (2026-06-19) pass is reachable now -- closes the hedge, not a contradiction.",
+    "correction_note": "2026-09-02: upgraded from HEDGE to CONFIRMED -- the specific page was unreachable in the 2026-06-19 pass, reachable now via the r.jina.ai proxy workaround. No value change, only the citation firmed up. Closes membership in \"the eleven\" (PROGRESS.md). training_instruction dropped as redundant once the fact itself states the real URL. NOTE (2026-09-02): verified_as_at left as \"unknown\" deliberately -- this is a live REGULATOR-PORTAL confirmation, not a primary-STATUTE read, and the bootstrap census (scripts/bootstrap_verified_as_at.py) correctly does not classify portal-tier evidence as primary_verified. The value is real progress (closes an unreachable/hedge status) but sits in the same weaker evidentiary tier as other portal-only facts, not the tier reserved for a direct Act/Regulation read."
   },
   "OSHA_annual_inspection": {
     "fact": "OSHA conducts mandatory annual inspections of all workplaces in Tanzania. The OSHA compliance licence must be renewed every year.",
@@ -2368,15 +2371,19 @@
     "fact": "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
     "correct_value": "PAYE on TZS 800,000 = TZS 78,000 (final answer)",
     "status": "CONFIRMED",
-    "primary_source": "tra.go.tz",
-    "verified_as_at": "unknown"
+    "primary_source": "Income Tax Act, Cap.332 R.E.2019, First Schedule para 1; Finance Act 2021 s.25",
+    "verified_as_at": "2026-09-01",
+    "verified_by": "Direct read (2026-09-01) of Income Tax Act Cap.332 First Schedule para 1 (individual PAYE table). FA2026 Part IX (ss.20-27) read in full: para 1 is not touched by s.27(a) at all. Band 2 (8%) separately re-confirmed against Finance Act 2021 s.25's own verbatim text. See chike/rules_engine/rates.py FINANCE_ACT_VERIFIED_THROUGH['PAYE_BANDS'] for the registry entry this citation mirrors (dual-file-sync). TZS 78,000 on TZS 800,000 gross verified arithmetically against the 4-band table (0 + 20,000 + 48,000 + 10,000).",
+    "correction_note": "2026-09-02: citation upgrade only, no value change -- was CONFIRMED with no verified_by field at all. Closes membership in the \"still ungrounded\" list (PROGRESS.md \"the eleven\"). Grounding evidence already existed in rates.py from this session's Finance Act 2026 freshness audit."
   },
   "sdl_calculation_example": {
     "fact": "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wafanyakazi 12 wenye mshahara huo huo, SDL jumla ni TZS 252,000 (12 × 21,000).",
     "correct_value": "SDL = 3.5% per employee salary, sum across all employees",
     "status": "CONFIRMED",
-    "primary_source": "tra.go.tz",
-    "verified_as_at": "unknown"
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2019, s.14",
+    "verified_as_at": "2026-09-01",
+    "verified_by": "Direct read (2026-09-01) of Vocational Education and Training Act Cap.82 s.14 (SDL rate). FA2026 Part XXVII (ss.97-98) read in full: touches only s.19 (funding-source wording), not s.14. Confirmed unchanged. See chike/rules_engine/rates.py FINANCE_ACT_VERIFIED_THROUGH['SDL']. 3.5% x 600,000 = 21,000; x12 employees = 252,000 verified arithmetically.",
+    "correction_note": "2026-09-02: citation upgrade only, no value change -- was CONFIRMED with no verified_by field at all. Closes membership in \"the eleven\" (PROGRESS.md). Grounding evidence already existed in rates.py from this session's Finance Act 2026 freshness audit; the only prior open question (VETA Cap.82 s.14 staleness risk) is now resolved by that same-session direct read."
   },
   "nssf_calculation_example": {
     "fact": "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo ni kwa mfanyakazi mmoja tu). Hesabu: kila mfanyakazi analipa NSSF ya TZS 120,000 (asilimia 20 ya mshahara wake), kisha zidisha kwa wafanyakazi 12 = TZS 1,440,000 jumla.",
@@ -2444,13 +2451,14 @@
     "verified_as_at": "unknown"
   },
   "brela_foreign_late_filing_penalty": {
-    "fact": "Foreign (Section XII) company late filing penalty for annual return is USD 25 per month, distinct from the TZS 2,500/month penalty for local companies.",
-    "correct_value": "USD 25/month (foreign Section XII company)",
+    "fact": "Foreign company (Companies Act Cap.212, Part XIII, ss.320-328) late filing penalty for annual return is USD 25 per month, distinct from the TZS 2,500/month penalty for local companies.",
+    "correct_value": "USD 25/month (foreign company, Part XIII, ss.320-328)",
     "primary_source": "https://www.brela.go.tz/pages/tozo-za-kampuni",
-    "verified_by": "BRELA official fee schedule, Jun 2026",
+    "verified_by": "Live re-fetch of BRELA official fee page (2026-09-02), retrying the prior tooling-failure entry -- succeeded this time. Page (Swahili) states: \"Ada ya kuchelewa kufungua jalada/usajili wa waraka wowote inalipwa kwa Msajili (kwa mwezi au sehemu ya siku za mwezi) ni Dola za Kimarekani 25/=\" -- confirms USD 25/month verbatim. The page itself labels the provision \"Kifungu XII\" (colloquial shorthand BRELA's own site still uses); the Act's actual current numbering is Part XIII ss.320-328 per the same correction already applied to act_section_12 and its siblings on 2026-08-31 -- applied here too for consistency, not because BRELA's own wording was independently found wrong.",
     "effective_date": "2025-01-01",
     "status": "CONFIRMED -- extracted from brela_annual_return_fee (2026-08-17, duplicate-key sweep)",
-    "verified_as_at": "unknown"
+    "verified_as_at": "unknown",
+    "correction_note": "2026-09-02: value re-confirmed live (prior entry was a tooling failure, not a contradiction); citation label corrected from \"(Section XII)\" to \"(Part XIII, ss.320-328)\" to match the convention already established elsewhere in this project. Closes membership in \"the eleven\" (PROGRESS.md whole-corpus audit). NOTE (2026-09-02): verified_as_at left as \"unknown\" deliberately -- this is a live REGULATOR-PORTAL confirmation, not a primary-STATUTE read, and the bootstrap census (scripts/bootstrap_verified_as_at.py) correctly does not classify portal-tier evidence as primary_verified. The value is real progress (closes an unreachable/hedge status) but sits in the same weaker evidentiary tier as other portal-only facts, not the tier reserved for a direct Act/Regulation read."
   },
   "osha_registration_before_operations": {
     "fact": "A workplace/factory must be registered with OSHA BEFORE commencing business operations -- there is no grace period of N days after opening. Section 16(2), Occupational Health and Safety Act No. 5 of 2003.",

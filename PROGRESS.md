@@ -1,13 +1,136 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-09-02 (pre-push hook crash fixed at the marker level — `integration`
-deselected by default alongside `network`, and the skipif that couldn't actually protect it
-documented as such; see below. Carries forward 2026-09-01: Tier 3 verification + fixes;
-whole-corpus picture after Tier 1+2+3; corporate/partnership tax source pass complete; 🔴
-PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT found and fixed same day; Finance Act 2026 read in
-full and the staleness-check mechanism built; PAYE_NONRESIDENT_RATE grounded; verified_as_at
-bootstrap census run across all 250 locked facts, extended to the 28 Finance-Act-bound ones —
-see "GROUNDED IS A SNAPSHOT, NOT A PROPERTY" below)
+Last updated: 2026-09-02 ("the eleven" re-examined — 9 of 11 originally-ungrounded facts closed
+or genuinely-confirmed-unreachable, and 🔴 a LIVE CONTRADICTION found on a fact "corrected" only
+9 days ago (`vat_deferment_minimum_value`) — see below, action needed. Also: pre-push hook crash
+fixed at the marker level — `integration` deselected by default alongside `network`, and the
+skipif that couldn't actually protect it documented as such. Carries forward 2026-09-01: Tier 3
+verification + fixes; whole-corpus picture after Tier 1+2+3; corporate/partnership tax source
+pass complete; 🔴 PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT found and fixed same day; Finance
+Act 2026 read in full and the staleness-check mechanism built; PAYE_NONRESIDENT_RATE grounded;
+verified_as_at bootstrap census run across all 250 locked facts, extended to the 28
+Finance-Act-bound ones — see "GROUNDED IS A SNAPSHOT, NOT A PROPERTY" below)
+
+---
+
+# 🔴 LIVE CONTRADICTION FOUND, ACTION NEEDED: `vat_deferment_minimum_value` — TRA's own current page says 10,000,000, the fact (corrected 9 days ago) says 20,000,000. Not yet resolved either way.
+
+**Found while grounding `vat_deferment_form_number` (below), not while looking for this.**
+TRA's live "Value Added Tax (VAT) Deferment" page (`tra.go.tz/page/value-added-tax-vat-deferment`,
+fetched 2026-09-02 via the r.jina.ai proxy — direct fetch still fails on tra.go.tz's known
+header-parse issue) states, verbatim: **"VAT element on the imported capital goods is at least
+Tshs 10,000,000/="**. The locked fact says the opposite: `"...is TZS 20,000,000 -- NOT TZS
+10,000,000."`, `correction_note`: *"Prior fact stated TZS 10,000,000. Found while verifying a
+neighbouring fact... every source located for this specific figure states TZS 20,000,000."*
+
+**Why this isn't a simple revert.** Neither number is currently grounded in raw statute/
+regulation text — the same gap the 2026-08-31 correction's own `correction_note` already flagged
+("NOT independently read against the raw Act/regulation text... recommend upgrading to a direct
+primary-text read before treating this as fully closed"). What exists on each side:
+- **For 20,000,000:** "multiple non-lineage-linked sources" (named: "TRA VAT Deferment guidance
+  and Breakthrough Attorneys" — a law firm blog), never quoted verbatim in the correction_note,
+  convergent-secondary strength only.
+- **For 10,000,000:** TRA's own live, current, named page — but CLAUDE.md's own doctrine (§ "A
+  CONSOLIDATED ACT IS NOT THE CURRENT LAW", and "the regulator's own summary is not the statute
+  either") already proved a TRA-hosted page can itself be stale or wrong (the presumptive-tax
+  consolidation, the "At a Glance" transport row) — a portal page is not statute text either,
+  and this exact project has one prior confirmed TRA-portal fabrication on the books
+  (`efd_threshold_tzs_11m`). I could not locate the actual VAT Act Cap.148 s.11 text or its
+  General Regulations provision for this specific threshold (tried three URL guesses off the
+  page's own nav-menu links; none had a citable section number for the deferment scheme itself —
+  the live page names no GN or section for this threshold at all).
+- I did NOT find the "TRA VAT Deferment guidance" document the 2026-08-31 correction cited as
+  agreeing with 20,000,000 — it may be a different, older PDF than this live HTML page, which
+  would explain the conflict without either side being a fabrication. Not confirmed either way.
+
+**Not edited.** Per R28 (a correction candidate can be the wrong party, verify against primary
+source before editing, not after) applied in the direction it wasn't originally used for here:
+I have new evidence bearing on an *already-made* correction, not a candidate awaiting one, and
+the evidence conflicts with itself across sources rather than clearly favouring either figure.
+Flagging for the founder's call rather than silently re-flipping a locked, documented correction
+on a second round of unequal-strength secondary evidence — same mistake shape, opposite
+direction, is still the mistake. `locked_facts.json` is UNCHANGED for this fact pending
+direction. Corpus exposure not yet checked either way (blocked on knowing which value is right).
+
+---
+
+## ✅ "The eleven" re-examined, 2026-09-02 — 9 closed (6 grounded, 1 form-number confirmed
+correct with no edit needed, 2 genuinely still unreachable), 1 conflict surfaced (above), 1
+retired before this pass started.
+
+Population, as named in the 2026-09-01 whole-corpus entry ("the remaining ungrounded set,
+all named above rather than hidden in an aggregate"): 2 pending-core + Tier 1's 4 unresolved +
+Tier 3's 5 tooling-blocked = 11. Of those, two had already moved since that entry was written
+(checked, not assumed): `vat_registration_threshold` was grounded 2026-08-31 (GN 448Y direct
+read) and `amt_loss_companies_only` was retired/folded into `minimum_turnover_tax` during the
+corporate/partnership build — neither was re-touched here, both correctly absent from today's
+list. Working population: **9 facts** (`corporate_tax_rate`, `paye_bands_with_examples`,
+`paye_band_2_rate`, `sdl_calculation_example`, `brela_foreign_late_filing_penalty`,
+`gn605a_average_increase`, `nssf_payment_deadline`, `efd_approved_supplier_verification`,
+`permit_class_d_does_not_exist`) plus one bare-string fact checked opportunistically while
+chasing a neighbour (`vat_deferment_form_number`) and its neighbour `vat_deferment_minimum_value`
+(the conflict above).
+
+**Closed by re-using evidence this same session already produced — no new fetch needed (4):**
+`corporate_tax_rate`, `paye_bands_with_examples`, `paye_band_2_rate`, `sdl_calculation_example`.
+Each traces to `chike/rules_engine/rates.py`'s `FINANCE_ACT_VERIFIED_THROUGH` registry (built
+earlier today for the presumptive-tax incident and the class-closing staleness check) — a
+Cap.332 First Schedule para 1/3 or VETA Cap.82 s.14 direct read already happened this session
+for the *engine constant*; these four facts assert the identical values and simply hadn't had
+that same evidence cross-referenced into their own `verified_by` field. Citation upgrade only
+(R28), no value change, `verified_as_at` set to a real date in each case (bootstrap census
+re-run confirms: **37 of 172 dict-shaped facts now primary_verified**, up from 31).
+
+**Closed by retrying previously-blocked sources, per instruction (4, one portal-tier, three
+statute/document-tier):**
+- `permit_class_d_does_not_exist` — **statute-adjacent.** immigration.go.tz is still an
+  unreadable JS shell (unchanged), but its own "Residence Permit Guidelines" PDF was already
+  cached locally from an earlier session
+  (`data/source_documents/immigration/residence_permit_guidelines.pdf`) and had never been
+  checked as a fallback. Direct read: *"There are three types of Residence Permits which are
+  Residence Permit Class A, B and C"* and a later section header *"...RESIDENCE PERMIT CLASS A,
+  B, C AND PASSES"* — closed set, no Class D anywhere in the document. Value already correct.
+- `nssf_payment_deadline` — **statute-tier.** Same pattern: NSSF Act Cap.50 was already cached
+  locally (`data/source_documents/nssf/nssf_act_cap50.pdf`); s.14(1) read directly: *"...within
+  one month after the end of the month in respect of which the contributions are due and
+  payable"*, s.14(3): 5% per-month-or-part-month late penalty. Corroborated by NSSF's own cached
+  payment page, which also names no "10th" — the hedge's "10th vs end of month" conflict traces
+  to somewhere else in the corpus, not to either primary/portal source checked here. Upgraded
+  from a deliberate hedge to a grounded statutory citation.
+- `brela_foreign_late_filing_penalty` — **portal-tier (retry succeeded, prior entry was tooling
+  failure not contradiction).** BRELA's fee page confirms USD 25/month verbatim. Citation label
+  corrected from "(Section XII)" to "(Part XIII, ss.320-328)" to match the convention already
+  applied to `act_section_12` and siblings on 2026-08-31 — not previously applied here. BRELA's
+  own page still colloquially says "Kifungu XII"; recorded, not silently overridden (R25).
+- `efd_approved_supplier_verification` — **portal-tier (retry succeeded via r.jina.ai proxy).**
+  The specific URL (`tra.go.tz/page/efd-vfd-suppliers`) that was "unavailable at time of
+  writing" in the 2026-06-19 pass is reachable now and confirms a published "List of Approved
+  EFD/VFD Suppliers" PDF exists there. Upgraded HEDGE → CONFIRMED.
+- **Both portal-tier facts deliberately kept `verified_as_at: "unknown"`** — a live regulator
+  page is real evidence and closes an unreachable/hedge status, but it is not the same
+  evidentiary tier as a direct Act/Regulation read, and the bootstrap census's strictness (only
+  primary-source-READ language counts) should not be quietly weakened to make a count look
+  better. Recorded explicitly in each `correction_note`.
+
+**Checked opportunistically, confirmed correct as-is, no edit needed (1):** `vat_deferment_form_number`
+("ITX 247.02.E") — TRA's live VAT Deferment page states verbatim: *"The importer shall apply for
+deferment by duly filling form ITX 247.02.E (filled online in TanESW)"*. This same fetch is what
+surfaced the `vat_deferment_minimum_value` conflict above.
+
+**Genuinely still unreachable, tried multiple ways, not evidence of anything wrong (1):**
+`gn605a_average_increase` — tanzlii.org (four URL variants tried: direct, `/akn/tz/act/gn/...`
+without the point-in-time suffix, `media.tanzlii.org` PDF path, and the r.jina.ai proxy) returns
+a live CAPTCHA bot-check on every attempt, not a 403 or timeout — a materially different signal
+from the original "access-blocked" tooling failure logged 2026-09-01: this is an active block,
+not a dead link, and time alone will not resolve it. Left exactly as it was (secondary
+corroboration only, no contradicting evidence either).
+
+**Full offline suite green throughout:** 1427 passed (up from 1422 pre-pass — new facts
+satisfying existing parametrized checks), 0 failed, 6 deselected, 16 xfailed.
+`scripts/audit_fact_claim_grounding.py` re-run: same 2 pre-existing flags, 0 new. Secret scan
+clean. `scripts/bootstrap_verified_as_at.py` re-run to refresh the count (its own `measured`
+label still reads 2026-09-01 — the harness date is hardcoded, not dynamic; noted, not fixed,
+out of scope for this pass).
 
 ---
 
