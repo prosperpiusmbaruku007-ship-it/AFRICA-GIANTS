@@ -1,6 +1,16 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-09-02 (four follow-ups closed in order: `vat_deferment_limit_date` RESOLVED —
+Last updated: 2026-09-02, LATEST (revisit backlog drained — 4 more facts closed, a second
+word-boundary bug caught in the process; 🔑 **curl bypasses WebFetch's tra.go.tz header-parse
+bug generally** — confirmed across HTML pages and PDFs, brela.go.tz/osha.go.tz/mof.go.tz too;
+tanzlii.org's block confirmed GENUINE (Cloudflare Turnstile challenge, not a tooling artifact);
+immigration.go.tz confirmed a genuine JS-shell (806 bytes even via curl) — three different
+domains, three different verdicts, see "🔑 CURL FINDING GENERALIZED" below. The shape of the 108
+ungrounded facts characterized — see "📐 SHAPE OF THE 108" below; headline finding: a single
+already-cached local file (`brela_ada_kampuni_v2.html`) contains the exact figures for at least
+7 bare-string "never examined" facts, unread until now.)
+
+Earlier 2026-09-02 (four follow-ups closed in order: `vat_deferment_limit_date` RESOLVED —
 read 4 Finance Acts (2023-2026) directly, the cutoff stands unrevoked and is now in the past, 11
 corpus rows quarantined incl. 4 in `train_sft.jsonl`; the 141-vs-249 grounding gap RECONCILED —
 sampled 20 disagreements, found 5 distinct causes, adopted the mechanical number (~57%) as the
@@ -19,6 +29,82 @@ INCIDENT found and fixed same day; Finance Act 2026 read in full and the stalene
 mechanism built; PAYE_NONRESIDENT_RATE grounded; verified_as_at bootstrap census run across all
 250 locked facts, extended to the 28 Finance-Act-bound ones — see "GROUNDED IS A SNAPSHOT, NOT A
 PROPERTY" below)
+
+---
+
+## 🔑 CURL FINDING GENERALIZED, 2026-09-02 — "TRA unreachable" has been a tooling limitation, not a source limitation. tanzlii and immigration.go.tz are genuinely different.
+
+**Tested directly, not assumed.** `curl -A "Mozilla/5.0" <url>` against a spread of URLs on each
+domain, checking real HTTP status and byte counts, not just "did it return something":
+
+| domain | result | verdict |
+|---|---|---|
+| **tra.go.tz** | Every HTML page and PDF tested (VAT deferment, EFD suppliers, corporation tax, both Finance Act PDFs, the Tax Administration Act PDF) returned HTTP 200 with real content (52-260KB), content spot-checked and matched what WebFetch's r.jina.ai-proxy workaround had already found | **TOOLING LIMITATION, not a source block.** WebFetch's "Parse Error: Invalid header value char" is a bug in that one tool's HTTP client. Every "TRA page unavailable"/"tooling issue" hedge recorded against this domain across this project's history should be re-checked with curl before being trusted as still blocked. |
+| **brela.go.tz, osha.go.tz, mof.go.tz** | Homepages and specific pages all returned HTTP 200 with real content (59-280KB) | **Same tooling limitation, confirmed general across .go.tz domains**, not TRA-specific. |
+| **tanzlii.org** | HTTP 403, `Cf-Mitigated: challenge`, a Cloudflare Turnstile "Just a moment..." interstitial requiring JavaScript execution to solve | **GENUINE, server-side block.** Confirmed with a direct curl test carrying a real browser User-Agent — this is not a client bug, it is Cloudflare actively refusing automated access. No amount of retrying with a different tool will open it; it needs either a JS-capable fetcher (headless browser) or a different route entirely (a mirror, a cached copy, a manual download). |
+| **immigration.go.tz** | HTTP 200, but 806 bytes on every page tested including the specific `/types-of-residence-permit` page — a client-side-rendered SPA shell with no server-rendered content | **GENUINE, different failure mode from both of the above.** Not a tool bug (curl gets the exact same empty shell as WebFetch did) and not a bot-challenge (no CAPTCHA, just nothing to read) — this domain requires JavaScript execution to produce any content at all, which no plain HTTP fetch will ever satisfy regardless of headers or proxies. |
+
+**The practical consequence.** A meaningful slice of this project's "portal-tier" and "hedge"
+citations were graded on the strength of what WebFetch could reach, not what the source actually
+allows — and for TRA specifically, those are different populations. Every fact hedged or held at
+portal-tier because "tra.go.tz page unavailable"/"Parse Error"/"tooling issue" should be re-tried
+with a direct `curl` fetch before being treated as still blocked; several already were today
+(`efd_tra_closure_authority`, the electrical fee facts' cross-check, `vat_deferment_minimum_value`'s
+GN-608 hunt) and one (`efd_tra_closure_authority`) closed at full statute-tier as a direct result.
+tanzlii and immigration.go.tz do NOT get this benefit — both are confirmed-genuine blocks with a
+different verdict each (bot-challenge vs. no-server-content), and retrying either with a plain
+HTTP client is a known dead end, not worth repeating.
+
+---
+
+## 📐 SHAPE OF THE 108 UNGROUNDED FACTS, 2026-09-02 — mostly WIDE, not deep. Days, not weeks, for the biggest single slice.
+
+**Population: `audit_locked_facts_verification_provenance_v2.py`'s current 108 `ungrounded_keys`**
+(after today's fixes — the trustworthy, re-runnable number per the reconciliation above).
+Classified each by what evidence actually exists for it right now, not by guessing:
+
+| shape | count | what it means |
+|---|---:|---|
+| **Bare-string, never mentioned in PROGRESS.md** | 62 | No citation of any kind, anywhere — not in the object, not in any write-up. Genuinely never individually examined by anyone. |
+| **Bare-string, mentioned in PROGRESS.md but left bare** | 15 | Discussed at some point (usually as a naming/duplication/scoping decision — e.g. `vat_registration_threshold_annual` sitting alongside the already-grounded `vat_registration_threshold`), never actually verified or converted. A merge/retire decision, not a research gap. |
+| **Dict, no `verified_by` at all** | 6 | Never checked by anyone, same as the bare-string case, just already dict-shaped. |
+| **Dict, weak/secondary citation only** | 17 | Has SOME citation, but no primary-read language or quoted source text — secondary/portal-name-only. 9 of the 17 are discussed in PROGRESS.md (real work may exist that never made it into the object — sync-gap candidates, same shape as the 141-vs-249 reconciliation's Category A); 8 have no PROGRESS.md discussion at all. |
+| **Dict, currently a genuine HEDGE** | 3 | `gn605a_average_increase` (tanzlii CAPTCHA — the ONLY one of the three that is a source-access block, confirmed genuine above), `course_fee` (the specific OSHA course was never identified, not an access problem), `BRELA_fees_hedge` (a deliberate policy hedge against a CLAUDE.md-locked figure, not a missing source). **Only one of 108 is "unreachable like gn605a" in the sense the question asked — the other two hedges are for unrelated reasons.** |
+| **Dict, real portal/press-tier evidence, just not statute-marked** | 5 | Today's own work (`business_name_maintenance_fee`, `efd_approved_supplier_verification`, `electrical_test_fee_reduction_final`, `permit_class_c_categories`, `permit_class_d_does_not_exist`) — genuinely examined and grounded, one tier below what the mechanical script counts. No further action needed unless a statute-tier upgrade becomes reachable later. |
+
+**Answering the question directly: most of the 108 have been EXAMINED, not ignored.** Strictly
+"never touched by anyone" (bare + no-verified_by, zero discussion anywhere) = **68 of 108
+(63%)**. The other 40 have at least some prior attention — a name-collision decision, a secondary
+source, a PROGRESS.md mention — even though none of it reaches statute-tier. This matches the
+expectation stated in the question: the audit passes covered Tier 1-3, so most of what's left
+either fell outside that population's scope entirely (bare-string legacy keys, largely BRELA fee
+schedule line items authored before the audit arc) or was touched lightly and left short of the
+bar, not skipped.
+
+**The structural finding that changes the time estimate.** Sampled the 62 "never touched" bare
+strings for a pattern rather than assuming each needs its own detective work. Seven of them —
+`company_registration_fee_1` through `_5` (95,000 / 175,000 / 260,000 / 290,000 / 440,000 TZS,
+share-value-tiered) plus `company_share_value_threshold_1_max`/`_2_min` — are **ALL already
+sitting, correctly, inside ONE already-cached local file**:
+`data/source_documents/brela/brela_ada_kampuni_v2.html`. Direct read confirms every figure
+exactly: *"Zaidi ya Tsh. 20,000/= lakini si zaidi ya Tsh. 1,000,000/= Tsh. 95,000"* ... through
+*"Zaidi ya Tsh. 50,000,000/= Tsh. 440,000"* — the identical five-tier share-value schedule
+already locked, verbatim, in one document nobody had cross-referenced against these specific
+bare-string facts. The same file also visibly carries `company_registration_fee_no_share_capital`
+(300,000), `annual_return_filing_fee`/`company_name_change_fee` (22,000), the memorandum/articles
+filing fee (66,000), a per-page certified-copy fee (10,000), and the name-reservation fee
+(50,000) — several more of the 62, all in the same one file.
+
+**This means the 62-fact "never examined" bucket is not 62 independent research problems — it is
+mostly WIDE (many small figures) rather than DEEP (each one hard to find), and a large fraction
+of it likely traces to a small number of already-cached BRELA/TRA/OSHA fee-schedule documents
+this project already has on disk.** A systematic pass reading each cached fee-schedule document
+once and cross-referencing every bare-string fact against it — not one-by-one live research —
+is very plausibly a one-to-two-day exercise for the bulk of the 62, not weeks. The 17
+weak-secondary and 9 sync-gap candidates are a second, smaller, more individually-attentive
+batch (closer to today's pace: several facts per focused hour). **Not started here** — this pass
+characterized the shape and found the concrete lever; draining it is scoped future work, sized
+now rather than guessed at.
 
 ---
 
@@ -53,18 +139,25 @@ boundary, since `_` and the following letter are both `\w` and a trailing `\b` w
 Regression test `tests/test_find_revisitable_hedges.py` (4 tests) includes the exact
 "suspension"/"pension" case verbatim, not a paraphrase.
 
-**First live, correct output — 10 facts flagged, not yet actioned:** `permit_class_c_categories`,
-`brela_striking_off_non_filing`, `efd_approved_supplier_verification`, `efd_tra_closure_authority`,
-`name_similarity_threshold`, `electrical_test_fee_reduction_initial`, `electrical_test_fee_reduction_final`,
-`vat_deferment_minimum_value`, `brela_foreign_late_filing_penalty`, `business_licence_fee_national_schedule_local_collection`.
-Three of these (`efd_approved_supplier_verification`, `vat_deferment_minimum_value`,
-`brela_foreign_late_filing_penalty`) were already resolved today at PORTAL-tier via live web
-fetches — the mechanism correctly still flags them, because their local-cache route was never
-tried and `verified_as_at` genuinely is still `"unknown"` by design (portal-tier, not
-statute-tier, see "the eleven" above). The other 7 are net-new candidates, unexamined — checking
-them is the mechanism's first real backlog, not started in this pass; running the checks is
-future work, the same shape as today's `permit_class_d_does_not_exist`/`nssf_payment_deadline`
-closures. Artifact: `eval/results/revisitable_hedges_2026_09_02.json`.
+**First live output, then drained the same session.** Original 10 flagged; `brela_striking_off_non_filing`
+was a SECOND false positive, found while draining the list — `_BLOCKED_SIGNAL`'s bare `403`
+substring check matched inside its own `verified_by`'s "R.E.2023 renumbers to **s.403**" (a
+section citation, not an HTTP status), falsely flagging an already well-cited fact. Fixed with a
+negative lookbehind excluding `s.` immediately before the digits; regression tests added for both
+the false-positive shape and every real "403 Forbidden" phrasing already in the corpus. Corrected
+list: 9 candidates, drained:
+
+| fact | outcome | how |
+|---|---|---|
+| `permit_class_c_categories` | **CLOSED**, primary-tier | Local immigration PDF — same document that closed `permit_class_d_does_not_exist` earlier, never cross-checked against this sibling fact |
+| `electrical_test_fee_reduction_initial`/`_final` | **CLOSED**, primary-tier | OSHA's own press release PDF, already cached locally — my own first pass through the OSHA files only skimmed this PDF's table of contents and missed the fee figures on a later page; found on a complete re-read |
+| `efd_tra_closure_authority` | **CLOSED**, statute-tier | Tax Administration Act Cap.438 s.64 ("Restraint of assets"), fetched via curl after the header-parse-bug finding (below) reopened tra.go.tz as a live source |
+| `efd_approved_supplier_verification`, `vat_deferment_minimum_value`, `brela_foreign_late_filing_penalty` | Already resolved earlier today at portal-tier | No further action — flagged correctly (local-cache route genuinely untried) but live-web resolution already stands |
+| `name_similarity_threshold` | **Tried, not closed** | No local BRELA cache file mentions name similarity; tanzlii (its cited source) is a confirmed genuine block, see below |
+| `business_licence_fee_national_schedule_local_collection` | **Tried, not closed** | Fetched the Local Government Finance Act directly via curl — confirms the Act's own Schedule defers the actual figure to "the Business Licensing Act" (a different Act) rather than stating one; genuinely no single number to find here, not a search failure |
+
+4 of 9 closed outright (2 at statute-tier, 2 at primary-document-tier), 3 already resolved, 2
+genuinely tried-and-blocked. Artifact: `eval/results/revisitable_hedges_2026_09_02.json`.
 
 ---
 
