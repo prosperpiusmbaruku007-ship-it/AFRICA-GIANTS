@@ -8,8 +8,8 @@
     "_unresolved_items"
   ],
   "dict_shaped_facts_classified": 173,
-  "primary_verified": 38,
-  "unknown_backlog_dict_shaped": 135,
+  "primary_verified": 42,
+  "unknown_backlog_dict_shaped": 131,
   "unstructured_string_valued_facts": 77,
   "unstructured_facts_note": "These carry no verified_by/primary_source/any metadata field at all -- not processed as \"unknown\" alongside the dict-shaped facts because they cannot carry a verified_as_at field without first being converted from a bare string to a dict, which is a schema-migration decision bigger than this bootstrap census. Effectively unknown-or-worse; listed separately so they are not silently invisible.",
   "unstructured_facts": [
@@ -570,10 +570,10 @@
     },
     {
       "key": "permit_class_c_categories",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "Tanzania Immigration Department official website; corroborated 2026-08-31 via three government embassy sub-portals (un.tzembassy.go.tz, us.tzembassy.go.tz, in.t"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of the Immigration Service Department's own \"Residence Permit Guidelines\" PDF, cached locally at data/source_documents/immigration/resi"
     },
     {
       "key": "corporate_tax_rate",
@@ -969,10 +969,10 @@
     },
     {
       "key": "efd_tra_closure_authority",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "TRA EFD page unavailable — based on VAT Act Cap.148 enforcement framework"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of Tax Administration Act, Cap.438 R.E.2019, s.64 (\"Restraint of assets\"), downloaded directly via curl from tra.go.tz/images/uploads/a"
     },
     {
       "key": "document_filing_fee_section_12_act_excluding_balance_sheet",
@@ -1081,17 +1081,17 @@
     },
     {
       "key": "electrical_test_fee_reduction_initial",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "Secondary source (national newspaper quoting OSHA's CEO directly), 2026-09-01 -- underlying OSHA fee-schedule/Government Notice not located."
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of OSHA's OWN official press release/report (\"Taarifa ya Mafanikio na Changamoto...\"), cached locally at data/source_documents/osha/osh"
     },
     {
       "key": "electrical_test_fee_reduction_final",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "Secondary source (national newspaper quoting OSHA's CEO directly), 2026-09-01 -- underlying OSHA fee-schedule/Government Notice not located."
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of OSHA's OWN official press release/report (\"Taarifa ya Mafanikio na Changamoto...\"), cached locally at data/source_documents/osha/osh"
     },
     {
       "key": "vat_deferment_limit_date",

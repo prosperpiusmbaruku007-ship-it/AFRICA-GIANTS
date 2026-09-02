@@ -45,8 +45,13 @@ FACTS_PATH = os.path.join(REPO, 'scripts', 'locked_facts.json')
 SOURCE_DOCS_DIR = os.path.join(REPO, 'data', 'source_documents')
 OUT = os.path.join(REPO, 'eval', 'results', 'revisitable_hedges_2026_09_02.json')
 
+# `403` bare would match a section citation like "s.403" (found live 2026-09-02:
+# brela_striking_off_non_filing's own verified_by says "R.E.2023 renumbers to s.403", falsely
+# flagging an already well-cited fact as a blocked hedge). `(?<!s\.)` excludes exactly that
+# shape without needing an enumerated whitelist of legitimate phrasings ("403'd", "a 403",
+# "HTTP 403" all still match -- none of them have "s." immediately before the digits).
 _BLOCKED_SIGNAL = re.compile(
-    r'unavailable|blocked|js shell|403|captcha|tooling failure|unreachable|'
+    r'unavailable|blocked|js shell|(?<!s\.)\b403\b|captcha|tooling failure|unreachable|'
     r'unable to (locate|confirm)|could not (locate|confirm)|not (located|found)|'
     r'no source (found|located)', re.I)
 

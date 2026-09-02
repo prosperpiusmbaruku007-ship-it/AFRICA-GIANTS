@@ -752,8 +752,8 @@
     "verified_as_at": "unknown"
   },
   "permit_class_c_categories": {
-    "fact": "Class C Residence Permit is for researchers, students, retired persons, missionaries, volunteers, and other similar categories -- NOT for employed foreign workers.",
-    "correct_value": "Class C = researchers, students, missionaries, volunteers, retired persons",
+    "fact": "Class C Residence Permit is for researchers, retired persons, missionaries, former employees winding up affairs, individuals attending medical treatment, volunteers, intern students, parties/witnesses in court, buyers of real estate, and other similar categories -- NOT for employed foreign workers.",
+    "correct_value": "Class C = researchers, retired persons, missionaries, intern students, volunteers, medical-treatment attendees, and similar non-employment categories",
     "wrong_patterns": [
       "daraja C.*mfanyakazi ajiriwa",
       "Class C for workers",
@@ -763,12 +763,12 @@
       "Class C.*does not include students",
       "wanafunzi.*hawaruhusiwi.*daraja C"
     ],
-    "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
-    "verified_by": "Tanzania Immigration Department official website; corroborated 2026-08-31 via three government embassy sub-portals (un.tzembassy.go.tz, us.tzembassy.go.tz, in.tzembassy.go.tz) mirroring the Department's category listing, which explicitly includes 'students' -- immigration.go.tz's own page returns a JS shell to automated fetch, so the embassy mirrors were used as corroboration.",
+    "primary_source": "data/source_documents/immigration/residence_permit_guidelines.pdf (Immigration Service Department); https://www.immigration.go.tz/index.php/types-of-residence-permit (cited topic, unreachable to automated fetch)",
+    "verified_by": "Direct read (2026-09-02) of the Immigration Service Department's own \"Residence Permit Guidelines\" PDF, cached locally at data/source_documents/immigration/residence_permit_guidelines.pdf (immigration.go.tz remains an unreadable JS shell to automated fetch, confirmed again today -- the specific /types-of-residence-permit page returns only an 806-byte SPA shell via direct curl too, not a WebFetch-specific issue). Verbatim: \"Residence Permit Class 'C' is issued to a foreigner who are not eligible to obtain either Class 'A' or 'B' permits. These includes; researchers, retired persons, missionaries, former employees winding up affairs, individuals attending medical treatment, volunteers, intern, parties and witness in court of laws and tribunals, buyer of real estate e.tc.\" A later subsection heading confirms \"INTERN STUDENT\" as the specific sub-category, corroborating \"students\" from the 2026-08-31 embassy-mirror correction. Supersedes that corroboration with the Department's own primary document.",
     "effective_date": "2025-07-28",
     "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note)",
-    "correction_note": "The category list was INCOMPLETE: it omitted 'students' as an explicit Class C category, which the government's own embassy-portal mirrors of the Immigration Department's listing include. A question about a student on a Class C permit would have scored a correct 'yes' answer as wrong under the prior wrong_patterns.",
-    "verified_as_at": "unknown"
+    "correction_note": "The category list was INCOMPLETE: it omitted 'students' as an explicit Class C category, which the government's own embassy-portal mirrors of the Immigration Department's listing include. A question about a student on a Class C permit would have scored a correct 'yes' answer as wrong under the prior wrong_patterns. UPGRADED 2026-09-02: found via scripts/find_revisitable_hedges.py -- the primary document was already cached locally and had never been checked as a fallback for this fact specifically (it was used for permit_class_d_does_not_exist and nssf_payment_deadline earlier the same day, but not cross-checked against this sibling fact). No value change, citation upgraded from embassy-mirror corroboration to the Department's own document, and the category list tightened to match its exact wording (e.g. \"intern students\" not bare \"students\", matching the document's own subsection heading).",
+    "verified_as_at": "2026-09-02"
   },
   "corporate_tax_rate": {
     "fact": "Tanzania standard corporate income tax rate is 30%. DSE-listed companies pay 25%.",
@@ -1706,8 +1706,8 @@
     "verified_as_at": "unknown"
   },
   "efd_tra_closure_authority": {
-    "fact": "TRA has enforcement authority against businesses that repeatedly fail to issue EFD receipts. Enforcement actions can include: written warnings, imposition of fines, suspension of EFD device/licence, and closure of business premises. The TRA EFD page was unavailable at time of verification (June 2026) but closure authority is grounded in the VAT Act Cap.148 enforcement provisions and general TRA administrative powers under the Tax Administration Act.",
-    "correct_value": "TRA CAN close (kufunga) a business for repeated EFD non-compliance — enforcement authority confirmed",
+    "fact": "TRA has enforcement authority against businesses that repeatedly fail to issue EFD receipts. Enforcement actions can include: written warnings, imposition of fines, suspension of EFD device/licence, and closure of business premises (Tax Administration Act Cap.438 s.64 -- \"Restraint of assets\" -- grants the Commissioner General power to mark, lock up or seal any building, room or place, triggered by breach of the EFD-issuance requirement, among other tax-law breaches).",
+    "correct_value": "TRA CAN close (kufunga) a business for repeated EFD non-compliance -- TAA Cap.438 s.64(1)(c) + s.64(2)(e)",
     "wrong_patterns": [
       "tra haiwezi kufunga biashara kwa efd",
       "tra cannot close business for efd",
@@ -1715,13 +1715,13 @@
       "kufunga biashara.*efd.*haiwezekani",
       "tra inaweza kufungua biashara"
     ],
-    "primary_source": "VAT Act Cap.148; Tax Administration Act Tanzania",
-    "verified_by": "TRA EFD page unavailable — based on VAT Act Cap.148 enforcement framework",
+    "primary_source": "Tax Administration Act, Cap.438 R.E.2019, s.64(1)(c) and s.64(2)(e); Finance Act 2023 s.54 (renumbering of the EFD-issuance trigger provision)",
+    "verified_by": "Direct read (2026-09-02) of Tax Administration Act, Cap.438 R.E.2019, s.64 (\"Restraint of assets\"), downloaded directly via curl from tra.go.tz/images/uploads/acts/CHAPTER_438-THE_TAX_ADMINISTRATION_ACT.pdf (the WebFetch tool's \"Parse Error: Invalid header value char\" on this domain is a client-side bug, confirmed general today -- curl reaches this and every other tra.go.tz page/PDF tested cleanly). Verbatim: s.64(1): \"The Commissioner General may... (c) mark, lock up or seal any building, room, place, receptacles or item of plant in any factory...\" s.64(2): the power under (1) may be exercised if the Commissioner General is satisfied that... \"(e) section 36(1) or a provision of any tax law has been breached\". Section 36(1) is this same R.E.2019 edition's OLD numbering for the EFD fiscal-receipt-issuance requirement -- Finance Act 2023 s.54 renumbered it to s.44(1) (already traced this session for efd_threshold_tzs_11m's own citation chain), so the live provision is s.44(1) via s.64(2)(e)'s \"any tax law\" catch-all, not literally \"s.36(1)\" in the current edition. Supersedes the prior vague \"VAT Act Cap.148; Tax Administration Act... general TRA administrative powers\" citation with a specific section.",
     "effective_date": "2025-07-01",
-    "verified_date": "2026-06-20",
-    "status": "HEDGE — TRA EFD page unavailable; grounded in VAT Act Cap.148",
+    "status": "CONFIRMED (statute-tier, 2026-09-02) -- was HEDGE (TRA EFD page unavailable)",
     "training_instruction": "Always write 'kufunga' (close) never 'kufungua' (open) when describing TRA closure authority. Pairs must state TRA CAN close — answer yes_no questions with Ndiyo.",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02",
+    "correction_note": "2026-09-02: upgraded from a hedge (vague statutory gesture, TRA EFD page unreachable at the time) to a specific statute citation, found via scripts/find_revisitable_hedges.py prompting a fresh live-source attempt using curl instead of WebFetch. No value change (the mechanism was always correctly asserted as \"yes, TRA can close\"); the citation is now real and specific rather than a general gesture at two Acts."
   },
   "sdl_payment_deadline": "7 days_of_month",
   "trademark_fee_for_explanation_of_decision": "50,000 TZS",
@@ -1967,22 +1967,22 @@
   "electrical_test_fee_reduction_initial": {
     "fact": "TZS 650,000 was the fee for OSHA electrical-system inspection at RURAL FUEL STATIONS specifically, before a 2025 fee reduction -- NOT a general/universal OSHA electrical inspection fee for all workplaces. Cap.297 s.66(2) separately requires ANNUAL electrical inspection for every factory/workplace using electricity at 'a prescribed fee' -- that general fee is a different, unconfirmed figure.",
     "correct_value": "TZS 650,000 (pre-reduction rural fuel-station electrical inspection fee only)",
-    "primary_source": "The Citizen (Tanzania), reporting OSHA's Chief Executive on the 2025 fee reduction",
-    "verified_by": "Secondary source (national newspaper quoting OSHA's CEO directly), 2026-09-01 -- underlying OSHA fee-schedule/Government Notice not located.",
+    "primary_source": "data/source_documents/osha/osha_press_release_fees.pdf (OSHA official press release/report)",
+    "verified_by": "Direct read (2026-09-02) of OSHA's OWN official press release/report (\"Taarifa ya Mafanikio na Changamoto...\"), cached locally at data/source_documents/osha/osha_press_release_fees.pdf -- this exact document was already flagged as the plausible topic match by scripts/find_revisitable_hedges.py, but my own first pass through the 6 OSHA local files only previewed this PDF's intro (table of contents) and did not search its full text; the fee figures sit later in the document and were found on a second, complete pass. Verbatim: \"Kupunguza Ada na Tozo nne za Umeme katika Vituo vya Mafuta Vijijini za[:] Polarity test, Continuity Test, Earth Resistance Test, Insulation Test... Hivyo kufanya tozo za umeme katika vituo vya mafuta vijijini kupungua kutoka Sh. 650,000/= hadi Sh. 150,000/=.\" Confirms FOUR separate electrical test types are covered by the combined reduction, and both figures (650,000 old / 150,000 new) exactly as already locked. Supersedes the prior secondary-source (The Citizen newspaper) citation with OSHA's own primary document -- same figures, no value change, first primary-tier confirmation.",
     "verified_date": "2026-09-01",
-    "status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, scope narrowed",
-    "correction_note": "Prior fact implied a general OSHA electrical-test fee. Narrowed to rural-fuel-station-specific per the only source located; the general Cap.297 s.66(2) annual-inspection fee remains a separate, unconfirmed figure and must not be conflated with this one.",
-    "verified_as_at": "unknown"
+    "status": "CONFIRMED (primary source, 2026-09-02) -- was PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, scope narrowed",
+    "correction_note": "Prior fact implied a general OSHA electrical-test fee. Narrowed to rural-fuel-station-specific per the only source located; the general Cap.297 s.66(2) annual-inspection fee remains a separate, unconfirmed figure and must not be conflated with this one. UPGRADED 2026-09-02: found via scripts/find_revisitable_hedges.py; the local cache already held OSHA's own primary press release, just not fully read on the first pass. No value change (TZS 650,000 (OLD fee, before the 2025 reduction) confirmed exactly).",
+    "verified_as_at": "2026-09-02"
   },
   "electrical_test_fee_reduction_final": {
     "fact": "TZS 150,000 is the REDUCED fee for OSHA electrical-system inspection at RURAL FUEL STATIONS specifically (reduced from TZS 650,000 in 2025 to encourage rural investment) -- NOT a general/universal OSHA electrical inspection fee. This is old-fee-vs-new-fee, not 'first test vs re-test' as previously assumed.",
     "correct_value": "TZS 150,000 (post-2025-reduction rural fuel-station electrical inspection fee only)",
-    "primary_source": "The Citizen (Tanzania), reporting OSHA's Chief Executive on the 2025 fee reduction",
-    "verified_by": "Secondary source (national newspaper quoting OSHA's CEO directly), 2026-09-01 -- underlying OSHA fee-schedule/Government Notice not located.",
+    "primary_source": "data/source_documents/osha/osha_press_release_fees.pdf (OSHA official press release/report)",
+    "verified_by": "Direct read (2026-09-02) of OSHA's OWN official press release/report (\"Taarifa ya Mafanikio na Changamoto...\"), cached locally at data/source_documents/osha/osha_press_release_fees.pdf -- this exact document was already flagged as the plausible topic match by scripts/find_revisitable_hedges.py, but my own first pass through the 6 OSHA local files only previewed this PDF's intro (table of contents) and did not search its full text; the fee figures sit later in the document and were found on a second, complete pass. Verbatim: \"Kupunguza Ada na Tozo nne za Umeme katika Vituo vya Mafuta Vijijini za[:] Polarity test, Continuity Test, Earth Resistance Test, Insulation Test... Hivyo kufanya tozo za umeme katika vituo vya mafuta vijijini kupungua kutoka Sh. 650,000/= hadi Sh. 150,000/=.\" Confirms FOUR separate electrical test types are covered by the combined reduction, and both figures (650,000 old / 150,000 new) exactly as already locked. Supersedes the prior secondary-source (The Citizen newspaper) citation with OSHA's own primary document -- same figures, no value change, first primary-tier confirmation.",
     "verified_date": "2026-09-01",
-    "status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, scope narrowed and mechanism corrected",
-    "correction_note": "Prior fact's 'initial vs final' framing was a guess at 'first test vs retest'; the actual relationship is 2025 fee reduction (old 650,000 -> new 150,000) for rural fuel stations specifically, not a test-sequence distinction.",
-    "verified_as_at": "unknown"
+    "status": "CONFIRMED (primary source, 2026-09-02) -- was PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, scope narrowed and mechanism corrected",
+    "correction_note": "Prior fact's 'initial vs final' framing was a guess at 'first test vs retest'; the actual relationship is 2025 fee reduction (old 650,000 -> new 150,000) for rural fuel stations specifically, not a test-sequence distinction. UPGRADED 2026-09-02: found via scripts/find_revisitable_hedges.py; the local cache already held OSHA's own primary press release, just not fully read on the first pass. No value change (TZS 150,000 (NEW fee, after the 2025 reduction) confirmed exactly).",
+    "verified_as_at": "2026-09-02"
   },
   "registration_certificate_processing_time_new": "1 days",
   "compliance_license_processing_time_old": "28 days",

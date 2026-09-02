@@ -40,3 +40,18 @@ def test_underscore_prefix_keywords_still_match_at_string_start():
 
 def test_no_topic_returns_none_not_a_wrong_guess():
     assert h._guess_topic('totally_unrelated_key', 'nothing matches any keyword here') is None
+
+
+def test_section_403_does_not_false_trigger_the_blocked_signal():
+    # The second bug found live 2026-09-02, same session: brela_striking_off_non_filing's own
+    # verified_by says "R.E.2023 renumbers to s.403" -- a bare '403' substring check flagged an
+    # already well-cited, non-blocked fact as a tooling-blocked hedge.
+    assert h._BLOCKED_SIGNAL.search('R.E.2023 renumbers to s.403 (section number)') is None
+
+
+def test_real_403_forbidden_phrasings_still_match():
+    for text in ("tanzlii.org 403'd on automated fetch",
+                 'not a 403 or a timeout',
+                 "direct TanzLII PDF fetch 403'd; recommend re-confirming",
+                 'HTTP 403 Forbidden'):
+        assert h._BLOCKED_SIGNAL.search(text), f'should have matched: {text!r}'

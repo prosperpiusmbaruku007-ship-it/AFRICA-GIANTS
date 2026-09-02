@@ -2,37 +2,11 @@
   "measured": "2026-09-02",
   "harness": "scripts/find_revisitable_hedges.py",
   "purpose": "Find hedged/tooling-blocked facts where a local data/source_documents/ cache for a plausible topic exists and was never checked as a fallback -- the gap that let permit_class_d_does_not_exist and nssf_payment_deadline sit hedged for weeks after the closing document was already on disk.",
-  "total_currently_blocked_hedges": 11,
+  "total_currently_blocked_hedges": 6,
   "skipped_no_local_files_for_topic": 1,
   "skipped_already_cites_local_cache": 0,
-  "REVISIT_NOW_count": 10,
+  "REVISIT_NOW_count": 5,
   "revisit_now": [
-    {
-      "key": "permit_class_c_categories",
-      "guessed_topic": "immigration",
-      "candidate_files": [
-        "gn487a_official_gazette.pdf",
-        "residence_permit_guidelines.pdf"
-      ],
-      "current_status": "CONFIRMED -- corrected 2026-08-31 (see correction_note)",
-      "current_primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit"
-    },
-    {
-      "key": "brela_striking_off_non_filing",
-      "guessed_topic": "brela",
-      "candidate_files": [
-        "brela_ada_alama.html",
-        "brela_ada_kampuni.html",
-        "brela_ada_kampuni_v2.html",
-        "brela_ada_leseni.html",
-        "brela_bn_company.pdf",
-        "brela_faq_official.pdf",
-        "brela_hatua_10.html",
-        "brela_huduma_zetu.html"
-      ],
-      "current_status": "CONFIRMED",
-      "current_primary_source": "Companies Act Cap 212 ss.128/400/400A; BRELA gazette notice brela.go.tz/uploads/documents/sw-1653651054-1.pdf"
-    },
     {
       "key": "efd_approved_supplier_verification",
       "guessed_topic": "tra",
@@ -65,37 +39,6 @@
       "current_primary_source": "https://www.tra.go.tz/page/efd-vfd-suppliers"
     },
     {
-      "key": "efd_tra_closure_authority",
-      "guessed_topic": "tra",
-      "candidate_files": [
-        "habib_advisory_tax_guide_2025_26.pdf",
-        "sdl_guide.txt",
-        "TRA.txt",
-        "tra_digital_service_tax_sw.html",
-        "tra_efd_index.html",
-        "tra_efd_makosa.html",
-        "tra_efd_ukweli.html",
-        "tra_kalenda_sw.html",
-        "tra_kodi_binafsi_sw.html",
-        "tra_kuanzisha_biashara_sw.html",
-        "tra_laws_sw.html",
-        "tra_mapato_ajira_sw.html",
-        "tra_paye_sw.html",
-        "tra_sdl_sw.txt",
-        "tra_taxes_duties_2025_2026.pdf",
-        "tra_ulipaji_kodi_sw.html",
-        "tra_vat_deferment_sw.html",
-        "tra_vat_full_sw.html",
-        "tra_vat_registration_sw.html",
-        "tra_vat_relief_sw.html",
-        "tra_vat_sw.txt",
-        "tra_vfk.txt",
-        "tra_withholding_tax_sw.html"
-      ],
-      "current_status": "HEDGE — TRA EFD page unavailable; grounded in VAT Act Cap.148",
-      "current_primary_source": "VAT Act Cap.148; Tax Administration Act Tanzania"
-    },
-    {
       "key": "name_similarity_threshold",
       "guessed_topic": "brela",
       "candidate_files": [
@@ -110,34 +53,6 @@
       ],
       "current_status": "CONFIRMED (mechanism) -- corrected 2026-08-31; NUMBER STILL UNGROUNDED as a legal rule because no such number exists in law",
       "current_primary_source": "Companies Rules 2006, rr.2-3 (Companies Act Cap.212); Business Names (Registration) Act, Cap.213"
-    },
-    {
-      "key": "electrical_test_fee_reduction_initial",
-      "guessed_topic": "osha",
-      "candidate_files": [
-        "osha_faq_full.html",
-        "osha_key_reform.html",
-        "osha_maswali.html",
-        "osha_press_release_fees.pdf",
-        "osha_training.html",
-        "osha_usalama_afya.txt"
-      ],
-      "current_status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, scope narrowed",
-      "current_primary_source": "The Citizen (Tanzania), reporting OSHA's Chief Executive on the 2025 fee reduction"
-    },
-    {
-      "key": "electrical_test_fee_reduction_final",
-      "guessed_topic": "osha",
-      "candidate_files": [
-        "osha_faq_full.html",
-        "osha_key_reform.html",
-        "osha_maswali.html",
-        "osha_press_release_fees.pdf",
-        "osha_training.html",
-        "osha_usalama_afya.txt"
-      ],
-      "current_status": "PARTIALLY CORRECTED 2026-09-01 (Tier 3) -- amount unchanged, scope narrowed and mechanism corrected",
-      "current_primary_source": "The Citizen (Tanzania), reporting OSHA's Chief Executive on the 2025 fee reduction"
     },
     {
       "key": "vat_deferment_minimum_value",
