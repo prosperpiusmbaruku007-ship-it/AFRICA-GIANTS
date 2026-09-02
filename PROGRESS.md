@@ -1,65 +1,81 @@
 # Africa Giants — Project Progress
 
-Last updated: 2026-09-02 (`vat_deferment_minimum_value` RESOLVED — reverted to 10,000,000,
-recorded as OUR error not a source dispute, root cause found (GN 608/2018 halved a stale
-2015 figure); corpus swept, 0 contaminated rows. 🔴 NEW FLAG surfaced by the same sweep,
-NOT yet actioned: `vat_deferment_limit_date` ("30 June 2026") may itself be stale — evidence
-suggests Finance Act 2026 made the VAT deferment scheme permanent, and today's date is already
-past the stated cutoff; this claim sits in `train_sft.jsonl`/`val_sft.jsonl` today. "The eleven"
-fully closed out — see below for the whole-corpus standing. Also: pre-push hook crash fixed at
-the marker level — `integration` deselected by default alongside `network`, and the skipif that
-couldn't actually protect it documented as such. Carries forward 2026-09-01: Tier 3 verification
-+ fixes; whole-corpus picture after Tier 1+2+3; corporate/partnership tax source pass complete;
-🔴 PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT found and fixed same day; Finance Act 2026 read in
+Last updated: 2026-09-02 (`vat_deferment_limit_date` RESOLVED — read 4 Finance Acts (2023-2026)
+directly rather than trusting secondary agreement; the cutoff stands, unrevoked, and is now in
+the past; fact converted from a bare string to a full grounded fact, 11 corpus rows quarantined
+including 4 in `train_sft.jsonl`. `vat_deferment_minimum_value` also RESOLVED — reverted to
+10,000,000, recorded as OUR error not a source dispute, root cause found (GN 608/2018 halved a
+stale 2015 figure); corpus swept, 0 contaminated rows. "The eleven" fully closed out — see below
+for the whole-corpus standing. Also: pre-push hook crash fixed at the marker level —
+`integration` deselected by default alongside `network`, and the skipif that couldn't actually
+protect it documented as such. Carries forward 2026-09-01: Tier 3 verification + fixes;
+whole-corpus picture after Tier 1+2+3; corporate/partnership tax source pass complete; 🔴
+PRESUMPTIVE ENGINE STALE-CONSTANT INCIDENT found and fixed same day; Finance Act 2026 read in
 full and the staleness-check mechanism built; PAYE_NONRESIDENT_RATE grounded; verified_as_at
 bootstrap census run across all 250 locked facts, extended to the 28 Finance-Act-bound ones —
 see "GROUNDED IS A SNAPSHOT, NOT A PROPERTY" below)
 
 ---
 
-# 🔴 NEW, NOT YET ACTIONED: `vat_deferment_limit_date` ("30 June 2026") is plausibly stale, and unlike everything else in this entry, it's already inside `train_sft.jsonl`.
+# ✅ `vat_deferment_limit_date` RESOLVED, 2026-09-02 — read 4 Finance Acts directly rather than trusting secondary agreement. The cutoff is real, unrevoked, and already in the past.
 
-**Found by the corpus sweep run to check the 20M defect below, not by design.** The sweep
-surfaced 52 corpus rows mentioning VAT deferment; several — in `train_sft.jsonl` (multiple
-copies), `val_sft.jsonl`, `datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl` and
-`_015.jsonl`, `data/reviewed/hand_coded_batch_015_b08.jsonl`, `data/reviewed/recovered_from_flags.jsonl`
-— assert, near-verbatim: *"Mpango wa VAT deferment una tarehe ya ukomo ya tarehe 30 Juni 2026"*
-(the VAT deferment scheme has a cutoff date of 30 June 2026), matching the locked fact
-`vat_deferment_limit_date: "30 June 2026"` exactly.
+**Read FA2026's own text on the deferment provision specifically, per instruction, rather than
+relying on the secondary agreement that raised the flag.** Downloaded FA2023, FA2024, FA2025,
+and FA2026 directly from `tra.go.tz/images/uploads/acts/` via `curl` — the WebFetch tool's known
+"Parse Error: Invalid header value char" on this domain turned out to be a client-side bug in
+that one tool, not an actual network block; `curl` reaches the same files with no issue. Each
+PDF extracted with `pdftotext -layout` for a full local text search, not an AI summary.
 
-**Why this is suspect, not confirmed.** Two independent web searches plus a live re-fetch of
-TRA's own VAT Deferment page (the same page already trusted above for the 10M/20M question):
-1. The 30 June 2026 cutoff traces to **Finance Act 2023**, which introduced VAT deferral on
-   *locally manufactured* capital goods and set that date as the point *imported* capital goods
-   deferment would cease.
-2. A dated VAT-news aggregator (vatupdate.com, 2026-08-20) states Finance Act 2026 "made
-   permanent the VAT deferment for imported capital goods — a measure repeatedly extended in
-   prior years," separately corroborated by the same source describing FA2026 as having "kept
-   the VAT deferment regime" (quoted directly from a second, dated FA2026-summary article).
-3. TRA's own live VAT Deferment page, fetched today, **names no expiry date at all** — asked
-   directly ("does this page mention any cessation date"), it does not.
+**Found the exact provision, verbatim.** FA2023 s.65(b) amends VAT Act Cap.148 s.11(1):
+*"A registered person may... apply to the Commissioner General for approval to defer payment of
+value added tax on imported or locally manufactured capital goods: Provided that, deferment on
+the imported capital goods shall cease to apply on the 30th day of June, 2026."* FA2024, FA2025,
+FA2026 were each searched in full for "deferment", "defer", and "capital goods" — **zero matches
+in all three.** None of them touches VAT Act s.11 in any way.
 
-**Not confirmed, because:** none of this is FA2026's own text, read directly — this session's
-earlier "Finance Act 2026 read in full" pass (see "GROUNDED IS A SNAPSHOT" below) covered the
-VAT Part of FA2026, but the deferment scheme's sunset was set by the VAT Act via a Finance Act
-**2023** amendment, and it isn't clear from what's in hand here whether FA2026's VAT Part is
-even where a reversal of that specific 2023 sunset clause would live, or whether it's addressed
-elsewhere. Two secondary sources agreeing is exactly the strength that was wrong on
-`vat_deferment_minimum_value` above.
+**Verdict: the secondary sources that raised the flag were wrong, not the fact.** The claim that
+"FA2026 made permanent" the deferment does not trace to FA2026's own enacted text. The cutoff
+FA2023 set stands, unrevoked through FA2026, and — because today's date is after 30 June 2026 —
+**it is now in the past, not an upcoming deadline.** This is the third possible outcome the
+instruction anticipated only two of ("confirms permanence" / "genuinely unreachable"): FA2026
+was reachable and read, and it confirms neither permanence nor a fresh cessation — it is simply
+silent, which means the last Act to actually touch the clause (2023) still governs.
 
-**Why it outranks the 20M defect anyway.** The 20M error, corrected 9 days ago, never reached a
-single corpus row (swept, confirmed below) — it was caught before it could matter. This one is
-different in kind: if it's wrong, it isn't a threshold a business gets slightly wrong on a form,
-it's telling every business that asks about VAT deferment that a **real, currently-available tax
-benefit no longer exists**, on a date that has already passed, and it is sitting in
-`train_sft.jsonl` right now — the file a training run actually consumes.
+**Fixed per "don't leave a stated-expired date live either way."** `vat_deferment_limit_date`
+converted from a bare string ("30 June 2026") to a full fact, because the correction changes the
+date's MEANING, not just confirms its value: it is scoped to **imported** capital goods only
+(locally manufactured goods have no cutoff, same s.11(1)), and it is now **past tense** — a
+bare string read today could not distinguish either point, and both points are exactly what made
+the original phrasing wrong regardless of which way the flag resolved. `verified_as_at:
+2026-09-02`, statute-tier, the strongest citation basis of any fact touched this session.
 
-**Not fixed, not touched.** `locked_facts.json`'s `vat_deferment_limit_date` and the corpus rows
-above are UNCHANGED pending a decision, for the same reason `vat_deferment_minimum_value` wasn't
-silently re-flipped before its root cause was found: two-source agreement has already produced
-one wrong correction in this exact fact family today. Recommend reading FA2026's actual VAT Part
-text for the deferment-scheme provision specifically (not just re-confirming via secondary
-sources) before touching either the fact or the corpus rows.
+**One thing recorded, not resolved:** TRA's own live VAT Deferment page (checked again for this)
+still describes the scheme's conditions in full — the 10M threshold, the 90% test, the ITX
+247.02.E form — with no expiry language anywhere. Per CLAUDE.md's own standing doctrine, the
+enacted Finance Act text governs over a regulator's portal page, so the fact is stated per the
+statute; but the discrepancy itself is recorded in the fact's `correction_note` rather than
+quietly resolved, since this project has both seen TRA portals go stale before AND seen
+Finance-Act text miss a later regulation-level change before — either could be true here, and
+neither was confirmed. See `scripts/locked_facts.json` `vat_deferment_limit_date` for the full
+account, and the four downloaded Finance Act PDFs' extracted text for anyone who wants to
+re-verify the quote independently.
+
+**Corpus swept and quarantined.** `scripts/correct_corpus_defects_v9.py` (committed before
+running, per R18) found 4 distinct Q/A pairs — 11 row-copies — that stated or implied the
+cutoff was a live/future deadline, or that imported-goods deferment remained unconditionally
+allowed: 1 in `data/flagged/batch_018_flagged.jsonl`, 1 in
+`data/reviewed/hand_coded_batch_015_b08.jsonl`, 1 in `data/reviewed/recovered_from_flags.jsonl`,
+3 in `cleaned_pairs_batch_014.jsonl`, 1 in `cleaned_pairs_batch_015.jsonl`, and **4 in
+`train_sft.jsonl` itself** — the file an actual training run consumes. Quarantined (not
+rewritten in place — hand-editing free-text Swahili answers outside the generation pipeline is
+what R9's spirit warns against), verification-after re-scan: 0 remaining live. Quarantine file:
+`datasets/tier1a/rejected/vat_deferment_stale_cutoff_framing_quarantine_2026_09_02.jsonl`.
+Artifact: `eval/results/corpus_correction_v9.json`. Regenerating replacement pairs (correctly
+scoped and tensed) is a follow-up, not done in this pass.
+
+**Full offline suite green:** 1428 passed, 0 failed, secret scan clean. Bootstrap census
+re-run: 38/173 dict-shaped facts now `primary_verified` (up from 37; `vat_deferment_limit_date`
+itself now counted, statute-tier).
 
 ---
 

@@ -7,10 +7,10 @@
     "_meta",
     "_unresolved_items"
   ],
-  "dict_shaped_facts_classified": 172,
-  "primary_verified": 37,
+  "dict_shaped_facts_classified": 173,
+  "primary_verified": 38,
   "unknown_backlog_dict_shaped": 135,
-  "unstructured_string_valued_facts": 78,
+  "unstructured_string_valued_facts": 77,
   "unstructured_facts_note": "These carry no verified_by/primary_source/any metadata field at all -- not processed as \"unknown\" alongside the dict-shaped facts because they cannot carry a verified_as_at field without first being converted from a bare string to a dict, which is a schema-migration decision bigger than this bootstrap census. Effectively unknown-or-worse; listed separately so they are not silently invisible.",
   "unstructured_facts": [
     {
@@ -316,10 +316,6 @@
     {
       "key": "compliance_license_processing_time_old",
       "value": "28 days"
-    },
-    {
-      "key": "vat_deferment_limit_date",
-      "value": "30 June 2026"
     },
     {
       "key": "vat_deferment_form_number",
@@ -1096,6 +1092,13 @@
       "verified_as_at": "unknown",
       "reason": "verified_by present but no primary-source-read language found",
       "verified_by_excerpt": "Secondary source (national newspaper quoting OSHA's CEO directly), 2026-09-01 -- underlying OSHA fee-schedule/Government Notice not located."
+    },
+    {
+      "key": "vat_deferment_limit_date",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of FOUR consecutive Finance Acts, each downloaded directly from tra.go.tz/images/uploads/acts/ (curl, bypassing the WebFetch tool's kno"
     },
     {
       "key": "vat_deferment_threshold_percentage",

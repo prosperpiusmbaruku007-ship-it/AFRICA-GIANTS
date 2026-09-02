@@ -1,0 +1,16 @@
+{
+  "measured": "2026-09-02",
+  "harness": "scripts/correct_corpus_defects_v9.py",
+  "defect_class": "VAT_DEFERMENT_STALE_CUTOFF_FRAMING",
+  "total_rows_quarantined": 11,
+  "per_file_removed": {
+    "data/flagged/batch_018_flagged.jsonl": 1,
+    "data/reviewed/hand_coded_batch_015_b08.jsonl": 1,
+    "data/reviewed/recovered_from_flags.jsonl": 1,
+    "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_014.jsonl": 3,
+    "datasets/tier1a/cleaned_pairs/cleaned_pairs_batch_015.jsonl": 1,
+    "datasets/tier1a/sft/train_sft.jsonl": 4
+  },
+  "quarantine_file": "datasets/tier1a/rejected/vat_deferment_stale_cutoff_framing_quarantine_2026_09_02.jsonl",
+  "remaining_live_after_fix": 0
+}
