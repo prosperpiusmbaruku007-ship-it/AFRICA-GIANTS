@@ -76,20 +76,59 @@ def _statute_search(blob):
 # Same standard as v1: naming the right statute is not the same claim as being verified against
 # it. A practitioner's citation of an Act, or a fact naming a GN as its topic without the
 # specific claim being checked against the gazette's own text, does not count.
+#
+# EACH OVERRIDE IS A PIN, AND PINS DECAY (R18, the 2026-08-17 stale-pins incident: verdicts
+# pinned to index content that moved underneath them kept asserting the old verdict). Found here
+# 2026-09-02, during the 141-vs-249 gap reconciliation: `gn487a_mgeni_cap357_definition`'s
+# override reason ("verified_by is a law firm's article...") described a citation that was
+# REPLACED on 2026-08-31 -- 9 DAYS before this file was next read closely -- by a direct read of
+# GN487A s.2 and Cap.357 ss.3(1), 8-12, 30(1)(b). The override kept forcing 'summary_only' on a
+# fact that had since become genuinely statute-grounded, and nothing would have caught it short
+# of someone re-reading the override's own prose against the field it describes. Fixed the same
+# way R18 fixed the index-pin version of this bug: each override now carries a `guard` fragment
+# that must still be found in the CURRENT verified_by text, checked every run. A decayed guard
+# raises instead of silently keeping the stale verdict -- removing an override quietly when its
+# citation improves is exactly the failure this mechanism exists to stop.
 _MANUAL_KEEP_SUMMARY_ONLY = {
-    'gn605a_average_increase':
-        "Names GN 605A as topic; the specific 33.4% aggregate traces to a press briefing, not "
-        "a computed check against the gazette's own sector tables.",
-    'gn487a_mgeni_cap357_definition':
-        "verified_by is a law firm's article citing Cap.357, not our own read of it; the fact's "
-        "own closing line admits it needs independent legal verification.",
+    'gn605a_average_increase': {
+        'reason': "Names GN 605A as topic; the specific 33.4% aggregate traces to a press "
+                  "briefing, not a computed check against the gazette's own sector tables.",
+        'guard': 'press briefing',
+    },
 }
+
+
+def _live_manual_overrides(facts):
+    """Re-checks every override's guard against the CURRENT field text on every run. A guard
+    that no longer matches means the citation underneath it changed and the override must be
+    re-examined by a human, not silently kept or silently dropped."""
+    live = {}
+    for key, entry in _MANUAL_KEEP_SUMMARY_ONLY.items():
+        fact = facts.get(key)
+        if not isinstance(fact, dict):
+            raise AssertionError(
+                f"_MANUAL_KEEP_SUMMARY_ONLY['{key}'] names a key that is no longer a dict-shaped "
+                f"fact in locked_facts.json -- remove or update this override.")
+        blob = ' '.join(str(fact.get(f, '')) for f in PROVENANCE_FIELDS).lower()
+        if entry['guard'].lower() not in blob:
+            raise AssertionError(
+                f"STALE OVERRIDE: _MANUAL_KEEP_SUMMARY_ONLY['{key}']'s guard phrase "
+                f"{entry['guard']!r} no longer appears in this fact's own provenance fields -- "
+                f"the citation underneath this override has changed since it was written "
+                f"(reason on file: {entry['reason']!r}). Re-examine the fact and either update "
+                f"the guard to match the current text, or remove the override if the fact is now "
+                f"genuinely grounded (this is exactly what happened to "
+                f"gn487a_mgeni_cap357_definition on 2026-09-02 -- do not silently re-add a stale "
+                f"guard to make this pass).")
+        live[key] = entry['reason']
+    return live
+
 
 PROVENANCE_FIELDS = ('verified_by', 'primary_source', 'source', 'section', 'source_note')
 
 
-def classify_dict_fact(key, v):
-    if key in _MANUAL_KEEP_SUMMARY_ONLY:
+def classify_dict_fact(key, v, live_overrides):
+    if key in live_overrides:
         return 'summary_only'
     if not any(f in v for f in PROVENANCE_FIELDS):
         blob = str(v.get('fact', ''))
@@ -110,9 +149,11 @@ def main():
     bare_group = [k for k in bare_keys if k in _GROUP_MEMBERS]
     bare_standalone = [k for k in bare_keys if k not in _GROUP_MEMBERS]
 
+    live_overrides = _live_manual_overrides(facts)  # raises if any guard has gone stale
+
     buckets = {'grounded': [], 'summary_only': [], 'unclear_no_source': []}
     for k in dict_keys:
-        buckets[classify_dict_fact(k, facts[k])].append(k)
+        buckets[classify_dict_fact(k, facts[k], live_overrides)].append(k)
 
     # Bare values carry no provenance field, dict or otherwise. Group membership is recorded
     # for context but does not change the classification -- the group's own text has no
@@ -147,7 +188,7 @@ def main():
         },
         'grounded_keys': sorted(grounded),
         'ungrounded_keys': sorted(ungrounded),
-        'manual_overrides': _MANUAL_KEEP_SUMMARY_ONLY,
+        'manual_overrides': live_overrides,
     }
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, indent=2)

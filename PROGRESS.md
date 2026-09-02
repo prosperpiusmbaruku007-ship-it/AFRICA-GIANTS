@@ -292,42 +292,69 @@ is hardcoded, not dynamic; noted, not fixed, out of scope for this pass).
 
 ---
 
-## 📊 Whole-corpus standing, 2026-09-02
+## 📊 Whole-corpus standing, 2026-09-02 — RECONCILED. The mechanical number is the real one: ~57%, not 99.6%.
 
-**Two different, both-legitimate measurements, named separately per R22 (never cite a number
-without the population/method it came from) — they answer different questions and should not
-be averaged or conflated:**
+**Verdict, stated first per instruction: treat the mechanical number as the real one.** The
+narrative's 99.6% was never fabricated — every case checked below traces to real work someone
+actually did — but it is not currently TRUE OF THE ARTIFACT, and "true of the artifact" is the
+only claim that survives being re-checked next month. `locked_facts.json` is what ships, what a
+future session inherits, and what any script can verify without archaeology through an
+18,000-line PROGRESS.md. **The corpus is ~57% grounded right now, re-derivably, not 99.6%.**
 
-| method | what it actually checks | current result |
-|---|---|---|
-| **Manual Tier 1+2+3 narrative** (2026-09-01 whole-corpus entry, updated for today) | Human verification against primary/practitioner text, fact-by-fact, recorded in `correction_note`/`verified_by` prose — the strongest claim, but a one-time tally, not mechanically re-run | **250 total** (251 minus `amt_loss_companies_only`, retired). Baseline was 240 grounded / 11 ungrounded (95.6%); today closed 9 of those 11 fact-level items (7 to statute/document-tier, 2 to portal-tier, both counted grounded under this narrative standard) and left 1 permanent hedge (`gn605a_average_increase`) → **249/250 (99.6%) grounded or correctly-hedged under the narrative standard, 1 permanent hedge remaining.** |
-| **`audit_locked_facts_verification_provenance_v2.py`** (mechanical, re-runnable, checks `verified_by`/`primary_source`/`source`/`section`/`source_note`/`fact` text for statute-shaped markers — Act/Cap/GN/section/gazette/tanzlii) | Whether a fact's OWN stored text contains a citable statute marker, regardless of whether a human ever actually read that statute | Re-run today: **141/250 (56.4%) GROUNDED**, up from this script's own last recorded baseline of ~100/251 (39.8%) before the Tier 1+2+3 arc began — real forward movement on the same mechanical yardstick, driven by the Tier 1+2+3 corrections and today's "the eleven" citation upgrades adding actual Act/Cap/section text into `verified_by` fields. |
+### The sample: 20 facts where the two methods disagreed, individually read
 
-**The gap between 99.6% and 56.4% is real and not yet reconciled — flagged, not resolved.** The
-narrative count is a stronger individual claim (a human read primary text) but isn't
-mechanically checkable each time; the v2 script is mechanically checkable but only credits a
-fact if its OWN stored fields happen to contain a statute-shaped word, which undercounts facts
-that were genuinely verified against primary text but whose `verified_by` field still names a
-portal or practitioner source in its own wording (common where a manual verification pass
-confirmed a figure without rewriting the citation field to match). Closing this gap — auditing
-which of the v2 "summary_only" facts are actually narrative-grounded and just need their
-`verified_by` text brought up to the same citation standard as today's four rates.py-sourced
-upgrades — is real, scoped work, not assumed done here.
+Population: `audit_locked_facts_verification_provenance_v2.py`'s 109 `ungrounded_keys` (before
+today's script fix, see below), cross-referenced against every mention in PROGRESS.md — 38
+candidates where the narrative discusses the fact by name. Sampled 20, read each fact's OWN
+`verified_by`/`primary_source`/`source`/`section` fields directly against what the narrative
+claims. **Every one of the 20 falls into exactly one of five causes, not "the script is wrong"
+or "the narrative is wrong" as a single verdict:**
 
-**Hedges (deliberate, not oversights) — 3 named, permanent unless a route to the source opens:**
-`gn605a_average_increase` (tanzlii.org CAPTCHA), `nssf.go.tz`-family facts already hedged
-elsewhere in the corpus (unchanged this pass), and any fact carrying `_MANUAL_KEEP_SUMMARY_ONLY`
-in the v2 script (currently 2: `gn605a_average_increase`, `gn487a_mgeni_cap357_definition`).
+| cause | count | example | what it means |
+|---|---:|---|---|
+| **A — sync gap** | 7 | `nssf_employer_rate`, `nssf_total_rate`, `nssf_calculation_example`, `wcf_accident_reporting`, `wcf_new_employer_registration`, `paye_personal_relief`, `VAT_zero_rated_vs_exempt_input_VAT` | Real statute-level work happened (Tier 1 narrative: "confirmed clean against primary text, Cap.50 s.12(1) + First Schedule"; `paye_personal_relief`: "confirmed by direct search of Cap.332 AND all five Finance Acts 2022–2026") — and was **never written into the fact's own `verified_by` field**, which still names only a portal or a secondary source. The script is right that the OBJECT isn't grounded; the narrative is right that the WORK was done. Both true; the object is what ships. **Backfillable cheaply — no new verification needed, just recording what already happened.** |
+| **B — definitional gap** | 2 | `business_name_maintenance_fee` ("Direct read of BRELA's own... fee page... quoted verbatim"), `permit_class_c_categories` (portal + 3 embassy-mirror corroboration) | Genuinely portal-tier, not statute-tier — correctly excluded by a script whose marker list (Act/Cap/GN/section/gazette) specifically measures statute-tier. Not a bug; a narrower, real, and separately-named tier this project already uses elsewhere (`brela_foreign_late_filing_penalty`, `efd_approved_supplier_verification`, above). |
+| **C — script bug (FIXED)** | 1 | `gn487a_mgeni_cap357_definition` | `_MANUAL_KEEP_SUMMARY_ONLY`'s override reason described a citation ("a law firm's article") that had been REPLACED 9 days earlier by a direct GN487A + Cap.357 read — a decayed pin, same shape as the 2026-08-17 stale-pins incident (R18), just for a grounding override instead of an index row. Fixed with a self-checking `guard` fragment: the override now raises loudly if its guard phrase stops matching the fact's current text, rather than silently keeping a stale verdict. Proven to fire on a planted stale guard (R23/R26); regression test `tests/test_provenance_audit_v2_guards.py` (4 tests, all passing). Result: **141→143/250 grounded** after this one fix alone. |
+| **D — genuinely weak by either standard** | 3 | `dse_25_rate_three_years_only` (no `verified_by` at all), `provisional_tax_instalments` (TRA portal + PWC + Auditax, no Act), `sdl_payer` (bare "TRA SDL page") | Not a disagreement — both methods correctly call these under-verified. Real backlog, not a reconciliation artifact. |
+| **E — population-scope overclaim** | 7 | `annual_return_filing_fee`, `company_registration_fee_1`, `vat_registration_threshold_annual`, `vat_registration_threshold_six_months`, `sdl_payment_deadline`, `osiha_act_citation`, `memorandum_articles_of_association_filing_fee` | Bare-string LEGACY/DUPLICATE keys (e.g. `vat_registration_threshold_annual` sits alongside the newer, already-grounded dict-shaped `vat_registration_threshold`) that were very likely never individually part of the Tier 1/2/3-verified 149-fact population at all — attention went to the renamed/canonical key, these siblings were never revisited. **The narrative's "249/250" figure implicitly claims coverage of the full 250-fact population; this category shows it did not actually check a meaningful slice of it.** This is the more serious of the two ways 99.6% overclaims — not that the recorded work is fictional, but that the framing implied completeness the population never had. |
+
+**Reading the sample: two real, separable defects, not one.** Category A (35% of the sample) is
+a **recording gap** — cheap to close, since no new verification is needed, only backfilling
+citations from PROGRESS.md's own prose into the fact objects (exactly the same operation as
+today's `corporate_tax_rate`/`paye_bands_with_examples`/`sdl_calculation_example` upgrades,
+just at a larger scale — see "the eleven," above). Category E (also 35%) is a **scope gap** —
+these were never actually verified by anyone, under either standard, and calling them "resolved"
+was the narrative's error, not a bookkeeping oversight. **Projected forward** (crude, from a
+20-sample rate, not a precise count): applying category A's ~37% backfillable rate to the 106
+facts `audit_locked_facts_verification_provenance_v2.py` still calls ungrounded suggests roughly
+35-40 of them could reach statute-tier by backfilling alone, landing the mechanical number near
+**~72-73%** — still far from 99.6%, and that gap is category E: duplicate/legacy keys nobody has
+actually checked. **Backfilling is scoped future work, not started here** beyond the one script
+fix (category C) that was cheap and immediate.
+
+**Current mechanical result, after the stale-override fix:** `audit_locked_facts_verification_provenance_v2.py`
+→ **143/250 (57.2%) GROUNDED**, up from 141/250 (56.4%) pre-fix and ~100/251 (39.8%) before the
+Tier 1+2+3 arc began. **This is the number to cite going forward, not 99.6%.** The narrative
+figure is retired as a headline claim; the individual Tier 1/2/3 write-ups it's built from remain
+accurate accounts of the specific work done and are not being retracted, only the aggregate
+percentage built on top of them.
+
+**Hedges (deliberate, not oversights) — permanent unless a route to the source opens:**
+`gn605a_average_increase` (tanzlii.org CAPTCHA — the only fact left in `_MANUAL_KEEP_SUMMARY_ONLY`
+after today's fix). `nssf.go.tz`-family facts already hedged elsewhere in the corpus are
+unchanged this pass.
 
 **Genuinely unreachable, tried and confirmed blocked (not merely untried):** tanzlii.org
 generally, for any fact whose only host is that domain and where no local cache or alternate
 mirror exists — a standing, structural constraint (see the CAPTCHA note above), not a per-fact
 failure to retry harder.
 
-**Open, not closed by today's pass:** the 141-vs-249 reconciliation above; the `vat_deferment_limit_date`
-flag (top of this file); the 135 dict-shaped facts still `verified_as_at: "unknown"` and the 78
-bare-string facts that cannot carry the field without a schema-migration decision (both scoped,
-not built — see "GN registry and periodic-cadence groups" below).
+**Open, not closed by today's pass:** the category-A backfill campaign (scoped, sized, not
+started); the category-E legacy/duplicate bare-string keys (need a decision on whether to
+verify, merge into their canonical sibling, or retire — not investigated further here); the 135
+dict-shaped facts still `verified_as_at: "unknown"` and the 78 bare-string facts that cannot
+carry the field without a schema-migration decision (both scoped, not built — see "GN registry
+and periodic-cadence groups" below).
 
 ---
 
