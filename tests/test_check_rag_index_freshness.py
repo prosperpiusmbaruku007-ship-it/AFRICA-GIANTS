@@ -107,15 +107,18 @@ def test_missing_git_history_is_reported_distinctly_from_staleness():
     assert report["missing_inputs"] == ["scripts/locked_facts.json"]
 
 
-def test_against_live_repo_state_reports_the_known_current_gap():
-    """Sanity check against the ACTUAL repo, not a synthetic graph: as of this test's
-    authoring (2026-09-03) locked_facts.json has moved since the last real regen
-    (b017aac, 2026-08-26) -- this must currently report NOT ok. When R15 actually runs
-    and both directories are re-committed, this test will start failing and should be
-    updated to assert ok=True at that point -- that flip is itself the signal the regen
-    landed, not a bug in the test."""
+def test_against_live_repo_state_reports_fresh_after_r15_landed():
+    """Sanity check against the ACTUAL repo, not a synthetic graph. This test's original
+    2026-09-03 form asserted ok=False (the b017aac-era index was stale against
+    locked_facts.json), with its own docstring predicting the flip: 'when R15 actually
+    runs and both directories are re-committed, this test will start failing and should
+    be updated to assert ok=True at that point -- that flip is itself the signal the
+    regen landed, not a bug in the test.' Commit efe5956 (same day) landed the fetched
+    183-row index in both kaggle/ and chike-inference/, and `python
+    scripts/check_rag_index_freshness.py` was re-run and confirmed FRESH before that
+    commit -- this is that predicted flip, not a relaxed check."""
     ok, report = check(repo_dir=REPO)
-    assert ok is False, (
-        "the live repo now reports FRESH -- if R15 ran and both kaggle/ and "
-        "chike-inference/ were recommitted, update this test to assert ok is True")
-    assert "scripts/locked_facts.json" in report["stale_inputs"]
+    assert ok is True, (
+        f"the live repo reports stale again: {report}. Either a fact/embedding-code "
+        "change landed without a matching R15 regen, or this flip was premature.")
+    assert report["stale_inputs"] == {}
