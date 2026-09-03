@@ -60,32 +60,55 @@ _REPO = os.path.normpath(os.path.join(_HERE, ".."))
 FACTS_PATH = os.path.join(_REPO, "scripts", "locked_facts.json")
 INDEX_PATH = os.path.join(_REPO, "kaggle", "rag_facts_text.json")
 
-# --- PINNED VERDICTS, adjudicated by hand 2026-08-17 (scratch/factpath_sync_gap_v3.py) ---
-# present_elsewhere: (index_row, a short substring of that row's CURRENT text — if the
-#   substring stops matching, the index changed under this pin and the check must FAIL
-#   rather than trust a stale row number).
-# absent / fragment / pending_r15: no index_row — genuinely not there, by different reasons.
+# --- PINNED VERDICTS, adjudicated by hand starting 2026-08-17 (scratch/factpath_sync_gap_v3.py) ---
+# present_elsewhere: (needle) — a substring of the row's CURRENT text, searched across the
+#   WHOLE index, not pinned to a row number. absent / fragment / pending_r15: (None) —
+#   genuinely not there, by different reasons.
 #
-# RE-ADJUDICATED WHOLESALE, same day, after the R15 regen actually ran and deployed.
-# Every present_elsewhere row number above was resolved against the OLD 217-row index;
-# inserting/deleting keys mid-file shifted almost every row after the edit point in the
-# NEW 221-row index, so 23 of 26 present_elsewhere pins went stale in one regen — this is
-# exactly what drift_pin_stale exists to catch, and it caught all 23 the first run after
-# deploy. Re-located each by searching the new index for its (still-correct) substring,
-# disambiguating by content where a figure recurs (22,000/5,000,000/asilimia 3.5 all hit
-# multiple rows — see PROGRESS's "R15 CYCLE DEPLOYED" entry). The 3 pending_r15 keys from
-# the C4 cycle are promoted to present_elsewhere here since the regen that was pending has
-# now happened. Two new drift_unpinned keys (sdl_rate, GN605A_sector_count) surfaced
-# separately: their round-2 CONCISE rewrites lead with a conversational Swahili clause
-# before the first colon, so split(":")[0] no longer yields "sdl rate" / "gn605a sector
-# count" — a checker-matcher gap the readability-over-key-shape tradeoff will keep
-# producing, not a one-off.
+# REDESIGNED 2026-09-03, KEYED ON CONTENT INSTEAD OF ROW NUMBER (R18/CLAUDE.md).
+# The original scheme was (verdict, row, needle): both the row number AND the needle had
+# to match, so ANY regen that inserted or deleted a per-key row before a pinned row shifted
+# every row after it and broke the pin — even though the fact's own text hadn't moved
+# semantically, just numerically. This happened THREE times in this file's history (2026-08-17:
+# 23 of 26 pins stale in one regen; 2026-08-26: pins relocated again for the consolidation
+# cycle; 2026-09-03: 25 of the file's pins stale again after the fc9b0c8 -> b002b96 regen) —
+# three occurrences makes it structural, not a one-off, and a scheme that requires a hand
+# re-adjudication pass on every regen has a maintenance cost that grows with every fact added.
+#
+# The fix: search the ENTIRE index for the needle and require it to match EXACTLY ONE row.
+# A regen that only reorders rows (the common case) now needs no pin update at all — the
+# needle still matches, just at a different index. A regen that genuinely removes the fact's
+# text (the rare, real-defect case) still fails loudly: zero matches. And a needle that
+# becomes ambiguous — now matching two rows because a neighbour started using the same
+# phrase — ALSO fails loudly, which the old (row, needle) scheme could not detect at all: it
+# only ever checked `needle in index[row]`, so a second matching row elsewhere was invisible.
+# Per R26, a control that can't fail is worse than none: _match_needle is exercised directly
+# by tests/test_facts_index_sync.py with a needle planted to match nothing, a needle planted
+# to match twice, and a clean needle that must pass — all three asserted, not eyeballed.
+#
+# This redesign is also why 7 of this file's pins are pinned "absent" rather than
+# "present_elsewhere" even though their old (now-deleted) pins pointed at a row that still,
+# coincidentally, contained matching text: osiha_act_citation, health_and_safety_act_citation,
+# legal_citation_sdl, business_licensing_act_citation, order_made_under_section,
+# business_licensing_act_chapter, tanzania_citizenship_act_reference. All seven are
+# noise-dropped by is_noise_key()'s shape patterns and have had no standalone row of their
+# own for some time — the row-number scheme could not distinguish "this fact's row moved"
+# from "this fact's row is gone and something else now occupies that row number", and a
+# needle-uniqueness search over the WHOLE index is exactly the check that surfaces the
+# difference immediately: search for their old citation text across all 183 rows and it is
+# nowhere, not just missing from one row.
 PINNED = {
-    "sdl_threshold": ("present_elsewhere", 7, "wafanyakazi 10 au zaidi"),
+    "sdl_threshold": ("present_elsewhere", "wafanyakazi 10 au zaidi"),
     # sdl_employee_threshold pin removed 2026-08-17 -- the key itself was deleted
     # (merged into sdl_threshold, duplicate-key sweep; see PROGRESS "C4 applied").
-    "efd_threshold_tzs_11m": ("present_elsewhere", 57, "TZS 11,000,000"),
-    "osha_registration_threshold_b004": ("present_elsewhere", 52, "kila mwajiri lazima asajili"),
+    # needle narrowed 2026-09-03, found by the redesigned uniqueness search itself: bare
+    # "TZS 11,000,000" is no longer unique -- row 57 (efd_not_every_business, pinned
+    # separately below) also states the same figure as context for a DIFFERENT fact. This
+    # ambiguity was invisible under the old (row, needle) scheme, which only ever checked
+    # whether the needle was present AT the pinned row -- exactly the failure class the
+    # redesign exists to surface.
+    "efd_threshold_tzs_11m": ("present_elsewhere", "Kizingiti cha kuanza kutumia mashine ya EFD"),
+    "osha_registration_threshold_b004": ("present_elsewhere", "kila mwajiri lazima asajili"),
 
     # RE-ADJUDICATED WHOLESALE, 2026-09-03, after the fc9b0c8 -> b002b96 double regen
     # (electrical-fee merge + 2 noise drops + 2 NSSF rewrites) actually ran and deployed.
@@ -109,35 +132,35 @@ PINNED = {
     # citation text left over from a much earlier index layout. Reclassified "absent"
     # rather than re-pinned present_elsewhere, since there is no row to point at going
     # forward and is_noise_key() will keep dropping them on every future regen too.
-    "small_headcount_still_register": ("present_elsewhere", 68, "OSHA husajili maeneo YOTE"),
-    "OSHA_annual_inspection": ("present_elsewhere", 84, "ukaguzi wa lazima kila mwaka"),
-    "gn487a_prohibited_activity_3": ("present_elsewhere", 134, "Prohibited activity 3"),
-    "osiha_act_citation": ("absent", None, None),  # noise-dropped, see block comment above
-    "health_and_safety_act_citation": ("absent", None, None),  # noise-dropped
-    "legal_citation_sdl": ("absent", None, None),  # noise-dropped
-    "business_licensing_act_citation": ("absent", None, None),  # noise-dropped
-    "order_made_under_section": ("absent", None, None),  # noise-dropped
-    "business_licensing_act_chapter": ("absent", None, None),  # noise-dropped
-    "tanzania_citizenship_act_reference": ("absent", None, None),  # noise-dropped
+    "small_headcount_still_register": ("present_elsewhere", "OSHA husajili maeneo YOTE"),
+    "OSHA_annual_inspection": ("present_elsewhere", "ukaguzi wa lazima kila mwaka"),
+    "gn487a_prohibited_activity_3": ("present_elsewhere", "Prohibited activity 3"),
+    "osiha_act_citation": ("absent", None),  # noise-dropped, see block comment above
+    "health_and_safety_act_citation": ("absent", None),  # noise-dropped
+    "legal_citation_sdl": ("absent", None),  # noise-dropped
+    "business_licensing_act_citation": ("absent", None),  # noise-dropped
+    "order_made_under_section": ("absent", None),  # noise-dropped
+    "business_licensing_act_chapter": ("absent", None),  # noise-dropped
+    "tanzania_citizenship_act_reference": ("absent", None),  # noise-dropped
 
-    "legal_citation_tax_administration": ("absent", None, None),
-    "legal_citation_amendment_act_sdl": ("absent", None, None),
-    "workers_compensation_act_citation": ("absent", None, None),
-    "exemption_category_government_departments": ("absent", None, None),
-    "exemption_category_diplomatic_missions": ("absent", None, None),
-    "exemption_category_un_and_agencies": ("absent", None, None),
-    "exemption_category_international_organizations_aid": ("absent", None, None),
-    "exemption_category_religious_institutions": ("absent", None, None),
-    "exemption_category_charitable_organizations": ("absent", None, None),
-    "exemption_category_educational_institutions": ("absent", None, None),
-    "exemption_category_local_government_authorities": ("absent", None, None),
-    "exemption_category_trainees_under_TAESA": ("absent", None, None),
-    "exemption_category_farm_employers_agriculture": ("absent", None, None),
+    "legal_citation_tax_administration": ("absent", None),
+    "legal_citation_amendment_act_sdl": ("absent", None),
+    "workers_compensation_act_citation": ("absent", None),
+    "exemption_category_government_departments": ("absent", None),
+    "exemption_category_diplomatic_missions": ("absent", None),
+    "exemption_category_un_and_agencies": ("absent", None),
+    "exemption_category_international_organizations_aid": ("absent", None),
+    "exemption_category_religious_institutions": ("absent", None),
+    "exemption_category_charitable_organizations": ("absent", None),
+    "exemption_category_educational_institutions": ("absent", None),
+    "exemption_category_local_government_authorities": ("absent", None),
+    "exemption_category_trainees_under_TAESA": ("absent", None),
+    "exemption_category_farm_employers_agriculture": ("absent", None),
 
-    "workers_compensation_act_section": ("fragment", None, None),
-    "workers_compensation_rules_section": ("fragment", None, None),
-    "workers_compensation_amendment_rules_section": ("fragment", None, None),
-    "offence_penalty_mention": ("fragment", None, None),
+    "workers_compensation_act_section": ("fragment", None),
+    "workers_compensation_rules_section": ("fragment", None),
+    "workers_compensation_amendment_rules_section": ("fragment", None),
+    "offence_penalty_mention": ("fragment", None),
 
     # Written 2026-08-16 for the presumptive-tax coverage item, pending_r15 until the R15
     # regen ran. It ran on 2026-08-17 (the natural48 entry, PROGRESS.md) and all four keys
@@ -151,11 +174,11 @@ PINNED = {
     # unrelated keys ride on the SAME row) demoted 5 real, already-indexed keys out of
     # "sibling" into unpinned drift. Re-verified each against its OWN correct row by
     # reading the index directly (scratch/local_regen_verify.py's sibling-audit pass).
-    "nssf_employer_rate": ("present_elsewhere", 9, "mwajiri analipa asilimia 10"),
-    "nssf_total_rate": ("present_elsewhere", 10, "jumla: asilimia 20"),
-    "nssf_payment_deadline": ("present_elsewhere", 61, "ifikapo tarehe 10"),  # re-adjudicated 2026-09-03, was row 62
-    "nssf_calculation_example": ("present_elsewhere", 166, "SI TZS 120,000"),  # re-adjudicated 2026-09-03, was row 171
-    "brela_striking_off_non_filing": ("present_elsewhere", 44, "kufuta, kufunga au kuondoa"),
+    "nssf_employer_rate": ("present_elsewhere", "mwajiri analipa asilimia 10"),
+    "nssf_total_rate": ("present_elsewhere", "jumla: asilimia 20"),
+    "nssf_payment_deadline": ("present_elsewhere", "ifikapo tarehe 10"),  # re-adjudicated 2026-09-03, was row 62
+    "nssf_calculation_example": ("present_elsewhere", "SI TZS 120,000"),  # re-adjudicated 2026-09-03, was row 171
+    "brela_striking_off_non_filing": ("present_elsewhere", "kufuta, kufunga au kuondoa"),
 
     # ---- The three council-fee domains reclassified from COVERAGE GAP to ANSWERED
     # (scripts/add_local_levy_facts.py) were pinned pending_r15 here 2026-08-25, then
@@ -175,9 +198,9 @@ PINNED = {
     # re-adjudicated 2026-09-03 (was rows 176/177/178): 'USD 25' alone is no longer unique
     # (the brela_filing_fees GROUP passage at row 181 also states the same figure) --
     # narrowed to the fuller phrase that is unique to this key's own standalone row.
-    "brela_foreign_late_filing_penalty": ("present_elsewhere", 171, "faini ni USD 25 kwa kila mwezi"),
-    "osha_registration_before_operations": ("present_elsewhere", 172, "Kifungu 16(2)"),
-    "sdl_exemption_categories": ("present_elsewhere", 173, "zisizolipa SDL"),
+    "brela_foreign_late_filing_penalty": ("present_elsewhere", "faini ni USD 25 kwa kila mwezi"),
+    "osha_registration_before_operations": ("present_elsewhere", "Kifungu 16(2)"),
+    "sdl_exemption_categories": ("present_elsewhere", "zisizolipa SDL"),
 
     # late_filing_penalty_monthly_fee: found 2026-08-26, by the sibling-match audit the fee
     # consolidation prompted (eval/results/sibling_match_audit.json). This key was NEVER
@@ -193,7 +216,7 @@ PINNED = {
     # (build_fact_texts(), row 98) since this pin is being added in the same commit as the
     # consolidation it depends on. Re-adjudicated 2026-09-03: row shifted 98 -> 97 (it
     # swapped positions with annual_return_filing_fee, below, in the fc9b0c8/b002b96 regen).
-    "late_filing_penalty_monthly_fee": ("present_elsewhere", 97, "TZS 2,500 kwa kila mwezi"),
+    "late_filing_penalty_monthly_fee": ("present_elsewhere", "TZS 2,500 kwa kila mwezi"),
 
     # --- Second pass, 2026-08-17: this script's own first run found 20 MORE unpinned
     # keys the earlier v1/v2/v3 investigation never touched -- v3 only re-checked the 28
@@ -203,23 +226,23 @@ PINNED = {
     # needle tightened 2026-08-26: bare "10,000,000" also matches vat_deferment_minimum_value's
     # row in the post-consolidation index (the sibling-match audit's disambiguation pass found
     # this collision while relocating pins) -- "(milioni kumi)" is unique to this fact's text.
-    "gn487a_penalty_noncitizen": ("present_elsewhere", 20, "10,000,000 (milioni kumi)"),
-    "gn487a_penalty_citizen_facilitator": ("present_elsewhere", 21, "5,000,000 (milioni tano)"),
+    "gn487a_penalty_noncitizen": ("present_elsewhere", "10,000,000 (milioni kumi)"),
+    "gn487a_penalty_citizen_facilitator": ("present_elsewhere", "5,000,000 (milioni tano)"),
     # re-adjudicated 2026-09-03 (row numbers below were 91/58/66/68/95/99 -- all stale
     # after the fc9b0c8/b002b96 regen; the osiha/health_and_safety/business_licensing x2/
     # tanzania_citizenship pins formerly here were REMOVED, not relocated -- see the
     # "SEVEN of the twenty-five" comment near the top of PINNED, they are noise-dropped
     # and pinned "absent" up there instead).
-    "gn487a_license_lending_is_facilitation": ("present_elsewhere", 22, "leseni yake kwa mgeni"),
-    "efd_not_every_business": ("present_elsewhere", 57, "Si lazima"),
+    "gn487a_license_lending_is_facilitation": ("present_elsewhere", "leseni yake kwa mgeni"),
+    "efd_not_every_business": ("present_elsewhere", "Si lazima"),
     # needle narrowed: bare 'asilimia 0.5' is no longer unique (row 67, osha_vs_wcf_roles,
     # also now states the WCF rate inline as part of its own explanation).
-    "wcf_rate_0_5_percent_confirmed": ("present_elsewhere", 65, "asilimia 0.5 ya jumla"),
-    "osha_vs_wcf_roles": ("present_elsewhere", 67, "taasisi mbili tofauti"),
-    "sdl_payment_deadline": ("present_elsewhere", 94, "siku ya 7"),
-    "annual_return_filing_fee": ("present_elsewhere", 98, "ada ya kuwasilisha ritani"),
-    "paye_bands_with_examples": ("present_elsewhere", 164, "TZS 800,000"),
-    "sdl_calculation_example": ("present_elsewhere", 165, "Mfano wa hesabu"),
+    "wcf_rate_0_5_percent_confirmed": ("present_elsewhere", "asilimia 0.5 ya jumla"),
+    "osha_vs_wcf_roles": ("present_elsewhere", "taasisi mbili tofauti"),
+    "sdl_payment_deadline": ("present_elsewhere", "siku ya 7"),
+    "annual_return_filing_fee": ("present_elsewhere", "ada ya kuwasilisha ritani"),
+    "paye_bands_with_examples": ("present_elsewhere", "TZS 800,000"),
+    "sdl_calculation_example": ("present_elsewhere", "Mfano wa hesabu"),
     # sdl_rate / GN605A_sector_count: drift found post-R15-regen, 2026-08-17 (the natural48
     # re-run entry, PROGRESS.md). Both rewritten this cycle into conversational Swahili
     # lead-ins ('SDL, ambayo huitwa pia "mafunzo": ...', 'Kima cha chini cha mshahara (GN
@@ -227,33 +250,33 @@ PINNED = {
     # exactly the citation-clutter-adjacent tradeoff the readability rule accepts. Content
     # verified correct and present; needles chosen to avoid the OTHER row that shares the
     # same generic figure (row 212's SDL worked example also says "asilimia 3.5").
-    "sdl_rate": ("present_elsewhere", 5, "Si asilimia 4, si asilimia 2"),
+    "sdl_rate": ("present_elsewhere", "Si asilimia 4, si asilimia 2"),
     # GN605A_sector_count re-adjudicated 2026-09-03: row 72 -> 71, needle narrowed --
     # bare 'sekta 16' risked ambiguity as the index grows, 'sekta 16 na sekta ndogo' is
     # unique to this row specifically.
-    "GN605A_sector_count": ("present_elsewhere", 71, "sekta 16 na sekta ndogo"),
+    "GN605A_sector_count": ("present_elsewhere", "sekta 16 na sekta ndogo"),
 
     # maternity_cash_benefit_rate / unpaid_contribution_penalty_rate: promoted from
     # "not pinned, still exact-matching the old bare form" (see b002b96) to
     # present_elsewhere now that the b002b96 regen actually shipped their ask-aligned
     # CONCISE rewrites -- the old bare-form exact match is gone, this checker correctly
     # reported both as drift_unpinned, and this is that promotion, exactly as predicted.
-    "maternity_cash_benefit_rate": ("present_elsewhere", 154, "likizo ya uzazi"),
-    "unpaid_contribution_penalty_rate": ("present_elsewhere", 148, "ASILIMIA 5"),
+    "maternity_cash_benefit_rate": ("present_elsewhere", "likizo ya uzazi"),
+    "unpaid_contribution_penalty_rate": ("present_elsewhere", "ASILIMIA 5"),
 
     # gn487a_marriage_no_exemption: row 93 covers dual-nationality/naturalisation under
     # Cap.357 but never mentions marriage. A materially different claim -- genuinely absent.
-    "gn487a_marriage_no_exemption": ("absent", None, None),
+    "gn487a_marriage_no_exemption": ("absent", None),
     # gn487a_signatory: "Jafo" (the minister) has zero hits anywhere in the index.
-    "gn487a_signatory": ("absent", None, None),
+    "gn487a_signatory": ("absent", None),
 
     # --- Fragment-displacement fixes, 2026-09-03 (re-adjudicating nat_27/nat_36 after the
     # fc9b0c8 regen -- see PROGRESS.md). Both were old-schema bare "key: value" duplicates of
     # an existing, better-formed CONCISE fact, deliberately dropped from the index as noise
     # (_NOISE_KEYS_REVIEWED in precompute_rag_embeddings.py carries the full R25 justification
     # for each). Pinned absent here rather than left to fall into drift_unpinned.
-    "contribution_rate_emplyees": ("absent", None, None),
-    "penalty_fine_non_citizen": ("absent", None, None),
+    "contribution_rate_emplyees": ("absent", None),
+    "penalty_fine_non_citizen": ("absent", None),
 
     # electrical_test_fee_reduction_initial / _final: NOT pinned here -- both were converted
     # to FACT_GROUPS members in the same commit (merged, self-retrieval-failure fix), so they
@@ -266,14 +289,14 @@ PINNED = {
     # the Kaggle regen's own guard queries ('Corporate tax rate (ask-aligned)', 'AMT loss-
     # making corporation (ask-aligned)' in kaggle/regenerate_rag_e5.py), and row-located
     # directly against the fetched, deployed rag_facts_text.json (2026-09-03).
-    "corporate_tax_rate": ("present_elsewhere", 36, "asilimia 30 kwa kampuni"),
-    "minimum_turnover_tax": ("present_elsewhere", 27, "hasara miaka mitatu mfululizo"),
+    "corporate_tax_rate": ("present_elsewhere", "asilimia 30 kwa kampuni"),
+    "minimum_turnover_tax": ("present_elsewhere", "hasara miaka mitatu mfululizo"),
     # prohibited_business_activities_for_non_citizens_order_year: value is the bare year
     # "2025". Row 19 states GN487A's effective date is 28 July 2025, so the YEAR is not
     # unretrievable -- but "2025" alone is too common a substring to pin reliably (it
     # would silently match almost any row a future index edit introduces), so this is
     # kept as a fragment rather than a fragile present_elsewhere pin.
-    "prohibited_business_activities_for_non_citizens_order_year": ("fragment", None, None),
+    "prohibited_business_activities_for_non_citizens_order_year": ("fragment", None),
 }
 
 
@@ -330,6 +353,27 @@ def _grouped_verdict(key, locked, index):
     return "grouped", None
 
 
+def _match_needle(needle, index):
+    """Search the WHOLE index for `needle`. Returns (status, matches):
+      status is 'unique' (exactly one row contains it -- the good case), 'absent'
+      (zero rows -- the fact's text is genuinely gone), or 'ambiguous' (2+ rows --
+      the needle no longer identifies a single row, which is the same silent-wrong-
+      row failure as 'absent' one step removed: a caller that just took matches[0]
+      could point at the wrong fact and never know).
+    matches is the list of row indices found, in index order.
+
+    This is the whole redesign: the old scheme checked one specific row number for
+    the needle, so it broke on every reorder. This checks EVERY row for the needle
+    and only accepts a result that is unambiguous, so reordering is free and a real
+    loss of content -- or a real new collision -- both still fail loudly."""
+    matches = [i for i, row in enumerate(index) if needle in row]
+    if len(matches) == 1:
+        return "unique", matches
+    if len(matches) == 0:
+        return "absent", matches
+    return "ambiguous", matches
+
+
 def check(facts_path=FACTS_PATH, index_path=INDEX_PATH):
     locked = json.load(open(facts_path, encoding="utf-8"))
     index = json.load(open(index_path, encoding="utf-8"))
@@ -358,8 +402,7 @@ def check(facts_path=FACTS_PATH, index_path=INDEX_PATH):
                 report["grouped"].append(key)
             else:
                 report["drift_pin_stale"].append(
-                    {"key": key, "pinned_row": None, "expected_substring": reason,
-                     "row_now": None})
+                    {"key": key, "expected_substring": None, "reason": reason})
             continue
 
         pin = PINNED.get(key)
@@ -367,14 +410,17 @@ def check(facts_path=FACTS_PATH, index_path=INDEX_PATH):
             report["drift_unpinned"].append(key)
             continue
 
-        verdict, row, needle = pin
+        verdict, needle = pin
         if verdict == "present_elsewhere":
-            if row is None or row >= len(index) or needle not in index[row]:
-                report["drift_pin_stale"].append(
-                    {"key": key, "pinned_row": row, "expected_substring": needle,
-                     "row_now": index[row] if row is not None and row < len(index) else None})
+            status, matches = _match_needle(needle, index)
+            if status == "unique":
+                report["present_elsewhere"].append({"key": key, "row": matches[0]})
             else:
-                report["present_elsewhere"].append({"key": key, "row": row})
+                reason = ("needle not found anywhere in the index" if status == "absent"
+                          else f"needle matches {len(matches)} rows (ambiguous), "
+                               f"no longer identifies one: {matches}")
+                report["drift_pin_stale"].append(
+                    {"key": key, "expected_substring": needle, "reason": reason})
         elif verdict in ("absent", "fragment", "pending_r15"):
             report[verdict].append(key)
         else:  # pragma: no cover -- guards a typo in PINNED itself
@@ -408,16 +454,16 @@ def main():
         for k in report["drift_unpinned"]:
             print(f"    {k}")
         print("  Adjudicate each: is the content in the index under a different key/language "
-              "(add to PINNED as present_elsewhere with the row + a substring), genuinely "
+              "(add to PINNED as present_elsewhere with a unique substring), genuinely "
               "absent, a non-retrievable fragment, or pending an R15 regen? Then re-run.")
         print()
 
     if report["drift_pin_stale"]:
-        print(f"DRIFT -- {len(report['drift_pin_stale'])} PINNED present_elsewhere row(s) "
-              f"no longer match the current index (the index changed under the pin):")
+        print(f"DRIFT -- {len(report['drift_pin_stale'])} PINNED present_elsewhere / grouped "
+              f"entries no longer verifiable against the current index:")
         for r in report["drift_pin_stale"]:
-            print(f"    {r['key']}: expected row {r['pinned_row']} to contain "
-                  f"{r['expected_substring']!r}, found {r['row_now']!r}")
+            needle_part = f" (needle: {r['expected_substring']!r})" if r["expected_substring"] else ""
+            print(f"    {r['key']}: {r['reason']}{needle_part}")
         print("  Re-adjudicate: find the fact's new location (or confirm it is now genuinely "
               "absent) and update PINNED.")
         print()
