@@ -1,5 +1,62 @@
 # Africa Giants — Project Progress
 
+## 🏁 VERIFICATION ARC CLOSED, 2026-09-03 — 100/251 (39.8%) → 234/250 (93.6%) grounded
+
+**What this section is for.** A future session should be able to read this and know what the
+fact base *is* — not read a month of commits to reconstruct it. Full history lives in the dated
+entries below and in `scripts/locked_facts.json` itself (`verified_by`/`correction_note` per
+fact); this is the map, not the territory.
+
+**Trajectory.** The arc started 2026-08-28, when `audit_locked_facts_verification_provenance_v2.py`
+was built to answer a founder question about exposure, not confidence, and found the corpus's
+own confidence number wrong twice on the way to a corrected baseline: **100/251 (39.8%)
+grounded**. Draining ran in source-first batches — BRELA cached pages, BRELA FAQ, NSSF Act,
+TRA per-topic (VAT/PAYE/SDL/WHT/provisional tax/DSE/objections/TRAB), WCF/Workers Compensation,
+immigration, BRELA remainder — each batch committed with its own harness and cross-checked
+against Finance Acts 2024–2026 before treating any consolidated Act as current (R29). Final:
+**234/250 (93.6%)**. (Total key count moved 251→250 mid-arc from an unrelated duplicate-key
+merge, not from this work.)
+
+**The four failure modes found.** Not a formal taxonomy chosen in advance — four distinct ways a
+locked fact turned out wrong (or right for the wrong reason), each requiring a different check to
+catch, discovered in this order over the arc:
+
+| mode | what it looks like | how it's caught | named instances found (not exhaustive) |
+|---|---|---|---|
+| **FABRICATED** | a plausible figure with an invented or laundered citation — the claim was never checked against anything real | R4's citation-laundering list; fetching the named source and finding it doesn't say what's claimed | `efd_threshold_tzs_11m` (2026-08-29, invented citation chain for an 11M turnover threshold that doesn't exist); `nssf_retirement_age` ("mining" as the justification for age 55 — the word appears in no source the fact ever cited, invented during authoring, not decayed from one) |
+| **UNTRACEABLE** | the citation names something real, but it is genuinely inaccessible to verify — not absence, a live block | direct retry with a different tool/route before accepting "unreachable"; distinguishing a CAPTCHA (permanent) from a dead link (temporary) (R30) | `gn605a_average_increase` — tanzlii.org Cloudflare Turnstile, confirmed genuine four ways, **still open as a permanent hedge**, only one of the 16 remaining; the Immigration Service's `permit_class_a/b/c/d` cluster — immigration.go.tz is a confirmed JS-shell (806 bytes via direct curl), worked around this arc by finding the Immigration Act itself via an nps.go.tz mirror, not by reaching the blocked site |
+| **OUT-OF-DATE** | the citation is real, but it's a stale EDITION of the same instrument, or cites a SECTION NUMBER from before the Act was renumbered | reading every amending Act forward from the edition's cover date; treating a `[s. NN]` footnote in a current Act as a hard fact about renumbering, not a curiosity | the founding case, Cap.332 R.E.2019 hosted on tra.go.tz itself still printing pre-2022 presumptive-tax bands (2026-08-16); the **renumbering-trap** recurred independently at least 4 times — `objection_deposit_requirement` (s.51→s.62), `efd_threshold_tzs_11m` (s.36→s.44), `legal_citation_tax_administration` (explicitly logged as "the THIRD" instance), and this arc's own `annual_return_form_number` ("Form 128" now filed under s.131, confirmed by the Act's own `[s. 128]` footnote) |
+| **SUPERSEDED-INSTRUMENT** | the citation is real and was correct when written, but a LATER, SEPARATE instrument (not a new edition of the same one) changed the figure | asking what would make a correctly-cited figure wrong despite being correctly cited — a search for amending Regulations/GNs by name, the same discipline already applied to Acts | `vat_deferment_minimum_value` (GN 608/2018 halved 20M→10M — the arc's worked example for this mode, see CLAUDE.md R29); `vat_withholding_remittance_deadline` (Finance Act 2026 moved the deadline, found only because a freshness audit read the whole Act rather than provision-by-provision); `presumptive_tax_bands_2022` (same shape, found 2026-09-01); this session's SDL exemption wording (FA2026 s.98 reworded s.19(1)(a)) and the **WCF late-payment interest rate — GN 668/2021 changed it from 10% to 2%**, the original 2016 figure (Reg.13/2016 §13(7)) now superseded and still printed verbatim in the unamended text |
+
+A fifth shape got named but explicitly ruled OUT of this taxonomy rather than forced in:
+`name_similarity_threshold`'s "50%" was real, current, and cited correctly — the defect was a
+**tool's UI behavior recorded as a legal rule** (BRELA's ORS screen shows a similarity score; the
+actual legal test is qualitative discretion, not a numeric cutoff). Worth remembering as a
+distinct trap, not folded into "fabricated" just because it was also wrong.
+
+**What remains ungrounded — 16 of 250 — and why, by reason not by fact:**
+
+| reason | facts | why not closed |
+|---|---|---|
+| **genuine access block (untraceable)** | `gn605a_average_increase` | tanzlii.org CAPTCHA, confirmed four ways; permanent hedge, not a scheduled retry |
+| **deliberate policy hedge, not a research gap** | `BRELA_fees_hedge` | locked against a CLAUDE.md-fixed figure on purpose — closing it would remove a guard, not add one |
+| **portal/press-tier IS the correct ceiling** | `efd_approved_supplier_verification`, `business_name_maintenance_fee`, `registration_certificate_processing_time`, `electrical_test_fee_reduction_final` | administrative facts (a published supplier list, an operational fee page, a processing-time SLA) with no statute to cite — forcing a citation here would be padding, not grounding |
+| **name/value mismatch found, not resolved** | `registration_certificate_processing_time_new`, `late_payment_penalty_rate` | the "1 day" figure traces to BUSINESS LICENCE issuance, not company registration, despite the key's name; the "2%" figure has zero scoping context anywhere in the codebase and a same-arc discovery (WCF's GN668/2021 rate) numerically matches it but is a different domain — **left as a lead, not a resolution; matching a number is not the same claim as identifying the provision it came from** |
+| **secondary-sourced, not yet primary-read** | `BRELA_COSOTA_split`, `application_fee_patent`, `beneficial_owner_information_penalty_maximum` | real, plausible, portal/secondary-tier; the Companies Act's own beneficial-ownership sections (ss.456–469) name no penalty figure, so that one may be Regulations-delegated rather than simply unread |
+| **out of this arc's scope, not investigated** | `course_fee`, `osha_registration_threshold_b004`, `compliance_license_processing_time_old`, `tmda_replaces_tfda`, `brave_search_blocked_tanzania` | OSHA/misc cluster explicitly deprioritized ("not worth a session") — genuinely untouched, not tried-and-failed |
+
+**Tooling built this arc that outlives it:** `scripts/audit_locked_facts_verification_provenance_v2.py`
+(the grounded/ungrounded census itself), `scripts/bootstrap_verified_as_at.py` (the
+primary-verified-date census, now with its own known-good/known-bad regression fixture at
+`tests/test_bootstrap_verified_as_at_classify.py` — built after the census under-counted a
+correct fact for a formatting reason twice in two commits), `scripts/fetch_primary_source.py`
+(the curl-based fetch helper that made most of this arc's statute reads possible once
+WebFetch's tra.go.tz bug was diagnosed as tooling, not a source block — R30), and
+`scripts/find_revisitable_hedges.py` (the mechanism that re-checks a hedged fact against a local
+cache that didn't exist at first-check time).
+
+---
+
 Last updated: 2026-09-02, LATEST (revisit backlog drained — 4 more facts closed, a second
 word-boundary bug caught in the process; 🔑 **curl bypasses WebFetch's tra.go.tz header-parse
 bug generally** — confirmed across HTML pages and PDFs, brela.go.tz/osha.go.tz/mof.go.tz too;
