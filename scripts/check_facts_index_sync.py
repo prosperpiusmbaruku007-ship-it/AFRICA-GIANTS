@@ -225,7 +225,7 @@ PINNED = {
     # correctly report them as drift_unpinned -- pin them present_elsewhere with the real row
     # at THAT point (matching this file's standing practice of pinning after, not ahead of,
     # the regen that makes the pin true). Confirmed via build_fact_texts() the prospective
-    # rows are 154 ("ASILIMIA 100") / 148 ("ASILIMIA 5") for whoever adds that pin next.
+    # rows are 154 ("100%") / 148 ("ASILIMIA 5") for whoever adds that pin next.
 
     # corporate_tax_rate / minimum_turnover_tax: the corporate-tax source pass (4974cbc,
     # 2026-09-01) moved both into CONCISE_BILINGUAL_FACTS, so their slugs stopped exact-

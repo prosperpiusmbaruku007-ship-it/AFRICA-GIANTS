@@ -78,13 +78,16 @@ SOURCE_FILES = ['scripts/locked_facts.json', 'scripts/precompute_rag_embeddings.
 # clone that does not contain it as an ancestor means the required commits were never
 # pushed, and this script must refuse to run rather than quietly build the wrong index.
 #
-# BUMPED 2026-09-03: the prior floor (76897e3, 2026-08-26) predates the entire
-# verification arc (24 commits to locked_facts.json, including reverting
-# vat_deferment_minimum_value's fabricated-lineage 20,000,000 back to 10,000,000, and
-# a4246fd correcting efd_threshold_tzs_11m's invented threshold -- a fact served ~111
-# times, per scripts/check_rag_index_freshness.py's report) and the corporate-tax
-# ask-alignment commit (4974cbc). This run is packaged specifically to carry all of it.
-EXPECTED_HEAD = 'fc9b0c8'
+# BUMPED 2026-09-03 (second bump, same day): fc9b0c8's regen shipped and was re-
+# adjudicated (nat_27/nat_36 KNOWN-FAIL re-check) -- found and fixed 3 more defects
+# AFTER that run completed: electrical_test_fee_reduction_initial/_final's self-
+# retrieval failure (merged into a FACT_GROUPS passage), and two typo'd/duplicate NSSF
+# and GN487A fragments (contribution_rate_emplyees, penalty_fine_non_citizen) dropped
+# as noise plus two genuine NSSF facts (maternity_cash_benefit_rate,
+# unpaid_contribution_penalty_rate) given ask-aligned rewrites. None of this is in the
+# index currently deployed (fc9b0c8-built) -- this floor exists so the NEXT regen
+# cannot silently rebuild without them.
+EXPECTED_HEAD = '76e64ed'
 
 
 def _assert_expected_head_present(local_head, live_sha):

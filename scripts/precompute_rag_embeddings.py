@@ -173,8 +173,13 @@ CONCISE_BILINGUAL_FACTS = {
     # existing correct_value -- no new claims added beyond restating the verified figure in
     # a natural Swahili question-shaped sentence.
     'maternity_cash_benefit_rate':
-        'NSSF likizo ya uzazi (maternity benefit): mfanyakazi analipwa ASILIMIA 100 ya '
-        'mshahara wakati wa likizo ya uzazi.',
+        # digit form '100%', not 'asilimia 100' -- the word form's substring 'asilimia 10'
+        # collided with the NSSF-employer-rate guard's anchor (found by a local anchor-
+        # uniqueness dry run against the prospective index before this was ever packaged
+        # for Kaggle; every '1xx' percent value has this hazard against a bare '...10'
+        # anchor and is worth checking for specifically, not just re-running the sweep).
+        'NSSF likizo ya uzazi (maternity benefit): mfanyakazi analipwa 100% ya mshahara '
+        'wakati wa likizo ya uzazi.',
 
     'unpaid_contribution_penalty_rate':
         'Ukichelewesha kulipa mchango wa NSSF, adhabu (penalty) ni ASILIMIA 5 ya kiasi '
