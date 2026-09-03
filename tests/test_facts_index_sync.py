@@ -29,14 +29,11 @@ from scripts.check_facts_index_sync import PINNED, check
 # IS the signal to delete the entry, per this file's own test_pending_r15_keys_are_still_pending
 # precedent for the PINNED-dict version of the same pattern.
 KNOWN_PENDING_R15_GROUP_DRIFT = {
-    "memorandum_articles_of_association_filing_fee": (
-        "2026-09-02: corrected 22,000 -> 66,000 (direct read of BRELA's fee page named the "
-        "Memorandum and Articles filing fee specifically, distinct from the generic "
-        "22,000-per-document rate -- see PROGRESS.md and the fact's own correction_note). The "
-        "group text in precompute_rag_embeddings.py's FACT_GROUPS['brela_filing_fees'] was "
-        "updated in the same commit, but the SHIPPED rag_facts_text.json still carries the old "
-        "22,000 figure until the next R15 regen runs on Kaggle."
-    ),
+    # memorandum_articles_of_association_filing_fee (22,000 -> 66,000, 2026-09-02) was here
+    # pending the R15 regen that would ship the corrected group text. The b002b96 regen
+    # (2026-09-03) shipped it -- test_known_pending_r15_group_drift_is_still_pending caught
+    # the resolution immediately, exactly the signal its own docstring describes. Removed
+    # rather than left stale.
 }
 
 

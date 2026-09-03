@@ -86,11 +86,39 @@ PINNED = {
     # (merged into sdl_threshold, duplicate-key sweep; see PROGRESS "C4 applied").
     "efd_threshold_tzs_11m": ("present_elsewhere", 57, "TZS 11,000,000"),
     "osha_registration_threshold_b004": ("present_elsewhere", 52, "kila mwajiri lazima asajili"),
-    "small_headcount_still_register": ("present_elsewhere", 69, "OSHA husajili maeneo YOTE"),
-    "OSHA_annual_inspection": ("present_elsewhere", 85, "ukaguzi wa lazima kila mwaka"),
-    "legal_citation_sdl": ("present_elsewhere", 88, "Vocational Education Training Act"),
-    "gn487a_prohibited_activity_3": ("present_elsewhere", 137, "Prohibited activity 3"),
-    "order_made_under_section": ("present_elsewhere", 133, "section 14A(2)"),
+
+    # RE-ADJUDICATED WHOLESALE, 2026-09-03, after the fc9b0c8 -> b002b96 double regen
+    # (electrical-fee merge + 2 noise drops + 2 NSSF rewrites) actually ran and deployed.
+    # This is the THIRD time this file has had to do this (see the 2026-08-17 note below,
+    # "23 of 26 present_elsewhere pins went stale in one regen") -- confirms the pattern is
+    # structural, not a one-off: any regen that inserts/deletes ANY per-key row before a
+    # pinned row shifts every row number after it, since build_fact_texts() emits rows in
+    # locked_facts.json's key-insertion order, not alphabetically or by content. Re-located
+    # each by searching the ACTUAL deployed kaggle/rag_facts_text.json for its CONCISE
+    # source text (scripts/precompute_rag_embeddings.py's CONCISE_BILINGUAL_FACTS dict is
+    # the ground truth for what each key's row actually says now), then verified the chosen
+    # needle is BOTH present at that row AND unique across the full 183-row index --
+    # several of the old needles ('USD 25', 'asilimia 0.5') are no longer unique now that
+    # rows moved next to different neighbours.
+    #
+    # SEVEN of the twenty-five were not actually stale-but-relocatable -- they were
+    # NOISE-DROPPED. is_noise_key()'s shape patterns (`_act_citation$`, `_act_chapter$`,
+    # `_act_reference$`, `^order_made_under_section$`) already matched these seven keys;
+    # they have not had a standalone row for some time, and the OLD pins were only ever
+    # coincidentally "valid" because a stale row number happened to still contain matching
+    # citation text left over from a much earlier index layout. Reclassified "absent"
+    # rather than re-pinned present_elsewhere, since there is no row to point at going
+    # forward and is_noise_key() will keep dropping them on every future regen too.
+    "small_headcount_still_register": ("present_elsewhere", 68, "OSHA husajili maeneo YOTE"),
+    "OSHA_annual_inspection": ("present_elsewhere", 84, "ukaguzi wa lazima kila mwaka"),
+    "gn487a_prohibited_activity_3": ("present_elsewhere", 134, "Prohibited activity 3"),
+    "osiha_act_citation": ("absent", None, None),  # noise-dropped, see block comment above
+    "health_and_safety_act_citation": ("absent", None, None),  # noise-dropped
+    "legal_citation_sdl": ("absent", None, None),  # noise-dropped
+    "business_licensing_act_citation": ("absent", None, None),  # noise-dropped
+    "order_made_under_section": ("absent", None, None),  # noise-dropped
+    "business_licensing_act_chapter": ("absent", None, None),  # noise-dropped
+    "tanzania_citizenship_act_reference": ("absent", None, None),  # noise-dropped
 
     "legal_citation_tax_administration": ("absent", None, None),
     "legal_citation_amendment_act_sdl": ("absent", None, None),
@@ -125,8 +153,8 @@ PINNED = {
     # reading the index directly (scratch/local_regen_verify.py's sibling-audit pass).
     "nssf_employer_rate": ("present_elsewhere", 9, "mwajiri analipa asilimia 10"),
     "nssf_total_rate": ("present_elsewhere", 10, "jumla: asilimia 20"),
-    "nssf_payment_deadline": ("present_elsewhere", 62, "ifikapo tarehe 10"),
-    "nssf_calculation_example": ("present_elsewhere", 171, "SI TZS 120,000"),
+    "nssf_payment_deadline": ("present_elsewhere", 61, "ifikapo tarehe 10"),  # re-adjudicated 2026-09-03, was row 62
+    "nssf_calculation_example": ("present_elsewhere", 166, "SI TZS 120,000"),  # re-adjudicated 2026-09-03, was row 171
     "brela_striking_off_non_filing": ("present_elsewhere", 44, "kufuta, kufunga au kuondoa"),
 
     # ---- The three council-fee domains reclassified from COVERAGE GAP to ANSWERED
@@ -144,9 +172,12 @@ PINNED = {
     # present_elsewhere below with their real rows. brela_foreign_late_filing_penalty is
     # the one the tightened sibling matcher above caught falsely riding on 'brela' before
     # the regen; it is genuinely indexed now.
-    "brela_foreign_late_filing_penalty": ("present_elsewhere", 176, "USD 25"),
-    "osha_registration_before_operations": ("present_elsewhere", 177, "16(2)"),
-    "sdl_exemption_categories": ("present_elsewhere", 178, "zisizolipa SDL"),
+    # re-adjudicated 2026-09-03 (was rows 176/177/178): 'USD 25' alone is no longer unique
+    # (the brela_filing_fees GROUP passage at row 181 also states the same figure) --
+    # narrowed to the fuller phrase that is unique to this key's own standalone row.
+    "brela_foreign_late_filing_penalty": ("present_elsewhere", 171, "faini ni USD 25 kwa kila mwezi"),
+    "osha_registration_before_operations": ("present_elsewhere", 172, "Kifungu 16(2)"),
+    "sdl_exemption_categories": ("present_elsewhere", 173, "zisizolipa SDL"),
 
     # late_filing_penalty_monthly_fee: found 2026-08-26, by the sibling-match audit the fee
     # consolidation prompted (eval/results/sibling_match_audit.json). This key was NEVER
@@ -160,8 +191,9 @@ PINNED = {
     # CONCISE_BILINGUAL_FACTS Swahili sentence that does not slug-match its own key) was
     # never independently confirmed. Row verified against the PROSPECTIVE post-regen index
     # (build_fact_texts(), row 98) since this pin is being added in the same commit as the
-    # consolidation it depends on.
-    "late_filing_penalty_monthly_fee": ("present_elsewhere", 98, "TZS 2,500 kwa kila mwezi"),
+    # consolidation it depends on. Re-adjudicated 2026-09-03: row shifted 98 -> 97 (it
+    # swapped positions with annual_return_filing_fee, below, in the fc9b0c8/b002b96 regen).
+    "late_filing_penalty_monthly_fee": ("present_elsewhere", 97, "TZS 2,500 kwa kila mwezi"),
 
     # --- Second pass, 2026-08-17: this script's own first run found 20 MORE unpinned
     # keys the earlier v1/v2/v3 investigation never touched -- v3 only re-checked the 28
@@ -173,19 +205,21 @@ PINNED = {
     # this collision while relocating pins) -- "(milioni kumi)" is unique to this fact's text.
     "gn487a_penalty_noncitizen": ("present_elsewhere", 20, "10,000,000 (milioni kumi)"),
     "gn487a_penalty_citizen_facilitator": ("present_elsewhere", 21, "5,000,000 (milioni tano)"),
-    "gn487a_license_lending_is_facilitation": ("present_elsewhere", 91, "lending their name"),
-    "efd_not_every_business": ("present_elsewhere", 58, "Si lazima"),
-    "wcf_rate_0_5_percent_confirmed": ("present_elsewhere", 66, "asilimia 0.5"),
-    "osha_vs_wcf_roles": ("present_elsewhere", 68, "taasisi mbili tofauti"),
-    "sdl_payment_deadline": ("present_elsewhere", 95, "siku ya 7"),
-    "annual_return_filing_fee": ("present_elsewhere", 99, "ada ya kuwasilisha ritani"),
-    "osiha_act_citation": ("present_elsewhere", 177, "Na.5 ya 2003"),
-    "health_and_safety_act_citation": ("present_elsewhere", 177, "Na.5 ya 2003"),
-    "business_licensing_act_citation": ("present_elsewhere", 133, "Cap. 101"),
-    "business_licensing_act_chapter": ("present_elsewhere", 133, "Cap. 101"),
-    "tanzania_citizenship_act_reference": ("present_elsewhere", 90, "Cap.357"),
-    "paye_bands_with_examples": ("present_elsewhere", 169, "TZS 800,000"),
-    "sdl_calculation_example": ("present_elsewhere", 170, "Mfano wa hesabu"),
+    # re-adjudicated 2026-09-03 (row numbers below were 91/58/66/68/95/99 -- all stale
+    # after the fc9b0c8/b002b96 regen; the osiha/health_and_safety/business_licensing x2/
+    # tanzania_citizenship pins formerly here were REMOVED, not relocated -- see the
+    # "SEVEN of the twenty-five" comment near the top of PINNED, they are noise-dropped
+    # and pinned "absent" up there instead).
+    "gn487a_license_lending_is_facilitation": ("present_elsewhere", 22, "leseni yake kwa mgeni"),
+    "efd_not_every_business": ("present_elsewhere", 57, "Si lazima"),
+    # needle narrowed: bare 'asilimia 0.5' is no longer unique (row 67, osha_vs_wcf_roles,
+    # also now states the WCF rate inline as part of its own explanation).
+    "wcf_rate_0_5_percent_confirmed": ("present_elsewhere", 65, "asilimia 0.5 ya jumla"),
+    "osha_vs_wcf_roles": ("present_elsewhere", 67, "taasisi mbili tofauti"),
+    "sdl_payment_deadline": ("present_elsewhere", 94, "siku ya 7"),
+    "annual_return_filing_fee": ("present_elsewhere", 98, "ada ya kuwasilisha ritani"),
+    "paye_bands_with_examples": ("present_elsewhere", 164, "TZS 800,000"),
+    "sdl_calculation_example": ("present_elsewhere", 165, "Mfano wa hesabu"),
     # sdl_rate / GN605A_sector_count: drift found post-R15-regen, 2026-08-17 (the natural48
     # re-run entry, PROGRESS.md). Both rewritten this cycle into conversational Swahili
     # lead-ins ('SDL, ambayo huitwa pia "mafunzo": ...', 'Kima cha chini cha mshahara (GN
@@ -194,7 +228,18 @@ PINNED = {
     # verified correct and present; needles chosen to avoid the OTHER row that shares the
     # same generic figure (row 212's SDL worked example also says "asilimia 3.5").
     "sdl_rate": ("present_elsewhere", 5, "Si asilimia 4, si asilimia 2"),
-    "GN605A_sector_count": ("present_elsewhere", 72, "sekta 16"),
+    # GN605A_sector_count re-adjudicated 2026-09-03: row 72 -> 71, needle narrowed --
+    # bare 'sekta 16' risked ambiguity as the index grows, 'sekta 16 na sekta ndogo' is
+    # unique to this row specifically.
+    "GN605A_sector_count": ("present_elsewhere", 71, "sekta 16 na sekta ndogo"),
+
+    # maternity_cash_benefit_rate / unpaid_contribution_penalty_rate: promoted from
+    # "not pinned, still exact-matching the old bare form" (see b002b96) to
+    # present_elsewhere now that the b002b96 regen actually shipped their ask-aligned
+    # CONCISE rewrites -- the old bare-form exact match is gone, this checker correctly
+    # reported both as drift_unpinned, and this is that promotion, exactly as predicted.
+    "maternity_cash_benefit_rate": ("present_elsewhere", 154, "likizo ya uzazi"),
+    "unpaid_contribution_penalty_rate": ("present_elsewhere", 148, "ASILIMIA 5"),
 
     # gn487a_marriage_no_exemption: row 93 covers dual-nationality/naturalisation under
     # Cap.357 but never mentions marriage. A materially different claim -- genuinely absent.
@@ -213,19 +258,6 @@ PINNED = {
     # electrical_test_fee_reduction_initial / _final: NOT pinned here -- both were converted
     # to FACT_GROUPS members in the same commit (merged, self-retrieval-failure fix), so they
     # resolve automatically via _grouped_verdict, the same as every other FACT_GROUPS member.
-
-    # maternity_cash_benefit_rate / unpaid_contribution_penalty_rate: ask-aligned CONCISE
-    # rewrites, 2026-09-03, NOT pinned. Both keys still resolve via plain EXACT match right
-    # now, because the currently-deployed/committed index predates this rewrite and still
-    # carries their OLD bare "key: value" rows (which slug-match on their own, no pin needed).
-    # This is a genuinely different situation from the usual PENDING_R15 case: those cover
-    # keys that are a true GAP until a regen ships them for the first time; these two are
-    # already served today, just via worse text. Once a regen that includes this rewrite
-    # actually lands, the new CONCISE text will stop slug-matching and this checker will
-    # correctly report them as drift_unpinned -- pin them present_elsewhere with the real row
-    # at THAT point (matching this file's standing practice of pinning after, not ahead of,
-    # the regen that makes the pin true). Confirmed via build_fact_texts() the prospective
-    # rows are 154 ("100%") / 148 ("ASILIMIA 5") for whoever adds that pin next.
 
     # corporate_tax_rate / minimum_turnover_tax: the corporate-tax source pass (4974cbc,
     # 2026-09-01) moved both into CONCISE_BILINGUAL_FACTS, so their slugs stopped exact-

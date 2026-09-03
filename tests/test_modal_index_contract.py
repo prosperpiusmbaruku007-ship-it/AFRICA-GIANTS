@@ -138,17 +138,19 @@ def test_the_real_index_passes_all_three_limbs():
 
 
 def test_the_real_shipped_index_rejects_the_superseded_count():
-    """Explicit re-check after the R15 regen changed rag_fact_count 221 -> 187 (this repo's
-    2026-08-26 consolidation). `test_the_loader_raises_on_a_stale_but_internally_consistent_index`
-    already proves the mechanism on a synthetic 5-row index; this proves it on the ACTUAL shipped
-    files, against the ACTUAL old value, so the specific count we just changed is the thing
+    """Explicit re-check after the R15 regen changed rag_fact_count 187 -> 183 (2026-09-03:
+    electrical-fee near-duplicate merge + 2 noise-key drops + 2 NSSF ask-aligned rewrites,
+    packaged in b002b96). Third count this test has tracked (221 -> 187 -> 183) --
+    `test_the_loader_raises_on_a_stale_but_internally_consistent_index` already proves the
+    mechanism on a synthetic 5-row index; this proves it on the ACTUAL shipped files, against
+    the ACTUAL immediately-prior value, so the specific count we just changed is the thing
     verified to still be fatal when wrong -- not just a stand-in for it."""
     from chike.retrieval import Retriever, RetrievalIndexError
     with open(TXT, encoding='utf-8') as f:
         n = len(json.load(f))
-    assert n == 187, f'expected the shipped index to be the 187-row R15 regen, got {n}'
+    assert n == 183, f'expected the shipped index to be the 183-row R15 regen, got {n}'
     with pytest.raises(RetrievalIndexError):
-        Retriever(emb_path=EMB, texts_path=TXT, expected_fact_count=221).preflight()
+        Retriever(emb_path=EMB, texts_path=TXT, expected_fact_count=187).preflight()
 
 
 # --- 3. retrieval behaviour is UNCHANGED ------------------------------------------------------
