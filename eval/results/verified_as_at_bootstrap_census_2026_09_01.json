@@ -7,39 +7,15 @@
     "_meta",
     "_unresolved_items"
   ],
-  "dict_shaped_facts_classified": 240,
-  "primary_verified": 122,
+  "dict_shaped_facts_classified": 246,
+  "primary_verified": 128,
   "unknown_backlog_dict_shaped": 118,
-  "unstructured_string_valued_facts": 10,
+  "unstructured_string_valued_facts": 4,
   "unstructured_facts_note": "These carry no verified_by/primary_source/any metadata field at all -- not processed as \"unknown\" alongside the dict-shaped facts because they cannot carry a verified_as_at field without first being converted from a bare string to a dict, which is a schema-migration decision bigger than this bootstrap census. Effectively unknown-or-worse; listed separately so they are not silently invisible.",
   "unstructured_facts": [
     {
       "key": "late_payment_penalty_rate",
       "value": "2 %"
-    },
-    {
-      "key": "workers_compensation_act_citation",
-      "value": "Sheria ya Fidia kwa Wafanyakazi [Sura 263]"
-    },
-    {
-      "key": "workers_compensation_act_section",
-      "value": "75 (2)"
-    },
-    {
-      "key": "workers_compensation_rules_citation",
-      "value": "Kanuni za Sheria ya Fidia kwa Wafanyakazi za mwaka 2016"
-    },
-    {
-      "key": "workers_compensation_rules_section",
-      "value": "13 (7)"
-    },
-    {
-      "key": "workers_compensation_amendment_rules_citation",
-      "value": "Kanuni za Sheria ya Fidia kwa Wafanyakazi Marekebisho ya mwaka 2021"
-    },
-    {
-      "key": "workers_compensation_amendment_rules_section",
-      "value": "13 (7)"
     },
     {
       "key": "company_director_minimum_age",
@@ -291,14 +267,14 @@
       "status": "unknown",
       "verified_as_at": "unknown",
       "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "Tanzania Immigration Department official website"
+      "verified_by_excerpt": "Direct fetch (2026-09-02) of the Immigration Act itself -- not previously in this project's source set. Found via a mirror hosted by nps.go.tz (National Prosecu"
     },
     {
       "key": "permit_class_a_investor",
       "status": "unknown",
       "verified_as_at": "unknown",
       "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "Tanzania Immigration Department official website"
+      "verified_by_excerpt": "Direct fetch (2026-09-02) of the Immigration Act itself (nps.go.tz mirror; immigration.go.tz's own site remains a confirmed JS-shell). s.35(1): 'A person, other"
     },
     {
       "key": "permit_class_c_categories",
@@ -372,10 +348,10 @@
     },
     {
       "key": "wcf_new_employer_registration",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "WCF official website, Jun 2026"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of Workers Compensation Act Cap.263 R.E.2023 PDF (elibrary.osg.go.tz, the Office of the Solicitor General's e-library -- tanzlii and wc"
     },
     {
       "key": "wcf_disease_reporting_deadline",
@@ -400,10 +376,10 @@
     },
     {
       "key": "wcf_accident_reporting",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "no verified_by field at all",
-      "verified_by_excerpt": ""
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of Workers Compensation Act Cap.263 R.E.2023 PDF, s.34(1) -- the Act's own text says 'seven days' without the word 'working'; WCF's liv"
     },
     {
       "key": "wcf_accident_reporting_deadline",
@@ -1195,6 +1171,48 @@
       "verified_as_at": "2026-09-02",
       "reason": "direct/verbatim primary-source read with an explicit date",
       "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(j) farms employers whose employees are directly and solely engaged in farming and shall not include "
+    },
+    {
+      "key": "workers_compensation_act_citation",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of the Act's own cover page: 'THE UNITED REPUBLIC OF TANZANIA CHAPTER 263 THE WORKERS' COMPENSATION ACT [CAP. 263 R.E. 2023]'; also ind"
+    },
+    {
+      "key": "workers_compensation_act_section",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of the Act PDF, s.75(2) -- confirmed it exists and confirmed its content is the interest-rate-delegation clause, cross-referenced expli"
+    },
+    {
+      "key": "workers_compensation_rules_citation",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Direct fetch (2026-09-02) of the gazette PDF from parliament.go.tz: 'ISSN 0856-034X Supplement No. 21 27th May, 2016... Workers' Compensation Regulations GN. No"
+    },
+    {
+      "key": "workers_compensation_rules_section",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of GN 185/2016's own text, reg.13(7): 'Subject to section 75(2) of the Act, where a tariff is not paid within the period prescribed und"
+    },
+    {
+      "key": "workers_compensation_amendment_rules_citation",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "Direct fetch (2026-09-02) of the gazette PDF from wcf.go.tz/uploads/documents/: 'GOVERNMENT NOTICE No. 668 Published On. 10/9/2021... THE WORKERS COMPENSATION ("
+    },
+    {
+      "key": "workers_compensation_amendment_rules_section",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of GN 668/2021's own text, s.2, quoted verbatim above. This is the CURRENT governing text for the WCF late-payment interest rate: 2%, n"
     },
     {
       "key": "minimum_directors",

@@ -731,8 +731,8 @@
       "Class B ni kwa wanaowekeza(?! — si| — not| Class A)",
       "Class B.*investor(?!.*Class A)(?!.*NOT)(?!.*si kwa)"
     ],
-    "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
-    "verified_by": "Tanzania Immigration Department official website",
+    "primary_source": "Immigration Act Cap.54 R.E.2023, s.36(1): specified employment offered by an employer in Tanzania, subject to Commissioner General satisfaction on qualifications/skill and benefit to Tanzania -- STATUTE-TIER, upgraded from the Immigration Service Department's operational Guidelines PDF (data/source_documents/immigration/residence_permit_guidelines.pdf), which states the same category in plainer terms: '2. Class B: For expatriates working in company/ private institutions.'",
+    "verified_by": "Direct fetch (2026-09-02) of the Immigration Act itself -- not previously in this project's source set. Found via a mirror hosted by nps.go.tz (National Prosecution Service; immigration.go.tz's own site remains a confirmed JS-shell, 806 bytes via direct curl). s.36(1): 'A person, other than prohibited immigrant, who has been offered a specified employment in Tanzania and in respect of whom the Commissioner General is satisfied that he possesses the qualifications or skill necessary for that employment and that his employment will be of benefit to Tanzania may... be granted a Class B permit'. s.33(1) confirms there are exactly THREE classes (A, B, C) -- the statute-tier basis for permit_class_d_does_not_exist. R29 check: FA2024/FA2025/FA2026 searched directly for 'Immigration Act'/'Cap. 54' -- zero hits in any of the three.",
     "effective_date": "2025-07-28",
     "status": "CONFIRMED",
     "verified_as_at": "unknown"
@@ -745,8 +745,8 @@
       "Class A for employees",
       "Class A.*for.*(?:employed|(?<!not hired )(?<!hired )employees|regular workers)(?!.*invest|.*self)"
     ],
-    "primary_source": "https://www.immigration.go.tz/index.php/types-of-residence-permit",
-    "verified_by": "Tanzania Immigration Department official website",
+    "primary_source": "Immigration Act Cap.54 R.E.2023, s.35(1): self-employed trade/business/profession/agriculture/investment, subject to security deposit and Commissioner General approval -- STATUTE-TIER, upgraded from the Immigration Service Department's operational Guidelines PDF (data/source_documents/immigration/residence_permit_guidelines.pdf), which states the same category in plainer terms: '1. Class A: For self-employed foreigners (investors)'.",
+    "verified_by": "Direct fetch (2026-09-02) of the Immigration Act itself (nps.go.tz mirror; immigration.go.tz's own site remains a confirmed JS-shell). s.35(1): 'A person, other than a prohibited immigrant, who intends to enter or remain in Tanzania and engage in any trade, business, profession, agriculture, animal husbandry, prospecting of minerals or manufacture may... be granted a class A permit'. The Act's own scope is broader than just 'investors' (any self-employed trade/business/profession) -- the Guidelines PDF's narrower 'investor' framing is a plain-language gloss, not wrong, just less complete than the statute. R29 check: FA2024/FA2025/FA2026 searched directly for 'Immigration Act'/'Cap. 54' -- zero hits.",
     "effective_date": "2025-07-28",
     "status": "CONFIRMED",
     "verified_as_at": "unknown"
@@ -763,8 +763,8 @@
       "Class C.*does not include students",
       "wanafunzi.*hawaruhusiwi.*daraja C"
     ],
-    "primary_source": "data/source_documents/immigration/residence_permit_guidelines.pdf (Immigration Service Department); https://www.immigration.go.tz/index.php/types-of-residence-permit (cited topic, unreachable to automated fetch)",
-    "verified_by": "Direct read (2026-09-02) of the Immigration Service Department's own \"Residence Permit Guidelines\" PDF, cached locally at data/source_documents/immigration/residence_permit_guidelines.pdf (immigration.go.tz remains an unreadable JS shell to automated fetch, confirmed again today -- the specific /types-of-residence-permit page returns only an 806-byte SPA shell via direct curl too, not a WebFetch-specific issue). Verbatim: \"Residence Permit Class 'C' is issued to a foreigner who are not eligible to obtain either Class 'A' or 'B' permits. These includes; researchers, retired persons, missionaries, former employees winding up affairs, individuals attending medical treatment, volunteers, intern, parties and witness in court of laws and tribunals, buyer of real estate e.tc.\" A later subsection heading confirms \"INTERN STUDENT\" as the specific sub-category, corroborating \"students\" from the 2026-08-31 embassy-mirror correction. Supersedes that corroboration with the Department's own primary document.",
+    "primary_source": "data/source_documents/immigration/residence_permit_guidelines.pdf (Immigration Service Department, for the detailed category list); Immigration Act Cap.54 R.E.2023 s.37(1) (for the residual-class definition itself); https://www.immigration.go.tz/index.php/types-of-residence-permit (cited topic, unreachable to automated fetch)",
+    "verified_by": "Direct read (2026-09-02) of the Immigration Service Department's own \"Residence Permit Guidelines\" PDF, cached locally at data/source_documents/immigration/residence_permit_guidelines.pdf (immigration.go.tz remains an unreadable JS shell to automated fetch, confirmed again today -- the specific /types-of-residence-permit page returns only an 806-byte SPA shell via direct curl too, not a WebFetch-specific issue). Verbatim: \"Residence Permit Class 'C' is issued to a foreigner who are not eligible to obtain either Class 'A' or 'B' permits. These includes; researchers, retired persons, missionaries, former employees winding up affairs, individuals attending medical treatment, volunteers, intern, parties and witness in court of laws and tribunals, buyer of real estate e.tc.\" A later subsection heading confirms \"INTERN STUDENT\" as the specific sub-category, corroborating \"students\" from the 2026-08-31 embassy-mirror correction. Supersedes that corroboration with the Department's own primary document. ADDED 2026-09-02: the Immigration Act itself (Cap.54 R.E.2023, fetched via nps.go.tz mirror) confirms the STRUCTURE at statute-tier -- s.37(1): 'A person, other than prohibited immigrant, who is not granted a Class A or Class B permit may... be granted a Class C permit' -- a residual/catch-all class. The Act does NOT enumerate the specific sub-categories (researchers, retirees, etc.); that detailed list remains Guidelines-tier, delegated administrative detail, not a gap in this pass's research.",
     "effective_date": "2025-07-28",
     "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note)",
     "correction_note": "The category list was INCOMPLETE: it omitted 'students' as an explicit Class C category, which the government's own embassy-portal mirrors of the Immigration Department's listing include. A question about a student on a Class C permit would have scored a correct 'yes' answer as wrong under the prior wrong_patterns. UPGRADED 2026-09-02: found via scripts/find_revisitable_hedges.py -- the primary document was already cached locally and had never been checked as a fallback for this fact specifically (it was used for permit_class_d_does_not_exist and nssf_payment_deadline earlier the same day, but not cross-checked against this sibling fact). No value change, citation upgraded from embassy-mirror corroboration to the Department's own document, and the category list tightened to match its exact wording (e.g. \"intern students\" not bare \"students\", matching the document's own subsection heading).",
@@ -935,11 +935,11 @@
       "sajili.*wcf.*ndani ya siku 60(?! ya kodi)",
       "register.*wcf.*60 days(?! of tax)"
     ],
-    "primary_source": "https://www.wcf.go.tz",
-    "verified_by": "WCF official website, Jun 2026",
+    "primary_source": "Workers Compensation Act Cap.263 R.E.2023, s.71(1) (employer registration obligation, timing delegated to 'the prescribed period') -- the specific 30-day figure is stated directly on https://www.wcf.go.tz/faqs: 'Mwajiri aliyekuwepo baada tarehe 01 Julai 2015, anawajibika kujisajili kwenye mfuko ndani ya siku thelathini (30) baada ya kuajiri mfanyakazi wa kwanza'",
+    "verified_by": "Direct read (2026-09-02) of Workers Compensation Act Cap.263 R.E.2023 PDF (elibrary.osg.go.tz, the Office of the Solicitor General's e-library -- tanzlii and wcf.go.tz/kazi.go.tz do not host the Act text itself), s.71(1): the registration duty exists in the Act but the deadline is delegated to 'the prescribed period', not stated as a number in the Act itself. The 30-day figure was NOT found in the Workers Compensation Regulations, 2016 (GN 185/2016) either -- searched directly, no match -- so it remains portal-tier (WCF's own live FAQ, re-fetched 2026-09-02) for the specific number, statute-tier only for the underlying obligation. R29 check: FA2024/FA2025/FA2026 each searched for 'Workers Compensation' / 'Cap. 263' -- zero hits in any of the three; Cap.263 unamended.",
     "effective_date": "2015-07-01",
     "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "wcf_disease_reporting_deadline": {
     "fact": "Occupational disease reporting to WCF is a TWO-STAGE chain, not a flat 7-day deadline. Per the Workers Compensation Regulations, 2016 (GN 185/2016), Reg.16: the EMPLOYEE must notify the EMPLOYER within 14 working days of diagnosis (Reg.16(1)); the EMPLOYER must then notify WCF within 7 working days of RECEIVING that employee notice (Reg.16(2)) -- so the true worst-case window from diagnosis to WCF notification is up to 21 working days, NOT 7. Workplace death must be reported to WCF within 12 months (Reg.17(2)). Compensation claim must be filed within 12 months of accident or disease discovery (Reg.19(1)).",
@@ -1032,8 +1032,10 @@
   },
   "wcf_accident_reporting": {
     "fact": "Employer must notify WCF of a workplace accident within 7 WORKING DAYS — via WCF online portal (portal.wcf.go.tz). Different deadline for occupational illness. Source: WCF portal.",
-    "primary_source": "https://portal.wcf.go.tz",
+    "primary_source": "Workers Compensation Act Cap.263 R.E.2023, s.34(1): 'an employer shall, within seven days after receiving a notice of an accident from the employee or having learned in some other way that an accident has occurred, report the accident to the Director-General'",
+    "verified_by": "Direct read (2026-09-02) of Workers Compensation Act Cap.263 R.E.2023 PDF, s.34(1) -- the Act's own text says 'seven days' without the word 'working'; WCF's live FAQ (wcf.go.tz/faqs, re-fetched same day) states 'siku saba (7) za kazi' (7 WORKING days) explicitly. Both cited; the 'working' qualifier is portal-sourced, not found in the Act text itself. R29 check: FA2024/FA2025/FA2026 searched directly for 'Workers Compensation'/'Cap. 263' -- zero hits; s.34 unamended.",
     "verified_date": "2026-06-09",
+    "verified_as_at": "2026-09-02",
     "wrong_patterns": [
       "wcf.*siku 30",
       "siku 30.*wcf",
@@ -1041,8 +1043,7 @@
       "30 days.*wcf",
       "wcf.*siku 14(?! za magonjwa)",
       "wcf.*14 days(?! for occupational)"
-    ],
-    "verified_as_at": "unknown"
+    ]
   },
   "wcf_accident_reporting_deadline": {
     "fact": "7 working days from date of accident. Source: Workers Compensation Act / portal.wcf.go.tz",
@@ -1094,10 +1095,10 @@
       "daraja d",
       "kibali cha darasa d"
     ],
-    "primary_source": "data/source_documents/immigration/residence_permit_guidelines.pdf (Immigration Service Department)",
+    "primary_source": "Immigration Act Cap.54 R.E.2023, s.33(1): 'There shall be three classes of residence permits to be known respectively as Class A permits, Class B permits and Class C permits.' -- STATUTE-TIER, upgraded same day from the Immigration Service Department's Guidelines PDF (data/source_documents/immigration/residence_permit_guidelines.pdf).",
     "verified_as_at": "2026-09-02",
-    "verified_by": "Direct read (2026-09-02) of the Immigration Service Department's own \"Residence Permit Guidelines\" PDF, cached locally at data/source_documents/immigration/residence_permit_guidelines.pdf (immigration.go.tz itself is an unreadable JS shell, as the original Tier 3 pass found -- the guideline document was already cached from an earlier session and simply hadn't been checked as an alternative to the live site). Page 1: \"There are three types of Residence Permits which are Residence Permit Class A, B and C.\" Class A = self-employed/investor, Class B = \"expatriates working in company/private institutions\", Class C = \"researchers, retired persons, Missionaries, Volunteers etc.\" Section heading later in the document reads \"SPECIFIC REQUIREMENTS FOR REFUGEES FOR RESIDENCE PERMIT CLASS A, B, C AND PASSES\" -- confirming the closed set is A/B/C (+ a separate, non-class \"Passes\" category), no Class D anywhere in the document.",
-    "correction_note": "2026-09-02: grounded against the primary guideline document (cached locally, not fetched live -- immigration.go.tz itself remains an unreadable JS shell). No value change. Closes membership in \"the eleven\" (PROGRESS.md)."
+    "verified_by": "Direct read (2026-09-02) of the Immigration Service Department's own \"Residence Permit Guidelines\" PDF, cached locally at data/source_documents/immigration/residence_permit_guidelines.pdf (immigration.go.tz itself is an unreadable JS shell, as the original Tier 3 pass found -- the guideline document was already cached from an earlier session and simply hadn't been checked as an alternative to the live site). Page 1: \"There are three types of Residence Permits which are Residence Permit Class A, B and C.\" Class A = self-employed/investor, Class B = \"expatriates working in company/private institutions\", Class C = \"researchers, retired persons, Missionaries, Volunteers etc.\" Section heading later in the document reads \"SPECIFIC REQUIREMENTS FOR REFUGEES FOR RESIDENCE PERMIT CLASS A, B, C AND PASSES\" -- confirming the closed set is A/B/C (+ a separate, non-class \"Passes\" category), no Class D anywhere in the document. UPGRADED 2026-09-02, same session: the Immigration Act itself (Cap.54 R.E.2023, fetched via nps.go.tz mirror since immigration.go.tz is a JS shell) confirms the closed set of exactly three classes AT STATUTE-TIER, s.33(1), quoted above. R29 check: FA2024/FA2025/FA2026 searched directly for 'Immigration Act'/'Cap. 54' -- zero hits; s.33 unamended.",
+    "correction_note": "2026-09-02: grounded against the primary guideline document (cached locally, not fetched live -- immigration.go.tz itself remains an unreadable JS shell). No value change. Closes membership in \"the eleven\" (PROGRESS.md). Same-day follow-up found the actual Immigration Act (not previously in this project's source set) and upgraded the citation to statute-tier."
   },
   "gn487a_transitional_provision": {
     "fact": "Non-citizens with valid licences at 28 July 2025 may continue until licence expiry. No renewal permitted. No new licences issued for prohibited activities.",
@@ -2301,12 +2302,48 @@
     "verified_as_at": "2026-09-02"
   },
   "late_payment_penalty_rate": "2 %",
-  "workers_compensation_act_citation": "Sheria ya Fidia kwa Wafanyakazi [Sura 263]",
-  "workers_compensation_act_section": "75 (2)",
-  "workers_compensation_rules_citation": "Kanuni za Sheria ya Fidia kwa Wafanyakazi za mwaka 2016",
-  "workers_compensation_rules_section": "13 (7)",
-  "workers_compensation_amendment_rules_citation": "Kanuni za Sheria ya Fidia kwa Wafanyakazi Marekebisho ya mwaka 2021",
-  "workers_compensation_amendment_rules_section": "13 (7)",
+  "workers_compensation_act_citation": {
+    "fact": "Workers Compensation Act, Cap.263 -- Sheria ya Fidia kwa Wafanyakazi [Sura 263]",
+    "correct_value": "Sheria ya Fidia kwa Wafanyakazi [Sura 263]",
+    "primary_source": "Workers Compensation Act Cap.263 R.E.2023 (elibrary.osg.go.tz)",
+    "verified_by": "Direct read (2026-09-02) of the Act's own cover page: 'THE UNITED REPUBLIC OF TANZANIA CHAPTER 263 THE WORKERS' COMPENSATION ACT [CAP. 263 R.E. 2023]'; also independently confirmed on wcf.go.tz's own FAQ, citing 'kifungu cha 5 cha Sheria ya Fidia kwa Wafanyakazi [Sura 263]'. This citation fragment is used elsewhere (e.g. workers_compensation_act_section) and had no grounding of its own until this pass.",
+    "verified_as_at": "2026-09-02"
+  },
+  "workers_compensation_act_section": {
+    "fact": "Workers Compensation Act Cap.263 s.75(2): 'Interest shall be payable on any overdue assessment at a rate determined by the Director-General which shall not exceed a standard rate of interest determined by the Minister.' This is the ENABLING provision cross-referenced by Regulation 13(7) (below) which sets the actual interest rate for late tariff payment -- s.75(2) itself does not state a number.",
+    "correct_value": "75 (2)",
+    "primary_source": "Workers Compensation Act Cap.263 R.E.2023, s.75(2)",
+    "verified_by": "Direct read (2026-09-02) of the Act PDF, s.75(2) -- confirmed it exists and confirmed its content is the interest-rate-delegation clause, cross-referenced explicitly by name in Workers Compensation Regulations 2016 reg.13(7): 'Subject to section 75(2) of the Act, where a tariff is not paid within the period prescribed...'. NOT about accident reporting or employer registration -- those are s.34 and s.71 respectively, confirmed separately on wcf_accident_reporting and wcf_new_employer_registration.",
+    "verified_as_at": "2026-09-02"
+  },
+  "workers_compensation_rules_citation": {
+    "fact": "Workers Compensation Regulations, 2016 (Government Notice No. 185 of 2016, gazetted 27 May 2016) -- Kanuni za Sheria ya Fidia kwa Wafanyakazi za mwaka 2016",
+    "correct_value": "Kanuni za Sheria ya Fidia kwa Wafanyakazi za mwaka 2016",
+    "primary_source": "GN No. 185 of 2016, The Workers' Compensation Regulations, 2016 (parliament.go.tz)",
+    "verified_by": "Direct fetch (2026-09-02) of the gazette PDF from parliament.go.tz: 'ISSN 0856-034X Supplement No. 21 27th May, 2016... Workers' Compensation Regulations GN. No. 185'. Note: the direct URL from a web search 404'd/timed out on first try; a second URL variant (same filename, different upload-timestamp prefix) succeeded -- consistent with this project's general finding that .go.tz fetch failures are often tooling/route issues, not genuine blocks (CLAUDE.md R30).",
+    "verified_as_at": "unknown"
+  },
+  "workers_compensation_rules_section": {
+    "fact": "Regulation 13(7) of GN 185/2016 (as originally enacted) set the interest penalty for late WCF tariff payment at TEN PERCENT of the unpaid amount. THIS RATE WAS LATER REDUCED TO TWO PERCENT by the Workers Compensation (Amendment) Regulations, 2021 -- see workers_compensation_amendment_rules_section. The '10%' figure in the original 2016 text is HISTORICAL, not the current rate.",
+    "correct_value": "13 (7) -- ORIGINAL 2016 text said 10%, superseded by the 2021 amendment (now 2%)",
+    "primary_source": "GN No. 185 of 2016, reg.13(7) (parliament.go.tz)",
+    "verified_by": "Direct read (2026-09-02) of GN 185/2016's own text, reg.13(7): 'Subject to section 75(2) of the Act, where a tariff is not paid within the period prescribed under this regulation, an employer shall be liable to pay a sum not exceeding ten percentum of the unpaid amount as an interest...'. R29 catch: this exact clause was amended two months into this project's own tracked history window -- see workers_compensation_amendment_rules_section for the 2021 change from 'ten' to 'two' percent. Citing the ORIGINAL clause without the amendment would misstate the current rate by 5x.",
+    "verified_as_at": "2026-09-02"
+  },
+  "workers_compensation_amendment_rules_citation": {
+    "fact": "Workers Compensation (Amendment) Regulations, 2021 (Government Notice No. 668, published 10 September 2021) -- Kanuni za Sheria ya Fidia kwa Wafanyakazi Marekebisho ya mwaka 2021",
+    "correct_value": "Kanuni za Sheria ya Fidia kwa Wafanyakazi Marekebisho ya mwaka 2021",
+    "primary_source": "GN No. 668 of 2021, The Workers Compensation (Amendment) Regulations, 2021 (wcf.go.tz)",
+    "verified_by": "Direct fetch (2026-09-02) of the gazette PDF from wcf.go.tz/uploads/documents/: 'GOVERNMENT NOTICE No. 668 Published On. 10/9/2021... THE WORKERS COMPENSATION (AMENDMENT) REGULATIONS, 2021... made under section 94' of Cap.263, amending 'the Workers Compensation Regulations, 2016, hereinafter referred to as the principal Regulations'. Note: wcf.go.tz's own website LISTS this document under a '24 Oct, 2022' date (upload/listing date), but the gazette's own cover page states the true publication date of 10 Sep 2021 -- matching this fact's '2021' framing over the site's display date, consistent with CLAUDE.md R30 (don't trust a portal's own metadata over the instrument's own text).",
+    "verified_as_at": "unknown"
+  },
+  "workers_compensation_amendment_rules_section": {
+    "fact": "GN 668/2021 s.2: 'The principal Regulations are amended in regulation 13, by deleting the word \"ten\" in sub-regulation (7) and substitute for it the word \"two\".' This is what changed the WCF late-tariff-payment interest penalty from 10% to the CURRENT 2%.",
+    "correct_value": "13 (7) -- the amending section is GN668's own s.2, which targets 'regulation 13... sub-regulation (7)' of the 2016 Regulations",
+    "primary_source": "GN No. 668 of 2021, s.2 (wcf.go.tz)",
+    "verified_by": "Direct read (2026-09-02) of GN 668/2021's own text, s.2, quoted verbatim above. This is the CURRENT governing text for the WCF late-payment interest rate: 2%, not the 10% printed in the unamended 2016 Regulations (workers_compensation_rules_section). Possible relevance to the separately-tracked, deliberately-unresolved late_payment_penalty_rate fact ('2%', no scoping context found anywhere in the codebase) -- the numbers match, but per explicit instruction NOT to reconcile an unscoped figure by inference, that fact was left untouched this pass; recorded here as a lead for whoever next investigates it, not as a resolution.",
+    "verified_as_at": "2026-09-02"
+  },
   "minimum_directors": {
     "fact": "A company under the Companies Act Cap.212 must have a minimum of 2 directors. Directors are PERSONS (natural persons appointed to the board), NOT 'employees' -- a director need not be, and often is not, an employee of the company. This minimum-of-2 figure is confirmed via secondary corroboration for both private and public companies (s.186, 'Number of directors'); whether the 2021 amendment permitting single-shareholder private companies (s.26A) also permits a single-DIRECTOR company has NOT been confirmed and should not be assumed either way.",
     "correct_value": "2 (persons/directors, not 'employees')",
