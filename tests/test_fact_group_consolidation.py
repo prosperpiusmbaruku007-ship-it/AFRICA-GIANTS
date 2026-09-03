@@ -43,9 +43,14 @@ def _prospective_index():
 
 def test_the_consolidation_absorbs_exactly_the_rows_it_claims():
     texts, keys, _ = pre.build_fact_texts()
-    assert len(pre._GROUP_MEMBERS) == 42, (
-        f'{len(pre._GROUP_MEMBERS)} member keys, expected 42 — the measured arm '
-        '(eval/results/feegroup_curation.json) absorbed 42 rows into 3.')
+    # 42 (2026-08-25 fee consolidation, measured: eval/results/feegroup_curation.json) + 2
+    # (2026-09-03: electrical_test_fee_reduction_initial/_final, a DIFFERENT justification --
+    # not crowding/fee-ladder curation, a self-retrieval FAILURE fix. The pair embedded to
+    # 0.925 cosine of each other post-fc9b0c8-regen, so one could never be retrieved as itself.
+    # Merged into one before/after passage, the same treatment, for an unrelated reason.)
+    assert len(pre._GROUP_MEMBERS) == 44, (
+        f'{len(pre._GROUP_MEMBERS)} member keys, expected 44 — 42 from the fee consolidation '
+        '(eval/results/feegroup_curation.json) + 2 from the electrical-fee near-duplicate fix.')
     for gname in pre.FACT_GROUPS:
         assert gname in keys, f'group {gname} produced no index row'
     for member in pre._GROUP_MEMBERS:

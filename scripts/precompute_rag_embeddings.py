@@ -157,6 +157,29 @@ CONCISE_BILINGUAL_FACTS = {
     'nssf_payment_deadline':
         'NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata.',
 
+    # Ask-aligned rewrites, 2026-09-03 (R15's topic-alignment lever): both were bare
+    # "key: five %" / "key: 100 %" context-free fragments before this, and both were found
+    # crowding nat_27's (unrelated VAT-rate query) and/or nat_36's (unrelated EFD-threshold
+    # query) post-regen top-3 alongside contribution_rate_emplyees (dropped as noise, see
+    # _NOISE_KEYS_REVIEWED) -- the SAME fragment-displacement class the fee-schedule
+    # consolidations were built to fix. NOT consolidation candidates the way the fee rows
+    # were, though: a fee LADDER is naturally one composite answer ("what are BRELA's fees");
+    # these two are independently-askable, unrelated NSSF questions (maternity benefit vs.
+    # late-payment penalty) that happen to share only a bare-percentage shape and a source
+    # document. Merging them would not address why they crowd unrelated queries -- it would
+    # still be a bare-percentage passage. The remedy that already worked on this exact defect
+    # shape (sdl_rate, efd_threshold_tzs_11m, nssf_total_rate) is ask-aligned rewriting, not
+    # grouping, so that is what is applied here. Values unchanged from locked_facts.json's
+    # existing correct_value -- no new claims added beyond restating the verified figure in
+    # a natural Swahili question-shaped sentence.
+    'maternity_cash_benefit_rate':
+        'NSSF likizo ya uzazi (maternity benefit): mfanyakazi analipwa ASILIMIA 100 ya '
+        'mshahara wakati wa likizo ya uzazi.',
+
+    'unpaid_contribution_penalty_rate':
+        'Ukichelewesha kulipa mchango wa NSSF, adhabu (penalty) ni ASILIMIA 5 ya kiasi '
+        'kisicholipwa.',
+
     'vat_registration_threshold_annual':
         'Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.',
 
@@ -465,6 +488,29 @@ FACT_GROUPS = {
             'ya cheti cha usajili TZS 4,000. Kampuni ya kigeni (kifungu 12): kuwasilisha nyaraka '
             'USD 220, mizania USD 220, na faini ya kuchelewa USD 25 kwa mwezi.'),
     },
+    'electrical_test_fee_reduction': {
+        # Found 2026-09-03: the R15 regen packaged in fc9b0c8 self-retrieval-failed on this
+        # pair -- electrical_test_fee_reduction_initial retrieves its OWN sibling (_final) at
+        # 0.925 cosine instead of itself. Both facts open with near-identical sentences
+        # ("TZS N was/is the [OLD/REDUCED] fee for OSHA electrical-system inspection at RURAL
+        # FUEL STATIONS specifically... NOT a general/universal OSHA electrical inspection
+        # fee") -- the two texts differ mainly in the single number and OLD/REDUCED adjective,
+        # which is exactly the shape e5-base collapses to a near-duplicate embedding. A fact
+        # that cannot retrieve itself can never be served; per instruction this must be fixed,
+        # not left as a tolerated <10% self-retrieval failure. Merged into one passage, the
+        # same treatment as the fee-schedule groups above -- a before/after fee pair is a
+        # single retrievable fact ("the fee dropped from X to Y"), not two competing rows for
+        # the same underlying question. Both figures verified to survive verbatim (checked by
+        # _figure_of's substring containment below).
+        'keys': ['electrical_test_fee_reduction_initial', 'electrical_test_fee_reduction_final'],
+        'text': (
+            'Ada ya ukaguzi wa umeme OSHA kwa VITUO VYA MAFUTA VIJIJINI (majaribio manne: '
+            'Polarity, Continuity, Earth Resistance, Insulation Test) ilipunguzwa mwaka 2025 '
+            'kutoka TZS 650,000 hadi TZS 150,000 ili kuhamasisha uwekezaji vijijini. Hii SI ada '
+            'ya jumla ya ukaguzi wa umeme kwa maeneo yote ya kazi -- kila kiwanda/eneo la kazi '
+            'linalotumia umeme linahitajika kukaguliwa KILA MWAKA chini ya Cap.297 kifungu '
+            '66(2), kwa ada tofauti isiyothibitishwa (si TZS 650,000 wala 150,000).'),
+    },
 }
 
 # Every member key must exist, and every member's FIGURE must survive into the group text.
@@ -510,6 +556,34 @@ _NOISE_KEY_PATTERNS = [
 # matter what it cites); it is never safe for a content-bearing family -- add those
 # here, individually, after reading them, not as a regex.
 _NOISE_KEYS_REVIEWED = {
+    # 'contribution_rate_emplyees' -- traced as one of FOUR named live-defect sources in the
+    # FACT_GROUPS comment above ([209], "THE NSSF 10%-vs-20% collapse"), still live as of the
+    # fc9b0c8 regen (2026-09-03): confirmed reshuffled into nat_27's post-regen top-3 alongside
+    # unrelated NSSF rows, still misspelled, still rendering as the context-free, unqualified
+    # "contribution rate emplyees: 10 %" this comment already predicted would keep happening.
+    # R25 test: (1) what defect does dropping this repair? An unqualified employee-only 10%
+    # figure with no "of 20% total" framing, highly retrievable on ANY NSSF-rate question,
+    # competing against the correctly-framed nssf_employer_rate/nssf_total_rate facts. (2) what
+    # correct output could dropping it damage? None -- nssf_total_rate's own CONCISE text
+    # ("NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi)") already states the
+    # employee's 10% share, correctly disambiguated from the employer's and the total. This key
+    # adds no reachable content that isn't already better-stated elsewhere; dropped as noise
+    # rather than merged (it has no fee-schedule sibling to consolidate with, and its content is
+    # a strict subset of an existing fact -- see the FACT_GROUPS comment's own note that [209]
+    # "needs its own fix, not absorption").
+    'contribution_rate_emplyees',
+    # 'penalty_fine_non_citizen' -- found 2026-09-03 while re-adjudicating nat_36's post-regen
+    # top-3, the SAME shape and same discovery route as contribution_rate_emplyees above: an
+    # old-schema, context-free bare fragment ("penalty fine non citizen: ten million TZS") that
+    # is a strict, less-precise SUBSET of the existing gn487a_penalty_noncitizen CONCISE fact
+    # (which already states the figure in both digit and word form, PLUS the imprisonment term
+    # and visa-revocation consequence, PLUS wrong_patterns guarding against the 5M/3-month
+    # confusions). R25 test: (1) defect repaired -- an unqualified "ten million TZS" fragment
+    # was crowding nat_36's top-3 (an EFD-threshold question, nothing to do with GN487A
+    # penalties). (2) correct output damaged by dropping it -- none; gn487a_penalty_noncitizen
+    # already carries every fact this key states and more, and already has its own dedicated
+    # displacement guard in kaggle/regenerate_rag_e5.py.
+    'penalty_fine_non_citizen',
     'exemption_category_government_departments',
     'exemption_category_diplomatic_missions',
     'exemption_category_religious_institutions',

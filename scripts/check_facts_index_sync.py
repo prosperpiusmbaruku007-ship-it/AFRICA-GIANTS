@@ -201,6 +201,41 @@ PINNED = {
     "gn487a_marriage_no_exemption": ("absent", None, None),
     # gn487a_signatory: "Jafo" (the minister) has zero hits anywhere in the index.
     "gn487a_signatory": ("absent", None, None),
+
+    # --- Fragment-displacement fixes, 2026-09-03 (re-adjudicating nat_27/nat_36 after the
+    # fc9b0c8 regen -- see PROGRESS.md). Both were old-schema bare "key: value" duplicates of
+    # an existing, better-formed CONCISE fact, deliberately dropped from the index as noise
+    # (_NOISE_KEYS_REVIEWED in precompute_rag_embeddings.py carries the full R25 justification
+    # for each). Pinned absent here rather than left to fall into drift_unpinned.
+    "contribution_rate_emplyees": ("absent", None, None),
+    "penalty_fine_non_citizen": ("absent", None, None),
+
+    # electrical_test_fee_reduction_initial / _final: NOT pinned here -- both were converted
+    # to FACT_GROUPS members in the same commit (merged, self-retrieval-failure fix), so they
+    # resolve automatically via _grouped_verdict, the same as every other FACT_GROUPS member.
+
+    # maternity_cash_benefit_rate / unpaid_contribution_penalty_rate: ask-aligned CONCISE
+    # rewrites, 2026-09-03, NOT pinned. Both keys still resolve via plain EXACT match right
+    # now, because the currently-deployed/committed index predates this rewrite and still
+    # carries their OLD bare "key: value" rows (which slug-match on their own, no pin needed).
+    # This is a genuinely different situation from the usual PENDING_R15 case: those cover
+    # keys that are a true GAP until a regen ships them for the first time; these two are
+    # already served today, just via worse text. Once a regen that includes this rewrite
+    # actually lands, the new CONCISE text will stop slug-matching and this checker will
+    # correctly report them as drift_unpinned -- pin them present_elsewhere with the real row
+    # at THAT point (matching this file's standing practice of pinning after, not ahead of,
+    # the regen that makes the pin true). Confirmed via build_fact_texts() the prospective
+    # rows are 154 ("ASILIMIA 100") / 148 ("ASILIMIA 5") for whoever adds that pin next.
+
+    # corporate_tax_rate / minimum_turnover_tax: the corporate-tax source pass (4974cbc,
+    # 2026-09-01) moved both into CONCISE_BILINGUAL_FACTS, so their slugs stopped exact-
+    # matching -- never adjudicated by this checker until now (it predates the fc9b0c8 regen
+    # that actually shipped them). Confirmed present and RANK 1 in the real deployed index by
+    # the Kaggle regen's own guard queries ('Corporate tax rate (ask-aligned)', 'AMT loss-
+    # making corporation (ask-aligned)' in kaggle/regenerate_rag_e5.py), and row-located
+    # directly against the fetched, deployed rag_facts_text.json (2026-09-03).
+    "corporate_tax_rate": ("present_elsewhere", 36, "asilimia 30 kwa kampuni"),
+    "minimum_turnover_tax": ("present_elsewhere", 27, "hasara miaka mitatu mfululizo"),
     # prohibited_business_activities_for_non_citizens_order_year: value is the bare year
     # "2025". Row 19 states GN487A's effective date is 28 July 2025, so the YEAR is not
     # unretrievable -- but "2025" alone is too common a substring to pin reliably (it
