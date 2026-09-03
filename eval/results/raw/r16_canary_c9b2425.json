@@ -1,0 +1,52 @@
+[
+  {
+    "label": "corporate_tax_rate (ask-aligned this regen, POSITIVE -- should retrieve rank1)",
+    "question": "kodi ya kampuni ni asilimia ngapi",
+    "reply": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi (First Schedule para 3(1)). Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hisa kwa umma hulipa asilimia 25 kwa miaka 3 tangu kuorodheshwa (para 3(2)(a)). Hii ni kiwango — SI hesabu ya TZS kutoka mauzo: faida (si mauzo) ndiyo msingi wa kodi hii, na faida haiwezi kupatikana kutoka mauzo peke yake."
+  },
+  {
+    "label": "minimum_turnover_tax / AMT (ask-aligned this regen, POSITIVE)",
+    "question": "kampuni yangu inapata hasara miaka mitatu mfululizo nitalipa kodi gani",
+    "reply": "Kampuni yenye hasara miaka mitatu mfululizo hulipa kodi ya chini (Alternative Minimum Tax) ya asilimia 1 ya mauzo ya mwaka wa tatu, tangu Julai 2025 (awali ilikuwa asilimia 0.5). Thibitisha na tra.go.tz."
+  },
+  {
+    "label": "maternity_cash_benefit_rate (NSSF ask-aligned rewrite this regen, POSITIVE)",
+    "question": "nikichukua likizo ya uzazi NSSF watanilipa asilimia ngapi ya mshahara",
+    "reply": "Kwa likizo ya uzazi, NSSF inalipa 100% ya mshahara mkubwa wa jumla. Thibitisha na NSSF (nssf.go.tz)."
+  },
+  {
+    "label": "unpaid_contribution_penalty_rate (NSSF ask-aligned rewrite this regen, POSITIVE)",
+    "question": "kama mwajiri hakulipa michango ya NSSF kwa wakati adhabu ni ngapi",
+    "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili."
+  },
+  {
+    "label": "electrical_test_fee (merged this regen, POSITIVE)",
+    "question": "ada ya ukaguzi wa umeme (electrical test) imepungua kiasi gani",
+    "reply": "Ada ya ukaguzi wa umeme imepungua kutoka TZS 650,000 hadi TZS 150,000 kwa vituo vya mafuta vijijini. Thibitisha na OSHA (osha.go.tz)."
+  },
+  {
+    "label": "efd_threshold_tzs_11m (pin needle narrowed THIS commit -- must still resolve, POSITIVE)",
+    "question": "mauzo yangu ni milioni kumi na moja kwa mwaka je nahitaji mashine ya EFD",
+    "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia taarifa rasmi (Commissioner-General public notice) inayotaja jina lako au kundi lako maalum. Thibitisha na TRA kama taarifa kama hiyo inakuhusu. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+    "label": "nat_27 (VAT standard rate, NEGATIVE control -- must stay correct, untouched by this regen)",
+    "question": "vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu",
+    "reply": "Kiwango cha VAT kinachotumika kwenye mauzo yako ni asilimia 18. Thibitisha na tra.go.tz."
+  },
+  {
+    "label": "nat_34 (company reg fee, NEGATIVE control -- must stay correct)",
+    "question": "nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+    "reply": "Ada ya kuhifadhi jina ni TZS 50,000. Gharama ya kuanzia ni TZS 95,000. Thibitisha na BRELA (brela.go.tz)."
+  },
+  {
+    "label": "nat_36 (EFD threshold unregistered framing, NEGATIVE control -- must stay correct)",
+    "question": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+    "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia taarifa rasmi (Commissioner-General public notice) inayotaja jina lako au kundi lako maalum. Thibitisha na TRA kama taarifa kama hiyo inakuhusu. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+    "label": "CONTAINER-FRESHNESS PROBE (OOC refusal, config-only path -- proves the fresh container is reading chike_config.json, not serving stale warm-container behaviour)",
+    "question": "nataka kujua kodi ya faida ya mtaji nikiuza nyumba",
+    "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu."
+  }
+]
