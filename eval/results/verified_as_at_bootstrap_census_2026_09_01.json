@@ -7,19 +7,15 @@
     "_meta",
     "_unresolved_items"
   ],
-  "dict_shaped_facts_classified": 246,
-  "primary_verified": 128,
+  "dict_shaped_facts_classified": 247,
+  "primary_verified": 129,
   "unknown_backlog_dict_shaped": 118,
-  "unstructured_string_valued_facts": 4,
+  "unstructured_string_valued_facts": 3,
   "unstructured_facts_note": "These carry no verified_by/primary_source/any metadata field at all -- not processed as \"unknown\" alongside the dict-shaped facts because they cannot carry a verified_as_at field without first being converted from a bare string to a dict, which is a schema-migration decision bigger than this bootstrap census. Effectively unknown-or-worse; listed separately so they are not silently invisible.",
   "unstructured_facts": [
     {
       "key": "late_payment_penalty_rate",
       "value": "2 %"
-    },
-    {
-      "key": "company_director_minimum_age",
-      "value": "18"
     },
     {
       "key": "registration_certificate_processing_time_new",
@@ -1283,6 +1279,13 @@
       "verified_as_at": "2026-08-31",
       "reason": "direct/verbatim primary-source read with an explicit date",
       "verified_by_excerpt": "Direct read of Patents (Registration) Act Cap.217 s.39(1)-(3), 2026-08-31. Cross-checked separately via web search that '20 years' as a flat term is the ARIPO r"
+    },
+    {
+      "key": "company_director_minimum_age",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of the Companies Act Cap.212 R.E.2023 PDF (brela.go.tz), s.197, quoted verbatim above. R29 check: FA2024/FA2025/FA2026 each searched di"
     },
     {
       "key": "course_fee",

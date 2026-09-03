@@ -2373,11 +2373,11 @@
     "verified_as_at": "2026-09-02"
   },
   "annual_return_form_number": {
-    "fact": "Form No. 128 -- annual return submission form",
-    "correct_value": "128",
-    "primary_source": "data/source_documents/brela/brela_faq_official.pdf (BRELA official FAQ)",
-    "verified_by": "Direct read (2026-09-02) of BRELA's official FAQ document, cached locally at data/source_documents/brela/brela_faq_official.pdf (1343 lines, covers companies, beneficial ownership, patents, industrial licences). Found via source-first draining. Verbatim: Q11: \"Ninawezaje kuwasilisha taarifa ya mwaka ya Kampuni? Kwa kujaza fomu Na. 128 inayopatikana katika mfumo wa ORS\" -- how to submit the Company's annual return: by filling Form No. 128, available in the ORS system.",
-    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string",
+    "fact": "Form No. 128 -- annual return submission form. The NAME is a legacy label from the original Companies Act 2002 numbering: the annual-return DUTY itself now sits at s.131 of the Companies Act Cap.212 R.E.2023 (28-day filing deadline from the return date), not s.128 -- current s.128 is 'Regulations as to branch register', an unrelated provision. Do not 'correct' the form's name to match the current section number; BRELA and practitioners still call it Form 128.",
+    "correct_value": "128 (form name/number, historical) -- filed under Companies Act Cap.212 R.E.2023 s.131 (current numbering)",
+    "primary_source": "data/source_documents/brela/brela_faq_official.pdf (BRELA official FAQ, for the form number itself); Companies Act Cap.212 R.E.2023 s.131 (for the underlying statutory duty and 28-day deadline)",
+    "verified_by": "Direct read (2026-09-02) of BRELA's official FAQ document, cached locally at data/source_documents/brela/brela_faq_official.pdf (1343 lines, covers companies, beneficial ownership, patents, industrial licences). Found via source-first draining. Verbatim: Q11: \"Ninawezaje kuwasilisha taarifa ya mwaka ya Kampuni? Kwa kujaza fomu Na. 128 inayopatikana katika mfumo wa ORS\" -- how to submit the Company's annual return: by filling Form No. 128, available in the ORS system. R29 RENUMBERING TRAP, confirmed at statute-tier same day: direct fetch of the Companies Act Cap.212 R.E.2023 PDF (brela.go.tz) shows s.131 ('Duty to deliver annual returns') carries its own footnote '[s. 128]' -- the Act's OWN historical cross-reference confirming this provision used to be numbered s.128 before a renumbering (exactly the pattern CLAUDE.md already documents for Cap.332's old s.35). Current s.128 is a different provision entirely ('Regulations as to branch register'). The form's colloquial name froze at the old number; the governing section did not.",
+    "status": "CONFIRMED (2026-09-02) -- value unchanged, upgraded from an unverified bare string, then upgraded again same session with the renumbering finding",
     "verified_as_at": "2026-09-02"
   },
   "beneficial_owner_information_penalty_maximum": {
@@ -2446,7 +2446,13 @@
     "correction_note": "Prior fact stated a bare, uncited '20 years' with no distinction between base term and extension. Direct read of Cap.217 s.39(1) found the true structure is a 10-year base term with two discretionary 5-year extensions (subject to a 'working' requirement), reaching 20 years only in the maximal case -- a flat '20 years' answer would mislead a patent holder into not renewing at year 10 and losing protection entirely. SCOPING FLAG (not resolved here, founder decision): patents/IP registration falls under no current or planned domain in CLAUDE.md Section 5 (Tier1A/1B/1C/2A/2B) -- this fact appears to belong to no active workstream.",
     "verified_as_at": "2026-08-31"
   },
-  "company_director_minimum_age": "18",
+  "company_director_minimum_age": {
+    "fact": "A person shall not be capable of being appointed as a director of a company if, at the time of appointment, they have not attained the age of eighteen years",
+    "correct_value": "18",
+    "primary_source": "Companies Act Cap.212 R.E.2023, s.197: 'a person shall not be capable of being appointed as a director of a company which is subject to this section if at the time of his appointment he had not attained the age of eighteen years'",
+    "verified_by": "Direct read (2026-09-02) of the Companies Act Cap.212 R.E.2023 PDF (brela.go.tz), s.197, quoted verbatim above. R29 check: FA2024/FA2025/FA2026 each searched directly for 'Companies Act'/'Cap. 212' -- zero hits in any of the three; s.197 unamended since its own last-listed amendment (Act No.5 of 2021 s.36).",
+    "verified_as_at": "2026-09-02"
+  },
   "course_fee": {
     "fact": "UNCONFIRMED: '250,000 TZS' does not match any OSHA training course fee actually checked on osha.go.tz -- 'Safe Use of Chemicals at Work', 'OHS in Construction Industry', and 'Safety and Health in Oil and Gas Industry' are all priced at TZS 300,000. Which course (if any) '250,000 TZS' refers to could not be identified.",
     "correct_value": "HEDGE -- could not identify which course this refers to; sampled OSHA courses are TZS 300,000, not 250,000",
