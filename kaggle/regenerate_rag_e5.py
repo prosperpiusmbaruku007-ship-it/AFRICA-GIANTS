@@ -87,7 +87,7 @@ SOURCE_FILES = ['scripts/locked_facts.json', 'scripts/precompute_rag_embeddings.
 # unpaid_contribution_penalty_rate) given ask-aligned rewrites. None of this is in the
 # index currently deployed (fc9b0c8-built) -- this floor exists so the NEXT regen
 # cannot silently rebuild without them.
-EXPECTED_HEAD = '76e64ed'
+EXPECTED_HEAD = '951fb67'
 
 
 def _assert_expected_head_present(local_head, live_sha):
