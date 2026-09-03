@@ -1151,6 +1151,21 @@
     "correction_note": "This fact was deliberately kept as a '200M-free companion to efd_threshold_tzs_11m' to win retrieval for eval_347 (PROGRESS.md, FACT-ACCURACY Q16, 2026-07-28) -- i.e. it was built to be internally consistent with the wrong fact, not with the statute. Rewritten 2026-08-29 to match the corrected understanding instead. eval_347's own correct_answer_sw text likely still needs updating (it tests '200M is not the EFD threshold' but its own gold answer may still supply 11M as the right one) -- flagged in the Tier-1 EFD sweep report for the founder to review before the gate is re-run, not changed here.",
     "verified_as_at": "2026-08-29"
   },
+  "efd_receipt_per_transaction_no_minimum": {
+    "fact": "A fiscal receipt (EFD) is required for EVERY individual sale or payment received, regardless of the transaction's value -- Tax Administration Act Cap.438 R.E.2019 s.36(1) (renumbered s.44(1) in R.E.2023, same renumbering already documented on efd_threshold_tzs_11m): 'A person who supplies goods, renders services or receives payment in respect of goods supplied or services rendered shall issue fiscal receipt or fiscal invoice by using electronic fiscal device.' No transaction-size carve-out exists anywhere in the section. This is a DIFFERENT claim from efd_threshold_tzs_11m/efd_not_every_business, which cover whether a BUSINESS must have an EFD at all regardless of ANNUAL TURNOVER -- this fact covers whether a single SALE, once a business has the EFD obligation, ever falls below a minimum value that would excuse a receipt. Both answers are the same shape (no threshold; exemption only by CG public notice, s.36(2)/s.44(2)) but at different levels (business-wide vs per-transaction), and conflating them left this per-transaction claim entirely unlocked.",
+    "correct_value": "No minimum transaction value -- EFD receipt required for every sale regardless of amount (s.36(1)/s.44(1)). Exemption only via Commissioner-General public notice (s.36(2)/s.44(2)), same mechanism as the business-level exemption, never a transaction-size cutoff.",
+    "wrong_patterns": [
+      "chini ya (tzs )?[0-9,]+[^.?!]{0,40}(risiti|efd)[^.?!]{0,20}(si lazima|hailazimiki|hazihitajiki)",
+      "below (tzs )?[0-9,]+[^.?!]{0,40}(efd|receipt)[^.?!]{0,20}(not required|no need)",
+      "mauzo chini ya (tzs )?500",
+      "(sales|transactions) (below|under) (tzs )?500",
+      "risiti ya kawaida.*inatosha",
+      "ordinary receipt.*sufficient"
+    ],
+    "primary_source": "Tax Administration Act, Cap.438 R.E.2019, s.36(1) and s.36(2) (renumbered s.44(1)/s.44(2) in R.E.2023, Finance Act 2023 s.54)",
+    "verified_by": "Direct read (2026-09-03) of Tax Administration Act Cap.438 R.E.2019, downloaded via curl per R30 from tra.go.tz/images/uploads/acts/CHAPTER_438-THE_TAX_ADMINISTRATION_ACT.pdf, s.36 'Use of electronic fiscal device'. Verbatim subsection (1) quoted above; subsection (2) confirms the only exemption route is a Commissioner-General public notice naming a person or class -- same mechanism efd_not_every_business already documents at the business level. Written after nat_37 (edge_probe_natural_048.jsonl) produced a live, fabricated TZS 500 minimum-transaction exemption with retrieval returning zero relevant context in either the pre- or post-R15 index (eval/results/grounding_48.json's own prior NO_OVERLAP measurement, 2026-08-22) -- this was a genuine coverage gap, not a retrieval-ranking problem alone.",
+    "verified_as_at": "2026-09-03"
+  },
   "gn487a_visa_revocation": {
     "fact": "Visa and resident-permit revocation is a MANDATORY consequence upon conviction under GN487A s.3(3)(a) -- the Order's own text says a convicted non-citizen 'shall be liable to' a fine or imprisonment 'AND revocation of visa and resident permit.' It only attaches on CONVICTION, not on mere accusation, investigation, or GN487A's existence.",
     "correct_value": "Lazima (mandatory) baada ya HUKUMU (conviction) -- si hiari ya mahakama, lakini hakuna kinachotokea kabla ya hukumu",

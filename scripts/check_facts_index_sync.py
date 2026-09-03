@@ -162,6 +162,24 @@ PINNED = {
     "workers_compensation_amendment_rules_section": ("fragment", None),
     "offence_penalty_mention": ("fragment", None),
 
+    # efd_receipt_per_transaction_no_minimum: brand-new key, 2026-09-03, closing nat_37's
+    # live regression (readjudicate_changed_48_r15_2026_09_03.py). No row exists for it
+    # in the currently-deployed index at all (never regenerated) -- pending_r15 until the
+    # next Kaggle regen ships it, per this file's own established practice for brand-new
+    # keys (see the C4-cycle precedent above). Measured RANK 2 (top-3) locally against the
+    # currently-deployed index plus this one new row; anchor 'KWA KILA muamala' unique.
+    # vat_standard_rate and late_payment_penalty_rate are NOT pinned here even though both
+    # changed this same session: vat_standard_rate's new CONCISE text still hasn't shipped,
+    # so its OLD "key: value" fallback row still exact-matches the currently-deployed index
+    # today -- pinning now would be premature (same reasoning already on record for
+    # maternity_cash_benefit_rate/unpaid_contribution_penalty_rate, above). Same for
+    # late_payment_penalty_rate: it is now is_noise_key()==True in source, but its row has
+    # not yet been dropped from the deployed index, so it still exact-matches today too.
+    # Both will surface as real, expected drift the moment the next regen ships and get
+    # pinned then (present_elsewhere for vat_standard_rate, absent for
+    # late_payment_penalty_rate) -- not now.
+    "efd_receipt_per_transaction_no_minimum": ("pending_r15", None),
+
     # Written 2026-08-16 for the presumptive-tax coverage item, pending_r15 until the R15
     # regen ran. It ran on 2026-08-17 (the natural48 entry, PROGRESS.md) and all four keys
     # now resolve by EXACT key match against the new index -- confirmed via check(), not

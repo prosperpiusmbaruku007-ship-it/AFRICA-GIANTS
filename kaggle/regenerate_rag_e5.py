@@ -317,7 +317,16 @@ critical_queries = [
     # answer, not merely when more than one fact matches.
     ('OSHA/WCF small-count (Q14 verbatim)', 'query: Nina wafanyakazi wawili tu dukani, bado nasajiliwa mahali fulani?', ['osha husajili', 'wcf huanza', 'mfanyakazi wa kwanza']),
     # Q16 EFD: model said every shop needs an EFD regardless of sales.
-    ('EFD not-every-business (Q16 verbatim)', 'query: Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?', ['si kila biashara', 'risiti za mkono']),
+    # anchor UPDATED 2026-09-03: the old anchors ('si kila biashara', 'risiti za mkono')
+    # were phrases from the STALE, fabricated turnover-threshold text this row used to
+    # carry (see efd_not_every_business's rewrite note in precompute_rag_embeddings.py --
+    # same defect nat_36's guard was re-adjudicated for, found and fixed in the same
+    # pass). Both anchors are now DEAD by design: the corrected text deliberately no
+    # longer says "si kila biashara" or offers "risiti za mkono" as a turnover-based
+    # option. Re-anchored to the corrected text's own unique phrase; re-verified this
+    # guard's query still resolves to the same row at rank 1 on the full prospective
+    # 183-row dry-run re-embed.
+    ('EFD not-every-business (Q16 verbatim)', 'query: Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?', ['HAKUNA kizingiti cha mauzo']),
     # ── C4 REACHABILITY CYCLE, 2026-08-17 ── one positive guard for the row that
     # actually cleared top-3 after two rounds of wording (GN605A_sector_count, nat_43,
     # rank 127->1); four negative/displacement guards for nat_26/27/34/36, whose pools
@@ -357,7 +366,15 @@ critical_queries = [
     # rot silently when facts are edited).
     ('GN605A sector count (nat_43 verbatim, the row that clears)', 'query: mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta', ['hakina kiwango kimoja']),
     ('VAT six-month threshold (nat_26 displacement guard)', 'query: nimefungua duka miezi sita iliyopita nimeuza jumla milioni 60 hadi sasa je nimefika kiwango cha vat', ['100,000,000 kwa miezi 6']),
-    ('VAT standard rate (nat_27 displacement guard)', 'query: vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu', ['NEVER 14%']),
+    # anchor UPDATED 2026-09-03: vat_standard_rate got its first CONCISE entry (it had
+    # none before -- default English "key: value" fallback, which never appeared in
+    # top-3 across three regens, fc9b0c8/76e64ed/b002b96 -- see PROGRESS.md). New text is
+    # Swahili-first and ask-aligned to this exact question; anchor changed from the old
+    # English 'NEVER 14%' to 'SIYO 14%' to match (an English anchor would defeat the
+    # point of a Swahili-first rewrite). Measured locally at RANK 1 (was rank 12) against
+    # the currently-deployed index, and PASSES on the full prospective 183-row dry-run
+    # re-embed before this file was repackaged. Removed from KNOWN_FAILING below.
+    ('VAT standard rate (nat_27 displacement guard)', 'query: vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu', ['SIYO 14%']),
     # anchor UPDATED 2026-08-26 (fee consolidation): 'company registration fee 1' matched
     # ZERO facts once the ladder's 14 rows were absorbed into company_registration_ladder --
     # the exact dead-anchor failure mode this uniqueness check exists to catch, found by
@@ -379,7 +396,30 @@ critical_queries = [
     # against the prospective index by verify_regen_guard_retrievability.py before this
     # file was repackaged.
     ('Company registration fee (nat_34 displacement guard)', 'query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina', ['gharama ya kuanzia ni TZS 95,000']),
-    ('EFD threshold, VAT-unregistered (nat_36 displacement guard)', 'query: mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti', ['milioni kumi na moja']),
+    # anchor UPDATED 2026-09-03, and the fix is NOT the anchor -- efd_not_every_business's
+    # CONCISE text was found STALE: it still stated the TZS 11,000,000 turnover-threshold
+    # framing that was found fabricated on 2026-08-29 and corrected in locked_facts.json,
+    # but the CONCISE rendering here was never updated to match (a sync gap, not a
+    # phrasing gap). Old anchor 'milioni kumi na moja' was never IN this row's text at
+    # all (it lives in efd_threshold_tzs_11m's separate row) and would have kept failing
+    # even under a correctness-only fix -- confirmed directly: a correctness-only rewrite
+    # (dropping the 11M figure without ask-aligning) fell OUT of top-3 entirely (rank 6).
+    # The ask-aligned rewrite recovers both correctness AND rank -- measured locally at
+    # RANK 1 (from not-in-top-3) against the currently-deployed index, non-displacing on
+    # nat_26/nat_38/the original Q16 target, and PASSES the full prospective 183-row
+    # dry-run re-embed. Removed from KNOWN_FAILING below -- this is a genuine close, not
+    # a guard-anchor patch over an unfixed retrieval gap.
+    ('EFD threshold, VAT-unregistered (nat_36 displacement guard)', 'query: mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti', ['HAKUNA kizingiti cha mauzo']),
+    # NEW GUARD 2026-09-03, for the NEW fact efd_receipt_per_transaction_no_minimum,
+    # closing nat_37's live regression (readjudicate_changed_48_r15_2026_09_03.py):
+    # no locked fact anywhere stated the per-transaction (as opposed to per-business/
+    # turnover) EFD rule, so retrieval returned zero relevant content for this question
+    # in both the pre- and post-R15 index (confirmed: eval/results/grounding_48.json's
+    # own 2026-08-22 measurement already found NO_OVERLAP here), and the model fabricated
+    # a TZS 500 minimum-transaction exemption from weights alone. Measured locally at
+    # RANK 2 (in top-3) against the currently-deployed index plus this one new row, and
+    # PASSES the full prospective 183-row dry-run re-embed.
+    ('EFD receipt required per-transaction, no minimum (nat_37 gap-closing guard)', 'query: mteja amenunua kwa shilingi 2000 tu nampa risiti ya mashine au inaruhusiwa kuandika kwa mkono', ['KWA KILA muamala']),
     # ── FEE-CONSOLIDATION BATCH, 2026-08-26 -- the five council-fee/market-dues/business-
     # licence facts reclassified from GAP to ANSWERED (add_local_levy_facts.py, PROGRESS.md
     # 'THE THREE UNANSWERABLE DOMAINS'). Pinned pending_r15 in check_facts_index_sync.py
@@ -410,16 +450,15 @@ critical_queries = [
 # ([STALE-KNOWN-FAIL]) and DOES block -- otherwise this set becomes the place guards go to be
 # forgotten, which is the failure mode it exists to prevent.
 KNOWN_FAILING = {
-    # [13] vat_standard_rate is rank 15 for the verbatim nat_27 question and is never
-    # retrieved. nat_27 answers correctly FROM MODEL WEIGHTS, not from retrieval -- see the
-    # 2026-08-22 grounding entry in PROGRESS.md. Closing this means rewriting [13] ask-first,
-    # measured at rank 15 -> 2 (eval/results/targeted_rewrite.json).
-    'VAT standard rate (nat_27 displacement guard)',
-    # [57] efd_threshold is rank 17 for the verbatim nat_36 question (rank 2 only under the
-    # old paraphrase, which is exactly why the paraphrase was a fault). nat_36 also answers
-    # from weights. Closing this means rewriting [57] to lead with 'mashine ya risiti (EFD)'
-    # rather than 'Kizingiti cha kuanza kutumia', measured at rank 17 -> 1.
-    'EFD threshold, VAT-unregistered (nat_36 displacement guard)',
+    # BOTH prior members of this set closed 2026-09-03 -- see the anchor-update comments
+    # beside each guard's tuple above (vat_standard_rate / efd_not_every_business), and
+    # readjudicate_changed_48_r15_2026_09_03.py for the live-answer evidence that
+    # motivated closing nat_36's the right way (a content fix, not a guard patch). Both
+    # verified PASS on the full prospective 183-row dry-run re-embed before this file was
+    # repackaged -- if either comes back [STALE-KNOWN-FAIL] on the real Kaggle run, that
+    # means the dry-run (CPU, local sentence-transformers) and the Kaggle run (same model,
+    # same code path) disagree, which would itself be worth investigating rather than
+    # re-adding the name reflexively.
 }
 
 # Anchor uniqueness is a PRECONDITION, not an assumption: if a fact edit makes an anchor match

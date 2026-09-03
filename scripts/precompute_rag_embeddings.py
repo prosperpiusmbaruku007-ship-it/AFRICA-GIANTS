@@ -228,17 +228,105 @@ CONCISE_BILINGUAL_FACTS = {
         'cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD '
         'bila kujali kiwango cha mauzo.',
 
-    # Q16 fix (200M-FREE by design, so it does NOT intrude on eval_347's 200M-heavy
-    # adversarial query while still winning the "kila duka bila kujali mauzo?" query).
-    # Counters the model's over-generalization that every shop needs an EFD regardless
-    # of sales, by injecting the explicit "Si kila biashara" + manual-receipts nuance.
+    # REWRITTEN 2026-09-03 -- the text below this comment (Q16 fix, pre-2026-08-29) was
+    # STALE, not just under-ranked: it stated a TZS 11,000,000 turnover threshold as the
+    # criterion for a hand-receipt exemption. That framing was found FABRICATED on
+    # 2026-08-29 (see efd_threshold_tzs_11m's locked_facts.json entry, and
+    # efd_not_every_business's own locked entry, corrected the same day with wrong_patterns
+    # specifically written to reject "chini ya TZS 11,000,000 ... risiti za mkono"). The
+    # locked_facts.json TEXT was corrected on 2026-08-29; THIS CONCISE rendering was never
+    # updated to match -- a sync gap between the fact's corrected content and its embedded
+    # index text, found while re-adjudicating nat_36's KNOWN-FAIL guard (2026-09-03). The
+    # old text's own wrong_pattern regex has a 40-char window and did not catch its own
+    # violation (checked directly: re.search found no match) -- the regex gap does not
+    # change that the CONTENT was wrong.
+    #
+    # New text is ask-aligned to nat_36's own phrasing ("mauzo yangu ya mwaka ni milioni
+    # 15 na sijasajili vat"), not just correctness-fixed: measured locally (multilingual-
+    # e5-base, cosine, prospective single-row swap) at RANK 1 for nat_36's verbatim query
+    # (was rank >10, not in top-3, even after a correctness-only rewrite that dropped the
+    # 11M figure -- ask-alignment is what recovers the rank, matching R15's lever).
+    # Confirmed non-displacing on the original Q16 target (still rank 1), nat_38 (rank 1,
+    # bonus), nat_26's VAT six-month threshold guard (row 57 falls to rank 11, unaffected
+    # top-3), and nat_37's per-transaction question (row 57 rank 17 -- this rewrite does
+    # NOT accidentally cover nat_37's distinct gap; see efd_receipt_per_transaction_no_
+    # minimum below for that). Anchor for the KNOWN_FAILING/critical_queries guard in
+    # regenerate_rag_e5.py updated to 'HAKUNA kizingiti cha mauzo', unique in the 183-row
+    # index (checked). Old anchor 'milioni kumi na moja' no longer applies -- it was never
+    # in this row's text (it was in efd_threshold_tzs_11m's, a different row) and would
+    # have kept failing even after this fix.
+    # Wording note added 2026-09-03, same pass: the first draft used "sijasajili VAT"
+    # (VAT-unregistered) prominently and displaced vat_registration_threshold_annual's
+    # own guard (row 103, "Kizingiti cha kusajili VAT... TZS 200,000,000 kwa miezi 12")
+    # from top-3 to rank 4 for its OWN query -- found by
+    # eval/index_quality/verify_regen_guard_retrievability.py before this was packaged,
+    # not assumed clean. "-sajili VAT" is the shared root that pulled the two queries
+    # together in embedding space even though they ask different things (an EFD
+    # obligation vs a VAT-registration threshold). Reworded to "sina namba ya VAT" (no
+    # VAT number), same meaning, no shared root -- re-verified row 103 back at rank 3.
     'efd_not_every_business':
-        'Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine ya risiti '
-        '(EFD)? Si lazima. Si kila biashara inalazimika kutumia mashine ya risiti za '
-        'kielektroniki (EFD): biashara ndogo yenye mauzo chini ya TZS 11,000,000 kwa mwaka '
-        'na isiyosajiliwa VAT inaweza kutumia risiti za mkono badala ya mashine ya EFD. '
-        'Waliosajiliwa VAT na wenye mauzo ya TZS 11,000,000 au zaidi ndio hulazimika '
-        'kutumia mashine ya risiti za EFD.',
+        'Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya '
+        'VAT -- je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali '
+        'kiasi cha mauzo yako -- HAKUNA kizingiti cha mauzo unaosubiri kufikia. Msamaha '
+        'ni TU kwa taarifa rasmi ya TRA (Commissioner-General) inayokutaja wewe au '
+        'kundi lako.',
+
+    # NEW FACT 2026-09-03, closing a genuine coverage gap exposed by nat_37's live
+    # regression (readjudicate_changed_48_r15_2026_09_03.py): no locked fact anywhere
+    # stated the PER-TRANSACTION rule (every sale needs a fiscal receipt regardless of
+    # value) as distinct from efd_threshold_tzs_11m's PER-BUSINESS/turnover rule -- the
+    # two are related but different claims, and only the turnover one was locked. With
+    # no relevant fact ever retrieved for nat_37's exact question (checked: top-15
+    # unpooled retrieval against BOTH the pre- and post-regen index returns zero EFD/
+    # receipt content at all -- confirmed via eval/results/grounding_48.json's own prior
+    # measurement, NO_OVERLAP even in 2026-08-22), the model answered this question from
+    # weights alone in both eras; this cycle it fabricated a TZS 500 minimum-transaction
+    # exemption that appears in NO locked fact and traces to no statute. Verified directly
+    # against Tax Administration Act Cap.438 (fetched via curl per R30, R.E.2019 edition,
+    # s.36(1) -- renumbered s.44(1) in R.E.2023, same renumbering efd_threshold_tzs_11m
+    # already documents): "A person who supplies goods, renders services or receives
+    # payment in respect of goods supplied or services rendered shall issue fiscal
+    # receipt or fiscal invoice by using electronic fiscal device" -- no transaction-size
+    # carve-out anywhere in the section; the only exemption is subsection (2)'s
+    # Commissioner-General public notice, the same mechanism already locked for the
+    # turnover-level claim. Ask-aligned to nat_37's own phrasing; measured locally at
+    # RANK 2 (in top-3), anchors 'KWA KILA muamala' / 'hakuna kiwango cha chini' unique
+    # in the 183-row index (checked).
+    'efd_receipt_per_transaction_no_minimum':
+        'Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya '
+        'mashine (EFD) au inaruhusiwa kuandika kwa mkono? Lazima risiti ya mashine ya '
+        'EFD KWA KILA muamala, bila kujali kiasi kidogo kiasi gani -- hakuna kiwango '
+        'cha chini. Kuandika kwa mkono kunaruhusiwa TU kwa aliyeondolewa na taarifa '
+        'rasmi ya TRA.',
+
+    # NEW ask-aligned rendering 2026-09-03, closing the last unaddressed row of the
+    # original nine displacement cases. vat_standard_rate had no CONCISE entry -- it fell
+    # to the default English "key: value" fallback ("vat standard rate: Tanzania's
+    # GENERAL VAT standard rate is 18%..."), and across three separate regens (fc9b0c8,
+    # 76e64ed, b002b96) its top-3 changed completely each time while the fact itself
+    # never appeared in any of them -- not displacement by one competitor, the fact
+    # simply was not close to the query in embedding space (rank 12 measured directly
+    # against the currently-deployed index, nowhere near production's top_k=3). Diagnosis
+    # was already on record (KNOWN_FAILING's own comment: "nat_27 answers correctly FROM
+    # MODEL WEIGHTS, not from retrieval"); this is the measured remedy. Ask-aligned to
+    # nat_27's own phrasing ("...naiweka kwenye bei ya bidhaa zangu"): measured locally
+    # at RANK 1 (from rank 12), score 0.834. Guard anchor in regenerate_rag_e5.py updated
+    # from 'NEVER 14%' to 'SIYO 14%' to match the Swahili-first text (Swahili-first is
+    # the whole point of the fix; forcing an English anchor phrase back into the text
+    # would undo it) -- unique in the 183-row index (checked).
+    # Wording note added 2026-09-03, same pass and same cause as efd_not_every_business's
+    # note above: "mteja asiyesajiliwa VAT" also carried the "-sajili VAT" root and
+    # contributed to the same row-103 displacement (both rows share the root; fixing only
+    # one was not sufficient -- confirmed by testing them independently before combining).
+    # Reworded to "mteja wa kawaida (si VAT)" -- same meaning (an ordinary, non-VAT-
+    # registered customer), no shared root. The 16%/B2B/exports/cash content is preserved
+    # in full; only this one phrase changed.
+    'vat_standard_rate':
+        'Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 '
+        '-- kiwango cha kawaida cha Tanzania Bara, tangu 2015 (VAT Act Cap.148 s.5(1)). '
+        'SIYO 14%. Kuna ubaguzi finyu wa asilimia 16 kwa malipo ya kielektroniki kwa '
+        'mteja wa kawaida (si VAT), kuanzia 1 Septemba 2025 (Finance Act 2025) -- '
+        'hauhusu B2B, mauzo nje ya nchi, wala malipo taslimu.',
 
     # Q14 companion — SHORT + high-concentration so it out-ranks the "minimum shareholders:
     # 2 employees" company-incorporation distractor that hijacked "wafanyakazi wawili tu...
@@ -589,6 +677,27 @@ _NOISE_KEYS_REVIEWED = {
     # already carries every fact this key states and more, and already has its own dedicated
     # displacement guard in kaggle/regenerate_rag_e5.py.
     'penalty_fine_non_citizen',
+    # 'late_payment_penalty_rate' -- a bare "2 %" value, no fact/correct_value/primary_source/
+    # wrong_patterns fields at all (compare every other entry in locked_facts.json), found
+    # 2026-09-03 while diagnosing nat_27's displacement. R25 test: (1) what defect does
+    # dropping this repair? Measured directly: retrieved RANK 1 for nat_27's exact VAT-
+    # standard-rate question ("late payment penalty rate: 2 %" beat every genuinely relevant
+    # fact, including vat_standard_rate's own then-unfixed row), an unscoped 2% figure with
+    # no domain attached, competing on pure numeric/percent similarity against completely
+    # unrelated questions. Domain unknown to this project across multiple prior sessions
+    # (PROGRESS.md, "name/value mismatch found, not resolved") -- a same-arc discovery
+    # (workers_compensation_amendment_rules_section, GN668/2021 s.2, WCF late-tariff-payment
+    # interest reduced 10%->2%) numerically matches, but per this project's own standing
+    # instruction NOT to reconcile an unscoped figure by inference, that identification was
+    # explicitly left unconfirmed, not adopted. (2) what correct output could dropping it
+    # damage? None identifiable: if it IS the WCF rate, that content is already fully and
+    # correctly captured, with primary citation, in workers_compensation_amendment_rules_
+    # section; if it is something else, nobody has ever named what. An un-scoped, un-cited,
+    # already-proven-harmful figure with no identified correct use is not being deprived of
+    # anything by leaving the index. Dropped as noise rather than merged (there is no
+    # confirmed sibling to merge it INTO -- merging into the WCF fact would be exactly the
+    # unconfirmed inference this project already declined to make).
+    'late_payment_penalty_rate',
     'exemption_category_government_departments',
     'exemption_category_diplomatic_missions',
     'exemption_category_religious_institutions',
