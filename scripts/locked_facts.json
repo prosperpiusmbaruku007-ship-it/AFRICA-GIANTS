@@ -43,11 +43,11 @@
       "paye.*10% per month",
       "paye[^.!?]*faini[^.!?]*asilimia 5(?! kwa mwezi — si)"
     ],
-    "primary_source": "https://taxsummaries.pwc.com/tanzania/corporate/tax-administration",
-    "verified_by": "PWC Tanzania Tax Summaries",
+    "primary_source": "Tax Administration Act Cap.438 R.E.2023, s.89(2)(a) -- the general penalty for failing to file a tax return or pay tax by the due date, applicable to PAYE as a tax law under this Act",
+    "verified_by": "Direct read (2026-09-02) of Tax Administration Act Cap.438 R.E.2023 PDF (tra.go.tz/images/uploads/acts/Tax_Administration_Act.pdf), s.89(2): 'A person who fails to file a tax return or pay tax on due date... is liable for a penalty for each month or part of a month... The penalty is- (a) two point five percent of the amount of tax assessable with respect to the tax return less tax paid by the start of the period towards that amount; and (b) in the case of an individual, 5 currency points or in the case of a body corporate, 15 currency points, whichever is higher.' Confirms PWC's 2.5% figure at statute-tier and adds the currency-point floor PWC's summary omits.",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "paye_personal_relief": {
     "fact": "Tanzania has NO separate PAYE personal relief deduction. The 0% band on first TZS 270,000/month IS the effective tax-free amount. Both TZS 26,000 and TZS 27,000 'personal relief' figures are WRONG.",
@@ -164,12 +164,12 @@
       "SDL is a disability levy",
       "SDL inamaanisha Service Development"
     ],
-    "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
-    "verified_by": "TRA official SDL page",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.14 (levy imposition) -- SDL is created and named by this Act; cross-checked against https://www.tra.go.tz/page/skills-development-levy-sdl",
+    "verified_by": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 (tra.go.tz/images/uploads/acts/THE_VOCATIONAL_EDUCATION_AND_TRAINING_ACT.pdf), s.14: the levy imposed under this Act is what TRA and the Act's own marginal notes call the Skills Development Levy. No competing name appears anywhere in the Act.",
     "effective_date": "2023-07-01",
     "status": "CONFIRMED",
     "adversarial_note": "Base model inference test after 300 pairs STILL said disability leave — needs 50+ adversarial pairs in batch_003",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "sdl_threshold": {
     "fact": "SDL applies to employers with 10 or more employees on Mainland Tanzania — NOT 4 employees",
@@ -208,11 +208,11 @@
       "mfanyakazi anapaswa kulipa SDL",
       "SDL hulipwa na mfanyakazi"
     ],
-    "primary_source": "https://www.tra.go.tz/page/skills-development-levy-sdl",
-    "verified_by": "TRA SDL page",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.14(2): 'The levy shall be the sum of money equal to three point five per centum of the total gross monthly emoluments payable BY THE EMPLOYER to his employees'",
+    "verified_by": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF, s.14(2) -- the levy is defined and imposed as an amount payable by the employer; no provision anywhere in ss.14-19 makes any part of it deductible from employee emoluments. Cross-checked against TRA's own SDL page.",
     "effective_date": "2023-07-01",
     "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "nssf_employer_rate": {
     "fact": "NSSF employer contribution is 10% of gross wage — NOT 6%",
@@ -593,11 +593,11 @@
       "kodi ya awali.{0,30}awamu 3(?! tu)",
       "paid in 3 instalments(?! will)"
     ],
-    "primary_source": "https://www.tra.go.tz/page/corporation-tax",
-    "verified_by": "TRA Paying Taxes page + PWC Tanzania + Auditax International",
+    "primary_source": "Income Tax Act Cap.332 R.E.2023, s.113(2)(a): 'on or before the last day of the third, sixth, ninth and twelfth months of the year of income'",
+    "verified_by": "Direct read (2026-09-02) of Income Tax Act Cap.332 R.E.2023 PDF, Division III (s.113) 'Payment of income tax by quarterly instalment' -- confirms TRA/PWC/Auditax's figure at statute-tier. R29 check: FA2024/FA2025/FA2026 each searched for 'section 113' -- FA2025's only hit inserts a new s.113A (HIV Response Levy on minerals) into a DIFFERENT Act (Cap.123), not the Income Tax Act; s.113 of Cap.332 itself is unamended by any of the three.",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "minimum_turnover_tax": {
     "fact": "The Alternative Minimum Tax (AMT) on chronically loss-making corporations is 1% of the turnover of the third consecutive year of unrelieved tax loss, effective 1 July 2025 (Income Tax Act Cap.332 First Schedule para 3(3), as amended by Finance Act 2025 s.60(d)(ii), which raised it from 0.5% to 1%). This applies ONLY to a corporation with THREE CONSECUTIVE YEARS of perpetual unrelieved loss -- it is NOT a general turnover tax on all businesses. Do not confuse with the presumptive (small-business) turnover tax, a different regime under First Schedule para 2. EXEMPT from this AMT regardless of loss history (Income Tax Act s.4(8)): a corporation conducting agricultural business, or engaged in the provision of health or education -- no sunset on these three -- and a corporation conducting tea processing, but ONLY for the period 1 July 2024 to 30 June 2027 (added by Finance Act 2024 s.34; the sunset is explicit in the proviso, not an inference).",
@@ -659,11 +659,11 @@
       "appeal within 30 days.*complete",
       "siku 30 peke yake"
     ],
-    "primary_source": "https://www.trab.go.tz/pages/how-to-appeals",
-    "verified_by": "TRAB official website",
+    "primary_source": "Tax Revenue Appeals Act Cap.408 R.E.2023, s.17(2): '(a) a notice of appeal is served upon the Commissioner General within thirty days...; and (b) the appeal is lodged with the Board within forty-five days...' -- cross-checked against https://www.trab.go.tz/pages/how-to-appeals",
+    "verified_by": "Direct read (2026-09-02) of Tax Revenue Appeals Act Cap.408 R.E.2023 PDF (tra.go.tz/images/uploads/acts/The_Tax_Revenue_Appeals_Act.pdf), s.17(2)(a)-(b) -- both deadlines run from the same trigger (date of service of the Commissioner General's final determination), not sequentially. R29 check: FA2024 s.99-100 amends Cap.408 ss.4 and 22 (Board composition, amicable settlement); FA2026 s.84-85 amends ss.8 and 23 (Part cross-reference, settlement timeline 60->90 days); neither touches s.17.",
     "effective_date": "2020-07-01",
     "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "objection_deposit_requirement": {
     "fact": "Before a TRA objection to a tax assessment is admitted, the taxpayer must pay the HIGHER of the undisputed tax OR one-third of the assessed tax. This payment is due CONCURRENTLY with lodging the objection -- i.e., within the same 30-day period allowed for filing the objection itself (Tax Administration Act, Cap.438 R.E.2023, s.62(7)-(9)) -- NOT on a separate 15-day clock.",
@@ -697,11 +697,11 @@
       "haitolewa kwa kawaida",
       "rarely granted"
     ],
-    "primary_source": "https://www.tra.go.tz/page/objections-and-appeals",
-    "verified_by": "TRA Objections page — extension explicitly provided by law",
+    "primary_source": "Tax Administration Act Cap.438 R.E.2023, s.62(2)-(3): 'A person who has reasonable ground to warrant extension of time to file an objection... may apply for an extension of time. Where the Commissioner General is satisfied by the reason stated... he shall grant the extension of time' -- the mandatory 'shall grant' (once satisfied) is the statute-tier confirmation that this is a right, not a rare discretionary favour",
+    "verified_by": "Direct read (2026-09-02) of Tax Administration Act Cap.438 R.E.2023 PDF, s.62(2)-(3) -- confirms the core CORE claim (extension is statutory, not rare) at statute-tier, same section already used for the neighbouring objection_deposit_requirement fact (s.62(7)-(9)). The specific operational figures in this fact's own text -- 'apply within 7 days before expiry' and 'max 30 more days' -- were NOT found in s.62 itself and are not yet cross-checked against Regulations (GN 101/2016, cited elsewhere in this project for adjacent objection-procedure detail); those two numbers remain at TRA-portal tier only, not statute-tier, pending a Regulations read this pass did not reach.",
     "effective_date": "2020-07-01",
     "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "stamp_duty_property_transfer": {
     "fact": "Stamp duty on transfer/conveyance of land or buildings is TIERED: 0.5% on the first TZS 100,000 of consideration/market value, then 1% on the value in excess of TZS 100,000 (Stamp Duty Act, Cap.189, Schedule, Article 22(b) 'CONVEYANCE') -- NOT a flat 1%.",
@@ -888,11 +888,11 @@
       "paye.*top.*35%",
       "kiwango cha juu cha paye.*35"
     ],
-    "primary_source": "https://taxsummaries.pwc.com/tanzania/individual/taxes-on-personal-income",
-    "verified_by": "PWC Tanzania Individual Tax Summary, last reviewed Jan 2026",
+    "primary_source": "Income Tax Act Cap.332 R.E.2023, First Schedule (made under s.4(6)), paragraph 1(1) -- resident individual tax rates, stated in the Act as ANNUAL bands (last amended by Finance Act 2023 s.31)",
+    "verified_by": "Direct read (2026-09-02) of Income Tax Act Cap.332 R.E.2023 PDF (tra.go.tz/images/uploads/acts/The_Income_Tax_Act.pdf), First Schedule para 1(1): NIL up to Tshs.3,240,000; 8% of excess over 3,240,000 up to 6,240,000; Tshs.240,000 plus 20% of excess over 6,240,000 up to 9,120,000; Tshs.816,000 plus 25% of excess over 9,120,000 up to 12,000,000; Tshs.1,536,000 plus 30% of excess over 12,000,000. These ANNUAL thresholds are exactly 12x the monthly bands (3,240,000/12=270,000; 6,240,000/12=520,000; 9,120,000/12=760,000; 12,000,000/12=1,000,000) and the annual cumulative bases (240,000; 816,000; 1,536,000) are exactly 12x the monthly bases PWC states (20,000; 68,000; 128,000) -- internally consistent cross-check between the Act's own annual table and the monthly PAYE withholding figures already locked. R29 check: FA2024/FA2025/FA2026 each searched directly for First Schedule amendments -- none touches paragraph 1 (individual rates); FA2026 has three unrelated First Schedule amendments (presumptive-tax table under a different Act, Motor Vehicle Tax Act, Tax Administration Act cross-reference), none in the Income Tax Act's individual rate table.",
     "effective_date": "2025-07-01",
     "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "paye_nonresident_flat_rate": {
     "fact": "Non-resident employees pay PAYE at a flat 15% rate — NOT the progressive bands. This is a final withholding tax (Income Tax Act Cap.332, First Schedule para 4(a)(ii), the rate table for section 81 'Withholding by employers' -- a resident withholdee follows 'the rates prescribed in regulations' i.e. the First Schedule para 1 progressive bands; a non-resident withholdee is flat 15%. Para 4 sits under Division II of Part VII, the final-withholding-payments framework, which is the statutory basis for calling this withholding final rather than an on-account payment.)",
@@ -1014,8 +1014,10 @@
   },
   "wht_director_fees": {
     "fact": "WHT on director fees (non-full-time directors) is 15% — a single rate for both residents and non-residents. Source: TRA.go.tz withholding tax page.",
-    "primary_source": "https://www.tra.go.tz/page/withholding-tax",
+    "primary_source": "Income Tax Act Cap.332 R.E.2023, First Schedule para 4(a)(iii): 'in the case of director's fees referred to in section 7(2)(h) — fifteen percent' -- listed as its own subitem, not split by resident/non-resident status the way other s.104 payments are in the same paragraph; cross-checked against https://www.tra.go.tz/page/withholding-tax",
+    "verified_by": "Direct read (2026-09-02) of Income Tax Act Cap.332 R.E.2023 PDF, First Schedule para 4(a): director's fees under s.7(2)(h) (annual director's fees to a director other than a full-time service director) are withheld at 15% flat, distinct from para 4(a)(i)/(ii)'s resident-vs-non-resident split for other s.104 payments. R29 check: FA2024/FA2025/FA2026 each searched directly for 'director' and for First Schedule para 4 amendments -- FA2024 amends para 4(b)/(c) (royalty-to-sports-entity, s.83 cross-references), FA2025/FA2026 touch unrelated paragraphs/Acts; none amends para 4(a)(iii).",
     "verified_date": "2026-06-09",
+    "verified_as_at": "2026-09-02",
     "wrong_patterns": [
       "asilimia 20.*mkurugenzi wasio wakazi",
       "mkurugenzi.*asiye mkazi.*asilimia 20",
@@ -1026,8 +1028,7 @@
       "ada za mkurugenzi.*wasio wakazi.*ni asilimia 20",
       "wasio wakazi.*ada.*mkurugenzi.*ni asilimia 20",
       "mkurugenzi.*kwa wasio wakazi.*ni asilimia 20"
-    ],
-    "verified_as_at": "unknown"
+    ]
   },
   "wcf_accident_reporting": {
     "fact": "Employer must notify WCF of a workplace accident within 7 WORKING DAYS — via WCF online portal (portal.wcf.go.tz). Different deadline for occupational illness. Source: WCF portal.",
@@ -1080,9 +1081,10 @@
       "indefinitely.*25.*listed",
       "dse.*25.*permanently"
     ],
-    "primary_source": "tra.go.tz income tax page",
+    "primary_source": "Income Tax Act Cap.332 R.E.2023, First Schedule para 3(2)(a): 'a newly listed company with the Dar es Salaam Stock Exchange with at least thirty percent of its equity ownership issued to the public shall be taxed at a reduced corporate rate of twenty five percent for three consecutive years from the date of listing'",
+    "verified_by": "Direct read (2026-09-02) of Income Tax Act Cap.332 R.E.2023 PDF, First Schedule para 3(2)(a) -- also confirms the additional condition (>=30% equity issued to the public) not present in the bare fact text. R29 check: searched FA2024/FA2025/FA2026 directly for 'Dar es Salaam Stock Exchange' and 'newly listed' -- no hits in the Income Tax Act parts of any of the three (one incidental DSE mention in FA2026 belongs to a different Act, Cap.342); para 3 unamended.",
     "verified_date": "2026-06-12",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "permit_class_d_does_not_exist": {
     "fact": "Tanzania has NO Class D permit — only Class A (investor), Class B (employed expatriate), Class C (researcher/voluntary)",
@@ -1220,10 +1222,11 @@
       "26,000.*personal relief",
       "punguzo la kibinafsi.*26,000"
     ],
-    "primary_source": "PWC Tax Summaries Tanzania (reviewed Jan 2026); Habib Advisory Tax Guide 2025/26",
+    "primary_source": "Income Tax Act Cap.332 R.E.2023, First Schedule para 1(1) -- same statute-tier grounding as paye_all_bands_sequence, this key adds the 'no TZS 26,000 personal relief' claim and the 2025/26-year framing",
+    "verified_by": "PWC Tax Summaries Tanzania (reviewed Jan 2026); Habib Advisory Tax Guide 2025/26; upgraded to statute-tier 2026-09-02 via direct read of Income Tax Act Cap.332 R.E.2023's First Schedule para 1(1) -- see paye_all_bands_sequence for the full quoted annual table and the FA2024/2025/2026 non-amendment check (R29). The Act's First Schedule contains no separate personal-relief deduction anywhere in para 1 or para 2 -- the 0% band up to 270,000/month IS the relief mechanism, confirming the 'no TZS 26,000 relief' claim by absence: no such figure appears anywhere in the schedule.",
     "verified_date": "2026-06-16",
     "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-09-02"
   },
   "vat_withholding_formula_correct": {
     "fact": "VAT withholding rate applies to the CONSIDERATION (invoice value exclusive of VAT), NOT the VAT amount. The standard 18% VAT is split between TRA and the supplier. Goods: 3% x consideration withheld, supplier receives 15% x consideration (3 + 15 = 18). Services: 6% x consideration withheld, supplier receives 12% x consideration (6 + 12 = 18). Example goods: TZS 5M invoice, VAT = TZS 900,000; withholding = 3% x 5,000,000 = TZS 150,000; supplier receives TZS 750,000 of the VAT. Example services: TZS 3M invoice, VAT = TZS 540,000; withholding = 6% x 3,000,000 = TZS 180,000; supplier receives TZS 360,000 of the VAT.",
@@ -1723,7 +1726,13 @@
     "verified_as_at": "2026-09-02",
     "correction_note": "2026-09-02: upgraded from a hedge (vague statutory gesture, TRA EFD page unreachable at the time) to a specific statute citation, found via scripts/find_revisitable_hedges.py prompting a fresh live-source attempt using curl instead of WebFetch. No value change (the mechanism was always correctly asserted as \"yes, TRA can close\"); the citation is now real and specific rather than a general gesture at two Acts."
   },
-  "sdl_payment_deadline": "7 days_of_month",
+  "sdl_payment_deadline": {
+    "fact": "An employer must file the monthly SDL return with the Commissioner on or before the 7th day of each month, covering the preceding month's emoluments",
+    "correct_value": "7th day_of_month",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.16(1): 'Returns and time for payment of levy -- An employer... shall... file with the Commissioner on or before the seventh day of each month a return setting out the total gross monthly emoluments payable by the employer to employees in respect of the preceding month and the levy payable with respect thereto.'",
+    "verified_by": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF, s.16(1) -- FA2024/FA2025/FA2026 each searched for 'section 16' amendments to Cap.82 (R29 check): FA2024 s.112 and FA2026 s.98 both amend s.19 (exemptions) only, neither touches s.16. Cross-checked against a cached TRA SDL guide (data/source_documents/tra/sdl_guide.txt): 'kabla au ifikapo tarehe 7 ya mwezi unaofuata' -- same figure.",
+    "verified_as_at": "2026-09-02"
+  },
   "trademark_fee_for_explanation_of_decision": {
     "fact": "trademark fee for explanation of decision: 50,000 TZS",
     "correct_value": "50,000 TZS",
@@ -2152,11 +2161,41 @@
     "correction_note": "Prior fact stated only the once-a-year floor with no scope. s.60 is scoped to hazardous-activity workplaces, sets 'or more often when necessary' as an escalation, and requires an approved inspection authority (not the employer) to perform it -- all three qualifiers were missing from the prior fact.",
     "verified_as_at": "2026-09-01"
   },
-  "vat_registration_threshold_annual": "200,000,000 TZS",
-  "vat_registration_threshold_six_months": "100,000,000 TZS",
-  "vat_registration_notification_deadline_commissioner": "14 days",
-  "vat_return_submission_deadline": "20 days_of_month",
-  "form_number_payment_credit_slip": "ITX 300.01.E",
+  "vat_registration_threshold_annual": {
+    "fact": "VAT registration threshold (12-month test) is TZS 200,000,000",
+    "correct_value": "TZS 200,000,000 per 12 months",
+    "primary_source": "Government Notice No. 448Y of 2023 (The Value Added Tax (General) (Amendment) Regulations, 2023), s.4, amending Regulation 14 of the VAT (General) Regulations 2015 (GN 225/2015) -- same instrument as vat_registration_threshold; cross-checked live 2026-09-02 against https://www.tra.go.tz/page/value-added-tax-vat",
+    "verified_by": "This key duplicates the 12-month half of vat_registration_threshold (GN 448Y/2023, verified 2026-08-31) as a standalone bare string with no citation of its own. Grounded here by the same GN plus a fresh live read (2026-09-02) of TRA's own VAT page, current as of today's fetch: 'VAT registration is mandatory for any person whose taxable turnover reaches TZS 200 million within a period of twelve months...' -- confirms the regulation has not been amended since the 2023 GN.",
+    "verified_as_at": "unknown"
+  },
+  "vat_registration_threshold_six_months": {
+    "fact": "VAT registration threshold (6-month test) is TZS 100,000,000 -- half of the 12-month threshold",
+    "correct_value": "TZS 100,000,000 per 6 months",
+    "primary_source": "Government Notice No. 448Y of 2023 (The Value Added Tax (General) (Amendment) Regulations, 2023), s.4, amending Regulation 14 of the VAT (General) Regulations 2015 (GN 225/2015) -- same instrument as vat_registration_threshold; cross-checked live 2026-09-02 against https://www.tra.go.tz/page/value-added-tax-vat",
+    "verified_by": "This key duplicates the 6-month half of vat_registration_threshold (GN 448Y/2023, verified 2026-08-31) as a standalone bare string with no citation of its own. Grounded here by the same GN plus a fresh live read (2026-09-02) of TRA's own VAT page, current as of today's fetch: '...or TZS 100 million (half of the registration threshold) within a period of six months ending at the end of the previous month.'",
+    "verified_as_at": "unknown"
+  },
+  "vat_registration_notification_deadline_commissioner": {
+    "fact": "When the Commissioner General registers a person for VAT who failed to apply despite being liable, the person must be notified within 14 days of the registration -- NOT the 30-day figure that applies to a liable person's own application deadline",
+    "correct_value": "14 days",
+    "primary_source": "VAT Act Cap.148 R.E.2023, Part III (Registration) -- the Commissioner-initiated-registration notice provision; also stated on https://www.tra.go.tz/page/value-added-tax-vat",
+    "verified_by": "Direct read (2026-09-02) of VAT Act Cap.148 R.E.2023 PDF (tra.go.tz/images/uploads/acts/The_Value_Added_Tax_Act.pdf), Part III: '...notify the applicant for registration of the decision within fourteen days of the application' -- exact section number illegible in this PDF's text layer (a diagonal certified-copy watermark is interleaved character-by-character with body text at that specific clause; surrounding clauses on registration threshold, numbered 31 in the table of contents, are legible). Cross-checked same day against TRA's live VAT page: 'The person shall be notified within 14 days of the registration' -- same figure, same distinct provision from the 30-day applicant deadline (see the page's own 'must apply to the Commissioner General within 30 days' sentence, a different obligation on a different party, not to be confused with this one).",
+    "verified_as_at": "2026-09-02"
+  },
+  "vat_return_submission_deadline": {
+    "fact": "VAT return for domestic (non-import) supplies is due on or before the 20th day of the month following the tax period -- same date VAT itself becomes payable",
+    "correct_value": "20th day_of_month",
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax-vat (TRA's own VAT guidance page)",
+    "verified_by": "Direct read (2026-09-02), live fetch: 'VAT is payable by a registered person on or before the 20th day of the following month, which is also the deadline for submitting the VAT return.' Portal-tier, not yet cross-read against the VAT Act's own filing-deadline clause (VAT Act Cap.148 delegates return procedure detail to Regulations per its general pattern, per the registration-threshold provision's own s.31(4) delegation found in this same pass) -- no statute-tier upgrade attempted this pass.",
+    "verified_as_at": "2026-09-02"
+  },
+  "form_number_payment_credit_slip": {
+    "fact": "SDL payments are made using form ITX 300.01.E, the Employment Taxes Payment Credit Slip",
+    "correct_value": "ITX 300.01.E -- Employment Taxes Payment Credit Slip",
+    "primary_source": "data/source_documents/tra/sdl_guide.txt (TRA SDL compliance guide, tra.go.tz), cross-referenced against Vocational Education and Training Act Cap.82 s.14/s.16 for the underlying levy obligation this form pays",
+    "verified_by": "Direct read (2026-09-02) of the cached TRA SDL guide: 'Kufanya malipo ya SDL kwa kutumia fomu ITX 300.01.E - Employment Taxes Payment Credit Slip.' An administrative form number, not itself a statutory provision -- portal-tier is the appropriate ceiling here, not a gap.",
+    "verified_as_at": "2026-09-02"
+  },
   "legal_citation_sdl": {
     "fact": "Sheria ya Elimu na Mafunzo ya Ufundi, Sura ya 82, Kifungu cha 14 (Vocational Education and Training Act, Cap.82, s.14) -- the SDL rate provision.",
     "correct_value": "Vocational Education and Training Act, Cap.82, s.14",
@@ -2190,23 +2229,77 @@
     "correction_note": "Flagged WRONG in the Tier 3 differences report but omitted from the founder's fix order by oversight; fixed as a follow-up. Section 19 (unchanged) is correct as the current exemptions provision, but the key name 'legal_citation_amendment_act_sdl' implies a citation to a specific amending Finance Act, which the fact never provided and which does not exist as a single instrument -- s.19 has been amended five separate times. Key NOT renamed this pass (would need the same coordinated precompute_rag_embeddings.py + R15 regen treatment already deferred for act_section_12's siblings and vat_threshold_200m_july2024_increase) -- content corrected to state what s.19 actually is rather than implying a citation it doesn't carry.",
     "verified_as_at": "2026-09-01"
   },
-  "exemption_category_government_departments": "Idara za Serikali au taasisi za umma zinazofadhiliwa kikamilifu na Serikali",
-  "exemption_category_diplomatic_missions": "Misheni za Kidiplomasia",
-  "exemption_category_un_and_agencies": "Umoja wa Mataifa na taasisi zake",
-  "exemption_category_international_organizations_aid": "Taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi",
-  "exemption_category_religious_institutions": "Taasisi za kidini ambazo wafanyakazi wake wanajihusisha tu na:kuendesha ibada; kutoa mafundisho ya dini; kusimamia shughuli za kidini; kutoa huduma za afya ya jamii",
-  "exemption_category_charitable_organizations": "Mashirika ya misaada (charitable organizations)",
-  "exemption_category_educational_institutions": "Taasisi za elimu zilizosajiliwa, zikiwemo: shule za awali, msingi na sekondari; vyuo vya ufundi na mafunzo; vyuo vikuu na taasisi za elimu ya juu",
-  "exemption_category_local_government_authorities": "Mamlaka za Serikali za Mitaa",
-  "exemption_category_trainees_under_TAESA": {
-    "fact": "UNCONFIRMED: a TaESA-trainee SDL exemption is commonly cited, but a direct read of VETA Act Cap.82 s.19(1) (2019 primary consolidation) does NOT list this category among the SDL exemptions. The only source claiming it is a non-primary AI search synthesis, which also independently misstated the SDL employer threshold and rate on the same page -- disqualifying it as a citation. May have been added by Act No.5 of 2022 (Finance Act), which was not reachable this pass. Do not assert this exemption as confirmed until read directly against Act No.5 of 2022 or a tanzlii consolidation dated after 1 Jul 2022.",
-    "correct_value": "HEDGE -- not confirmed in the 2019 primary text of s.19(1); do not assert as a confirmed SDL exemption",
-    "primary_source": "Wanted: VETA Act Cap.82 s.19(1) as amended by Act No.5 of 2022 -- not yet reached",
-    "verified_date": "2026-09-01",
-    "status": "HEDGE -- Tier 3 (2026-09-01): re-verification against VETA Act Cap.82 s.19(1) 2019 primary text found no TaESA category; recommend excluding from training pairs until confirmed against the 2022 amendment.",
-    "verified_as_at": "unknown"
+  "exemption_category_government_departments": {
+    "fact": "SDL exemption (a): a Government department or a public institution which is wholly financed THROUGH GOVERNMENT SUBVENTION -- NOT the R.E.2023 consolidation's 'wholly financed by the Government' wording, which Finance Act 2026 s.98 amended",
+    "correct_value": "Government department or public institution wholly financed through Government subvention",
+    "primary_source": "Vocational Education and Training Act, Cap.82, s.19(1)(a), AS AMENDED by Finance Act 2026 (Act No.2 of 2026) s.98",
+    "verified_by": "Direct read (2026-09-02): VETA Act Cap.82 R.E.2023 s.19(1)(a) reads 'a Government department or a public institution which is wholly financed by the Government' -- but Finance Act 2026 s.98, read directly (tra.go.tz/images/uploads/acts/THE_FINANCE_ACT%2C_2026.pdf): 'The principal Act is amended in section 19(1) by deleting the words \"by the Government\" appearing in paragraph (a) and substituting for them the words \"through Government subvention\".' This is a wording amendment, not a scope change (a subvention is still Government financing), but the R.E.2023 text alone is no longer the operative phrasing as of FA2026's commencement -- exactly the consolidated-Act-is-a-snapshot trap CLAUDE.md already documents. FA2024 s.112 also touches s.19(1), adding paragraph (k) (water/sanitation authorities) -- does not affect paragraph (a).",
+    "verified_as_at": "2026-09-02"
   },
-  "exemption_category_farm_employers_agriculture": "Waajiri wa mashambani ambao wafanyakazi wao wanajihusisha moja kwa moja na shughuli za kilimo (isipokuwa wale wanaosimamia au kushughulika na usindikaji wa mazao)",
+  "exemption_category_diplomatic_missions": {
+    "fact": "SDL exemption (b): Diplomatic Missions",
+    "correct_value": "Diplomatic Missions",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(b)",
+    "verified_by": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(b) Diplomatic Missions;' -- unaffected by FA2024 s.112 (adds (k)) or FA2026 s.98 (amends (a) only).",
+    "verified_as_at": "2026-09-02"
+  },
+  "exemption_category_un_and_agencies": {
+    "fact": "SDL exemption (c): the United Nations and its organisations",
+    "correct_value": "United Nations and its organisations",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(c)",
+    "verified_by": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(c) the United Nations and its organisations;' -- unaffected by FA2024/FA2026 amendments to s.19(1).",
+    "verified_as_at": "2026-09-02"
+  },
+  "exemption_category_international_organizations_aid": {
+    "fact": "SDL exemption (d): international and other foreign institutions dealing with aid or technical assistance",
+    "correct_value": "International and other foreign institutions dealing with aid or technical assistance",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(d)",
+    "verified_by": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(d) international and other foreign institutions dealing with aid or technical assistance;' -- unaffected by FA2024/FA2026 amendments to s.19(1).",
+    "verified_as_at": "2026-09-02"
+  },
+  "exemption_category_religious_institutions": {
+    "fact": "SDL exemption (e): religious institutions whose employees are solely employed to administer places of worship, give religious instruction/administer religion, or provide public health",
+    "correct_value": "Religious institutions (worship administration, religious instruction, or public health only)",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(e)",
+    "verified_by": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(e) religious institutions whose employees are solely employed to- (i) administer places of worship; or (ii) give religious instructions or generally to administer religion; (iii) provide public health;' -- unaffected by FA2024/FA2026 amendments to s.19(1).",
+    "verified_as_at": "2026-09-02"
+  },
+  "exemption_category_charitable_organizations": {
+    "fact": "SDL exemption (f): charitable organisations -- defined in s.19(2) as a resident entity of a public character, registered as such, whose functions are solely relief of poverty/distress or provision of education/public health, and which the Commissioner General is satisfied conducts business for public good",
+    "correct_value": "Charitable organisations (as defined in s.19(2))",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(f) and s.19(2)",
+    "verified_by": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(f) charitable organisations;' with s.19(2)'s definition immediately following. Unaffected by FA2024/FA2026 amendments to s.19(1).",
+    "verified_as_at": "2026-09-02"
+  },
+  "exemption_category_educational_institutions": {
+    "fact": "SDL exemption (g): registered educational institutions, including nursery/primary/secondary schools, vocational/educational/training schools, and universities/higher learning institutions",
+    "correct_value": "Registered educational institutions (nursery through university)",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(g)",
+    "verified_by": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(g) registered educational institutions, including- (i) nursery, primary and secondary schools; (ii) vocational, educational and training schools; and (iii) universities and higher learning institutions;' -- unaffected by FA2024/FA2026 amendments to s.19(1).",
+    "verified_as_at": "2026-09-02"
+  },
+  "exemption_category_local_government_authorities": {
+    "fact": "SDL exemption (h): local government authority",
+    "correct_value": "Local government authority",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(h)",
+    "verified_by": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(h) local government authority;' -- unaffected by FA2024/FA2026 amendments to s.19(1).",
+    "verified_as_at": "2026-09-02"
+  },
+  "exemption_category_trainees_under_TAESA": {
+    "fact": "SDL exemption (i): intern students from higher learning institutions or technical and vocational education and training institutions who are under the Tanzania Employment Service Agency (TaESA) Program",
+    "correct_value": "TaESA-program intern students -- CONFIRMED, present in s.19(1)(i)",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(i)",
+    "verified_by": "RESOLVED 2026-09-02, closing a standing hedge. The prior entry (2026-09-01, Tier 3) read only the 2019 primary consolidation and correctly found no TaESA category there, hedging pending Act No.5 of 2022. Direct read (2026-09-02) of the CURRENT VETA Act Cap.82 R.E.2023 PDF confirms the category now exists at s.19(1)(i): 'intern students from higher learning institutions or technical and vocational education and training institutions who are under the Tanzania Employment Service Agency Program; and' -- the 2022 amendment the prior hedge was waiting for is already incorporated into the R.E.2023 consolidation. Unaffected by FA2024/FA2026's further amendments to s.19(1) (FA2024 adds (k); FA2026 amends (a) only).",
+    "status": "CONFIRMED 2026-09-02 (was HEDGE)",
+    "verified_as_at": "2026-09-02"
+  },
+  "exemption_category_farm_employers_agriculture": {
+    "fact": "SDL exemption (j): farms employers whose employees are directly and solely engaged in farming -- does NOT include employees engaged in farm management or processing of farming products",
+    "correct_value": "Farm employers, employees directly/solely engaged in farming (excludes management/processing staff)",
+    "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(j)",
+    "verified_by": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(j) farms employers whose employees are directly and solely engaged in farming and shall not include employees who are engaged in the management of the farm or processing of farming products.' -- unaffected by FA2024/FA2026 amendments to s.19(1) (FA2024 adds a new (k) after this paragraph; FA2026 amends (a) only).",
+    "verified_as_at": "2026-09-02"
+  },
   "late_payment_penalty_rate": "2 %",
   "workers_compensation_act_citation": "Sheria ya Fidia kwa Wafanyakazi [Sura 263]",
   "workers_compensation_act_section": "75 (2)",
@@ -2391,7 +2484,13 @@
     "correction_note": "CONFLICT HISTORY, kept because it is worth more than the number: (1) ORIGINAL fact stated TZS 10,000,000, uncontested for the life of the corpus. (2) 2026-08-31: changed to TZS 20,000,000 on the strength of \"multiple non-lineage-linked sources\" (named: \"TRA VAT Deferment guidance and Breakthrough Attorneys\"), convergent-secondary confirmation only, explicitly not checked against raw statute/regulation text (that gap was flagged in the correction's own note at the time). (3) 2026-09-02: found to directly CONTRADICT TRA's own current live VAT Deferment page while grounding a neighbouring fact (vat_deferment_form_number). Investigated rather than silently re-flipped: the 20,000,000 figure was real, but it was the PRE-2018 figure -- GN 608 of 2018 (VAT (General) (Amendment) Regulations, 2018, gazetted 19 Oct 2018) reduced it to 10,000,000, confirmed by an independent, dated, named practitioner source (EY) that had no part in the 2026-08-31 correction. (4) REVERTED to 10,000,000 here. THIS WAS OUR ERROR, not a source dispute -- the identical reasoning failure as efd_threshold_tzs_11m: agreeing secondary sources were assumed to be independent confirmation when they in fact shared a stale lineage (both reflecting a pre-2018 regulation text), and the regulator's own live page -- which this project already has a standing rule to weight above practitioner agreement when the two conflict -- was overridden instead of followed. The rule existed and was applied backwards. Neither 10,000,000 nor 20,000,000 has yet been read from raw regulation text (GN 608/2018 itself); this fact should be upgraded to statute-tier the next time tanzlii.org is reachable without a CAPTCHA challenge, or via any other primary-text route.",
     "verified_as_at": "unknown"
   },
-  "vat_deferment_form_number": "ITX 247.02.E",
+  "vat_deferment_form_number": {
+    "fact": "The VAT capital-goods deferment application form is ITX 247.02.E, filed online via TanESW",
+    "correct_value": "ITX 247.02.E",
+    "primary_source": "https://www.tra.go.tz/page/value-added-tax-vat-deferment (TRA's own VAT deferment guidance page) -- an administrative form implementing the deferment scheme created by VAT Act Cap.148 s.11(1); no Act or Regulation names the form number itself, so portal-tier is the correct ceiling for this specific fact, not a gap.",
+    "verified_by": "Direct read, live fetch 2026-09-02: 'The importer shall apply for deferment by duly filling form ITX 247.02.E (filled online in TanESW) with the following attachments...' -- previously confirmed in conversation (2026-09-02, same session as vat_deferment_minimum_value's investigation) but never persisted to this key as a dict; re-fetched fresh for this pass rather than relying on the earlier unrecorded read.",
+    "verified_as_at": "2026-09-02"
+  },
   "gn487a_full_legal_name": {
     "fact": "GN 487A is Government Notice No. 487A. Its full legal name is: The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025. GN 487A is NOT Government Notice No. 605A. Government Notice No. 605A is a completely different instrument -- the 2026 minimum wage order. Never state that GN 487A's name or number is 605A.",
     "correct_value": "Government Notice No. 487A -- The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025",

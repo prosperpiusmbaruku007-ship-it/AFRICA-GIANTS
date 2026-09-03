@@ -7,72 +7,12 @@
     "_meta",
     "_unresolved_items"
   ],
-  "dict_shaped_facts_classified": 224,
-  "primary_verified": 97,
-  "unknown_backlog_dict_shaped": 127,
-  "unstructured_string_valued_facts": 26,
+  "dict_shaped_facts_classified": 240,
+  "primary_verified": 122,
+  "unknown_backlog_dict_shaped": 118,
+  "unstructured_string_valued_facts": 10,
   "unstructured_facts_note": "These carry no verified_by/primary_source/any metadata field at all -- not processed as \"unknown\" alongside the dict-shaped facts because they cannot carry a verified_as_at field without first being converted from a bare string to a dict, which is a schema-migration decision bigger than this bootstrap census. Effectively unknown-or-worse; listed separately so they are not silently invisible.",
   "unstructured_facts": [
-    {
-      "key": "sdl_payment_deadline",
-      "value": "7 days_of_month"
-    },
-    {
-      "key": "vat_registration_threshold_annual",
-      "value": "200,000,000 TZS"
-    },
-    {
-      "key": "vat_registration_threshold_six_months",
-      "value": "100,000,000 TZS"
-    },
-    {
-      "key": "vat_registration_notification_deadline_commissioner",
-      "value": "14 days"
-    },
-    {
-      "key": "vat_return_submission_deadline",
-      "value": "20 days_of_month"
-    },
-    {
-      "key": "form_number_payment_credit_slip",
-      "value": "ITX 300.01.E"
-    },
-    {
-      "key": "exemption_category_government_departments",
-      "value": "Idara za Serikali au taasisi za umma zinazofadhiliwa kikamilifu na Serikali"
-    },
-    {
-      "key": "exemption_category_diplomatic_missions",
-      "value": "Misheni za Kidiplomasia"
-    },
-    {
-      "key": "exemption_category_un_and_agencies",
-      "value": "Umoja wa Mataifa na taasisi zake"
-    },
-    {
-      "key": "exemption_category_international_organizations_aid",
-      "value": "Taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi"
-    },
-    {
-      "key": "exemption_category_religious_institutions",
-      "value": "Taasisi za kidini ambazo wafanyakazi wake wanajihusisha tu na:kuendesha ibada; kutoa mafundisho ya dini; kusimamia shughuli za kidini; kutoa huduma za afya ya jamii"
-    },
-    {
-      "key": "exemption_category_charitable_organizations",
-      "value": "Mashirika ya misaada (charitable organizations)"
-    },
-    {
-      "key": "exemption_category_educational_institutions",
-      "value": "Taasisi za elimu zilizosajiliwa, zikiwemo: shule za awali, msingi na sekondari; vyuo vya ufundi na mafunzo; vyuo vikuu na taasisi za elimu ya juu"
-    },
-    {
-      "key": "exemption_category_local_government_authorities",
-      "value": "Mamlaka za Serikali za Mitaa"
-    },
-    {
-      "key": "exemption_category_farm_employers_agriculture",
-      "value": "Waajiri wa mashambani ambao wafanyakazi wao wanajihusisha moja kwa moja na shughuli za kilimo (isipokuwa wale wanaosimamia au kushughulika na usindikaji wa mazao)"
-    },
     {
       "key": "late_payment_penalty_rate",
       "value": "2 %"
@@ -112,10 +52,6 @@
     {
       "key": "compliance_license_processing_time_old",
       "value": "28 days"
-    },
-    {
-      "key": "vat_deferment_form_number",
-      "value": "ITX 247.02.E"
     }
   ],
   "rows": [
@@ -128,10 +64,10 @@
     },
     {
       "key": "paye_penalty_rate",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "PWC Tanzania Tax Summaries"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of Tax Administration Act Cap.438 R.E.2023 PDF (tra.go.tz/images/uploads/acts/Tax_Administration_Act.pdf), s.89(2): 'A person who fails"
     },
     {
       "key": "paye_personal_relief",
@@ -163,10 +99,10 @@
     },
     {
       "key": "sdl_full_name",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "TRA official SDL page"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 (tra.go.tz/images/uploads/acts/THE_VOCATIONAL_EDUCATION_AND_TRAINING_ACT.pdf), s.14: the levy imposed under"
     },
     {
       "key": "sdl_threshold",
@@ -177,10 +113,10 @@
     },
     {
       "key": "sdl_payer",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "TRA SDL page"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF, s.14(2) -- the levy is defined and imposed as an amount payable by the employer; no provision anywhere"
     },
     {
       "key": "nssf_employer_rate",
@@ -303,10 +239,10 @@
     },
     {
       "key": "provisional_tax_instalments",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "TRA Paying Taxes page + PWC Tanzania + Auditax International"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of Income Tax Act Cap.332 R.E.2023 PDF, Division III (s.113) 'Payment of income tax by quarterly instalment' -- confirms TRA/PWC/Audita"
     },
     {
       "key": "minimum_turnover_tax",
@@ -324,10 +260,10 @@
     },
     {
       "key": "trab_appeal_two_steps",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "TRAB official website"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of Tax Revenue Appeals Act Cap.408 R.E.2023 PDF (tra.go.tz/images/uploads/acts/The_Tax_Revenue_Appeals_Act.pdf), s.17(2)(a)-(b) -- both"
     },
     {
       "key": "objection_deposit_requirement",
@@ -338,10 +274,10 @@
     },
     {
       "key": "objection_extension_statutory_right",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "TRA Objections page — extension explicitly provided by law"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of Tax Administration Act Cap.438 R.E.2023 PDF, s.62(2)-(3) -- confirms the core CORE claim (extension is statutory, not rare) at statu"
     },
     {
       "key": "stamp_duty_property_transfer",
@@ -415,10 +351,10 @@
     },
     {
       "key": "paye_all_bands_sequence",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "verified_by present but no primary-source-read language found",
-      "verified_by_excerpt": "PWC Tanzania Individual Tax Summary, last reviewed Jan 2026"
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of Income Tax Act Cap.332 R.E.2023 PDF (tra.go.tz/images/uploads/acts/The_Income_Tax_Act.pdf), First Schedule para 1(1): NIL up to Tshs"
     },
     {
       "key": "paye_nonresident_flat_rate",
@@ -457,10 +393,10 @@
     },
     {
       "key": "wht_director_fees",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "no verified_by field at all",
-      "verified_by_excerpt": ""
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of Income Tax Act Cap.332 R.E.2023 PDF, First Schedule para 4(a): director's fees under s.7(2)(h) (annual director's fees to a director"
     },
     {
       "key": "wcf_accident_reporting",
@@ -485,10 +421,10 @@
     },
     {
       "key": "dse_25_rate_three_years_only",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "no verified_by field at all",
-      "verified_by_excerpt": ""
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of Income Tax Act Cap.332 R.E.2023 PDF, First Schedule para 3(2)(a) -- also confirms the additional condition (>=30% equity issued to t"
     },
     {
       "key": "permit_class_d_does_not_exist",
@@ -548,10 +484,10 @@
     },
     {
       "key": "paye_bands_monthly_2025_26",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "no verified_by field at all",
-      "verified_by_excerpt": ""
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "PWC Tax Summaries Tanzania (reviewed Jan 2026); Habib Advisory Tax Guide 2025/26; upgraded to statute-tier 2026-09-02 via direct read of Income Tax Act Cap.332 "
     },
     {
       "key": "vat_withholding_formula_correct",
@@ -769,6 +705,13 @@
       "verified_as_at": "2026-09-02",
       "reason": "direct/verbatim primary-source read with an explicit date",
       "verified_by_excerpt": "Direct read (2026-09-02) of Tax Administration Act, Cap.438 R.E.2019, s.64 (\"Restraint of assets\"), downloaded directly via curl from tra.go.tz/images/uploads/a"
+    },
+    {
+      "key": "sdl_payment_deadline",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF, s.16(1) -- FA2024/FA2025/FA2026 each searched for 'section 16' amendments to Cap.82 (R29 check): FA202"
     },
     {
       "key": "trademark_fee_for_explanation_of_decision",
@@ -1128,6 +1071,41 @@
       "verified_by_excerpt": "Direct read of Cap.297 s.60 primary text, 2026-09-01."
     },
     {
+      "key": "vat_registration_threshold_annual",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "This key duplicates the 12-month half of vat_registration_threshold (GN 448Y/2023, verified 2026-08-31) as a standalone bare string with no citation of its own."
+    },
+    {
+      "key": "vat_registration_threshold_six_months",
+      "status": "unknown",
+      "verified_as_at": "unknown",
+      "reason": "verified_by present but no primary-source-read language found",
+      "verified_by_excerpt": "This key duplicates the 6-month half of vat_registration_threshold (GN 448Y/2023, verified 2026-08-31) as a standalone bare string with no citation of its own. "
+    },
+    {
+      "key": "vat_registration_notification_deadline_commissioner",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VAT Act Cap.148 R.E.2023 PDF (tra.go.tz/images/uploads/acts/The_Value_Added_Tax_Act.pdf), Part III: '...notify the applicant for reg"
+    },
+    {
+      "key": "vat_return_submission_deadline",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02), live fetch: 'VAT is payable by a registered person on or before the 20th day of the following month, which is also the deadline for su"
+    },
+    {
+      "key": "form_number_payment_credit_slip",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of the cached TRA SDL guide: 'Kufanya malipo ya SDL kwa kutumia fomu ITX 300.01.E - Employment Taxes Payment Credit Slip.' An administr"
+    },
+    {
       "key": "legal_citation_sdl",
       "status": "primary_verified",
       "verified_as_at": "2026-09-02",
@@ -1149,11 +1127,74 @@
       "verified_by_excerpt": "Direct read of Cap.82's 2019 primary consolidation text, 2026-09-01 -- s.19's own amendment-history bracket lists the five Acts above."
     },
     {
+      "key": "exemption_category_government_departments",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02): VETA Act Cap.82 R.E.2023 s.19(1)(a) reads 'a Government department or a public institution which is wholly financed by the Government'"
+    },
+    {
+      "key": "exemption_category_diplomatic_missions",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(b) Diplomatic Missions;' -- unaffected by FA2024 s.112 (adds (k)) or FA2026 s.98 (amends (a) only)."
+    },
+    {
+      "key": "exemption_category_un_and_agencies",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(c) the United Nations and its organisations;' -- unaffected by FA2024/FA2026 amendments to s.19(1)."
+    },
+    {
+      "key": "exemption_category_international_organizations_aid",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(d) international and other foreign institutions dealing with aid or technical assistance;' -- unaffe"
+    },
+    {
+      "key": "exemption_category_religious_institutions",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(e) religious institutions whose employees are solely employed to- (i) administer places of worship; "
+    },
+    {
+      "key": "exemption_category_charitable_organizations",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(f) charitable organisations;' with s.19(2)'s definition immediately following. Unaffected by FA2024/"
+    },
+    {
+      "key": "exemption_category_educational_institutions",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(g) registered educational institutions, including- (i) nursery, primary and secondary schools; (ii) "
+    },
+    {
+      "key": "exemption_category_local_government_authorities",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(h) local government authority;' -- unaffected by FA2024/FA2026 amendments to s.19(1)."
+    },
+    {
       "key": "exemption_category_trainees_under_TAESA",
-      "status": "unknown",
-      "verified_as_at": "unknown",
-      "reason": "no verified_by field at all",
-      "verified_by_excerpt": ""
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "RESOLVED 2026-09-02, closing a standing hedge. The prior entry (2026-09-01, Tier 3) read only the 2019 primary consolidation and correctly found no TaESA catego"
+    },
+    {
+      "key": "exemption_category_farm_employers_agriculture",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read (2026-09-02) of VETA Act Cap.82 R.E.2023 PDF: '(j) farms employers whose employees are directly and solely engaged in farming and shall not include "
     },
     {
       "key": "minimum_directors",
@@ -1266,6 +1307,13 @@
       "verified_as_at": "unknown",
       "reason": "verified_by present but no primary-source-read language found",
       "verified_by_excerpt": "Live re-fetch (2026-09-02) of https://www.tra.go.tz/page/value-added-tax-vat-deferment via the r.jina.ai proxy: \"VAT element on the imported capital goods is at"
+    },
+    {
+      "key": "vat_deferment_form_number",
+      "status": "primary_verified",
+      "verified_as_at": "2026-09-02",
+      "reason": "direct/verbatim primary-source read with an explicit date",
+      "verified_by_excerpt": "Direct read, live fetch 2026-09-02: 'The importer shall apply for deferment by duly filling form ITX 247.02.E (filled online in TanESW) with the following attac"
     },
     {
       "key": "gn487a_full_legal_name",

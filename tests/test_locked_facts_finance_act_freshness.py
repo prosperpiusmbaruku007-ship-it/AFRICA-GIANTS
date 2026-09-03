@@ -60,8 +60,6 @@ KNOWN_GAPS = {
     'SDL_source_law': 'verified_by is a bare TRA page + Act name, no direct-read date.',
     'vat_withholding_buyer_remits_directly': 'verified_by is a TRA portal quote, no direct-'
                                              'read date.',
-    'exemption_category_trainees_under_TAESA': 'no verified_by field at all -- never checked '
-                                               'against primary text by anyone, not just undated.',
     'business_licence_expiry_30_june': 'no verified_by field at all -- never checked against '
                                        'primary text by anyone, not just undated.',
     'presumptive_excluded_services': 'no verified_by field at all -- the CLAIM was '
