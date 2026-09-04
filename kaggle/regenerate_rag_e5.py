@@ -58,7 +58,15 @@ os.environ['HF_TOKEN'] = hf_token
 DATASET_REPO = 'prospAprospA007/africa-giants-dataset'
 GH_REPO = 'prosperpiusmbaruku007-ship-it/AFRICA-GIANTS'
 RAW = f'https://raw.githubusercontent.com/{GH_REPO}/main'
-SOURCE_FILES = ['scripts/locked_facts.json', 'scripts/precompute_rag_embeddings.py']
+SOURCE_FILES = [
+    'scripts/locked_facts.json',
+    'scripts/precompute_rag_embeddings.py',
+    # Added 2026-09-05 for the correction-sync gate (see below): check_correction_sync.py
+    # imports from check_facts_index_sync.py, and both must be present for the in-memory
+    # call to work on the no-local-checkout (raw-fetch) path, not just the git-clone path.
+    'scripts/check_correction_sync.py',
+    'scripts/check_facts_index_sync.py',
+]
 
 # ── EXPECTED_HEAD — the commit this package was packaged FOR ────────────────────
 # Found 2026-08-26: this script printed 'GitHub main HEAD = <sha>' at startup and NOTHING
@@ -87,7 +95,12 @@ SOURCE_FILES = ['scripts/locked_facts.json', 'scripts/precompute_rag_embeddings.
 # unpaid_contribution_penalty_rate) given ask-aligned rewrites. None of this is in the
 # index currently deployed (fc9b0c8-built) -- this floor exists so the NEXT regen
 # cannot silently rebuild without them.
-EXPECTED_HEAD = '951fb67'
+#
+# BUMPED 2026-09-05: a09a2a9 added scripts/check_correction_sync.py -- this script now
+# imports it directly (see CORRECTION-SYNC GATE below) as a hard, not incidental,
+# dependency. A clone that doesn't contain a09a2a9 as an ancestor cannot run this file
+# at all, not just "would build the wrong index" -- so it belongs on this floor.
+EXPECTED_HEAD = 'a09a2a9'
 
 
 def _assert_expected_head_present(local_head, live_sha):
@@ -672,10 +685,56 @@ if rank_gate_pass:
     print(f'[OK] all {len(RANK_GATE_CASES)} consolidation anchors reproduce the offline-'
           f'measured movement within tolerance')
 
+# ── CORRECTION-SYNC GATE — does a corrected fact still serve its own debunked content? ──
+# SOFT this run (2026-09-05, first wiring into the regen). See scripts/check_correction_
+# sync.py's GATING POSTURE note: the detector's own first-run false-positive rate was 7 of
+# 8 (87.5%), separated from the 1 genuine defect by a negation-cue heuristic that is
+# itself unproven at scale -- a true and a false `stale_wrong_pattern` match read
+# identically from this report; only reading the matched sentence tells them apart, the
+# same shape as this project's other lexical-match controls (bare `hisa`, the local-levy
+# mask). A HARD fail here would block a regen for what could be a CORRECT fact -- the
+# expensive direction per R21 (a mechanism that can refuse/block is not cheap to get
+# wrong; one that can only under-report is). Runs against the PROSPECTIVE in-memory
+# index (fact_texts_to_embed), before anything is written or uploaded -- this is the
+# in-memory refactor `check_facts_and_index()` exists for.
+#
+# PROMOTE TO BLOCKING (flip the flag below to True) once a run has come back either
+# fully clean or with only adjudicated-and-accepted flags. Do not flip it on a clean run
+# alone without reading this comment again next time -- "clean once" and "proven at
+# scale" are not the same claim.
+print('\n' + '=' * 60)
+print('CORRECTION-SYNC GATE — corrected facts vs. their own wrong_patterns (SOFT)')
+print('=' * 60)
+CORRECTION_SYNC_BLOCKING = False
+sys.path.insert(0, 'scripts')
+from check_correction_sync import check_facts_and_index  # noqa: E402
+with open('scripts/locked_facts.json', encoding='utf-8') as _f:
+    _locked_for_sync = json.load(_f)
+correction_sync_ok, correction_sync_report = check_facts_and_index(
+    _locked_for_sync, fact_texts_to_embed)
+_cs_stale = correction_sync_report['stale_wrong_pattern']
+_cs_negated = correction_sync_report['negated_mention']
+if _cs_stale:
+    _label = 'FAIL' if CORRECTION_SYNC_BLOCKING else 'SOFT-FAIL (reported, not blocking)'
+    print(f'[{_label}] {len(_cs_stale)} corrected fact(s) still match their OWN '
+          f'wrong_patterns in the PROSPECTIVE index -- READ EACH ONE, do not assume '
+          f'defect count == flag count (first-run precision was 1 of 8):')
+    for r in _cs_stale:
+        print(f'    {r["key"]}: {r["matched_patterns"]}')
+        for t in r['rows']:
+            print(f'        row: {t[:120]}')
+else:
+    print("[OK] no corrected fact's own wrong_patterns matches the prospective index")
+if _cs_negated:
+    print(f'INFO -- {len(_cs_negated)} fact(s) mention their own wrong_patterns text with '
+          f'a negation cue nearby (read to confirm, not treated as a defect): '
+          f'{sorted(r["key"] for r in _cs_negated)}')
+correction_sync_pass = correction_sync_ok or not CORRECTION_SYNC_BLOCKING
+
 print()
 # allow <10% self-retrieval noise (near-duplicate facts can surface a sibling at rank 1)
 overall_pass = (critical_pass and contrast_pass and disambig_pass and rank_gate_pass
-                and _anchor_pass
+                and _anchor_pass and correction_sync_pass
                 and len(failures) < len(fact_texts_to_embed) * 0.1)
 if overall_pass:
     print(f'VERIFICATION PASSED — {len(fact_texts_to_embed) - len(failures)}/{len(fact_texts_to_embed)} '
@@ -685,7 +744,8 @@ else:
     print('VERIFICATION FAILED — review failures before saving')
     print(f'  critical_pass={critical_pass} | contrast_pass={contrast_pass} | '
           f'disambig_pass={disambig_pass} | rank_gate_pass={rank_gate_pass} | '
-          f'anchor_pass={_anchor_pass} | self_retrieval_failures={len(failures)} '
+          f'anchor_pass={_anchor_pass} | correction_sync_pass={correction_sync_pass} '
+          f'(blocking={CORRECTION_SYNC_BLOCKING}) | self_retrieval_failures={len(failures)} '
           f'(tolerance={int(len(fact_texts_to_embed) * 0.1)})')
     sys.exit(1)   # do NOT upload a broken index
 

@@ -56,6 +56,23 @@ METHOD, TWO SIGNALS, DELIBERATELY NOT EQUAL WEIGHT:
      `negated_mention` entries are visible in the report for exactly this reason -- read
      them, don't just trust the bucket.
 
+     ⛔ GATING POSTURE, stated plainly because it decides how the next reader treats a flag:
+     the unfiltered detector's FIRST-RUN FALSE-POSITIVE RATE WAS 7 OF 8 (87.5%) -- a future
+     maintainer who sees this script flag eight facts and assumes eight defects will act on
+     seven wrong ones. The negation filter above is what stands between that assumption and
+     a wrong correction pass, and it is a heuristic, not a proof, per the paragraph above.
+     A true `stale_wrong_pattern` match and a false one both read as "the regex matched" --
+     they are NOT mechanically distinguishable from the report alone, only by reading the
+     matched sentence. This is the same shape as this project's other lexical-match
+     controls whose true/false positives require a human read to separate (the OOC bare-
+     `hisa`-class terms, the local-levy pattern mask -- see CLAUDE.md's ⛔ block on
+     mechanisms that can refuse a user, and R17/R21 on why a clean-looking sweep is not
+     proof of precision). CONSEQUENTLY: this checker's `stale_wrong_pattern` output is
+     designed to be READ AND ADJUDICATED, not treated as ground truth by an automated
+     gate, until its precision has been measured at scale across more than one run's worth
+     of corrected facts. See the regen-gate wiring note below for how that translates into
+     an actual blocking decision.
+
      KNOWN LIMITATION, not hidden: `efd_not_every_business`'s own wrong_patterns regex
      ("chini ya (tzs )?(11|14),?000,?000[^.?!]{0,40}(efd|risiti za mkono)") did NOT match
      its own stale, pre-fix text -- the 40-char window was too narrow for the actual
@@ -77,6 +94,19 @@ A fact this script cannot resolve to any row at all (absent/fragment/pending_r15
 drift) is skipped, not flagged -- check_facts_index_sync.py already owns reachability; this
 script only asks, of facts that ARE reachable, whether what's actually being served still
 matches what the fact says is correct.
+
+REGEN-GATE WIRING (2026-09-05). `check_facts_and_index(locked, index)` below is the pure,
+in-memory core -- it takes the parsed locked_facts dict and the prospective index (a list
+of fact-text strings, the same shape as `build_fact_texts()`'s first return value) directly,
+with no file I/O. `kaggle/regenerate_rag_e5.py` calls it against its own in-memory
+`fact_texts_to_embed` BEFORE that list is written to `rag_facts_text.json` or uploaded, so a
+still-stale correction is visible before the regen ships, not after. Per the GATING POSTURE
+note above, that call is SOFT on its first wiring: it reports `stale_wrong_pattern` findings
+loudly but does not fail the run, because a hard-fail on an unproven detector blocks a
+regen for what could be a correct fact -- the expensive direction per R21 (a mechanism that
+can BLOCK is not cheap to iterate on; one that can only under-report is). Promote it to
+blocking once a clean or fully-adjudicated run has been observed -- see the
+`CORRECTION_SYNC_BLOCKING` flag and comment in `kaggle/regenerate_rag_e5.py`.
 
 R18: committed before its result is written up.
 Artifact: eval/results/correction_sync_audit.json
@@ -154,11 +184,11 @@ def resolve_row_texts(key, index, index_slugs):
     return []
 
 
-def check(facts_path=FACTS_PATH, index_path=INDEX_PATH):
-    with open(facts_path, encoding="utf-8") as f:
-        locked = json.load(f)
-    with open(index_path, encoding="utf-8") as f:
-        index = json.load(f)
+def check_facts_and_index(locked, index):
+    """Pure, in-memory core -- no file I/O. `locked` is the parsed locked_facts.json dict;
+    `index` is a list of fact-text strings (the shape build_fact_texts() returns, and the
+    shape rag_facts_text.json is saved as). Callable directly against a PROSPECTIVE index
+    that has not been written or uploaded yet -- see REGEN-GATE WIRING above."""
     index_slugs = [f.split(":")[0].strip().lower() for f in index]
 
     report = {
@@ -214,6 +244,18 @@ def check(facts_path=FACTS_PATH, index_path=INDEX_PATH):
 
     ok = not report["stale_wrong_pattern"]
     return ok, report
+
+
+def check(facts_path=FACTS_PATH, index_path=INDEX_PATH):
+    """Thin file-loading wrapper around check_facts_and_index(), for standalone/CLI use
+    (this script's own main(), the test suite) where reading from disk is exactly what's
+    wanted. The regen gate does NOT go through this -- it calls check_facts_and_index()
+    directly against its own in-memory, not-yet-written index."""
+    with open(facts_path, encoding="utf-8") as f:
+        locked = json.load(f)
+    with open(index_path, encoding="utf-8") as f:
+        index = json.load(f)
+    return check_facts_and_index(locked, index)
 
 
 def main():
