@@ -1,5 +1,258 @@
 # Africa Giants — Project Progress
 
+## 🧭 PILOT RE-DERIVATION, 2026-09-04 — VERDICT: **FURTHER — and for the first time we know the accuracy number itself was never measuring what it looked like it was measuring.**
+
+**Re-derived from scratch against today's state, not updated from the 2026-08-24 assessment.**
+Every claim is tagged **[M]** (measured, artifact named) or **[J]** (judgement). The 48-row
+accuracy base was **re-pulled from the live endpoint today** (via the R16 redeploy this
+session ran), not carried — `eval/results/raw/natural48_live_replies_2026_09_03_c9b2425.json`,
+readjudicated in `eval/results/natural48_readjudicated_2026_09_03.json`. HEAD `befc68d`.
+
+## The verdict, plainly
+
+**Further.** The 48's accuracy number moved up — genuinely, and it is live in production
+today. That would normally read as progress. It is not the reason for this verdict, and
+reading it that way is exactly the mistake this cycle caught **itself** making.
+
+**What actually happened, corrected after first getting it wrong [M].** Four rows moved
+this cycle: `nat_28`, `nat_30`, `nat_44` improved; `nat_37` regressed. The first write-up of
+this (yesterday, same session) attributed the three improvements to **GROUNDING** — the
+verification arc's fact corrections reaching the RAG index. That claim was **not checked
+before it was reported to the founder.** Checked today, by reproducing production's actual
+retrieval for each question: the VAT-withholding rate facts `nat_28`/`nat_44` need are
+never in production's top-3 retrieval window (ranked 7th–16th). **Neither improved reply is
+grounded in anything retrieval surfaced.** They are correct from the model's weights,
+despite an irrelevant retrieved context — **the identical mechanism as `nat_37`'s
+regression, not its opposite.** Three coin flips landed right this cycle and one landed
+wrong. That is not grounding delivering wins; it is **retrieval instability between
+regens**, and it was reported as the former until this session re-checked its own claim.
+
+**Set against that, real structural work landed and is verified, not asserted:**
+the corpus-wide verification arc closed 234/250 locked facts grounded (from 100/251) before
+this session began; the R15 regen shipping 183 facts is live and R16-verified with 10
+targeted probes, not just `✓ deployed`; the present_elsewhere pin scheme was redesigned to
+key on content instead of row number and **caught a live bug on its first run** (a pin
+silently pointing at the wrong fact's row); and three genuine defects — one fresh, one over
+a month old and previously undetected — were root-caused and fixed at the source, verified
+locally, and are staged for the next regen (not yet shipped).
+
+**The honest one-line version:** *the number went up, the number doesn't mean what it looked
+like it meant, and finding that out also surfaced a live, unnoticed defect that had been
+serving wrong information for five weeks.*
+
+---
+
+## 1. What ten recruited testers would experience
+
+**Delivery works and is current. [M, today]** `chike-inference` was stopped and redeployed
+fresh at `c9b2425` this session (R16: `modal app stop --yes` then deploy with
+`PYTHONIOENCODING=utf-8`), verified live via 10 targeted canary probes covering every fact
+this regen touched, not just a health check
+(`eval/results/raw/r16_canary_c9b2425.json`). `chike-whatsapp` is unchanged since
+2026-08-24: `GET /health` still returns `build: ad1ed50`, and `git log ad1ed50..HEAD --
+chike-whatsapp/` is still **empty** [M, today] — the deployed handler is still at the tip
+of its own app's history, nobody touched it this cycle.
+
+**Still no real user has ever used it. [M, today]** Same payload, same as 08-24:
+`transcript_store.rows: 0`, `months: []`.
+
+**On natural Swahili phrasing — the closest proxy to a tester — today's live replies, LIVE
+in production right now: [M]**
+
+| | n | share |
+|---|---|---|
+| **CORRECT** | **31** (+1 `CORRECT*`) | **67%** |
+| PARTIAL | 6 | 13% |
+| CLARIFY (asks rather than guesses) | 6 | 13% |
+| **WRONG** | **4** | **8%** |
+
+vs. 2026-08-24: CORRECT 29 (+1*, 63%) / PARTIAL 7 (15%) / CLARIFY 6 (13%) / WRONG 5 (10%).
+Against the originally-cited 2026-08-17 baseline (29/6/5/8): **32/6/6/4**, net +3 correct,
+−4 wrong, +1 partial, one row's worth of noise either way.
+
+**14 of 48 replies changed text this cycle; 4 verdicts actually moved [M].** All four are
+fact-path questions (`nat_28`, `nat_30`, `nat_37`, `nat_44` — confirmed against
+`edge_probe_natural_048.jsonl`'s own `intent_expected` field, not assumed). Fact-path
+breakdown today: **13 of 21 correct** (up from 11 of 21 on 2026-08-24) — but per the
+correction above, that movement is **retrieval-noise-driven, not grounding-driven**, and
+the corrected cause is recorded per-row in the readjudication artifact, not just in this
+summary.
+
+**`nat_36` needs its own line, because its verdict label is the same on both sides of this
+diff and that conceals the real story [M].** The row was re-adjudicated this session
+against a rubric that was itself tightened after the 2026-08-29 `efd_threshold_tzs_11m`
+fabrication finding — the 08-24 reply would FAIL today's rubric even though it PASSED the
+rubric that existed when it was scored. The honest read is
+WRONG-under-today's-rubric → CORRECT, not CORRECT → CORRECT. Separately, `nat_36`'s
+underlying fact (`efd_not_every_business`) was found to be serving **stale, previously-
+fabricated content** in the live index — not merely under-ranked (see §5). Both the content
+and the retrieval-rank problem are fixed at the source and locally verified, but **NOT YET
+SHIPPED** — today's correct `nat_36` answer is still weights-answered, same as 08-24,
+unchanged by anything in this paragraph until the next regen actually runs.
+
+**Zero of the 48 questions touch corporate tax or the Alternative Minimum Tax. [M]** The
+corporate-tax ask-alignment rewrite (`corporate_tax_rate` / `minimum_turnover_tax`),
+landed and R16-verified this session, contributed **nothing** to any movement measured on
+this fixture — it has no natural-48 touchpoint. It was checked correct directly via the
+R16 canary run instead. **This part of the original attribution was right; the grounding
+claim was not.**
+
+**A tester's experience still splits by what they ask, and now we know part of WHY. [J]**
+Payroll arithmetic (the compute path, unmeasured this cycle, carried from 08-24: 15/24
+correct with an authoritative working appended) is stable because it needs no retrieval.
+Anything answered from the corpus is **not a stable coin-flip with a bias** as 08-24 put
+it — it is a coin-flip whose bias **changes with every regen**, because the noise context
+retrieval hands the model changes with every regen, and the model's weights are sensitive
+to that noise in ways nobody can currently predict row-by-row.
+
+## 2. What breaks first
+
+**Unchanged, and now demonstrated fresh rather than theoretical. [M+J]** The first thing to
+break is still a question that sounds in-domain and has no fact reliably behind it — the
+product answers it anyway, fluently. `nat_37` is that happening, live, this cycle:
+*"Kwa mauzo chini ya TZS 500, risiti ya kawaida ya biashara inatosha"* — a fabricated
+minimum-transaction EFD exemption that traces to no locked fact and no statute (verified
+directly against Tax Administration Act Cap.438 s.36(1), fetched via curl). It is fixed at
+the source (a new fact, ask-aligned, measured at rank 2) but **not yet shipped** — the
+fabrication is still what a real user asking this exact question would receive today.
+
+**The five routes to a safety floor remain exactly where they were on 2026-08-24. [M,
+carried — nothing this cycle touched this]**
+
+| route | outcome |
+|---|---|
+| absolute similarity floor | ❌ scores compress, distributions overlap |
+| margin-based floor | ❌ retired at its own scoping location |
+| re-ranked index / term overlap | ❌ no measured separation of right from wrong |
+| topic coverage gate | ⚠️ built, measured, **SHIPPED DISABLED** — 1.9% false refusals on
+  411 corpus questions vs **71% on 21 held-out**, a **~37× gap** |
+| model-side topic classifier | ❌ not built, deliberately |
+
+**This is still the single item that decides whether a pilot is safe rather than merely
+good, and it did not move this cycle.** Nothing in this session's work — the RAG regen, the
+pin redesign, the four fact fixes — touches this precondition at all; it is a routing/
+classification problem, not a retrieval-content problem, and this session was entirely the
+latter.
+
+**NEW THIS CYCLE, and it belongs in this section because it is the same failure class:**
+**a locked fact can be corrected in `locked_facts.json` and STILL serve the old, wrong
+content in production, indefinitely, with nothing to catch it.** `efd_not_every_business`
+was corrected in `locked_facts.json` on 2026-08-29 (the fabricated TZS 11,000,000
+turnover-threshold framing was found and rejected). Its RAG-embedded rendering was
+**never updated to match** — it kept serving the debunked framing verbatim from its
+original authoring (2026-07-28, "Q16 fix") straight through to today, **five weeks**,
+undetected, because `check_facts_index_sync.py` only verifies a fact is REACHABLE, not
+that a non-grouped `CONCISE_BILINGUAL_FACTS` entry's TEXT still matches its locked fact's
+CURRENT `correct_value`. (The one place this content-check already exists —
+`_grouped_verdict`, for `FACT_GROUPS` members — does not cover ordinary entries.) This is
+a real, generalizable gap, not a one-off: any future correction to a locked fact that
+already has a CONCISE rendering can silently fail to propagate the same way. **Recorded as
+a gap, not yet closed** — building a general content-sync checker is scoped future work,
+not done this pass, per the same discipline 08-24 used for the two mechanism-less defect
+classes ("stated plainly rather than filling the slot").
+
+## 3. What I would monitor
+
+Carried from 08-24, unchanged, plus one addition:
+
+1. Refusals, as the primary metric — not accuracy. [J, unchanged reasoning]
+2. Any reply containing a rate, threshold or deadline, against `locked_facts.json`. [J]
+3. `GET /health` → `build`, before every session. [M] — confirmed both apps' builds match
+   their own git history today.
+4. The `[rag] loaded N` count in the container log. [M, unchanged]
+5. Empty replies. [carried, unchanged]
+6. **NEW: for any CONCISE-rendered fact that gets corrected in `locked_facts.json`, check
+   whether its RAG-index text was updated in the SAME commit.** `efd_not_every_business`'s
+   correction (`a4246fd`-adjacent, 2026-08-29) and its CONCISE-text fix (`951fb67`,
+   2026-09-03/04) were **five weeks and two sessions apart**, and nobody would have known
+   without re-adjudicating an unrelated guard. Any correction commit that touches
+   `locked_facts.json` should be checked against `precompute_rag_embeddings.py`'s
+   `CONCISE_BILINGUAL_FACTS` for the same key before being called done.
+
+## 4. What would make me pull it
+
+Carried from 08-24, unchanged, plus one addition:
+
+- Any reply asserting a rate or threshold that is not in `locked_facts.json`. Immediate.
+- A wrongly-refused question reported by a tester.
+- Any reply about payroll that a tester acts on and is wrong.
+- `[rag] loaded 0`, or a reply with no facts where facts exist.
+- The R7 gate reporting GATE PASSED on a run whose per-question output disagrees.
+- **NEW: any fact-path reply whose figure does not appear in `[rag]`'s logged retrieved
+  context, even if the figure is correct.** Today's finding is that a correct-looking
+  fact-path answer is not evidence retrieval is working — three of today's four moved rows
+  prove exactly the opposite. A monitoring pass that only checks CORRECTNESS, not
+  GROUNDEDNESS, would have called this cycle's movement good news.
+
+## 5. What changed this session, and why it moves the verdict
+
+**Shipped and verified live:**
+- R15 regen landed: 183-row content-keyed RAG index, fetched from HF, dual-committed,
+  freshness check flips FRESH [M, `efe5956`].
+- Pin scheme redesigned to key on content (needle search + uniqueness assertion) instead
+  of row number — the third time row-number pins went stale in one regen, now structural
+  [M, `c9b2425`]. **Caught a real bug on its first run**: `efd_threshold_tzs_11m`'s pin
+  silently pointed at the wrong row (a different fact's row that happened to share the
+  same substring) under the old scheme.
+- `chike-inference` redeployed and verified live via 10 targeted probes plus an OOC/
+  config-freshness check [M, `eval/results/raw/r16_canary_c9b2425.json`].
+- 48 natural probes re-run live, readjudicated, cause-corrected (this entry's own
+  headline finding) [M, `bd66bdf`, `befc68d`].
+
+**Fixed at the source, locally verified, STAGED — not yet shipped [M, `951fb67`]:**
+- `nat_37`'s coverage gap closed: new fact `efd_receipt_per_transaction_no_minimum`,
+  verified against Tax Administration Act Cap.438 s.36(1) directly, measured at retrieval
+  rank 2 (was not retrieved at all).
+- `nat_27`'s three-regen absence closed: `vat_standard_rate` given its first ask-aligned
+  CONCISE entry, measured at rank 1 (was rank 12).
+- `nat_36`'s real defect closed, not patched: `efd_not_every_business`'s stale content
+  corrected AND ask-aligned, measured at rank 1 (was not in top-3 even after a
+  correctness-only fix).
+- `late_payment_penalty_rate` (a bare, uncited "2%" with no scope, measured retrieving
+  RANK 1 for an unrelated VAT-rate question) dropped as noise, per R25's two-question
+  test — **still live in the currently-deployed index today**, since the regen hasn't run.
+- A real collision the fixes themselves introduced was found and fixed BEFORE shipping,
+  not after: the `nat_27`/`nat_36` rewrites both used "-sajili VAT" vocabulary that
+  displaced `vat_registration_threshold_annual`'s own guard from rank 2 to rank 4 —
+  caught by `verify_regen_guard_retrievability.py`, reworded, re-verified.
+
+**A verification limit, stated rather than hidden:** the collision fix was re-confirmed on
+the full guard-retrievability tool once, then the tool became unusable for the rest of the
+session — a reproducible local pagefile/segfault constraint already documented twice in
+this project (`~2.8GB-free` precedent). Text-only anchor-uniqueness (0 dead, 0 ambiguous
+across 34 guards) and the full offline pytest suite (1461 passed) stand in as partial
+verification; the numerical Kaggle cross-check is deferred to the actual regen, which
+re-runs this exact gate as a blocking step regardless.
+
+## 6. The honest chance the first thing they ask has no fact behind it
+
+**Unchanged: roughly two in three to three in four. [J, carried from 08-24 — nothing this
+cycle touched coverage, and no newer measurement exists between 08-24 and today, checked.]**
+`coverage_12_rerun.json` still stands as the last measurement: 3 of 12 real-world questions
+have a fact behind them, and that is an upper bound, not a rate. The 48's own accuracy
+number is now known to be a weaker proxy for this than it looked yesterday, for the same
+reason §1 states: correctness on the 48 does not imply the retrieval that would make an
+unprompted first message safe is actually working.
+
+## 7. The ledger since 2026-08-24
+
+| moved us **closer** | moved us **further** |
+|---|---|
+| 234/250 locked facts grounded corpus-wide, up from 100/251 (verification arc, closed before this session) **[M]** | ⛔ **the 48's accuracy movement is retrieval-noise, not grounding — reported as the latter for one full day before being checked [M]** |
+| pin scheme redesigned, structural, caught a live bug on first use **[M]** | ⛔ **a locked-fact correction silently failed to reach the RAG index for FIVE WEEKS, undetected — no general mechanism catches this class [M]** |
+| R16 redeploy verified with 10 targeted probes, not a health check **[M]** | `nat_37`: a fresh, live, fabricated EFD exemption — proof the "first thing to break" risk is not hypothetical **[M]** |
+| a real pre-ship collision found and fixed before it shipped, not after **[M]** | the safety-floor precondition: **still zero known routes** (unchanged) |
+| 3 genuine defects root-caused and fixed at the source (staged, not yet live) **[M]** | `late_payment_penalty_rate`, proven harmful, still live in production today (fix staged, not shipped) |
+
+**The left column is real, structural, and mostly not yet delivered to a tester. The right
+column is the discovery that the one number that looked like delivered progress — the 48's
+accuracy — was not measuring what it appeared to measure, plus a live defect that had been
+invisible for over a month.** That is the verdict in one sentence: **the work is real, the
+progress-signal that would normally certify it just failed its own audit.**
+
+---
+
+
 ## 🏁 VERIFICATION ARC CLOSED, 2026-09-03 — 100/251 (39.8%) → 234/250 (93.6%) grounded
 
 **What this section is for.** A future session should be able to read this and know what the
