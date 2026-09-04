@@ -1,0 +1,154 @@
+{
+  "stale_wrong_pattern": [
+    {
+      "key": "efd_not_every_business",
+      "matched_patterns": [
+        "chini ya (tzs )?(11|14),?000,?000[^.?!]{0,90}(efd|risiti za mkono)"
+      ],
+      "rows": [
+        "Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine ya risiti (EFD)? Si lazima. Si kila biashara inalazimika kutumia mashine ya risiti za kielektroniki (EFD): biashara ndogo yenye mauzo chini ya TZS 11,000,000 kwa mwaka na isiyosajiliwa VAT inaweza kutumia risiti za mkono badala ya mashine ya EFD. Waliosajiliwa VAT na wenye mauzo ya TZS 11,000,000 au zaidi ndio hulazimika kutumia mashine ya risiti za EFD."
+      ]
+    }
+  ],
+  "negated_mention": [
+    {
+      "key": "paye_personal_relief",
+      "matched_patterns": [
+        "TZS 27,000",
+        "TZS 26,000.*personal relief",
+        "personal relief.*26,000"
+      ],
+      "rows": [
+        "paye personal relief: Tanzania has NO separate PAYE personal relief deduction. The 0% band on first TZS 270,000/month IS the effective tax-free amount. Both TZS 26,000 and TZS 27,000 'personal relief' figures are WRONG."
+      ]
+    },
+    {
+      "key": "p45_not_tanzanian",
+      "matched_patterns": [
+        "P45.*P9"
+      ],
+      "rows": [
+        "p45 not tanzanian: Form P45 does not exist in Tanzania -- it is a UK payroll form. Tanzania's actual equivalent, on employment termination, is the annual employment-income withholding certificate (Income Tax Act Cap.332 s.85(3)(b)) -- there is no 'P9' form name in Tanzanian law either; 'P9' is Kenyan (KRA) terminology, the same defect already found and corrected in this project's paye_p9_deadline fact."
+      ]
+    },
+    {
+      "key": "stamp_duty_property_transfer",
+      "matched_patterns": [
+        "stamp duty.*flat 1%"
+      ],
+      "rows": [
+        "stamp duty property transfer: Stamp duty on transfer/conveyance of land or buildings is TIERED: 0.5% on the first TZS 100,000 of consideration/market value, then 1% on the value in excess of TZS 100,000 (Stamp Duty Act, Cap.189, Schedule, Article 22(b) 'CONVEYANCE') -- NOT a flat 1%."
+      ]
+    },
+    {
+      "key": "paye_nonresident_flat_rate",
+      "matched_patterns": [
+        "non-resident.{0,30}paye.{0,30}progressive"
+      ],
+      "rows": [
+        "paye nonresident flat rate: Non-resident employees pay PAYE at a flat 15% rate — NOT the progressive bands. This is a final withholding tax (Income Tax Act Cap.332, First Schedule para 4(a)(ii), the rate table for section 81 'Withholding by employers' -- a resident withholdee follows 'the rates prescribed in regulations' i.e. the First Schedule para 1 progressive bands; a non-resident withholdee is flat 15%. Para 4 sits under Division II of Part VII, the final-withholding-payments framework, which is the statutory basis for calling this withholding final rather than an on-account payment.)"
+      ]
+    },
+    {
+      "key": "wcf_disease_reporting_deadline",
+      "matched_patterns": [
+        "occupational disease.*7 working days.*diagnosis(?!.*14)"
+      ],
+      "rows": [
+        "wcf disease reporting deadline: Occupational disease reporting to WCF is a TWO-STAGE chain, not a flat 7-day deadline. Per the Workers Compensation Regulations, 2016 (GN 185/2016), Reg.16: the EMPLOYEE must notify the EMPLOYER within 14 working days of diagnosis (Reg.16(1)); the EMPLOYER must then notify WCF within 7 working days of RECEIVING that employee notice (Reg.16(2)) -- so the true worst-case window from diagnosis to WCF notification is up to 21 working days, NOT 7. Workplace death must be reported to WCF within 12 months (Reg.17(2)). Compensation claim must be filed within 12 months of accident or disease discovery (Reg.19(1))."
+      ]
+    },
+    {
+      "key": "permit_class_d_does_not_exist",
+      "matched_patterns": [
+        "class d"
+      ],
+      "rows": [
+        "permit class d does not exist: Tanzania has NO Class D permit — only Class A (investor), Class B (employed expatriate), Class C (researcher/voluntary)"
+      ]
+    },
+    {
+      "key": "vat_threshold_200m_july2024_increase",
+      "matched_patterns": [
+        "increased.*july 2024"
+      ],
+      "rows": [
+        "vat threshold 200m july2024 increase: VAT registration threshold was increased from TZS 100M to TZS 200M effective 1 JULY 2023 (NOT July 2024) by Government Notice No. 448Y of 2023, amending Regulation 14 of the VAT (General) Regulations 2015. Current thresholds: TZS 200M per 12 months OR TZS 100M per any 6-month rolling period (the 6-month figure is structurally half of the 12-month figure, per VAT Act s.28(2)(b)). Zanzibar has its own, separately-administered VAT threshold, reported by the Zanzibar Revenue Authority's own site as TZS 100,000,000 under the Zanzibar VAT Act No. 4 of 1998 -- sourced to ZRA directly, but not yet pinned to a specific section/GN. Any pair showing TZS 100M/year or TZS 50M/6mo mainland is citing pre-July-2023 rules."
+      ]
+    }
+  ],
+  "figure_not_found": [
+    {
+      "key": "efd_threshold_tzs_11m",
+      "expected_figure": "438",
+      "rows": [
+        "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD bila kujali kiwango cha mauzo."
+      ]
+    },
+    {
+      "key": "nssf_payment_deadline",
+      "expected_figure": "50",
+      "rows": [
+        "NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata."
+      ]
+    },
+    {
+      "key": "brela_foreign_late_filing_penalty",
+      "expected_figure": "212,",
+      "rows": [
+        "Kampuni ya kigeni (Section XII) ikichelewa kuwasilisha ritani ya mwaka: faini ni USD 25 kwa kila mwezi (tofauti na kampuni za ndani ambazo hulipa TZS 2,500 kwa mwezi)."
+      ]
+    },
+    {
+      "key": "sdl_exemption_categories",
+      "expected_figure": "82",
+      "rows": [
+        "Waajiri/taasisi zisizolipa SDL (msamaha): idara za Serikali, mamlaka za Serikali za Mitaa, taasisi za kidiplomasia, Umoja wa Mataifa na taasisi zake, mashirika ya kimataifa ya misaada, taasisi za kidini (kwa shughuli za kiroho tu), taasisi za elimu zilizosajiliwa, mashirika ya misaada (charitable), wanafunzi wa TaESA, na waajiri wa mashambani kwa wafanyakazi wanaolima moja kwa moja."
+      ]
+    }
+  ],
+  "clean": [
+    "paye_band_2_rate",
+    "paye_p9_deadline",
+    "nssf_retirement_age",
+    "vat_standard_rate",
+    "vat_reduced_rates",
+    "gn605a_average_increase",
+    "royalties_wht_rate",
+    "minimum_turnover_tax",
+    "objection_deposit_requirement",
+    "permit_class_c_categories",
+    "corporate_tax_rate",
+    "gn487a_transitional_provision",
+    "gn487a_visa_revocation",
+    "vat_withholding_remittance_deadline",
+    "wcf_rate_0_5_percent_confirmed",
+    "efd_approved_supplier_verification",
+    "OSHA_safety_officer_threshold",
+    "gn487a_mgeni_cap357_definition",
+    "efd_tra_closure_authority",
+    "memorandum_articles_of_association_filing_fee",
+    "document_filing_fee_section_12_act_excluding_balance_sheet",
+    "balance_sheet_filing_fee_section_12_act",
+    "act_section_12",
+    "risk_assessment_frequency",
+    "minimum_directors",
+    "minimum_shareholders",
+    "name_similarity_threshold",
+    "patent_term",
+    "electrical_test_fee_reduction_initial",
+    "electrical_test_fee_reduction_final",
+    "vat_deferment_limit_date",
+    "vat_deferment_threshold_percentage",
+    "vat_deferment_minimum_value",
+    "paye_bands_with_examples",
+    "sdl_calculation_example",
+    "presumptive_tax_bands_2022"
+  ],
+  "unresolved": [
+    "health_and_safety_act_citation",
+    "legal_citation_tax_administration",
+    "legal_citation_amendment_act_sdl"
+  ],
+  "no_check_possible": []
+}

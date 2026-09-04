@@ -1123,7 +1123,7 @@
       "efd threshold[^.?!]{0,30}(11|14),?000,?000",
       "(11|14),?000,?000[^.?!]{0,30}kizingiti cha efd",
       "(11|14),?000,?000[^.?!]{0,30}efd threshold",
-      "chini ya (tzs )?(11|14),?000,?000[^.?!]{0,40}(efd|risiti za mkono)",
+      "chini ya (tzs )?(11|14),?000,?000[^.?!]{0,90}(efd|risiti za mkono)",
       "below (tzs )?(11|14),?000,?000[^.?!]{0,40}efd",
       "efd[^.?!]{0,40}(11|14) million"
     ],
@@ -1141,7 +1141,7 @@
       "duka lolote[^.?!]{0,40}efd[^.?!]{0,30}bila kujali[^.?!]{0,15}mauzo",
       "kila (duka|biashara)[^.?!]{0,40}efd[^.?!]{0,30}bila kujali[^.?!]{0,15}mauzo",
       "every (shop|business)[^.?!]{0,40}efd[^.?!]{0,20}regardless of (sales|turnover)",
-      "chini ya (tzs )?(11|14),?000,?000[^.?!]{0,40}(efd|risiti za mkono)",
+      "chini ya (tzs )?(11|14),?000,?000[^.?!]{0,90}(efd|risiti za mkono)",
       "below (tzs )?(11|14),?000,?000[^.?!]{0,40}efd"
     ],
     "primary_source": "Tax Administration Act, Cap.438 R.E.2023, s.44(2) -- read directly, 2026-08-29",

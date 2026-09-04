@@ -1,0 +1,27 @@
+{
+  "checked": "2026-09-04",
+  "method": "first run (no negation filter) flagged 8 of 51 corrected facts on wrong_patterns match; each verified by hand against a 40-before/60-after char negation-cue window before being trusted",
+  "first_run_flagged_8": [
+    "paye_personal_relief",
+    "p45_not_tanzanian",
+    "stamp_duty_property_transfer",
+    "paye_nonresident_flat_rate",
+    "wcf_disease_reporting_deadline",
+    "permit_class_d_does_not_exist",
+    "efd_not_every_business",
+    "vat_threshold_200m_july2024_increase"
+  ],
+  "confirmed_false_positive_negated_mention_7": [
+    "paye_personal_relief",
+    "p45_not_tanzanian",
+    "stamp_duty_property_transfer",
+    "paye_nonresident_flat_rate",
+    "wcf_disease_reporting_deadline",
+    "permit_class_d_does_not_exist",
+    "vat_threshold_200m_july2024_increase"
+  ],
+  "confirmed_true_positive_1": [
+    "efd_not_every_business"
+  ],
+  "verdict": "the negation-window filter (checked, not assumed) correctly separates all 8 -- 1 genuine defect (already found and fixed at the source, 951fb67, not yet shipped), 7 correct rejections that only false-flagged because their own wrong_patterns regex matched inside the sentence explicitly negating the wrong claim"
+}
