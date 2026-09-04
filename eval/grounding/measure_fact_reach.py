@@ -104,6 +104,54 @@ artifacts) before trusting an aggregate rate over this fixture -- a single measu
 answers "is it stable now"; only repeated ones answer "is it stable," exactly the lesson
 the 48's own accuracy number turned out to need.
 
+GATE POSTURE -- PROPOSED HERE, NOT WIRED (2026-09-05). A number with no threshold is a
+dashboard, and a soft-reported number nobody can act on is worse than no report at all: it
+teaches readers that gate output doesn't need reading. Before this joins any regen gate
+the way check_correction_sync.py's soft report just did, work out what a threshold would
+even mean at this sample size -- and where the honest answer is "it can't," write that
+down instead of a threshold, per the standing rule that a mechanism which can BLOCK is the
+expensive direction to get wrong (R21/the ⛔ block above R17).
+
+  1. reaches_context aggregate rate (today: 30/36, 83%) -- NO THRESHOLD, ever, at this n.
+     One probe's movement is ~2.8 points; the fixture is survivorship-biased toward facts
+     someone already fixed, so a HIGH rate is expected by construction and proves nothing
+     about the corpus questions no guard has ever been written for (the exact R22 mismatch:
+     this rate is measured on the population that by definition already got attention, not
+     the population that needs it). ITS ONLY LEGITIMATE JOB IS TREND-WATCHING: read the
+     number and the by_category breakdown across each regen's artifact, investigate any
+     drop by NAME using the per-probe rows, never gate on the figure itself.
+
+  2. BOUNDARY category (today: n=2) -- CANNOT support a threshold, soft or hard, full
+     stop. It is a NAMED WATCHLIST, not a population: read nat_28/nat_44's raw rank every
+     regen, and add a probe here whenever a future fact is found sitting at rank 4-16 in
+     production, rather than trying to synthesize statistical power over 2 items.
+
+  3. NAMED per-probe regression against the PREVIOUS shipped artifact (not built, but
+     buildable and TRUSTWORTHY at this n) -- "this specific probe was IN_TOP3 in the last
+     shipped baseline and is not in this one." This is a delta against a specific prior
+     measurement of the SAME item, the same shape as this file's own already-proven
+     RANK_GATE_CASES gate, not an absolute threshold over a small population -- the
+     distinction that makes it viable where (1) and (2) are not. Recommended posture:
+     SOFT report for its first 2-3 regens (a legitimate fact rewrite can look identical to
+     a regression from a name+category diff alone -- R25's rewrite-vs-repair ambiguity
+     applies here too), promoted to blocking only once it's been watched not to false-
+     positive on a deliberate content change.
+
+  4. NAMED shipped-fix confirmation -- when a regen's own commit/PROGRESS entry names the
+     facts it intends to fix (this session: efd_not_every_business, vat_standard_rate,
+     efd_receipt_per_transaction_no_minimum), assert THOSE SPECIFIC probes flipped to
+     reaches_context=True after shipping. Also buildable, also trustworthy at this n for
+     the same reason as (3) -- checking a specific named claim, not an aggregate. Even
+     this should start SOFT: e5 inference on different hardware (Kaggle GPU vs local CPU)
+     can shift a borderline rank by ~1, and a hard block on a check's first outing risks
+     failing a genuinely fine regen before the check has earned trust.
+
+**Bottom line: this measure's aggregate number and its BOUNDARY category are for a human to
+read and think about, not for a gate to act on. Only (3) and (4) -- both delta/name-based,
+never population-threshold-based -- are candidates for eventual soft gating, and neither is
+wired yet.** Do not add (1) or (2) to any gate, soft or hard, without re-deriving why they
+can't support one first -- that reasoning is why this paragraph exists.
+
 R18: committed before its result is written up.
 Baseline artifact: eval/results/grounded_fact_reach_baseline.json
 Prospective-compare artifact: eval/results/grounded_fact_reach_prospective_compare.json

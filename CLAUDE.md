@@ -954,6 +954,25 @@ loader silently returned nothing must be. The two are byte-identical at the AST 
   and it kept reporting sites already closed. **A worklist that cannot see its own fixes is the
   defect class it exists to find.**
 
+**R20's arrival points, updated 2026-09-05 — FOUR, not one.** The vacuous-check family does not
+only arrive as a bad `assert` inserted by a mechanical pass. It has now been found arriving through
+four independent mechanisms, each requiring a different eye to catch:
+
+| arrival point | example | how it was found |
+|---|---|---|
+| **a bad assertion in code** (R20's founding case) | `assert f` on an open file handle — always truthy | reading each of 25 mechanically-inserted sites by hand |
+| **a test that instructs maintainers not to fix a real defect** (R17) | `test_paraphrased_ooc_controls_*` asserted a known leak should PASS the gate | live data disproving the test's own assumption |
+| **a control nothing calls, or that fires on everything, or on nothing** (R26) | `scan_for_keys.py` invoked bare in the pre-push hook — nothing was ever staged at push time, so it scanned zero files on every push in the project's history | planting the exact thing a control claims to catch and watching it fail to fire |
+| **a fixture whose composition cannot exercise the category it claims to watch** (NEW, 2026-09-05) | `eval/grounding/measure_fact_reach.py`'s `BOUNDARY` category (rank 4–16): the 34 real regression probes it reused from `kaggle/regenerate_rag_e5.py` are ALL either solidly `IN_TOP3` or a known `ABSENT` gap — **zero of them land in `BOUNDARY`**, so the category existed in the code, ran on every invocation, and could never once report anything, clean by construction rather than by health | noticed while building the measure, before it shipped — closed by adding 2 more probes (`nat_28`/`nat_44`, sourced from an already-committed fixture, needle-uniqueness-checked) specifically chosen to populate the empty category, not by asserting harder |
+
+**The common thread across all four:** each one *looks* like a working check from the outside —
+it runs, it doesn't error, it reports a clean result — and the only way any of them was caught was
+someone asking not "does this run" but **"what would have to be true for this to ever report
+something other than clean?"** For a bad assert, the answer is "nothing, it's tautological." For an
+unwired control, "nothing calls it." For a mis-scoped test, "the assumption it encodes is false."
+For a mis-composed fixture, "no member of this population falls in that bucket." Same question,
+four different places it can hide the same answer.
+
 ### R25 — A CONTENT REWRITE IN THE CLEANUP LAYER NEEDS ITS JUSTIFICATION IN WRITING, AT THE SITE.
 
 **Two questions, answered in a comment beside the rule, before it is added:**
