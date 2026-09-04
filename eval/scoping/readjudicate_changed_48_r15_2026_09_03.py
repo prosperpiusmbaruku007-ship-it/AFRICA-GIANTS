@@ -1,5 +1,22 @@
 # -*- coding: utf-8 -*-
-"""Re-adjudication of the 48 natural probes against chike-inference redeployed at c9b2425
+"""⛔ CORRECTED 2026-09-04 -- the original "GROUNDING" claim below for nat_28/nat_44 was
+WRONG, found while building the pilot re-derivation and checking the claim instead of
+repeating it (R22's own standing lesson, applied to this file by its author one day
+later). Reproducing production retrieval for both questions shows the actual VAT-
+withholding RATE facts (rows 16/17) rank 7th-16th -- never in production's top-3/pooled-9
+window. Neither reply is grounded in retrieved content; both are UNGROUNDED, correct from
+weights despite an irrelevant retrieved context -- the SAME shape as nat_37's regression,
+not its opposite. See nat_28's and nat_44's VERDICTS entries below for the full account
+and eval/results/natural48_readjudicated_2026_09_03.json's corrected `cause` fields (the
+artifact was re-generated from this corrected script, not hand-edited). The headline
+"zero of the 48 touch corporate tax" finding is UNAFFECTED (still true, still checked) --
+only the causal story for WHY nat_28/nat_44/nat_30 improved is corrected: it is retrieval-
+noise reshuffling between regens producing a different irrelevant context each time, and
+three of four moved rows this cycle happened to land right where one (nat_37) landed
+wrong. That is a materially different, more sobering finding than "grounding delivered
+wins," and PROGRESS.md's pilot re-derivation (2026-09-04) carries the corrected account.
+
+Re-adjudication of the 48 natural probes against chike-inference redeployed at c9b2425
 (the R15 regen -- 183-row content-keyed index, landed efe5956 -- plus the corporate-tax
 ask-alignment rewrite from 4974cbc/0fce8b6, plus the content-keyed pin redesign, c9b2425).
 
@@ -71,15 +88,31 @@ VERDICTS = {
                'here), not evidence the ranking problem is resolved.',
     },
     'nat_28': {
-        'new': 'CORRECT', 'cause': 'GROUNDING',
+        'new': 'CORRECT', 'cause': 'CORRECTED 2026-09-04 -- NOT grounding. See note.',
         'why': 'WRONG -> CORRECT. Old reply answered a different tax entirely (15% royalties '
                'withholding -- wrong topic). New reply states VAT withholding 6% for services '
                '(Finance Act 2025) AND the correct certificate-timing rule (issued the day VAT '
-               'becomes payable, not the 20th) -- both rubric requirements met exactly. '
-               'Attributed to GROUNDING: these are Tier 1A VAT-withholding facts from the '
-               'verification arc (Section 11 of CLAUDE.md), not anything touched by the '
-               'corporate-tax ask-alignment rewrite -- no corporate/AMT content in this row '
-               'at all.',
+               'becomes payable, not the 20th) -- both rubric requirements met exactly.\n\n'
+               'CORRECTION, 2026-09-04, found while building the pilot re-derivation and '
+               'checking this claim rather than repeating it: "GROUNDING" was asserted here '
+               'without checking whether the VAT-withholding RATE facts (vat_withholding_goods '
+               '/ vat_withholding_services, rows 16/17) are actually within retrieval reach for '
+               'this question. Checked directly: they are NOT. Reproducing production retrieval '
+               '(decompose_query + top-3-per-subquestion pooling) for this exact question '
+               'returns rows 11/149/156 (an NSSF penalty fact, a contribution-frequency '
+               'fragment, a retirement-fund deadline) -- zero VAT-withholding content of any '
+               'kind. Row 17 (the 6% services fact) ranks 10th; row 16 (3% goods) ranks 15th -- '
+               'both well outside production\'s top-3/pooled-9 window. This reply is UNGROUNDED: '
+               'correct despite retrieval not surfacing the relevant fact, the same shape as '
+               'nat_26/27/36 (weights-answered) -- and the same shape as nat_37\'s regression, '
+               'which is the more important point: this is not "grounding delivered a win", it '
+               'is retrieval-noise reshuffling between regens producing a DIFFERENT irrelevant '
+               'context, and this time the model\'s own weights landed on the right answer '
+               'anyway rather than the wrong one. Three of the four rows that moved this cycle '
+               '(nat_28, nat_30, nat_44) share this shape; only nat_37 landed the other way. '
+               'See the pilot re-derivation (PROGRESS.md, 2026-09-04) for the full, corrected '
+               'account -- this was reported to the founder as "GROUNDING" before this check was '
+               'done, and that was wrong.',
     },
     'nat_29': {
         'new': 'PARTIAL', 'cause': 'no verdict change',
@@ -192,11 +225,19 @@ VERDICTS = {
                'not citation domain).',
     },
     'nat_44': {
-        'new': 'CORRECT', 'cause': 'GROUNDING',
+        'new': 'CORRECT', 'cause': 'CORRECTED 2026-09-04 -- NOT grounding. Same correction as nat_28.',
         'why': 'WRONG -> CORRECT. Old reply gave 6% (the services rate) for a goods-sale '
                'question. New reply states both rates correctly labelled: 3% for goods, 6% '
-               'for services, answering the goods question right. Same VAT-withholding fact '
-               'family as nat_28 -- GROUNDING, not the corporate-tax rewrite.',
+               'for services, answering the goods question right.\n\n'
+               'CORRECTION, 2026-09-04, same check as nat_28 (see its note for the full '
+               'account): reproducing production retrieval for this exact question returns '
+               'rows 75/107/63 (a VAT-withholding-BASE dispute-resolution note, the '
+               'late_payment_penalty_rate noise fact this same session dropped as harmful '
+               'elsewhere, and a withholding-formula fact) -- NOT the rate facts themselves. '
+               'Row 16 (3% goods) ranks 7th, row 17 (6% services) ranks 16th -- outside '
+               'production\'s retrieval window. UNGROUNDED, not GROUNDING -- correct from '
+               'weights despite an irrelevant retrieved context, the same shape as nat_28 and '
+               'nat_37\'s regression.',
     },
 }
 
@@ -258,16 +299,27 @@ def main():
         'moved_rows': moved,
         'cause_breakdown_of_moved_rows': dict(causes),
         'headline': (
-            'Zero of the 48 natural questions touch corporate tax or the Alternative Minimum '
-            'Tax -- the corporate-tax ask-alignment rewrite (corporate_tax_rate / '
-            'minimum_turnover_tax) has no natural-48 touchpoint and contributed nothing to any '
-            'movement measured here (verified separately, live and correct, via the R16 canary '
-            'run). Every genuine improvement traces to GROUNDING: VAT-withholding facts '
-            '(nat_28, nat_44) and the EFD-threshold fabrication fix (nat_36, whose CORRECT-to-'
-            'CORRECT label conceals a real WRONG-under-current-rubric-to-CORRECT fix -- see its '
-            'row). One regression found and NOT explained by either mechanism: nat_37 '
-            '(CORRECT -> WRONG, a newly fabricated small-transaction EFD exemption), flagged '
-            'for follow-up rather than root-caused in this pass.'
+            'CORRECTED 2026-09-04. Zero of the 48 natural questions touch corporate tax or '
+            'the Alternative Minimum Tax -- the corporate-tax ask-alignment rewrite '
+            '(corporate_tax_rate / minimum_turnover_tax) has no natural-48 touchpoint and '
+            'contributed nothing to any movement measured here (verified separately, live '
+            'and correct, via the R16 canary run). That part of the original headline stands. '
+            'The rest does not: the original claimed the 4 moved rows traced to "GROUNDING" '
+            '(retrieval reaching a correct fact). Checked directly and found wrong: for '
+            'nat_28/nat_44, the actual VAT-withholding rate facts rank 7th-16th, never in '
+            'production\'s top-3 retrieval window -- both replies are UNGROUNDED, correct '
+            'from weights despite irrelevant retrieved context. nat_30 was already correctly '
+            'marked "unclear" in the original pass. nat_36\'s live reply is ALSO ungrounded '
+            'today -- its real fix (efd_not_every_business\'s corrected, ask-aligned CONCISE '
+            'text) is prepared and locally verified but NOT YET SHIPPED to production (staged '
+            'in commit 951fb67, pending the next Kaggle regen); today\'s correct nat_36 answer '
+            'is weights-answered, same as before. So: THREE of the four moved rows this '
+            'cycle (nat_28, nat_30, nat_44) and the one regression (nat_37) are the SAME '
+            'phenomenon -- retrieval-noise reshuffling between regens producing a different '
+            'irrelevant context each time, with the model\'s weights landing on the right '
+            'answer three times and the wrong answer once. This is retrieval INSTABILITY '
+            'exposed, not grounding delivered. See PROGRESS.md\'s 2026-09-04 pilot '
+            're-derivation for the full account.'
         ),
         'rows': rows,
     }
