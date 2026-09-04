@@ -1,0 +1,320 @@
+{
+  "measured": "2026-09-05",
+  "index_dir": "C:\\Users\\jhjh\\AFRICA-GIANTS\\chike-inference",
+  "index_rows": 183,
+  "method": "production-exact pooled retrieval (chike.decomposition + Orchestrator._pool_facts semantics), needle-matched, not row-position-matched",
+  "top_k": 3,
+  "pool_cap": 9,
+  "boundary_max_rank": 16,
+  "fixture_caveat": "34 hand-picked regression probes from kaggle/regenerate_rag_e5.py -- a floor, not a corpus-wide claim; see module docstring",
+  "summary": {
+    "total_probes": 36,
+    "reaches_context_count": 30,
+    "reaches_context_rate": 0.833,
+    "by_category": {
+      "IN_TOP3": 30,
+      "ABSENT": 4,
+      "BOUNDARY": 2
+    },
+    "boundary_watchlist": [
+      "nat_28 verbatim (VAT withholding SERVICES, boundary-history probe)",
+      "nat_44 verbatim (VAT withholding GOODS, boundary-history probe)"
+    ],
+    "deep_or_absent": [
+      "EFD not-every-business (Q16 verbatim)",
+      "EFD receipt required per-transaction, no minimum (nat_37 gap-closing guard)",
+      "EFD threshold, VAT-unregistered (nat_36 displacement guard)",
+      "VAT standard rate (nat_27 displacement guard)"
+    ]
+  },
+  "rows": [
+    {
+      "name": "GN487A penalty",
+      "question": "query: Faini kwa raia wa kigeni anayevunja GN487A ni kiasi gani hasa?",
+      "needle": "Faini kwa mgeni",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "SDL rate",
+      "question": "query: SDL rate Tanzania ni asilimia ngapi?",
+      "needle": "asilimia tatu na nusu",
+      "raw_rank": 3,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "NSSF employer",
+      "question": "query: Mwajiri analipa asilimia ngapi NSSF kila mwezi?",
+      "needle": "asilimia 10",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "BRELA annual return",
+      "question": "query: Ada ya annual return BRELA ni shilingi ngapi?",
+      "needle": "kila mwaka ni TZS 22,000",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "VAT withholding services",
+      "question": "query: VAT withholding kwenye huduma ni asilimia ngapi?",
+      "needle": "services is 6",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "Zero-rated input VAT",
+      "question": "query: Naweza kudai input VAT kwenye bidhaa zilizo zero-rated?",
+      "needle": "input vat",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "GN487A effective date",
+      "question": "query: GN487A ilianza kutekelezwa tarehe gani?",
+      "needle": "came into effect on 28 July",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "GN487A full name",
+      "question": "query: Jina kamili la GN487A ni nini?",
+      "needle": "gn487a full legal name",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "Facilitator penalty",
+      "question": "query: Adhabu ya raia wa Tanzania anayemsaidia mgeni ni nini?",
+      "needle": "milioni tano",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "Phone repair activity",
+      "question": "query: Mgeni anaweza kutengeneza simu?",
+      "needle": "phone",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "License lending facilitation",
+      "question": "query: Raia anayekopesha leseni yake kwa mgeni anaadhibiwa?",
+      "needle": "kukopesha",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "GN487A marriage no exemption",
+      "question": "query: Ninaoa Mtanzania, naweza kufanya biashara ya rejareja?",
+      "needle": "kuoa",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "PAYE 800K band",
+      "question": "query: PAYE kwa mshahara wa TZS 800,000 ni kiasi gani?",
+      "needle": "78,000",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "SDL 12-employee calculation",
+      "question": "query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, SDL jumla ni kiasi gani?",
+      "needle": "252,000",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "NSSF 12-employee calculation",
+      "question": "query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, NSSF jumla ni kiasi gani?",
+      "needle": "1,440,000",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "NSSF compound (120k selection bug)",
+      "question": "query: Kampuni ina wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja. NSSF jumla ya kampuni ni kiasi gani?",
+      "needle": "1,440,000",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "EFD threshold",
+      "question": "query: Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?",
+      "needle": "milioni kumi na moja",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "VAT registration threshold (displacement guard)",
+      "question": "query: Kizingiti cha kusajili VAT ni mauzo ya kiasi gani kwa mwaka?",
+      "needle": "200,000,000 kwa miezi 12",
+      "raw_rank": 2,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "BRELA striking-off (Q13 verbatim)",
+      "question": "query: Kampuni yangu imesajiliwa miaka sita iliyopita, naweza kuifuta sasa?",
+      "needle": "defunct",
+      "raw_rank": 2,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "OSHA/WCF small-count (Q14 verbatim)",
+      "question": "query: Nina wafanyakazi wawili tu dukani, bado nasajiliwa mahali fulani?",
+      "needle": "osha husajili",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "EFD not-every-business (Q16 verbatim)",
+      "question": "query: Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?",
+      "needle": "HAKUNA kizingiti cha mauzo",
+      "raw_rank": null,
+      "category": "ABSENT",
+      "reaches_context": false
+    },
+    {
+      "name": "GN605A sector count (nat_43 verbatim, the row that clears)",
+      "question": "query: mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+      "needle": "hakina kiwango kimoja",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "VAT six-month threshold (nat_26 displacement guard)",
+      "question": "query: nimefungua duka miezi sita iliyopita nimeuza jumla milioni 60 hadi sasa je nimefika kiwango cha vat",
+      "needle": "100,000,000 kwa miezi 6",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "VAT standard rate (nat_27 displacement guard)",
+      "question": "query: vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu",
+      "needle": "SIYO 14%",
+      "raw_rank": null,
+      "category": "ABSENT",
+      "reaches_context": false
+    },
+    {
+      "name": "Company registration fee (nat_34 displacement guard)",
+      "question": "query: nataka kusajili kampuni gharama ya kuanzia ni ngapi na kuhifadhi jina",
+      "needle": "gharama ya kuanzia ni TZS 95,000",
+      "raw_rank": 2,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "EFD threshold, VAT-unregistered (nat_36 displacement guard)",
+      "question": "query: mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "needle": "HAKUNA kizingiti cha mauzo",
+      "raw_rank": null,
+      "category": "ABSENT",
+      "reaches_context": false
+    },
+    {
+      "name": "EFD receipt required per-transaction, no minimum (nat_37 gap-closing guard)",
+      "question": "query: mteja amenunua kwa shilingi 2000 tu nampa risiti ya mashine au inaruhusiwa kuandika kwa mkono",
+      "needle": "KWA KILA muamala",
+      "raw_rank": null,
+      "category": "ABSENT",
+      "reaches_context": false
+    },
+    {
+      "name": "Council service levy is a ceiling (new fact)",
+      "question": "query: Halmashauri wananitoza ushuru wa huduma asilimia 0.3 ya mauzo yangu, ni sahihi?",
+      "needle": "KIKOMO cha asilimia 0.3",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "Council service levy non-corporate conflict (new fact)",
+      "question": "query: Mimi ni mfanyabiashara mmoja mmoja, ninatakiwa kulipa ushuru wa huduma wa halmashauri?",
+      "needle": "non-corporate",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "Market dues no national amount (new fact)",
+      "question": "query: Ushuru wa genge langu sokoni ni shilingi ngapi?",
+      "needle": "Sheria ya Masoko (Cap 106)",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "Market dues exemptions (new fact)",
+      "question": "query: Ninauza maandazi sokoni, ninatakiwa kulipa ushuru wa soko?",
+      "needle": "maandazi na samaki wa kukaanga",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "Business licence fee national schedule, local collection (new fact)",
+      "question": "query: Leseni ya biashara yangu inagharimu kiasi gani, na nani hutoa?",
+      "needle": "Ada imepangwa KITAIFA",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "Corporate tax rate (ask-aligned)",
+      "question": "query: Kodi ya kampuni Tanzania ni asilimia ngapi?",
+      "needle": "kampuni za kawaida",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "AMT loss-making corporation (ask-aligned)",
+      "question": "query: Kampuni yangu ina hasara miaka mitatu mfululizo, nalipa kodi gani?",
+      "needle": "hasara miaka mitatu mfululizo",
+      "raw_rank": 1,
+      "category": "IN_TOP3",
+      "reaches_context": true
+    },
+    {
+      "name": "nat_28 verbatim (VAT withholding SERVICES, boundary-history probe)",
+      "question": "query: nimefanya kazi ya ushauri kwa taasisi ya serikali wamesema watakata vat je asilimia ngapi na cheti nitapata lini",
+      "needle": "vat withholding services",
+      "raw_rank": 10,
+      "category": "BOUNDARY",
+      "reaches_context": false
+    },
+    {
+      "name": "nat_44 verbatim (VAT withholding GOODS, boundary-history probe)",
+      "question": "query: nimeuzia wakala wa serikali bidhaa je watanikata asilimia ngapi ya vat",
+      "needle": "vat withholding goods",
+      "raw_rank": 7,
+      "category": "BOUNDARY",
+      "reaches_context": false
+    }
+  ]
+}

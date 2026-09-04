@@ -1,0 +1,485 @@
+{
+  "measured": "2026-09-05",
+  "deployed_index_rows": 183,
+  "prospective_index_rows": 183,
+  "prospective_dropped_as_noise": 29,
+  "summary_deployed": {
+    "total_probes": 36,
+    "reaches_context_count": 30,
+    "reaches_context_rate": 0.833,
+    "by_category": {
+      "IN_TOP3": 30,
+      "ABSENT": 4,
+      "BOUNDARY": 2
+    },
+    "boundary_watchlist": [
+      "nat_28 verbatim (VAT withholding SERVICES, boundary-history probe)",
+      "nat_44 verbatim (VAT withholding GOODS, boundary-history probe)"
+    ],
+    "deep_or_absent": [
+      "EFD not-every-business (Q16 verbatim)",
+      "EFD receipt required per-transaction, no minimum (nat_37 gap-closing guard)",
+      "EFD threshold, VAT-unregistered (nat_36 displacement guard)",
+      "VAT standard rate (nat_27 displacement guard)"
+    ]
+  },
+  "summary_prospective": {
+    "total_probes": 36,
+    "reaches_context_count": 34,
+    "reaches_context_rate": 0.944,
+    "by_category": {
+      "IN_TOP3": 34,
+      "BOUNDARY": 2
+    },
+    "boundary_watchlist": [
+      "nat_28 verbatim (VAT withholding SERVICES, boundary-history probe)",
+      "nat_44 verbatim (VAT withholding GOODS, boundary-history probe)"
+    ],
+    "deep_or_absent": []
+  },
+  "note": "28 probe(s) already IN_TOP3 on the deployed index moved rank 0 against the prospective build -- the stability contrast this measure is built to watch for. Category flips (a probe changing IN_TOP3/BOUNDARY/DEEP/ABSENT) are listed explicitly, not just averaged.",
+  "category_flips": [
+    {
+      "name": "EFD not-every-business (Q16 verbatim)",
+      "deployed_rank": null,
+      "prospective_rank": 1,
+      "rank_delta": null,
+      "deployed_category": "ABSENT",
+      "prospective_category": "IN_TOP3",
+      "category_changed": true,
+      "deployed_reaches_context": false,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "VAT standard rate (nat_27 displacement guard)",
+      "deployed_rank": null,
+      "prospective_rank": 1,
+      "rank_delta": null,
+      "deployed_category": "ABSENT",
+      "prospective_category": "IN_TOP3",
+      "category_changed": true,
+      "deployed_reaches_context": false,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "EFD threshold, VAT-unregistered (nat_36 displacement guard)",
+      "deployed_rank": null,
+      "prospective_rank": 1,
+      "rank_delta": null,
+      "deployed_category": "ABSENT",
+      "prospective_category": "IN_TOP3",
+      "category_changed": true,
+      "deployed_reaches_context": false,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "EFD receipt required per-transaction, no minimum (nat_37 gap-closing guard)",
+      "deployed_rank": null,
+      "prospective_rank": 2,
+      "rank_delta": null,
+      "deployed_category": "ABSENT",
+      "prospective_category": "IN_TOP3",
+      "category_changed": true,
+      "deployed_reaches_context": false,
+      "prospective_reaches_context": true
+    }
+  ],
+  "deltas": [
+    {
+      "name": "GN487A penalty",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "SDL rate",
+      "deployed_rank": 3,
+      "prospective_rank": 3,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "NSSF employer",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "BRELA annual return",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "VAT withholding services",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "Zero-rated input VAT",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "GN487A effective date",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "GN487A full name",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "Facilitator penalty",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "Phone repair activity",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "License lending facilitation",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "GN487A marriage no exemption",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "PAYE 800K band",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "SDL 12-employee calculation",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "NSSF 12-employee calculation",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "NSSF compound (120k selection bug)",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "EFD threshold",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "VAT registration threshold (displacement guard)",
+      "deployed_rank": 2,
+      "prospective_rank": 3,
+      "rank_delta": 1,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "BRELA striking-off (Q13 verbatim)",
+      "deployed_rank": 2,
+      "prospective_rank": 2,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "OSHA/WCF small-count (Q14 verbatim)",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "EFD not-every-business (Q16 verbatim)",
+      "deployed_rank": null,
+      "prospective_rank": 1,
+      "rank_delta": null,
+      "deployed_category": "ABSENT",
+      "prospective_category": "IN_TOP3",
+      "category_changed": true,
+      "deployed_reaches_context": false,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "GN605A sector count (nat_43 verbatim, the row that clears)",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "VAT six-month threshold (nat_26 displacement guard)",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "VAT standard rate (nat_27 displacement guard)",
+      "deployed_rank": null,
+      "prospective_rank": 1,
+      "rank_delta": null,
+      "deployed_category": "ABSENT",
+      "prospective_category": "IN_TOP3",
+      "category_changed": true,
+      "deployed_reaches_context": false,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "Company registration fee (nat_34 displacement guard)",
+      "deployed_rank": 2,
+      "prospective_rank": 2,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "EFD threshold, VAT-unregistered (nat_36 displacement guard)",
+      "deployed_rank": null,
+      "prospective_rank": 1,
+      "rank_delta": null,
+      "deployed_category": "ABSENT",
+      "prospective_category": "IN_TOP3",
+      "category_changed": true,
+      "deployed_reaches_context": false,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "EFD receipt required per-transaction, no minimum (nat_37 gap-closing guard)",
+      "deployed_rank": null,
+      "prospective_rank": 2,
+      "rank_delta": null,
+      "deployed_category": "ABSENT",
+      "prospective_category": "IN_TOP3",
+      "category_changed": true,
+      "deployed_reaches_context": false,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "Council service levy is a ceiling (new fact)",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "Council service levy non-corporate conflict (new fact)",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "Market dues no national amount (new fact)",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "Market dues exemptions (new fact)",
+      "deployed_rank": 1,
+      "prospective_rank": 2,
+      "rank_delta": 1,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "Business licence fee national schedule, local collection (new fact)",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "Corporate tax rate (ask-aligned)",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "AMT loss-making corporation (ask-aligned)",
+      "deployed_rank": 1,
+      "prospective_rank": 1,
+      "rank_delta": 0,
+      "deployed_category": "IN_TOP3",
+      "prospective_category": "IN_TOP3",
+      "category_changed": false,
+      "deployed_reaches_context": true,
+      "prospective_reaches_context": true
+    },
+    {
+      "name": "nat_28 verbatim (VAT withholding SERVICES, boundary-history probe)",
+      "deployed_rank": 10,
+      "prospective_rank": 10,
+      "rank_delta": 0,
+      "deployed_category": "BOUNDARY",
+      "prospective_category": "BOUNDARY",
+      "category_changed": false,
+      "deployed_reaches_context": false,
+      "prospective_reaches_context": false
+    },
+    {
+      "name": "nat_44 verbatim (VAT withholding GOODS, boundary-history probe)",
+      "deployed_rank": 7,
+      "prospective_rank": 6,
+      "rank_delta": -1,
+      "deployed_category": "BOUNDARY",
+      "prospective_category": "BOUNDARY",
+      "category_changed": false,
+      "deployed_reaches_context": false,
+      "prospective_reaches_context": false
+    }
+  ]
+}
