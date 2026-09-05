@@ -462,17 +462,28 @@ critical_queries = [
 # entry naming why. A name here that starts PASSING is itself reported as a defect
 # ([STALE-KNOWN-FAIL]) and DOES block -- otherwise this set becomes the place guards go to be
 # forgotten, which is the failure mode it exists to prevent.
-KNOWN_FAILING = {
-    # BOTH prior members of this set closed 2026-09-03 -- see the anchor-update comments
-    # beside each guard's tuple above (vat_standard_rate / efd_not_every_business), and
-    # readjudicate_changed_48_r15_2026_09_03.py for the live-answer evidence that
-    # motivated closing nat_36's the right way (a content fix, not a guard patch). Both
-    # verified PASS on the full prospective 183-row dry-run re-embed before this file was
-    # repackaged -- if either comes back [STALE-KNOWN-FAIL] on the real Kaggle run, that
-    # means the dry-run (CPU, local sentence-transformers) and the Kaggle run (same model,
-    # same code path) disagree, which would itself be worth investigating rather than
-    # re-adding the name reflexively.
-}
+KNOWN_FAILING: set = set()
+# BOTH prior members of this set closed 2026-09-03 -- see the anchor-update comments
+# beside each guard's tuple above (vat_standard_rate / efd_not_every_business), and
+# readjudicate_changed_48_r15_2026_09_03.py for the live-answer evidence that
+# motivated closing nat_36's the right way (a content fix, not a guard patch). Both
+# verified PASS on the full prospective 183-row dry-run re-embed before this file was
+# repackaged -- if either comes back [STALE-KNOWN-FAIL] on the real Kaggle run, that
+# means the dry-run (CPU, local sentence-transformers) and the Kaggle run (same model,
+# same code path) disagree, which would itself be worth investigating rather than
+# re-adding the name reflexively.
+#
+# BUG FOUND 2026-09-05, ON THE ACTUAL KAGGLE RUN, NOT LOCALLY: `KNOWN_FAILING = { <only
+# comments, no elements> }` is an empty DICT literal in Python, not an empty set -- `{}`
+# with no `key: value` pairs and no bare elements is a dict by Python's own grammar. It
+# was harmless while this held at least one bare string (`{'name'}` IS a set), and broke
+# silently the moment the last two names were removed (2026-09-03) without anyone
+# re-running the actual regen until now: `KNOWN_FAILING - _known_fail_seen` below raised
+# `TypeError: unsupported operand type(s) for -: 'dict' and 'set'`, crashing the ENTIRE
+# regen after all 34+ guards had already printed PASS -- a real defect that no local
+# dry-run (scratch scripts calling precompute.build_fact_texts() directly) ever exercised,
+# because none of them execute this file's own KNOWN_FAILING/_orphans logic. Exactly the
+# R18/R24 lesson: a check that was never actually run is not a check that passed.
 
 # Anchor uniqueness is a PRECONDITION, not an assumption: if a fact edit makes an anchor match
 # two rows, the guard silently regains the exact fault this change removed. Checked here, on
