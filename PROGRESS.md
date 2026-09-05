@@ -1,5 +1,113 @@
 # Africa Giants — Project Progress
 
+## ✅ R15 REGEN SHIPPED FOR REAL, 2026-09-05 — the 4 staged fixes from 951fb67 are live, a real Kaggle-only bug was found and fixed on the way, and the correction-sync gate closed the loop it was built for
+
+**This closes out everything the 2026-09-04 entry below left staged-but-not-shipped.** Full
+chain, each step verified rather than assumed:
+
+**1. The correction-sync checker (`scripts/check_correction_sync.py`, built 2026-09-04)
+was finished and wired in.** Negation-window filter confirmed correctly separating 1 real
+defect (`efd_not_every_business`) from 7 false positives on first run — recorded in the
+checker's own docstring with the 87.5% first-run false-positive rate, and an explicit
+GATING POSTURE note: this detector's true/false positives are not mechanically
+distinguishable from its report alone, same shape as the OOC bare-`hisa` class and the
+local-levy mask, so it reports for adjudication, not automated blocking. Refactored into a
+pure `check_facts_and_index(locked, index)` core so `kaggle/regenerate_rag_e5.py` can call
+it against its own in-memory prospective build, before anything is written or uploaded —
+wired in **SOFT** (`CORRECTION_SYNC_BLOCKING = False`), promotion to blocking deferred to a
+future regen once proven at scale, per R21's asymmetry (a mechanism that can block is the
+expensive direction to get wrong).
+
+**2. The actual Kaggle regen ran, and it found a real bug nothing local ever could. [M]**
+Pushed `kaggle/regenerate_rag_e5.py` as a script kernel via the Kaggle API
+(`prospaprospa/africa-giants-rag-regen`) rather than the historical manual-notebook path —
+first run (v1) crashed: `KNOWN_FAILING = { <comments only> }` is an empty **dict** literal
+in Python, not a set (no `key: value` pairs, no bare elements), and `KNOWN_FAILING -
+_known_fail_seen` needs set subtraction. It worked while at least one bare string sat
+inside and broke silently the moment the last two tracked names were removed (2026-09-03) —
+invisible locally because every dry-run script calls `precompute.build_fact_texts()`
+directly and never executes this file's own `KNOWN_FAILING`/`_orphans` logic. Fixed to
+`KNOWN_FAILING: set = set()`, regression-tested by AST extraction (no import — this module
+has Kaggle-auth/network side effects at import time), re-pushed as v2. **VERIFICATION
+PASSED**: 183/183 facts self-retrieve, all 34 `critical_queries` guards pass, contrast/
+disambiguation/rank-regression gates pass, and the new soft CORRECTION-SYNC GATE reports
+CLEAN (0 stale, 7 correctly-negated mentions matching the exact false positives already
+characterized 2026-09-04).
+
+**3. Files fetched from the kernel's own output and shipped, since the kernel had no HF
+Secret attached.** A brand-new kernel slug has no Kaggle Secret (`AFRICA_GIANTS`) attached —
+secrets are a per-kernel, web-UI-only setting with no API equivalent — so `hf_token` was
+empty. Rather than let the script crash after verification already passed (leaving files
+on disk with a scary `[Error]` status), the PUSHED COPY ONLY (not the canonical repo file)
+skipped the upload with a clear `[skip-upload]` message; `rag_embeddings.npy` (183×768,
+unit-normalized) and `rag_facts_text.json` were pulled from `kernels_output()`, spot-checked
+directly (all 4 target facts present with corrected content, old stale text confirmed
+gone), uploaded to the HF dataset repo in one atomic `create_commit` matching the script's
+own intended behavior, then committed to both `kaggle/` and `chike-inference/` (`0be8662`).
+`check_rag_index_freshness.py` flipped **FRESH** — third flip of that test, exactly as its
+own docstring predicted twice already.
+
+**4. PINNED entries updated AFTER the ship, never before — now three facts confirming the
+same rule.** `efd_not_every_business`'s needle ("Si lazima", part of the now-gone stale
+text) → "HAKUNA kizingiti cha mauzo"; `vat_standard_rate` newly pinned present_elsewhere
+("SIYO 14%"); `late_payment_penalty_rate` newly pinned absent (confirmed genuinely gone —
+the one coincidental substring hit is `nssf_penalty`, an unrelated real fact, checked by
+reading it, not assumed); `efd_receipt_per_transaction_no_minimum` converted from
+`pending_r15` to present_elsewhere. `check_facts_index_sync.py` and `check_correction_sync.py`
+both report CLEAN against the live repo. Two tests flipped exactly as their own docstrings
+predicted; the R26 live-defect plant in `test_check_correction_sync.py` was replaced with a
+synthetic in-memory plant (the real specimen is fixed now) — first draft of the plant used
+the word "wrong" in the planted sentence, which is itself one of the negation cues the
+filter looks for, self-defeating, caught by running it rather than assuming it passed.
+
+**5. Modal redeployed per R16 and verified with a real before/after canary, not a health
+check. [M]** `eval/controls/canary_2026_09_05_regen_deploy.py`, 5 probes covering all 4
+changed facts plus a standard negative, verbatim from `critical_queries` (AST-loaded, R24).
+**BEFORE** (old index, still live): confirmed the exact defects, not assumed —
+`efd_not_every_business` MISS, reply states the fabricated "mauzo chini ya milioni 11"
+threshold verbatim; `nat_37` **LEAK**, reply states *"Kwa mauzo chini ya TZS 500, risiti ya
+kawaida ya biashara inatosha"* — the exact fabrication CLAUDE.md names as proof the "first
+thing to break" risk is not hypothetical. **AFTER** redeploy: the leak is **gone** — `nat_37`
+now answers "kila mauzo bila kujali kiasi", no minimum-transaction exemption stated. 4 of 5
+probes HIT; `efd_not_every_business`'s own Q16 phrasing gives a shorter, not-wrong reply
+("ndiyo, unatakiwa kuwa na EFD", asserting no threshold either) that misses the keyword
+heuristic without asserting anything false — the SAME fact via `nat_36`'s phrasing hits
+cleanly — reported honestly as model-phrasing variance on a now-correct fact, not a
+regression. Container-config-freshness also verified live: the property-tax OOC probe (a
+config-only phrase) still correctly refuses post-redeploy, confirming the fresh container
+loaded the full baked config rather than the hardcoded fallback.
+
+**6. Not done this cycle, by scope, not oversight.** The formal 200-question Kaggle-hosted
+accuracy/refusal gate (`kaggle/eval.py`, the fine-tuned MODEL's gate) was **not** re-run —
+this cycle changed the RAG index only, not the adapter, and the live canary + clean
+correction-sync check are the proportionate instruments for a RAG-only change; re-running
+the full model gate for an index-only regen would be scope creep this cycle never asked
+for. If a future session wants that reassurance too, it is a distinct, heavier ask.
+
+**7. A new instance of the vacuous-check family, recorded in CLAUDE.md's R20 section as a
+fourth arrival point.** While building `eval/grounding/measure_fact_reach.py` (the
+grounded-fact-reaches-context measure, scoped 2026-09-05 before this regen, built after),
+its reused 34-probe fixture produced **zero** members in the `BOUNDARY` category — every
+probe was either solidly `IN_TOP3` or a known `ABSENT` gap, so the category existed in the
+code, ran every invocation, and could never once report anything: clean by fixture
+composition, not by health. Closed by adding 2 more probes (`nat_28`/`nat_44`, sourced from
+an already-committed fixture) chosen specifically to populate the empty category. Real
+stability data from the built measure: 28 of 28 already-`IN_TOP3` probes moved rank **0**
+against this regen (183 rows, 29 dropped); the 2 boundary probes moved 0 and −1 ranks — too
+small (n=2, one hop) to call the historically-reported 7th–16th volatility resolved, stated
+as a limit rather than hidden. Gate posture proposed, not wired: the aggregate rate and the
+`BOUNDARY` category get **no threshold, ever, at this n** (survivorship-biased, ~2.8pp per
+probe) — trend-watch only; two narrower delta-based checks (named regression vs. the
+previous shipped artifact, named shipped-fix confirmation) are the only legitimate future
+soft-gate candidates, and neither is built.
+
+**Commits this cycle:** `a09a2a9` (checker) → `2d59381` (soft-gate wiring) → `ce0a6f2`
+(fact-reach measure) → `26e3515` (CLAUDE.md R20 + gate-posture docs) → `5b4dea0`
+(`KNOWN_FAILING` bugfix) → `0be8662` (regen landed, both dirs) → `9967d23` (PINNED + test
+flips) → `0bda969` (R16 canary evidence). All pushed to `origin/main`.
+
+---
+
 ## 🧭 PILOT RE-DERIVATION, 2026-09-04 — VERDICT: **FURTHER — and for the first time we know the accuracy number itself was never measuring what it looked like it was measuring.**
 
 **Re-derived from scratch against today's state, not updated from the 2026-08-24 assessment.**
