@@ -1,0 +1,111 @@
+{
+  "measured": "2026-09-05",
+  "tag": "after",
+  "harness": "eval/controls/canary_2026_09_05_regen_deploy.py",
+  "target": "chike-inference (production)",
+  "rows": [
+    {
+      "name": "efd_not_every_business (Q16 verbatim) -- the 5-week stale-content fix",
+      "question": "query: Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?",
+      "must_contain_any": [
+        "HAKUNA",
+        "hakuna kizingiti",
+        "bila kujali"
+      ],
+      "must_not_contain_any": [
+        "11,000,000",
+        "milioni kumi na moja"
+      ],
+      "provenance": "verbatim critical_queries guard; must_not_contain is the OLD fabricated threshold",
+      "outcome": "HTTP_200",
+      "reply": "Ndiyo, kwa mujibu wa sheria, unatakiwa kuwa na mashine ya risiti (EFD). Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 59.4,
+      "keyword_hit": false,
+      "stale_content_leaked": false,
+      "leaked_terms": []
+    },
+    {
+      "name": "vat_standard_rate (nat_27 displacement guard) -- ask-aligned rewrite",
+      "question": "query: vat ya asilimia ngapi naiweka kwenye bei ya bidhaa zangu",
+      "must_contain_any": [
+        "18%",
+        "18 %",
+        "asilimia 18"
+      ],
+      "must_not_contain_any": [
+        "14%"
+      ],
+      "provenance": "verbatim critical_queries guard; must_not_contain is the old wrong 14% figure",
+      "outcome": "HTTP_200",
+      "reply": "Kiwango cha VAT kinachowekwa kwenye bei ya bidhaa ni asilimia 18. Thibitisha na tra.go.tz.",
+      "elapsed_s": 4.9,
+      "keyword_hit": true,
+      "stale_content_leaked": false,
+      "leaked_terms": []
+    },
+    {
+      "name": "efd_receipt_per_transaction_no_minimum (nat_37 gap-closing guard) -- new fact",
+      "question": "query: mteja amenunua kwa shilingi 2000 tu nampa risiti ya mashine au inaruhusiwa kuandika kwa mkono",
+      "must_contain_any": [
+        "kila muamala",
+        "kila mauzo",
+        "lazima",
+        "risiti"
+      ],
+      "must_not_contain_any": [
+        "TZS 500",
+        "shilingi 500"
+      ],
+      "provenance": "verbatim critical_queries guard; must_not_contain is nat_37's original fabrication (a TZS 500 minimum-transaction EFD exemption that traces to no statute)",
+      "outcome": "HTTP_200",
+      "reply": "Kwa mujibu wa sheria, unatakiwa kutoa risiti ya mashine (EFD receipt) kwa kila mauzo bila kujali kiasi. Thibitisha na tra.go.tz.",
+      "elapsed_s": 5.8,
+      "keyword_hit": true,
+      "stale_content_leaked": false,
+      "leaked_terms": []
+    },
+    {
+      "name": "EFD threshold, VAT-unregistered (nat_36 displacement guard) -- same row as fix 1",
+      "question": "query: mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "must_contain_any": [
+        "HAKUNA",
+        "hakuna kizingiti",
+        "bila kujali"
+      ],
+      "must_not_contain_any": [
+        "11,000,000",
+        "milioni kumi na moja"
+      ],
+      "provenance": "verbatim critical_queries guard; same underlying fact as efd_not_every_business",
+      "outcome": "HTTP_200",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia taarifa rasmi (Commissioner-General public notice) inayotaja jina lako au kundi lako maalum. Thibitisha na TRA kama taarifa kama hiyo inakuhusu. Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 1.3,
+      "keyword_hit": true,
+      "stale_content_leaked": false,
+      "leaked_terms": []
+    },
+    {
+      "name": "standard negative (ordinary in-scope compute question, must still answer correctly)",
+      "question": "query: Kwa wafanyakazi 12 wenye mshahara TZS 600,000, SDL jumla ni kiasi gani?",
+      "must_contain_any": [
+        "3.5",
+        "252,000"
+      ],
+      "must_not_contain_any": [],
+      "provenance": "verbatim critical_queries guard; unaffected by this regen, R16 negative case",
+      "outcome": "HTTP_200",
+      "reply": "SDL = 3.5% × TZS 600,000 = TZS 21,000",
+      "elapsed_s": 12.4,
+      "keyword_hit": true,
+      "stale_content_leaked": false,
+      "leaked_terms": []
+    }
+  ],
+  "status_counts": {
+    "keyword_hit": 4,
+    "keyword_miss": 1,
+    "stale_content_leaked": 0,
+    "http_error": 0
+  },
+  "status": "COMPLETE"
+}
