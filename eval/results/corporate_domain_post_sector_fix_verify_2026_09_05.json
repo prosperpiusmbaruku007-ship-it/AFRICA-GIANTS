@@ -1,0 +1,36 @@
+{
+  "measured": "2026-09-05",
+  "target": "chike-inference (production, post sector-fix redeploy)",
+  "rows": [
+    {
+      "name": "amt_agriculture_exempt_sector (was WRONG)",
+      "question": "Kampuni yetu ya kilimo imepata hasara kwa miaka mitatu mfululizo. Je, tunapaswa kulipa hiyo kodi ya AMT?",
+      "reply": "Hapana, AMT haitumiki. Kampuni zinazofanya kilimo, afya au elimu ZIMESAMEHEWA AMT kabisa (Sheria ya Kodi ya Mapato Kifungu 4(8)), hata kama zina hasara miaka 3 mfululizo. Kodi ya kawaida ya asilimia 30 inatumika kwa faida (si AMT).",
+      "elapsed_s": 74.3
+    },
+    {
+      "name": "amt_education_exempt_sector (was WRONG)",
+      "question": "Shule yetu binafsi (kampuni ya elimu) imepata hasara kwa miaka mitatu mfululizo. Je, AMT inatumika kwetu?",
+      "reply": "Hapana, AMT haitumiki. Kampuni zinazofanya kilimo, afya au elimu ZIMESAMEHEWA AMT kabisa (Sheria ya Kodi ya Mapato Kifungu 4(8)), hata kama zina hasara miaka 3 mfululizo. Kodi ya kawaida ya asilimia 30 inatumika kwa faida (si AMT).",
+      "elapsed_s": 1.9
+    },
+    {
+      "name": "amt_ordinary_loss_making (was PARTIAL/wording)",
+      "question": "Kampuni yetu ya usafirishaji imepata hasara kwa miaka mitatu mfululizo. Sasa tutalipa kodi gani?",
+      "reply": "Kwa mujibu wa sheria, kampuni yenye hasara kwa miaka mitatu mfululizo italazimika kulipa kodi ya chini ya asilimia 1 ya mauzo yake ya mwaka wa tatu, tangu Julai 2025 (Finance Act 2025). Thibitisha na tra.go.tz.",
+      "elapsed_s": 17.1
+    },
+    {
+      "name": "standard_corporate_rate (was CORRECT, negative case)",
+      "question": "Kampuni yetu ni ya biashara ya kawaida, hatujaorodheshwa DSE. Kodi ya mapato ya kampuni tunayolipa ni asilimia ngapi?",
+      "reply": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi (First Schedule para 3(1)). Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hisa kwa umma hulipa asilimia 25 kwa miaka 3 tangu kuorodheshwa (para 3(2)(a)). Hii ni kiwango — SI hesabu ya TZS kutoka mauzo: faida (si mauzo) ndiyo msingi wa kodi hii, na faida haiwezi kupatikana kutoka mauzo peke yake.",
+      "elapsed_s": 1.6
+    },
+    {
+      "name": "partnership_filing (was CORRECT, negative case)",
+      "question": "Sisi ni ubia wa maduka mawili, mimi na mwenzangu. Tunatakiwa kuwasilisha tamko la kodi ya mapato kama kampuni, au kila mmoja wetu analipa mwenyewe?",
+      "reply": "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya Mapato Kifungu 48(1)) — si kama kampuni. Badala yake, faida au hasara ya ubia hugawanywa kwa kila mshirika kulingana na sehemu yake (Vifungu 49-50), na KILA MSHIRIKA analipa kodi mwenyewe juu ya sehemu yake, kwa kiwango kinachomhusu YEYE — viwango vya mtu binafsi kama mshirika ni mtu, au asilimia 30 kama mshirika ni kampuni. Sina taarifa ya kutosha kutaja kiwango bila kujua mshirika ni nani. Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 1.6
+    }
+  ]
+}
