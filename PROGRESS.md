@@ -1,5 +1,43 @@
 # Africa Giants — Project Progress
 
+## 📏 THE VERIFICATION ARC'S EFFECT, MEASURED, 2026-09-05 — VERDICT: **confirmed effective on its own targets, inconclusive beyond them**
+
+**The fixture-bias caveat goes ABOVE the number, not after it, because it decides how to
+read the number.** `eval/grounding/measure_fact_reach.py`'s 36-probe fixture is mostly
+composed of facts the arc itself found and fixed — a fixture drawn substantially FROM the
+intervention being measured will show that intervention working almost by construction.
+That is true of this run and stated in its own harness docstring before it was run, not
+after the result was seen.
+
+**With that caveat in place, the measured result** (`eval/grounding/measure_arc_effect.py`,
+PRE = commit `3cd3924` built locally, POST = the actual shipped `chike-inference/` index,
+same 36 probes both sides): **6 probes flip ABSENT → reaching context, 0 regress among 28
+already-reaching probes.** The 6 are exactly the facts this session and its immediate
+predecessors targeted (`efd_not_every_business`, `vat_standard_rate`, `nat_36`, `nat_37`,
+`corporate_tax_rate`, `minimum_turnover_tax`). **Verdict: confirmed effective on its own
+targets, inconclusive beyond them.**
+
+**`nat_28`/`nat_44` deserve their own line, because they are the closer approximation to an
+unbiased read** — added to this measure for an unrelated reason (populating an otherwise-
+empty `BOUNDARY` category), not to flatter the arc, and previously the exact pair the pilot
+re-derivation used to find the arc's own headline claim WRONG. Their result: rank moved
+substantially, **19→10 and 16→6**, and **neither crosses into a user ever seeing it** — 0 of
+2 reaching context before, 0 of 2 after. **Real movement that changes nothing a user sees is
+the clearest statement yet that rank improvement and user benefit are different things** —
+the same lesson the 48 taught from the other side (a correct-looking accuracy number that
+wasn't measuring what it looked like it was measuring), now confirmed by an instrument built
+specifically to avoid that failure mode, arriving at a structurally identical warning.
+
+**What this measure CANNOT do, recorded now so it isn't over-read later:** a fixture drawn
+from facts that were fixed can only ever confirm that the fixed facts got fixed. It cannot
+produce an unbiased, corpus-wide answer to "did the arc help retrieval generally" — for
+that, the probe population must be drawn INDEPENDENTLY of what was worked on. This is the
+design constraint carried into the extended-48 probe set (below): a subset of its questions
+must target facts nobody has touched, specifically so this measure has an unbiased
+population to run against next time.
+
+---
+
 ## ✅ R15 REGEN SHIPPED FOR REAL, 2026-09-05 — the 4 staged fixes from 951fb67 are live, a real Kaggle-only bug was found and fixed on the way, and the correction-sync gate closed the loop it was built for
 
 **This closes out everything the 2026-09-04 entry below left staged-but-not-shipped.** Full
