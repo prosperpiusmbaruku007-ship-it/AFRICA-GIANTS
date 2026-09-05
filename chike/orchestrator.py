@@ -608,15 +608,18 @@ class Orchestrator:
     def _answer_corporate_tax(self, sq: SubQuestion) -> SubAnswer:
         """Corporate income tax rate statement — deterministic, no model in the loop.
 
-        Reads whatever DSE-listing/public-float/loss-year signals routing.py could find in the
-        text (each independently None when unstated — never-guess per field, not per question)
-        and hands them straight to the engine, which is itself built to answer usefully even
-        when every optional field is None (the plain 30%/25% statement)."""
+        Reads whatever DSE-listing/public-float/loss-year/sector signals routing.py could
+        find in the text (each independently None when unstated — never-guess per field, not
+        per question) and hands them straight to the engine, which is itself built to answer
+        usefully even when every optional field is None (the plain 30%/25% statement).
+        `sector` was added 2026-09-05 — see routing.corporate_sector's docstring; before this,
+        the engine's own s.4(8) exemption branches were unreachable from any live question."""
         return self._deterministic_answer(
             sq, rules_engine.corporate_tax_rate_statement(
                 is_dse_listed=routing.is_dse_listed(sq.text),
                 meets_public_float=self._dse_float_verdict(sq.text),
-                loss_years=routing.corporate_loss_years(sq.text)))
+                loss_years=routing.corporate_loss_years(sq.text),
+                sector=routing.corporate_sector(sq.text)))
 
     def _dse_float_verdict(self, text: str) -> Optional[bool]:
         """The stated public-float percentage, compared against the CURRENT qualifying

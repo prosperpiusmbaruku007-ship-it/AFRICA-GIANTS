@@ -1302,6 +1302,53 @@ written down?
    retry it.** Every one is now suspect on exactly the terms this rule states, not just the ones
    already re-checked.
 
+### R31 — AN ENGINE PARAMETER WITH NO EXTRACTOR IS A CAPABILITY THAT DOES NOT EXIST YET, WHATEVER THE UNIT TESTS SAY.
+
+**Three instances now, three different modules, one shape each time: coded, unit-tested, correct
+— and unreachable from a real request.** Naming it as its own rule because a third occurrence in
+different code is a pattern, not a coincidence, and because the same blind spot (a unit test
+calling the function directly, signal already supplied by hand) hid all three the same way.
+
+| instance | the parameter with no extractor | found |
+|---|---|---|
+| presumptive engine | reachable only by the technical term *makadirio* — bare `kodi ya mapato` did not trigger it | 2026-08-23, after deploy, by measurement (PROGRESS.md, "An engine reachable only by the technical term serves the users who least need it") |
+| `chike/retrieval.py`'s FAIL-LOUD INDEX CONTRACT | fires correctly on all three limbs it was built to guard — but production (`modal_app.ChikeModel`) loads the index itself and never imports this module at all | R26 audit, 2026-08-24 |
+| `corporate_tax_rate_statement`'s `sector` parameter (s.4(8) AMT exemption) | agriculture/health/education/tea-processing branches existed and were unit-tested since 2026-09-01 by calling the engine function directly with a hardcoded `sector=` kwarg; `chike/routing.py` had no function anywhere that extracted a sector from question text | live, 2026-09-05 (`eval/controls/corporate_domain_live_probe_2026_09_05.json`) — an agriculture company and a private school were both told "yes, pay AMT," live, in production |
+
+**Why a unit test cannot see this by construction, not by oversight.** Every one of these three
+had passing tests before the gap was found. The tests called the engine function directly, with
+the exact signal it needed already supplied as a keyword argument — `sector="agriculture"`,
+never a sentence a real person would type. A test built that way proves the BRANCH is correct.
+It cannot prove the branch is REACHABLE, because reachability lives entirely in the code between
+raw text and that keyword argument — code the test never touches. This is R24's baseline-
+reproduction lesson arriving at the parameter level instead of the whole-answer level: matching
+the function's own contract is not the same claim as matching what a real message produces.
+
+**The general check, and it is now part of building any engine, not a thing discovered
+afterwards:**
+
+> **For every parameter an engine function accepts, ask: what in `routing.py` extracts this
+> from question text? If the answer is "nothing" or "only the technical/statutory term," the
+> parameter is unreachable by construction — the branch it feeds is a documented intention, not
+> a live capability. Then write a probe that supplies the signal ONLY through natural phrasing
+> (no technical term, no keyword argument) and confirm the extractor finds it. A unit test that
+> calls the engine function directly does not answer this question, however thorough it is.**
+
+**Practical consequence for building a new engine:**
+1. **List every parameter the engine function takes**, alongside the extractor function that is
+   supposed to populate it from raw text. A parameter with no listed extractor is a gap, not an
+   oversight to be found later.
+2. **For each extractor, write it narrow-by-construction (R17 step 4) and sweep it for
+   collisions BEFORE shipping** — a wider net that reaches more phrasings also reaches more
+   accidental matches; both risks are checked together, not the first now and the second later.
+   The corporate `sector` fix above found a live collision risk in its OWN first candidate cue
+   (a bare-substring `amt` match inside ordinary Swahili verb forms `inamtaka`/`inamtambua`) by
+   checking before shipping, exactly the discipline this bullet asks for.
+3. **Author at least one probe per parameter using ONLY natural phrasing — no technical term, no
+   direct function call — and confirm it reaches the branch it should.** This is the test the
+   unit-test suite structurally cannot provide, and it is the one that would have caught all
+   three instances above before deploy instead of after.
+
 See PROGRESS.md for current project status and next actions.
 
 ---

@@ -23,6 +23,7 @@ count given states the 3-consecutive-year rule and asks, rather than assuming lo
 AMT applies at year one.
 """
 
+from datetime import date
 from decimal import Decimal
 
 from .rates import (
@@ -34,6 +35,9 @@ from .rates import (
 )
 from .results import ComputationResult
 
+_TEA_EXEMPT_FROM = date.fromisoformat(AMT_EXEMPT_TEA_PROCESSING_FROM)
+_TEA_EXEMPT_TO = date.fromisoformat(AMT_EXEMPT_TEA_PROCESSING_TO)
+
 
 def _pct(rate: Decimal) -> str:
     value = rate * 100
@@ -41,7 +45,8 @@ def _pct(rate: Decimal) -> str:
 
 
 def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
-                                 loss_years=None, sector=None) -> ComputationResult:
+                                 loss_years=None, sector=None,
+                                 today=None) -> ComputationResult:
     """State the corporate income tax rate. Never computes a TZS amount — see module docstring.
 
     `is_dse_listed`: True/False/None (unstated) — whether the corporation is listed on the DSE.
@@ -50,16 +55,30 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
     `loss_years`: an int, or None — consecutive years of perpetual unrelieved tax loss, if the
         question is really about the AMT rather than the ordinary rate.
     `sector`: a free-text sector hint (e.g. "agriculture", "tea_processing"), or None.
+    `today`: a `date`, or None to use the real current date — injectable so the
+        time-bounded tea-processing exemption (2024-07-01..2027-06-30) is testable on both
+        sides of its own boundary without mocking the clock. Never passed by production
+        callers; exists for tests only.
     """
     inputs = {"is_dse_listed": is_dse_listed, "meets_public_float": meets_public_float,
               "loss_years": loss_years, "sector": sector}
+    if today is None:
+        today = date.today()
 
     # AMT branch — only entered when the question actually supplies a loss-year count. This is
     # never-guess: a corporation asking "kiwango cha kodi ya kampuni ni ngapi" with no loss
     # history mentioned gets the ordinary-rate branch below, not an AMT tangent.
     if loss_years is not None:
         exempt_permanent = sector in AMT_EXEMPT_SECTORS_PERMANENT
-        exempt_tea = sector == AMT_EXEMPT_SECTOR_TEA_PROCESSING
+        # TIME-BOUNDED, checked against `today`, not just narrated in the reply text — a
+        # sector match alone used to return this branch unconditionally forever, which would
+        # have kept stating the tea exemption as active long after it lapses on 2027-06-30
+        # (found 2026-09-05: the reply text already named the sunset date but the CODE never
+        # checked it against the clock, so the exemption would have silently outlived its own
+        # stated window). Outside the window, exempt_tea is False and execution falls through
+        # to the ordinary AMT-applies logic below, same as any other non-exempt sector.
+        exempt_tea = (sector == AMT_EXEMPT_SECTOR_TEA_PROCESSING
+                      and _TEA_EXEMPT_FROM <= today <= _TEA_EXEMPT_TO)
         if exempt_permanent:
             working = (
                 f"Hapana, AMT haitumiki. Kampuni zinazofanya kilimo, afya au elimu ZIMESAMEHEWA "

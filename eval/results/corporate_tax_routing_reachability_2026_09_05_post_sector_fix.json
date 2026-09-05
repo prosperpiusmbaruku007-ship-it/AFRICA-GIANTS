@@ -1,0 +1,25 @@
+{
+  "measured": "2026-09-01",
+  "harness": "eval/routing/sweep_corporate_tax_routing.py",
+  "corpus": {
+    "gate_files": [
+      "eval/accuracy_gate/eval_questions_001.jsonl",
+      "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+      "eval/accuracy_gate/eval_questions_003.jsonl"
+    ],
+    "probe_files": [
+      "eval/accuracy_gate/edge_probe_plain_sw_015.jsonl",
+      "eval/accuracy_gate/edge_probe_plain_sw_005b.jsonl"
+    ],
+    "total_questions": 420
+  },
+  "what_changed": {
+    "gained_corporate_tax": 0,
+    "gained_partnership_tax": 0,
+    "changed_to_something_else": 0
+  },
+  "gained_corporate_tax_rows": [],
+  "gained_partnership_tax_rows": [],
+  "unexpected_changes_rows": [],
+  "clean": true
+}

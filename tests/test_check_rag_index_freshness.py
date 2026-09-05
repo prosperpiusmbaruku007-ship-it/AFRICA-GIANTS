@@ -107,18 +107,21 @@ def test_missing_git_history_is_reported_distinctly_from_staleness():
     assert report["missing_inputs"] == ["scripts/locked_facts.json"]
 
 
-def test_against_live_repo_state_reports_fresh_after_the_951fb67_regen_shipped():
-    """Sanity check against the ACTUAL repo, not a synthetic graph. THIRD flip of this
-    test, same mechanism as the first two (2026-09-03 ok=False -> ok=True after efe5956;
-    ok=True -> ok=False after 951fb67 changed facts without a matching regen). 951fb67's
-    fixes shipped for real 2026-09-05: kaggle/regenerate_rag_e5.py v2 ran on Kaggle
-    (kernel prospaprospa/africa-giants-rag-regen), VERIFICATION PASSED, and both
-    kaggle/ and chike-inference/ were re-committed with the new 183-row index
-    (commit 0be8662) -- confirmed via `python scripts/check_rag_index_freshness.py`
-    reporting FRESH before this test was touched, not assumed. This flip is the signal,
-    not a bug in the test -- exactly as its own prior form predicted."""
+def test_against_live_repo_state_reports_stale_pending_the_amt_wording_fix_regen():
+    """Sanity check against the ACTUAL repo, not a synthetic graph. FOURTH flip, same
+    mechanism as all three before it (2026-09-03 ok=False->True after efe5956; ok=True->
+    False after 951fb67 changed facts with no matching regen; ok=False->True after 0be8662
+    shipped 951fb67's fixes for real). This flip: precompute_rag_embeddings.py's
+    minimum_turnover_tax CONCISE text was reworded (2026-09-05, same commit as this test
+    edit) to remove an ambiguous "kodi ya chini (AMT)" gloss found live to read as "less
+    than 1%" instead of the intended "the minimum tax, of 1%" -- a genuine content fix,
+    landed the same way every prior one was: at the source first, shipped in a LATER regen,
+    never both in the same commit (R15 batches). Correctly reports STALE again until that
+    regen runs and both directories are re-committed -- this flip is the signal, not a bug
+    in the test, exactly as every prior form of this test predicted for itself."""
     ok, report = check(repo_dir=REPO)
-    assert ok is True, (
-        f"the live repo reports stale again: {report}. Either a fact/embedding-code "
-        "change landed without a matching R15 regen, or this flip was premature.")
-    assert report["stale_inputs"] == {}
+    assert ok is False, (
+        f"the live repo reports fresh: {report}. Either this fix already shipped -- update "
+        "this test to assert ok is True, that flip IS the signal -- or a fact/embedding-code "
+        "change landed without this test being updated to expect it.")
+    assert "scripts/precompute_rag_embeddings.py" in report["stale_inputs"]

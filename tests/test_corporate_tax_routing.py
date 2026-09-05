@@ -15,6 +15,7 @@ Two things this file exists to pin, both found live rather than assumed:
    requiring an income-tax/DSE cue to trigger the route; loss-years only ever REFINES an
    already-triggered corporate_tax answer. This test asserts the fix holds.
 """
+from datetime import date
 from decimal import Decimal
 
 from chike import routing, rules_engine
@@ -109,10 +110,79 @@ def test_amt_permanent_sector_exemption_agriculture():
 
 
 def test_amt_tea_processing_exemption_states_explicit_sunset():
-    r = rules_engine.corporate_tax_rate_statement(loss_years=5, sector="tea_processing")
+    """Pinned to a fixed in-window date, not wall-clock `today` -- see the boundary tests
+    below for why this matters (the exemption is time-bounded and must stop applying once
+    the window closes, which an implicit-`today` test would only start catching in 2027)."""
+    r = rules_engine.corporate_tax_rate_statement(
+        loss_years=5, sector="tea_processing", today=date(2026, 1, 1))
     assert "2024-07-01" in r.working
     assert "2027-06-30" in r.working
     assert "kipindi maalum" in r.working
+
+
+def test_amt_tea_processing_exemption_does_not_apply_before_the_window():
+    r = rules_engine.corporate_tax_rate_statement(
+        loss_years=5, sector="tea_processing", today=date(2024, 6, 30))
+    assert "ZIMESAMEHEWA AMT" not in r.working
+    assert "kipindi maalum" not in r.working
+    assert "AMT inatumika" in r.working
+
+
+def test_amt_tea_processing_exemption_does_not_apply_after_the_window_lapses():
+    """FOUND 2026-09-05: the exemption used to apply unconditionally forever once sector==
+    'tea_processing' was true, regardless of the date -- the reply text NAMED the sunset
+    (2027-06-30) but the CODE never checked it. This is the test that would have caught it:
+    one day after the window closes, AMT must apply in full, not the tea exemption."""
+    r = rules_engine.corporate_tax_rate_statement(
+        loss_years=5, sector="tea_processing", today=date(2027, 7, 1))
+    assert "ZIMESAMEHEWA AMT" not in r.working
+    assert "kipindi maalum" not in r.working
+    assert "AMT inatumika" in r.working
+    assert r.applicable is True
+
+
+def test_amt_tea_processing_exemption_applies_at_window_edges_inclusive():
+    for edge in (date(2024, 7, 1), date(2027, 6, 30)):
+        r = rules_engine.corporate_tax_rate_statement(
+            loss_years=5, sector="tea_processing", today=edge)
+        assert "kipindi maalum" in r.working, edge
+
+
+def test_sector_exemption_reachable_end_to_end_agriculture():
+    """Closes the exact live defect (eval/controls/corporate_domain_live_probe_2026_09_05.
+    json, amt_agriculture_exempt_sector): before this fix, this natural question routed to
+    corporate_tax but the engine was never told the sector, so it answered "yes, pay AMT" --
+    wrong. Reproduces the full router -> engine chain, not just the engine call directly."""
+    q = "Kampuni yetu ya kilimo imepata hasara kwa miaka mitatu mfululizo. Je, tunapaswa kulipa hiyo kodi ya AMT?"
+    assert routing.detect_intent(q) == "corporate_tax"
+    sector = routing.corporate_sector(q)
+    assert sector == "agriculture"
+    r = rules_engine.corporate_tax_rate_statement(
+        loss_years=routing.corporate_loss_years(q), sector=sector)
+    assert "ZIMESAMEHEWA AMT" in r.working
+    assert "Hapana" in r.working
+
+
+def test_sector_exemption_reachable_end_to_end_education():
+    """Same live defect, education sector (eval/controls/corporate_domain_live_probe_2026_09_05
+    .json, amt_education_exempt_sector) -- confirms the fix is general, not agriculture-only."""
+    q = "Shule yetu binafsi (kampuni ya elimu) imepata hasara kwa miaka mitatu mfululizo. Je, AMT inatumika kwetu?"
+    assert routing.detect_intent(q) == "corporate_tax"
+    sector = routing.corporate_sector(q)
+    assert sector == "education"
+    r = rules_engine.corporate_tax_rate_statement(
+        loss_years=routing.corporate_loss_years(q), sector=sector)
+    assert "ZIMESAMEHEWA AMT" in r.working
+    assert "Hapana" in r.working
+
+
+def test_bare_amt_mention_routes_to_corporate_tax():
+    """The OTHER live gap found alongside the sector one: a question naming 'AMT' but not
+    using 'kodi ya mapato' phrasing didn't route to corporate_tax at all before this fix
+    (asks_corporate_income_tax had no AMT cue), so it never reached the engine to even ask
+    about a sector."""
+    q = "Kampuni yetu imepata hasara kwa miaka mitatu mfululizo. Je, tunapaswa kulipa hiyo kodi ya AMT?"
+    assert routing.detect_intent(q) == "corporate_tax"
 
 
 def test_partnership_is_never_itself_taxed_and_declines_to_guess_a_rate():

@@ -670,13 +670,63 @@ def states_vat_registered(text: str) -> bool:
 # existed — falls to path 2's PAYE claim if payroll context is present, otherwise to fact/RAG.
 _CORPORATE_ENTITY_CUES = ["kampuni", "shirika", r"\bcompany\b", r"\bltd\b", r"\bplc\b"]
 _PARTNERSHIP_ENTITY_CUES = ["ubia", "ushirikiano wa kibiashara", r"\bpartnership\b"]
+# "amt" ADDED 2026-09-05, as \bamt\b, NOT a bare substring -- checked before adding, not
+# assumed safe: bare "amt" is a substring of ordinary Swahili verb forms with the object
+# infix "m" ("inamtaka" = wants him/her, "inamtambua" = recognises him/her), both already
+# present in this project's own gate corpora. A bare-substring "amt" cue would have matched
+# either verb form inside ANY message that also names a corporate entity -- caught by
+# checking, exactly the R17 discipline this project already has a name for. `\bamt\b`
+# requires a non-word boundary on both sides, which "inamtaka"/"inamtambua" never present
+# (the "amt" span sits between two word characters), so it does not match them.
 _CORPORATE_INCOME_TAX_CUES = ["kodi ya mapato ya kampuni", "kodi ya mapato ya shirika",
                               "kodi ya kampuni", "kodi ya shirika", "corporate tax",
-                              "corporation tax", "kodi ya mapato"]
+                              "corporation tax", "kodi ya mapato", r"\bamt\b"]
 
 _DSE_CUES = ["dse", "dar es salaam stock exchange", "soko la hisa"]
 _DSE_NEGATED_CUES = ["haijaorodheshwa", "hatujaorodheshwa", "sijaorodheshwa", "not listed",
                      "sijaorodhesha"]
+
+# === CORPORATE AMT SECTOR EXEMPTION (s.4(8)) -- added 2026-09-05 =========================
+# corporate_tax_rate_statement()'s sector-exemption branches (agriculture/health/education,
+# permanent; tea processing, time-limited) existed and were unit-tested since the 2026-09-01
+# corporate/partnership source pass, but nothing anywhere extracted a sector from question
+# text -- the branches were unreachable from a live question. Confirmed live 2026-09-05
+# (eval/controls/corporate_domain_live_probe_2026_09_05.json): an agriculture company and a
+# private school, both asking about AMT after 3 loss years, were BOTH told "yes, pay AMT" --
+# wrong, both sectors are exempt. This closes that gap.
+#
+# NARROW BY CONSTRUCTION (R17 step 4), and swept for collisions BEFORE shipping, not after --
+# bare "kilimo"/"afya"/"elimu" are common words that already appear standalone throughout
+# this project's own corpora (GN605A minimum-wage sector lists, OOC adversarial probes,
+# mw_sector_resolution.json) for reasons that have nothing to do with corporate AMT. The
+# risk that matters here is narrower than a routing collision, though: these cues only ever
+# run to REFINE an answer inside an ALREADY-confirmed corporate_tax question (entity +
+# income-tax/AMT/DSE cue already matched), never to trigger the route themselves. Even so,
+# a bare sector word inside a genuine corporate_tax question is not enough to prove the
+# ASKING company is itself in that sector -- "kampuni yetu inauza mbolea kwa wakulima" (we
+# sell fertiliser to farmers) mentions kilimo-adjacent vocabulary without the company itself
+# conducting agriculture, and s.4(8) exempts a corporation "conducting agricultural
+# business," not one merely serving that sector. So every phrase below requires the
+# ENTITY-DESCRIBING form (kampuni/shirika/shule/chuo/hospitali possessively tied to the
+# sector), never a bare sector noun -- swept against this project's adversarial-probe
+# discipline (see tests/test_corporate_sector_extraction.py) with probes built specifically
+# to mention the risky words in a NON-exempt, in-scope corporate context.
+_SECTOR_CUES = {
+    "agriculture": ["kampuni ya kilimo", "kampuni yetu ya kilimo", "shirika la kilimo",
+                    "shirika letu la kilimo", "kampuni inayofanya kilimo",
+                    "kampuni yetu inayofanya kilimo", "kampuni inayojishughulisha na kilimo",
+                    "kampuni yetu inayojishughulisha na kilimo"],
+    "health": ["kampuni ya afya", "kampuni yetu ya afya", "shirika la afya",
+               "shirika letu la afya", "hospitali yetu", "kituo chetu cha afya",
+               "zahanati yetu", "kampuni inayotoa huduma za afya",
+               "kampuni yetu inayotoa huduma za afya"],
+    "education": ["kampuni ya elimu", "kampuni yetu ya elimu", "shirika la elimu",
+                  "shirika letu la elimu", "shule yetu", "chuo chetu",
+                  "taasisi yetu ya elimu", "kampuni inayotoa elimu",
+                  "kampuni yetu inayotoa elimu"],
+    "tea_processing": ["usindikaji wa chai", "kiwanda cha chai", "kiwanda chetu cha chai",
+                       "kampuni ya chai", "kampuni yetu ya chai"],
+}
 
 # Loss-year count ("miaka mitatu mfululizo ya hasara") — digit form plus the small set of
 # spelled numerals this context plausibly uses (a loss-year count is never large). Outside this
@@ -705,7 +755,25 @@ def is_partnership_entity(text: str) -> bool:
 
 def asks_corporate_income_tax(text: str) -> bool:
     ql = text.lower()
-    return any(c in ql for c in _CORPORATE_INCOME_TAX_CUES)
+    return any(re.search(c, ql) if c.startswith(r"\b") else c in ql
+              for c in _CORPORATE_INCOME_TAX_CUES)
+
+
+def corporate_sector(text: str):
+    """The s.4(8) AMT-exemption sector the question describes the ASKING company as being
+    IN, or None -- "agriculture" | "health" | "education" | "tea_processing". Only ever
+    meaningful to call once the message has already been confirmed a corporate_tax
+    question (entity + income-tax/AMT/DSE cue); this refines that answer, it never triggers
+    the route itself. Every cue phrase ties the sector to the entity possessively/
+    descriptively (e.g. "kampuni ya kilimo", "shule yetu") -- a company merely mentioning a
+    sector it sells to or serves ("tunauza mbolea kwa wakulima") does not match, since s.4(8)
+    exempts a corporation CONDUCTING that business, not one adjacent to it. See the R17
+    adversarial coverage in tests/test_corporate_sector_extraction.py."""
+    ql = text.lower()
+    for sector, cues in _SECTOR_CUES.items():
+        if any(c in ql for c in cues):
+            return sector
+    return None
 
 
 def is_dse_listed(text: str):

@@ -443,10 +443,19 @@ CONCISE_BILINGUAL_FACTS = {
     # partnership source pass — an omitted exemption is as misleading as a wrong rate, so it
     # belongs in the retrieval-facing text too, not only in locked_facts.json's fuller `fact`
     # field.
+    # REWORDED 2026-09-05 -- "kodi ya chini (AMT) ya asilimia 1" was found live to be read as
+    # "a tax of LESS THAN 1%" rather than the intended "the MINIMUM tax (AMT), of 1%" -- "kodi
+    # ya chini" was meant as a Swahili gloss for "minimum tax", but "ya chini ya asilimia 1" is
+    # also the ordinary way to say "less than 1%" in Swahili, and a live reply
+    # (eval/controls/corporate_domain_live_probe_2026_09_05.json, amt_ordinary_loss_making)
+    # resolved the ambiguity the wrong way -- a rate a user could act on wrongly. Dropped the
+    # ambiguous gloss entirely; "AMT (Alternative Minimum Tax)" is already the unambiguous
+    # technical anchor and needs no Swahili paraphrase alongside it.
     'minimum_turnover_tax':
-        'Kampuni yenye hasara miaka mitatu mfululizo hulipa kodi ya chini (AMT) ya asilimia 1 '
-        'ya mauzo ya mwaka wa tatu, tangu Julai 2025 (awali ilikuwa asilimia 0.5). Haitumiki kwa '
-        'kampuni za kilimo, afya, elimu, wala kampuni za usindikaji chai hadi Juni 2027.',
+        'Kampuni yenye hasara miaka mitatu mfululizo hulipa AMT (Alternative Minimum Tax) ya '
+        'asilimia 1 ya mauzo ya mwaka wa tatu, tangu Julai 2025 (awali ilikuwa asilimia 0.5). '
+        'Haitumiki kwa kampuni za kilimo, afya, elimu, wala kampuni za usindikaji chai hadi '
+        'Juni 2027.',
 }
 
 # --- FACT GROUPS: many `key: number` rows collapsed into ONE contextual passage ------------
