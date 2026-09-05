@@ -162,23 +162,29 @@ PINNED = {
     "workers_compensation_amendment_rules_section": ("fragment", None),
     "offence_penalty_mention": ("fragment", None),
 
-    # efd_receipt_per_transaction_no_minimum: brand-new key, 2026-09-03, closing nat_37's
-    # live regression (readjudicate_changed_48_r15_2026_09_03.py). No row exists for it
-    # in the currently-deployed index at all (never regenerated) -- pending_r15 until the
-    # next Kaggle regen ships it, per this file's own established practice for brand-new
-    # keys (see the C4-cycle precedent above). Measured RANK 2 (top-3) locally against the
-    # currently-deployed index plus this one new row; anchor 'KWA KILA muamala' unique.
-    # vat_standard_rate and late_payment_penalty_rate are NOT pinned here even though both
-    # changed this same session: vat_standard_rate's new CONCISE text still hasn't shipped,
-    # so its OLD "key: value" fallback row still exact-matches the currently-deployed index
-    # today -- pinning now would be premature (same reasoning already on record for
-    # maternity_cash_benefit_rate/unpaid_contribution_penalty_rate, above). Same for
-    # late_payment_penalty_rate: it is now is_noise_key()==True in source, but its row has
-    # not yet been dropped from the deployed index, so it still exact-matches today too.
-    # Both will surface as real, expected drift the moment the next regen ships and get
-    # pinned then (present_elsewhere for vat_standard_rate, absent for
-    # late_payment_penalty_rate) -- not now.
-    "efd_receipt_per_transaction_no_minimum": ("pending_r15", None),
+    # efd_receipt_per_transaction_no_minimum: brand-new key, closing nat_37's live
+    # regression. SHIPPED 2026-09-05 (the R15 regen run for real on Kaggle, kernel
+    # prospaprospa/africa-giants-rag-regen v2) -- converted from pending_r15 to
+    # present_elsewhere per this file's own established practice, since this fact is
+    # CONCISE-rendered (no "key:" prefix), so it will NEVER resolve via exact/sibling
+    # match even now that it exists -- unlike the four-keys precedent below, where exact
+    # match was enough. Confirmed present at row 58 in the shipped kaggle/rag_facts_text.json
+    # directly (not assumed from the Kaggle log). Needle verified unique.
+    "efd_receipt_per_transaction_no_minimum": ("present_elsewhere", "KWA KILA muamala"),
+
+    # vat_standard_rate: SHIPPED 2026-09-05, same regen. Its new ask-aligned CONCISE text
+    # ("SIYO 14%...") replaced the old "key: value" fallback that used to exact-match --
+    # confirmed the old row is gone and the new one is in at row 13, per this file's own
+    # prediction two sessions ago ("present_elsewhere for vat_standard_rate ... the moment
+    # the next regen ships").
+    "vat_standard_rate": ("present_elsewhere", "SIYO 14%"),
+
+    # late_payment_penalty_rate: SHIPPED 2026-09-05, same regen, DROPPED as noise per
+    # R25's two-question test (a bare, uncited "2%" with no scope that was retrieving
+    # RANK 1 for an unrelated VAT-rate question) -- confirmed genuinely absent from the
+    # shipped index, not merely under-ranked. Per this file's own prediction: "absent for
+    # late_payment_penalty_rate ... the moment the next regen ships".
+    "late_payment_penalty_rate": ("absent", None),
 
     # Written 2026-08-16 for the presumptive-tax coverage item, pending_r15 until the R15
     # regen ran. It ran on 2026-08-17 (the natural48 entry, PROGRESS.md) and all four keys
@@ -252,7 +258,17 @@ PINNED = {
     # "SEVEN of the twenty-five" comment near the top of PINNED, they are noise-dropped
     # and pinned "absent" up there instead).
     "gn487a_license_lending_is_facilitation": ("present_elsewhere", "leseni yake kwa mgeni"),
-    "efd_not_every_business": ("present_elsewhere", "Si lazima"),
+    # needle UPDATED 2026-09-05 (R15 regen shipped): the old needle "Si lazima" was part of
+    # the STALE, previously-fabricated TZS 11,000,000 turnover-threshold text this row used
+    # to carry -- fixed at the source 2026-09-03/04, shipped 2026-09-05. The corrected text
+    # deliberately no longer contains "Si lazima" at all; re-pinning to it would have made
+    # this key silently fall into drift_pin_stale the moment the regen landed. Same-day
+    # discipline note: per this session's own stated rule, a pin describes what's LIVE and
+    # is updated AFTER a ship, never before -- this edit happens in the same commit as the
+    # index files precisely because the ship already happened by the time this is written.
+    # New needle "HAKUNA kizingiti cha mauzo" confirmed present at row 57, unique, verified
+    # directly against the shipped kaggle/rag_facts_text.json, not assumed from the log.
+    "efd_not_every_business": ("present_elsewhere", "HAKUNA kizingiti cha mauzo"),
     # needle narrowed: bare 'asilimia 0.5' is no longer unique (row 67, osha_vs_wcf_roles,
     # also now states the WCF rate inline as part of its own explanation).
     "wcf_rate_0_5_percent_confirmed": ("present_elsewhere", "asilimia 0.5 ya jumla"),

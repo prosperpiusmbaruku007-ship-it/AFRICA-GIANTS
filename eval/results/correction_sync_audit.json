@@ -1,15 +1,5 @@
 {
-  "stale_wrong_pattern": [
-    {
-      "key": "efd_not_every_business",
-      "matched_patterns": [
-        "chini ya (tzs )?(11|14),?000,?000[^.?!]{0,90}(efd|risiti za mkono)"
-      ],
-      "rows": [
-        "Duka dogo au biashara ndogo yenye mauzo madogo, je inahitaji mashine ya risiti (EFD)? Si lazima. Si kila biashara inalazimika kutumia mashine ya risiti za kielektroniki (EFD): biashara ndogo yenye mauzo chini ya TZS 11,000,000 kwa mwaka na isiyosajiliwa VAT inaweza kutumia risiti za mkono badala ya mashine ya EFD. Waliosajiliwa VAT na wenye mauzo ya TZS 11,000,000 au zaidi ndio hulazimika kutumia mashine ya risiti za EFD."
-      ]
-    }
-  ],
+  "stale_wrong_pattern": [],
   "negated_mention": [
     {
       "key": "paye_personal_relief",
@@ -83,6 +73,13 @@
       "expected_figure": "438",
       "rows": [
         "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD bila kujali kiwango cha mauzo."
+      ]
+    },
+    {
+      "key": "efd_not_every_business",
+      "expected_figure": "438",
+      "rows": [
+        "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako -- HAKUNA kizingiti cha mauzo unaosubiri kufikia. Msamaha ni TU kwa taarifa rasmi ya TRA (Commissioner-General) inayokutaja wewe au kundi lako."
       ]
     },
     {

@@ -107,21 +107,18 @@ def test_missing_git_history_is_reported_distinctly_from_staleness():
     assert report["missing_inputs"] == ["scripts/locked_facts.json"]
 
 
-def test_against_live_repo_state_reports_stale_pending_the_951fb67_regen():
-    """Sanity check against the ACTUAL repo, not a synthetic graph. SECOND flip of this
-    test, same mechanism as the first (see git blame for the 2026-09-03 ok=False -> ok=True
-    flip after efe5956 landed the R15 regen). 951fb67 (2026-09-03/04, same day as the
-    pilot re-derivation this test's flip feeds into -- PROGRESS.md) changed
-    precompute_rag_embeddings.py again (the nat_37/nat_27/nat_36 fixes, the
-    late_payment_penalty_rate noise-drop) without a matching Kaggle regen -- deliberately;
-    R15 batches fixes rather than dripping them, per CLAUDE.md's own cost table. This
-    correctly reports STALE again until that regen runs and both directories are
-    re-committed, at which point this test should flip a third time to ok=True -- that
-    flip is the signal, not a bug in the test."""
+def test_against_live_repo_state_reports_fresh_after_the_951fb67_regen_shipped():
+    """Sanity check against the ACTUAL repo, not a synthetic graph. THIRD flip of this
+    test, same mechanism as the first two (2026-09-03 ok=False -> ok=True after efe5956;
+    ok=True -> ok=False after 951fb67 changed facts without a matching regen). 951fb67's
+    fixes shipped for real 2026-09-05: kaggle/regenerate_rag_e5.py v2 ran on Kaggle
+    (kernel prospaprospa/africa-giants-rag-regen), VERIFICATION PASSED, and both
+    kaggle/ and chike-inference/ were re-committed with the new 183-row index
+    (commit 0be8662) -- confirmed via `python scripts/check_rag_index_freshness.py`
+    reporting FRESH before this test was touched, not assumed. This flip is the signal,
+    not a bug in the test -- exactly as its own prior form predicted."""
     ok, report = check(repo_dir=REPO)
-    assert ok is False, (
-        f"the live repo reports fresh: {report}. Either the 951fb67 regen already ran and "
-        "shipped -- update this test to assert ok is True, that flip IS the signal -- or "
-        "a fact/embedding-code change landed without this test being updated to expect it.")
-    assert "scripts/locked_facts.json" in report["stale_inputs"]
-    assert "scripts/precompute_rag_embeddings.py" in report["stale_inputs"]
+    assert ok is True, (
+        f"the live repo reports stale again: {report}. Either a fact/embedding-code "
+        "change landed without a matching R15 regen, or this flip was premature.")
+    assert report["stale_inputs"] == {}

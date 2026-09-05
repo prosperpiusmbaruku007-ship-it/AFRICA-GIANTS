@@ -15,6 +15,7 @@ import re
 from scripts.check_correction_sync import (
     _has_nearby_negation,
     check,
+    check_facts_and_index,
 )
 
 
@@ -36,21 +37,58 @@ def test_no_negation_cue_is_the_clean_negative_control():
     assert not _has_nearby_negation(text, m)
 
 
-def test_the_control_fires_on_the_known_live_defect():
-    """R26: plant the exact thing the control exists to catch. MUST block.
-    efd_not_every_business's CONCISE rendering was stale in the deployed index for five
-    weeks (corrected 2026-08-29, fixed at the source 2026-09-03/04 in 951fb67, not yet
-    shipped) -- as of this repo's currently-deployed kaggle/rag_facts_text.json, it is
-    STILL the pre-fix text, so this MUST still be flagged today. When the 951fb67 regen
-    ships, this test will start failing and should be updated -- that flip IS the
-    signal, per this project's established pattern for exactly this shape of test."""
+def test_the_former_live_defect_is_now_clean_not_just_absent():
+    """THIRD FORM of this test, and the flip IS the signal, exactly as its own prior
+    docstring predicted. efd_not_every_business's stale CONCISE rendering (five weeks
+    undetected, corrected at the source 2026-09-03/04 in 951fb67) shipped for real
+    2026-09-05 -- the R15 regen ran on Kaggle (kernel prospaprospa/africa-giants-rag-regen
+    v2), verified, and both directories were re-committed. Against the live repo today the
+    fact must now resolve CLEAN, not merely stop appearing -- 'clean' and 'unresolved'
+    are different verdicts (see check_facts_and_index's report buckets), and only 'clean'
+    or a non-stale bucket actually confirms the fix shipped correctly rather than the pin
+    simply going dark. The PINNED needle in check_facts_index_sync.py was updated in the
+    same commit as the index files (per this session's own rule: a pin describes what's
+    live, updated after ship, never before) specifically so this resolves rather than
+    falling into 'unresolved'."""
     ok, report = check()
     stale_keys = {r["key"] for r in report["stale_wrong_pattern"]}
-    assert "efd_not_every_business" in stale_keys, (
-        "efd_not_every_business no longer flagged -- if the 951fb67 regen shipped, this "
-        "is the expected outcome and this test should be updated to confirm it does NOT "
-        "appear here instead. If the regen has not shipped, the control just went inert."
+    unresolved_keys = set(report["unresolved"])
+    assert "efd_not_every_business" not in stale_keys
+    assert "efd_not_every_business" not in unresolved_keys, (
+        "efd_not_every_business is unresolved, not clean -- the PINNED needle in "
+        "check_facts_index_sync.py likely still points at stale content and needs "
+        "updating to match the shipped text, same as this session already did once."
     )
+
+
+def test_the_control_still_fires_on_a_planted_synthetic_defect():
+    """R26, reasserted now that the REAL live specimen this test used to plant against is
+    fixed: a control's fire-capability must be checked with something planted, not
+    retired along with the specimen that used to demonstrate it. Constructs a minimal
+    in-memory (locked, index) pair reproducing the exact shape of the original defect --
+    a correction_note'd fact whose wrong_patterns regex matches its OWN resolved row with
+    no negation cue nearby -- and confirms check_facts_and_index() still flags it. This is
+    the synthetic replacement for the retired live-defect plant, using the SAME in-memory
+    core the regen gate calls (check_facts_and_index), not the file-loading check()
+    wrapper, so it needs no fixture files."""
+    locked = {
+        "synthetic_stale_fact": {
+            "fact": "placeholder",
+            "correct_value": "placeholder",
+            "correction_note": "corrected 2020-01-01, superseded a since-rejected figure",
+            "wrong_patterns": [r"amount charged is (11|14)"],
+        }
+    }
+    # Deliberately contains none of _NEGATION_CUE's words (not/wrong/no/never/hakuna/si/
+    # siyo/sio/haiwezekani/hairuhusiwi/haipaswi) -- an earlier draft of this test used
+    # "the wrong figure is 11", which is self-defeating: the word "wrong" is itself a
+    # negation cue, so the filter correctly (but uselessly, for this test's purpose)
+    # treated the plant as a negated mention instead of a stale one.
+    index = ["synthetic stale fact: the amount charged is 11 percent monthly, unchanged"]
+    ok, report = check_facts_and_index(locked, index)
+    stale_keys = {r["key"] for r in report["stale_wrong_pattern"]}
+    assert "synthetic_stale_fact" in stale_keys
+    assert ok is False
     assert ok is False
 
 
