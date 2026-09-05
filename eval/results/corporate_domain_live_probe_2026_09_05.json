@@ -1,0 +1,82 @@
+{
+  "measured": "2026-09-05",
+  "target": "chike-inference (production)",
+  "harness": "eval/controls/corporate_domain_live_probe_2026_09_05.py",
+  "rows": [
+    {
+      "name": "standard_corporate_rate",
+      "question": "Kampuni yetu ni ya biashara ya kawaida, hatujaorodheshwa DSE. Kodi ya mapato ya kampuni tunayolipa ni asilimia ngapi?",
+      "statute_expectation": "30% (First Schedule para 3(1)) -- an ordinary, non-DSE-listed company. Wrong if it states 25% or any other figure as the default.",
+      "outcome": "HTTP_200",
+      "reply": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi (First Schedule para 3(1)). Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hisa kwa umma hulipa asilimia 25 kwa miaka 3 tangu kuorodheshwa (para 3(2)(a)). Hii ni kiwango — SI hesabu ya TZS kutoka mauzo: faida (si mauzo) ndiyo msingi wa kodi hii, na faida haiwezi kupatikana kutoka mauzo peke yake.",
+      "elapsed_s": 49.3,
+      "adjudication": "CORRECT -- 30% standard cited correctly (para 3(1)), DSE 25%/current-25%-float-threshold mentioned accurately as context, correctly refuses to compute a TZS amount from turnover."
+    },
+    {
+      "name": "partnership_filing",
+      "question": "Sisi ni ubia wa maduka mawili, mimi na mwenzangu. Tunatakiwa kuwasilisha tamko la kodi ya mapato kama kampuni, au kila mmoja wetu analipa mwenyewe?",
+      "statute_expectation": "Per s.48(1): the partnership itself is NOT liable for income tax and files no corporate return on its own income; each partner includes their share in their own individual return (s.48(2), s.50-51). Wrong if it says the partnership itself files and pays like a company.",
+      "outcome": "HTTP_200",
+      "reply": "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya Mapato Kifungu 48(1)) — si kama kampuni. Badala yake, faida au hasara ya ubia hugawanywa kwa kila mshirika kulingana na sehemu yake (Vifungu 49-50), na KILA MSHIRIKA analipa kodi mwenyewe juu ya sehemu yake, kwa kiwango kinachomhusu YEYE — viwango vya mtu binafsi kama mshirika ni mtu, au asilimia 30 kama mshirika ni kampuni. Sina taarifa ya kutosha kutaja kiwango bila kujua mshirika ni nani. Thibitisha na TRA (tra.go.tz).",
+      "elapsed_s": 3.3,
+      "adjudication": "CORRECT -- s.48(1) transparency stated correctly, ss.49-50 pass-through cited, correctly refuses to name a rate without knowing the partner's identity (individual progressive vs 30% corporate partner). Matches partnership_tax_statement() exactly."
+    },
+    {
+      "name": "amt_ordinary_loss_making",
+      "question": "Kampuni yetu ya usafirishaji imepata hasara kwa miaka mitatu mfululizo. Sasa tutalipa kodi gani?",
+      "statute_expectation": "AMT applies: 1% of the 3rd loss-year turnover (First Schedule para 3(3), as amended by FA2025 s.60(d)(ii), WEF 2025-07-01). Transport is not an exempt sector, so this is the correct default -- baseline case to contrast against probes 4/5.",
+      "outcome": "HTTP_200",
+      "reply": "Kwa mujibu wa sheria, kampuni yenye hasara kwa miaka mitatu mfululizo italazimika kulipa kodi ya chini ya asilimia 1 ya mauzo yake ya mwaka wa tatu, tangu Julai 2025 (Finance Act 2025). Thibitisha na tra.go.tz.",
+      "elapsed_s": 18.7,
+      "adjudication": "PARTIAL -- WEF July 2025 and \"mauzo ya mwaka wa tatu\" (3rd-year turnover) both correct, but phrased \"kodi ya CHINI YA asilimia 1\" (a tax of LESS THAN 1%) rather than \"kodi ya asilimia 1\" (a tax OF 1%) -- ambiguous/understating wording defect, not a wrong rate, but not a clean statement of the fixed 1% either."
+    },
+    {
+      "name": "amt_agriculture_exempt_sector",
+      "question": "Kampuni yetu ya kilimo imepata hasara kwa miaka mitatu mfululizo. Je, tunapaswa kulipa hiyo kodi ya AMT?",
+      "statute_expectation": "EXEMPT, permanently, no sunset (s.4(8): \"shall not apply to a corporation conducting agricultural business\"). Correct answer is NO/exempt. KNOWN GAP: `sector` is never extracted from question text anywhere in routing.py, so the engine cannot reach this branch live -- predict this returns the generic \"AMT applies\" answer, which would be WRONG for this specific company.",
+      "outcome": "HTTP_200",
+      "reply": "Ndiyo, kulingana na sheria, kampuni zenye hasara kwa miaka mitatu mfululizo zinatakiwa kulipa kodi ya AMT ya asilimia 1 ya mauzo ya mwaka wa tatu. Thibitisha na tra.go.tz.",
+      "elapsed_s": 10.4,
+      "adjudication": "WRONG, CONFIRMED, EXACTLY AS PREDICTED BEFORE RUNNING ANYTHING -- s.4(8) exempts agricultural corporations from AMT permanently, no sunset. The model answered \"Ndiyo... zinatakiwa kulipa kodi ya AMT\" (yes, you must pay AMT). This is the documented routing gap (chike/routing.py never extracts a sector cue) materializing as a live wrong answer: a real agribusiness owner asking this question today is told to pay a tax they do not owe."
+    },
+    {
+      "name": "amt_education_exempt_sector",
+      "question": "Shule yetu binafsi (kampuni ya elimu) imepata hasara kwa miaka mitatu mfululizo. Je, AMT inatumika kwetu?",
+      "statute_expectation": "EXEMPT, permanently, no sunset (s.4(8): \"...or engaged in the provision of health or education\"). Same gap as probe 4, different sector wording -- checks whether the failure is general (no sector extraction at all) or specific to how \"agriculture\" was phrased.",
+      "outcome": "HTTP_200",
+      "reply": "Ndiyo, shule binafsi zinazopata hasara zinalipishwa AMT (Alternative Minimum Tax) kuanzia mwaka wa tatu wa hasara. Kwa shule, kiwango ni asilimia 1 ya mauzo ya jumla (turnover) kwa mwaka wa tatu. Thibitisha na tra.go.tz.",
+      "elapsed_s": 12.1,
+      "adjudication": "WRONG, CONFIRMED, SAME GAP -- s.4(8) exempts education-sector corporations from AMT permanently. Model answered \"Ndiyo, shule binafsi... zinalipishwa AMT\" (yes, private schools are charged AMT). Identical failure mode to probe 4 with different sector wording -- confirms the gap is GENERAL (no sector extraction at all), not specific to how \"agriculture\" was phrased."
+    },
+    {
+      "name": "dse_listed_no_float_stated",
+      "question": "Kampuni yetu imeorodheshwa hivi karibuni katika Dar es Salaam Stock Exchange (DSE). Kodi ya mapato tunayolipa ni asilimia ngapi?",
+      "statute_expectation": "Never-guess case: the 25% rate requires >=25% of equity issued to the public (First Schedule para 3(2)(a), float threshold lowered from 30% to 25% by FA2025 s.60(d)(i)) -- NOT stated here. Correct behavior is to ASK for the public-float %, not assume either 25% or 30%. Wrong if it states a rate without asking.",
+      "outcome": "HTTP_200",
+      "reply": "Kampuni zilizoorodheshwa DSE zinapata asilimia 25 kwa miaka 3 — LAKINI kwa sharti kwamba angalau asilimia 25 ya hisa ziwe kwa umma (First Schedule para 3(2)(a), kigezo hiki tangu 2025-07-01 — kilikuwa asilimia 30 kabla ya hapo). Je, sehemu ya hisa kwa umma inafikia kiwango hicho? Bila hilo, kiwango cha kawaida cha asilimia 30 ndicho kinachotumika.",
+      "elapsed_s": 2.2,
+      "adjudication": "CORRECT, AND NOTABLY PRECISE -- correctly identifies the >=25% public-float condition, correctly states the CURRENT threshold (25%, changed from 30% by FA2025 s.60(d)(i) effective 2025-07-01) with the historical context, and asks for the float % rather than assuming. Exact never-guess behavior the engine is designed for."
+    },
+    {
+      "name": "dse_listed_float_given",
+      "question": "Kampuni yetu imeorodheshwa DSE mwaka jana, na asilimia 30 ya hisa zetu ziko mikononi mwa umma. Kodi ya mapato tunayolipa ni asilimia ngapi?",
+      "statute_expectation": "25% for 3 consecutive years from listing date, since 30% public float clears the current 25% threshold (First Schedule para 3(2)(a) as amended by FA2025 s.60(d)(i)). Wrong if it states 30% (the standard rate) or refuses to answer despite the float being given.",
+      "outcome": "HTTP_200",
+      "reply": "Kiwango cha kodi ya kampuni yako ni asilimia 25 kwa miaka 3 tangu tarehe ya kuorodheshwa DSE (First Schedule para 3(2)(a)) — kwa sababu umetaja kufikia kigezo cha hisa kwa umma. Baada ya miaka 3, kiwango cha kawaida cha asilimia 30 kinarudi kutumika.",
+      "elapsed_s": 5.5,
+      "adjudication": "CORRECT -- 30% float clears the 25% threshold, correctly applies 25% for 3 years from listing, correctly notes reversion to 30% standard rate after year 3."
+    }
+  ],
+  "status": "COMPLETE, ADJUDICATED",
+  "adjudication_summary": {
+    "correct": 4,
+    "correct_notably_precise": 1,
+    "partial_wording_defect": 1,
+    "wrong_confirmed": 2,
+    "wrong_names": [
+      "amt_agriculture_exempt_sector",
+      "amt_education_exempt_sector"
+    ],
+    "note": "the 2 wrong answers are the SAME predicted gap (s.4(8) sector exemption unreachable from live routing), confirmed live and consistent across two different sector phrasings -- not two independent defects."
+  }
+}
