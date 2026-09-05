@@ -1349,6 +1349,66 @@ afterwards:**
    unit-test suite structurally cannot provide, and it is the one that would have caught all
    three instances above before deploy instead of after.
 
+### R32 — A TIME-BOUNDED PROVISION NEEDS THE DATE IN THE LOGIC, NOT ONLY IN THE PROSE. A REPLY THAT NAMES A SUNSET IT DOESN'T ENFORCE IS WORSE THAN ONE THAT OMITS IT.
+
+**Found alongside R31, in the same function, and worth its own rule because it is a different
+mistake, not a restatement.** R31 is about a parameter nothing extracts. This is about a
+parameter (a date) that IS present, in the reply text, and simply never compared to anything.
+
+**The instance.** `corporate_tax_rate_statement`'s tea-processing AMT exemption
+(`AMT_EXEMPT_SECTOR_TEA_PROCESSING`, time-limited 2024-07-01 to 2027-06-30, FA2024 s.34) checked
+only `sector == "tea_processing"` before returning "exempt." The reply it returned NAMED the
+sunset verbatim — *"kwa kipindi maalum tu — 2024-07-01 hadi 2027-06-30"* — while the code that
+decided whether to say that had no `import datetime` anywhere in the module and nothing that
+compared today's date to either bound. Run this function one day after 2027-06-30 and it would
+have kept exempting the company, in a sentence that simultaneously told the user the exemption
+had already ended. **The reply would have been self-contradicting in its own output, not merely
+wrong** — a stronger failure than a plain wrong answer, because a wrong answer with no citation
+at least does not claim to know its own expiry and ignore it.
+
+**The general form:** a rule with a start and/or end date is not correctly implemented by a
+constant that HOLDS the date and a template that PRINTS it. The code path that decides whether
+the rule currently applies must read that same constant and compare it to the current date —
+otherwise the date is decoration, not logic, and the provision is correct only for as long as
+someone remembers to re-check it by hand, which is exactly the kind of durability this project's
+own R18/R30 already rule out for measurements and diagnoses. **A reply that states a sunset it
+does not enforce is worse than one that omits the sunset entirely** — omission is silence;
+stating-and-ignoring is a specific, checkable claim the code is contradicting in the same breath.
+
+**Swept for other instances before treating this as a one-off — method and result, not
+assertion.** Grepped every `.py` file under `chike/` for `datetime`/`date.today` usage (finds
+exactly one call site — `corporate_tax.py`, added by the fix above — nothing else in the entire
+package compares anything to the current date) and for every `_FROM`/`_TO`/`_CHANGE_DATE`-style
+constant pair in `rates.py` (three: the DSE public-float change date, and the tea-processing
+window). Two named candidates checked directly, both found NOT to be instances, for two
+different and instructive reasons:
+- **Sanitary-pads manufacturer rate** (First Schedule para 3(2)(d), 25%, but only 1 Jul
+  2019–30 Jun 2021): **never built at all.** PROGRESS.md's own corporate-tax source pass
+  recorded the window as expired and deliberately did not lock it as a fact or code it as a
+  branch, "flagged so it isn't authored as current if this domain expands later." Correctly
+  avoided in advance, not a defect to fix now.
+- **VAT deferment cutoff** (imported capital goods, ceased 30 June 2026, FA2023 s.65(b)):
+  a pure locked-fact/RAG item with no engine branch at all, and its OWN TEXT already reads
+  *"This is now a PAST cutoff, not an upcoming deadline"* — written as static history, not as a
+  live conditional. There is no code deciding whether to apply it, so there is nothing that
+  could check the date and fail to.
+- **The DSE public-float threshold change** (30%→25%, WEF 2025-07-01) and the **AMT rate
+  change** (0.5%→1%, WEF 2025-07-01): both one-directional, already-past, permanent changes with
+  no reversion — correctly implemented as a single current constant, because there is no future
+  date at which the OLD value could ever become correct again. This is the shape that does NOT
+  need a `today` comparison, and telling it apart from tea-processing's shape (a window that
+  re-closes) is the actual judgement call, not a formality.
+
+**Only one instance existed, and it is now fixed.** Recorded as a clean sweep with its method
+shown, not a bare "checked, found nothing" — per R21, a clean sweep is a lower bound on what was
+looked for, not proof nothing exists; the boundary drawn above (one-sided permanent change vs.
+two-sided re-closing window) is what a future addition should be checked against, not assumed.
+
+**Practical test for the next time-bounded provision:** if the rule has an END date (a window
+that closes, not just a change that already happened), ask **"what does this code do the day
+after the window closes?"** If the honest answer is "the same thing it does today," the date is
+not in the logic yet.
+
 See PROGRESS.md for current project status and next actions.
 
 ---
