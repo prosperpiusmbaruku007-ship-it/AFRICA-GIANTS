@@ -52,7 +52,15 @@ def test_resolve_phrases_yields_the_production_132_26_set():
     # the hardcoded FALLBACK, which is the only path where they are not already matched by
     # the config's shorter `nunua ardhi`/`uza ardhi`. In-scope is unchanged at 26 — this
     # change adds no in-scope vocabulary.
-    assert len(ooc) == 132
+    # 132 -> 136 on 2026-09-23 (stock-market narrowing): the bare phrase `soko la hisa` was
+    # REMOVED and five verb-qualified investing forms added in its place (net +4). The bare
+    # form refused ext_01 live -- an ordinary corporate-income-tax question from a company
+    # stating it is NOT listed -- because building the corporate-tax domain made listing
+    # status an in-scope subject without the refusal list being touched. In-scope is
+    # unchanged at 26; this change adds no in-scope vocabulary. See
+    # tests/test_ooc_phrase_narrowing.py and eval/refusal_gate/
+    # stock_market_narrowing_probes_014.jsonl.
+    assert len(ooc) == 136
     assert len(in_scope) == 26
 
 
@@ -135,8 +143,8 @@ def test_orchestrator_classify_uses_the_full_production_set():
     orch = Orchestrator(backend=FakeBackend(), retriever=lambda q: [])
     # Resolved from config, not the removed 8-phrase stub (107 after the SAFETY-1 audit,
     # 125 after the 2026-08-14 orthographic-variant additions, 132 after the 2026-08-15
-    # concord closure).
-    assert len(orch.ooc_phrases) == 132
+    # concord closure, 136 after the 2026-09-23 `soko la hisa` narrowing).
+    assert len(orch.ooc_phrases) == 136
     assert len(orch.in_scope_phrases) == 26
     assert orch.classify("BRELA ada ni ngapi?") is True
     assert orch.classify("mrabaha wa madini ni ngapi?") is False

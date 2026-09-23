@@ -1,0 +1,47 @@
+{
+  "measured": "2026-09-23",
+  "harness": "eval/controls/sweep_ooc_phrases_vs_inscope.py",
+  "config": "kaggle/chike_config.json",
+  "bound": "R21 LOWER BOUND. These corpora share vocabulary with the facts by construction (authored from the same source families). A clean result here does not measure paraphrase space and must never be written up as \"safe\".",
+  "why_this_population": "Every in-scope question this project has committed, which is the population an over-broad refusal phrase would harm. It is NOT the population a real user draws from (R21/R22).",
+  "totals": {
+    "questions": 1167,
+    "in_scope": 1099,
+    "ooc_by_design": 68,
+    "phrases": 130,
+    "phrases_colliding": 3,
+    "phrases_unexplained": 0
+  },
+  "accepted_collisions": {
+    "stempu :: eval_228": "Stamp duty on a Memorandum of Association. Genuinely in-scope-adjacent (subdomain brela_registration), so this is a real collision, not a bad specimen. NOT narrowed: stamp duty is a named OOC topic under R11, and eval_228's OWN gold answer is a hedge -- 'the figure commonly cited is TZS 10,000, but it is not confirmed against the current Stamp Duty Act schedule; do not quote it without certainty, confirm with TRA'. The OOC refusal sends the user to TRA, which is where the gold answer sends them too; it refuses on the wrong GROUNDS (topic rather than uncertainty) but reaches the right destination. Narrowing `stempu` to rescue one row whose correct answer is a referral would open a live OOC topic that three other rows (eval_312, eval_197, ro_03) depend on. Cost of leaving it: one imprecise refusal reason. Cost of fixing it: a real capital-taxes leak.",
+    "ushuru wa stempu :: eval_228": "Same row, longer form of the same cue. Same decision and same reasoning.",
+    "ushuru wa hati :: hoA_stamp_duty": "BAD SPECIMEN, kept visible rather than filtered away. The row's true_topic IS stamp_duty -- an OOC topic -- so refusing it is CORRECT. Its `expect: pass` belongs to the COVERAGE GATE, a different mechanism that is DISABLED by decision (37x false-refusal gap), not to the OOC classifier. Two mechanisms, two meanings of 'pass'; reading this row's field as a verdict on the classifier is the mistake, not the phrase."
+  },
+  "collisions": {
+    "ushuru wa stempu": [
+      {
+        "id": "eval_228",
+        "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+        "question": "Ushuru wa stempu kwa Hati ya Makubaliano (Memorandum of Association) ni TZS ngapi?",
+        "accepted": "Same row, longer form of the same cue. Same decision and same reasoning."
+      }
+    ],
+    "stempu": [
+      {
+        "id": "eval_228",
+        "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+        "question": "Ushuru wa stempu kwa Hati ya Makubaliano (Memorandum of Association) ni TZS ngapi?",
+        "accepted": "Stamp duty on a Memorandum of Association. Genuinely in-scope-adjacent (subdomain brela_registration), so this is a real collision, not a bad specimen. NOT narrowed: stamp duty is a named OOC topic under R11, and eval_228's OWN gold answer is a hedge -- 'the figure commonly cited is TZS 10,000, but it is not confirmed against the current Stamp Duty Act schedule; do not quote it without certainty, confirm with TRA'. The OOC refusal sends the user to TRA, which is where the gold answer sends them too; it refuses on the wrong GROUNDS (topic rather than uncertainty) but reaches the right destination. Narrowing `stempu` to rescue one row whose correct answer is a referral would open a live OOC topic that three other rows (eval_312, eval_197, ro_03) depend on. Cost of leaving it: one imprecise refusal reason. Cost of fixing it: a real capital-taxes leak."
+      }
+    ],
+    "ushuru wa hati": [
+      {
+        "id": "hoA_stamp_duty",
+        "file": "eval/coverage/coverage_gate_heldout_040.jsonl",
+        "question": "nimeandika mkataba wa kukodisha duka, kuna ushuru wa hati ninaotakiwa kulipa?",
+        "accepted": "BAD SPECIMEN, kept visible rather than filtered away. The row's true_topic IS stamp_duty -- an OOC topic -- so refusing it is CORRECT. Its `expect: pass` belongs to the COVERAGE GATE, a different mechanism that is DISABLED by decision (37x false-refusal gap), not to the OOC classifier. Two mechanisms, two meanings of 'pass'; reading this row's field as a verdict on the classifier is the mistake, not the phrase."
+      }
+    ]
+  },
+  "unexplained": {}
+}
