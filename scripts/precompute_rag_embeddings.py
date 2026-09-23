@@ -356,10 +356,26 @@ CONCISE_BILINGUAL_FACTS = {
         'BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni '
         'TZS 2,500 kwa kila mwezi wa kuchelewa.',
 
+    # CITATION CORRECTED 2026-09-23. This row said "(Section XII)" until today -- the exact
+    # stale citation that locked fact act_section_12 was corrected off on 2026-08-31 (the
+    # foreign-company regime is Part XIII, ss.320-328; Part XII is winding up of unregistered
+    # companies). The 2026-09-01 sweep quarantined 14+ corpus rows carrying the same string
+    # and updated CLAUDE.md Section 11, but THIS text is hand-authored here rather than
+    # derived from locked_facts.json, so it was a fourth location nobody enumerated and the
+    # sweep did not reach it. It then shipped: ext_15 of the extended-078 probe set
+    # reproduced "Section XII" verbatim in a live reply on 2026-09-05.
+    #
+    # Why no check caught it, which is the part worth keeping: check_facts_index_sync.py is
+    # content-shaped and passed (the figure USD 25 IS present); check_rag_index_freshness.py
+    # is time-shaped and passed on this input (the index was rebuilt AFTER the 2026-08-31
+    # correction -- the string survived a regeneration); and check_correction_sync.py exists
+    # precisely to catch "a corrected fact's wrong_patterns match its deployed rendering" and
+    # reported STRONG MATCH 0, because those patterns assumed English word order and this row
+    # is Swahili. Three green checks, one live defect. Patterns fixed in the same commit.
     'brela_foreign_late_filing_penalty':
-        'Kampuni ya kigeni (Section XII) ikichelewa kuwasilisha ritani ya mwaka: faini '
-        'ni USD 25 kwa kila mwezi (tofauti na kampuni za ndani ambazo hulipa TZS 2,500 '
-        'kwa mwezi).',
+        'Kampuni ya kigeni (Companies Act Cap.212, Part XIII, ss.320-328) ikichelewa '
+        'kuwasilisha ritani ya mwaka: faini ni USD 25 kwa kila mwezi (tofauti na kampuni '
+        'za ndani ambazo hulipa TZS 2,500 kwa mwezi).',
 
     'osha_registration_threshold_b004':
         'OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kikomo cha idadi ya wafanyakazi.',

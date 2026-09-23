@@ -102,7 +102,11 @@ def test_the_real_config_still_yields_the_full_list():
     ooc, _ = classification.resolve_phrases(cfg)
     hardcoded, _ = classification.resolve_phrases({})
     assert len(ooc) > len(hardcoded), 'config-only phrases must exist for this guard to matter'
-    assert len(ooc) == 132, f'expected the full list of 132, got {len(ooc)}'
+    # 132 -> 136 on 2026-09-23: bare `soko la hisa` removed, five verb-qualified investing
+    # forms added (see tests/test_ooc_phrase_narrowing.py). The bare form refused an in-scope
+    # corporate question live; building the corporate-tax domain made an untouched refusal
+    # phrase over-broad.
+    assert len(ooc) == 136, f'expected the full list of 136, got {len(ooc)}'
 
 
 # --- credential hygiene ----------------------------------------------------------------

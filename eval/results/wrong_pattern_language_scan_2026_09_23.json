@@ -1,0 +1,518 @@
+{
+  "measured": "2026-09-23",
+  "harness": "eval/controls/scan_wrong_pattern_language_assumption.py",
+  "found_by": "act_section_12, whose four English-word-order patterns all failed to match the Swahili index row they guarded (ext_15, live 2026-09-05)",
+  "nature": "REVIEW QUEUE, NOT A DEFECT LIST. Static scan over pattern text; it cannot distinguish a broken English pattern from one whose guarded rendering is also English. Every hit is hand-adjudicated before any edit (R26).",
+  "totals": {
+    "facts_with_patterns": 108,
+    "patterns": 688,
+    "not_order_dependent": 360,
+    "order_dependent_swahili": 128,
+    "order_dependent_english_guarding_english": 153,
+    "rendering_unresolvable": 3,
+    "review_queue": 44
+  },
+  "review_queue": [
+    {
+      "fact_key": "sdl_threshold",
+      "pattern": "threshold.*wafanyakazi 5(?! au zaidi| or more)",
+      "literal_segments": [
+        "threshold",
+        "wafanyakazi 5  ! au zaidi  or more"
+      ],
+      "rendering": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "sdl_threshold",
+      "pattern": "minimum.*\\b5 employees\\b",
+      "literal_segments": [
+        "minimum",
+        "b5 employees b"
+      ],
+      "rendering": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "sdl_threshold",
+      "pattern": "\\b5 employees\\b.*threshold",
+      "literal_segments": [
+        "b5 employees b",
+        "threshold"
+      ],
+      "rendering": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "sdl_threshold",
+      "pattern": "threshold.*\\b5 employees\\b",
+      "literal_segments": [
+        "threshold",
+        "b5 employees b"
+      ],
+      "rendering": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "sdl_threshold",
+      "pattern": "sdl.*wafanyakazi 5(?! au zaidi| or more| tu| haihitajiki)",
+      "literal_segments": [
+        "sdl",
+        "wafanyakazi 5  ! au zaidi  or more  tu  haihitajiki"
+      ],
+      "rendering": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "sdl_threshold",
+      "pattern": "sdl.*\\b5 employees\\b(?! or more| au zaidi| only| is not)",
+      "literal_segments": [
+        "sdl",
+        "b5 employees b  ! or more  au zaidi  only  is not"
+      ],
+      "rendering": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "sdl_threshold",
+      "pattern": "sdl.*minimum.*50 employees",
+      "literal_segments": [
+        "sdl",
+        "minimum",
+        "50 employees"
+      ],
+      "rendering": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "nssf_employer_rate",
+      "pattern": "nssf.*employer.*12%",
+      "literal_segments": [
+        "nssf",
+        "employer",
+        "12%"
+      ],
+      "rendering": "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "nssf_employer_rate",
+      "pattern": "12%.*nssf.*employer",
+      "literal_segments": [
+        "12%",
+        "nssf",
+        "employer"
+      ],
+      "rendering": "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "vat_standard_rate",
+      "pattern": "16%.*all electronic payments",
+      "literal_segments": [
+        "16%",
+        "all electronic payments"
+      ],
+      "rendering": "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanzania Bara, tangu 2015 (VAT Act Cap.148 s.5(1)). SIYO 14%. Kuna ubaguzi finyu wa asilimia 16 kwa malipo ya kielektroniki kwa mteja wa kawaida (si VAT), kuanzia 1 Septemba 2025 (Finance Act 2025) -- hauhusu B2B, mauzo nje ya nchi, wala malipo taslimu.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "minimum_turnover_tax",
+      "pattern": "all companies.*1%.*turnover",
+      "literal_segments": [
+        "all companies",
+        "1%",
+        "turnover"
+      ],
+      "rendering": "Kampuni yenye hasara miaka mitatu mfululizo hulipa AMT (Alternative Minimum Tax) ya asilimia 1 ya mauzo ya mwaka wa tatu, tangu Julai 2025 (awali ilikuwa asilimia 0.5). Haitumiki kwa kampuni za kilimo, afya, elimu, wala kampuni za usindikaji chai hadi Juni 2027.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "minimum_turnover_tax",
+      "pattern": "any company.*minimum.*1%",
+      "literal_segments": [
+        "any company",
+        "minimum",
+        "1%"
+      ],
+      "rendering": "Kampuni yenye hasara miaka mitatu mfululizo hulipa AMT (Alternative Minimum Tax) ya asilimia 1 ya mauzo ya mwaka wa tatu, tangu Julai 2025 (awali ilikuwa asilimia 0.5). Haitumiki kwa kampuni za kilimo, afya, elimu, wala kampuni za usindikaji chai hadi Juni 2027.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "corporate_tax_rate",
+      "pattern": "corporate tax.{0,20}35%",
+      "literal_segments": [
+        "corporate tax",
+        "35%"
+      ],
+      "rendering": "Kodi ya kampuni Tanzania ni asilimia 30 kwa kampuni za kawaida. Kampuni zilizoorodheshwa DSE (Soko la Hisa la Dar es Salaam) zenye angalau asilimia 25 ya hisa zao kwa umma hulipa asilimia 25 kwa miaka mitatu tangu tarehe ya kuorodheshwa.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "brela_striking_off_non_filing",
+      "pattern": "cannot be (struck off|deregistered|removed) before .*term",
+      "literal_segments": [
+        "cannot be  struck off deregistered removed  before",
+        "term"
+      ],
+      "rendering": "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUNA sharti la \"kumaliza muda\" kwanza, kwa sababu kampuni haina muda maalum. Kampuni isipowasilisha ritani za mwaka (annual returns) inaweza kuhesabiwa haifanyi kazi (defunct) na kufutwa kwenye Daftari la Makampuni: Msajili hutoa notisi ya siku 30, kisha jina hufutwa chini ya Sheria ya Makampuni (Sura 212). Kurejesha kampuni iliyofutwa kunahitaji Mahakama Kuu.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "osha_registration_threshold_b004",
+      "pattern": "wafanyakazi 10.*osha",
+      "literal_segments": [
+        "wafanyakazi 10",
+        "osha"
+      ],
+      "rendering": "OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kikomo cha idadi ya wafanyakazi.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "osha_registration_threshold_b004",
+      "pattern": "osha.*10 employees",
+      "literal_segments": [
+        "osha",
+        "10 employees"
+      ],
+      "rendering": "OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kikomo cha idadi ya wafanyakazi.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "osha_registration_threshold_b004",
+      "pattern": "10 or more.*osha",
+      "literal_segments": [
+        "10 or more",
+        "osha"
+      ],
+      "rendering": "OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kikomo cha idadi ya wafanyakazi.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "osha_registration_threshold_b004",
+      "pattern": "osha.*wafanyakazi 10 au zaidi",
+      "literal_segments": [
+        "osha",
+        "wafanyakazi 10 au zaidi"
+      ],
+      "rendering": "OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kikomo cha idadi ya wafanyakazi.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "efd_receipt_per_transaction_no_minimum",
+      "pattern": "ordinary receipt.*sufficient",
+      "literal_segments": [
+        "ordinary receipt",
+        "sufficient"
+      ],
+      "rendering": "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD) au inaruhusiwa kuandika kwa mkono? Lazima risiti ya mashine ya EFD KWA KILA muamala, bila kujali kiasi kidogo kiasi gani -- hakuna kiwango cha chini. Kuandika kwa mkono kunaruhusiwa TU kwa aliyeondolewa na taarifa rasmi ya TRA.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "nssf_payment_deadline",
+      "pattern": "nssf.*tarehe 10 au mwishoni mwa mwezi",
+      "literal_segments": [
+        "nssf",
+        "tarehe 10 au mwishoni mwa mwezi"
+      ],
+      "rendering": "NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "wcf_rate_0_5_percent_confirmed",
+      "pattern": "wcf.*1%(?! before| kabla| was| ilikuwa)",
+      "literal_segments": [
+        "wcf",
+        "1%  ! before  kabla  was  ilikuwa"
+      ],
+      "rendering": "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi kisichobadilika — inategemea mishahara.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "wcf_rate_0_5_percent_confirmed",
+      "pattern": "wcf.*0.6%(?! before| kabla| was| ilikuwa)",
+      "literal_segments": [
+        "wcf",
+        "0.6%  ! before  kabla  was  ilikuwa"
+      ],
+      "rendering": "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi kisichobadilika — inategemea mishahara.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "wcf_rate_0_5_percent_confirmed",
+      "pattern": "wcf.*rate.*0.6",
+      "literal_segments": [
+        "wcf",
+        "rate",
+        "0.6"
+      ],
+      "rendering": "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi kisichobadilika — inategemea mishahara.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "wcf_rate_0_5_percent_confirmed",
+      "pattern": "all sectors.*1%.*before 2021",
+      "literal_segments": [
+        "all sectors",
+        "1%",
+        "before 2021"
+      ],
+      "rendering": "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi kisichobadilika — inategemea mishahara.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "BRELA_COSOTA_split",
+      "pattern": "registrar of titles.*intellectual property",
+      "literal_segments": [
+        "registrar of titles",
+        "intellectual property"
+      ],
+      "rendering": "BRELA COSOTA split: Intellectual property in Tanzania is split between two bodies. BRELA (Business Registrations and Licensing Agency) administers: trademarks (alama za biashara), patents (hati miliki), and industrial designs (miundo ya viwanda). COSOTA (Copyright Society of Tanzania) administers: copyright and neighbouring rights (haki za ubunifu na haki jirani). There is NO body called ORT — ort.go.tz does not exist as a Tanzanian IP registry.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "BRELA_COSOTA_split",
+      "pattern": "cosota.*patent",
+      "literal_segments": [
+        "cosota",
+        "patent"
+      ],
+      "rendering": "BRELA COSOTA split: Intellectual property in Tanzania is split between two bodies. BRELA (Business Registrations and Licensing Agency) administers: trademarks (alama za biashara), patents (hati miliki), and industrial designs (miundo ya viwanda). COSOTA (Copyright Society of Tanzania) administers: copyright and neighbouring rights (haki za ubunifu na haki jirani). There is NO body called ORT — ort.go.tz does not exist as a Tanzanian IP registry.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": true
+    },
+    {
+      "fact_key": "BRELA_COSOTA_split",
+      "pattern": "cosota.*trademark",
+      "literal_segments": [
+        "cosota",
+        "trademark"
+      ],
+      "rendering": "BRELA COSOTA split: Intellectual property in Tanzania is split between two bodies. BRELA (Business Registrations and Licensing Agency) administers: trademarks (alama za biashara), patents (hati miliki), and industrial designs (miundo ya viwanda). COSOTA (Copyright Society of Tanzania) administers: copyright and neighbouring rights (haki za ubunifu na haki jirani). There is NO body called ORT — ort.go.tz does not exist as a Tanzanian IP registry.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": true
+    },
+    {
+      "fact_key": "BRELA_COSOTA_split",
+      "pattern": "brela.*copyright(?!.*cosota)",
+      "literal_segments": [
+        "brela",
+        "copyright  !",
+        "cosota"
+      ],
+      "rendering": "BRELA COSOTA split: Intellectual property in Tanzania is split between two bodies. BRELA (Business Registrations and Licensing Agency) administers: trademarks (alama za biashara), patents (hati miliki), and industrial designs (miundo ya viwanda). COSOTA (Copyright Society of Tanzania) administers: copyright and neighbouring rights (haki za ubunifu na haki jirani). There is NO body called ORT — ort.go.tz does not exist as a Tanzanian IP registry.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": true
+    },
+    {
+      "fact_key": "BRELA_COSOTA_split",
+      "pattern": "cosota.*hati miliki(?!.*brela)",
+      "literal_segments": [
+        "cosota",
+        "hati miliki  !",
+        "brela"
+      ],
+      "rendering": "BRELA COSOTA split: Intellectual property in Tanzania is split between two bodies. BRELA (Business Registrations and Licensing Agency) administers: trademarks (alama za biashara), patents (hati miliki), and industrial designs (miundo ya viwanda). COSOTA (Copyright Society of Tanzania) administers: copyright and neighbouring rights (haki za ubunifu na haki jirani). There is NO body called ORT — ort.go.tz does not exist as a Tanzanian IP registry.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": true
+    },
+    {
+      "fact_key": "gn487a_marriage_no_exemption",
+      "pattern": "married to tanzanian.*no longer non-citizen",
+      "literal_segments": [
+        "married to tanzanian",
+        "no longer non-citizen"
+      ],
+      "rendering": "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania bado ni mgeni na hawezi kufanya biashara ya rejareja iliyozuiliwa. Tafuta ushauri wa wakili wa uhamiaji.",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "business_licence_expiry_30_june",
+      "pattern": "leseni.*huisha.*disemba",
+      "literal_segments": [
+        "leseni",
+        "huisha",
+        "disemba"
+      ],
+      "rendering": "business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara huisha tarehe 30 Juni kila mwaka, hivyo huhuishwa kila mwaka kabla ya tarehe hiyo.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "business_licence_expiry_30_june",
+      "pattern": "leseni.*expire.*december",
+      "literal_segments": [
+        "leseni",
+        "expire",
+        "december"
+      ],
+      "rendering": "business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara huisha tarehe 30 Juni kila mwaka, hivyo huhuishwa kila mwaka kabla ya tarehe hiyo.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "presumptive_tax_bands_2022",
+      "pattern": "450,?000.*3\\.5%",
+      "literal_segments": [
+        "450, 000",
+        "3 .5%"
+      ],
+      "rendering": "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: hadi TZS 4,000,000 = TZS 0; zaidi ya 4,000,000 hadi 7,000,000 = TZS 100,000 (asiyetunza kumbukumbu) au 3% ya mauzo yanayozidi 4,000,000 (anayetunza); zaidi ya 7,000,000 hadi 11,000,000 = TZS 250,000 (asiyetunza) au TZS 90,000 pamoja na 3% ya yanayozidi 7,000,000 (anayetunza); kuanzia 11,000,001 hadi 200,000,000 = 4.0% ya mauzo yote (ilikuwa asilimia 3.5, ilipanda WEF 1 Julai 2026). Pia: mfanyabiashara mpya mwenye TIN aliyoipata kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 anaweza kustahili msamaha wa TZS 0 (hadi TZS 200,000,000 za mauzo) -- LAKINI si wa moja kwa moja, lazima aombe kwa Kamishna na aidhinishwe (First Schedule para 2(4), mpya).",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "presumptive_tax_bands_2022",
+      "pattern": "14,?000,?000.*presumptive",
+      "literal_segments": [
+        "14, 000, 000",
+        "presumptive"
+      ],
+      "rendering": "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: hadi TZS 4,000,000 = TZS 0; zaidi ya 4,000,000 hadi 7,000,000 = TZS 100,000 (asiyetunza kumbukumbu) au 3% ya mauzo yanayozidi 4,000,000 (anayetunza); zaidi ya 7,000,000 hadi 11,000,000 = TZS 250,000 (asiyetunza) au TZS 90,000 pamoja na 3% ya yanayozidi 7,000,000 (anayetunza); kuanzia 11,000,001 hadi 200,000,000 = 4.0% ya mauzo yote (ilikuwa asilimia 3.5, ilipanda WEF 1 Julai 2026). Pia: mfanyabiashara mpya mwenye TIN aliyoipata kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 anaweza kustahili msamaha wa TZS 0 (hadi TZS 200,000,000 za mauzo) -- LAKINI si wa moja kwa moja, lazima aombe kwa Kamishna na aidhinishwe (First Schedule para 2(4), mpya).",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "presumptive_tax_bands_2022",
+      "pattern": "presumptive.*14 million",
+      "literal_segments": [
+        "presumptive",
+        "14 million"
+      ],
+      "rendering": "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: hadi TZS 4,000,000 = TZS 0; zaidi ya 4,000,000 hadi 7,000,000 = TZS 100,000 (asiyetunza kumbukumbu) au 3% ya mauzo yanayozidi 4,000,000 (anayetunza); zaidi ya 7,000,000 hadi 11,000,000 = TZS 250,000 (asiyetunza) au TZS 90,000 pamoja na 3% ya yanayozidi 7,000,000 (anayetunza); kuanzia 11,000,001 hadi 200,000,000 = 4.0% ya mauzo yote (ilikuwa asilimia 3.5, ilipanda WEF 1 Julai 2026). Pia: mfanyabiashara mpya mwenye TIN aliyoipata kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 anaweza kustahili msamaha wa TZS 0 (hadi TZS 200,000,000 za mauzo) -- LAKINI si wa moja kwa moja, lazima aombe kwa Kamishna na aidhinishwe (First Schedule para 2(4), mpya).",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "presumptive_tax_bands_2022",
+      "pattern": "makadirio.*450,?000",
+      "literal_segments": [
+        "makadirio",
+        "450, 000"
+      ],
+      "rendering": "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: hadi TZS 4,000,000 = TZS 0; zaidi ya 4,000,000 hadi 7,000,000 = TZS 100,000 (asiyetunza kumbukumbu) au 3% ya mauzo yanayozidi 4,000,000 (anayetunza); zaidi ya 7,000,000 hadi 11,000,000 = TZS 250,000 (asiyetunza) au TZS 90,000 pamoja na 3% ya yanayozidi 7,000,000 (anayetunza); kuanzia 11,000,001 hadi 200,000,000 = 4.0% ya mauzo yote (ilikuwa asilimia 3.5, ilipanda WEF 1 Julai 2026). Pia: mfanyabiashara mpya mwenye TIN aliyoipata kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 anaweza kustahili msamaha wa TZS 0 (hadi TZS 200,000,000 za mauzo) -- LAKINI si wa moja kwa moja, lazima aombe kwa Kamishna na aidhinishwe (First Schedule para 2(4), mpya).",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "presumptive_tax_ceiling_100m",
+      "pattern": "makadirio.*kikomo.*20,?000,?000",
+      "literal_segments": [
+        "makadirio",
+        "kikomo",
+        "20, 000, 000"
+      ],
+      "rendering": "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,000,000 kwa mwaka (ilikuwa TZS 100,000,000, iliongezwa WEF 1 Julai 2026). Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "presumptive_tax_ceiling_100m",
+      "pattern": "presumptive.*threshold.*50 million",
+      "literal_segments": [
+        "presumptive",
+        "threshold",
+        "50 million"
+      ],
+      "rendering": "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,000,000 kwa mwaka (ilikuwa TZS 100,000,000, iliongezwa WEF 1 Julai 2026). Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "presumptive_tax_ceiling_100m",
+      "pattern": "(?<!kutoka )(?<!ilikuwa )(?<!was )(?<!from )(kikomo|threshold|ceiling).{0,30}(TZS )?100,?000,?000.{0,20}(makadirio|presumptive)",
+      "literal_segments": [
+        "<!kutoka    <!ilikuwa    <!was    <!from   kikomo threshold ceiling",
+        "TZS   100, 000, 000",
+        "makadirio presumptive"
+      ],
+      "rendering": "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,000,000 kwa mwaka (ilikuwa TZS 100,000,000, iliongezwa WEF 1 Julai 2026). Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "presumptive_tax_ceiling_100m",
+      "pattern": "(?<!kutoka )(?<!ilikuwa )(?<!was )(?<!from )(makadirio|presumptive).{0,30}(kikomo|threshold|ceiling).{0,20}(TZS )?100,?000,?000",
+      "literal_segments": [
+        "<!kutoka    <!ilikuwa    <!was    <!from   makadirio presumptive",
+        "kikomo threshold ceiling",
+        "TZS   100, 000, 000"
+      ],
+      "rendering": "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,000,000 kwa mwaka (ilikuwa TZS 100,000,000, iliongezwa WEF 1 Julai 2026). Zaidi ya hapo hutozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "presumptive_excluded_services",
+      "pattern": "presumptive.*applies to all businesses",
+      "literal_segments": [
+        "presumptive",
+        "applies to all businesses"
+      ],
+      "rendering": "presumptive excluded services: Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala watoa huduma za kitaalamu (technical), uendeshaji (management), ujenzi (construction) na mafunzo (training). Hawa hutozwa kodi kwa viwango vya kawaida vya mtu binafsi.",
+      "resolved_via": "index_key_prefix",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "osha_registration_before_operations",
+      "pattern": "osha.*siku 1",
+      "literal_segments": [
+        "osha",
+        "siku 1"
+      ],
+      "rendering": "Umefungua karakana au sehemu mpya ya kazi? Usajili wa OSHA lazima ufanyike KABLA ya kuanza biashara — hakuna muda wa siku baada ya kufungua. (Kifungu 16(2), Sheria ya Afya na Usalama Mahali pa Kazi Na.5 ya 2003.)",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "osha_registration_before_operations",
+      "pattern": "osha.*within 1 day",
+      "literal_segments": [
+        "osha",
+        "within 1 day"
+      ],
+      "rendering": "Umefungua karakana au sehemu mpya ya kazi? Usajili wa OSHA lazima ufanyike KABLA ya kuanza biashara — hakuna muda wa siku baada ya kufungua. (Kifungu 16(2), Sheria ya Afya na Usalama Mahali pa Kazi Na.5 ya 2003.)",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    },
+    {
+      "fact_key": "osha_registration_before_operations",
+      "pattern": "osha.*registration.*deadline.*days after",
+      "literal_segments": [
+        "osha",
+        "registration",
+        "deadline",
+        "days after"
+      ],
+      "rendering": "Umefungua karakana au sehemu mpya ya kazi? Usajili wa OSHA lazima ufanyike KABLA ya kuanza biashara — hakuna muda wa siku baada ya kufungua. (Kifungu 16(2), Sheria ya Afya na Usalama Mahali pa Kazi Na.5 ya 2003.)",
+      "resolved_via": "concise_bilingual_facts",
+      "pattern_matches_own_rendering": false
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "recorded": "2026-09-23",
+  "scope": "Item 2 of the post-adjudication scoped pass: the stale 'Section XII' citation still served from the deployed RAG index, and the guard that could not fire on it.",
+  "harnesses": [
+    "eval/controls/scan_wrong_pattern_language_assumption.py",
+    "scripts/check_correction_sync.py",
+    "scripts/check_rag_index_freshness.py",
+    "scripts/check_facts_index_sync.py"
+  ],
+  "fixed": [
+    {
+      "id": "F1",
+      "what": "The stale string at its source.",
+      "detail": "scripts/precompute_rag_embeddings.py, CONCISE_BILINGUAL_FACTS['brela_foreign_late_filing_penalty'] said '(Section XII)'. Now reads '(Companies Act Cap.212, Part XIII, ss.320-328)'.",
+      "why_the_2026_09_01_sweep_missed_it": "That sweep enumerated locked_facts.json, the training corpus and CLAUDE.md. This text is hand-authored in the embedding builder and is NOT derived from locked_facts.json -- a fourth location, and the only one production actually serves.",
+      "status": "SOURCE FIXED, NOT YET SERVED. The deployed index still carries the old string until kaggle/regenerate_rag_e5.py is run (R15, founder step: local network blocks the e5-base download)."
+    },
+    {
+      "id": "F2",
+      "what": "act_section_12's wrong_patterns could not match the Swahili row they guard.",
+      "detail": "All four original patterns required <part|section|kifungu> FIRST and <foreign company> SECOND -- English word order. The live Swahili is 'Kampuni ya kigeni (Section XII)...' -- entity first, and using the English word 'Section', not 'kifungu'. None matched row 171, nor the live ext_15 reply that reproduced it.",
+      "fix": "Both orders, both languages, with 'xii\\b(?!i)' excluding XIII so the corrected text cannot match itself.",
+      "second_iteration_same_day": "The first rewrite allowed the NUMERAL after 'section', which matched the deployed row's own KEY PREFIX ('act section 12: ...') and fired on CORRECT content -- check_correction_sync.py went red on a clean row. The numeral alternative is now restricted to 'part 12' as the original had it. The specimen that caught this was the deployed row WITH its prefix; the first round's specimens omitted the prefix and passed. A guard must be tested against the string as DEPLOYED, not as authored.",
+      "verified": "6 must-fire and 6 must-not-fire specimens in tests/test_act_section_xii_patterns.py, including both live 2026-09-05 artifacts verbatim."
+    },
+    {
+      "id": "F3",
+      "what": "A SECOND fact with the same defect, found by sweeping rather than by accident: presumptive_tax_ceiling_100m.",
+      "detail": "The ceiling doubled to TZS 200,000,000 (Finance Act 2026 s.27(a)(i), verified verbatim 2026-09-01). Its four guards against the stale 100,000,000 covered (kikomo -> 100M -> makadirio) and (makadirio -> kikomo -> 100M) and were BLIND to the two most natural Swahili phrasings: 'Kikomo cha makadirio ni TZS 100,000,000' (the genitive order), and 'Mauzo yasiyozidi TZS 100,000,000...' -- which is the construction THE FACT'S OWN TEXT USES.",
+      "note": "A guard that cannot catch the stale version of its own sentence is the act_section_12 shape exactly.",
+      "verified": "4 must-fire and 5 must-not-fire specimens, the must-nots including the correct 200M value and three historical framings ('kilikuwa', 'kutoka ... hadi', leading 'Ilikuwa')."
+    }
+  ],
+  "swept_not_fixed": {
+    "question_asked": "Do other wrong_patterns carry the same English-word-order assumption?",
+    "method": "688 patterns across 108 facts. Classified by (a) order-dependent? (b) English-only? (c) is the fact's OWN deployed rendering Swahili? Only the conjunction of all three is the defect shape.",
+    "result": {
+      "not_order_dependent": 360,
+      "order_dependent_swahili": 128,
+      "order_dependent_english_guarding_english_rendering": 153,
+      "rendering_unresolvable": 3,
+      "review_queue": 44
+    },
+    "first_run_was_wrong_and_this_is_the_point": "Before clause (c) existed the scan reported 200 hits -- mostly English patterns guarding facts whose rendering is ALSO English, where English order is correct. Reporting those would have sent someone to rewrite ~29% of every guard in the corpus, all working. The defect is not 'an English pattern'; it is a LANGUAGE MISMATCH between a pattern and the text it guards.",
+    "hand_adjudication_of_the_queue": "Re-cut per FACT rather than per pattern (a fact is only blind if NO pattern of its can fire in the served language). That yielded 2 candidates. Both were then decided by PLANTING Swahili wrong claims rather than by word-list matching. osha_vs_wcf_roles turned out to have Swahili-capable patterns all along (hulipa/kusajiliwa/wafanyakazi) that the scan's function-word list simply did not recognise -- a bad specimen. presumptive_tax_ceiling_100m was real, and is F3 above.",
+    "bound": "R21. This is a LOWER BOUND. It measures pattern text against deployed renderings in a corpus authored from the same sources as the facts. It does not measure the paraphrase space of real model output."
+  },
+  "recorded_not_fixed": [
+    {
+      "id": "R1",
+      "title": "check_correction_sync.py cannot see a stale string that lives under a DIFFERENT key than the patterns that would catch it.",
+      "detail": "The check resolves each corrected fact to its OWN index row and tests that fact's patterns against it. Row 171 belongs to locked fact 'brela_foreign_late_filing_penalty', which has NO wrong_patterns; the patterns that catch its stale citation live on 'act_section_12'. So the defect is structurally invisible to the check that exists for exactly this defect -- which is why it reported STRONG MATCH 0 while the string shipped.",
+      "measurement": "Sweeping every corrected fact's patterns across all 183 index rows instead of only its own row yields 8 facts with a cross-row hit, exactly 1 row each. One (act_section_12 -> row 171) is the genuine defect. The other 7 need adjudication and are plausibly the same 'negated mention' class the check already classifies separately.",
+      "why_not_fixed_here": "Adding a whole-index limb changes a control's verdict surface and needs its own both-limb probe set and adjudication of those 7 rows. Bolting it onto a citation fix is how a working control acquires an unreviewed new failure mode. Proposed as its own scoped pass, with the measurement above as its starting evidence.",
+      "cheap_interim": "Give 'brela_foreign_late_filing_penalty' its own wrong_patterns, so the row and the guard share a key. Not done here for the same scope reason, but it is a one-field change if the next pass wants a stopgap."
+    },
+    {
+      "id": "R2",
+      "title": "osha_vs_wcf_roles has an OVERBROAD guard that flags CORRECT output. Different class, found incidentally.",
+      "detail": "Pattern 'osha[^.?!]{0,30}(hulipa|inalipa|hutoa) fidia' fires on 'OSHA husajili mahali pa kazi, WCF hulipa fidia.' -- a CORRECT two-clause sentence. The character class excludes only sentence-enders, so the 30-character window crosses a comma and attributes WCF's verb to OSHA.",
+      "shape": "This is D-FIDELITY-6's proximity problem (CLAUDE.md: 'nearest-levy-wins' attributing NSSF's rate to WCF) arriving in a wrong_pattern instead of a fidelity rule. Same failure, different mechanism -- worth noting that the lesson did not transfer between the two layers.",
+      "not_a_language_defect": "Recorded but NOT fixed in this pass: it is a punctuation-window defect, not the word-order defect this pass was scoped to, and narrowing it trades a false positive for a coverage loss on comma-containing wrong claims. Needs its own probes.",
+      "verified": "Fires on the correct comma form and on the genuinely-wrong 'OSHA hulipa fidia.'; clean on 'OSHA husajili mahali pa kazi na WCF hulipa fidia kwa majeruhi.' (>30 chars)."
+    }
+  ],
+  "control_demonstration": {
+    "claim": "The guard was inert on this defect and is now live -- watched, not assumed (R26).",
+    "evidence": "With the original patterns, check_correction_sync.py reported 'STRONG: stale wrong_pattern MATCH 0' while row 171 shipped. With the rewritten patterns applied directly to row 171, the pattern matches, and a whole-index sweep with them matches exactly 1 of 183 rows -- row 171, with zero false positives. The check's own verdict is still CLEAN only because of R1 above, which is now recorded rather than mistaken for health."
+  },
+  "three_green_checks": {
+    "note": "All three standing index checks passed on this row while it was wrong. Kept because the reason differs for each and no single new check covers all three.",
+    "check_facts_index_sync": "CONTENT-shaped: 'is this key's figure reachable?' USD 25 was present -> CLEAN.",
+    "check_rag_index_freshness": "TIME-shaped: 'was the index rebuilt after the fact changed?' It was -- the string SURVIVED a regeneration, because it is not derived from locked_facts.json -> CLEAN on that input.",
+    "check_correction_sync": "Exists for exactly this defect, and reported 0 -- patterns in the wrong language, and scoped to the wrong key (R1)."
+  }
+}
