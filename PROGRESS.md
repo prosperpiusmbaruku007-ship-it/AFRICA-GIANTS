@@ -1,5 +1,150 @@
 # Africa Giants — Project Progress
 
+## 🧪 78-ROW EDGE PROBE SET ADJUDICATED + 4-ITEM FIX PASS, 2026-09-23 — VERDICT: **the floor problem is fabrication on plausible questions, not wrong numbers on hard ones**
+
+**Recovery first.** A terminal crash ended the previous session between the run finishing and
+adjudication starting. Nothing was lost: the draft (78 rows), the harness, and a **complete**
+live capture (78/78 `HTTP_200`, no empty replies, question strings byte-identical to the
+draft, 695.8s) all survived. The capture was NOT re-run — it was taken at 21:35 on 2026-09-05
+against the post-sector-fix build, and nothing has been committed to production code since, so
+a second run would only produce a newer specimen of the same thing. Harness, probes and
+artifact were committed **before** any adjudication was written (R18): `c093450`.
+
+### Adjudication [M] — `eval/results/extended_078_adjudication_2026_09_23.json`
+
+**PASS 26 · PARTIAL 16 · WRONG 34 · PASS_BY_OUTCOME 1 · UNADJUDICABLE 1.**
+
+⚠️ **THIS IS NOT A GATE NUMBER AND MUST NEVER BE CITED AS ONE.** It is an authored edge-probe
+population, conditioned toward hard cases by construction (R22). The caveat ships inside the
+artifact so it cannot be separated from the figure by being quoted.
+
+Adjudicated **against statute and this project's own primary-source record**, not against
+`locked_facts.json` as ground truth — 15 rows target facts whose `verified_by` is `None`, and
+scoring those against the corpus would only confirm the model agrees with an unchecked file.
+
+**Of 52 non-clean rows, 42 are model failures and NINE ARE NOT:** 2 routing, 1
+classifier-overbroad, 1 corpus-stale, 3 corpus-gap (hedged, did not fabricate), 2
+fact-unverified — plus 1 row where **the probe was wrong and the model was right**.
+
+**Routing verdicts were measured, not inferred** — `asks_corporate_income_tax()` and
+`corporate_sector()` called on the verbatim probe strings.
+
+### The pre-registered prediction [M] — direction consistent, NOT established
+
+Recorded before results: *untouched facts (ext_63–78) will score worse than the rest.*
+
+| population | n | clean | wrong |
+|---|---|---|---|
+| untouched facts | 16 | 31.2% | 37.5% |
+| other fact-intent rows | 27 | 44.4% | 33.3% |
+
+**gap −13.2pp, Fisher exact two-sided p = 0.523.** The direction holds; nothing is
+established. **Do not scope work on this gap.** The first version of the tally script declared
+"prediction confirmed" against a ±5pp threshold invented on the spot, which would have written
+a p=0.52 difference into the record as a finding — R20's vacuous-check shape arriving in a
+tally. It now reports the p-value.
+
+### The four fixes, each swept before shipping
+
+1. **`soko la hisa` narrowed** (`ecb61b3`). It refused ext_01 — an ordinary corporate-income-tax
+   question from a company stating it is **not** listed — while routing agreed the question was
+   corporate. **The phrase never changed and was not wrong when written.** Building the
+   corporate-tax domain made an untouched refusal phrase over-broad. The collision is one line:
+   the same string is an OOC phrase **and** a corporate routing cue in `_DSE_CUES`.
+   Narrowing was the only lever — `in_scope_phrases` is inert (OOC wins unconditionally; the
+   in-scope loop returns what the fallthrough returns), now pinned as characterization.
+2. **Stale `Section XII` fixed at source** (`467115b`). Corrected 2026-08-31, corpus swept
+   2026-09-01, CLAUDE.md updated — and still shipping, because the string also lived in
+   hand-authored `CONCISE_BILINGUAL_FACTS`, a **fourth location** not derived from
+   `locked_facts.json` and the only one production serves.
+3. **Corporate route gate widened** (`28e5c55`) for four measured gaps, **8 route changes over
+   1,167 questions, all `none → corporate_tax`, zero diversions**, `eval_211` held.
+4. **ext_30's `expected_behavior` corrected** — see below.
+
+### 🔴 THE HEADLINE FINDING: fabrication on questions with no fact behind them
+
+**9 of 12 coverage-gap rows fabricated (75%). Including the two unbuilt-domain rows: 10 of 14
+(71%).** [M]
+
+These rows ask plausible small-business questions the corpus holds **no fact** for. Correct
+behaviour is to say so. Instead: an invented fee (*"shilingi elfu 30,000"* for a fire
+certificate), three invented authorities (Chief Inspector of Works, TBS, OSHA — for the same
+two questions), and two invented domains (`fire.go.tz`, `manispaa.jiji.go.tz`).
+
+**And the paired-phrasing design earned its keep: 4 of 6 gap pairs answered the SAME question
+two different ways.** The sharpest is ext_39/ext_40 — *"TRA may inspect with no notice at all"*
+vs *"TRA must give at least 14 days"*. **Only the TIN pair held.**
+
+**R1 is intact**: ext_46 invented a procurement process but never said TANePS.
+
+### Two findings recorded, deliberately NOT fixed
+
+**PHRASING-DEPENDENT CONTRADICTION — its own defect class.** ext_39/ext_40 is not "wrong"; it
+is *inconsistent under paraphrase*, and **only paired phrasing detects it**. A single-phrasing
+corpus cannot see it at all, however large. **We have never checked how many of the 48 or the
+78 would contradict themselves under a second phrasing** — both corpora are one-phrasing-per-
+question by construction. That is a measurement nobody has taken, and the 4-of-6 rate here is
+the only estimate we have.
+
+**PREMISE ACCEPTANCE, WITH GUARD-BLINDNESS ATTACHED.** ext_51 attributes 3.5% correctly to SDL
+when asked neutrally. ext_55 asks *"that 3.5% workplace-injury deduction — that's WCF, right?"*
+and the model says **"Ndiyo"**. Same fact, opposite outcome, decided by the frame. ext_56 is
+the same failure with higher cost: it tells a trader over the 100M/6-month threshold they need
+not register.
+
+**The guard-blindness is the structural half.** D-FIDELITY-6 compares a rate in the *body*
+against the statute. Here **the wrong figure lives in the QUESTION and the reply asserts no
+figure at all** — just "Ndiyo". **Every figure-comparing rule is vacuous by construction on
+this shape.** That is D-FIDELITY-5's *"a contradiction doesn't need a number"* one step further
+out: not only does a contradiction not need a number, **a confirmation does not need to restate
+the thing it confirms.** A guard that reads only the reply cannot see a claim the reply
+inherited. Detecting it requires reading the question's assertion against the statute and
+checking whether the reply *assents* — a different rule shape from anything now built.
+
+### ext_30 — the probe was wrong and the model was right
+
+Its `expected_behavior` cited the TZS 10,000,000 deferment threshold. That threshold is **real
+and currently verified** — it is the eligibility criterion of a regime that **ceased for
+imported capital goods on 30 June 2026** (FA2023 s.65(b)). *"Hapana"* is correct today.
+
+**A correctly-cited, currently-verified fact about a repealed provision reads exactly like a
+correct expectation.** R29 mode 3 arriving inside a **probe file** rather than a fact file, and
+R32's shape as well — the date was in the corpus and not in the probe's logic. The original
+text is preserved verbatim inside the correction so the trap stays legible.
+
+### Harness defects found while building the sweeps — five, each producing a clean-looking result
+
+Recorded because the pattern is now the dominant failure mode of this project's own
+instruments, not of its product:
+
+| harness | the defect | what it reported |
+|---|---|---|
+| OOC in-scope sweep | knew 2 of the 9 ways the corpora spell "must be refused" | **34 colliding phrases**; 33 were OOC questions it had mislabelled |
+| wrong_pattern language scan | flagged English patterns without asking what language they GUARD | **200 hits**; would have sent someone to rewrite ~29% of all guards, all working |
+| corporate gate sweep | excluded routes returning `none` — the eval_211 harm class | **0 diversions** for every candidate, including the deliberately-broad one |
+| corporate gate sweep | `re.escape()` on multi-word cues, which the router substring-matches | **0 changes for every multi-word cue**; single-word cues escaped to themselves and appeared to work |
+| corporate gate sweep | baseline keyed by row id — **18 ids are duplicated across corpora** | **11 phantom route changes** no corporate cue could cause |
+
+**Every one was caught by R26's second half — suspect the specimen before recording an adverse
+verdict — and every one would have generated edits to working code if reported.**
+
+### Corrections to earlier statements in this session
+
+- The coverage-gap fabrication rate was first reported as **8 of 10**. The correct figure is
+  **9 of 12 (75%)**, or 10 of 14 (71%) including unbuilt domains. Corrected before it entered
+  the record as a headline.
+- The first `soko la hisa` sweep reported 34 collisions; after fixing the specimen filter, **4**,
+  of which **1** was actionable.
+
+### Still required before any of this is live
+
+`chike_config.json` and `routing.py` changes need a **Modal redeploy under R16** (stop, deploy
+with `PYTHONIOENCODING=utf-8`, then a live check that exercises the specific change plus a
+negative case). The `Section XII` fix additionally needs **`kaggle/regenerate_rag_e5.py` run on
+Kaggle** (R15 founder step) — `check_rag_index_freshness.py` correctly reports FAIL until then.
+
+---
+
 ## 📏 THE VERIFICATION ARC'S EFFECT, MEASURED, 2026-09-05 — VERDICT: **confirmed effective on its own targets, inconclusive beyond them**
 
 **The fixture-bias caveat goes ABOVE the number, not after it, because it decides how to
@@ -147,6 +292,47 @@ flips) → `0bda969` (R16 canary evidence). All pushed to `origin/main`.
 ---
 
 ## 🧭 PILOT RE-DERIVATION, 2026-09-04 — VERDICT: **FURTHER — and for the first time we know the accuracy number itself was never measuring what it looked like it was measuring.**
+
+> ### 🔴 ADDED 2026-09-23 — READ THIS BEFORE THE REST OF THIS SECTION. The floor problem now has a number.
+>
+> **On questions the corpus holds NO fact for, the model fabricates 9 times out of 12 (75%).**
+> Including the two unbuilt-domain rows: **10 of 14 (71%)**. [M —
+> `eval/results/extended_078_adjudication_2026_09_23.json`]
+>
+> Not wrong numbers on hard questions — **invented specifics on plausible ones**: a fire-safety
+> certificate fee (*"shilingi elfu 30,000"*), three different authorities named for the same two
+> questions (Chief Inspector of Works, TBS, OSHA), and two domains that do not exist
+> (`fire.go.tz`, `manispaa.jiji.go.tz`). A tester who asks about fire safety, scales, TIN
+> registration, a TRA inspection, mobile-money receipts or rental withholding is asking a
+> reasonable question about running a Tanzanian business, and gets a confident invention.
+>
+> **Worse, and only visible because the probes were PAIRED: 4 of 6 gap pairs answered the SAME
+> question two different ways.** ext_39/ext_40 is the clearest — *"TRA may inspect with no
+> notice at all"* and *"TRA must give at least 14 days' notice"*, from the same system, minutes
+> apart, differing only in phrasing. Only the TIN pair held.
+>
+> **This does not supersede §6 below ("The honest chance the first thing they ask has no fact
+> behind it") — it answers the question §6 never asked.** §6 estimates HOW OFTEN a first message
+> lands on a gap (*"roughly two in three to three in four"*, tagged **[J]**, resting on a 3-of-12
+> upper bound). This measures WHAT THE SYSTEM DOES once it is there, and the answer is not a
+> hedge — it is fabrication three times in four.
+>
+> **The two compound, and deliberately not as a single multiplied figure.** §6's number is a
+> judgement over an upper bound and this one is a measurement over 12 authored rows; multiplying
+> them would manufacture a precision neither has. What is safe to say is the direction, and it is
+> not reassuring: **the most likely first-contact outcome is a gap, and the most likely behaviour
+> at a gap is an invention.** Both halves would need to be wrong for first contact to be safe.
+>
+> ⚠️ The 78-row set is an authored edge-probe population (R22) and its overall pass rate is NOT
+> a gate number. **This sub-figure is different and is the one that transfers**: the gap rows do
+> not need to be representative of question difficulty to establish what the system does when it
+> has nothing — they only need to be questions with no fact behind them, which is how they were
+> constructed and is verifiable by reading them.
+>
+> **Nothing here has been fixed.** No mechanism currently makes the model prefer "I don't know"
+> over a plausible invention, and the one mechanism that could — the coverage gate — is
+> **DISABLED by decision** (37× false-refusal gap, R21). That decision was correct on the
+> evidence available and is now the binding constraint on this number.
 
 **Re-derived from scratch against today's state, not updated from the 2026-08-24 assessment.**
 Every claim is tagged **[M]** (measured, artifact named) or **[J]** (judgement). The 48-row
