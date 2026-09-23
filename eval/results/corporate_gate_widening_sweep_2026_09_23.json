@@ -1,0 +1,303 @@
+{
+  "measured": "2026-09-23",
+  "harness": "eval/routing/sweep_corporate_gate_widening_2026_09_23.py",
+  "eval_211_veto": "Kampuni yangu imekuwa na hasara miaka 4 mfululizo — je nitaweza kupunguza mapato ya mwaka wa 5 kwa hasara zote bila kikomo?",
+  "why_this_population": "Every question in every committed eval corpus. This is the population a widened route could WRONGLY capture, which is where the cost of widening lands. R21: lower bound only -- it shares vocabulary with the facts by construction.",
+  "corpus_questions": 1167,
+  "candidates": [
+    {
+      "conjunct": "tax",
+      "cue": "kodi ya makampuni",
+      "motivation": "ext_05 -- plural of the existing \"kodi ya kampuni\" cue, which does not cover it as a substring",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 1,
+      "route_changes": [
+        {
+          "id": "ext_05",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:5",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Zahanati yetu binafsi imekuwa na hasara miaka mitatu mfululizo. Tunatakiwa kulipa ile kodi ya makampuni yenye "
+        }
+      ],
+      "probes_it_reaches": [
+        "ext_05"
+      ]
+    },
+    {
+      "conjunct": "tax",
+      "cue": "makampuni yenye hasara",
+      "motivation": "ext_05/ext_07 -- names the AMT population explicitly",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 2,
+      "route_changes": [
+        {
+          "id": "ext_05",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:5",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Zahanati yetu binafsi imekuwa na hasara miaka mitatu mfululizo. Tunatakiwa kulipa ile kodi ya makampuni yenye "
+        },
+        {
+          "id": "ext_07",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:7",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Kampuni yetu imepata hasara miaka miwili mfululizo tu hadi sasa. Je, tayari tunadaiwa ile kodi maalum ya makam"
+        }
+      ],
+      "probes_it_reaches": [
+        "ext_05",
+        "ext_07"
+      ]
+    },
+    {
+      "conjunct": "tax",
+      "cue": "kodi maalum ya makampuni",
+      "motivation": "ext_07 -- \"that special tax for companies\"",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 1,
+      "route_changes": [
+        {
+          "id": "ext_07",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:7",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Kampuni yetu imepata hasara miaka miwili mfululizo tu hadi sasa. Je, tayari tunadaiwa ile kodi maalum ya makam"
+        }
+      ],
+      "probes_it_reaches": [
+        "ext_07"
+      ]
+    },
+    {
+      "conjunct": "tax",
+      "cue": "tunadaiwa kodi",
+      "motivation": "ext_04 -- 1pl \"what tax are we charged\"",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 1,
+      "route_changes": [
+        {
+          "id": "ext_04",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:4",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Kampuni yetu ya usafirishaji wa mizigo imepata hasara miaka mitatu iliyopita mfululizo. Sasa tunadaiwa kodi ga"
+        }
+      ],
+      "probes_it_reaches": [
+        "ext_04"
+      ]
+    },
+    {
+      "conjunct": "tax",
+      "cue": "ninadaiwa kodi",
+      "motivation": "ext_04 sibling, 1sg",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 1,
+      "route_changes": [],
+      "probes_it_reaches": []
+    },
+    {
+      "conjunct": "tax",
+      "cue": "nadaiwa kodi",
+      "motivation": "ext_04 sibling, short 1sg",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 2,
+      "route_changes": [
+        {
+          "id": "ext_04",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:4",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Kampuni yetu ya usafirishaji wa mizigo imepata hasara miaka mitatu iliyopita mfululizo. Sasa tunadaiwa kodi ga"
+        }
+      ],
+      "probes_it_reaches": [
+        "ext_04"
+      ]
+    },
+    {
+      "conjunct": "tax",
+      "cue": "kodi gani",
+      "motivation": "ext_04 -- DELIBERATELY TESTED TO BE REJECTED: the broadest form, included so its collision surface is measured rather than assumed",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 7,
+      "route_changes": [
+        {
+          "id": "ext_04",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:4",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Kampuni yetu ya usafirishaji wa mizigo imepata hasara miaka mitatu iliyopita mfululizo. Sasa tunadaiwa kodi ga"
+        }
+      ],
+      "probes_it_reaches": [
+        "ext_04"
+      ]
+    },
+    {
+      "conjunct": "entity",
+      "cue": "tumeorodheshwa",
+      "motivation": "ext_03 -- 1pl \"we are listed\"",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 2,
+      "route_changes": [
+        {
+          "id": "ext_02",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:2",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Tumeorodheshwa hivi karibuni sokoni la hisa la Dar es Salaam. Je, tunalipa kodi ya mapato kwa kiwango gani sas"
+        },
+        {
+          "id": "smn_13",
+          "key": "eval/refusal_gate/stock_market_narrowing_probes_014.jsonl:13",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Tumeorodheshwa hivi karibuni sokoni la hisa la Dar es Salaam. Je, tunalipa kodi ya mapato kwa kiwango gani sas"
+        }
+      ],
+      "probes_it_reaches": []
+    },
+    {
+      "conjunct": "entity",
+      "cue": "tulioorodheshwa",
+      "motivation": "ext_03 verbatim -- 1pl relative \"we who were listed\"",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 2,
+      "route_changes": [
+        {
+          "id": "ext_03",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:3",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Tulioorodheshwa DSE mwaka jana lakini ni asilimia 15 tu ya hisa zetu ndizo mikononi mwa umma. Tunalipa kodi ip"
+        },
+        {
+          "id": "smn_14",
+          "key": "eval/refusal_gate/stock_market_narrowing_probes_014.jsonl:14",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Tulioorodheshwa DSE mwaka jana lakini ni asilimia 15 tu ya hisa zetu ndizo mikononi mwa umma. Tunalipa kodi ip"
+        }
+      ],
+      "probes_it_reaches": [
+        "ext_03"
+      ]
+    },
+    {
+      "conjunct": "entity",
+      "cue": "hatujaorodheshwa",
+      "motivation": "ext_01/smn_07 -- 1pl negative \"we are not listed\"",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 3,
+      "route_changes": [
+        {
+          "id": "smn_09",
+          "key": "eval/refusal_gate/stock_market_narrowing_probes_014.jsonl:9",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Hatujaorodheshwa soko la hisa bado. Tunalipa kodi ya mapato kiwango gani?"
+        }
+      ],
+      "probes_it_reaches": []
+    },
+    {
+      "conjunct": "entity",
+      "cue": "tumeondolewa soko",
+      "motivation": "smn_11 -- delisting",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 1,
+      "route_changes": [
+        {
+          "id": "smn_11",
+          "key": "eval/refusal_gate/stock_market_narrowing_probes_014.jsonl:11",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Tumeondolewa soko la hisa mwaka jana, kodi yetu ya mapato inabadilikaje?"
+        }
+      ],
+      "probes_it_reaches": []
+    },
+    {
+      "conjunct": "entity",
+      "cue": "orodheshwa",
+      "motivation": "SHIPPED -- covers tume-/tulio-/hatuja-/ime-/haija-orodheshwa in one substring",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 8,
+      "route_changes": [
+        {
+          "id": "ext_02",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:2",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Tumeorodheshwa hivi karibuni sokoni la hisa la Dar es Salaam. Je, tunalipa kodi ya mapato kwa kiwango gani sas"
+        },
+        {
+          "id": "ext_03",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:3",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Tulioorodheshwa DSE mwaka jana lakini ni asilimia 15 tu ya hisa zetu ndizo mikononi mwa umma. Tunalipa kodi ip"
+        },
+        {
+          "id": "smn_09",
+          "key": "eval/refusal_gate/stock_market_narrowing_probes_014.jsonl:9",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Hatujaorodheshwa soko la hisa bado. Tunalipa kodi ya mapato kiwango gani?"
+        },
+        {
+          "id": "smn_13",
+          "key": "eval/refusal_gate/stock_market_narrowing_probes_014.jsonl:13",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Tumeorodheshwa hivi karibuni sokoni la hisa la Dar es Salaam. Je, tunalipa kodi ya mapato kwa kiwango gani sas"
+        },
+        {
+          "id": "smn_14",
+          "key": "eval/refusal_gate/stock_market_narrowing_probes_014.jsonl:14",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Tulioorodheshwa DSE mwaka jana lakini ni asilimia 15 tu ya hisa zetu ndizo mikononi mwa umma. Tunalipa kodi ip"
+        }
+      ],
+      "probes_it_reaches": [
+        "ext_03"
+      ]
+    },
+    {
+      "conjunct": "tax",
+      "cue": "nadaiwa kodi",
+      "motivation": "SHIPPED -- covers nina-/tuna-/na-daiwa kodi in one substring",
+      "matches_eval_211": false,
+      "eval_211_route_with_this_cue": "none",
+      "corpus_hits": 2,
+      "route_changes": [
+        {
+          "id": "ext_04",
+          "key": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl:4",
+          "route_before": "none",
+          "route_after": "corporate_tax",
+          "question": "Kampuni yetu ya usafirishaji wa mizigo imepata hasara miaka mitatu iliyopita mfululizo. Sasa tunadaiwa kodi ga"
+        }
+      ],
+      "probes_it_reaches": [
+        "ext_04"
+      ]
+    }
+  ]
+}

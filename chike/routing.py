@@ -678,9 +678,56 @@ _PARTNERSHIP_ENTITY_CUES = ["ubia", "ushirikiano wa kibiashara", r"\bpartnership
 # checking, exactly the R17 discipline this project already has a name for. `\bamt\b`
 # requires a non-word boundary on both sides, which "inamtaka"/"inamtambua" never present
 # (the "amt" span sits between two word characters), so it does not match them.
+# THREE CUES ADDED 2026-09-05 -> 2026-09-23, closing the TAX conjunct for three of the four
+# gaps the extended-078 probe set exposed live. Each gap was diagnosed PER CONJUNCT by calling
+# is_corporate_entity()/asks_corporate_income_tax() on the verbatim probe strings, not inferred
+# from the replies:
+#   ext_05  "...ile kodi ya MAKAMPUNI yenye hasara?"      entity OK, tax cue MISSED
+#   ext_07  "...ile kodi maalum ya MAKAMPUNI yenye hasara" entity OK, tax cue MISSED
+#   ext_04  "Sasa TUNADAIWA KODI gani?"                    entity OK, tax cue MISSED
+# ext_05's is a plain symmetry gap: "kodi ya kampuni" was present and its PLURAL was not, and
+# "makampuni" does not contain "kampuni" at the point the cue needs it. ext_04's is register:
+# an owner says "what tax are we charged", not "corporate income tax".
+#
+# `nadaiwa kodi` is the INFLECTION-FAMILY form (R17 step 4): it is a substring of ninadaiwa /
+# tunadaiwa / nadaiwa, so one cue replaces three. `makampuni yenye hasara` subsumes the
+# ext_07-specific "kodi maalum ya makampuni", so that candidate was dropped rather than added.
+#
+# `kodi gani` WAS TESTED AND DELIBERATELY REJECTED. It reaches ext_04 and, measured, diverts
+# nothing in the corpus (7 hits, 1 route change) -- but it is semantically the whole space of
+# "which tax?", so any company asking about ANY tax topic would be handed to the AMT engine,
+# which is the eval_211 harm exactly. A cue is rejected on what it COULD capture, not only on
+# what this corpus happens to contain (R21: the sweep is a lower bound).
+#
+# SWEPT BEFORE SHIPPING, not after: eval/routing/sweep_corporate_gate_widening_2026_09_23.py
+# over all 1,167 committed corpus questions. The full shipped set produces EIGHT route changes,
+# every one of them `none -> corporate_tax` on a corporate listing/AMT question, ZERO diversions
+# away from any existing route, and eval_211 unchanged at `none`.
+#
+# "amt" ADDED 2026-09-05, as \bamt\b, NOT a bare substring -- see the note above the entity cues.
 _CORPORATE_INCOME_TAX_CUES = ["kodi ya mapato ya kampuni", "kodi ya mapato ya shirika",
-                              "kodi ya kampuni", "kodi ya shirika", "corporate tax",
-                              "corporation tax", "kodi ya mapato", r"\bamt\b"]
+                              "kodi ya kampuni", "kodi ya makampuni",
+                              "kodi ya shirika", "corporate tax",
+                              "corporation tax", "kodi ya mapato", r"\bamt\b",
+                              "makampuni yenye hasara", "nadaiwa kodi"]
+
+# SELF-LISTING AS ENTITY EVIDENCE (added 2026-09-23). ext_03 -- "Tulioorodheshwa DSE mwaka jana
+# lakini ni asilimia 15 tu ya hisa zetu ndizo mikononi mwa umma. Tunalipa kodi ipi?" -- failed
+# the ENTITY conjunct, not the tax one: it names no entity noun at all. But only a company can
+# be listed on an exchange, so the 1pl listing verb IS the entity evidence, and this row is the
+# public-float branch (para 3(2)(a)) that the corporate engine exists to answer.
+#
+# `orodheshwa` is the inflection-family substring covering tume-/tulio-/hatuja-/ime-/haija-
+# orodheshwa -- one cue instead of the four hand-written variants that were also swept. Measured
+# over 1,167 questions: 8 matches, 5 route changes, all to corporate_tax, all correct; the other
+# 3 already routed there via an entity noun.
+#
+# FORWARD-LOOKING RISK, recorded because the `soko la hisa` incident on the same day is exactly
+# this shape in reverse: "orodheshwa" is also the verb for a product being ON A LIST, and Tier 1B
+# (EAC STR) turns on the COMMON LIST -- "bidhaa zilizoorodheshwa". Nothing collides today because
+# Tier 1B is not built. When it is, re-run the sweep above BEFORE adding STR vocabulary; a domain
+# build is precisely what silently makes an existing cue over-broad.
+_CORPORATE_SELF_LISTING_CUES = ["orodheshwa"]
 
 _DSE_CUES = ["dse", "dar es salaam stock exchange", "soko la hisa"]
 _DSE_NEGATED_CUES = ["haijaorodheshwa", "hatujaorodheshwa", "sijaorodheshwa", "not listed",
@@ -740,10 +787,16 @@ _LOSS_CUE = re.compile(r"hasara|loss")
 
 
 def is_corporate_entity(text: str) -> bool:
-    """True when the question names a company/corporation as the entity asking."""
+    """True when the question identifies a company/corporation as the entity asking.
+
+    Two kinds of evidence, kept in separate lists because they are different claims:
+    an entity NOUN ("kampuni", "shirika"), or a SELF-LISTING VERB ("tulioorodheshwa") --
+    only a company can be listed on an exchange, so saying "we are listed" identifies the
+    speaker as one without ever naming the noun. ext_03 is the live case (2026-09-05).
+    """
     ql = text.lower()
     return any(re.search(c, ql) if c.startswith(r"\b") else c in ql
-              for c in _CORPORATE_ENTITY_CUES)
+              for c in list(_CORPORATE_ENTITY_CUES) + list(_CORPORATE_SELF_LISTING_CUES))
 
 
 def is_partnership_entity(text: str) -> bool:
