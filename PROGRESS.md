@@ -128,6 +128,30 @@ instruments, not of its product:
 **Every one was caught by R26's second half — suspect the specimen before recording an adverse
 verdict — and every one would have generated edits to working code if reported.**
 
+**SCOPED 2026-09-24 as its own item → `docs/decisions/proposed-eval-harness-shared-kernel.md`.**
+The question put to it was *is there anything structural to do, or is "suspect the specimen"
+the whole answer?* Measured: **66 harnesses under `eval/`, no shared module, 28 loading JSONL
+themselves, 29 hand-picking the question field, 27 diffing before/after, 28 keying a dict by
+row `id`.** **Four of the five defects are prevented by a tested kernel** (loader with
+positional keys, one `is_ooc_by_design`, a `matches_cue` mirroring production, a `diff_routes`
+that treats absence as a value); **the fifth is not, and is the important one** — no helper can
+tell you your *definition of the defect* is wrong, which is precisely the job "suspect the
+specimen" keeps. Narrowing that job from five things to one is the whole value.
+
+**The duplicate-id trap is LATENT, not active, and saying otherwise would itself be the
+fabricated-defect failure.** 18 ids are duplicated (`cc_01`–`cc_08`, `hc_01`–`hc_10`) across
+two file pairs, but **no existing harness collides**: only three harnesses glob all corpora,
+two of them written 2026-09-23, and none of those three is id-keyed. **It is a trap the first
+whole-corpus harness hit immediately**, not 28 broken files — so the fix is to make it
+unrepresentable for the next harness, not to edit working ones (R20).
+
+The proposal is deliberately **additive**: new harnesses use the kernel, existing ones migrate
+only when touched for another reason, and exactly three (the whole-corpus globbers) move with
+it. It also names the risk it creates — a shared kernel fails *consistently*, which is harder
+to notice than five harnesses disagreeing — and holds it with both-limb tests, a
+classification census printed into every artifact, and a row in
+`eval/controls/audit_control_fires.py`.
+
 ### Corrections to earlier statements in this session
 
 - The coverage-gap fabrication rate was first reported as **8 of 10**. The correct figure is
@@ -333,6 +357,41 @@ flips) → `0bda969` (R16 canary evidence). All pushed to `origin/main`.
 > over a plausible invention, and the one mechanism that could — the coverage gate — is
 > **DISABLED by decision** (37× false-refusal gap, R21). That decision was correct on the
 > evidence available and is now the binding constraint on this number.
+>
+> ---
+>
+> ### ⚠️ AND A SECOND THING, WHICH WE CANNOT CURRENTLY PUT A NUMBER ON AT ALL
+>
+> **We do not know how often CHIKE contradicts itself when the same question is rephrased, and
+> we cannot find out from any corpus we own.**
+>
+> Not "we haven't got round to measuring it" — **the measurement is impossible with the
+> material that exists.** Every probe set and gate corpus in this repo is
+> **one-phrasing-per-question by construction**: the 200/50/150 eval questions, the natural 48,
+> the 78, and every targeted probe file. A corpus with one phrasing per question cannot detect
+> phrasing-dependence, **however large it is or however carefully it is adjudicated**. Adding
+> more single-phrasing rows raises confidence in every other property and leaves this one
+> exactly where it was.
+>
+> **The only evidence we have is the 12 deliberately-paired rows in the 78, and it is not
+> reassuring: 4 of 6 pairs answered the same question two different ways** [M]. ext_39/ext_40
+> returned *"TRA may inspect with no notice at all"* and *"TRA must give at least 14 days'
+> notice"* — same system, same underlying question, minutes apart, differing only in phrasing.
+>
+> **6 pairs is far too small a base to generalise from, and the population was chosen to be
+> hard** (they are all coverage gaps, where the model has nothing to ground on). So 4-of-6 is
+> **not** an estimate of the contradiction rate. It is a demonstration that the rate is not
+> zero, on a population where it would be worst. **The honest statement is that the quantity is
+> unmeasured, and the only way to measure it is to author a paired corpus** — the same question
+> in two registers, adjudicated for mutual consistency rather than for correctness against a
+> fact.
+>
+> **Why this belongs in a pilot assessment rather than an engineering backlog:** a wrong answer
+> is a wrong answer and a tester may or may not catch it. **Two contradictory answers to the
+> same question are self-evidently untrustworthy to the person who receives them**, and they
+> destroy confidence in every other answer the system gave that tester — including the correct
+> ones. It is the failure mode with the worst ratio of trust-damage to frequency, and it is the
+> one we have no instrument for.
 
 **Re-derived from scratch against today's state, not updated from the 2026-08-24 assessment.**
 Every claim is tagged **[M]** (measured, artifact named) or **[J]** (judgement). The 48-row
