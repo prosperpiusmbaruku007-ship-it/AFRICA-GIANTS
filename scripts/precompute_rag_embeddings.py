@@ -396,6 +396,39 @@ CONCISE_BILINGUAL_FACTS = {
     'OSHA_annual_inspection':
         'OSHA hufanya ukaguzi wa lazima kila mwaka (mara moja kwa mwaka) katika maeneo yote ya kazi Tanzania.',
 
+    # ext_31 FIX (2026-09-24). THE FACT WAS ALREADY CORRECT AND WAS NEVER A CORPUS DEFECT --
+    # this is a REACH defect of the R15 kind, and naming it precisely matters because the
+    # obvious reading ("the model said the wrong thing, so fix what it knows") is wrong here.
+    #
+    # The served row was the `key: value` fallback, i.e. the locked fact's own text, which
+    # opens 'OSHA safety officer threshold: Occupational Health and Safety Act Cap.297
+    # s.11(1) requires...' -- English-first and LABEL-LED. Measured at BOUNDARY (rank 4-16)
+    # for the real user phrasing 'Kiwandani kwetu tuna wafanyakazi zaidi ya ishirini. Ni
+    # lazima tuwe na afisa maalum wa usalama kazini?' (bucket-E reach run, 2026-09-24), and
+    # the live reply asserted exactly the phrasing the fact itself forbids.
+    #
+    # Re-led with the asker's words -- `afisa wa usalama kazini`, `wafanyakazi zaidi ya 20`,
+    # `kiwandani` -- then the answer, then the mechanism. This is the nat_36 lever (rank 17 ->
+    # 1 from vocabulary choice alone), applied per-row and measurable, not a bulk reword.
+    #
+    # Citations are DELIBERATELY ABSENT per the standing rule above: 'Cap.297 s.11(1)' is
+    # exactly the legal-citation-shaped material that pulled nat_05 from rank 24 to 59. It is
+    # NOT lost -- it stays in locked_facts.json's `fact`/`primary_source`, which R13
+    # generate-from-facts reads directly and which never passes through this embedding.
+    # locked_facts.json is therefore left UNTOUCHED (no R27 exposure).
+    #
+    # The short English tail preserves 'NOT a professionally hired/dedicated 'safety officer''
+    # verbatim, because that string is bucket_e_reach_probes_014's needle for ext_31 -- same
+    # reason gn487a_prohibited_activity_3 keeps its English guard keys. Changing the embedded
+    # text without it would silently break the fixture that measured the defect.
+    'OSHA_safety_officer_threshold':
+        'Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na '
+        'wafanyakazi zaidi ya 20, unateua mwakilishi wa usalama na afya kutoka kwa wafanyakazi '
+        'ulio nao -- ni kuteua, si kuajiri mtu mpya. Kiwandani: mwakilishi 1 kwa kila '
+        'wafanyakazi 50. Dukani au ofisini: 1 kwa kila 100. Mkaguzi anaweza kuagiza uteuzi hata '
+        'kwa wafanyakazi 4 au chini ya hapo. Kamati ya usalama inahitajika ukiwa na wawakilishi '
+        '2 au zaidi. (NOT a professionally hired/dedicated \'safety officer\'.)',
+
     'wcf_rate_0_5_percent_confirmed':
         'WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi kisichobadilika — inategemea mishahara.',
 

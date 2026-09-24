@@ -1,5 +1,113 @@
 # Africa Giants — Project Progress
 
+## ⛔ DECIDED 2026-09-24 — **DO NOT RETRAIN.** Read this before proposing one.
+
+**The case for retraining was that the model was trained to reproduce claims we have since
+proven wrong. Measured against the failures we actually have, that is not what these failures
+are.**
+
+**The corpus corrections and the measured failures do not overlap in any way that makes the
+corrections a fix.** Of the **7 distinct index rows** where the supporting fact reached the
+model's context and the answer was still wrong — the exact population the retrain case rests on
+— **five have no quarantined defect class behind them at all.** Their facts were never wrong in
+the corpus: BRELA late-filing, name reservation, service levy cap, nationally-set licence fee,
+OSHA continuing offence. The remaining two (DSE stale float, presumptive stale ceiling/rate)
+**had their defective rows already removed, and both still failed with the corrected fact in
+context** — so for neither is the stale training claim a *sufficient* explanation of the
+failure. **Zero of the seven are explained by what the corpus corrections changed.**
+
+Artifact: `eval/results/retrain_case_2026_09_24.json`. Harness:
+`eval/retrain/measure_retrain_case.py`, committed before this write-up (R18).
+
+⚠️ **NUMBER DISCIPLINE, because this entry will be quoted.** The overlap is **2 of 7 distinct
+rows by defect class, 0 of 7 as a sufficient explanation.** Both figures are in the artifact.
+The stricter "0" is the one that carries the decision and the looser "2" is the one that
+survives an audit — say which you mean. Per probe rather than per row it is 4 of 9, inflated by
+`ext_08/09/11` all resolving to row 168.
+
+### The compact form — and it is NOT the case that was proposed
+
+**`nssf_total_rate` was put forward as the emblem and it does not hold. Recorded because the
+correction matters more than the example.** Claim: 15 training pairs assert 20%, the corrected
+fact reaches context saying 20%, the model answers 10%. Measured:
+
+- **570** training rows mention NSSF; **112** assert 20 — not 15.
+- `nssf_total_rate` says 20%; index rows **10, 77 and 166** all say 20%. So far so good.
+- **But the model does NOT answer 10%.** Today's committed capture has `cp_06a` *and* `cp_06b`
+  both returning *"asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi)"* — correct
+  under both registers — and `cp_18` correct on the employer share too.
+- The 10% failure came from the **2026-08-23 R23 control arm, which R24 already retracted**:
+  that baseline was built from three hand-picked facts while `retrieve()` returns four, and
+  *"with the real context the model answers correctly"*. Writing it into the record now would
+  re-assert a claim this project retracted a month ago — the R30 decay shape exactly.
+
+**THE CASE THAT DOES HOLD IS THE SERVICE LEVY, and it is sharper than the one it replaces:**
+
+> **`ext_23` / `cp_05` — exactly ONE training row mentions the service levy at all, and ZERO
+> state the 0.3% figure. Zero rows were ever quarantined. The correct fact reached TOP-3 in the
+> bucket-E run. And live on 2026-09-24 the model said *"Hakuna kiwango cha juu kilichowekwa
+> kwenye sheria. Ni kikomo cha CHINI tu… asilimia 0.3"* — there is no maximum, 0.3% is a
+> FLOOR — inverting a statutory ceiling. The other phrasing of the same question got it right.**
+
+**No training data, correct retrieval, wrong answer, phrasing-dependent.** A retrain cannot fix
+this by correcting data: *there is no data to correct.* Fixing it would mean **authoring new
+pairs**, which is corpus construction, not a retrain of a corrected corpus — a different piece
+of work with a different cost.
+
+### What this decision does NOT say
+
+**The corpus work still has to land in a retrain eventually.** 448 rows across 17 defect classes
+were quarantined for good reasons, the deployed adapter (trained 2026-07-07) consumed every one
+of them before any was found, and **the corrected corpus is the one any future training must
+use.** Nothing here argues otherwise.
+
+It argues only this: **the corrected corpus is not a fix for the failures we measured, and must
+not be spent as though it were.** Retraining now would consume the project's most expensive
+resource, pass through the gate — the expensive irreversible step — and leave five of seven
+measured failures untouched, because they were never corpus defects.
+
+**And the gate cannot currently price it.** The *"~6 questions of headroom"* premise is
+superseded and **its sign is inverted**: the honest measurement is **84.7% (161/190)**,
+`gate_001_results.json` records `gate_passed: False`, `run_eval.py` compares with strict `>` so
+the floor needs 162 — **one question BELOW the line, not five above it.** The 91.1%/88.0%/87.9%
+figures were all inflated by scorer bugs since fixed, and **CLAUDE.md line ~465 still advertises
+87.9% as a pass and is stale.** No gate has been run since **2026-07-14**, so the entire
+verification arc and today's regen have an unmeasured gate effect. 1 question = 0.53pp.
+
+### `ext_31` fixed — a content defect, independent of all of the above
+
+Live and wrong today, so fixed regardless of the retrain outcome. **The fact was already correct
+and was never a corpus defect** — naming that precisely matters, because the obvious reading
+("the model said something wrong, so fix what it knows") is the wrong diagnosis here.
+
+The served row was the `key: value` fallback — the locked fact's own text, opening *"OSHA safety
+officer threshold: Occupational Health and Safety Act Cap.297 s.11(1) requires…"*:
+**English-first and label-led.** Measured at **BOUNDARY (rank 4–16)** for the real phrasing
+*"Kiwandani kwetu tuna wafanyakazi zaidi ya ishirini. Ni lazima tuwe na afisa maalum wa usalama
+kazini?"*, and the live reply asserted **exactly the phrasing the fact itself forbids**.
+
+Re-led with the asker's words — *afisa wa usalama kazini*, *wafanyakazi zaidi ya 20*,
+*kiwandani* — then the answer, then the mechanism. This is the `nat_36` lever (rank 17 → 1 from
+vocabulary alone), applied per-row and measurable.
+
+- Added to `CONCISE_BILINGUAL_FACTS`, which embeds **without** the `key: ` prefix.
+- **`locked_facts.json` deliberately UNTOUCHED** — no R27 exposure. Citations stay there, where
+  R13 `generate-from-facts` reads them, and are kept OUT of the embedded text per the standing
+  rule (folding citations in cost `nat_05` ranks 24 → 59).
+- The short English tail preserves `NOT a professionally hired/dedicated 'safety officer'`
+  verbatim, because that is `bucket_e_reach_probes_014`'s needle for `ext_31`. Changing the text
+  without it would have silently broken the fixture that measured the defect.
+- **Verified offline: exactly ONE row changed (86), 183 rows before and after, and all 14
+  bucket-E needles still resolve to exactly one row.** My first verification pass misused
+  `build_fact_texts()` (it returns a 3-tuple) and reported "3 rows / needles not unique" — a bad
+  specimen, discarded rather than recorded (R26 second half).
+
+🔴 **NOT LIVE YET.** R15 founder steps required: run `kaggle/regenerate_rag_e5.py` on Kaggle,
+commit the index to both `chike-inference/` and `kaggle/`, then R16 stop + deploy, then confirm
+`ext_31` reaches and the live reply no longer says *"afisa maalum"*.
+
+---
+
 ## 🔁 PAIRED-PHRASING ADJUDICATED, 2026-09-24 — **16.7% contradictory, and contradictions are NOT confined to coverage gaps**
 
 **Recovery first.** A terminal crash landed on the capture's commit-approval prompt. Nothing was
