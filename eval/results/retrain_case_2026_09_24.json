@@ -1,0 +1,241 @@
+{
+  "measured": "2026-09-24",
+  "harness": "eval/retrain/measure_retrain_case.py",
+  "caveats_at_the_front": [
+    "BUCKET-E IS 14 AUTHORED PROBES, OUTCOME-CONDITIONED ON FAILURE. It establishes the failure profile of rows already known to be wrong and says NOTHING about the corpus generally (R22). No figure here is a corpus-wide rate.",
+    "14 PROBES = 12 DISTINCT INDEX ROWS. ext_08/09/11 share row 168 and all SUCCEEDED, so redundancy inflates the REACH side. Quote the distinct-row figures.",
+    "ext_31 IS A LIVE CONTENT DEFECT AND IS OUT OF SCOPE OF THIS DECISION. Index row 86 says \"designated representative from existing staff\"; the live reply said \"must hire a safety officer above N employees\". Fix it regardless of the retrain outcome -- it is wrong in production today.",
+    "THE REACH NUMBERS ARE TRANSCRIBED FROM A KAGGLE CONSOLE. The per-probe artifact is not yet in the repo, so everything downstream is PROVISIONAL under R18."
+  ],
+  "A_residual_quarantine_exposure": {
+    "quarantine_files": 10,
+    "quarantined_rows_total": 448,
+    "distinct_defect_classes_recorded": 17,
+    "defect_classes": {
+      "states visa/permit revocation as merely \"possible\" or \"not always\" -- GN487A s.3(3)(a) mak": 129,
+      "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,": 64,
+      "asserts an EFD requirement/threshold tied to TZS 11,000,000 or TZS 14,000,000 turnover -- ": 58,
+      "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Financ": 50,
+      "asserts Form \"P9\" due 31 March -- \"P9\" is Kenyan (KRA) terminology, not a Tanzanian TRA fo": 45,
+      "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)": 32,
+      "asserts NSSF has a mining-specific 55-year retirement provision -- NSSF Act Cap.50 Part V ": 17,
+      "(none recorded)": 13,
+      "asserts a flat 1% stamp duty on land/building transfer -- Stamp Duty Act Cap.189 Schedule ": 13,
+      "cites \"(Section XII)\" as the Companies Act provision for foreign-company BRELA filings. Th": 13,
+      "states the pre-Finance-Act-2026 presumptive-tax ceiling (TZS 100,000,000) and/or top-band ": 10,
+      "asserts a >=30% public-float condition for the DSE-listed 25% corporate tax rate. Finance ": 6,
+      "asserts occupational disease must reach WCF within a flat 7 working days of diagnosis -- G": 6,
+      "dates the VAT 100M->200M registration threshold increase to July 2024 -- the amending inst": 6,
+      "names \"P9\" as the Tanzanian alternative to a UK P45 -- \"P9\" is Kenyan (KRA) terminology, t": 3,
+      "states patent term as a flat 20 years with no extension mechanism -- Patents (Registration": 2,
+      "states an OSHA training-course fee of TZS 250,000 with no identified course. Every OSHA co": 2
+    },
+    "sft": {
+      "train_sft.jsonl": {
+        "rows": 3967,
+        "quarantined_rows_still_present": 4,
+        "by_file": {
+          "paye_defect_quarantine_2026_08_25.jsonl": 2,
+          "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl": 2
+        }
+      },
+      "val_sft.jsonl": {
+        "rows": 445,
+        "quarantined_rows_still_present": 0,
+        "by_file": {}
+      }
+    }
+  },
+  "B_defect_assertion_exposure_BOUND": {
+    "train_rows": 3967,
+    "rows_matching_any_wrong_pattern": 152,
+    "pct_of_train": 3.83,
+    "patterns_applied": 690,
+    "top_facts": {
+      "wcf_accident_reporting": 33,
+      "wcf_accident_reporting_deadline": 33,
+      "BRELA_COSOTA_split": 31,
+      "osha_registration_threshold_b004": 29,
+      "wcf_threshold_no_minimum": 22,
+      "SDL_source_law": 11,
+      "sdl_threshold": 9,
+      "osha_registration_before_operations": 8,
+      "wht_deadline": 7,
+      "wcf_rate_0_5_percent_confirmed": 7,
+      "paye_p9_deadline": 6,
+      "gn487a_penalty_noncitizen": 6
+    },
+    "why_this_is_a_bound_not_a_count": "wrong_patterns are known OVER-BROAD (2026-09-23 language scan: 200 hits, ~29% guarding working text) and known BLIND (2026-09-24: service-levy patterns require a string that appears only in the question; OSHA_penalties guards \"miezi 6\" while the live defect was \"miezi 12 hadi 24\"). Treat as an order-of-magnitude bound in BOTH directions."
+  },
+  "C_bucket_e_overlap": {
+    "probes": 14,
+    "distinct_index_rows": 12,
+    "reaching_probes": 9,
+    "reaching_distinct_rows": 7,
+    "not_reaching_probes": 5,
+    "not_reaching_distinct_rows": 5,
+    "reach_rate_by_probe_pct": 64.3,
+    "reach_rate_by_distinct_row_pct": 58.3,
+    "reaching_AND_in_a_quarantined_defect_class": {
+      "probes": [
+        "ext_02",
+        "ext_08",
+        "ext_09",
+        "ext_11"
+      ],
+      "n_probes": 4,
+      "distinct_rows": [
+        36,
+        168
+      ],
+      "n_distinct_rows": 2
+    },
+    "reaching_but_NO_quarantined_defect_class": {
+      "probes": [
+        "ext_14",
+        "ext_18",
+        "ext_23",
+        "ext_25",
+        "ext_32"
+      ],
+      "n_probes": 5,
+      "distinct_rows": [
+        75,
+        98,
+        174,
+        178,
+        180
+      ],
+      "n_distinct_rows": 5
+    },
+    "not_reaching_in_a_quarantined_defect_class": [],
+    "per_probe": {
+      "ext_02": {
+        "reach": "IN_TOP3",
+        "index_row": 36,
+        "defect_class": "dse_stale_float_2026_09_01",
+        "why": "DIRECT. Probe needs the >=25% public-float condition; the quarantined class is rows asserting the stale >=30% condition. Same fact, same clause, opposite value.",
+        "retrain_reachable": "PLAUSIBLY",
+        "retrain_why": "Wrong stale value was in training; corrected rows teach the right one. This is the shape SFT is for."
+      },
+      "ext_08": {
+        "reach": "IN_TOP3",
+        "index_row": 168,
+        "defect_class": "presumptive_stale_ceiling_rate_2026_09_01",
+        "why": "SAME FACT, ADJACENT CLAUSE. The quarantine targets the stale 100M ceiling / 3.5% top rate; the probe needs the zero band. One locked fact (presumptive_tax_bands_2022), so the correction rewrites the row the probe depends on -- but not the clause the probe asks about.",
+        "retrain_reachable": "PLAUSIBLY",
+        "retrain_why": "Same fact row corrected; band recall is content the model can be taught."
+      },
+      "ext_09": {
+        "reach": "IN_TOP3",
+        "index_row": 168,
+        "defect_class": "presumptive_stale_ceiling_rate_2026_09_01",
+        "why": "SAME FACT, ADJACENT CLAUSE. As ext_08; probe needs the no-records 100,000 band.",
+        "retrain_reachable": "PLAUSIBLY",
+        "retrain_why": "As ext_08."
+      },
+      "ext_11": {
+        "reach": "IN_TOP3",
+        "index_row": 168,
+        "defect_class": "presumptive_stale_ceiling_rate_2026_09_01",
+        "why": "DIRECT. The new-business exemption the probe needs was ADDED to the fact by the same Finance Act 2026 correction that drove this quarantine.",
+        "retrain_reachable": "PLAUSIBLY",
+        "retrain_why": "The exemption clause is newly-correct content absent from the old training set."
+      },
+      "ext_14": {
+        "reach": "IN_TOP3",
+        "index_row": 98,
+        "defect_class": null,
+        "why": "No quarantined class. The BRELA local late-filing penalty (2,500/month) was never found wrong in the corpus.",
+        "retrain_reachable": "NO",
+        "retrain_why": "Nothing in training asserted this wrongly. A retrain re-teaches a fact that was already right and the model still got wrong."
+      },
+      "ext_18": {
+        "reach": "IN_TOP3",
+        "index_row": 180,
+        "defect_class": null,
+        "why": "No quarantined class. memorandum_articles_fee_stale_22000 is the MemArts fee, a DIFFERENT fee from name reservation (50,000). Checked, not assumed.",
+        "retrain_reachable": "NO",
+        "retrain_why": "As ext_14 -- correct in corpus, wrong in output."
+      },
+      "ext_21": {
+        "reach": "DEEP",
+        "index_row": 30,
+        "defect_class": null,
+        "why": "No quarantined class. Objection deposit rule was never a corpus defect.",
+        "retrain_reachable": "n/a -- did not reach context",
+        "retrain_why": ""
+      },
+      "ext_22": {
+        "reach": "DEEP",
+        "index_row": 31,
+        "defect_class": null,
+        "why": "No quarantined class. Objection extension right was never a corpus defect.",
+        "retrain_reachable": "n/a -- did not reach context",
+        "retrain_why": ""
+      },
+      "ext_23": {
+        "reach": "IN_TOP3",
+        "index_row": 174,
+        "defect_class": null,
+        "why": "No quarantined class. The service-levy cap was never quarantined -- and the live 2026-09-24 failure on it (cp_05) INVERTED cap into floor with the correct fact in context.",
+        "retrain_reachable": "NO -- AND IT IS THE COUNTEREXAMPLE",
+        "retrain_why": "The corpus fact is CORRECT and reached top-3, and the model inverted \"kikomo\" (ceiling) into a floor live on 2026-09-24 (cp_05). Retraining on correct facts does not address a model that contradicts a correct fact sitting in its context."
+      },
+      "ext_25": {
+        "reach": "IN_TOP3",
+        "index_row": 178,
+        "defect_class": null,
+        "why": "No quarantined class. Nationally-set licence fee was never a corpus defect; keyword pass matched unrelated rows on \"ada\" and was discarded.",
+        "retrain_reachable": "NO",
+        "retrain_why": "Correct in corpus, wrong in output."
+      },
+      "ext_27": {
+        "reach": "DEEP",
+        "index_row": 33,
+        "defect_class": null,
+        "why": "No quarantined class. Class B was CONFIRMED correct against the Immigration Act, never quarantined.",
+        "retrain_reachable": "n/a -- did not reach context",
+        "retrain_why": ""
+      },
+      "ext_29": {
+        "reach": "BOUNDARY",
+        "index_row": 103,
+        "defect_class": null,
+        "why": "NOT A MATCH, and this one is the near-miss worth stating. A VAT class WAS quarantined -- but it is rows DATING the 100M->200M increase to July 2024. Those rows assert the CORRECT 200M value with a wrong date. The probe needs the value. Correcting the date changes nothing the model learned about the threshold itself.",
+        "retrain_reachable": "n/a -- did not reach context",
+        "retrain_why": ""
+      },
+      "ext_31": {
+        "reach": "BOUNDARY",
+        "index_row": 86,
+        "defect_class": null,
+        "why": "No quarantined class. AND THIS IS A LIVE CONTENT DEFECT INDEPENDENT OF THE RETRAIN: index row 86 says \"designated representative from existing staff\", the live reply said \"must hire a safety officer above N employees\". Fix the fact regardless of the retrain outcome.",
+        "retrain_reachable": "n/a -- did not reach context",
+        "retrain_why": ""
+      },
+      "ext_32": {
+        "reach": "IN_TOP3",
+        "index_row": 75,
+        "defect_class": null,
+        "why": "No quarantined class. The OSHA quarantine is course_fee 250,000, a different fact from the continuing-offence penalty.",
+        "retrain_reachable": "NO",
+        "retrain_why": "Correct in corpus, wrong in output."
+      }
+    }
+  },
+  "D_gate_cost": {
+    "gate_corpus_n": 190,
+    "last_pass_score": 0.847,
+    "questions_correct_at_last_pass": 161,
+    "floor_pct": 0.85,
+    "questions_needed_to_hold_the_floor": 162,
+    "headroom_questions": -1,
+    "one_question_is_pct": 0.53,
+    "gate_currently_passes": false,
+    "measured_on": "2026-07-14 Kaggle eval.py re-run; NO gate run since",
+    "note": "THE SIGN IS INVERTED RELATIVE TO THE \"~6 QUESTIONS OF HEADROOM\" PREMISE. There is no headroom: the last honest measurement is ONE QUESTION BELOW the floor, and gate_001_results.json records gate_passed: False. The 87.9%/91.1%/88.0% figures were all inflated by scorer bugs since fixed, and CLAUDE.md still advertises 87.9% as a pass.",
+    "the_larger_problem": "NO GATE HAS BEEN RUN SINCE 2026-07-14. Every content and index fix shipped since -- the whole verification arc, the clean 34/34 guard sweep, today's regen -- has an UNMEASURED effect on Gate 1. The retrain is being scoped against a baseline two and a half months stale, and the cheapest action available is to re-run the gate on the current build before deciding anything.",
+    "granularity": "1 question = 0.53pp. A retrain whose expected effect is under ~2 questions is not distinguishable from noise at this corpus size."
+  }
+}
