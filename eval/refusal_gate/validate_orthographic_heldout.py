@@ -11,17 +11,17 @@ the cost of a future cue.
 happened to judge well -- which R11 exists so we never depend on. The 2026-08-14 variant pass
 covered the DIGRAPH family only (dh->z, th->s, gh->g: 11 word pairs), and its enforcing test is
 named `test_every_swahili_digraph_phrase_has_its_variant`. Metathesis is a REORDERING, not a
-substitution; vowel change and elision are different again. Nothing has ever looked for them.
+substitution; vowel change, elision and DROPPED ASPIRATION are different again. Nothing has ever looked for them.
 
 === WHAT IS SEALED, AND WHY THE SPLIT IS NOT PEDANTRY (R21) ===
 
 A held-out set is burned once its RESULTS are read, and the two limbs burn differently:
 
-  OOC LIMB (16 rows, must REFUSE) -- reading this now is FINE and necessary. It establishes
+  OOC LIMB (20 rows, must REFUSE) -- reading this now is FINE and necessary. It establishes
     that the leak is real and which variants carry it. Fitting a cue to a leaked phrase is the
     intended work: the phrase IS the target. Nothing is overfitted by knowing the defect exists.
 
-  IN-SCOPE LIMB (16 rows, must NOT be refused) -- SEALED. This limb prices the FALSE-REFUSAL
+  IN-SCOPE LIMB (18 rows, must NOT be refused) -- SEALED. This limb prices the FALSE-REFUSAL
     cost, which is the expensive half (R21 measured a ~37x gap between corpus sweeps and
     held-out questions). Reading which rows a candidate cue would refuse, BEFORE the cue is
     frozen, is exactly how a cue gets tuned to a set and stops measuring anything.
@@ -55,7 +55,7 @@ sys.path.insert(0, REPO)
 
 from chike import classification                                     # noqa: E402
 
-FIXTURE = os.path.join(REPO, 'eval', 'refusal_gate', 'orthographic_heldout_032.jsonl')
+FIXTURE = os.path.join(REPO, 'eval', 'refusal_gate', 'orthographic_heldout_038.jsonl')
 
 
 def main():
@@ -70,11 +70,11 @@ def main():
     assert len(ids) == len(set(ids)), 'duplicate ids'
     ooc_rows = [r for r in rows if r['limb'] == 'ooc']
     ins_rows = [r for r in rows if r['limb'] == 'in_scope']
-    assert len(rows) == 32, f'expected 32 rows, got {len(rows)}'
-    assert len(ooc_rows) == 16 and len(ins_rows) == 16, 'limbs must be 16/16'
+    assert len(rows) == 38, f'expected 38 rows, got {len(rows)}'
+    assert len(ooc_rows) == 20 and len(ins_rows) == 18, 'limbs must be 20/18'
 
     axes = collections.Counter(r['axis'] for r in ooc_rows)
-    for axis in ('metathesis', 'vowel_change', 'elision'):
+    for axis in ('metathesis', 'vowel_change', 'elision', 'aspiration_drop'):
         assert axes[axis] >= 4, f'axis {axis} has only {axes[axis]} OOC rows -- too few to read'
     print(f'[fixture] OOC axes: {dict(axes)}')
     print(f'[fixture] in-scope collision rows: '
@@ -111,7 +111,7 @@ def main():
         for rid, topic, matched in pre_existing:
             print(f'    {rid}  ({topic})  matched {matched}')
     else:
-        print('  none -- every in-scope row passes the current list, so all 16 are clean '
+        print('  none -- every in-scope row passes the current list, so all 18 are clean '
               'specimens for the future cue measurement')
     print(f'\n  pre-existing false refusals: {len(pre_existing)}/{len(ins_rows)}')
     print('  NOT READ HERE, BY DESIGN: what any candidate cue would do to these rows. That is '

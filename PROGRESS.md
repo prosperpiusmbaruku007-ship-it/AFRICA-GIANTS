@@ -1,5 +1,81 @@
 # Africa Giants — Project Progress
 
+## 🔴 BOARD ITEM 2026-09-24 — **R31's FOURTH INSTANCE: `partnership_tax_statement()` is a whole engine nothing reaches**
+
+**First, a correction to the premise this was raised under.** The finding was put to me as
+*"`osha.py` computing the right answer and never being reached"*. **There is no `chike/osha.py`,
+and no OSHA computation exists anywhere in the package** — the only OSHA references in `chike/`
+are a domain-name list, a regex alternation and a comment. **`ext_31` was a RETRIEVAL defect, not
+an engine defect**: the index row was English-first and label-led, measured at BOUNDARY, and was
+fixed by re-leading it with the asker's vocabulary. Recorded because a claim handed to this
+project carries the same burden as a locked fact (R28), and *"a pass that only ever edits never
+earns the confidence to also NOT edit when the evidence says not to."*
+
+**But the phenomenon behind the question is real, and looking for it found a genuine instance.**
+
+### The finding
+
+`partnership_tax_statement()` is reached only when
+**`is_partnership_entity(text) AND asks_corporate_income_tax(ql)`** are both true. The second
+conjunct is `_CORPORATE_INCOME_TAX_CUES` — **11 cues built for the CORPORATE route and reused
+here.** Every one is either company-framed (`kodi ya kampuni`, `kodi ya makampuni`, `corporate
+tax`) or the technical term **`kodi ya mapato`**.
+
+**Measured on 8 natural partnership phrasings — and the answer to *"specific to this shape, or
+general?"* is GENERAL:**
+
+| | result |
+|---|---|
+| `is_partnership_entity` | **8 / 8** — entity detection is fine |
+| `asks_corporate_income_tax` | **3 / 8** — and the 3 are *exactly* those containing `kodi ya mapato` |
+| **engine reached** | **3 / 8** |
+
+The five that miss are the ordinary ways the question gets asked: *"analipa kodi kwa kiwango
+gani"*, *"tunalipaje kodi"*, *"nani analipa kodi — ubia au sisi wenyewe?"*, *"kodi inakatwa
+vipi"*, *"analipa asilimia ngapi"*.
+
+**This is R31's presumptive-engine pattern exactly — *an engine reachable only by the technical
+term serves the users who least need it*** — and it is worse than that case in one respect: the
+gate is not even the engine's own vocabulary, it is **another route's** cue list, inherited by
+conjunction.
+
+### Why this is worse than no engine, which is the point
+
+`ext_06`'s live adjudication note reads: *"never states that an individual partner's share falls
+under individual progressive rates."* **The engine's own working text already contains that
+sentence** — *"viwango vya mtu binafsi kama mshirika ni mtu, au asilimia 30 kama mshirika ni
+kampuni."* The answer existed, was correct, and was never reached; the question fell to the fact
+path instead. **A live engine producing nothing makes the domain look covered** — `rules_engine`
+exports it, tests exercise it, the census counts it.
+
+### Two candidates checked and REJECTED — the specimen-first half of R26 doing real work
+
+Both would have been reported as R31 instances by a pass that only asked *"does an extractor
+exist?"*. Neither is one:
+
+- **`compute_presumptive`'s `new_business_exemption_granted`** — no extractor, always `None`, and
+  that is a **documented three-state design**. `None` computes the ordinary band figure *and*
+  appends `_NEW_BUSINESS_NOTE`, stating the exemption's possible applicability explicitly. The
+  signal (*has the Commissioner granted an application?*) is one no question states, and the
+  engine correctly refuses to guess it.
+- **`partnership_tax_statement`'s `partner_is_individual`** — no extractor, always `None`, and its
+  docstring says it *"narrows the EXPLANATION only, it never turns into a computed rate"*. The
+  default text already states both branches. **The parameter is not the defect; the route is.**
+
+**Reporting either as inert would have sent someone to rewrite a working engine** — the exact
+cost R26's second half names, where a false positive is more expensive than a false negative
+because only false positives generate edits.
+
+### Not fixed here, deliberately
+
+Widening the gate is a routing change, and R31's own step 2 requires the extractor to be written
+**narrow-by-construction and swept for collisions BEFORE shipping** — not narrowed afterwards.
+The obvious candidate (a bare `analipa kodi` / `tunalipaje kodi` cue) is exactly the kind of
+broad phrase that would divert unrelated levy questions, which is what the `eval_211` harm class
+is. Scoped, not started.
+
+---
+
 ## ⛔ DECIDED 2026-09-24 — **DO NOT RETRAIN.** Read this before proposing one.
 
 **The case for retraining was that the model was trained to reproduce claims we have since
