@@ -100,7 +100,24 @@ SOURCE_FILES = [
 # imports it directly (see CORRECTION-SYNC GATE below) as a hard, not incidental,
 # dependency. A clone that doesn't contain a09a2a9 as an ancestor cannot run this file
 # at all, not just "would build the wrong index" -- so it belongs on this floor.
-EXPECTED_HEAD = 'a09a2a9'
+#
+# BUMPED 2026-09-24 to 467115b, AND THE REASON IS THIS FLOOR'S OWN FAILURE MODE RECURRING.
+# This regen exists to ship the corrected `brela_foreign_late_filing_penalty` text (Part
+# XIII, not "Section XII"), which landed in 467115b. With the floor left at a09a2a9 -- now
+# a three-week-old ancestor -- a clone made at ANY commit from a09a2a9 onward passes the
+# ancestry check, including every commit BEFORE the fix this run is for. The guard would
+# have printed `[OK] HEAD contains the expected baseline a09a2a9`, rebuilt the index with
+# "Section XII" still in it, passed every other check (nothing about the stale row is wrong
+# FOR the stale row), and uploaded a successful-looking run that shipped exactly nothing of
+# what it was run for. That is verbatim the incident this constant was created to prevent,
+# recurring because the floor is only as good as its last bump. A floor that is never bumped
+# is not a floor; it is a comment.
+#
+# WHEN REPACKAGING: set this to the SHA of the commit carrying the CHANGE THIS RUN IS FOR,
+# not merely the newest infrastructure dependency. The question to answer is "what would
+# make this run pointless if it were missing?" -- and today that is the corrected fact text,
+# not the tooling.
+EXPECTED_HEAD = '467115b'
 
 
 def _assert_expected_head_present(local_head, live_sha):
@@ -205,6 +222,75 @@ assert EMBED_MODEL == 'intfloat/multilingual-e5-base', f'unexpected embedder: {E
 
 fact_texts_to_embed, fact_keys, dropped = precompute.build_fact_texts()
 print(f'[rag] kept {len(fact_texts_to_embed)} facts, dropped {len(dropped)} noise')
+
+# ── PAYLOAD GATE: is the change THIS RUN EXISTS FOR actually in the built texts? ─────
+# HARD, and hard is defensible here in a way the correction-sync gate below is not. That
+# gate is a LEXICAL match over free text whose own first-run false-positive rate was 7 of 8,
+# so a hard fail there could block a regen over a CORRECT fact (R21: a mechanism that can
+# refuse is expensive to get wrong). This gate asserts an exact string in text THIS REPO
+# AUTHORS, in a row identified by KEY, not by pattern matching. There is no sentence it can
+# misread: either the corrected citation is in the row or it is not.
+#
+# WHY IT EXISTS (2026-09-24). `brela_foreign_late_filing_penalty` said "(Section XII)" for
+# the entire life of the corpus. The fact was corrected 2026-08-31, the training corpus was
+# swept 2026-09-01, CLAUDE.md was fixed -- and the string still shipped, because this row is
+# hand-authored in precompute_rag_embeddings.py and is NOT derived from locked_facts.json.
+# It reached a live user reply on 2026-09-05 (ext_15). THREE standing checks were green on
+# it: check_facts_index_sync (content-shaped -- the USD 25 figure was present),
+# check_rag_index_freshness (time-shaped -- the index HAD been rebuilt after the correction;
+# the string survived a regeneration), and check_correction_sync (blind, because its
+# patterns assumed English word order and this row is Swahili, and because it resolves each
+# fact to its OWN row while the patterns live under a different key).
+#
+# So this is deliberately NOT another general detector. It is a per-run payload assertion:
+# name the exact thing this regen is for and refuse to upload without it. The cost of
+# carrying it forward is one line per shipped correction; the cost of not having it was five
+# weeks of a wrong citation served under three green checks.
+_XII_KEY = 'brela_foreign_late_filing_penalty'
+if _XII_KEY in fact_keys:
+    _xii_row = fact_texts_to_embed[fact_keys.index(_XII_KEY)]
+    assert 'section xii' not in _xii_row.lower(), (
+        f'[FATAL] {_XII_KEY} still carries the stale "Section XII" citation:\n  {_xii_row}\n'
+        f'This regen exists to remove it. The clone is older than 467115b, or the fix was '
+        f'reverted. Refusing to build -- see EXPECTED_HEAD above.')
+    assert 'part xiii' in _xii_row.lower(), (
+        f'[FATAL] {_XII_KEY} no longer names Part XIII:\n  {_xii_row}\n'
+        f'The stale citation is gone but the correct one is missing -- that is a different '
+        f'defect, not a pass.')
+    print(f'[OK] payload gate: {_XII_KEY} carries Part XIII, no "Section XII"')
+else:
+    # NOT a silent skip. If the key is renamed or dropped, this gate stops watching the
+    # thing it was built for and must say so rather than passing by absence (R20: a check
+    # that cannot fail is worse than the gap it replaced).
+    raise SystemExit(
+        f'[FATAL] {_XII_KEY} is not in the built fact set at all. Either it was renamed '
+        f'(update this gate) or dropped (a regression). A payload gate that silently stops '
+        f'applying is exactly the inert-control shape this project keeps finding.')
+
+# Nothing anywhere else in the built texts may carry the stale citation either -- the row
+# above is the one known instance, not a guarantee it is the only one.
+_stale = [k for k, t in zip(fact_keys, fact_texts_to_embed) if 'section xii' in t.lower()]
+assert not _stale, f'[FATAL] "Section XII" still present in: {_stale}'
+print('[OK] payload gate: no row in the built index carries "Section XII"')
+
+# SECOND PAYLOAD IN THIS RUN. 9c43143 (2026-09-05) also reworded `minimum_turnover_tax`, and
+# it has been sitting unshipped since: "kodi ya chini (AMT) ya asilimia 1" was intended as
+# "the MINIMUM tax (AMT), of 1%" but "ya chini ya asilimia 1" is equally the ordinary Swahili
+# for "LESS THAN 1%", and a live reply resolved it the wrong way -- a rate a user could act on
+# wrongly (eval/controls/corporate_domain_live_probe_2026_09_05.json). Gated here for the same
+# reason as the citation above: this regen is the first to carry it, so "did it actually get
+# in" is a question worth answering before upload rather than after a user finds out.
+_AMT_KEY = 'minimum_turnover_tax'
+if _AMT_KEY in fact_keys:
+    _amt_row = fact_texts_to_embed[fact_keys.index(_AMT_KEY)]
+    assert 'kodi ya chini' not in _amt_row.lower(), (
+        f'[FATAL] {_AMT_KEY} still carries the ambiguous "kodi ya chini" gloss, which reads '
+        f'as "less than 1%":\n  {_amt_row}')
+    assert 'alternative minimum tax' in _amt_row.lower(), (
+        f'[FATAL] {_AMT_KEY} no longer names Alternative Minimum Tax:\n  {_amt_row}')
+    print(f'[OK] payload gate: {_AMT_KEY} reworded, ambiguous gloss gone')
+else:
+    raise SystemExit(f'[FATAL] {_AMT_KEY} absent from the built fact set -- gate cannot apply.')
 
 # ── EMBED WITH E5-BASE ──────────────────────────────────────────────────────────
 from sentence_transformers import SentenceTransformer
