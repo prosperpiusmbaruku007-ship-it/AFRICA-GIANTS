@@ -117,7 +117,41 @@ import os
 import re
 import sys
 
-sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+def _safe_stdout_utf8():
+    """Make stdout UTF-8-tolerant WHERE THAT IS POSSIBLE, and never raise where it is not.
+
+    CALLED ONLY FROM main(). It used to run at module level, and that broke a Kaggle regen
+    on 2026-09-24: `sys.stdout.reconfigure` exists on a real TextIOWrapper but NOT on
+    Jupyter's `ipykernel.iostream.OutStream`, so importing this module inside a notebook
+    kernel raised AttributeError before a single check had run.
+
+    TWO DEFECTS IN ONE LINE, and the second is the general one:
+
+    1. It was the R16 Windows-console defence ("a console encoding must never be able to
+       destroy measured data") applied in an environment it was never tested in. A fix for
+       one platform became a crash on another -- the defence has to be conditional on the
+       platform actually needing it, which is what the try/except below is for.
+
+    2. IT WAS A MODULE-LEVEL SIDE EFFECT IN A LIBRARY. This file is imported by
+       kaggle/regenerate_rag_e5.py for `check_facts_and_index()`. A library must not
+       reconfigure its caller's stdout: the caller owns that stream, may be a notebook, a
+       subprocess with a pipe, or a test harness capturing output, and none of them asked
+       for it. Import-time work that touches global state runs regardless of how the module
+       is used, which is exactly why this could not be avoided by calling it carefully.
+
+    AST-swept the other two modules the regen imports in-process
+    (precompute_rag_embeddings.py, check_facts_index_sync.py) for module-level I/O
+    configuration of any kind -- reconfigure, setlocale, logging.basicConfig,
+    filterwarnings, chdir, os.environ assignment. Both clean; this was the only one.
+    """
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    except (AttributeError, ValueError, OSError):
+        # No reconfigure (Jupyter OutStream), or a stream that refuses it. Harmless: the
+        # only cost is that a non-UTF-8 console may mangle a character in a printed report.
+        # That is a cosmetic loss in an environment that already handles UTF-8 fine, and it
+        # is strictly better than aborting the caller.
+        pass
 
 _HERE = os.path.dirname(__file__)
 _REPO = os.path.normpath(os.path.join(_HERE, ".."))
@@ -259,6 +293,7 @@ def check(facts_path=FACTS_PATH, index_path=INDEX_PATH):
 
 
 def main():
+    _safe_stdout_utf8()          # CLI-only: this process owns stdout, an importer does not
     ap = argparse.ArgumentParser()
     ap.add_argument("--facts", default=FACTS_PATH)
     ap.add_argument("--index", default=INDEX_PATH)

@@ -803,15 +803,72 @@ print('\n' + '=' * 60)
 print('CORRECTION-SYNC GATE — corrected facts vs. their own wrong_patterns (SOFT)')
 print('=' * 60)
 CORRECTION_SYNC_BLOCKING = False
-sys.path.insert(0, 'scripts')
-from check_correction_sync import check_facts_and_index  # noqa: E402
-with open('scripts/locked_facts.json', encoding='utf-8') as _f:
-    _locked_for_sync = json.load(_f)
-correction_sync_ok, correction_sync_report = check_facts_and_index(
-    _locked_for_sync, fact_texts_to_embed)
-_cs_stale = correction_sync_report['stale_wrong_pattern']
-_cs_negated = correction_sync_report['negated_mention']
-if _cs_stale:
+
+
+def run_soft_gate(name, thunk):
+    """Run a NON-BLOCKING gate so that a crash inside it degrades to 'did not run' instead
+    of taking down the whole regen.
+
+    WHY THIS EXISTS (2026-09-24), and it is a general rule, not a patch for one line.
+    The correction-sync gate is deliberately soft: its verdict does not block the build,
+    because its own first-run precision was 1 of 8 and a hard fail could block a regen over
+    a CORRECT fact. On 2026-09-24 it aborted a regen anyway -- AFTER every blocking check
+    had passed (183 facts, 0 self-retrieval failures, 34 unique anchors, 0 known-failing
+    guards, rank gate clean) and BEFORE anything was uploaded. The whole run was lost to a
+    module-level `sys.stdout.reconfigure()` in the imported checker, which Jupyter's
+    OutStream does not implement.
+
+    THE LESSON IS ABOUT WIRING, NOT ABOUT THAT LINE. "Soft" was implemented as a statement
+    about the gate's VERDICT (`correction_sync_pass = ok or not BLOCKING`) and said nothing
+    about its EXECUTION. A gate whose verdict cannot block but whose crash can is not soft;
+    it is blocking through the back door, and in the worst possible way -- it blocks on
+    infrastructure faults rather than on findings, i.e. precisely when the finding is absent.
+
+    THE IMPORT IS INSIDE THE PROTECTED REGION ON PURPOSE. The 2026-09-24 crash happened at
+    IMPORT, not at call time. A wrapper around only the invocation would have been a wrapper
+    around the wrong thing and would have failed identically -- the exact shape of an inert
+    control, built while fixing one.
+
+    `Exception` only. KeyboardInterrupt and SystemExit propagate: those are someone
+    deliberately stopping the run, and swallowing them would make the regen unkillable.
+
+    R26 -- CANNOT EVALUATE IS NOT PASSED. A gate that did not run is reported as its own
+    third state, never folded into 'clean'. It does not block (this one is soft) but it is
+    printed loudly, carried into the final summary line, and recorded in the upload metadata,
+    so a run that shipped without this check saying anything is identifiable afterwards.
+    """
+    try:
+        return {'ran': True, 'value': thunk(), 'error': None}
+    except Exception as exc:                                              # noqa: BLE001
+        import traceback
+        print(f'[GATE DID NOT RUN] {name} crashed -- this is NOT a pass, and NOT a finding.')
+        print(f'    {type(exc).__name__}: {exc}')
+        print('    ' + '\n    '.join(traceback.format_exc().strip().splitlines()[-4:]))
+        print(f'    {name} is non-blocking, so the build continues WITHOUT its verdict.')
+        return {'ran': False, 'value': None, 'error': f'{type(exc).__name__}: {exc}'}
+
+
+def _correction_sync_thunk():
+    sys.path.insert(0, 'scripts')
+    from check_correction_sync import check_facts_and_index   # noqa: E402  (inside on purpose)
+    with open('scripts/locked_facts.json', encoding='utf-8') as _f:
+        _locked = json.load(_f)
+    return check_facts_and_index(_locked, fact_texts_to_embed)
+
+
+_cs_gate = run_soft_gate('CORRECTION-SYNC GATE', _correction_sync_thunk)
+correction_sync_ran = _cs_gate['ran']
+if correction_sync_ran:
+    correction_sync_ok, correction_sync_report = _cs_gate['value']
+    _cs_stale = correction_sync_report['stale_wrong_pattern']
+    _cs_negated = correction_sync_report['negated_mention']
+else:
+    correction_sync_ok, correction_sync_report = None, {'gate_did_not_run': _cs_gate['error']}
+    _cs_stale, _cs_negated = [], []
+
+if not correction_sync_ran:
+    pass          # already reported by run_soft_gate; nothing to add here
+elif _cs_stale:
     _label = 'FAIL' if CORRECTION_SYNC_BLOCKING else 'SOFT-FAIL (reported, not blocking)'
     print(f'[{_label}] {len(_cs_stale)} corrected fact(s) still match their OWN '
           f'wrong_patterns in the PROSPECTIVE index -- READ EACH ONE, do not assume '
@@ -826,7 +883,13 @@ if _cs_negated:
     print(f'INFO -- {len(_cs_negated)} fact(s) mention their own wrong_patterns text with '
           f'a negation cue nearby (read to confirm, not treated as a defect): '
           f'{sorted(r["key"] for r in _cs_negated)}')
-correction_sync_pass = correction_sync_ok or not CORRECTION_SYNC_BLOCKING
+# A crashed soft gate does not block (that is what soft means) but it is NOT a pass -- the
+# distinction is carried into the summary below and into the upload metadata rather than
+# being collapsed here (R26: cannot evaluate is not passed).
+correction_sync_pass = (correction_sync_ok or not CORRECTION_SYNC_BLOCKING
+                        if correction_sync_ran else not CORRECTION_SYNC_BLOCKING)
+correction_sync_state = ('DID_NOT_RUN' if not correction_sync_ran
+                         else ('CLEAN' if correction_sync_ok else 'SOFT-FAIL'))
 
 print()
 # allow <10% self-retrieval noise (near-duplicate facts can surface a sibling at rank 1)
@@ -836,12 +899,16 @@ overall_pass = (critical_pass and contrast_pass and disambig_pass and rank_gate_
 if overall_pass:
     print(f'VERIFICATION PASSED — {len(fact_texts_to_embed) - len(failures)}/{len(fact_texts_to_embed)} '
           f'facts self-retrieve correctly, all critical queries pass')
+    if correction_sync_state == 'DID_NOT_RUN':
+        print('  ⚠ NOTE: the correction-sync gate DID NOT RUN this build. It is non-blocking '
+              'so the upload proceeds, but this index ships WITHOUT that check having said '
+              'anything — not with it having said "clean".')
     print('Saving and uploading...')
 else:
     print('VERIFICATION FAILED — review failures before saving')
     print(f'  critical_pass={critical_pass} | contrast_pass={contrast_pass} | '
           f'disambig_pass={disambig_pass} | rank_gate_pass={rank_gate_pass} | '
-          f'anchor_pass={_anchor_pass} | correction_sync_pass={correction_sync_pass} '
+          f'anchor_pass={_anchor_pass} | correction_sync={correction_sync_state} '
           f'(blocking={CORRECTION_SYNC_BLOCKING}) | self_retrieval_failures={len(failures)} '
           f'(tolerance={int(len(fact_texts_to_embed) * 0.1)})')
     sys.exit(1)   # do NOT upload a broken index
@@ -870,8 +937,12 @@ api.create_commit(
         CommitOperationAdd(path_in_repo='rag_embeddings.npy', path_or_fileobj='rag_embeddings.npy'),
         CommitOperationAdd(path_in_repo='rag_facts_text.json', path_or_fileobj='rag_facts_text.json'),
     ],
+    # correction_sync state is IN the commit message, not only on a console that scrolls
+    # away: an index that shipped while a soft gate crashed must be identifiable from the
+    # artifact itself months later, without the run log (R18's "cite the artifact" applied
+    # to a build record).
     commit_message=f'e5-base RAG index ({embeddings_normalized.shape[0]}x{embeddings_normalized.shape[1]}), '
-                    f'built from {_live_sha}',
+                    f'built from {_live_sha}; correction_sync={correction_sync_state}',
     token=hf_token,
 )
 print(f'[upload] rag_embeddings.npy + rag_facts_text.json -> {DATASET_REPO} (one commit)')
