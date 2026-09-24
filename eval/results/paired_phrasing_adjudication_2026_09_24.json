@@ -1,0 +1,347 @@
+{
+  "measured": "2026-09-24",
+  "adjudicated": "2026-09-24",
+  "source_capture": "eval/results/paired_phrasing_live_2026_09_24.json",
+  "source_verdicts": "eval/consistency/paired_phrasing_verdicts_024.jsonl",
+  "harness": "eval/consistency/adjudicate_paired_phrasing.py",
+  "scheme_frozen_at": "4d81eab (runner + corpus, committed BEFORE the capture)",
+  "verdict_scheme": {
+    "CONSISTENT_CORRECT": "both agree and the shared answer is right",
+    "CONSISTENT_WRONG": "both agree and the shared answer is wrong -- NOT a contradiction",
+    "DIVERGENT_COMPATIBLE": "one says more, nothing denied -- NOT a contradiction",
+    "CONTRADICTORY": "the two answers cannot both be true -- THE TARGET",
+    "SCOPE_INCONSISTENT": "one answered, one refused as out of scope -- reported separately",
+    "UNADJUDICABLE": "one or both replies too vague to place"
+  },
+  "population_caveat": "MEASURED ON 24 AUTHORED PAIRS, not a corpus-wide estimate and never to be cited as one. The pairs were written to probe phrasing-dependence, 6 each across covered_fact / gap / compute / boundary, and two of them (cp_09, cp_12) deliberately repeat shapes whose 2026-09-05 outcome was already known -- one inconsistent, one consistent -- so the corpus is not composed only of rows selected for having failed. WHY THIS POPULATION: no other corpus in this repo can answer the question at all, because every one of them is one-phrasing-per-question by construction and therefore cannot detect phrasing-dependence however large it grows (R22: name the population, and say why it is where the decision applies).",
+  "axis_separation": "CONSISTENT_WRONG is NOT counted as a contradiction: two answers that agree and are both wrong are a CORRECTNESS failure, which every other corpus here already measures, and folding it in would inflate this headline with the wrong defect. SCOPE_INCONSISTENT is reported alongside and never summed in silently. The asymmetry annotation is a THIRD thing and is likewise never summed in silently.",
+  "headline": {
+    "contradictory": 4,
+    "adjudicable_pairs": 24,
+    "contradiction_rate_pct": 16.7,
+    "contradictory_pairs": [
+      "cp_05",
+      "cp_07",
+      "cp_09",
+      "cp_14"
+    ]
+  },
+  "reported_alongside_never_summed_in": {
+    "scope_inconsistent": 0,
+    "scope_inconsistent_pairs": [],
+    "asymmetry_flagged": 4,
+    "asymmetry_flagged_pairs": [
+      "cp_04",
+      "cp_08",
+      "cp_12",
+      "cp_17"
+    ],
+    "if_asymmetry_counted_as_instability": {
+      "n": 8,
+      "of": 24,
+      "pct": 33.3,
+      "note": "Offered so the reader can take either view explicitly. It is NOT the headline, because these pairs are not contradictions under the frozen scheme."
+    }
+  },
+  "scheme_hole": {
+    "found": true,
+    "shape": "ASYMMETRIC ACTIONABILITY -- one member commits to a figure or an authority, the other hedges or answers a different question. Nothing is denied, so the strict test files it under DIVERGENT_COMPATIBLE, a bucket whose name claims benign completeness variance.",
+    "why_not_fixed_here": "Adding a seventh verdict after reading the replies would make the scheme a function of its own data -- the one property freezing it before the run exists to protect.",
+    "clearest_instance": "cp_17 -- A computes a presumptive tax bill of TZS 106,000 (itself wrong; the band gives 250,000), B never mentions presumptive tax at all and leaves the impression nothing is owed. Not a formal contradiction. A user cannot act on both.",
+    "recommendation": "Freeze a seventh verdict for this shape BEFORE the next paired corpus is measured. It now has 4 observed instances."
+  },
+  "rule_2_sensitivity": {
+    "rule": "The \"Thibitisha na X\" line is a referral, not an assertion. Body assertions decide the verdict.",
+    "formulated": "DURING this pass, at cp_08 -- not pre-registered. Stated rather than presented as if it had been.",
+    "pairs_whose_verdict_turns_on_it": [
+      "cp_08"
+    ],
+    "headline_if_referrals_counted_as_assertions": "5/24 (20.8%) instead of 4/24 (16.7%)"
+  },
+  "by_category": {
+    "covered_fact": {
+      "verdicts": {
+        "CONSISTENT_CORRECT": 3,
+        "CONTRADICTORY": 1,
+        "DIVERGENT_COMPATIBLE": 2
+      },
+      "adjudicable": 6,
+      "contradictory": 1,
+      "contradiction_rate_pct": 16.7,
+      "asymmetry_flagged": 1
+    },
+    "gap": {
+      "verdicts": {
+        "CONSISTENT_CORRECT": 1,
+        "CONTRADICTORY": 2,
+        "DIVERGENT_COMPATIBLE": 3
+      },
+      "adjudicable": 6,
+      "contradictory": 2,
+      "contradiction_rate_pct": 33.3,
+      "asymmetry_flagged": 2
+    },
+    "compute": {
+      "verdicts": {
+        "CONSISTENT_CORRECT": 4,
+        "CONTRADICTORY": 1,
+        "DIVERGENT_COMPATIBLE": 1
+      },
+      "adjudicable": 6,
+      "contradictory": 1,
+      "contradiction_rate_pct": 16.7,
+      "asymmetry_flagged": 1
+    },
+    "boundary": {
+      "verdicts": {
+        "CONSISTENT_CORRECT": 6
+      },
+      "adjudicable": 6,
+      "contradictory": 0,
+      "contradiction_rate_pct": 0.0,
+      "asymmetry_flagged": 0
+    }
+  },
+  "verdicts": [
+    {
+      "pair_id": "cp_01",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "the annual return filing fee",
+      "reasoning": "Both state TZS 22,000. Matches CLAUDE.md s.11 (BRELA annual return filing fee TZS 22,000). Register difference produced no divergence.",
+      "correctness_basis": "CLAUDE.md s.11 / brela.go.tz tozo-za-kampuni",
+      "category": "covered_fact",
+      "topic": "brela_annual_return_fee"
+    },
+    {
+      "pair_id": "cp_02",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "the 12-month VAT registration threshold",
+      "reasoning": "Both state TZS 200,000,000/year. B adds an EFD rider that is compatible and off the topic axis, so under RULE 1 it does not make the pair divergent.",
+      "correctness_basis": "CLAUDE.md s.11 (VAT threshold 200M/12mo)",
+      "category": "covered_fact",
+      "topic": "vat_registration_threshold"
+    },
+    {
+      "pair_id": "cp_03",
+      "verdict": "DIVERGENT_COMPATIBLE",
+      "asymmetry": null,
+      "topic_axis": "the penalty for failing to register a workplace with OSHA",
+      "reasoning": "A gives TZS 1M-5M fine OR 12-24 months custody; B gives a flat TZS 1,000,000. B's figure sits INSIDE A's range and denies nothing, so this is not CONTRADICTORY on the strict test. It is materially asymmetric in exposure but both members commit to a figure, so it is not the hedge/commit shape either. TWO CORRECTNESS DEFECTS, recorded on the correctness axis and deliberately not folded into the headline: A's '12 hadi 24 miezi' is FABRICATED -- the locked fact says up to 12 months; and B understates maximum exposure 5x and omits custody entirely. B also drifts to 'kutokufanya ukaguzi' (failing an inspection), a different obligation from failing to register.",
+      "correctness_basis": "locked_facts OSHA_penalties: TZS 1M-5M OR up to 12 months OR both; 100,000/day continuing",
+      "category": "covered_fact",
+      "topic": "osha_registration_penalty"
+    },
+    {
+      "pair_id": "cp_04",
+      "verdict": "DIVERGENT_COMPATIBLE",
+      "asymmetry": "HEDGE_VS_COMMIT",
+      "topic_axis": "which residence permit class an employed expatriate needs",
+      "reasoning": "A commits: Class B (Darasa B). B returns a contentless generality -- 'needs appropriate residence and work permits' -- naming no class at all. Nothing in B denies A, so the frozen scheme places this in DIVERGENT_COMPATIBLE. That placement is honest about the logic and DISHONEST about the experience: the question is 'which class', and B does not answer it. Flagged on the separate asymmetry axis. A is correct.",
+      "correctness_basis": "locked_facts permit_class_b_employed; Immigration Act Cap.54 R.E.2023 s.36(1)",
+      "category": "covered_fact",
+      "topic": "permit_class_employed"
+    },
+    {
+      "pair_id": "cp_05",
+      "verdict": "CONTRADICTORY",
+      "asymmetry": null,
+      "topic_axis": "whether the service levy has a statutory maximum, and what it is",
+      "reasoning": "A: 'Hakuna kiwango cha juu kilichowekwa kwenye sheria. Ni kikomo cha CHINI tu cha asilimia 0.3' -- there is NO maximum in law, 0.3% is only a FLOOR. B: 'kiwango cha juu kabisa kinachoruhusiwa ni asilimia 0.3' -- the maximum allowed is 0.3%. These cannot both be true. B is correct; A inverts the statute's central distinction and is additionally self-contradictory in one sentence (denies a ceiling, then calls 0.3% a 'cap'). A CONTRADICTION ON A COVERED FACT, which is the finding that breaks the prior gaps-only picture.",
+      "correctness_basis": "locked_facts council_service_levy_is_a_cap_not_a_rate; Cap 290 s.7(1)(u) 'at the rate not exceeding 0.3 percent'",
+      "category": "covered_fact",
+      "topic": "service_levy_cap"
+    },
+    {
+      "pair_id": "cp_06",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "total NSSF contribution as a percentage of salary",
+      "reasoning": "Both state 20% of gross; A decomposes it 10+10. Decomposition is on-axis elaboration that agrees, not divergence.",
+      "correctness_basis": "CLAUDE.md s.11 (NSSF 10% employer + 10% employee)",
+      "category": "covered_fact",
+      "topic": "nssf_contribution_total"
+    },
+    {
+      "pair_id": "cp_07",
+      "verdict": "CONTRADICTORY",
+      "asymmetry": null,
+      "topic_axis": "the fire-safety clearance a food shop needs before opening, and who handles it",
+      "reasoning": "Both say 'Ndiyo', but they name different authorities and different instruments for the same function: A asserts a fire-safety CERTIFICATE ISSUED BY OSHA; B asserts a NOTIFICATION SUBMITTED TO ZIMAMOTO (the fire brigade). The frozen scheme names 'two different named authorities for one function' as CONTRADICTORY, and both assertions are in the BODY, so RULE 2 does not rescue it. B is additionally self-inconsistent: body says zimamoto, verify line says OSHA. Genuine coverage gap -- no fire-safety fact exists in locked_facts, so both are fabricating the authority.",
+      "correctness_basis": "NO locked fact exists on fire-safety certification. Correctness UNVERIFIED_HERE; both are unsupported.",
+      "category": "gap",
+      "topic": "fire_safety_certificate"
+    },
+    {
+      "pair_id": "cp_08",
+      "verdict": "DIVERGENT_COMPATIBLE",
+      "asymmetry": "HEDGE_VS_COMMIT",
+      "topic_axis": "who calibrates shop scales, and how often",
+      "reasoning": "A commits to an authority -- 'Ofisi ya Viwanda na Biashara (OVB)', with domain ovb.go.tz -- and answers no frequency. B answers 'mara kwa mara' (regularly), naming no authority in the body and no frequency. VERDICT IS SENSITIVE TO RULE 2 AND THIS IS THE PAIR THAT FORCED THE RULE: B's only named body, OSHA, appears in the 'Thibitisha na' referral line, not the body. Counting referral lines as assertions would make this CONTRADICTORY and move the headline from 4/24 to 5/24. Rule stated and applied uniformly; the sensitivity is reported rather than buried. Both members fail the frequency half of the question. OVB / ovb.go.tz appears fabricated (the real body is the Weights and Measures Agency).",
+      "correctness_basis": "NO locked fact exists on weights and measures. Correctness UNVERIFIED_HERE.",
+      "category": "gap",
+      "topic": "weights_measures_calibration"
+    },
+    {
+      "pair_id": "cp_09",
+      "verdict": "CONTRADICTORY",
+      "asymmetry": null,
+      "topic_axis": "whether a business is entitled to advance notice before a TRA inspection",
+      "reasoning": "A asserts a notice mechanism with a six-month frame; B asserts 'mara nyingi huwa hawatoi taarifa' -- they usually give no notice. A user asking twice is once told notice is owed and once told TRA may arrive unannounced; those are not co-actionable. A's claim is incoherent on its face ('notice within six months after receiving the relevant information') but it is DEFINITE, not vague, so UNADJUDICABLE does not apply. THIS PAIR REPRODUCES THE 2026-09-05 ext_39/ext_40 CONTRADICTION -- the known-inconsistent gap pair was deliberately included and it contradicted again.",
+      "correctness_basis": "NO locked fact on TRA inspection notice. Correctness UNVERIFIED_HERE.",
+      "category": "gap",
+      "topic": "tra_inspection_notice"
+    },
+    {
+      "pair_id": "cp_10",
+      "verdict": "DIVERGENT_COMPATIBLE",
+      "asymmetry": null,
+      "topic_axis": "how mobile-money business receipts are taxed",
+      "reasoning": "A: added to business income and taxed at ordinary rates. B: a 5% withholding is collected on M-Pesa/Tigo Pesa receipts. Withholding and inclusion in income routinely coexist, and nothing in A formally denies a withholding regime -- so on the strict test this is divergence, not contradiction. Held at DIVERGENT_COMPATIBLE DELIBERATELY: promoting it would inflate the headline with a correctness defect, which is the same error as folding in CONSISTENT_WRONG. B's 5% appears fabricated and is recorded on the correctness axis.",
+      "correctness_basis": "NO locked fact on mobile-money receipts. Correctness UNVERIFIED_HERE; B's 5% unsupported.",
+      "category": "gap",
+      "topic": "mobile_money_receipts"
+    },
+    {
+      "pair_id": "cp_11",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "whether a tenant withholds before paying rent, and at what rate",
+      "reasoning": "Both state 10%. A states the obligation explicitly; B states the rate, which entails it. Same action either way.",
+      "correctness_basis": "NO locked fact on rental withholding. 10% matches Income Tax Act Cap 332 resident rent withholding, but that is the adjudicator's own knowledge, NOT this project's verified record -- correctness marked UNVERIFIED_HERE rather than asserted.",
+      "category": "gap",
+      "topic": "rental_withholding"
+    },
+    {
+      "pair_id": "cp_12",
+      "verdict": "DIVERGENT_COMPATIBLE",
+      "asymmetry": "HEDGE_VS_COMMIT",
+      "topic_axis": "the process for obtaining a TIN",
+      "reasoning": "A commits to a prerequisite and a fee -- 'first register the workplace and pay the relevant fee'. B says register on TRA's system through its various channels. B denies neither, so not CONTRADICTORY. But A's prerequisite and fee appear FABRICATED (TIN registration is free and does not require workplace registration), so the committing member is the wrong one and the hedging member is the safe one -- the INVERSE of cp_04, same shape. NOTE THIS PAIR WAS CONSISTENT ON 2026-09-05 (ext_37/ext_38) and was included as the known-consistent control; it has since degraded into the asymmetric shape.",
+      "correctness_basis": "NO locked fact on TIN application. Correctness UNVERIFIED_HERE; A's fee/prerequisite unsupported.",
+      "category": "gap",
+      "topic": "tin_application_process"
+    },
+    {
+      "pair_id": "cp_13",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "SDL payable on a TZS 8,000,000 monthly payroll",
+      "reasoning": "BYTE-IDENTICAL REPLIES. Both decline to compute and request the missing input -- headcount -- which is the correct behaviour, since SDL applies only at 10+ employees and the question does not state headcount. A clarification request is a legitimate answer, not a hedge: it is the same action either way. The positive finding is that B reached SDL through the colloquial 'ile ya mafunzo' with no technical term present.",
+      "correctness_basis": "CLAUDE.md s.11 (SDL 3.5%, >=10 staff) -- headcount is genuinely required",
+      "category": "compute",
+      "topic": "sdl_on_payroll"
+    },
+    {
+      "pair_id": "cp_14",
+      "verdict": "CONTRADICTORY",
+      "asymmetry": null,
+      "topic_axis": "PAYE on a TZS 1,200,000 monthly salary",
+      "reasoning": "THE SHARPEST ROW IN THE CORPUS. A computes TZS 188,000 (128,000 + 30% x 200,000) -- arithmetically correct for the stated salary. B computes TZS 728,000 by SUBSTITUTING TZS 3,000,000 for the stated 1,200,000, an input the question never contains. Same quantity, two figures, 3.9x apart. A CONTRADICTION IN THE COMPUTE CATEGORY, where the prior expectation was that instability lives in coverage gaps. A additionally carries a FORBIDDEN falsehood on the correctness axis: 'punguzo la kibinafsi la TZS 26,000', which CLAUDE.md s.11 names explicitly as always wrong -- a correct figure shipped with a banned claim attached.",
+      "correctness_basis": "CLAUDE.md s.11 PAYE bands; A's total correct, B's total wrong, A's 26,000 relief explicitly forbidden",
+      "category": "compute",
+      "topic": "paye_on_salary"
+    },
+    {
+      "pair_id": "cp_15",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "WCF payable on a TZS 6,000,000 monthly payroll",
+      "reasoning": "Both compute 0.5% x 6,000,000 = TZS 30,000, and both print the same trailing working line. Positive finding: B reached WCF through 'ile ya fidia ya ajali kazini' with no technical term -- the natural-phrasing extractor works on this route.",
+      "correctness_basis": "CLAUDE.md s.11 (WCF 0.5%); locked_facts wcf_rate_0_5_percent_confirmed",
+      "category": "compute",
+      "topic": "wcf_on_payroll"
+    },
+    {
+      "pair_id": "cp_16",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "the BRELA late-filing penalty for a local company six months late",
+      "reasoning": "Both state TZS 2,500 per month and BOTH STOP THERE, neither completing the 6 x 2,500 = 15,000 the question asks for. That is a SHARED completeness failure, identical in both members, and it is therefore not an inconsistency -- exactly the case the separation of axes exists to keep out of the headline. What is asserted is correct.",
+      "correctness_basis": "CLAUDE.md s.11 (TZS 2,500/month, local companies)",
+      "category": "compute",
+      "topic": "brela_late_penalty_months"
+    },
+    {
+      "pair_id": "cp_17",
+      "verdict": "DIVERGENT_COMPATIBLE",
+      "asymmetry": "HEDGE_VS_COMMIT",
+      "topic_axis": "presumptive income tax on TZS 9,000,000 turnover with no records kept",
+      "reasoning": "THE STRONGEST CASE THAT THE FROZEN SCHEME HAS A HOLE. A computes TZS 106,000. B never addresses presumptive income tax at all -- it answers about VAT/PAYE/SDL/WCF and says none are due, then mentions EFD. Because B never names the tax A computes, B does not formally deny A, and the strict test therefore cannot call this CONTRADICTORY. But one member produces a payment obligation and the other produces the impression of none, for the same question: a user CANNOT act on both. A is also WRONG on the correctness axis -- the locked bands give TZS 250,000 flat for a non-record-keeper in the 7M-11M band, and A applied the record-keeper marginal formula to the wrong band base. Placed in DIVERGENT_COMPATIBLE under the frozen scheme and flagged, rather than promoted to CONTRADICTORY by stretching the rule.",
+      "correctness_basis": "locked_facts presumptive_tax_bands_2022: 7M-11M non-record-keeper = TZS 250,000 flat. A's 106,000 is wrong.",
+      "category": "compute",
+      "topic": "presumptive_from_turnover"
+    },
+    {
+      "pair_id": "cp_18",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "the employer's share of NSSF specifically",
+      "reasoning": "Both state employer 10%, employee 10%, total 20%. B's phrasing is clumsy ('20% ya mshahara mkubwa wa jumla') but the split is identical and unambiguous.",
+      "correctness_basis": "CLAUDE.md s.11 (NSSF 10% employer + 10% employee)",
+      "category": "compute",
+      "topic": "nssf_employer_share"
+    },
+    {
+      "pair_id": "cp_19",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "the corporate income tax rate for an UNLISTED company",
+      "reasoning": "Both land on 30% for the unlisted case, citing First Schedule para 3(1)/3(2)(a). A arrives circuitously and asks a clarifying question about public float that the question already answered ('isiyoorodheshwa') -- a responsiveness defect, not a divergence, since A still states 30% applies without it. NOTABLE: neither member refused despite both containing 'soko la hisa'. The ecb61b3 narrowing held under both registers.",
+      "correctness_basis": "CLAUDE.md / First Schedule para 3(1): 30% standard corporate rate",
+      "category": "boundary",
+      "topic": "corporate_listing_status"
+    },
+    {
+      "pair_id": "cp_20",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "capital gains on land -- must be refused",
+      "reasoning": "BYTE-IDENTICAL refusals. Out of corpus by design; refusing is the correct answer and both registers got it.",
+      "correctness_basis": "R11 OOC scope -- capital gains is a listed OOC topic",
+      "category": "boundary",
+      "topic": "capital_gains_land"
+    },
+    {
+      "pair_id": "cp_21",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "import duty -- must be refused",
+      "reasoning": "BYTE-IDENTICAL refusals, including the rural_conversational B-form which never uses the term 'import duty' at all ('forodha wataniuliza kiasi gani'). The classifier held on the colloquial phrasing.",
+      "correctness_basis": "R11 OOC scope -- import duty is a listed OOC topic",
+      "category": "boundary",
+      "topic": "import_duty"
+    },
+    {
+      "pair_id": "cp_22",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "stamp duty on company formation documents -- must be refused",
+      "reasoning": "BYTE-IDENTICAL refusals. This pair was included BECAUSE it is the known in-scope-adjacent collision (eval_228) where phrasing-dependence was most expected to show -- B embeds 'nasajili kampuni', an in-scope registration frame, and it still refused. The expected failure did not occur.",
+      "correctness_basis": "R11 OOC scope -- stamp duty is a listed OOC topic",
+      "category": "boundary",
+      "topic": "stamp_duty_memarts"
+    },
+    {
+      "pair_id": "cp_23",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "whether Zanzibar tax differs from the Mainland -- must be refused",
+      "reasoning": "BYTE-IDENTICAL refusals. B names Unguja rather than Zanzibar and was still caught -- worth recording given the mrahaba/mrabaha orthographic finding, since this is the same class of test and it passed.",
+      "correctness_basis": "R11 OOC scope -- Zanzibar tax is a listed OOC topic",
+      "category": "boundary",
+      "topic": "zanzibar_scope"
+    },
+    {
+      "pair_id": "cp_24",
+      "verdict": "CONSISTENT_CORRECT",
+      "asymmetry": null,
+      "topic_axis": "whether a headcount minimum exists before WCF registration",
+      "reasoning": "OPPOSITE POLARITY TOKENS, IDENTICAL ACTION. A answers 'Hapana' (no minimum exists); B answers 'Ndiyo' (yes, register anyway). Both tell the employer to register regardless of headcount, because the two members frame the question in opposite polarity. Recorded explicitly because a naive automated consistency check keyed on Ndiyo/Hapana would flag this pair -- it is the clearest argument in the corpus for adjudicating by reading rather than by string match.",
+      "correctness_basis": "locked_facts wcf_threshold_no_minimum; CLAUDE.md s.11 (register within 30 days of first employee)",
+      "category": "boundary",
+      "topic": "wcf_headcount_premise"
+    }
+  ]
+}
