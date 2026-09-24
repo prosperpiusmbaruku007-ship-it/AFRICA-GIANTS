@@ -117,7 +117,22 @@ SOURCE_FILES = [
 # not merely the newest infrastructure dependency. The question to answer is "what would
 # make this run pointless if it were missing?" -- and today that is the corrected fact text,
 # not the tooling.
-EXPECTED_HEAD = '467115b'
+#
+# BUMPED 2026-09-24 (second bump, same day) to d593d49, after the first attempt at this run
+# passed every blocking check and then died in a NON-BLOCKING gate, uploading nothing.
+# d593d49 carries both fixes: check_correction_sync.py no longer reconfigures its caller's
+# stdout at import (Jupyter's OutStream has no such method), and the soft gate's invocation
+# is wrapped so a crash inside it degrades to DID_NOT_RUN instead of taking down the regen.
+#
+# NOTE THE DEPARTURE FROM THE RULE ABOVE, made deliberately rather than by drift: d593d49 is
+# TOOLING, not payload, which the previous paragraph says not to use as the floor. It is the
+# floor anyway because a clone without it CANNOT COMPLETE THIS RUN AT ALL on Kaggle -- the
+# same reason a09a2a9 qualified in 2026-09-05. The rule is "what makes the run pointless or
+# impossible", and an abort before upload is the second of those. The payload itself is no
+# longer protected by this constant alone in any case: the two payload gates added earlier
+# today assert the corrected strings by key, which is a stronger and more direct check than
+# an ancestry test ever was.
+EXPECTED_HEAD = 'd593d49'
 
 
 def _assert_expected_head_present(local_head, live_sha):
