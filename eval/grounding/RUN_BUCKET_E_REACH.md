@@ -36,6 +36,17 @@ Two calls changed on the full pass, which is the argument for doing it:
 
 All 14 needles verified to resolve to **exactly one** index row before freezing.
 
+**Re-verified 2026-09-24 against the SHIPPED 183-row index, after the regen** — all 14 still
+resolve to exactly one row and every `index_row_at_authoring` pin still holds (0 drift). The
+fixture was authored the same day the index was regenerated, so the pins had to be re-checked
+rather than trusted; this is the stale-pin failure mode named in R18, and the check is cheap.
+
+⚠️ **14 PROBES, BUT ONLY 12 DISTINCT INDEX ROWS — READ THE RESULT ACCORDINGLY.**
+`ext_08`, `ext_09` and `ext_11` are all supported by **row 168** (the presumptive-bands row).
+If row 168 fails to reach, **three probes fail together and it is one failure, not three.**
+A raw "3/14 ABSENT" would overstate the breadth of the problem by 3×. Count distinct failing
+rows, not failing probes, before drawing any conclusion about how widespread a reach gap is.
+
 ---
 
 ## The cell

@@ -1,5 +1,127 @@
 # Africa Giants — Project Progress
 
+## 🔁 PAIRED-PHRASING ADJUDICATED, 2026-09-24 — **16.7% contradictory, and contradictions are NOT confined to coverage gaps**
+
+**Recovery first.** A terminal crash landed on the capture's commit-approval prompt. Nothing was
+lost: 48/48 `HTTP_200`, zero errors, zero empty replies, all 48 question strings byte-identical
+to the frozen corpus. **Not re-run** — a second capture against unchanged production yields a
+newer specimen of the same thing and destroys the property that matters. That property was
+*verified, not assumed*: the artifact's `verdict_scheme` literal-equals `VERDICT_SCHEME` parsed
+out of the committed runner, and the runner + corpus are committed at `4d81eab`, the commit
+**before** the run. The six verdicts existed in git before any reply did, demonstrably from
+history. Raw capture committed untouched at `b35473d` before any verdict was written.
+
+### The result — `eval/results/paired_phrasing_adjudication_2026_09_24.json`
+
+**CONTRADICTORY 4/24 = 16.7%** (`cp_05`, `cp_07`, `cp_09`, `cp_14`).
+SCOPE_INCONSISTENT **0** · CONSISTENT_WRONG **0** · UNADJUDICABLE **0**.
+
+⚠️ **24 AUTHORED PAIRS. NOT a corpus-wide estimate, and the caveat ships inside the artifact**
+so it cannot be separated from the figure by being quoted.
+
+| category | contradictory | asymmetry-flagged |
+|---|---|---|
+| covered_fact | **1/6 — 16.7%** | 1 |
+| gap | 2/6 — 33.3% | 2 |
+| compute | **1/6 — 16.7%** | 1 |
+| boundary | **0/6 — 0.0%** | 0 |
+
+**THE FINDING THAT CHANGES THE PICTURE: instability is not a symptom of missing facts.** The only
+prior evidence was 4-of-6 drawn from gap rows, which invited exactly that reading. It does not
+hold. `cp_05` contradicts on a **covered** fact — one member says the council service levy has no
+statutory maximum and calls 0.3% a *floor*, the other correctly calls 0.3% the ceiling. `cp_14`
+contradicts on **compute** — PAYE on the same salary returned **188,000 and 728,000**, 3.9× apart,
+because one member silently substituted a `TZS 3,000,000` salary the question never contained.
+**Neither is a coverage problem and neither has a retrieval fix**, which is the direct bearing on
+the retrain-vs-retrieval question bucket E is being run to settle.
+
+**Boundary was perfectly stable — 6/6, four of them byte-identical refusals.** `cp_22` was
+included *because* it is the `eval_228` in-scope-adjacent collision where phrasing-dependence was
+most expected, and it refused under both registers. **The predicted failure did not occur, and
+recording that matters as much as recording the ones that did.**
+
+### The scheme has no honest home for one shape, and it was NOT forced into an existing bucket
+
+Four pairs are **neither contradictions nor consistency**: one member commits to a figure or an
+authority, the other hedges or answers a different question. Nothing is *denied*, so the strict
+test files them under `DIVERGENT_COMPATIBLE` — a bucket whose name asserts benign completeness
+variance. For `cp_17` that is plainly wrong about the user's experience: A computes a presumptive
+bill of 106,000 (itself wrong — the band gives **250,000** flat), B never mentions presumptive tax
+at all and leaves the impression nothing is owed. **No formal contradiction. A user cannot act on
+both.**
+
+**Resolved as a SEPARATE AXIS, not a seventh verdict.** Adding one after reading the replies would
+make the scheme a function of its own data — the single property freezing it before the run exists
+to protect. The frozen verdict still stands and still drives the headline; `asymmetry` is reported
+alongside and **never summed in silently**, the same treatment `SCOPE_INCONSISTENT` gets. Counted
+as instability it would be **8/24 (33.3%)** — offered explicitly in the artifact, labelled as *not*
+the headline. **Freeze a seventh verdict for this shape BEFORE the next paired corpus is
+measured**; it now has four observed instances.
+
+**The control is demonstrated, not asserted (R26).** The tally parses the scheme out of the
+committed runner rather than holding a copy, and rejects anything outside it. `--self-test` plants
+the exact thing it exists to catch and watches it block, **plus a clean case that must pass** —
+the limb the secret scan never had. The planted seventh verdict is literally
+`ASYMMETRIC_ACTIONABILITY`: **the control blocks its own author.**
+
+### Conventions, including the one that is not pre-registered
+
+**RULE 2 — "Thibitisha na X" is a referral, not an assertion; bodies decide the verdict — was
+formulated DURING this pass, at `cp_08`.** Said plainly rather than presented as pre-registered.
+`cp_08` is the only pair whose verdict turns on it, and **the sensitivity is reported: counting
+referral lines as assertions gives 5/24 (20.8%) instead of 4/24 (16.7%).**
+
+**Two calls CHANGED on direct lookup rather than being assumed** — `cp_05`'s A-member inverts
+`council_service_levy_is_a_cap_not_a_rate`, and `cp_17`'s A-member is wrong against
+`presumptive_tax_bands_2022`. Correctness is marked `UNVERIFIED_HERE` on the 7 pairs where this
+project holds no fact, rather than scored against the adjudicator's own knowledge.
+
+**Two guard-blindness observations, recorded not fixed.** Both wrong answers above sit beside
+`wrong_patterns` that cannot see them: the service-levy patterns require the literal string
+*"ushuru wa huduma"*, which appears in the **question** and not the reply; and `OSHA_penalties`
+guards *"miezi 6"* while `cp_03` invented *"miezi 12 hadi 24"*. Same shape as `ext_55` — a guard
+reading only for the form it expected.
+
+**`cp_24` is the argument for reading over string-matching:** its two members answer **"Hapana"**
+and **"Ndiyo"** and mean the identical action, because the question is framed in opposite polarity.
+Any automated consistency check keyed on those tokens would flag a correct pair.
+
+---
+
+### 🔤 THE `mrahaba` MISS IS THE ORTHOGRAPHIC AXIS REAPPEARING — and the August pass covered the DIGRAPH FAMILY ONLY
+
+**Kept on the board with the 42 model failures, not buried in the deploy report.** The N3 probe
+spells it `mrahaba`; the OOC list has `mrabaha`. **Zero phrases matched and `classify()` returned
+True — the model refused on its own judgement**, which R11 exists precisely so we never depend on.
+
+**The question worth answering was whether the 2026-08-14 variant pass hardened that list. It did
+not, and the boundary is exact.** `tests/test_orthographic_variants.py` `_SUBS` is **11 word pairs
+across exactly three substitutions — `dh→z`, `th→s`, `gh→g`** (`ardhi`/`arzi`, `hifadhi`/`hifazi`,
+`thamani`/`samani`, `gharama`/`garama`, …). **Every one is a digraph simplification: a two-letter
+Arabic-loan cluster written as one letter.** The enforcing test is named
+`test_every_swahili_digraph_phrase_has_its_variant`. **It was never a general orthographic-variant
+pass; it was a digraph-simplification pass, and it covers nothing beyond that family.**
+
+**`mrabaha` → `mrahaba` is metathesis — a REORDERING of `b` and `h` across a syllable boundary, not
+a substitution.** Different operation class entirely. Nothing in the suite has ever looked for it.
+
+**And the royalty cues are the trap, because they LOOK covered.** `chike_config.json` carries
+`royalty ya dhahabu` *and* its variant `royalty ya zahabu` — so that family visibly received the
+August treatment, along the `dh→z` axis only. `mrabaha` sits in the same block with **no variant of
+any kind**. *A phrase family that was partially treated reads as hardened at a glance*, which is
+why "did the pass cover anything beyond digraphs?" was worth asking before anyone assumed it.
+
+**Not fixed here, deliberately.** Adding the cue is a refusal-path change: its failure mode is
+**blocking a real user**, which R21 prices at a ~37× gap between corpus sweeps and held-out
+questions. It needs its own held-out set authored and frozen **before** the cue exists — not bolted
+onto a deploy verification or onto this adjudication.
+
+**Also still on the board:** `N2` opened an SDL answer with *"asilimia 0.5 ya jumla ya mishahara"* —
+**the WCF rate** — while passing its own compute assertion (`SDL = 3.5% × 5,000,000 = 175,000`).
+The conflation class is still live, and it was found by a check watching something else.
+
+---
+
 ## 🚢 SHIPPED 2026-09-24 — index regenerated, three changes live, 12/12 verified. Two things worth recording properly: the first fully clean guard sweep, and the end of the Section XII defect.
 
 **Delivered and verified, not asserted.** R15 regen → dual-commit `1d59a06` → R16 stop/deploy →
