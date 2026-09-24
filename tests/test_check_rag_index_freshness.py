@@ -107,21 +107,34 @@ def test_missing_git_history_is_reported_distinctly_from_staleness():
     assert report["missing_inputs"] == ["scripts/locked_facts.json"]
 
 
-def test_against_live_repo_state_reports_stale_pending_the_amt_wording_fix_regen():
-    """Sanity check against the ACTUAL repo, not a synthetic graph. FOURTH flip, same
-    mechanism as all three before it (2026-09-03 ok=False->True after efe5956; ok=True->
-    False after 951fb67 changed facts with no matching regen; ok=False->True after 0be8662
-    shipped 951fb67's fixes for real). This flip: precompute_rag_embeddings.py's
-    minimum_turnover_tax CONCISE text was reworded (2026-09-05, same commit as this test
-    edit) to remove an ambiguous "kodi ya chini (AMT)" gloss found live to read as "less
-    than 1%" instead of the intended "the minimum tax, of 1%" -- a genuine content fix,
-    landed the same way every prior one was: at the source first, shipped in a LATER regen,
-    never both in the same commit (R15 batches). Correctly reports STALE again until that
-    regen runs and both directories are re-committed -- this flip is the signal, not a bug
-    in the test, exactly as every prior form of this test predicted for itself."""
+def test_against_live_repo_state_is_fresh_after_the_2026_09_24_regen():
+    """Sanity check against the ACTUAL repo, not a synthetic graph. FIFTH flip, same
+    mechanism as all four before it (2026-09-03 ok=False->True after efe5956; ok=True->False
+    after 951fb67 changed facts with no matching regen; ok=False->True after 0be8662 shipped
+    951fb67's fixes for real; ok=True->False after 9c43143/467115b staged two content fixes).
+
+    THIS FLIP: the 2026-09-24 regen shipped both staged fixes at once --
+    minimum_turnover_tax's ambiguous "kodi ya chini (AMT)" gloss (staged 2026-09-05, found
+    live to read as "less than 1%" rather than "the minimum tax, of 1%"), and
+    brela_foreign_late_filing_penalty's "(Section XII)" citation (staged 2026-09-23, live in
+    production since the corpus began). Index committed to both directories in 1d59a06;
+    exactly two rows changed (27 and 171), 183 rows before and after.
+
+    THE PRIOR VERSION OF THIS TEST TOLD ITS OWN MAINTAINER WHAT TO DO HERE, and that is why
+    it is being flipped rather than deleted or suppressed: its failure message read "Either
+    this fix already shipped -- update this test to assert ok is True, that flip IS the
+    signal". It fired exactly as designed, on a pre-push hook, on the push that shipped the
+    fix it was watching for. An oscillating assertion whose two states are both meaningful is
+    the opposite of the R17 hazard (a test that instructs maintainers NOT to fix a real
+    defect) -- each flip records that a staged fix actually reached the deployed artifact
+    rather than sitting at the source, which is the failure mode this whole check exists for
+    (five weeks of a stale citation behind three green checks).
+    """
     ok, report = check(repo_dir=REPO)
-    assert ok is False, (
-        f"the live repo reports fresh: {report}. Either this fix already shipped -- update "
-        "this test to assert ok is True, that flip IS the signal -- or a fact/embedding-code "
-        "change landed without this test being updated to expect it.")
-    assert "scripts/precompute_rag_embeddings.py" in report["stale_inputs"]
+    assert ok is True, (
+        f"the live repo reports STALE: {report}. Either a fact or embedding-code change "
+        "landed WITHOUT a matching regen -- stage it and ship it in the next R15 run, then "
+        "flip this back to `assert ok is False` until it does -- or the two index "
+        "directories were committed separately (artifacts_diverged).")
+    assert report["stale_inputs"] == {}
+    assert report["artifacts_diverged"] is False
