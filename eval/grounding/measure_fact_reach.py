@@ -192,6 +192,36 @@ EXTRA_BOUNDARY_PROBES = [
 ]
 
 
+def load_probes_jsonl(path):
+    """Load probes from a committed JSONL fixture instead of the regen guards.
+
+    WHY THIS EXISTS (2026-09-24). The default fixture is 34 regression guards -- written by
+    people fixing retrieval problems they had ALREADY FOUND, which this module's own docstring
+    calls out as survivorship-biased. Measuring reach on them answers "does retrieval still
+    work where we already made it work". That is a base-rate measurement (R22), not a finding.
+
+    The bucket-E fixture is the opposite population by construction: rows where the model
+    answered WRONG in a live run AND the supporting fact was verified present in the shipped
+    index. It is outcome-conditioned on FAILURE, which is the population the reach question is
+    actually about -- exactly R22's "measure a remedy on the population that needs it, not the
+    one cheapest to sample".
+
+    Each row supplies: id, question (verbatim, never paraphrased -- R24), needle (a substring
+    unique to the supporting row), and prose recording what the row needs and how the live
+    reply failed.
+    """
+    probes = []
+    with open(path, encoding='utf-8') as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            r = json.loads(line)
+            probes.append((f"{r['id']} ({r['needs'][:60]})", r['question'], [r['needle']]))
+    assert probes, f'no probes loaded from {path} -- a reach run over zero rows would '\
+                   f'report a clean summary over nothing'
+    return probes
+
+
 def load_probes(regen_script=REGEN_SCRIPT):
     """AST-extract kaggle/regenerate_rag_e5.py's `critical_queries` list without importing
     the module (importing it triggers Kaggle auth + network fetches as side effects), then
@@ -339,20 +369,50 @@ def main():
                           'e5-base) and report per-probe deltas against it')
     ap.add_argument('--prospective-out', default=os.path.join(
         REPO, 'eval', 'results', 'grounded_fact_reach_prospective_compare.json'))
+    ap.add_argument('--probes-jsonl', default=None,
+                     help='JSONL fixture (id/question/needle) to measure INSTEAD of the 34 '
+                          'regen guards. Use for outcome-conditioned populations such as '
+                          'eval/grounding/bucket_e_reach_probes_014.jsonl.')
     args = ap.parse_args()
 
     from sentence_transformers import SentenceTransformer
     model = SentenceTransformer('intfloat/multilingual-e5-base')
 
-    probes = load_probes()
-    print(f'[probes] {len(probes)} loaded from {os.path.relpath(REGEN_SCRIPT, REPO)} '
-          f'(survivorship-biased floor fixture -- see module docstring)')
+    if args.probes_jsonl:
+        probes = load_probes_jsonl(args.probes_jsonl)
+        population = os.path.relpath(args.probes_jsonl, REPO).replace('\\', '/')
+        print(f'[probes] {len(probes)} loaded from {population}')
+        print('[probes] population: rows the model answered WRONG live, whose supporting '
+              'fact was verified present in the shipped index (outcome-conditioned on '
+              'failure -- R22)')
+    else:
+        probes = load_probes()
+        population = os.path.relpath(REGEN_SCRIPT, REPO).replace('\\', '/')
+        print(f'[probes] {len(probes)} loaded from {population} '
+              f'(survivorship-biased floor fixture -- see module docstring)')
 
     norm_a, texts_a = load_deployed_index(args.index_dir)
     print(f'[index] deployed: {len(texts_a)} rows from {args.index_dir}')
     retriever_a = Retriever(model, norm_a, texts_a)
     rows_a = measure(retriever_a, probes)
     summary_a = summarize(rows_a)
+
+    _BUCKET_E_CAVEAT = (
+        'POPULATION: 14 rows from an AUTHORED EDGE-PROBE SET (the extended-078), selected '
+        'because the model answered them WRONG in a live run on 2026-09-05 AND the '
+        'supporting fact was individually verified present in the shipped index on '
+        '2026-09-24. Outcome-conditioned on failure by construction, which is the point '
+        '(R22: measure a remedy on the population that needs it). '
+        'WHAT THIS CAN SUPPORT: a decision about where to invest next -- if the facts do '
+        'not reach the model on rows where the fact exists and the answer was wrong, the '
+        'next investment belongs in retrieval rather than in retraining. '
+        'WHAT THIS CANNOT SUPPORT: any corpus-wide or gate-level claim about reach. It is '
+        'not a random sample of anything, it is 14 hard rows chosen for having failed. The '
+        'correct scope for an investment decision and the wrong scope for a headline. '
+        'A 15th row (ext_06, partnership taxation) was DROPPED from this fixture after the '
+        'lookup found no supporting fact anywhere in the index -- it is a coverage gap, not '
+        'a reach question, and leaving it in would have produced a number that reads as '
+        'reach failure when it is absence.')
 
     baseline = {
         'measured': '2026-09-05',
@@ -362,9 +422,11 @@ def main():
                   'Orchestrator._pool_facts semantics), needle-matched, not row-'
                   'position-matched',
         'top_k': TOP_K, 'pool_cap': POOL_CAP, 'boundary_max_rank': BOUNDARY_MAX,
-        'fixture_caveat': ('34 hand-picked regression probes from kaggle/'
-                            'regenerate_rag_e5.py -- a floor, not a corpus-wide claim; '
-                            'see module docstring'),
+        'population_source': population,
+        'fixture_caveat': (_BUCKET_E_CAVEAT if args.probes_jsonl else
+                           '34 hand-picked regression probes from kaggle/'
+                           'regenerate_rag_e5.py -- a floor, not a corpus-wide claim; '
+                           'see module docstring'),
         'summary': summary_a,
         'rows': rows_a,
     }
