@@ -672,6 +672,34 @@ Founder-only steps (no CLI access from here): the `chike-whatsapp` Modal Secret
 (`WAPPFLY_TOKEN`, `WEBHOOK_TOKEN`, `ADMIN_TOKEN`, `SENDER_SALT`) and pointing Wappfly at
 the new webhook URL.
 
+### 🎯 THE PILOT BAR IS TWO BARS. CONFLATING THEM HAS MADE THE PILOT LOOK FURTHER AWAY THAN HALF OF IT IS. (standing framing, 2026-09-24)
+
+**R7 names two gates and they are routinely read as one difficulty. They are not. They are
+different problems, with different tractability, and they should be scoped, funded and reported
+separately.**
+
+| | **BAR A — no known class of confident wrong answer on IN-SCOPE questions** | **BAR B — confident refusal OUTSIDE coverage** |
+|---|---|---|
+| shape | **enumerable.** A wrong class is a located thing: a fact, a row, a rank, a rate attributed to the wrong levy | **not enumerable.** It is behaviour in the ABSENCE of a fact — there is no row to fix |
+| evidence it is reachable | Section XII closed. R31 closed. The first clean 34/34 guard sweep. `ext_31` closed. Every one found, fixed and *proved* fixed | **five designs dead**: absolute score, margin, re-ranked index, term overlap, the coverage gate — the last measured at a **37× gap** (1.9% corpus vs 71% held-out) and correctly DISABLED |
+| what closes it | content work — the machinery this project already has and is good at | a mechanism whose failure mode is **blocking a real user**, priced at one frozen held-out set per iteration |
+| status | **reachable.** Finite, and the remaining instances are being enumerated | **the floor.** Unsolved, and the honest read is that it may not be solvable as a guard at all |
+
+**WHY THIS MATTERS FOR SCOPING, and it is the whole reason this block exists:** every time the
+pilot is described as blocked, it is Bar B doing the blocking, and Bar A gets dragged along with
+it into "not close". **Bar A is close.** Saying so is not optimism — it is refusing to let the
+harder half set the schedule for the easier one.
+
+**In practice:**
+- **Report them separately.** Never a single "pilot readiness" figure. A number that blends a
+  finite enumerable defect list with an unsolved behavioural floor describes neither.
+- **Do not spend Bar A work on Bar B mechanisms.** The corpus/content machinery closes Bar A and
+  does nothing for Bar B — measured 2026-09-24: 5 of 7 reaching-and-failing rows had no corpus
+  defect behind them at all.
+- **Bar B's remaining move is probably not a better guard.** It is changing the failure mode from
+  *refusing* to *hedging*, which is far cheaper to get wrong, and which the model already does on
+  some coverage-gap rows without being asked to.
+
 ### ⛔ BEFORE PROPOSING ANY MECHANISM THAT CAN REFUSE A USER — read this, then R21.
 
 **Applies to: refusal phrases, OOC lists, coverage gates, similarity floors, confidence

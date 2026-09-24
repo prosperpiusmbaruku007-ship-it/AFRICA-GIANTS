@@ -307,6 +307,45 @@ if _AMT_KEY in fact_keys:
 else:
     raise SystemExit(f'[FATAL] {_AMT_KEY} absent from the built fact set -- gate cannot apply.')
 
+# THIRD PAYLOAD (2026-09-24, ext_31). Carried forward at the stated cost of one line per
+# shipped correction. DIFFERENT DEFECT CLASS FROM THE TWO ABOVE, and that is the point worth
+# noting: both of those shipped a WRONG STRING. This one's fact was entirely CORRECT and
+# still failed, because the served row was the `key: value` fallback -- English-first and
+# LABEL-LED ('OSHA safety officer threshold: Occupational Health and Safety Act Cap.297
+# s.11(1)...'). It measured at BOUNDARY (rank 4-16) for the real user phrasing 'Kiwandani
+# kwetu tuna wafanyakazi zaidi ya ishirini. Ni lazima tuwe na afisa maalum wa usalama
+# kazini?' while the live reply asserted exactly the phrasing the fact's own text forbids.
+#
+# So the gate asserts REACHABILITY-SHAPED content, not correctness: that the row now LEADS
+# with the asker's vocabulary rather than the regulatory label. A payload gate that only ever
+# checked for wrong strings would pass this row in both its broken and its fixed state.
+_OSHA_REP_KEY = 'OSHA_safety_officer_threshold'
+if _OSHA_REP_KEY in fact_keys:
+    _rep_row = fact_texts_to_embed[fact_keys.index(_OSHA_REP_KEY)]
+    assert not _rep_row.lower().startswith('osha safety officer threshold:'), (
+        f'[FATAL] {_OSHA_REP_KEY} is still the label-led `key: value` fallback:\n  '
+        f'{_rep_row[:160]}\nThis regen exists to replace it with the ask-aligned Swahili '
+        f'text. The clone predates bb2c1ff, or the CONCISE_BILINGUAL_FACTS entry was '
+        f'removed.')
+    assert _rep_row.lower().startswith('afisa wa usalama kazini'), (
+        f'[FATAL] {_OSHA_REP_KEY} no longer LEADS with the asker\'s vocabulary:\n  '
+        f'{_rep_row[:160]}\nLeading with the user\'s words is the entire mechanism here '
+        f'(the nat_36 lever, rank 17 -> 1). A row that merely CONTAINS them is not the fix.')
+    assert 'cap.297' not in _rep_row.lower() and 's.11' not in _rep_row.lower(), (
+        f'[FATAL] {_OSHA_REP_KEY} carries a statutory citation in the EMBEDDED text:\n  '
+        f'{_rep_row[:160]}\nThe standing rule in precompute_rag_embeddings.py forbids this '
+        f'-- folding citations in cost nat_05 ranks 24 -> 59. Citations belong in '
+        f'locked_facts.json, which R13 reads directly.')
+    assert "NOT a professionally hired/dedicated 'safety officer'" in _rep_row, (
+        f'[FATAL] {_OSHA_REP_KEY} lost the ext_31 needle:\n  {_rep_row[:160]}\n'
+        f'eval/grounding/bucket_e_reach_probes_014.jsonl matches on that exact substring. '
+        f'Dropping it silently breaks the fixture that MEASURED this defect, so the next '
+        f'reach run would report on a probe that can no longer resolve.')
+    print(f'[OK] payload gate: {_OSHA_REP_KEY} is ask-aligned, uncited, needle intact')
+else:
+    raise SystemExit(
+        f'[FATAL] {_OSHA_REP_KEY} absent from the built fact set -- gate cannot apply.')
+
 # ── EMBED WITH E5-BASE ──────────────────────────────────────────────────────────
 from sentence_transformers import SentenceTransformer
 print(f'[rag] loading {EMBED_MODEL} ...')
