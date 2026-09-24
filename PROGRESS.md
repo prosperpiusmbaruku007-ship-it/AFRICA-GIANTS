@@ -1,5 +1,123 @@
 # Africa Giants — Project Progress
 
+## 🚢 SHIPPED 2026-09-24 — index regenerated, three changes live, 12/12 verified. Two things worth recording properly: the first fully clean guard sweep, and the end of the Section XII defect.
+
+**Delivered and verified, not asserted.** R15 regen → dual-commit `1d59a06` → R16 stop/deploy →
+`eval/controls/verify_r16_deploy_2026_09_24.py` **12/12 ALL PASS**
+(`eval/results/r16_deploy_verification_2026_09_24.json`). Index delta was exactly **two rows**
+(27 and 171), 183 before and after, verified against the deployed index before copying rather
+than trusted from the build log.
+
+The two live checks that carried the most weight:
+
+- **A1 + A3 read together.** `ext_01` now **answers** (*"asilimia 30 ya faida inayotozwa kodi,
+  First Schedule para 3(1)"*) while `kodi ya majengo` — a config-only phrase absent from the
+  hardcoded fallback — **still refuses**. That pairing is what separates *"the fix works"* from
+  *"the container is stale"*, two failures that look identical from any single row.
+- **C2.** `ext_05` → *"Hapana, AMT haitumiki. Kampuni zinazofanya kilimo, afya au elimu
+  ZIMESAMEHEWA AMT kabisa (Kifungu 4(8))"*. That answer is reachable **only** through the
+  widened gate **and** `corporate_sector()=="health"`. It answered the **opposite** on
+  2026-09-05. **R31 is closed end to end** — and C3 confirms the opposite branch still fires
+  (transport: AMT applies), so C2 is not a system that exempts everyone.
+
+---
+
+### 🏅 THE FIRST FULLY CLEAN GUARD SWEEP THIS PROJECT HAS HAD — 34/34, zero known-failing
+
+**`nat_27` and `nat_36` both clear for the first time.** In August this was **nine open rows**.
+
+**Recorded from an uploaded artifact, not a console.** Attempt #1 of this regen produced the
+identical result and uploaded nothing — it existed only in a scrollback. That is precisely the
+R18 situation ("a result whose harness was never committed is PROVISIONAL"), so it was
+deliberately **not** written up until attempt #2 put it in a Hub commit and the index landed in
+the repo.
+
+**What it took, and the honest shape of it — five separate pieces of work, none of which was
+"tune the retriever":**
+
+| work | what it actually fixed |
+|---|---|
+| **fee consolidation** | duplicate/fragment fee rows competing with each other; one key bundling three answers |
+| **ask-alignment rewrites** | leading with the user's vocabulary instead of the regulatory label — the `nat_36` lever (rank 17 → 1) and the `nat_28` 69-rank swing |
+| **EFD fabrication fix** | `efd_threshold_tzs_11m`, a plausible figure on an invented citation chain, served ~111 times |
+| **`nat_36` re-anchor** | the guard was passing on a phrasing no user sends while the verbatim eval text sat at rank 17 |
+| **`nat_37` coverage gap** | a fabricated EFD exemption — genuinely absent content, not a phrasing problem |
+
+**The pattern across all five is worth naming: every one was a CONTENT defect, not a retrieval
+defect.** Wrong text, duplicated text, absent text, or text written in the regulator's
+vocabulary instead of the asker's. Nothing here was fixed by changing how retrieval scores;
+they were fixed by changing what was in the index. That is the same conclusion the 2026-08-22
+targeted-rewrite measurement reached and it now has a clean sweep behind it.
+
+⚠️ **What this does NOT mean.** 34/34 is the **guard set** passing — the regression fixtures
+that watch known-failure queries. It is **not** an accuracy number, **not** a gate result, and
+**not** evidence about the 71% fabrication rate or the contradiction class. A clean guard sweep
+says the defects we already found and wrote guards for are not back. It says nothing about the
+ones we have not written guards for, and by construction it cannot (R21: a sweep measures what
+it was pointed at).
+
+---
+
+### 🪦 THE SECTION XII DEFECT, FULL TIMELINE — the completed shape of "a defect that defends itself"
+
+**The string is out of production as of today.** Here is the whole arc in one place, because
+the individual steps each looked like diligence and the composition still failed for 23 days.
+
+| date | what happened | why it did not end the defect |
+|---|---|---|
+| — | `brela_foreign_late_filing_penalty` written with `(Section XII)` | the foreign-company regime is **Part XIII, ss.320-328**; Part XII is winding up of unregistered companies |
+| **2026-08-31** | locked fact `act_section_12` **corrected** against a direct read of Cap.212, with `wrong_patterns` added | the patterns were written in **English word order**; the served row is Swahili with the entity first |
+| **2026-09-01** | corpus **swept**, 14+ rows quarantined; CLAUDE.md §11 fixed | the swept corpus is *training data*. The row production serves is **hand-authored in `precompute_rag_embeddings.py`** and derives from nothing |
+| ~2026-09-03 | index **regenerated** | the string **survived a regeneration** — it was never downstream of the corrected fact |
+| **2026-09-05** | `ext_15` reproduces *"Section XII"* **in a live reply** | the probe set was captured; adjudication did not happen until 09-23 |
+| **2026-09-23** | found during adjudication; source fixed, patterns rewritten for both word orders | still only at the source — the deployed index was untouched |
+| **2026-09-24** | regen + dual-commit + R16 deploy; **B1 confirms it live** | ✅ ended |
+
+**THREE STANDING CHECKS WERE GREEN THE ENTIRE TIME, each for a different reason — which is why
+no single new check would have caught it:**
+
+1. **`check_facts_index_sync`** is **content-shaped** — *"is this key's figure reachable?"* The
+   USD 25 figure was present. **CLEAN.**
+2. **`check_rag_index_freshness`** is **time-shaped** — *"was the index rebuilt after the fact
+   changed?"* It was. **CLEAN on that input.**
+3. **`check_correction_sync`** exists for **exactly this defect** and reported
+   `STRONG MATCH 0` — blind, because its patterns assumed English word order **and** because it
+   resolves each fact to its **own** row while the patterns live under a **different key**.
+
+> **The general shape, now complete: a correction that is real, applied conscientiously in
+> every place someone thought to look, guarded by a check built for that exact defect — and
+> still wrong in production, because the guard could not see the language it guards and nothing
+> connected the row to the key that owned it.** The defect did not survive by hiding. It
+> survived by being *adjacent* to everything that was looking for it.
+
+**What actually closed it, and the order matters:** not a better detector. A **per-run payload
+assertion** — name the exact string this build exists to ship, by key, and refuse to upload
+without it. One line per shipped correction. The general detectors were all looking; none could
+see it.
+
+**Demonstrated, not assumed (R26):** the rewritten patterns **FIRE** on the old row, are
+**clean** on the new one, and match **zero of 183** rows in the shipped index.
+
+---
+
+### Two findings from the deploy itself, recorded not fixed
+
+**`mrahaba` bypasses the OOC classifier.** The N3 probe spells it `mrahaba`; the OOC list has
+`mrabaha`. **Zero phrases matched, `classify()` returned True** — the model refused on its own
+judgement. R11 calls the classifier *infrastructure, not behaviour* precisely so refusal does
+not depend on the model choosing well, and here it did. Same class as the 2026-08-14 `hifazi`
+variant, different family (b/h metathesis). Adding the cue is a refusal-path change and needs
+its own held-out set (R21) — **not** bolted onto a deploy verification.
+
+**A mixed reply with a stray levy rate.** N2 passed its compute assertion
+(`SDL = 3.5% × 5,000,000 = 175,000`, correct) but opened with *"Kwa wafanyakazi 10, unalipa
+asilimia 0.5 ya jumla ya mishahara"* — **0.5% is the WCF rate**, surfacing unbidden in an SDL
+answer. Pre-existing, not caused by this deploy, and not what N2 was checking — but recorded
+here rather than left hidden behind `ALL PASS`, because a check passing on the thing it watches
+is not a statement about the rest of the reply.
+
+---
+
 ## 🧪 78-ROW EDGE PROBE SET ADJUDICATED + 4-ITEM FIX PASS, 2026-09-23 — VERDICT: **the floor problem is fabrication on plausible questions, not wrong numbers on hard ones**
 
 **Recovery first.** A terminal crash ended the previous session between the run finishing and
