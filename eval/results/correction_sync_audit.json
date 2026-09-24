@@ -90,13 +90,6 @@
       ]
     },
     {
-      "key": "brela_foreign_late_filing_penalty",
-      "expected_figure": "212,",
-      "rows": [
-        "Kampuni ya kigeni (Section XII) ikichelewa kuwasilisha ritani ya mwaka: faini ni USD 25 kwa kila mwezi (tofauti na kampuni za ndani ambazo hulipa TZS 2,500 kwa mwezi)."
-      ]
-    },
-    {
       "key": "sdl_exemption_categories",
       "expected_figure": "82",
       "rows": [
@@ -140,7 +133,8 @@
     "vat_deferment_minimum_value",
     "paye_bands_with_examples",
     "sdl_calculation_example",
-    "presumptive_tax_bands_2022"
+    "presumptive_tax_bands_2022",
+    "brela_foreign_late_filing_penalty"
   ],
   "unresolved": [
     "health_and_safety_act_citation",

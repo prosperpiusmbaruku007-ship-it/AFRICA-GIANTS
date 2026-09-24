@@ -1,0 +1,217 @@
+{
+  "measured": "2026-09-24",
+  "target": "chike-inference (production)",
+  "harness": "eval/controls/verify_r16_deploy_2026_09_24.py",
+  "changes_under_test": {
+    "A": "classifier: soko la hisa narrowed (ecb61b3)",
+    "B": "index: Section XII -> Part XIII + AMT rewording (467115b, 9c43143, via R15 regen)",
+    "C": "routing: corporate gate widened (28e5c55)"
+  },
+  "rows": [
+    {
+      "id": "A1_ext01_must_answer",
+      "change": "A/classifier",
+      "question": "Kampuni yetu inauza vifaa vya ujenzi, hatujaorodheshwa soko la hisa. Kodi ya mapato tunayolipa mwishoni mwa mwaka ni asilimia ngapi ya faida?",
+      "must_not_contain": [
+        "liko nje ya mada yangu",
+        "nje ya maarifa yangu"
+      ],
+      "note": "THE ROW THAT CAUSED THE FIX. Refused live 2026-09-05 by the bare phrase. Must now answer. Any OOC refusal string here means a STALE CONTAINER -- config-only change, no code diff, exactly R16 s core case.",
+      "outcome": "HTTP_200",
+      "reply": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi (First Schedule para 3(1)). Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hisa kwa umma hulipa asilimia 25 kwa miaka 3 tangu kuorodheshwa (para 3(2)(a)). Hii ni kiwango — SI hesabu ya TZS kutoka mauzo: faida (si mauzo) ndiyo msingi wa kodi hii, na faida haiwezi kupatikana kutoka mauzo peke yake.",
+      "elapsed_s": 1.4,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    },
+    {
+      "id": "A2_investing_must_still_refuse",
+      "change": "A/classifier",
+      "question": "Nataka kuwekeza kwenye soko la hisa, nianzeje?",
+      "must_contain": [
+        "nje ya mada yangu"
+      ],
+      "note": "NEGATIVE LIMB. The narrowing must not have opened a stock-market leak. If this answers, A went too far.",
+      "outcome": "HTTP_200",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "elapsed_s": 1.2,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    },
+    {
+      "id": "A3_config_only_phrase_still_refuses",
+      "change": "A/classifier (staleness probe)",
+      "question": "Kodi ya majengo ninayolipa kwa nyumba yangu ni kiasi gani?",
+      "must_contain": [
+        "nje ya mada yangu"
+      ],
+      "note": "R16 STALENESS DIAGNOSTIC, the one that settled the 2026-08-07 incident. `kodi ya majengo` is in chike_config.json but NOT in the hardcoded fallback, so a correct refusal here proves the container actually LOADED the new config rather than falling back. Read together with A1: A3 refusing while A1 also refuses means stale config; A3 refusing and A1 answering is the target state.",
+      "outcome": "HTTP_200",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "elapsed_s": 1.2,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    },
+    {
+      "id": "B1_foreign_penalty_citation",
+      "change": "B/index",
+      "question": "Tawi letu la kampuni ya kigeni limechelewa kuwasilisha ripoti ya mwaka. Adhabu ni tofauti na kampuni za huku?",
+      "must_not_contain": [
+        "section xii",
+        "kifungu xii"
+      ],
+      "must_contain": [
+        "25"
+      ],
+      "note": "ext_15 verbatim. Reproduced \"Section XII\" live on 2026-09-05 from index row 171. The USD 25 figure was always correct and must stay; only the citation was wrong. \"Part XIII\" is NOT asserted as must_contain: the model may answer correctly without naming the Part at all, and demanding it would fail a good reply. The stale string is the defect; its absence is the check.",
+      "outcome": "HTTP_200",
+      "reply": "Ndiyo, adhabu ni tofauti. Kampuni za ndani zinapata adhabu ya TZS 2,500 kwa mwezi ikiwa zimechelewa kuwasilisha annual returns. Kampuni za kigeni zinapata adhabu ya USD 25 kwa mwezi (au TZS 60,000). Thibitisha na BRELA (brela.go.tz).",
+      "elapsed_s": 9.1,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    },
+    {
+      "id": "B2_amt_wording",
+      "change": "B/index",
+      "question": "Kampuni yetu imepata hasara miaka mitatu mfululizo. Tunalipa kiasi gani?",
+      "must_not_contain": [
+        "chini ya asilimia 1"
+      ],
+      "note": "The second payload in the regen, staged since 2026-09-05. \"kodi ya chini (AMT) ya asilimia 1\" was live-read as \"a tax of LESS THAN 1%\". The reply must not render the rate as below 1%.",
+      "outcome": "HTTP_200",
+      "reply": "Kiwango cha Alternative Minimum Tax (AMT) kwa kampuni zenye hasara ni asilimia 1 ya mauzo ya mwaka wa tatu (tangu Julai 2025). Kwa kampuni yako, kiwango ni TZS 1,000,000 (asilimia 1 ya mauzo ya TZS 100M). Kumbuka: unalipa kwa sababu umepita kizingiti cha hasara — si kwa sababu unaanza kulipa kodi mara ya kwanza. Thibitisha na tra.go.tz.",
+      "elapsed_s": 11.7,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    },
+    {
+      "id": "C1_ext03_public_float",
+      "change": "C/routing",
+      "question": "Tulioorodheshwa DSE mwaka jana lakini ni asilimia 15 tu ya hisa zetu ndizo mikononi mwa umma. Tunalipa kodi ipi?",
+      "must_contain": [
+        "30"
+      ],
+      "must_not_contain": [
+        "liko nje ya mada yangu"
+      ],
+      "note": "ext_03. 15% float is BELOW the 25% threshold, so the ordinary 30% applies. Answered 25% before the fix. Routing has no observable endpoint, so \"30\" is the signature -- a reply reaching 30% through the engine and one reaching it from weights are indistinguishable here, and that is stated rather than hidden.",
+      "outcome": "HTTP_200",
+      "reply": "Kampuni zilizoorodheshwa DSE zinapata asilimia 25 kwa miaka 3 — LAKINI kwa sharti kwamba angalau asilimia 25 ya hisa ziwe kwa umma (First Schedule para 3(2)(a), kigezo hiki tangu 2025-07-01 — kilikuwa asilimia 30 kabla ya hapo). Je, sehemu ya hisa kwa umma inafikia kiwango hicho? Bila hilo, kiwango cha kawaida cha asilimia 30 ndicho kinachotumika.",
+      "elapsed_s": 1.2,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    },
+    {
+      "id": "C2_ext05_sector_exemption",
+      "change": "C/routing + R31",
+      "question": "Zahanati yetu binafsi imekuwa na hasara miaka mitatu mfululizo. Tunatakiwa kulipa ile kodi ya makampuni yenye hasara?",
+      "must_contain": [
+        "hapana"
+      ],
+      "note": "ext_05, THE STRONGEST ROUTING SIGNATURE IN THIS FILE. corporate_sector() has returned \"health\" for \"zahanati yetu\" since 2026-09-05; the s.4(8) exemption is reachable ONLY through the widened gate. Live on 2026-09-05 this answered \"Ndiyo, pay AMT\" -- wrong. A \"Hapana\" here is near-conclusive that the route opened AND the sector was read, because nothing else produces that answer.",
+      "outcome": "HTTP_200",
+      "reply": "Hapana, AMT haitumiki. Kampuni zinazofanya kilimo, afya au elimu ZIMESAMEHEWA AMT kabisa (Sheria ya Kodi ya Mapato Kifungu 4(8)), hata kama zina hasara miaka 3 mfululizo. Kodi ya kawaida ya asilimia 30 inatumika kwa faida (si AMT).",
+      "elapsed_s": 1.2,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    },
+    {
+      "id": "C3_ext04_transport_amt",
+      "change": "C/routing",
+      "question": "Kampuni yetu ya usafirishaji wa mizigo imepata hasara miaka mitatu iliyopita mfululizo. Sasa tunadaiwa kodi gani?",
+      "must_contain": [
+        "1"
+      ],
+      "must_not_contain": [
+        "liko nje ya mada yangu"
+      ],
+      "note": "ext_04. Transport is NOT an exempt sector, so AMT at 1% applies -- the opposite branch to C2. Both must be right; C2 alone would pass a system that exempts everyone.",
+      "outcome": "HTTP_200",
+      "reply": "Ndiyo, AMT inatumika. Kampuni yenye hasara isiyopunguzwa kwa miaka 3 mfululizo hulipa AMT ya asilimia 1 ya mauzo (turnover) ya mwaka wa tatu wa hasara — SI faida, SI kodi ya kawaida ya asilimia 30 (First Schedule para 3(3), Sheria ya Fedha 2025 Kifungu 60(d)(ii)). Kiasi halisi kinahitaji mauzo ya mwaka huo — thibitisha na TRA.",
+      "elapsed_s": 1.2,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    },
+    {
+      "id": "C4_eval211_must_not_route",
+      "change": "C/routing (the pin)",
+      "question": "Kampuni yangu imekuwa na hasara miaka 4 mfululizo — je nitaweza kupunguza mapato ya mwaka wa 5 kwa hasara zote bila kikomo?",
+      "must_not_contain": [
+        "alternative minimum tax"
+      ],
+      "note": "THE CONSTRAINT. A loss-carryforward OFFSET-LIMIT question must not be answered as AMT applicability. Verified locally as route=none after the widening; this confirms it live. If the reply is an AMT answer, C over-triggered.",
+      "outcome": "HTTP_200",
+      "reply": "Kwa mujibu wa sheria, hakuna kikomo cha muda kinachotakiwa kwa hasara zinazobebwa. Thibitisha na tra.go.tz.",
+      "elapsed_s": 5.3,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    },
+    {
+      "id": "N1_ordinary_fact",
+      "change": "negative",
+      "question": "Ada ya kuwasilisha ripoti ya mwaka BRELA ni shilingi ngapi?",
+      "must_contain": [
+        "22,000"
+      ],
+      "note": "An ordinary fact lookup, correct before and after. Catches a deploy that broke retrieval wholesale.",
+      "outcome": "HTTP_200",
+      "reply": "Ada ya kuwasilisha ripoti ya mwaka (annual return) ni Shilingi 22,000. Thibitisha na BRELA Official (brela.go.tz).",
+      "elapsed_s": 5.2,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    },
+    {
+      "id": "N2_ordinary_compute",
+      "change": "negative",
+      "question": "Tuna wafanyakazi kumi, mishahara yote jumla milioni tano kwa mwezi. Ile ya mafunzo ni kiasi gani?",
+      "must_contain": [
+        "175,000"
+      ],
+      "note": "SDL 3.5% x 5,000,000. A compute path untouched by all three changes.",
+      "outcome": "HTTP_200",
+      "reply": "Kwa wafanyakazi 10, unalipa asilimia 0.5 ya jumla ya mishahara. Thibitisha na tra.go.tz.\nSDL = 3.5% × TZS 5,000,000 = TZS 175,000",
+      "elapsed_s": 8.8,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    },
+    {
+      "id": "N3_genuine_ooc",
+      "change": "negative",
+      "question": "Nina mgodi mdogo wa madini. Mrahaba tunaolipa serikalini ni asilimia ngapi?",
+      "must_contain_any": [
+        "nje ya",
+        "sijui",
+        "sina uhakika"
+      ],
+      "must_not_contain": [
+        "asilimia 3",
+        "asilimia 4",
+        "asilimia 5",
+        "asilimia 6"
+      ],
+      "note": "ASSERTION CORRECTED 2026-09-24 AFTER IT FAILED A GOOD REPLY. It originally required the literal substring \"nje ya\" -- one particular refusal wording. The deploy answered \"Samahani, sijui kuhusu viwango vya mrabaha wa madini... Wasiliana na Wizara ya Madini\", which is a correct refusal in different words. A check that demands one phrasing of a correct behaviour reports a defect that is not there, and R26 is explicit that a false adverse verdict costs more than a missed one because only false positives generate edits. Now: any refusal marker, AND no royalty rate quoted -- the second half is what actually matters.\nSEPARATE, REAL FINDING from the same row, recorded not fixed: the probe spells it \"mrahaba\", and the OOC list has \"mrabaha\". The classifier did NOT intercept (classify returns True, zero phrases matched) -- the model refused on its own. R11 calls the classifier infrastructure rather than behaviour precisely so it does not depend on the model choosing well, and here it did depend on exactly that. Same class as the 2026-08-14 `hifazi` variant, different family (b/h metathesis). Adding the cue is a refusal-path change and needs its own held-out set per R21, so it is NOT bolted onto a deploy verification.",
+      "outcome": "HTTP_200",
+      "reply": "Samahani, sijui kuhusu viwango vya mrabaha wa madini. Viwango vinategemea aina ya madini yanayochimbwa. Wasiliana na Wizara ya Madini kupitia tovuti yao madini.go.tz.",
+      "elapsed_s": 6.6,
+      "verdict": "PASS",
+      "missing_required": [],
+      "present_forbidden": []
+    }
+  ],
+  "summary": {
+    "PASS": 12,
+    "FAIL": 0,
+    "ERROR": 0
+  },
+  "status": "ALL PASS"
+}

@@ -130,9 +130,24 @@ CHECKS = [
      'note': 'SDL 3.5% x 5,000,000. A compute path untouched by all three changes.'},
     {'id': 'N3_genuine_ooc', 'change': 'negative',
      'question': 'Nina mgodi mdogo wa madini. Mrahaba tunaolipa serikalini ni asilimia ngapi?',
-     'must_contain': ['nje ya'],
-     'note': 'Mining royalties -- genuinely OOC, untouched by the narrowing. The refusal gate '
-             'must still work on what it is for.'},
+     'must_contain_any': ['nje ya', 'sijui', 'sina uhakika'],
+     'must_not_contain': ['asilimia 3', 'asilimia 4', 'asilimia 5', 'asilimia 6'],
+     'note': 'ASSERTION CORRECTED 2026-09-24 AFTER IT FAILED A GOOD REPLY. It originally '
+             'required the literal substring "nje ya" -- one particular refusal wording. The '
+             'deploy answered "Samahani, sijui kuhusu viwango vya mrabaha wa madini... '
+             'Wasiliana na Wizara ya Madini", which is a correct refusal in different words. '
+             'A check that demands one phrasing of a correct behaviour reports a defect that '
+             'is not there, and R26 is explicit that a false adverse verdict costs more than '
+             'a missed one because only false positives generate edits. Now: any refusal '
+             'marker, AND no royalty rate quoted -- the second half is what actually matters.\n'
+             'SEPARATE, REAL FINDING from the same row, recorded not fixed: the probe spells '
+             'it "mrahaba", and the OOC list has "mrabaha". The classifier did NOT intercept '
+             '(classify returns True, zero phrases matched) -- the model refused on its own. '
+             'R11 calls the classifier infrastructure rather than behaviour precisely so it '
+             'does not depend on the model choosing well, and here it did depend on exactly '
+             'that. Same class as the 2026-08-14 `hifazi` variant, different family (b/h '
+             'metathesis). Adding the cue is a refusal-path change and needs its own '
+             'held-out set per R21, so it is NOT bolted onto a deploy verification.'},
 ]
 
 
@@ -158,8 +173,18 @@ def ask(question):
 
 
 def adjudicate(check, reply):
+    """`must_contain` is ALL-of; `must_contain_any` is ANY-of; `must_not_contain` is none-of.
+
+    `must_contain_any` exists because the all-of form failed a CORRECT reply on 2026-09-24:
+    it demanded one particular refusal wording where several are equally right. Where a
+    behaviour has multiple valid surface forms, asserting one of them measures phrasing, not
+    behaviour.
+    """
     low = reply.lower()
     missing = [s for s in check.get('must_contain', []) if s.lower() not in low]
+    any_of = check.get('must_contain_any', [])
+    if any_of and not any(s.lower() in low for s in any_of):
+        missing.append(f'none of {any_of}')
     present = [s for s in check.get('must_not_contain', []) if s.lower() in low]
     return ('PASS' if not missing and not present else 'FAIL'), missing, present
 
