@@ -107,34 +107,43 @@ def test_missing_git_history_is_reported_distinctly_from_staleness():
     assert report["missing_inputs"] == ["scripts/locked_facts.json"]
 
 
-def test_against_live_repo_state_is_fresh_after_the_2026_09_24_regen():
-    """Sanity check against the ACTUAL repo, not a synthetic graph. FIFTH flip, same
-    mechanism as all four before it (2026-09-03 ok=False->True after efe5956; ok=True->False
+def test_against_live_repo_state_is_stale_pending_the_ext_31_regen():
+    """Sanity check against the ACTUAL repo, not a synthetic graph. SIXTH flip, same
+    mechanism as all five before it (2026-09-03 ok=False->True after efe5956; ok=True->False
     after 951fb67 changed facts with no matching regen; ok=False->True after 0be8662 shipped
-    951fb67's fixes for real; ok=True->False after 9c43143/467115b staged two content fixes).
+    951fb67's fixes for real; ok=True->False after 9c43143/467115b staged two content fixes;
+    ok=False->True after the 2026-09-24 regen shipped both at once in 1d59a06).
 
-    THIS FLIP: the 2026-09-24 regen shipped both staged fixes at once --
-    minimum_turnover_tax's ambiguous "kodi ya chini (AMT)" gloss (staged 2026-09-05, found
-    live to read as "less than 1%" rather than "the minimum tax, of 1%"), and
-    brela_foreign_late_filing_penalty's "(Section XII)" citation (staged 2026-09-23, live in
-    production since the corpus began). Index committed to both directories in 1d59a06;
-    exactly two rows changed (27 and 171), 183 rows before and after.
+    THIS FLIP: ext_31's ask-alignment rewrite (2026-09-24) added
+    OSHA_safety_officer_threshold to CONCISE_BILINGUAL_FACTS, so
+    precompute_rag_embeddings.py is now newer than the committed index. The fact itself was
+    already CORRECT -- this is a REACH defect, not a content error: the served row was the
+    `key: value` fallback, English-first and label-led, measured at BOUNDARY (rank 4-16) for
+    the real user phrasing while the live reply asserted exactly the phrasing the fact's own
+    text forbids. Verified offline: exactly one row changes (86), 183 rows before and after,
+    all 14 bucket-E needles still resolve to exactly one row.
 
-    THE PRIOR VERSION OF THIS TEST TOLD ITS OWN MAINTAINER WHAT TO DO HERE, and that is why
-    it is being flipped rather than deleted or suppressed: its failure message read "Either
-    this fix already shipped -- update this test to assert ok is True, that flip IS the
-    signal". It fired exactly as designed, on a pre-push hook, on the push that shipped the
-    fix it was watching for. An oscillating assertion whose two states are both meaningful is
-    the opposite of the R17 hazard (a test that instructs maintainers NOT to fix a real
-    defect) -- each flip records that a staged fix actually reached the deployed artifact
-    rather than sitting at the source, which is the failure mode this whole check exists for
-    (five weeks of a stale citation behind three green checks).
+    AND THE FLIP ITSELF IS THE POINT, AGAIN. The previous version of this test told its
+    maintainer precisely what to do in this situation -- "stage it and ship it in the next
+    R15 run, then flip this back to `assert ok is False` until it does" -- and it fired on a
+    pre-push hook, on the push that staged the change, before anything could ship stale.
+    That is the control working, not an obstacle: an oscillating assertion whose two states
+    are BOTH meaningful is the opposite of the R17 hazard (a test that instructs maintainers
+    not to fix a real defect). Each flip records whether a staged fix has actually reached
+    the deployed artifact or is still sitting at the source -- the exact failure mode this
+    check exists for, after five weeks of a stale citation hid behind three green checks.
+
+    FLIPS BACK TO `assert ok is True` when the founder runs kaggle/regenerate_rag_e5.py and
+    the index is dual-committed (R15 steps 1-4). Until then STALE is the honest state and
+    this test asserting it is the only thing tracking that the rewrite is not live.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is True, (
-        f"the live repo reports STALE: {report}. Either a fact or embedding-code change "
-        "landed WITHOUT a matching regen -- stage it and ship it in the next R15 run, then "
-        "flip this back to `assert ok is False` until it does -- or the two index "
-        "directories were committed separately (artifacts_diverged).")
-    assert report["stale_inputs"] == {}
-    assert report["artifacts_diverged"] is False
+    assert ok is False, (
+        f"the live repo reports FRESH: {report}. If the ext_31 regen has now shipped, that "
+        "flip IS the signal -- update this test to assert ok is True and rename it, and "
+        "confirm live that ext_31 reaches and the reply no longer says 'afisa maalum'.")
+    assert "scripts/precompute_rag_embeddings.py" in report["stale_inputs"], (
+        f"expected the embedding builder to be the stale input; got {report['stale_inputs']}")
+    assert report["artifacts_diverged"] is False, (
+        "the two index directories disagree -- a different defect from the pending regen, "
+        "and one the R15 dual-commit step exists to prevent")
