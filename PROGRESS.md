@@ -1,5 +1,76 @@
 # Africa Giants — Project Progress
 
+## 🔄 2026-09-24 — **THE OOC CUE LIST DOES NOT GENERALISE ALONG ANY AXIS. 42 of 42 probes leak.**
+
+**No cue was written and none should be.** The plan was: freeze a held-out set, then build
+metathesis/vowel/elision/aspiration cues against it. The held-out set killed the plan before the
+cues existed, which is the entire reason for freezing it first.
+
+| arm | probes | leak |
+|---|---|---|
+| orthographic — metathesis, vowel change, dropped aspiration, elision | 20 | **20/20 (100%)** |
+| vocabulary substitution — ordinary words instead of the cue term, **no misspellings** | 22 | **22/22 (100%)** |
+
+`eval/refusal_gate/orthographic_heldout_038.jsonl` ·
+`eval/refusal_gate/measure_vocab_substitution_arm.py` →
+`eval/results/vocab_substitution_arm_2026_09_24.json`
+
+**Both arms are 100%, and that is the finding — NOT that vocabulary is the bigger hole.** Two
+unrelated variation types, 42 probes, zero caught. **The list does not generalise beyond the exact
+strings it holds.**
+
+### ⚠️ Correcting the framing this was raised under
+
+A reading of this pass circulated in which vocabulary substitution beat orthographic variation
+**13 of 22**, three fixes were measured and **6 shipped**, and `soko la ajira` narrowly avoided a
+false positive. **None of that is in the record and none of it was measured.** There is no
+generator, no candidate-cue set, no per-fix measurement, and `soko la ajira` appears nowhere in the
+repository. The real split is **20/20 vs 22/22** — a stronger result, pointing somewhere else. The
+*instinct* that vocabulary substitution is a separate, real, coverage-shaped problem is
+**confirmed**; the numbers attached to it were not.
+
+Recorded explicitly because a headline reversal sourced to a measurement nobody can inspect is what
+R18 exists to prevent, and would be worse than the five incidents that rule was written from —
+fabricated rather than merely unrecoverable.
+
+### What this retires, and what it does not
+
+**Retired: the per-axis patch as a plan.** Closing metathesis closes metathesis. Neither axis is
+finite, and there are at least four orthographic ones plus vocabulary. An OOC list grown one phrase
+at a time, driven by whichever leak was found last, is the failure-driven approach **R21 warns is
+expensive precisely in the blocking direction**.
+
+**NOT retired: the metathesis finding itself.** `mrahaba` did reach production, did match zero
+phrases, and was refused only because the model judged well. That is still a live R11 dependency.
+What changed is the *remedy*: it is not a cue.
+
+**`oh_34` is the compact argument.** `mrabaha → mrabaa` is a **third** independent way to break one
+word, after metathesis (`mrahaba`) and apocope (`mrabah`). **One base word, three axes, three
+misses.**
+
+### The vocabulary losses are a measured gap, deliberately left open
+
+`nunua ardhi`-shaped losses are **the coverage-gap shape, not an orthographic one** — a different
+problem from `zahabu`, and not fixable by adding verbs. Logged as measured, not scoped: **22/22
+vocabulary probes leak across 11 OOC topics** (capital gains, import duty, stamp duty, mining
+royalty, transfer pricing, Zanzibar, property tax, crypto, stock market, insurance levy, EPZ).
+**No phrases added.**
+
+### Three pre-existing false refusals the set found on the way past
+
+Found before any cue was written, and **they must never be charged to a future cue**:
+`oh_24` royalty WHT (refused by bare `mrabaha`, though `royalties_wht_rate` is a **locked fact** at
+15% — the system holds the answer and refuses the question) · `oh_27` an EFD machine from TRA
+(bare `nikiagiza`) · `oh_31` a company **seal** (bare `stempu` — a physical seal is not stamp duty).
+
+**The in-scope limb remains SEALED.** 18 rows, unread. It is the expensive half and it is intact,
+so the next mechanism — whatever shape it takes — still has something to be priced against.
+
+**Generalised as R33 in CLAUDE.md**, grounded only in the two instances that are verified: the
+digraph test green at 8/8 while 20/20 leak, and the coverage gate's 37× gap.
+
+---
+
 ## 🔴 BOARD ITEM 2026-09-24 — **R31's FOURTH INSTANCE: `partnership_tax_statement()` is a whole engine nothing reaches**
 
 **First, a correction to the premise this was raised under.** The finding was put to me as

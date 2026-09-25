@@ -1130,6 +1130,49 @@ paraphrase.
   something through is cheap to iterate on. A mechanism that can fail by BLOCKING something is
   not, because the cost lands on a real user and is invisible to us.
 
+### R33 — A VARIANT SET VALIDATED AGAINST VARIANTS OF ITS OWN DESIGN MEASURES THE GENERATOR, NOT THE PHENOMENON.
+
+**R21 says a sweep over our own corpora is a lower bound. R33 is the same defect one level up, in
+the FIXTURE rather than the corpus, and it is the form that survives every R21 precaution** —
+because a set of adversarial probes authored by the person who wrote the mechanism is still a
+closed loop, however adversarial each probe is.
+
+**Two grounded instances, both of which reported CLEAN while the gap was open:**
+
+1. **The digraph test.** `tests/test_orthographic_variants.py` enforces that every `dh→z` / `th→s`
+   / `gh→g` phrase has its variant — 11 word pairs — and it is **green, 8/8 passing.** Measured
+   2026-09-24: **20 of 20** orthographic OOC probes across **metathesis, vowel change, dropped
+   aspiration and elision** leak past the classifier. The test is green *because it is scoped to
+   the axis its own generator produced*, and its name says so:
+   `test_every_swahili_digraph_phrase_has_its_variant`. **It validates digraph variants against
+   digraph variants and cannot fail on anything else.**
+2. **The coverage gate** (R21): **1.9%** false refusals on 411 corpus questions, **71%** on 21
+   held-out ones. A **~37× gap** on the same cue list.
+
+**AND THE MEASUREMENT THAT SHOWS WHY NEITHER FIX IS A FIX** (2026-09-24,
+`eval/refusal_gate/measure_vocab_substitution_arm.py` →
+`eval/results/vocab_substitution_arm_2026_09_24.json`): 22 OOC questions asked with **ordinary
+vocabulary instead of the term the cue list holds** — no misspellings anywhere — leak **22/22**.
+
+> **Orthographic arm 20/20. Vocabulary arm 22/22. 42 of 42 probes across two unrelated variation
+> types. The cue list does not generalise beyond the exact strings it holds, along ANY axis.**
+
+**The scoping consequence, which is the point of the rule:** closing one axis closes that axis.
+Neither axis is finite, so **an OOC list grown one phrase at a time — driven by whichever leak was
+found last — is the failure-driven approach R21 warns is expensive precisely in the blocking
+direction.** 42/42 is evidence about the **mechanism**, not a worklist of phrases to add.
+
+**In practice:**
+- **Before trusting a variant/probe set, name the axis its author had in mind, then ask what OTHER
+  axis exists.** If you cannot name one, you have not looked; there were four here and the suite
+  modelled one.
+- **A leak-rate result is a COVERAGE result, never a REALISM result.** Which variation real users
+  actually produce is a traffic-frequency claim and **no offline sweep can establish it** — it
+  needs transcripts. Do not let 22/22 become "this is how users type".
+- **State who authored the probes.** A set written to avoid the current cues will avoid them; the
+  finding is that *plausible natural phrasings* avoid them, and the honest caveat is that whether
+  these are the phrasings users produce is a separate, unanswered question.
+
 ### R22 — MEASURE A REMEDY ON THE POPULATION THAT NEEDS IT, NOT THE ONE THAT IS CHEAPEST TO SAMPLE.
 
 **Distinct from R21 and it will recur.** R21 is about *vocabulary*: our corpora are aligned with our

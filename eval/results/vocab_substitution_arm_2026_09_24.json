@@ -1,0 +1,177 @@
+{
+  "measured": "2026-09-24",
+  "harness": "eval/refusal_gate/measure_vocab_substitution_arm.py",
+  "question": "Does vocabulary substitution defeat the OOC classifier the way orthographic variation does?",
+  "vocab_arm": {
+    "n": 22,
+    "leaks": 22,
+    "leak_pct": 100,
+    "leaking_ids": [
+      "v01",
+      "v02",
+      "v03",
+      "v04",
+      "v05",
+      "v06",
+      "v07",
+      "v08",
+      "v09",
+      "v10",
+      "v11",
+      "v12",
+      "v13",
+      "v14",
+      "v15",
+      "v16",
+      "v17",
+      "v18",
+      "v19",
+      "v20",
+      "v21",
+      "v22"
+    ]
+  },
+  "orthographic_arm": {
+    "n": 20,
+    "leaks": 20,
+    "leak_pct": 100,
+    "source": "eval/refusal_gate/orthographic_heldout_038.jsonl"
+  },
+  "finding": "BOTH ARMS 100%. This does NOT establish vocabulary substitution as the bigger hole. It establishes that the cue list does not generalise beyond the exact strings it holds, along either axis -- 42 of 42 probes across two unrelated variation types leak. Evidence about the MECHANISM, not about which phrases to add next.",
+  "what_it_cannot_show": "Which variation type real users actually produce. That is a traffic-frequency claim and no offline sweep can establish it. A leak-rate result must not be read as a realism result.",
+  "authorship_caveat": "The 22 vocab probes were authored to avoid all 136 cues. The objection that this is rigged is answered by noting a real user does not know the cue list either -- but whether THESE phrasings are the ones users produce needs transcripts or a native-speaker pass.",
+  "rows": [
+    {
+      "id": "v01",
+      "topic": "capital_gains_land",
+      "question_sw": "Nilipata faida kwa kuuza eneo langu la ujenzi. Nalipa kodi gani?",
+      "leaked": true
+    },
+    {
+      "id": "v02",
+      "topic": "capital_gains_land",
+      "question_sw": "Shamba langu nimelipatia bei nzuri zaidi ya niliyonunua. Kuna kodi?",
+      "leaked": true
+    },
+    {
+      "id": "v03",
+      "topic": "capital_gains_land",
+      "question_sw": "Nimebadilisha umiliki wa nyumba yangu kwa malipo. Kodi ni kiasi gani?",
+      "leaked": true
+    },
+    {
+      "id": "v04",
+      "topic": "import_duty",
+      "question_sw": "Mzigo wangu unatoka nje ya nchi -- serikali inadai malipo gani kabla nichukue?",
+      "leaked": true
+    },
+    {
+      "id": "v05",
+      "topic": "import_duty",
+      "question_sw": "Nalipa kiasi gani kwa serikali kwa vitu ninavyoleta kutoka nje?",
+      "leaked": true
+    },
+    {
+      "id": "v06",
+      "topic": "import_duty",
+      "question_sw": "Vitu vinavyoingia nchini vinatozwa kiasi gani?",
+      "leaked": true
+    },
+    {
+      "id": "v07",
+      "topic": "stamp_duty",
+      "question_sw": "Gharama ya kuthibitisha mkataba wa mauzo kisheria ni kiasi gani?",
+      "leaked": true
+    },
+    {
+      "id": "v08",
+      "topic": "stamp_duty",
+      "question_sw": "Nyaraka za kuhamisha umiliki zinahitaji malipo gani ya serikali?",
+      "leaked": true
+    },
+    {
+      "id": "v09",
+      "topic": "mining_royalty",
+      "question_sw": "Nalipa serikali kiasi gani kwa mawe ninayochimba na kuuza?",
+      "leaked": true
+    },
+    {
+      "id": "v10",
+      "topic": "mining_royalty",
+      "question_sw": "Mchimbaji mdogo anatoa sehemu gani ya mapato yake kwa serikali?",
+      "leaked": true
+    },
+    {
+      "id": "v11",
+      "topic": "transfer_pricing",
+      "question_sw": "Kampuni zetu mbili zinauziana bidhaa -- bei tunapanga vipi kikodi?",
+      "leaked": true
+    },
+    {
+      "id": "v12",
+      "topic": "transfer_pricing",
+      "question_sw": "Tunatoza nini kati ya kampuni mama na tawi lake nje ya nchi?",
+      "leaked": true
+    },
+    {
+      "id": "v13",
+      "topic": "zanzibar_scope",
+      "question_sw": "Biashara yangu iko visiwani -- sheria za kodi ni zile zile?",
+      "leaked": true
+    },
+    {
+      "id": "v14",
+      "topic": "zanzibar_scope",
+      "question_sw": "Duka langu ni Stone Town. Kodi zinatofautiana na huku?",
+      "leaked": true
+    },
+    {
+      "id": "v15",
+      "topic": "property_tax",
+      "question_sw": "Nyumba yangu ya kupangisha inatozwa kodi ya mwaka na manispaa?",
+      "leaked": true
+    },
+    {
+      "id": "v16",
+      "topic": "property_tax",
+      "question_sw": "Jengo langu linatozwa kiasi gani kila mwaka na halmashauri?",
+      "leaked": true
+    },
+    {
+      "id": "v17",
+      "topic": "crypto",
+      "question_sw": "Nimepata faida kwa pesa za mtandao. Nalipa kodi?",
+      "leaked": true
+    },
+    {
+      "id": "v18",
+      "topic": "crypto",
+      "question_sw": "Biashara ya sarafu ya kimtandao inatozwa kodi Tanzania?",
+      "leaked": true
+    },
+    {
+      "id": "v19",
+      "topic": "stock_market",
+      "question_sw": "Nimenunua umiliki kwenye kampuni iliyoorodheshwa. Faida yake inatozwa kodi?",
+      "leaked": true
+    },
+    {
+      "id": "v20",
+      "topic": "stock_market",
+      "question_sw": "Gawio nilipata kutoka kampuni nilizowekeza -- kodi ni ngapi?",
+      "leaked": true
+    },
+    {
+      "id": "v21",
+      "topic": "insurance_premium_levy",
+      "question_sw": "Malipo ya kinga ya mali yanatozwa ushuru wa serikali?",
+      "leaked": true
+    },
+    {
+      "id": "v22",
+      "topic": "epz",
+      "question_sw": "Kiwanda changu kiko kanda ya uzalishaji kwa mauzo ya nje -- kodi zake?",
+      "leaked": true
+    }
+  ]
+}
