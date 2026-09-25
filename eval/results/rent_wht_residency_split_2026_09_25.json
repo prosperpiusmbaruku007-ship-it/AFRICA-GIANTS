@@ -1,0 +1,147 @@
+{
+ "measured": "2026-09-25",
+ "harness": "eval/sources/verify_rent_wht_residency_split.py",
+ "question": "Does commercial rent WHT have a resident/non-resident split?",
+ "authority_order": "statute decides; the TRA summary corroborates and never overrides (CLAUDE.md: the regulator's own summary is not the statute).",
+ "statute": {
+  "url": "https://www.tra.go.tz/images/uploads/acts/The_Income_Tax_Act.pdf",
+  "bytes": 1256766,
+  "pages": 146,
+  "edition": "Cap.332 R.E. 2023",
+  "act_header_present": true,
+  "rent_limb_found": true,
+  "rent_limb_quote": "in the case of interest, rent or a commuted pension paid to a resident withholdee or interest or rent paid to a non- resident withholdee – ten percent; (iii) in the case of royalty referred ",
+  "rent_rate_stated": "ten percent",
+  "service_fee_contrast_found": true,
+  "service_fee_contrast_quote": "five percent for a resident and fifteen percent for a non-resident; Rates of withholding tax Acts Nos. 8 of 2012 s. 31 4"
+ },
+ "tra_summary": {
+  "url": "https://www.tra.go.tz/page/withholding-tax",
+  "bytes": 58571,
+  "header": [
+   "Description of Payment",
+   "Rate for Resident",
+   "Rate for Non Resident"
+  ],
+  "rent_row": [
+   "Rental Income (For commercial purposes)",
+   "10%",
+   "10%"
+  ]
+ },
+ "corpus_rows_asserting_15pct": [
+  {
+   "file": "datasets\\tier1a\\cleaned_pairs\\batch_002b_cleaned.jsonl",
+   "id": "tier1a_wh_009_20260603",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\cleaned_pairs\\batch_002_cleaned.jsonl",
+   "id": "tier1a_wh_009_20260603",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+   "id": "tier1a_wht_deep_012_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+   "id": "tier1a_wht_deep_030_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+   "id": "tier1a_wht_deep_035_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+   "id": "tier1a_wht_deep_037_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\cleaned_pairs\\batch_005_cleaned.jsonl",
+   "id": "tier1a_income_tax_adv_064_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\cleaned_pairs\\batch_005_cleaned.jsonl",
+   "id": "tier1a_income_tax_adv_089_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\flagged\\needs_human_review\\batch_004_founder_sample.jsonl",
+   "id": "tier1a_wht_deep_037_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\raw_pairs_batch_002.jsonl",
+   "id": "tier1a_wh_009_20260603",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\raw_pairs_batch_002b.jsonl",
+   "id": "tier1a_wh_009_20260603",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\raw_pairs_batch_004.jsonl",
+   "id": "tier1a_wht_deep_012_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\raw_pairs_batch_004.jsonl",
+   "id": "tier1a_wht_deep_030_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\raw_pairs_batch_004.jsonl",
+   "id": "tier1a_wht_deep_035_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\raw_pairs_batch_004.jsonl",
+   "id": "tier1a_wht_deep_037_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\raw_pairs_batch_005.jsonl",
+   "id": "tier1a_income_tax_adv_064_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\raw_pairs_batch_005.jsonl",
+   "id": "tier1a_income_tax_adv_089_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\_verify_batch004_pairs21_300.jsonl",
+   "id": "tier1a_wht_deep_012_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\_verify_batch004_pairs21_300.jsonl",
+   "id": "tier1a_wht_deep_030_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\_verify_batch004_pairs21_300.jsonl",
+   "id": "tier1a_wht_deep_035_20260609",
+   "eval_set": false
+  },
+  {
+   "file": "datasets\\tier1a\\raw_sources\\_verify_batch004_pairs21_300.jsonl",
+   "id": "tier1a_wht_deep_037_20260609",
+   "eval_set": false
+  }
+ ],
+ "verdict": {
+  "residency_split_for_rent": "NO",
+  "resident_rate": "10%",
+  "non_resident_rate": "10%",
+  "discriminating_evidence": "The SAME First Schedule paragraph writes an explicit residency split for service fees ('five percent for a resident and fifteen percent for a non-resident') and does NOT write one for rent -- it names the non-resident limb and gives it the same ten percent. Silence would be ambiguous; an explicit non-resident limb is not.",
+  "corpus_rows_wrong": 21,
+  "corpus_rows_in_eval_set": 0
+ }
+}
