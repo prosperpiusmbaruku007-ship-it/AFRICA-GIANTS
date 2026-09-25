@@ -1030,6 +1030,22 @@
       "mkurugenzi.*kwa wasio wakazi.*ni asilimia 20"
     ]
   },
+  "rent_wht_rate": {
+    "fact": "WHT on rent for commercial purposes is 10% — a SINGLE rate for both residents and non-residents. There is no residency split for rent. The payer must be a WITHHOLDING AGENT for the obligation to arise at all; an ordinary individual tenant paying a landlord is not automatically one.",
+    "correct_value": "10% for both residents and non-residents (commercial rent)",
+    "primary_source": "Income Tax Act Cap.332 R.E.2023, First Schedule para 4(b)(ii): 'in the case of interest, rent or a commuted pension paid to a resident withholdee or interest or rent paid to a non-resident withholdee – ten percent'; cross-checked against https://www.tra.go.tz/page/withholding-tax, whose table reads 'Rental Income (For commercial purposes) | 10% | 10%' under the headers 'Rate for Resident' / 'Rate for Non Resident'.",
+    "verified_by": "Direct read (2026-09-26) of the Income Tax Act Cap.332 R.E.2023 PDF (tra.go.tz, fetched via curl per R30), First Schedule para 4(b)(ii). THE NON-RESIDENT LIMB IS NAMED EXPLICITLY and given the same ten percent -- this is not drafting silence, which would be ambiguous. DISCRIMINATING EVIDENCE (R23: 10% alone proves nothing, since the resident limb is 10% under either hypothesis): the SAME paragraph writes an explicit residency split for service fees at para 4(c)(i), 'five percent for a resident and fifteen percent for a non-resident'. The Act demonstrably uses that form where a split exists, and does not use it for rent. The erroneous 15% almost certainly comes from para 4(b)(iv), 'in the case of other payments - fifteen percent' -- the catch-all, taken instead of the specific rent limb three lines above it. Harness: eval/sources/verify_rent_wht_residency_split.py -> eval/results/rent_wht_residency_split_2026_09_25.json",
+    "verified_date": "2026-09-26",
+    "verified_as_at": "2026-09-26",
+    "correction_note": "Resolves _unresolved_items.commercial_rent_wht_nonresident (status NEEDS_TRA_CHECK, standing assumption '15% non-resident'), whose OWN named resolution_source was the TRA withholding page that states 10%/10%. 21 corpus rows asserting the 15% non-resident rate quarantined 2026-09-26 (scripts/correct_corpus_defects_v11.py).",
+    "wrong_patterns": [
+      "pango[^.!?]{0,60}wasio wakazi[^.!?]{0,30}asilimia 15(?! si| sio| – si)",
+      "wasio wakazi[^.!?]{0,30}asilimia 15[^.!?]{0,40}pango(?! si| sio)",
+      "rent[^.!?]{0,60}non.?residents?[^.!?]{0,30}(?:is |are |at |of )?15%(?! is not| is wrong)",
+      "non.?residents?[^.!?]{0,30}15%[^.!?]{0,40}rent(?! is not| is wrong)",
+      "kodi ya zuio ya pango[^.!?]{0,80}asilimia 15(?! si| sio)"
+    ]
+  },
   "wcf_accident_reporting": {
     "fact": "Employer must notify WCF of a workplace accident within 7 WORKING DAYS — via WCF online portal (portal.wcf.go.tz). Different deadline for occupational illness. Source: WCF portal.",
     "primary_source": "Workers Compensation Act Cap.263 R.E.2023, s.34(1): 'an employer shall, within seven days after receiving a notice of an accident from the employee or having learned in some other way that an accident has occurred, report the accident to the Director-General'",

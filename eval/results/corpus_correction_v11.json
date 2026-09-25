@@ -1,0 +1,24 @@
+{
+  "measured": "2026-09-26",
+  "harness": "scripts/correct_corpus_defects_v11.py",
+  "defect_class": "RENT_WHT_NONRESIDENT_15PCT",
+  "mode": "DRY_RUN",
+  "probes_passed": 11,
+  "rows_matched": 16,
+  "rows_in_eval_set": 0,
+  "per_file": {
+    "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl": 1,
+    "datasets/tier1a/cleaned_pairs/batch_002b_cleaned.jsonl": 1,
+    "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl": 2,
+    "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl": 1,
+    "datasets/tier1a/raw_sources/_verify_batch004_pairs21_300.jsonl": 2,
+    "datasets/tier1a/raw_sources/raw_pairs_batch_002.jsonl": 1,
+    "datasets/tier1a/raw_sources/raw_pairs_batch_002b.jsonl": 1,
+    "datasets/tier1a/raw_sources/raw_pairs_batch_004.jsonl": 2,
+    "datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl": 1,
+    "datasets/tier1a/sft/train_sft.jsonl": 1,
+    "datasets/tier1a/sft/val_sft.jsonl": 3
+  },
+  "locked_fact": "rent_wht_rate (added 2026-09-26)",
+  "quarantine_file": "datasets/tier1a/rejected/rent_wht_nonresident_15pct_quarantine_2026_09_26.jsonl"
+}
