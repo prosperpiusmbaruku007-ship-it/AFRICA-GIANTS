@@ -1,0 +1,574 @@
+{
+ "measured": "2026-09-26",
+ "harness": "eval/sources/check_cited_sections_exist.py",
+ "checks": "cited section NUMBER exists in the Act's Arrangement of Sections",
+ "explicitly_does_not_check": "that the section supports the claim. A real section that CONTRADICTS the fact passes this check.",
+ "acts_in_scope": {
+  "332": {
+   "name": "Income Tax Act Cap.332",
+   "sections_parsed": 139,
+   "max_section": 171,
+   "toc_chars": 8341
+  },
+  "438": {
+   "name": "Tax Administration Act Cap.438",
+   "sections_parsed": 115,
+   "max_section": 115,
+   "toc_chars": 6789
+  }
+ },
+ "acts_out_of_scope": [
+  "212",
+  "148",
+  "297",
+  "263",
+  "290",
+  "357",
+  "213",
+  "101",
+  "189",
+  "217"
+ ],
+ "controls": {
+  "positive_cap332_s105_must_exist": true,
+  "negative_cap332_s9999_must_be_missing": true,
+  "positive_cap438_s51_must_exist": true,
+  "currency_not_read_as_section": true,
+  "sections_attributed_to_their_own_act": true
+ },
+ "rows": [
+  {
+   "key": "paye_band_2_rate",
+   "cap": "332",
+   "sections_cited": [
+    25,
+    27
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "paye_penalty_rate",
+   "cap": "438",
+   "sections_cited": [
+    89
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "paye_p9_deadline",
+   "cap": "332",
+   "sections_cited": [
+    85
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "p45_not_tanzanian",
+   "cap": "332",
+   "sections_cited": [
+    85
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "royalties_wht_rate",
+   "cap": "332",
+   "sections_cited": [
+    46,
+    72,
+    82
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "provisional_tax_instalments",
+   "cap": "332",
+   "sections_cited": [
+    113
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "minimum_turnover_tax",
+   "cap": "332",
+   "sections_cited": [
+    4,
+    34,
+    60
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "objection_deposit_requirement",
+   "cap": "332",
+   "sections_cited": [
+    36,
+    44
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "objection_deposit_requirement",
+   "cap": "438",
+   "sections_cited": [
+    16,
+    51,
+    62
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "objection_extension_statutory_right",
+   "cap": "438",
+   "sections_cited": [
+    62
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "corporate_tax_rate",
+   "cap": "332",
+   "sections_cited": [
+    27
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "paye_all_bands_sequence",
+   "cap": "332",
+   "sections_cited": [
+    4,
+    31
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "paye_nonresident_flat_rate",
+   "cap": "332",
+   "sections_cited": [
+    25,
+    27,
+    31,
+    46,
+    60,
+    72,
+    81
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "wht_director_fees",
+   "cap": "332",
+   "sections_cited": [
+    7,
+    83,
+    104
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "efd_threshold_tzs_11m",
+   "cap": "438",
+   "sections_cited": [
+    36,
+    44,
+    54
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "efd_not_every_business",
+   "cap": "438",
+   "sections_cited": [
+    44
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "efd_receipt_per_transaction_no_minimum",
+   "cap": "438",
+   "sections_cited": [
+    36,
+    44,
+    54
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "efd_tra_closure_authority",
+   "cap": "438",
+   "sections_cited": [
+    36,
+    44,
+    54,
+    64
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "legal_citation_tax_administration",
+   "cap": "438",
+   "sections_cited": [
+    11,
+    35,
+    36,
+    43,
+    44,
+    51,
+    62
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "annual_return_form_number",
+   "cap": "332",
+   "sections_cited": [
+    35,
+    128
+   ],
+   "sections_missing": [
+    128
+   ],
+   "verdict": "AMBIGUOUS_MULTI_ACT_PROSE",
+   "why_not_a_defect": "The fact is ABOUT cross-Act renumbering, so it necessarily names two Acts in one sentence: 'exactly the pattern CLAUDE.md already documents for Cap.332's old s.35. Current s.128 is a different provision entirely.' That trailing s.128 is Companies Act Cap.212's, but it follows the Cap.332 mention, so positional attribution assigns it to Cap.332 and calls it missing. VERIFIED BY READING THE FACT: its Cap.212 citations (ss.128/131) are correct and documented against a direct brela.go.tz fetch, including the Act's own footnote '[s. 128]' on s.131. Not a defect -- a limit of positional attribution on prose, and the fact itself warns against 'correcting' it."
+  },
+  {
+   "key": "paye_bands_with_examples",
+   "cap": "332",
+   "sections_cited": [
+    20,
+    25,
+    27
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "presumptive_tax_bands_2022",
+   "cap": "332",
+   "sections_cited": [
+    6,
+    27,
+    72
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "presumptive_tax_ceiling_100m",
+   "cap": "332",
+   "sections_cited": [
+    27
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  },
+  {
+   "key": "presumptive_excluded_services",
+   "cap": "332",
+   "sections_cited": [
+    72
+   ],
+   "sections_missing": [],
+   "verdict": "ALL_EXIST"
+  }
+ ],
+ "out_of_scope_rows": [
+  {
+   "key": "vat_standard_rate",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_reduced_rates",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_registration_threshold",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_withholding_goods",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_withholding_services",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "minimum_turnover_tax",
+   "cap": "290",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "stamp_duty_property_transfer",
+   "cap": "189",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "brela_striking_off_non_filing",
+   "cap": "212",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "wcf_new_employer_registration",
+   "cap": "263",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "wcf_accident_reporting",
+   "cap": "263",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_withholding_remittance_deadline",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_late_registration_penalty",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_withholding_formula_correct",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "osha_vs_wcf_roles",
+   "cap": "263",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_threshold_200m_july2024_increase",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "VAT_withholding_base_disputed",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "brela_business_structures",
+   "cap": "212",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "OSHA_safety_officer_threshold",
+   "cap": "297",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "VAT_zero_rated_vs_exempt_input_VAT",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "gn487a_mgeni_cap357_definition",
+   "cap": "357",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "gn487a_marriage_no_exemption",
+   "cap": "357",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "efd_tra_closure_authority",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "document_filing_fee_section_12_act_excluding_balance_sheet",
+   "cap": "212",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "balance_sheet_filing_fee_section_12_act",
+   "cap": "212",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "act_section_12",
+   "cap": "212",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "osiha_act_citation",
+   "cap": "297",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "health_and_safety_act_citation",
+   "cap": "297",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "risk_assessment_frequency",
+   "cap": "297",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_registration_notification_deadline_commissioner",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_return_submission_deadline",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "workers_compensation_act_citation",
+   "cap": "263",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "workers_compensation_act_section",
+   "cap": "263",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "workers_compensation_amendment_rules_citation",
+   "cap": "263",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "minimum_directors",
+   "cap": "212",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "minimum_shareholders",
+   "cap": "212",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "annual_return_form_number",
+   "cap": "212",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "name_similarity_threshold",
+   "cap": "212",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "patent_term",
+   "cap": "217",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "company_director_minimum_age",
+   "cap": "212",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "electrical_test_fee_reduction_initial",
+   "cap": "297",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_deferment_limit_date",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_deferment_threshold_percentage",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_deferment_minimum_value",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "vat_deferment_form_number",
+   "cap": "148",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "gn487a_legal_authority",
+   "cap": "101",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "business_licensing_act_citation",
+   "cap": "101",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "business_licensing_act_chapter",
+   "cap": "101",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "tanzania_citizenship_act_reference",
+   "cap": "357",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "brela_foreign_late_filing_penalty",
+   "cap": "212",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "council_service_levy_is_a_cap_not_a_rate",
+   "cap": "290",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "council_service_levy_non_corporate_conflict",
+   "cap": "290",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "market_dues_no_national_amount",
+   "cap": "290",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "market_dues_exemptions",
+   "cap": "290",
+   "reason": "no full text on disk"
+  },
+  {
+   "key": "business_licence_fee_national_schedule_local_collection",
+   "cap": "290",
+   "reason": "no full text on disk"
+  }
+ ],
+ "summary": {
+  "facts_checked": 24,
+  "clean": 23,
+  "section_not_in_act": 0,
+  "ambiguous_multi_act_prose": 1,
+  "facts_out_of_scope": 54
+ }
+}
