@@ -1,5 +1,154 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-09-25 — **COVERAGE SCOPED. Two of the six are not coverage gaps, and none of the six is council-level.**
+
+**Scoping only. Nothing encoded, nothing built.** Source reachability is measured and committed:
+`eval/sources/probe_source_reachability.py` → `eval/results/coverage_source_reachability_2026_09_25.json`
+(`b416e95`, committed before this write-up per R18).
+
+**The population, corrected and counted.** 6 Tier-1A topics / **12 probe rows**, of which 2 already
+PASS (`ext_38` TIN, `ext_41` mobile money) → **10 non-clean**, +1 out-of-tier (`ext_46` NeST) = the
+11 in `cc50789`. The earlier "20" counted paired phrasings. **Every topic is 2 probes, so the row
+count is double the topic count by construction** — which is exactly the correlation caveat bucket E
+already carries: count distinct topics, not probes.
+
+### Ranked by consequence, as asked — and the ranking moved on evidence, not on the sources being equal
+
+| # | topic | rows | consequence | shape | source verdict |
+|---|---|---|---|---|---|
+| **1** | **rental withholding** | `ext_43/44` | **money** — over- or under-withholding | **ENGINE/statement, not fact** | **OK** — TRA page in hand |
+| **2** | **TRA audit rights** | `ext_39/40` | **penalty + rights at the door** | fact (2 limbs) | **OK** — Cap.438 PDF in hand |
+| 3 | fire safety | `ext_33/34` | can stop an opening | fact — name the office | **OK** for the office; **fee not located** |
+| 4 | weights & measures | `ext_35/36` | procedural | fact — name the office | office **OK**; its laws page **HTTP 500** |
+| 5 | TIN process | `ext_37` | procedural | fact — *disambiguation* | **OK** |
+| 6 | mobile money | `ext_42` | clarifying | fact — *disambiguation* | **unverified this session** |
+| — | NeST procurement | `ext_46` | **do not build** | — | tier-sequenced out (§5) |
+
+### 🔴 The two findings that change what the work is
+
+**1. `rental withholding` is not a missing rate. It is a missing CONDITION — so a fact would ship the
+bug.** TRA's own withholding page states **Rental Income (for commercial purposes) — 10% resident /
+10% non-resident**, and defines *withholding agent* vs *withholdee*. The model's flat 10% was
+**rate-correct** and wrong on two conditions: the *commercial-purposes* qualifier, and that the payer
+must **be a withholding agent** — which `ext_43`'s small individual trader is not, as that row's own
+adjudication note already said. **Authoring a flat "rental withholding is 10%" fact reproduces
+exactly the error we are trying to fix**, with a whitelisted primary source behind it and nothing
+downstream able to catch it. This is the `partnership_tax_statement` shape: a conditional statement,
+and therefore **R31 applies before a line is written** — every parameter needs a named extractor and
+a natural-phrasing probe, or the branches are documented intentions.
+
+**2. `TRA audit rights` is NOT a coverage gap, and `ext_39` was scored WRONG for being RIGHT.**
+Tax Administration Act **Cap.438 R.E. 2023 s.51(1)** (PDF on tra.go.tz, 946KB, fetched):
+
+> *"The Commissioner General shall, **without a prior notice**, be granted free access to any
+> premises, documents, goods … (a) in the case of a dwelling house … between 9:00am and 6:00pm; and
+> at other times as permitted by an order of a court; (b) **in any other case, at any time.**"*
+
+A *duka* is "any other case". So `ext_39`'s *"TRA may inspect at any time with no prior notice"* is
+**substantively correct on the R.E. 2023 text**, and `ext_40`'s *"must give at least 14 days"* is
+flatly wrong. **The probe scored it WRONG because its `expected_behavior` set the bar at CORPUS
+MEMBERSHIP — "must not assert a rule that doesn't exist in the corpus" — not at truth.** That is a
+defensible bar for a refusal probe and the wrong bar for this row, and it inverted the verdict.
+
+⚠️ **This demotes "the sharpest consistency failure in the set" without excusing it.** `ext_39/40`
+was recorded as two fabrications contradicting each other; it is **one correct answer and one wrong
+answer**. The phrasing-dependence is just as real and just as bad — the user who types `ext_40`'s
+phrasing is told the opposite of the law — but the fix is **not** teaching the system to refuse. It
+is one fact it can already source.
+
+⚠️ **NOT YET CURRENT, by this project's own rule.** R.E. 2023 is a consolidation, and its own margin
+already shows s.51 carrying an amendment (Act No. 2 of 2016 s.54). Finance Acts 2024/2025/2026 must
+be read forward before s.51 is encoded — the presumptive-tax precedent is a stale table on
+tra.go.tz itself. And the renumbering trap is documented for **this exact Act** (s.35 → s.43).
+
+### Council-level: **none of the six.** Both candidates are national agencies
+
+The hypothesis was reasonable and both halves of it are wrong:
+
+- **Fire safety is a NATIONAL FORCE, not a council function.** Jeshi la Zimamoto na Uokoaji (Fire
+  and Rescue Force) under the Ministry of Home Affairs, Commissioner General **John W. Masunga**,
+  `zimamoto.go.tz` **200** with a Fire Safety Inspection service and an e-services portal.
+- **Weights & measures is a NATIONAL EXECUTIVE AGENCY.** The **Weights and Measures Agency (WMA)**,
+  `wma.go.tz` **200**, with verification services enumerated. The model said **TBS** (`ext_35`) then
+  **OSHA** (`ext_36`) — both wrong, and *different from each other*.
+
+**So "name the office" is still the right answer shape for both — for a different reason than
+assumed.** Not because the figure varies by council, but because **the question asks *who*, and the
+*who* is a specific national body the model keeps inventing.** That reclassifies them the way the
+three earlier domains were reclassified — **answered, not open** — and it is cheaper than a
+council-by-council answer would have been, because there is one correct issuer nationwide.
+
+**The council-level shape does exist in this corpus** — the service levy (0.3% cap, council-set,
+`ext_23`/`cp_05`) and some business licence fees (`ext_25`, nationally set, checked). It just is not
+in these six.
+
+**Two probes were written to FAIL, and their failing is the evidence:**
+`www.fire.go.tz` — **UNRESOLVABLE, no HTTP response at all.** The domain `ext_33` invented does not
+exist, now verified rather than asserted. And `www.zimamoto.go.tz` returns **HTTP 400** while the
+apex serves 200 — **the broken host is the one MOHA's own site links to.**
+
+### `ext_46` (NeST) should not be built, and that is a §5 ruling not a judgement call
+
+Tier 1C unlocks **after the 1A gate passes**. Counting it as a 1A coverage gap is a category error;
+the correct behaviour is deferral, and the fix is refusal quality, not content. **`ext_45` (EAC,
+Tier 1B) already PASSES — proof that clean deferral is achievable without building the domain**, and
+the better comparison for `ext_46` than any of the six.
+
+### Reachability — and the tanzlii verdict is PER-PATH
+
+`OK 6 · CHALLENGED 1 · HTTP_500 1 · HTTP_400 1 · UNRESOLVABLE 1`. **tanzlii.org listing pages serve
+200 with real content and zero challenge markers; its Act full-text pages 403 with
+`Just a moment...`.** The 2026-09-02 "Turnstile-blocked" note is **correct for document pages and
+stale for listings** — so tanzlii is usable for **discovery** (Act and GN numbers) and not for
+**text**, and both readings of a bare *"tanzlii is blocked"* would have misdirected this scoping.
+Per R30 the finding is now a script, not a paragraph, because the 2026-08-16 version of it was a
+paragraph and decayed.
+
+**Known source gaps, stated rather than glossed:** the fire-safety **fee** (likely in Fire and Rescue
+Force (Fire Safety) Regulations — not located); **Cap.340** text and the weights-and-measures
+verification **periodicity** (WMA's own laws page is HTTP 500); and the **mobile-money transfer levy
+rate**, which I did not verify — R29 applies hard there, since that levy has been amended repeatedly
+and two sources agreeing on it would be exactly the mode-3 trap.
+
+---
+
+## ⚠️ 2026-09-25 — **`ext_29` CORRECTED. It is not a boundary-cliff row, and the claim's three details are each wrong.**
+
+**Recorded as its own finding as asked — but as a correction, because the record does not support the
+claim and writing it up as given would put a measurement nobody can inspect into the record.** That
+is what `54e4d1f` corrected for the vocabulary arm two days ago; doing it again knowingly would be
+worse than the five incidents R18 was written from.
+
+The claim: *correct fact at **rank 4**, one position outside the window, model invents a **six-month
+threshold** that doesn't exist; therefore the cliff argument, and therefore cheap ask-alignment.*
+
+| # | claim | record |
+|---|---|---|
+| 1 | **rank 4** | **No rank exists for `ext_29` anywhere.** Its reach is `BOUNDARY`, which `measure_fact_reach.py` defines as the **band rank 4–16** — and per its own harness note that label is **PROVISIONAL**: the per-probe artifact was written on Kaggle and `eval/results/bucket_e_reach_2026_09_24.json` is not in the repo. "Rank 4" reads a one-position miss off a thirteen-wide band. |
+| 2 | **invents a six-month threshold** | The verbatim live reply says **`TZS 200M/12 miezi` — correctly**. "Six months" appears nowhere in it. The two fabrications, per the adjudication, are a **VFD "instead of" a physical EFD** and a **nil VAT return filed before registration**. |
+| 3 | **a six-month threshold doesn't exist** | **It does.** `vat_registration_threshold` = *"TZS 200M/year **OR TZS 100M/6 months**"*, verified by direct read of GN 448Y/2023 and GN 225/2015 Reg.14 on 2026-08-31. Had the model said six months it would have been reaching for **a real limb of the rule**. |
+
+**And the conclusion does not follow even if the details are set aside.** `ext_29`'s reply **states
+the threshold correctly**, so a missing threshold is not what went wrong. Its defect is **additive
+fabricated obligations** — which is the bucket-A shape (had what it needed, invented extra), not a
+retrieval-miss shape. **An ask-alignment rewrite of row 103 would not fix it.**
+
+**The row that IS this story is `ext_31`, and it is already done.** BOUNDARY, index row 86,
+English-first and label-led, fixed by exactly the ask-alignment rewrite described — `bb2c1ff`,
+pending only the R15 regen. The two rows are adjacent in the same fixture and share a reach label;
+`ext_29` is the one where the lever does not apply.
+
+**What survives, and it is worth keeping:** row 103's needle *"Kizingiti cha kusajili VAT: …"* **is**
+label-led, the shape the `nat_36` lever addresses (rank 17 → 1 from vocabulary alone). Rewriting it
+is cheap and defensible **on its own merits**. It must not be booked as fixing `ext_29`.
+
+**The boundary-category argument still needs a row.** It may well be right — R20's fourth arrival
+point is `BOUNDARY` being structurally unpopulated — but `ext_29` cannot carry it, and no committed
+artifact currently ranks a row at 4. **The bucket-F run would produce per-probe ranks, which is the
+cheapest way to find a row that can.**
+
+---
+
 ## 🔄 2026-09-24 — **THE OOC CUE LIST DOES NOT GENERALISE ALONG ANY AXIS. 42 of 42 probes leak.**
 
 **No cue was written and none should be.** The plan was: freeze a held-out set, then build
