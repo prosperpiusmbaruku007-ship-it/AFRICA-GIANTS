@@ -1,0 +1,103 @@
+{
+ "measured": "2026-09-26",
+ "harness": "eval/sources/verify_s19_family_claim.py",
+ "claim_under_test": "five facts cite ss.19-32 of a statute whose numbering ends at 18 and which has no amending instrument; all five fabricated",
+ "action_the_claim_requested": "correct all five to the hedge shape",
+ "veta_cap82_s19_facts": {
+  "sdl_payment_deadline": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.16(1): 'Returns and time for payment of levy -- An employer... shall... file with the Commis"
+  },
+  "legal_citation_sdl": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2019, s.14"
+  },
+  "legal_citation_amendment_act_sdl": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-01",
+   "primary_source": "Vocational Education and Training Act, Cap.82 (VETA Act), s.19"
+  },
+  "exemption_category_government_departments": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82, s.19(1)(a), AS AMENDED by Finance Act 2026 (Act No.2 of 2026) s.98"
+  },
+  "exemption_category_diplomatic_missions": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(b)"
+  },
+  "exemption_category_un_and_agencies": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(c)"
+  },
+  "exemption_category_international_organizations_aid": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(d)"
+  },
+  "exemption_category_religious_institutions": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(e)"
+  },
+  "exemption_category_charitable_organizations": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(f) and s.19(2)"
+  },
+  "exemption_category_educational_institutions": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(g)"
+  },
+  "exemption_category_local_government_authorities": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(h)"
+  },
+  "exemption_category_trainees_under_TAESA": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(i)"
+  },
+  "exemption_category_farm_employers_agriculture": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-02",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2023, s.19(1)(j)"
+  },
+  "sdl_calculation_example": {
+   "has_verified_by": true,
+   "verified_as_at": "2026-09-01",
+   "primary_source": "Vocational Education and Training Act, Cap.82 R.E.2019, s.14"
+  },
+  "sdl_exemption_categories": {
+   "has_verified_by": false,
+   "verified_as_at": "unknown",
+   "primary_source": "source of the 10 individual exemption_category_* keys, unchanged"
+  }
+ },
+ "family_size_actual": 15,
+ "family_size_claimed": 5,
+ "with_verification_record": 14,
+ "finance_act_2026": {
+  "url": "https://www.tra.go.tz/images/uploads/acts/THE_FINANCE_ACT%2C_2026.pdf",
+  "bytes": 844978,
+  "amending_text_found": true,
+  "quote": "tion and Training Act, hereinafter referred to as the “principal Act”. Amendment of section 19 98. The principal Act is amended in section 19(1) by deleting the words “by the Government” appearing in paragraph (a) and substituting for them the words “through Government subvention”. No. 2 The Finance Act, 2026 57 PART XXVIII AMENDMENT OF THE WILDLIFE CONSERVATION ACT, (CAP. 283)",
+  "proves": "Cap.82 s.19 EXISTS and HAS an amending instrument (FA2026 s.98)."
+ },
+ "substituted_wording_present_in_our_fact": true,
+ "infer_sector_for_licence_sites": [],
+ "verdict": {
+  "family_exists_as_described": false,
+  "sections_fabricated": false,
+  "statute_numbering_ends_at_18": false,
+  "statute_has_no_amending_instrument": false,
+  "named_function_exists": false,
+  "recommended_action": "DO NOT HEDGE. On a verified fact a hedge is a REGRESSION: it withdraws a correct, primary-sourced answer. These facts are current to the most recent Finance Act."
+ }
+}
