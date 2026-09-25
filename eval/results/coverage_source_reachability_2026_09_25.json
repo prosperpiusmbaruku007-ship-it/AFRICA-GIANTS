@@ -1,0 +1,152 @@
+{
+ "measured": "2026-09-25",
+ "harness": "eval/sources/probe_source_reachability.py",
+ "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+ "what_this_measures": "REACHABILITY of a candidate primary source at a SPECIFIC URL. Not the truth of anything it says, and not a licence to encode a fact from it (R4/R28/R29 still apply in full).",
+ "verdicts": {
+  "OK": "served real content",
+  "CHALLENGED": "bot challenge; switching tools will not help",
+  "EMPTY_SHELL": "200 but client-rendered/near-empty; needs another route",
+  "UNRESOLVABLE": "no HTTP response at all (DNS/refused/TLS)",
+  "HTTP_n": "reached, refused with status n",
+  "PROBE_ERROR": "the probe failed, verdict UNKNOWN — not a source verdict"
+ },
+ "rows": {
+  "rental_wht_tra": {
+   "topic": "rental_withholding",
+   "url": "https://www.tra.go.tz/page/withholding-tax",
+   "url_provenance": "LINKED",
+   "expect": "Withholding rate table incl. rent, and the withholding-AGENT definition",
+   "http_status": 200,
+   "bytes": 58618,
+   "verdict": "OK",
+   "needles_found": [
+    "Rental Income",
+    "Withholding Agent"
+   ],
+   "needles_missing": [],
+   "transport_error": null
+  },
+  "taa_cap438_pdf": {
+   "topic": "tra_audit",
+   "url": "https://www.tra.go.tz/images/uploads/acts/Tax_Administration_Act.pdf",
+   "url_provenance": "GUESS",
+   "expect": "Tax Administration Act Cap.438 R.E.2023 full text (s.51 access to premises)",
+   "http_status": 200,
+   "bytes": 945982,
+   "verdict": "OK",
+   "needles_found": [],
+   "needles_missing": [],
+   "transport_error": null
+  },
+  "wma_home": {
+   "topic": "weights_measures",
+   "url": "https://www.wma.go.tz/",
+   "url_provenance": "OFFICIAL",
+   "expect": "Weights and Measures Agency — the real calibration authority",
+   "http_status": 200,
+   "bytes": 201978,
+   "verdict": "OK",
+   "needles_found": [
+    "Weights and Measures Agency"
+   ],
+   "needles_missing": [],
+   "transport_error": null
+  },
+  "wma_laws": {
+   "topic": "weights_measures",
+   "url": "https://www.wma.go.tz/publications/laws",
+   "url_provenance": "LINKED",
+   "expect": "WMA's own legal-basis page (Cap.340 + subsidiary regs)",
+   "http_status": 500,
+   "bytes": 2,
+   "verdict": "HTTP_500",
+   "needles_found": [],
+   "needles_missing": [],
+   "transport_error": null
+  },
+  "fire_force_apex": {
+   "topic": "fire_safety",
+   "url": "https://zimamoto.go.tz/",
+   "url_provenance": "LINKED",
+   "expect": "Fire and Rescue Force — national force under MOHA, the real issuer",
+   "http_status": 200,
+   "bytes": 69852,
+   "verdict": "OK",
+   "needles_found": [
+    "Fire and Rescue"
+   ],
+   "needles_missing": [],
+   "transport_error": null
+  },
+  "fire_force_www": {
+   "topic": "fire_safety",
+   "url": "https://www.zimamoto.go.tz/",
+   "url_provenance": "LINKED",
+   "expect": "SAME site via the www host MOHA itself links to — expected to FAIL",
+   "http_status": 400,
+   "bytes": 52,
+   "verdict": "HTTP_400",
+   "needles_found": [],
+   "needles_missing": [],
+   "transport_error": null
+  },
+  "fire_fabricated_domain": {
+   "topic": "fire_safety",
+   "url": "https://www.fire.go.tz/",
+   "url_provenance": "GUESS",
+   "expect": "THE DOMAIN THE MODEL INVENTED in ext_33. Expected: does not resolve.",
+   "http_status": null,
+   "bytes": 0,
+   "verdict": "UNRESOLVABLE",
+   "needles_found": [],
+   "needles_missing": [],
+   "transport_error": "no_http_response"
+  },
+  "tin_starting_business": {
+   "topic": "tin_process",
+   "url": "https://www.tra.go.tz/page/starting-business-income-for-individuals-and-paying-taxes",
+   "url_provenance": "LINKED",
+   "expect": "TRA Starting Business page — TIN registration path",
+   "http_status": 200,
+   "bytes": 58037,
+   "verdict": "OK",
+   "needles_found": [],
+   "needles_missing": [],
+   "transport_error": null
+  },
+  "tanzlii_listing": {
+   "topic": "_infrastructure",
+   "url": "https://tanzlii.org/en/legislation/",
+   "url_provenance": "OFFICIAL",
+   "expect": "Listing page. 2026-09-02 recorded tanzlii as Turnstile-blocked; test it.",
+   "http_status": 200,
+   "bytes": 298807,
+   "verdict": "OK",
+   "needles_found": [
+    "legislation"
+   ],
+   "needles_missing": [],
+   "transport_error": null
+  },
+  "tanzlii_act_fulltext": {
+   "topic": "_infrastructure",
+   "url": "https://tanzlii.org/en/akn/tz/act/2015/10/eng",
+   "url_provenance": "GUESS",
+   "expect": "Act full text. URL pattern read off the listing page, act number is a guess.",
+   "http_status": 403,
+   "bytes": 5690,
+   "verdict": "CHALLENGED",
+   "needles_found": [],
+   "needles_missing": [],
+   "transport_error": null
+  }
+ },
+ "summary": {
+  "OK": 6,
+  "HTTP_500": 1,
+  "HTTP_400": 1,
+  "UNRESOLVABLE": 1,
+  "CHALLENGED": 1
+ }
+}
