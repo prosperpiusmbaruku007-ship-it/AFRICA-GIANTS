@@ -204,6 +204,16 @@ PINNED = {
     "nssf_calculation_example": ("present_elsewhere", "SI TZS 120,000"),  # re-adjudicated 2026-09-03, was row 171
     "brela_striking_off_non_filing": ("present_elsewhere", "kufuta, kufunga au kuondoa"),
 
+    # rent_wht_rate: NEW FACT, 2026-09-26 (commercial rent WHT is 10% for BOTH residents and
+    # non-residents; Cap.332 First Schedule para 4(b)(ii) names the non-resident limb
+    # explicitly and gives it the same ten percent). PENDING_R15 -- the fact was added in the
+    # same commit series as the 16-row quarantine of the 15%-non-resident defect, and the RAG
+    # index has not been regenerated since, so it is NOT retrievable in production yet. This
+    # pin queues behind the SAME founder regen ext_31 has been waiting on since bb2c1ff.
+    # test_pending_r15_keys_are_still_pending will flag this entry as stale the moment the
+    # regen lands, which is the signal to promote it to present_elsewhere with its real row.
+    "rent_wht_rate": ("pending_r15", None),
+
     # ---- The three council-fee domains reclassified from COVERAGE GAP to ANSWERED
     # (scripts/add_local_levy_facts.py) were pinned pending_r15 here 2026-08-25, then
     # REMOVED 2026-08-26 once the batched R15 regen (packaged in 76897e3, run and shipped
