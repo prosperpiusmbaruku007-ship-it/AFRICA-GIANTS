@@ -2,7 +2,7 @@
   "measured": "2026-09-26",
   "harness": "scripts/correct_corpus_defects_v11.py",
   "defect_class": "RENT_WHT_NONRESIDENT_15PCT",
-  "mode": "DRY_RUN",
+  "mode": "APPLIED",
   "probes_passed": 11,
   "rows_matched": 16,
   "rows_in_eval_set": 0,
@@ -20,5 +20,6 @@
     "datasets/tier1a/sft/val_sft.jsonl": 3
   },
   "locked_fact": "rent_wht_rate (added 2026-09-26)",
-  "quarantine_file": "datasets/tier1a/rejected/rent_wht_nonresident_15pct_quarantine_2026_09_26.jsonl"
+  "quarantine_file": "datasets/tier1a/rejected/rent_wht_nonresident_15pct_quarantine_2026_09_26.jsonl",
+  "remaining_live_after_fix": 0
 }
