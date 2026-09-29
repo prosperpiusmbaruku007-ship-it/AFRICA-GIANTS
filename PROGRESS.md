@@ -1,5 +1,139 @@
 # Africa Giants — Project Progress
 
+## ✅ 2026-09-29 — **THE RENT ENGINE WAS REACHABLE ONLY IN THE STATUTORY REGISTER. Plus: the gate was refusing our own training pair.**
+
+**Shipped:** rent-WHT reachability `0/5 → 5/5` on natural phrasing · bare `mrabaha` narrowed to
+a conjunction · a full-pipeline probe harness that did not previously exist.
+`978a75b` → `1f32973` → `21f89cb`. Suite **1580 passed**.
+
+### 🔴 THE MECHANISM WAS WRONG TWICE, AND EACH WRONG ACCOUNT NAMED A DIFFERENT INNOCENT FILE
+
+This defect was handed over twice with a mechanism attached, and **both mechanisms were
+inventions while the defect underneath was real both times.**
+
+| account given | what it would have had someone edit | what is actually true |
+|---|---|---|
+| *"`decomposition.py` strips `wa nje` before routing sees it"* | `chike/decomposition.py` | the string appears **nowhere** in `chike/`. There is no noise-phrase stripping in the pipeline — audited and committed the day before (`b0a4729`, 13 spans × 45 cue lists → **0 collisions**) |
+| *"`kodi ya pango` is missing from `_MONEY_ASK`"* | the money-ask list | `_MONEY_ASK` holds money-**ASK** phrases (`kiasi gani`, `shilingi ngapi`). `kodi ya pango` is a **subject** cue and is **already in `_RENT_TERM_CUES`**. The rent route (Path 1c) **never consults `_MONEY_ASK` at all** |
+
+**The real gate is `_WITHHOLDING_CUES`.** `asks_rent_withholding` requires a rent term AND a
+withholding term. The withholding limb held the formal register — `zuio`, `kuzuia`, `withhold`,
+`wht` — indicative object concord, and **exactly one subjunctive form: the bare 1sg `nikate`.**
+
+**Why `_object_concord` could not reach the rest, and this is not a bug in it.** Its host is
+subject **+ TENSE** (`ni+na+m+kata`), and that required tense marker is precisely the
+discriminator keeping it off `waKATi`/`kaMPUNI`. **The subjunctive has no tense slot at all**
+(`ni+m+kat+E`) — a different paradigm needing its own builder, not a wider version of that one.
+So every object-marked subjunctive missed, including **`nimkate`** — how a tenant actually asks
+*"how much do I deduct from my landlord?"*
+
+**Measured through the full pipeline, raw question → reply:**
+
+| arm | before | after |
+|---|---|---|
+| `natural_no_formal_term` | **0/5** | **5/5** |
+| `formal_regression` | 2/2 | 2/2 |
+| `must_not_route` | 4/4 | 4/4 |
+
+**The split IS the finding: the engine answered when asked in the statutory register and was
+unreachable when asked the way a tenant asks.** R31's *"an engine reachable only by the
+technical term serves the users who least need it"*, now on its fifth instance.
+
+### The test shape that did not exist, and the reason the defect survived a month
+
+`tests/test_rent_wht.py` was **15/15 green throughout**. It calls `detect_intent` on verbatim
+strings — already stronger than calling the engine with keyword arguments — **and it was still
+not enough**, because `detect_intent` is ONE step of the path. The new harness
+(`eval/routing/probe_rent_wht_pipeline.py`) runs raw message → `decompose_query` →
+`detect_intent` → engine → **reply text**, and is wired into the suite so a regression fails
+normally rather than waiting for someone to remember a script.
+
+**That path is deterministic and it is not an approximation.** `_answer_rent_wht` dispatches to
+`_deterministic_answer`, whose docstring is explicit: *"the engine's `working` ALONE — no model
+call."* The harness **is** the production rent-WHT path, offline.
+
+### ⚠️ `mkate` IS BREAD, and the asymmetry in the fix must never be regularised
+
+The object infix is **REQUIRED** for `-kate` and **OPTIONAL** for `-zuie`. That looks like an
+inconsistency and is the entire safety property:
+
+- **`mkate` parses as subject-prefix `m-` + `kate`.** The "tidier" optional-infix form matches
+  it, and a bakery question mentioning its `pango` then completes the conjunction and reaches
+  the rent engine with full authority. **Planted and confirmed: with the infix made optional,
+  probe `rwp_10` routes to `rent_wht` — and it is the ONLY row that moves**, so the shipped form
+  is not over-narrow either. `mkate` occurs in the corpora; this is live, not hypothetical.
+- **`-zuie` has no homograph**, and requiring an infix would drop `nizuie` (*"should I withhold
+  anything?"*) — intransitive, no object to mark.
+
+**Controls demonstrated in both directions** (R26): fix reverted → 5 tests FAIL; fix present →
+28/28; overbroad variant → `rwp_10` fires. **Sweep clean**: 1,242 questions, the `eval_258` pin
+holds, real-corpus matches remain exactly `ext_43`/`ext_44`/`eval_218`.
+
+### 🔴 THE CHEAP-FIX ASYMMETRY, ANSWERED DIFFERENTLY THAN IT WAS PUT
+
+The concern raised was: *two lines correct the rate, but without the engine the arithmetic is
+still the model's.* **On this path the arithmetic is not the model's, and not because the engine
+computes it — because the model is never called at all.** The reply is the engine's `working`
+verbatim.
+
+**And the engine deliberately does NOT compute the amount.** Asked *"nimkate kiasi gani?"* with
+TZS 800,000 stated, it returns the rate, the commercial qualifier and the withholding-agent
+precondition **in both directions** — never `TZS 80,000`. That is R19's Guard B line: whether
+the payer is a withholding agent has **no extractor and never will**, so a computed figure would
+be indistinguishable from a fabrication exactly when the precondition is unmet. Computing it is
+how `ext_43` went wrong — telling a small individual trader renting a village house that he must
+withhold. **Adding arithmetic here would reopen that harm; it is not a gap to close.**
+
+### oh_24 — a gate refusing a question we can answer, which is correct behaviour at the wrong layer
+
+**Gate ordering unchanged.** R11 stands: OOC is checked first and remains infrastructure. What
+changed is that the gate stopped making a decision a substring cannot make.
+
+Bare `mrabaha` (royalty) refused **every** royalty question. Only **MINING** royalty is out of
+scope — `royalties_wht_rate` is a **locked fact** (15% default / 10% film / 5% approved sports).
+Measured over **14,766 corpus questions**, it was the sole reason for refusing three distinct
+questions:
+
+| row | verdict |
+|---|---|
+| `oh_24` | a book royalty, held-out probe marked **ANSWER** — falsely refused |
+| `tier1a_wh_007_20260603` | **OUR OWN TRAINING PAIR**, asking exactly what the locked fact answers — falsely refused |
+| `b008_refusal_008` | *"Shirika la **madini** linanipa mrabaha"* — genuinely OOC, **and the only reason this is a conjunction rather than a deletion** |
+
+**A conjunction because the discriminating signal is not in the royalty word at all** — it is
+whether mining is the subject, and the limbs need not be adjacent, so no narrower substring
+reaches `b008`. Same shape `asks_rent_withholding` already uses.
+
+**⛔ Why this did not owe a frozen held-out set, and the argument is STRUCTURAL.** The standing
+rule above R17 prices any refusing mechanism at one held-out set. This one **cannot refuse
+anything new**: the conjunction's first limb is the term removed from the flat list in the same
+commit, so its refusal set is a strict **subset** of the gate's previous one. **0 newly refused**
+across 14,766 questions confirms it empirically. The exemption is **asserted, not commented** —
+`test_the_conjunction_can_only_narrow_never_widen` fails on any future conjunction whose first
+limb was not already an active bare phrase, so it cannot be inherited by a rule that has not
+earned it.
+
+**The arm most likely to be deleted as redundant is the one doing the work.** `mrn_08`/`mrn_09`
+price the *mining* limb: a miner asking about BRELA registration, and a mining company asking
+about SDL, are both **in scope**. Promoting `madini`/`mchimbaji` to bare phrases would recreate
+the exact harm being removed, on the other side — planted, and both rows fire.
+
+### oh_09 — NOT fixed, and the reason is a boundary rather than a backlog
+
+`oh_09` (*`medini`*, vowel change, no royalty word) is in the fixture as **`LEAK_KNOWN`** and
+**pinned as still leaking**, so it is re-adjudicated deliberately if anything ever closes it
+rather than the fixture going quietly stale.
+
+It is not reachable by this conjunction and was never meant to be. Closing it needs a **new
+refusing mechanism** (mining-actor ∧ tax-ask), which is squarely inside the ⛔ block: its failure
+mode is blocking a real user, and its entry price is a held-out set frozen before it is built.
+**That set exists — the orthographic set's in-scope limb, 18 rows, still SEALED and unread** —
+and reading it burns it. Adding `medini` instead is the per-axis patch **R33 retires at 42/42
+across two axes.** A decision to spend the sealed limb is the founder's, not a side effect of a
+narrowing commit.
+
+---
+
 ## ✅ 2026-09-26/27 — **RENT WHT: the defect, the quarantine, and the engine. The absent parameter is the fix.**
 
 **Shipped:** `rent_wht_rate` locked · 16 corpus rows quarantined · `rent_wht` engine + route live
