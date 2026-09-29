@@ -1,0 +1,112 @@
+{
+  "measured": "2026-09-29",
+  "harness": "eval/controls/audit_wcf_base_assumption.py",
+  "question_asked": "Does any committed scoring key compute WCF on a base that disagrees with the engine -- specifically, does any assume an ANNUAL rather than a monthly base?",
+  "verdict": "INCUMBENT CONFIRMED. Every parsed key uses the monthly base and agrees with compute_wcf() exactly. No shared wrong assumption, so no inflated failure count from this cause.",
+  "primary_source": {
+    "url": "https://www.wcf.go.tz/pages/contributions",
+    "fetched": "2026-09-29 (curl, HTTP 200, 96177 bytes)",
+    "base": "asilimia 0.5 ya mapato ghafi; mapato ghafi = mshahara + posho 'sambamba na mshahara wa KILA MWEZI'",
+    "cadence": "'michango ya kila mwezi', remitted within the month or the next",
+    "the_annual_item_on_the_same_page": "'Kuwasilisha taarifa za mapato ya mwaka ya wafanyakazi' -- an annual REPORTING duty, a different obligation from the contribution base. Named because this is the likeliest origin of the annual reading."
+  },
+  "what_it_cannot_show": "Whether the portal's Swahili FAQ faithfully summarises the Act. The regulator's own summary is not the statute (see CLAUDE.md, the Class A transport row TRA prints that FA2024 does not contain). WCA s.79 was NOT read -- it appears nowhere in this repository and no copy was located.",
+  "why_this_population": "Every committed scoring key that states a WCF calculation, which is the population a wrong base assumption would corrupt. A wrong key is invisible to adjudication because the adjudication reads the key (eval_347 / eval_355 / tg_08).",
+  "totals": {
+    "wcf_calculations_parsed": 8,
+    "consistent_with_monthly_base": 8,
+    "consistent_with_annual_base": 0,
+    "disagreeing_with_engine": 0
+  },
+  "rows": [
+    {
+      "id": "ext_59",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "question": "Duka letu lina wafanyakazi kumi na mbili, mshahara wa kila mmoja ni laki nne. Tunataka kujua makato yote matatu -- mafunzo, uzeeni, na ajali kazini.",
+      "amount_in_key": "24000",
+      "monthly_base_found": "4800000",
+      "annual_base_found": null,
+      "consistent_with_monthly_base": true,
+      "consistent_with_annual_base": false,
+      "period_word_in_key": false
+    },
+    {
+      "id": "nat_19",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "question": "mishahara yangu yote kwa mwezi ni milioni 3 nichangie ngapi kwenye ile ya fidia",
+      "amount_in_key": "15000",
+      "monthly_base_found": "3000000",
+      "annual_base_found": null,
+      "consistent_with_monthly_base": true,
+      "consistent_with_annual_base": false,
+      "period_word_in_key": true
+    },
+    {
+      "id": "edge_p05",
+      "file": "eval/accuracy_gate/edge_probe_plain_sw_015.jsonl",
+      "question": "nina saluni thamani ya vifaa vyangu ni milioni 20 na nawalipa wafanyakazi jumla ya milioni 2 kwa mwezi nichangie ngapi kwenye ile ya fidia za wafanyakazi",
+      "amount_in_key": "10000",
+      "monthly_base_found": "2000000",
+      "annual_base_found": null,
+      "consistent_with_monthly_base": true,
+      "consistent_with_annual_base": false,
+      "period_word_in_key": true
+    },
+    {
+      "id": "eval_288",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "question": "Robo tatu ya wafanyakazi 16 wanapata TZS 450,000, robo wanapata TZS 1,000,000 — WCF ya jumla?",
+      "amount_in_key": "47000",
+      "monthly_base_found": "9400000",
+      "annual_base_found": null,
+      "consistent_with_monthly_base": true,
+      "consistent_with_annual_base": false,
+      "period_word_in_key": true
+    },
+    {
+      "id": "eval_311",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "question": "Nina mfanyakazi mmoja tu anayelipwa TZS 500,000, je bado nachangia WCF?",
+      "amount_in_key": "2500",
+      "monthly_base_found": "500000",
+      "annual_base_found": null,
+      "consistent_with_monthly_base": true,
+      "consistent_with_annual_base": false,
+      "period_word_in_key": true
+    },
+    {
+      "id": "eval_320",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "question": "Nilipe SDL, NSSF, PAYE na WCF kwa mfanyakazi mmoja mwenye TZS 800,000 — nionyeshe vyote.",
+      "amount_in_key": "4000",
+      "monthly_base_found": "800000",
+      "annual_base_found": null,
+      "consistent_with_monthly_base": true,
+      "consistent_with_annual_base": false,
+      "period_word_in_key": false
+    },
+    {
+      "id": "eval_321",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "question": "Nina maswali: mishahara ni TZS 3,200,000 kwa watu 8, nataka SDL, NSSF na WCF, na pia je nawajibika kusajili OSHA?",
+      "amount_in_key": "16000",
+      "monthly_base_found": "3200000",
+      "annual_base_found": null,
+      "consistent_with_monthly_base": true,
+      "consistent_with_annual_base": false,
+      "period_word_in_key": false
+    },
+    {
+      "id": "eval_327",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "question": "Nina wafanyakazi 10, kati yao 4 wana mishahara ya TZS 700,000 na 6 wana TZS 300,000, nataka WCF na SDL — zote mbili.",
+      "amount_in_key": "23000",
+      "monthly_base_found": "4600000",
+      "annual_base_found": null,
+      "consistent_with_monthly_base": true,
+      "consistent_with_annual_base": false,
+      "period_word_in_key": false
+    }
+  ],
+  "disagreeing": []
+}
