@@ -306,6 +306,8 @@ class Orchestrator:
             return self._answer_corporate_tax(sq)
         if sq.computation_type == "partnership_tax":
             return self._answer_partnership_tax(sq)
+        if sq.computation_type == "rent_wht":
+            return self._answer_rent_wht(sq)
         # 'ambiguous_multi' (or any type the rules engine doesn't define) is compute-intent
         # with an unresolved levy — never guess which one; clarify.
         required = REQUIRED_FIELDS.get(sq.computation_type)
@@ -636,6 +638,20 @@ class Orchestrator:
         """A partnership is not itself taxed (Cap 332 s.48(1)) — deterministic, no model."""
         return self._deterministic_answer(
             sq, rules_engine.partnership_tax_statement())
+
+    def _answer_rent_wht(self, sq: SubQuestion) -> SubAnswer:
+        """Rent WHT is 10% for BOTH residencies (Cap.332 First Schedule para 4(b)(ii)) —
+        deterministic, no model.
+
+        `payer_is_withholding_agent` is deliberately NOT passed and has no extractor: whether
+        a payer is a withholding agent is a fact about their own tax status that no question
+        states. Inferring it is how ext_43 went wrong, telling a small individual trader he
+        must withhold. The statement names both limbs instead.
+        """
+        return self._deterministic_answer(
+            sq,
+            rules_engine.rent_wht_statement(
+                letting_is_commercial=routing.rent_letting_is_commercial(sq.text)))
 
     def _answer_applicability(self, sq: SubQuestion) -> SubAnswer:
         """Deterministic yes/no for an applicability-only levy question. SDL needs the

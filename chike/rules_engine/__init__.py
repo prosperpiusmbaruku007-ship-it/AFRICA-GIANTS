@@ -22,6 +22,7 @@ from .minimum_wage import compare_to_floor, sector_rates_statement
 from .registration_thresholds import vat_registration, efd_required
 from .presumptive import compute_presumptive, records_status_matters
 from .corporate_tax import corporate_tax_rate_statement, partnership_tax_statement
+from .rent_wht import rent_wht_statement
 from . import wage_schedule
 from . import registration_thresholds
 
@@ -95,4 +96,5 @@ __all__ = [
     "registration_thresholds",
     "corporate_tax_rate_statement",
     "partnership_tax_statement",
+    "rent_wht_statement",
 ]

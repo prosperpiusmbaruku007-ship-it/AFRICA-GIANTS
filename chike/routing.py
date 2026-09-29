@@ -39,7 +39,7 @@ from . import swahili_numbers as swn
 # in detect_intent and chike/rules_engine/minimum_wage.py. 'corporate_tax'/'partnership_tax'
 # are rate statements, not levies — see path 1b below and chike/rules_engine/corporate_tax.py.
 COMPUTE_TYPES = ("sdl", "nssf", "paye", "wcf", "minimum_wage", "corporate_tax",
-                 "partnership_tax")
+                 "partnership_tax", "rent_wht")
 
 # --- explicit identifiers (path 1) ------------------------------------------
 _EXPLICIT = {
@@ -812,6 +812,65 @@ def asks_corporate_income_tax(text: str) -> bool:
               for c in _CORPORATE_INCOME_TAX_CUES)
 
 
+# --- RENT WITHHOLDING (2026-09-26) ------------------------------------------------------
+# NARROW BY CONSTRUCTION (R31 step 2, checked BEFORE shipping, not narrowed afterwards).
+# The route requires a RENT term AND a WITHHOLDING term. The conjunction is the whole design,
+# because a bare rent cue is KNOWN to collide: eval_258 --
+#   "Nalipa kodi ya pango TZS 850,000 kwa mwezi kwa ofisi, hii inaingia kwenye hesabu ya SDL?"
+# -- contains `kodi ya pango` AND a commercial cue (`ofisi`), and is an SDL question whose
+# correct answer is that rent does NOT enter the SDL base. A bare `kodi ya pango` cue would
+# divert it into a rent-WHT answer: the eval_211 harm class exactly, a wrong-TOPIC answer
+# delivered with full engine authority. eval_258 has no withholding verb, so requiring one
+# excludes it by construction rather than by a later exception.
+_RENT_TERM_CUES = [r"\bpango\b", r"\bkodi ya pango\b", r"\brent\b", r"\brental\b"]
+# Swahili -kata- ("cut/deduct") carries the withholding sense across inflections
+# (kunikata, nikate, inakatwa, kukata), so the stem is matched with `kodi` required nearby
+# rather than enumerating forms. `zuio`/`kuzuia` is the formal term.
+_WITHHOLDING_CUES = [r"\bzuio\b", r"kuzuia", r"withhold", r"\bwht\b",
+                     r"\bkat[ae]\w*\s+kodi\b", r"\bkodi\s+\w*kat\w*\b",
+                     r"ku\w*kata\s+kodi", r"\bnikate\b", r"\bkunikata\b"]
+
+
+def asks_rent_withholding(text: str) -> bool:
+    """True only when the question asks about WITHHOLDING on RENT specifically.
+
+    Both limbs required. See the collision note above: the rent limb alone matches eval_258,
+    an SDL question. Swept over all corpora before shipping --
+    eval/routing/sweep_rent_wht_routing.py.
+    """
+    ql = text.lower()
+    has_rent = any(re.search(c, ql) for c in _RENT_TERM_CUES)
+    has_wht = any(re.search(c, ql) for c in _WITHHOLDING_CUES)
+    return has_rent and has_wht
+
+
+# Commercial-letting cues. Tied to the PREMISES being let, not to the asker being in
+# business: a trader asking about the house he lives in is not a commercial letting.
+_COMMERCIAL_LETTING_CUES = [r"\bofisi", r"\bduka", r"\bkibiashara\b", r"\bbiashara\b",
+                            r"\bgodown\b", r"\bstoo\b", r"\bkiwanda"]
+_RESIDENTIAL_LETTING_CUES = [r"nyumba ya kuishi", r"\bkuishi\b", r"\bmakazi\b",
+                             r"chumba cha kulala"]
+
+
+def rent_letting_is_commercial(text: str):
+    """True | False | None — whether the LETTING is commercial.
+
+    None is a first-class answer and the common one. Returns None when both families match
+    (e.g. ext_43's "nyumba kijijini" let to a "mfanyabiashara mdogo"), because a residential
+    house let to a trader is exactly the case the TRA table's "For commercial purposes"
+    wording does not settle, and guessing it would put a confident rate on an unsettled
+    question. The engine states which case the figure is stated for instead.
+    """
+    ql = text.lower()
+    commercial = any(re.search(c, ql) for c in _COMMERCIAL_LETTING_CUES)
+    residential = any(re.search(c, ql) for c in _RESIDENTIAL_LETTING_CUES)
+    if commercial and not residential:
+        return True
+    if residential and not commercial:
+        return False
+    return None
+
+
 def corporate_sector(text: str):
     """The s.4(8) AMT-exemption sector the question describes the ASKING company as being
     IN, or None -- "agriculture" | "health" | "education" | "tea_processing". Only ever
@@ -1237,6 +1296,17 @@ def detect_intent(text: str) -> str:
     if is_corporate_entity(text) and (
             asks_corporate_income_tax(ql) or is_dse_listed(text) is not None):
         return "corporate_tax"
+
+    # Path 1c — RENT WITHHOLDING (2026-09-26). Requires BOTH a rent term and a withholding
+    # term; the conjunction is the design, not a refinement. A bare rent cue diverts eval_258
+    # ("Nalipa kodi ya pango ... hii inaingia kwenye hesabu ya SDL?"), an SDL question whose
+    # correct answer is that rent does NOT enter the SDL base — the eval_211 harm class.
+    # Swept before wiring: eval/routing/sweep_rent_wht_routing.py, 1,231 questions, 3 matches
+    # (ext_43, ext_44, eval_218 — all genuinely rent-WHT), eval_258 pinned NOT to route.
+    # Placed after corporate so a company asking a corporate-income-tax question that happens
+    # to mention its office rent keeps the more specific route.
+    if asks_rent_withholding(ql):
+        return "rent_wht"
 
     # Path 2 — Candidate C: number + payroll context + a money 'how-much' cue.
     # Only a compute route when _natural_levy actually resolves a levy — a specific one,

@@ -1,0 +1,31 @@
+{
+ "measured": "2026-09-29",
+ "harness": "eval/routing/sweep_rent_wht_routing.py",
+ "what_a_collision_costs": "a diverted question receives a confident, well-cited answer about the WRONG topic -- the eval_211 class",
+ "r21_bound": "swept over OUR corpora, which share vocabulary with our facts by construction. LOWER BOUND on collision cost; says nothing about paraphrase space.",
+ "probe_failures": [],
+ "pin_failures": [],
+ "corpus_matches": [
+  {
+   "id": "ext_43",
+   "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+   "question": "Nina nyumba kijijini nimemkodisha mfanyabiashara mdogo. Yeye anatakiwa kunikata kodi kabla ya kunilipa kodi ya pango?",
+   "letting_is_commercial": null
+  },
+  {
+   "id": "ext_44",
+   "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+   "question": "Nikimlipa mwenye nyumba kodi ya pango ofisini, ni lazima nikate kodi kabla ya kumpa fedha?",
+   "letting_is_commercial": true
+  },
+  {
+   "id": "eval_218",
+   "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+   "question": "Kiwango cha withholding tax kwa kodi ya pango la biashara kwa mtu asiye mkazi ni asilimia ngapi?",
+   "letting_is_commercial": true
+  }
+ ],
+ "questions_scanned": 1231,
+ "corpus_match_count": 3,
+ "verdict": "CLEAN"
+}
