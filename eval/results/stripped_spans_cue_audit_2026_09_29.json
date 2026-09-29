@@ -1,0 +1,134 @@
+{
+ "measured": "2026-09-29",
+ "harness": "eval/routing/audit_stripped_spans_vs_cues.py",
+ "question": "does any blanked span hide a cue from a downstream extractor?",
+ "strippers_found_in_pipeline": {
+  "chike/decomposition.py": "NONE -- whitespace only, verified empirically",
+  "orchestrator.route()": "NONE -- passes text unchanged to detect_intent",
+  "routing._strip_unclear_spans": "the only span-blanking in the package"
+ },
+ "stripped_spans": [
+  "hana residence permit",
+  "hana kibali cha ukaazi",
+  "hana kibali cha ukazi",
+  "hana kibali cha kuishi",
+  "hana kibali cha makazi",
+  "hana ukaazi",
+  "hana ukazi",
+  "hana makazi ya kudumu",
+  "si mkazi wa kudumu",
+  "siyo mkazi wa kudumu",
+  "sio mkazi wa kudumu",
+  "hana ukaazi wa kudumu",
+  "no residence permit"
+ ],
+ "cue_lists_checked": {
+  "COMPUTE_TYPES": 8,
+  "_APPLICABILITY_CUES": 21,
+  "_BUSINESS_INCOME_TAX_CUES": 6,
+  "_COMMERCIAL_LETTING_CUES": 7,
+  "_CONDITIONAL_MARKERS": 8,
+  "_CORPORATE_ENTITY_CUES": 5,
+  "_CORPORATE_INCOME_TAX_CUES": 11,
+  "_CORPORATE_SELF_LISTING_CUES": 1,
+  "_DSE_CUES": 3,
+  "_DSE_NEGATED_CUES": 5,
+  "_EFD_CUES": 8,
+  "_EXCLUDED_SERVICE_CUES": 19,
+  "_EXPLICIT_MONEY_ASK": 3,
+  "_GAP_B_APPLICABILITY_CUES": 8,
+  "_GENERIC_LEVY": 6,
+  "_KEEPS_RECORDS_CUES": 15,
+  "_MIN_WAGE_CUES": 7,
+  "_MONEY_ASK": 8,
+  "_NONMONEY_ASK": 10,
+  "_NO_RECORDS_CUES": 14,
+  "_NSSF_EMPLOYEE_CUES": 7,
+  "_NSSF_EMPLOYER_CUES": 6,
+  "_NSSF_TOTAL_CUES": 10,
+  "_OWN_TURNOVER_CUES": 28,
+  "_PARTNERSHIP_ENTITY_CUES": 3,
+  "_PAYE_NONRESIDENT_CUES": 7,
+  "_PAYE_RESIDENCY_UNCLEAR_CUES": 13,
+  "_PAYE_RESIDENT_CUES": 2,
+  "_PAYROLL_CTX": 29,
+  "_PRESUMPTIVE_CUES": 6,
+  "_PRESUMPTIVE_TURNOVER_CUES": 19,
+  "_RENT_TERM_CUES": 4,
+  "_RESIDENTIAL_LETTING_CUES": 4,
+  "_TAKEHOME_ASK": 6,
+  "_VAT_REGISTERED_CUES": 16,
+  "_VAT_REG_CUES": 15,
+  "_VERDICT_NEG": 6,
+  "_VERDICT_POS": 5,
+  "_WAGE_EMPLOYER_CUES": 32,
+  "_WAGE_LAWFUL_CUES": 9,
+  "_WAGE_PAY_CUES": 19,
+  "_WAGE_STATUS_UNCLEAR_CUES": 10,
+  "_WAGE_VIOLATION_CUES": 17,
+  "_WAGE_WORKER_POSSESSIVE": 6,
+  "_WITHHOLDING_CUES": 9
+ },
+ "collisions": [],
+ "suppressed_by_design": [
+  {
+   "stripped_span": "si mkazi wa kudumu",
+   "cue_list": "_PAYE_NONRESIDENT_CUES",
+   "cue_destroyed": "si mkazi",
+   "why_not_a_defect": "this suppression IS the mechanism: the long immigration phrase must not be read as the short tax-determination cue. paye_residency_unclear re-tests this list against the blanked remainder, so a residency stated elsewhere still wins."
+  },
+  {
+   "stripped_span": "sio mkazi wa kudumu",
+   "cue_list": "_PAYE_NONRESIDENT_CUES",
+   "cue_destroyed": "sio mkazi",
+   "why_not_a_defect": "this suppression IS the mechanism: the long immigration phrase must not be read as the short tax-determination cue. paye_residency_unclear re-tests this list against the blanked remainder, so a residency stated elsewhere still wins."
+  }
+ ],
+ "decomposition_preservation": [
+  {
+   "question": "Nina nyumba kijijini nimemkodisha mfanyabiashara mdogo. Yeye anatakiwa kunikata kodi kabla ya kunilipa kodi ya",
+   "parts": 1,
+   "all_parts_are_substrings": true,
+   "routes": [
+    "rent_wht"
+   ]
+  },
+  {
+   "question": "Nikimlipa mwenye nyumba kodi ya pango ofisini, ni lazima nikate kodi kabla ya kumpa fedha?",
+   "parts": 1,
+   "all_parts_are_substrings": true,
+   "routes": [
+    "rent_wht"
+   ]
+  },
+  {
+   "question": "Mfanyakazi wangu si mkazi wa Tanzania, mshahara wake ni TZS 2,000,000. PAYE ni kiasi gani?",
+   "parts": 1,
+   "all_parts_are_substrings": true,
+   "routes": [
+    "paye"
+   ]
+  },
+  {
+   "question": "Nalipa kodi ya pango TZS 850,000 kwa mwezi kwa ofisi, hii inaingia kwenye hesabu ya SDL?",
+   "parts": 1,
+   "all_parts_are_substrings": true,
+   "routes": [
+    "sdl"
+   ]
+  },
+  {
+   "question": "Mhandisi wangu hana residence permit ya kudumu, mshahara TZS 4,000,000. PAYE?",
+   "parts": 1,
+   "all_parts_are_substrings": true,
+   "routes": [
+    "paye"
+   ]
+  }
+ ],
+ "verdict": {
+  "collisions_found": 0,
+  "decomposition_drops_text": false,
+  "summary": "CLEAN -- the single stripper destroys no other extractor's cue, and decomposition preserves text"
+ }
+}
