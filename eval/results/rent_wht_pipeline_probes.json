@@ -1,0 +1,195 @@
+{
+  "measured": "2026-09-29",
+  "harness": "eval/routing/probe_rent_wht_pipeline.py",
+  "probes": "eval/routing/rent_wht_pipeline_probes.jsonl",
+  "what_this_measures": "Whether a rent-WHT question phrased WITHOUT the formal withholding vocabulary reaches the engine, measured from the raw string through decomposition and routing to the reply text -- the path a unit test does not touch.",
+  "what_it_cannot_show": "Whether these are the phrasings real users produce. The must-route rows are authored by whoever wrote the cues (R33), so they are a COVERAGE result, never a REALISM one. That claim needs transcripts.",
+  "rows": [
+    {
+      "id": "rwp_01",
+      "arm": "natural_no_formal_term",
+      "expect": "rent_wht",
+      "routes": [
+        "none"
+      ],
+      "routed_rent_wht": false,
+      "reply_states_10pct": false,
+      "reply_cites_para": false,
+      "reply_contains_forbidden_15pct": false,
+      "ok": false,
+      "question": "Ninalipa pango la ofisi TZS 800,000 kwa mwezi, nimkate mwenye nyumba kiasi gani?",
+      "guards_against": "THE FOUNDING CASE. Subjunctive with object infix (ni+m+kat+e, 'let me deduct from HIM'). _WITHHOLDING_CUES held bare `nikate` — the 1sg subjunctive with NO object infix — and every object-marked form missed. `_object_concord('kat')` cannot reach it either: that builder requires a subject+TENSE host and the subjunctive has no tense slot. Routed to `none` before 2026-09-29, so the rate became the model's to invent.",
+      "reply": ""
+    },
+    {
+      "id": "rwp_02",
+      "arm": "natural_no_formal_term",
+      "expect": "rent_wht",
+      "routes": [
+        "none"
+      ],
+      "routed_rent_wht": false,
+      "reply_states_10pct": false,
+      "reply_cites_para": false,
+      "reply_contains_forbidden_15pct": false,
+      "ok": false,
+      "question": "Nakodisha duka la biashara, nimkate mwenye duka asilimia ngapi kwenye pango?",
+      "guards_against": "Same subjunctive shape with a rate ask rather than a money ask, so the fix cannot be conditional on _MONEY_ASK — which was the mechanism first proposed for this defect and is not the gate.",
+      "reply": ""
+    },
+    {
+      "id": "rwp_03",
+      "arm": "natural_no_formal_term",
+      "expect": "rent_wht",
+      "routes": [
+        "none"
+      ],
+      "routed_rent_wht": false,
+      "reply_states_10pct": false,
+      "reply_cites_para": false,
+      "reply_contains_forbidden_15pct": false,
+      "ok": false,
+      "question": "Tunalipa pango la godown kila mwezi, tumkate mwenye nyumba kiasi gani?",
+      "guards_against": "1pl subjunctive (tu+m+kat+e). The object-infix class is closed and must not be half-populated — the defect `_object_concord`'s own docstring names for _APPLICABILITY_CUES (three of five) and _NSSF_EMPLOYEE_CUES (none of five).",
+      "reply": ""
+    },
+    {
+      "id": "rwp_04",
+      "arm": "natural_no_formal_term",
+      "expect": "rent_wht",
+      "routes": [
+        "none"
+      ],
+      "routed_rent_wht": false,
+      "reply_states_10pct": false,
+      "reply_cites_para": false,
+      "reply_contains_forbidden_15pct": false,
+      "ok": false,
+      "question": "Mwenye nyumba wangu anataka kodi ya pango, je nizuie kitu chochote kabla ya kumlipa?",
+      "guards_against": "The -zuia- stem's subjunctive. _WITHHOLDING_CUES held the INFINITIVE `kuzuia` and the noun `zuio` only, so the formal vocabulary routed and the natural conjugation did not. R31's 'reachable only by the technical term' on a second stem.",
+      "reply": ""
+    },
+    {
+      "id": "rwp_05",
+      "arm": "natural_no_formal_term",
+      "expect": "rent_wht",
+      "routes": [
+        "none"
+      ],
+      "routed_rent_wht": false,
+      "reply_states_10pct": false,
+      "reply_cites_para": false,
+      "reply_contains_forbidden_15pct": false,
+      "ok": false,
+      "question": "Nalipa pango la kiwanda kwa wenye jengo; niwakate asilimia ngapi?",
+      "guards_against": "-wa- (3pl) object infix, a plural landlord. Confirms the fix is the closed infix class and not a hand-listed pair of forms.",
+      "reply": ""
+    },
+    {
+      "id": "rwp_06",
+      "arm": "formal_regression",
+      "expect": "rent_wht",
+      "routes": [
+        "rent_wht"
+      ],
+      "routed_rent_wht": true,
+      "reply_states_10pct": true,
+      "reply_cites_para": true,
+      "reply_contains_forbidden_15pct": false,
+      "ok": true,
+      "question": "Kodi ya zuio kwenye pango la ofisi ni asilimia ngapi?",
+      "guards_against": "The formal path that ALREADY worked. R26 step 2: a control given only failing specimens certifies a change that breaks everything. This row must stay green across the fix.",
+      "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata."
+    },
+    {
+      "id": "rwp_07",
+      "arm": "formal_regression",
+      "expect": "rent_wht",
+      "routes": [
+        "rent_wht"
+      ],
+      "routed_rent_wht": true,
+      "reply_states_10pct": true,
+      "reply_cites_para": true,
+      "reply_contains_forbidden_15pct": false,
+      "ok": true,
+      "question": "Nina nyumba kijijini nimemkodisha mfanyabiashara mdogo. Yeye anatakiwa kunikata kodi kabla ya kunilipa kodi ya pango?",
+      "guards_against": "ext_43, the row the engine was built for. Indicative object concord (ku+ni+kata), already covered — held so the widening cannot displace it.",
+      "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata."
+    },
+    {
+      "id": "rwp_08",
+      "arm": "must_not_route",
+      "expect": "not_rent_wht",
+      "routes": [
+        "sdl"
+      ],
+      "routed_rent_wht": false,
+      "reply_states_10pct": false,
+      "reply_cites_para": false,
+      "reply_contains_forbidden_15pct": false,
+      "ok": true,
+      "question": "Nalipa kodi ya pango TZS 850,000 kwa mwezi kwa ofisi, hii inaingia kwenye hesabu ya SDL?",
+      "guards_against": "eval_258 — THE PIN, verbatim. Contains `kodi ya pango` AND a commercial cue (`ofisi`) and is an SDL question whose correct answer is that rent does NOT enter the SDL base. It carries no withholding verb, so requiring one excludes it BY CONSTRUCTION rather than by a later exception. If a widening ever routes this, the widening is wrong. EXPECT WAS FIRST AUTHORED AS `none` AND THAT WAS A BAD SPECIMEN, corrected before anything was recorded (R26 second half): this row routes to `sdl`, which is CORRECT — it is an SDL question. The pin is that it must not reach the rent engine, not that it must reach nothing.",
+      "reply": ""
+    },
+    {
+      "id": "rwp_09",
+      "arm": "must_not_route",
+      "expect": "not_rent_wht",
+      "routes": [
+        "none"
+      ],
+      "routed_rent_wht": false,
+      "reply_states_10pct": false,
+      "reply_cites_para": false,
+      "reply_contains_forbidden_15pct": false,
+      "ok": true,
+      "question": "mfanyakazi wangu analipwa laki tano na nusu kwa mwezi nimkate kiasi gani cha kodi",
+      "guards_against": "emp_02 VERBATIM from eval/scoping/heldout_employer_first_messages_040.jsonl — a real held-out PAYE probe that already uses `nimkate`. The natural form this fix adds is one a PAYE question genuinely contains, so the rent limb is what must keep them apart. Expect is `not_rent_wht`, not `none`: PAYE is the correct route and asserting `none` would pin an unrelated engine's behaviour.",
+      "reply": ""
+    },
+    {
+      "id": "rwp_10",
+      "arm": "must_not_route",
+      "expect": "none",
+      "routes": [
+        "none"
+      ],
+      "routed_rent_wht": false,
+      "reply_states_10pct": false,
+      "reply_cites_para": false,
+      "reply_contains_forbidden_15pct": false,
+      "ok": true,
+      "question": "Nina duka la mkate ninalolipia pango, nalipa kodi gani kwa TRA?",
+      "guards_against": "THE COLLISION THE NAIVE FIX CREATES. `mkate` is BREAD and parses as subject-prefix m- + kate. A subjunctive pattern that does not REQUIRE the object infix matches it, and this row supplies the rent term that would then complete the conjunction and route a bakery question to the rent-WHT engine. Verified: the naive pattern matches bare `mkate`; the shipped one does not. `mkate` occurs in the corpora, so this is a live shape, not a hypothetical.",
+      "reply": ""
+    },
+    {
+      "id": "rwp_11",
+      "arm": "must_not_route",
+      "expect": "none",
+      "routes": [
+        "none"
+      ],
+      "routed_rent_wht": false,
+      "reply_states_10pct": false,
+      "reply_cites_para": false,
+      "reply_contains_forbidden_15pct": false,
+      "ok": true,
+      "question": "Napata kipato cha pango kutoka nyumba zangu mbili, nalipa kodi ya mapato kiasi gani?",
+      "guards_against": "RENTAL INCOME is not rent WITHHOLDING. Rent term present, no withholding sense anywhere — the landlord's own income tax is a different question and answering it with the withholding engine is the eval_211 wrong-TOPIC harm class.",
+      "reply": ""
+    }
+  ],
+  "summary": {
+    "n": 11,
+    "failures": [
+      "rwp_01",
+      "rwp_02",
+      "rwp_03",
+      "rwp_04",
+      "rwp_05"
+    ]
+  }
+}
