@@ -35,7 +35,7 @@ def _ooc_controls():
 
 # --- config-driven resolution ----------------------------------------------
 
-def test_resolve_phrases_yields_the_production_132_26_set():
+def test_resolve_phrases_yields_the_production_135_26_set():
     ooc, in_scope = classification.resolve_phrases(classification.load_local_config())
     # Finding 3 target: the full production set, not the former 8-phrase stub.
     # 53 -> 107 on 2026-08-06 (SAFETY-1 audit: +54 phrases closing the capital-gains leak
@@ -60,7 +60,16 @@ def test_resolve_phrases_yields_the_production_132_26_set():
     # unchanged at 26; this change adds no in-scope vocabulary. See
     # tests/test_ooc_phrase_narrowing.py and eval/refusal_gate/
     # stock_market_narrowing_probes_014.jsonl.
-    assert len(ooc) == 136
+    # 136 -> 135 on 2026-09-29 (mining-royalty narrowing): the bare phrase `mrabaha` was
+    # REMOVED and replaced by the OOC_CONJUNCTIONS `mining_royalty` rule (royalty term AND a
+    # mining term). Same shape as the `soko la hisa` removal above and the same cause: only
+    # MINING royalty is out of scope, while `royalties_wht_rate` is a LOCKED FACT, so the bare
+    # form refused questions the system holds the answer to. Measured over 14,766 corpus
+    # questions: 0 newly refused, 2 distinct questions newly answered -- oh_24 and
+    # tier1a_wh_007_20260603, OUR OWN TRAINING PAIR. The genuinely-OOC b008_refusal_008
+    # ("Shirika la madini linanipa mrabaha") stays refused via the conjunction. In-scope
+    # unchanged at 26. See tests/test_ooc_phrase_narrowing.py.
+    assert len(ooc) == 135
     assert len(in_scope) == 26
 
 
@@ -143,8 +152,9 @@ def test_orchestrator_classify_uses_the_full_production_set():
     orch = Orchestrator(backend=FakeBackend(), retriever=lambda q: [])
     # Resolved from config, not the removed 8-phrase stub (107 after the SAFETY-1 audit,
     # 125 after the 2026-08-14 orthographic-variant additions, 132 after the 2026-08-15
-    # concord closure, 136 after the 2026-09-23 `soko la hisa` narrowing).
-    assert len(orch.ooc_phrases) == 136
+    # concord closure, 136 after the 2026-09-23 `soko la hisa` narrowing, 135 after the
+    # 2026-09-29 bare-`mrabaha` narrowing).
+    assert len(orch.ooc_phrases) == 135
     assert len(orch.in_scope_phrases) == 26
     assert orch.classify("BRELA ada ni ngapi?") is True
     assert orch.classify("mrabaha wa madini ni ngapi?") is False

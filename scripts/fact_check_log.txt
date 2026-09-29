@@ -969,3 +969,7 @@ Total: 10 | Flagged: 4
   FLAG [llp_09] minimum_turnover_tax: kodi ndogo.*(?<!kutoka )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\.5(?! hadi)(?! to )
   FLAG [llp_10] minimum_turnover_tax: minimum.*tax.*(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\.5(?! hadi)(?! to )
   FLAG [llp_10] minimum_turnover_tax: turnover.*tax.*(?<!kutoka asilimia )(?<!from )(?<!ilikuwa asilimia )(?<!ilikuwa )(?<!was )0\.5(?! hadi)(?! to )
+
+[2026-09-26T00:38:30.736816] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 222 | Flagged: 1
+  FLAG [tier1a_tax_disp_001_20260603] objection_deposit_requirement: pay.*within 15 days.*objection

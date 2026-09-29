@@ -138,6 +138,60 @@ def resolve_phrases(config) -> Tuple[list, list]:
     return ooc, in_scope
 
 
+# CONJUNCTIVE OOC (2026-09-29) — the gate's first non-substring rule, added to close a FALSE
+# REFUSAL rather than a leak.
+#
+# THE DEFECT. `mrabaha` (royalty) sat in chike_config.json as a BARE phrase, so every royalty
+# question was refused. But only MINING royalty is out of scope: `royalties_wht_rate` is a
+# LOCKED FACT (15% default, 10% film/sound recordings, 5% approved sports bodies). The system
+# held the answer and declined the question. Measured over 14,766 corpus questions, bare
+# `mrabaha` was the sole reason for refusing three distinct questions, and TWO of them are
+# ours and in scope:
+#     oh_24                   an author paid a book royalty — a held-out probe marked ANSWER
+#     tier1a_wh_007_20260603  OUR OWN TRAINING PAIR asking the exact question the locked fact
+#                             answers — refused by our own gate
+#     b008_refusal_008        "Shirika la MADINI linanipa mrabaha" — genuinely OOC, must stay
+#                             refused, and it is the only reason this is a conjunction rather
+#                             than a deletion
+#
+# WHY A CONJUNCTION AND NOT A NARROWER PHRASE. The discriminating signal is not in the royalty
+# word at all — it is whether MINING is the subject, and the two words need not be adjacent
+# ("Shirika la madini linanipa mrabaha"). A flat substring list cannot express that; this is
+# the shape asks_rent_withholding already uses for rent AND withholding.
+#
+# ⛔ WHY THIS DOES NOT NEED A FROZEN HELD-OUT SET, and the argument is STRUCTURAL, not a
+# measurement. The standing rule above R17 prices any mechanism that can REFUSE a user, and
+# prices it at one held-out set because a wrongly-refused question is invisible. This rule
+# cannot refuse anything new: every conjunction's first limb is a term ALREADY in the OOC list
+# being removed in the same commit, so the set it refuses is a strict SUBSET of what the gate
+# refused before it. The change can only ever move questions from refused to answered. A
+# future conjunction whose first limb is NOT already an active OOC phrase is a different
+# mechanism and DOES owe the held-out set — do not read this exemption as covering it.
+#
+# NOT A REMEDY FOR THE ORTHOGRAPHIC/VOCABULARY GAP, and deliberately not extended toward it.
+# `mrahaba` (metathesis), `mrabaa` (apocope) and `medini` (vowel change) are absent on purpose:
+# adding them is the per-axis patch R33 retires, measured at 42/42 leaks across two axes. This
+# rule closes a false REFUSAL; it makes no claim about leaks.
+OOC_CONJUNCTIONS = [
+    {
+        "name": "mining_royalty",
+        # Limb 1 is the term removed from the flat list — this is what makes the rule a strict
+        # narrowing. Limb 2 is the mining sense, in any position in the message.
+        "royalty": ("mrabaha",),
+        "mining": ("madini", "mchimbaji", "mchimba", "dhahabu", "mgodi", "migodi"),
+    },
+]
+
+
+def _matches_conjunction(msg: str) -> bool:
+    """True when every limb of some OOC_CONJUNCTIONS entry is present in the message."""
+    for rule in OOC_CONJUNCTIONS:
+        limbs = [v for k, v in rule.items() if k != "name"]
+        if all(any(term in msg for term in limb) for limb in limbs):
+            return True
+    return False
+
+
 def classify(message: str, ooc_phrases: Sequence[str],
              in_scope_phrases: Sequence[str]) -> bool:
     """Return True if in scope (pass to the model), False if explicitly OOC (intercept/refuse).
@@ -147,6 +201,11 @@ def classify(message: str, ooc_phrases: Sequence[str],
     matches BOTH an OOC phrase and an in-scope phrase, OOC wins because the OOC loop runs first
     and returns before the in-scope loop is reached."""
     msg = message.lower()
+    # Conjunctive rules run in the same precedence slot as the flat OOC list — before
+    # in-scope, so OOC still always wins. See the OOC_CONJUNCTIONS block for why this cannot
+    # widen the refusal set.
+    if _matches_conjunction(msg):
+        return False                     # OOC — intercept
     for phrase in ooc_phrases:
         if phrase in msg:
             return False                 # OOC — intercept (checked FIRST: OOC always wins)

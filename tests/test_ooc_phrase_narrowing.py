@@ -124,3 +124,80 @@ def test_in_scope_phrases_cannot_rescue_an_overbroad_ooc_phrase():
     assert classification.classify(question, ooc,
                                    in_scope_phrases=["kodi ya mapato",
                                                      "hatujaorodheshwa"]) is False
+
+
+# --- mining-royalty narrowing (2026-09-29) ---------------------------------------------
+#
+# Same shape as the `soko la hisa` narrowing above: a bare OOC phrase refusing questions the
+# system holds the answer to. `mrabaha` is royalty, but only MINING royalty is out of scope --
+# `royalties_wht_rate` is a locked fact at 15% default / 10% film / 5% approved sports bodies.
+# Replaced by the OOC_CONJUNCTIONS `mining_royalty` rule rather than deleted, because the one
+# genuinely-OOC corpus row states its limbs non-adjacently ("Shirika la madini linanipa
+# mrabaha") and no substring phrase reaches it.
+
+_MRN_PROBES = [
+    json.loads(l) for l in open(
+        os.path.join(_ROOT, "eval", "refusal_gate",
+                     "mining_royalty_narrowing_probes_010.jsonl"), encoding="utf-8")
+    if l.strip()
+]
+
+
+def test_mining_royalty_probe_fixture_has_all_four_arms():
+    """R20: a fixture that cannot exercise a category reports clean by construction. The
+    `mining_word_alone_is_not_ooc` arm is the one most likely to be dropped as redundant and
+    is the only thing pricing the mining limb -- without it, promoting `madini` to a bare OOC
+    phrase would look free."""
+    arms = {r["arm"] for r in _MRN_PROBES}
+    assert {"false_refusal_closed", "oo_scope_held",
+            "pre_existing_refusal_unchanged", "mining_word_alone_is_not_ooc"} <= arms
+    for arm in ("false_refusal_closed", "oo_scope_held", "mining_word_alone_is_not_ooc"):
+        assert sum(1 for r in _MRN_PROBES if r["arm"] == arm) >= 2, f"{arm} is under-populated"
+
+
+@pytest.mark.parametrize("row", [r for r in _MRN_PROBES if r["expect"] != "LEAK_KNOWN"],
+                         ids=lambda r: r["id"])
+def test_mining_royalty_narrowing(row):
+    ooc, in_scope = classification.resolve_phrases(classification.load_local_config())
+    in_scope_verdict = classification.classify(row["question_sw"], ooc, in_scope)
+    expected = row["expect"] == "ANSWER"
+    assert in_scope_verdict is expected, (
+        f"{row['id']} ({row['arm']}): expected {row['expect']}. {row['guards_against']}")
+
+
+def test_bare_mrabaha_is_gone_but_the_qualified_forms_remain():
+    """The narrowing itself. `mrabaha wa madini` must survive independently of the
+    conjunction -- mrn_07 is refused by BOTH mechanisms, so removing either alone must not
+    silently drop it."""
+    ooc, _ = classification.resolve_phrases(classification.load_local_config())
+    assert "mrabaha" not in ooc, "the bare over-broad form is back"
+    assert "mrabaha wa madini" in ooc, "the qualified form was removed along with the bare one"
+
+
+def test_the_conjunction_can_only_narrow_never_widen():
+    """THE SAFETY ARGUMENT, asserted rather than left in a comment.
+
+    The standing rule above R17 prices any mechanism that can refuse a user at one frozen
+    held-out set, because a wrongly-refused question is invisible. This rule is exempt only
+    because every conjunction's first limb is a term that was ALREADY an active bare OOC
+    phrase, making the set it refuses a strict subset of what the gate refused before. If a
+    future conjunction breaks that property, the exemption no longer applies and this test
+    fails -- which is the point.
+    """
+    removed_bare_phrases = {"mrabaha"}
+    for rule in classification.OOC_CONJUNCTIONS:
+        limbs = [v for k, v in rule.items() if k != "name"]
+        assert any(set(limb) <= removed_bare_phrases for limb in limbs), (
+            f"conjunction {rule['name']} has no limb that was previously a bare OOC phrase, "
+            "so it can refuse questions the gate did not refuse before. It owes a frozen "
+            "held-out set (R21) before it ships.")
+
+
+def test_known_leak_row_is_recorded_and_still_leaks():
+    """oh_09 is in the fixture as LEAK_KNOWN and is NOT asserted as refused. Pinned as still
+    leaking so that if some future change happens to close it, this test fails and the row is
+    re-adjudicated deliberately rather than the fixture quietly becoming stale."""
+    row = next(r for r in _MRN_PROBES if r["expect"] == "LEAK_KNOWN")
+    ooc, in_scope = classification.resolve_phrases(classification.load_local_config())
+    assert classification.classify(row["question_sw"], ooc, in_scope) is True, (
+        "oh_09 no longer leaks -- re-adjudicate the row instead of leaving it marked LEAK_KNOWN")
