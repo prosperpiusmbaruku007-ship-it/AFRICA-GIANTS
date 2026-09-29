@@ -1,0 +1,272 @@
+{
+  "measured": "2026-09-29",
+  "harness": "eval/fidelity/sweep_rate_attribution_all_stored.py",
+  "instrument": "chike.fidelity.body_states_wrong_levy_rate -- D-FIDELITY-6, shipped 2026-08-22, specified by nat_24 (NSSF's correct 10% attached to WCF). No new rule was written for this measurement.",
+  "question": "How many stored replies attach a rate to a levy the statute does not give it, and how many of those had already been recorded as correct?",
+  "why_this_population": "Every stored reply artifact in eval/results/, joined to the extended-078 adjudication verdicts. The 2026-08-22 pricing sweep covered 150 replies and asked whether the guard false-positives; this asks whether it flags rows already booked correct, which is the only question that can soften a baseline (R22).",
+  "what_it_cannot_show": "Replies that assert no rate at all are invisible -- ext_55's bare 'Ndiyo', ext_56's 'Ndiyo, bado hujafika', ext_58's two clarification requests. Those are inherited-claim failures no body-reading rule can reach. A flag is a candidate, not a verdict (R26).",
+  "totals": {
+    "stored_replies_swept": 714,
+    "replies_attributing_any_rate_to_a_levy": 140,
+    "flagged_wrong_pairing": 13,
+    "flagged_and_previously_recorded_correct": 1,
+    "by_file": {
+      "eval/results/covered_half_class_analysis.json": 1,
+      "eval/results/gap_ab_canary_live.json": 1,
+      "eval/results/grounding_48.json": 1,
+      "eval/results/natural48_rerun_2026_08_11_adjudication.json": 2,
+      "eval/results/nickname_live_probes.json": 1,
+      "eval/results/phantom_relief_26k_prevalence.json": 1,
+      "eval/results/r16_deploy_verification_2026_09_24.json": 1,
+      "eval/results/rate_guard_sweep.json": 4,
+      "eval/results/regen_guards_local_dryrun.json": 1
+    }
+  },
+  "flagged": [
+    {
+      "id": "eval_337",
+      "file": "eval/results/covered_half_class_analysis.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": false,
+      "attributed_pairs": [
+        [
+          "nssf",
+          "10"
+        ],
+        [
+          "nssf",
+          "0.5"
+        ]
+      ],
+      "recorded_verdict": null,
+      "body": "Kiwango sahihi ni asilimia 10, si asilimia 3.5 wala asilimia 0.5. Thibitisha na NSSF (nssf.go.tz)."
+    },
+    {
+      "id": "nat_24",
+      "file": "eval/results/gap_ab_canary_live.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": false,
+      "attributed_pairs": [
+        [
+          "nssf",
+          "20"
+        ],
+        [
+          "nssf",
+          "10"
+        ],
+        [
+          "nssf",
+          "10"
+        ],
+        [
+          "sdl",
+          "0"
+        ],
+        [
+          "wcf",
+          "10"
+        ],
+        [
+          "wcf",
+          "0.5"
+        ]
+      ],
+      "recorded_verdict": null,
+      "body": "Kwa sasa, hakuna taarifa kamili kuhusu kiwango cha malipo kinachohusiana na idadi ya wafanyakazi au mshahara. Thibitisha na NSSF (nssf.go.tz).\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).\n\nKwa sasa, unatakiwa kulipa asilimia 0% ya SDL kwa kuwa una chini ya wafanyakazi 10. Thibitisha na tra.go.tz.\nHapana. SDL haihusiki: una wafanyakazi 9 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.\n\nKwa mujibu wa taarifa ulizonipa, unatakiwa kulipa 10% ya jumla ya mis"
+    },
+    {
+      "id": "nat_24",
+      "file": "eval/results/grounding_48.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": false,
+      "attributed_pairs": [
+        [
+          "sdl",
+          "0.5"
+        ],
+        [
+          "nssf",
+          "10"
+        ]
+      ],
+      "recorded_verdict": "WRONG",
+      "body": "Kwa mujibu wa sheria, unapaswa kulipa asilimia 0.5% ya jumla ya mishahara kwa ajili ya mafunzo ya fidia, pamoja na asilimia 10% kwa ajili ya NSSF. Thibitisha na mamlaka husika (nssf.go.tz)."
+    },
+    {
+      "id": "nat_01",
+      "file": "eval/results/natural48_rerun_2026_08_11_adjudication.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": false,
+      "attributed_pairs": [
+        [
+          "sdl",
+          "0.5"
+        ]
+      ],
+      "recorded_verdict": "WRONG",
+      "body": "Kwa sasa, bado unatakiwa kulipa asilimia 0.5% ya mishahara yote kwa ajili ya mafunzo ya ufundi. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "nat_04",
+      "file": "eval/results/natural48_rerun_2026_08_11_adjudication.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": false,
+      "attributed_pairs": [
+        [
+          "sdl",
+          "0.5"
+        ]
+      ],
+      "recorded_verdict": "WRONG",
+      "body": "Kwa mujibu wa sheria, unapaswa kulipa asilimia 0.5% ya mishahara kwa ajili ya mafunzo mara tu idadi ya wafanyakazi itakapofika 10. Thibitisha na NSSF (nssf.go.tz)."
+    },
+    {
+      "id": "nick_01",
+      "file": "eval/results/nickname_live_probes.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": false,
+      "attributed_pairs": [
+        [
+          "sdl",
+          "0.5"
+        ]
+      ],
+      "recorded_verdict": null,
+      "body": "Kulingana na taarifa uliyopewa, unatakiwa kuwa na wafanyakazi 10 ili kulazimika kulipa asilimia 0.5 kwa ajili ya mafunzo. Thibitisha na mamlaka husika (nssf.go.tz)."
+    },
+    {
+      "id": "?",
+      "file": "eval/results/phantom_relief_26k_prevalence.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": false,
+      "attributed_pairs": [
+        [
+          "paye",
+          "0"
+        ],
+        [
+          "paye",
+          "50"
+        ]
+      ],
+      "recorded_verdict": null,
+      "body": "Kwenye mzunguko wa TZS 9,000,000, PAYE itakuwa:\n\nTZS 0 hadi TZS 270,000 = 0%\nTZS 270,001–520,000 = 8% (TZS 250,000)\nTZS 520,001–760,000 = 20% (TZS 240,000)\nTZS 760,001–1,000,000 = 25% (TZS 240,000)\nTZS 1,000,001–1,200,000 = 30% (TZS 200,000)\nTZS 1,200,001–1,400,000 = 35% (TZS 200,000)\nTZS 1,400,001–1,600,000 = 40% (TZS 200,000)\nTZS 1,600,001–1,800,000 = 45% (TZS 200,000)\nTZS 1,800,001–2,000,000 = 50% (TZS 200,000)\n\nJumla ya PAYE = TZS 1,280,000.\n\nThibitisha na TRA (tra.go.tz). Thibitisha na TRA (tra.go.tz).\n\nHii hesabu ya PAYE imejumuisha punguzo la kibinafsi la TZS 26,000? Thibitisha na TRA ("
+    },
+    {
+      "id": "N2_ordinary_compute",
+      "file": "eval/results/r16_deploy_verification_2026_09_24.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": false,
+      "attributed_pairs": [
+        [
+          "sdl",
+          "0.5"
+        ],
+        [
+          "sdl",
+          "3.5"
+        ]
+      ],
+      "recorded_verdict": "PASS",
+      "body": "Kwa wafanyakazi 10, unalipa asilimia 0.5 ya jumla ya mishahara. Thibitisha na tra.go.tz.\nSDL = 3.5% × TZS 5,000,000 = TZS 175,000"
+    },
+    {
+      "id": "rg_13",
+      "file": "eval/results/rate_guard_sweep.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": true,
+      "attributed_pairs": [
+        [
+          "wcf",
+          "10"
+        ]
+      ],
+      "recorded_verdict": null,
+      "body": "Unatakiwa kulipa asilimia 10 ya jumla ya mishahara kwa ajili ya WCF."
+    },
+    {
+      "id": "rg_14",
+      "file": "eval/results/rate_guard_sweep.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": true,
+      "attributed_pairs": [
+        [
+          "sdl",
+          "0.5"
+        ]
+      ],
+      "recorded_verdict": null,
+      "body": "Unatakiwa kulipa asilimia 0.5 kwa ajili ya mafunzo."
+    },
+    {
+      "id": "rg_15",
+      "file": "eval/results/rate_guard_sweep.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": true,
+      "attributed_pairs": [
+        [
+          "sdl",
+          "4"
+        ]
+      ],
+      "recorded_verdict": null,
+      "body": "SDL ni asilimia 4 ya mishahara."
+    },
+    {
+      "id": "rg_16",
+      "file": "eval/results/rate_guard_sweep.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": true,
+      "attributed_pairs": [
+        [
+          "nssf",
+          "30"
+        ]
+      ],
+      "recorded_verdict": null,
+      "body": "NSSF ni asilimia 30 ya mshahara ghafi."
+    },
+    {
+      "id": "?",
+      "file": "eval/results/regen_guards_local_dryrun.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": true,
+      "attributed_pairs": [
+        [
+          "sdl",
+          "3"
+        ]
+      ],
+      "recorded_verdict": null,
+      "body": "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3."
+    }
+  ],
+  "flagged_and_previously_recorded_correct": [
+    {
+      "id": "N2_ordinary_compute",
+      "file": "eval/results/r16_deploy_verification_2026_09_24.json",
+      "flagged": true,
+      "is_probe_designed_to_flag": false,
+      "attributed_pairs": [
+        [
+          "sdl",
+          "0.5"
+        ],
+        [
+          "sdl",
+          "3.5"
+        ]
+      ],
+      "recorded_verdict": "PASS",
+      "body": "Kwa wafanyakazi 10, unalipa asilimia 0.5 ya jumla ya mishahara. Thibitisha na tra.go.tz.\nSDL = 3.5% × TZS 5,000,000 = TZS 175,000"
+    }
+  ],
+  "the_staging_finding": {
+    "row": "N2_ordinary_compute, eval/results/r16_deploy_verification_2026_09_24.json",
+    "live_reply": "Kwa wafanyakazi 10, unalipa asilimia 0.5 ya jumla ya mishahara. Thibitisha na tra.go.tz. [newline] SDL = 3.5% x TZS 5,000,000 = TZS 175,000",
+    "why_the_guard_missed_it": "D-FIDELITY-6 IS wired in production (chike/orchestrator.py:818, pipeline=v16) and it FIRES on this text -- but it is handed `cleaned`, the MODEL BODY, and _render appends the engine's working AFTERWARDS. Measured: body alone -> 0 attributed pairs, flag False. Full rendered reply -> [('sdl','0.5'), ('sdl','3.5')], flag True. The body states a bare rate with NO levy token, so it is unattributable in isolation; the levy name arrives from the engine's own working line, and nothing re-checks the concatenation.",
+    "class": "A FIFTH R26 shape, distinct from the four on record. Not INERT, not NOT_WIRED, not OVERBROAD, not a bad fixture: the control is correct, wired, and firing, and is CHECKED AT THE WRONG STAGE. The contradiction does not exist in either half and is created by joining them.",
+    "why_the_harness_recorded_PASS": "r16_deploy_verification's must_contain was ['175,000'], which is present. A substring check cannot see a contradiction beside the substring it wants -- R23's shape: the control's expected value was satisfied by a reply carrying the defect."
+  }
+}
