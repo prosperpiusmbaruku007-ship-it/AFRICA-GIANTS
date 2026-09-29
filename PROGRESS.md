@@ -1,5 +1,204 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-09-29 (later) — **THE BUCKET-A RECOUNT, AND WHY THE MOTIVATING NUMBER DID NOT SURVIVE THE AUDIT IT STARTED**
+
+**Measurement and record-correction only. No production code changed. Nothing widened.**
+`ff6284a` → `3891c3b` → `a0c1544` → `85efc84` → `345708b`.
+
+### ⛔ FIRST, THE PROVENANCE PROBLEM, because it governs how the rest of this entry should be read
+
+Path A was scoped on *"5 of 8 bucket-A failures are compute questions where the model does
+arithmetic an engine already owns."* **That figure could not be re-derived from any committed
+artifact, and the audit it motivated disproved it.** The nearest real figures are both **5 of 7**
+— CLAUDE.md's *"5 of 7 reaching-and-failing rows had no corpus defect behind them"* (2026-09-24)
+and this file's *"5 of 7 WRONG … on the fact path"*. **The first one's MEANING is the inverse of
+the plan it was cited for: it says a corpus/content fix does NOT close those rows.**
+
+**Seven further specifics were escalated across this session with a conclusion attached, and
+every one failed verification against the committed artifacts.** They are listed because the
+pattern is the finding, not any individual miss:
+
+| claim | what the artifact says |
+|---|---|
+| *"zero unreachable engines — the class that bit four times is closed"* | 11/11 in the **technical** register, **6/19 natural**; six engines with **zero** natural-phrasing reach. The class is **wider**, not closed |
+| *"ext_53: working says 175,000, prose says 0.5%"* | `ext_53` is **PASS** and its reply contains **no figure at all** |
+| *"ext_53: working says 3.5%, prose says 0.5%"* (same row, second version) | same row, same PASS, still no figure |
+| *"ext_56: correct the key — WCA s.79(1), 30,000 not 2,500"* | `ext_56` is a **VAT** row; its key is **correct**. `WCA s.79` appears **nowhere** in this repo |
+| *"the ext_51 find"* | `ext_51` is **PASS** — the control that attributes 3.5% **correctly** to SDL |
+| *"ext_58: a currently-passing answer with SDL's rate attached to NSSF"* | `ext_58` is **WRONG**, and its reply is two clarification requests with **no rate** |
+| *"3 of 8 misclassified — two wrong scoring keys, one fidelity defect; 37%"* | **zero** scoring keys were corrected. Both candidates were verified and **both incumbents held**. One row was reclassified (`ext_56`) |
+
+**Why this is written down rather than smoothed over.** This file already records the rule: *"a
+headline reversal sourced to a measurement nobody can inspect is what R18 exists to prevent, and
+would be worse than the five incidents that rule was written from — fabricated rather than merely
+unrecoverable."* Writing *"two wrong scoring keys"* into the record would have created precedent
+for editing gate golds on an unverified claim — the exact failure **R28** exists to stop, arriving
+from the correction side. **Two candidate key corrections were checked this session and both were
+refused. That is the outcome R28 asks for and it has now happened twice.**
+
+### THE RECOUNT — 34 WRONG, and there is no 8 anywhere in the artifact
+
+Re-derived from `eval/results/extended_078_adjudication_2026_09_23.json`, per-row, committed:
+`eval/results/bucket_a_recount_2026_09_29.py`.
+
+**Verdicts over 78:** WRONG **34** · PARTIAL 16 · PASS 26 · PASS_BY_OUTCOME 1 · UNADJUDICABLE 1
+**Adjudicator's causes, non-PASS:** model 42 · corpus_gap 3 · routing 2 · fact_unverified 2 ·
+classifier_overbroad 1 · corpus_stale 1
+
+The 34 WRONG rows by **what would have to change** (this file's classification, deliberately kept
+separate from the adjudicator's `cause` field, because one row disagrees with it):
+
+| n | class | rows |
+|---|---|---|
+| 10 | **domain_unbuilt** | ext_33/34/35/36/39/40/42/43/44/46 |
+| 10 | **generation** | ext_08/09/14/22/25/27/29/31/32/67 |
+| 5 | **fact_quality** | ext_69/71/72/73/76 |
+| **4** | **route** | ext_01/03/05/**56** |
+| 3 | **premise** | ext_54/55/62 |
+| 2 | **extraction** | ext_58/59 |
+
+**One reclassification, not three: `ext_56`, `model` → `routing`.** Recorded as a disagreement
+inside the artifact rather than by overwriting the adjudicator's field.
+
+**⚠️ AND THE CAUTION IS ABOUT THE CLASSIFICATION, NOT THE COUNT.** Every correction this session
+moved a row *out* of "the model's ceiling": `ext_56` to routing, `ext_51`/`ext_53` out of the
+failure set entirely (both PASS). None moved the other way. **`cause: model` is the residual
+category — what is left when no other mechanism has been looked for — so it is systematically
+over-populated, and the only thing that empties it is looking.** `model 42` is a ceiling on how
+much is genuinely generation, never an estimate of it.
+
+### THE ROUTE CLASS IS THE AUDIT'S FINDING, CORROBORATED BY THE ADJUDICATION'S OWN NOTES
+
+The reachability audit (`ff6284a`) measured **11/11** engines reachable in the technical register
+and **6/19** from natural phrasing, with six engines at **zero** natural reach — `minimum_wage`,
+`corporate_tax`, `partnership_tax`, `vat_registration`, `efd_requirement`, `presumptive`. Blockers
+isolated by bisection, one per engine; `presumptive` corroborated by **four** committed held-out
+probes (`ext_08/09/10/11`) that all route to `none`.
+
+**`ext_05`'s own adjudication note, written two weeks earlier, says the same thing:** *"The sector
+extractor works perfectly — `corporate_sector()` returns 'health' on this exact string … **The
+route gate in front**"* is what failed.
+
+### R26's SECOND HALF DID MOST OF THE WORK, AND IT FOUND MY OWN FIXTURES TWICE
+
+1. **The reachability fixture.** Four of 28 rows were bad specimens, one a **paraphrase of
+   committed `pic_13`** that missed where the verbatim row reaches. The first run would have
+   reported **four broken routes that are not broken.** All four kept with inverted pass
+   conditions; every control is now verbatim from a committed file with provenance named.
+2. **The rate-attribution sweep.** The first run reported **5** previously-correct flagged rows;
+   four were `rg_13`–`rg_16` from the guard's **own probe fixture**, where the boolean means
+   *"behaved as designed"* and the design is **to be flagged**. Unchecked it would have claimed a
+   five-row baseline softening, four fifths of which was the guard working perfectly.
+
+**Both would have sent someone to repair something that works, which is R26's asymmetry exactly:
+only false positives generate edits.**
+
+### 🔴 A FIFTH R26 SHAPE: THE RATE GUARD IS CHECKED AT THE WRONG STAGE
+
+`N2_ordinary_compute`, **live 2026-09-24, HTTP 200, booked `verdict: PASS`**:
+
+> *"Kwa wafanyakazi 10, unalipa **asilimia 0.5** ya jumla ya mishahara. Thibitisha na tra.go.tz.*
+> ***SDL = 3.5% × TZS 5,000,000 = TZS 175,000***"
+
+0.5% is **WCF's** rate, stated for an **SDL** question, with the engine's correct 3.5% directly
+beneath it. Every figure in the reply is a real Tanzanian rate.
+
+| what is checked | attributed pairs | D-FIDELITY-6 |
+|---|---|---|
+| **model body alone** ← what the guard is handed | `[]` | **False** |
+| working alone | `[('sdl','3.5')]` | False |
+| **full rendered reply** ← what the user receives | `[('sdl','0.5'), ('sdl','3.5')]` | **True** |
+
+**D-FIDELITY-6 is wired in production** (`orchestrator.py:818`, `pipeline=v16`) **and it fires on
+that text.** It is handed `cleaned` — the model body — and `_render` appends the engine's working
+**afterwards**. The body states a bare rate with **no levy token**, so it is unattributable in
+isolation; the levy name arrives from the engine's own working line, and nothing re-checks the
+join. **The contradiction exists in neither half and is created by concatenating them.**
+
+**Distinct from all four recorded R26 shapes.** Not `INERT`, not `NOT_WIRED`, not `OVERBROAD`, not
+a mis-composed fixture. The control is correct, wired, and firing, and is **checked at the wrong
+stage.** Booked PASS because that harness's `must_contain` was `["175,000"]`, which is present —
+**R23's shape: the control's expected value satisfied by a reply carrying the defect.**
+
+**CLASS-FREQUENCY CAVEAT, and it stays attached to the number.** 714 stored replies swept, **140**
+attribute a rate to a levy at all, **13** flagged, **1** previously recorded correct. The 140 is
+the real population for this class — not 714 — and it is small. One instance **bounds what we can
+currently see, not what exists**: this row was invisible for five days with a guard that catches
+it, because nothing ran the guard on the text the user receives.
+
+### WHAT WAS VERIFIED AND LEFT ALONE — two refusals to edit
+
+- **`ext_56`'s key is correct.** Verbatim: *"110M exceeds the TZS 100,000,000/6-month threshold; the
+  trader HAS reached it."* Right on the locked `vat_registration_threshold`.
+- **The monthly WCF base survives.** 8 committed keys state a WCF calculation; **8/8** monthly-
+  consistent, **0/8** annual-consistent, **0** disagreeing with `compute_wcf()`. Confirmed against
+  wcf.go.tz's own contributions page (curl, HTTP 200, 96,177 bytes): *"asilimia 0.5 … ya mapato
+  ghafi"*, gross = salary + allowances *"sambamba na **mshahara wa kila mwezi**"*, *"**michango ya
+  kila mwezi**"*. **The annual item on that same page — *"taarifa za mapato ya mwaka"* — is a
+  REPORTING duty, a different obligation**, and is the likeliest origin of the annual reading. That
+  is the `oh_09` shape from four days earlier: a real provision answering a different transaction.
+  Citation upgrade deliberately **not** written into `locked_facts.json`, which would open a third
+  pending R15 regen behind `rent_wht_rate` and `ext_31`.
+
+### THE OOC COLLISION WAS FOUND DELIBERATELY — and the sweep that existed could not have found it
+
+`eval/controls/sweep_ooc_phrases_vs_inscope.py` globs **`eval/**` only — 1,280 questions.** The
+`mrabaha` collision closed the same day was found over 14,766, and its worst row was **our own
+training pair**, which lives in `datasets/`. **So the control built to catch over-broad refusal
+phrases could not have caught the most recent one** — R22 applied to an instrument rather than a
+measurement.
+
+New sweep, **12,958 questions**: **12 training pairs whose own subdomain is in-scope, refused by a
+jurisdiction-or-zone phrase** — SDL ×6 (`epz`, `export processing zone`, `special economic zone`,
+`zanzibar`), GN 487A ×4, VAT ×2. Including `tier1a_sdl_034`, the SDL headcount-threshold question,
+refused because the asker added *"Na Zanzibar inajumuishwa?"*. **The fourth collision, and it is a
+class rather than a phrase.**
+
+Separately and larger, **not a phrase question**: ~119 stamp-duty pairs plus Zanzibar, import/
+customs, EPZ and capital-gains pairs answer R11-named OOC topics **substantively** in the training
+corpus. One asserts a 1% stamp-duty rate. **Narrowing phrases to rescue those rows would open real
+leaks.** Recorded, not scoped.
+
+### 🎯 THE PILOT BAR, RE-DERIVED WITH THESE NUMBERS
+
+**Reported as two bars, per the standing framing. Never as one figure.**
+
+**BAR A — no confident wrong answer on covered questions. The distance is now describable.** Of
+the 34 WRONG rows, **10 are `domain_unbuilt`** (no Tier-1A coverage exists; `ext_46` is
+tier-sequenced out by §5) and **24 are in-scope defects with a named mechanism each**: 4 route, 3
+premise, 5 fact_quality, 2 extraction, 10 generation. **Every mechanism in the first four classes
+is a located thing** — a cue list, a veto limb, a concord form, an object noun, a guard stage, a
+fact's `verified_by`. That is what makes Bar A scopeable and the floor not.
+
+**BAR B — confident refusal outside coverage. Unchanged, and parked with the reason recorded.**
+Five designs dead on **measurement rather than effort**: absolute score, margin, re-ranked index,
+term overlap, and the coverage gate at a **37× gap** (1.9% corpus vs 71% held-out), correctly
+DISABLED. **A sixth would need a mechanism that is not a confidence estimate. We do not have one,
+and another variant of the five is not a plan.** The 42/42 leak measurement across two unrelated
+variation axes (R33) is evidence about the mechanism, not a worklist of phrases.
+
+**The honest headline: Bar A is finite and enumerated; Bar B is unsolved and may not be solvable as
+a guard.** Blending them into one readiness figure describes neither.
+
+### Next — the bounded set is SEVEN rows, not five
+
+Scoped as a group, by what would have to change:
+
+| shape | rows | what it is |
+|---|---|---|
+| **engine-shaped** — the engine already answers correctly, only reachability is broken | `ext_03`, `ext_05`, `ext_56`, `ext_62` | `ext_03` asserts 25% for a DSE company at 15% float (engine returns 30%); `ext_05` tells an exempt clinic to pay AMT while `corporate_sector()` reads `health` correctly; `ext_56` the `sivyo?` veto; `ext_62` reaches neither `presumptive` nor `vat_registration` and then contradicts itself in one sentence |
+| **classifier-shaped** | `ext_01` | `soko la hisa` refused an in-scope corporate question. The route would have fired |
+| **assent-rule-shaped** — the wrong claim is in the QUESTION and the reply restates no figure | `ext_55` | *"Ndiyo, hiyo ndiyo WCF"*. Invisible to every figure-comparing rule by construction |
+| **genuinely the model ignoring what it had** | `ext_54` | States the PAYE top band begins above TZS **5,000,000**/month; it begins above TZS **1,000,000**, a locked fact. Also opens *"Hapana, si kweli"* then confirms 30% |
+
+**Four of seven are engine-shaped and three of those four have a correct engine sitting behind a
+cue list.** Only **one** of the seven is the model ignoring what it was given.
+
+**Every fix on the board is a WIDENING**, so none ships before authored in-scope probes per R17
+step 2 — and the EPZ/Zanzibar class means the refusal side must be re-checked in the same pass.
+
+---
+
 ## ✅ 2026-09-29 — **THE RENT ENGINE WAS REACHABLE ONLY IN THE STATUTORY REGISTER. Plus: the gate was refusing our own training pair.**
 
 **Shipped:** rent-WHT reachability `0/5 → 5/5` on natural phrasing · bare `mrabaha` narrowed to
