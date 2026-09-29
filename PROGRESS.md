@@ -146,7 +146,34 @@ it cannot emit a rate it does not have.
 because accepting the conclusion and the mechanism together is how the next session opens the
 wrong file.
 
-### oh_09 — NOT fixed, and the reason is a boundary rather than a backlog
+### ✅ oh_09 — A CORRECTION, NOT A DEFERRAL. The fact answers a different transaction.
+
+**Superseding the "boundary" framing below.** `oh_09` was raised as a companion to `oh_24` —
+*"oh_24 and oh_09 to the router"* — on the reading that both were questions the system could
+answer. **It is not, and the instruction was wrong.**
+
+| | `oh_24` | `oh_09` |
+|---|---|---|
+| asks about | **withholding on a royalty PAYMENT** — an author's book royalty | **MINING royalty** — a levy on mineral extraction |
+| governing instrument | Cap.332 First Schedule para 4(b) via s.82 | the **Mining Act** — a different statute and a different levy |
+| do we hold the answer? | **yes**, `royalties_wht_rate` (15% / 10% film / 5% sports) | **no.** The locked fact does not answer this transaction at all |
+| correct behaviour | **ANSWER** — and it was being refused | **REFUSE** — and refusing is substantively right |
+
+**The two share a word and nothing else.** Reading them as one class is the substring-collision
+mistake arriving in the *adjudication* rather than in a cue list — `mrabaha`/royalty looks like
+one subject and is two.
+
+**So there is no answer being withheld here, and nothing to route.** The only open item is that
+the gate does not currently *achieve* the correct refusal — `oh_09` leaks — which is one instance
+of the measured **42/42** mechanism-level gap (R33), not a coverage or routing defect. Pinned
+`LEAK_KNOWN` and asserted as still leaking, so it is re-adjudicated deliberately if that ever
+changes.
+
+**This does NOT spend the sealed 18-row in-scope limb**, and the earlier suggestion that closing
+`oh_09` would require it was answering the wrong question — that price is for a *new refusing
+mechanism* in general, not for this row, which needs no new answer from us.
+
+### (superseded) oh_09 as a boundary — retained for the reasoning about the sealed set
 
 `oh_09` (*`medini`*, vowel change, no royalty word) is in the fixture as **`LEAK_KNOWN`** and
 **pinned as still leaking**, so it is re-adjudicated deliberately if anything ever closes it
