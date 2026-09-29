@@ -1,0 +1,43 @@
+{
+  "measured": "2026-09-29",
+  "harness": "eval/routing/measure_confirmation_tag_veto.py",
+  "what_this_measures": "How many committed questions would change route if the `sivyo?` confirmation-tag limb left _THRESHOLD_ASK_VETO -- i.e. the blast radius of the routing decision that sent ext_56 to the fact path, where no engine ran and so no figure-comparing fidelity guard could fire.",
+  "what_it_cannot_show": "R21: whether users ask confirmation-tag questions more often than this corpus does. A confirmation tag is a REGISTER, and these corpora are one-phrasing-per-question by construction, so a blast radius of one is a statement about the corpus, not about traffic. And it cannot see the polarity hazard at all: _answer_vat_registration does not call agree_with_negated_premise, so a row routed to the engine would open 'Ndiyo' to a 'sivyo?' question.",
+  "why_this_population": "Every committed question in eval/ and datasets/ (quarantines excluded), which is the population a route change can move. It is NOT the population a false-premise question is drawn from in production (R22).",
+  "totals": {
+    "questions": 14243,
+    "rows_with_confirmation_tag": 35,
+    "rows_whose_route_would_change": 2,
+    "distinct_questions_affected": 1
+  },
+  "rows": [
+    {
+      "id": "ext_56",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "question": "Mauzo yangu yamefika milioni mia moja na kumi kwa miezi sita. Bado sijafika kiwango cha kujisajili VAT, sivyo?",
+      "route_now": "none",
+      "route_if_narrowed": "vat_registration",
+      "amount_parsed": "110000000",
+      "period_parsed": "six_month",
+      "engine_would_say": {
+        "applicable": true,
+        "working": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 110,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+        "note": "over the VAT threshold on the limb tested"
+      }
+    },
+    {
+      "id": "ext_56",
+      "file": "eval/grounding/bucket_f_reach_probes_012.jsonl",
+      "question": "Mauzo yangu yamefika milioni mia moja na kumi kwa miezi sita. Bado sijafika kiwango cha kujisajili VAT, sivyo?",
+      "route_now": "none",
+      "route_if_narrowed": "vat_registration",
+      "amount_parsed": "110000000",
+      "period_parsed": "six_month",
+      "engine_would_say": {
+        "applicable": true,
+        "working": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 110,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+        "note": "over the VAT threshold on the limb tested"
+      }
+    }
+  ]
+}
