@@ -1,0 +1,87 @@
+{
+  "recounted": "2026-09-29",
+  "harness": "eval/results/bucket_a_recount_2026_09_29.py",
+  "source": "eval/results/extended_078_adjudication_2026_09_23.json",
+  "why": "A figure of '8 bucket-A failures, 5 of them compute questions an engine already owns' drove a work plan and could not be re-derived from any committed artifact. Two rows attributed to it are PASSes. Rebuilt from the committed per-row adjudication.",
+  "adjudicators_own_fields": {
+    "by_verdict": {
+      "WRONG": 34,
+      "PARTIAL": 16,
+      "PASS": 26,
+      "PASS_BY_OUTCOME": 1,
+      "UNADJUDICABLE": 1
+    },
+    "by_cause_among_non_pass": {
+      "classifier_overbroad": 1,
+      "model": 42,
+      "routing": 2,
+      "corpus_stale": 1,
+      "corpus_gap": 3,
+      "fact_unverified": 2
+    }
+  },
+  "this_files_classification": {
+    "note": "remediation_class is a judgement about what would have to CHANGE, made by this file and not by the adjudicator. Kept separate from `cause` above.",
+    "counts": {
+      "route": 4,
+      "premise": 3,
+      "domain_unbuilt": 10,
+      "fact_quality": 5,
+      "extraction": 2,
+      "generation": 10
+    },
+    "rows": {
+      "route": [
+        "ext_01",
+        "ext_03",
+        "ext_05",
+        "ext_56"
+      ],
+      "premise": [
+        "ext_54",
+        "ext_55",
+        "ext_62"
+      ],
+      "domain_unbuilt": [
+        "ext_33",
+        "ext_34",
+        "ext_35",
+        "ext_36",
+        "ext_39",
+        "ext_40",
+        "ext_42",
+        "ext_43",
+        "ext_44",
+        "ext_46"
+      ],
+      "fact_quality": [
+        "ext_69",
+        "ext_71",
+        "ext_72",
+        "ext_73",
+        "ext_76"
+      ],
+      "extraction": [
+        "ext_58",
+        "ext_59"
+      ],
+      "generation": [
+        "ext_08",
+        "ext_09",
+        "ext_14",
+        "ext_22",
+        "ext_25",
+        "ext_27",
+        "ext_29",
+        "ext_31",
+        "ext_32",
+        "ext_67"
+      ]
+    }
+  },
+  "disagreements_with_recorded_cause": {
+    "ext_56": "adjudication says cause=model. Proven routing this session: _THRESHOLD_ASK_VETO's `sivyo?` limb sends it to the fact path, and vat_registration(110_000_000, 'six_month') returns the correct refutation. The model only had to answer because no engine ran."
+  },
+  "rows_classified_but_not_WRONG": [],
+  "no_eight_anywhere": "No grouping of this artifact yields 8. The nearest real figures are CLAUDE.md's '5 of 7 reaching-and-failing rows had no corpus defect behind them' (2026-09-24) and PROGRESS.md's '5 of 7 WRONG ... on the fact path'. Both are 5-of-7, and the first one's MEANING is the opposite of the plan it was cited for: it says a corpus/content fix does NOT close those rows."
+}
