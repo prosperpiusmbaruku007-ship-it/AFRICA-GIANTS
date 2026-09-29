@@ -1,5 +1,115 @@
 # Africa Giants — Project Progress
 
+## ✅ 2026-09-26/27 — **RENT WHT: the defect, the quarantine, and the engine. The absent parameter is the fix.**
+
+**Shipped:** `rent_wht_rate` locked · 16 corpus rows quarantined · `rent_wht` engine + route live
+in code. `b5bb445` → `b514226` → `486317e`.
+
+### The finding
+
+**Commercial rent WHT is 10% for BOTH residents and non-residents.** Cap.332 R.E.2023 First
+Schedule **para 4(b)(ii)**: *"in the case of interest, rent or a commuted pension paid to a
+resident withholdee **or interest or rent paid to a non-resident** withholdee — **ten percent**"*.
+
+**The discriminating evidence, because 10% alone proves nothing** (R23 — the resident limb is 10%
+under either hypothesis): the **same paragraph** writes a real residency split for service fees at
+**para 4(c)(i)**, *"five percent for a resident and fifteen percent for a non-resident"*. The Act
+uses that form where a split exists and does not use it for rent. Drafting silence would be
+ambiguous; an explicit non-resident limb is not. The erroneous 15% is **para 4(b)(iv)**'s catch-all,
+*"in the case of other payments — fifteen percent"*, taken instead of the specific rent limb three
+lines above it.
+
+### 🔴 A FOURTH CITATION SHAPE, and R29's three do not cover it
+
+`tier1a_wh_009_20260603` asserts 10%/15% and cites `primary_source_url =`
+`tra.go.tz/page/withholding-tax` — **the page whose table reads `Rental Income (For commercial
+purposes) | 10% | 10%`.** Not untraceable. Not a stale edition. Not correctly-cited-but-superseded
+(the page has said 10%/10% throughout).
+
+> **CITED-AND-CONTRADICTED: the source was named but never read.** Every provenance check we own
+> passes it, because they all verify a citation is **present and well-formed**, never that it
+> **supports the claim**.
+
+**One evidenced instance.** The section-exists check built the same week (`d3d110e`) found **0
+non-existent sections in 24 fact/Act pairs** — so the *fabricated-section* class has no known
+instance, and this one is the real gap. **Nothing we own would find a second.** Scoped, not built.
+
+### The quarantine — 16 rows, and why not 21
+
+**16 rows / 11 files. ZERO in the eval set**, so no gate number can move. `remaining_live_after_fix: 0`,
+verified by re-scanning after the write. Rows preserved whole in `rejected/` with reason.
+
+**The first count was 21.** 16 is the number that actually *attribute* 15% to non-resident rent. The
+five-row difference is **correct content a looser rule would have destroyed** — each read
+individually before being spared:
+
+| spared row | why it is right |
+|---|---|
+| director fees 15% flat both | para 4(a)(iii) |
+| royalties 15% both | matches locked `royalties_wht_rate` |
+| technical/management fees 15% non-resident | para 4(c)(i) — **a real residency split** |
+
+**The detector failed its own probe on the first run, and that is why the probes exist.** A ±120
+character proximity window flagged a **correct** body — *"For other payments to non-residents the
+rate is 15%; rent is separate at 10%"* — because `rent` sits twelve characters after the `15%`.
+Every token present, attribution wrong: the D-FIDELITY-6 lesson exactly. Fixed by scoping to a
+**clause**. **The corpus sweep was clean for it; an authored probe found it.**
+
+**One row is reached by ID, not by pattern.** `tier1a_income_tax_adv_089` negates the wrong
+*resident* rate (*"ni asilimia 10, si asilimia 15"*) then asserts the wrong *non-resident* one in
+the next sentence — **a correction and a defect in one body**. Two consequences: negation guards
+became **per-clause**, and the defective clause carries its rent subject only by **anaphora**, so no
+clause-scoped pattern reaches it without flagging the three correct rows above. R17 step 4: narrow
+beats clever.
+
+### The engine — and the parameter that isn't there
+
+**`payer_is_withholding_agent` has NO extractor, deliberately.** Whether a payer is a withholding
+agent is a fact about their own tax status that **no question states**. Assuming it is how `ext_43`
+went wrong — telling a small individual trader renting a village house that he must withhold 10%.
+`None` states **both limbs** and refuses to decide. A test asserts no such extractor exists.
+
+**`is_resident` is absent for a different reason and it is the whole point: adding it would encode
+the corpus's error into code**, handing a confident 15% to non-resident landlords with a whitelisted
+citation behind it.
+
+**Swept before wiring** (R31 step 2): **1,231 questions · 8/8 probes (5 must-NOT-route) · 3 matches**
+— `ext_43`, `ext_44`, `eval_218`, all genuinely rent-WHT. **Zero diversions.**
+
+**`eval_258` is the pin and it holds.** It contains `kodi ya pango` **and** `ofisi` and is an **SDL**
+question whose correct answer is that rent does **not** enter the SDL base. Requiring a withholding
+term excludes it **by construction**. A second test re-checks its **content** every run, so the pin
+fails loudly rather than decaying.
+
+**Reachability tested through `detect_intent` on verbatim probe strings**, never by calling the
+engine with a keyword argument — the test a unit test structurally cannot provide, and whose absence
+hid three unreachable engines here.
+
+### 🔴 FLAGGED, NOT EDITED — `eval_218` is a stale GATE row
+
+Its expected answer: *"the exact non-resident rate on commercial rent is **not fully confirmed** in
+our sources — do not quote a figure."* **Correct when written** (it mirrors `_unresolved_items`'
+`NEEDS_TRA_CHECK`) and **now resolved at 10%**, by the statute and by the page in its **own
+`source_url`**. **A correct answer may now score WRONG against it.** Changing a gate expectation is
+the founder's call under Gate 2 — sign-off is blocking, no automation substitute.
+
+### Also closed / found on the way
+
+- **`_unresolved_items.commercial_rent_wht_nonresident` resolved** — standing assumption *"15%
+  non-resident"*, whose **own named `resolution_source`** was the TRA page stating 10%/10%. The
+  register pointed at the answer for months.
+- **The pre-push hook blocked the push**, correctly: `rent_wht_rate` had no index pin. Pinned
+  `pending_r15`. Notable because that same hook's `scan_for_keys` invocation was **inert for the
+  project's entire history** until 2026-08-24. **R26 observed in production, not planted.**
+- **Pre-existing, unrelated:** `tier1a_tax_disp_001` / `objection_deposit_requirement`
+  (`pay.*within 15 days.*objection`). Recorded rather than folded in or silently left.
+
+🔴 **R15 OUTSTANDING:** `rent_wht_rate` is **not retrievable in production** until
+`kaggle/regenerate_rag_e5.py` runs. It queues behind the **same founder regen `ext_31` has awaited
+since `bb2c1ff` — two facts, one regen.** The **engine** path does not depend on it; the fact path does.
+
+---
+
 ## 📋 2026-09-25 — **COVERAGE SCOPED. Two of the six are not coverage gaps, and none of the six is council-level.**
 
 **Scoping only. Nothing encoded, nothing built.** Source reachability is measured and committed:
