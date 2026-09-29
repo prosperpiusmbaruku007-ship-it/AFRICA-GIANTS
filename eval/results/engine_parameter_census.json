@@ -1,0 +1,436 @@
+{
+  "measured": "2026-09-29",
+  "harness": "eval/routing/audit_engine_parameters.py",
+  "what_this_measures": "WIRING: for every parameter of every rules-engine function, whether a named extractor reads it from raw question text, and for every parameter with none, whether that absence carries a reviewed decision.",
+  "what_it_cannot_show": "REACHABILITY. A census proves an extractor is wired, never that it fires on the phrasings real people use. corporate_sector had no extractor at all for four days while its branches were unit-tested; asks_rent_withholding HAD an extractor that missed every object-marked subjunctive form. Both are census-clean states. eval/routing/probe_engine_reachability.py is the measurement; this file only says where to point it.",
+  "why_this_population": "Every engine function exported by chike.rules_engine, which is the complete set of deterministic answers the system can give. R31's instances were all in this population and all found one at a time, after shipping.",
+  "totals": {
+    "engines": 19,
+    "parameters": 42,
+    "by_kind": {
+      "NUMBERS": 9,
+      "ENGINE_STATE": 9,
+      "ROUTING": 15,
+      "SLOT": 6,
+      "ABSENT": 3
+    },
+    "absent_by_design": 2,
+    "absent_defects": [
+      "partnership_tax_statement.partner_is_individual"
+    ]
+  },
+  "rows": [
+    {
+      "engine": "compare_to_floor",
+      "route": "minimum_wage",
+      "site": "orchestrator.py:536",
+      "parameter": "paid",
+      "kind": "NUMBERS",
+      "extractor": "swn.sole_plausible_amount",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "compare_to_floor",
+      "route": "minimum_wage",
+      "site": "orchestrator.py:536",
+      "parameter": "sector_no",
+      "kind": "ENGINE_STATE",
+      "extractor": "wage_schedule.resolve(sq.text) -- reads raw text",
+      "in_live_signature": true
+    },
+    {
+      "engine": "compare_to_floor",
+      "route": "minimum_wage",
+      "site": "orchestrator.py:536",
+      "parameter": "sub",
+      "kind": "ENGINE_STATE",
+      "extractor": "wage_schedule.resolve(sq.text) -- reads raw text",
+      "in_live_signature": true
+    },
+    {
+      "engine": "compare_to_floor",
+      "route": "minimum_wage",
+      "site": "orchestrator.py:536",
+      "parameter": "period",
+      "kind": "ROUTING",
+      "extractor": "routing.wage_period",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "compare_to_floor",
+      "route": "minimum_wage",
+      "site": "orchestrator.py:536",
+      "parameter": "frame",
+      "kind": "ROUTING",
+      "extractor": "routing.wage_question_frame",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "compute_nssf",
+      "route": "nssf",
+      "site": "orchestrator.py:422/467 rules_engine.compute",
+      "parameter": "gross_monthly_payroll",
+      "kind": "SLOT",
+      "extractor": "SlotExtractor + swn.parse_payroll_groups",
+      "in_live_signature": true
+    },
+    {
+      "engine": "compute_nssf",
+      "route": "nssf",
+      "site": "orchestrator.py:422/467 rules_engine.compute",
+      "parameter": "party",
+      "kind": "ROUTING",
+      "extractor": "routing.nssf_party",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "compute_nssf",
+      "route": "nssf",
+      "site": "orchestrator.py:422/467 rules_engine.compute",
+      "parameter": "employer_rate",
+      "kind": "ENGINE_STATE",
+      "extractor": "rates.py constant, not a user fact",
+      "in_live_signature": true
+    },
+    {
+      "engine": "compute_nssf",
+      "route": "nssf",
+      "site": "orchestrator.py:422/467 rules_engine.compute",
+      "parameter": "employee_rate",
+      "kind": "ENGINE_STATE",
+      "extractor": "rates.py constant, not a user fact",
+      "in_live_signature": true
+    },
+    {
+      "engine": "compute_paye",
+      "route": "paye",
+      "site": "orchestrator.py:467 rules_engine.compute",
+      "parameter": "monthly_salary",
+      "kind": "SLOT",
+      "extractor": "SlotExtractor",
+      "in_live_signature": true
+    },
+    {
+      "engine": "compute_paye",
+      "route": "paye",
+      "site": "orchestrator.py:467 rules_engine.compute",
+      "parameter": "resident",
+      "kind": "ROUTING",
+      "extractor": "routing.paye_resident (+ paye_residency_unclear veto)",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "compute_paye_each",
+      "route": "paye",
+      "site": "orchestrator.py:411",
+      "parameter": "salaries",
+      "kind": "NUMBERS",
+      "extractor": "swn.parse_individual_salaries",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "compute_paye_each",
+      "route": "paye",
+      "site": "orchestrator.py:411",
+      "parameter": "resident",
+      "kind": "ROUTING",
+      "extractor": "routing.paye_resident",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "compute_presumptive",
+      "route": "presumptive",
+      "site": "orchestrator.py:590/608",
+      "parameter": "annual_turnover",
+      "kind": "NUMBERS",
+      "extractor": "swn.sole_plausible_amount",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "compute_presumptive",
+      "route": "presumptive",
+      "site": "orchestrator.py:590/608",
+      "parameter": "keeps_records",
+      "kind": "ROUTING",
+      "extractor": "routing.keeps_records",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "compute_presumptive",
+      "route": "presumptive",
+      "site": "orchestrator.py:590/608",
+      "parameter": "excluded_service",
+      "kind": "ROUTING",
+      "extractor": "routing.states_excluded_service",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "compute_presumptive",
+      "route": "presumptive",
+      "site": "orchestrator.py:590/608",
+      "parameter": "new_business_exemption_granted",
+      "kind": "ABSENT",
+      "extractor": null,
+      "in_live_signature": true,
+      "verdict": "BY_DESIGN",
+      "why": "FA2026 s.27(a)(ii)-(iii) turns on whether the COMMISSIONER HAS GRANTED an application (para 2(4) -- not self-executing). No question states that, and asserting TZS 0 without it would be as wrong as ignoring a real possibility of TZS 0. None computes the ordinary band figure -- still the correct fallback -- and appends _NEW_BUSINESS_NOTE stating the exemption's possible applicability explicitly. Documented in presumptive.py's own module docstring.",
+      "guarded_by": "NOTHING ASSERTS THE ABSENCE. Unlike payer_is_withholding_agent there is no test forbidding a future extractor, so a later reader could add one believing it an improvement. Recorded as a gap in the GUARD, not in the design."
+    },
+    {
+      "engine": "compute_sdl",
+      "route": "sdl",
+      "site": "orchestrator.py:422/467 rules_engine.compute",
+      "parameter": "gross_monthly_payroll",
+      "kind": "SLOT",
+      "extractor": "SlotExtractor + swn.parse_payroll_groups",
+      "in_live_signature": true
+    },
+    {
+      "engine": "compute_sdl",
+      "route": "sdl",
+      "site": "orchestrator.py:422/467 rules_engine.compute",
+      "parameter": "employee_count",
+      "kind": "SLOT",
+      "extractor": "SlotExtractor + swn.parse_payroll_groups",
+      "in_live_signature": true
+    },
+    {
+      "engine": "compute_wcf",
+      "route": "wcf",
+      "site": "orchestrator.py:422/467",
+      "parameter": "gross_monthly_payroll",
+      "kind": "SLOT",
+      "extractor": "SlotExtractor + swn.parse_payroll_groups",
+      "in_live_signature": true
+    },
+    {
+      "engine": "corporate_tax_rate_statement",
+      "route": "corporate_tax",
+      "site": "orchestrator.py:620",
+      "parameter": "is_dse_listed",
+      "kind": "ROUTING",
+      "extractor": "routing.is_dse_listed",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "corporate_tax_rate_statement",
+      "route": "corporate_tax",
+      "site": "orchestrator.py:620",
+      "parameter": "meets_public_float",
+      "kind": "ROUTING",
+      "extractor": "routing.dse_public_float_percent -> _dse_float_verdict",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "corporate_tax_rate_statement",
+      "route": "corporate_tax",
+      "site": "orchestrator.py:620",
+      "parameter": "loss_years",
+      "kind": "ROUTING",
+      "extractor": "routing.corporate_loss_years",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "corporate_tax_rate_statement",
+      "route": "corporate_tax",
+      "site": "orchestrator.py:620",
+      "parameter": "sector",
+      "kind": "ROUTING",
+      "extractor": "routing.corporate_sector",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "corporate_tax_rate_statement",
+      "route": "corporate_tax",
+      "site": "orchestrator.py:620",
+      "parameter": "today",
+      "kind": "ENGINE_STATE",
+      "extractor": "the clock (R32) -- not a user fact",
+      "in_live_signature": true
+    },
+    {
+      "engine": "efd_required",
+      "route": "efd_requirement",
+      "site": "orchestrator.py:572",
+      "parameter": "vat_registered",
+      "kind": "ROUTING",
+      "extractor": "routing.states_vat_registered",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "levy_rate_statement",
+      "route": "sdl|nssf|paye|wcf",
+      "site": "orchestrator.py:398",
+      "parameter": "computation_type",
+      "kind": "ENGINE_STATE",
+      "extractor": "the route itself",
+      "in_live_signature": true
+    },
+    {
+      "engine": "levy_rate_statement",
+      "route": "sdl|nssf|paye|wcf",
+      "site": "orchestrator.py:398",
+      "parameter": "amount",
+      "kind": "NUMBERS",
+      "extractor": "swn.sole_plausible_amount",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "partnership_tax_statement",
+      "route": "partnership_tax",
+      "site": "orchestrator.py:640",
+      "parameter": "partner_is_individual",
+      "kind": "ABSENT",
+      "extractor": null,
+      "in_live_signature": true,
+      "verdict": "DEFECT",
+      "why": "R31 exactly. The parameter narrows the EXPLANATION (an individual partner's share falls under the individual progressive bands, not a flat corporate rate), it is not a never-guess hazard, and the orchestrator calls partnership_tax_statement() with NO arguments at all -- so the branch is unreachable from every possible question. ext_06 was authored specifically to exercise it ('tests the partner_is_individual refinement, not just the bare refusal') and was adjudicated PARTIAL on 2026-09-23 with the note 'The partner_is_individual refinement is not exercised.' The gate row already records the cost.",
+      "guarded_by": null
+    },
+    {
+      "engine": "reject_base",
+      "route": "any levy",
+      "site": "orchestrator.py:441",
+      "parameter": "computation_type",
+      "kind": "ENGINE_STATE",
+      "extractor": "the route itself",
+      "in_live_signature": true
+    },
+    {
+      "engine": "reject_base",
+      "route": "any levy",
+      "site": "orchestrator.py:441",
+      "parameter": "stated_amount",
+      "kind": "NUMBERS",
+      "extractor": "swn.rejectable_base_amount",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "reject_base",
+      "route": "any levy",
+      "site": "orchestrator.py:441",
+      "parameter": "invite",
+      "kind": "ENGINE_STATE",
+      "extractor": "copy switch, not a user fact",
+      "in_live_signature": true
+    },
+    {
+      "engine": "rent_wht_statement",
+      "route": "rent_wht",
+      "site": "orchestrator.py:653",
+      "parameter": "letting_is_commercial",
+      "kind": "ROUTING",
+      "extractor": "routing.rent_letting_is_commercial",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "rent_wht_statement",
+      "route": "rent_wht",
+      "site": "orchestrator.py:653",
+      "parameter": "payer_is_withholding_agent",
+      "kind": "ABSENT",
+      "extractor": null,
+      "in_live_signature": true,
+      "verdict": "BY_DESIGN",
+      "why": "Whether a payer is a withholding agent is a fact about their own tax status that no question states. Inferring it is how ext_43 went wrong (a small individual trader renting a village house told he must withhold). None states BOTH limbs and refuses to decide. R19 Guard-B: a derived quantity with no extractor must not be computed.",
+      "guarded_by": "tests/test_rent_wht.py asserts NO such extractor exists"
+    },
+    {
+      "engine": "sdl_applies",
+      "route": "sdl",
+      "site": "orchestrator.py:673 rules_engine.applicability",
+      "parameter": "employee_count",
+      "kind": "SLOT",
+      "extractor": "SlotExtractor via APPLICABILITY_REQUIRED_FIELDS",
+      "in_live_signature": true
+    },
+    {
+      "engine": "sdl_by_month",
+      "route": "sdl",
+      "site": "orchestrator.py:382",
+      "parameter": "periods",
+      "kind": "NUMBERS",
+      "extractor": "swn.parse_month_headcounts",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "sdl_by_month",
+      "route": "sdl",
+      "site": "orchestrator.py:382",
+      "parameter": "gross_monthly_payroll",
+      "kind": "NUMBERS",
+      "extractor": "swn.sole_plausible_amount",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "sector_rates_statement",
+      "route": "minimum_wage",
+      "site": "orchestrator.py:534",
+      "parameter": "sector_no",
+      "kind": "ENGINE_STATE",
+      "extractor": "wage_schedule.resolve(sq.text)",
+      "in_live_signature": true
+    },
+    {
+      "engine": "sector_rates_statement",
+      "route": "minimum_wage",
+      "site": "orchestrator.py:534",
+      "parameter": "paid",
+      "kind": "NUMBERS",
+      "extractor": "swn.sole_plausible_amount",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "sector_rates_statement",
+      "route": "minimum_wage",
+      "site": "orchestrator.py:534",
+      "parameter": "period",
+      "kind": "ROUTING",
+      "extractor": "routing.wage_period",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "vat_registration",
+      "route": "vat_registration",
+      "site": "orchestrator.py:558",
+      "parameter": "turnover",
+      "kind": "NUMBERS",
+      "extractor": "swn.sole_plausible_amount",
+      "in_live_signature": true,
+      "extractor_exists": true
+    },
+    {
+      "engine": "vat_registration",
+      "route": "vat_registration",
+      "site": "orchestrator.py:558",
+      "parameter": "period",
+      "kind": "ROUTING",
+      "extractor": "routing.turnover_period",
+      "in_live_signature": true,
+      "extractor_exists": true
+    }
+  ],
+  "failures": []
+}

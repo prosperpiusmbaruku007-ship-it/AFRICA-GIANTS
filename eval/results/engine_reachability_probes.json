@@ -1,0 +1,1100 @@
+{
+  "measured": "2026-09-29",
+  "harness": "eval/routing/probe_engine_reachability.py",
+  "probes": "eval/routing/engine_reachability_probes.jsonl",
+  "ooc_phrases_loaded": 135,
+  "what_this_measures": "Whether each rules engine is reachable from a question phrased the way a real asker phrases it -- measured from the raw string through the OOC gate, decomposition, routing and field extraction to the reply, which is the span no unit test touches.",
+  "what_it_cannot_show": "Whether these are the phrasings real users produce (R33: the probes were authored by someone who had read the cue lists, so REACHED is a coverage result, never a realism one), and anything that depends on the MODEL fallback in slot extraction, which a FakeBackend cannot supply.",
+  "why_this_population": "Every engine the system can answer with, two arms each: a natural phrasing that names no acronym or statutory term, and a technical control that does. R31's five instances were all engines whose branches were correct and whose natural phrasings reached nothing, so the population a reachability defect lives in IS the engine list -- not the gate corpora, which are authored in the register that already works (R22).",
+  "verdict_meanings": {
+    "REACHED": "expected engine ran; its result is in the reply",
+    "WRONG_ENGINE": "an engine ran, but not the expected one -- a misroute",
+    "CLARIFIED": "routed correctly, never-guess exit fired, no engine result",
+    "FACT_PATH": "routed to `none`; the model answers from RAG. The R31 shape",
+    "OOC_REFUSED": "the refusal gate intercepted an in-scope question",
+    "ERROR": "the harness failed on this row"
+  },
+  "rows": [
+    {
+      "id": "er_sdl_01",
+      "arm": "natural",
+      "expect": "sdl",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Nina wafanyakazi 12 na mishahara ya jumla milioni 6 kwa mwezi, nalipa kiasi gani kwa mafunzo ya ufundi?"
+      ],
+      "routes": [
+        "sdl"
+      ],
+      "engine_results": [
+        {
+          "computation": "sdl",
+          "applicable": true,
+          "amount": "210000",
+          "inputs": {
+            "gross_monthly_payroll": "6000000",
+            "employee_count": "12"
+          },
+          "note": ""
+        }
+      ],
+      "engine_inputs": {
+        "gross_monthly_payroll": "6000000",
+        "employee_count": "12"
+      },
+      "needs_clarification": false,
+      "question": "Nina wafanyakazi 12 na mishahara ya jumla milioni 6 kwa mwezi, nalipa kiasi gani kwa mafunzo ya ufundi?",
+      "supplies": "gross_monthly_payroll + employee_count, both stated naturally",
+      "guards_against": "SDL reachable without the acronym.",
+      "reply": "{}\nSDL = 3.5% × TZS 6,000,000 = TZS 210,000"
+    },
+    {
+      "id": "er_sdl_02",
+      "arm": "natural",
+      "expect": "sdl",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Tuna watumishi 15, mshahara wote kwa mwezi ni 9,000,000. Tunachangia shingapi kwa bodi ya mafunzo?"
+      ],
+      "routes": [
+        "sdl"
+      ],
+      "engine_results": [
+        {
+          "computation": "sdl",
+          "applicable": true,
+          "amount": "315000",
+          "inputs": {
+            "gross_monthly_payroll": "9000000",
+            "employee_count": "15"
+          },
+          "note": ""
+        }
+      ],
+      "engine_inputs": {
+        "gross_monthly_payroll": "9000000",
+        "employee_count": "15"
+      },
+      "needs_clarification": false,
+      "question": "Tuna watumishi 15, mshahara wote kwa mwezi ni 9,000,000. Tunachangia shingapi kwa bodi ya mafunzo?",
+      "supplies": "same, spoken contraction `shingapi`",
+      "guards_against": "CONCORD-1 contraction still reaching SDL.",
+      "reply": "{}\nSDL = 3.5% × TZS 9,000,000 = TZS 315,000"
+    },
+    {
+      "id": "er_sdl_03",
+      "arm": "technical_control",
+      "expect": "sdl",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "SDL kwa mishahara ya 6,000,000 na wafanyakazi 12 ni kiasi gani?"
+      ],
+      "routes": [
+        "sdl"
+      ],
+      "engine_results": [
+        {
+          "computation": "sdl",
+          "applicable": true,
+          "amount": "210000",
+          "inputs": {
+            "gross_monthly_payroll": "6000000",
+            "employee_count": "12"
+          },
+          "note": ""
+        }
+      ],
+      "engine_inputs": {
+        "gross_monthly_payroll": "6000000",
+        "employee_count": "12"
+      },
+      "needs_clarification": false,
+      "question": "SDL kwa mishahara ya 6,000,000 na wafanyakazi 12 ni kiasi gani?",
+      "supplies": "acronym present",
+      "guards_against": "R26 step 2 -- the clean case. If this misses, the route is broken, not merely narrow.",
+      "reply": "{}\nSDL = 3.5% × TZS 6,000,000 = TZS 210,000"
+    },
+    {
+      "id": "er_nssf_01",
+      "arm": "natural",
+      "expect": "nssf",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Mfanyakazi wangu analipwa 800,000 kwa mwezi, tunakatwa kiasi gani kwa pensheni?"
+      ],
+      "routes": [
+        "nssf"
+      ],
+      "engine_results": [
+        {
+          "computation": "nssf",
+          "applicable": true,
+          "amount": "80000",
+          "inputs": {
+            "gross_monthly_payroll": "800000",
+            "party": "employee",
+            "employer_rate": "0.10",
+            "employee_rate": "0.10"
+          },
+          "note": "party=employee"
+        }
+      ],
+      "engine_inputs": {
+        "gross_monthly_payroll": "800000",
+        "party": "employee",
+        "employer_rate": "0.10",
+        "employee_rate": "0.10"
+      },
+      "needs_clarification": false,
+      "question": "Mfanyakazi wangu analipwa 800,000 kwa mwezi, tunakatwa kiasi gani kwa pensheni?",
+      "supplies": "gross_monthly_payroll; party inferred",
+      "guards_against": "NSSF by the everyday word for pension rather than the acronym.",
+      "reply": "{}\nNSSF (sehemu ya mfanyakazi) = 10% × TZS 800,000 = TZS 80,000 — jumla ya NSSF ni 20% (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)"
+    },
+    {
+      "id": "er_nssf_02",
+      "arm": "natural",
+      "expect": "nssf",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Namlipa fundi wangu laki nane, nampeleka wapi mchango wa uzeeni na ni shingapi?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Namlipa fundi wangu laki nane, nampeleka wapi mchango wa uzeeni na ni shingapi?",
+      "supplies": "amount in Swahili spoken form",
+      "guards_against": "The worker is a `fundi`, not a `mfanyakazi`. Amount written as `laki nane`, no digits.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_nssf_03",
+      "arm": "technical_control",
+      "expect": "nssf",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "NSSF kwa mshahara wa 800,000 ni kiasi gani?"
+      ],
+      "routes": [
+        "nssf"
+      ],
+      "engine_results": [
+        {
+          "computation": "nssf",
+          "applicable": true,
+          "amount": "160000",
+          "inputs": {
+            "gross_monthly_payroll": "800000",
+            "party": "total",
+            "employer_rate": "0.10",
+            "employee_rate": "0.10"
+          },
+          "note": "party=total"
+        }
+      ],
+      "engine_inputs": {
+        "gross_monthly_payroll": "800000",
+        "party": "total",
+        "employer_rate": "0.10",
+        "employee_rate": "0.10"
+      },
+      "needs_clarification": false,
+      "question": "NSSF kwa mshahara wa 800,000 ni kiasi gani?",
+      "supplies": "acronym present",
+      "guards_against": "The clean case.",
+      "reply": "{}\nNSSF = 20% × TZS 800,000 = TZS 160,000 (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)"
+    },
+    {
+      "id": "er_paye_01",
+      "arm": "natural",
+      "expect": "paye",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Mfanyakazi wangu analipwa laki tano na nusu kwa mwezi, nimkate kiasi gani cha kodi?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Mfanyakazi wangu analipwa laki tano na nusu kwa mwezi, nimkate kiasi gani cha kodi?",
+      "supplies": "monthly_salary; resident defaults True",
+      "guards_against": "emp_02's shape -- an employer-first message. No acronym, amount spoken, and the tax named only as bare `kodi`.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_paye_02",
+      "arm": "natural",
+      "expect": "paye",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Nina muuzaji dukani ninayemlipa 900,000, serikali inachukua kiasi gani kwenye mshahara wake?"
+      ],
+      "routes": [
+        "paye"
+      ],
+      "engine_results": [
+        {
+          "computation": "paye",
+          "applicable": true,
+          "amount": "103000",
+          "inputs": {
+            "monthly_salary": "900000",
+            "resident": "True"
+          },
+          "note": "per-employee, resident progressive bands"
+        }
+      ],
+      "engine_inputs": {
+        "monthly_salary": "900000",
+        "resident": "True"
+      },
+      "needs_clarification": false,
+      "question": "Nina muuzaji dukani ninayemlipa 900,000, serikali inachukua kiasi gani kwenye mshahara wake?",
+      "supplies": "monthly_salary",
+      "guards_against": "PAYE asked as 'what does the government take', the commonest framing.",
+      "reply": "{}\nPAYE = TZS 68,000 + 25% × (TZS 900,000 − TZS 760,000) = TZS 103,000"
+    },
+    {
+      "id": "er_paye_03",
+      "arm": "technical_control",
+      "expect": "paye",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "PAYE kwa mshahara wa 900,000 kwa mwezi ni kiasi gani?"
+      ],
+      "routes": [
+        "paye"
+      ],
+      "engine_results": [
+        {
+          "computation": "paye",
+          "applicable": true,
+          "amount": "103000",
+          "inputs": {
+            "monthly_salary": "900000",
+            "resident": "True"
+          },
+          "note": "per-employee, resident progressive bands"
+        }
+      ],
+      "engine_inputs": {
+        "monthly_salary": "900000",
+        "resident": "True"
+      },
+      "needs_clarification": false,
+      "question": "PAYE kwa mshahara wa 900,000 kwa mwezi ni kiasi gani?",
+      "supplies": "acronym present",
+      "guards_against": "The clean case.",
+      "reply": "{}\nPAYE = TZS 68,000 + 25% × (TZS 900,000 − TZS 760,000) = TZS 103,000"
+    },
+    {
+      "id": "er_wcf_01",
+      "arm": "natural",
+      "expect": "wcf",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Mishahara yangu ya mwezi ni 3,000,000. Nalipa kiasi gani kwa mfuko wa fidia ya ajali kazini?"
+      ],
+      "routes": [
+        "wcf"
+      ],
+      "engine_results": [
+        {
+          "computation": "wcf",
+          "applicable": true,
+          "amount": "15000",
+          "inputs": {
+            "gross_monthly_payroll": "3000000"
+          },
+          "note": "all employers, from first employee"
+        }
+      ],
+      "engine_inputs": {
+        "gross_monthly_payroll": "3000000"
+      },
+      "needs_clarification": false,
+      "question": "Mishahara yangu ya mwezi ni 3,000,000. Nalipa kiasi gani kwa mfuko wa fidia ya ajali kazini?",
+      "supplies": "gross_monthly_payroll",
+      "guards_against": "WCF by description rather than acronym. nat_19 answered this wrong at 10% against the real 0.5%.",
+      "reply": "{}\nWCF = 0.5% × TZS 3,000,000 = TZS 15,000"
+    },
+    {
+      "id": "er_wcf_02",
+      "arm": "technical_control",
+      "expect": "wcf",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "WCF kwa mishahara ya 3,000,000 ni kiasi gani?"
+      ],
+      "routes": [
+        "wcf"
+      ],
+      "engine_results": [
+        {
+          "computation": "wcf",
+          "applicable": true,
+          "amount": "15000",
+          "inputs": {
+            "gross_monthly_payroll": "3000000"
+          },
+          "note": "all employers, from first employee"
+        }
+      ],
+      "engine_inputs": {
+        "gross_monthly_payroll": "3000000"
+      },
+      "needs_clarification": false,
+      "question": "WCF kwa mishahara ya 3,000,000 ni kiasi gani?",
+      "supplies": "acronym present",
+      "guards_against": "The clean case.",
+      "reply": "{}\nWCF = 0.5% × TZS 3,000,000 = TZS 15,000"
+    },
+    {
+      "id": "er_mw_01",
+      "arm": "natural",
+      "expect": "minimum_wage",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED",
+        "CLARIFIED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Nalipa mlinzi wangu 150,000 kwa mwezi, je nipo sawa kisheria?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Nalipa mlinzi wangu 150,000 kwa mwezi, je nipo sawa kisheria?",
+      "supplies": "paid + sector via the guard's occupation",
+      "guards_against": "The EMPLOYER direction, in the contracted 1sg `Nalipa` with no object infix, and lawfulness asked as `nipo sawa kisheria`. Two independent limbs.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_mw_02",
+      "arm": "technical_control",
+      "expect": "minimum_wage",
+      "verdict": "CLARIFIED",
+      "accept": [
+        "REACHED",
+        "CLARIFIED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "mwajiri ananilipa 150000 kwa mwezi je nakiuka sheria"
+      ],
+      "routes": [
+        "minimum_wage"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": true,
+      "question": "mwajiri ananilipa 150000 kwa mwezi je nakiuka sheria",
+      "supplies": "paid + a violation frame",
+      "guards_against": "The clean case. VERBATIM from eval/refusal_gate/wage_pay_concord_018.jsonl wp_02 -- NOT a paraphrase (R26: a five-word paraphrase was enough to flip a correct body once already).",
+      "reply": "Kima cha chini cha mshahara kinatofautiana kwa sekta — GN 605A ina viwango 50, kuanzia TZS 80,000 hadi TZS 765,900 kwa mwezi. Ili nikupe jibu sahihi la kisheria, niambie unafanya kazi ya aina gani (mfano: shamba, hoteli, ulinzi, duka, ujenzi)."
+    },
+    {
+      "id": "er_mw_03",
+      "arm": "bad_specimen",
+      "expect": "minimum_wage",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "FACT_PATH"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Kima cha chini cha mshahara kwa mlinzi ni kiasi gani?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Kima cha chini cha mshahara kwa mlinzi ni kiasi gani?",
+      "supplies": "nothing -- no wage is stated",
+      "guards_against": "MY OWN BAD SPECIMEN, kept visible. It asks what the floor IS, and every minimum-wage engine (compare_to_floor, sector_rates_statement) requires a stated `paid`. The fact path is the correct destination, so FACT_PATH is the pass condition. What it DOES record: there is no deterministic answer path for 'what is the floor for a guard?', which is a coverage observation and not a reachability defect.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_corp_01",
+      "arm": "natural",
+      "expect": "corporate_tax",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Kampuni yangu ya ujenzi imepata faida mwaka huu, tunalipa asilimia ngapi?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Kampuni yangu ya ujenzi imepata faida mwaka huu, tunalipa asilimia ngapi?",
+      "supplies": "entity + rate ask; sector=None",
+      "guards_against": "Corporate rate asked without any tax-type term -- profit stated, rate asked.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_corp_02",
+      "arm": "natural",
+      "expect": "corporate_tax",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Tuna kampuni ya shule binafsi, faida yetu inatozwa kiasi gani?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Tuna kampuni ya shule binafsi, faida yetu inatozwa kiasi gani?",
+      "supplies": "sector=education -- the s.4(8) AMT exemption branch",
+      "guards_against": "THE SECTOR PARAMETER THROUGH NATURAL PHRASING ONLY. Its branches were unit-tested since 2026-09-01 with a hardcoded sector= kwarg and no extractor existed until 2026-09-05; a private school was told live to pay AMT. This row asks whether the 2026-09-05 fix is reachable at all without the technical term.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_corp_03",
+      "arm": "technical_control",
+      "expect": "corporate_tax",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Kampuni yetu inauza vifaa vya ujenzi, hatujaorodheshwa soko la hisa. Kodi ya mapato ya kampuni tunalipa asilimia ngapi?"
+      ],
+      "routes": [
+        "corporate_tax"
+      ],
+      "engine_results": [
+        {
+          "computation": "corporate_tax",
+          "applicable": true,
+          "amount": null,
+          "inputs": {
+            "is_dse_listed": "False",
+            "meets_public_float": null,
+            "loss_years": null,
+            "sector": null
+          },
+          "note": "First Schedule para 3(1) — standard rate, no DSE/AMT facts given"
+        }
+      ],
+      "engine_inputs": {
+        "is_dse_listed": "False",
+        "meets_public_float": null,
+        "loss_years": null,
+        "sector": null
+      },
+      "needs_clarification": false,
+      "question": "Kampuni yetu inauza vifaa vya ujenzi, hatujaorodheshwa soko la hisa. Kodi ya mapato ya kampuni tunalipa asilimia ngapi?",
+      "supplies": "the technical term",
+      "guards_against": "The clean case. VERBATIM ext_01 from eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl -- the row `soko la hisa` refused in PRODUCTION on 2026-09-23, so it also holds that narrowing.",
+      "reply": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi (First Schedule para 3(1)). Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hisa kwa umma hulipa asilimia 25 kwa miaka 3 tangu kuorodheshwa (para 3(2)(a)). Hii ni kiwango — SI hesabu ya TZS kutoka mauzo: faida (si mauzo) ndiyo msingi wa kodi hii, na faida haiwezi kupatikana kutoka mauzo peke yake."
+    },
+    {
+      "id": "er_part_01",
+      "arm": "natural",
+      "expect": "partnership_tax",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Sisi ni ubia wa watu watatu, analipa kodi kwa kiwango gani?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Sisi ni ubia wa watu watatu, analipa kodi kwa kiwango gani?",
+      "supplies": "entity; partner_is_individual=None by design",
+      "guards_against": "KNOWN OPEN R31 INSTANCE. asks_corporate_income_tax is another route's cue list inherited by conjunction.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_part_02",
+      "arm": "natural",
+      "expect": "partnership_tax",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Mimi na mshirika wangu tunaendesha duka pamoja kama ubia. Kama mshirika mwenzangu ni mtu binafsi tu, yeye analipa kodi kwa kiwango gani?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Mimi na mshirika wangu tunaendesha duka pamoja kama ubia. Kama mshirika mwenzangu ni mtu binafsi tu, yeye analipa kodi kwa kiwango gani?",
+      "supplies": "entity + partner_is_individual stated in words",
+      "guards_against": "VERBATIM ext_06 from eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl, adjudicated PARTIAL 2026-09-23 with the note 'The partner_is_individual refinement is not exercised.' Holds BOTH the route gap and the absent parameter in one committed row.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_part_03",
+      "arm": "technical_control",
+      "expect": "partnership_tax",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Ubia wetu unalipa kodi ya mapato kiasi gani?"
+      ],
+      "routes": [
+        "partnership_tax"
+      ],
+      "engine_results": [
+        {
+          "computation": "partnership_tax",
+          "applicable": true,
+          "amount": null,
+          "inputs": {
+            "partner_is_individual": null
+          },
+          "note": "ss.48-51 — partnership is tax-transparent, never-guess the rate"
+        }
+      ],
+      "engine_inputs": {
+        "partner_is_individual": null
+      },
+      "needs_clarification": false,
+      "question": "Ubia wetu unalipa kodi ya mapato kiasi gani?",
+      "supplies": "the technical term",
+      "guards_against": "The clean case -- the only phrasing measured as reaching.",
+      "reply": "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya Mapato Kifungu 48(1)) — si kama kampuni. Badala yake, faida au hasara ya ubia hugawanywa kwa kila mshirika kulingana na sehemu yake (Vifungu 49-50), na KILA MSHIRIKA analipa kodi mwenyewe juu ya sehemu yake, kwa kiwango kinachomhusu YEYE — viwango vya mtu binafsi kama mshirika ni mtu, au asilimia 30 kama mshirika ni kampuni. Sina taarifa ya kutosha kutaja kiwango bila kujua mshirika ni nani. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "er_rent_01",
+      "arm": "natural",
+      "expect": "rent_wht",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Ninalipa pango la ofisi kwa mwezi, nimkate mwenye nyumba kiasi gani?"
+      ],
+      "routes": [
+        "rent_wht"
+      ],
+      "engine_results": [
+        {
+          "computation": "rent_wht",
+          "applicable": true,
+          "amount": null,
+          "inputs": {
+            "letting_is_commercial": "True",
+            "payer_is_withholding_agent": null
+          },
+          "note": "Cap.332 First Schedule para 4(b)(ii) — 10% for BOTH residencies; obligation is conditional on withholding-agent status, which is never inferred"
+        }
+      ],
+      "engine_inputs": {
+        "letting_is_commercial": "True",
+        "payer_is_withholding_agent": null
+      },
+      "needs_clarification": false,
+      "question": "Ninalipa pango la ofisi kwa mwezi, nimkate mwenye nyumba kiasi gani?",
+      "supplies": "letting_is_commercial=True via `ofisi`",
+      "guards_against": "Closed 2026-09-29. Held so the subjunctive fix cannot regress.",
+      "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata."
+    },
+    {
+      "id": "er_rent_02",
+      "arm": "technical_control",
+      "expect": "rent_wht",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Kodi ya zuio kwenye pango la ofisi ni asilimia ngapi?"
+      ],
+      "routes": [
+        "rent_wht"
+      ],
+      "engine_results": [
+        {
+          "computation": "rent_wht",
+          "applicable": true,
+          "amount": null,
+          "inputs": {
+            "letting_is_commercial": "True",
+            "payer_is_withholding_agent": null
+          },
+          "note": "Cap.332 First Schedule para 4(b)(ii) — 10% for BOTH residencies; obligation is conditional on withholding-agent status, which is never inferred"
+        }
+      ],
+      "engine_inputs": {
+        "letting_is_commercial": "True",
+        "payer_is_withholding_agent": null
+      },
+      "needs_clarification": false,
+      "question": "Kodi ya zuio kwenye pango la ofisi ni asilimia ngapi?",
+      "supplies": "the statutory register",
+      "guards_against": "The clean case.",
+      "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata."
+    },
+    {
+      "id": "er_vat_01",
+      "arm": "natural",
+      "expect": "vat_registration",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Mauzo ya duka langu yamefika milioni 250 mwaka huu, je nalazimika kujisajili?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Mauzo ya duka langu yamefika milioni 250 mwaka huu, je nalazimika kujisajili?",
+      "supplies": "turnover + period=annual",
+      "guards_against": "Registration asked without naming VAT -- `kujisajili` alone. 250M is ABOVE the 200M threshold, so the answer this misses is a yes.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_vat_02",
+      "arm": "technical_control",
+      "expect": "vat_registration",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Biashara yetu ina mauzo ya TZS 250,000,000 kwa miezi 12 je tunatakiwa kujisajili VAT"
+      ],
+      "routes": [
+        "vat_registration"
+      ],
+      "engine_results": [
+        {
+          "computation": "vat_registration",
+          "applicable": true,
+          "amount": null,
+          "inputs": {
+            "turnover": "250000000",
+            "period": "annual",
+            "threshold": "200000000",
+            "limb_tested": "annual",
+            "limb_untested": null
+          },
+          "note": "over the VAT threshold on the limb tested"
+        }
+      ],
+      "engine_inputs": {
+        "turnover": "250000000",
+        "period": "annual",
+        "threshold": "200000000",
+        "limb_tested": "annual",
+        "limb_untested": null
+      },
+      "needs_clarification": false,
+      "question": "Biashara yetu ina mauzo ya TZS 250,000,000 kwa miezi 12 je tunatakiwa kujisajili VAT",
+      "supplies": "acronym + own-turnover cue + figure",
+      "guards_against": "The clean case. VERBATIM cc_01 from eval/refusal_gate/concord_1pl_in_scope_020.jsonl.",
+      "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "er_vat_03",
+      "arm": "bad_specimen",
+      "expect": "vat_registration",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "FACT_PATH"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Kizingiti cha usajili wa VAT ni mauzo ya kiasi gani?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Kizingiti cha usajili wa VAT ni mauzo ya kiasi gani?",
+      "supplies": "nothing -- no figure",
+      "guards_against": "MY OWN BAD SPECIMEN, kept visible. It asks what the threshold IS; _THRESHOLD_ASK_VETO catches exactly this and the fact path is correct. Recorded so the next reader does not count it as a reachability miss.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_efd_01",
+      "arm": "natural",
+      "expect": "efd_requirement",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Nina duka dogo la vyakula, je nalazimika kuwa na mashine ya risiti?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Nina duka dogo la vyakula, je nalazimika kuwa na mashine ya risiti?",
+      "supplies": "nothing the engine needs -- efd_required() takes only vat_registered, which changes the WORDING and never the verdict",
+      "guards_against": "EFD by the object the user names -- `mashine ya risiti` -- with no figure and no VAT-registration statement. The engine's own docstring says no turnover figure can change this answer, so a route that demands one is demanding evidence its engine cannot use.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_efd_02",
+      "arm": "natural",
+      "expect": "efd_requirement",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Je kila biashara inatakiwa kuwa na EFD?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Je kila biashara inatakiwa kuwa na EFD?",
+      "supplies": "nothing the engine needs",
+      "guards_against": "The acronym IS present and it still misses, which is why this is a natural-arm row and not the control: the blocker is the figure/registration requirement, not the vocabulary.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_efd_03",
+      "arm": "technical_control",
+      "expect": "efd_requirement",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Tumesajiliwa kwa VAT je tunahitaji mashine ya EFD"
+      ],
+      "routes": [
+        "efd_requirement"
+      ],
+      "engine_results": [
+        {
+          "computation": "efd_requirement",
+          "applicable": true,
+          "amount": null,
+          "inputs": {
+            "vat_registered": "True",
+            "ground": "vat_registered_and_default"
+          },
+          "note": "EFD required by default for everyone; turnover is never consulted because no turnover threshold exists in the Act (TAA Cap.438 s.44). Exemption is only by Commissioner-General public notice naming a class, which this engine cannot evaluate from a turnover figure."
+        }
+      ],
+      "engine_inputs": {
+        "vat_registered": "True",
+        "ground": "vat_registered_and_default"
+      },
+      "needs_clarification": false,
+      "question": "Tumesajiliwa kwa VAT je tunahitaji mashine ya EFD",
+      "supplies": "vat_registered=True via states_vat_registered",
+      "guards_against": "The clean case, and the ONLY committed probe in the repository that reaches this route. VERBATIM cc_07 from eval/refusal_gate/concord_1pl_in_scope_020.jsonl. That it is the only one is itself the finding.",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Biashara iliyosajiliwa VAT inatakiwa kutumia EFD -- na hii ni sehemu ya wajibu mpana zaidi: EFD inahitajika kwa kila mfanyabiashara anayeuza bidhaa au huduma, bila kujali mauzo. Msamaha unatolewa TU na TRA kupitia taarifa rasmi (kwa jina lako au kundi lako maalum). Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "id": "er_pres_01",
+      "arm": "natural",
+      "expect": "presumptive",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Duka langu linauza milioni 50 kwa mwaka na situnzi vitabu, nalipa kodi kiasi gani?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Duka langu linauza milioni 50 kwa mwaka na situnzi vitabu, nalipa kodi kiasi gani?",
+      "supplies": "annual_turnover + keeps_records=False",
+      "guards_against": "R31's FOUNDING INSTANCE, re-asked. The 2026-08-23 fix added `kodi ya mapato` beside `makadirio`; this row names the tax only as bare `kodi` and states its records status as `situnzi vitabu`. Two layers at once -- the route cue and the keeps_records object noun.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_pres_02",
+      "arm": "natural",
+      "expect": "presumptive",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED",
+        "CLARIFIED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Biashara yangu ndogo inaingiza laki tisa kwa mwezi, kodi yangu ni ngapi bila kutunza hesabu?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Biashara yangu ndogo inaingiza laki tisa kwa mwezi, kodi yangu ni ngapi bila kutunza hesabu?",
+      "supplies": "turnover stated MONTHLY and in spoken form",
+      "guards_against": "Turnover given per-month the way a trader states it, `inaingiza` in the 3rd person, and records status as `bila kutunza hesabu`.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_pres_03",
+      "arm": "technical_control",
+      "expect": "presumptive",
+      "verdict": "REACHED",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Biashara yangu inauza milioni 4 kwa mwaka, kodi ya makadirio ni ngapi?"
+      ],
+      "routes": [
+        "presumptive"
+      ],
+      "engine_results": [
+        {
+          "computation": "presumptive",
+          "applicable": true,
+          "amount": "0",
+          "inputs": {
+            "annual_turnover": "4000000",
+            "keeps_records": "False",
+            "excluded_service": "False",
+            "new_business_exemption_granted": null
+          },
+          "note": "annual turnover, individual presumptive schedule (FA2022 s.72, FA2026 s.27(a))"
+        }
+      ],
+      "engine_inputs": {
+        "annual_turnover": "4000000",
+        "keeps_records": "False",
+        "excluded_service": "False",
+        "new_business_exemption_granted": null
+      },
+      "needs_clarification": false,
+      "question": "Biashara yangu inauza milioni 4 kwa mwaka, kodi ya makadirio ni ngapi?",
+      "supplies": "the technical term + an own-turnover cue",
+      "guards_against": "The clean case. VERBATIM pic_13 from eval/routing/presumptive_income_cue_probes.jsonl -- replacing a PARAPHRASE of it that missed, which is R26's warning arriving in this very fixture.",
+      "reply": "Kodi ya makadirio = TZS 0 (mauzo ya TZS 4,000,000 kwa mwaka yako ndani ya kiwango cha sifuri hadi TZS 4,000,000)"
+    },
+    {
+      "id": "er_pres_04",
+      "arm": "defensible_by_design",
+      "expect": "presumptive",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "FACT_PATH"
+      ],
+      "ok": true,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Kodi ya makadirio kwa mauzo ya milioni 50 kwa mwaka ni kiasi gani?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Kodi ya makadirio kwa mauzo ya milioni 50 kwa mwaka ni kiasi gani?",
+      "supplies": "the technical term and a figure, but NO own-turnover cue",
+      "guards_against": "The paraphrase that replaced pic_13 as this fixture's first control and missed. Kept as its own row with the correct expectation, because the reason it misses is recorded in routing.py: bare `mauzo` is not evidence -- it appears in 178 corpus rows that must keep their fact route. A third-person question about nobody's turnover is a definition question. Pass condition is FACT_PATH, so this row fails if a future widening captures it.",
+      "reply": "{}"
+    },
+    {
+      "id": "er_pres_05",
+      "arm": "natural",
+      "expect": "presumptive",
+      "verdict": "FACT_PATH",
+      "accept": [
+        "REACHED"
+      ],
+      "ok": false,
+      "ooc_phrase_matched": null,
+      "parts": [
+        "Duka langu limeuza jumla ya milioni tano mwaka huu, situnzi kumbukumbu za mahesabu. Kodi yangu ni ngapi?"
+      ],
+      "routes": [
+        "none"
+      ],
+      "engine_results": [],
+      "engine_inputs": {},
+      "needs_clarification": false,
+      "question": "Duka langu limeuza jumla ya milioni tano mwaka huu, situnzi kumbukumbu za mahesabu. Kodi yangu ni ngapi?",
+      "supplies": "annual_turnover + keeps_records=False, both stated",
+      "guards_against": "VERBATIM ext_09 from eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl -- a COMMITTED held-out probe whose own expectation is presumptive. Independent corroboration that er_pres_01 is not a paraphrase artefact: four committed ext rows (ext_08/09/10/11) share this shape and none of them reaches.",
+      "reply": "{}"
+    }
+  ],
+  "summary": {
+    "n": 33,
+    "by_verdict": {
+      "REACHED": 16,
+      "FACT_PATH": 16,
+      "CLARIFIED": 1
+    },
+    "reached": 20,
+    "natural_reached": 6,
+    "natural_total": 19,
+    "control_reached": 11,
+    "control_total": 11,
+    "by_arm": {
+      "bad_specimen": {
+        "ok": 2,
+        "n": 2
+      },
+      "defensible_by_design": {
+        "ok": 1,
+        "n": 1
+      },
+      "natural": {
+        "ok": 6,
+        "n": 19
+      },
+      "technical_control": {
+        "ok": 11,
+        "n": 11
+      }
+    },
+    "failures": [
+      "er_nssf_02",
+      "er_paye_01",
+      "er_mw_01",
+      "er_corp_01",
+      "er_corp_02",
+      "er_part_01",
+      "er_part_02",
+      "er_vat_01",
+      "er_efd_01",
+      "er_efd_02",
+      "er_pres_01",
+      "er_pres_02",
+      "er_pres_05"
+    ]
+  }
+}
