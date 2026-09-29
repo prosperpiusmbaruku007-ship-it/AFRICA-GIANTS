@@ -826,9 +826,65 @@ _RENT_TERM_CUES = [r"\bpango\b", r"\bkodi ya pango\b", r"\brent\b", r"\brental\b
 # Swahili -kata- ("cut/deduct") carries the withholding sense across inflections
 # (kunikata, nikate, inakatwa, kukata), so the stem is matched with `kodi` required nearby
 # rather than enumerating forms. `zuio`/`kuzuia` is the formal term.
+
+# SUBJUNCTIVE CONCORD (2026-09-29). THE SUBJUNCTIVE HAS NO TENSE SLOT — `ni+m+kat+E`, not
+# `ni+na+m+kata` — so `_object_concord` cannot reach it BY CONSTRUCTION. That builder's host
+# is subject+TENSE, and the required tense marker is exactly the property that makes it safe
+# against `waKATi`/`kaMPUNI`. It is not a gap in that function; it is a different paradigm.
+#
+# WHAT THAT COST. `_WITHHOLDING_CUES` held exactly ONE subjunctive form, the bare 1sg
+# `nikate`, and every object-marked form missed — `nimkate` ("let me deduct from HIM"), the
+# ordinary way a tenant asks. Measured through the full pipeline before this fix
+# (eval/results/rent_wht_pipeline_probes_BEFORE_2026_09_29.json): 5 of 5 natural phrasings
+# routed to `none` while both formal-register rows routed correctly. R31's "an engine
+# reachable only by the technical term serves the users who least need it", and the
+# half-populated-closed-class defect this module's own `_object_concord` docstring already
+# names for _APPLICABILITY_CUES (three of five) and _NSSF_EMPLOYEE_CUES (none of five).
+#
+# THE OBJECT INFIX IS REQUIRED FOR `-kate` AND OPTIONAL FOR `-zuie`, AND THE ASYMMETRY IS THE
+# WHOLE SAFETY PROPERTY — it is not tidiness, and it must not be regularised away:
+#
+#   `mkate` IS THE SWAHILI FOR BREAD and parses as subject-prefix `m-` + `kate`. A pattern
+#   that makes the infix optional matches it, and a bakery question that also mentions its
+#   `pango` then completes `asks_rent_withholding`'s conjunction and routes to the rent
+#   engine — a wrong-TOPIC answer with full engine authority, the eval_211 harm class.
+#   Verified both ways, not assumed: the optional-infix form matches bare `mkate`, the
+#   shipped form does not, and `mkate` occurs in the corpora. Probe rwp_10 holds the line.
+#
+#   `-zuie` has no such homograph, and requiring an infix there would drop `nizuie` ("should
+#   I withhold anything?") — an intransitive phrasing with no object to mark. Probe rwp_04.
+#
+# Persons + cl.9 only (`i`, for "kampuni izuie"). The wider noun-class list is deliberately
+# NOT used: nothing here needs cl.7/8/11, and every member added is another collision surface
+# for no reachability gain (R17 step 4, narrowest form that closes the case).
+_SUBJ_PREFIX = r"(?:ni|u|a|tu|m|wa|i)"
+
+
+def _subjunctive_concord(stem_e: str, require_object: bool) -> str:
+    """Regex source matching the SUBJUNCTIVE forms of one verb stem (stem given ending -e).
+
+    ALL FIVE INFIX MEMBERS, ALWAYS — same contract as `_object_concord`, for the same reason:
+    a closed class written out in full cannot be half-populated by accident. `-mw-` is dropped
+    because it is the pre-vocalic allomorph and both stems used here are consonant-initial.
+    """
+    infixes = []
+    for member in _OBJECT_INFIX:
+        for form in _OBJECT_INFIX_ALT.get(member, (member,)):
+            if form == "mw":
+                continue
+            infixes.append(form)
+    alt = "|".join(sorted(set(infixes), key=len, reverse=True))
+    quantifier = "" if require_object else "?"
+    return rf"\b{_SUBJ_PREFIX}(?:{alt}){quantifier}{stem_e}\b"
+
+
 _WITHHOLDING_CUES = [r"\bzuio\b", r"kuzuia", r"withhold", r"\bwht\b",
                      r"\bkat[ae]\w*\s+kodi\b", r"\bkodi\s+\w*kat\w*\b",
-                     r"ku\w*kata\s+kodi", r"\bnikate\b", r"\bkunikata\b"]
+                     r"ku\w*kata\s+kodi", r"\bnikate\b", r"\bkunikata\b",
+                     # See the SUBJUNCTIVE CONCORD block above for why one requires the
+                     # object infix and the other does not.
+                     _subjunctive_concord("kate", require_object=True),
+                     _subjunctive_concord("zuie", require_object=False)]
 
 
 def asks_rent_withholding(text: str) -> bool:

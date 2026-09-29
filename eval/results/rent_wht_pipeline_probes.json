@@ -10,80 +10,80 @@
       "arm": "natural_no_formal_term",
       "expect": "rent_wht",
       "routes": [
-        "none"
+        "rent_wht"
       ],
-      "routed_rent_wht": false,
-      "reply_states_10pct": false,
-      "reply_cites_para": false,
+      "routed_rent_wht": true,
+      "reply_states_10pct": true,
+      "reply_cites_para": true,
       "reply_contains_forbidden_15pct": false,
-      "ok": false,
+      "ok": true,
       "question": "Ninalipa pango la ofisi TZS 800,000 kwa mwezi, nimkate mwenye nyumba kiasi gani?",
       "guards_against": "THE FOUNDING CASE. Subjunctive with object infix (ni+m+kat+e, 'let me deduct from HIM'). _WITHHOLDING_CUES held bare `nikate` — the 1sg subjunctive with NO object infix — and every object-marked form missed. `_object_concord('kat')` cannot reach it either: that builder requires a subject+TENSE host and the subjunctive has no tense slot. Routed to `none` before 2026-09-29, so the rate became the model's to invent.",
-      "reply": ""
+      "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata."
     },
     {
       "id": "rwp_02",
       "arm": "natural_no_formal_term",
       "expect": "rent_wht",
       "routes": [
-        "none"
+        "rent_wht"
       ],
-      "routed_rent_wht": false,
-      "reply_states_10pct": false,
-      "reply_cites_para": false,
+      "routed_rent_wht": true,
+      "reply_states_10pct": true,
+      "reply_cites_para": true,
       "reply_contains_forbidden_15pct": false,
-      "ok": false,
+      "ok": true,
       "question": "Nakodisha duka la biashara, nimkate mwenye duka asilimia ngapi kwenye pango?",
       "guards_against": "Same subjunctive shape with a rate ask rather than a money ask, so the fix cannot be conditional on _MONEY_ASK — which was the mechanism first proposed for this defect and is not the gate.",
-      "reply": ""
+      "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata."
     },
     {
       "id": "rwp_03",
       "arm": "natural_no_formal_term",
       "expect": "rent_wht",
       "routes": [
-        "none"
+        "rent_wht"
       ],
-      "routed_rent_wht": false,
-      "reply_states_10pct": false,
-      "reply_cites_para": false,
+      "routed_rent_wht": true,
+      "reply_states_10pct": true,
+      "reply_cites_para": true,
       "reply_contains_forbidden_15pct": false,
-      "ok": false,
+      "ok": true,
       "question": "Tunalipa pango la godown kila mwezi, tumkate mwenye nyumba kiasi gani?",
       "guards_against": "1pl subjunctive (tu+m+kat+e). The object-infix class is closed and must not be half-populated — the defect `_object_concord`'s own docstring names for _APPLICABILITY_CUES (three of five) and _NSSF_EMPLOYEE_CUES (none of five).",
-      "reply": ""
+      "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata."
     },
     {
       "id": "rwp_04",
       "arm": "natural_no_formal_term",
       "expect": "rent_wht",
       "routes": [
-        "none"
+        "rent_wht"
       ],
-      "routed_rent_wht": false,
-      "reply_states_10pct": false,
-      "reply_cites_para": false,
+      "routed_rent_wht": true,
+      "reply_states_10pct": true,
+      "reply_cites_para": true,
       "reply_contains_forbidden_15pct": false,
-      "ok": false,
+      "ok": true,
       "question": "Mwenye nyumba wangu anataka kodi ya pango, je nizuie kitu chochote kabla ya kumlipa?",
       "guards_against": "The -zuia- stem's subjunctive. _WITHHOLDING_CUES held the INFINITIVE `kuzuia` and the noun `zuio` only, so the formal vocabulary routed and the natural conjugation did not. R31's 'reachable only by the technical term' on a second stem.",
-      "reply": ""
+      "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata."
     },
     {
       "id": "rwp_05",
       "arm": "natural_no_formal_term",
       "expect": "rent_wht",
       "routes": [
-        "none"
+        "rent_wht"
       ],
-      "routed_rent_wht": false,
-      "reply_states_10pct": false,
-      "reply_cites_para": false,
+      "routed_rent_wht": true,
+      "reply_states_10pct": true,
+      "reply_cites_para": true,
       "reply_contains_forbidden_15pct": false,
-      "ok": false,
+      "ok": true,
       "question": "Nalipa pango la kiwanda kwa wenye jengo; niwakate asilimia ngapi?",
       "guards_against": "-wa- (3pl) object infix, a plural landlord. Confirms the fix is the closed infix class and not a hand-listed pair of forms.",
-      "reply": ""
+      "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata."
     },
     {
       "id": "rwp_06",
@@ -184,12 +184,6 @@
   ],
   "summary": {
     "n": 11,
-    "failures": [
-      "rwp_01",
-      "rwp_02",
-      "rwp_03",
-      "rwp_04",
-      "rwp_05"
-    ]
+    "failures": []
   }
 }

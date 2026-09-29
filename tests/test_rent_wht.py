@@ -126,3 +126,51 @@ def test_unknown_commercial_status_still_answers_with_the_rate():
     r = rent_wht_statement(letting_is_commercial=None)
     assert "asilimia 10" in r.working
     assert r.applicable is True
+
+
+# --- FULL-PIPELINE REACHABILITY (2026-09-29) -------------------------------------------
+#
+# The tests above go through detect_intent on verbatim strings, which is already stronger
+# than calling the engine directly — and it was still not enough. detect_intent is ONE step
+# of the path; this parametrization runs the fixture from the raw message through
+# decomposition, routing AND the engine to the reply text, which is what
+# eval/routing/probe_rent_wht_pipeline.py measures. Wired here so a regression fails in the
+# normal suite rather than waiting for someone to remember the script (R26: a control nobody
+# calls is inert however correct it is).
+
+_PIPELINE_PROBES = [
+    json.loads(l) for l in open(
+        os.path.join(REPO, "eval", "routing", "rent_wht_pipeline_probes.jsonl"),
+        encoding="utf-8") if l.strip()
+]
+
+
+def test_pipeline_probe_fixture_is_populated_and_two_armed():
+    """R20: a fixture that cannot exercise the category it claims to watch is clean by
+    construction. Both arms must be non-empty — a must-route-only set certifies a cue that
+    matches everything, and that is precisely how the `mkate` collision would have shipped."""
+    assert len(_PIPELINE_PROBES) >= 10
+    must_route = [r for r in _PIPELINE_PROBES if r["expect"] == "rent_wht"]
+    must_not = [r for r in _PIPELINE_PROBES if r["expect"] != "rent_wht"]
+    assert len(must_route) >= 5, "no reachability arm"
+    assert len(must_not) >= 4, "no collision arm — the half that does the work"
+    natural = [r for r in must_route if r["arm"] == "natural_no_formal_term"]
+    assert len(natural) >= 5, "the arm that was 0/5 before the fix must stay populated"
+
+
+@pytest.mark.parametrize("row", _PIPELINE_PROBES, ids=lambda r: r["id"])
+def test_rent_wht_full_pipeline(row):
+    from eval.routing.probe_rent_wht_pipeline import check
+    result = check(row)
+    assert result["ok"], (
+        f"{row['id']} ({row['arm']}): expected {row['expect']}, "
+        f"routed {result['routes']}. {row['guards_against']}")
+
+
+def test_no_reply_ever_states_fifteen_percent():
+    """R23 — the value the system would not produce by default. 15% is the corpus's error
+    (16 rows quarantined 2026-09-26) and is what reappears if anyone adds the deliberately
+    absent `is_resident` parameter. Asserted across every probe, both arms."""
+    from eval.routing.probe_rent_wht_pipeline import check
+    for row in _PIPELINE_PROBES:
+        assert not check(row)["reply_contains_forbidden_15pct"], row["id"]

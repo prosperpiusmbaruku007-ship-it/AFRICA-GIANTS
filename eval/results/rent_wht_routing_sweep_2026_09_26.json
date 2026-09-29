@@ -23,9 +23,51 @@
    "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
    "question": "Kiwango cha withholding tax kwa kodi ya pango la biashara kwa mtu asiye mkazi ni asilimia ngapi?",
    "letting_is_commercial": true
+  },
+  {
+   "id": "rwp_01",
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "question": "Ninalipa pango la ofisi TZS 800,000 kwa mwezi, nimkate mwenye nyumba kiasi gani?",
+   "letting_is_commercial": true
+  },
+  {
+   "id": "rwp_02",
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "question": "Nakodisha duka la biashara, nimkate mwenye duka asilimia ngapi kwenye pango?",
+   "letting_is_commercial": true
+  },
+  {
+   "id": "rwp_03",
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "question": "Tunalipa pango la godown kila mwezi, tumkate mwenye nyumba kiasi gani?",
+   "letting_is_commercial": true
+  },
+  {
+   "id": "rwp_04",
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "question": "Mwenye nyumba wangu anataka kodi ya pango, je nizuie kitu chochote kabla ya kumlipa?",
+   "letting_is_commercial": null
+  },
+  {
+   "id": "rwp_05",
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "question": "Nalipa pango la kiwanda kwa wenye jengo; niwakate asilimia ngapi?",
+   "letting_is_commercial": true
+  },
+  {
+   "id": "rwp_06",
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "question": "Kodi ya zuio kwenye pango la ofisi ni asilimia ngapi?",
+   "letting_is_commercial": true
+  },
+  {
+   "id": "rwp_07",
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "question": "Nina nyumba kijijini nimemkodisha mfanyabiashara mdogo. Yeye anatakiwa kunikata kodi kabla ya kunilipa kodi ya pango?",
+   "letting_is_commercial": null
   }
  ],
- "questions_scanned": 1231,
- "corpus_match_count": 3,
+ "questions_scanned": 1242,
+ "corpus_match_count": 10,
  "verdict": "CLEAN"
 }
