@@ -752,6 +752,39 @@ the sixteen probes were deliberately *correct* bodies, and that is the half that
 probes designed to be flagged all passed on the first rule too. **Write the probes that should
 come back CLEAN, not just the ones that should flag.**
 
+**🔴 EVERY OOC PHRASE-LIST CHANGE IN THE WIDENING DIRECTION HAS PRODUCED AT LEAST ONE
+SUBSTRING COLLISION WITH IN-SCOPE VOCABULARY. Three for three, no exceptions.**
+
+**The general form, and it is why neither list can police this alone: substring containment
+between a refusal phrase and an in-scope phrase is invisible to BOTH lists.** The OOC list
+does not know what the in-scope corpus says; the in-scope corpus does not know what the
+refusal list holds. Nothing in either data structure can see the overlap, so it is found only
+by something that exercises them TOGETHER — and it has never once been found by the pass that
+introduced it.
+
+| when | the collision | how it was actually caught |
+|---|---|---|
+| 2026-08-06/07 SAFETY-1 sweep | bare `hisa` would refuse **7 real gate questions**; bare `kiwanja`/`nyumba`/`shamba`/`bima`/`madini`/`bandari`/`hati` all unusable | **15 authored adversarial probes** (R17 step 2). The corpus sweep was clean — 0 false positives on all 61 candidates |
+| 2026-09-23 | `soko la hisa` refused `ext_01`, an ordinary corporate-tax question from a company stating it is **not** listed | **LIVE IN PRODUCTION**, not by a probe. Nothing offline was looking |
+| 2026-09-29 | bare `mrabaha` refused `oh_24` **and our own training pair** `tier1a_wh_007_20260603` | **a sweep measuring something else** — the cost of removing it |
+
+**Two corrections to how this is usually retold, because both change what you do next:**
+
+1. **The catch mechanism is NOT reliably "a probe written to test something else."** It was
+   probes once, **live production** once, and an unrelated sweep once. Do not plan on probes
+   catching the next one.
+2. **Two of the three were PRE-EXISTING phrases that BECAME over-broad when a new domain was
+   built** — nobody edited the refusal path at all. `soko la hisa` was correct until corporate
+   tax made listing status in-scope; `mrabaha` was correct until `royalties_wht_rate` was
+   locked. **So the trigger to re-check refusals is ADDING A DOMAIN, not editing a phrase** —
+   and adding a domain does not look like touching refusals, which is exactly why it is missed.
+
+**The operational consequence:** when a fact is locked or a domain is built, grep the OOC lists
+for every content word in the new subject BEFORE shipping. Today's mining limb kept `madini`,
+`mchimbaji` and `dhahabu` out of the bare list *only because the 2026-08-06 row above already
+recorded `madini` as unusable* — the written record prevented a fourth instance, which is the
+whole return on writing these down.
+
 **Procedure for any phrase/cue-list change:**
 1. Sweep candidates individually over all corpora (400 gate + every probe set).
 2. **Author adversarial probes that contain the risky vocabulary in an IN-SCOPE context**,

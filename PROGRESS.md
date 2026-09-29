@@ -118,6 +118,34 @@ price the *mining* limb: a miner asking about BRELA registration, and a mining c
 about SDL, are both **in scope**. Promoting `madini`/`mchimbaji` to bare phrases would recreate
 the exact harm being removed, on the other side — planted, and both rows fire.
 
+### ✅ "CHEAP FIX, ENGINE LATER" WAS WRONG — and the real reason is stronger than the one given
+
+**The conclusion is right: the fix and the engine are ONE change, and splitting them would have
+reduced correctness.** The stated mechanism is not, and the correction matters because it points
+at the actual hazard.
+
+**Stated:** *the two lines alone route to a `rate_statement` with no rental branch and would have
+produced a confident wrong rate.* **Checked:** `rate_statement.supports("rent_wht")` is `False`
+and `levy_rate_statement("rent_wht")` **raises `ValueError`** — there is an explicit guard, and
+it cannot emit a rate it does not have.
+
+**The real reason, which is stronger:**
+
+1. **There is no "two lines alone" state.** `_WITHHOLDING_CUES`, `asks_rent_withholding`, the
+   Path 1c route and the engine all landed in **one commit** (`486317e`). The cue list does not
+   exist independently of the engine, so "engine later" is not a riskier ordering — **it is not
+   a possible one.**
+2. **The confident wrong rate is real, and it comes from the FACT PATH.** A rent question that
+   routes to `none` falls to the model, and the model learned from **16 corpus rows teaching 15%
+   for non-resident rent** — quarantined 2026-09-26 but present throughout training. So the harm
+   the framing describes is genuine; its source is the training corpus, not a rate engine. **That
+   is precisely why the engine had to exist before the cues could safely reach anything.**
+
+**Third instance in one session of a correct conclusion carried on an invented mechanism**, after
+`decomposition.py`/`wa nje` and `_MONEY_ASK`. Each named a different innocent module. Recorded
+because accepting the conclusion and the mechanism together is how the next session opens the
+wrong file.
+
 ### oh_09 — NOT fixed, and the reason is a boundary rather than a backlog
 
 `oh_09` (*`medini`*, vowel change, no royalty word) is in the fixture as **`LEAK_KNOWN`** and
