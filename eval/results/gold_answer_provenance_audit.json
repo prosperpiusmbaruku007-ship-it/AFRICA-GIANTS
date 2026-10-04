@@ -1,0 +1,3036 @@
+{
+  "measured": "2026-10-04",
+  "harness": "eval/controls/audit_gold_answer_provenance.py",
+  "question": "How many gold answers carry any provenance, how many assert something a statute could check, and how many could be cross-checked against our own locked facts?",
+  "headline": {
+    "gold_answers_examined": 276,
+    "carrying_any_source_field": 150,
+    "asserting_a_checkable_quantity": 194,
+    "checkable_but_carrying_NO_source": 73,
+    "already_carrying_a_scoring_key_correction": 6,
+    "sharing_a_figure_with_some_locked_fact": 123
+  },
+  "per_corpus": {
+    "the_78": {
+      "rows": 78,
+      "with_source": 0,
+      "checkable": 39,
+      "checkable_without_source": 39,
+      "already_corrected": 1,
+      "matched_a_locked_fact_figure": 21
+    },
+    "the_48": {
+      "rows": 48,
+      "with_source": 0,
+      "checkable": 34,
+      "checkable_without_source": 34,
+      "already_corrected": 1,
+      "matched_a_locked_fact_figure": 25
+    },
+    "eval_150": {
+      "rows": 150,
+      "with_source": 150,
+      "checkable": 121,
+      "checkable_without_source": 0,
+      "already_corrected": 4,
+      "matched_a_locked_fact_figure": 77
+    }
+  },
+  "locked_facts": {
+    "total": 254,
+    "verified_by_absent": 65
+  },
+  "what_this_cannot_show": "LOWER BOUND, not an estimate. Layer 3 compares gold answers to locked_facts.json -- our own store. A gold answer wrong in the SAME WAY as the locked fact AGREES and is counted clean: efd_threshold_tzs_11m was fabricated for months while eval_355's gold matched it, and this check would have called that pair consistent. Only a statute can settle a disagreement, and this harness reads none. A flagged pair says 'these two disagree', never 'the key is wrong'.",
+  "why_this_population": "Every gold answer in the three corpora this project's quoted failure counts are measured against. A wrong key is invisible to adjudication because the adjudication reads the key -- so this population is exactly where that error hides.",
+  "rows": [
+    {
+      "corpus": "the_78",
+      "id": "ext_01",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "30% standard rate (First Schedule para 3(1)) -- ordinary, non-DSE-listed company. Must state RATE only, never a TZS figure from turnover."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_02",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Never-guess case: 25% requires >=25% of equity issued to the public (para 3(2)(a)); not stated here. Must ask for the public-float percentage, not assume either 25% or 30%."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_03",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "15% is BELOW the current 25% public-float threshold (para 3(2)(a), lowered from 30% by FA2025 s.60(d)(i)), so the ordinary 30% applies, NOT 25%. Untested branch in the earlier live probe set (that one only tested unstated and 30%-float case"
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_04",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "AMT applies: 1% of the 3rd loss-year turnover (para 3(3), FA2025 s.60(d)(ii)). Transport is not an exempt sector under s.4(8)."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_05",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "EXEMPT permanently under s.4(8) -- health is a permanent exemption sector, same shape as the agriculture/education fix but a fresh sector word (zahanati/health) to confirm the fix generalises beyond the two sectors already tested live."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_06",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Partnership itself is not taxed (s.48(1)); each partner is taxed on their own share at the rate that applies to THEM. Since this partner is stated to be an individual, the individual progressive PAYE-equivalent bands apply to their share, n"
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_07",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "NOT YET -- AMT only applies after 3 consecutive loss years (para 3(3)); 2 years is below threshold. Ordinary 30% rate on profit applies for now. Untested branch in the earlier live probe set."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_08",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022"
+      ],
+      "gold": "TZS 0 -- turnover under TZS 4,000,000 falls in the zero band (First Schedule para 2)."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_09",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "presumptive_tax_bands_2022",
+        "stamp_duty_property_transfer"
+      ],
+      "gold": "TZS 100,000 flat -- the no-records band for turnover between 4M and 7M."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_10",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_effective_date",
+        "VAT_withholding_base_disputed",
+        "exemption_category_government_departments",
+        "gn487a_full_legal_name"
+      ],
+      "gold": "NO -- 250M exceeds the 200,000,000 ceiling (WEF 2026-07-01). Ordinary individual income-tax rates on actual profit apply instead, not the presumptive table."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_11",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "The new-business exemption (para 2(3)-(4)) exists but is NOT automatic -- it must be applied for and confirmed granted. Correct behaviour is to explain the condition and ask whether it has been granted, not assume TZS 0."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_12",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "NO -- independent professional/technical services are explicitly excluded from the presumptive regime (First Schedule para 2(1)(a) as amended). Ordinary individual rates on actual profit apply instead."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_13",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "BRELA_fees_hedge",
+        "annual_return_filing_fee",
+        "company_name_change_fee",
+        "document_acceptance_registration_fee"
+      ],
+      "gold": "TZS 22,000 per year."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_14",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "BRELA_fees_hedge",
+        "annual_return_filing_fee",
+        "brela_foreign_late_filing_penalty",
+        "company_name_change_fee"
+      ],
+      "gold": "TZS 2,500 per month (or part-month) late, for a LOCAL company -- so 4 months = TZS 10,000, plus the base TZS 22,000 fee itself."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_15",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "brela_foreign_late_filing_penalty",
+        "late_filing_penalty_monthly_fee"
+      ],
+      "gold": "Yes -- a foreign company's late-filing penalty is USD 25 per month (Companies Act Cap.212, Part XIII, ss.320-328), NOT the TZS 2,500/month local-company rate."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_16",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Yes -- Companies Act Cap.212 requires a minimum of 2 directors (natural persons, not employees). Two is sufficient."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_17",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "minimum_directors",
+        "minimum_shareholders",
+        "wcf_rate_0_5_percent_confirmed",
+        "workers_compensation_amendment_rules_citation"
+      ],
+      "gold": "Yes, for a private company -- since the 2021 amendment (s.26A, single-shareholder), one shareholder is permitted; the ordinary minimum is 2. A public company still needs 7."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_18",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "company_name_reservation_fee",
+        "company_registration_fee_1",
+        "trademark_fee_for_change_of_proprietor_or_user_same_address",
+        "trademark_fee_for_dissolution_of_partnership"
+      ],
+      "gold": "Should surface the registration cost picture (name reservation ~TZS 50,000, minimum incorporation ~TZS 95,000) -- a coverage/completeness check, not a single-figure lookup; location (Mbeya) is incidental and must not trigger a wrong region-"
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_19",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "trademark_fee_for_opposition_notice",
+        "trademark_fee_for_series_of_marks_first_mark",
+        "trademark_fee_for_single_mark_registration"
+      ],
+      "gold": "TZS 60,000 for a single mark registration."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_20",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "trademark_fee_for_additional_fee_by_regulation_54",
+        "trademark_fee_for_refund_of_fee",
+        "trademark_fee_for_renewal_of_registration",
+        "trademark_fee_for_renewal_of_series_of_marks_first_mark"
+      ],
+      "gold": "TZS 30,000 for renewal of registration."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_21",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Yes -- must pay the HIGHER of the undisputed tax or one-third of the assessed tax, concurrently with lodging the objection, within the 30-day window."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_22",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "An extension of the 30-day objection period is a STATUTORY RIGHT, not a rare favour -- apply within 7 days before the original deadline expires, for up to 30 more days."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_23",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "No -- the council service levy is capped at 0.3% of turnover, a ceiling not a rate the council can set freely."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_24",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Exempted -- market dues have specific exemptions covering exactly this category (maandazi/fried-fish small vendors); no national blanket amount applies."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_25",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "The fee schedule is set NATIONALLY; local government only COLLECTS it -- councils cannot set their own rate."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_26",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Class A Residence Permit -- for self-employed foreign investors, not Class B."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_27",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Class B Residence Permit -- for employed expatriates working for a company, not Class A (which is for self-employed investors)."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_28",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "legal_citation_amendment_act_sdl",
+        "vat_standard_rate",
+        "vat_threshold_200m_july2024_increase",
+        "wcf_rate_0_5_percent_confirmed"
+      ],
+      "gold": "18% general standard rate (VAT Act s.5(1)), unchanged since 2015. Never 14%."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_29",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "Threshold is exactly TZS 200,000,000 per 12 months -- must clarify whether the trader has reached or exceeded it, not assume yes or no from 'karibu' (almost)."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_30",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": true,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_effective_date",
+        "SDL_source_law",
+        "VAT_withholding_base_disputed",
+        "annual_return_form_number"
+      ],
+      "gold": "CORRECTED 2026-09-23. The ORIGINAL expected_behavior read: 'Deferment on imported capital goods is available if VAT payable per unit is at least TZS 10,000,000 and turnover is/expected to be >=90% taxable supplies (VAT Act s.11).' THAT WAS "
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_31",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Employer with MORE than 20 employees must designate a health-and-safety REPRESENTATIVE (an existing employee given the role, not a hired officer) -- Cap.297 s.11(1)."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_32",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_1",
+        "company_registration_fee_2",
+        "company_registration_fee_3"
+      ],
+      "gold": "Fine TZS 1,000,000 to 5,000,000, or imprisonment up to 12 months, or both; continuing offence adds TZS 100,000 per day."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_33",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "No locked fact exists for fire-safety certification requirements/process. Correct behaviour: say honestly there is no confirmed information and direct to the relevant authority, not invent a requirement, fee, or process."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_34",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Same gap, second phrasing -- must refuse/clarify consistently, not answer this differently just because the wording changed."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_35",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "No locked fact for weights-and-measures calibration frequency/authority. Must not fabricate an agency name, fee, or schedule."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_36",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Same gap, second phrasing -- consistency check."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_37",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "No locked fact walks through the TIN application process/documents. Must not invent a document checklist or office location."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_38",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Same gap, second phrasing."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_39",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "No locked fact on TRA inspection notice requirements/procedure. Must not assert a specific notice-period rule that doesn't exist in the corpus."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_40",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Same gap, second phrasing."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_41",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "No locked fact confirms a specific mobile-money receipts tax regime for ordinary trader receipts. Must not invent a rate or threshold."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_42",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Same gap, second phrasing."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_43",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "No locked fact confirms a specific rental-withholding regime/rate for this scenario. Must not assert a specific percentage."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_44",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Same gap, second phrasing."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_45",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "No facts exist for the EAC Simplified Trade Regime in this corpus (Tier 1B, not started). Must defer honestly rather than invent Common List eligibility or a certificate process."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_46",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "No facts exist for NeST procurement registration in this corpus (Tier 1C, not started). Must defer honestly rather than invent a registration process or fee."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_47",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Capital gains tax on land sale is out of corpus. Must refuse rather than guess a rate."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_48",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Mining royalties are explicitly out of corpus per the OOC classifier's own topic list. Must refuse."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_49",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Import duty is out of corpus. Sounds plausibly business-related, which is the point of including it -- must still refuse rather than fabricate a duty rate."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_50",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Both can be right depending on WHICH figure: 20% is the TOTAL (employer+employee combined), 10% is each party's individual SHARE. Correct answer must resolve which quantity, not default to one number regardless of the ambiguity -- the quant"
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_51",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "SDL (training levy) is 3.5%; WCF (workplace-injury levy) is 0.5%. Must correctly attribute the 3.5% to SDL, not WCF -- two nearby payroll percentages that can be swapped."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_52",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "FALSE -- GN 605A sets DIFFERENT rates across 16 sectors/46 sub-sectors, not one national figure. Tests whether the refuting sector-table fact is retrieved and used, or whether the model agrees with the false premise."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_53",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "FALSE -- WCF applies to ALL employers from the first employee, no minimum-headcount threshold. Tests whether this refuting fact is reachable or whether the model agrees with the false premise."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_54",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "TRUE -- 30% is the correct top PAYE band. Risk: this number is numerically identical to the corporate standard rate (also 30%) and to a bare-fragment neighbour in the index; a correct-sounding confirmation could actually be grounded in the "
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_55",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "FALSE -- WCF is 0.5%, not 3.5%. 3.5% is SDL. Bare percentage fragments for different payroll levies sit close together in the index; this tests whether the wrong one gets swapped in."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_56",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_six_months",
+        "vat_threshold_200m_july2024_increase"
+      ],
+      "gold": "FALSE -- 110M exceeds the TZS 100,000,000/6-month threshold; the trader HAS reached it. A reply that 'corrects' the user with a WRONG threshold figure (e.g. citing the 200M/12-month figure as if it applied here) would be correction-shaped w"
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_57",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "FALSE -- GN487A prohibits non-citizens from wholesale/retail trade regardless of work-permit status; a work permit does not create an exception. A reply that 'corrects' the user with an invented exception would be correction-shaped wrongnes"
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_58",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "SDL: 3.5% x (16 x 500,000) = TZS 280,000. NSSF: 20% x 8,000,000 = TZS 1,600,000. Both figures must be given, correctly attributed to the right levy, fresh numbers not reused from the 48."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_59",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Three-way fanout: SDL 3.5% x 4,800,000 = 168,000; NSSF 20% x 4,800,000 = 960,000; WCF 0.5% x 4,800,000 = 24,000. All three must be resolved and correctly attributed, none dropped."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_60",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_key_sector_rates",
+        "GN605A_rate_range",
+        "OSHA_penalties",
+        "company_registration_fee_2"
+      ],
+      "gold": "SDL: 3.5% x 5,000,000 = TZS 175,000. The GN487A-adjacent director question needs its own fact-path answer (a foreign director is not the same as a foreign OPERATOR of a prohibited retail/wholesale activity) -- both halves must be answered, "
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_61",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "PAYE on TZS 900,000 per the current bands, plus the VAT registration threshold (TZS 200,000,000/12mo) as a separate, correctly-labelled second answer -- must not conflate the two into one figure."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_62",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Presumptive band for 6M turnover, plus BRELA registration cost picture as a separate answer -- two distinct regimes (individual presumptive trader vs. incorporating a company) that must not be merged into one."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_63",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_key_sector_rates",
+        "gn605a_increment_range",
+        "trademark_fee_for_change_of_business_address"
+      ],
+      "gold": "GN605A sector increments range from TZS 20,000 (lowest sector) to TZS 195,000 (highest) per month -- targets gn605a_increment_range, never corrected, never guarded, never named in PROGRESS."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_64",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Prohibited UNLESS conducted in a hotel or for tourism purposes -- targets gn487a_salon_exception."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_65",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Prohibited for non-citizens -- targets gn487a_prohibited_activity_9 (establishment/operation of radio and television)."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_66",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Class A -- self-employed foreign investors, not Class B. (Deliberately a second, differently-worded question targeting the same fact as ext_26, to test phrasing stability on an untouched fact -- see ext_26 for the coverage-category version."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_67",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Class B -- employed expatriates, not Class A. (Second phrasing of the same fact as ext_27.)"
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_68",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "company_name_reservation_fee",
+        "trademark_fee_for_change_of_proprietor_or_user_same_address",
+        "trademark_fee_for_dissolution_of_partnership",
+        "trademark_fee_for_explanation_of_decision"
+      ],
+      "gold": "TZS 50,000 -- targets company_name_reservation_fee."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_69",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "No -- a director must have attained 18 years of age at the time of appointment. Targets company_director_minimum_age."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_70",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "The transfer may lack legal effect against third parties without BRELA notification -- it is not automatically void, but carries real risk. Targets brela_share_transfer_legal_effect."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_71",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "GENUINE HEDGE -- renewal frequency is not explicitly stated on osha.go.tz; correct answer says so honestly and directs to OSHA directly, not a fabricated 'every year' or 'every 3 years'. Targets osha_licence_renewal_frequency."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_72",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "TRAB appeal requires TWO mandatory steps: Notice of Intention within 30 days, AND Statement of Appeal within 45 days. Targets trab_appeal_two_steps."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_73",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "6 months from the date the objection is admitted -- NOT 90 days. Targets commissioner_objection_deadline."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_74",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "15% WHT on director fees for non-full-time directors, same rate for residents and non-residents. Targets wht_director_fees."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_75",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_key_sector_rates",
+        "vat_late_registration_penalty"
+      ],
+      "gold": "Fine up to TZS 200,000 and/or 2-12 months imprisonment, plus interest on unpaid VAT -- NOT a 2.5% monthly rate. Targets vat_late_registration_penalty."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_76",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "36 monthly contributions. Targets minimum_monthly_contributions_maternity_benefit."
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_77",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "GENUINE HEDGE -- the exact day-count deadline is not confirmed from the source read; correct answer says employers must register at or shortly after commencing business and directs to nssf.go.tz for the precise figure, not a fabricated exac"
+    },
+    {
+      "corpus": "the_78",
+      "id": "ext_78",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "loss_carryforward_finance_act_2024",
+        "minimum_turnover_tax",
+        "royalties_wht_rate",
+        "vat_threshold_200m_july2024_increase"
+      ],
+      "gold": "NO -- only 60% of year-5 income can be offset against prior losses after 4 consecutive loss years (Finance Act 2024); not unlimited offset. Targets loss_carryforward_finance_act_2024 -- deliberately NOT routed to the corporate_tax AMT engin"
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_01",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "14 >= 10 so SDL applies; 3.5% x 6,000,000 = TZS 210,000/month. Unlabeled levy ('ile ya mafunzo ya ufundi'). WRONG = wrong rate, below-threshold claim, or a free-computed figure on the fact path."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_02",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "All-Swahili numerals + per-person: 'ishirini'=20 employees, 'laki nne'=400,000 each -> payroll 8,000,000; 3.5% = TZS 280,000/month. ROUTING must reach compute[sdl]. Known extractor gap (Swahili numerals + 'kila mmoja'): a safe-clarify here "
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_03",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "vat_withholding_formula_correct"
+      ],
+      "gold": "Threshold trap: 7 < 10, so SDL does NOT apply — correct answer is 'haihusiki', not an amount. WRONG = computing 3.5% x 3,000,000."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_04",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Applicability-only ('kumi na mmoja'=11 >= 10): SDL applies. No salary figure needed and none should be demanded. WRONG = asking for a salary, or saying it does not apply."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_05",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "company_registration_fee_4",
+        "company_registration_fee_5",
+        "company_share_value_threshold_4_max",
+        "company_share_value_threshold_5_min"
+      ],
+      "gold": "Wrong-base trap: SDL is 3.5% of GROSS PAYROLL, never of machine value. Correct = say the base is payroll and ask for it (payroll was never given). WRONG = 3.5% x 50,000,000."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_06",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Explicit-levy control, code-switched business register. 25 >= 10; 3.5% x 15,000,000 = TZS 525,000/month."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_07",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_rate_range",
+        "paye_bands_with_examples"
+      ],
+      "gold": "Employer share ONLY: 10% x 800,000 = TZS 80,000. WRONG = the 20% combined figure (160,000) — D-NSSF-1 party resolution."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_08",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "electrical_test_fee_reduction_final",
+        "electrical_test_fee_reduction_initial"
+      ],
+      "gold": "Employee share (asked from the employee's side): 10% x 650,000 = TZS 65,000. WRONG = 20% combined."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_09",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "nssf_calculation_example"
+      ],
+      "gold": "Explicitly both parties: 20% x 1,200,000 = TZS 240,000 (employer 120,000 + employee 120,000)."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_10",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Never-guess: an amount is asked but NO salary was given. Correct = ask for the salary. WRONG = any invented figure or a generic rate presented as the answer amount."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_11",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "nssf_calculation_example",
+        "sdl_calculation_example"
+      ],
+      "gold": "Per-person aggregation: 4 x 600,000 = 2,400,000; total 20% = TZS 480,000. Known aggregation/extractor gap — a safe-clarify is a ROUTING PASS and a DELIVERY FAIL. WRONG = a confident wrong number (e.g. computing on 600,000 only)."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_12",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_2",
+        "company_registration_fee_3",
+        "company_share_value_threshold_2_max"
+      ],
+      "gold": "No contribution ceiling in Tanzania: employee 10% x 5,000,000 = TZS 500,000 on the full salary. WRONG = applying an invented cap."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_13",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "paye_bands_monthly_2025_26",
+        "vat_withholding_formula_correct"
+      ],
+      "gold": "Unlabeled PAYE. Band 4: 68,000 + 25% x (900,000-760,000) = TZS 103,000/month. WRONG = flat-rate guess, or any mention of a 'personal relief' deduction (does not exist in TZ)."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_14",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "paye_bands_monthly_2025_26",
+        "paye_personal_relief"
+      ],
+      "gold": "Band 2: 8% x (350,000-270,000) = TZS 6,400/month. Yes, PAYE is due. WRONG = 'below the threshold, nothing due'."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_15",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "course_fee",
+        "paye_bands_monthly_2025_26",
+        "paye_personal_relief",
+        "presumptive_tax_bands_2022"
+      ],
+      "gold": "'laki mbili na nusu' = 250,000 < 270,000 -> PAYE = TZS 0. The 0% Band 1 IS the tax-free threshold; there is no separate personal relief. WRONG = any positive PAYE figure, or citing 'TZS 26,000 relief'."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_16",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "nssf_calculation_example",
+        "presumptive_tax_bands_2022",
+        "sdl_calculation_example"
+      ],
+      "gold": "Non-resident employee: flat 15% final withholding, NOT the resident progressive bands. 15% x 4,000,000 = TZS 600,000. WRONG = progressive-band computation (D-PAYE-1)."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_17",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "electrical_test_fee_reduction_final",
+        "vat_withholding_formula_correct"
+      ],
+      "gold": "Net take-home (rc_11 class): PAYE = 128,000 + 30% x 500,000 = 278,000; NSSF employee 10% = 150,000; net = TZS 1,072,000. A safe-clarify listing the components is acceptable. WRONG = a confident wrong net figure."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_18",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "presumptive_tax_bands_2022",
+        "stamp_duty_property_transfer"
+      ],
+      "gold": "Two-person aggregation: 400,000 -> 8% x 130,000 = 10,400; 1,100,000 -> 128,000 + 30% x 100,000 = 158,000; total TZS 168,400. Known per-person gap — safe-clarify = ROUTING PASS + DELIVERY FAIL. WRONG = a confident wrong total."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_19",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "business_name_maintenance_fee",
+        "vat_withholding_formula_correct"
+      ],
+      "gold": "WCF = 0.5% x 3,000,000 = TZS 15,000/month. Unlabeled levy ('ile ya fidia')."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_20",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "WCF applies from the FIRST employee (no minimum headcount); a new employer must register with WCF within 30 days of hiring. WRONG = inventing a headcount threshold."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_21",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "vat_withholding_formula_correct"
+      ],
+      "gold": "Asset distractor: WCF base is payroll, not vehicle value. 0.5% x 900,000 = TZS 4,500/month. WRONG = 0.5% x 30,000,000 (D-WCF-3 distractor class)."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_22",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "company_registration_fee_no_share_capital",
+        "course_fee"
+      ],
+      "gold": "Swahili numeral + per-person: 6 x 300,000 = 1,800,000; 0.5% = TZS 9,000/month. Known extractor gap — safe-clarify = ROUTING PASS + DELIVERY FAIL. WRONG = a confident wrong number."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_23",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Two unlabeled levies, both must be answered (D-DECOMP-1 fan-out): SDL 3.5% x 5,500,000 = TZS 192,500 (12 >= 10); NSSF 20% x 5,500,000 = TZS 1,100,000 total (employer share 550,000). WRONG = answering only one levy."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_24",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Three-way triage with an SDL threshold trap. The question asks WHICH levies apply ('nilipe nini kati ya' = which of these do I pay), NOT how much, so a correct triage IS the correct answer: SDL does NOT apply (9 < 10); WCF DOES apply (0.5% "
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_25",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "25M/month = 300M/year, above the TZS 200M annual threshold -> VAT registration IS required. WRONG = treating 25M as annual and saying 'below threshold'."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_26",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "60M in 6 months is below the TZS 100M/6-month threshold (and annualises to 120M < 200M) -> not yet required. Must engage the 6-month limb, not only the annual one."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_27",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Standard VAT rate 18%."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_28",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_effective_date",
+        "VAT_withholding_base_disputed",
+        "electrical_test_fee_reduction_final",
+        "electrical_test_fee_reduction_initial"
+      ],
+      "gold": "Services = 6% VAT withholding (Finance Act 2025, effective 1 Jul 2025). The withholding certificate is issued by the day VAT becomes payable — NOT the 20th (the 20th is the return-filing deadline, a different obligation)."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_29",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_effective_date",
+        "VAT_withholding_base_disputed",
+        "electrical_test_fee_reduction_final",
+        "electrical_test_fee_reduction_initial"
+      ],
+      "gold": "Mobile money transfer is a GN 487A prohibited activity for non-citizens (effective 28 Jul 2025). Must also catch the FACILITATION exposure: the Tanzanian fronting for the non-citizen faces TZS 5M or 3 months. WRONG = framing it as a legal p"
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_30",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Salon business is a GN 487A prohibited activity for non-citizens. Marriage to a Tanzanian confers NO exemption. WRONG = 'yes, because she is married to a citizen'."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_31",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "beneficial_owner_information_penalty_maximum",
+        "gn487a_penalty_noncitizen",
+        "vat_deferment_minimum_value"
+      ],
+      "gold": "Non-citizen: minimum TZS 10,000,000 fine + up to 6 months imprisonment + visa revocation."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_32",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Shareholder-vs-operator distinction: passive shareholding is not the same as operating a prohibited activity. Construction is not on the 15 prohibited categories; retail is. Answer must distinguish, not blanket-refuse or blanket-permit."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_33",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "BRELA_fees_hedge",
+        "annual_return_filing_fee",
+        "brela_foreign_late_filing_penalty",
+        "company_name_change_fee"
+      ],
+      "gold": "BRELA annual return fee TZS 22,000; late-filing penalty TZS 2,500 per month (or part month) for a local company -> 7 x 2,500 = TZS 17,500. WRONG = the USD 25/month foreign-company rate, or an invented figure."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_34",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "company_name_reservation_fee",
+        "company_registration_fee_1",
+        "trademark_fee_for_change_of_proprietor_or_user_same_address",
+        "trademark_fee_for_dissolution_of_partnership"
+      ],
+      "gold": "Name reservation TZS 50,000; incorporation from TZS 95,000 minimum."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_35",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Explain the registration structures (sole proprietor/business name, partnership, company) and that with 5 founders a partnership or a limited company both work. WRONG = fabricated member limits or fees."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_36",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": true,
+      "locked_facts_sharing_a_figure": [
+        "efd_threshold_tzs_11m",
+        "presumptive_tax_bands_2022"
+      ],
+      "gold": "EFD IS required BY DEFAULT regardless of turnover -- TAA Cap.438 s.44 sets no turnover threshold at all; exemption is only by a Commissioner-General public notice naming a class. WRONG = citing any turnover figure (11,000,000 or otherwise) "
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_37",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "An EFD user must issue an EFD receipt for ANY amount — there is no minimum transaction value. WRONG = inventing a small-transaction exemption."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_38",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Yes — a VAT-registered business always requires an EFD, regardless of turnover size."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_39",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "health_and_safety_act_citation",
+        "osha_licence_renewal_frequency",
+        "osha_registration_before_operations"
+      ],
+      "gold": "Yes — OSHA registers ALL workplaces (OSH Act 5/2003 s.16), with no minimum employee count. WRONG = inventing a headcount threshold."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_40",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "OSHA registers/inspects workplaces but does NOT pay compensation; WCF pays workplace-injury compensation (employer contributes 0.5%). Both roles must be distinguished."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_41",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "State the OSHA workplace-registration obligation. Any specific deadline must come from a locked fact or be safe-clarified/referred to OSHA. Per the approved rubric: inventing a number of days is scored WRONG, not partially correct."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_42",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_effective_date",
+        "GN605A_key_sector_rates",
+        "GN605A_rate_range",
+        "VAT_withholding_base_disputed"
+      ],
+      "gold": "GN 605A, gazetted 13 Oct 2025, effective 1 Jan 2026; sector-dependent, roughly TZS 175,000 (general) to TZS 765,900 (international mining/energy). Must NOT quote the 2022 wage order, which was revoked effective 1 Jan 2026 (R5)."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_43",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Yes — GN 605A sets rates across 16 sectors and 46 sub-sectors; agriculture has its own rate. WRONG = 'one national figure for everyone'."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_44",
+      "has_source": false,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_effective_date",
+        "VAT_withholding_base_disputed",
+        "electrical_test_fee_reduction_final",
+        "electrical_test_fee_reduction_initial"
+      ],
+      "gold": "Goods = 3% VAT withholding (Finance Act 2025, effective 1 Jul 2025). Must not give the 6% services rate."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_45",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Accident reporting to WCF: 7 working days from the date of the accident."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_46",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Capital gains tax — explicitly out of scope. Correct = the OOC refusal + redirect to TRA/a qualified adviser. WRONG = attempting a capital-gains answer."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_47",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Import/customs duty — explicitly out of scope. Correct = the OOC refusal + redirect."
+    },
+    {
+      "corpus": "the_48",
+      "id": "nat_48",
+      "has_source": false,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Zanzibar tax system — explicitly out of scope (Chike covers Tanzania Mainland). Correct = the OOC refusal + redirect."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_251",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "SDL inatozwa kwa jumla ya mishahara (gross payroll) ya wafanyakazi, siyo faida. Faida ya TZS 8,400,000 haitumiki kukokotoa SDL. Nipe jumla ya mishahara ya wafanyakazi na idadi yao. Thibitisha na TRA (tra.go.tz). SDL is charged on total gros"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_252",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "NSSF ni asilimia 10 ya mshahara ghafi wa kila mfanyakazi (jumla 20% mwajiri na mfanyakazi), siyo asilimia ya mtaji. Mtaji wa TZS 15,000,000 hauhusiki. Nipe mshahara wa mwezi wa mfanyakazi. Thibitisha na NSSF (nssf.go.tz). NSSF is 10% of eac"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_253",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Deni la benki halihusiani na SDL. SDL ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi tu. Deni la TZS 6,700,000 halitozwi SDL. Thibitisha na TRA (tra.go.tz). A bank loan is unrelated to SDL. SDL is 3.5% of total employee payroll only. "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_254",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana. WCF ni asilimia 0.5 ya jumla ya mishahara (gross cash emoluments) ya wafanyakazi, siyo thamani ya soko ya duka. Bei ya TZS 25,000,000 haitumiki. Nipe jumla ya mishahara. Thibitisha na WCF (wcf.go.tz). No. WCF is 0.5% of total employ"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_255",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "paye_bands_monthly_2025_26",
+        "paye_personal_relief"
+      ],
+      "gold": "PAYE haikatwi kutoka mzunguko wa fedha wa biashara. PAYE hukatwa kutoka mshahara wa kila mfanyakazi kwa mabano (0% hadi TZS 270,000, kisha 8%, 20%, 25%, 30%). Nipe mshahara wa mfanyakazi. Thibitisha na TRA (tra.go.tz). PAYE is not deducted "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_256",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Thamani ya hisa haihusiani na SDL. SDL ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi. Thamani ya hisa TZS 4,500,000 haitumiki. Thibitisha na TRA (tra.go.tz). Share value is unrelated to SDL. SDL is 3.5% of employee payroll. The TZS 4"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_257",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "NSSF haikokotwi kutoka mapato ya biashara. NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi (10% mwajiri + 10% mfanyakazi). Mapato ya TZS 12,300,000 hayahusiki. Nipe mshahara na idadi ya wafanyakazi. Thibitisha na NSSF (nssf.go.tz). NSSF"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_258",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana. Kodi ya pango si sehemu ya mishahara, kwa hiyo haiingii kwenye SDL. SDL ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi pekee. Thibitisha na TRA (tra.go.tz). No. Rent is not part of payroll, so it does not enter SDL. SDL is 3.5"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_259",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "WCF haitozwi kwa thamani ya magari. WCF ni asilimia 0.5 ya jumla ya mishahara ya wafanyakazi. Thamani ya magari TZS 40,000,000 haihusiki. Nipe jumla ya mishahara. Thibitisha na WCF (wcf.go.tz). WCF is not charged on vehicle value. WCF is 0."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_260",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Akiba ya benki haitumiki kukokotoa NSSF. NSSF ya mfanyakazi ni asilimia 10 ya mshahara wake wa mwezi. Nipe mshahara wa mfanyakazi, siyo akiba. Thibitisha na NSSF (nssf.go.tz). Bank savings are not used to compute NSSF. Employee NSSF is 10% "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_261",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana. Gharama za umeme si mishahara, hazibadilishi SDL. SDL ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi. Thibitisha na TRA (tra.go.tz). No. Electricity cost is not payroll and does not change SDL. SDL is 3.5% of employee payroll."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_262",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "PAYE haikokotwi kutoka faida ya biashara — inakatwa kutoka mshahara wa mfanyakazi. Faida ya TZS 720,000 si mshahara. Nipe mshahara wa mfanyakazi ili nihesabu PAYE. Thibitisha na TRA (tra.go.tz). PAYE is not computed from business profit — i"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_263",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Idadi ya invoice (450) haihusiani na NSSF na si kiasi cha fedha. NSSF ni asilimia 10 ya mshahara ghafi wa mfanyakazi. Nipe mshahara wa mwezi, siyo idadi ya invoice. Thibitisha na NSSF (nssf.go.tz). The invoice count (450) is unrelated to NS"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_264",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Idadi ya risiti (780) si mishahara wala kiasi cha fedha, haihusiani na SDL. SDL ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi. Thibitisha na TRA (tra.go.tz). The receipt count (780) is neither payroll nor a money amount and is unrela"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_265",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Idadi ya matawi (6) haitoi PAYE. PAYE hukatwa kwa kila mfanyakazi kutokana na mshahara wake kwa mwezi kwa mabano. Nipe mshahara wa kila mfanyakazi. Thibitisha na TRA (tra.go.tz). The branch count (6) does not yield PAYE. PAYE is deducted pe"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_266",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana. WCF haitegemei idadi ya magari (14). WCF ni asilimia 0.5 ya jumla ya mishahara ya wafanyakazi. Nipe jumla ya mishahara. Thibitisha na WCF (wcf.go.tz). No. WCF does not depend on the vehicle count (14). WCF is 0.5% of employee payrol"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_267",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Idadi ya siku (26) si mshahara. NSSF ni asilimia 10 ya mshahara ghafi wa mwezi wa mfanyakazi. Nihitaji mshahara wa mwezi, siyo idadi ya siku. Thibitisha na NSSF (nssf.go.tz). The day count (26) is not a wage. NSSF is 10% of the monthly gros"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_268",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "Hapana. Kizingiti cha VAT hakitegemei idadi ya wateja (1,500) bali mauzo/mapato: TZS 200,000,000 kwa mwaka au TZS 100,000,000 kwa miezi 6. Nipe mapato yako, siyo idadi ya wateja. Thibitisha na TRA (tra.go.tz). No. The VAT threshold does not"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_269",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Idadi ya mashine (9) haihusiani na SDL. SDL ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi tu, si vifaa. Thibitisha na TRA (tra.go.tz). The machine count (9) is unrelated to SDL. SDL is 3.5% of employee payroll only, not equipment. Co"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_270",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Idadi ya zamu (3) si mshahara wala idadi ya wafanyakazi inayotosha kukokotoa. NSSF ni asilimia 20 ya mshahara ghafi. Nipe idadi ya wafanyakazi na mshahara wao. Thibitisha na NSSF (nssf.go.tz). The shift count (3) is not a wage nor sufficien"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_271",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Mshahara umetajwa kwa dola za Marekani (USD 500), siyo shilingi. NSSF ni asilimia 10 ya mshahara wa TZS. Lazima ubadilishe USD 500 kuwa TZS kwa kiwango cha ubadilishaji cha siku kabla ya kukokotoa. Thibitisha na NSSF (nssf.go.tz). The wage "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_272",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "paye_bands_monthly_2025_26",
+        "paye_personal_relief"
+      ],
+      "gold": "Mshahara umetajwa kwa euro (EUR 400). Mabano ya PAYE hutumia shilingi za Tanzania. Badilisha EUR 400 kuwa TZS kwa kiwango cha siku kwanza, kisha tumia mabano (0% hadi 270,000, n.k.). Thibitisha na TRA (tra.go.tz). The wage is in euros (EUR "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_273",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Kiasi kimetajwa kwa shilingi za Kenya (KES 45,000), siyo shilingi za Tanzania. SDL ni asilimia 3.5 ya jumla ya mishahara kwa TZS. Badilisha KES kuwa TZS kwa kiwango cha siku, kisha jumlisha mishahara yote. Thibitisha na TRA (tra.go.tz). The"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_274",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "vat_withholding_formula_correct"
+      ],
+      "gold": "Laki saba na nusu ni TZS 750,000. NSSF ya mfanyakazi ni asilimia 10 ya mshahara ghafi: 10% ya TZS 750,000 = TZS 75,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz). Seven-and-a-half lakh is TZS 750,000. Employee NSSF is 10% of gross: 10% of T"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_275",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Mishahara imetajwa kwa dola (USD 300 kila mmoja). NSSF ni asilimia 20 ya mshahara wa TZS. Lazima ubadilishe USD 300 kuwa TZS kwa kiwango cha siku kwanza, kisha uzidishe kwa 12 na kwa 20%. Sipati kukokotoa bila kiwango cha ubadilishaji. Thib"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_276",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "stamp_duty_form_14b_fee"
+      ],
+      "gold": "Mshahara umetajwa kwa dola (USD 1,200). Makundi ya PAYE hupangwa kwa TZS. Badilisha USD 1,200 kuwa TZS kwa kiwango cha siku kwanza; hapo ndipo utaweza kujua kundi (0%/8%/20%/25%/30%). Thibitisha na TRA (tra.go.tz). The wage is in dollars (U"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_277",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "vat_withholding_formula_correct"
+      ],
+      "gold": "Kama \"pesa 900,000\" ni jumla ya mishahara kwa TZS na wafanyakazi ni 10 au zaidi, SDL ni asilimia 3.5: 3.5% ya TZS 900,000 = TZS 31,500. Kama ni chini ya wafanyakazi 10, hakuna SDL. Thibitisha idadi ya wafanyakazi na TRA (tra.go.tz). If \"900"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_278",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "Mapato yametajwa kwa shilingi za Kenya (KES 1,200,000). Kizingiti cha VAT ni TZS 200,000,000 kwa mwaka au TZS 100,000,000 kwa miezi 6. Badilisha KES kuwa TZS kwa kiwango cha siku kwanza ndipo ulinganishe. Thibitisha na TRA (tra.go.tz). Turn"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_279",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Kwa kuwa wafanyakazi ni 13 (zaidi ya 10), SDL inatozwa. Tumia jumla hasa iliyotolewa: asilimia 3.5 ya TZS 3,750,000 = TZS 131,250 kwa mwezi. Thibitisha na TRA (tra.go.tz). Since there are 13 employees (over 10), SDL applies. Use the exact t"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_280",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Tumia takwimu hasa: 18 x TZS 480,000 = TZS 8,640,000 jumla ya mishahara. NSSF ni asilimia 20 (mwajiri + mfanyakazi) = TZS 1,728,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz). Use the exact figures: 18 x TZS 480,000 = TZS 8,640,000 total pa"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_281",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "paye_bands_monthly_2025_26"
+      ],
+      "gold": "Tumia TZS 920,000. Iko kwenye kundi la nne: PAYE = TZS 68,000 + 25% ya (920,000 - 760,000) = 68,000 + 40,000 = TZS 108,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). Use TZS 920,000. It falls in band 4: PAYE = TZS 68,000 + 25% of (920,000 - "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_282",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Tumia TZS 640,000. NSSF ya mfanyakazi ni asilimia 10 = TZS 64,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz). Use TZS 640,000. Employee NSSF is 10% = TZS 64,000/month. Confirm with NSSF."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_283",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Watu 16 ni zaidi ya 10, hivyo SDL inatozwa. Tumia jumla hasa: asilimia 3.5 ya TZS 5,200,000 = TZS 182,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). 16 people is over 10, so SDL applies. Use the exact total: 3.5% of TZS 5,200,000 = TZS 182,0"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_284",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "gn605a_increment_range",
+        "paye_band_2_rate",
+        "paye_bands_monthly_2025_26",
+        "trademark_fee_for_change_of_business_address"
+      ],
+      "gold": "Tumia TZS 610,000 (kundi la tatu): PAYE = TZS 20,000 + 20% ya (610,000 - 520,000) = 20,000 + 18,000 = TZS 38,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). Use TZS 610,000 (band 3): PAYE = TZS 20,000 + 20% of (610,000 - 520,000) = 20,000 + 1"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_285",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "paye_bands_with_examples"
+      ],
+      "gold": "Robo ya 24 ni 6 (kwa TZS 800,000) na 18 (kwa TZS 350,000). Jumla: 6 x 800,000 + 18 x 350,000 = 4,800,000 + 6,300,000 = TZS 11,100,000. Watu 24 zaidi ya 10, SDL = 3.5% = TZS 388,500 kwa mwezi. Thibitisha na TRA (tra.go.tz). A quarter of 24 i"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_286",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "company_registration_fee_no_share_capital",
+        "course_fee"
+      ],
+      "gold": "Jumla ya mishahara: 5 x 700,000 + 4 x 550,000 + 6 x 300,000 = 3,500,000 + 2,200,000 + 1,800,000 = TZS 7,500,000. NSSF ni asilimia 20 = TZS 1,500,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz). Total payroll: 5 x 700,000 + 4 x 550,000 + 6 x "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_287",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "beneficial_owner_information_penalty_maximum",
+        "gn487a_penalty_noncitizen",
+        "vat_deferment_minimum_value",
+        "vat_withholding_formula_correct"
+      ],
+      "gold": "Theluthi mbili ya 30 ni 20 (kwa 500,000) na 10 (kwa 900,000). Jumla: 20 x 500,000 + 10 x 900,000 = 10,000,000 + 9,000,000 = TZS 19,000,000. Watu 30 zaidi ya 10, SDL = 3.5% = TZS 665,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). Two-thirds o"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_288",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_1",
+        "company_registration_fee_2",
+        "company_share_value_threshold_1_max"
+      ],
+      "gold": "Robo tatu ya 16 ni 12 (kwa 450,000) na 4 (kwa 1,000,000). Jumla: 12 x 450,000 + 4 x 1,000,000 = 5,400,000 + 4,000,000 = TZS 9,400,000. WCF ni asilimia 0.5 = TZS 47,000 kwa mwezi. Thibitisha na WCF (wcf.go.tz). Three-quarters of 16 is 12 (at"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_289",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022"
+      ],
+      "gold": "Nusu ya 14 ni 7 na 7. Jumla: 7 x 620,000 + 7 x 380,000 = 4,340,000 + 2,660,000 = TZS 7,000,000. Sehemu ya mwajiri ni asilimia 10 = TZS 700,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz). Half of 14 is 7 and 7. Total: TZS 7,000,000. Employer"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_290",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "paye_bands_with_examples"
+      ],
+      "gold": "Jumla ya mishahara: 3 x 1,200,000 + 4 x 800,000 + 5 x 500,000 = 3,600,000 + 3,200,000 + 2,500,000 = TZS 9,300,000. Wafanyakazi 12 (zaidi ya 10), SDL = 3.5% = TZS 325,500 kwa mwezi. Thibitisha na TRA (tra.go.tz). Total payroll: 3 x 1,200,000"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_291",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Malipo ni ya kila wiki mbili, hivyo nihitaji mshahara halisi wa mwezi kwanza (mfano malipo mawili kwa mwezi ni TZS 640,000, lakini hii inategemea kalenda). Toa mshahara wa mwezi ndipo nikokotoe NSSF (10% ya mfanyakazi). Thibitisha na NSSF ("
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_292",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Malipo ni kwa zamu. Nihitaji jumla ya mshahara wa mwezi wa kila mfanyakazi (idadi ya zamu kwa mwezi x TZS 25,000) kabla ya kutoza NSSF (20% ya jumla). Toa jumla ya mwezi. Thibitisha na NSSF (nssf.go.tz). Pay is per shift. I need each worker"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_293",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "gn605a_increment_range",
+        "nssf_calculation_example",
+        "paye_band_2_rate",
+        "paye_bands_monthly_2025_26"
+      ],
+      "gold": "Mshahara wa mwezi = 1,500 x 400 = TZS 600,000. Iko kwenye kundi la tatu: PAYE = TZS 20,000 + 20% ya (600,000 - 520,000) = 20,000 + 16,000 = TZS 36,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). Monthly wage = 1,500 x 400 = TZS 600,000. Band "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_294",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_rate_range"
+      ],
+      "gold": "Mshahara wa dereva kwa mwezi ni 80,000 x 15 = TZS 1,200,000. Lakini SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi WOTE na tu kama ni 10 au zaidi. Nipe idadi ya wafanyakazi wote na mishahara yao. Thibitisha na TRA (tra.go.tz). The driver"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_295",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Mshahara wa kamisheni hubadilika kila mwezi. NSSF ni asilimia 10 ya mshahara ghafi halisi aliopata. Nihitaji kiasi halisi cha kamisheni cha mwezi husika (TZS) ndipo nikokotoe. Thibitisha na NSSF (nssf.go.tz). Commission pay varies monthly. "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_296",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Mshahara wa mwezi = 18,000 x 26 = TZS 468,000. NSSF ya mfanyakazi ni asilimia 10 = TZS 46,800 kwa mwezi. Thibitisha na NSSF (nssf.go.tz). Monthly wage = 18,000 x 26 = TZS 468,000. Employee NSSF is 10% = TZS 46,800/month. Confirm with NSSF."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_297",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Sina taarifa ya mazungumzo ya jana; sikumbuki mishahara \"ile ile\". Tafadhali niambie tena jumla ya mishahara ya mwezi na idadi ya wafanyakazi ndipo nikokotoe SDL (3.5% ikiwa ni wafanyakazi 10+). Thibitisha na TRA (tra.go.tz). I have no reco"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_298",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Sina ujumbe uliopita wenye idadi ya wafanyakazi wala mishahara yao. Tafadhali niandikie tena idadi na mshahara wa kila mfanyakazi ndipo nikokotoe NSSF (20% ya jumla). Thibitisha na NSSF (nssf.go.tz). I do not have a previous message with th"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_299",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Sina hesabu ya PAYE ya wiki iliyopita; sikumbuki kiasi cha awali. Nipe mshahara wa mwezi wa mfanyakazi upya ndipo nikokotoe PAYE kwa mabano rasmi. Thibitisha na TRA (tra.go.tz). I have no last-week PAYE figure; I do not recall the prior amo"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_300",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Sina kumbukumbu ya mazungumzo ya asubuhi wala mishahara ya \"wale\" wafanyakazi. Tafadhali niambie jumla ya mishahara ndipo nikokotoe WCF (0.5% ya jumla ya mishahara). Thibitisha na WCF (wcf.go.tz). I have no memory of the morning chat or tho"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_301",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022"
+      ],
+      "gold": "Usajili wa BRELA hautegemei kiasi cha payroll. Kila kampuni au jina la biashara linalofanya biashara Tanzania linatakiwa kusajiliwa BRELA bila kujali mishahara. TZS 7,000,000 haihusiki na uamuzi huo. Thibitisha na BRELA (brela.go.tz). BRELA"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_302",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "nssf_calculation_example",
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "sdl_calculation_example"
+      ],
+      "gold": "Usajili wa VAT hautegemei idadi ya wafanyakazi wala mishahara, bali mauzo/mapato: TZS 200,000,000 kwa mwaka au TZS 100,000,000 kwa miezi 6. Wafanyakazi 15 na mshahara TZS 600,000 hazihusiki. Nipe mapato ya biashara. Thibitisha na TRA (tra.g"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_303",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Samahani, kodi ya majengo (property tax) iko nje ya mada yangu na huduma yangu, ambayo inashughulikia kodi za mishahara na biashara (PAYE, SDL, NSSF, WCF, VAT, BRELA, OSHA, GN487A). Tafadhali thibitisha na TRA au mamlaka ya serikali za mita"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_304",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "company_registration_fee_4",
+        "company_registration_fee_5",
+        "company_share_value_threshold_4_max",
+        "company_share_value_threshold_5_min"
+      ],
+      "gold": "Uchaguzi kati ya kampuni (company) na jina la biashara (business name) hautegemei idadi ya wafanyakazi wala mtaji, bali muundo wa kisheria unaotaka. Idadi 20 na mtaji TZS 50,000,000 hazihusiki. Thibitisha na BRELA (brela.go.tz). Choosing be"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_305",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Kiwango cha SDL ni asilimia 3.5 ya jumla ya mishahara — hakibadiliki kwa mshahara wa mtu mmoja. Kwa TZS 480,000 pekee, SDL siyo per-mtu; hutozwa kwa jumla ya mishahara ya wote na tu kama ni wafanyakazi 10 au zaidi. Thibitisha na TRA (tra.go"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_306",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Samahani, kodi ya faida ya mtaji (capital gains tax) iko nje ya mada yangu na huduma yangu. Mshahara wa TZS 1,500,000 hauhusiani na swali hilo. Tafadhali thibitisha na TRA (tra.go.tz). Sorry, capital gains tax is outside my scope. The TZS 1"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_307",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Samahani, ushuru wa forodha (import duty) iko nje ya mada yangu na huduma yangu na hautegemei mishahara. Tafadhali thibitisha na TRA au Mamlaka ya Forodha (tra.go.tz). Sorry, import duty is outside my scope and does not depend on payroll. P"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_308",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Ndiyo. NSSF haina kizingiti cha chini cha wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. Wafanyakazi 8 wanahusika kikamilifu. Thibitisha na NSSF (nssf.go.tz). Yes. NSSF has no minimum employee threshold — it applies from the fir"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_309",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "company_registration_fee_no_share_capital",
+        "course_fee"
+      ],
+      "gold": "NSSF ni lazima, siyo hiari, kwa waajiri na wafanyakazi wanaostahili — bila kujali mshahara. TZS 300,000 haibadilishi hilo. Thibitisha na NSSF (nssf.go.tz). NSSF is mandatory, not optional, for eligible employers and employees regardless of "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_310",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Ndiyo. OSHA inahusu maeneo yote ya kazi bila kizingiti cha idadi ya wafanyakazi. Wafanyakazi 6 na payroll TZS 2,400,000 hazibadilishi wajibu huo. Thibitisha na OSHA (osha.go.tz). Yes. OSHA covers all workplaces with no employee-count thresh"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_311",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "brela_foreign_late_filing_penalty",
+        "late_filing_penalty_monthly_fee"
+      ],
+      "gold": "Ndiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha chini. Kwa mfanyakazi mmoja wa TZS 500,000, WCF ni asilimia 0.5 = TZS 2,500 kwa mwezi. Thibitisha na WCF (wcf.go.tz). Yes. WCF applies to all employers from "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_312",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Samahani, ushuru wa stempu (stamp duty) wa uhamisho wa mali iko nje ya mada yangu na huduma yangu. Tafadhali thibitisha na TRA (tra.go.tz). Sorry, stamp duty on property transfer is outside my scope. Please confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_313",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Samahani, mrabaha wa madini (mining royalties) uko nje ya mada yangu na huduma yangu. Idadi ya wafanyakazi 30 haihusiani. Tafadhali thibitisha na TRA au Tume ya Madini (tra.go.tz). Sorry, mining royalties are outside my scope. The 30 worker"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_314",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Kiwango cha jumla cha NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi) — hakibadiliki kwa mshahara. Kwa TZS 950,000, jumla ni TZS 190,000 ikitakiwa. Thibitisha na NSSF (nssf.go.tz). The total NSSF rate is 20% of gross (1"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_315",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "vat_withholding_formula_correct"
+      ],
+      "gold": "Kiwango cha VAT withholding kwa huduma ni asilimia 6 (bidhaa ni 3%) — hakitegemei ukubwa wa ankara. Kwa ankara ya TZS 3,000,000, kiasi ni TZS 180,000. Thibitisha na TRA (tra.go.tz). The VAT withholding rate on services is 6% (goods are 3%) "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_316",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Samahani, VAT ya Zanzibar inasimamiwa na Mamlaka ya Mapato Zanzibar (ZRA), iko nje ya mada yangu na huduma yangu inayohusu Tanzania Bara. Tafadhali thibitisha na ZRA. Sorry, Zanzibar VAT is administered by the Zanzibar Revenue Authority and"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_317",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_six_months",
+        "vat_threshold_200m_july2024_increase"
+      ],
+      "gold": "Hapana. Chini ya GN 487A, biashara ya saluni ni miongoni mwa shughuli 15 zilizozuiliwa kwa wasio raia — bila kujali mtaji. TZS 100,000,000 haibadilishi katazo hilo. Thibitisha na Idara ya Uhamiaji. No. Under GN 487A, salon business is among"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_318",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "Sehemu tatu: (1) SDL: wafanyakazi 11 zaidi ya 10, 3.5% ya TZS 5,500,000 = TZS 192,500. (2) NSSF: 20% ya TZS 5,500,000 = TZS 1,100,000. (3) VAT: mapato TZS 205,000,000 yamevuka kizingiti cha TZS 200,000,000/mwaka, hivyo lazima usajili VAT. T"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_319",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022"
+      ],
+      "gold": "Jumla ya mishahara: 14 x TZS 500,000 = TZS 7,000,000. NSSF: 20% = TZS 1,400,000. SDL: wafanyakazi 14 zaidi ya 10, 3.5% ya TZS 7,000,000 = TZS 245,000. Thibitisha na NSSF/TRA. Total payroll: 14 x 500,000 = TZS 7,000,000. NSSF: 20% = TZS 1,40"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_320",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_rate_range",
+        "certified_copy_certificate_of_registration_fee",
+        "paye_bands_monthly_2025_26",
+        "paye_bands_with_examples"
+      ],
+      "gold": "Kwa mfanyakazi MMOJA wa TZS 800,000: PAYE (kundi 4) = 68,000 + 25% x (800,000-760,000) = TZS 78,000. NSSF mfanyakazi = 10% = TZS 80,000 (jumla 20% = 160,000). WCF = 0.5% = TZS 4,000. SDL: HAKUNA — SDL huanza wafanyakazi 10 au zaidi; mmoja h"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_321",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "SDL: HAKUNA — watu 8 ni chini ya kizingiti cha 10, hivyo hakuna SDL. NSSF: 20% ya TZS 3,200,000 = TZS 640,000. WCF: 0.5% = TZS 16,000. OSHA: Ndiyo, lazima usajili — OSHA haina kizingiti cha idadi. Thibitisha na TRA/NSSF/OSHA. SDL: NONE — 8 "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_322",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "business_name_maintenance_fee",
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold"
+      ],
+      "gold": "(1) Kizingiti cha VAT: TZS 200,000,000 kwa mwaka au TZS 100,000,000 kwa miezi 6. (2) Kiwango cha SDL: asilimia 3.5 ya jumla ya mishahara. (3) EFD: Ndiyo — kila muamala unahitaji risiti ya EFD bila kujali kiasi, hata TZS 5,000. Thibitisha na"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_323",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "gn605a_increment_range",
+        "paye_band_2_rate",
+        "paye_bands_monthly_2025_26",
+        "trademark_fee_for_change_of_business_address"
+      ],
+      "gold": "PAYE ya TZS 760,000 (kikomo cha kundi 3) = 20,000 + 20% x (760,000-520,000) = TZS 68,000. SDL: ukifikia wafanyakazi 10, sasa inatozwa: 3.5% ya TZS 7,600,000 = TZS 266,000. Thibitisha na TRA (tra.go.tz). PAYE on TZS 760,000 (band 3 ceiling) "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_324",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_1",
+        "company_registration_fee_2",
+        "company_share_value_threshold_1_max"
+      ],
+      "gold": "SDL hutozwa kwa mishahara tu. Tumia TZS 4,800,000 (watu 13 zaidi ya 10): 3.5% = TZS 168,000. Madeni TZS 2,000,000 na faida TZS 1,000,000 hazihusiki na SDL. Thibitisha na TRA (tra.go.tz). SDL is charged on payroll only. Use TZS 4,800,000 (13"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_325",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Arusha: 6 x 400,000 = 2,400,000. Mwanza: 9 x 500,000 = 4,500,000. Jumla ya mishahara = TZS 6,900,000. NSSF ni 20% = TZS 1,380,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz). Arusha: 6 x 400,000 = 2,400,000. Mwanza: 9 x 500,000 = 4,500,000. "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_326",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_1",
+        "company_registration_fee_2",
+        "company_share_value_threshold_1_max"
+      ],
+      "gold": "Mkazi (kundi 5): PAYE = 128,000 + 30% x (1,100,000-1,000,000) = TZS 158,000. Asiye mkazi: kiwango cha mkato wa mwisho ni asilimia 15 tambarare = 15% x 1,100,000 = TZS 165,000, siyo mabano. Thibitisha na TRA (tra.go.tz). Resident (band 5): P"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_327",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "company_registration_fee_no_share_capital",
+        "course_fee"
+      ],
+      "gold": "Jumla ya mishahara: 4 x 700,000 + 6 x 300,000 = 2,800,000 + 1,800,000 = TZS 4,600,000. WCF: 0.5% = TZS 23,000. SDL: watu 10 wamefikia kizingiti, 3.5% = TZS 161,000. Thibitisha na WCF/TRA. Total payroll: 4 x 700,000 + 6 x 300,000 = TZS 4,600"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_328",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "beneficial_owner_information_penalty_maximum",
+        "company_registration_fee_no_share_capital",
+        "course_fee",
+        "gn487a_penalty_noncitizen"
+      ],
+      "gold": "Bidhaa: 3% x TZS 10,000,000 = TZS 300,000. Huduma: 6% x TZS 4,000,000 = TZS 240,000. Jumla ya kuzuia = TZS 540,000, kuwasilishwa TRA ifikapo tarehe 20 ya mwezi unaofuata. Thibitisha na TRA (tra.go.tz). Goods: 3% x 10,000,000 = TZS 300,000. "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_329",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "vat_withholding_formula_correct"
+      ],
+      "gold": "Januari: watu 9 (chini ya 10) — HAKUNA SDL. Februari: watu 10 (wamefikia kizingiti) — SDL = 3.5% ya TZS 3,000,000 = TZS 105,000. Thibitisha na TRA (tra.go.tz). January: 9 people (below 10) — NO SDL. February: 10 people (threshold met) — SDL"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_330",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "NSSF ya mfanyakazi: 10% ya TZS 450,000 = TZS 45,000. Deadline: mwisho wa mwezi unaofuata mwezi wa mishahara. Adhabu ya kuchelewa: thibitisha kiwango na NSSF (nssf.go.tz) kwani hutofautiana. Thibitisha na NSSF. Employee NSSF: 10% of 450,000 "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_331",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": true,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Ndiyo, unahitaji EFD -- kwa default, bila kujali mauzo yako. Hakuna kizingiti cha mauzo kwa EFD (TZS 9,000,000 haibadilishi jibu). Lazima utoe risiti ya EFD kwa kila muamala, hata wa TZS 500. Msamaha unatolewa TU na TRA kupitia taarifa rasm"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_332",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "beneficial_owner_information_penalty_maximum",
+        "company_registration_fee_2",
+        "company_registration_fee_3"
+      ],
+      "gold": "Hapana, biashara ya jumla (wholesale) imezuiliwa kwa wasio raia chini ya GN 487A. Adhabu ya mgeni: faini isiyopungua TZS 10,000,000 na/au kifungo hadi miezi 6 na kufutwa viza. Raia aliyesaidia: faini TZS 5,000,000 au kifungo miezi 3. Thibit"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_333",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "Ndiyo, lazima usajili. Ingawa kigezo cha mwaka (TZS 190,000,000) hakijafikia TZS 200,000,000, kigezo cha miezi 6 (TZS 120,000,000) kimevuka TZS 100,000,000. Kufikia kizingiti chochote kati ya hivyo kunalazimisha usajili. Thibitisha na TRA ("
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_334",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_key_sector_rates",
+        "electrical_test_fee_reduction_final",
+        "nssf_calculation_example",
+        "paye_bands_monthly_2025_26"
+      ],
+      "gold": "Mshahara wa jumla unaotozwa (kama posho na bonasi zinahesabika) = 600,000 + 150,000 + 200,000 = TZS 950,000 (kundi 4): PAYE = 68,000 + 25% x (950,000-760,000) = 68,000 + 47,500 = TZS 115,500. Thibitisha aina ya posho na TRA (tra.go.tz). Tax"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_335",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana. Asilimia 3.5 ni kiwango cha SDL, siyo WCF. WCF ni asilimia 0.5 ya jumla ya mishahara. Thibitisha na WCF (wcf.go.tz). No. 3.5% is the SDL rate, not WCF. WCF is 0.5% of gross payroll. Confirm with WCF."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_336",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_effective_date",
+        "VAT_withholding_base_disputed",
+        "exemption_category_government_departments",
+        "gn487a_full_legal_name"
+      ],
+      "gold": "Hapana. GN 605A ni Amri ya kima cha chini cha mshahara wa sekta binafsi (ilianza 1 Januari 2026). Inayozuia biashara za wasio raia ni GN 487A. Ni Amri mbili tofauti kabisa. No. GN 605A is the private-sector minimum wage order (effective 1 J"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_337",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hakuna. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi). Asilimia 3.5 ni SDL na 0.5 ni WCF. Thibitisha na NSSF (nssf.go.tz). Neither. NSSF is 20% of gross (10% employer + 10% employee). 3.5% is SDL and 0.5% is WCF. Conf"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_338",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_effective_date",
+        "VAT_withholding_base_disputed",
+        "electrical_test_fee_reduction_final",
+        "electrical_test_fee_reduction_initial"
+      ],
+      "gold": "Hapana. Asilimia 18 ni kiwango cha kawaida cha VAT. VAT withholding ni asilimia 6 kwa huduma na asilimia 3 kwa bidhaa (tangu 1 Julai 2025). Thibitisha na TRA (tra.go.tz). No. 18% is the standard VAT rate. VAT withholding is 6% on services a"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_339",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_effective_date",
+        "VAT_withholding_base_disputed",
+        "electrical_test_fee_reduction_final",
+        "electrical_test_fee_reduction_initial"
+      ],
+      "gold": "Hapana. GN 487A ilianza tarehe 28 Julai 2025. Tarehe 1 Januari 2026 ni ya GN 605A (kima cha chini cha mshahara). Thibitisha na Uhamiaji. No. GN 487A took effect on 28 July 2025. 1 January 2026 is GN 605A (minimum wage). Confirm with Immigra"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_340",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "BRELA_fees_hedge",
+        "annual_return_filing_fee",
+        "brela_foreign_late_filing_penalty",
+        "company_name_change_fee"
+      ],
+      "gold": "Hapana. TZS 2,500 ni adhabu ya kuchelewa kwa mwezi (kampuni ya ndani). Ada ya kuwasilisha annual return ni TZS 22,000. Thibitisha na BRELA (brela.go.tz). No. TZS 2,500 is the monthly late penalty (local company). The annual return filing fe"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_341",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana. Kizingiti cha SDL ni wafanyakazi 10 au zaidi Tanzania Bara. Chini ya 10 hakuna wajibu wa SDL. Thibitisha na TRA (tra.go.tz). No. The SDL threshold is 10 or more employees on the Mainland. Below 10 there is no SDL obligation. Confirm"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_342",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_1",
+        "company_registration_fee_2",
+        "company_share_value_threshold_1_max"
+      ],
+      "gold": "Hapana. Kiwango cha juu kabisa cha PAYE ni asilimia 30 (kwa mapato yanayozidi TZS 1,000,000 kwa mwezi). Asilimia 25 ni kundi la nne. Thibitisha na TRA (tra.go.tz). No. The top PAYE rate is 30% (income above TZS 1,000,000/month). 25% is the "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_343",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana. Ajali ya kazini lazima itolewe taarifa WCF ndani ya siku 7 za kazi. Siku 30 ni muda wa mwajiri mpya kujisajili WCF baada ya kuajiri mtu wa kwanza. Thibitisha na WCF (wcf.go.tz). No. A workplace accident must be reported to WCF withi"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_344",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana. Mfanyakazi asiye mkazi hulipa PAYE kwa kiwango tambarare cha asilimia 15 (mkato wa mwisho), siyo mabano wala 30%. Thibitisha na TRA (tra.go.tz). No. A non-resident pays PAYE at a flat 15% (final withholding), not the bands or 30%. C"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_345",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana. SDL inawasilishwa ifikapo siku ya 7 ya mwezi unaofuata. Tarehe 20 ni ya VAT withholding na return ya VAT. Thibitisha na TRA (tra.go.tz). No. SDL is remitted by the 7th of the following month. The 20th is for VAT withholding and the "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_346",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "beneficial_owner_information_penalty_maximum",
+        "company_registration_fee_2",
+        "company_registration_fee_3"
+      ],
+      "gold": "Hapana. TZS 10,000,000 ni adhabu ya chini kwa mgeni mwenyewe. Raia anayemsaidia hupata faini ya TZS 5,000,000 au kifungo cha miezi 3. Thibitisha na Uhamiaji. No. TZS 10,000,000 is the minimum penalty for the non-citizen. An assisting citize"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_347",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": true,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "Hapana. TZS 200,000,000 ni kizingiti cha usajili wa VAT kwa mwaka, si EFD. EFD haina kizingiti cha mauzo kabisa -- inahitajika kwa default kwa kila mfanyabiashara. Msamaha unatolewa TU na TRA kupitia taarifa rasmi inayotaja jina lako au kun"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_348",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana. Jumla ni asilimia 20 daima, lakini kuna migawanyo mitatu halali: 10% mwajiri + 10% mfanyakazi, au 15% + 5%, au 20% + 0%. Thibitisha na NSSF (nssf.go.tz). No. The total is always 20%, but there are three valid splits: 10%+10%, 15%+5%"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_349",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "Hapana. TZS 100,000,000 ni kigezo cha miezi 6. Kizingiti cha mwaka mzima ni TZS 200,000,000. Kufikia chochote kati ya hivyo kunalazimisha usajili. Thibitisha na TRA (tra.go.tz). No. TZS 100,000,000 is the 6-month test. The annual threshold "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_350",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_effective_date",
+        "VAT_withholding_base_disputed",
+        "electrical_test_fee_reduction_final",
+        "electrical_test_fee_reduction_initial"
+      ],
+      "gold": "Hapana. GN 605A ilianza kutumika tarehe 1 Januari 2026 (ilitangazwa 13 Oktoba 2025). Julai 2025 ni kipindi cha ongezeko la mshahara wa sekta ya umma, siyo GN 605A ya sekta binafsi. Thibitisha na TanzLII. No. GN 605A took effect on 1 January"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_351",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "Ndiyo. Kufikia TZS 200,000,000 kwa mwaka (siyo tu kuzidi) kunalazimisha usajili wa VAT. Uko kwenye kizingiti. Thibitisha na TRA (tra.go.tz). Yes. Reaching exactly TZS 200,000,000 a year (not only exceeding) triggers VAT registration. You ar"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_352",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_six_months",
+        "vat_threshold_200m_july2024_increase"
+      ],
+      "gold": "Ndiyo, sajili. Kigezo cha miezi 6 ni TZS 100,000,000; kufikia kiasi hicho kamili kunalazimisha usajili. Thibitisha na TRA (tra.go.tz). Yes, register. The 6-month test is TZS 100,000,000; reaching that exact amount triggers registration. Con"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_353",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "Hapana, bado hulazimiki. Vigezo vyote viwili viko chini: mwaka (199,000,000 chini ya 200,000,000) na miezi 6 (99,000,000 chini ya 100,000,000). Ukivuka kimojawapo, ndipo utasajili. Thibitisha na TRA (tra.go.tz). No, not yet required. Both t"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_354",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": true,
+      "locked_facts_sharing_a_figure": [
+        "efd_threshold_tzs_11m",
+        "presumptive_tax_bands_2022"
+      ],
+      "gold": "Ndiyo, unahitaji EFD -- lakini si kwa sababu ya kufikia TZS 11,000,000. EFD inahitajika kwa default kwa kila mfanyabiashara, bila kujali mauzo. Hakuna kizingiti cha mauzo kwa EFD. Thibitisha na TRA (tra.go.tz). Yes, you need EFD -- but not "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_355",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": true,
+      "locked_facts_sharing_a_figure": [
+        "efd_threshold_tzs_11m",
+        "presumptive_tax_bands_2022"
+      ],
+      "gold": "Ndiyo, EFD ni lazima — kwa default, bila kujali mauzo yako. TZS 10,999,000 au TZS 11,000,000 hazibadilishi jibu, kwa sababu hakuna kizingiti cha mauzo kwa EFD. Thibitisha na TRA (tra.go.tz). Yes, EFD is mandatory — by default, regardless of"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_356",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "paye_bands_monthly_2025_26",
+        "paye_personal_relief"
+      ],
+      "gold": "Iko kwenye kundi la pili kwa sehemu ndogo tu: PAYE = 8% ya (271,000 - 270,000) = 8% ya 1,000 = TZS 80 kwa mwezi. Thibitisha na TRA (tra.go.tz). Just into band 2 by a small margin: PAYE = 8% of (271,000 - 270,000) = 8% of 1,000 = TZS 80/mont"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_357",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "course_fee",
+        "gn605a_increment_range",
+        "paye_band_2_rate",
+        "paye_bands_monthly_2025_26"
+      ],
+      "gold": "TZS 520,000 ni kikomo cha juu cha kundi la pili: PAYE = 8% ya (520,000 - 270,000) = 8% ya 250,000 = TZS 20,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). TZS 520,000 is the top of band 2: PAYE = 8% of (520,000 - 270,000) = 8% of 250,000 = TZ"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_358",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "gn605a_increment_range",
+        "paye_band_2_rate",
+        "paye_bands_monthly_2025_26",
+        "trademark_fee_for_change_of_business_address"
+      ],
+      "gold": "TZS 521,000 imeingia kundi la tatu kwa TZS 1,000: PAYE = 20,000 + 20% ya (521,000 - 520,000) = 20,000 + 200 = TZS 20,200 kwa mwezi. Thibitisha na TRA (tra.go.tz). TZS 521,000 enters band 3 by TZS 1,000: PAYE = 20,000 + 20% of (521,000 - 520"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_359",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "gn605a_increment_range",
+        "paye_band_2_rate",
+        "paye_bands_monthly_2025_26",
+        "trademark_fee_for_change_of_business_address"
+      ],
+      "gold": "TZS 760,000 ni kikomo cha kundi la tatu: PAYE = 20,000 + 20% ya (760,000 - 520,000) = 20,000 + 48,000 = TZS 68,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). TZS 760,000 is the band-3 ceiling: PAYE = 20,000 + 20% of (760,000 - 520,000) = 20,"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_360",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_1",
+        "company_registration_fee_2",
+        "company_share_value_threshold_1_max"
+      ],
+      "gold": "TZS 1,000,000 ni kikomo cha kundi la nne: PAYE = 68,000 + 25% ya (1,000,000 - 760,000) = 68,000 + 60,000 = TZS 128,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). TZS 1,000,000 is the band-4 ceiling: PAYE = 68,000 + 25% of (1,000,000 - 760,00"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_361",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_1",
+        "company_registration_fee_2",
+        "company_share_value_threshold_1_max"
+      ],
+      "gold": "Imeingia kundi la tano: PAYE = 128,000 + 30% ya (1,010,000 - 1,000,000) = 128,000 + 3,000 = TZS 131,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). Into band 5: PAYE = 128,000 + 30% of (1,010,000 - 1,000,000) = 128,000 + 3,000 = TZS 131,000/m"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_362",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022"
+      ],
+      "gold": "Wafanyakazi 10 wamefikia kizingiti kamili (10 au zaidi), hivyo SDL inatozwa: 3.5% ya TZS 4,000,000 = TZS 140,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). Exactly 10 employees meets the threshold (10 or more), so SDL applies: 3.5% of TZS 4,"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_363",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana. Wafanyakazi 9 ni chini ya kizingiti cha 10, hivyo huna wajibu wa SDL — SDL yako ni TZS 0. Thibitisha na TRA (tra.go.tz). No. 9 employees is below the 10 threshold, so you have no SDL obligation — your SDL is TZS 0. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_364",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Inakuhusu. WCF haina kizingiti cha chini — inahusu waajiri wote kutoka mfanyakazi wa kwanza. Thibitisha na WCF (wcf.go.tz). It applies. WCF has no minimum — it covers all employers from the first employee. Confirm with WCF."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_365",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Ni lazima sasa. NSSF haina kizingiti cha idadi — inaanza kutoka mfanyakazi wa kwanza. Thibitisha na NSSF (nssf.go.tz). Mandatory now. NSSF has no headcount threshold — it starts from the first employee. Confirm with NSSF."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_366",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "Ndiyo, unasajili. Kizingiti ni cha kujumuisha: kufikia TZS 200,000,000 (siyo lazima kuzidi) kunalazimisha usajili. Thibitisha na TRA (tra.go.tz). Yes, you register. The threshold is inclusive: reaching TZS 200,000,000 (not necessarily excee"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_367",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_2",
+        "company_registration_fee_3",
+        "company_share_value_threshold_2_max"
+      ],
+      "gold": "Wasio wakazi hulipa kiwango tambarare cha asilimia 15 (mkato wa mwisho), siyo mabano: 15% ya TZS 5,000,000 = TZS 750,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). Non-residents pay a flat 15% (final withholding), not the bands: 15% of TZS 5"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_368",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Ndiyo. Kizingiti cha SDL ni wafanyakazi 10 au zaidi; wafanyakazi wa muda huhesabika. Watu 12 wamefikia kizingiti, hivyo SDL inatozwa kwa jumla ya mishahara yao. Thibitisha na TRA (tra.go.tz). Yes. The SDL threshold is 10 or more; part-time "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_369",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_effective_date",
+        "VAT_withholding_base_disputed",
+        "electrical_test_fee_reduction_final",
+        "electrical_test_fee_reduction_initial"
+      ],
+      "gold": "Ndiyo, inakuhusu. GN 487A ilianza kutumika tarehe 28 Julai 2025 na katazo linatumika kuanzia tarehe hiyo bila kujali lini biashara ilianzishwa. Thibitisha na Uhamiaji. Yes, it applies. GN 487A took effect on 28 July 2025 and the prohibition"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_370",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_six_months",
+        "vat_threshold_200m_july2024_increase"
+      ],
+      "gold": "Ndiyo, umevuka. Kigezo cha miezi 6 ni TZS 100,000,000; TZS 100,500,000 kimezidi, hivyo lazima usajili VAT. Thibitisha na TRA (tra.go.tz). Yes, crossed. The 6-month test is TZS 100,000,000; TZS 100,500,000 exceeds it, so you must register fo"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_371",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "TZS 0. Wafanyakazi 7 ni chini ya kizingiti cha 10, hivyo hakuna SDL inayostahili. Thibitisha na TRA (tra.go.tz). TZS 0. 7 employees is below the 10 threshold, so no SDL is due. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_372",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "TZS 0. Wafanyakazi 5 wako chini ya 10, hivyo hakuna wajibu wa SDL. Thibitisha na TRA (tra.go.tz). TZS 0. 5 employees is below 10, so no SDL obligation. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_373",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "course_fee",
+        "paye_bands_monthly_2025_26",
+        "paye_personal_relief",
+        "presumptive_tax_bands_2022"
+      ],
+      "gold": "TZS 0. TZS 250,000 iko ndani ya bano la asilimia 0 (chini ya TZS 270,000), hivyo hakuna PAYE inayokatwa. Thibitisha na TRA (tra.go.tz). TZS 0. TZS 250,000 is within the 0% band (below TZS 270,000), so no PAYE is deducted. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_374",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "paye_bands_monthly_2025_26",
+        "paye_personal_relief"
+      ],
+      "gold": "TZS 0. TZS 270,000 ni kikomo cha juu cha bano la asilimia 0, hivyo hakuna PAYE. Thibitisha na TRA (tra.go.tz). TZS 0. TZS 270,000 is the top of the 0% band, so there is no PAYE. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_375",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "TZS 0. Ikiwa hakuna VAT inayotozwa kwenye ankara (msambazaji hajasajiliwa VAT), hakuna VAT ya kuzuia. VAT withholding hutumika tu pale VAT inapotozwa. Thibitisha na TRA (tra.go.tz). TZS 0. If no VAT is charged on the invoice (supplier not V"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_376",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "TZS 0. Bila wafanyakazi (na chini ya 10), hakuna SDL. SDL hutozwa kwa mishahara ya wafanyakazi tu. Thibitisha na TRA (tra.go.tz). TZS 0. With no employees (and below 10), there is no SDL. SDL is charged on employee payroll only. Confirm wit"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_377",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_key_sector_rates",
+        "paye_bands_monthly_2025_26",
+        "paye_personal_relief",
+        "vat_late_registration_penalty"
+      ],
+      "gold": "TZS 0. TZS 200,000 iko chini ya TZS 270,000 (bano la asilimia 0), hivyo hakuna PAYE. Thibitisha na TRA (tra.go.tz). TZS 0. TZS 200,000 is below TZS 270,000 (the 0% band), so no PAYE. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_378",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_2",
+        "company_registration_fee_3",
+        "company_share_value_threshold_2_max"
+      ],
+      "gold": "TZS 0. Wafanyakazi 8 wako chini ya kizingiti cha 10, hivyo hakuna SDL inayolipwa, licha ya mishahara kuwa TZS 5,000,000. Thibitisha na TRA (tra.go.tz). TZS 0. 8 employees is below the 10 threshold, so no SDL is paid despite the TZS 5,000,00"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_379",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "TZS 0. Wafanyakazi 6 wako chini ya 10, hivyo huna SDL. Thibitisha na TRA (tra.go.tz). TZS 0. 6 employees is below 10, so you have no SDL. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_380",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "beneficial_owner_information_penalty_maximum",
+        "gn487a_penalty_noncitizen",
+        "vat_deferment_minimum_value"
+      ],
+      "gold": "Faini ya chini kwa asiye raia ni TZS 10,000,000, pamoja na kifungo hadi miezi 6 na kufutwa kwa viza. Thibitisha na Uhamiaji. The minimum fine for a non-citizen is TZS 10,000,000, plus up to 6 months imprisonment and visa revocation. Confirm"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_381",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "presumptive_tax_bands_2022",
+        "presumptive_tax_ceiling_100m",
+        "vat_registration_threshold",
+        "vat_registration_threshold_annual"
+      ],
+      "gold": "Kizingiti cha mwaka ni TZS 200,000,000 na cha miezi sita ni TZS 100,000,000. Kufikia chochote kati ya hivyo kunalazimisha usajili. Thibitisha na TRA (tra.go.tz). The annual threshold is TZS 200,000,000 and the six-month threshold is TZS 100"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_382",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_key_sector_rates",
+        "GN605A_rate_range",
+        "company_registration_fee_2"
+      ],
+      "gold": "Kima cha juu kabisa ni TZS 765,900 (sekta ya nishati, makampuni ya kimataifa) na kile cha kawaida ni TZS 175,000. Thibitisha na TanzLII. The highest rate is TZS 765,900 (energy sector, international companies) and the default is TZS 175,000"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_383",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "company_registration_fee_no_share_capital",
+        "course_fee"
+      ],
+      "gold": "Ada ya kusajili kampuni isiyo na mtaji wa hisa ni TZS 300,000. Thibitisha na BRELA (brela.go.tz). The fee to register a company with no share capital is TZS 300,000. Confirm with BRELA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_384",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_2",
+        "company_registration_fee_3",
+        "company_share_value_threshold_2_max"
+      ],
+      "gold": "Raia anayemsaidia mgeni hupata faini ya TZS 5,000,000 au kifungo cha miezi 3. Thibitisha na Uhamiaji. An assisting citizen gets a TZS 5,000,000 fine or 3 months imprisonment. Confirm with Immigration."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_385",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Wafanyakazi 20 zaidi ya 10, SDL inatozwa: 3.5% ya TZS 45,000,000 = TZS 1,575,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). 20 staff over 10, SDL applies: 3.5% of TZS 45,000,000 = TZS 1,575,000/month. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_386",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "course_fee",
+        "presumptive_tax_bands_2022"
+      ],
+      "gold": "Mchango wa mfanyakazi ni asilimia 10 ya mshahara ghafi: 10% ya TZS 2,500,000 = TZS 250,000 kwa mwezi (mwajiri naye 10%). Thibitisha na NSSF (nssf.go.tz). Employee contribution is 10% of gross: 10% of TZS 2,500,000 = TZS 250,000/month (emplo"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_387",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "company_name_reservation_fee",
+        "trademark_fee_for_change_of_proprietor_or_user_same_address",
+        "trademark_fee_for_dissolution_of_partnership",
+        "trademark_fee_for_explanation_of_decision"
+      ],
+      "gold": "Ada ya kuhifadhi jina la kampuni ni TZS 50,000. Thibitisha na BRELA (brela.go.tz). The company name reservation fee is TZS 50,000. Confirm with BRELA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_388",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Ni kweli. SDL hailipwi na mfanyakazi; hulipwa na mwajiri peke yake. Thibitisha na TRA (tra.go.tz). It is true. SDL is not paid by the employee; it is paid by the employer alone. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_389",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Ndiyo, haruhusiwi. Biashara ya rejareja ni miongoni mwa shughuli zilizozuiliwa kwa wasio raia chini ya GN 487A. Thibitisha na Uhamiaji. Correct, not allowed. Retail is among the activities prohibited for non-citizens under GN 487A. Confirm "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_390",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Ndiyo, haitozwi. Bidhaa zilizosamehewa (exempt) hazitozwi VAT. Thibitisha na TRA (tra.go.tz). Correct, not charged. Exempt goods are not charged VAT. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_391",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Hapana, ni lazima. OSHA inahusu maeneo yote ya kazi bila kizingiti — hata mfanyakazi mmoja unatakiwa kusajili. Thibitisha na OSHA (osha.go.tz). No, it is required. OSHA covers all workplaces with no threshold — even one employee must regist"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_392",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Ndiyo, halipi mabano. Asiye mkazi hulipa kiwango tambarare cha asilimia 15 (mkato wa mwisho), siyo mabano ya kawaida. Thibitisha na TRA (tra.go.tz). Correct, not the bands. A non-resident pays a flat 15% (final withholding), not the ordinar"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_393",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Ndiyo, sivyo — haitakiwi. Wafanyakazi 9 wako chini ya kizingiti cha 10, hivyo hakuna SDL. Thibitisha na TRA (tra.go.tz). Correct — not required. 9 employees is below the 10 threshold, so no SDL. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_394",
+      "has_source": true,
+      "gold_is_checkable": false,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Ndiyo, si ya hiari. NSSF ni lazima kwa mwajiri na wafanyakazi wanaostahili. Thibitisha na NSSF (nssf.go.tz). Correct, not optional. NSSF is mandatory for eligible employers and employees. Confirm with NSSF."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_395",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "paye_bands_monthly_2025_26",
+        "paye_bands_with_examples"
+      ],
+      "gold": "PAYE (kundi 4) = 68,000 + 25% x (800,000-760,000) = TZS 78,000. Mshahara halisi baada ya PAYE = 800,000 - 78,000 = TZS 722,000 (kabla ya makato mengine). Thibitisha na TRA (tra.go.tz). PAYE (band 4) = 68,000 + 25% x 40,000 = TZS 78,000. Net"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_396",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Wafanyakazi 16 zaidi ya 10, SDL = 3.5% ya TZS 6,400,000 = TZS 224,000 kwa mwezi. Thibitisha na TRA (tra.go.tz). 16 over 10, SDL = 3.5% of TZS 6,400,000 = TZS 224,000/month. Confirm with TRA."
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_397",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "OSHA_penalties",
+        "company_registration_fee_2",
+        "company_registration_fee_3",
+        "company_registration_fee_no_share_capital"
+      ],
+      "gold": "VAT withholding kwa huduma ni asilimia 6: 6% ya TZS 5,000,000 = TZS 300,000, kuwasilishwa TRA ifikapo tarehe 20 ya mwezi unaofuata. Thibitisha na TRA (tra.go.tz). VAT withholding on services is 6%: 6% of TZS 5,000,000 = TZS 300,000, remitte"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_398",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [],
+      "gold": "Sehemu ya mwajiri: 15% ya TZS 700,000 = TZS 105,000. Sehemu ya mfanyakazi: 5% ya TZS 700,000 = TZS 35,000. Jumla bado ni 20% = TZS 140,000. Thibitisha na NSSF (nssf.go.tz). Employer share: 15% of TZS 700,000 = TZS 105,000. Employee share: 5"
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_399",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "GN605A_key_sector_rates",
+        "OSHA_penalties",
+        "company_registration_fee_1",
+        "company_registration_fee_2"
+      ],
+      "gold": "Wa TZS 400,000 (kundi 2): 8% x (400,000-270,000) = TZS 10,400. Wa TZS 1,200,000 (kundi 5): 128,000 + 30% x (1,200,000-1,000,000) = TZS 188,000. Thibitisha na TRA (tra.go.tz). The TZS 400,000 one (band 2): 8% x 130,000 = TZS 10,400. The TZS "
+    },
+    {
+      "corpus": "eval_150",
+      "id": "eval_400",
+      "has_source": true,
+      "gold_is_checkable": true,
+      "already_has_scoring_key_correction": false,
+      "locked_facts_sharing_a_figure": [
+        "vat_withholding_formula_correct"
+      ],
+      "gold": "SDL = 3.5% ya TZS 3,000,000 = TZS 105,000 (watu 12 zaidi ya 10). Inawasilishwa ifikapo siku ya 7 ya mwezi unaofuata. Thibitisha na TRA (tra.go.tz). SDL = 3.5% of TZS 3,000,000 = TZS 105,000 (12 over 10). Remitted by the 7th of the following"
+    }
+  ]
+}
