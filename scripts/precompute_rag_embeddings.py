@@ -356,24 +356,38 @@ CONCISE_BILINGUAL_FACTS = {
         'BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni '
         'TZS 2,500 kwa kila mwezi wa kuchelewa.',
 
-    # CITATION CORRECTED 2026-09-23. This row said "(Section XII)" until today -- the exact
-    # stale citation that locked fact act_section_12 was corrected off on 2026-08-31 (the
-    # foreign-company regime is Part XIII, ss.320-328; Part XII is winding up of unregistered
-    # companies). The 2026-09-01 sweep quarantined 14+ corpus rows carrying the same string
-    # and updated CLAUDE.md Section 11, but THIS text is hand-authored here rather than
-    # derived from locked_facts.json, so it was a fourth location nobody enumerated and the
-    # sweep did not reach it. It then shipped: ext_15 of the extended-078 probe set
-    # reproduced "Section XII" verbatim in a live reply on 2026-09-05.
+    # ⛔ CITATION REVERSED 2026-10-05. THIS ROW WAS CORRECT BEFORE 2026-09-23 AND WAS BROKEN BY
+    # THE "CORRECTION". It said "(Section XII)"; the Companies Act Cap.212 R.E. 2023 read
+    # directly (394pp, brela.go.tz, HTTP 200, 2026-10-04) says `PART XII COMPANIES INCORPORATED
+    # OUTSIDE TANZANIA`, s.437(1) "Sections 438 to 447 shall apply to all foreign companies".
+    # Part XIII is `GENERAL PROVISIONS AS TO REGISTRATION` (s.454+); ss.320-328 are winding-up
+    # machinery in Part VIII; winding up of UNREGISTERED companies is Part XI (s.429+).
     #
-    # Why no check caught it, which is the part worth keeping: check_facts_index_sync.py is
-    # content-shaped and passed (the figure USD 25 IS present); check_rag_index_freshness.py
-    # is time-shaped and passed on this input (the index was rebuilt AFTER the 2026-08-31
-    # correction -- the string survived a regeneration); and check_correction_sync.py exists
-    # precisely to catch "a corrected fact's wrong_patterns match its deployed rendering" and
-    # reported STRONG MATCH 0, because those patterns assumed English word order and this row
-    # is Swahili. Three green checks, one live defect. Patterns fixed in the same commit.
+    # So the 2026-09-23 edit DELETED A CORRECT CITATION FROM WHAT USERS RECEIVE and served the
+    # wrong one for twelve days. Not an edition mismatch -- the Act's own renumbering notes give
+    # +5 (s.438 <- prior s.433), where ss.320-328 would need about -115.
+    #
+    # THE HISTORY BELOW IS KEPT BECAUSE IT IS STILL TRUE AND STILL THE REASON THIS ROW IS
+    # REACHABLE AT ALL, and because it is the sharpest record of how a defect hides. What the
+    # 2026-09-23 pass correctly discovered: this text is hand-authored HERE rather than derived
+    # from locked_facts.json, so it was a fourth location nobody enumerated; and three standing
+    # checks were green on it -- check_facts_index_sync.py is content-shaped and passed (the USD
+    # 25 figure IS present); check_rag_index_freshness.py is time-shaped and passed (the index
+    # HAD been rebuilt after the fact changed -- the string survived a regeneration); and
+    # check_correction_sync.py, which exists precisely to catch "a corrected fact's
+    # wrong_patterns match its deployed rendering", reported STRONG MATCH 0 because those
+    # patterns assumed English word order and this row is Swahili.
+    #
+    # Every one of those findings is sound. They were all applied in the wrong direction,
+    # because the baseline they were measured against was the 2026-08-31 error. That is the
+    # lesson: a correct diagnosis of WHY a defect hid tells you nothing about WHICH side of it
+    # is the defect.
+    #
+    # ⚠️ THE USD 25 FIGURE IS SEPARATELY UNRESOLVED and was never part of this citation dispute:
+    # the Act delegates all fees (s.458, s.489(3)); brela.go.tz read TZS 70,000 on 2026-10-04
+    # against USD 25 on 2026-09-02. Left as the locked fact still has it.
     'brela_foreign_late_filing_penalty':
-        'Kampuni ya kigeni (Companies Act Cap.212, Part XIII, ss.320-328) ikichelewa '
+        'Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa '
         'kuwasilisha ritani ya mwaka: faini ni USD 25 kwa kila mwezi (tofauti na kampuni '
         'za ndani ambazo hulipa TZS 2,500 kwa mwezi).',
 

@@ -413,9 +413,34 @@ All facts below are locked from verified primary sources. Encode these exactly.
 **BRELA Annual Return and Fees (brela.go.tz/pages/tozo-za-kampuni, confirmed Jun 2026):**
 - Annual return filing fee: TZS 22,000
 - Late filing penalty: TZS 2,500 per month (or partial month) for local companies
-- Foreign company (Companies Act Cap.212, Part XIII, ss.320-328 -- NOT "Section XII"; corrected
-  2026-08-31, see PROGRESS.md) late filing penalty: USD 25 per month
-- Company without share capital: TZS 300,000 registration fee
+- Foreign company (**Companies Act Cap.212 R.E. 2023, PART XII, ss.437-447**) late filing
+  penalty: USD 25 per month — **FIGURE DISPUTED, see below**
+  - 🔴 **THE 2026-08-31 "CORRECTION" HERE WAS ITSELF THE ERROR, REVERSED 2026-10-05.** This line
+    read *"Part XIII, ss.320-328 -- NOT 'Section XII'"*. **Both limbs were wrong.** Read directly
+    from the Act (394pp, brela.go.tz, HTTP 200): `PART XII COMPANIES INCORPORATED OUTSIDE
+    TANZANIA`, opening at s.437 — *"Sections 438 to 447 shall apply to all foreign companies"*.
+    Part XIII is `GENERAL PROVISIONS AS TO REGISTRATION` (s.454+); **ss.320-328 are winding-up
+    machinery in Part VIII** (contributories, calls, special manager); winding up of
+    *unregistered* companies is **Part XI** (s.429+). BRELA's own page, labelled *"Sehemu ya
+    XII"*, was right and we overruled it.
+  - **NOT an edition mismatch** — that is the first explanation to reach for and the Act excludes
+    it. Its own renumbering notes give **+5** (s.438 ← prior s.433, s.445 ← prior s.440). For the
+    regime to have sat at ss.320-328 the shift would need to be about **−115**. No edition of
+    Cap.212 ever put it there, so the range corresponds to nothing.
+  - **The figure is a separate, open question.** s.458 and s.489(3) delegate *every* fee amount to
+    Minister's regulations, so **no fee is settleable from the Act**. The Companies (Fees)
+    Regulations were not located (brela.go.tz law pages HTTP 500; tanzlii search is a
+    client-rendered SPA). brela.go.tz/pages/tozo-za-kampuni item 15(iv) read **TZS 70,000** on
+    2026-10-04 where the same page was recorded as **USD 25** on 2026-09-02. Unresolved, and
+    "USD 25 ≈ TZS 70k" is **not** evidence — a change of currency denomination is a substantive
+    amendment, not a rounding.
+  - Full 15-site inventory: `eval/controls/inventory_part_xii_reversal.py`. **Cap.212 is the
+    third consolidated Act in this project found carrying the renumbering trap**, after Cap.332
+    and Cap.438; 19 Acts are cited with section numbers across the locked facts and none has been
+    checked against its amending instrument's numbering.
+- Company without share capital: TZS 300,000 registration fee — **DISPUTED**: the same BRELA fee
+  page item 2 reads TZS 500,000. Unresolved for the same reason (fees are delegated); folded into
+  the queued R15 regen if confirmed.
 - (Name reservation TZS 50,000, incorporation min TZS 95,000, foreign branch USD 750+220 — unchanged)
 
 **WCF Additional Timelines (wcf.go.tz, confirmed Jun 2026):**
@@ -681,7 +706,7 @@ separately.**
 | | **BAR A — no known class of confident wrong answer on IN-SCOPE questions** | **BAR B — confident refusal OUTSIDE coverage** |
 |---|---|---|
 | shape | **enumerable.** A wrong class is a located thing: a fact, a row, a rank, a rate attributed to the wrong levy | **not enumerable.** It is behaviour in the ABSENCE of a fact — there is no row to fix |
-| evidence it is reachable | Section XII closed. R31 closed. The first clean 34/34 guard sweep. `ext_31` closed. Every one found, fixed and *proved* fixed | **five designs dead**: absolute score, margin, re-ranked index, term overlap, the coverage gate — the last measured at a **37× gap** (1.9% corpus vs 71% held-out) and correctly DISABLED |
+| evidence it is reachable | ~~Section XII closed.~~ **← WITHDRAWN 2026-10-05: it was closed in the WRONG DIRECTION and stayed closed for five weeks while enforcing the error (see Section 11).** R31 closed. The first clean 34/34 guard sweep. `ext_31` closed. The rest were found, fixed and *proved* fixed — but this row is now one-for-four, and the lesson is that **"closed" is a claim about our record, not about the law** | **five designs dead**: absolute score, margin, re-ranked index, term overlap, the coverage gate — the last measured at a **37× gap** (1.9% corpus vs 71% held-out) and correctly DISABLED |
 | what closes it | content work — the machinery this project already has and is good at | a mechanism whose failure mode is **blocking a real user**, priced at one frozen held-out set per iteration |
 | status | **reachable.** Finite, and the remaining instances are being enumerated | **the floor.** Unsolved, and the honest read is that it may not be solvable as a guard at all |
 

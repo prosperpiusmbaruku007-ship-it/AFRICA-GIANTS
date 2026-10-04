@@ -77,6 +77,17 @@ remove is the one row that was correct all along, and it survived by being phras
 language the 2026-09-01 patterns could not see. The same blindness that the 2026-09-23 rewrite
 was built to fix is what preserved the right answer.
 
+=============================================================================================
+LANDED 2026-10-05. All 16 sites fixed except the two held by decision; see SITE_STATUS below.
+=============================================================================================
+A SEVENTEENTH-SITE WARNING, because the first run of this inventory found 15 and MISSED the one
+that mattered most: `kaggle/regenerate_rag_e5.py`'s payload gate would have REFUSED TO BUILD the
+corrected index. The inventory searched locked_facts, the RAG text, the corpora, the gold sets,
+the tests and the docs -- and not the BUILD SCRIPTS. It was found only because fixing the RAG
+text required grepping for the authored source of that text. So: an inventory of a defect's
+enforcement points must include everything that can REFUSE A FIX, not only everything that
+asserts the fact. Those are different sets, and the second one is the one that bites.
+
 REPORT-ONLY. This script changes nothing. It enumerates, and it fails if the enumeration has
 drifted -- so a site fixed without updating the inventory, or a NEW site appearing, is loud.
 """
@@ -215,6 +226,23 @@ EXPECTED_SITES = {
                 "part-unresolved (the USD 25 figure). Verdict left ALONE -- half a correction "
                 "must not flip a count.",
     },
+    # --- build gate (SITE 16, MISSED BY THE FIRST INVENTORY) ----------------
+    "kaggle/regenerate_rag_e5.py:payload_gate": {
+        "says": "asserted `'part xiii' in row` and refused to upload the index without it, plus "
+                "a corpus-wide sweep banning the string 'Section XII' from every built row",
+        "direction": "PUNISHES_RIGHT",
+        "note": "⛔ THE WORST OF THE SIXTEEN AND THE FIRST INVENTORY MISSED IT. This gate would "
+                "have REFUSED TO BUILD THE CORRECTED INDEX, demanding the wrong citation as its "
+                "entry price -- so the R15 regen queued to fix the other sites could not have "
+                "run. It is also the best-built control in the set: keyed rather than lexical, "
+                "failing loudly on absence rather than passing by it, written in direct response "
+                "to a real live defect, with R20 and R21 both cited in its own comment. NONE OF "
+                "THAT HELPED, because a control can only be as right as the fact it encodes. A "
+                "well-built gate on a reversed premise is strictly WORSE than a weak one: it has "
+                "more power to keep the error in place. Inverted 2026-10-05 -- and the inversion "
+                "needed a regex, because 'part xii' IS A SUBSTRING OF 'part xiii' and the naive "
+                "`in` form would have been vacuous in exactly the R20 way.",
+    },
     # --- tests --------------------------------------------------------------
     "tests:test_act_section_xii_patterns.py": {
         "says": "6 MUST_FIRE cases and 6 MUST_NOT_FIRE cases encoding the 2026-08-31 reading",
@@ -251,6 +279,65 @@ OUT_OF_SCOPE = {
 }
 
 
+# What actually landed on 2026-10-05, per site. Two are HELD, both deliberately.
+SITE_STATUS = {
+    "locked_facts:act_section_12": "FIXED -- fact/correct_value/primary_source/verified_by/"
+                                   "status/correction_note amended per R27; _pattern_note's "
+                                   "2026-09-23 Swahili-word-order history KEPT (still true)",
+    "locked_facts:act_section_12:wrong_patterns": "INVERTED -- now catch Part XIII/ss.320-328; "
+                                                  "verified to block 0 of 4 correct strings and "
+                                                  "catch 2 of 2 stale ones",
+    "locked_facts:document_filing_fee_section_12_act_excluding_balance_sheet":
+        "FIXED -- citation label only; amount and verified_as_at untouched",
+    "locked_facts:balance_sheet_filing_fee_section_12_act":
+        "FIXED -- citation label only; amount and verified_as_at untouched",
+    "locked_facts:brela_foreign_late_filing_penalty":
+        "FIXED -- citation label only; the USD 25 figure left as-is and still DISPUTED",
+    "rag_index:row_101": "FIXED AT SOURCE -- derived from act_section_12; reaches the index on "
+                         "the queued R15 regen. The generated rag_facts_text.json is NOT "
+                         "hand-edited: it is paired with rag_embeddings.npy, and editing text "
+                         "without re-embedding leaves the vector encoding the OLD string, so "
+                         "retrieval would match on text the user never sees. Worse than the gap.",
+    "rag_index:row_171": "FIXED AT SOURCE -- scripts/precompute_rag_embeddings.py, the "
+                         "hand-authored CONCISE_BILINGUAL_FACTS entry; same regen caveat",
+    "rag_index:row_181": "LEFT AS IS -- 'kifungu 12' is correct on the numeral. Rewriting a "
+                         "correct row to tidy its label is a content edit needing its own "
+                         "justification (R25) and has none.",
+    "kaggle/regenerate_rag_e5.py:payload_gate": "INVERTED -- plus `import re` added, which the "
+                                                "file lacked; without it the new gate would have "
+                                                "NameError'd on Kaggle at build time",
+    "quarantine:tier3_confirmed_wrong_quarantine_2026_09_01.jsonl":
+        "RESTORED -- 7 of 13 instances returned to authored sources; 6 live in export artifacts "
+        "(train_sft*.jsonl) and return on regeneration, never by hand. The 13 entries are FOUR "
+        "distinct pairs across seven files. 9 of them assert the disputed USD 25 -- restored "
+        "anyway, to match the unchanged locked fact, and listed in the harness so the fee "
+        "resolution can find them in one lookup. Harness: "
+        "scripts/restore_part_xii_quarantine.py",
+    "training:train_sft.jsonl:3851": "LEFT -- already correct ('Sehemu XII'), and an export "
+                                     "artifact regardless",
+    "training:cleaned_pairs_batch_009.jsonl:98": "LEFT -- already correct",
+    "gold:ext_15": "CITATION FIXED, VERDICT HELD. Carries a _scoring_key_correction block: the "
+                   "citation limb is settled in the model's favour, the FIGURE limb is "
+                   "unresolved, so the verdict now rests on the figure alone. Half a correction "
+                   "must not flip a count.",
+    "tests:test_act_section_xii_patterns.py": "INVERTED, history kept in the docstring per R17's "
+                                              "corollary. The two verbatim 2026-09-05 live "
+                                              "artifacts moved from MUST_FIRE to MUST_NOT_FIRE "
+                                              "-- unchanged text, opposite verdict.",
+    "CLAUDE.md:416": "FIXED -- with the reversal, the +5-vs-115 renumbering argument, and the "
+                     "open fee question recorded inline",
+    "CLAUDE.md:684": "FIXED -- 'Section XII closed' WITHDRAWN from Bar A's evidence list. It was "
+                     "closed in the wrong direction, so that row is now one-for-four.",
+}
+
+HELD_BY_DECISION = {
+    "the USD 25 vs TZS 70,000 fee": "UNRESOLVED. The Act delegates every fee (s.458, s.489(3)); "
+                                    "the Companies (Fees) Regulations were not located. Recorded "
+                                    "as a standing disagreement with both sources named.",
+    "the TZS 300,000 vs 500,000 registration fee": "UNRESOLVED, same gazette, same block.",
+}
+
+
 def _facts():
     with open(os.path.join(REPO, "scripts", "locked_facts.json"), encoding="utf-8") as fh:
         data = json.load(fh)
@@ -264,6 +351,12 @@ CORRECT_CITATIONS = [
     "Foreign companies are governed by Part XII of the Companies Act.",
     "Companies Act Cap.212, Part XII, ss.437-447",
 ]
+# Strings that are STALE under the Act. The guard must catch these.
+STALE_CITATIONS = [
+    "Kampuni ya kigeni (Companies Act Cap.212, Part XIII, ss.320-328) ikichelewa kuwasilisha "
+    "ritani ya mwaka: faini ni USD 25 kwa kila mwezi.",
+    "Foreign companies are governed by Part XIII (ss.320-328) of the Companies Act, Cap.212.",
+]
 # The deployed row no guard sees, in either direction.
 UNGUARDED_DEPLOYED_ROW = ("Kampuni ya kigeni (kifungu 12): kuwasilisha nyaraka USD 220, "
                           "mizania USD 220, na faini ya kuchelewa USD 25 kwa mwezi.")
@@ -275,11 +368,23 @@ def measure():
 
     blocked = [c for c in CORRECT_CITATIONS
                if any(re.search(p, c, re.I) for p in pats)]
-    # R26 both directions: the guard must reject correct text (the defect we are reporting),
-    # AND must be shown blind to row 181 (the claim that row is unguarded).
-    assert blocked, ("act_section_12's wrong_patterns no longer reject the correct Part XII "
-                     "citation. If that is because the fact was fixed, update this inventory; "
-                     "this assertion exists so the finding cannot decay silently.")
+    caught = [s for s in STALE_CITATIONS
+              if any(re.search(p, s, re.I) for p in pats)]
+
+    # ASSERTION FLIPPED 2026-10-05 ALONGSIDE THE FIX, and the flip is itself the record. Before
+    # the fix this asserted `blocked` was NON-empty -- the guard DID reject correct text, which
+    # was the defect being reported. Now it must be EMPTY, and the stale citation must be caught
+    # instead. Both limbs are asserted, because a guard that blocks nothing is as broken as one
+    # that blocks everything, and only checking both can tell them apart.
+    assert not blocked, (
+        f"REGRESSION: act_section_12's wrong_patterns reject the CORRECT Part XII citation "
+        f"again: {blocked}. The Act says PART XII, ss.437-447 (s.437(1), Cap.212 R.E.2023). A "
+        f"guard that blocks a right answer is worse than one that is blind.")
+    assert len(caught) == len(STALE_CITATIONS), (
+        f"the guard no longer catches the REVERSED Part XIII citation -- caught "
+        f"{len(caught)}/{len(STALE_CITATIONS)}. The stale citation is what production served "
+        f"between 2026-09-22 and 2026-10-05; losing this limb makes the inversion vacuous.")
+
     unguarded = not any(re.search(p, UNGUARDED_DEPLOYED_ROW, re.I) for p in pats)
 
     return {
@@ -288,10 +393,14 @@ def measure():
         "_report_only": True,
         "act": ACT,
         "refuted_claims": REFUTED_CLAIMS,
-        "guard_rejects_correct_citation": {
-            "count": len(blocked), "of": len(CORRECT_CITATIONS), "blocked": blocked,
-            "meaning": "the fact's own guard now blocks right answers in both word orders",
+        "guard_state_after_inversion": {
+            "blocks_correct_citations": len(blocked), "of": len(CORRECT_CITATIONS),
+            "catches_stale_citations": len(caught), "of_stale": len(STALE_CITATIONS),
+            "meaning": "0 blocked + all stale caught = the guard now defends the Act's reading "
+                       "instead of the reversal. Before 2026-10-05 it blocked 3 of 4.",
         },
+        "site_status": SITE_STATUS,
+        "held_by_decision": HELD_BY_DECISION,
         "guard_blind_to_deployed_row_181": unguarded,
         "sites": EXPECTED_SITES,
         "site_count_by_direction": {
@@ -332,12 +441,14 @@ if __name__ == "__main__":
     for c in REFUTED_CLAIMS:
         print(f"  {c['verdict']:32s} {c['claim']}")
     print()
-    g = out["guard_rejects_correct_citation"]
-    print(f"guard rejects {g['count']}/{g['of']} correct citations; "
+    g = out["guard_state_after_inversion"]
+    print(f"guard blocks {g['blocks_correct_citations']}/{g['of']} CORRECT citations "
+          f"(was 3/4) and catches {g['catches_stale_citations']}/{g['of_stale']} STALE ones; "
           f"blind to deployed row 181: {out['guard_blind_to_deployed_row_181']}")
     print()
     for k, v in EXPECTED_SITES.items():
         print(f"  [{v['direction']:22s}] {k}")
+        print(f"        -> {SITE_STATUS.get(k, 'NO STATUS RECORDED')[:108]}")
     print()
     print("by direction:", out["site_count_by_direction"])
     print("renumbering exposure:", out["renumbering_exposure"]["top_exposure"])

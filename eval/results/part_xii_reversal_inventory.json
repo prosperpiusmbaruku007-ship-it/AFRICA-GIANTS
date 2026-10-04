@@ -55,15 +55,34 @@
       "verdict": "REFUTED"
     }
   ],
-  "guard_rejects_correct_citation": {
-    "count": 3,
+  "guard_state_after_inversion": {
+    "blocks_correct_citations": 0,
     "of": 4,
-    "blocked": [
-      "Kampuni ya kigeni (Part XII) ikichelewa kufungua taarifa ya mwaka hulipa USD 25 kwa mwezi.",
-      "Section XII ya Sheria ya Makampuni inahusu kampuni za kigeni.",
-      "Foreign companies are governed by Part XII of the Companies Act."
-    ],
-    "meaning": "the fact's own guard now blocks right answers in both word orders"
+    "catches_stale_citations": 2,
+    "of_stale": 2,
+    "meaning": "0 blocked + all stale caught = the guard now defends the Act's reading instead of the reversal. Before 2026-10-05 it blocked 3 of 4."
+  },
+  "site_status": {
+    "locked_facts:act_section_12": "FIXED -- fact/correct_value/primary_source/verified_by/status/correction_note amended per R27; _pattern_note's 2026-09-23 Swahili-word-order history KEPT (still true)",
+    "locked_facts:act_section_12:wrong_patterns": "INVERTED -- now catch Part XIII/ss.320-328; verified to block 0 of 4 correct strings and catch 2 of 2 stale ones",
+    "locked_facts:document_filing_fee_section_12_act_excluding_balance_sheet": "FIXED -- citation label only; amount and verified_as_at untouched",
+    "locked_facts:balance_sheet_filing_fee_section_12_act": "FIXED -- citation label only; amount and verified_as_at untouched",
+    "locked_facts:brela_foreign_late_filing_penalty": "FIXED -- citation label only; the USD 25 figure left as-is and still DISPUTED",
+    "rag_index:row_101": "FIXED AT SOURCE -- derived from act_section_12; reaches the index on the queued R15 regen. The generated rag_facts_text.json is NOT hand-edited: it is paired with rag_embeddings.npy, and editing text without re-embedding leaves the vector encoding the OLD string, so retrieval would match on text the user never sees. Worse than the gap.",
+    "rag_index:row_171": "FIXED AT SOURCE -- scripts/precompute_rag_embeddings.py, the hand-authored CONCISE_BILINGUAL_FACTS entry; same regen caveat",
+    "rag_index:row_181": "LEFT AS IS -- 'kifungu 12' is correct on the numeral. Rewriting a correct row to tidy its label is a content edit needing its own justification (R25) and has none.",
+    "kaggle/regenerate_rag_e5.py:payload_gate": "INVERTED -- plus `import re` added, which the file lacked; without it the new gate would have NameError'd on Kaggle at build time",
+    "quarantine:tier3_confirmed_wrong_quarantine_2026_09_01.jsonl": "RESTORED -- 7 of 13 instances returned to authored sources; 6 live in export artifacts (train_sft*.jsonl) and return on regeneration, never by hand. The 13 entries are FOUR distinct pairs across seven files. 9 of them assert the disputed USD 25 -- restored anyway, to match the unchanged locked fact, and listed in the harness so the fee resolution can find them in one lookup. Harness: scripts/restore_part_xii_quarantine.py",
+    "training:train_sft.jsonl:3851": "LEFT -- already correct ('Sehemu XII'), and an export artifact regardless",
+    "training:cleaned_pairs_batch_009.jsonl:98": "LEFT -- already correct",
+    "gold:ext_15": "CITATION FIXED, VERDICT HELD. Carries a _scoring_key_correction block: the citation limb is settled in the model's favour, the FIGURE limb is unresolved, so the verdict now rests on the figure alone. Half a correction must not flip a count.",
+    "tests:test_act_section_xii_patterns.py": "INVERTED, history kept in the docstring per R17's corollary. The two verbatim 2026-09-05 live artifacts moved from MUST_FIRE to MUST_NOT_FIRE -- unchanged text, opposite verdict.",
+    "CLAUDE.md:416": "FIXED -- with the reversal, the +5-vs-115 renumbering argument, and the open fee question recorded inline",
+    "CLAUDE.md:684": "FIXED -- 'Section XII closed' WITHDRAWN from Bar A's evidence list. It was closed in the wrong direction, so that row is now one-for-four."
+  },
+  "held_by_decision": {
+    "the USD 25 vs TZS 70,000 fee": "UNRESOLVED. The Act delegates every fee (s.458, s.489(3)); the Companies (Fees) Regulations were not located. Recorded as a standing disagreement with both sources named.",
+    "the TZS 300,000 vs 500,000 registration fee": "UNRESOLVED, same gazette, same block."
   },
   "guard_blind_to_deployed_row_181": true,
   "sites": {
@@ -127,6 +146,11 @@
       "direction": "ASSERTS_WRONG",
       "note": "THE ONLY affected scoring key in all three corpora (78 + 48 + 150 rows; the other two are clean). Gold is now part-confirmed-wrong (citation) and part-unresolved (the USD 25 figure). Verdict left ALONE -- half a correction must not flip a count."
     },
+    "kaggle/regenerate_rag_e5.py:payload_gate": {
+      "says": "asserted `'part xiii' in row` and refused to upload the index without it, plus a corpus-wide sweep banning the string 'Section XII' from every built row",
+      "direction": "PUNISHES_RIGHT",
+      "note": "⛔ THE WORST OF THE SIXTEEN AND THE FIRST INVENTORY MISSED IT. This gate would have REFUSED TO BUILD THE CORRECTED INDEX, demanding the wrong citation as its entry price -- so the R15 regen queued to fix the other sites could not have run. It is also the best-built control in the set: keyed rather than lexical, failing loudly on absence rather than passing by it, written in direct response to a real live defect, with R20 and R21 both cited in its own comment. NONE OF THAT HELPED, because a control can only be as right as the fact it encodes. A well-built gate on a reversed premise is strictly WORSE than a weak one: it has more power to keep the error in place. Inverted 2026-10-05 -- and the inversion needed a regex, because 'part xii' IS A SUBSTRING OF 'part xiii' and the naive `in` form would have been vacuous in exactly the R20 way."
+    },
     "tests:test_act_section_xii_patterns.py": {
       "says": "6 MUST_FIRE cases and 6 MUST_NOT_FIRE cases encoding the 2026-08-31 reading",
       "direction": "PUNISHES_RIGHT",
@@ -146,7 +170,7 @@
   "site_count_by_direction": {
     "ASSERTS_RIGHT_UNCAUGHT": 3,
     "ASSERTS_WRONG": 9,
-    "PUNISHES_RIGHT": 3
+    "PUNISHES_RIGHT": 4
   },
   "out_of_scope": {
     "datasets/.../batch_002*.jsonl: tier1a_nssf_edge_002/009": "'NSSF Act Section 12' -- the 15%/5% employer-employee split. Different Act entirely.",

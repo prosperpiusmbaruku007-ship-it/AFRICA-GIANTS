@@ -37,6 +37,8 @@ and remain exposed to the same shared budget — not fixed here, logged so it is
 rediscovered as a surprise mid-run again.
 """
 import os
+import re  # added 2026-10-05 for the Part XII payload gate's (?!i) boundary -- 'part xii' is a
+           # substring of 'part xiii', so the gate cannot be written with `in`
 import subprocess
 import sys
 import json
@@ -261,18 +263,38 @@ print(f'[rag] kept {len(fact_texts_to_embed)} facts, dropped {len(dropped)} nois
 # name the exact thing this regen is for and refuse to upload without it. The cost of
 # carrying it forward is one line per shipped correction; the cost of not having it was five
 # weeks of a wrong citation served under three green checks.
+#
+# ⛔⛔ THIS GATE WAS INVERTED ON 2026-10-05, AND IT IS THE MOST IMPORTANT ENTRY IN THIS FILE.
+# As written on 2026-09-24 it asserted `'part xiii' in row` and refused to upload without it.
+# The Companies Act Cap.212 R.E. 2023, read directly (brela.go.tz, HTTP 200, 394pp, 2026-10-04),
+# says `PART XII COMPANIES INCORPORATED OUTSIDE TANZANIA`, ss.437-447. So this gate would have
+# REFUSED TO BUILD THE CORRECTED INDEX and demanded the wrong citation as its entry price.
+#
+# Everything in the paragraph above it is well-reasoned: it is keyed, not lexical; it fails
+# loudly on absence rather than passing by it; it was built in direct response to a real live
+# defect. NONE OF THAT PROTECTED IT, because a control can only be as right as the fact it
+# encodes -- and this one encoded a reversed fact. A better-built gate on a wrong premise is
+# strictly WORSE than a weak one: it has more power to keep the error in place. That is the
+# whole shape of the Part XII reversal in one control.
+#
+# ⚠️ SUBSTRING TRAP, and it is why this uses a regex and not `in`: 'part xii' IS A SUBSTRING OF
+# 'part xiii'. A naive `'part xii' in row.lower()` passes on the STALE text and would have made
+# the inverted gate vacuous in exactly the R20 way -- a check that cannot fail. The `(?!i)`
+# boundary is the same device act_section_12's wrong_patterns already needed for the same reason.
 _XII_KEY = 'brela_foreign_late_filing_penalty'
 if _XII_KEY in fact_keys:
     _xii_row = fact_texts_to_embed[fact_keys.index(_XII_KEY)]
-    assert 'section xii' not in _xii_row.lower(), (
-        f'[FATAL] {_XII_KEY} still carries the stale "Section XII" citation:\n  {_xii_row}\n'
-        f'This regen exists to remove it. The clone is older than 467115b, or the fix was '
-        f'reverted. Refusing to build -- see EXPECTED_HEAD above.')
-    assert 'part xiii' in _xii_row.lower(), (
-        f'[FATAL] {_XII_KEY} no longer names Part XIII:\n  {_xii_row}\n'
-        f'The stale citation is gone but the correct one is missing -- that is a different '
-        f'defect, not a pass.')
-    print(f'[OK] payload gate: {_XII_KEY} carries Part XIII, no "Section XII"')
+    _stale_xiii = re.search(r'part\s*xiii\b|ss?\.?\s*320\s*[-–]\s*328', _xii_row, re.I)
+    assert not _stale_xiii, (
+        f'[FATAL] {_XII_KEY} carries the REVERSED citation "Part XIII / ss.320-328":\n'
+        f'  {_xii_row}\n'
+        f'The Act says PART XII, ss.437-447 (s.437(1), Cap.212 R.E.2023). The clone predates '
+        f'the 2026-10-05 reversal, or it was reverted. Refusing to build.')
+    assert re.search(r'part\s*xii\b(?!i)', _xii_row, re.I), (
+        f'[FATAL] {_XII_KEY} no longer names Part XII:\n  {_xii_row}\n'
+        f'The reversed citation is gone but the correct one is missing -- a different defect, '
+        f'not a pass.')
+    print(f'[OK] payload gate: {_XII_KEY} carries Part XII, no "Part XIII"/ss.320-328')
 else:
     # NOT a silent skip. If the key is renamed or dropped, this gate stops watching the
     # thing it was built for and must say so rather than passing by absence (R20: a check
@@ -284,9 +306,17 @@ else:
 
 # Nothing anywhere else in the built texts may carry the stale citation either -- the row
 # above is the one known instance, not a guarantee it is the only one.
-_stale = [k for k, t in zip(fact_keys, fact_texts_to_embed) if 'section xii' in t.lower()]
-assert not _stale, f'[FATAL] "Section XII" still present in: {_stale}'
-print('[OK] payload gate: no row in the built index carries "Section XII"')
+# INVERTED 2026-10-05 with the gate above. This swept for "Section XII" across every built row
+# and refused to upload if it found any -- i.e. it banned the CORRECT numeral corpus-wide. It now
+# sweeps for the reversed citation instead. Note it never fired in its original form on anything
+# but the one known row, so inverting it loses no coverage.
+_stale = [k for k, t in zip(fact_keys, fact_texts_to_embed)
+          if re.search(r'part\s*xiii\b.{0,60}(?:foreign|kigeni)|'
+                       r'(?:foreign|kigeni).{0,60}part\s*xiii\b|'
+                       r'ss?\.?\s*320\s*[-–]\s*328', t, re.I)]
+assert not _stale, (f'[FATAL] the reversed "Part XIII / ss.320-328" foreign-company citation is '
+                    f'still present in: {_stale}. The Act says PART XII, ss.437-447.')
+print('[OK] payload gate: no row in the built index carries the reversed Part XIII citation')
 
 # SECOND PAYLOAD IN THIS RUN. 9c43143 (2026-09-05) also reworded `minimum_turnover_tax`, and
 # it has been sitting unshipped since: "kodi ya chini (AMT) ya asilimia 1" was intended as
