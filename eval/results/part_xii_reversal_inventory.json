@@ -1,0 +1,174 @@
+{
+  "_what": "Complete inventory of sites downstream of the 2026-08-31 Part XII 'correction', checked against Cap.212 R.E.2023 directly.",
+  "_report_only": true,
+  "act": {
+    "source": "https://www.brela.go.tz/uploads/documents/sw-1758107576-THE%20COMPANIES%20ACT,%20REVISED%20EDITION,%202023.pdf",
+    "edition": "Cap.212 Revised Edition 2023",
+    "fetched": "2026-10-04",
+    "http": 200,
+    "bytes": 3215470,
+    "parts": {
+      "XI": {
+        "heading": "WINDING UP OF UNREGISTERED COMPANIES",
+        "first_section": 429
+      },
+      "XII": {
+        "heading": "COMPANIES INCORPORATED OUTSIDE TANZANIA",
+        "first_section": 437,
+        "range": "ss.437-447"
+      },
+      "XIII": {
+        "heading": "GENERAL PROVISIONS AS TO REGISTRATION",
+        "first_section": 454
+      }
+    },
+    "ss_314_328": "winding-up machinery inside PART VIII (WINDING UP, s.270+): contributories, calls, special manager, public examination of promoters",
+    "renumbering_notes": {
+      "438": 433,
+      "439": 434,
+      "440": 435,
+      "442": 437,
+      "445": 440
+    },
+    "correct_citation": "Companies Act Cap.212 R.E.2023, Part XII, ss.437-447",
+    "fees_are_delegated": "s.458 and s.489(3) -- the Act sets NO fee amounts, so no fee figure is settleable from it (see gold_source_register.json)"
+  },
+  "refuted_claims": [
+    {
+      "claim": "the foreign-company regime is Part XIII",
+      "act": "Part XIII is 'GENERAL PROVISIONS AS TO REGISTRATION', s.454+",
+      "verdict": "REFUTED"
+    },
+    {
+      "claim": "the foreign-company regime is ss.320-328",
+      "act": "ss.320-328 are winding-up machinery in Part VIII; the regime is ss.437-447, and the Act's own renumbering notes show a +5 shift, not -115",
+      "verdict": "REFUTED -- corresponds to no edition"
+    },
+    {
+      "claim": "Part XII governs winding up of unregistered companies",
+      "act": "that is Part XI, s.429+",
+      "verdict": "REFUTED"
+    },
+    {
+      "claim": "winding up of unregistered companies is ss.314-319",
+      "act": "ss.314-319 are contributories/calls in Part VIII; Part XI begins at s.429",
+      "verdict": "REFUTED"
+    }
+  ],
+  "guard_rejects_correct_citation": {
+    "count": 3,
+    "of": 4,
+    "blocked": [
+      "Kampuni ya kigeni (Part XII) ikichelewa kufungua taarifa ya mwaka hulipa USD 25 kwa mwezi.",
+      "Section XII ya Sheria ya Makampuni inahusu kampuni za kigeni.",
+      "Foreign companies are governed by Part XII of the Companies Act."
+    ],
+    "meaning": "the fact's own guard now blocks right answers in both word orders"
+  },
+  "guard_blind_to_deployed_row_181": true,
+  "sites": {
+    "locked_facts:act_section_12": {
+      "says": "Part XIII (ss.320-328) ... NOT Part XII, which governs winding up of unregistered companies (ss.314-319)",
+      "direction": "ASSERTS_WRONG",
+      "note": "its verified_by claims a direct read that does not reproduce; R15 regen fact"
+    },
+    "locked_facts:act_section_12:wrong_patterns": {
+      "says": "two patterns matching <part|section|kifungu> XII near <foreign company>, in both word orders",
+      "direction": "PUNISHES_RIGHT",
+      "note": "THE DEFECT DEFENDS ITSELF. Verified by this script: both patterns fire on the now-correct citation. A guard rejecting right answers."
+    },
+    "locked_facts:document_filing_fee_section_12_act_excluding_balance_sheet": {
+      "says": "USD 220 (Companies Act Cap.212, Part XIII, ss.320-328)",
+      "direction": "ASSERTS_WRONG",
+      "note": "amount unaffected; citation only"
+    },
+    "locked_facts:balance_sheet_filing_fee_section_12_act": {
+      "says": "USD 220 (Companies Act Cap.212, Part XIII, ss.320-328)",
+      "direction": "ASSERTS_WRONG",
+      "note": "amount unaffected; citation only"
+    },
+    "locked_facts:brela_foreign_late_filing_penalty": {
+      "says": "USD 25/month (foreign company, Part XIII, ss.320-328)",
+      "direction": "ASSERTS_WRONG",
+      "note": "its verified_by explicitly overrode BRELA's own 'Kifungu XII' label as 'colloquial shorthand'. BRELA was right. The USD 25 figure is a separate, still-unresolved question -- the Act delegates fees (s.458, s.489(3))."
+    },
+    "rag_index:row_101": {
+      "says": "act section 12: ... governed by Part XIII (ss.320-328) ... NOT Part XII",
+      "direction": "ASSERTS_WRONG",
+      "note": "both kaggle/ and chike-inference/ copies; R15 regen required"
+    },
+    "rag_index:row_171": {
+      "says": "Kampuni ya kigeni (Companies Act Cap.212, Part XIII, ss.320-328) ikichelewa...",
+      "direction": "ASSERTS_WRONG",
+      "note": "THE CORRECT CITATION WAS DELETED FROM PRODUCTION HERE on 2026-09-22, as a stale defect. Users have received the wrong citation since."
+    },
+    "rag_index:row_181": {
+      "says": "Kampuni ya kigeni (kifungu 12): kuwasilisha nyaraka USD 220, mizania USD 220",
+      "direction": "ASSERTS_RIGHT_UNCAUGHT",
+      "note": "a THIRD deployed row, in a third form. Verified by this script: the 2026-09-23 guard does NOT match 'kifungu 12' -- the numeral branch requires the English 'part'. So the row that is substantively CORRECT about the numeral is also the row no guard can see, in either direction."
+    },
+    "quarantine:tier3_confirmed_wrong_quarantine_2026_09_01.jsonl": {
+      "says": "13 rows saying '(Section XII)', removed from training with the reason 'The correct citation is Part XIII, ss.320-328'",
+      "direction": "PUNISHES_RIGHT",
+      "note": "quarantined FOR BEING RIGHT on the numeral. They are loose on the label ('Section' where the Act says 'Part') -- a style imprecision, not the citation error they were removed for."
+    },
+    "training:train_sft.jsonl:3851": {
+      "says": "kusajili TAWI (branch) kwa BRELA chini ya Sehemu XII ya Companies Act",
+      "direction": "ASSERTS_RIGHT_UNCAUGHT",
+      "note": "STILL IN TRAINING, and correct. Survived the 2026-09-01 sweep because it uses the Swahili 'Sehemu' where the patterns required English. The sweep's blind spot preserved the one right answer."
+    },
+    "training:cleaned_pairs_batch_009.jsonl:98": {
+      "says": "same pair as train_sft.jsonl:3851",
+      "direction": "ASSERTS_RIGHT_UNCAUGHT",
+      "note": "source of the SFT row"
+    },
+    "gold:ext_15": {
+      "says": "USD 25 per month (Companies Act Cap.212, Part XIII, ss.320-328), NOT the TZS 2,500/month local-company rate",
+      "direction": "ASSERTS_WRONG",
+      "note": "THE ONLY affected scoring key in all three corpora (78 + 48 + 150 rows; the other two are clean). Gold is now part-confirmed-wrong (citation) and part-unresolved (the USD 25 figure). Verdict left ALONE -- half a correction must not flip a count."
+    },
+    "tests:test_act_section_xii_patterns.py": {
+      "says": "6 MUST_FIRE cases and 6 MUST_NOT_FIRE cases encoding the 2026-08-31 reading",
+      "direction": "PUNISHES_RIGHT",
+      "note": "ASSERTS THE ERROR IN BOTH DIRECTIONS, which is why it is the most consequential site. MUST_FIRE includes 'Foreign companies are governed by Part XII of the Companies Act' -- now TRUE, and the test requires it to be flagged. MUST_NOT_FIRE includes 'Part XII governs winding up of unregistered companies (ss.314-319)' -- now FALSE, and the test protects it. R20's second arrival point: a test instructing maintainers not to fix a real defect."
+    },
+    "CLAUDE.md:416": {
+      "says": "Foreign company (Companies Act Cap.212, Part XIII, ss.320-328 -- NOT 'Section XII'; corrected 2026-08-31)",
+      "direction": "ASSERTS_WRONG",
+      "note": "the origin the locked fact says it came from"
+    },
+    "CLAUDE.md:684": {
+      "says": "'Section XII closed' cited as evidence Bar A is reachable",
+      "direction": "ASSERTS_WRONG",
+      "note": "a worked example of a closed defect that was not closed. Bar A's evidence list is itself subject to the denominator problem."
+    }
+  },
+  "site_count_by_direction": {
+    "ASSERTS_RIGHT_UNCAUGHT": 3,
+    "ASSERTS_WRONG": 9,
+    "PUNISHES_RIGHT": 3
+  },
+  "out_of_scope": {
+    "datasets/.../batch_002*.jsonl: tier1a_nssf_edge_002/009": "'NSSF Act Section 12' -- the 15%/5% employer-employee split. Different Act entirely.",
+    "locked_facts: various 'Section 11' hits": "CLAUDE.md's own Section 11 heading, quoted inside correction_notes. Not a statutory citation."
+  },
+  "renumbering_exposure": {
+    "_why": "Cap.212 is the THIRD consolidated Act in this project found to carry the renumbering trap, after Cap.332 (presumptive bands) and Cap.438 (the s.35->s.43 cross-reference). Section citations against a consolidated edition are therefore a KNOWN-RECURRING exposure class, not a one-off.",
+    "_measured": "every locked fact citing a Cap.NNN together with a section number",
+    "acts_cited_with_section_numbers": 19,
+    "top_exposure": {
+      "Cap.332": 21,
+      "Cap.50": 20,
+      "Cap.82": 19,
+      "Cap.148": 18,
+      "Cap.212": 11,
+      "Cap.438": 8
+    },
+    "_status": "ENUMERATED, NOT CHECKED. No claim is made that any of these is wrong. The claim is that none has been verified against the amending instrument's own numbering, and that two of the three Acts checked so far were found stale."
+  },
+  "decisions_held": {
+    "ext_15_verdict": "UNCHANGED -- part-confirmed, part-unresolved",
+    "usd_25_vs_tzs_70000": "UNRESOLVED -- Companies (Fees) Regulations not located; the Act delegates all fees (s.458, s.489(3))",
+    "300000_vs_500000": "UNRESOLVED -- same gazette, same block"
+  }
+}
