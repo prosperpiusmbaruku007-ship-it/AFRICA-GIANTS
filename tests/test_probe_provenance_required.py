@@ -46,17 +46,16 @@ _DEADLINE = re.compile(r"\b(?:siku|days?|miezi|months?|mwaka|years?)\s+\d{1,3}|"
 
 # The uncited quantitative rows STILL outstanding. Started at 73 (measured 2026-09-29);
 # pass 1 on 2026-10-04 sourced 21, leaving 52; pass 2 on 2026-10-05 sourced 12 more,
-# leaving 40. Of pass 2's 12, five are PARTIAL -- they carry `source` for what a primary
+# leaving 32 after a second round widened three subject limbs. Of pass 2's 20, five are PARTIAL -- they carry `source` for what a primary
 # source settles and `source_partial` naming what it does not, so a row never reads as a
 # full warranty on a gold answer that is half unverified.
 # A BACKFILL WORKLIST, NOT AN EXEMPTION: ids leave as each gets a source, and nothing may be
 # added -- test_backfill_worklist_only_shrinks enforces both directions.
 PENDING_BACKFILL = {
-    "ext_01", "ext_02", "ext_03", "ext_08", "ext_09", "ext_13", "ext_14", "ext_18", "ext_19",
-    "ext_20", "ext_23", "ext_29", "ext_30", "ext_32", "ext_50", "ext_54", "ext_56", "ext_63",
-    "ext_68", "ext_71", "ext_73", "ext_75", "ext_76", "ext_78", "nat_06", "nat_07", "nat_08",
-    "nat_09", "nat_11", "nat_12", "nat_18", "nat_20", "nat_22", "nat_25", "nat_26", "nat_29",
-    "nat_31", "nat_34", "nat_36", "nat_42"
+    "ext_01", "ext_02", "ext_03", "ext_13", "ext_14", "ext_18", "ext_19", "ext_20", "ext_23",
+    "ext_30", "ext_32", "ext_50", "ext_54", "ext_63", "ext_68", "ext_71", "ext_73", "ext_75",
+    "ext_76", "ext_78", "nat_07", "nat_08", "nat_09", "nat_11", "nat_12", "nat_18", "nat_22",
+    "nat_29", "nat_31", "nat_34", "nat_36", "nat_42"
 }
 
 
@@ -123,6 +122,40 @@ def test_the_check_itself_fires_and_is_not_overbroad():
     assert asserts_checkable_quantity(uncited) and not has_source(uncited)   # would FAIL
     assert asserts_checkable_quantity(cited) and has_source(cited)           # would PASS
     assert not asserts_checkable_quantity(prose)                             # needs no source
+
+
+def test_the_matcher_refuses_to_cite_a_threshold_source_on_a_no_threshold_claim():
+    """R26 both directions on the backfill matcher's EXCLUSIONS limb (over-assignment #5).
+
+    nat_36's gold asserts that TAA Cap.438 s.44 sets NO turnover threshold for EFD. It matched
+    the VAT-registration-threshold rule on both the subject and quantity limbs, so the backfill
+    was about to attach a source STATING a threshold (TZS 200,000,000, for a different
+    obligation) to a row whose claim is that no threshold exists -- a citation contradicting the
+    gold it cites.
+
+    Neither limb could express this: both are legitimately present, and the defect is in the
+    POLARITY of the claim. This test exists because that third limb is the only thing standing
+    between the matcher and a manufactured cited-and-contradicted row, and an edit that drops it
+    would otherwise fail nothing -- the rule would simply start matching again and the backfill
+    would look more productive.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "bf", os.path.join(REPO, "eval", "controls", "backfill_gold_provenance.py"))
+    bf = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bf)
+
+    denies = ("EFD IS required BY DEFAULT regardless of turnover -- TAA Cap.438 s.44 sets no "
+              "turnover threshold at all; the VAT registration threshold of TZS 200,000,000 is "
+              "a different obligation.")
+    states = ("Threshold is exactly TZS 200,000,000 per 12 months -- must clarify whether the "
+              "trader has reached or exceeded it.")
+
+    assert "vat_registration_threshold" not in bf.match_claims(denies), (
+        "the matcher cited a threshold-stating source on a gold answer DENYING a threshold")
+    assert "vat_registration_threshold" in bf.match_claims(states), (
+        "the exclusion is overbroad -- it now blocks a row that genuinely asserts the VAT "
+        "registration threshold, which is the claim the entry exists to source")
 
 
 @pytest.mark.parametrize("rel", FIXTURES)

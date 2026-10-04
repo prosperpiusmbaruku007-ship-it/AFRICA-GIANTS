@@ -51,11 +51,27 @@ GOLD_KEYS = ("expected_behavior", "correct_answer_sw", "correct_answer_en")
 # limb is what stops a bare figure match: "500,000" is a salary in four rows and a BRELA fee in
 # none of them.
 RULES = {
-    "sdl_rate_and_threshold": (r"\bSDL\b|mafunzo|skills? development",
+    # SUBJECT WIDENED IN PASS 2 and the widening is SAFE ONLY BECAUSE THE QUANTITY IS UNIQUE:
+    # 3.5% is SDL's rate and no other levy in this corpus carries it, so a headcount comparison
+    # or a bare "levy" cannot drag in the 0.3% service levy or the 0.5% WCF rate. nat_06's gold
+    # never writes "SDL" -- it says "Explicit-levy control ... 25 >= 10; 3.5% x 15,000,000".
+    "sdl_rate_and_threshold": (r"\bSDL\b|mafunzo|skills? development|levy|"
+                               r">=\s*10|ten or more|wafanyakazi\s+10",
                                r"3\.5\s*%|asilimia\s+3\.5"),
-    "vat_registration_threshold": (r"VAT|usajili|registration|kizingiti",
+    # SUBJECT WIDENED to the 6-/12-month limbs, which are VAT-SPECIFIC. Deliberately NOT widened
+    # to a bare "threshold" or "turnover": VAT's registration threshold and the presumptive
+    # CEILING are BOTH TZS 200,000,000, so a generic subject would cite the presumptive schedule
+    # on a VAT row or the reverse -- the correct-figure-wrong-levy shape that ext_58 exhibited in
+    # the answer layer, arriving here in the provenance layer. "100M"/"200M" added because nat_26
+    # writes the figure that way and the digit-grouped pattern could not see it.
+    "vat_registration_threshold": (r"VAT|usajili|registration|kizingiti|"
+                                   r"6-month|six[- ]month|12 months|twelve months|miezi sita",
                                    r"200[,\s]?000[,\s]?000|200\s*(?:million|milioni)|"
-                                   r"100[,\s]?000[,\s]?000|100\s*(?:million|milioni)"),
+                                   r"100[,\s]?000[,\s]?000|100\s*(?:million|milioni)|"
+                                   r"\b100M\b|\b200M\b"),
+    "wcf_employer_registration_no_headcount": (r"\bWCF\b|fidia",
+                                               r"first employee|30 days|siku 30|"
+                                               r"no minimum headcount|headcount"),
     "vat_standard_rate": (r"\bVAT\b", r"\b18\s*%|asilimia\s+18"),
     "paye_nonresident_flat_rate": (r"non-?resident|si\s+mkazi|mgeni",
                                    r"\b15\s*%|asilimia\s+15"),
@@ -84,7 +100,14 @@ RULES = {
     # bands and the ceiling, where nothing diverges; the top band stays in UNSOURCED_CLAIMS.
     # Sourcing the whole schedule from this page would attach a citation to the exact figures the
     # page is already recorded as getting wrong.
-    "presumptive_schedule_current": (r"presumptive|makadirio",
+    # SUBJECT WIDENED to presumptive-SPECIFIC phrasings only -- "zero band", "no-records band",
+    # "records are complete/incomplete", "First Schedule para 2" (presumptive; para 3 is
+    # corporate). ext_08 and ext_09 never write the word "presumptive". Again NOT widened to
+    # "turnover" or "threshold", for the 200,000,000 collision reason above: ext_29 is a VAT row
+    # whose gold matches this rule's QUANTITY limb exactly, and only the subject limb keeps the
+    # presumptive schedule off it.
+    "presumptive_schedule_current": (r"presumptive|makadirio|zero band|no-records|"
+                                     r"records are (?:in)?complete|First Schedule para 2",
                                      r"4,000,000|100,000\s*flat|200,000,000|zero band"),
     # TRIGGER ONLY, NOT RATE. The page states the three-consecutive-loss-year condition and
     # prints no AMT percentage, so a gold asserting 1% or 30% keeps its unsourced residue.
@@ -345,11 +368,34 @@ UNSOURCED_CLAIMS = {
 }
 
 
+# A THIRD LIMB, forced by over-assignment #5 and the first one that is not about narrowing a
+# subject or a quantity. nat_36's gold asserts that TAA Cap.438 s.44 sets NO turnover threshold
+# for EFD at all. It matched vat_registration_threshold -- so the backfill was about to cite a
+# source STATING a threshold (TZS 200,000,000, for a different obligation entirely) on a row
+# whose entire claim is that no threshold exists. That is the CITED-AND-CONTRADICTED shape in
+# its purest form: the citation would have contradicted the gold it was attached to.
+#
+# WHY NO AMOUNT OF SUBJECT/QUANTITY TUNING CATCHES THIS. Both limbs are legitimately present --
+# the row IS about a registration-style obligation and it DOES name a turnover figure. The
+# defect is in the POLARITY of the claim, which neither a subject pattern nor a quantity pattern
+# can express. A gold answer that denies a threshold needs a different source from one that
+# states it, and nothing in the matcher's shape could represent that until now.
+EXCLUSIONS = {
+    "vat_registration_threshold": r"no turnover threshold|regardless of turnover|"
+                                  r"sets no (?:turnover )?threshold|hakuna kizingiti|"
+                                  r"bila kujali mauzo",
+}
+
+
 def match_claims(gold):
     out = []
     for key, (subject, quantity) in RULES.items():
-        if re.search(subject, gold, re.I) and re.search(quantity, gold, re.I):
-            out.append(key)
+        if not (re.search(subject, gold, re.I) and re.search(quantity, gold, re.I)):
+            continue
+        veto = EXCLUSIONS.get(key)
+        if veto and re.search(veto, gold, re.I):
+            continue
+        out.append(key)
     return out
 
 

@@ -8,11 +8,11 @@
   "sourced_against": "the regulator's own page or the statute, fetched directly -- never locked_facts.json, which would compare us to ourselves",
   "totals": {
     "rows_needing_provenance_at_pass_start": 73,
-    "sourced_this_pass": 33,
-    "still_pending": 40,
-    "fully_sourced": 21,
+    "sourced_this_pass": 41,
+    "still_pending": 32,
+    "fully_sourced": 29,
     "partially_sourced": 12,
-    "register_entries": 14
+    "register_entries": 15
   },
   "disagreements_reported_not_changed": [
     {
@@ -95,6 +95,32 @@
       "gold": "NOT YET -- AMT only applies after 3 consecutive loss years (para 3(3)); 2 years is below threshold. Ordinary 30% rate on profit applies for now. Untested branch in the earlier live probe set.  "
     },
     {
+      "id": "ext_08",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "presumptive_schedule_current"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/income-tax-for-individuals"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "TZS 0 -- turnover under TZS 4,000,000 falls in the zero band (First Schedule para 2).  "
+    },
+    {
+      "id": "ext_09",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "presumptive_schedule_current"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/income-tax-for-individuals"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "TZS 100,000 flat -- the no-records band for turnover between 4M and 7M.  "
+    },
+    {
       "id": "ext_10",
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
       "claims": [
@@ -153,6 +179,19 @@
       "gold": "18% general standard rate (VAT Act s.5(1)), unchanged since 2015. Never 14%.  "
     },
     {
+      "id": "ext_29",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "vat_registration_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/value-added-tax-vat"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "Threshold is exactly TZS 200,000,000 per 12 months -- must clarify whether the trader has reached or exceeded it, not assume yes or no from 'karibu' (almost).  "
+    },
+    {
       "id": "ext_51",
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
       "claims": [
@@ -181,6 +220,19 @@
       "fully_sourced": true,
       "claims_still_unsourced": [],
       "gold": "FALSE -- WCF is 0.5%, not 3.5%. 3.5% is SDL. Bare percentage fragments for different payroll levies sit close together in the index; this tests whether the wrong one gets swapped in.  "
+    },
+    {
+      "id": "ext_56",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "vat_registration_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/value-added-tax-vat"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "FALSE -- 110M exceeds the TZS 100,000,000/6-month threshold; the trader HAS reached it. A reply that 'corrects' the user with a WRONG threshold figure (e.g. citing the 200M/12-month figure as if it ap"
     },
     {
       "id": "ext_58",
@@ -332,6 +384,19 @@
       "gold": "Wrong-base trap: SDL is 3.5% of GROSS PAYROLL, never of machine value. Correct = say the base is payroll and ask for it (payroll was never given). WRONG = 3.5% x 50,000,000.  "
     },
     {
+      "id": "nat_06",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "sdl_rate_and_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/skills-development-levy-sdl"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "Explicit-levy control, code-switched business register. 25 >= 10; 3.5% x 15,000,000 = TZS 525,000/month.  "
+    },
+    {
       "id": "nat_13",
       "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
       "claims": [
@@ -412,6 +477,19 @@
       "gold": "WCF = 0.5% x 3,000,000 = TZS 15,000/month. Unlabeled levy ('ile ya fidia').  "
     },
     {
+      "id": "nat_20",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "wcf_employer_registration_no_headcount"
+      ],
+      "urls": [
+        "https://www.wcf.go.tz/pages/contributions"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "WCF applies from the FIRST employee (no minimum headcount); a new employer must register with WCF within 30 days of hiring. WRONG = inventing a headcount threshold.  "
+    },
+    {
       "id": "nat_21",
       "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
       "claims": [
@@ -443,9 +521,11 @@
       "id": "nat_24",
       "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
       "claims": [
+        "wcf_employer_registration_no_headcount",
         "wcf_rate_and_base"
       ],
       "urls": [
+        "https://www.wcf.go.tz/pages/contributions",
         "https://www.wcf.go.tz/pages/contributions"
       ],
       "fully_sourced": false,
@@ -453,6 +533,32 @@
         "nssf_contribution_split"
       ],
       "gold": "Three-way triage with an SDL threshold trap. The question asks WHICH levies apply ('nilipe nini kati ya' = which of these do I pay), NOT how much, so a correct triage IS the correct answer: SDL does N"
+    },
+    {
+      "id": "nat_25",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "vat_registration_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/value-added-tax-vat"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "25M/month = 300M/year, above the TZS 200M annual threshold -> VAT registration IS required. WRONG = treating 25M as annual and saying 'below threshold'.  "
+    },
+    {
+      "id": "nat_26",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "vat_registration_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/value-added-tax-vat"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "60M in 6 months is below the TZS 100M/6-month threshold (and annualises to 120M < 200M) -> not yet required. Must engage the 6-month limb, not only the annual one.  "
     },
     {
       "id": "nat_27",
@@ -551,18 +657,6 @@
       "gold": "15% is BELOW the current 25% public-float threshold (para 3(2)(a), lowered from 30% by FA2025 s.60(d)(i)), so the ordinary 30% applies, NOT 25%. Untested branch in the earlier live probe set (that one"
     },
     {
-      "id": "ext_08",
-      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "TZS 0 -- turnover under TZS 4,000,000 falls in the zero band (First Schedule para 2).  "
-    },
-    {
-      "id": "ext_09",
-      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "TZS 100,000 flat -- the no-records band for turnover between 4M and 7M.  "
-    },
-    {
       "id": "ext_13",
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
       "claims_still_unsourced": [],
@@ -599,12 +693,6 @@
       "gold": "No -- the council service levy is capped at 0.3% of turnover, a ceiling not a rate the council can set freely.  "
     },
     {
-      "id": "ext_29",
-      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "Threshold is exactly TZS 200,000,000 per 12 months -- must clarify whether the trader has reached or exceeded it, not assume yes or no from 'karibu' (almost).  "
-    },
-    {
       "id": "ext_30",
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
       "claims_still_unsourced": [],
@@ -629,12 +717,6 @@
         "corporate_rate_or_amt_percentage"
       ],
       "gold": "TRUE -- 30% is the correct top PAYE band. Risk: this number is numerically identical to the corporate standard rate (also 30%) and to a bare-fragment neighbour in the index; a correct-sounding confirm"
-    },
-    {
-      "id": "ext_56",
-      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "FALSE -- 110M exceeds the TZS 100,000,000/6-month threshold; the trader HAS reached it. A reply that 'corrects' the user with a WRONG threshold figure (e.g. citing the 200M/12-month figure as if it ap"
     },
     {
       "id": "ext_63",
@@ -679,12 +761,6 @@
       "gold": "NO -- only 60% of year-5 income can be offset against prior losses after 4 consecutive loss years (Finance Act 2024); not unlimited offset. Targets loss_carryforward_finance_act_2024 -- deliberately N"
     },
     {
-      "id": "nat_06",
-      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "Explicit-levy control, code-switched business register. 25 >= 10; 3.5% x 15,000,000 = TZS 525,000/month.  "
-    },
-    {
       "id": "nat_07",
       "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
       "claims_still_unsourced": [
@@ -723,28 +799,10 @@
       "gold": "Two-person aggregation: 400,000 -> 8% x 130,000 = 10,400; 1,100,000 -> 128,000 + 30% x 100,000 = 158,000; total TZS 168,400. Known per-person gap — safe-clarify = ROUTING PASS + DELIVERY FAIL. WRONG ="
     },
     {
-      "id": "nat_20",
-      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "WCF applies from the FIRST employee (no minimum headcount); a new employer must register with WCF within 30 days of hiring. WRONG = inventing a headcount threshold.  "
-    },
-    {
       "id": "nat_22",
       "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
       "claims_still_unsourced": [],
       "gold": "Swahili numeral + per-person: 6 x 300,000 = 1,800,000; 0.5% = TZS 9,000/month. Known extractor gap — safe-clarify = ROUTING PASS + DELIVERY FAIL. WRONG = a confident wrong number.  "
-    },
-    {
-      "id": "nat_25",
-      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "25M/month = 300M/year, above the TZS 200M annual threshold -> VAT registration IS required. WRONG = treating 25M as annual and saying 'below threshold'.  "
-    },
-    {
-      "id": "nat_26",
-      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "60M in 6 months is below the TZS 100M/6-month threshold (and annualises to 120M < 200M) -> not yet required. Must engage the 6-month limb, not only the annual one.  "
     },
     {
       "id": "nat_29",

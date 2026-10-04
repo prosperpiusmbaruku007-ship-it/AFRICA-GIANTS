@@ -122,6 +122,16 @@
     "quote": "A person aggrieved by a tax decision made by the Commissioner General may file a Notice of Objection within thirty (30) days from the date of service of the decision. ... The objection shall not be admitted unless the taxpayer pays the tax not in dispute or one-third of the assessed tax, whichever is greater. ... 1) A notice of appeal is served upon the Commissioner General within thirty days following the date on which a notice of final determination of assessment of tax is served on the appellant; 2) The appeal is lodged with the Board within forty-five days ... The appellant shall serve the opposite party notice of intention to appeal within fifteen days following the date on which the decision of the board was made and the appeal should be made within thirty days from the date of the decision of the board.",
     "note": "⚠️ THE LABEL 'NOTICE OF INTENTION' BELONGS TO THE TRIBUNAL STEP, NOT THE BOARD STEP. ext_72's gold calls the TRAB 30-day step a 'Notice of Intention'; TRA calls it a 'notice of appeal' and reserves 'notice of intention' for the 15-day TRAT step. The two FIGURES ext_72 is scored on (30 and 45 days, both mandatory, both for the Board) are CONFIRMED -- so the gold's quantities stand and only its terminology is loose. Recorded because a model that uses TRA's own vocabulary could be marked wrong by a key using ours."
   },
+  "wcf_employer_registration_no_headcount": {
+    "claim": "Every employer in Tanzania Mainland must register with WCF -- there is no minimum headcount -- and an employer established after 1 July 2015 must register within 30 days of hiring its first employee.",
+    "url": "https://www.wcf.go.tz/pages/contributions",
+    "source_type": "regulator_page",
+    "fetched": "2026-10-05",
+    "http": 200,
+    "bytes": 96129,
+    "quote": "mwajiri yoyote Tanzania Bara anawajibika kujisajili katika Mfuko. Mwajiri aliyekuwepo kabla ya tarehe 01 Julai 2015, aliwajibika kujisajili kwenye Mfuko tarehe 01 Julai 2015. Kwa Mwajiri aliyekuwepo baada tarehe 01 Julai 2015, anawajibika kujisajili kwenye mfuko ndani ya siku thelathini (30) baada ya kuajiri mfanyakazi wa kwanza.",
+    "note": "Sources BOTH limbs nat_20 is scored on -- 'from the first employee, no minimum headcount' (the page says 'mwajiri yoyote', any employer) and the 30-day deadline. Distinct from wcf_rate_and_base, which covers the 0.5% contribution: nat_20 asserts no rate at all, which is why the rate entry's quantity limb could not reach it."
+  },
   "companies_act_director_minimum_age": {
     "claim": "A person cannot be appointed a company director if at the time of appointment they have not attained the age of eighteen years.",
     "url": "https://www.brela.go.tz/uploads/documents/sw-1758107576-THE%20COMPANIES%20ACT,%20REVISED%20EDITION,%202023.pdf",
