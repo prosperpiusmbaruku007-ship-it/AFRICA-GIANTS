@@ -1,0 +1,676 @@
+{
+  "measured": "2026-10-04",
+  "harness": "eval/controls/backfill_gold_provenance.py",
+  "register": "eval/accuracy_gate/gold_source_register.json",
+  "pass": 1,
+  "mode": "WRITE",
+  "what_this_does": "Attaches a source-register key to gate gold answers whose claim has been read against a primary source. Changes no gold answer.",
+  "sourced_against": "the regulator's own page or the statute, fetched directly -- never locked_facts.json, which would compare us to ourselves",
+  "totals": {
+    "rows_needing_provenance_at_pass_start": 73,
+    "sourced_this_pass": 21,
+    "still_pending": 52,
+    "fully_sourced": 16,
+    "partially_sourced": 5,
+    "register_entries": 6
+  },
+  "disagreements_reported_not_changed": [
+    {
+      "what": "⛔ AFFECTS A GATE GOLD ANSWER. ext_15's gold asserts a foreign company's late-filing penalty is USD 25 per month. CLAUDE.md Section 11 says the same.",
+      "source_says": "TZS 70,000 per month or part month. brela.go.tz/pages/tozo-za-kampuni item 15(iv), under 'Ada chini ya Masharti ya Sehemu ya XII ya Sheria (Makampuni ya Nje)': 'Kwa kutowasilisha au kuchelewesha kuwasilisha hati yoyote inayotakiwa kuwasilishwa kwa Msajili, kwa kila mwezi au sehemu ya mwezi wa kuchelewa. 70,000/='",
+      "fetched": "2026-10-04 (HTTP 200, 57,804 bytes)",
+      "affects_a_gate_gold": true,
+      "affected_rows": [
+        "ext_15"
+      ],
+      "assessment": "THIS IS A SCORING-KEY CORRECTION CANDIDATE AND IT MOVES A FAILURE COUNT, so it is reported and not applied. ext_15 is currently adjudicated WRONG with cause=model; if the gold is wrong the row's verdict is unsafe in either direction until a human decides. NOTE THE R29 SHAPE: USD 25 is roughly TZS 65,000-70,000 at current rates, so the likeliest reading is CORRECTLY-CITED-BUT-SUPERSEDED -- a real earlier fee schedule denominated in dollars, replaced by a shilling figure. That is mode 3, the one no check in this project would have caught, and it is why the fee schedule needs reading rather than the Act alone: Cap.212 may still say USD 25 while the current GN fee schedule says 70,000.",
+      "what_would_settle_it": "The current Companies (Fees) GN, and Cap.212 Part XII/XIII as amended. Neither was read -- only BRELA's fee page.",
+      "status": "REPORTED_NOT_CHANGED"
+    },
+    {
+      "what": "locked fact / CLAUDE.md Section 11 -- 'Company without share capital: TZS 300,000 registration fee'",
+      "source_says": "TZS 500,000. brela.go.tz/pages/tozo-za-kampuni item 2: 'Usajili wa Kampuni ambayo haina mtaji wa hisa 500,000/='",
+      "fetched": "2026-10-04 (HTTP 200, 57,804 bytes)",
+      "affects_a_gate_gold": false,
+      "checked": "No row among the 73 asserts this figure -- searched for '300,000' and for share-capital subject terms across both fixtures. The three '300,000' and four '500,000' matches are all wages or salaries in other rows.",
+      "recommendation": "Correct CLAUDE.md Section 11 and the locked fact to 500,000 after a second read. No gate number moves either way, so this is a provenance fix rather than a scoring-key correction.",
+      "status": "REPORTED_NOT_CHANGED"
+    },
+    {
+      "what": "BRELA's own fee page labels the foreign-company part of the Companies Act 'Sehemu ya XII'",
+      "source_says": "'15 Ada chini ya Masharti ya Sehemu ya XII ya Sheria (Makampuni ya Nje)' -- i.e. Part XII",
+      "our_record": "CLAUDE.md Section 11 says Part XIII, ss.320-328, and explicitly 'NOT \"Section XII\"; corrected 2026-08-31'. ext_15's gold cites Part XIII.",
+      "affects_a_gate_gold": true,
+      "affected_rows": [
+        "ext_15"
+      ],
+      "assessment": "DO NOT FLIP. The 2026-08-31 correction was made against the Act; this is the regulator's own page being imprecise, which CLAUDE.md already documents as a known failure mode ('The regulator's own summary is not the statute either'). Recorded because it is almost certainly the ORIGIN of the original Part XII error, and because a future reader fetching this page will hit the same contradiction and needs to find this note rather than re-derive it.",
+      "status": "REPORTED_NOT_CHANGED"
+    }
+  ],
+  "sourced": [
+    {
+      "id": "ext_15",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "brela_annual_return_and_penalties"
+      ],
+      "urls": [
+        "https://www.brela.go.tz/pages/tozo-za-kampuni"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "foreign_company_late_filing_penalty"
+      ],
+      "gold": "Yes -- a foreign company's late-filing penalty is USD 25 per month (Companies Act Cap.212, Part XIII, ss.320-328), NOT the TZS 2,500/month local-company rate.  "
+    },
+    {
+      "id": "ext_28",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "vat_standard_rate"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/value-added-tax-vat"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "18% general standard rate (VAT Act s.5(1)), unchanged since 2015. Never 14%.  "
+    },
+    {
+      "id": "ext_51",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "sdl_rate_and_threshold",
+        "wcf_rate_and_base"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/skills-development-levy-sdl",
+        "https://www.wcf.go.tz/pages/contributions"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "SDL (training levy) is 3.5%; WCF (workplace-injury levy) is 0.5%. Must correctly attribute the 3.5% to SDL, not WCF -- two nearby payroll percentages that can be swapped.  "
+    },
+    {
+      "id": "ext_55",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "sdl_rate_and_threshold",
+        "wcf_rate_and_base"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/skills-development-levy-sdl",
+        "https://www.wcf.go.tz/pages/contributions"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "FALSE -- WCF is 0.5%, not 3.5%. 3.5% is SDL. Bare percentage fragments for different payroll levies sit close together in the index; this tests whether the wrong one gets swapped in.  "
+    },
+    {
+      "id": "ext_58",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "sdl_rate_and_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/skills-development-levy-sdl"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "nssf_contribution_split"
+      ],
+      "gold": "SDL: 3.5% x (16 x 500,000) = TZS 280,000. NSSF: 20% x 8,000,000 = TZS 1,600,000. Both figures must be given, correctly attributed to the right levy, fresh numbers not reused from the 48.  "
+    },
+    {
+      "id": "ext_59",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "sdl_rate_and_threshold",
+        "wcf_rate_and_base"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/skills-development-levy-sdl",
+        "https://www.wcf.go.tz/pages/contributions"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "nssf_contribution_split"
+      ],
+      "gold": "Three-way fanout: SDL 3.5% x 4,800,000 = 168,000; NSSF 20% x 4,800,000 = 960,000; WCF 0.5% x 4,800,000 = 24,000. All three must be resolved and correctly attributed, none dropped.  "
+    },
+    {
+      "id": "ext_60",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "sdl_rate_and_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/skills-development-levy-sdl"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "SDL: 3.5% x 5,000,000 = TZS 175,000. The GN487A-adjacent director question needs its own fact-path answer (a foreign director is not the same as a foreign OPERATOR of a prohibited retail/wholesale act"
+    },
+    {
+      "id": "ext_61",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "vat_registration_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/value-added-tax-vat"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "PAYE on TZS 900,000 per the current bands, plus the VAT registration threshold (TZS 200,000,000/12mo) as a separate, correctly-labelled second answer -- must not conflate the two into one figure.  "
+    },
+    {
+      "id": "ext_74",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "paye_nonresident_flat_rate"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/pay-as-you-earn"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "15% WHT on director fees for non-full-time directors, same rate for residents and non-residents. Targets wht_director_fees.  "
+    },
+    {
+      "id": "nat_01",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "sdl_rate_and_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/skills-development-levy-sdl"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "14 >= 10 so SDL applies; 3.5% x 6,000,000 = TZS 210,000/month. Unlabeled levy ('ile ya mafunzo ya ufundi'). WRONG = wrong rate, below-threshold claim, or a free-computed figure on the fact path.  "
+    },
+    {
+      "id": "nat_02",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "sdl_rate_and_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/skills-development-levy-sdl"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "All-Swahili numerals + per-person: 'ishirini'=20 employees, 'laki nne'=400,000 each -> payroll 8,000,000; 3.5% = TZS 280,000/month. ROUTING must reach compute[sdl]. Known extractor gap (Swahili numera"
+    },
+    {
+      "id": "nat_03",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "sdl_rate_and_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/skills-development-levy-sdl"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "Threshold trap: 7 < 10, so SDL does NOT apply — correct answer is 'haihusiki', not an amount. WRONG = computing 3.5% x 3,000,000.  "
+    },
+    {
+      "id": "nat_05",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "sdl_rate_and_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/skills-development-levy-sdl"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "Wrong-base trap: SDL is 3.5% of GROSS PAYROLL, never of machine value. Correct = say the base is payroll and ask for it (payroll was never given). WRONG = 3.5% x 50,000,000.  "
+    },
+    {
+      "id": "nat_16",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "paye_nonresident_flat_rate"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/pay-as-you-earn"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "Non-resident employee: flat 15% final withholding, NOT the resident progressive bands. 15% x 4,000,000 = TZS 600,000. WRONG = progressive-band computation (D-PAYE-1).  "
+    },
+    {
+      "id": "nat_19",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "wcf_rate_and_base"
+      ],
+      "urls": [
+        "https://www.wcf.go.tz/pages/contributions"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "WCF = 0.5% x 3,000,000 = TZS 15,000/month. Unlabeled levy ('ile ya fidia').  "
+    },
+    {
+      "id": "nat_21",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "wcf_rate_and_base"
+      ],
+      "urls": [
+        "https://www.wcf.go.tz/pages/contributions"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "Asset distractor: WCF base is payroll, not vehicle value. 0.5% x 900,000 = TZS 4,500/month. WRONG = 0.5% x 30,000,000 (D-WCF-3 distractor class).  "
+    },
+    {
+      "id": "nat_23",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "sdl_rate_and_threshold"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/skills-development-levy-sdl"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "nssf_contribution_split"
+      ],
+      "gold": "Two unlabeled levies, both must be answered (D-DECOMP-1 fan-out): SDL 3.5% x 5,500,000 = TZS 192,500 (12 >= 10); NSSF 20% x 5,500,000 = TZS 1,100,000 total (employer share 550,000). WRONG = answering "
+    },
+    {
+      "id": "nat_24",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "wcf_rate_and_base"
+      ],
+      "urls": [
+        "https://www.wcf.go.tz/pages/contributions"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "nssf_contribution_split"
+      ],
+      "gold": "Three-way triage with an SDL threshold trap. The question asks WHICH levies apply ('nilipe nini kati ya' = which of these do I pay), NOT how much, so a correct triage IS the correct answer: SDL does N"
+    },
+    {
+      "id": "nat_27",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "vat_standard_rate"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/value-added-tax-vat"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "Standard VAT rate 18%.  "
+    },
+    {
+      "id": "nat_33",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "brela_annual_return_and_penalties"
+      ],
+      "urls": [
+        "https://www.brela.go.tz/pages/tozo-za-kampuni"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "BRELA annual return fee TZS 22,000; late-filing penalty TZS 2,500 per month (or part month) for a local company -> 7 x 2,500 = TZS 17,500. WRONG = the USD 25/month foreign-company rate, or an invented"
+    },
+    {
+      "id": "nat_40",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "wcf_rate_and_base"
+      ],
+      "urls": [
+        "https://www.wcf.go.tz/pages/contributions"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "OSHA registers/inspects workplaces but does NOT pay compensation; WCF pays workplace-injury compensation (employer contributes 0.5%). Both roles must be distinguished.  "
+    }
+  ],
+  "still_pending": [
+    {
+      "id": "ext_01",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "30% standard rate (First Schedule para 3(1)) -- ordinary, non-DSE-listed company. Must state RATE only, never a TZS figure from turnover.  "
+    },
+    {
+      "id": "ext_02",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Never-guess case: 25% requires >=25% of equity issued to the public (para 3(2)(a)); not stated here. Must ask for the public-float percentage, not assume either 25% or 30%.  "
+    },
+    {
+      "id": "ext_03",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "15% is BELOW the current 25% public-float threshold (para 3(2)(a), lowered from 30% by FA2025 s.60(d)(i)), so the ordinary 30% applies, NOT 25%. Untested branch in the earlier live probe set (that one"
+    },
+    {
+      "id": "ext_04",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [
+        "corporate_rate_or_amt"
+      ],
+      "gold": "AMT applies: 1% of the 3rd loss-year turnover (para 3(3), FA2025 s.60(d)(ii)). Transport is not an exempt sector under s.4(8).  "
+    },
+    {
+      "id": "ext_07",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [
+        "corporate_rate_or_amt"
+      ],
+      "gold": "NOT YET -- AMT only applies after 3 consecutive loss years (para 3(3)); 2 years is below threshold. Ordinary 30% rate on profit applies for now. Untested branch in the earlier live probe set.  "
+    },
+    {
+      "id": "ext_08",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "TZS 0 -- turnover under TZS 4,000,000 falls in the zero band (First Schedule para 2).  "
+    },
+    {
+      "id": "ext_09",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "TZS 100,000 flat -- the no-records band for turnover between 4M and 7M.  "
+    },
+    {
+      "id": "ext_10",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [
+        "presumptive_schedule"
+      ],
+      "gold": "NO -- 250M exceeds the 200,000,000 ceiling (WEF 2026-07-01). Ordinary individual income-tax rates on actual profit apply instead, not the presumptive table.  "
+    },
+    {
+      "id": "ext_13",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "TZS 22,000 per year.  "
+    },
+    {
+      "id": "ext_14",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "TZS 2,500 per month (or part-month) late, for a LOCAL company -- so 4 months = TZS 10,000, plus the base TZS 22,000 fee itself.  "
+    },
+    {
+      "id": "ext_18",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Should surface the registration cost picture (name reservation ~TZS 50,000, minimum incorporation ~TZS 95,000) -- a coverage/completeness check, not a single-figure lookup; location (Mbeya) is inciden"
+    },
+    {
+      "id": "ext_19",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "TZS 60,000 for a single mark registration.  "
+    },
+    {
+      "id": "ext_20",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "TZS 30,000 for renewal of registration.  "
+    },
+    {
+      "id": "ext_22",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "An extension of the 30-day objection period is a STATUTORY RIGHT, not a rare favour -- apply within 7 days before the original deadline expires, for up to 30 more days.  "
+    },
+    {
+      "id": "ext_23",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "No -- the council service levy is capped at 0.3% of turnover, a ceiling not a rate the council can set freely.  "
+    },
+    {
+      "id": "ext_29",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Threshold is exactly TZS 200,000,000 per 12 months -- must clarify whether the trader has reached or exceeded it, not assume yes or no from 'karibu' (almost).  "
+    },
+    {
+      "id": "ext_30",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "CORRECTED 2026-09-23. The ORIGINAL expected_behavior read: 'Deferment on imported capital goods is available if VAT payable per unit is at least TZS 10,000,000 and turnover is/expected to be >=90% tax"
+    },
+    {
+      "id": "ext_32",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Fine TZS 1,000,000 to 5,000,000, or imprisonment up to 12 months, or both; continuing offence adds TZS 100,000 per day.  "
+    },
+    {
+      "id": "ext_50",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Both can be right depending on WHICH figure: 20% is the TOTAL (employer+employee combined), 10% is each party's individual SHARE. Correct answer must resolve which quantity, not default to one number "
+    },
+    {
+      "id": "ext_54",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [
+        "corporate_rate_or_amt"
+      ],
+      "gold": "TRUE -- 30% is the correct top PAYE band. Risk: this number is numerically identical to the corporate standard rate (also 30%) and to a bare-fragment neighbour in the index; a correct-sounding confirm"
+    },
+    {
+      "id": "ext_56",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "FALSE -- 110M exceeds the TZS 100,000,000/6-month threshold; the trader HAS reached it. A reply that 'corrects' the user with a WRONG threshold figure (e.g. citing the 200M/12-month figure as if it ap"
+    },
+    {
+      "id": "ext_63",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "GN605A sector increments range from TZS 20,000 (lowest sector) to TZS 195,000 (highest) per month -- targets gn605a_increment_range, never corrected, never guarded, never named in PROGRESS.  "
+    },
+    {
+      "id": "ext_68",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "TZS 50,000 -- targets company_name_reservation_fee.  "
+    },
+    {
+      "id": "ext_69",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "No -- a director must have attained 18 years of age at the time of appointment. Targets company_director_minimum_age.  "
+    },
+    {
+      "id": "ext_71",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "GENUINE HEDGE -- renewal frequency is not explicitly stated on osha.go.tz; correct answer says so honestly and directs to OSHA directly, not a fabricated 'every year' or 'every 3 years'. Targets osha_"
+    },
+    {
+      "id": "ext_72",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "TRAB appeal requires TWO mandatory steps: Notice of Intention within 30 days, AND Statement of Appeal within 45 days. Targets trab_appeal_two_steps.  "
+    },
+    {
+      "id": "ext_73",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "6 months from the date the objection is admitted -- NOT 90 days. Targets commissioner_objection_deadline.  "
+    },
+    {
+      "id": "ext_75",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Fine up to TZS 200,000 and/or 2-12 months imprisonment, plus interest on unpaid VAT -- NOT a 2.5% monthly rate. Targets vat_late_registration_penalty.  "
+    },
+    {
+      "id": "ext_76",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "36 monthly contributions. Targets minimum_monthly_contributions_maternity_benefit.  "
+    },
+    {
+      "id": "ext_78",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "NO -- only 60% of year-5 income can be offset against prior losses after 4 consecutive loss years (Finance Act 2024); not unlimited offset. Targets loss_carryforward_finance_act_2024 -- deliberately N"
+    },
+    {
+      "id": "nat_06",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Explicit-levy control, code-switched business register. 25 >= 10; 3.5% x 15,000,000 = TZS 525,000/month.  "
+    },
+    {
+      "id": "nat_07",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [
+        "nssf_contribution_split"
+      ],
+      "gold": "Employer share ONLY: 10% x 800,000 = TZS 80,000. WRONG = the 20% combined figure (160,000) — D-NSSF-1 party resolution.  "
+    },
+    {
+      "id": "nat_08",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Employee share (asked from the employee's side): 10% x 650,000 = TZS 65,000. WRONG = 20% combined.  "
+    },
+    {
+      "id": "nat_09",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Explicitly both parties: 20% x 1,200,000 = TZS 240,000 (employer 120,000 + employee 120,000).  "
+    },
+    {
+      "id": "nat_11",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Per-person aggregation: 4 x 600,000 = 2,400,000; total 20% = TZS 480,000. Known aggregation/extractor gap — a safe-clarify is a ROUTING PASS and a DELIVERY FAIL. WRONG = a confident wrong number (e.g."
+    },
+    {
+      "id": "nat_12",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "No contribution ceiling in Tanzania: employee 10% x 5,000,000 = TZS 500,000 on the full salary. WRONG = applying an invented cap.  "
+    },
+    {
+      "id": "nat_13",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [
+        "paye_resident_bands"
+      ],
+      "gold": "Unlabeled PAYE. Band 4: 68,000 + 25% x (900,000-760,000) = TZS 103,000/month. WRONG = flat-rate guess, or any mention of a 'personal relief' deduction (does not exist in TZ).  "
+    },
+    {
+      "id": "nat_14",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [
+        "paye_resident_bands"
+      ],
+      "gold": "Band 2: 8% x (350,000-270,000) = TZS 6,400/month. Yes, PAYE is due. WRONG = 'below the threshold, nothing due'.  "
+    },
+    {
+      "id": "nat_15",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [
+        "paye_resident_bands"
+      ],
+      "gold": "'laki mbili na nusu' = 250,000 < 270,000 -> PAYE = TZS 0. The 0% Band 1 IS the tax-free threshold; there is no separate personal relief. WRONG = any positive PAYE figure, or citing 'TZS 26,000 relief'"
+    },
+    {
+      "id": "nat_17",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [
+        "nssf_contribution_split",
+        "paye_resident_bands"
+      ],
+      "gold": "Net take-home (rc_11 class): PAYE = 128,000 + 30% x 500,000 = 278,000; NSSF employee 10% = 150,000; net = TZS 1,072,000. A safe-clarify listing the components is acceptable. WRONG = a confident wrong "
+    },
+    {
+      "id": "nat_18",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Two-person aggregation: 400,000 -> 8% x 130,000 = 10,400; 1,100,000 -> 128,000 + 30% x 100,000 = 158,000; total TZS 168,400. Known per-person gap — safe-clarify = ROUTING PASS + DELIVERY FAIL. WRONG ="
+    },
+    {
+      "id": "nat_20",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "WCF applies from the FIRST employee (no minimum headcount); a new employer must register with WCF within 30 days of hiring. WRONG = inventing a headcount threshold.  "
+    },
+    {
+      "id": "nat_22",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Swahili numeral + per-person: 6 x 300,000 = 1,800,000; 0.5% = TZS 9,000/month. Known extractor gap — safe-clarify = ROUTING PASS + DELIVERY FAIL. WRONG = a confident wrong number.  "
+    },
+    {
+      "id": "nat_25",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "25M/month = 300M/year, above the TZS 200M annual threshold -> VAT registration IS required. WRONG = treating 25M as annual and saying 'below threshold'.  "
+    },
+    {
+      "id": "nat_26",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "60M in 6 months is below the TZS 100M/6-month threshold (and annualises to 120M < 200M) -> not yet required. Must engage the 6-month limb, not only the annual one.  "
+    },
+    {
+      "id": "nat_28",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Services = 6% VAT withholding (Finance Act 2025, effective 1 Jul 2025). The withholding certificate is issued by the day VAT becomes payable — NOT the 20th (the 20th is the return-filing deadline, a d"
+    },
+    {
+      "id": "nat_29",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Mobile money transfer is a GN 487A prohibited activity for non-citizens (effective 28 Jul 2025). Must also catch the FACILITATION exposure: the Tanzanian fronting for the non-citizen faces TZS 5M or 3"
+    },
+    {
+      "id": "nat_31",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Non-citizen: minimum TZS 10,000,000 fine + up to 6 months imprisonment + visa revocation.  "
+    },
+    {
+      "id": "nat_34",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Name reservation TZS 50,000; incorporation from TZS 95,000 minimum.  "
+    },
+    {
+      "id": "nat_36",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "EFD IS required BY DEFAULT regardless of turnover -- TAA Cap.438 s.44 sets no turnover threshold at all; exemption is only by a Commissioner-General public notice naming a class. WRONG = citing any tu"
+    },
+    {
+      "id": "nat_42",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "GN 605A, gazetted 13 Oct 2025, effective 1 Jan 2026; sector-dependent, roughly TZS 175,000 (general) to TZS 765,900 (international mining/energy). Must NOT quote the 2022 wage order, which was revoked"
+    },
+    {
+      "id": "nat_44",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims_still_unsourced": [],
+      "gold": "Goods = 3% VAT withholding (Finance Act 2025, effective 1 Jul 2025). Must not give the 6% services rate.  "
+    }
+  ],
+  "what_remains": "Rows still pending need instruments not yet read directly: the presumptive First Schedule as amended (FA2022 s.72, FA2026 s.27(a)), Cap.332 s.4 for the corporate rate and the AMT, the NSSF Act for the 20% split (nssf.go.tz/pages/contributions returns HTTP 500 -- a real block, retried, not a tool fault), Cap.297 for OSHA, Cap.408 s.17 for TRAB, and GN 605A. Named per row rather than left as a count."
+}

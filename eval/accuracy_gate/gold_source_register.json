@@ -1,0 +1,73 @@
+{
+  "_what_this_is": "The provenance register for gate gold answers. Each entry is a claim a gold answer can assert, paired with the primary source READ DIRECTLY (not inferred from locked_facts.json) and the verbatim text that settles it. Probe rows cite an entry by key in their `source` field.",
+  "_why_not_locked_facts": "Checking a gold answer against scripts/locked_facts.json compares us to ourselves. efd_threshold_tzs_11m was fabricated and sat in locked_facts for months while eval_355's gold matched it -- a consistency check would have called that pair clean. Every entry here was fetched from the regulator or the statute on the date shown.",
+  "_fetch_method": "curl with a browser User-Agent. WebFetch fails against tra.go.tz with 'Parse Error: Invalid header value char' -- a bug in one tool's HTTP client, not a property of the domain (R30). HTTP status and byte count recorded per entry so a future reader can tell a real block from a tool fault.",
+  "_caveat": "A REGULATOR'S PAGE IS NOT THE STATUTE. CLAUDE.md records TRA's own 'At a Glance' printing a Class A transport row the enacted Finance Act 2024 does not contain, and a consolidated Act on tra.go.tz printing a pre-2022 presumptive table. Entries sourced to a portal page are marked source_type: regulator_page and are weaker than source_type: statute. Where the two disagree the statute governs.",
+
+  "sdl_rate_and_threshold": {
+    "claim": "SDL is 3.5% of total monthly emoluments, payable by an employer with ten or more employees.",
+    "url": "https://www.tra.go.tz/page/skills-development-levy-sdl",
+    "source_type": "regulator_page",
+    "statute_named_by_source": "Vocational Education Training Act, Cap. 82, s.14",
+    "fetched": "2026-10-04",
+    "http": 200,
+    "bytes": 56092,
+    "quote": "Any employer who employs ten or more employees shall pay SDL from gross emoluments. Applicable rates: The rate applicable for SDL is 3.5% of the total emoluments paid to all employees during the month."
+  },
+  "vat_registration_threshold": {
+    "claim": "VAT registration is mandatory at TZS 200 million taxable turnover in twelve months, or TZS 100 million in six months.",
+    "url": "https://www.tra.go.tz/page/value-added-tax-vat",
+    "source_type": "regulator_page",
+    "fetched": "2026-10-04",
+    "http": 200,
+    "bytes": 102422,
+    "quote": "person whose taxable turnover reaches TZS 200 million within a period of twelve months or TZS 100 million (half of the registration threshold) within a period of six months ending at the end of the previous month. The turnover threshold does not apply to professional service providers, Government entities..."
+  },
+  "vat_standard_rate": {
+    "claim": "The standard VAT rate is 18%; exports of goods and services are zero-rated.",
+    "url": "https://www.tra.go.tz/page/value-added-tax-vat",
+    "source_type": "regulator_page",
+    "fetched": "2026-10-04",
+    "http": 200,
+    "bytes": 102422,
+    "quote": "The standard VAT rate is 18%, while exports of goods and services are charged at 0%."
+  },
+  "paye_nonresident_flat_rate": {
+    "claim": "A non-resident employee is taxed at a flat 15% of gross employment income, as a final withholding -- not on the progressive resident bands.",
+    "url": "https://www.tra.go.tz/page/pay-as-you-earn",
+    "source_type": "regulator_page",
+    "fetched": "2026-10-04",
+    "http": 200,
+    "bytes": 75019,
+    "quote": "Non-residents : For nonresident employees (e.g. temporary employees from abroad) tax is withheld at a flat rate of 15% of the gross income from employment. This is effectively a final withholding and the amount withheld satisfies the employee's..."
+  },
+  "wcf_rate_and_base": {
+    "claim": "WCF is 0.5% of an employee's gross monthly earnings (salary plus allowances paid alongside the monthly salary), remitted monthly, with no headcount threshold.",
+    "url": "https://www.wcf.go.tz/pages/contributions",
+    "source_type": "regulator_page",
+    "fetched": "2026-09-29",
+    "http": 200,
+    "bytes": 96177,
+    "quote": "Mwajiri anachangia asilimia sifuri nukta tano (0.5%) ya mapato ghafi ya wafanyakazi katika sekta ya umma na binafsi. Mapato ghafi ya mfanyakazi yanajumuisha mshahara (basic salary) na posho anazolipwa sambamba na mshahara wa kila mwezi. Michango ya kila mwezi itawasilishwa ndani ya mwezi husika au mwezi unaofuata.",
+    "note": "The SAME page lists an annual REPORTING duty ('Kuwasilisha taarifa za mapato ya mwaka ya wafanyakazi'). That is a different obligation from the contribution base and is the likeliest origin of an annual-base reading. See eval/results/wcf_base_assumption_audit.json."
+  },
+  "rent_wht_rate": {
+    "claim": "Withholding tax on rental income for commercial purposes is 10% for both resident and non-resident withholdees.",
+    "url": "https://www.tra.go.tz/page/withholding-tax",
+    "source_type": "regulator_page",
+    "statute_named_by_source": "Income Tax Act Cap.332 First Schedule para 4(b)(ii)",
+    "fetched": "2026-10-04",
+    "http": 200,
+    "bytes": 58637,
+    "quote": "Rental Income (For commercial purposes) | 10% | 10%"
+  },
+  "brela_annual_return_and_penalties": {
+    "claim": "Annual return filing fee TZS 22,000; registrar late-filing penalty TZS 2,500 per month or part month; minimum share-capital incorporation fee TZS 95,000.",
+    "url": "https://www.brela.go.tz/pages/tozo-za-kampuni",
+    "source_type": "regulator_page",
+    "fetched": "2026-10-04",
+    "http": 200,
+    "bytes": 57804,
+    "quote": "Usajili wa Kampuni yenye Mtaji wa Hisa (Kulingana na Thamani): (a) Zaidi ya Tsh. 20,000 hadi Tsh. 1,000,000 95,000/= ... 6 Adhabu ya kuchelewesha hati kwa Msajili (kwa kila mwezi au sehemu ya mwezi) 2,500/= 7 Gharama za kujaza taarifa ya mwaka (Annual Return) 22,000/="
+  }
+}
