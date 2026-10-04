@@ -3,16 +3,16 @@
   "harness": "eval/controls/backfill_gold_provenance.py",
   "register": "eval/accuracy_gate/gold_source_register.json",
   "pass": 1,
-  "mode": "REPORT_ONLY",
+  "mode": "WRITE",
   "what_this_does": "Attaches a source-register key to gate gold answers whose claim has been read against a primary source. Changes no gold answer.",
   "sourced_against": "the regulator's own page or the statute, fetched directly -- never locked_facts.json, which would compare us to ourselves",
   "totals": {
     "rows_needing_provenance_at_pass_start": 73,
-    "sourced_this_pass": 21,
-    "still_pending": 52,
-    "fully_sourced": 16,
-    "partially_sourced": 5,
-    "register_entries": 8
+    "sourced_this_pass": 33,
+    "still_pending": 40,
+    "fully_sourced": 21,
+    "partially_sourced": 12,
+    "register_entries": 14
   },
   "disagreements_reported_not_changed": [
     {
@@ -64,6 +64,52 @@
   ],
   "sourced": [
     {
+      "id": "ext_04",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "corporate_amt_three_loss_years"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/corporation-tax"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "corporate_rate_or_amt_percentage",
+        "amt_exempt_sector_list_s4_8"
+      ],
+      "gold": "AMT applies: 1% of the 3rd loss-year turnover (para 3(3), FA2025 s.60(d)(ii)). Transport is not an exempt sector under s.4(8).  "
+    },
+    {
+      "id": "ext_07",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "corporate_amt_three_loss_years"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/corporation-tax"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "corporate_rate_or_amt_percentage"
+      ],
+      "gold": "NOT YET -- AMT only applies after 3 consecutive loss years (para 3(3)); 2 years is below threshold. Ordinary 30% rate on profit applies for now. Untested branch in the earlier live probe set.  "
+    },
+    {
+      "id": "ext_10",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "presumptive_schedule_current"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/income-tax-for-individuals"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "effective_date_of_a_changed_figure"
+      ],
+      "gold": "NO -- 250M exceeds the 200,000,000 ceiling (WEF 2026-07-01). Ordinary individual income-tax rates on actual profit apply instead, not the presumptive table.  "
+    },
+    {
       "id": "ext_15",
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
       "claims": [
@@ -77,6 +123,21 @@
         "foreign_company_late_filing_penalty"
       ],
       "gold": "Yes -- a foreign company's late-filing penalty is USD 25 per month (Companies Act Cap.212, Part XIII, ss.320-328), NOT the TZS 2,500/month local-company rate.  "
+    },
+    {
+      "id": "ext_22",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "objection_and_appeal_timelines"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/objections-appeals"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "objection_extension_mechanics"
+      ],
+      "gold": "An extension of the 30-day objection period is a STATUTORY RIGHT, not a rare favour -- apply within 7 days before the original deadline expires, for up to 30 more days.  "
     },
     {
       "id": "ext_28",
@@ -180,6 +241,32 @@
       "gold": "PAYE on TZS 900,000 per the current bands, plus the VAT registration threshold (TZS 200,000,000/12mo) as a separate, correctly-labelled second answer -- must not conflate the two into one figure.  "
     },
     {
+      "id": "ext_69",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "companies_act_director_minimum_age"
+      ],
+      "urls": [
+        "https://www.brela.go.tz/uploads/documents/sw-1758107576-THE%20COMPANIES%20ACT,%20REVISED%20EDITION,%202023.pdf"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "No -- a director must have attained 18 years of age at the time of appointment. Targets company_director_minimum_age.  "
+    },
+    {
+      "id": "ext_72",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "claims": [
+        "objection_and_appeal_timelines"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/objections-appeals"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "TRAB appeal requires TWO mandatory steps: Notice of Intention within 30 days, AND Statement of Appeal within 45 days. Targets trab_appeal_two_steps.  "
+    },
+    {
       "id": "ext_74",
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
       "claims": [
@@ -245,6 +332,45 @@
       "gold": "Wrong-base trap: SDL is 3.5% of GROSS PAYROLL, never of machine value. Correct = say the base is payroll and ask for it (payroll was never given). WRONG = 3.5% x 50,000,000.  "
     },
     {
+      "id": "nat_13",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "paye_resident_monthly_bands"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/income-tax-for-individuals"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "Unlabeled PAYE. Band 4: 68,000 + 25% x (900,000-760,000) = TZS 103,000/month. WRONG = flat-rate guess, or any mention of a 'personal relief' deduction (does not exist in TZ).  "
+    },
+    {
+      "id": "nat_14",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "paye_resident_monthly_bands"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/income-tax-for-individuals"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "Band 2: 8% x (350,000-270,000) = TZS 6,400/month. Yes, PAYE is due. WRONG = 'below the threshold, nothing due'.  "
+    },
+    {
+      "id": "nat_15",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "paye_resident_monthly_bands"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/income-tax-for-individuals"
+      ],
+      "fully_sourced": true,
+      "claims_still_unsourced": [],
+      "gold": "'laki mbili na nusu' = 250,000 < 270,000 -> PAYE = TZS 0. The 0% Band 1 IS the tax-free threshold; there is no separate personal relief. WRONG = any positive PAYE figure, or citing 'TZS 26,000 relief'"
+    },
+    {
       "id": "nat_16",
       "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
       "claims": [
@@ -256,6 +382,21 @@
       "fully_sourced": true,
       "claims_still_unsourced": [],
       "gold": "Non-resident employee: flat 15% final withholding, NOT the resident progressive bands. 15% x 4,000,000 = TZS 600,000. WRONG = progressive-band computation (D-PAYE-1).  "
+    },
+    {
+      "id": "nat_17",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "paye_resident_monthly_bands"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/income-tax-for-individuals"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "nssf_contribution_split"
+      ],
+      "gold": "Net take-home (rc_11 class): PAYE = 128,000 + 30% x 500,000 = 278,000; NSSF employee 10% = 150,000; net = TZS 1,072,000. A safe-clarify listing the components is acceptable. WRONG = a confident wrong "
     },
     {
       "id": "nat_19",
@@ -327,6 +468,22 @@
       "gold": "Standard VAT rate 18%.  "
     },
     {
+      "id": "nat_28",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "vat_withholding_goods_and_services"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/withholding-tax"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "vat_withholding_certificate_timing",
+        "effective_date_of_a_changed_figure"
+      ],
+      "gold": "Services = 6% VAT withholding (Finance Act 2025, effective 1 Jul 2025). The withholding certificate is issued by the day VAT becomes payable — NOT the 20th (the 20th is the return-filing deadline, a d"
+    },
+    {
       "id": "nat_33",
       "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
       "claims": [
@@ -351,42 +508,47 @@
       "fully_sourced": true,
       "claims_still_unsourced": [],
       "gold": "OSHA registers/inspects workplaces but does NOT pay compensation; WCF pays workplace-injury compensation (employer contributes 0.5%). Both roles must be distinguished.  "
+    },
+    {
+      "id": "nat_44",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "claims": [
+        "vat_withholding_goods_and_services"
+      ],
+      "urls": [
+        "https://www.tra.go.tz/page/withholding-tax"
+      ],
+      "fully_sourced": false,
+      "claims_still_unsourced": [
+        "effective_date_of_a_changed_figure"
+      ],
+      "gold": "Goods = 3% VAT withholding (Finance Act 2025, effective 1 Jul 2025). Must not give the 6% services rate.  "
     }
   ],
   "still_pending": [
     {
       "id": "ext_01",
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [],
+      "claims_still_unsourced": [
+        "dse_public_float_threshold"
+      ],
       "gold": "30% standard rate (First Schedule para 3(1)) -- ordinary, non-DSE-listed company. Must state RATE only, never a TZS figure from turnover.  "
     },
     {
       "id": "ext_02",
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [],
+      "claims_still_unsourced": [
+        "dse_public_float_threshold"
+      ],
       "gold": "Never-guess case: 25% requires >=25% of equity issued to the public (para 3(2)(a)); not stated here. Must ask for the public-float percentage, not assume either 25% or 30%.  "
     },
     {
       "id": "ext_03",
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [],
+      "claims_still_unsourced": [
+        "dse_public_float_threshold"
+      ],
       "gold": "15% is BELOW the current 25% public-float threshold (para 3(2)(a), lowered from 30% by FA2025 s.60(d)(i)), so the ordinary 30% applies, NOT 25%. Untested branch in the earlier live probe set (that one"
-    },
-    {
-      "id": "ext_04",
-      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [
-        "corporate_rate_or_amt"
-      ],
-      "gold": "AMT applies: 1% of the 3rd loss-year turnover (para 3(3), FA2025 s.60(d)(ii)). Transport is not an exempt sector under s.4(8).  "
-    },
-    {
-      "id": "ext_07",
-      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [
-        "corporate_rate_or_amt"
-      ],
-      "gold": "NOT YET -- AMT only applies after 3 consecutive loss years (para 3(3)); 2 years is below threshold. Ordinary 30% rate on profit applies for now. Untested branch in the earlier live probe set.  "
     },
     {
       "id": "ext_08",
@@ -399,14 +561,6 @@
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
       "claims_still_unsourced": [],
       "gold": "TZS 100,000 flat -- the no-records band for turnover between 4M and 7M.  "
-    },
-    {
-      "id": "ext_10",
-      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [
-        "presumptive_schedule"
-      ],
-      "gold": "NO -- 250M exceeds the 200,000,000 ceiling (WEF 2026-07-01). Ordinary individual income-tax rates on actual profit apply instead, not the presumptive table.  "
     },
     {
       "id": "ext_13",
@@ -437,12 +591,6 @@
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
       "claims_still_unsourced": [],
       "gold": "TZS 30,000 for renewal of registration.  "
-    },
-    {
-      "id": "ext_22",
-      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "An extension of the 30-day objection period is a STATUTORY RIGHT, not a rare favour -- apply within 7 days before the original deadline expires, for up to 30 more days.  "
     },
     {
       "id": "ext_23",
@@ -478,7 +626,7 @@
       "id": "ext_54",
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
       "claims_still_unsourced": [
-        "corporate_rate_or_amt"
+        "corporate_rate_or_amt_percentage"
       ],
       "gold": "TRUE -- 30% is the correct top PAYE band. Risk: this number is numerically identical to the corporate standard rate (also 30%) and to a bare-fragment neighbour in the index; a correct-sounding confirm"
     },
@@ -501,22 +649,10 @@
       "gold": "TZS 50,000 -- targets company_name_reservation_fee.  "
     },
     {
-      "id": "ext_69",
-      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "No -- a director must have attained 18 years of age at the time of appointment. Targets company_director_minimum_age.  "
-    },
-    {
       "id": "ext_71",
       "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
       "claims_still_unsourced": [],
       "gold": "GENUINE HEDGE -- renewal frequency is not explicitly stated on osha.go.tz; correct answer says so honestly and directs to OSHA directly, not a fabricated 'every year' or 'every 3 years'. Targets osha_"
-    },
-    {
-      "id": "ext_72",
-      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "TRAB appeal requires TWO mandatory steps: Notice of Intention within 30 days, AND Statement of Appeal within 45 days. Targets trab_appeal_two_steps.  "
     },
     {
       "id": "ext_73",
@@ -581,39 +717,6 @@
       "gold": "No contribution ceiling in Tanzania: employee 10% x 5,000,000 = TZS 500,000 on the full salary. WRONG = applying an invented cap.  "
     },
     {
-      "id": "nat_13",
-      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
-      "claims_still_unsourced": [
-        "paye_resident_bands"
-      ],
-      "gold": "Unlabeled PAYE. Band 4: 68,000 + 25% x (900,000-760,000) = TZS 103,000/month. WRONG = flat-rate guess, or any mention of a 'personal relief' deduction (does not exist in TZ).  "
-    },
-    {
-      "id": "nat_14",
-      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
-      "claims_still_unsourced": [
-        "paye_resident_bands"
-      ],
-      "gold": "Band 2: 8% x (350,000-270,000) = TZS 6,400/month. Yes, PAYE is due. WRONG = 'below the threshold, nothing due'.  "
-    },
-    {
-      "id": "nat_15",
-      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
-      "claims_still_unsourced": [
-        "paye_resident_bands"
-      ],
-      "gold": "'laki mbili na nusu' = 250,000 < 270,000 -> PAYE = TZS 0. The 0% Band 1 IS the tax-free threshold; there is no separate personal relief. WRONG = any positive PAYE figure, or citing 'TZS 26,000 relief'"
-    },
-    {
-      "id": "nat_17",
-      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
-      "claims_still_unsourced": [
-        "nssf_contribution_split",
-        "paye_resident_bands"
-      ],
-      "gold": "Net take-home (rc_11 class): PAYE = 128,000 + 30% x 500,000 = 278,000; NSSF employee 10% = 150,000; net = TZS 1,072,000. A safe-clarify listing the components is acceptable. WRONG = a confident wrong "
-    },
-    {
       "id": "nat_18",
       "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
       "claims_still_unsourced": [],
@@ -644,12 +747,6 @@
       "gold": "60M in 6 months is below the TZS 100M/6-month threshold (and annualises to 120M < 200M) -> not yet required. Must engage the 6-month limb, not only the annual one.  "
     },
     {
-      "id": "nat_28",
-      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "Services = 6% VAT withholding (Finance Act 2025, effective 1 Jul 2025). The withholding certificate is issued by the day VAT becomes payable — NOT the 20th (the 20th is the return-filing deadline, a d"
-    },
-    {
       "id": "nat_29",
       "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
       "claims_still_unsourced": [],
@@ -678,12 +775,6 @@
       "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
       "claims_still_unsourced": [],
       "gold": "GN 605A, gazetted 13 Oct 2025, effective 1 Jan 2026; sector-dependent, roughly TZS 175,000 (general) to TZS 765,900 (international mining/energy). Must NOT quote the 2022 wage order, which was revoked"
-    },
-    {
-      "id": "nat_44",
-      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
-      "claims_still_unsourced": [],
-      "gold": "Goods = 3% VAT withholding (Finance Act 2025, effective 1 Jul 2025). Must not give the 6% services rate.  "
     }
   ],
   "what_remains": "Rows still pending need instruments not yet read directly: the presumptive First Schedule as amended (FA2022 s.72, FA2026 s.27(a)), Cap.332 s.4 for the corporate rate and the AMT, the NSSF Act for the 20% split (nssf.go.tz/pages/contributions returns HTTP 500 -- a real block, retried, not a tool fault), Cap.297 for OSHA, Cap.408 s.17 for TRAB, and GN 605A. Named per row rather than left as a count."

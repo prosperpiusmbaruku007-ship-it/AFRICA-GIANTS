@@ -79,6 +79,69 @@
     "quote": "PART XII COMPANIES INCORPORATED OUTSIDE TANZANIA ... 437.-(1) Sections 438 to 447 shall apply to all foreign companies that are companies incorporated outside Tanzania",
     "note": "The Act's own source note on s.437 reads '[s. 433]' -- R.E. 2023 renumbered Cap.212 throughout, the same renumbering trap CLAUDE.md documents for Cap.332/Cap.438. CONTRADICTS CLAUDE.md Section 11's 'Part XIII, ss.320-328' and vindicates BRELA's own page, which labels it Sehemu ya XII. See eval/results/gold_provenance_backfill_pass1.json disagreement 1."
   },
+  "paye_resident_monthly_bands": {
+    "claim": "Resident monthly PAYE bands: 0 up to 270,000; 8% of excess over 270,000 to 520,000; 20,000 + 20% of excess over 520,000 to 760,000; 68,000 + 25% of excess over 760,000 to 1,000,000; 128,000 + 30% of excess over 1,000,000.",
+    "url": "https://www.tra.go.tz/page/income-tax-for-individuals",
+    "source_type": "regulator_page",
+    "fetched": "2026-10-05",
+    "http": 200,
+    "bytes": 82690,
+    "quote": "For Tanzania Mainland Monthly Taxable Income Tax Rate Where total Income does not exceed Tshs. 270,000/= NIL Where the total Income exceeds Tshs. 270,000/= but does not exceed Tshs. 520,000/= 8% of the amount in excess of ... Tshs. 270,000/= Where total Income exceeds Tshs. 520,000/= but does not exceed Tshs. 760,000/= Tshs. 20,000/= plus 20% of the amount in excess of Tshs. 520,000/= Where total Income exceeds Tshs. 760,000/= but does not exceed Tshs. 1,000,000/= Tshs. 68,000/= plus 25% of the amount in excess of Tshs. 760,000/= Where total Income exceeds Tshs. 1,000,000/= Tshs. 128,000/= plus 30% of the amount in excess of Tshs. 1,000,000/=",
+    "note": "NOT on /page/pay-as-you-earn, which is where this project's existing paye_nonresident_flat_rate entry came from -- that page carries the 15% non-resident rate and the benefit-in-kind tables but NOT the resident band table. Two PAYE claims, two different TRA pages. Confirms CLAUDE.md Section 11's band table exactly, including that the 0% first band IS the threshold: the page's own note reads 'Annual Income of Tshs 3,240,000/= is not taxable' (= 270,000 x 12), with no separate personal relief anywhere on the page."
+  },
+  "presumptive_schedule_current": {
+    "claim": "Presumptive regime: NIL up to 4,000,000; 4M-7M = 100,000 (incomplete records) or 3% of excess over 4M (complete); 7M-11M = 250,000 or 90,000 + 3% of excess over 7M; 11M-200M = 4% of turnover. New taxpayer: no tax for the first 12 months. Ceiling 200,000,000.",
+    "url": "https://www.tra.go.tz/page/income-tax-for-individuals",
+    "source_type": "regulator_page",
+    "fetched": "2026-10-05",
+    "http": 200,
+    "bytes": 82690,
+    "quote": "Annual turnover Tax payable when records are incomplete Tax payable when records are complete Where turnovers does not exceed Tshs 4,000,000 NIL NIL ... For new taxpayer No tax for the first 12 month of business ... Where turnover exceeds Tshs 4,000,000/= but does not exceed Tshs 7,000,000 Tshs 100,000/= 3% of the turnover in excess of Tshs 4,000,000/= Where turnover exceeds Tshs 7,000,000/= but does not exceed Tshs 11,000,000/= Tshs 250,000/= Tshs 90,000/= plus 3% of the turnover in excess of Tshs 7,000,000/= Where turnovers exceed Tshs. 11,000,000/= but does not exceed Tshs. 200,000,000/= 4% of turnover",
+    "⛔_divergence": "THIS PAGE CARRIES A ROW CLAUDE.md ALREADY RECORDS AS NOT IN THE ENACTED STATUTE. It prints the Class A transport row 'Not more than 5 and Three wheelers 120,000', which CLAUDE.md's consolidated-Act section states Finance Act 2024 s.46(a) does not contain. AND its top band (11M-200M at 4% of turnover) gives 2,000,000 at a turnover of 50,000,000, where CLAUDE.md records the governing First Schedule text as yielding 1,750,000 -- a 250,000 disagreement between the regulator's summary and this project's recorded statutory table.",
+    "⛔_no_effective_date": "The page prints the CURRENT table with no commencement date anywhere. It therefore sources the 200,000,000 ceiling itself but NOT any 'WEF 2026-07-01' claim about when it changed (ext_10's gold carries one). An effective date needs the amending Finance Act, not a portal snapshot.",
+    "⛔_use_restriction": "USABLE ONLY for the lower bands and the 200,000,000 ceiling, where no divergence is recorded. NOT usable to source any claim in the 11M-200M band, nor any transport-class figure. Those need the First Schedule as amended (FA2022 s.72, FA2026 s.27(a)) read directly. Recorded rather than resolved -- per CLAUDE.md, where a portal and the statute disagree the statute governs, and the statute has not been read here."
+  },
+  "vat_withholding_goods_and_services": {
+    "claim": "VAT withholding by a Withholding Agent: 3% on supply of goods, 6% on supply of services.",
+    "url": "https://www.tra.go.tz/page/withholding-tax",
+    "source_type": "regulator_page",
+    "statute_named_by_source": "VAT Act s.5(5)",
+    "fetched": "2026-10-05",
+    "http": 200,
+    "bytes": 58608,
+    "quote": "VAT withholding obligation on supply of goods by the Withholding Agent under Section 5(5) of the VAT Act 3% N/A VAT withholding obligation on supply of service by the Withholding Agent under Section 5(5) of the VAT Act 6% N/A",
+    "note": "Settles the goods/services split that nat_44 and nat_28 are scored on, and names its own statutory hook (s.5(5)) rather than leaving the rate unattributed."
+  },
+  "objection_and_appeal_timelines": {
+    "claim": "Objection to the Commissioner General: Notice of Objection within 30 days of service of the decision, admitted only on payment of the tax not in dispute or one-third of the assessed tax, whichever is greater. Appeal to the Board (TRAB): notice of appeal within 30 days AND appeal lodged within 45 days of the notice of final determination. Appeal to the Tribunal (TRAT): notice of intention within 15 days, appeal within 30 days of the Board's decision.",
+    "url": "https://www.tra.go.tz/page/objections-appeals",
+    "source_type": "regulator_page",
+    "fetched": "2026-10-05",
+    "http": 200,
+    "bytes": 59536,
+    "quote": "A person aggrieved by a tax decision made by the Commissioner General may file a Notice of Objection within thirty (30) days from the date of service of the decision. ... The objection shall not be admitted unless the taxpayer pays the tax not in dispute or one-third of the assessed tax, whichever is greater. ... 1) A notice of appeal is served upon the Commissioner General within thirty days following the date on which a notice of final determination of assessment of tax is served on the appellant; 2) The appeal is lodged with the Board within forty-five days ... The appellant shall serve the opposite party notice of intention to appeal within fifteen days following the date on which the decision of the board was made and the appeal should be made within thirty days from the date of the decision of the board.",
+    "note": "⚠️ THE LABEL 'NOTICE OF INTENTION' BELONGS TO THE TRIBUNAL STEP, NOT THE BOARD STEP. ext_72's gold calls the TRAB 30-day step a 'Notice of Intention'; TRA calls it a 'notice of appeal' and reserves 'notice of intention' for the 15-day TRAT step. The two FIGURES ext_72 is scored on (30 and 45 days, both mandatory, both for the Board) are CONFIRMED -- so the gold's quantities stand and only its terminology is loose. Recorded because a model that uses TRA's own vocabulary could be marked wrong by a key using ours."
+  },
+  "companies_act_director_minimum_age": {
+    "claim": "A person cannot be appointed a company director if at the time of appointment they have not attained the age of eighteen years.",
+    "url": "https://www.brela.go.tz/uploads/documents/sw-1758107576-THE%20COMPANIES%20ACT,%20REVISED%20EDITION,%202023.pdf",
+    "source_type": "statute",
+    "fetched": "2026-10-04",
+    "http": 200,
+    "bytes": 3215470,
+    "quote": "197. Subject to the provisions of this section, a person shall not be capable of being appointed as a director of a company which is subject to this section if at the time of his appointment he had not attained the age of eighteen years. [s. 194] Minimum age for appointment of directors Act No. 5 of 2021 s. 36",
+    "note": "The locked fact company_director_minimum_age cites 's.197, s.36' and BOTH are right, for different reasons the Act makes explicit: s.197 is the R.E.2023 section, and s.36 is the amending provision (Act No. 5 of 2021 s.36) that inserted it. The bracketed '[s. 194]' is the pre-R.E.2023 number -- the same renumbering trap that produced the Part XII reversal, here caught in advance rather than after."
+  },
+  "corporate_amt_three_loss_years": {
+    "claim": "A company with perpetual unrelieved losses for three consecutive years is taxed on turnover rather than on profit (the Alternative Minimum Tax trigger).",
+    "url": "https://www.tra.go.tz/page/corporation-tax",
+    "source_type": "regulator_page",
+    "fetched": "2026-10-05",
+    "http": 200,
+    "bytes": 63567,
+    "quote": "Taxable incomes (profits) for charging Corporation Tax include: ... Tax paid out of turnover of companies with perpetual unrelieved losses for three consecutive years",
+    "note": "⚠️ CONFIRMS THE TRIGGER, NOT THE RATE. The page states the three-consecutive-loss-year condition that ext_07 turns on ('2 years is below threshold') but prints NO AMT percentage anywhere. The 1% rate (para 3(3) as amended by FA2025 s.60(d)(ii)) and the 30% standard rate are therefore still UNSOURCED against primary text -- ext_04 and ext_01 remain source_partial on the rate limb. Sourcing a trigger is not sourcing a rate, and merging them would be the matcher over-assignment this backfill already produced three of."
+  },
   "companies_act_fees_are_delegated": {
     "claim": "The Companies Act sets NO fee amounts. Fees are prescribed by Minister's regulations, so no fee figure can be settled from the Act.",
     "url": "https://www.brela.go.tz/uploads/documents/sw-1758107576-THE%20COMPANIES%20ACT,%20REVISED%20EDITION,%202023.pdf",

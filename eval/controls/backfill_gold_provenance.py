@@ -69,6 +69,31 @@ RULES = {
     "brela_annual_return_and_penalties": (r"BRELA|annual return|taarifa ya mwaka|"
                                           r"late[- ]filing|kuchelewesha",
                                           r"22,000|2,500|95,000"),
+
+    # --- PASS 2 (2026-10-05) ---------------------------------------------------------------
+    "paye_resident_monthly_bands": (r"\bPAYE\b|band|mshahara|taxable income",
+                                    r"270,000|520,000|760,000|128,000|68,000|20,000\s*\+"),
+    "vat_withholding_goods_and_services": (r"withholding|zuio|zuia",
+                                           r"\b3\s*%|\b6\s*%|asilimia\s+[36]\b"),
+    "companies_act_director_minimum_age": (r"director|mkurugenzi", r"18\b|eighteen|miaka 18"),
+    # PRESUMPTIVE IS DELIBERATELY SPLIT ACROSS A RULE AND AN UNSOURCED ENTRY, because the
+    # register entry for it carries a use restriction and a matcher cannot read prose. The TRA
+    # page diverges from this project's recorded statutory table in the 11M-200M band (4% of
+    # turnover -> 2,000,000 at 50M, where CLAUDE.md records 1,750,000) and prints a transport row
+    # CLAUDE.md says the enacted FA2024 does not contain. So this rule matches ONLY the lower
+    # bands and the ceiling, where nothing diverges; the top band stays in UNSOURCED_CLAIMS.
+    # Sourcing the whole schedule from this page would attach a citation to the exact figures the
+    # page is already recorded as getting wrong.
+    "presumptive_schedule_current": (r"presumptive|makadirio",
+                                     r"4,000,000|100,000\s*flat|200,000,000|zero band"),
+    # TRIGGER ONLY, NOT RATE. The page states the three-consecutive-loss-year condition and
+    # prints no AMT percentage, so a gold asserting 1% or 30% keeps its unsourced residue.
+    "corporate_amt_three_loss_years": (r"AMT|alternative minimum|loss year|hasara",
+                                       r"3 consecutive|three consecutive|miaka (?:3|mitatu)|"
+                                       r"3rd loss|2 years is below"),
+    "objection_and_appeal_timelines": (r"objection|pingamizi|TRAB|appeal|rufaa",
+                                       r"30[- ]day|30 days|siku 30|45 days|siku 45|"
+                                       r"one[- ]third|thelathini"),
 }
 
 # Disagreements found while sourcing. REPORTED, NOT APPLIED -- each is a scoring-key or
@@ -253,9 +278,21 @@ def gold_of(row):
 # that forced this: its gold asserts SDL 3.5% (sourced today) AND NSSF 20% (not sourced -- the
 # NSSF Act was not read, and nssf.go.tz/pages/contributions returns HTTP 500 on retry).
 UNSOURCED_CLAIMS = {
+    # ⛔ STILL BLOCKED AFTER PASS 2, AND THE BLOCK IS REAL, NOT A TOOLING ARTEFACT (R30).
+    # nssf.go.tz/pages/contributions AND /pages/michango both return HTTP 500 to curl with a
+    # browser User-Agent on 2026-10-05 -- the same 500 recorded on 2026-10-04, so this is the
+    # server, not WebFetch's header bug. The NSSF Act itself was not located. Seven rows
+    # (ext_50, ext_76, nat_07, nat_08, nat_09, nat_12, nat_17) are scored on the 10%/10%/20%
+    # split and therefore STAY source_partial. Recorded as a standing gap rather than sourced
+    # against locked_facts.json, which would compare us to ourselves.
     "nssf_contribution_split": (r"\bNSSF\b|uzeeni|pension",
                                 r"\b20\s*%|asilimia\s+20|\b10\s*%\s*(?:x|×)|employee 10%"),
-    "presumptive_schedule": (r"presumptive|makadirio", r"\d"),
+    # NARROWED IN PASS 2: the lower bands and the 200M ceiling are now sourced (see RULES). What
+    # remains unsourced is the 11M-200M band, where the regulator's page and this project's
+    # recorded statutory table disagree by 250,000 at a 50M turnover. Needs the First Schedule
+    # as amended (FA2022 s.72, FA2026 s.27(a)) read directly.
+    "presumptive_top_band_11m_to_200m": (r"presumptive|makadirio",
+                                         r"4\s*%\s*of turnover|asilimia 4|11,000,000"),
     # ext_15 forced this one. The register's BRELA entry covers the LOCAL 2,500/month penalty;
     # ext_15's actual claim is the FOREIGN company's USD 25/month, which the live fee schedule
     # CONTRADICTS at TZS 70,000 (see DISAGREEMENTS). The gold mentions 2,500 only as a contrast,
@@ -263,9 +300,48 @@ UNSOURCED_CLAIMS = {
     # CITED-AND-CONTRADICTED shape, manufactured by my own matcher.
     "foreign_company_late_filing_penalty": (r"foreign compan|kampuni ya (?:ki)?geni|tawi",
                                             r"USD\s*25|\b25\s*(?:per|kwa|/)"),
-    "corporate_rate_or_amt": (r"corporate|kampuni|AMT|alternative minimum",
-                              r"\b30\s*%|\b25\s*%|\b1\s*%|\b0\.5\s*%"),
-    "paye_resident_bands": (r"\bPAYE\b", r"270,000|520,000|760,000|128,000|68,000"),
+    # RATE LIMB ONLY -- the TRIGGER is now sourced (corporate_amt_three_loss_years) but the page
+    # prints no percentage at all, so 30%, 25%, 1% and 0.5% all remain unsourced against primary
+    # text. Needs Cap.332 First Schedule para 3 as amended (FA2025 s.60(d)) read directly.
+    # Keeping these separate is the point: sourcing a trigger is not sourcing a rate, and merging
+    # them would manufacture a fourth over-assignment of exactly the kind recorded below.
+    "corporate_rate_or_amt_percentage": (r"corporate|kampuni|AMT|alternative minimum",
+                                         r"\b30\s*%|\b25\s*%|\b1\s*%|\b0\.5\s*%"),
+    # The public-float threshold ext_02/ext_03 turn on (25%, lowered from 30% by FA2025
+    # s.60(d)(i)) is in the same First Schedule and equally unread.
+    "dse_public_float_threshold": (r"public[- ]float|equity issued to the public|DSE|hisa",
+                                   r"\b25\s*%|\b30\s*%|\b15\s*%"),
+
+    # --- ADDED IN PASS 2's OWN DRY-RUN AUDIT. Each of these three closes a residue gap that
+    # would have let a row read FULLY SOURCED while part of its gold rested on nothing. The
+    # fourth over-assignment of this backfill is in the first of them, and it is the same
+    # mechanism as the first three: the matcher found the quantity the source DOES settle and
+    # had no way to notice the gold asserting two more that it does not.
+    #
+    # ext_22: the TRA page confirms the 30-day objection period. It says NOTHING about applying
+    # "within 7 days before the original deadline" or an extension of "up to 30 more days", and
+    # its one sentence about extending time concerns the BOARD/TRIBUNAL extending a filing
+    # limit -- a different decision-maker from the Commissioner, on a different application.
+    # Without this entry ext_22 read fully_sourced on a gold answer two-thirds unsourced.
+    "objection_extension_mechanics": (r"extension|kuongeza muda|statutory right",
+                                      r"7 days|siku 7|30 more|30 zaidi|up to 30"),
+    # ext_04: "Transport is not an exempt sector under s.4(8)" is a claim about the CONTENTS of
+    # the s.4(8) exemption list. The corporation-tax page does not enumerate it, and Cap.332 was
+    # not read. This is the same sector-exemption list whose extractor gap was found live on
+    # 2026-09-05 (R31), so the claim matters and its provenance is absent.
+    "amt_exempt_sector_list_s4_8": (r"exempt sector|s\.4\(8\)|s4\(8\)|kilimo|agriculture|"
+                                    r"health|education|tea",
+                                    r"not an exempt|exempt under|s\.4\(8\)"),
+    # nat_28: the withholding RATE table settles 6% on services. The certificate-timing claim
+    # ("issued by the day VAT becomes payable -- NOT the 20th") is a separate obligation on a
+    # separate page, and is exactly the distinction CLAUDE.md Section 11 flags as confusable.
+    "vat_withholding_certificate_timing": (r"certificate|cheti",
+                                           r"day VAT becomes payable|siku VAT|20th|tarehe 20"),
+    # ext_10: the page sources the 200,000,000 ceiling but prints no commencement date, so a
+    # "WEF 2026-07-01" claim is not sourced by it. Added for the same reason as the three above
+    # -- a portal snapshot shows what the law IS, never when it changed.
+    "effective_date_of_a_changed_figure": (r"WEF|effective|kuanzia|w\.e\.f",
+                                           r"20\d\d-\d\d-\d\d|1 Jul|Julai"),
 }
 
 

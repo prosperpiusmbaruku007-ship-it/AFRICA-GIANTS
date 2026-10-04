@@ -45,16 +45,18 @@ _DEADLINE = re.compile(r"\b(?:siku|days?|miezi|months?|mwaka|years?)\s+\d{1,3}|"
                        r"\b\d{1,3}\s+(?:siku|days?|miezi|months?|mwaka|years?)", re.I)
 
 # The uncited quantitative rows STILL outstanding. Started at 73 (measured 2026-09-29);
-# pass 1 on 2026-10-04 sourced 21 against primary sources, leaving 52.
+# pass 1 on 2026-10-04 sourced 21, leaving 52; pass 2 on 2026-10-05 sourced 12 more,
+# leaving 40. Of pass 2's 12, five are PARTIAL -- they carry `source` for what a primary
+# source settles and `source_partial` naming what it does not, so a row never reads as a
+# full warranty on a gold answer that is half unverified.
 # A BACKFILL WORKLIST, NOT AN EXEMPTION: ids leave as each gets a source, and nothing may be
 # added -- test_backfill_worklist_only_shrinks enforces both directions.
 PENDING_BACKFILL = {
-    "ext_01", "ext_02", "ext_03", "ext_04", "ext_07", "ext_08", "ext_09", "ext_10", "ext_13",
-    "ext_14", "ext_18", "ext_19", "ext_20", "ext_22", "ext_23", "ext_29", "ext_30", "ext_32",
-    "ext_50", "ext_54", "ext_56", "ext_63", "ext_68", "ext_69", "ext_71", "ext_72", "ext_73",
-    "ext_75", "ext_76", "ext_78", "nat_06", "nat_07", "nat_08", "nat_09", "nat_11", "nat_12",
-    "nat_13", "nat_14", "nat_15", "nat_17", "nat_18", "nat_20", "nat_22", "nat_25", "nat_26",
-    "nat_28", "nat_29", "nat_31", "nat_34", "nat_36", "nat_42", "nat_44"
+    "ext_01", "ext_02", "ext_03", "ext_08", "ext_09", "ext_13", "ext_14", "ext_18", "ext_19",
+    "ext_20", "ext_23", "ext_29", "ext_30", "ext_32", "ext_50", "ext_54", "ext_56", "ext_63",
+    "ext_68", "ext_71", "ext_73", "ext_75", "ext_76", "ext_78", "nat_06", "nat_07", "nat_08",
+    "nat_09", "nat_11", "nat_12", "nat_18", "nat_20", "nat_22", "nat_25", "nat_26", "nat_29",
+    "nat_31", "nat_34", "nat_36", "nat_42"
 }
 
 
