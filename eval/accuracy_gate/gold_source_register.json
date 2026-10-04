@@ -3,7 +3,6 @@
   "_why_not_locked_facts": "Checking a gold answer against scripts/locked_facts.json compares us to ourselves. efd_threshold_tzs_11m was fabricated and sat in locked_facts for months while eval_355's gold matched it -- a consistency check would have called that pair clean. Every entry here was fetched from the regulator or the statute on the date shown.",
   "_fetch_method": "curl with a browser User-Agent. WebFetch fails against tra.go.tz with 'Parse Error: Invalid header value char' -- a bug in one tool's HTTP client, not a property of the domain (R30). HTTP status and byte count recorded per entry so a future reader can tell a real block from a tool fault.",
   "_caveat": "A REGULATOR'S PAGE IS NOT THE STATUTE. CLAUDE.md records TRA's own 'At a Glance' printing a Class A transport row the enacted Finance Act 2024 does not contain, and a consolidated Act on tra.go.tz printing a pre-2022 presumptive table. Entries sourced to a portal page are marked source_type: regulator_page and are weaker than source_type: statute. Where the two disagree the statute governs.",
-
   "sdl_rate_and_threshold": {
     "claim": "SDL is 3.5% of total monthly emoluments, payable by an employer with ten or more employees.",
     "url": "https://www.tra.go.tz/page/skills-development-levy-sdl",
@@ -69,5 +68,25 @@
     "http": 200,
     "bytes": 57804,
     "quote": "Usajili wa Kampuni yenye Mtaji wa Hisa (Kulingana na Thamani): (a) Zaidi ya Tsh. 20,000 hadi Tsh. 1,000,000 95,000/= ... 6 Adhabu ya kuchelewesha hati kwa Msajili (kwa kila mwezi au sehemu ya mwezi) 2,500/= 7 Gharama za kujaza taarifa ya mwaka (Annual Return) 22,000/="
+  },
+  "companies_act_foreign_company_part": {
+    "claim": "The foreign-company provisions of the Companies Act are PART XII, 'Companies Incorporated Outside Tanzania', ss.437-447. Part XIII is 'General Provisions as to Registration'. ss.320-328 are winding-up provisions.",
+    "url": "https://www.brela.go.tz/uploads/documents/sw-1758107576-THE%20COMPANIES%20ACT,%20REVISED%20EDITION,%202023.pdf",
+    "source_type": "statute",
+    "fetched": "2026-10-04",
+    "http": 200,
+    "bytes": 3215470,
+    "quote": "PART XII COMPANIES INCORPORATED OUTSIDE TANZANIA ... 437.-(1) Sections 438 to 447 shall apply to all foreign companies that are companies incorporated outside Tanzania",
+    "note": "The Act's own source note on s.437 reads '[s. 433]' -- R.E. 2023 renumbered Cap.212 throughout, the same renumbering trap CLAUDE.md documents for Cap.332/Cap.438. CONTRADICTS CLAUDE.md Section 11's 'Part XIII, ss.320-328' and vindicates BRELA's own page, which labels it Sehemu ya XII. See eval/results/gold_provenance_backfill_pass1.json disagreement 1."
+  },
+  "companies_act_fees_are_delegated": {
+    "claim": "The Companies Act sets NO fee amounts. Fees are prescribed by Minister's regulations, so no fee figure can be settled from the Act.",
+    "url": "https://www.brela.go.tz/uploads/documents/sw-1758107576-THE%20COMPANIES%20ACT,%20REVISED%20EDITION,%202023.pdf",
+    "source_type": "statute",
+    "fetched": "2026-10-04",
+    "http": 200,
+    "bytes": 3215470,
+    "quote": "458. The Minister may by regulations require the payment to the Registrar of companies such fees as may be specified in the regulations ... 489.-(3) The fees to be paid under this Act shall be as the Minister may prescribe in regulations.",
+    "note": "Decisive for the USD 25 vs TZS 70,000 question: the Act delegates it. Only the Companies (Fees) Regulations can answer, and they were not located (brela.go.tz law pages HTTP 500; tanzlii search is a client-rendered SPA). Both figures therefore stand UNRESOLVED rather than being settled from the Act."
   }
 }

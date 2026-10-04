@@ -76,8 +76,37 @@ RULES = {
 # blocking; no automation substitute).
 DISAGREEMENTS = [
     {
-        "what": "⛔ AFFECTS A GATE GOLD ANSWER. ext_15's gold asserts a foreign company's "
-                "late-filing penalty is USD 25 per month. CLAUDE.md Section 11 says the same.",
+        "what": "🔴 SETTLED AGAINST US BY THE STATUTE. CLAUDE.md Section 11 and ext_15's gold "
+                "cite the foreign-company provisions as 'Companies Act Cap.212, Part XIII, "
+                "ss.320-328', and Section 11 adds 'NOT \"Section XII\"; corrected 2026-08-31'. "
+                "BOTH LIMBS ARE WRONG AND THE 2026-08-31 'correction' INTRODUCED THE ERROR.",
+        "source_says": "Companies Act, Revised Edition 2023, read directly (394pp, 3.2MB PDF "
+                       "hosted on brela.go.tz, HTTP 200, fetched 2026-10-04): 'PART XII "
+                       "COMPANIES INCORPORATED OUTSIDE TANZANIA', opening at s.437 whose own "
+                       "text reads 'Sections 438 to 447 shall apply to all foreign companies'. "
+                       "PART XIII is 'GENERAL PROVISIONS AS TO REGISTRATION' (ss.454+). "
+                       "ss.320-328 are WINDING-UP provisions -- orders against contributories, "
+                       "the official receiver, fraud in winding up -- and have nothing to do "
+                       "with foreign companies.",
+        "so_the_correct_citation_is": "Cap.212 R.E. 2023, Part XII, ss.437-447",
+        "affects_a_gate_gold": True,
+        "affected_rows": ["ext_15"],
+        "assessment": "THE REGULATOR'S PAGE WAS RIGHT AND WE OVERRULED IT. Disagreement 3 below "
+                      "originally recorded BRELA's 'Sehemu ya XII' as regulator imprecision and "
+                      "said DO NOT FLIP, on the correct general principle that a portal summary "
+                      "is not the statute. Reading the statute reversed it. The principle held; "
+                      "the application was wrong, and only the primary text could show which.",
+        "renumbering_trap": "The Act's own source note on s.437 reads '[s. 433]' -- R.E. 2023 "
+                            "renumbered Cap.212 throughout. CLAUDE.md documents this trap for "
+                            "Cap.332/Cap.438 ('s.35 -> s.43'); this is the same trap in Cap.212, "
+                            "and it is the likeliest origin of a stale section range.",
+        "status": "REPORTED_NOT_CHANGED -- a citation correction is still a scoring-key "
+                  "correction and still moves a verdict's basis; founder's call.",
+    },
+    {
+        "what": "⛔ AFFECTS A GATE GOLD ANSWER, AND IS NOT SETTLEABLE FROM THE ACT. ext_15's "
+                "gold asserts a foreign company's late-filing penalty is USD 25 per month. "
+                "CLAUDE.md Section 11 says the same.",
         "source_says": "TZS 70,000 per month or part month. brela.go.tz/pages/tozo-za-kampuni "
                        "item 15(iv), under 'Ada chini ya Masharti ya Sehemu ya XII ya Sheria "
                        "(Makampuni ya Nje)': 'Kwa kutowasilisha au kuchelewesha kuwasilisha "
@@ -96,9 +125,30 @@ DISAGREEMENTS = [
                       "check in this project would have caught, and it is why the fee schedule "
                       "needs reading rather than the Act alone: Cap.212 may still say USD 25 "
                       "while the current GN fee schedule says 70,000.",
-        "what_would_settle_it": "The current Companies (Fees) GN, and Cap.212 Part XII/XIII as "
-                                "amended. Neither was read -- only BRELA's fee page.",
-        "status": "REPORTED_NOT_CHANGED",
+        "what_would_settle_it": "ONLY the Companies (Fees) Regulations. THE ACT CANNOT SETTLE "
+                                "IT, now established rather than assumed: s.458 reads 'The "
+                                "Minister may by regulations require the payment to the "
+                                "Registrar of such fees as may be specified in the "
+                                "regulations', and s.489(3) 'The fees to be paid under this Act "
+                                "shall be as the Minister may prescribe in regulations'. The "
+                                "Act contains no fee amounts at all.",
+        "search_performed": "brela.go.tz/pages/sheria-na-kanuni and /pages/machapisho both "
+                            "HTTP 500; tanzlii.org/search is a client-rendered SPA returning no "
+                            "results to curl; two web searches surfaced only practitioner "
+                            "summaries and fee-aggregator blogs (one gives USD 220 filing / USD "
+                            "25 per delayed month, consistent with our record but secondary and "
+                            "undated as to which schedule it describes -- R29's exact trap). "
+                            "The Regulations' own text was NOT located.",
+        "currency_caveat_accepted": "The earlier 'USD 25 is roughly TZS 65-70k' note is an "
+                                    "INFERENCE and is withdrawn as evidence. A change of "
+                                    "denomination is a substantive amendment, not a rounding, "
+                                    "and two figures being numerically close is not grounds to "
+                                    "treat one as the other.",
+        "status": "UNRESOLVED -- GOLD UNCHANGED. The honest state: BRELA's published schedule "
+                  "says TZS 70,000, our record says USD 25, the Act delegates the question, and "
+                  "the instrument that would answer it was not found. Recorded as a standing "
+                  "disagreement with both sources named rather than resolved in either "
+                  "direction.",
     },
     {
         "what": "locked fact / CLAUDE.md Section 11 -- 'Company without share capital: "
@@ -110,10 +160,17 @@ DISAGREEMENTS = [
         "checked": "No row among the 73 asserts this figure -- searched for '300,000' and for "
                    "share-capital subject terms across both fixtures. The three '300,000' and "
                    "four '500,000' matches are all wages or salaries in other rows.",
-        "recommendation": "Correct CLAUDE.md Section 11 and the locked fact to 500,000 after a "
-                          "second read. No gate number moves either way, so this is a "
-                          "provenance fix rather than a scoring-key correction.",
-        "status": "REPORTED_NOT_CHANGED",
+        "recommendation": "HOLD. Same reasoning as the USD-25 row and the same instrument: the "
+                          "Act sets no fee amounts (s.458, s.489(3)), so only the Companies "
+                          "(Fees) Regulations can confirm 500,000, and they were not located. "
+                          "A figure is not flipped onto a source already shown unreliable on a "
+                          "neighbouring point -- and on the Part XII/XIII point that same page "
+                          "turned out to be RIGHT, which cuts both ways: it is unreliable in "
+                          "neither direction predictably, so it needs the gazette either way. "
+                          "No gate number moves, so there is no cost to waiting; when the "
+                          "Regulations are read, fold any change into the queued R15 regen as a "
+                          "third fact behind rent_wht_rate and ext_31 -- one cycle, not two.",
+        "status": "UNRESOLVED -- UNCHANGED",
     },
     {
         "what": "BRELA's own fee page labels the foreign-company part of the Companies Act "
@@ -134,6 +191,51 @@ DISAGREEMENTS = [
         "status": "REPORTED_NOT_CHANGED",
     },
 ]
+
+
+# ---------------------------------------------------------------------------------------------
+# 🔴 A TOOL THAT ATTACHES EVIDENCE IS A TOOL THAT CAN FABRICATE EVIDENCE.
+#
+# Its own finding, recorded here rather than in a commit message, because it is a property of
+# this CLASS of tool and the next provenance pass will have it too.
+#
+# This script exists to prevent CITED-AND-CONTRADICTED gold answers -- the fourth citation shape
+# (2026-09-26): a claim that names a source which does not support it, invisible to every
+# provenance check we own because they all verify a citation is PRESENT and WELL-FORMED, never
+# that it SUPPORTS the claim. tier1a_wh_009 is the known instance: a 10%/15% rent-WHT assertion
+# citing the TRA page whose table reads 10%/10%.
+#
+# THE FIRST DRY RUN OF THIS SCRIPT WOULD HAVE MANUFACTURED THREE OF THEM:
+#
+#   nat_24  <- rent_wht_rate       a payroll-levy TRIAGE row (SDL/WCF/NSSF, 9 employees) with no
+#                                  rental content whatsoever. The subject limb accepted a bare
+#                                  "withhold" and the quantity limb found a 10% belonging to
+#                                  NSSF. A rent-WHT citation would have been stamped on it.
+#   ext_15  <- brela_...penalties  matched on a "2,500" the gold mentions only as the CONTRAST
+#                                  it is refuting. Its actual claim -- the foreign company's
+#                                  USD 25/month -- is the one figure in this whole pass that the
+#                                  source CONTRADICTS, so the citation would have pointed at a
+#                                  page saying something else.
+#   ext_58/59, nat_23/24           would have read as fully sourced while asserting an NSSF 20%
+#                                  split that nothing in the register covers.
+#
+# NONE OF IT REACHED A FILE, and the reason is structural rather than careful: the script has a
+# REPORT_ONLY default and writes only under --write, so every assignment was printed and read
+# before anything was stamped. That is the dry-run-before-write rule doing the work, not
+# vigilance -- vigilance is what fails on the twentieth row.
+#
+# THE ASYMMETRY THAT MAKES THIS WORSE THAN A MISSING CITATION: an absent source is VISIBLE and
+# was in fact the finding that started this work (73 rows, counted). A WRONG source is invisible
+# and actively misleading -- it reads as verified, and the next reader has no reason to re-check
+# it. So a provenance tool's false positives cost more than its false negatives, which is R26's
+# asymmetry arriving in the evidence layer instead of the audit layer.
+#
+# CONSEQUENCE FOR PASS 2 AND AFTER: a claim rule must match the SUBJECT, not merely a number
+# near a keyword; a quantity the register cannot settle must surface as `source_partial` rather
+# than be silently covered by a sibling claim; and no pass writes until its dry run is read in
+# full. Three of twenty-one assignments were wrong on the first attempt -- a 14% error rate on
+# a mechanical pass, which is the rate to expect next time, not an anomaly.
+# ---------------------------------------------------------------------------------------------
 
 
 def rows_of(rel):
