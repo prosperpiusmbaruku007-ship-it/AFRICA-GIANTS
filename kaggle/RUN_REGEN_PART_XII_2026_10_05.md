@@ -78,7 +78,7 @@ neighbourhood by construction. It measured clean; that is a measurement, not a p
 
 ## The gates this package adds
 
-**`EXPECTED_HEAD` bumped `d593d49` → `498c8d8`.** That is the PACKAGING commit -- the first containing all three
+**`EXPECTED_HEAD` bumped `d593d49` → `5e191e0`.** That is the PACKAGING commit -- the first containing all three
 of the source fixes, the rent entry, **and the inverted payload gate** — see next.
 
 ### The payload gate had to be INVERTED, and this is the entry to remember
@@ -136,7 +136,7 @@ put its fact at rank 2 and the verbatim eval text at rank 17.
 # On Kaggle (GPU not required; e5-base is small)
 !git clone https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS.git
 %cd AFRICA-GIANTS
-!git log --oneline -1          # MUST contain 498c8d8 as an ancestor, or the script aborts
+!git log --oneline -1          # MUST contain 5e191e0 as an ancestor, or the script aborts
 !python kaggle/regenerate_rag_e5.py
 ```
 
@@ -169,3 +169,45 @@ Expect in the log:
 5. **Negative case:** a normal SDL or PAYE question still answers correctly (the index grew by a
    row; nothing else should move).
 6. Re-run the gate.
+
+---
+
+## Attempt 1 (2026-10-05) — BLOCKED BEFORE UPLOAD. Nothing shipped. Fixed; re-run.
+
+Everything substantive passed. **184 facts, 0 self-retrieval failures, all 36 critical queries
+including both new guards, 0 known-failing, rank gate 39/17/6, correction-sync clean.** One
+failure stopped the save:
+
+```
+[AMBIGUOUS] NSSF employer: anchor 'asilimia 10' matches 2 facts [9, 50]
+```
+
+**Row 9 = `nssf_employer_rate`, row 50 = `rent_wht_rate`** — confirmed by key against the
+prospective build, not inferred from the symptom. The new rent fact states a 10% withholding
+rate, so **a correct new fact made an old guard ambiguous with no edit to any guard.**
+
+**The gate did exactly its job.** An ambiguous anchor can pass on a fact it does not mean: that
+guard could have certified NSSF's employer share while actually matching the rent rate. Blocking
+the upload was right.
+
+Re-anchored on **`'mwajiri analipa asilimia 10'`** — unique in the 184-row build, and it carries
+the **party**, which is what the guard is about (the employer-share-vs-20%-total confusion,
+D-NSSF-1, is the documented live defect). Anchor as the claim, not a proxy — same principle that
+rejected bare `'ss.437-447'` for the Part XII guard.
+
+**`EXPECTED_HEAD` → `5e191e0`.** `498c8d8` is now too low a floor for a second, distinct reason:
+a clone there still has the bare `'asilimia 10'` anchor and would reproduce this exact failure.
+
+### What the harness got wrong, and what changed
+
+The dry run checked only the **two anchors this package adds**. The regen blocked on one the
+package never touched. It now checks **every committed anchor** (36 guards) against the
+prospective build and fails the verdict on any non-benign fault.
+
+> **Inserting a row perturbs its neighbours' ANCHORS as well as their RANKS.** The displacement
+> arm already covered ranks; nothing covered anchors. That is the `nat_23` 45→46 property in the
+> guard layer — and the shape where a per-change check that only inspects the change is blind by
+> construction.
+
+Re-verified after the fix: **SAFE TO RUN** — 0 blocking anchor faults (3 adjudicated-benign
+OSHA/WCF), 0 displacement caused, both new guards rank 1, new row self-retrieves.

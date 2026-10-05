@@ -153,7 +153,12 @@ SOURCE_FILES = [
 # A clone older than this resolves to a tree whose payload gate still demands the REVERSED
 # citation, which is precisely the failure EXPECTED_HEAD exists to stop: a fully
 # successful-looking run that ships the opposite of what it was run for.
-EXPECTED_HEAD = '498c8d8'
+# BUMPED AGAIN 2026-10-05 to 5e191e0, after the first Kaggle attempt blocked on an ambiguous
+# anchor. 498c8d8 is now a FLOOR TOO LOW for a second reason, distinct from the d1138ca one: a
+# clone there carries the NSSF employer guard still anchored on bare 'asilimia 10', which the
+# new rent_wht_rate row makes ambiguous -- so it would reproduce the exact failure that wasted
+# the first cycle. 5e191e0 is the first commit containing the re-anchor.
+EXPECTED_HEAD = '5e191e0'
 
 
 def _assert_expected_head_present(local_head, live_sha):
