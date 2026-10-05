@@ -54,22 +54,56 @@ NSSF = re.compile(r"\bnssf\b|hifadhi\s+ya\s+jamii|social\s+security|cap\.?\s*50"
 # charge is CORRECT and must not be quarantined; it is the single largest source of noise here.
 OTHER_SUBJECT = re.compile(r"\bosha\b|usalama\s+kazini|\bvat\b|\bbrela\b|\btra\b", re.I)
 
+# ⛔ A SWEEP FOR A WRONG VALUE MATCHES THE DOCUMENTATION OF ITS OWN CORRECTION, and this one
+# did: after the 4 rows were quarantined, the run came back with SIX new hits, every one of
+# them a file written to FIX the defect -- this script's own docstring, fine_limit's
+# correction_note, the regen's payload-gate comment, the quarantine script's adjudications.
+#
+# Left unhandled, that is corrosive in a specific way: each remediation pass makes the next
+# sweep noisier, so the instrument degrades in proportion to how thoroughly the defect was
+# documented, and the pressure is to document less. (It also fired the stale-adjudication
+# assertion, which is the assertion working -- it refused to report from a hit set it had not
+# read, rather than quietly absorbing six new rows.)
+#
+# The rule is POLARITY AND CONTEXT, the same distinction the regen's payload gates draw: a
+# superseded value NAMED in order to reject it is a mention; a superseded value OFFERED as the
+# answer is an assertion. Only the second is a defect.
+#
+# ⚠️ EVERY ALTERNATIVE HERE IS WORD-BOUNDED, and the first version was not: a bare `si\s`
+# matched inside the ordinary Swahili word `kiasi ` ("kiasi kisicholipwa"), which reclassified
+# the one real FALSE POSITIVE as a mere mention and silently removed it from the adjudicated
+# set. A mention rule that is too loose does not merely add noise -- it DELETES findings, which
+# is the more expensive direction and the one that looks like success.
+MENTION_CONTEXT = re.compile(
+    r"correction_note|_legacy_source_note|_renumbering_note|_sibling_note|quarantin|supersed"
+    r"|stale|kimepitwa|R\.E\.\s*2015|wrong_patterns|must_not|adjudicat|\bwas\b|\bnot\b", re.I)
+
 # Everything a training row or a gold answer could live in. Listed explicitly rather than
 # globbed from the repo root so that a directory added later is a visible omission, not a
 # silently-missing population (R20's mis-composed-fixture arrival point).
 SEARCH_DIRS = [
-    ("training", "datasets/tier1a/cleaned_pairs"),
-    ("training", "datasets/tier1a/sft_shaped_pairs"),
-    ("training", "datasets/tier1a/eval_set"),
-    ("training", "datasets/tier1a/adversarial"),
-    ("gold", "eval/accuracy_gate"),
-    ("gold", "eval/refusal_gate"),
-    ("gold", "eval/fidelity"),
-    ("gold", "eval/routing"),
-    ("gold", "eval/grounding"),
-    ("index", "scripts"),          # locked_facts.json + precompute_rag_embeddings.py
-    ("index", "kaggle"),           # rag_facts_text.json
-    ("index", "chike-inference"),
+    ("training", "datasets/tier1a/cleaned_pairs", None),
+    ("training", "datasets/tier1a/sft_shaped_pairs", None),
+    ("training", "datasets/tier1a/eval_set", None),
+    ("training", "datasets/tier1a/adversarial", None),
+    ("gold", "eval/accuracy_gate", None),
+    ("gold", "eval/refusal_gate", None),
+    ("gold", "eval/fidelity", None),
+    ("gold", "eval/routing", None),
+    ("gold", "eval/grounding", None),
+    # ⛔ THE INDEX CATEGORY IS NAMED FILE BY FILE, NOT BY DIRECTORY, and that is a correction.
+    # Sweeping all of scripts/ and kaggle/ pulled in HARNESSES -- this file, the quarantine
+    # script, the regen's gate comments -- none of which reaches a user. The sweep's question is
+    # "can the superseded value reach someone who asks?", and the answer runs through training
+    # rows, gold answers, the locked facts and the embedded index text. A measurement script is
+    # not a route to a user, so it does not belong in the population at all.
+    #
+    # Naming the files is what keeps this from being a convenience filter: these four ARE the
+    # served path. If a fifth file ever carries index text, its absence here is a visible
+    # omission rather than a silently-missing population (R20).
+    ("index", "scripts", ["locked_facts.json", "precompute_rag_embeddings.py"]),
+    ("index", "kaggle", ["rag_facts_text.json"]),
+    ("index", "chike-inference", ["rag_facts_text.json"]),
 ]
 
 
@@ -88,24 +122,26 @@ ADJUDICATED = {
                "TZS 15,000'. 100,000 is the base of a worked example, not a fine ceiling. The "
                "arithmetic is right and the rate is the statutory one.",
     },
-    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl:693": {
-        "verdict": "GENUINE PROPAGATION",
-        "why": "'Kifungu cha sheria kinasema faini ya shilingi elfu mia moja (TZS 100,000) "
-               "inaweza kutozwa' -- asserts the superseded R.E.2015 ceiling as the current one, "
-               "and attributes it to 'the section of the law' without naming one.",
-    },
-    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl:694": {
-        "verdict": "GENUINE PROPAGATION",
-        "why": "Same superseded ceiling, framed as applying to compliance offences generally.",
-    },
-    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl:695": {
-        "verdict": "GENUINE PROPAGATION",
-        "why": "Same superseded ceiling, framed inside the NSSF benefits system.",
-    },
-    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl:696": {
-        "verdict": "GENUINE PROPAGATION",
-        "why": "Same superseded ceiling, with payment instructions built on top of it.",
-    },
+}
+
+# QUARANTINED 2026-10-05, and now asserted ABSENT rather than deleted from the record.
+#
+# These four were the GENUINE propagation: each asserted 'faini ya shilingi elfu mia moja
+# (TZS 100,000)' as the current statutory fine. They were removed to
+# datasets/tier1a/rejected/nssf_fine_stale_100k_quarantine_2026_10_05.jsonl by
+# scripts/quarantine_nssf_fine_100k_rows.py, individually adjudicated.
+#
+# Keeping them here as an ABSENCE assertion rather than deleting the entries is the point: if
+# any of them comes back -- a merge, a regenerated batch, a restored file -- this run fails.
+# Deleting the entries would make the sweep forget the defect ever existed, and a sweep that
+# forgets cannot detect a reintroduction.
+QUARANTINED_EXPECTED_ABSENT = {
+    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl": [
+        "Kifungu cha sheria kinasema faini ya shilingi elfu mia moja",
+        "Faini ya shilingi elfu mia moja (TZS 100,000) hutolewa",
+        "Faini ya shilingi elfu mia moja (TZS 100,000) ni adhabu",
+        "Kama utapata adhabu ya faini ya shilingi elfu mia moja",
+    ],
 }
 
 
@@ -127,15 +163,18 @@ def _rows(path):
 
 
 def main():
-    hits, near, production = [], [], []
+    hits, near, production, mentions = [], [], [], []
     files_read = 0
-    for kind, rel in SEARCH_DIRS:
+    for kind, rel, only in SEARCH_DIRS:
         d = os.path.join(REPO, rel)
         if not os.path.isdir(d):
             print(f"  [absent] {rel}")
             continue
         for name in sorted(os.listdir(d)):
-            if not name.endswith((".jsonl", ".json", ".py")):
+            if only is not None:
+                if name not in only:
+                    continue
+            elif not name.endswith((".jsonl", ".json", ".py")):
                 continue
             path = os.path.join(d, name)
             files_read += 1
@@ -151,7 +190,7 @@ def main():
                 # sits NEAREST the matched figure -- the same proximity discipline D-FIDELITY-6
                 # uses, and for the same reason.
                 fig = FIGURE.search(flat)
-                window = flat[max(0, fig.start() - 220): fig.end() + 220]
+                window = flat[max(0, fig.start() - 260): fig.end() + 260]
                 nssf_near = NSSF.search(window)
                 other_near = OTHER_SUBJECT.search(window)
                 rec = {"kind": kind, "file": f"{rel}/{name}", "line": lineno,
@@ -168,7 +207,12 @@ def main():
                 # therefore scored NEAR -- filed next to ten correct OSHA rows -- while being
                 # the single most consequential hit in the sweep, because it is LIVE: retrieved
                 # and served to users now, not merely trained on once.
-                if "rag_facts_text.json" in name and not other_near:
+                # MENTION vs ASSERTION, checked before any bucket. A ±260-char window around
+                # the figure, so a correction_note two fields away still counts as context.
+                if MENTION_CONTEXT.search(window):
+                    rec["mention_context"] = MENTION_CONTEXT.search(window).group(0)
+                    mentions.append(rec)
+                elif "rag_facts_text.json" in name and not other_near:
                     rec["why_production"] = (
                         "shipped RAG index text -- retrievable in production NOW. Subject-less "
                         "terse row, so the three-axis bound cannot see it; bucketed by FILE.")
@@ -180,12 +224,12 @@ def main():
 
     # The unbounded figure count, so the narrowing is auditable rather than asserted.
     bare = 0
-    for kind, rel in SEARCH_DIRS:
+    for kind, rel, only in SEARCH_DIRS:
         d = os.path.join(REPO, rel)
         if not os.path.isdir(d):
             continue
         for name in sorted(os.listdir(d)):
-            if name.endswith((".jsonl", ".json", ".py")):
+            if (name in only) if only is not None else name.endswith((".jsonl", ".json", ".py")):
                 for _, text in _rows(os.path.join(d, name)):
                     if FIGURE.search(text):
                         bare += 1
@@ -199,6 +243,23 @@ def main():
     for h in hits:
         h.update(ADJUDICATED[f"{h['file']}:{h['line']}"])
     genuine = [h for h in hits if h["verdict"] == "GENUINE PROPAGATION"]
+
+    # THE QUARANTINE, VERIFIED BY ABSENCE. A quarantine script reporting "4 rows removed" is a
+    # claim about what it did; this is a check on the corpus as it now stands.
+    reintroduced = []
+    for rel, phrases in QUARANTINED_EXPECTED_ABSENT.items():
+        body = ""
+        p = os.path.join(REPO, rel)
+        if os.path.exists(p):
+            body = open(p, encoding="utf-8", errors="replace").read()
+        for ph in phrases:
+            if ph in body:
+                reintroduced.append({"file": rel, "phrase": ph})
+    assert not reintroduced, (
+        f"a QUARANTINED row is back in the live corpus: {reintroduced}. It was removed on "
+        f"2026-10-05 to datasets/tier1a/rejected/nssf_fine_stale_100k_quarantine_2026_10_05."
+        f"jsonl after individual adjudication. A reintroduction is a regression, not a "
+        f"new finding -- check a merge or a regenerated batch before re-adjudicating.")
 
     payload = {
         "_what": "Propagation sweep for the superseded NSSF fine ceiling (TZS 100,000, "
@@ -215,10 +276,12 @@ def main():
                    "candidates_matched": len(hits),
                    "genuine_propagation": len(genuine),
                    "false_positives_adjudicated_out": len(hits) - len(genuine),
-                   "near_other_levy_mostly_correct_osha": len(near)},
+                   "near_other_levy_mostly_correct_osha": len(near),
+                   "mentions_not_assertions": len(mentions)},
         "production": production,
         "hits": hits,
         "near": near,
+        "mentions_in_remediation": mentions,
     }
     with open(OUT, "w", encoding="utf-8") as fh:
         json.dump(payload, fh, ensure_ascii=False, indent=2)

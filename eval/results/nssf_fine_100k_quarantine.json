@@ -1,0 +1,27 @@
+{
+  "measured": "2026-10-05",
+  "harness": "scripts/quarantine_nssf_fine_100k_rows.py",
+  "defect_class": "NSSF_FINE_CEILING_STALE_100K_FROM_RE2015",
+  "rows_quarantined": 4,
+  "lines_removed_from": {
+    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl": [
+      693,
+      694,
+      695,
+      696
+    ]
+  },
+  "corpus_rows_before": 1102,
+  "corpus_rows_after": 1098,
+  "quarantine_file": "datasets/tier1a/rejected/nssf_fine_stale_100k_quarantine_2026_10_05.jsonl",
+  "excluded_false_positive": {
+    "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl",
+    "line": 216,
+    "instruction_starts": "NSSF faini ya kuchelewa ni ngapi",
+    "why_kept": "TZS 100,000 is the BASE of a worked example of the 5% late-payment penalty (s.14(3), confirmed correct against R.E.2023), not a fine ceiling: 'Mfano: NSSF TZS 100,000 haijalipwa kwa miezi 3 -> faini = 5% x 100,000 x 3 = TZS 15,000'. The rate is statutory and the arithmetic is right.",
+    "what_it_demonstrates": "A pattern-driven quarantine of the sweep's match set would have deleted a correct row. This is why every row is read before it is removed, and why the exclusion is written down."
+  },
+  "superseded_phrases_surviving_in_live_corpus": [],
+  "gold_answers_affected": 0,
+  "_gold_note": "Zero. All 13 gold matches on the figure are OSHA's CORRECT TZS 100,000/day continuing-offence charge and are untouched."
+}
