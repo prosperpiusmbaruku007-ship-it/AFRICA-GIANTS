@@ -150,18 +150,43 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     A test whose state depends on committed history must be exercised by a hook that runs at
     push time; a pre-commit run cannot see it.
 
-    FLIPS BACK TO `assert ok is False` the next time a fact or the embedding builder changes
-    without a matching regen -- which is the normal staging state, not an error.
+    ⭐ EIGHTH FLIP, SAME DAY, back to `assert ok is False`. 2ee38f8 amended 20 Cap.50 facts
+    against the NSSF Act R.E.2023 and rewrote three CONCISE_BILINGUAL_FACTS entries, so both
+    inputs are newer than the 184-row artifacts shipped in 7d46df1. PENDING, and the pending
+    content is exactly what makes this flip worth reading rather than acknowledging:
+
+      fine_limit            TZS 100,000 -> TEN MILLION (Cap.50 R.E.2023 s.76(1)). The deployed
+                            index row 159 reads `fine limit: one hundred thousand TZS` -- a
+                            100x understatement, LIVE, and a faithful copy of R.E.2015 s.72(1).
+      nssf_payment_deadline the 10th -> within one month after month-end (s.14(1)). Deployed
+                            row 63 reads `NSSF inalipwa ifikapo tarehe 10`, which appears in NO
+                            source -- the fact's own verified_by says so, and had said so since
+                            2026-09-02 while this row kept serving it.
+      imprisonment_term_limit  new ask-led row, same statutory sentence as the fine.
+
+    So the previous flip's lesson repeats with a second instance: a fact corrected in
+    locked_facts.json while its EMBEDDED TEXT keeps the superseded value is not a one-off that
+    Part XII happened to hit -- it is the default outcome of correcting a fact, and this check
+    is what makes the gap visible between the correction and the regen that ships it.
+
+    FLIPS BACK TO `assert ok is True` when the Cap.50 regen runs and its artifacts are
+    dual-committed. Until then this failing state IS the honest one.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is True, (
-        f"the live repo reports STALE: {report}. If a fact or the embedding builder has been "
-        "edited since 7d46df1 with no matching regen, that is the honest state -- flip this "
-        "back to `assert ok is False`, name the pending change, and keep it failing until the "
-        "regen ships. Do NOT silence it: five weeks of a wrong Part XII citation hid behind "
-        "three green checks, and this is the one that would have said so.")
-    assert not report["stale_inputs"], (
-        f"FRESH overall but with stale inputs reported, which should be impossible: {report}")
+    assert ok is False, (
+        f"the live repo reports FRESH: {report}. If the Cap.50 regen has shipped and its "
+        "artifacts are dual-committed, that is the expected transition -- flip this to "
+        "`assert ok is True`, record the flip in the docstring with the shipping commit, and "
+        "re-assert `not report['stale_inputs']`. Do NOT silence it in either direction: both "
+        "states are meaningful, and the state is the whole signal.")
+    # In the PENDING state the stale inputs are an assertion about WHICH change is unshipped,
+    # not noise to be tolerated. Naming them keeps this from degrading into "something is
+    # stale, who knows what" -- which would make the next reader flip it without looking.
+    assert set(report["stale_inputs"]) == {
+        "scripts/locked_facts.json", "scripts/precompute_rag_embeddings.py"}, (
+        f"a DIFFERENT input is stale than the Cap.50 pass accounts for: "
+        f"{sorted(report['stale_inputs'])}. Identify it before shipping -- an unaccounted stale "
+        f"input is a second pending change hiding behind this one.")
     assert report["artifacts_diverged"] is False, (
         "the two index directories disagree -- a different defect from a pending regen, "
         "and one the R15 dual-commit step exists to prevent")
