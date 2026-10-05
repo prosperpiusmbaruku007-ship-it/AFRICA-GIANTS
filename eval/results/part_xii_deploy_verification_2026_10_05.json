@@ -1,0 +1,92 @@
+{
+  "_what": "R16 live verification of the 2026-10-05 Part XII / rent_wht_rate deploy.",
+  "_endpoint": "https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run",
+  "_deployed_index": "184 rows, (184, 768), shipped in 7d46df1; chike_config.json rag_fact_count=184 in the same commit",
+  "_r16": "'App deployed' is not verification. Each probe exercises a specific change, with two negatives and one config-only probe.",
+  "_write_discipline": "rewritten after EVERY row; per-row errors captured, never fatal",
+  "totals": {
+    "probes": 6,
+    "run": 6,
+    "pass": 6,
+    "fail": 0,
+    "error": 0
+  },
+  "verdict": "DEPLOY VERIFIED",
+  "rows": [
+    {
+      "id": "ext_15_part_xii",
+      "proves": "THE DEPLOY'S WHOLE PURPOSE: the foreign-company citation is now Part XII, ss.437-447 and no longer the reversed Part XIII / ss.320-328.",
+      "source": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl ext_15 (verbatim)",
+      "question": "Tawi letu la kampuni ya kigeni limechelewa kuwasilisha ripoti ya mwaka. Adhabu ni tofauti na kampuni za huku?",
+      "note": "A reply that cites NO Part is not a pass and not a failure of the citation fix -- the pre-deploy baseline cited none either. Scored on must_not_match plus a separate observation of whether Part XII appears, so the two are not conflated.",
+      "reply": "Ndiyo, adhabu ni tofauti. Kampuni za ndani zinapata adhabu ya TZS 2,500 kwa mwezi ikiwa zimechelewa kuwasilisha annual returns. Lakini kwa kampuni za kigeni (foreign companies) chini ya Companies Act Sehemu XII, adhabu ni USD 25 kwa mwezi. Thibitisha na BRELA (brela.go.tz).",
+      "observed": true,
+      "checks": {
+        "must_not_match_absent": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "ext_44_rent_wht",
+      "proves": "rent_wht_rate is reachable for the first time -- it was in ZERO rows of the 183-row index.",
+      "source": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl ext_44 (verbatim)",
+      "question": "Nikimlipa mwenye nyumba kodi ya pango ofisini, ni lazima nikate kodi kabla ya kumpa fedha?",
+      "note": "Baseline said 'pango la MAKAZI' (residential) for a commercial-rent question. The observe limb looks for the two qualifiers the new fact carries.",
+      "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata.",
+      "observed": true,
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "nssf_employer_new_anchor",
+      "proves": "The re-anchored NSSF employer guard's subject still answers correctly after rent_wht_rate joined the index with its own 10% rate -- the ambiguity that blocked the first regen attempt was in the GUARD, and this confirms the underlying answer did not move.",
+      "source": "kaggle/regenerate_rag_e5.py critical_queries 'NSSF employer' (verbatim)",
+      "question": "Mwajiri analipa asilimia ngapi NSSF kila mwezi?",
+      "note": "must_not_match 20% is the D-NSSF-1 party defect: the employer SHARE is 10%, the 20% is the combined total.",
+      "reply": "Mwajiri analipa asilimia 10 ya mshahara mkubwa wa jumla wa kila mfanyakazi kila mwezi. Thibitisha na NSSF (nssf.go.tz).",
+      "checks": {
+        "must_match": true,
+        "must_not_match_absent": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "config_only_phrase",
+      "proves": "CONFIG LOADING, separately from code. This phrase exists in kaggle/chike_config.json's OOC list and NOT in modal_app.py's hardcoded fallback, so a correct refusal here proves the container read the FETCHED config -- the exact diagnostic that on 2026-08-07 distinguished a config failure from a stale warm container.",
+      "source": "chike_config.json ooc_phrases (config-only, not in the code fallback)",
+      "question": "Nataka kuuza kiwanja changu, kodi ya mapato ni kiasi gani?",
+      "note": "Property/land sale is out of corpus by design.",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_sdl_unchanged",
+      "proves": "NEGATIVE CASE: a question the deploy must NOT have changed. The index grew by one row; nothing about SDL should move.",
+      "source": "eval/accuracy_gate/edge_probe_natural_048.jsonl nat_06 class",
+      "question": "Nina wafanyakazi 25, mishahara yote ni milioni 15 kwa mwezi. SDL ni kiasi gani?",
+      "note": "3.5% of 15,000,000 = 525,000. If this moved, the new row displaced something it had no business touching.",
+      "reply": "Kwa hesabu sahihi: SDL = 3.5% × TZS 15,000,000 = TZS 525,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 15,000,000 = TZS 525,000",
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_paye_unchanged",
+      "proves": "SECOND NEGATIVE, on a different engine, so 'unchanged' is not evidenced by one lucky row.",
+      "source": "eval/accuracy_gate/edge_probe_natural_048.jsonl nat_13 class",
+      "question": "Mshahara wangu ni TZS 900,000 kwa mwezi, PAYE ni kiasi gani?",
+      "note": "Band 4: 68,000 + 25% x (900,000-760,000) = 103,000.",
+      "reply": "Kwa mshahara wa TZS 900,000/mwezi, PAYE = TZS 68,000 + 25% × (TZS 900,000 − TZS 760,000) = TZS 103,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 900,000 − TZS 760,000) = TZS 103,000",
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    }
+  ]
+}
