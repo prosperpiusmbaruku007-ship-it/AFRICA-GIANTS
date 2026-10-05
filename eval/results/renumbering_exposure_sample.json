@@ -13,13 +13,13 @@
     "why_this_population": "these are the facts where a renumbering can make a REAL, correctly-fetched citation point at the wrong provision -- the failure mode that produced the Cap.212 reversal and the Cap.332 presumptive incident."
   },
   "⚠️_what_a_clean_act_does_and_does_not_mean": "2 clean draws from 20 facts is a LOWER BOUND on cleanliness, not a clearance. An Act reading clean here is NOT YET SHOWN to be a problem; it is not shown not to be.",
-  "hit_rate_on_adjudicable": "1/8",
+  "hit_rate_on_adjudicable": "1/10",
   "totals": {
     "sampled": 12,
-    "adjudicable": 8,
+    "adjudicable": 10,
     "hits": 1,
-    "clean": 7,
-    "blocked": 4
+    "clean": 9,
+    "blocked": 2
   },
   "by_act": {
     "Cap.332": [
@@ -39,8 +39,8 @@
       "CLEAN"
     ],
     "Cap.438": [
-      "BLOCKED",
-      "BLOCKED"
+      "CLEAN",
+      "CLEAN"
     ],
     "Cap.50": [
       "BLOCKED",
@@ -48,8 +48,8 @@
     ]
   },
   "blocked_notes": {
-    "Cap.50": "NSSF Act not obtained. nssf.go.tz returns HTTP 500 on /pages/contributions AND /pages/michango to curl with a browser UA on two consecutive days (2026-10-04, 2026-10-05), and the Act is not hosted on tra.go.tz. kazi.go.tz is the remaining candidate and was not tried in this sample. NOT recorded as clean: 20 facts cite this Act and none of them has been checked against its text.",
-    "Cap.438": "Obtainable edition is R.E. 2019; the facts cite R.E. 2023 numbering. A verdict against the 2019 text would be a verdict about the wrong document -- and this is itself an instance of the pattern, since tra.go.tz is serving a superseded consolidation of its own governing Act."
+    "Cap.50": "NSSF Act NOT LOCATED, and the diagnosis is narrower than the earlier note claimed. nssf.go.tz is UP: the root returns HTTP 200 (42,040 bytes) and /benefits/old-age-pension, /benefits/maternity-benefits, /schemes all resolve. What fails is one ROUTE FAMILY -- every /pages/* path tried returns HTTP 500 (/pages/contributions, /pages/michango, /pages/sheria, /pages/about), on 2026-10-04 and 2026-10-05. So the earlier framing 'the server returns 500' was wrong in a way that matters: the site works, a path family does not. AND the homepage links NO legislation at all -- 41 links, none to an Act, a PDF, or a downloads page. tra.go.tz does not host it (302). No further URLs were guessed, because R30 is explicit that a failed guess proves nothing about a route. 20 facts cite this Act and NONE has been checked against its text: that is UNCHECKED, not clean, and it is now the single largest renumbering exposure left. Remaining candidates, untried: parliament.go.tz (HTTP 200, 557,873 bytes), mof.go.tz (HTTP 200), tanzlii (Cloudflare Turnstile), and asking the founder for a copy.",
+    "Cap.438": "RESOLVED 2026-10-05, and the earlier BLOCKED verdict was MY ERROR, not the regulator's. tra.go.tz hosts BOTH editions: CHAPTER_438-THE_TAX_ADMINISTRATION_ACT.pdf is R.E.2019 (259,711 bytes) and Tax_Administration_Act.pdf is the current OAG compilation (945,982 bytes, 88pp). The project ALREADY cited the current one -- paye_penalty_rate's verified_by has quoted s.89(2) from it since 2026-09-02. I picked the stale URL out of a grep of recorded paths without checking which fact cited which, then recorded the whole Act as unverifiable. So 'the regulator serves its own Act at a stale edition' was half right at best: it serves both, and the actionable fact is that one of OUR recorded URLs is the old one (deliberately, for the two EFD facts that quote the 2019 wording and name the renumbering explicitly)."
   },
   "rows": [
     {
@@ -185,26 +185,43 @@
       "act": "Cap.438",
       "fact": "paye_penalty_rate",
       "cited_section": 89,
-      "verdict": "BLOCKED",
-      "why": "Obtainable edition is R.E. 2019; the facts cite R.E. 2023 numbering. A verdict against the 2019 text would be a verdict about the wrong document -- and this is itself an instance of the pattern, since tra.go.tz is serving a superseded consolidation of its own governing Act.",
-      "body": null,
-      "matched": []
+      "verdict": "CLEAN",
+      "why": "the cited section reads on the provision the fact describes",
+      "expected_words": [
+        "penalt",
+        "fails to file",
+        "two point five"
+      ],
+      "matched": [
+        "penalt",
+        "fails to file",
+        "two point five"
+      ],
+      "body": "89.–(1) A person who fails to file a tax return or pay tax on due date as required by a tax law is liable for a penalty for each month or part of a month during which the failure continues. (2) The penalty is- (a) two point five percent of the amount of tax assessable with respect to the tax return "
     },
     {
       "act": "Cap.438",
       "fact": "legal_citation_tax_administration",
       "cited_section": 43,
-      "verdict": "BLOCKED",
-      "why": "Obtainable edition is R.E. 2019; the facts cite R.E. 2023 numbering. A verdict against the 2019 text would be a verdict about the wrong document -- and this is itself an instance of the pattern, since tra.go.tz is serving a superseded consolidation of its own governing Act.",
-      "body": null,
-      "matched": []
+      "verdict": "CLEAN",
+      "why": "the cited section reads on the provision the fact describes",
+      "expected_words": [
+        "document",
+        "maintain",
+        "record"
+      ],
+      "matched": [
+        "document",
+        "maintain"
+      ],
+      "body": "43.–(1) Every taxable or liable person shall, within the United Republic, maintain documents in paper or electronic form which- (a) contain information to be provided or filed with the Commissioner General under any tax law; (b) enable an accurate determination of tax payable under any tax law; and "
     },
     {
       "act": "Cap.50",
       "fact": "nssf_payment_deadline",
       "cited_section": 14,
       "verdict": "BLOCKED",
-      "why": "NSSF Act not obtained. nssf.go.tz returns HTTP 500 on /pages/contributions AND /pages/michango to curl with a browser UA on two consecutive days (2026-10-04, 2026-10-05), and the Act is not hosted on tra.go.tz. kazi.go.tz is the remaining candidate and was not tried in this sample. NOT recorded as clean: 20 facts cite this Act and none of them has been checked against its text.",
+      "why": "NSSF Act NOT LOCATED, and the diagnosis is narrower than the earlier note claimed. nssf.go.tz is UP: the root returns HTTP 200 (42,040 bytes) and /benefits/old-age-pension, /benefits/maternity-benefits, /schemes all resolve. What fails is one ROUTE FAMILY -- every /pages/* path tried returns HTTP 500 (/pages/contributions, /pages/michango, /pages/sheria, /pages/about), on 2026-10-04 and 2026-10-05. So the earlier framing 'the server returns 500' was wrong in a way that matters: the site works, a path family does not. AND the homepage links NO legislation at all -- 41 links, none to an Act, a PDF, or a downloads page. tra.go.tz does not host it (302). No further URLs were guessed, because R30 is explicit that a failed guess proves nothing about a route. 20 facts cite this Act and NONE has been checked against its text: that is UNCHECKED, not clean, and it is now the single largest renumbering exposure left. Remaining candidates, untried: parliament.go.tz (HTTP 200, 557,873 bytes), mof.go.tz (HTTP 200), tanzlii (Cloudflare Turnstile), and asking the founder for a copy.",
       "body": null,
       "matched": []
     },
@@ -213,7 +230,7 @@
       "fact": "nssf_retirement_age",
       "cited_section": 25,
       "verdict": "BLOCKED",
-      "why": "NSSF Act not obtained. nssf.go.tz returns HTTP 500 on /pages/contributions AND /pages/michango to curl with a browser UA on two consecutive days (2026-10-04, 2026-10-05), and the Act is not hosted on tra.go.tz. kazi.go.tz is the remaining candidate and was not tried in this sample. NOT recorded as clean: 20 facts cite this Act and none of them has been checked against its text.",
+      "why": "NSSF Act NOT LOCATED, and the diagnosis is narrower than the earlier note claimed. nssf.go.tz is UP: the root returns HTTP 200 (42,040 bytes) and /benefits/old-age-pension, /benefits/maternity-benefits, /schemes all resolve. What fails is one ROUTE FAMILY -- every /pages/* path tried returns HTTP 500 (/pages/contributions, /pages/michango, /pages/sheria, /pages/about), on 2026-10-04 and 2026-10-05. So the earlier framing 'the server returns 500' was wrong in a way that matters: the site works, a path family does not. AND the homepage links NO legislation at all -- 41 links, none to an Act, a PDF, or a downloads page. tra.go.tz does not host it (302). No further URLs were guessed, because R30 is explicit that a failed guess proves nothing about a route. 20 facts cite this Act and NONE has been checked against its text: that is UNCHECKED, not clean, and it is now the single largest renumbering exposure left. Remaining candidates, untried: parliament.go.tz (HTTP 200, 557,873 bytes), mof.go.tz (HTTP 200), tanzlii (Cloudflare Turnstile), and asking the founder for a copy.",
       "body": null,
       "matched": []
     }

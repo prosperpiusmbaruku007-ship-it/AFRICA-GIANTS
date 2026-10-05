@@ -47,7 +47,15 @@ OUT = os.path.join(REPO, "eval", "results", "renumbering_exposure_sample.json")
 # Act -> (local text file, edition on cover, what the project's facts cite)
 SOURCES = {
     "Cap.332": ("The_Income_Tax_Act.pdf.txt", "2023", "Cap.332 R.E.2023"),
-    "Cap.438": ("CHAPTER_438-THE_TAX_ADMINISTRATION_ACT.pdf.txt", "2019", "Cap.438 R.E.2023"),
+    # ⛔ CORRECTED 2026-10-05. This pointed at CHAPTER_438-THE_TAX_ADMINISTRATION_ACT.pdf
+    # (259,711 bytes, 90pp), which is R.E.2019 -- and the whole Act was then recorded BLOCKED on
+    # an edition mismatch. WRONG ON BOTH COUNTS. tra.go.tz hosts BOTH editions, and the project
+    # already recorded the current one: Tax_Administration_Act.pdf (945,982 bytes, 88pp, HTTP
+    # 200), cited by paye_penalty_rate's own verified_by since 2026-09-02. I picked the stale
+    # URL out of a grep of recorded paths without checking WHICH FACT CITED WHICH.
+    # So "the regulator serves its own Act at a superseded edition" was half right at best: it
+    # serves both, and the actionable fact is that one of our recorded URLs is the old one.
+    "Cap.438": ("TAA_current.txt", "2023 (OAG 2025 compilation)", "Cap.438 R.E.2023"),
     "Cap.148": ("The_Value_Added_Tax_Act.pdf.txt", "unstated", "Cap.148"),
     "Cap.82": ("THE_VOCATIONAL_EDUCATION_AND_TRAINING_ACT.pdf.txt", "2023", "Cap.82"),
     "Cap.212": ("../act_full.txt", "2023", "Cap.212 R.E.2023"),  # read in full 2026-10-04
@@ -61,7 +69,11 @@ SOURCES = {
 # wrong citation, and nothing in the 2019 text can tell the difference. My own BLOCKED_NOTE
 # already said so and the code ignored it -- a note that the code does not enforce is exactly
 # the inert-control shape. Now enforced.
-EDITION_MISMATCH = {"Cap.438"}
+# EMPTIED 2026-10-05: the current Cap.438 edition WAS obtainable all along (see SOURCES), so
+# there is no longer an edition mismatch to gate on. Kept as a mechanism because the next Act
+# fetched may genuinely only exist at a stale edition, and a verdict against the wrong document
+# must never be reported as CLEAN.
+EDITION_MISMATCH = set()
 
 # 2 per Act. `expect` = words that must appear at/near the cited section if the citation is right.
 #
@@ -86,22 +98,39 @@ SAMPLE = [
     ("Cap.82", "legal_citation_amendment_act_sdl", 19, ["exempt", "levy", "apply"]),
     ("Cap.212", "company_director_minimum_age", 197, ["eighteen", "director"]),
     ("Cap.212", "minimum_directors", 186, ["director"]),
-    ("Cap.438", "paye_penalty_rate", 89, ["penalt", "interest", "fail"]),
+    ("Cap.438", "paye_penalty_rate", 89, ["penalt", "fails to file", "two point five"]),
     ("Cap.438", "legal_citation_tax_administration", 43, ["document", "maintain", "record"]),
     ("Cap.50", "nssf_payment_deadline", 14, ["contribution", "month", "pay"]),
     ("Cap.50", "nssf_retirement_age", 25, ["pension", "age", "retire"]),
 ]
 
 BLOCKED_NOTE = {
-    "Cap.50": "NSSF Act not obtained. nssf.go.tz returns HTTP 500 on /pages/contributions AND "
-              "/pages/michango to curl with a browser UA on two consecutive days (2026-10-04, "
-              "2026-10-05), and the Act is not hosted on tra.go.tz. kazi.go.tz is the remaining "
-              "candidate and was not tried in this sample. NOT recorded as clean: 20 facts cite "
-              "this Act and none of them has been checked against its text.",
-    "Cap.438": "Obtainable edition is R.E. 2019; the facts cite R.E. 2023 numbering. A verdict "
-               "against the 2019 text would be a verdict about the wrong document -- and this "
-               "is itself an instance of the pattern, since tra.go.tz is serving a superseded "
-               "consolidation of its own governing Act.",
+    "Cap.50": "NSSF Act NOT LOCATED, and the diagnosis is narrower than the earlier note "
+              "claimed. nssf.go.tz is UP: the root returns HTTP 200 (42,040 bytes) and "
+              "/benefits/old-age-pension, /benefits/maternity-benefits, /schemes all resolve. "
+              "What fails is one ROUTE FAMILY -- every /pages/* path tried returns HTTP 500 "
+              "(/pages/contributions, /pages/michango, /pages/sheria, /pages/about), on "
+              "2026-10-04 and 2026-10-05. So the earlier framing 'the server returns 500' was "
+              "wrong in a way that matters: the site works, a path family does not. AND the "
+              "homepage links NO legislation at all -- 41 links, none to an Act, a PDF, or a "
+              "downloads page. tra.go.tz does not host it (302). No further URLs were guessed, "
+              "because R30 is explicit that a failed guess proves nothing about a route. "
+              "20 facts cite this Act and NONE has been checked against its text: that is "
+              "UNCHECKED, not clean, and it is now the single largest renumbering exposure left. "
+              "Remaining candidates, untried: parliament.go.tz (HTTP 200, 557,873 bytes), "
+              "mof.go.tz (HTTP 200), tanzlii (Cloudflare Turnstile), and asking the founder for "
+              "a copy.",
+    "Cap.438": "RESOLVED 2026-10-05, and the earlier BLOCKED verdict was MY ERROR, not the "
+               "regulator's. tra.go.tz hosts BOTH editions: CHAPTER_438-THE_TAX_ADMINISTRATION_"
+               "ACT.pdf is R.E.2019 (259,711 bytes) and Tax_Administration_Act.pdf is the "
+               "current OAG compilation (945,982 bytes, 88pp). The project ALREADY cited the "
+               "current one -- paye_penalty_rate's verified_by has quoted s.89(2) from it since "
+               "2026-09-02. I picked the stale URL out of a grep of recorded paths without "
+               "checking which fact cited which, then recorded the whole Act as unverifiable. "
+               "So 'the regulator serves its own Act at a stale edition' was half right at "
+               "best: it serves both, and the actionable fact is that one of OUR recorded URLs "
+               "is the old one (deliberately, for the two EFD facts that quote the 2019 "
+               "wording and name the renumbering explicitly).",
 }
 
 
