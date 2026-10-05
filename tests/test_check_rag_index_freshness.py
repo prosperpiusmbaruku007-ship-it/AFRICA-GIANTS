@@ -169,24 +169,39 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     Part XII happened to hit -- it is the default outcome of correcting a fact, and this check
     is what makes the gap visible between the correction and the regen that ships it.
 
-    FLIPS BACK TO `assert ok is True` when the Cap.50 regen runs and its artifacts are
-    dual-committed. Until then this failing state IS the honest one.
+    ⭐ NINTH FLIP, back to `assert ok is True`. The Cap.50 regen ran (184 facts, (184, 768), 0
+    self-retrieval failures, every anchor across 38 guards unique, all 38 critical queries
+    passing including both new ones, rank gate 38/16/6, correction_sync=CLEAN) and the artifacts
+    were dual-committed. Exactly SIX rows changed, all intended, verified against the fetched
+    files before they were committed:
+
+        63   deadline: "ifikapo tarehe 10" -> "ndani ya MWEZI MMOJA baada ya mwisho wa mwezi"
+        78   split triggers: enumeration -> the s.12(2) rule
+        84   registration deadline: hedge -> within one month
+        152  health insurance: "3 months" -> NOT SETTLEABLE FROM Cap.50
+        159  fine: "one hundred thousand TZS" -> ten million, with the old value negated
+        160  imprisonment: bare "two years" -> ask-led row
+
+    And `one hundred thousand` / `ifikapo tarehe 10` now appear in ZERO rows of the shipped
+    index. (`part xiii` still matches row 102 -- that is the CORRECT disambiguation clause, not
+    a survival of the reversal, already adjudicated as a bad specimen in its own right.)
+
+    rag_fact_count did NOT move (184 -> 184), so unlike the previous ship there was no window
+    in which the config and the index could disagree.
+
+    FLIPS BACK TO `assert ok is False` the next time a fact or the embedding builder changes
+    without a matching regen -- which is the normal staging state, not an error. Two flips in
+    one day is not churn: it is one correction cycle, and both halves were load-bearing.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is False, (
-        f"the live repo reports FRESH: {report}. If the Cap.50 regen has shipped and its "
-        "artifacts are dual-committed, that is the expected transition -- flip this to "
-        "`assert ok is True`, record the flip in the docstring with the shipping commit, and "
-        "re-assert `not report['stale_inputs']`. Do NOT silence it in either direction: both "
-        "states are meaningful, and the state is the whole signal.")
-    # In the PENDING state the stale inputs are an assertion about WHICH change is unshipped,
-    # not noise to be tolerated. Naming them keeps this from degrading into "something is
-    # stale, who knows what" -- which would make the next reader flip it without looking.
-    assert set(report["stale_inputs"]) == {
-        "scripts/locked_facts.json", "scripts/precompute_rag_embeddings.py"}, (
-        f"a DIFFERENT input is stale than the Cap.50 pass accounts for: "
-        f"{sorted(report['stale_inputs'])}. Identify it before shipping -- an unaccounted stale "
-        f"input is a second pending change hiding behind this one.")
+    assert ok is True, (
+        f"the live repo reports STALE: {report}. If a fact or the embedding builder has been "
+        "edited since this ship with no matching regen, that is the honest state -- flip this "
+        "back to `assert ok is False`, NAME the pending change and assert which inputs are "
+        "stale, and keep it failing until the regen ships. Do NOT silence it in either "
+        "direction: both states are meaningful, and the state is the whole signal.")
+    assert not report["stale_inputs"], (
+        f"FRESH overall but with stale inputs reported, which should be impossible: {report}")
     assert report["artifacts_diverged"] is False, (
         "the two index directories disagree -- a different defect from a pending regen, "
         "and one the R15 dual-commit step exists to prevent")
