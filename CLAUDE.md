@@ -837,6 +837,37 @@ introduced it.
    locked. **So the trigger to re-check refusals is ADDING A DOMAIN, not editing a phrase** —
    and adding a domain does not look like touching refusals, which is exactly why it is missed.
 
+### 🎯 ADDING A ROW PERTURBS ITS NEIGHBOURS' ANCHORS, NOT ONLY THEIR RANKS (2026-10-05)
+
+**The same shape as the OOC collisions above, in the GUARD layer, and it cost a Kaggle cycle.**
+The 2026-10-05 regen added `rent_wht_rate` — a correct new fact stating a 10% withholding rate.
+Everything substantive passed: 184 facts, 0 self-retrieval failures, all 36 critical queries,
+rank gate 39/17/6. The upload was refused by one line:
+
+```
+[AMBIGUOUS] NSSF employer: anchor 'asilimia 10' matches 2 facts [9, 50]
+```
+
+Row 9 is `nssf_employer_rate`; row 50 is the new `rent_wht_rate`. **A correct new fact made an
+old guard ambiguous, with no edit to any guard.** An ambiguous anchor can pass on a fact it does
+not mean, so that guard could have certified NSSF's employer share while matching the rent rate.
+
+**Why the local dry run missed it, and this is the generalisable part:** the harness checked the
+anchors the change *adds*. The failure was in an anchor the change never touched. **A per-change
+check that only inspects the change is blind to this class by construction** — it is the `nat_23`
+45→46 property (insertion shifts neighbours) arriving in the guard layer, where a rank gate
+watches ranks and *nothing* watched anchors.
+
+- **Check EVERY committed anchor against the prospective index before packaging, not just the new
+  ones.** Now enforced in `eval/index_quality/dryrun_regen_2026_10_05.py`.
+- **Prefer an anchor that IS the claim under guard, not a proxy for it.** `'asilimia 10'` is a
+  bare magnitude; `'mwajiri analipa asilimia 10'` carries the PARTY, which is the actual defect
+  (D-NSSF-1 party resolution). Same reasoning rejected bare `'ss.437-447'` for the Part XII guard
+  — it matched two rows.
+- **Read an exception list FROM its source rather than re-deriving it.** A local re-derivation of
+  `ACCEPTED_AMBIGUOUS` by regex silently missed it across intervening comment lines and reported
+  a second, false ambiguity — a bad specimen in the instrument, where the Kaggle log was right.
+
 **The operational consequence:** when a fact is locked or a domain is built, grep the OOC lists
 for every content word in the new subject BEFORE shipping. Today's mining limb kept `madini`,
 `mchimbaji` and `dhahabu` out of the bare list *only because the 2026-08-06 row above already
@@ -1073,9 +1104,9 @@ loader silently returned nothing must be. The two are byte-identical at the AST 
   and it kept reporting sites already closed. **A worklist that cannot see its own fixes is the
   defect class it exists to find.**
 
-**R20's arrival points, updated 2026-09-05 — FOUR, not one.** The vacuous-check family does not
+**R20's arrival points, updated 2026-10-05 — FIVE, not one.** The vacuous-check family does not
 only arrive as a bad `assert` inserted by a mechanical pass. It has now been found arriving through
-four independent mechanisms, each requiring a different eye to catch:
+five independent mechanisms, each requiring a different eye to catch:
 
 | arrival point | example | how it was found |
 |---|---|---|
@@ -1084,7 +1115,18 @@ four independent mechanisms, each requiring a different eye to catch:
 | **a control nothing calls, or that fires on everything, or on nothing** (R26) | `scan_for_keys.py` invoked bare in the pre-push hook — nothing was ever staged at push time, so it scanned zero files on every push in the project's history | planting the exact thing a control claims to catch and watching it fail to fire |
 | **a fixture whose composition cannot exercise the category it claims to watch** (NEW, 2026-09-05) | `eval/grounding/measure_fact_reach.py`'s `BOUNDARY` category (rank 4–16): the 34 real regression probes it reused from `kaggle/regenerate_rag_e5.py` are ALL either solidly `IN_TOP3` or a known `ABSENT` gap — **zero of them land in `BOUNDARY`**, so the category existed in the code, ran on every invocation, and could never once report anything, clean by construction rather than by health | noticed while building the measure, before it shipped — closed by adding 2 more probes (`nat_28`/`nat_44`, sourced from an already-committed fixture, needle-uniqueness-checked) specifically chosen to populate the empty category, not by asserting harder |
 
-**The common thread across all four:** each one *looks* like a working check from the outside —
+| **a check whose POPULATION is defined by a string match, so editing prose silently removes a row from it** (NEW, 2026-10-05) | `tests/test_locked_facts_finance_act_freshness.py` builds its parametrize list from every fact whose JSON object *contains the string* `"finance act"`. Correcting `paye_p9_deadline`'s citation rewrote its prose, deleted that phrase, and **removed the fact from Finance-Act freshness coverage.** The check still ran, still passed, and simply no longer covered it | **a test-count diff.** The suite went **1590 → 1589 with nothing red.** No failure, no warning — a parametrized case just stopped existing. Found by diffing `--collect-only` node ids before and after the edit |
+
+> **🔍 THE TECHNIQUE, worth using whenever an edit touches data that drives a parametrize list:
+> `pytest -q --collect-only`, diff the node ids before and after, and treat a SHRINKING count as a
+> finding.** A dropped test case is invisible to every signal the suite emits: green is green
+> whether a check ran or vanished. The only trace is a number nobody watches, and "1590 → 1589"
+> does not look like a defect — which is exactly why this arrival point survives the other four
+> defences. **Close it by doing the check the test existed to enforce, not by re-inserting the
+> magic string** — the string was never the point, and restoring it without redoing the check
+> would re-add the row to a population while leaving the question unanswered.
+
+**The common thread across all five:** each one *looks* like a working check from the outside —
 it runs, it doesn't error, it reports a clean result — and the only way any of them was caught was
 someone asking not "does this run" but **"what would have to be true for this to ever report
 something other than clean?"** For a bad assert, the answer is "nothing, it's tautological." For an
