@@ -1,0 +1,188 @@
+{
+  "_what": "Local offline dry run of the Cap.50 R.E.2023 R15 regen package (second package of 2026-10-05), before Kaggle.",
+  "_model": "intfloat/multilingual-e5-base",
+  "_offline": "HF_HUB_OFFLINE=1; weights already cached locally. The regen header's 'weights do not download locally' is true of DOWNLOADING, not of loading.",
+  "_two_live_defects_this_closes": {
+    "row_159": "fine limit: one hundred thousand TZS -- R.E.2015 s.72(1) text, 100x understated against R.E.2023 s.76(1)'s ten million shillings",
+    "row_63": "NSSF inalipwa ifikapo tarehe 10 -- the 10th, where s.14(1) says within one month after month-end; the fact's own verified_by says the 10th appears in no source"
+  },
+  "prospective_row_count": 184,
+  "deployed_row_count": 184,
+  "⚠️_rag_fact_count": {
+    "from": 184,
+    "to": 184,
+    "where": "kaggle/chike_config.json rag_fact_count",
+    "⛔_WHEN": "IN THE SAME COMMIT AS THE FETCHED .npy/.json ARTIFACTS, NEVER BEFORE. modal_app.py asserts this count against the loaded index and REFUSES TO SERVE on a mismatch (verified live 2026-08-24: HTTP 500). The config is fetched from GitHub at runtime, so bumping it while production still holds the old index takes production DOWN."
+  },
+  "builder_dropped_keys": [
+    "business_licensing_act_chapter",
+    "business_licensing_act_citation",
+    "contribution_rate_emplyees",
+    "exemption_category_charitable_organizations",
+    "exemption_category_diplomatic_missions",
+    "exemption_category_educational_institutions",
+    "exemption_category_farm_employers_agriculture",
+    "exemption_category_government_departments",
+    "exemption_category_international_organizations_aid",
+    "exemption_category_local_government_authorities",
+    "exemption_category_religious_institutions",
+    "exemption_category_trainees_under_TAESA",
+    "exemption_category_un_and_agencies",
+    "gn487a_signatory",
+    "health_and_safety_act_citation",
+    "late_payment_penalty_rate",
+    "legal_citation_amendment_act_sdl",
+    "legal_citation_sdl",
+    "legal_citation_tax_administration",
+    "offence_penalty_mention",
+    "order_made_under_section",
+    "osiha_act_citation",
+    "penalty_fine_non_citizen",
+    "prohibited_business_activities_for_non_citizens_order_year",
+    "tanzania_citizenship_act_reference",
+    "workers_compensation_act_citation",
+    "workers_compensation_act_section",
+    "workers_compensation_amendment_rules_section",
+    "workers_compensation_rules_section"
+  ],
+  "anchor_uniqueness_new_guards": [
+    {
+      "guard": "NSSF fine ceiling is ten million, not one hundred thousand (Cap.50 s.76(1))",
+      "anchor": "kosa la NSSF ni TZS 10,000,000",
+      "matches": 1,
+      "rows": [
+        {
+          "row": 159,
+          "key": "fine_limit"
+        }
+      ]
+    },
+    {
+      "guard": "NSSF deadline is one month after month-end, not the 10th (Cap.50 s.14(1))",
+      "anchor": "ndani ya MWEZI MMOJA baada ya mwisho wa mwezi",
+      "matches": 1,
+      "rows": [
+        {
+          "row": 63,
+          "key": "nssf_payment_deadline"
+        }
+      ]
+    }
+  ],
+  "anchor_faults_ALL_committed_guards": [
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "osha husajili",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "wcf huanza",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "mfanyakazi wa kwanza",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    }
+  ],
+  "anchor_faults_blocking": [],
+  "new_guards": [
+    {
+      "name": "NSSF fine ceiling is ten million, not one hundred thousand (Cap.50 s.76(1))",
+      "anchor": "kosa la NSSF ni TZS 10,000,000",
+      "from": "authored for this package; the live defect was index row 159",
+      "why_this_anchor": "carries the SUBJECT (kosa la NSSF) and the CLAIM (10,000,000) together. Bare 'milioni kumi' matches gn487a_penalty_noncitizen too.",
+      "in_top3": true,
+      "rank": 1,
+      "top3": [
+        "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au kifungo cha hadi miaka miwi",
+        "Kosa la NSSF linaweza kuleta kifungo (jela) cha hadi miaka miwili, au faini ya hadi TZS 10,000,000, au vyote v",
+        "nssf penalty: NSSF late payment penalty is 5% per month of unpaid contributions"
+      ]
+    },
+    {
+      "name": "NSSF deadline is one month after month-end, not the 10th (Cap.50 s.14(1))",
+      "anchor": "ndani ya MWEZI MMOJA baada ya mwisho wa mwezi",
+      "from": "authored for this package; the live defect was index row 63",
+      "why_this_anchor": "the statutory period IS the claim under guard, not a proxy for it.",
+      "in_top3": true,
+      "rank": 1,
+      "top3": [
+        "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni ",
+        "SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata.",
+        "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.o"
+      ]
+    }
+  ],
+  "displacement_regressions_caused_by_this_package": [],
+  "pre_existing_failures_not_caused_by_this_package": [],
+  "rewritten_rows_self_retrieve": [
+    {
+      "key": "fine_limit",
+      "row": 159,
+      "self_retrieves": true,
+      "text": "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au kifungo cha hadi miaka miwili, au vyote viwili. SI TZS 100,000 — kiwango hicho kimepitw"
+    },
+    {
+      "key": "imprisonment_term_limit",
+      "row": 160,
+      "self_retrieves": true,
+      "text": "Kosa la NSSF linaweza kuleta kifungo (jela) cha hadi miaka miwili, au faini ya hadi TZS 10,000,000, au vyote viwili."
+    },
+    {
+      "key": "nssf_payment_deadline",
+      "row": 63,
+      "self_retrieves": true,
+      "text": "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni asilimia 5 ya kiasi kisicholipwa kwa kila mwezi au sehemu ya"
+    }
+  ],
+  "superseded_value_polarity": [
+    {
+      "key": "fine_limit",
+      "asserts_superseded_value": [],
+      "explicitly_contradicts_it": true,
+      "text": "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au kifungo cha hadi miaka miwili, au vyote viwili. SI TZS 100,000 — kiwango hicho kimepitwa na wakati."
+    },
+    {
+      "key": "nssf_payment_deadline",
+      "asserts_superseded_value": [],
+      "explicitly_contradicts_it": true,
+      "text": "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni asilimia 5 ya kiasi kisicholipwa kwa kila mwezi au sehemu ya mwezi."
+    }
+  ],
+  "verdict": "SAFE TO RUN"
+}

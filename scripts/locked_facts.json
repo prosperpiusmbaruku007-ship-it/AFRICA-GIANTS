@@ -228,12 +228,13 @@
       "mwajiri.*nssf.*asilimia 12(?!\\s*/)",
       "nssf.*asilimia 12(?!\\s*/)"
     ],
-    "primary_source": "NSSF Act, Cap.50 R.E.2015, First Schedule (ss.5A(c), 12(1)), G.N. No. 286 of 2000",
-    "verified_by": "Direct read (2026-09-02) of NSSF Act Cap.50, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf. NSSF Act Cap.50 First Schedule (made under ss.5A(c) and 12(1)), G.N. No. 286 of 2000: \"Employers share deductible from wages by Employer: Ten cents for every complete shilling of wages [10%]. Statutory Contributions for each employee: Twenty cents for every complete shilling of wages [20%].\" Confirms employer share 10%, total statutory contribution 20% (implying employee share 20%-10%=10% by construction, matching the already-locked nssf_split_triggers documentation of the standard 10/10 split).",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, First Schedule (Made under sections 5(2)(c) and 12(1) and (5)), G.N. No. 286 of 2000 (secondary -- see note)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. First Schedule, contribution period \"(a) one month\": \"Employer's share deductible from wages by Employer: Ten cents for every complete shilling of wages\" [=10%]; \"Statutory Contributions for each employee: Twenty cents for every complete shilling of wages\" [=20%]. Confirms the employer share at 10% and the statutory total at 20%, so the employee share is 10% by subtraction.",
     "effective_date": "2018-07-01",
-    "status": "CONFIRMED (statute-tier, 2026-09-02) -- was CONFIRMED",
+    "status": "CONFIRMED (statute-tier, re-read in R.E.2023 on 2026-10-05)",
     "adversarial_note": "Base model frequently says 6% — confirmed fixed after 300-pair training",
-    "verified_as_at": "2026-09-02"
+    "verified_as_at": "2026-10-05",
+    "_renumbering_note": "CITATION CORRECTED 2026-10-05: previously cited as 'Cap.50 R.E.2015, First Schedule (ss.5A(c), 12(1))'. R.E.2023 HAS NO SECTION 5A -- the Schedule's own rubric reads '(Made under sections 5(2)(c) and 12(1) and (5))'. The old citation pointed at a section that does not exist in the current edition, so a reader could not distinguish a wrong fact from a stale citation. The VALUE is unchanged and was re-confirmed against R.E.2023; only the citation moved. G.N. No. 286 of 2000 (the instrument that substituted the Schedule) was a marginal note in R.E.2015 and is not reproduced in R.E.2023's text, so it is retained here as a secondary note rather than as the operative citation."
   },
   "nssf_total_rate": {
     "fact": "NSSF total contribution is 20% of gross wage (10% employer + 10% employee)",
@@ -248,11 +249,12 @@
       "10% only total",
       "nssf.*asilimia 16|asilimia 16.*nssf"
     ],
-    "primary_source": "NSSF Act, Cap.50 R.E.2015, First Schedule (ss.5A(c), 12(1)), G.N. No. 286 of 2000",
-    "verified_by": "Direct read (2026-09-02) of NSSF Act Cap.50, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf. NSSF Act Cap.50 First Schedule (made under ss.5A(c) and 12(1)), G.N. No. 286 of 2000: \"Employers share deductible from wages by Employer: Ten cents for every complete shilling of wages [10%]. Statutory Contributions for each employee: Twenty cents for every complete shilling of wages [20%].\" Confirms employer share 10%, total statutory contribution 20% (implying employee share 20%-10%=10% by construction, matching the already-locked nssf_split_triggers documentation of the standard 10/10 split).",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, First Schedule (Made under sections 5(2)(c) and 12(1) and (5)), G.N. No. 286 of 2000 (secondary -- see note)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. First Schedule, contribution period \"(a) one month\": \"Employer's share deductible from wages by Employer: Ten cents for every complete shilling of wages\" [=10%]; \"Statutory Contributions for each employee: Twenty cents for every complete shilling of wages\" [=20%]. The 20% figure is the Schedule's \"Statutory Contributions for each employee\" column.",
     "effective_date": "2018-07-01",
-    "status": "CONFIRMED (statute-tier, 2026-09-02) -- was CONFIRMED",
-    "verified_as_at": "2026-09-02"
+    "status": "CONFIRMED (statute-tier, re-read in R.E.2023 on 2026-10-05)",
+    "verified_as_at": "2026-10-05",
+    "_renumbering_note": "CITATION CORRECTED 2026-10-05: previously cited as 'Cap.50 R.E.2015, First Schedule (ss.5A(c), 12(1))'. R.E.2023 HAS NO SECTION 5A -- the Schedule's own rubric reads '(Made under sections 5(2)(c) and 12(1) and (5))'. The old citation pointed at a section that does not exist in the current edition, so a reader could not distinguish a wrong fact from a stale citation. The VALUE is unchanged and was re-confirmed against R.E.2023; only the citation moved. G.N. No. 286 of 2000 (the instrument that substituted the Schedule) was a marginal note in R.E.2015 and is not reproduced in R.E.2023's text, so it is retained here as a secondary note rather than as the operative citation."
   },
   "nssf_penalty": {
     "fact": "NSSF late payment penalty is 5% per month of unpaid contributions",
@@ -267,11 +269,11 @@
       "nssf.*faini.*asilimia 2(?![0-9])",
       "nssf.*asilimia 2(?![0-9]).*adhabu|adhabu.*nssf.*asilimia 2(?![0-9])"
     ],
-    "primary_source": "https://www.nssf.go.tz/pages/payment-of-contributions",
-    "verified_by": "NSSF Act Cap.50",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.14(3)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.14(3) verbatim: \"Where any contribution is not paid within the period stated under subsection (1) a sum equal to five per centum of the amount unpaid shall be added as penalty for each month or a part of a month after the date when payment should have been made and the amount of the penalty shall be recovered as a debt owing to the Fund by the employer: Provided that, the Board may, where it thinks fit, remit in whole or in part any penalty imposed by this subsection.\" NOTE THE PROVISO -- the Board may remit the penalty in whole or in part, which the bare '5% per month' does not convey.",
     "effective_date": "2018-07-01",
-    "status": "CONFIRMED",
-    "verified_as_at": "unknown"
+    "status": "CONFIRMED (statute-tier, 2026-10-05) -- was portal-only, and that portal route (nssf.go.tz/pages/payment-of-contributions) returns HTTP 500",
+    "verified_as_at": "2026-10-05"
   },
   "nssf_retirement_age": {
     "fact": "NSSF pensionable (retirement) age is 60 (Cap.50 s.2, definition of 'pensionable age'). Early retirement is available from age 55 to ANY insured person within 5 years of pensionable age who has paid at least 180 monthly contributions (ss.25(c), 29) -- this is a GENERAL early-retirement provision, NOT a mining-sector-specific rate. Minimum 180 months (15 years) of contributions is required for a retirement pension (s.25(b)).",
@@ -1239,11 +1241,12 @@
       "nssf.*tarehe 10 au mwishoni mwa mwezi",
       "nssf.*tarehe 10 au mwisho wa mwezi"
     ],
-    "primary_source": "NSSF Act, Cap.50 R.E.2015, s.14(1) and (3)",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.14(1) and (3)",
     "status": "CONFIRMED -- grounded against primary Act text, hedge removed",
-    "verified_as_at": "2026-09-02",
-    "verified_by": "Direct read (2026-09-02) of NSSF Act Cap.50 R.E.2015 s.14, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf: \"A contributing employer shall pay contributions to the Fund... within one month after the end of the month in respect of which the contributions are due and payable\" (s.14(1)); \"If any contribution is not paid within the period stated under subsection (1), a sum equal to five per centum of the amount unpaid shall be added as penalty for each month or a part of a month\" (s.14(3)). Corroborated by NSSF's own cached payment-of-contributions page (data/source_documents/nssf/nssf_payment_contributions.html): \"The employer is required to remit contributions within one month from the month of payment of salaries.\" Neither source mentions a \"10th\" of the month anywhere -- the prior hedge's \"10th vs end of month\" conflict traces to somewhere else in the corpus, not to either of these two sources. NSSF Act confirmed ABSENT from Finance Act 2026's own list of amended Acts this same session (rates.py FINANCE_ACT_VERIFIED_THROUGH['NSSF']), so s.14 is current, not stale.",
-    "correction_note": "2026-09-02: upgraded from a deliberate hedge (portal-only, \"verify at nssf.go.tz\") to a grounded statutory citation. Value direction unchanged (\"end of month following payroll month\" was already the working assumption); now backed by the Act's own text plus the penalty detail. Closes membership in \"the eleven\" (PROGRESS.md)."
+    "verified_as_at": "2026-10-05",
+    "verified_by": "Direct read (2026-09-02) of NSSF Act Cap.50 R.E.2015 s.14, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf: \"A contributing employer shall pay contributions to the Fund... within one month after the end of the month in respect of which the contributions are due and payable\" (s.14(1)); \"If any contribution is not paid within the period stated under subsection (1), a sum equal to five per centum of the amount unpaid shall be added as penalty for each month or a part of a month\" (s.14(3)). Corroborated by NSSF's own cached payment-of-contributions page (data/source_documents/nssf/nssf_payment_contributions.html): \"The employer is required to remit contributions within one month from the month of payment of salaries.\" Neither source mentions a \"10th\" of the month anywhere -- the prior hedge's \"10th vs end of month\" conflict traces to somewhere else in the corpus, not to either of these two sources. NSSF Act confirmed ABSENT from Finance Act 2026's own list of amended Acts this same session (rates.py FINANCE_ACT_VERIFIED_THROUGH['NSSF']), so s.14 is current, not stale. RE-CONFIRMED 2026-10-05 against Cap.50 R.E.2023 (sha256 2a820e67ed109cd36059, from nssf.go.tz/publications/act and oagmis.oag.go.tz, byte-identical): s.14(1) and s.14(3) are word-for-word as quoted above, and s.14 carries NO bracketed prior-edition note, so the section number did not move between editions. The previous read was against R.E.2015; the citation's edition label was the only stale part. s.14(3)'s proviso -- the Board may remit the penalty in whole or in part -- is noted here as a limb the bare '5% per month' does not convey.",
+    "correction_note": "2026-09-02: upgraded from a deliberate hedge (portal-only, \"verify at nssf.go.tz\") to a grounded statutory citation. Value direction unchanged (\"end of month following payroll month\" was already the working assumption); now backed by the Act's own text plus the penalty detail. Closes membership in \"the eleven\" (PROGRESS.md).",
+    "_renumbering_note": "CITATION EDITION CORRECTED 2026-10-05: R.E.2015 -> R.E.2023. s.14 carries NO bracketed prior-edition note in R.E.2023, so the SECTION NUMBER is unchanged across the two editions and only the edition label was stale. Recorded explicitly because 'the number is the same' is a finding here, not an absence of one -- s.76, s.51, s.47, s.46, s.29, s.25 and s.23 all moved."
   },
   "paye_bands_monthly_2025_26": {
     "fact": "PAYE monthly bands 2025/26: Band 1: 0-270,000=0%; Band 2: 270,001-520,000=8%; Band 3: 520,001-760,000=20%; Band 4: 760,001-1,000,000=25%; Band 5: above 1,000,000=30%. No personal relief of TZS 26,000 exists.",
@@ -1465,8 +1468,8 @@
     "verified_as_at": "unknown"
   },
   "NSSF_split_triggers": {
-    "fact": "NSSF total is always 20% of gross wage. Three valid employer-employee split arrangements: (a) 10% employer + 10% employee — standard default; (b) 15% employer + 5% employee — employer elects to contribute more; (c) 20% employer + 0% employee — employer pays the full 20%, employee pays nothing. Employee share must never exceed 10%. All three arrangements are legal under the NSSF Act.",
-    "correct_value": "20% total — three valid splits: 10+10, 15+5, 20+0",
+    "fact": "NSSF's statutory total is 20% of gross wage, of which the employer's share deductible from wages is 10% (First Schedule). THE RULE, from s.12(2)-(3): the employer MAY OPT to contribute at a greater rate than the First Schedule amount, up to the whole contribution rate. So an employer paying 15% with the employee paying 5%, or an employer paying the full 20% with the employee paying nothing, is acting lawfully. s.12(3) limits the option: it does not apply to a member whose contribution rate at any given time does not exceed fifty percent of his contributions. The total never changes -- only who bears it. THE ACT DOES NOT ENUMERATE A LIST OF PERMITTED SPLITS; 10+10, 15+5 and 20+0 are instances of the s.12(2) option, not statutory categories.",
+    "correct_value": "20% total; employer may opt to pay more than its 10% share, up to the whole 20% (s.12(2)-(3)). 10+10, 15+5 and 20+0 are examples of that option, not an exhaustive statutory list",
     "wrong_patterns": [
       "mgawanyo wa NSSF ni 10%\\+10% peke yake",
       "only valid split is 10.*10",
@@ -1474,11 +1477,14 @@
       "15%.*employer.*NSSF.*si halali",
       "20%.*employer.*NSSF.*si halali"
     ],
-    "primary_source": "nssf.go.tz official website — payment of contributions page",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.12(1)-(3) and First Schedule",
     "verified_date": "2026-06-19",
     "effective_date": "2018-07-01",
-    "status": "LOCKED",
-    "verified_as_at": "unknown"
+    "status": "CONFIRMED AS A RULE (statute-tier, 2026-10-05); THE THREE-SPLIT ENUMERATION IS NOT STATUTORY -- reworded 2026-10-05",
+    "verified_as_at": "2026-10-05",
+    "section": "s.12(1)-(3) read with the First Schedule",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.12(1): employer pays \"a contribution that consist of the employer's and employee's share at the rate stipulated in the First Schedule\". s.12(2) verbatim: \"The employer may opt to contribute a greater rate than the amount stipulated in subsection (1).\" s.12(3) verbatim: \"Where the employer agrees to contribute at a greater rate or the whole contribution rate, such option shall not apply to a member whose contribution rate at any given time does not exceed fifty percent of his contributions.\" s.12 carries no bracketed prior-edition note.",
+    "correction_note": "2026-10-05: REWORDED, value unchanged. The previous text said \"Three valid employer-employee split arrangements\" and \"All three arrangements are legal under the NSSF Act\", which reads as though the Act lists them. It does not. The Act states a 20% total and an employer option to pay more, up to the whole; the three splits are portal-sourced illustrations of that option. The direction of the fact was right and defensible -- what was wrong was attributing an enumeration to the statute. wrong_patterns are deliberately UNCHANGED (R27): every one of them guards against the model claiming 10+10 is the ONLY lawful split, which is still exactly what s.12(2) refutes."
   },
   "BRELA_fees_hedge": {
     "fact": "BRELA registration and filing fees change periodically via ministerial order. Training pairs must direct users to brela.go.tz or the ORS portal for current fees rather than stating specific TZS amounts. The annual return filing fee has been approximately TZS 22,000 but this must be verified before quoting in any business context.",
@@ -1554,19 +1560,22 @@
     "verified_as_at": "unknown"
   },
   "nssf_employer_registration_deadline": {
-    "fact": "Every employer in Tanzania must register with NSSF before or within a reasonable period of commencing business. The NSSF Act Cap. 50 imposes a registration obligation but the exact number of days is not confirmed from the primary source (nssf.go.tz was unreachable during verification). Training pairs must direct employers to nssf.go.tz to confirm current registration deadline and avoid stating a specific day count.",
-    "correct_value": "Register with NSSF at or shortly after commencement of business — verify deadline at nssf.go.tz",
+    "fact": "Every contributing employer must register with NSSF WITHIN ONE MONTH of becoming a contributing employer. NSSF Act Cap.50 R.E.2023 s.11(1): \"every contributing employer shall, unless such employer has been registered under the existing Fund, within one month, register under this section in the prescribed manner.\" s.11(2) fixes when that month starts: \"The period of one month mentioned in subsection (1) shall, in every case, begin upon the commencement of this Act or the date when the person concerned becomes a contributing employer.\" So the clock runs from the date the employer becomes a contributing employer, not from registration of the business.",
+    "correct_value": "within one month of becoming a contributing employer (s.11(1)-(2))",
     "wrong_patterns": [
       "mwajiri hana wajibu wa kusajili nssf",
       "employer does not need to register with nssf",
       "nssf registration is optional",
       "usajilishaji wa nssf si lazima"
     ],
-    "primary_source": "https://www.nssf.go.tz — unverifiable at time of writing",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.11(1) and (2)",
     "verified_date": "2026-06-19",
-    "status": "HEDGE — specific deadline unverifiable from primary source; direct to nssf.go.tz",
-    "training_instruction": "Do not state a specific day count for NSSF registration deadline. Use: 'sajili na NSSF haraka iwezekanavyo baada ya kuanza biashara. Thibitisha tarehe ya mwisho kwenye nssf.go.tz'.",
-    "verified_as_at": "unknown"
+    "status": "CONFIRMED (statute-tier, 2026-10-05) -- was HEDGE (deadline unverifiable)",
+    "training_instruction": "State the deadline: 'sajili na NSSF ndani ya MWEZI MMOJA kuanzia siku unakuwa mwajiri mwenye wajibu wa kuchangia (NSSF Act Cap.50 s.11(1)-(2))'. The previous instruction not to state a day count is WITHDRAWN -- it existed because the figure was unverifiable, and the Act now supplies it.",
+    "verified_as_at": "2026-10-05",
+    "section": "s.11(1)-(2)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.11(1) verbatim: \"Subject to the provisions of this Act, every contributing employer shall, unless such employer has been registered under the existing Fund, within one month, register under this section in the prescribed manner.\" s.11(2) verbatim: \"The period of one month mentioned in subsection (1) shall, in every case, begin upon the commencement of this Act or the date when the person concerned becomes a contributing employer.\" s.11 carries no bracketed prior-edition note, so the section number is the same in R.E.2015.",
+    "correction_note": "2026-10-05: HEDGE LIFTED, not a value corrected. The fact previously said 'verify deadline at nssf.go.tz' because nssf.go.tz was recorded as unreachable at the time of writing (2026-06-19). Per R30, that was a claim about one request, not about the domain: the Act is published by the Fund itself at /publications/act, a route the broken /pages/* family does not cover. The deadline was in primary source all along, on a host we had written off."
   },
   "efd_approved_supplier_verification": {
     "fact": "To verify that an EFD supplier/distributor (msambazaji) is TRA-approved, businesses should check tra.go.tz/page/efd-vfd-suppliers, which publishes a \"List of Approved EFD/VFD Suppliers\" PDF. TRA defines an approved supplier as a certified entity \"by commissioner General for import, distribute and sell EFD/VFD, install, configure, integrate, train users\" and provide related support. Businesses should only purchase EFD machines from TRA-approved dealers -- purchasing from unapproved suppliers may result in the machine not being activated by TRA.",
@@ -2721,99 +2730,135 @@
   },
   "unpaid_contribution_penalty_rate": {
     "correct_value": "five %",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, 2026-10-05)",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "Payment 14.-(3)",
+    "section": "s.14(3)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.14(3)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.14(3): \"a sum equal to five per centum of the amount unpaid shall be added as penalty for each month or a part of a month...\" Subject to the s.14(3) proviso allowing the Board to remit the penalty in whole or in part."
   },
   "unpaid_contribution_penalty_frequency": {
     "correct_value": "each month or a part of a month null",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, 2026-10-05)",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "Payment 14.-(3)",
+    "section": "s.14(3)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.14(3)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.14(3): \"...for each month OR A PART OF A MONTH after the date when payment should have been made\". The 'part of a month' limb is verbatim statutory language, so a part-month attracts a full 5%."
   },
   "minimum_monthly_contributions_for_retirement_pension": {
     "correct_value": "180 monthly contributions",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, 2026-10-05)",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "Condi tions for retirement pension",
+    "section": "s.25(b) (R.E.2023; was s.23(b) in R.E.2015)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.25(b)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.25 verbatim: \"retirement pension shall be payable to an insured person who- (a) has attained pensionable age; (b) in respect of whom not less than 180 monthly contributions have been paid; and (c) who has attained the age of fifty-five or above but before attaining pensionable age.\" s.25 carries the prior-edition note [s. 23]."
   },
   "minimum_contribution_months_health_insurance": {
-    "correct_value": "3 months",
-    "status": "CONFIRMED",
+    "correct_value": "NOT SETTLEABLE FROM Cap.50 -- 3 months neither confirmed nor contradicted by the Act; likely in regulations or Cap.135",
+    "status": "NOT SETTLEABLE FROM Cap.50 (2026-10-05) -- was CONFIRMED on no stated source; do not assert the 3-month figure until a dated instrument is found",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "Health insurance benefit",
+    "section": "not in Cap.50; cf. s.23(1)(g) (health benefit as a class) and s.44(4) (delegation to regulations)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "unknown",
+    "fact": "NOT SETTLEABLE FROM Cap.50. The claimed 3-month qualifying period for the NSSF health/medical benefit does not appear anywhere in the NSSF Act Cap.50 R.E.2023. The Act names \"health benefit\" as a class of benefit (s.23(1)(g)) and s.44(4) delegates the forms and procedures for medical benefits to regulations made by the Minister. WHERE TO LOOK NEXT, in this order: (1) the NSSF (Benefits) Regulations / any G.N. made under s.44(4) or s.52 -- the Act itself points there; (2) the Social Security Act Cap.135, which Cap.50 cross-references repeatedly for benefit standards and rates; (3) NSSF's own published benefit conditions. A Regulation can be amended by a later Regulation exactly as an Act is by a later amending Act (R29), so whatever is found must be dated as-at, not merely cited.",
+    "primary_source": null,
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. Searched every occurrence of 'health' and 'medical' in the enacting body. s.23(1)(g) lists health benefit as a class of benefit; no contribution-month qualifying condition for it appears anywhere in the Act. NOT CONTRADICTED and NOT CONFIRMED -- the Act is silent, which is a different verdict from either."
   },
   "minimum_monthly_contributions_maternity_benefit": {
     "correct_value": "36 monthly_contributions",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED BUT INCOMPLETE (statute-tier, 2026-10-05) -- see the recency limb",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "Conditions for maternity benefit",
+    "section": "s.46(a) (R.E.2023; was s.44(a) in R.E.2015)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.46(a)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.46(a) verbatim: \"Maternity benefit shall be payable- (a) to an insured person who has made at least thirty-six monthly contributions OF WHICH TWELVE CONTRIBUTIONS ARE MADE IN THE THIRTY-SIX MONTHS PRIOR TO DATE OF CONFINEMENT\". s.46 carries the prior-edition note [s. 44]. THE SECOND LIMB IS AN ADDITIONAL CONDITION THE BARE '36' OMITS: 36 lifetime contributions are not sufficient on their own -- twelve must fall in the 36 months before confinement. Recorded as an incompleteness in the fact, not a contradiction of it."
   },
   "duration_of_maternity_cash_benefit": {
     "correct_value": "12 weeks",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, 2026-10-05)",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "Types of maternity benefit",
+    "section": "s.47(a) (R.E.2023; was s.45(a) in R.E.2015)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.47(a)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.47(a) verbatim: \"cash benefit at the rate of 100 per centum of the average daily earnings for a period of twelve weeks\". s.47 carries the prior-edition note [s. 45]."
   },
   "maternity_cash_benefit_rate": {
     "correct_value": "100 %",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, 2026-10-05) -- base is average daily earnings",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "Types of maternity benefit",
+    "section": "s.47(a) (R.E.2023; was s.45(a) in R.E.2015)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.47(a)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.47(a) verbatim: \"cash benefit at the rate of 100 per centum of THE AVERAGE DAILY EARNINGS for a period of twelve weeks\". THE BASE MATTERS AND THE BARE '100%' DOES NOT CONVEY IT: the rate is 100% of average DAILY earnings, not of the monthly salary. s.47 carries the prior-edition note [s. 45]."
   },
   "employer_notification_deadline_before_retirement": {
     "correct_value": "6 months",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, 2026-10-05)",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "49.-( I) An employer shall, within six months before the date of Penalty",
+    "section": "s.51(1) (R.E.2023; was s.49(1) in R.E.2015)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.51(1)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.51(1) verbatim: \"An employer shall, within six months before the date of retirement of his employee, notify the Fund in writing about the date of retirement of his employee.\" s.51 carries the prior-edition note [s. 49] -- THE OLD `section` FIELD HERE READ \"49.-( I)\", i.e. R.E.2015 numbering, which in R.E.2023 is a different section."
   },
   "fund_payment_deadline_after_retirement_notification": {
     "correct_value": "60 days",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, 2026-10-05) -- s.51(3) 15%/annum limb not yet encoded as its own fact",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "49.-(2) The Fund shall ensure that, within sixty days following the date of",
+    "section": "s.51(2) (R.E.2023; was s.49(2) in R.E.2015)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.51(2)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.51(2) verbatim: \"Subject to subsection (1), the Fund shall, within sixty days following the date of retirement, pay to the member the due retirement pension benefits.\" s.51(3) adds a limb the fact omits and a member would want: \"Where the Fund fails to pay retirement benefits to a member within a period specified under subsection (2), and the member is not responsible for that failure, the Fund shall pay the member the principal sum that is due... plus a penalty of fifteen percent of that sum per annum.\" s.51 carries the prior-edition note [s. 49]."
   },
   "pensionable_age": {
     "correct_value": "60 years",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, 2026-10-05)",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "Definitions",
+    "section": "s.2 (interpretation)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.2",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.2 interpretation, verbatim: \"'pensionable age' means the age of sixty years\"."
   },
   "fine_limit": {
-    "correct_value": "one hundred thousand TZS",
-    "status": "CONFIRMED",
+    "correct_value": "ten million TZS (TZS 10,000,000)",
+    "status": "CORRECTED 2026-10-05 (statute-tier, R.E.2023) -- was WRONG BY 100x, carried from a superseded edition",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "(1)",
+    "section": "s.76(1) (R.E.2023; was s.72(1) in R.E.2015)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "fact": "The maximum fine for an offence under the NSSF Act is TZS 10,000,000 (ten million shillings), not TZS 100,000. NSSF Act Cap.50 R.E.2023 s.76(1): a person who commits any of the offences listed in s.76(1)(a)-(j) \"commits an offence and on conviction shall be liable to a fine not exceeding ten million shillings or to imprisonment for a term not exceeding two years or to both\".",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.76(1)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.76(1) closing words, verbatim: \"commits an offence and on conviction shall be liable to a fine not exceeding ten million shillings or to imprisonment for a term not exceeding two years or to both.\" The marginal note on this section lists Acts Nos. 1 of 2008 s.33, 5 of 2012 s.67 and 2 of 2018 s.108 as its amending instruments; Act No. 2 of 2018 s.108 is the only one post-dating the 2015 revision, so it is the instrument that raised the ceiling -- ATTRIBUTED BY ELIMINATION from the section's own amendment list and the two editions' dates, not by reading Act No. 2 of 2018 itself.",
+    "wrong_patterns": [
+      "faini\\s+(?:ya\\s+)?(?:shilingi\\s+)?(?:elfu\\s+mia\\s+moja|laki\\s+moja)(?!.{0,40}(?:kwa\\s+siku|kila\\s+siku|per\\s+day))",
+      "fine\\s+not\\s+exceeding\\s+one\\s+hundred\\s+thousand",
+      "nssf.{0,60}faini.{0,30}(?:TZS\\s*)?100[,.]?000(?![,.\\d])",
+      "(?:TZS\\s*)?100[,.]?000(?![,.\\d]).{0,40}(?:faini|fine).{0,40}nssf"
+    ],
+    "correction_note": "2026-10-05: corrected from 'one hundred thousand TZS' to ten million shillings per s.76(1) of Cap.50 R.E.2023.\n\nTHIS WAS NOT A FABRICATION -- IT IS R29 MODE 2 (OUT-OF-DATE EDITION), AND THAT MATTERS FOR WHAT TO CHECK NEXT. The fact's legacy `source` field points at data/source_documents/nssf/nssf_act_cap50.pdf, which is REVISED EDITION 2015, and in that edition s.72(1) reads \"a fine not exceeding one hundred thousand shillings\". So 100,000 was a faithful transcription of a real primary document that had simply been superseded. It was not unchecked; it was checked against the wrong edition.\n\nTHE SIBLING IS THE WHOLE LESSON. `imprisonment_term_limit` (two years) comes from THE SAME SENTENCE of THE SAME superseded edition and is CORRECT -- because Parliament multiplied the fine by 100 and left the term of imprisonment alone. One read of one clause in one stale edition produced one wrong fact and one right one, and nothing about either fact's provenance distinguished them. The sibling's correctness is luck about which limb was amended, not evidence that the reading was sound.\n\nPROPAGATION, measured before anything was quarantined (eval/controls/sweep_nssf_fine_100k_propagation.py): 4 genuine training rows (datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl:693-696), 2 shipped RAG index rows (row 159, 'fine limit: one hundred thousand TZS' -- LIVE in production until the R15 regen lands), 1 false positive adjudicated out, and ZERO gold answers. All 13 gold matches on the figure are OSHA's correct TZS 100,000/day continuing offence.",
+    "_legacy_source_note": "The `source` field below is retained for provenance rather than deleted, and it is the superseded R.E.2015 copy -- the document that produced the 100x error. Do not re-verify this fact against it."
   },
   "imprisonment_term_limit": {
     "correct_value": "two years",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, 2026-10-05, R.E.2023)",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "(1)",
+    "section": "s.76(1) (R.E.2023; was s.72(1) in R.E.2015)",
     "approved": "manual_review — Tier 1 employer-facing compliance facts",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "fact": "The maximum term of imprisonment for an offence under the NSSF Act is two years. NSSF Act Cap.50 R.E.2023 s.76(1): \"...liable to a fine not exceeding ten million shillings or to imprisonment for a term not exceeding two years or to both\".",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, s.76(1)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. s.76(1) closing words, verbatim: \"...liable to a fine not exceeding ten million shillings or to imprisonment for a term not exceeding two years or to both.\" The two-year term is identical in R.E.2015 s.72(1) and R.E.2023 s.76(1).",
+    "_sibling_note": "SURVIVED VERIFICATION FOR A REASON WORTH RECORDING, not because its provenance was better. This fact and `fine_limit` were read from the same sentence of the same superseded R.E.2015 copy. The fine limb was amended 100x and this limb was not, so the same flawed read produced one wrong fact and one correct one. 'Ungrounded' carried no information about which -- and neither did 'grounded', because both were grounded, in a stale edition. See `fine_limit.correction_note`."
   },
   "business_licensing_act_citation": {
     "correct_value": "THE BUSINESS LICENSING ACT, (CAP. 101)",
@@ -2897,11 +2942,13 @@
   },
   "contribution_rate_emplyees": {
     "correct_value": "10 %",
-    "status": "CONFIRMED",
+    "status": "CONFIRMED (statute-tier, 2026-10-05) -- derived from the Schedule's two columns, not quoted directly",
     "source": "data/source_documents\\nssf\\nssf_act_cap50.pdf",
-    "section": "CONTRIBUTIONS FOR EMPLOYEES",
+    "section": "First Schedule read with s.12(1)",
     "approved": "manual_review — NSSF employee contribution rate 10%, unit corrected from cents to %",
-    "verified_as_at": "unknown"
+    "verified_as_at": "2026-10-05",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, First Schedule (Made under sections 5(2)(c) and 12(1) and (5)) read with s.12(1)",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. First Schedule, contribution period \"(a) one month\": \"Employer's share deductible from wages by Employer: Ten cents for every complete shilling of wages\" [=10%]; \"Statutory Contributions for each employee: Twenty cents for every complete shilling of wages\" [=20%]. The EMPLOYEE share is not stated as a separate column: it is the statutory total (20%) less the employer's share (10%) = 10%. Recorded as derived-by-subtraction rather than as a quoted figure, because that is what the Act supports."
   },
   "gn487a_shareholder_vs_operator_distinction": {
     "fact": "GN487A prohibits non-citizens from CONDUCTING or OPERATING the listed business activities. Passive shareholding or investment in a Tanzanian-owned and operated company is not explicitly prohibited by GN487A - the prohibition targets the person carrying out the activity, not the investor. However, a non-citizen who is a shareholder AND actively manages or operates the business would be covered. Consult an immigration lawyer for specific structures.",
@@ -2937,10 +2984,11 @@
   "nssf_calculation_example": {
     "fact": "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo ni kwa mfanyakazi mmoja tu). Hesabu: kila mfanyakazi analipa NSSF ya TZS 120,000 (asilimia 20 ya mshahara wake), kisha zidisha kwa wafanyakazi 12 = TZS 1,440,000 jumla.",
     "correct_value": "NSSF total for 12 employees at 600,000 each = TZS 1,440,000 (NOT 120,000 which is per-employee)",
-    "status": "CONFIRMED (statute-tier, 2026-09-02) -- was CONFIRMED (portal-tier)",
-    "primary_source": "NSSF Act, Cap.50 R.E.2015, First Schedule (ss.5A(c), 12(1))",
-    "verified_as_at": "2026-09-02",
-    "verified_by": "Direct read (2026-09-02) of NSSF Act Cap.50, cached locally at data/source_documents/nssf/nssf_act_cap50.pdf. NSSF Act Cap.50 First Schedule (made under ss.5A(c) and 12(1)), G.N. No. 286 of 2000: \"Employers share deductible from wages by Employer: Ten cents for every complete shilling of wages [10%]. Statutory Contributions for each employee: Twenty cents for every complete shilling of wages [20%].\" Confirms employer share 10%, total statutory contribution 20% (implying employee share 20%-10%=10% by construction, matching the already-locked nssf_split_triggers documentation of the standard 10/10 split). The 20% total rate directly supports this example's arithmetic (TZS 600,000 x 20% = TZS 120,000 per employee; x 12 employees = TZS 1,440,000 total)."
+    "status": "CONFIRMED (statute-tier, re-read in R.E.2023 on 2026-10-05)",
+    "primary_source": "NSSF Act, Cap.50 R.E.2023, First Schedule (Made under sections 5(2)(c) and 12(1) and (5)) read with s.12(1)",
+    "verified_as_at": "2026-10-05",
+    "verified_by": "Direct read (2026-10-05) of NSSF Act, Cap.50 R.E.2023, fetched from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and independently from https://oagmis.oag.go.tz/portal/acts/revised/155/download -- both routes byte-identical (sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp), confirmed the same edition BEFORE either was used. First Schedule, contribution period \"(a) one month\": \"Employer's share deductible from wages by Employer: Ten cents for every complete shilling of wages\" [=10%]; \"Statutory Contributions for each employee: Twenty cents for every complete shilling of wages\" [=20%]. s.12(1): \"A contributing employer shall, for every contribution period following the date of appointment of an insured person, pay to the Fund a contribution that consist of the employer's and employee's share at the rate stipulated in the First Schedule.\" The example's arithmetic follows from the 20% total: 600,000 x 20% = 120,000 per employee, x 12 = 1,440,000.",
+    "_renumbering_note": "CITATION CORRECTED 2026-10-05: previously cited as 'Cap.50 R.E.2015, First Schedule (ss.5A(c), 12(1))'. R.E.2023 HAS NO SECTION 5A -- the Schedule's own rubric reads '(Made under sections 5(2)(c) and 12(1) and (5))'. The old citation pointed at a section that does not exist in the current edition, so a reader could not distinguish a wrong fact from a stale citation. The VALUE is unchanged and was re-confirmed against R.E.2023; only the citation moved. G.N. No. 286 of 2000 (the instrument that substituted the Schedule) was a marginal note in R.E.2015 and is not reproduced in R.E.2023's text, so it is retained here as a secondary note rather than as the operative citation."
   },
   "business_licence_expiry_30_june": {
     "fact": "Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara huisha tarehe 30 Juni kila mwaka, hivyo huhuishwa kila mwaka kabla ya tarehe hiyo.",

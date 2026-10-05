@@ -440,6 +440,61 @@ else:
         f'[FATAL] {_RENT_KEY} absent from the built fact set -- this regen exists to ADD it, '
         f'so its absence is the whole failure, not a skippable gate.')
 
+# ── PAYLOAD GATE: THE TWO Cap.50 ROWS THAT WERE WRONG IN THE DEPLOYED INDEX ─────
+# Both of these were LIVE and wrong in the 184-row index this regen replaces, and both are the
+# same shape: locked_facts.json was corrected and the embedded text was not. A retrieval guard
+# cannot catch that -- a row can be reached perfectly and still state the superseded value --
+# so each needs a TEXT gate here as well as its critical query below.
+#
+# ⚠️ THESE GATES MUST CHECK POLARITY, NOT PRESENCE, and the first draft of them did not -- it
+# would have failed on the very rows it was written to protect. BOTH new rows deliberately NAME
+# the superseded value under a negation ('SI TZS 100,000', 'si tarehe 10'), because four training
+# rows assert the old fine and the model therefore carries a prior for it; a retrieved row that
+# merely states the right number competes with that prior, while one that explicitly contradicts
+# the wrong number overrides it. So the superseded figure APPEARING is correct and expected --
+# what must never happen is it appearing as the ASSERTION.
+#
+# A presence gate and a polarity gate are indistinguishable until the protected text contains
+# the thing being banned, and then they are opposites. Same lesson as the citation-attached-to-a-
+# no-threshold-gold limb: no subject or quantity pattern can see polarity, so it has to be
+# checked for directly.
+_NEGATED = r'(?:\bsi\b|\bnot\b|\bsio\b|\bhapana\b)[\s:,]*(?:TZS\s*)?$'
+for _k, _must_not, _must, _why in [
+    ('fine_limit',
+     r'one\s+hundred\s+thousand|laki\s+moja|100[,.]?000(?![,.\d])',
+     r'10,000,000|milioni\s+kumi',
+     'Cap.50 R.E.2023 s.76(1) reads "ten million shillings". TZS 100,000 is R.E.2015 s.72(1) '
+     '-- superseded, and it was row 159 of the deployed index, understated 100x.'),
+    ('nssf_payment_deadline',
+     # `tarehe 10`, NOT `ifikapo tarehe 10` -- the ban pattern must match the CLAIM (the date),
+     # not the one phrasing the replaced row happened to use. Caught in the dry run: the longer
+     # form reported "does not contradict it" on a row reading "si tarehe 10".
+     r'tarehe\s+10\b|the\s+10th',
+     r'mwezi\s+mmoja',
+     'Cap.50 R.E.2023 s.14(1): "within one month after the end of the month in respect of '
+     'which the contributions are due and payable". The 10th appears in NO source -- the '
+     'fact\'s own verified_by says so -- and was row 63 of the deployed index.'),
+]:
+    assert _k in fact_keys, (
+        f'[FATAL] {_k} absent from the built fact set -- it was present in the 184-row index '
+        f'this regen replaces, so its disappearance is a defect, not a skippable gate.')
+    _row = fact_texts_to_embed[fact_keys.index(_k)]
+    _asserted = [m.group(0) for m in re.finditer(_must_not, _row, re.I)
+                 if not re.search(_NEGATED, _row[max(0, m.start() - 14):m.start()], re.I)]
+    assert not _asserted, (
+        f'[FATAL] {_k} ASSERTS the superseded value {_asserted!r} (not under a negation):\n'
+        f'  {_row}\n{_why}\nThis gate exists so the correction cannot silently revert.')
+    assert re.search(_must, _row, re.I), (
+        f'[FATAL] {_k} does not state the current value:\n  {_row}\n{_why}')
+    # And the negation device itself is asserted, so a future "tidy-up" that simply deletes the
+    # "SI TZS 100,000" clause fails here rather than quietly weakening the override.
+    assert re.search(_must_not, _row, re.I), (
+        f'[FATAL] {_k} no longer CONTRADICTS the superseded value at all:\n  {_row}\n'
+        f'The explicit contradiction is deliberate -- it is what overrides the trained prior '
+        f'from the rows that assert the old value. Stating the right number is not enough.')
+    print(f'[OK] payload gate: {_k} states the current value and contradicts the superseded '
+          f'one (polarity-checked, not presence-checked)')
+
 # ── EMBED WITH E5-BASE ──────────────────────────────────────────────────────────
 from sentence_transformers import SentenceTransformer
 print(f'[rag] loading {EMBED_MODEL} ...')
@@ -729,6 +784,24 @@ critical_queries = [
     # in b5bb445. Anchored on the no-residency-split clause because that is the DEFECT the
     # locked fact exists to prevent (a bare 'asilimia 10' would match several facts).
     ('Rent WHT 10% both parties, no residency split (ext_44 verbatim, new fact)', 'query: Nikimlipa mwenye nyumba kodi ya pango ofisini, ni lazima nikate kodi kabla ya kumpa fedha?', ['hakuna tofauti ya ukaazi kwenye pango']),
+    # ── Cap.50 R.E.2023 PASS, 2026-10-05 ───────────────────────────────────────────
+    # TWO rows of the deployed 184-row index were wrong on this Act, and BOTH are the
+    # already-named shape: a fact corrected in locked_facts.json while the text actually served
+    # to users kept the superseded value.
+    #
+    #   row 159  `fine limit: one hundred thousand TZS`  -- 100x understated. A faithful copy of
+    #            Cap.50 R.E.2015 s.72(1); R.E.2023 s.76(1) reads ten million shillings.
+    #   row  63  `NSSF inalipwa ifikapo tarehe 10...`    -- the 10th, where s.14(1) says within
+    #            one month after month-end. nssf_payment_deadline was grounded and corrected on
+    #            2026-09-02 and its own verified_by says the 10th "traces to somewhere else in
+    #            the corpus" -- this row IS that somewhere else, and nothing was watching it.
+    #
+    # ANCHOR CHOICE. `milioni kumi` is NOT usable: gn487a_penalty_noncitizen also reads
+    # 'TZS 10,000,000 (milioni kumi)', so an anchor on the magnitude could pass on the wrong
+    # levy -- the same two-row ambiguity that made bare 'ss.437-447' and bare 'asilimia 10'
+    # unusable. Both anchors below carry the SUBJECT and the CLAIM, not a bare figure.
+    ('NSSF fine ceiling is ten million, not one hundred thousand (Cap.50 s.76(1))', 'query: Nisipolipa michango ya NSSF kabisa, nitatozwa faini ya kiasi gani?', ['kosa la NSSF ni TZS 10,000,000']),
+    ('NSSF deadline is one month after month-end, not the 10th (Cap.50 s.14(1))', 'query: Michango ya NSSF ya mwezi huu inatakiwa kulipwa lini?', ['ndani ya MWEZI MMOJA baada ya mwisho wa mwezi']),
 ]
 
 # ── KNOWN-FAILING GUARDS (2026-08-22) ────────────────────────────────────────────

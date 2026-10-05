@@ -154,8 +154,48 @@ CONCISE_BILINGUAL_FACTS = {
     'nssf_total_rate':
         'NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).',
 
+    # 🔴 CORRECTED 2026-10-05. THIS ROW SAID "ifikapo tarehe 10 ya mwezi unaofuata" -- the 10th
+    # -- while its OWN locked fact says s.14(1): "within one month after the end of the month in
+    # respect of which the contributions are due and payable", i.e. the end of the following
+    # month. The fact's wrong_patterns even guard against the 10th/month-end conflation.
+    #
+    # AND THIS ROW IS THE "SOMEWHERE ELSE" ITS OWN FACT COULD NOT FIND. nssf_payment_deadline's
+    # verified_by, written 2026-09-02, records: 'Neither source mentions a "10th" of the month
+    # anywhere -- the prior hedge's "10th vs end of month" conflict traces to somewhere else in
+    # the corpus, not to either of these two sources.' It traced to the embedded index row FOR
+    # THAT VERY FACT, which nothing was looking at: the fact was grounded, corrected and
+    # re-verified in September while the text actually served to users kept the unsourced date.
+    # One more arrival point for the one-defect-several-enforcement-points lesson -- the fact and
+    # its own index row disagreed for five weeks, in the same direction as the engine/docs split.
     'nssf_payment_deadline':
-        'NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata.',
+        'NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. '
+        'Ukichelewa, faini ni asilimia 5 ya kiasi kisicholipwa kwa kila mwezi au sehemu ya mwezi.',
+
+    # 🔴 NEW 2026-10-05, replacing an auto-generated `fine limit: one hundred thousand TZS` row
+    # that was LIVE (row 159 of the deployed 184-row index) and understated the ceiling 100x.
+    # The old value is a faithful copy of Cap.50 R.E.2015 s.72(1); R.E.2023 s.76(1) reads ten
+    # million. See fine_limit.correction_note.
+    #
+    # THE "SI TZS 100,000" LIMB IS DELIBERATE AND IS THE REASON THIS NEEDS A CONCISE ENTRY AT
+    # ALL. Four training rows (sft_shaped_pairs/cleaned_pairs_batch_014.jsonl:693-696) assert
+    # the superseded figure, so the model carries a trained prior for it. A retrieved row that
+    # merely states the right number competes with that prior; one that CONTRADICTS the wrong
+    # number explicitly is what overrides it. Same device as nssf_calculation_example's
+    # "SI TZS 120,000" and nssf_employer_rate's "NOT 6%".
+    #
+    # Per the standing rule above: no Act/section citation in the embedded text. s.76(1) lives
+    # in the fact's primary_source/verified_by, which training-pair generation reads directly.
+    'fine_limit':
+        'Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au '
+        'kifungo cha hadi miaka miwili, au vyote viwili. SI TZS 100,000 — kiwango hicho '
+        'kimepitwa na wakati.',
+
+    # Its sibling, from the same statutory sentence. Leads with the imprisonment vocabulary
+    # (kifungo/jela) rather than the fine, so the two rows win different questions instead of
+    # competing for the same one.
+    'imprisonment_term_limit':
+        'Kosa la NSSF linaweza kuleta kifungo (jela) cha hadi miaka miwili, au faini ya hadi '
+        'TZS 10,000,000, au vyote viwili.',
 
     # Ask-aligned rewrites, 2026-09-03 (R15's topic-alignment lever): both were bare
     # "key: five %" / "key: 100 %" context-free fragments before this, and both were found
