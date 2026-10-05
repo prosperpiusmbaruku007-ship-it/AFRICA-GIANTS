@@ -134,7 +134,18 @@ SOURCE_FILES = [
 # longer protected by this constant alone in any case: the two payload gates added earlier
 # today assert the corrected strings by key, which is a stronger and more direct check than
 # an ancestry test ever was.
-EXPECTED_HEAD = 'd593d49'
+# BUMPED 2026-10-05 (Part XII reversal + rent_wht_rate). The floor this packaging assumes is
+# d1138ca, the tip at packaging time, which is the first commit containing ALL THREE of:
+#   * the Part XII source fixes in scripts/precompute_rag_embeddings.py (row 171) and
+#     scripts/locked_facts.json (row 101) -- ad43473
+#   * the INVERTED payload gate in this file; the pre-bump gate asserted 'part xiii' and would
+#     have REFUSED TO BUILD the corrected index -- ad43473
+#   * the rent_wht_rate CONCISE entry and the two new critical-query guards -- this commit's
+#     parent chain
+# A clone older than this resolves to a tree whose payload gate still demands the REVERSED
+# citation, which is precisely the failure EXPECTED_HEAD exists to stop: a fully
+# successful-looking run that ships the opposite of what it was run for.
+EXPECTED_HEAD = 'd1138ca'
 
 
 def _assert_expected_head_present(local_head, live_sha):
@@ -375,6 +386,46 @@ if _OSHA_REP_KEY in fact_keys:
 else:
     raise SystemExit(
         f'[FATAL] {_OSHA_REP_KEY} absent from the built fact set -- gate cannot apply.')
+
+# FOURTH PAYLOAD (2026-10-05, rent_wht_rate). A FOURTH DEFECT CLASS, and naming it is the
+# point: the first two shipped a WRONG STRING, the third shipped CORRECT TEXT THAT WAS NEVER
+# REACHED, and this one was NEVER IN THE INDEX AT ALL. Measured, not assumed: the deployed
+# 183-row index contains ZERO rows mentioning pango/rental/rent, so `rent_wht_rate` has been
+# unretrievable for its entire life since being locked in b5bb445 -- the rate engine was fixed
+# (1f32973, 0/5 -> 5/5 natural reach) while the FACT behind it could not be retrieved.
+#
+# The gate asserts presence, ask-alignment and both qualifiers, because the two qualifiers ARE
+# the defect this fact exists to prevent: a residency split that does not exist, and a
+# withholding duty asserted against someone who is not an agent.
+_RENT_KEY = 'rent_wht_rate'
+if _RENT_KEY in fact_keys:
+    _rent_row = fact_texts_to_embed[fact_keys.index(_RENT_KEY)]
+    assert not _rent_row.lower().startswith('rent wht rate:'), (
+        f'[FATAL] {_RENT_KEY} is the label-led `key: value` fallback:\n  {_rent_row[:160]}\n'
+        f'This regen exists to ship the ask-led CONCISE entry. The clone predates it, or the '
+        f'CONCISE_BILINGUAL_FACTS entry was removed.')
+    assert _rent_row.lower().startswith('unalipa pango'), (
+        f'[FATAL] {_RENT_KEY} no longer LEADS with the asker\'s vocabulary:\n  '
+        f'{_rent_row[:160]}\nThe nat_36 lever is the whole mechanism; a row that merely '
+        f'CONTAINS "pango" is not the fix.')
+    assert 'hakuna tofauti ya ukaazi kwenye pango' in _rent_row.lower(), (
+        f'[FATAL] {_RENT_KEY} lost the no-residency-split clause:\n  {_rent_row[:200]}\n'
+        f'That clause is the DEFECT the locked fact exists to prevent (there is no '
+        f'resident/non-resident split on rent), and it is the critical-query guard\'s anchor '
+        f'-- dropping it breaks the guard too.')
+    assert 'wakala wa kuzuia' in _rent_row.lower(), (
+        f'[FATAL] {_RENT_KEY} lost the withholding-agent qualifier:\n  {_rent_row[:200]}\n'
+        f'Without it the row tells every ordinary payer to withhold 10%, which is wrong and '
+        f'is the second defect the locked fact exists to prevent.')
+    assert 'cap.332' not in _rent_row.lower() and 'first schedule' not in _rent_row.lower(), (
+        f'[FATAL] {_RENT_KEY} carries a statutory citation in the EMBEDDED text:\n  '
+        f'{_rent_row[:200]}\nForbidden by the standing rule in precompute_rag_embeddings.py '
+        f'-- folding citations in cost nat_05 ranks 24 -> 59.')
+    print(f'[OK] payload gate: {_RENT_KEY} present, ask-led, both qualifiers intact, uncited')
+else:
+    raise SystemExit(
+        f'[FATAL] {_RENT_KEY} absent from the built fact set -- this regen exists to ADD it, '
+        f'so its absence is the whole failure, not a skippable gate.')
 
 # ── EMBED WITH E5-BASE ──────────────────────────────────────────────────────────
 from sentence_transformers import SentenceTransformer
@@ -622,6 +673,31 @@ critical_queries = [
     # build_fact_texts()'s prospective 188-row output before this file was packaged.
     ('Corporate tax rate (ask-aligned)', 'query: Kodi ya kampuni Tanzania ni asilimia ngapi?', ['kampuni za kawaida']),
     ('AMT loss-making corporation (ask-aligned)', 'query: Kampuni yangu ina hasara miaka mitatu mfululizo, nalipa kodi gani?', ['hasara miaka mitatu mfululizo']),
+    # ── PART XII REVERSAL + rent_wht_rate, 2026-10-05 ──────────────────────────────
+    # Both anchors verified unique against build_fact_texts()'s prospective 184-row output, and
+    # both queries are VERBATIM gate rows -- never paraphrases, for the measured reason recorded
+    # above (nat_36's fact sits at rank 2 under the guard's phrasing and rank 17 under the
+    # verbatim eval text; a guard that only passes on a phrasing no user sends certifies
+    # nothing). Local offline dry run: eval/index_quality/dryrun_regen_2026_10_05.py ->
+    # eval/results/dryrun_regen_2026_10_05.json. BOTH AT RANK 1, zero displacement caused.
+    #
+    # ⛔ THE PART XII GUARD IS A RETRIEVAL GUARD AND THE PAYLOAD GATE ABOVE IS A TEXT GUARD.
+    # Both are needed and they fail differently: the payload gate catches a row whose TEXT
+    # reverted, this catches a row that is textually right but no longer REACHED by the question
+    # it exists to answer. The 2026-09-05 live defect was the first kind; `OSHA_safety_officer_
+    # threshold` (ext_31) was the second, correct text that never surfaced. Neither gate sees
+    # the other's failure.
+    #
+    # Anchor choice matters here and the near-miss is worth recording: 'ss.437-447' matches TWO
+    # rows (act_section_12 and brela_foreign_late_filing_penalty), so a guard anchored on it
+    # could PASS on the wrong one. 'Part XII, ss.437-447' -- with the comma -- is unique to the
+    # row this question must reach, and it IS the citation under guard rather than a proxy.
+    ('Part XII foreign-company citation (ext_15 verbatim, the reversal guard)', 'query: Tawi letu la kampuni ya kigeni limechelewa kuwasilisha ripoti ya mwaka. Adhabu ni tofauti na kampuni za huku?', ['Part XII, ss.437-447']),
+    # rent_wht_rate is a BRAND NEW row: measured, the deployed 183-row index contains ZERO rows
+    # mentioning pango/rent at all, so this fact has never been retrievable since it was locked
+    # in b5bb445. Anchored on the no-residency-split clause because that is the DEFECT the
+    # locked fact exists to prevent (a bare 'asilimia 10' would match several facts).
+    ('Rent WHT 10% both parties, no residency split (ext_44 verbatim, new fact)', 'query: Nikimlipa mwenye nyumba kodi ya pango ofisini, ni lazima nikate kodi kabla ya kumpa fedha?', ['hakuna tofauti ya ukaazi kwenye pango']),
 ]
 
 # ── KNOWN-FAILING GUARDS (2026-08-22) ────────────────────────────────────────────

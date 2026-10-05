@@ -188,6 +188,31 @@ CONCISE_BILINGUAL_FACTS = {
     'vat_registration_threshold_annual':
         'Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.',
 
+    # NEW 2026-10-05. rent_wht_rate was locked (b5bb445) and HAS NEVER REACHED THE INDEX --
+    # measured, not assumed: zero rows in the deployed 183-row index mention pango/rent at all.
+    # Without a CONCISE entry it would arrive as the default English `key: value` fallback, and
+    # this file already records what that costs: vat_standard_rate's fallback "never appeared in
+    # top-3 across three regens". So the entry is written ask-led per the measured nat_36 lever
+    # (rank 17 -> 1 from vocabulary alone): it opens with the OBJECT the user names (pango la
+    # ofisi/duka/godown) and the VERB they use (nimkate), then the rate, then the two
+    # qualifiers, and NO citation in embedded text (folding citations in cost nat_05 ranks
+    # 24 -> 59 -- the standing rule in this file).
+    #
+    # ⚠️ DISPLACEMENT IS THE KNOWN RISK HERE, not correctness. The comment immediately below
+    # records two VAT-withholding entries HELD BACK because a withholding-flavoured Swahili
+    # rewrite pulled nat_27 (a correct STANDARD-rate row) out of its own top-3. This entry is
+    # withholding-flavoured too. It was therefore dry-run verified locally against the full
+    # prospective index before packaging -- see eval/index_quality/dryrun_regen_2026_10_05.py
+    # and its artifact. The two qualifiers are kept because they are the actual defect the
+    # locked fact exists to prevent: there is no resident/non-resident split, and the duty only
+    # arises if the payer is a withholding agent.
+    'rent_wht_rate':
+        'Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba '
+        'ASILIMIA 10 ya pango kabla ya kumlipa (kodi ya zuio). Kiwango ni asilimia 10 kwa '
+        'mkazi NA kwa asiye mkazi -- hakuna tofauti ya ukaazi kwenye pango. Lakini wajibu huu '
+        'unamhusu tu mlipaji ambaye ni WAKALA WA KUZUIA (withholding agent); mtu wa kawaida '
+        'asiye wakala hazuii kitu.',
+
     # vat_withholding_goods / vat_withholding_services: HELD BACK, not applied
     # (2026-08-17). A round-2 rewrite (adding 'bidhaa'/'ushauri' vocabulary, the same
     # pattern that worked for every other C4 row) measured nat_44 33->4 and nat_28's
