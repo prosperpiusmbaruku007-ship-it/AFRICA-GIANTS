@@ -110,6 +110,24 @@ PINNED = {
     "efd_threshold_tzs_11m": ("present_elsewhere", "Kizingiti cha kuanza kutumia mashine ya EFD"),
     "osha_registration_threshold_b004": ("present_elsewhere", "kila mwajiri lazima asajili"),
 
+    # --- Cap.50 R.E.2023 pass, 2026-10-05 ---------------------------------------------------
+    # Both keys acquired a CONCISE_BILINGUAL_FACTS entry in this cycle, so their rows no longer
+    # contain the key name and the exact/sibling key match cannot see them. THIS GATE BLOCKED
+    # THE SHIP UNTIL THEY WERE ADJUDICATED, which is the behaviour wanted -- a fact whose row
+    # stops being findable by key is indistinguishable, to a key-based check, from a fact that
+    # fell out of the index altogether.
+    #
+    # Needles chosen by searching the ACTUAL shipped kaggle/rag_facts_text.json and confirming
+    # uniqueness across all 184 rows, not by reading the CONCISE source and assuming it landed.
+    # Deliberately NOT 'shilingi milioni kumi' (unique today, but a bare magnitude of the kind
+    # that stopped being unique for 'USD 25' and 'asilimia 0.5' the moment rows moved next to
+    # new neighbours) and NOT 'miaka miwili' (the fine row states it too, since the statutory
+    # sentence is disjunctive). Each needle carries the SUBJECT, so it cannot drift onto the
+    # sibling row -- the two rows describe two limbs of one sentence and are each other's
+    # nearest false match.
+    "fine_limit": ("present_elsewhere", "Faini ya juu kabisa kwa kosa la NSSF"),
+    "imprisonment_term_limit": ("present_elsewhere", "kifungo (jela) cha hadi miaka miwili"),
+
     # RE-ADJUDICATED WHOLESALE, 2026-09-03, after the fc9b0c8 -> b002b96 double regen
     # (electrical-fee merge + 2 noise drops + 2 NSSF rewrites) actually ran and deployed.
     # This is the THIRD time this file has had to do this (see the 2026-08-17 note below,
@@ -200,7 +218,25 @@ PINNED = {
     # reading the index directly (scratch/local_regen_verify.py's sibling-audit pass).
     "nssf_employer_rate": ("present_elsewhere", "mwajiri analipa asilimia 10"),
     "nssf_total_rate": ("present_elsewhere", "jumla: asilimia 20"),
-    "nssf_payment_deadline": ("present_elsewhere", "ifikapo tarehe 10"),  # re-adjudicated 2026-09-03, was row 62
+    # 🔴 THIS PIN WAS ANCHORED ON THE SUPERSEDED VALUE, AND SO IT DEFENDED THE DEFECT.
+    # It read ("present_elsewhere", "ifikapo tarehe 10") -- the 10th -- from its 2026-09-03
+    # re-adjudication. nssf_payment_deadline was grounded against Cap.50 s.14(1) on 2026-09-02
+    # ("within one month after the end of the month..."), one day EARLIER, and this pin was then
+    # written to assert that the index row still said the thing the Act does not say.
+    #
+    # So the gate did not merely fail to notice the row was stale. IT REQUIRED THE ROW TO BE
+    # STALE: any regen that corrected row 63 would have tripped `drift_pin_stale` and been read
+    # as the regression. A check pinned to a wrong value does not go quiet, it goes HOSTILE --
+    # the same defect-defends-itself shape as act_section_12's wrong_patterns rejecting the
+    # correct Part XII citation, now in the sync layer.
+    #
+    # THE MECHANISM TO WATCH FOR, because it is not specific to this key: these needles are
+    # chosen by searching the INDEX for text that is present and unique, and a stale row is
+    # present and unique. Nothing in the needle-selection step asks whether the text being
+    # pinned is TRUE -- it is a uniqueness search, not a correctness one. Pinning a corrected
+    # fact's row therefore records whatever the row currently says, right or wrong.
+    # Re-anchored 2026-10-05 on the corrected text, which IS the claim (the statutory period).
+    "nssf_payment_deadline": ("present_elsewhere", "ndani ya MWEZI MMOJA baada ya mwisho wa mwezi"),  # row 63
     "nssf_calculation_example": ("present_elsewhere", "SI TZS 120,000"),  # re-adjudicated 2026-09-03, was row 171
     "brela_striking_off_non_filing": ("present_elsewhere", "kufuta, kufunga au kuondoa"),
 
