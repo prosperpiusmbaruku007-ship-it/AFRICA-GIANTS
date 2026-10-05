@@ -90,6 +90,13 @@
       ]
     },
     {
+      "key": "OSHA_safety_officer_threshold",
+      "expected_figure": "297",
+      "rows": [
+        "Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zaidi ya 20, unateua mwakilishi wa usalama na afya kutoka kwa wafanyakazi ulio nao -- ni kuteua, si kuajiri mtu mpya. Kiwandani: mwakilishi 1 kwa kila wafanyakazi 50. Dukani au ofisini: 1 kwa kila 100. Mkaguzi anaweza kuagiza uteuzi hata kwa wafanyakazi 4 au chini ya hapo. Kamati ya usalama inahitajika ukiwa na wawakilishi 2 au zaidi. (NOT a professionally hired/dedicated 'safety officer'.)"
+      ]
+    },
+    {
       "key": "sdl_exemption_categories",
       "expected_figure": "82",
       "rows": [
@@ -109,12 +116,12 @@
     "objection_deposit_requirement",
     "permit_class_c_categories",
     "corporate_tax_rate",
+    "rent_wht_rate",
     "gn487a_transitional_provision",
     "gn487a_visa_revocation",
     "vat_withholding_remittance_deadline",
     "wcf_rate_0_5_percent_confirmed",
     "efd_approved_supplier_verification",
-    "OSHA_safety_officer_threshold",
     "gn487a_mgeni_cap357_definition",
     "efd_tra_closure_authority",
     "memorandum_articles_of_association_filing_fee",

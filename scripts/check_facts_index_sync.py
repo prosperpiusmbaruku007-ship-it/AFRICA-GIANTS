@@ -210,9 +210,27 @@ PINNED = {
     # same commit series as the 16-row quarantine of the 15%-non-resident defect, and the RAG
     # index has not been regenerated since, so it is NOT retrievable in production yet. This
     # pin queues behind the SAME founder regen ext_31 has been waiting on since bb2c1ff.
-    # test_pending_r15_keys_are_still_pending will flag this entry as stale the moment the
-    # regen lands, which is the signal to promote it to present_elsewhere with its real row.
-    "rent_wht_rate": ("pending_r15", None),
+    # ✅ SHIPPED 2026-10-05. The regen ran on Kaggle (184 facts, (184, 768), 0 self-retrieval
+    # failures, all 36 critical queries, every anchor unique) and uploaded. Promoted from
+    # pending_r15 to present_elsewhere, per this file's established practice for a
+    # CONCISE-rendered fact: rent_wht_rate has no "key:" prefix in the index, so it will NEVER
+    # resolve by exact or sibling match even now that it exists.
+    # Needle CONFIRMED at row 50 in the shipped kaggle/rag_facts_text.json by direct read, not
+    # assumed from the Kaggle log, and verified unique across all 184 rows. It is also the
+    # critical-query guard's anchor and the fourth payload gate's assertion, so all three break
+    # together if the clause is ever dropped -- deliberate, not redundant.
+    "rent_wht_rate": ("present_elsewhere", "hakuna tofauti ya ukaazi kwenye pango"),
+
+    # ✅ SHIPPED 2026-10-05, same regen. ext_31's ask-aligned rewrite (bb2c1ff) had been waiting
+    # since 2026-09-24 and was reported as unadjudicated DRIFT by this check, NOT as a pin --
+    # because the rewrite replaced the label-led "OSHA safety officer threshold: ..." key:value
+    # fallback with CONCISE Swahili text opening "Afisa wa usalama kazini:", which no longer
+    # exact-matches its own key. So the drift was the FIX landing, not a defect. Needle confirmed
+    # at row 87 in the shipped index by direct read; it is the same substring
+    # eval/grounding/bucket_e_reach_probes_014.jsonl matches on, which is why the payload gate
+    # asserts it too.
+    "OSHA_safety_officer_threshold":
+        ("present_elsewhere", "NOT a professionally hired/dedicated 'safety officer'"),
 
     # ---- The three council-fee domains reclassified from COVERAGE GAP to ANSWERED
     # (scripts/add_local_levy_facts.py) were pinned pending_r15 here 2026-08-25, then

@@ -138,19 +138,28 @@ def test_the_real_index_passes_all_three_limbs():
 
 
 def test_the_real_shipped_index_rejects_the_superseded_count():
-    """Explicit re-check after the R15 regen changed rag_fact_count 187 -> 183 (2026-09-03:
-    electrical-fee near-duplicate merge + 2 noise-key drops + 2 NSSF ask-aligned rewrites,
-    packaged in b002b96). Third count this test has tracked (221 -> 187 -> 183) --
+    """Explicit re-check after the R15 regen changed rag_fact_count 183 -> 184 (2026-10-05: the
+    Part XII citation reversal on two rows, plus rent_wht_rate added as a brand-new row that had
+    never been in the index at all).
+
+    FOURTH count this test has tracked: 221 -> 187 -> 183 -> 184.
     `test_the_loader_raises_on_a_stale_but_internally_consistent_index` already proves the
     mechanism on a synthetic 5-row index; this proves it on the ACTUAL shipped files, against
     the ACTUAL immediately-prior value, so the specific count we just changed is the thing
-    verified to still be fatal when wrong -- not just a stand-in for it."""
+    verified to still be fatal when wrong -- not just a stand-in for it.
+
+    ⚠️ THIS TEST FAILING IS THE NORMAL, INTENDED SIGNAL OF A SHIP, not a defect: the count is
+    pinned deliberately so that changing the index without updating the contract is impossible to
+    do quietly. It is also the check that makes the rag_fact_count sequencing safe -- bumping
+    chike_config.json's count before the matching index exists would take production down (the
+    fail-loud contract firing against a healthy index), so the two must move together, and this
+    test is what notices if they did not."""
     from chike.retrieval import Retriever, RetrievalIndexError
     with open(TXT, encoding='utf-8') as f:
         n = len(json.load(f))
-    assert n == 183, f'expected the shipped index to be the 183-row R15 regen, got {n}'
+    assert n == 184, f'expected the shipped index to be the 184-row R15 regen, got {n}'
     with pytest.raises(RetrievalIndexError):
-        Retriever(emb_path=EMB, texts_path=TXT, expected_fact_count=187).preflight()
+        Retriever(emb_path=EMB, texts_path=TXT, expected_fact_count=183).preflight()
 
 
 # --- 3. retrieval behaviour is UNCHANGED ------------------------------------------------------
