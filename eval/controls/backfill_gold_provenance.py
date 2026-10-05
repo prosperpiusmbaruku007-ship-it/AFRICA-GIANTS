@@ -106,9 +106,15 @@ RULES = {
     # "turnover" or "threshold", for the 200,000,000 collision reason above: ext_29 is a VAT row
     # whose gold matches this rule's QUANTITY limb exactly, and only the subject limb keeps the
     # presumptive schedule off it.
+    # QUANTITY WIDENED 2026-10-05 to include the top band (4% of turnover, 11M-200M) now that
+    # FA2026 s.27(a)(ii) has been checked and the page confirmed current. The subject limb is
+    # UNCHANGED and stays presumptive-specific -- the 200,000,000 collision with VAT's
+    # registration threshold is exactly as live as it was, and resolving the divergence does
+    # nothing to make a bare "threshold" safe here.
     "presumptive_schedule_current": (r"presumptive|makadirio|zero band|no-records|"
                                      r"records are (?:in)?complete|First Schedule para 2",
-                                     r"4,000,000|100,000\s*flat|200,000,000|zero band"),
+                                     r"4,000,000|100,000\s*flat|200,000,000|zero band|"
+                                     r"4\s*%\s*of turnover|asilimia 4 ya mauzo|11,000,000"),
     # TRIGGER ONLY, NOT RATE. The page states the three-consecutive-loss-year condition and
     # prints no AMT percentage, so a gold asserting 1% or 30% keeps its unsourced residue.
     "corporate_amt_three_loss_years": (r"AMT|alternative minimum|loss year|hasara",
@@ -310,12 +316,17 @@ UNSOURCED_CLAIMS = {
     # against locked_facts.json, which would compare us to ourselves.
     "nssf_contribution_split": (r"\bNSSF\b|uzeeni|pension",
                                 r"\b20\s*%|asilimia\s+20|\b10\s*%\s*(?:x|×)|employee 10%"),
-    # NARROWED IN PASS 2: the lower bands and the 200M ceiling are now sourced (see RULES). What
-    # remains unsourced is the 11M-200M band, where the regulator's page and this project's
-    # recorded statutory table disagree by 250,000 at a 50M turnover. Needs the First Schedule
-    # as amended (FA2022 s.72, FA2026 s.27(a)) read directly.
-    "presumptive_top_band_11m_to_200m": (r"presumptive|makadirio",
-                                         r"4\s*%\s*of turnover|asilimia 4|11,000,000"),
+    # ✅ REMOVED 2026-10-05 -- THE TOP BAND IS SOURCED AFTER ALL, AND THE REASON IT WAS BLOCKED
+    # WAS OUR OWN STALE DOC. This entry read: "the 11M-200M band, where the regulator's page and
+    # this project's recorded statutory table disagree by 250,000 at a 50M turnover." Checked
+    # against the amending Act instead of against the doc: FA2026 s.27(a)(ii) substituted that
+    # band -- '11,000,001 but does not exceed 200,000,000' at '4.0% of turnover' (was 3.5%,
+    # capped at 100,000,000) -- read verbatim 2026-09-01 and carried in
+    # chike/rules_engine/rates.py PRESUMPTIVE_BANDS as ('flat_on_turnover', 0.04) ever since.
+    # The PAGE was current; CLAUDE.md's 1,750,000 worked example was the FA2022 figure, never
+    # updated when the engine was corrected. Arithmetic reproduces three ways: pre-2022 table
+    # 450,000 + 3.5% x 36M = 1,710,000; FA2022 3.5% x 50M = 1,750,000; FA2026 4% x 50M =
+    # 2,000,000. The band therefore moved from UNSOURCED_CLAIMS into RULES.
     # ext_15 forced this one. The register's BRELA entry covers the LOCAL 2,500/month penalty;
     # ext_15's actual claim is the FOREIGN company's USD 25/month, which the live fee schedule
     # CONTRADICTS at TZS 70,000 (see DISAGREEMENTS). The gold mentions 2,500 only as a contrast,

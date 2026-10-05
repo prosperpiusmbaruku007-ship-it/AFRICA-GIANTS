@@ -166,13 +166,39 @@ band table, rate or fee from a consolidated Act:
 
 **Proven on 2026-08-16, presumptive income tax.** Cap 332 R.E. 2019 — hosted on **tra.go.tz
 itself** — still prints the pre-2022 five-band table. Finance Act 2022 s.72 replaced it. At TZS
-50,000,000 turnover the stale table gives **1,710,000**, the governing text **1,750,000**; every
-figure above TZS 11,000,000 would have been wrong, from a whitelisted government source, with
-nothing downstream able to catch it.
+50,000,000 turnover the stale table gives **1,710,000** against FA2022's **1,750,000** (3.5% of
+turnover); every figure above TZS 11,000,000 would have been wrong, from a whitelisted government
+source, with nothing downstream able to catch it.
 
-**The regulator's own summary is not the statute either.** TRA's "At a Glance 2025/26" prints a
-Class A transport row (*Up to 5 → 120,000*) that the enacted Finance Act 2024 s.46(a) does not
-contain.
+> ⚠️ **THIS WORKED EXAMPLE WAS ITSELF STALE FOR FIVE WEEKS — corrected 2026-10-05, and the fact
+> that it was is a bigger lesson than the example.** **Finance Act 2026 s.27(a)(ii)** substituted
+> the top band again: *11,000,001–**200,000,000** at **4.0% of turnover*** (was 3.5%, capped at
+> 100,000,000). **So at TZS 50,000,000 the governing figure is now 2,000,000, not 1,750,000.**
+>
+> **The engine was corrected on 2026-09-01. This paragraph describing it was not.** `rates.py`
+> has carried `("flat_on_turnover", Decimal("0.04"))` and a verbatim FA2026 s.27(a) change log
+> since that date, while this document kept teaching the 3.5% result — **the engine and its own
+> reference documentation disagreed for five weeks**, and the disagreement was found only when a
+> provenance pass used CLAUDE.md to judge a regulator's page and concluded the *page* was wrong.
+> It was not; this was.
+>
+> **A FOURTH ENFORCEMENT LAYER FOR THE ONE-DEFECT-SEVERAL-ENFORCEMENT-POINTS LESSON: THE DOCS.**
+> A corrected fact has to be chased through the locked facts, the RAG index, the corpora, the
+> guards and the tests — and **this file**, which is the layer that decides what every later
+> session *believes*. A stale doc is the most expensive of the five, because the others merely
+> assert the error while **a stale doc is used as the baseline for judging new evidence**, so it
+> converts correct incoming sources into "unreliable" ones. That is precisely how it failed here,
+> and it is the same mechanism as the Part XII reversal in Section 11.
+
+**The regulator's own summary is not the statute either** — but check the amending Act *before*
+concluding the summary is wrong. TRA's "At a Glance 2025/26" prints a Class A transport row
+(*Up to 5 → 120,000*) that the enacted Finance Act 2024 s.46(a) does not contain. **Partly
+rehabilitated 2026-10-05:** FA2026 s.27(a)(v) *does* amend para 2(5) Class A item 1, adding
+"including three wheelers" — which is why tra.go.tz now reads *"Not more than 5 and Three wheelers
+120,000"*. So the row's **wording tracks the statute** and is not invented; the **120,000 amount
+remains unverified** against primary text, and Class A is out of the presumptive engine's scope.
+The original caution stands as a caution; it no longer stands as evidence that this page is
+unreliable.
 
 **Renumbering trap:** a cross-reference inside an old consolidation points at the old numbering.
 Cap 332's presumptive records test cites "section 35 of the Tax Administration Act"; in Cap 438

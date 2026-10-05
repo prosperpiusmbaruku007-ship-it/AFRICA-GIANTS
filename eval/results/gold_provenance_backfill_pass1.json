@@ -3,7 +3,7 @@
   "harness": "eval/controls/backfill_gold_provenance.py",
   "register": "eval/accuracy_gate/gold_source_register.json",
   "pass": 1,
-  "mode": "WRITE",
+  "mode": "REPORT_ONLY",
   "what_this_does": "Attaches a source-register key to gate gold answers whose claim has been read against a primary source. Changes no gold answer.",
   "sourced_against": "the regulator's own page or the statute, fetched directly -- never locked_facts.json, which would compare us to ourselves",
   "totals": {
@@ -12,7 +12,7 @@
     "still_pending": 32,
     "fully_sourced": 29,
     "partially_sourced": 12,
-    "register_entries": 15
+    "register_entries": 16
   },
   "disagreements_reported_not_changed": [
     {
@@ -148,7 +148,7 @@
       "claims_still_unsourced": [
         "foreign_company_late_filing_penalty"
       ],
-      "gold": "Yes -- a foreign company's late-filing penalty is USD 25 per month (Companies Act Cap.212, Part XIII, ss.320-328), NOT the TZS 2,500/month local-company rate.  "
+      "gold": "Yes -- a foreign company's late-filing penalty is USD 25 per month (Companies Act Cap.212 R.E. 2023, Part XII, ss.437-447), NOT the TZS 2,500/month local-company rate.  "
     },
     {
       "id": "ext_22",
