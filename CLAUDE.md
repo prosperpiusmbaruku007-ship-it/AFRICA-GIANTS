@@ -137,6 +137,17 @@ Full machine-readable list: **sources/whitelist.json**
 - nssf.go.tz — NSSF contributions and registration (use .go.tz — nssf.or.tz fails DNS)
 - kazi.go.tz — NSSF Act / labour source
 - osha.go.tz — OSHA workplace registration
+- **⚖️ OVERRIDE ON THE RECORD (2026-10-05): a paired condition was split, with the founder's
+  agreement afterwards.** The instruction was: verify both `mlywf.go.tz` and `portal.wcf.go.tz`,
+  and *"if either doesn't [check out], the 52 stay frozen."* The evidence separated cleanly —
+  WCF's ownership verified from its own pages, while `mlywf.go.tz` has **no DNS record at all**
+  — so the condition was applied per-publisher rather than as a pair: WCF whitelisted, the 43
+  mlywf pairs re-sourced. **The reasoning: they are two independent publishers, and freezing a
+  verified gap because an unrelated domain is dead would have kept open the very gap the
+  instruction existed to close.** Recorded because the general lesson is not "deviate when you
+  disagree" — it is that **a condition written as a pair assumes both halves are checkable, and
+  stops being one condition the moment the evidence splits.** Surface the split, say which way
+  you went and why, and leave it reversible in one line.
 - wcf.go.tz + portal.wcf.go.tz — Workers Compensation Fund: contribution rate/base, employer
   registration deadline, accident and occupational-disease reporting. **Added 2026-10-05, late:**
   Section 11 has carried a full WCF block since Jun 2026 and two locked facts were sourced from
@@ -1363,6 +1374,41 @@ rows we already answer correctly?"* — and the honest answer to that is **no**.
   it is the one population nobody thinks to test.
 
 ---
+
+### 🔍 R34 — A DEFECT INFERRED FROM METADATA IS NOT A DEFECT. READ THE ARTIFACT BEFORE REPORTING WHAT IT SAYS.
+
+**Five instances in one week, all mine, all the same shape: a verdict reached from a filename, a
+field, an edition, or a pattern — without opening the thing itself.** Recorded as a rule because
+the founder's parallel failure mode (escalating specifics reconstructed from memory rather than
+re-derived, nine of nine failing verification) got a standing process note, and this is the same
+error arriving from the other side. Same fix, too.
+
+| inferred from | the "defect" | what the artifact said |
+|---|---|---|
+| a **filename**, grepped out of recorded paths | Cap.438 unverifiable; "the regulator serves its own Act at a superseded edition" | tra.go.tz hosts **both** editions and the project already cited the current one — `paye_penalty_rate` had quoted `s.89(2)` from `Tax_Administration_Act.pdf` since 2026-09-02. **I picked the stale URL without checking which fact cited which** |
+| an **edition difference** | two EFD facts cite a renumbered `s.36` | all four EFD facts already name the renumbering explicitly: *"s.36(1) (renumbered s.44(1) in R.E.2023, Finance Act 2023 s.54)"*. Nothing to fix |
+| a **`subdomain` field** | 4 minimum-wage pairs repointable to the WCF page | they matched on the single generic word **`mwajiri`** (employer). 4 of 35 = **11%**, caught only by report-before-write |
+| a **bare substring** | the shipped index still carried the reversed `Part XIII` | row 102's *"Part XIII is 'General Provisions as to Registration'"* is the **correct disambiguation clause**. The regen's own proximity-bounded sweep was clean |
+| an **English-only pattern** | production doesn't cite Part XII | the live reply says *"Companies Act **SEHEMU XII**"* — correct, and the form BRELA's own page uses. **This one repeats the exact defect `act_section_12`'s own `_pattern_note` records from 2026-09-23**, written by the same person who wrote that note |
+
+**Why metadata is so persuasive, and why that is the trap:** a filename, an edition year, a
+subdomain and a field name all *look* like facts about content, and they are cheap to read. The
+content is one `open()` away and nobody checks, because the metadata already produced a
+confident answer. Every one of the five above was a **confident** wrong verdict.
+
+**And the asymmetry is R26's:** four of the five would have generated an edit — a "fix" applied
+to something already correct. A missed defect leaves the system where it was; a fabricated one
+sends someone to repair a working part.
+
+**In practice:**
+- **Before reporting that an artifact is wrong, open it and quote the line that makes it wrong.**
+  If the write-up cannot quote it, the verdict is an inference, not a finding.
+- **A grep over recorded paths tells you what strings exist, never which one is authoritative.**
+  Resolve *which fact cites which* before judging either.
+- **Match in the language the text is served in.** This project's corpus is Swahili-first; an
+  English-only pattern reports `False` on correct content, and has now done so twice.
+- **The committed gate is the authority, not an ad-hoc check written at report time.** When the
+  two disagree, suspect the ad-hoc one — it was written in a hurry, by someone with a hypothesis.
 
 ### R27 — CORRECTING A FACT AMENDS ITS FIELDS. IT DOES NOT REPLACE THE OBJECT.
 
