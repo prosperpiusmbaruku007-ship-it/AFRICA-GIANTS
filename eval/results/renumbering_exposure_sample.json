@@ -1,0 +1,221 @@
+{
+  "_what": "2-per-Act sample pricing the renumbering exposure before a full pass.",
+  "_population": {
+    "facts_citing_a_section_against_a_consolidated_act": 97,
+    "acts": {
+      "Cap.332": 21,
+      "Cap.50": 20,
+      "Cap.82": 19,
+      "Cap.148": 18,
+      "Cap.212": 11,
+      "Cap.438": 8
+    },
+    "why_this_population": "these are the facts where a renumbering can make a REAL, correctly-fetched citation point at the wrong provision -- the failure mode that produced the Cap.212 reversal and the Cap.332 presumptive incident."
+  },
+  "⚠️_what_a_clean_act_does_and_does_not_mean": "2 clean draws from 20 facts is a LOWER BOUND on cleanliness, not a clearance. An Act reading clean here is NOT YET SHOWN to be a problem; it is not shown not to be.",
+  "hit_rate_on_adjudicable": "1/8",
+  "totals": {
+    "sampled": 12,
+    "adjudicable": 8,
+    "hits": 1,
+    "clean": 7,
+    "blocked": 4
+  },
+  "by_act": {
+    "Cap.332": [
+      "HIT",
+      "CLEAN"
+    ],
+    "Cap.148": [
+      "CLEAN",
+      "CLEAN"
+    ],
+    "Cap.82": [
+      "CLEAN",
+      "CLEAN"
+    ],
+    "Cap.212": [
+      "CLEAN",
+      "CLEAN"
+    ],
+    "Cap.438": [
+      "BLOCKED",
+      "BLOCKED"
+    ],
+    "Cap.50": [
+      "BLOCKED",
+      "BLOCKED"
+    ]
+  },
+  "blocked_notes": {
+    "Cap.50": "NSSF Act not obtained. nssf.go.tz returns HTTP 500 on /pages/contributions AND /pages/michango to curl with a browser UA on two consecutive days (2026-10-04, 2026-10-05), and the Act is not hosted on tra.go.tz. kazi.go.tz is the remaining candidate and was not tried in this sample. NOT recorded as clean: 20 facts cite this Act and none of them has been checked against its text.",
+    "Cap.438": "Obtainable edition is R.E. 2019; the facts cite R.E. 2023 numbering. A verdict against the 2019 text would be a verdict about the wrong document -- and this is itself an instance of the pattern, since tra.go.tz is serving a superseded consolidation of its own governing Act."
+  },
+  "rows": [
+    {
+      "act": "Cap.332",
+      "fact": "paye_p9_deadline",
+      "cited_section": 85,
+      "verdict": "HIT",
+      "why": "the cited section does NOT read on the provision the fact describes -- candidate renumbering hit, needs a human read",
+      "expected_words": [
+        "statement",
+        "withhold",
+        "return"
+      ],
+      "matched": [],
+      "body": "85. Repealed. part vi INTERNATIONAL Division I: Residence and Source 86. Resident persons. 87. Source of income and loss. ©2025 Government of Tanzania. All rights reserved. No part of this book may be reproduced or distributed without permission of OAG. 549 THE INCOME TAX ACT [CAP . 332 R.E. 2023] 8"
+    },
+    {
+      "act": "Cap.332",
+      "fact": "provisional_tax_instalments",
+      "cited_section": 113,
+      "verdict": "CLEAN",
+      "why": "the cited section reads on the provision the fact describes",
+      "expected_words": [
+        "instalment",
+        "quarter",
+        "estimate"
+      ],
+      "matched": [
+        "instalment",
+        "quarter"
+      ],
+      "body": "113.–(1) A person an “instalment payer” who derives or expects to derive any chargeable income during a year of income- (a) from a business or investment; or (b) from an employment where the employer is not required to withhold tax under section 104 from payments received by the person that are incl"
+    },
+    {
+      "act": "Cap.148",
+      "fact": "vat_standard_rate",
+      "cited_section": 5,
+      "verdict": "CLEAN",
+      "why": "the cited section reads on the provision the fact describes",
+      "expected_words": [
+        "rate",
+        "value added tax",
+        "impos"
+      ],
+      "matched": [
+        "rate",
+        "value added tax"
+      ],
+      "body": "5.–(1) The amount of value added tax payable shall be calculated by multiplying the value of the supply or import by the value added tax rate, which shall be eighteen percent. (2) Where the supply or import is zero-rated, the value added tax rate shall be zero percent. (3) Where a supply is both exe"
+    },
+    {
+      "act": "Cap.148",
+      "fact": "vat_registration_threshold",
+      "cited_section": 28,
+      "verdict": "CLEAN",
+      "why": "the cited section reads on the provision the fact describes",
+      "expected_words": [
+        "registration",
+        "threshold",
+        "regist"
+      ],
+      "matched": [
+        "registration",
+        "threshold",
+        "regist"
+      ],
+      "body": "28.–(1) A person shall, in respect of any month, be registered for value added tax from the first day of that month, if there is reasonable ground to expect that the person’s turnover in the twelve months period commencing at the beginning of the previous month will be equal to or greater than the r"
+    },
+    {
+      "act": "Cap.82",
+      "fact": "sdl_payer",
+      "cited_section": 14,
+      "verdict": "CLEAN",
+      "why": "the cited section reads on the provision the fact describes",
+      "expected_words": [
+        "levy",
+        "employer",
+        "payment"
+      ],
+      "matched": [
+        "levy",
+        "employer"
+      ],
+      "body": "14.–(1) Subject to the provisions of this Part, there shall be charged, levied and payable to the Commissioner at the end of every month, from every employer who has in his employment ten or more employees, a levy to be known as the skills and development levy. (2) The levy shall be the sum of money"
+    },
+    {
+      "act": "Cap.82",
+      "fact": "legal_citation_amendment_act_sdl",
+      "cited_section": 19,
+      "verdict": "CLEAN",
+      "why": "the cited section reads on the provision the fact describes",
+      "expected_words": [
+        "exempt",
+        "levy",
+        "apply"
+      ],
+      "matched": [
+        "apply"
+      ],
+      "body": "19.–(1) The provisions of section 14 shall not apply to- (a) a Government department or a public institution which is wholly financed by the Government; (b) Diplomatic Missions; (c) the United Nations and its organisations; (d) international and other foreign institutions dealing with aid or technic"
+    },
+    {
+      "act": "Cap.212",
+      "fact": "company_director_minimum_age",
+      "cited_section": 197,
+      "verdict": "CLEAN",
+      "why": "the cited section reads on the provision the fact describes",
+      "expected_words": [
+        "eighteen",
+        "director"
+      ],
+      "matched": [
+        "eighteen",
+        "director"
+      ],
+      "body": "197. Subject to the provisions of this section, a person shall not be capable of being appointed as a director of a company which is subject to this section if at the time of his appointment he had not attained the age of eighteen years. [s. 194] Minimum age for appointment of directors Act No. 5 of"
+    },
+    {
+      "act": "Cap.212",
+      "fact": "minimum_directors",
+      "cited_section": 186,
+      "verdict": "CLEAN",
+      "why": "the cited section reads on the provision the fact describes",
+      "expected_words": [
+        "director"
+      ],
+      "matched": [
+        "director"
+      ],
+      "body": "186.–(1) The matters to which the directors of the company are to have regard in the performance of their functions include, in addition to the interests of the members, the interests of the company’s employees. (2) The duty imposed by this section on the directors is owed by them to the company, an"
+    },
+    {
+      "act": "Cap.438",
+      "fact": "paye_penalty_rate",
+      "cited_section": 89,
+      "verdict": "BLOCKED",
+      "why": "Obtainable edition is R.E. 2019; the facts cite R.E. 2023 numbering. A verdict against the 2019 text would be a verdict about the wrong document -- and this is itself an instance of the pattern, since tra.go.tz is serving a superseded consolidation of its own governing Act.",
+      "body": null,
+      "matched": []
+    },
+    {
+      "act": "Cap.438",
+      "fact": "legal_citation_tax_administration",
+      "cited_section": 43,
+      "verdict": "BLOCKED",
+      "why": "Obtainable edition is R.E. 2019; the facts cite R.E. 2023 numbering. A verdict against the 2019 text would be a verdict about the wrong document -- and this is itself an instance of the pattern, since tra.go.tz is serving a superseded consolidation of its own governing Act.",
+      "body": null,
+      "matched": []
+    },
+    {
+      "act": "Cap.50",
+      "fact": "nssf_payment_deadline",
+      "cited_section": 14,
+      "verdict": "BLOCKED",
+      "why": "NSSF Act not obtained. nssf.go.tz returns HTTP 500 on /pages/contributions AND /pages/michango to curl with a browser UA on two consecutive days (2026-10-04, 2026-10-05), and the Act is not hosted on tra.go.tz. kazi.go.tz is the remaining candidate and was not tried in this sample. NOT recorded as clean: 20 facts cite this Act and none of them has been checked against its text.",
+      "body": null,
+      "matched": []
+    },
+    {
+      "act": "Cap.50",
+      "fact": "nssf_retirement_age",
+      "cited_section": 25,
+      "verdict": "BLOCKED",
+      "why": "NSSF Act not obtained. nssf.go.tz returns HTTP 500 on /pages/contributions AND /pages/michango to curl with a browser UA on two consecutive days (2026-10-04, 2026-10-05), and the Act is not hosted on tra.go.tz. kazi.go.tz is the remaining candidate and was not tried in this sample. NOT recorded as clean: 20 facts cite this Act and none of them has been checked against its text.",
+      "body": null,
+      "matched": []
+    }
+  ]
+}

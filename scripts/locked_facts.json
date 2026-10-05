@@ -73,7 +73,7 @@
     "verified_as_at": "2026-09-02"
   },
   "paye_p9_deadline": {
-    "fact": "The annual employment-income withholding certificate is due by 30 January of the following year (Income Tax Act Cap.332, s.85(3)(b)). 'Form P9' is Kenyan (KRA) terminology -- Tanzania's TRA has no form by that name; do not use it.",
+    "fact": "The annual employment-income withholding certificate is due by 30 January of the following year (Income Tax Act Cap.332 R.E.2023, s.110(3)(b)). 'Form P9' is Kenyan (KRA) terminology -- Tanzania's TRA has no form by that name; do not use it.",
     "correct_value": "30 January (not 31 March, and not 'Form P9' -- that is a Kenyan KRA term, not a Tanzanian TRA one)",
     "wrong_patterns": [
       "p9.*31 machi",
@@ -85,12 +85,12 @@
       "withholding certificate.*31 march",
       "cheti cha makato.*31 machi"
     ],
-    "primary_source": "Income Tax Act, Cap.332, s.85(3)(b)",
-    "verified_by": "Direct read of ITA Cap.332 s.85(3)(b), 2026-08-31; checked every Finance Act 2021-2026 for an amendment to s.85 -- none found. Supersedes payspace.com/Deel/Rivermate (three multi-country payroll SaaS vendors sharing one likely lineage, none an Act citation).",
+    "primary_source": "Income Tax Act, Cap.332 R.E.2023, s.110(3)(b)",
+    "verified_by": "Direct read of the Income Tax Act Cap.332 R.E.2023 PDF (tra.go.tz/images/uploads/acts/The_Income_Tax_Act.pdf, 146pp, HTTP 200, 2026-10-05), s.110(3)(b) verbatim: 'In the case of income tax withheld under section 104, a withholding certificate- (a) shall cover the part of the calendar year during which the employee shall be employed; and (b) shall be served by 30th January after the end of the year...'. The section's own source note reads '[s. 85]', confirming the renumbering. R29 amendment check, done because this fact's edit silently dropped it out of tests/test_locked_facts_finance_act_freshness.py (that test's population is every fact whose object CONTAINS the string 'finance act', so deleting the phrase removes the fact from Finance-Act coverage): the Finance Act 2025 (511,401 bytes) and Finance Act 2026 (844,978 bytes) PDFs were fetched from tra.go.tz and searched directly -- NEITHER contains any reference to 'section 110' of Cap.332, and FA2026 does not mention a withholding certificate at all. FA2025's only withholding-certificate provision amends the VAT Act s.5(5)/s.15, a different Act. So s.110(3)(b) is unamended through the current Finance Act and the 30 January date is current, not merely correct as at the consolidation's revision date.",
     "effective_date": "2020-07-01",
     "status": "CONFIRMED -- corrected 2026-08-31 (see correction_note); TENTATIVE, recommend a TRA-registered tax consultant spot-check",
-    "correction_note": "Prior fact asserted a 'Form P9' deadline of 31 March, and blocked '31 January' as a wrong_pattern. 'P9' is Kenyan KRA terminology -- no evidence was found that TRA uses this form name at all. Tanzania's actual equivalent obligation, the annual employment-income withholding certificate under Income Tax Act Cap.332 s.85(3)(b), is due 30 January -- one day earlier than the '31 January' pattern this fact used to reject as wrong. Likely origin: payspace.com (a multi-country payroll SaaS vendor) imported Kenyan P9 terminology and deadline logic wholesale; the fact's own 'correction' from 31 January to 31 March then compounded the error rather than catching it. Flagged CORRECTED but TENTATIVE by the verifying researcher -- s.85(3)(b) was read directly and no amendment was found in any Finance Act 2021-2026, but this fact would benefit from an independent tax-consultant confirmation given how far from the primary text the original three-vendor citation chain had drifted.",
-    "verified_as_at": "2026-08-31"
+    "correction_note": "RENUMBERING CORRECTION 2026-10-05, found by the renumbering-exposure sample (eval/controls/sample_renumbering_exposure.py). CITATION ONLY -- the 30 January value is CONFIRMED correct by the current consolidation and is unchanged. The prior citation was 's.85(3)(b)', which is the PRE-R.E.2023 number: in Cap.332 R.E.2023 s.85 reads 'Repealed.' (it sat in Part V Division VI, Transportation) and the obligation now lives at s.110(3)(b), whose bracketed source note is '[s. 85]'. Exactly the trap CLAUDE.md already records for Cap.438 (s.35 -> s.43) and Cap.212 (Part XII). || SUPERSEDED NOTE: Prior fact asserted a 'Form P9' deadline of 31 March, and blocked '31 January' as a wrong_pattern. 'P9' is Kenyan KRA terminology -- no evidence was found that TRA uses this form name at all. Tanzania's actual equivalent",
+    "verified_as_at": "2026-10-05"
   },
   "p45_not_tanzanian": {
     "fact": "Form P45 does not exist in Tanzania -- it is a UK payroll form. Tanzania's actual equivalent, on employment termination, is the annual employment-income withholding certificate (Income Tax Act Cap.332 s.85(3)(b)) -- there is no 'P9' form name in Tanzanian law either; 'P9' is Kenyan (KRA) terminology, the same defect already found and corrected in this project's paye_p9_deadline fact.",
