@@ -140,12 +140,20 @@ SOURCE_FILES = [
 #     scripts/locked_facts.json (row 101) -- ad43473
 #   * the INVERTED payload gate in this file; the pre-bump gate asserted 'part xiii' and would
 #     have REFUSED TO BUILD the corrected index -- ad43473
-#   * the rent_wht_rate CONCISE entry and the two new critical-query guards -- this commit's
-#     parent chain
+#   * the rent_wht_rate CONCISE entry and the two new critical-query guards -- 498c8d8
+#
+# BUMPED AGAIN, same day, to 498c8d8. The first value (d1138ca) was the tip at the moment of
+# writing and was a FLOOR TOO LOW: a clone at d1138ca has the Part XII fixes but NOT the
+# rent_wht_rate CONCISE entry, so it would build the label-led `key: value` fallback and die at
+# the fourth payload gate instead of at the ancestry check. Failing loudly either way, but at
+# the wrong place and with a message about the wrong thing. The convention in this block says
+# EXPECTED_HEAD cannot be the commit containing the line (it cannot know its own hash) -- so the
+# correct value is the PACKAGING commit, set in the immediately following commit, which is what
+# this is.
 # A clone older than this resolves to a tree whose payload gate still demands the REVERSED
 # citation, which is precisely the failure EXPECTED_HEAD exists to stop: a fully
 # successful-looking run that ships the opposite of what it was run for.
-EXPECTED_HEAD = 'd1138ca'
+EXPECTED_HEAD = '498c8d8'
 
 
 def _assert_expected_head_present(local_head, live_sha):

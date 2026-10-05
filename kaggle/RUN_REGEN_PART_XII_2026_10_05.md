@@ -78,7 +78,7 @@ neighbourhood by construction. It measured clean; that is a measurement, not a p
 
 ## The gates this package adds
 
-**`EXPECTED_HEAD` bumped `d593d49` → `d1138ca`.** That is the first commit containing all three
+**`EXPECTED_HEAD` bumped `d593d49` → `498c8d8`.** That is the PACKAGING commit -- the first containing all three
 of the source fixes, the rent entry, **and the inverted payload gate** — see next.
 
 ### The payload gate had to be INVERTED, and this is the entry to remember
@@ -136,7 +136,7 @@ put its fact at rank 2 and the verbatim eval text at rank 17.
 # On Kaggle (GPU not required; e5-base is small)
 !git clone https://github.com/prosperpiusmbaruku007-ship-it/AFRICA-GIANTS.git
 %cd AFRICA-GIANTS
-!git log --oneline -1          # MUST contain d1138ca as an ancestor, or the script aborts
+!git log --oneline -1          # MUST contain 498c8d8 as an ancestor, or the script aborts
 !python kaggle/regenerate_rag_e5.py
 ```
 
