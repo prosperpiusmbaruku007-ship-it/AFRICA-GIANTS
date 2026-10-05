@@ -1,5 +1,247 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-10-05 — **BAR A's DENOMINATOR IS SOFTER THAN ITS NUMERATOR, AND `ext_15` IS THE WORKED EXAMPLE**
+
+**No production code behaviour changed. Four commits: `990d52e` → `ad43473` → `b20a32a` → `d1a54d3`,
+all pushed. Suite 1590 passed.**
+
+### ⛔ LEAD WITH THIS: WE HAVE BEEN SCORING THE MODEL AGAINST CLAIMS NOBODY COULD CHECK
+
+Every Bar A number this project quotes is the model measured against gold answers. Measured
+2026-09-29 (`eval/results/gold_answer_provenance_audit.json`): of 276 gold answers across the
+three corpora the counts come from, **73 assert a figure, rate or deadline a statute could
+confirm — and cite nothing.** Not blank: the 78- and 48-row schemas **had no source field at
+all**. The corroborating detail is what makes it structural rather than untidy:
+`eval_questions_003.jsonl` **does** carry `source_url` on all 150 rows, and **4 of the 6
+scoring-key corrections in the entire repository live there.** A cited key can be checked, and
+was. An uncited one cannot, so a wrong key is booked as a model failure **forever** — the
+adjudication reads the key.
+
+**Two passes have now closed 41 of the 73.** `32` remain, each blocked on a named instrument,
+and `12` rows carry `source_partial` — `source` for what a primary source settles, plus an
+explicit list of what it does not, so a row never reads as a full warranty on a half-verified
+gold. Register: `eval/accuracy_gate/gold_source_register.json`, 16 entries, 3 statute-tier,
+every one fetched directly with URL, HTTP status, byte count and a verbatim quote.
+
+### 🎯 `ext_15` — A BAR A FAILURE COUNTED AGAINST THE MODEL ON A KEY NOW KNOWN TO BE WRONG
+
+The model's live reply (2026-09-05) cited the foreign-company regime as **"Section XII"**. It was
+adjudicated **WRONG**, and "Section XII closed" then entered CLAUDE.md as *evidence that Bar A is
+reachable*.
+
+**The Companies Act Cap.212 R.E. 2023, read directly** (394pp, 3,215,470 bytes, brela.go.tz,
+HTTP 200): `PART XII COMPANIES INCORPORATED OUTSIDE TANZANIA`, s.437(1) — *"Sections 438 to 447
+shall apply to all foreign companies"*. **The model was right on the numeral. Our key was wrong,
+and the 2026-08-31 "correction" introduced the error.**
+
+`ext_15`'s verdict **stays WRONG** — deliberately. Its figure limb (USD 25 vs the TZS 70,000 read
+from BRELA on 2026-10-04) is unresolved, because the Act **delegates every fee** to Minister's
+regulations (s.458, s.489(3)) and the Companies (Fees) Regulations could not be located. **Half a
+correction must not flip a count.** But the verdict now rests on the figure alone, not on the
+citation it was partly booked against — recorded in the row's own `_scoring_key_correction` block.
+
+> **The general point for every future re-derivation: an uncited gold answer makes Bar A's
+> numerator look harder than it is. Bar A is still the enumerable bar — but part of what was
+> being enumerated was our own record, not the model.**
+
+### THE PART XII REVERSAL — 16 SITES, AND THE 16th WOULD HAVE REFUSED TO SHIP THE FIX
+
+**Not an edition mismatch**, which is the first explanation to reach for. The Act's own
+renumbering notes give **+5** (s.438 ← prior s.433, s.445 ← prior s.440); ss.320-328 would need
+about **−115**. No edition of Cap.212 ever put the regime there, and all four claims in the
+2026-08-31 `verified_by` are refuted — including its account of what Part XII *does* contain
+(that is Part **XI**, at s.429). **It is a `verified_by` asserting a primary read that reproduces
+in no direction** — the R18 shape, uncommitted and therefore un-re-derivable.
+
+Inventory: `eval/controls/inventory_part_xii_reversal.py`. **9 sites asserted the error, 4
+punished the right answer, 3 were right and never caught.**
+
+| the 4 that punished the right answer | |
+|---|---|
+| `act_section_12.wrong_patterns` | rejected **3 of 4** correct citations, both word orders. **The 2026-09-23 rewrite that finally made this guard fire is what gave it the power to enforce the error** |
+| 13 quarantine entries | removed from training on the reason *"the correct citation is Part XIII"*. **Quarantined for being right** |
+| `tests/test_act_section_xii_patterns.py` | asserted the error in **both** directions — a now-true sentence in `MUST_FIRE`, a now-false one protected in `MUST_NOT_FIRE` |
+| **`kaggle/regenerate_rag_e5.py` payload gate** | **asserted `'part xiii' in row` and refused to upload without it — it would have REFUSED TO BUILD THE CORRECTED INDEX** |
+
+**The build gate is the entry to remember.** It is the *best-built* control in the set: keyed not
+lexical, failing loudly on absence rather than passing by it, written against a real live defect,
+citing R20 and R21 in its own comment. **None of that protected it, because a control can only be
+as right as the fact it encodes — and a well-built gate on a reversed premise is strictly worse
+than a weak one, because it has more power to keep the error in place.**
+
+**And the first inventory MISSED it, which generalises:** that pass searched locked facts, the RAG
+text, the corpora, the gold sets, the tests and the docs — **and not the build scripts**. It was
+found only because fixing the RAG text required grepping for the authored source of that text.
+
+> **An inventory of a defect's enforcement points must include everything that can REFUSE A FIX,
+> not only everything that ASSERTS the fact. Those are different sets, and the second is the one
+> that bites.**
+
+Two traps inside the inversion itself: **`'part xii'` is a substring of `'part xiii'`**, so the
+naive `in` form would have been vacuous in exactly the R20 way; and the file had **no `import
+re`**, which would have NameError'd on Kaggle at build time.
+
+**Three things checked rather than assumed.** *(a)* "13 training rows" is **13 file-level
+instances of 4 distinct pairs** across 7 files — counting instances overstates corpus impact ~3×;
+7 went back to authored sources, 6 live in `train_sft*.jsonl` and return on regeneration, never by
+hand. *(b)* 9 of the 13 assert the **disputed USD 25**, which was never the quarantine reason —
+restored to match the unchanged locked fact, and listed in the harness so the fee resolution finds
+them in one lookup. *(c)* Deployed RAG row 181's *"kifungu 12"* is **correct on the numeral** and
+was left alone; rewriting a correct row to tidy its label is a content edit with no justification
+(R25).
+
+**The asymmetry worth keeping:** the 2026-09-01 sweep quarantined 13 rows saying *"Section XII"*
+(English token) and **missed the one saying *"Sehemu XII"*** — Swahili token, patterns were
+English. **The single row the sweep failed to remove is the one row that was correct all along.**
+The same blindness the 2026-09-23 rewrite was built to fix is what preserved the right answer.
+
+### 🔴 A FOURTH ENFORCEMENT LAYER: THE DOCS — AND IT IS THE MOST EXPENSIVE ONE
+
+The presumptive divergence was raised as a **hypothesis** and it **held**. FA2026 **s.27(a)(ii)**
+substituted the top band: *11,000,001–**200,000,000** at **4.0% of turnover*** (was 3.5%, capped
+at 100M), read verbatim **2026-09-01** and carried in `rates.py` as `("flat_on_turnover", 0.04)`
+ever since.
+
+```
+pre-2022 table   450,000 + 3.5% × 36M = 1,710,000
+FA2022   3.5% × 50M      = 1,750,000   ← what CLAUDE.md still taught
+FA2026   4.0% × 50M      = 2,000,000   ← what the engine and TRA's page both say
+```
+
+All three reproduce, so this is settled rather than plausible. Then every other layer was swept:
+**the three gold corpora are clean; `presumptive_tax_bands_2022` and
+`presumptive_tax_ceiling_100m` carry 4.0%/200M with the old values correctly marked historical
+(*"ilikuwa asilimia 3.5"*); deployed RAG rows 168–169 likewise. The ONLY stale site in the entire
+repo was CLAUDE.md.** The engine was corrected on 2026-09-01 and the document describing it was
+not — **the engine and its own reference documentation disagreed for five weeks.**
+
+> **A stale doc is the most expensive of the layers, and it is a different KIND of cost. The
+> others merely ASSERT a stale value. A doc is the BASELINE FOR JUDGING NEW EVIDENCE, so a stale
+> one converts correct incoming sources into "unreliable" ones.**
+
+It did exactly that **twice in two days**, and both times a regulator's page was overruled on the
+strength of a document nobody had re-derived:
+- **Part XII** — BRELA's *"Sehemu ya XII"* dismissed as regulator imprecision. The page was right.
+- **presumptive** — TRA's 4% barred from the register as a page/statute divergence. The page was
+  current.
+
+The register now carries that **mirror-image caveat** beside the original *"a regulator's page is
+not the statute"* one, **because the original alone is what produced both errors.** The honest
+default when a page disagrees with our record is that **either may be stale, and the doc has lost
+both contests so far.**
+
+**Class A transport row, checked rather than inherited:** FA2026 s.27(a)(v) **does** amend para
+2(5) Class A item 1, adding *"including three wheelers"* — which is why tra.go.tz reads *"Not more
+than 5 and Three wheelers 120,000"*. The **wording tracks the statute** and is not invented. The
+**120,000 amount stays unverified** and Class A is outside the engine's scope. Partly
+rehabilitated, not cleared.
+
+### THE MATCHER FINDING, AND THE POLARITY LIMB
+
+> **A tool that attaches evidence is a tool that can fabricate evidence.**
+
+`backfill_gold_provenance.py` exists to prevent uncited gold answers. **Across two passes it
+produced 5 over-assignments out of 41 — and every one was caught because the script is
+`REPORT_ONLY` by default and writes only under `--write`. Structural, not vigilance** — vigilance
+is what fails on the twentieth row. The asymmetry that matters: **an absent citation is visible
+and countable (it is what started this work), while a wrong one reads as verified and nobody
+re-checks it.**
+
+Pass 1 (3 of 21): `rent_wht_rate` onto a payroll-triage row with no rental content; the BRELA
+entry onto `ext_15` matching a `2,500` its gold names **only as the contrast it refutes**; four
+rows reading fully sourced while asserting an unsourced NSSF 20%. Pass 2 (2 of 20): `ext_22`
+reading fully sourced when TRA's page settles only **one of its three claims**; and —
+
+**⛔ THE POLARITY LIMB, over-assignment #5, and the first that no amount of subject/quantity
+tuning could ever have caught.** `nat_36`'s gold asserts that **TAA Cap.438 s.44 sets NO turnover
+threshold for EFD.** It matched the VAT-registration-threshold rule on **both** limbs — both
+*legitimately* present, because the row **is** about a registration-style obligation and **does**
+name a turnover figure. The backfill was about to attach a source **stating** a threshold to a row
+whose entire claim is that **none exists**: **a citation that contradicts the gold it cites.**
+
+**The defect is in the POLARITY of the claim, and neither a subject pattern nor a quantity pattern
+can express polarity.** Hence a third limb, `EXCLUSIONS` — and a committed test asserting **both**
+directions, because dropping the limb would otherwise **fail nothing**: the rule would simply
+start matching again and the backfill would look *more* productive.
+
+**One more widening hazard, recorded because it is live:** **VAT's registration threshold and the
+presumptive ceiling are BOTH TZS 200,000,000.** `ext_29` is a VAT row matching the presumptive
+rule's quantity limb exactly; `nat_20` is a WCF row matching the tax-objection rule's. **Only the
+subject limb keeps the wrong source off each.** Every widening is therefore levy-specific — `zero
+band`, `no-records`, `6-month`, `First Schedule para 2` — and **none** adds a bare *threshold* or
+*turnover*. This is `ext_58`'s correct-figure-wrong-levy shape arriving in the **provenance**
+layer.
+
+### THE GUARD-STAGE FIX: MEASURED, AND THE OBVIOUS FIX WAS WRONG
+
+The 2026-09-29 audit raised a **fifth R26 shape** in D-FIDELITY-6: not inert, not unwired, not
+overbroad — **checked at the wrong stage.** Production checks `cleaned` (the model body); the user
+receives `body + "\n" + working`. The queued fix was to run it on the rendered reply.
+
+**Measured first** (`eval/fidelity/measure_rate_guard_stage.py`, 16 committed probes paired with
+**real** engine workings from the production compute functions — no model, so it reproduces
+exactly):
+
+```
+flagged pre-render    4   ← exactly the four `flag` probes. Correct.
+flagged post-render   6
+verdicts moved        2   ← BOTH FALSE POSITIVES ON CORRECT BODIES
+new catches           0
+```
+
+The rule is a ±60-character proximity window, so concatenation puts the **end** of the body within
+60 chars of the **start** of the working. The working names its levy; the body's trailing rate then
+attaches to a levy it was never about — `rg_09`'s *"VAT withholding … asilimia 6 … asilimia 3"*
+becomes `('sdl', 3)` and `('sdl', 6)`, both wrong for SDL and **both correct for VAT withholding**.
+**Those attributions exist in neither segment alone; the seam manufactures them.** And this guard
+**blanks**, so moving the stage would delete two correct answers to catch nothing.
+
+**Stage kept and pinned** — the test fails with a pointer to the measurement, so the next person to
+spot the gap reads why before changing it.
+
+**My own harness reported the reassuring number first, from a wrong key.** It read
+`verdict`/`judgement` where the fixture uses `expect`, got `None` on every row, and printed
+*"new_false_positives_on_correct_bodies: 0"* while **both** moved rows were false positives on
+correct bodies. **R26's second half inside the instrument doing the auditing.** Now asserted: a row
+with no `expect` fails the run rather than being judged against `None`.
+
+**The limb that WAS genuinely open** — the working was never checked at all — is closed
+**statically**: `test_every_engine_working_attributes_only_statutory_rates` compares `rates.py`'s
+constants against `fidelity._LEVY_RATES` across a grid spanning SDL's 10-employee threshold and all
+five PAYE bands. **Two independent tables that must agree, and nothing compared them.** They agree
+today. Static because it is a property of two constants (R19: a constant comparison) — it cannot
+vary per request, costs nothing, and puts no blanking mechanism in front of authoritative output.
+Planted a table drift to confirm it fires in both directions. Census: **FIRES 20 · DISABLED 1 ·
+NOT_WIRED 1 · OBSERVED 1 · NOT_EXERCISABLE 1.**
+
+### OPEN, NAMED RATHER THAN HEDGED
+
+- **32 uncited gold answers**, blocked on 8 named instruments: Cap.332 First Schedule
+  (corporate/AMT rates, public float, loss offset), the **Companies (Fees) Regulations**, **GN
+  605A** (tanzlii Cloudflare Turnstile — a genuine block), **GN 487A**, Cap.297/OSHA (subpages
+  404), Cap.290 (service levy cap), the VAT Act (late-registration penalty, deferment), and
+  **NSSF** — `nssf.go.tz/pages/contributions` **and** `/pages/michango` both HTTP 500 to curl with
+  a browser UA on two consecutive days, so this is the server, not WebFetch's header bug (R30
+  applied, not assumed). Seven rows scored on the 10/10/20 split stay `source_partial`.
+- **Two fee figures unresolved**, recorded as standing disagreements with both sources named: USD
+  25 vs TZS 70,000, and TZS 300,000 vs 500,000. *"USD 25 ≈ TZS 70k" is withdrawn as evidence — a
+  change of currency denomination is a substantive amendment, not a rounding.*
+- **Queued R15 regen**, three facts: `rent_wht_rate`, `ext_31`, and now the Part XII citation.
+  Until it runs, the deployed index still serves the reversed citation.
+- **Renumbering exposure, enumerated not checked.** Cap.212 is the **third** consolidated Act found
+  carrying this trap, after Cap.332 and Cap.438. **19 Acts are cited with section numbers across
+  the locked facts** — Cap.332 (21 facts), Cap.50 (20), Cap.82 (19), Cap.148 (18), Cap.212 (11),
+  Cap.438 (8) — and **none has been verified against its amending instrument's numbering. Two of
+  the three checked so far were stale.**
+- **`validate_dataset.py` fails project-wide** — 46,881 errors across 4,416 pairs **before** this
+  session's changes, because the `cleaned_pairs` files are SFT-shaped and do not satisfy the
+  18-field schema at all. **R3's gate is not being enforced on those files**, and a validator that
+  fails on everything is as uninformative as one that fires on nothing. Not investigated; flagged.
+- **Bar B unchanged and still the floor.** Nothing this session touched it, and nothing should:
+  42/42 leak across two unrelated variation axes is evidence about the mechanism, not a worklist.
+
+---
+
 ## 📋 2026-09-29 (later) — **THE BUCKET-A RECOUNT, AND WHY THE MOTIVATING NUMBER DID NOT SURVIVE THE AUDIT IT STARTED**
 
 **Measurement and record-correction only. No production code changed. Nothing widened.**
