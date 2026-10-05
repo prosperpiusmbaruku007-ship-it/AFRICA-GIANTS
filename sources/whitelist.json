@@ -343,5 +343,35 @@
     "last_verified": "2026-08-16",
     "re_scrape_trigger": "When Cap 290 is amended by a Finance Act or new GN",
     "notes": "Local Government Finance Act Cap 290 R.E. 2019 -- the only source read for the five council-fee/market-dues/business-licence facts added 2026-08-25 (scripts/add_local_levy_facts.py). Cap 290 is also on tanzlii.org (already whitelisted) but that copy was not fetched and is not cited -- adding this exact URL rather than substituting the tanzlii domain is deliberate: R25/S3 forbid citing a source that was not actually read. Added 2026-08-26 per founder approval (PROGRESS.md, 'A WHITELIST GAP, SURFACED RATHER THAN PAPERED OVER')."
+  },
+  {
+    "id": "tier1a_wcf_001",
+    "url": "https://www.wcf.go.tz",
+    "institution": "Workers Compensation Fund (Mfuko wa Fidia kwa Wafanyakazi), Prime Minister's Office - Labour, Employment and Relations",
+    "source_type": "government_portal",
+    "approved_for": [
+      "tier1a"
+    ],
+    "use_for": "training",
+    "content_type": "html_guide",
+    "decay_risk": "Stable",
+    "last_verified": "2026-10-05",
+    "re_scrape_trigger": "When the Workers Compensation Act Cap.263 or its rules are amended",
+    "notes": "OWNERSHIP VERIFIED FROM THE SITE ITSELF 2026-10-05 (HTTP 200, 183,434 bytes), not inferred: the page header reads 'WCF | Ofisi ya Waziri Mkuu Kazi, Ajira na Mahusiano' and the body carries 'Mfuko wa Fidia' and 'Jamhuri ya Muungano'. Contribution rate/base, employer registration deadline, accident and occupational-disease reporting. ADDED LATE: CLAUDE.md Section 11 has carried a full WCF block since Jun 2026 and this project sourced wcf_rate_and_base and wcf_employer_registration_no_headcount directly from this host, while the domain was in no form on this list -- a whitelist gap for an already-trusted regulator, found by the 2026-10-05 validate_dataset rewrite."
+  },
+  {
+    "id": "tier1a_wcf_002",
+    "url": "https://portal.wcf.go.tz",
+    "institution": "Workers Compensation Fund - self-service portal",
+    "source_type": "government_portal",
+    "approved_for": [
+      "tier1a"
+    ],
+    "use_for": "training",
+    "content_type": "html_guide",
+    "decay_risk": "Stable",
+    "last_verified": "2026-10-05",
+    "re_scrape_trigger": "When WCF online services or forms change",
+    "notes": "OWNERSHIP VERIFIED FROM THE SITE ITSELF 2026-10-05 (HTTP 200, 40,323 bytes): 'WCF - PORTAL / WORKERS COMPENSATION FUND SELF SERVICE PORTAL'. A subdomain of the verified wcf.go.tz, listed SEPARATELY because validate_dataset deliberately does not collapse arbitrary subdomains -- a portal is a different service from a parent site and treating them as one would be a policy change disguised as a bug fix. Cited by 9 cleaned pairs."
   }
 ]

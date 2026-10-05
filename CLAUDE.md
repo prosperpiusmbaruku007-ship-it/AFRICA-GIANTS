@@ -137,6 +137,13 @@ Full machine-readable list: **sources/whitelist.json**
 - nssf.go.tz — NSSF contributions and registration (use .go.tz — nssf.or.tz fails DNS)
 - kazi.go.tz — NSSF Act / labour source
 - osha.go.tz — OSHA workplace registration
+- wcf.go.tz + portal.wcf.go.tz — Workers Compensation Fund: contribution rate/base, employer
+  registration deadline, accident and occupational-disease reporting. **Added 2026-10-05, late:**
+  Section 11 has carried a full WCF block since Jun 2026 and two locked facts were sourced from
+  this host, while the domain was on the whitelist in no form at all — so every WCF-sourced pair
+  was failing the pipeline's own source check. Ownership verified from the site, not inferred
+  (header reads *"WCF | Ofisi ya Waziri Mkuu Kazi, Ajira na Mahusiano"*; the portal identifies
+  itself as *"WORKERS COMPENSATION FUND SELF SERVICE PORTAL"*).
 - tanzlii.org — primary legal database: official Acts and Government Notices (GN 605A, ELRA)
 - fbattorneys.co.tz/gn487a — GN 487A gazette copy
 - Tanzania Government Gazette — Finance Act 2025, GN 487A, GN 605A

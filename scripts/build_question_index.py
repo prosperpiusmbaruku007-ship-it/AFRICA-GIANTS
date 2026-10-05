@@ -16,6 +16,9 @@ def build_index():
 
     patterns = [
         "datasets/tier1a/cleaned_pairs/*.jsonl",
+        # added 2026-10-05 with the SFT-shaped move: a dedup index that cannot see 2,705 existing questions would
+        # wave through duplicates of every one of them.
+        "datasets/tier1a/sft_shaped_pairs/*.jsonl",
         "datasets/tier1a/raw_sources/raw_pairs_*.jsonl"
     ]
 
@@ -59,6 +62,9 @@ def check_duplicates():
 
     patterns = [
         "datasets/tier1a/cleaned_pairs/*.jsonl",
+        # added 2026-10-05 with the SFT-shaped move: a dedup index that cannot see 2,705 existing questions would
+        # wave through duplicates of every one of them.
+        "datasets/tier1a/sft_shaped_pairs/*.jsonl",
         "datasets/tier1a/raw_sources/raw_pairs_*.jsonl"
     ]
 

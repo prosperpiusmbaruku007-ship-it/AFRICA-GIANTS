@@ -93,35 +93,36 @@ def load_whitelist():
     return {_host(e["url"]) for e in entries}
 
 
-# ── UN-WHITELISTED SOURCE DOMAINS, FROZEN 2026-10-05 ───────────────────────────────────────
-# Two domains, 52 pairs, and NEITHER is a validator defect -- they are real pairs citing hosts
-# nobody approved. They are frozen here rather than whitelisted, because adding a domain to
-# sources/whitelist.json changes WHAT THE PIPELINE WILL ACCEPT FROM NOW ON, and CLAUDE.md
-# Section 4 + R4 make that a governance decision, not a tidy-up. Frozen so the gate can exit 0
-# and be USED (an always-failing blocking gate gets ignored, which is how it went inert) while
-# the 52 rows stay visible, bounded, and unable to grow.
+# ── UN-WHITELISTED SOURCE DOMAINS — RESOLVED 2026-10-05 BY VERIFYING OWNERSHIP ─────────────
+# Both were checked against the live hosts rather than reasoned about, per the standing rule that
+# ownership is verified, never inferred. The two came back DIFFERENT, which is why only one was
+# whitelisted:
 #
-# ⚠️ FOUNDER DECISION, NAMED NOT ABSORBED — each needs a yes/no, and the two are different:
+#  ✅ wcf.go.tz + portal.wcf.go.tz -- WHITELISTED (sources/whitelist.json tier1a_wcf_001/002,
+#     CLAUDE.md Section 4). Verified from the sites: wcf.go.tz returns HTTP 200 / 183,434 bytes
+#     with the header "WCF | Ofisi ya Waziri Mkuu Kazi, Ajira na Mahusiano" plus "Mfuko wa
+#     Fidia" and "Jamhuri ya Muungano"; portal.wcf.go.tz returns HTTP 200 / 40,323 bytes
+#     identifying itself as "WORKERS COMPENSATION FUND SELF SERVICE PORTAL". The Fund's own site
+#     and the Fund's own subdomain. This closes a real gap: Section 11 has carried a full WCF
+#     block since Jun 2026 and two locked facts were sourced from that host, while the domain was
+#     on the approved list in NO form -- so every WCF-sourced pair was failing the pipeline's own
+#     source check.
 #
-#   wcf.go.tz        9 pairs cite `portal.wcf.go.tz`. The striking part: **wcf.go.tz is not in
-#                    the whitelist AT ALL**, in any form -- yet CLAUDE.md Section 11 carries a
-#                    whole WCF block ("WCF Additional Timelines (wcf.go.tz, confirmed Jun 2026)")
-#                    and this project sourced wcf_rate_and_base and
-#                    wcf_employer_registration_no_headcount directly from that host on
-#                    2026-09-29 and 2026-10-05. So this is a WHITELIST GAP for a core,
-#                    already-trusted regulator, not a questionable source. Almost certainly a
-#                    yes -- but it is still an addition to the approved list.
+#  ⛔ mlywf.go.tz -- STAYS FROZEN. **IT HAS NO DNS RECORD AT ALL**, bare or www:
+#     `getaddrinfo failed` / `curl (6) Could not resolve host`. That is a DNS failure, not an
+#     HTTP one, so switching tools cannot help -- and it is NOT this link misbehaving, which is
+#     the control that makes the finding meaningful: kazi.go.tz (196.192.79.159), wcf.go.tz
+#     (197.149.178.6) and portal.wcf.go.tz (102.223.10.219) all resolved in the same breath on
+#     the same connection. "mlywf" is presumably an earlier incarnation of the labour ministry,
+#     whose current whitelisted domain is kazi.go.tz (CLAUDE.md Section 4).
 #
-#   mlywf.go.tz     43 pairs. Ministry of Labour, Youth, Employment and Persons with
-#                    Disability. NOT in the whitelist and NOT in CLAUDE.md Section 4, which
-#                    names `kazi.go.tz` as the labour/NSSF-Act source. mlywf.go.tz appears to be
-#                    the same ministry under a different (likely earlier) domain. A genuine
-#                    judgement: if it is the same publisher, these 43 pairs are fine and the
-#                    domain should be added; if it is a dead or unofficial host, the pairs need
-#                    re-sourcing. NOT resolved here -- the host was not fetched, and R30 says a
-#                    reachability claim about a domain needs an actual request behind it.
+#     ⚠️ SO THESE 43 PAIRS ARE WORSE OFF THAN "UNWHITELISTED": their primary_source_url points at
+#     a host that does not exist, which means **their provenance cannot be checked by anyone** --
+#     not by us, not by a reviewer, not by the TRA-registered consultant R7's Gate 2 sign-off
+#     depends on. An unverifiable citation is the condition R4 exists to prevent, arriving by
+#     domain death rather than by fabrication. They need re-sourcing to kazi.go.tz (or whatever
+#     now publishes the content), not whitelisting.
 UNWHITELISTED_DOMAIN_EXCEPTION = {
-    "portal.wcf.go.tz": 9,
     "mlywf.go.tz": 43,
 }
 
@@ -159,16 +160,20 @@ def validate_pair(pair, required_fields, allowed_values, whitelisted_domains, fi
 # Companies Act Part XII citation and came back, so the exception legitimately grew by 4 that
 # day. Recorded here rather than silently absorbed, because "the exception may only shrink" is
 # the whole mechanism and a change to it needs a reason on the record.
-SFT_SHAPED_EXCEPTION = {
-    "cleaned_pairs_batch_009.jsonl": 260,
-    "cleaned_pairs_batch_010.jsonl": 86,
-    "cleaned_pairs_batch_011.jsonl": 224,
-    "cleaned_pairs_batch_012.jsonl": 157,
-    "cleaned_pairs_batch_013.jsonl": 129,
-    "cleaned_pairs_batch_014.jsonl": 1102,
-    "cleaned_pairs_batch_015.jsonl": 720,
-    "cleaned_pairs_batch_019.jsonl": 27,
-}
+# ✅ EMPTIED 2026-10-05 — AND THE EMPTY SET IS NOW THE WHOLE POINT, not a leftover.
+#
+# All 8 files (2,705 rows) were MOVED to datasets/tier1a/sft_shaped_pairs/, which this validator
+# deliberately does not scan. So the exception legitimately holds nothing: there is no longer an
+# SFT-shaped file inside cleaned_pairs/ to excuse.
+#
+# ⚠️ IT IS KEPT RATHER THAN DELETED because with the dict empty, the `new_files` branch below
+# becomes a REGRESSION GUARD covering every possible SFT-shaped file: ANY such file appearing in
+# cleaned_pairs/ from now on is unlisted, and therefore blocks. Deleting the mechanism would
+# retire exactly the protection the move was made to establish -- the two generations can never
+# silently re-merge. tests/test_validate_dataset_gate.py plants one and watches it block, so the
+# empty dict cannot quietly become an unchecked one (R20: an empty collection by DESIGN and one
+# empty by ACCIDENT are byte-identical, so the reason is recorded here at the site).
+SFT_SHAPED_EXCEPTION = {}
 _SFT_KEYS = {"instruction", "output"}
 
 

@@ -8,7 +8,8 @@ Exit: 0 = clean (no temp files), 1 = temp files found
 """
 import os, glob, argparse, json, sys
 
-CLEANED_DIR = "datasets/tier1a/cleaned_pairs"
+# BOTH: a scan that cannot see a directory is a place for temp files to accumulate unseen.
+CLEANED_DIRS = ["datasets/tier1a/cleaned_pairs", "datasets/tier1a/sft_shaped_pairs"]
 
 # Flag files whose name contains these substrings (case-insensitive).
 # Does NOT flag batch_NNN_eval.jsonl or batch_NNN_adversarial.jsonl.
@@ -40,7 +41,7 @@ def count_pairs(filepath):
 
 
 def find_temp_files():
-    all_files = glob.glob(os.path.join(CLEANED_DIR, "*.jsonl"))
+    all_files = sorted(f for d in CLEANED_DIRS for f in glob.glob(os.path.join(d, "*.jsonl")))
     temp_files = []
     for f in all_files:
         basename = os.path.basename(f)

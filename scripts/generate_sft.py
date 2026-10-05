@@ -11,12 +11,24 @@ SYSTEM_PROMPT = (
     "and financial rules in Swahili and English."
 )
 
-CLEANED_DIR = "datasets/tier1a/cleaned_pairs"
+# ⛔ BOTH DIRECTORIES, AND THIS IS NOT OPTIONAL. On 2026-10-05 the 8 SFT-shaped files moved out
+# of cleaned_pairs/ into sft_shaped_pairs/, because cleaned_pairs/ asserts the 18-field contract
+# (R3) and those rows never carried it. They are still 2,705 of the 4,410 non-eval pairs this
+# generator loads -- 61% -- so reading only cleaned_pairs/ would silently shrink the next
+# retrain's data by more than half while the script still printed a cheerful "Loaded N pairs".
+# fmt_pair() already handled both shapes; only the directory list changed.
+# Verified across the move: train_sft.jsonl and val_sft.jsonl are byte-identical before/after.
+CLEANED_DIRS = ["datasets/tier1a/cleaned_pairs", "datasets/tier1a/sft_shaped_pairs"]
 SFT_DIR = "datasets/tier1a/sft"
 
 def load_all_pairs():
     all_pairs = []
-    for filepath in sorted(glob.glob(f"{CLEANED_DIR}/*.jsonl")):
+    # sorted over the UNION, so ordering (and therefore the seeded shuffle) is stable and
+    # independent of which directory a file lives in -- that is what makes the byte-identity
+    # check above meaningful rather than coincidental.
+    paths = sorted(p for d in CLEANED_DIRS for p in glob.glob(f"{d}/*.jsonl"))
+    assert paths, f"no pair files found under {CLEANED_DIRS} -- refusing to build an empty SFT set"
+    for filepath in paths:
         with open(filepath, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()

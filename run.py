@@ -12,6 +12,9 @@ ROOT = Path(__file__).parent
 
 def cmd_status(args):
     cleaned   = ROOT / 'datasets' / 'tier1a' / 'cleaned_pairs'
+    # 2026-10-05: the SFT-shaped half lives in sft_shaped_pairs/ now. Listed too, so the
+    # status view does not silently report a corpus 61% smaller than it is.
+    sft_pairs = ROOT / 'datasets' / 'tier1a' / 'sft_shaped_pairs'
     sft_train = ROOT / 'datasets' / 'tier1a' / 'sft' / 'train_sft.jsonl'
     sft_val   = ROOT / 'datasets' / 'tier1a' / 'sft' / 'val_sft.jsonl'
     source_docs = ROOT / 'data' / 'source_documents'
@@ -21,8 +24,9 @@ def cmd_status(args):
 
     total_pairs = 0
     batch_files = []
-    if cleaned.exists():
-        for f in sorted(cleaned.glob('*.jsonl')):
+    for _d in (cleaned, sft_pairs):
+      if _d.exists():
+        for f in sorted(_d.glob('*.jsonl')):
             count = sum(1 for line in open(f, encoding='utf-8') if line.strip())
             total_pairs += count
             batch_files.append((f.name, count))

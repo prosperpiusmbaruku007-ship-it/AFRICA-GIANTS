@@ -122,15 +122,38 @@ def test_a_NEW_sft_shaped_file_BLOCKS(tmp_path):
     assert "NEW SFT-SHAPED FILE" in r.stdout
 
 
-def test_a_GROWN_sft_file_BLOCKS(tmp_path):
-    """A frozen count that is not actually compared is the vacuous shape (R20)."""
-    import validate_dataset as v
-    name, frozen = next(iter(v.SFT_SHAPED_EXCEPTION.items()))
+def test_a_GROWN_sft_file_BLOCKS(tmp_path, monkeypatch):
+    """A frozen count that is not actually compared is the vacuous shape (R20).
+
+    SFT_SHAPED_EXCEPTION is EMPTY since the 2026-10-05 move (all 8 files went to
+    sft_shaped_pairs/), so the growth limb has nothing live to exercise it — exactly the
+    mis-composed-fixture shape R20 warns about, where a check runs on every invocation and can
+    never report anything. A listed file is injected here so the comparison itself is proven to
+    work, and would be the limb that fires if a future decision ever re-lists one.
+    """
     sft = {"instruction": "swali", "input": "", "output": "jibu", "system": "s"}
-    root = _plant(tmp_path, name, [dict(sft) for _ in range(frozen + 1)])
-    r = _run(root)
+    root = _plant(tmp_path, "cleaned_pairs_batch_009.jsonl", [dict(sft) for _ in range(3)])
+    code = (
+        "import json,sys,pathlib;"
+        f"sys.path.insert(0,{os.path.join(REPO, 'scripts')!r});"
+        "import validate_dataset as v;"
+        "v.SFT_SHAPED_EXCEPTION={'cleaned_pairs_batch_009.jsonl': 2};"
+        f"v.DATASETS_ROOT=pathlib.Path({str(root)!r});"
+        "v.main()")
+    r = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
     assert r.returncode == 1, f"a grown SFT file was accepted:\n{r.stdout}"
     assert "GREW" in r.stdout
+
+
+def test_the_exception_is_empty_so_ANY_sft_file_in_cleaned_pairs_blocks():
+    """The move's protection, asserted. With SFT_SHAPED_EXCEPTION empty, every SFT-shaped file
+    in cleaned_pairs/ is unlisted and therefore blocks — so the two pipeline generations cannot
+    silently re-merge into one directory, which is the confusion the move resolved."""
+    import validate_dataset as v
+    assert v.SFT_SHAPED_EXCEPTION == {}, (
+        "the SFT exception is no longer empty. If a file was deliberately re-listed, say why at "
+        "the site; if one reappeared in cleaned_pairs/, that is the regression this guards.")
 
 
 def test_a_row_matching_NEITHER_shape_BLOCKS(tmp_path):

@@ -6,7 +6,9 @@ Usage: python scripts/plan_next_batch.py
 import json, os, glob
 
 GATE_RESULTS_FILE = "gate_001_results.json"
-CLEANED_DIR = "datasets/tier1a/cleaned_pairs"
+# BOTH: this plans the next batch from how much already exists, so reading only
+# cleaned_pairs/ would under-count the corpus by 2,705 pairs (61%) and plan duplicates.
+CLEANED_DIRS = ["datasets/tier1a/cleaned_pairs", "datasets/tier1a/sft_shaped_pairs"]
 TARGET_PAIRS = 3000
 
 ADVERSARIAL_THRESHOLD = 60   # Below this: build adversarial pairs
@@ -17,7 +19,7 @@ FIXED_REFUSAL_PAIRS = 30
 def count_existing_pairs():
     total = 0
     subdomain_counts = {}
-    for filepath in glob.glob(f"{CLEANED_DIR}/*.jsonl"):
+    for filepath in sorted(p for d in CLEANED_DIRS for p in glob.glob(f"{d}/*.jsonl")):
         with open(filepath, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
