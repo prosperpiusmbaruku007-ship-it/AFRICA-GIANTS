@@ -51,19 +51,71 @@ def token():
 
 
 PROBES = [
+    # ⚠️ THE DEPLOY'S FIRST PURPOSE IS SPLIT ACROSS TWO PROBES, and the first version of this
+    # file conflated them into one -- which produced a FAIL that did not mean what it looked
+    # like it meant. The question below is the guard's verbatim text, and the model answers it
+    # with the 5% LATE-PAYMENT penalty (s.14(3)): a correct, relevant, differently-scoped fact,
+    # because "nisipolipa ... faini ya kiasi gani" is genuinely ambiguous between the civil
+    # late-payment charge and the criminal ceiling on conviction. Scoring that as one probe
+    # charged the deploy with a fact-selection ambiguity it did not cause and cannot fix.
+    #
+    # So: THIS probe asks only whether the superseded value is gone. The NEXT asks whether the
+    # ceiling is reachable. Both are necessary and they fail for different reasons.
     {
-        "id": "nssf_fine_ten_million",
-        "proves": "THE DEPLOY'S FIRST PURPOSE: row 159 no longer serves "
-                  "'one hundred thousand'. Cap.50 R.E.2023 s.76(1) reads ten million.",
+        "id": "superseded_fine_value_gone",
+        "proves": "THE DEPLOY'S FIRST PURPOSE, narrowly: row 159 no longer serves 'one hundred "
+                  "thousand'. Scored ONLY on the superseded value's absence -- deliberately "
+                  "not on which fine the model selects, which is a separate question.",
         "source": "kaggle/regenerate_rag_e5.py critical_queries (verbatim, the new guard)",
         "question": "Nisipolipa michango ya NSSF kabisa, nitatozwa faini ya kiasi gani?",
         "before_committed_index": "row 159 = 'fine limit: one hundred thousand TZS'",
+        "must_not_assert": r"100[,.]?000(?![,.\d])|laki\s+moja|elfu\s+mia\s+moja",
+        "observe": r"10,?000,?000|milioni\s+kumi|asilimia\s*5",
+        "note": "The recorded reply gives the 5% late-payment penalty (s.14(3)) -- CORRECT and "
+                "relevant, just not the ceiling. observe records which of the two it chose.",
+    },
+    {
+        "id": "fine_ceiling_reachable",
+        "proves": "THE DEPLOY'S FIRST PURPOSE, completed: the CORRECTED ten-million row is "
+                  "reachable in a live reply, not merely present in the index and retrievable "
+                  "by the guard. A row can rank 1 and still never reach the answer -- that is "
+                  "the ext_31 defect, and the regen's rank gate cannot see it.",
+        "source": "authored for this verification, phrased at the ceiling specifically",
+        "question": "Faini ya juu kabisa kwa kosa la NSSF ni shilingi ngapi?",
         "must_match": r"10,?000,?000|milioni\s+kumi",
         "must_not_assert": r"100[,.]?000(?![,.\d])|laki\s+moja|elfu\s+mia\s+moja",
-        "observe": r"kifungo|jela|miaka\s+miwili|miaka\s+2",
-        "note": "observe looks for the imprisonment limb -- the statutory sentence is "
-                "disjunctive (fine OR imprisonment OR both), so a reply naming only the fine "
-                "is correct but incomplete.",
+        "note": "Deliberately close to the index row's own wording. That makes it a WEAK test "
+                "of real-user phrasing (R21: a question sharing vocabulary with the fact is "
+                "measuring alignment, not reach) and a STRONG test of whether the corrected "
+                "value exists in the served path at all -- which is what this probe is for.",
+    },
+    {
+        "id": "FINDING_gn487a_term_bleed",
+        "proves": "NOT A DEPLOY GATE -- a defect this verification FOUND, recorded as a probe "
+                  "so it is tracked rather than mentioned. On conviction/prosecution phrasings "
+                  "the reply imports GN487A's SIX-MONTH term onto an NSSF question. Cap.50 "
+                  "s.76(1) is TWO YEARS.\n"
+                  "SOURCE, read from the shipped index rather than inferred: row 20 "
+                  "(gn487a_penalty_noncitizen) is the ONLY row pairing TZS 10,000,000 with "
+                  "'kifungo miezi 6'. FIVE rows now state TZS 10,000,000 (GN487A penalty, "
+                  "beneficial-owner penalty, VAT deferment minimum, and both new NSSF rows), "
+                  "making it the most crowded magnitude in the index.\n"
+                  "⚠️ NEWLY MEASURED, NOT DEMONSTRABLY NEWLY CAUSED. No baseline exists for "
+                  "this phrasing, and row 20 predates this ship. That adding a SECOND "
+                  "ten-million row beside it increases the blend is a HYPOTHESIS, not a "
+                  "finding -- it needs the before, which cannot now be taken.",
+        "source": "authored for this verification",
+        "question": "Nikipatikana na hatia ya kosa chini ya sheria ya NSSF, nitatozwa faini ya "
+                    "kiasi gani na kifungo cha muda gani?",
+        "must_not_assert": r"100[,.]?000(?![,.\d])|laki\s+moja",
+        "observe": r"miaka\s+miwili|miaka\s+2",
+        "expected_to_fail_observe": True,
+        "note": "Recorded reply: 'faini ya TZS 20,000,000 (milioni ishirini) AU kifungo cha "
+                "miezi sita (6)'. TWO errors: the term is GN487A's, and TZS 20,000,000 appears "
+                "in NO penalty row of the index (row 181 is a BRELA share-capital band), so "
+                "that figure is fabricated. A third reply said 'si zote mbili pamoja' where "
+                "s.76(1) says 'or to both'. Scored only on the superseded value so this probe "
+                "cannot block the deploy; the observe limb is the tracked defect.",
     },
     {
         "id": "nssf_deadline_one_month",
@@ -181,6 +233,13 @@ def save(rows):
                    "fail": len(failed), "error": len(errored)},
         "verdict": ("DEPLOY VERIFIED" if rows and not failed and not errored
                     and len(rows) == len(PROBES) else "INCOMPLETE OR FAILED"),
+        # The deploy verdict and the defect list are DELIBERATELY SEPARATE. A verification that
+        # can only say "verified" or "failed" has to choose between hiding a found defect and
+        # blocking a ship that did what it set out to do -- and the honest answer here is both
+        # at once: the 100x understatement is gone, and a different defect was found doing it.
+        "found_defects_not_blocking_this_deploy": [
+            {"id": r["id"], "what": r.get("note"), "reply": r.get("reply")}
+            for r in rows if r.get("id", "").startswith("FINDING_")],
         "rows": rows,
     }
     with open(OUT, "w", encoding="utf-8") as fh:

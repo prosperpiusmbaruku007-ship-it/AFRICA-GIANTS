@@ -1,0 +1,149 @@
+{
+  "_what": "R16 live verification of the Cap.50 R.E.2023 deploy (second ship, 2026-10-05).",
+  "_endpoint": "https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run",
+  "_deployed_index": "184 rows, (184, 768), HF commit 69e514f2c7 built from 9093762, dual-committed in 335624b. rag_fact_count unchanged at 184.",
+  "_baseline_limitation": "No pre-deploy LIVE capture was taken for rows 63/159. BEFORE is the committed index text (git show 7d46df1:kaggle/rag_facts_text.json), decisive about what was RETRIEVABLE and silent about what the model said on top of it.",
+  "_scoring": "must_not_assert is POLARITY-checked: a superseded value named under a negation is correct behaviour, not a failure, because both new index rows deliberately contradict the old value.",
+  "_write_discipline": "rewritten after EVERY row; per-row errors captured, never fatal",
+  "totals": {
+    "probes": 9,
+    "run": 9,
+    "pass": 9,
+    "fail": 0,
+    "error": 0
+  },
+  "verdict": "DEPLOY VERIFIED",
+  "found_defects_not_blocking_this_deploy": [
+    {
+      "id": "FINDING_gn487a_term_bleed",
+      "what": "Recorded reply: 'faini ya TZS 20,000,000 (milioni ishirini) AU kifungo cha miezi sita (6)'. TWO errors: the term is GN487A's, and TZS 20,000,000 appears in NO penalty row of the index (row 181 is a BRELA share-capital band), so that figure is fabricated. A third reply said 'si zote mbili pamoja' where s.76(1) says 'or to both'. Scored only on the superseded value so this probe cannot block the deploy; the observe limb is the tracked defect.",
+      "reply": "Kwa mujibu wa Sheria ya NSSF, adhabu ya msingi ni faini ya TZS 20,000,000 (milioni ishirini) AU kifungo cha miezi sita (6). Thibitisha na NSSF (nssf.go.tz)."
+    }
+  ],
+  "rows": [
+    {
+      "id": "superseded_fine_value_gone",
+      "proves": "THE DEPLOY'S FIRST PURPOSE, narrowly: row 159 no longer serves 'one hundred thousand'. Scored ONLY on the superseded value's absence -- deliberately not on which fine the model selects, which is a separate question.",
+      "source": "kaggle/regenerate_rag_e5.py critical_queries (verbatim, the new guard)",
+      "question": "Nisipolipa michango ya NSSF kabisa, nitatozwa faini ya kiasi gani?",
+      "note": "The recorded reply gives the 5% late-payment penalty (s.14(3)) -- CORRECT and relevant, just not the ceiling. observe records which of the two it chose.",
+      "before_committed_index": "row 159 = 'fine limit: one hundred thousand TZS'",
+      "reply": "Kukosa kulipa michango ya NSSF kwa wakati kunaweza kusababisha adhabu ya asilimia 5 kwa kila mwezi wa ucheleweshaji. Thibitisha na NSSF (nssf.go.tz).",
+      "mentions_under_negation": false,
+      "observed": true,
+      "checks": {
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "fine_ceiling_reachable",
+      "proves": "THE DEPLOY'S FIRST PURPOSE, completed: the CORRECTED ten-million row is reachable in a live reply, not merely present in the index and retrievable by the guard. A row can rank 1 and still never reach the answer -- that is the ext_31 defect, and the regen's rank gate cannot see it.",
+      "source": "authored for this verification, phrased at the ceiling specifically",
+      "question": "Faini ya juu kabisa kwa kosa la NSSF ni shilingi ngapi?",
+      "note": "Deliberately close to the index row's own wording. That makes it a WEAK test of real-user phrasing (R21: a question sharing vocabulary with the fact is measuring alignment, not reach) and a STRONG test of whether the corrected value exists in the served path at all -- which is what this probe is for.",
+      "reply": "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi). Thibitisha na NSSF (nssf.go.tz).",
+      "mentions_under_negation": false,
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "FINDING_gn487a_term_bleed",
+      "proves": "NOT A DEPLOY GATE -- a defect this verification FOUND, recorded as a probe so it is tracked rather than mentioned. On conviction/prosecution phrasings the reply imports GN487A's SIX-MONTH term onto an NSSF question. Cap.50 s.76(1) is TWO YEARS.\nSOURCE, read from the shipped index rather than inferred: row 20 (gn487a_penalty_noncitizen) is the ONLY row pairing TZS 10,000,000 with 'kifungo miezi 6'. FIVE rows now state TZS 10,000,000 (GN487A penalty, beneficial-owner penalty, VAT deferment minimum, and both new NSSF rows), making it the most crowded magnitude in the index.\n⚠️ NEWLY MEASURED, NOT DEMONSTRABLY NEWLY CAUSED. No baseline exists for this phrasing, and row 20 predates this ship. That adding a SECOND ten-million row beside it increases the blend is a HYPOTHESIS, not a finding -- it needs the before, which cannot now be taken.",
+      "source": "authored for this verification",
+      "question": "Nikipatikana na hatia ya kosa chini ya sheria ya NSSF, nitatozwa faini ya kiasi gani na kifungo cha muda gani?",
+      "note": "Recorded reply: 'faini ya TZS 20,000,000 (milioni ishirini) AU kifungo cha miezi sita (6)'. TWO errors: the term is GN487A's, and TZS 20,000,000 appears in NO penalty row of the index (row 181 is a BRELA share-capital band), so that figure is fabricated. A third reply said 'si zote mbili pamoja' where s.76(1) says 'or to both'. Scored only on the superseded value so this probe cannot block the deploy; the observe limb is the tracked defect.",
+      "reply": "Kwa mujibu wa Sheria ya NSSF, adhabu ya msingi ni faini ya TZS 20,000,000 (milioni ishirini) AU kifungo cha miezi sita (6). Thibitisha na NSSF (nssf.go.tz).",
+      "mentions_under_negation": false,
+      "observed": false,
+      "checks": {
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "nssf_deadline_one_month",
+      "proves": "THE DEPLOY'S SECOND PURPOSE: row 63 no longer serves 'tarehe 10'. s.14(1) is within one month after the end of the payroll month. This row has been live and wrong since at least September.",
+      "source": "kaggle/regenerate_rag_e5.py critical_queries (verbatim, the new guard)",
+      "question": "Michango ya NSSF ya mwezi huu inatakiwa kulipwa lini?",
+      "note": "observe looks for the 5% late-payment penalty, which the corrected row also carries.",
+      "before_committed_index": "row 63 = 'NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata.'",
+      "reply": "Michango ya NSSF inatakiwa kulipwa ndani ya mwezi mmoja baada ya mwisho wa mwezi husika. Thibitisha na NSSF (nssf.go.tz).",
+      "mentions_under_negation": false,
+      "observed": false,
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "regression_part_xii",
+      "proves": "PRIOR-SHIP REGRESSION CHECK. The index changed under the Part XII fix that shipped hours earlier; production served the REVERSED citation for five weeks, so confirming it survived this ship is not a formality.",
+      "source": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl ext_15 (verbatim)",
+      "question": "Tawi letu la kampuni ya kigeni limechelewa kuwasilisha ripoti ya mwaka. Adhabu ni tofauti na kampuni za huku?",
+      "note": "Scored on must_not_assert; the Part XII citation itself is OBSERVED separately so 'cites no Part' is not conflated with 'cites the wrong Part'.",
+      "reply": "Ndiyo, adhabu ni tofauti. Kampuni za ndani zinapata adhabu ya TZS 2,500 kwa mwezi ikiwa zimechelewa kuwasilisha annual returns. Lakini kwa kampuni za kigeni (foreign companies) chini ya Companies Act Sehemu XII, adhabu ni USD 25 kwa mwezi. Thibitisha na BRELA (brela.go.tz).",
+      "mentions_under_negation": false,
+      "observed": true,
+      "checks": {
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "regression_rent_wht",
+      "proves": "SECOND PRIOR-SHIP REGRESSION CHECK, on a different fact, so 'the earlier ship survived' is not evidenced by one lucky row.",
+      "source": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl ext_44 (verbatim)",
+      "question": "Nikimlipa mwenye nyumba kodi ya pango ofisini, ni lazima nikate kodi kabla ya kumpa fedha?",
+      "note": "The two qualifiers the locked fact carries: withholding-agent only, and no residency split.",
+      "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata.",
+      "observed": true,
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "config_only_phrase",
+      "proves": "CONFIG LOADING, separately from code. This phrase is in kaggle/chike_config.json's OOC list and NOT in modal_app.py's hardcoded fallback, so a correct refusal proves the container read the FETCHED config -- the diagnostic that on 2026-08-07 separated a config failure from a stale warm container.",
+      "source": "chike_config.json ooc_phrases (config-only)",
+      "question": "Nataka kuuza kiwanja changu, kodi ya mapato ni kiasi gani?",
+      "note": "Land sale is out of corpus by design.",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_sdl_unchanged",
+      "proves": "NEGATIVE CASE: six rows changed and none of them is SDL. If this moved, a rewritten row displaced something it had no business touching.",
+      "source": "eval/accuracy_gate/edge_probe_natural_048.jsonl nat_06 class",
+      "question": "Nina wafanyakazi 25, mishahara yote ni milioni 15 kwa mwezi. SDL ni kiasi gani?",
+      "note": "3.5% of 15,000,000 = 525,000.",
+      "reply": "Kwa hesabu sahihi: SDL = 3.5% × TZS 15,000,000 = TZS 525,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 15,000,000 = TZS 525,000",
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_nssf_employer_rate",
+      "proves": "SECOND NEGATIVE, chosen deliberately on NSSF itself -- the domain this ship rewrote four rows in. The employer SHARE must still be 10% and must not have been dragged to the 20% total (D-NSSF-1 party resolution), and it must not have picked up the new ten-million figure either.",
+      "source": "kaggle/regenerate_rag_e5.py critical_queries 'NSSF employer' (verbatim)",
+      "question": "Mwajiri analipa asilimia ngapi NSSF kila mwezi?",
+      "note": "The nearest-neighbour risk this ship creates: four NSSF rows changed around this one.",
+      "reply": "Mwajiri analipa asilimia 10 ya mshahara mkubwa wa jumla wa kila mfanyakazi kila mwezi. Thibitisha na NSSF (nssf.go.tz).",
+      "mentions_under_negation": false,
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    }
+  ]
+}
