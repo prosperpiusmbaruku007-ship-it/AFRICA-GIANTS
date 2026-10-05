@@ -158,7 +158,7 @@ SOURCE_FILES = [
 # clone there carries the NSSF employer guard still anchored on bare 'asilimia 10', which the
 # new rent_wht_rate row makes ambiguous -- so it would reproduce the exact failure that wasted
 # the first cycle. 5e191e0 is the first commit containing the re-anchor.
-EXPECTED_HEAD = '5e191e0'
+EXPECTED_HEAD = '2ee38f8'
 
 
 def _assert_expected_head_present(local_head, live_sha):
