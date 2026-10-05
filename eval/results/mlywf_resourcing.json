@@ -1,0 +1,537 @@
+{
+  "_what": "Re-sourcing the 43 pairs citing mlywf.go.tz, a domain with no DNS record.",
+  "_mode": "WRITE",
+  "_why_not_just_repoint": "All 43 cited the bare HOMEPAGE, so they were never checkable even while the domain lived. Repointing a homepage to another homepage changes nothing that matters.",
+  "_destinations_tested": {
+    "wcf.go.tz/pages/contributions": "HTTP 200, 96,129 bytes, 17,974 chars of text, carries the WCF subject matter. Whitelisted 2026-10-05 after verifying ownership on the site.",
+    "kazi.go.tz": "UNUSABLE: DNS resolves but https returns 000 (connection reset) and http 302s to https://www.www.kazi.go.tz -- a malformed doubled-www redirect. Three combinations tried. A pair sent there would be as uncheckable as it is now."
+  },
+  "_over_assignment_guard": "Verdicts are decided PER CLAIM against the fetched document's text, never from the `subdomain` field, and only on distinctive SUBJECT terms -- never bare figures, which match any document and produced the ext_15 over-assignment on the last mechanical sourcing pass (3 wrong of 21, 14%).",
+  "totals": {
+    "MARK_UNSOURCED": 12,
+    "REPOINT_WCF": 31
+  },
+  "by_subdomain_and_verdict": {
+    "gn605a_adversarial / MARK_UNSOURCED": 2,
+    "gn605a_minimum_wage / MARK_UNSOURCED": 10,
+    "wcf_compliance / REPOINT_WCF": 31
+  },
+  "rows": [
+    {
+      "id": "tier1a_gn605a_007_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 6,
+      "subdomain": "gn605a_minimum_wage",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Mshahara wa chini kwa sekta ya umma ni Shilingi ngapi?"
+    },
+    {
+      "id": "tier1a_gn605a_010_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 9,
+      "subdomain": "gn605a_minimum_wage",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Adhabu ya kulipa chini ya mshahara wa chini wa GN 605A ni nini?"
+    },
+    {
+      "id": "tier1a_gn605a_014_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 13,
+      "subdomain": "gn605a_minimum_wage",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Nani anawajibika kuhakikisha waajiri wanafuata GN 605A?"
+    },
+    {
+      "id": "tier1a_gn605a_016_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 15,
+      "subdomain": "gn605a_minimum_wage",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Mfanyakazi ana haki ya kudai mshahara wake wa nyuma ikiwa alidanganywa?"
+    },
+    {
+      "id": "tier1a_gn605a_021_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 20,
+      "subdomain": "gn605a_minimum_wage",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Ikiwa sekta yangu haipo kwenye jedwali la GN 605A, ninatumia kiwango gani?"
+    },
+    {
+      "id": "tier1a_gn605a_023_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 22,
+      "subdomain": "gn605a_minimum_wage",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Mfanyakazi aliyeajiriwa kupitia wakala wa ajira (labour contractor) ana haki ya GN 605A?"
+    },
+    {
+      "id": "tier1a_gn605a_026_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 25,
+      "subdomain": "gn605a_minimum_wage",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Jinsi gani ya kusimamia usahihi wa mishahara katika biashara yangu?"
+    },
+    {
+      "id": "tier1a_gn605a_033_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 32,
+      "subdomain": "gn605a_minimum_wage",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Je, mfanyakazi anayeomba kazi mpya ana haki ya kuuliza mwajiri wa zamani mshahara wake wote?"
+    },
+    {
+      "id": "tier1a_gn605a_042_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 41,
+      "subdomain": "gn605a_adversarial",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Mshahara wa chini wa sekta ya umma ni Shilingi 400,000 kutoka Julai 2025 — je, hii ni sahihi?"
+    },
+    {
+      "id": "tier1a_gn605a_045_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 44,
+      "subdomain": "gn605a_adversarial",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Waajiri hawana adhabu ya kweli kwa kulipa chini ya mshahara wa chini — ni kweli?"
+    },
+    {
+      "id": "tier1a_wcf_001_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 176,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "fidia",
+        "ajali",
+        "matibabu"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF ni nini na wajibu wake kwa biashara yangu ni nini?"
+    },
+    {
+      "id": "tier1a_wcf_002_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 177,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Kiwango cha mchango wa WCF ni asilimia ngapi?"
+    },
+    {
+      "id": "tier1a_wcf_003_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 178,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "ajali",
+        "matibabu"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF na NSSF ni sawa — ni shirika moja tu — je, ni kweli?"
+    },
+    {
+      "id": "tier1a_wcf_004_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 179,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Mfanyakazi analipa sehemu ya mchango wa WCF — je, ni kweli?"
+    },
+    {
+      "id": "tier1a_wcf_005_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 180,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "siku saba",
+        "ajali"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Ikiwa mfanyakazi ameumia kazini, mwajiri anamwarifu WCF ndani ya muda gani?"
+    },
+    {
+      "id": "tier1a_wcf_006_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 181,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF inalipia majeraha ya nje ya mahali pa kazi — kama mfanyakazi alianguka akitoka kazini — je, ni kweli?"
+    },
+    {
+      "id": "tier1a_wcf_007_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 182,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Mfanyakazi wa muda mfupi (casual worker) ana haki ya WCF?"
+    },
+    {
+      "id": "tier1a_wcf_008_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 183,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Mchango wa WCF ni asilimia 1 ya mshahara wa mfanyakazi — je, ni sahihi?"
+    },
+    {
+      "id": "tier1a_wcf_009_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 184,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "fidia",
+        "matibabu"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Manufaa ya WCF yanajumuisha nini kwa mfanyakazi aliyeumia?"
+    },
+    {
+      "id": "tier1a_wcf_010_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 185,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "mfanyakazi wa kwanza"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Wajibu wa mwajiri wa kulipa WCF unaanzia wafanyakazi wangapi?"
+    },
+    {
+      "id": "tier1a_wcf_011_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 186,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "ugonjwa"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF inashughulikia magonjwa yanayotokana na kazi (occupational diseases) pia?"
+    },
+    {
+      "id": "tier1a_wcf_012_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 187,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Mwajiri anaweza kusimama kidedea akiwa na bima binafsi ya wafanyakazi badala ya WCF — je, ni kweli?"
+    },
+    {
+      "id": "tier1a_wcf_013_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 188,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF mchango unalipwa TRA au WCF moja kwa moja?"
+    },
+    {
+      "id": "tier1a_wcf_014_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 189,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Mfanyakazi wa kipindi cha majaribio (probationary) ana haki ya WCF?"
+    },
+    {
+      "id": "tier1a_wcf_015_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 190,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF inashughulikia matukio ya dharura tu — kama maumivu ya kawaida, mfanyakazi hana haki — je, ni kweli?"
+    },
+    {
+      "id": "tier1a_wcf_016_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 191,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "ajali"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Tofauti kati ya WCF na NSSF ni nini — wote wawili wanahusiana na manufaa ya wafanyakazi?"
+    },
+    {
+      "id": "tier1a_wcf_017_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 192,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF inashughulikia tu wafanyakazi wa sekta ya viwanda — waajiri wa ofisi hawahitajiki kusajili — je, ni kweli?"
+    },
+    {
+      "id": "tier1a_wcf_018_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 193,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Mfanyakazi wa kigeni anayefanya kazi Tanzania ana haki ya WCF?"
+    },
+    {
+      "id": "tier1a_wcf_019_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 194,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "ajali",
+        "matibabu"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Mfanyakazi anayedai WCF lazima athibitishe nini?"
+    },
+    {
+      "id": "tier1a_wcf_020_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 195,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "ajali"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF ni tofauti na bima ya maisha (life insurance) — je, ni kweli?"
+    },
+    {
+      "id": "tier1a_wcf_021_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 196,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Je, WCF inamaliza kulipia mfanyakazi baada ya mwaka mmoja wa ulemavu?"
+    },
+    {
+      "id": "tier1a_wcf_022_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 197,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "siku saba",
+        "ajali"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Mwajiri analazimika kutoa ripoti ya ajali kwa WCF kwa fomu gani?"
+    },
+    {
+      "id": "tier1a_wcf_023_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 198,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "fidia"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF inamlipa mfanyakazi moja kwa moja au kupitia mwajiri?"
+    },
+    {
+      "id": "tier1a_wcf_024_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 199,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Mchango wa WCF wa asilimia 0.5 unahesabiwa kwa mshahara wa msingi tu au mshahara wote?"
+    },
+    {
+      "id": "tier1a_wcf_025_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 200,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF ya asilimia 0.5 inakatwa kutoka mshahara wa mfanyakazi kila mwezi — je, ni sahihi?"
+    },
+    {
+      "id": "tier1a_wcf_026_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 201,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "matibabu"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF inalipa gharama za matibabu zote bila kikomo — je, ni kweli?"
+    },
+    {
+      "id": "tier1a_wcf_027_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 202,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Jinsi ya kusajili biashara na WCF — hatua zipi?"
+    },
+    {
+      "id": "tier1a_wcf_028_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 203,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "fidia",
+        "siku saba",
+        "ajali"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF na OSHA zinahusiana vipi?"
+    },
+    {
+      "id": "tier1a_wcf_029_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 204,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Mfanyakazi aliyeumia anaweza kudai WCF bila kumwambia mwajiri wake — je, ni kweli?"
+    },
+    {
+      "id": "tier1a_wcf_030_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 205,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "WCF inatumika kwa sekta ya kilimo — wakulima wanaolima shamba lao wenyewe wana haki?"
+    },
+    {
+      "id": "tier1a_mix_rc_001_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 286,
+      "subdomain": "gn605a_minimum_wage",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Boss wangu analipa chini ya GN 605A — ninafanya nini?"
+    },
+    {
+      "id": "tier1a_mix_rc_007_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 292,
+      "subdomain": "wcf_compliance",
+      "verdict": "REPOINT_WCF",
+      "matched_terms": [
+        "wcf",
+        "siku saba",
+        "ajali"
+      ],
+      "new_url": "https://www.wcf.go.tz/pages/contributions",
+      "question": "Mfanyakazi wangu alianguka na kuumia dukani — WCF inasaidiaje?"
+    },
+    {
+      "id": "tier1a_mix_rc_009_20260609",
+      "file": "datasets\\tier1a\\cleaned_pairs\\batch_004_cleaned.jsonl",
+      "line": 294,
+      "subdomain": "gn605a_minimum_wage",
+      "verdict": "MARK_UNSOURCED",
+      "matched_terms": [],
+      "new_url": "",
+      "question": "Nina biashara ya usafiri (bodaboda 5) — wapanda bodaboda wangu wana haki ya mshahara wa chini?"
+    }
+  ]
+}

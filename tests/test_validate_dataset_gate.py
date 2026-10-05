@@ -187,3 +187,57 @@ def test_the_real_corpus_currently_passes_and_its_exceptions_are_unchanged():
     assert "schema-shaped: 1715 pairs, 0 errors" in r.stdout, (
         f"the schema-shaped corpus changed size or cleanliness; re-derive before updating this "
         f"number:\n{r.stdout[-1500:]}")
+
+
+# --- the deliberately-unsourced exception, both directions ----------------------------------
+
+def test_an_UNLISTED_pair_with_a_blank_source_BLOCKS(tmp_path):
+    """The 12 blanked GN 605A pairs are excused by ID. An unlisted pair must not be.
+
+    Without this the exception is a hole rather than a worklist: any pair could acquire a blank
+    primary_source_url and pass. The 12 exist because their citation pointed at a host with no
+    DNS record and there is no live destination to repoint to -- a specific, recorded situation,
+    not a general licence to drop provenance.
+    """
+    bad = _good_pair()
+    bad["id"] = "not_on_the_unsourced_list"
+    bad["primary_source_url"] = ""
+    bad["primary_source_name"] = ""
+    r = _run(_plant(tmp_path, "batch_001_cleaned.jsonl", [bad]))
+    assert r.returncode == 1, f"an unlisted pair with a blank source was accepted:\n{r.stdout}"
+    assert "Empty field: primary_source_url" in r.stdout
+
+
+def test_a_LISTED_pair_with_a_blank_source_PASSES(tmp_path):
+    """And the listed ones must pass, or the gate is back to failing on everything -- the state
+    it was rewritten today to escape."""
+    import validate_dataset as v
+    listed = sorted(v.UNSOURCED_PAIR_EXCEPTION)[0]
+    ok = _good_pair()
+    ok["id"] = listed
+    ok["primary_source_url"] = ""
+    ok["primary_source_name"] = ""
+    r = _run(_plant(tmp_path, "batch_001_cleaned.jsonl", [ok]))
+    assert r.returncode == 0, (
+        f"a listed deliberately-unsourced pair was rejected:\n{r.stdout}")
+
+
+def test_the_unsourced_exception_excuses_ONLY_the_source_fields(tmp_path):
+    """A listed pair is excused on provenance, NOT on the rest of the 18-field contract.
+
+    This is the limb that keeps the exception narrow. If being on the list excused any empty
+    field, the 12 would become 12 rows exempt from the schema entirely -- which is how a
+    tracked exception quietly becomes an untracked one.
+    """
+    import validate_dataset as v
+    listed = sorted(v.UNSOURCED_PAIR_EXCEPTION)[0]
+    bad = _good_pair()
+    bad["id"] = listed
+    bad["primary_source_url"] = ""
+    bad["primary_source_name"] = ""
+    bad["verified_by"] = ""          # NOT a source field; must still fail
+    r = _run(_plant(tmp_path, "batch_001_cleaned.jsonl", [bad]))
+    assert r.returncode == 1, (
+        f"a listed pair was excused on a NON-source field:\n{r.stdout}")
+    assert "Empty field: verified_by" in r.stdout
+    assert "Empty field: primary_source_url" not in r.stdout

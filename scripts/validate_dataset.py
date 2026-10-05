@@ -108,39 +108,79 @@ def load_whitelist():
 #     on the approved list in NO form -- so every WCF-sourced pair was failing the pipeline's own
 #     source check.
 #
-#  ⛔ mlywf.go.tz -- STAYS FROZEN. **IT HAS NO DNS RECORD AT ALL**, bare or www:
-#     `getaddrinfo failed` / `curl (6) Could not resolve host`. That is a DNS failure, not an
-#     HTTP one, so switching tools cannot help -- and it is NOT this link misbehaving, which is
-#     the control that makes the finding meaningful: kazi.go.tz (196.192.79.159), wcf.go.tz
-#     (197.149.178.6) and portal.wcf.go.tz (102.223.10.219) all resolved in the same breath on
-#     the same connection. "mlywf" is presumably an earlier incarnation of the labour ministry,
-#     whose current whitelisted domain is kazi.go.tz (CLAUDE.md Section 4).
+#  ✅ mlywf.go.tz -- NOW EMPTY BECAUSE THE 43 PAIRS WERE RE-SOURCED, not because it was excused.
+#     The host has NO DNS RECORD at all, bare or www (`getaddrinfo failed` / `curl (6) Could not
+#     resolve host`) -- a DNS failure, not an HTTP one, so no tool switch helps. And it was not
+#     this link misbehaving, which is the control that made the finding meaningful: kazi.go.tz
+#     (196.192.79.159), wcf.go.tz (197.149.178.6) and portal.wcf.go.tz (102.223.10.219) all
+#     resolved in the same breath on the same connection.
 #
-#     ⚠️ SO THESE 43 PAIRS ARE WORSE OFF THAN "UNWHITELISTED": their primary_source_url points at
-#     a host that does not exist, which means **their provenance cannot be checked by anyone** --
-#     not by us, not by a reviewer, not by the TRA-registered consultant R7's Gate 2 sign-off
-#     depends on. An unverifiable citation is the condition R4 exists to prevent, arriving by
-#     domain death rather than by fabrication. They need re-sourcing to kazi.go.tz (or whatever
-#     now publishes the content), not whitelisting.
-UNWHITELISTED_DOMAIN_EXCEPTION = {
-    "mlywf.go.tz": 43,
+#     Those 43 pairs were worse off than "unwhitelisted": a primary_source_url pointing at a
+#     host that does not exist cannot be checked by anyone -- not by us, not by a reviewer, not
+#     by the TRA-registered consultant R7's Gate 2 depends on. An unverifiable citation is what
+#     R4 exists to prevent, arriving by domain death rather than fabrication.
+#
+#     Resolved 2026-10-05 by scripts/resource_mlywf_pairs.py: 31 repointed to the verified
+#     wcf.go.tz document that carries their subject matter, 12 blanked as genuinely unsourced
+#     (see UNSOURCED_PAIR_EXCEPTION below). This dict is kept, empty, as the regression guard --
+#     any NEW un-whitelisted source domain is unlisted and therefore BLOCKS.
+UNWHITELISTED_DOMAIN_EXCEPTION = {}
+
+# ── DELIBERATELY UNSOURCED PAIRS, FROZEN 2026-10-05 ────────────────────────────────────────
+# The 43 mlywf.go.tz pairs were re-sourced (scripts/resource_mlywf_pairs.py): 31 repointed to
+# the newly-whitelisted wcf.go.tz/pages/contributions, and these 12 had their
+# primary_source_url and primary_source_name BLANKED ON PURPOSE.
+#
+# WHY BLANK RATHER THAN REPOINT: all 43 cited a dead homepage, and for these 12 there is no
+# live destination. They are GN 605A / minimum-wage claims. kazi.go.tz is unusable as a target
+# -- DNS resolves, https returns 000 (connection reset), and http 302s to
+# `https://www.www.kazi.go.tz`, a malformed doubled-www redirect -- and GN 605A's home on
+# TanzLII is behind a genuine Cloudflare Turnstile challenge. Repointing to either would move
+# an unverifiable citation to a different unverifiable citation.
+#
+# **BLANK IS THE HONEST STATE: it makes these pairs COUNT as unverified instead of reading as
+# cited.** A URL that looks like provenance and cannot be fetched is worse than an empty field,
+# because the empty field is visibly unverified while the dead URL silently is not.
+#
+# ⚠️ WHY THEY ARE LISTED HERE RATHER THAN LEFT TO FAIL. Blanking them produces 36 errors
+# (12 pairs x empty url + empty name + empty-domain-not-whitelisted) and exit 1 -- which would
+# put this gate straight back into the always-failing state it was rewritten TODAY to escape,
+# and an always-failing blocking gate gets ignored, which is how it went inert in the first
+# place. Listed by ID so the gate stays USABLE while the 12 stay visible, bounded and unable to
+# grow: a NEW unsourced pair is unlisted and therefore BLOCKS, and the list can only shrink.
+#
+# ⛔ NOT a decision that they may stay unsourced. The way out is re-deriving each claim from a
+# reachable primary source -- GN 605A itself, once TanzLII is obtainable or a copy is supplied.
+UNSOURCED_PAIR_EXCEPTION = {
+    "tier1a_gn605a_007_20260609", "tier1a_gn605a_010_20260609", "tier1a_gn605a_014_20260609",
+    "tier1a_gn605a_016_20260609", "tier1a_gn605a_021_20260609", "tier1a_gn605a_026_20260609",
+    "tier1a_gn605a_033_20260609", "tier1a_gn605a_042_20260609", "tier1a_gn605a_045_20260609",
+    "tier1a_mix_rc_001_20260609", "tier1a_mix_rc_009_20260609", "tier1a_gn605a_023_20260609",
 }
 
 
 def validate_pair(pair, required_fields, allowed_values, whitelisted_domains, filepath, line_num):
     errors = []
 
+    # A listed deliberately-unsourced pair is excused on the SOURCE fields only -- never on any
+    # other field, and never on being absent entirely. The exception exists so blanking a dead
+    # citation does not re-inert the gate; it is not a licence to drop metadata generally.
+    excused = (pair.get("id") in UNSOURCED_PAIR_EXCEPTION
+               and {"primary_source_url", "primary_source_name"})
+
     for field in required_fields:
         if field not in pair:
             errors.append(f"Missing field: {field}")
         elif pair[field] == "" or pair[field] is None:
+            if excused and field in excused:
+                continue
             errors.append(f"Empty field: {field}")
 
     for field, allowed in allowed_values.items():
         if field in pair and pair[field] not in allowed:
             errors.append(f"Invalid value for {field}: '{pair[field]}' not in {allowed}")
 
-    if "primary_source_url" in pair:
+    if pair.get("primary_source_url"):
         domain = _host(pair["primary_source_url"])
         if domain not in whitelisted_domains and domain not in UNWHITELISTED_DOMAIN_EXCEPTION:
             errors.append(
