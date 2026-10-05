@@ -1,0 +1,240 @@
+{
+  "_what": "Propagation sweep for the superseded NSSF fine ceiling (TZS 100,000, R.E.2015 s.72(1)) now that R.E.2023 s.76(1) reads ten million shillings.",
+  "_diagnosis": "R29 mode 2 (OUT-OF-DATE EDITION), not mode 1. fine_limit.source points at a locally cached R.E.2015 PDF in which 100,000 is the correct text. The fact is a faithful transcription of a superseded edition.",
+  "_bound": "Three-axis match within one row: figure AND penalty word AND NSSF word. NEAR = figure AND penalty but no NSSF word -- reported, not counted, since that is where a Swahili paraphrase without the acronym would hide.",
+  "files_read": 245,
+  "unbounded_figure_rows": 67,
+  "totals": {
+    "production_live_index_rows": 2,
+    "candidates_matched": 5,
+    "genuine_propagation": 4,
+    "false_positives_adjudicated_out": 1,
+    "near_other_levy_mostly_correct_osha": 19
+  },
+  "production": [
+    {
+      "kind": "index",
+      "file": "kaggle/rag_facts_text.json",
+      "line": 161,
+      "figure_matched": "one hundred thousand",
+      "subject_in_window": null,
+      "excerpt": "\"fine limit: one hundred thousand TZS\",",
+      "why_production": "shipped RAG index text -- retrievable in production NOW. Subject-less terse row, so the three-axis bound cannot see it; bucketed by FILE."
+    },
+    {
+      "kind": "index",
+      "file": "chike-inference/rag_facts_text.json",
+      "line": 161,
+      "figure_matched": "one hundred thousand",
+      "subject_in_window": null,
+      "excerpt": "\"fine limit: one hundred thousand TZS\",",
+      "why_production": "shipped RAG index text -- retrievable in production NOW. Subject-less terse row, so the three-axis bound cannot see it; bucketed by FILE."
+    }
+  ],
+  "hits": [
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl",
+      "line": 216,
+      "figure_matched": "100,000",
+      "subject_in_window": "nssf",
+      "excerpt": "{\"instruction\": \"NSSF faini ya kuchelewa ni ngapi — na riba pia?\", \"input\": \"\", \"output\": \"NSSF ina adhabu mbili kwa kuchelewa: (1) FAINI ya 5% ya kiasi kisicholipwa kwa kila mwezi wa kuchelewa — inakusanyika kila mwezi. Mfano: NSSF TZS 100,000 haijalipwa kwa miezi 3 → faini = 5% × 100,000 × 3 = TZS 15,000. (2) RIBA ya kuchelewa — inaongezeka pia (kiwango kinabadilika kwa maamuzi ya NSSF). Kwa mie",
+      "verdict": "FALSE POSITIVE -- DO NOT QUARANTINE",
+      "why": "The row is about the 5% LATE-PAYMENT penalty (s.14(3), confirmed correct) and uses TZS 100,000 as an ILLUSTRATIVE UNPAID CONTRIBUTION: '5% x 100,000 x 3 = TZS 15,000'. 100,000 is the base of a worked example, not a fine ceiling. The arithmetic is right and the rate is the statutory one."
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+      "line": 693,
+      "figure_matched": "laki moja",
+      "subject_in_window": "nssf",
+      "excerpt": "{\"instruction\": \"Chike, niliona huko kwenye sheria kuna adhabu ya laki moja kama hatutalipa chochote. Hii laki moja ni kwa kila kosa au kwa mwaka?\", \"input\": \"\", \"output\": \"Kifungu cha sheria kinasema faini ya shilingi elfu mia moja (TZS 100,000) inaweza kutozwa. Thibitisha na NSSF (nssf.go.tz).\", \"system\": \"Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. Kauli mbiu yako ni: Fahamu B",
+      "verdict": "GENUINE PROPAGATION",
+      "why": "'Kifungu cha sheria kinasema faini ya shilingi elfu mia moja (TZS 100,000) inaweza kutozwa' -- asserts the superseded R.E.2015 ceiling as the current one, and attributes it to 'the section of the law' without naming one."
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+      "line": 694,
+      "figure_matched": "laki moja",
+      "subject_in_window": "nssf",
+      "excerpt": "{\"instruction\": \"Hii faini ya laki moja inawahusu nani hasa? Ni lazima kila mfanyabiashara mmoja mmoja alipe hii faini?\", \"input\": \"\", \"output\": \"Faini ya shilingi elfu mia moja (TZS 100,000) hutolewa kwa makosa yanayohusu utii wa sheria. Thibitisha na NSSF (nssf.go.tz).\", \"system\": \"Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yak",
+      "verdict": "GENUINE PROPAGATION",
+      "why": "Same superseded ceiling, framed as applying to compliance offences generally."
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+      "line": 695,
+      "figure_matched": "elfu mia moja",
+      "subject_in_window": "nssf",
+      "excerpt": "{\"instruction\": \"Hii faini ya elfu mia moja inamaanisha nini katika mfumo wa mafao ya NSSF?\", \"input\": \"\", \"output\": \"Faini ya shilingi elfu mia moja (TZS 100,000) ni adhabu inayoweza kutozwa kwa makosa ya kutotii sheria. Thibitisha na NSSF (nssf.go.tz).\", \"system\": \"Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yako. Unajibu maswal",
+      "verdict": "GENUINE PROPAGATION",
+      "why": "Same superseded ceiling, framed inside the NSSF benefits system."
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+      "line": 696,
+      "figure_matched": "laki moja",
+      "subject_in_window": "nssf",
+      "excerpt": "{\"instruction\": \"Nkalipa vipi hiyo faini ya laki moja kama nikikosea?\", \"input\": \"\", \"output\": \"Kama utapata adhabu ya faini ya shilingi elfu mia moja (TZS 100,000), utahitaji kufuata utaratibu rasmi wa malipo utakaoelekezwa na NSSF. Thibitisha na NSSF (nssf.go.tz).\", \"system\": \"Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yako. Un",
+      "verdict": "GENUINE PROPAGATION",
+      "why": "Same superseded ceiling, with payment instructions built on top of it."
+    }
+  ],
+  "near": [
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl",
+      "line": 65,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "{\"instruction\": \"Adhabu ya kushindwa kusajili mahali pa kazi na OSHA ni nini?\", \"input\": \"\", \"output\": \"Kwa kushindwa kusajili mahali pa kazi na OSHA: faini ya TZS 1,000,000 hadi TZS 5,000,000 AU kifungo cha hadi miezi 12 gerezani AU vyote viwili. Kwa makosa yanayoendelea (continuing offence) — kama vile kubaki bila usajilishaji — adhabu ya ziada ya TZS 100,000 kwa kila siku inayoendelea inaweza k"
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl",
+      "line": 73,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "{\"instruction\": \"Adhabu ya kuendelea kufanya kazi bila usajilishaji wa OSHA kwa miezi 3 itakuwa ngapi?\", \"input\": \"\", \"output\": \"Adhabu ya msingi ni TZS 1,000,000 hadi TZS 5,000,000 — hii ni kwa kosa la awali. Kwa kosa linaloendelea (continuing offence), adhabu ya ziada ya TZS 100,000 kwa kila siku inayoendelea inaweza kutolewa. Kwa miezi 3 ya kukiuka (siku 90 za kazi), adhabu ya ziada inaweza kuw"
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+      "line": 52,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "{\"instruction\": \"Adhabu ya biashara inayokosa kusajili mahali pa kazi na OSHA ni nini?\", \"input\": \"\", \"output\": \"Adhabu ya kushindwa kusajili mahali pa kazi na OSHA ni: faini ya TZS milioni 1 hadi TZS milioni 5 AU kifungo cha hadi miezi 12 AU vyote viwili. Kosa linaloendelea linaongeza faini ya TZS 100,000 kwa kila siku ya kosa. Thibitisha adhabu za sasa na OSHA (osha.go.tz) kwani zinaweza kubadil"
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+      "line": 58,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "{\"instruction\": \"Biashara yangu haikufanya ukaguzi wa OSHA kwa miaka 3 -- ninafanya nini sasa?\", \"input\": \"\", \"output\": \"Wasiliana na OSHA mara moja (osha.go.tz au +255-22-2760548) ili kupanga ukaguzi na kufanya upya wa leseni yako. Kutofanya ukaguzi kwa muda mrefu kunaweza kusababisha adhabu za faini ya TZS milioni 1-5 pamoja na faini ya TZS 100,000 kwa kila siku ya kosa. Usisubiri -- wasiliana n"
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+      "line": 407,
+      "figure_matched": "100,000",
+      "subject_in_window": "tra",
+      "excerpt": "{\"instruction\": \"Kama mfanyabiashara niliyefanya makosa ya kutumia EFD vibaya, na TRA wakagundua nilidaiwa kodi ya laki tano (500,000) na sikulipa, nitatozwa shilingi ngapi jumla?\", \"input\": \"\", \"output\": \"Kodi uliyoikwepa ni shilingi 500,000. Adhabu yake ni 20% ya kodi hiyo, hivyo utalipa 100,000 kama adhabu. Jumla utakayolipa ni kodi yako ya 500,000 pamoja na adhabu ya 100,000, na kufanya jumla "
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+      "line": 990,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "{\"instruction\": \"Mbona OSHA wanatoza faini kubwa hivyo? Je, kuna kiwango cha chini au cha juu cha faini nikikosea sheria zao?\", \"input\": \"\", \"output\": \"Kisheria, faini za OSHA zinaweza kuwa kati ya TZS 1,000,000 hadi TZS 5,000,000, au kifungo cha hadi miezi 12, au vyote viwili. Pia, unaweza kuongezewa faini ya TZS 100,000 kwa kila siku ambapo kosa linaendelea. Thibitisha na OSHA (osha.go.tz).\", \"s"
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+      "line": 992,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "{\"instruction\": \"Ni TZS ngapi kwa siku kama kesi ya OSHA itaendelea kwa muda mrefu?\", \"input\": \"\", \"output\": \"Kama kosa la OSHA litaendelea, unatozwa faini ya TZS 100,000 kwa kila siku kosa linaendelea. Thibitisha na OSHA (osha.go.tz).\", \"system\": \"Jina lako ni Chike, mshauri wa biashara kutoka Africa Giants. Kauli mbiu yako ni: Fahamu Biashara Yako, Maarifa Yako. Unajibu maswali kuhusu biashara, "
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+      "line": 250,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "{\"instruction\": \"Nisipojisajili au kupata leseni ya OSHA, adhabu ni ipi?\", \"input\": \"\", \"output\": \"Adhabu ya kutojisajili au kutopata leseni ya OSHA ni faini ya TZS 1,000,000 hadi TZS 5,000,000 AU kifungo cha hadi miezi 12 AU vyote viwili, na kwa kosa linaloendelea ni TZS 100,000 kwa kila siku. Hii ni chini ya Sheria ya Afya na Usalama Kazini Na. 5 ya mwaka 2003. Thibitisha na OSHA (osha.go.tz).\","
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+      "line": 466,
+      "figure_matched": "100,000",
+      "subject_in_window": "usalama kazini",
+      "excerpt": "{\"instruction\": \"Nikiendesha biashara bila cheti cha OSHA, adhabu yake ni ya kiwango gani?\", \"input\": \"\", \"output\": \"Adhabu ni faini ya TZS 1,000,000 hadi TZS 5,000,000 AU kifungo cha hadi miezi 12 AU vyote viwili, chini ya Sheria ya Afya na Usalama Kazini Na. 5 ya 2003. Kwa kosa linaloendelea huongezwa TZS 100,000 kwa kila siku. Thibitisha na OSHA (osha.go.tz).\", \"system\": \"Jina lako ni Chike, ms"
+    },
+    {
+      "kind": "training",
+      "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+      "line": 469,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "{\"instruction\": \"Adhabu ya TZS 100,000 kwa siku ya OSHA inatumika lini?\", \"input\": \"\", \"output\": \"Adhabu ya TZS 100,000 kwa kila siku ni kwa kosa linaloendelea (continuing offence) — yaani unapoendelea kutozingatia baada ya kupatikana na hatia, huongezwa juu ya faini ya msingi ya TZS 1,000,000 hadi 5,000,000. Thibitisha na OSHA (osha.go.tz).\", \"system\": \"Jina lako ni Chike, mshauri wa biashara kut"
+    },
+    {
+      "kind": "gold",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "line": 32,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "{\"id\": \"ext_32\", \"question\": \"Bado sijasajili kiwanda changu OSHA. Nikikamatwa, adhabu ni nini?\", \"subdomain\": \"osha\", \"intent_expected\": \"fact\", \"expected_behavior\": \"Fine TZS 1,000,000 to 5,000,000, or imprisonment up to 12 months, or both; continuing offence adds TZS 100,000 per day.\", \"register\": \"business_market\"}"
+    },
+    {
+      "kind": "gold",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 183,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "{\"id\": \"eval_183\", \"subdomain\": \"osha_registration\", \"question_sw\": \"Mwajiri asiyesajili OSHA anaweza kufungiwa biashara yake?\", \"question_en\": \"Can an employer who fails to register with OSHA face closure of their premises?\", \"correct_answer_sw\": \"Hapana — OSHA haina mamlaka ya moja kwa moja ya kufunga eneo la kazi. Adhabu ni faini TZS milioni 1-5, kifungo, au faini ya TZS 100,000 kwa kila siku i"
+    },
+    {
+      "kind": "gold",
+      "file": "eval/grounding/bucket_e_reach_probes_014.jsonl",
+      "line": 14,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "{\"id\": \"ext_32\", \"question\": \"Bado sijasajili kiwanda changu OSHA. Nikikamatwa, adhabu ni nini?\", \"needle\": \"Continuing offence: additional TZS 100,000 per day\", \"index_row_at_authoring\": 75, \"needs\": \"Fine TZS 1,000,000-5,000,000, up to 12 months, and the TZS 100,000/day continuing charge.\", \"live_reply_defect\": \"Said 'faini ya hadi TZS 1,000,000', treating the statutory MINIMUM as the maximum, a"
+    },
+    {
+      "kind": "index",
+      "file": "scripts/gen_batch012_remaining.py",
+      "line": 465,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "\"Kwa kushindwa kusajili mahali pa kazi na OSHA: faini ya TZS 1,000,000 hadi TZS 5,000,000 AU kifungo cha hadi miezi 12 gerezani AU vyote viwili. Kwa makosa yanayoendelea (continuing offence) — kama vile kubaki bila usajilishaji — adhabu ya ziada ya TZS 100,000 kwa kila siku inayoendelea inaweza kutolewa. Adhabu hizi zinatoka OHS Act No. 5 of 2003.\"),"
+    },
+    {
+      "kind": "index",
+      "file": "scripts/gen_batch012_remaining.py",
+      "line": 489,
+      "figure_matched": "100,000",
+      "subject_in_window": null,
+      "excerpt": "\"Adhabu ya msingi ni TZS 1,000,000 hadi TZS 5,000,000 — hii ni kwa kosa la awali. Kwa kosa linaloendelea (continuing offence), adhabu ya ziada ya TZS 100,000 kwa kila siku inayoendelea inaweza kutolewa. Kwa miezi 3 ya kukiuka (siku 90 za kazi), adhabu ya ziada inaweza kuwa hadi TZS 9,000,000 — juu ya adhabu ya msingi. Jumla inaweza kufikia zaidi ya TZS 14,000,000. Sajili na OSHA haraka (osha.go.tz"
+    },
+    {
+      "kind": "index",
+      "file": "scripts/locked_facts.json",
+      "line": 1435,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "\"fact\": \"Failure to register or obtain OSHA compliance licence: fine TZS 1,000,000 to TZS 5,000,000 OR imprisonment up to 12 months OR both. Continuing offence: additional TZS 100,000 per day. Source: OHS Act No. 5 of 2003.\","
+    },
+    {
+      "kind": "index",
+      "file": "scripts/locked_facts.json",
+      "line": 1436,
+      "figure_matched": "100,000",
+      "subject_in_window": null,
+      "excerpt": "\"correct_value\": \"TZS 1M–5M fine OR up to 12 months OR both; TZS 100,000/day continuing offence\","
+    },
+    {
+      "kind": "index",
+      "file": "kaggle/rag_facts_text.json",
+      "line": 78,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "\"OSHA penalties: Failure to register or obtain OSHA compliance licence: fine TZS 1,000,000 to TZS 5,000,000 OR imprisonment up to 12 months OR both. Continuing offence: additional TZS 100,000 per day. Source: OHS Act No. 5 of 2003.\","
+    },
+    {
+      "kind": "index",
+      "file": "chike-inference/rag_facts_text.json",
+      "line": 78,
+      "figure_matched": "100,000",
+      "subject_in_window": "osha",
+      "excerpt": "\"OSHA penalties: Failure to register or obtain OSHA compliance licence: fine TZS 1,000,000 to TZS 5,000,000 OR imprisonment up to 12 months OR both. Continuing offence: additional TZS 100,000 per day. Source: OHS Act No. 5 of 2003.\","
+    }
+  ]
+}
