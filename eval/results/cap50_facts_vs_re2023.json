@@ -1,0 +1,231 @@
+{
+  "_what": "All 21 Cap.50 facts checked against the NSSF Act R.E.2023, read directly.",
+  "_mode": "REPORT ONLY -- no fact edited. Disagreements reported for decision first.",
+  "act": {
+    "edition": "Cap.50 R.E. 2023 (OAG 2025 compilation)",
+    "routes": [
+      "https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf",
+      "https://oagmis.oag.go.tz/portal/acts/revised/155/download"
+    ],
+    "bytes": 773203,
+    "pages": 50,
+    "sha256_both_routes": "2a820e67ed109cd36059",
+    "same_file": true,
+    "rejected_sources": "kazi.go.tz copies (R.E.2015 and R.E.2018) and the TanzLII PDF that labels itself not the latest version -- the superseded-edition trap",
+    "renumbering_confirmed": {
+      "s.25": "[s. 23]",
+      "s.47": "[s. 45]",
+      "s.50": "[s. 48]",
+      "s.51": "[s. 49]",
+      "s.23": "[s. 21]"
+    },
+    "s5A_exists_in_re2023": false
+  },
+  "anchor_strings_verified_present": 14,
+  "totals": {
+    "VALUE_CONFIRMED": 17,
+    "WRONG_VALUE": 1,
+    "NOT_SETTLEABLE": 2,
+    "HEDGE_RESOLVABLE": 1
+  },
+  "citation_issues": {
+    "stale_edition_and_phantom_section": 3,
+    "no_source_at_all": 13,
+    "portal_only_and_that_portal_route_is_down": 1,
+    "stale_edition": 1,
+    "none": 1,
+    "portal_only": 1,
+    "unverifiable_hedge": 1
+  },
+  "findings": [
+    {
+      "key": "nssf_employer_rate",
+      "claim": "10% employer share",
+      "provision": "First Schedule, item (a) one month",
+      "verbatim": "Employer's share deductible from wages by Employer: Ten cents for every complete shilling of wages",
+      "verdict": "VALUE CONFIRMED",
+      "citation_issue": "stale_edition_and_phantom_section",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "nssf_total_rate",
+      "claim": "20% total (10+10)",
+      "provision": "First Schedule, item (a) one month",
+      "verbatim": "Statutory Contributions for each employee: Twenty cents for every complete shilling of wages",
+      "verdict": "VALUE CONFIRMED",
+      "citation_issue": "stale_edition_and_phantom_section",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "contribution_rate_emplyees",
+      "claim": "10% employee share",
+      "provision": "First Schedule read with s.12(1)",
+      "verbatim": "a contribution that consist of the employer's and employee's share at the rate stipulated in the First Schedule (total 20%, employer limb 10%)",
+      "verdict": "VALUE CONFIRMED (by subtraction, 20% total less the 10% employer limb)",
+      "citation_issue": "no_source_at_all",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "nssf_calculation_example",
+      "claim": "12 employees at 600,000 = TZS 1,440,000 total, not 120,000",
+      "provision": "First Schedule + s.12(1)",
+      "verbatim": "20% of 12 x 600,000 = 1,440,000 (arithmetic on the confirmed statutory rate)",
+      "verdict": "VALUE CONFIRMED",
+      "citation_issue": "stale_edition_and_phantom_section",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "nssf_penalty",
+      "claim": "5% per month",
+      "provision": "s.14(3)",
+      "verbatim": "a sum equal to five per centum of the amount unpaid shall be added as penalty for each month or a part of a month after the date when payment should have been made",
+      "verdict": "VALUE CONFIRMED -- UPGRADE AVAILABLE: currently cited only to the nssf.go.tz/pages/payment-of-contributions portal page, which returns HTTP 500. Now sourceable at statute tier.",
+      "citation_issue": "portal_only_and_that_portal_route_is_down",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "unpaid_contribution_penalty_rate",
+      "claim": "five %",
+      "provision": "s.14(3)",
+      "verbatim": "a sum equal to five per centum of the amount unpaid",
+      "verdict": "VALUE CONFIRMED",
+      "citation_issue": "no_source_at_all",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "unpaid_contribution_penalty_frequency",
+      "claim": "each month or a part of a month",
+      "provision": "s.14(3)",
+      "verbatim": "for each month or a part of a month after the date when payment should have been made",
+      "verdict": "VALUE CONFIRMED -- verbatim, including the 'part of a month' limb",
+      "citation_issue": "no_source_at_all",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "nssf_payment_deadline",
+      "claim": "within one month after the payroll month ends; 5%/month if late",
+      "provision": "s.14(1) and s.14(3)",
+      "verbatim": "within one month after the end of the month in respect of which the contributions are due and payable",
+      "verdict": "VALUE CONFIRMED",
+      "citation_issue": "stale_edition",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "nssf_retirement_age",
+      "claim": "60 pensionable; 55 = early retirement within 5 years of pensionable age",
+      "provision": "s.2 (interpretation), s.25(c), s.29(1)",
+      "verbatim": "\"pensionable age\" means the age of sixty years | 25.(c) who has attained the age of fifty-five or above but before attaining pensionable age | 29.-(1) An insured person who is within five retirement years of the pensionable age and has paid contributions for at least 180 months, may claim early retirement",
+      "verdict": "VALUE CONFIRMED -- and this is the ONE Cap.50 fact already citing R.E.2023",
+      "citation_issue": "none",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "pensionable_age",
+      "claim": "60 years",
+      "provision": "s.2 (interpretation)",
+      "verbatim": "\"pensionable age\" means the age of sixty years",
+      "verdict": "VALUE CONFIRMED",
+      "citation_issue": "no_source_at_all",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "minimum_monthly_contributions_for_retirement_pension",
+      "claim": "180",
+      "provision": "s.25(b)",
+      "verbatim": "in respect of whom not less than 180 monthly contributions have been paid",
+      "verdict": "VALUE CONFIRMED",
+      "citation_issue": "no_source_at_all",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "minimum_monthly_contributions_maternity_benefit",
+      "claim": "36",
+      "provision": "s.46(a)",
+      "verbatim": "to an insured person who has made at least thirty-six monthly contributions of which twelve contributions are made in the th[irty-six months...]",
+      "verdict": "VALUE CONFIRMED -- with an ADDITIONAL statutory condition the fact omits: twelve of the thirty-six must fall in the recent window. Not a contradiction; an incompleteness worth recording.",
+      "citation_issue": "no_source_at_all",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "duration_of_maternity_cash_benefit",
+      "claim": "12 weeks",
+      "provision": "s.47(a)",
+      "verbatim": "cash benefit at the rate of 100 per centum of the average daily earnings for a period of twelve weeks",
+      "verdict": "VALUE CONFIRMED",
+      "citation_issue": "no_source_at_all",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "maternity_cash_benefit_rate",
+      "claim": "100 %",
+      "provision": "s.47(a)",
+      "verbatim": "100 per centum of the average DAILY earnings",
+      "verdict": "VALUE CONFIRMED -- note the base is average DAILY earnings, which the bare '100%' does not convey",
+      "citation_issue": "no_source_at_all",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "employer_notification_deadline_before_retirement",
+      "claim": "6 months",
+      "provision": "s.51(1)",
+      "verbatim": "An employer shall, within six months before the date of retirement of his employee, notify the Fund in writing about the date of retirement",
+      "verdict": "VALUE CONFIRMED",
+      "citation_issue": "no_source_at_all",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "fund_payment_deadline_after_retirement_notification",
+      "claim": "60 days",
+      "provision": "s.51(2)",
+      "verbatim": "the Fund shall, within sixty days following the date of retirement, pay to the member the due retirement pension benefits",
+      "verdict": "VALUE CONFIRMED -- and s.51(3) adds a limb worth having: if the Fund misses that deadline through no fault of the member it owes the principal plus a penalty of fifteen percent per annum.",
+      "citation_issue": "no_source_at_all",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "imprisonment_term_limit",
+      "claim": "two years",
+      "provision": "s.76(1) closing words",
+      "verbatim": "or to imprisonment for a term not exceeding two years or to both",
+      "verdict": "VALUE CONFIRMED",
+      "citation_issue": "no_source_at_all",
+      "bucket": "VALUE_CONFIRMED"
+    },
+    {
+      "key": "fine_limit",
+      "claim": "one hundred thousand TZS",
+      "provision": "s.76(1) closing words",
+      "verbatim": "commits an offence and on conviction shall be liable to a fine not exceeding TEN MILLION SHILLINGS or to imprisonment for a term not exceeding two years or to both",
+      "verdict": "🔴 WRONG VALUE -- the Act says TEN MILLION shillings, the fact says one hundred thousand. A 100x understatement of the maximum fine, on a fact that had primary_source: None and so was never checked by anyone.",
+      "citation_issue": "no_source_at_all",
+      "bucket": "WRONG_VALUE"
+    },
+    {
+      "key": "minimum_contribution_months_health_insurance",
+      "claim": "3 months",
+      "provision": "NOT IN Cap.50",
+      "verbatim": "s.23(1)(g) lists 'health benefit' as a class of benefit; NO contribution-month condition for it appears anywhere in the Act body",
+      "verdict": "⚠️ UNVERIFIABLE FROM Cap.50 -- searched every occurrence of 'health' in the enacting body; the 3-month qualifying period is not there. It is presumably in regulations or the Social Security Act. NOT contradicted, NOT confirmed.",
+      "citation_issue": "no_source_at_all",
+      "bucket": "NOT_SETTLEABLE"
+    },
+    {
+      "key": "NSSF_split_triggers",
+      "claim": "three valid splits: 10+10, 15+5, 20+0",
+      "provision": "s.12(1)-(3)",
+      "verbatim": "12.-(2) The employer may opt to contribute a greater rate than the amount stipulated in subsection (1). (3) Where the employer agrees to contribute at a greater rate or the whole contribution rate, such option shall not apply to a member whose contribution rate ... does not exceed fifty percent",
+      "verdict": "⚠️ CONCEPT CONFIRMED, ENUMERATION NOT. The Act establishes the 20% total and that an employer MAY opt to pay a greater share up to the whole, which makes 15+5 and 20+0 lawful. It does not enumerate those three splits -- that framing is portal-sourced. Defensible, but the fact should not imply the statute lists them.",
+      "citation_issue": "portal_only",
+      "bucket": "NOT_SETTLEABLE"
+    },
+    {
+      "key": "nssf_employer_registration_deadline",
+      "claim": "register at or shortly after commencement of business -- verify at nssf.go.tz",
+      "provision": "s.11(1)-(2)",
+      "verbatim": "every contributing employer shall, unless such employer has been registered under the existing Fund, within one month, register under this section in the prescribed manner | (2) The period of one month ... shall, in every case, begin upon the commencement of this Act or the date when the person concerned becomes a contributing employer",
+      "verdict": "⭐ HEDGE NOW RESOLVABLE. The fact currently says 'verify deadline at nssf.go.tz' and is marked unverifiable. The Act gives a precise answer: WITHIN ONE MONTH of becoming a contributing employer. This is an upgrade from a hedge to a statute-grounded value, not a correction of a wrong one.",
+      "citation_issue": "unverifiable_hedge",
+      "bucket": "HEDGE_RESOLVABLE"
+    }
+  ]
+}
