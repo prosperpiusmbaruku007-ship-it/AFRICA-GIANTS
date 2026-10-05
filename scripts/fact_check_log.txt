@@ -973,3 +973,10 @@ Total: 10 | Flagged: 4
 [2026-09-26T00:38:30.736816] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
 Total: 222 | Flagged: 1
   FLAG [tier1a_tax_disp_001_20260603] objection_deposit_requirement: pay.*within 15 days.*objection
+
+[2026-10-05T13:44:42.121706] Checked C:\Users\jhjh\AppData\Local\Temp\tmpzlvjumbe\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-10-05T13:44:42.315184] Checked C:\Users\jhjh\AppData\Local\Temp\tmpzlvjumbe\lf_ok.jsonl
+Total: 1 | Flagged: 0

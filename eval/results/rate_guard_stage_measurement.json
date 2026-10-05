@@ -1,0 +1,278 @@
+{
+  "_what": "Does moving D-FIDELITY-6 from the model body to the rendered reply change any verdict, and if so why?",
+  "_population": {
+    "rows": "C:\\Users\\jhjh\\AFRICA-GIANTS\\eval\\fidelity\\rate_guard_probes.jsonl",
+    "why_this_population": "the committed rate-guard probes are the only fixture whose rows were authored with a KNOWN correct/incorrect verdict per body, so a verdict move can be judged rather than merely counted. 12 of 16 are deliberately CORRECT bodies, which is the half that exposed both bad attribution rules on the founding R17 case.",
+    "workings": "REAL ComputationResults from the production compute functions (compute_sdl/wcf/nssf/paye), not hand-written strings"
+  },
+  "totals": {
+    "probes": 16,
+    "flagged_pre_render": 4,
+    "flagged_post_render": 6,
+    "verdicts_moved": 2,
+    "working_alone_flags": 0,
+    "rows_with_seam_created_attributions": 2,
+    "new_false_positives_on_correct_bodies": 2
+  },
+  "verdicts_moved": [
+    {
+      "id": "rg_09",
+      "expected": "clean",
+      "levy_paired": "sdl",
+      "pre_render_flag": false,
+      "post_render_flag": true,
+      "working_alone_flag": false,
+      "verdict_moved": true,
+      "attributions_created_by_the_seam": [
+        "('sdl', Decimal('3'))",
+        "('sdl', Decimal('6'))"
+      ],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "VAT withholding kwa huduma ni asilimia 6, na kwa bidhaa ni asilimia 3."
+    },
+    {
+      "id": "rg_10",
+      "expected": "clean",
+      "levy_paired": "sdl",
+      "pre_render_flag": false,
+      "post_render_flag": true,
+      "working_alone_flag": false,
+      "verdict_moved": true,
+      "attributions_created_by_the_seam": [
+        "('sdl', Decimal('18'))"
+      ],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "Kiwango cha kawaida cha VAT ni asilimia 18. Hakijabadilika tangu 2015."
+    }
+  ],
+  "seam_rows": [
+    {
+      "id": "rg_09",
+      "expected": "clean",
+      "levy_paired": "sdl",
+      "pre_render_flag": false,
+      "post_render_flag": true,
+      "working_alone_flag": false,
+      "verdict_moved": true,
+      "attributions_created_by_the_seam": [
+        "('sdl', Decimal('3'))",
+        "('sdl', Decimal('6'))"
+      ],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "VAT withholding kwa huduma ni asilimia 6, na kwa bidhaa ni asilimia 3."
+    },
+    {
+      "id": "rg_10",
+      "expected": "clean",
+      "levy_paired": "sdl",
+      "pre_render_flag": false,
+      "post_render_flag": true,
+      "working_alone_flag": false,
+      "verdict_moved": true,
+      "attributions_created_by_the_seam": [
+        "('sdl', Decimal('18'))"
+      ],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "Kiwango cha kawaida cha VAT ni asilimia 18. Hakijabadilika tangu 2015."
+    }
+  ],
+  "rows": [
+    {
+      "id": "rg_01",
+      "expected": "clean",
+      "levy_paired": "sdl",
+      "pre_render_flag": false,
+      "post_render_flag": false,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "SDL ni asilimia 3.5 ya jumla ya mishahara, NSSF ni asilimia 20, na WCF ni asilimia 0.5."
+    },
+    {
+      "id": "rg_02",
+      "expected": "clean",
+      "levy_paired": "sdl",
+      "pre_render_flag": false,
+      "post_render_flag": false,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "Kwa mishahara ya TZS 1,000,000: SDL = 3.5% = TZS 35,000; NSSF = 20% = TZS 200,000; WCF = 0.5% = TZS 5,000."
+    },
+    {
+      "id": "rg_03",
+      "expected": "clean",
+      "levy_paired": "wcf",
+      "pre_render_flag": false,
+      "post_render_flag": false,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "WCF ni asilimia 0.5 ya mishahara, si asilimia 10 kama NSSF."
+    },
+    {
+      "id": "rg_04",
+      "expected": "clean",
+      "levy_paired": "sdl",
+      "pre_render_flag": false,
+      "post_render_flag": false,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "Unalipa asilimia 3.5 kwa ajili ya mafunzo."
+    },
+    {
+      "id": "rg_05",
+      "expected": "clean",
+      "levy_paired": "nssf",
+      "pre_render_flag": false,
+      "post_render_flag": false,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "Asilimia 20 ya mshahara huenda NSSF; kati ya hiyo asilimia 10 ni ya mwajiri na asilimia 10 ya mfanyakazi."
+    },
+    {
+      "id": "rg_06",
+      "expected": "clean",
+      "levy_paired": "nssf",
+      "pre_render_flag": false,
+      "post_render_flag": false,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "Mwajiri anaweza kuchagua kulipa asilimia 15 na mfanyakazi asilimia 5 kwa NSSF."
+    },
+    {
+      "id": "rg_07",
+      "expected": "clean",
+      "levy_paired": "paye",
+      "pre_render_flag": false,
+      "post_render_flag": false,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "PAYE kwa kipato cha TZS 300,000 ni asilimia 8 ya kiasi kinachozidi TZS 270,000."
+    },
+    {
+      "id": "rg_08",
+      "expected": "clean",
+      "levy_paired": "paye",
+      "pre_render_flag": false,
+      "post_render_flag": false,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "Mfanyakazi asiye raia analipa PAYE ya asilimia 15 — kiwango kimoja, si mabano."
+    },
+    {
+      "id": "rg_09",
+      "expected": "clean",
+      "levy_paired": "sdl",
+      "pre_render_flag": false,
+      "post_render_flag": true,
+      "working_alone_flag": false,
+      "verdict_moved": true,
+      "attributions_created_by_the_seam": [
+        "('sdl', Decimal('3'))",
+        "('sdl', Decimal('6'))"
+      ],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "VAT withholding kwa huduma ni asilimia 6, na kwa bidhaa ni asilimia 3."
+    },
+    {
+      "id": "rg_10",
+      "expected": "clean",
+      "levy_paired": "sdl",
+      "pre_render_flag": false,
+      "post_render_flag": true,
+      "working_alone_flag": false,
+      "verdict_moved": true,
+      "attributions_created_by_the_seam": [
+        "('sdl', Decimal('18'))"
+      ],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "Kiwango cha kawaida cha VAT ni asilimia 18. Hakijabadilika tangu 2015."
+    },
+    {
+      "id": "rg_11",
+      "expected": "clean",
+      "levy_paired": "sdl",
+      "pre_render_flag": false,
+      "post_render_flag": false,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "Kwa kuwa una wafanyakazi 9, SDL haihusiki — unalipa asilimia 0."
+    },
+    {
+      "id": "rg_12",
+      "expected": "clean",
+      "levy_paired": "wcf",
+      "pre_render_flag": false,
+      "post_render_flag": false,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "OSHA hukagua mahali pa kazi; WCF hulipa fidia, na mwajiri huchangia asilimia 0.5 ya mishahara."
+    },
+    {
+      "id": "rg_13",
+      "expected": "flag",
+      "levy_paired": "wcf",
+      "pre_render_flag": true,
+      "post_render_flag": true,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "Unatakiwa kulipa asilimia 10 ya jumla ya mishahara kwa ajili ya WCF."
+    },
+    {
+      "id": "rg_14",
+      "expected": "flag",
+      "levy_paired": "sdl",
+      "pre_render_flag": true,
+      "post_render_flag": true,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "Unatakiwa kulipa asilimia 0.5 kwa ajili ya mafunzo."
+    },
+    {
+      "id": "rg_15",
+      "expected": "flag",
+      "levy_paired": "sdl",
+      "pre_render_flag": true,
+      "post_render_flag": true,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "SDL ni asilimia 4 ya mishahara."
+    },
+    {
+      "id": "rg_16",
+      "expected": "flag",
+      "levy_paired": "nssf",
+      "pre_render_flag": true,
+      "post_render_flag": true,
+      "working_alone_flag": false,
+      "verdict_moved": false,
+      "attributions_created_by_the_seam": [],
+      "attributions_destroyed_by_the_seam": [],
+      "body": "NSSF ni asilimia 30 ya mshahara ghafi."
+    }
+  ]
+}

@@ -449,6 +449,40 @@ def _fidelity_rules(fidelity):
         record('D-FIDELITY-6', 'runtime', 'a WRONG statutory rate attributed to a levy',
                'ERROR', '', '', f'{type(exc).__name__}: {exc}')
 
+    # D-FIDELITY-6, STAGE — the fifth R26 shape, and the one no FIRES/INERT/OVERBROAD verdict
+    # can express: a control that is correct, wired AND firing, but reading text that is not
+    # what ships. Production checks `cleaned` (the model body); the user receives
+    # `body + "\n" + working`. Raised 2026-09-29, SETTLED 2026-10-05 BY MEASUREMENT: moving the
+    # stage to the rendered reply moves 2 of 16 committed probes, BOTH false positives on
+    # CORRECT bodies, and catches nothing new -- the +/-60-char window spans the seam, so the
+    # body's trailing rate attaches to the levy the working names.
+    # STAGE DELIBERATELY KEPT. Harness: eval/fidelity/measure_rate_guard_stage.py; artifact:
+    # eval/results/rate_guard_stage_measurement.json; pinned by tests/test_rate_guard.py.
+    try:
+        from decimal import Decimal as _D
+
+        from chike.rules_engine.sdl import compute_sdl as _sdl
+        _correct_vat = 'Kiwango cha kawaida cha VAT ni asilimia 18. Hakijabadilika tangu 2015.'
+        _rendered = f"{_correct_vat}\n{_sdl(_D('15000000'), 25).working}"
+        _pre = fidelity.body_states_wrong_levy_rate(_correct_vat)
+        _post = fidelity.body_states_wrong_levy_rate(_rendered)
+        # The "control" here is the DECISION to check the body. It is working iff the body stage
+        # is clean on a correct body AND the rendered stage is not -- i.e. iff the seam hazard is
+        # real and the current stage avoids it.
+        record('D-FIDELITY-6-STAGE', 'runtime',
+               'the stage choice itself: body-only avoids a seam false positive the rendered '
+               'reply would produce',
+               'FIRES' if (not _pre and _post) else 'INERT' if not _post else 'OVERBROAD',
+               'the correct VAT body CONCATENATED with an SDL working (what moving the stage '
+               'would check)',
+               'the same correct VAT body alone (what production checks)',
+               f'body stage flags correct body: {_pre} (must be False); rendered stage flags '
+               f'it: {_post} (True = the seam hazard is real and the current stage is right). '
+               f'Measured 2 of 16 probes move, both false positives, 0 new catches.')
+    except Exception as exc:
+        record('D-FIDELITY-6-STAGE', 'runtime', 'the stage choice itself',
+               'ERROR', '', '', f'{type(exc).__name__}: {exc}')
+
     # D-FIDELITY-7 — built, but is anything calling it?
     try:
         p = fidelity.body_states_wrong_threshold(
