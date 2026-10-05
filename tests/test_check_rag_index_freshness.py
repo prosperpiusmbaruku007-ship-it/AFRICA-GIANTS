@@ -107,7 +107,7 @@ def test_missing_git_history_is_reported_distinctly_from_staleness():
     assert report["missing_inputs"] == ["scripts/locked_facts.json"]
 
 
-def test_against_live_repo_state_is_stale_pending_the_ext_31_regen():
+def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     """Sanity check against the ACTUAL repo, not a synthetic graph. SIXTH flip, same
     mechanism as all five before it (2026-09-03 ok=False->True after efe5956; ok=True->False
     after 951fb67 changed facts with no matching regen; ok=False->True after 0be8662 shipped
@@ -133,17 +133,35 @@ def test_against_live_repo_state_is_stale_pending_the_ext_31_regen():
     the deployed artifact or is still sitting at the source -- the exact failure mode this
     check exists for, after five weeks of a stale citation hid behind three green checks.
 
-    FLIPS BACK TO `assert ok is True` when the founder runs kaggle/regenerate_rag_e5.py and
-    the index is dual-committed (R15 steps 1-4). Until then STALE is the honest state and
-    this test asserting it is the only thing tracking that the rewrite is not live.
+    ⭐ SEVENTH FLIP, 2026-10-05, AND THIS IS THE ONE THE CHECK WAS BUILT FOR. The R15 regen
+    ran (184 facts, (184, 768), 0 self-retrieval failures, all 36 critical queries, every
+    anchor unique) and the index was dual-committed in 7d46df1, which carries ext_31's
+    rewrite AND the Part XII citation reversal AND rent_wht_rate.
+
+    The Part XII row is the reason this matters: production served the REVERSED citation from
+    2026-08-31 to 2026-10-05 -- five weeks -- and for most of that time this very check was
+    the only thing asserting the index did not reflect its own sources.
+
+    AND THE FLIP FIRED ON THE PRE-PUSH HOOK AGAIN, which is worth recording precisely because
+    it looks like noise: `pytest tests/` passed locally BEFORE the ship commit and failed on
+    push. Not a flake -- the freshness verdict is derived from `git log` of the artifacts'
+    last-touch commit, so while the new index sat uncommitted in the working tree the repo
+    still read STALE and this test still passed. It could only flip once the commit existed.
+    A test whose state depends on committed history must be exercised by a hook that runs at
+    push time; a pre-commit run cannot see it.
+
+    FLIPS BACK TO `assert ok is False` the next time a fact or the embedding builder changes
+    without a matching regen -- which is the normal staging state, not an error.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is False, (
-        f"the live repo reports FRESH: {report}. If the ext_31 regen has now shipped, that "
-        "flip IS the signal -- update this test to assert ok is True and rename it, and "
-        "confirm live that ext_31 reaches and the reply no longer says 'afisa maalum'.")
-    assert "scripts/precompute_rag_embeddings.py" in report["stale_inputs"], (
-        f"expected the embedding builder to be the stale input; got {report['stale_inputs']}")
+    assert ok is True, (
+        f"the live repo reports STALE: {report}. If a fact or the embedding builder has been "
+        "edited since 7d46df1 with no matching regen, that is the honest state -- flip this "
+        "back to `assert ok is False`, name the pending change, and keep it failing until the "
+        "regen ships. Do NOT silence it: five weeks of a wrong Part XII citation hid behind "
+        "three green checks, and this is the one that would have said so.")
+    assert not report["stale_inputs"], (
+        f"FRESH overall but with stale inputs reported, which should be impossible: {report}")
     assert report["artifacts_diverged"] is False, (
-        "the two index directories disagree -- a different defect from the pending regen, "
+        "the two index directories disagree -- a different defect from a pending regen, "
         "and one the R15 dual-commit step exists to prevent")
