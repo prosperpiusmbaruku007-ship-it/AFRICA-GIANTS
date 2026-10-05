@@ -10,7 +10,7 @@
     "where": "kaggle/chike_config.json rag_fact_count",
     "⛔_WHEN": "IN THE SAME COMMIT AS THE FETCHED .npy/.json ARTIFACTS, NEVER BEFORE. modal_app.py asserts this count against the loaded index and REFUSES TO SERVE on a mismatch (verified live 2026-08-24: HTTP 500). The config is fetched from GitHub at runtime, so bumping it while production still holds the old index takes production DOWN."
   },
-  "anchor_uniqueness": [
+  "anchor_uniqueness_new_guards": [
     {
       "guard": "Part XII foreign-company citation (ext_15 verbatim)",
       "anchor": "Part XII, ss.437-447",
@@ -28,6 +28,57 @@
       ]
     }
   ],
+  "anchor_faults_ALL_committed_guards": [
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "osha husajili",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "wcf huanza",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "mfanyakazi wa kwanza",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    }
+  ],
+  "anchor_faults_blocking": [],
   "new_guards": [
     {
       "name": "Part XII foreign-company citation (ext_15 verbatim)",

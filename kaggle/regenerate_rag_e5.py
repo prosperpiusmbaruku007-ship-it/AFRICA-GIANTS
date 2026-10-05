@@ -503,7 +503,25 @@ critical_queries = [
     # guard; both of these sat behind an ambiguous one that always passed.
     ('GN487A penalty', 'query: Faini kwa raia wa kigeni anayevunja GN487A ni kiasi gani hasa?', ['Faini kwa mgeni']),
     ('SDL rate', 'query: SDL rate Tanzania ni asilimia ngapi?', ['asilimia tatu na nusu']),
-    ('NSSF employer', 'query: Mwajiri analipa asilimia ngapi NSSF kila mwezi?', ['asilimia 10']),
+    # ⛔ RE-ANCHORED 2026-10-05, BY THE ANCHOR-UNIQUENESS GATE DOING ITS JOB ON A KAGGLE RUN.
+    # The anchor was bare 'asilimia 10'. The 2026-10-05 regen added rent_wht_rate, whose text
+    # states a 10% withholding rate -- so a correct NEW fact made an OLD guard ambiguous:
+    #     [AMBIGUOUS] NSSF employer: anchor 'asilimia 10' matches 2 facts [9, 50]
+    #     row 9  = nssf_employer_rate      row 50 = rent_wht_rate
+    # Confirmed by key, not inferred from the diagnosis. The gate BLOCKED THE UPLOAD, which is
+    # correct: an ambiguous anchor can pass on a fact it does not mean, so this guard could have
+    # certified NSSF's employer share while actually matching the rent rate.
+    #
+    # THE GENERAL PROPERTY, and it is the nat_23 45->46 lesson arriving in the GUARD layer:
+    # inserting a row perturbs its neighbours' ANCHORS as well as their RANKS. A rank gate
+    # watches the second; only an anchor-uniqueness gate watches the first, and nothing about
+    # adding a correct fact looks like editing a guard.
+    #
+    # New anchor carries the PARTY, which is what this guard is actually about -- the
+    # employer-share-vs-20%-total confusion (D-NSSF-1 party resolution) is the documented live
+    # defect. Verified unique against the prospective 184-row build before re-packaging.
+    ('NSSF employer', 'query: Mwajiri analipa asilimia ngapi NSSF kila mwezi?',
+     ['mwajiri analipa asilimia 10']),
     ('BRELA annual return', 'query: Ada ya annual return BRELA ni shilingi ngapi?', ['kila mwaka ni TZS 22,000']),
     ('VAT withholding services', 'query: VAT withholding kwenye huduma ni asilimia ngapi?', ['services is 6']),
     ('Zero-rated input VAT', 'query: Naweza kudai input VAT kwenye bidhaa zilizo zero-rated?', ['input vat']),
@@ -749,8 +767,17 @@ print('=' * 60)
 # correct answer to the guard's question, so passing on "the other one" is not a false pass.
 # A name here needs the reasoning written at the guard itself, not just this set.
 ACCEPTED_AMBIGUOUS = {
-    # anchors match [68] and [69]; both carry OSHA-registers-all-workplaces and
-    # WCF-from-first-employee. Pinning to one would fail spuriously on the other.
+    # Anchors match osha_vs_wcf_roles and small_headcount_still_register; both carry
+    # OSHA-registers-all-workplaces and WCF-from-first-employee, so pinning to one would fail
+    # spuriously on the other. Adjudicated benign: passing on "the other one" is still a correct
+    # answer to the guard's question.
+    #
+    # ⚠️ THIS COMMENT USED TO SAY "[68] and [69]" AND BOTH NUMBERS WERE WRONG BY 2026-10-05.
+    # Inserting rent_wht_rate shifted them to 69 and 70 -- the stale-pin decay recorded as R18's
+    # first incident, reproduced here in miniature by the very insertion that triggered the NSSF
+    # re-anchor above. The SET itself is keyed by guard NAME so it kept working; only the prose
+    # rotted, which is why it rotted silently. Row numbers are now named by KEY instead, which
+    # an insertion cannot move.
     'OSHA/WCF small-count (Q14 verbatim)',
 }
 

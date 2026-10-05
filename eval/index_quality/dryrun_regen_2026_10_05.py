@@ -117,6 +117,50 @@ def main():
         f"a new guard's anchor does not resolve to exactly one fact: {ambiguous}. A dead anchor "
         f"never fires; an ambiguous one can pass on a fact it does not mean.")
 
+    # ⛔⛔ EVERY COMMITTED ANCHOR, NOT JUST THE NEW ONES. THIS IS WHY THE 2026-10-05 KAGGLE RUN
+    # FAILED AND WASTED A CYCLE.
+    #
+    # The first version of this harness checked only the two anchors this package ADDS. The
+    # regen then blocked on an anchor this package did not touch: 'asilimia 10', the NSSF
+    # employer guard's, which became ambiguous because the NEW rent_wht_rate row also states a
+    # 10% rate. Everything substantive passed -- 184 facts, 0 self-retrieval failures, all 36
+    # critical queries, rank gate 39/17/6 -- and nothing uploaded.
+    #
+    # THE PROPERTY THE HARNESS MISSED: inserting a row perturbs its neighbours' ANCHORS as well
+    # as their RANKS. The displacement arm below already covers ranks; nothing covered anchors.
+    # A new correct fact can therefore invalidate an OLD guard with no edit to any guard at all
+    # -- which is the nat_23 45->46 lesson in the guard layer, and is exactly the shape where a
+    # per-change check that only looks at the change itself is blind by construction.
+    #
+    # ACCEPTED_AMBIGUOUS is read FROM the regen rather than re-listed here, so the two cannot
+    # drift. (My first local attempt at this check re-derived the set with a regex that silently
+    # missed it across the intervening comment lines, and reported the OSHA/WCF guard as a
+    # second real ambiguity -- a bad specimen in the instrument, where the Kaggle log had been
+    # right all along. Parsed by name below, and asserted non-empty so a parse failure cannot
+    # masquerade as "no exceptions".)
+    import re as _re2
+    _src = open(os.path.join(REPO, "kaggle", "regenerate_rag_e5.py"), encoding="utf-8").read()
+    _blk = _re2.search(r"ACCEPTED_AMBIGUOUS\s*=\s*\{(.*?)\n\}", _src, _re2.S)
+    assert _blk, "could not locate ACCEPTED_AMBIGUOUS in the regen -- refusing to guess it empty"
+    accepted = set(_re2.findall(r"^\s*'([^']+)',", _blk.group(1), _re2.M))
+    assert accepted, ("parsed ACCEPTED_AMBIGUOUS as EMPTY. It is not empty in the regen, so this "
+                      "is a parse failure, and an empty exception set would report every "
+                      "adjudicated-benign guard as a fresh defect.")
+
+    all_anchor_faults = []
+    for name, query, anchors in _re2.findall(
+            r"\(\s*'([^']+)'\s*,\s*'(query: [^']+)'\s*,\s*\[([^\]]*)\]\s*\)", _src):
+        for a in _re2.findall(r"'([^']*)'", anchors):
+            hits = [(i, keys[i]) for i, t in enumerate(texts) if a.lower() in t.lower()]
+            if len(hits) == 1:
+                continue
+            all_anchor_faults.append({
+                "guard": name, "anchor": a,
+                "kind": "DEAD" if not hits else "AMBIGUOUS",
+                "matches": [{"row": i, "key": k} for i, k in hits][:6],
+                "accepted_benign": name in accepted})
+    blocking_anchor_faults = [f for f in all_anchor_faults if not f["accepted_benign"]]
+
     # --- embed -------------------------------------------------------------------------------
     from sentence_transformers import SentenceTransformer
     model = SentenceTransformer(precompute.EMBED_MODEL)
@@ -220,13 +264,17 @@ def main():
                       "fetched from GitHub at runtime, so bumping it while production still "
                       "holds the old index takes production DOWN.",
         },
-        "anchor_uniqueness": anchor_rows,
+        "anchor_uniqueness_new_guards": anchor_rows,
+        "anchor_faults_ALL_committed_guards": all_anchor_faults,
+        "anchor_faults_blocking": blocking_anchor_faults,
         "new_guards": new_results,
         "displacement_regressions_caused_by_this_package": regressions,
         "pre_existing_failures_not_caused_by_this_package": preexisting,
         "new_row_self_retrieves": bool(self_ok),
-        "verdict": ("SAFE TO RUN" if not regressions and all(r["in_top3"] for r in new_results)
-                    and self_ok else "DO NOT RUN -- see regressions / failed guards"),
+        "verdict": ("SAFE TO RUN"
+                    if not regressions and not blocking_anchor_faults
+                    and all(r["in_top3"] for r in new_results) and self_ok
+                    else "DO NOT RUN -- see regressions / anchor faults / failed guards"),
     }
     with open(OUT, "w", encoding="utf-8") as fh:
         json.dump(out, fh, ensure_ascii=False, indent=2)
@@ -234,6 +282,11 @@ def main():
     print(f"\nrows {len(deployed)} -> {len(texts)}  (rag_fact_count must follow, WITH the "
           f"artifacts)")
     print(f"new row self-retrieves: {self_ok}")
+    print(f"anchor faults across ALL {len(all_anchor_faults) and 'committed' or 'committed'} "
+          f"guards: {len(all_anchor_faults)} ({len(blocking_anchor_faults)} blocking, "
+          f"{len(all_anchor_faults)-len(blocking_anchor_faults)} adjudicated-benign)")
+    for f in blocking_anchor_faults:
+        print(f"   [{f['kind']}] {f['guard']}: {f['anchor']!r} -> {f['matches']}")
     print(f"displacement regressions CAUSED BY THIS PACKAGE: {len(regressions)}")
     print(f"pre-existing failures (fail on the deployed index too): {len(preexisting)}")
     print(f"\nVERDICT: {out['verdict']}")
