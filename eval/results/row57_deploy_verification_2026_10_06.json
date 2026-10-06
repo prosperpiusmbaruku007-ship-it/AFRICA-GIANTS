@@ -1,0 +1,106 @@
+{
+  "_what": "R16 live verification of the row-57 deploy (2026-10-06).",
+  "_endpoint": "https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run",
+  "_deployed_index": "184 rows, HF commit 63dfb0cbdd built from 59cf784, dual-committed. rag_fact_count unchanged at 184.",
+  "_why_r16_matters_here": "this deploy returned in 6.1s against 150s for the previous one -- image and mounts cached, which is exactly when a deploy is most likely to be serving what was already there.",
+  "_scoring": "must_not_assert is POLARITY-checked. Row 57 names TZS 11,000,000 under a negation by design; a presence check would fail the behaviour being verified, and a quoting bug in this very pattern already produced one false ASSERTED verdict today.",
+  "_write_discipline": "rewritten after EVERY row; per-row errors captured, never fatal",
+  "totals": {
+    "probes": 6,
+    "run": 6,
+    "pass": 5,
+    "fail": 1,
+    "error": 0
+  },
+  "verdict": "INCOMPLETE OR FAILED",
+  "rows": [
+    {
+      "id": "row57_no_11m_assertion",
+      "proves": "CHECK 1: row 57 no longer ASSERTS an 11M EFD turnover threshold. Scored on polarity -- the row names the figure to reject it, by design.",
+      "source": "eval/accuracy_gate/eval_questions_003.jsonl eval_347 (verbatim)",
+      "question": "Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?",
+      "note": "eval_347 is a FALSE-PREMISE question. must_match looks for the no-threshold claim; observe records whether the 200M/VAT contrast survived.",
+      "baseline_committed_row": "row 57 @ 59cf784 = 'Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka.'",
+      "reply": "Hapana. Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 11,000,000 (TZS 10M +). Si TZS 200,000,000. Thibitisha na TRA (tra.go.tz).",
+      "asserted_superseded": [
+        "11,000,000"
+      ],
+      "mentions_under_negation": false,
+      "observed": true,
+      "checks": {
+        "must_match": false,
+        "superseded_value_not_asserted": false
+      },
+      "verdict": "FAIL"
+    },
+    {
+      "id": "row57_new_guard_claim",
+      "proves": "CHECK 3: the new critical query's anchor ('EFD haina kizingiti cha mauzo') is what the corrected row actually answers with -- a retrieval guard can pass while the reply says something else, so this asks the model, not the index.",
+      "source": "kaggle/regenerate_rag_e5.py critical_queries 'EFD threshold' (new anchor)",
+      "question": "EFD inaanza kutumika kwa mauzo ya kiasi gani kwa mwaka?",
+      "note": "Deliberately NOT the guard's own query -- a second phrasing of the same question, so a pass is not an artefact of one wording (R33).",
+      "reply": "Hakuna kizingiti cha mauzo kilichowekwa kwa ajili ya kuanza kutumia EFD. Thibitisha na TRA (tra.go.tz).",
+      "mentions_under_negation": false,
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "sibling_unchanged",
+      "proves": "CHECK 2: efd_not_every_business must STILL say EFD applies regardless of turnover. It was the correct row of the contradictory pair, and the whole risk of rewriting its sibling is displacing it.",
+      "source": "kaggle/regenerate_rag_e5.py critical_queries 'EFD not-every-business (Q16 verbatim)'",
+      "question": "Duka langu dogo halifikishi mauzo makubwa kila siku, bado nahitaji mashine ya risiti?",
+      "note": "observe looks for the exemption mechanism (CG public notice), which is the limb this row carries and row 57 deliberately does not.",
+      "reply": "Ndiyo, kwa mujibu wa sheria, unatakiwa kuwa na mashine ya risiti (EFD). Thibitisha na TRA (tra.go.tz).",
+      "mentions_under_negation": false,
+      "observed": false,
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_vat_threshold_not_displaced",
+      "proves": "NEGATIVE: the genuine VAT-registration threshold must NOT have been displaced by row 57's 200M contrast. The old comment flagged exactly this risk, and correcting the figure does not remove it.",
+      "source": "kaggle/regenerate_rag_e5.py anti-displacement bracket guard",
+      "question": "Kizingiti cha kusajili VAT ni mauzo ya kiasi gani kwa mwaka?",
+      "note": "VAT registration is TZS 200M/12mo. If this moved, narrow row 57's 200M contrast (the GN487A narrowing precedent).",
+      "reply": "Kizingiti cha kusajili VAT ni mauzo ya shilingi 200,000,000 (TZS 200M) katika kipindi cha miezi 12, au shilingi 100,000,000 (TZS 100M) katika kipindi cha miezi 6. Ukifikia kiasi hicho, lazima ujisajili kwa VAT na TRA ndani ya siku 30. Thibitisha na TRA (tra.go.tz).",
+      "mentions_under_negation": false,
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "config_only_phrase",
+      "proves": "CONFIG LOADING, separately from code -- the diagnostic that distinguishes a config failure from a stale warm container, which a 6-second deploy makes the live question.",
+      "source": "chike_config.json ooc_phrases (config-only, not in the code fallback)",
+      "question": "Nataka kuuza kiwanja changu, kodi ya mapato ni kiasi gani?",
+      "note": "Land sale is out of corpus by design.",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_nssf_fine_unchanged",
+      "proves": "SECOND NEGATIVE, on the rows shipped YESTERDAY. One row changed in this regen; the Cap.50 corrections must be exactly where they were.",
+      "source": "eval/controls/verify_cap50_deploy_2026_10_05.py fine_ceiling_reachable",
+      "question": "Faini ya juu kabisa kwa kosa la NSSF ni shilingi ngapi?",
+      "note": "Ten million, s.76(1). Also re-confirms yesterday's ship survived this one.",
+      "reply": "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi). Thibitisha na NSSF (nssf.go.tz).",
+      "mentions_under_negation": false,
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    }
+  ]
+}
