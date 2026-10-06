@@ -60,6 +60,71 @@ PY = sys.executable
 
 RESULTS = []
 
+# =============================================================================================
+# ⛔ HOLDS EXPIRE. A HOLD WITHOUT AN EXPIRY IS A DECISION NOBODY IS MAKING.
+# =============================================================================================
+#
+# PROVEN BY D-FIDELITY-7, and the cost was six weeks of a live fabricated threshold.
+#
+# On 2026-08-24 this harness recorded it `NOT_WIRED` with the note *"Held for one R16 cycle by
+# decision — but note eval_208 shows the exact defect it targets, LIVE."* ONE CYCLE. The note was
+# accurate, it was committed, it was re-printed on every subsequent run of this audit, and
+# **nothing ever came due**, so nobody re-opened it. On 2026-10-06 `eval_347` served the same
+# fabricated TZS 11,000,000 EFD threshold, with the corrected index row at rank 1 for both
+# phrasings — no index-side headroom left, so the guard layer was the only one that could reach
+# it, and the guard had been sitting built and unwired the whole time.
+#
+# THE HOLD DID NOT GET OVERRULED. IT LAPSED. That is a different failure from a bad decision and
+# it needs a different fix: not better judgement, but a DATE. This is the same shape as R30's
+# "TRA unreachable" note — a correct finding, faithfully written down, that decayed because
+# nothing forced the next session to act on it. R30's remedy applies verbatim: *a finding is not
+# done when it is written down, it is done when it is impossible for the next session to not know
+# it.* Prose in an 18,000-line file is exactly as durable as an unenforced convention.
+#
+# SO: any control deliberately not in force carries a row here, and a HELD row carries an EXPIRY.
+# `tests/test_control_hold_expiry.py` FAILS once an expiry passes — the hold surfaces on its own,
+# without anyone remembering to look.
+#
+# TWO STATES, and the distinction is what keeps this honest:
+#   DISABLED  decided, on evidence, with no review pending. No expiry — demanding one would
+#             manufacture busywork and train people to bump dates.
+#   HELD      pending a decision. MUST carry an expiry. The absence of one is the defect.
+HOLDS = {
+    'coverage gate': {
+        'state': 'DISABLED',
+        'decided': '2026-08-24',
+        'expires': None,
+        'why': ('measured 1.9% false refusals on 411 corpus questions vs 71% on 21 held-out '
+                '-- a ~37x gap (R21). Off on evidence, not pending review. Re-opening it needs '
+                'a NEW frozen held-out set, which is the entry price, not a review date.'),
+    },
+    'D-FIDELITY-7': {
+        'state': 'LAPSED_THEN_WIRED',
+        'decided': '2026-08-24',
+        'expires': '2026-08-31',          # "one R16 cycle" -- stated in the original note
+        'resolved': '2026-10-06',
+        'why': ('held for ONE R16 cycle and never revisited. Wired 2026-10-06 after eval_347 '
+                'served the defect live for a second time. Kept in this registry as the '
+                'specimen that produced the expiry rule -- NOT removed: a registry that drops '
+                'its one failure reads as though the rule were free.'),
+    },
+}
+
+
+def hold_overdue(cid, today=None):
+    """(bool, note) — is this control's hold past its own expiry?"""
+    import datetime
+    h = HOLDS.get(cid)
+    if not h or not h.get('expires'):
+        return False, ''
+    today = today or datetime.date.today().isoformat()
+    if h.get('resolved'):
+        return False, f"resolved {h['resolved']} (hold had expired {h['expires']})"
+    if today > h['expires']:
+        return True, (f"HOLD EXPIRED {h['expires']}, decided {h['decided']} -- "
+                      f"this is overdue, not held")
+    return False, f"held until {h['expires']}"
+
 
 def record(cid, layer, claims, verdict, positive='', negative='', note=''):
     RESULTS.append({'id': cid, 'layer': layer, 'claims_to_block': claims,
@@ -276,9 +341,22 @@ def audit_patched_gates(tmp):
     os.makedirs(empty_dir, exist_ok=True)
     jsonl(os.path.join(empty_dir, 'batch_001.jsonl'), [valid_pair()])
 
+    # ⛔ THIS LINE WAS `ctf.CLEANED_DIR` AND HAD BEEN RAISING AttributeError SINCE 2026-10-05,
+    # when the two pipeline generations were separated and `clean_temp_files` moved to a LIST
+    # (`CLEANED_DIRS`). The audit recorded `layer2 -> ERROR` and carried on, so ONE WHOLE LAYER
+    # of repo gates went unaudited while the census still printed a tally.
+    #
+    # That is the hazard this harness's own header names: *a census that quietly omits what it
+    # cannot test reports a cleaner result than it earned.* An ERROR row is honest about the
+    # omission, which is why it was visible at all -- but honest-and-ignored is still unaudited,
+    # and the fix is one line. Asserted below so a third rename fails loudly here.
+    assert hasattr(ctf, 'CLEANED_DIRS'), (
+        'clean_temp_files no longer exposes CLEANED_DIRS. Re-point this before the audit reports '
+        'ERROR for the whole layer again.')
+
     def run_ctf(d):
-        orig = ctf.CLEANED_DIR
-        ctf.CLEANED_DIR = d
+        orig = ctf.CLEANED_DIRS
+        ctf.CLEANED_DIRS = [d]
         argv = sys.argv
         sys.argv = ['clean_temp_files.py', '--scan']
         try:
@@ -286,7 +364,7 @@ def audit_patched_gates(tmp):
         except SystemExit as e:
             return e.code
         finally:
-            ctf.CLEANED_DIR = orig
+            ctf.CLEANED_DIRS = orig
             sys.argv = argv
         return None
 
@@ -489,16 +567,39 @@ def _fidelity_rules(fidelity):
             'Kizingiti cha kusajili VAT ni TZS 90,000,000 kwa miezi 6.')
         ngd = fidelity.body_states_wrong_threshold(
             'Kizingiti cha kusajili VAT ni TZS 100,000,000 kwa miezi 6.')
+        # ⛔ CODE LINES ONLY. The previous form was `'body_states_wrong_threshold' in f.read()`,
+        # which matches a COMMENT as readily as a call -- and the wiring commit added three
+        # comments naming the function, so that check would now report FIRES on a comment alone.
+        # This is the exact defect this audit's own notes record from 2026-08-24: three of its
+        # checks matched the comment explaining why a defect had been REMOVED, one of them
+        # introduced while fixing the previous two.
         with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as f:
-            wired = 'body_states_wrong_threshold' in f.read()
+            code = '\n'.join(line.split('#', 1)[0] for line in f.read().splitlines())
+        calls = code.count('fidelity.body_states_wrong_threshold(cleaned)')
+        replaces = 'clarification.wrong_threshold_withheld' in code
         v = ('ERROR' if not p else 'OVERBROAD' if ngd else
-             ('FIRES' if wired else 'NOT_WIRED'))
+             ('FIRES' if calls else 'NOT_WIRED'))
+        overdue, hold_note = hold_overdue('D-FIDELITY-7')
         record('D-FIDELITY-7', 'runtime',
                'a body stating a threshold that is not the statutory one',
-               v, 'VAT threshold stated as TZS 90,000,000', 'stated as TZS 100,000,000',
-               f'logic: planted flagged {p}, correct not flagged {not ngd}. '
-               f'CALLED FROM orchestrator: {wired}. Held for one R16 cycle by decision — but '
-               f'note eval_208 shows the exact defect it targets, LIVE.')
+               'HOLD_OVERDUE' if overdue else v,
+               'VAT threshold stated as TZS 90,000,000', 'stated as TZS 100,000,000',
+               f'logic: planted flagged {p}, correct not flagged {not ngd}. CALL SITES IN '
+               f'ORCHESTRATOR CODE (comments stripped): {calls}; fact-path replacement copy '
+               f'present: {replaces}. Wired 2026-10-06 after a hold taken 2026-08-24 for ONE '
+               f'R16 cycle lapsed for six weeks while eval_208 and then eval_347 served the '
+               f'defect live. {hold_note}. NARROWED BEFORE WIRING: unnarrowed it flagged 3 GOLD '
+               f'answers including eval_347 itself '
+               f'(eval/results/threshold_guard_prewiring_2026_10_06.json).')
+        # Both paths must be present and they are not interchangeable: the compute path blanks
+        # (the engine's working still renders), the fact path REPLACES (blanking a fact answer
+        # ships an empty reply). One call site means one of the two is missing.
+        if calls and (calls < 2 or not replaces):
+            record('D-FIDELITY-7-FACT-PATH', 'runtime',
+                   'a FACT-path body stating a non-statutory threshold, without shipping silence',
+                   'INERT_IN_PRODUCTION', 'the eval_347 live reply', 'a gold EFD answer',
+                   f'call sites: {calls} (need 2), replacement copy: {replaces}. A fact answer '
+                   f'that is blanked renders as NOTHING.')
     except Exception as exc:
         record('D-FIDELITY-7', 'runtime', 'a body stating a non-statutory threshold',
                'ERROR', '', '', f'{type(exc).__name__}: {exc}')
@@ -616,7 +717,14 @@ def main():
     from collections import Counter
     tally = Counter(r['verdict'] for r in RESULTS)
     blob = {
-        'audited': '2026-08-24',
+        # ⛔ WAS THE LITERAL '2026-08-24' FOR SIX WEEKS, so every re-run stamped itself with the
+        # date of the FIRST run. A census that cannot say when it was taken is read as current
+        # whenever it is read -- and this one is cited as evidence that no control is inert. The
+        # same shape as the stale pins (R18 incident 1) and as the CLAUDE.md worked example that
+        # taught a superseded figure for five weeks: the artifact asserted, and nothing it
+        # asserted could go out of date visibly.
+        'audited': __import__('datetime').date.today().isoformat(),
+        'first_audited': '2026-08-24',
         'harness': 'eval/controls/audit_control_fires.py',
         'method': 'R23 applied to controls: plant the thing each control exists to catch '
                   '(POSITIVE, must block) and a clean case (NEGATIVE, must pass). A control '

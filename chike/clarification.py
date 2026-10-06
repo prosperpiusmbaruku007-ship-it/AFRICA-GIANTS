@@ -326,3 +326,43 @@ def headcount_contradiction(stated: int) -> str:
         f"wafanyakazi {stated} na unataka hesabu ya tozo gani (SDL, NSSF, PAYE au WCF), "
         f"pamoja na jumla ya mishahara kwa mwezi? Nitakuletea hesabu kamili."
     )
+
+
+# --- wrong stated threshold withheld (D-FIDELITY-7, wired 2026-10-06) -------
+
+_THRESHOLD_TOPIC = {
+    "efd": "mashine ya risiti (EFD)",
+    "vat_registration": "usajili wa VAT",
+    "presumptive": "kodi ya makadirio",
+}
+
+
+def wrong_threshold_withheld(subject: str) -> str:
+    """The fact path stated a turnover threshold that is not the statutory one.
+
+    WHY THIS IS REPLACEMENT COPY AND NOT A BLANK. On the compute path a flagged body is blanked
+    and `_render` still emits the engine's authoritative working, so the user loses a wrong
+    sentence and keeps the right figure. On the FACT path there is no working: `_render` returns
+    the body alone, so blanking returns an EMPTY REPLY. GUARD A's note governs — silence is worse
+    than a wrong answer — so the wrong sentence is REPLACED, exactly as a headcount contradiction
+    is.
+
+    DELIBERATELY STATES NO FIGURE, not even a correct one. The system has just been caught
+    asserting a fabricated constant about this very subject; following that with a different
+    number from the same generation is not a correction, it is a second guess. Naming the subject
+    and the authority is the whole of what can be said honestly here.
+
+    ⛔ AND IT IS NOT A FIX, ONLY A STOP. Wiring the guard turns a confident wrong answer into a
+    non-answer. On an IN-CORPUS question (eval_347 is one) that still scores as a miss on the
+    accuracy gate — correctly, because the user did not get their answer. It closes R7's Bar A
+    (no known class of confident wrong answer) and does nothing for the retrieval or generation
+    defect underneath. Anyone reading a gate score after this lands should expect the wrong-answer
+    class to become a no-answer class, not to disappear.
+    """
+    topic = _THRESHOLD_TOPIC.get(subject, "kiwango hiki")
+    return (
+        f"Samahani — jibu langu la awali lilitoa kiwango cha mauzo kwa {topic} ambacho "
+        f"sikiwezi kukithibitisha, hivyo sitalitumia. Sitakisii kiwango kingine. "
+        f"Tafadhali thibitisha na TRA (tra.go.tz) au niulize kwa namna nyingine, "
+        f"nikueleze utaratibu bila kutaja kiasi."
+    )

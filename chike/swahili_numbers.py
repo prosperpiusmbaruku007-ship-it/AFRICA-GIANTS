@@ -225,6 +225,23 @@ def parse_amounts(text):
     Handles digit forms ("TZS 500,000", "milioni 190"), the "20m" slang, and
     scale-first Swahili word numbers ("laki tano", "milioni moja na nusu").
     Deliberately over-collects candidates; the caller decides which role each fills.
+
+    Positions are available from `parse_amounts_located`, which this delegates to — the two
+    MUST agree, because a caller that reasons about what sits between two amounts (D-FIDELITY-7's
+    frame-reachability rule) would otherwise be reasoning about a different amount list than the
+    one every other caller sees. Asserted in tests/test_swahili_numbers_located.py.
+    """
+    return [v for _, v in parse_amounts_located(text)]
+
+
+def parse_amounts_located(text):
+    """`parse_amounts` with each amount's START OFFSET in `text`, ascending.
+
+    Added 2026-10-06 for D-FIDELITY-7's narrowing: whether a threshold FRAME word reaches an
+    amount without crossing another amount is a question about POSITIONS, and the bare value
+    list cannot answer it. Extracted from parse_amounts rather than reimplemented — a second
+    parser would have measured itself (R33), and the whole point is that the positions belong
+    to the amounts the rest of the pipeline already sees.
     """
     text_l = text.lower()
     found = []
@@ -310,7 +327,7 @@ def parse_amounts(text):
 
     found.sort(key=lambda x: x[0])
     # de-dup by (position) keeping order
-    return [v for _, v in found]
+    return found
 
 
 # ── PREREQ-2 pattern C-2: resolve a fraction-of-headcount into group sizes ──────────

@@ -1,0 +1,312 @@
+{
+  "measured": "2026-10-06",
+  "harness": "eval/fidelity/price_threshold_guard_before_wiring.py",
+  "instrument": "chike.fidelity.stated_wrong_thresholds -- D-FIDELITY-7, built 2026-08-23, NOT WIRED. No new rule was written for this measurement (R33): writing one would have measured the new rule, not the phenomenon.",
+  "question": "If D-FIDELITY-7 were wired today, what text would it remove? Split by population and by whether the row was already booked correct.",
+  "why_each_population": {
+    "STORED_REPLY": "the only population that is actual MODEL PROSE, which is what the guard is handed in production -- and the only one where a flag can be joined to a recorded verdict",
+    "GOLD": "a human asserted each of these is RIGHT, so a flag is the strongest available false-positive signal",
+    "PAIRED": "the corpus the model was trained on -- closest offline proxy for the prose it emits, and a flag is a candidate training defect too"
+  },
+  "the_path_distinction": "A flag does not mean one action. On the COMPUTE path blanking is safe -- _render still emits the engine's working, so the user loses a sentence and keeps the figure. On the FACT path blanking is SILENCE, because _render returns the body alone. eval_347 is a fact-path question, so wiring this the way D-FIDELITY-6 is wired would not fix it: it needs replacement copy, like GUARD A's headcount_contradiction.",
+  "what_this_cannot_show": "R21: all three populations share vocabulary with the facts by construction, so the false-positive count is a LOWER BOUND, not a safety verdict. A flag is a CANDIDATE, not a verdict (R26 second half) -- every one below is printed with its attributed claims so it can be read individually before anything is done with it.",
+  "totals": {
+    "rows_swept": 5599,
+    "by_population": {
+      "STORED_REPLY": 755,
+      "GOLD": 428,
+      "PAIRED": 4416
+    },
+    "flagged_total": 19,
+    "flagged_excluding_own_probe_fixtures": 18,
+    "flagged_in_GOLD": 0,
+    "flagged_and_previously_booked_correct": 2,
+    "by_subject": {
+      "efd": 18,
+      "presumptive": 1
+    },
+    "by_file": {
+      "eval/results/canary_2026_09_05_regen_deploy_before.json": 1,
+      "eval/results/covered_half_class_analysis.json": 1,
+      "eval/results/regen_guard_audit.json": 1,
+      "eval/results/row57_deploy_verification_2026_10_06.json": 1,
+      "eval/results/safety3_threshold_investigation.json": 2,
+      "eval/results/targeted_rewrite.json": 1,
+      "eval/results/vat_orchestrator_offline.json": 5,
+      "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl": 4,
+      "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl": 2
+    }
+  },
+  "flagged": [
+    {
+      "population": "STORED_REPLY",
+      "id": "?",
+      "locator": "eval/results/canary_2026_09_05_regen_deploy_before.json",
+      "recorded_verdict": null,
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Kwa mujibu wa sheria, biashara zenye mauzo chini ya milioni 11 kwa mwaka hazilazimiki kutumia mashine ya EFD. Lakini kumbuka kuwa unapaswa kutoa risiti sahihi kwa wateja wako, hata kama si kwenye mashine ya EFD. Thibitisha na tra.go.tz."
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "pic_11",
+      "locator": "eval/results/covered_half_class_analysis.json",
+      "recorded_verdict": null,
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "presumptive",
+          10000000
+        ]
+      ],
+      "body": "Kwa mauzo ya milioni 20, unalipa kodi ya mapato kwa mfumo wa kawaida (normal progressive rates). Presumptive tax inatumika kwa mauzo chini ya milioni 10. Thibitisha na tra.go.tz."
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "?",
+      "locator": "eval/results/regen_guard_audit.json",
+      "recorded_verdict": null,
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa"
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "?",
+      "locator": "eval/results/regen_guards_local_dryrun.json",
+      "recorded_verdict": null,
+      "is_probe_designed_to_flag": true,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na mo"
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "row57_no_11m_assertion",
+      "locator": "eval/results/row57_deploy_verification_2026_10_06.json",
+      "recorded_verdict": "FAIL",
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Hapana. Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 11,000,000 (TZS 10M +). Si TZS 200,000,000. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "th_09",
+      "locator": "eval/results/safety3_threshold_investigation.json",
+      "recorded_verdict": "CORRECT",
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Ndiyo. Kwa kuwa umefikia mauzo ya TZS 15,000,000 (zaidi ya kizingiti cha TZS 11M), unapaswa kutumia mashine ya EFD. Sajili VAT na TRA haraka ili kupata TIN sahihi ya biashara. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "th_10",
+      "locator": "eval/results/safety3_threshold_investigation.json",
+      "recorded_verdict": "CORRECT",
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Kwa mauzo ya TZS 8,000,000 kwa mwaka, bado hujafikia kizingiti cha TZS 11M/mwaka. Mashine ya EFD inatakiwa tu pale unapofikia kizingiti cha TZS 11M/mwaka au unaposajiliwa VAT. Kwa sasa, unaweza kuendelea kutumia risiti za mkono. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "?",
+      "locator": "eval/results/targeted_rewrite.json",
+      "recorded_verdict": null,
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka. Si TZS "
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "vf_09",
+      "locator": "eval/results/vat_orchestrator_offline.json",
+      "recorded_verdict": null,
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Kwa upande wa mauzo: hapana, mauzo yako ya mwaka ya TZS 8,000,000 hayajafikia kizingiti cha EFD cha TZS 11,000,000, hivyo unaweza kutumia risiti za kuandika kwa mkono. LAKINI hili halijamalizika: IKIWA umesajiliwa VAT, EFD ni ya lazima bila kujali mauzo. Niambie kama umesajiliwa VAT nami nitathibitisha. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "vf_11",
+      "locator": "eval/results/vat_orchestrator_offline.json",
+      "recorded_verdict": null,
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Kizingiti cha EFD kinapimwa kwa mauzo ya MWAKA: biashara yenye mauzo ya mwaka ya TZS 11,000,000 au zaidi inatakiwa kutumia mashine ya EFD, na biashara yoyote iliyosajiliwa VAT inatakiwa kuwa nayo bila kujali mauzo. Sitakisii mauzo ya mwaka kutokana na ya mwezi mmoja. Niambie jumla ya mauzo yako ya mwaka, au kama umesajiliwa VAT, nami nitathibitisha."
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "edge_p08",
+      "locator": "eval/results/vat_orchestrator_offline.json",
+      "recorded_verdict": null,
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Kizingiti cha EFD kinapimwa kwa mauzo ya MWAKA: biashara yenye mauzo ya mwaka ya TZS 11,000,000 au zaidi inatakiwa kutumia mashine ya EFD, na biashara yoyote iliyosajiliwa VAT inatakiwa kuwa nayo bila kujali mauzo. Sitakisii mauzo ya mwaka kutokana na ya mwezi mmoja. Niambie jumla ya mauzo yako ya mwaka, au kama umesajiliwa VAT, nami nitathibitisha."
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "eval_331",
+      "locator": "eval/results/vat_orchestrator_offline.json",
+      "recorded_verdict": null,
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Kwa upande wa mauzo: hapana, mauzo yako ya mwaka ya TZS 9,000,000 hayajafikia kizingiti cha EFD cha TZS 11,000,000, hivyo unaweza kutumia risiti za kuandika kwa mkono. LAKINI hili halijamalizika: IKIWA umesajiliwa VAT, EFD ni ya lazima bila kujali mauzo. Niambie kama umesajiliwa VAT nami nitathibitisha. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "population": "STORED_REPLY",
+      "id": "th_10",
+      "locator": "eval/results/vat_orchestrator_offline.json",
+      "recorded_verdict": null,
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Kwa upande wa mauzo: hapana, mauzo yako ya mwaka ya TZS 8,000,000 hayajafikia kizingiti cha EFD cha TZS 11,000,000, hivyo unaweza kutumia risiti za kuandika kwa mkono. LAKINI hili halijamalizika: IKIWA umesajiliwa VAT, EFD ni ya lazima bila kujali mauzo. Niambie kama umesajiliwa VAT nami nitathibitisha. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "population": "PAIRED",
+      "id": "cleaned_pairs_batch_011.jsonl:81",
+      "locator": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:81",
+      "recorded_verdict": "IN_TRAINING_SET",
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ],
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi EFD inahitajika hata kwa mauzo ya chini ya TZS 11M."
+    },
+    {
+      "population": "PAIRED",
+      "id": "cleaned_pairs_batch_011.jsonl:84",
+      "locator": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:84",
+      "recorded_verdict": "IN_TRAINING_SET",
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhitajika. (3) TZS 200M+ (au TZS 100M/miezi 6) — lazima usajili VAT na utumie EFD. Nunua EFD kupitia wasambazaji walioidhinishwa na TRA."
+    },
+    {
+      "population": "PAIRED",
+      "id": "cleaned_pairs_batch_011.jsonl:86",
+      "locator": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:86",
+      "recorded_verdict": "IN_TRAINING_SET",
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD baada ya kupitisha kizingiti ni ukiukaji wa sheria ya kodi."
+    },
+    {
+      "population": "PAIRED",
+      "id": "cleaned_pairs_batch_011.jsonl:88",
+      "locator": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:88",
+      "recorded_verdict": "IN_TRAINING_SET",
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya kutoa risiti za uongo au kutokuwasilisha risiti kabisa. Nunua na usajili EFD haraka iwezekanavyo ukiwa umepitisha TZS 11M kwa mwaka."
+    },
+    {
+      "population": "PAIRED",
+      "id": "cleaned_pairs_batch_012.jsonl:36",
+      "locator": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl:36",
+      "recorded_verdict": "IN_TRAINING_SET",
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Ndiyo. Biashara yote — B2C (biashara kwa mtumiaji wa mwisho) na B2B (biashara kwa biashara) — zinazofuata kizingiti cha EFD (TZS 11M+ au zilizosajiliwa VAT) lazima zitoe risiti ya EFD kwa kila muamala. Muamala wa B2B hausamehewi. Kila muamala lazima uingie kwenye mfumo wa EFD na risiti itolewe."
+    },
+    {
+      "population": "PAIRED",
+      "id": "cleaned_pairs_batch_012.jsonl:37",
+      "locator": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl:37",
+      "recorded_verdict": "IN_TRAINING_SET",
+      "is_probe_designed_to_flag": false,
+      "claims": [
+        [
+          "efd",
+          11000000
+        ]
+      ],
+      "body": "Ndiyo. Biashara za mtandaoni (e-commerce) zinazofuata kizingiti cha EFD (mauzo TZS 11M+ kwa mwaka, au zilizosajiliwa VAT) lazima zitoe risiti ya EFD. TRA imeandaa miongozo (maelekezo) maalum kwa biashara za mtandaoni. Wasiliana na TRA (tra.go.tz) kupata maelekezo sahihi ya jinsi ya kuunganisha mfumo wako wa mauzo ya mtandaoni na EFD."
+    }
+  ]
+}

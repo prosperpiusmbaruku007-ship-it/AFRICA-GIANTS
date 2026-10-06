@@ -778,6 +778,80 @@ _SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+|\n+")
 # "je ni jumla ya miezi 12, au ya miezi 6 mfululizo?" and attributed 12 and 6 as VAT thresholds.
 _THRESHOLD_MONEY_FLOOR = 1_000_000
 
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+# ⛔ THE THREE NARROWINGS, 2026-10-06 — MEASURED BEFORE WIRING, NOT AFTER
+#
+# This guard was built 2026-08-23 and held NOT_WIRED. Before wiring it, it was run over every
+# stored reply, every gold answer and every training pair this project holds
+# (eval/fidelity/price_threshold_guard_before_wiring.py → eval/results/
+# threshold_guard_prewiring_2026_10_06.json). On 5,593 rows it flagged 45, and the flags were
+# overwhelmingly FALSE POSITIVES — including THREE GOLD ANSWERS a human had asserted correct:
+#
+#   eval_347  "TZS 200,000,000 ni kizingiti cha usajili wa VAT, si EFD. EFD haina kizingiti…"
+#   eval_355  "TZS 10,999,000 au TZS 11,000,000 hazibadilishi jibu … hakuna kizingiti…"
+#   eval_331  "Hakuna kizingiti cha mauzo kwa EFD (TZS 9,000,000 haibadilishi jibu)."
+#
+# eval_347 is THE ROW THIS WIRING EXISTS TO FIX. Wired unnarrowed, the guard would have
+# destroyed the correct answer to it — and because the fact path cannot be blanked (see
+# orchestrator._validate_and_clean), destroying means an EMPTY REPLY. The 22 unit tests passed
+# the whole time: R33 exactly, a probe set validated against variants of its own design.
+#
+# N1  POLARITY. A negated FRAME ("hakuna kizingiti", "haina kizingiti") DENIES that a threshold
+#     exists — the opposite of claiming a wrong one — and a negated AMOUNT ("SI TZS 200,000,000")
+#     is a MENTION, not an assertion. This is the mention-vs-assertion rule recorded in CLAUDE.md
+#     on 2026-10-05, and the WORD-BOUNDING is the hard-won half: a bare `si\s` matches inside the
+#     ordinary Swahili word `kiasi `, and in the NSSF-fine sweep that one unbounded alternative
+#     silently DELETED the single real false positive from the adjudicated set. Every alternative
+#     here is word-bounded.
+#     Deliberately NOT included: negative VERB forms (`haujafika`, `hujafikia`). "haujafika
+#     kizingiti cha TZS 11M" asserts the threshold and denies only that the user has reached it.
+#
+# N2  THE FRAME MUST REACH THE AMOUNT BACKWARD WITHOUT CROSSING ANOTHER AMOUNT. This is what
+#     separates a threshold CLAIM from the user's own turnover, and it does the heavy lifting:
+#     "Kwa mauzo ya TZS 250M (zaidi ya TZS 200M/miezi 12)" has no frame before 250M, so 250M is
+#     not a threshold claim, while 200M has `zaidi ya` immediately before it and is. The old
+#     sentence-level rule attributed EVERY amount in the sentence to EVERY subject in it.
+#
+# N3  LAWFUL FOR A CO-NAMED SUBJECT. If an amount is a statutory threshold for ANY subject named
+#     in the same sentence, it is not a fabricated threshold. The old escape asked only about the
+#     SUBJECT'S OWN lawful set, and for EFD that set is deliberately EMPTY — so the escape was
+#     DEAD for EFD by construction, which is why 20-odd correct sentences of the form "…lazima
+#     utumie EFD … kizingiti cha TZS 200M" were flagged: a real VAT threshold attributed to EFD.
+#     Mis-attribution is D-FIDELITY-6's class, and in the bare-magnitude shape it was measured
+#     UNBUILDABLE there. This guard's job is FABRICATED CONSTANTS (the 11M EFD threshold, pic_11's
+#     milioni 10), and a global escape would not do: 11,000,000 IS a lawful presumptive band edge,
+#     so "lawful anywhere in the table" would release the guard's single most important true
+#     positive. Co-named is the line that keeps it.
+#
+# COST OF N3, STATED (the cost of narrowing decision 2 is already stated above): "kizingiti cha
+# EFD ni TZS 200,000,000" escapes when VAT is also named. Accepted — it errs toward silence,
+# the only direction a guard that removes text may err in, and the claim is near-true in effect
+# (VAT registration does compel EFD) rather than fabricated.
+_THRESHOLD_NEGATION = re.compile(
+    r"(?:\bsi\b|\bsio\b|\bsiyo\b|\bhakuna\b|\bhaina\b|\bhakina\b|\bhamna\b|\bhapana\b|"
+    r"\bnot\b|\bno\b|\bnever\b)[\s:,—–-]*(?:tzs\s*)?$", re.IGNORECASE)
+# How far back a negation may sit and still govern. 24 chars covers "SI TZS 200,000,000" and
+# "haina kizingiti" without reaching across a clause boundary.
+_THRESHOLD_NEGATION_CHARS = 24
+_VAT_TOKEN = re.compile(r"\bvat\b", re.IGNORECASE)
+
+
+def _negated_at(sentence: str, pos: int) -> bool:
+    """True iff a word-bounded negation immediately precedes offset `pos`."""
+    return bool(_THRESHOLD_NEGATION.search(
+        sentence[max(0, pos - _THRESHOLD_NEGATION_CHARS):pos]))
+
+
+def _frame_reaches(sentence: str, amount_pos: int, amount_positions) -> bool:
+    """N2 — is there a frame word before `amount_pos` with no other amount in between?"""
+    frames = [m for m in _THRESHOLD_FRAME.finditer(sentence) if m.end() <= amount_pos]
+    if not frames:
+        return False
+    frame = frames[-1]                                 # the nearest one behind the amount
+    if _negated_at(sentence, frame.start()):
+        return False                                   # N1 — a negated frame denies a threshold
+    return not any(frame.end() <= p < amount_pos for p in amount_positions)
+
 
 def stated_wrong_thresholds(body: str):
     """[(subject, stated_amount)] for every sentence making a non-statutory threshold claim.
@@ -797,7 +871,7 @@ def stated_wrong_thresholds(body: str):
     """
     if not body:
         return []
-    from .swahili_numbers import parse_amounts
+    from .swahili_numbers import parse_amounts, parse_amounts_located
     body_amounts = {int(a) for a in parse_amounts(body)}
     out = []
     for sentence in _SENTENCE_SPLIT.split(body):
@@ -805,15 +879,38 @@ def stated_wrong_thresholds(body: str):
                     for m in _THRESHOLD_SUBJECT_RE.finditer(sentence)}
         if not subjects or not _THRESHOLD_FRAME.search(sentence):
             continue
-        amounts = [int(a) for a in parse_amounts(sentence)
-                   if int(a) >= _THRESHOLD_MONEY_FLOOR]
+        located = [(p, int(a)) for p, a in parse_amounts_located(sentence)]
+        positions = [p for p, _ in located]
+        amounts = [(p, a) for p, a in located if a >= _THRESHOLD_MONEY_FLOOR]
         if not amounts:
             continue
+        # N3 — every lawful threshold of every subject NAMED IN THIS SENTENCE.
+        co_named_lawful = set().union(*(_STATUTORY_THRESHOLDS[s] for s in subjects))
+        # N3b — A BARE MENTION OF VAT ADMITS THE VAT-REGISTRATION MAGNITUDES, and it is needed
+        # because the subject map requires a REGISTRATION phrase (`kusajili vat`, `usajili wa
+        # vat`) that correct prose routinely omits: "VAT 18% … (kizingiti TZS 200M/mwaka)",
+        # "EFD ukifikia kizingiti", "zaidi ya TZS 200M … EFD nayo ni lazima". Seven training
+        # rows stating the VAT threshold CORRECTLY were flagged as fabricated EFD thresholds on
+        # the narrowed measurement, which is the shape N3 exists to stop and could not see.
+        #
+        # SAFE BECAUSE IT IS NOT A GLOBAL ESCAPE. Only 100M/200M are admitted, and only when the
+        # sentence says "vat". The guard's own most important true positive — the fabricated
+        # TZS 11,000,000 EFD threshold — is a lawful PRESUMPTIVE band edge, so admitting the
+        # whole table would release it. Verified: batch_012:36/37 state "kizingiti cha EFD (TZS
+        # 11M+ au zilizosajiliwa VAT)", mention VAT, and REMAIN flagged.
+        if _VAT_TOKEN.search(sentence):
+            co_named_lawful |= _STATUTORY_THRESHOLDS["vat_registration"]
         for subject in sorted(subjects):
             lawful = _STATUTORY_THRESHOLDS[subject]
             if body_amounts & lawful:
                 continue                      # narrowing decision 2 — see the header
-            for a in amounts:
+            for pos, a in amounts:
+                if a in co_named_lawful:
+                    continue                  # N3
+                if _negated_at(sentence, pos):
+                    continue                  # N1 — the amount is MENTIONED, not asserted
+                if not _frame_reaches(sentence, pos, positions):
+                    continue                  # N2
                 out.append((subject, a))
     return out
 

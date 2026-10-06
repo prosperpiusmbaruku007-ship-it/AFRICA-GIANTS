@@ -815,8 +815,32 @@ class Orchestrator:
                 # _render would emit nothing, and GUARD A's note applies: silence is worse than
                 # a wrong answer. Closing the fact-path case needs replacement copy, which is
                 # its own scoped piece of work. Named here rather than half-done.
-                or fidelity.body_states_wrong_levy_rate(cleaned)):
+                or fidelity.body_states_wrong_levy_rate(cleaned)
+                # D-FIDELITY-7 (built 2026-08-23, WIRED 2026-10-06). A stated turnover threshold
+                # that is not the statutory one. Safe to blank here for the same reason as every
+                # rule above: the engine's working still renders.
+                or fidelity.body_states_wrong_threshold(cleaned)):
             cleaned = ""
+        elif sub.computation is None and fidelity.body_states_wrong_threshold(cleaned):
+            # ⛔ THE FACT PATH CANNOT BE BLANKED, AND THAT IS WHY THIS IS A SECOND BRANCH RATHER
+            # THAN ONE MORE `or` ABOVE. _render returns the body alone when there is no
+            # computation, so blanking a fact answer returns an EMPTY REPLY. GUARD A's note
+            # governs: silence is worse than a wrong answer. The body is REPLACED.
+            #
+            # This is the branch that reaches eval_347 — a FACT-path question whose live reply on
+            # 2026-10-06 was "Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 11,000,000 (TZS
+            # 10M +)", with the CORRECTED index row at rank 1 for both phrasings. Zero index-side
+            # headroom, so no retrieval or content change can reach it; the guard layer is the
+            # only one that can.
+            #
+            # IT STOPS THE WRONG ANSWER. IT DOES NOT PRODUCE THE RIGHT ONE. eval_347 goes from a
+            # confident fabrication to a non-answer, which still scores as a miss. Said plainly
+            # in clarification.wrong_threshold_withheld's docstring so a later reader does not
+            # mistake a shrinking wrong-answer count for a rising correct-answer count.
+            subject = fidelity.stated_wrong_thresholds(cleaned)[0][0]
+            return dataclasses.replace(
+                sub, text=clarification.wrong_threshold_withheld(subject),
+                raw_text=sub.text, needs_clarification=True)
         elif sub.computation is None and fidelity.body_contradicts_stated_headcount(
                 cleaned, sub.sub_question.text):
             stated = fidelity.stated_headcount(sub.sub_question.text)

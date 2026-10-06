@@ -980,3 +980,24 @@ Total: 1 | Flagged: 1
 
 [2026-10-05T13:44:42.315184] Checked C:\Users\jhjh\AppData\Local\Temp\tmpzlvjumbe\lf_ok.jsonl
 Total: 1 | Flagged: 0
+
+[2026-10-06T19:10:41.997681] Checked C:\Users\jhjh\AppData\Local\Temp\tmpvqblock_\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-10-06T19:10:42.182647] Checked C:\Users\jhjh\AppData\Local\Temp\tmpvqblock_\lf_ok.jsonl
+Total: 1 | Flagged: 0
+
+[2026-10-06T19:12:09.708996] Checked C:\Users\jhjh\AppData\Local\Temp\tmp2yfy7lva\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-10-06T19:12:09.917866] Checked C:\Users\jhjh\AppData\Local\Temp\tmp2yfy7lva\lf_ok.jsonl
+Total: 1 | Flagged: 0
+
+[2026-10-06T19:13:56.678036] Checked C:\Users\jhjh\AppData\Local\Temp\tmprjju7u1f\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-10-06T19:13:56.896215] Checked C:\Users\jhjh\AppData\Local\Temp\tmprjju7u1f\lf_ok.jsonl
+Total: 1 | Flagged: 0
