@@ -26,6 +26,22 @@ build/
 # Local Storage (ignore actual datasets and models, keep only .gitkeep)
 data/**/*
 !data/**/.gitkeep
+# ⛔ THE SOURCE MANIFEST MUST BE TRACKED, and it was not -- caught 2026-10-06, the same day it
+# was built and reported as shipped. `data/**/*` swallowed it, so the edition contract existed
+# only on one machine: tests/test_source_editions.py was committed and PASSED locally while it
+# would have failed in any fresh clone with "no MANIFEST.json". The suite's green was a
+# property of this laptop.
+#
+# That is R18's lesson about the thing R18 is for. The cached DOCUMENTS stay ignored on purpose
+# (they are large and re-fetchable); the manifest is the committed RECORD of what edition each
+# one was and what bytes it had -- which is the only part that has to survive the machine. An
+# un-ignore, not a relaxation of the rule.
+#
+# Both lines are needed: `data/**/*` excludes the DIRECTORY too, and git does not descend into
+# an excluded directory, so un-ignoring only the file has no effect. Verified with
+# `git check-ignore -v`, not assumed from the pattern.
+!data/source_documents/
+!data/source_documents/MANIFEST.json
 models/**/*
 !models/**/.gitkeep
 !models/registry.json

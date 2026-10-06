@@ -1,0 +1,581 @@
+{
+  "_what": "Edition manifest for every cached source document. An edition is a property of the DOCUMENT, read from it and quoted -- never inferred from a filename.",
+  "_why": "fine_limit said TZS 100,000 because it was read from nssf_act_cap50.pdf, which is R.E.2015. Checking a citation against a cached PDF CAN CERTIFY AN ERROR when the edition renumbered: Cap.50's offences clause is s.72 in R.E.2015 and s.76 in R.E.2023, and R.E.2015's s.76 is a different provision entirely.",
+  "_contract": "Any check that reads a cached source MUST call assert_edition(path, expected) first. A file whose edition is UNDECLARED may not be used to settle a figure.",
+  "_generated_by": "scripts/check_source_editions.py --build",
+  "counts": {
+    "files": 62,
+    "declared": 10,
+    "undeclared": 52,
+    "superseded": 2
+  },
+  "files": {
+    "brela/brela_ada_alama.html": {
+      "sha256": "0dd33cab438d1624eb657702623be4a988675fbdcc2fadbb2aeeed75aa036c4e",
+      "bytes": 53307,
+      "captured_local_mtime_utc": "2026-06-30T01:42:11Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "brela/brela_ada_kampuni.html": {
+      "sha256": "cb1353fcce53b93c72247a8007430af51f8ec4e6b81b7acefaf2e100bacd810e",
+      "bytes": 37719,
+      "captured_local_mtime_utc": "2026-06-30T01:42:10Z",
+      "kind": "portal",
+      "edition": "capture of brela.go.tz/pages/tozo-za-kampuni, not earlier than 10 Jun 2026",
+      "edition_evidence": "embedded news items dated '10 Jun 2026' and '02 Jun 2026' bound the capture from below. A regulator's page has no edition, so the capture date is the only honest answer and is recorded as a BOUND, not as a date we know.",
+      "superseded": true,
+      "superseded_by": "data/source_documents/brela/brela_ada_kampuni_20261006T140442Z.html -- a live re-fetch on 2026-10-06 which is NOT byte-identical and on which several fees DIFFER. This capture is the OLDER evidence and R29 gives the newer reading.",
+      "note": "⭐ THIS CAPTURE BEARS ON THREE DISPUTES OPEN IN CLAUDE.md Section 11, and is quoted here so the next reader does not have to re-derive it:\n  item 14 ('Ada zinazolipwa na kampuni ambapo KIFUNGU XII cha Sheria kinahusika'), fourth bullet: 'Ada ya kuchelewa kufungua jalada/usajili wa waraka wowote inalipwa kwa Msajili (kwa mwezi au sehemu ya siku za mwezi) ni Dola za Kimarekani 25 /=' -- USD 25, under PART XII. The string '70,000' appears NOWHERE in this capture.\n  item 2: 'Usajili wa kampuni ambayo haina mtaji wa hisa ... Tsh. 300,000 /=' -- and '500,000' appears NOWHERE in this capture.\n  item 10: 'Gharama za kujaza taarifa ya mwaka Tsh. 22,000 /=' and item 9: late filing 'TSHS 2,500 /=' per month -- both already locked, re-confirmed.\n⚠️ THIS DOES NOT DISPROVE THE 2026-10-04 READING of TZS 70,000. It establishes that NO CACHED ARTIFACT SUPPORTS IT and that the one capture we hold says USD 25. A live page can change; an unsaved live reading cannot be checked by anyone, which is the whole argument for capturing before citing.\n🔴 RESOLVED 2026-10-06 BY RE-FETCHING: the page DID change. See the timestamped capture below. Every figure quoted above is accurate FOR THIS CAPTURE and superseded as a statement about the current page."
+    },
+    "brela/brela_ada_kampuni_20261006T140442Z.html": {
+      "sha256": "8d5543ac68eb4d3dc72fd1762dc7cc9c037870df65ac33f3654eb3c11c73b52c",
+      "bytes": 57804,
+      "captured_local_mtime_utc": "2026-10-06T14:04:42Z",
+      "kind": "portal",
+      "edition": "live capture of brela.go.tz/pages/tozo-za-kampuni at 2026-10-06T14:04:42Z",
+      "edition_evidence": "fetched with curl, HTTP 200, 57,804 bytes, sha256 8d5543ac68eb4d3dc72fd1762dc7cc9c037870df65ac33f3654eb3c11c73b52c. The capture timestamp is IN THE FILENAME, so the edition cannot be separated from the file. Embedded news item '28 Sep 2026' is consistent with it.",
+      "superseded": false,
+      "note": "⭐ THIS CAPTURE RESOLVES THE BRELA FEE DISPUTES, AND IT RESOLVES THEM AGAINST THE CACHED JUNE EVIDENCE.\nThe dispute was never two contradictory readings of one page -- IT WAS A REAL AMENDMENT BETWEEN TWO DATES. The June capture (mtime 2026-06-30 04:42, re-fetched 16:44 the same day to byte-identical bytes) and this one differ, so 'disputed' was the wrong frame: both readings were correct, at different times. That dissolves the conflict; what remains is a provenance question, not a contradiction.\n\nTHE WHOLE PART XII SCHEDULE IS NOW DENOMINATED IN TZS, not USD -- which is why this is a substantive amendment and not a rounding, exactly as CLAUDE.md Section 11 anticipated. Item 15, 'Ada chini ya Masharti ya SEHEMU YA XII ya Sheria (Makampuni ya Nje)':\n  (i)   certified copy of the constitution ............ TZS 2,000,000  (was USD 750)\n  (ii)  any Part XII document except the balance sheet . TZS 600,000  (was USD 220)\n  (iii) balance sheet .............................. TZS 600,000  (was USD 220)\n  (iv)  failure/delay to file, per month or part month . TZS 70,000   (was USD 25)\n⭐ So '15(iv)' is EXACTLY the right citation, and the June capture's 'item 14' was the OLD numbering -- the item numbers moved with the redenomination.\n\n  item 2  company without share capital .............. TZS 500,000  (was 300,000)\n\nUNCHANGED, and worth recording as unchanged so the next reader need not re-derive it:\n  item 1(a) incorporation, share capital up to 1,000,000 .. TZS 95,000\n  item 7    annual return ............................. TZS 22,000\n  item 6    late filing, per month or part month ....... TZS 2,500\n  item 3    company NAME fee .......................... TZS 50,000 (label is now 'utunzaji' = maintenance, where June read 'kulinda' = reservation; same figure, different word -- flagged because the locked fact says 'reservation')\n\n⚠️ WHAT THIS STILL DOES NOT SETTLE. This is a REGULATOR SUMMARY PAGE, not the instrument. Companies Act Cap.212 s.458 and s.489(3) delegate every fee amount to the Minister's regulations, so no fee is settleable from the Act and the Companies (Fees) Regulations remain unlocated. The page-level evidence is now consistent, dated, saved and hashed; the amending instrument is still the open question."
+    },
+    "brela/brela_ada_kampuni_v2.html": {
+      "sha256": "cb1353fcce53b93c72247a8007430af51f8ec4e6b81b7acefaf2e100bacd810e",
+      "bytes": 37719,
+      "captured_local_mtime_utc": "2026-06-30T13:44:59Z",
+      "kind": "portal",
+      "edition": "BYTE-IDENTICAL to brela_ada_kampuni.html -- NOT a second capture",
+      "edition_evidence": "sha256 equal to brela/brela_ada_kampuni.html.",
+      "superseded": false,
+      "note": "⛔ THE '_v2' SUFFIX ASSERTS A SECOND OBSERVATION THAT DOES NOT EXIST. Two files, one capture. Anything that reads these as two readings of the page at two times is reading a filename, not a document (R34). Kept rather than deleted so the duplication is recorded instead of quietly resolved."
+    },
+    "brela/brela_ada_leseni.html": {
+      "sha256": "eda2cb6c0f6b28680f90ef2acbd3cb99a4edb4fecea82372480b83fbc6efafd9",
+      "bytes": 30053,
+      "captured_local_mtime_utc": "2026-06-30T01:42:10Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "brela/brela_bn_company.pdf": {
+      "sha256": "7a551218c17382347b4f7bdd9da480fa1c53399e3673dd974592021f0eff864c",
+      "bytes": 319798,
+      "captured_local_mtime_utc": "2026-06-30T13:24:33Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "brela/brela_faq_official.pdf": {
+      "sha256": "07e527411487ce83752b901cd77e8957068126b8a24fcec9366211b435d01f62",
+      "bytes": 380590,
+      "captured_local_mtime_utc": "2026-06-30T13:23:57Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "brela/brela_hatua_10.html": {
+      "sha256": "f2bc89521a71e9c6844730a2b83e49f6aab090ddbae4ba659433feadd26b5024",
+      "bytes": 34690,
+      "captured_local_mtime_utc": "2026-06-30T13:24:02Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "brela/brela_huduma_zetu.html": {
+      "sha256": "764ee5551a540bf2fc5a4ab77c582e942b917983b77c685c756d6f1f84ecc1f3",
+      "bytes": 40939,
+      "captured_local_mtime_utc": "2026-06-30T13:24:07Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "general/jamiiforums_kufungua_kampuni.html": {
+      "sha256": "6b05b56a869b4e0d00d35d275b44c9b2ecfe474b00f260f4df85043e9704cda4",
+      "bytes": 184315,
+      "captured_local_mtime_utc": "2026-06-30T22:51:10Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "general/jamiiforums_vat_discussion.html": {
+      "sha256": "be419c463f5de6c939167f173bb38d252d651aee8e77766a9d9bdd53d516853c",
+      "bytes": 247536,
+      "captured_local_mtime_utc": "2026-06-30T22:51:08Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "general/leseni_biashara_faq_2026.html": {
+      "sha256": "7a09094fb2113420709eaeee8593ef3f7fe06235875788099137ff1355a27825",
+      "bytes": 166474,
+      "captured_local_mtime_utc": "2026-06-30T22:51:13Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "general/sido_urasimishaji.html": {
+      "sha256": "6891cb8d7eb53c2364e2a8b82869810dcbf7dd51314d48dccd18a248131c9941",
+      "bytes": 67208,
+      "captured_local_mtime_utc": "2026-06-30T22:51:21Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "general/tanzania_business_dealers_2017.html": {
+      "sha256": "385f1359b65260de98b0140ab1415952319bb014f16b720572b84137b1a77257",
+      "bytes": 177489,
+      "captured_local_mtime_utc": "2026-06-30T22:51:31Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "general/wauzaji_biashara_blog.html": {
+      "sha256": "d1c5c5927a7247079f280807475ff40f4bdb8c4efcd46dd8f3ef43c42e97b2e7",
+      "bytes": 157913,
+      "captured_local_mtime_utc": "2026-06-30T22:51:25Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "immigration/gn487a_official_gazette.pdf": {
+      "sha256": "dd147c0d3c239858f2fae67e835fb0b08c0ec1f7c08bfc85d187700fd95dfbcf",
+      "bytes": 210998,
+      "captured_local_mtime_utc": "2026-07-01T07:43:31Z",
+      "kind": "gazette",
+      "edition": "GN No. 487A, published 28/7/2025",
+      "edition_evidence": "page 1: 'GOVERNMENT NOTICE No. 487A published on 28/7/2025 THE BUSINESS LICENSING ACT, (CAP. 101)'",
+      "superseded": false
+    },
+    "immigration/residence_permit_guidelines.pdf": {
+      "sha256": "50f6e24ef7ea4b23e25487f404747b7b54092d650b4f804cb1a6165b07704c6e",
+      "bytes": 164134,
+      "captured_local_mtime_utc": "2026-06-30T11:08:15Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "nssf/nssf_act_cap50.pdf": {
+      "sha256": "b7600960ee46fa67777c7905d7a4da74d270d4bcf8df15b70727e921c70192dc",
+      "bytes": 1870232,
+      "captured_local_mtime_utc": "2026-07-01T07:04:00Z",
+      "kind": "statute",
+      "edition": "R.E. 2015",
+      "edition_evidence": "cover: 'CHAPTER 50 THE NATIONAL SOCIAL SECURITY FUND ACT, [PRINCIPAL LEGISLATION] REVISED EDITION OF 2015 ... incorporates all amendments made up to and including 31st December, 2015'",
+      "superseded": true,
+      "superseded_by": "Cap.50 R.E. 2023 (OAG 2025 compilation), sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp, at https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and https://oagmis.oag.go.tz/portal/acts/revised/155/download (byte-identical)",
+      "do_not_verify_against": "THIS FILE PRODUCED THE fine_limit 100x ERROR. s.72(1) here is s.76(1) in R.E.2023, and this edition's s.76 is a DIFFERENT provision ('Protection of contributions'). Renumbering offsets confirmed from R.E.2023's own bracketed notes: s.23<-[21] s.25<-[23] s.29<-[27] s.46<-[44] s.47<-[45] s.50<-[48] s.51<-[49] s.76<-[72]; s.11/s.12/s.14 unmoved."
+    },
+    "nssf/nssf_contributions_en.html": {
+      "sha256": "c61740b2596b7e79c5d1f7a7b0048a48f00bbfc8bd844390bed4579408459c46",
+      "bytes": 59147,
+      "captured_local_mtime_utc": "2026-07-01T06:18:30Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "nssf/nssf_go_contributions.html": {
+      "sha256": "ca93799e558e001500028f6dc3be58310200354dde52bd2f73beb50966c357b1",
+      "bytes": 31799,
+      "captured_local_mtime_utc": "2026-07-01T07:02:20Z",
+      "kind": "portal",
+      "edition": "capture of nssf.go.tz/pages/payment-of-contributions; the page itself cites 'R.E. 2018'",
+      "edition_evidence": "the string 'R.E. 2018' appears in the page body.",
+      "superseded": false,
+      "note": "The Fund's own portal cites R.E.2018 on this page and R.E 2023 on nssf_go_registration.html -- TWO EDITIONS OF ITS OWN ACT across two pages of one site. Neither is the statute; use Cap.50 R.E.2023 for any section number."
+    },
+    "nssf/nssf_go_employers.html": {
+      "sha256": "0d7c98822a6e84bd4bc9c08a44eb44e09dab5ca9bbfff5e5692ad1afc1e5a980",
+      "bytes": 107805,
+      "captured_local_mtime_utc": "2026-07-01T07:01:56Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "nssf/nssf_go_registration.html": {
+      "sha256": "f61eedf118a4b97a0fab16eb7aa93bcdc29133899f944ee2be3a7136eb4dede6",
+      "bytes": 30478,
+      "captured_local_mtime_utc": "2026-07-01T07:02:36Z",
+      "kind": "portal",
+      "edition": "capture of nssf.go.tz registration overview; the page itself cites 'R.E 2023'",
+      "edition_evidence": "the string 'R.E 2023' appears in the page body.",
+      "superseded": false
+    },
+    "nssf/nssf_mobile_taarifa.html": {
+      "sha256": "15ae9203db5754eddf96fc705b25bc6de7e321e4e79af1cf625d3092c4e45664",
+      "bytes": 49019,
+      "captured_local_mtime_utc": "2026-06-30T22:50:53Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "nssf/nssf_payment_contributions.html": {
+      "sha256": "e502b012ab1956c8abaae888f482f6d140b1ed9ef2d073703e54c4c6c158ac1f",
+      "bytes": 59150,
+      "captured_local_mtime_utc": "2026-06-30T22:50:50Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "nssf/nssf_ulipaji_mchango.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "captured_local_mtime_utc": "2026-06-30T01:54:30Z",
+      "kind": "portal",
+      "edition": "NONE -- THE FILE IS 0 BYTES",
+      "edition_evidence": "size 0. There is no content and therefore no edition.",
+      "superseded": false,
+      "note": "⛔ AN EMPTY CACHED SOURCE IS THE R26 INERT-CONTROL SHAPE IN THE SOURCE LAYER. Anything recorded as 'verified against' this path was verified against nothing, and the verification would have looked exactly like a successful one. Kept and declared rather than deleted so the gap is visible; re-fetch or remove deliberately."
+    },
+    "osha/osha_faq_full.html": {
+      "sha256": "483aaf2e205dc405371f867fa62885c8d43c799686a584122237ee7b5bd7c5bd",
+      "bytes": 57128,
+      "captured_local_mtime_utc": "2026-06-30T13:22:37Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "osha/osha_key_reform.html": {
+      "sha256": "668c1f7ef3911506c2e154c7d0e18ce538178a08e6ec2a061524337bda630b8a",
+      "bytes": 35349,
+      "captured_local_mtime_utc": "2026-06-30T13:22:43Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "osha/osha_maswali.html": {
+      "sha256": "705cf1b232bb5a845718304791826f4e9a4c3ad68fcd6386ba2ab4ed7b7e8c76",
+      "bytes": 57128,
+      "captured_local_mtime_utc": "2026-06-30T01:42:12Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "osha/osha_press_release_fees.pdf": {
+      "sha256": "866250326d1d50ca43fea4250dee4c2b7fe91bae1b3ebf4be5b8b709bf63dc7d",
+      "bytes": 482431,
+      "captured_local_mtime_utc": "2026-06-30T13:45:52Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "osha/osha_training.html": {
+      "sha256": "b25e89fe78dea3ffb7087020cc106f69314d2f9ad7b02a2fe6fe6f1f433da9e0",
+      "bytes": 127934,
+      "captured_local_mtime_utc": "2026-06-30T13:23:44Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "osha/osha_usalama_afya.txt": {
+      "sha256": "7155a9daf31e11001ae3aee82ea0ce7ebcdb9e9628bf4e5345af9b718fa071b8",
+      "bytes": 3099,
+      "captured_local_mtime_utc": "2026-06-30T02:28:25Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/TRA.txt": {
+      "sha256": "edaafd0609d7c21d44aa4687bd339c59f3abfd9e050df3b52d0c2a79b93393bb",
+      "bytes": 2036,
+      "captured_local_mtime_utc": "2026-06-24T17:44:15Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/habib_advisory_tax_guide_2025_26.pdf": {
+      "sha256": "6d7f026339c112c6c88a43f54faa2b1c5cc4badad415c490d5ed80977333ecd7",
+      "bytes": 575660,
+      "captured_local_mtime_utc": "2026-06-30T22:51:07Z",
+      "kind": "advisory",
+      "edition": "Hanif Habib & Co. tax guide 2025/2026",
+      "edition_evidence": "cover text names the firm and the 2025/2026 year.",
+      "superseded": false
+    },
+    "tra/sdl_guide.txt": {
+      "sha256": "e7bf33e61a8b74891a65ccf34dcf2b61fdc9f9039ff9c2b1c7d07b9609693259",
+      "bytes": 3479,
+      "captured_local_mtime_utc": "2026-06-23T10:57:10Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_digital_service_tax_sw.html": {
+      "sha256": "3f0f7ccf7f53d72ba95d9445ecec78ede99e547af0a688b134bd52fe18e2146e",
+      "bytes": 81882,
+      "captured_local_mtime_utc": "2026-06-30T22:50:46Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_efd_index.html": {
+      "sha256": "80c54d42d18cd2cac06db3c048d01456db5942882ee37247365587f268ea5f02",
+      "bytes": 22147,
+      "captured_local_mtime_utc": "2026-06-30T13:42:25Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_efd_makosa.html": {
+      "sha256": "8acd897ae83abd8bdbc1036acc8b413c6edd771b832567aca366f0db336b16d8",
+      "bytes": 21446,
+      "captured_local_mtime_utc": "2026-06-30T13:41:58Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_efd_ukweli.html": {
+      "sha256": "e2ef2854915effadf80f1b5e406a67939716c6999dc135d217f4648f5f835d8d",
+      "bytes": 21309,
+      "captured_local_mtime_utc": "2026-06-30T13:28:43Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_kalenda_sw.html": {
+      "sha256": "0c54ebc0359bd5d3da75f3b4a15af997d345b9a0a68f6ac8521d9510450a4f19",
+      "bytes": 21131,
+      "captured_local_mtime_utc": "2026-06-30T13:44:05Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_kodi_binafsi_sw.html": {
+      "sha256": "2d9e13f76597b674cc7c4735817d99fa0eeb57f1dbac65f018dc353a16dedee1",
+      "bytes": 119799,
+      "captured_local_mtime_utc": "2026-06-30T12:41:15Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_kuanzisha_biashara_sw.html": {
+      "sha256": "6721200bd77b8693d4c294e3ec7351ae1a2eee35f20649696b1afeee59834b18",
+      "bytes": 83332,
+      "captured_local_mtime_utc": "2026-06-30T12:41:17Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_laws_sw.html": {
+      "sha256": "c135e6b3ed2c3c4fc9b96ffa8f1162a8ab50f9283f1fa4ced0045c2860b0b759",
+      "bytes": 21048,
+      "captured_local_mtime_utc": "2026-06-30T13:44:48Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_mapato_ajira_sw.html": {
+      "sha256": "b487f9c9976bfa489872bc9ddc520dd17c2a0753292b6f2c7d1ebb7f6bcfb9e8",
+      "bytes": 21713,
+      "captured_local_mtime_utc": "2026-06-30T12:42:54Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_paye_sw.html": {
+      "sha256": "d8e6620e301ed250460b363f0ee4c8c39426a5f04ec3f67d46d3d40a5425e3de",
+      "bytes": 100094,
+      "captured_local_mtime_utc": "2026-06-30T12:41:13Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_sdl_sw.txt": {
+      "sha256": "d90995a07cd3cdf6c5f56b54fc0ff0e8d387f222fafe173cfe45406888d2ab12",
+      "bytes": 33095,
+      "captured_local_mtime_utc": "2026-06-30T02:07:00Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_taxes_duties_2025_2026.pdf": {
+      "sha256": "3f2b62caa11a8c32ddf89292e9d8ee6f87aee9306eaee30b11e615da6f7481db",
+      "bytes": 2204282,
+      "captured_local_mtime_utc": "2026-06-29T20:42:33Z",
+      "kind": "advisory",
+      "edition": "TRA 'Taxes and Duties at a Glance' July 2025 (FY 2025/2026)",
+      "edition_evidence": "cover: 'TAXES FOR OUR DEVELOPMENT JULY, 2025'",
+      "superseded": false,
+      "note": "A regulator SUMMARY, not the statute. CLAUDE.md Section 4 records that this family's Class A transport row could not be verified against primary text."
+    },
+    "tra/tra_ulipaji_kodi_sw.html": {
+      "sha256": "c629dfdc916ff1128fa4ba9857a35e1d9194a55d389345cb0c62e1d984384211",
+      "bytes": 79879,
+      "captured_local_mtime_utc": "2026-06-30T12:41:08Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_vat_deferment_sw.html": {
+      "sha256": "2cf6a03b49b1f618e6615cd4d0090869e557553268d7cab4eb62367fd7573e5d",
+      "bytes": 80056,
+      "captured_local_mtime_utc": "2026-06-30T13:42:39Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_vat_full_sw.html": {
+      "sha256": "b3f550d9c2d8427ec7dd99e52f46e799034335942ed819005ee8e99b21df72da",
+      "bytes": 124237,
+      "captured_local_mtime_utc": "2026-06-30T13:42:33Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_vat_full_sw_stripped.txt": {
+      "sha256": "604e4ec2a3b491e2bd77e5cd6169904b14264a661acf561c0397531045587485",
+      "bytes": 30442,
+      "captured_local_mtime_utc": "2026-09-02T19:29:53Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_vat_registration_sw.html": {
+      "sha256": "16532aae4b475cea6e04a674389fba90ad440e77d2f06b330ee7dbef715a64a0",
+      "bytes": 124297,
+      "captured_local_mtime_utc": "2026-06-30T13:46:34Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_vat_registration_sw_stripped.txt": {
+      "sha256": "9a74396a4c825e5d28ba3041f536f5c234dc440de8212a286ea67b0a391148fd",
+      "bytes": 30449,
+      "captured_local_mtime_utc": "2026-09-02T19:29:53Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_vat_relief_sw.html": {
+      "sha256": "11014bbde7850148f2063ea4a2c8ca1f1de371d0641f0d7ecca6c1ecff9bb873",
+      "bytes": 124350,
+      "captured_local_mtime_utc": "2026-06-30T13:43:10Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_vat_sw.txt": {
+      "sha256": "e5fc7519d356699f3badc3db8c90c45a5f6b78d947962ef4c46a021470b4888a",
+      "bytes": 23447,
+      "captured_local_mtime_utc": "2026-06-30T02:13:48Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_vfk.txt": {
+      "sha256": "c2e17cfeab065b66423d489134851b7f56b7fb77b8151fa0268a634a1a885c06",
+      "bytes": 7235,
+      "captured_local_mtime_utc": "2026-06-30T02:20:34Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_withholding_tax_sw.html": {
+      "sha256": "ca4fff4740a600056e5540272a1238be085eaa9be5b378fcbd472ecfc93229fe",
+      "bytes": 89226,
+      "captured_local_mtime_utc": "2026-06-30T22:50:43Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "wcf/wcf_announcement_05.html": {
+      "sha256": "f1b0466336532225e3772fe1fc34ed689b870da3274eacd0ba3bfac11bde06b8",
+      "bytes": 96123,
+      "captured_local_mtime_utc": "2026-06-30T13:44:53Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "wcf/wcf_huduma.html": {
+      "sha256": "db1556ce3cbb46aea7e9bab2a5bfe2704dc1ca7cb2a198dc6a77fc2e949d5a52",
+      "bytes": 106851,
+      "captured_local_mtime_utc": "2026-06-30T11:07:58Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "wcf/wcf_michango.html": {
+      "sha256": "1e341acf6c4d07f9e31f0b691f460dabe5da4583d19a3d8d6ebe7a1873884d1e",
+      "bytes": 98235,
+      "captured_local_mtime_utc": "2026-06-30T11:08:02Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "wcf/wcf_online_services.html": {
+      "sha256": "a76b2f34d2f9a4d0b304f76c704d460d4e4901a4075db5b363ae8d1aaabf8447",
+      "bytes": 100602,
+      "captured_local_mtime_utc": "2026-06-30T13:44:57Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "wcf/wcf_sheria.html": {
+      "sha256": "239979532707e79bcaad052eb6a8e76c2acd1a9bd233dd9333986a41669701fa",
+      "bytes": 101440,
+      "captured_local_mtime_utc": "2026-06-30T11:08:07Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "wcf/wcf_ulemavu.html": {
+      "sha256": "c3c06a7893b89149c7a1ff670059e2c8554d5e9e18aeb0cfa1d534213de41eaa",
+      "bytes": 96865,
+      "captured_local_mtime_utc": "2026-06-30T11:08:04Z",
+      "kind": "portal",
+      "edition": "UNDECLARED",
+      "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    }
+  }
+}

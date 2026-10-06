@@ -71,7 +71,8 @@ NEW_GUARDS = [
 
 # Keys whose embedded TEXT this package changes. Each must still self-retrieve, so a rewrite
 # that makes a row unreachable by its own content fails here rather than in production.
-CHANGED_TEXT_KEYS = ["fine_limit", "imprisonment_term_limit", "nssf_payment_deadline"]
+CHANGED_TEXT_KEYS = ["fine_limit", "imprisonment_term_limit", "nssf_payment_deadline",
+                     "efd_threshold_tzs_11m"]
 
 # The superseded value each rewritten row must CONTRADICT but never ASSERT. Both rows name the
 # old figure deliberately, under a negation, because four training rows assert the old fine and
@@ -84,8 +85,28 @@ SUPERSEDED = [
     # row that does contradict it ("si tarehe 10"), because the replacement does not repeat the
     # old row's verb. A ban pattern must match the CLAIM (the date), not one phrasing of it.
     ("nssf_payment_deadline", r"tarehe 10\b|the 10th"),
+    # Added 2026-10-06. Row 57's fabricated TZS 11,000,000 "EFD threshold", re-verified against
+    # TAA Cap.438 s.44 on 2026-08-29 and found invented. The row must NAME it in order to
+    # reject it -- corpus rows assert it and a bare restatement only competes with the trained
+    # prior -- and must never assert it.
+    ("efd_threshold_tzs_11m", r"11[,.]?000[,.]?000|milioni kumi na moja"),
 ]
 NEGATED = r"(?:\bsi\b|\bnot\b|\bsio\b)[\s:,]*(?:TZS\s*)?$"
+
+# ⛔ GUARDS WHOSE ANCHOR THIS PACKAGE CHANGES, mapped to the anchor they USED TO carry.
+#
+# Without this the displacement arm MISFILES them, and it did: the 'EFD threshold' guard came
+# back "[pre-existing fail] <- fails on deployed index too", which reads as "not this package's
+# doing". It is an artefact of the comparison. The baseline arm looks for the CURRENT anchor in
+# the DEPLOYED index, and a newly-written anchor is by definition absent from it -- so base_hit
+# is always False and any genuine failure is laundered into "pre-existing".
+#
+# That is the R24 shape in the diagnostic layer: an arm that agrees with the comforting answer
+# for a reason unrelated to the question. The baseline must be asked with the OLD anchor, which
+# is the only version of the guard the deployed index could ever have satisfied.
+CHANGED_ANCHORS = {
+    "EFD threshold": "milioni kumi na moja",
+}
 
 
 def main():
@@ -202,8 +223,13 @@ def main():
         if any(any(a.lower() in texts[i].lower() for a in want) for i, _ in t3):
             continue
         b3 = base_top(query)
-        base_hit = any(any(a.lower() in deployed[i].lower() for a in want) for i, _ in b3)
+        # Ask the baseline with the anchor the deployed index could actually have satisfied.
+        base_want = [CHANGED_ANCHORS[name]] if name in CHANGED_ANCHORS else want
+        base_hit = any(any(a.lower() in deployed[i].lower() for a in base_want)
+                       for i, _ in b3)
         rec = {"guard": name, "anchors": want,
+               "baseline_anchor_used": base_want,
+               "anchor_changed_by_this_package": name in CHANGED_ANCHORS,
                "prospective_top3": [texts[i][:100] for i, _ in t3],
                "deployed_top3": [deployed[i][:100] for i, _ in b3],
                "passes_on_deployed_index": base_hit}

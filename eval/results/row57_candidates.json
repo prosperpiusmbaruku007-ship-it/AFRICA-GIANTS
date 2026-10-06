@@ -1,0 +1,95 @@
+{
+  "_what": "Candidate texts for index row 57, measured against the real prospective index with the production builder.",
+  "_why": "The first corrected draft measured REGRESSED on eval_347 -- the old, WRONG row won that query at rank 1 and the corrected draft fell out of the top 3, losing to the two VAT-registration rows. 'Correct but unretrievable' is not a fix here: eval_347 is a false-premise question, so if the corrected row does not win it the answer comes from a VAT row that will confirm a 200M figure.",
+  "_deployed_baseline": {
+    "old_row_rank_on_eval_347": 1,
+    "note": "the OLD row won this query with the FABRICATED 'milioni kumi na moja'. That is the rank a candidate has to match, and it is why the trade had to be resolved rather than accepted."
+  },
+  "_queries": {
+    "eval_347_verbatim": "query: Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?",
+    "vat_displacement_guard": "query: Kizingiti cha kusajili VAT ni mauzo ya kiasi gani kwa mwaka?"
+  },
+  "candidates": [
+    {
+      "candidate": "A_shipped_draft_too_long",
+      "chars": 415,
+      "eval_347_rank": 4,
+      "eval_347_in_top3": false,
+      "eval_347_top3": [
+        "application fee patent: 12,000 TZS -- patent application fee",
+        "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.",
+        "Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6."
+      ],
+      "vat_query_rank": 3,
+      "vat_query_in_top3": true,
+      "anchor_unique": true,
+      "anchor_rows": [
+        57
+      ],
+      "collides_with_other_guard_anchor": false,
+      "text": "Kizingiti cha kuanza kutumia mashine ya EFD: HAKITUMIKI — EFD haina kizingiti cha mauzo hata kidogo. Mashine ya risiti inahitajika kwa DEFAULT kwa kila anayeuza bidhaa au kutoa huduma, bila kujali mauzo. Msamaha hutolewa TU kwa tangazo rasmi la Kamishna Mkuu linalotaja jina lako au kundi lako. SI TZS 11,000,000 — kiwango hicho si cha EFD kabisa. Na SI TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD."
+    },
+    {
+      "candidate": "B_short_negation_first",
+      "chars": 235,
+      "eval_347_rank": 3,
+      "eval_347_in_top3": true,
+      "eval_347_top3": [
+        "application fee patent: 12,000 TZS -- patent application fee",
+        "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.",
+        "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo. SI TZS 200,000,000 "
+      ],
+      "vat_query_rank": 3,
+      "vat_query_in_top3": true,
+      "anchor_unique": true,
+      "anchor_rows": [
+        57
+      ],
+      "collides_with_other_guard_anchor": false,
+      "text": "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo. SI TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Na SI TZS 11,000,000. Mashine ya risiti inahitajika kwa kila mfanyabiashara bila kujali mauzo."
+    },
+    {
+      "candidate": "C_mirrors_old_shape",
+      "chars": 237,
+      "eval_347_rank": 3,
+      "eval_347_in_top3": true,
+      "eval_347_top3": [
+        "application fee patent: 12,000 TZS -- patent application fee",
+        "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.",
+        "Kizingiti cha kuanza kutumia mashine ya EFD: HAKUNA — EFD haina kizingiti cha mauzo kwa mwaka. "
+      ],
+      "vat_query_rank": 3,
+      "vat_query_in_top3": true,
+      "anchor_unique": true,
+      "anchor_rows": [
+        57
+      ],
+      "collides_with_other_guard_anchor": false,
+      "text": "Kizingiti cha kuanza kutumia mashine ya EFD: HAKUNA — EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 (hiyo ni kizingiti cha kusajili VAT, si EFD) na SI TZS 11,000,000. Biashara zote hutumia EFD bila kujali kiwango cha mauzo."
+    },
+    {
+      "candidate": "D_shortest",
+      "chars": 172,
+      "eval_347_rank": 1,
+      "eval_347_in_top3": true,
+      "eval_347_top3": [
+        "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 20",
+        "application fee patent: 12,000 TZS -- patent application fee",
+        "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12."
+      ],
+      "vat_query_rank": 3,
+      "vat_query_in_top3": true,
+      "anchor_unique": true,
+      "anchor_rows": [
+        57
+      ],
+      "collides_with_other_guard_anchor": false,
+      "text": "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Na SI TZS 11,000,000."
+    }
+  ],
+  "passing": [
+    "B_short_negation_first",
+    "C_mirrors_old_shape",
+    "D_shortest"
+  ]
+}

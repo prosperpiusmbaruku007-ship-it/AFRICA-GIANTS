@@ -1220,6 +1220,33 @@ five independent mechanisms, each requiring a different eye to catch:
 >
 > **The question to ask of any new detector: whose words is it matching, and were they written
 > for the population you are now pointing it at?**
+>
+> **⛔ AND WHEN YOU ADD A MENTION-VS-ASSERTION FILTER TO ONE, NOTE WHICH WAY IT FAILS — IT IS
+> NOT THE WAY FILTERS NORMALLY FAIL.** A sweep for a wrong value matches the documentation of
+> its own correction: after the four stale NSSF-fine rows were quarantined, the sweep came back
+> with **six new hits, every one a file written to FIX the defect**. The remedy is to score a
+> superseded value *named in order to reject it* as a MENTION rather than an ASSERTION — three
+> live index rows (57, 63, 159) deliberately carry their old value under a negation, so a
+> presence check would fail the very rows it protects.
+>
+> **The hazard is that a LOOSE mention rule does not add noise — IT DELETES FINDINGS.** The
+> first draft used a bare `si\s`, which matches inside the ordinary Swahili word `kiasi `
+> (*"kiasi kisicholipwa"*), and that reclassified **the one real false positive** as a mere
+> mention, silently removing it from the adjudicated set. Every alternative in the rule is now
+> word-bounded.
+>
+> That is the opposite of how one expects a filter to fail. A loose filter is supposed to let
+> junk *through*, where it is visible and annoying; this one quietly **shrank the population
+> under adjudication**, and a shorter list of findings is indistinguishable from progress. So:
+> **word-bound every alternative, and after adding a mention rule, re-check that the findings
+> you already knew about are still in the list.**
+>
+> The second reason this matters is cumulative: left unhandled, each remediation pass makes the
+> next sweep noisier, so **the instrument degrades in proportion to how thoroughly the defect
+> was documented** — and the pressure that creates is to document less. Closed two ways here:
+> the polarity rule, and naming the swept population *file by file* rather than by directory,
+> since a measurement script is not a route to a user and does not belong in the population at
+> all.
 
 > **🔍 THE TECHNIQUE, worth using whenever an edit touches data that drives a parametrize list:
 > `pytest -q --collect-only`, diff the node ids before and after, and treat a SHRINKING count as a

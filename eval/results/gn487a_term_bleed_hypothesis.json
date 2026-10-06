@@ -1,0 +1,149 @@
+{
+  "_what": "Tests the GN487A term-bleed hypothesis against the shipped 184-row index before any fix is built.",
+  "_live_observation": {
+    "artifact": "eval/results/cap50_deploy_verification_2026_10_05.json",
+    "probe": "FINDING_gn487a_term_bleed",
+    "question": "Nikipatikana na hatia ya kosa chini ya sheria ya NSSF, nitatozwa faini ya kiasi gani na kifungo cha muda gani?",
+    "reply": "Kwa mujibu wa Sheria ya NSSF, adhabu ya msingi ni faini ya TZS 20,000,000 (milioni ishirini) AU kifungo cha miezi sita (6). Thibitisha na NSSF (nssf.go.tz)."
+  },
+  "_statute": "Cap.50 R.E.2023 s.76(1): 'a fine not exceeding ten million shillings or to imprisonment for a term not exceeding two years or to both'. GN487A: not less than TZS 10,000,000 and/or 6 months. Row 20 is CORRECT for GN487A and is not touched.",
+  "premise_check": {
+    "hypothesis": "the NSSF fine rows state the figure WITHOUT the term, so the model completes it from the nearest row that has both",
+    "rows_containing_the_two_year_term": [
+      159,
+      160
+    ],
+    "nssf_ceiling_rows": [
+      159,
+      160
+    ],
+    "both_ceiling_rows_carry_the_term": true,
+    "verdict": "PREMISE FALSE -- both NSSF ceiling rows already carry 'miaka miwili' explicitly, and they are the ONLY rows in the index that do. The implied fix (add the term) was already in place when the bleed was observed."
+  },
+  "retrieval": [
+    {
+      "label": "the live conviction phrasing (verbatim from the artifact)",
+      "query": "Nikipatikana na hatia ya kosa chini ya sheria ya NSSF, nitatozwa faini ya kiasi gani na kifungo cha muda gani?",
+      "top5_rows": [
+        159,
+        160,
+        21,
+        149,
+        11
+      ],
+      "top5_text": [
+        "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au kifungo cha hadi ",
+        "Kosa la NSSF linaweza kuleta kifungo (jela) cha hadi miaka miwili, au faini ya hadi TZS 10,000,000, ",
+        "Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini si zaidi ya TZS 5,000,000 (mili",
+        "Ukichelewesha kulipa mchango wa NSSF, adhabu (penalty) ni ASILIMIA 5 ya kiasi kisicholipwa.",
+        "nssf penalty: NSSF late payment penalty is 5% per month of unpaid contributions"
+      ],
+      "nssf_ceiling_row_in_top3": true,
+      "six_month_gn487a_row_in_top3": false,
+      "any_gn487a_row_in_top3": true,
+      "rank_of_best_nssf_ceiling_row": 1,
+      "rank_of_SIX_MONTH_gn487a_row": 6,
+      "rank_of_any_gn487a_row": 3
+    },
+    {
+      "label": "prosecution phrasing",
+      "query": "NSSF wananishtaki. Adhabu ya juu ni ipi?",
+      "top5_rows": [
+        159,
+        167,
+        160,
+        10,
+        9
+      ],
+      "top5_text": [
+        "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au kifungo cha hadi ",
+        "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,00",
+        "Kosa la NSSF linaweza kuleta kifungo (jela) cha hadi miaka miwili, au faini ya hadi TZS 10,000,000, ",
+        "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si ",
+        "NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz "
+      ],
+      "nssf_ceiling_row_in_top3": true,
+      "six_month_gn487a_row_in_top3": false,
+      "any_gn487a_row_in_top3": false,
+      "rank_of_best_nssf_ceiling_row": 1,
+      "rank_of_SIX_MONTH_gn487a_row": 22,
+      "rank_of_any_gn487a_row": 7
+    },
+    {
+      "label": "ceiling phrasing (known to work)",
+      "query": "Faini ya juu kabisa kwa kosa la NSSF ni shilingi ngapi?",
+      "top5_rows": [
+        159,
+        160,
+        63,
+        167,
+        21
+      ],
+      "top5_text": [
+        "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au kifungo cha hadi ",
+        "Kosa la NSSF linaweza kuleta kifungo (jela) cha hadi miaka miwili, au faini ya hadi TZS 10,000,000, ",
+        "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa,",
+        "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,00",
+        "Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini si zaidi ya TZS 5,000,000 (mili"
+      ],
+      "nssf_ceiling_row_in_top3": true,
+      "six_month_gn487a_row_in_top3": false,
+      "any_gn487a_row_in_top3": false,
+      "rank_of_best_nssf_ceiling_row": 1,
+      "rank_of_SIX_MONTH_gn487a_row": 8,
+      "rank_of_any_gn487a_row": 5
+    },
+    {
+      "label": "term phrasing",
+      "query": "Kifungu cha kosa la NSSF ni cha muda gani gerezani?",
+      "top5_rows": [
+        159,
+        160,
+        21,
+        20,
+        63
+      ],
+      "top5_text": [
+        "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au kifungo cha hadi ",
+        "Kosa la NSSF linaweza kuleta kifungo (jela) cha hadi miaka miwili, au faini ya hadi TZS 10,000,000, ",
+        "Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini si zaidi ya TZS 5,000,000 (mili",
+        "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni kumi), na/au",
+        "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa,"
+      ],
+      "nssf_ceiling_row_in_top3": true,
+      "six_month_gn487a_row_in_top3": false,
+      "any_gn487a_row_in_top3": true,
+      "rank_of_best_nssf_ceiling_row": 1,
+      "rank_of_SIX_MONTH_gn487a_row": 4,
+      "rank_of_any_gn487a_row": 3
+    }
+  ],
+  "the_20m_figure": {
+    "penalty_rows_containing_it": [],
+    "finding": "TZS 20,000,000 appears in NO penalty row of the index, so it is not retrieved from anywhere. It cannot be an index defect and no index edit can remove it -- it is generated, not grounded."
+  },
+  "conclusion": {
+    "hypothesis_as_stated": "PREMISE FALSE -- both NSSF ceiling rows already carry 'miaka miwili' explicitly, and they are the ONLY rows in the index that do. The implied fix (add the term) was already in place when the bleed was observed.",
+    "queries_where_the_SIX_MONTH_row_is_in_top3": [],
+    "queries_where_an_nssf_ceiling_row_is_in_top3": [
+      "the live conviction phrasing (verbatim from the artifact)",
+      "prosecution phrasing",
+      "ceiling phrasing (known to work)",
+      "term phrasing"
+    ],
+    "reading": "RETRIEVAL DOES NOT EXPLAIN IT, AND AN INDEX EDIT HAS NO HEADROOM: the NSSF ceiling rows are at rank 1 (and 2) on every phrasing tested, ABOVE the six-month GN487A row in every case -- and they carry 'miaka miwili' explicitly. So the correct term was IN CONTEXT, at the top, and the reply said six months anyway. That is a generation defect, not an index defect, and NO index edit will fix it. The six months is most likely parametric (GN487A is heavily represented in training), which is the same shape as the D-NSSF-1 party defect: correct fact retrieved, wrong value emitted.",
+    "nssf_ceiling_ranks": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "six_month_row_ranks": [
+      6,
+      22,
+      8,
+      4
+    ],
+    "index_side_headroom": false
+  }
+}

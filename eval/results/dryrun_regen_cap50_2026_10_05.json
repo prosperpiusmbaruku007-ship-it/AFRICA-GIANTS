@@ -168,6 +168,12 @@
       "row": 63,
       "self_retrieves": true,
       "text": "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni asilimia 5 ya kiasi kisicholipwa kwa kila mwezi au sehemu ya"
+    },
+    {
+      "key": "efd_threshold_tzs_11m",
+      "row": 57,
+      "self_retrieves": true,
+      "text": "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Na SI TZS 11,000,00"
     }
   ],
   "superseded_value_polarity": [
@@ -182,6 +188,12 @@
       "asserts_superseded_value": [],
       "explicitly_contradicts_it": true,
       "text": "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni asilimia 5 ya kiasi kisicholipwa kwa kila mwezi au sehemu ya mwezi."
+    },
+    {
+      "key": "efd_threshold_tzs_11m",
+      "asserts_superseded_value": [],
+      "explicitly_contradicts_it": true,
+      "text": "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Na SI TZS 11,000,000."
     }
   ],
   "verdict": "SAFE TO RUN"

@@ -474,6 +474,18 @@ for _k, _must_not, _must, _why in [
      'Cap.50 R.E.2023 s.14(1): "within one month after the end of the month in respect of '
      'which the contributions are due and payable". The 10th appears in NO source -- the '
      'fact\'s own verified_by says so -- and was row 63 of the deployed index.'),
+    # Added 2026-10-06. Row 57 asserted a FABRICATED TZS 11,000,000 EFD turnover threshold for
+    # five and a half weeks after the 2026-08-29 re-verification found it invented -- while the
+    # critical query above DEMANDED that figure be retrievable, and the comment above the row
+    # told maintainers not to change it. Three things defending one fabrication.
+    ('efd_threshold_tzs_11m',
+     r'11[,.]?000[,.]?000|milioni\s+kumi\s+na\s+moja|14[,.]?000[,.]?000',
+     r'haina\s+kizingiti|hakitumiki',
+     'TAA Cap.438 R.E.2023 s.44(1) makes fiscal-receipt issuance the DEFAULT for every person '
+     'supplying goods or rendering services; s.44(2) allows exemption ONLY by a '
+     'Commissioner-General public notice naming a person or class. NO turnover figure appears '
+     'in the section or anywhere in the Act. TZS 11M and TZS 14M are adjacent PRESUMPTIVE '
+     'INCOME TAX band edges (Income Tax Act First Schedule para.2(3)) -- a different provision.'),
 ]:
     assert _k in fact_keys, (
         f'[FATAL] {_k} absent from the built fact set -- it was present in the 184-row index '
@@ -607,7 +619,26 @@ critical_queries = [
     ('NSSF compound (120k selection bug)', 'query: Kampuni ina wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja. NSSF jumla ya kampuni ni kiasi gani?', ['1,440,000']),
     # EFD-threshold Swahili grounding (eval_347): the concise efd_threshold_tzs_11m fact must
     # WIN its own query — previously the 200M-magnitude vat_registration fact hijacked it.
-    ('EFD threshold', 'query: Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?', ['milioni kumi na moja']),
+    #
+    # 🔴 ANCHOR CORRECTED 2026-10-06, AND THE OLD ANCHOR IS THE WORST ONE FOUND YET. It read
+    # ['milioni kumi na moja'] — ELEVEN MILLION — the figure re-verified against TAA Cap.438
+    # s.44 on 2026-08-29 and found FABRICATED. So from that date this guard did not merely fail
+    # to notice the stale row: IT REQUIRED THE FABRICATION TO BE PRESENT AND RETRIEVABLE, and
+    # passed on every regen because it was. Any regen that corrected row 57 would have tripped
+    # this guard and read as the regression.
+    #
+    # Third instance of the defect-defends-itself shape in one day — after act_section_12's
+    # wrong_patterns rejecting the CORRECT Part XII citation, and check_facts_index_sync's
+    # PINNED needle requiring 'ifikapo tarehe 10'. All three were written to protect a fact and
+    # all three were pointed at the wrong value. THE COMMON CAUSE: each was authored by
+    # searching the INDEX for text that is present and unique, and a stale row is present and
+    # unique. Nothing in anchor selection asks whether the text being anchored is TRUE.
+    #
+    # The new anchor IS the claim under guard (there is no threshold), not a magnitude. It also
+    # cannot collide with efd_not_every_business's committed 'HAKUNA kizingiti cha mauzo' anchor
+    # — different word, 'haina' vs 'hakuna' — verified unique against the prospective index by
+    # the dry run, not by eye.
+    ('EFD threshold', 'query: Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?', ['EFD haina kizingiti cha mauzo']),
     # Anti-displacement guard (bracket): the new concise EFD fact mentions 200M/kusajili-VAT,
     # which could displace the real VAT-registration fact from a genuine VAT-reg query — the
     # exact failure mode the GN487A concise facts hit. This must still return the 200M VAT-reg

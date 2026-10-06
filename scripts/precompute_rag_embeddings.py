@@ -282,16 +282,70 @@ CONCISE_BILINGUAL_FACTS = {
     # carry a displacement risk toward genuine VAT-registration queries (as the GN487A concise
     # facts did) — guarded by the two verification tuples in regenerate_rag_e5.py; narrow this
     # text (trim the 200M contrast) if the regen gate flags displacement.
-    # KEPT PRISTINE (value-at-front + tight 200M-contrast) — this exact text was the
-    # deployed 213-fact index and PASSES the adversarial eval_347 'EFD threshold' tuple.
-    # Do NOT add applicability prose here; the "not every business" correction lives in
-    # the separate 200M-free efd_not_every_business key below (adding it here tipped
-    # eval_347 out of top-3 — see PROGRESS §FACT-ACCURACY / regen b54eb23).
+    # 🔴 REWRITTEN 2026-10-06. THE TEXT THIS REPLACES ASSERTED THE FABRICATION, LIVE, FOR FIVE
+    # AND A HALF WEEKS AFTER IT WAS FOUND, AND THE COMMENT ABOVE IT TOLD MAINTAINERS NOT TO
+    # TOUCH IT. Both halves are the defect.
+    #
+    # The old text: 'Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000
+    # (milioni kumi na moja) kwa mwaka.' Re-verified against TAA Cap.438 R.E.2023 s.44 on
+    # 2026-08-29 and found FABRICATED: s.44(1) makes fiscal-receipt issuance the DEFAULT for
+    # every person supplying goods or rendering services, with exemption ONLY by a
+    # Commissioner-General public notice naming a person or class (s.44(2)). No turnover figure
+    # appears in the section or anywhere in the Act. TZS 11M and TZS 14M are adjacent
+    # PRESUMPTIVE-INCOME-TAX band edges (Income Tax Act First Schedule para.2(3)) -- a different
+    # provision entirely.
+    #
+    # ⛔ THE PRESERVATION INSTRUCTION THAT STOOD HERE IS WITHDRAWN, AND WHY IT HELD IS THE
+    # LESSON. It read "KEPT PRISTINE ... Do NOT add applicability prose here", and its reason
+    # was a RETRIEVAL RANK: adding the applicability correction "tipped eval_347 out of top-3".
+    # That is a real measurement and it was traded against CORRECTNESS without the trade being
+    # named. A row that wins its query by stating a fabricated threshold has not passed
+    # eval_347 -- and eval_347's own gold was corrected on 2026-08-29 to say "EFD haina
+    # kizingiti cha mauzo kabisa", so the tuple this text was "KEPT PRISTINE" to pass had
+    # already stopped asking for it. Per R17's corollary, the instruction is inverted here with
+    # its history intact rather than deleted: a note that tells a future maintainer not to fix a
+    # real defect is worse than no note.
+    #
+    # THE SYNC GAP WAS DIAGNOSED ON THE SIBLING AND NOT ASKED OF THIS KEY. The comment block
+    # immediately below (efd_not_every_business, rewritten 2026-09-03) records this exact
+    # failure -- stale concise text, a wrong_patterns regex whose 40-char window "did not catch
+    # its own violation (checked directly: re.search found no match)" -- and NAMES
+    # efd_threshold_tzs_11m as where the fabrication finding lives. The sibling was fixed; the
+    # key named in its own fix note was not.
+    #
+    # ASK-ALIGNMENT IS PRESERVED, not sacrificed to correctness (R15's lever): the row still
+    # LEADS with the asker's words from eval_347 ("Kizingiti cha kuanza kutumia ... EFD") and
+    # still carries the 200M contrast that targets that row's false premise. What changed is the
+    # answer it gives to its own question -- from a fabricated figure to "there is no threshold".
+    #
+    # ⭐ AND THE OLD COMMENT'S TRADE WAS NOT A TRADE -- IT WAS DILUTION. MEASURED, 4 candidates,
+    # eval/index_quality/measure_row57_candidates.py -> eval/results/row57_candidates.json.
+    # The first corrected draft DID measure REGRESSED, exactly as the old comment predicted: it
+    # fell out of eval_347's top-3, losing to the two 'Kizingiti cha kusajili VAT: mauzo ya TZS
+    # ...' rows -- the same hijack the original note described. But the cause was LENGTH, not
+    # correctness, and the relationship is monotonic:
+    #
+    #     415 chars -> rank 4      235 -> rank 3      237 -> rank 3      172 -> RANK 1
+    #
+    # Rank 1 is what the OLD, FABRICATED row scored on this query. So the corrected text matches
+    # it exactly while being true. "Correct but unretrievable" was never the only alternative to
+    # "wrong but rank 1" -- the third option was to state the correction BRIEFLY, and nobody had
+    # measured it. That is why the preservation instruction survived five weeks: it recorded a
+    # real measurement of ONE draft and was read as a property of correctness itself.
+    #
+    # The applicability mechanism (default for everyone, exemption only by Commissioner-General
+    # notice) is deliberately NOT here -- it lives in the 200M-free efd_not_every_business row
+    # below, which is the split the old comment itself specified and which still holds. This row
+    # answers "what is the threshold?" with "there is none, and here is what 200M and 11M
+    # actually are".
+    #
+    # WORDING CONSTRAINT, checked not assumed: this text must NOT contain the exact string
+    # 'HAKUNA kizingiti cha mauzo', the committed anchor of TWO other guards pointing at
+    # efd_not_every_business. 'haina kizingiti cha mauzo' is a different word and does not
+    # collide -- verified unique against the prospective index, not by eye.
     'efd_threshold_tzs_11m':
-        'Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 '
-        '(milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti '
-        'cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD '
-        'bila kujali kiwango cha mauzo.',
+        'Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. '
+        'SI TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Na SI TZS 11,000,000.',
 
     # REWRITTEN 2026-09-03 -- the text below this comment (Q16 fix, pre-2026-08-29) was
     # STALE, not just under-ranked: it stated a TZS 11,000,000 turnover threshold as the

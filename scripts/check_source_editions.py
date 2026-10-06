@@ -98,7 +98,11 @@ DECLARED = {
                             "the capture from below. A regulator's page has no edition, so the "
                             "capture date is the only honest answer and is recorded as a BOUND, "
                             "not as a date we know.",
-        "superseded": False,
+        "superseded": True,
+        "superseded_by": "data/source_documents/brela/brela_ada_kampuni_20261006T140442Z.html "
+                         "-- a live re-fetch on 2026-10-06 which is NOT byte-identical and on "
+                         "which several fees DIFFER. This capture is the OLDER evidence and "
+                         "R29 gives the newer reading.",
         "note": "⭐ THIS CAPTURE BEARS ON THREE DISPUTES OPEN IN CLAUDE.md Section 11, and is "
                 "quoted here so the next reader does not have to re-derive it:\n"
                 "  item 14 ('Ada zinazolipwa na kampuni ambapo KIFUNGU XII cha Sheria "
@@ -113,7 +117,53 @@ DECLARED = {
                 "⚠️ THIS DOES NOT DISPROVE THE 2026-10-04 READING of TZS 70,000. It establishes "
                 "that NO CACHED ARTIFACT SUPPORTS IT and that the one capture we hold says USD "
                 "25. A live page can change; an unsaved live reading cannot be checked by "
-                "anyone, which is the whole argument for capturing before citing.",
+                "anyone, which is the whole argument for capturing before citing.\n"
+                "🔴 RESOLVED 2026-10-06 BY RE-FETCHING: the page DID change. See the "
+                "timestamped capture below. Every figure quoted above is accurate FOR THIS "
+                "CAPTURE and superseded as a statement about the current page.",
+    },
+    "brela/brela_ada_kampuni_20261006T140442Z.html": {
+        "kind": "portal",
+        "edition": "live capture of brela.go.tz/pages/tozo-za-kampuni at 2026-10-06T14:04:42Z",
+        "edition_evidence": "fetched with curl, HTTP 200, 57,804 bytes, sha256 "
+                            "8d5543ac68eb4d3dc72fd1762dc7cc9c037870df65ac33f3654eb3c11c73b52c. "
+                            "The capture timestamp is IN THE FILENAME, so the edition cannot be "
+                            "separated from the file. Embedded news item '28 Sep 2026' is "
+                            "consistent with it.",
+        "superseded": False,
+        "note": "⭐ THIS CAPTURE RESOLVES THE BRELA FEE DISPUTES, AND IT RESOLVES THEM AGAINST "
+                "THE CACHED JUNE EVIDENCE.\n"
+                "The dispute was never two contradictory readings of one page -- IT WAS A REAL "
+                "AMENDMENT BETWEEN TWO DATES. The June capture (mtime 2026-06-30 04:42, "
+                "re-fetched 16:44 the same day to byte-identical bytes) and this one differ, so "
+                "'disputed' was the wrong frame: both readings were correct, at different "
+                "times. That dissolves the conflict; what remains is a provenance question, "
+                "not a contradiction.\n\n"
+                "THE WHOLE PART XII SCHEDULE IS NOW DENOMINATED IN TZS, not USD -- which is why "
+                "this is a substantive amendment and not a rounding, exactly as CLAUDE.md "
+                "Section 11 anticipated. Item 15, 'Ada chini ya Masharti ya SEHEMU YA XII ya "
+                "Sheria (Makampuni ya Nje)':\n"
+                "  (i)   certified copy of the constitution ............ TZS 2,000,000  (was USD 750)\n"
+                "  (ii)  any Part XII document except the balance sheet . TZS 600,000  (was USD 220)\n"
+                "  (iii) balance sheet .............................. TZS 600,000  (was USD 220)\n"
+                "  (iv)  failure/delay to file, per month or part month . TZS 70,000   (was USD 25)\n"
+                "⭐ So '15(iv)' is EXACTLY the right citation, and the June capture's 'item 14' "
+                "was the OLD numbering -- the item numbers moved with the redenomination.\n\n"
+                "  item 2  company without share capital .............. TZS 500,000  (was 300,000)\n\n"
+                "UNCHANGED, and worth recording as unchanged so the next reader need not "
+                "re-derive it:\n"
+                "  item 1(a) incorporation, share capital up to 1,000,000 .. TZS 95,000\n"
+                "  item 7    annual return ............................. TZS 22,000\n"
+                "  item 6    late filing, per month or part month ....... TZS 2,500\n"
+                "  item 3    company NAME fee .......................... TZS 50,000 (label is "
+                "now 'utunzaji' = maintenance, where June read 'kulinda' = reservation; same "
+                "figure, different word -- flagged because the locked fact says 'reservation')\n\n"
+                "⚠️ WHAT THIS STILL DOES NOT SETTLE. This is a REGULATOR SUMMARY PAGE, not the "
+                "instrument. Companies Act Cap.212 s.458 and s.489(3) delegate every fee amount "
+                "to the Minister's regulations, so no fee is settleable from the Act and the "
+                "Companies (Fees) Regulations remain unlocated. The page-level evidence is now "
+                "consistent, dated, saved and hashed; the amending instrument is still the open "
+                "question.",
     },
     "brela/brela_ada_kampuni_v2.html": {
         "kind": "portal",
@@ -201,9 +251,16 @@ def build():
     for rel, full in _walk():
         d = DECLARED.get(rel)
         size = os.path.getsize(full)
+        # THE LOCAL MTIME IS THE ONLY CAPTURE-DATE EVIDENCE MOST OF THESE HAVE, and it lives on
+        # one laptop. Committing it into the manifest is the whole point: it is the difference
+        # between "fetched at some time" and a date the next reader can reason about. It also
+        # exposed that brela_ada_kampuni_v2.html was fetched 12 HOURS after its sibling and
+        # returned identical bytes -- a genuine re-fetch that found no change, not a mislabel.
         entries[rel] = {
             "sha256": _hash(full),
             "bytes": size,
+            "captured_local_mtime_utc": __import__("datetime").datetime.utcfromtimestamp(
+                os.path.getmtime(full)).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "kind": d["kind"] if d else "portal",
             "edition": d["edition"] if d else "UNDECLARED",
             "edition_evidence": d["edition_evidence"] if d else UNDATED_PORTAL_CAPTURE,
