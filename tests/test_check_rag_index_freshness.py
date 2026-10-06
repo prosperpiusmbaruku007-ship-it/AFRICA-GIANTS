@@ -189,19 +189,38 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     rag_fact_count did NOT move (184 -> 184), so unlike the previous ship there was no window
     in which the config and the index could disagree.
 
-    FLIPS BACK TO `assert ok is False` the next time a fact or the embedding builder changes
-    without a matching regen -- which is the normal staging state, not an error. Two flips in
-    one day is not churn: it is one correction cycle, and both halves were load-bearing.
+    ⭐ TENTH FLIP, back to `assert ok is False`, and the pending change is a SINGLE ROW.
+
+    897e0e2 rewrote index row 57. It had asserted a FABRICATED TZS 11,000,000 "EFD turnover
+    threshold" -- re-verified against TAA Cap.438 R.E.2023 s.44 on 2026-08-29 and found
+    invented, since s.44(1) makes fiscal-receipt issuance the default for everyone and s.44(2)
+    allows exemption only by a Commissioner-General notice. It stayed live for five and a half
+    weeks after that finding, defended by three separate things: the row, a critical query
+    anchored on the fabricated figure itself, and a comment instructing maintainers not to
+    change the row.
+
+    ⚠️ NOTE WHICH INPUT IS STALE AND WHICH IS NOT. Only
+    `scripts/precompute_rag_embeddings.py` is ahead of the artifacts this time;
+    `scripts/locked_facts.json` is NOT, because the LOCKED FACT WAS ALREADY CORRECT. The defect
+    was entirely in the embedded rendering. That is the sync gap in its purest form -- the fact
+    said the right thing on 2026-08-29 and the text served to users said the opposite until
+    today -- and this check is the only thing in the repo that makes the window visible.
+
+    FLIPS BACK TO `assert ok is True` when the regen ships row 57 and its artifacts are
+    dual-committed.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is True, (
-        f"the live repo reports STALE: {report}. If a fact or the embedding builder has been "
-        "edited since this ship with no matching regen, that is the honest state -- flip this "
-        "back to `assert ok is False`, NAME the pending change and assert which inputs are "
-        "stale, and keep it failing until the regen ships. Do NOT silence it in either "
-        "direction: both states are meaningful, and the state is the whole signal.")
-    assert not report["stale_inputs"], (
-        f"FRESH overall but with stale inputs reported, which should be impossible: {report}")
+    assert ok is False, (
+        f"the live repo reports FRESH: {report}. If the row-57 regen has shipped and its "
+        "artifacts are dual-committed, flip this to `assert ok is True`, record the flip with "
+        "the shipping commit, and re-assert `not report['stale_inputs']`. Do NOT silence it in "
+        "either direction: both states are meaningful, and the state is the whole signal.")
+    # WHICH input is stale is the assertion, not just THAT one is. Here it is the builder ALONE
+    # -- if locked_facts.json also appears, a second pending change is hiding behind this one.
+    assert set(report["stale_inputs"]) == {"scripts/precompute_rag_embeddings.py"}, (
+        f"a DIFFERENT input is stale than the row-57 fix accounts for: "
+        f"{sorted(report['stale_inputs'])}. The locked facts were already correct in this "
+        f"cycle, so locked_facts.json appearing here means a separate unshipped change.")
     assert report["artifacts_diverged"] is False, (
         "the two index directories disagree -- a different defect from a pending regen, "
         "and one the R15 dual-commit step exists to prevent")
