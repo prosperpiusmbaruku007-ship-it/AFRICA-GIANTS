@@ -1,0 +1,97 @@
+{
+  "_question": "How many corrected facts have a row ASSERTING a figure their own wrong_patterns call wrong, despite the gate reporting CLEAN?",
+  "_why_this_test": "The gate's strong signal depends on a wrong_patterns regex matching the index row's exact wording. Row 63 and row 57 both escaped by WORD ORDER / ADJACENCY, not by content. This test extracts the FIGURES the patterns single out and checks assertion directly, so adjacency cannot hide a defect.",
+  "_bound": "LOWER BOUND, one axis. Facts whose correction is QUALITATIVE carry no figure to test and are invisible here -- which is most of the no_figure bucket. R21: this is a lower bound on cost and an upper bound on nothing.",
+  "population": {
+    "locked_facts_total": 249,
+    "with_correction_note": 55,
+    "resolved_and_figure_testable": 5,
+    "no_wrong_figure_to_test": 47,
+    "unresolved_by_the_gate": 3
+  },
+  "totals": {
+    "asserting_a_wrong_figure": 2,
+    "clean": 3
+  },
+  "flags": [
+    {
+      "key": "efd_threshold_tzs_11m",
+      "asserted_wrong_figures": [
+        "11,000,000"
+      ],
+      "rows": [
+        "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD bila kujali kiwango cha mauzo."
+      ],
+      "verdict": "GENUINE -- LIVE STALE ROW, SAME CLASS AS ROW 63",
+      "why": "Row 57 opens 'Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 ... kwa mwaka', asserting as a threshold the exact figure its own fact calls a fabrication ('TZS 11M and TZS 14M are NOT EFD thresholds'). The wrong_pattern `kizingiti cha efd[^.?!]{0,30}(11|14),?000,?000` cannot match because 25 chars of ordinary Swahili sit between 'kizingiti cha' and 'efd'. Corrected 2026-08-29; still live 2026-10-06. NOT FIXED HERE -- reported.",
+      "also_note": "It contradicts a SIBLING LIVE ROW: efd_not_every_business's row says EFD is required by default regardless of turnover. Two live rows, opposite answers to the same question."
+    },
+    {
+      "key": "vat_threshold_200m_july2024_increase",
+      "asserted_wrong_figures": [
+        "100,000,000"
+      ],
+      "rows": [
+        "vat threshold 200m july2024 increase: VAT registration threshold was increased from TZS 100M to TZS 200M effective 1 JULY 2023 (NOT July 2024) by Government Notice No. 448Y of 2023, amending Regulation 14 of the VAT (General) Regulations 2015. Current thresholds: TZS 200M per 12 months OR TZS 100M p"
+      ],
+      "verdict": "FALSE POSITIVE -- the figure is CORRECT in this row's context",
+      "why": "The flagged figure is TZS 100,000,000, and row 71 states it correctly: it is the 6-MONTH threshold ('TZS 100M per any 6-month rolling period'). The wrong_pattern it came from is `vat.*kizingiti.*100,000,000 kwa mwaka` -- 100,000,000 PER YEAR, which is the superseded 12-month figure. Same number, two periods, one right and one wrong.",
+      "what_it_demonstrates": "A FIGURE-ONLY test is context-blind by construction, and that is not fixable by widening it: the wrong_pattern already encodes the context ('kwa mwaka') and is RIGHT to. So this measurement must stay ADJUDICATED and must never be promoted to a blocking gate as it stands -- it would block a regen on a correct row, which is the expensive direction (R21)."
+    }
+  ],
+  "no_figure_to_test": [
+    "NSSF_split_triggers",
+    "OSHA_safety_officer_threshold",
+    "act_section_12",
+    "balance_sheet_filing_fee_section_12_act",
+    "brela_foreign_late_filing_penalty",
+    "corporate_tax_rate",
+    "document_filing_fee_section_12_act_excluding_balance_sheet",
+    "efd_approved_supplier_verification",
+    "efd_tra_closure_authority",
+    "electrical_test_fee_reduction_final",
+    "electrical_test_fee_reduction_initial",
+    "fine_limit",
+    "gn487a_mgeni_cap357_definition",
+    "gn487a_transitional_provision",
+    "gn487a_visa_revocation",
+    "memorandum_articles_of_association_filing_fee",
+    "minimum_directors",
+    "minimum_shareholders",
+    "minimum_turnover_tax",
+    "name_similarity_threshold",
+    "nssf_employer_registration_deadline",
+    "nssf_payment_deadline",
+    "nssf_retirement_age",
+    "objection_deposit_requirement",
+    "p45_not_tanzanian",
+    "patent_term",
+    "paye_band_2_rate",
+    "paye_bands_with_examples",
+    "paye_nonresident_flat_rate",
+    "paye_p9_deadline",
+    "paye_personal_relief",
+    "permit_class_c_categories",
+    "permit_class_d_does_not_exist",
+    "presumptive_tax_bands_2022",
+    "rent_wht_rate",
+    "risk_assessment_frequency",
+    "royalties_wht_rate",
+    "sdl_calculation_example",
+    "sdl_exemption_categories",
+    "stamp_duty_property_transfer",
+    "vat_deferment_limit_date",
+    "vat_deferment_threshold_percentage",
+    "vat_reduced_rates",
+    "vat_standard_rate",
+    "vat_withholding_remittance_deadline",
+    "wcf_disease_reporting_deadline",
+    "wcf_rate_0_5_percent_confirmed"
+  ],
+  "unresolved": [
+    "health_and_safety_act_citation",
+    "legal_citation_amendment_act_sdl",
+    "legal_citation_tax_administration"
+  ],
+  "_gate_said": "correction_sync=CLEAN on every regen through 2026-10-06, including the one that shipped today."
+}

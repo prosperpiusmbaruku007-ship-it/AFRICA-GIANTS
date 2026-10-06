@@ -1,0 +1,64 @@
+{
+  "_question": "Why didn't the correction-sync gate catch index row 63?",
+  "_method": "Reconstructed the PRE-FIX state from git (locked_facts @ eb12e70, deployed index @ 7d46df1) and ran the REAL check_facts_and_index against it, with the reconstruction asserted against the known stale row text first (R24).",
+  "reconstruction": {
+    "facts_sha": "eb12e70",
+    "index_sha": "7d46df1",
+    "index_row_63": "NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata.",
+    "fact_had_correction_note": true,
+    "fact_wrong_patterns": [
+      "nssf.*tarehe 10 au mwishoni mwa mwezi",
+      "nssf.*tarehe 10 au mwisho wa mwezi"
+    ]
+  },
+  "real_gate_verdict": {
+    "ok": true,
+    "buckets": {
+      "stale_wrong_pattern": 0,
+      "negated_mention": 7,
+      "figure_not_found": 5,
+      "clean": 37,
+      "unresolved": 3,
+      "no_check_possible": 0
+    },
+    "key_bucket": "figure_not_found"
+  },
+  "hypotheses": [
+    {
+      "hypothesis": "(a) the row comes from a different key, so the gate never associated it",
+      "rows_resolved_for_the_key": [
+        "NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata."
+      ],
+      "stale_row_among_them": true,
+      "verdict": "REFUTED -- the gate resolved the key TO the stale row"
+    },
+    {
+      "hypothesis": "(b) wrong_patterns never named the old value AS THE ROW PHRASED IT",
+      "per_pattern": [
+        {
+          "pattern": "nssf.*tarehe 10 au mwishoni mwa mwezi",
+          "matches_the_stale_row": false,
+          "matched_text": null
+        },
+        {
+          "pattern": "nssf.*tarehe 10 au mwisho wa mwezi",
+          "matches_the_stale_row": false,
+          "matched_text": null
+        }
+      ],
+      "any_pattern_matches": false,
+      "what_the_patterns_require": "the literal conjunction 'au' plus 'mwishoni/mwisho wa mwezi' -- i.e. the AMBIGUOUS '10th OR end of month' formulation",
+      "what_the_row_actually_said": "'ifikapo tarehe 10 ya mwezi unaofuata' -- a BARE assertion of the 10th, with no 'au' and no mention of month-end at all",
+      "verdict": "SUPPORTED -- no pattern matches the text that was actually served"
+    },
+    {
+      "hypothesis": "(c) the gate is soft and a flag was read past",
+      "CORRECTION_SYNC_BLOCKING": "False",
+      "key_was_flagged": false,
+      "verdict": "REFUTED -- the gate never flagged it, so softness is irrelevant to this miss. Softness would only matter had there been a flag to ignore; the gate reported CLEAN, which a BLOCKING posture would also have passed."
+    }
+  ],
+  "_answer": [
+    "(b) wrong_patterns never named the old value AS THE ROW PHRASED IT"
+  ]
+}
