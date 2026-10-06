@@ -1,0 +1,131 @@
+{
+  "_what": "R16 live verification of the D-FIDELITY-7 wiring (2026-10-06).",
+  "_endpoint": "https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run",
+  "_deploy": "app stop --yes then deploy; '✓ App deployed in 6.5s' (cached image/mounts), which is exactly when R16 says a deploy is most likely to be stale. Containers forced cold by the stop.",
+  "_change_under_test": "chike/orchestrator.py: fidelity.body_states_wrong_threshold wired on BOTH paths -- compute blanks, fact replaces with clarification.wrong_threshold_withheld.",
+  "_why_the_negatives_matter_most": "this guard REMOVES TEXT, and on the fact path removal means a non-answer. A false positive costs a whole answer and the cost lands on a user invisibly. Both EFD phrasings and all three gold rows the UNNARROWED rule would have blanked are asked live.",
+  "_scoring": "must_not_assert is POLARITY-checked through the same helper the row-57 run used; naming a figure under a negation is correct behaviour.",
+  "_write_discipline": "rewritten after EVERY row; per-row errors captured, never fatal",
+  "totals": {
+    "probes": 8,
+    "run": 8,
+    "pass": 8,
+    "fail": 0,
+    "error": 0
+  },
+  "verdict": "WIRING VERIFIED",
+  "rows": [
+    {
+      "id": "PRIMARY_eval_347_verbatim",
+      "proves": "THE PRIMARY CHECK. The exact question whose live reply asserted a fabricated TZS 11,000,000 EFD threshold six hours ago, with the corrected row at rank 1.",
+      "source": "eval/accuracy_gate/eval_questions_003.jsonl eval_347 (verbatim)",
+      "question": "Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?",
+      "note": "PASS = the fabrication is gone. It may be gone because the answer is now correct OR because the guard replaced it; `outcome` below records which, and the second is a STOP, not a fix -- it still scores as a gate miss.",
+      "pre_wiring_reply": "Hapana. Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 11,000,000 (TZS 10M +). Si TZS 200,000,000. Thibitisha na TRA (tra.go.tz).",
+      "pre_wiring_artifact": "eval/results/row57_deploy_verification_2026_10_06.json",
+      "reply": "Samahani — jibu langu la awali lilitoa kiwango cha mauzo kwa mashine ya risiti (EFD) ambacho sikiwezi kukithibitisha, hivyo sitalitumia. Sitakisii kiwango kingine. Tafadhali thibitisha na TRA (tra.go.tz) au niulize kwa namna nyingine, nikueleze utaratibu bila kutaja kiasi.",
+      "mentions_under_negation": false,
+      "outcome": "REPLACED_BY_GUARD",
+      "checks": {
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "NEGATIVE_efd_second_phrasing",
+      "proves": "THE LOAD-BEARING NEGATIVE. This phrasing answered CORRECTLY before the wiring. If the guard catches it, the wiring traded one wrong answer for one DESTROYED right answer -- the expensive direction, and invisible to us.",
+      "source": "eval/controls/verify_row57_deploy_2026_10_06.py row57_new_guard_claim",
+      "question": "EFD inaanza kutumika kwa mauzo ya kiasi gani kwa mwaka?",
+      "note": "must_not_match is the withheld copy: a correct answer must NOT be replaced.",
+      "pre_wiring_reply": "Hakuna kizingiti cha mauzo kilichowekwa...",
+      "reply": "Hakuna kizingiti cha mauzo kilichowekwa kwa ajili ya kuanza kutumia EFD. Thibitisha na TRA (tra.go.tz).",
+      "mentions_under_negation": false,
+      "outcome": "MODEL_ANSWERED",
+      "checks": {
+        "must_match": true,
+        "not_replaced_by_guard": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "NEGATIVE_gold_eval_355_live",
+      "proves": "A gold question the UNNARROWED rule would have blanked. Asked live, because offline the guard sees the gold TEXT while live it sees what the model generates -- a different string.",
+      "source": "eval/accuracy_gate/eval_questions_003.jsonl eval_355 (verbatim)",
+      "question": "Mauzo yangu ni TZS 10,999,000 kwa mwaka. Je, EFD ni lazima kwangu?",
+      "note": "The gold answer states both 10,999,000 and 11,000,000 and says neither changes the answer. N2 clears it: no frame reaches either without crossing the other.",
+      "reply": "Ndiyo, kwa mauzo hayo, unatakiwa kutumia EFD. Hakuna msamaha kwa sababu tu mauzo yako ni chini ya TZS 11M. Thibitisha na TRA (tra.go.tz).",
+      "outcome": "MODEL_ANSWERED",
+      "checks": {
+        "not_replaced_by_guard": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "NEGATIVE_gold_eval_331_live",
+      "proves": "The second gold the unnarrowed rule flagged -- via a NEGATED FRAME ('Hakuna kizingiti cha mauzo kwa EFD (TZS 9,000,000 ...)'). N1 applied to the frame rather than only to the amount is the limb that clears it.",
+      "source": "eval/accuracy_gate/eval_questions_003.jsonl eval_331 (verbatim)",
+      "question": "Mauzo yangu ya mwaka ni TZS 9,000,000. Nahitaji mashine ya EFD?",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia taarifa rasmi (Commissioner-General public notice) inayotaja jina lako au kundi lako maalum. Thibitisha na TRA kama taarifa kama hiyo inakuhusu. Thibitisha na TRA (tra.go.tz).",
+      "mentions_under_negation": false,
+      "outcome": "MODEL_ANSWERED",
+      "checks": {
+        "not_replaced_by_guard": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "NEGATIVE_vat_threshold_untouched",
+      "proves": "The genuine VAT registration threshold is a LAWFUL constant and the guard must never touch it. If this is replaced, N3 regressed.",
+      "source": "kaggle/regenerate_rag_e5.py anti-displacement bracket guard",
+      "question": "Kizingiti cha kusajili VAT ni mauzo ya kiasi gani kwa mwaka?",
+      "reply": "Kizingiti cha kusajili VAT ni mauzo ya shilingi 200,000,000 (TZS 200M) katika kipindi cha miezi 12, au shilingi 100,000,000 (TZS 100M) katika kipindi cha miezi 6. Ukifikia kiasi hicho, lazima ujisajili kwa VAT na TRA ndani ya siku 30. Thibitisha na TRA (tra.go.tz).",
+      "outcome": "MODEL_ANSWERED",
+      "checks": {
+        "must_match": true,
+        "not_replaced_by_guard": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "NEGATIVE_sdl_compute_still_answers",
+      "proves": "A COMPUTE-path question, because the guard was wired into that branch too (where it blanks). The engine's working must still render -- a blanked body with a working is fine, a missing figure is not.",
+      "source": "standard compute negative",
+      "question": "Nina wafanyakazi 25 na mishahara ya TZS 15,000,000 kwa mwezi, SDL ni ngapi?",
+      "reply": "Kwa hesabu sahihi, tumia kiwango cha 3.5% cha SDL kwenye jumla ya mishahara ya wafanyakazi wote 25. Thibisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 15,000,000 = TZS 525,000",
+      "outcome": "MODEL_ANSWERED",
+      "checks": {
+        "must_match": true,
+        "not_replaced_by_guard": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "NEGATIVE_config_only_phrase",
+      "proves": "CONFIG LOADING, separately from code -- the diagnostic that distinguishes a config failure from a stale warm container.",
+      "source": "chike_config.json ooc_phrases (config-only, not in the code fallback)",
+      "question": "Nataka kuuza kiwanja changu, kodi ya mapato ni kiasi gani?",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "outcome": "MODEL_ANSWERED",
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "NEGATIVE_nssf_fine_still_ten_million",
+      "proves": "Yesterday's Cap.50 ship, re-confirmed. One code change in this deploy; the 2026-10-05 corrections must be exactly where they were.",
+      "source": "eval/controls/verify_cap50_deploy_2026_10_05.py fine_ceiling_reachable",
+      "question": "Faini ya juu kabisa kwa kosa la NSSF ni shilingi ngapi?",
+      "reply": "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi). Thibitisha na NSSF (nssf.go.tz).",
+      "mentions_under_negation": false,
+      "outcome": "MODEL_ANSWERED",
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    }
+  ]
+}
