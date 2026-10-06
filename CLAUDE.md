@@ -222,6 +222,66 @@ unreliable.
 Cap 332's presumptive records test cites "section 35 of the Tax Administration Act"; in Cap 438
 R.E. 2023 that provision is **s.43**.
 
+### ⛔ THE RENUMBERING TRAP HAS TWO FORMS, AND THE QUIET ONE MEANS A CITATION CHECKED AGAINST A CACHED PDF CAN *CERTIFY* AN ERROR (added 2026-10-06)
+
+**Both forms were found in one Act — Cap.50 — on the same day, and the pair is the lesson.**
+
+| form | instance | how it fails |
+|---|---|---|
+| **POINTS AT NOTHING** | **`s.5A`.** Four facts cited the First Schedule as made under *"ss.5A(c), 12(1)"*. **R.E.2023 has no s.5A at all**; its Schedule's own rubric reads *"(Made under sections **5(2)(c)** and 12(1) and (5))"*. In R.E.2015 the rubric genuinely read *"(Sections 5A(c) and 12{1))"* — so the citation was right once | **LOUDLY.** The reader finds no such section. They cannot tell whether the fact is wrong or the citation is stale, but they know something is |
+| **POINTS AT THE WRONG THING** | **`s.76`.** The offences clause is **s.72 in R.E.2015** and **s.76 in R.E.2023** (bracket note `[s. 72]`; R.E.2015's own arrangement of sections confirms 72 = *"Criminal proceedings"*). **In R.E.2015, s.76 is "Protection of contributions"** — a different provision entirely | **SILENTLY, AND IT LOOKS LIKE SUCCESS.** A reader who looks up *"s.76(1)"* in the cached PDF reads a real section of a real Act and comes away **confidently confirmed** |
+
+> **The second form is why an edition assertion has to come FIRST rather than alongside. A
+> verification pass that does not establish which edition it is holding is not a verification
+> pass — it is a coin flip whose result is reported as evidence.** Every check this project has
+> built asks whether a citation traces to something real. None of them asked *which edition of
+> the real thing*, and the one that mattered returned a pass.
+
+**Proven by `fine_limit`, and note the direction of the error.** The fact said the maximum fine
+under the NSSF Act is **TZS 100,000**. R.E.2023 s.76(1) reads **ten million shillings** — a
+**100× understatement**, live in the index (row 159) and in four training rows. It was called
+ungrounded in the first report. It was not: its legacy `source` field pointed at
+`data/source_documents/nssf/nssf_act_cap50.pdf`, which is **REVISED EDITION 2015**, where
+s.72(1) genuinely reads *"a fine not exceeding one hundred thousand shillings"*. **R29 mode 2
+(OUT-OF-DATE EDITION), not mode 1 (UNTRACEABLE) — checked, against the wrong edition.**
+
+**🎯 AND THE SIBLING IS THE WHOLE ARGUMENT, because it survived for no good reason.**
+`imprisonment_term_limit` (two years) comes from **the same sentence of the same superseded
+edition** and is **CORRECT** — because Parliament multiplied the fine by 100 and left the term
+of imprisonment alone. One read of one clause in one stale edition produced **one wrong fact and
+one right one**, and nothing in either fact's provenance distinguished them.
+
+> **"Ungrounded" carried no information about which was wrong — and neither did "grounded".**
+> Both were grounded. The sibling's correctness is **luck about which limb Parliament happened
+> to amend**, not evidence that the reading was sound. So a fact's being sourced is not a reason
+> to skip it in an edition audit; it is the reason the audit is needed.
+
+**⛔ THE ENFORCEMENT, because a lesson in prose decays exactly like R30's "TRA unreachable"
+note.** `data/source_documents/MANIFEST.json` declares every cached source's edition **read from
+the document and quoted**, sha256-pinned. `scripts/check_source_editions.py` exposes
+**`assert_edition(path, expected)`**, which raises on an unknown file, on a wrong edition, and on
+a **file swapped under its own name** — the edition is a claim about *bytes*, not about a path,
+and a stale declaration is worse than none because it is trusted.
+
+**In practice:**
+- **Any check that reads a cached source calls `assert_edition()` BEFORE reading it.** A source
+  whose edition is `UNDECLARED` may not settle a figure on its own — **52 of 61 currently are**,
+  and that number is asserted shrink-only so a new cached file must arrive *with* its edition.
+- **A superseded source must name its replacement AND its renumbering offsets**, or the reader
+  who hits the block has nowhere to go. Cap.50's are in the manifest: `s.23←[21] s.25←[23]
+  s.29←[27] s.46←[44] s.47←[45] s.50←[48] s.51←[49] s.76←[72]`, with `s.11/s.12/s.14` unmoved —
+  **and "the number didn't move" is a finding to record, not an absence of one.**
+- **Never delete the stale `source` field to "fix" this** (R27). The invariant is not *never
+  mention the superseded file* — 14 facts legitimately still do — it is **never rest on it
+  alone**: a fact naming it must also carry a current R.E.2023 citation. Enforced in
+  `tests/test_source_editions.py`, planted and watched to block.
+- **An EMPTY cached source is R26's inert control in the source layer.**
+  `nssf/nssf_ulipaji_mchango.txt` is **0 bytes**; anything "verified against" it was verified
+  against nothing, and that verification would have looked exactly like a successful one.
+- **A `_v2` suffix is a filename, not an observation** (R34). `brela_ada_kampuni_v2.html` is
+  **byte-identical** to its sibling: two files, **one capture**. A dispute that turns on whether
+  a page was read twice cannot be settled by a pair of files that are the same bytes.
+
 ---
 
 # 5. DOMAIN SEQUENCE AND CURRENT ACTIVE TIER
@@ -1115,7 +1175,7 @@ loader silently returned nothing must be. The two are byte-identical at the AST 
   and it kept reporting sites already closed. **A worklist that cannot see its own fixes is the
   defect class it exists to find.**
 
-**R20's arrival points, updated 2026-10-05 — FIVE, not one.** The vacuous-check family does not
+**R20's arrival points, updated 2026-10-06 — SIX, not one.** The vacuous-check family does not
 only arrive as a bad `assert` inserted by a mechanical pass. It has now been found arriving through
 five independent mechanisms, each requiring a different eye to catch:
 
@@ -1128,6 +1188,39 @@ five independent mechanisms, each requiring a different eye to catch:
 
 | **a check whose POPULATION is defined by a string match, so editing prose silently removes a row from it** (NEW, 2026-10-05) | `tests/test_locked_facts_finance_act_freshness.py` builds its parametrize list from every fact whose JSON object *contains the string* `"finance act"`. Correcting `paye_p9_deadline`'s citation rewrote its prose, deleted that phrase, and **removed the fact from Finance-Act freshness coverage.** The check still ran, still passed, and simply no longer covered it | **a test-count diff.** The suite went **1590 → 1589 with nothing red.** No failure, no warning — a parametrized case just stopped existing. Found by diffing `--collect-only` node ids before and after the edit |
 
+| **a detector whose signal depends on the DEFECT'S AUTHOR having anticipated the exact wording of the thing it must catch** (NEW, 2026-10-06) | `scripts/check_correction_sync.py` exists for one shape: a fact corrected in `locked_facts.json` whose RAG-embedded text keeps serving the superseded value. Its strong signal is *does the fact's own `wrong_patterns` match its index row?* `nssf_payment_deadline` was corrected on 2026-09-02 to s.14(1)'s *"within one month after the end of the month"*; **index row 63 kept serving `"NSSF inalipwa ifikapo tarehe 10"`** — the 10th — and **every regen in between reported `correction_sync=CLEAN`**. The patterns require the literal `au` plus `mwishoni/mwisho wa mwezi`, i.e. the *ambiguous* "10th OR end of month" conflation; the row asserted a bare 10th. Nothing matched | **a live wrong answer, five weeks later.** Reproduced afterwards by reconstructing all four inputs at one SHA and running the real gate: `eval/controls/diagnose_correction_sync_miss_row63.py` |
+
+> **🔍 WHY THAT SIXTH ONE IS DIFFERENT, AND WHAT TO ASK OF THE NEXT DETECTOR.** The other five
+> fail because of how the *check* was written. This one fails because of **where its signal comes
+> from**: `wrong_patterns` are authored to catch a wrong claim **in generated text** — a model
+> reply, a training pair — and the gate reuses them against **index text**. Two populations,
+> written by different hands for different purposes, and *nothing requires the wordings to
+> overlap*. The gate's own docstring says what the patterns were for; nobody asked whether that
+> was the same thing it was now testing.
+>
+> **It is still open, and the second instance is live.** `efd_threshold_tzs_11m` was corrected on
+> 2026-08-29 (the TZS 11M "EFD threshold" is a fabrication; s.44(1) makes EFD the default for
+> everyone). **Index row 57 reads `"Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS
+> 11,000,000 ... kwa mwaka"`** — asserting the exact figure its own fact rejects — because 25
+> characters of ordinary Swahili (*"kuanza kutumia mashine ya"*) sit between `kizingiti cha` and
+> `efd` and the pattern's window cannot span them. **It also contradicts a sibling live row**
+> (`efd_not_every_business`, which correctly says EFD applies regardless of turnover): two live
+> rows, opposite answers to the same question. And this is the **same failure the checker's own
+> docstring already records as a KNOWN LIMITATION on that sibling** — recorded, widened for one
+> fact, never asked of any other.
+>
+> **Coverage, measured (`eval/controls/measure_correction_sync_adjacency_hole.py`): of 249 locked
+> facts, 55 carry a `correction_note`, and only FIVE are figure-testable at all** — 47 corrections
+> are qualitative and carry no figure, 3 are unresolved. The one axis that works found 1 genuine
+> live defect in those 5. **Do not promote the figure test to blocking as it stands:** its second
+> flag was a false positive (`vat_threshold_200m`'s row states TZS 100,000,000 correctly as the
+> **6-month** threshold while its `wrong_pattern` targets 100,000,000 *"kwa mwaka"* — same number,
+> two periods, one right), and a figure-only test is **context-blind by construction**, not by
+> being too narrow.
+>
+> **The question to ask of any new detector: whose words is it matching, and were they written
+> for the population you are now pointing it at?**
+
 > **🔍 THE TECHNIQUE, worth using whenever an edit touches data that drives a parametrize list:
 > `pytest -q --collect-only`, diff the node ids before and after, and treat a SHRINKING count as a
 > finding.** A dropped test case is invisible to every signal the suite emits: green is green
@@ -1137,13 +1230,15 @@ five independent mechanisms, each requiring a different eye to catch:
 > magic string** — the string was never the point, and restoring it without redoing the check
 > would re-add the row to a population while leaving the question unanswered.
 
-**The common thread across all five:** each one *looks* like a working check from the outside —
+**The common thread across all six:** each one *looks* like a working check from the outside —
 it runs, it doesn't error, it reports a clean result — and the only way any of them was caught was
 someone asking not "does this run" but **"what would have to be true for this to ever report
 something other than clean?"** For a bad assert, the answer is "nothing, it's tautological." For an
 unwired control, "nothing calls it." For a mis-scoped test, "the assumption it encodes is false."
-For a mis-composed fixture, "no member of this population falls in that bucket." Same question,
-four different places it can hide the same answer.
+For a mis-composed fixture, "no member of this population falls in that bucket." For a check whose
+population is a string match, "the magic string is still in the prose." For a borrowed detector,
+**"the author of the defect would have had to anticipate the exact wording of a different
+population's text."** Same question, six different places it can hide the same answer.
 
 ### R25 — A CONTENT REWRITE IN THE CLEANUP LAYER NEEDS ITS JUSTIFICATION IN WRITING, AT THE SITE.
 
