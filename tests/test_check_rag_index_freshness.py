@@ -206,21 +206,34 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     said the right thing on 2026-08-29 and the text served to users said the opposite until
     today -- and this check is the only thing in the repo that makes the window visible.
 
-    FLIPS BACK TO `assert ok is True` when the regen ships row 57 and its artifacts are
-    dual-committed.
+    ⭐ ELEVENTH FLIP, back to `assert ok is True`. The row-57 regen ran (built from 59cf784,
+    184x768, correction_sync=CLEAN) and its artifacts are dual-committed. EXACTLY ONE ROW
+    changed, verified against the fetched file before commit:
+
+        57  'mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka'
+         -> 'EFD haina kizingiti cha mauzo kwa mwaka. ... Na SI TZS 11,000,000.'
+
+    The figure still appears, under a negation, deliberately -- corpus rows assert it, so an
+    explicit contradiction is what overrides the trained prior where a bare restatement merely
+    competes with it. Polarity-checked, not presence-checked, in three places now: the regen's
+    payload gate, the dry run, and the deploy verification.
+
+    FLIPS BACK TO `assert ok is False` the next time a fact or the builder changes without a
+    matching regen. Three flips in two days is three correction cycles, not churn -- and the
+    False states did the work: each one named which input was unshipped and why.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is False, (
-        f"the live repo reports FRESH: {report}. If the row-57 regen has shipped and its "
-        "artifacts are dual-committed, flip this to `assert ok is True`, record the flip with "
-        "the shipping commit, and re-assert `not report['stale_inputs']`. Do NOT silence it in "
-        "either direction: both states are meaningful, and the state is the whole signal.")
-    # WHICH input is stale is the assertion, not just THAT one is. Here it is the builder ALONE
-    # -- if locked_facts.json also appears, a second pending change is hiding behind this one.
-    assert set(report["stale_inputs"]) == {"scripts/precompute_rag_embeddings.py"}, (
-        f"a DIFFERENT input is stale than the row-57 fix accounts for: "
-        f"{sorted(report['stale_inputs'])}. The locked facts were already correct in this "
-        f"cycle, so locked_facts.json appearing here means a separate unshipped change.")
+    assert ok is True, (
+        f"the live repo reports STALE: {report}. If a fact or the embedding builder has been "
+        "edited since this ship with no matching regen, that is the honest state -- flip this "
+        "back to `assert ok is False`, NAME the pending change and assert which inputs are "
+        "stale, and keep it failing until the regen ships. Do NOT silence it in either "
+        "direction: both states are meaningful, and the state is the whole signal.")
+    assert not report["stale_inputs"], (
+        f"FRESH overall but with stale inputs reported, which should be impossible: {report}")
+    assert report["artifacts_diverged"] is False, (
+        "the two index directories disagree -- a different defect from a pending regen, and "
+        "one the R15 dual-commit step exists to prevent")
     assert report["artifacts_diverged"] is False, (
         "the two index directories disagree -- a different defect from a pending regen, "
         "and one the R15 dual-commit step exists to prevent")
