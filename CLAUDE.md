@@ -691,6 +691,47 @@ Corollary for scoping: index-content work is **per-row and testable**, not a bul
 Pick the row that fails, rewrite the fact it needs, measure the rank. Do not re-word in bulk
 and hope.
 
+**🎯 AND WHEN A CORRECTION LOSES RANK, MEASURE LENGTH BEFORE CONCLUDING THAT THE CORRECTION
+COSTS RETRIEVAL. "Correct but unretrievable" is usually a statement about one draft, not about
+correctness** (added 2026-10-06).
+
+Row 57 asserted a fabricated TZS 11,000,000 EFD threshold for **five and a half weeks after it
+was found fabricated**, and the thing that kept it there was a comment reading *"KEPT PRISTINE …
+Do NOT add applicability prose here"* — whose stated reason was that adding the correction
+*"tipped eval_347 out of top-3"*. **That measurement was real.** The first corrected draft did
+regress exactly as predicted, falling out of the top 3 to the two VAT-registration rows.
+
+Four candidates, same correct content, varying only in length
+(`eval/index_quality/measure_row57_candidates.py`):
+
+| chars | eval_347 rank |
+|---|---|
+| 415 | 4 |
+| 237 | 3 |
+| 235 | 3 |
+| **172** | **1** |
+
+**Rank 1 is what the old, fabricated row scored.** The corrected text matches it exactly. So the
+trade was never correctness-vs-rank — it was **dilution**, and the third option nobody had
+measured was *state the correction briefly*.
+
+> **That is how the instruction survived five weeks: it recorded a true measurement of ONE
+> 415-character draft and was read as a property of CORRECTNESS ITSELF.** A measured result
+> about a specific artifact generalises into a principle the moment it is written as prose, and
+> nobody re-measures a principle.
+
+**In practice:**
+- **Vary length before concluding anything about content.** The ask-aligned lead stays; the
+  supporting prose is what gets cut. Here the applicability mechanism (default for everyone,
+  exemption only by Commissioner-General notice) moved to the sibling row that already carried
+  it — which the original comment itself had specified.
+- **When a rank measurement is recorded as guidance, say WHICH DRAFT it was taken on**, and keep
+  the harness (R18). The next reader can then re-measure instead of inheriting a conclusion.
+- **A preservation instruction whose reason is a rank is a candidate for re-measurement, not a
+  rule** — especially once the gold row it was protecting has itself been corrected, as
+  eval_347's had been on 2026-08-29, which already removed the thing the text was "KEPT
+  PRISTINE" to pass.
+
 ### R16 — "✓ App deployed" is NOT verification. Warm containers serve the OLD code.
 
 Learned the hard way on 2026-08-07 shipping the OOC phrase-list fix. `modal deploy` returned
