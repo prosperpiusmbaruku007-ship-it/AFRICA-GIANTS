@@ -724,6 +724,14 @@ FACT_GROUPS = {
             'company_registration_fee_4',
             'company_share_value_threshold_5_min', 'company_registration_fee_5',
             'company_registration_fee_no_share_capital',
+            # ADDED 2026-10-06. `company_registration_fee_bands` is the RE-AUTHORED nine-band
+            # table, and it belongs in this group rather than as its own row for the reason the
+            # group exists: a fee is meaningless without the band it attaches to, and two rows
+            # both carrying band tables would compete for the same query while giving whichever
+            # retrieves three of them a chance to pair a band with the wrong fee. Joining the
+            # group also means the consolidation test checks every one of its figures against
+            # this passage, which is the check that caught the stale 440,000/300,000 here.
+            'company_registration_fee_bands',
         ],
         # RE-LED 2026-08-26 (nat_34 retrieval regression, R15 ask-alignment lever -- see
         # PROGRESS.md "nat_34 rank-4 fix"). The prior text opened with the regulatory frame
@@ -743,13 +751,36 @@ FACT_GROUPS = {
         # numbers the question asks for. Only the SHORT, filler-free lead (values right after
         # each named concept, qualifiers moved later) cleared rank 3. Five phrasings measured
         # against the fixed remainder of the prospective index; this is the only one that won.
+        # ⛔ UPDATED 2026-10-06 TO THE CURRENT SCHEDULE, AND THE SHAPE CHANGED, NOT ONLY THE
+        # NUMBERS. BRELA replaced its fee schedule between 2026-06-30 and 2026-10-06 (dated,
+        # hashed captures: brela_ada_kampuni_v2.html -> brela_ada_kampuni_20261006T140442Z.html).
+        # The share-capital table went from FIVE bands with an open-ended top ("zaidi ya TZS
+        # 50,000,000 ni TZS 440,000") to NINE with a closed top, and the no-share-capital fee
+        # went 300,000 -> 500,000.
+        #
+        # THE RE-LED OPENING IS PRESERVED EXACTLY. The 2026-08-26 wording search (five phrasings,
+        # eval/results/nat34_reledger_probe.json) established that only the SHORT, filler-free
+        # lead -- "kusajili kampuni", "gharama ya kuanzia", "kuhifadhi jina", values immediately
+        # after each named concept -- clears rank 3 for nat_34. That is a measurement about the
+        # LEAD, not about the band list, so the lead is byte-identical and every change is below
+        # it. The row grows by four bands, which is a dilution risk and therefore a RANK question
+        # to re-measure in the dry run -- not a reason to drop bands the regulator publishes
+        # (CLAUDE.md: vary length before concluding anything about content, and say which draft a
+        # rank was measured on).
+        #
+        # BANDS 1-4 ARE UNCHANGED, which is worth stating rather than leaving to inference: only
+        # the old open-ended band 5 split, into five closed bands. So this is not a re-pricing of
+        # the ladder, it is an extension of its top.
         'text': (
             'Kusajili kampuni gharama ya kuanzia ni TZS 95,000; kuhifadhi jina ni TZS 50,000. '
             'Ngazi za ada kwa mtaji wa hisa (share capital): hadi TZS 1,000,000 ni TZS 95,000; '
             'zaidi ya TZS 1,000,000 hadi TZS 5,000,000 ni TZS 175,000; zaidi ya TZS 5,000,000 '
             'hadi TZS 20,000,000 ni TZS 260,000; zaidi ya TZS 20,000,000 hadi TZS 50,000,000 ni '
-            'TZS 290,000; zaidi ya TZS 50,000,000 ni TZS 440,000. Kampuni isiyo na mtaji wa hisa '
-            'ni TZS 300,000. Kubadili jina ni TZS 22,000.'),
+            'TZS 290,000; zaidi ya TZS 50,000,000 hadi TZS 100,000,000 ni TZS 400,000; zaidi ya '
+            'TZS 100,000,000 hadi TZS 500,000,000 ni TZS 450,000; zaidi ya TZS 500,000,000 hadi '
+            'TZS 1,000,000,000 ni TZS 500,000; zaidi ya TZS 1,000,000,000 hadi TZS 10,000,000,000 '
+            'ni TZS 600,000; zaidi ya TZS 10,000,000,000 ni TZS 1,000,000. Kampuni isiyo na mtaji '
+            'wa hisa ni TZS 500,000. Kubadili jina ni TZS 22,000.'),
     },
     'brela_filing_fees': {
         'keys': [
@@ -764,13 +795,51 @@ FACT_GROUPS = {
             'balance_sheet_filing_fee_section_12_act',
             'late_filing_penalty_monthly_fee_section_12_act',
         ],
+        # ⛔ UPDATED 2026-10-06. THE FOREIGN-COMPANY LIMB WAS THE LIVE WRONG ANSWER: this row is
+        # what served "USD 220 / USD 220 / USD 25" after BRELA's own page moved the whole block
+        # into shillings (item 15: 600,000 / 600,000 / 70,000). Dated, hashed capture:
+        # data/source_documents/brela/brela_ada_kampuni_20261006T140442Z.html.
+        #
+        # "kifungu 12" -> "Sehemu ya XII", which is BRELA'S OWN WORDING on the current page
+        # ("Ada chini ya Masharti ya Sehemu ya XII ya Sheria (Makampuni ya Nje)") and matches the
+        # Act read directly on 2026-10-04. The old "kifungu 12" is the string the 2026-09-23
+        # guard rewrite was built around; see act_section_12's _pattern_note before touching it.
+        #
+        # ⚠️ THREE JUNE LINE ITEMS ARE GONE FROM THE OCTOBER SCHEDULE and are DELIBERATELY STILL
+        # HERE: memorandum/articles TZS 66,000, stamp duty TZS 10,000, fomu 14B TZS 1,200. Their
+        # locked facts were not edited because ABSENCE IS NOT A VALUE -- abolished, folded into
+        # another fee, and moved to another page are three different answers giving three
+        # different pieces of advice, and no capture distinguishes them (see
+        # _unresolved_items.brela_vanished_fee_line_items). Removing them from this passage would
+        # assert "abolished" by omission, which is the one reading we have no evidence for.
+        # THREE OTHERS DID CHANGE ON THE SAME PAGE and are updated: file search 3,000 -> 5,000,
+        # search report 22,000 -> 30,000, certified copy of the registration certificate
+        # 4,000 -> 10,000.
         'text': (
             'Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS '
             '66,000; stempu kwa kila nakala ya memorandum TZS 10,000; fomu 14B TZS 1,200; '
             'kupokea/kusajili nyaraka TZS 22,000; kuthibitisha nyaraka kwa ukurasa TZS 3,000; '
-            'kutafuta faili TZS 3,000 na ripoti ya utafutaji TZS 22,000; nakala iliyothibitishwa '
-            'ya cheti cha usajili TZS 4,000. Kampuni ya kigeni (kifungu 12): kuwasilisha nyaraka '
-            'USD 220, mizania USD 220, na faini ya kuchelewa USD 25 kwa mwezi.'),
+            'kutafuta jalada TZS 5,000 na ripoti maalum ya taarifa za kampuni TZS 30,000; '
+            'nakala iliyothibitishwa ya cheti cha usajili TZS 10,000. Kampuni ya kigeni (Sehemu '
+            'ya XII): kuwasilisha nyaraka TZS 600,000, mizania TZS 600,000, na faini ya kuchelewa '
+            'TZS 70,000 kwa mwezi. SI USD 220 na SI USD 25 — hizo ni ada za zamani.'),
+        # ⚠️ "SI USD 220 NA SI USD 25", NOT "SI USD 220 WALA USD 25", and the reason is mechanical
+        # rather than stylistic. The polarity gate in kaggle/regenerate_rag_e5.py looks back a
+        # FIXED 14 characters for a negation. In "SI USD 220 wala USD 25" the second figure has
+        # "USD 220 wala " behind it, so the gate would read it as an ASSERTION and fail this row
+        # for carrying the contradiction it was written to carry. Repeating the negator keeps each
+        # figure inside its own window.
+        #
+        # Worth knowing generally: a polarity rule with a fixed look-back distance constrains how
+        # the protected text may be PHRASED. That is a real coupling between a guard and the prose
+        # it guards, and the cheap side to fix is the prose.
+        # ⚠️ THE CONTRADICTION CLAUSE IS DATELESS ON PURPOSE. A first draft read "hizo zilikuwa
+        # ada za mwaka 2026 kabla ya Julai", which asserts an effective date this project
+        # explicitly does not have -- the same invented-date error the amendments were careful to
+        # avoid in effective_date, reappearing in the served text where a user would actually
+        # read it. "ada za zamani" (old fees) is true and carries no claim about when.
+        # It is also kept SHORT: the 172-char row-57 measurement showed a correction's rank cost
+        # is dilution, not correctness.
     },
     'electrical_test_fee_reduction': {
         # Found 2026-09-03: the R15 regen packaged in fc9b0c8 self-retrieval-failed on this

@@ -286,7 +286,29 @@ PINNED = {
     # re-adjudicated 2026-09-03 (was rows 176/177/178): 'USD 25' alone is no longer unique
     # (the brela_filing_fees GROUP passage at row 181 also states the same figure) --
     # narrowed to the fuller phrase that is unique to this key's own standalone row.
-    "brela_foreign_late_filing_penalty": ("present_elsewhere", "faini ni USD 25 kwa kila mwezi"),
+    # ⛔ RE-PINNED pending_r15 ON 2026-10-06, AND THE REASON THIS LINE CHANGED IS ITSELF THE
+    # FINDING. The needle was "faini ni USD 25 kwa kila mwezi" -- a pin whose decisive substring
+    # IS the value the fact now rejects. BRELA's own schedule moved this fee into shillings
+    # (item 15(iv), TZS 70,000); the fact was amended, and this pin went on REQUIRING the
+    # superseded figure to be retrievable. Identical in shape to check_facts_index_sync's own
+    # 'ifikapo tarehe 10' pin (2026-10-05) and the regen's 'milioni kumi na moja' anchor
+    # (2026-10-06): three instances in two days of a control pointed at the value its own fact
+    # had rejected.
+    #
+    # Caught by scripts/check_anchor_provenance.py -- the structural check built for exactly
+    # this, on the first real correction after it shipped. It had to be WIDENED to do it: the
+    # amendment recorded the old value in a new `superseded_value` field the extractor did not
+    # read, AND the fact names the old value in its own text in order to contradict it, so the
+    # "never treat a currently-asserted value as superseded" rule suppressed it. Both fixed at
+    # the extractor, with the polarity reasoning recorded there.
+    #
+    # pending_r15 rather than a new needle BECAUSE THE SHIPPED INDEX GENUINELY STILL SAYS USD 25.
+    # Writing the corrected needle now would make this check fail for the right reason in the
+    # wrong direction -- and writing the stale one is what just went wrong. The honest state is
+    # "not reachable until the regen ships", which is what pending_r15 means.
+    "brela_foreign_late_filing_penalty": (
+        "pending_r15",
+        None),
     "osha_registration_before_operations": ("present_elsewhere", "Kifungu 16(2)"),
     "sdl_exemption_categories": ("present_elsewhere", "zisizolipa SDL"),
 

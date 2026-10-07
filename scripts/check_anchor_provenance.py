@@ -156,6 +156,39 @@ def superseded_values(fact, strict=False):
                         vals.add(g.lower())
                         vals.add(g.replace(" ", "").lower())   # '320 - 328' -> '320-328'
 
+    # 1b. ⛔ THE `superseded_value` FIELD, ADDED 2026-10-06 — AND THE GAP IT CLOSES IS THIS
+    # CHECK'S OWN R20 ARRIVAL POINT 5: ITS POPULATION WAS DEFINED BY WHERE SUPERSEDED VALUES
+    # HAPPENED TO LIVE WHEN IT WAS WRITTEN.
+    #
+    # Built 2026-10-06, this check read three sources: wrong_patterns literals, quoted strings in
+    # correction_note prose, and Swahili word forms. Hours later the BRELA amendments introduced a
+    # FOURTH, explicit home for the same information -- a `superseded_value` field, which is
+    # strictly the clearest place a fact can state what it no longer asserts. The check could not
+    # see it, so it passed `brela_foreign_late_filing_penalty` whose PINNED needle is literally
+    # "faini ni USD 25 kwa kila mwezi" -- a pin asserting the superseded value, which is the
+    # precise defect the check exists to block, on the first real correction after it shipped.
+    #
+    # It did not fail. It reported CLEAN, which is worse: the suite was green while a stale pin
+    # sat in the repo. "What would have to be true for this to ever report something other than
+    # clean?" -- and the answer was "the fact has to record its old value in one of three places
+    # I thought of."
+    #
+    # A new field is loud (a test went red on the BRELA facts); a new field the CHECKER does not
+    # read is silent. That asymmetry is why this is listed at the site rather than in a note.
+    declared = set()        # from the explicit field -- NOT subject to the `current` suppression
+    for f in ("superseded_value", "superseded_values"):
+        v = fact.get(f)
+        for s in ([v] if isinstance(v, str) else list(v or [])):
+            s = str(s)
+            for lit in re.findall(r"(?<!\d)(\d{1,3}(?:,\d{3})+)(?!\d)", s):
+                declared.add(lit)
+                declared |= _swahili_forms(int(lit.replace(",", "")))
+            # currency-qualified magnitudes ("USD 25", "USD 750") are short but DISTINCTIVE --
+            # the currency token is what makes them so, and it is why they survive `strict`.
+            for cur, amt in re.findall(r"\b(USD|TZS|Tsh\.?|Dola)\s*([\d][\d,]*)", s, re.I):
+                declared.add(f"{cur} {amt}".lower())
+                declared.add(f"{cur}{amt}".lower())
+
     # 2. quoted strings inside correction_note / status prose
     prose = " ".join(str(fact.get(k) or "") for k in
                      ("correction_note", "status", "_renumbering_note", "_sibling_note",
@@ -180,6 +213,27 @@ def superseded_values(fact, strict=False):
             if len(v.split()) < 3 and not numericish:
                 continue
         keep.add(v)
+
+    # ⛔ A DECLARED SUPERSEDED VALUE IS NOT SUBJECT TO THE `current` SUPPRESSION, AND THIS IS
+    # WHY THE FIELD HAD TO BE HANDLED SEPARATELY RATHER THAN POURED INTO `vals`.
+    #
+    # The suppression above exists for a measured false positive: vat_threshold_200m ASSERTS
+    # TZS 100,000,000 correctly as the six-month threshold while its own wrong_pattern targets
+    # that figure "kwa mwaka". So a value the fact currently asserts must not be read as
+    # superseded. Sound -- for values INFERRED from patterns and prose.
+    #
+    # It is exactly wrong for a DECLARED one. A corrected fact routinely names its old value in
+    # its own text in order to contradict it ("... ni TZS 70,000 ... SUPERSEDES USD 25/month"),
+    # because an explicit contradiction is what overrides a trained prior -- the same reason
+    # index rows 57/63/159 deliberately carry their old values under a negation. The old value is
+    # therefore IN `current`, and the suppression silently removed it, so the check reported
+    # CLEAN on a pin reading "faini ni USD 25 kwa kila mwezi": the exact defect it was built for,
+    # missed on the first real correction after it shipped, because polarity was not considered.
+    #
+    # Mention-vs-assertion again, one layer up: presence in the fact's own text does not mean the
+    # fact asserts it. `superseded_value` is an EXPLICIT declaration by the fact's author, so it
+    # outranks any inference drawn from where the string happens to appear.
+    keep |= {v for v in declared if len(v) >= 5}
     return keep
 
 

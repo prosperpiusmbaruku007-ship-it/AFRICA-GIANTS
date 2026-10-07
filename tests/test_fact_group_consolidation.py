@@ -48,8 +48,17 @@ def test_the_consolidation_absorbs_exactly_the_rows_it_claims():
     # not crowding/fee-ladder curation, a self-retrieval FAILURE fix. The pair embedded to
     # 0.925 cosine of each other post-fc9b0c8-regen, so one could never be retrieved as itself.
     # Merged into one before/after passage, the same treatment, for an unrelated reason.)
-    assert len(pre._GROUP_MEMBERS) == 44, (
-        f'{len(pre._GROUP_MEMBERS)} member keys, expected 44 — 42 from the fee consolidation '
+    # + 1 (2026-10-06: company_registration_fee_bands, the RE-AUTHORED nine-band share-capital
+    # table. BRELA replaced its fee schedule between 2026-06-30 and 2026-10-06 and the top band
+    # split from one open-ended "above TZS 50,000,000 = 440,000" into five closed bands, so the
+    # table was re-authored as a fact rather than patched figure by figure. It joins
+    # company_registration_ladder rather than becoming its own row: two rows both carrying band
+    # tables would compete for the same query and let a retriever pair a band with the wrong fee,
+    # which is the exact hazard the group exists to prevent. Joining also puts every one of its
+    # nine figures under the consolidation check below — the check that caught the stale 440,000
+    # and 300,000 still sitting in this passage.)
+    assert len(pre._GROUP_MEMBERS) == 45, (
+        f'{len(pre._GROUP_MEMBERS)} member keys, expected 45 — 42 from the fee consolidation '
         '(eval/results/feegroup_curation.json) + 2 from the electrical-fee near-duplicate fix.')
     for gname in pre.FACT_GROUPS:
         assert gname in keys, f'group {gname} produced no index row'

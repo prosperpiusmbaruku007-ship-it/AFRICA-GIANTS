@@ -458,11 +458,31 @@ else:
 # the thing being banned, and then they are opposites. Same lesson as the citation-attached-to-a-
 # no-threshold-gold limb: no subject or quantity pattern can see polarity, so it has to be
 # checked for directly.
-_NEGATED = r'(?:\bsi\b|\bnot\b|\bsio\b|\bhapana\b)[\s:,]*(?:TZS\s*)?$'
-for _k, _must_not, _must, _why in [
+_NEGATED = r'(?:\bsi\b|\bnot\b|\bsio\b|\bhapana\b)[\s:,]*(?:TZS\s*|USD\s*)?$'
+# ⛔ FIFTH ELEMENT ADDED 2026-10-06: `require_contradiction`.
+#
+# The first four gates all protect rows that DELIBERATELY NAME the superseded value under a
+# negation, because training rows assert the old figure and an explicit contradiction is what
+# overrides that prior. For those, the third assertion below -- "the row must still CONTRADICT the
+# old value" -- is load-bearing: it stops a tidy-up silently deleting the override.
+#
+# The BRELA fee rows added today are not all like that, and forcing them to be would have been
+# the wrong call in two directions at once:
+#   * `company_registration_ladder` never mentioned 440,000 or 300,000 as wrong -- it simply
+#     stated them as right. There is no prior to override, and the row is ALREADY LONG (nine
+#     bands). Adding "SI TZS 440,000" would lengthen a row whose rank is measured (nat_34's
+#     displacement guard), and the row-57 measurement showed length is what costs rank, not
+#     correctness. So: presence-ban only, no contradiction required.
+#   * `brela_filing_fees` DOES carry the contradiction ("SI USD 220 na SI USD 25"), because the
+#     USD figures were live in the deployed index and were the live wrong answer on ext_15.
+#
+# Demanding a contradiction clause everywhere would have been R20's vacuous-fix shape in reverse:
+# a uniform rule inserted because it is uniform, costing rank on a row that needed nothing.
+for _k, _must_not, _must, _require_contradiction, _why in [
     ('fine_limit',
      r'one\s+hundred\s+thousand|laki\s+moja|100[,.]?000(?![,.\d])',
      r'10,000,000|milioni\s+kumi',
+     True,
      'Cap.50 R.E.2023 s.76(1) reads "ten million shillings". TZS 100,000 is R.E.2015 s.72(1) '
      '-- superseded, and it was row 159 of the deployed index, understated 100x.'),
     ('nssf_payment_deadline',
@@ -471,6 +491,7 @@ for _k, _must_not, _must, _why in [
      # form reported "does not contradict it" on a row reading "si tarehe 10".
      r'tarehe\s+10\b|the\s+10th',
      r'mwezi\s+mmoja',
+     True,
      'Cap.50 R.E.2023 s.14(1): "within one month after the end of the month in respect of '
      'which the contributions are due and payable". The 10th appears in NO source -- the '
      'fact\'s own verified_by says so -- and was row 63 of the deployed index.'),
@@ -481,11 +502,47 @@ for _k, _must_not, _must, _why in [
     ('efd_threshold_tzs_11m',
      r'11[,.]?000[,.]?000|milioni\s+kumi\s+na\s+moja|14[,.]?000[,.]?000',
      r'haina\s+kizingiti|hakitumiki',
+     True,
      'TAA Cap.438 R.E.2023 s.44(1) makes fiscal-receipt issuance the DEFAULT for every person '
      'supplying goods or rendering services; s.44(2) allows exemption ONLY by a '
      'Commissioner-General public notice naming a person or class. NO turnover figure appears '
      'in the section or anywhere in the Act. TZS 11M and TZS 14M are adjacent PRESUMPTIVE '
      'INCOME TAX band edges (Income Tax Act First Schedule para.2(3)) -- a different provision.'),
+    # ── BRELA REPLACED ITS PUBLISHED FEE SCHEDULE, 2026-10-06 ──────────────────────
+    # Not a correction of a misreading: BRELA's own 'Ada za Kampuni' page changed between two
+    # dated, hashed captures (brela_ada_kampuni_v2.html sha256 cb1353fc..., 2026-06-30 ->
+    # brela_ada_kampuni_20261006T140442Z.html sha256 8d5543ac..., 2026-10-06T14:04:42Z). The
+    # whole foreign-company block moved from USD into TZS, the share-capital table went from five
+    # bands to nine, and several local fees moved. R29 mode 3 -- the June figures were correct as
+    # at their own date, which is why the gold row ext_15 is STALE rather than the model wrong.
+    #
+    # Rows 181 and 182 of the deployed index are serving USD 220 / USD 25 / 440,000 / 300,000.
+    ('brela_filing_fees',
+     r'USD\s*220|USD\s*25\b',
+     r'faini ya kuchelewa TZS 70,000',
+     True,
+     'BRELA fee schedule items 15(ii)/(iii)/(iv) now read 600,000/600,000/70,000 in SHILLINGS. '
+     'This group passage was the live source of the USD figures. The contradiction clause IS '
+     'required here: the USD values were live in the deployed index and were the figure ext_15 '
+     'was scored against, so a trained prior for them exists.'),
+    ('company_registration_ladder',
+     r'(?<![\d,])440,000(?![\d,])|(?<![\d,])300,000(?![\d,])',
+     r'hadi TZS 100,000,000 ni TZS 400,000',
+     False,
+     'BRELA fee schedule item 1 now has NINE bands: the old open-ended "above TZS 50,000,000 = '
+     '440,000" became 50M-100M = 400,000 with four bands above it, and item 2 (no share capital) '
+     'went 300,000 -> 500,000. require_contradiction is FALSE on purpose -- this row never named '
+     'those figures as wrong, so there is no override to preserve, and it is already nine bands '
+     'long where length is what costs rank (the row-57 measurement).'),
+    ('brela_foreign_late_filing_penalty',
+     r'USD\s*25\b|Dola\s*za\s*Kimarekani\s*25',
+     r'TZS\s*70,000',
+     False,
+     'The standalone row for this fact. Its PINNED needle in check_facts_index_sync used to be '
+     '"faini ni USD 25 kwa kila mwezi" -- a pin REQUIRING the superseded figure -- and was '
+     're-pinned pending_r15 today after scripts/check_anchor_provenance.py caught it. '
+     'require_contradiction is FALSE: this CONCISE row states the current figure plainly and the '
+     'group passage above carries the explicit USD contradiction for the trained prior.'),
 ]:
     assert _k in fact_keys, (
         f'[FATAL] {_k} absent from the built fact set -- it was present in the 184-row index '
@@ -500,10 +557,17 @@ for _k, _must_not, _must, _why in [
         f'[FATAL] {_k} does not state the current value:\n  {_row}\n{_why}')
     # And the negation device itself is asserted, so a future "tidy-up" that simply deletes the
     # "SI TZS 100,000" clause fails here rather than quietly weakening the override.
-    assert re.search(_must_not, _row, re.I), (
-        f'[FATAL] {_k} no longer CONTRADICTS the superseded value at all:\n  {_row}\n'
-        f'The explicit contradiction is deliberate -- it is what overrides the trained prior '
-        f'from the rows that assert the old value. Stating the right number is not enough.')
+    if _require_contradiction:
+        assert re.search(_must_not, _row, re.I), (
+            f'[FATAL] {_k} no longer CONTRADICTS the superseded value at all:\n  {_row}\n'
+            f'The explicit contradiction is deliberate -- it is what overrides the trained prior '
+            f'from the rows that assert the old value. Stating the right number is not enough.')
+    elif re.search(_must_not, _row, re.I):
+        # NOT an error: the ban above already proved it is not ASSERTED. Printed rather than
+        # silent so a row that GROWS a contradiction clause is visible -- the opposite direction
+        # from the one the assertion guards, and equally worth seeing.
+        print(f'[note] payload gate: {_k} mentions the superseded value under a negation; no '
+              f'contradiction clause was required for this row.')
     print(f'[OK] payload gate: {_k} states the current value and contradicts the superseded '
           f'one (polarity-checked, not presence-checked)')
 
@@ -833,6 +897,26 @@ critical_queries = [
     # unusable. Both anchors below carry the SUBJECT and the CLAIM, not a bare figure.
     ('NSSF fine ceiling is ten million, not one hundred thousand (Cap.50 s.76(1))', 'query: Nisipolipa michango ya NSSF kabisa, nitatozwa faini ya kiasi gani?', ['kosa la NSSF ni TZS 10,000,000']),
     ('NSSF deadline is one month after month-end, not the 10th (Cap.50 s.14(1))', 'query: Michango ya NSSF ya mwezi huu inatakiwa kulipwa lini?', ['ndani ya MWEZI MMOJA baada ya mwisho wa mwezi']),
+    # ── BRELA'S REPLACED FEE SCHEDULE, 2026-10-06 ──────────────────────────────────
+    # ext_15 VERBATIM, and it is a SECOND guard on the same question as the Part XII guard above
+    # rather than a replacement for it -- the two check different limbs of the same row and the
+    # row has been wrong on each limb separately. The citation limb was reversed in the WRONG
+    # DIRECTION for five weeks (Part XII -> Part XIII -> Part XII); the figure limb was USD 25
+    # while BRELA's page had moved to TZS 70,000. A guard on the citation alone passes a reply
+    # that cites correctly and quotes a superseded fee, which is precisely what shipped.
+    #
+    # ANCHOR CHOICE. 'TZS 70,000' alone is NOT usable: it matches the brela_filing_fees group
+    # passage as well as this fact's own row, so a guard anchored on the bare magnitude could
+    # pass on either. 'faini ya kuchelewa TZS 70,000' carries the SUBJECT (late-filing penalty)
+    # and is unique to the group passage; the standalone row is guarded by its own payload gate.
+    # Same reasoning that rejected bare 'ss.437-447' (two rows) and bare 'asilimia 10'.
+    ('BRELA foreign late-filing fee is TZS 70,000, not USD 25 (ext_15 verbatim, figure limb)', 'query: Tawi letu la kampuni ya kigeni limechelewa kuwasilisha ripoti ya mwaka. Adhabu ni tofauti na kampuni za huku?', ['faini ya kuchelewa TZS 70,000']),
+    # nat_34 VERBATIM is already guarded above on the LEAD ('gharama ya kuanzia ni TZS 95,000'),
+    # which this change deliberately left byte-identical. This second anchor guards the part that
+    # DID change -- the extended band table -- on a question that actually asks for a high band.
+    # Without it, the ladder could lose its four new bands and the existing guard would still pass
+    # on an unchanged opening sentence.
+    ('BRELA share-capital ladder now has nine bands (the four new top bands)', 'query: Mtaji wa hisa wa kampuni yangu ni TZS 2,000,000,000. Ada ya kusajili ni ngapi?', ['hadi TZS 10,000,000,000 ni TZS 600,000']),
 ]
 
 # ── KNOWN-FAILING GUARDS (2026-08-22) ────────────────────────────────────────────

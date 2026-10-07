@@ -137,3 +137,68 @@ def test_vat_threshold_200m_keeps_its_legitimate_6_month_figure():
     assert "100,000,000" not in vals, (
         f"100,000,000 was extracted as superseded for this fact, but it ASSERTS that figure as "
         f"the 6-month threshold. Extracted: {sorted(vals)[:8]}")
+
+
+# --- the `superseded_value` limb, added 2026-10-06 -------------------------------------------
+
+def test_a_value_declared_in_superseded_value_is_caught():
+    """⛔ THE GAP THIS CHECK SHIPPED WITH, AND IT WAS FOUND ON THE FIRST REAL CORRECTION AFTER.
+
+    The extractor read three sources: wrong_patterns literals, quoted strings in correction_note
+    prose, and Swahili word forms. Hours after it shipped, the BRELA amendments introduced a
+    fourth and clearest home for the same information -- an explicit `superseded_value` field --
+    and the check could not see it. It reported CLEAN on
+    `check_facts_index_sync.PINNED['brela_foreign_late_filing_penalty']`, whose needle was
+    literally "faini ni USD 25 kwa kila mwezi": a pin requiring the superseded figure to be
+    retrievable, which is precisely the defect this file exists to block.
+
+    R20 arrival point 5, in this check's own code: its POPULATION was defined by where superseded
+    values happened to live when it was written. A new field is loud (tests went red on the facts
+    themselves); a new field the CHECKER does not read is silent.
+    """
+    fact = {
+        "fact": "Faini ni TZS 70,000 kwa kila mwezi.",
+        "correct_value": "TZS 70,000 per month",
+        "superseded_value": "USD 25 per month (published as at 2026-06-30)",
+        "correction_note": "x" * 50,
+    }
+    vals = cap.superseded_values(fact)
+    assert any("usd 25" in v for v in vals), (
+        f"the superseded_value field was not read. Extracted: {sorted(vals)[:8]}")
+    faults = cap.check(facts={"k": fact},
+                       anchors=[], pins=[("k", "faini ni USD 25 kwa kila mwezi")])
+    assert faults, "a pin asserting the declared superseded value was not flagged"
+
+
+def test_a_declared_superseded_value_survives_the_currently_asserted_filter():
+    """⛔ POLARITY, ONE LAYER UP, AND IT IS WHY THE FIELD IS HANDLED SEPARATELY.
+
+    The `current` suppression exists for a measured false positive (vat_threshold_200m asserts
+    TZS 100,000,000 correctly as the SIX-MONTH threshold while its wrong_pattern targets that
+    figure "kwa mwaka"). Sound for values INFERRED from patterns and prose.
+
+    It is exactly wrong for a DECLARED one. A corrected fact routinely names its old value in its
+    own text in order to CONTRADICT it -- the same reason index rows 57/63/159 deliberately carry
+    their old values under a negation -- so the old value appears in `fact`, and the suppression
+    silently removed it. Presence in a fact's own text is not assertion by that fact.
+    """
+    fact = {
+        # the old value is named here ON PURPOSE, to contradict it
+        "fact": "Faini ni TZS 70,000 kwa kila mwezi. SUPERSEDES USD 25/month.",
+        "correct_value": "TZS 70,000 per month",
+        "superseded_value": "USD 25 per month",
+        "correction_note": "x" * 50,
+    }
+    vals = cap.superseded_values(fact)
+    assert any("usd 25" in v for v in vals), (
+        "the `current` suppression removed an EXPLICITLY DECLARED superseded value because the "
+        "fact mentions it in order to reject it. A declaration outranks an inference.")
+
+
+def test_the_inferred_path_still_respects_the_currently_asserted_filter():
+    """The negative case: the suppression must still protect the measured false positive. If this
+    fails, the fix above was applied too broadly and the check can block correct anchors (R21's
+    expensive direction)."""
+    f = FACTS.get("vat_threshold_200m_july2024_increase")
+    assert f, "fact renamed; re-point this test"
+    assert "100,000,000" not in cap.superseded_values(f)

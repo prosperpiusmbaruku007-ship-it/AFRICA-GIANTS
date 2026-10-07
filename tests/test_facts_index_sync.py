@@ -36,6 +36,43 @@ KNOWN_PENDING_R15_GROUP_DRIFT = {
     # (2026-09-03) shipped it -- test_known_pending_r15_group_drift_is_still_pending caught
     # the resolution immediately, exactly the signal its own docstring describes. Removed
     # rather than left stale.
+
+    # ---- 2026-10-06: BRELA REPLACED ITS PUBLISHED FEE SCHEDULE ----------------------------
+    # Not a correction of a misreading. BRELA's own "Ada za Kampuni" page changed between two
+    # dated, hashed captures (brela_ada_kampuni_v2.html, sha256 cb1353fc..., 2026-06-30 ->
+    # brela_ada_kampuni_20261006T140442Z.html, sha256 8d5543ac..., 2026-10-06T14:04:42Z): the
+    # whole foreign-company block moved from USD into TZS, the share-capital table went from
+    # five bands to nine, and several local fees moved. R29 mode 3 -- the June figures were
+    # correct as at their own date.
+    #
+    # ⛔ EVERY ONE OF THESE SIX IS A FIGURE PRODUCTION IS SERVING WRONG RIGHT NOW. They are
+    # DRIFT only in the sense that no local edit can fix them: the group passages in
+    # precompute_rag_embeddings.py are already correct in this commit, and the shipped
+    # rag_facts_text.json cannot catch up except through the Kaggle R15 regen. They are listed
+    # individually, with their old and new values, so that this block is a worklist rather than
+    # a silence -- an entry that only says "pending regen" tells the next reader nothing about
+    # what is wrong on the way there.
+    "company_registration_fee_no_share_capital":
+        "TZS 300,000 -> 500,000 (item 2). Shipped ladder passage still says 300,000.",
+    "file_search_fee":
+        "TZS 3,000 -> 5,000 (item 9). Shipped brela_filing_fees passage still says 3,000.",
+    "file_search_report_fee":
+        "TZS 22,000 -> 30,000 (item 10). Shipped passage still says 22,000.",
+    "document_filing_fee_section_12_act_excluding_balance_sheet":
+        "USD 220 -> TZS 600,000 (item 15(ii)). Shipped passage still says USD 220.",
+    "balance_sheet_filing_fee_section_12_act":
+        "USD 220 -> TZS 600,000 (item 15(iii)). Shipped passage still says USD 220.",
+    "late_filing_penalty_monthly_fee_section_12_act":
+        "USD 25 -> TZS 70,000 (item 15(iv)). Shipped passage still says USD 25 -- this is the "
+        "figure ext_15 was scored PASS on, which is why that gold row is STALE rather than the "
+        "model wrong.",
+    # ⚠️ certified_copy_certificate_of_registration_fee (TZS 4,000 -> 10,000, item 12) is
+    # DELIBERATELY ABSENT from this list, and the reason is a trap worth naming: it resolves
+    # CLEAN against the shipped index by COINCIDENCE. _grouped_verdict does substring
+    # containment, and the shipped brela_filing_fees passage happens to contain "10,000" --
+    # as the STAMP DUTY figure, a different fee entirely. So the check passes on the right
+    # string for the wrong reason, and the row is as stale as the six above. Recorded here
+    # because a key missing from a worklist reads as a key that is fine.
 }
 
 
