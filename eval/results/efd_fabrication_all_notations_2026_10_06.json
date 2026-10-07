@@ -1,0 +1,83 @@
+{
+  "measured": "2026-10-07",
+  "harness": "eval/controls/sweep_efd_threshold_fabrication_all_notations.py",
+  "question": "Which live rows assert a fabricated EFD turnover threshold, in ANY notation -- and how many would a digits-only or a words-only sweep miss?",
+  "why_this_population": "every live corpus plus both gold sets. The gold sets are included deliberately: a gold answer that asserts the fabrication is a scoring key rewarding the defect, which is worse than a training row carrying it.",
+  "the_notation_blindness": "A sweep for the spelled-out 'milioni 11' found 3 rows; D-FIDELITY-7 found 7 on the same corpora the same day. Every corpus sweep in this arc has been keyed on FIGURES, and the fact's own wrong_patterns hold (11|14),?000,?000 in DIGITS -- so a sweep built from the fact's own patterns is blind to the words by construction.",
+  "adjudication_rule": "POLARITY, NOT PRESENCE, and word-bounded. A row stating the figure in order to REJECT it asserts the CORRECTION. Quarantining those would delete the corpus's own defence against the defect. MIXED_READ_IT rows carry a correction marker AND an un-negated figure -- they are flagged for reading, never auto-cleared.",
+  "totals": {
+    "rows_matching_any_notation": 7,
+    "ASSERTS_FABRICATION": 0,
+    "MIXED_READ_IT": 2,
+    "REJECTS_FABRICATION": 0,
+    "NO_EFD_SUBJECT": 5,
+    "asserts_by_stage": {},
+    "asserts_by_notation_family": {},
+    "asserts_the_guard_also_flags": 0
+  },
+  "ASSERTS_FABRICATION": [],
+  "MIXED_READ_IT": [
+    {
+      "stage": "GOLD_accuracy",
+      "locator": "eval/accuracy_gate/eval_questions_003.jsonl:104",
+      "id": "eval_354",
+      "verdict": "MIXED_READ_IT",
+      "notation": [
+        "11,000,000"
+      ],
+      "guard_also_flags": false,
+      "question": "Mauzo yangu ni TZS 11,000,000 kamili kwa mwaka, je nalazimika kutumia EFD?",
+      "body": "Ndiyo, unahitaji EFD -- lakini si kwa sababu ya kufikia TZS 11,000,000. EFD inahitajika kwa default kwa kila mfanyabiashara, bila kujali mauzo. Hakuna kizingiti cha mauzo kwa EFD. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "stage": "GOLD_accuracy",
+      "locator": "eval/accuracy_gate/eval_questions_003.jsonl:105",
+      "id": "eval_355",
+      "verdict": "MIXED_READ_IT",
+      "notation": [
+        "11,000,000"
+      ],
+      "guard_also_flags": false,
+      "question": "Mauzo yangu ni TZS 10,999,000 kwa mwaka, je EFD ni lazima kwangu?",
+      "body": "Ndiyo, EFD ni lazima — kwa default, bila kujali mauzo yako. TZS 10,999,000 au TZS 11,000,000 hazibadilishi jibu, kwa sababu hakuna kizingiti cha mauzo kwa EFD. Thibitisha na TRA (tra.go.tz)."
+    }
+  ],
+  "REJECTS_FABRICATION_excluded_by_name": [],
+  "NO_EFD_SUBJECT_excluded_by_name": [
+    {
+      "locator": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl:70",
+      "id": "",
+      "notation": [
+        "14,000,000"
+      ]
+    },
+    {
+      "locator": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl:55",
+      "id": "",
+      "notation": [
+        "milioni 11"
+      ]
+    },
+    {
+      "locator": "datasets/tier1a/sft/train_sft.jsonl:1934",
+      "id": "",
+      "notation": [
+        "14,000,000"
+      ]
+    },
+    {
+      "locator": "datasets/tier1a/sft/train_sft.jsonl:1953",
+      "id": "",
+      "notation": [
+        "milioni 11"
+      ]
+    },
+    {
+      "locator": "eval/accuracy_gate/eval_questions_003.jsonl:9",
+      "id": "eval_259",
+      "notation": [
+        "40,000,000"
+      ]
+    }
+  ]
+}

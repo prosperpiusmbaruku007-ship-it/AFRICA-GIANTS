@@ -1,5 +1,5 @@
 {
-  "measured": "2026-10-06",
+  "measured": "2026-10-07",
   "harness": "eval/controls/audit_quarantine_reach.py",
   "question": "For every quarantine this project has performed, does the quarantined TEXT still exist in a live corpus -- and specifically in the exported SFT files that actually train the model?",
   "why_this_population": "Every record in datasets/tier1a/rejected/ against every row of every live corpus. The quarantines are the only population where an adjudication was already made, so a survivor is a KNOWN defect still present rather than a new candidate -- no re-adjudication of the fact is needed, only of whether the row is a deliberate adversarial retention (R22: this is the population the question is about).",
@@ -7,15 +7,15 @@
   "what_this_cannot_show": "A survivor may be a DELIBERATE adversarial retention -- a pair that quotes a fabrication in order to refuse it is correct prose. Polarity is not scored here; every survivor is printed with its body to be read individually (R26).",
   "the_finding_that_prompted_it": "D-FIDELITY-7's pre-wiring sweep flagged 7 rows asserting the fabricated TZS 11M EFD threshold in sft_shaped_pairs/batch_011 and _012. Five of their questions are verbatim in efd_threshold_fabrication_quarantine_2026_08_29.jsonl. The quarantine removed them from cleaned_pairs/ and never touched sft_shaped_pairs/ or sft/.",
   "totals": {
-    "live_corpus_rows_indexed": 8824,
-    "quarantined_rows_read": 467,
-    "distinct_quarantined_rows_still_live": 8,
-    "survivor_locations": 8,
+    "live_corpus_rows_indexed": 8791,
+    "quarantined_rows_read": 486,
+    "distinct_quarantined_rows_still_live": 2,
+    "survivor_locations": 2,
     "by_stage": {
-      "sft_EXPORTED_TRAINING": 8
+      "sft_EXPORTED_TRAINING": 2
     },
-    "survivors_in_training_stages": 8,
-    "edited_in_place_not_removed": 54
+    "survivors_in_training_stages": 2,
+    "edited_in_place_not_removed": 6
   },
   "the_third_outcome": "A quarantined body that is ABSENT while its QUESTION is still live was EDITED IN PLACE, not removed. The record then holds the pre-edit text, so a body match reports the row as cleanly gone. R25's containment shape: the edit can repair the sentence a sweep keys on and leave the same claim standing later in the same row. It is also why a sweep for the spelled-out 'milioni 11' found 3 rows while D-FIDELITY-7 found 7 -- the repair deleted the words and left the digits.",
   "per_quarantine_record": [
@@ -28,11 +28,19 @@
       "stages": {}
     },
     {
+      "record": "datasets/tier1a/rejected/efd_fabrication_all_notations_quarantine_2026_10_06.jsonl",
+      "rows": 14,
+      "with_body": 14,
+      "surviving": 0,
+      "edited_in_place": 0,
+      "stages": {}
+    },
+    {
       "record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
       "rows": 58,
       "with_body": 58,
       "surviving": 0,
-      "edited_in_place": 24,
+      "edited_in_place": 0,
       "stages": {}
     },
     {
@@ -63,11 +71,9 @@
       "record": "datasets/tier1a/rejected/nssf_fine_stale_100k_quarantine_2026_10_05.jsonl",
       "rows": 4,
       "with_body": 4,
-      "surviving": 4,
+      "surviving": 0,
       "edited_in_place": 0,
-      "stages": {
-        "sft_EXPORTED_TRAINING": 4
-      }
+      "stages": {}
     },
     {
       "record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
@@ -86,14 +92,20 @@
       "stages": {}
     },
     {
+      "record": "datasets/tier1a/rejected/quarantine_survivors_reswept_2026_10_06.jsonl",
+      "rows": 5,
+      "with_body": 5,
+      "surviving": 0,
+      "edited_in_place": 0,
+      "stages": {}
+    },
+    {
       "record": "datasets/tier1a/rejected/rent_wht_nonresident_15pct_quarantine_2026_09_26.jsonl",
       "rows": 16,
       "with_body": 16,
-      "surviving": 2,
+      "surviving": 0,
       "edited_in_place": 0,
-      "stages": {
-        "sft_EXPORTED_TRAINING": 2
-      }
+      "stages": {}
     },
     {
       "record": "datasets/tier1a/rejected/sdl_tourism_levy_mislabeled.jsonl",
@@ -140,58 +152,10 @@
   ],
   "survivors": [
     {
-      "quarantine_record": "datasets/tier1a/rejected/nssf_fine_stale_100k_quarantine_2026_10_05.jsonl",
-      "quarantine_line": 1,
-      "survives_in_stage": "sft_EXPORTED_TRAINING",
-      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:503",
-      "question": "Chike, niliona huko kwenye sheria kuna adhabu ya laki moja kama hatutalipa chochote. Hii laki moja ni kwa kila kosa au k",
-      "body": "Kifungu cha sheria kinasema faini ya shilingi elfu mia moja (TZS 100,000) inaweza kutozwa. Thibitisha na NSSF (nssf.go.tz)."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/nssf_fine_stale_100k_quarantine_2026_10_05.jsonl",
-      "quarantine_line": 2,
-      "survives_in_stage": "sft_EXPORTED_TRAINING",
-      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:3272",
-      "question": "Hii faini ya laki moja inawahusu nani hasa? Ni lazima kila mfanyabiashara mmoja mmoja alipe hii faini?",
-      "body": "Faini ya shilingi elfu mia moja (TZS 100,000) hutolewa kwa makosa yanayohusu utii wa sheria. Thibitisha na NSSF (nssf.go.tz)."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/nssf_fine_stale_100k_quarantine_2026_10_05.jsonl",
-      "quarantine_line": 3,
-      "survives_in_stage": "sft_EXPORTED_TRAINING",
-      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:3034",
-      "question": "Hii faini ya elfu mia moja inamaanisha nini katika mfumo wa mafao ya NSSF?",
-      "body": "Faini ya shilingi elfu mia moja (TZS 100,000) ni adhabu inayoweza kutozwa kwa makosa ya kutotii sheria. Thibitisha na NSSF (nssf.go.tz)."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/nssf_fine_stale_100k_quarantine_2026_10_05.jsonl",
-      "quarantine_line": 4,
-      "survives_in_stage": "sft_EXPORTED_TRAINING",
-      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:2758",
-      "question": "Nkalipa vipi hiyo faini ya laki moja kama nikikosea?",
-      "body": "Kama utapata adhabu ya faini ya shilingi elfu mia moja (TZS 100,000), utahitaji kufuata utaratibu rasmi wa malipo utakaoelekezwa na NSSF. Thibitisha na NSSF (nssf.go.tz)."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/rent_wht_nonresident_15pct_quarantine_2026_09_26.jsonl",
-      "quarantine_line": 5,
-      "survives_in_stage": "sft_EXPORTED_TRAINING",
-      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:819",
-      "question": "Kodi ya zuio kwenye pango la ardhi/mali isiyohamishika kwa mkazi Tanzania ni asilimia 15 — je, ni sahihi?",
-      "body": "Hapana. Kodi ya zuio kwenye pango la ardhi au mali isiyohamishika inayolipwa kwa mkazi Tanzania ni asilimia 10, si asilimia 15. Kwa asiye mkazi, kiwango ni asilimia 15. Hii ni sehemu ya jedwali la kodi ya zuio la Tanzania. Kampuni inayolipa pango kwa mkazi lazima ishikilie asilimia 10 na kuwasilisha ndani ya siku 7 baada ya mwisho wa mwezi."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/rent_wht_nonresident_15pct_quarantine_2026_09_26.jsonl",
-      "quarantine_line": 12,
-      "survives_in_stage": "sft_EXPORTED_TRAINING",
-      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:819",
-      "question": "Kodi ya zuio kwenye pango la ardhi/mali isiyohamishika kwa mkazi Tanzania ni asilimia 15 — je, ni sahihi?",
-      "body": "Hapana. Kodi ya zuio kwenye pango la ardhi au mali isiyohamishika inayolipwa kwa mkazi Tanzania ni asilimia 10, si asilimia 15. Kwa asiye mkazi, kiwango ni asilimia 15. Hii ni sehemu ya jedwali la kodi ya zuio la Tanzania. Kampuni inayolipa pango kwa mkazi lazima ishikilie asilimia 10 na kuwasilisha ndani ya siku 7 baada ya mwisho wa mwezi."
-    },
-    {
       "quarantine_record": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
       "quarantine_line": 1,
       "survives_in_stage": "sft_EXPORTED_TRAINING",
-      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:3196",
+      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:3181",
       "question": "Mimi ni wakala wa zuio la VAT. Ninaweza kupunguza VAT niliyoizuia kutoka kwa wasambazaji dhidi ya VAT ninayodaiwa mimi m",
       "body": "Hapana. VAT ya zuio unayoizuia kutoka kwa msambazaji wako hailipwi kama mkopo dhidi ya deni lako la VAT. Wewe kama wakala wa zuio unalipa kiasi hicho moja kwa moja TRA kwa niaba ya msambazaji. Msambazaji wako ndiye anayeidai kama mkopo wa VAT (input VAT) kwenye return yake. Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — si tarehe ya 20."
     },
@@ -199,445 +163,13 @@
       "quarantine_record": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
       "quarantine_line": 31,
       "survives_in_stage": "sft_EXPORTED_TRAINING",
-      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:3196",
+      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:3181",
       "question": "Mimi ni wakala wa zuio la VAT. Ninaweza kupunguza VAT niliyoizuia kutoka kwa wasambazaji dhidi ya VAT ninayodaiwa mimi m",
       "body": "Hapana. VAT ya zuio unayoizuia kutoka kwa msambazaji wako hailipwi kama mkopo dhidi ya deni lako la VAT. Wewe kama wakala wa zuio unalipa kiasi hicho moja kwa moja TRA kwa niaba ya msambazaji. Msambazaji wako ndiye anayeidai kama mkopo wa VAT (input VAT) kwenye return yake. Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — si tarehe ya 20."
     }
   ],
   "edited_in_place": [
     {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 16,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:81",
-      "question": "Biashara yangu inauzwa TZS 5M kwa mwaka — ninahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi EFD inahitajika hata kwa mauzo ya chini y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 16,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:1959",
-      "question": "Biashara yangu inauzwa TZS 5M kwa mwaka — ninahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi EFD inahitajika hata kwa mauzo ya chini y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 17,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:82",
-      "question": "Kizingiti cha EFD ni TZS 11 milioni kwa mwaka — ni lazima kuwa VAT registered pia?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika TZS 200M (au TZS 100M kwa miezi 6), lazima",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika "
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 17,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2385",
-      "question": "Kizingiti cha EFD ni TZS 11 milioni kwa mwaka — ni lazima kuwa VAT registered pia?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika TZS 200M (au TZS 100M kwa miezi 6), lazima",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika "
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 18,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:83",
-      "question": "EFD mandatory kwa kila biashara au kuna msamaha?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara yoyote inayochukuliwa kwa hatari ya kodi. M",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara y"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 18,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/val_sft.jsonl:136",
-      "question": "EFD mandatory kwa kila biashara au kuna msamaha?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara yoyote inayochukuliwa kwa hatari ya kodi. M",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara y"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 19,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:84",
-      "question": "Ninaanza biashara — EFD niihitajiwaje?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhitajika. (3) TZS 200M+ (au TZS 100M/miezi 6)",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhit"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 19,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2649",
-      "question": "Ninaanza biashara — EFD niihitajiwaje?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhitajika. (3) TZS 200M+ (au TZS 100M/miezi 6)",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhit"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 20,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:85",
-      "question": "Nimeambiwa EFD ni kwa wafanyabiashara wa TZS 40M au zaidi — sahihi?",
-      "quarantined_body": "Hapana, si sahihi. EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe.",
-      "live_body_now": "Hapana, si sahihi. EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 20,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:667",
-      "question": "Nimeambiwa EFD ni kwa wafanyabiashara wa TZS 40M au zaidi — sahihi?",
-      "quarantined_body": "Hapana, si sahihi. EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe.",
-      "live_body_now": "Hapana, si sahihi. EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 21,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:86",
-      "question": "Kama ninauzwa TZS 12M mwaka — ninunue EFD haraka au ninaweza kusubiri?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD baada ya kupitisha kizingiti ni ukiukaji wa ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD ba"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 21,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:3509",
-      "question": "Kama ninauzwa TZS 12M mwaka — ninunue EFD haraka au ninaweza kusubiri?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD baada ya kupitisha kizingiti ni ukiukaji wa ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD ba"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 22,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:87",
-      "question": "EFD na VAT — zinahusiana vipi? Mtu asiye na VAT bado anahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M+ → EFD bado inaweza kuhitajika kwa amri y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 22,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:399",
-      "question": "EFD na VAT — zinahusiana vipi? Mtu asiye na VAT bado anahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M+ → EFD bado inaweza kuhitajika kwa amri y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 23,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:88",
-      "question": "TRA inaweza kunipiga faini kwa kutokuwa na EFD wakati mauzo yangu yako TZS 15M kwa mwaka?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya kutoa risiti za uongo au kutokuwasilisha ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 23,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:79",
-      "question": "TRA inaweza kunipiga faini kwa kutokuwa na EFD wakati mauzo yangu yako TZS 15M kwa mwaka?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya kutoa risiti za uongo au kutokuwasilisha ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 24,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:81",
-      "question": "Biashara yangu inauzwa TZS 5M kwa mwaka — ninahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi EFD inahitajika hata kwa mauzo ya chini y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 24,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:1959",
-      "question": "Biashara yangu inauzwa TZS 5M kwa mwaka — ninahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi EFD inahitajika hata kwa mauzo ya chini y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 25,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:82",
-      "question": "Kizingiti cha EFD ni TZS 11 milioni kwa mwaka — ni lazima kuwa VAT registered pia?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika TZS 200M (au TZS 100M kwa miezi 6), lazima",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika "
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 25,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2385",
-      "question": "Kizingiti cha EFD ni TZS 11 milioni kwa mwaka — ni lazima kuwa VAT registered pia?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika TZS 200M (au TZS 100M kwa miezi 6), lazima",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika "
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 26,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:83",
-      "question": "EFD mandatory kwa kila biashara au kuna msamaha?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara yoyote inayochukuliwa kwa hatari ya kodi. M",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara y"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 26,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/val_sft.jsonl:136",
-      "question": "EFD mandatory kwa kila biashara au kuna msamaha?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara yoyote inayochukuliwa kwa hatari ya kodi. M",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara y"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 27,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:84",
-      "question": "Ninaanza biashara — EFD niihitajiwaje?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhitajika. (3) TZS 200M+ (au TZS 100M/miezi 6)",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhit"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 27,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2649",
-      "question": "Ninaanza biashara — EFD niihitajiwaje?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhitajika. (3) TZS 200M+ (au TZS 100M/miezi 6)",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhit"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 28,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:85",
-      "question": "Nimeambiwa EFD ni kwa wafanyabiashara wa TZS 40M au zaidi — sahihi?",
-      "quarantined_body": "Hapana, si sahihi. EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe.",
-      "live_body_now": "Hapana, si sahihi. EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 28,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:667",
-      "question": "Nimeambiwa EFD ni kwa wafanyabiashara wa TZS 40M au zaidi — sahihi?",
-      "quarantined_body": "Hapana, si sahihi. EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe.",
-      "live_body_now": "Hapana, si sahihi. EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 29,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:86",
-      "question": "Kama ninauzwa TZS 12M mwaka — ninunue EFD haraka au ninaweza kusubiri?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD baada ya kupitisha kizingiti ni ukiukaji wa ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD ba"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 29,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:3509",
-      "question": "Kama ninauzwa TZS 12M mwaka — ninunue EFD haraka au ninaweza kusubiri?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD baada ya kupitisha kizingiti ni ukiukaji wa ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD ba"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 30,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:87",
-      "question": "EFD na VAT — zinahusiana vipi? Mtu asiye na VAT bado anahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M+ → EFD bado inaweza kuhitajika kwa amri y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 30,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:399",
-      "question": "EFD na VAT — zinahusiana vipi? Mtu asiye na VAT bado anahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M+ → EFD bado inaweza kuhitajika kwa amri y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 31,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:88",
-      "question": "TRA inaweza kunipiga faini kwa kutokuwa na EFD wakati mauzo yangu yako TZS 15M kwa mwaka?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya kutoa risiti za uongo au kutokuwasilisha ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 31,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:79",
-      "question": "TRA inaweza kunipiga faini kwa kutokuwa na EFD wakati mauzo yangu yako TZS 15M kwa mwaka?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya kutoa risiti za uongo au kutokuwasilisha ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 32,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:81",
-      "question": "Biashara yangu inauzwa TZS 5M kwa mwaka — ninahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi EFD inahitajika hata kwa mauzo ya chini y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 32,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:1959",
-      "question": "Biashara yangu inauzwa TZS 5M kwa mwaka — ninahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi EFD inahitajika hata kwa mauzo ya chini y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 5M tu kwa mwaka, haujafika kizingiti cha TZS 11M — EFD haihitajiki kiautomatiki, isipokuwa umesajiliwa kwa VAT. Ukisajiliwa VAT kwa hiari, basi"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 33,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:82",
-      "question": "Kizingiti cha EFD ni TZS 11 milioni kwa mwaka — ni lazima kuwa VAT registered pia?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika TZS 200M (au TZS 100M kwa miezi 6), lazima",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika "
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 33,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2385",
-      "question": "Kizingiti cha EFD ni TZS 11 milioni kwa mwaka — ni lazima kuwa VAT registered pia?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika TZS 200M (au TZS 100M kwa miezi 6), lazima",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Jibu: Si lazima kuwa VAT registered kwa EFD peke yake — ukifika TZS 11M kwa mwaka, TRA inaweza kuhitaji EFD hata kabla ya kizingiti cha VAT (TZS 200M). Ukifika "
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 34,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:83",
-      "question": "EFD mandatory kwa kila biashara au kuna msamaha?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara yoyote inayochukuliwa kwa hatari ya kodi. M",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara y"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 34,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/val_sft.jsonl:136",
-      "question": "EFD mandatory kwa kila biashara au kuna msamaha?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara yoyote inayochukuliwa kwa hatari ya kodi. M",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Msamaha: biashara zenye mauzo chini ya TZS 11M kwa mwaka na ambazo hazijasajiliwa VAT hazihitajiki kiautomatiki. Lakini: TRA inaweza kuhitaji EFD kwa biashara y"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 35,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:84",
-      "question": "Ninaanza biashara — EFD niihitajiwaje?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhitajika. (3) TZS 200M+ (au TZS 100M/miezi 6)",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhit"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 35,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2649",
-      "question": "Ninaanza biashara — EFD niihitajiwaje?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhitajika. (3) TZS 200M+ (au TZS 100M/miezi 6)",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mpya wa biashara: (1) Chini ya TZS 11M kwa mwaka — EFD haihitajiki bado (endelea kufuatilia mauzo yako). (2) TZS 11M hadi TZS 200M kwa mwaka — EFD inaweza kuhit"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 36,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:85",
-      "question": "Nimeambiwa EFD ni kwa wafanyabiashara wa TZS 40M au zaidi — sahihi?",
-      "quarantined_body": "Hapana, si sahihi. EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe.",
-      "live_body_now": "Hapana, si sahihi. EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 36,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:667",
-      "question": "Nimeambiwa EFD ni kwa wafanyabiashara wa TZS 40M au zaidi — sahihi?",
-      "quarantined_body": "Hapana, si sahihi. EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe.",
-      "live_body_now": "Hapana, si sahihi. EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M. Thibitisha kila wakati na TRA (tra.go.tz) au ofisi ya TRA karibu nawe."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 37,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:86",
-      "question": "Kama ninauzwa TZS 12M mwaka — ninunue EFD haraka au ninaweza kusubiri?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD baada ya kupitisha kizingiti ni ukiukaji wa ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD ba"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 37,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:3509",
-      "question": "Kama ninauzwa TZS 12M mwaka — ninunue EFD haraka au ninaweza kusubiri?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD baada ya kupitisha kizingiti ni ukiukaji wa ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kwa mauzo ya TZS 12M kwa mwaka, umepita kizingiti cha TZS 11M — EFD inahitajika. Wasiliana na TRA au msambazaji wa EFD mara moja. Kutowasilisha risiti za EFD ba"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 38,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:87",
-      "question": "EFD na VAT — zinahusiana vipi? Mtu asiye na VAT bado anahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M+ → EFD bado inaweza kuhitajika kwa amri y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 38,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:399",
-      "question": "EFD na VAT — zinahusiana vipi? Mtu asiye na VAT bado anahitaji EFD?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M+ → EFD bado inaweza kuhitajika kwa amri y",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Mahusiano: EFD inaweza kuhitajika KABLA ya usajili wa VAT (kuanzia TZS 11M). VAT registered → EFD ni lazima bila shaka yoyote. Si VAT registered + mauzo TZS 11M"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 39,
-      "stage": "sft_shaped_pairs",
-      "at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:88",
-      "question": "TRA inaweza kunipiga faini kwa kutokuwa na EFD wakati mauzo yangu yako TZS 15M kwa mwaka?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya kutoa risiti za uongo au kutokuwasilisha ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya"
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
-      "quarantine_line": 39,
-      "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:79",
-      "question": "TRA inaweza kunipiga faini kwa kutokuwa na EFD wakati mauzo yangu yako TZS 15M kwa mwaka?",
-      "quarantined_body": "EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka. VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya kutoa risiti za uongo au kutokuwasilisha ",
-      "live_body_now": "EFD inahitajika kulingana na kizingiti cha mauzo kilichowekwa na TRA — thibitisha kizingiti cha sasa na TRA (tra.go.tz). VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Ndio — TRA ina mamlaka ya kukupiga faini kwa kutotumia EFD ukiwa umepitisha kizingiti cha TZS 11M. Faini za EFD zinaweza kuwa nzito: TRA inaweza kupiga faini ya"
-    },
-    {
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
       "quarantine_line": 1,
       "stage": "cleaned_pairs",
@@ -650,7 +182,7 @@
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
       "quarantine_line": 1,
       "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2588",
+      "at": "datasets/tier1a/sft/train_sft.jsonl:2577",
       "question": "PAYE inacheswa vipi kwa mshahara wa chini wa TZS 358,322?",
       "quarantined_body": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. Baada ya punguzo la kibinafsi TZS 26,000, TZS 4,199 ? TZS 26,000 < 0, kwa hiyo PAYE = TZS 0. Thibitisha hesabu na TRA.",
       "live_body_now": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. PAYE ya mwezi: TZS 4,199. Thibitisha hesabu na TRA."
@@ -668,7 +200,7 @@
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
       "quarantine_line": 22,
       "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2588",
+      "at": "datasets/tier1a/sft/train_sft.jsonl:2577",
       "question": "PAYE inacheswa vipi kwa mshahara wa chini wa TZS 358,322?",
       "quarantined_body": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. Baada ya punguzo la kibinafsi TZS 26,000, TZS 4,199 ? TZS 26,000 < 0, kwa hiyo PAYE = TZS 0. Thibitisha hesabu na TRA.",
       "live_body_now": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. PAYE ya mwezi: TZS 4,199. Thibitisha hesabu na TRA."
@@ -686,7 +218,7 @@
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
       "quarantine_line": 56,
       "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2588",
+      "at": "datasets/tier1a/sft/train_sft.jsonl:2577",
       "question": "PAYE inacheswa vipi kwa mshahara wa chini wa TZS 358,322?",
       "quarantined_body": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. Baada ya punguzo la kibinafsi TZS 26,000, TZS 4,199 ? TZS 26,000 < 0, kwa hiyo PAYE = TZS 0. Thibitisha hesabu na TRA.",
       "live_body_now": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. PAYE ya mwezi: TZS 4,199. Thibitisha hesabu na TRA."
