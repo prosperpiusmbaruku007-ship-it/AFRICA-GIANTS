@@ -1,0 +1,364 @@
+{
+  "_what": "The retrain precondition re-derived from scratch: the export rebuilt from the current corpus, then swept on the CLAIM in both notations, polarity-aware.",
+  "_why_this_population": "The 2026-09-01 declaration swept the right files with figure-keyed patterns derived from each fact's own wrong_patterns, and was then invalidated by quarantines that fired one stage upstream of the export. This sweep's population is the CLAIM over the OUTPUT, so neither notation nor stage can hide a row.",
+  "_what_this_cannot_show": "Realism. Which claims a trained model actually reproduces is a weights question, not a corpus question. And a clean sweep is a LOWER BOUND on what was looked for (R21): 17 classes are checked, every one previously found; a defect class nobody has discovered yet is not in this list.",
+  "rebuilt": false,
+  "precheck": {},
+  "before": [
+    {
+      "path": "C:\\Users\\jhjh\\AFRICA-GIANTS\\datasets\\tier1a\\sft\\train_sft.jsonl",
+      "exists": true,
+      "rows": 3952,
+      "bytes": 2970930,
+      "sha256": "2bc108322388fa34c85a29f5494eba7608efe7b52fc0e8d47465a7626fa7d38a"
+    },
+    {
+      "path": "C:\\Users\\jhjh\\AFRICA-GIANTS\\datasets\\tier1a\\sft\\val_sft.jsonl",
+      "exists": true,
+      "rows": 440,
+      "bytes": 333995,
+      "sha256": "e5fada47b43b1a108705c6643c2531bb8f47f49b949ffc604c82e4121fa1eefe"
+    }
+  ],
+  "after": [
+    {
+      "path": "C:\\Users\\jhjh\\AFRICA-GIANTS\\datasets\\tier1a\\sft\\train_sft.jsonl",
+      "exists": true,
+      "rows": 3952,
+      "bytes": 2970930,
+      "sha256": "2bc108322388fa34c85a29f5494eba7608efe7b52fc0e8d47465a7626fa7d38a"
+    },
+    {
+      "path": "C:\\Users\\jhjh\\AFRICA-GIANTS\\datasets\\tier1a\\sft\\val_sft.jsonl",
+      "exists": true,
+      "rows": 440,
+      "bytes": 333995,
+      "sha256": "e5fada47b43b1a108705c6643c2531bb8f47f49b949ffc604c82e4121fa1eefe"
+    }
+  ],
+  "training_rows_swept": 4392,
+  "upstream_rows_swept": 4402,
+  "defect_classes_checked": [
+    "paye_phantom_personal_relief",
+    "paye_band2_at_9pct",
+    "nssf_retirement_mining_fabrication",
+    "efd_threshold_fabrication",
+    "gn487a_visa_revocation_softened",
+    "paye_p9_31_march",
+    "vat_threshold_dated_2024",
+    "patent_flat_20_years",
+    "foreign_company_part_xiii_reversed",
+    "osha_course_fee_250k",
+    "dse_stale_30pct_float",
+    "presumptive_stale_ceiling_and_rate",
+    "memorandum_articles_fee_22k",
+    "nssf_fine_ceiling_100k",
+    "rent_wht_nonresident_15pct",
+    "vat_withholding_deadline_20th"
+  ],
+  "defect_classes_NOT_figure_testable": [
+    {
+      "id": "stamp_duty_flat_1pct",
+      "why": "The defect is SCOPE, not value: 1% is a lawful stamp-duty rate (Cap.189 Art.22(b) is tiered 0.5%/1%), and the defect was asserting it as FLAT. A figure test flagged 14 rows, including correct share-transfer and land-transfer answers. R19's Guard B line -- find the constant underneath the claim, or do not build the check."
+    },
+    {
+      "id": "wcf_disease_reporting_flat_7_days",
+      "why": "The true rule is a CHAIN (14 days to the employer, then 7 to WCF) and the defect was collapsing it to a flat 7. '7 working days' is correct for the accident-reporting obligation, so the figure appears lawfully in adjacent rows. Needs a structure test, not a value test."
+    },
+    {
+      "id": "p45_p9_conflation",
+      "why": "A TERMINOLOGY defect with no figure. Caught by the p9 class above only where a date is attached; a row that uses 'P9' as a label with no deadline is not distinguishable by any pattern from one that explains the term is Kenyan."
+    },
+    {
+      "id": "nssf_or_tz_dead_domain",
+      "why": "Fixed by in-place REWRITE, not quarantine (R25 containment) -- 1,374 occurrences. Nothing to sweep for; the string is gone by construction. The upstream defect (the model emitting it) is tracked separately."
+    }
+  ],
+  "asserts_in_training_files": {
+    "paye_p9_31_march": [
+      {
+        "at": "datasets/tier1a/sft/train_sft.jsonl:85",
+        "question": "P9 form na P9A form — ni tofauti gani?",
+        "matched": [
+          "31 Machi"
+        ],
+        "sentence": "Inatakiwa kabla ya 31 Machi."
+      },
+      {
+        "at": "datasets/tier1a/sft/train_sft.jsonl:315",
+        "question": "Fomu ya P9 inatumika kwa nini na inawasilishwa lini?",
+        "matched": [
+          "31 Machi",
+          "tarehe 31 Machi"
+        ],
+        "sentence": "Inawasilishwa kufikia tarehe 31 Machi ya mwaka unaofuata, si 31 Januari."
+      },
+      {
+        "at": "datasets/tier1a/sft/train_sft.jsonl:1759",
+        "question": "P9 form kwa mfanyakazi mgeni — ni nini na inapaswa kutolewa lini?",
+        "matched": [
+          "31 Machi"
+        ],
+        "sentence": "Inahitajika kutolewa na mwajiri kwa kila mfanyakazi — raia na wageni — kabla ya 31 Machi ya mwaka unaofuata wa kodi."
+      },
+      {
+        "at": "datasets/tier1a/sft/train_sft.jsonl:2470",
+        "question": "Tofauti kati ya P9 na P10 ni nini kwa madhumuni ya PAYE?",
+        "matched": [
+          "31 Machi",
+          "tarehe 31 Machi"
+        ],
+        "sentence": "P9 ni TAARIFA YA MWAKA ya PAYE — inawasilishwa mara moja kwa mwaka ifikapo tarehe 31 Machi na inatoa muhtasari wa PAYE yote iliyolipwa na mwaka."
+      },
+      {
+        "at": "datasets/tier1a/sft/val_sft.jsonl:135",
+        "question": "Fomu ya P9 ni nini, inawasilishwa lini na nani hupata nakala?",
+        "matched": [
+          "31 Machi",
+          "tarehe 31 Machi"
+        ],
+        "sentence": "Fomu ya P9 ni ya usuluhishi wa mwaka wa PAYE, inayowasilishwa kufikia tarehe 31 Machi ya mwaka unaofuata."
+      }
+    ],
+    "osha_course_fee_250k": [
+      {
+        "at": "datasets/tier1a/sft/train_sft.jsonl:1469",
+        "question": "Naomba namba tatu: ada ya BRELA ya annual return, ada ya mafunzo ya OSHA, na kiwango cha mchango wa WCF.",
+        "matched": [
+          "250,000"
+        ],
+        "sentence": "Ada ya kozi ya mafunzo ya usalama ya OSHA ni TZS 250,000."
+      },
+      {
+        "at": "datasets/tier1a/sft/train_sft.jsonl:1666",
+        "question": "Mafunzo ya usalama kazini ya OSHA yanawahusu akina nani na gharama yake?",
+        "matched": [
+          "250,000"
+        ],
+        "sentence": "OSHA hutoa kozi za mafunzo ya usalama kazini kwa ada ya TZS 250,000."
+      },
+      {
+        "at": "datasets/tier1a/sft/val_sft.jsonl:172",
+        "question": "Mafunzo ya OSHA kwa afisa usalama na matakwa ya huduma ya kwanza ya WCF — ni mafunzo yale yale au tofauti?",
+        "matched": [
+          "250,000"
+        ],
+        "sentence": "Mafunzo ya usalama kazini ya OSHA (kwa mfano kozi ya ada ya TZS 250,000) yanalenga usalama na afya mahali pa kazi na husimamiwa na OSHA."
+      }
+    ],
+    "vat_threshold_dated_2024": [
+      {
+        "at": "datasets/tier1a/sft/train_sft.jsonl:3152",
+        "question": "Nasikia kizingiti cha VAT ni milioni 100 kwa mwaka — bado ni hivyo?",
+        "matched": [
+          "Julai 2024"
+        ],
+        "sentence": "Kilipandishwa kutoka 100M hadi 200M mwezi Julai 2024;"
+      }
+    ]
+  },
+  "mentions_under_negation_in_training_files": {
+    "paye_band2_at_9pct": 7,
+    "vat_withholding_deadline_20th": 12,
+    "paye_phantom_personal_relief": 1,
+    "osha_course_fee_250k": 1,
+    "nssf_fine_ceiling_100k": 1
+  },
+  "asserts_still_upstream": {
+    "paye_p9_31_march": 5,
+    "vat_threshold_dated_2024": 1,
+    "osha_course_fee_250k": 3
+  },
+  "planted_specimens": [
+    {
+      "q": "PAYE ya mwezi",
+      "body": "Baada ya punguzo la kibinafsi TZS 26,000, PAYE = TZS 0.",
+      "class": "paye_phantom_personal_relief",
+      "expected": "ASSERTS",
+      "why_this_case_exists": "the exact quarantined 2026-08-25 body"
+    },
+    {
+      "q": "PAYE ya mwezi",
+      "body": "Hakuna punguzo la kibinafsi Tanzania; kanda ya 0% ni kizingiti.",
+      "class": "paye_phantom_personal_relief",
+      "expected": null,
+      "why_this_case_exists": "a row that REJECTS the relief must not be flagged -- the shape the 2026-09-01 'tarehe 20' sweep deleted as if it were a defect. ⚠️ EXPECTED `None`, NOT `MENTIONS_UNDER_NEGATION`, and the change is the narrowing working: the row carries no FIGURE, so it is not a candidate at all rather than a demoted one. Relying on the negation rule to rescue a term-only row is one rule away from flagging it"
+    },
+    {
+      "q": "Kizingiti cha EFD",
+      "body": "Kizingiti ni mauzo ya TZS 11,000,000 kwa mwaka.",
+      "class": "efd_threshold_fabrication",
+      "expected": "ASSERTS",
+      "why_this_case_exists": "the fabrication in DIGITS"
+    },
+    {
+      "q": "Kizingiti cha EFD",
+      "body": "Kizingiti ni mauzo ya milioni 11 kwa mwaka.",
+      "class": "efd_threshold_fabrication",
+      "expected": "ASSERTS",
+      "why_this_case_exists": "THE SAME CLAIM IN WORDS. Every figure-keyed sweep in this arc missed this form, because the fact's own wrong_patterns hold digits"
+    },
+    {
+      "q": "Kizingiti cha EFD",
+      "body": "Hakuna kizingiti cha EFD. SI TZS 11,000,000.",
+      "class": "efd_threshold_fabrication",
+      "expected": "MENTIONS_UNDER_NEGATION",
+      "why_this_case_exists": "SENTENCE-FINAL negated figure -- the boundary that blocked a trailing '.' reported this CLEAN and removed a real finding"
+    },
+    {
+      "q": "Cheti cha VAT ya zuio",
+      "body": "Cheti hutolewa siku VAT inapodaiwa, SI tarehe 20.",
+      "class": "vat_withholding_deadline_20th",
+      "expected": "MENTIONS_UNDER_NEGATION",
+      "why_this_case_exists": "train_sft:3196 verbatim shape -- the row the 2026-09-01 sweep removed for REJECTING the 20th. Correct data, deleted by a presence check"
+    },
+    {
+      "q": "Faini ya NSSF",
+      "body": "Faini ya juu ni TZS 100,000 kwa mujibu wa sheria.",
+      "class": "nssf_fine_ceiling_100k",
+      "expected": "ASSERTS",
+      "why_this_case_exists": "a 100x understatement, asserted"
+    },
+    {
+      "q": "Faini ya NSSF",
+      "body": "Faini ya juu ni TZS 10,000,000 -- si laki moja.",
+      "class": "nssf_fine_ceiling_100k",
+      "expected": "MENTIONS_UNDER_NEGATION",
+      "why_this_case_exists": "the correction's own text, in words. A sweep that flags this flags the fix"
+    },
+    {
+      "q": "Hii faini ya laki moja inawahusu nani?",
+      "body": "Faini ya shilingi elfu mia moja (TZS 100,000) hutolewa kwa makosa yanayohusu utii wa sheria. Thibitisha na NSSF (nssf.go.tz).",
+      "class": "nssf_fine_ceiling_100k",
+      "expected": "ASSERTS",
+      "why_this_case_exists": "`makosa` here means OFFENCES, not errors. A bare `\\bmakosa\\b` correction marker demoted this to a mention -- so the over-removal arm reported a row asserting a 100x understatement as correct data wrongly removed. Narrowed to the predicative `ni makosa`"
+    },
+    {
+      "q": "Nimeambiwa EFD ni kwa wafanyabiashara wa TZS 40M au zaidi — sahihi?",
+      "body": "Hapana, si sahihi. EFD inahitajika kwa biashara zenye mauzo ya TZS milioni 11 au zaidi kwa mwaka.",
+      "class": "efd_threshold_fabrication",
+      "expected": "ASSERTS",
+      "why_this_case_exists": "ONE SENTENCE REJECTING ONE VALUE AND ASSERTING ANOTHER -- it refutes 40M correctly and asserts the fabricated 11M, which is the worst row in the whole EFD quarantine. A sentence-wide correction marker excused BOTH figures; the marker now has to sit within _MARKER_CHARS of the value it excuses"
+    },
+    {
+      "q": "Nimeambiwa EFD ni kwa wafanyabiashara wa TZS 40M au zaidi — sahihi?",
+      "body": "VAT registered businesses ZOTE lazima zitumie EFD bila kujali kiasi cha mauzo. Kizingiti sahihi ni TZS milioni 11 — si 40M.",
+      "class": "efd_threshold_fabrication",
+      "expected": "ASSERTS",
+      "why_this_case_exists": "`sahihi ni` DIRECTLY IN FRONT OF THE FABRICATION, asserting it AS the correct threshold. The cue was in BOTH the negation rule and the correction marker, and removing it from one left the other demoting this row -- so the sweep still reported the worst row in the EFD quarantine as correct data wrongly deleted. A cue that appears in two rules has to be removed from two rules"
+    },
+    {
+      "q": "Kama kosa la OSHA litaendelea nini?",
+      "body": "Kama kosa la OSHA litaendelea, unatozwa faini ya TZS 100,000 kwa kila siku kosa linaendelea.",
+      "class": "nssf_fine_ceiling_100k",
+      "expected": null,
+      "why_this_case_exists": "train_sft:395 verbatim. The OSHA per-day fine IS TZS 100,000. A row subject of `faini|adhabu` matched every fine in the corpus; it must be NSSF only"
+    },
+    {
+      "q": "Kampuni ya Uingereza inatumia asilimia 25 au 30?",
+      "body": "Kiwango cha asilimia 25 kinatokana na ORODHA ya hisa kwenye DSE kwa umma Tanzania. Kampuni ambayo haijaorodhesha DSE inalipa kiwango cha kawaida cha asilimia 30.",
+      "class": "dse_stale_30pct_float",
+      "expected": null,
+      "why_this_case_exists": "train_sft:25 verbatim, a FULLY CORRECT answer. 30% is the standard corporate rate and 25% is both the reduced rate and the float threshold -- coincident numbers, and the first draft read the correct rate as a stale float"
+    },
+    {
+      "q": "'personal relief' kwenye PAYE maana yake nini?",
+      "body": "Hakuna punguzo la kibinafsi (personal relief) tofauti — kizingiti cha 0% (TZS 270,000) NDIYO punguzo la ufanisi.",
+      "class": "paye_phantom_personal_relief",
+      "expected": null,
+      "why_this_case_exists": "train_sft:731 verbatim. The row SAYS THERE IS NONE. A term is not a claim -- only a FIGURE attached to the relief is testable"
+    },
+    {
+      "q": "Bendi ya pili ya PAYE Tanzania ni asilimia 9 — ni kweli?",
+      "body": "Hapana. Bendi ya pili (TZS 270,001-520,000) ni asilimia 8 ya kiasi kinachozidi TZS 270,000.",
+      "class": "paye_band2_at_9pct",
+      "expected": null,
+      "why_this_case_exists": "train_sft:1173's shape: the DEFECT IS IN THE QUESTION, by design, and the answer corrects it. Sweeping question+body together converts adversarial pairs -- the best rows in the corpus -- into findings"
+    },
+    {
+      "q": "Kodi ya stempu kwenye uhamishaji wa hisa ni ngapi?",
+      "body": "Kiwango cha kodi ya stempu kwenye uhamishaji wa hisa ni asilimia 1 ya thamani ya hisa.",
+      "class": "stamp_duty_flat_1pct",
+      "expected": null,
+      "why_this_case_exists": "train_sft:208 verbatim, and CORRECT -- 1% is lawful for this instrument. The class is in NOT_FIGURE_TESTABLE and must never be swept; this specimen fails loudly if someone adds it back"
+    },
+    {
+      "q": "Ni TZS ngapi kwa siku kama kesi ya OSHA itaendelea kwa muda mrefu?",
+      "body": "Kama kosa la OSHA litaendelea, unatozwa faini ya TZS 100,000 kwa kila siku kosa linaendelea. Thibitisha na OSHA (osha.go.tz).",
+      "class": "nssf_fine_ceiling_100k",
+      "expected": null,
+      "why_this_case_exists": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl:987 (1 match) -- the OSHA per-day fine IS TZS 100,000. A row subject of `faini|adhabu` matched every fine in the corpus; it must be NSSF only"
+    },
+    {
+      "q": "Kampuni ya Tanzania haijasajiliwa DSE lakini inamilikiwa asilimia 100 na kampuni ya Uingereza — inatumia kiwango cha asilimia 25 au asilimia 30?",
+      "body": "Umiliki na kiwango cha kodi ya DSE ni mambo tofauti. Kiwango cha asilimia 25 kinatokana na ORODHA ya hisa kwenye DSE kwa umma Tanzania — si umiliki wa kigeni. Kampuni inayomilikiwa na Uingereza asilimia 100 ambayo haijaorodhesha DSE inalipa kiwango cha kawaida cha asilimia 30. Umiliki wa kigeni peke yake haupunguzi kiwango cha kodi.",
+      "class": "dse_stale_30pct_float",
+      "expected": null,
+      "why_this_case_exists": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl:89 (1 match) -- a FULLY CORRECT answer. 30% is the standard corporate rate; 25% is both the reduced rate and the float threshold -- coincident numbers, and the first draft read the correct rate as a stale float"
+    },
+    {
+      "q": "PAYE ya mfanyakazi mwenye mshahara wa TZS 300,000 kwa mwezi — inakokotolewa vipi?",
+      "body": "Mfanyakazi mwenye mshahara wa TZS 300,000/mwezi: Band 1 (0%): TZS 270,000 → kodi = TZS 0. Ziada: TZS 300,000 − TZS 270,000 = TZS 30,000. Band 2 (8%): TZS 30,000 × 8% = TZS 2,400. PAYE ya mwezi = TZS 2,400. Hakuna punguzo la kibinafsi (personal relief) tofauti — kizingiti cha 0% (TZS 270,000) NDIYO punguzo la ufanisi. Kwa hivyo mfanyakazi mwenye mshahara wa TZS 300,000 analipa PAYE ya TZS 2,400/mwezi tu — kiasi kidogo kwa sababu ana mshahara mdogo unaopita kidogo mstari wa TZS 270,000. Thibitisha na TRA (tra.go.tz).",
+      "class": "paye_phantom_personal_relief",
+      "expected": null,
+      "why_this_case_exists": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl:249 (1 match) -- the row SAYS THERE IS NONE. A term is not a claim -- only a FIGURE attached to the relief is testable"
+    },
+    {
+      "q": "Bendi ya pili ya PAYE Tanzania ni asilimia 9 — ni kweli?",
+      "body": "UWONGO — bendi ya pili ya PAYE ni asilimia 8, si 9. Bendi zote tano za PAYE kwa kipindi cha 2025/2026: Bendi 1: TZS 0-270,000 = 0%; Bendi 2: TZS 270,001-520,000 = 8%; Bendi 3: TZS 520,001-760,000 = 20%; Bendi 4: TZS 760,001-1,000,000 = 25%; Bendi 5: Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000 kwa mwaka (TZS 270,000/mwezi kwa kiwango cha 0%, imejengwa ndani ya Bendi 1). Kumbuka: bendi ya 2 ni 8% — si 9% — kosa hili ni la kawaida.",
+      "class": "paye_band2_at_9pct",
+      "expected": "MENTIONS_UNDER_NEGATION",
+      "why_this_case_exists": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:117 (1 match) -- an adversarial pair: the defect is in the QUESTION by design and the answer refutes it twice ('asilimia 8, si 9'). ⚠️ I first labelled this `None` from a paraphrase I had retyped; the real row names 9 under negation, so the correct expectation is a FIRED DEMOTION -- a stronger pin, because it fails if the negation rule is removed rather than passing by the class happening not to match"
+    },
+    {
+      "q": "Kodi ya stempu (stamp duty) ni nini na nyaraka gani zinaathirika nazo Tanzania?",
+      "body": "Kodi ya stempu ni ushuru unaolipwa kwa hati maalum zinazotajwa kwenye Sheria ya Kodi ya Stempu (Stamp Duty Act, Cap. 189). Hati zinazohitaji kodi ya stempu ni pamoja na: mikataba ya manunuzi ya mali isiyohamia (ardhi/nyumba), makubaliano ya kukodi (lease/tenancy agreements), uhamishaji wa hisa za kampuni, makubaliano ya mikopo, hati za kuasisi ushirika, na mamlaka ya mwakilishi (power of attorney). Hati isiyopigwa stempu haiwezi kutumika kama ushahidi mahakamani.",
+      "class": "stamp_duty_flat_1pct",
+      "expected": null,
+      "why_this_case_exists": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl:146 (10 match) -- CORRECT -- 1% is lawful for a share transfer. The class is in NOT_FIGURE_TESTABLE and must never be swept; this fails loudly if someone adds it back"
+    },
+    {
+      "q": "NSSF faini ya kuchelewa ni ngapi — na riba pia?",
+      "body": "NSSF ina adhabu mbili kwa kuchelewa: (1) FAINI ya 5% ya kiasi kisicholipwa kwa kila mwezi wa kuchelewa — inakusanyika kila mwezi. Mfano: NSSF TZS 100,000 haijalipwa kwa miezi 3 → faini = 5% × 100,000 × 3 = TZS 15,000. (2) RIBA ya kuchelewa — inaongezeka pia (kiwango kinabadilika kwa maamuzi ya NSSF). Kwa miezi mingi ya kuchelewa, deni linakuwa kubwa haraka. Mwajiri anashauriwa kulipa ndani ya mwezi mmoja baada ya mwisho wa mwezi wa malipo ya wafanyakazi. Thibitisha na nssf.go.tz kwa viwango vya sasa vya riba.",
+      "class": "nssf_fine_ceiling_100k",
+      "expected": "MENTIONS_UNDER_NEGATION",
+      "why_this_case_exists": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl:216 (1 match) -- the 100,000 is the UNPAID CONTRIBUTION in a worked example, not the Act's fine ceiling. The row is correct and even states the one-month deadline correctly"
+    },
+    {
+      "q": "Hizo 'OSH TRAININGS AND PROMOTION' nilizolipia 250,000 TZS zinahusiana na kodi gani hasa?",
+      "body": "Mafunzo kuhusu Afya na Usalama Kazini (OSH) kama haya uliyolipia 250,000 TZS yanalenga kutoa elimu na uelewa wa kanuni za Afya na Usalama Kazini kwa waajiri na wafanyakazi, ili kuhakikisha mazingira salama ya kazi. Thibitisha na OSHA (osha.go.tz).",
+      "class": "osha_course_fee_250k",
+      "expected": "MENTIONS_UNDER_NEGATION",
+      "why_this_case_exists": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl:184 (1 match) -- the figure came from the QUESTION and is echoed back; the answer asserts no fee"
+    },
+    {
+      "q": "Mwajiri alitumia mfumo wa zamani wa PAYE unaotumia bendi ya 9%. Wafanyakazi wanapaswa kupata rejesho la ziada waliyolipa?",
+      "body": "Ndiyo — ikiwa mfumo ulitumia 9% badala ya 8% kwa bendi ya pili, mfanyakazi alikuwa akilipa PAYE zaidi ya inayostahili. Tofauti ni 1% ya mapato kati ya TZS 270,001 na TZS 520,000. Mfanyakazi anastahili rejesho la ziada iliyolipwa. Mwajiri anapaswa: (1) kuhesabu tofauti; (2) kuomba TRA marekebisho (amendment) au rejesho (refund); (3) kusasisha mfumo wa mishahara kwa bendi sahihi za 2025/2026.",
+      "class": "paye_band2_at_9pct",
+      "expected": "MENTIONS_UNDER_NEGATION",
+      "why_this_case_exists": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:121 (1 match) -- CORRECT. 'badala ya' is a CONTRAST marker and a backward negation window reaches nothing in front of it"
+    },
+    {
+      "q": "Kwa nini watu wengi wanasema bendi ya 2 ya PAYE ni 9% — kosa hili limetoka wapi?",
+      "body": "Kosa la 9% limetoka kwenye bendi za zamani za PAYE za Tanzania ambazo zilitumika kabla ya marekebisho. Bendi hii ilibadilishwa kwa 8% kupitia Finance Act ya miaka iliyopita. Mifumo mingi ya mishahara ya zamani, vitabu vya kodi visivyosasishwa, na wataalam fulani bado wanatumia kiwango cha zamani. Wajibu wa mwajiri ni kuhakikisha anatumia bendi za hivi karibuni za TRA — tazama tovuti ya TRA au wasiliana nao moja kwa moja kwa uthibitisho.",
+      "class": "paye_band2_at_9pct",
+      "expected": "MENTIONS_UNDER_NEGATION",
+      "why_this_case_exists": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:122 (1 match) -- CORRECT. The wrong value is the SUBJECT of a noun phrase naming it as an error"
+    },
+    {
+      "q": "Nasikia kuna personal relief ya TZS 26,000 kwenye PAYE — ni kweli?",
+      "body": "Hapana, si sahihi — Tanzania haina personal relief ya aina hiyo. Daraja la 0% kwenye TZS 270,000 za kwanza ndilo kiwango halisi kisichotozwa kodi; takwimu ya TZS 26,000 personal relief ni makosa. Thibitisha na TRA (tra.go.tz).",
+      "class": "paye_phantom_personal_relief",
+      "expected": "MENTIONS_UNDER_NEGATION",
+      "why_this_case_exists": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl:83 (1 match) -- CORRECT. The correction is stated AFTER the figure ('ni makosa'), which is where a backward window cannot look"
+    },
+    {
+      "q": "Kiwango cha pili cha PAYE ni asilimia 9 tangu Finance Act 2023 — je, hii ni sahihi?",
+      "body": "Hapana. Kiwango cha pili cha PAYE ni asilimia 8 — hii haikubadilishwa hadi asilimia 9 na Finance Act 2023 wala Finance Act nyingine yoyote. Kanda ya asilimia 8 bado inatumika kwa mapato kati ya Shilingi 270,001 na 520,000 kwa mwezi. Kiwango cha asilimia 9 si sahihi chini ya sheria ya Tanzania.",
+      "class": "paye_band2_at_9pct",
+      "expected": "MENTIONS_UNDER_NEGATION",
+      "why_this_case_exists": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl:94 (1 match) -- CORRECT -- it DENIES the 9% change. A negative verb form, which the threshold guard deliberately does NOT treat as a negation; here it is one, and the difference is whether the verb negates the CLAIM or the user's position"
+    }
+  ],
+  "verdict": "NOT MET"
+}

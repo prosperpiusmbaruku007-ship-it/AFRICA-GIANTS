@@ -1,0 +1,327 @@
+# -*- coding: utf-8 -*-
+r"""DOES ANY BUILT INDEX ROW STILL ASSERT A VALUE ITS OWN FACT DECLARES SUPERSEDED?
+
+⛔ WHY THIS EXISTS, AND IT IS NOT "BRELA NEEDED CHECKING".
+
+On 2026-10-06 twelve BRELA facts were amended and a payload gate demanding `TZS 70,000` in
+`brela_foreign_late_filing_penalty`'s index row was written IN THE SAME COMMIT. The row itself was
+not touched. The local dry run reported SAFE TO RUN; the Kaggle regen aborted on that gate before
+uploading anything.
+
+The gate did its job. The question this file answers is the one the founder asked next: what
+checked the OTHER eleven? Nothing did. The dry run hand-wrote payload assertions for the two rows
+whoever wrote it remembered changing (`brela_filing_fees`, `company_registration_ladder`) — which
+is R33 exactly: a validator authored by the author of the change, scoped to the change the author
+had in mind. Twelve facts moved; two rows were checked.
+
+So this sweep's POPULATION IS DEFINED BY THE DATA, NOT BY RECOLLECTION: every fact in
+locked_facts.json carrying a `superseded_value` field, whatever domain it is in. Adding a thirteenth
+amendment enrols it automatically. Nobody has to remember.
+
+⚠️ AND THE FIGURE TEST ALONE IS CONTEXT-BLIND — measured, not feared. `TZS 22,000` is the
+SUPERSEDED special-company-information-report fee AND the CURRENT annual-return filing fee. A
+whole-index sweep for superseded figures flags `annual_return_filing_fee`, which is correct. That
+is the same false positive the correction-sync figure test produced on `vat_threshold_200m` (TZS
+100,000,000 right as the 6-month threshold, wrong "kwa mwaka"), and it is why this file has two arms
+with different authority:
+
+  ARM 1 — OWN-ROW, BLOCKING. A fact's superseded figure in the row that RENDERS THAT FACT is a
+          defect with no second reading. Scope is resolved structurally: the fact's own key row, or
+          the FACT_GROUPS passage that absorbed it (precompute._GROUP_MEMBERS).
+  ARM 2 — WHOLE-INDEX, REPORTING ONLY. Every other row carrying the figure, listed for a human.
+          Collisions are expected here and are NOT failures.
+
+⚠️ POLARITY, NOT PRESENCE — the lesson that has now arrived in a guard, a quarantine, an anchor
+extractor and a payload gate. Three live rows deliberately name their superseded value in order to
+CONTRADICT it ("SI TZS 100,000", "si tarehe 10", "SI USD 220 na SI USD 25"), because training rows
+assert the old figure and an explicit contradiction is what overrides that prior. A presence check
+would fail the very rows it protects. The negation device is lifted verbatim from the regen's own
+payload gate so the two cannot drift.
+
+⚠️ AND THE MONEY BOUNDARY FAILS IN THE DANGEROUS DIRECTION IF IT IS TOO TIGHT. A too-loose
+boundary adds noise, which is visible and annoying. A too-tight one DELETES FINDINGS: `(?![\d,.])`
+also blocks a sentence-final period, so "SI TZS 11,000,000." came back CLEAN from the EFD sweep
+until a planted specimen caught it. The boundary here is the corrected form, and the planted
+specimens below include a sentence-final case for exactly that reason.
+
+Usage:  python eval/index_quality/sweep_superseded_values_in_built_index.py
+Artifact: eval/results/superseded_values_in_built_index.json
+Exit 1 if any ARM 1 finding. Exit 2 if the instrument could not be exercised (NOT a pass).
+"""
+import importlib.util
+import io
+import json
+import os
+import re
+import sys
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+os.chdir(REPO)
+
+ARTIFACT = "eval/results/superseded_values_in_built_index.json"
+
+# Lifted VERBATIM from kaggle/regenerate_rag_e5.py's payload gate. If these two ever disagree,
+# this sweep and the gate that aborts the regen are measuring different things.
+_NEGATED = r"(?:\bsi\b|\bnot\b|\bsio\b|\bhapana\b)[\s:,]*(?:TZS\s*|USD\s*)?$"
+_NEGATION_CHARS = 14
+
+# Money tokens as they appear in a `superseded_value` field: currency-led ("USD 25"), or
+# comma-grouped ("440,000"). Nothing else.
+#
+# ⚠️ A BARE RUN OF DIGITS IS NOT A MONEY TOKEN, and the first draft of this pattern had
+# `\d{4,}` as a third alternative "so 70000 lands too". No fee in this corpus is written without
+# separators, and that alternative turned the DATE in "(published as at 2026-06-30)" into a
+# needle — which then matched ten unrelated rows (gn605a_effective_date, the presumptive bands,
+# the GN487A disambiguation) and reported them as carrying a superseded BRELA fee. R34: a defect
+# inferred from a pattern is not a defect. Dropped rather than special-cased, because "exclude
+# years" is a list and "require money notation" is a rule.
+_MONEY = re.compile(
+    r"(?:USD|TZS|Dola\s+za\s+Kimarekani)\s*\d[\d,]*(?:\.\d+)?"
+    r"|(?<![\d,.])\d{1,3}(?:,\d{3})+(?![\d,])",
+    re.IGNORECASE)
+
+
+def _numeric(token: str) -> str:
+    """The digits of a money token, currency and separators stripped.
+
+    ⛔ WHY COMPARISON IS BY NUMBER AND NOT BY STRING. `company_registration_fee_bands` declares
+    its supersession as "5 bands ending in an OPEN-ENDED 'above TZS 50,000,000 = 440,000'", and
+    its CURRENT nine-band text reads "hadi 50,000,000 = 290,000" — the same figure, written
+    without the currency because it is a band EDGE rather than a fee. String comparison made
+    `TZS 50,000,000` and `50,000,000` different tokens, so the current-value filter missed it and
+    the sweep reported a BLOCKING finding on a figure that never moved: only the band's SCOPE
+    changed (it closed at 100,000,000 with four bands above it). The actual superseded figure for
+    that fact is 440,000, and the row correctly no longer carries it.
+    """
+    return re.sub(r"[^\d]", "", token)
+
+
+def _needle_pattern(token: str) -> str:
+    """A regex matching `token` in row text, tolerant of currency spacing, strict at the edges.
+
+    The trailing boundary deliberately does NOT exclude a following '.' or ',' — a figure at the
+    end of a sentence, or in a list, is still that figure. It excludes only a continuation of the
+    NUMBER itself (another digit, or a comma followed by digits), which is what distinguishes
+    `70,000` from `70,000,000`.
+    """
+    m = re.match(r"(?i)^(USD|TZS|Dola\s+za\s+Kimarekani)\s*(.+)$", token)
+    if m:
+        cur, num = m.group(1), m.group(2)
+        cur_pat = r"Dola\s+za\s+Kimarekani" if cur.lower().startswith("dola") else re.escape(cur)
+        return rf"(?<![\d,.]){cur_pat}\s*{re.escape(num)}(?![\d]|,\d)"
+    return rf"(?<![\d,.]){re.escape(token)}(?![\d]|,\d)"
+
+
+def _tokens(text: str) -> list:
+    seen, out = set(), []
+    for m in _MONEY.finditer(text or ""):
+        t = re.sub(r"\s+", " ", m.group(0)).strip()
+        if t.lower() not in seen:
+            seen.add(t.lower())
+            out.append(t)
+    return out
+
+
+def _asserted_spans(row: str, token: str) -> list:
+    pat = _needle_pattern(token)
+    out = []
+    for m in re.finditer(pat, row, re.IGNORECASE):
+        before = row[max(0, m.start() - _NEGATION_CHARS):m.start()]
+        if re.search(_NEGATED, before, re.IGNORECASE):
+            continue
+        out.append(m.group(0))
+    return out
+
+
+def _mentioned(row: str, token: str) -> bool:
+    return bool(re.search(_needle_pattern(token), row, re.IGNORECASE))
+
+
+def _load_precompute():
+    spec = importlib.util.spec_from_file_location(
+        "precompute", os.path.join(REPO, "scripts", "precompute_rag_embeddings.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _self_test():
+    """NON-VACUITY BY PLANTED SPECIMEN, both directions (R26).
+
+    A sweep that reports CLEAN is indistinguishable from a sweep that cannot report anything, and
+    this project has shipped both. So the instrument is exercised against rows written to be
+    caught and rows written to pass, BEFORE it is pointed at the index.
+    """
+    cases = [
+        # (row, token, must_be_asserted, why)
+        ("faini ni USD 25 kwa kila mwezi", "USD 25", True,
+         "the exact defect this sweep exists for -- a plain assertion of the superseded figure"),
+        ("SI USD 220 na SI USD 25 — hizo ni ada za zamani.", "USD 25", False,
+         "brela_filing_fees' real contradiction clause. A presence check fails the row that "
+         "protects the figure; this is why polarity is checked"),
+        ("Faini ya juu ni TZS 10,000,000, SI TZS 100,000.", "TZS 100,000", False,
+         "fine_limit's real override clause, mid-sentence negation"),
+        ("Kizingiti sahihi: hakuna. SI TZS 11,000,000.", "TZS 11,000,000", False,
+         "SENTENCE-FINAL negated figure. The EFD sweep's first boundary blocked a trailing '.' "
+         "and reported this CLEAN -- a too-tight boundary DELETES findings, which is the "
+         "dangerous direction"),
+        ("Ada ni TZS 440,000 kwa mtaji wa juu.", "TZS 440,000", True,
+         "the superseded open-ended ladder band, asserted"),
+        ("Ada ni TZS 400,000 kwa mtaji wa juu.", "TZS 440,000", False,
+         "the CURRENT band must not match the superseded needle -- 400,000 vs 440,000"),
+        ("Ada ni TZS 70,000,000 kwa kitu kingine.", "TZS 70,000", False,
+         "a LONGER number must not match a shorter needle: 70,000,000 is not 70,000"),
+        ("Ada tatu: TZS 600,000, TZS 70,000, na TZS 2,500.", "TZS 70,000", True,
+         "a figure inside a comma-separated list is still that figure"),
+    ]
+    failures = []
+    for row, token, want, why in cases:
+        got = bool(_asserted_spans(row, token))
+        if got != want:
+            failures.append({"row": row, "token": token, "expected_asserted": want,
+                             "got_asserted": got, "why_this_case_exists": why})
+    # TOKEN EXTRACTION, pinned separately because both of this instrument's own real defects were
+    # here rather than in the polarity logic -- and both were found by RUNNING it, not by reading
+    # it. Kept as specimens so neither can return.
+    tok_cases = [
+        ("5 bands ending in an OPEN-ENDED 'above TZS 50,000,000 = 440,000' (published as at "
+         "2026-06-30)", ["TZS 50,000,000", "440,000"],
+         "the DATE must not become a money needle. With `\\d{4,}` in the pattern, '2026' was a "
+         "token and matched ten unrelated rows -- gn605a_effective_date, the presumptive bands, "
+         "the GN487A disambiguation -- reporting each as carrying a superseded BRELA fee"),
+        ("USD 25 per month (published as at 2026-06-30, June capture item 14)", ["USD 25"],
+         "'item 14' and the date are not money; the currency-led figure is"),
+    ]
+    for text, want, why in tok_cases:
+        got = _tokens(text)
+        if got != want:
+            failures.append({"superseded_value_text": text, "expected_tokens": want,
+                             "got_tokens": got, "why_this_case_exists": why})
+    if _numeric("TZS 50,000,000") != _numeric("50,000,000"):
+        failures.append({"why_this_case_exists":
+                         "a band EDGE written without its currency in the fact's current text "
+                         "must cancel the same figure written WITH it in the superseded field. "
+                         "String comparison did not, and the sweep reported a BLOCKING finding "
+                         "on a figure that never moved"})
+    assert not failures, (
+        "THE INSTRUMENT IS BROKEN, NOT THE INDEX. Planted specimens disagree with the "
+        "polarity/boundary/extraction logic:\n" + json.dumps(failures, ensure_ascii=False,
+                                                             indent=2) +
+        "\nRefusing to sweep -- a broken sweep reports CLEAN and that reads as progress.")
+    return ([{"row": r, "token": t, "expected_asserted": w, "why_this_case_exists": y}
+             for r, t, w, y in cases] +
+            [{"superseded_value_text": t, "expected_tokens": w, "why_this_case_exists": y}
+             for t, w, y in tok_cases])
+
+
+def main():
+    specimens = _self_test()
+    precompute = _load_precompute()
+    texts, keys, _dropped = precompute.build_fact_texts()
+    by_key = dict(zip(keys, texts))
+    group_of = dict(precompute._GROUP_MEMBERS)
+
+    facts = json.load(io.open(os.path.join(REPO, "scripts", "locked_facts.json"),
+                              encoding="utf-8"))
+
+    population = {k: v for k, v in facts.items()
+                  if isinstance(v, dict) and v.get("superseded_value")}
+    assert population, (
+        "ZERO facts carry a `superseded_value` field. That is either a renamed field or a "
+        "corpus with no recorded supersessions -- both make this sweep vacuous, so it refuses "
+        "to report CLEAN. Check the field name before believing this.")
+
+    arm1, arm2, clean = [], [], []
+    for key, fact in sorted(population.items()):
+        row_key = group_of.get(key, key)
+        row = by_key.get(row_key)
+        superseded = _tokens(str(fact.get("superseded_value", "")))
+        current = _tokens(str(fact.get("correct_value", "")) + " " + str(fact.get("fact", "")))
+        # A token that is ALSO the current value is not superseded for this fact -- the amount
+        # did not move, something else did (a currency, a band's scope, a citation). Compared by
+        # NUMBER, not by string: see _numeric's note on the TZS 50,000,000 false positive.
+        current_nums = {_numeric(c) for c in current}
+        superseded = [t for t in superseded if _numeric(t) not in current_nums]
+
+        if row is None:
+            arm1.append({"fact": key, "row_key": row_key, "verdict": "ROW_ABSENT",
+                         "detail": "the fact declares a supersession and has no built row at "
+                                   "all -- it cannot be serving the right value either"})
+            continue
+
+        hits = []
+        for t in superseded:
+            spans = _asserted_spans(row, t)
+            if spans:
+                hits.append({"token": t, "asserted_as": spans})
+        if hits:
+            arm1.append({"fact": key, "row_key": row_key, "verdict": "ASSERTS_SUPERSEDED",
+                         "hits": hits, "row": row,
+                         "superseded_value": fact.get("superseded_value"),
+                         "correct_value": fact.get("correct_value")})
+        else:
+            negated = [t for t in superseded if _mentioned(row, t)]
+            clean.append({"fact": key, "row_key": row_key,
+                          "verdict": "MENTIONS_UNDER_NEGATION" if negated else "CLEAN",
+                          "superseded_tokens_checked": superseded,
+                          "mentioned_under_negation": negated})
+
+        # ARM 2 — reporting only.
+        for t in superseded:
+            elsewhere = [k for k, txt in by_key.items()
+                         if k != row_key and _asserted_spans(txt, t)]
+            if elsewhere:
+                arm2.append({"fact": key, "token": t, "also_asserted_by_rows": elsewhere})
+
+    out = {
+        "_what": "Every locked fact declaring a `superseded_value`, checked against the index row "
+                 "that renders it. Built locally from scripts/precompute_rag_embeddings.py, the "
+                 "same module the regen imports.",
+        "_why_this_population": (
+            "Defined by the DATA (the presence of a `superseded_value` field), not by which rows "
+            "whoever ran it remembered changing. The 2026-10-06 dry run hand-picked two of twelve "
+            "amended facts and reported SAFE TO RUN; the Kaggle gate then aborted on a third."),
+        "_arm_authority": {
+            "arm1_own_row": "BLOCKING. A fact's superseded figure in the row that renders that "
+                            "fact has no innocent reading.",
+            "arm2_whole_index": "REPORTING ONLY. Figure collisions across subjects are expected: "
+                                "TZS 22,000 is the superseded special-report fee AND the current "
+                                "annual-return fee. A figure test is context-blind by "
+                                "construction, not by being too narrow.",
+        },
+        "rows_in_built_index": len(keys),
+        "facts_declaring_a_supersession": len(population),
+        "arm1_blocking": arm1,
+        "arm1_clean": clean,
+        "arm2_reporting": arm2,
+        "planted_specimens": specimens,
+    }
+    os.makedirs(os.path.dirname(ARTIFACT), exist_ok=True)
+    with io.open(os.path.join(REPO, ARTIFACT), "w", encoding="utf-8", newline="\n") as fh:
+        json.dump(out, fh, ensure_ascii=False, indent=2)
+
+    print(f"built index: {len(keys)} rows")
+    print(f"facts declaring a supersession: {len(population)}")
+    print(f"planted specimens: {len(specimens)} passed (instrument exercised both directions)\n")
+    for r in arm1:
+        print(f"  [BLOCKING] {r['fact']} (row '{r['row_key']}'): {r['verdict']}")
+        for h in r.get("hits", []):
+            print(f"             asserts {h['asserted_as']}")
+    for r in clean:
+        tag = "note" if r["verdict"] == "MENTIONS_UNDER_NEGATION" else "ok"
+        print(f"  [{tag}] {r['fact']} -> row '{r['row_key']}': {r['verdict']}")
+    if arm2:
+        print("\n  ARM 2 (reporting only, collisions expected):")
+        for r in arm2:
+            print(f"    {r['token']} (from {r['fact']}) also asserted by: "
+                  f"{r['also_asserted_by_rows']}")
+
+    print(f"\nartifact: {ARTIFACT}")
+    print(f"VERDICT: {'BLOCKING FINDINGS' if arm1 else 'no own-row supersession survives'}")
+    return 1 if arm1 else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

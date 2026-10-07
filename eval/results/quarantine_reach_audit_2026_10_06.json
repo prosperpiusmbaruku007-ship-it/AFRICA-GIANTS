@@ -7,14 +7,12 @@
   "what_this_cannot_show": "A survivor may be a DELIBERATE adversarial retention -- a pair that quotes a fabrication in order to refuse it is correct prose. Polarity is not scored here; every survivor is printed with its body to be read individually (R26).",
   "the_finding_that_prompted_it": "D-FIDELITY-7's pre-wiring sweep flagged 7 rows asserting the fabricated TZS 11M EFD threshold in sft_shaped_pairs/batch_011 and _012. Five of their questions are verbatim in efd_threshold_fabrication_quarantine_2026_08_29.jsonl. The quarantine removed them from cleaned_pairs/ and never touched sft_shaped_pairs/ or sft/.",
   "totals": {
-    "live_corpus_rows_indexed": 8791,
+    "live_corpus_rows_indexed": 8794,
     "quarantined_rows_read": 486,
-    "distinct_quarantined_rows_still_live": 2,
-    "survivor_locations": 2,
-    "by_stage": {
-      "sft_EXPORTED_TRAINING": 2
-    },
-    "survivors_in_training_stages": 2,
+    "distinct_quarantined_rows_still_live": 0,
+    "survivor_locations": 0,
+    "by_stage": {},
+    "survivors_in_training_stages": 0,
     "edited_in_place_not_removed": 6
   },
   "the_third_outcome": "A quarantined body that is ABSENT while its QUESTION is still live was EDITED IN PLACE, not removed. The record then holds the pre-edit text, so a body match reports the row as cleanly gone. R25's containment shape: the edit can repair the sentence a sweep keys on and leave the same claim standing later in the same row. It is also why a sweep for the spelled-out 'milioni 11' found 3 rows while D-FIDELITY-7 found 7 -- the repair deleted the words and left the digits.",
@@ -143,31 +141,12 @@
       "record": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
       "rows": 50,
       "with_body": 50,
-      "surviving": 2,
+      "surviving": 0,
       "edited_in_place": 0,
-      "stages": {
-        "sft_EXPORTED_TRAINING": 2
-      }
+      "stages": {}
     }
   ],
-  "survivors": [
-    {
-      "quarantine_record": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
-      "quarantine_line": 1,
-      "survives_in_stage": "sft_EXPORTED_TRAINING",
-      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:3181",
-      "question": "Mimi ni wakala wa zuio la VAT. Ninaweza kupunguza VAT niliyoizuia kutoka kwa wasambazaji dhidi ya VAT ninayodaiwa mimi m",
-      "body": "Hapana. VAT ya zuio unayoizuia kutoka kwa msambazaji wako hailipwi kama mkopo dhidi ya deni lako la VAT. Wewe kama wakala wa zuio unalipa kiasi hicho moja kwa moja TRA kwa niaba ya msambazaji. Msambazaji wako ndiye anayeidai kama mkopo wa VAT (input VAT) kwenye return yake. Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — si tarehe ya 20."
-    },
-    {
-      "quarantine_record": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
-      "quarantine_line": 31,
-      "survives_in_stage": "sft_EXPORTED_TRAINING",
-      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:3181",
-      "question": "Mimi ni wakala wa zuio la VAT. Ninaweza kupunguza VAT niliyoizuia kutoka kwa wasambazaji dhidi ya VAT ninayodaiwa mimi m",
-      "body": "Hapana. VAT ya zuio unayoizuia kutoka kwa msambazaji wako hailipwi kama mkopo dhidi ya deni lako la VAT. Wewe kama wakala wa zuio unalipa kiasi hicho moja kwa moja TRA kwa niaba ya msambazaji. Msambazaji wako ndiye anayeidai kama mkopo wa VAT (input VAT) kwenye return yake. Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — si tarehe ya 20."
-    }
-  ],
+  "survivors": [],
   "edited_in_place": [
     {
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
@@ -182,7 +161,7 @@
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
       "quarantine_line": 1,
       "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2577",
+      "at": "datasets/tier1a/sft/train_sft.jsonl:3602",
       "question": "PAYE inacheswa vipi kwa mshahara wa chini wa TZS 358,322?",
       "quarantined_body": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. Baada ya punguzo la kibinafsi TZS 26,000, TZS 4,199 ? TZS 26,000 < 0, kwa hiyo PAYE = TZS 0. Thibitisha hesabu na TRA.",
       "live_body_now": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. PAYE ya mwezi: TZS 4,199. Thibitisha hesabu na TRA."
@@ -200,7 +179,7 @@
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
       "quarantine_line": 22,
       "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2577",
+      "at": "datasets/tier1a/sft/train_sft.jsonl:3602",
       "question": "PAYE inacheswa vipi kwa mshahara wa chini wa TZS 358,322?",
       "quarantined_body": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. Baada ya punguzo la kibinafsi TZS 26,000, TZS 4,199 ? TZS 26,000 < 0, kwa hiyo PAYE = TZS 0. Thibitisha hesabu na TRA.",
       "live_body_now": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. PAYE ya mwezi: TZS 4,199. Thibitisha hesabu na TRA."
@@ -218,7 +197,7 @@
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
       "quarantine_line": 56,
       "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:2577",
+      "at": "datasets/tier1a/sft/train_sft.jsonl:3602",
       "question": "PAYE inacheswa vipi kwa mshahara wa chini wa TZS 358,322?",
       "quarantined_body": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. Baada ya punguzo la kibinafsi TZS 26,000, TZS 4,199 ? TZS 26,000 < 0, kwa hiyo PAYE = TZS 0. Thibitisha hesabu na TRA.",
       "live_body_now": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. PAYE ya mwezi: TZS 4,199. Thibitisha hesabu na TRA."

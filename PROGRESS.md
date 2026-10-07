@@ -1,5 +1,117 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-10-07 — **THE GATE CAUGHT THE ROW. THEN THE AUDIT OF THE AUDITS FOUND WE HAD DELETED CORRECT DATA.**
+
+**No production code behaviour changed. The R15 regen is re-packaged and not yet run.**
+
+### 1. THE REGEN ABORTED, AND THE REAL FINDING WAS THE DRY RUN
+
+`kaggle/regenerate_rag_e5.py` refused to upload at `d1523e9`:
+
+```
+[FATAL] brela_foreign_late_filing_penalty ASSERTS the superseded value ['USD 25']
+```
+
+The 2026-10-06 commit amended the fact to **TZS 70,000** and wrote a payload gate demanding that
+figure in the row — **and did not touch the row.** Fourth corrected-fact-stale-rendering instance
+in that file (`act_section_12`, row 63, row 57, this), **first caught before shipping.** Row fixed;
+all **11** gates now pass locally, including the one that aborted.
+
+**The dry run had said `SAFE TO RUN` on the same commit, because it did not execute those gates.**
+It re-implemented five assertions about the two rows its author remembered changing, while twelve
+facts had moved — and it *already* parsed two of the regen's other tables out of the regen file for
+exactly this reason. Gates moved verbatim to **`scripts/rag_payload_gates.py`**, imported by both
+runs, import aborts rather than skips, gate count asserted ≥11 in both. Durable half:
+`eval/index_quality/sweep_superseded_values_in_built_index.py` — population is **every fact with a
+`superseded_value` field** (11 today, shrink-asserted), so the next amendment enrols itself.
+Dry run re-run: **SAFE TO RUN**, 0 displacement, new guards at rank 2 and 1, 184 → 184.
+Full account and the sweep's own two defects: CLAUDE.md, *"A DRY RUN THAT RE-IMPLEMENTS..."*
+
+### 2. ⛔ THE RETRAIN PRECONDITION IS **NOT MET** — 9 ROWS, 3 CLASSES, ALL LIVE IN THE AUTHORED CORPUS
+
+Re-derived from scratch (`eval/controls/rederive_retrain_precondition_2026_10_07.py`,
+artifact `eval/results/retrain_precondition_rederived_2026_10_07.json`). The 2026-09-01 **MET**
+declaration failed for two independent reasons: **stage** (quarantines fired upstream of the
+export, which nobody re-ran — R36) and **notation** (the v1–v5 pattern sets are keyed on digits,
+because they came from each fact's own `wrong_patterns`).
+
+**The export was in fact stale: 4,389 → 4,392 rows on rebuild.** Pre-checks run and recorded
+(`clean_temp_files --scan` 0, `check_eval_split` 0, `generate_sft` 0).
+
+| class | rows | status |
+|---|---|---|
+| `paye_p9_31_march` | **5** | **confirmed wrong.** `paye_p9_deadline` = 30 January, ITA Cap.332 R.E.2023 **s.110(3)(b)**; "Form P9" is Kenyan KRA terminology. One row explicitly rejects the correct date: *"tarehe 31 Machi ..., si 31 Januari"* |
+| `osha_course_fee_250k` | **3** | **unconfirmed, not disproven** — and the distinction matters. `course_fee` is a locked **HEDGE**: every sampled OSHA course is TZS 300,000, but which course 250,000 refers to was never identified. These rows assert a figure we cannot confirm, not one proved wrong |
+| `vat_threshold_dated_2024` | **1** | **confirmed wrong.** GN 448Y/2023 → 1 July **2023**. The row is otherwise correct (200M, 100M is old) and carries a wrong date |
+
+All 9 are present upstream as well as in the export, so this is **live authored corpus**, not a
+stale build. **Restoration/quarantine not executed — reported for a decision.**
+
+**R26's second half did most of the work here, and the numbers say so: the first draft raised
+68 findings across 7 classes. 5 of the 7 classes were BAD SPECIMENS.** `faini|adhabu` matched every
+OSHA per-day fine; `asilimia 30` near `dse` matched the **standard corporate rate** in a correct
+answer; `personal relief` as a "wrong claim" matched rows **saying there is none**; two matched the
+QUESTION of adversarial pairs, where a wrong premise is the design; and stamp duty's flat-1% defect
+is **not figure-testable at all** (1% is lawful — R19's Guard B line, now recorded in
+`NOT_FIGURE_TESTABLE` with the WCF 14+7 chain and the P45/P9 terminology defect). Narrowing does
+**not** converge on its own: round two of reading the survivors found **five more**.
+
+### 3. ⛔⛔ THE AUDIT NOBODY HAD RUN: **THREE CORRECT ROWS WERE DELETED BY OUR OWN QUARANTINES**
+
+`eval/controls/audit_edit_in_place_and_overremoval_2026_10_07.py` — 486 quarantined rows re-read
+**on the claim, polarity-aware**, asking whether the *removal* was right.
+
+- **2 PAYE adversarial pairs** (`b008_paye_adv_002`, `b008_paye_adv_015`), removed 2026-08-25.
+  The record's reason: *"computes PAYE band 2 at 9%; the locked rate is 8%"*. **The rows say
+  `kiwango 8% (si 9%)`** — the correct rate, explicitly denying 9%, in rows whose `subdomain` is
+  `paye_adversarial`, i.e. **written to hold the line against that exact error.** The record's
+  `disposition` even explains the choice not to repair: *"correcting requires recomputing the
+  arithmetic."* **There is no arithmetic in either row.** A reason written once for a batch,
+  applied per row, reads as adjudication that never happened.
+- **1 VAT-withholding row**, removed 2026-09-01 for containing `tarehe 20` — attached to the
+  **RETURN** (*"return yako ya VAT, inayowasilishwa kufikia tarehe 20"*), which is correct. Second
+  known instance from that one sweep, after `train_sft:3196`.
+
+**Why this direction is invisible: an over-removal destroys its own evidence.** The row is gone,
+the count went down, the write-up reads as progress, and the only trace is a record written by the
+pass that made the mistake. Now R37.
+
+**Arm 1 — EDITED IN PLACE: 6 locations, 2 distinct rows, 0 defects survived.** Both genuinely
+repaired (the phantom TZS 26,000 relief clause gone, `PAYE ya mwezi: TZS 4,199` correct — verified
+against the locked bands). The 8 EFD rows that *did* keep their claim were quarantined 2026-10-06,
+so that population is closed.
+**Arm 2 — INVISIBLE EDIT: 17 locations, 0 defects survived.** New measurement of a blind spot in
+`audit_quarantine_reach.py`: it detects an edit by an exact question match, so a quarantine that
+reworded the question too is **neither a survivor nor an edit** — it is simply absent, which reads
+as success. The blind spot is now a number instead of an assumption.
+
+**And the instrument that makes R37 checkable failed four times, always by DELETING findings** —
+`makosa` bare (it means *offences*), sentence-wide marker scope, `sahihi ni` (it marks what
+*follows* as correct), and that same cue present in **two** rules so removing it from one changed
+nothing. Each time the finding count fell, which looks like progress. Details in CLAUDE.md.
+
+### 4. DOCUMENTATION
+
+- **Authoring guidance**: step zero of any wording/retrieval job is to **measure the fact's current
+  rank**; at rank 1 the defect is in generation and wording hours are wasted. Table of
+  rank → layer → action.
+- **Pilot section**: Bar A now carries **two** numbers. D-FIDELITY-7 turned `eval_347` from a
+  confident fabrication into a refusal — the safe direction, and **still a gate miss**. A falling
+  wrong-answer count is not a rising right-answer count; never net them.
+
+### 5. STATE
+
+Regen package re-assembled and ready; `EXPECTED_HEAD` to be bumped to this session's commit.
+Founder runs Kaggle. Then: fetch artifacts, dual-commit to `kaggle/` + `chike-inference/`, flip
+`tests/test_check_rag_index_freshness.py` back to `assert ok is True`, R16 deploy, and live-verify
+the BRELA twelve with `ext_15` and row 172 primary.
+
+**Open, not closed:** the 9 precondition rows (decision needed); restoring the 3 wrongly-removed
+rows (decision needed); the Companies (Fees) Regulations search lead; the three vanished BRELA line
+items; `ext_15` is `RE_RUN_REQUIRED`.
+
+---
+
 ## 📋 2026-10-05 — **BAR A's DENOMINATOR IS SOFTER THAN ITS NUMERATOR, AND `ext_15` IS THE WORKED EXAMPLE**
 
 **No production code behaviour changed. Four commits: `990d52e` → `ad43473` → `b20a32a` → `d1a54d3`,

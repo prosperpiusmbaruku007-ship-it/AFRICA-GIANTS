@@ -753,6 +753,31 @@ Corollary for scoping: index-content work is **per-row and testable**, not a bul
 Pick the row that fails, rewrite the fact it needs, measure the rank. Do not re-word in bulk
 and hope.
 
+### ⛔ STEP ZERO OF ANY WORDING OR RETRIEVAL JOB: MEASURE THE FACT'S CURRENT RANK. IF IT IS ALREADY 1, STOP — THE DEFECT IS IN GENERATION AND EVERY WORDING HOUR IS SPENT ON THE WRONG LAYER. (added 2026-10-07)
+
+**Rank 1 is the ceiling of what retrieval can offer. There is no headroom left to take, so no
+amount of re-wording can move the answer.** This is not a caution; it is a measured result, and
+row 57 is the proof: it was found fabricated, rewritten, the rewrite was *measured at rank 1*
+across both phrasings, it shipped — and `eval_347` served the fabricated TZS 11,000,000 anyway,
+with a parenthetical `(TZS 10M +)` that appears in **no index row at all**. Two instances of this
+on one day (the other being the GN487A term-bleed hypothesis, where the NSSF ceiling row sat at
+rank 1 *and* 2 on every phrasing).
+
+**So the diagnosis order is fixed, and it is cheap:**
+
+| measured rank of the needed fact | where the defect is | what to do |
+|---|---|---|
+| **absent, or outside top-3** | retrieval / content | the lever in this section — ask-aligned lead, then length (415 chars → rank 4; 172 → rank 1) |
+| **4–16 (BOUNDARY)** | retrieval, marginally | same lever, and it usually works |
+| **1–3, and the answer is still wrong** | **GENERATION** | a guard, or forced-fact / prompt work. **Not wording.** `eval/index_quality/` has the harness; run it first |
+
+**The trap this closes is that wording work always *looks* available.** A row can always be
+re-led, re-shortened, re-vocabularised, and each of those is a real lever that has really worked
+here — so the hours get spent, the rank does not move because it cannot, and the wrong answer
+survives the whole exercise looking like a hard retrieval problem. **Measuring first costs one
+harness run and tells you which of two unrelated workstreams you are in.** See the standing entry
+"THE CORRECT FACT AT RANK 1 AND THE WRONG VALUE EMITTED" for the class and its only remedy.
+
 **🎯 AND WHEN A CORRECTION LOSES RANK, MEASURE LENGTH BEFORE CONCLUDING THAT THE CORRECTION
 COSTS RETRIEVAL. "Correct but unretrievable" is usually a statement about one draft, not about
 correctness** (added 2026-10-06).
@@ -932,6 +957,38 @@ harder half set the schedule for the easier one.
   *refusing* to *hedging*, which is far cheaper to get wrong, and which the model already does on
   some coverage-gap rows without being asked to.
 
+**⛔ AND BAR A NEEDS TWO NUMBERS, NOT ONE — BECAUSE EVERY GUARD THAT CLOSES A WRONG-ANSWER CLASS
+CONVERTS IT INTO A NO-ANSWER CLASS, AND THAT IS PROGRESS THAT LOOKS LIKE NONE** (added 2026-10-07,
+from `eval_347`).
+
+D-FIDELITY-7 was wired on 2026-10-06. `eval_347` stopped serving a fabricated TZS 11,000,000 EFD
+threshold and started serving a withheld-answer message. **That is the safe direction and it is a
+real win** — the guard is the only layer that can reach this class, because the corrected fact was
+already at rank 1 for both phrasings and there was no retrieval headroom left to take. **And
+`eval_347` still scores as a gate miss, correctly, because the user did not get their answer.**
+
+> **A falling wrong-answer count is not a rising right-answer count.** Read as one number, the
+> whole exercise is invisible: accuracy did not move. Read as two, it is exactly what happened —
+> one confident fabrication removed, one answer still owed.
+
+**So the Bar A dashboard carries both, always:**
+
+| | what it counts | what moves it |
+|---|---|---|
+| **A1 — confident wrong answers** | in-scope questions answered with a located, wrong value | a guard, a fact correction, an index fix. **D-FIDELITY-7 moved this.** |
+| **A2 — answered correctly** | in-scope questions the user can act on | content, retrieval, generation. **A guard never moves this.** |
+
+- **Never net them.** A guard that converts five fabrications into five non-answers is a large A1
+  improvement and a zero A2 improvement, and reporting the net says the work did nothing.
+- **A guard stops the wrong answer; it does not produce the right one.** Wiring one is therefore
+  never the end of a row's work — it is the point at which the row becomes *safe to leave open*.
+  `eval_347` is open: the answer it owes is "EFD applies regardless of turnover," and that is an
+  A2 job on the fact path, where a blanking guard can only ship silence.
+- **The copy matters more than usual on the fact path.** The compute path still renders the
+  engine's working, so a blanked body costs a sentence. The fact path returns the body alone, so
+  it needs **replacement copy**, and that copy is the only thing standing between a caught
+  fabrication and a blank reply.
+
 ### ⛔ BEFORE PROPOSING ANY MECHANISM THAT CAN REFUSE A USER — read this, then R21.
 
 **Applies to: refusal phrases, OOC lists, coverage gates, similarity floors, confidence
@@ -1010,6 +1067,43 @@ introduced it.
    tax made listing status in-scope; `mrabaha` was correct until `royalties_wht_rate` was
    locked. **So the trigger to re-check refusals is ADDING A DOMAIN, not editing a phrase** —
    and adding a domain does not look like touching refusals, which is exactly why it is missed.
+
+### ⛔ A DRY RUN THAT RE-IMPLEMENTS THE REAL RUN'S GATES IS NOT A DRY RUN OF THAT RUN (2026-10-07)
+
+**The local dry run reported `VERDICT: SAFE TO RUN` — 0 displacement across 40 committed guards,
+both new guards hit, 184 → 184 rows. The Kaggle regen aborted on the same commit:**
+
+```
+[FATAL] brela_foreign_late_filing_penalty ASSERTS the superseded value ['USD 25']
+```
+
+Nothing uploaded, so the gate earned its place — the **fourth** corrected-fact-stale-rendering
+instance in `precompute_rag_embeddings.py` (after `act_section_12`, row 63, row 57) and **the first
+caught before shipping.** The fact was amended and a gate demanding `TZS 70,000` in that row was
+written **in the same commit**; the row itself was not touched.
+
+**Why the dry run passed: it did not execute those gates at all.** It hand-wrote payload assertions
+for the two rows whoever wrote it remembered changing, while **twelve facts had moved.** R33 in the
+validator layer — a check authored by the author of the change, scoped to the change the author had
+in mind. And sharper than a plain omission: **the dry run already knew not to re-derive the regen's
+tables** — it parses `ACCEPTED_AMBIGUOUS` and the committed critical queries straight out of
+`regenerate_rag_e5.py` precisely so the two cannot disagree. It applied that discipline to two
+tables and hand-wrote the third.
+
+- **Gates live in `scripts/rag_payload_gates.py`, imported by BOTH** `kaggle/regenerate_rag_e5.py`
+  and the dry run. The move was verbatim; the extractor asserted the block referenced no free name
+  beyond `(fact_keys, fact_texts_to_embed)`.
+- **The import ABORTS, it does not skip** — a regen with no payload gates succeeds, prints nothing
+  missing, and uploads whatever it built. Both callers also assert the **gate count** (≥11), because
+  a gate list that shrinks silently is R20's check that cannot fail.
+- **AND A PER-ROW GATE LIST CANNOT COVER A CORRECTION NOBODY REMEMBERED.** The durable half is
+  `eval/index_quality/sweep_superseded_values_in_built_index.py`: its population is **every fact
+  carrying a `superseded_value` field**, so a thirteenth amendment enrols itself. 11 facts today,
+  shrink-asserted. ⚠️ Its own two defects are the instructive part — a bare `\d{4,}` alternative
+  turned the DATE in *"(published as at 2026-06-30)"* into a money needle that matched ten
+  unrelated rows, and a **string** comparison made `TZS 50,000,000` and `50,000,000` different
+  tokens, so a band EDGE that never moved was reported as a BLOCKING finding. Require money
+  notation; compare by number.
 
 ### 🎯 ADDING A ROW PERTURBS ITS NEIGHBOURS' ANCHORS, NOT ONLY THEIR RANKS (2026-10-05)
 
@@ -2006,6 +2100,85 @@ the test goes green on its own defect.
    sweep built from a fact's own patterns is blind to the words by construction**, and Swahili
    writes money both ways in the same file. The worst single row *corrected* a wrong figure **to**
    the fabrication: *"Kizingiti sahihi ni TZS milioni 11 — si 40M."*
+
+### ⛔⛔ R37 — EVERY AUDIT HERE ASKS WHETHER THE FIX REACHED THE DEFECT. NONE HAS ASKED WHETHER THE FIX TOOK SOMETHING CORRECT WITH IT. THAT DIRECTION HAS THREE CONFIRMED HITS. (added 2026-10-07)
+
+**R36 asks: did the quarantined rows actually go? R37 asks the opposite question, and it is the
+one no audit in this project has ever asked:** *were any of the rows it removed CORRECT?*
+
+**Measured, 486 quarantined rows re-read on the claim with polarity
+(`eval/controls/audit_edit_in_place_and_overremoval_2026_10_07.py`): THREE distinct correct rows
+were deleted, across 9 record lines, by 2 quarantines.**
+
+| removed | by | the stated reason | what the row actually said |
+|---|---|---|---|
+| **2 PAYE adversarial pairs** (`b008_paye_adv_002`, `b008_paye_adv_015`) | 2026-08-25 | *"computes PAYE band 2 at 9%; the locked rate is 8%"* | ***"(2) TZS 270,001 hadi 520,000: kiwango **8% (si 9%)**"*** — the correct rate, explicitly denying 9%, **in rows whose `subdomain` is `paye_adversarial`, i.e. written to hold the line against that exact error** |
+| **1 VAT-withholding row** | 2026-09-01 | contained `tarehe 20` | the 20th attached to the **RETURN** (*"return yako ya VAT, inayowasilishwa kufikia tarehe 20"*), which is correct. Second known instance from that one sweep, after `train_sft:3196` |
+
+> **🔴 THE QUARANTINE RECORD CONTRADICTS ITSELF AND NOBODY READ IT.** The PAYE record's own
+> `reasons` field names an arithmetic defect — *"computes band 2 at 9%"* — in a row containing no
+> arithmetic and no 9%. Its `disposition` field even explains the choice not to repair: *"correcting
+> requires recomputing the arithmetic."* **There was none.** A per-row reason was written once and
+> applied to a list, so the record *looks* adjudicated while the adjudication never happened.
+
+**WHY THIS DIRECTION IS STRUCTURALLY INVISIBLE, and it is not carelessness:**
+
+> **A missed defect leaves evidence — the row is still there to be found. AN OVER-REMOVAL DESTROYS
+> ITS OWN EVIDENCE.** The row is gone, the quarantine count went *down*, and the write-up reads as
+> progress. The only remaining trace is the quarantine record, which is written by the same pass
+> that made the mistake and therefore records its reasoning rather than the row's content. **And
+> the finding is an accusation against the remediation, not against the corpus**, so no
+> defect-hunting sweep is ever pointed at it.
+
+**In practice:**
+- **Every quarantine gets re-read in the opposite direction before it is trusted** — classify the
+  REMOVED bodies, polarity-aware, and count how many *reject* the claim. Cheap: it is the same
+  classifier the sweep already needs.
+- **A quarantine's stated reason must be checkable against the row it names.** A reason that could
+  be true of the batch rather than of the row is not a reason. Quote the sentence.
+- **Adversarial pairs are the highest-risk population for a presence-keyed sweep**, because
+  containing the wrong value is their entire purpose. `pair_type: adversarial` /
+  `subdomain: *_adversarial` should be a loud prompt to read before removing, not a field nobody
+  looks at.
+- **Restoration is a separate decision from discovery.** These three rows are *recorded* as
+  wrongly removed; putting them back is a corpus change and needs authorising on its own terms.
+
+### ⚠️ AND THE DEMOTION RULE THAT MAKES R37 CHECKABLE FAILED FOUR TIMES IN ONE SESSION, ALWAYS BY DELETING FINDINGS (2026-10-07)
+
+**A mention-vs-assertion rule is the only thing that can tell an over-removal from a real defect,
+and it is the component whose failures are hardest to notice, because every one of them SHORTENS
+the finding list.** Four, in one afternoon, each a different mechanism:
+
+| the rule | what it excused | why it was wrong |
+|---|---|---|
+| **`\bmakosa\b` bare** | *"Faini ya ... (TZS 100,000) hutolewa kwa **makosa** yanayohusu utii wa sheria"* | `makosa` is ordinary Swahili for **OFFENCES**, not only "errors". It demoted a row asserting a **100× understatement** and reported it as correct data wrongly removed. Narrowed to the predicative `ni makosa` |
+| **sentence-wide scope** | *"Hapana, **si sahihi**. EFD inahitajika ... TZS **milioni 11** au zaidi"* | one sentence can **reject one value and assert another**. A marker anywhere in the sentence excused both. Now it must sit within **±40 chars** of the value it excuses |
+| **`sahihi ni`** | *"Kizingiti **sahihi ni** TZS milioni 11 — si 40M"* | the phrase marks what **FOLLOWS** as correct, so as a demotion cue it is exactly inverted — and this is the worst row in the whole EFD quarantine |
+| **the same cue, twice** | the row above, *again*, after the first fix | `sahihi ni` was in **both** the backward negation rule and the forward correction marker. Removing it from one left the other demoting the row. **A cue that appears in two rules has to be removed from two rules**, and only re-running found it |
+
+**The common signature: the count went DOWN.** A loose filter is supposed to let junk *through*,
+where it is visible and annoying. A loose *demotion* rule quietly shrinks the population under
+adjudication, and **a shorter list of findings is indistinguishable from progress.** So after any
+change to a polarity rule, re-check that the findings you already knew about are still in the list.
+
+### ⚠️ A SPECIMEN PINNED TO A GENERATED FILE IS NOT PINNED (2026-10-07)
+
+Eleven corpus-sourced negative specimens were pinned by `file:line` into
+`datasets/tier1a/sft/*.jsonl`. `generate_sft.py` reshuffles that export (seeded, but over the
+whole set, so one added pair moves everything), and **all eleven failed at once the first time
+`--rebuild` ran.** They failed *loudly*, because each carried a required substring — the stale-pin
+discipline working rather than a new instance of it — but **re-pinning the numbers is the wrong
+fix: a line number in a generated file is not an identity.** Locate the specimen by CONTENT in the
+**authored** corpus, and assert the lookup resolves.
+
+**Two more from the same hour, both R26's "use the verbatim committed text":** I shortened two
+specimens by hand for readability and **one lost the only mention of its own row's subject** while
+the other lost its `PAYE` mention — so both fell out of their own class and returned "no verdict"
+for a reason unrelated to the rule under test. **They would have passed forever, guarding
+nothing.** And one `lawful_attachment` pattern was *constructed* from optional Swahili morphemes
+(`u(?:li)?(?:ya)?lipi?a`), which generates `uliyalipia` where the live row says **`uliyolipia`** —
+it matched nothing, and the escape it implemented was decoration. **List the forms; a Swahili
+relative-verb form is not reliably assembled from optional groups.**
 
 ### 🎯 THE CORRECT FACT AT RANK 1 AND THE WRONG VALUE EMITTED — NAME IT, BECAUSE NO INDEX EDIT REACHES IT (standing framing, 2026-10-06)
 

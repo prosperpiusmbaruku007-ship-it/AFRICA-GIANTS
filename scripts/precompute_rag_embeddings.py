@@ -502,13 +502,29 @@ CONCISE_BILINGUAL_FACTS = {
     # lesson: a correct diagnosis of WHY a defect hid tells you nothing about WHICH side of it
     # is the defect.
     #
-    # ⚠️ THE USD 25 FIGURE IS SEPARATELY UNRESOLVED and was never part of this citation dispute:
-    # the Act delegates all fees (s.458, s.489(3)); brela.go.tz read TZS 70,000 on 2026-10-04
-    # against USD 25 on 2026-09-02. Left as the locked fact still has it.
+    # ⛔ FIGURE CORRECTED 2026-10-07 — AND THE DELAY IS THE FINDING, NOT THE FIGURE.
+    # The comment that used to sit here read: "THE USD 25 FIGURE IS SEPARATELY UNRESOLVED ...
+    # brela.go.tz read TZS 70,000 on 2026-10-04 against USD 25 on 2026-09-02. Left as the locked
+    # fact still has it." On 2026-10-06 the locked fact WAS amended to TZS 70,000 from a dated,
+    # sha256-pinned capture, and a payload gate demanding TZS 70,000 in THIS row was written in
+    # the same commit — and this row was not touched. The gate aborted the Kaggle regen before
+    # anything uploaded, which is the gate earning its place; but it is the FOURTH
+    # corrected-fact-stale-rendering instance in this file (act_section_12, nssf_payment_deadline
+    # row 63, efd_threshold row 57, this), and the first caught before shipping.
+    #
+    # ⚠️ "Left as the locked fact still has it" was TRUE WHEN WRITTEN and became the reason the
+    # row was skipped once it stopped being true. A deferral note that names no condition for its
+    # own removal is R35's lapsed hold in a source comment: it does not get overruled, it is read
+    # as current by whoever arrives next. The condition it was waiting for was met the next day.
+    #
+    # Shortest edit that clears the gate: the figure, plus item 15(iv)'s own "au sehemu ya mwezi".
+    # NOT lengthened with a "SI USD 25" contradiction clause — the group passage brela_filing_fees
+    # carries that explicitly for the trained prior, and the row-57 measurement is that length,
+    # not correctness, is what costs rank (415 chars -> rank 4; 172 -> rank 1).
     'brela_foreign_late_filing_penalty':
         'Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa '
-        'kuwasilisha ritani ya mwaka: faini ni USD 25 kwa kila mwezi (tofauti na kampuni '
-        'za ndani ambazo hulipa TZS 2,500 kwa mwezi).',
+        'kuwasilisha ritani ya mwaka: faini ni TZS 70,000 kwa kila mwezi au sehemu ya '
+        'mwezi (kampuni za ndani hulipa TZS 2,500 kwa mwezi).',
 
     'osha_registration_threshold_b004':
         'OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kikomo cha idadi ya wafanyakazi.',

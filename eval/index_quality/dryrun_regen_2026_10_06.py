@@ -71,13 +71,20 @@ REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 OUT = os.path.join(REPO, "eval", "results", "dryrun_regen_2026_10_06.json")
 
 
-def _load_precompute():
-    path = os.path.join(REPO, "scripts", "precompute_rag_embeddings.py")
-    spec = importlib.util.spec_from_file_location("precompute_rag_embeddings", path)
+def _load_module(relpath, name):
+    path = os.path.join(REPO, *relpath.split("/"))
+    assert os.path.exists(path), (
+        f"{relpath} is missing. A dry run that cannot load it must ABORT, not continue with one "
+        f"fewer check -- that is the whole shape of the defect this file is being fixed for.")
+    spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
-    sys.modules["precompute_rag_embeddings"] = mod
+    sys.modules[name] = mod
     spec.loader.exec_module(mod)
     return mod
+
+
+def _load_precompute():
+    return _load_module("scripts/precompute_rag_embeddings.py", "precompute_rag_embeddings")
 
 
 # The two NEW guards this package adds, with the fixture each question comes from.
@@ -123,26 +130,37 @@ def main():
     texts, keys, dropped = precompute.build_fact_texts()
     assert texts and keys and len(texts) == len(keys), (
         f"builder returned {len(texts)} texts for {len(keys)} keys -- shape changed")
-    for _k in ("brela_filing_fees", "company_registration_ladder"):
-        assert _k in keys, (
-            f"{_k} is not in the built index at all. It is one of the two rows this package "
-            f"exists to ship, so a dry run that cannot find it is measuring the wrong thing.")
-    # THE PAYLOAD ITSELF, CHECKED HERE TOO. The regen has its own payload gates, but a dry run
-    # that measures only RANKS can report SAFE TO RUN on a package whose text never changed --
-    # the exact shape of a check that cannot fail. Both halves: the new value present, the
-    # superseded one absent.
-    _ladder = texts[keys.index("company_registration_ladder")]
-    _filing = texts[keys.index("brela_filing_fees")]
-    assert "hadi TZS 100,000,000 ni TZS 400,000" in _ladder, (
-        "the ladder row does not carry the new band (e). The package has no payload.")
-    assert "hadi TZS 10,000,000,000 ni TZS 600,000" in _ladder, (
-        "the ladder row does not carry the new top bands.")
-    assert "440,000" not in _ladder and "300,000" not in _ladder, (
-        f"the ladder row still carries a superseded figure:\n  {_ladder}")
-    assert "Kampuni isiyo na mtaji wa hisa ni TZS 500,000" in _ladder, (
-        "the no-share-capital fee was not updated in the ladder row.")
-    assert "faini ya kuchelewa TZS 70,000" in _filing, (
-        "the filing-fees row does not carry the new foreign late-filing penalty.")
+    # ── THE REGEN'S OWN PAYLOAD GATES, EXECUTED — NOT RE-IMPLEMENTED ────────────────────
+    #
+    # ⛔ THIS BLOCK USED TO BE FIVE HAND-WRITTEN ASSERTIONS ABOUT TWO ROWS, AND THAT IS WHY THIS
+    # FILE SAID `SAFE TO RUN` ON A PACKAGE THE KAGGLE REGEN THEN REFUSED.
+    #
+    # On 2026-10-06 it reported 0 displacement across 40 committed guards, both new guards hit,
+    # 184 -> 184 rows. The real run aborted on the same commit:
+    #
+    #     [FATAL] brela_foreign_late_filing_penalty ASSERTS the superseded value ['USD 25']
+    #
+    # Twelve facts were amended; the old block checked `brela_filing_fees` and
+    # `company_registration_ladder` -- the two rows whoever wrote it remembered changing. R33 in
+    # the validator layer: a check authored by the author of the change, scoped to the change the
+    # author had in mind. The comment above it even said the right thing ("the regen has its own
+    # payload gates, but a dry run that measures only RANKS can report SAFE TO RUN...") and then
+    # answered it by re-deriving a subset.
+    #
+    # Sharper still: THIS FILE ALREADY KNEW NOT TO RE-DERIVE THE REGEN'S TABLES. It parses
+    # ACCEPTED_AMBIGUOUS and the committed critical queries straight out of regenerate_rag_e5.py,
+    # precisely so the two cannot disagree (see the two parsers below). That discipline was
+    # applied to two tables and skipped for the third.
+    #
+    # The gates now live in scripts/rag_payload_gates.py and both runs import them, so this file
+    # cannot pass a package the real run would reject. The count is asserted for the same reason
+    # the regen asserts it: a gate list that silently shrinks is R20's check-that-cannot-fail.
+    _gates = _load_module("scripts/rag_payload_gates.py", "rag_payload_gates")
+    n_gates = _gates.run_payload_gates(keys, texts)
+    assert n_gates >= 11, (
+        f"only {n_gates} payload gate(s) ran; the regen enforces eleven. A dry run with fewer "
+        f"gates than the run it models is the defect this block was rewritten to close.")
+    print(f"payload gates executed from scripts/rag_payload_gates.py: {n_gates}")
     if dropped:
         print(f"builder dropped {len(dropped)} key(s): {sorted(dropped)[:8]}")
     print(f"prospective index: {len(texts)} rows")
