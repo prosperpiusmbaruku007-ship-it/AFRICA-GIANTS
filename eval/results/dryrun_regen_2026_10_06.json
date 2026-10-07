@@ -1,0 +1,194 @@
+{
+  "_what": "Local offline dry-run of the 2026-10-06 R15 regen package (BRELA replaced its published company fee schedule), before Kaggle.",
+  "_model": "intfloat/multilingual-e5-base",
+  "_offline": "HF_HUB_OFFLINE=1; weights already cached locally. The regen header's 'weights do not download locally' is true of DOWNLOADING, not of loading.",
+  "prospective_row_count": 184,
+  "deployed_row_count": 184,
+  "⚠️_rag_fact_count_must_be_bumped": {
+    "from": 184,
+    "to": 184,
+    "where": "kaggle/chike_config.json rag_fact_count",
+    "⛔_WHEN": "IN THE SAME COMMIT AS THE FETCHED .npy/.json ARTIFACTS, NEVER BEFORE. modal_app.py asserts this count against the loaded index and REFUSES TO SERVE on a mismatch (verified live 2026-08-24: HTTP 500). The config is fetched from GitHub at runtime, so bumping it while production still holds the old index takes production DOWN."
+  },
+  "anchor_uniqueness_new_guards": [
+    {
+      "guard": "BRELA foreign late-filing fee is TZS 70,000, not USD 25 (ext_15 verbatim)",
+      "anchor": "faini ya kuchelewa TZS 70,000",
+      "matches": 1,
+      "rows": [
+        182
+      ]
+    },
+    {
+      "guard": "BRELA share-capital ladder now has nine bands (the four new top bands)",
+      "anchor": "hadi TZS 10,000,000,000 ni TZS 600,000",
+      "matches": 1,
+      "rows": [
+        181
+      ]
+    }
+  ],
+  "anchor_faults_ALL_committed_guards": [
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "osha husajili",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "wcf huanza",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "mfanyakazi wa kwanza",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    }
+  ],
+  "anchor_faults_blocking": [],
+  "new_guards": [
+    {
+      "name": "BRELA foreign late-filing fee is TZS 70,000, not USD 25 (ext_15 verbatim)",
+      "anchor": "faini ya kuchelewa TZS 70,000",
+      "from": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl ext_15",
+      "why_this_anchor": "a bare 'TZS 70,000' matches TWO rows -- this group passage and the standalone brela_foreign_late_filing_penalty row -- so a guard anchored on the magnitude could pass on either. Carrying the SUBJECT (faini ya kuchelewa) makes it unique, the same reasoning that rejected bare 'ss.437-447' and bare 'asilimia 10'. This is a SECOND guard on ext_15, not a replacement for the Part XII citation guard: that row has been wrong on each limb separately, and a citation guard passes a reply that cites correctly while quoting a superseded fee.",
+      "in_top3": true,
+      "rank": 2,
+      "top3": [
+        "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini ",
+        "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS 66,000; stempu kwa kila n",
+        "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni TZS 22,000."
+      ]
+    },
+    {
+      "name": "BRELA share-capital ladder now has nine bands (the four new top bands)",
+      "anchor": "hadi TZS 10,000,000,000 ni TZS 600,000",
+      "from": "AUTHORED for this package -- and the absence is itself the finding: no committed fixture asks a HIGH-band question. The only committed ladder guard (nat_34) asks for the STARTING fee, so the four new top bands could be lost entirely with every committed guard still green. R17: a clean sweep over an existing corpus is weak evidence -- author the probe that contains the case.",
+      "why_this_anchor": "it is a band that did not exist before this package, so it cannot pass against the deployed index by accident.",
+      "in_top3": true,
+      "rank": 1,
+      "top3": [
+        "Kusajili kampuni gharama ya kuanzia ni TZS 95,000; kuhifadhi jina ni TZS 50,000. Ngazi za ada kwa mtaji wa his",
+        "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS 66,000; stempu kwa kila n",
+        "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha (renewal) TZS 30,000; mfu"
+      ]
+    }
+  ],
+  "displacement_regressions_caused_by_this_package": [],
+  "pre_existing_failures_not_caused_by_this_package": [
+    {
+      "guard": "Phone repair activity",
+      "anchors": [
+        "phone', 'simu', 'activity 3"
+      ],
+      "prospective_top3": [
+        "Kutengeneza au ukarabati wa simu na vifaa vya kielektroniki ni shughuli iliyozuiliwa kwa wasio raia ",
+        "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania b",
+        "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni kumi), na/au"
+      ],
+      "deployed_top3": [
+        "Kutengeneza au ukarabati wa simu na vifaa vya kielektroniki ni shughuli iliyozuiliwa kwa wasio raia ",
+        "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania b",
+        "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni kumi), na/au"
+      ],
+      "passes_on_deployed_index": false
+    },
+    {
+      "guard": "GN487A marriage no exemption",
+      "anchors": [
+        "kuoa', 'kuolewa"
+      ],
+      "prospective_top3": [
+        "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania b",
+        "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya",
+        "business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Le"
+      ],
+      "deployed_top3": [
+        "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania b",
+        "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya",
+        "business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Le"
+      ],
+      "passes_on_deployed_index": false
+    },
+    {
+      "guard": "BRELA striking-off (Q13 verbatim)",
+      "anchors": [
+        "defunct', 'mahakama kuu', 'sura 212"
+      ],
+      "prospective_top3": [
+        "employer notification deadline before retirement: 6 months",
+        "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUN",
+        "compliance license processing time old: 28 days"
+      ],
+      "deployed_top3": [
+        "employer notification deadline before retirement: 6 months",
+        "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUN",
+        "compliance license processing time old: 28 days"
+      ],
+      "passes_on_deployed_index": false
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchors": [
+        "osha husajili', 'wcf huanza', 'mfanyakazi wa kwanza"
+      ],
+      "prospective_top3": [
+        "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajil",
+        "Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zai",
+        "employer notification deadline before retirement: 6 months"
+      ],
+      "deployed_top3": [
+        "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajil",
+        "Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zai",
+        "employer notification deadline before retirement: 6 months"
+      ],
+      "passes_on_deployed_index": false
+    }
+  ],
+  "changed_rows_self_retrieve": [
+    {
+      "key": "company_registration_ladder",
+      "row": 181,
+      "self_retrieves": true
+    },
+    {
+      "key": "brela_filing_fees",
+      "row": 182,
+      "self_retrieves": true
+    }
+  ],
+  "verdict": "SAFE TO RUN"
+}
