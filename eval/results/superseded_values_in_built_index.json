@@ -12,36 +12,50 @@
     {
       "fact": "balance_sheet_filing_fee_section_12_act",
       "row_key": "brela_filing_fees",
-      "verdict": "CLEAN",
-      "superseded_tokens_checked": [],
-      "mentioned_under_negation": []
+      "verdict": "MENTIONS_UNDER_NEGATION",
+      "superseded_tokens_checked": [
+        "USD 220"
+      ],
+      "mentioned_under_negation": [
+        "USD 220"
+      ]
     },
     {
       "fact": "brela_foreign_late_filing_penalty",
       "row_key": "brela_foreign_late_filing_penalty",
       "verdict": "CLEAN",
-      "superseded_tokens_checked": [],
+      "superseded_tokens_checked": [
+        "USD 25"
+      ],
       "mentioned_under_negation": []
     },
     {
       "fact": "certified_copy_agreement_law_constitution_fee",
       "row_key": "certified_copy_agreement_law_constitution_fee",
-      "verdict": "CLEAN",
-      "superseded_tokens_checked": [],
-      "mentioned_under_negation": []
+      "verdict": "MENTIONS_UNDER_NEGATION",
+      "superseded_tokens_checked": [
+        "USD 750"
+      ],
+      "mentioned_under_negation": [
+        "USD 750"
+      ]
     },
     {
       "fact": "certified_copy_certificate_of_registration_fee",
       "row_key": "brela_filing_fees",
       "verdict": "CLEAN",
-      "superseded_tokens_checked": [],
+      "superseded_tokens_checked": [
+        "TZS 4,000"
+      ],
       "mentioned_under_negation": []
     },
     {
       "fact": "company_registration_fee_5",
       "row_key": "company_registration_ladder",
       "verdict": "CLEAN",
-      "superseded_tokens_checked": [],
+      "superseded_tokens_checked": [
+        "TZS 440,000"
+      ],
       "mentioned_under_negation": []
     },
     {
@@ -57,39 +71,85 @@
       "fact": "company_registration_fee_no_share_capital",
       "row_key": "company_registration_ladder",
       "verdict": "CLEAN",
-      "superseded_tokens_checked": [],
+      "superseded_tokens_checked": [
+        "TZS 300,000"
+      ],
       "mentioned_under_negation": []
     },
     {
       "fact": "document_filing_fee_section_12_act_excluding_balance_sheet",
       "row_key": "brela_filing_fees",
-      "verdict": "CLEAN",
-      "superseded_tokens_checked": [],
-      "mentioned_under_negation": []
+      "verdict": "MENTIONS_UNDER_NEGATION",
+      "superseded_tokens_checked": [
+        "USD 220"
+      ],
+      "mentioned_under_negation": [
+        "USD 220"
+      ]
     },
     {
       "fact": "file_search_fee",
       "row_key": "brela_filing_fees",
-      "verdict": "CLEAN",
-      "superseded_tokens_checked": [],
-      "mentioned_under_negation": []
+      "verdict": "MENTIONS_UNDER_NEGATION",
+      "superseded_tokens_checked": [
+        "TZS 3,000"
+      ],
+      "mentioned_under_negation": [
+        "TZS 3,000"
+      ]
     },
     {
       "fact": "file_search_report_fee",
       "row_key": "brela_filing_fees",
-      "verdict": "CLEAN",
-      "superseded_tokens_checked": [],
-      "mentioned_under_negation": []
+      "verdict": "MENTIONS_UNDER_NEGATION",
+      "superseded_tokens_checked": [
+        "TZS 22,000"
+      ],
+      "mentioned_under_negation": [
+        "TZS 22,000"
+      ]
     },
     {
       "fact": "late_filing_penalty_monthly_fee_section_12_act",
       "row_key": "brela_filing_fees",
-      "verdict": "CLEAN",
-      "superseded_tokens_checked": [],
-      "mentioned_under_negation": []
+      "verdict": "MENTIONS_UNDER_NEGATION",
+      "superseded_tokens_checked": [
+        "USD 25"
+      ],
+      "mentioned_under_negation": [
+        "USD 25"
+      ]
     }
   ],
-  "arm2_reporting": [],
+  "arm2_reporting": [
+    {
+      "fact": "company_registration_fee_no_share_capital",
+      "token": "TZS 300,000",
+      "also_asserted_by_rows": [
+        "course_fee"
+      ]
+    },
+    {
+      "fact": "file_search_report_fee",
+      "token": "TZS 22,000",
+      "also_asserted_by_rows": [
+        "BRELA_fees_hedge",
+        "annual_return_filing_fee",
+        "company_registration_ladder"
+      ]
+    }
+  ],
+  "provenance_leaking_rows": [
+    {
+      "fact": "certified_copy_agreement_law_constitution_fee",
+      "row_key": "certified_copy_agreement_law_constitution_fee",
+      "label_led_fallback": true,
+      "carries_citation_in_embedded_text": true,
+      "chars": 288,
+      "row": "certified copy agreement law constitution fee: Ada ya kuwasilisha nakala iliyothibitishwa ya katiba ya kampuni ya nje kwa Msajili ni TZS 2,000,000 (BRELA fee schedule item 15(i), as at 2026-10-06; Companies Act Cap.212 R.E.2023, Part XII). SUPERSEDES USD 750 (published as at 2026-06-30)."
+    }
+  ],
+  "_provenance_leak_is_not_an_accuracy_defect": "These rows state the CURRENT value first and label the old one SUPERSEDED, so none serves a wrong figure. The defect is dilution and reachability: a label-led `key: value` fallback, a statutory citation inside the EMBEDDED text (forbidden by precompute_rag_embeddings.py's standing rule -- folding citations in cost nat_05 ranks 24 -> 59), and English provenance a user never needs. Fixing it changes SERVED CONTENT, so it needs the displacement harness, not an edit.",
   "planted_specimens": [
     {
       "row": "faini ni USD 25 kwa kila mwezi",
@@ -120,6 +180,18 @@
       "token": "TZS 440,000",
       "expected_asserted": true,
       "why_this_case_exists": "the superseded open-ended ladder band, asserted"
+    },
+    {
+      "row": "Ada ... ni TZS 2,000,000 (item 15(i), as at 2026-10-06). SUPERSEDES USD 750 (published as at 2026-06-30).",
+      "token": "USD 750",
+      "expected_asserted": false,
+      "why_this_case_exists": "the `key: value` FALLBACK rendering of an amended fact serves its provenance prose verbatim. `SUPERSEDES` is a stronger supersession marker than any Swahili negation and the borrowed device knew none of them -- it was written for reply text. Reporting this as a wrong value would have sent someone to edit a CORRECT row"
+    },
+    {
+      "row": "Ada ya kuwasilisha ni USD 750 kwa Msajili.",
+      "token": "USD 750",
+      "expected_asserted": true,
+      "why_this_case_exists": "and the same figure WITHOUT the marker must still flag -- otherwise the escape above would be a blanket release for every USD figure in the index"
     },
     {
       "row": "Ada ni TZS 400,000 kwa mtaji wa juu.",

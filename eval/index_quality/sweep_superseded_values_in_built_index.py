@@ -67,6 +67,30 @@ ARTIFACT = "eval/results/superseded_values_in_built_index.json"
 _NEGATED = r"(?:\bsi\b|\bnot\b|\bsio\b|\bhapana\b)[\s:,]*(?:TZS\s*|USD\s*)?$"
 _NEGATION_CHARS = 14
 
+# ⚠️ AND `SUPERSEDES` IS A STRONGER SUPERSESSION MARKER THAN ANY OF THOSE, which the borrowed
+# device does not know about — it was written for Swahili reply text, and this is English
+# provenance prose that R27/R29 discipline puts into every amended fact's `fact` field. A row
+# rendered via the `key: value` fallback therefore serves that prose verbatim:
+#
+#   "...ni TZS 2,000,000 (BRELA fee schedule item 15(i), as at 2026-10-06...).
+#    SUPERSEDES USD 750 (published as at 2026-06-30)."
+#
+# That row states the CURRENT value first and labels the old one as superseded. It is not a wrong
+# value, and reporting it as one would have sent someone to edit a correct row. R20's sixth
+# arrival point, exactly: whose words is the detector matching, and were they written for the
+# population it is now pointed at?
+#
+# ⚠️ THERE IS A REAL FINDING UNDERNEATH, AND IT IS A DIFFERENT ONE — recorded, not conflated:
+# the row is the LABEL-LED `key: value` fallback ("certified copy agreement law constitution
+# fee: ..."), it carries a statutory citation in the EMBEDDED text (forbidden by the standing
+# rule in precompute_rag_embeddings.py — folding citations in cost nat_05 ranks 24 -> 59), and it
+# serves English provenance a user never needs. That is a reachability/dilution defect, not an
+# accuracy one, and fixing it changes served content, so it needs the displacement harness rather
+# than an edit here. Counted in `provenance_leaking_rows` below.
+_SUPERSESSION_MARKER = re.compile(r"\bSUPERSEDES\b|\bSUPERSEDED\b|\bwas\s+(?:TZS|USD)\b",
+                                  re.IGNORECASE)
+_SUPERSESSION_CHARS = 60
+
 # Money tokens as they appear in a `superseded_value` field: currency-led ("USD 25"), or
 # comma-grouped ("440,000"). Nothing else.
 #
@@ -81,6 +105,38 @@ _MONEY = re.compile(
     r"(?:USD|TZS|Dola\s+za\s+Kimarekani)\s*\d[\d,]*(?:\.\d+)?"
     r"|(?<![\d,.])\d{1,3}(?:,\d{3})+(?![\d,])",
     re.IGNORECASE)
+
+
+_SUPERSEDES_CLAUSE = re.compile(
+    r"\bSUPERSEDES\b|\bSUPERSEDED\b|\bwas\s+(?:TZS|USD)\b|\(was\b|\bya\s+zamani\b", re.IGNORECASE)
+
+
+def _current_prose(fact_text: str) -> str:
+    """The part of a fact's prose that asserts its CURRENT value, with the provenance tail cut.
+
+    ⛔⛔ THIS SWEEP SHIPPED WITH THE EXACT DEFECT IT EXISTS TO FIND, AND IT REPORTED `CLEAN`.
+
+    The current-value filter read tokens out of the whole `fact` field to cancel a superseded
+    token that had not actually moved (the TZS 50,000,000 band edge). But R27/R29 discipline means
+    a corrected fact RECORDS WHAT IT SUPERSEDES in its own prose:
+
+        "Ada ya kutafuta jalada ... ni TZS 5,000 (item 9, as at 2026-10-06).
+         SUPERSEDES TZS 3,000 (published as at 2026-06-30, June item 12)."
+
+    So `3,000` was read as a CURRENT value, cancelled itself, and the fact's superseded-token list
+    came out EMPTY. Three of eleven facts were never examined at all — `file_search_fee`,
+    `file_search_report_fee`, `certified_copy_certificate_of_registration_fee` — and all three
+    printed as `CLEAN`, which is what an unexamined row looks like from the outside.
+
+    **It is the same polarity failure as every other one found today, one level up: a value named
+    in order to be REJECTED was read as a value ASSERTED.** The difference is where it landed —
+    not in a demotion rule but in a CANCELLATION rule, where its effect is not to excuse a finding
+    but to delete the question. And the signature was the same: a shorter list, read as clean.
+
+    Found only because row 182 of the built index was read by eye and still carried `TZS 3,000`.
+    """
+    m = _SUPERSEDES_CLAUSE.search(fact_text)
+    return fact_text[:m.start()] if m else fact_text
 
 
 def _numeric(token: str) -> str:
@@ -131,6 +187,8 @@ def _asserted_spans(row: str, token: str) -> list:
         before = row[max(0, m.start() - _NEGATION_CHARS):m.start()]
         if re.search(_NEGATED, before, re.IGNORECASE):
             continue
+        if _SUPERSESSION_MARKER.search(row[max(0, m.start() - _SUPERSESSION_CHARS):m.start()]):
+            continue
         out.append(m.group(0))
     return out
 
@@ -169,6 +227,15 @@ def _self_test():
          "dangerous direction"),
         ("Ada ni TZS 440,000 kwa mtaji wa juu.", "TZS 440,000", True,
          "the superseded open-ended ladder band, asserted"),
+        ("Ada ... ni TZS 2,000,000 (item 15(i), as at 2026-10-06). SUPERSEDES USD 750 "
+         "(published as at 2026-06-30).", "USD 750", False,
+         "the `key: value` FALLBACK rendering of an amended fact serves its provenance prose "
+         "verbatim. `SUPERSEDES` is a stronger supersession marker than any Swahili negation and "
+         "the borrowed device knew none of them -- it was written for reply text. Reporting this "
+         "as a wrong value would have sent someone to edit a CORRECT row"),
+        ("Ada ya kuwasilisha ni USD 750 kwa Msajili.", "USD 750", True,
+         "and the same figure WITHOUT the marker must still flag -- otherwise the escape above "
+         "would be a blanket release for every USD figure in the index"),
         ("Ada ni TZS 400,000 kwa mtaji wa juu.", "TZS 440,000", False,
          "the CURRENT band must not match the superseded needle -- 400,000 vs 440,000"),
         ("Ada ni TZS 70,000,000 kwa kitu kingine.", "TZS 70,000", False,
@@ -199,6 +266,24 @@ def _self_test():
         if got != want:
             failures.append({"superseded_value_text": text, "expected_tokens": want,
                              "got_tokens": got, "why_this_case_exists": why})
+    # THE CANCELLATION RULE, pinned both ways. It emptied three facts' token lists and printed
+    # CLEAN; a specimen is the only thing that would have shown it.
+    cancel_cases = [
+        ("Ada ya kutafuta jalada la kampuni yoyote BRELA ni TZS 5,000 (item 9, as at "
+         "2026-10-06). SUPERSEDES TZS 3,000 (published as at 2026-06-30, June item 12).",
+         ["TZS 5,000"],
+         "the SUPERSEDES tail must NOT contribute current tokens. Reading 3,000 from it "
+         "cancelled the fact's own superseded value and the check was never performed"),
+        ("Ada ya kusajili kampuni ... hadi 50,000,000 = 290,000; hadi 100,000,000 = 400,000.",
+         ["50,000,000", "290,000", "100,000,000", "400,000"],
+         "a fact with NO supersession clause keeps its whole prose -- this is the case the "
+         "cancellation rule exists for (a band edge that never moved)"),
+    ]
+    for text, want, why in cancel_cases:
+        got = _tokens(_current_prose(text))
+        if got != want:
+            failures.append({"fact_prose": text, "expected_current_tokens": want,
+                             "got": got, "why_this_case_exists": why})
     if _numeric("TZS 50,000,000") != _numeric("50,000,000"):
         failures.append({"why_this_case_exists":
                          "a band EDGE written without its currency in the fact's current text "
@@ -238,7 +323,8 @@ def main():
         row_key = group_of.get(key, key)
         row = by_key.get(row_key)
         superseded = _tokens(str(fact.get("superseded_value", "")))
-        current = _tokens(str(fact.get("correct_value", "")) + " " + str(fact.get("fact", "")))
+        current = _tokens(str(fact.get("correct_value", "")) + " " +
+                          _current_prose(str(fact.get("fact", ""))))
         # A token that is ALSO the current value is not superseded for this fact -- the amount
         # did not move, something else did (a currency, a band's scope, a citation). Compared by
         # NUMBER, not by string: see _numeric's note on the TZS 50,000,000 false positive.
@@ -251,8 +337,32 @@ def main():
                                    "all -- it cannot be serving the right value either"})
             continue
 
+        # ⛔ A GROUP PASSAGE HOLDS MANY FEES, SO "THE ROW THAT RENDERS THIS FACT" IS SHARED —
+        # AND TWO OF THE FIRST THREE BLOCKING FINDINGS WERE SIBLINGS' CURRENT FEES.
+        #
+        # `file_search_fee` moved TZS 3,000 -> 5,000, and `brela_filing_fees` contains BOTH
+        # "kutafuta jalada TZS 5,000" (this fact, correct) and "kuthibitisha nyaraka kwa ukurasa
+        # TZS 3,000" — which is item 8 of BRELA's October schedule, *"Malipo ya kuthibitisha
+        # waraka wowote (kwa kila ukurasa) 3,000/="*, CURRENT and unchanged. Same for
+        # `file_search_report_fee` (22,000 -> 30,000): item 5 *"Upokeaji/usajili wa hati ya
+        # kisheria 22,000/="* is also current, as is item 7's annual return. Both read from the
+        # sha256-pinned capture, not inferred (R34).
+        #
+        # So for a GROUP row the test needs its positive limb: a fact is correctly rendered when
+        # ITS CURRENT VALUE IS PRESENT — which is exactly what the regen's own payload gates
+        # assert. If the current value is there, a stray match of the old one elsewhere in the
+        # passage belongs to a sibling. A STANDALONE row has no siblings, so it stays strict.
+        #
+        # ⚠️ RESIDUAL, stated rather than engineered around: a group passage stating BOTH the old
+        # and the new value for the SAME item would be cancelled here. That is a smaller hole than
+        # two false positives in three findings, because only a false positive generates an edit —
+        # and an edit lands in correct data.
+        in_group = key in group_of
+        current_present = any(_mentioned(row, c) for c in current) if current else False
         hits = []
         for t in superseded:
+            if in_group and current_present:
+                continue
             spans = _asserted_spans(row, t)
             if spans:
                 hits.append({"token": t, "asserted_as": spans})
@@ -275,6 +385,27 @@ def main():
             if elsewhere:
                 arm2.append({"fact": key, "token": t, "also_asserted_by_rows": elsewhere})
 
+    # ── THE SEPARATE, REAL FINDING: provenance prose reaching served text ───────────────────
+    # Not an accuracy defect (the current value leads), so it is REPORTED, not blocking. But it is
+    # a dilution + reachability one: a `key: value` fallback row is label-led, carries a statutory
+    # citation in the embedded text (forbidden by the standing rule in
+    # precompute_rag_embeddings.py), and serves English provenance a user never needs. Fixing it
+    # changes served content and therefore needs the displacement harness, not an edit here.
+    provenance_leaking = []
+    for key in sorted(population):
+        row_key = group_of.get(key, key)
+        row = by_key.get(row_key) or ""
+        if not _SUPERSESSION_MARKER.search(row):
+            continue
+        provenance_leaking.append({
+            "fact": key, "row_key": row_key,
+            "label_led_fallback": row.lower().startswith(key.replace("_", " ").lower() + ":"),
+            "carries_citation_in_embedded_text": bool(
+                re.search(r"cap\.?\s*\d|item\s+\d|s\.\d|schedule", row, re.IGNORECASE)),
+            "chars": len(row),
+            "row": row,
+        })
+
     out = {
         "_what": "Every locked fact declaring a `superseded_value`, checked against the index row "
                  "that renders it. Built locally from scripts/precompute_rag_embeddings.py, the "
@@ -296,6 +427,14 @@ def main():
         "arm1_blocking": arm1,
         "arm1_clean": clean,
         "arm2_reporting": arm2,
+        "provenance_leaking_rows": provenance_leaking,
+        "_provenance_leak_is_not_an_accuracy_defect": (
+            "These rows state the CURRENT value first and label the old one SUPERSEDED, so none "
+            "serves a wrong figure. The defect is dilution and reachability: a label-led "
+            "`key: value` fallback, a statutory citation inside the EMBEDDED text (forbidden by "
+            "precompute_rag_embeddings.py's standing rule -- folding citations in cost nat_05 "
+            "ranks 24 -> 59), and English provenance a user never needs. Fixing it changes "
+            "SERVED CONTENT, so it needs the displacement harness, not an edit."),
         "planted_specimens": specimens,
     }
     os.makedirs(os.path.dirname(ARTIFACT), exist_ok=True)
@@ -317,6 +456,14 @@ def main():
         for r in arm2:
             print(f"    {r['token']} (from {r['fact']}) also asserted by: "
                   f"{r['also_asserted_by_rows']}")
+
+    if provenance_leaking:
+        print(f"\n  PROVENANCE LEAK (reported, NOT blocking): {len(provenance_leaking)} row(s) "
+              f"serve `SUPERSEDES ...` prose to users")
+        for r in provenance_leaking:
+            print(f"    {r['fact']} -> row '{r['row_key']}'  {r['chars']} chars  "
+                  f"label_led={r['label_led_fallback']}  "
+                  f"cited={r['carries_citation_in_embedded_text']}")
 
     print(f"\nartifact: {ARTIFACT}")
     print(f"VERDICT: {'BLOCKING FINDINGS' if arm1 else 'no own-row supersession survives'}")
