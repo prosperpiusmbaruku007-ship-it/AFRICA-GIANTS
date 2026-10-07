@@ -158,7 +158,21 @@ SOURCE_FILES = [
 # clone there carries the NSSF employer guard still anchored on bare 'asilimia 10', which the
 # new rent_wht_rate row makes ambiguous -- so it would reproduce the exact failure that wasted
 # the first cycle. 5e191e0 is the first commit containing the re-anchor.
-EXPECTED_HEAD = '897e0e2'
+# BUMPED AGAIN 2026-10-06 to 951a67d, the BRELA fee-schedule packaging commit. 897e0e2 is a
+# FLOOR TOO LOW for a THIRD distinct reason, and it is the sharpest of the three: a clone there
+# carries the five-band ladder and the USD foreign-company figures, so it would build an index
+# whose text BRELA's own published schedule contradicts -- while every anchor, every critical
+# query and the rank gate all passed, because the guards that would catch it are added in the
+# same commit as the content they guard.
+#
+# ⛔ THAT IS THE GENERAL SHAPE AND IT IS WHY THIS LINE KEEPS MOVING: a payload gate and the row
+# it protects are ALWAYS added together, so a clone older than the pair has neither -- and a run
+# from there is not a failed run, it is a FULLY SUCCESSFUL-LOOKING run that ships the opposite of
+# what it was run for. The ancestry check is the only thing standing between a stale clone and
+# that outcome, and the previous two bumps were each made after a real cycle was spent finding
+# out (d1138ca died at the wrong gate with a message about the wrong thing; 498c8d8 reproduced an
+# ambiguous anchor that had already wasted one Kaggle run).
+EXPECTED_HEAD = '951a67d'
 
 
 def _assert_expected_head_present(local_head, live_sha):
