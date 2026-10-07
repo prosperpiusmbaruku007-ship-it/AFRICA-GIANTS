@@ -189,10 +189,16 @@ SOURCE_FILES = [
 # WITHOUT THE CONTENT. Both halves land in one commit when things go well; when they don't, the
 # gate lands first and the floor has to move past the repair, not past the gate.
 #
+# RE-BUMPED 2026-10-07 to c8cdbb9: 48cb213's superseded-value sweep reported CLEAN on three
+# facts it had never examined (a cancellation rule read `SUPERSEDES TZS 3,000` as a CURRENT
+# value), so a clone there carries an instrument that cannot see the class it was built for.
+# Not a blocker for THIS run's payload -- but the floor exists so the next regen cannot be
+# validated by a sweep known to report clean on unexamined rows.
+#
 # 48cb213 also carries scripts/rag_payload_gates.py, which this file now imports as a hard
 # dependency and refuses to run without -- so it belongs on this floor on the ordinary
 # "cannot run at all" ground as well.
-EXPECTED_HEAD = '48cb213'
+EXPECTED_HEAD = 'c8cdbb9'
 
 
 def _assert_expected_head_present(local_head, live_sha):
