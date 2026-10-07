@@ -514,11 +514,65 @@ All facts below are locked from verified primary sources. Encode these exactly.
   IS the effective tax-free threshold. Any pair mentioning "TZS 26,000 personal relief" is WRONG.
 - Source: PWC Tanzania Individual Tax Summary (last reviewed Jan 2026); Habib Advisory 2025/26
 
-**BRELA Annual Return and Fees (brela.go.tz/pages/tozo-za-kampuni, confirmed Jun 2026):**
-- Annual return filing fee: TZS 22,000
-- Late filing penalty: TZS 2,500 per month (or partial month) for local companies
+**BRELA Annual Return and Fees — ⚠️ THE PUBLISHED SCHEDULE WAS REPLACED BETWEEN 2026-06-30 AND
+2026-10-06. Figures below are as at the 2026-10-06 capture (sha256 `8d5543ac…`, fetched
+2026-10-06T14:04:42Z).**
+
+> **🔴 THE "DISPUTE" THIS SECTION RECORDED FOR FIVE WEEKS WAS A DATE PROBLEM WEARING THE COSTUME
+> OF AN ACCURACY PROBLEM, and that is the transferable lesson.** Two readings of the *same URL* —
+> item 2 as TZS 300,000 and as TZS 500,000; item 15(iv) as USD 25 and as TZS 70,000 — were written
+> up as irreconcilable, i.e. as evidence that **this page is unreliable**. They were four months
+> apart. Both were read correctly. **A living page read twice without dates cannot produce a
+> dispute, only an ambiguity — and the fix is to date and hash every capture, never to adjudicate
+> between two undated readings.** Both captures are now sha256-pinned in the repo.
+>
+> **AND THE ITEM NUMBERS MOVED, which is how a later pass gets a confident wrong verdict.** The
+> foreign-company block was **item 14** in June and is **item 15** in October; item 14 is now
+> *Restoration, 50,000/=*. Anyone checking "item 14" against the live page reads a restoration fee
+> and concludes the fact is fabricated (R34's exact shape).
+
+- Annual return filing fee: TZS 22,000 — **unchanged** (item 7)
+- Late filing penalty: TZS 2,500 per month (or partial month) for local companies — **unchanged**
+  (item 6)
 - Foreign company (**Companies Act Cap.212 R.E. 2023, PART XII, ss.437-447**) late filing
-  penalty: USD 25 per month — **FIGURE DISPUTED, see below**
+  penalty: **TZS 70,000 per month or part month** (item 15(iv)). **SUPERSEDES USD 25/month**,
+  which was the published figure as at 2026-06-30 and is why gold row `ext_15` is **stale, not
+  wrong**. ⚠️ **Both the correct figure and the local-company distractor are now in shillings** —
+  until 2026 the currency itself marked the distinction.
+- Other foreign-company fees, all now in TZS (item 15): certified copy of the charter/constitution
+  **TZS 2,000,000** (was USD 750); filing any document except the balance sheet **TZS 600,000**
+  (was USD 220); filing the balance sheet **TZS 600,000** (was USD 220).
+- Company **without share capital**: **TZS 500,000** (item 2) — was TZS 300,000. **This is the
+  "dispute" above, resolved as a supersession.**
+- Share-capital registration ladder: **NINE bands** (item 1), where June had five with an
+  open-ended top. 95,000 / 175,000 / 260,000 / 290,000 / **400,000** (50M–100M) / 450,000 /
+  500,000 / 600,000 / 1,000,000. **"Band 5" no longer means "above TZS 50,000,000"** — it is now a
+  closed band with four above it, so the old `440,000` was not merely re-priced, it was re-scoped.
+- Also changed on the same page: file search **TZS 5,000** (was 3,000); special company-information
+  report **TZS 30,000** (was 22,000); certified copy of the registration/compliance certificate
+  **TZS 10,000** (was 4,000).
+- ⚠️ **THREE JUNE LINE ITEMS ARE ABSENT FROM THE OCTOBER SCHEDULE and their facts were NOT
+  edited**: memorandum/articles filing TZS 66,000, stamp duty per copy TZS 10,000, Form 14b
+  TZS 1,200. **Absence is not a value.** Abolished, folded into another fee, and relocated to a
+  page we have not fetched are three answers giving three different pieces of advice, and no
+  capture distinguishes them (`_unresolved_items.brela_vanished_fee_line_items`).
+- 🔍 **`effective_date` IS EXPLICITLY UNKNOWN for every figure above, and must stay that way until
+  an instrument is found.** 2026-10-06 is our **observation** date; all we know is that the change
+  landed inside 2026-06-30 → 2026-10-06. A trader asking *"was I overcharged in August?"* needs the
+  effective date, and writing the observation date there would manufacture R29 mode 3 — a
+  correctly-cited figure carrying an unsourced currency date. One fact already carried
+  `effective_date: "2025-01-01"` that no source ever supported; it is now `unknown`.
+- 🔎 **THE REDENOMINATION IS A SEARCH LEAD, not a caveat.** An entire block switching **USD → TZS**
+  inside a known four-month window is a **substantive amendment by a dated instrument** — *"USD 25
+  ≈ TZS 70k" is arithmetic, not evidence.* Together with 5→9 bands, the item renumbering, and three
+  vanished line items, the schedule was replaced wholesale. **Cap.212 ss.458 and 489(3) delegate
+  every fee amount to Minister's regulations, so no fee here is settleable from the Act at all** —
+  the Companies (Fees) Regulations are the only statute-tier target, and locating them is also the
+  only way to replace `unknown` with a real effective date. Untried routes recorded in
+  `_unresolved_items.brela_companies_fees_regulations`.
+
+- *(superseded, kept for provenance)* Foreign company late filing penalty: USD 25 per month —
+  **FIGURE DISPUTED, see below**
   - 🔴 **THE 2026-08-31 "CORRECTION" HERE WAS ITSELF THE ERROR, REVERSED 2026-10-05.** This line
     read *"Part XIII, ss.320-328 -- NOT 'Section XII'"*. **Both limbs were wrong.** Read directly
     from the Act (394pp, brela.go.tz, HTTP 200): `PART XII COMPANIES INCORPORATED OUTSIDE
@@ -531,21 +585,29 @@ All facts below are locked from verified primary sources. Encode these exactly.
     it. Its own renumbering notes give **+5** (s.438 ← prior s.433, s.445 ← prior s.440). For the
     regime to have sat at ss.320-328 the shift would need to be about **−115**. No edition of
     Cap.212 ever put it there, so the range corresponds to nothing.
-  - **The figure is a separate, open question.** s.458 and s.489(3) delegate *every* fee amount to
-    Minister's regulations, so **no fee is settleable from the Act**. The Companies (Fees)
-    Regulations were not located (brela.go.tz law pages HTTP 500; tanzlii search is a
-    client-rendered SPA). brela.go.tz/pages/tozo-za-kampuni item 15(iv) read **TZS 70,000** on
-    2026-10-04 where the same page was recorded as **USD 25** on 2026-09-02. Unresolved, and
-    "USD 25 ≈ TZS 70k" is **not** evidence — a change of currency denomination is a substantive
-    amendment, not a rounding.
+  - **The figure was a separate question and it is now RESOLVED AT PORTAL TIER (2026-10-06).**
+    s.458 and s.489(3) delegate *every* fee amount to Minister's regulations, so **no fee is
+    settleable from the Act** — the statute tier here is not merely hard to reach, it is
+    **structurally silent**, which is precisely why portal tier is the right tier and not a
+    compromise. The served figure is now **TZS 70,000**, from a dated, sha256-pinned capture of
+    BRELA's own schedule. "USD 25 ≈ TZS 70k" was never evidence and is not being used as any: the
+    old value is recorded as **superseded**, not as a rounding, and the redenomination is now
+    being used as a **search key** for the Regulations rather than as a reason to hedge. The
+    Companies (Fees) Regulations remain unlocated and remain the statute-tier target.
+    **⚖️ The decision, stated because it was asked:** leaving `USD 25` served while the
+    regulator's own page says `TZS 70,000/=` is not caution — **it is a known-wrong answer
+    preserved by inaction**, and a trader pays what BRELA charges at the counter.
   - Full 15-site inventory: `eval/controls/inventory_part_xii_reversal.py`. **Cap.212 is the
     third consolidated Act in this project found carrying the renumbering trap**, after Cap.332
     and Cap.438; 19 Acts are cited with section numbers across the locked facts and none has been
     checked against its amending instrument's numbering.
-- Company without share capital: TZS 300,000 registration fee — **DISPUTED**: the same BRELA fee
-  page item 2 reads TZS 500,000. Unresolved for the same reason (fees are delegated); folded into
-  the queued R15 regen if confirmed.
-- (Name reservation TZS 50,000, incorporation min TZS 95,000, foreign branch USD 750+220 — unchanged)
+- ~~Company without share capital: TZS 300,000 registration fee — **DISPUTED**~~ → **RESOLVED
+  2026-10-06 as a SUPERSESSION: TZS 500,000.** Not two contradictory readings of one page: the
+  June capture says 300,000 and the October capture says 500,000, four months apart, both read
+  correctly. **It was never an accuracy problem; it was an undated one.**
+- Name reservation TZS 50,000 and incorporation minimum TZS 95,000 — **re-confirmed unchanged**
+  on the 2026-10-06 capture (items 3 and 1(a)).
+- ~~foreign branch USD 750+220~~ → **TZS 2,000,000 + TZS 600,000** (item 15(i)/(ii)), per above.
 
 **WCF Additional Timelines (wcf.go.tz, confirmed Jun 2026):**
 - New employer: must register with WCF within 30 days of hiring first employee
@@ -1822,6 +1884,151 @@ two-sided re-closing window) is what a future addition should be checked against
 that closes, not just a change that already happened), ask **"what does this code do the day
 after the window closes?"** If the honest answer is "the same thing it does today," the date is
 not in the logic yet.
+
+### 🎯 R35 — A HOLD WITHOUT AN EXPIRY IS A DECISION NOBODY IS MAKING. IT DOES NOT GET OVERRULED; IT LAPSES. (added 2026-10-06)
+
+**Proven by D-FIDELITY-7, and the bill was six weeks of a live fabricated threshold.**
+
+On 2026-08-24 `eval/results/control_fire_audit.json` recorded the guard `NOT_WIRED` with the
+note: *"Held for one R16 cycle by decision — but note eval_208 shows the exact defect it targets,
+LIVE."* **One cycle.** The note was accurate, it was committed, it was re-printed on every
+subsequent run of the audit, and **nothing ever came due**, so nobody re-opened it. On 2026-10-06
+`eval_347` served the same fabricated TZS 11,000,000 EFD threshold — with the corrected index row
+at **rank 1 for both phrasings**, i.e. with no index-side headroom left. The guard layer was the
+only layer that could reach it, and the guard had been built, tested and unwired the whole time.
+
+> **The hold was not overruled. It lapsed.** That is a different failure from a bad decision and
+> it needs a different fix: **not better judgement, a DATE.** Same shape as R30's "TRA
+> unreachable" note — a correct finding, faithfully written down, that decayed because nothing
+> forced the next session to act on it. Prose in an 18,000-line file is exactly as durable as an
+> unenforced convention, which this project has already ruled is not durable at all.
+
+**Enforced, not remembered:** `eval/controls/audit_control_fires.py` carries a `HOLDS` registry
+and `tests/test_control_hold_expiry.py` **fails once a HELD control's own expiry passes.** Two
+states, and the distinction is what keeps it honest:
+
+| state | meaning | expiry |
+|---|---|---|
+| **`DISABLED`** | decided, on evidence, no review pending (the coverage gate: 1.9% vs 71%, a ~37× gap) | **none** — demanding one manufactures busywork and trains people to bump dates |
+| **`HELD`** | a decision is **pending** | **mandatory.** Its absence is the defect |
+
+**In practice:**
+- **Any control not in force gets a registry row.** A `NOT_WIRED` control with no row is worse
+  than a lapsed hold: there is no date to expire, because nobody took a decision at all.
+- **Keep the lapsed one in the registry.** D-FIDELITY-7 stays, resolved, as the specimen that
+  produced the rule — *a registry that drops its only failure reads as though the rule were free.*
+- **The audit's own date must be real.** Its `audited` field was the **literal `'2026-08-24'`**
+  for six weeks, so every re-run stamped itself with the first run's date — a census that cannot
+  say when it was taken is read as current whenever it is read, and this one is cited as evidence
+  that no control is inert.
+
+### ⛔ AND BEFORE WIRING ANY HELD GUARD: PRICE IT ON EVERY STORED REPLY FIRST. THE 22 PASSING UNIT TESTS SAID NOTHING. (2026-10-06)
+
+**D-FIDELITY-7 was wired on the same day. Unnarrowed, it would have BLANKED THE GOLD ANSWER TO
+`eval_347` — the row the wiring existed to fix.**
+
+Swept over 5,599 rows (755 stored replies, 428 gold answers, 4,416 training pairs —
+`eval/fidelity/price_threshold_guard_before_wiring.py`):
+
+| | flags | in GOLD |
+|---|---|---|
+| as built | **45** | **3** — `eval_347`, `eval_355`, `eval_331` |
+| after three narrowings | **18** | **0** — every one a genuine fabricated-threshold assertion |
+
+**All 22 of its unit tests were green while that was true.** R33 exactly: the first sixteen probes
+were authored by whoever wrote the rule, and every one of them agreed with it.
+
+**THE THREE NARROWINGS, each forced by a measured false positive** — and each pinned by its own
+test, because probes that exercise the limbs *together* let a limb silently become decoration:
+- **N1 POLARITY.** A negated **frame** (*"hakuna kizingiti"*) denies a threshold exists; a negated
+  **amount** (*"SI TZS 200,000,000"*) is a mention. Word-bounded — a bare `si\s` matches inside
+  `kiasi `. Negative **verb** forms (*haujafika*) are deliberately NOT negations: they assert the
+  threshold and deny only that the user reached it.
+- **N2 THE FRAME MUST REACH THE AMOUNT BACKWARD WITHOUT CROSSING ANOTHER AMOUNT.** This is what
+  separates a threshold *claim* from the user's own turnover, and it did the heavy lifting.
+- **N3/N3b LAWFUL FOR A CO-NAMED SUBJECT**, plus the VAT magnitudes on a bare mention of `vat`.
+  The old escape asked only about the subject's **own** lawful set, and **EFD's is deliberately
+  EMPTY — so the escape was DEAD for EFD by construction**, which is why ~20 correct rows deriving
+  the EFD obligation *from* the VAT threshold were flagged. Not a global escape: **11,000,000 is a
+  lawful presumptive band edge**, so "lawful anywhere in the table" would release the guard's most
+  important true positive.
+
+**AND THE PATH ASYMMETRY, which is where the wiring is actually decided:**
+
+> **On the COMPUTE path a flagged body is BLANKED — `_render` still emits the engine's working, so
+> the user loses a sentence and keeps the figure. On the FACT path `_render` returns the body
+> alone, so BLANKING SHIPS SILENCE.** The fact path needs *replacement copy*, like GUARD A's.
+> D-FIDELITY-6 is deliberately not on the fact path for exactly this reason, and wiring
+> D-FIDELITY-7 the same way would not have fixed `eval_347` at all.
+
+**It stops the wrong answer. It does not produce the right one.** `eval_347` went from a confident
+fabrication to a non-answer, which **still scores as a gate miss** — correctly, because the user
+did not get their answer. Closing R7's Bar A converts a wrong-answer class into a no-answer class;
+**do not read a shrinking wrong-answer count as a rising correct-answer count.**
+
+### ⛔ R36 — A QUARANTINE THAT DOES NOT REACH `datasets/tier1a/sft/` HAS NOT REMOVED ANYTHING FROM TRAINING. (added 2026-10-06)
+
+**Found one day after it happened, and it was mine.** The 2026-10-05 pass removed four rows
+asserting a TZS 100,000 NSSF fine ceiling from `sft_shaped_pairs/cleaned_pairs_batch_014.jsonl`.
+The count went 1102 → 1098, the quarantine record was written, every claim in the commit was true.
+**`datasets/tier1a/sft/train_sft.jsonl` — the exported file that actually trains — was never
+touched, and all four rows were still in it the next morning at lines 503/2758/3034/3272.**
+
+Two more were found with it (a rent-WHT row from 2026-09-26, a VAT-withholding row from
+2026-09-01), so this is not one slip in one script: **every quarantine in this repo targets the
+authored corpus, and the bytes that train live one stage downstream.**
+
+> **The quarantine fired. It was pointed one stage upstream of the bytes.** Identical to the two
+> inert controls of 2026-08-24 — `scan_for_keys.py` scanned correctly and was handed no files;
+> `chike/retrieval.py`'s index contract raises correctly and production never imports it. Nothing
+> is wrong with the logic in any of the three, and **no test asking "did the quarantine work?"
+> can find any of them.** Ask where the control ACTS, not whether it works.
+
+**Durable:** `tests/test_quarantine_reach.py` re-runs `eval/controls/audit_quarantine_reach.py` and
+fails on any un-adjudicated survivor — and **separately asserts that `datasets/tier1a/sft` is still
+in the audited stages**, because without that a survivor in the training export is invisible and
+the test goes green on its own defect.
+
+**THREE THINGS THE AUDIT TAUGHT THAT GENERALISE BEYOND QUARANTINES:**
+
+1. **MATCH ON THE ANSWER, NEVER THE QUESTION.** A question legitimately recurs when a defective
+   pair is **replaced** by a corrected one. Matching questions reports a false survival for every
+   correct replacement — and matching questions is what made my first read of this wrong.
+2. **A THIRD OUTCOME EXISTS: EDITED IN PLACE.** A quarantined body that is absent while its
+   question is live was **edited, not removed**, so the record holds the *pre-edit* text and a body
+   match reports the row as cleanly gone. **24 rows of the 2026-08-29 EFD quarantine were that**,
+   and eight still asserted the fabrication three sentences after the repaired opening line. R25's
+   containment shape: the symptom went, the defect stayed, so no later sweep was looking.
+3. **COUNT THE CLAIM, NOT THE NOTATION.** A sweep for the spelled-out `milioni 11` found **3**
+   rows; D-FIDELITY-7 found **7**; a sweep keyed on the claim across all notations found **14 — six
+   in digits, six in words, two in both.** Every corpus sweep in this arc has been keyed on
+   **figures**, because the fact's own `wrong_patterns` hold `(11|14),?000,?000` in digits — **so a
+   sweep built from a fact's own patterns is blind to the words by construction**, and Swahili
+   writes money both ways in the same file. The worst single row *corrected* a wrong figure **to**
+   the fabrication: *"Kizingiti sahihi ni TZS milioni 11 — si 40M."*
+
+### 🎯 THE CORRECT FACT AT RANK 1 AND THE WRONG VALUE EMITTED — NAME IT, BECAUSE NO INDEX EDIT REACHES IT (standing framing, 2026-10-06)
+
+**Two instances in one day, and that is the point of the entry.**
+
+| row | the fact in context | what shipped |
+|---|---|---|
+| `eval_347` | corrected row 57 at **rank 1 for BOTH phrasings** | *"Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 11,000,000 (TZS 10M +)"* — and `(TZS 10M +)` appears in **no index row at all**; it was generated |
+| GN487A term bleed | NSSF ceiling row at **rank 1 (and 2) on every phrasing** | the hypothesis was refuted, and the *reaching-and-failing* shape was the same |
+
+**This is the D-NSSF-1 class and it has NO index-side remedy.** Rank 1 is the ceiling of what
+retrieval can offer; there is no headroom left to take. Row 57 is the proof: it was rewritten, the
+rewrite was measured at rank 1, it shipped, and the wrong value was served anyway.
+
+> **So it is the strongest argument on the board for D-FIDELITY-7 and its siblings being WIRED
+> rather than HELD — the guards are the only layer that can reach this class.** And it cuts the
+> other way too: a guard here can only *stop* the wrong answer, never produce the right one, so
+> closing this class makes Bar A's wrong-answer count fall without Bar A's correct-answer count
+> rising. Report the two separately (the two-bar framing above), or the win reads as a loss.
+
+**Corollary for diagnosis:** before scoping any retrieval or content work on a wrong answer,
+**measure the fact's rank first.** If it is already 1, no amount of index work is the fix, and
+every hour spent on wording is spent on the wrong layer. `eval/index_quality/` has the harness.
 
 See PROGRESS.md for current project status and next actions.
 

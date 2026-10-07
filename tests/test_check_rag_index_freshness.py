@@ -221,16 +221,61 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     FLIPS BACK TO `assert ok is False` the next time a fact or the builder changes without a
     matching regen. Three flips in two days is three correction cycles, not churn -- and the
     False states did the work: each one named which input was unshipped and why.
+
+    ⭐ TWELFTH FLIP, back to `assert ok is False`. BOTH inputs are stale this time, and the
+    pending change is not a correction of ours at all -- IT IS A CHANGE IN THE LAW'S OWN
+    PUBLISHED SCHEDULE, which is a shape none of the eleven previous flips had.
+
+    BRELA replaced its company fee schedule between two dated, sha256-pinned captures:
+    `brela_ada_kampuni_v2.html` (cb1353fc..., 2026-06-30) and
+    `brela_ada_kampuni_20261006T140442Z.html` (8d5543ac..., fetched 2026-10-06T14:04:42Z). The
+    whole foreign-company block moved from USD into TZS, the share-capital ladder went from five
+    bands to nine, and several local fees moved. R29 mode 3: the June figures were CORRECT AS AT
+    THEIR OWN DATE, so this is a supersession and not a defect anyone introduced.
+
+    PENDING, and what is live and wrong on the way there:
+
+        row 182  brela_filing_fees   USD 220 / USD 220 / USD 25  ->  TZS 600,000 / 600,000 /
+                 70,000, with "SI USD 220 na SI USD 25" added. These USD figures are the ones
+                 ext_15 was scored against, which is why that gold row is STALE, not the model
+                 wrong.
+        row 181  company_registration_ladder   the open-ended "zaidi ya TZS 50,000,000 ni TZS
+                 440,000" -> five closed bands ending at 1,000,000, and no-share-capital
+                 300,000 -> 500,000.
+        + 12 locked facts amended, 1 re-authored (company_registration_fee_bands, which joins
+          the ladder group rather than adding a row).
+
+    ⚠️ BOTH INPUTS ARE STALE, and that is the correct reading rather than a worse one: unlike the
+    eleventh flip (where only the builder moved, because the FACT was already right) and unlike
+    the tenth, here the facts and the rendering changed together, because the underlying published
+    figure changed. A flip that names WHICH inputs moved is doing more work than one that says
+    "stale" -- this is the first flip where the answer is "both, and for the same reason".
+
+    rag_fact_count does NOT move (184 -> 184), so there is no window in which the config and the
+    index can disagree. Local dry run: eval/index_quality/dryrun_regen_2026_10_06.py -> SAFE TO
+    RUN, 0 displacement regressions across 40 committed guards, both new guards at rank 2 and
+    rank 1, both changed rows self-retrieving. Notably nat_34's displacement guard still passes
+    with the ladder grown by four bands -- the dilution risk row 57 priced yesterday did not
+    materialise, because the measured SHORT lead was left byte-identical.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is True, (
-        f"the live repo reports STALE: {report}. If a fact or the embedding builder has been "
-        "edited since this ship with no matching regen, that is the honest state -- flip this "
-        "back to `assert ok is False`, NAME the pending change and assert which inputs are "
-        "stale, and keep it failing until the regen ships. Do NOT silence it in either "
-        "direction: both states are meaningful, and the state is the whole signal.")
-    assert not report["stale_inputs"], (
-        f"FRESH overall but with stale inputs reported, which should be impossible: {report}")
+    assert ok is False, (
+        f"the live repo reports FRESH: {report}. If the 2026-10-06 BRELA regen has shipped and "
+        "its artifacts are dual-committed, that is the GOOD outcome and this is the signal -- "
+        "flip back to `assert ok is True`, record what changed (rows 181/182) and confirm no "
+        "superseded figure survives in the shipped index. Do NOT silence it in either direction: "
+        "both states are meaningful, and the state is the whole signal.")
+    # NAME the pending inputs, so this failure is a worklist rather than a mood. A flip asserted
+    # only on `ok is False` would pass for ANY reason the check returns False -- including a
+    # missing artifact or a divergence between the two index directories, which are different
+    # defects entirely.
+    assert set(report["stale_inputs"]) == {
+        "scripts/locked_facts.json",
+        "scripts/precompute_rag_embeddings.py",
+    }, (f"the stale inputs are not the two this flip is about: {report['stale_inputs']}. "
+        f"Something else is pending -- read it before shipping anything.")
+    assert not report["missing_inputs"] and not report["missing_artifacts"], (
+        f"a missing file is a setup bug, not a pending regen: {report}")
     assert report["artifacts_diverged"] is False, (
         "the two index directories disagree -- a different defect from a pending regen, and "
         "one the R15 dual-commit step exists to prevent")
