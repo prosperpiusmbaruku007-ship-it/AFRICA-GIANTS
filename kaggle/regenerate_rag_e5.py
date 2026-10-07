@@ -176,7 +176,23 @@ SOURCE_FILES = [
 # that outcome, and the previous two bumps were each made after a real cycle was spent finding
 # out (d1138ca died at the wrong gate with a message about the wrong thing; 498c8d8 reproduced an
 # ambiguous anchor that had already wasted one Kaggle run).
-EXPECTED_HEAD = '951a67d'
+# BUMPED AGAIN 2026-10-07 to 48cb213, and this bump is the first one made because the ancestry
+# check ITSELF would now be looking at the wrong tree in a new way: 951a67d is a FLOOR TOO LOW
+# because a clone there has the payload GATE demanding `TZS 70,000` in
+# brela_foreign_late_filing_penalty and still has the row saying `USD 25`. That is not a
+# successful-looking run shipping the wrong thing -- it is the run that actually happened, and it
+# ABORTED. So a clone at 951a67d cannot complete this regen at all.
+#
+# ⚠️ AND NOTE WHICH DIRECTION THAT IS, because it is the opposite of the previous three bumps.
+# d1138ca / 498c8d8 / 897e0e2 were each too low because the clone would have had NEITHER the gate
+# nor the content and would have passed everything. 951a67d is too low because it has the GATE
+# WITHOUT THE CONTENT. Both halves land in one commit when things go well; when they don't, the
+# gate lands first and the floor has to move past the repair, not past the gate.
+#
+# 48cb213 also carries scripts/rag_payload_gates.py, which this file now imports as a hard
+# dependency and refuses to run without -- so it belongs on this floor on the ordinary
+# "cannot run at all" ground as well.
+EXPECTED_HEAD = '48cb213'
 
 
 def _assert_expected_head_present(local_head, live_sha):
