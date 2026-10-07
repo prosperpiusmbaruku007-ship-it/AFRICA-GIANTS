@@ -52,20 +52,28 @@ KNOWN_PENDING_R15_GROUP_DRIFT = {
     # individually, with their old and new values, so that this block is a worklist rather than
     # a silence -- an entry that only says "pending regen" tells the next reader nothing about
     # what is wrong on the way there.
-    "company_registration_fee_no_share_capital":
-        "TZS 300,000 -> 500,000 (item 2). Shipped ladder passage still says 300,000.",
-    "file_search_fee":
-        "TZS 3,000 -> 5,000 (item 9). Shipped brela_filing_fees passage still says 3,000.",
-    "file_search_report_fee":
-        "TZS 22,000 -> 30,000 (item 10). Shipped passage still says 22,000.",
-    "document_filing_fee_section_12_act_excluding_balance_sheet":
-        "USD 220 -> TZS 600,000 (item 15(ii)). Shipped passage still says USD 220.",
-    "balance_sheet_filing_fee_section_12_act":
-        "USD 220 -> TZS 600,000 (item 15(iii)). Shipped passage still says USD 220.",
-    "late_filing_penalty_monthly_fee_section_12_act":
-        "USD 25 -> TZS 70,000 (item 15(iv)). Shipped passage still says USD 25 -- this is the "
-        "figure ext_15 was scored PASS on, which is why that gold row is STALE rather than the "
-        "model wrong.",
+    # ✅ ALL SIX RESOLVED 2026-10-07 BY THE REGEN (built from e3e1d0f, 184x768, HF
+    # 2026-10-07T19:38:04Z), and removed rather than left stale -- which is this test's own
+    # stated signal firing for the second time in its life:
+    #
+    #   company_registration_fee_no_share_capital                   300,000  -> 500,000
+    #   file_search_fee                                               3,000  ->   5,000
+    #   file_search_report_fee                                       22,000  ->  30,000
+    #   document_filing_fee_section_12_act_excluding_balance_sheet  USD 220  -> TZS 600,000
+    #   balance_sheet_filing_fee_section_12_act                     USD 220  -> TZS 600,000
+    #   late_filing_penalty_monthly_fee_section_12_act               USD 25  -> TZS  70,000
+    #
+    # The last of those is the figure `ext_15` was scored PASS on, which is why that gold row was
+    # STALE rather than the model wrong; its verdict is RE_RUN_REQUIRED, not re-labelled.
+    #
+    # ⚠️ AND THE LIST WAS SHORT BY ONE WHEN IT WAS WRITTEN. `brela_foreign_late_filing_penalty` --
+    # the STANDALONE row 172, not a group passage -- carried the same USD 25 and was pinned
+    # `pending_r15` separately, so it never appeared here. It is also the row that ABORTED the
+    # Kaggle run, on a payload gate written in the same commit as the fact it guards. A worklist
+    # assembled by hand is exactly as complete as its author's recall; the durable replacement is
+    # eval/index_quality/sweep_superseded_values_in_built_index.py, whose population is every
+    # fact carrying a `superseded_value` field.
+
     # ⚠️ certified_copy_certificate_of_registration_fee (TZS 4,000 -> 10,000, item 12) is
     # DELIBERATELY ABSENT from this list, and the reason is a trap worth naming: it resolves
     # CLEAN against the shipped index by COINCIDENCE. _grouped_verdict does substring

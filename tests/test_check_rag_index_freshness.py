@@ -257,28 +257,49 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     rank 1, both changed rows self-retrieving. Notably nat_34's displacement guard still passes
     with the ladder grown by four bands -- the dilution risk row 57 priced yesterday did not
     materialise, because the measured SHORT lead was left byte-identical.
+
+    ⭐ THIRTEENTH FLIP, back to `assert ok is True`. The BRELA regen ran (built from e3e1d0f,
+    184x768, correction_sync=CLEAN, HF 2026-10-07T19:38:04Z) and its artifacts are
+    dual-committed. What shipped, named rather than implied:
+
+        row 172  brela_foreign_late_filing_penalty   "faini ni USD 25" -> "faini ni TZS 70,000
+                 kwa kila mwezi au sehemu ya mwezi". SAME INDEX POSITION before and after.
+        row 182  brela_filing_fees   USD 220 / USD 220 / USD 25 -> TZS 600,000 / 600,000 /
+                 70,000, with "SI USD 220 na SI USD 25".
+        row 181  company_registration_ladder   five bands -> nine; no-share-capital 300,000 ->
+                 500,000.
+
+    ⚠️ THE TWELFTH FLIP'S PENDING LIST WAS INCOMPLETE AND THE REGEN IS WHY WE KNOW. It named rows
+    181 and 182 and not row 172 -- the standalone row -- which is the row that then ABORTED the
+    Kaggle run on a payload gate written in the same commit as the fact it guards. A flip that
+    names which inputs moved is doing more work than one that says "stale"; it is still a list
+    somebody wrote from memory, and this one was short by the row that mattered. The durable fix
+    is not a better list: it is
+    `eval/index_quality/sweep_superseded_values_in_built_index.py`, whose population is every
+    fact carrying a `superseded_value` field.
+
+    Verified, not assumed -- `eval/controls/verify_rag_fetch_2026_10_07.py` ->
+    `eval/results/rag_fetch_verification_2026_10_07.json`, VERDICT VERIFIED, 11 payload gates
+    re-executed against the SERVED index by IMPORT (not re-implementation), and the served text
+    asserted BYTE-IDENTICAL to `build_fact_texts()` -- which is what actually establishes the
+    index was built from this tree, rather than the HF commit title, which is a claim the
+    uploader made about itself.
+
+    FLIPS BACK TO `assert ok is False` the next time a fact or the builder changes without a
+    regen. Both states are meaningful; neither may be silenced.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is False, (
-        f"the live repo reports FRESH: {report}. If the 2026-10-06 BRELA regen has shipped and "
-        "its artifacts are dual-committed, that is the GOOD outcome and this is the signal -- "
-        "flip back to `assert ok is True`, record what changed (rows 181/182) and confirm no "
-        "superseded figure survives in the shipped index. Do NOT silence it in either direction: "
-        "both states are meaningful, and the state is the whole signal.")
-    # NAME the pending inputs, so this failure is a worklist rather than a mood. A flip asserted
-    # only on `ok is False` would pass for ANY reason the check returns False -- including a
-    # missing artifact or a divergence between the two index directories, which are different
-    # defects entirely.
-    assert set(report["stale_inputs"]) == {
-        "scripts/locked_facts.json",
-        "scripts/precompute_rag_embeddings.py",
-    }, (f"the stale inputs are not the two this flip is about: {report['stale_inputs']}. "
-        f"Something else is pending -- read it before shipping anything.")
+    assert ok is True, (
+        f"the live repo reports STALE: {report}. If a fact or the builder has changed since the "
+        "2026-10-07 regen, that is the check doing its job -- flip to `assert ok is False`, NAME "
+        "the pending inputs, and leave it red until the regen ships. Do NOT silence it in either "
+        "direction: the state is the whole signal.")
+    # The positive state still gets its specifics asserted, for the same reason the negative one
+    # does: `ok is True` alone would also pass if the check started returning True for a reason
+    # unrelated to freshness.
+    assert not report["stale_inputs"], report
     assert not report["missing_inputs"] and not report["missing_artifacts"], (
-        f"a missing file is a setup bug, not a pending regen: {report}")
+        f"a missing file is a setup bug, not a fresh index: {report}")
     assert report["artifacts_diverged"] is False, (
         "the two index directories disagree -- a different defect from a pending regen, and "
         "one the R15 dual-commit step exists to prevent")
-    assert report["artifacts_diverged"] is False, (
-        "the two index directories disagree -- a different defect from a pending regen, "
-        "and one the R15 dual-commit step exists to prevent")

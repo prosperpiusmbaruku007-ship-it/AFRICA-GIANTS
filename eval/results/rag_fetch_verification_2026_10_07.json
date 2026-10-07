@@ -1,0 +1,86 @@
+{
+  "_what": "The fetched R15 index, verified against this tree before deploy.",
+  "_why_imported_not_reimplemented": "A harness that re-implements the checks its author remembers is a MODEL of the run, not the run. The 2026-10-06 dry run proved that by passing a package the real run refused. Payload gates come from scripts/rag_payload_gates.py and the superseded-value polarity from the committed sweep; neither is copied here.",
+  "fetch_provenance": {
+    "source": "https://huggingface.co/datasets/prospAprospA007/africa-giants-dataset",
+    "hf_commit_date": "2026-10-07T19:38:04.000Z",
+    "hf_commit_title": "e5-base RAG index (184x768), built from e3e1d0f; correction_sync=CLEAN",
+    "claimed_build_commit": "e3e1d0f",
+    "required_floor": "c8cdbb9",
+    "fetched_sha256": {
+      "rag_facts_text.json": "0fb2826558773406",
+      "rag_embeddings.npy": "ec29974baa486157"
+    }
+  },
+  "checks": [
+    {
+      "check": "claimed build commit e3e1d0f contains the floor c8cdbb9",
+      "ok": true,
+      "detail": "git merge-base --is-ancestor -> 0"
+    },
+    {
+      "check": "rag_facts_text.json identical in kaggle/ and chike-inference/",
+      "ok": true,
+      "detail": "0fb2826558773406"
+    },
+    {
+      "check": "rag_embeddings.npy identical in kaggle/ and chike-inference/",
+      "ok": true,
+      "detail": "ec29974baa486157"
+    },
+    {
+      "check": "committed index text == build_fact_texts() output, row for row",
+      "ok": true,
+      "detail": "184 served vs 184 built"
+    },
+    {
+      "check": "chike_config.rag_fact_count matches the served row count",
+      "ok": true,
+      "detail": "config=184 served=184"
+    },
+    {
+      "check": "embeddings shape is (rows, 768)",
+      "ok": true,
+      "detail": "(184, 768)"
+    },
+    {
+      "check": "embeddings are L2-normalised",
+      "ok": true,
+      "detail": "min=1.000000"
+    },
+    {
+      "check": "row 172 states 'faini ni TZS 70,000'",
+      "ok": true,
+      "detail": "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini ni TZS 70,000 kwa kila mwezi au sehemu ya mwezi (kampuni za ndani huli"
+    },
+    {
+      "check": "row 172 no longer asserts USD 25",
+      "ok": true,
+      "detail": "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini ni TZS 70,000 kwa kila mwezi au sehemu ya mwezi (kampuni za ndani huli"
+    },
+    {
+      "check": "the regen's own payload gates pass on the SERVED index",
+      "ok": true,
+      "detail": "11 gates"
+    },
+    {
+      "check": "no served row ASSERTS a value its own fact declares superseded",
+      "ok": true,
+      "detail": "[]"
+    }
+  ],
+  "sha256": {
+    "kaggle/rag_facts_text.json": "0fb282655877340629ca92a3ec2cddb6c7f2f7b78d6b518d878d63dd8158724c",
+    "kaggle/rag_embeddings.npy": "ec29974baa486157129eaa1b218b37b58093ef55d5266a4c044853c5fdca413a",
+    "chike-inference/rag_facts_text.json": "0fb282655877340629ca92a3ec2cddb6c7f2f7b78d6b518d878d63dd8158724c",
+    "chike-inference/rag_embeddings.npy": "ec29974baa486157129eaa1b218b37b58093ef55d5266a4c044853c5fdca413a"
+  },
+  "primary_row": {
+    "index": 172,
+    "text": "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini ni TZS 70,000 kwa kila mwezi au sehemu ya mwezi (kampuni za ndani hulipa TZS 2,500 kwa mwezi)."
+  },
+  "payload_gates_run": 11,
+  "superseded_assertions": [],
+  "verdict": "VERIFIED",
+  "failures": []
+}

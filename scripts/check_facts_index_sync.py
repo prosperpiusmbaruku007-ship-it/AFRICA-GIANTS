@@ -306,9 +306,25 @@ PINNED = {
     # Writing the corrected needle now would make this check fail for the right reason in the
     # wrong direction -- and writing the stale one is what just went wrong. The honest state is
     # "not reachable until the regen ships", which is what pending_r15 means.
+    # ✅ RESOLVED 2026-10-07: the regen shipped (built from e3e1d0f, HF 2026-10-07T19:38:04Z) and
+    # row 172 now reads "faini ni TZS 70,000 kwa kila mwezi au sehemu ya mwezi". Re-pinned to a
+    # CONTENT needle, which is the state `pending_r15` exists to be temporary against.
+    #
+    # ⛔ AND THE PIN HISTORY HERE IS THE WHOLE LESSON, so it stays: this key was pinned
+    # `("present_elsewhere", "faini ni USD 25 kwa kila mwezi")` -- a pin that REQUIRED the
+    # superseded figure in order to pass -- for the entire life of the BRELA amendment, and it
+    # reported CLEAN the whole time. check_anchor_provenance.py caught it on 2026-10-05, and only
+    # after being widened twice: the amendment put the old value in a NEW `superseded_value` field
+    # the extractor did not read, and the fact names its old value in order to CONTRADICT it, so
+    # the "currently asserted" filter suppressed the evidence. A content pin is only as current as
+    # the content it was written against.
+    #
+    # The needle carries the SUBJECT, not just the magnitude: a bare "TZS 70,000" matches two rows
+    # (this one and the brela_filing_fees group passage), and an ambiguous pin can pass on a row it
+    # does not mean -- the same reasoning that rejected bare 'asilimia 10' and bare 'ss.437-447'.
     "brela_foreign_late_filing_penalty": (
-        "pending_r15",
-        None),
+        "present_elsewhere",
+        "faini ni TZS 70,000 kwa kila mwezi au sehemu ya mwezi"),
     "osha_registration_before_operations": ("present_elsewhere", "Kifungu 16(2)"),
     "sdl_exemption_categories": ("present_elsewhere", "zisizolipa SDL"),
 
