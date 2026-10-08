@@ -91,9 +91,41 @@ goes stale the instant the action is taken. It is `OBSERVED` rather than `FIRES`
 failure direction cannot be planted offline: making it report a mismatch needs a deliberately
 stale deploy, so only the passing direction has been seen, and the row says so.
 
-### 6. STATE
+### 6. 🎯 AND THEN `build_matches` CAUGHT A REAL WARM CONTAINER — THE FAILURE DIRECTION, UNPLANTED
 
-Suite **1777 passed**, 0 failed. D-FIDELITY-8 live and verified. Production healthy.
+**A caveat on the verification above, found by checking rather than assuming.** The recovery
+deploy ran from a **dirty tree**: production reported `build: 5d1ed71`, but the running image
+carried the uncommitted `.env()` fix. **So the label named a commit whose own `modal_app.py`
+cannot deploy at all.** Accurate about what I *passed*, wrong about what was *built* — the exact
+class of problem `/health` exists to prevent, arriving from the direction of a dirty tree.
+
+Redeployed from the clean committed tree to make the label true — deliberately **without**
+`app stop`, to avoid a second downtime window for a label. And that produced this:
+
+```
+web build     5d1ed71      <- warm container, survived the redeploy
+gpu build     3659a06      <- replaced
+build_matches FALSE
+```
+
+> **The two-tier comparison fired on a genuine warm-container case, on its first real
+> opportunity, with nothing planted.** That is the one state no offline test could have
+> produced, and it is the precise R16 hazard the limb was built for.
+
+Nothing behavioural was stale — the served digest still matched and the GPU tier does all the
+answering — **which is exactly why it needed a check: a label-only staleness is the kind that
+gets tolerated until it is covering something real.** Resolved by waiting out the 300s scaledown
+with no traffic: both tiers now `3659a06`, `build_matches: true`.
+
+**So both directions of this control are now evidenced on live traffic**, and the audit row no
+longer claims only the passing one has been seen. **The procedural lesson: never deploy from a
+dirty tree — and if production is down and you must, redeploy from the committed SHA afterwards
+so the label stops lying.**
+
+### 7. STATE
+
+Suite **1777 passed**, 0 failed. D-FIDELITY-8 live and verified 8/8. Production healthy on
+`3659a06`, both tiers agreeing.
 
 **Open:** A2 for the fee question — the user still reads off their own band, and closing that is
 compute-path work; the 18 ratcheted locked-fact flags and 1 source violation; `stamp_duty_138`'s

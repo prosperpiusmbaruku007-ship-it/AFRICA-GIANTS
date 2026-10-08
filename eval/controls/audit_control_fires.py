@@ -819,9 +819,18 @@ def audit_unexercisable():
            'moment the deploy happened. A note that describes a pending action is a note that '
            'goes stale the instant the action is taken, which is R30 exactly, so it is '
            'rewritten here rather than left to be read as current. '
-           'OBSERVED rather than FIRES because the failure direction cannot be planted '
-           'offline: making it report a MISMATCH needs a deliberately stale deploy, and the '
-           'honest state is that only the passing direction has been seen.')
+           '⛔ AND THE FAILURE DIRECTION HAS NOW BEEN SEEN LIVE TOO, WHICH THE FIRST '
+           'VERSION OF THIS NOTE SAID COULD ONLY BE PLANTED. A redeploy WITHOUT `app stop` '
+           '(done deliberately, to avoid a second downtime window for a label) left the WEB '
+           'container warm while the GPU container was replaced: web build 5d1ed71, gpu build '
+           '3659a06, build_matches FALSE. That is the exact R16 warm-container hazard this '
+           'limb was built for, caught on its first real opportunity and WITHOUT PLANTING '
+           'ANYTHING -- and it is the one state no offline test could have produced. Nothing '
+           'behavioural was stale (the served digest still matched, and the GPU tier does all '
+           'the answering), which is precisely why it needed a check: a label-only staleness '
+           'is the kind that gets tolerated until it is covering something real. Resolved by '
+           'waiting out the 300s scaledown with no traffic rather than by a second `app '
+           'stop`. So BOTH directions of this control are now evidenced on live traffic.')
 
 
 def main():

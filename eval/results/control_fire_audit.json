@@ -49,8 +49,8 @@
       "layer": "repo_gate",
       "claims_to_block": "an API key committed into a source file",
       "verdict": "FIRES",
-      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\leak.py",
-      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\clean.py",
+      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\leak.py",
+      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\clean.py",
       "note": "planted -> exit 1; clean -> exit 0. FIXED 2026-08-24; the bare invocation this replaced was INERT"
     },
     {
@@ -67,8 +67,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a training pair citing a banned, eval-only or DNS-dead source",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\src_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\src_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\src_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\src_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -76,8 +76,8 @@
       "layer": "repo_gate",
       "claims_to_block": "nssf.or.tz (DNS-failing) anywhere in a pair, including answer TEXT",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\dead_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\dead_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\dead_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\dead_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -85,8 +85,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a pair asserting a value locked_facts.json marks as WRONG",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\lf_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\lf_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\lf_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\lf_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -94,8 +94,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a held-out eval question leaking into the SFT training file (R6)",
       "verdict": "FIRES",
-      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\train_bad.jsonl",
-      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\train_ok.jsonl",
+      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\train_bad.jsonl",
+      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\train_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -103,7 +103,7 @@
       "layer": "repo_gate",
       "claims_to_block": "a locked fact that is neither in the RAG index nor human-adjudicated",
       "verdict": "FIRES",
-      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp13145cu1\\facts_drift.json",
+      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\facts_drift.json",
       "negative_specimen": "",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
@@ -276,7 +276,7 @@
       "verdict": "OBSERVED",
       "positive_specimen": "not plantable offline -- it needs the live app",
       "negative_specimen": "exercised live 2026-10-08 and every limb reported correctly",
-      "note": "EXERCISED LIVE 2026-10-08, FIRST USE, ALL FOUR LIMBS TRUE: build 5d1ed71 == the deployed commit; build_matches true (web and GPU tiers agree, so no warm container); served rag_facts_text_sha256 19bcfabb... == EXPECTED_SERVED_SHA256 in tests/test_inference_health_endpoint.py; rag_rows_loaded 184 == config_rag_fact_count. Recorded in eval/results/fee_band_guard_live_2026_10_08.json. ⚠️ UPGRADED FROM NOT_EXERCISABLE, whose note read \"the deploy that makes it answerable has not been run\" -- true when written hours earlier and FALSE the moment the deploy happened. A note that describes a pending action is a note that goes stale the instant the action is taken, which is R30 exactly, so it is rewritten here rather than left to be read as current. OBSERVED rather than FIRES because the failure direction cannot be planted offline: making it report a MISMATCH needs a deliberately stale deploy, and the honest state is that only the passing direction has been seen."
+      "note": "EXERCISED LIVE 2026-10-08, FIRST USE, ALL FOUR LIMBS TRUE: build 5d1ed71 == the deployed commit; build_matches true (web and GPU tiers agree, so no warm container); served rag_facts_text_sha256 19bcfabb... == EXPECTED_SERVED_SHA256 in tests/test_inference_health_endpoint.py; rag_rows_loaded 184 == config_rag_fact_count. Recorded in eval/results/fee_band_guard_live_2026_10_08.json. ⚠️ UPGRADED FROM NOT_EXERCISABLE, whose note read \"the deploy that makes it answerable has not been run\" -- true when written hours earlier and FALSE the moment the deploy happened. A note that describes a pending action is a note that goes stale the instant the action is taken, which is R30 exactly, so it is rewritten here rather than left to be read as current. ⛔ AND THE FAILURE DIRECTION HAS NOW BEEN SEEN LIVE TOO, WHICH THE FIRST VERSION OF THIS NOTE SAID COULD ONLY BE PLANTED. A redeploy WITHOUT `app stop` (done deliberately, to avoid a second downtime window for a label) left the WEB container warm while the GPU container was replaced: web build 5d1ed71, gpu build 3659a06, build_matches FALSE. That is the exact R16 warm-container hazard this limb was built for, caught on its first real opportunity and WITHOUT PLANTING ANYTHING -- and it is the one state no offline test could have produced. Nothing behavioural was stale (the served digest still matched, and the GPU tier does all the answering), which is precisely why it needed a check: a label-only staleness is the kind that gets tolerated until it is covering something real. Resolved by waiting out the 300s scaledown with no traffic rather than by a second `app stop`. So BOTH directions of this control are now evidenced on live traffic."
     }
   ]
 }
