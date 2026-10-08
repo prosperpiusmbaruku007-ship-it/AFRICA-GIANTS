@@ -285,21 +285,48 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     index was built from this tree, rather than the HF commit title, which is a claim the
     uploader made about itself.
 
-    FLIPS BACK TO `assert ok is False` the next time a fact or the builder changes without a
-    regen. Both states are meaningful; neither may be silenced.
+    ⭐ FOURTEENTH FLIP, back to `assert ok is False`, AND THIS ONE IS A DIFFERENT KIND OF STALE
+    FROM EVERY FLIP BEFORE IT -- which is why it is spelled out rather than logged as "stale".
+
+    PENDING INPUT, named: `scripts/locked_facts.json`, moved by 6e65097. The change is a
+    `wrong_patterns` fix on `rent_wht_rate` -- its two ENGLISH patterns carried a bare `rent`,
+    which matches inside the ordinary English word "diffe-RENT", and flagged
+    `tier1a_wht_deep_035`, a row about DIRECTOR FEES whose claims are both correct.
+
+    ⛔ THE SERVED INDEX CONTENT IS UNAFFECTED, AND THAT IS MEASURED, NOT ASSUMED.
+    `build_fact_texts()` run against this tree returns 184 rows BYTE-IDENTICAL to the committed
+    `kaggle/rag_facts_text.json`, because `wrong_patterns` is not an input to the index text at
+    all -- it is authored for matching GENERATED output. So this is PROVENANCE staleness, not
+    CONTENT staleness: no regen is owed to make the served index correct, and the next reader
+    does not have to re-derive that.
+
+    IT STILL FLIPS, AND IT SHOULD. The check's contract is over INPUT SHAs, deliberately coarse,
+    because it cannot know which fields of locked_facts.json reach the index -- and a check that
+    tried to know would be a second, divergent copy of the builder's field selection. Silencing
+    it here on "the content is fine" would be exactly the reasoning that makes a freshness check
+    useless the one time the content is NOT fine. The honest state is: red, with the reason and
+    the measurement attached.
+
+    CLEARS on the next regen that bakes this `locked_facts.json`, or on any commit that reverts
+    it. Flip back to `assert ok is True` then -- and re-assert the specifics, because `ok is
+    True` alone would also pass if `check()` started returning True for an unrelated reason.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is True, (
-        f"the live repo reports STALE: {report}. If a fact or the builder has changed since the "
-        "2026-10-07 regen, that is the check doing its job -- flip to `assert ok is False`, NAME "
-        "the pending inputs, and leave it red until the regen ships. Do NOT silence it in either "
+    assert ok is False, (
+        f"the live repo now reports FRESH: {report}. If the regen has shipped, flip this back to "
+        "`assert ok is True` and re-assert the specifics below. Do NOT silence it in either "
         "direction: the state is the whole signal.")
-    # The positive state still gets its specifics asserted, for the same reason the negative one
-    # does: `ok is True` alone would also pass if the check started returning True for a reason
-    # unrelated to freshness.
-    assert not report["stale_inputs"], report
+    # THE NEGATIVE STATE GETS ITS SPECIFICS ASSERTED TOO, for the same reason the positive one
+    # does: `ok is False` alone would pass if the check went stale for a reason that has nothing
+    # to do with this edit -- including a missing file, which is a setup bug and not a stale
+    # index. Naming the pending input is what makes the red state carry information.
+    assert set(report["stale_inputs"]) == {"scripts/locked_facts.json"}, (
+        f"the pending inputs are not the ones this flip was written for: "
+        f"{list(report['stale_inputs'])}. If the BUILDER (precompute_rag_embeddings.py) has also "
+        f"moved, that is a content change and needs its own note -- a `wrong_patterns` edit does "
+        f"not touch index text, but a builder change does.")
     assert not report["missing_inputs"] and not report["missing_artifacts"], (
-        f"a missing file is a setup bug, not a fresh index: {report}")
+        f"a missing file is a setup bug, not a stale index: {report}")
     assert report["artifacts_diverged"] is False, (
         "the two index directories disagree -- a different defect from a pending regen, and "
         "one the R15 dual-commit step exists to prevent")

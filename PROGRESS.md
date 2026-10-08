@@ -159,9 +159,30 @@ in the live-verify layer. Both of my first-run harness failures: a retrieval gua
 promoted to a model-answer assertion, and a probe scoring D-FIDELITY-7's *correct* behaviour as a
 regression **while its own note described the right handling three lines above**.
 
-### 8. STATE
+### 8. THE FRESHNESS CHECK CAUGHT THE PATTERN EDIT — FOURTEENTH FLIP, AND A NEW KIND OF STALE
 
-Suite **1700+ passed**, 0 failed. Deploy verified. Precondition **MET** with its boundary stated.
+**The pre-push hook BLOCKED the push**, correctly: editing `scripts/locked_facts.json` for the
+`rent_wht_rate` fix made the RAG index provenance-stale against artifacts built from `be3691f`.
+
+> **And it could only fail AFTER the commit existed** — the check compares git-log SHAs, so the
+> identical suite passed pre-commit and failed pre-push. Worth knowing: for this one test,
+> "green before committing" carries no information.
+
+**But the served index content is UNAFFECTED, and that is measured:** `build_fact_texts()` over
+this tree returns 184 rows **byte-identical** to the committed `rag_facts_text.json`, because
+`wrong_patterns` is authored for matching **generated output** and is not an input to index text
+at all. **So this is PROVENANCE staleness, not CONTENT staleness — no regen is owed.**
+
+**It still flips to red, and it should.** The check's contract is over input SHAs, deliberately
+coarse, because it cannot know which fields reach the index — and a check that tried to know
+would be a second, divergent copy of the builder's field selection. **Silencing it on "the
+content is fine" is exactly the reasoning that would make it useless the one time the content is
+not fine.** The negative state now asserts *which* input is pending, so the red carries
+information rather than just a colour.
+
+### 9. STATE
+
+Suite **1717 passed**, 0 failed. Deploy verified. Precondition **MET** with its boundary stated.
 
 **Open:** the 4 new over-removals (restoration is the founder's call); **8 rows still
 undetermined** and 3 hand-adjudicated; D-FIDELITY-8's wiring decision, **due 2026-11-05**; the
