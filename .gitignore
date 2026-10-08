@@ -72,3 +72,9 @@ scratch/
 
 # Ephemeral scheduler lock files (machine-local runtime state, never versioned)
 .claude/*.lock
+
+# Restoration/quarantine backups — the originals are recoverable from git history,
+# so these are redundant and were committed by accident twice (2026-10-08).
+*.pre_restore_bak
+*.pre_restore2_bak
+*.pre_quarantine_bak
