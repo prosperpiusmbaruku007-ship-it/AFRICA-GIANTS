@@ -1,5 +1,176 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-10-08 (second pass) — **51% → 95% ON THE REMOVALS, AND THE INFERENCE APP CAN FINALLY SAY WHAT IT SERVES**
+
+**`fb91566` pushed. Then five pieces of follow-up work, of which three found defects in my own
+instruments and one found that a mandatory gate had never been run at all.**
+
+### 1. THE PRECONDITION'S BOUNDARY IS NOW INSIDE THE ARTIFACT
+
+`MET` means **no known defect is ASSERTED in what trains** — and the harness now says so in
+`_what_MET_means`, `_what_MET_does_not_mean`, and prints it beside every future verdict, because
+the one-word answer is the part that gets repeated (R22: a bare figure travels, its caveat does
+not, unless it is inside it).
+
+> **The sharp edge, stated in the artifact: AN OVER-REMOVAL MOVES THIS VERDICT TOWARD GREEN.**
+> Delete a correct row and the asserted-defect count falls. So the two measures can be improved
+> by the same mistake, which is exactly why they must never be reported as one number.
+
+### 2. OVER-REMOVAL COVERAGE **51.3% → 95.0%**, and phase 1 had asked the wrong question
+
+`eval/controls/audit_overremoval_phase2_2026_10_08.py`. Phase 1 ran the precondition
+classifier — *"does this row assert one of 17 known **figure** defects?"* **Most of these
+defects have no figure:** modality (GN487A, *"may be revoked"* vs *"shall"*), attachment (which
+obligation the 20th belongs to), scope (stamp duty flat-vs-tiered), terminology (P45/P9), tense
+(a passed cutoff stated as upcoming). Rules are now keyed on **each record's own stated reason,
+quoted in the code**.
+
+```
+501 rows | ASSERTS 457 | OVER-REMOVAL 19 | NOT_A_CORRECTNESS_QUESTION 17 | UNDETERMINED 8
+```
+
+**Four new over-removals, reported and NOT restored** (R37: restoration is a separate decision
+from discovery):
+
+| row | removed for | what it says |
+|---|---|---|
+| **`b008_paye_adv_005`** | asserting a TZS 26,000 personal relief | *"**Hakuna** punguzo la kibinafsi tofauti la TZS 26,000"* |
+| **`b008_paye_adv_007`** | the same | *"Kumbuka: **hakuna** punguzo la kibinafsi tofauti…"* |
+| a VAT row | *"dating the increase to July 2024"* | **states no date at all** |
+| a VATWH row | *"asserting the 20th"* | says *"tarehe **muafaka**"*, naming none |
+
+**That makes FOUR distinct over-removals in `paye_defect_quarantine_2026_08_25.jsonl`, every one
+an adversarial pair** — the population R37 names as highest-risk, because containing the wrong
+value is their entire purpose. Plus one *removed-for-the-wrong-reason-but-still-wrong* (a 7-day
+VATWH row; FA2026 s.95 is 10 days) and one **weak** removal repairable by striking a single word
+(`stamp_duty_138`).
+
+**🔴 AND KEYING ONE RULE PER RECORD WAS THE BATCH-REASON ERROR I WAS AUDITING FOR.** `paye_defect`
+carries **two** per-row reasons (11 rows *"band 2 at 9%"*, 64 rows *"TZS 26,000 personal
+relief"*); `fabrication_and_deadline` carries two more. **44 distinct reason signatures across 18
+records**, and `efd_fabrication_all_notations` carries a separate reason for **every one of its
+14 rows**. The records are far better documented than my first rule table assumed.
+
+### 3. ⛔ THREE DEFECTS IN MY OWN INSTRUMENT, ALL IN THE DELETING DIRECTION
+
+**(a) The VATWH rule inverted 28 ASSERTING rows into accusations against the remediation.** It
+tested `_RETURN` over the **whole sentence**, and these rows say both things in one breath
+(*"…tarehe 20 — siku ile ile ya VAT return ya kawaida"*). R33 in my own instrument: **one**
+assert-specimen, written by me in the phrasing the regex was built around, so it could only
+agree. Every specimen is now **verbatim from the records**, including the word orders that broke
+it. Then reading the survivors found a second blind spot — the **anaphoric transfer** (*"Ni
+tarehe hiyohiyo ya kuwasilisha VAT ya kuzuia"*), which attaches the 20th to the remittance while
+containing **no date token**, so every date-first rule is blind to it by construction.
+
+**(b) One pattern was a silent no-op for an iteration.** A patch script wrote its word-boundary
+escapes inside a **non-raw** Python string, so they compiled to literal **backspace** characters:
+the pattern demanded a backspace after the `M` and matched nothing. Found only by introspecting
+the compiled closure; the self-test missed it because no specimen used the `11M` form — R37's
+constructed-pattern shape. **The first version of the comment explaining it reproduced the bug.**
+
+**(c) `11M` is a THIRD notation**, after digits and spelled-out words. 10 of 14 rows in one
+record use **only** that form.
+
+### 4. 🔴 THE GATE THAT WAS NEVER RUN — the finding behind `check_locked_facts.py`
+
+The matcher's defect is real (five rows flagged for **denying** the wrong value; four were
+quarantined on that basis and `b008_paye_adv_001` was live at HEAD still carrying it). **But the
+defect is not the interesting part.**
+
+| gate | mechanically enforced | how | corpus at HEAD |
+|---|---|---|---|
+| `validate_dataset.py` | **YES** | `test_the_real_corpus_currently_passes…`, and pre-push runs pytest | **clean, 1714/0** |
+| **`check_locked_facts.py`** | **NO** | imported by 2 tests, **neither runs it over the corpus** | **48 flag lines** |
+| `check_sources.py` | **NO** | **0** test references | 1 violation |
+| `check_eval_split.py` | **NO** | **0** test references | clean |
+
+**`.githooks/` contains only `pre-push`. There is NO pre-commit hook at all**, and pre-push runs
+`scan_for_keys` and `pytest` — not this gate. *"Do NOT save if exit code 1"* and *"only commit if
+all 4 return 0"* are instructions to a reader, enforced by nothing.
+
+> **The difference between the clean gate and the dirty one is WIRING, not diligence.** R26's
+> shape arriving from the opposite direction: not a control that can never fire, but **one that
+> always does** — and a gate that fails continuously stops carrying information, so people route
+> around it and are right to.
+
+**Taken through R17 properly.** Two narrowings, each measured: a **span cap** (160 chars — the
+real matches spanned 604 and 812) and a **phrase-scoped backward negation window** (60 chars).
+The window is *phrase*-scoped, not adjacency-scoped, because that is how negation works — *"there
+is **no separate** personal relief of TZS 26,000"* puts six words between negator and figure, and
+the Swahili limb puts a five-word noun phrase there. **Both narrowings loosen a demotion rule,
+the deleting direction**, so each is bounded and the **true positives are pinned**: 8 committed
+probes in `eval/fidelity/locked_facts_polarity_probes.jsonl`, four of which must still FLAG —
+including `lfp_05`, the **same figure as `lfp_04` with the opposite polarity**.
+
+Separately, one genuine pattern fix (R27, amending only the two entries): `rent_wht_rate`'s
+English patterns had a bare `rent`, **which matches inside the ordinary English word
+"diffe·RENT"**. `tier1a_wht_deep_035` — a row about **director fees**, both claims correct — was
+flagged on the text *"non-residents (15%) have different"*. Word-bounded; the three Swahili
+patterns were already safe and are unchanged.
+
+**Result: batch_004 19→6, batch_006 10→2, batch_008 4→0.** The survivors are genuine
+OSHA/WCF threshold-conflation candidates (e.g. a row giving OSHA registration a 10-employee
+floor, which is **SDL's** threshold) and are left for adjudication. **`tests/test_locked_facts_polarity.py`
+RATCHETS the corpus, shrink-only** — not *"the corpus passes"*, which would be a test instructing
+maintainers to ignore real defects. And a **compile cache** took a corpus pass from **117s to
+4.4s** (≈2,000 patterns against Python's 512-entry regex cache), because expense is how a check
+ends up not being run.
+
+### 5. `chike-inference` CAN FINALLY SAY WHAT IT SERVES
+
+Two tiers: shallow `GET /health` (web build SHA, no GPU, no secrets) and
+`?deep=1&token=` which asks the GPU class what it **actually loaded** — rows, shape, and a
+**sha256 over `self.fact_texts`**.
+
+> **The digest is the point, not the count.** `rag_fact_count` was **unchanged at 184** across the
+> BRELA regen, so the count could not tell the corrected index from the superseded one and the
+> fail-loud contract had nothing to catch. `build_matches` compares the two tiers, because a warm
+> GPU container behind a fresh web tier is the R16 hazard itself.
+
+Listed **`NOT_EXERCISABLE`** in the control-fire audit **on the day it was built** — not `FIRES`.
+Booking a control as working before it has ever answered would be the same mistake this one
+exists to fix. `FIRES 21 · DISABLED 1 · OBSERVED 1 · NOT_EXERCISABLE 2`, zero inert.
+
+### 6. D-FIDELITY-8 SCOPED AND PRICED, NOT BUILT — and the prototype was INERT on its own specimen
+
+`eval/fidelity/scope_fee_table_guard_2026_10_08.py`. R19: a fee table is a **constant**
+comparison — no transformation of 2,000,000,000 makes 290,000 true — so **buildable**, and like
+D-FIDELITY-7 it needs no `ComputationResult`, so it reaches the **fact path**.
+
+**Priced before wiring: 13,632 rows → 1 flag, 0 in GOLD, and the one flag IS the founding
+defect.** But the first version returned **0 flags and a verdict of "SAFE TO PROPOSE"** while
+being **inert on the live reply it was built for** — its fee cue looked in a 60-char window that
+never contains the word *"Ada"*. **A clean sweep from an inert rule is byte-identical to a clean
+sweep from a sound one.** Caught by planting the specimen, which the harness now refuses to
+sweep without. The replacement is **grammatical, not positional**: a fee is introduced by the
+predicative `ni`, a band edge by a comparative (`unaozidi`, `hadi`) — and the defective sentence
+contains **both**, so separating them is the whole job.
+
+**Registered `HELD` with an expiry of 2026-11-05 before any code exists** (R35: D-FIDELITY-7 *"was
+not overruled — it lapsed"*). **What the decision turns on:** the defect is on the **fact path**,
+where `_render` returns the body alone, so blanking ships **silence** — it needs **replacement
+copy**, which is a content decision, not a guard decision. Wiring it compute-path-only like
+D-FIDELITY-6 would not fix the measured row at all.
+
+### 7. R38 ADDED
+
+A probe encodes an expected answer, so it can encode a **wrong** one — the uncited-gold problem
+in the live-verify layer. Both of my first-run harness failures: a retrieval guard's query
+promoted to a model-answer assertion, and a probe scoring D-FIDELITY-7's *correct* behaviour as a
+regression **while its own note described the right handling three lines above**.
+
+### 8. STATE
+
+Suite **1700+ passed**, 0 failed. Deploy verified. Precondition **MET** with its boundary stated.
+
+**Open:** the 4 new over-removals (restoration is the founder's call); **8 rows still
+undetermined** and 3 hand-adjudicated; D-FIDELITY-8's wiring decision, **due 2026-11-05**; the
+`/health` deploy, which is what turns that control from `NOT_EXERCISABLE` into evidence; the 6+2
+OSHA/WCF threshold-conflation candidates; `check_sources.py` and `check_eval_split.py` still
+have **zero** test references; **there is still no pre-commit hook.**
+
+---
+
 ## 📋 2026-10-08 — **THE DEPLOY IS VERIFIED AND THE PRECONDITION IS MET. THE AUDIT OF THE REMOVALS CAN ONLY SEE HALF OF WHAT IT REMOVED.**
 
 **Recovery session after a crash at the approval prompt for the live verify harness. The R15
@@ -215,12 +386,18 @@ deletion. Not scored as over-removals, because the word is wrong. And stamp duty
 `NOT_FIGURE_TESTABLE` *precisely* because 1% is lawful and the defect is **scope** (R19's Guard B
 line) — which is exactly why no instrument could tell the two kinds apart.
 
-**⚠️ FOUR RECORDS STATE NO REASON AT ALL.** `eval_contaminated`,
-`sdl_tourism_levy_mislabeled`, `vat_deferment_stale_cutoff_framing`,
-`rent_wht_nonresident_15pct` have `reasons: None` — **their only account of why rows went is the
-FILENAME**, which cannot be checked against any row. That is strictly worse than the 2026-08-25
-PAYE record, which at least wrote a reason that could be found false. Every removal in them
-happened to be correct on reading; **that is a fact about those rows, not about the practice.**
+**⚠️ ~~FOUR RECORDS STATE NO REASON AT ALL.~~ → 🔴 CORRECTED SAME DAY, AND THE CORRECTION IS
+ITSELF AN R34 INSTANCE OF MINE.** I read one field name — `_quarantine.reasons` — and concluded
+absence. The records use **three** key names: `_quarantine.reasons` (a list), `reason` (a
+string), `why` (a string). `rent_wht_nonresident_15pct` carries a **precise** reason under
+`reason` (*"asserts a 15% NON-RESIDENT rate on rent; Cap.332 First Schedule para 4(b)(ii) gives
+the non-resident limb the same TEN percent, and TRA's table reads 10%|10%"*), so my
+"the record is misnamed and nothing states what was wrong" was **false**;
+`vat_deferment_stale_cutoff_framing` carries one that is *better* than I credited (it names the
+**unscoped** defect as well as the tense); and `efd_fabrication`, `nssf_fine`,
+`memorandum_articles` and `quarantine_survivors_reswept` all carry theirs under `why`. **Only
+TWO genuinely have none: `sdl_tourism_levy_mislabeled` and `eval_contaminated`.** See the
+2026-10-08 entry above.
 
 ### 6. ✅ THE RETRAIN PRECONDITION IS **MET**
 
@@ -249,8 +426,11 @@ present at HEAD, not introduced here — the R25 containment residual).
 But `check_locked_facts.py` flags my two restored rows, and the pattern is
 `paye.*band.*9%(?! is wrong| ni kosa)`:
 
-1. **the `.*` is unbounded and spans the whole concatenated record** — "PAYE", "band" and "9%" are
-   matched out of three different fields, across the question/answer and Swahili/English boundary;
+1. **the `.*` is unbounded and spans the whole concatenated answer** — measured on the real
+   matcher: spans of **604 and 812 characters**, running from `answer_sw` into `answer_en`.
+   *(Corrected: I first wrote "across the question/answer boundary". The checker concatenates
+   `answer_sw + answer_en` and never reads the question — that span came from my own debug
+   harness, not from the gate.)*
 2. **the negation lookahead sits AFTER the value** and covers two literal phrases, while these
    rows negate **before** it: `si 9%`, `(not 9%)`, `(MUHIMU: si 9%)`;
 3. **`b008_paye_adv_001` is live in HEAD carrying the identical false positive** — *"UWONGO —

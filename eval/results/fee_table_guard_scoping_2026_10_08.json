@@ -1,0 +1,73 @@
+{
+  "_what": "Scoping and PRE-WIRING PRICE for D-FIDELITY-8, a BRELA share-capital fee-table band guard. Nothing is wired.",
+  "_the_defect": "live 2026-10-08: TZS 2,000,000,000 share capital answered TZS 290,000 (the >20M-50M band, floor misstated as 5,000,000) where the table gives TZS 600,000.",
+  "_why_generation_not_retrieval": "row 181 measured at RANK 1 for the failing query (0.9167), rank 3 on a paraphrase, rank 1 on the sibling. The ladder was in context. And the sibling probe on the SAME row returns the new 500,000, so staleness is excluded from inside the harness.",
+  "_r19": "CONSTANT comparison, therefore BUILDABLE: no lawful transformation of 2,000,000,000 makes 290,000 correct, because the fee is a lookup against a fixed published table. Same side of R19 as D-FIDELITY-7, and it likewise needs no ComputationResult, so it reaches the FACT path where every pre-sixth D-FIDELITY rule goes vacuous.",
+  "_path_asymmetry_decides_the_wiring": "On the COMPUTE path a flagged body is blanked and `_render` still emits the engine's working, so the user loses a sentence and keeps the figure. THE FACT PATH RETURNS THE BODY ALONE, so blanking ships SILENCE. This guard's defect lives on the fact path, so it needs REPLACEMENT COPY -- the band and its fee, or an instruction to check the schedule -- not a blank. Wiring it like D-FIDELITY-6 (compute path only) would not fix the measured row at all.",
+  "_two_bar_consequence": "Wiring this would move Bar A's A1 (confident wrong answers) and NOT A2 (answered correctly). A guard stops a wrong answer; it never produces the right one. Report the two separately or the work reads as having done nothing.",
+  "_narrowings_built_in_from_the_start": {
+    "N1_subject_gate": "share capital only; otherwise every BRELA fee is in scope and the bare magnitudes collide",
+    "N2_figure_provenance": "the user's amount comes from the QUESTION, the fee from the BODY — D-FIDELITY-7's N2 failure in table form",
+    "N3_fee_cue": "only a STATED fee counts; a body reciting the ladder mentions eight lawful fees that are not its answer",
+    "N4_polarity": "a fee named under a negation is a mention, not an assertion"
+  },
+  "planted_specimens": [
+    {
+      "expect": "WRONG_BAND",
+      "got": "WRONG_BAND",
+      "why": "the live 2026-10-08 defect. 290,000 is lawful for >20M-50M and wrong here; 5,000,000 in the same sentence is a BAND EDGE and must not be read as the fee",
+      "detail": "capital 2,000,000,000 needs 600,000; the body states 290,000, which is a LAWFUL fee for a DIFFERENT band"
+    },
+    {
+      "expect": "CORRECT",
+      "got": "CORRECT",
+      "why": "the right answer must NOT flag — the specimen that matters most, because a guard that flags the correct answer is worse than none",
+      "detail": "capital 2,000,000,000 -> 600,000, which the body states"
+    },
+    {
+      "expect": "CORRECT",
+      "got": "CORRECT",
+      "why": "the SAME fee, 290,000, now in its OWN band. The guard must distinguish the band, not the figure — this is what makes it a table guard rather than a value check",
+      "detail": "capital 30,000,000 -> 290,000, which the body states"
+    },
+    {
+      "expect": "UNLAWFUL_FEE",
+      "got": "UNLAWFUL_FEE",
+      "why": "a figure that is in no band at all — a different finding from a lawful fee misapplied, and worth reporting separately",
+      "detail": "capital 2,000,000,000 needs 600,000; the body states 777,777, which is not a fee in the table at all"
+    },
+    {
+      "expect": "NO_USER_FIGURE",
+      "got": "NO_USER_FIGURE",
+      "why": "a ladder recital with no user amount — the row must not be judged, because there is no band to judge it against",
+      "detail": "the question states no share-capital amount"
+    },
+    {
+      "expect": "CORRECT",
+      "got": "CORRECT",
+      "why": "POLARITY: the correct answer names the wrong value in order to reject it. A presence check fails exactly the rows that carry the correction",
+      "detail": "capital 2,000,000,000 -> 600,000, which the body states"
+    }
+  ],
+  "rows_swept": 13632,
+  "verdicts": {
+    "NOT_IN_SCOPE": 13594,
+    "NO_USER_FIGURE": 35,
+    "WRONG_BAND": 1,
+    "NO_STATED_FEE": 2
+  },
+  "flags": 1,
+  "flags_in_GOLD": 0,
+  "findings": [
+    {
+      "population": "STORED_REPLY",
+      "src": "brela_deploy_verification_2026_10_07.json",
+      "question": "Mtaji wa hisa wa kampuni yangu ni TZS 2,000,000,000. Ada ya kusajili ni ngapi?",
+      "body": "Ada ya kusajili kampuni yenye mtaji wa hisa unaozidi TZS 5,000,000 ni TZS 290,000. Thibitisha na BRELA (brela.go.tz).",
+      "verdict": "WRONG_BAND",
+      "detail": "capital 2,000,000,000 needs 600,000; the body states 290,000, which is a LAWFUL fee for a DIFFERENT band"
+    }
+  ],
+  "_what_a_gold_flag_would_mean": "either the guard is over-broad or a gold answer is wrong. D-FIDELITY-7 flagged THREE gold answers as built, including the very row its wiring existed to fix, and all three were the guard's fault.",
+  "verdict": "SAFE TO PROPOSE FOR WIRING — 0 gold flags"
+}

@@ -108,6 +108,32 @@ HOLDS = {
                 'specimen that produced the expiry rule -- NOT removed: a registry that drops '
                 'its one failure reads as though the rule were free.'),
     },
+    # ── D-FIDELITY-8, scoped and priced 2026-10-08, NOT BUILT ────────────────────
+    # A registry row on the day it was PROPOSED, not on the day someone gets round to it.
+    # R35's finding was that D-FIDELITY-7 "was not overruled -- it LAPSED", because the note
+    # holding it had no date and nothing ever came due. The fix is a date, so this one has
+    # one before any code exists.
+    'D-FIDELITY-8 (fee-table band guard)': {
+        'state': 'HELD',
+        'decided': '2026-10-08',
+        'expires': '2026-11-05',   # four weeks: long enough to gather a second instance of
+                                   # the class, short enough that nobody forgets it exists
+        'why': ('SCOPED AND PRICED, NOT BUILT. The defect is measured and live: TZS '
+                '2,000,000,000 of share capital answered TZS 290,000 where the table gives '
+                'TZS 600,000, with row 181 at RANK 1 for the failing query -- so no index or '
+                'wording work can reach it. R19 says BUILDABLE (a fee table is a CONSTANT '
+                'comparison; no transformation of 2,000,000,000 makes 290,000 true), and like '
+                'D-FIDELITY-7 it needs no ComputationResult, so it reaches the FACT path. '
+                'Priced over 13,632 rows: 1 flag, 0 in GOLD, and the one flag IS the founding '
+                'defect (eval/fidelity/scope_fee_table_guard_2026_10_08.py). '
+                'WHAT THE DECISION TURNS ON, and why it is a hold rather than a build: the '
+                'defect lives on the FACT path, where `_render` returns the body alone, so '
+                'blanking ships SILENCE -- it needs REPLACEMENT COPY (the band and its fee), '
+                'which is a content decision, not a guard decision. Wiring it like '
+                'D-FIDELITY-6, compute-path only, would not fix the measured row at all. '
+                'THE EXPIRY QUESTION: is one measured instance enough to justify a guard, or '
+                'does it wait for a second? Either answer is fine; leaving it undated is not.'),
+    },
 }
 
 

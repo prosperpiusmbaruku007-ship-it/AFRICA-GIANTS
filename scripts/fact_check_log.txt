@@ -1200,3 +1200,36 @@ Total: 1 | Flagged: 1
 
 [2026-10-08T13:11:41.340167] Checked C:\Users\jhjh\AppData\Local\Temp\tmptmy01hxo\lf_ok.jsonl
 Total: 1 | Flagged: 0
+
+[2026-10-08T13:21:35.531797] Checked datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl
+Total: 295 | Flagged: 9
+  FLAG [tier1a_gn605a_008_20260609] wcf_threshold_no_minimum: wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)
+  FLAG [tier1a_gn605a_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_osha_001_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_012_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_012_20260609] osha_registration_threshold_b004: osha.*wafanyakazi 10 au zaidi
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: osha.*wafanyakazi 10 au zaidi
+  FLAG [tier1a_wht_deep_035_20260609] rent_wht_rate: non.?residents?[^.!?]{0,30}15%[^.!?]{0,40}rent(?! is not| is wrong)
+  FLAG [tier1a_wcf_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_wcf_010_20260609] osha_registration_threshold_b004: osha.*threshold ya 10
+
+[2026-10-08T13:22:20.197002] Checked datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl
+Total: 294 | Flagged: 2
+  FLAG [b006_sdl_034] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_rural_007] wcf_threshold_no_minimum: wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)
+
+[2026-10-08T13:22:41.987390] Checked datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl
+Total: 144 | Flagged: 0
+
+[2026-10-08T13:41:24.150116] Checked datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl
+Total: 295 | Flagged: 6
+  FLAG [tier1a_gn605a_008_20260609] wcf_threshold_no_minimum: wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)
+  FLAG [tier1a_gn605a_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_osha_001_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_wcf_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_wcf_010_20260609] osha_registration_threshold_b004: osha.*threshold ya 10

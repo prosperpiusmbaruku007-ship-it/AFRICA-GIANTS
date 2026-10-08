@@ -1064,10 +1064,11 @@
     "wrong_patterns": [
       "pango[^.!?]{0,60}wasio wakazi[^.!?]{0,30}asilimia 15(?! si| sio| – si)",
       "wasio wakazi[^.!?]{0,30}asilimia 15[^.!?]{0,40}pango(?! si| sio)",
-      "rent[^.!?]{0,60}non.?residents?[^.!?]{0,30}(?:is |are |at |of )?15%(?! is not| is wrong)",
-      "non.?residents?[^.!?]{0,30}15%[^.!?]{0,40}rent(?! is not| is wrong)",
+      "\\brent\\b[^.!?]{0,60}non.?residents?[^.!?]{0,30}(?:is |are |at |of )?15%(?! is not| is wrong)",
+      "non.?residents?[^.!?]{0,30}15%[^.!?]{0,40}\\brent\\b(?! is not| is wrong)",
       "kodi ya zuio ya pango[^.!?]{0,80}asilimia 15(?! si| sio)"
-    ]
+    ],
+    "_pattern_note": "2026-10-08: the two ENGLISH patterns had a bare `rent`, which matches inside the ordinary English word 'diffe-RENT'. tier1a_wht_deep_035 -- a row about DIRECTOR FEES (15% for residents and non-residents alike, correct) that mentions a residency split only for MANAGEMENT fees (5%/15%, also correct) -- was flagged on the text 'non-residents (15%) have different'. Word-bounded to \brent\b. The three Swahili patterns were already safe (`pango` has no such collision) and are unchanged, as is every other field (R27)."
   },
   "wcf_accident_reporting": {
     "fact": "Employer must notify WCF of a workplace accident within 7 WORKING DAYS — via WCF online portal (portal.wcf.go.tz). Different deadline for occupational illness. Source: WCF portal.",
