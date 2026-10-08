@@ -828,11 +828,53 @@ The diagnostic that settled it — config-only phrases (`kodi ya majengo`, `prop
 `uza ardhi`, present in chike_config.json but NOT in the hardcoded fallback) still refused
 correctly, proving config loading was fine and the container was simply stale.
 
+**⛔⛔ STEP ZERO, ADDED 2026-10-08 AND IT CHANGES THE ORDER OF EVERYTHING BELOW: PRE-FLIGHT
+BEFORE THE STOP. `python scripts/preflight_deploy.py chike-inference/modal_app.py` MUST exit 0
+before `app stop` is run.**
+
+**The stop is instant and irreversible; the deploy is neither. Twice the stop has succeeded and
+the replacing deploy has then failed for an unrelated reason, leaving production dead:**
+
+| | cause | downtime |
+|---|---|---|
+| 2026-08-10 | the CLI aborted on its own `✓` glyph, unprintable on a cp1252 console | ~2 min |
+| 2026-10-08 | `.env({'CHIKE_BUILD': …})` chained **after** `add_local_file`, which Modal forbids | ~3 min |
+
+> **Two unrelated causes, one window. So enumerating causes is the wrong defence — the defence
+> is to REORDER. Build and validate first; only then open the window.** After the pre-flight,
+> the outage window can only be opened by a deploy that has already built once.
+
+**⚠️ AND THE OBVIOUS PRE-FLIGHT DOES NOT WORK — do not substitute it.** "Import `modal_app.py`
+and construct the image" **does not catch** the 2026-10-08 bug: measured on modal 1.5.1,
+chaining `.env()` after `add_local_file()` **constructs fine** and raises only when the image is
+**built**. An import-based check would have passed and the outage would have happened anyway.
+Hence three gates, in increasing cost:
+
+1. **PROVENANCE** — tree clean **and** HEAD on `origin/main`. A deploy from a dirty tree makes
+   `/health` lie: on 2026-10-08 it reported `build 5d1ed71` while the running image carried an
+   uncommitted fix, so **the label named a commit whose own `modal_app.py` cannot deploy at
+   all** — accurate about what was *passed*, wrong about what was *built*. That is the
+   stale-clone provenance problem one layer out. **If production is down and you must deploy
+   dirty, redeploy from the committed SHA afterwards so the label stops lying.**
+2. **CHAIN LINT** — AST-level, instant, offline; encodes the one rule Modal enforces at build
+   time. Catches the 2026-10-08 class and costs nothing.
+3. **REAL BUILD** — `modal deploy --name <app>-preflight` on the same file, then stop the
+   preflight app. The live app is untouched, image layers are cached so the real deploy is
+   fast, and **this is the only gate that can catch a build failure nobody has thought of**,
+   which is the category both outages came from.
+
 **After EVERY Modal redeploy, before claiming a change is live:**
-1. Force fresh containers — `python -m modal app stop chike-inference --yes` then
-   `python -m modal deploy chike-inference/modal_app.py` — **or** wait past the 300s
-   `scaledown_window` with no traffic (test requests reset the idle timer, so "wait" means
-   actually wait).
+1. Force fresh containers — **having already pre-flighted** — `python -m modal app stop
+   chike-inference --yes` then `python -m modal deploy chike-inference/modal_app.py` — **or**
+   wait past the 300s `scaledown_window` with no traffic (test requests reset the idle timer,
+   so "wait" means actually wait).
+
+   **⚠️ SKIPPING `app stop` LEAVES THE WEB TIER WARM, and `/health`'s `build_matches` now
+   proves it.** Measured 2026-10-08: a redeploy without the stop gave `web build 5d1ed71`,
+   `gpu build 3659a06`, `build_matches: false`. Nothing behavioural was stale — the served
+   digest still matched and the GPU tier does all the answering — **which is exactly why it
+   needed a check: a label-only staleness is the kind that gets tolerated until it is covering
+   something real.** Resolved by waiting out the scaledown rather than a second stop.
 
    **ALWAYS set `PYTHONIOENCODING=utf-8` (alongside `PYTHONUTF8=1`) on the deploy command,
    and know that step 1 opens a window where production is DEAD.** `app stop` succeeds

@@ -7,8 +7,7 @@
   "tally": {
     "FIRES": 22,
     "DISABLED": 1,
-    "OBSERVED": 2,
-    "NOT_EXERCISABLE": 1
+    "OBSERVED": 3
   },
   "audit_self_corrections": [
     {
@@ -49,8 +48,8 @@
       "layer": "repo_gate",
       "claims_to_block": "an API key committed into a source file",
       "verdict": "FIRES",
-      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\leak.py",
-      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\clean.py",
+      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\leak.py",
+      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\clean.py",
       "note": "planted -> exit 1; clean -> exit 0. FIXED 2026-08-24; the bare invocation this replaced was INERT"
     },
     {
@@ -67,8 +66,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a training pair citing a banned, eval-only or DNS-dead source",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\src_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\src_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\src_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\src_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -76,8 +75,8 @@
       "layer": "repo_gate",
       "claims_to_block": "nssf.or.tz (DNS-failing) anywhere in a pair, including answer TEXT",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\dead_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\dead_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\dead_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\dead_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -85,8 +84,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a pair asserting a value locked_facts.json marks as WRONG",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\lf_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\lf_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\lf_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\lf_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -94,8 +93,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a held-out eval question leaking into the SFT training file (R6)",
       "verdict": "FIRES",
-      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\train_bad.jsonl",
-      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\train_ok.jsonl",
+      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\train_bad.jsonl",
+      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\train_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -103,7 +102,7 @@
       "layer": "repo_gate",
       "claims_to_block": "a locked fact that is neither in the RAG index nor human-adjudicated",
       "verdict": "FIRES",
-      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp7dnzsi2v\\facts_drift.json",
+      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpc_8szamw\\facts_drift.json",
       "negative_specimen": "",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
@@ -254,11 +253,11 @@
     {
       "id": "Wappfly/WhatsApp webhook token",
       "layer": "process",
-      "claims_to_block": "an unauthenticated caller posting to the WhatsApp webhook",
-      "verdict": "NOT_EXERCISABLE",
-      "positive_specimen": "",
-      "negative_specimen": "",
-      "note": "needs the live chike-whatsapp app and its Modal Secret. Not audited here."
+      "claims_to_block": "an unauthenticated caller posting to the WhatsApp webhook and reaching the GPU",
+      "verdict": "OBSERVED",
+      "positive_specimen": "no token / wrong token / wrong token of the EXACT real length -- all three refused with status unauthorized AND a rejected row written (rows 0 -> 3)",
+      "negative_specimen": "NOT exercisable: supplying the correct token needs the founder-only Secret",
+      "note": "NEGATIVE DIRECTION EVIDENCED LIVE 2026-10-08 on build ad1ed50, all three arms PASS (eval/results/whatsapp_webhook_token_exercised.json). Row write proven via /health transcript_store.rows, which is unauthenticated, because /transcripts needs the founder-only ADMIN_TOKEN. POSITIVE ARM NOT CLAIMED -- and it is named rather than rounded up, because a census that quietly omits what it could not test reports a cleaner result than it earned. Three rejection rows were left in the live transcript store on purpose: they carry no PII (sender fields are None on a rejection) and they ARE the evidence."
     },
     {
       "id": "D-FIDELITY-8 (fee-band guard)",

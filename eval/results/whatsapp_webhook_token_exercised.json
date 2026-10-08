@@ -1,0 +1,52 @@
+{
+  "_what": "The WhatsApp webhook token gate, exercised against the live endpoint.",
+  "_why_it_mattered": "It was the only entry in control_fire_audit.json with NO evidence behind it, and it is the gate between the open internet and a GPU.",
+  "_how_the_row_write_is_proven": "Reading /transcripts needs ADMIN_TOKEN and the chike-whatsapp Secret is founder-only (Modal does not expose secret values to the CLI). /health reports transcript_store.rows UNAUTHENTICATED, so the row is proven by the counter moving. Weaker than reading the row, and sufficient: it either wrote or it did not.",
+  "_positive_arm_NOT_claimed": "Supplying the CORRECT token needs the Secret, so this run evidences ONLY that wrong tokens are refused and recorded. The half is named rather than rounded up. Note the positive arm's failure mode -- rejecting a LEGITIMATE delivery -- has already been OBSERVED failing: three failed sends and two token rotations on 2026-08-14, which is why the fingerprint block exists.",
+  "_production_writes": "3 `kind: rejected` rows left in the live transcript store, deliberately. No PII (sender fields are None on a rejection). They are the evidence.",
+  "build": "ad1ed50",
+  "rows_before": 0,
+  "rows_after": 3,
+  "arms": [
+    {
+      "arm": "no_token",
+      "why": "A delivery with no token at all. The most basic case and the one an attacker who merely guesses the URL would send.",
+      "http_status": 200,
+      "response": {
+        "status": "unauthorized"
+      },
+      "rejected_as_unauthorized": true,
+      "rows_before_arm": 0,
+      "rows_after_arm": 1,
+      "row_was_written": true,
+      "verdict": "PASS"
+    },
+    {
+      "arm": "wrong_token_wrong_length",
+      "why": "A wrong value of the wrong length.",
+      "http_status": 200,
+      "response": {
+        "status": "unauthorized"
+      },
+      "rejected_as_unauthorized": true,
+      "rows_before_arm": 1,
+      "rows_after_arm": 2,
+      "row_was_written": true,
+      "verdict": "PASS"
+    },
+    {
+      "arm": "wrong_token_CORRECT_length",
+      "why": "⛔ THE ARM WORTH HAVING: 40 characters, the exact length of the real token, which /health publishes unauthenticated. A length-based check would PASS this. It proves the gate compares values.",
+      "http_status": 200,
+      "response": {
+        "status": "unauthorized"
+      },
+      "rejected_as_unauthorized": true,
+      "rows_before_arm": 2,
+      "rows_after_arm": 3,
+      "row_was_written": true,
+      "verdict": "PASS"
+    }
+  ],
+  "verdict": "NEGATIVE DIRECTION EVIDENCED"
+}

@@ -748,10 +748,41 @@ def audit_unexercisable():
            v, 'planted corpora scoring 0% on each limb in turn', 'a corpus that scores above '
            'both thresholds', note)
 
+    # ⛔ EXERCISED LIVE 2026-10-08, after sitting NOT_EXERCISABLE since 2026-08-24 -- the last
+    # entry in this census with no evidence behind it, and the gate between the open internet
+    # and a GPU. eval/controls/exercise_whatsapp_webhook_token_2026_10_08.py.
+    #
+    # HOW THE ROW-WRITE WAS PROVEN WITHOUT THE ADMIN TOKEN, which is what made it runnable at
+    # all: /transcripts needs ADMIN_TOKEN and the chike-whatsapp Secret is founder-only (Modal
+    # does not expose secret values to the CLI). But /health reports transcript_store.rows
+    # UNAUTHENTICATED, so the row is proven by the counter moving 0 -> 3. Weaker than reading
+    # the row; sufficient for the claim.
+    #
+    # ⚠️ PARTIAL, AND THE PARTIALITY IS THE POINT OF THE VERDICT NAME. Only the NEGATIVE
+    # direction is evidenced: supplying the CORRECT token needs the Secret. Three arms, all
+    # refused with `status: unauthorized` AND a `kind: rejected` row written -- no token; a
+    # wrong token of the wrong length; and a wrong token of the EXACT 40-character length of
+    # the real one, which is the arm worth having because /health publishes that length
+    # unauthenticated and a length-based check would have passed it. So the gate compares
+    # VALUES.
+    #
+    # The positive arm's failure mode (rejecting a LEGITIMATE Wappfly delivery) is the one
+    # already OBSERVED failing -- three failed sends and two token rotations on 2026-08-14,
+    # which is why the fingerprint block exists in that handler at all.
     record('Wappfly/WhatsApp webhook token', 'process',
-           'an unauthenticated caller posting to the WhatsApp webhook',
-           'NOT_EXERCISABLE', '', '',
-           'needs the live chike-whatsapp app and its Modal Secret. Not audited here.')
+           'an unauthenticated caller posting to the WhatsApp webhook and reaching the GPU',
+           'OBSERVED',
+           'no token / wrong token / wrong token of the EXACT real length -- all three '
+           'refused with status unauthorized AND a rejected row written (rows 0 -> 3)',
+           'NOT exercisable: supplying the correct token needs the founder-only Secret',
+           'NEGATIVE DIRECTION EVIDENCED LIVE 2026-10-08 on build ad1ed50, all three arms '
+           'PASS (eval/results/whatsapp_webhook_token_exercised.json). Row write proven via '
+           '/health transcript_store.rows, which is unauthenticated, because /transcripts '
+           'needs the founder-only ADMIN_TOKEN. POSITIVE ARM NOT CLAIMED -- and it is named '
+           'rather than rounded up, because a census that quietly omits what it could not '
+           'test reports a cleaner result than it earned. Three rejection rows were left in '
+           'the live transcript store on purpose: they carry no PII (sender fields are None '
+           'on a rejection) and they ARE the evidence.')
 
     # ── chike-inference /health, built 2026-10-08 ────────────────────────────────
     # Listed on the day it was built rather than after it is first exercised, because R26's

@@ -1261,3 +1261,10 @@ Total: 1 | Flagged: 1
 
 [2026-10-08T18:50:12.771919] Checked C:\Users\jhjh\AppData\Local\Temp\tmp7dnzsi2v\lf_ok.jsonl
 Total: 1 | Flagged: 0
+
+[2026-10-08T19:06:58.085745] Checked C:\Users\jhjh\AppData\Local\Temp\tmpc_8szamw\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-10-08T19:06:58.516871] Checked C:\Users\jhjh\AppData\Local\Temp\tmpc_8szamw\lf_ok.jsonl
+Total: 1 | Flagged: 0
