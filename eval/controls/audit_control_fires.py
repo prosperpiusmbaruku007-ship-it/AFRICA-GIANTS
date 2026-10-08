@@ -122,10 +122,23 @@ HOLDS = {
         # state records what is done and the date keeps the undone half from going quiet.
         # Clear to DISABLED/resolved only when the live verify passes with the 2B question
         # returning the ladder.
-        'state': 'WIRED_PENDING_LIVE_VERIFY',
+        # ⛔ EXPIRY CLEARED 2026-10-08, and ONLY because the live check passed. Founder
+        # instruction was explicit: "leave the expiry at 2026-11-05 until the live check
+        # passes, then clear it." It passed -- DEPLOY VERIFIED 8/8, the 2B question returning
+        # the ladder instead of TZS 290,000 and the no-share-capital sibling still returning
+        # TZS 500,000 with the guard not firing (eval/results/fee_band_guard_live_2026_10_08
+        # .json). So this is now DISABLED-shaped: a decision taken on evidence with nothing
+        # pending, which is the only state that legitimately carries no date.
+        #
+        # ⚠️ "RESOLVED" MEANS THE GUARD IS LIVE AND PROVEN, NOT THAT THE DEFECT IS FIXED. It
+        # is a CONTAINMENT: the user gets the ladder, not their fee. Bar A1 moved, A2 did not.
+        # If a later reader takes this row as evidence the fee question is answered, they have
+        # read it as the opposite of what it says.
+        'state': 'DISABLED',
         'decided': '2026-10-08',
         'wired': '2026-10-08',
-        'expires': '2026-11-05',   # retained until the live check passes, then cleared
+        'live_verified': '2026-10-08',
+        'expires': None,
         'why': ('SCOPED AND PRICED, NOT BUILT. The defect is measured and live: TZS '
                 '2,000,000,000 of share capital answered TZS 290,000 where the table gives '
                 'TZS 600,000, with row 181 at RANK 1 for the failing query -- so no index or '
@@ -794,14 +807,21 @@ def audit_unexercisable():
            'a deploy that did not reach production, or a WARM GPU container serving an older '
            'index behind a freshly-deployed web tier — the R16 hazard that previously could '
            'only be probed for',
-           'NOT_EXERCISABLE', '', '',
-           'needs the live chike-inference app. The deploy that makes it answerable has not '
-           'been run; until it has, the only evidence of what this app serves remains a '
-           'content probe. To exercise: GET /health (expect build == the deployed SHA, never '
-           "'dev'), then GET /health?deep=1&token=... and compare "
-           'served.rag_facts_text_sha256 against EXPECTED_SERVED_SHA256 in '
-           'tests/test_inference_health_endpoint.py. A build_mismatch between the two tiers '
-           'is the warm-container case and means `modal app stop` was skipped.')
+           'OBSERVED', 'not plantable offline -- it needs the live app',
+           'exercised live 2026-10-08 and every limb reported correctly',
+           'EXERCISED LIVE 2026-10-08, FIRST USE, ALL FOUR LIMBS TRUE: build 5d1ed71 == the '
+           'deployed commit; build_matches true (web and GPU tiers agree, so no warm '
+           'container); served rag_facts_text_sha256 19bcfabb... == EXPECTED_SERVED_SHA256 in '
+           'tests/test_inference_health_endpoint.py; rag_rows_loaded 184 == '
+           'config_rag_fact_count. Recorded in eval/results/fee_band_guard_live_2026_10_08'
+           '.json. ⚠️ UPGRADED FROM NOT_EXERCISABLE, whose note read "the deploy that makes '
+           'it answerable has not been run" -- true when written hours earlier and FALSE the '
+           'moment the deploy happened. A note that describes a pending action is a note that '
+           'goes stale the instant the action is taken, which is R30 exactly, so it is '
+           'rewritten here rather than left to be read as current. '
+           'OBSERVED rather than FIRES because the failure direction cannot be planted '
+           'offline: making it report a MISMATCH needs a deliberately stale deploy, and the '
+           'honest state is that only the passing direction has been seen.')
 
 
 def main():

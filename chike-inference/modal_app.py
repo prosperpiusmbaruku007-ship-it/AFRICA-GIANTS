@@ -45,6 +45,15 @@ image = (
         'numpy>=1.26.0',
         'huggingface_hub>=0.23.0',
     )
+    # ⛔ `.env()` MUST COME BEFORE EVERY `add_local_*`. Modal requires local-file adds to be
+    # the LAST operations in an image chain (without `copy=True`), so putting `.env()` after
+    # them fails the build with "add_local_* must be the last operation". That mistake took
+    # PRODUCTION DOWN for ~3 minutes on 2026-10-08: `modal app stop` had already succeeded,
+    # and the replacing deploy aborted here -- the exact window R16 warns about, after the
+    # 2026-08-10 console-encoding failure did the same thing. R16's step 1 is not merely
+    # "force fresh containers"; it is "force fresh containers AND be certain the replacing
+    # deploy builds", because the stop is instant and irreversible while the deploy is not.
+    .env({'CHIKE_BUILD': BUILD})
     .add_local_file(os.path.join(_HERE, 'rag_embeddings.npy'),   '/root/assets/rag_embeddings.npy')
     .add_local_file(os.path.join(_HERE, 'rag_facts_text.json'),  '/root/assets/rag_facts_text.json')
     .add_local_file(os.path.join(_HERE, '..', 'kaggle', 'chike_config.json'), '/root/assets/chike_config.json')
@@ -53,7 +62,6 @@ image = (
     # add_local pattern as the RAG data files above; /root is on sys.path so
     # `import chike.prompting` / `import chike.generation_cleanup` resolve at runtime.
     .add_local_dir(os.path.join(_HERE, '..', 'chike'), '/root/chike')
-    .env({'CHIKE_BUILD': BUILD})
 )
 
 # Tiny image for the HTTP endpoint (only needs FastAPI; it just forwards to the GPU class).

@@ -1,0 +1,156 @@
+{
+  "_what": "R16 live verification of the D-FIDELITY-8 (fee-band guard) deploy.",
+  "_endpoint": "https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run",
+  "_downtime_incident": "The deploy preceding this run took production down ~3 minutes: `modal app stop` succeeded and the replacing deploy ABORTED because `.env()` was chained after `add_local_*`, which Modal requires to be last. My error, fixed at the site. R16 step 1 is 'force fresh containers AND be certain the replacing deploy BUILDS' -- the stop is instant and irreversible, the deploy is not. Second time this window has cost downtime (2026-08-10 was a console-encoding abort).",
+  "_health_is_read_not_inferred": "First verification in this project that does not deduce what is serving. /health was added hours ago to close a gap R16b left open for eight weeks, and the served index identity is now an EQUALITY against a committed digest rather than a probe whose power depends on someone thinking of the right question.",
+  "health": {
+    "status": "ok",
+    "app": "chike-inference",
+    "build": "5d1ed71",
+    "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+    "base_model": "McGill-NLP/AfriqueLlama-8B",
+    "config_rag_fact_count": null,
+    "config_loaded": false,
+    "deep": true,
+    "served": {
+      "build": "5d1ed71",
+      "rag_rows_loaded": 184,
+      "rag_embeddings_shape": [
+        184,
+        768
+      ],
+      "rag_facts_text_sha256": "19bcfabb887c49643268b9a5659ae31d90d31a982fb42930a250b23d6f5ae405",
+      "config_rag_fact_count": 184,
+      "adapter_repo": "prospAprospA007/africa-giants-adapter-v15"
+    },
+    "build_matches": true,
+    "_checks": {
+      "build_is_the_deployed_commit": true,
+      "web_and_gpu_tiers_agree": true,
+      "served_index_digest_matches": true,
+      "rows_match_config": true
+    }
+  },
+  "totals": {
+    "probes": 8,
+    "run": 8,
+    "pass": 8,
+    "fail": 0,
+    "error": 0
+  },
+  "verdict": "DEPLOY VERIFIED",
+  "answer_withheld_by_guard": [
+    "negative_row57_efd_unchanged"
+  ],
+  "rows": [
+    {
+      "id": "fee_band_guard_PRIMARY_2bn",
+      "limb": "deploy",
+      "proves": "PRIMARY. The question that produced the defect must now return the TABLE, not TZS 290,000. This is the row D-FIDELITY-8 exists for.",
+      "source": "regen critical_queries 'BRELA share-capital ladder now has nine bands'",
+      "question": "Mtaji wa hisa wa kampuni yangu ni TZS 2,000,000,000. Ada ya kusajili ni ngapi?",
+      "note": "must_not_assert targets 290,000 STATED AS THE FEE, not its appearance in the ladder, where it is correct for the >20M-50M band. A presence check would fail the replacement copy itself -- the deleting-direction trap in reverse.",
+      "baseline_committed_row": "live 2026-10-08 BEFORE the guard: 'Ada ya kusajili kampuni yenye mtaji wa hisa unaozidi TZS 5,000,000 ni TZS 290,000.'",
+      "reply": "Ada ya kusajili kampuni BRELA inategemea mtaji wa hisa (share capital), na ni ngazi — si kiwango kimoja. Ngazi za ada: hadi TZS 1,000,000 ni TZS 95,000; zaidi ya TZS 1,000,000 hadi TZS 5,000,000 ni TZS 175,000; zaidi ya TZS 5,000,000 hadi TZS 20,000,000 ni TZS 260,000; zaidi ya TZS 20,000,000 hadi TZS 50,000,000 ni TZS 290,000; zaidi ya TZS 50,000,000 hadi TZS 100,000,000 ni TZS 400,000; zaidi ya TZS 100,000,000 hadi TZS 500,000,000 ni TZS 450,000; zaidi ya TZS 500,000,000 hadi TZS 1,000,000,000 ni TZS 500,000; zaidi ya TZS 1,000,000,000 hadi TZS 10,000,000,000 ni TZS 600,000; zaidi ya TZS 10,000,000,000 ni TZS 1,000,000. Angalia ngazi inayolingana na mtaji wa hisa wa kampuni yako. Kampuni isiyo na mtaji wa hisa ni TZS 500,000. Ratiba hii ni kama ilivyochapishwa na BRELA (brela.go.tz) tarehe 2026-10-06; thibitisha ratiba inayotumika sasa na BRELA kabla ya kulipa.",
+      "observed": true,
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "no_share_capital_UNTOUCHED",
+      "limb": "deploy",
+      "proves": "⛔ THE OVER-BREADTH PROBE, and the one that matters most. This answer was CORRECT in the same live run (TZS 500,000, superseding 300,000) and reads the SAME index row 181. The guard must not touch it: the question states no share-capital AMOUNT, so there is no band to be wrong about. A guard that replaces a correct answer is worse than no guard.",
+      "source": "verify_brela_deploy_live_2026_10_07.py row181_no_share_capital",
+      "question": "Kampuni yangu haina mtaji wa hisa. Ada ya kusajili ni shilingi ngapi?",
+      "note": "must_not_match is the guard NOT firing. If the ladder copy appears here, D-FIDELITY-8 is over-broad and has replaced a right answer with a table.",
+      "reply": "Kampuni bila mtaji wa hisa (assetless company) inasajiliwa kwa ada ya TZS 500,000. Thibitisha na BRELA (brela.go.tz).",
+      "checks": {
+        "must_match": true,
+        "guard_did_not_fire": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "row172_brela_foreign_penalty",
+      "limb": "deploy",
+      "proves": "The row the previous cycle shipped must still serve TZS 70,000. A redeploy is exactly when a prior ship silently regresses.",
+      "source": "regen critical_queries 'BRELA foreign late-filing fee' (ext_15 verbatim)",
+      "question": "Tawi letu la kampuni ya kigeni limechelewa kuwasilisha ripoti ya mwaka. Adhabu ni tofauti na kampuni za huku?",
+      "reply": "Ndiyo, adhabu ni tofauti. Kampuni za ndani huadhibiwa kwa TZS 2,500 kwa mwezi kwa kuchelewa kuwasilisha annual return. Lakini kampuni za kigeni zinatumia sheria tofauti (Cap.212 Sehemu XII). Kwa kampuni ya kigeni, adhabu ni TZS 70,000 kwa mwezi au sehemu ya mwezi. Thibitisha na BRELA (brela.go.tz).",
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_local_late_penalty_2500",
+      "limb": "deploy",
+      "proves": "NEGATIVE: a LOCAL company's late-filing penalty is TZS 2,500/month. Both limbs are now in shillings, so they can displace each other.",
+      "source": "index row 99",
+      "question": "Kampuni yangu ya hapa Tanzania imechelewa kuwasilisha ritani ya mwaka. Faini ni shilingi ngapi kwa mwezi?",
+      "reply": "Kwa kampuni za kawaida za ndani (local companies), faini ya kuchelewa kuwasilisha annual return ni TZS 2,500 kwa kila mwezi au sehemu ya mwezi. Thibitisha na BRELA Official (brela.go.tz).",
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_annual_return_fee_22000",
+      "limb": "deploy",
+      "proves": "NEGATIVE: the annual return FILING FEE is unchanged at TZS 22,000, and it sits on the same BRELA schedule the guard now reads.",
+      "source": "regen critical_queries 'BRELA annual return'",
+      "question": "Ada ya annual return BRELA ni shilingi ngapi?",
+      "note": "must_not_match: a BRELA fee question that is NOT about share capital must not trip the guard. N1, the subject gate, tested live.",
+      "reply": "Ada ya kuwasilisha annual return kwa kampuni ya ndani ni TZS 22,000. Thibitisha na BRELA Official (brela.go.tz).",
+      "checks": {
+        "must_match": true,
+        "guard_did_not_fire": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_nssf_fine_unchanged",
+      "limb": "deploy",
+      "proves": "NEGATIVE: the Cap.50 corrections from 2026-10-05 must be where they were. Accepts EITHER locked statutory limb -- s.76(1)'s ceiling or s.14(3)'s 5%/month -- because the question licenses both and demanding one made a correct reply fail on 2026-10-07 (R38).",
+      "source": "regen critical_queries 'NSSF fine ceiling is ten million'",
+      "question": "Nisipolipa michango ya NSSF kabisa, nitatozwa faini ya kiasi gani?",
+      "reply": "Kukosa kulipa michango ya NSSF kwa wakati kunaweza kusababisha adhabu ya asilimia 5 kwa kila mwezi wa ucheleweshaji. Thibitisha na NSSF (nssf.go.tz).",
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_row57_efd_unchanged",
+      "limb": "deploy",
+      "proves": "NEGATIVE: row 57 must not re-assert the fabricated TZS 11,000,000 EFD threshold. Accepts D-FIDELITY-7's withheld-answer copy, which is that guard WORKING -- scoring it as a regression was my error on 2026-10-07.",
+      "source": "regen critical_queries 'EFD threshold' (eval_347 verbatim)",
+      "question": "Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?",
+      "reply": "Samahani — jibu langu la awali lilitoa kiwango cha mauzo kwa mashine ya risiti (EFD) ambacho sikiwezi kukithibitisha, hivyo sitalitumia. Sitakisii kiwango kingine. Tafadhali thibitisha na TRA (tra.go.tz) au niulize kwa namna nyingine, nikueleze utaratibu bila kutaja kiasi.",
+      "answer_withheld": true,
+      "checks": {
+        "must_match": true,
+        "superseded_value_not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "config_only_phrase",
+      "limb": "deploy",
+      "proves": "CONFIG LOADING, separately from code -- the diagnostic that distinguishes a config failure from a stale warm container.",
+      "source": "chike_config.json ooc_phrases (config-only, not in the code fallback)",
+      "question": "Nataka kuuza kiwanja changu, kodi ya mapato ni kiasi gani?",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    }
+  ]
+}

@@ -1,5 +1,106 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-10-08 (fourth pass) — **D-FIDELITY-8 IS LIVE AND VERIFIED. I ALSO TOOK PRODUCTION DOWN FOR THREE MINUTES DOING IT.**
+
+### 1. ⛔ LEAD WITH THE INCIDENT: THE DEPLOY THAT PRECEDED THE VERIFY FAILED, AND PRODUCTION WAS DOWN
+
+`modal app stop chike-inference --yes` succeeded instantly. The replacing deploy then **aborted**,
+because I had chained `.env({'CHIKE_BUILD': BUILD})` **after** `add_local_file`/`add_local_dir`,
+and Modal requires local-file adds to be the last operations in an image chain. Fixed by moving
+`.env()` before them; the redeploy succeeded in **8.6s**. Downtime ≈ 3 minutes. No wrong answers
+were served — it was unavailable, not incorrect.
+
+> **R16's step 1 is usually read as "force fresh containers". It is really "force fresh containers
+> AND be certain the replacing deploy BUILDS" — because the stop is instant and irreversible while
+> the deploy is not.** This is the **second** time that window has cost real downtime: 2026-08-10
+> was a console-encoding abort on the CLI's own `✓` glyph. **Two unrelated causes, one window** —
+> so enumerating causes is the wrong defence, and the note now sits in `modal_app.py` at the exact
+> line that broke.
+
+### 2. ✅ DEPLOY VERIFIED — 8/8, and for the first time WITHOUT INFERRING WHAT IS SERVING
+
+`/health` was added hours earlier to close a gap R16b left open for eight weeks, and **it answered
+on first use**:
+
+```
+build                 5d1ed71   == the deployed commit
+build_matches         true      == web tier and GPU tier agree -> no warm container
+rag_rows_loaded       184       == config_rag_fact_count
+rag_facts_text_sha256 19bcfabb… == EXPECTED_SERVED_SHA256 in the committed test
+```
+
+**The index identity is now an equality check, not a probe whose power depends on someone thinking
+of the right question.** Every previous cycle had to deduce it from behaviour.
+
+The two probes that matter, both live:
+
+| probe | reply |
+|---|---|
+| **the 2B share-capital question** | *"Ada ya kusajili kampuni BRELA **inategemea mtaji wa hisa** (share capital), na ni **ngazi — si kiwango kimoja**. Ngazi za ada: hadi TZS 1,000,000 ni TZS 95,000; …"* — **the table, not TZS 290,000** |
+| **the no-share-capital sibling** | *"Kampuni bila mtaji wa hisa … kwa ada ya **TZS 500,000**"* — unchanged, and **the guard did not fire** |
+
+Plus row 172 (TZS 70,000), local 2,500, annual return 22,000, NSSF 5%/month, row 57's
+D-FIDELITY-7 withheld answer, and the config-only OOC refusal. `negative_annual_return_fee_22000`
+doubles as a live test of **N1, the subject gate**: a BRELA fee question that is *not* about share
+capital must not trip the guard, and did not.
+
+### 3. THE COPY EDIT, AND WHY IT GENERALISES
+
+Dropped the apology; opens with the rule. The founder's reasoning applies to **every** fact-path
+replacement:
+
+> **On the fact path the user never sees the original answer — the guard replaces it.** So
+> *"Samahani — jibu langu la awali lilitoa ada…"* apologised for a reply they never received and
+> read as though something had gone wrong that they should worry about. **It manufactured anxiety
+> about an error the system successfully prevented.**
+
+This is the one place the copy diverges from `wrong_threshold_withheld`, which *does* open by
+withdrawing — deliberate, not an inconsistency: D-FIDELITY-7 fires where there is **no rule to
+state**, so withdrawal is its whole message. Here the rule *is* the message, so the reply simply
+answers. 875 characters.
+
+### 4. WIRED, AND RECORDED AS CONTAINMENT
+
+Fact path only — the engine computes no fee, so a compute body cannot carry this defect and there
+is no measured instance there; adding it to the compute branch would widen the blast radius on no
+evidence. **Replaces rather than blanks**, because `_render` returns the body alone there.
+
+**The containment caveat is asserted by a test**, so it cannot decay out of the code into
+PROGRESS.md where it would: it hands over the ladder, not the fee. **A1 moves, A2 does not.**
+
+The rule lives in `chike/fidelity.py` and reads `clarification`'s ladder — one owner — and the
+scoping harness now **delegates to production** instead of keeping its own copy, because a harness
+that retains a private rule after wiring measures a *model* of production.
+
+**And the post-wiring re-price caught a self-ingestion defect in that harness:** it writes into
+`eval/results/` and reads from it, so its own recorded finding re-entered the population and 1
+flag became 2 — *a measurement that grows because it was taken.* Excluded. Re-priced: 13,632 rows,
+**1 flag, 0 in gold, and the flag is the founding defect.**
+
+### 5. THE EXPIRY, CLEARED ON EVIDENCE
+
+Retained at 2026-11-05 through the wiring, in a new `WIRED_PENDING_LIVE_VERIFY` state the expiry
+tests treat exactly like `HELD` — then **cleared only after the live check passed**. `FIRES 22 ·
+DISABLED 1 · OBSERVED 2 · NOT_EXERCISABLE 1`, zero inert; the only unexercised control left is the
+WhatsApp webhook token.
+
+**`/health` was upgraded `NOT_EXERCISABLE` → `OBSERVED`**, and the old note is worth recording as a
+small R30 instance of its own: it read *"the deploy that makes it answerable has not been run"* —
+true when written and **false the moment the deploy happened**. A note describing a pending action
+goes stale the instant the action is taken. It is `OBSERVED` rather than `FIRES` because the
+failure direction cannot be planted offline: making it report a mismatch needs a deliberately
+stale deploy, so only the passing direction has been seen, and the row says so.
+
+### 6. STATE
+
+Suite **1777 passed**, 0 failed. D-FIDELITY-8 live and verified. Production healthy.
+
+**Open:** A2 for the fee question — the user still reads off their own band, and closing that is
+compute-path work; the 18 ratcheted locked-fact flags and 1 source violation; `stamp_duty_138`'s
+one-word repair; the WhatsApp webhook token, still the one control never exercised.
+
+---
+
 ## 📋 2026-10-08 (third pass) — **THE RECORD-WIDE RE-READ CAME BACK 4-FOR-4 ON ADVERSARIAL ROWS AND 18-FOR-18 ON EVERYTHING ELSE**
 
 **Four founder decisions, executed. One produced the cleanest finding of the whole arc.**

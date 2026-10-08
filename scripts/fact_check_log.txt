@@ -1240,3 +1240,17 @@ Total: 1 | Flagged: 1
 
 [2026-10-08T18:12:34.470437] Checked C:\Users\jhjh\AppData\Local\Temp\tmpwfy6bhaw\lf_ok.jsonl
 Total: 1 | Flagged: 0
+
+[2026-10-08T18:30:26.303234] Checked C:\Users\jhjh\AppData\Local\Temp\tmpxebj0ovr\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-10-08T18:30:26.538250] Checked C:\Users\jhjh\AppData\Local\Temp\tmpxebj0ovr\lf_ok.jsonl
+Total: 1 | Flagged: 0
+
+[2026-10-08T18:32:48.606197] Checked C:\Users\jhjh\AppData\Local\Temp\tmp13145cu1\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-10-08T18:32:48.847297] Checked C:\Users\jhjh\AppData\Local\Temp\tmp13145cu1\lf_ok.jsonl
+Total: 1 | Flagged: 0
