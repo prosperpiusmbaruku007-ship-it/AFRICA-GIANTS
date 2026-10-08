@@ -1,5 +1,136 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-10-08 (third pass) — **THE RECORD-WIDE RE-READ CAME BACK 4-FOR-4 ON ADVERSARIAL ROWS AND 18-FOR-18 ON EVERYTHING ELSE**
+
+**Four founder decisions, executed. One produced the cleanest finding of the whole arc.**
+
+### 1. 🎯 A PRESENCE SWEEP'S PRECISION IS 100% OUTSIDE THE ADVERSARIAL SUBDOMAIN AND 0% INSIDE IT
+
+The founder's reasoning was that a record over-removing *that* consistently was never adjudicated
+row by row. It wasn't. All 75 record lines of `paye_defect_quarantine_2026_08_25.jsonl` →
+**22 distinct bodies**, each read individually:
+
+```
+ADVERSARIAL rows:      4   correctly removed:  0   OVER-REMOVED: 4
+NON-adversarial rows: 18   correctly removed: 18   OVER-REMOVED: 0
+```
+
+> **The sweep was right about every row except the ones whose entire purpose is to contain the
+> wrong value.** That stops being a bias to watch for and becomes a hard gate: a presence-keyed
+> sweep must not remove a `pair_type: adversarial` / `subdomain: *_adversarial` row without a
+> human reading it.
+
+**⚠️ And my first read of that record was wrong twice, from excerpts.** The two
+`out_of_corpus_refusal` rows looked like over-removals — they refuse correctly and a 200-character
+excerpt showed no relief claim. Read **whole**, both *volunteer* it after refusing:
+*"Ninajua viwango vya PAYE (… punguzo la kibinafsi TZS 26,000)"*. Removals correct. R34 on my own
+instrument's truncated output.
+
+**Restored 4 — and THREE WERE REMOVED FOR SOMETHING THE QUESTION SAID:**
+
+| row | removed for | reality |
+|---|---|---|
+| `b008_paye_adv_005` | asserting a 26,000 relief | *"**HAKUNA** punguzo la kibinafsi tofauti la TZS 26,000"* |
+| `b008_paye_adv_007` | the same | band 2 at 8% **plus** the same explicit denial |
+| the VAT_JULY2024 row | dating the increase to July 2024 | **the answer contains no date at all** — the *question* says *"ninaambiwa ni kuanzia Julai 2024"*. The sweep matched the `instruction` field |
+| the tarehe-muafaka row | asserting the 20th | the *question* asks *"ifikapo tarehe 20?"*; the answer says *"tarehe **muafaka**"*, declining to endorse it |
+
+**R36's first lesson — match on the ANSWER, never the question — inverted into a REMOVAL sweep,
+where it deletes rather than merely reporting.** Export rebuilt 4386 → 4390.
+
+**Two read and NOT restored**, recorded rather than bundled in: the 7-day VATWH row (removed for
+the wrong reason, but 7 days is still wrong — FA2026 s.95 is 10) and `stamp_duty_138` (a weak
+removal repairable by striking one word, which is a corpus edit needing its own authorisation).
+
+### 2. THE FRESHNESS CHECK IS CONTENT-ADDRESSED — the right call, not a silencing
+
+The founder's diagnosis: leaving it red taught the reflex I had refused to give it. The fix is to
+**hash the built text rather than track which file was touched** — the same principle as
+`/health`'s digest over its count.
+
+`ok` now means: `build_fact_texts()` over this tree equals the served `rag_facts_text.json`, row
+for row, in **both** deploy dirs, and the embedding matrix has one row per text. The git-SHA limb
+is **kept and demoted to provenance** — it still answers *which commits are implicated* once
+content is red, and still catches the two deploy dirs being committed separately.
+
+**Four arms planted:** clean passes; one changed row (181, with 600,000 swapped for the
+wrongly-served 290,000) turns it red **and names the row**; a failed build is `ok=False`, never
+True by omission; an npy/json row-count mismatch blocks.
+
+**And the founding incident is still caught — asserted, not assumed.** The 2026-09-03 case was a
+*corrected fact* that never reached the index; a corrected fact changes the built text, so the
+content limb catches it — and catches it **more** often, because SHA staleness is invisible when
+the fact edit and the artifact land in the same commit while a content mismatch is not. One old
+synthetic test changed contract and says so at length, because *"a test that used to assert False
+now asserts True"* is the shape of a weakened control and this is not one.
+
+### 3. THE THREE UNENFORCED GATES ARE WIRED, AND THERE IS NOW A PRE-COMMIT HOOK
+
+`scripts/check_corpus_gates.py` is the single implementation; `.githooks/pre-commit` and
+`tests/test_corpus_gates_wired.py` both call it. A hook with its own copy would drift from the
+suite invisibly, because both would be green — exactly how the 2026-10-06 dry run passed a package
+the real run refused.
+
+**⛔ A RATCHET, NOT "MUST BE ZERO", AND THAT IS THE LOAD-BEARING DECISION.** 18 pairs still flag
+and they are **real** (OSHA/WCF threshold conflations — e.g. a row giving OSHA registration a
+10-employee floor, which is *SDL's* threshold). A hook demanding zero would block every commit
+touching those files and be bypassed within a day — **and a bypassed hook is worse than none,
+because it also removes the appetite for the next one.** Shrink-only per file, plus a total
+ceiling so a new file cannot arrive already dirty.
+
+**Exercised live, both directions:** a planted band-2-at-9% row staged → `HOOK EXIT=1`, naming the
+file and the ceiling; the clean file staged → `HOOK EXIT=0`. `core.hooksPath` is asserted, because
+a hook in a directory git isn't reading is the purest inert control.
+
+### 4. D-FIDELITY-8's REPLACEMENT COPY — the content decision, made
+
+**It states the RULE, not a figure**, per the founder's shape. Why this differs from D-FIDELITY-7,
+which deliberately states none:
+
+> D-FIDELITY-7 catches a **fabricated** constant — there *is* no statutory EFD threshold, so there
+> is no rule to state and any number would be a second guess. D-FIDELITY-8 catches a **misapplied
+> lookup**: the table is real, published, sha256-pinned and **already served verbatim as index row
+> 181**. Nothing about the facts failed; **band selection** did.
+
+The copy withdraws the figure, states that the fee depends on share capital and is a **ladder, not
+one rate**, lists all nine bands, asks the user to read off their own, and names BRELA with the
+**capture** date — *"kama ilivyochapishwa"*, because `effective_date` is genuinely unknown and
+writing the observation date there would manufacture R29 mode 3.
+
+**It performs NO band selection — a structural guarantee rather than a hope: there is no step at
+which a wrong band can be chosen.** That is exactly what makes stating figures safe here and
+unsafe in D-FIDELITY-7's case. Generated from one constant, pinned to served row 181 by 16
+assertions. ~1,000 characters, and the length is a recorded trade: shortening it would mean
+choosing which bands to show, which *is* band selection.
+
+**Awaiting approval; the 2026-11-05 expiry stands.**
+
+### 5. R39 — THE DELETING-DIRECTION BIAS, as a standing rule
+
+Nine instances in three days, unrelated mechanisms, every one mine. The rule names why it recurs:
+
+> **A loose filter in a DEFECT hunt adds noise — visible, annoying, self-announcing. A loose
+> filter in a CLEANUP removes findings — and a shorter finding list is indistinguishable from
+> progress. One gets investigated on sight; the other gets celebrated.**
+
+Worse than symmetric: a loud failure costs one re-run, a silent one **ends the investigation**,
+because nobody re-reads a population the instrument called clean — and in an over-removal hunt the
+rows are already deleted, so the contradicting evidence is gone. Six practices recorded, none of
+which is "be careful"; the load-bearing one is **read what the instrument demoted or accused, not
+what it reported** — five of the nine were caught that way and by nothing else.
+
+### 6. STATE
+
+Suite **1756 passed**, 0 failed (+39). Freshness **green, on content**. Corpus gates wired behind a
+live-exercised pre-commit hook.
+
+**Open:** the fee-band copy awaits approval, then D-FIDELITY-8's wiring (**due 2026-11-05**); the
+`/health` deploy, which turns that control from `NOT_EXERCISABLE` into evidence; the 18 ratcheted
+locked-fact flags and 1 source violation; `stamp_duty_138`'s one-word repair; the 2026-09-01 VATWH
+sweep's over-removal count is now **three**.
+
+---
+
 ## 📋 2026-10-08 (second pass) — **51% → 95% ON THE REMOVALS, AND THE INFERENCE APP CAN FINALLY SAY WHAT IT SERVES**
 
 **`fb91566` pushed. Then five pieces of follow-up work, of which three found defects in my own

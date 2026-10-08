@@ -1068,6 +1068,58 @@ introduced it.
    locked. **So the trigger to re-check refusals is ADDING A DOMAIN, not editing a phrase** —
    and adding a domain does not look like touching refusals, which is exactly why it is missed.
 
+### ⛔⛔ R39 — IN A CLEANUP, AN INSTRUMENT THAT FAILS SILENT IS FAR MORE LIKELY TO BE TRUSTED THAN ONE THAT FAILS LOUD. A SHRINKING COUNT READS AS PROGRESS. (added 2026-10-08)
+
+**This is the standing bias behind a list that has now reached nine instances in three days,
+across unrelated mechanisms, every one of them mine.** It is not a lesson about any of those
+mechanisms. It is a lesson about which *direction* of error survives review during remediation
+work, and the answer is: **the direction that makes the output shorter.**
+
+| the rule | what it deleted | how it was caught |
+|---|---|---|
+| `\bmakosa\b` bare | a row asserting a **100× understatement** | reading the demoted set |
+| sentence-wide marker scope | a row rejecting one value and **asserting another** | reading the demoted set |
+| `sahihi ni` as a demotion cue | the worst row in the whole EFD quarantine — the cue marks what **follows** as correct | reading the demoted set |
+| the same cue present in **two** rules | that row again, after the first fix | **re-running** |
+| VATWH `_RETURN` over the whole sentence | **28 asserting rows**, inverted into accusations against the remediation | reading the rows it accused |
+| the anaphoric-transfer blind spot | 2 more, where the date is attached **without a date token** | reading the rows it accused |
+| word-boundary escapes in a **non-raw** string | an entire pattern, compiled to demand a literal backspace | **introspecting the compiled closure** |
+| D-FIDELITY-8's first fee cue | its own founding specimen — **0 flags over 13,632 rows, reported "SAFE"** | planting the specimen |
+| `check_locked_facts`'s negation window at 40 chars | nothing yet — it was too TIGHT, the safe direction, and still needed a measured 60 | the self-test |
+
+**WHY THIS DIRECTION AND NOT THE OTHER.** A cleanup's whole purpose is to make a number go
+down. So every signal that the work is succeeding looks exactly like every symptom of an
+instrument that has stopped seeing things:
+
+> **A loose filter in a DEFECT hunt adds noise — visible, annoying, self-announcing. A loose
+> filter in a CLEANUP removes findings — and a shorter finding list is indistinguishable from
+> progress. One of those gets investigated on sight; the other gets celebrated.**
+
+And it is worse than symmetric, because of what each error causes next. A **loud** failure
+costs one re-run. A **silent** one ends the investigation: nobody re-reads a population the
+instrument reported clean, and in an over-removal hunt the rows are already deleted, so the
+evidence that would have contradicted it is gone (R37).
+
+**THE PRACTICES THAT ACTUALLY CAUGHT THESE — note that none of them is "be careful":**
+
+1. **Read what the instrument DEMOTED or ACCUSED, not what it reported.** Five of the nine
+   were found this way and by nothing else. The demoted set is the only place a deleting
+   failure is visible.
+2. **Plant the founding specimen BEFORE the sweep, and refuse to sweep without it.** A clean
+   sweep from an inert rule is **byte-identical** to a clean sweep from a sound one — 0 flags
+   across 13,632 rows with a verdict of "SAFE TO PROPOSE", from a rule that fired on nothing.
+3. **Re-run after every narrowing, and re-check that the findings you already knew about are
+   still in the list.** A cue in two rules survives being removed from one.
+4. **Introspect the compiled object, not the source.** `\b` in a non-raw string is a backspace;
+   the source *looks* right and the closure is the only place the truth is.
+5. **When a count falls, say by how much and WHY, per row.** "28 fewer findings" is not a
+   result. "28 rows re-classified because the rule tested the whole sentence" is.
+6. **Prefer being wrong LOUDLY while iterating.** A rule that is too tight produces findings
+   you then dismiss by hand — tedious and self-correcting. A rule that is too loose produces
+   silence. When unsure of a threshold, start at the tight end and loosen on measured evidence,
+   which is exactly how `check_locked_facts`'s negation window went 40 → 60: a specific Swahili
+   construction forced it, not a desire for green.
+
 ### ⛔ R38 — A PROBE ENCODES AN EXPECTED ANSWER, SO A PROBE CAN ENCODE A WRONG ONE. THE UNCITED-GOLD PROBLEM, ARRIVING IN THE LIVE-VERIFY LAYER. (added 2026-10-08)
 
 **Two of the three failures in the first run of `verify_brela_deploy_live_2026_10_07.py` were

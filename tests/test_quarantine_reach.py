@@ -49,6 +49,28 @@ ARTIFACT = os.path.join(REPO, "eval", "results", "quarantine_reach_audit_2026_10
 ADJUDICATED_KEEPS = {
     "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl": [
         {
+            "needle": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri",
+            "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",
+            "why": (
+                "RESTORED 2026-10-08 (phase 2), founder-authorised. b008_paye_adv_005: "
+                "'...HAKUNA punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi' -- verbatim "
+                "what CLAUDE.md s.11 states is correct (no separate personal relief; the 0% "
+                "band on the first TZS 270,000 IS the tax-free amount), removed for "
+                "ASSERTING the phantom relief. subdomain paye_adversarial."),
+        },
+        {
+            "needle": "Ndiyo — mshahara wa TZS 270,001 unaathiriwa na bendi ya pili",
+            "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",
+            "why": (
+                "RESTORED 2026-10-08 (phase 2). b008_paye_adv_007: band 2 at 8% ('TZS 1 x 8% "
+                "= TZS 0.08') plus 'Kumbuka: HAKUNA punguzo la kibinafsi tofauti la TZS "
+                "26,000'. Removed for asserting the relief it denies. paye_adversarial. "
+                "⛔ WITH THIS PAIR THE RECORD-WIDE RE-READ IS COMPLETE AND THE RESULT IS THE "
+                "FINDING: 22 distinct bodies, 4 adversarial rows ALL over-removed, 18 "
+                "non-adversarial rows ALL correctly removed. 100% precision outside the "
+                "adversarial subdomain, 0% inside it."),
+        },
+        {
             "needle": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%",
             "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",
             "why": (
@@ -81,6 +103,32 @@ ADJUDICATED_KEEPS = {
                 "(R25). Tracked separately."),
         },
     ],
+    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl": [
+        {
+            "needle": "Hicho kiasi cha TZS 200M au TZS 100M",
+            "quarantined_by": "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl",
+            "why": (
+                "RESTORED 2026-10-08 (phase 2). Removed for 'dating the VAT 100M->200M "
+                "increase to July 2024'. ⛔ THE ANSWER CONTAINS NO DATE AT ALL -- verified, no "
+                "match for Julai 2024 anywhere in the body. It is the QUESTION that says "
+                "'ninaambiwa ni kuanzia Julai 2024'. The sweep matched the instruction field: "
+                "R36's first lesson (match on the ANSWER, never the question) inverted into a "
+                "REMOVAL sweep, where it deletes rather than merely reporting. Both figures "
+                "the row does state (200M/12mo, 100M/6mo) are correct."),
+        },
+        {
+            "needle": "ifikapo tarehe muafaka",
+            "quarantined_by": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+            "why": (
+                "RESTORED 2026-10-08 (phase 2). Removed for 'asserting the 20th'. The "
+                "QUESTION asks '...ifikapo TAREHE 20?' and the answer pointedly declines to "
+                "endorse it: 'endapo utashindwa kuwasilisha VAT withholding ifikapo TAREHE "
+                "MUAFAKA'. The answer is MORE careful than the question. Same shape as the "
+                "'nilizolipia 250,000' row kept on 2026-10-08 -- the user's own figure is not "
+                "the model's claim. What it does say (late remittance draws interest or a "
+                "penalty) is true under FA2026 s.95 as much as before it."),
+        },
+    ],
     "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl": [
         {
             "needle": "kudai kiasi kilichozuiliwa kama input credit",
@@ -103,6 +151,39 @@ ADJUDICATED_KEEPS = {
         },
     ],
     "datasets/tier1a/sft/train_sft.jsonl": [
+        {
+            "needle": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri",
+            "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",
+            "why": ("Exported copy of the b008_paye_adv_005 restoration above: restored "
+                    "upstream, then regenerated (R36's converse). Pinned by CONTENT, never "
+                    "by line -- this file is reshuffled on every rebuild."),
+        },
+        {
+            "needle": "Ndiyo — mshahara wa TZS 270,001 unaathiriwa na bendi ya pili",
+            "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",
+            "why": ("Exported copy of the b008_paye_adv_007 restoration above: restored "
+                    "upstream, then regenerated. 4390 rows after the rebuild, +4 from 4386."),
+        },
+        {
+            "needle": "Hicho kiasi cha TZS 200M au TZS 100M",
+            "quarantined_by": "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl",
+            "why": ("Exported copy of the VAT_JULY2024 restoration above -- the row removed "
+                    "for dating an increase its answer never dates. Present here because the "
+                    "restoration went to the AUTHORED corpus and the export was then "
+                    "regenerated, which is the R36-correct direction: a row written into "
+                    "datasets/tier1a/sft/ by hand is overwritten on the next rebuild and has "
+                    "no authored source."),
+        },
+        {
+            "needle": "ifikapo tarehe muafaka",
+            "quarantined_by": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+            "why": ("Exported copy of the tarehe-muafaka restoration above -- the row whose "
+                    "answer is MORE careful than its question, declining to endorse the 20th "
+                    "the question names. THIS IS THE THIRD ROW THAT ONE 2026-09-01 SWEEP "
+                    "REMOVED over a correctly-attached or deliberately-avoided 'tarehe 20', "
+                    "after train_sft:3196 and the row restored earlier the same day -- so "
+                    "that sweep's over-removal count is three, not one."),
+        },
         {
             "needle": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%",
             "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",

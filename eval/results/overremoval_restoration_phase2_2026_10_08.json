@@ -1,0 +1,171 @@
+{
+  "_what": "Restoration of the four over-removals found by the phase-2 audit.",
+  "_authorised": "founder, 2026-10-08, conditional on reading each row whole",
+  "_mode": "WRITE",
+  "_the_record_wide_reread": {
+    "record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+    "record_lines": 75,
+    "distinct_bodies": 22,
+    "adversarial_rows": 4,
+    "adversarial_over_removed": 4,
+    "non_adversarial_rows": 18,
+    "non_adversarial_over_removed": 0,
+    "finding": "The sweep was right about EVERY row except the ones whose purpose is to contain the wrong value. 100% precision outside the adversarial subdomain, 0% inside it. A presence sweep must not remove an adversarial row without a human reading it.",
+    "my_own_error": "I first read b008_refusal_001/_002 as over-removals from a 200-character excerpt. Read WHOLE, both VOLUNTEER the phantom relief after refusing correctly. Removals correct. R34 on my own instrument's truncated output."
+  },
+  "_three_of_four_were_removed_for_what_the_QUESTION_said": "The VAT_JULY2024 answer contains no date at all (the question says 'ninaambiwa ni kuanzia Julai 2024'); the tarehe-muafaka answer declines to endorse the 20th the question names; and the two PAYE rows explicitly DENY the value. R36's first lesson -- match on the answer, never the question -- inverted into a REMOVAL sweep, where it deletes rather than merely reporting.",
+  "_read_and_not_restored": [
+    {
+      "row": "the 7-day VATWH row (vat_withholding record, line 21)",
+      "verdict": "removed for the WRONG REASON but STILL WRONG -- do not restore",
+      "basis": "It does not assert the 20th: it contrasts them explicitly ('analipa TRA ndani ya siku 7 ... Hii ni tofauti na kuwasilisha VAT return ya kawaida (tarehe 20)'). So the record's stated reason is not true of it. But 7 days is not right either -- FA2026 s.95 replaced VAT Act s.71(5) with TEN days after the end of the tax period, and 7 days is the general WHT deadline (`wht_deadline`) conflated with the VAT-withholding one. Restoring it would put a wrong figure back. The right fix is a new row teaching s.95."
+    },
+    {
+      "row": "stamp_duty_138 (tier2 record, 4 lines)",
+      "verdict": "WEAK removal -- repairable, not restorable as-is",
+      "basis": "Its subject is first-time-buyer relief and its answer is correct (Tanzania has none). The 1% appears once in passing with no flatness claim, so the record's reason ('asserts a flat 1% stamp duty') is not true of it. But the word is still wrong, so restoring it verbatim re-imports a defect. Striking one word is a corpus EDIT and needs authorising as one."
+    }
+  ],
+  "restorations": [
+    {
+      "key": "b008_paye_adv_005_20260612",
+      "record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "record_lines": [
+        19,
+        40,
+        62
+      ],
+      "why": "states there is NO separate TZS 26,000 personal relief, which is what CLAUDE.md s.11 says is correct, and was removed for asserting it. subdomain paye_adversarial.",
+      "fields": [
+        "answer_en",
+        "answer_sw",
+        "decay_risk",
+        "domain",
+        "effective_date",
+        "eval_set",
+        "id",
+        "next_review_trigger",
+        "pair_type",
+        "primary_source_name",
+        "primary_source_url",
+        "question_en",
+        "question_sw",
+        "register",
+        "source_type",
+        "subdomain",
+        "verified_by",
+        "verified_date"
+      ],
+      "to": [
+        {
+          "path": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl",
+          "action": "RESTORE"
+        },
+        {
+          "path": "datasets/tier1a/raw_sources/raw_pairs_batch_008.jsonl",
+          "action": "RESTORE"
+        }
+      ]
+    },
+    {
+      "key": "b008_paye_adv_007_20260612",
+      "record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "record_lines": [
+        20,
+        41
+      ],
+      "why": "band 2 at 8% plus 'Kumbuka: HAKUNA punguzo la kibinafsi tofauti la TZS 26,000'. subdomain paye_adversarial.",
+      "fields": [
+        "answer_en",
+        "answer_sw",
+        "decay_risk",
+        "domain",
+        "effective_date",
+        "eval_set",
+        "id",
+        "next_review_trigger",
+        "pair_type",
+        "primary_source_name",
+        "primary_source_url",
+        "question_en",
+        "question_sw",
+        "register",
+        "source_type",
+        "subdomain",
+        "verified_by",
+        "verified_date"
+      ],
+      "to": [
+        {
+          "path": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl",
+          "action": "RESTORE"
+        },
+        {
+          "path": "datasets/tier1a/raw_sources/raw_pairs_batch_008.jsonl",
+          "action": "RESTORE"
+        }
+      ]
+    },
+    {
+      "key": "Hicho kiasi cha TZS 200M au TZS 100M",
+      "record": "datasets/tier1a/rejected/tier2_confirmed_wrong_quarantine_2026_08_31.jsonl",
+      "record_lines": [
+        53,
+        124
+      ],
+      "why": "removed for dating the increase to July 2024. THE ANSWER CONTAINS NO DATE; the QUESTION says 'ninaambiwa ni kuanzia Julai 2024'. The sweep matched the instruction field.",
+      "fields": [
+        "answer_type",
+        "generated_date",
+        "input",
+        "instruction",
+        "output",
+        "source_document",
+        "source_name",
+        "source_url",
+        "subdomain",
+        "system"
+      ],
+      "to": [
+        {
+          "path": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+          "action": "RESTORE"
+        }
+      ]
+    },
+    {
+      "key": "tarehe muafaka",
+      "record": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+      "record_lines": [
+        12,
+        36
+      ],
+      "why": "removed for asserting the 20th. The QUESTION names the 20th; the answer says 'tarehe muafaka' and declines to endorse it.",
+      "fields": [
+        "answer_type",
+        "generated_date",
+        "input",
+        "instruction",
+        "output",
+        "source_document",
+        "source_name",
+        "source_url",
+        "subdomain",
+        "system"
+      ],
+      "to": [
+        {
+          "path": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+          "action": "RESTORE"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "rows": 4,
+    "destinations": 6,
+    "restored": 6,
+    "skipped": 0,
+    "read_and_not_restored": 2
+  }
+}

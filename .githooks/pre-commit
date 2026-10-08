@@ -1,0 +1,88 @@
+#!/bin/sh
+# PRE-COMMIT HOOK — added 2026-10-08, because there was NO pre-commit hook at all.
+#
+# WHY. Measured 2026-10-08: `.githooks/` held only `pre-push`, which runs scan_for_keys and
+# pytest. `validate_dataset.py` was enforced (a test asserts the real corpus passes it, and
+# pre-push runs pytest) and its corpus was clean: 1714 pairs / 0 errors. The other three
+# corpus gates were enforced by nothing — `check_locked_facts.py` was imported by two tests,
+# neither of which ran it over the corpus, and 48 flag lines were live at HEAD;
+# `check_sources.py` and `check_eval_split.py` had zero test references.
+#
+# CLAUDE.md says "Before every git commit touching datasets/: run all 4 checks. Only commit
+# if all return exit code 0." That was an instruction to a reader, enforced by nothing. THE
+# DIFFERENCE BETWEEN THE CLEAN GATE AND THE DIRTY ONES WAS WIRING, NOT DILIGENCE — so this
+# closes it mechanically.
+#
+# DESIGN NOTES, each one a lesson already paid for:
+#
+#  * STAGED FILES ONLY, and only corpus files. A hook that checked the whole corpus on every
+#    commit would cost seconds on commits that touch no data, and expense is how a check ends
+#    up not being run.
+#
+#  * SHRINK-ONLY, via scripts/corpus_gate_baseline.json. 18 pairs still flag and they are
+#    REAL. A hook demanding zero would block every commit touching those files and be
+#    bypassed within a day — and a bypassed hook is worse than none, because it also removes
+#    the appetite for the next one.
+#
+#  * ONE IMPLEMENTATION. This hook calls scripts/check_corpus_gates.py, which
+#    tests/test_corpus_gates_wired.py also calls. A hook that re-implemented the checks would
+#    drift from the suite and the drift would be invisible, because both would be green —
+#    exactly how the 2026-10-06 dry run passed a package the real run refused.
+#
+#  * NO PIPE ON THE EXIT STATUS. `pytest ... | tail -2` once consumed pytest's status in the
+#    pre-push hook and made an `&&` chain read a failure as success. Status is read directly.
+#
+#  * scan_for_keys IS RUN HERE, WHERE STAGING MEANS IT HAS FILES. Invoked bare it reads
+#    `git diff --cached`, and at PUSH time nothing is staged — which is why every push in
+#    this project's history was scanned by nothing until 2026-08-24. Pre-commit is the point
+#    at which that command is actually meaningful.
+#
+# Bypass with CHIKE_SKIP_PRECOMMIT=1 only when the gates genuinely cannot run.
+set -u
+
+if [ "${CHIKE_SKIP_PRECOMMIT:-0}" = "1" ]; then
+    echo "[pre-commit] SKIPPED by CHIKE_SKIP_PRECOMMIT=1"
+    exit 0
+fi
+
+REPO="$(git rev-parse --show-toplevel)"
+export PYTHONIOENCODING=utf-8
+export PYTHONUTF8=1
+
+# ── 1. SECRETS, on the staged set ────────────────────────────────────────────────
+python "$REPO/scripts/scan_for_keys.py"
+SCAN=$?
+if [ $SCAN -ne 0 ]; then
+    echo "[pre-commit] BLOCKED: scan_for_keys.py exited $SCAN. Remove the key; use"
+    echo "             os.environ.get(\"KEY_NAME\", \"\") instead of a literal."
+    exit 1
+fi
+
+# ── 2. CORPUS GATES, on staged corpus files only ─────────────────────────────────
+STAGED=$(git diff --cached --name-only --diff-filter=ACM \
+         -- 'datasets/tier1a/cleaned_pairs/*.jsonl' \
+            'datasets/tier1a/sft_shaped_pairs/*.jsonl')
+
+if [ -n "$STAGED" ]; then
+    echo "[pre-commit] corpus gates on staged data files:"
+    # shellcheck disable=SC2086
+    python "$REPO/scripts/check_corpus_gates.py" --files $STAGED
+    GATES=$?
+    if [ $GATES -ne 0 ]; then
+        echo "[pre-commit] BLOCKED: check_corpus_gates.py exited $GATES."
+        exit 1
+    fi
+
+    # validate_dataset is whole-corpus and already enforced by the suite; running it here too
+    # catches a schema break at commit time instead of at push time, which is cheaper to fix.
+    python "$REPO/scripts/validate_dataset.py" > /dev/null 2>&1
+    VD=$?
+    if [ $VD -ne 0 ]; then
+        echo "[pre-commit] BLOCKED: validate_dataset.py exited $VD. Run it directly for the"
+        echo "             per-pair errors."
+        exit 1
+    fi
+fi
+
+echo "[pre-commit] OK"
+exit 0

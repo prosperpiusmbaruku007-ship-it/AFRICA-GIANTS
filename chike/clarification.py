@@ -366,3 +366,96 @@ def wrong_threshold_withheld(subject: str) -> str:
         f"Tafadhali thibitisha na TRA (tra.go.tz) au niulize kwa namna nyingine, "
         f"nikueleze utaratibu bila kutaja kiasi."
     )
+
+
+# ─── D-FIDELITY-8 REPLACEMENT COPY: THE BRELA SHARE-CAPITAL FEE LADDER ───────────
+# ⛔ THE ONE OWNER OF THESE NINE BANDS IN PRODUCTION CODE. The copy below is GENERATED from
+# this tuple, never hand-typed, so the sentence a user reads cannot drift from the table --
+# and tests/test_fee_band_copy.py asserts every figure here appears in the SERVED index row
+# 181. A second hand-written copy of a fee table is the dual-file divergence this project
+# keeps paying for.
+#
+# Source: BRELA's published schedule, item 1, captured 2026-10-06T14:04:42Z, sha256
+# 8d5543ac… (data/source_documents/brela/brela_ada_kampuni_20261006T140442Z.html).
+#
+# ⚠️ THE DATE BELOW IS AN OBSERVATION DATE, NOT AN EFFECTIVE DATE, and the copy says
+# "kama ilivyochapishwa … tarehe" (as published on) for exactly that reason. CLAUDE.md is
+# explicit: `effective_date` is UNKNOWN for every figure on this schedule, the change landed
+# somewhere inside 2026-06-30 → 2026-10-06, and the Companies (Fees) Regulations have not
+# been located. Writing the capture date as an effective date would manufacture R29 mode 3 --
+# a correctly-cited figure carrying an unsourced currency date.
+BRELA_CAPTURE_DATE = "2026-10-06"
+BRELA_SHARE_CAPITAL_BANDS = (
+    (None,             1_000_000,        95_000),
+    (1_000_000,        5_000_000,       175_000),
+    (5_000_000,        20_000_000,      260_000),
+    (20_000_000,       50_000_000,      290_000),
+    (50_000_000,       100_000_000,     400_000),
+    (100_000_000,      500_000_000,     450_000),
+    (500_000_000,      1_000_000_000,   500_000),
+    (1_000_000_000,    10_000_000_000,  600_000),
+    (10_000_000_000,   None,          1_000_000),
+)
+
+
+def _tzs(n):
+    return f"TZS {n:,}"
+
+
+def _band_phrase(lo, hi, fee):
+    if lo is None:
+        return f"hadi {_tzs(hi)} ni {_tzs(fee)}"
+    if hi is None:
+        return f"zaidi ya {_tzs(lo)} ni {_tzs(fee)}"
+    return f"zaidi ya {_tzs(lo)} hadi {_tzs(hi)} ni {_tzs(fee)}"
+
+
+def wrong_fee_band_withheld() -> str:
+    """The fact path stated a company-registration fee that is wrong for the share capital.
+
+    WHY THIS COPY STATES THE RULE AND THE WHOLE LADDER, where `wrong_threshold_withheld`
+    deliberately states NO figure. The two defects are not the same shape and the difference
+    decides the copy:
+
+      D-FIDELITY-7 caught a FABRICATED constant -- there IS no statutory EFD turnover
+      threshold, so there is no rule to state, and following a fabrication with a different
+      number from the same generation would be a second guess.
+
+      D-FIDELITY-8 catches a MISAPPLIED LOOKUP. The table is real, published, sha256-pinned,
+      and ALREADY SERVED VERBATIM as index row 181. Nothing about the facts failed; BAND
+      SELECTION failed -- picking a row from nine closed bands means comparing the user's
+      figure against band edges, which is arithmetic the fact path does not do. The measured
+      live reply gave TZS 290,000 for TZS 2,000,000,000 of share capital (the >20M-50M band,
+      with its floor misstated as 5,000,000) where the ladder gives TZS 600,000.
+
+    SO THE COPY ANSWERS BY HANDING OVER THE RULE AND REFUSING THE SELECTION:
+      * it withdraws the figure it just gave;
+      * it states the RULE -- the fee depends on share capital and is a ladder, not one rate;
+      * it lists all nine bands, generated from BRELA_SHARE_CAPITAL_BANDS;
+      * it asks the user to read off their own band, which is the step that failed;
+      * it names the authority and the CAPTURE date, and asks them to confirm the current
+        schedule, because `effective_date` is genuinely unknown.
+
+    ⛔ IT CANNOT REPRODUCE THE 290,000 ERROR, and that is the structural property rather than
+    a hope: the copy performs no band selection at all. Every figure in it comes from the
+    pinned capture via the constant above, so there is no step at which a wrong band can be
+    chosen. That is what makes stating figures safe HERE and unsafe in D-FIDELITY-7's case.
+
+    ⚠️ AND IT IS STILL NOT A FIX. Like every guard, this stops a wrong answer and does not
+    produce the right one: the user is handed the table instead of their fee. It moves Bar
+    A's A1 (confident wrong answers) and NOT A2 (answered correctly). A2 needs the band
+    SELECTION to work, which is a compute-path job, not a copy job.
+    """
+    ladder = "; ".join(_band_phrase(lo, hi, fee)
+                       for lo, hi, fee in BRELA_SHARE_CAPITAL_BANDS)
+    return (
+        "Samahani — jibu langu la awali lilitoa ada ya usajili ambayo siwezi kuihakikisha "
+        "kwa mtaji wa hisa wa kampuni yako, hivyo sitalitumia. "
+        "Kanuni ni hii: ada ya kusajili kampuni BRELA inategemea MTAJI WA HISA (share "
+        "capital), na ni NGAZI — si kiwango kimoja. "
+        f"Ngazi za ada: {ladder}. "
+        "Angalia ngazi inayolingana na mtaji wa hisa wa kampuni yako. "
+        "Kampuni isiyo na mtaji wa hisa ni TZS 500,000. "
+        f"Ratiba hii ni kama ilivyochapishwa na BRELA (brela.go.tz) tarehe "
+        f"{BRELA_CAPTURE_DATE}; thibitisha ratiba inayotumika sasa na BRELA kabla ya kulipa."
+    )

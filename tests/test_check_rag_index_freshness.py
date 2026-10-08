@@ -41,10 +41,29 @@ def _commits_since(_old, _new, _path):
     return ["<fake commit summary>"]
 
 
-def test_stale_facts_after_the_regen_commit_are_caught():
-    """Plant the exact incident this script was built for: locked_facts.json's last touch
-    (D) is NOT an ancestor of the deployed artifacts' build commit (C) -- i.e. the fact
-    changed after the index was built. Must FAIL."""
+def test_sha_staleness_is_still_REPORTED_but_no_longer_decides_the_verdict():
+    """⛔ THIS TEST'S CONTRACT CHANGED ON 2026-10-08, DELIBERATELY, AND THE CHANGE IS WORTH
+    READING BEFORE TRUSTING IT -- because "a test that used to assert False now asserts True"
+    is exactly the shape of a weakened control, and this is not one.
+
+    It used to assert `ok is False` on planted SHA staleness. The verdict is now
+    CONTENT-addressed: does `build_fact_texts()` over this tree equal the served
+    rag_facts_text.json? SHA staleness alone no longer turns it red, because on 2026-10-08 it
+    went red on a `wrong_patterns` edit -- a field the builder does not read -- while the
+    built text was BYTE-IDENTICAL to the served index. The check was reporting staleness that
+    did not exist, and a check that is red when nothing is wrong teaches the reflex of
+    overriding it.
+
+    SO WHAT THIS NOW ASSERTS: the planted staleness is still fully REPORTED in
+    `stale_inputs`, with the implicated commits, because that is what a reader needs once
+    content IS red. The limb is preserved and demoted, not deleted.
+
+    AND THE SCRIPT IS NOT WEAKER AGAINST ITS FOUNDING INCIDENT -- see the next test, which
+    plants it. The 2026-09-03 case was a CORRECTED FACT that never reached the index; a
+    corrected fact changes the built text, so the content limb catches it. It catches it
+    MORE often, in fact: SHA staleness is invisible when the fact edit and the artifact land
+    in the SAME commit, and a content mismatch is not.
+    """
     shas = {p: "C" for p in FRESHNESS_INPUTS + DEPLOYED_ARTIFACTS}
     shas["scripts/locked_facts.json"] = "D"  # edited after the regen
 
@@ -53,8 +72,49 @@ def test_stale_facts_after_the_regen_commit_are_caught():
         last_touch_fn=_make_last_touch(shas),
         commits_since_fn=_commits_since,
     )
-    assert ok is False, "planted staleness did not fire -- the control is INERT"
-    assert "scripts/locked_facts.json" in report["stale_inputs"]
+    assert "scripts/locked_facts.json" in report["stale_inputs"], (
+        "the provenance limb has stopped reporting planted staleness — that limb is demoted, "
+        "not removed, and losing it would leave a red content verdict with no way to say "
+        "WHICH commits are implicated")
+    assert report["stale_inputs"]["scripts/locked_facts.json"], "no implicated commits listed"
+    assert report["_stale_inputs_is_provenance_only"], (
+        "the provenance label is gone; without it a future reader will read stale_inputs as "
+        "a verdict again, which is the conflation this redesign removed")
+    # And `ok` is driven by content here, not by the planted SHA state.
+    assert report["content_matches"] is True, (
+        "the live tree's content does not match the served index, so this test cannot "
+        "demonstrate the separation it exists for — fix the real staleness first")
+    assert ok is True
+
+
+def test_the_FOUNDING_INCIDENT_is_still_caught_by_the_content_limb():
+    """The incident this whole script was written for (2026-09-03): `efd_threshold_tzs_11m`
+    was corrected off an invented threshold, and the correction never reached the deployed
+    index -- served ~111 times. Planted as a CONTENT divergence, which is what that incident
+    actually was: the built text and the served text disagree.
+
+    This is the test that makes the redesign safe. Without it, demoting the SHA limb would be
+    a weakening with nothing to show the capability survived."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "_fresh_founding", os.path.join(REPO, "scripts", "check_rag_index_freshness.py"))
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_fresh_founding"] = mod
+    spec.loader.exec_module(mod)
+    texts, err = mod.built_fact_texts(REPO)
+    assert err is None, err
+    # A corrected fact: the served index still carries a value the current facts reject.
+    stale_served = list(texts)
+    hit = next((i for i, t in enumerate(stale_served) if "EFD" in t or "efd" in t), None)
+    assert hit is not None, "no EFD row found — re-point this specimen"
+    stale_served[hit] = stale_served[hit] + " Kizingiti ni TZS 11,000,000."
+    ok, report = check(repo_dir=REPO, content_fn=lambda: (stale_served, None))
+    assert ok is False, (
+        "a built text that disagrees with the served index did not turn the check red — the "
+        "content limb is INERT and the founding incident would recur unseen")
+    assert report["content_matches"] is False
+    rows = [r for info in report["diverging"].values() for r in info.get("rows", [])]
+    assert any(r["index"] == hit for r in rows), report["diverging"]
 
 
 def test_artifact_directories_that_disagree_are_caught():
@@ -310,23 +370,129 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     CLEARS on the next regen that bakes this `locked_facts.json`, or on any commit that reverts
     it. Flip back to `assert ok is True` then -- and re-assert the specifics, because `ok is
     True` alone would also pass if `check()` started returning True for an unrelated reason.
+
+    ⭐ FIFTEENTH FLIP, back to `assert ok is True` — AND THE CHECK ITSELF CHANGED, WHICH IS WHY
+    THIS IS THE LAST FLIP OF ITS KIND. The fourteenth flip was red on a `wrong_patterns` edit
+    while `build_fact_texts()` was BYTE-IDENTICAL to the served index: the check was reporting
+    staleness that did not exist, because it asked which FILE was touched rather than whether
+    the SERVED TEXT is what this tree builds.
+
+    Leaving it red was the wrong call, for a reason worth keeping: a check that is red when
+    nothing is wrong teaches the reflex of overriding it, and that reflex is spent the one time
+    it is red because something IS wrong. Silencing it would have been worse. The fix was to
+    make the VERDICT content-addressed -- same principle as /health reporting a digest rather
+    than a row count, and for the same reason: the count was unchanged at 184 across a regen
+    that changed what was served.
+
+    So `ok` now means: build_fact_texts() over this tree equals the served rag_facts_text.json
+    row for row, in BOTH deploy dirs, and the embedding matrix has one row per text. The git-SHA
+    limb is KEPT and demoted to PROVENANCE -- it still answers "which commits are implicated"
+    once content is red, and still catches the two deploy dirs being committed separately.
+
+    THE CONSEQUENCE FOR FUTURE FLIPS: this test should now flip FAR LESS OFTEN, and when it does
+    it means something served actually changed. A fact edit, a builder change or a row
+    reordering turns it red; a `wrong_patterns` or `verified_by` edit does not.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is False, (
-        f"the live repo now reports FRESH: {report}. If the regen has shipped, flip this back to "
-        "`assert ok is True` and re-assert the specifics below. Do NOT silence it in either "
-        "direction: the state is the whole signal.")
-    # THE NEGATIVE STATE GETS ITS SPECIFICS ASSERTED TOO, for the same reason the positive one
-    # does: `ok is False` alone would pass if the check went stale for a reason that has nothing
-    # to do with this edit -- including a missing file, which is a setup bug and not a stale
-    # index. Naming the pending input is what makes the red state carry information.
-    assert set(report["stale_inputs"]) == {"scripts/locked_facts.json"}, (
-        f"the pending inputs are not the ones this flip was written for: "
-        f"{list(report['stale_inputs'])}. If the BUILDER (precompute_rag_embeddings.py) has also "
-        f"moved, that is a content change and needs its own note -- a `wrong_patterns` edit does "
-        f"not touch index text, but a builder change does.")
+    assert ok is True, (
+        f"the live repo reports NOT FRESH: {report}. Since 2026-10-08 this is a CONTENT verdict, "
+        "so a red here means build_fact_texts() no longer matches the served index -- a real "
+        "regen is owed. Check `diverging` for the rows, and `content_build_error` for the "
+        "cannot-evaluate case, which is also not a pass.")
+    assert report["content_matches"] is True, report
+    assert report["content_build_error"] is None, report
+    assert report["embedding_rows_match"] is True, report
+    assert report["built_rows"] == 184, report["built_rows"]
+    # ⛔ AND THE PROVENANCE LIMB IS STILL RED HERE, DELIBERATELY ASSERTED. This is the whole
+    # point of the redesign: `scripts/locked_facts.json` HAS moved since the artifacts were
+    # committed (the 6e65097 wrong_patterns fix), and the check is GREEN anyway because nothing
+    # served changed. If this assertion ever fails because stale_inputs is empty, the two limbs
+    # have stopped disagreeing and this test no longer demonstrates the distinction it was
+    # rewritten to prove -- re-point it at whatever input has moved instead of deleting it.
+    assert report["stale_inputs"], (
+        "stale_inputs is empty, so this test no longer exercises the case it exists for: an "
+        "input moved WITHOUT changing a served row. The content limb is still asserted above; "
+        "re-point this at the current provenance state rather than dropping it.")
     assert not report["missing_inputs"] and not report["missing_artifacts"], (
         f"a missing file is a setup bug, not a stale index: {report}")
     assert report["artifacts_diverged"] is False, (
         "the two index directories disagree -- a different defect from a pending regen, and "
         "one the R15 dual-commit step exists to prevent")
+
+
+# ── THE CONTENT LIMB, PLANTED IN EVERY DIRECTION (added 2026-10-08) ─────────────────────────
+# R26: a control is not working until it has been watched to block the thing it exists to block
+# AND to pass a clean case. `content_fn` is injectable precisely so these four arms can be run
+# against synthetic state rather than against whatever the tree happens to contain -- the same
+# reason the git calls were made injectable when this file was first written.
+
+def _real_texts():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "_fresh_mod", os.path.join(REPO, "scripts", "check_rag_index_freshness.py"))
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_fresh_mod"] = mod
+    spec.loader.exec_module(mod)
+    texts, err = mod.built_fact_texts(REPO)
+    assert err is None, f"the builder itself failed, so these arms cannot run: {err}"
+    assert texts and len(texts) == 184, f"unexpected builder output: {texts and len(texts)}"
+    return texts
+
+
+REAL_TEXTS = _real_texts()
+
+
+def test_content_limb_passes_on_the_real_built_texts():
+    ok, rep = check(repo_dir=REPO, content_fn=lambda: (REAL_TEXTS, None))
+    assert ok is True, rep
+    assert rep["content_matches"] is True
+
+
+def test_content_limb_BLOCKS_a_single_changed_row():
+    """THE SPECIMEN THIS REDESIGN EXISTS FOR. One row altered -- row 181, the share-capital
+    ladder, with 600,000 swapped for the 290,000 the model wrongly served on 2026-10-08 -- and
+    the check must go red and NAME the row. The old SHA limb could not see this at all if the
+    change arrived in the same commit as the artifacts."""
+    tampered = list(REAL_TEXTS)
+    tampered[181] = tampered[181].replace("TZS 600,000", "TZS 290,000")
+    assert tampered != REAL_TEXTS, "the planted edit did not change anything — bad specimen"
+    ok, rep = check(repo_dir=REPO, content_fn=lambda: (tampered, None))
+    assert ok is False, "a changed served row did not turn the check red"
+    assert rep["content_matches"] is False
+    rows = [r for info in rep["diverging"].values() for r in info.get("rows", [])]
+    assert any(r["index"] == 181 for r in rows), (
+        f"the check went red but did not name the changed row: {rep['diverging']}")
+
+
+def test_cannot_evaluate_is_NOT_a_pass():
+    """If the builder cannot be imported or run, `ok` must be False with a distinct reason --
+    never True by omission. Same rule that made run_eval.py's empty-corpus path exit 2."""
+    ok, rep = check(repo_dir=REPO, content_fn=lambda: (None, "ImportError: planted"))
+    assert ok is False
+    assert rep["content_build_error"] == "ImportError: planted"
+    assert rep["content_matches"] is None, "a failed build must not report a content verdict"
+
+
+def test_a_row_count_mismatch_with_the_embeddings_BLOCKS():
+    """A half-shipped index: the text file and the embedding matrix disagreeing on how many
+    rows there are. Checkable locally even though the embeddings themselves cannot be rebuilt
+    here, and it is the one property a content change would always break."""
+    short = list(REAL_TEXTS)[:-1]
+    ok, rep = check(repo_dir=REPO, content_fn=lambda: (short, None))
+    assert ok is False
+    assert rep["embedding_rows_match"] is False, rep["embedding_rows"]
+
+
+def test_the_provenance_limb_is_labelled_as_not_decisive():
+    """The SHA limb must survive as provenance and must not be able to decide the verdict --
+    that conflation is what produced the fourteenth flip's false red."""
+    import inspect
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "_fresh_src", os.path.join(REPO, "scripts", "check_rag_index_freshness.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    src = inspect.getsource(mod.check)
+    assert "content_matches is True" in src, "content no longer decides `ok`"
+    assert "stale_inputs" not in src.split("ok = (")[1].split(")")[0], (
+        "stale_inputs is back in the verdict expression; it is provenance only")

@@ -191,12 +191,17 @@ def test_the_real_corpus_currently_passes_and_its_exceptions_are_unchanged():
     #   +2  batch_008_cleaned  b008_paye_adv_002, b008_paye_adv_015   RESTORED (R37 over-removal)
     #   ------
     #   -1  net
+    # 1714 -> 1716 on 2026-10-08 (phase 2 restorations), re-derived:
+    #   +2  batch_008_cleaned  b008_paye_adv_005, b008_paye_adv_007  RESTORED (R37)
+    # The other two phase-2 restorations (the VAT_JULY2024 row and the tarehe-muafaka row)
+    # went to sft_shaped_pairs/, which this count does not cover -- which is again why the
+    # arithmetic is written out rather than the number bumped.
     # The P9 deadline is 30 January, Income Tax Act Cap.332 R.E.2023 s.110(3)(b). The two
     # restored rows say "kiwango 8% (si 9%)" and were removed on a batch reason that named an
     # arithmetic defect neither row contains. The other six removals of that pass landed in
     # sft_shaped_pairs/ and raw_sources/, which this count does not cover -- which is why the
     # arithmetic is written out: a bare "-1" would hide that nine rows moved, not one.
-    assert "schema-shaped: 1714 pairs, 0 errors" in r.stdout, (
+    assert "schema-shaped: 1716 pairs, 0 errors" in r.stdout, (
         f"the schema-shaped corpus changed size or cleanliness; re-derive before updating this "
         f"number:\n{r.stdout[-1500:]}")
 

@@ -132,7 +132,18 @@ HOLDS = {
                 'which is a content decision, not a guard decision. Wiring it like '
                 'D-FIDELITY-6, compute-path only, would not fix the measured row at all. '
                 'THE EXPIRY QUESTION: is one measured instance enough to justify a guard, or '
-                'does it wait for a second? Either answer is fine; leaving it undated is not.'),
+                'does it wait for a second? Either answer is fine; leaving it undated is not. '
+                '-- UPDATE 2026-10-08: THE BLOCKING CONTENT DECISION IS MADE. '
+                'chike.clarification.wrong_fee_band_withheld() states the RULE rather than a '
+                'figure: the fee depends on share capital, here are all nine bands, read off '
+                'your own, confirm the current schedule with BRELA. It PERFORMS NO BAND '
+                'SELECTION, so it structurally cannot reproduce the 290,000 error -- which is '
+                'also why stating figures is safe here and is not in D-FIDELITY-7\'s case '
+                '(that guard fires on a FABRICATED constant, where any number is a second '
+                'guess; this one fires on a MISAPPLIED LOOKUP of a real, pinned, already-'
+                'served table). Generated from one constant and pinned to served index row '
+                '181 by tests/test_fee_band_copy.py (16 assertions). The expiry stands: what '
+                'remains is the founder\'s approval of the copy and the wiring itself.'),
     },
 }
 
