@@ -719,6 +719,40 @@ def main():
             "a corpus question. And a clean sweep is a LOWER BOUND on what was looked for (R21): "
             "17 classes are checked, every one previously found; a defect class nobody has "
             "discovered yet is not in this list."),
+        # ⛔ THE BOUNDARY OF THE WORD "MET", CARRIED INSIDE THE ARTIFACT SO IT CANNOT BE
+        # SEPARATED FROM THE VERDICT BY BEING QUOTED (R22: a bare figure travels, its caveat
+        # does not, unless it is inside it).
+        "_what_MET_means": (
+            "MET means NO KNOWN DEFECT IS ASSERTED IN WHAT TRAINS. That is a statement about "
+            "wrong claims PRESENT in the export. It says NOTHING about correct rows WRONGLY "
+            "REMOVED from it -- that is the over-removal question, it runs in the opposite "
+            "direction, and this harness does not ask it."),
+        "_what_MET_does_not_mean": (
+            "It does not mean the corpus is whole. An over-removal DESTROYS ITS OWN EVIDENCE: "
+            "the row is gone, the count went down, and this verdict goes GREEN -- a quarantine "
+            "that deleted correct training data moves this harness in the direction of MET. The "
+            "two measures can therefore be improved by the same mistake, which is why they must "
+            "never be reported as one number."),
+        "_the_over_removal_counterpart": {
+            "harness": "eval/controls/audit_overremoval_by_class_2026_10_08.py",
+            "artifact": "eval/results/overremoval_by_class_2026_10_08.json",
+            "removals_total": 501,
+            "removals_carrying_a_verdict": 257,
+            "removals_UNEXAMINED": 244,
+            "coverage_pct": 51.3,
+            "why_this_number_qualifies_the_headline": (
+                "The widely-quoted '3 over-removals' is 3 of the 257 removals any instrument "
+                "here can judge -- it describes HALF the removals and is silent on the other "
+                "244. Four quarantine records sit at 0% coverage and one holds 148 unexamined "
+                "rows. So the honest pairing is: MET on what trains, HALF-MEASURED on what was "
+                "taken out of it."),
+            "why_it_does_not_block": (
+                "Over-removal is not a wrong claim in the training set, so it cannot make this "
+                "precondition NOT MET and should not be made to. But it is training signal we "
+                "may have destroyed, and the rows lost last time were ADVERSARIAL pairs -- the "
+                "population whose entire purpose is to contain the wrong value, and therefore "
+                "the population a presence-keyed sweep is most likely to delete."),
+        },
         "rebuilt": bool(args.rebuild),
         "precheck": precheck,
         "before": before,
@@ -738,6 +772,14 @@ def main():
         json.dump(out, fh, ensure_ascii=False, indent=2)
     print(f"\nartifact: {ARTIFACT}")
     print(f"VERDICT: {out['verdict']}")
+    # Printed beside the verdict, every run, for the same reason it is in the artifact: the
+    # one-word answer is the part that gets repeated.
+    print("  SCOPE: MET = no known defect ASSERTED in what trains. It says nothing about "
+          "correct rows wrongly REMOVED;")
+    print("         an over-removal moves this verdict TOWARD green. Counterpart: "
+          "overremoval_by_class_2026_10_08.json")
+    print("         -- 257 of 501 removals carry a verdict (51.3%), so '3 over-removals' "
+          "describes half the removals.")
     return 1 if asserts else 0
 
 

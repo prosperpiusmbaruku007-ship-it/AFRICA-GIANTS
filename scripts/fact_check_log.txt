@@ -1193,3 +1193,10 @@ Total: 144 | Flagged: 6
   FLAG [b008_paye_adv_010_20260612] paye_bands_monthly_2025_26: band 2.*9%(?! ni kosa| is wrong)
   FLAG [b008_paye_adv_002_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
   FLAG [b008_paye_adv_015_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+
+[2026-10-08T13:11:41.095128] Checked C:\Users\jhjh\AppData\Local\Temp\tmptmy01hxo\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-10-08T13:11:41.340167] Checked C:\Users\jhjh\AppData\Local\Temp\tmptmy01hxo\lf_ok.jsonl
+Total: 1 | Flagged: 0

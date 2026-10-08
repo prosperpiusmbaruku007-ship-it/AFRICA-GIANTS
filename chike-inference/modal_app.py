@@ -10,6 +10,27 @@ app = modal.App('chike-inference')
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 
+# ─── BUILD IDENTITY (added 2026-10-08) ────────────────────────────────────────────
+# ⛔ WHY THIS EXISTS, AND IT IS A GAP R16b LEFT OPEN FOR EIGHT WEEKS. R16b requires
+# "GET /health returns `build` -- confirm it matches the commit you just pushed", and it
+# was built for `chike-whatsapp` ONLY. This app had NO /health, NO build SHA and nothing
+# else that reports what it is serving. On 2026-10-07 that meant the entire evidence that
+# the corrected BRELA index had reached production was a content probe -- a question whose
+# answer happens to differ before and after. That works only while someone can think of
+# such a question, and it says nothing at all when the change is one a probe cannot
+# distinguish.
+#
+# It is worse here than on the WhatsApp app, not better: that app's failure mode is a dead
+# webhook, which is obvious. This app's failure mode is a fluent, confident, SUPERSEDED
+# regulatory figure, which is invisible.
+#
+# Modal injects no commit SHA of its own, so the deploy command must pass it:
+#   CHIKE_BUILD=$(git rev-parse --short HEAD) PYTHONIOENCODING=utf-8 PYTHONUTF8=1 \
+#     python -m modal deploy chike-inference/modal_app.py
+# Absent, this reads 'dev', which is itself a useful signal: it means the deploy did not
+# pass a SHA, so /health cannot vouch for what is running.
+BUILD = os.environ.get('CHIKE_BUILD', '') or 'dev'
+
 # GPU image: ML stack. RAG data files are baked in via add_local_file (Modal does
 # not auto-include sibling data files, so __file__-relative loading needs this).
 image = (
@@ -32,10 +53,16 @@ image = (
     # add_local pattern as the RAG data files above; /root is on sys.path so
     # `import chike.prompting` / `import chike.generation_cleanup` resolve at runtime.
     .add_local_dir(os.path.join(_HERE, '..', 'chike'), '/root/chike')
+    .env({'CHIKE_BUILD': BUILD})
 )
 
 # Tiny image for the HTTP endpoint (only needs FastAPI; it just forwards to the GPU class).
-web_image = modal.Image.debian_slim(python_version='3.11').pip_install('fastapi[standard]')
+# The build SHA is baked into BOTH images, because a mismatch between them is itself a
+# finding: the web tier and the GPU tier are separate containers with separate lifecycles,
+# and a warm GPU container surviving a web-tier redeploy is exactly the R16 hazard.
+web_image = (modal.Image.debian_slim(python_version='3.11')
+             .pip_install('fastapi[standard]')
+             .env({'CHIKE_BUILD': BUILD}))
 
 volume = modal.Volume.from_name('chike-storage', create_if_missing=True)
 
@@ -552,6 +579,34 @@ class ChikeModel:
     # Restore with: git show 617212d -- chike-inference/modal_app.py
 
     @modal.method()
+    def served_index_identity(self) -> dict:
+        """What THIS container actually loaded — not what the repo contains.
+
+        ⛔ THE POINT OF THE sha256 IS THAT IT IS NOT A COUNT. `rag_fact_count` was
+        UNCHANGED at 184 across the 2026-10-07 BRELA regen, so the row count could not
+        distinguish the corrected index from the superseded one, and the fail-loud index
+        contract had nothing to catch. A digest over the loaded fact texts identifies the
+        index uniquely: compare it to sha256 of the committed rag_facts_text.json and the
+        question "is the new index live?" becomes an equality check instead of a probe
+        whose discriminating power depends on someone thinking of the right question.
+
+        Reads self.fact_texts, i.e. the arrays the retriever is serving from, rather than
+        re-reading the file off disk — R26's "ask what the deployed path actually calls".
+        Re-reading the file would certify the IMAGE, which is not the same claim.
+        """
+        import hashlib
+        import json as _json
+        blob = _json.dumps(self.fact_texts, ensure_ascii=False).encode('utf-8')
+        return {
+            'build': os.environ.get('CHIKE_BUILD', 'dev'),
+            'rag_rows_loaded': len(self.fact_texts),
+            'rag_embeddings_shape': list(self.fact_embeddings.shape),
+            'rag_facts_text_sha256': hashlib.sha256(blob).hexdigest(),
+            'config_rag_fact_count': CONFIG.get('rag_fact_count'),
+            'adapter_repo': ADAPTER_REPO,
+        }
+
+    @modal.method()
     def generate_raw(self, prompt: str, params: dict = None) -> dict:
         """RAW completion primitive: tokenize -> generate -> decode. NO classify /
         decompose / RAG / system prompt / cleaning.
@@ -587,6 +642,79 @@ class ChikeModel:
             outputs[0][input_len:], skip_special_tokens=False
         ).strip()
         return {'completion': completion}
+
+
+@app.function(image=web_image, secrets=[modal.Secret.from_name('modal-api-token')])
+@modal.fastapi_endpoint(method='GET')
+def health(deep: int = 0, token: str = None):
+    """Mirrors chike-whatsapp's /health so this app can finally say what it is serving.
+
+    TWO TIERS, deliberately:
+
+      GET /health          -- the web container's own build SHA, instantly, no GPU. Answers
+                              "which code was deployed". Cheap enough to call on every
+                              deploy, which is the whole point of R16 step 1.
+      GET /health?deep=1&token=...  -- additionally asks the GPU class for the index it
+                              ACTUALLY LOADED: row count, embedding shape, and a sha256 of
+                              the loaded fact texts. Answers "which INDEX is live", which is
+                              the question the 2026-10-07 cycle had to answer with a content
+                              probe because nothing here could answer it directly.
+
+    Deep is token-gated and opt-in because it spins the GPU container; a health check that
+    costs a cold start would not get run. Shallow is unauthenticated and returns no secret
+    material -- no tokens, no fingerprints -- so it is safe to call from anywhere.
+
+    ⚠️ A SHALLOW PASS IS NOT A DEPLOY VERIFICATION. It proves the WEB tier is new. The GPU
+    class is a separate container with its own lifecycle, and a warm GPU container serving
+    old code through a freshly-deployed web tier is precisely the R16 hazard — which is why
+    `build_matches` below compares the two tiers and why deep mode exists at all.
+    """
+    import os as _os
+    from fastapi.responses import JSONResponse
+
+    out = {
+        'status': 'ok',
+        'app': 'chike-inference',
+        'build': _os.environ.get('CHIKE_BUILD', 'dev'),
+        'adapter_repo': ADAPTER_REPO,
+        'base_model': BASE_MODEL,
+        'config_rag_fact_count': CONFIG.get('rag_fact_count'),
+        'config_loaded': bool(CONFIG),
+        'deep': bool(deep),
+    }
+    # 'dev' means the deploy passed no CHIKE_BUILD, so this endpoint cannot vouch for the
+    # running code. Said out loud rather than left for the reader to infer from a string.
+    if out['build'] == 'dev':
+        out['build_warning'] = (
+            "build is 'dev': the deploy did not pass CHIKE_BUILD, so /health cannot "
+            'identify the serving commit. Redeploy with '
+            'CHIKE_BUILD=$(git rev-parse --short HEAD).')
+    if not deep:
+        return out
+
+    expected = _os.environ.get('MODAL_API_TOKEN', '')
+    if not token or not expected or token != expected:
+        return JSONResponse({'error': 'unauthorized', 'hint': 'deep=1 requires ?token='},
+                            status_code=401)
+    try:
+        served = ChikeModel().served_index_identity.remote()
+        out['served'] = served
+        out['build_matches'] = (served.get('build') == out['build'])
+        if not out['build_matches']:
+            out['status'] = 'build_mismatch'
+            out['build_mismatch_warning'] = (
+                f"the web tier reports build {out['build']!r} and the GPU container reports "
+                f"{served.get('build')!r}. The GPU container is WARM and serving older code "
+                '— R16: force fresh containers (`modal app stop chike-inference --yes`, then '
+                'redeploy) before treating any change as live.')
+        # Config and index disagreeing is the fail-loud contract's own condition; if it is
+        # ever reachable here, the contract did not fire and that is the finding.
+        if served.get('rag_rows_loaded') != served.get('config_rag_fact_count'):
+            out['status'] = 'index_contract_violation'
+    except Exception as exc:
+        out['status'] = 'deep_check_failed'
+        out['deep_error'] = f'{type(exc).__name__}: {str(exc)[:200]}'
+    return out
 
 
 @app.function(image=web_image, secrets=[modal.Secret.from_name('modal-api-token')])

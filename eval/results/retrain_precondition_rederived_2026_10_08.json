@@ -2,21 +2,20 @@
   "_what": "The retrain precondition re-derived from scratch: the export rebuilt from the current corpus, then swept on the CLAIM in both notations, polarity-aware.",
   "_why_this_population": "The 2026-09-01 declaration swept the right files with figure-keyed patterns derived from each fact's own wrong_patterns, and was then invalidated by quarantines that fired one stage upstream of the export. This sweep's population is the CLAIM over the OUTPUT, so neither notation nor stage can hide a row.",
   "_what_this_cannot_show": "Realism. Which claims a trained model actually reproduces is a weights question, not a corpus question. And a clean sweep is a LOWER BOUND on what was looked for (R21): 17 classes are checked, every one previously found; a defect class nobody has discovered yet is not in this list.",
-  "rebuilt": true,
-  "precheck": {
-    "clean_temp_files": {
-      "exit": 0,
-      "tail": "CLEAN — only valid batch files present.\n"
-    },
-    "check_eval_split": {
-      "exit": 0,
-      "tail": "Checking eval split...\nTraining pairs: 1704\nEval pairs (eval_set: true): 10\nUnique eval question strings: 20\nCLEAN — eval split verified. Safe to train.\n"
-    },
-    "generate_sft": {
-      "exit": 0,
-      "tail": "Loaded 4386 non-eval pairs\nTrain: 3947 | Val: 439\nSaved: datasets/tier1a/sft\\train_sft.jsonl\nSaved: datasets/tier1a/sft\\val_sft.jsonl\n"
-    }
+  "_what_MET_means": "MET means NO KNOWN DEFECT IS ASSERTED IN WHAT TRAINS. That is a statement about wrong claims PRESENT in the export. It says NOTHING about correct rows WRONGLY REMOVED from it -- that is the over-removal question, it runs in the opposite direction, and this harness does not ask it.",
+  "_what_MET_does_not_mean": "It does not mean the corpus is whole. An over-removal DESTROYS ITS OWN EVIDENCE: the row is gone, the count went down, and this verdict goes GREEN -- a quarantine that deleted correct training data moves this harness in the direction of MET. The two measures can therefore be improved by the same mistake, which is why they must never be reported as one number.",
+  "_the_over_removal_counterpart": {
+    "harness": "eval/controls/audit_overremoval_by_class_2026_10_08.py",
+    "artifact": "eval/results/overremoval_by_class_2026_10_08.json",
+    "removals_total": 501,
+    "removals_carrying_a_verdict": 257,
+    "removals_UNEXAMINED": 244,
+    "coverage_pct": 51.3,
+    "why_this_number_qualifies_the_headline": "The widely-quoted '3 over-removals' is 3 of the 257 removals any instrument here can judge -- it describes HALF the removals and is silent on the other 244. Four quarantine records sit at 0% coverage and one holds 148 unexamined rows. So the honest pairing is: MET on what trains, HALF-MEASURED on what was taken out of it.",
+    "why_it_does_not_block": "Over-removal is not a wrong claim in the training set, so it cannot make this precondition NOT MET and should not be made to. But it is training signal we may have destroyed, and the rows lost last time were ADVERSARIAL pairs -- the population whose entire purpose is to contain the wrong value, and therefore the population a presence-keyed sweep is most likely to delete."
   },
+  "rebuilt": false,
+  "precheck": {},
   "before": [
     {
       "path": "C:\\Users\\jhjh\\AFRICA-GIANTS\\datasets\\tier1a\\sft\\train_sft.jsonl",

@@ -1,0 +1,1328 @@
+{
+  "_what": "Phase 2: the 244 removed rows no instrument could judge, tested against each record's OWN stated reason instead of against 17 figure patterns.",
+  "_why_phase_1_could_not": "It asked whether a row asserts one of 17 known FIGURE defects. Most of these defects have no figure: modality (GN487A), attachment (which obligation the 20th belongs to), scope (stamp duty flat-vs-tiered), terminology (P45/P9), tense (a passed cutoff stated as upcoming).",
+  "_correction_to_phase_1": "Phase 1 reported FOUR records as stating no reason at all. It read only `_quarantine.reasons`; the records use THREE key names (`_quarantine.reasons`, `reason`, `why`). rent_wht and vat_deferment have PRECISE reasons under `reason`, and efd_fabrication/nssf_fine/memorandum/survivors_reswept have them under `why`. ONLY TWO records genuinely have none: sdl_tourism_levy_mislabeled and eval_contaminated. Phase 1's claim was R34 -- a verdict inferred from one field name.",
+  "_third_outcome_is_not_a_pass": "NOT_DETERMINABLE means the rule cannot reach the row. It is counted separately and never folded into a 'removals were correct' total: for an over-removal hunt a false 'that removal was fine' is the expensive error, because the row is already gone.",
+  "_rules_quoted_from_the_records": {
+    "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl::GN487A_VISA": "states visa/permit revocation as merely \"possible\" or \"not always\" -- GN487A s.3(3)(a) makes it mandatory upon conviction",
+    "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl::VATWH_REMITTANCE_STALE_20TH": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period",
+    "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl::STAMP_DUTY_FLAT1": "asserts a flat 1% stamp duty ... Cap.189 Art.22(b) sets a TIERED rate (0.5% on first TZS 100,000, then 1%)",
+    "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl::PATENT_20FLAT": "states patent term as a flat 20 years ... Cap.217 s.39(1) sets a 10-year BASE term, extendable to a maximum of 20",
+    "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl::PAYE_P9_31MARCH": "asserts Form \"P9\" due 31 March ... the obligation is due 30 January",
+    "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl::VAT_JULY2024": "dates the VAT 100M->200M increase to July 2024 -- GN 448Y/2023 commenced 1 July 2023",
+    "precondition_confirmed_wrong_quarantine_2026_10_08.jsonl::paye_p9_31_march": "asserts the certificate is due 31 March; Cap.332 R.E.2023 s.110(3)(b) says 30 January",
+    "precondition_confirmed_wrong_quarantine_2026_10_08.jsonl::vat_threshold_dated_2024": "dates the threshold increase to July 2024; GN 448Y/2023 commenced 1 July 2023",
+    "presumptive_stale_ceiling_rate_quarantine_2026_09_01.jsonl::PRESUMPTIVE_STALE_CEILING_OR_RATE": "states the pre-FA2026 ceiling (TZS 100,000,000) and/or top-band rate (3.5%) as current; FA2026 s.27(a) raised the ceiling to 200,000,000 and the rate to 4.0%",
+    "dse_stale_float_quarantine_2026_09_01.jsonl::DSE_STALE_FLOAT_30": "asserts a >=30% public-float condition; FA2025 s.60(d)(i) lowered it to 25%",
+    "tier3_confirmed_wrong_quarantine_2026_09_01.jsonl::P45_P9_CONFLATION": "names \"P9\" as the Tanzanian alternative to a UK P45",
+    "tier3_confirmed_wrong_quarantine_2026_09_01.jsonl::COURSE_FEE_250K": "states an OSHA training-course fee of TZS 250,000 with no identified course",
+    "osha_course_fee_removed_pending_confirmation_2026_10_08.jsonl::osha_course_fee_250k": "asserts an OSHA course fee of TZS 250,000 as a plain fact; course_fee is a HEDGE",
+    "vat_deferment_stale_cutoff_framing_quarantine_2026_09_02.jsonl::None": "STALE_CUTOFF_UNSCOPED: states \"30 June 2026\" as the deferment end date with no scope and no indication the date has already passed",
+    "rent_wht_nonresident_15pct_quarantine_2026_09_26.jsonl::None": "asserts a 15% NON-RESIDENT rate on rent; Cap.332 First Schedule para 4(b)(ii) gives the non-resident limb the same TEN percent",
+    "paye_defect_quarantine_2026_08_25.jsonl::None": "computes PAYE band 2 at 9%; the locked rate is 8%",
+    "efd_threshold_fabrication_quarantine_2026_08_29.jsonl::None": "asserts a TZS 11,000,000 EFD turnover threshold; TAA Cap.438 s.44(1) sets none",
+    "efd_fabrication_all_notations_quarantine_2026_10_06.jsonl::None": "the same fabrication in WORDS as well as digits -- a sweep keyed on digits is blind to 'milioni 11' by construction",
+    "nssf_fine_stale_100k_quarantine_2026_10_05.jsonl::None": "asserts TZS 100,000 as the current statutory fine; Cap.50 R.E.2023 s.76(1) reads ten million -- a 100x understatement",
+    "memorandum_articles_fee_stale_22000_quarantine_2026_09_02.jsonl::None": "asserts the generic 22,000-per-document rate for Memorandum and Articles specifically; BRELA's own fee page names a different figure",
+    "fabrication_and_deadline_defect_quarantine_2026_08_29.jsonl::None": "mixed fabrication and deadline defects (see per-row reasons in the record)"
+  },
+  "_records_with_no_content_rule": {
+    "eval_contaminated.jsonl": "NOT A CORRECTNESS QUESTION. These 9 rows were removed under R6 to preserve the training/eval split, and phase 1 read 4 of them and found them CORRECT (two sound OOC refusals, a PAYE computation on TZS 800,000 exactly right against the locked bands, a GN 605A row stating 33.4%). Correctness was never the removal criterion, so neither ASSERTS nor REJECTS means anything here. This record genuinely carries no stated reason anywhere -- one of only TWO that do not.",
+    "sdl_tourism_levy_mislabeled.jsonl": "NO STATED REASON ANYWHERE -- the other of the two. Adjudicated by hand in phase 1: all 3 rows assert a 'tourism development levy' of 1% under subdomain sdl_compliance, no such levy is a locked fact, and one computes 1% x TZS 50,000,000 = 500,000 confidently. Removal correct, but the only account of WHY is the filename, which cannot be checked against any row.",
+    "quarantine_survivors_reswept_2026_10_06.jsonl": "NOT A CONTENT CLAIM. Its `why` reads 'already quarantined in nssf_fine_stale_100k... and STILL LIVE in sft_EXPORTED_TRAINING -- the quarantine was pointed at the authored corpus'. These rows were re-removed because an earlier quarantine did not REACH the export (R36). The content verdict already exists in the original record; re-judging it here would double-count."
+  },
+  "hand_adjudicated_residue": [
+    {
+      "rows": "stamp_duty_138 (tier2 L7/L60/L74/L180 -- 4 lines, 1 row)",
+      "verdict": "WEAK REMOVAL -- repairable, not deletable",
+      "basis": "The row's SUBJECT is first-time-buyer relief and its answer is correct: Tanzania has no such relief, unlike the UK or Australia. The 1% appears once, in passing, with no flatness claim. Its record's reason -- 'asserts a flat 1% stamp duty' -- is true of stamp_duty_101 and _108, which explicitly deny tiering, and NOT of this row. Striking one word would have kept it. Not scored as an over-removal because the word is still wrong; not scored as a correct removal because the stated reason is not true of it."
+    },
+    {
+      "rows": "the VAT_JULY2024 row (tier2 L53/L124 -- 2 lines, 1 row)",
+      "verdict": "OVER-REMOVAL on the record's own reason",
+      "basis": "The record's reason is 'dates the VAT 100M->200M increase to July 2024'. THE ROW STATES NO DATE AT ALL: 'Hicho kiasi cha TZS 200M au TZS 100M ni kiwango cha mauzo kinachosababisha usajili wa lazima kwa ajili ya VAT.' Both figures are correct (200M/12mo, 100M/6mo) and the row cannot commit a dating defect it never commits to a date. Removed on a batch reason that was true of its siblings."
+    },
+    {
+      "rows": "the 'tarehe muafaka' row (vat_withholding L12/L36 -- 2 lines, 1 row)",
+      "verdict": "OVER-REMOVAL on the record's own reason",
+      "basis": "'Ndiyo, kuna adhabu ya riba au tozo endapo utashindwa kuwasilisha VAT withholding ifikapo TAREHE MUAFAKA' -- 'by the appropriate date', naming no date. The record's reason is specifically that the row asserts the 20th. It does not, and what it does say (that late remittance draws interest or a penalty) is true under FA2026 s.95 as much as before it. Vague, and vagueness is not a removable defect."
+    }
+  ],
+  "_residue_note": "8 lines = 3 distinct rows, read individually. TWO are over-removals on their own records' reasons (a VAT row removed for dating an increase it never dates, and a row removed for asserting the 20th while saying 'tarehe muafaka' and naming no date); one is a WEAK removal repairable by striking a single word. A rule loose enough to reach these three would reach their correct neighbours too -- R20: inventing one to complete a census is the vacuous check.",
+  "planted_specimens": [
+    {
+      "rule": "rule_gn487a_visa",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "verbatim from the record, line 12"
+    },
+    {
+      "rule": "rule_gn487a_visa",
+      "expect": "REJECTS_DEFECT",
+      "got": "REJECTS_DEFECT",
+      "why": "verbatim from the record, line 16 -- mandatory framing, correct"
+    },
+    {
+      "rule": "rule_gn487a_visa",
+      "expect": "NOT_DETERMINABLE",
+      "got": "NOT_DETERMINABLE",
+      "why": "no revocation sentence -- must not be judged"
+    },
+    {
+      "rule": "rule_vatwh_20th",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "record line 2/3 verbatim. SUBJECT-FIRST passive, AND it mentions the return in the same breath -- the shape that version 1 scored as an over-removal"
+    },
+    {
+      "rule": "rule_vatwh_20th",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "record line 4 verbatim -- 'apeleke', which version 1's verb list missed"
+    },
+    {
+      "rule": "rule_vatwh_20th",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "record line 6 verbatim -- a numbered list where limb (1) is correct and limb (2) is the defect; a sentence-wide rule excuses both"
+    },
+    {
+      "rule": "rule_vatwh_20th",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "record line 7 verbatim -- 'kilipwa', past passive"
+    },
+    {
+      "rule": "rule_vatwh_20th",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "record line 8 verbatim -- 'hulipwa', habitual; version 1 returned NOT_DETERMINABLE"
+    },
+    {
+      "rule": "rule_vatwh_20th",
+      "expect": "REJECTS_DEFECT",
+      "got": "REJECTS_DEFECT",
+      "why": "record line 1 verbatim -- the row ALREADY in ADJUDICATED_KEEPS as a known over-removal. It denies the 20th outright, and version 1 scored it NOT_DETERMINABLE"
+    },
+    {
+      "rule": "rule_vatwh_20th",
+      "expect": "REJECTS_DEFECT",
+      "got": "REJECTS_DEFECT",
+      "why": "verbatim from the row RESTORED on 2026-10-08 -- the 20th on the RETURN only. The specimen that must not flag"
+    },
+    {
+      "rule": "rule_vatwh_20th",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "record lines 14/32 verbatim. THE ANAPHORIC TRANSFER: the second sentence attaches the 20th to the remittance while containing no date token, so a rule that finds a date and asks what it attaches to cannot see it. Versions 1 AND 2 both called this an over-removal; reading it is what caught them"
+    },
+    {
+      "rule": "rule_stamp_duty_flat",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "flatness asserted"
+    },
+    {
+      "rule": "rule_stamp_duty_flat",
+      "expect": "REJECTS_DEFECT",
+      "got": "REJECTS_DEFECT",
+      "why": "the tiered rule, correct"
+    },
+    {
+      "rule": "rule_stamp_duty_flat",
+      "expect": "NOT_DETERMINABLE",
+      "got": "NOT_DETERMINABLE",
+      "why": "stamp_duty_138's shape -- a bare 1% mention in a correct answer about something else; the WEAK-removal bucket, which must not be scored as a correct removal"
+    },
+    {
+      "rule": "rule_patent_20flat",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "flat 20 with no base term"
+    },
+    {
+      "rule": "rule_patent_20flat",
+      "expect": "REJECTS_DEFECT",
+      "got": "REJECTS_DEFECT",
+      "why": "correct"
+    },
+    {
+      "rule": "rule_p9_terminology",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "P9 used as a Tanzanian form"
+    },
+    {
+      "rule": "rule_p9_terminology",
+      "expect": "REJECTS_DEFECT",
+      "got": "REJECTS_DEFECT",
+      "why": "correctly flags it as Kenyan"
+    },
+    {
+      "rule": "rule_vat_deferment_tense",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "a passed cutoff stated as upcoming"
+    },
+    {
+      "rule": "rule_vat_deferment_tense",
+      "expect": "REJECTS_DEFECT",
+      "got": "REJECTS_DEFECT",
+      "why": "correctly marked past"
+    },
+    {
+      "rule": "rule_rent_wht",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "a non-resident rent rate other than 10%"
+    },
+    {
+      "rule": "rule_rent_wht",
+      "expect": "REJECTS_DEFECT",
+      "got": "REJECTS_DEFECT",
+      "why": "the single 10% rate, correct"
+    },
+    {
+      "rule": "rule_personal_relief",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "record line 7 verbatim"
+    },
+    {
+      "rule": "rule_personal_relief",
+      "expect": "REJECTS_DEFECT",
+      "got": "REJECTS_DEFECT",
+      "why": "the correct statement -- must not be removed"
+    },
+    {
+      "rule": "rule_nssf_mining_55",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "record line 5 verbatim -- 55 attributed to mining"
+    },
+    {
+      "rule": "rule_nssf_mining_55",
+      "expect": "REJECTS_DEFECT",
+      "got": "REJECTS_DEFECT",
+      "why": "55 as GENERAL early retirement is correct (ss.25(c),29) -- the figure is lawful and only the mining attribution is fabricated, so a figure test cannot tell them apart"
+    },
+    {
+      "rule": "rule_wcf_disease_flat7",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "flat 7 for disease, the chain collapsed"
+    },
+    {
+      "rule": "rule_wcf_disease_flat7",
+      "expect": "REJECTS_DEFECT",
+      "got": "REJECTS_DEFECT",
+      "why": "names the two-stage chain, correct"
+    },
+    {
+      "rule": "rule_gn487a_visa",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "tier2 L54 verbatim -- `kunyimwa`, which the first revocation verb list missed"
+    },
+    {
+      "rule": "rule_vatwh_20th",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "record L13 verbatim -- 'fedha ulizoshikilia' is the withheld amount under another name, which the first subject list missed"
+    },
+    {
+      "rule": "rule_rent_wht",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "record L5 verbatim, BOTH sentences. My first attempt at this specimen was the last sentence alone -- it lost the only mention of `pango`, fell out of the rule's own class, and returned NOT_DETERMINABLE for a reason unrelated to the rule under test. Caught by the self-test, which is what it is for (R26: use the verbatim text)."
+    },
+    {
+      "rule": "rule_vat_deferment_tense",
+      "expect": "ASSERTS_DEFECT",
+      "got": "ASSERTS_DEFECT",
+      "why": "record L5 verbatim -- present-tense availability with NO date at all"
+    }
+  ],
+  "totals": {
+    "ASSERTS_DEFECT": 457,
+    "NOT_A_CORRECTNESS_QUESTION": 17,
+    "REJECTS_DEFECT": 19,
+    "NOT_DETERMINABLE": 8
+  },
+  "rows_total": 501,
+  "rows_judged": 476,
+  "coverage_pct": 95.0,
+  "over_removals": [
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 18,
+      "id": "b008_paye_adv_002_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya ",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 19,
+      "id": "b008_paye_adv_005_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Punguzo la kibinafsi la PAYE Tanzania ni TZS ngapi kwa mwezi?",
+      "body": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri kwa TZS 270,000 za kwanza za mapato ya kila mwezi — hii ndiyo ruhusa ya mapato yasiyotozwa kodi iliyojengwa ndani ya mfumo. Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa. Mapato yanayozidi TZS 270,000 yanatozwa kodi kwa msururu wa 8% kuanzia. K",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa.\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 20,
+      "id": "b008_paye_adv_007_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Mshahara wa TZS 270,001 (shilingi moja zaidi ya kizingiti) — mfanyakazi analipa PAYE?",
+      "body": "Ndiyo — mshahara wa TZS 270,001 unaathiriwa na bendi ya pili ya PAYE. Lakini: kodi inazingatiwa kwenye sehemu inayopita kizingiti cha TZS 270,000 tu — si mshahara wote. TZS 1 × 8% = TZS 0.08 Kwa vitendo kiasi hiki ni kidogo sana — PAYE inayozalishwa kwa kiwango hiki cha mapato ni ndogo mno. Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi katika mfumo wa PAYE Tanzania..\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 21,
+      "id": "b008_paye_adv_015_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+      "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, ha",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 39,
+      "id": "b008_paye_adv_002_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya ",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 40,
+      "id": "b008_paye_adv_005_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Punguzo la kibinafsi la PAYE Tanzania ni TZS ngapi kwa mwezi?",
+      "body": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri kwa TZS 270,000 za kwanza za mapato ya kila mwezi — hii ndiyo ruhusa ya mapato yasiyotozwa kodi iliyojengwa ndani ya mfumo. Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa. Mapato yanayozidi TZS 270,000 yanatozwa kodi kwa msururu wa 8% kuanzia. K",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa.\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 41,
+      "id": "b008_paye_adv_007_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Mshahara wa TZS 270,001 (shilingi moja zaidi ya kizingiti) — mfanyakazi analipa PAYE?",
+      "body": "Ndiyo — mshahara wa TZS 270,001 unaathiriwa na bendi ya pili ya PAYE. Lakini: kodi inazingatiwa kwenye sehemu inayopita kizingiti cha TZS 270,000 tu — si mshahara wote. TZS 1 × 8% = TZS 0.08 Kwa vitendo kiasi hiki ni kidogo sana — PAYE inayozalishwa kwa kiwango hiki cha mapato ni ndogo mno. Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi katika mfumo wa PAYE Tanzania..\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 42,
+      "id": "b008_paye_adv_015_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+      "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, ha",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 51,
+      "id": null,
+      "subdomain": null,
+      "pair_type": null,
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+      "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, ha",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 53,
+      "id": null,
+      "subdomain": null,
+      "pair_type": null,
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Punguzo la kibinafsi la PAYE Tanzania ni TZS ngapi kwa mwezi?",
+      "body": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri kwa TZS 270,000 za kwanza za mapato ya kila mwezi — hii ndiyo ruhusa ya mapato yasiyotozwa kodi iliyojengwa ndani ya mfumo. Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa. Mapato yanayozidi TZS 270,000 yanatozwa kodi kwa msururu wa 8% kuanzia. K",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa.\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 58,
+      "id": null,
+      "subdomain": null,
+      "pair_type": null,
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Mshahara wa TZS 270,001 (shilingi moja zaidi ya kizingiti) — mfanyakazi analipa PAYE?",
+      "body": "Ndiyo — mshahara wa TZS 270,001 unaathiriwa na bendi ya pili ya PAYE. Lakini: kodi inazingatiwa kwenye sehemu inayopita kizingiti cha TZS 270,000 tu — si mshahara wote. TZS 1 × 8% = TZS 0.08 Kwa vitendo kiasi hiki ni kidogo sana — PAYE inayozalishwa kwa kiwango hiki cha mapato ni ndogo mno. Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi katika mfumo wa PAYE Tanzania..\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 62,
+      "id": "b008_paye_adv_005_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Punguzo la kibinafsi la PAYE Tanzania ni TZS ngapi kwa mwezi?",
+      "body": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri kwa TZS 270,000 za kwanza za mapato ya kila mwezi — hii ndiyo ruhusa ya mapato yasiyotozwa kodi iliyojengwa ndani ya mfumo. Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa. Mapato yanayozidi TZS 270,000 yanatozwa kodi kwa msururu wa 8% kuanzia. K",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa.\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 71,
+      "id": "b008_paye_adv_002_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya ",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 72,
+      "id": null,
+      "subdomain": null,
+      "pair_type": null,
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya ",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    },
+    {
+      "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+      "line": 1,
+      "id": "tier1a_vat_rep_002_20260611",
+      "subdomain": "vat_withholding",
+      "pair_type": "standard",
+      "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+      "question": "Mimi ni wakala wa zuio la VAT. Ninaweza kupunguza VAT niliyoizuia kutoka kwa wasambazaji dhidi ya VAT ninayodaiwa mimi mwenyewe?",
+      "body": "Hapana. VAT ya zuio unayoizuia kutoka kwa msambazaji wako hailipwi kama mkopo dhidi ya deni lako la VAT. Wewe kama wakala wa zuio unalipa kiasi hicho moja kwa moja TRA kwa niaba ya msambazaji. Msambazaji wako ndiye anayeidai kama mkopo wa VAT (input VAT) kwenye return yake. Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — s",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "explicitly denies the 20th for this obligation: \"Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — si tarehe ya 20.\"",
+      "rule": "rule_vatwh_20th",
+      "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+    },
+    {
+      "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+      "line": 18,
+      "id": null,
+      "subdomain": "vat_withholding",
+      "pair_type": null,
+      "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+      "question": "Napatanishaje vyeti vya VAT withholding na return yangu ya VAT?",
+      "body": "Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20. Wakala huwasilisha kiasi kilichozuiliwa moja kwa moja TRA. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "20th attached to the RETURN only, which is correct: \"Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20.\"",
+      "rule": "rule_vatwh_20th",
+      "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+    },
+    {
+      "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+      "line": 21,
+      "id": null,
+      "subdomain": null,
+      "pair_type": null,
+      "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+      "question": "VAT withholding ya 6% ya huduma — inalipwa TRA lini?",
+      "body": "Qualifying buyer anayechukua VAT withholding ya 6% ya huduma analipa TRA ndani ya siku 7 baada ya mwisho wa mwezi wa muamala (au kadri TRA inavyoelekeza). Hii ni tofauti na kuwasilisha VAT return ya kawaida (tarehe 20 ya mwezi unaofuata). Kwa withholding: tarehe ya mwisho = siku 7 baada ya mwisho wa mwezi. Qualifying buyer ana wajibu mbili: (1) Kuweka withho",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "20th attached to the RETURN only, which is correct: \"Hii ni tofauti na kuwasilisha VAT return ya kawaida (tarehe 20 ya mwezi unaofuata).\"",
+      "rule": "rule_vatwh_20th",
+      "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+    },
+    {
+      "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+      "line": 31,
+      "id": "tier1a_vat_rep_002_20260611",
+      "subdomain": "vat_withholding",
+      "pair_type": "standard",
+      "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+      "question": "Mimi ni wakala wa zuio la VAT. Ninaweza kupunguza VAT niliyoizuia kutoka kwa wasambazaji dhidi ya VAT ninayodaiwa mimi mwenyewe?",
+      "body": "Hapana. VAT ya zuio unayoizuia kutoka kwa msambazaji wako hailipwi kama mkopo dhidi ya deni lako la VAT. Wewe kama wakala wa zuio unalipa kiasi hicho moja kwa moja TRA kwa niaba ya msambazaji. Msambazaji wako ndiye anayeidai kama mkopo wa VAT (input VAT) kwenye return yake. Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — s",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "explicitly denies the 20th for this obligation: \"Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — si tarehe ya 20.\"",
+      "rule": "rule_vatwh_20th",
+      "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+    },
+    {
+      "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+      "line": 41,
+      "id": null,
+      "subdomain": null,
+      "pair_type": null,
+      "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+      "question": "Napatanishaje vyeti vya VAT withholding na return yangu ya VAT?",
+      "body": "Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20. Wakala huwasilisha kiasi kilichozuiliwa moja kwa moja TRA. Thibitisha na TRA (tra.go.tz).",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "20th attached to the RETURN only, which is correct: \"Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20.\"",
+      "rule": "rule_vatwh_20th",
+      "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+    }
+  ],
+  "adversarial_rows": 33,
+  "adversarial_over_removals": [
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 18,
+      "id": "b008_paye_adv_002_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya ",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 19,
+      "id": "b008_paye_adv_005_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Punguzo la kibinafsi la PAYE Tanzania ni TZS ngapi kwa mwezi?",
+      "body": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri kwa TZS 270,000 za kwanza za mapato ya kila mwezi — hii ndiyo ruhusa ya mapato yasiyotozwa kodi iliyojengwa ndani ya mfumo. Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa. Mapato yanayozidi TZS 270,000 yanatozwa kodi kwa msururu wa 8% kuanzia. K",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa.\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 20,
+      "id": "b008_paye_adv_007_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Mshahara wa TZS 270,001 (shilingi moja zaidi ya kizingiti) — mfanyakazi analipa PAYE?",
+      "body": "Ndiyo — mshahara wa TZS 270,001 unaathiriwa na bendi ya pili ya PAYE. Lakini: kodi inazingatiwa kwenye sehemu inayopita kizingiti cha TZS 270,000 tu — si mshahara wote. TZS 1 × 8% = TZS 0.08 Kwa vitendo kiasi hiki ni kidogo sana — PAYE inayozalishwa kwa kiwango hiki cha mapato ni ndogo mno. Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi katika mfumo wa PAYE Tanzania..\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 21,
+      "id": "b008_paye_adv_015_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+      "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, ha",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 39,
+      "id": "b008_paye_adv_002_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya ",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 40,
+      "id": "b008_paye_adv_005_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Punguzo la kibinafsi la PAYE Tanzania ni TZS ngapi kwa mwezi?",
+      "body": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri kwa TZS 270,000 za kwanza za mapato ya kila mwezi — hii ndiyo ruhusa ya mapato yasiyotozwa kodi iliyojengwa ndani ya mfumo. Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa. Mapato yanayozidi TZS 270,000 yanatozwa kodi kwa msururu wa 8% kuanzia. K",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa.\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 41,
+      "id": "b008_paye_adv_007_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Mshahara wa TZS 270,001 (shilingi moja zaidi ya kizingiti) — mfanyakazi analipa PAYE?",
+      "body": "Ndiyo — mshahara wa TZS 270,001 unaathiriwa na bendi ya pili ya PAYE. Lakini: kodi inazingatiwa kwenye sehemu inayopita kizingiti cha TZS 270,000 tu — si mshahara wote. TZS 1 × 8% = TZS 0.08 Kwa vitendo kiasi hiki ni kidogo sana — PAYE inayozalishwa kwa kiwango hiki cha mapato ni ndogo mno. Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi katika mfumo wa PAYE Tanzania..\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 42,
+      "id": "b008_paye_adv_015_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+      "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, ha",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 62,
+      "id": "b008_paye_adv_005_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+      "question": "Punguzo la kibinafsi la PAYE Tanzania ni TZS ngapi kwa mwezi?",
+      "body": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri kwa TZS 270,000 za kwanza za mapato ya kila mwezi — hii ndiyo ruhusa ya mapato yasiyotozwa kodi iliyojengwa ndani ya mfumo. Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa. Mapato yanayozidi TZS 270,000 yanatozwa kodi kwa msururu wa 8% kuanzia. K",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "states there is NO personal relief: \"Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa.\"",
+      "rule": "rule_personal_relief",
+      "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "line": 71,
+      "id": "b008_paye_adv_002_20260612",
+      "subdomain": "paye_adversarial",
+      "pair_type": "standard",
+      "declared_class": null,
+      "reason_key": "_quarantine.reasons",
+      "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya ",
+      "verdict": "REJECTS_DEFECT",
+      "detail": "names PAYE band 2 at 9% only under a negation",
+      "rule": "f",
+      "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+    }
+  ],
+  "per_quarantine_record": [
+    {
+      "record": "dse_stale_float_quarantine_2026_09_01.jsonl",
+      "rows": 6,
+      "verdicts": {
+        "ASSERTS_DEFECT": 6
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "efd_fabrication_all_notations_quarantine_2026_10_06.jsonl",
+      "rows": 14,
+      "verdicts": {
+        "ASSERTS_DEFECT": 14
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "efd_threshold_fabrication_quarantine_2026_08_29.jsonl",
+      "rows": 58,
+      "verdicts": {
+        "ASSERTS_DEFECT": 58
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "eval_contaminated.jsonl",
+      "rows": 9,
+      "verdicts": {
+        "NOT_A_CORRECTNESS_QUESTION": 9
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "fabrication_and_deadline_defect_quarantine_2026_08_29.jsonl",
+      "rows": 23,
+      "verdicts": {
+        "ASSERTS_DEFECT": 23
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "memorandum_articles_fee_stale_22000_quarantine_2026_09_02.jsonl",
+      "rows": 2,
+      "verdicts": {
+        "ASSERTS_DEFECT": 2
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "nssf_fine_stale_100k_quarantine_2026_10_05.jsonl",
+      "rows": 4,
+      "verdicts": {
+        "ASSERTS_DEFECT": 4
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "osha_course_fee_removed_pending_confirmation_2026_10_08.jsonl",
+      "rows": 3,
+      "verdicts": {
+        "ASSERTS_DEFECT": 3
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "paye_defect_quarantine_2026_08_25.jsonl",
+      "rows": 75,
+      "verdicts": {
+        "ASSERTS_DEFECT": 61,
+        "REJECTS_DEFECT": 14
+      },
+      "over_removals": [
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 18,
+          "id": "b008_paye_adv_002_20260612",
+          "subdomain": "paye_adversarial",
+          "pair_type": "standard",
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+          "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+          "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya ",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "names PAYE band 2 at 9% only under a negation",
+          "rule": "f",
+          "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 19,
+          "id": "b008_paye_adv_005_20260612",
+          "subdomain": "paye_adversarial",
+          "pair_type": "standard",
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+          "question": "Punguzo la kibinafsi la PAYE Tanzania ni TZS ngapi kwa mwezi?",
+          "body": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri kwa TZS 270,000 za kwanza za mapato ya kila mwezi — hii ndiyo ruhusa ya mapato yasiyotozwa kodi iliyojengwa ndani ya mfumo. Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa. Mapato yanayozidi TZS 270,000 yanatozwa kodi kwa msururu wa 8% kuanzia. K",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "states there is NO personal relief: \"Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa.\"",
+          "rule": "rule_personal_relief",
+          "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 20,
+          "id": "b008_paye_adv_007_20260612",
+          "subdomain": "paye_adversarial",
+          "pair_type": "standard",
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+          "question": "Mshahara wa TZS 270,001 (shilingi moja zaidi ya kizingiti) — mfanyakazi analipa PAYE?",
+          "body": "Ndiyo — mshahara wa TZS 270,001 unaathiriwa na bendi ya pili ya PAYE. Lakini: kodi inazingatiwa kwenye sehemu inayopita kizingiti cha TZS 270,000 tu — si mshahara wote. TZS 1 × 8% = TZS 0.08 Kwa vitendo kiasi hiki ni kidogo sana — PAYE inayozalishwa kwa kiwango hiki cha mapato ni ndogo mno. Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "states there is NO personal relief: \"Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi katika mfumo wa PAYE Tanzania..\"",
+          "rule": "rule_personal_relief",
+          "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 21,
+          "id": "b008_paye_adv_015_20260612",
+          "subdomain": "paye_adversarial",
+          "pair_type": "standard",
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+          "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+          "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, ha",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "names PAYE band 2 at 9% only under a negation",
+          "rule": "f",
+          "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 39,
+          "id": "b008_paye_adv_002_20260612",
+          "subdomain": "paye_adversarial",
+          "pair_type": "standard",
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+          "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+          "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya ",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "names PAYE band 2 at 9% only under a negation",
+          "rule": "f",
+          "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 40,
+          "id": "b008_paye_adv_005_20260612",
+          "subdomain": "paye_adversarial",
+          "pair_type": "standard",
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+          "question": "Punguzo la kibinafsi la PAYE Tanzania ni TZS ngapi kwa mwezi?",
+          "body": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri kwa TZS 270,000 za kwanza za mapato ya kila mwezi — hii ndiyo ruhusa ya mapato yasiyotozwa kodi iliyojengwa ndani ya mfumo. Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa. Mapato yanayozidi TZS 270,000 yanatozwa kodi kwa msururu wa 8% kuanzia. K",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "states there is NO personal relief: \"Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa.\"",
+          "rule": "rule_personal_relief",
+          "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 41,
+          "id": "b008_paye_adv_007_20260612",
+          "subdomain": "paye_adversarial",
+          "pair_type": "standard",
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+          "question": "Mshahara wa TZS 270,001 (shilingi moja zaidi ya kizingiti) — mfanyakazi analipa PAYE?",
+          "body": "Ndiyo — mshahara wa TZS 270,001 unaathiriwa na bendi ya pili ya PAYE. Lakini: kodi inazingatiwa kwenye sehemu inayopita kizingiti cha TZS 270,000 tu — si mshahara wote. TZS 1 × 8% = TZS 0.08 Kwa vitendo kiasi hiki ni kidogo sana — PAYE inayozalishwa kwa kiwango hiki cha mapato ni ndogo mno. Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "states there is NO personal relief: \"Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi katika mfumo wa PAYE Tanzania..\"",
+          "rule": "rule_personal_relief",
+          "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 42,
+          "id": "b008_paye_adv_015_20260612",
+          "subdomain": "paye_adversarial",
+          "pair_type": "standard",
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+          "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+          "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, ha",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "names PAYE band 2 at 9% only under a negation",
+          "rule": "f",
+          "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 51,
+          "id": null,
+          "subdomain": null,
+          "pair_type": null,
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+          "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+          "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, ha",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "names PAYE band 2 at 9% only under a negation",
+          "rule": "f",
+          "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 53,
+          "id": null,
+          "subdomain": null,
+          "pair_type": null,
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+          "question": "Punguzo la kibinafsi la PAYE Tanzania ni TZS ngapi kwa mwezi?",
+          "body": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri kwa TZS 270,000 za kwanza za mapato ya kila mwezi — hii ndiyo ruhusa ya mapato yasiyotozwa kodi iliyojengwa ndani ya mfumo. Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa. Mapato yanayozidi TZS 270,000 yanatozwa kodi kwa msururu wa 8% kuanzia. K",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "states there is NO personal relief: \"Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa.\"",
+          "rule": "rule_personal_relief",
+          "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 58,
+          "id": null,
+          "subdomain": null,
+          "pair_type": null,
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+          "question": "Mshahara wa TZS 270,001 (shilingi moja zaidi ya kizingiti) — mfanyakazi analipa PAYE?",
+          "body": "Ndiyo — mshahara wa TZS 270,001 unaathiriwa na bendi ya pili ya PAYE. Lakini: kodi inazingatiwa kwenye sehemu inayopita kizingiti cha TZS 270,000 tu — si mshahara wote. TZS 1 × 8% = TZS 0.08 Kwa vitendo kiasi hiki ni kidogo sana — PAYE inayozalishwa kwa kiwango hiki cha mapato ni ndogo mno. Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "states there is NO personal relief: \"Kumbuka: hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi katika mfumo wa PAYE Tanzania..\"",
+          "rule": "rule_personal_relief",
+          "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 62,
+          "id": "b008_paye_adv_005_20260612",
+          "subdomain": "paye_adversarial",
+          "pair_type": "standard",
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\"",
+          "question": "Punguzo la kibinafsi la PAYE Tanzania ni TZS ngapi kwa mwezi?",
+          "body": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri kwa TZS 270,000 za kwanza za mapato ya kila mwezi — hii ndiyo ruhusa ya mapato yasiyotozwa kodi iliyojengwa ndani ya mfumo. Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa. Mapato yanayozidi TZS 270,000 yanatozwa kodi kwa msururu wa 8% kuanzia. K",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "states there is NO personal relief: \"Hakuna punguzo la kibinafsi tofauti la TZS 26,000 kwa mwezi linalotakiwa kukatwa kutoka PAYE iliyohesabiwa.\"",
+          "rule": "rule_personal_relief",
+          "from_reason": "asserts a TZS 26,000/27,000 personal relief — CLAUDE.md §11: \"Any pair mentioning 'TZS 26,000 personal relief' is WRONG\""
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 71,
+          "id": "b008_paye_adv_002_20260612",
+          "subdomain": "paye_adversarial",
+          "pair_type": "standard",
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+          "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+          "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya ",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "names PAYE band 2 at 9% only under a negation",
+          "rule": "f",
+          "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+        },
+        {
+          "record": "paye_defect_quarantine_2026_08_25.jsonl",
+          "line": 72,
+          "id": null,
+          "subdomain": null,
+          "pair_type": null,
+          "declared_class": null,
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "computes PAYE band 2 at 9%; the locked rate is 8% (CLAUDE.md §11)",
+          "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+          "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya ",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "names PAYE band 2 at 9% only under a negation",
+          "rule": "f",
+          "from_reason": "computes PAYE band 2 at 9%; the locked rate is 8%"
+        }
+      ],
+      "still_not_determinable": []
+    },
+    {
+      "record": "precondition_confirmed_wrong_quarantine_2026_10_08.jsonl",
+      "rows": 12,
+      "verdicts": {
+        "ASSERTS_DEFECT": 12
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "presumptive_stale_ceiling_rate_quarantine_2026_09_01.jsonl",
+      "rows": 10,
+      "verdicts": {
+        "ASSERTS_DEFECT": 10
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "quarantine_survivors_reswept_2026_10_06.jsonl",
+      "rows": 5,
+      "verdicts": {
+        "NOT_A_CORRECTNESS_QUESTION": 5
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "rent_wht_nonresident_15pct_quarantine_2026_09_26.jsonl",
+      "rows": 16,
+      "verdicts": {
+        "ASSERTS_DEFECT": 16
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "sdl_tourism_levy_mislabeled.jsonl",
+      "rows": 3,
+      "verdicts": {
+        "NOT_A_CORRECTNESS_QUESTION": 3
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl",
+      "rows": 195,
+      "verdicts": {
+        "ASSERTS_DEFECT": 189,
+        "NOT_DETERMINABLE": 6
+      },
+      "over_removals": [],
+      "still_not_determinable": [
+        {
+          "record": "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl",
+          "line": 7,
+          "id": "tier1a_stamp_duty_138_20260609",
+          "subdomain": "stamp_duty",
+          "pair_type": "standard",
+          "declared_class": "STAMP_DUTY_FLAT1",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts a flat 1% stamp duty on land/building transfer -- Stamp Duty Act Cap.189 Schedule Art.22(b) sets a TIERED rate (0.5% on first TZS 100,000, then 1% on the excess), confirmed unchanged FA2021->FA2026. Re-verified 2026-08-31.",
+          "question": "Mtu anayenunua ardhi Tanzania kwa mara ya kwanza ana msamaha wowote wa ushuru wa stempu — kama 'first home buyer' msamaha wa nchi nyingine?",
+          "body": "Tanzania haina mfumo maalum wa msamaha wa ushuru wa stempu kwa wanunuzi wa nyumba kwa mara ya kwanza (first-time buyer) kama nchi kama Uingereza au Australia. Ushuru wa stempu wa asilimia 1 unatumika kwa wanunuzi wote bila kujali iwapo ni ununuzi wao wa kwanza au la.",
+          "verdict": "NOT_DETERMINABLE",
+          "detail": "mentions a 1% stamp duty WITHOUT a flatness claim -- removable by repair rather than deletion; this is the WEAK-removal bucket phase 1 found by hand",
+          "rule": "rule_stamp_duty_flat",
+          "from_reason": "asserts a flat 1% stamp duty ... Cap.189 Art.22(b) sets a TIERED rate (0.5% on first TZS 100,000, then 1%)"
+        },
+        {
+          "record": "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl",
+          "line": 53,
+          "id": null,
+          "subdomain": "vat_registration",
+          "pair_type": null,
+          "declared_class": "VAT_JULY2024",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "dates the VAT 100M->200M registration threshold increase to July 2024 -- the amending instrument, Government Notice No. 448Y of 2023 s.4, commenced 1 July 2023. The 200M/100M figures themselves are correct and unaffected -- only the date is wrong. Re-verified 2026-08-31.",
+          "question": "Na hiyo mipaka ya mauzo yaani TZS 200M kwa mwaka au TZS 100M kwa miezi 6, ninaambiwa ni kuanzia Julai 2024 maana yake ni kiasi gani cha VAT ",
+          "body": "Hicho kiasi cha TZS 200M au TZS 100M ni kiwango cha mauzo kinachosababisha usajili wa lazima kwa ajili ya VAT. Baada ya kusajiliwa, utatakiwa kulipa VAT kulingana na mapato yako halisi na viwango vilivyowekwa na TRA. Malipo na viwango vyenyewe vinategemea aina ya bidhaa au huduma unazotoa. Thibitisha na TRA (tra.go.tz).",
+          "verdict": "NOT_DETERMINABLE",
+          "detail": "no the July 2024 date claim in the body",
+          "rule": "f",
+          "from_reason": "dates the VAT 100M->200M increase to July 2024 -- GN 448Y/2023 commenced 1 July 2023"
+        },
+        {
+          "record": "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl",
+          "line": 60,
+          "id": "tier1a_stamp_duty_138_20260609",
+          "subdomain": "stamp_duty",
+          "pair_type": "standard",
+          "declared_class": "STAMP_DUTY_FLAT1",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts a flat 1% stamp duty on land/building transfer -- Stamp Duty Act Cap.189 Schedule Art.22(b) sets a TIERED rate (0.5% on first TZS 100,000, then 1% on the excess), confirmed unchanged FA2021->FA2026. Re-verified 2026-08-31.",
+          "question": "Mtu anayenunua ardhi Tanzania kwa mara ya kwanza ana msamaha wowote wa ushuru wa stempu — kama 'first home buyer' msamaha wa nchi nyingine?",
+          "body": "Tanzania haina mfumo maalum wa msamaha wa ushuru wa stempu kwa wanunuzi wa nyumba kwa mara ya kwanza (first-time buyer) kama nchi kama Uingereza au Australia. Ushuru wa stempu wa asilimia 1 unatumika kwa wanunuzi wote bila kujali iwapo ni ununuzi wao wa kwanza au la.",
+          "verdict": "NOT_DETERMINABLE",
+          "detail": "mentions a 1% stamp duty WITHOUT a flatness claim -- removable by repair rather than deletion; this is the WEAK-removal bucket phase 1 found by hand",
+          "rule": "rule_stamp_duty_flat",
+          "from_reason": "asserts a flat 1% stamp duty ... Cap.189 Art.22(b) sets a TIERED rate (0.5% on first TZS 100,000, then 1%)"
+        },
+        {
+          "record": "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl",
+          "line": 74,
+          "id": "tier1a_stamp_duty_138_20260609",
+          "subdomain": "stamp_duty",
+          "pair_type": "standard",
+          "declared_class": "STAMP_DUTY_FLAT1",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts a flat 1% stamp duty on land/building transfer -- Stamp Duty Act Cap.189 Schedule Art.22(b) sets a TIERED rate (0.5% on first TZS 100,000, then 1% on the excess), confirmed unchanged FA2021->FA2026. Re-verified 2026-08-31.",
+          "question": "Mtu anayenunua ardhi Tanzania kwa mara ya kwanza ana msamaha wowote wa ushuru wa stempu — kama 'first home buyer' msamaha wa nchi nyingine?",
+          "body": "Tanzania haina mfumo maalum wa msamaha wa ushuru wa stempu kwa wanunuzi wa nyumba kwa mara ya kwanza (first-time buyer) kama nchi kama Uingereza au Australia. Ushuru wa stempu wa asilimia 1 unatumika kwa wanunuzi wote bila kujali iwapo ni ununuzi wao wa kwanza au la.",
+          "verdict": "NOT_DETERMINABLE",
+          "detail": "mentions a 1% stamp duty WITHOUT a flatness claim -- removable by repair rather than deletion; this is the WEAK-removal bucket phase 1 found by hand",
+          "rule": "rule_stamp_duty_flat",
+          "from_reason": "asserts a flat 1% stamp duty ... Cap.189 Art.22(b) sets a TIERED rate (0.5% on first TZS 100,000, then 1%)"
+        },
+        {
+          "record": "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl",
+          "line": 124,
+          "id": null,
+          "subdomain": null,
+          "pair_type": null,
+          "declared_class": "VAT_JULY2024",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "dates the VAT 100M->200M registration threshold increase to July 2024 -- the amending instrument, Government Notice No. 448Y of 2023 s.4, commenced 1 July 2023. The 200M/100M figures themselves are correct and unaffected -- only the date is wrong. Re-verified 2026-08-31.",
+          "question": "Na hiyo mipaka ya mauzo yaani TZS 200M kwa mwaka au TZS 100M kwa miezi 6, ninaambiwa ni kuanzia Julai 2024 maana yake ni kiasi gani cha VAT ",
+          "body": "Hicho kiasi cha TZS 200M au TZS 100M ni kiwango cha mauzo kinachosababisha usajili wa lazima kwa ajili ya VAT. Baada ya kusajiliwa, utatakiwa kulipa VAT kulingana na mapato yako halisi na viwango vilivyowekwa na TRA. Malipo na viwango vyenyewe vinategemea aina ya bidhaa au huduma unazotoa. Thibitisha na TRA (tra.go.tz).",
+          "verdict": "NOT_DETERMINABLE",
+          "detail": "no the July 2024 date claim in the body",
+          "rule": "f",
+          "from_reason": "dates the VAT 100M->200M increase to July 2024 -- GN 448Y/2023 commenced 1 July 2023"
+        },
+        {
+          "record": "tier2_confirmed_wrong_quarantine_2026_08_31.jsonl",
+          "line": 180,
+          "id": "tier1a_stamp_duty_138_20260609",
+          "subdomain": "stamp_duty",
+          "pair_type": "standard",
+          "declared_class": "STAMP_DUTY_FLAT1",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts a flat 1% stamp duty on land/building transfer -- Stamp Duty Act Cap.189 Schedule Art.22(b) sets a TIERED rate (0.5% on first TZS 100,000, then 1% on the excess), confirmed unchanged FA2021->FA2026. Re-verified 2026-08-31.",
+          "question": "Mtu anayenunua ardhi Tanzania kwa mara ya kwanza ana msamaha wowote wa ushuru wa stempu — kama 'first home buyer' msamaha wa nchi nyingine?",
+          "body": "Tanzania haina mfumo maalum wa msamaha wa ushuru wa stempu kwa wanunuzi wa nyumba kwa mara ya kwanza (first-time buyer) kama nchi kama Uingereza au Australia. Ushuru wa stempu wa asilimia 1 unatumika kwa wanunuzi wote bila kujali iwapo ni ununuzi wao wa kwanza au la.",
+          "verdict": "NOT_DETERMINABLE",
+          "detail": "mentions a 1% stamp duty WITHOUT a flatness claim -- removable by repair rather than deletion; this is the WEAK-removal bucket phase 1 found by hand",
+          "rule": "rule_stamp_duty_flat",
+          "from_reason": "asserts a flat 1% stamp duty ... Cap.189 Art.22(b) sets a TIERED rate (0.5% on first TZS 100,000, then 1%)"
+        }
+      ]
+    },
+    {
+      "record": "tier3_confirmed_wrong_quarantine_2026_09_01.jsonl",
+      "rows": 5,
+      "verdicts": {
+        "ASSERTS_DEFECT": 5
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "vat_deferment_stale_cutoff_framing_quarantine_2026_09_02.jsonl",
+      "rows": 11,
+      "verdicts": {
+        "ASSERTS_DEFECT": 11
+      },
+      "over_removals": [],
+      "still_not_determinable": []
+    },
+    {
+      "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+      "rows": 50,
+      "verdicts": {
+        "REJECTS_DEFECT": 5,
+        "ASSERTS_DEFECT": 43,
+        "NOT_DETERMINABLE": 2
+      },
+      "over_removals": [
+        {
+          "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+          "line": 1,
+          "id": "tier1a_vat_rep_002_20260611",
+          "subdomain": "vat_withholding",
+          "pair_type": "standard",
+          "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+          "question": "Mimi ni wakala wa zuio la VAT. Ninaweza kupunguza VAT niliyoizuia kutoka kwa wasambazaji dhidi ya VAT ninayodaiwa mimi mwenyewe?",
+          "body": "Hapana. VAT ya zuio unayoizuia kutoka kwa msambazaji wako hailipwi kama mkopo dhidi ya deni lako la VAT. Wewe kama wakala wa zuio unalipa kiasi hicho moja kwa moja TRA kwa niaba ya msambazaji. Msambazaji wako ndiye anayeidai kama mkopo wa VAT (input VAT) kwenye return yake. Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — s",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "explicitly denies the 20th for this obligation: \"Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — si tarehe ya 20.\"",
+          "rule": "rule_vatwh_20th",
+          "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+        },
+        {
+          "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+          "line": 18,
+          "id": null,
+          "subdomain": "vat_withholding",
+          "pair_type": null,
+          "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+          "question": "Napatanishaje vyeti vya VAT withholding na return yangu ya VAT?",
+          "body": "Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20. Wakala huwasilisha kiasi kilichozuiliwa moja kwa moja TRA. Thibitisha na TRA (tra.go.tz).",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "20th attached to the RETURN only, which is correct: \"Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20.\"",
+          "rule": "rule_vatwh_20th",
+          "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+        },
+        {
+          "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+          "line": 21,
+          "id": null,
+          "subdomain": null,
+          "pair_type": null,
+          "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+          "question": "VAT withholding ya 6% ya huduma — inalipwa TRA lini?",
+          "body": "Qualifying buyer anayechukua VAT withholding ya 6% ya huduma analipa TRA ndani ya siku 7 baada ya mwisho wa mwezi wa muamala (au kadri TRA inavyoelekeza). Hii ni tofauti na kuwasilisha VAT return ya kawaida (tarehe 20 ya mwezi unaofuata). Kwa withholding: tarehe ya mwisho = siku 7 baada ya mwisho wa mwezi. Qualifying buyer ana wajibu mbili: (1) Kuweka withho",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "20th attached to the RETURN only, which is correct: \"Hii ni tofauti na kuwasilisha VAT return ya kawaida (tarehe 20 ya mwezi unaofuata).\"",
+          "rule": "rule_vatwh_20th",
+          "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+        },
+        {
+          "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+          "line": 31,
+          "id": "tier1a_vat_rep_002_20260611",
+          "subdomain": "vat_withholding",
+          "pair_type": "standard",
+          "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+          "question": "Mimi ni wakala wa zuio la VAT. Ninaweza kupunguza VAT niliyoizuia kutoka kwa wasambazaji dhidi ya VAT ninayodaiwa mimi mwenyewe?",
+          "body": "Hapana. VAT ya zuio unayoizuia kutoka kwa msambazaji wako hailipwi kama mkopo dhidi ya deni lako la VAT. Wewe kama wakala wa zuio unalipa kiasi hicho moja kwa moja TRA kwa niaba ya msambazaji. Msambazaji wako ndiye anayeidai kama mkopo wa VAT (input VAT) kwenye return yake. Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — s",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "explicitly denies the 20th for this obligation: \"Lazima utoe hati ya zuio la VAT kwa msambazaji siku ambayo VAT inastahili kulipwa — si tarehe ya 20.\"",
+          "rule": "rule_vatwh_20th",
+          "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+        },
+        {
+          "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+          "line": 41,
+          "id": null,
+          "subdomain": null,
+          "pair_type": null,
+          "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+          "question": "Napatanishaje vyeti vya VAT withholding na return yangu ya VAT?",
+          "body": "Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20. Wakala huwasilisha kiasi kilichozuiliwa moja kwa moja TRA. Thibitisha na TRA (tra.go.tz).",
+          "verdict": "REJECTS_DEFECT",
+          "detail": "20th attached to the RETURN only, which is correct: \"Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20.\"",
+          "rule": "rule_vatwh_20th",
+          "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+        }
+      ],
+      "still_not_determinable": [
+        {
+          "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+          "line": 12,
+          "id": null,
+          "subdomain": "vat_withholding",
+          "pair_type": null,
+          "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+          "question": "Je, kuna adhabu nikishindwa kuwasilisha VAT withholding niliyokusanya ifikapo tarehe 20?",
+          "body": "Ndiyo, kuna adhabu ya riba au tozo endapo utashindwa kuwasilisha VAT withholding ifikapo tarehe muafaka. Thibitisha na TRA (tra.go.tz).",
+          "verdict": "NOT_DETERMINABLE",
+          "detail": "no 20th-of-the-month claim in the body",
+          "rule": "rule_vatwh_20th",
+          "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+        },
+        {
+          "record": "vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+          "line": 36,
+          "id": null,
+          "subdomain": null,
+          "pair_type": null,
+          "declared_class": "VATWH_REMITTANCE_STALE_20TH",
+          "reason_key": "_quarantine.reasons",
+          "stated_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th of the following month. Finance Act 2026 s.95, in force 1 July 2026, repealed and replaced VAT Act s.71(5): the deadline is now within 10 days after the end of the tax period. The 20th was correct under Finance Act 2025's original s.71(5) t",
+          "question": "Je, kuna adhabu nikishindwa kuwasilisha VAT withholding niliyokusanya ifikapo tarehe 20?",
+          "body": "Ndiyo, kuna adhabu ya riba au tozo endapo utashindwa kuwasilisha VAT withholding ifikapo tarehe muafaka. Thibitisha na TRA (tra.go.tz).",
+          "verdict": "NOT_DETERMINABLE",
+          "detail": "no 20th-of-the-month claim in the body",
+          "rule": "rule_vatwh_20th",
+          "from_reason": "asserts VAT withholding is remitted/paid to TRA by the 20th ... FA2026 s.95 ... now within 10 days after the end of the tax period"
+        }
+      ]
+    }
+  ]
+}

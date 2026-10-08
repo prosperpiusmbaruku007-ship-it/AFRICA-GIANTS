@@ -695,6 +695,33 @@ def audit_unexercisable():
            'NOT_EXERCISABLE', '', '',
            'needs the live chike-whatsapp app and its Modal Secret. Not audited here.')
 
+    # ── chike-inference /health, built 2026-10-08 ────────────────────────────────
+    # Listed on the day it was built rather than after it is first exercised, because R26's
+    # standing instruction is to add the row when the control is built and to LIST what
+    # cannot be exercised offline rather than drop it: a census that quietly omits what it
+    # could not test reports a cleaner result than it earned.
+    #
+    # It is NOT_EXERCISABLE and not FIRES, and the distinction matters here more than usual:
+    # this control exists precisely because the previous cycle had no way to ask production
+    # what it was serving, so booking it as working before it has ever answered would be the
+    # same mistake in a new place. The offline half IS covered --
+    # tests/test_inference_health_endpoint.py (9 assertions) pins that the endpoint exists as
+    # a GET, that CHIKE_BUILD is baked into BOTH images, that the digest is taken over
+    # `self.fact_texts` rather than a fresh file read, and that the committed index still
+    # hashes to EXPECTED_SERVED_SHA256.
+    record('chike-inference /health (build + served-index digest)', 'infrastructure',
+           'a deploy that did not reach production, or a WARM GPU container serving an older '
+           'index behind a freshly-deployed web tier — the R16 hazard that previously could '
+           'only be probed for',
+           'NOT_EXERCISABLE', '', '',
+           'needs the live chike-inference app. The deploy that makes it answerable has not '
+           'been run; until it has, the only evidence of what this app serves remains a '
+           'content probe. To exercise: GET /health (expect build == the deployed SHA, never '
+           "'dev'), then GET /health?deep=1&token=... and compare "
+           'served.rag_facts_text_sha256 against EXPECTED_SERVED_SHA256 in '
+           'tests/test_inference_health_endpoint.py. A build_mismatch between the two tiers '
+           'is the warm-container case and means `modal app stop` was skipped.')
+
 
 def main():
     print('CONTROL FIRE AUDIT — planting the thing each control exists to catch\n')

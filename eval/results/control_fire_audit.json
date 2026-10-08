@@ -1,5 +1,5 @@
 {
-  "audited": "2026-10-06",
+  "audited": "2026-10-08",
   "first_audited": "2026-08-24",
   "harness": "eval/controls/audit_control_fires.py",
   "method": "R23 applied to controls: plant the thing each control exists to catch (POSITIVE, must block) and a clean case (NEGATIVE, must pass). A control needs both to count as working.",
@@ -8,7 +8,7 @@
     "FIRES": 21,
     "DISABLED": 1,
     "OBSERVED": 1,
-    "NOT_EXERCISABLE": 1
+    "NOT_EXERCISABLE": 2
   },
   "audit_self_corrections": [
     {
@@ -49,8 +49,8 @@
       "layer": "repo_gate",
       "claims_to_block": "an API key committed into a source file",
       "verdict": "FIRES",
-      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\leak.py",
-      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\clean.py",
+      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\leak.py",
+      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\clean.py",
       "note": "planted -> exit 1; clean -> exit 0. FIXED 2026-08-24; the bare invocation this replaced was INERT"
     },
     {
@@ -67,8 +67,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a training pair citing a banned, eval-only or DNS-dead source",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\src_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\src_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\src_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\src_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -76,8 +76,8 @@
       "layer": "repo_gate",
       "claims_to_block": "nssf.or.tz (DNS-failing) anywhere in a pair, including answer TEXT",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\dead_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\dead_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\dead_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\dead_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -85,8 +85,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a pair asserting a value locked_facts.json marks as WRONG",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\lf_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\lf_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\lf_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\lf_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -94,8 +94,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a held-out eval question leaking into the SFT training file (R6)",
       "verdict": "FIRES",
-      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\train_bad.jsonl",
-      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\train_ok.jsonl",
+      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\train_bad.jsonl",
+      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\train_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -103,7 +103,7 @@
       "layer": "repo_gate",
       "claims_to_block": "a locked fact that is neither in the RAG index nor human-adjudicated",
       "verdict": "FIRES",
-      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmprjju7u1f\\facts_drift.json",
+      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\facts_drift.json",
       "negative_specimen": "",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
@@ -259,6 +259,15 @@
       "positive_specimen": "",
       "negative_specimen": "",
       "note": "needs the live chike-whatsapp app and its Modal Secret. Not audited here."
+    },
+    {
+      "id": "chike-inference /health (build + served-index digest)",
+      "layer": "infrastructure",
+      "claims_to_block": "a deploy that did not reach production, or a WARM GPU container serving an older index behind a freshly-deployed web tier — the R16 hazard that previously could only be probed for",
+      "verdict": "NOT_EXERCISABLE",
+      "positive_specimen": "",
+      "negative_specimen": "",
+      "note": "needs the live chike-inference app. The deploy that makes it answerable has not been run; until it has, the only evidence of what this app serves remains a content probe. To exercise: GET /health (expect build == the deployed SHA, never 'dev'), then GET /health?deep=1&token=... and compare served.rag_facts_text_sha256 against EXPECTED_SERVED_SHA256 in tests/test_inference_health_endpoint.py. A build_mismatch between the two tiers is the warm-container case and means `modal app stop` was skipped."
     }
   ]
 }

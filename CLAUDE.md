@@ -1068,6 +1068,47 @@ introduced it.
    locked. **So the trigger to re-check refusals is ADDING A DOMAIN, not editing a phrase** —
    and adding a domain does not look like touching refusals, which is exactly why it is missed.
 
+### ⛔ R38 — A PROBE ENCODES AN EXPECTED ANSWER, SO A PROBE CAN ENCODE A WRONG ONE. THE UNCITED-GOLD PROBLEM, ARRIVING IN THE LIVE-VERIFY LAYER. (added 2026-10-08)
+
+**Two of the three failures in the first run of `verify_brela_deploy_live_2026_10_07.py` were
+the HARNESS, not the system — and the deploy was fine.** This is the same defect as the 73
+uncited gold answers (*"a wrong key is booked as a model failure forever — the adjudication
+reads the key"*), except a live-verify probe is written in minutes, by the person shipping the
+change, under time pressure, and is believed immediately because it is new.
+
+| probe | what it demanded | what the model said | who was wrong |
+|---|---|---|---|
+| `negative_nssf_fine_unchanged` | s.76(1)'s **TZS 10,000,000** ceiling | *"adhabu ya **asilimia 5** kwa kila mwezi"* | **the probe.** That is `nssf_penalty` / Cap.50 **s.14(3)**, statute-tier CONFIRMED from two byte-identical routes. The question — *"Nisipolipa michango ya NSSF kabisa, nitatozwa faini ya kiasi gani?"* — licenses **both** statutory limbs and chooses neither |
+| `negative_row57_efd_unchanged` | the no-threshold claim | D-FIDELITY-7's **withheld-answer copy** | **the probe.** It scored a guard *working* as a regression |
+
+**THE FIRST HAS A NAMEABLE CAUSE: I REUSED A RETRIEVAL GUARD'S QUERY AS A MODEL-ANSWER
+ASSERTION.** A committed critical query's job is *"is this fact reachable at rank ≤3"*. Asking
+the **model** to emit that particular limb is a different claim, and `regenerate_rag_e5.py`
+says so about another guard in its own comment: *"a retrieval guard can pass while the reply
+says something else."* Importing the query was right (it is the dry-run lesson); importing the
+**anchor as a must_match** was not.
+
+**THE SECOND IS WORSE, BECAUSE THE PROBE'S OWN `note` ALREADY DESCRIBED THE CORRECT HANDLING
+WHILE THE CODE DID THE OPPOSITE** — *"a withheld answer here is the guard working, not this
+deploy failing"* sat three lines above a `must_match` that failed exactly that. Prose and
+assertion in the same object, disagreeing, authored in one sitting.
+
+**In practice:**
+- **A `must_match` is a gold answer. Source it like one.** If the question admits two correct
+  statutory answers, accept both and say why in the probe; if you cannot cite what makes your
+  expectation the *only* right answer, the probe is not ready.
+- **Never promote a retrieval anchor to a model-answer requirement.** Reuse the query; write
+  the expectation separately.
+- **When a probe's note describes a behaviour, assert the behaviour the note describes.** A
+  note that contradicts its own assertion is an R20 vacuous check with extra confidence.
+- **Suspect the probe before the system (R26's second half), and suspect it HARDEST when the
+  probe is newer than the thing it tests.** The deploy here had already passed eleven other
+  probes; two failures against a one-hour-old harness were always more likely to be mine.
+- **Separate the limbs.** A probe that fails on *answer quality* must not be able to falsify a
+  *deploy* verdict — `row181_nine_bands` failed while its own sibling, reading the same index
+  row, proved the row was live. The harness now carries `limb: deploy | answer_quality` and the
+  deploy verdict is decided by the first only, with a non-zero exit either way.
+
 ### ⛔ A DRY RUN THAT RE-IMPLEMENTS THE REAL RUN'S GATES IS NOT A DRY RUN OF THAT RUN (2026-10-07)
 
 **The local dry run reported `VERDICT: SAFE TO RUN` — 0 displacement across 40 committed guards,
