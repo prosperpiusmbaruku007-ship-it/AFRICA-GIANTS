@@ -1,5 +1,301 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-10-08 — **THE DEPLOY IS VERIFIED AND THE PRECONDITION IS MET. THE AUDIT OF THE REMOVALS CAN ONLY SEE HALF OF WHAT IT REMOVED.**
+
+**Recovery session after a crash at the approval prompt for the live verify harness. The R15
+BRELA regen had already shipped; the crash cost one file, not the cycle.**
+
+### 1. WHERE THE CYCLE ACTUALLY GOT TO — AND ⛔ `chike-inference` HAS NO `/health` AT ALL
+
+Established from evidence rather than from the commit messages that assert it:
+
+- **The HF upload exists and is the right build.** `rag_fetch_verification_2026_10_07.json`:
+  built from `e3e1d0f` (contains the `c8cdbb9` floor, `merge-base --is-ancestor` → 0), HF
+  `2026-10-07T19:38:04Z`. The load-bearing check is not the HF commit title — it is that the
+  served `rag_facts_text.json` is **byte-identical to local `build_fact_texts()` output, row for
+  row, 184 vs 184**. All 11 payload gates re-executed against the served index.
+- **The dual-commit landed.** Row 172 read directly in both dirs: *"…faini ni **TZS 70,000** kwa
+  kila mwezi au sehemu ya mwezi"*. `kaggle/` and `chike-inference/` byte-identical (text
+  `0fb2826558773406`, npy `ec29974baa486157`), `(184, 768)`, L2-normalised. The only remaining
+  `USD 25` is row 182, **under a negation** — correct polarity.
+- **The R16 deploy ran:** `modal app history chike-inference` → a single **v1 at 2026-10-07
+  23:08 EAT**, eleven minutes after `be3691f`. A *fresh app record*, so containers are cold by
+  construction rather than by waiting out the 300s scaledown — the strongest form of R16 step 1.
+
+> **🔴 BUT THE SERVING BUILD SHA CANNOT BE QUERIED, BECAUSE THERE IS NOTHING TO QUERY.**
+> `chike-inference/modal_app.py` exposes `web_endpoint` and `generate_endpoint` and nothing
+> else. **No `/health`, no `CHIKE_BUILD`, no build SHA anywhere in the app.** R16b's "GET
+> /health returns `build`, confirm it matches the commit you pushed" exists on
+> **`chike-whatsapp` only** — that app answers with `"build":"ad1ed50"`, which is a *different
+> app*, last deployed 2026-08-14 and untouched by this cycle. And `rag_fact_count` is unchanged
+> at 184, so the fail-loud index contract cannot distinguish the two builds either (good for
+> availability — no production-down window — and it removes the one count-based signal).
+>
+> **So for the model app, a content probe is not a confirmation of the deploy. It is the whole
+> of the available evidence.** The asymmetry is worth naming: the app whose failure mode is a
+> *dead webhook* has a build SHA; the app whose failure mode is *a confidently wrong regulatory
+> figure* does not.
+
+### 2. LIVE VERIFICATION: **DEPLOY VERIFIED**, 11/11 on the deploy limb
+
+`eval/controls/verify_brela_deploy_live_2026_10_07.py` → `eval/results/brela_deploy_verification_2026_10_07.json`.
+Per-row flush, per-row errors captured. Five of twelve probes use the regen's **own committed
+critical queries, parsed out of `regenerate_rag_e5.py`** with the tested regex, each lookup
+asserting a unique hit — a harness that re-types the queries it verifies is a *model* of the
+guard set, which is how the 2026-10-06 dry run passed a package the real run refused.
+
+| probe | live reply |
+|---|---|
+| **row 172, ext_15 verbatim** | *"…kampuni za ndani … TZS 2,500 … Lakini kampuni za kigeni (Cap.212 **Sehemu XII**) … **TZS 70,000**"* |
+| **row 172, second phrasing (R33)** | **TZS 70,000** per month or part month |
+| citation not reversed | *"**Sehemu XII (ss.437-447)** … 'Companies Incorporated Outside Tanzania'"* |
+| row 181 no-share-capital | **TZS 500,000** (the superseded 300,000 is gone) |
+| row 182 foreign filing | **TZS 600,000**, no `USD 220` |
+| row 101 charter copy | **TZS 2,000,000**, no `USD 750` |
+| **negatives** | local late penalty **2,500** (not displaced by 70,000), annual return **22,000**, NSSF **5%/month**, config-only OOC refusal |
+
+**The displacement risk of this cycle was specific and it held.** Until 2026 the foreign figure
+was in USD and could not be confused with the local TZS 2,500; both limbs are now shillings, and
+the local row still answers 2,500 while the foreign row answers 70,000.
+
+**Two of the three initial failures were MY harness, not the system — R26's second half.**
+*(a)* The NSSF probe demanded s.76(1)'s ten-million ceiling; the model answered **5% per month**,
+which is `nssf_penalty` / Cap.50 **s.14(3)**, statute-tier CONFIRMED from two byte-identical
+routes. The question ("nisipolipa michango … faini ya kiasi gani") licenses **both** statutory
+limbs and does not choose; I had turned a *retrieval* guard's query into a model-answer
+assertion, which `regenerate_rag_e5.py` itself warns about ("a retrieval guard can pass while
+the reply says something else"). *(b)* The EFD probe scored **D-FIDELITY-7 working** as a BRELA
+regression — and the probe's own `note` already described the correct handling while the code did
+the opposite. Both fixed; the load-bearing `must_not_assert` limbs passed on the first run and
+were never relaxed.
+
+### 3. 🎯 THE THIRD FAILURE IS REAL, AND IT IS THE RANK-1 CLASS AGAIN — FOURTH MEMBER
+
+```
+Q (the regen's own committed guard): "Mtaji wa hisa wa kampuni yangu ni TZS 2,000,000,000.
+                                      Ada ya kusajili ni ngapi?"
+A (live): "Ada ya kusajili kampuni yenye mtaji wa hisa unaozidi TZS 5,000,000 ni TZS 290,000."
+```
+
+**The answer is TZS 600,000** (band 8, >1bn–10bn). The model returned the **>20M–50M** band and
+misstated its floor as 5,000,000.
+
+**Step zero was run before this was classified** (CLAUDE.md: measure the rank first; at rank 1
+the defect is in generation and every wording hour is wasted). Measured against the *served*
+index with the production embedder: **this exact query → row 181 at RANK 1** (0.9167); natural
+paraphrase → rank 3; the no-share-capital ask → rank 1. The correct ladder, *"zaidi ya TZS
+1,000,000,000 hadi TZS 10,000,000,000 ni TZS 600,000"*, was **in context**. There is no retrieval
+headroom left.
+
+**It cannot be staleness, and the proof is inside the harness rather than asserted about it:**
+`row181_no_share_capital` reads the **same index row 181** and returns the new 500,000. So the
+harness now carries **two limbs** — `deploy` decides the verdict, `answer_quality` is reported
+separately and still forces a non-zero exit. A single verdict read a band-selection defect as an
+unverified deploy, which is CLAUDE.md's two-bar rule arriving in a harness: *a blended number
+describes neither limb.*
+
+**R19 says it is BUILDABLE**: picking a row from a fixed fee table is a **CONSTANT** comparison,
+not a derived quantity — no lawful transformation of the user's 2,000,000,000 makes 290,000 true.
+Recorded for the next cycle, deliberately not built here. And note *why* this appeared now: the
+ladder went from **five bands with an open top to nine closed bands** on 2026-10-06, so band
+selection became arithmetic the fact path does not do. CLAUDE.md warned the ladder was
+**re-scoped, not re-priced**; this is the first measurement of what that costs.
+
+### 4. THE THREE DECISIONS, EXECUTED
+
+**(a) Quarantined 6 confirmed-wrong rows; removed 3 OSHA rows reversibly.**
+`eval/controls/quarantine_precondition_rows_2026_10_08.py`. Every locked fact re-read against
+primary text **before** removing anything (R28): `paye_p9_deadline` — *"shall be served by 30th
+January"*, Cap.332 R.E.2023 **s.110(3)(b)** verbatim; `vat_registration_threshold` — GN 448Y/2023
+commencement *"the 1st day of July, **2023**"*, so "Julai 2024" is wrong by a year; `course_fee`
+— status **HEDGE**, and its own `training_instruction` reads *"Do not state 250,000 TZS for an
+unnamed OSHA course"*, which is a **stronger** basis than "unconfirmed". Two dispositions, each
+carrying its own `restore_condition`; `CONFIRMED_WRONG` has none by design.
+
+**Each `reason` embeds the matched sentence from its own row**, so a reason that is not true of
+its row cannot be written — the direct fix for R37's finding that the 2026-08-25 record wrote one
+reason for a batch and applied it per row.
+
+> **⛔ AND READING CAUGHT TWO ROWS THE SWEEP WANTED.** A broader local sweep for "OSHA near
+> 250,000" surfaced three authored rows the precondition artifact does not list. **Two are
+> CORRECT.** `cleaned_pairs_batch_014:184` — the 250,000 is **the user's own figure**
+> (*"nilizolipia 250,000 TZS"*), merely echoed; the row asserts no fee. `batch_005_cleaned:151` —
+> the 250,000 is the **EFD machine** (*"EFD machine TZS 250,000-500,000"*); that row's OSHA line
+> is 50,000–150,000 and is right. **My sweep matched on co-occurrence inside one long body — the
+> bare-magnitude proximity false positive this project has recorded three times already.** The
+> precondition sweep was right to exclude them and mine was wrong. Both recorded as
+> `READ_AND_KEPT` at the site so no later pass re-raises them.
+
+**(b) Restored the 3 wrongly-removed rows**, each re-read whole first.
+`eval/controls/restore_overremoved_rows_2026_10_08.py`. The two PAYE rows say *"kiwango 8% (si
+9%)"* and *"8% (MUHIMU: si 9%)"* — the correct rate, explicitly denying 9%, in `paye_adversarial`
+rows written to hold that line; the record's reason names an arithmetic defect and **there is no
+arithmetic in either row**. All three questions were measured **absent from all 36 corpus files**
+before restoring, so no replacement existed and *"list the five PAYE bands"* — a core Tier 1A
+question — had been **unanswered by the corpus entirely** for six weeks.
+
+> **🔴 AND THE AUDIT'S STATED REASON FOR THE VAT ROW WAS WRONG, WHICH MATTERS MORE THAN THE
+> ROW.** The over-removal audit and the 2026-10-07 entry both describe it as removed *"for
+> containing `tarehe 20`"*. Read whole, the record's reason is a **statutory supersession**:
+> FA2026 s.95 replaced VAT Act s.71(5), moving the **remittance** deadline to within 10 days
+> after the tax period. The row still does not commit that: the 20th is attached to the
+> **RETURN** (correct, and the distinction CLAUDE.md draws in terms), and the remittance sentence
+> carries **no date at all**. A row naming no remittance deadline cannot assert the superseded
+> one. **The arm-3 classifier scored BODIES against figure patterns and never read the quarantine
+> REASONS** — so its verdicts are reliable about the rows and unreliable about *why* each was
+> removed. Restored; the residual adjacency risk is recorded and deliberately not acted on,
+> because acting on a speculative inference about what a correct row might imply *is* the
+> over-removal failure mode.
+
+**Restored to the AUTHORED corpus, then regenerated — R36's converse.** R36 says a quarantine
+must reach the export; the converse is that a restoration must **not** be hand-written there: it
+would be overwritten on the next rebuild and would have no authored source. The record's path for
+the VAT row (`cleaned_pairs/cleaned_pairs_batch_015.jsonl`) **no longer exists** — `generate_sft.py`
+moved that file to `sft_shaped_pairs/`. A path in a quarantine record is a claim about where the
+file was on the day of removal.
+
+**A restoration makes `audit_quarantine_reach.py` go red, and the red is correct but
+misleading** — it asks "is a quarantined body live again?" and cannot tell a failed quarantine
+from a deliberate restoration. All 9 flagged record lines are the 3 restored bodies (one body
+occupies 7 record lines). Adjudicated in `tests/test_quarantine_reach.py` with full reasoning;
+**12 passed**. The over-removal count stays 9 forever — a quarantine record is an append-only
+audit trail and the record of a wrong removal is the only evidence it happened — so each line now
+carries a `restored_on` marker, without which a later reader reads 9 rows as still missing.
+
+**(c) The provenance-leak row waits for the next cycle** and goes through the displacement
+harness. Unchanged, recorded.
+
+### 5. ⛔⛔ THE OVER-REMOVAL AUDIT BY CLASS: **COVERAGE IS 51.3%**
+
+`eval/controls/audit_overremoval_by_class_2026_10_08.py` → `overremoval_by_class_2026_10_08.json`.
+501 removed rows across **18** quarantine records, classifier imported never re-implemented.
+
+```
+rows 501 | verdict-bearing 257 | removal correct 248 | OVER-REMOVAL 9 | UNEXAMINED 244
+```
+
+> **The 2026-10-07 result — "3 over-removals out of 486" — described 257 rows and was silent
+> about the other 244.** Its own caveat said so ("UNEXAMINED, NOT CLEARED"); nobody had measured
+> the size. **Half the removed population is invisible to every instrument in this repo.**
+
+Four records are at **0% coverage** and one, `tier2_confirmed_wrong_quarantine_2026_08_31.jsonl`,
+has **148 unexamined of 195**. The asymmetry **flips** here and the reporting follows it: for a
+defect hunt a false positive is the expensive error because only false positives generate edits;
+for an over-removal hunt a false *"that removal was fine"* leaves correct data deleted forever and
+**the removal destroyed its own evidence**. So `NO_VERDICT` is never folded into a
+"removals-were-correct" total. **Sampling is not random** — R37 names adversarial pairs as the
+high-risk population, so all 33 are enumerated in full rather than sampled.
+
+**Hand-adjudicated, each naming the primary-sourced fact it rests on:**
+
+| record | verdict |
+|---|---|
+| `eval_contaminated` (9) | **CORRECT_AND_CORRECTLY_REMOVED** — a **third category the question did not anticipate** |
+| `sdl_tourism_levy_mislabeled` (3) | removal correct — a fabricated levy, with a confident 1% × 50M = 500,000 worked example |
+| `vat_deferment_stale_cutoff_framing` (11) | removal correct — **R32's shape: the date is right, the tense is wrong** (30 June 2026 framed as upcoming; it has passed) |
+| `presumptive_stale_ceiling_rate` (5) | removal correct — one row stale on **both** limbs (*"milioni 11 hadi milioni 100 … asilimia 3.5"*) |
+| `rent_wht_nonresident_15pct` (8) | removal correct, **record misnamed** — `rent_wht_rate` is **10% for residents AND non-residents, no split** (First Schedule para 4(b)(ii), verbatim, cross-checked against tra.go.tz's `10% \| 10%` table); the rows assert 10%/20% and 20%, so the quarantine caught **more** than its name claims |
+| `dse_stale_float` (3) | removal correct — asserts the pre-FA2025 **30%** public-float condition, lowered to 25% WEF 1 Jul 2025 |
+| **`tier2` stamp-duty limb (4)** | **MIXED — 2 correct, 2 WEAK** |
+
+**🔴 `eval_contaminated` is the finding about the question itself.** "How many removed rows were
+correct?" presumes correctness was the criterion. There it was not: those rows went under **R6**
+to preserve the train/eval split, and they **are correct** — two sound OOC refusals, a PAYE
+computation on TZS 800,000 that is exactly right against the locked bands (0 + 20,000 + 48,000 +
+10,000 = 78,000), a GN 605A row stating 33.4%. Counting them either way would be wrong.
+
+**The stamp-duty limb is the same shape as R37's founding case, one degree milder.** One reason —
+*"asserts a flat 1% stamp duty … Cap.189 Art.22(b) sets a TIERED rate"* — was applied to two
+different kinds of row. True of `stamp_duty_101` and `_108`, which explicitly deny tiering
+(*"hakuna mfumo wa ngazi (tiered)"*). **Not really true of `_122`**, whose job is refuting a 2%
+claim and which is **right** that the rate is not 2% — "BAPA" is an incidental adjective — nor of
+`_138`, whose subject is first-time-buyer relief (there is none in Tanzania: correct) and which
+mentions 1% in passing. Those two were removable **by repair, striking one word**, rather than by
+deletion. Not scored as over-removals, because the word is wrong. And stamp duty is in
+`NOT_FIGURE_TESTABLE` *precisely* because 1% is lawful and the defect is **scope** (R19's Guard B
+line) — which is exactly why no instrument could tell the two kinds apart.
+
+**⚠️ FOUR RECORDS STATE NO REASON AT ALL.** `eval_contaminated`,
+`sdl_tourism_levy_mislabeled`, `vat_deferment_stale_cutoff_framing`,
+`rent_wht_nonresident_15pct` have `reasons: None` — **their only account of why rows went is the
+FILENAME**, which cannot be checked against any row. That is strictly worse than the 2026-08-25
+PAYE record, which at least wrote a reason that could be found false. Every removal in them
+happened to be correct on reading; **that is a fact about those rows, not about the practice.**
+
+### 6. ✅ THE RETRAIN PRECONDITION IS **MET**
+
+`retrain_precondition_rederived_2026_10_08.json`, pre-checks run **and recorded**
+(`clean_temp_files` 0, `check_eval_split` 0, `generate_sft` 0):
+
+| | 2026-10-07 | 2026-10-08 |
+|---|---|---|
+| verdict | **NOT MET** | **MET** |
+| ASSERTS in the export | `paye_p9_31_march` 5, `osha_course_fee_250k` 3, `vat_threshold_dated_2024` 1 | **none** |
+| ASSERTS upstream | same 9 | **none** |
+| rows | 4,392 train / 4,402 upstream | 4,386 / 4,396 |
+
+**4,392 → 4,386 reconciles exactly: −9 removed, +3 restored.** The rebuild was **idempotent** —
+`sha256 47e2253ef7f0` before and after — which independently confirms the earlier `generate_sft`
+run produced the same bytes. `paye_band2_at_9pct` mentions-under-negation rose to 9, which is the
+restored rows being correctly demoted rather than removed. Both dated artifacts are kept; the
+10-07 one was restored from git so today's run could not overwrite yesterday's record.
+
+### 7. 🔎 NEW, FOUND WHILE RUNNING THE MANDATORY VALIDATORS: `check_locked_facts.py` HAS THE MENTION-VS-ASSERTION DEFECT
+
+`validate_dataset.py` **PASSED** (1,714 pairs, 0 errors). `check_sources.py` is clean on every
+changed file except one **pre-existing** `nssf.or.tz` hit in `cleaned_pairs_batch_015` (verified
+present at HEAD, not introduced here — the R25 containment residual).
+
+But `check_locked_facts.py` flags my two restored rows, and the pattern is
+`paye.*band.*9%(?! is wrong| ni kosa)`:
+
+1. **the `.*` is unbounded and spans the whole concatenated record** — "PAYE", "band" and "9%" are
+   matched out of three different fields, across the question/answer and Swahili/English boundary;
+2. **the negation lookahead sits AFTER the value** and covers two literal phrases, while these
+   rows negate **before** it: `si 9%`, `(not 9%)`, `(MUHIMU: si 9%)`;
+3. **`b008_paye_adv_001` is live in HEAD carrying the identical false positive** — *"UWONGO —
+   bendi ya pili ya PAYE ni asilimia 8, si 9"*, a row flagged for **denying** 9%.
+
+**Before/after against the HEAD versions, so the attribution is measured, not assumed:**
+batch_004 **19 → 18**, batch_006 **10 → 8** (the quarantine removed rows the guardian *also*
+flagged — independent corroboration), batch_008 **4 → 6** (mine).
+
+**⚠️ A ROW-LEVEL POLARITY SORT OF THE 48 FLAGS PUT 16 IN THE FALSE-POSITIVE BUCKET — AND THEN
+READING ONE ROW FROM THE *OTHER* BUCKET FOUND A FALSE POSITIVE THERE TOO, SO THE SORT IS
+UNRELIABLE IN BOTH DIRECTIONS AND NEITHER NUMBER SHOULD BE QUOTED.** `tier1a_wht_deep_035` was
+sorted as a likely true positive on `rent_wht_rate`. Read whole, **it says nothing about rent at
+all** — it is about **director fees** (15% for residents and non-residents alike) and mentions a
+residency split only for **management fees** (5%/15%), which is correct. The flag fires because
+`rent_wht_rate`'s patterns key on a residency-split claim and the row contains one *about a
+different levy*. That is the bare-magnitude/proximity failure yet again, and it is the second
+time in this session my own ad-hoc instrument reproduced a defect I had already diagnosed.
+
+**So the only defensible statement is the read one: 4 confirmed false positives** — the 2 restored
+PAYE rows, `b008_paye_adv_001` (live in HEAD), and `tier1a_wht_deep_035`. The remaining 44 flags
+are **unadjudicated**, not sorted.
+
+> **The consequential part is not the 16. It is that these three files fail this gate at HEAD.**
+> The skill says *"Do NOT save if exit code 1"* — so that instruction cannot have been honoured
+> for these files, and a gate that fails continuously carries no information. **R26's inert-control
+> shape arriving from the opposite direction: not a control that can never fire, but one that
+> always does.** Not fixed here: a lexical change to a guard needs R17's full procedure — sweep,
+> authored adversarial probes, committed regression file — and that is its own cycle, not a
+> fold-in.
+
+### 8. STATE
+
+Deploy verified and live. Precondition **MET**. Suite green.
+
+**Open, not closed:** the **row-181 band-selection defect** (rank 1, generation-layer, R19-buildable
+— the strongest new A1 item); `check_locked_facts.py`'s polarity defect and the three files that
+fail it at HEAD; **244 unexamined removed rows**, 148 of them in one record; four quarantine
+records with no stated reason; the provenance-leak row (next cycle, via
+the displacement harness); the Companies (Fees) Regulations search lead; the three vanished BRELA
+line items, **which index row 182 still serves as current**; `ext_15`'s figure limb now
+re-measured live and correct — the row's verdict is the founder's call.
+
+---
+
 ## 📋 2026-10-07 — **THE GATE CAUGHT THE ROW. THEN THE AUDIT OF THE AUDITS FOUND WE HAD DELETED CORRECT DATA.**
 
 **No production code behaviour changed. The R15 regen is re-packaged and not yet run.**

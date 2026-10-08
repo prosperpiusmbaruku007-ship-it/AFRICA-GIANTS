@@ -1,5 +1,5 @@
 {
-  "measured": "2026-10-07",
+  "measured": "2026-10-08",
   "harness": "eval/controls/audit_quarantine_reach.py",
   "question": "For every quarantine this project has performed, does the quarantined TEXT still exist in a live corpus -- and specifically in the exported SFT files that actually train the model?",
   "why_this_population": "Every record in datasets/tier1a/rejected/ against every row of every live corpus. The quarantines are the only population where an adjudication was already made, so a survivor is a KNOWN defect still present rather than a new candidate -- no re-adjudication of the fact is needed, only of whether the row is a deliberate adversarial retention (R22: this is the population the question is about).",
@@ -7,12 +7,16 @@
   "what_this_cannot_show": "A survivor may be a DELIBERATE adversarial retention -- a pair that quotes a fabrication in order to refuse it is correct prose. Polarity is not scored here; every survivor is printed with its body to be read individually (R26).",
   "the_finding_that_prompted_it": "D-FIDELITY-7's pre-wiring sweep flagged 7 rows asserting the fabricated TZS 11M EFD threshold in sft_shaped_pairs/batch_011 and _012. Five of their questions are verbatim in efd_threshold_fabrication_quarantine_2026_08_29.jsonl. The quarantine removed them from cleaned_pairs/ and never touched sft_shaped_pairs/ or sft/.",
   "totals": {
-    "live_corpus_rows_indexed": 8794,
-    "quarantined_rows_read": 486,
-    "distinct_quarantined_rows_still_live": 0,
-    "survivor_locations": 0,
-    "by_stage": {},
-    "survivors_in_training_stages": 0,
+    "live_corpus_rows_indexed": 8782,
+    "quarantined_rows_read": 501,
+    "distinct_quarantined_rows_still_live": 9,
+    "survivor_locations": 18,
+    "by_stage": {
+      "cleaned_pairs": 7,
+      "sft_EXPORTED_TRAINING": 9,
+      "sft_shaped_pairs": 2
+    },
+    "survivors_in_training_stages": 11,
     "edited_in_place_not_removed": 6
   },
   "the_third_outcome": "A quarantined body that is ABSENT while its QUESTION is still live was EDITED IN PLACE, not removed. The record then holds the pre-edit text, so a body match reports the row as cleanly gone. R25's containment shape: the edit can repair the sentence a sweep keys on and leave the same claim standing later in the same row. It is also why a sweep for the spelled-out 'milioni 11' found 3 rows while D-FIDELITY-7 found 7 -- the repair deleted the words and left the digits.",
@@ -74,11 +78,30 @@
       "stages": {}
     },
     {
+      "record": "datasets/tier1a/rejected/osha_course_fee_removed_pending_confirmation_2026_10_08.jsonl",
+      "rows": 3,
+      "with_body": 3,
+      "surviving": 0,
+      "edited_in_place": 0,
+      "stages": {}
+    },
+    {
       "record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
       "rows": 75,
       "with_body": 75,
-      "surviving": 0,
+      "surviving": 7,
       "edited_in_place": 3,
+      "stages": {
+        "cleaned_pairs": 7,
+        "sft_EXPORTED_TRAINING": 7
+      }
+    },
+    {
+      "record": "datasets/tier1a/rejected/precondition_confirmed_wrong_quarantine_2026_10_08.jsonl",
+      "rows": 12,
+      "with_body": 12,
+      "surviving": 0,
+      "edited_in_place": 0,
       "stages": {}
     },
     {
@@ -141,12 +164,160 @@
       "record": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
       "rows": 50,
       "with_body": 50,
-      "surviving": 0,
+      "surviving": 2,
       "edited_in_place": 0,
-      "stages": {}
+      "stages": {
+        "sft_shaped_pairs": 2,
+        "sft_EXPORTED_TRAINING": 2
+      }
     }
   ],
-  "survivors": [],
+  "survivors": [
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 18,
+      "survives_in_stage": "cleaned_pairs",
+      "survives_at": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:143",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). Kodi inazing"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 18,
+      "survives_in_stage": "sft_EXPORTED_TRAINING",
+      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:2115",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). Kodi inazing"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 21,
+      "survives_in_stage": "cleaned_pairs",
+      "survives_at": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:144",
+      "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+      "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). kwa mwezi. Kodi ya bend"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 21,
+      "survives_in_stage": "sft_EXPORTED_TRAINING",
+      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:3728",
+      "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+      "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). kwa mwezi. Kodi ya bend"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 39,
+      "survives_in_stage": "cleaned_pairs",
+      "survives_at": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:143",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). Kodi inazing"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 39,
+      "survives_in_stage": "sft_EXPORTED_TRAINING",
+      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:2115",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). Kodi inazing"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 42,
+      "survives_in_stage": "cleaned_pairs",
+      "survives_at": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:144",
+      "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+      "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). kwa mwezi. Kodi ya bend"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 42,
+      "survives_in_stage": "sft_EXPORTED_TRAINING",
+      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:3728",
+      "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+      "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). kwa mwezi. Kodi ya bend"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 51,
+      "survives_in_stage": "cleaned_pairs",
+      "survives_at": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:144",
+      "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+      "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). kwa mwezi. Kodi ya bend"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 51,
+      "survives_in_stage": "sft_EXPORTED_TRAINING",
+      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:3728",
+      "question": "Kwa muhtasari: bendi TANO za PAYE Tanzania kwa 2025/2026 — zitaje kwa usahihi kamili.",
+      "body": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili: (1) TZS 0 hadi 270,000 = 0%; (2) TZS 270,001 hadi 520,000 = 8% (MUHIMU: si 9%); (3) TZS 520,001 hadi 760,000 = 20%; (4) TZS 760,001 hadi 1,000,000 = 25%; (5) Zaidi ya TZS 1,000,000 = 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). kwa mwezi. Kodi ya bend"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 71,
+      "survives_in_stage": "cleaned_pairs",
+      "survives_at": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:143",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). Kodi inazing"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 71,
+      "survives_in_stage": "sft_EXPORTED_TRAINING",
+      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:2115",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). Kodi inazing"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 72,
+      "survives_in_stage": "cleaned_pairs",
+      "survives_at": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:143",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). Kodi inazing"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
+      "quarantine_line": 72,
+      "survives_in_stage": "sft_EXPORTED_TRAINING",
+      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:2115",
+      "question": "Bendi za PAYE za Tanzania kwa mwaka 2025/2026 ni zipi — zitaje zote tano kwa usahihi?",
+      "body": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%; (2) TZS 270,001 hadi 520,000: kiwango 8% (si 9%); (3) TZS 520,001 hadi 760,000: kiwango 20%; (4) TZS 760,001 hadi 1,000,000: kiwango 25%; (5) Zaidi ya TZS 1,000,000: kiwango 30%. Kizingiti cha mapato yasiyotozwa kodi: TZS 3,240,000/mwaka (TZS 270,000/mwezi kwa 0% — imejengwa ndani ya Bendi 1, hakuna punguzo tofauti la kila mwezi). Kodi inazing"
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+      "quarantine_line": 18,
+      "survives_in_stage": "sft_shaped_pairs",
+      "survives_at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl:714",
+      "question": "Napatanishaje vyeti vya VAT withholding na return yangu ya VAT?",
+      "body": "Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20. Wakala huwasilisha kiasi kilichozuiliwa moja kwa moja TRA. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+      "quarantine_line": 18,
+      "survives_in_stage": "sft_EXPORTED_TRAINING",
+      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:2635",
+      "question": "Napatanishaje vyeti vya VAT withholding na return yangu ya VAT?",
+      "body": "Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20. Wakala huwasilisha kiasi kilichozuiliwa moja kwa moja TRA. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+      "quarantine_line": 41,
+      "survives_in_stage": "sft_shaped_pairs",
+      "survives_at": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl:714",
+      "question": "Napatanishaje vyeti vya VAT withholding na return yangu ya VAT?",
+      "body": "Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20. Wakala huwasilisha kiasi kilichozuiliwa moja kwa moja TRA. Thibitisha na TRA (tra.go.tz)."
+    },
+    {
+      "quarantine_record": "datasets/tier1a/rejected/vat_withholding_deadline_stale_quarantine_2026_09_01.jsonl",
+      "quarantine_line": 41,
+      "survives_in_stage": "sft_EXPORTED_TRAINING",
+      "survives_at": "datasets/tier1a/sft/train_sft.jsonl:2635",
+      "question": "Napatanishaje vyeti vya VAT withholding na return yangu ya VAT?",
+      "body": "Kama muuzaji, unatumia cheti cha VAT withholding kudai kiasi kilichozuiliwa kama input credit kwenye return yako ya VAT, inayowasilishwa kufikia tarehe 20. Wakala huwasilisha kiasi kilichozuiliwa moja kwa moja TRA. Thibitisha na TRA (tra.go.tz)."
+    }
+  ],
   "edited_in_place": [
     {
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
@@ -161,7 +332,7 @@
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
       "quarantine_line": 1,
       "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:3602",
+      "at": "datasets/tier1a/sft/train_sft.jsonl:3592",
       "question": "PAYE inacheswa vipi kwa mshahara wa chini wa TZS 358,322?",
       "quarantined_body": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. Baada ya punguzo la kibinafsi TZS 26,000, TZS 4,199 ? TZS 26,000 < 0, kwa hiyo PAYE = TZS 0. Thibitisha hesabu na TRA.",
       "live_body_now": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. PAYE ya mwezi: TZS 4,199. Thibitisha hesabu na TRA."
@@ -179,7 +350,7 @@
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
       "quarantine_line": 22,
       "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:3602",
+      "at": "datasets/tier1a/sft/train_sft.jsonl:3592",
       "question": "PAYE inacheswa vipi kwa mshahara wa chini wa TZS 358,322?",
       "quarantined_body": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. Baada ya punguzo la kibinafsi TZS 26,000, TZS 4,199 ? TZS 26,000 < 0, kwa hiyo PAYE = TZS 0. Thibitisha hesabu na TRA.",
       "live_body_now": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. PAYE ya mwezi: TZS 4,199. Thibitisha hesabu na TRA."
@@ -197,7 +368,7 @@
       "quarantine_record": "datasets/tier1a/rejected/paye_defect_quarantine_2026_08_25.jsonl",
       "quarantine_line": 56,
       "stage": "sft_EXPORTED_TRAINING",
-      "at": "datasets/tier1a/sft/train_sft.jsonl:3602",
+      "at": "datasets/tier1a/sft/train_sft.jsonl:3592",
       "question": "PAYE inacheswa vipi kwa mshahara wa chini wa TZS 358,322?",
       "quarantined_body": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. Baada ya punguzo la kibinafsi TZS 26,000, TZS 4,199 ? TZS 26,000 < 0, kwa hiyo PAYE = TZS 0. Thibitisha hesabu na TRA.",
       "live_body_now": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. PAYE ya mwezi: TZS 4,199. Thibitisha hesabu na TRA."

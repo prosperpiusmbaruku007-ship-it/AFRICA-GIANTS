@@ -1001,3 +1001,195 @@ Total: 1 | Flagged: 1
 
 [2026-10-06T19:13:56.896215] Checked C:\Users\jhjh\AppData\Local\Temp\tmprjju7u1f\lf_ok.jsonl
 Total: 1 | Flagged: 0
+
+[2026-10-08T11:25:38.766479] Checked datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl
+Total: 295 | Flagged: 18
+  FLAG [tier1a_gn605a_008_20260609] wcf_threshold_no_minimum: wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)
+  FLAG [tier1a_gn605a_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_osha_001_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_001_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: biashara zenye wafanyakazi chini ya 10.*osha
+  FLAG [tier1a_osha_012_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_012_20260609] osha_registration_threshold_b004: osha.*wafanyakazi 10 au zaidi
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_024_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: osha.*wafanyakazi 10 au zaidi
+  FLAG [tier1a_osha_038_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_paye_adv_001_20260609] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [tier1a_paye_adv_002_20260609] p45_not_tanzanian: P45.*P9
+  FLAG [tier1a_paye_adv_006_20260609] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [tier1a_paye_adv_017_20260609] paye_all_bands_sequence: paye.*band.*35%
+  FLAG [tier1a_paye_adv_017_20260609] paye_all_bands_sequence: paye.*top.*35%
+  FLAG [tier1a_wht_deep_035_20260609] rent_wht_rate: non.?residents?[^.!?]{0,30}15%[^.!?]{0,40}rent(?! is not| is wrong)
+  FLAG [tier1a_wcf_004_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_wcf_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*1%(?! before| kabla| was| ilikuwa)
+  FLAG [tier1a_wcf_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_wcf_010_20260609] osha_registration_threshold_b004: osha.*threshold ya 10
+  FLAG [tier1a_mix_rc_002_20260609] vat_threshold_200m_july2024_increase: vat.*50M.*6 months(?! before 2023| was)
+  FLAG [tier1a_mix_rc_005_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+
+[2026-10-08T11:26:09.867404] Checked datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl
+Total: 294 | Flagged: 8
+  FLAG [b006_sdl_034] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_sdl_049] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_vat_ref_028] VAT_zero_rated_vs_exempt_input_VAT: zero.rated.*haiwezi kudai.*input
+  FLAG [b006_paye_for_030] paye_nonresident_flat_rate: non-resident.*paye.*30%(?!.*resident)
+  FLAG [b006_paye_for_038] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_disambig_009] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_rural_007] wcf_threshold_no_minimum: wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)
+  FLAG [b006_rural_015] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [b006_rural_015] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+
+[2026-10-08T11:26:24.857484] Checked datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl
+Total: 144 | Flagged: 6
+  FLAG [b008_vat_prc_001_20260612] VAT_zero_rated_vs_exempt_input_VAT: zero.rated.*cannot claim input vat
+  FLAG [b008_paye_adv_001_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_001_20260612] paye_bands_monthly_2025_26: band 2.*9%(?! ni kosa| is wrong)
+  FLAG [b008_paye_adv_003_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_010_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_010_20260612] paye_bands_monthly_2025_26: band 2.*9%(?! ni kosa| is wrong)
+  FLAG [b008_paye_adv_002_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_015_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+
+[2026-10-08T11:27:40.317383] Checked datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl
+Total: 714 | Flagged: 0
+
+[2026-10-08T11:29:08.237301] Checked C:/Users/jhjh/AppData/Local/Temp/claude/C--Users-jhjh-AFRICA-GIANTS/7e09fc99-9cd4-4c52-b286-f910ad8463fa/scratchpad/head/batch_004_cleaned.jsonl
+Total: 296 | Flagged: 19
+  FLAG [tier1a_gn605a_008_20260609] wcf_threshold_no_minimum: wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)
+  FLAG [tier1a_gn605a_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_osha_001_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_001_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: biashara zenye wafanyakazi chini ya 10.*osha
+  FLAG [tier1a_osha_012_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_012_20260609] osha_registration_threshold_b004: osha.*wafanyakazi 10 au zaidi
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_024_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: osha.*wafanyakazi 10 au zaidi
+  FLAG [tier1a_osha_038_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_paye_adv_001_20260609] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [tier1a_paye_adv_002_20260609] p45_not_tanzanian: P45.*P9
+  FLAG [tier1a_paye_adv_006_20260609] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [tier1a_paye_adv_017_20260609] paye_all_bands_sequence: paye.*band.*35%
+  FLAG [tier1a_paye_adv_017_20260609] paye_all_bands_sequence: paye.*top.*35%
+  FLAG [tier1a_paye_adv_033_20260609] paye_p9_deadline: p9.*31 machi
+  FLAG [tier1a_paye_adv_033_20260609] paye_p9_deadline: p9.*31 march
+  FLAG [tier1a_wht_deep_035_20260609] rent_wht_rate: non.?residents?[^.!?]{0,30}15%[^.!?]{0,40}rent(?! is not| is wrong)
+  FLAG [tier1a_wcf_004_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_wcf_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*1%(?! before| kabla| was| ilikuwa)
+  FLAG [tier1a_wcf_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_wcf_010_20260609] osha_registration_threshold_b004: osha.*threshold ya 10
+  FLAG [tier1a_mix_rc_002_20260609] vat_threshold_200m_july2024_increase: vat.*50M.*6 months(?! before 2023| was)
+  FLAG [tier1a_mix_rc_005_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+
+[2026-10-08T11:29:42.386465] Checked C:/Users/jhjh/AppData/Local/Temp/claude/C--Users-jhjh-AFRICA-GIANTS/7e09fc99-9cd4-4c52-b286-f910ad8463fa/scratchpad/head/batch_006_cleaned.jsonl
+Total: 296 | Flagged: 10
+  FLAG [b006_sdl_034] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_sdl_049] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_vat_ref_028] VAT_zero_rated_vs_exempt_input_VAT: zero.rated.*haiwezi kudai.*input
+  FLAG [b006_paye_for_018] paye_p9_deadline: p9.*31 machi
+  FLAG [b006_paye_for_018] paye_p9_deadline: p9.*31 march
+  FLAG [b006_paye_for_030] paye_nonresident_flat_rate: non-resident.*paye.*30%(?!.*resident)
+  FLAG [b006_paye_for_038] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_disambig_009] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_disambig_012] paye_p9_deadline: p9.*31 machi
+  FLAG [b006_disambig_012] paye_p9_deadline: p9.*31 march
+  FLAG [b006_rural_007] wcf_threshold_no_minimum: wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)
+  FLAG [b006_rural_015] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [b006_rural_015] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+
+[2026-10-08T11:29:58.672457] Checked C:/Users/jhjh/AppData/Local/Temp/claude/C--Users-jhjh-AFRICA-GIANTS/7e09fc99-9cd4-4c52-b286-f910ad8463fa/scratchpad/head/batch_008_cleaned.jsonl
+Total: 142 | Flagged: 4
+  FLAG [b008_vat_prc_001_20260612] VAT_zero_rated_vs_exempt_input_VAT: zero.rated.*cannot claim input vat
+  FLAG [b008_paye_adv_001_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_001_20260612] paye_bands_monthly_2025_26: band 2.*9%(?! ni kosa| is wrong)
+  FLAG [b008_paye_adv_003_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_010_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_010_20260612] paye_bands_monthly_2025_26: band 2.*9%(?! ni kosa| is wrong)
+
+[2026-10-08T11:31:20.157280] Checked C:/Users/jhjh/AppData/Local/Temp/claude/C--Users-jhjh-AFRICA-GIANTS/7e09fc99-9cd4-4c52-b286-f910ad8463fa/scratchpad/head/cleaned_pairs_batch_015.jsonl
+Total: 719 | Flagged: 0
+
+[2026-10-08T11:33:27.962410] Checked datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl
+Total: 144 | Flagged: 6
+  FLAG [b008_vat_prc_001_20260612] VAT_zero_rated_vs_exempt_input_VAT: zero.rated.*cannot claim input vat
+  FLAG [b008_paye_adv_001_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_001_20260612] paye_bands_monthly_2025_26: band 2.*9%(?! ni kosa| is wrong)
+  FLAG [b008_paye_adv_003_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_010_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_010_20260612] paye_bands_monthly_2025_26: band 2.*9%(?! ni kosa| is wrong)
+  FLAG [b008_paye_adv_002_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_015_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+
+[2026-10-08T11:37:26.894300] Checked datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl
+Total: 295 | Flagged: 18
+  FLAG [tier1a_gn605a_008_20260609] wcf_threshold_no_minimum: wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)
+  FLAG [tier1a_gn605a_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_osha_001_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_001_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: biashara zenye wafanyakazi chini ya 10.*osha
+  FLAG [tier1a_osha_012_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_012_20260609] osha_registration_threshold_b004: osha.*wafanyakazi 10 au zaidi
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_024_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_028_20260609] osha_registration_threshold_b004: osha.*wafanyakazi 10 au zaidi
+  FLAG [tier1a_osha_038_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+  FLAG [tier1a_paye_adv_001_20260609] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [tier1a_paye_adv_002_20260609] p45_not_tanzanian: P45.*P9
+  FLAG [tier1a_paye_adv_006_20260609] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [tier1a_paye_adv_017_20260609] paye_all_bands_sequence: paye.*band.*35%
+  FLAG [tier1a_paye_adv_017_20260609] paye_all_bands_sequence: paye.*top.*35%
+  FLAG [tier1a_wht_deep_035_20260609] rent_wht_rate: non.?residents?[^.!?]{0,30}15%[^.!?]{0,40}rent(?! is not| is wrong)
+  FLAG [tier1a_wcf_004_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_wcf_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*1%(?! before| kabla| was| ilikuwa)
+  FLAG [tier1a_wcf_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_wcf_010_20260609] osha_registration_threshold_b004: osha.*threshold ya 10
+  FLAG [tier1a_mix_rc_002_20260609] vat_threshold_200m_july2024_increase: vat.*50M.*6 months(?! before 2023| was)
+  FLAG [tier1a_mix_rc_005_20260609] osha_registration_threshold_b004: wafanyakazi 10.*osha
+
+[2026-10-08T11:38:02.887291] Checked datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl
+Total: 294 | Flagged: 8
+  FLAG [b006_sdl_034] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_sdl_049] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_vat_ref_028] VAT_zero_rated_vs_exempt_input_VAT: zero.rated.*haiwezi kudai.*input
+  FLAG [b006_paye_for_030] paye_nonresident_flat_rate: non-resident.*paye.*30%(?!.*resident)
+  FLAG [b006_paye_for_038] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_disambig_009] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+  FLAG [b006_rural_007] wcf_threshold_no_minimum: wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)
+  FLAG [b006_rural_015] osha_registration_threshold_b004: osha.*10 employees
+  FLAG [b006_rural_015] wcf_threshold_no_minimum: wcf.*10 employees(?! for sdl)
+
+[2026-10-08T11:38:20.771912] Checked datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl
+Total: 144 | Flagged: 6
+  FLAG [b008_vat_prc_001_20260612] VAT_zero_rated_vs_exempt_input_VAT: zero.rated.*cannot claim input vat
+  FLAG [b008_paye_adv_001_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_001_20260612] paye_bands_monthly_2025_26: band 2.*9%(?! ni kosa| is wrong)
+  FLAG [b008_paye_adv_003_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_010_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_010_20260612] paye_bands_monthly_2025_26: band 2.*9%(?! ni kosa| is wrong)
+  FLAG [b008_paye_adv_002_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)
+  FLAG [b008_paye_adv_015_20260612] paye_all_bands_sequence: paye.*band.*9%(?! is wrong| ni kosa)

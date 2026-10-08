@@ -1,0 +1,302 @@
+{
+  "_what": "Quarantine of the 6 confirmed-wrong precondition rows and reversible removal of the 3 OSHA course-fee rows.",
+  "_authorised": "founder, 2026-10-08",
+  "_mode": "WRITE",
+  "_two_dispositions": "CONFIRMED_WRONG is refuted by primary text and has no restore condition. REMOVED_PENDING_CONFIRMATION is unsupported, not disproven: course_fee is a locked HEDGE whose own training_instruction forbids asserting 250,000, so a confident row teaches a certainty the fact base withholds. Each removed row carries its own restore_condition.",
+  "_per_row_reasons": "Each `reason` embeds the matched sentence FROM THAT ROW. The 2026-08-25 PAYE quarantine wrote one reason for a batch, applied it per row, and its stated reason was false of every row it named (R37). A reason built from the row cannot be.",
+  "_where_it_acts": "The AUTHORED corpus (cleaned_pairs/, sft_shaped_pairs/, raw_sources/). datasets/tier1a/sft/ is generated; the export is rebuilt afterwards and the reach is asserted separately per R36.",
+  "_read_and_kept": [
+    {
+      "at": "datasets\\tier1a\\sft_shaped_pairs/cleaned_pairs_batch_014.jsonl:184",
+      "q": "Hizo 'OSH TRAININGS AND PROMOTION' nilizolipia 250,000 TZS zinahusiana na kodi gani hasa?",
+      "why_kept": "The 250,000 is THE USER'S OWN figure, stated in the question ('nilizolipia 250,000 TZS') and echoed by the body ('kama haya uliyolipia 250,000 TZS'). The row asserts no OSHA course fee. Removing it would be an over-removal of exactly the kind R37 was written for."
+    },
+    {
+      "at": "datasets\\tier1a\\cleaned_pairs/batch_005_cleaned.jsonl:151 (+ datasets\\tier1a\\raw_sources/raw_pairs_batch_005.jsonl:151)",
+      "q": "Gharama ya jumla ya kufuata sheria za biashara kwa miaka ya kwanza...",
+      "why_kept": "The 250,000 is the EFD MACHINE ('EFD machine TZS 250,000-500,000'). This row's OSHA line is 'OSHA TZS 50,000-150,000 kwa mwaka' and is correct. My sweep matched on co-occurrence inside one long body; the precondition sweep correctly excluded it."
+    }
+  ],
+  "totals": {
+    "targets": 9,
+    "file_instances_considered": 15,
+    "confirmed_wrong_removed": 12,
+    "reversibly_removed": 3,
+    "kept_on_polarity": 0,
+    "unresolved": 0,
+    "read_and_kept_outside_the_set": 2
+  },
+  "rows": [
+    {
+      "class": "paye_p9_31_march",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\cleaned_pairs/batch_004_cleaned.jsonl:120",
+      "row_id": "tier1a_paye_adv_033_20260609",
+      "question": "Tofauti kati ya P9 na P10 ni nini kwa madhumuni ya PAYE?",
+      "subdomain": "paye_standard",
+      "pair_type": "disambiguation",
+      "polarity": "ASSERTS",
+      "matched": [
+        "31 Machi"
+      ],
+      "locked_fact": "paye_p9_deadline",
+      "reason": "asserts the annual employment-income withholding certificate is due 31 March. Income Tax Act Cap.332 R.E.2023 s.110(3)(b): \"shall be served by 30th January after the end of the year\" (read verbatim from tra.go.tz, 146pp, HTTP 200, 2026-10-05; source note '[s. 85]' confirms the renumbering from the pre-R.E.2023 citation). Separately, 'Form P9' is Kenyan KRA terminology -- TRA has no form by that name. THIS ROW SAYS: \"P9 ni TAARIFA YA MWAKA ya PAYE — inawasilishwa mara moja kwa mwaka ifikapo tarehe 31 Machi na inatoa muhtasari wa PAYE yote iliyolipwa na mwaka.\"",
+      "quoted_sentence": "P9 ni TAARIFA YA MWAKA ya PAYE — inawasilishwa mara moja kwa mwaka ifikapo tarehe 31 Machi na inatoa muhtasari wa PAYE yote iliyolipwa na mwaka.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "paye_p9_31_march",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\raw_sources/raw_pairs_batch_004.jsonl:120",
+      "row_id": "tier1a_paye_adv_033_20260609",
+      "question": "Tofauti kati ya P9 na P10 ni nini kwa madhumuni ya PAYE?",
+      "subdomain": "paye_standard",
+      "pair_type": "disambiguation",
+      "polarity": "ASSERTS",
+      "matched": [
+        "31 Machi"
+      ],
+      "locked_fact": "paye_p9_deadline",
+      "reason": "asserts the annual employment-income withholding certificate is due 31 March. Income Tax Act Cap.332 R.E.2023 s.110(3)(b): \"shall be served by 30th January after the end of the year\" (read verbatim from tra.go.tz, 146pp, HTTP 200, 2026-10-05; source note '[s. 85]' confirms the renumbering from the pre-R.E.2023 citation). Separately, 'Form P9' is Kenyan KRA terminology -- TRA has no form by that name. THIS ROW SAYS: \"P9 ni TAARIFA YA MWAKA ya PAYE — inawasilishwa mara moja kwa mwaka ifikapo tarehe 31 Machi na inatoa muhtasari wa PAYE yote iliyolipwa na mwaka.\"",
+      "quoted_sentence": "P9 ni TAARIFA YA MWAKA ya PAYE — inawasilishwa mara moja kwa mwaka ifikapo tarehe 31 Machi na inatoa muhtasari wa PAYE yote iliyolipwa na mwaka.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "paye_p9_31_march",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\raw_sources/_verify_batch004_pairs21_300.jsonl:101",
+      "row_id": "tier1a_paye_adv_033_20260609",
+      "question": "Tofauti kati ya P9 na P10 ni nini kwa madhumuni ya PAYE?",
+      "subdomain": "paye_standard",
+      "pair_type": "disambiguation",
+      "polarity": "ASSERTS",
+      "matched": [
+        "31 Machi"
+      ],
+      "locked_fact": "paye_p9_deadline",
+      "reason": "asserts the annual employment-income withholding certificate is due 31 March. Income Tax Act Cap.332 R.E.2023 s.110(3)(b): \"shall be served by 30th January after the end of the year\" (read verbatim from tra.go.tz, 146pp, HTTP 200, 2026-10-05; source note '[s. 85]' confirms the renumbering from the pre-R.E.2023 citation). Separately, 'Form P9' is Kenyan KRA terminology -- TRA has no form by that name. THIS ROW SAYS: \"P9 ni TAARIFA YA MWAKA ya PAYE — inawasilishwa mara moja kwa mwaka ifikapo tarehe 31 Machi na inatoa muhtasari wa PAYE yote iliyolipwa na mwaka.\"",
+      "quoted_sentence": "P9 ni TAARIFA YA MWAKA ya PAYE — inawasilishwa mara moja kwa mwaka ifikapo tarehe 31 Machi na inatoa muhtasari wa PAYE yote iliyolipwa na mwaka.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "paye_p9_31_march",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\cleaned_pairs/batch_006_cleaned.jsonl:217",
+      "row_id": "b006_paye_for_018",
+      "question": "P9 form kwa mfanyakazi mgeni — ni nini na inapaswa kutolewa lini?",
+      "subdomain": "paye_foreign_employees",
+      "pair_type": "standard",
+      "polarity": "ASSERTS",
+      "matched": [
+        "31 Machi"
+      ],
+      "locked_fact": "paye_p9_deadline",
+      "reason": "asserts the annual employment-income withholding certificate is due 31 March. Income Tax Act Cap.332 R.E.2023 s.110(3)(b): \"shall be served by 30th January after the end of the year\" (read verbatim from tra.go.tz, 146pp, HTTP 200, 2026-10-05; source note '[s. 85]' confirms the renumbering from the pre-R.E.2023 citation). Separately, 'Form P9' is Kenyan KRA terminology -- TRA has no form by that name. THIS ROW SAYS: \"Inahitajika kutolewa na mwajiri kwa kila mfanyakazi — raia na wageni — kabla ya 31 Machi ya mwaka unaofuata wa kodi.\"",
+      "quoted_sentence": "Inahitajika kutolewa na mwajiri kwa kila mfanyakazi — raia na wageni — kabla ya 31 Machi ya mwaka unaofuata wa kodi.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "paye_p9_31_march",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\raw_sources/raw_pairs_batch_006.jsonl:217",
+      "row_id": "b006_paye_for_018",
+      "question": "P9 form kwa mfanyakazi mgeni — ni nini na inapaswa kutolewa lini?",
+      "subdomain": "paye_foreign_employees",
+      "pair_type": "standard",
+      "polarity": "ASSERTS",
+      "matched": [
+        "31 Machi"
+      ],
+      "locked_fact": "paye_p9_deadline",
+      "reason": "asserts the annual employment-income withholding certificate is due 31 March. Income Tax Act Cap.332 R.E.2023 s.110(3)(b): \"shall be served by 30th January after the end of the year\" (read verbatim from tra.go.tz, 146pp, HTTP 200, 2026-10-05; source note '[s. 85]' confirms the renumbering from the pre-R.E.2023 citation). Separately, 'Form P9' is Kenyan KRA terminology -- TRA has no form by that name. THIS ROW SAYS: \"Inahitajika kutolewa na mwajiri kwa kila mfanyakazi — raia na wageni — kabla ya 31 Machi ya mwaka unaofuata wa kodi.\"",
+      "quoted_sentence": "Inahitajika kutolewa na mwajiri kwa kila mfanyakazi — raia na wageni — kabla ya 31 Machi ya mwaka unaofuata wa kodi.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "paye_p9_31_march",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\raw_sources/_verify_batch006_all.jsonl:217",
+      "row_id": "b006_paye_for_018",
+      "question": "P9 form kwa mfanyakazi mgeni — ni nini na inapaswa kutolewa lini?",
+      "subdomain": "paye_foreign_employees",
+      "pair_type": "standard",
+      "polarity": "ASSERTS",
+      "matched": [
+        "31 Machi"
+      ],
+      "locked_fact": "paye_p9_deadline",
+      "reason": "asserts the annual employment-income withholding certificate is due 31 March. Income Tax Act Cap.332 R.E.2023 s.110(3)(b): \"shall be served by 30th January after the end of the year\" (read verbatim from tra.go.tz, 146pp, HTTP 200, 2026-10-05; source note '[s. 85]' confirms the renumbering from the pre-R.E.2023 citation). Separately, 'Form P9' is Kenyan KRA terminology -- TRA has no form by that name. THIS ROW SAYS: \"Inahitajika kutolewa na mwajiri kwa kila mfanyakazi — raia na wageni — kabla ya 31 Machi ya mwaka unaofuata wa kodi.\"",
+      "quoted_sentence": "Inahitajika kutolewa na mwajiri kwa kila mfanyakazi — raia na wageni — kabla ya 31 Machi ya mwaka unaofuata wa kodi.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "paye_p9_31_march",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\cleaned_pairs/batch_006_cleaned.jsonl:278",
+      "row_id": "b006_disambig_012",
+      "question": "P9 form na P9A form — ni tofauti gani?",
+      "subdomain": "disambiguation_mixed",
+      "pair_type": "disambiguation",
+      "polarity": "ASSERTS",
+      "matched": [
+        "31 Machi"
+      ],
+      "locked_fact": "paye_p9_deadline",
+      "reason": "asserts the annual employment-income withholding certificate is due 31 March. Income Tax Act Cap.332 R.E.2023 s.110(3)(b): \"shall be served by 30th January after the end of the year\" (read verbatim from tra.go.tz, 146pp, HTTP 200, 2026-10-05; source note '[s. 85]' confirms the renumbering from the pre-R.E.2023 citation). Separately, 'Form P9' is Kenyan KRA terminology -- TRA has no form by that name. THIS ROW SAYS: \"Inatakiwa kabla ya 31 Machi.\"",
+      "quoted_sentence": "Inatakiwa kabla ya 31 Machi.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "paye_p9_31_march",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\raw_sources/raw_pairs_batch_006.jsonl:278",
+      "row_id": "b006_disambig_012",
+      "question": "P9 form na P9A form — ni tofauti gani?",
+      "subdomain": "disambiguation_mixed",
+      "pair_type": "disambiguation",
+      "polarity": "ASSERTS",
+      "matched": [
+        "31 Machi"
+      ],
+      "locked_fact": "paye_p9_deadline",
+      "reason": "asserts the annual employment-income withholding certificate is due 31 March. Income Tax Act Cap.332 R.E.2023 s.110(3)(b): \"shall be served by 30th January after the end of the year\" (read verbatim from tra.go.tz, 146pp, HTTP 200, 2026-10-05; source note '[s. 85]' confirms the renumbering from the pre-R.E.2023 citation). Separately, 'Form P9' is Kenyan KRA terminology -- TRA has no form by that name. THIS ROW SAYS: \"Inatakiwa kabla ya 31 Machi.\"",
+      "quoted_sentence": "Inatakiwa kabla ya 31 Machi.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "paye_p9_31_march",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\raw_sources/_verify_batch006_all.jsonl:278",
+      "row_id": "b006_disambig_012",
+      "question": "P9 form na P9A form — ni tofauti gani?",
+      "subdomain": "disambiguation_mixed",
+      "pair_type": "disambiguation",
+      "polarity": "ASSERTS",
+      "matched": [
+        "31 Machi"
+      ],
+      "locked_fact": "paye_p9_deadline",
+      "reason": "asserts the annual employment-income withholding certificate is due 31 March. Income Tax Act Cap.332 R.E.2023 s.110(3)(b): \"shall be served by 30th January after the end of the year\" (read verbatim from tra.go.tz, 146pp, HTTP 200, 2026-10-05; source note '[s. 85]' confirms the renumbering from the pre-R.E.2023 citation). Separately, 'Form P9' is Kenyan KRA terminology -- TRA has no form by that name. THIS ROW SAYS: \"Inatakiwa kabla ya 31 Machi.\"",
+      "quoted_sentence": "Inatakiwa kabla ya 31 Machi.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "paye_p9_31_march",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\sft_shaped_pairs/cleaned_pairs_batch_015.jsonl:87",
+      "row_id": null,
+      "question": "Fomu ya P9 inatumika kwa nini na inawasilishwa lini?",
+      "subdomain": "paye",
+      "pair_type": null,
+      "polarity": "ASSERTS",
+      "matched": [
+        "31 Machi"
+      ],
+      "locked_fact": "paye_p9_deadline",
+      "reason": "asserts the annual employment-income withholding certificate is due 31 March. Income Tax Act Cap.332 R.E.2023 s.110(3)(b): \"shall be served by 30th January after the end of the year\" (read verbatim from tra.go.tz, 146pp, HTTP 200, 2026-10-05; source note '[s. 85]' confirms the renumbering from the pre-R.E.2023 citation). Separately, 'Form P9' is Kenyan KRA terminology -- TRA has no form by that name. THIS ROW SAYS: \"Inawasilishwa kufikia tarehe 31 Machi ya mwaka unaofuata, si 31 Januari.\"",
+      "quoted_sentence": "Inawasilishwa kufikia tarehe 31 Machi ya mwaka unaofuata, si 31 Januari.",
+      "note": "THE WORST ROW IN THIS CLASS: 'Inawasilishwa kufikia tarehe 31 Machi ya mwaka unaofuata, si 31 Januari.' It asserts the wrong date AND explicitly denies the correct one, so a polarity rule that looked only for a negation near the wrong value would have DEMOTED it to a mention and dropped it from the set.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "paye_p9_31_march",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\sft_shaped_pairs/cleaned_pairs_batch_015.jsonl:368",
+      "row_id": null,
+      "question": "Fomu ya P9 ni nini, inawasilishwa lini na nani hupata nakala?",
+      "subdomain": "paye",
+      "pair_type": null,
+      "polarity": "ASSERTS",
+      "matched": [
+        "31 Machi"
+      ],
+      "locked_fact": "paye_p9_deadline",
+      "reason": "asserts the annual employment-income withholding certificate is due 31 March. Income Tax Act Cap.332 R.E.2023 s.110(3)(b): \"shall be served by 30th January after the end of the year\" (read verbatim from tra.go.tz, 146pp, HTTP 200, 2026-10-05; source note '[s. 85]' confirms the renumbering from the pre-R.E.2023 citation). Separately, 'Form P9' is Kenyan KRA terminology -- TRA has no form by that name. THIS ROW SAYS: \"Fomu ya P9 ni ya usuluhishi wa mwaka wa PAYE, inayowasilishwa kufikia tarehe 31 Machi ya mwaka unaofuata.\"",
+      "quoted_sentence": "Fomu ya P9 ni ya usuluhishi wa mwaka wa PAYE, inayowasilishwa kufikia tarehe 31 Machi ya mwaka unaofuata.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "vat_threshold_dated_2024",
+      "disposition": "CONFIRMED_WRONG",
+      "reversible": false,
+      "at": "datasets\\tier1a\\sft_shaped_pairs/cleaned_pairs_batch_015.jsonl:103",
+      "row_id": null,
+      "question": "Nasikia kizingiti cha VAT ni milioni 100 kwa mwaka — bado ni hivyo?",
+      "subdomain": "vat_registration",
+      "pair_type": null,
+      "polarity": "ASSERTS",
+      "matched": [
+        "Julai 2024"
+      ],
+      "locked_fact": "vat_registration_threshold",
+      "reason": "dates the 100M -> 200M VAT registration threshold increase to July 2024. GN 448Y/2023 s.4 made the substitution and its commencement clause reads \"deemed to have come into operation on the 1st day of July, 2023\" -- wrong by one year. The row's FIGURES (200M current, 100M old) are correct; only the date is wrong. THIS ROW SAYS: \"Kilipandishwa kutoka 100M hadi 200M mwezi Julai 2024;\"",
+      "quoted_sentence": "Kilipandishwa kutoka 100M hadi 200M mwezi Julai 2024;",
+      "action": "REMOVE"
+    },
+    {
+      "class": "osha_course_fee_250k",
+      "disposition": "REMOVED_PENDING_CONFIRMATION",
+      "reversible": true,
+      "at": "datasets\\tier1a\\sft_shaped_pairs/cleaned_pairs_batch_015.jsonl:467",
+      "row_id": null,
+      "question": "Mafunzo ya usalama kazini ya OSHA yanawahusu akina nani na gharama yake?",
+      "subdomain": "osha_registration",
+      "pair_type": null,
+      "polarity": "ASSERTS",
+      "matched": [
+        "250,000"
+      ],
+      "locked_fact": "course_fee",
+      "reason": "asserts an OSHA training course fee of TZS 250,000 as a plain fact. NOT PROVED WRONG -- proved UNSUPPORTED: `course_fee` is a locked HEDGE (status 'HEDGE -- Tier 3'), every OSHA course sampled on osha.go.tz is TZS 300,000, and which course 250,000 refers to was never identified. The fact's own `training_instruction` reads \"Do not state 250,000 TZS for an unnamed OSHA course.\" A confident training row teaches a certainty the fact base withholds. THIS ROW SAYS: \"OSHA hutoa kozi za mafunzo ya usalama kazini kwa ada ya TZS 250,000.\"",
+      "quoted_sentence": "OSHA hutoa kozi za mafunzo ya usalama kazini kwa ada ya TZS 250,000.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "osha_course_fee_250k",
+      "disposition": "REMOVED_PENDING_CONFIRMATION",
+      "reversible": true,
+      "at": "datasets\\tier1a\\sft_shaped_pairs/cleaned_pairs_batch_015.jsonl:524",
+      "row_id": null,
+      "question": "Mafunzo ya OSHA kwa afisa usalama na matakwa ya huduma ya kwanza ya WCF — ni mafunzo yale yale au tofauti?",
+      "subdomain": "osha_registration",
+      "pair_type": null,
+      "polarity": "ASSERTS",
+      "matched": [
+        "250,000"
+      ],
+      "locked_fact": "course_fee",
+      "reason": "asserts an OSHA training course fee of TZS 250,000 as a plain fact. NOT PROVED WRONG -- proved UNSUPPORTED: `course_fee` is a locked HEDGE (status 'HEDGE -- Tier 3'), every OSHA course sampled on osha.go.tz is TZS 300,000, and which course 250,000 refers to was never identified. The fact's own `training_instruction` reads \"Do not state 250,000 TZS for an unnamed OSHA course.\" A confident training row teaches a certainty the fact base withholds. THIS ROW SAYS: \"Mafunzo ya usalama kazini ya OSHA (kwa mfano kozi ya ada ya TZS 250,000) yanalenga usalama na afya mahali pa kazi na husimamiwa na OSHA.\"",
+      "quoted_sentence": "Mafunzo ya usalama kazini ya OSHA (kwa mfano kozi ya ada ya TZS 250,000) yanalenga usalama na afya mahali pa kazi na husimamiwa na OSHA.",
+      "action": "REMOVE"
+    },
+    {
+      "class": "osha_course_fee_250k",
+      "disposition": "REMOVED_PENDING_CONFIRMATION",
+      "reversible": true,
+      "at": "datasets\\tier1a\\sft_shaped_pairs/cleaned_pairs_batch_015.jsonl:716",
+      "row_id": null,
+      "question": "Naomba namba tatu: ada ya BRELA ya annual return, ada ya mafunzo ya OSHA, na kiwango cha mchango wa WCF.",
+      "subdomain": "brela_registration",
+      "pair_type": null,
+      "polarity": "ASSERTS",
+      "matched": [
+        "250,000"
+      ],
+      "locked_fact": "course_fee",
+      "reason": "asserts an OSHA training course fee of TZS 250,000 as a plain fact. NOT PROVED WRONG -- proved UNSUPPORTED: `course_fee` is a locked HEDGE (status 'HEDGE -- Tier 3'), every OSHA course sampled on osha.go.tz is TZS 300,000, and which course 250,000 refers to was never identified. The fact's own `training_instruction` reads \"Do not state 250,000 TZS for an unnamed OSHA course.\" A confident training row teaches a certainty the fact base withholds. THIS ROW SAYS: \"Ada ya kozi ya mafunzo ya usalama ya OSHA ni TZS 250,000.\"",
+      "quoted_sentence": "Ada ya kozi ya mafunzo ya usalama ya OSHA ni TZS 250,000.",
+      "action": "REMOVE"
+    }
+  ]
+}

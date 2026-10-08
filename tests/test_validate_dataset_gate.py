@@ -184,7 +184,19 @@ def test_the_real_corpus_currently_passes_and_its_exceptions_are_unchanged():
                        encoding="utf-8", errors="replace", cwd=REPO)
     assert r.returncode == 0, (
         f"the real corpus no longer passes the dataset gate:\n{r.stdout[-3000:]}")
-    assert "schema-shaped: 1715 pairs, 0 errors" in r.stdout, (
+    # 1715 -> 1714 on 2026-10-08, re-derived rather than bumped (the instruction below is the
+    # point of pinning a count at all):
+    #   -1  batch_004_cleaned  tier1a_paye_adv_033      quarantined, asserts P9 due 31 March
+    #   -2  batch_006_cleaned  b006_paye_for_018, b006_disambig_012   same class
+    #   +2  batch_008_cleaned  b008_paye_adv_002, b008_paye_adv_015   RESTORED (R37 over-removal)
+    #   ------
+    #   -1  net
+    # The P9 deadline is 30 January, Income Tax Act Cap.332 R.E.2023 s.110(3)(b). The two
+    # restored rows say "kiwango 8% (si 9%)" and were removed on a batch reason that named an
+    # arithmetic defect neither row contains. The other six removals of that pass landed in
+    # sft_shaped_pairs/ and raw_sources/, which this count does not cover -- which is why the
+    # arithmetic is written out: a bare "-1" would hide that nine rows moved, not one.
+    assert "schema-shaped: 1714 pairs, 0 errors" in r.stdout, (
         f"the schema-shaped corpus changed size or cleanliness; re-derive before updating this "
         f"number:\n{r.stdout[-1500:]}")
 
