@@ -841,6 +841,38 @@ class Orchestrator:
             return dataclasses.replace(
                 sub, text=clarification.wrong_threshold_withheld(subject),
                 raw_text=sub.text, needs_clarification=True)
+        elif sub.computation is None and fidelity.body_states_wrong_fee_band(
+                sub.sub_question.text, cleaned):
+            # D-FIDELITY-8 (built, priced and WIRED 2026-10-08). A registration fee stated for
+            # the WRONG BAND of BRELA's published share-capital ladder. The live reply gave TZS
+            # 290,000 for TZS 2,000,000,000 — the >20M-50M band, with its floor misstated as
+            # 5,000,000 — where the ladder gives TZS 600,000.
+            #
+            # FACT PATH ONLY, and deliberately so. The engine computes no fee, so a compute
+            # body cannot carry this defect and there is no measured instance of it there;
+            # adding the rule to the compute branch would widen the blast radius on no
+            # evidence. That is the mirror of D-FIDELITY-6's note above, which is compute-only
+            # for the opposite reason.
+            #
+            # ⛔ REPLACED, NOT BLANKED, FOR THE SAME REASON AS THE BRANCH ABOVE: _render returns
+            # the body alone here, so blanking ships silence. The copy states the RULE rather
+            # than a figure — the fee depends on share capital, here are all nine bands, read
+            # off your own, confirm the current schedule with BRELA — and it PERFORMS NO BAND
+            # SELECTION, so it cannot reproduce the 290,000 error. That structural property is
+            # also why stating figures is safe here and is NOT in wrong_threshold_withheld's
+            # case: that guard fires on a FABRICATED constant, where any number is a second
+            # guess; this one fires on a MISAPPLIED LOOKUP of a real, pinned, already-served
+            # table.
+            #
+            # ⚠️ CONTAINMENT, the same caveat eval_347 carries. It hands over the table instead
+            # of the fee: A1 (confident wrong answers) moves, A2 (answered correctly) does not.
+            # A trader can find their band in one line, which is why the trade is right for a
+            # guard — but it is not an answer, and the gate should not be read as if it were.
+            # Priced before wiring over 13,632 rows: 1 flag, 0 in GOLD, and the one flag IS
+            # this defect (eval/fidelity/scope_fee_table_guard_2026_10_08.py).
+            return dataclasses.replace(
+                sub, text=clarification.wrong_fee_band_withheld(),
+                raw_text=sub.text, needs_clarification=True)
         elif sub.computation is None and fidelity.body_contradicts_stated_headcount(
                 cleaned, sub.sub_question.text):
             stated = fidelity.stated_headcount(sub.sub_question.text)

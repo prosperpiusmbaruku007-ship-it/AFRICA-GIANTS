@@ -114,10 +114,18 @@ HOLDS = {
     # holding it had no date and nothing ever came due. The fix is a date, so this one has
     # one before any code exists.
     'D-FIDELITY-8 (fee-table band guard)': {
-        'state': 'HELD',
+        # ⛔ WIRED 2026-10-08 AND THE EXPIRY IS DELIBERATELY RETAINED. Founder instruction:
+        # "leave the expiry at 2026-11-05 until the live check passes, then clear it." The
+        # copy is approved and the guard is in the orchestrator, but NOTHING IS PROVEN ABOUT
+        # PRODUCTION until the R16 deploy and live verify run -- and D-FIDELITY-7's whole
+        # lesson is that a decision with no date does not get overruled, it LAPSES. So the
+        # state records what is done and the date keeps the undone half from going quiet.
+        # Clear to DISABLED/resolved only when the live verify passes with the 2B question
+        # returning the ladder.
+        'state': 'WIRED_PENDING_LIVE_VERIFY',
         'decided': '2026-10-08',
-        'expires': '2026-11-05',   # four weeks: long enough to gather a second instance of
-                                   # the class, short enough that nobody forgets it exists
+        'wired': '2026-10-08',
+        'expires': '2026-11-05',   # retained until the live check passes, then cleared
         'why': ('SCOPED AND PRICED, NOT BUILT. The defect is measured and live: TZS '
                 '2,000,000,000 of share capital answered TZS 290,000 where the table gives '
                 'TZS 600,000, with row 181 at RANK 1 for the failing query -- so no index or '
@@ -746,6 +754,42 @@ def audit_unexercisable():
     # a GET, that CHIKE_BUILD is baked into BOTH images, that the digest is taken over
     # `self.fact_texts` rather than a fresh file read, and that the committed index still
     # hashes to EXPECTED_SERVED_SHA256.
+    # ── D-FIDELITY-8, WIRED 2026-10-08 ──────────────────────────────────────────
+    # Planted here the day it was wired, in both directions, because R26's whole point is
+    # that a control is not working until it has been watched to block the thing it exists
+    # to block AND to pass a clean case.
+    try:
+        import sys as _s
+        _s.path.insert(0, REPO) if 'REPO' in dir() else None
+        from chike import fidelity as _fid
+        _Q = ('Mtaji wa hisa wa kampuni yangu ni TZS 2,000,000,000. '
+              'Ada ya kusajili ni ngapi?')
+        _planted = _fid.body_states_wrong_fee_band(
+            _Q, 'Ada ya kusajili kampuni yenye mtaji wa hisa unaozidi TZS 5,000,000 ni '
+                'TZS 290,000.')
+        _clean = _fid.body_states_wrong_fee_band(
+            _Q, 'Ada ya kusajili kwa mtaji wa hisa wa TZS 2,000,000,000 ni TZS 600,000.')
+        # The sibling the founder named: a CORRECT answer on the same index row, which the
+        # guard must not touch because the question states no share-capital amount.
+        _sibling = _fid.body_states_wrong_fee_band(
+            'Kampuni yangu haina mtaji wa hisa. Ada ya kusajili ni shilingi ngapi?',
+            'Kampuni bila mtaji wa hisa inasajiliwa kwa ada ya TZS 500,000.')
+        _v = 'FIRES' if (_planted and not _clean and not _sibling) else 'ERROR'
+        _note = (f'planted(2bn->290,000) flagged: {bool(_planted)}; correct(600,000) '
+                 f'flagged: {bool(_clean)}; no-share-capital sibling flagged: '
+                 f'{bool(_sibling)}. WIRED on the FACT path and REPLACES rather than blanks '
+                 f'(blanking ships silence there). CONTAINMENT: moves Bar A1, not A2 -- it '
+                 f'hands over the ladder, not the fee.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:120]}'
+    record('D-FIDELITY-8 (fee-band guard)', 'fidelity',
+           'a registration fee stated for the WRONG BAND of BRELA published share-capital '
+           'ladder -- the rank-1 class, where the correct ladder is in context and no '
+           'retrieval or wording change can reach the defect',
+           _v, 'a fee of TZS 290,000 asserted for TZS 2,000,000,000 of share capital',
+           'the correct TZS 600,000, and the no-share-capital sibling that was already right',
+           _note)
+
     record('chike-inference /health (build + served-index digest)', 'infrastructure',
            'a deploy that did not reach production, or a WARM GPU container serving an older '
            'index behind a freshly-deployed web tier — the R16 hazard that previously could '

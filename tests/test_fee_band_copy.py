@@ -74,7 +74,14 @@ def test_the_copy_states_the_RULE_before_any_figure():
     rule = COPY.index("inategemea")
     first_band = COPY.index("Ngazi za ada:")
     assert rule < first_band, "the ladder is stated before the rule that makes it usable"
-    assert "MTAJI WA HISA" in COPY, "the rule does not name what the fee depends on"
+    # Case-insensitive: the approved wording is lowercase "mtaji wa hisa". The draft shouted
+    # it in caps, and asserting the caps would pin a typographic choice the founder changed
+    # rather than the claim that has to be present.
+    assert re.search(r"mtaji wa hisa", COPY, re.I), (
+        "the rule does not name what the fee depends on")
+    assert "(share capital)" in COPY, (
+        "the English gloss is gone — business-register users code-switch, and 'share capital' "
+        "is the term on BRELA's own form")
     assert "si kiwango kimoja" in COPY, (
         "the copy does not say it is a ladder rather than one rate — which is the "
         "misconception that produced the wrong answer")
@@ -90,10 +97,25 @@ def test_the_copy_PERFORMS_NO_BAND_SELECTION():
             f"selecting is what produced TZS 290,000 for TZS 2,000,000,000")
 
 
-def test_the_copy_withdraws_the_previous_figure():
-    """A replacement that does not withdraw reads as an addition, leaving the wrong figure
-    standing earlier in the conversation."""
-    assert "siwezi kuihakikisha" in COPY and "sitalitumia" in COPY
+def test_the_copy_does_NOT_apologise_or_mention_a_previous_answer():
+    """⛔ CONTRACT INVERTED BY FOUNDER EDIT, 2026-10-08, and the reasoning generalises to every
+    fact-path replacement. The first draft opened "Samahani — jibu langu la awali lilitoa
+    ada...". ON THE FACT PATH THE USER NEVER SEES THE ORIGINAL REPLY: the guard REPLACES it
+    before `_render` returns. So an apology apologises for a reply they never received, and
+    reads as though something went wrong that they should worry about — it manufactures
+    anxiety about an error the system successfully prevented.
+
+    This is the one place this copy diverges from `wrong_threshold_withheld`, which DOES open
+    by withdrawing. That is deliberate, not an inconsistency to tidy: D-FIDELITY-7 fires where
+    there is no rule to state, so withdrawal is the whole of its message. Here the rule IS the
+    message, so the reply simply answers."""
+    for apology in ("Samahani", "samahani", "jibu langu la awali", "Pole"):
+        assert apology not in COPY, (
+            f"the copy apologises ({apology!r}) for a reply the user never saw — the guard "
+            f"replaced it")
+    assert COPY.startswith("Ada ya kusajili kampuni BRELA inategemea mtaji wa hisa"), (
+        "the copy no longer opens with the RULE, which is what makes it an answer rather "
+        "than an error message")
 
 
 def test_the_date_is_framed_as_an_OBSERVATION_not_an_effective_date():

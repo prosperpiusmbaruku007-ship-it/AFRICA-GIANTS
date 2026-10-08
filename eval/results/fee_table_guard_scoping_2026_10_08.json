@@ -19,16 +19,16 @@
       "detail": "capital 2,000,000,000 needs 600,000; the body states 290,000, which is a LAWFUL fee for a DIFFERENT band"
     },
     {
-      "expect": "CORRECT",
-      "got": "CORRECT",
+      "expect": "CORRECT_OR_NOT_ASSERTED",
+      "got": "CORRECT_OR_NOT_ASSERTED",
       "why": "the right answer must NOT flag — the specimen that matters most, because a guard that flags the correct answer is worse than none",
-      "detail": "capital 2,000,000,000 -> 600,000, which the body states"
+      "detail": "production rule finds no wrong-band fee claim"
     },
     {
-      "expect": "CORRECT",
-      "got": "CORRECT",
+      "expect": "CORRECT_OR_NOT_ASSERTED",
+      "got": "CORRECT_OR_NOT_ASSERTED",
       "why": "the SAME fee, 290,000, now in its OWN band. The guard must distinguish the band, not the figure — this is what makes it a table guard rather than a value check",
-      "detail": "capital 30,000,000 -> 290,000, which the body states"
+      "detail": "production rule finds no wrong-band fee claim"
     },
     {
       "expect": "UNLAWFUL_FEE",
@@ -43,18 +43,18 @@
       "detail": "the question states no share-capital amount"
     },
     {
-      "expect": "CORRECT",
-      "got": "CORRECT",
+      "expect": "CORRECT_OR_NOT_ASSERTED",
+      "got": "CORRECT_OR_NOT_ASSERTED",
       "why": "POLARITY: the correct answer names the wrong value in order to reject it. A presence check fails exactly the rows that carry the correction",
-      "detail": "capital 2,000,000,000 -> 600,000, which the body states"
+      "detail": "production rule finds no wrong-band fee claim"
     }
   ],
-  "rows_swept": 13632,
+  "rows_swept": 13664,
   "verdicts": {
-    "NOT_IN_SCOPE": 13594,
+    "NOT_IN_SCOPE": 13626,
     "NO_USER_FIGURE": 35,
     "WRONG_BAND": 1,
-    "NO_STATED_FEE": 2
+    "CORRECT_OR_NOT_ASSERTED": 2
   },
   "flags": 1,
   "flags_in_GOLD": 0,
@@ -69,5 +69,6 @@
     }
   ],
   "_what_a_gold_flag_would_mean": "either the guard is over-broad or a gold answer is wrong. D-FIDELITY-7 flagged THREE gold answers as built, including the very row its wiring existed to fix, and all three were the guard's fault.",
-  "verdict": "SAFE TO PROPOSE FOR WIRING — 0 gold flags"
+  "_status": "WIRED 2026-10-08 on the FACT path (chike/orchestrator.py), with clarification.wrong_fee_band_withheld() as the replacement copy. This file now DELEGATES to chike.fidelity.stated_wrong_fee_band rather than keeping its own rule, so this is a post-wiring re-price of production and not a model of it.",
+  "verdict": "PRICED CLEAN — 0 gold flags; the only flag is the founding defect itself"
 }

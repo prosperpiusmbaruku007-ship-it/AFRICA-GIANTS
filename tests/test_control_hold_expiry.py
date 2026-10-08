@@ -57,7 +57,14 @@ def test_the_registry_is_not_empty_and_contains_the_specimen():
 @pytest.mark.parametrize("cid", sorted(HOLDS))
 def test_every_held_control_declares_a_state_and_a_reason(cid):
     h = HOLDS[cid]
-    assert h.get("state") in ("DISABLED", "HELD", "LAPSED_THEN_WIRED"), (
+    # WIRED_PENDING_LIVE_VERIFY added 2026-10-08 for D-FIDELITY-8, and it is a PENDING state,
+    # not a resolved one: the guard is in the orchestrator and its copy is approved, but
+    # nothing is proven about PRODUCTION until the R16 deploy and live verify run. It
+    # therefore keeps its expiry and is treated exactly like HELD by the tests below --
+    # the whole point of retaining the date is that the undone half cannot go quiet, which
+    # is how D-FIDELITY-7 lapsed for six weeks while sitting built.
+    assert h.get("state") in ("DISABLED", "HELD", "LAPSED_THEN_WIRED",
+                              "WIRED_PENDING_LIVE_VERIFY"), (
         f"{cid}: unknown state {h.get('state')!r}")
     assert h.get("decided"), f"{cid}: no decision date — an undated decision cannot expire"
     assert len(h.get("why", "")) > 40, (
@@ -71,7 +78,7 @@ def test_a_pending_hold_carries_an_expiry(cid):
     taken on evidence with no review pending — demanding an expiry there would manufacture
     busywork and train people to bump dates, which is how an expiry stops meaning anything."""
     h = HOLDS[cid]
-    if h["state"] == "HELD":
+    if h["state"] in ("HELD", "WIRED_PENDING_LIVE_VERIFY"):
         assert h.get("expires"), (
             f"{cid} is HELD with no expiry. That is the D-FIDELITY-7 defect exactly: a hold "
             f"nothing brings due is not a hold, it is a thing that was forgotten on purpose.")

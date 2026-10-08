@@ -918,3 +918,119 @@ def stated_wrong_thresholds(body: str):
 def body_states_wrong_threshold(body: str) -> bool:
     """True iff the body claims a statutory threshold that is not the statutory threshold."""
     return bool(stated_wrong_thresholds(body))
+
+
+# ─── D-FIDELITY-8 — A FEE STATED FOR THE WRONG BAND OF A PUBLISHED FEE TABLE ─────
+# Built, priced and wired 2026-10-08. THE DEFECT, measured live against the deployed index:
+#
+#     Q: "Mtaji wa hisa wa kampuni yangu ni TZS 2,000,000,000. Ada ya kusajili ni ngapi?"
+#     A: "Ada ya kusajili kampuni yenye mtaji wa hisa unaozidi TZS 5,000,000 ni TZS 290,000."
+#
+# TZS 2,000,000,000 is band 8 (>1bn-10bn) and the fee is TZS 600,000. The reply returned the
+# >20M-50M band AND misstated its floor as 5,000,000.
+#
+# WHY A GUARD IS THE ONLY LAYER THAT REACHES IT. Row 181 measured at RANK 1 (0.9167) for that
+# exact query, rank 3 on a paraphrase, rank 1 on the sibling ask -- the correct ladder was IN
+# CONTEXT. CLAUDE.md's step-zero table: at rank 1-3 with a wrong answer the defect is in
+# GENERATION, and every wording hour is spent on the wrong layer. Staleness is excluded from
+# inside the live harness: the no-share-capital probe reads the SAME row 181 and returns the
+# NEW TZS 500,000.
+#
+# R19 SAYS BUILDABLE, and the test is the one R19 prescribes: write the claim the guard would
+# reject -- "the fee for TZS 2,000,000,000 of share capital is TZS 290,000" -- and ask whether
+# it could be true under some lawful transformation of the user's own numbers. It could not:
+# the fee is a LOOKUP against a fixed published table. A CONSTANT comparison, the same side of
+# R19 as D-FIDELITY-7, and like it this needs no ComputationResult, so it reaches the FACT
+# path where every pre-sixth D-FIDELITY rule goes vacuous.
+#
+# ⚠️ CONTAINMENT, NOT A FIX -- the same caveat eval_347 carries. This stops a confident wrong
+# fee and hands over the table instead of the fee. It moves Bar A's A1 (confident wrong
+# answers) and NOT A2 (answered correctly): the user still has to read off their own band.
+# A2 needs band SELECTION to work, which is compute-path work. Do not read a falling
+# wrong-answer count as a rising correct-answer count.
+#
+# FOUR NARROWINGS, each one a lesson already paid for, each pinned by a specimen in
+# tests/test_fee_band_guard.py:
+#   N1 SUBJECT GATE — share-capital registration only. Without it every BRELA fee is in
+#      scope and the bare magnitudes collide (why bare 'TZS 70,000' and bare 'asilimia 10'
+#      were both rejected as regen anchors).
+#   N2 PROVENANCE — the user's amount comes from the QUESTION, the fee from the BODY.
+#      Conflating them is D-FIDELITY-7's N2 failure in table form.
+#   N3 FEE vs BAND EDGE, GRAMMATICALLY. In Swahili a fee follows the predicative `ni`; a band
+#      edge follows a comparative (`unaozidi`, `zaidi ya`, `hadi`). The defective sentence
+#      contains BOTH, so separating them is the whole job — and a proximity window cannot:
+#      the first version of this rule used one and was INERT on its own founding specimen,
+#      reporting 0 flags over 13,632 rows with a verdict of "SAFE TO PROPOSE".
+#   N4 POLARITY — a fee named under a negation ("si TZS 290,000") is a mention. Correct rows
+#      deliberately name wrong values to reject them.
+# Plus a LADDER-RECITAL exclusion: a body listing the whole table is answering with the table,
+# not with one fee, and must not be judged as if it had chosen.
+_FEE_SUBJECT = re.compile(
+    r"mtaji\s+wa\s+hisa|share\s+capital|ada\s+ya\s+kusajili\s+kampuni", re.I)
+_FEE_NUM = re.compile(r"(?:TZS\s*)?([\d][\d,\.]{2,})", re.I)
+_FEE_MARK = re.compile(r"(?:\bni\b|\bada\s+ni\b|\bgharama\s+ni\b|\bis\b|\bcosts?\b)"
+                       r"[\s:]*(?:TZS\s*|Tsh\.?\s*)?$", re.I)
+_FEE_EDGE = re.compile(r"(?:unaozidi|inazidi|zaidi\s+ya|hadi|kati\s+ya|chini\s+ya|juu\s+ya"
+                       r"|above|over|up\s+to|exceed\w*|between)[\s:]*(?:TZS\s*)?$", re.I)
+_FEE_NEG = re.compile(r"\b(?:si|sio|siyo|hakuna|not|no)\b[\s:,\-—]*(?:TZS\s*)?$", re.I)
+
+
+def _fee_int(s: str):
+    try:
+        return int(s.replace(",", "").split(".")[0])
+    except ValueError:
+        return None
+
+
+def expected_share_capital_fee(capital: int):
+    """The published fee for this share capital, or None if it falls in no band.
+
+    Reads the ladder from `chike.clarification`, which owns it as the replacement copy's
+    single source. A second copy of a fee table in the guard layer is the dual-file
+    divergence this project keeps paying for, and the copy is generated from the same tuple.
+    """
+    from chike import clarification
+    for lo, hi, fee in clarification.BRELA_SHARE_CAPITAL_BANDS:
+        if (lo is None or capital > lo) and (hi is None or capital <= hi):
+            return fee
+    return None
+
+
+def stated_wrong_fee_band(question: str, body: str):
+    """(capital, expected_fee, stated_fee) if the body states a fee that is wrong for the
+    share capital the QUESTION states — otherwise None."""
+    from chike import clarification
+    if not _FEE_SUBJECT.search(f"{question} {body}"):
+        return None                                                     # N1
+    caps = [_fee_int(m.group(1)) for m in _FEE_NUM.finditer(question)]   # N2
+    caps = [c for c in caps if c and c >= 100_000]
+    if not caps:
+        return None
+    capital = max(caps)
+    want = expected_share_capital_fee(capital)
+    if want is None:
+        return None
+    if len(list(_FEE_NUM.finditer(body))) >= 7:
+        return None                                      # the body recites the whole ladder
+    lawful = {f for _, _, f in clarification.BRELA_SHARE_CAPITAL_BANDS}
+    for m in _FEE_NUM.finditer(body):
+        v = _fee_int(m.group(1))
+        if v is None or v == capital:
+            continue
+        lead = body[max(0, m.start() - 24):m.start()]
+        if _FEE_NEG.search(lead):
+            continue                                                    # N4
+        if _FEE_EDGE.search(lead):
+            continue                                                    # N3, band edge
+        if not _FEE_MARK.search(lead):
+            continue                                                    # N3, not a fee
+        if v == want:
+            return None                                  # the right fee is stated: no defect
+        if v in lawful or v > 10_000:
+            return (capital, want, v)
+    return None
+
+
+def body_states_wrong_fee_band(question: str, body: str) -> bool:
+    """True iff the body states a registration fee that is wrong for the stated share capital."""
+    return bool(stated_wrong_fee_band(question, body))

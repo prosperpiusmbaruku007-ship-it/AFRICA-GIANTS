@@ -1233,3 +1233,10 @@ Total: 295 | Flagged: 6
   FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: 10 or more.*osha
   FLAG [tier1a_wcf_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
   FLAG [tier1a_wcf_010_20260609] osha_registration_threshold_b004: osha.*threshold ya 10
+
+[2026-10-08T18:12:34.165776] Checked C:\Users\jhjh\AppData\Local\Temp\tmpwfy6bhaw\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-10-08T18:12:34.470437] Checked C:\Users\jhjh\AppData\Local\Temp\tmpwfy6bhaw\lf_ok.jsonl
+Total: 1 | Flagged: 0

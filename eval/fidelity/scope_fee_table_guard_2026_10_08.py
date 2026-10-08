@@ -121,7 +121,39 @@ def expected_fee(capital):
 
 
 def evaluate(question, body):
-    """The prototype rule. Returns (verdict, detail).
+    """⛔ SINCE WIRING (2026-10-08) THIS DELEGATES TO THE PRODUCTION RULE and keeps none of
+    its own. A scoping harness that retains a private copy after the rule ships is measuring
+    a MODEL of production -- the exact failure that let the 2026-10-06 dry run report SAFE TO
+    RUN on a package the real Kaggle run refused. The narrowings and their reasoning now live
+    in chike/fidelity.py beside the rule they guard.
+
+    Returns (verdict, detail), preserving this file's richer verdict vocabulary so the
+    pre-wiring price and the post-wiring price are comparable numbers.
+    """
+    import sys as _sys, os as _os
+    _sys.path.insert(0, REPO)
+    from chike import fidelity as _f
+    if not _f._FEE_SUBJECT.search(f"{question} {body}"):
+        return "NOT_IN_SCOPE", "not a share-capital registration question"
+    caps = [_f._fee_int(m.group(1)) for m in _f._FEE_NUM.finditer(question)]
+    caps = [c for c in caps if c and c >= 100_000]
+    if not caps:
+        return "NO_USER_FIGURE", "the question states no share-capital amount"
+    hit = _f.stated_wrong_fee_band(question, body)
+    if hit is None:
+        return "CORRECT_OR_NOT_ASSERTED", "production rule finds no wrong-band fee claim"
+    capital, want, got = hit
+    from chike import clarification as _c
+    lawful = {fee for _, _, fee in _c.BRELA_SHARE_CAPITAL_BANDS}
+    kind = "WRONG_BAND" if got in lawful else "UNLAWFUL_FEE"
+    return kind, (f"capital {capital:,} needs {want:,}; the body states {got:,}"
+                  + (", which is a LAWFUL fee for a DIFFERENT band" if got in lawful
+                     else ", which is not a fee in the table at all"))
+
+
+def _retired_prototype(question, body):
+    """The pre-wiring prototype, kept only so the comment above has something to refer to.
+    NOT called. Returns (verdict, detail).
 
     FOUR NARROWINGS ARE BUILT IN FROM THE START, each one a lesson already paid for:
 
@@ -183,6 +215,15 @@ def evaluate(question, body):
 def _rows():
     rows = []
     for path in sorted(glob.glob(os.path.join(REPO, "eval", "results", "*.json"))):
+        # ⛔ EXCLUDE THIS HARNESS'S OWN ARTIFACT. It writes into eval/results/ and reads from
+        # it, so after the first run its own recorded findings re-enter the population and
+        # the flag count climbs by one every time -- a measurement that grows because it was
+        # taken. Caught on the post-wiring re-price: 1 flag became 2, and the second was this
+        # file's own copy of the first. The same shape as a sweep that matches the
+        # documentation of its own correction (CLAUDE.md, the mention-vs-assertion note), and
+        # the remedy is the same: name the swept population precisely rather than by glob.
+        if os.path.abspath(path) == os.path.abspath(OUT):
+            continue
         try:
             with open(path, encoding="utf-8") as fh:
                 blob = json.load(fh)
@@ -251,11 +292,11 @@ SPECIMENS = [
                    "read as the fee"),
     ("Mtaji wa hisa wa kampuni yangu ni TZS 2,000,000,000. Ada ya kusajili ni ngapi?",
      "Ada ya kusajili kwa mtaji wa hisa wa TZS 2,000,000,000 ni TZS 600,000.",
-     "CORRECT", "the right answer must NOT flag — the specimen that matters most, because a "
+     "CORRECT_OR_NOT_ASSERTED", "the right answer must NOT flag — the specimen that matters most, because a "
                 "guard that flags the correct answer is worse than none"),
     ("Mtaji wa hisa ni TZS 30,000,000. Ada ni ngapi?",
      "Ada ya kusajili ni TZS 290,000 kwa mtaji unaozidi TZS 20,000,000 hadi TZS 50,000,000.",
-     "CORRECT", "the SAME fee, 290,000, now in its OWN band. The guard must distinguish the "
+     "CORRECT_OR_NOT_ASSERTED", "the SAME fee, 290,000, now in its OWN band. The guard must distinguish the "
                 "band, not the figure — this is what makes it a table guard rather than a "
                 "value check"),
     ("Mtaji wa hisa wangu ni TZS 2,000,000,000. Ada ni ngapi?",
@@ -270,7 +311,7 @@ SPECIMENS = [
                        "because there is no band to judge it against"),
     ("Mtaji wa hisa ni TZS 2,000,000,000. Ada ni ngapi?",
      "Ada ni TZS 600,000 — SI TZS 290,000, hiyo ni kwa mtaji mdogo.",
-     "CORRECT", "POLARITY: the correct answer names the wrong value in order to reject it. A "
+     "CORRECT_OR_NOT_ASSERTED", "POLARITY: the correct answer names the wrong value in order to reject it. A "
                 "presence check fails exactly the rows that carry the correction"),
 ]
 
@@ -352,8 +393,14 @@ def main():
                                         "wrong. D-FIDELITY-7 flagged THREE gold answers as "
                                         "built, including the very row its wiring existed to "
                                         "fix, and all three were the guard's fault.",
-        "verdict": ("SAFE TO PROPOSE FOR WIRING — 0 gold flags" if not gold_hits
-                    else f"DO NOT WIRE AS BUILT — {len(gold_hits)} gold flag(s) to adjudicate"),
+        "_status": ("WIRED 2026-10-08 on the FACT path (chike/orchestrator.py), with "
+                    "clarification.wrong_fee_band_withheld() as the replacement copy. This "
+                    "file now DELEGATES to chike.fidelity.stated_wrong_fee_band rather than "
+                    "keeping its own rule, so this is a post-wiring re-price of production "
+                    "and not a model of it."),
+        "verdict": ("PRICED CLEAN — 0 gold flags; the only flag is the founding defect itself"
+                    if not gold_hits
+                    else f"REVIEW — {len(gold_hits)} gold flag(s) to adjudicate"),
     }
     with open(OUT, "w", encoding="utf-8") as fh:
         json.dump(payload, fh, ensure_ascii=False, indent=2)

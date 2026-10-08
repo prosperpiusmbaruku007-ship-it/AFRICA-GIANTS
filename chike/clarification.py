@@ -446,13 +446,22 @@ def wrong_fee_band_withheld() -> str:
     A's A1 (confident wrong answers) and NOT A2 (answered correctly). A2 needs the band
     SELECTION to work, which is a compute-path job, not a copy job.
     """
+    # ⛔ NO APOLOGY, AND NO REFERENCE TO A PREVIOUS ANSWER. Founder edit, 2026-10-08, and the
+    # reasoning generalises to every fact-path replacement: ON THE FACT PATH THE USER NEVER
+    # SEES THE ORIGINAL REPLY -- the guard REPLACES it before `_render` returns. So an opener
+    # like "jibu langu la awali lilitoa ada..." apologises for a reply they never received and
+    # reads as though something went wrong that they should worry about. It manufactures
+    # anxiety about an error the system successfully prevented.
+    #
+    # This is the one place this copy DIVERGES from `wrong_threshold_withheld` above, which
+    # does open by withdrawing. That difference is deliberate and not an inconsistency to
+    # tidy: D-FIDELITY-7 fires where there is no rule to state, so withdrawal is the whole of
+    # its message. Here the rule IS the message, so the reply simply answers.
     ladder = "; ".join(_band_phrase(lo, hi, fee)
                        for lo, hi, fee in BRELA_SHARE_CAPITAL_BANDS)
     return (
-        "Samahani — jibu langu la awali lilitoa ada ya usajili ambayo siwezi kuihakikisha "
-        "kwa mtaji wa hisa wa kampuni yako, hivyo sitalitumia. "
-        "Kanuni ni hii: ada ya kusajili kampuni BRELA inategemea MTAJI WA HISA (share "
-        "capital), na ni NGAZI — si kiwango kimoja. "
+        "Ada ya kusajili kampuni BRELA inategemea mtaji wa hisa (share capital), na ni "
+        "ngazi — si kiwango kimoja. "
         f"Ngazi za ada: {ladder}. "
         "Angalia ngazi inayolingana na mtaji wa hisa wa kampuni yako. "
         "Kampuni isiyo na mtaji wa hisa ni TZS 500,000. "

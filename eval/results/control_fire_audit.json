@@ -5,7 +5,7 @@
   "method": "R23 applied to controls: plant the thing each control exists to catch (POSITIVE, must block) and a clean case (NEGATIVE, must pass). A control needs both to count as working.",
   "prompted_by": "the pre-push secret scan, which invoked scan_for_keys.py bare and so scanned zero files on every push in this project's history, while a passing test certified it by checking the hook mentioned the script.",
   "tally": {
-    "FIRES": 21,
+    "FIRES": 22,
     "DISABLED": 1,
     "OBSERVED": 1,
     "NOT_EXERCISABLE": 2
@@ -49,8 +49,8 @@
       "layer": "repo_gate",
       "claims_to_block": "an API key committed into a source file",
       "verdict": "FIRES",
-      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\leak.py",
-      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\clean.py",
+      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\leak.py",
+      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\clean.py",
       "note": "planted -> exit 1; clean -> exit 0. FIXED 2026-08-24; the bare invocation this replaced was INERT"
     },
     {
@@ -67,8 +67,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a training pair citing a banned, eval-only or DNS-dead source",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\src_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\src_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\src_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\src_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -76,8 +76,8 @@
       "layer": "repo_gate",
       "claims_to_block": "nssf.or.tz (DNS-failing) anywhere in a pair, including answer TEXT",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\dead_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\dead_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\dead_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\dead_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -85,8 +85,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a pair asserting a value locked_facts.json marks as WRONG",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\lf_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\lf_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\lf_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\lf_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -94,8 +94,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a held-out eval question leaking into the SFT training file (R6)",
       "verdict": "FIRES",
-      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\train_bad.jsonl",
-      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\train_ok.jsonl",
+      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\train_bad.jsonl",
+      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\train_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -103,7 +103,7 @@
       "layer": "repo_gate",
       "claims_to_block": "a locked fact that is neither in the RAG index nor human-adjudicated",
       "verdict": "FIRES",
-      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmptmy01hxo\\facts_drift.json",
+      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwfy6bhaw\\facts_drift.json",
       "negative_specimen": "",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
@@ -259,6 +259,15 @@
       "positive_specimen": "",
       "negative_specimen": "",
       "note": "needs the live chike-whatsapp app and its Modal Secret. Not audited here."
+    },
+    {
+      "id": "D-FIDELITY-8 (fee-band guard)",
+      "layer": "fidelity",
+      "claims_to_block": "a registration fee stated for the WRONG BAND of BRELA published share-capital ladder -- the rank-1 class, where the correct ladder is in context and no retrieval or wording change can reach the defect",
+      "verdict": "FIRES",
+      "positive_specimen": "a fee of TZS 290,000 asserted for TZS 2,000,000,000 of share capital",
+      "negative_specimen": "the correct TZS 600,000, and the no-share-capital sibling that was already right",
+      "note": "planted(2bn->290,000) flagged: True; correct(600,000) flagged: False; no-share-capital sibling flagged: False. WIRED on the FACT path and REPLACES rather than blanks (blanking ships silence there). CONTAINMENT: moves Bar A1, not A2 -- it hands over the ladder, not the fee."
     },
     {
       "id": "chike-inference /health (build + served-index digest)",
