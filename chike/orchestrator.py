@@ -429,9 +429,24 @@ class Orchestrator:
         # path already answers correctly. ENRICH THEN ROUTE — widening the route first would
         # have traded 4 right answers for 3.
         #
-        # A METHOD ask lands here too. "SDL inahesabiwa vipi?" is answered by exactly this
-        # statement — the rate AND the base — which is what eval_130 got wrong by inverting the
-        # operation (divide instead of multiply).
+        # ⛔ A METHOD ASK GETS THE METHOD STATEMENT, AND THE RATE STATEMENT IS NOT A SUBSTITUTE —
+        # corrected 2026-10-09, after measuring the first version of this branch. The note that
+        # used to sit here claimed "SDL inahesabiwa vipi? is answered by exactly this statement —
+        # the rate AND the base". It is not: eval_130 asks HOW the amount is computed, and the
+        # rate statement gives the rate, the base, the threshold and the incidence while never
+        # stating THE OPERATION. Live on the deployed build the judge moved the row from WRONG to
+        # UNDETERMINED — the inverted "divide by 3.5%" gone (an A1 win) and the method still not
+        # stated (so A2 unearned). Third instance of one renderer serving a different ask; the
+        # other two were the threshold and WCF's base.
+        #
+        # Ordered BEFORE the rate branch because a method ask can also satisfy `asks_rate`, and
+        # the more specific renderer must win. Population: exactly ONE row in 2,473 reaches a
+        # method ask on a levy route (eval_130), asserted in tests.
+        if (rules_engine.rate_statement_supports_method(sq.computation_type)
+                and routing.asks_levy_method(sq.text)
+                and swn.sole_plausible_amount(sq.text) is None):
+            return self._deterministic_answer(
+                sq, rules_engine.levy_method_statement(sq.computation_type))
         if (rules_engine.rate_statement_supports(sq.computation_type)
                 and (routing.asks_rate(sq.text) or routing.asks_levy_method(sq.text))):
             amount = swn.sole_plausible_amount(sq.text)

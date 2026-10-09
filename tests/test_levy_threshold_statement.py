@@ -131,6 +131,123 @@ def test_exactly_ONE_gate_row_reaches_the_threshold_branch_and_it_is_eval_233():
         f"its answer read before this is updated.")
 
 
+# ── THE METHOD RENDERER (added 2026-10-09, after measuring the second instance) ─────────
+# ⛔ ONE RENDERER WAS SERVING FOUR DIFFERENT ASKS, and three of them needed their own. The
+# threshold case is above; this is the method case; the third was WCF's base inside the rate
+# statement itself. All three were found by MEASURING live replies against the judge, and none of
+# them is visible to the regex scorer — eval_130 is `procedure`, eval_112 is `number` with "0.5"
+# present, and both score as passes either way. That is the argument for the targeted check.
+
+def _method_parts(question):
+    out = []
+    for t in (decompose_query(question) or [question]):
+        if (routing.detect_intent(t) in ("sdl", "nssf", "wcf")
+                and routing.asks_levy_method(t)
+                and swn.sole_plausible_amount(t) is None):
+            out.append(t)
+    return out
+
+
+def test_the_method_statement_leads_with_the_OPERATION_not_the_rate():
+    text = rules_engine.levy_method_statement("sdl").working
+    assert text.startswith("Zidisha"), (
+        f"a method answer that does not open with the operation is the defect this renderer was "
+        f"split out for: {text}")
+    assert "3.5" in text and "JUMLA ya mishahara" in text
+    assert "wafanyakazi 10 au zaidi" in text, "the applicability qualifier is still owed here"
+    assert "sDL" not in text, (
+        "the levy name has been case-munged. My first draft spliced the incidence clause "
+        "mid-sentence with [0].lower(), which produced 'sDL inalipwa' — visible only by printing "
+        "the output, never by reading the source")
+
+
+def test_the_REGEX_SCORER_CANNOT_TELL_THE_TWO_RENDERERS_APART_on_eval_130():
+    """⛔ MY FIRST VERSION OF THIS TEST ASSERTED THE OPPOSITE AND FAILED, AND THE FAILURE IS THE
+    MOST USEFUL THING IN THIS FILE.
+
+    I wrote it as the usual both-directions plant: the method renderer passes eval_130 and the
+    rate renderer fails it. **The rate renderer PASSES TOO.** `answer_type` is `procedure`, which
+    the scorer grades by counting three shared 5-character-plus tokens with the gold, and both
+    renderings share "mishahara", "wafanyakazi" and "jumla". The scorer is blind to whether the
+    OPERATION is stated at all.
+
+    So the regex scorer cannot see this defect, cannot see the WCF base defect (`number`, "0.5"
+    present), and could not see the inverted "divide by 3.5%" that eval_130 shipped at 0e11c3d —
+    which is exactly why that row was one of the seventeen false passes the judge flagged. **A
+    full gate run would have scored every one of these as a pass.** That is the argument for the
+    targeted judge-scored check, stated as a test so it cannot quietly stop being true.
+
+    What IS asserted is therefore structural: the operation is present in one and absent in the
+    other. A scorer assertion here would be a check that cannot fail.
+    """
+    q = GATE["eval_130"]
+    method = rules_engine.levy_method_statement("sdl").working
+    rate = rules_engine.levy_rate_statement("sdl", None).working
+    assert "Zidisha" in method and "Zidisha" not in rate, (
+        "the two renderers no longer differ on whether they state the operation, which is the "
+        "whole reason the method renderer exists")
+    assert score_question(q, method, REFUSALS) is True
+    assert score_question(q, rate, REFUSALS) is True, (
+        "the regex scorer has started distinguishing these two. That would be good news, but "
+        "this test's docstring then describes a world that no longer exists — re-read it rather "
+        "than flipping the assertion")
+
+
+def test_the_method_statement_states_NO_example_figure():
+    """eval_130's gold carries a worked example ('milioni 10 → 350,000') and the engine
+    deliberately does not. An invented amount is the compute path's job; a statement that makes
+    one up is the fabrication class D-FIDELITY-7 exists for."""
+    for levy in ("sdl", "wcf", "nssf"):
+        text = rules_engine.levy_method_statement(levy).working
+        figures = [tok for tok in text.replace(",", "").split()
+                   if tok.strip(".").isdigit() and len(tok.strip(".")) >= 4]
+        assert not figures, f"{levy}: the method statement invented a figure: {figures} in {text}"
+        assert "nihesabu" in text, (
+            f"{levy}: the hand-off to the compute path is gone, so the user is left with a method "
+            f"and no way to get the number")
+
+
+def test_exactly_ONE_gate_row_reaches_the_method_branch_and_it_is_eval_130():
+    reaching = sorted(i for i, r in GATE.items() if _method_parts(r["question_sw"]))
+    assert reaching == ["eval_130"], (
+        f"the method branch's gate-400 population changed: {reaching}. Each new row needs its "
+        f"answer read before this is updated.")
+
+
+def test_a_method_ask_WITH_a_figure_goes_to_the_compute_path_instead():
+    """The ordering guard. A method ask can also satisfy `asks_rate`, so the method branch is
+    placed first — but it must not swallow a question that carries the user's own figure, which
+    the compute path owns."""
+    q = "Jumla ya mishahara ni TZS 10,000,000. SDL inahesabiwa vipi?"
+    assert routing.asks_levy_method(q) is True
+    assert swn.sole_plausible_amount(q) is not None, (
+        "the guard clause this test exists for reads sole_plausible_amount; if that is None here "
+        "the ordering guard is untested")
+    assert _method_parts(q) == [], "a figure-bearing method ask must not reach the method branch"
+
+
+def test_an_unsupported_type_RAISES_rather_than_inventing_a_method():
+    assert rules_engine.rate_statement_supports_method("paye") is False
+    with pytest.raises(ValueError):
+        rules_engine.levy_method_statement("paye")
+
+
+def test_the_WCF_rate_statement_states_the_AGGREGATE_base_not_a_single_wage():
+    """⛔ MY MEASURED REGRESSION, PINNED. The rate statement said "ya mshahara ghafi" for every
+    levy. For NSSF that is right (20% of the individual's gross wage); for WCF it is wrong by
+    omission — 0.5% of the employer's gross cash emoluments, i.e. the whole payroll. The judge
+    moved eval_112 from CORRECT to UNDETERMINED when the route started serving the generic text
+    instead of the fact-path reply, which had the base right. The regex scorer passes it either
+    way, so only a judge-scored targeted check could see it."""
+    wcf = rules_engine.levy_rate_statement("wcf").working
+    assert "JUMLA ya mishahara ghafi ya wafanyakazi wote" in wcf, wcf
+    nssf = rules_engine.levy_rate_statement("nssf").working
+    assert "ya mshahara ghafi wa mfanyakazi" in nssf, (
+        f"NSSF's base must stay the INDIVIDUAL's wage — it is 20% of one employee's gross pay, "
+        f"not of the payroll, and swapping the two bases is the same defect mirrored: {nssf}")
+    assert score_question(GATE["eval_112"], wcf, REFUSALS) is True
+
+
 def test_eval_322s_rate_limb_is_NOT_captured_by_the_threshold_branch():
     """The near-miss, pinned by name. `kizingiti` appears in its VAT limb and `SDL` in its rate
     limb; only decomposition keeps those apart, so this fails loudly if decomposition stops

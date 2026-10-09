@@ -1,0 +1,181 @@
+{
+ "_what": "does the statement route alter anything for a row whose route did not change? Answered at the prompt level, across two trees, with retrieval held fixed.",
+ "_why_not_the_reply_diff": "the targeted harness compares production replies now against the 0e11c3d GATE artifact, whose `generated` field was produced by the gate's OWN Kaggle backend (its source calls it 'the Kaggle twin of modal_app.ChikeModel._generate') while production then served build 3659a06. That diff therefore conflates the route, every other code change, and a different host — and its noise floor is demonstrably non-zero: eval_162, a GN487A row untouched by anything shipped today, 'moved' by a single space.",
+ "_what_is_held_fixed": "retrieval. The same constant fact list is supplied on both sides, so the index cannot perturb the comparison. The index term is a SEPARATE question that needs e5 and is not answered here.",
+ "trees": {
+  "after": "0602193",
+  "before": "e45b28f",
+  "route_landed_in": "7b15756"
+ },
+ "n_rows": 15,
+ "prompt_identical_for_all": true,
+ "rows_that_differ": [],
+ "verdict": "PREMISE HOLDS AT THE CODE LEVEL — every unchanged-route row gets a byte-identical prompt before and after the route change, so the route cannot have altered its reply. The reply differences seen against the 0e11c3d gate artifact are cross-host/cross-tree, not route effects.",
+ "rows": [
+  {
+   "id": "eval_223",
+   "question": "Utaratibu Rahisishwa wa Biashara (STR) wa EAC una zana kuu ngapi na ni zipi?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": true
+  },
+  {
+   "id": "eval_186",
+   "question": "Nina wafanyakazi 60 na nimesajili OSHA — je, pia ninahitaji kumwajiri afisa wa usalama?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": false
+  },
+  {
+   "id": "eval_239",
+   "question": "Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": false
+  },
+  {
+   "id": "eval_104",
+   "question": "Mwajiri anahitaji nyaraka gani kuwasilisha NSSF ili kusajilisha wafanyakazi wake?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": true
+  },
+  {
+   "id": "eval_162",
+   "question": "'Mgeni' katika GN 487A inamaanisha nani hasa?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": true
+  },
+  {
+   "id": "eval_171",
+   "question": "Mimi ni mgeni ninayefanya biashara ya rejareja — GN 487A tayari imetangazwa. Nifanye nini sasa?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": false
+  },
+  {
+   "id": "eval_237",
+   "question": "Kodi ya zuio (withholding tax) inatakiwa kuwasilishwa TRA ndani ya muda gani baada ya mwisho wa mwezi?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": false
+  },
+  {
+   "id": "eval_304",
+   "question": "Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": false
+  },
+  {
+   "id": "eval_338",
+   "question": "VAT withholding kwa huduma ni asilimia 18 kama kiwango cha kawaida, sivyo?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": false
+  },
+  {
+   "id": "eval_099",
+   "question": "Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": true
+  },
+  {
+   "id": "eval_348",
+   "question": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": false
+  },
+  {
+   "id": "eval_337",
+   "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": false
+  },
+  {
+   "id": "eval_365",
+   "question": "Nina mfanyakazi mmoja tu wa kwanza, je NSSF ni lazima au nasubiri niwe na wengi?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": false
+  },
+  {
+   "id": "eval_234",
+   "question": "Michango ya NSSF inatakiwa kufikishwa NSSF ndani ya muda gani baada ya kulipa mishahara?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": false
+  },
+  {
+   "id": "eval_089",
+   "question": "Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?",
+   "intent_before": "none",
+   "intent_after": "none",
+   "prompt_identical": true,
+   "deterministic_text_identical": true,
+   "n_prompts_before": 2,
+   "n_prompts_after": 2,
+   "moved_in_the_cross_host_reply_diff": true
+  }
+ ]
+}

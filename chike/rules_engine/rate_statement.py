@@ -131,6 +131,58 @@ def levy_threshold_statement(computation_type: str) -> ComputationResult:
              "rate, which is an unsupported figure on this question")
 
 
+# ── METHOD-LED ANSWERS: "HOW DO I COMPUTE IT" NEEDS THE OPERATION, NOT JUST THE RATE ────
+# ⛔ THE THIRD RENDERER, AND THE THIRD TIME THE SAME DEFECT HAS BEEN MEASURED (2026-10-09).
+# `levy_rate_statement` was one renderer serving four different asks — rate, threshold, method
+# and incidence — and three of them needed their own:
+#
+#   * RATE      → it was written for this one.
+#   * THRESHOLD → answered rate-first, which regressed eval_233 from PASS to FAIL.
+#   * METHOD    → this. eval_130 asks "Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi
+#                 VIPI?" and the rate statement answers with the rate, the base, the threshold
+#                 and the incidence — everything except THE OPERATION. The judge moved it from
+#                 WRONG to UNDETERMINED: the inverted "divide the payroll by 3.5%" is gone (an A1
+#                 win) and the method is still not stated (so A2 is not earned). That is the
+#                 A1/A2 split visible on a single row.
+#
+# ⚠️ AND IT STATES NO EXAMPLE FIGURE. eval_130's gold carries one ("milioni 10 → 350,000"), and
+# the engine deliberately does not: a worked example here would be an amount the user never gave,
+# which is the compute path's job. The closing invitation hands off to it.
+_METHOD = {
+    # ⚠️ The incidence clause follows a FULL STOP rather than being spliced mid-sentence. My
+    # first draft joined it with "na " + `_INCIDENCE['sdl'][0].lower() + [1:]`, which lowercased
+    # the levy's own name into "sDL inalipwa" — case-munging a string that begins with an
+    # acronym. Caught by printing the output, which is the only place it was visible.
+    "sdl": (f"Zidisha JUMLA ya mishahara ghafi ya wafanyakazi wote kwa asilimia "
+            f"{_pct_text(SDL_RATE)}. Hiyo ndiyo SDL ya mwezi. Inamhusu mwajiri mwenye "
+            f"wafanyakazi {SDL_MIN_EMPLOYEES} au zaidi. {_INCIDENCE['sdl']} Nipe jumla ya "
+            f"mishahara na idadi ya wafanyakazi ili nihesabu."),
+    "wcf": (f"Zidisha JUMLA ya mishahara ghafi ya wafanyakazi wote kwa asilimia "
+            f"{_pct_text(WCF_RATE)}. Hiyo ndiyo WCF ya mwezi. {_INCIDENCE['wcf']} Nipe jumla "
+            f"ya mishahara ili nihesabu."),
+    "nssf": (f"Zidisha mshahara ghafi wa mfanyakazi kwa asilimia {_pct_text(NSSF_TOTAL_RATE)} "
+             f"— asilimia {_pct_text(NSSF_EMPLOYER_RATE)} mwajiri na asilimia "
+             f"{_pct_text(NSSF_EMPLOYEE_RATE)} mfanyakazi. {_INCIDENCE['nssf']} Nipe mshahara "
+             f"ili nihesabu."),
+}
+
+
+def supports_method(computation_type: str) -> bool:
+    return computation_type in _METHOD
+
+
+def levy_method_statement(computation_type: str) -> ComputationResult:
+    """Answer a METHOD question with the operation, the base and the rate — in that order."""
+    if computation_type not in _METHOD:
+        raise ValueError(f"levy_method_statement: no method text for {computation_type!r}")
+    return ComputationResult(
+        computation=computation_type, applicable=True, amount=None,
+        working=_METHOD[computation_type],
+        inputs={"rate": _PCT[computation_type]},
+        note="method question — answered with the OPERATION first, and with no example figure, "
+             "because an invented amount is the compute path's job and not a statement's")
+
+
 def levy_rate_statement(computation_type: str, amount=None) -> ComputationResult:
     """State the levy's rate, its invariance to the salary, and — where the levy really is a
     per-employee percentage — what it comes to on the figure given."""
@@ -153,8 +205,25 @@ def levy_rate_statement(computation_type: str, amount=None) -> ComputationResult
             inputs={"rate": rate},
             note="rate question — SDL is charged on the whole payroll, never per person")
 
-    lines = [f"Kiwango cha {computation_type.upper()} ni asilimia {pct} ya mshahara ghafi — "
-             f"hakibadiliki kwa ukubwa wa mshahara."]
+    # ⛔ THE BASE IS PER-LEVY AND SAYING IT GENERICALLY COST A MEASURED REGRESSION (2026-10-09).
+    # This read "ya mshahara ghafi" for every levy. For NSSF that is right — 20% of the
+    # INDIVIDUAL employee's gross wage. For WCF it is wrong by omission: WCF is 0.5% of the
+    # employer's gross cash emoluments, i.e. the WHOLE PAYROLL (`wcf_rate_0_5_percent_confirmed`,
+    # `wcf_threshold_no_minimum`), which is also what eval_112's gold and its QUESTION both say
+    # ("ya jumla ya mishahara ya jumla").
+    #
+    # MEASURED, NOT INFERRED: on the live deployed build the judge moved eval_112 from CORRECT to
+    # UNDETERMINED (4/5) when the route started serving this text instead of the fact-path reply
+    # it replaced — and that fact-path reply had the base right ("jumla ya mishahara ghafi (gross
+    # payroll) ya wafanyakazi wote"). The regex scorer cannot see it at all: answer_type `number`,
+    # "0.5" present, pass either way. So the full gate's headline would have called this a pass.
+    # eval/results/targeted_route_verification_2026_10_09.json, row eval_112.
+    _BASE = {
+        "nssf": "ya mshahara ghafi wa mfanyakazi",
+        "wcf": "ya JUMLA ya mishahara ghafi ya wafanyakazi wote",
+    }
+    lines = [f"Kiwango cha {computation_type.upper()} ni asilimia {pct} "
+             f"{_BASE[computation_type]} — hakibadiliki kwa ukubwa wa mshahara."]
     if computation_type == "nssf":
         lines[0] += (f" (asilimia {_pct_text(NSSF_EMPLOYER_RATE)} mwajiri + "
                      f"asilimia {_pct_text(NSSF_EMPLOYEE_RATE)} mfanyakazi).")

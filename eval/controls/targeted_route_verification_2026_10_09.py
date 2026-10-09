@@ -373,7 +373,14 @@ def classify(rec):
     if ("PREMISE_CONTROL_MODEL" in rec["arms"] or "PREMISE_CONTROL_INDEX" in rec["arms"]):
         if b is None:
             return "NO_BASELINE"
-        return "CONTROL_MOVED" if rec["reply_changed"] else "CONTROL_HELD"
+        # ⛔ THIS REPORTS A TEXT DIFFERENCE, AND A TEXT DIFFERENCE IS NOT A ROUTE EFFECT.
+        # The baseline reply came from the 0e11c3d GATE, which generates with its own Kaggle
+        # backend while production then served build 3659a06 — so a difference here is
+        # cross-host and cross-tree before it is anything else. eval_162 is the proof: a GN487A
+        # row untouched by anything shipped today, differing by ONE SPACE. The premise is
+        # settled by premise_prompt_identity_2026_10_09.py instead, which compares the PROMPT
+        # across the two trees with retrieval held fixed — and found all 15 identical.
+        return "CONTROL_TEXT_DIFFERS_CROSS_HOST" if rec["reply_changed"] else "CONTROL_HELD"
     if b is None or b.get("judge") is None:
         return "NO_BASELINE_JUDGE_" + str(jv).upper()
     bj = b["judge"]
@@ -386,8 +393,61 @@ def classify(rec):
     return "JUDGE_MOVED_" + str(bj).upper() + "_TO_" + str(jv).upper()
 
 
+def _premise_block(rows, text_differs):
+    """⛔ THE PREMISE IS DECIDED BY THE PROMPT TEST, NOT BY THIS HARNESS'S REPLY DIFF.
+
+    My first version decided it here, from `reply_changed`, and printed "FALSIFIED — the full
+    gate is now justified" on four rows. That verdict was WRONG, and wrong in the expensive
+    direction: it would have bought a ~100-minute GPU run on the strength of a comparison whose
+    own noise floor is a single space (`eval_162`, a GN487A row untouched by anything shipped
+    today). The baseline replies come from the 0e11c3d GATE — its own Kaggle backend, with
+    production then on build 3659a06 — so a text difference is cross-host and cross-tree before
+    it is anything else.
+
+    The premise is a claim about CODE: if `detect_intent` is unchanged, the orchestrator hands
+    the model the same prompt, and the same weights on the same prompt give the same reply. So it
+    is settled by comparing PROMPTS across the two trees with retrieval held fixed, which is
+    exact, local and free. That artifact is READ here, never re-derived.
+    """
+    path = os.path.join(REPO, "eval", "results",
+                        "premise_prompt_identity_2026_10_09.json")
+    prompt_test = None
+    if os.path.exists(path):
+        try:
+            prompt_test = json.load(io.open(path, encoding="utf-8"))
+        except Exception:                                                # noqa: BLE001
+            prompt_test = None
+    held = bool(prompt_test and prompt_test.get("prompt_identical_for_all"))
+    return {
+        "_decided_by": "eval/controls/premise_prompt_identity_2026_10_09.py (prompt identity "
+                       "across trees, retrieval held fixed) — NOT by the reply diff below",
+        "controls_total": len([r for r in rows if "PREMISE_CONTROL_MODEL" in r["arms"]
+                               or "PREMISE_CONTROL_INDEX" in r["arms"]]),
+        "controls_whose_TEXT_differs_cross_host": text_differs,
+        "_why_that_is_not_a_falsification": (
+            "the baseline is the 0e11c3d gate's own Kaggle-generated reply, measured while "
+            "production served 3659a06. The smallest difference this comparison reports is one "
+            "space, on eval_162, whose subject nothing shipped today touches. It is an "
+            "observation, not evidence of a route effect."),
+        "prompt_identity_test": (
+            None if prompt_test is None else
+            {"verdict": prompt_test.get("verdict"),
+             "n_rows": prompt_test.get("n_rows"),
+             "rows_that_differ": prompt_test.get("rows_that_differ"),
+             "trees": prompt_test.get("trees")}),
+        "verdict": (
+            "HELD — every unchanged-route row gets a byte-identical prompt before and after "
+            "the route change, so the route cannot have altered its reply"
+            if held else
+            "NOT ESTABLISHED — run premise_prompt_identity_2026_10_09.py. Absence of that "
+            "artifact is NOT a pass, and the cross-host reply diff cannot substitute for it."),
+        "_held": held,
+    }
+
+
 def save(rows, h, population):
-    moved_controls = [r["id"] for r in rows if r.get("verdict") == "CONTROL_MOVED"]
+    moved_controls = [r["id"] for r in rows
+                      if r.get("verdict") == "CONTROL_TEXT_DIFFERS_CROSS_HOST"]
     regressions = [r["id"] for r in rows if r.get("verdict") == "JUDGE_REGRESSED"]
     done = [r for r in rows if r.get("reply")]
     payload = {
@@ -419,14 +479,7 @@ def save(rows, h, population):
             "by_verdict": {v: len([r for r in rows if r.get("verdict") == v])
                            for v in sorted({r.get("verdict") for r in rows if r.get("verdict")})},
         },
-        "premise": {
-            "controls_total": len([r for r in rows if "PREMISE_CONTROL_MODEL" in r["arms"]
-                                   or "PREMISE_CONTROL_INDEX" in r["arms"]]),
-            "controls_moved": moved_controls,
-            "verdict": ("HELD — no unchanged-route row moved" if not moved_controls
-                        else "FALSIFIED — an unchanged-route row moved; the full gate is now "
-                             "justified and the blast radius is NOT bounded by the sweep"),
-        },
+        "premise": _premise_block(rows, moved_controls),
         "regression_candidates": regressions,
         "judge_to_judge": {
             "_what": ("the apples-to-apples comparison: the 0e11c3d artifact's own judge verdict "
@@ -540,11 +593,17 @@ def main():
     payload = save(out, h, pop)
     print("\n" + json.dumps(payload["totals"], ensure_ascii=False, indent=1))
     print(f"\nPREMISE: {payload['premise']['verdict']}")
+    if payload["premise"]["controls_whose_TEXT_differs_cross_host"]:
+        print(f"  (text differs cross-host on "
+              f"{payload['premise']['controls_whose_TEXT_differs_cross_host']} — an "
+              f"observation, not a route effect; see _why_that_is_not_a_falsification)")
     if payload["regression_candidates"]:
         print(f"⛔ REGRESSION CANDIDATES (hand-read before recording): "
               f"{payload['regression_candidates']}")
     print(f"artifact: {os.path.relpath(OUT, REPO)}")
-    bad = payload["regression_candidates"] or payload["premise"]["controls_moved"]
+    # ⛔ THE EXIT CODE FOLLOWS THE PROMPT TEST AND THE JUDGE-TO-JUDGE REGRESSIONS — never the
+    # cross-host text diff, which would fail this run on a single space.
+    bad = payload["regression_candidates"] or not payload["premise"]["_held"]
     return 1 if bad else 0
 
 

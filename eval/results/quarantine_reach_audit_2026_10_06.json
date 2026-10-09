@@ -1,5 +1,5 @@
 {
-  "measured": "2026-10-09",
+  "measured": "2026-10-10",
   "harness": "eval/controls/audit_quarantine_reach.py",
   "question": "For every quarantine this project has performed, does the quarantined TEXT still exist in a live corpus -- and specifically in the exported SFT files that actually train the model?",
   "why_this_population": "Every record in datasets/tier1a/rejected/ against every row of every live corpus. The quarantines are the only population where an adjudication was already made, so a survivor is a KNOWN defect still present rather than a new candidate -- no re-adjudication of the fact is needed, only of whether the row is a deliberate adversarial retention (R22: this is the population the question is about).",
