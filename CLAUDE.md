@@ -1102,6 +1102,55 @@ already at rank 1 for both phrasings and there was no retrieval headroom left to
 | **A1 — confident wrong answers** | in-scope questions answered with a located, wrong value | a guard, a fact correction, an index fix. **D-FIDELITY-7 moved this.** |
 | **A2 — answered correctly** | in-scope questions the user can act on | content, retrieval, generation. **A guard never moves this.** |
 
+### 🎯 THE STANDING ANSWER TO "CAN BAR A BE CLOSED, OR DOES IT NEED THE MODEL LAYER?" — MEASURED 2026-10-09, AND ANY RETRAIN DECISION STARTS HERE
+
+**A1 IS CLOSABLE BY ROUTING AND GUARDS. A2 IS NOT CLOSABLE BY ANYTHING WE HAVE.** That is the
+split, taken on the largest and best-measured population available: the 12 confirmed
+confident-wrong answers of the `0e11c3d` gate, each classified by what could take it out of the
+model's hands. `eval/controls/classify_bar_a_closability_2026_10_09.py` →
+`eval/results/bar_a_closability_2026_10_09.json`.
+
+| class | n | meaning |
+|---|---|---|
+| **ROUTE** | 2 | a deterministic engine already holds the answer |
+| **CORPUS+ROUTE** | 1 | one index row away, and the route exists |
+| **CORPUS** | 1 | genuinely absent — an unbuilt tier |
+| **MODEL** | **6** | **the fact was SERVED and the reply contradicted it** |
+| **GOLD** | 2 | the key was the defect, not the answer |
+
+Two measurements per row, re-derived on every run of the harness rather than asserted:
+`routing.detect_intent(question)`, and whether the governing fact is in the served index.
+
+> **ALL TWELVE ROUTED TO `none`. NOT ONE REACHED AN ENGINE. AND FOR 10 OF 12 THE GOVERNING FACT
+> WAS IN THE INDEX — OFTEN STATING THE DENIAL VERBATIM:** row 82 says the company-vs-business-name
+> choice depends *"NOT on the number of employees or the amount of capital"* against `eval_304`'s
+> invented threshold; row 3 says of the P9 *"do not use it"* against `eval_104`; row 37 says
+> *"NOT 7th of following month"* against `eval_237`.
+
+**WHAT THIS MEANS FOR A RETRAIN DECISION, which is the question it was taken to answer:**
+
+- **8 of 12 are guardable, and a guard moves A1 and never A2.** Closing the whole guardable set
+  converts eight confident wrong answers into eight non-answers. That is worth doing and it
+  raises the correct-answer rate by zero.
+- **The routing half is the highest-yield work on the board and it is NOT a model problem.**
+  `detect_intent` is the bottleneck, not the engines (R31's fifth instance): the engines already
+  answered two of the twelve correctly and could not be reached. **Fixed 2026-10-09** — the
+  statement route now carries rate/method/applicability questions with no figure.
+- **The 6 MODEL rows are the A2 ceiling, and neither of this project's two effective methods
+  reaches them.** Index content and retrieval wording cannot help a reply that contradicts a fact
+  it was handed. **This — not a general sense that accuracy is low — is the evidence for or
+  against a retrain**, and it is six rows, not sixty.
+- ⚠️ **IT DOES NOT SETTLE RANK, and that caveat is load-bearing.** "In the index" is necessary for
+  "the model ignored it", not sufficient. If a present fact sat at a bad rank, the row is
+  retrieval work after all. Measure the rank before citing any of these six as model failures.
+- ⚠️ **AND "PRESENT" IS NOT "UNAMBIGUOUS".** `eval_086` was classified MODEL because its fact was
+  in the index — and the fact was **complicit**: row 9 read *"mwajiri analipa asilimia 10 ya
+  mshahara wa mfanyakazi"*, true as a statement of the BASE and readable as a statement of
+  SOURCE, which is the inverted party the reply served. **"Is the governing fact present" is a
+  different question from "does it say it unambiguously", and only the second predicts whether
+  the model can get it wrong.** Reworded the same day. Expect this to reclassify more than one
+  MODEL row on inspection, which would make the A2 ceiling *lower* than six.
+
 - **Never net them.** A guard that converts five fabrications into five non-answers is a large A1
   improvement and a zero A2 improvement, and reporting the net says the work did nothing.
 - **A guard stops the wrong answer; it does not produce the right one.** Wiring one is therefore

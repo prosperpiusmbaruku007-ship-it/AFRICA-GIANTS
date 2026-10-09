@@ -1,0 +1,399 @@
+{
+ "_what": "every eval/results adjudication artifact added between the wrong Part XIII 'correction' (2026-08-31) and its reversal (2026-10-05), scanned for rows penalised for citing Part XII correctly or credited for citing Part XIII",
+ "_why_the_window_and_not_the_subject": "searching for foreign-company rows would only re-find what prompted the audit. An adjudication is a permanent human verdict — nothing downstream re-opens it — so the population has to be every verdict taken while the wrong citation was the official answer.",
+ "window": {
+  "open": "2026-08-31",
+  "shut": "2026-10-05"
+ },
+ "artifacts_scanned": [
+  {
+   "added": "2026-10-05",
+   "artifact": "eval/results/part_xii_deploy_verification_2026_10_05.json",
+   "bytes": 6247
+  },
+  {
+   "added": "2026-10-05",
+   "artifact": "eval/results/renumbering_exposure_sample.json",
+   "bytes": 13160
+  },
+  {
+   "added": "2026-10-05",
+   "artifact": "eval/results/dryrun_regen_2026_10_05.json",
+   "bytes": 7543
+  },
+  {
+   "added": "2026-10-05",
+   "artifact": "eval/results/rate_guard_stage_measurement.json",
+   "bytes": 9329
+  },
+  {
+   "added": "2026-10-05",
+   "artifact": "eval/results/part_xii_reversal_inventory.json",
+   "bytes": 13899
+  },
+  {
+   "added": "2026-10-04",
+   "artifact": "eval/results/gold_provenance_backfill_pass1.json",
+   "bytes": 39189
+  },
+  {
+   "added": "2026-10-04",
+   "artifact": "eval/results/gold_answer_provenance_audit.json",
+   "bytes": 136769
+  },
+  {
+   "added": "2026-09-29",
+   "artifact": "eval/results/rate_attribution_all_stored_2026_09_29.json",
+   "bytes": 10487
+  },
+  {
+   "added": "2026-09-29",
+   "artifact": "eval/results/bucket_a_recount_2026_09_29.json",
+   "bytes": 2693
+  },
+  {
+   "added": "2026-09-29",
+   "artifact": "eval/results/wcf_base_assumption_audit.json",
+   "bytes": 5447
+  },
+  {
+   "added": "2026-09-29",
+   "artifact": "eval/results/confirmation_tag_veto_2026_09_29.json",
+   "bytes": 2806
+  },
+  {
+   "added": "2026-09-29",
+   "artifact": "eval/results/engine_parameter_census.json",
+   "bytes": 15090
+  },
+  {
+   "added": "2026-09-29",
+   "artifact": "eval/results/engine_reachability_probes.json",
+   "bytes": 39873
+  },
+  {
+   "added": "2026-09-29",
+   "artifact": "eval/results/ooc_phrase_training_corpus_sweep.json",
+   "bytes": 258933
+  },
+  {
+   "added": "2026-09-29",
+   "artifact": "eval/results/rent_wht_pipeline_probes.json",
+   "bytes": 13187
+  },
+  {
+   "added": "2026-09-29",
+   "artifact": "eval/results/rent_wht_pipeline_probes_BEFORE_2026_09_29.json",
+   "bytes": 10156
+  },
+  {
+   "added": "2026-09-29",
+   "artifact": "eval/results/stripped_spans_cue_audit_2026_09_29.json",
+   "bytes": 4118
+  },
+  {
+   "added": "2026-09-29",
+   "artifact": "eval/results/rent_wht_routing_sweep_2026_09_26.json",
+   "bytes": 2787
+  },
+  {
+   "added": "2026-09-26",
+   "artifact": "eval/results/corpus_correction_v11.json",
+   "bytes": 1110
+  },
+  {
+   "added": "2026-09-26",
+   "artifact": "eval/results/s19_family_claim_2026_09_26.json",
+   "bytes": 4690
+  },
+  {
+   "added": "2026-09-26",
+   "artifact": "eval/results/cited_sections_exist_2026_09_25.json",
+   "bytes": 11459
+  },
+  {
+   "added": "2026-09-25",
+   "artifact": "eval/results/rent_wht_residency_split_2026_09_25.json",
+   "bytes": 4867
+  },
+  {
+   "added": "2026-09-25",
+   "artifact": "eval/results/coverage_source_reachability_2026_09_25.json",
+   "bytes": 4725
+  },
+  {
+   "added": "2026-09-25",
+   "artifact": "eval/results/vocab_substitution_arm_2026_09_24.json",
+   "bytes": 5354
+  },
+  {
+   "added": "2026-09-24",
+   "artifact": "eval/results/retrain_case_2026_09_24.json",
+   "bytes": 12344
+  },
+  {
+   "added": "2026-09-24",
+   "artifact": "eval/results/paired_phrasing_adjudication_2026_09_24.json",
+   "bytes": 23519
+  },
+  {
+   "added": "2026-09-24",
+   "artifact": "eval/results/paired_phrasing_live_2026_09_24.json",
+   "bytes": 25102
+  },
+  {
+   "added": "2026-09-24",
+   "artifact": "eval/results/r16_deploy_verification_2026_09_24.json",
+   "bytes": 12670
+  },
+  {
+   "added": "2026-09-23",
+   "artifact": "eval/results/corporate_gate_widening_sweep_2026_09_23.json",
+   "bytes": 11159
+  },
+  {
+   "added": "2026-09-23",
+   "artifact": "eval/results/section_xii_guard_findings_2026_09_23.json",
+   "bytes": 9105
+  },
+  {
+   "added": "2026-09-23",
+   "artifact": "eval/results/wrong_pattern_language_scan_2026_09_23.json",
+   "bytes": 26847
+  },
+  {
+   "added": "2026-09-23",
+   "artifact": "eval/results/ooc_phrase_inscope_sweep_2026_09_23.json",
+   "bytes": 5405
+  },
+  {
+   "added": "2026-09-23",
+   "artifact": "eval/results/extended_078_adjudication_2026_09_23.json",
+   "bytes": 24613
+  },
+  {
+   "added": "2026-09-23",
+   "artifact": "eval/results/extended_078_live_replies_2026_09_05.json",
+   "bytes": 56081
+  },
+  {
+   "added": "2026-09-05",
+   "artifact": "eval/results/corporate_domain_post_sector_fix_verify_2026_09_05.json",
+   "bytes": 2974
+  },
+  {
+   "added": "2026-09-05",
+   "artifact": "eval/results/corporate_tax_routing_reachability_2026_09_05_post_sector_fix.json",
+   "bytes": 721
+  },
+  {
+   "added": "2026-09-05",
+   "artifact": "eval/results/corporate_domain_live_probe_2026_09_05.json",
+   "bytes": 8939
+  },
+  {
+   "added": "2026-09-05",
+   "artifact": "eval/results/arc_effect_pre_vs_post.json",
+   "bytes": 12349
+  },
+  {
+   "added": "2026-09-05",
+   "artifact": "eval/results/canary_2026_09_05_regen_deploy_after.json",
+   "bytes": 4318
+  },
+  {
+   "added": "2026-09-05",
+   "artifact": "eval/results/canary_2026_09_05_regen_deploy_before.json",
+   "bytes": 4514
+  },
+  {
+   "added": "2026-09-05",
+   "artifact": "eval/results/grounded_fact_reach_baseline.json",
+   "bytes": 11121
+  },
+  {
+   "added": "2026-09-05",
+   "artifact": "eval/results/grounded_fact_reach_prospective_compare.json",
+   "bytes": 15193
+  },
+  {
+   "added": "2026-09-05",
+   "artifact": "eval/results/correction_sync_audit.json",
+   "bytes": 7868
+  },
+  {
+   "added": "2026-09-05",
+   "artifact": "eval/results/correction_sync_negation_check_2026_09_04.json",
+   "bytes": 1222
+  },
+  {
+   "added": "2026-09-03",
+   "artifact": "eval/results/natural48_readjudicated_2026_09_03.json",
+   "bytes": 60980
+  },
+  {
+   "added": "2026-09-03",
+   "artifact": "eval/results/raw/natural48_live_replies_2026_09_03_c9b2425.json",
+   "bytes": 31198
+  },
+  {
+   "added": "2026-09-03",
+   "artifact": "eval/results/raw/r16_canary_c9b2425.json",
+   "bytes": 4232
+  },
+  {
+   "added": "2026-09-02",
+   "artifact": "eval/results/corpus_correction_v10.json",
+   "bytes": 462
+  },
+  {
+   "added": "2026-09-02",
+   "artifact": "eval/results/revisitable_hedges_2026_09_02.json",
+   "bytes": 5429
+  },
+  {
+   "added": "2026-09-02",
+   "artifact": "eval/results/corpus_correction_v9.json",
+   "bytes": 683
+  },
+  {
+   "added": "2026-09-02",
+   "artifact": "eval/results/verified_as_at_bootstrap_census_2026_09_01.json",
+   "bytes": 83907
+  },
+  {
+   "added": "2026-09-01",
+   "artifact": "eval/results/corpus_correction_v8.json",
+   "bytes": 2599
+  },
+  {
+   "added": "2026-09-01",
+   "artifact": "eval/results/corpus_correction_v7.json",
+   "bytes": 1865
+  },
+  {
+   "added": "2026-09-01",
+   "artifact": "eval/results/dse_conflation_verification_2026_09_01.json",
+   "bytes": 21668
+  },
+  {
+   "added": "2026-09-01",
+   "artifact": "eval/results/corporate_tax_routing_reachability_2026_09_01.json",
+   "bytes": 996
+  },
+  {
+   "added": "2026-09-01",
+   "artifact": "eval/results/corpus_correction_v6.json",
+   "bytes": 1850
+  },
+  {
+   "added": "2026-09-01",
+   "artifact": "eval/results/sft_regeneration_verification_2026_09_01.json",
+   "bytes": 1203
+  },
+  {
+   "added": "2026-09-01",
+   "artifact": "eval/results/corpus_correction_v5.json",
+   "bytes": 2655
+  }
+ ],
+ "unreadable": [],
+ "hits": [
+  {
+   "artifact": "eval/results/part_xii_deploy_verification_2026_10_05.json",
+   "added": "2026-10-05",
+   "id": "?",
+   "mentions_correct_citation": true,
+   "mentions_reversed_citation": true,
+   "verdict": "DEPLOY VERIFIED",
+   "cause": null,
+   "note": "",
+   "already_known": false,
+   "not_a_row_verdict": "the REVERSAL's own deploy verification, dated the day of the fix. Verdict 'DEPLOY VERIFIED' — it confirms the correct citation reached production, which is the opposite of penalising it."
+  },
+  {
+   "artifact": "eval/results/dryrun_regen_2026_10_05.json",
+   "added": "2026-10-05",
+   "id": "?",
+   "mentions_correct_citation": true,
+   "mentions_reversed_citation": false,
+   "verdict": "SAFE TO RUN",
+   "cause": null,
+   "note": "",
+   "already_known": false,
+   "not_a_row_verdict": "the regen dry run for the reversal. 'SAFE TO RUN' is a build verdict, not a judgement on any answer."
+  },
+  {
+   "artifact": "eval/results/part_xii_reversal_inventory.json",
+   "added": "2026-10-05",
+   "id": "?",
+   "mentions_correct_citation": false,
+   "mentions_reversed_citation": true,
+   "verdict": null,
+   "cause": null,
+   "note": "THE CORRECT CITATION WAS DELETED FROM PRODUCTION HERE on 2026-09-22, as a stale defect. Users have received the wrong citation since.",
+   "already_known": false,
+   "not_a_row_verdict": "the 15-site inventory OF the reversal, built by reading Cap.212 directly. Its rows are SITES of the defect, already recorded — and one of them is the finding this audit set out to look for: ext_15 was the only affected scoring key across all three corpora."
+  },
+  {
+   "artifact": "eval/results/part_xii_reversal_inventory.json",
+   "added": "2026-10-05",
+   "id": "?",
+   "mentions_correct_citation": false,
+   "mentions_reversed_citation": true,
+   "verdict": null,
+   "cause": null,
+   "note": "THE ONLY affected scoring key in all three corpora (78 + 48 + 150 rows; the other two are clean). Gold is now part-confirmed-wrong (citation) and part-unresolved (the USD 25 figure). Verdict left ALONE -- half a correction must not flip a count.",
+   "already_known": false,
+   "not_a_row_verdict": "the 15-site inventory OF the reversal, built by reading Cap.212 directly. Its rows are SITES of the defect, already recorded — and one of them is the finding this audit set out to look for: ext_15 was the only affected scoring key across all three corpora."
+  },
+  {
+   "artifact": "eval/results/part_xii_reversal_inventory.json",
+   "added": "2026-10-05",
+   "id": "?",
+   "mentions_correct_citation": true,
+   "mentions_reversed_citation": true,
+   "verdict": null,
+   "cause": null,
+   "note": "⛔ THE WORST OF THE SIXTEEN AND THE FIRST INVENTORY MISSED IT. This gate would have REFUSED TO BUILD THE CORRECTED INDEX, demanding the wrong citation as its entry price -- so the R15 regen queued to fix the other sites could not have run. It is also the best-built control in the set: keyed rather than lexical, failing loudly on absence rather than passing by it, written in direct response to a rea",
+   "already_known": false,
+   "not_a_row_verdict": "the 15-site inventory OF the reversal, built by reading Cap.212 directly. Its rows are SITES of the defect, already recorded — and one of them is the finding this audit set out to look for: ext_15 was the only affected scoring key across all three corpora."
+  },
+  {
+   "artifact": "eval/results/r16_deploy_verification_2026_09_24.json",
+   "added": "2026-09-24",
+   "id": "B1_foreign_penalty_citation",
+   "mentions_correct_citation": false,
+   "mentions_reversed_citation": true,
+   "verdict": "PASS",
+   "cause": null,
+   "note": "ext_15 verbatim. Reproduced \"Section XII\" live on 2026-09-05 from index row 171. The USD 25 figure was always correct and must stay; only the citation was wrong. \"Part XIII\" is NOT asserted as must_contain: the model may answer correctly without naming the Part at all, and demanding it would fail a good reply. The stale string is the defect; its absence is the check.",
+   "already_known": false,
+   "not_a_row_verdict": "row B1_foreign_penalty_citation, verdict PASS — a deploy probe, and its note shows it was written with care about exactly this trap: \"The USD 25 figure was always correct and must stay; only the citation was wrong. 'Part XIII' is NOT asserted as must_contain.\" So even inside the window, this probe declined to demand the wrong citation. It penalised nothing."
+  },
+  {
+   "artifact": "eval/results/extended_078_adjudication_2026_09_23.json",
+   "added": "2026-09-23",
+   "id": "ext_15",
+   "mentions_correct_citation": false,
+   "mentions_reversed_citation": true,
+   "verdict": "PARTIAL",
+   "cause": "corpus_stale",
+   "note": "USD 25/month is correct, but the reply cites 'Section XII' -- the exact stale citation corrected on 2026-08-31 (correct: Part XIII, ss.320-328). The string survives LIVE at chike-inference/rag_facts_text.json row 171 and kaggle/rag_facts_text.json. The 2026-09-01 sweep quarantined 14+ corpus rows but never regenerated the RAG index (R15). All four act_section_12 wrong_patterns fail to match both t",
+   "already_known": true,
+   "not_a_row_verdict": null
+  }
+ ],
+ "new_unrecorded": [],
+ "known_and_already_recorded": [
+  "ext_15"
+ ],
+ "not_row_verdicts_adjudicated": {
+  "eval/results/part_xii_deploy_verification_2026_10_05.json": "the REVERSAL's own deploy verification, dated the day of the fix. Verdict 'DEPLOY VERIFIED' — it confirms the correct citation reached production, which is the opposite of penalising it.",
+  "eval/results/dryrun_regen_2026_10_05.json": "the regen dry run for the reversal. 'SAFE TO RUN' is a build verdict, not a judgement on any answer.",
+  "eval/results/part_xii_reversal_inventory.json": "the 15-site inventory OF the reversal, built by reading Cap.212 directly. Its rows are SITES of the defect, already recorded — and one of them is the finding this audit set out to look for: ext_15 was the only affected scoring key across all three corpora.",
+  "eval/results/r16_deploy_verification_2026_09_24.json": "row B1_foreign_penalty_citation, verdict PASS — a deploy probe, and its note shows it was written with care about exactly this trap: \"The USD 25 figure was always correct and must stay; only the citation was wrong. 'Part XIII' is NOT asserted as must_contain.\" So even inside the window, this probe declined to demand the wrong citation. It penalised nothing."
+ },
+ "_the_answer": "NO SECOND ROW WAS PENALISED. ext_15 is the only row-level adverse verdict in the window that turns on the citation, and the 2026-10-05 reversal inventory had already established the same thing from a different population: 'THE ONLY affected scoring key in all three corpora (78 + 48 + 150 rows; the other two are clean).' Two independent derivations, one by subject and one by window, agreeing.",
+ "_bound": "A LOWER BOUND, stated rather than implied. This finds rows whose adjudication NOTE mentions the citation. A row penalised for a wrong citation whose note recorded only the figure, or only 'wrong', is invisible here — and the only complete remedy is re-running the affected rows, which is what ext_15's own note demanded and got."
+}

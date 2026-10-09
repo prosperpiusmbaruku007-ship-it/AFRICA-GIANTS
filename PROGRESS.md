@@ -1,5 +1,129 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-10-09 (fourth pass) — **THE ROUTER WAS THE BOTTLENECK, AND IT IS FIXED. PLUS: NO SECOND ROW WAS MARKED DOWN BY THE REVERSED CITATION.**
+
+### 1. ✅ THE STATEMENT ROUTE — rate / method / applicability questions now reach the engines with no figure
+
+Every compute path in `detect_intent` required `_has_number`, so a question asking what a rate
+**is**, how a levy is **computed**, or **whether** it applies — carrying no digits — could never
+reach an engine. All 12 of the gate's confirmed defects routed to `none`; `levy_rate_statement`
+already answered two of them correctly. **R31's fifth instance, and it reframes the rule: the
+bottleneck is the router, not the engines.** A user asking what a rate is has no number to give.
+
+**⛔ ENRICH THEN ROUTE — the order is the whole safety of it.** The orchestrator's rate branch was
+gated on an amount for a *recorded, measured* reason: `eval_111`/`eval_112` answer correctly on
+the fact path and carried incidence detail the engine did not reproduce. I measured the candidate
+population before widening anything: **8 rows, split 4 GOOD / 4 BAD** — widening the route alone
+would have traded four right answers for three. So `rate_statement._INCIDENCE` closed the richness
+gap first, each clause lifted from the gold of the row that proves it necessary. Both NSSF shares
+are stated, which answers `eval_086` (the employer's is not deducted) and `eval_087` (the
+employee's is) **without a party extractor** — an engine parameter with no extractor being the
+exact R31 defect this change exists to close.
+
+**The three pinned rows move.** `eval_086`, `eval_130`, `eval_394`.
+
+**R17 in full, and the sweep did the work the probes could not.** 1,200+ questions, every corpus,
+BEFORE state re-derived by disabling the route rather than assumed. **0 already-routed questions
+changed route. My 10 authored adversarial probes all passed — and the sweep found 23 further
+diversions, four of them defects:**
+
+| veto | the row that forced it |
+|---|---|
+| **V1 deadline** | *"SDL inatakiwa kulipwa **tarehe ngapi** kila mwezi?"* matched `_APPLICABILITY_CUES`' `"inatakiwa kulipwa"` — the route would have answered the threshold rule to a question about a date |
+| **V2 one levy** | `edge_b04` names four obligations and expects a **triage**; `_explicit_levy` returns only the first, so the route answered a quarter of the question |
+| **V3 sufficiency** | `adv_06` — and **path 2b's own note had already rejected this exact diversion.** My first draft reintroduced what that note declined |
+| **V5 second domain** | *"Kiwango cha NSSF **na mara ngapi OSHA** hukagua"* — `decompose` does **not** split it (measured), so the OSHA half would vanish |
+
+V4 narrows the applicability limb to the asker's **own** obligation, which incidentally exposed a
+substring collision: `_APPLICABILITY_CUES`' `"nachangia"` matches inside *"a**nachangia**"*,
+routing a question about whether a **director** contributes. Every remaining diversion is pinned
+with its reason, and **an unadjudicated diversion now blocks** — my first run listed 23 and exited
+0, a sweep that calls its own unreviewed output clean (R20).
+
+**⛔ Two regressions of my own, caught end-to-end and invisible to the route check:** threshold
+questions **clarified instead of answering** (*"Ni idadi gani ya waajiriwa…"* reached SDL
+applicability, which needs a headcount, so it asked the user for their count — and the
+clarification *contained* the answer); and `eval_394` fell to the amount path and asked for a
+payroll figure. Both fixed with branches whose discrimination is the **headcount**, so *"wafanyakazi
+wachache tu"* still clarifies, correctly.
+
+> ### 🔴 AND R39's NINTH INSTANCE, SELF-INFLICTED, IN THE SAME SESSION THAT CITED IT
+> `_THRESHOLD_ASK` compiled to `'\x08wangapi\x08'` — **every `\b` a literal backspace** — because
+> I patched the file through an inline script whose replacement string was **not raw**. `grep`
+> renders `0x08` invisibly, so **the source looked correct** while `asks_levy_threshold` returned
+> False on text containing *"wangapi"*. Found by introspecting the compiled pattern, which is
+> R39's own prescription, then audited across all 7 new patterns: **only the inline-patched one
+> was corrupt; every Edit-written one was clean.** The actionable lesson is narrower than "be
+> careful": *write regexes as literal text, never through a scripted replacement string.*
+
+**Four pins updated, none weakened.** `ngapi_08`/`ngapi_10` asserted `expect_intent: none` to
+guard *"wangapi must never read as money"* and *"a rate ask is not an amount ask"* — at authoring
+time "not the amount path" and "not routed at all" were the same thing. They are now different,
+so the encoding moved and the guarded property is asserted **more** strongly: a new test runs both
+through the orchestrator and requires a stated constant, no clarification, no computed amount.
+
+### 2. ROW 9's WORDING — AND IT CORRECTS THE CLASSIFICATION
+
+`nssf_employer_rate` read *"mwajiri analipa asilimia 10 **ya mshahara wa mfanyakazi**"* — true as
+a statement of the **base**, and in Swahili it reads as a statement of **source**, which is the
+opposite of the employer's obligation. `eval_086`'s live reply is close enough to be an echo of
+it. Base and source are now separated, and the employee's 10% named so the two cannot be read as
+one.
+
+> **The classification called `eval_086` a MODEL defect because the fact was "in the index". It
+> was — and the fact was complicit. "Is the governing fact present" is not the same question as
+> "does it say it unambiguously", and only the second predicts whether the model can get it
+> wrong.** Expect this to reclassify more than one MODEL row on inspection, which would put the
+> A2 ceiling *below* six.
+
+**R15: the freshness check fired correctly.** Exactly one row (9) differs, 184 before and after —
+**a Kaggle regen is owed.** Sixteenth flip to `assert ok is False`, and the first flip ever caused
+by a row that was not *wrong*. Two sibling tests were also red and were **not** oscillators: they
+isolate the SHA limb and were using the live tree, so a content change turned them red for a
+reason unrelated to their subject. Both now take a matching `content_fn` — *a test that isolates
+one limb must not be failable by another limb's live state.*
+
+### 3. ✅ THE `ext_15` AUDIT — NO SECOND ROW WAS PENALISED
+
+`ext_15` was marked down on 2026-09-23 for citing the statute correctly, by an adjudication
+enforcing the wrong Part XIII "correction". The question was whether any **other** adjudication
+did the same. `eval/controls/audit_part_xiii_window_adjudications_2026_10_09.py`.
+
+**The population is the WINDOW, not the subject** — every `eval/results` artifact added between
+2026-08-31 (the wrong correction) and 2026-10-05 (the reversal), because searching for
+foreign-company rows would only re-find what prompted the audit. An adjudication is a permanent
+human verdict; nothing downstream re-opens it.
+
+**Result: `ext_15` is the only row-level adverse verdict in the window that turns on the
+citation.** Seven hits, six adjudicated as not row verdicts (the reversal's own deploy
+verification, its dry run, the 15-site inventory, and a deploy probe that **passed** — and whose
+note shows it was written with care about exactly this trap: *"'Part XIII' is NOT asserted as
+must_contain"*).
+
+> **And the decisive evidence was already in the record, derived from a different population.**
+> The 2026-10-05 reversal inventory had recorded: *"THE ONLY affected scoring key in all three
+> corpora (78 + 48 + 150 rows; the other two are clean)."* Two independent derivations — one by
+> subject at reversal time, one by window today — agreeing.
+
+**The rate worth watching, as asked:** three rows in two days where the recorded failure was our
+record rather than the model — `ext_15` (citation), `eval_239` (WCF two-stage chain), `eval_186`
+(OSHA officer/representative). All three were found by the same check: **read the served index or
+the statute before recording a reply as wrong.** If a seventh turns up among the 6 MODEL rows, the
+A2 ceiling is lower than it looks.
+
+### 4. `eval_223` ON THE BOARD — A TIER 1B CORPUS QUESTION, NOT A DEFECT
+
+It asks for the EAC STR's four instruments. Nothing in the served index carries the USD 2,000
+consignment threshold, the Common List or the Simplified Certificate of Origin, because **§5
+records Tier 1B as NOT STARTED and gated behind the Tier 1A gate passing.** So it is not a model
+failure and not a corpus gap to fix now — it is a question about a tier we have deliberately not
+built, sitting inside an in-corpus accuracy bucket where it depresses A2 without naming a defect
+anyone can act on. **Board item: decide whether Tier 1B questions belong in the Tier 1A gate at
+all.** Not re-scored or removed unilaterally — changing a gate corpus's composition changes every
+historical comparison, which is the founder's call.
+
+---
+
 ## 📋 2026-10-09 (third pass) — **THE JUDGE IS THE HEADLINE NOW. AND BAR A's RESIDUE IS THE MODEL CONTRADICTING WHAT IT WAS HANDED — 10 OF 12 FACTS WERE IN THE INDEX.**
 
 ### 1. ⛔ CORRECTION TO YESTERDAY'S QUOTE, PLAINLY
