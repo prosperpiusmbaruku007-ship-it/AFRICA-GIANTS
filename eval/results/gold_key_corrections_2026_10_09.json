@@ -1,0 +1,1233 @@
+{
+  "_what": "Every gate-corpus row whose gold changed between the last full gate's commit and HEAD, read out of git rather than from any write-up.",
+  "_why": "A corrected gold moves the score with no model change. Scoring the changed rows under BOTH keys makes that term measurable instead of leaving it inside the headline.",
+  "_old_keys_are_from_git_not_from_the_correction_notes": "_scoring_key_correction.what_changed is a note by the person who made the change. It was wrong once already: eval_383's said '300,000 -> 500,000' while correct_answer_en still read 300,000, and score_question unions the SW and EN numeric keys, so the corrected key accepted both.",
+  "baseline_commit": "1476caa",
+  "head": "7351eb9",
+  "counts": {
+    "rows_in_400_changed_at_all": 24,
+    "rows_whose_SCORED_fields_changed": 24,
+    "of_those_that_NARROW_the_key": 2,
+    "of_those_that_CANNOT_move_a_score": 22,
+    "of_those_UNDECIDABLE_by_this_method": 0,
+    "yes_no_rows_whose_DECLARED_FLIP_THE_SCORER_CANNOT_SEE": 1
+  },
+  "dual_score_these": [
+    "eval_355",
+    "eval_383"
+  ],
+  "undecidable_ids": [],
+  "scorer_blind_verdict_flips": {
+    "_what": "yes_no rows whose _scoring_key_correction declares a verdict flip that chike.scoring._yn_polarity does not read, so the row was scored against a verdict nobody wrote and the correction produces ZERO regex delta.",
+    "_cause": "_YN_NEG lists `halazimiki` (3rd person) and not `hulazimiki` (2nd person). One vowel. _yn_polarity falls through to its AFFIRMATIVE DEFAULT, so a model leading with 'Ndiyo' passed eval_331 both before and after the verdict flipped from No to Yes.",
+    "_not_repaired_here": "widening _YN_NEG is a scorer change that moves historical numbers and needs R17's treatment (sweep every corpus, author probes that must stay clean), not a one-word patch shipped alongside a gate package. All affected rows are already reliable=False, so the reliable denominator never counted them; the raw denominator did.",
+    "ids": [
+      "eval_331"
+    ]
+  },
+  "findings_400": [
+    {
+      "id": "eval_086",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "number",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "number",
+        "correct_answer_sw": "Asilimia 10 ya mshahara wa jumla (gross salary) wa mfanyakazi. Mwajiri analipa sehemu hii kutoka pesa zake mwenyewe — haikatwi kutoka mshahara wa mfanyakazi. Thibitisha kiwango cha sasa na NSSF kwenye nssf.or.tz.",
+        "correct_answer_en": "10% of the employee's gross salary. The employer pays this from their own funds — it is not deducted from the employee's salary. Confirm the current rate with NSSF at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "number",
+        "correct_answer_sw": "Asilimia 10 ya mshahara wa jumla (gross salary) wa mfanyakazi. Mwajiri analipa sehemu hii kutoka pesa zake mwenyewe — haikatwi kutoka mshahara wa mfanyakazi. Thibitisha kiwango cha sasa na NSSF kwenye nssf.go.tz.",
+        "correct_answer_en": "10% of the employee's gross salary. The employer pays this from their own funds — it is not deducted from the employee's salary. Confirm the current rate with NSSF at nssf.go.tz."
+      },
+      "old_numeric_key": [
+        "10"
+      ],
+      "new_numeric_key": [
+        "10"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Asilimia 10 ya mshahara wa jumla (gross salary) wa mfanyakazi. Mwajiri analipa sehemu hii kutoka pesa zake mwenyewe — haikatwi kutoka mshahara wa mfanyakazi. Thibitisha kiwango cha sasa na NSSF kwenye nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": true,
+      "reliable_new": true
+    },
+    {
+      "id": "eval_087",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "number",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "number",
+        "correct_answer_sw": "Asilimia 10 ya mshahara wake wa jumla (gross salary). Mwajiri anakata kiasi hiki kutoka mshahara wa mfanyakazi kabla ya kulipa mshahara, kisha anachanganya na sehemu yake ya asilimia 10 na kupeleka NSSF. Thibitisha kiwango na NSSF kwenye nssf.or.tz.",
+        "correct_answer_en": "10% of the employee's gross salary. The employer deducts this from the employee's salary before payment, then combines it with their own 10% contribution and remits to NSSF. Confirm the rate with NSSF at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "number",
+        "correct_answer_sw": "Asilimia 10 ya mshahara wake wa jumla (gross salary). Mwajiri anakata kiasi hiki kutoka mshahara wa mfanyakazi kabla ya kulipa mshahara, kisha anachanganya na sehemu yake ya asilimia 10 na kupeleka NSSF. Thibitisha kiwango na NSSF kwenye nssf.go.tz.",
+        "correct_answer_en": "10% of the employee's gross salary. The employer deducts this from the employee's salary before payment, then combines it with their own 10% contribution and remits to NSSF. Confirm the rate with NSSF at nssf.go.tz."
+      },
+      "old_numeric_key": [
+        "10"
+      ],
+      "new_numeric_key": [
+        "10"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Asilimia 10 ya mshahara wake wa jumla (gross salary). Mwajiri anakata kiasi hiki kutoka mshahara wa mfanyakazi kabla ya kulipa mshahara, kisha anachanganya na sehemu yake ya asilimia 10 na kupeleka NSSF. Thibitisha kiwango na NSSF kwenye nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": true,
+      "reliable_new": true
+    },
+    {
+      "id": "eval_088",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "number",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "number",
+        "correct_answer_sw": "Asilimia 20 ya mshahara wa jumla — asilimia 10 kutoka mwajiri na asilimia 10 kutoka mfanyakazi. Jumla hii inapelekwa NSSF kila mwezi. Thibitisha na nssf.or.tz.",
+        "correct_answer_en": "20% of gross salary — 10% from the employer and 10% from the employee. This total is remitted to NSSF every month. Confirm at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "number",
+        "correct_answer_sw": "Asilimia 20 ya mshahara wa jumla — asilimia 10 kutoka mwajiri na asilimia 10 kutoka mfanyakazi. Jumla hii inapelekwa NSSF kila mwezi. Thibitisha na nssf.go.tz.",
+        "correct_answer_en": "20% of gross salary — 10% from the employer and 10% from the employee. This total is remitted to NSSF every month. Confirm at nssf.go.tz."
+      },
+      "old_numeric_key": [
+        "10",
+        "20"
+      ],
+      "new_numeric_key": [
+        "10",
+        "20"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Asilimia 20 ya mshahara wa jumla — asilimia 10 kutoka mwajiri na asilimia 10 kutoka mfanyakazi. Jumla hii inapelekwa NSSF kila mwezi. Thibitisha na nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false
+    },
+    {
+      "id": "eval_089",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "number",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "number",
+        "correct_answer_sw": "Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata. Thibitisha tarehe sahihi na nssf.or.tz.",
+        "correct_answer_en": "Under the NSSF Act, contributions must be paid within one month of salary payment. In practice, NSSF generally expects payment by the 10th of the following month. Confirm the exact date at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "number",
+        "correct_answer_sw": "Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata. Thibitisha tarehe sahihi na nssf.go.tz.",
+        "correct_answer_en": "Under the NSSF Act, contributions must be paid within one month of salary payment. In practice, NSSF generally expects payment by the 10th of the following month. Confirm the exact date at nssf.go.tz."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata. Thibitisha tarehe sahihi na nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false
+    },
+    {
+      "id": "eval_093",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "number",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "number",
+        "correct_answer_sw": "Kwa mujibu wa Sheria ya NSSF, michango ya Januari inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara — kwa vitendo ifikapo siku ya 10 ya Februari. Kumbuka: siku ya 20 ni deadline ya VAT return, si ya NSSF. Thibitisha tarehe sahihi na nssf.or.tz.",
+        "correct_answer_en": "Under the NSSF Act, January contributions must be paid within one month of salary payment — in practice by the 10th of February. Note: the 20th is the VAT return deadline, not the NSSF deadline. Confirm the exact date at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "number",
+        "correct_answer_sw": "Kwa mujibu wa Sheria ya NSSF, michango ya Januari inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara — kwa vitendo ifikapo siku ya 10 ya Februari. Kumbuka: siku ya 20 ni deadline ya VAT return, si ya NSSF. Thibitisha tarehe sahihi na nssf.go.tz.",
+        "correct_answer_en": "Under the NSSF Act, January contributions must be paid within one month of salary payment — in practice by the 10th of February. Note: the 20th is the VAT return deadline, not the NSSF deadline. Confirm the exact date at nssf.go.tz."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Kwa mujibu wa Sheria ya NSSF, michango ya Januari inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara — kwa vitendo ifikapo siku ya 10 ya Februari. Kumbuka: siku ya 20 ni deadline ya VAT return, si ya NSSF. Thibitisha tarehe sahihi na nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false
+    },
+    {
+      "id": "eval_094",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "number",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "number",
+        "correct_answer_sw": "NSSF — si TRA. NSSF ni taasisi tofauti na TRA kabisa, ingawa zote mbili zinahusiana na mwajiri. NSSF ina mamlaka yake ya kisheria ya kutoza riba na faini na hata kufungua kesi za kisheria dhidi ya waajiri wanaokiuka. Thibitisha utaratibu wa makosa na NSSF kwenye nssf.or.tz.",
+        "correct_answer_en": "NSSF — not TRA. NSSF is a completely separate institution from TRA, though both have employer obligations. NSSF has its own legal authority to charge interest and penalties and even take legal action against non-compliant employers. Confirm the penalties procedure with NSSF at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "number",
+        "correct_answer_sw": "NSSF — si TRA. NSSF ni taasisi tofauti na TRA kabisa, ingawa zote mbili zinahusiana na mwajiri. NSSF ina mamlaka yake ya kisheria ya kutoza riba na faini na hata kufungua kesi za kisheria dhidi ya waajiri wanaokiuka. Thibitisha utaratibu wa makosa na NSSF kwenye nssf.go.tz.",
+        "correct_answer_en": "NSSF — not TRA. NSSF is a completely separate institution from TRA, though both have employer obligations. NSSF has its own legal authority to charge interest and penalties and even take legal action against non-compliant employers. Confirm the penalties procedure with NSSF at nssf.go.tz."
+      },
+      "old_numeric_key": [
+        "2"
+      ],
+      "new_numeric_key": [
+        "2"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "NSSF — si TRA. NSSF ni taasisi tofauti na TRA kabisa, ingawa zote mbili zinahusiana na mwajiri. NSSF ina mamlaka yake ya kisheria ya kutoza riba na faini na hata kufungua kesi za kisheria dhidi ya waajiri wanaokiuka. Thibitisha utaratibu wa makosa na NSSF kwenye nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": true,
+      "reliable_new": true
+    },
+    {
+      "id": "eval_095",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "number",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "number",
+        "correct_answer_sw": "Asilimia 20 ya mapato yao (10% ya sehemu ya mwajiri + 10% ya sehemu ya mfanyakazi). Kama mwanachama wa hiari, wewe unalipa sehemu zote mbili peke yako. Kiasi cha msingi cha mapato kinachodhibitiwa kinaweza kutofautiana — thibitisha na NSSF kwenye nssf.or.tz.",
+        "correct_answer_en": "20% of their income (10% employer portion + 10% employee portion). As a voluntary member, you pay both portions yourself. The base income amount used may vary — confirm with NSSF at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "number",
+        "correct_answer_sw": "Asilimia 20 ya mapato yao (10% ya sehemu ya mwajiri + 10% ya sehemu ya mfanyakazi). Kama mwanachama wa hiari, wewe unalipa sehemu zote mbili peke yako. Kiasi cha msingi cha mapato kinachodhibitiwa kinaweza kutofautiana — thibitisha na NSSF kwenye nssf.go.tz.",
+        "correct_answer_en": "20% of their income (10% employer portion + 10% employee portion). As a voluntary member, you pay both portions yourself. The base income amount used may vary — confirm with NSSF at nssf.go.tz."
+      },
+      "old_numeric_key": [
+        "10",
+        "2",
+        "20"
+      ],
+      "new_numeric_key": [
+        "10",
+        "2",
+        "20"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Asilimia 20 ya mapato yao (10% ya sehemu ya mwajiri + 10% ya sehemu ya mfanyakazi). Kama mwanachama wa hiari, wewe unalipa sehemu zote mbili peke yako. Kiasi cha msingi cha mapato kinachodhibitiwa kinaweza kutofautiana — thibitisha na NSSF kwenye nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": true,
+      "reliable_new": true
+    },
+    {
+      "id": "eval_096",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "yes_no",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo. Mwajiri yeyote anayeajiri wafanyakazi Tanzania ana wajibu wa kisheria wa kuwasajilisha NSSF. Kutosajilisha ni ukiukwaji wa Sheria ya NSSF na kunaweza kusababisha adhabu za kisheria. Thibitisha mahitaji yako maalum na NSSF kwenye nssf.or.tz.",
+        "correct_answer_en": "Yes. Any employer hiring workers in Tanzania has a legal obligation to register them with NSSF. Failure to register is a violation of the NSSF Act and can result in legal penalties. Confirm your specific requirements with NSSF at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo. Mwajiri yeyote anayeajiri wafanyakazi Tanzania ana wajibu wa kisheria wa kuwasajilisha NSSF. Kutosajilisha ni ukiukwaji wa Sheria ya NSSF na kunaweza kusababisha adhabu za kisheria. Thibitisha mahitaji yako maalum na NSSF kwenye nssf.go.tz.",
+        "correct_answer_en": "Yes. Any employer hiring workers in Tanzania has a legal obligation to register them with NSSF. Failure to register is a violation of the NSSF Act and can result in legal penalties. Confirm your specific requirements with NSSF at nssf.go.tz."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Ndiyo. Mwajiri yeyote anayeajiri wafanyakazi Tanzania ana wajibu wa kisheria wa kuwasajilisha NSSF. Kutosajilisha ni ukiukwaji wa Sheria ya NSSF na kunaweza kusababisha adhabu za kisheria. Thibitisha mahitaji yako maalum na NSSF kwenye nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false,
+      "yes_no_verdict_read_by_scorer": {
+        "scorer_reads_old_gold_as": "yes",
+        "scorer_reads_new_gold_as": "yes",
+        "scorer_sees_a_flip": false,
+        "the_note_declares_a_flip": false,
+        "DIVERGENT": false,
+        "why_it_matters": ""
+      }
+    },
+    {
+      "id": "eval_097",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "yes_no",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo, kwa mujibu wa Sheria ya NSSF Tanzania, wafanyakazi wa nyumbani (domestic workers) wanastahili ufikiwa wa NSSF. Mwajiri wao ana wajibu wa kuchangia NSSF kwa niaba yao. Thibitisha mahitaji ya sasa na NSSF kwenye nssf.or.tz.",
+        "correct_answer_en": "Yes, under Tanzania's NSSF Act, domestic workers are covered by NSSF. Their employer has an obligation to contribute to NSSF on their behalf. Confirm current requirements with NSSF at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo, kwa mujibu wa Sheria ya NSSF Tanzania, wafanyakazi wa nyumbani (domestic workers) wanastahili ufikiwa wa NSSF. Mwajiri wao ana wajibu wa kuchangia NSSF kwa niaba yao. Thibitisha mahitaji ya sasa na NSSF kwenye nssf.go.tz.",
+        "correct_answer_en": "Yes, under Tanzania's NSSF Act, domestic workers are covered by NSSF. Their employer has an obligation to contribute to NSSF on their behalf. Confirm current requirements with NSSF at nssf.go.tz."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Ndiyo, kwa mujibu wa Sheria ya NSSF Tanzania, wafanyakazi wa nyumbani (domestic workers) wanastahili ufikiwa wa NSSF. Mwajiri wao ana wajibu wa kuchangia NSSF kwa niaba yao. Thibitisha mahitaji ya sasa na NSSF kwenye nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false,
+      "yes_no_verdict_read_by_scorer": {
+        "scorer_reads_old_gold_as": "yes",
+        "scorer_reads_new_gold_as": "yes",
+        "scorer_sees_a_flip": false,
+        "the_note_declares_a_flip": false,
+        "DIVERGENT": false,
+        "why_it_matters": ""
+      }
+    },
+    {
+      "id": "eval_098",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "yes_no",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo. NSSF Tanzania inakubali uanachama wa hiari kwa wajitegemea na wale wasio na mwajiri rasmi. Mwanachama wa hiari anachangia peke yake na hupata haki ya mafao wakati wa kustaafu, ulemavu, au hali nyingine zinazohitimu. Thibitisha taratibu za usajilishaji na NSSF kwenye nssf.or.tz.",
+        "correct_answer_en": "Yes. NSSF Tanzania accepts voluntary membership for the self-employed and those without a formal employer. A voluntary member contributes independently and earns entitlement to benefits at retirement, disability, or other qualifying circumstances. Confirm registration procedures with NSSF at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo. NSSF Tanzania inakubali uanachama wa hiari kwa wajitegemea na wale wasio na mwajiri rasmi. Mwanachama wa hiari anachangia peke yake na hupata haki ya mafao wakati wa kustaafu, ulemavu, au hali nyingine zinazohitimu. Thibitisha taratibu za usajilishaji na NSSF kwenye nssf.go.tz.",
+        "correct_answer_en": "Yes. NSSF Tanzania accepts voluntary membership for the self-employed and those without a formal employer. A voluntary member contributes independently and earns entitlement to benefits at retirement, disability, or other qualifying circumstances. Confirm registration procedures with NSSF at nssf.go.tz."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Ndiyo. NSSF Tanzania inakubali uanachama wa hiari kwa wajitegemea na wale wasio na mwajiri rasmi. Mwanachama wa hiari anachangia peke yake na hupata haki ya mafao wakati wa kustaafu, ulemavu, au hali nyingine zinazohitimu. Thibitisha taratibu za usajilishaji na NSSF kwenye nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false,
+      "yes_no_verdict_read_by_scorer": {
+        "scorer_reads_old_gold_as": "yes",
+        "scorer_reads_new_gold_as": "yes",
+        "scorer_sees_a_flip": false,
+        "the_note_declares_a_flip": false,
+        "DIVERGENT": false,
+        "why_it_matters": ""
+      }
+    },
+    {
+      "id": "eval_100",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "yes_no",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo. NSSF inahusika na mshahara wote wa jumla bila kiwango cha juu. Mfanyakazi anachangia TZS 200,000 (10% ya TZS milioni 2) na mwajiri anachangia TZS 200,000 nyingine — jumla ya TZS 400,000 inapelekwa NSSF kila mwezi. Thibitisha na nssf.or.tz.",
+        "correct_answer_en": "Yes. NSSF applies to the full gross salary with no upper cap. The employee contributes TZS 200,000 (10% of TZS 2M) and the employer contributes another TZS 200,000 — a total of TZS 400,000 remitted to NSSF each month. Confirm at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo. NSSF inahusika na mshahara wote wa jumla bila kiwango cha juu. Mfanyakazi anachangia TZS 200,000 (10% ya TZS milioni 2) na mwajiri anachangia TZS 200,000 nyingine — jumla ya TZS 400,000 inapelekwa NSSF kila mwezi. Thibitisha na nssf.go.tz.",
+        "correct_answer_en": "Yes. NSSF applies to the full gross salary with no upper cap. The employee contributes TZS 200,000 (10% of TZS 2M) and the employer contributes another TZS 200,000 — a total of TZS 400,000 remitted to NSSF each month. Confirm at nssf.go.tz."
+      },
+      "old_numeric_key": [
+        "10",
+        "1000000",
+        "2",
+        "200000",
+        "2000000",
+        "400000"
+      ],
+      "new_numeric_key": [
+        "10",
+        "1000000",
+        "2",
+        "200000",
+        "2000000",
+        "400000"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Ndiyo. NSSF inahusika na mshahara wote wa jumla bila kiwango cha juu. Mfanyakazi anachangia TZS 200,000 (10% ya TZS milioni 2) na mwajiri anachangia TZS 200,000 nyingine — jumla ya TZS 400,000 inapelekwa NSSF kila mwezi. Thibitisha na nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false,
+      "yes_no_verdict_read_by_scorer": {
+        "scorer_reads_old_gold_as": "yes",
+        "scorer_reads_new_gold_as": "yes",
+        "scorer_sees_a_flip": false,
+        "the_note_declares_a_flip": false,
+        "DIVERGENT": false,
+        "why_it_matters": ""
+      }
+    },
+    {
+      "id": "eval_101",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "yes_no",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo. NSSF inatoa mafao ya uzazi kwa wanawake wanaochangia wanaohitimu. Mafao mengine ni pensheni ya uzee, ulemavu, wasio na wazazi, na msaada wa mazishi. Thibitisha masharti ya kuhitimu na NSSF kwenye nssf.or.tz.",
+        "correct_answer_en": "Yes. NSSF provides maternity benefits for qualifying contributing female members. Other benefits include retirement pension, disability, survivors, and funeral grant. Confirm eligibility conditions with NSSF at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo. NSSF inatoa mafao ya uzazi kwa wanawake wanaochangia wanaohitimu. Mafao mengine ni pensheni ya uzee, ulemavu, wasio na wazazi, na msaada wa mazishi. Thibitisha masharti ya kuhitimu na NSSF kwenye nssf.go.tz.",
+        "correct_answer_en": "Yes. NSSF provides maternity benefits for qualifying contributing female members. Other benefits include retirement pension, disability, survivors, and funeral grant. Confirm eligibility conditions with NSSF at nssf.go.tz."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Ndiyo. NSSF inatoa mafao ya uzazi kwa wanawake wanaochangia wanaohitimu. Mafao mengine ni pensheni ya uzee, ulemavu, wasio na wazazi, na msaada wa mazishi. Thibitisha masharti ya kuhitimu na NSSF kwenye nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false,
+      "yes_no_verdict_read_by_scorer": {
+        "scorer_reads_old_gold_as": "yes",
+        "scorer_reads_new_gold_as": "yes",
+        "scorer_sees_a_flip": false,
+        "the_note_declares_a_flip": false,
+        "DIVERGENT": false,
+        "why_it_matters": ""
+      }
+    },
+    {
+      "id": "eval_102",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "yes_no",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Hapana. Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata — si siku ya 20. Siku ya 20 ni deadline ya VAT return, tofauti kabisa. Thibitisha tarehe sahihi na nssf.or.tz.",
+        "correct_answer_en": "No. Under the NSSF Act, contributions must be paid within one month of salary payment. In practice, NSSF generally expects payment by the 10th of the following month — not the 20th. The 20th is the VAT return deadline, completely different. Confirm the exact date at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Hapana. Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata — si siku ya 20. Siku ya 20 ni deadline ya VAT return, tofauti kabisa. Thibitisha tarehe sahihi na nssf.go.tz.",
+        "correct_answer_en": "No. Under the NSSF Act, contributions must be paid within one month of salary payment. In practice, NSSF generally expects payment by the 10th of the following month — not the 20th. The 20th is the VAT return deadline, completely different. Confirm the exact date at nssf.go.tz."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Hapana. Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata — si siku ya 20. Siku ya 20 ni deadline ya VAT return, tofauti kabisa. Thibitisha tarehe sahihi na nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false,
+      "yes_no_verdict_read_by_scorer": {
+        "scorer_reads_old_gold_as": "no",
+        "scorer_reads_new_gold_as": "no",
+        "scorer_sees_a_flip": false,
+        "the_note_declares_a_flip": false,
+        "DIVERGENT": false,
+        "why_it_matters": ""
+      }
+    },
+    {
+      "id": "eval_103",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "yes_no",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Hapana — adhabu zinatumika bila kujali sababu. Unachopaswa kufanya ni kuwasiliana na NSSF mapema ili kujadili mpango wa malipo kabla ya muda wa mwisho. Kukimbia bila kuwasiliana kunazidisha tatizo — adhabu zinaendelea kukua. Wasiliana na NSSF kwenye nssf.or.tz haraka.",
+        "correct_answer_en": "No — penalties apply regardless of the reason for delay. What you should do is contact NSSF proactively before the deadline to discuss a payment arrangement. Going silent worsens the problem — penalties accumulate. Contact NSSF at nssf.or.tz as quickly as possible."
+      },
+      "new": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Hapana — adhabu zinatumika bila kujali sababu. Unachopaswa kufanya ni kuwasiliana na NSSF mapema ili kujadili mpango wa malipo kabla ya muda wa mwisho. Kukimbia bila kuwasiliana kunazidisha tatizo — adhabu zinaendelea kukua. Wasiliana na NSSF kwenye nssf.go.tz haraka.",
+        "correct_answer_en": "No — penalties apply regardless of the reason for delay. What you should do is contact NSSF proactively before the deadline to discuss a payment arrangement. Going silent worsens the problem — penalties accumulate. Contact NSSF at nssf.go.tz as quickly as possible."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Hapana — adhabu zinatumika bila kujali sababu. Unachopaswa kufanya ni kuwasiliana na NSSF mapema ili kujadili mpango wa malipo kabla ya muda wa mwisho. Kukimbia bila kuwasiliana kunazidisha tatizo — adhabu zinaendelea kukua. Wasiliana na NSSF kwenye nssf.or.tz haraka.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false,
+      "yes_no_verdict_read_by_scorer": {
+        "scorer_reads_old_gold_as": "no",
+        "scorer_reads_new_gold_as": "no",
+        "scorer_sees_a_flip": false,
+        "the_note_declares_a_flip": false,
+        "DIVERGENT": false,
+        "why_it_matters": ""
+      }
+    },
+    {
+      "id": "eval_104",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "procedure",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "procedure",
+        "correct_answer_sw": "Unahitaji: fomu ya usajilishaji wa mwajiri; nakala ya certificate ya BRELA; TIN; vitambulisho vya kitaifa vya wafanyakazi wote. Thibitisha orodha kamili na NSSF kwenye nssf.or.tz kabla ya kwenda.",
+        "correct_answer_en": "You need: employer registration form; copy of BRELA certificate; TIN; national ID documents of all employees. Confirm the complete list with NSSF at nssf.or.tz before going."
+      },
+      "new": {
+        "answer_type": "procedure",
+        "correct_answer_sw": "Unahitaji: fomu ya usajilishaji wa mwajiri; nakala ya certificate ya BRELA; TIN; vitambulisho vya kitaifa vya wafanyakazi wote. Thibitisha orodha kamili na NSSF kwenye nssf.go.tz kabla ya kwenda.",
+        "correct_answer_en": "You need: employer registration form; copy of BRELA certificate; TIN; national ID documents of all employees. Confirm the complete list with NSSF at nssf.go.tz before going."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Unahitaji: fomu ya usajilishaji wa mwajiri; nakala ya certificate ya BRELA; TIN; vitambulisho vya kitaifa vya wafanyakazi wote. Thibitisha orodha kamili na NSSF kwenye nssf.or.tz kabla ya kwenda.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": true,
+      "reliable_new": true
+    },
+    {
+      "id": "eval_105",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "procedure",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "procedure",
+        "correct_answer_sw": "Wasiliana na NSSF mara moja — kabla ya muda wa mwisho, si baada yake. Eleza hali yako na omba mpango wa malipo. Kukimbia bila kuwasiliana kunazidisha tatizo na adhabu. Thibitisha chaguzi zilizopo na NSSF kwenye nssf.or.tz.",
+        "correct_answer_en": "Contact NSSF immediately — before the deadline, not after. Explain your situation and request a payment arrangement. Going silent worsens the problem and penalties. Confirm available options with NSSF at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "procedure",
+        "correct_answer_sw": "Wasiliana na NSSF mara moja — kabla ya muda wa mwisho, si baada yake. Eleza hali yako na omba mpango wa malipo. Kukimbia bila kuwasiliana kunazidisha tatizo na adhabu. Thibitisha chaguzi zilizopo na NSSF kwenye nssf.go.tz.",
+        "correct_answer_en": "Contact NSSF immediately — before the deadline, not after. Explain your situation and request a payment arrangement. Going silent worsens the problem and penalties. Confirm available options with NSSF at nssf.go.tz."
+      },
+      "old_numeric_key": [
+        "1"
+      ],
+      "new_numeric_key": [
+        "1"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Wasiliana na NSSF mara moja — kabla ya muda wa mwisho, si baada yake. Eleza hali yako na omba mpango wa malipo. Kukimbia bila kuwasiliana kunazidisha tatizo na adhabu. Thibitisha chaguzi zilizopo na NSSF kwenye nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": true,
+      "reliable_new": true
+    },
+    {
+      "id": "eval_106",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "procedure",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "procedure",
+        "correct_answer_sw": "NSSF inatoa nambari ya akaunti ya mwajiri na maelekezo ya kulipa michango kila mwezi. Kila mfanyakazi aliyesajiliwa anapewa nambari yake ya uanachama wa NSSF. Thibitisha taarifa zinazotolewa na NSSF kwenye nssf.or.tz.",
+        "correct_answer_en": "NSSF issues the employer an account number and monthly contribution payment instructions. Each registered employee is also assigned their own NSSF membership number. Confirm the information provided with NSSF at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "procedure",
+        "correct_answer_sw": "NSSF inatoa nambari ya akaunti ya mwajiri na maelekezo ya kulipa michango kila mwezi. Kila mfanyakazi aliyesajiliwa anapewa nambari yake ya uanachama wa NSSF. Thibitisha taarifa zinazotolewa na NSSF kwenye nssf.go.tz.",
+        "correct_answer_en": "NSSF issues the employer an account number and monthly contribution payment instructions. Each registered employee is also assigned their own NSSF membership number. Confirm the information provided with NSSF at nssf.go.tz."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "NSSF inatoa nambari ya akaunti ya mwajiri na maelekezo ya kulipa michango kila mwezi. Kila mfanyakazi aliyesajiliwa anapewa nambari yake ya uanachama wa NSSF. Thibitisha taarifa zinazotolewa na NSSF kwenye nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": true,
+      "reliable_new": true
+    },
+    {
+      "id": "eval_107",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "procedure",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "procedure",
+        "correct_answer_sw": "1) Tembelea ofisi ya NSSF au tovuti nssf.or.tz. 2) Omba fomu ya uanachama wa hiari. 3) Wasilisha fomu pamoja na kitambulisho cha kitaifa. 4) NSSF itakupa nambari ya uanachama. 5) Anza kulipa michango ya kila mwezi. Thibitisha viwango vya mchango wa hiari na NSSF.",
+        "correct_answer_en": "1) Visit an NSSF office or nssf.or.tz. 2) Request the voluntary membership form. 3) Submit the form with your national ID. 4) NSSF will issue your membership number. 5) Begin monthly contributions. Confirm voluntary contribution rates with NSSF."
+      },
+      "new": {
+        "answer_type": "procedure",
+        "correct_answer_sw": "1) Tembelea ofisi ya NSSF au tovuti nssf.go.tz. 2) Omba fomu ya uanachama wa hiari. 3) Wasilisha fomu pamoja na kitambulisho cha kitaifa. 4) NSSF itakupa nambari ya uanachama. 5) Anza kulipa michango ya kila mwezi. Thibitisha viwango vya mchango wa hiari na NSSF.",
+        "correct_answer_en": "1) Visit an NSSF office or nssf.go.tz. 2) Request the voluntary membership form. 3) Submit the form with your national ID. 4) NSSF will issue your membership number. 5) Begin monthly contributions. Confirm voluntary contribution rates with NSSF."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "1) Tembelea ofisi ya NSSF au tovuti nssf.or.tz. 2) Omba fomu ya uanachama wa hiari. 3) Wasilisha fomu pamoja na kitambulisho cha kitaifa. 4) NSSF itakupa nambari ya uanachama. 5) Anza kulipa michango ya kila mwezi. Thibitisha viwango vya mchango wa hiari na NSSF.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": true,
+      "reliable_new": true
+    },
+    {
+      "id": "eval_110",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "penalty",
+      "fields_differing": [
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "penalty",
+        "correct_answer_sw": "NSSF inaweza: kufungua kesi ya kisheria; kutoza faini; kutoa amri ya kulazimisha usajilishaji; na katika hali mbaya, kuwashirikisha wakurugenzi kibinafsi. Kutosajilisha ni ukiukwaji mkubwa wa Sheria ya NSSF. Thibitisha na NSSF kwenye nssf.or.tz.",
+        "correct_answer_en": "NSSF can: file a legal case; impose fines; issue an order compelling registration; and in serious cases, hold directors personally liable. Failing to register is a serious NSSF Act violation. Confirm with NSSF at nssf.or.tz."
+      },
+      "new": {
+        "answer_type": "penalty",
+        "correct_answer_sw": "NSSF inaweza: kufungua kesi ya kisheria; kutoza faini; kutoa amri ya kulazimisha usajilishaji; na katika hali mbaya, kuwashirikisha wakurugenzi kibinafsi. Kutosajilisha ni ukiukwaji mkubwa wa Sheria ya NSSF. Thibitisha na NSSF kwenye nssf.go.tz.",
+        "correct_answer_en": "NSSF can: file a legal case; impose fines; issue an order compelling registration; and in serious cases, hold directors personally liable. Failing to register is a serious NSSF Act violation. Confirm with NSSF at nssf.go.tz."
+      },
+      "old_numeric_key": [],
+      "new_numeric_key": [],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "NSSF inaweza: kufungua kesi ya kisheria; kutoza faini; kutoa amri ya kulazimisha usajilishaji; na katika hali mbaya, kuwashirikisha wakurugenzi kibinafsi. Kutosajilisha ni ukiukwaji mkubwa wa Sheria ya NSSF. Thibitisha na NSSF kwenye nssf.or.tz.",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false
+    },
+    {
+      "id": "eval_331",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "yes_no",
+      "fields_differing": [
+        "_scoring_key_correction",
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Mauzo TZS 9,000,000 ni chini ya kizingiti cha EFD cha TZS 11,000,000, hivyo hulazimiki kutumia EFD bado (waweza kutumia risiti za mikono). Lakini ukisajili VAT au kuvuka TZS 11,000,000, EFD inakuwa lazima kwa kila muamala. Thibitisha na TRA (tra.go.tz).",
+        "correct_answer_en": "Turnover TZS 9,000,000 is below the EFD threshold of TZS 11,000,000, so EFD is not yet mandatory (manual receipts allowed). But once VAT-registered or above 11,000,000, EFD is required for every sale. Confirm with TRA."
+      },
+      "new": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo, unahitaji EFD -- kwa default, bila kujali mauzo yako. Hakuna kizingiti cha mauzo kwa EFD (TZS 9,000,000 haibadilishi jibu). Lazima utoe risiti ya EFD kwa kila muamala, hata wa TZS 500. Msamaha unatolewa TU na TRA kupitia taarifa rasmi inayotaja jina lako au kundi lako maalum. Thibitisha na TRA (tra.go.tz).",
+        "correct_answer_en": "Yes, you need EFD -- by default, regardless of your turnover. There is no turnover threshold for EFD (TZS 9,000,000 does not change the answer). You must issue an EFD receipt for every sale, even TZS 500. Exemption is only by a TRA public notice naming your specific class. Confirm with TRA."
+      },
+      "old_numeric_key": [
+        "11000000",
+        "9000000"
+      ],
+      "new_numeric_key": [
+        "500",
+        "9000000"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Mauzo TZS 9,000,000 ni chini ya kizingiti cha EFD cha TZS 11,000,000, hivyo hulazimiki kutumia EFD bado (waweza kutumia risiti za mikono). Lakini ukisajili VAT au kuvuka TZS 11,000,000, EFD inakuwa lazima kwa kila muamala. Thibitisha na TRA (tra.go.tz).",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [
+          "11000000"
+        ],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false,
+      "yes_no_verdict_read_by_scorer": {
+        "scorer_reads_old_gold_as": "yes",
+        "scorer_reads_new_gold_as": "yes",
+        "scorer_sees_a_flip": false,
+        "the_note_declares_a_flip": true,
+        "DIVERGENT": true,
+        "why_it_matters": "the correction note declares a verdict flip that the scorer cannot see, so this row was being scored against a verdict nobody wrote and the key-correction delta on it is zero by construction"
+      }
+    },
+    {
+      "id": "eval_347",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "yes_no",
+      "fields_differing": [
+        "_scoring_key_correction",
+        "_why_hard",
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Hapana. TZS 200,000,000 ni kizingiti cha usajili wa VAT kwa mwaka. Kizingiti cha EFD ni mauzo ya TZS 11,000,000 kwa mwaka. Thibitisha na TRA (tra.go.tz).",
+        "correct_answer_en": "No. TZS 200,000,000 is the annual VAT registration threshold. The EFD threshold is TZS 11,000,000 turnover a year. Confirm with TRA."
+      },
+      "new": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Hapana. TZS 200,000,000 ni kizingiti cha usajili wa VAT kwa mwaka, si EFD. EFD haina kizingiti cha mauzo kabisa -- inahitajika kwa default kwa kila mfanyabiashara. Msamaha unatolewa TU na TRA kupitia taarifa rasmi inayotaja jina lako au kundi lako maalum. Thibitisha na TRA (tra.go.tz).",
+        "correct_answer_en": "No. TZS 200,000,000 is the annual VAT registration threshold, not EFD's. EFD has no turnover threshold at all -- it is required by default for every business. Exemption is only by a TRA public notice naming your specific class. Confirm with TRA."
+      },
+      "old_numeric_key": [
+        "11000000",
+        "200000000"
+      ],
+      "new_numeric_key": [
+        "200000000"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Hapana. TZS 200,000,000 ni kizingiti cha usajili wa VAT kwa mwaka. Kizingiti cha EFD ni mauzo ya TZS 11,000,000 kwa mwaka. Thibitisha na TRA (tra.go.tz).",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [
+          "11000000"
+        ],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false,
+      "yes_no_verdict_read_by_scorer": {
+        "scorer_reads_old_gold_as": "no",
+        "scorer_reads_new_gold_as": "no",
+        "scorer_sees_a_flip": false,
+        "the_note_declares_a_flip": false,
+        "DIVERGENT": false,
+        "why_it_matters": ""
+      }
+    },
+    {
+      "id": "eval_354",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "yes_no",
+      "fields_differing": [
+        "_scoring_key_correction",
+        "_why_hard",
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo. EFD inahitajika kwa mauzo ya TZS 11,000,000 na zaidi kwa mwaka. Uko kwenye kizingiti kamili, hivyo EFD ni lazima. Thibitisha na TRA (tra.go.tz).",
+        "correct_answer_en": "Yes. EFD is required for turnover of TZS 11,000,000 and above. You are exactly at the threshold, so EFD is required. Confirm with TRA."
+      },
+      "new": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo, unahitaji EFD -- lakini si kwa sababu ya kufikia TZS 11,000,000. EFD inahitajika kwa default kwa kila mfanyabiashara, bila kujali mauzo. Hakuna kizingiti cha mauzo kwa EFD. Thibitisha na TRA (tra.go.tz).",
+        "correct_answer_en": "Yes, you need EFD -- but not because you've reached TZS 11,000,000. EFD is required by default for every business, regardless of turnover. There is no EFD turnover threshold. Confirm with TRA."
+      },
+      "old_numeric_key": [
+        "11000000"
+      ],
+      "new_numeric_key": [
+        "11000000"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Ndiyo. EFD inahitajika kwa mauzo ya TZS 11,000,000 na zaidi kwa mwaka. Uko kwenye kizingiti kamili, hivyo EFD ni lazima. Thibitisha na TRA (tra.go.tz).",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": true,
+        "old_numeric_key_dropped": [],
+        "narrows": false,
+        "why": "the new key still accepts the old gold answer, so a model giving the old answer still passes and no key-correction delta is observable on this row"
+      },
+      "reliable_old": false,
+      "reliable_new": false,
+      "yes_no_verdict_read_by_scorer": {
+        "scorer_reads_old_gold_as": "yes",
+        "scorer_reads_new_gold_as": "yes",
+        "scorer_sees_a_flip": false,
+        "the_note_declares_a_flip": false,
+        "DIVERGENT": false,
+        "why_it_matters": ""
+      }
+    },
+    {
+      "id": "eval_355",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "yes_no",
+      "fields_differing": [
+        "_scoring_key_correction",
+        "_why_hard",
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Hapana, bado si lazima kwa kizingiti hicho — TZS 10,999,000 iko chini ya TZS 11,000,000; unaweza kutumia risiti za mikono. Ukisajili VAT au kuvuka, EFD itakuwa lazima. Thibitisha na TRA (tra.go.tz).",
+        "correct_answer_en": "No, not yet mandatory at that level — TZS 10,999,000 is below TZS 11,000,000; you may use manual receipts. If VAT-registered or above, EFD becomes required. Confirm with TRA."
+      },
+      "new": {
+        "answer_type": "yes_no",
+        "correct_answer_sw": "Ndiyo, EFD ni lazima — kwa default, bila kujali mauzo yako. TZS 10,999,000 au TZS 11,000,000 hazibadilishi jibu, kwa sababu hakuna kizingiti cha mauzo kwa EFD. Thibitisha na TRA (tra.go.tz).",
+        "correct_answer_en": "Yes, EFD is mandatory — by default, regardless of your turnover. TZS 10,999,000 or TZS 11,000,000 makes no difference, because there is no EFD turnover threshold. Confirm with TRA."
+      },
+      "old_numeric_key": [
+        "10999000",
+        "11000000"
+      ],
+      "new_numeric_key": [
+        "10999000",
+        "11000000"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Hapana, bado si lazima kwa kizingiti hicho — TZS 10,999,000 iko chini ya TZS 11,000,000; unaweza kutumia risiti za mikono. Ukisajili VAT au kuvuka, EFD itakuwa lazima. Thibitisha na TRA (tra.go.tz).",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": false,
+        "old_numeric_key_dropped": [],
+        "narrows": true,
+        "why": "the old gold answer is REJECTED by the new key, so a pass->fail flip here is attributable to the key, not the model"
+      },
+      "reliable_old": false,
+      "reliable_new": false,
+      "yes_no_verdict_read_by_scorer": {
+        "scorer_reads_old_gold_as": "no",
+        "scorer_reads_new_gold_as": "yes",
+        "scorer_sees_a_flip": true,
+        "the_note_declares_a_flip": true,
+        "DIVERGENT": false,
+        "why_it_matters": ""
+      }
+    },
+    {
+      "id": "eval_383",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "scored_fields_changed": true,
+      "answer_type": "number",
+      "fields_differing": [
+        "_scoring_key_correction",
+        "correct_answer_en",
+        "correct_answer_sw"
+      ],
+      "old": {
+        "answer_type": "number",
+        "correct_answer_sw": "Ada ya kusajili kampuni isiyo na mtaji wa hisa ni TZS 300,000. Thibitisha na BRELA (brela.go.tz).",
+        "correct_answer_en": "The fee to register a company with no share capital is TZS 300,000. Confirm with BRELA."
+      },
+      "new": {
+        "answer_type": "number",
+        "correct_answer_sw": "Ada ya kusajili kampuni isiyo na mtaji wa hisa ni TZS 500,000. Thibitisha na BRELA (brela.go.tz).",
+        "correct_answer_en": "The fee to register a company with no share capital is TZS 500,000. Confirm with BRELA."
+      },
+      "old_numeric_key": [
+        "300000"
+      ],
+      "new_numeric_key": [
+        "500000"
+      ],
+      "discrimination": {
+        "specimen": "the OLD gold answer text, scored as if the model had produced it",
+        "specimen_text": "Ada ya kusajili kampuni isiyo na mtaji wa hisa ni TZS 300,000. Thibitisha na BRELA (brela.go.tz).",
+        "old_gold_passes_old_key": true,
+        "old_gold_passes_new_key": false,
+        "old_numeric_key_dropped": [
+          "300000"
+        ],
+        "narrows": true,
+        "why": "the old gold answer is REJECTED by the new key, so a pass->fail flip here is attributable to the key, not the model"
+      },
+      "reliable_old": true,
+      "reliable_new": true,
+      "self_declared": "TZS 300,000 -> TZS 500,000, in BOTH correct_answer_sw and correct_answer_en."
+    }
+  ],
+  "probe_set_changes": [
+    {
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "n": 78,
+      "change": "ENTIRE SET IS NEW since the baseline — it was never scored at 1476caa, so it contributes no key-correction delta and no comparison"
+    },
+    {
+      "id": "nat_01",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "14 >= 10 so SDL applies; 3.5% x 6,000,000 = TZS 210,000/month. Unlabeled levy ('ile ya mafunzo ya ufundi'). WRONG = wrong rate, below-threshold claim, or a free-computed figure on the fact path.",
+      "new_expected": "14 >= 10 so SDL applies; 3.5% x 6,000,000 = TZS 210,000/month. Unlabeled levy ('ile ya mafunzo ya ufundi'). WRONG = wrong rate, below-threshold claim, or a free-computed figure on the fact path."
+    },
+    {
+      "id": "nat_02",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "All-Swahili numerals + per-person: 'ishirini'=20 employees, 'laki nne'=400,000 each -> payroll 8,000,000; 3.5% = TZS 280,000/month. ROUTING must reach compute[sdl]. Known extractor gap (Swahili numerals + 'kila mmoja'): a safe-clarify here is a ROUTING PASS and a DELIVERY FAIL, logged as both. WRONG = any confident wrong number.",
+      "new_expected": "All-Swahili numerals + per-person: 'ishirini'=20 employees, 'laki nne'=400,000 each -> payroll 8,000,000; 3.5% = TZS 280,000/month. ROUTING must reach compute[sdl]. Known extractor gap (Swahili numerals + 'kila mmoja'): a safe-clarify here is a ROUTING PASS and a DELIVERY FAIL, logged as both. WRONG = any confident wrong number."
+    },
+    {
+      "id": "nat_03",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "Threshold trap: 7 < 10, so SDL does NOT apply — correct answer is 'haihusiki', not an amount. WRONG = computing 3.5% x 3,000,000.",
+      "new_expected": "Threshold trap: 7 < 10, so SDL does NOT apply — correct answer is 'haihusiki', not an amount. WRONG = computing 3.5% x 3,000,000."
+    },
+    {
+      "id": "nat_05",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "Wrong-base trap: SDL is 3.5% of GROSS PAYROLL, never of machine value. Correct = say the base is payroll and ask for it (payroll was never given). WRONG = 3.5% x 50,000,000.",
+      "new_expected": "Wrong-base trap: SDL is 3.5% of GROSS PAYROLL, never of machine value. Correct = say the base is payroll and ask for it (payroll was never given). WRONG = 3.5% x 50,000,000."
+    },
+    {
+      "id": "nat_06",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "Explicit-levy control, code-switched business register. 25 >= 10; 3.5% x 15,000,000 = TZS 525,000/month.",
+      "new_expected": "Explicit-levy control, code-switched business register. 25 >= 10; 3.5% x 15,000,000 = TZS 525,000/month."
+    },
+    {
+      "id": "nat_13",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "Unlabeled PAYE. Band 4: 68,000 + 25% x (900,000-760,000) = TZS 103,000/month. WRONG = flat-rate guess, or any mention of a 'personal relief' deduction (does not exist in TZ).",
+      "new_expected": "Unlabeled PAYE. Band 4: 68,000 + 25% x (900,000-760,000) = TZS 103,000/month. WRONG = flat-rate guess, or any mention of a 'personal relief' deduction (does not exist in TZ)."
+    },
+    {
+      "id": "nat_14",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "Band 2: 8% x (350,000-270,000) = TZS 6,400/month. Yes, PAYE is due. WRONG = 'below the threshold, nothing due'.",
+      "new_expected": "Band 2: 8% x (350,000-270,000) = TZS 6,400/month. Yes, PAYE is due. WRONG = 'below the threshold, nothing due'."
+    },
+    {
+      "id": "nat_15",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "'laki mbili na nusu' = 250,000 < 270,000 -> PAYE = TZS 0. The 0% Band 1 IS the tax-free threshold; there is no separate personal relief. WRONG = any positive PAYE figure, or citing 'TZS 26,000 relief'.",
+      "new_expected": "'laki mbili na nusu' = 250,000 < 270,000 -> PAYE = TZS 0. The 0% Band 1 IS the tax-free threshold; there is no separate personal relief. WRONG = any positive PAYE figure, or citing 'TZS 26,000 relief'."
+    },
+    {
+      "id": "nat_16",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "Non-resident employee: flat 15% final withholding, NOT the resident progressive bands. 15% x 4,000,000 = TZS 600,000. WRONG = progressive-band computation (D-PAYE-1).",
+      "new_expected": "Non-resident employee: flat 15% final withholding, NOT the resident progressive bands. 15% x 4,000,000 = TZS 600,000. WRONG = progressive-band computation (D-PAYE-1)."
+    },
+    {
+      "id": "nat_17",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source",
+        "source_partial"
+      ],
+      "old_expected": "Net take-home (rc_11 class): PAYE = 128,000 + 30% x 500,000 = 278,000; NSSF employee 10% = 150,000; net = TZS 1,072,000. A safe-clarify listing the components is acceptable. WRONG = a confident wrong net figure.",
+      "new_expected": "Net take-home (rc_11 class): PAYE = 128,000 + 30% x 500,000 = 278,000; NSSF employee 10% = 150,000; net = TZS 1,072,000. A safe-clarify listing the components is acceptable. WRONG = a confident wrong net figure."
+    },
+    {
+      "id": "nat_19",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "WCF = 0.5% x 3,000,000 = TZS 15,000/month. Unlabeled levy ('ile ya fidia').",
+      "new_expected": "WCF = 0.5% x 3,000,000 = TZS 15,000/month. Unlabeled levy ('ile ya fidia')."
+    },
+    {
+      "id": "nat_20",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "WCF applies from the FIRST employee (no minimum headcount); a new employer must register with WCF within 30 days of hiring. WRONG = inventing a headcount threshold.",
+      "new_expected": "WCF applies from the FIRST employee (no minimum headcount); a new employer must register with WCF within 30 days of hiring. WRONG = inventing a headcount threshold."
+    },
+    {
+      "id": "nat_21",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "Asset distractor: WCF base is payroll, not vehicle value. 0.5% x 900,000 = TZS 4,500/month. WRONG = 0.5% x 30,000,000 (D-WCF-3 distractor class).",
+      "new_expected": "Asset distractor: WCF base is payroll, not vehicle value. 0.5% x 900,000 = TZS 4,500/month. WRONG = 0.5% x 30,000,000 (D-WCF-3 distractor class)."
+    },
+    {
+      "id": "nat_23",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source",
+        "source_partial"
+      ],
+      "old_expected": "Two unlabeled levies, both must be answered (D-DECOMP-1 fan-out): SDL 3.5% x 5,500,000 = TZS 192,500 (12 >= 10); NSSF 20% x 5,500,000 = TZS 1,100,000 total (employer share 550,000). WRONG = answering only one levy.",
+      "new_expected": "Two unlabeled levies, both must be answered (D-DECOMP-1 fan-out): SDL 3.5% x 5,500,000 = TZS 192,500 (12 >= 10); NSSF 20% x 5,500,000 = TZS 1,100,000 total (employer share 550,000). WRONG = answering only one levy."
+    },
+    {
+      "id": "nat_24",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "expected_behavior",
+        "rubric_revision",
+        "source",
+        "source_partial"
+      ],
+      "old_expected": "Three-way triage with an SDL threshold trap: SDL does NOT apply (9 < 10); WCF 0.5% x 4,000,000 = TZS 20,000; NSSF employer 10% = TZS 400,000 (20% total = 800,000). WRONG = charging SDL at 9 employees.",
+      "new_expected": "Three-way triage with an SDL threshold trap. The question asks WHICH levies apply ('nilipe nini kati ya' = which of these do I pay), NOT how much, so a correct triage IS the correct answer: SDL does NOT apply (9 < 10); WCF DOES apply (0.5% of gross payroll, from the first employee); NSSF DOES apply (20% total, 10% employer + 10% employee). Amounts are welcome but NOT required. WRONG = charging SDL at 9 employees, or stating a rate that belongs to a different levy."
+    },
+    {
+      "id": "nat_25",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "25M/month = 300M/year, above the TZS 200M annual threshold -> VAT registration IS required. WRONG = treating 25M as annual and saying 'below threshold'.",
+      "new_expected": "25M/month = 300M/year, above the TZS 200M annual threshold -> VAT registration IS required. WRONG = treating 25M as annual and saying 'below threshold'."
+    },
+    {
+      "id": "nat_26",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "60M in 6 months is below the TZS 100M/6-month threshold (and annualises to 120M < 200M) -> not yet required. Must engage the 6-month limb, not only the annual one.",
+      "new_expected": "60M in 6 months is below the TZS 100M/6-month threshold (and annualises to 120M < 200M) -> not yet required. Must engage the 6-month limb, not only the annual one."
+    },
+    {
+      "id": "nat_27",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "Standard VAT rate 18%.",
+      "new_expected": "Standard VAT rate 18%."
+    },
+    {
+      "id": "nat_28",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source",
+        "source_partial"
+      ],
+      "old_expected": "Services = 6% VAT withholding (Finance Act 2025, effective 1 Jul 2025). The withholding certificate is issued by the day VAT becomes payable — NOT the 20th (the 20th is the return-filing deadline, a different obligation).",
+      "new_expected": "Services = 6% VAT withholding (Finance Act 2025, effective 1 Jul 2025). The withholding certificate is issued by the day VAT becomes payable — NOT the 20th (the 20th is the return-filing deadline, a different obligation)."
+    },
+    {
+      "id": "nat_33",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "_scoring_key_correction",
+        "expected_behavior",
+        "source"
+      ],
+      "old_expected": "BRELA annual return fee TZS 22,000; late-filing penalty TZS 2,500 per month (or part month) for a local company -> 7 x 2,500 = TZS 17,500. WRONG = the USD 25/month foreign-company rate, or an invented figure.",
+      "new_expected": "BRELA annual return fee TZS 22,000; late-filing penalty TZS 2,500 per month (or part month) for a local company -> 7 x 2,500 = TZS 17,500. WRONG = the foreign-company rate (TZS 70,000/month as at 2026-10-06, USD 25/month before that), or an invented figure."
+    },
+    {
+      "id": "nat_36",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "_scoring_key_correction",
+        "expected_behavior"
+      ],
+      "old_expected": "Non-VAT-registered with turnover >= TZS 11,000,000 -> EFD IS required. WRONG = 'below threshold', or citing the 200M VAT threshold as the EFD trigger.",
+      "new_expected": "EFD IS required BY DEFAULT regardless of turnover -- TAA Cap.438 s.44 sets no turnover threshold at all; exemption is only by a Commissioner-General public notice naming a class. WRONG = citing any turnover figure (11,000,000 or otherwise) as a threshold that must be crossed, citing the 200M VAT threshold as the EFD trigger, or saying 'below threshold' as if a turnover threshold exists."
+    },
+    {
+      "id": "nat_40",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source"
+      ],
+      "old_expected": "OSHA registers/inspects workplaces but does NOT pay compensation; WCF pays workplace-injury compensation (employer contributes 0.5%). Both roles must be distinguished.",
+      "new_expected": "OSHA registers/inspects workplaces but does NOT pay compensation; WCF pays workplace-injury compensation (employer contributes 0.5%). Both roles must be distinguished."
+    },
+    {
+      "id": "nat_44",
+      "file": "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+      "fields_differing": [
+        "source",
+        "source_partial"
+      ],
+      "old_expected": "Goods = 3% VAT withholding (Finance Act 2025, effective 1 Jul 2025). Must not give the 6% services rate.",
+      "new_expected": "Goods = 3% VAT withholding (Finance Act 2025, effective 1 Jul 2025). Must not give the 6% services rate."
+    },
+    {
+      "file": "eval/accuracy_gate/threshold_comparison_probes_024.jsonl",
+      "n": 24,
+      "change": "ENTIRE SET IS NEW since the baseline — it was never scored at 1476caa, so it contributes no key-correction delta and no comparison"
+    },
+    {
+      "file": "eval/accuracy_gate/vat_efd_probes_019.jsonl",
+      "n": 18,
+      "change": "ENTIRE SET IS NEW since the baseline — it was never scored at 1476caa, so it contributes no key-correction delta and no comparison"
+    },
+    {
+      "file": "eval/accuracy_gate/quantity_instruction_heldout_024.jsonl",
+      "n": 24,
+      "change": "ENTIRE SET IS NEW since the baseline — it was never scored at 1476caa, so it contributes no key-correction delta and no comparison"
+    }
+  ]
+}

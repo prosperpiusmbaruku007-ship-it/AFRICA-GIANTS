@@ -1,0 +1,99 @@
+{
+  "_what": "The expectation for the 2026-10-09 full gate, written and COMMITTED BEFORE the run so the result cannot be read backwards into it.",
+  "_why_a_separate_file": "kaggle/eval_gate_production_2026_10_09.py's summary payload names this path as its pre-registration. For five weeks CLAUDE.md taught a 3.5% presumptive figure its own engine had already corrected, and the lesson recorded was that a claim whose evidence is one lookup away must actually BE one lookup away. The summary made the claim before this file existed; that is now closed.",
+  "_committed_before_the_run": "The run has NOT happened. If a results artifact for 2026-10-09 exists alongside this file, this file predates it in git history and that is checkable with `git log --diff-filter=A`.",
+
+  "run": {
+    "harness": "kaggle/eval_gate_production_2026_10_09.py",
+    "corpora": [
+      "eval/accuracy_gate/eval_questions_001.jsonl (200)",
+      "eval/accuracy_gate/eval_questions_002_additions.jsonl (50)",
+      "eval/accuracy_gate/eval_questions_003.jsonl (150)"
+    ],
+    "n_questions": 400,
+    "configuration": "production single-arm retriever, 184-fact index, D-FIDELITY-7 and -8 wired",
+    "adapter": "prospAprospA007/africa-giants-adapter-v15",
+    "arms": 1,
+    "judge": "MANDATORY (majority-of-N via OpenRouter). An explicit opt-out stamps the artifact SKIPPED and the headline is then not trustworthy alone."
+  },
+
+  "baseline": {
+    "commit": "1476caa",
+    "dated": "2026-08-08",
+    "index_facts": 217,
+    "in_corpus_raw": {"pass": 314, "n": 384, "rate": 0.818, "_this_is_the_comparable_headline": true},
+    "in_corpus_reliable": {"pass": 222, "n": 270, "rate": 0.822},
+    "fact_path_190_raw": {"pass": 158, "n": 184, "rate": 0.859},
+    "fact_path_190_reliable": {"pass": 111, "n": 130, "rate": 0.854},
+    "_re_derived_from": "eval/results/gate_phase_d_paired_1476caa.json raw rows, not from any write-up",
+    "_correction_to_my_own_stocktake": "On 2026-10-08 I reported the baseline blend as 330/400 = 82.5%. That figure puts the 16 out_of_corpus rows in BOTH numerator and denominator (all 16 passed), so it is an in-corpus-plus-refusals number. R7 Gate 1 is an IN-CORPUS bar and the gate's own accuracy excludes OOC by design, so 81.8% is the like-for-like baseline. 82.5% must never be compared against this run's in-corpus figure."
+  },
+
+  "expected": {
+    "point_estimate_in_corpus_raw": 0.825,
+    "_arithmetic": "81.8% - 0.52 + 1.25 ~= 82.5%",
+    "_i_am_not_predicting_bar_a_clears_85": "The fact-path bucket sat at 85.9% raw / 85.4% reliable at the baseline — ON R7's line, not clear of it. That bucket is where a first-time user's question lands, so it is the bucket to read first.",
+    "terms": [
+      {
+        "term": "a) KEY CORRECTION",
+        "pts": -0.52,
+        "direction": "DOWN",
+        "bound": "HARD — at most 2 rows of 384",
+        "basis": "Exactly 2 rows of the 400 narrow their key (eval_355, eval_383); 22 of the 24 changed rows cannot move a score (19 are nssf.or.tz -> nssf.go.tz in gold prose). Measured by eval/controls/derive_gold_key_corrections_2026_10_09.py, read out of git.",
+        "measured_exactly_by_the_run": true
+      },
+      {
+        "term": "b) CORRECTED FACTS",
+        "pts": 1.25,
+        "direction": "UP",
+        "bound": "AT MOST — 5 rows of 384",
+        "basis": "12 of the 400 rows (3.0%) touch a fact corrected after the baseline; 5 of those 12 were FAILING at the baseline, so at most 5 can flip. Re-derived in eval/controls/pilot_stocktake_2026_10_08.py, not recalled.",
+        "measured_exactly_by_the_run": false
+      },
+      {
+        "term": "c) THE TWO WIRED GUARDS",
+        "pts": 0.0,
+        "direction": "A1 DOWN, A2 NOT AT ALL",
+        "bound": "UNMEASURED on these 400",
+        "basis": "D-FIDELITY-7 priced at 18 flags over 5,599 stored rows with 0 in gold; D-FIDELITY-8 at 1 flag over 13,632 rows, 0 in gold. Neither guard can produce a right answer.",
+        "_falsifier": "If A2 RISES, that rise is NOT the guards' and must be attributed elsewhere. A guard converts a wrong answer into a non-answer; it never converts one into a right answer.",
+        "measured_exactly_by_the_run": false
+      },
+      {
+        "term": "d) THE INDEX, 217 -> 184",
+        "pts": null,
+        "direction": "UNSIGNED",
+        "bound": "UNBOUNDED — AND IT IS THE LARGEST TERM",
+        "basis": "The drop is consolidation (221 -> 187 on 2026-08-26, three consolidated families) plus four stale renderings corrected out of production — not deletion. Consolidation is plausibly positive (the ask-aligned rewrites measured at rank 1), but NOTHING has measured its effect on these 400 questions, and nat_23 moving 45->46 from a single rewrite is the standing proof that index composition perturbs neighbours.",
+        "measured_exactly_by_the_run": false
+      }
+    ],
+    "_if_the_result_lands_outside_a_plus_b": "Term (d) is the first place to look, and that is NOT a reason to doubt the run.",
+    "_if_the_result_lands_below_the_projection": "That is a result to bring back, not a reason to reopen a decision. Standing instruction, 2026-08-08: decide against a real number, not a projected one."
+  },
+
+  "row_to_watch": {
+    "id": "eval_347",
+    "expected": "outcome=NO_ANSWER, guards=[D-FIDELITY-7]",
+    "why": "On 2026-10-06 it served a fabricated TZS 11,000,000 EFD threshold with the corrected index row at rank 1 for BOTH phrasings — so there was no retrieval headroom left and the guard layer is the only layer that can reach it.",
+    "_this_is_a_fail_that_is_a_win": "It still scores as a gate miss, correctly, because the user did not get their answer. A1 moves, A2 does not, and the answer is still owed: 'EFD applies regardless of turnover' is an A2 job on the fact path, where a blanking guard can only ship silence.",
+    "_if_it_still_asserts_the_figure": "The guard is not reaching the fact path in production, and that is the finding of the run.",
+    "_and_a_negated_mention_is_not_the_defect": "The correct answer CONTAINS the figure, under a negation — index row 57 reads 'EFD haina kizingiti cha mauzo kwa mwaka ... Na SI TZS 11,000,000'. The verdict is polarity-aware for exactly this reason."
+  },
+
+  "how_the_headline_must_be_read": {
+    "two_numbers_and_a_count_never_a_net": {
+      "A1": "WRONG-ANSWER RATE — in-corpus rows answered with a located, wrong value",
+      "A2": "RIGHT-ANSWER RATE — in-corpus rows the user can act on",
+      "G": "GUARD INTERVENTIONS — a fidelity guard replaced or blanked the body"
+    },
+    "containment_rule": "A falling A1 with a flat A2 is CONTAINMENT, not improvement. The summary prints that word when it happens.",
+    "gate_2_is_not_in_this_run": "R7 requires BOTH gates simultaneously. No part of this output is a Gate-2 result and none of it is pilot readiness on its own."
+  },
+
+  "declared_not_exercisable_offline": [
+    "the GPU run itself",
+    "the HuggingFace index download",
+    "production's live /health (recorded either way; 'COULD NOT ASK' is a different claim from 'asked and it matched')"
+  ]
+}
