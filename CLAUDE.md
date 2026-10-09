@@ -749,6 +749,49 @@ ends plus `PASS` / **`PROVISIONAL — adjudicate the queue`** / `BELOW`.
   gate says so in its own output.
 - **Cost is not the constraint:** $0.21 for 361 rows against ~1h of GPU.
 
+### ⛔⛔ R12c — THE FULL GATE IS A **BATCH** INSTRUMENT. NEVER RUN IT TO CONFIRM ONE CHANGE'S PREDICTION. VERIFY A SINGLE CHANGE AGAINST ITS **ENUMERATED BLAST RADIUS** INSTEAD. (restated 2026-10-09 — and the reason it had to be restated is the lesson)
+
+**This convention was set months ago and was written down NOWHERE, so the default decayed to
+"ship a change, run the gate" and I reached for a ~100-minute GPU run to confirm a prediction my
+own pre-registration had already made.** R30's shape exactly: a correct decision, never made
+mechanical, re-derived wrongly by the next session. It is now in the file that decides what later
+sessions believe.
+
+| | **THE FULL GATE** | **A TARGETED VERIFICATION** |
+|---|---|---|
+| answers | *did the PRODUCT move* | *did THIS CHANGE do what it claimed, and did it break anything* |
+| population | all 400, fixed | the rows the change can possibly have touched, **enumerated mechanically** |
+| cost | ~100 min GPU + judge | ~35 live calls, minutes |
+| when | **several changes have landed together** | **every change, before it is called verified** |
+
+> **ATTRIBUTION DOES NOT COME FROM THE GATE. IT COMES FROM THE TARGETED CHECKS AND THE
+> PRE-REGISTRATION.** The gate is the aggregate; it cannot tell you which of five changes moved
+> it. So running it per change buys neither attribution *nor* a measurement — and when the
+> pre-registration already says the headline cannot move, it buys a **receipt**.
+
+**WHAT MAKES A TARGETED CHECK A POPULATION RATHER THAN A SAMPLE, which is the whole technique:**
+
+1. **Enumerate the blast radius mechanically, from an instrument, not from memory.** For a routing
+   change the sweep already answers it: 24 diversions over 2,473 questions. **Rows on an unchanged
+   route cannot have changed their answer**, so those 24 are not a selection — they are the set.
+2. **Then test THAT PREMISE with controls on unchanged routes.** This is the part that is easy to
+   skip and is the only thing standing between a population and a guess. If an unchanged-route row
+   moved, the enumeration is wrong, the blast radius is unbounded, and **the full gate is justified
+   immediately** — the harness must say so in its own verdict and exit non-zero.
+3. **Name every OTHER term the deploy carried and give each its own arm.** The 2026-10-09 deploy
+   changed a route *and* reworded index row 9, so a moved answer on an unchanged route has the
+   index as its remaining candidate cause. Six unchanged-route rows on row 9's own subject made
+   that term **measured** instead of a confound hiding inside the control arm (R22).
+4. **Compare against the last gate's RECORDED REPLIES**, per row, not against its headline. The
+   artifact carries `generated` for all 400; that is a free per-row baseline and it is what turns
+   "the answer is correct" into "the answer changed, in this direction".
+
+**AND RESOLVE THE PRE-REGISTRATION IN WRITING WHEN THE RUN IS DELIBERATELY NOT EXECUTED.** A
+pre-registration with no result reads as a lost run, and the next reader cannot tell a deliberate
+decision from a dropped ball. Record *not run, by decision, with the reason* in the artifact
+itself — the same discipline R35 applies to a held control, for the same reason: **an unresolved
+item does not get overruled, it lapses.**
+
 ### R13 — generate-from-facts command
 python run.py generate-from-facts --subdomain <name> --limit <n>
 Generates pairs directly from locked_facts.json entries without document extraction.
