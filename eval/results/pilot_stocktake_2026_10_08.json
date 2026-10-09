@@ -1,0 +1,250 @@
+{
+  "_what": "Pilot stock-take: both bars, every figure recomputed from raw rows.",
+  "_corrections_to_the_framing": [
+    "There is NO 2026-09-21 PROGRESS entry. The last PILOT RE-DERIVATION is 2026-09-04; the floor's number comes from the 2026-09-23 edge-probe adjudication. Both baselines are named separately below because they measure different things.",
+    "NO FULL GATE HAS RUN SINCE 2026-08-09. Bar A's headline is two months old and nothing closed since is visible in it until it is re-run.",
+    "The latest gate ran against 217 index facts; production serves 184."
+  ],
+  "bar_a_covered_question_accuracy": {
+    "_what": "Bar A -- accuracy on questions the corpus covers. Recomputed from raw rows.",
+    "_population_and_why": "The 400-question combined corpus: gate_001 (200, the original accuracy gate), additions_003 (150, adversarial), additions_002 (50, staged compute). R22: the decision 'is Bar A near R7's >85%' applies to the FACT PATH, because that is where a pilot's first questions land -- so the fact-path bucket is reported separately and is NOT the same claim as the 400-row blend.",
+    "latest_full_gate": {
+      "artifact": "eval/results/gate_phase_d_paired_1476caa.json",
+      "clone_head": "1476caa",
+      "committed": "2026-08-09",
+      "index_facts_at_run": 217,
+      "index_facts_in_production_now": 184,
+      "rows": 400,
+      "passes": 330,
+      "raw_overall": 0.825,
+      "clarified": 21,
+      "by_source": {
+        "additions_002": {
+          "n": 50,
+          "pass": 42,
+          "rate": 0.84
+        },
+        "additions_003": {
+          "n": 150,
+          "pass": 114,
+          "rate": 0.76
+        },
+        "gate_001": {
+          "n": 200,
+          "pass": 174,
+          "rate": 0.87
+        }
+      },
+      "buckets_from_the_run": {
+        "fact_path_190": {
+          "summary_raw": 0.8587,
+          "n_scored": 184,
+          "passes": 158
+        },
+        "staged_50": {
+          "summary_raw": 0.84,
+          "n_scored": 50,
+          "passes": 42
+        },
+        "compute_type": {
+          "summary_raw": 0.8235,
+          "n_scored": 102,
+          "passes": 84
+        },
+        "adversarial_150": {
+          "summary_raw": 0.75,
+          "n_scored": 144,
+          "passes": 108
+        },
+        "ALL_400": {
+          "summary_raw": 0.8177,
+          "n_scored": 384,
+          "passes": 314
+        }
+      }
+    },
+    "prior_full_gate": {
+      "artifact": "eval/results/gate_orchestrator_combined_5a62c00.json",
+      "committed": "2026-07-28",
+      "rows": 400,
+      "passes": 290,
+      "raw_overall": 0.725
+    },
+    "_the_number_that_matters_for_R7": "R7 Gate 1 is >85% in-corpus. On the latest full gate the FACT PATH bucket is 85.87% raw / 85.38% reliable -- i.e. ON the line, not clear of it. The 400-row blend is 82.5% raw, which is BELOW it, and the adversarial 150 is 75%. Quoting any single one of those as 'Bar A' is the blending error the two-bar framing exists to prevent.",
+    "_staleness": "TWO MONTHS OLD, and measured against a 217-fact index that production no longer serves (184 now). Everything closed since -- Part XII, the EFD 11M fabrication, the NSSF 100k fine, the BRELA fee schedule, rent WHT, two wired guards -- is INVISIBLE to this figure until the gate is re-run."
+  },
+  "bar_a_staleness": {
+    "_what": "How many of the 400 gate rows touch a fact corrected AFTER the run.",
+    "_why_this_bounds_rather_than_predicts": "A touched row's old verdict is untrustworthy in BOTH directions: it may have been FAILED against a key since found wrong (ext_15 is the worked example -- its 'Section XII' reply was marked WRONG and the Act vindicates the numeral), or PASSED on a value since superseded. So this is the size of the uncertain slice, not a predicted gain. Anyone reading it as 'Bar A is really N points higher' has read it backwards.",
+    "rows_total": 400,
+    "rows_touched": 12,
+    "pct_touched": 3.0,
+    "touched_passing_at_run": 7,
+    "touched_failing_at_run": 5,
+    "by_correction": {
+      "brela_fee_schedule_2026_10_06": 1,
+      "efd_11m_fabrication_2026_10_06": 6,
+      "nssf_deadline_2026_10_05": 2,
+      "nssf_fine_100k_2026_10_05": 1,
+      "paye_p9_deadline_2026_10_05": 1,
+      "rent_wht_nonresident_2026_09_26": 1
+    },
+    "detail": {
+      "brela_fee_schedule_2026_10_06": [
+        {
+          "i": 382,
+          "id": "eval_383",
+          "subdomain": "brela_registration",
+          "pass_at_run": false
+        }
+      ],
+      "efd_11m_fabrication_2026_10_06": [
+        {
+          "i": 55,
+          "id": "eval_056",
+          "subdomain": "efd_compliance",
+          "pass_at_run": true
+        },
+        {
+          "i": 207,
+          "id": "eval_208",
+          "subdomain": "vat_registration",
+          "pass_at_run": true
+        },
+        {
+          "i": 330,
+          "id": "eval_331",
+          "subdomain": "efd_compliance",
+          "pass_at_run": false
+        },
+        {
+          "i": 346,
+          "id": "eval_347",
+          "subdomain": "efd_compliance",
+          "pass_at_run": true
+        },
+        {
+          "i": 353,
+          "id": "eval_354",
+          "subdomain": "efd_compliance",
+          "pass_at_run": true
+        },
+        {
+          "i": 354,
+          "id": "eval_355",
+          "subdomain": "efd_compliance",
+          "pass_at_run": false
+        }
+      ],
+      "nssf_deadline_2026_10_05": [
+        {
+          "i": 88,
+          "id": "eval_089",
+          "subdomain": "nssf_contributions",
+          "pass_at_run": true
+        },
+        {
+          "i": 92,
+          "id": "eval_093",
+          "subdomain": "nssf_contributions",
+          "pass_at_run": true
+        }
+      ],
+      "nssf_fine_100k_2026_10_05": [
+        {
+          "i": 182,
+          "id": "eval_183",
+          "subdomain": "osha_registration",
+          "pass_at_run": false
+        }
+      ],
+      "paye_p9_deadline_2026_10_05": [
+        {
+          "i": 128,
+          "id": "eval_129",
+          "subdomain": "sdl_compliance",
+          "pass_at_run": true
+        }
+      ],
+      "rent_wht_nonresident_2026_09_26": [
+        {
+          "i": 217,
+          "id": "eval_218",
+          "subdomain": "vat_withholding",
+          "pass_at_run": false
+        }
+      ]
+    }
+  },
+  "bar_b_the_floor": {
+    "_what": "Bar B -- what the system does on questions the corpus holds NO fact for.",
+    "_population_and_why": "78 authored edge probes, live replies captured 2026-09-05 against production at e4b5e90, adjudicated 2026-09-23. R22: the 78-row OVERALL pass rate is NOT a gate number and is not quoted. The GAP SUBSET is the transferable figure -- those rows do not need to be representative of difficulty to establish what the system does when it has nothing; they only need to be questions with no fact behind them, which is how they were constructed and is checkable by reading them.",
+    "artifact": "eval/results/extended_078_adjudication_2026_09_23.json",
+    "rows": 78,
+    "all_verdicts": {
+      "WRONG": 34,
+      "PARTIAL": 16,
+      "PASS": 26,
+      "PASS_BY_OUTCOME": 1,
+      "UNADJUDICABLE": 1
+    },
+    "gap_rows": 12,
+    "gap_verdicts": {
+      "WRONG": 9,
+      "PARTIAL": 1,
+      "PASS": 2
+    },
+    "gap_fabrications_WRONG": 9,
+    "gap_fabrication_rate": 0.75,
+    "gap_fabrications_incl_PARTIAL": 10,
+    "gap_rate_incl_partial": 0.8333,
+    "unbuilt_domain_rows": 2,
+    "unbuilt_verdicts": {
+      "PASS": 1,
+      "WRONG": 1
+    },
+    "gap_plus_unbuilt_wrong": 10,
+    "gap_plus_unbuilt_n": 14,
+    "_the_recorded_claim_SURVIVES_rederivation": "PROGRESS 2026-09-23 records '9 times out of 12 (75%)' and 'including the two unbuilt-domain rows: 10 of 14 (71%)'. Both recompute EXACTLY from these rows. Worth stating plainly because several figures re-checked this week did not: this one is sound, and the floor number can be quoted as measured.",
+    "cue_list_generalisation": {
+      "artifact": "eval/results/vocab_substitution_arm_2026_09_24.json",
+      "orthographic_arm": {
+        "n": 20,
+        "leaks": 20,
+        "leak_pct": 100,
+        "source": "eval/refusal_gate/orthographic_heldout_038.jsonl"
+      },
+      "vocab_arm": {
+        "n": 22,
+        "leaks": 22,
+        "leak_pct": 100,
+        "leaking_ids": [
+          "v01",
+          "v02",
+          "v03",
+          "v04",
+          "v05",
+          "v06",
+          "v07",
+          "v08",
+          "v09",
+          "v10",
+          "v11",
+          "v12",
+          "v13",
+          "v14",
+          "v15",
+          "v16",
+          "v17",
+          "v18",
+          "v19",
+          "v20",
+          "v21",
+          "v22"
+        ]
+      },
+      "finding": "42 of 42 probes leak across two unrelated variation axes. The cue list does not generalise beyond the exact strings it holds."
+    },
+    "_the_one_mechanism_that_could_help_is_off": "The coverage gate is DISABLED by decision on measured evidence: 1.9% false refusals on 411 corpus questions vs 71% on 21 held-out, a ~37x gap (R21). That decision was correct and is now the binding constraint on this number. Nothing shipped since 2026-09-23 changes it."
+  }
+}
