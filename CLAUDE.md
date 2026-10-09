@@ -1315,10 +1315,37 @@ work, and the answer is: **the direction that makes the output shorter.**
 | the same cue present in **two** rules | that row again, after the first fix | **re-running** |
 | VATWH `_RETURN` over the whole sentence | **28 asserting rows**, inverted into accusations against the remediation | reading the rows it accused |
 | the anaphoric-transfer blind spot | 2 more, where the date is attached **without a date token** | reading the rows it accused |
-| word-boundary escapes in a **non-raw** string | an entire pattern, compiled to demand a literal backspace | **introspecting the compiled closure** |
+| word-boundary escapes in a **non-raw** string | an entire pattern, compiled to demand a literal backspace | **introspecting the compiled closure** — and see the block below, which is the whole lesson |
 | D-FIDELITY-8's first fee cue | its own founding specimen — **0 flags over 13,632 rows, reported "SAFE"** | planting the specimen |
 | `check_locked_facts`'s negation window at 40 chars | nothing yet — it was too TIGHT, the safe direction, and still needed a measured 60 | the self-test |
 | **a path resolver made STRICTLY MORE CAPABLE** (2026-10-09) | **the only finding it existed to report** — see below | **asking why the number moved** |
+
+> ### ⛔ A PATTERN CAN BE WRONG IN A WAY THE SOURCE CANNOT SHOW YOU. INTROSPECT THE COMPILED OBJECT. (2026-10-09)
+>
+> `_THRESHOLD_ASK` compiled to **`'\x08wangapi\x08'`** — every `\b` a literal **backspace** —
+> because it was patched in through an inline script whose replacement string was **not raw**.
+> The pattern matched nothing. It was a cue list in a router gate every question passes through.
+>
+> **THE SOURCE LOOKED CORRECT, AND SO DID EVERY TOOL THAT READS SOURCE.** `0x08` renders as
+> nothing in a terminal, so `grep` prints a line that appears to say `\bwangapi\b`, an editor
+> shows the same, and a diff shows no difference worth noticing. **There is no reading of the
+> file that reveals this** — the only place the truth exists is the compiled object:
+> `print(repr(mod._THRESHOLD_ASK.pattern))`.
+>
+> **AND AUDITING ALL SEVEN NEW PATTERNS RATHER THAN THE ONE IS WHAT MADE IT A FINDING INSTEAD OF
+> AN INSTANCE.** Fixing the pattern that misbehaved would have left six unexamined siblings
+> written in the same sitting, and the next one would have been found by a wrong answer rather
+> than by a check. The sweep also produced the *cause*: exactly one of the seven was corrupt, and
+> it was **the one patched through an inline script** — the others were written straight into the
+> file with `r''`. So the finding is not "escapes are tricky", it is **a tool-specific hazard with
+> a named trigger**: any patch applied by a generating script must be raw, and must be verified by
+> compiling, not by re-reading.
+>
+> **In practice, for any regex-bearing change:** after patching, `repr()` the compiled pattern of
+> **every** pattern the change touched, assert it contains no control characters, and prefer
+> editing the file directly over generating the replacement text. R39's direction applies as
+> usual — this failure DELETES matches, so it is silent, and a cue list that matches nothing looks
+> exactly like a cue list with nothing to match.
 
 > ### 🎯 THE CLEAREST INSTANCE OF R39 IN THE LIST, BECAUSE NOTHING ABOUT IT LOOKS LIKE A MISTAKE
 >

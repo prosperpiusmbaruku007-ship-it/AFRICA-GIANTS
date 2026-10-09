@@ -1328,14 +1328,42 @@ summary = {
     },
     'judge_overlay': judge_overlay,
     'judge_overlay_status': ('ran' if RUN_JUDGE else 'SKIPPED — headline not trustworthy alone'),
+    # ⛔ TWO PRE-REGISTRATIONS, BOTH KEPT. The first belongs to the 0e11c3d run and is NOT
+    # amended — a pre-registration that gets edited after its run is not one. The second is this
+    # run's, and it predicts something the first could not have: that the regex headline cannot
+    # move at all while the judge bracket should.
     'pre_registration': {
         '_recorded': 'committed in this file and in '
                      'eval/results/gate_preregistration_2026_10_09.json BEFORE the run',
+        '_belongs_to_run': '0e11c3d (2026-10-09, first run of the day). Kept verbatim.',
         'point_estimate_in_corpus_raw': 0.825,
         'terms': {'key_correction_pts': -0.52, 'corrected_facts_pts': +1.25,
                   'guards': 'A1 down, A2 unchanged',
                   'index_217_to_184': 'UNBOUNDED AND UNSIGNED — the largest term'},
         'row_to_watch': 'eval_347',
+    },
+    'pre_registration_statement_route': {
+        '_recorded': 'eval/results/gate_preregistration_statement_route_2026_10_09.json, '
+                     'committed BEFORE this run',
+        '_belongs_to_run': 'the statement-route run, baseline 0e11c3d',
+        'baseline_commit': '0e11c3d',
+        'regex_all_400_A2_point': 0.820,
+        'regex_pts_vs_baseline': -0.26,
+        'judge_upper_end_range': [0.816, 0.819],
+        'judge_lower_end_direction': 'UP, +0.5 to +0.8 pts',
+        'bracket_width_direction': 'NARROWER',
+        'regex_flips_expected_among_the_twelve': 0,
+        'substantively_fixed_among_the_twelve': 3,
+        'must_not_move': 8,
+        '_the_headline_claim': (
+            'THE REGEX A2 CANNOT RISE: 7 of the 8 rows this change touches already scored '
+            'pass=True at 0e11c3d, including the three it fixes, all three of which hand '
+            'adjudication confirmed as FALSE_PASSES. 0 regex flips with 3 real fixes is the '
+            'whole argument for the judge being the headline.'),
+        'rows_to_watch': ['eval_394 — fixed, and the regex will now FAIL it on the leading '
+                          'polarity token; expect it in the regex-FAIL queue',
+                          'eval_233 — a PASS that this change briefly broke and then fixed',
+                          'the 6 MODEL rows — nothing shipped reaches them'],
     },
 }
 _publish(_flush(rows, summary=summary, judge_overlay=judge_overlay), complete=True)

@@ -601,6 +601,47 @@ def test_the_prereg_artifact_EXISTS_and_agrees_with_the_package():
     assert "gate_preregistration_2026_10_09.json" in src
 
 
+def test_the_SECOND_pre_registration_exists_and_agrees_and_the_FIRST_is_unamended():
+    """⛔ THE STATEMENT-ROUTE RUN'S PRE-REGISTRATION, AND THE REASON IT IS A SECOND FILE.
+
+    A pre-registration edited after its own run is not a pre-registration. So the 0e11c3d one is
+    asserted UNCHANGED above and here, and this run's prediction lives in its own file — which
+    predicts something the first could not have: that the regex headline CANNOT move while the
+    judge bracket should, because 7 of the 8 rows this change touches were already being credited
+    by the regex scorer and three of those were hand-confirmed false passes.
+    """
+    p = os.path.join(REPO, "eval", "results",
+                     "gate_preregistration_statement_route_2026_10_09.json")
+    assert os.path.isfile(p), "the package names this path; it must exist before the run"
+    pre = json.load(io.open(p, encoding="utf-8"))
+    assert pre["baseline"]["commit"] == "0e11c3d", (
+        "the baseline moved. 0e11c3d is the only prior run with the same index, the same guards "
+        "and a judge; comparing this change to 1476caa would blend four unrelated terms")
+    assert pre["baseline"]["all_400_in_corpus_raw"] == {"right": 316, "n": 384, "rate": 0.823}
+    assert pre["the_prediction"]["tally"]["regex_flips_expected_among_the_twelve"] == 0, (
+        "the prediction of ZERO regex flips is the load-bearing claim — it is what makes a flat "
+        "regex figure a confirmation rather than a disappointment")
+    assert pre["the_prediction"]["tally"]["substantively_fixed_among_the_twelve"] == 3
+    assert pre["the_prediction"]["tally"]["must_not_move"] == 8
+    assert pre["the_prediction"]["bracket_width"]["expected_direction"] == "NARROWER"
+    assert len(pre["the_prediction"]["the_twelve_row_by_row"]) == 12, (
+        "the row-by-row prediction must cover all twelve; a partial list lets the run be scored "
+        "against whichever rows it happened to move")
+    assert len(pre["falsification_conditions"]) >= 4, (
+        "a prediction with no stated falsification conditions cannot be wrong, which is the "
+        "defect pre-registration exists to prevent")
+    # ⛔ AND THE PACKAGE MUST CARRY THE SAME NUMBERS. Two copies that disagree let the run be
+    # scored against whichever one it beat — the reason the first test asserts equality too.
+    src = _package_source()
+    assert "gate_preregistration_statement_route_2026_10_09.json" in src
+    assert "'regex_all_400_A2_point': 0.820" in src
+    assert "'regex_flips_expected_among_the_twelve': 0" in src
+    assert "'bracket_width_direction': 'NARROWER'" in src
+    assert "'_belongs_to_run': '0e11c3d (2026-10-09, first run of the day). Kept verbatim.'" \
+        in src, ("the first pre-registration is no longer labelled as belonging to its own run, "
+                 "so a reader will take it for this run's prediction")
+
+
 # ── WHAT THIS FILE CANNOT EXERCISE, NAMED RATHER THAN OMITTED ───────────────────────────
 def test_the_unexercisable_parts_are_declared_in_the_package():
     """A census that quietly omits what it could not test reports a cleaner result than it

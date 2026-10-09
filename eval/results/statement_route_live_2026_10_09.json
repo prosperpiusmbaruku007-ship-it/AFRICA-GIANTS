@@ -6,7 +6,7 @@
   "health": {
     "status": "ok",
     "app": "chike-inference",
-    "build": "8d7ebd2",
+    "build": "dce1432",
     "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
     "base_model": "McGill-NLP/AfriqueLlama-8B",
     "web_tier_config_loaded": false,
@@ -14,7 +14,7 @@
     "config_note": "the WEB tier carries no chike_config.json by design; the serving GPU tier loads it. Its real value is in deep mode as served.config_rag_fact_count.",
     "deep": true,
     "served": {
-      "build": "8d7ebd2",
+      "build": "dce1432",
       "rag_rows_loaded": 184,
       "rag_embeddings_shape": [
         184,
@@ -34,8 +34,8 @@
       "rows_match_config": true
     },
     "_provenance": {
-      "deployed_build": "8d7ebd2",
-      "head": "5bf3e10",
+      "deployed_build": "dce1432",
+      "head": "dce1432",
       "serving_paths_moved_since_build": [],
       "deploy_paths_watched": [
         "chike",
@@ -148,7 +148,7 @@
       "question": "Mwajiri analazimika kulipa SDL akiwa na wafanyakazi wangapi?",
       "note": "THE CHECK IS THE PRESENCE OF THE THRESHOLD, and that is the whole test: a clarification is precisely a reply that asks for the headcount WITHOUT stating 10. No forbidden phrase is used, because the correct answer ends by inviting the payroll figure — forbidding that would fail the fix.",
       "_local_intent": "sdl",
-      "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "reply": "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL. Mwenye wafanyakazi chini ya 10 hana wajibu wa kulipa SDL.",
       "route_evidence_seen": true,
       "route_evidence_pattern": "wafanyakazi\\s+10\\s+au\\s+zaidi",
       "checks": {

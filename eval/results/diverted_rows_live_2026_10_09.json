@@ -14,7 +14,6 @@
     "of_those_hand_adjudicated_false_pass_or_partial": 3,
     "regex_gain": [],
     "regex_loss": [
-      "eval_233",
       "eval_394"
     ],
     "regex_unchanged": [
@@ -23,6 +22,7 @@
       "eval_111",
       "eval_112",
       "eval_130",
+      "eval_233",
       "eval_364"
     ]
   },
@@ -136,11 +136,11 @@
         "clarified": false
       },
       "hand_adjudication_0e11c3d": null,
-      "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
-      "scored_pass_now": false,
+      "reply": "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL. Mwenye wafanyakazi chini ya 10 hana wajibu wa kulipa SDL.",
+      "scored_pass_now": true,
       "scorer_reliable_now": true,
       "scorer_unreliable_reason": null,
-      "regex_delta": "REGEX_LOSS"
+      "regex_delta": "unchanged"
     },
     {
       "id": "eval_364",

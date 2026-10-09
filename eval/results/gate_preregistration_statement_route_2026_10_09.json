@@ -1,0 +1,87 @@
+{
+ "_what": "The expectation for the SECOND full gate of 2026-10-09 — the statement-route run — written and COMMITTED BEFORE it is launched, so the result cannot be read backwards into it.",
+ "_why_this_one_matters_more_than_the_last": "This is the first change since August aimed squarely at A2 by a method with a track record (routing + the deterministic engines), and the first run with the judge bracket as the headline. So it is the run that should move the measured number — and the prediction below says, on measured evidence, that THE REGEX HEADLINE CANNOT MOVE AND THE JUDGE BRACKET SHOULD. Writing that down first is the only thing that makes either outcome informative.",
+ "_committed_before_the_run": "Checkable with `git log --diff-filter=A -- eval/results/gate_preregistration_statement_route_2026_10_09.json` against the results artifact's own add-commit.",
+
+ "run": {
+  "harness": "kaggle/eval_gate_production_2026_10_09.py",
+  "n_questions": 400,
+  "configuration": "production single-arm retriever, 184-fact index (digest 5f76d40cf46d8be5…), D-FIDELITY-7 and -8 wired, statement route live",
+  "adapter": "prospAprospA007/africa-giants-adapter-v15",
+  "deployed_build_verified_live": "dce1432",
+  "judge": "MANDATORY. The bracket is the headline; the regex figure is reported beside it for continuity (R12b)."
+ },
+
+ "whats_new_since_the_baseline": [
+  "THE STATEMENT ROUTE — routing path 9 plus the orchestrator's threshold and optionality branches. Questions asking for a rate, a method, a threshold or an applicability rule now reach the deterministic engines with NO figure in the text. Measured cause: all 12 confirmed defects of 0e11c3d returned detect_intent='none' and not one reached an engine, while the engines already answered several correctly (R31's fifth instance).",
+  "rate_statement._INCIDENCE — the engines now state WHO pays and whether it is deducted, which is what made it safe to route figure-free questions to them.",
+  "levy_threshold_statement — a headcount question is answered with the headcount rule and deliberately WITHOUT the rate. Added after the threshold branch regressed eval_233 from PASS to FAIL by answering rate-first.",
+  "INDEX ROW 9 (nssf_employer_rate) reworded so the BASE is not readable as the SOURCE. One row of 184 changed; the regen was built from dc8843e and dual-committed.",
+  "eval_223 tagged out-of-current-scope (Tier 1B). NOT re-scored and NOT removed; it stays in every denominator and is reported in a new SCOPE column."
+ ],
+
+ "baseline": {
+  "commit": "0e11c3d",
+  "_why_this_baseline_and_not_1476caa": "0e11c3d is the only prior run with the same index, the same guards wired and a judge overlay. 1476caa (217 facts, no guards, no judge) remains the long-run comparison and is NOT the baseline for this change.",
+  "all_400_in_corpus_raw": {"right": 316, "n": 384, "rate": 0.823},
+  "all_400_A1_wrong": {"wrong": 45, "rate": 0.117},
+  "all_400_no_answer": 23,
+  "fact_path_190_raw": 0.852,
+  "fact_path_190_reliable": 0.858,
+  "judge_augmented": {"pass": 303, "total": 370, "rate": 0.819},
+  "disagreement_queue": {"false_pass_candidates": 17, "false_fail_candidates": 5},
+  "hand_adjudication_of_the_17": {"FALSE_PASS": 10, "PARTIAL": 5, "FALSE_ALARM": 1, "WRONG_GOLD": 1},
+  "adjudicated_impact_ALL_400": {"confirmed_removed": 0.797, "confirmed_and_partial_removed": 0.784},
+  "_the_quotable_figure": "~78–79% overall, ~82% on the fact path. 85.2% must not be cited as a Gate 1 result."
+ },
+
+ "the_prediction": {
+  "headline": "THE REGEX A2 SHOULD BE FLAT OR ONE ROW LOWER. THE JUDGE BRACKET'S LOWER END SHOULD RISE BY UP TO THREE ROWS AND THE BRACKET SHOULD NARROW.",
+  "_why_the_regex_cannot_rise": "Derived, not assumed: eval/controls/measure_diverted_rows_before_gate_2026_10_09.py asked the 8 gate rows the sweep measured as diverting, LIVE on the deployed build, and scored them with the production scorer. 7 of the 8 ALREADY scored pass=True at 0e11c3d — including the three this change targets (eval_086 party inversion, eval_130 inverted operation, eval_394 cross-levy threshold bleed), every one of which the judge flagged and hand adjudication confirmed as a FALSE_PASS. The regex instrument was crediting them while they were wrong, so fixing them cannot earn it anything.",
+  "regex_all_400_A2": {"expected_range": [0.820, 0.823], "point": 0.820, "pts_vs_baseline": -0.26},
+  "judge_upper_end": {"expected_range": [0.816, 0.819], "note": "judge_augmented uses the regex verdict on reliable rows, so eval_394's new regex FAIL costs the upper end one row."},
+  "judge_lower_end": {"expected_direction": "UP", "expected_magnitude_pts": "+0.5 to +0.8", "note": "the lower end assumes every queued false pass is a real defect. Three of the 17 are the rows this change fixed, so if the judge stops flagging them the queue shrinks and the floor rises."},
+  "bracket_width": {"expected_direction": "NARROWER", "note": "this is the signature of the change and the cleanest single thing to look at."},
+
+  "the_twelve_row_by_row": [
+   {"id": "eval_086", "class": "ROUTE", "predicted": "SUBSTANTIVELY FIXED, NO REGEX FLIP", "basis": "live-verified: the engine's own text reaches the user, stating both NSSF shares and that the employer's share is HAIKATWI from the wage. Regex already credited it at 0e11c3d. The judge should stop flagging it.", "scored_pass_live": true},
+   {"id": "eval_130", "class": "ROUTE", "predicted": "SUBSTANTIVELY FIXED, NO REGEX FLIP", "basis": "live-verified: levy_rate_statement('sdl') states the rate and the whole-payroll base, and the inverted-division phrasing is gone. Regex already credited it.", "scored_pass_live": true},
+   {"id": "eval_394", "class": "CORPUS+ROUTE", "predicted": "SUBSTANTIVELY FIXED AND REGEX WILL NOW FAIL IT", "basis": "the route now reaches nssf_applies and the reply is correct ('Hapana, si ya hiari … lazima asajili … kutoka mfanyakazi wa kwanza'). The scorer's yes_no limb compares the LEADING polarity token: the gold says 'Ndiyo', the reply opens 'Hapana', and for a negatively-framed question ('si ya hiari?') both are correct Swahili. Verified by substitution — the same answer opening 'Ndiyo' scores True. EXPECT IT IN THE JUDGE'S regex-FAIL queue, which is the direction never applied to either bound.", "scored_pass_live": false},
+   {"id": "eval_223", "class": "CORPUS", "predicted": "UNCHANGED, AND NOW IN THE SCOPE COLUMN", "basis": "EAC STR — Tier 1B, no corpus. Tagged, not re-scored, not removed. It stays in the denominator so the comparison holds."},
+   {"id": "eval_186", "class": "GOLD", "predicted": "MUST NOT MOVE", "basis": "its gold is the stale party (index row 87 is specific and sourced where the gold hedges). Correcting a key needs its own primary-source pass (R28) and is queued, not done."},
+   {"id": "eval_239", "class": "GOLD", "predicted": "MUST NOT MOVE", "basis": "WRONG_GOLD — the model reproduced row 46 with its citation and the KEY was stale. CLAUDE.md s.11 is corrected; the gold is not. It will keep scoring as a failure until the key is fixed."},
+   {"id": "eval_104", "class": "MODEL", "predicted": "MUST NOT MOVE"},
+   {"id": "eval_162", "class": "MODEL", "predicted": "MUST NOT MOVE"},
+   {"id": "eval_171", "class": "MODEL", "predicted": "MUST NOT MOVE"},
+   {"id": "eval_237", "class": "MODEL", "predicted": "MUST NOT MOVE"},
+   {"id": "eval_304", "class": "MODEL", "predicted": "MUST NOT MOVE"},
+   {"id": "eval_338", "class": "MODEL", "predicted": "MUST NOT MOVE"}
+  ],
+  "tally": {
+   "regex_flips_expected_among_the_twelve": 0,
+   "substantively_fixed_among_the_twelve": 3,
+   "must_not_move": 8,
+   "scope_tagged": 1,
+   "_the_point": "0 regex flips and 3 real fixes is the whole argument for the judge being the headline. Under the old reporting this cycle would read as 'no movement', and three confident wrong answers would have been removed anyway."
+  },
+
+  "the_six_MODEL_rows_are_the_test": "Nothing shipped this cycle reaches them: index content and retrieval wording cannot help a reply that contradicts a fact it was handed. If the bracket does not move while these six stay wrong, that is the strongest evidence yet that Bar A's remaining ceiling sits at the MODEL layer — which is the evidence a retrain decision should start from. If any of the six flips, it needs explaining before it is booked as progress."
+ },
+
+ "falsification_conditions": [
+  "IF the judge still flags eval_086 or eval_130 as wrong → the engine's text is not reaching the gate's answer path even though it reaches production's. The gate runs the clone's orchestrator on Kaggle while the live verification went through Modal; same code, different host, and this is where a divergence would show (R12's dual-file concern).",
+  "IF the regex ALL_400 A2 rises materially (> +0.3 pts) → suspect another term or the instrument, because the 8 rows this change touches cannot produce it. Do not attribute it to the statement route without naming the rows that moved.",
+  "IF eval_233 scores FAIL → the threshold renderer regressed again. It was a PASS at 0e11c3d, FAILED under the first version of this change (answered rate-first), and is a PASS again live on dce1432.",
+  "IF any of the 6 MODEL rows flips → either judge variance or an unaccounted change. Explain it before counting it.",
+  "IF the compute path loses rows → the statement route has swallowed questions that carry figures. Live-verified not to, on one row only."
+ ],
+
+ "unbounded_and_unsigned_terms": [
+  "THE 16 DIVERSIONS OUTSIDE THE 400. The sweep covered 2,473 questions and found 24 diversions, 8 of them inside the gate corpora. The other 16 are in data/reviewed and probe sets this run does not score, so their effect on anything the gate measures is zero — but they are live in production and nobody has read all of them.",
+  "THE SWEEP IS AN OVER-COUNT, not an under-count: it ran detect_intent on WHOLE question strings while the orchestrator routes DECOMPOSED sub-questions. eval_322 is the worked example — `kizingiti` in its VAT limb made it look like a threshold row until decomposition was applied, and then it was not one.",
+  "JUDGE VARIANCE. The judge is an LLM with majority-of-N, not a deterministic instrument. A bracket end moving by one row is inside its noise; the DIRECTION of the lower end moving by three is not.",
+  "ROW 9's SECOND-ORDER EFFECTS. One index row of 184 changed, which perturbs its neighbours' retrieval ranks (the nat_23 property). eval_086 and eval_087 are live-verified; no other NSSF row was measured."
+ ],
+
+ "_what_this_run_does_not_measure": "Gate 2 (refusal, >70%). R7 requires both gates simultaneously, so nothing here is a pilot-readiness figure."
+}

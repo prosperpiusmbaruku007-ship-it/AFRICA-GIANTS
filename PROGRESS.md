@@ -1,5 +1,135 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-10-09 (fifth pass) — **THE STATEMENT ROUTE IS LIVE AND VERIFIED. AND THE PRE-REGISTRATION SAYS THE REGEX HEADLINE *CANNOT* MOVE — BECAUSE IT WAS ALREADY CREDITING EVERY ROW THIS CHANGE FIXES.**
+
+### 1. ✅ SHIPPED: the row-9 regen, the statement route, and the threshold renderer — three gates, two deploys, no downtime
+
+| step | result |
+|---|---|
+| HF fetch, pinned revision | `e5-base RAG index (184x768), built from dc8843e; correction_sync=CLEAN` |
+| verified **before** overwriting | byte-identical to `build_fact_texts()` in all 184 rows; differs from the previously served index in **exactly row 9**; every embedding row unit-normalised |
+| R16 pre-flight ×2 | 3/3 gates green both times, including the **real build** |
+| deployed | `8d7ebd2`, then `dce1432` after the renderer fix |
+| deep `/health` | `build_matches: true`, **`rag_facts_text_sha256` equal to the committed digest** |
+| live verification | **10/10 deploy-limb probes PASS, 2 observations**, `DEPLOY VERIFIED` |
+
+**The digest equality is the new thing here.** Until today every post-deploy claim about *which
+index is serving* was inferred from behaviour — a probe whose power depended on someone thinking
+of the right question. `served.rag_facts_text_sha256` now equals a value **computed from the
+committed index**, so "the corrected index is live" is an equality rather than an argument.
+
+**All three pinned rows answer correctly live, with the engine's own text reaching the user:**
+`eval_086` (both NSSF shares plus *"HAIKATWI kwenye mshahara wa mfanyakazi"*), `eval_130` (the
+rate and the whole-payroll base, no inverted division), `eval_394` (*"Hapana, si ya hiari …
+lazima asajili … kutoka mfanyakazi wa kwanza"* — and no request for a payroll figure, which was
+the regression). `adv_06` stays off the route and is answered, not refused.
+
+### 2. 🔴 I SHIPPED A REGRESSION THIS MORNING AND FOUND IT BY MEASURING, NOT BY THE GATE
+
+`eval_233` — *"Ni idadi gani ya waajiriwa inayofanya mwajiri kuwa na wajibu wa kulipa SDL?"* —
+was a **PASS at `0e11c3d`** and came back a **FAIL**. The threshold branch called
+`levy_rate_statement`, so the reply led with *"Kiwango cha SDL ni asilimia 3.5 …"*, buried the
+headcount rule mid-paragraph, and ended by asking for payroll figures. **Right branch, wrong
+renderer.**
+
+Two independent things were wrong, which is why the fix is a renderer and not a reword:
+
+- **the scorer failed it correctly** — the gold holds no rate, the reply volunteers 3.5, and an
+  unsupported figure in an answer is a defect, not a bonus;
+- **the copy was wrong-topic-first**, which is R15's measured lever pointing the other way: they
+  asked HOW MANY PEOPLE.
+
+> **⚠️ AND THE SECOND DRAFT STILL FAILED, which is the part worth keeping.** *"SDL inamhusu
+> mwajiri mwenye wafanyakazi 10 au zaidi … halipi SDL"* is correct, rate-free, and shares **two**
+> 5-char-plus tokens with the gold where the `definition` limb needs **three** — pure synonym
+> variation. Revising wording after watching a lexical scorer is one step from instrument-fitting,
+> so the test applied was: **is the wording defensible from the QUESTION rather than from the
+> gold?** It is — the question itself asks what makes an employer *"kuwa na **wajibu wa kulipa**
+> SDL"*, so that construction is the asker's own. **Had the only defence been "it matches the
+> gold", the right move would have been to leave the row failing for the judge**, as `eval_394`
+> is being left.
+
+**Two more of mine, both caught by checking rather than reasoning:**
+
+- My count of which gate rows reach the threshold branch said **two**, because I tested WHOLE
+  question strings. The orchestrator routes **decomposed sub-questions**, and `eval_322`'s
+  `kizingiti` sits in its VAT limb while `SDL` sits in its rate limb — so the bleed does not
+  exist. **Checking a pipeline with the wrong unit manufactures a defect** (R34). Population now
+  asserted at **one** and pinned.
+- `tests/test_routing_ngapi.py` demanded `asilimia 3.5` for **both** reclassified rows, which held
+  only while one renderer served both asks. `ngapi_08` is a headcount question: the rate is an
+  unsupported figure there. **My own test would have blocked the fix.**
+
+### 3. ⛔ THE PRE-REGISTRATION, AND IT PREDICTS A FLAT HEADLINE ON PURPOSE
+
+`eval/results/gate_preregistration_statement_route_2026_10_09.json`, committed before the run.
+Baseline is **`0e11c3d`** — the only prior run with the same index, the same guards wired and a
+judge overlay.
+
+The number it refuses to guess is *how many of the twelve flip*, so it was **derived**:
+`eval/controls/measure_diverted_rows_before_gate_2026_10_09.py` asked the 8 gate rows the sweep
+measured as diverting, live, and scored them with the production scorer.
+
+> ### 🎯 **7 OF THE 8 ALREADY SCORED `pass=True` AT `0e11c3d` — INCLUDING ALL THREE THIS CHANGE FIXES, EVERY ONE OF WHICH HAND ADJUDICATION CONFIRMED AS A FALSE PASS.**
+>
+> **The regex A2 cannot rise on these rows. It was already counting them.** So the prediction is:
+> regex **flat to one row lower** (82.3% → ~82.0%), judge **upper end flat to −1 row**, judge
+> **lower end UP by up to three rows**, and the **bracket narrower** — that last being the
+> cleanest single thing to look at.
+>
+> **0 regex flips with 3 real fixes is the whole argument for the judge being the headline.** Under
+> the old reporting this cycle reads as "no movement", and three confident wrong answers would
+> have been removed anyway.
+
+**`eval_394` is the sharpest case and it goes the other way.** The route is fixed, the answer is
+correct, and the **regex will now FAIL it**: the `yes_no` limb compares the leading polarity token,
+the gold says *"Ndiyo"*, the reply opens *"Hapana"*, and for a negatively-framed question (*"si ya
+hiari?"*) **both are correct Swahili**. Verified by substitution — the same answer opening *"Ndiyo"*
+scores True. **An answer got better and the instrument scored it worse.** Expect it in the judge's
+regex-FAIL queue, the direction never applied to either bound.
+
+**The six MODEL rows are the test.** Nothing shipped this cycle reaches them. If the bracket does
+not move while they stay wrong, that is the strongest evidence yet that Bar A's remaining ceiling
+sits at the model layer — **and that is six rows, not sixty.** Five falsification conditions are
+written into the artifact, including *"if the regex A2 rises more than +0.3 pts, suspect another
+term, because the 8 rows this change touches cannot produce it."*
+
+### 4. ✅ `eval_223` ANNOTATED — a scope column, not a deletion
+
+Tagged `scope.status: out_of_current_scope`, `tier: tier1b`, `do_not_rescore: true`. It **stays in
+every denominator**, so the comparison to `1476caa` and `0e11c3d` holds, and the gate publishes the
+counterfactual rate beside the headline. **Removing it would have turned a roadmap fact into
+apparent product movement** — the same confound the key-correction arm exists to separate. The
+key-correction derivation independently records the edit as
+`fields_differing: ["scope"], scored_fields_changed: false`.
+
+Planted both directions (R26): the column fires on a tagged population and stays **quiet** on an
+untagged one, where the two rates must be identical — a column that reported members on an
+untagged population would make every historical bucket look scope-adjusted, and the artifact alone
+cannot tell those apart.
+
+### 5. 📌 TWO PROVENANCE LIMBS RE-POINTED IN ONE DAY, FOR THE SAME REASON
+
+Both asserted **where the working tree sits relative to `git commit`** rather than what is served:
+
+- the freshness test's `stale_inputs` limb — non-empty *or* empty both fail, because a dual-commit
+  flips it twice. Now asserts the **label**, with the demonstration moved to planted state.
+- the live harness's `build_is_this_working_tree` — I derived it from `rev-parse HEAD`
+  *specifically* to avoid a hand-copied pin, and committing the harness before running it (R18)
+  moved HEAD one commit past the deploy. **Deriving a constant does not make it the right
+  constant.** Now: is the build an **ancestor** of HEAD, and has any **serving path** moved since.
+
+### 6. 📝 RECORDED: `\x08` — a pattern can be wrong in a way the source cannot show you
+
+`_THRESHOLD_ASK` compiled to `'\x08wangapi\x08'` — every `\b` a literal backspace — from an inline
+patch with a **non-raw** replacement string. `0x08` renders as nothing, so grep, editors and diffs
+all print what looks like the correct pattern. **The compiled object is the only place the truth
+exists.** Auditing **all seven** new patterns rather than the one is what made it a finding: exactly
+one was corrupt, and it was the one patched through a generating script — a tool-specific hazard
+with a named trigger, not a general warning about escapes.
+
+---
+
 ## 📋 2026-10-09 (fourth pass) — **THE ROUTER WAS THE BOTTLENECK, AND IT IS FIXED. PLUS: NO SECOND ROW WAS MARKED DOWN BY THE REVERSED CITATION.**
 
 ### 1. ✅ THE STATEMENT ROUTE — rate / method / applicability questions now reach the engines with no figure
