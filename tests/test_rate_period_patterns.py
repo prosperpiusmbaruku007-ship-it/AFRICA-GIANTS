@@ -195,9 +195,55 @@ def test_rate_nssf_states_the_rate_and_the_figure():
 
 
 @pytest.mark.parametrize("pid", ["rq_03", "rq_04"])
-def test_rate_branch_needs_a_figure_to_engage(pid):
-    # eval_111 / eval_112 stay on the fact path, which is where their richer golds live.
-    assert swn.sole_plausible_amount(_q(pid)) is None
+def test_a_figure_free_rate_question_REACHES_the_statement_engine(pid):
+    """⛔ THIS TEST WAS INVERTED ON 2026-10-09 AND THE HISTORY IS THE POINT.
+
+    It was `test_rate_branch_needs_a_figure_to_engage`, and all it asserted was
+    `sole_plausible_amount(q) is None` — i.e. that the question carries no figure. That was true
+    before the change and is still true after it, so **the assertion survived a deliberate
+    reversal of the behaviour it was named for without going red once.** It had stopped testing
+    anything about the branch.
+
+    The probes it reads said `expect: "untouched"`, guarding eval_111/eval_112 on the fact path
+    because the engine "does not reproduce" their employer-only / paid-to-WCF detail. That premise
+    was true when written and is now false: `rate_statement._INCIDENCE` was added in the same
+    commit as the route so the engine WOULD reproduce it. Measured on the live deployed build —
+    these questions ARE eval_111/eval_112 verbatim — the judge scored eval_111's engine answer
+    correct 5/5 (`eval/results/targeted_route_verification_2026_10_09.json`).
+
+    So the probes were inverted with their history (`expect_history`) and this asserts the new
+    expectation, which is strictly stronger: the route fires AND the incidence detail the old
+    note said was missing is present.
+
+    ⚠️ eval_112 CARRIES AN OPEN ITEM, recorded in its probe rather than glossed: the judge
+    returned UNDETERMINED 4/5 because the engine says "asilimia 0.5 ya mshahara ghafi" where the
+    gold and the question both say the AGGREGATE payroll. The payee half of rq_04's concern is
+    closed; the base phrasing half is partly vindicated. Hence the base assertion below is NOT
+    made for WCF — asserting the weaker wording would freeze the open item in place.
+    """
+    probe = BY_ID[pid]
+    assert probe["expect"] == "routed_to_the_statement_engine", (
+        "the probe's expectation changed again; read its expect_history before touching this")
+    assert probe["expect_history"][0]["expect"] == "untouched", (
+        "the inverted probe lost its history, which is the thing that lets a later reader see "
+        "that the old expectation was true when written")
+    q = _q(pid)
+    assert swn.sole_plausible_amount(q) is None, "the probe must stay figure-free"
+    levy = {"rq_03": "sdl", "rq_04": "wcf"}[pid]
+    assert routing.detect_intent(q) == levy
+    text = _answer(q).text
+    assert ("asilimia 3.5" if levy == "sdl" else "asilimia 0.5") in text
+    # The detail the old note said this branch could not reproduce.
+    assert "haikatwi kwenye mshahara wa mfanyakazi" in text, (
+        f"{pid}: the incidence clause is gone, which is the exact ground on which the old "
+        f"expectation kept these questions off the engine: {text!r}")
+    if levy == "wcf":
+        assert "Mamlaka ya WCF" in text and "si TRA" in text, (
+            "rq_04's gold carries 'paid to the WCF Authority, not TRA' and that is the half of "
+            "its concern the engine now closes")
+    else:
+        assert "JUMLA ya mishahara" in text, (
+            "rq_03 asks for the rate on the TOTAL payroll and the engine must say so")
 
 
 def test_a_plain_amount_question_is_not_a_rate_question():
