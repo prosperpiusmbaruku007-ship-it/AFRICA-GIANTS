@@ -193,6 +193,48 @@ def test_the_REGEX_SCORER_CANNOT_TELL_THE_TWO_RENDERERS_APART_on_eval_130():
         "than flipping the assertion")
 
 
+def test_the_GATE_WOULD_HAVE_SCORED_THE_INVERTED_OPERATION_AS_A_PASS():
+    """⛔⛔ THE PERMANENT RECORD, PINNED TO THE REAL SPECIMEN RATHER THAN A PROXY.
+
+    `eval_130`'s reply at gate `0e11c3d` was: *"Kiasi cha SDL kinahesabiwa kwa kuchukua jumla ya
+    mishahara ... na KUIGAWANYA kwa 3.5%"* — **divide the payroll by 3.5%**, which for a TZS
+    10,000,000 payroll gives roughly 286 million instead of 350,000. The regex scorer marked that
+    row `pass=True`, `reliable=True`. The judge flagged it; hand adjudication confirmed it as one
+    of the seventeen false passes.
+
+    This test reads that reply OUT OF THE COMMITTED GATE ARTIFACT and asserts the scorer still
+    credits it. Not a proxy, not a paraphrase (R26: a five-word paraphrase was once enough to
+    flip a correct body into a flagged one), and not my own reconstruction of what the defect
+    looked like.
+
+    **WHAT IT IS FOR.** It is the standing reason the judge is the Bar A headline and the reason a
+    targeted judge-scored check is worth running when a full gate is not: a 100-minute gate would
+    have scored this answer, the WCF base defect and the missing operation as three passes. If
+    this assertion ever fails, the regex scorer has become able to see the wrong-direction class
+    and that is a material change in what the gate measures — **read R12b before touching it.**
+    """
+    import io as _io
+    import json as _json
+    p = os.path.join(REPO, "eval", "results", "gate_production_0e11c3d.json")
+    rows = {r["id"]: r for r in _json.load(_io.open(p, encoding="utf-8"))["rows"]}
+    row = rows["eval_130"]
+    inverted = row["generated"]
+    # The specimen is the real thing, and it is asserted to BE the defect before it is used.
+    assert "gawany" in inverted.lower(), (
+        f"the 0e11c3d reply for eval_130 no longer contains the inverted operation, so this "
+        f"test is pinned to the wrong specimen: {inverted!r}")
+    assert "3.5" in inverted
+    assert row["pass"] is True and row["reliable"] is True, (
+        "the baseline artifact no longer records this row as a confident regex pass, which is "
+        "the fact this test exists to preserve")
+    assert score_question(GATE["eval_130"], inverted, REFUSALS) is True, (
+        "the regex scorer now FAILS the inverted operation. That is a real improvement in the "
+        "instrument — do not just flip this assertion: R12b's reasoning about which figure is "
+        "the headline rests on the scorer being blind to this class, and it would need revisiting")
+    # And the renderer that replaced it states the operation the specimen inverted.
+    assert "Zidisha" in rules_engine.levy_method_statement("sdl").working
+
+
 def test_the_method_statement_states_NO_example_figure():
     """eval_130's gold carries a worked example ('milioni 10 → 350,000') and the engine
     deliberately does not. An invented amount is the compute path's job; a statement that makes
