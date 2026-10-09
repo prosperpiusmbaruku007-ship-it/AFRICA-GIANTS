@@ -1,0 +1,1824 @@
+{
+  "_what": "targeted live verification of the statement route, in place of a full gate",
+  "_why_not_the_full_gate": "the change's own pre-registration predicts the regex headline cannot move (7 of the 8 diverted rows were already scored as passes at 0e11c3d) and the judge's lower bound can move by at most three rows. 100 minutes of GPU to confirm a prediction is a receipt, not a measurement. The full gate is held for a batch of changes, so the expensive run attributes to something.",
+  "_the_premise_under_test": "A ROW WHOSE ROUTE DID NOT CHANGE CANNOT HAVE CHANGED ITS ANSWER. If it holds, the sweep's 24 diversions over 2,473 questions ARE the blast radius and this is a population, not a sample. If a premise control moved, the premise is false and the full gate is justified immediately.",
+  "_the_second_term": "this deploy also reworded index row 9, so a moved answer on an unchanged route has the index as its remaining candidate cause. That is why arm 4 exists: six unchanged-route NSSF rows on row 9's own subject, so the index term is MEASURED rather than left as a confound inside the control arm.",
+  "endpoint": "https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run",
+  "health": {
+    "status": "ok",
+    "app": "chike-inference",
+    "build": "dce1432",
+    "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+    "base_model": "McGill-NLP/AfriqueLlama-8B",
+    "web_tier_config_loaded": false,
+    "web_tier_config_rag_fact_count": null,
+    "config_note": "the WEB tier carries no chike_config.json by design; the serving GPU tier loads it. Its real value is in deep mode as served.config_rag_fact_count.",
+    "deep": true,
+    "served": {
+      "build": "dce1432",
+      "rag_rows_loaded": 184,
+      "rag_embeddings_shape": [
+        184,
+        768
+      ],
+      "rag_facts_text_sha256": "5f76d40cf46d8be515f356c05bfb072529482c5bdf3dab966264965a9d98381f",
+      "config_rag_fact_count": 184,
+      "adapter_repo": "prospAprospA007/africa-giants-adapter-v15"
+    },
+    "build_matches": true,
+    "_checks": {
+      "build_is_an_ancestor_of_head": true,
+      "no_serving_path_moved_since_the_build": true,
+      "web_and_gpu_tiers_agree": true
+    },
+    "_provenance": {
+      "deployed_build": "dce1432",
+      "head": "7d1e02a",
+      "serving_paths_moved": []
+    }
+  },
+  "judge": {
+    "model": "qwen/qwen3-32b",
+    "provider": "DeepInfra",
+    "n": 5,
+    "_never_auto_applies": "the judge is not ground truth. Diverted rows are read by hand; the verdict column records what it said."
+  },
+  "population": {
+    "_why_each_population": {
+      "q::SDL inaanza kuwahusu waajiri wenye wafanyakazi wangapi?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Mchango wa mwajiri kwa NSSF ni asilimia ngapi ya mshahara?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Jumla ya mchango wa NSSF ni asilimia ngapi?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved.",
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=ROUTE"
+      ],
+      "q::Kiwango cha mchango wa NSSF kwa upande wa mfanyakazi ni asilimia ngapi ya mshahara wake wa jumla?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Kiwango cha WCF ni asilimia ngapi ya jumla ya mishahara ya jumla?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved.",
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=ROUTE"
+      ],
+      "q::Ni idadi gani ya waajiriwa inayofanya mwajiri kuwa na wajibu wa kulipa SDL Tanzania Bara?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Nina mfanyakazi mmoja tu, je WCF inanihusu au ni kwa makampuni makubwa?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Je, NSSF si ya hiari kwa mwajiri anayestahili?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved.",
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=CORPUS+ROUTE"
+      ],
+      "q::Mchango wa NSSF ni asilimia ngapi -- watu wamenambia tofauti, mmoja anasema kumi, mwingine anasema ishirini.": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Tuna wafanyakazi wachache sana, WCF inatuhusu?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Nina wafanyakazi wachache tu, SDL itanihusu?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Kiwango cha SDL ni asilimia ngapi ya mishahara?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Kiwango cha WCF ni asilimia ngapi ya mishahara?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Nina mfanyakazi mmoja wa kudumu na wawili wa muda — SDL inanihusu?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::mfanyakazi wangu analipwa kwa samani ya kazi je NSSF ni asilimia ngapi": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Nina mfanyakazi mmoja tu — je nalipa WCF?": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "q::Utaratibu Rahisishwa wa Biashara (STR) wa EAC una zana kuu ngapi na ni zipi?": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=CORPUS"
+      ],
+      "q::Nina wafanyakazi 60 na nimesajili OSHA — je, pia ninahitaji kumwajiri afisa wa usalama?": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=GOLD"
+      ],
+      "q::Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=GOLD"
+      ],
+      "q::Mwajiri anahitaji nyaraka gani kuwasilisha NSSF ili kusajilisha wafanyakazi wake?": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "q::'Mgeni' katika GN 487A inamaanisha nani hasa?": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "q::Mimi ni mgeni ninayefanya biashara ya rejareja — GN 487A tayari imetangazwa. Nifanye nini sasa?": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "q::Kodi ya zuio (withholding tax) inatakiwa kuwasilishwa TRA ndani ya muda gani baada ya mwisho wa mwezi?": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "q::Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "q::VAT withholding kwa huduma ni asilimia 18 kama kiwango cha kawaida, sivyo?": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "q::Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?": [
+        "PREMISE_CONTROL_INDEX: asks whether the employer's 10% is DEDUCTED from the wage — row 9's ambiguity verbatim, and the single best test of whether the rewording moved anything. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "q::NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?": [
+        "PREMISE_CONTROL_INDEX: asks about the 10/10 split itself. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "q::Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?": [
+        "PREMISE_CONTROL_INDEX: a cross-levy confusion on the NSSF rate (3.5 or 0.5), so it competes with the rows the rewording touched. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "q::Nina mfanyakazi mmoja tu wa kwanza, je NSSF ni lazima au nasubiri niwe na wengi?": [
+        "PREMISE_CONTROL_INDEX: one first employee, is NSSF mandatory — eval_394's subject on an UNCHANGED route. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "q::Michango ya NSSF inatakiwa kufikishwa NSSF ndani ya muda gani baada ya kulipa mishahara?": [
+        "PREMISE_CONTROL_INDEX: the NSSF remittance window, row 63's neighbourhood rather than row 9's. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "q::Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?": [
+        "PREMISE_CONTROL_INDEX: the NSSF deadline, a plain NSSF row with no connection to the rewording — the quiet control inside the control arm. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ]
+    },
+    "counts": {
+      "DIVERTED": 19,
+      "THE_TWELVE": 12,
+      "PREMISE_CONTROL_MODEL": 6,
+      "PREMISE_CONTROL_INDEX": 6,
+      "unique_questions": 34
+    }
+  },
+  "totals": {
+    "rows": 34,
+    "measured": 18,
+    "by_verdict": {
+      "ERROR": 16,
+      "HELD_CORRECT": 4,
+      "HELD_UNDETERMINED": 2,
+      "IMPROVED": 1,
+      "NO_BASELINE_JUDGE_CORRECT": 8,
+      "NO_BASELINE_JUDGE_NO_REFERENCE": 1,
+      "NO_BASELINE_JUDGE_UNDETERMINED": 1,
+      "REGRESSION_CANDIDATE": 1
+    }
+  },
+  "premise": {
+    "controls_total": 12,
+    "controls_moved": [],
+    "verdict": "HELD — no unchanged-route row moved"
+  },
+  "regression_candidates": [
+    "eval_394"
+  ],
+  "rows": [
+    {
+      "key": "q::SDL inaanza kuwahusu waajiri wenye wafanyakazi wangapi?",
+      "id": null,
+      "file": "data/reviewed/hand_coded_batch_015_b02.jsonl",
+      "line": 4,
+      "question": "SDL inaanza kuwahusu waajiri wenye wafanyakazi wangapi?",
+      "question_field": "instruction",
+      "reference": "SDL inawahusu waajiri wenye wafanyakazi 10 au zaidi Tanzania Bara. Ukiwa na chini ya wafanyakazi 10, huna wajibu wa kulipa SDL. Thibitisha na TRA (tra.go.tz).",
+      "reference_field": "output",
+      "all_references_found": [
+        {
+          "file": "data/reviewed/hand_coded_batch_015_b02.jsonl",
+          "field": "output",
+          "text": "SDL inawahusu waajiri wenye wafanyakazi 10 au zaidi Tanzania Bara. Ukiwa na chini ya wafanyakazi 10, huna wajibu wa kulipa SDL. Thibitisha na TRA (tra.go.tz)."
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "sdl",
+      "baseline_0e11c3d": null,
+      "route_before": "none",
+      "route_after": "sdl",
+      "also_in_files": [
+        "data/reviewed/hand_coded_batch_015_b02.jsonl"
+      ],
+      "reply": "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL. Mwenye wafanyakazi chini ya 10 hana wajibu wa kulipa SDL.",
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 5
+        },
+        "n": 5,
+        "justification": "The generated answer correctly states that employers with 10 or more employees must pay SDL and those with fewer than 10 are not required, aligning with the reference answer.",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 1855,
+        "pout": 1148,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+    },
+    {
+      "key": "q::Mchango wa mwajiri kwa NSSF ni asilimia ngapi ya mshahara?",
+      "id": null,
+      "file": "data/reviewed/hand_coded_batch_015_b05.jsonl",
+      "line": 1,
+      "question": "Mchango wa mwajiri kwa NSSF ni asilimia ngapi ya mshahara?",
+      "question_field": "instruction",
+      "reference": "Mchango wa mwajiri kwa NSSF ni asilimia 10 ya mshahara ghafi (gross) wa mfanyakazi. Mfanyakazi naye huchangia asilimia 10, hivyo jumla ni 20%. Thibitisha na NSSF (nssf.go.tz).",
+      "reference_field": "output",
+      "all_references_found": [
+        {
+          "file": "data/reviewed/hand_coded_batch_015_b05.jsonl",
+          "field": "output",
+          "text": "Mchango wa mwajiri kwa NSSF ni asilimia 10 ya mshahara ghafi (gross) wa mfanyakazi. Mfanyakazi naye huchangia asilimia 10, hivyo jumla ni 20%. Thibitisha na NSSF (nssf.go.tz)."
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "nssf",
+      "baseline_0e11c3d": null,
+      "route_before": "none",
+      "route_after": "nssf",
+      "also_in_files": [
+        "data/reviewed/hand_coded_batch_015_b05.jsonl"
+      ],
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 5
+        },
+        "n": 5,
+        "justification": "The generated answer correctly states the 10% employer contribution to NSSF, matches the reference's total 20% split, and accurately explains that the employer's share is not deducted from the employe",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2405,
+        "pout": 1508,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+    },
+    {
+      "key": "q::Jumla ya mchango wa NSSF ni asilimia ngapi?",
+      "id": null,
+      "file": "data/reviewed/hand_coded_batch_015_b05.jsonl",
+      "line": 3,
+      "question": "Jumla ya mchango wa NSSF ni asilimia ngapi?",
+      "question_field": "instruction",
+      "reference": "Jumla ya mchango wa NSSF ni asilimia 20 ya mshahara ghafi — asilimia 10 kutoka kwa mwajiri na asilimia 10 kutoka kwa mfanyakazi. Thibitisha na NSSF (nssf.go.tz).",
+      "reference_field": "output",
+      "all_references_found": [
+        {
+          "file": "data/reviewed/hand_coded_batch_015_b05.jsonl",
+          "field": "output",
+          "text": "Jumla ya mchango wa NSSF ni asilimia 20 ya mshahara ghafi — asilimia 10 kutoka kwa mwajiri na asilimia 10 kutoka kwa mfanyakazi. Thibitisha na NSSF (nssf.go.tz)."
+        },
+        {
+          "file": "data/reviewed/nssf_confident_pairs.jsonl",
+          "field": "output",
+          "text": "Jumla ya mchango wa NSSF ni asilimia 20 ya mshahara. Kati ya hizo, asilimia 10 hulipwa na mwajiri na asilimia 10 na mfanyakazi. Thibitisha na NSSF (nssf.or.tz)"
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "nssf",
+      "baseline_0e11c3d": null,
+      "route_before": "none",
+      "route_after": "nssf",
+      "also_in_files": [
+        "data/reviewed/hand_coded_batch_015_b05.jsonl",
+        "data/reviewed/nssf_confident_pairs.jsonl"
+      ],
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 5
+        },
+        "n": 5,
+        "justification": "The generated answer correctly states the 20% total NSSF contribution split equally between employer and employee, aligning with the reference answer and adding accurate clarification about payment so",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2340,
+        "pout": 1239,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+    },
+    {
+      "key": "q::Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?",
+      "id": "eval_086",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 86,
+      "question": "Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?",
+      "question_field": "question_sw",
+      "reference": "Asilimia 10 ya mshahara wa jumla (gross salary) wa mfanyakazi. Mwajiri analipa sehemu hii kutoka pesa zake mwenyewe — haikatwi kutoka mshahara wa mfanyakazi. Thibitisha kiwango cha sasa na NSSF kwenye nssf.go.tz.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Asilimia 10 ya mshahara wa jumla (gross salary) wa mfanyakazi. Mwajiri analipa sehemu hii kutoka pesa zake mwenyewe — haikatwi kutoka mshahara wa mfanyakazi. Thibitisha kiwango cha sasa na NSSF kwenye nssf.go.tz."
+        }
+      ],
+      "arms": [
+        "DIVERTED",
+        "THE_TWELVE"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved.",
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=ROUTE"
+      ],
+      "intent_now": "nssf",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Kiasi kinachokatwa na mwajiri kwenye mshahara wa mfanyakazi kwa ajili ya NSSF ni asilimia 10. Thibitisha na NSSF (nssf.go.tz).",
+        "judge": "wrong"
+      },
+      "route_before": "none",
+      "route_after": "nssf",
+      "also_in_files": [
+        "eval/accuracy_gate/eval_questions_001.jsonl"
+      ],
+      "closability": "ROUTE",
+      "adjudication_0e11c3d": "FALSE_PASS",
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 4,
+          "undetermined": 1
+        },
+        "n": 5,
+        "justification": "The generated answer correctly states the employer's 10% contribution to NSSF, aligning with the reference answer, despite adding context about the total 20% (10% employer + 10% employee) and specifyi",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2515,
+        "pout": 1850,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "undetermined",
+          "correct"
+        ]
+      },
+      "reply_changed": true,
+      "verdict": "HELD_CORRECT"
+    },
+    {
+      "key": "q::Kiwango cha mchango wa NSSF kwa upande wa mfanyakazi ni asilimia ngapi ya mshahara wake wa jumla?",
+      "id": "eval_087",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 87,
+      "question": "Kiwango cha mchango wa NSSF kwa upande wa mfanyakazi ni asilimia ngapi ya mshahara wake wa jumla?",
+      "question_field": "question_sw",
+      "reference": "Asilimia 10 ya mshahara wake wa jumla (gross salary). Mwajiri anakata kiasi hiki kutoka mshahara wa mfanyakazi kabla ya kulipa mshahara, kisha anachanganya na sehemu yake ya asilimia 10 na kupeleka NSSF. Thibitisha kiwango na NSSF kwenye nssf.go.tz.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Asilimia 10 ya mshahara wake wa jumla (gross salary). Mwajiri anakata kiasi hiki kutoka mshahara wa mfanyakazi kabla ya kulipa mshahara, kisha anachanganya na sehemu yake ya asilimia 10 na kupeleka NSSF. Thibitisha kiwango na NSSF kwenye nssf.go.tz."
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "nssf",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Kiasi kinachokatwa kwenye mshahara wa mfanyakazi kwa ajili ya NSSF ni asilimia 10. Thibitisha na NSSF (nssf.go.tz).",
+        "judge": "correct"
+      },
+      "route_before": "none",
+      "route_after": "nssf",
+      "also_in_files": [
+        "eval/accuracy_gate/eval_questions_001.jsonl"
+      ],
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 5
+        },
+        "n": 5,
+        "justification": "The generated answer correctly states that the employee's NSSF contribution is 10% of gross salary, matching the reference, and clarifies the employer's separate 10% contribution without contradicting",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2570,
+        "pout": 1600,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "reply_changed": true,
+      "verdict": "HELD_CORRECT"
+    },
+    {
+      "key": "q::Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?",
+      "id": "eval_111",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 111,
+      "question": "Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?",
+      "question_field": "question_sw",
+      "reference": "Asilimia 3.5 ya jumla ya mishahara ya jumla (gross wages) ya wafanyakazi wote. SDL inalipwa na mwajiri peke yake — haikatwi kwa mfanyakazi. Thibitisha kiwango cha sasa na TRA kwenye tra.go.tz.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Asilimia 3.5 ya jumla ya mishahara ya jumla (gross wages) ya wafanyakazi wote. SDL inalipwa na mwajiri peke yake — haikatwi kwa mfanyakazi. Thibitisha kiwango cha sasa na TRA kwenye tra.go.tz."
+        },
+        {
+          "file": "eval/accuracy_gate/rate_period_probes_016.jsonl",
+          "field": "expect",
+          "text": "untouched"
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "sdl",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Kiwango cha SDL ni asilimia 3.5% ya jumla ya mishahara ya fedha ya wafanyakazi wote. Thibitisha na TRA (tra.go.tz).",
+        "judge": "correct"
+      },
+      "route_before": "none",
+      "route_after": "sdl",
+      "also_in_files": [
+        "eval/accuracy_gate/eval_questions_001.jsonl",
+        "eval/accuracy_gate/rate_period_probes_016.jsonl"
+      ],
+      "stale_expectation": "expect:'untouched' + guards_against 'eval_111 MUST-NOT-BREAK … answers correctly on the fact path and carries detail this branch does not reproduce'. The engine now carries that detail (rate_statement._INCIDENCE), which is what made routing these safe. The probe's expectation is stale, not the behaviour.",
+      "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 5
+        },
+        "n": 5,
+        "justification": "The generated answer correctly states the 3.5% SDL rate on total gross wages and clarifies it is paid by the employer, aligning with the reference answer despite additional non-contradictory details.",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2445,
+        "pout": 1143,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "reply_changed": true,
+      "verdict": "HELD_CORRECT"
+    },
+    {
+      "key": "q::Kiwango cha WCF ni asilimia ngapi ya jumla ya mishahara ya jumla?",
+      "id": "eval_112",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 112,
+      "question": "Kiwango cha WCF ni asilimia ngapi ya jumla ya mishahara ya jumla?",
+      "question_field": "question_sw",
+      "reference": "Asilimia 0.5 ya jumla ya mishahara ya jumla ya wafanyakazi wote. WCF inalipwa na mwajiri — haikatwi mshahara wa mfanyakazi. WCF inalipwa kwa Mamlaka ya WCF, si TRA. Thibitisha kiwango na Mamlaka ya WCF.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Asilimia 0.5 ya jumla ya mishahara ya jumla ya wafanyakazi wote. WCF inalipwa na mwajiri — haikatwi mshahara wa mfanyakazi. WCF inalipwa kwa Mamlaka ya WCF, si TRA. Thibitisha kiwango na Mamlaka ya WCF."
+        },
+        {
+          "file": "eval/accuracy_gate/rate_period_probes_016.jsonl",
+          "field": "expect",
+          "text": "untouched"
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "wcf",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Kiwango cha WCF ni asilimia 0.5 ya jumla ya mishahara ghafi (gross payroll) ya wafanyakazi wote. Thibitisha na WCF (wcf.go.tz).",
+        "judge": "correct"
+      },
+      "route_before": "none",
+      "route_after": "wcf",
+      "also_in_files": [
+        "eval/accuracy_gate/eval_questions_001.jsonl",
+        "eval/accuracy_gate/rate_period_probes_016.jsonl"
+      ],
+      "stale_expectation": "same, for WCF — 'Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA' is now in the engine's own text.",
+      "reply": "Kiwango cha WCF ni asilimia 0.5 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA.",
+      "judge": {
+        "verdict": "undetermined",
+        "tie": false,
+        "votes": {
+          "undetermined": 4,
+          "correct": 1
+        },
+        "n": 5,
+        "justification": "",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2195,
+        "pout": 1952,
+        "err_count": 0,
+        "per_call": [
+          "undetermined",
+          "undetermined",
+          "undetermined",
+          "correct",
+          "undetermined"
+        ]
+      },
+      "reply_changed": true,
+      "verdict": "HELD_UNDETERMINED"
+    },
+    {
+      "key": "q::Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?",
+      "id": "eval_130",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 130,
+      "question": "Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?",
+      "question_field": "question_sw",
+      "reference": "Zidisha jumla ya mishahara ya jumla (gross wages) ya wafanyakazi wote kwa asilimia 3.5. Mfano: jumla ya mishahara ya wafanyakazi wote ni TZS milioni 10 — SDL = 3.5% × 10,000,000 = TZS 350,000. Thibitisha hesabu yako na mshauri wa kodi au TRA.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Zidisha jumla ya mishahara ya jumla (gross wages) ya wafanyakazi wote kwa asilimia 3.5. Mfano: jumla ya mishahara ya wafanyakazi wote ni TZS milioni 10 — SDL = 3.5% × 10,000,000 = TZS 350,000. Thibitisha hesabu yako na mshauri wa kodi au TRA."
+        }
+      ],
+      "arms": [
+        "DIVERTED",
+        "THE_TWELVE"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved.",
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=ROUTE"
+      ],
+      "intent_now": "sdl",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Kiasi cha SDL kinahesabiwa kwa kuchukua jumla ya mishahara ya fedha (gross cash wages) ya wafanyakazi wote na kuigawanya kwa 3.5%. Thibitisha na TRA (tra.go.tz).",
+        "judge": "wrong"
+      },
+      "route_before": "none",
+      "route_after": "sdl",
+      "also_in_files": [
+        "eval/accuracy_gate/eval_questions_001.jsonl"
+      ],
+      "closability": "ROUTE",
+      "adjudication_0e11c3d": "FALSE_PASS",
+      "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "reply_changed": true,
+      "judge": {
+        "verdict": "undetermined",
+        "tie": false,
+        "votes": {
+          "undetermined": 4,
+          "correct": 1
+        },
+        "n": 5,
+        "justification": "",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2595,
+        "pout": 1972,
+        "err_count": 0,
+        "per_call": [
+          "undetermined",
+          "undetermined",
+          "undetermined",
+          "correct",
+          "undetermined"
+        ]
+      },
+      "verdict": "HELD_UNDETERMINED"
+    },
+    {
+      "key": "q::Ni idadi gani ya waajiriwa inayofanya mwajiri kuwa na wajibu wa kulipa SDL Tanzania Bara?",
+      "id": "eval_233",
+      "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+      "line": 33,
+      "question": "Ni idadi gani ya waajiriwa inayofanya mwajiri kuwa na wajibu wa kulipa SDL Tanzania Bara?",
+      "question_field": "question_sw",
+      "reference": "Waajiri wenye waajiriwa 10 au zaidi ndio wanaowajibika kulipa SDL Tanzania Bara. Chini ya hapo hakuna wajibu wa SDL. Thibitisha na TRA (tra.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Waajiri wenye waajiriwa 10 au zaidi ndio wanaowajibika kulipa SDL Tanzania Bara. Chini ya hapo hakuna wajibu wa SDL. Thibitisha na TRA (tra.go.tz)."
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "sdl",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Mwajiri anakuwa na wajibu wa kulipa SDL ikiwa atapata waajiriwa 10 au zaidi. Thibitisha na TRA (tra.go.tz).",
+        "judge": "correct"
+      },
+      "route_before": "none",
+      "route_after": "sdl",
+      "also_in_files": [
+        "eval/accuracy_gate/eval_questions_002_additions.jsonl"
+      ],
+      "reply": "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL. Mwenye wafanyakazi chini ya 10 hana wajibu wa kulipa SDL.",
+      "reply_changed": true,
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 5
+        },
+        "n": 5,
+        "justification": "The generated answer correctly states that employers with 10 or more employees are liable for SDL, while those with fewer than 10 are not, matching the reference answer's key facts.",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 1885,
+        "pout": 1195,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "verdict": "HELD_CORRECT"
+    },
+    {
+      "key": "q::Nina mfanyakazi mmoja tu, je WCF inanihusu au ni kwa makampuni makubwa?",
+      "id": "eval_364",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "line": 114,
+      "question": "Nina mfanyakazi mmoja tu, je WCF inanihusu au ni kwa makampuni makubwa?",
+      "question_field": "question_sw",
+      "reference": "Inakuhusu. WCF haina kizingiti cha chini — inahusu waajiri wote kutoka mfanyakazi wa kwanza. Thibitisha na WCF (wcf.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Inakuhusu. WCF haina kizingiti cha chini — inahusu waajiri wote kutoka mfanyakazi wa kwanza. Thibitisha na WCF (wcf.go.tz)."
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "wcf",
+      "baseline_0e11c3d": {
+        "pass": false,
+        "reliable": false,
+        "clarified": false,
+        "reply": "Ndiyo, WCF inawahusu hata waajiri wenye mfanyakazi MMOJA. Hakuna kiwango cha chini cha idadi ya wafanyakazi kinachokuruhusu kusamehewa. Thibitisha na WCF (wcf.go.tz).",
+        "judge": "correct"
+      },
+      "route_before": "none",
+      "route_after": "wcf",
+      "also_in_files": [
+        "eval/accuracy_gate/eval_questions_003.jsonl"
+      ],
+      "reply": "Ndiyo, WCF inakuhusu bila kujali idadi ya wafanyakazi. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+      "reply_changed": true,
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 5
+        },
+        "n": 5,
+        "justification": "The generated answer correctly states that WCF applies regardless of employee count, aligning with the reference's assertion of no lower limit and applicability from the first employee.",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2050,
+        "pout": 1227,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "verdict": "IMPROVED"
+    },
+    {
+      "key": "q::Je, NSSF si ya hiari kwa mwajiri anayestahili?",
+      "id": "eval_394",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "line": 144,
+      "question": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
+      "question_field": "question_sw",
+      "reference": "Ndiyo, si ya hiari. NSSF ni lazima kwa mwajiri na wafanyakazi wanaostahili. Thibitisha na NSSF (nssf.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Ndiyo, si ya hiari. NSSF ni lazima kwa mwajiri na wafanyakazi wanaostahili. Thibitisha na NSSF (nssf.go.tz)."
+        }
+      ],
+      "arms": [
+        "DIVERTED",
+        "THE_TWELVE"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved.",
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=CORPUS+ROUTE"
+      ],
+      "intent_now": "nssf",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Ndiyo, NSSF ni ya lazima kwa waajiri wenye wafanyakazi 10 au zaidi. Thibitisha na NSSF (nssf.go.tz).",
+        "judge": "wrong"
+      },
+      "route_before": "none",
+      "route_after": "nssf",
+      "also_in_files": [
+        "eval/accuracy_gate/eval_questions_003.jsonl"
+      ],
+      "closability": "CORPUS+ROUTE",
+      "adjudication_0e11c3d": "FALSE_PASS",
+      "reply": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+      "reply_changed": true,
+      "judge": {
+        "verdict": "wrong",
+        "tie": false,
+        "votes": {
+          "wrong": 5
+        },
+        "n": 5,
+        "justification": "The generated answer initially contradicts the reference by stating 'Hapana, si ya hiari' (No, it's not mandatory), while the reference confirms it is mandatory. The later correction ('Ndiyo') does no",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2110,
+        "pout": 1298,
+        "err_count": 0,
+        "per_call": [
+          "wrong",
+          "wrong",
+          "wrong",
+          "wrong",
+          "wrong"
+        ]
+      },
+      "verdict": "REGRESSION_CANDIDATE"
+    },
+    {
+      "key": "q::Mchango wa NSSF ni asilimia ngapi -- watu wamenambia tofauti, mmoja anasema kumi, mwingine anasema ishirini.",
+      "id": "ext_50",
+      "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+      "line": 50,
+      "question": "Mchango wa NSSF ni asilimia ngapi -- watu wamenambia tofauti, mmoja anasema kumi, mwingine anasema ishirini.",
+      "question_field": "question",
+      "reference": "Both can be right depending on WHICH figure: 20% is the TOTAL (employer+employee combined), 10% is each party's individual SHARE. Correct answer must resolve which quantity, not default to one number regardless of the ambiguity -- the quantity-axis-blindness shape (fresh phrasing, not eval_337 verbatim).",
+      "reference_field": "expected_behavior",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+          "field": "expected_behavior",
+          "text": "Both can be right depending on WHICH figure: 20% is the TOTAL (employer+employee combined), 10% is each party's individual SHARE. Correct answer must resolve which quantity, not default to one number regardless of the ambiguity -- the quantity-axis-blindness shape (fresh phrasing, not eval_337 verbatim)."
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "nssf",
+      "baseline_0e11c3d": null,
+      "route_before": "none",
+      "route_after": "nssf",
+      "also_in_files": [
+        "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl"
+      ],
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply_changed": null,
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 5
+        },
+        "n": 5,
+        "justification": "The generated answer correctly explains that the total NSSF contribution is 20% (10% from employer and 10% from employee), aligning with the reference answer's clarification about the combined total a",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2465,
+        "pout": 1335,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+    },
+    {
+      "key": "q::Tuna wafanyakazi wachache sana, WCF inatuhusu?",
+      "id": "extract_004",
+      "file": "data/reviewed/slot_extraction_stress_test_001.jsonl",
+      "line": 4,
+      "question": "Tuna wafanyakazi wachache sana, WCF inatuhusu?",
+      "question_field": "question_sw",
+      "reference": "Should clarify that WCF applies regardless of employee count (unlike SDL's 10-employee threshold) and then ask for payroll total to compute the 0.5% — not assume the vague headcount is relevant to eligibility.",
+      "reference_field": "expected_behavior",
+      "all_references_found": [
+        {
+          "file": "data/reviewed/slot_extraction_stress_test_001.jsonl",
+          "field": "expected_behavior",
+          "text": "Should clarify that WCF applies regardless of employee count (unlike SDL's 10-employee threshold) and then ask for payroll total to compute the 0.5% — not assume the vague headcount is relevant to eligibility."
+        },
+        {
+          "file": "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl",
+          "field": "expected_behavior",
+          "text": "Should clarify that WCF applies regardless of employee count (unlike SDL's 10-employee threshold) and then ask for payroll total to compute the 0.5% — not assume the vague headcount is relevant to eligibility."
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "wcf",
+      "baseline_0e11c3d": null,
+      "route_before": "none",
+      "route_after": "wcf",
+      "also_in_files": [
+        "data/reviewed/slot_extraction_stress_test_001.jsonl",
+        "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl"
+      ],
+      "reply": "Ndiyo, WCF inawahusu waajiri WOTE bila kujali idadi ya wafanyakazi. Hakuna kizingiti cha chini cha idadi iliyoainishwa. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+      "reply_changed": null,
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 4,
+          "undetermined": 1
+        },
+        "n": 5,
+        "justification": "Generated answer correctly states WCF applies to all employers regardless of employee count and mentions the 0.5% payroll rate, aligning with the reference answer's key points.",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2110,
+        "pout": 1462,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "undetermined",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+    },
+    {
+      "key": "q::Nina wafanyakazi wachache tu, SDL itanihusu?",
+      "id": "extract_131",
+      "file": "data/reviewed/slot_extraction_stress_test_001.jsonl",
+      "line": 131,
+      "question": "Nina wafanyakazi wachache tu, SDL itanihusu?",
+      "question_field": "question_sw",
+      "reference": "Ask for the exact number of employees before determining SDL applicability.",
+      "reference_field": "expected_behavior",
+      "all_references_found": [
+        {
+          "file": "data/reviewed/slot_extraction_stress_test_001.jsonl",
+          "field": "expected_behavior",
+          "text": "Ask for the exact number of employees before determining SDL applicability."
+        },
+        {
+          "file": "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl",
+          "field": "expected_behavior",
+          "text": "Ask for the exact number of employees before determining SDL applicability."
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "sdl",
+      "baseline_0e11c3d": null,
+      "route_before": "none",
+      "route_after": "sdl",
+      "also_in_files": [
+        "data/reviewed/slot_extraction_stress_test_001.jsonl",
+        "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl"
+      ],
+      "reply": "Ili nijue kama SDL inakuhusu, niambie una wafanyakazi wangapi (kizingiti ni wafanyakazi 10).",
+      "reply_changed": null,
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 5
+        },
+        "n": 5,
+        "justification": "The generated answer correctly instructs the user to provide the exact number of employees, aligning with the reference answer's requirement to determine SDL applicability based on employee count.",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 1525,
+        "pout": 1276,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+    },
+    {
+      "key": "q::Kiwango cha SDL ni asilimia ngapi ya mishahara?",
+      "id": "fp_01b",
+      "file": "eval/accuracy_gate/false_premise_pairs_016.jsonl",
+      "line": 2,
+      "question": "Kiwango cha SDL ni asilimia ngapi ya mishahara?",
+      "question_field": "question",
+      "reference": "3.5",
+      "reference_field": "correct",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/false_premise_pairs_016.jsonl",
+          "field": "correct",
+          "text": "3.5"
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "sdl",
+      "baseline_0e11c3d": null,
+      "route_before": "none",
+      "route_after": "sdl",
+      "also_in_files": [
+        "eval/accuracy_gate/false_premise_pairs_016.jsonl"
+      ],
+      "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "reply_changed": null,
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 5
+        },
+        "n": 5,
+        "justification": "The generated answer correctly states the SDL rate as 3.5% and provides additional context without contradicting the reference answer.",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2005,
+        "pout": 1112,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+    },
+    {
+      "key": "q::Kiwango cha WCF ni asilimia ngapi ya mishahara?",
+      "id": "fp_02b",
+      "file": "eval/accuracy_gate/false_premise_pairs_016.jsonl",
+      "line": 4,
+      "question": "Kiwango cha WCF ni asilimia ngapi ya mishahara?",
+      "question_field": "question",
+      "reference": "0.5",
+      "reference_field": "correct",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/false_premise_pairs_016.jsonl",
+          "field": "correct",
+          "text": "0.5"
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "wcf",
+      "baseline_0e11c3d": null,
+      "route_before": "none",
+      "route_after": "wcf",
+      "also_in_files": [
+        "eval/accuracy_gate/false_premise_pairs_016.jsonl"
+      ],
+      "reply": "Kiwango cha WCF ni asilimia 0.5 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA.",
+      "reply_changed": null,
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 5
+        },
+        "n": 5,
+        "justification": "The generated answer correctly states the 0.5% WCF rate and adds accurate contextual details about employer responsibility and payment destination without contradicting the reference answer.",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 1745,
+        "pout": 1042,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "correct",
+          "correct",
+          "correct"
+        ]
+      },
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+    },
+    {
+      "key": "q::Nina mfanyakazi mmoja wa kudumu na wawili wa muda — SDL inanihusu?",
+      "id": "hc_08",
+      "file": "eval/accuracy_gate/headcount_extraction_probes_012.jsonl",
+      "line": 8,
+      "question": "Nina mfanyakazi mmoja wa kudumu na wawili wa muda — SDL inanihusu?",
+      "question_field": "question",
+      "reference": null,
+      "reference_field": null,
+      "all_references_found": [],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "sdl",
+      "baseline_0e11c3d": null,
+      "route_before": "none",
+      "route_after": "sdl",
+      "also_in_files": [
+        "eval/accuracy_gate/headcount_extraction_probes_012.jsonl"
+      ],
+      "committed_fields": {
+        "id": "hc_08",
+        "question": "Nina mfanyakazi mmoja wa kudumu na wawili wa muda — SDL inanihusu?",
+        "expect_count": null,
+        "guards_against": "the employment-type split (78b672c) must still veto ahead of C1. 1 + 2 is not 1.",
+        "in_scope": true
+      },
+      "reply": "Ili nijue kama SDL inakuhusu, niambie una wafanyakazi wangapi (kizingiti ni wafanyakazi 10).",
+      "reply_changed": null,
+      "judge": {
+        "verdict": "no_reference",
+        "_why": "this corpus row carries no reference field; the reply is recorded for hand reading rather than graded against an expectation I would have had to invent (R38)"
+      },
+      "verdict": "NO_BASELINE_JUDGE_NO_REFERENCE"
+    },
+    {
+      "key": "q::mfanyakazi wangu analipwa kwa samani ya kazi je NSSF ni asilimia ngapi",
+      "id": "ov_07",
+      "file": "eval/refusal_gate/orthographic_variant_in_scope_012.jsonl",
+      "line": 7,
+      "question": "mfanyakazi wangu analipwa kwa samani ya kazi je NSSF ni asilimia ngapi",
+      "question_field": "question",
+      "reference": null,
+      "reference_field": null,
+      "all_references_found": [],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "nssf",
+      "baseline_0e11c3d": null,
+      "route_before": "none",
+      "route_after": "nssf",
+      "also_in_files": [
+        "eval/refusal_gate/orthographic_variant_in_scope_012.jsonl"
+      ],
+      "committed_fields": {
+        "id": "ov_07",
+        "question": "mfanyakazi wangu analipwa kwa samani ya kazi je NSSF ni asilimia ngapi",
+        "question_standard": "mfanyakazi wangu analipwa kwa thamani ya kazi je NSSF ni asilimia ngapi",
+        "subdomain": "nssf_contributions",
+        "expected_refusal": false,
+        "variant_added": true,
+        "standard_refused_today": false,
+        "guards_against": "thamani/samani in an NSSF question."
+      },
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Nina mfanyakazi mmoja tu — je nalipa WCF?",
+      "id": "th_22",
+      "file": "eval/accuracy_gate/threshold_comparison_probes_024.jsonl",
+      "line": 22,
+      "question": "Nina mfanyakazi mmoja tu — je nalipa WCF?",
+      "question_field": "question_sw",
+      "reference": "WCF applies from the first employee; must say yes",
+      "reference_field": "expect",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/threshold_comparison_probes_024.jsonl",
+          "field": "expect",
+          "text": "WCF applies from the first employee; must say yes"
+        }
+      ],
+      "arms": [
+        "DIVERTED"
+      ],
+      "why_population": [
+        "DIVERTED: the sweep measured this row's route CHANGING. By the premise under test, these are the only rows whose answer can have moved."
+      ],
+      "intent_now": "wcf",
+      "baseline_0e11c3d": null,
+      "route_before": "none",
+      "route_after": "wcf",
+      "also_in_files": [
+        "eval/accuracy_gate/threshold_comparison_probes_024.jsonl"
+      ],
+      "reply": "Ndiyo. WCF inatumika kwa waajiri WOTE bila kujali idadi ya wafanyakazi. Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara). Inalipwa na mwajiri pekee. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+      "reply_changed": null,
+      "judge": {
+        "verdict": "undetermined",
+        "tie": false,
+        "votes": {
+          "correct": 2,
+          "undetermined": 3
+        },
+        "n": 5,
+        "justification": "",
+        "providers": [
+          "?",
+          "DeepInfra"
+        ],
+        "pin": 828,
+        "pout": 558,
+        "err_count": 3,
+        "per_call": [
+          "correct",
+          "correct",
+          "undetermined",
+          "undetermined",
+          "undetermined"
+        ]
+      },
+      "verdict": "NO_BASELINE_JUDGE_UNDETERMINED"
+    },
+    {
+      "key": "q::Utaratibu Rahisishwa wa Biashara (STR) wa EAC una zana kuu ngapi na ni zipi?",
+      "id": "eval_223",
+      "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+      "line": 23,
+      "question": "Utaratibu Rahisishwa wa Biashara (STR) wa EAC una zana kuu ngapi na ni zipi?",
+      "question_field": "question_sw",
+      "reference": "STR ina zana kuu nne: Cheti Rahisishwa cha Asili (Simplified Certificate of Origin), Hati Rahisishwa ya Forodha (Simplified Customs Document), Orodha ya Pamoja (Common List), na kizingiti cha thamani cha USD 2,000 kwa mzigo. Thibitisha na Sekretarieti ya EAC.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+          "field": "correct_answer_sw",
+          "text": "STR ina zana kuu nne: Cheti Rahisishwa cha Asili (Simplified Certificate of Origin), Hati Rahisishwa ya Forodha (Simplified Customs Document), Orodha ya Pamoja (Common List), na kizingiti cha thamani cha USD 2,000 kwa mzigo. Thibitisha na Sekretarieti ya EAC."
+        }
+      ],
+      "arms": [
+        "THE_TWELVE"
+      ],
+      "why_population": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=CORPUS"
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Zana kuu za utaratibu rahisi wa biashara (STR) ni: Common List (orodha ya bidhaa ~370), Simplified Certificate of Origin (SCO), Simplified Customs Document (SCD), na One Stop Border Post (OSBP). Thibitisha na EAC/COMESA (eac.int).",
+        "judge": "wrong"
+      },
+      "closability": "CORPUS",
+      "adjudication_0e11c3d": "FALSE_PASS",
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Nina wafanyakazi 60 na nimesajili OSHA — je, pia ninahitaji kumwajiri afisa wa usalama?",
+      "id": "eval_186",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 186,
+      "question": "Nina wafanyakazi 60 na nimesajili OSHA — je, pia ninahitaji kumwajiri afisa wa usalama?",
+      "question_field": "question_sw",
+      "reference": "Kizingiti hasa cha idadi ya wafanyakazi kinachohitaji afisa wa usalama hakijathibitishwa waziwazi. Thibitisha na OSHA (osha.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Kizingiti hasa cha idadi ya wafanyakazi kinachohitaji afisa wa usalama hakijathibitishwa waziwazi. Thibitisha na OSHA (osha.go.tz)."
+        }
+      ],
+      "arms": [
+        "THE_TWELVE"
+      ],
+      "why_population": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=GOLD"
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Ndiyo, kwa mujibu wa sheria, unapaswa kumteua mwakilishi wa usalama na afya kazini (designated safety representative) kutoka kwa wafanyakazi wako. Thibitisha na OSHA (osha.go.tz).",
+        "judge": "wrong"
+      },
+      "closability": "GOLD",
+      "adjudication_0e11c3d": "PARTIAL",
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?",
+      "id": "eval_239",
+      "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+      "line": 39,
+      "question": "Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?",
+      "question_field": "question_sw",
+      "reference": "Ndani ya siku 7 za kazi tangu kugunduliwa kwa ugonjwa. Kwa kifo mahali pa kazi ni ndani ya miezi 12, na dai la fidia ni ndani ya miezi 12. Thibitisha na WCF (wcf.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Ndani ya siku 7 za kazi tangu kugunduliwa kwa ugonjwa. Kwa kifo mahali pa kazi ni ndani ya miezi 12, na dai la fidia ni ndani ya miezi 12. Thibitisha na WCF (wcf.go.tz)."
+        }
+      ],
+      "arms": [
+        "THE_TWELVE"
+      ],
+      "why_population": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=GOLD"
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Kuna hatua mbili za kuripoti ugonjwa wa kazini:\n\nHatua ya 1: Mfanyakazi anaripoti kwa mwajiri ndani ya siku 14 tangu kugunduliwa kwa ugonjwa.\nHatua ya 2: Mwajiri analazimika kuwasilisha taarifa hiyo WCF ndani ya siku 7 tangu kupokea taarifa ya mfanyakazi.\n\nMuda wa siku 14 si lazima uwe umepita kabla ya siku 7 — ni mfululizo wa hatua mbili tofauti. Thibitisha na WCF (wcf.go.tz).",
+        "judge": "wrong"
+      },
+      "closability": "GOLD",
+      "adjudication_0e11c3d": "WRONG_GOLD",
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Mwajiri anahitaji nyaraka gani kuwasilisha NSSF ili kusajilisha wafanyakazi wake?",
+      "id": "eval_104",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 104,
+      "question": "Mwajiri anahitaji nyaraka gani kuwasilisha NSSF ili kusajilisha wafanyakazi wake?",
+      "question_field": "question_sw",
+      "reference": "Unahitaji: fomu ya usajilishaji wa mwajiri; nakala ya certificate ya BRELA; TIN; vitambulisho vya kitaifa vya wafanyakazi wote. Thibitisha orodha kamili na NSSF kwenye nssf.go.tz kabla ya kwenda.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Unahitaji: fomu ya usajilishaji wa mwajiri; nakala ya certificate ya BRELA; TIN; vitambulisho vya kitaifa vya wafanyakazi wote. Thibitisha orodha kamili na NSSF kwenye nssf.go.tz kabla ya kwenda."
+        }
+      ],
+      "arms": [
+        "THE_TWELVE",
+        "PREMISE_CONTROL_MODEL"
+      ],
+      "why_population": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Kusajilisha wafanyakazi na NSSF kunahitaji: hati za utambulisho za wafanyakazi, picha za pasipoti, fomu ya NSSF P9, na nakala ya vitambulisho vya mwajiri. Thibitisha na NSSF (nssf.go.tz).",
+        "judge": "wrong"
+      },
+      "closability": "MODEL",
+      "adjudication_0e11c3d": "FALSE_PASS",
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::'Mgeni' katika GN 487A inamaanisha nani hasa?",
+      "id": "eval_162",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 162,
+      "question": "'Mgeni' katika GN 487A inamaanisha nani hasa?",
+      "question_field": "question_sw",
+      "reference": "Mgeni ni mtu yeyote ambaye si raia wa Tanzania. Hii inajumuisha watu wenye mwenzi wa Kitanzania — ndoa na raia wa Tanzania haibadilishi hadhi ya uraia chini ya amri hii.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Mgeni ni mtu yeyote ambaye si raia wa Tanzania. Hii inajumuisha watu wenye mwenzi wa Kitanzania — ndoa na raia wa Tanzania haibadilishi hadhi ya uraia chini ya amri hii."
+        }
+      ],
+      "arms": [
+        "THE_TWELVE",
+        "PREMISE_CONTROL_MODEL"
+      ],
+      "why_population": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Raia wa Tanzania ni'mgeni' kwa maana ya GN 487A ikiwa amefikia masharti haya: (1) Amepata uraia kupitia ndoa tu (si kwa njia ya kuasiliwa); (2) Ameishi Tanzania kwa miaka 15 au zaidi; (3) Ana pasipoti ya Tanzania yenye hadhi kamili ya uraia. Ikiwa amefikia masharti hayo, bado ana adhabu ya faini ya TZS milioni 5 au kifungo cha miezi 3 kwa kuvunja GN 487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+        "judge": "wrong"
+      },
+      "closability": "MODEL",
+      "adjudication_0e11c3d": "FALSE_PASS",
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Mimi ni mgeni ninayefanya biashara ya rejareja — GN 487A tayari imetangazwa. Nifanye nini sasa?",
+      "id": "eval_171",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 171,
+      "question": "Mimi ni mgeni ninayefanya biashara ya rejareja — GN 487A tayari imetangazwa. Nifanye nini sasa?",
+      "question_field": "question_sw",
+      "reference": "Mgeni anayefanya biashara iliyokatazwa anapaswa kusimamisha shughuli hiyo haraka iwezekanavyo. Kama una leseni iliyotolewa kabla ya GN 487A (kabla ya 28 Julai 2025), unaweza kuendelea hadi leseni hiyo iishe muda wake — lakini renewal haitaruhusiwa. Biashara mpya au zilizosajiliwa baada ya tarehe hiyo lazima zisimame mara moja. Tafuta ushauri wa kisheria haraka.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Mgeni anayefanya biashara iliyokatazwa anapaswa kusimamisha shughuli hiyo haraka iwezekanavyo. Kama una leseni iliyotolewa kabla ya GN 487A (kabla ya 28 Julai 2025), unaweza kuendelea hadi leseni hiyo iishe muda wake — lakini renewal haitaruhusiwa. Biashara mpya au zilizosajiliwa baada ya tarehe hiyo lazima zisimame mara moja. Tafuta ushauri wa kisheria haraka."
+        }
+      ],
+      "arms": [
+        "THE_TWELVE",
+        "PREMISE_CONTROL_MODEL"
+      ],
+      "why_population": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Kwanza, thibitisha na Idara ya Uhamiaji (immigration.go.tz) ili kujua hatua sahihi za kisheria zinazohusiana na hali yako. Pili, hakikisha unabadilisha muundo wa umiliki wa biashara haraka. Unaweza kubadilisha muundo wa umiliki kwa njia mbalimbali, ikiwa ni pamoja na ubia na raia wa Tanzania, kununua biashara hiyo na Mtanzania, au kuanzisha biashara mpya yenye muundo salama. Thibitisha na wakili wa uhamiaji na BRELA (brela.go.tz).",
+        "judge": "wrong"
+      },
+      "closability": "MODEL",
+      "adjudication_0e11c3d": "FALSE_PASS",
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Kodi ya zuio (withholding tax) inatakiwa kuwasilishwa TRA ndani ya muda gani baada ya mwisho wa mwezi?",
+      "id": "eval_237",
+      "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+      "line": 37,
+      "question": "Kodi ya zuio (withholding tax) inatakiwa kuwasilishwa TRA ndani ya muda gani baada ya mwisho wa mwezi?",
+      "question_field": "question_sw",
+      "reference": "Ndani ya siku 7 baada ya mwisho wa mwezi wa kalenda — si tarehe 7 ya mwezi unaofuata, wala si siku 30. Kumbuka PAYE ni tarehe 7 ya mwezi unaofuata; hizi ni tofauti. Thibitisha na TRA.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Ndani ya siku 7 baada ya mwisho wa mwezi wa kalenda — si tarehe 7 ya mwezi unaofuata, wala si siku 30. Kumbuka PAYE ni tarehe 7 ya mwezi unaofuata; hizi ni tofauti. Thibitisha na TRA."
+        }
+      ],
+      "arms": [
+        "THE_TWELVE",
+        "PREMISE_CONTROL_MODEL"
+      ],
+      "why_population": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Kodi ya zuio inatakiwa kuwasilishwa ndani ya siku 7 baada ya mwisho wa mwezi unaofuata. Thibitisha na tra.go.tz.",
+        "judge": "wrong"
+      },
+      "closability": "MODEL",
+      "adjudication_0e11c3d": "FALSE_PASS",
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?",
+      "id": "eval_304",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "line": 54,
+      "question": "Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?",
+      "question_field": "question_sw",
+      "reference": "Uchaguzi kati ya kampuni (company) na jina la biashara (business name) hautegemei idadi ya wafanyakazi wala mtaji, bali muundo wa kisheria unaotaka. Idadi 20 na mtaji TZS 50,000,000 hazihusiki. Thibitisha na BRELA (brela.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Uchaguzi kati ya kampuni (company) na jina la biashara (business name) hautegemei idadi ya wafanyakazi wala mtaji, bali muundo wa kisheria unaotaka. Idadi 20 na mtaji TZS 50,000,000 hazihusiki. Thibitisha na BRELA (brela.go.tz)."
+        }
+      ],
+      "arms": [
+        "THE_TWELVE",
+        "PREMISE_CONTROL_MODEL"
+      ],
+      "why_population": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Kulingana na sheria, unapaswa kusajili JINA LA BIASHARA (Business Name) ikiwa una wafanyakazi 20 au chini yao, na mtaji hadi TZS 100,000,000. Ikiwa mtaji wako unazidi TZS 100,000,000, basi unaweza kusajili KAMPUNI (Company Limited by Shares). Thibitisha na BRELA Official (brela.go.tz).",
+        "judge": "wrong"
+      },
+      "closability": "MODEL",
+      "adjudication_0e11c3d": "FALSE_PASS",
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::VAT withholding kwa huduma ni asilimia 18 kama kiwango cha kawaida, sivyo?",
+      "id": "eval_338",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "line": 88,
+      "question": "VAT withholding kwa huduma ni asilimia 18 kama kiwango cha kawaida, sivyo?",
+      "question_field": "question_sw",
+      "reference": "Hapana. Asilimia 18 ni kiwango cha kawaida cha VAT. VAT withholding ni asilimia 6 kwa huduma na asilimia 3 kwa bidhaa (tangu 1 Julai 2025). Thibitisha na TRA (tra.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Hapana. Asilimia 18 ni kiwango cha kawaida cha VAT. VAT withholding ni asilimia 6 kwa huduma na asilimia 3 kwa bidhaa (tangu 1 Julai 2025). Thibitisha na TRA (tra.go.tz)."
+        }
+      ],
+      "arms": [
+        "THE_TWELVE",
+        "PREMISE_CONTROL_MODEL"
+      ],
+      "why_population": [
+        "THE_TWELVE: one of the 12 confirmed defects of 0e11c3d; closability=MODEL",
+        "PREMISE_CONTROL_MODEL: route unchanged and nothing shipped this cycle reaches it, so the reply must be UNCHANGED. A change falsifies 'unchanged route means unchanged answer' and justifies the full gate immediately."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Hapana. Kiwango cha VAT kwa huduma ni asilimia 18 kama kiwango cha kawaida pia. Hakuna kiwango cha kati cha 8% au 10% kwa huduma. Bidhaa na huduma zinatozwa 18% kwa wateja wengi. Thibitisha na TRA (tra.go.tz).",
+        "judge": "wrong"
+      },
+      "closability": "MODEL",
+      "adjudication_0e11c3d": "FALSE_PASS",
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?",
+      "id": "eval_099",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 99,
+      "question": "Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?",
+      "question_field": "question_sw",
+      "reference": "Hapana. Sehemu ya mwajiri (asilimia 10) inalipwa na mwajiri kutoka pesa zake mwenyewe — si kukatwa mshahara wa mfanyakazi. Sehemu inayokatwa mshahara wa mfanyakazi ni asilimia 10 yake mwenyewe. Jumla inayopelekwa NSSF ni asilimia 20, lakini asilimia 10 tu inakatwa mshahara wa mfanyakazi.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Hapana. Sehemu ya mwajiri (asilimia 10) inalipwa na mwajiri kutoka pesa zake mwenyewe — si kukatwa mshahara wa mfanyakazi. Sehemu inayokatwa mshahara wa mfanyakazi ni asilimia 10 yake mwenyewe. Jumla inayopelekwa NSSF ni asilimia 20, lakini asilimia 10 tu inakatwa mshahara wa mfanyakazi."
+        }
+      ],
+      "arms": [
+        "PREMISE_CONTROL_INDEX"
+      ],
+      "why_population": [
+        "PREMISE_CONTROL_INDEX: asks whether the employer's 10% is DEDUCTED from the wage — row 9's ambiguity verbatim, and the single best test of whether the rewording moved anything. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Hapana. Mchango wa mwajiri (asilimia 10) unalipwa na MWAJIRI peke yake — si kukatwa kwenye mshahara wa mfanyakazi. Ni gharama ya ziada ya mwajiri juu ya mshahara wa msingi. Thibitisha na NSSF (nssf.go.tz).",
+        "judge": "correct"
+      },
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+      "id": "eval_348",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "line": 98,
+      "question": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+      "question_field": "question_sw",
+      "reference": "Hapana. Jumla ni asilimia 20 daima, lakini kuna migawanyo mitatu halali: 10% mwajiri + 10% mfanyakazi, au 15% + 5%, au 20% + 0%. Thibitisha na NSSF (nssf.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Hapana. Jumla ni asilimia 20 daima, lakini kuna migawanyo mitatu halali: 10% mwajiri + 10% mfanyakazi, au 15% + 5%, au 20% + 0%. Thibitisha na NSSF (nssf.go.tz)."
+        }
+      ],
+      "arms": [
+        "PREMISE_CONTROL_INDEX"
+      ],
+      "why_population": [
+        "PREMISE_CONTROL_INDEX: asks about the 10/10 split itself. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": false,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10% baina ya mwajiri na mfanyakazi. Hakuna mgawanyo mwingine uliopo. Thibitisha na NSSF (nssf.go.tz).",
+        "judge": "wrong"
+      },
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "id": "eval_337",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "line": 87,
+      "question": "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
+      "question_field": "question_sw",
+      "reference": "Hakuna. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi). Asilimia 3.5 ni SDL na 0.5 ni WCF. Thibitisha na NSSF (nssf.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Hakuna. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi). Asilimia 3.5 ni SDL na 0.5 ni WCF. Thibitisha na NSSF (nssf.go.tz)."
+        }
+      ],
+      "arms": [
+        "PREMISE_CONTROL_INDEX"
+      ],
+      "why_population": [
+        "PREMISE_CONTROL_INDEX: a cross-levy confusion on the NSSF rate (3.5 or 0.5), so it competes with the rows the rewording touched. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": false,
+        "clarified": false,
+        "reply": "Kiwango sahihi ni asilimia 10. Hakuna kiwango cha asilimia 3.5 wala asilimia 0.5 katika historia ya NSSF Tanzania. Thibitisha na NSSF (nssf.go.tz).",
+        "judge": "wrong"
+      },
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Nina mfanyakazi mmoja tu wa kwanza, je NSSF ni lazima au nasubiri niwe na wengi?",
+      "id": "eval_365",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "line": 115,
+      "question": "Nina mfanyakazi mmoja tu wa kwanza, je NSSF ni lazima au nasubiri niwe na wengi?",
+      "question_field": "question_sw",
+      "reference": "Ni lazima sasa. NSSF haina kizingiti cha idadi — inaanza kutoka mfanyakazi wa kwanza. Thibitisha na NSSF (nssf.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Ni lazima sasa. NSSF haina kizingiti cha idadi — inaanza kutoka mfanyakazi wa kwanza. Thibitisha na NSSF (nssf.go.tz)."
+        }
+      ],
+      "arms": [
+        "PREMISE_CONTROL_INDEX"
+      ],
+      "why_population": [
+        "PREMISE_CONTROL_INDEX: one first employee, is NSSF mandatory — eval_394's subject on an UNCHANGED route. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": false,
+        "reliable": false,
+        "clarified": false,
+        "reply": "NSSF ni lazima kwa wafanyakazi wote, bila kujali idadi. Hata kama una mfanyakazi mmoja, NSSF ni lazima. Thibitisha na nssf.go.tz.",
+        "judge": "correct"
+      },
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Michango ya NSSF inatakiwa kufikishwa NSSF ndani ya muda gani baada ya kulipa mishahara?",
+      "id": "eval_234",
+      "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+      "line": 34,
+      "question": "Michango ya NSSF inatakiwa kufikishwa NSSF ndani ya muda gani baada ya kulipa mishahara?",
+      "question_field": "question_sw",
+      "reference": "Ndani ya mwezi mmoja baada ya kulipa mishahara — kwa vitendo ifikapo siku ya 10 ya mwezi unaofuata. Kumbuka siku ya 20 ni ya VAT return, si NSSF. Thibitisha na NSSF (nssf.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Ndani ya mwezi mmoja baada ya kulipa mishahara — kwa vitendo ifikapo siku ya 10 ya mwezi unaofuata. Kumbuka siku ya 20 ni ya VAT return, si NSSF. Thibitisha na NSSF (nssf.go.tz)."
+        }
+      ],
+      "arms": [
+        "PREMISE_CONTROL_INDEX"
+      ],
+      "why_population": [
+        "PREMISE_CONTROL_INDEX: the NSSF remittance window, row 63's neighbourhood rather than row 9's. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Michango ya NSSF inatakiwa kuwasilishwa ndani ya mwezi mmoja (within one month) baada ya mwisho wa mwezi husika. Thibitisha na NSSF (nssf.go.tz).",
+        "judge": "correct"
+      },
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    },
+    {
+      "key": "q::Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?",
+      "id": "eval_089",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 89,
+      "question": "Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?",
+      "question_field": "question_sw",
+      "reference": "Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata. Thibitisha tarehe sahihi na nssf.go.tz.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata. Thibitisha tarehe sahihi na nssf.go.tz."
+        }
+      ],
+      "arms": [
+        "PREMISE_CONTROL_INDEX"
+      ],
+      "why_population": [
+        "PREMISE_CONTROL_INDEX: the NSSF deadline, a plain NSSF row with no connection to the rewording — the quiet control inside the control arm. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": false,
+        "clarified": false,
+        "reply": "Kuna tofauti muhimu sana kati ya tarehe za NSSF na SDL:\n\nNSSF: malipo yanawasilishwa ndani ya mwezi MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz.\nSDL: malipo yanawasilishwa ifikapo tarehe 7 ya mwezi unaofuata — si mwezi mmoja baadaye.\n\nHizi ni tarehe tofauti kabisa. Thibitisha na NSSF (nssf.go.tz) na TRA (tra.go.tz).",
+        "judge": "wrong"
+      },
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
+    }
+  ]
+}

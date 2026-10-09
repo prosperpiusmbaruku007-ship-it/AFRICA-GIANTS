@@ -344,8 +344,22 @@ def _resume():
 
 
 def classify(rec):
-    """Per-row verdict. Deliberately distinguishes a REGRESSION from a row that was already
-    wrong, and never treats a stale committed expectation as either."""
+    """Per-row verdict — JUDGE-TO-JUDGE, with the regex comparison recorded beside it.
+
+    ⛔ MY FIRST VERSION COMPARED THE *REGEX* BASELINE TO THE *JUDGE'S* VERDICT NOW, AND IT
+    MISLABELLED BOTH ROWS THAT MOVED. It called `eval_394` a REGRESSION_CANDIDATE (regex passed
+    at 0e11c3d, judge says wrong now) when **the judge said wrong at 0e11c3d too** — it held, it
+    did not regress. And it called `eval_364` IMPROVED (regex failed, judge says correct now)
+    when the judge had already said correct — the regex is simply unreliable on that row
+    (`yes_no_ground_truth_ambiguous`). Comparing one instrument's verdict to another's across
+    time measures the gap between the instruments, not the effect of the change: R22's shape
+    arriving in a classifier.
+
+    The baseline artifact carries a `judge` verdict for 361 of its 400 rows, so the
+    apples-to-apples comparison was available the whole time and I reached for the regex field
+    because it was the one I had been thinking about. The regex column is kept — it is how the
+    gate will score these rows and it is worth seeing — but it is not the verdict.
+    """
     b = rec.get("baseline_0e11c3d")
     jv = (rec.get("judge") or {}).get("verdict")
     if rec.get("error"):
@@ -360,18 +374,21 @@ def classify(rec):
         if b is None:
             return "NO_BASELINE"
         return "CONTROL_MOVED" if rec["reply_changed"] else "CONTROL_HELD"
-    if b is None:
+    if b is None or b.get("judge") is None:
         return "NO_BASELINE_JUDGE_" + str(jv).upper()
-    if b["pass"] and jv == "wrong":
-        return "REGRESSION_CANDIDATE"
-    if not b["pass"] and jv == "correct":
-        return "IMPROVED"
-    return "HELD_" + str(jv).upper()
+    bj = b["judge"]
+    if bj == jv:
+        return "JUDGE_HELD_" + str(jv).upper()
+    if bj != "correct" and jv == "correct":
+        return "JUDGE_FIXED"
+    if bj == "correct" and jv != "correct":
+        return "JUDGE_REGRESSED"
+    return "JUDGE_MOVED_" + str(bj).upper() + "_TO_" + str(jv).upper()
 
 
 def save(rows, h, population):
     moved_controls = [r["id"] for r in rows if r.get("verdict") == "CONTROL_MOVED"]
-    regressions = [r["id"] for r in rows if r.get("verdict") == "REGRESSION_CANDIDATE"]
+    regressions = [r["id"] for r in rows if r.get("verdict") == "JUDGE_REGRESSED"]
     done = [r for r in rows if r.get("reply")]
     payload = {
         "_what": "targeted live verification of the statement route, in place of a full gate",
@@ -411,6 +428,23 @@ def save(rows, h, population):
                              "justified and the blast radius is NOT bounded by the sweep"),
         },
         "regression_candidates": regressions,
+        "judge_to_judge": {
+            "_what": ("the apples-to-apples comparison: the 0e11c3d artifact's own judge verdict "
+                      "against this run's, per row. A regex-vs-judge comparison measures the gap "
+                      "between two instruments rather than the effect of the change, and it "
+                      "mislabelled both rows that moved when this harness first ran."),
+            "fixed": [r["id"] for r in rows if r.get("verdict") == "JUDGE_FIXED"],
+            "regressed": regressions,
+            "held": {v: [r["id"] for r in rows if r.get("verdict") == v]
+                     for v in sorted({str(r.get("verdict")) for r in rows
+                                      if str(r.get("verdict")).startswith("JUDGE_HELD_")})},
+            "moved_between_other_states": [
+                {"id": r["id"], "verdict": r["verdict"]} for r in rows
+                if str(r.get("verdict")).startswith("JUDGE_MOVED_")],
+            "regex_credited_a_row_the_judge_calls_wrong": [
+                r["id"] for r in rows if r.get("regex_baseline_pass") is True
+                and (r.get("judge") or {}).get("verdict") == "wrong"],
+        },
         "rows": rows,
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
@@ -459,11 +493,20 @@ def main():
     out = []
     for rec in rows:
         if rec["key"] in done:
+            # ⛔ RESTORE THE MEASUREMENTS, RE-DERIVE THE VERDICT. My first version copied the
+            # stored `verdict` across as well, which freezes the OLD classifier's judgement on
+            # every resumed row — so correcting the classifier (and it needed correcting) could
+            # never relabel anything, and a re-run would reprint the same wrong labels just as
+            # confidently. A resume may carry DATA forward; it must never carry a CONCLUSION
+            # forward. R39's direction again: that failure is silent and reassuring.
             prev = done[rec["key"]]
-            rec.update({k: prev[k] for k in ("reply", "judge", "reply_changed", "verdict",
-                                             "error") if k in prev})
+            rec.update({k: prev[k] for k in ("reply", "judge", "reply_changed",
+                                             "regex_baseline_pass", "error") if k in prev})
+            rec["verdict"] = classify(rec)
+            rec["_resumed"] = True
             out.append(rec)
             save(out, h, pop)
+            print(f"[{rec['verdict']:24s}] {str(rec['id']):14s} (resumed, re-classified)")
             continue
         try:
             reply = str(ask(rec["question"], tok).get("reply") or "")
@@ -471,6 +514,9 @@ def main():
             b = rec.get("baseline_0e11c3d")
             rec["reply_changed"] = (None if b is None
                                     else _norm(reply) != _norm(b["reply"]))
+            # The regex baseline, recorded as a COLUMN rather than used as the verdict.
+            if b is not None:
+                rec["regex_baseline_pass"] = b["pass"]
             if rec.get("reference"):
                 rec["judge"] = chike_judge.judge_majority(
                     rec["question"], rec["reference"], reply, api_key=or_key)
