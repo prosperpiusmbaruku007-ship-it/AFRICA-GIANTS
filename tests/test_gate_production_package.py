@@ -546,3 +546,13 @@ def test_the_unexercisable_parts_are_declared_in_the_package():
         assert needle in src, (
             f"{needle!r} is gone — the package no longer distinguishes 'asked production and "
             f"it matched' from 'could not ask', and those are different claims")
+    # ⛔ AND THE FOURTH THING, ADDED AFTER IT COST A RUN: this file being green says nothing
+    # about whether the script will START. It died at second 13 on a module-level
+    # sys.stdout.reconfigure in a module it loads, while two tests here were loading that
+    # same module happily — under pytest sys.stdout HAS reconfigure, so the failure mode is
+    # unreachable locally. The package must keep pointing at the static check that can see it.
+    assert "check_kaggle_import_safety" in src, (
+        "the package no longer names the static import-safety check. That check is the only "
+        "thing in the repo that can see the class which killed this script at import, and no "
+        "test in this file can substitute for it")
+    assert os.path.isfile(os.path.join(REPO, "scripts", "check_kaggle_import_safety.py"))

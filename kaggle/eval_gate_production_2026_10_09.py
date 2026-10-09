@@ -136,6 +136,22 @@ WHAT I EXPECT, with each term's direction and size, and the honest width of the 
     Secrets: AFRICA_GIANTS (HF token), OPENROUTER_API_KEY (judge overlay — MANDATORY)
     Runtime: ~400 generations ~= 50-75 min, plus ~15 min judge.
 
+⛔ AND ONE CLASS OF FAILURE THIS FILE'S PRE-FLIGHT CANNOT REACH, BECAUSE IT HAPPENS BEFORE
+THE PRE-FLIGHT EXISTS. On 2026-10-09 this script died at SECOND 13 — not in a gate, but at
+IMPORT, on a module-level `sys.stdout.reconfigure()` inside the polarity module it loads.
+That method exists on a real `TextIOWrapper` and NOT on Jupyter's `ipykernel.iostream.
+OutStream`. **The 23 offline tests were green, including two that load that very module**,
+because under pytest `sys.stdout` is a TextIOWrapper and the failure mode cannot occur
+locally. A green suite is not evidence that this script will START.
+
+The check for that class is necessarily STATIC and lives outside this file:
+`scripts/check_kaggle_import_safety.py` + `tests/test_kaggle_import_safety.py` re-derive the
+transitive closure of every module the kaggle/ scripts import — including through
+`spec_from_file_location`, which is the edge this one arrived on — and fail on any unguarded
+module-level reconfigure or chdir. It is the second instance of the identical defect
+(scripts/check_correction_sync.py cost a whole RAG regen on 2026-09-24), and the first fix's
+one-time sweep could not protect a file written fifteen days later.
+
 PER-ROW FLUSH AND RESUME. The artifact is written after EVERY row and the run resumes from it,
 so a codec fault, a dropped TCP connection or a reclaimed Kaggle session costs one row and
 never the run. Four separate incidents with no shared mechanism established that enumerating

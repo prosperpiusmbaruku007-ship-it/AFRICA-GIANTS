@@ -55,12 +55,55 @@ import os
 import re
 import sys
 
-sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-os.chdir(REPO)
 
 ARTIFACT = "eval/results/superseded_values_in_built_index.json"
+
+
+def _safe_stdout_utf8():
+    """Make stdout UTF-8-tolerant WHERE THAT IS POSSIBLE, and never raise where it is not.
+
+    ⛔ CALLED ONLY FROM main(). IT USED TO RUN AT MODULE LEVEL, AND THAT KILLED THE FULL
+    PRODUCTION GATE AT SECOND 13 ON 2026-10-09 — before the GPU, before the HF download,
+    before a single pre-flight check. `sys.stdout.reconfigure` exists on a real
+    `TextIOWrapper` but NOT on Jupyter's `ipykernel.iostream.OutStream`, so importing this
+    module inside a notebook kernel raised AttributeError at import time.
+
+    THIS IS THE SECOND INSTANCE OF THE IDENTICAL DEFECT. The first was
+    scripts/check_correction_sync.py on 2026-09-24, which cost a whole RAG regen after every
+    blocking check had passed. That fix was correct and it included a sweep of "the other two
+    modules the regen imports in-process" — a ONE-TIME act over a TWO-MODULE population,
+    which could not protect this file because this file did not exist yet. The remembered-rule
+    failure, again.
+
+    So the durable half is NOT this function. It is
+    scripts/check_kaggle_import_safety.py + tests/test_kaggle_import_safety.py, which re-derive
+    the transitive closure of every module the kaggle/ scripts import — including through
+    `spec_from_file_location`, which is the edge this one arrived on — and fail on any
+    unguarded module-level reconfigure. The population is computed every run, so a module
+    written next month is audited without anyone remembering to add it.
+
+    ⚠️ AND NO LOCAL TEST COULD HAVE CAUGHT THIS. Under pytest `sys.stdout` is a TextIOWrapper
+    (or pytest's CaptureIO, which subclasses it) and therefore HAS `reconfigure`. The gate
+    package's 23 offline tests included two that LOAD this module and run its self-test, and
+    they passed. Local green says nothing whatever about Jupyter's stream objects; the only
+    reachable check for this class is static.
+
+    The second defect was in the same two lines and is the general one: A LIBRARY MUST NOT
+    MUTATE ITS CALLER'S GLOBAL STATE AT IMPORT. `os.chdir(REPO)` sat on the next line, and
+    importing this module silently relocated the notebook's working directory. It is now in
+    `main()` alongside this call — moved, NOT removed, and the attempt to remove it is worth
+    recording: it is LOAD-BEARING. `scripts/precompute_rag_embeddings.py` holds
+    `FACTS_PATH = 'scripts/locked_facts.json'` as a RELATIVE path, so `build_fact_texts()`
+    raises FileNotFoundError from any other cwd. The first fix made this file's own artifact
+    path absolute and declared the chdir unnecessary; running the sweep from `C:\\` disproved
+    that in one line. The distinction that matters is not chdir-vs-no-chdir, it is IMPORT TIME
+    vs CALL TIME: a script's main() may set up its own world, a library's import may not.
+    """
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:                                                    # noqa: BLE001
+        pass
 
 # Lifted VERBATIM from kaggle/regenerate_rag_e5.py's payload gate. If these two ever disagree,
 # this sweep and the gate that aborts the regen are measuring different things.
@@ -302,6 +345,12 @@ def _self_test():
 
 
 def main():
+    _safe_stdout_utf8()
+    # At CALL time, not import time. Needed because precompute_rag_embeddings.FACTS_PATH is
+    # relative ('scripts/locked_facts.json'), so build_fact_texts() below only works from the
+    # repo root. See _safe_stdout_utf8's docstring: removing this looked right and broke the
+    # standalone run.
+    os.chdir(REPO)
     specimens = _self_test()
     precompute = _load_precompute()
     texts, keys, _dropped = precompute.build_fact_texts()
@@ -437,7 +486,10 @@ def main():
             "SERVED CONTENT, so it needs the displacement harness, not an edit."),
         "planted_specimens": specimens,
     }
-    os.makedirs(os.path.dirname(ARTIFACT), exist_ok=True)
+    # Absolute, because the module-level `os.chdir(REPO)` that used to make this work is gone:
+    # a library may not relocate its caller's working directory at import. This was the only
+    # cwd-dependent path in the file; every other one already joined REPO.
+    os.makedirs(os.path.join(REPO, os.path.dirname(ARTIFACT)), exist_ok=True)
     with io.open(os.path.join(REPO, ARTIFACT), "w", encoding="utf-8", newline="\n") as fh:
         json.dump(out, fh, ensure_ascii=False, indent=2)
 
