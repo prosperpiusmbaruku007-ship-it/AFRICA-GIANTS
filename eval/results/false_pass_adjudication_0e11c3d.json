@@ -1,0 +1,350 @@
+{
+ "_what": "the 17 reliable=True rows where the regex scorer passed and the judge said wrong, adjudicated one by one against question, gold and reply",
+ "_population": "regex pass AND judge 'wrong' AND reliable=True, in-corpus. NOT the 19 further candidates on reliable=False rows, and NOT the opposite direction (regex fail + judge correct), which would move A2 UP and is a separate job.",
+ "gate": "gate_production_0e11c3d.json",
+ "gate_commit": "0e11c3d",
+ "tally": {
+  "FALSE_PASS": 12,
+  "PARTIAL": 4,
+  "FALSE_ALARM": 1,
+  "total": 17
+ },
+ "judge_right_or_defensible": 16,
+ "defect_classes": [
+  "advises_the_prohibited_act",
+  "confident_answer_where_gold_is_a_hedge",
+  "contradictory_values_offered_plus_omission",
+  "correct_answer_plus_a_new_adjacent_error",
+  "cross_levy_threshold_bleed",
+  "definition_inverted_with_fabricated_criteria",
+  "fabricated_process_structure",
+  "fabricated_threshold_rule",
+  "half_of_a_two_part_question",
+  "one_word_date_shift",
+  "operation_inverted",
+  "party_inversion",
+  "penalty_misattributed",
+  "refuses_then_confirms_the_false_premise",
+  "wrong_instrument_named",
+  "wrong_member_of_a_closed_set"
+ ],
+ "impact_on_bar_a": {
+  "ALL_400": {
+   "as_published": {
+    "right": 316,
+    "n": 384,
+    "rate": 0.8229166666666666
+   },
+   "confirmed_removed": {
+    "right": 304,
+    "n": 384,
+    "rate": 0.7916666666666666
+   },
+   "confirmed_and_partial_removed": {
+    "right": 300,
+    "n": 384,
+    "rate": 0.78125
+   }
+  },
+  "fact_path_190": {
+   "as_published": {
+    "right": 156,
+    "n": 183,
+    "rate": 0.8524590163934426
+   },
+   "confirmed_removed": {
+    "right": 150,
+    "n": 183,
+    "rate": 0.819672131147541
+   },
+   "confirmed_and_partial_removed": {
+    "right": 149,
+    "n": 183,
+    "rate": 0.8142076502732241
+   }
+  }
+ },
+ "_the_gate_1_conclusion": "fact_path_190 was published at 85.2% raw, above R7's 85%. Removing only the CONFIRMED false passes puts it at 82.0%; including the partials, 81.4%. BOTH ARE BELOW 85%. No bucket of this run clears Gate 1 once the false passes are removed, and 85.2% must not be quoted as a Gate 1 result.",
+ "rows": [
+  {
+   "id": "eval_086",
+   "verdict": "FALSE_PASS",
+   "defect": "party_inversion",
+   "why": "The RATE is right and the PARTY is inverted. Gold: 10% is the employer's own contribution and 'haikatwi kutoka mshahara wa mfanyakazi' (is NOT deducted from the employee's salary). The reply says exactly the opposite — 'Kiasi kinachokatwa na mwajiri KWENYE MSHAHARA wa mfanyakazi ... ni asilimia 10'. The regex scorer matched `asilimia 10` and passed. An employer following this deducts 10% from wages unlawfully, on top of the employee's own 10%. This is D-NSSF-1's party-resolution defect, live, on a reliable row.",
+   "subdomain": "nssf_contributions",
+   "answer_type": "number",
+   "source": "gate_001",
+   "in_fact_path": true,
+   "judge_votes": {
+    "wrong": 5
+   },
+   "question_sw": "Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?",
+   "gold_sw": "Asilimia 10 ya mshahara wa jumla (gross salary) wa mfanyakazi. Mwajiri analipa sehemu hii kutoka pesa zake mwenyewe — haikatwi kutoka mshahara wa mfanyakazi. Thibitisha kiwango cha sasa na NSSF kwenye nssf.go.tz.",
+   "generated": "Kiasi kinachokatwa na mwajiri kwenye mshahara wa mfanyakazi kwa ajili ya NSSF ni asilimia 10. Thibitisha na NSSF (nssf.go.tz)."
+  },
+  {
+   "id": "eval_104",
+   "verdict": "FALSE_PASS",
+   "defect": "wrong_instrument_named",
+   "why": "Names 'fomu ya NSSF P9' as an NSSF registration document. The P9 is a PAYE annual tax-deduction card, not an NSSF form. It also omits two of the four items the gold requires (TIN, BRELA certificate) while adding unsourced 'picha za pasipoti'. A procedure answer naming the wrong form is not a pass.",
+   "subdomain": "nssf_contributions",
+   "answer_type": "procedure",
+   "source": "gate_001",
+   "in_fact_path": true,
+   "judge_votes": {
+    "wrong": 4,
+    "undetermined": 1
+   },
+   "question_sw": "Mwajiri anahitaji nyaraka gani kuwasilisha NSSF ili kusajilisha wafanyakazi wake?",
+   "gold_sw": "Unahitaji: fomu ya usajilishaji wa mwajiri; nakala ya certificate ya BRELA; TIN; vitambulisho vya kitaifa vya wafanyakazi wote. Thibitisha orodha kamili na NSSF kwenye nssf.go.tz kabla ya kwenda.",
+   "generated": "Kusajilisha wafanyakazi na NSSF kunahitaji: hati za utambulisho za wafanyakazi, picha za pasipoti, fomu ya NSSF P9, na nakala ya vitambulisho vya mwajiri. Thibitisha na NSSF (nssf.go.tz)."
+  },
+  {
+   "id": "eval_130",
+   "verdict": "FALSE_PASS",
+   "defect": "operation_inverted",
+   "why": "'kuchukua jumla ya mishahara ... na KUIGAWANYA kwa 3.5%' — DIVIDE by 3.5%, where the gold multiplies. On the gold's own example that is 10,000,000 / 0.035 = 285,714,286 instead of 350,000. The rate is correct and the operation is inverted, so every magnitude-based check passes. No D-FIDELITY rule can see this: it describes a METHOD and computes no amount (R19's derived-quantity boundary, from the other side).",
+   "subdomain": "sdl_compliance",
+   "answer_type": "procedure",
+   "source": "gate_001",
+   "in_fact_path": true,
+   "judge_votes": {
+    "wrong": 5
+   },
+   "question_sw": "Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?",
+   "gold_sw": "Zidisha jumla ya mishahara ya jumla (gross wages) ya wafanyakazi wote kwa asilimia 3.5. Mfano: jumla ya mishahara ya wafanyakazi wote ni TZS milioni 10 — SDL = 3.5% × 10,000,000 = TZS 350,000. Thibitisha hesabu yako na mshauri wa kodi au TRA.",
+   "generated": "Kiasi cha SDL kinahesabiwa kwa kuchukua jumla ya mishahara ya fedha (gross cash wages) ya wafanyakazi wote na kuigawanya kwa 3.5%. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_145",
+   "verdict": "PARTIAL",
+   "defect": "penalty_misattributed",
+   "why": "The verdict is right ('Hapana') and the prohibition is correctly identified as facilitation. But it states 'faini ya TZS milioni 10 AU kifungo cha miezi 6' without saying whose, then says the friend faces 'adhabu tofauti' and never names them — and the friend's TZS 5M / 3 months IS the gold's point. Defensible both ways: 10M/6mo is correct for the ASKER, who is the non-citizen. Weakest of the seven.",
+   "subdomain": "gn487a",
+   "answer_type": "yes_no",
+   "source": "gate_001",
+   "in_fact_path": true,
+   "judge_votes": {
+    "wrong": 4,
+    "undetermined": 1
+   },
+   "question_sw": "Naweza kumwomba rafiki yangu Mtanzania asajili biashara kwa jina lake, niendelee mimi kuendeshea — inafanya kazi?",
+   "gold_sw": "Hapana. Mgeni hawezi kuendesha biashara iliyokatazwa kwa kutumia jina la Mtanzania. Mtanzania huyo atapata adhabu kama msaidizi: faini ya TZS milioni 5 au kifungo cha miezi 3.",
+   "generated": "Hapana — hii ni 'kuwezesha' au 'kuwasilisha' (facilitating) ambayo imezuiliwa wazi na GN487A. Ni kosa la jinai. Adhabu: faini ya TZS milioni 10 AU kifungo cha miezi 6, pamoja na kufutwa kwa visa. Rafiki yako anakuwa'mtoa huduma' na anakabiliwa na adhabu tofauti. Thibitisha na wakili wa uhamiaji."
+  },
+  {
+   "id": "eval_162",
+   "verdict": "FALSE_PASS",
+   "defect": "definition_inverted_with_fabricated_criteria",
+   "why": "Flagrant. Gold: 'mgeni' is anyone who is not a Tanzanian citizen, and marriage to a citizen does not change status. The reply inverts it — a Tanzanian CITIZEN is a 'mgeni' if they meet three invented numbered criteria (citizenship by marriage only, 15+ years' residence, a full-status passport). None exists. This is the 'mgeni definition inverted' defect the v9 root-cause analysis recorded, still live, now with fabricated structure attached.",
+   "subdomain": "gn487a",
+   "answer_type": "definition",
+   "source": "gate_001",
+   "in_fact_path": true,
+   "judge_votes": {
+    "wrong": 5
+   },
+   "question_sw": "'Mgeni' katika GN 487A inamaanisha nani hasa?",
+   "gold_sw": "Mgeni ni mtu yeyote ambaye si raia wa Tanzania. Hii inajumuisha watu wenye mwenzi wa Kitanzania — ndoa na raia wa Tanzania haibadilishi hadhi ya uraia chini ya amri hii.",
+   "generated": "Raia wa Tanzania ni'mgeni' kwa maana ya GN 487A ikiwa amefikia masharti haya: (1) Amepata uraia kupitia ndoa tu (si kwa njia ya kuasiliwa); (2) Ameishi Tanzania kwa miaka 15 au zaidi; (3) Ana pasipoti ya Tanzania yenye hadhi kamili ya uraia. Ikiwa amefikia masharti hayo, bado ana adhabu ya faini ya TZS milioni 5 au kifungo cha miezi 3 kwa kuvunja GN 487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz)."
+  },
+  {
+   "id": "eval_171",
+   "verdict": "FALSE_PASS",
+   "defect": "advises_the_prohibited_act",
+   "why": "THE MOST HARMFUL OF THE SEVEN. Asked what to do now, it advises changing the ownership structure — 'ubia na raia wa Tanzania, kununua biashara hiyo na Mtanzania' — which is the facilitation GN487A criminalises, and the very thing eval_145 asks about. It never says to stop the activity, and omits the pre-28-Jul-2025 licence run-off that is the gold's actual relief. Counsels a workaround carrying TZS 10M + 6 months for the asker and 5M + 3 months for the Tanzanian.",
+   "subdomain": "gn487a",
+   "answer_type": "procedure",
+   "source": "gate_001",
+   "in_fact_path": true,
+   "judge_votes": {
+    "wrong": 5
+   },
+   "question_sw": "Mimi ni mgeni ninayefanya biashara ya rejareja — GN 487A tayari imetangazwa. Nifanye nini sasa?",
+   "gold_sw": "Mgeni anayefanya biashara iliyokatazwa anapaswa kusimamisha shughuli hiyo haraka iwezekanavyo. Kama una leseni iliyotolewa kabla ya GN 487A (kabla ya 28 Julai 2025), unaweza kuendelea hadi leseni hiyo iishe muda wake — lakini renewal haitaruhusiwa. Biashara mpya au zilizosajiliwa baada ya tarehe hiyo lazima zisimame mara moja. Tafuta ushauri wa kisheria haraka.",
+   "generated": "Kwanza, thibitisha na Idara ya Uhamiaji (immigration.go.tz) ili kujua hatua sahihi za kisheria zinazohusiana na hali yako. Pili, hakikisha unabadilisha muundo wa umiliki wa biashara haraka. Unaweza kubadilisha muundo wa umiliki kwa njia mbalimbali, ikiwa ni pamoja na ubia na raia wa Tanzania, kununua biashara hiyo na Mtanzania, au kuanzisha biashara mpya yenye muundo salama. Thibitisha na wakili wa uhamiaji na BRELA (brela.go.tz)."
+  },
+  {
+   "id": "eval_186",
+   "verdict": "FALSE_PASS",
+   "defect": "confident_answer_where_gold_is_a_hedge",
+   "why": "The gold says the threshold 'hakijathibitishwa waziwazi' — we do not know it. The reply asserts 'Ndiyo, kwa mujibu wa sheria' and conflates a safety OFFICER with a designated safety REPRESENTATIVE, which is a different obligation. Where the gold is an admitted gap, a confident assertion cannot be scored correct — and this is the uncited-gold family arriving as a model defect rather than a key one.",
+   "subdomain": "osha_registration",
+   "answer_type": "procedure",
+   "source": "gate_001",
+   "in_fact_path": true,
+   "judge_votes": {
+    "wrong": 4,
+    "undetermined": 1
+   },
+   "question_sw": "Nina wafanyakazi 60 na nimesajili OSHA — je, pia ninahitaji kumwajiri afisa wa usalama?",
+   "gold_sw": "Kizingiti hasa cha idadi ya wafanyakazi kinachohitaji afisa wa usalama hakijathibitishwa waziwazi. Thibitisha na OSHA (osha.go.tz).",
+   "generated": "Ndiyo, kwa mujibu wa sheria, unapaswa kumteua mwakilishi wa usalama na afya kazini (designated safety representative) kutoka kwa wafanyakazi wako. Thibitisha na OSHA (osha.go.tz)."
+  },
+  {
+   "id": "eval_206",
+   "verdict": "FALSE_ALARM",
+   "defect": null,
+   "why": "THE JUDGE IS WRONG AND THE REGEX PASS STANDS. 'Hapana — BRELA inasajili makampuni na majina ya biashara; OSHA inasajili MAHALI PA KAZI. Ni usajili tofauti kabisa.' That is the gold's content. It omits the explicit 'you must do both', which is an incompleteness and not an error. Vote split 3-2, the weakest in the set — and the only row where the split predicted the outcome.",
+   "subdomain": "osha_registration",
+   "answer_type": "yes_no",
+   "source": "additions_002",
+   "in_fact_path": false,
+   "judge_votes": {
+    "correct": 2,
+    "wrong": 3
+   },
+   "question_sw": "Nimesajili biashara yangu BRELA — je hiyo inamaanisha nimesajili OSHA pia?",
+   "gold_sw": "Hapana. Usajili wa BRELA haumaanishi usajili wa OSHA. BRELA inasajili biashara na majina; OSHA inasajili mahali pa kazi. Ni hatua mbili tofauti kabisa na lazima ufanye zote mbili. Thibitisha na OSHA (osha.go.tz).",
+   "generated": "Hapana — BRELA inasajili makampuni na majina ya biashara; OSHA inasajili MAHALI PA KAZI (workplace registration). Ni usajili tofauti kabisa. Thibitisha na BRELA (brela.go.tz) na OSHA (osha.go.tz)."
+  },
+  {
+   "id": "eval_223",
+   "verdict": "FALSE_PASS",
+   "defect": "wrong_member_of_a_closed_set",
+   "why": "The STR's four instruments are a CLOSED list. The reply keeps the count at four and substitutes 'One Stop Border Post' for the USD 2,000 consignment threshold — a real EAC concept that is not an STR instrument — thereby dropping the one operative NUMBER a trader needs. Right shape, wrong member, missing threshold.",
+   "subdomain": "vat_registration",
+   "answer_type": "definition",
+   "source": "additions_002",
+   "in_fact_path": false,
+   "judge_votes": {
+    "wrong": 5
+   },
+   "question_sw": "Utaratibu Rahisishwa wa Biashara (STR) wa EAC una zana kuu ngapi na ni zipi?",
+   "gold_sw": "STR ina zana kuu nne: Cheti Rahisishwa cha Asili (Simplified Certificate of Origin), Hati Rahisishwa ya Forodha (Simplified Customs Document), Orodha ya Pamoja (Common List), na kizingiti cha thamani cha USD 2,000 kwa mzigo. Thibitisha na Sekretarieti ya EAC.",
+   "generated": "Zana kuu za utaratibu rahisi wa biashara (STR) ni: Common List (orodha ya bidhaa ~370), Simplified Certificate of Origin (SCO), Simplified Customs Document (SCD), na One Stop Border Post (OSBP). Thibitisha na EAC/COMESA (eac.int)."
+  },
+  {
+   "id": "eval_235",
+   "verdict": "PARTIAL",
+   "defect": "half_of_a_two_part_question",
+   "why": "The question asks age AND contribution months. The reply gives 180 months correctly and OMITS THE AGE entirely (60, or 55 for mining/early). Nothing stated is wrong; half of what was asked is absent.",
+   "subdomain": "nssf_contributions",
+   "answer_type": "definition",
+   "source": "additions_002",
+   "in_fact_path": false,
+   "judge_votes": {
+    "wrong": 5
+   },
+   "question_sw": "Mtu anaweza kustaafu na kupata pensheni kamili ya NSSF akiwa na umri gani na michango ya miezi mingapi?",
+   "gold_sw": "Umri wa kustaafu ni miaka 60 (miaka 55 kwa sekta ya madini/kustaafu mapema), na michango isiyopungua miezi 180 kwa pensheni kamili. Thibitisha na NSSF (nssf.go.tz).",
+   "generated": "Kwa sasa, ili kupata pensheni kamili ya NSSF, unahitaji angalau miezi 180 (miaka 15) ya michango. Thibitisha na NSSF (nssf.go.tz)."
+  },
+  {
+   "id": "eval_237",
+   "verdict": "FALSE_PASS",
+   "defect": "one_word_date_shift",
+   "why": "'ndani ya siku 7 baada ya mwisho wa MWEZI UNAOFUATA' — within 7 days after the end of the FOLLOWING month. The gold is 7 days after the end of the calendar month, and goes out of its way to say 'si tarehe 7 ya mwezi unaofuata'. One word (`unaofuata`) moves the deadline a full month late; the regex matched 'siku 7'.",
+   "subdomain": "vat_withholding",
+   "answer_type": "procedure",
+   "source": "additions_002",
+   "in_fact_path": false,
+   "judge_votes": {
+    "wrong": 3,
+    "undetermined": 2
+   },
+   "question_sw": "Kodi ya zuio (withholding tax) inatakiwa kuwasilishwa TRA ndani ya muda gani baada ya mwisho wa mwezi?",
+   "gold_sw": "Ndani ya siku 7 baada ya mwisho wa mwezi wa kalenda — si tarehe 7 ya mwezi unaofuata, wala si siku 30. Kumbuka PAYE ni tarehe 7 ya mwezi unaofuata; hizi ni tofauti. Thibitisha na TRA.",
+   "generated": "Kodi ya zuio inatakiwa kuwasilishwa ndani ya siku 7 baada ya mwisho wa mwezi unaofuata. Thibitisha na tra.go.tz."
+  },
+  {
+   "id": "eval_239",
+   "verdict": "FALSE_PASS",
+   "defect": "fabricated_process_structure",
+   "why": "Invents a two-stage reporting process with a 14-day worker-to-employer step that appears in no locked fact, then adds a confident gloss about how the two windows interact. The 7 days is present and correct, which is why it passed; everything built around it is manufactured.",
+   "subdomain": "osha_registration",
+   "answer_type": "procedure",
+   "source": "additions_002",
+   "in_fact_path": false,
+   "judge_votes": {
+    "wrong": 3,
+    "correct": 2
+   },
+   "question_sw": "Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?",
+   "gold_sw": "Ndani ya siku 7 za kazi tangu kugunduliwa kwa ugonjwa. Kwa kifo mahali pa kazi ni ndani ya miezi 12, na dai la fidia ni ndani ya miezi 12. Thibitisha na WCF (wcf.go.tz).",
+   "generated": "Kuna hatua mbili za kuripoti ugonjwa wa kazini:\n\nHatua ya 1: Mfanyakazi anaripoti kwa mwajiri ndani ya siku 14 tangu kugunduliwa kwa ugonjwa.\nHatua ya 2: Mwajiri analazimika kuwasilisha taarifa hiyo WCF ndani ya siku 7 tangu kupokea taarifa ya mfanyakazi.\n\nMuda wa siku 14 si lazima uwe umepita kabla ya siku 7 — ni mfululizo wa hatua mbili tofauti. Thibitisha na WCF (wcf.go.tz)."
+  },
+  {
+   "id": "eval_304",
+   "verdict": "FALSE_PASS",
+   "defect": "fabricated_threshold_rule",
+   "why": "CORRECTION-SHAPED WRONGNESS — it reads as rigour. Gold: the company-vs-business-name choice does not depend on headcount or capital, and the question's 20 employees and TZS 50,000,000 are irrelevant. The reply invents a rule ('business name if <=20 employees and capital up to TZS 100,000,000, company above that') and applies it confidently. Exactly the fabrication-on-a-plausible-question shape the 2026-09-23 adjudication identified as the floor problem.",
+   "subdomain": "brela_registration",
+   "answer_type": "definition",
+   "source": "additions_003",
+   "in_fact_path": false,
+   "judge_votes": {
+    "wrong": 5
+   },
+   "question_sw": "Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?",
+   "gold_sw": "Uchaguzi kati ya kampuni (company) na jina la biashara (business name) hautegemei idadi ya wafanyakazi wala mtaji, bali muundo wa kisheria unaotaka. Idadi 20 na mtaji TZS 50,000,000 hazihusiki. Thibitisha na BRELA (brela.go.tz).",
+   "generated": "Kulingana na sheria, unapaswa kusajili JINA LA BIASHARA (Business Name) ikiwa una wafanyakazi 20 au chini yao, na mtaji hadi TZS 100,000,000. Ikiwa mtaji wako unazidi TZS 100,000,000, basi unaweza kusajili KAMPUNI (Company Limited by Shares). Thibitisha na BRELA Official (brela.go.tz)."
+  },
+  {
+   "id": "eval_330",
+   "verdict": "PARTIAL",
+   "defect": "contradictory_values_offered_plus_omission",
+   "why": "The arithmetic is right (10% x 450,000 = 45,000) and the 20% split is correct. But it offers TWO contradictory penalties — 'Taarifa #1: asilimia 5 ... Taarifa #2: shilingi 2000' — where Cap.50 s.14(3)'s 5%/month is the statute-tier confirmed figure and the 2,000 is unsourced; and it never answers the DEADLINE, which the question explicitly asked for. The gold itself hedges the penalty, so the hedge is not the defect — the fabricated alternative and the omission are.",
+   "subdomain": "nssf_contributions",
+   "answer_type": "number",
+   "source": "additions_003",
+   "in_fact_path": false,
+   "judge_votes": {
+    "wrong": 5
+   },
+   "question_sw": "Nataka jibu la haraka: NSSF ya mfanyakazi wa TZS 450,000, na pia deadline ya kuwasilisha, na kama nikichelewa adhabu ni ngapi?",
+   "gold_sw": "NSSF ya mfanyakazi: 10% ya TZS 450,000 = TZS 45,000. Deadline: mwisho wa mwezi unaofuata mwezi wa mishahara. Adhabu ya kuchelewa: thibitisha kiwango na NSSF (nssf.go.tz) kwani hutofautiana. Thibitisha na NSSF.",
+   "generated": "NSSF ya mfanyakazi (sehemu yake): TZS 450,000 × 10% = TZS 45,000. Thibitisha na nssf.go.tz.\nNSSF (sehemu ya mfanyakazi) = 10% × TZS 450,000 = TZS 45,000 — jumla ya NSSF ni 20% (mwajiri TZS 45,000 + mfanyakazi TZS 45,000)\n\nKuna taarifa mbili tofauti kuhusu adhabu ya kuchelewa malipo ya NSSF. Thibitisha na NSSF (nssf.go.tz). Taarifa #1: Adhabu ni asilimia 5 ya kiasi kilichochelewa kwa kila mwezi. Taarifa #2: Adhabu ni shilingi 2000 TZS kwa kila mwezi. Tafadhali thibitisha na NSSF (nssf.go.tz) kwa taarifa sahihi."
+  },
+  {
+   "id": "eval_338",
+   "verdict": "FALSE_PASS",
+   "defect": "refuses_then_confirms_the_false_premise",
+   "why": "Opens 'Hapana' and then CONFIRMS the premise it just denied: 'Kiwango cha VAT kwa huduma ni asilimia 18 kama kiwango cha kawaida pia ... Bidhaa na huduma zinatozwa 18%'. It never states the actual withholding rates (6% services / 3% goods, FA2025). The regex passed on the leading 'Hapana' — the refusal-then-elaborate pattern, with the elaboration restoring the error.",
+   "subdomain": "vat_withholding",
+   "answer_type": "yes_no",
+   "source": "additions_003",
+   "in_fact_path": false,
+   "judge_votes": {
+    "wrong": 5
+   },
+   "question_sw": "VAT withholding kwa huduma ni asilimia 18 kama kiwango cha kawaida, sivyo?",
+   "gold_sw": "Hapana. Asilimia 18 ni kiwango cha kawaida cha VAT. VAT withholding ni asilimia 6 kwa huduma na asilimia 3 kwa bidhaa (tangu 1 Julai 2025). Thibitisha na TRA (tra.go.tz).",
+   "generated": "Hapana. Kiwango cha VAT kwa huduma ni asilimia 18 kama kiwango cha kawaida pia. Hakuna kiwango cha kati cha 8% au 10% kwa huduma. Bidhaa na huduma zinatozwa 18% kwa wateja wengi. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_345",
+   "verdict": "PARTIAL",
+   "defect": "correct_answer_plus_a_new_adjacent_error",
+   "why": "The question — is SDL due on the 20th? — is answered correctly (no, the 7th). It then says 'Tarehe 20 ni kwa VAT withholding na PAYE'. PAYE is the 7th, not the 20th, so it introduces a fresh wrong deadline while correcting one. The gold names the 20th as VAT withholding and the VAT return. Defensible both ways.",
+   "subdomain": "sdl_compliance",
+   "answer_type": "yes_no",
+   "source": "additions_003",
+   "in_fact_path": false,
+   "judge_votes": {
+    "correct": 2,
+    "wrong": 3
+   },
+   "question_sw": "SDL inalipwa ifikapo tarehe 20 ya mwezi kama VAT withholding, sivyo?",
+   "gold_sw": "Hapana. SDL inawasilishwa ifikapo siku ya 7 ya mwezi unaofuata. Tarehe 20 ni ya VAT withholding na return ya VAT. Thibitisha na TRA (tra.go.tz).",
+   "generated": "Hapana — SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata, si tarehe 20. Tarehe 20 ni kwa VAT withholding na PAYE. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_394",
+   "verdict": "FALSE_PASS",
+   "defect": "cross_levy_threshold_bleed",
+   "why": "Gold: NSSF is mandatory, full stop, for eligible employers. The reply bolts on a threshold — 'lazima kwa waajiri wenye wafanyakazi 10 au zaidi' — which is SDL's threshold, not NSSF's. NSSF has no such minimum, so this tells an employer with nine staff that NSSF is optional. The 'Ndiyo' passed the yes/no check while the qualifier reversed the answer for a whole class of employer.",
+   "subdomain": "nssf_contributions",
+   "answer_type": "yes_no",
+   "source": "additions_003",
+   "in_fact_path": false,
+   "judge_votes": {
+    "wrong": 4,
+    "undetermined": 1
+   },
+   "question_sw": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
+   "gold_sw": "Ndiyo, si ya hiari. NSSF ni lazima kwa mwajiri na wafanyakazi wanaostahili. Thibitisha na NSSF (nssf.go.tz).",
+   "generated": "Ndiyo, NSSF ni ya lazima kwa waajiri wenye wafanyakazi 10 au zaidi. Thibitisha na NSSF (nssf.go.tz)."
+  }
+ ]
+}

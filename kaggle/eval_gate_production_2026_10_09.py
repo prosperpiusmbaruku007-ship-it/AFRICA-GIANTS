@@ -730,8 +730,20 @@ def _flush(rows, **extra):
         'key_corrections': {'dual_scored': DUAL_SCORE_IDS,
                             'scorer_blind_flips': KEYCORR['scorer_blind_verdict_flips'],
                             'source': 'eval/results/gold_key_corrections_2026_10_09.json'},
-        'judge_overlay_status': ('pending' if RUN_JUDGE else
-                                 'SKIPPED (CHIKE_JUDGE=0) — headline NOT trustworthy alone'),
+        # ⛔ DERIVED FROM THE PAYLOAD, NOT HARDCODED 'pending'. This read
+        # `'pending' if RUN_JUDGE else 'SKIPPED…'`, and `_flush` is called LAST — inside the
+        # final `_publish` — so the top-level field was stamped back to 'pending' AFTER the
+        # judge had finished. In gate_production_0e11c3d.json it says 'pending' while
+        # `summary.judge_overlay_status` says 'ran' and the overlay holds 361 graded rows and
+        # a $0.21 bill. A reader of the top-level field concludes the judge never completed.
+        #
+        # Same family as /health's `config_loaded: false`: A STATUS FIELD THAT CANNOT EVER
+        # REPORT THE TRUE STATE. It is worse than a missing field, because it is confidently
+        # wrong in the direction of "something did not run" — which invites exactly the
+        # investigation that found it, on a run where nothing was wrong.
+        'judge_overlay_status': (
+            'SKIPPED (CHIKE_JUDGE=0) — headline NOT trustworthy alone' if not RUN_JUDGE
+            else ('ran' if (extra.get('judge_overlay') or {}).get('graded') else 'pending')),
         'n_questions': len(ALL), 'rows_measured': len(rows), 'rows': rows,
     }
     payload.update(extra)

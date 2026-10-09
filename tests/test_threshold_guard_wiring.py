@@ -85,13 +85,64 @@ def test_the_fact_path_REPLACES_the_wrong_threshold_body():
 
 def test_the_replacement_copy_states_no_figure_at_all():
     """Following a caught fabrication with a different number from the same generation is a
-    second guess, not a correction."""
+    second guess, not a correction.
+
+    ⚠️ STILL TRUE AFTER THE 2026-10-09 RULE ADDITION, and that is the point of keeping it: for
+    EFD the copy now STATES THE STATUTORY POSITION — that no threshold exists — which is the
+    ABSENCE of a figure, not a different one. If this test ever fails on `efd`, someone has put
+    a number back into the one copy that fires on a fabricated number."""
     import re
     for subject in ("efd", "vat_registration", "presumptive", "unknown_subject"):
         copy = clarification.wrong_threshold_withheld(subject)
         assert not re.search(r"\d{1,3}(?:,\d{3})+|\bmilioni\b|\bTZS\s*\d", copy), (
             f"{subject}: replacement copy contains a figure: {copy!r}")
         assert "tra.go.tz" in copy, f"{subject}: copy does not point at the authority"
+
+
+def test_the_copy_does_NOT_apologise_for_a_reply_the_user_never_SAW():
+    """⛔ THE SAME CONTRACT AS `wrong_fee_band_withheld`, APPLIED HERE 2026-10-09 AFTER eval_347
+    SERVED THE APOLOGY LIVE IN THE FULL GATE.
+
+    On the fact path the guard REPLACES the body before `_render` returns, so the user never
+    received the original. "Samahani — jibu langu la awali lilitoa kiwango..." therefore
+    apologises for a reply they never saw and reads as though something went wrong that they
+    should worry about — anxiety manufactured about an error the system successfully prevented.
+
+    The earlier note recorded this as a DELIBERATE divergence between the two guards
+    ("D-FIDELITY-7 fires where there is no rule to state, so withdrawal is the whole of its
+    message"). That was wrong: the reasoning is a property of the FACT PATH, which both guards
+    share, so it was never a legitimate difference. Pinned for every subject, not just efd."""
+    for subject in ("efd", "vat_registration", "presumptive", "unknown_subject"):
+        copy = clarification.wrong_threshold_withheld(subject)
+        for apology in ("Samahani", "samahani", "jibu langu la awali", "Pole", "pole kwa"):
+            assert apology not in copy, (
+                f"{subject}: the copy apologises ({apology!r}) for a reply the guard replaced "
+                f"before the user could see it: {copy!r}")
+
+
+def test_efd_STATES_THE_RULE_while_a_real_threshold_subject_only_withholds():
+    """⛔ A2 WORK, AND THE PER-SUBJECT SPLIT IS THE WHOLE SAFETY OF IT.
+
+    D-FIDELITY-7 turned eval_347's fabricated threshold into a non-answer — the safe direction,
+    still a gate miss, because the user did not get their answer. For EFD the answer is
+    available and is not a second guess: s.44(1) makes EFD the default regardless of turnover,
+    which index row 57 already serves.
+
+    But `vat_registration` and `presumptive` HAVE statutory thresholds, so a generic "there is
+    no threshold" sentence would be a worse defect than the apology it replaced. The rule table
+    is therefore per-subject, and this test is what stops it being generalised."""
+    efd = clarification.wrong_threshold_withheld("efd")
+    assert "haina kizingiti" in efd, (
+        "the EFD copy no longer states that no threshold exists — it is back to withholding "
+        "only, which leaves eval_347's answer owed")
+    assert "Kamishna Mkuu" in efd, "the only route to an exemption is no longer named"
+    for subject in ("vat_registration", "presumptive"):
+        copy = clarification.wrong_threshold_withheld(subject)
+        assert "haina kizingiti" not in copy, (
+            f"{subject} HAS a statutory threshold, and this copy now claims there is none — "
+            f"the rule table has been generalised past its evidence")
+        assert "siwezi kuthibitisha" in copy.lower(), (
+            f"{subject}: the withhold-only form has lost its own opening")
 
 
 def test_the_compute_path_BLANKS_rather_than_replaces():

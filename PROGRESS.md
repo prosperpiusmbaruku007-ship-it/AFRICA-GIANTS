@@ -1,5 +1,160 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-10-09 (second pass) — **THE GATE RAN. THE TWO MONTHS SINCE AUGUST IMPROVED THE INSTRUMENTS SUBSTANTIALLY AND THE MEASURED PRODUCT BARELY.**
+
+> **That sentence is the result.** Everything below is the evidence for it, and nothing below
+> changes it. The guard wiring, `/health`, the pre-flight, the census, the import-safety check,
+> the pre-registration — all real, all landed, and **the product a user talks to is where it was
+> in August.** Leading with the provenance work would be leading with the part that did not move.
+
+`gate_production_0e11c3d.json` · sha256 `914aef328bd315aa` · `complete: true` · 400 rows, 0 errors
+· judge 361 graded, $0.21, 0 API errors. Every figure below **re-derived from the raw rows**, not
+read back from the summary block: `eval/controls/verify_gate_0e11c3d_from_raw_rows.py` →
+`eval/results/gate_0e11c3d_verification.json`, with the scoring definitions lifted out of the
+package by source so the two cannot disagree. **All published figures reproduce.**
+
+### 1. THE RESULT AGAINST THE PRE-REGISTRATION
+
+| | pre-registered | measured | verdict |
+|---|---|---|---|
+| **in-corpus A2 (ALL_400)** | 82.5% point estimate | **82.3%** (316/384) | inside the band; **below R7's 85%** |
+| baseline, like-for-like | 81.8% (314/384) | — | the comparable figure, *not* 82.5% |
+| **A2 delta** | −0.52 + 1.25, index term unsigned | **+0.52 pts** | inside (a)+(b) |
+| (a) key correction | −0.52 at most, measured exactly | **+0.26 pts**, one row | `eval_355` alone, and the sign is UP not down |
+| **attributable to the system** | — | **+0.3 pts** | **indistinguishable from noise** |
+| (c) guards: A1 down, A2 flat | predicted | A1 45/384, 23 no-answers, 2 guard rows | held |
+| (d) index 217→184 | unbounded, unsigned, largest | no separate signal | nothing to attribute |
+| **`eval_347`** | `NO_ANSWER, guard=D-FIDELITY-7` | **exactly that** | the one pre-registered prediction that landed cleanly |
+
+**Term (a) came in with the wrong SIGN and that is worth saying.** It was pre-registered as *at
+most −0.52, direction DOWN* — stricter keys can only cost points. It measured **+0.26**: the one
+row whose verdict the key moved, `eval_355`, moved from fail to **pass**, because the corrected
+key accepts what the model actually said. The bound was never violated (|0.26| < 0.52); the
+*direction* reasoning was wrong, and a bound that happens to hold while its reasoning fails is
+the kind of thing that only shows up if you record the direction in advance.
+
+**The fact-path bucket came in at 85.2% raw / 85.8% reliable — ON the line, not clear of it.** It
+was the one quotable "above 85%" in the run. §2 is why it should not be quoted.
+
+### 2. ⛔ 12 OF THE 17 FALSE-PASS CANDIDATES ARE CONFIRMED. NO BUCKET OF THIS RUN CLEARS GATE 1.
+
+The judge flags **17 rows where the regex scorer PASSED a row it was CONFIDENT about
+(`reliable=True`) and the judge says the answer is wrong**. Adjudicated one at a time against
+question, gold and reply — `eval/controls/adjudicate_false_passes_0e11c3d.py` →
+`eval/results/false_pass_adjudication_0e11c3d.json`:
+
+> **`FALSE_PASS` 12 · `PARTIAL` 4 · `FALSE_ALARM` 1. The judge is right or defensible on 16 of 17.**
+
+| bucket | as published | confirmed removed | + partials |
+|---|---|---|---|
+| **ALL_400** | 316/384 = **82.3%** | 304/384 = **79.2%** | 300/384 = **78.1%** |
+| **fact_path_190** | 156/183 = **85.2%** | 150/183 = **82.0%** | 149/183 = **81.4%** |
+
+**So the fact path does not clear 85% either, and 85.2% must not be quoted as a Gate 1 result.**
+True in-corpus A2 is **~78–79%**, not 82.3%. The single false alarm (`eval_206`) had the weakest
+vote split in the set (3-2) and is the only row where the split predicted the outcome.
+
+**The defect classes, because the list is more useful than the count** — and note that **not one
+of these is a wrong number retrieved from the index**:
+
+| row | class | what shipped |
+|---|---|---|
+| `eval_086` | **party inversion** | *"Kiasi kinachokatwa na mwajiri KWENYE MSHAHARA ... asilimia 10"* — the rate is right, the party inverted. Gold says explicitly it is **not** deducted from the employee. An employer following it deducts 10% unlawfully, on top of the employee's own 10%. **D-NSSF-1, live, on a reliable row** |
+| `eval_130` | **operation inverted** | *"kuchukua jumla ya mishahara ... na KUIGAWANYA kwa 3.5%"* — divide, not multiply. On the gold's own example: 285,714,286 instead of 350,000. **No D-FIDELITY rule can see it: it describes a method and computes no amount** |
+| `eval_162` | **definition inverted + fabricated criteria** | says a Tanzanian **citizen** is a *"mgeni"* if they meet three invented numbered criteria. The v9 root-cause analysis recorded "mgeni definition inverted"; it is still live, now with structure attached |
+| `eval_171` | **advises the prohibited act** | asked what to do under GN487A, it advises *"ubia na raia wa Tanzania, kununua biashara hiyo na Mtanzania"* — the facilitation GN487A criminalises, and the subject of `eval_145`. Never says to stop. **The most harmful row in the set** |
+| `eval_304` | **fabricated threshold rule** | invents *"business name if ≤20 employees and capital up to TZS 100,000,000"*. Correction-shaped wrongness: reads as rigour |
+| `eval_237` | **one-word date shift** | *"siku 7 baada ya mwisho wa MWEZI UNAOFUATA"* — one word moves the deadline a full month late. Regex matched "siku 7" |
+| `eval_338` | **refuses then confirms the false premise** | opens *"Hapana"* and then confirms 18% for services, never stating 6%/3%. The refusal-then-elaborate pattern, with the elaboration restoring the error |
+| `eval_394` | **cross-levy threshold bleed** | *"NSSF ni lazima kwa waajiri wenye wafanyakazi 10 au zaidi"* — SDL's threshold on NSSF. Tells an employer with nine staff that NSSF is optional |
+| `eval_186` | **confident answer where the gold is a hedge** | the gold says the safety-officer threshold *"hakijathibitishwa waziwazi"*; the reply asserts *"Ndiyo, kwa mujibu wa sheria"* and conflates officer with representative |
+| `eval_104`, `eval_223`, `eval_239` | wrong instrument named · wrong member of a closed set · fabricated process structure | the NSSF **P9** (a PAYE form) as an NSSF document; **OSBP** substituted for the USD 2,000 STR threshold; an invented 14-day two-stage WCF process |
+
+> **🔴 THE PATTERN, AND IT RELOCATES THE WORK.** Twelve confirmed false passes and **not one is a
+> retrieval failure**. They are party inversions, inverted operations, fabricated rules,
+> one-word date shifts and cross-levy bleeds — all GENERATION defects on rows where the right
+> fact was available. This is the class the standing entry names: *the correct fact at rank 1 and
+> the wrong value emitted*, and no index edit reaches any of it.
+>
+> **It also prices the two-bar framing honestly.** Bar A was described as "reachable — finite,
+> and the remaining instances are being enumerated." Twelve more instances just arrived from a
+> single run, and **the regex scorer was crediting every one of them.** Bar A is still finite,
+> but the enumeration was being done with an instrument that scored these as successes.
+
+**⚠️ ONE DIRECTION ONLY.** This adjudicates rows the regex scorer **passed**. The opposite
+direction — 17 rows where regex FAILED and the judge said `correct` — would move A2 **up** and is
+a separate job, named here so "adjudicated" cannot be read as covering both.
+
+### 3. THE THREE CHECKS
+
+**(i) `/health`'s `config_loaded: false` is the shallow probe BY DESIGN — not a serving container
+failing to load config.** Settled from the code, not inferred: `health()` runs on `web_image`,
+which is `debian_slim + fastapi[standard] + .env(CHIKE_BUILD)` and **carries no
+`chike_config.json`**; only the GPU image gets it via `add_local_file`. `_load_config()`'s own
+docstring says so — *"Falls back to {} in the web container (which does not have the file)."* The
+answer-producing tier is the GPU class, and on 2026-10-08 its own `served_index_identity`
+returned `rag_rows_loaded 184 == config_rag_fact_count`, i.e. its config was loaded. `?deep=1`
+is token-gated and the token is founder-only, so the deep arm is **not claimed here**.
+
+> **BUT THE FIELD IS A FALSE-ALARM GENERATOR AND THAT IS A REAL DEFECT.** An unauthenticated
+> endpoint reports `config_loaded: false` in the tier where it **cannot** be true. It reads as
+> "production is not loading its config" — CONTAINER-PATH-1's exact shape — and it cost a
+> founder question that outranked everything else on suspicion alone. **A health field that
+> cannot report a true value in the tier reporting it is worse than a missing field**, because it
+> is confidently wrong in the direction of "something did not run". Being fixed with the copy
+> deploy: the shallow arm will name the tier instead of implying a failure.
+
+**(ii) D-FIDELITY-7's apology is gone.** `eval_347` served *"Samahani — jibu langu la awali
+lilitoa kiwango..."* live. The founder's 2026-10-08 reasoning applies identically: on the fact
+path the guard **replaces** the body before `_render` returns, so the user never saw the original
+and the apology manufactures anxiety about an error the system prevented.
+
+> **And the note claiming the two copies deliberately DIVERGED on this was wrong.** It read:
+> *"D-FIDELITY-7 fires where there is no rule to state, so withdrawal is the whole of its
+> message."* The reasoning is a property of **the fact path**, which both guards share, so it was
+> never a legitimate difference — and the docstring licensed a live apology for a day.
+
+**AND EFD NOW STATES THE RULE, which is A2 work rather than A1 work.** For EFD the statutory
+position *is* that no threshold exists (s.44(1), already served by index row 57), so the reply
+can answer instead of only withdrawing. **This does not break the no-figure contract** — "there
+is no threshold" is the *absence* of a number, not a second guess drawn from the same generation,
+and the no-figure test still passes for every subject. The rule table is **per-subject**:
+`vat_registration` and `presumptive` have real thresholds and keep the withhold-only form,
+because for them "there is no threshold" would be false. Pinned by
+`tests/test_threshold_guard_wiring.py`.
+
+**(iii) A real defect in the package, found by the verification and fixed.** Top-level
+`judge_overlay_status` reads **`pending`** in this artifact while `summary.judge_overlay_status`
+reads `ran` and the overlay holds 361 graded rows and a $0.21 bill. `_flush()` hardcoded
+`'pending' if RUN_JUDGE` and is called **last**, inside the final `_publish`. Same family as
+`config_loaded`: a status field that cannot ever report the true state. Now derived from the
+payload.
+
+**Two of the verification's three initial "disagreements" were my own harness, adjudicated rather
+than smoothed:** a rounding comparison that cried wolf on agreement (0.8525 vs "85.2%"), and an
+assertion that only 2 rows carry `pass_under_baseline_key` when **24** do — the package scoring
+every row whose gold changed, not just the 2 that narrow, which is it being *more* thorough than
+its spec. The third was the real one above.
+
+### 4. OWED, RE-ORDERED BY WHAT THE RESULT CHANGED
+
+1. **The 12 confirmed false passes are now the Bar A worklist** — generation defects, not
+   retrieval. `eval_171` (advises the prohibited act) and `eval_086` (party inversion) first.
+2. **The scorer credits this whole class.** 12 of 17 confident passes were wrong. Any Bar A
+   number taken with the regex scorer alone is an over-count, and the judge overlay should stop
+   being "report-alongside only" — that is a decision to take, not a patch.
+3. **`eval_331`'s `_YN_NEG` gap** — `hulazimiki` (2nd person) absent while `halazimiki` (3rd) is
+   present, one vowel, so `_yn_polarity` falls to its affirmative default and a declared verdict
+   flip produces **zero regex delta by construction**. A scorer that cannot read a flip reports
+   no change, which looks like no change. Needs R17's treatment, not a one-word patch.
+4. **The 4 `disagreements_reported_not_changed`** in `gold_provenance_backfill_pass1.json` — each
+   may be booking a model failure against a wrong key, and a wrong key is booked forever because
+   the adjudication reads the key.
+5. **`ext_15`** — its own job, next. The row that started the BRELA work.
+6. The 32 still-pending of the 73; the opposite judge direction (17 regex-fail/judge-correct).
+
+---
+
 ## 📋 2026-10-09 — **THE FULL GATE IS PACKAGED AND RUNNING. IT DIED TWICE BEFORE IT STARTED, AND NEITHER DEATH WAS A TEST FAILURE.**
 
 The first full gate since `1476caa` (2026-08-09) is running as this is written. Two months of

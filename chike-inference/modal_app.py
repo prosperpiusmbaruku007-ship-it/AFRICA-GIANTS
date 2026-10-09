@@ -680,14 +680,30 @@ def health(deep: int = 0, token: str = None):
     import os as _os
     from fastapi.responses import JSONResponse
 
+    # ⛔ THESE TWO FIELDS USED TO BE `config_loaded` / `config_rag_fact_count`, AND THEY WERE A
+    # FALSE-ALARM GENERATOR (renamed 2026-10-09). `health` runs on `web_image`, which carries
+    # no chike_config.json by design — only the GPU image gets it via add_local_file — so
+    # `CONFIG` is ALWAYS `{}` here and the fields ALWAYS read `false` / `null`. On an
+    # unauthenticated endpoint that reads as "production is not loading its config", which is
+    # CONTAINER-PATH-1's exact shape, and it cost a founder question that outranked everything
+    # else in a gate post-mortem on suspicion alone.
+    #
+    # A HEALTH FIELD THAT CANNOT REPORT A TRUE VALUE IN THE TIER REPORTING IT IS WORSE THAN A
+    # MISSING FIELD, because it is confidently wrong in the direction of "something did not
+    # run". The names now say WHOSE config they describe, and the value says where the real
+    # answer lives. Same lesson as `build_matches`: a label-only staleness gets tolerated until
+    # it is covering something real.
     out = {
         'status': 'ok',
         'app': 'chike-inference',
         'build': _os.environ.get('CHIKE_BUILD', 'dev'),
         'adapter_repo': ADAPTER_REPO,
         'base_model': BASE_MODEL,
-        'config_rag_fact_count': CONFIG.get('rag_fact_count'),
-        'config_loaded': bool(CONFIG),
+        'web_tier_config_loaded': bool(CONFIG),
+        'web_tier_config_rag_fact_count': CONFIG.get('rag_fact_count'),
+        'config_note': ('the WEB tier carries no chike_config.json by design; the serving GPU '
+                        'tier loads it. Its real value is in deep mode as '
+                        'served.config_rag_fact_count.'),
         'deep': bool(deep),
     }
     # 'dev' means the deploy passed no CHIKE_BUILD, so this endpoint cannot vouch for the

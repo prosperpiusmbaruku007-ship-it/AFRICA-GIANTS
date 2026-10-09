@@ -105,10 +105,18 @@ def test_the_copy_does_NOT_apologise_or_mention_a_previous_answer():
     reads as though something went wrong that they should worry about — it manufactures
     anxiety about an error the system successfully prevented.
 
-    This is the one place this copy diverges from `wrong_threshold_withheld`, which DOES open
-    by withdrawing. That is deliberate, not an inconsistency to tidy: D-FIDELITY-7 fires where
-    there is no rule to state, so withdrawal is the whole of its message. Here the rule IS the
-    message, so the reply simply answers."""
+    ⛔ THE NOTE THAT USED TO SIT HERE WAS WRONG, AND IT COST A LIVE APOLOGY IN THE FULL GATE.
+    It read: "This is the one place this copy diverges from `wrong_threshold_withheld`, which
+    DOES open by withdrawing — deliberate, not an inconsistency to tidy: D-FIDELITY-7 fires
+    where there is no rule to state, so withdrawal is the whole of its message." The reasoning
+    above is a property of THE FACT PATH, which both guards share, so it was never a legitimate
+    difference between them — and eval_347 served "Samahani — jibu langu la awali..." live on
+    2026-10-09 while this docstring licensed it. The apology is gone from both copies as of that
+    date; see tests/test_threshold_guard_wiring.py for D-FIDELITY-7's pin.
+
+    What genuinely differs is only WHAT each can state: a real published ladder here, versus the
+    statutory position for EFD (that no threshold exists) there — neither of which is an
+    apology, and neither of which is a second guess."""
     for apology in ("Samahani", "samahani", "jibu langu la awali", "Pole"):
         assert apology not in COPY, (
             f"the copy apologises ({apology!r}) for a reply the user never saw — the guard "

@@ -1,0 +1,551 @@
+{
+ "_what": "every published headline of gate_production_0e11c3d re-derived from its 400 raw rows, with the scoring definitions lifted out of the package by source",
+ "artifact": "eval\\results\\gate_production_0e11c3d.json",
+ "sha256": "914aef328bd315aa135087e2a73d3ad31d28159a749f67778d42e6eb9d1f4915",
+ "gate_commit": "0e11c3d",
+ "index_facts": 184,
+ "outcome_partition": {
+  "RIGHT": 332,
+  "WRONG": 45,
+  "NO_ANSWER": 23
+ },
+ "bar_a": {
+  "ALL_400": {
+   "n": 400,
+   "raw": {
+    "n_in_corpus": 384,
+    "A2_right": 316,
+    "A1_wrong": 45,
+    "no_answer": 23,
+    "A2_rate": 0.8229166666666666,
+    "A1_rate": 0.1171875
+   },
+   "reliable": {
+    "n_in_corpus": 267,
+    "A2_right": 222,
+    "A2_rate": 0.8314606741573034
+   }
+  },
+  "fact_path_190": {
+   "n": 192,
+   "raw": {
+    "n_in_corpus": 183,
+    "A2_right": 156,
+    "A1_wrong": 26,
+    "no_answer": 1,
+    "A2_rate": 0.8524590163934426,
+    "A1_rate": 0.14207650273224043
+   },
+   "reliable": {
+    "n_in_corpus": 127,
+    "A2_right": 109,
+    "A2_rate": 0.8582677165354331
+   }
+  },
+  "staged_50": {
+   "n": 50,
+   "raw": {
+    "n_in_corpus": 50,
+    "A2_right": 43,
+    "A1_wrong": 7,
+    "no_answer": 0,
+    "A2_rate": 0.86,
+    "A1_rate": 0.14
+   },
+   "reliable": {
+    "n_in_corpus": 38,
+    "A2_right": 32,
+    "A2_rate": 0.8421052631578947
+   }
+  },
+  "compute_type": {
+   "n": 110,
+   "raw": {
+    "n_in_corpus": 109,
+    "A2_right": 91,
+    "A1_wrong": 2,
+    "no_answer": 16,
+    "A2_rate": 0.8348623853211009,
+    "A1_rate": 0.01834862385321101
+   },
+   "reliable": {
+    "n_in_corpus": 65,
+    "A2_right": 51,
+    "A2_rate": 0.7846153846153846
+   }
+  },
+  "adversarial_150": {
+   "n": 150,
+   "raw": {
+    "n_in_corpus": 144,
+    "A2_right": 110,
+    "A1_wrong": 12,
+    "no_answer": 22,
+    "A2_rate": 0.7638888888888888,
+    "A1_rate": 0.08333333333333333
+   },
+   "reliable": {
+    "n_in_corpus": 97,
+    "A2_right": 76,
+    "A2_rate": 0.7835051546391752
+   }
+  }
+ },
+ "baseline": {
+  "commit": "1476caa",
+  "in_corpus": "314/384",
+  "rate": 0.8177083333333334,
+  "blend_for_contrast": 0.825
+ },
+ "deltas": {
+  "A2_pts": 0.5208333333333259,
+  "key_correction_pts": 0.26041666666666663,
+  "attributable_pts": 0.2604166666666593,
+  "moved_by_key_alone": [
+   "eval_355"
+  ]
+ },
+ "eval_347": {
+  "outcome": "NO_ANSWER",
+  "guards": [
+   "D-FIDELITY-7"
+  ],
+  "generated": "Samahani — jibu langu la awali lilitoa kiwango cha mauzo kwa mashine ya risiti (EFD) ambacho sikiwezi kukithibitisha, hivyo sitalitumia. Sitakisii kiwango kingine. Tafadhali thibitisha na TRA (tra.go.tz) au niulize kwa namna nyingine, nikueleze utaratibu bila kutaja kiasi."
+ },
+ "judge": {
+  "status": "pending",
+  "judged": 361,
+  "cost_usd": 0.2058,
+  "api_errors": 0,
+  "false_pass_reliable_17": [
+   "eval_086",
+   "eval_104",
+   "eval_130",
+   "eval_145",
+   "eval_162",
+   "eval_171",
+   "eval_186",
+   "eval_206",
+   "eval_223",
+   "eval_235",
+   "eval_237",
+   "eval_239",
+   "eval_304",
+   "eval_330",
+   "eval_338",
+   "eval_345",
+   "eval_394"
+  ],
+  "false_pass_all_36": [
+   "eval_005",
+   "eval_006",
+   "eval_007",
+   "eval_053",
+   "eval_073",
+   "eval_086",
+   "eval_089",
+   "eval_093",
+   "eval_104",
+   "eval_114",
+   "eval_130",
+   "eval_135",
+   "eval_143",
+   "eval_145",
+   "eval_162",
+   "eval_171",
+   "eval_186",
+   "eval_190",
+   "eval_206",
+   "eval_211",
+   "eval_217",
+   "eval_223",
+   "eval_235",
+   "eval_237",
+   "eval_239",
+   "eval_304",
+   "eval_320",
+   "eval_321",
+   "eval_323",
+   "eval_327",
+   "eval_330",
+   "eval_333",
+   "eval_337",
+   "eval_338",
+   "eval_345",
+   "eval_394"
+  ],
+  "_why_two_populations": "regex PASS + judge 'wrong'. On reliable=True rows the regex scorer was CONFIDENT, so a judge disagreement is a candidate wrong gold or a candidate real miss; on reliable=False rows the regex verdict was already known weak, so those 19 are a different claim and must not be added to the 17 without saying so.",
+  "judge_augmented_A2_all400": 0.8189189189189189,
+  "judge_augmented_floor": 0.8015873015873016,
+  "fact_path_A2_raw": 0.8524590163934426,
+  "fact_path_false_passes_reliable": [
+   "eval_086",
+   "eval_104",
+   "eval_130",
+   "eval_145",
+   "eval_162",
+   "eval_171",
+   "eval_186"
+  ],
+  "fact_path_false_passes_all": [
+   "eval_005",
+   "eval_006",
+   "eval_007",
+   "eval_053",
+   "eval_073",
+   "eval_086",
+   "eval_089",
+   "eval_093",
+   "eval_104",
+   "eval_114",
+   "eval_130",
+   "eval_135",
+   "eval_143",
+   "eval_145",
+   "eval_162",
+   "eval_171",
+   "eval_186",
+   "eval_190"
+  ],
+  "fact_path_A2_if_reliable_calls_hold": 0.8142076502732241,
+  "fact_path_A2_if_all_calls_hold": 0.7540983606557377,
+  "_the_gate_1_question": "fact_path raw is 85.2% — ON R7's line. If the 7 reliable-only judge calls in this bucket hold, it becomes 81.4%; if all 18 hold, 75.4%. Both are BELOW 85%, so 85.2% must not be quoted as a Gate 1 result before the 17 are adjudicated.",
+  "overlay_caveat": "report-alongside only: the judge fills the reliable=False gap and FLAGS disagreements on the reliable=True set, but never flips a confident regex verdict and does not drive GATE PASSED.",
+  "overlay_keys": [
+   "api_errors",
+   "caveat",
+   "graded",
+   "per_id",
+   "providers",
+   "report",
+   "usd"
+  ]
+ },
+ "serving_identity": {
+  "health_url": "https://prosperpiusmbaruku007--chike-inference-health.modal.run",
+  "health": {
+   "status": "ok",
+   "app": "chike-inference",
+   "build": "3659a06",
+   "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+   "base_model": "McGill-NLP/AfriqueLlama-8B",
+   "config_rag_fact_count": null,
+   "config_loaded": false,
+   "deep": false
+  },
+  "served_build": "3659a06",
+  "gate_build": "0e11c3d",
+  "gate_chike_tree": "b913c0bd53a8eb54abf84571cc8f2afaca9369d9",
+  "served_chike_tree": "",
+  "verdict": "the served SHA 3659a06 is not in this shallow clone, so the trees cannot be compared. Re-run with a full clone to settle it."
+ },
+ "checks": [
+  {
+   "check": "sha256 prefix",
+   "got": "914aef328bd315aa",
+   "expected": "914aef328bd315aa",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "complete flag",
+   "got": true,
+   "expected": true,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "rows present",
+   "got": 400,
+   "expected": 400,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "rows_measured == len(rows)",
+   "got": 400,
+   "expected": 400,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "index_facts",
+   "got": 184,
+   "expected": 184,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "clone_head",
+   "got": "0e11c3d",
+   "expected": "0e11c3d",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "unique ids",
+   "got": 400,
+   "expected": 400,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "rows with an error",
+   "got": 0,
+   "expected": 0,
+   "ok": true,
+   "note": "a row that errored is not a measured row"
+  },
+  {
+   "check": "partition sums to 400",
+   "got": 400,
+   "expected": 400,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "no unexpected outcome",
+   "got": true,
+   "expected": true,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "ALL_400 A2 rate",
+   "got": 0.8229,
+   "expected": 0.823,
+   "ok": true,
+   "note": "the in-corpus right-answer rate, OOC excluded"
+  },
+  {
+   "check": "fact_path A2 raw",
+   "got": 0.8525,
+   "expected": 0.852,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "fact_path A2 reliable",
+   "got": 0.8583,
+   "expected": 0.858,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "ALL_400 clears R7 Gate 1 (>85%)",
+   "got": false,
+   "expected": false,
+   "ok": true,
+   "note": "recorded as a FACT about this run, not as a target"
+  },
+  {
+   "check": "fact_path clears R7 Gate 1 (>85%)",
+   "got": true,
+   "expected": true,
+   "ok": true,
+   "note": "ON the line: this is why the 17 false-pass candidates decide it"
+  },
+  {
+   "check": "OOC rows excluded from in-corpus n",
+   "got": 384,
+   "expected": 384,
+   "ok": true,
+   "note": "16 out_of_corpus rows in the corpus"
+  },
+  {
+   "check": "baseline in-corpus n",
+   "got": 384,
+   "expected": 384,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "baseline in-corpus pass",
+   "got": 314,
+   "expected": 314,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "baseline in-corpus rate",
+   "got": 0.8177,
+   "expected": 0.8177,
+   "ok": true,
+   "note": "81.8% is the like-for-like figure; 330/400=82.5% blends the 16 OOC rows"
+  },
+  {
+   "check": "the 82.5% stocktake figure reproduces as a BLEND",
+   "got": 0.825,
+   "expected": 0.825,
+   "ok": true,
+   "note": "reproduced only to show it is a different quantity, not a baseline"
+  },
+  {
+   "check": "A2 delta vs baseline (pts)",
+   "got": 0.52,
+   "expected": 0.5,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "dual-scored set covers the declared narrowing rows",
+   "got": true,
+   "expected": true,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "rows actually scored under both keys",
+   "got": 24,
+   "expected": 24,
+   "ok": true,
+   "note": "every row whose scored gold changed, not only the 2 that narrow"
+  },
+  {
+   "check": "exactly one row's verdict moved on the key alone",
+   "got": [
+    "eval_355"
+   ],
+   "expected": [
+    "eval_355"
+   ],
+   "ok": true,
+   "note": "so the entire key-correction term is one row of 384"
+  },
+  {
+   "check": "key-correction pts",
+   "got": 0.26,
+   "expected": 0.26,
+   "ok": true,
+   "note": "one row of 384 = 0.26 pts"
+  },
+  {
+   "check": "attributable movement (pts)",
+   "got": 0.3,
+   "expected": 0.3,
+   "ok": true,
+   "note": "A2 delta minus the key-correction term"
+  },
+  {
+   "check": "eval_347 outcome",
+   "got": "NO_ANSWER",
+   "expected": "NO_ANSWER",
+   "ok": true,
+   "note": "pre-registered: a FAIL THAT IS A WIN"
+  },
+  {
+   "check": "eval_347 guard",
+   "got": [
+    "D-FIDELITY-7"
+   ],
+   "expected": [
+    "D-FIDELITY-7"
+   ],
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "eval_347 does not assert the fabrication",
+   "got": false,
+   "expected": false,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "judge verdicts are strings",
+   "got": [
+    "str"
+   ],
+   "expected": [
+    "str"
+   ],
+   "ok": true,
+   "note": "if this ever becomes a dict, the comparisons below go silently empty"
+  },
+  {
+   "check": "judge ran (summary field, the truthful one)",
+   "got": "ran",
+   "expected": "ran",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "top-level status field is the known-stale one",
+   "got": "pending",
+   "expected": "pending",
+   "ok": true,
+   "note": "package fixed after this run; a status that cannot report the true state is worse than a missing one"
+  },
+  {
+   "check": "false-pass candidates (reliable=True)",
+   "got": 17,
+   "expected": 17,
+   "ok": true,
+   "note": "THE population that matters: regex PASS on a row it was confident about, judge says wrong. This is the 17."
+  },
+  {
+   "check": "false-pass candidates (all in-corpus)",
+   "got": 36,
+   "expected": 36,
+   "ok": true,
+   "note": "the wider set; the extra 19 sit on reliable=False rows where the regex verdict was already known weak, so they are a different claim"
+  },
+  {
+   "check": "the two populations partition",
+   "got": 36,
+   "expected": 36,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "check": "judge-augmented A2 (overlay)",
+   "got": 0.8189,
+   "expected": 0.819,
+   "ok": true,
+   "note": "LOWER than raw, which is the direction that matters"
+  },
+  {
+   "check": "judge-augmented floor (undetermined=fail)",
+   "got": 0.8016,
+   "expected": 0.8016,
+   "ok": true,
+   "note": "the pessimistic bound the overlay also publishes"
+  },
+  {
+   "check": "fact_path falls BELOW 85% if the reliable-only judge calls hold",
+   "got": false,
+   "expected": false,
+   "ok": true,
+   "note": "85.2% -> 81.4% on 7 rows. This is why 85.2% must not be quoted before the 17 are adjudicated"
+  },
+  {
+   "check": "summary vs rows: ALL_400.A2_right",
+   "got": 316,
+   "expected": 316,
+   "ok": true,
+   "note": "the shipped summary must equal the re-derivation"
+  },
+  {
+   "check": "summary vs rows: ALL_400.A1_wrong",
+   "got": 45,
+   "expected": 45,
+   "ok": true,
+   "note": "the shipped summary must equal the re-derivation"
+  },
+  {
+   "check": "summary vs rows: ALL_400.no_answer",
+   "got": 23,
+   "expected": 23,
+   "ok": true,
+   "note": "the shipped summary must equal the re-derivation"
+  },
+  {
+   "check": "summary vs rows: ALL_400.n_in_corpus",
+   "got": 384,
+   "expected": 384,
+   "ok": true,
+   "note": "the shipped summary must equal the re-derivation"
+  }
+ ],
+ "findings": []
+}

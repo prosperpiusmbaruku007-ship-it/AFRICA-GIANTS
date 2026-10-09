@@ -336,6 +336,34 @@ _THRESHOLD_TOPIC = {
     "presumptive": "kodi ya makadirio",
 }
 
+# ⛔ THE STATUTORY POSITION, FOR THE SUBJECTS WHERE IT IS *THAT THERE IS NO THRESHOLD*.
+# (added 2026-10-09, with the apology removal)
+#
+# WHAT THIS REPAIRS, AND IT IS A2 WORK, NOT A1 WORK. D-FIDELITY-7 converted eval_347 from a
+# confident fabricated TZS 11,000,000 EFD threshold into a non-answer. That is the safe
+# direction and it still scores as a gate miss, because the user did not get their answer —
+# the debt the two-bar framing names explicitly: a guard stops a wrong answer, it cannot
+# produce a right one. For EFD the right answer is available and is not a second guess: the
+# statutory position is that NO threshold exists.
+#
+# ⚠️ WHY THIS DOES NOT BREAK THE NO-FIGURE CONTRACT, which is the obvious objection. That
+# contract exists because following a caught fabrication with a different NUMBER from the same
+# generation is a second guess. "There is no threshold" is the ABSENCE of a number, it is not
+# drawn from the generation at all, and it is the same provenance as D-FIDELITY-8's ladder:
+# ITA s.44(1) (s.36(1) renumbered, Finance Act 2023 s.54), already served verbatim by index
+# row 57 and its sibling `efd_not_every_business`. The copy still states no figure, and
+# tests/test_threshold_guard_wiring.py still asserts that for every subject.
+#
+# ⚠️ AND IT IS PER-SUBJECT FOR A REASON. `vat_registration` and `presumptive` DO have
+# statutory thresholds, so "there is no threshold" would be false for them — they keep the
+# withhold-only copy. A generic rule sentence here would have been a worse defect than the
+# apology it replaced.
+_THRESHOLD_RULE = {
+    "efd": ("Mashine ya risiti (EFD) haina kizingiti cha mauzo — inahitajika bila kujali "
+            "kiwango cha mauzo ya mwaka. Msamaha hutolewa tu kwa tangazo la Kamishna Mkuu "
+            "wa TRA."),
+}
+
 
 def wrong_threshold_withheld(subject: str) -> str:
     """The fact path stated a turnover threshold that is not the statutory one.
@@ -352,6 +380,23 @@ def wrong_threshold_withheld(subject: str) -> str:
     number from the same generation is not a correction, it is a second guess. Naming the subject
     and the authority is the whole of what can be said honestly here.
 
+    ⛔ NO APOLOGY, AS OF 2026-10-09 — the same correction already applied to
+    `wrong_fee_band_withheld` on 2026-10-08, and the earlier note claiming the two copies
+    DIVERGE on this point was wrong. It read: "D-FIDELITY-7 fires where there is no rule to
+    state, so withdrawal is the whole of its message." The first clause is subject-dependent and
+    the second does not follow from it. On the fact path the user NEVER SEES THE ORIGINAL REPLY —
+    the guard replaces it before `_render` returns — so "Samahani — jibu langu la awali lilitoa
+    kiwango..." apologised for a reply they never received and manufactured anxiety about an error
+    the system successfully prevented. That reasoning is a property of the FACT PATH, not of
+    either guard, so it was never a legitimate difference between them. eval_347 served the
+    apology live in this run.
+
+    AND WHERE A RULE EXISTS, IT IS NOW STATED (`_THRESHOLD_RULE`). For EFD the statutory position
+    is that there IS no threshold, which is the absence of a figure rather than a second guess,
+    so the reply can answer instead of only withdrawing — A2 work, not A1 work. Subjects with a
+    real threshold (`vat_registration`, `presumptive`) keep the withhold-only form, because for
+    them "there is no threshold" would be false.
+
     ⛔ AND IT IS NOT A FIX, ONLY A STOP. Wiring the guard turns a confident wrong answer into a
     non-answer. On an IN-CORPUS question (eval_347 is one) that still scores as a miss on the
     accuracy gate — correctly, because the user did not get their answer. It closes R7's Bar A
@@ -360,11 +405,13 @@ def wrong_threshold_withheld(subject: str) -> str:
     class to become a no-answer class, not to disappear.
     """
     topic = _THRESHOLD_TOPIC.get(subject, "kiwango hiki")
+    rule = _THRESHOLD_RULE.get(subject)
+    if rule:
+        return f"{rule} Sitatoa kiwango chochote cha mauzo hapa. Thibitisha na TRA (tra.go.tz)."
     return (
-        f"Samahani — jibu langu la awali lilitoa kiwango cha mauzo kwa {topic} ambacho "
-        f"sikiwezi kukithibitisha, hivyo sitalitumia. Sitakisii kiwango kingine. "
-        f"Tafadhali thibitisha na TRA (tra.go.tz) au niulize kwa namna nyingine, "
-        f"nikueleze utaratibu bila kutaja kiasi."
+        f"Siwezi kuthibitisha kiwango cha mauzo kwa {topic}, hivyo sitakitaja na sitakisii "
+        f"kingine. Thibitisha na TRA (tra.go.tz) — au niulize utaratibu bila kiasi, "
+        f"nikueleze hatua."
     )
 
 
