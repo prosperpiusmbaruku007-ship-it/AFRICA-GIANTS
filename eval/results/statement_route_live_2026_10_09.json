@@ -1,0 +1,271 @@
+{
+  "_what": "R16 live verification of the statement route (routing path 9 + the orchestrator's threshold and optionality branches) and of index row 9's rewording. Deployed build and HEAD are both recorded under health._provenance.",
+  "_endpoint": "https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run",
+  "_what_this_cannot_see": "the endpoint returns {'reply': text} only — no intent, no computation record. The live ROUTE is therefore established by (a) re-deriving detect_intent locally while asserting /health's build equals this tree's HEAD, and (b) route_evidence patterns taken from the engine's own emitted working, each asserted to match that working before any request is sent. Neither is the same claim as reading the route off the wire, and saying so is the point.",
+  "_why_these_rows": "three pinned must-move rows from the 0e11c3d closability classification; the two regressions the change itself introduced and that only an end-to-end run found; the over-breadth row V3 exists for; and the standard negatives — the compute path, both wired guards, a prior ship, and config loading.",
+  "health": {
+    "status": "ok",
+    "app": "chike-inference",
+    "build": "8d7ebd2",
+    "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+    "base_model": "McGill-NLP/AfriqueLlama-8B",
+    "web_tier_config_loaded": false,
+    "web_tier_config_rag_fact_count": null,
+    "config_note": "the WEB tier carries no chike_config.json by design; the serving GPU tier loads it. Its real value is in deep mode as served.config_rag_fact_count.",
+    "deep": true,
+    "served": {
+      "build": "8d7ebd2",
+      "rag_rows_loaded": 184,
+      "rag_embeddings_shape": [
+        184,
+        768
+      ],
+      "rag_facts_text_sha256": "5f76d40cf46d8be515f356c05bfb072529482c5bdf3dab966264965a9d98381f",
+      "config_rag_fact_count": 184,
+      "adapter_repo": "prospAprospA007/africa-giants-adapter-v15"
+    },
+    "build_matches": true,
+    "_checks": {
+      "build_is_an_ancestor_of_head": true,
+      "no_serving_path_moved_since_the_build": true,
+      "web_and_gpu_tiers_agree": true,
+      "served_digest_equals_committed_index": true,
+      "served_rows_equal_committed_rows": true,
+      "rows_match_config": true
+    },
+    "_provenance": {
+      "deployed_build": "8d7ebd2",
+      "head": "5bf3e10",
+      "serving_paths_moved_since_build": [],
+      "deploy_paths_watched": [
+        "chike",
+        "chike-inference",
+        "kaggle/rag_facts_text.json",
+        "kaggle/rag_embeddings.npy",
+        "kaggle/chike_config.json"
+      ],
+      "_why_not_equality_to_head": "committing this harness before running it (R18) moved HEAD one commit past the deploy, and an equality check called that a stale deploy. Ancestry plus a serving-path diff is the question that was actually meant: a doc or harness commit after a deploy is not staleness, and a changed chike/ file is.",
+      "expected_sha256": "5f76d40cf46d8be515f356c05bfb072529482c5bdf3dab966264965a9d98381f",
+      "expected_rows": 184,
+      "_derived": "the digest is computed from the committed index, not typed, so there is no pin here to go stale."
+    }
+  },
+  "local_intents": {
+    "eval_086_nssf_employer_rate_and_party": "nssf",
+    "eval_130_sdl_method": "sdl",
+    "eval_394_nssf_not_optional": "nssf",
+    "threshold_question_ANSWERS_rather_than_clarifies": "sdl",
+    "adv_06_stays_OFF_the_route": "none",
+    "negative_compute_path_still_computes": "sdl",
+    "per_vs_total_ambiguity_fires_even_when_the_user_said_JUMLA": "sdl",
+    "negative_row57_efd_guard_still_holds": "none",
+    "negative_row172_brela_foreign_penalty": "none",
+    "negative_nssf_fine_either_statutory_limb": "none",
+    "negative_config_only_ooc_phrase": "none",
+    "wcf_incidence_known_near_miss": "none"
+  },
+  "engine_text": {
+    "nssf": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+    "sdl": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+    "sdl_threshold": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+    "nssf_applies": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi)."
+  },
+  "totals": {
+    "probes": 12,
+    "run": 12,
+    "pass": 10,
+    "fail": 0,
+    "error": 0,
+    "observed_only": 2
+  },
+  "verdict": "DEPLOY VERIFIED",
+  "answer_withheld_by_guard": [],
+  "rows": [
+    {
+      "id": "eval_086_nssf_employer_rate_and_party",
+      "limb": "deploy",
+      "pinned": true,
+      "proves": "⛔ PINNED MUST-MOVE ROW #1, and it is BOTH changes at once. The 0e11c3d gate served 'Kiasi kinachokatwa na mwajiri KWENYE MSHAHARA wa mfanyakazi … ni asilimia 10' — the rate right, the party inverted, which makes an employer deduct 10% from wages unlawfully on top of the employee's own 10%. The route now reaches levy_rate_statement('nssf'), which states both shares AND their incidence; index row 9 no longer invites the inversion either.",
+      "source": "question verbatim from eval_questions_001.jsonl; expectation from its own gold ('haikatwi kutoka mshahara wa mfanyakazi') and from the engine working",
+      "question": "Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?",
+      "note": "must_not_assert targets the INVERSION (the employer's share described as a deduction from the employee's wage), not the words 'kukatwa' or '10' — the correct answer necessarily contains both, and so does the engine's own text.",
+      "baseline_committed_row": "gate_production_0e11c3d.json, adjudicated FALSE_PASS",
+      "_local_intent": "nssf",
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "route_evidence_seen": true,
+      "route_evidence_pattern": "HAIKATWI\\s+kwenye\\s+mshahara|haikatwi\\s+kwenye\\s+mshahara",
+      "checks": {
+        "must_match": true,
+        "not_asserted": true,
+        "engine_text_reached_the_user": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "eval_130_sdl_method",
+      "limb": "deploy",
+      "pinned": true,
+      "proves": "⛔ PINNED MUST-MOVE ROW #2. The 0e11c3d reply described the INVERSE operation — dividing the payroll by 3.5% — which no figure-comparing fidelity rule can see, because the reply produces no figure at all (R19: this is a method claim, not a derived quantity). It turned out ROUTABLE, not merely guardable: levy_rate_statement('sdl') already answers 'how is SDL computed'.",
+      "source": "question verbatim from eval_questions_001.jsonl; gold says 'Zidisha jumla ya mishahara … kwa asilimia 3.5'",
+      "question": "Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?",
+      "note": "must_not_match is the inverted operation. 'Zidisha' is not required: the engine states the base and the rate without using the imperative, and demanding the gold's verb would fail a correct engine rendering.",
+      "_local_intent": "sdl",
+      "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "route_evidence_seen": true,
+      "route_evidence_pattern": "JUMLA\\s+ya\\s+mishahara|jumla\\s+ya\\s+mishahara",
+      "checks": {
+        "must_match": true,
+        "must_not_match": true,
+        "engine_text_reached_the_user": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "eval_394_nssf_not_optional",
+      "limb": "deploy",
+      "pinned": true,
+      "proves": "⛔ PINNED MUST-MOVE ROW #3 — AND THE SECOND OF MY TWO REGRESSIONS. After the route opened, this yes/no question fell through to the AMOUNT path and asked the user for a payroll figure, which no payroll can answer. The orchestrator's applicability gate was widened with asks_levy_optionality to fix it. Both limbs are checked here: a substantive verdict AND no request for a figure.",
+      "source": "question verbatim from eval_questions_003.jsonl. TWO correct answers accepted and that is deliberate (R38): the gold says 'si ya hiari … ni lazima', the engine says 'haina kizingiti … kutoka mfanyakazi wa kwanza'. Both answer it.",
+      "question": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
+      "note": "must_not_match is the amount-path clarification shape. It is scoped to THIS row on purpose: SDL's threshold statement legitimately ends 'nipe jumla ya mishahara … ili nihesabu', so the same pattern as a global signature would fail a correct answer two rows down.",
+      "_local_intent": "nssf",
+      "reply": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+      "route_evidence_seen": true,
+      "route_evidence_pattern": "mfanyakazi\\s+wa\\s+kwanza",
+      "observed": true,
+      "checks": {
+        "must_match": true,
+        "must_not_match": true,
+        "engine_text_reached_the_user": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "threshold_question_ANSWERS_rather_than_clarifies",
+      "limb": "deploy",
+      "proves": "⛔ MY FIRST REGRESSION, caught end-to-end and invisible to the route check. With path 9 open and no threshold branch, 'how many employees' reached the clarification path — which then ASKED for the headcount while its own text contained the answer. The orchestrator now answers from rates.py before clarifying.",
+      "source": "rates.SDL_MIN_EMPLOYEES = 10; engine working says 'wafanyakazi 10 au zaidi'. NOT a corpus row — authored, and said so.",
+      "question": "Mwajiri analazimika kulipa SDL akiwa na wafanyakazi wangapi?",
+      "note": "THE CHECK IS THE PRESENCE OF THE THRESHOLD, and that is the whole test: a clarification is precisely a reply that asks for the headcount WITHOUT stating 10. No forbidden phrase is used, because the correct answer ends by inviting the payroll figure — forbidding that would fail the fix.",
+      "_local_intent": "sdl",
+      "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "route_evidence_seen": true,
+      "route_evidence_pattern": "wafanyakazi\\s+10\\s+au\\s+zaidi",
+      "checks": {
+        "must_match": true,
+        "engine_text_reached_the_user": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "adv_06_stays_OFF_the_route",
+      "limb": "deploy",
+      "proves": "⛔ THE OVER-BREADTH ROW, and the one that matters most. V3 (the sufficiency / alternative frame) exists for it: path 2b's own note had ALREADY rejected this diversion and my first draft reintroduced it. Routing it would answer 'WCF is 0.5%' to an employer asking whether accident insurance suffices — a confident answer to a question nobody asked. It must be ANSWERED (expected_refusal is false) and must NOT receive the WCF rate statement.",
+      "source": "verbatim from eval/refusal_gate/ooc_adversarial_in_scope_015.jsonl, which records expected_refusal=false and guards_against bare 'bima'",
+      "question": "mfanyakazi wangu ameumia je bima ya ajali inatosha au nachangia WCF",
+      "note": "must_not_match carries BOTH failure directions — the engine signature (routed when it must not be) and the refusal phrase (refused when it must not be). The committed probe asserts the second; the sweep asserts the first.",
+      "_local_intent": "none",
+      "reply": "Kwa majeraha ya kazini, mwajiri anapaswa kuwasilisha taarifa WCF na kulipa fidia. Thibitisha na WCF (wcf.go.tz).",
+      "checks": {
+        "must_match": true,
+        "must_not_match": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_compute_path_still_computes",
+      "limb": "deploy",
+      "proves": "NEGATIVE: removing the rate branch's `amount is not None` gate must not have taken the AMOUNT path with it. A question WITH figures must still return the computed figure, not a rate statement. 12 employees × TZS 10,000,000 → 350,000.",
+      "source": "rates.SDL_RATE = 3.5% of total payroll; 0.035 × 10,000,000 = 350,000. detect_intent returns 'sdl' here via the NUMBER path, not path 9 — asks_levy_statement is False because the question carries a money ask.",
+      "question": "Nina wafanyakazi 12 na jumla ya mishahara yao ni TZS 10,000,000 kwa mwezi. SDL ni kiasi gani?",
+      "note": "If this fails while the three pinned rows pass, the statement route has SWALLOWED the compute path — the expensive failure mode of widening a gate every question passes through.",
+      "_local_intent": "sdl",
+      "reply": "Kwa hesabu sahihi: SDL = 3.5% × TZS 10,000,000 = TZS 350,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 10,000,000 = TZS 350,000",
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "per_vs_total_ambiguity_fires_even_when_the_user_said_JUMLA",
+      "limb": "answer_quality",
+      "proves": "⛔ A REAL NEAR-MISS, FOUND BY MY OWN BAD PROBE AND KEPT BECAUSE IT IS REAL. The per-vs-total clarification is correct on the bare wording, and it ALSO fires on 'Jumla ya mishahara ya wafanyakazi wangu 12 ni TZS 10,000,000' — where the user has already said JUMLA (total). The same figures asked as 'Nina wafanyakazi 12 na jumla ya mishahara yao ni …' compute 350,000 correctly, so the sensitivity is to where 'jumla' sits in the sentence, not to whether it is present. NOT a regression (copy predates this change by eleven weeks) and NOT fixed here: it is the compute path, it needs its own R17 sweep, and a clarification is the SAFE direction of this error.",
+      "source": "found while adjudicating this harness's own FAIL on 2026-10-09; clarification copy from chike/clarification.py:270 (commit 5239190, 2026-07-23)",
+      "question": "Jumla ya mishahara ya wafanyakazi wangu 12 ni TZS 10,000,000 kwa mwezi. SDL ni kiasi gani?",
+      "note": "OBSERVED, never asserted. Recording it as a deploy requirement would demand a fix nobody has scoped, and asserting the clarification is correct would freeze a behaviour that may well be worth narrowing later.",
+      "_local_intent": "sdl",
+      "reply": "Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+      "observed": true,
+      "checks": {},
+      "verdict": "OBSERVED"
+    },
+    {
+      "id": "negative_row57_efd_guard_still_holds",
+      "limb": "deploy",
+      "proves": "NEGATIVE: D-FIDELITY-7 must still stop the fabricated TZS 11,000,000 EFD threshold. Accepts the withheld-answer copy, which is the guard WORKING — scoring that as a regression was my error on 2026-10-07 (R38).",
+      "source": "regen critical_queries 'EFD threshold' (eval_347 verbatim); index row 57",
+      "question": "Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?",
+      "_local_intent": "none",
+      "reply": "Mashine ya risiti (EFD) haina kizingiti cha mauzo — inahitajika bila kujali kiwango cha mauzo ya mwaka. Msamaha hutolewa tu kwa tangazo la Kamishna Mkuu wa TRA. Sitatoa kiwango chochote cha mauzo hapa. Thibitisha na TRA (tra.go.tz).",
+      "answer_withheld": false,
+      "checks": {
+        "must_match": true,
+        "not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_row172_brela_foreign_penalty",
+      "limb": "deploy",
+      "proves": "NEGATIVE: the BRELA foreign late-filing figure shipped two cycles ago must still be TZS 70,000. A redeploy is exactly when a prior ship silently regresses, and this row's index neighbours moved in this index build.",
+      "source": "regen critical_queries 'BRELA foreign late-filing fee' (ext_15 verbatim)",
+      "question": "Tawi letu la kampuni ya kigeni limechelewa kuwasilisha ripoti ya mwaka. Adhabu ni tofauti na kampuni za huku?",
+      "_local_intent": "none",
+      "reply": "Ndiyo, adhabu ni tofauti. Kampuni za ndani huadhibiwa kwa TZS 2,500 kwa mwezi kwa kuchelewa kuwasilisha annual return. Lakini kampuni za kigeni zinatumia sheria tofauti (Cap.212 Sehemu XII). Kwa kampuni ya kigeni, adhabu ni TZS 70,000 kwa mwezi au sehemu ya mwezi. Thibitisha na BRELA (brela.go.tz).",
+      "checks": {
+        "must_match": true,
+        "not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_nssf_fine_either_statutory_limb",
+      "limb": "deploy",
+      "proves": "NEGATIVE: the Cap.50 corrections must be where they were. Accepts EITHER locked limb — s.76(1)'s ten-million ceiling or s.14(3)'s 5%/month — because the question licenses both, and demanding one made a CORRECT reply fail on 2026-10-07. The 100,000 understatement is what must not return.",
+      "source": "regen critical_queries 'NSSF fine ceiling is ten million'; Cap.50 R.E.2023",
+      "question": "Nisipolipa michango ya NSSF kabisa, nitatozwa faini ya kiasi gani?",
+      "_local_intent": "none",
+      "reply": "Kukosa kulipa michango ya NSSF kwa wakati kunaweza kusababisha adhabu ya asilimia 5 kwa kila mwezi wa ucheleweshaji. Thibitisha na NSSF (nssf.go.tz).",
+      "checks": {
+        "must_match": true,
+        "not_asserted": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "negative_config_only_ooc_phrase",
+      "limb": "deploy",
+      "proves": "CONFIG LOADING, separately from code — the 2026-08-07 diagnostic that distinguishes a config failure from a stale warm container. This phrase is in chike_config.json and NOT in the hardcoded fallback.",
+      "source": "chike_config.json ooc_phrases (config-only)",
+      "question": "Nataka kuuza kiwanja changu, kodi ya mapato ni kiasi gani?",
+      "_local_intent": "none",
+      "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+      "checks": {
+        "must_match": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "wcf_incidence_known_near_miss",
+      "limb": "answer_quality",
+      "proves": "A RECORDED NEAR-MISS, not a requirement. 'WCF ni ya mwajiri au mfanyakazi?' is an incidence question the statement now ANSWERS, but no rate/method/applicability cue is present so path 9 does not fire. Observed rather than asserted, because widening for it needs its own sweep — and because an answer-quality row must never be able to falsify a deploy verdict (R38).",
+      "source": "ADVERSARIAL_MUST_STAY_NONE in sweep_statement_route_2026_10_09.py, entry 11",
+      "question": "WCF ni ya mwajiri au mfanyakazi?",
+      "_local_intent": "none",
+      "reply": "WCF ni ya MWAJIRI pekee — si mfanyakazi. Ni mwajiri anayechangia 0.5% ya mishahara ili kulipa fidia pale mfanyakazi anapopata majeraha. Thibitisha na WCF (wcf.go.tz).",
+      "observed": true,
+      "checks": {},
+      "verdict": "OBSERVED"
+    }
+  ]
+}
