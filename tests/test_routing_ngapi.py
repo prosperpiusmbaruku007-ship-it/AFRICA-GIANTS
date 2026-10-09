@@ -27,6 +27,48 @@ def test_probe_routes_as_specified(row):
         f"{row['id']} guards against: {row['guards_against']}")
 
 
+def test_the_reclassified_rows_still_guard_what_they_were_written_for():
+    """⛔ ngapi_08 AND ngapi_10 CHANGED `expect_intent` ON 2026-10-09, AND THIS IS THE CHECK
+    THAT MAKES THAT HONEST RATHER THAN CONVENIENT.
+
+    Both were authored with `expect_intent: none` to guard two things:
+        ngapi_08 — "wangapi" must never read as MONEY
+        ngapi_10 — "asilimia ngapi" is a RATE ask, not an AMOUNT ask
+    At authoring time "not the amount path" and "not routed at all" were the same thing, because
+    every compute path required a figure in the text. The statement route separates them: these
+    now reach the levy and are answered by a CONSTANT — the rate, its base, and the headcount
+    threshold — which is neither an amount ask nor a count read as money.
+
+    So the encoding moved and the GUARDED PROPERTY is asserted here instead, more strongly than
+    `expect_intent` ever did: the reply must state the constant and must never demand a salary
+    or a payroll. A test whose expectation is relaxed without the thing it protected being
+    re-checked somewhere stronger is how a real defect gets instructed into permanence (R17's
+    corollary), so this exists to stop that reading.
+    """
+    from chike.model_abstraction import FakeBackend
+    from chike.orchestrator import Orchestrator
+
+    rows = {r['id']: r for r in ROWS}
+    orch = Orchestrator(backend=FakeBackend("[persona]"), retriever=lambda q: ())
+    for qid in ('ngapi_08', 'ngapi_10'):
+        row = rows[qid]
+        assert row['reclassified_2026_10_09'], f"{qid} lost its reclassification note"
+        assert row['still_guards_against'] == row['guards_against']
+        reply = orch.answer(row['question'])
+        sub = reply.sub_answers[0]
+        assert not sub.needs_clarification, (
+            f"{qid} now asks the user to clarify. It guards against "
+            f"{row['guards_against']!r} — demanding a figure for a question about a CONSTANT is "
+            f"the amount-path behaviour it was written to prevent: {reply.text!r}")
+        assert sub.computation is not None and sub.computation.amount is None, (
+            f"{qid} produced an AMOUNT. The answer is a constant, not a computed quantity — "
+            f"this is the 'read as money' failure the probe names")
+        assert 'asilimia 3.5' in reply.text, (
+            f"{qid} no longer states the SDL rate: {reply.text!r}")
+    # ngapi_08 specifically asks what the THRESHOLD is, so the figure must be there
+    assert '10' in orch.answer(rows['ngapi_08']['question']).text
+
+
 def test_the_probe_set_carries_both_directions():
     """A set with no must-not-route rows would pass for a bare `ngapi` -- the single
     change most likely to be made later and most likely to be wrong."""

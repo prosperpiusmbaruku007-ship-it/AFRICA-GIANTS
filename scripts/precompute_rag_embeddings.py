@@ -148,8 +148,32 @@ CONCISE_BILINGUAL_FACTS = {
     'sdl_payment_deadline':
         'SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata.',
 
+    # 🔴 REWORDED 2026-10-09 BECAUSE THIS ROW INVITED THE DEFECT IT WAS MEANT TO PREVENT.
+    #
+    # It read: "mwajiri analipa asilimia 10 YA MSHAHARA WA MFANYAKAZI kila mwezi" — "of the
+    # EMPLOYEE'S salary". That is true as a statement of the BASE (the 10% is calculated on the
+    # employee's gross wage) and it reads in Swahili as a statement of SOURCE (the 10% comes OUT
+    # of the employee's wage), which is false and is the opposite of the employer's obligation.
+    #
+    # eval_086 then served, live in the 2026-10-09 gate: "Kiasi kinachokatwa na mwajiri KWENYE
+    # MSHAHARA wa mfanyakazi kwa ajili ya NSSF ni asilimia 10" — the rate right, the party
+    # inverted, and close enough to this row's phrasing to be an echo of it rather than an
+    # invention. An employer following it deducts 10% from wages unlawfully, ON TOP of the
+    # employee's own 10%. The regex scorer passed it on `asilimia 10`.
+    #
+    # ⛔ THE GENERAL POINT, worth more than this row: a fact can be TRUE and still be the cause
+    # of a wrong answer, when its wording is ambiguous in the one dimension the question turns
+    # on. The classification pass called eval_086 a MODEL defect because the fact was "in the
+    # index"; it was, and the fact was also complicit. "Is the governing fact present?" is not
+    # the same question as "does the governing fact say it unambiguously?"
+    #
+    # BASE and SOURCE are now separated explicitly, and the employee's share is named so the
+    # two 10%s cannot be read as one.
     'nssf_employer_rate':
-        'NSSF: mwajiri analipa asilimia 10 ya mshahara wa mfanyakazi kila mwezi. Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).',
+        'NSSF sehemu ya mwajiri: mwajiri analipa asilimia 10, ikihesabiwa kwa mshahara ghafi '
+        'wa mfanyakazi. Mwajiri hulipa kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa '
+        'mfanyakazi. Mfanyakazi hukatwa asilimia 10 yake tofauti. Tovuti sahihi ni nssf.go.tz '
+        '(si nssf.or.tz).',
 
     'nssf_total_rate':
         'NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz).',

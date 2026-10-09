@@ -1,0 +1,343 @@
+{
+ "_what": "every corpus question's routing intent before and after the statement route",
+ "_why_full_sweep": "the change widens detect_intent, which every question passes through, so the population is the whole corpus and not the three rows it was built for",
+ "questions_swept": 2473,
+ "files": [
+  "data/reviewed/gn487a_seed_batch.jsonl",
+  "data/reviewed/gn487a_seed_flagged.jsonl",
+  "data/reviewed/gn487a_seed_raw.jsonl",
+  "data/reviewed/hand_coded_batch_015_b01.jsonl",
+  "data/reviewed/hand_coded_batch_015_b02.jsonl",
+  "data/reviewed/hand_coded_batch_015_b03.jsonl",
+  "data/reviewed/hand_coded_batch_015_b04.jsonl",
+  "data/reviewed/hand_coded_batch_015_b05.jsonl",
+  "data/reviewed/hand_coded_batch_015_b06.jsonl",
+  "data/reviewed/hand_coded_batch_015_b07.jsonl",
+  "data/reviewed/hand_coded_batch_015_b08.jsonl",
+  "data/reviewed/hand_coded_batch_015_b09.jsonl",
+  "data/reviewed/hand_coded_batch_015_b10.jsonl",
+  "data/reviewed/hand_coded_batch_015_b11.jsonl",
+  "data/reviewed/hand_coded_batch_015_b12a.jsonl",
+  "data/reviewed/hand_coded_batch_015_b12b.jsonl",
+  "data/reviewed/hand_coded_batch_015_b12c.jsonl",
+  "data/reviewed/hand_coded_batch_015_b12d.jsonl",
+  "data/reviewed/human_review_priority.jsonl",
+  "data/reviewed/nssf_confident_pairs.jsonl",
+  "data/reviewed/recovered_from_flags.jsonl",
+  "data/reviewed/slot_extraction_stress_test_001.jsonl",
+  "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl",
+  "data/reviewed/targeted_ooc_refusals.jsonl",
+  "eval/accuracy_gate/a2_levy_cues_012.jsonl",
+  "eval/accuracy_gate/applicability_adversarial_in_scope_017.jsonl",
+  "eval/accuracy_gate/clarification_copy_probes_008.jsonl",
+  "eval/accuracy_gate/decimal_separator_probes_019.jsonl",
+  "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+  "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+  "eval/accuracy_gate/edge_probe_plain_sw_005b.jsonl",
+  "eval/accuracy_gate/edge_probe_plain_sw_015.jsonl",
+  "eval/accuracy_gate/employment_type_probes_008.jsonl",
+  "eval/accuracy_gate/eval_questions_001.jsonl",
+  "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+  "eval/accuracy_gate/eval_questions_003.jsonl",
+  "eval/accuracy_gate/extraction_adversarial_in_scope_016.jsonl",
+  "eval/accuracy_gate/extraction_fraction_probes_008.jsonl",
+  "eval/accuracy_gate/faithfulness_leseni_probes.jsonl",
+  "eval/accuracy_gate/faithfulness_probes.jsonl",
+  "eval/accuracy_gate/false_premise_pairs_016.jsonl",
+  "eval/accuracy_gate/gn487a_inversion_probes.jsonl",
+  "eval/accuracy_gate/group_payroll_probes_008.jsonl",
+  "eval/accuracy_gate/headcount_contradiction_probes_010.jsonl",
+  "eval/accuracy_gate/headcount_extraction_probes_012.jsonl",
+  "eval/accuracy_gate/minimum_wage_probes_018.jsonl",
+  "eval/accuracy_gate/output_shape_probes_010.jsonl",
+  "eval/accuracy_gate/presumptive_tax_probes_020.jsonl",
+  "eval/accuracy_gate/quantity_instruction_heldout_024.jsonl",
+  "eval/accuracy_gate/rate_period_probes_016.jsonl",
+  "eval/accuracy_gate/residency_unclear_probes_014.jsonl",
+  "eval/accuracy_gate/threshold_comparison_probes_024.jsonl",
+  "eval/accuracy_gate/vat_efd_probes_019.jsonl",
+  "eval/accuracy_gate/wage_pay_concord_018.jsonl",
+  "eval/grounding/bucket_e_reach_probes_014.jsonl",
+  "eval/grounding/bucket_f_reach_probes_012.jsonl",
+  "eval/refusal_gate/concord_1pl_in_scope_020.jsonl",
+  "eval/refusal_gate/mining_royalty_narrowing_probes_010.jsonl",
+  "eval/refusal_gate/object_concord_in_scope_022.jsonl",
+  "eval/refusal_gate/ooc_adversarial_in_scope_015.jsonl",
+  "eval/refusal_gate/orthographic_heldout_038.jsonl",
+  "eval/refusal_gate/orthographic_variant_in_scope_012.jsonl",
+  "eval/refusal_gate/stock_market_narrowing_probes_014.jsonl"
+ ],
+ "unchanged": 2449,
+ "diversions": 24,
+ "already_routed_and_changed": 0,
+ "must_move": {
+  "eval_086": "nssf",
+  "eval_130": "sdl",
+  "eval_394": "nssf"
+ },
+ "expected_diversions": {
+  "eval_087": "nssf",
+  "eval_111": "sdl",
+  "eval_112": "wcf",
+  "eval_233": "sdl",
+  "eval_364": "wcf"
+ },
+ "diversion_rows": [
+  {
+   "file": "data/reviewed/hand_coded_batch_015_b02.jsonl",
+   "line": 4,
+   "id": "data/reviewed/hand_coded_batch_015_b02.jsonl:4",
+   "q": "SDL inaanza kuwahusu waajiri wenye wafanyakazi wangapi?",
+   "before": "none",
+   "after": "sdl"
+  },
+  {
+   "file": "data/reviewed/hand_coded_batch_015_b05.jsonl",
+   "line": 1,
+   "id": "data/reviewed/hand_coded_batch_015_b05.jsonl:1",
+   "q": "Mchango wa mwajiri kwa NSSF ni asilimia ngapi ya mshahara?",
+   "before": "none",
+   "after": "nssf"
+  },
+  {
+   "file": "data/reviewed/hand_coded_batch_015_b05.jsonl",
+   "line": 3,
+   "id": "data/reviewed/hand_coded_batch_015_b05.jsonl:3",
+   "q": "Jumla ya mchango wa NSSF ni asilimia ngapi?",
+   "before": "none",
+   "after": "nssf"
+  },
+  {
+   "file": "data/reviewed/nssf_confident_pairs.jsonl",
+   "line": 3,
+   "id": "data/reviewed/nssf_confident_pairs.jsonl:3",
+   "q": "Jumla ya mchango wa NSSF ni asilimia ngapi?",
+   "before": "none",
+   "after": "nssf"
+  },
+  {
+   "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "line": 86,
+   "id": "eval_086",
+   "q": "Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?",
+   "before": "none",
+   "after": "nssf"
+  },
+  {
+   "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "line": 87,
+   "id": "eval_087",
+   "q": "Kiwango cha mchango wa NSSF kwa upande wa mfanyakazi ni asilimia ngapi ya mshahara wake wa jumla?",
+   "before": "none",
+   "after": "nssf"
+  },
+  {
+   "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "line": 111,
+   "id": "eval_111",
+   "q": "Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?",
+   "before": "none",
+   "after": "sdl"
+  },
+  {
+   "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "line": 112,
+   "id": "eval_112",
+   "q": "Kiwango cha WCF ni asilimia ngapi ya jumla ya mishahara ya jumla?",
+   "before": "none",
+   "after": "wcf"
+  },
+  {
+   "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "line": 130,
+   "id": "eval_130",
+   "q": "Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?",
+   "before": "none",
+   "after": "sdl"
+  },
+  {
+   "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+   "line": 33,
+   "id": "eval_233",
+   "q": "Ni idadi gani ya waajiriwa inayofanya mwajiri kuwa na wajibu wa kulipa SDL Tanzania Bara?",
+   "before": "none",
+   "after": "sdl"
+  },
+  {
+   "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "line": 114,
+   "id": "eval_364",
+   "q": "Nina mfanyakazi mmoja tu, je WCF inanihusu au ni kwa makampuni makubwa?",
+   "before": "none",
+   "after": "wcf"
+  },
+  {
+   "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "line": 144,
+   "id": "eval_394",
+   "q": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
+   "before": "none",
+   "after": "nssf"
+  },
+  {
+   "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+   "line": 50,
+   "id": "ext_50",
+   "q": "Mchango wa NSSF ni asilimia ngapi -- watu wamenambia tofauti, mmoja anasema kumi, mwingine anasema ishirini.",
+   "before": "none",
+   "after": "nssf"
+  },
+  {
+   "file": "data/reviewed/slot_extraction_stress_test_001.jsonl",
+   "line": 4,
+   "id": "extract_004",
+   "q": "Tuna wafanyakazi wachache sana, WCF inatuhusu?",
+   "before": "none",
+   "after": "wcf"
+  },
+  {
+   "file": "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl",
+   "line": 4,
+   "id": "extract_004",
+   "q": "Tuna wafanyakazi wachache sana, WCF inatuhusu?",
+   "before": "none",
+   "after": "wcf"
+  },
+  {
+   "file": "data/reviewed/slot_extraction_stress_test_001.jsonl",
+   "line": 131,
+   "id": "extract_131",
+   "q": "Nina wafanyakazi wachache tu, SDL itanihusu?",
+   "before": "none",
+   "after": "sdl"
+  },
+  {
+   "file": "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl",
+   "line": 131,
+   "id": "extract_131",
+   "q": "Nina wafanyakazi wachache tu, SDL itanihusu?",
+   "before": "none",
+   "after": "sdl"
+  },
+  {
+   "file": "eval/accuracy_gate/false_premise_pairs_016.jsonl",
+   "line": 2,
+   "id": "fp_01b",
+   "q": "Kiwango cha SDL ni asilimia ngapi ya mishahara?",
+   "before": "none",
+   "after": "sdl"
+  },
+  {
+   "file": "eval/accuracy_gate/false_premise_pairs_016.jsonl",
+   "line": 4,
+   "id": "fp_02b",
+   "q": "Kiwango cha WCF ni asilimia ngapi ya mishahara?",
+   "before": "none",
+   "after": "wcf"
+  },
+  {
+   "file": "eval/accuracy_gate/headcount_extraction_probes_012.jsonl",
+   "line": 8,
+   "id": "hc_08",
+   "q": "Nina mfanyakazi mmoja wa kudumu na wawili wa muda — SDL inanihusu?",
+   "before": "none",
+   "after": "sdl"
+  },
+  {
+   "file": "eval/refusal_gate/orthographic_variant_in_scope_012.jsonl",
+   "line": 7,
+   "id": "ov_07",
+   "q": "mfanyakazi wangu analipwa kwa samani ya kazi je NSSF ni asilimia ngapi",
+   "before": "none",
+   "after": "nssf"
+  },
+  {
+   "file": "eval/accuracy_gate/rate_period_probes_016.jsonl",
+   "line": 19,
+   "id": "rq_03",
+   "q": "Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?",
+   "before": "none",
+   "after": "sdl"
+  },
+  {
+   "file": "eval/accuracy_gate/rate_period_probes_016.jsonl",
+   "line": 20,
+   "id": "rq_04",
+   "q": "Kiwango cha WCF ni asilimia ngapi ya jumla ya mishahara ya jumla?",
+   "before": "none",
+   "after": "wcf"
+  },
+  {
+   "file": "eval/accuracy_gate/threshold_comparison_probes_024.jsonl",
+   "line": 22,
+   "id": "th_22",
+   "q": "Nina mfanyakazi mmoja tu — je nalipa WCF?",
+   "before": "none",
+   "after": "wcf"
+  }
+ ],
+ "adversarial_must_stay_none": [
+  {
+   "question": "Naweza kujiunga NSSF kwa hiari?",
+   "intent": "none",
+   "ok": true,
+   "why": "NSSF genuinely HAS voluntary membership for the self-employed. A bare `hiari` cue would answer 'NSSF is mandatory for employers' to a question about opting IN — the eval_211 wrong-topic harm class. The `si/ni ya hiari` predicative frame is what excludes it."
+  },
+  {
+   "question": "Je, mtu anayejiajiri anaweza kuchangia NSSF kwa hiari?",
+   "intent": "none",
+   "ok": true,
+   "why": "same shape, third person"
+  },
+  {
+   "question": "NSSF ni nini?",
+   "intent": "none",
+   "ok": true,
+   "why": "a definition question has no statement answer"
+  },
+  {
+   "question": "SDL ni kodi ya aina gani?",
+   "intent": "none",
+   "ok": true,
+   "why": "definition, not rate/method/applicability"
+  },
+  {
+   "question": "Ili kuhesabu SDL nahitaji nyaraka gani?",
+   "intent": "none",
+   "ok": true,
+   "why": "contains `kuhesabu` but asks for DOCUMENTS — this is why _METHOD_QUESTION requires the interrogative and not a bare verb"
+  },
+  {
+   "question": "Adhabu ya kuchelewa kulipa NSSF ni kiasi gani?",
+   "intent": "none",
+   "ok": true,
+   "why": "a penalty amount is not a rate, a method or an applicability rule, and no statement function holds it"
+  },
+  {
+   "question": "Je, NSSF inahusika na mshahara wote?",
+   "intent": "none",
+   "ok": true,
+   "why": "a base-SCOPE question. Recorded in _APPLICABILITY_CUES' own notes as the row that got `nahusika na` dropped, because nssf_applies() would answer a different question"
+  },
+  {
+   "question": "NSSF inalipwa tarehe ngapi?",
+   "intent": "none",
+   "ok": true,
+   "why": "a DEADLINE question. `kiwango` is absent so asks_rate is False, and no statement function holds a deadline"
+  },
+  {
+   "question": "Nyaraka gani zinahitajika kusajili wafanyakazi NSSF?",
+   "intent": "none",
+   "ok": true,
+   "why": "registration documents — eval_104's subject, and deliberately NOT routed: no engine holds the document list, so routing it would manufacture a confident wrong answer"
+  },
+  {
+   "question": "WCF ni ya mwajiri au mfanyakazi?",
+   "intent": "none",
+   "ok": true,
+   "why": "an incidence question. The statement now ANSWERS this, but the route does not fire because no rate/method/applicability cue is present — recorded as a known near-miss rather than widened for, since widening would need its own sweep"
+  }
+ ],
+ "findings": [],
+ "_bound": "R21: this is a LOWER bound on cost. Every corpus here shares vocabulary with the facts by construction, so a clean sweep says the change does not break what we have — not that it is safe on a stranger's phrasing. The adversarial arm is the partial remedy and it was authored by the person who wrote the rule."
+}

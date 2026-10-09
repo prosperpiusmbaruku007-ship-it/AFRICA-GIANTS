@@ -1459,6 +1459,40 @@ def detect_intent(text: str) -> str:
         if (own and _has_money_magnitude(ql)) or (efd and states_vat_registered(text)):
             return "efd_requirement" if efd else "vat_registration"
 
+    # ── PATH 9 — THE STATEMENT ROUTE: a rate / method / applicability question about an
+    # EXPLICITLY named levy, WITH NO FIGURE REQUIRED. (2026-10-09)
+    #
+    # ⛔ THE ROUTER PROPERTY THIS CLOSES, MEASURED NOT SUSPECTED. Every compute path above
+    # requires `_has_number(ql)` — path 1 explicitly, paths 2 and 2b in their first conjunct.
+    # So a question that asks what a rate IS, how a levy is COMPUTED, or WHETHER it applies,
+    # carrying no digits, could never reach an engine. Measured against the full 2026-10-09
+    # gate: **all 12 of that run's confirmed defects returned `detect_intent` = 'none'; not one
+    # reached an engine**, and for two of them (`eval_086` party inversion, `eval_130` inverted
+    # operation) `levy_rate_statement` already emits the correct answer. R31's fifth instance,
+    # and the reframing it forced: the bottleneck is the router, not the engines. A user asking
+    # what a rate is has no number to give.
+    #
+    # ⛔⛔ WHY THIS IS SAFE NOW AND WAS NOT BEFORE — the thing a cue list could not fix. The
+    # orchestrator's rate branch was gated on an amount for a MEASURED reason: eval_111/112
+    # answer correctly on the fact path and carried detail the engine did not reproduce (SDL is
+    # employer-only; WCF is paid to the WCF Authority, not TRA). Diverting them would have
+    # traded a richer correct answer for a thinner one. The candidate population is 8 rows and
+    # it split **4 good / 4 bad** — so a blanket widening would have risked 4 correct answers to
+    # fix 3. `rules_engine.rate_statement._INCIDENCE` closes that richness gap first, with each
+    # clause lifted from the gold of the row that proves it necessary. ENRICH THEN ROUTE; the
+    # order is the whole safety of it.
+    #
+    # NARROW BY CONSTRUCTION (R17 step 4), four ways:
+    #   * EXPLICIT levy token only — never `_natural_levy`, never `ambiguous_multi`. "Does SOME
+    #     levy apply?" has no single answer.
+    #   * only the three levies with BOTH a rate statement and an applicability verdict
+    #     (sdl/nssf/wcf). PAYE is banded, so "the rate" has no single value.
+    #   * PLACED LAST, immediately before the fact-path fallthrough, so it can only catch what
+    #     every other path has already declined. Nothing that routes today changes route.
+    #   * the asks are specific predicates, not a keyword list — see `asks_levy_statement`.
+    if explicit in _STATEMENT_LEVIES and asks_levy_statement(text):
+        return explicit
+
     return "none"
 
 
@@ -1608,6 +1642,172 @@ _RATE_QUESTION = re.compile(
 def asks_rate(text: str) -> bool:
     """True when the question asks for a levy's RATE rather than an amount owed."""
     return bool(_RATE_QUESTION.search(text))
+
+
+# ── THE STATEMENT ROUTE'S PREDICATES (2026-10-09) ────────────────────────────────────────
+# The three levies whose statement functions answer with NO user figures: both
+# `rate_statement_supports` and `supports_applicability` are True for exactly these.
+_STATEMENT_LEVIES = ("sdl", "nssf", "wcf")
+
+# A METHOD ask — "how is it worked out". eval_130 ("Mwajiri anahesabu kiasi cha SDL cha kulipa
+# kwa mwezi vipi?") inverted the operation, saying DIVIDE payroll by 3.5%, while
+# levy_rate_statement('sdl') already states the rate AND the base correctly.
+#
+# ⚠️ THE FORMS ARE LISTED, NOT ASSEMBLED FROM OPTIONAL MORPHEMES (R37). A constructed
+# `(?:a|u|i)(?:na)?hesab\w*` would generate strings Swahili does not use and miss ones it does;
+# the 2026-10-07 `uliyalipia`/`uliyolipia` miss came from exactly that shortcut. Each verb form
+# below is one that appears in the corpora.
+#
+# Requires the INTERROGATIVE as well as the verb: a bare "kuhesabu" appears in ordinary prose
+# ("...ili kuhesabu SDL nahitaji..."), which is a statement of need, not a method question.
+_METHOD_QUESTION = re.compile(
+    r"\b(?:inahesabiwa|hesabiwa|anahesabu|unahesabu|ninahesabu|tunahesabu|huhesabiwa)\b"
+    r"[^?]{0,80}?\bvipi\b"
+    r"|\bvipi\b[^?]{0,60}?\b(?:inahesabiwa|hesabiwa|kuhesabu)\b"
+    r"|\b(?:namna|jinsi)\s+(?:ya\s+)?kuhesabu\b"
+    r"|\bhesabu\s+ya\s+(?:sdl|nssf|wcf)\s+(?:inafanywa|hufanywa)\b", re.IGNORECASE)
+
+# An OPTIONALITY ask — "is it voluntary?". eval_394 ("Je, NSSF si ya hiari kwa mwajiri
+# anayestahili?") answered "Ndiyo, NSSF ni lazima kwa waajiri wenye wafanyakazi 10 au zaidi",
+# bolting SDL's headcount threshold onto NSSF, which has none.
+#
+# ⚠️ DELIBERATELY NOT A BARE `hiari`, AND THE COUNTER-EXAMPLE IS REAL: NSSF genuinely has
+# VOLUNTARY membership for the self-employed, so "Naweza kujiunga NSSF kwa hiari?" is a true
+# question about opting IN, whose correct answer is not "NSSF is mandatory for employers" — that
+# would be the eval_211 wrong-topic harm class. Requiring the `si/ni ya hiari` predicative frame
+# keeps the opt-in question on the fact path.
+#
+# Kept LOCAL to this route rather than added to _APPLICABILITY_CUES: that list feeds paths 1,
+# 2b and two orchestrator branches, so a cue added there changes behaviour everywhere. The
+# blast radius of a new cue should be the route that needs it.
+_OPTIONALITY_ASK = re.compile(r"\b(?:si|ni)\s+ya\s+hiari\b", re.IGNORECASE)
+
+
+def asks_levy_method(text: str) -> bool:
+    """True when the question asks HOW a levy is computed, rather than for an amount."""
+    return bool(_METHOD_QUESTION.search(text))
+
+
+# A THRESHOLD ask — "what headcount triggers this levy", as opposed to "does it apply to ME".
+# ⛔ FOUND END-TO-END, NOT BY THE ROUTE CHECK, and it is the distinction that decides whether
+# the answer is a STATEMENT or a CLARIFICATION. With the statement route open but this
+# predicate missing, eval_233 ("Ni idadi gani ya waajiriwa...") and ngapi_08 ("nina wafanyakazi
+# wangapi wanaohitajika ili SDL inianze kunihusu") reached the SDL applicability branch, which
+# needs a headcount, and so came back asking the user for THEIR count — on a question asking
+# what the threshold IS. The clarification even contained the answer ("kizingiti ni wafanyakazi
+# 10") while framing it as a question. Strictly worse than the fact path, which answered
+# eval_233 correctly.
+#
+# The complement matters as much: "Nina wafanyakazi wachache tu, SDL itanihusu?" carries NO
+# quantified count and names none of these tokens, so it still clarifies — which is correct,
+# because there the user really is asking about their own unstated headcount.
+_THRESHOLD_ASK = re.compile(
+    '\\bwangapi\\b|\\bidadi\\s+gani\\b|\\bkizingiti\\b|\\bwanaohitajika\\b',
+    re.IGNORECASE)
+
+
+def asks_levy_threshold(text: str) -> bool:
+    """True when the question asks what a levy's threshold IS, not whether it applies to me."""
+    return bool(_THRESHOLD_ASK.search(text))
+
+
+def asks_levy_optionality(text: str) -> bool:
+    """True when the question asks whether a levy is voluntary ("si ya hiari").
+
+    Exposed because the ORCHESTRATOR needs it too: `is_applicability_question` is False for
+    eval_394, so with only the route widened the question reached the amount path and asked for
+    a payroll figure — the Finding-1 harm the applicability branch exists to prevent, arriving
+    through a new door.
+    """
+    return bool(_OPTIONALITY_ASK.search(text))
+
+
+# ── THE FOUR VETOES, EVERY ONE FROM A MEASURED DIVERSION IN THE FULL-CORPUS SWEEP ────────
+# The first draft of this route swept 23 diversions beyond the 8 it was built for. Most were
+# genuine improvements, and FOUR were defects. Each veto below exists for a named row; none was
+# added on suspicion. This is R17 step 1 doing the work a probe set could not: the probes I
+# authored all passed.
+
+# V1 — DEADLINE. `_APPLICABILITY_CUES` contains "inatakiwa kulipwa", which matches
+# "SDL inatakiwa kulipwa TAREHE NGAPI kila mwezi?" — a question about WHICH DATE. The statement
+# route would have answered "SDL applies to employers with 10+ staff", i.e. the eval_211
+# wrong-topic harm class: full deterministic authority, aimed at a question nobody asked. No
+# statement function holds a deadline.
+_DEADLINE_ASK = re.compile(
+    r"\btarehe\s+(?:ngapi|gani|ya\s+mwisho)\b|\blini\b|\bmuda\s+gani\b"
+    r"|\bndani\s+ya\s+(?:siku|wiki|mwezi|miezi)\b|\bsiku\s+ngapi\b", re.IGNORECASE)
+
+# V2 — ONE LEVY ONLY. `edge_b04` names four obligations at once ("hizi za nssf wcf sdl osha zote
+# zinanihusu au zipi tu") and its expected behaviour is a TRIAGE across all of them.
+# `_explicit_levy` returns only the FIRST, so the route answered a quarter of the question —
+# the same defect `all_explicit_levies` exists to prevent on the compute path (eval_318 dropped
+# NSSF). A multi-levy question is a decomposition case, not a statement case.
+
+# V3 — SUFFICIENCY / ALTERNATIVE FRAME. `adv_06` ("...je bima ya ajali inatosha au nachangia
+# WCF") asks whether private insurance SUBSTITUTES for WCF. Path 2b's own note already recorded
+# this exact diversion as rejected: "the number-free form also diverts adv_06 to a
+# correct-but-partial deterministic yes that ignores the insurance half of the question — not
+# worth widening for." My first draft reintroduced precisely what that note declined. The
+# recorded decision governs.
+_SUFFICIENCY_FRAME = re.compile(r"\binatosha\b|\bbadala\s+ya\b|\bni\s+sawa\s+na\b",
+                                re.IGNORECASE)
+
+# V4 — THE APPLICABILITY LIMB IS ABOUT THE ASKER'S OWN OBLIGATION. The engine's verdict answers
+# "does this levy apply to an employer like me", not "is this particular PERSON an employee".
+# Two swept rows asked the latter: "Mkurugenzi analipwa mshahara — WCF inamhusu?" and
+# "Mkurugenzi anayejilipa mshahara anachangia NSSF?" — whether a DIRECTOR counts is a question
+# the flat no-threshold rule does not address, and answering "yes, from the first employee"
+# papers over it.
+#
+# ⚠️ AND THE SECOND OF THOSE IS A SUBSTRING COLLISION IN THE EXISTING CUE LIST, found here and
+# worth recording: `_APPLICABILITY_CUES` holds "nachangia", which matches inside "aNACHANGIA".
+# Word-bounding it below is what excludes the third-person form while keeping adv_06's genuine
+# first-person "nachangia" — R17's standing finding that every widening collides with something.
+# V5 — A SECOND OBLIGATION DOMAIN. "Kiwango cha mchango wa NSSF na mara ngapi OSHA hukagua
+# vikao?" asks two unrelated things. V2 does not catch it because OSHA is not a LEVY, so
+# `all_explicit_levies` returns just [nssf] — and `Orchestrator.decompose` does NOT split this
+# question (measured, not assumed: it returns the sentence whole). So the route would answer the
+# NSSF half with full deterministic authority and silently drop the OSHA half, which is
+# edge_b04's harm in a shape V2 cannot see.
+#
+# ⚠️ A LOWER BOUND AND SAID SO (R21). This list is the domains that actually appear beside a
+# levy in these corpora; a stranger could name one that is not here. The conservative direction
+# is the fact path, which is where a vetoed question goes.
+_OTHER_DOMAIN = re.compile(r"\bosha\b|\bbrela\b|\bnest\b|\btaneps\b|\buhamiaji\b"
+                           r"|\bvat\b|\befd\b|\bleseni\b", re.IGNORECASE)
+
+_OWN_OBLIGATION = re.compile(
+    r"\bina(?:ni|ku|tu)husu\b|\bitani(?:husu)?\b|\bitakuhusu\b|\bzina(?:ni|ku|tu)husu\b"
+    r"|\bnalipa\b|\bnilipe\b|\bnawajibika\b|\bnalazimika\b|\bnachangia\b"
+    r"|\bkuwa\s+na\s+wajibu\b|\bkuwahusu\b|\bwangapi\b|\bsi\s+ya\s+hiari\b"
+    r"|\bnafikia\s+kizingiti\b|\bfikia\s+kizingiti\b|\blazima\s+nilipe\b",
+    re.IGNORECASE)
+
+
+def asks_levy_statement(text: str) -> bool:
+    """True when a levy question is answerable by a STATEMENT — rate, method, or applicability
+    — i.e. by a constant the engine already holds, with no figure from the user.
+
+    The money-ask veto inside `asks_applicability` still governs: a question that does ask for a
+    shilling quantity is not a statement question and keeps the amount path.
+    """
+    ql = text.lower()
+    if _has_money_ask(ql):
+        return False
+    if _DEADLINE_ASK.search(ql):                       # V1
+        return False
+    if len(all_explicit_levies(text)) != 1:            # V2
+        return False
+    if _SUFFICIENCY_FRAME.search(ql):                  # V3
+        return False
+    if _OTHER_DOMAIN.search(ql):                       # V5
+        return False
+    if asks_rate(text) or asks_levy_method(text):
+        return True
+    if _OPTIONALITY_ASK.search(text):
+        return True
+    # V4 — applicability only where the asker is asking about their own obligation
+    return bool(is_applicability_question(text) and _OWN_OBLIGATION.search(ql))
 
 
 def asks_applicability(text: str) -> bool:

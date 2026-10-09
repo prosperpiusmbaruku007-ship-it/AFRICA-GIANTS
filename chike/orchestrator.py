@@ -330,8 +330,27 @@ class Orchestrator:
         # Applicability-only question (obligation/threshold, no amount asked): answer the
         # yes/no from headcount (SDL) or the flat no-threshold rule (NSSF/WCF) — no salary
         # required, which the amount path below would otherwise demand (Finding 1).
+        # THRESHOLD ASK -> THE STATEMENT, NOT A CLARIFICATION (2026-10-09). "What headcount
+        # triggers SDL" is answered by the statement, which names the threshold; sending it to
+        # the applicability branch asks the user for a count they did not supply and were not
+        # asked about. Placed BEFORE that branch for exactly that reason.
+        # THE DISCRIMINATION IS THE HEADCOUNT, NOT THE WORDING: a threshold ask with NO usable
+        # count is asking what the threshold IS; one WITH a count is asking whether it applies,
+        # and keeps the applicability verdict below. "Nina wafanyakazi wachache tu, SDL
+        # itanihusu?" names no quantified count and no threshold token, so it still clarifies —
+        # correctly, because there the user really is asking about their own unstated headcount.
+        if (rules_engine.rate_statement_supports(sq.computation_type)
+                and routing.asks_levy_threshold(sq.text)
+                and swn.sole_headcount(sq.text) is None
+                and not swn.states_no_employees(sq.text)):
+            return self._deterministic_answer(
+                sq, rules_engine.levy_rate_statement(sq.computation_type, None))
+        # Applicability, now including the OPTIONALITY form ("si ya hiari"). eval_394 routes
+        # here from the statement route; without the second disjunct it fell through to the
+        # amount path and asked for a payroll figure on a yes/no question.
         if (rules_engine.supports_applicability(sq.computation_type)
-                and routing.is_applicability_question(sq.text)):
+                and (routing.is_applicability_question(sq.text)
+                     or routing.asks_levy_optionality(sq.text))):
             return self._answer_applicability(sq)
         # Phase D re-run: SDL below the threshold is TZS 0 WHATEVER the payroll is, so an
         # AMOUNT question does not need the payroll either — the same "input not needed"
@@ -390,12 +409,27 @@ class Orchestrator:
         # TRA). Firing here would replace a correct richer answer with a thinner one, so the
         # branch engages only where a figure is present — which is exactly the case that was
         # clarifying instead of answering.
+        # ⛔ THE `amount is not None` GATE IS GONE (2026-10-09), AND THE REASON IT EXISTED IS
+        # NOW HANDLED RATHER THAN AVOIDED. The note above is kept because it was correct: with
+        # the old thinner statement, firing on a figure-free question WOULD have replaced
+        # eval_111/112's richer fact-path answers with poorer ones. The statement now carries
+        # the incidence detail those golds carry (`rate_statement._INCIDENCE`: SDL is
+        # employer-only; WCF is employer-only AND paid to the WCF Authority, not TRA; NSSF's
+        # employer share is not deducted from the wage while the employee's is), so the engine
+        # is at least as rich as the fact path on every row in that population.
+        #
+        # Measured before opening it: the candidate population is 8 rows, 4 of which the fact
+        # path already answers correctly. ENRICH THEN ROUTE — widening the route first would
+        # have traded 4 right answers for 3.
+        #
+        # A METHOD ask lands here too. "SDL inahesabiwa vipi?" is answered by exactly this
+        # statement — the rate AND the base — which is what eval_130 got wrong by inverting the
+        # operation (divide instead of multiply).
         if (rules_engine.rate_statement_supports(sq.computation_type)
-                and routing.asks_rate(sq.text)):
+                and (routing.asks_rate(sq.text) or routing.asks_levy_method(sq.text))):
             amount = swn.sole_plausible_amount(sq.text)
-            if amount is not None:
-                return self._deterministic_answer(
-                    sq, rules_engine.levy_rate_statement(sq.computation_type, amount))
+            return self._deterministic_answer(
+                sq, rules_engine.levy_rate_statement(sq.computation_type, amount))
         extraction = self.extractor.extract(sq.text, required, sq.computation_type)
         if not extraction.usable(required):
             # PREREQ-2 pattern B. GATED TO RUN ONLY WHERE EXTRACTION ALREADY FAILED, so a

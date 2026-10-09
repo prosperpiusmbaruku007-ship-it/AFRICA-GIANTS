@@ -223,6 +223,18 @@ def test_sdl_applicability_without_a_count_clarifies_for_headcount_not_salary():
 # Q1/Q12 regressions and that Phase B removes — revised openly, not silently.
 
 def test_multi_part_all_fact_collapses_to_single_pass():
+    """⚠️ THE SECOND PART CHANGED 2026-10-09, AND THE PROPERTY UNDER TEST IS UNCHANGED.
+
+    This used "NSSF ni asilimia ngapi?" as its second fragment. The statement route now sends
+    that to the COMPUTE path — correctly, since it is a rate question a constant answers — so
+    the question was no longer ALL-FACT and the collapse this test is named for was no longer
+    the behaviour under examination: it got 2 sub-answers because one part genuinely is a
+    computation now.
+
+    The fix is the fixture, not the assertion. "NSSF ni nini?" is a definition — a real
+    fact-path question — so the test again measures what its name claims. Changing the
+    assertion instead would have recorded the collapse as broken when it is intact.
+    """
     def retr(q):
         if "BRELA" in q:
             return ["BRELA ada ya mwaka ni TZS 22,000"]
@@ -233,8 +245,14 @@ def test_multi_part_all_fact_collapses_to_single_pass():
     fake = FakeBackend(scripted_reply="jibu moja lililojumuishwa")
     orch = Orchestrator(backend=fake, retriever=retr)
 
-    reply = orch.answer("BRELA ada ni ngapi? NSSF ni asilimia ngapi?")
+    question = "BRELA ada ni ngapi? NSSF ni nini?"
+    reply = orch.answer(question)
 
+    # The premise of the test, asserted rather than assumed: BOTH parts must be fact-path, or
+    # this is no longer an all-fact question and the collapse does not apply.
+    assert all(s.computation is None for s in reply.sub_answers), (
+        "a part of the fixture now routes to compute, so this is not an all-fact question — "
+        "fix the fixture, not the assertion")
     # One generation, one sub-answer — the v15 collapse, not per-fragment generation.
     assert fake.call_count == 1
     assert len(reply.sub_answers) == 1
@@ -242,7 +260,7 @@ def test_multi_part_all_fact_collapses_to_single_pass():
     assert "BRELA ada ya mwaka ni TZS 22,000" in fake.last_prompt
     assert "NSSF ni asilimia 20 ya mshahara" in fake.last_prompt
     # The single generation is over the WHOLE original question (not a lone fragment).
-    assert fake.last_prompt.rstrip().endswith("BRELA ada ni ngapi? NSSF ni asilimia ngapi?")
+    assert fake.last_prompt.rstrip().endswith(question)
     assert reply.text == "jibu moja lililojumuishwa"
 
 
@@ -796,6 +814,15 @@ def test_clean_stage_actually_applies_the_resolved_stop_strings():
         retriever=lambda q: ("ukweli",),
         gen_params={"stop_strings": ["\n\nZZZKATA"]},
     )
-    reply = orch.answer("Kiwango cha SDL ni asilimia ngapi?")
+    # ⚠️ VEHICLE QUESTION CHANGED 2026-10-09, AND THE TEST'S SUBJECT IS UNCHANGED. This read
+    # "Kiwango cha SDL ni asilimia ngapi?", which the statement route now sends to the compute
+    # path — where `_deterministic_answer` never calls the model, so the stop-string clean stage
+    # under test was no longer exercised at all. A test that silently stops reaching its own
+    # subject is worse than one that fails; it needed a FACT-path question, which is all this
+    # vehicle was ever meant to be.
+    reply = orch.answer("NSSF ni nini?")
+    assert reply.sub_answers[0].computation is None, (
+        "the vehicle question reaches the compute path again, so the model is never called and "
+        "this test no longer exercises the clean stage — pick a fact-path question")
     assert "ZZZKATA" not in reply.text
     assert reply.text.startswith("Jibu halisi hapa.")

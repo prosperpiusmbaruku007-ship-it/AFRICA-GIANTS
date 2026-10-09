@@ -71,6 +71,12 @@ def test_sha_staleness_is_still_REPORTED_but_no_longer_decides_the_verdict():
         is_ancestor_fn=_is_ancestor,
         last_touch_fn=_make_last_touch(shas),
         commits_since_fn=_commits_since,
+        # ⛔ content_fn SUPPLIED SO THIS TEST ISOLATES THE LIMB IT IS ABOUT (2026-10-09). It
+        # previously used the live tree, so a source change — the row-9 rewording — turned it
+        # red via the CONTENT limb while its subject is the SHA limb's demotion. A test that
+        # means to isolate one limb must not be failable by another limb's live state; that is
+        # how a green-to-red flip gets misread as the demotion having been undone.
+        content_fn=lambda: (SERVED_TEXTS, None),
     )
     assert "scripts/locked_facts.json" in report["stale_inputs"], (
         "the provenance limb has stopped reporting planted staleness — that limb is demoted, "
@@ -146,6 +152,9 @@ def test_a_fresh_index_built_after_every_input_change_passes_clean():
         is_ancestor_fn=_is_ancestor,
         last_touch_fn=_make_last_touch(shas),
         commits_since_fn=_commits_since,
+        # content_fn supplied so the SHA limb is isolated -- see _served_texts(). Without it
+        # this test went red on a live source change, for a reason unrelated to its subject.
+        content_fn=lambda: (SERVED_TEXTS, None),
     )
     assert ok is True, f"clean up-to-date state was wrongly flagged stale: {report}"
     assert report["stale_inputs"] == {}
@@ -392,15 +401,43 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     THE CONSEQUENCE FOR FUTURE FLIPS: this test should now flip FAR LESS OFTEN, and when it does
     it means something served actually changed. A fact edit, a builder change or a row
     reordering turns it red; a `wrong_patterns` or `verified_by` edit does not.
+
+    ⭐ SIXTEENTH FLIP, back to `assert ok is False`, AND IT IS THE FIRST FLIP CAUSED BY A ROW
+    THAT WAS NOT WRONG. Every previous flip pended a CORRECTION — a fabricated threshold, a
+    100x understated fine, a reversed citation. This one pends a REWORDING: `nssf_employer_rate`
+    read "mwajiri analipa asilimia 10 YA MSHAHARA WA MFANYAKAZI", which is true as a statement
+    of the BASE and reads in Swahili as a statement of SOURCE — the opposite of the employer's
+    obligation. eval_086 then served, live in the 2026-10-09 gate, "Kiasi kinachokatwa na
+    mwajiri KWENYE MSHAHARA wa mfanyakazi ... ni asilimia 10": rate right, party inverted, close
+    enough to the row's phrasing to be an echo of it. An employer following it deducts 10% from
+    wages unlawfully, on top of the employee's own 10%.
+
+    ⛔ WHY THAT DISTINCTION IS WORTH A FLIP OF ITS OWN. The 2026-10-09 closability pass
+    classified eval_086 by asking "is the governing fact in the index?" — it was, so the row was
+    called a MODEL defect. The fact was ALSO complicit. **"Is the governing fact present" is not
+    the same question as "does the governing fact say it unambiguously",** and only the second
+    one predicts whether the model can get it wrong. A true fact whose wording is ambiguous in
+    the one dimension the question turns on is a corpus defect that no presence check can see.
+
+    Exactly one row changes (9), 184 before and after. Flip back to `assert ok is True` once the
+    R15 regen has run and the artifacts are dual-committed — and re-assert the specifics then,
+    because `ok is True` alone does not establish that the intended row is the one that moved.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is True, (
-        f"the live repo reports NOT FRESH: {report}. Since 2026-10-08 this is a CONTENT verdict, "
-        "so a red here means build_fact_texts() no longer matches the served index -- a real "
-        "regen is owed. Check `diverging` for the rows, and `content_build_error` for the "
-        "cannot-evaluate case, which is also not a pass.")
-    assert report["content_matches"] is True, report
+    assert ok is False, (
+        "the live repo now reports FRESH. If the row-9 rewording regen has shipped, flip this "
+        "and test_content_limb_passes_on_the_real_built_texts back to True and re-assert the "
+        "specifics; if it has not, something else has made the built index match again and "
+        "that needs explaining before this is flipped.")
+    assert report["content_matches"] is False, report
     assert report["content_build_error"] is None, report
+    rows = report["diverging"]["kaggle/rag_facts_text.json"]["rows"]
+    assert [r["index"] for r in rows] == [9], (
+        f"the pending divergence is no longer row 9 alone — a second change has been staged "
+        f"without this note being updated: {rows}")
+    assert "HAIKATWI" in rows[0]["built"] and "ikihesabiwa" in rows[0]["built"], (
+        "the pending row no longer separates the BASE from the SOURCE, which is the entire "
+        "point of the rewording")
     assert report["embedding_rows_match"] is True, report
     assert report["built_rows"] == 184, report["built_rows"]
     # ⛔ AND THE PROVENANCE LIMB IS STILL RED HERE, DELIBERATELY ASSERTED. This is the whole
@@ -442,10 +479,52 @@ def _real_texts():
 REAL_TEXTS = _real_texts()
 
 
+def _served_texts():
+    """The COMMITTED index, i.e. what the content limb compares against.
+
+    ⛔ ADDED 2026-10-09 TO DECOUPLE THE SHA-LIMB TESTS FROM LIVE FRESHNESS. Two tests whose
+    subject is limb SEPARATION (`test_sha_staleness_is_still_REPORTED_but_no_longer_decides_
+    the_verdict` and `test_a_fresh_index_built_after_every_input_change_passes_clean`) were
+    calling `check()` with the REAL builder output, so they went red the moment a source change
+    made the live content diverge — for a reason that has nothing to do with what they assert.
+    A test that intends to isolate one limb must not be failable by another limb's live state;
+    feeding it a content_fn that matches by construction is what makes the isolation real.
+    """
+    import json
+    with open(os.path.join(REPO, "kaggle", "rag_facts_text.json"), encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+SERVED_TEXTS = _served_texts()
+
+
 def test_content_limb_passes_on_the_real_built_texts():
+    """⭐ SIXTEENTH FLIP, to `assert ok is False` — PENDING THE ROW-9 REWORDING REGEN.
+
+    `nssf_employer_rate` was reworded on 2026-10-09 because its text INVITED the defect it
+    existed to prevent. It read "mwajiri analipa asilimia 10 YA MSHAHARA WA MFANYAKAZI" — true
+    as a statement of the BASE, and readable in Swahili as a statement of SOURCE, which is the
+    opposite of the employer's obligation. eval_086 then served "Kiasi kinachokatwa na mwajiri
+    KWENYE MSHAHARA wa mfanyakazi ... ni asilimia 10" live in the 2026-10-09 gate: the rate
+    right, the party inverted, close enough to the row's own phrasing to be an echo of it. An
+    employer following it deducts 10% from wages unlawfully, on top of the employee's own 10%.
+
+    EXACTLY ONE ROW CHANGES (9), 184 before and after, verified by this check's own diff. Flip
+    back to `assert ok is True` once the R15 regen has run on Kaggle and the artifacts are
+    dual-committed to kaggle/ and chike-inference/ — and re-assert the specifics then, because
+    `ok is True` alone does not establish that the intended row is the one that moved.
+    """
     ok, rep = check(repo_dir=REPO, content_fn=lambda: (REAL_TEXTS, None))
-    assert ok is True, rep
-    assert rep["content_matches"] is True
+    assert ok is False, (
+        "the built index now matches the served one — if the row-9 regen has shipped, flip "
+        "this and the three siblings back and re-assert the specifics")
+    assert rep["content_matches"] is False
+    diverging = rep["diverging"]["kaggle/rag_facts_text.json"]["rows"]
+    assert [r["index"] for r in diverging] == [9], (
+        f"the pending divergence is no longer row 9 alone: {diverging}")
+    assert "HAIKATWI" in diverging[0]["built"], (
+        "the pending row no longer states that the employer's share is NOT deducted, which is "
+        "the whole point of the rewording")
 
 
 def test_content_limb_BLOCKS_a_single_changed_row():
