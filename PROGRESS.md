@@ -1,5 +1,285 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-10-09 — **THE FULL GATE IS PACKAGED AND RUNNING. IT DIED TWICE BEFORE IT STARTED, AND NEITHER DEATH WAS A TEST FAILURE.**
+
+The first full gate since `1476caa` (2026-08-09) is running as this is written. Two months of
+defect-class work is invisible in Bar A until it re-runs, and the last run measured a **217-fact**
+index while production serves **184** — so the standing number is not merely old, it was taken on
+a different system.
+
+### 1. ⛔ THE PRE-REGISTERED EXPECTATION, VERBATIM — RECORDED BEFORE THE RUN SO THE RESULT IS READ AGAINST IT, NOT THE OTHER WAY ROUND
+
+Committed in `eval/results/gate_preregistration_2026_10_09.json` and in the package's own
+docstring at `7052551`, **before** a single generation. Reproduced here unaltered:
+
+> ```
+>   (a) KEY CORRECTION  -2 rows at most, i.e. **-0.52 pts**, and the direction is DOWN. Both
+>       corrected keys are stricter, and the row only moves if the model gives the old answer.
+>       This is a hard bound: the dual-score arm measures it exactly rather than estimating it.
+>   (b) CORRECTED FACTS  **+1.25 pts at most**, direction UP. 12 of the 400 rows (3.0%) touch a
+>       fact corrected after the baseline; 5 of those were failing at the baseline, so at most 5
+>       rows can flip, i.e. 5/384. Bound re-derived in
+>       `eval/controls/pilot_stocktake_2026_10_08.py`, not recalled.
+>   (c) THE TWO WIRED GUARDS  expected to move **A1 down and A2 not at all**. D-FIDELITY-7 was
+>       priced at 18 flags over 5,599 stored rows with **0 in gold**; D-FIDELITY-8 at 1 flag over
+>       13,632 rows, **0 in gold**. Neither can produce a right answer, so if A2 rises, that rise
+>       is NOT theirs and must be attributed elsewhere.
+>   (d) THE INDEX, 217 -> 184  **UNBOUNDED AND UNMEASURED, AND IT IS THE LARGEST TERM.** The drop
+>       is consolidation (221 -> 187 on 2026-08-26, "three consolidated families"), not deletion,
+>       plus four stale renderings corrected out of production. Consolidation is plausibly
+>       positive — the ask-aligned rewrites measured at rank 1 — but **nothing has measured its
+>       effect on these 400 questions**, and `nat_23` moving 45->46 from a single rewrite is the
+>       standing proof that index composition perturbs neighbours. If the result lands outside
+>       (a)+(b), this is the first place to look, and NOT a reason to doubt the run.
+>
+>   SO THE PRE-REGISTERED POINT ESTIMATE IS  81.8% - 0.5 + 1.25 ~= **82.5% in-corpus raw**, with
+>   the honest statement that term (d) is larger than both the others and unsigned. I am NOT
+>   predicting Bar A clears 85%. The fact-path bucket sat at 85.9% raw / 85.4% reliable at the
+>   baseline — ON R7's line, not clear of it — and that bucket is where a first-time user's
+>   question lands, so it is the bucket to read first.
+>
+>   🎯 THE ONE ROW TO WATCH: `eval_347`. D-FIDELITY-7 should now withhold its fabricated TZS
+>   11,000,000 EFD threshold. That is a **FAIL that is a WIN**, and it must appear as
+>   `outcome=NO_ANSWER, guard=D-FIDELITY-7`, not as a wrong answer. If it still asserts the
+>   figure, the guard is not reaching the fact path in production and that is the finding of the
+>   run.
+>
+>   ⛔ IF THE RESULT LANDS BELOW THE PROJECTION, that is a result to bring back, not a reason to
+>   reopen a decision — the founder's standing instruction from 2026-08-08: decide against a real
+>   number, not a projected one.
+> ```
+
+**The comparable baseline is 81.8% (314/384 in-corpus raw), not 82.5%.** My own 2026-10-08
+stock-take quoted `330/400 = 82.5%`, which puts the 16 `out_of_corpus` rows in both numerator and
+denominator — an in-corpus-plus-refusals figure. R7 Gate 1 is an **in-corpus** bar and the gate's
+accuracy excludes OOC by design. Both numbers are in the artifact so they cannot be conflated
+again. *(The coincidence that the projected result and the mis-blended baseline are both 82.5% is
+exactly the kind of thing that gets quoted as "no movement".)*
+
+**The headline carries two numbers and a count, never a net:** `A1` wrong-answer rate, `A2`
+right-answer rate, `G` guard interventions, with a guard × outcome cross-tab. A falling A1 with a
+flat A2 is **CONTAINMENT**, and the summary prints that word when it happens.
+
+### 2. ⛔ FINDING ONE: A BARE PRESENCE CHECK FAILED ON EXACTLY THE ROW THAT FIXES THE DEFECT, BECAUSE THE FIX CONTRADICTS THE OLD VALUE BY NAMING IT
+
+The package's FATAL pre-flight probe for index row 57 was `'11,000,000' not in row`. Row 57 reads:
+
+> `Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS
+> 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. **Na SI TZS 11,000,000.**`
+
+It is **correct**, and it denies the fabrication *by naming it*. So containment is true of precisely
+the row that closes the defect, and the probe would have aborted the run **after the HuggingFace
+download** — the GPU hour the package exists to protect.
+
+**Three sites carried the same check**, and their costs are not equal:
+
+| site | what it would have done | how loud |
+|---|---|---|
+| the offline test | failed | **LOUD** — cost nothing, and is the only reason the other two were found |
+| the package's pre-flight gate | **aborted the run post-download, on a correct index** | silent until the run |
+| the `eval_347` verdict line, on the MODEL's reply | printed a reply *denying* the fabrication as **"THE FINDING OF THE RUN"** | silent, and quotable |
+
+> **THIS WAS PREDICTED IN WRITING AND THE PREDICTION DID NOT STOP IT.** CLAUDE.md already records
+> that *"three live index rows (57, 63, 159) deliberately carry their old value under a negation,
+> so a presence check would fail the very rows it protects."* I wrote the check anyway, three
+> times, in one file, the day after reading that sentence. **Mention-vs-assertion is not a
+> property of sweeps — it is a property of any check pointed at corrected text**, and a pre-flight
+> gate is the most expensive place to learn it, because it runs after the money has been spent.
+
+All three now call the committed, hardened `_asserted_spans` from
+`sweep_superseded_values_in_built_index.py` — **imported, never re-implemented** (R39: a cue in two
+rules must be removed from two rules), with its nine-specimen self-test run before it judges
+anything. The probes were lifted to module level as `INDEX_CONTENT_PROBES` /
+`index_content_probes()` **specifically so the offline test can CALL them against the real index
+rather than grep the source**, and they are planted four ways: pre-correction row 57 in digits, the
+spelled-out `milioni 11`, a *hollow* row that omits the fabrication without stating the claim, and
+a stale row 172.
+
+**Two of my own bad specimens were caught by those planted limbs (R26's second half):** the
+positive limb asserted `hakuna kizingiti` where the live row says **`haina`** — in the package that
+slip is fatal post-download — and the package-source check matched **the comment explaining why
+containment was wrong**, which is R26's recorded *"matched the COMMENT explaining why a defect was
+removed"*, arriving while fixing a presence check with a presence check.
+
+### 3. ⛔ FINDING TWO: IMPORT TIME vs CALL TIME — THE SECOND INSTANCE OF ONE DEFECT, AND THE ONE-TIME SWEEP THAT COULD NOT COVER IT
+
+The gate then died at **second 13**, before the GPU, before the pre-flight, on
+`AttributeError: 'OutStream' object has no attribute 'reconfigure'` — a module-level
+`sys.stdout.reconfigure()` in the polarity module the package loads.
+
+| | file | cost |
+|---|---|---|
+| 2026-09-24 | `scripts/check_correction_sync.py` | a whole Kaggle RAG regen, **after** every blocking check passed and **before** any upload |
+| 2026-10-09 | `eval/index_quality/sweep_superseded_values_in_built_index.py` | the full gate, at second 13, in a loader written the day before |
+
+The 2026-09-24 remedy was correct and thorough: guard the line, move it into `main()`, then
+*"AST-sweep the other two modules the regen imports in-process for module-level I/O configuration
+of any kind."* **That was a one-time act over a two-module population.** It could not protect a
+file that did not exist yet, and the file that broke the gate was written fifteen days later. The
+remembered-rule failure, in the same shape as R30's "TRA unreachable".
+
+> ### 🎯 THE DURABLE RULE, AND IT IS SMALLER AND MORE USEFUL THAN "GUARD RECONFIGURE":
+> **A SCRIPT'S `main()` MAY SET UP ITS WORLD. A LIBRARY'S IMPORT MAY NOT.**
+>
+> The question is never which call is dangerous — it is **who asked for it and when**. The same
+> `os.chdir(REPO)` is correct in `main()` and a defect at module level, because import-time work
+> on global state runs regardless of how the module is used, which is exactly why careful calling
+> cannot avoid it.
+
+**And the chdir proved the rule by resisting it.** `os.chdir(REPO)` sat on the next line; I removed
+it, made this file's artifact path absolute, and declared it unnecessary. **Running the sweep from
+`C:\` disproved that in one line** — `precompute_rag_embeddings.FACTS_PATH` is *relative*, so
+`build_fact_texts()` raises `FileNotFoundError` from any other cwd. It is load-bearing, and it is
+now in `main()`. Recorded because the method is the point: *the claim was settled by running it from
+a different directory, not by reasoning about it* — one command against a confident wrong
+conclusion I had already written into a comment.
+
+**Structural, so the population is re-derived every run:**
+`scripts/check_kaggle_import_safety.py` + `tests/test_kaggle_import_safety.py` (23 tests) take the
+transitive closure of every module the `kaggle/` scripts import — **61 today, 43 of them
+libraries** — and AST-scan for module-level global-I/O mutation. **Six rules; four of them match
+nothing in the repo today, which is why they are coded rather than swept**: `reconfigure` and
+`chdir` have instances, while `setlocale`, `logging.basicConfig`, `filterwarnings` and
+`os.environ[...]=` are the rest of the 2026-09-24 write-up's own rule list. Recording them as "swept
+clean" would repeat the exact mistake this entry is about; the marginal cost of enforcing a rule
+with zero violations is zero. All six are planted **firing** and **satisfied inside `main()`**.
+
+**The dynamic edge is the whole point.** A statement-only import graph would have missed this
+instance: the package reaches that module through `spec_from_file_location(name,
+os.path.join(_CLONE, 'eval', 'index_quality', 'sweep_…py'))` — a string, not an import. Four edges
+are resolved and planted separately (plain import; `spec_from_file_location` as literal and via a
+variable; `sys.path.insert` + bare name; a declared `SOURCE_FILES` manifest). **Three of the four
+had a real bug in my scanner**, so a single plant would have certified it.
+
+### 4. 🔴 AND THE INSTRUMENT FAILED TWICE AGAINST ME, BOTH TIMES BY DELETING FINDINGS — R39's CLEAREST INSTANCE YET
+
+1. **The first draft resolved dotted names against the repo root only.** The regen reaches its
+   checker as `sys.path.insert(0, 'scripts')` + `from check_correction_sync import …` — a **bare**
+   name. So `scripts/check_correction_sync.py`, **the 2026-09-24 offender itself**, was never in
+   the audited population, while the scan reported two findings and looked like it worked.
+2. **Then I added a constant table so `_gates_path` would resolve — and `_CLONE` resolved too**
+   (it is also a module-level literal). The sweep's path became
+   `/kaggle/working/AFRICA-GIANTS/eval/…`, which is not a repo file, so **the module fell out of the
+   population.** Findings went **2 → CLEAN** while the closure grew **58 → 60**.
+
+> **A strictly more capable resolver that deleted the only finding it existed to report.** It was
+> caught by asking why the number moved — nothing else would have. Both defects were **invisible to
+> the findings list**, which is why the test now asserts specific required **members** of the
+> population and a shrink-only size: *a population is checked by its positive limb, not by its
+> findings.*
+
+Fixed by trying every path **suffix** — a clone root is just a prefix, whether it is a literal, a
+variable, or absent.
+
+### 5. THE FIRST CRASH WAS NOT A TEST FAILURE EITHER, AND THE RETRY WAS AIMED AT THE WRONG CAUSE
+
+Before all of the above, the packaging session crashed mid-run. No pytest output survived on disk
+(`lastfailed` stale from 2026-10-08; `nodeids` proving no session reached `sessionfinish` after
+04:55), so it was recovered from the session transcript:
+
+```
+File ".../anyio/pytest_plugin.py", line 264, in <module>
+File ".../_pytest/assertion/rewrite.py", line 357, in _rewrite_test
+    tree = ast.parse(source, filename=strfn)
+MemoryError
+```
+
+It died six seconds in, inside pytest's assertion rewrite while loading the `anyio` plugin —
+**before collecting a single test**. The host has 8 GB. The retry's only change was
+`-p no:cacheprovider`, which cannot affect memory. **A retry that does not name a cause is not a
+retry, and a green one would have explained nothing.**
+
+### 6. ⚠️ WHY LOCAL GREEN SAYS NOTHING ABOUT WHETHER A KAGGLE SCRIPT WILL *START*
+
+The package ships 23 offline tests precisely so it cannot waste GPU time, and **two of them load
+the offending module and run its self-test**. They passed while the gate was unrunnable. Under
+pytest `sys.stdout` is a `TextIOWrapper` — or pytest's `CaptureIO`, which subclasses it — and
+therefore **always** has `reconfigure`. Every local test of a Kaggle-imported module runs in an
+environment where this class cannot occur.
+
+So the check is necessarily **static**, plus one narrow dynamic probe that substitutes a
+`reconfigure`-less stream and imports the two historical modules — scoped to those two because
+loading the whole closure would pull in torch and the e5 model, the segfault risk that put
+`integration` behind a marker. The claim is asserted rather than stated: a test fails if
+`sys.stdout` ever *lacks* `reconfigure` locally, since that would change the premise.
+
+### 7. THE SPECIFICATION NAMED THREE ITEMS; ONE HELD. THE COVERAGE LEDGER IS WHY THAT IS VISIBLE
+
+The dual-key arm was specified to cover `eval_383`, `ext_15`, `ext_56` and the 41-sourced-of-73.
+Re-derived from the artifacts rather than from the request:
+
+| item | in the arm | what the record says |
+|---|---|---|
+| `eval_383` | **YES** | a genuine narrowing — *and the 2026-10-06 correction was half-applied until today* (below) |
+| `eval_355` | **YES** | the only other narrowing row in the 400. **Not named in the spec; the derivation found it** |
+| `eval_331` | no | declared verdict flip the regex scorer **cannot see** — `hulazimiki` is absent from `_YN_NEG`, one vowel, so it fell to the affirmative default. Delta **0 by construction**, which is worse than a measured delta because it looks like no change |
+| `ext_15` | no | `RE_RUN_REQUIRED`, key changed twice — but it is in the 78-row extended probe set, **not in these 400**, never scored at `1476caa`, and its gold is `expected_behavior` **prose** with no `answer_type`, which `score_question` cannot score at all |
+| `ext_56` | no | **not a key-correction row at all.** No `_scoring_key_correction` of any kind; the 2026-09-23 adjudication has `verdict=WRONG, cause=MODEL`. Listing it would have **manufactured a key-correction term out of a model defect** |
+| the 41 of 73 | no | `mode=REPORT_ONLY`, header reads *"Changes no gold answer"*. Delta **exactly zero, not small**. 41 sourced + 32 pending = 73, re-derived |
+
+**Second week running that a specification's escalated specifics did not survive re-derivation.**
+The standing practice — any supplied figure gets checked against the artifacts before it drives an
+action — is what caught both. The ledger ships **inside** the artifact, not only in the console, for
+the `why_each_population` reason: a caveat quoted away from its number stops travelling with it.
+
+**🔴 AND THE LIVE PART OF THE 73 IS NOT THE 41.** That file records **4
+`disagreements_reported_not_changed`** — gold answers that disagree with a primary source and were
+deliberately left alone. Those are candidate **wrong keys still scoring rows today**, and a wrong
+key is booked as a model failure forever, because the adjudication reads the key.
+
+**`eval_383`'s correction was half-applied for three days.** `score_question` **unions** the SW and
+EN numeric keys, so with `correct_answer_en` left at `TZS 300,000` the "corrected" key accepted
+**both** figures — the opposite of a correction, and it could never have shown a delta. Found by
+auditing all 15 rows carrying a `_scoring_key_correction` for EN-field drift; it was the only
+instance. **R36's shape in the gold layer: the fix fired, pointed one field short of the bytes that
+are read.** A standing sweep now covers every corrected row.
+
+### 8. THE ARC SINCE THE LAST ENTRY
+
+| landed | what |
+|---|---|
+| **retrain precondition MET** | with its boundary written in, so "MET" cannot be read as "retrain now" |
+| **D-FIDELITY-7 and -8 WIRED** | 7 priced at 18 flags / 5,599 rows / **0 in gold** after three measured narrowings; 8 at 1 flag / 13,632 rows, live-verified 8/8 |
+| **`/health` on `chike-inference`** | index identity is now an **equality check**, not a probe whose power depends on asking the right question. `build_matches` then caught a **real warm container, unplanted, on its first opportunity** |
+| **R16 reordered: PRE-FLIGHT BEFORE THE STOP** | three gates (provenance · AST chain lint · real build under a throwaway app name). **The obvious pre-flight does not work** — measured: on modal 1.5.1, `.env()` after `add_local_file()` *constructs fine* and raises only at build |
+| **dirty-tree refusal** | `/health` reporting a commit whose own `modal_app.py` cannot deploy is the provenance problem one layer out. Gate 1 fired on its **first run**, on the script itself being untracked |
+| **census: `NOT_EXERCISABLE` = 0** | `FIRES 22 · DISABLED 1 · OBSERVED 3`. The WhatsApp webhook token — the gate between the open internet and a GPU — exercised with three arms, including a wrong token of the **exact 40-character length** of the real one, because `/health` publishes that length unauthenticated and a length check would have passed it. **The positive arm is NOT claimed**: it needs the founder-only Secret, and it is named rather than rounded up |
+| **R37, R38, R39** | over-removal (3 correct rows deleted by 2 quarantines) · a probe can encode a wrong gold answer · the silent-failure direction in a cleanup |
+| **Kaggle import-safety check** | §3–4 above |
+| **the pre-registration** | §1 above — and the summary payload **named the file before it existed**, the stale-doc shape, now written and asserted field-for-field against the package |
+
+### 9. BARS, AS THEY STAND GOING INTO THE RUN (re-derived from raw rows, 2026-10-08)
+
+**BAR A** — `400-row blend 330/400 = 82.5%` · `gate_001 174/200 = 87.0%` ·
+`additions_003 114/150 = 76.0%` · `fact path 158/184 = 85.87% raw, 111/130 = 85.38% reliable` ·
+`adversarial_150 108/144 = 75.0%`. **The fact path is ON R7's line, not clear of it; the blend is
+below it.** Quoting any single one of those as "Bar A" is the blending error the two-bar framing
+exists to prevent.
+
+**BAR B** — unchanged and the recorded claim survived re-derivation exactly, which several figures
+re-checked this week did not: gap rows 12 → **WRONG 9, PARTIAL 1, PASS 2**; fabrication **9/12 =
+75.0%** outright, 10/14 = 71.4% including unbuilt domains; cue-list leaks **42 of 42** (orthographic
+20/20, vocabulary 22/22). The one mechanism that could move it is **DISABLED on measured evidence**
+(1.9% vs 71%, a ~37× gap).
+
+### 10. OWED, EXPLICITLY
+
+- **`ext_15` adjudication — its own job, after the gate lands.** It is the row that started the
+  BRELA work, its key changed twice (citation 2026-10-05, figure USD 25 → TZS 70,000 on
+  2026-10-06), and its own note **refuses desk re-labelling**: *"this row's reply was adjudicated
+  against a key that has since changed, so neither 'still wrong' nor 'actually right' is
+  supportable without asking the question again."* Not foldable into this gate — different corpus,
+  prose gold, no baseline.
+- The **4 reported disagreements** in `gold_provenance_backfill_pass1.json`, and the **32 still
+  pending** of the 73.
+- `eval_331`'s `_YN_NEG` gap: a scorer change that moves historical numbers, so it needs R17's
+  treatment, not a one-word patch riding along with a gate package.
+- `eval_347` is **open even if the guard works**: the answer it owes is *"EFD applies regardless of
+  turnover"*, and that is an **A2** job on the fact path, where a blanking guard can only ship
+  silence.
+
+---
+
 ## 📋 2026-10-08 (fourth pass) — **D-FIDELITY-8 IS LIVE AND VERIFIED. I ALSO TOOK PRODUCTION DOWN FOR THREE MINUTES DOING IT.**
 
 ### 1. ⛔ LEAD WITH THE INCIDENT: THE DEPLOY THAT PRECEDED THE VERIFY FAILED, AND PRODUCTION WAS DOWN

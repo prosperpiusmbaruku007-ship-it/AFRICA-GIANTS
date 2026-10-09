@@ -1110,6 +1110,65 @@ introduced it.
    locked. **So the trigger to re-check refusals is ADDING A DOMAIN, not editing a phrase** —
    and adding a domain does not look like touching refusals, which is exactly why it is missed.
 
+### ⛔⛔ R40 — A SCRIPT'S `main()` MAY SET UP ITS WORLD. A LIBRARY'S IMPORT MAY NOT. (added 2026-10-09)
+
+**The same line is correct in one place and an outage in the other, and the difference is not
+what it does — it is WHO ASKED FOR IT AND WHEN.**
+
+| | file | cost |
+|---|---|---|
+| 2026-09-24 | `scripts/check_correction_sync.py` — module-level `sys.stdout.reconfigure()` | **a whole Kaggle RAG regen**, after every blocking check passed and before any upload |
+| 2026-10-09 | `eval/index_quality/sweep_superseded_values_in_built_index.py` — the same line | **the full production gate, at second 13**, in a loader written the day before |
+
+`sys.stdout.reconfigure` exists on a real `TextIOWrapper` and **not** on Jupyter's
+`ipykernel.iostream.OutStream`. At module level in a library it therefore raises `AttributeError`
+the moment a notebook imports the module — before a line of the caller's work has run.
+
+> **Import-time work that touches global state runs REGARDLESS OF HOW THE MODULE IS USED, which
+> is exactly why careful calling cannot avoid it.** The caller owns its stdout, its cwd, its root
+> logger, its warning filters and its environment, and it may be a notebook kernel, a piped
+> subprocess, or a test harness capturing output. None of them asked.
+
+**⛔ THE FIRST REMEDY WAS CORRECT AND COULD NOT HAVE PREVENTED THE SECOND, AND THAT IS THE REAL
+LESSON.** 2026-09-24 guarded the line, moved it into `main()`, and then *"AST-swept the other two
+modules the regen imports in-process for module-level I/O configuration of any kind — reconfigure,
+setlocale, logging.basicConfig, filterwarnings, chdir, os.environ assignment."* **A one-time act
+over a two-module population.** The file that broke the gate was written fifteen days later. Same
+decay as R30's "TRA unreachable" note: a correct finding, faithfully written down, that nothing
+forced the next session to re-apply.
+
+**ENFORCED, NOT REMEMBERED.** `scripts/check_kaggle_import_safety.py` +
+`tests/test_kaggle_import_safety.py` re-derive the transitive closure of every module the
+`kaggle/` scripts import — **61 today** — and fail on module-level `reconfigure`, `chdir`,
+`setlocale`, `logging.basicConfig`, `filterwarnings` or `os.environ[...]=`. **Four of those six
+match nothing in the repo, which is why they are CODED rather than swept:** a rule with no current
+violation is indistinguishable from one that cannot match anything, so each is planted firing *and*
+satisfied-inside-`main()`.
+
+**⚠️ AND THE DYNAMIC EDGE IS WHERE IT ARRIVED.** A graph built from `import` statements alone would
+have missed it: the gate reaches that module through `spec_from_file_location(name,
+os.path.join(_CLONE, …))` — a string, not an import. Four edges must be resolved (plain import,
+`spec_from_file_location` literal and via a variable, `sys.path.insert` + bare name, and a declared
+`SOURCE_FILES` manifest), and **three of the four had a real bug on the first attempt.**
+
+**⚠️⚠️ LOCAL GREEN SAYS NOTHING ABOUT THIS CLASS, AND MUST NEVER BE OFFERED AS EVIDENCE THAT A
+KAGGLE SCRIPT WILL *START*.** Under pytest `sys.stdout` is a `TextIOWrapper` — or pytest's own
+`CaptureIO`, which subclasses it — so it **always** has `reconfigure`. The gate package's 23 offline
+tests included **two that load the offending module and run its self-test**, and they passed while
+the script was unrunnable. The only reachable check is **static**: read the source, do not run it.
+One narrow dynamic probe supplements it (substitute a `reconfigure`-less stream, import the two
+historical modules) — scoped to two known-pure modules, because importing the full closure would
+pull in torch and the e5 model, the segfault risk that put `integration` behind a marker.
+
+**🎯 AND WHEN REMOVING AN IMPORT-TIME SIDE EFFECT, RUN THE THING FROM SOMEWHERE ELSE RATHER THAN
+REASONING ABOUT IT.** `os.chdir(REPO)` sat beside the reconfigure. I removed it, made the file's own
+artifact path absolute, and wrote a comment declaring it unnecessary. **Running the sweep from `C:\`
+disproved that in one line:** `precompute_rag_embeddings.FACTS_PATH` is *relative*, so
+`build_fact_texts()` raises `FileNotFoundError` from any other cwd. It is load-bearing and belongs
+in `main()` — **moved, not removed.** A confident wrong conclusion had already reached the comment;
+one command from a different directory was cheaper than any amount of reading, and R34's rule
+applies to a module's behaviour exactly as it does to a document's contents.
+
 ### ⛔⛔ R39 — IN A CLEANUP, AN INSTRUMENT THAT FAILS SILENT IS FAR MORE LIKELY TO BE TRUSTED THAN ONE THAT FAILS LOUD. A SHRINKING COUNT READS AS PROGRESS. (added 2026-10-08)
 
 **This is the standing bias behind a list that has now reached nine instances in three days,
@@ -1128,6 +1187,36 @@ work, and the answer is: **the direction that makes the output shorter.**
 | word-boundary escapes in a **non-raw** string | an entire pattern, compiled to demand a literal backspace | **introspecting the compiled closure** |
 | D-FIDELITY-8's first fee cue | its own founding specimen — **0 flags over 13,632 rows, reported "SAFE"** | planting the specimen |
 | `check_locked_facts`'s negation window at 40 chars | nothing yet — it was too TIGHT, the safe direction, and still needed a measured 60 | the self-test |
+| **a path resolver made STRICTLY MORE CAPABLE** (2026-10-09) | **the only finding it existed to report** — see below | **asking why the number moved** |
+
+> ### 🎯 THE CLEAREST INSTANCE OF R39 IN THE LIST, BECAUSE NOTHING ABOUT IT LOOKS LIKE A MISTAKE
+>
+> `scripts/check_kaggle_import_safety.py` walks the modules the Kaggle scripts import and flags
+> module-level `sys.stdout.reconfigure`. Its first draft found the live defect — **2 findings**
+> over a **58**-module closure. Then it was given a constant table so a path held in a variable
+> (`_gates_path`) would resolve, which is a strict improvement and pulled in three more real
+> modules.
+>
+> **`_CLONE` is also a module-level literal.** So `os.path.join(_CLONE, 'eval', 'index_quality',
+> 'sweep_…py')` resolved to `/kaggle/working/AFRICA-GIANTS/eval/…`, which is not a repo file, and
+> **the offending module dropped out of the population.** Findings went **2 → CLEAN** while the
+> closure grew **58 → 60**.
+>
+> **A strictly more capable resolver that deleted the only finding it existed to report.** Every
+> signal said success: more modules audited, fewer defects, no error, no warning. It was caught
+> by **asking why the number moved** — and nothing else in the suite would have, because the
+> defect was invisible to the findings list by construction.
+>
+> **THE DEFENCE IS A POSITIVE LIMB ON THE POPULATION, NOT ON THE FINDINGS.** The test now names
+> required **members** (`scripts/check_correction_sync.py`,
+> `eval/index_quality/sweep_superseded_values_in_built_index.py`, …) and asserts the closure size
+> **shrink-only**. *A population is checked by its positive limb; its findings cannot check it.*
+> The same draft had already hidden the **2026-09-24 offender itself** — reached by a bare name
+> via `sys.path.insert` — behind a scan that reported findings and looked like it worked.
+>
+> **And the generalisation for any graph/closure instrument:** when a capability is added and the
+> count falls, the capability is the first suspect, not the vindication. Resolve a path by trying
+> every **suffix** — a root is just a prefix, whether literal, variable, or absent.
 
 **WHY THIS DIRECTION AND NOT THE OTHER.** A cleanup's whole purpose is to make a number go
 down. So every signal that the work is succeeding looks exactly like every symptom of an
@@ -1560,6 +1649,46 @@ five independent mechanisms, each requiring a different eye to catch:
 > superseded value *named in order to reject it* as a MENTION rather than an ASSERTION — three
 > live index rows (57, 63, 159) deliberately carry their old value under a negation, so a
 > presence check would fail the very rows it protects.
+>
+> **🔴 AND THAT SENTENCE WAS WRITTEN DOWN, READ, AND THEN VIOLATED AT THREE SITES IN ONE FILE THE
+> NEXT DAY (2026-10-09) — INCLUDING IN A PRE-FLIGHT GATE, WHICH IS THE EXPENSIVE PLACE.** The
+> 2026-10-09 gate package checked index row 57 with a bare `'11,000,000' not in row`. Row 57 is
+> the CORRECTED row and it denies the fabrication **by naming it**: *"EFD haina kizingiti cha
+> mauzo kwa mwaka. SI TZS 200,000,000 … **Na SI TZS 11,000,000**."* Containment is therefore true
+> of exactly the row that closes the defect.
+>
+> | site | what it would have done | how loud |
+> |---|---|---|
+> | the offline test | failed | **LOUD** — cost nothing, and is the only reason the other two were found |
+> | the package's **FATAL pre-flight gate** | **aborted the run AFTER the HuggingFace download, on a correct index** — the GPU hour the package exists to protect | silent until the run |
+> | the `eval_347` verdict line, run on the **MODEL's reply** | printed a reply *denying* the fabrication as **"THE FINDING OF THE RUN"** | silent, and quotable |
+>
+> **SO MENTION-VS-ASSERTION IS NOT A PROPERTY OF SWEEPS. It is a property of ANY check pointed at
+> corrected text** — a sweep, a test, a pre-flight gate, a verdict line, a live-verify probe.
+> Wherever a correction states the old value in order to reject it, a presence check inverts:
+> *the better the correction, the more certainly it fails.* And the three sites are not equal —
+> **rank them by when they run**, because a gate that fires after the money is spent is worth
+> more care than a test that fires in 0.3s.
+>
+> **The remedy is the one already written here, applied one level wider: never re-implement the
+> polarity rule.** All three sites now import `_asserted_spans` from
+> `sweep_superseded_values_in_built_index.py` — the hardened one, with its nine planted specimens
+> run *before* it judges anything. A second copy of a cue list is R39's defect (a cue in two rules
+> must be removed from two rules), and three copies of a *presence* check is the same defect with
+> no rule at all.
+>
+> **Two of my own specimens were bad, and the planted limbs caught both (R26's second half):** the
+> positive limb asserted `hakuna kizingiti` where the live row says **`haina`** — fatal
+> post-download in the package — and the source-level check matched **the comment explaining why
+> containment was wrong**, which is R26's recorded *"matched the COMMENT explaining why a defect
+> was removed"*, arriving while fixing a presence check with a presence check. **Grep code lines,
+> never the prose that documents the fix.**
+>
+> **And prefer RUNNING the probe to GREPPING for it.** The probe list and its loop were lifted to
+> module level (`INDEX_CONTENT_PROBES` / `index_content_probes()`) so the offline test could
+> **call** them against the real committed index instead of asserting that the source contains the
+> string `must_not_assert` — a string check passes on a probe that is mis-keyed, mis-scoped or
+> aimed at the wrong row (R20).
 >
 > **The hazard is that a LOOSE mention rule does not add noise — IT DELETES FINDINGS.** The
 > first draft used a bare `si\s`, which matches inside the ordinary Swahili word `kiasi `
