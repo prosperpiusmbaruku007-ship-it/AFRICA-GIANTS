@@ -1,0 +1,118 @@
+{
+ "_what": "is production self-deterministic, and does it still reproduce the gate harness's replies byte-for-byte as it did on 2026-08-10?",
+ "_why": "the 2026-08-10 v16 cutover was verified by byte-for-byte comparison against a harness-derived expectation, and two canaries came back 'byte-identical'. That procedure is only valid while the harness host and production produce the same bytes. On 2026-10-09 eval_162 differed by ONE SPACE on an unchanged route with a prompt proven byte-identical across both trees.",
+ "_what_this_cannot_say": "the CAUSE. Naming it needs the Kaggle and Modal images side by side — library versions, GPU model, quantisation kernels. R30: do not write down a diagnosis that has not been tested.",
+ "deployed_build": "054fb19",
+ "calls_per_question": 3,
+ "production_self_deterministic": true,
+ "reproduces_gate_reply": {
+  "eval_162": false,
+  "eval_111": false,
+  "eval_089": false
+ },
+ "drifted_from_the_gate_harness": [
+  "eval_162",
+  "eval_089"
+ ],
+ "excluded_because_their_route_changed": [
+  "eval_111"
+ ],
+ "_why_excluded": "a diverted row is EXPECTED to differ from the 0e11c3d reply — that is the change under test. Counting it as drift would manufacture evidence. eval_111 is in the probe set as exactly this worked example: I had justified it by what the row does NOW, while the baseline answered it on the fact path.",
+ "_the_cleanest_specimen": "eval_162. Unchanged route, prompt proven byte-identical across both trees with retrieval held fixed, and a GN487A subject that index row 9 cannot touch — so its one-space difference has nowhere to come from except the host/image. eval_089 differs too but is NSSF, so row 9 is a second candidate cause there and it is the weaker specimen.",
+ "verdict": "PRODUCTION IS SELF-DETERMINISTIC — and it NO LONGER reproduces the gate harness's bytes on ['eval_162', 'eval_089']. The difference is therefore SYSTEMATIC (image, library versions, GPU, quantisation), not sampling noise. ⛔ CONSEQUENCE: a byte-for-byte CROSS-HOST canary is no longer a valid check and will produce false FAILs on correct deploys. Within-host comparisons remain valid, which is what the prompt-identity method uses.",
+ "rows": [
+  {
+   "id": "eval_162",
+   "question": "'Mgeni' katika GN 487A inamaanisha nani hasa?",
+   "why_this_probe": "THE ROW THAT EXPOSED THE DRIFT. Unchanged route, prompt proven byte-identical across both trees, subject (GN487A citizenship) untouched by anything shipped — and it still differed from the gate reply by one space.",
+   "gate_0e11c3d_reply": "Raia wa Tanzania ni'mgeni' kwa maana ya GN 487A ikiwa amefikia masharti haya: (1) Amepata uraia kupitia ndoa tu (si kwa njia ya kuasiliwa); (2) Ameishi Tanzania kwa miaka 15 au zaidi; (3) Ana pasipoti ya Tanzania yenye hadhi kamili ya uraia. Ikiwa amefikia masharti hayo, bado ana adhabu ya faini ya TZS milioni 5 au kifungo cha miezi 3 kwa kuvunja GN 487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "gate_reply_sha16": "9582c1b9409b615d",
+   "calls": [
+    {
+     "i": 0,
+     "sha16": "e31c3b6704490906",
+     "len": 411,
+     "reply": "Raia wa Tanzania ni 'mgeni' kwa maana ya GN 487A ikiwa amefikia masharti haya: (1) Amepata uraia kupitia ndoa tu (si kwa njia ya kuasiliwa); (2) Ameishi Tanzania kwa miaka 15 au zaidi; (3) Ana pasipoti ya Tanzania yenye hadhi kamili ya uraia. Ikiwa amefikia masharti hayo, bado ana adhabu ya faini ya TZS milioni 5 au kifungo cha miezi 3 kwa kuvunja GN 487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz)."
+    },
+    {
+     "i": 1,
+     "sha16": "e31c3b6704490906",
+     "len": 411,
+     "reply": "Raia wa Tanzania ni 'mgeni' kwa maana ya GN 487A ikiwa amefikia masharti haya: (1) Amepata uraia kupitia ndoa tu (si kwa njia ya kuasiliwa); (2) Ameishi Tanzania kwa miaka 15 au zaidi; (3) Ana pasipoti ya Tanzania yenye hadhi kamili ya uraia. Ikiwa amefikia masharti hayo, bado ana adhabu ya faini ya TZS milioni 5 au kifungo cha miezi 3 kwa kuvunja GN 487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz)."
+    },
+    {
+     "i": 2,
+     "sha16": "e31c3b6704490906",
+     "len": 411,
+     "reply": "Raia wa Tanzania ni 'mgeni' kwa maana ya GN 487A ikiwa amefikia masharti haya: (1) Amepata uraia kupitia ndoa tu (si kwa njia ya kuasiliwa); (2) Ameishi Tanzania kwa miaka 15 au zaidi; (3) Ana pasipoti ya Tanzania yenye hadhi kamili ya uraia. Ikiwa amefikia masharti hayo, bado ana adhabu ya faini ya TZS milioni 5 au kifungo cha miezi 3 kwa kuvunja GN 487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz)."
+    }
+   ],
+   "self_deterministic": true,
+   "matches_gate_reply": false,
+   "route_changed": false,
+   "counts_as_drift_evidence": true
+  },
+  {
+   "id": "eval_111",
+   "question": "Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?",
+   "why_this_probe": "ROUTE CHANGED — reported, never counted. Diverted by the statement route, so its byte difference is the change under test rather than drift. In only as the worked example of why the drift set must exclude diverted rows.",
+   "gate_0e11c3d_reply": "Kiwango cha SDL ni asilimia 3.5% ya jumla ya mishahara ya fedha ya wafanyakazi wote. Thibitisha na TRA (tra.go.tz).",
+   "gate_reply_sha16": "3c2eb587c930482f",
+   "calls": [
+    {
+     "i": 0,
+     "sha16": "978b118b4e01ff3c",
+     "len": 342,
+     "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu."
+    },
+    {
+     "i": 1,
+     "sha16": "978b118b4e01ff3c",
+     "len": 342,
+     "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu."
+    },
+    {
+     "i": 2,
+     "sha16": "978b118b4e01ff3c",
+     "len": 342,
+     "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu."
+    }
+   ],
+   "self_deterministic": true,
+   "matches_gate_reply": false,
+   "route_changed": true,
+   "counts_as_drift_evidence": false
+  },
+  {
+   "id": "eval_089",
+   "question": "Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?",
+   "why_this_probe": "A PLAIN FACT-PATH ROW, long enough for a small difference to have somewhere to appear. One of the four whose text differed cross-host.",
+   "gate_0e11c3d_reply": "Kuna tofauti muhimu sana kati ya tarehe za NSSF na SDL:\n\nNSSF: malipo yanawasilishwa ndani ya mwezi MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz.\nSDL: malipo yanawasilishwa ifikapo tarehe 7 ya mwezi unaofuata — si mwezi mmoja baadaye.\n\nHizi ni tarehe tofauti kabisa. Thibitisha na NSSF (nssf.go.tz) na TRA (tra.go.tz).",
+   "gate_reply_sha16": "c5c54d881e10ea64",
+   "calls": [
+    {
+     "i": 0,
+     "sha16": "250cfe755213162c",
+     "len": 423,
+     "reply": "Kuna tofauti muhimu sana kati ya tarehe za NSSF na SDL:\n\nNSSF: malipo yanawasilishwa ndani ya mwezi MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz.\nSDL: malipo yanawasilishwa ifikapo tarehe 7 ya mwezi unaofuata — si mwezi mmoja baadaye. Thibitisha na tra.go.tz.\n\nHizi ni tofauti kabisa. Kuchelewa NSSF kunasababisha adhabu kali zaidi kuliko SDL. Thibitisha na nssf.org.tz au tra.go.tz."
+    },
+    {
+     "i": 1,
+     "sha16": "250cfe755213162c",
+     "len": 423,
+     "reply": "Kuna tofauti muhimu sana kati ya tarehe za NSSF na SDL:\n\nNSSF: malipo yanawasilishwa ndani ya mwezi MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz.\nSDL: malipo yanawasilishwa ifikapo tarehe 7 ya mwezi unaofuata — si mwezi mmoja baadaye. Thibitisha na tra.go.tz.\n\nHizi ni tofauti kabisa. Kuchelewa NSSF kunasababisha adhabu kali zaidi kuliko SDL. Thibitisha na nssf.org.tz au tra.go.tz."
+    },
+    {
+     "i": 2,
+     "sha16": "250cfe755213162c",
+     "len": 423,
+     "reply": "Kuna tofauti muhimu sana kati ya tarehe za NSSF na SDL:\n\nNSSF: malipo yanawasilishwa ndani ya mwezi MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz.\nSDL: malipo yanawasilishwa ifikapo tarehe 7 ya mwezi unaofuata — si mwezi mmoja baadaye. Thibitisha na tra.go.tz.\n\nHizi ni tofauti kabisa. Kuchelewa NSSF kunasababisha adhabu kali zaidi kuliko SDL. Thibitisha na nssf.org.tz au tra.go.tz."
+    }
+   ],
+   "self_deterministic": true,
+   "matches_gate_reply": false,
+   "route_changed": false,
+   "counts_as_drift_evidence": true
+  }
+ ]
+}

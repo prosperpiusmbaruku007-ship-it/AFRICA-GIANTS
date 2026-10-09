@@ -1042,6 +1042,19 @@ Hence three gates, in increasing cost:
    artifact on restart.** Then a fault costs one row, never the run. Defensive fixes — don't
    pipe, set the env var, keep the link up — are each correct and each only close the instance
    that already happened.
+
+   **✅ IT PAID OUT AGAIN ON 2026-10-09, FIFTH INSTANCE, SAME CLASS:** a 34-row judged live run
+   lost **16 rows to `getaddrinfo failed`** — the Tanzanian link dropped mid-run. 18 measured
+   rows survived on disk and the 16 were re-asked on resume. Cost: 16 rows, not the run.
+
+   > **⛔ AND THE RESUME ITSELF HAS A RULE: A RESUME MAY CARRY *DATA* FORWARD, NEVER A
+   > *CONCLUSION*.** The same harness restored each resumed row's `verdict` alongside its reply —
+   > so when its classifier turned out to be wrong (it compared a *regex* baseline against a
+   > *judge* verdict), **correcting the classifier could not relabel a single resumed row**, and
+   > a re-run reprinted the old labels just as confidently. Restore the measurements — reply,
+   > judge votes, timings, errors — and **re-derive every verdict, every run.** R39's direction
+   > exactly: it fails silently, and it fails in the reassuring direction, because a resumed row
+   > looks measured.
 2. Run a **live check that exercises the specific change** — a request whose behaviour is
    different before and after. A health check, a sanity question, or the deploy log prove
    nothing about the change.
@@ -1737,6 +1750,36 @@ arguments?** Answer it by parsing the deployed file — and by code lines only. 
 checks in this audit matched the COMMENT explaining why a defect was removed**, including one
 introduced while fixing the previous two.
 
+### ⛔⛔ R26's CLEAREST INSTANCE: A TEST THAT ASSERTS A *PRECONDITION* INSTEAD OF THE *BEHAVIOUR* SURVIVES A DELIBERATE REVERSAL OF THE BEHAVIOUR WITHOUT EVER GOING RED. (added 2026-10-09)
+
+`test_rate_branch_needs_a_figure_to_engage` guarded `rq_03`/`rq_04` — the two probes holding
+eval_111/eval_112 on the fact path. Its entire body was:
+
+```python
+assert swn.sole_plausible_amount(_q(pid)) is None     # "the question carries no figure"
+```
+
+**That is a property of the QUESTION, not of the branch.** It was true before the statement
+route, it is true after it, and it will be true forever — so when the 2026-10-09 change
+deliberately reversed the exact behaviour the test is *named* for, **the test stayed green and
+said nothing.** The probes' own `expect: "untouched"` field was the only trace, and nothing read
+that field at all.
+
+> **This is more instructive than an inert control, because nothing about it looks wrong.** An
+> unwired control has a visible gap — nothing calls it. This one runs, asserts something true,
+> relates to the right rows, and is *named after the behaviour it does not test*. The name is
+> what makes it credible, and the name is the only part that was ever about the branch.
+
+**THE TEST TO APPLY, and it is one question per assertion:** *could this assertion still pass if
+the behaviour it guards were inverted?* For a precondition the answer is always yes. Assert the
+**outcome** — here: the route fires, the rate is stated, and the incidence clause the old note
+said was missing is present — which is strictly stronger than the `expect` field ever was.
+
+**And when a probe's premise is disproved, invert it and keep the history** (R17's corollary):
+`expect_history` now records the old expectation, why it was true when written, and the measured
+result that disproved it. Never delete — a deleted expectation leaves the next reader unable to
+see that the reversal was deliberate.
+
 Standing harness: `eval/controls/audit_control_fires.py` → `eval/results/control_fire_audit.json`.
 **Add a row to it whenever a new control is built** — and list what cannot be exercised offline
 rather than dropping it, because *a census that quietly omits what it cannot test reports a
@@ -1990,6 +2033,52 @@ same one and it costs one assertion.
   the baseline is checkable against something specific rather than against memory.
 - **When the baseline does NOT reproduce, that is a finding in itself** and often a bigger one than
   the experiment: it means production does something you did not model.
+- **NAME THE HOST THE BASELINE CAME FROM, and never compare replies across two of them** — see
+  below, which is the fifth instance and the one that changes a standing procedure.
+
+### ⛔⛔ R24b — A REPLY COMPARISON ACROSS TWO HOSTS MEASURES THE HOSTS. SETTLE A *ROUTE* QUESTION ON *PROMPTS*. (added 2026-10-09, measured 2026-10-10)
+
+**The gate does not generate production's replies.** `kaggle/eval_gate_production_*.py` builds its
+own `_Backend` and `Orchestrator` on the Kaggle GPU — its own source calls it *"the Kaggle twin of
+modal_app.ChikeModel._generate"* — while production serves a separately deployed image. So
+`gate_production_*.json`'s `generated` field is a **Kaggle** reply, and diffing it against a
+production reply conflates at least three things: the change under test, every other code change
+between the two trees, and the host.
+
+**MEASURED, and the drift is real.** `eval/controls/measure_host_determinism_2026_10_10.py`:
+production is **self-deterministic** (one distinct reply over three calls on every probe) and it
+**no longer reproduces the gate harness's bytes** on unchanged-route rows. The clean specimen is
+`eval_162` — a GN487A question, unchanged route, prompt proven byte-identical across both trees,
+and a subject index row 9 cannot touch — differing by **one space** (`ni'mgeni'` → `ni 'mgeni'`).
+Self-determinism plus a stable difference means the cause is **SYSTEMATIC** (image, library
+versions, GPU model, quantisation kernels), not sampling noise.
+
+> **⛔ CONSEQUENCE FOR A STANDING PROCEDURE: THE 2026-08-10 BYTE-FOR-BYTE CROSS-HOST CANARY IS NO
+> LONGER VALID.** It worked then — two canaries came back *"byte-identical to v15"*. It will now
+> produce **false FAILs on correct deploys**, which is the stale-pin shape, and that session
+> already shows the cost: a canary "failed" against a malformed expectation and the deviation had
+> to be chased before the deploy could be trusted. **Within-host** comparisons are unaffected.
+
+**SO ASK THE QUESTION AT THE LAYER WHERE IT IS EXACT.** A routing claim — *"a row whose route did
+not change cannot have changed its answer"* — is a claim about **code**, not about replies: if
+`detect_intent` is unchanged the orchestrator hands the model the same prompt, and the same
+weights on the same prompt give the same reply. So compare the **PROMPTS** across the two trees,
+with a capturing backend and **retrieval held fixed by construction** so the index cannot perturb
+it. `eval/controls/premise_prompt_identity_2026_10_09.py` does this in a throwaway `git worktree`
+and a separate process (never a module reload — half-swapped imports are how an arm agrees with
+the wrong thing). It settled 15 rows as byte-identical in seconds, offline, for free — after the
+reply diff had reported `PREMISE FALSIFIED` and nearly bought a 100-minute GPU run on the strength
+of a one-space difference.
+
+**In practice:**
+- **A harness that compares against a recorded reply records WHICH HOST produced it.** If that is
+  not the host under test, the comparison is a lower bound on similarity and nothing more.
+- **Prefer the exact layer.** Prompts for routing, engine strings for renderers, retrieval ranks
+  for index work. Reply text is the layer of last resort and the only one that needs a GPU.
+- **A control whose own subject moved is not a control.** My drift probe included `eval_111`
+  because *"the engine answers it deterministically"* — true of the row NOW, while the baseline
+  answered it on the fact path. It is kept in the set, reported, and **excluded from the
+  conclusion**, as the worked example.
 
 ### R23 — A CONTROL MUST USE A VALUE THE SYSTEM WOULD NOT PRODUCE BY DEFAULT, or its pass proves nothing.
 

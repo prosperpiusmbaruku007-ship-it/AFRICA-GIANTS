@@ -61,14 +61,30 @@ PROBES = {
                  "THE ROW THAT EXPOSED THE DRIFT. Unchanged route, prompt proven byte-identical "
                  "across both trees, subject (GN487A citizenship) untouched by anything shipped "
                  "— and it still differed from the gate reply by one space."),
+    # ⛔ KEPT, RECLASSIFIED, AND NOT COUNTED AS DRIFT — R26's second half on my own probe set.
+    # I put this in as "a row the engine answers deterministically, so a difference implicates
+    # the deterministic path". That reasoning describes the row NOW. At the 0e11c3d baseline
+    # eval_111 was answered on the FACT PATH: its route is one of the 19 the statement route
+    # diverted. So `matches_gate_reply=False` here is fully explained by the change under test,
+    # and reading it as host drift would have manufactured a third instance of a defect that has
+    # two. A control whose own subject moved is not a control.
     "eval_111": ("eval/accuracy_gate/eval_questions_001.jsonl",
-                 "A ROW THE ENGINE ANSWERS DETERMINISTICALLY. Its reply is levy_rate_statement's "
-                 "own string, so a difference HERE would implicate the deterministic path rather "
-                 "than the model — a much larger finding, and the reason this probe is in."),
+                 "ROUTE CHANGED — reported, never counted. Diverted by the statement route, so "
+                 "its byte difference is the change under test rather than drift. In only as the "
+                 "worked example of why the drift set must exclude diverted rows."),
     "eval_089": ("eval/accuracy_gate/eval_questions_001.jsonl",
                  "A PLAIN FACT-PATH ROW, long enough for a small difference to have somewhere to "
                  "appear. One of the four whose text differed cross-host."),
 }
+
+
+def _diverted_ids():
+    """The ids the sweep measured as changing route, READ from its artifact rather than
+    re-derived. A diverted row's reply is EXPECTED to differ from the baseline, so it cannot be
+    evidence about host determinism."""
+    p = os.path.join(REPO, "eval", "results", "statement_route_sweep_2026_10_09.json")
+    rows = json.load(io.open(p, encoding="utf-8"))["diversion_rows"]
+    return {r["id"] for r in rows if r.get("id")}
 
 
 def _question(qid, rel):
@@ -93,6 +109,9 @@ def ask(question, tok, timeout=600):
         headers={"Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.loads(r.read().decode("utf-8"))
+
+
+DIVERTED = set()
 
 
 def _sha(s):
@@ -121,6 +140,8 @@ def main():
         build = f"unreadable: {type(exc).__name__}"
 
     # The cross-host specimen, read from the gate artifact rather than described.
+    global DIVERTED
+    DIVERTED = _diverted_ids()
     gate = {r["id"]: r for r in json.load(
         io.open(os.path.join(REPO, "eval", "results", "gate_production_0e11c3d.json"),
                 encoding="utf-8"))["rows"]}
@@ -145,9 +166,14 @@ def main():
         shas = {c.get("sha16") for c in rec["calls"] if "sha16" in c}
         rec["self_deterministic"] = (len(shas) == 1)
         rec["matches_gate_reply"] = (rec["gate_reply_sha16"] in shas) if shas else None
+        rec["route_changed"] = qid in DIVERTED
+        rec["counts_as_drift_evidence"] = (not rec["route_changed"]
+                                           and rec["matches_gate_reply"] is False)
         _save(rows, build, args.n)
         print(f"  {qid:10s} self-deterministic={rec['self_deterministic']!s:5s} "
               f"matches_gate_reply={rec['matches_gate_reply']!s:5s} "
+              f"route_changed={rec['route_changed']!s:5s} "
+              f"drift_evidence={rec['counts_as_drift_evidence']!s:5s} "
               f"distinct={len(shas)}/{len([c for c in rec['calls'] if 'sha16' in c])}")
 
     payload = _save(rows, build, args.n)
@@ -160,7 +186,10 @@ def _save(rows, build, n):
     done = [r for r in rows if "self_deterministic" in r]
     self_det = all(r["self_deterministic"] for r in done) if done else None
     cross = {r["id"]: r.get("matches_gate_reply") for r in done}
-    drifted = [k for k, v in cross.items() if v is False]
+    # ⛔ ONLY UNCHANGED-ROUTE ROWS COUNT. A diverted row differing from the baseline is the
+    # change working, not the host drifting.
+    drifted = [r["id"] for r in done if r.get("counts_as_drift_evidence")]
+    excluded = [r["id"] for r in done if r.get("route_changed")]
     payload = {
         "_what": "is production self-deterministic, and does it still reproduce the gate "
                  "harness's replies byte-for-byte as it did on 2026-08-10?",
@@ -176,6 +205,18 @@ def _save(rows, build, n):
         "production_self_deterministic": self_det,
         "reproduces_gate_reply": cross,
         "drifted_from_the_gate_harness": drifted,
+        "excluded_because_their_route_changed": excluded,
+        "_why_excluded": ("a diverted row is EXPECTED to differ from the 0e11c3d reply — that is "
+                          "the change under test. Counting it as drift would manufacture "
+                          "evidence. eval_111 is in the probe set as exactly this worked "
+                          "example: I had justified it by what the row does NOW, while the "
+                          "baseline answered it on the fact path."),
+        "_the_cleanest_specimen": ("eval_162. Unchanged route, prompt proven byte-identical "
+                                   "across both trees with retrieval held fixed, and a GN487A "
+                                   "subject that index row 9 cannot touch — so its one-space "
+                                   "difference has nowhere to come from except the host/image. "
+                                   "eval_089 differs too but is NSSF, so row 9 is a second "
+                                   "candidate cause there and it is the weaker specimen."),
         "verdict": (
             "NOT YET DETERMINED" if self_det is None else
             ("PRODUCTION IS SELF-DETERMINISTIC" + (

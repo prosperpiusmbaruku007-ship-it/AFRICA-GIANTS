@@ -7,7 +7,7 @@
   "health": {
     "status": "ok",
     "app": "chike-inference",
-    "build": "dce1432",
+    "build": "054fb19",
     "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
     "base_model": "McGill-NLP/AfriqueLlama-8B",
     "web_tier_config_loaded": false,
@@ -15,7 +15,7 @@
     "config_note": "the WEB tier carries no chike_config.json by design; the serving GPU tier loads it. Its real value is in deep mode as served.config_rag_fact_count.",
     "deep": true,
     "served": {
-      "build": "dce1432",
+      "build": "054fb19",
       "rag_rows_loaded": 184,
       "rag_embeddings_shape": [
         184,
@@ -32,8 +32,8 @@
       "web_and_gpu_tiers_agree": true
     },
     "_provenance": {
-      "deployed_build": "dce1432",
-      "head": "0602193",
+      "deployed_build": "054fb19",
+      "head": "054fb19",
       "serving_paths_moved": []
     }
   },
@@ -166,29 +166,25 @@
     }
   },
   "totals": {
-    "rows": 34,
-    "measured": 34,
+    "rows": 32,
+    "measured": 29,
     "by_verdict": {
-      "CONTROL_HELD": 8,
-      "CONTROL_TEXT_DIFFERS_CROSS_HOST": 4,
-      "JUDGE_FIXED": 1,
+      "CONTROL_HELD": 6,
+      "CONTROL_TEXT_DIFFERS_CROSS_HOST": 1,
+      "ERROR": 3,
+      "JUDGE_FIXED": 2,
       "JUDGE_HELD_CORRECT": 4,
       "JUDGE_HELD_WRONG": 4,
-      "JUDGE_MOVED_WRONG_TO_UNDETERMINED": 1,
       "JUDGE_REGRESSED": 1,
-      "NO_BASELINE_JUDGE_CORRECT": 8,
-      "NO_BASELINE_JUDGE_NO_REFERENCE": 2,
-      "NO_BASELINE_JUDGE_UNDETERMINED": 1
+      "NO_BASELINE_JUDGE_CORRECT": 9,
+      "NO_BASELINE_JUDGE_NO_REFERENCE": 2
     }
   },
   "premise": {
     "_decided_by": "eval/controls/premise_prompt_identity_2026_10_09.py (prompt identity across trees, retrieval held fixed) — NOT by the reply diff below",
-    "controls_total": 12,
+    "controls_total": 10,
     "controls_whose_TEXT_differs_cross_host": [
-      "eval_104",
-      "eval_162",
-      "eval_099",
-      "eval_089"
+      "eval_099"
     ],
     "_why_that_is_not_a_falsification": "the baseline is the 0e11c3d gate's own Kaggle-generated reply, measured while production served 3659a06. The smallest difference this comparison reports is one space, on eval_162, whose subject nothing shipped today touches. It is an observation, not evidence of a route effect.",
     "prompt_identity_test": {
@@ -205,20 +201,21 @@
     "_held": true
   },
   "regression_candidates": [
-    "eval_112"
+    "eval_087"
   ],
   "judge_to_judge": {
     "_what": "the apples-to-apples comparison: the 0e11c3d artifact's own judge verdict against this run's, per row. A regex-vs-judge comparison measures the gap between two instruments rather than the effect of the change, and it mislabelled both rows that moved when this harness first ran.",
     "fixed": [
-      "eval_086"
+      "eval_086",
+      "eval_130"
     ],
     "regressed": [
-      "eval_112"
+      "eval_087"
     ],
     "held": {
       "JUDGE_HELD_CORRECT": [
-        "eval_087",
         "eval_111",
+        "eval_112",
         "eval_233",
         "eval_364"
       ],
@@ -229,23 +226,16 @@
         "eval_239"
       ]
     },
-    "moved_between_other_states": [
-      {
-        "id": "eval_130",
-        "verdict": "JUDGE_MOVED_WRONG_TO_UNDETERMINED"
-      }
-    ],
+    "moved_between_other_states": [],
     "regex_credited_a_row_the_judge_calls_wrong": [
+      "eval_394",
       "eval_223",
       "eval_186",
       "eval_239",
-      "eval_104",
-      "eval_162",
       "eval_237",
       "eval_304",
       "eval_338",
-      "eval_337",
-      "eval_234"
+      "eval_337"
     ]
   },
   "rows": [
@@ -279,6 +269,7 @@
         "data/reviewed/hand_coded_batch_015_b02.jsonl"
       ],
       "reply": "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL. Mwenye wafanyakazi chini ya 10 hana wajibu wa kulipa SDL.",
+      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -286,12 +277,12 @@
           "correct": 5
         },
         "n": 5,
-        "justification": "The generated answer correctly states that employers with 10 or more employees must pay SDL and those with fewer than 10 are not required, aligning with the reference answer.",
+        "justification": "The generated answer correctly states that employers with 10 or more employees must pay SDL, while those with fewer than 10 are not required, aligning with the reference answer.",
         "providers": [
           "DeepInfra"
         ],
         "pin": 1855,
-        "pout": 1148,
+        "pout": 1206,
         "err_count": 0,
         "per_call": [
           "correct",
@@ -301,9 +292,7 @@
           "correct"
         ]
       },
-      "reply_changed": null,
-      "verdict": "NO_BASELINE_JUDGE_CORRECT",
-      "_resumed": true
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
     },
     {
       "key": "q::Mchango wa mwajiri kwa NSSF ni asilimia ngapi ya mshahara?",
@@ -334,7 +323,8 @@
       "also_in_files": [
         "data/reviewed/hand_coded_batch_015_b05.jsonl"
       ],
-      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -342,12 +332,12 @@
           "correct": 5
         },
         "n": 5,
-        "justification": "The generated answer correctly states the 10% employer contribution to NSSF, matches the reference's total 20% split, and accurately explains that the employer's share is not deducted from the employe",
+        "justification": "The generated answer correctly states the 10% employer contribution to NSSF, matches the reference's total 20% split, and accurately clarifies that the employer's share is paid separately from the emp",
         "providers": [
           "DeepInfra"
         ],
-        "pin": 2405,
-        "pout": 1508,
+        "pin": 2425,
+        "pout": 1439,
         "err_count": 0,
         "per_call": [
           "correct",
@@ -357,9 +347,7 @@
           "correct"
         ]
       },
-      "reply_changed": null,
-      "verdict": "NO_BASELINE_JUDGE_CORRECT",
-      "_resumed": true
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
     },
     {
       "key": "q::Jumla ya mchango wa NSSF ni asilimia ngapi?",
@@ -396,7 +384,8 @@
         "data/reviewed/hand_coded_batch_015_b05.jsonl",
         "data/reviewed/nssf_confident_pairs.jsonl"
       ],
-      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -404,12 +393,12 @@
           "correct": 5
         },
         "n": 5,
-        "justification": "The generated answer correctly states the 20% total NSSF contribution split equally between employer and employee, aligning with the reference answer and adding accurate clarification about payment so",
+        "justification": "The generated answer correctly states the 20% total NSSF contribution split between employer (10%) and employee (10%), aligning with the reference answer.",
         "providers": [
           "DeepInfra"
         ],
-        "pin": 2340,
-        "pout": 1239,
+        "pin": 2360,
+        "pout": 1174,
         "err_count": 0,
         "per_call": [
           "correct",
@@ -419,9 +408,7 @@
           "correct"
         ]
       },
-      "reply_changed": null,
-      "verdict": "NO_BASELINE_JUDGE_CORRECT",
-      "_resumed": true
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
     },
     {
       "key": "q::Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?",
@@ -462,7 +449,9 @@
       ],
       "closability": "ROUTE",
       "adjudication_0e11c3d": "FALSE_PASS",
-      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply_changed": true,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -471,24 +460,22 @@
           "undetermined": 1
         },
         "n": 5,
-        "justification": "The generated answer correctly states the employer's 10% contribution to NSSF, aligning with the reference answer, despite adding context about the total 20% (10% employer + 10% employee) and specifyi",
+        "justification": "The generated answer correctly states the employer's 10% contribution to NSSF from their own funds, aligning with the reference answer, despite adding context about the total 20% split.",
         "providers": [
           "DeepInfra"
         ],
-        "pin": 2515,
-        "pout": 1850,
+        "pin": 2535,
+        "pout": 1808,
         "err_count": 0,
         "per_call": [
           "correct",
-          "correct",
-          "correct",
           "undetermined",
+          "correct",
+          "correct",
           "correct"
         ]
       },
-      "reply_changed": true,
-      "verdict": "JUDGE_FIXED",
-      "_resumed": true
+      "verdict": "JUDGE_FIXED"
     },
     {
       "key": "q::Kiwango cha mchango wa NSSF kwa upande wa mfanyakazi ni asilimia ngapi ya mshahara wake wa jumla?",
@@ -525,32 +512,34 @@
       "also_in_files": [
         "eval/accuracy_gate/eval_questions_001.jsonl"
       ],
-      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply_changed": true,
+      "regex_baseline_pass": true,
       "judge": {
-        "verdict": "correct",
-        "tie": false,
+        "verdict": "undetermined",
+        "tie": true,
         "votes": {
-          "correct": 5
+          "wrong": 2,
+          "correct": 2,
+          "undetermined": 1
         },
         "n": 5,
-        "justification": "The generated answer correctly states that the employee's NSSF contribution is 10% of gross salary, matching the reference, and clarifies the employer's separate 10% contribution without contradicting",
+        "justification": "",
         "providers": [
           "DeepInfra"
         ],
-        "pin": 2570,
-        "pout": 1600,
+        "pin": 2590,
+        "pout": 1789,
         "err_count": 0,
         "per_call": [
+          "wrong",
           "correct",
-          "correct",
-          "correct",
-          "correct",
+          "undetermined",
+          "wrong",
           "correct"
         ]
       },
-      "reply_changed": true,
-      "verdict": "JUDGE_HELD_CORRECT",
-      "_resumed": true
+      "verdict": "JUDGE_REGRESSED"
     },
     {
       "key": "q::Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?",
@@ -595,6 +584,8 @@
       ],
       "stale_expectation": "expect:'untouched' + guards_against 'eval_111 MUST-NOT-BREAK … answers correctly on the fact path and carries detail this branch does not reproduce'. The engine now carries that detail (rate_statement._INCIDENCE), which is what made routing these safe. The probe's expectation is stale, not the behaviour.",
       "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "reply_changed": true,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -602,12 +593,12 @@
           "correct": 5
         },
         "n": 5,
-        "justification": "The generated answer correctly states the 3.5% SDL rate on total gross wages and clarifies it is paid by the employer, aligning with the reference answer despite additional non-contradictory details.",
+        "justification": "The generated answer correctly states the 3.5% SDL rate, clarifies it's based on total wages, and accurately notes that employers (not employees) pay it, aligning with the reference despite additional",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2445,
-        "pout": 1143,
+        "pout": 1220,
         "err_count": 0,
         "per_call": [
           "correct",
@@ -617,9 +608,7 @@
           "correct"
         ]
       },
-      "reply_changed": true,
-      "verdict": "JUDGE_HELD_CORRECT",
-      "_resumed": true
+      "verdict": "JUDGE_HELD_CORRECT"
     },
     {
       "key": "q::Kiwango cha WCF ni asilimia ngapi ya jumla ya mishahara ya jumla?",
@@ -663,33 +652,32 @@
         "eval/accuracy_gate/rate_period_probes_016.jsonl"
       ],
       "stale_expectation": "same, for WCF — 'Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA' is now in the engine's own text.",
-      "reply": "Kiwango cha WCF ni asilimia 0.5 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA.",
+      "reply": "Kiwango cha WCF ni asilimia 0.5 ya JUMLA ya mishahara ghafi ya wafanyakazi wote — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA.",
+      "reply_changed": true,
+      "regex_baseline_pass": true,
       "judge": {
-        "verdict": "undetermined",
+        "verdict": "correct",
         "tie": false,
         "votes": {
-          "undetermined": 4,
-          "correct": 1
+          "correct": 5
         },
         "n": 5,
-        "justification": "",
+        "justification": "The generated answer correctly states the 0.5% rate, employer responsibility, and correct authority (WCF), aligning with the reference answer.",
         "providers": [
           "DeepInfra"
         ],
-        "pin": 2195,
-        "pout": 1952,
+        "pin": 2250,
+        "pout": 1271,
         "err_count": 0,
         "per_call": [
-          "undetermined",
-          "undetermined",
-          "undetermined",
           "correct",
-          "undetermined"
+          "correct",
+          "correct",
+          "correct",
+          "correct"
         ]
       },
-      "reply_changed": true,
-      "verdict": "JUDGE_REGRESSED",
-      "_resumed": true
+      "verdict": "JUDGE_HELD_CORRECT"
     },
     {
       "key": "q::Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?",
@@ -730,33 +718,32 @@
       ],
       "closability": "ROUTE",
       "adjudication_0e11c3d": "FALSE_PASS",
-      "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "reply": "Zidisha JUMLA ya mishahara ghafi ya wafanyakazi wote kwa asilimia 3.5. Hiyo ndiyo SDL ya mwezi. Inamhusu mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "reply_changed": true,
+      "regex_baseline_pass": true,
       "judge": {
-        "verdict": "undetermined",
+        "verdict": "correct",
         "tie": false,
         "votes": {
-          "undetermined": 4,
-          "correct": 1
+          "correct": 5
         },
         "n": 5,
-        "justification": "",
+        "justification": "The generated answer correctly states the 3.5% SDL calculation on total gross wages, aligns with the reference example, and adds non-contradictory details about employer responsibility and applicabili",
         "providers": [
           "DeepInfra"
         ],
-        "pin": 2595,
-        "pout": 1972,
+        "pin": 2480,
+        "pout": 1429,
         "err_count": 0,
         "per_call": [
-          "undetermined",
-          "undetermined",
-          "undetermined",
           "correct",
-          "undetermined"
+          "correct",
+          "correct",
+          "correct",
+          "correct"
         ]
       },
-      "reply_changed": true,
-      "verdict": "JUDGE_MOVED_WRONG_TO_UNDETERMINED",
-      "_resumed": true
+      "verdict": "JUDGE_FIXED"
     },
     {
       "key": "q::Ni idadi gani ya waajiriwa inayofanya mwajiri kuwa na wajibu wa kulipa SDL Tanzania Bara?",
@@ -794,6 +781,8 @@
         "eval/accuracy_gate/eval_questions_002_additions.jsonl"
       ],
       "reply": "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL. Mwenye wafanyakazi chini ya 10 hana wajibu wa kulipa SDL.",
+      "reply_changed": true,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -801,12 +790,12 @@
           "correct": 5
         },
         "n": 5,
-        "justification": "The generated answer correctly states that employers with 10 or more employees are liable for SDL, while those with fewer than 10 are not, matching the reference answer's key facts.",
+        "justification": "Generated answer correctly states the 10-employee threshold for SDL liability matching the reference answer.",
         "providers": [
           "DeepInfra"
         ],
         "pin": 1885,
-        "pout": 1195,
+        "pout": 1140,
         "err_count": 0,
         "per_call": [
           "correct",
@@ -816,9 +805,7 @@
           "correct"
         ]
       },
-      "reply_changed": true,
-      "verdict": "JUDGE_HELD_CORRECT",
-      "_resumed": true
+      "verdict": "JUDGE_HELD_CORRECT"
     },
     {
       "key": "q::Nina mfanyakazi mmoja tu, je WCF inanihusu au ni kwa makampuni makubwa?",
@@ -856,6 +843,8 @@
         "eval/accuracy_gate/eval_questions_003.jsonl"
       ],
       "reply": "Ndiyo, WCF inakuhusu bila kujali idadi ya wafanyakazi. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+      "reply_changed": true,
+      "regex_baseline_pass": false,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -863,12 +852,12 @@
           "correct": 5
         },
         "n": 5,
-        "justification": "The generated answer correctly states that WCF applies regardless of employee count, aligning with the reference's assertion of no lower limit and applicability from the first employee.",
+        "justification": "The generated answer correctly states that WCF applies regardless of employee count and aligns with the reference's key points about no lower limit and universal applicability.",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2050,
-        "pout": 1227,
+        "pout": 1400,
         "err_count": 0,
         "per_call": [
           "correct",
@@ -878,9 +867,7 @@
           "correct"
         ]
       },
-      "reply_changed": true,
-      "verdict": "JUDGE_HELD_CORRECT",
-      "_resumed": true
+      "verdict": "JUDGE_HELD_CORRECT"
     },
     {
       "key": "q::Je, NSSF si ya hiari kwa mwajiri anayestahili?",
@@ -922,31 +909,32 @@
       "closability": "CORPUS+ROUTE",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+      "reply_changed": true,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
         "votes": {
-          "wrong": 5
+          "undetermined": 1,
+          "wrong": 4
         },
         "n": 5,
-        "justification": "The generated answer initially contradicts the reference by stating 'Hapana, si ya hiari' (No, it's not mandatory), while the reference confirms it is mandatory. The later correction ('Ndiyo') does no",
+        "justification": "The generated answer contradicts the reference by initially stating 'Hapana, si ya hiari' (No, it's not mandatory) before correcting itself, creating a direct contradiction with the reference's clear ",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2110,
-        "pout": 1298,
+        "pout": 1533,
         "err_count": 0,
         "per_call": [
-          "wrong",
+          "undetermined",
           "wrong",
           "wrong",
           "wrong",
           "wrong"
         ]
       },
-      "reply_changed": true,
-      "verdict": "JUDGE_HELD_WRONG",
-      "_resumed": true
+      "verdict": "JUDGE_HELD_WRONG"
     },
     {
       "key": "q::Mchango wa NSSF ni asilimia ngapi -- watu wamenambia tofauti, mmoja anasema kumi, mwingine anasema ishirini.",
@@ -977,7 +965,8 @@
       "also_in_files": [
         "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl"
       ],
-      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -985,12 +974,12 @@
           "correct": 5
         },
         "n": 5,
-        "justification": "The generated answer correctly explains that the total NSSF contribution is 20% (10% from employer and 10% from employee), aligning with the reference answer's clarification about the combined total a",
+        "justification": "The generated answer correctly specifies the 20% total NSSF rate as a combination of 10% from employer and 10% from employee, aligning with the reference answer's explanation of the split.",
         "providers": [
           "DeepInfra"
         ],
-        "pin": 2465,
-        "pout": 1335,
+        "pin": 2485,
+        "pout": 1414,
         "err_count": 0,
         "per_call": [
           "correct",
@@ -1000,9 +989,7 @@
           "correct"
         ]
       },
-      "reply_changed": null,
-      "verdict": "NO_BASELINE_JUDGE_CORRECT",
-      "_resumed": true
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
     },
     {
       "key": "q::Tuna wafanyakazi wachache sana, WCF inatuhusu?",
@@ -1040,6 +1027,7 @@
         "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl"
       ],
       "reply": "Ndiyo, WCF inawahusu waajiri WOTE bila kujali idadi ya wafanyakazi. Hakuna kizingiti cha chini cha idadi iliyoainishwa. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -1048,24 +1036,22 @@
           "undetermined": 1
         },
         "n": 5,
-        "justification": "Generated answer correctly states WCF applies to all employers regardless of employee count and mentions the 0.5% payroll rate, aligning with the reference answer's key points.",
+        "justification": "The generated answer correctly states that WCF applies to all employers regardless of employee count and specifies the 0.5% payroll rate, aligning with the reference answer's key points.",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2110,
-        "pout": 1462,
+        "pout": 1571,
         "err_count": 0,
         "per_call": [
           "correct",
-          "undetermined",
           "correct",
           "correct",
-          "correct"
+          "correct",
+          "undetermined"
         ]
       },
-      "reply_changed": null,
-      "verdict": "NO_BASELINE_JUDGE_CORRECT",
-      "_resumed": true
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
     },
     {
       "key": "q::Nina wafanyakazi wachache tu, SDL itanihusu?",
@@ -1103,6 +1089,7 @@
         "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl"
       ],
       "reply": "Ili nijue kama SDL inakuhusu, niambie una wafanyakazi wangapi (kizingiti ni wafanyakazi 10).",
+      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -1110,12 +1097,12 @@
           "correct": 5
         },
         "n": 5,
-        "justification": "The generated answer correctly instructs the user to provide the exact number of employees, aligning with the reference answer's requirement to determine SDL applicability based on employee count.",
+        "justification": "The generated answer correctly asks for the exact number of employees and mentions the 10-employee threshold, aligning with the reference answer's requirement to determine applicability based on emplo",
         "providers": [
           "DeepInfra"
         ],
         "pin": 1525,
-        "pout": 1276,
+        "pout": 1168,
         "err_count": 0,
         "per_call": [
           "correct",
@@ -1125,9 +1112,7 @@
           "correct"
         ]
       },
-      "reply_changed": null,
-      "verdict": "NO_BASELINE_JUDGE_CORRECT",
-      "_resumed": true
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
     },
     {
       "key": "q::Kiwango cha SDL ni asilimia ngapi ya mishahara?",
@@ -1159,6 +1144,7 @@
         "eval/accuracy_gate/false_premise_pairs_016.jsonl"
       ],
       "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -1166,12 +1152,12 @@
           "correct": 5
         },
         "n": 5,
-        "justification": "The generated answer correctly states the SDL rate as 3.5% and provides additional context without contradicting the reference answer.",
+        "justification": "The generated answer correctly states the 3.5% SDL rate and provides accurate additional context without contradicting the reference answer.",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2005,
-        "pout": 1112,
+        "pout": 1133,
         "err_count": 0,
         "per_call": [
           "correct",
@@ -1181,9 +1167,7 @@
           "correct"
         ]
       },
-      "reply_changed": null,
-      "verdict": "NO_BASELINE_JUDGE_CORRECT",
-      "_resumed": true
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
     },
     {
       "key": "q::Kiwango cha WCF ni asilimia ngapi ya mishahara?",
@@ -1214,7 +1198,8 @@
       "also_in_files": [
         "eval/accuracy_gate/false_premise_pairs_016.jsonl"
       ],
-      "reply": "Kiwango cha WCF ni asilimia 0.5 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA.",
+      "reply": "Kiwango cha WCF ni asilimia 0.5 ya JUMLA ya mishahara ghafi ya wafanyakazi wote — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA.",
+      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -1222,12 +1207,12 @@
           "correct": 5
         },
         "n": 5,
-        "justification": "The generated answer correctly states the 0.5% WCF rate and adds accurate contextual details about employer responsibility and payment destination without contradicting the reference answer.",
+        "justification": "The generated answer correctly states the 0.5% WCF rate and provides accurate additional context about payment obligations and authority without contradicting the reference.",
         "providers": [
           "DeepInfra"
         ],
-        "pin": 1745,
-        "pout": 1042,
+        "pin": 1800,
+        "pout": 1203,
         "err_count": 0,
         "per_call": [
           "correct",
@@ -1237,9 +1222,7 @@
           "correct"
         ]
       },
-      "reply_changed": null,
-      "verdict": "NO_BASELINE_JUDGE_CORRECT",
-      "_resumed": true
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
     },
     {
       "key": "q::Nina mfanyakazi mmoja wa kudumu na wawili wa muda — SDL inanihusu?",
@@ -1272,13 +1255,12 @@
         "in_scope": true
       },
       "reply": "Ili nijue kama SDL inakuhusu, niambie una wafanyakazi wangapi (kizingiti ni wafanyakazi 10).",
+      "reply_changed": null,
       "judge": {
         "verdict": "no_reference",
         "_why": "this corpus row carries no reference field; the reply is recorded for hand reading rather than graded against an expectation I would have had to invent (R38)"
       },
-      "reply_changed": null,
-      "verdict": "NO_BASELINE_JUDGE_NO_REFERENCE",
-      "_resumed": true
+      "verdict": "NO_BASELINE_JUDGE_NO_REFERENCE"
     },
     {
       "key": "q::mfanyakazi wangu analipwa kwa samani ya kazi je NSSF ni asilimia ngapi",
@@ -1313,14 +1295,13 @@
         "standard_refused_today": false,
         "guards_against": "thamani/samani in an NSSF question."
       },
-      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "reply_changed": null,
       "judge": {
         "verdict": "no_reference",
         "_why": "this corpus row carries no reference field; the reply is recorded for hand reading rather than graded against an expectation I would have had to invent (R38)"
       },
-      "reply_changed": null,
-      "verdict": "NO_BASELINE_JUDGE_NO_REFERENCE",
-      "_resumed": true
+      "verdict": "NO_BASELINE_JUDGE_NO_REFERENCE"
     },
     {
       "key": "q::Nina mfanyakazi mmoja tu — je nalipa WCF?",
@@ -1352,33 +1333,30 @@
         "eval/accuracy_gate/threshold_comparison_probes_024.jsonl"
       ],
       "reply": "Ndiyo. WCF inatumika kwa waajiri WOTE bila kujali idadi ya wafanyakazi. Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara). Inalipwa na mwajiri pekee. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+      "reply_changed": null,
       "judge": {
-        "verdict": "undetermined",
+        "verdict": "correct",
         "tie": false,
         "votes": {
-          "correct": 2,
-          "undetermined": 3
+          "correct": 5
         },
         "n": 5,
-        "justification": "",
+        "justification": "The generated answer correctly confirms WCF applies to all employers from the first employee, aligning with the reference answer's key fact that WCF is mandatory regardless of employee count.",
         "providers": [
-          "?",
           "DeepInfra"
         ],
-        "pin": 828,
-        "pout": 558,
-        "err_count": 3,
+        "pin": 2070,
+        "pout": 1480,
+        "err_count": 0,
         "per_call": [
           "correct",
           "correct",
-          "undetermined",
-          "undetermined",
-          "undetermined"
+          "correct",
+          "correct",
+          "correct"
         ]
       },
-      "reply_changed": null,
-      "verdict": "NO_BASELINE_JUDGE_UNDETERMINED",
-      "_resumed": true
+      "verdict": "NO_BASELINE_JUDGE_CORRECT"
     },
     {
       "key": "q::Utaratibu Rahisishwa wa Biashara (STR) wa EAC una zana kuu ngapi na ni zipi?",
@@ -1413,6 +1391,8 @@
       "closability": "CORPUS",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Zana kuu za utaratibu rahisi wa forodha (STR) ni: Simplified Certificate of Origin (SCO), Simplified Customs Document (SCD), Common External Tariff (CET), na utaratibu wa pamoja wa forodha (Single Customs Document). SCO huonyesha asili ya bidhaa, SCD ni fomu rahisi ya forodha, CET ni jedwali la pamoja la ushuru, na Single Customs Document ni fomu moja ya pamoja kwa biashara zote.",
+      "reply_changed": true,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -1421,12 +1401,12 @@
           "undetermined": 1
         },
         "n": 5,
-        "justification": "Generated answer incorrectly lists CET and Single Customs Document instead of Common List and USD 2,000 threshold from reference.",
+        "justification": "Generated answer incorrectly includes CET and Single Customs Document instead of Common List and the USD 2,000 threshold mentioned in the reference.",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2385,
-        "pout": 1592,
+        "pout": 1629,
         "err_count": 0,
         "per_call": [
           "wrong",
@@ -1436,10 +1416,7 @@
           "wrong"
         ]
       },
-      "reply_changed": true,
-      "regex_baseline_pass": true,
-      "verdict": "JUDGE_HELD_WRONG",
-      "_resumed": true
+      "verdict": "JUDGE_HELD_WRONG"
     },
     {
       "key": "q::Nina wafanyakazi 60 na nimesajili OSHA — je, pia ninahitaji kumwajiri afisa wa usalama?",
@@ -1474,6 +1451,8 @@
       "closability": "GOLD",
       "adjudication_0e11c3d": "PARTIAL",
       "reply": "Ndiyo, kwa mujibu wa sheria, unapaswa kumteua mwakilishi wa usalama na afya kazini (designated safety representative) kutoka kwa wafanyakazi wako. Thibitisha na OSHA (osha.go.tz).",
+      "reply_changed": false,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -1482,25 +1461,22 @@
           "undetermined": 1
         },
         "n": 5,
-        "justification": "The generated answer incorrectly asserts a requirement to appoint a safety representative, while the reference clarifies the threshold is unspecified and advises direct verification with OSHA.",
+        "justification": "The generated answer incorrectly asserts a legal requirement to appoint a safety representative, while the reference clarifies the threshold is unspecified and advises verification with OSHA.",
         "providers": [
           "DeepInfra"
         ],
         "pin": 1945,
-        "pout": 1510,
+        "pout": 1511,
         "err_count": 0,
         "per_call": [
           "wrong",
-          "wrong",
           "undetermined",
+          "wrong",
           "wrong",
           "wrong"
         ]
       },
-      "reply_changed": false,
-      "regex_baseline_pass": true,
-      "verdict": "JUDGE_HELD_WRONG",
-      "_resumed": true
+      "verdict": "JUDGE_HELD_WRONG"
     },
     {
       "key": "q::Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?",
@@ -1535,33 +1511,31 @@
       "closability": "GOLD",
       "adjudication_0e11c3d": "WRONG_GOLD",
       "reply": "Kuna hatua mbili za kuripoti ugonjwa wa kazini:\n\nHatua ya 1: Mfanyakazi anaripoti kwa mwajiri ndani ya siku 14 tangu kugunduliwa kwa ugonjwa.\nHatua ya 2: Mwajiri analazimika kuwasilisha taarifa hiyo WCF ndani ya siku 7 tangu kupokea taarifa ya mfanyakazi.\n\nMuda wa siku 14 si lazima uwe umepita kabla ya siku 7 — ni mfululizo wa hatua mbili tofauti. Thibitisha na WCF (wcf.go.tz).",
+      "reply_changed": false,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
         "votes": {
-          "correct": 1,
-          "wrong": 4
+          "wrong": 5
         },
         "n": 5,
-        "justification": "The generated answer incorrectly states a 14-day period for the employee to report to the employer, conflicting with the reference's 7-day requirement from the injury date.",
+        "justification": "The generated answer incorrectly states a 14-day deadline for the employee to report to the employer, conflicting with the reference's 7-day requirement from the injury date.",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2505,
-        "pout": 1715,
+        "pout": 1449,
         "err_count": 0,
         "per_call": [
-          "correct",
+          "wrong",
           "wrong",
           "wrong",
           "wrong",
           "wrong"
         ]
       },
-      "reply_changed": false,
-      "regex_baseline_pass": true,
-      "verdict": "JUDGE_HELD_WRONG",
-      "_resumed": true
+      "verdict": "JUDGE_HELD_WRONG"
     },
     {
       "key": "q::Mwajiri anahitaji nyaraka gani kuwasilisha NSSF ili kusajilisha wafanyakazi wake?",
@@ -1597,33 +1571,8 @@
       },
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
-      "reply": "Mwajiri anahitaji: fomu ya usajili wa mwajiri (NSSF/01), nakala za vitambulisho vya utambulisho wa kila mfanyakazi, na akaunti ya benki ya kampuni. Thibitisha na NSSF (nssf.go.tz).",
-      "judge": {
-        "verdict": "wrong",
-        "tie": false,
-        "votes": {
-          "wrong": 5
-        },
-        "n": 5,
-        "justification": "The generated answer omits the required BRELA certificate and TIN, and incorrectly adds a company bank account which is not mentioned in the reference answer.",
-        "providers": [
-          "DeepInfra"
-        ],
-        "pin": 2095,
-        "pout": 1448,
-        "err_count": 0,
-        "per_call": [
-          "wrong",
-          "wrong",
-          "wrong",
-          "wrong",
-          "wrong"
-        ]
-      },
-      "reply_changed": true,
-      "regex_baseline_pass": true,
-      "verdict": "CONTROL_TEXT_DIFFERS_CROSS_HOST",
-      "_resumed": true
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
     },
     {
       "key": "q::'Mgeni' katika GN 487A inamaanisha nani hasa?",
@@ -1659,33 +1608,8 @@
       },
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
-      "reply": "Raia wa Tanzania ni 'mgeni' kwa maana ya GN 487A ikiwa amefikia masharti haya: (1) Amepata uraia kupitia ndoa tu (si kwa njia ya kuasiliwa); (2) Ameishi Tanzania kwa miaka 15 au zaidi; (3) Ana pasipoti ya Tanzania yenye hadhi kamili ya uraia. Ikiwa amefikia masharti hayo, bado ana adhabu ya faini ya TZS milioni 5 au kifungo cha miezi 3 kwa kuvunja GN 487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
-      "judge": {
-        "verdict": "wrong",
-        "tie": false,
-        "votes": {
-          "wrong": 5
-        },
-        "n": 5,
-        "justification": "The generated answer incorrectly states that Tanzanian citizens can be considered 'mgeni' under GN 487A if they meet certain conditions, directly contradicting the reference answer which defines 'mgen",
-        "providers": [
-          "DeepInfra"
-        ],
-        "pin": 2445,
-        "pout": 1395,
-        "err_count": 0,
-        "per_call": [
-          "wrong",
-          "wrong",
-          "wrong",
-          "wrong",
-          "wrong"
-        ]
-      },
-      "reply_changed": true,
-      "regex_baseline_pass": true,
-      "verdict": "CONTROL_TEXT_DIFFERS_CROSS_HOST",
-      "_resumed": true
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
     },
     {
       "key": "q::Mimi ni mgeni ninayefanya biashara ya rejareja — GN 487A tayari imetangazwa. Nifanye nini sasa?",
@@ -1721,34 +1645,8 @@
       },
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
-      "reply": "Kwanza, thibitisha na Idara ya Uhamiaji (immigration.go.tz) ili kujua hatua sahihi za kisheria zinazohusiana na hali yako. Pili, hakikisha unabadilisha muundo wa umiliki wa biashara haraka. Unaweza kubadilisha muundo wa umiliki kwa njia mbalimbali, ikiwa ni pamoja na ubia na raia wa Tanzania, kununua biashara hiyo na Mtanzania, au kuanzisha biashara mpya yenye muundo salama. Thibitisha na wakili wa uhamiaji na BRELA (brela.go.tz).",
-      "judge": {
-        "verdict": "correct",
-        "tie": false,
-        "votes": {
-          "correct": 3,
-          "wrong": 2
-        },
-        "n": 5,
-        "justification": "The generated answer aligns with the reference by advising legal consultation and structural changes to comply with the revoked GN 487A, without contradicting key requirements like immediate cessation",
-        "providers": [
-          "DeepInfra"
-        ],
-        "pin": 2965,
-        "pout": 1401,
-        "err_count": 0,
-        "per_call": [
-          "correct",
-          "correct",
-          "wrong",
-          "correct",
-          "wrong"
-        ]
-      },
-      "reply_changed": false,
-      "regex_baseline_pass": true,
-      "verdict": "CONTROL_HELD",
-      "_resumed": true
+      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+      "verdict": "ERROR"
     },
     {
       "key": "q::Kodi ya zuio (withholding tax) inatakiwa kuwasilishwa TRA ndani ya muda gani baada ya mwisho wa mwezi?",
@@ -1785,32 +1683,32 @@
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Kodi ya zuio inatakiwa kuwasilishwa ndani ya siku 7 baada ya mwisho wa mwezi unaofuata. Thibitisha na tra.go.tz.",
+      "reply_changed": false,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
         "votes": {
-          "wrong": 5
+          "wrong": 4,
+          "undetermined": 1
         },
         "n": 5,
-        "justification": "Generated answer incorrectly states the deadline as '7 days after the end of the following month' instead of '7 days after the end of the calendar month,' conflicting with the reference's clear distin",
+        "justification": "Generated answer incorrectly states the deadline as '7 days after the end of the following month,' whereas the reference clarifies it is '7 days after the end of the calendar month' (not the next mont",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2025,
-        "pout": 1702,
+        "pout": 1604,
         "err_count": 0,
         "per_call": [
           "wrong",
           "wrong",
           "wrong",
-          "wrong",
+          "undetermined",
           "wrong"
         ]
       },
-      "reply_changed": false,
-      "regex_baseline_pass": true,
-      "verdict": "CONTROL_HELD",
-      "_resumed": true
+      "verdict": "CONTROL_HELD"
     },
     {
       "key": "q::Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?",
@@ -1847,6 +1745,8 @@
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Kulingana na sheria, unapaswa kusajili JINA LA BIASHARA (Business Name) ikiwa una wafanyakazi 20 au chini yao, na mtaji hadi TZS 100,000,000. Ikiwa mtaji wako unazidi TZS 100,000,000, basi unaweza kusajili KAMPUNI (Company Limited by Shares). Thibitisha na BRELA Official (brela.go.tz).",
+      "reply_changed": false,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -1854,12 +1754,12 @@
           "wrong": 5
         },
         "n": 5,
-        "justification": "The generated answer incorrectly links the number of employees and capital amount to the registration type, contradicting the reference which states these factors are irrelevant to the legal structure",
+        "justification": "The generated answer incorrectly ties registration type to employee count and capital thresholds, contradicting the reference which states these factors are irrelevant to the legal structure choice.",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2490,
-        "pout": 1642,
+        "pout": 1600,
         "err_count": 0,
         "per_call": [
           "wrong",
@@ -1869,10 +1769,7 @@
           "wrong"
         ]
       },
-      "reply_changed": false,
-      "regex_baseline_pass": true,
-      "verdict": "CONTROL_HELD",
-      "_resumed": true
+      "verdict": "CONTROL_HELD"
     },
     {
       "key": "q::VAT withholding kwa huduma ni asilimia 18 kama kiwango cha kawaida, sivyo?",
@@ -1909,6 +1806,8 @@
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Hapana. Kiwango cha VAT kwa huduma ni asilimia 18 kama kiwango cha kawaida pia. Hakuna kiwango cha kati cha 8% au 10% kwa huduma. Bidhaa na huduma zinatozwa 18% kwa wateja wengi. Thibitisha na TRA (tra.go.tz).",
+      "reply_changed": false,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -1916,12 +1815,12 @@
           "wrong": 5
         },
         "n": 5,
-        "justification": "The generated answer incorrectly states the standard VAT rate applies to withholding, while the reference clarifies withholding is 6% for services (vs. 18% standard rate).",
+        "justification": "The generated answer incorrectly states the standard 18% VAT rate applies to withholding, while the reference clarifies withholding is 6% for services (and 3% for goods from 2025), directly contradict",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2165,
-        "pout": 1531,
+        "pout": 1618,
         "err_count": 0,
         "per_call": [
           "wrong",
@@ -1931,10 +1830,7 @@
           "wrong"
         ]
       },
-      "reply_changed": false,
-      "regex_baseline_pass": true,
-      "verdict": "CONTROL_HELD",
-      "_resumed": true
+      "verdict": "CONTROL_HELD"
     },
     {
       "key": "q::Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?",
@@ -1967,6 +1863,8 @@
         "judge": "correct"
       },
       "reply": "Hapana kabisa. Mchango wa mwajiri (asilimia 10) unalipwa na mwajiri kutoka pochi yake binafsi — si kutoka mshahara wa mfanyakazi. Ni gharama ya ziada ya mwajiri pekee. Thibitisha na NSSF (nssf.go.tz).",
+      "reply_changed": true,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -1974,12 +1872,12 @@
           "correct": 5
         },
         "n": 5,
-        "justification": "The generated answer correctly states that the employer's 10% NSSF contribution is paid by the employer from their own funds, not deducted from the employee's salary, aligning with the reference answe",
+        "justification": "The generated answer correctly states that the employer's 10% NSSF contribution is paid from the employer's own funds, not deducted from the employee's salary, aligning with the reference answer.",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2390,
-        "pout": 1180,
+        "pout": 1320,
         "err_count": 0,
         "per_call": [
           "correct",
@@ -1989,10 +1887,7 @@
           "correct"
         ]
       },
-      "reply_changed": true,
-      "regex_baseline_pass": true,
-      "verdict": "CONTROL_TEXT_DIFFERS_CROSS_HOST",
-      "_resumed": true
+      "verdict": "CONTROL_TEXT_DIFFERS_CROSS_HOST"
     },
     {
       "key": "q::NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
@@ -2025,6 +1920,8 @@
         "judge": "wrong"
       },
       "reply": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10% baina ya mwajiri na mfanyakazi. Hakuna mgawanyo mwingine uliopo. Thibitisha na NSSF (nssf.go.tz).",
+      "reply_changed": false,
+      "regex_baseline_pass": false,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -2032,12 +1929,12 @@
           "wrong": 5
         },
         "n": 5,
-        "justification": "The generated answer incorrectly claims there is only a 10-10 split, while the reference confirms three valid splits (10+10, 15+5, 20+0).",
+        "justification": "The generated answer incorrectly claims there is only one 10% split, while the reference confirms three valid splits (10+10, 15+5, 20+0).",
         "providers": [
           "DeepInfra"
         ],
         "pin": 2085,
-        "pout": 1047,
+        "pout": 1032,
         "err_count": 0,
         "per_call": [
           "wrong",
@@ -2047,10 +1944,7 @@
           "wrong"
         ]
       },
-      "reply_changed": false,
-      "regex_baseline_pass": false,
-      "verdict": "CONTROL_HELD",
-      "_resumed": true
+      "verdict": "CONTROL_HELD"
     },
     {
       "key": "q::Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
@@ -2083,6 +1977,8 @@
         "judge": "wrong"
       },
       "reply": "Kiwango sahihi ni asilimia 10. Hakuna kiwango cha asilimia 3.5 wala asilimia 0.5 katika historia ya NSSF Tanzania. Thibitisha na NSSF (nssf.go.tz).",
+      "reply_changed": false,
+      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -2090,12 +1986,12 @@
           "wrong": 5
         },
         "n": 5,
-        "justification": "The generated answer incorrectly states the NSSF rate as 10% instead of the correct 20% (10% employer + 10% employee) and falsely claims 3.5% and 0.5% are not part of NSSF history, when the reference ",
+        "justification": "The generated answer incorrectly states NSSF is 10% instead of 20% (10% employer + 10% employee) and falsely claims 3.5% and 0.5% rates don't exist, while the reference clarifies they are separate SDL",
         "providers": [
           "DeepInfra"
         ],
         "pin": 1985,
-        "pout": 1807,
+        "pout": 1840,
         "err_count": 0,
         "per_call": [
           "wrong",
@@ -2105,10 +2001,7 @@
           "wrong"
         ]
       },
-      "reply_changed": false,
-      "regex_baseline_pass": true,
-      "verdict": "CONTROL_HELD",
-      "_resumed": true
+      "verdict": "CONTROL_HELD"
     },
     {
       "key": "q::Nina mfanyakazi mmoja tu wa kwanza, je NSSF ni lazima au nasubiri niwe na wengi?",
@@ -2141,150 +2034,33 @@
         "judge": "correct"
       },
       "reply": "NSSF ni lazima kwa wafanyakazi wote, bila kujali idadi. Hata kama una mfanyakazi mmoja, NSSF ni lazima. Thibitisha na nssf.go.tz.",
+      "reply_changed": false,
+      "regex_baseline_pass": false,
       "judge": {
         "verdict": "correct",
         "tie": false,
         "votes": {
-          "correct": 5
+          "correct": 4,
+          "undetermined": 1
         },
         "n": 5,
         "justification": "The generated answer correctly states that NSSF is mandatory for all employees regardless of number, aligning with the reference's assertion that there is no threshold and it starts from the first emp",
         "providers": [
+          "?",
           "DeepInfra"
         ],
-        "pin": 1825,
-        "pout": 1071,
-        "err_count": 0,
+        "pin": 1460,
+        "pout": 818,
+        "err_count": 1,
         "per_call": [
           "correct",
-          "correct",
+          "undetermined",
           "correct",
           "correct",
           "correct"
         ]
       },
-      "reply_changed": false,
-      "regex_baseline_pass": false,
-      "verdict": "CONTROL_HELD",
-      "_resumed": true
-    },
-    {
-      "key": "q::Michango ya NSSF inatakiwa kufikishwa NSSF ndani ya muda gani baada ya kulipa mishahara?",
-      "id": "eval_234",
-      "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
-      "line": 34,
-      "question": "Michango ya NSSF inatakiwa kufikishwa NSSF ndani ya muda gani baada ya kulipa mishahara?",
-      "question_field": "question_sw",
-      "reference": "Ndani ya mwezi mmoja baada ya kulipa mishahara — kwa vitendo ifikapo siku ya 10 ya mwezi unaofuata. Kumbuka siku ya 20 ni ya VAT return, si NSSF. Thibitisha na NSSF (nssf.go.tz).",
-      "reference_field": "correct_answer_sw",
-      "all_references_found": [
-        {
-          "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
-          "field": "correct_answer_sw",
-          "text": "Ndani ya mwezi mmoja baada ya kulipa mishahara — kwa vitendo ifikapo siku ya 10 ya mwezi unaofuata. Kumbuka siku ya 20 ni ya VAT return, si NSSF. Thibitisha na NSSF (nssf.go.tz)."
-        }
-      ],
-      "arms": [
-        "PREMISE_CONTROL_INDEX"
-      ],
-      "why_population": [
-        "PREMISE_CONTROL_INDEX: the NSSF remittance window, row 63's neighbourhood rather than row 9's. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
-      ],
-      "intent_now": "none",
-      "baseline_0e11c3d": {
-        "pass": true,
-        "reliable": true,
-        "clarified": false,
-        "reply": "Michango ya NSSF inatakiwa kuwasilishwa ndani ya mwezi mmoja (within one month) baada ya mwisho wa mwezi husika. Thibitisha na NSSF (nssf.go.tz).",
-        "judge": "correct"
-      },
-      "reply": "Michango ya NSSF inatakiwa kuwasilishwa ndani ya mwezi mmoja (within one month) baada ya mwisho wa mwezi husika. Thibitisha na NSSF (nssf.go.tz).",
-      "judge": {
-        "verdict": "wrong",
-        "tie": false,
-        "votes": {
-          "correct": 2,
-          "wrong": 3
-        },
-        "n": 5,
-        "justification": "The generated answer incorrectly states the deadline as 'within one month after the end of the month' instead of the reference's specific '10th of the following month'.",
-        "providers": [
-          "DeepInfra"
-        ],
-        "pin": 1990,
-        "pout": 1459,
-        "err_count": 0,
-        "per_call": [
-          "correct",
-          "correct",
-          "wrong",
-          "wrong",
-          "wrong"
-        ]
-      },
-      "reply_changed": false,
-      "regex_baseline_pass": true,
-      "verdict": "CONTROL_HELD",
-      "_resumed": true
-    },
-    {
-      "key": "q::Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?",
-      "id": "eval_089",
-      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
-      "line": 89,
-      "question": "Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?",
-      "question_field": "question_sw",
-      "reference": "Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata. Thibitisha tarehe sahihi na nssf.go.tz.",
-      "reference_field": "correct_answer_sw",
-      "all_references_found": [
-        {
-          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
-          "field": "correct_answer_sw",
-          "text": "Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata. Thibitisha tarehe sahihi na nssf.go.tz."
-        }
-      ],
-      "arms": [
-        "PREMISE_CONTROL_INDEX"
-      ],
-      "why_population": [
-        "PREMISE_CONTROL_INDEX: the NSSF deadline, a plain NSSF row with no connection to the rewording — the quiet control inside the control arm. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
-      ],
-      "intent_now": "none",
-      "baseline_0e11c3d": {
-        "pass": true,
-        "reliable": false,
-        "clarified": false,
-        "reply": "Kuna tofauti muhimu sana kati ya tarehe za NSSF na SDL:\n\nNSSF: malipo yanawasilishwa ndani ya mwezi MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz.\nSDL: malipo yanawasilishwa ifikapo tarehe 7 ya mwezi unaofuata — si mwezi mmoja baadaye.\n\nHizi ni tarehe tofauti kabisa. Thibitisha na NSSF (nssf.go.tz) na TRA (tra.go.tz).",
-        "judge": "wrong"
-      },
-      "reply": "Kuna tofauti muhimu sana kati ya tarehe za NSSF na SDL:\n\nNSSF: malipo yanawasilishwa ndani ya mwezi MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz.\nSDL: malipo yanawasilishwa ifikapo tarehe 7 ya mwezi unaofuata — si mwezi mmoja baadaye. Thibitisha na tra.go.tz.\n\nHizi ni tofauti kabisa. Kuchelewa NSSF kunasababisha adhabu kali zaidi kuliko SDL. Thibitisha na nssf.org.tz au tra.go.tz.",
-      "judge": {
-        "verdict": "undetermined",
-        "tie": false,
-        "votes": {
-          "undetermined": 3,
-          "wrong": 2
-        },
-        "n": 5,
-        "justification": "",
-        "providers": [
-          "DeepInfra"
-        ],
-        "pin": 2640,
-        "pout": 1787,
-        "err_count": 0,
-        "per_call": [
-          "undetermined",
-          "wrong",
-          "undetermined",
-          "wrong",
-          "undetermined"
-        ]
-      },
-      "reply_changed": true,
-      "regex_baseline_pass": true,
-      "verdict": "CONTROL_TEXT_DIFFERS_CROSS_HOST",
-      "_resumed": true
+      "verdict": "CONTROL_HELD"
     }
   ]
 }
