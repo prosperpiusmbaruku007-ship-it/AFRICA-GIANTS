@@ -1,0 +1,64 @@
+{
+ "_what": "ext_15 re-adjudicated by asking the live system again, because its own note refuses re-labelling from a desk",
+ "measured": "2026-10-09T10:06:27Z",
+ "serving": {
+  "build": "39279b6",
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15"
+ },
+ "question": "Tawi letu la kampuni ya kigeni limechelewa kuwasilisha ripoti ya mwaka. Adhabu ni tofauti na kampuni za huku?",
+ "expected_behavior": "Yes -- a foreign company's late-filing penalty is TZS 70,000 per month or part month (BRELA fee schedule item 15(iv), as at 2026-10-06; Companies Act Cap.212 R.E. 2023, Part XII, ss.437-447), NOT the TZS 2,500/month local-company rate. ⚠️ BOTH FIGURES ARE NOW IN SHILLINGS: until 2026 the foreign rate was USD 25, and the currency itself used to mark the distinction.",
+ "key_corrections": [
+  {
+   "date": "2026-10-05",
+   "what_changed": "CITATION ONLY: 'Part XIII, ss.320-328' -> 'Part XII, ss.437-447'.",
+   "basis": "Companies Act Cap.212 R.E.2023 s.437(1) read directly -- 'PART XII COMPANIES INCORPORATED OUTSIDE TANZANIA ... Sections 438 to 447 shall apply to all foreign companies'. The 2026-08-31 'correction' that put Part XIII here was the error.",
+   "verdict_deliberately_unchanged": "This row stays adjudicated WRONG. Half a correction must not flip a count: the citation limb is now settled IN THE MODEL'S FAVOUR (its live reply said 'Section XII', which the Act vindicates on the numeral), but the FIGURE limb -- USD 25 vs the TZS 70,000 read from brela.go.tz on 2026-10-04 -- is unresolved because the Act delegates every fee to Minister's regulations (s.458, s.489(3)) and the Companies (Fees) Regulations were not located. So the verdict now rests on the figure alone, not on the citation it was partly booked against.",
+   "why_this_matters_beyond_this_row": "ext_15 is the worked example of Bar A's denominator being softer than its numerator: a Bar A failure counted against the model on a key now known to be wrong."
+  },
+  {
+   "date": "2026-10-06",
+   "what_changed": "FIGURE: 'USD 25 per month' -> 'TZS 70,000 per month or part month'. The citation limb is unchanged from the 2026-10-05 fix.",
+   "basis": "BRELA's own published fee schedule, item 15(iv): 'Kwa kutowasilisha au kuchelewesha kuwasilisha hati yoyote inayotakiwa kuwasilishwa kwa Msajili, kwa kila mwezi au sehemu ya mwezi wa kuchelewa. 70,000/='. Read from data/source_documents/brela/brela_ada_kampuni_20261006T140442Z.html (sha256 8d5543ac68eb4d3dc72fd1762dc7cc9c037870df65ac33f3654eb3c11c73b52c, fetched 2026-10-06T14:04:42Z).",
+   "closes_what_the_2026_10_05_note_left_open": "That note recorded the verdict as resting on the FIGURE alone, the figure being unresolved because the Act delegates every fee to Minister's regulations (s.458, s.489(3)) and the Fees Regulations were not located. The figure is now resolved at PORTAL tier from a dated, hashed capture. The Regulations remain unlocated and remain the statute-tier target (_unresolved_items.brela_companies_fees_regulations).",
+   "verdict": "RE_RUN_REQUIRED",
+   "why_not_simply_flipped": "⛔ THE RECORDED VERDICT IS NOT RE-LABELLED FROM A DESK. This row's reply was adjudicated against a key that has since changed, so neither 'still wrong' nor 'actually right' is supportable without asking the question again. Re-labelling on reconstruction is exactly the move that produced the 2026-08-31 Part XII reversal -- a confident correction that was itself the error. And a reply that said USD 25 was CORRECT AS AT ITS OWN DATE, which is a third possibility neither label expresses."
+  }
+ ],
+ "prior_verdict": "RE_RUN_REQUIRED (2026-10-06)",
+ "prior_reply_source": "eval/results/extended_078_live_replies_2026_09_05.json",
+ "live_reply": "Ndiyo, adhabu ni tofauti. Kampuni za ndani huadhibiwa kwa TZS 2,500 kwa mwezi kwa kuchelewa kuwasilisha annual return. Lakini kampuni za kigeni zinatumia sheria tofauti (Cap.212 Sehemu XII). Kwa kampuni ya kigeni, adhabu ni TZS 70,000 kwa mwezi au sehemu ya mwezi. Thibitisha na BRELA (brela.go.tz).",
+ "wall_seconds": 65.0,
+ "limbs": {
+  "discrimination_foreign_differs": {
+   "asks": "does it say the foreign penalty DIFFERS from the local one?",
+   "hit": true
+  },
+  "figure_70000_for_the_FOREIGN_company": {
+   "asks": "TZS 70,000 per month/part month, attributed to the foreign company",
+   "hit": true
+  },
+  "local_rate_2500_not_applied_to_the_branch": {
+   "asks": "2,500 must appear (if at all) as the LOCAL comparator, never as the foreign branch's own rate",
+   "hit": null
+  },
+  "superseded_usd_25_absent": {
+   "asks": "the pre-2026 USD 25 must not be asserted",
+   "hit": true
+  },
+  "citation_part_XII": {
+   "asks": "Part XII / Sehemu ya XII (NOT Part XIII, NOT ss.320-328)",
+   "hit": true
+  },
+  "citation_not_the_reversed_part_XIII": {
+   "asks": "the 2026-08-31 reversal must not reappear",
+   "hit": true
+  }
+ },
+ "_not_regex_scorable": "this row's gold is `expected_behavior` prose with no correct_answer_sw/answer_type, so score_question cannot score it. It is also not in the 400 and has no 1476caa baseline. Hence hand adjudication, and hence no delta against the gate.",
+ "verdict": "PASS",
+ "verdict_written_by": "hand, 2026-10-09, against expected_behavior as corrected 2026-10-06",
+ "verdict_reasoning": "Every limb is right, including the one that got HARDER in 2026. The reply: 'Ndiyo, adhabu ni tofauti. Kampuni za ndani huadhibiwa kwa TZS 2,500 kwa mwezi ... Lakini kampuni za kigeni zinatumia sheria tofauti (Cap.212 Sehemu XII). Kwa kampuni ya kigeni, adhabu ni TZS 70,000 kwa mwezi au sehemu ya mwezi.' -- discrimination stated; 2,500 attributed to LOCAL companies; 70,000 attributed to the FOREIGN company with 'au sehemu ya mwezi'; Sehemu XII cited; no USD 25; no Part XIII. Until 2026 the CURRENCY marked the foreign/local distinction; now both are shillings, so correct attribution of each figure to its own party is the whole test, and the reply does it explicitly.",
+ "the_history_is_the_finding": "⛔ THIS ROW WAS MARKED DOWN TWICE FOR BEING RIGHT, AND BOTH TIMES OUR RECORD WAS THE WRONG ONE. The 2026-09-05 live reply said 'Section XII' and 'USD 25'. BOTH WERE CORRECT AT THAT DATE. The 2026-09-23 adjudication recorded verdict=PARTIAL, cause=corpus_stale, with the note: 'USD 25/month is correct, but the reply cites Section XII -- the exact stale citation corrected on 2026-08-31 (correct: Part XIII, ss.320-328)'. The 2026-08-31 'correction' was itself the error, reversed on 2026-10-05 after reading Cap.212 directly: Part XII opens at s.437, and ss.320-328 are winding-up machinery in Part VIII. So the model was penalised for citing the statute correctly, by an adjudication enforcing a wrong locked fact. The figure limb then moved for a real reason (USD 25 -> TZS 70,000, a 2026 supersession), which is why the verdict became RE_RUN_REQUIRED rather than being flipped at a desk.",
+ "second_instance_today": "This is the SECOND row today whose recorded failure was our record rather than the model's -- eval_239 is the other (index row 46 states the two-stage WCF chain with GN 185/2016 Reg.16 cited; the gold and CLAUDE.md Section 11 said a flat 7 days, and my first adjudication called the model's correct answer a fabrication). Two in one day, found by the same check: READ THE SERVED INDEX / THE STATUTE BEFORE RECORDING A REPLY AS WRONG. A wrong key does not merely mis-score a row -- it manufactures evidence that a working system is broken.",
+ "what_remains_open": "The figure is resolved at PORTAL tier only. Cap.212 ss.458 and 489(3) delegate every fee amount to Minister's regulations, so the Companies (Fees) Regulations remain the statute-tier target and remain unlocated -- and they are also the only route to a real effective_date, which is still 'unknown' for every figure on that schedule."
+}

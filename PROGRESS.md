@@ -144,7 +144,48 @@ not sufficient. Whether each present fact was actually *retrieved* into the cont
 — that needs the e5 harness in `eval/index_quality/`, which is `integration`-marked for segfault
 risk. If a present fact sat at a bad rank, that row is retrieval work after all.
 
-### 5. THE PRE-FLIGHT EARNED ITS PLACE ON ITS SECOND REAL OPPORTUNITY
+### 5. ✅ `ext_15` RE-ADJUDICATED BY ASKING AGAIN — **PASS**. AND IT WAS MARKED DOWN TWICE FOR BEING RIGHT.
+
+Its own note refused desk re-labelling, so the question was asked live at `39279b6`
+(`eval/controls/readjudicate_ext_15_2026_10_09.py` →
+`eval/results/ext_15_readjudication_2026_10_09.json`):
+
+> *"Ndiyo, adhabu ni tofauti. **Kampuni za ndani** huadhibiwa kwa TZS 2,500 kwa mwezi kwa
+> kuchelewa kuwasilisha annual return. Lakini **kampuni za kigeni** zinatumia sheria tofauti
+> (**Cap.212 Sehemu XII**). Kwa kampuni ya kigeni, adhabu ni **TZS 70,000 kwa mwezi au sehemu ya
+> mwezi**. Thibitisha na BRELA (brela.go.tz)."*
+
+Every limb: discrimination stated · 2,500 attributed to **local** · 70,000 to the **foreign**
+company with *"au sehemu ya mwezi"* · **Sehemu XII** · no USD 25 · no Part XIII. **And the hard
+limb is the attribution**: until 2026 the *currency* marked the foreign/local distinction, and now
+both are shillings, so putting each figure with its own party is the whole test.
+
+> ## 🔴 THE HISTORY IS THE FINDING, AND IT INDICTS OUR RECORD, NOT THE MODEL.
+>
+> The 2026-09-05 live reply said **"Section XII"** and **"USD 25"**. **Both were correct at that
+> date.** The 2026-09-23 adjudication recorded `verdict: PARTIAL, cause: corpus_stale`, with the
+> note: *"USD 25/month is correct, but the reply cites 'Section XII' — the exact stale citation
+> corrected on 2026-08-31 (correct: Part XIII, ss.320-328)."*
+>
+> **The 2026-08-31 "correction" was itself the error**, reversed on 2026-10-05 after reading
+> Cap.212 directly — Part XII opens at s.437, and ss.320-328 are winding-up machinery in Part
+> VIII. **So the model was penalised for citing the statute correctly, by an adjudication
+> enforcing a wrong locked fact.** The figure then moved for a real reason (the 2026
+> supersession), which is exactly why the verdict became `RE_RUN_REQUIRED` rather than being
+> flipped at a desk — and the row's own refusal to be re-labelled is what preserved the
+> distinction.
+>
+> **THIS IS THE SECOND ROW TODAY WHOSE RECORDED FAILURE WAS OUR RECORD RATHER THAN THE MODEL'S**
+> — `eval_239` is the other. Two in one day, both found by the same check: **read the served
+> index or the statute before recording a reply as wrong.** A wrong key does not merely mis-score
+> a row; it manufactures evidence that a working system is broken.
+
+**Still open, and it is not the figure:** Cap.212 ss.458 and 489(3) delegate every fee amount to
+Minister's regulations, so the **Companies (Fees) Regulations** remain the statute-tier target and
+remain unlocated — and they are also the only route to a real `effective_date`, which is still
+`unknown` for every figure on that schedule.
+
+### 6. THE PRE-FLIGHT EARNED ITS PLACE ON ITS SECOND REAL OPPORTUNITY
 
 Shipping the D-FIDELITY-7 copy, **gate 1 refused the deploy**: the link dropped mid-push (DNS,
 then connection reset, then connect timeout), leaving the commit local-only, and the pre-flight
