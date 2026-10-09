@@ -555,6 +555,34 @@ ALL = gate + additions + additions3
 BY_ID = {q['id']: q for q in ALL}
 print(f'\n[data] {len(ALL)} questions (200 gate + 50 additions + 150 adversarial)')
 
+# ── SCOPE: A ROW CAN BE OUT OF THE CURRENT TIER WITHOUT BEING A MODEL FAILURE ────────────
+# ⛔ WHY THIS EXISTS AND WHY IT IS NOT A DELETION. `eval_223` asks how many instruments the EAC
+# Simplified Trade Regime has. That is Tier 1B, which CLAUDE.md s.5 lists as "Not started --
+# unlock after 1A gate passes": there is no corpus, so the model cannot answer it and booking it
+# as a Tier 1A model defect describes the ROADMAP, not the system. Its own fields hide this — the
+# subdomain reads `vat_registration` and the source_url points at GN 487A (immigration).
+#
+# ⚠️ AND THE ROW STAYS IN, DENOMINATOR UNCHANGED. Removing it would move the denominator of every
+# historical comparison (1476caa, 0e11c3d) by one row, so a scope correction would show up as
+# product movement — the same confound the key-correction arm exists to separate. So the tag is
+# REPORTED, in both directions: the headline population is untouched and comparable, and a SCOPE
+# column says what it contains and what the figure would be without it. The gold is not touched
+# either; it is correct, and the absence is coverage.
+SCOPE_OUT = {q['id']: q['scope'] for q in ALL
+             if isinstance(q.get('scope'), dict)
+             and q['scope'].get('status') == 'out_of_current_scope'}
+# R20: a scope column with no members is a column that can never report anything, and it would
+# look identical to a clean one. The one known member is named so a silent retagging is loud.
+assert SCOPE_OUT, ('no row carries scope.status=out_of_current_scope. If the tag was removed, '
+                   'this column now reports nothing while still printing — say so explicitly '
+                   'rather than shipping an inert column.')
+assert 'eval_223' in SCOPE_OUT, (
+    f'eval_223 is no longer tagged out_of_current_scope; the scope column is measuring something '
+    f'other than what it was built for: {sorted(SCOPE_OUT)}')
+assert all(v.get('tier') for v in SCOPE_OUT.values()), 'a scope tag names no tier'
+print(f'[scope] {len(SCOPE_OUT)} row(s) tagged out-of-current-scope and reported separately: '
+      + ', '.join(f'{k} ({v["tier"]})' for k, v in sorted(SCOPE_OUT.items())))
+
 # ⛔ THE OLD KEYS ARE LOADED FROM THE COMMITTED ARTIFACT, NOT RE-DERIVED HERE. Re-deriving them
 # would create a second implementation of the same table, and the two could disagree without
 # either being obviously wrong — the exact defect that let the 2026-10-07 dry run report SAFE
@@ -890,6 +918,21 @@ def bars(rows_):
         # engine's working, so it can be RIGHT; a fact body replaced by a guard can only be
         # NO_ANSWER. Netting them would hide exactly the distinction this run exists to show.
         'guard_x_outcome': dict(Counter(outcome(r) for r in guard_rows)),
+        # ⛔ THE SCOPE COLUMN — COUNTED, NEVER NETTED OUT OF THE DENOMINATOR ABOVE. These rows are
+        # in-corpus by composition and out of the current tier by subject, so they are reported
+        # with their own outcome and their own counterfactual rate. A reader who wants the
+        # scope-adjusted figure gets it here; a reader comparing to 1476caa gets an unchanged
+        # denominator above. Netting would make a roadmap fact look like product movement.
+        'scope_out_rows': sorted(r['id'] for r in inc if r['id'] in SCOPE_OUT),
+        'scope_out_outcomes': {r['id']: outcome(r) for r in inc if r['id'] in SCOPE_OUT},
+        'A2_rate_excluding_scope_out': (
+            (c['RIGHT'] - sum(1 for r in inc if r['id'] in SCOPE_OUT and outcome(r) == 'RIGHT'))
+            / (n - sum(1 for r in inc if r['id'] in SCOPE_OUT))
+            if n - sum(1 for r in inc if r['id'] in SCOPE_OUT) else 0.0),
+        'A1_rate_excluding_scope_out': (
+            (c['WRONG'] - sum(1 for r in inc if r['id'] in SCOPE_OUT and outcome(r) == 'WRONG'))
+            / (n - sum(1 for r in inc if r['id'] in SCOPE_OUT))
+            if n - sum(1 for r in inc if r['id'] in SCOPE_OUT) else 0.0),
     }
 
 
@@ -948,6 +991,12 @@ for name, bucket in BUCKETS.items():
           f'{b["no_answer_rate"]:6.1%}   errors={b["errors"]}')
     print(f'   GUARDS    {b["guard_rows"]} rows  {b["guard_by_name"]}  '
           f'x outcome {b["guard_x_outcome"]}')
+    if b['scope_out_rows']:
+        print(f'   SCOPE     {len(b["scope_out_rows"])} row(s) out of the current tier '
+              f'{b["scope_out_outcomes"]}  -> A2 excluding them '
+              f'{b["A2_rate_excluding_scope_out"]:.1%}, A1 '
+              f'{b["A1_rate_excluding_scope_out"]:.1%}  (NOT the headline; the denominator '
+              f'above is unchanged so the comparison to the baseline holds)')
 
 _a = BARS['ALL_400']['raw']
 print('\n' + '-' * 90)
@@ -1223,6 +1272,11 @@ print('  ⚠️ A REGEX BUCKET FIGURE IS NOT A GATE 1 RESULT. On gate 0e11c3d fa
 print('  NOTE: Gate 2 (refusal, >70%) is NOT measured by this run. R7 requires BOTH gates '
       'simultaneously, so no part of this output is a Gate-2 result and none of it should be '
       'quoted as pilot readiness on its own.')
+print(f'  SCOPE: {len(_a["scope_out_rows"])} in-corpus row(s) are out of the CURRENT tier '
+      f'{_a["scope_out_outcomes"]} and are counted in every figure above. Excluding them the '
+      f'ALL_400 regex A2 reads {_a["A2_rate_excluding_scope_out"]:.1%} against '
+      f'{_a["A2_rate"]:.1%}. The judge bracket is computed on the full population, so the same '
+      f'row sits in it — a tier-scope decision must not be able to move a headline silently.')
 
 summary = {
     'gate_commit': _sha, 'github_head': _live, 'index_facts': EXPECTED_FACT_COUNT,
@@ -1254,9 +1308,24 @@ summary = {
     'errors': [{'id': r['id'], 'error': r['error']} for r in rows if r['error']],
     'r7_gate_1': {'threshold': IN_THR,
                   'all_400_in_corpus_A2': _a['A2_rate'],
+                  'all_400_in_corpus_A2_excluding_scope_out': _a['A2_rate_excluding_scope_out'],
                   'fact_path_190_A2': _fp['A2_rate'],
                   'gate_2_measured': False,
                   'note': 'R7 needs BOTH gates. Gate 2 is not in this run.'},
+    'scope': {
+        'tagged': SCOPE_OUT,
+        'outcomes': _a['scope_out_outcomes'],
+        '_how_to_read': (
+            'these rows are IN the denominator of every headline figure, deliberately. They are '
+            'tagged because their subject is a tier whose corpus has not been built, so they '
+            'measure the roadmap rather than the model — but removing them would move the '
+            'denominator of every historical comparison, turning a scope correction into '
+            'apparent product movement. Both figures are published: with and without.'),
+        '_not_a_model_failure': (
+            'a scope-tagged row scored WRONG is a coverage fact. Do not count it in a defect '
+            'list, a closability classification, or an A1 narrative without saying which tier '
+            'it belongs to.'),
+    },
     'judge_overlay': judge_overlay,
     'judge_overlay_status': ('ran' if RUN_JUDGE else 'SKIPPED — headline not trustworthy alone'),
     'pre_registration': {

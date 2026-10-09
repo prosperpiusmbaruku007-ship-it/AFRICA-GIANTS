@@ -3,9 +3,9 @@
   "_why": "A corrected gold moves the score with no model change. Scoring the changed rows under BOTH keys makes that term measurable instead of leaving it inside the headline.",
   "_old_keys_are_from_git_not_from_the_correction_notes": "_scoring_key_correction.what_changed is a note by the person who made the change. It was wrong once already: eval_383's said '300,000 -> 500,000' while correct_answer_en still read 300,000, and score_question unions the SW and EN numeric keys, so the corrected key accepted both.",
   "baseline_commit": "1476caa",
-  "head": "7351eb9",
+  "head": "dc8843e",
   "counts": {
-    "rows_in_400_changed_at_all": 24,
+    "rows_in_400_changed_at_all": 25,
     "rows_whose_SCORED_fields_changed": 24,
     "of_those_that_NARROW_the_key": 2,
     "of_those_that_CANNOT_move_a_score": 22,
@@ -752,6 +752,15 @@
       },
       "reliable_old": false,
       "reliable_new": false
+    },
+    {
+      "id": "eval_223",
+      "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+      "scored_fields_changed": false,
+      "answer_type": "definition",
+      "fields_differing": [
+        "scope"
+      ]
     },
     {
       "id": "eval_331",

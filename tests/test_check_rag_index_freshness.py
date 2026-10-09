@@ -13,6 +13,7 @@ The synthetic graph, as a DAG (letters are commit SHAs, '<-' is 'is a parent of'
 `is_ancestor(x, y)` below encodes exactly that graph: is_ancestor('A','C') is True,
 is_ancestor('D','C') is False (D is NOT an ancestor of C -- C came first).
 """
+import json
 import os
 import sys
 
@@ -422,34 +423,65 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     Exactly one row changes (9), 184 before and after. Flip back to `assert ok is True` once the
     R15 regen has run and the artifacts are dual-committed — and re-assert the specifics then,
     because `ok is True` alone does not establish that the intended row is the one that moved.
+
+    ⭐ SEVENTEENTH FLIP, back to `assert ok is True`. The row-9 regen ran on Kaggle and uploaded
+    one HF commit — `e5-base RAG index (184x768), built from dc8843e; correction_sync=CLEAN` —
+    whose two files were fetched at that pinned revision and dual-committed. Verified BEFORE
+    overwriting anything: the downloaded text is byte-identical to `build_fact_texts()` over this
+    tree in all 184 rows, differs from the previously served index in EXACTLY row 9, and every
+    embedding row is unit-normalised at (184, 768).
+
+    ⛔ AND THE PROVENANCE ASSERTION BELOW IS RE-POINTED, NOT DROPPED — the sixteenth flip's note
+    demanded exactly that if it ever went empty. It had asserted `stale_inputs` was NON-empty, to
+    demonstrate on live state that an input can move without changing a served row (the 6e65097
+    `wrong_patterns` edit). My first re-pointing flipped it to assert EMPTY, and that went red:
+    the regen artifacts were on disk but not yet COMMITTED, so git still reported them older than
+    the inputs. The failure is the useful part — **both polarities are assertions about where the
+    working tree sits relative to `git commit`, which flips twice during an ordinary R15
+    dual-commit and is not a property of the index at all.** A test whose subject is the
+    content/provenance SEPARATION must not be decidable by commit order, which is the same error
+    the fifteenth flip fixed one layer down (asking which FILE moved rather than whether the
+    SERVED TEXT changed). So the label is what is asserted, and the demonstration lives on planted
+    state in `test_sha_staleness_is_still_REPORTED_but_no_longer_decides_the_verdict` — input `D`,
+    artifacts `C`, content matching — where it cannot evaporate because someone committed a file.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is False, (
-        "the live repo now reports FRESH. If the row-9 rewording regen has shipped, flip this "
-        "and test_content_limb_passes_on_the_real_built_texts back to True and re-assert the "
-        "specifics; if it has not, something else has made the built index match again and "
-        "that needs explaining before this is flipped.")
-    assert report["content_matches"] is False, report
+    assert ok is True, (
+        f"the live repo reports STALE after the dc8843e dual-commit. The content limb IS the "
+        f"verdict, so this means build_fact_texts() over this tree no longer equals a served "
+        f"file — do not flip this back to False to make it green; find what moved: {report}")
+    assert report["content_matches"] is True, report
     assert report["content_build_error"] is None, report
-    rows = report["diverging"]["kaggle/rag_facts_text.json"]["rows"]
-    assert [r["index"] for r in rows] == [9], (
-        f"the pending divergence is no longer row 9 alone — a second change has been staged "
-        f"without this note being updated: {rows}")
-    assert "HAIKATWI" in rows[0]["built"] and "ikihesabiwa" in rows[0]["built"], (
-        "the pending row no longer separates the BASE from the SOURCE, which is the entire "
-        "point of the rewording")
+    assert report["diverging"] == {}, report["diverging"]
+    # ⛔ `ok is True` ALONE DOES NOT ESTABLISH THAT THE INTENDED ROW IS THE ONE THAT MOVED — it is
+    # equally true of an index that never changed at all. So the specifics are re-asserted against
+    # the SERVED text, per the sixteenth flip's own instruction, in both deploy dirs separately.
+    for _d in ("kaggle", "chike-inference"):
+        with open(os.path.join(REPO, _d, "rag_facts_text.json"), encoding="utf-8") as _fh:
+            _served = json.load(_fh)
+        assert len(_served) == 184, (_d, len(_served))
+        assert "HAIKATWI" in _served[9] and "ikihesabiwa" in _served[9], (
+            f"{_d} row 9 no longer separates the BASE from the SOURCE, which is the entire "
+            f"point of the rewording this flip pended: {_served[9][:200]}")
+        assert "ya mshahara wa mfanyakazi kila mwezi" not in _served[9], (
+            f"{_d} row 9 still carries the SOURCE-ambiguous phrasing that invited eval_086's "
+            f"party inversion — the regen did not land, whatever the verdict says")
     assert report["embedding_rows_match"] is True, report
     assert report["built_rows"] == 184, report["built_rows"]
-    # ⛔ AND THE PROVENANCE LIMB IS STILL RED HERE, DELIBERATELY ASSERTED. This is the whole
-    # point of the redesign: `scripts/locked_facts.json` HAS moved since the artifacts were
-    # committed (the 6e65097 wrong_patterns fix), and the check is GREEN anyway because nothing
-    # served changed. If this assertion ever fails because stale_inputs is empty, the two limbs
-    # have stopped disagreeing and this test no longer demonstrates the distinction it was
-    # rewritten to prove -- re-point it at whatever input has moved instead of deleting it.
-    assert report["stale_inputs"], (
-        "stale_inputs is empty, so this test no longer exercises the case it exists for: an "
-        "input moved WITHOUT changing a served row. The content limb is still asserted above; "
-        "re-point this at the current provenance state rather than dropping it.")
+    # ⛔ RE-POINTED ON THE SEVENTEENTH FLIP, AND NEITHER POLARITY OF THE OLD ASSERTION BELONGS
+    # HERE. The sixteenth flip asserted `stale_inputs` was NON-empty; my first attempt at
+    # re-pointing asserted it was EMPTY, and that went red — correctly — because the artifacts
+    # had been written to disk but not yet COMMITTED, so git still reported them older than the
+    # inputs. Both polarities are assertions about where the working tree sits relative to
+    # `git commit`, which flips twice during an ordinary R15 dual-commit and is not a property
+    # of the index at all. So what is asserted is the LABEL: this limb is provenance, the
+    # content limb is the verdict, and the two are separately reported. The planted sibling
+    # (`test_sha_staleness_is_still_REPORTED_but_no_longer_decides_the_verdict`) holds the
+    # demonstration that an input can move without changing a served row — on constructed
+    # state, which cannot evaporate when someone commits a file.
+    assert report["_stale_inputs_is_provenance_only"], (
+        "the provenance label is gone; without it a future reader will read stale_inputs as a "
+        "verdict again, which is exactly the conflation the 2026-10-08 redesign removed")
     assert not report["missing_inputs"] and not report["missing_artifacts"], (
         f"a missing file is a setup bug, not a stale index: {report}")
     assert report["artifacts_diverged"] is False, (
@@ -513,18 +545,26 @@ def test_content_limb_passes_on_the_real_built_texts():
     back to `assert ok is True` once the R15 regen has run on Kaggle and the artifacts are
     dual-committed to kaggle/ and chike-inference/ — and re-assert the specifics then, because
     `ok is True` alone does not establish that the intended row is the one that moved.
+
+    ⭐ SEVENTEENTH FLIP, back to `assert ok is True` — the dc8843e regen shipped and was
+    dual-committed. This arm is the one that matters for the REWORDING specifically, because it
+    compares the LIVE BUILDER's output against the served files rather than trusting either: the
+    served row must now be the built row, and the built row must still carry the BASE/SOURCE
+    separation. Both are asserted, so a future edit that quietly re-ambiguates the fact turns
+    this red even though the index and the builder would still agree with each other.
     """
     ok, rep = check(repo_dir=REPO, content_fn=lambda: (REAL_TEXTS, None))
-    assert ok is False, (
-        "the built index now matches the served one — if the row-9 regen has shipped, flip "
-        "this and the three siblings back and re-assert the specifics")
-    assert rep["content_matches"] is False
-    diverging = rep["diverging"]["kaggle/rag_facts_text.json"]["rows"]
-    assert [r["index"] for r in diverging] == [9], (
-        f"the pending divergence is no longer row 9 alone: {diverging}")
-    assert "HAIKATWI" in diverging[0]["built"], (
-        "the pending row no longer states that the employer's share is NOT deducted, which is "
-        "the whole point of the rewording")
+    assert ok is True, (
+        f"the real builder's output no longer matches the served index. If a fact or the builder "
+        f"has changed, an R15 regen is owed and THAT is the fix — not flipping this: {rep}")
+    assert rep["content_matches"] is True
+    assert rep["diverging"] == {}, rep["diverging"]
+    assert "HAIKATWI" in REAL_TEXTS[9] and "ikihesabiwa" in REAL_TEXTS[9], (
+        f"the BUILT row 9 no longer states that the employer's share is NOT deducted, which is "
+        f"the whole point of the rewording: {REAL_TEXTS[9][:200]}")
+    assert REAL_TEXTS[9] == SERVED_TEXTS[9], (
+        "built and served row 9 differ, which the verdict above should already have caught — if "
+        "this fires alone, the content limb's comparison has stopped covering row 9")
 
 
 def test_content_limb_BLOCKS_a_single_changed_row():

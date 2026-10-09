@@ -39,8 +39,14 @@ APP = os.path.join(REPO, "chike-inference", "modal_app.py")
 # 2026-10-07 BRELA regen, so the count could not distinguish the corrected index from the
 # superseded one and the fail-loud contract had nothing to catch. The count is the thing
 # that failed; the digest is the fix.
+#
+# ⭐ BUMPED 2026-10-09 for the row-9 regen (`nssf_employer_rate` reworded so the BASE is not
+# readable as the SOURCE). Previous value, kept so a rollback is one lookup away rather than one
+# git-log excavation: 19bcfabb887c49643268b9a5659ae31d90d31a982fb42930a250b23d6f5ae405 — the
+# 2026-10-07 BRELA index. The pin FIRED on this change, with its own instruction attached, which
+# is the only reason the constant and the index are in the same commit.
 EXPECTED_SERVED_SHA256 = (
-    "19bcfabb887c49643268b9a5659ae31d90d31a982fb42930a250b23d6f5ae405")
+    "5f76d40cf46d8be515f356c05bfb072529482c5bdf3dab966264965a9d98381f")
 EXPECTED_ROWS = 184
 
 

@@ -265,22 +265,29 @@ def test_the_eval_347_verdict_is_polarity_aware():
 
 
 # ── THE OUTCOME PARTITION AND THE GUARD CLASSIFIER ──────────────────────────────────────
-def _load_scoring_helpers():
+def _load_scoring_helpers(scope_out=None):
     """Load just the pure helpers out of the package without executing its Kaggle preamble.
 
     The package is a flat Kaggle script — importing it would authenticate, clone and load an
     8B model. So the two functions under test are extracted by source and exec'd in a tiny
     namespace. That is a real limitation and it is stated rather than hidden: these tests
     exercise the LOGIC the package ships, and the extraction is asserted to have found it.
+
+    `scope_out` injects the out-of-current-scope registry `bars` reads. It defaults to EMPTY so
+    every pre-existing test keeps measuring what it measured — and the scope arms below pass one
+    in explicitly, which is the only way to watch the column both fire and stay quiet.
     """
     src = _package_source()
-    ns = {"Counter": __import__("collections").Counter}
+    ns = {"Counter": __import__("collections").Counter, "SCOPE_OUT": dict(scope_out or {})}
     for marker in ("def outcome(r):", "def bars(rows_):"):
         assert marker in src, f"{marker} is gone from the package — this test is stale"
     start = src.index("def outcome(r):")
     end = src.index("def reliable_only(rows_):")
     exec(compile(src[start:end], PKG, "exec"), ns)      # noqa: S102
     assert "outcome" in ns and "bars" in ns
+    assert "SCOPE_OUT" in src.split("def bars(rows_):")[1][:2000], (
+        "bars() no longer reads SCOPE_OUT, so the scope column has been removed or renamed and "
+        "the arms below are measuring nothing")
     return ns["outcome"], ns["bars"]
 
 
@@ -345,6 +352,63 @@ def test_out_of_corpus_rows_are_excluded_from_both_bars():
     assert bars(rows)["n_in_corpus"] == 1, (
         "OOC rows are back in the in-corpus denominator. That is exactly how 330/400 = 82.5% "
         "came to be quoted against R7's IN-CORPUS bar")
+
+
+# ── THE SCOPE COLUMN (added 2026-10-09 for eval_223) ────────────────────────────────────
+def test_a_scope_tagged_row_stays_IN_the_denominator_and_is_reported_beside_it():
+    """⛔ THE WHOLE POINT IS THAT IT IS *NOT* REMOVED. `eval_223` asks an EAC STR question — Tier
+    1B, no corpus — so scoring it WRONG measures the roadmap. The tempting fix is to drop it, and
+    dropping it would move the denominator of every historical comparison (1476caa, 0e11c3d) by
+    one row, so a scope decision would surface as product movement. The column reports both.
+    """
+    outcome, bars = _load_scoring_helpers({"eval_223": {"tier": "tier1b"}})
+    rows = ([_row(id=f"r{i}", **{"pass": True}) for i in range(8)]
+            + [_row(id="eval_223", **{"pass": False})]
+            + [_row(id="w0", **{"pass": False})])
+    b = bars(rows)
+    assert b["n_in_corpus"] == 10, (
+        "a scope-tagged row was netted out of the denominator — that is the deletion this column "
+        "exists to avoid, and it silently re-bases every historical comparison")
+    assert b["A1_wrong"] == 2 and b["A2_right"] == 8
+    assert b["scope_out_rows"] == ["eval_223"]
+    assert b["scope_out_outcomes"] == {"eval_223": "WRONG"}
+    # 8/9 vs 8/10 — the counterfactual is published, not asserted as the result.
+    assert b["A2_rate_excluding_scope_out"] == pytest.approx(8 / 9)
+    assert b["A1_rate_excluding_scope_out"] == pytest.approx(1 / 9)
+    assert b["A2_rate"] == pytest.approx(0.8), "the headline rate moved; it must not"
+
+
+def test_the_scope_column_is_QUIET_when_nothing_is_tagged():
+    """R26's clean case. A column that reports members on an untagged population would make every
+    historical bucket look scope-adjusted, and the two directions are indistinguishable from the
+    artifact alone."""
+    outcome, bars = _load_scoring_helpers()          # empty registry
+    b = bars([_row(id="eval_223", **{"pass": False}), _row(id="a", **{"pass": True})])
+    assert b["scope_out_rows"] == [] and b["scope_out_outcomes"] == {}
+    assert b["A2_rate_excluding_scope_out"] == pytest.approx(b["A2_rate"]), (
+        "with nothing tagged the two rates must be identical; if they diverge the exclusion "
+        "arithmetic is reading a different population than the headline")
+
+
+def test_eval_223_really_IS_tagged_in_the_corpus_and_its_gold_was_NOT_touched():
+    """⛔ THE TAG IS THE CLAIM, SO READ THE CORPUS, NOT THE PACKAGE (R34). And assert the
+    scored fields are untouched: the instruction was annotate, do not re-score, and a quiet edit
+    to `correct_answer_sw` would move the key under the comparison it exists to preserve."""
+    p = os.path.join(REPO, "eval", "accuracy_gate", "eval_questions_002_additions.jsonl")
+    rows = [json.loads(l) for l in io.open(p, encoding="utf-8") if l.strip()]
+    assert len(rows) == 50, len(rows)
+    r = next(x for x in rows if x["id"] == "eval_223")
+    assert r["scope"]["status"] == "out_of_current_scope"
+    assert r["scope"]["tier"] == "tier1b"
+    assert r["scope"]["do_not_rescore"] is True
+    assert "STR ina zana kuu nne" in r["correct_answer_sw"], (
+        "eval_223's gold answer changed. The scope tag is metadata; re-scoring it is a different "
+        "decision and was explicitly not taken")
+    assert r["answer_type"] == "definition"
+    # And exactly one row carries the tag — a second one appearing without a note means someone
+    # used the column to quietly shrink the in-scope population.
+    tagged = [x["id"] for x in rows if isinstance(x.get("scope"), dict)]
+    assert tagged == ["eval_223"], tagged
 
 
 # ── THE DUAL-KEY ARM ────────────────────────────────────────────────────────────────────
