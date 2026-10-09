@@ -101,8 +101,10 @@ is token-gated and the token is founder-only, so the deep arm is **not claimed h
 > "production is not loading its config" — CONTAINER-PATH-1's exact shape — and it cost a
 > founder question that outranked everything else on suspicion alone. **A health field that
 > cannot report a true value in the tier reporting it is worse than a missing field**, because it
-> is confidently wrong in the direction of "something did not run". Being fixed with the copy
-> deploy: the shallow arm will name the tier instead of implying a failure.
+> is confidently wrong in the direction of "something did not run". **FIXED AND LIVE** at
+> `39279b6`: the shallow arm now reads `web_tier_config_loaded` /
+> `web_tier_config_rag_fact_count` plus a `config_note` naming where the real value lives, so
+> the field states a fact about the web tier instead of implying a production failure.
 
 **(ii) D-FIDELITY-7's apology is gone.** `eval_347` served *"Samahani — jibu langu la awali
 lilitoa kiwango..."* live. The founder's 2026-10-08 reasoning applies identically: on the fact
@@ -122,6 +124,24 @@ and the no-figure test still passes for every subject. The rule table is **per-s
 `vat_registration` and `presumptive` have real thresholds and keep the withhold-only form,
 because for them "there is no threshold" would be false. Pinned by
 `tests/test_threshold_guard_wiring.py`.
+
+**DEPLOYED AND VERIFIED LIVE, through R16 in its new order.** Pre-flight first: gate 1 **refused
+the deploy** on its second real opportunity — the commit was local-only after the Tanzanian link
+dropped mid-push (three attempts, three different failure modes: DNS, connection reset, connect
+timeout), and the gate printed *"DO NOT STOP THE LIVE APP"* rather than opening the window. Once
+the push landed, all three gates passed including the real build, then stop → deploy (8.7s).
+
+```
+build 39279b6 == the deployed commit   build_matches TRUE   (no warm container)
+served.rag_rows_loaded 184 == served.config_rag_fact_count 184
+served.rag_facts_text_sha256 19bcfabb… == the committed expected digest
+```
+
+| limb | live reply |
+|---|---|
+| **POSITIVE** — the changed path | *"Mashine ya risiti (EFD) **haina kizingiti cha mauzo** — inahitajika bila kujali kiwango cha mauzo ya mwaka. Msamaha hutolewa tu kwa tangazo la Kamishna Mkuu wa TRA. Sitatoa kiwango chochote cha mauzo hapa."* — **no apology, states the rule, states no figure** |
+| **NEGATIVE** — D-FIDELITY-8 unchanged | the nine-band ladder, verbatim, still correct |
+| **NEGATIVE** — an ordinary question | *"Kiwango cha kawaida cha VAT Tanzania ni asilimia 18…"* — still answers |
 
 **(iii) A real defect in the package, found by the verification and fixed.** Top-level
 `judge_overlay_status` reads **`pending`** in this artifact while `summary.judge_overlay_status`
