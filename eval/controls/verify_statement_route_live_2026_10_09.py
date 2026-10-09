@@ -16,8 +16,10 @@ differently:
 So **the live route is not directly observable.** It is established two ways, neither of which
 is a guess:
 
-  1. `detect_intent` is re-derived HERE, locally, and the deploy's own `/health` build is
-     asserted equal to this working tree's HEAD. Same code, same commit, deterministic function.
+  1. `detect_intent` is re-derived HERE, locally, against a tree whose relationship to the
+     deployed commit is checked rather than assumed: `/health`'s build must be an ANCESTOR of
+     HEAD and no serving path (`chike/`, `chike-inference/`, the index files) may have moved
+     since it. Deterministic function, same code, provable provenance.
   2. Each routed row carries a `route_evidence` pattern taken from the ENGINE'S OWN output
      string (printed and pasted, not invented) — a clause the fact path does not produce. That
      is positive evidence the deterministic text reached the user.
@@ -40,10 +42,12 @@ mechanised: a five-word paraphrase was once enough to flip a correct body into a
 `eval_086` / `eval_130` / `eval_394` come out of the gate files and `adv_06` out of
 `eval/refusal_gate/ooc_adversarial_in_scope_015.jsonl`, each looked up by id and asserted found.
 
-⛔ THE TWO CONSTANTS ARE DERIVED, NOT TYPED. `EXPECTED_BUILD` is `git rev-parse --short HEAD`
-and the expected served digest is computed from the committed index the same way
-`served_index_identity` computes it. The 2026-10-08 harness hand-copied both, which is a pin
-that can go stale silently (R18's first incident). There is nothing here to keep in sync.
+⛔ NOTHING HERE IS A TYPED PIN. The expected served digest is COMPUTED from the committed
+index the same way `served_index_identity` computes it, and the build is checked by ANCESTRY plus
+a serving-path diff rather than by equality to anything. The 2026-10-08 harness hand-copied both
+constants, which is a stale pin waiting to happen (R18's first incident); the first run of THIS
+harness then proved that even a *derived* equality against HEAD is wrong, because committing the
+harness before running it moved HEAD one commit past the deploy.
 
 Usage:  python eval/controls/verify_statement_route_live_2026_10_09.py
 Artifact: eval/results/statement_route_live_2026_10_09.json  (written after EVERY row, and
@@ -78,7 +82,19 @@ def _sh(*args):
     return subprocess.run(args, cwd=REPO, capture_output=True, text=True).stdout.strip()
 
 
-EXPECTED_BUILD = _sh("git", "rev-parse", "--short", "HEAD")
+# ⛔ THE DEPLOYED COMMIT, NOT HEAD — AND THE FIRST RUN PROVED WHY. Deriving this as
+# `rev-parse HEAD` read `build_is_this_working_tree: false` for a reason that is not a defect:
+# this harness was COMMITTED (R18) after the deploy, so HEAD had legitimately moved one commit
+# on. An equality against HEAD therefore fails on every deploy followed by any commit at all —
+# the same shape as the provenance limb in the freshness test, which had to be re-pointed for
+# the same reason an hour earlier. What matters is not "is the build HEAD" but:
+#   (a) is the deployed commit an ANCESTOR of HEAD (not a fork, not something newer), and
+#   (b) has any SERVING path moved since it — chike/, chike-inference/, the index files.
+# A doc or harness commit landing after a deploy is not a stale deploy, and treating it as one
+# teaches the reflex of overriding the check.
+DEPLOY_PATHS = ["chike", "chike-inference", "kaggle/rag_facts_text.json",
+                "kaggle/rag_embeddings.npy", "kaggle/chike_config.json"]
+HEAD = _sh("git", "rev-parse", "--short", "HEAD")
 
 
 def expected_served_sha256():
@@ -270,15 +286,49 @@ PROBES = [
         "proves": "NEGATIVE: removing the rate branch's `amount is not None` gate must not have "
                   "taken the AMOUNT path with it. A question WITH figures must still return the "
                   "computed figure, not a rate statement. 12 employees × TZS 10,000,000 → 350,000.",
-        "question": "Mishahara ya wafanyakazi wangu 12 ni TZS 10,000,000 kwa mwezi. "
+        "question": "Nina wafanyakazi 12 na jumla ya mishahara yao ni TZS 10,000,000 kwa mwezi. "
                     "SDL ni kiasi gani?",
         "source": "rates.SDL_RATE = 3.5% of total payroll; 0.035 × 10,000,000 = 350,000. "
                   "detect_intent returns 'sdl' here via the NUMBER path, not path 9 — "
                   "asks_levy_statement is False because the question carries a money ask.",
         "must_match": r"350,?000",
+        "_probe_was_corrected_mid_run": (
+            "⛔ MY PROBE WAS THE DEFECT, and it is R38's exact shape. The first wording — "
+            "'Mishahara ya wafanyakazi wangu 12 ni TZS 10,000,000 kwa mwezi' — is genuinely "
+            "AMBIGUOUS between per-employee and total, and production correctly asked which: "
+            "'Ili nihesabu SDL, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote'. "
+            "My must_match demanded 350,000, i.e. it encoded ONE reading of a question that has "
+            "two, and scored a correct clarification as a broken compute path. Suspect the "
+            "specimen before the system (R26), and hardest when the probe is newer than the "
+            "thing it tests — the clarification copy is from 2026-07-23 (5239190), eleven weeks "
+            "older than the statement route, and `git merge-base --is-ancestor` confirms it "
+            "predates 7b15756, so it cannot be a regression from this change. The failing "
+            "wording is kept as its own answer_quality observation below rather than deleted."),
         "note": "If this fails while the three pinned rows pass, the statement route has "
                 "SWALLOWED the compute path — the expensive failure mode of widening a gate "
                 "every question passes through.",
+    },
+    {
+        "id": "per_vs_total_ambiguity_fires_even_when_the_user_said_JUMLA",
+        "limb": "answer_quality",
+        "proves": "⛔ A REAL NEAR-MISS, FOUND BY MY OWN BAD PROBE AND KEPT BECAUSE IT IS REAL. "
+                  "The per-vs-total clarification is correct on the bare wording, and it ALSO "
+                  "fires on 'Jumla ya mishahara ya wafanyakazi wangu 12 ni TZS 10,000,000' — "
+                  "where the user has already said JUMLA (total). The same figures asked as "
+                  "'Nina wafanyakazi 12 na jumla ya mishahara yao ni …' compute 350,000 "
+                  "correctly, so the sensitivity is to where 'jumla' sits in the sentence, not "
+                  "to whether it is present. NOT a regression (copy predates this change by "
+                  "eleven weeks) and NOT fixed here: it is the compute path, it needs its own "
+                  "R17 sweep, and a clarification is the SAFE direction of this error.",
+        "question": "Jumla ya mishahara ya wafanyakazi wangu 12 ni TZS 10,000,000 kwa mwezi. "
+                    "SDL ni kiasi gani?",
+        "source": "found while adjudicating this harness's own FAIL on 2026-10-09; "
+                  "clarification copy from chike/clarification.py:270 (commit 5239190, "
+                  "2026-07-23)",
+        "observe": r"niambie\s+kama\s+kiasi|kwa\s+kila\s+mfanyakazi\s+au",
+        "note": "OBSERVED, never asserted. Recording it as a deploy requirement would demand a "
+                "fix nobody has scoped, and asserting the clarification is correct would freeze "
+                "a behaviour that may well be worth narrowing later.",
     },
     {
         "id": "negative_row57_efd_guard_still_holds",
@@ -371,8 +421,15 @@ def health(tok):
     except Exception as exc:                                                 # noqa: BLE001
         return {"error": f"{type(exc).__name__}: {str(exc)[:200]}"}
     served = h.get("served") or {}
+    build = h.get("build") or ""
+    is_ancestor = bool(build) and subprocess.run(
+        ["git", "merge-base", "--is-ancestor", build, "HEAD"],
+        cwd=REPO, capture_output=True).returncode == 0
+    moved = [p for p in (_sh("git", "diff", "--name-only", f"{build}..HEAD", "--", *DEPLOY_PATHS)
+                         .splitlines()) if p.strip()] if is_ancestor else []
     h["_checks"] = {
-        "build_is_this_working_tree": h.get("build") == EXPECTED_BUILD,
+        "build_is_an_ancestor_of_head": is_ancestor,
+        "no_serving_path_moved_since_the_build": not moved,
         "web_and_gpu_tiers_agree": h.get("build_matches") is True,
         "served_digest_equals_committed_index": (
             served.get("rag_facts_text_sha256") == EXPECTED_SHA256),
@@ -380,10 +437,18 @@ def health(tok):
         "rows_match_config": served.get("rag_rows_loaded") == served.get(
             "config_rag_fact_count"),
     }
-    h["_expected"] = {"build": EXPECTED_BUILD, "sha256": EXPECTED_SHA256,
-                      "rows": EXPECTED_ROWS,
-                      "_derived": "both derived here — build from git, digest from the committed "
-                                  "index. Nothing to keep in sync, so nothing to go stale."}
+    h["_provenance"] = {
+        "deployed_build": build, "head": HEAD, "serving_paths_moved_since_build": moved,
+        "deploy_paths_watched": DEPLOY_PATHS,
+        "_why_not_equality_to_head": (
+            "committing this harness before running it (R18) moved HEAD one commit past the "
+            "deploy, and an equality check called that a stale deploy. Ancestry plus a "
+            "serving-path diff is the question that was actually meant: a doc or harness commit "
+            "after a deploy is not staleness, and a changed chike/ file is."),
+        "expected_sha256": EXPECTED_SHA256, "expected_rows": EXPECTED_ROWS,
+        "_derived": "the digest is computed from the committed index, not typed, so there is no "
+                    "pin here to go stale.",
+    }
     return h
 
 
@@ -406,7 +471,7 @@ def save(rows, h):
     payload = {
         "_what": "R16 live verification of the statement route (routing path 9 + the "
                  "orchestrator's threshold and optionality branches) and of index row 9's "
-                 "rewording, on deploy " + EXPECTED_BUILD,
+                 "rewording. Deployed build and HEAD are both recorded under health._provenance.",
         "_endpoint": ENDPOINT,
         "_what_this_cannot_see": (
             "the endpoint returns {'reply': text} only — no intent, no computation record. The "
@@ -455,8 +520,12 @@ def main():
 
     h = health(tok)
     print(f"[health] {json.dumps(h.get('_checks', h.get('error')), ensure_ascii=False)}")
-    print(f"[health] expected build={EXPECTED_BUILD} digest={EXPECTED_SHA256[:16]}… "
-          f"rows={EXPECTED_ROWS}")
+    _pv = h.get("_provenance") or {}
+    print(f"[health] deployed build={_pv.get('deployed_build')} head={HEAD}  "
+          f"digest={EXPECTED_SHA256[:16]}… rows={EXPECTED_ROWS}")
+    if _pv.get("serving_paths_moved_since_build"):
+        print(f"[health] ⛔ serving paths moved since the build: "
+              f"{_pv['serving_paths_moved_since_build']}")
 
     # The route claim, re-derived here before anything is asked.
     for p in PROBES:
