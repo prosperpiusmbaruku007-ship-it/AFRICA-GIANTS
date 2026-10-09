@@ -158,6 +158,85 @@ def test_augmented_fills_gap_and_never_flips_reliable():
     assert rep['judge_augmented']['floor_undet_fail'] == {'pass': 3, 'total': 6, 'acc': 3 / 6}
 
 
+def test_the_promoted_headline_is_a_BRACKET_and_the_upper_bound_is_the_old_figure():
+    """⛔ THE JUDGE BECAME THE BAR A HEADLINE ON 2026-10-09, AND A POINT ESTIMATE WOULD HAVE
+    CARRIED THE SAME DEFECT THAT PROMPTED THE PROMOTION.
+
+    `judge_augmented` fills the unreliable gap and deliberately does NOT demote the queued false
+    passes. While the judge was report-alongside that was correct. As a HEADLINE it means every
+    queued false pass is still inside the numerator — on gate 0e11c3d it read 81.9% with 17
+    rows the judge had itself flagged as wrong counted as passes, and hand adjudication put 10
+    of them beyond doubt.
+
+    So the headline is a bracket: upper = judge_augmented unchanged (every candidate survives),
+    lower = every candidate upheld. Only hand adjudication moves the true figure, which must sit
+    inside. Asserted here on the real shape, so a future 'simplification' to a single number
+    fails rather than quietly restoring the overstatement.
+    """
+    rows = [
+        _row('p1', passed=True,  reliable=True, judge='correct'),
+        _row('p2', passed=True,  reliable=True, judge='correct'),
+        _row('fp', passed=True,  reliable=True, judge='wrong'),      # queued false pass
+        _row('g1', reliable=False, judge='correct'),
+    ]
+    rep = build_confirmation_report(rows)
+    b = rep['bar_a_headline_bracket']
+    # upper is EXACTLY the pre-promotion figure — the bracket adds a bound, it does not
+    # redefine the old number
+    assert b['upper']['acc'] == rep['judge_augmented']['acc']
+    assert b['upper']['pass'] == rep['judge_augmented']['pass']
+    # lower demotes the queued false passes, and only those
+    assert b['queued_false_pass'] == 1
+    assert b['lower']['pass'] == b['upper']['pass'] - 1
+    assert b['lower']['total'] == b['upper']['total'], (
+        "the lower bound changed the DENOMINATOR — a demoted pass becomes a fail, it does not "
+        "leave the population")
+    assert b['lower']['acc'] < b['upper']['acc']
+    assert b['width_pts'] > 0
+
+    # ⛔ AND THE FALSE-FAIL DIRECTION MUST NOT BE APPLIED. Promoting a regex fail on the
+    # judge's word alone is the same error in the flattering direction, and that queue has
+    # never been adjudicated.
+    rows2 = rows + [_row('ff', passed=False, reliable=True, judge='correct')]
+    rep2 = build_confirmation_report(rows2)
+    assert rep2['disagreement_queue']['false_fail_candidates'] == ['ff']
+    b2 = rep2['bar_a_headline_bracket']
+    assert b2['upper']['pass'] == rep2['judge_augmented']['pass'], (
+        "a false-FAIL candidate was promoted into the headline — the bracket may only demote")
+
+
+def test_the_bracket_contains_the_adjudicated_figure_for_the_real_gate_run():
+    """⛔ R24's baseline reproduction, applied to the promotion itself: the bracket is only
+    useful if the hand-adjudicated answer actually falls inside it. On gate 0e11c3d the upper
+    bound is 81.89% (and must equal the shipped overlay's own figure), the lower is 77.30%, and
+    adjudication landed at 293/370 = 79.19% — inside, as it must be. If a future change to the
+    bracket puts the adjudicated figure outside it, the bracket is wrong, not the adjudication.
+    """
+    import io
+    import json
+    import os
+    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    gate = os.path.join(repo, 'eval', 'results', 'gate_production_0e11c3d.json')
+    adj = os.path.join(repo, 'eval', 'results', 'false_pass_adjudication_0e11c3d.json')
+    if not (os.path.isfile(gate) and os.path.isfile(adj)):
+        import pytest
+        pytest.skip('the 0e11c3d artifacts are not present')
+    d = json.load(io.open(gate, encoding='utf-8'))
+    a = json.load(io.open(adj, encoding='utf-8'))
+    rep = build_confirmation_report(d['rows'])
+    b = rep['bar_a_headline_bracket']
+    # the upper bound must still be the figure the run itself published
+    assert abs(b['upper']['acc'] - d['judge_overlay']['report']['judge_augmented']['acc']) < 1e-9
+    confirmed = a['tally']['FALSE_PASS']
+    adjudicated = (b['upper']['pass'] - confirmed) / b['upper']['total']
+    assert b['lower']['acc'] <= adjudicated <= b['upper']['acc'], (
+        f"the adjudicated figure {adjudicated:.4f} is OUTSIDE the bracket "
+        f"[{b['lower']['acc']:.4f}, {b['upper']['acc']:.4f}] — the bracket is wrong")
+    assert adjudicated < 0.85, (
+        'the adjudicated in-corpus figure now clears R7 Gate 1 — if that is real it is the '
+        'headline of the project, so re-derive it before believing this test')
+
+
 def test_disagreement_queue_is_flags_not_corrections():
     rows = [
         _row('fp', passed=True,  reliable=True, judge='wrong'),

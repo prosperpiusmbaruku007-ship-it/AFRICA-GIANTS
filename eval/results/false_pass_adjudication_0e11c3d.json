@@ -4,26 +4,28 @@
  "gate": "gate_production_0e11c3d.json",
  "gate_commit": "0e11c3d",
  "tally": {
-  "FALSE_PASS": 12,
-  "PARTIAL": 4,
+  "FALSE_PASS": 10,
+  "PARTIAL": 5,
   "FALSE_ALARM": 1,
+  "WRONG_GOLD": 1,
   "total": 17
  },
- "judge_right_or_defensible": 16,
+ "judge_right_or_defensible": 15,
+ "_corrections_to_this_adjudication": "eval_239 FALSE_PASS -> WRONG_GOLD and eval_186 FALSE_PASS -> PARTIAL, both on 2026-10-09 after checking whether the governing fact was IN THE INDEX. Both of my original calls accused the model of fabricating something its own served index states with a citation. The check that found them -- read the index row before classifying the row -- is now the first step, not the last.",
  "defect_classes": [
   "advises_the_prohibited_act",
-  "confident_answer_where_gold_is_a_hedge",
   "contradictory_values_offered_plus_omission",
   "correct_answer_plus_a_new_adjacent_error",
   "cross_levy_threshold_bleed",
   "definition_inverted_with_fabricated_criteria",
-  "fabricated_process_structure",
   "fabricated_threshold_rule",
+  "gold_is_the_stale_claim",
   "half_of_a_two_part_question",
   "one_word_date_shift",
   "operation_inverted",
   "party_inversion",
   "penalty_misattributed",
+  "polarity_error_on_a_row_whose_GOLD_is_also_stale",
   "refuses_then_confirms_the_false_premise",
   "wrong_instrument_named",
   "wrong_member_of_a_closed_set"
@@ -36,14 +38,14 @@
     "rate": 0.8229166666666666
    },
    "confirmed_removed": {
-    "right": 304,
+    "right": 306,
     "n": 384,
-    "rate": 0.7916666666666666
+    "rate": 0.796875
    },
    "confirmed_and_partial_removed": {
-    "right": 300,
+    "right": 301,
     "n": 384,
-    "rate": 0.78125
+    "rate": 0.7838541666666666
    }
   },
   "fact_path_190": {
@@ -53,9 +55,9 @@
     "rate": 0.8524590163934426
    },
    "confirmed_removed": {
-    "right": 150,
+    "right": 151,
     "n": 183,
-    "rate": 0.819672131147541
+    "rate": 0.825136612021858
    },
    "confirmed_and_partial_removed": {
     "right": 149,
@@ -64,7 +66,7 @@
    }
   }
  },
- "_the_gate_1_conclusion": "fact_path_190 was published at 85.2% raw, above R7's 85%. Removing only the CONFIRMED false passes puts it at 82.0%; including the partials, 81.4%. BOTH ARE BELOW 85%. No bucket of this run clears Gate 1 once the false passes are removed, and 85.2% must not be quoted as a Gate 1 result.",
+ "_the_gate_1_conclusion": "fact_path_190 was published at 85.2% raw, above R7's 85%. Removing only the CONFIRMED false passes puts it at 82.5%; including the partials, 81.4%. BOTH ARE BELOW 85%. No bucket of this run clears Gate 1 once the false passes are removed, and 85.2% must not be quoted as a Gate 1 result.",
  "rows": [
   {
    "id": "eval_086",
@@ -166,9 +168,9 @@
   },
   {
    "id": "eval_186",
-   "verdict": "FALSE_PASS",
-   "defect": "confident_answer_where_gold_is_a_hedge",
-   "why": "The gold says the threshold 'hakijathibitishwa waziwazi' — we do not know it. The reply asserts 'Ndiyo, kwa mujibu wa sheria' and conflates a safety OFFICER with a designated safety REPRESENTATIVE, which is a different obligation. Where the gold is an admitted gap, a confident assertion cannot be scored correct — and this is the uncited-gold family arriving as a model defect rather than a key one.",
+   "verdict": "PARTIAL",
+   "defect": "polarity_error_on_a_row_whose_GOLD_is_also_stale",
+   "why": "⚠️ RECLASSIFIED FROM FALSE_PASS, for the same reason as eval_239: I called it 'a confident answer where the gold is a hedge', and THE INDEX IS NOT A HEDGE. Row 87 is specific and sourced: 'Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zaidi ya 20, unateua mwakilishi wa usalama na afya kutoka kwa wafanyakazi ulio nao -- ni kuteua, si kuajiri mtu mpya. Kiwandani: mwakilishi 1 kwa kila wafanyakazi 50... (NOT a professionally hired/dedicated safety officer.)' So the GOLD's 'kizingiti ... hakijathibitishwa waziwazi' is weaker than what we actually hold and is itself a candidate stale key. The model's answer is HALF right -- appointing a representative is correct at 60 staff -- but it opens 'Ndiyo' to a question about an AFISA WA USALAMA, where its own row says HAPANA and draws exactly that officer/representative distinction. A real polarity defect on a row that also needs its gold re-sourced, so it is not a clean false pass in either direction.",
    "subdomain": "osha_registration",
    "answer_type": "procedure",
    "source": "gate_001",
@@ -249,9 +251,9 @@
   },
   {
    "id": "eval_239",
-   "verdict": "FALSE_PASS",
-   "defect": "fabricated_process_structure",
-   "why": "Invents a two-stage reporting process with a 14-day worker-to-employer step that appears in no locked fact, then adds a confident gloss about how the two windows interact. The 7 days is present and correct, which is why it passed; everything built around it is manufactured.",
+   "verdict": "WRONG_GOLD",
+   "defect": "gold_is_the_stale_claim",
+   "why": "⛔ MY OWN FIRST ADJUDICATION OF THIS ROW WAS WRONG, AND IT WAS WRONG IN THE DIRECTION THAT ACCUSES THE MODEL. I recorded it as 'fabricated process structure — invents a two-stage reporting process with a 14-day worker-to-employer step that appears in no locked fact'. It appears in a locked fact, verbatim, WITH a regulation citation, and it is SERVED: index row 46 reads 'Occupational disease reporting to WCF is a TWO-STAGE chain, not a flat 7-day deadline. Per the Workers Compensation Regulations, 2016 (GN 185/2016), Reg.16: the EMPLOYEE must notify the EMPLOYER within 14 working days of diagnosis (Reg.16(1)); the EMPLOYER must then notify WCF within 7 working days of RECEIVING that employee notice (Reg.16(2)) -- so the true worst-case window from diagnosis to WCF notification is up to 21 working days, NOT 7.' The model reproduced its own index row correctly. THE GOLD ('ndani ya siku 7 za kazi tangu kugunduliwa') IS THE STALE CLAIM, and so is CLAUDE.md Section 11's 'Occupational disease reporting: 7 working days from date of diagnosis'. The judge agreed with the gold, so the judge was wrong here too. Found only by checking whether the governing fact was IN THE INDEX before classifying the row — which is the step that should have come first, and which R28 already prescribes from the correction side: the thing telling you the incumbent is wrong carries the same burden as the incumbent.",
    "subdomain": "osha_registration",
    "answer_type": "procedure",
    "source": "additions_002",

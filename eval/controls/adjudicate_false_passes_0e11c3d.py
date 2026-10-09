@@ -16,7 +16,7 @@ this adjudication had to happen before anyone quoted 85.2%.
 disagreement is a CANDIDATE, not a verdict — the judge is a model too. But R28's mirror applies
 equally: the thing telling you the incumbent is wrong carries the same burden as the incumbent.
 So each row was read in full — question, gold, generated reply, vote split — and classified into
-three outcomes, not two:
+four outcomes, not two:
 
     FALSE_PASS   the judge is right; the regex verdict is wrong and A2 must fall
     PARTIAL      the answer to the question ASKED is right, but the reply carries a wrong
@@ -24,10 +24,22 @@ three outcomes, not two:
                  call is defensible; so was the regex pass. Reported separately so the headline
                  can be read with and without them.
     FALSE_ALARM  the judge is wrong; the regex pass stands
+    WRONG_GOLD   the GOLD is the wrong one and the model was right. Not a false pass (the regex
+                 pass was CORRECT) and not a false alarm (the judge's disagreement was
+                 reasonable against the key it was handed). It must move A2 UP.
 
-**Result: 12 FALSE_PASS, 4 PARTIAL, 1 FALSE_ALARM. The judge is right or defensible on 16 of
-17.** The single false alarm (`eval_206`) had the weakest vote split in the set (3-2), and that
-is the only row where the split predicted the outcome.
+**Result: 10 FALSE_PASS, 5 PARTIAL, 1 FALSE_ALARM, 1 WRONG_GOLD.** The judge is right or
+defensible on 15 of 17. The single false alarm (`eval_206`) had the weakest vote split in the
+set (3-2), and that is the only row where the split predicted the outcome.
+
+⛔⛔ TWO OF MY OWN CALLS WERE CORRECTED ON RE-READ, BOTH IN THE DIRECTION THAT ACCUSES THE MODEL
+OF FABRICATING SOMETHING ITS OWN SERVED INDEX STATES WITH A CITATION. `eval_239` went
+FALSE_PASS → WRONG_GOLD (index row 46 asserts the two-stage chain with GN 185/2016 Reg.16, and
+the GOLD's flat 7 days is the stale claim); `eval_186` went FALSE_PASS → PARTIAL (index row 87 is
+specific and sourced where I called the gold a hedge). **The check that found both is: READ THE
+INDEX ROW BEFORE CLASSIFYING THE ROW.** It is now the first step of this file's method rather
+than an afterthought, and it is the same asymmetry R26 records — a fabricated defect generates
+an edit, a missed one does not.
 
 ⚠️ WHAT THIS IS NOT. This adjudicates only rows the regex scorer PASSED. It says nothing about
 the 24 rows where regex failed and the judge said `correct` — the opposite direction, which
@@ -100,12 +112,20 @@ ADJ = {
             "workaround carrying TZS 10M + 6 months for the asker and 5M + 3 months for the "
             "Tanzanian."),
     "eval_186": dict(
-        verdict="FALSE_PASS", defect="confident_answer_where_gold_is_a_hedge",
-        why="The gold says the threshold 'hakijathibitishwa waziwazi' — we do not know it. The "
-            "reply asserts 'Ndiyo, kwa mujibu wa sheria' and conflates a safety OFFICER with "
-            "a designated safety REPRESENTATIVE, which is a different obligation. Where the "
-            "gold is an admitted gap, a confident assertion cannot be scored correct — and "
-            "this is the uncited-gold family arriving as a model defect rather than a key one."),
+        verdict="PARTIAL", defect="polarity_error_on_a_row_whose_GOLD_is_also_stale",
+        why="⚠️ RECLASSIFIED FROM FALSE_PASS, for the same reason as eval_239: I called it "
+            "'a confident answer where the gold is a hedge', and THE INDEX IS NOT A HEDGE. Row "
+            "87 is specific and sourced: 'Afisa wa usalama kazini: HAPANA, mwajiri halazimiki "
+            "kumwajiri afisa maalum. Ukiwa na wafanyakazi zaidi ya 20, unateua mwakilishi wa "
+            "usalama na afya kutoka kwa wafanyakazi ulio nao -- ni kuteua, si kuajiri mtu "
+            "mpya. Kiwandani: mwakilishi 1 kwa kila wafanyakazi 50... (NOT a professionally "
+            "hired/dedicated safety officer.)' So the GOLD's 'kizingiti ... hakijathibitishwa "
+            "waziwazi' is weaker than what we actually hold and is itself a candidate stale "
+            "key. The model's answer is HALF right -- appointing a representative is correct "
+            "at 60 staff -- but it opens 'Ndiyo' to a question about an AFISA WA USALAMA, "
+            "where its own row says HAPANA and draws exactly that officer/representative "
+            "distinction. A real polarity defect on a row that also needs its gold re-sourced, "
+            "so it is not a clean false pass in either direction."),
     # ───────────────── the other ten ─────────────────
     "eval_206": dict(
         verdict="FALSE_ALARM", defect=None,
@@ -132,11 +152,25 @@ ADJ = {
             "month, and goes out of its way to say 'si tarehe 7 ya mwezi unaofuata'. One word "
             "(`unaofuata`) moves the deadline a full month late; the regex matched 'siku 7'."),
     "eval_239": dict(
-        verdict="FALSE_PASS", defect="fabricated_process_structure",
-        why="Invents a two-stage reporting process with a 14-day worker-to-employer step that "
-            "appears in no locked fact, then adds a confident gloss about how the two windows "
-            "interact. The 7 days is present and correct, which is why it passed; everything "
-            "built around it is manufactured."),
+        verdict="WRONG_GOLD", defect="gold_is_the_stale_claim",
+        why="⛔ MY OWN FIRST ADJUDICATION OF THIS ROW WAS WRONG, AND IT WAS WRONG IN THE "
+            "DIRECTION THAT ACCUSES THE MODEL. I recorded it as 'fabricated process structure "
+            "— invents a two-stage reporting process with a 14-day worker-to-employer step "
+            "that appears in no locked fact'. It appears in a locked fact, verbatim, WITH a "
+            "regulation citation, and it is SERVED: index row 46 reads 'Occupational disease "
+            "reporting to WCF is a TWO-STAGE chain, not a flat 7-day deadline. Per the Workers "
+            "Compensation Regulations, 2016 (GN 185/2016), Reg.16: the EMPLOYEE must notify the "
+            "EMPLOYER within 14 working days of diagnosis (Reg.16(1)); the EMPLOYER must then "
+            "notify WCF within 7 working days of RECEIVING that employee notice (Reg.16(2)) -- "
+            "so the true worst-case window from diagnosis to WCF notification is up to 21 "
+            "working days, NOT 7.' The model reproduced its own index row correctly. "
+            "THE GOLD ('ndani ya siku 7 za kazi tangu kugunduliwa') IS THE STALE CLAIM, and so "
+            "is CLAUDE.md Section 11's 'Occupational disease reporting: 7 working days from "
+            "date of diagnosis'. The judge agreed with the gold, so the judge was wrong here "
+            "too. Found only by checking whether the governing fact was IN THE INDEX before "
+            "classifying the row — which is the step that should have come first, and which "
+            "R28 already prescribes from the correction side: the thing telling you the "
+            "incumbent is wrong carries the same burden as the incumbent."),
     "eval_304": dict(
         verdict="FALSE_PASS", defect="fabricated_threshold_rule",
         why="CORRECTION-SHAPED WRONGNESS — it reads as rigour. Gold: the company-vs-business-"
@@ -220,6 +254,12 @@ def main():
     confirmed = {q for q in candidates if ADJ[q]["verdict"] == "FALSE_PASS"}
     partial = {q for q in candidates if ADJ[q]["verdict"] == "PARTIAL"}
     alarm = {q for q in candidates if ADJ[q]["verdict"] == "FALSE_ALARM"}
+    # ⛔ A FOURTH OUTCOME, ADDED ON RE-READ: the GOLD is the wrong one and the model was right.
+    # It is not a false pass (the regex pass was CORRECT) and not a false alarm (the judge's
+    # disagreement was reasonable against the key it was given) -- it is a key defect, and it
+    # must move A2 UP, not down. Keeping it in its own bucket is what stops it being quietly
+    # absorbed into either of the other two.
+    wrong_gold = {q for q in candidates if ADJ[q]["verdict"] == "WRONG_GOLD"}
 
     impact = {
         "ALL_400": {
@@ -243,8 +283,15 @@ def main():
                        "a separate job.",
         "gate": "gate_production_0e11c3d.json", "gate_commit": d["clone_head"],
         "tally": {"FALSE_PASS": len(confirmed), "PARTIAL": len(partial),
-                  "FALSE_ALARM": len(alarm), "total": len(candidates)},
+                  "FALSE_ALARM": len(alarm), "WRONG_GOLD": len(wrong_gold),
+                  "total": len(candidates)},
         "judge_right_or_defensible": len(confirmed) + len(partial),
+        "_corrections_to_this_adjudication": (
+            "eval_239 FALSE_PASS -> WRONG_GOLD and eval_186 FALSE_PASS -> PARTIAL, both on "
+            "2026-10-09 after checking whether the governing fact was IN THE INDEX. Both of my "
+            "original calls accused the model of fabricating something its own served index "
+            "states with a citation. The check that found them -- read the index row before "
+            "classifying the row -- is now the first step, not the last."),
         "defect_classes": sorted({a["defect"] for a in ADJ.values() if a["defect"]}),
         "impact_on_bar_a": impact,
         "_the_gate_1_conclusion": (
@@ -259,10 +306,11 @@ def main():
     with io.open(OUT, "w", encoding="utf-8", newline="\n") as fh:
         json.dump(payload, fh, ensure_ascii=False, indent=1)
 
-    print(f"adjudicated {len(candidates)} candidates: "
-          f"FALSE_PASS {len(confirmed)} · PARTIAL {len(partial)} · FALSE_ALARM {len(alarm)}")
+    print(f"adjudicated {len(candidates)} candidates: FALSE_PASS {len(confirmed)} · "
+          f"PARTIAL {len(partial)} · FALSE_ALARM {len(alarm)} · WRONG_GOLD {len(wrong_gold)}")
     for q in candidates:
-        mark = {"FALSE_PASS": "FP", "PARTIAL": "~~", "FALSE_ALARM": "ok"}[ADJ[q]["verdict"]]
+        mark = {"FALSE_PASS": "FP", "PARTIAL": "~~", "FALSE_ALARM": "ok",
+                "WRONG_GOLD": "GOLD"}[ADJ[q]["verdict"]]
         print(f"  [{mark}] {q:10s} {'(fact path)' if q in fact_path else '':12s} "
               f"{ADJ[q]['defect'] or '-'}")
     print()

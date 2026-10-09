@@ -612,9 +612,33 @@ All facts below are locked from verified primary sources. Encode these exactly.
 **WCF Additional Timelines (wcf.go.tz, confirmed Jun 2026):**
 - New employer: must register with WCF within 30 days of hiring first employee
 - Accident reporting: 7 working days from date of accident (already locked)
-- Occupational disease reporting: 7 working days from date of diagnosis
-- Death at workplace: report within 12 months of incident/disease discovery
-- Compensation claim filing deadline: 12 months from accident or disease discovery
+- ~~Occupational disease reporting: 7 working days from date of diagnosis~~ → **CORRECTED
+  2026-10-09. IT IS A TWO-STAGE CHAIN, NOT A FLAT 7 DAYS, and the worst case from diagnosis to
+  WCF is up to 21 working days.** Per the **Workers Compensation Regulations 2016 (GN 185/2016)
+  Reg.16**: the **EMPLOYEE** must notify the **EMPLOYER** within **14 working days** of diagnosis
+  (Reg.16(1)); the **EMPLOYER** must then notify **WCF** within **7 working days of RECEIVING**
+  that notice (Reg.16(2)).
+  > 🔴 **HOW THIS WAS FOUND IS THE POINT, AND IT IS THE REVERSE OF THE USUAL DIRECTION.** The
+  > served index has carried the correct two-stage text, with the citation, in row 46. A gate
+  > row (`eval_239`) asked the question, **the model answered correctly from its own index**, and
+  > both the gold key AND this line said it was wrong — so the judge marked it wrong, and my
+  > first adjudication recorded it as a *"fabricated process structure … appears in no locked
+  > fact"*. **Three layers agreed against a correct answer: the gold, this document, and the
+  > adjudication.** The index was the only one right.
+  >
+  > **So a wrong line here does not merely mislead the next author — it manufactures evidence
+  > that a correct answer is a defect.** That is the fourth-enforcement-layer lesson (a stale doc
+  > is used as the baseline for judging new evidence) arriving through the EVAL layer, where it
+  > converts a working system into a reported failure. Check the served index row before
+  > recording a reply as wrong.
+- Death at workplace: report within 12 months of incident/disease discovery (GN 185/2016
+  Reg.17(2))
+- Compensation claim filing deadline: 12 months from accident or disease discovery (Reg.19(1))
+- ⚠️ **`osha_safety_officer` is a sibling candidate, not yet re-sourced.** Index row 87 is
+  specific and sourced (*"HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi
+  zaidi ya 20, unateua mwakilishi … ni kuteua, si kuajiri"*) while `eval_186`'s gold says the
+  threshold *"hakijathibitishwa waziwazi"*. One of the two is stale and it is probably the gold.
+  Queued, not fixed — correcting a key needs its own primary-source pass (R28).
 
 **GN 605A Increment Range (PKF Eastern Africa, Oct 2025):**
 - Minimum wage increment range across all sectors: TZS 20,000 (lowest) to TZS 195,000 (highest) per month
@@ -680,6 +704,50 @@ eval.py (kaggle/eval.py, fetched from GitHub at runtime) runs the OOC classifier
 before every model call — matching production behavior.
 The gate measures the full system: classifier + RAG + model.
 Gate thresholds: in_corpus ≥ 0.85, out_of_corpus ≥ 0.70
+
+### ⛔⛔ R12b — THE JUDGE IS THE BAR A HEADLINE. THE REGEX FIGURE IS REPORTED BESIDE IT FOR CONTINUITY, NEVER AS THE RESULT. (decided 2026-10-09, on measured evidence)
+
+**Why, and it is a number not a preference.** On gate `0e11c3d` the judge flagged **17 confident
+regex passes** (`reliable=True`) as wrong. Hand adjudication: **10 beyond doubt, 5 defensible, 1
+false alarm, 1 WRONG GOLD.** The regex scorer had been crediting every one of them, and it
+positively credits the two worst defects of the `1476caa` cycle (`eval_318` tells a TZS
+205,000,000 business it need not register for VAT; `eval_320` charges SDL on a one-employee
+payroll). **It overstated A2 by about three points, and `fact_path_190` read 85.2% — above R7's
+line — where the adjudicated figure is 82.5%.** An instrument that cannot see the wrong-direction
+class must not be the one that defines the headline.
+
+**⚠️ THE HEADLINE IS A BRACKET, NOT A POINT, and a point estimate would have carried the very
+defect that prompted the promotion.** `judge_augmented` fills the `reliable=False` gap but
+deliberately does **not** demote the queued false passes — correct while the judge was
+report-alongside, misleading the instant it becomes the headline, because **every queued false
+pass stays inside the numerator**. It read 81.9% with 17 self-flagged rows counted as passes.
+
+```
+upper = judge_augmented        every queued candidate survives adjudication
+lower = queue fully upheld     every queued candidate is a real defect
+true  = inside, and ONLY HAND ADJUDICATION moves it
+```
+
+`chike.judge.build_confirmation_report` returns `bar_a_headline_bracket`; the gate prints both
+ends plus `PASS` / **`PROVISIONAL — adjudicate the queue`** / `BELOW`.
+
+**IN PRACTICE:**
+- **The judge never auto-applies, and that restraint is earned, not cautious.** 15 of 17 — one
+  false alarm, and one `WRONG_GOLD` where the model was right and the key was stale. A judge that
+  auto-flipped would have booked both as model defects.
+- **The disagreement queue is adjudicated BY HAND, row by row, into four outcomes** —
+  `FALSE_PASS` / `PARTIAL` / `FALSE_ALARM` / `WRONG_GOLD`. Three outcomes is not enough: without
+  `WRONG_GOLD` a stale key is recorded as a model failure forever, because the adjudication reads
+  the key.
+- **READ THE SERVED INDEX ROW BEFORE CLASSIFYING A ROW AS A MODEL DEFECT.** Both of my wrong
+  adjudications accused the model of fabricating something its own index states with a citation.
+  This is the first step, not a check at the end.
+- **The false-FAIL direction is NOT applied to either bound.** Promoting a regex fail on the
+  judge's word alone is the same error in the flattering direction, and that queue (5 rows) has
+  never been adjudicated.
+- **A judge that did not run means there is NO Bar A headline** — not "fall back to regex". The
+  gate says so in its own output.
+- **Cost is not the constraint:** $0.21 for 361 rows against ~1h of GPU.
 
 ### R13 — generate-from-facts command
 python run.py generate-from-facts --subdomain <name> --limit <n>
@@ -843,6 +911,20 @@ the replacing deploy has then failed for an unrelated reason, leaving production
 > **Two unrelated causes, one window. So enumerating causes is the wrong defence — the defence
 > is to REORDER. Build and validate first; only then open the window.** After the pre-flight,
 > the outage window can only be opened by a deploy that has already built once.
+
+**✅ AND IT EARNED ITS PLACE ON ITS SECOND REAL OPPORTUNITY (2026-10-09), ON A CAUSE NOBODY
+ENUMERATED.** Shipping the D-FIDELITY-7 copy, **GATE 1 refused the deploy**: the Tanzanian link
+dropped mid-push — three attempts, three different failure modes (DNS resolution, connection
+reset, connect timeout) — leaving the commit **local-only**, and the pre-flight printed *"DO NOT
+STOP THE LIVE APP"* instead of opening the window. A deploy from an unpushed commit makes
+`/health`'s `build` name a commit **that exists on no other machine**, so the label would have
+been unverifiable by anyone reading it. After the push landed: three gates green including the
+real build, stop → deploy in 8.7s, `build_matches: true`, 3/3 live limbs, no downtime.
+
+> **Both saves this gate has produced came from the REORDERING, not from any individual check.**
+> 2026-10-08 it was a build failure an import-based pre-flight would have passed; 2026-10-09 it
+> was a dead network. Neither was on anyone's list of causes — which is the argument for
+> ordering over enumeration, made twice.
 
 **⚠️ AND THE OBVIOUS PRE-FLIGHT DOES NOT WORK — do not substitute it.** "Import `modal_app.py`
 and construct the image" **does not catch** the 2026-10-08 bug: measured on modal 1.5.1,
@@ -2148,6 +2230,16 @@ calling the function directly, signal already supplied by hand) hid all three th
 | `chike/retrieval.py`'s FAIL-LOUD INDEX CONTRACT | fires correctly on all three limbs it was built to guard — but production (`modal_app.ChikeModel`) loads the index itself and never imports this module at all | R26 audit, 2026-08-24 |
 | `corporate_tax_rate_statement`'s `sector` parameter (s.4(8) AMT exemption) | agriculture/health/education/tea-processing branches existed and were unit-tested since 2026-09-01 by calling the engine function directly with a hardcoded `sector=` kwarg; `chike/routing.py` had no function anywhere that extracted a sector from question text | live, 2026-09-05 (`eval/controls/corporate_domain_live_probe_2026_09_05.json`) — an agriculture company and a private school were both told "yes, pay AMT," live, in production |
 | **`partnership_tax_statement()` — THE WHOLE ENGINE, not a parameter** | the route is `is_partnership_entity(text) AND asks_corporate_income_tax(ql)`. The second conjunct is `_CORPORATE_INCOME_TAX_CUES`, **11 cues built for the CORPORATE route** and reused here — every one either company-framed (`kodi ya kampuni`, `corporate tax`) or the technical term `kodi ya mapato`. A partnership question phrased the way a duka owner asks it reaches nothing | measured 2026-09-24. `is_partnership_entity` fires **8/8** on natural phrasings; `asks_corporate_income_tax` fires **3/8**, and the 3 are exactly those containing `kodi ya mapato`. `ext_06` — *"…yeye analipa kodi kwa kiwango gani?"* — routes to `none` and falls to the fact path, **while the engine it never reached already contains the sentence the adjudication said was missing** (*"viwango vya mtu binafsi kama mshirika ni mtu"*) |
+| **`levy_rate_statement()` — reachable only when the question carries AN AMOUNT** | the branch at `orchestrator.py:393` is gated on `rate_statement_supports(sq.computation_type) AND routing.asks_rate(sq.text)`. **`asks_rate` already returns True** for *"Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi…"* — but `detect_intent` returns **`none`** without a figure in the text, so `computation_type` is `None` and the conjunction can never hold. The engine already emits the right answer: *"Kiwango cha NSSF ni asilimia 20 … (asilimia 10 mwajiri + asilimia 10 mfanyakazi)"* | measured 2026-10-09 against the full gate. **All 12 of the run's confirmed defects returned `detect_intent='none'` — not one reached any engine.** `eval_086` then shipped the party inversion (*"kinachokatwa … kwenye mshahara wa mfanyakazi … asilimia 10"*) and `eval_130` the inverted operation (*divide* payroll by 3.5%), both of which the unreachable engine answers correctly. `eval/controls/classify_bar_a_closability_2026_10_09.py` |
+
+> **🎯 THE FIFTH INSTANCE REFRAMES THE RULE: `detect_intent` IS THE BOTTLENECK, NOT THE ENGINES.**
+> The first four instances read as four separate oversights. The fifth was found by asking the
+> question of a whole measured population at once, and the answer was **0 of 12** — so this is
+> not a list of parameters someone forgot, it is a **systematic property of the router**: it
+> fires on questions that contain a number, and a user asking what a rate *is* has no number to
+> give. **An engine's correctness and an engine's reachability are independent measurements, and
+> only the first has ever been tested here.** Before building the next engine, measure what
+> fraction of natural phrasings reach the existing ones.
 
 **Why a unit test cannot see this by construction, not by oversight.** Every one of these three
 had passing tests before the gap was found. The tests called the engine function directly, with

@@ -209,12 +209,51 @@ def build_confirmation_report(rows):
     def acc(p, t):
         return (p / t) if t else 0.0
 
+    # ⛔ THE BRACKET, ADDED 2026-10-09 WHEN THE JUDGE WAS PROMOTED TO THE BAR A HEADLINE.
+    #
+    # `judge_augmented` above fills the reliable=False gap and DELIBERATELY DOES NOT demote the
+    # false passes on the confident set — "the judge never flips a confident regex verdict".
+    # That was right while the judge was report-alongside. It is misleading the moment the
+    # figure becomes the headline, because it means **the headline still counts every queued
+    # false pass as a pass**: on gate 0e11c3d, judge_augmented read 81.9% while 17 rows it had
+    # itself flagged as wrong were inside the numerator, and hand-adjudication put 10 of them
+    # beyond doubt (79.7%).
+    #
+    # So the promoted headline is a BRACKET, not a point, and the queue is what closes it:
+    #   upper = judge_augmented            (every queued false pass survives adjudication)
+    #   lower = queue fully upheld         (every queued false pass is a real defect)
+    # The true figure is inside, and ONLY HAND ADJUDICATION moves it. Publishing the upper
+    # bound alone is what overstated A2 by ~3 points for two months.
+    #
+    # The false_FAIL direction is deliberately NOT applied to the lower bound: promoting a
+    # regex fail on the judge's word alone would be the same error in the flattering
+    # direction, and that queue has never been adjudicated.
+    queued_fp = len(false_pass)
+    bracket = {
+        'upper': {'pass': aug_pass, 'total': aug_tot, 'acc': acc(aug_pass, aug_tot),
+                  'assumes': 'every queued false-pass candidate survives adjudication'},
+        'lower': {'pass': aug_pass - queued_fp, 'total': aug_tot,
+                  'acc': acc(aug_pass - queued_fp, aug_tot),
+                  'assumes': 'every queued false-pass candidate is a real defect'},
+        'queued_false_pass': queued_fp,
+        'width_pts': round((acc(aug_pass, aug_tot)
+                            - acc(aug_pass - queued_fp, aug_tot)) * 100, 2),
+        'resolved_by': 'hand adjudication of disagreement_queue.false_pass_candidates — see '
+                       'eval/controls/adjudicate_false_passes_0e11c3d.py for the method and '
+                       'the four outcomes (FALSE_PASS / PARTIAL / FALSE_ALARM / WRONG_GOLD)',
+        '_not_applied_automatically': 'the judge was right or defensible on 15 of 17 on gate '
+                                      '0e11c3d, not 17 of 17: one false alarm and one WRONG '
+                                      'GOLD, where the model was right and the key was stale. '
+                                      'A judge that auto-applied would have booked both.',
+    }
+
     return {
         'raw':             {'pass': raw_pass, 'total': raw_tot, 'acc': acc(raw_pass, raw_tot)},
         'reliable_denom':  {'pass': rel_pass, 'total': rel_tot, 'acc': acc(rel_pass, rel_tot)},
         'judge_augmented': {'pass': aug_pass, 'total': aug_tot, 'acc': acc(aug_pass, aug_tot),
                             'floor_undet_fail': {'pass': aug_pass, 'total': aug_tot_floor,
                                                  'acc': acc(aug_pass, aug_tot_floor)}},
+        'bar_a_headline_bracket': bracket,
         'gap_fill': {'gap_n': len(gap), 'judge_correct': len(gc), 'judge_wrong': len(gw),
                      'judge_undetermined': len(gu),
                      'correct_ids': [r['id'] for r in gc], 'wrong_ids': [r['id'] for r in gw],

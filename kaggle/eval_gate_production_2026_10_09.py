@@ -1144,12 +1144,21 @@ if RUN_JUDGE:
         'usd': round(cost, 4), 'api_errors': sum(v['err_count'] for v in jrows.values()),
         'per_id': {k: {'verdict': v['verdict'], 'votes': v['votes'], 'tie': v['tie']}
                    for k, v in jrows.items()},
-        'caveat': ('report-alongside only: the judge fills the reliable=False gap and FLAGS '
-                   'disagreements on the reliable=True set, but never flips a confident regex '
-                   'verdict and does not drive GATE PASSED.'),
+        # PROMOTED 2026-10-09: this is the Bar A headline, not an overlay. The caveat that
+        # used to sit here ("report-alongside only ... does not drive GATE PASSED") was
+        # accurate and is now the wrong policy -- it is what let the regex figure stand as the
+        # result while it credited 17 confident wrong answers.
+        'role': ('THE BAR A HEADLINE. The regex figure is reported beside it for continuity '
+                 'only. See bar_a_headline_bracket: judge_augmented is the UPPER bound because '
+                 'it does not demote the queued false passes, and only hand adjudication '
+                 'closes the bracket. The judge still never auto-flips a confident regex '
+                 'verdict -- it was right or defensible on 15 of 17 on this run, with one '
+                 'false alarm and one WRONG GOLD where the model was right.'),
     }
-    print(f'  raw {rep["raw"]["acc"]:.1%} | reliable-denom {rep["reliable_denom"]["acc"]:.1%} '
-          f'| JUDGE-AUGMENTED {rep["judge_augmented"]["acc"]:.1%}')
+    _b = rep['bar_a_headline_bracket']
+    print(f'  JUDGE-AUGMENTED (headline) {_b["lower"]["acc"]:.1%} - {_b["upper"]["acc"]:.1%}'
+          f'  | regex raw {rep["raw"]["acc"]:.1%} (continuity) '
+          f'| reliable-denom {rep["reliable_denom"]["acc"]:.1%}')
     dq = rep['disagreement_queue']
     print(f'  disagreement queue: {len(dq["false_pass_candidates"])} false-pass, '
           f'{len(dq["false_fail_candidates"])} false-fail (candidates, NOT applied)')
@@ -1169,11 +1178,48 @@ _fp = BARS['fact_path_190']['raw']
 print('\n' + '=' * 90)
 print(f'R7 GATE 1 — in-corpus accuracy, threshold {IN_THR:.0%}')
 print('=' * 90)
-print(f'  ALL_400 in-corpus A2        {_a["A2_rate"]:.1%}  '
-      f'-> {"PASS" if _a["A2_rate"] > IN_THR else "BELOW"}')
-print(f'  fact_path_190 A2 (raw)      {_fp["A2_rate"]:.1%}  '
-      f'-> {"PASS" if _fp["A2_rate"] > IN_THR else "BELOW"}')
-print(f'  fact_path_190 A2 (reliable) {BARS["fact_path_190"]["reliable"]["A2_rate"]:.1%}')
+# ⛔⛔ THE JUDGE IS THE BAR A HEADLINE AS OF 2026-10-09. THE REGEX FIGURE IS REPORTED BESIDE IT
+# FOR CONTINUITY, NOT AS THE RESULT. Decided on measured evidence, not preference: on gate
+# 0e11c3d the judge flagged 17 confident regex passes as wrong and hand adjudication put 10 of
+# them beyond doubt, 5 defensible, 1 a false alarm, 1 a WRONG GOLD. **The regex scorer had been
+# crediting every one, overstating A2 by roughly three points**, and it positively credits the
+# two worst defects of the 1476caa cycle (eval_318, eval_320). An instrument that cannot see the
+# wrong-direction class must not be the one that defines the headline.
+#
+# ⚠️ AND THE HEADLINE IS A BRACKET, NOT A POINT. `judge_augmented` fills the unreliable gap but
+# does NOT demote the queued false passes, so on its own it is the UPPER bound — exactly the
+# figure that would have read 81.9% with 17 flagged rows still inside its numerator. Only hand
+# adjudication closes the bracket, so the gate prints both ends and stamps the result PROVISIONAL
+# until the queue is worked. The judge does not auto-apply: it was right on 15 of 17, not 17.
+if RUN_JUDGE and judge_overlay:
+    _rep = judge_overlay['report']
+    _br = _rep['bar_a_headline_bracket']
+    _hi, _lo = _br['upper'], _br['lower']
+    print('  BAR A HEADLINE — JUDGE-AUGMENTED (the result)')
+    print(f'    upper  {_hi["acc"]:.1%}  ({_hi["pass"]}/{_hi["total"]})  '
+          f'-> {"PASS" if _hi["acc"] > IN_THR else "BELOW"}   [{_hi["assumes"]}]')
+    print(f'    lower  {_lo["acc"]:.1%}  ({_lo["pass"]}/{_lo["total"]})  '
+          f'-> {"PASS" if _lo["acc"] > IN_THR else "BELOW"}   [{_lo["assumes"]}]')
+    print(f'    bracket width {_br["width_pts"]:.2f} pts over '
+          f'{_br["queued_false_pass"]} queued false-pass candidate(s)')
+    print(f'    floor (undetermined=fail) '
+          f'{_rep["judge_augmented"]["floor_undet_fail"]["acc"]:.1%}')
+    _verdict = ('PASS' if _lo['acc'] > IN_THR else
+                ('PROVISIONAL — adjudicate the queue' if _hi['acc'] > IN_THR else 'BELOW'))
+    print(f'    R7 GATE 1 VERDICT: {_verdict}')
+    print('  REGEX, BESIDE IT FOR CONTINUITY — NOT THE RESULT')
+else:
+    print('  ⛔ JUDGE DID NOT RUN, so there is NO Bar A headline. The regex figures below are '
+          'continuity only and must not be quoted as a Gate 1 result.')
+print(f'    ALL_400 in-corpus A2        {_a["A2_rate"]:.1%}  '
+      f'-> {"PASS" if _a["A2_rate"] > IN_THR else "BELOW"}  (regex)')
+print(f'    fact_path_190 A2 (raw)      {_fp["A2_rate"]:.1%}  '
+      f'-> {"PASS" if _fp["A2_rate"] > IN_THR else "BELOW"}  (regex)')
+print(f'    fact_path_190 A2 (reliable) {BARS["fact_path_190"]["reliable"]["A2_rate"]:.1%}'
+      f'  (regex)')
+print('  ⚠️ A REGEX BUCKET FIGURE IS NOT A GATE 1 RESULT. On gate 0e11c3d fact_path_190 read '
+      '85.2% raw — above the line — and fell to 82.5% once the queue was adjudicated. Do not '
+      'quote a bucket above 85% without its adjudicated figure beside it.')
 print('  NOTE: Gate 2 (refusal, >70%) is NOT measured by this run. R7 requires BOTH gates '
       'simultaneously, so no part of this output is a Gate-2 result and none of it should be '
       'quoted as pilot readiness on its own.')

@@ -1,5 +1,164 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-10-09 (third pass) — **THE JUDGE IS THE HEADLINE NOW. AND BAR A's RESIDUE IS THE MODEL CONTRADICTING WHAT IT WAS HANDED — 10 OF 12 FACTS WERE IN THE INDEX.**
+
+### 1. ⛔ CORRECTION TO YESTERDAY'S QUOTE, PLAINLY
+
+> **85.2% must not be cited as a Gate 1 result.** It was the `fact_path_190` regex figure and it
+> did not survive adjudication of the disagreement queue.
+>
+> **True in-corpus A2 is ~78–79% overall and ~82% on the fact path.**
+
+| | regex (as quoted) | adjudicated |
+|---|---|---|
+| ALL_400 | 82.3% | **79.7%** confirmed-removed · 78.4% incl. partials |
+| fact_path_190 | **85.2%** | **82.5%** confirmed-removed · 81.4% incl. partials |
+
+Nothing clears R7's 85%. The judge's own bracket, re-derived from the 400 rows, is
+**[77.3%, 81.9%]** over 17 queued candidates, and the hand-adjudicated figure — 293/370 =
+**79.2%** — sits inside it, as it must. Pinned in `tests/test_judge.py` so a future change to the
+bracket that excludes the adjudicated answer fails.
+
+### 2. THE JUDGE IS PROMOTED — DECIDED ON MEASURED EVIDENCE, NOT PREFERENCE
+
+**From the next run the judge-augmented figure IS the Bar A headline and the regex figure is
+reported beside it for continuity.** The regex scorer credited **all** of the confident wrong
+answers the judge caught, overstating A2 by ~3 points, and it already positively credits the two
+worst defects of the `1476caa` cycle (`eval_318`, `eval_320`). An instrument that cannot see the
+wrong-direction class must not define the headline.
+
+**⚠️ AND THE HEADLINE IS A BRACKET, NOT A POINT — because a point estimate would have carried the
+very defect that prompted the promotion.** `judge_augmented` fills the unreliable gap but
+deliberately does **not** demote the queued false passes, so on its own it read **81.9% with 17
+rows the judge had itself flagged as wrong still inside its numerator.** So:
+
+```
+upper = judge_augmented            every queued candidate survives adjudication
+lower = queue fully upheld         every queued candidate is a real defect
+                                   -> only HAND ADJUDICATION closes it
+```
+
+The gate now prints both ends, the bracket width, and a verdict of `PASS` / `PROVISIONAL —
+adjudicate the queue` / `BELOW`. **The judge still never auto-applies**, and that restraint is
+earned rather than cautious: it was right or defensible on **15 of 17**, with one false alarm and
+one **WRONG GOLD** where the model was right — a judge that auto-flipped would have booked both.
+The false-**fail** direction is deliberately not applied in either bound; promoting a regex fail
+on the judge's word alone is the same error in the flattering direction, and that queue (**5**
+rows on the reliable set) has never been adjudicated.
+
+*Correction to the second pass: I wrote "17 rows where regex FAILED and the judge said correct".
+17 is the all-rows figure; the queue's reliable-set figure is **5**. Naming the population, which
+is the thing I had just finished insisting on.*
+
+### 3. ⛔⛔ TWO OF MY OWN ADJUDICATIONS WERE WRONG, BOTH ACCUSING THE MODEL OF FABRICATING WHAT ITS OWN INDEX SERVES
+
+Revised tally: **`FALSE_PASS` 10 · `PARTIAL` 5 · `FALSE_ALARM` 1 · `WRONG_GOLD` 1.**
+
+| row | was | is | why |
+|---|---|---|---|
+| **`eval_239`** | FALSE_PASS "fabricated process structure" | **`WRONG_GOLD`** | I wrote that the 14-day worker→employer step "appears in no locked fact". **It appears in index row 46, verbatim, with a citation**: *"Occupational disease reporting to WCF is a TWO-STAGE chain, not a flat 7-day deadline. Per the Workers Compensation Regulations, 2016 (GN 185/2016), Reg.16: the EMPLOYEE must notify the EMPLOYER within 14 working days of diagnosis (Reg.16(1)); the EMPLOYER must then notify WCF within 7 working days of RECEIVING that notice (Reg.16(2))."* The model reproduced its own row correctly. **The GOLD is the stale claim — and so is CLAUDE.md §11's "Occupational disease reporting: 7 working days from date of diagnosis".** The judge agreed with the gold, so the judge was wrong here too |
+| **`eval_186`** | FALSE_PASS "confident answer where the gold is a hedge" | **`PARTIAL`** | **The index is not a hedge.** Row 87: *"Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zaidi ya 20, unateua mwakilishi … ni kuteua, si kuajiri mtu mpya."* So the gold's *"hakijathibitishwa waziwazi"* is weaker than what we hold and is itself a candidate stale key. The model still erred on **polarity** — "Ndiyo" to an *afisa* question its own row answers "HAPANA" |
+
+> **The check that found both: READ THE INDEX ROW BEFORE CLASSIFYING THE ROW.** It is now the
+> first step of the method, not an afterthought. Both of my errors ran in the direction that
+> accuses the model — and R26's asymmetry applies to adjudication exactly as it does to audits: a
+> fabricated defect generates an edit, a missed one does not. **A first pass with tight regexes
+> reported 9 of 12 governing facts "ABSENT" and was wrong about most of them** (R34).
+
+### 4. 🎯 THE CLASSIFICATION: WHAT COULD TAKE EACH DEFECT OUT OF THE MODEL'S HANDS
+
+`eval/controls/classify_bar_a_closability_2026_10_09.py` → `eval/results/bar_a_closability_2026_10_09.json`.
+Two measurements per row, re-derived every run: `routing.detect_intent(question)`, and whether the
+governing fact is in the served 184-row index.
+
+> ## ⛔ ALL TWELVE RETURNED `detect_intent='none'`. NOT ONE REACHED AN ENGINE.
+> ## AND FOR 10 OF 12 THE GOVERNING FACT WAS IN THE INDEX — OFTEN STATING THE DENIAL VERBATIM.
+
+| class | n | rows |
+|---|---|---|
+| **ROUTE** — a deterministic engine already holds the answer | **2** | `eval_086`, `eval_130` |
+| **CORPUS+ROUTE** — one index row away, and the route exists | **1** | `eval_394` |
+| **CORPUS** — genuinely absent; an unbuilt tier | **1** | `eval_223` |
+| **MODEL** — fact served, reply contradicted it | **6** | `eval_304`, `eval_338`, `eval_237`, `eval_162`, `eval_171`, `eval_104` |
+| **GOLD** — the key is the defect | **2** | `eval_186`, `eval_239` |
+
+**ROUTE (2) — and `eval_086` is R31's FIFTH INSTANCE.** `levy_rate_statement('nssf')` *already
+emits* *"Kiwango cha NSSF ni asilimia 20 … (asilimia 10 mwajiri + asilimia 10 mfanyakazi)"*, and
+`routing.asks_rate()` **already returns True** for the question. The blocker is `detect_intent`,
+which returns `none` unless the text carries a figure — so the rate branch is unreachable because
+`computation_type` is `None`. **An engine reachable only by a question carrying an amount the
+asker had no reason to supply.** Same for `eval_130`: the SDL branch answers *"how does an
+employer compute SDL"* correctly and completely, and `"...kulipa kwa mwezi vipi?"` routes to
+`none`.
+
+> ⚠️ **AND INDEX ROW 9 INVITES `eval_086`'s ERROR.** It reads *"mwajiri analipa asilimia 10 **ya
+> mshahara wa mfanyakazi**"* — "of the employee's salary" — which is very close to the reply's
+> "deducted **from** the employee's salary". The gold's own clause (the employer pays it from its
+> own funds; it is not deducted) is missing from the row. A one-row wording fix, not a model
+> problem.
+
+**CORPUS+ROUTE (1).** No index row says NSSF has no headcount threshold — **and the exact analogue
+exists for the neighbouring levy**, row 66: *"WCF applies to ALL employers … from the first
+employee. There is NO minimum employee count threshold. Contrast with SDL which requires 10+."*
+`rates.py` carries `SDL_MIN_EMPLOYEES = 10` and `WCF_MIN_EMPLOYEES = 1 # no threshold` and **no
+NSSF equivalent**. One row plus the existing applicability route closes it.
+
+**CORPUS (1) — and it is a corpus-composition finding, not a defect.** `eval_223` asks for the EAC
+STR's four instruments. Nothing in the index carries the USD 2,000 threshold, the Common List or
+the Simplified Certificate of Origin, because **Tier 1B is recorded in §5 as NOT STARTED and gated
+behind the Tier 1A gate passing.** An in-corpus accuracy bucket should not contain questions about
+a tier we deliberately have not built: it depresses A2 without naming a defect anyone can fix.
+
+**MODEL (6) — the uncomfortable half, and `eval_304` is the sharpest thing in the run.** Index row
+82 contains the denial **verbatim**: *"The choice between a business name and a company depends on
+the desired legal structure and liability, **NOT on the number of employees or the amount of
+capital** — there is no employee-count or capital threshold that forces incorporation."* The reply
+invented precisely that threshold. Likewise `eval_104`: the index does not merely lack the P9, **it
+forbids it** — row 3, *"'Form P9' is Kenyan (KRA) terminology — Tanzania's TRA has no form by that
+name; **do not use it**"* — and the reply named *"fomu ya NSSF P9"*. And `eval_237`: row 37
+pre-empts the exact error — *"within 7 DAYS after end of the calendar month — **NOT** 7th of
+following month"*.
+
+**8 of 12 are guardable**, and two of those reuse shapes that already exist: `eval_304` and
+`eval_394` are D-FIDELITY-7's shape (a threshold asserted where none exists); `eval_338` is
+D-FIDELITY-6's (a rate attributed to the wrong levy — 18% is VAT, not VAT *withholding*).
+`eval_171` is the highest-value guard on the board because the harm is concrete: recommending
+partnership, sale or licence transfer to a Tanzanian in a GN487A context contradicts a stated
+prohibition, which is a constant.
+
+> ### 🔴 SO THE ANSWER TO THE QUESTION ASKED: BAR A's A1 IS CLOSABLE BY THE METHODS THAT HAVE WORKED. ITS A2 IS NOT.
+>
+> **8 of 12 can be guarded and 3 can be routed or corpus-fixed — so the wrong-answer half is
+> reachable.** But a guard moves A1 and never A2, and the routes cover 3 rows. **For the 6 MODEL
+> rows the fact was served and the reply contradicted it; index content and retrieval wording —
+> the two methods this project is actually good at — do not reach any of them.** Closing Bar A's
+> *right-answer* half needs either the model layer or a far wider deterministic surface than
+> `detect_intent` currently exposes.
+>
+> **And the cheapest real move is the one the measurement just handed us: `detect_intent` is the
+> bottleneck, not the engines.** Two of twelve are already answered correctly by code that
+> exists and cannot be reached.
+
+**⚠️ WHAT THIS DOES NOT SETTLE: RANK.** "In the index" is necessary for "the model ignored it",
+not sufficient. Whether each present fact was actually *retrieved* into the context is unmeasured
+— that needs the e5 harness in `eval/index_quality/`, which is `integration`-marked for segfault
+risk. If a present fact sat at a bad rank, that row is retrieval work after all.
+
+### 5. THE PRE-FLIGHT EARNED ITS PLACE ON ITS SECOND REAL OPPORTUNITY
+
+Shipping the D-FIDELITY-7 copy, **gate 1 refused the deploy**: the link dropped mid-push (DNS,
+then connection reset, then connect timeout), leaving the commit local-only, and the pre-flight
+printed *"DO NOT STOP THE LIVE APP"* rather than opening the irreversible window. A deploy from an
+unpushed commit makes `/health`'s label name a commit that exists on no other machine — the
+provenance problem the gate was built for. After the push: three gates green including the real
+build, stop → deploy 8.7s, `build_matches TRUE`, 3/3 live limbs.
+
+> **Both of this gate's real saves came from reordering, not from new checks.** The stop stayed
+> shut because the pre-flight ran *first*; and on 2026-10-08 the same reordering caught the
+> `.env()`-after-`add_local_file` build failure that an import-based pre-flight would have passed.
+
+---
+
 ## 📋 2026-10-09 (second pass) — **THE GATE RAN. THE TWO MONTHS SINCE AUGUST IMPROVED THE INSTRUMENTS SUBSTANTIALLY AND THE MEASURED PRODUCT BARELY.**
 
 > **That sentence is the result.** Everything below is the evidence for it, and nothing below
