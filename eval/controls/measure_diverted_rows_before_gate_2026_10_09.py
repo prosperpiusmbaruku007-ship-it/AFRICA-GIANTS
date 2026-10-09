@@ -120,7 +120,19 @@ def main():
     adj = json.load(io.open(os.path.join(REPO, "eval", "results",
                                          "false_pass_adjudication_0e11c3d.json"),
                             encoding="utf-8"))
-    adjudicated = {r["id"]: r.get("outcome") for r in adj.get("rows", [])}
+    # ⛔ THE FIELD IS `verdict`, NOT `outcome`, AND READING THE WRONG ONE RETURNED A SILENT ZERO.
+    # The first run of this harness printed `adjudicated=None` on all eight rows and tallied
+    # "0 hand-adjudicated FALSE_PASS" — for eval_086, eval_130 and eval_394, which are three of
+    # the seventeen. R39's deleting direction, in a harness written to support a prediction:
+    # a lookup against a key that does not exist produces an EMPTY finding set, and an empty set
+    # reads as "nothing to report" rather than as a broken join. Asserted below instead.
+    adjudicated = {r["id"]: r.get("verdict") for r in adj.get("rows", [])}
+    assert len(adjudicated) == 17, f"expected the 17 adjudicated rows, got {len(adjudicated)}"
+    assert any(v for v in adjudicated.values()), "every adjudication verdict read as empty"
+    _expect_adjudicated = {"eval_086", "eval_130", "eval_394"}
+    assert _expect_adjudicated <= set(adjudicated), (
+        f"the three rows this change targets are not in the adjudicated set, so the join is "
+        f"wrong again: {sorted(set(adjudicated))}")
 
     rows = []
     for qid in ids:

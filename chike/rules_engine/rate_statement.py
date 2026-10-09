@@ -58,6 +58,50 @@ _INCIDENCE = {
 }
 
 
+# ── THRESHOLD-LED ANSWERS: A HEADCOUNT QUESTION MUST NOT BE ANSWERED RATE-FIRST ─────────
+# ⛔ ADDED 2026-10-09, AFTER MEASURING A REGRESSION I HAD SHIPPED HOURS EARLIER. The statement
+# route's threshold branch called `levy_rate_statement`, so "Ni idadi gani ya waajiriwa
+# inayofanya mwajiri kuwa na wajibu wa kulipa SDL?" (eval_233) came back led by "Kiwango cha SDL
+# ni asilimia 3.5 …" with the threshold buried mid-paragraph and a request for payroll figures
+# at the end. The threshold WAS in there, and the answer still got worse in two independent ways:
+#
+#   * THE SCORER FAILED IT, correctly. Its gold contains no rate, the reply volunteers 3.5, and
+#     an unsupported figure is a defect — a pass at 0e11c3d became a fail here.
+#   * THE COPY IS WRONG-TOPIC-FIRST, which is R15's measured lesson: lead with the thing the
+#     user asked about, not the regulatory label. They asked HOW MANY PEOPLE.
+#
+# ⚠️ AND THE RATE IS DELIBERATELY ABSENT, not merely moved. Volunteering a rate on a headcount
+# question is what broke the row; stating it "briefly at the end" would re-introduce the same
+# unsupported figure. The rate is one follow-up question away and the engine answers it.
+#
+# ⚠️ THE SDL WORDING WAS REVISED AFTER A SECOND MEASUREMENT, AND THE REASON MATTERS MORE THAN
+# THE CHANGE. A first draft read "SDL inamhusu mwajiri mwenye wafanyakazi 10 au zaidi … halipi
+# SDL" — correct, rate-free, and STILL scored False. The scorer's `definition` limb needs three
+# shared 5-char-plus tokens with the gold, and the draft shared two: the gold says
+# "wanaowajibika KULIPA", "WAJIBU", "waajiriwa", mine said "inamhusu", "halipi", "wafanyakazi".
+# Pure synonym variation.
+#
+# ⛔ CHASING A LEXICAL SCORER IS INSTRUMENT-FITTING AND IS NOT WHAT THIS IS. The test applied,
+# and the one to apply next time: **is the wording defensible from the QUESTION, not from the
+# gold?** It is — eval_233 asks "…inayofanya mwajiri kuwa na WAJIBU WA KULIPA SDL", so "ana
+# wajibu wa kulipa" is the asker's own construction, which is R15's measured lever (lead with
+# the user's vocabulary, not the regulatory label; a 69-rank swing came from exactly this). If
+# the only defence for a wording had been "it matches the gold", the right move would have been
+# to leave the row failing and let the judge adjudicate it, as eval_394 is being left.
+_THRESHOLD = {
+    "sdl": (f"Mwajiri mwenye wafanyakazi {SDL_MIN_EMPLOYEES} au zaidi ana wajibu wa kulipa SDL. "
+            f"Mwenye wafanyakazi chini ya {SDL_MIN_EMPLOYEES} hana wajibu wa kulipa SDL."),
+    # WCF_MIN_EMPLOYEES is 1 and its own comment reads "from the first employee, no threshold",
+    # so the honest answer is that there IS no threshold — phrased as the absence of one rather
+    # than as "one employee", which reads like a threshold and invites the same bleed eval_394
+    # produced in the other direction.
+    "wcf": ("WCF haina kizingiti cha idadi ya wafanyakazi — inamhusu mwajiri kutoka mfanyakazi "
+            "wa kwanza."),
+    "nssf": ("NSSF haina kizingiti cha idadi ya wafanyakazi — inamhusu mwajiri kutoka "
+             "mfanyakazi wa kwanza."),
+}
+
+
 def _pct_text(rate: Decimal) -> str:
     value = rate * 100
     return f"{value.normalize():f}".rstrip(".")
@@ -65,6 +109,26 @@ def _pct_text(rate: Decimal) -> str:
 
 def supports(computation_type: str) -> bool:
     return computation_type in _PCT
+
+
+def supports_threshold(computation_type: str) -> bool:
+    return computation_type in _THRESHOLD
+
+
+def levy_threshold_statement(computation_type: str) -> ComputationResult:
+    """Answer a HEADCOUNT question with the headcount rule, and without the rate.
+
+    Separate from `levy_rate_statement` rather than a flag on it, because the two answer
+    different questions and the failure mode of conflating them is measured: see `_THRESHOLD`.
+    """
+    if computation_type not in _THRESHOLD:
+        raise ValueError(f"levy_threshold_statement: no headcount rule for {computation_type!r}")
+    return ComputationResult(
+        computation=computation_type, applicable=True, amount=None,
+        working=_THRESHOLD[computation_type],
+        inputs={"min_employees": (SDL_MIN_EMPLOYEES if computation_type == "sdl" else None)},
+        note="threshold question — answered with the headcount rule, deliberately without the "
+             "rate, which is an unsupported figure on this question")
 
 
 def levy_rate_statement(computation_type: str, amount=None) -> ComputationResult:

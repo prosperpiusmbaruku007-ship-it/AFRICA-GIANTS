@@ -339,12 +339,19 @@ class Orchestrator:
         # and keeps the applicability verdict below. "Nina wafanyakazi wachache tu, SDL
         # itanihusu?" names no quantified count and no threshold token, so it still clarifies —
         # correctly, because there the user really is asking about their own unstated headcount.
-        if (rules_engine.rate_statement_supports(sq.computation_type)
+        #
+        # ⛔ AND IT ANSWERS WITH THE THRESHOLD STATEMENT, NOT THE RATE STATEMENT — corrected the
+        # same day, after measuring a regression this branch had shipped. Calling
+        # `levy_rate_statement` here answered eval_233 ("Ni idadi gani ya waajiriwa …") led by
+        # "Kiwango cha SDL ni asilimia 3.5", with the threshold mid-paragraph and a request for
+        # payroll figures at the end: a 0e11c3d PASS became a FAIL, because the gold holds no
+        # rate and an unsupported figure is a defect. Right branch, wrong renderer.
+        if (rules_engine.rate_statement_supports_threshold(sq.computation_type)
                 and routing.asks_levy_threshold(sq.text)
                 and swn.sole_headcount(sq.text) is None
                 and not swn.states_no_employees(sq.text)):
             return self._deterministic_answer(
-                sq, rules_engine.levy_rate_statement(sq.computation_type, None))
+                sq, rules_engine.levy_threshold_statement(sq.computation_type))
         # Applicability, now including the OPTIONALITY form ("si ya hiari"). eval_394 routes
         # here from the statement route; without the second disjunct it fell through to the
         # amount path and asked for a payroll figure on a yes/no question.

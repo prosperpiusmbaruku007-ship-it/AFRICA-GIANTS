@@ -63,10 +63,21 @@ def test_the_reclassified_rows_still_guard_what_they_were_written_for():
         assert sub.computation is not None and sub.computation.amount is None, (
             f"{qid} produced an AMOUNT. The answer is a constant, not a computed quantity — "
             f"this is the 'read as money' failure the probe names")
-        assert 'asilimia 3.5' in reply.text, (
-            f"{qid} no longer states the SDL rate: {reply.text!r}")
-    # ngapi_08 specifically asks what the THRESHOLD is, so the figure must be there
-    assert '10' in orch.answer(rows['ngapi_08']['question']).text
+        # ⛔ WHICH CONSTANT, PER ROW — AND MY FIRST VERSION OF THIS DEMANDED THE WRONG ONE.
+        # It asserted "asilimia 3.5" for BOTH rows, which held only because one renderer served
+        # both asks. ngapi_08 asks "nina wafanyakazi WANGAPI … ili SDL inianze kunihusu" — a
+        # HEADCOUNT question, whose correct answer states the threshold and NOT the rate: the
+        # rate is an unsupported figure there, which is what made eval_233 regress. ngapi_10
+        # asks "asilimia ngapi", so the rate is exactly what it must state. Demanding the rate
+        # everywhere was my own mis-specification, and it would have blocked the fix.
+        expected = {'ngapi_08': 'wafanyakazi 10 au zaidi', 'ngapi_10': 'asilimia 3.5'}[qid]
+        assert expected in reply.text, (
+            f"{qid} no longer states the constant it asks for ({expected!r}): {reply.text!r}")
+    # And the other direction, so neither row can be answered with the other's constant: a
+    # headcount question must not volunteer a rate, which is the regression in miniature.
+    _08 = orch.answer(rows['ngapi_08']['question']).text
+    assert '10' in _08 and 'asilimia 3.5' not in _08, (
+        f"ngapi_08 is being answered rate-first again: {_08!r}")
 
 
 def test_the_probe_set_carries_both_directions():

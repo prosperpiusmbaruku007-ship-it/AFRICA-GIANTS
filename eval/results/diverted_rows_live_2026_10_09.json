@@ -1,0 +1,184 @@
+{
+  "_what": "the 8 gate-400 rows the statement route diverts, asked live on the deployed system and scored with the production scorer, before the gate runs",
+  "_population_and_why": "R22: the population is the rows the CHANGE touches, read out of the sweep's own artifact rather than re-derived, and cross-checked against the live router. It is the population the prediction is about and nothing wider — every other row in the 400 is the unbounded term.",
+  "_endpoint": "https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run",
+  "sweep_bound": {
+    "questions_swept": 2473,
+    "unchanged": 2449,
+    "diversions": 24,
+    "already_routed_and_changed": 0
+  },
+  "tally": {
+    "rows": 8,
+    "already_passing_under_regex_at_baseline": 7,
+    "of_those_hand_adjudicated_false_pass_or_partial": 3,
+    "regex_gain": [],
+    "regex_loss": [
+      "eval_233",
+      "eval_394"
+    ],
+    "regex_unchanged": [
+      "eval_086",
+      "eval_087",
+      "eval_111",
+      "eval_112",
+      "eval_130",
+      "eval_364"
+    ]
+  },
+  "_the_prediction": "THE REGEX HEADLINE CANNOT RISE ON THESE ROWS BECAUSE IT WAS ALREADY COUNTING THEM: 7 of 8 scored pass=True at 0e11c3d, and 3 of those were hand-adjudicated FALSE_PASS or PARTIAL. The improvement shows up as the judge's disagreement queue shrinking — which raises the LOWER end of the Bar A bracket and leaves the upper end roughly flat. A flat or slightly lower regex A2 is the PREDICTED result here, not evidence the change failed.",
+  "rows": [
+    {
+      "id": "eval_086",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "answer_type": "number",
+      "intent_now": "nssf",
+      "question": "Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?",
+      "gold": "Asilimia 10 ya mshahara wa jumla (gross salary) wa mfanyakazi. Mwajiri analipa sehemu hii kutoka pesa zake mwenyewe — haikatwi kutoka mshahara wa mfanyakazi. Thibitisha kiwango cha sasa na NSSF kwenye nssf.go.tz.",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false
+      },
+      "hand_adjudication_0e11c3d": "FALSE_PASS",
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "scored_pass_now": true,
+      "scorer_reliable_now": true,
+      "scorer_unreliable_reason": null,
+      "regex_delta": "unchanged"
+    },
+    {
+      "id": "eval_087",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "answer_type": "number",
+      "intent_now": "nssf",
+      "question": "Kiwango cha mchango wa NSSF kwa upande wa mfanyakazi ni asilimia ngapi ya mshahara wake wa jumla?",
+      "gold": "Asilimia 10 ya mshahara wake wa jumla (gross salary). Mwajiri anakata kiasi hiki kutoka mshahara wa mfanyakazi kabla ya kulipa mshahara, kisha anachanganya na sehemu yake ya asilimia 10 na kupeleka NSSF. Thibitisha kiwango na NSSF kwenye nssf.go.tz.",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false
+      },
+      "hand_adjudication_0e11c3d": null,
+      "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+      "scored_pass_now": true,
+      "scorer_reliable_now": true,
+      "scorer_unreliable_reason": null,
+      "regex_delta": "unchanged"
+    },
+    {
+      "id": "eval_111",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "answer_type": "number",
+      "intent_now": "sdl",
+      "question": "Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?",
+      "gold": "Asilimia 3.5 ya jumla ya mishahara ya jumla (gross wages) ya wafanyakazi wote. SDL inalipwa na mwajiri peke yake — haikatwi kwa mfanyakazi. Thibitisha kiwango cha sasa na TRA kwenye tra.go.tz.",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false
+      },
+      "hand_adjudication_0e11c3d": null,
+      "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "scored_pass_now": true,
+      "scorer_reliable_now": true,
+      "scorer_unreliable_reason": null,
+      "regex_delta": "unchanged"
+    },
+    {
+      "id": "eval_112",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "answer_type": "number",
+      "intent_now": "wcf",
+      "question": "Kiwango cha WCF ni asilimia ngapi ya jumla ya mishahara ya jumla?",
+      "gold": "Asilimia 0.5 ya jumla ya mishahara ya jumla ya wafanyakazi wote. WCF inalipwa na mwajiri — haikatwi mshahara wa mfanyakazi. WCF inalipwa kwa Mamlaka ya WCF, si TRA. Thibitisha kiwango na Mamlaka ya WCF.",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false
+      },
+      "hand_adjudication_0e11c3d": null,
+      "reply": "Kiwango cha WCF ni asilimia 0.5 ya mshahara ghafi — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA.",
+      "scored_pass_now": true,
+      "scorer_reliable_now": true,
+      "scorer_unreliable_reason": null,
+      "regex_delta": "unchanged"
+    },
+    {
+      "id": "eval_130",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "answer_type": "procedure",
+      "intent_now": "sdl",
+      "question": "Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?",
+      "gold": "Zidisha jumla ya mishahara ya jumla (gross wages) ya wafanyakazi wote kwa asilimia 3.5. Mfano: jumla ya mishahara ya wafanyakazi wote ni TZS milioni 10 — SDL = 3.5% × 10,000,000 = TZS 350,000. Thibitisha hesabu yako na mshauri wa kodi au TRA.",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false
+      },
+      "hand_adjudication_0e11c3d": "FALSE_PASS",
+      "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "scored_pass_now": true,
+      "scorer_reliable_now": true,
+      "scorer_unreliable_reason": null,
+      "regex_delta": "unchanged"
+    },
+    {
+      "id": "eval_233",
+      "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+      "answer_type": "definition",
+      "intent_now": "sdl",
+      "question": "Ni idadi gani ya waajiriwa inayofanya mwajiri kuwa na wajibu wa kulipa SDL Tanzania Bara?",
+      "gold": "Waajiri wenye waajiriwa 10 au zaidi ndio wanaowajibika kulipa SDL Tanzania Bara. Chini ya hapo hakuna wajibu wa SDL. Thibitisha na TRA (tra.go.tz).",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false
+      },
+      "hand_adjudication_0e11c3d": null,
+      "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+      "scored_pass_now": false,
+      "scorer_reliable_now": true,
+      "scorer_unreliable_reason": null,
+      "regex_delta": "REGEX_LOSS"
+    },
+    {
+      "id": "eval_364",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "answer_type": "yes_no",
+      "intent_now": "wcf",
+      "question": "Nina mfanyakazi mmoja tu, je WCF inanihusu au ni kwa makampuni makubwa?",
+      "gold": "Inakuhusu. WCF haina kizingiti cha chini — inahusu waajiri wote kutoka mfanyakazi wa kwanza. Thibitisha na WCF (wcf.go.tz).",
+      "baseline_0e11c3d": {
+        "pass": false,
+        "reliable": false,
+        "clarified": false
+      },
+      "hand_adjudication_0e11c3d": null,
+      "reply": "Ndiyo, WCF inakuhusu bila kujali idadi ya wafanyakazi. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+      "scored_pass_now": false,
+      "scorer_reliable_now": false,
+      "scorer_unreliable_reason": "yes_no_ground_truth_ambiguous",
+      "regex_delta": "unchanged"
+    },
+    {
+      "id": "eval_394",
+      "file": "eval/accuracy_gate/eval_questions_003.jsonl",
+      "answer_type": "yes_no",
+      "intent_now": "nssf",
+      "question": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
+      "gold": "Ndiyo, si ya hiari. NSSF ni lazima kwa mwajiri na wafanyakazi wanaostahili. Thibitisha na NSSF (nssf.go.tz).",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false
+      },
+      "hand_adjudication_0e11c3d": "FALSE_PASS",
+      "reply": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+      "scored_pass_now": false,
+      "scorer_reliable_now": true,
+      "scorer_unreliable_reason": null,
+      "regex_delta": "REGEX_LOSS"
+    }
+  ]
+}
