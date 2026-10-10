@@ -24,10 +24,15 @@ test asserts the send was never attempted, which is the stronger claim.
 That needs a real number on the roster, which is the founder's to give. The notification leg is
 exercised as far as the Wappfly call and its result is reported, not asserted.
 
+⚠️ THE QUEUE IS READ OVER THE MODAL CLI, NOT THROUGH /review_queue, because that endpoint
+needs ADMIN_TOKEN — and this harness has no business holding it. Nor do I: it lives in a
+Secret whose values are not readable from here, and a harness that required it would have
+pushed someone towards printing a production credential to a console.
+
 Usage:
-    python eval/controls/verify_review_roster_live_2026_10_10.py --base <url> \
-        --admin <ADMIN_TOKEN> --key <REVIEW_SIGNING_KEY> \
-        --r1 <number> --r2 <number>
+    python eval/controls/verify_review_roster_live_2026_10_10.py
+        --base <url> --app <modal app name>
+        --key <REVIEW_SIGNING_KEY> --r1 <number> --r2 <number> --claim-ttl <seconds>
 Artifact: eval/results/review_roster_live_2026_10_10.json
 Exit 0 all four verified · 1 a finding · 2 could not be exercised (NOT a pass).
 """
@@ -63,6 +68,48 @@ def _post(url, payload, timeout=60):
         return 0, {"error": f"{type(e).__name__}: {e}"}
 
 
+def _modal_run(fn, extra=()):
+    """Call one of the CLI-only functions. Returns combined stdout+stderr."""
+    import subprocess
+    proc = subprocess.run(
+        [sys.executable, "-m", "modal", "run",
+         f"chike-whatsapp/modal_whatsapp.py::{fn}", *extra],
+        capture_output=True, text=True, cwd=REPO,
+        env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"})
+    return (proc.stdout or "") + (proc.stderr or "")
+
+
+def _dump_queue(_app_unused=None):
+    """The queue, via the CLI-only `dump_queue`.
+
+    ⚠️ Parsed out of stdout, because `modal run` prints the return value rather than handing
+    it back. The JSON is located by its own marker rather than by assuming it is the last
+    line — Modal interleaves its own progress output, and 'the last line' is exactly the kind
+    of assumption that produces a confident wrong read.
+    """
+    out = _modal_run("dump_queue")
+    start = out.find('{"count"')
+    if start < 0:
+        print(f"[dump_queue] no payload found in output:\n{out[-1200:]}")
+        return None
+    depth, end = 0, None
+    for i, ch in enumerate(out[start:], start):
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    if end is None:
+        return None
+    try:
+        return json.loads(out[start:end])
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[dump_queue] unparseable payload ({e})")
+        return None
+
+
 def _get(url, timeout=60):
     try:
         with urllib.request.urlopen(url, timeout=timeout) as r:
@@ -85,7 +132,8 @@ def main():
 
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", required=True, help="deployed base URL, no trailing slash")
-    ap.add_argument("--admin", required=True)
+    ap.add_argument("--app", default="chike-whatsapp",
+                    help="Modal app name (informational; modal run resolves from the file)")
     ap.add_argument("--key", required=True, help="REVIEW_SIGNING_KEY, to mint link tokens")
     ap.add_argument("--r1", required=True)
     ap.add_argument("--r2", required=True)
@@ -141,17 +189,10 @@ def main():
            f"build={health.get('build')} reviewers={roster.get('reviewers')}")
 
     # ── 1. TWO DRAFTS AT ONCE ─────────────────────────────────────────────────────────
-    import subprocess
     stamp = str(int(time.time()))
     ids = []
     for n in ("A", "B"):
-        proc = subprocess.run(
-            [sys.executable, "-m", "modal", "run",
-             "chike-whatsapp/modal_whatsapp.py::seed_test_draft",
-             "--label", f"live-{stamp}-{n}"],
-            capture_output=True, text=True, cwd=REPO,
-            env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"})
-        out = (proc.stdout or "") + (proc.stderr or "")
+        out = _modal_run("seed_test_draft", ["--label", f"live-{stamp}-{n}"])
         found = [ln.split("SEEDED ", 1)[1].strip() for ln in out.splitlines()
                  if "SEEDED " in ln]
         if not found:
@@ -209,9 +250,9 @@ def main():
            s7 == 200 and j7.get("outcome") == "claimed", f"HTTP {s7} {j7}")
 
     # ── 4. NOTHING SENT, EVER ─────────────────────────────────────────────────────────
-    status, q = _get(f"{base}/review_queue?token={args.admin}")
-    if status != 200:
-        print(f"[FATAL] /review_queue returned {status}: {q}")
+    q = _dump_queue(args.app)
+    if q is None:
+        print("[FATAL] could not read the queue over the CLI")
         return 2
     items = {i["review_id"]: i for i in (q.get("items") or [])}
     both = [items.get(a), items.get(b)]
@@ -255,7 +296,7 @@ def main():
            "only showed refusals would equally describe a system that refuses everything",
            s8 == 200 and j8.get("ok") is True and j8.get("status") == "withheld"
            and j8.get("by"), f"HTTP {s8} {j8}")
-    status, q2 = _get(f"{base}/review_queue?token={args.admin}")
+    q2 = _dump_queue(args.app) or {}
     after = {i["review_id"]: i for i in (q2.get("items") or [])}.get(b) or {}
     record("5b. the withheld draft records WHO withheld it, keeps the draft verbatim, and "
            "has no final answer",

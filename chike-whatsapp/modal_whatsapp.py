@@ -64,10 +64,30 @@ BUILD = os.environ.get("CHIKE_BUILD", "") or "dev"
 # ORDER MATTERS: every build step must precede `add_local_*`, or Modal refuses the
 # image outright ("tried to run a build step after using image.add_local_*"). The
 # first deploy failed exactly this way with .env() placed last.
+# ⛔⛔ MODAL DOES NOT FORWARD THE DEPLOYING SHELL'S ENVIRONMENT. Found while preparing the
+# roster's live verification, and it is a real production defect, not a test inconvenience:
+# `SUPERVISED=1 modal deploy ...` would have set nothing at all inside the container, so the
+# founder could have followed the runbook exactly, seen the command succeed, and had an
+# UNSUPERVISED pilot — with /health the only thing that would have said so.
+#
+# That is the same shape as R16's warm container: the deploy reports success and the thing
+# you changed is not what is running. The fix is to bake the tunables into the image at
+# deploy time, exactly as CHIKE_BUILD already was — and `/health` reporting the parsed values
+# is what makes it verifiable rather than assumed.
+#
+# ⚠️ CREDENTIALS ARE NOT IN THIS LIST. REVIEWER_ROSTER and REVIEW_SIGNING_KEY belong in the
+# Modal Secret, and a Secret value OVERRIDES the image env, so a deploy-time value cannot
+# silently shadow the real one. They are read here only so a THROWAWAY verification app can
+# be given a test roster without writing to the production secret.
+_DEPLOY_TUNABLES = ("SUPERVISED", "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S",
+                    "PUBLIC_BASE_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
+                    "SECOND_ACK_AFTER_S", "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY")
+
 image = (
     modal.Image.debian_slim(python_version="3.11")
     .pip_install("fastapi[standard]", "httpx")
-    .env({"CHIKE_BUILD": BUILD})
+    .env({"CHIKE_BUILD": BUILD,
+          **{k: os.environ[k] for k in _DEPLOY_TUNABLES if os.environ.get(k)}})
     .add_local_dir(_HERE, "/root/chike_whatsapp")
 )
 
@@ -947,6 +967,22 @@ async def sweep_review_queue():
               flush=True)
     return {"pending": pending, "released": released, "renotified": renotified,
             "sent_to_participants": 0}
+
+
+@app.function(image=image, secrets=[SECRET], timeout=120)
+def dump_queue():
+    """The queue, over the CLI, with the phone numbers stripped.
+
+    ⛔ WHY NOT JUST CALL /review_queue? Because that needs ADMIN_TOKEN, and the verification
+    harness has no business holding it — nor do I: it lives in a Secret whose values are not
+    readable from here, and a harness that needed it would have pushed someone towards
+    printing a production credential to a console. This function is reachable only with Modal
+    CLI credentials, the same gate as the seeder, and it returns the SAME shape /review_queue
+    returns so the two cannot drift into disagreeing about what the queue holds.
+    """
+    core = _core()
+    items = [{k: v for k, v in i.items() if k != "sender"} for i in _queue_items()]
+    return {"count": len(items), "summary": core.review_summary(items), "items": items}
 
 
 @app.function(image=image, secrets=[SECRET], timeout=120)
