@@ -33,7 +33,7 @@
     },
     "_provenance": {
       "deployed_build": "054fb19",
-      "head": "054fb19",
+      "head": "3fe25a5",
       "serving_paths_moved": []
     }
   },
@@ -166,12 +166,11 @@
     }
   },
   "totals": {
-    "rows": 32,
-    "measured": 29,
+    "rows": 34,
+    "measured": 34,
     "by_verdict": {
-      "CONTROL_HELD": 6,
-      "CONTROL_TEXT_DIFFERS_CROSS_HOST": 1,
-      "ERROR": 3,
+      "CONTROL_HELD": 8,
+      "CONTROL_TEXT_DIFFERS_CROSS_HOST": 4,
       "JUDGE_FIXED": 2,
       "JUDGE_HELD_CORRECT": 4,
       "JUDGE_HELD_WRONG": 4,
@@ -182,9 +181,12 @@
   },
   "premise": {
     "_decided_by": "eval/controls/premise_prompt_identity_2026_10_09.py (prompt identity across trees, retrieval held fixed) — NOT by the reply diff below",
-    "controls_total": 10,
+    "controls_total": 12,
     "controls_whose_TEXT_differs_cross_host": [
-      "eval_099"
+      "eval_104",
+      "eval_162",
+      "eval_099",
+      "eval_089"
     ],
     "_why_that_is_not_a_falsification": "the baseline is the 0e11c3d gate's own Kaggle-generated reply, measured while production served 3659a06. The smallest difference this comparison reports is one space, on eval_162, whose subject nothing shipped today touches. It is an observation, not evidence of a route effect.",
     "prompt_identity_test": {
@@ -232,6 +234,8 @@
       "eval_223",
       "eval_186",
       "eval_239",
+      "eval_104",
+      "eval_162",
       "eval_237",
       "eval_304",
       "eval_338",
@@ -269,7 +273,6 @@
         "data/reviewed/hand_coded_batch_015_b02.jsonl"
       ],
       "reply": "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL. Mwenye wafanyakazi chini ya 10 hana wajibu wa kulipa SDL.",
-      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -292,7 +295,9 @@
           "correct"
         ]
       },
-      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Mchango wa mwajiri kwa NSSF ni asilimia ngapi ya mshahara?",
@@ -324,7 +329,6 @@
         "data/reviewed/hand_coded_batch_015_b05.jsonl"
       ],
       "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
-      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -347,7 +351,9 @@
           "correct"
         ]
       },
-      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Jumla ya mchango wa NSSF ni asilimia ngapi?",
@@ -385,7 +391,6 @@
         "data/reviewed/nssf_confident_pairs.jsonl"
       ],
       "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
-      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -408,7 +413,9 @@
           "correct"
         ]
       },
-      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?",
@@ -450,8 +457,6 @@
       "closability": "ROUTE",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
-      "reply_changed": true,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -475,7 +480,10 @@
           "correct"
         ]
       },
-      "verdict": "JUDGE_FIXED"
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "verdict": "JUDGE_FIXED",
+      "_resumed": true
     },
     {
       "key": "q::Kiwango cha mchango wa NSSF kwa upande wa mfanyakazi ni asilimia ngapi ya mshahara wake wa jumla?",
@@ -513,8 +521,6 @@
         "eval/accuracy_gate/eval_questions_001.jsonl"
       ],
       "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
-      "reply_changed": true,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "undetermined",
         "tie": true,
@@ -539,7 +545,10 @@
           "correct"
         ]
       },
-      "verdict": "JUDGE_REGRESSED"
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "verdict": "JUDGE_REGRESSED",
+      "_resumed": true
     },
     {
       "key": "q::Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?",
@@ -584,8 +593,6 @@
       ],
       "stale_expectation": "expect:'untouched' + guards_against 'eval_111 MUST-NOT-BREAK … answers correctly on the fact path and carries detail this branch does not reproduce'. The engine now carries that detail (rate_statement._INCIDENCE), which is what made routing these safe. The probe's expectation is stale, not the behaviour.",
       "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
-      "reply_changed": true,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -608,7 +615,10 @@
           "correct"
         ]
       },
-      "verdict": "JUDGE_HELD_CORRECT"
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "verdict": "JUDGE_HELD_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Kiwango cha WCF ni asilimia ngapi ya jumla ya mishahara ya jumla?",
@@ -653,8 +663,6 @@
       ],
       "stale_expectation": "same, for WCF — 'Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA' is now in the engine's own text.",
       "reply": "Kiwango cha WCF ni asilimia 0.5 ya JUMLA ya mishahara ghafi ya wafanyakazi wote — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA.",
-      "reply_changed": true,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -677,7 +685,10 @@
           "correct"
         ]
       },
-      "verdict": "JUDGE_HELD_CORRECT"
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "verdict": "JUDGE_HELD_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?",
@@ -719,8 +730,6 @@
       "closability": "ROUTE",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Zidisha JUMLA ya mishahara ghafi ya wafanyakazi wote kwa asilimia 3.5. Hiyo ndiyo SDL ya mwezi. Inamhusu mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
-      "reply_changed": true,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -743,7 +752,10 @@
           "correct"
         ]
       },
-      "verdict": "JUDGE_FIXED"
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "verdict": "JUDGE_FIXED",
+      "_resumed": true
     },
     {
       "key": "q::Ni idadi gani ya waajiriwa inayofanya mwajiri kuwa na wajibu wa kulipa SDL Tanzania Bara?",
@@ -781,8 +793,6 @@
         "eval/accuracy_gate/eval_questions_002_additions.jsonl"
       ],
       "reply": "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL. Mwenye wafanyakazi chini ya 10 hana wajibu wa kulipa SDL.",
-      "reply_changed": true,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -805,7 +815,10 @@
           "correct"
         ]
       },
-      "verdict": "JUDGE_HELD_CORRECT"
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "verdict": "JUDGE_HELD_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Nina mfanyakazi mmoja tu, je WCF inanihusu au ni kwa makampuni makubwa?",
@@ -843,8 +856,6 @@
         "eval/accuracy_gate/eval_questions_003.jsonl"
       ],
       "reply": "Ndiyo, WCF inakuhusu bila kujali idadi ya wafanyakazi. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
-      "reply_changed": true,
-      "regex_baseline_pass": false,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -867,7 +878,10 @@
           "correct"
         ]
       },
-      "verdict": "JUDGE_HELD_CORRECT"
+      "reply_changed": true,
+      "regex_baseline_pass": false,
+      "verdict": "JUDGE_HELD_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Je, NSSF si ya hiari kwa mwajiri anayestahili?",
@@ -909,8 +923,6 @@
       "closability": "CORPUS+ROUTE",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
-      "reply_changed": true,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -934,7 +946,10 @@
           "wrong"
         ]
       },
-      "verdict": "JUDGE_HELD_WRONG"
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "verdict": "JUDGE_HELD_WRONG",
+      "_resumed": true
     },
     {
       "key": "q::Mchango wa NSSF ni asilimia ngapi -- watu wamenambia tofauti, mmoja anasema kumi, mwingine anasema ishirini.",
@@ -966,7 +981,6 @@
         "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl"
       ],
       "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
-      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -989,7 +1003,9 @@
           "correct"
         ]
       },
-      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Tuna wafanyakazi wachache sana, WCF inatuhusu?",
@@ -1027,7 +1043,6 @@
         "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl"
       ],
       "reply": "Ndiyo, WCF inawahusu waajiri WOTE bila kujali idadi ya wafanyakazi. Hakuna kizingiti cha chini cha idadi iliyoainishwa. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
-      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -1051,7 +1066,9 @@
           "undetermined"
         ]
       },
-      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Nina wafanyakazi wachache tu, SDL itanihusu?",
@@ -1089,7 +1106,6 @@
         "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl"
       ],
       "reply": "Ili nijue kama SDL inakuhusu, niambie una wafanyakazi wangapi (kizingiti ni wafanyakazi 10).",
-      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -1112,7 +1128,9 @@
           "correct"
         ]
       },
-      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Kiwango cha SDL ni asilimia ngapi ya mishahara?",
@@ -1144,7 +1162,6 @@
         "eval/accuracy_gate/false_premise_pairs_016.jsonl"
       ],
       "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
-      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -1167,7 +1184,9 @@
           "correct"
         ]
       },
-      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Kiwango cha WCF ni asilimia ngapi ya mishahara?",
@@ -1199,7 +1218,6 @@
         "eval/accuracy_gate/false_premise_pairs_016.jsonl"
       ],
       "reply": "Kiwango cha WCF ni asilimia 0.5 ya JUMLA ya mishahara ghafi ya wafanyakazi wote — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA.",
-      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -1222,7 +1240,9 @@
           "correct"
         ]
       },
-      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Nina mfanyakazi mmoja wa kudumu na wawili wa muda — SDL inanihusu?",
@@ -1255,12 +1275,13 @@
         "in_scope": true
       },
       "reply": "Ili nijue kama SDL inakuhusu, niambie una wafanyakazi wangapi (kizingiti ni wafanyakazi 10).",
-      "reply_changed": null,
       "judge": {
         "verdict": "no_reference",
         "_why": "this corpus row carries no reference field; the reply is recorded for hand reading rather than graded against an expectation I would have had to invent (R38)"
       },
-      "verdict": "NO_BASELINE_JUDGE_NO_REFERENCE"
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_NO_REFERENCE",
+      "_resumed": true
     },
     {
       "key": "q::mfanyakazi wangu analipwa kwa samani ya kazi je NSSF ni asilimia ngapi",
@@ -1296,12 +1317,13 @@
         "guards_against": "thamani/samani in an NSSF question."
       },
       "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
-      "reply_changed": null,
       "judge": {
         "verdict": "no_reference",
         "_why": "this corpus row carries no reference field; the reply is recorded for hand reading rather than graded against an expectation I would have had to invent (R38)"
       },
-      "verdict": "NO_BASELINE_JUDGE_NO_REFERENCE"
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_NO_REFERENCE",
+      "_resumed": true
     },
     {
       "key": "q::Nina mfanyakazi mmoja tu — je nalipa WCF?",
@@ -1333,7 +1355,6 @@
         "eval/accuracy_gate/threshold_comparison_probes_024.jsonl"
       ],
       "reply": "Ndiyo. WCF inatumika kwa waajiri WOTE bila kujali idadi ya wafanyakazi. Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara). Inalipwa na mwajiri pekee. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
-      "reply_changed": null,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -1356,7 +1377,9 @@
           "correct"
         ]
       },
-      "verdict": "NO_BASELINE_JUDGE_CORRECT"
+      "reply_changed": null,
+      "verdict": "NO_BASELINE_JUDGE_CORRECT",
+      "_resumed": true
     },
     {
       "key": "q::Utaratibu Rahisishwa wa Biashara (STR) wa EAC una zana kuu ngapi na ni zipi?",
@@ -1391,8 +1414,6 @@
       "closability": "CORPUS",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Zana kuu za utaratibu rahisi wa forodha (STR) ni: Simplified Certificate of Origin (SCO), Simplified Customs Document (SCD), Common External Tariff (CET), na utaratibu wa pamoja wa forodha (Single Customs Document). SCO huonyesha asili ya bidhaa, SCD ni fomu rahisi ya forodha, CET ni jedwali la pamoja la ushuru, na Single Customs Document ni fomu moja ya pamoja kwa biashara zote.",
-      "reply_changed": true,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -1416,7 +1437,10 @@
           "wrong"
         ]
       },
-      "verdict": "JUDGE_HELD_WRONG"
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "verdict": "JUDGE_HELD_WRONG",
+      "_resumed": true
     },
     {
       "key": "q::Nina wafanyakazi 60 na nimesajili OSHA — je, pia ninahitaji kumwajiri afisa wa usalama?",
@@ -1451,8 +1475,6 @@
       "closability": "GOLD",
       "adjudication_0e11c3d": "PARTIAL",
       "reply": "Ndiyo, kwa mujibu wa sheria, unapaswa kumteua mwakilishi wa usalama na afya kazini (designated safety representative) kutoka kwa wafanyakazi wako. Thibitisha na OSHA (osha.go.tz).",
-      "reply_changed": false,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -1476,7 +1498,10 @@
           "wrong"
         ]
       },
-      "verdict": "JUDGE_HELD_WRONG"
+      "reply_changed": false,
+      "regex_baseline_pass": true,
+      "verdict": "JUDGE_HELD_WRONG",
+      "_resumed": true
     },
     {
       "key": "q::Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?",
@@ -1511,8 +1536,6 @@
       "closability": "GOLD",
       "adjudication_0e11c3d": "WRONG_GOLD",
       "reply": "Kuna hatua mbili za kuripoti ugonjwa wa kazini:\n\nHatua ya 1: Mfanyakazi anaripoti kwa mwajiri ndani ya siku 14 tangu kugunduliwa kwa ugonjwa.\nHatua ya 2: Mwajiri analazimika kuwasilisha taarifa hiyo WCF ndani ya siku 7 tangu kupokea taarifa ya mfanyakazi.\n\nMuda wa siku 14 si lazima uwe umepita kabla ya siku 7 — ni mfululizo wa hatua mbili tofauti. Thibitisha na WCF (wcf.go.tz).",
-      "reply_changed": false,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -1535,7 +1558,10 @@
           "wrong"
         ]
       },
-      "verdict": "JUDGE_HELD_WRONG"
+      "reply_changed": false,
+      "regex_baseline_pass": true,
+      "verdict": "JUDGE_HELD_WRONG",
+      "_resumed": true
     },
     {
       "key": "q::Mwajiri anahitaji nyaraka gani kuwasilisha NSSF ili kusajilisha wafanyakazi wake?",
@@ -1571,8 +1597,32 @@
       },
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
-      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
-      "verdict": "ERROR"
+      "reply": "Mwajiri anahitaji: fomu ya usajili wa mwajiri (NSSF/01), nakala za vitambulisho vya utambulisho wa kila mfanyakazi, na akaunti ya benki ya kampuni. Thibitisha na NSSF (nssf.go.tz).",
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "judge": {
+        "verdict": "wrong",
+        "tie": false,
+        "votes": {
+          "wrong": 5
+        },
+        "n": 5,
+        "justification": "Generated answer omits required BRELA certificate and TIN, adds non-reference item (bank account), and lacks national IDs of all workers as specified in reference.",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2095,
+        "pout": 1529,
+        "err_count": 0,
+        "per_call": [
+          "wrong",
+          "wrong",
+          "wrong",
+          "wrong",
+          "wrong"
+        ]
+      },
+      "verdict": "CONTROL_TEXT_DIFFERS_CROSS_HOST"
     },
     {
       "key": "q::'Mgeni' katika GN 487A inamaanisha nani hasa?",
@@ -1608,8 +1658,32 @@
       },
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
-      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
-      "verdict": "ERROR"
+      "reply": "Raia wa Tanzania ni 'mgeni' kwa maana ya GN 487A ikiwa amefikia masharti haya: (1) Amepata uraia kupitia ndoa tu (si kwa njia ya kuasiliwa); (2) Ameishi Tanzania kwa miaka 15 au zaidi; (3) Ana pasipoti ya Tanzania yenye hadhi kamili ya uraia. Ikiwa amefikia masharti hayo, bado ana adhabu ya faini ya TZS milioni 5 au kifungo cha miezi 3 kwa kuvunja GN 487A. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "judge": {
+        "verdict": "wrong",
+        "tie": false,
+        "votes": {
+          "wrong": 5
+        },
+        "n": 5,
+        "justification": "The generated answer incorrectly states that Tanzanian citizens can be 'mgeni' under GN 487A if they meet certain conditions, contradicting the reference which clarifies that 'mgeni' specifically refe",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2445,
+        "pout": 1236,
+        "err_count": 0,
+        "per_call": [
+          "wrong",
+          "wrong",
+          "wrong",
+          "wrong",
+          "wrong"
+        ]
+      },
+      "verdict": "CONTROL_TEXT_DIFFERS_CROSS_HOST"
     },
     {
       "key": "q::Mimi ni mgeni ninayefanya biashara ya rejareja — GN 487A tayari imetangazwa. Nifanye nini sasa?",
@@ -1645,8 +1719,34 @@
       },
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
-      "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
-      "verdict": "ERROR"
+      "reply": "Kwanza, thibitisha na Idara ya Uhamiaji (immigration.go.tz) ili kujua hatua sahihi za kisheria zinazohusiana na hali yako. Pili, hakikisha unabadilisha muundo wa umiliki wa biashara haraka. Unaweza kubadilisha muundo wa umiliki kwa njia mbalimbali, ikiwa ni pamoja na ubia na raia wa Tanzania, kununua biashara hiyo na Mtanzania, au kuanzisha biashara mpya yenye muundo salama. Thibitisha na wakili wa uhamiaji na BRELA (brela.go.tz).",
+      "reply_changed": false,
+      "regex_baseline_pass": true,
+      "judge": {
+        "verdict": "undetermined",
+        "tie": true,
+        "votes": {
+          "wrong": 2,
+          "correct": 2,
+          "undetermined": 1
+        },
+        "n": 5,
+        "justification": "Generated answer lacks specific details about permit validity periods and renewal prohibition from reference, focusing instead on ownership structure changes without confirming alignment with the 28 J",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2965,
+        "pout": 1513,
+        "err_count": 0,
+        "per_call": [
+          "wrong",
+          "wrong",
+          "correct",
+          "undetermined",
+          "correct"
+        ]
+      },
+      "verdict": "CONTROL_HELD"
     },
     {
       "key": "q::Kodi ya zuio (withholding tax) inatakiwa kuwasilishwa TRA ndani ya muda gani baada ya mwisho wa mwezi?",
@@ -1683,8 +1783,6 @@
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Kodi ya zuio inatakiwa kuwasilishwa ndani ya siku 7 baada ya mwisho wa mwezi unaofuata. Thibitisha na tra.go.tz.",
-      "reply_changed": false,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -1708,7 +1806,10 @@
           "wrong"
         ]
       },
-      "verdict": "CONTROL_HELD"
+      "reply_changed": false,
+      "regex_baseline_pass": true,
+      "verdict": "CONTROL_HELD",
+      "_resumed": true
     },
     {
       "key": "q::Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?",
@@ -1745,8 +1846,6 @@
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Kulingana na sheria, unapaswa kusajili JINA LA BIASHARA (Business Name) ikiwa una wafanyakazi 20 au chini yao, na mtaji hadi TZS 100,000,000. Ikiwa mtaji wako unazidi TZS 100,000,000, basi unaweza kusajili KAMPUNI (Company Limited by Shares). Thibitisha na BRELA Official (brela.go.tz).",
-      "reply_changed": false,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -1769,7 +1868,10 @@
           "wrong"
         ]
       },
-      "verdict": "CONTROL_HELD"
+      "reply_changed": false,
+      "regex_baseline_pass": true,
+      "verdict": "CONTROL_HELD",
+      "_resumed": true
     },
     {
       "key": "q::VAT withholding kwa huduma ni asilimia 18 kama kiwango cha kawaida, sivyo?",
@@ -1806,8 +1908,6 @@
       "closability": "MODEL",
       "adjudication_0e11c3d": "FALSE_PASS",
       "reply": "Hapana. Kiwango cha VAT kwa huduma ni asilimia 18 kama kiwango cha kawaida pia. Hakuna kiwango cha kati cha 8% au 10% kwa huduma. Bidhaa na huduma zinatozwa 18% kwa wateja wengi. Thibitisha na TRA (tra.go.tz).",
-      "reply_changed": false,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -1830,7 +1930,10 @@
           "wrong"
         ]
       },
-      "verdict": "CONTROL_HELD"
+      "reply_changed": false,
+      "regex_baseline_pass": true,
+      "verdict": "CONTROL_HELD",
+      "_resumed": true
     },
     {
       "key": "q::Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?",
@@ -1863,8 +1966,6 @@
         "judge": "correct"
       },
       "reply": "Hapana kabisa. Mchango wa mwajiri (asilimia 10) unalipwa na mwajiri kutoka pochi yake binafsi — si kutoka mshahara wa mfanyakazi. Ni gharama ya ziada ya mwajiri pekee. Thibitisha na NSSF (nssf.go.tz).",
-      "reply_changed": true,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -1887,7 +1988,10 @@
           "correct"
         ]
       },
-      "verdict": "CONTROL_TEXT_DIFFERS_CROSS_HOST"
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "verdict": "CONTROL_TEXT_DIFFERS_CROSS_HOST",
+      "_resumed": true
     },
     {
       "key": "q::NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
@@ -1920,8 +2024,6 @@
         "judge": "wrong"
       },
       "reply": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10% baina ya mwajiri na mfanyakazi. Hakuna mgawanyo mwingine uliopo. Thibitisha na NSSF (nssf.go.tz).",
-      "reply_changed": false,
-      "regex_baseline_pass": false,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -1944,7 +2046,10 @@
           "wrong"
         ]
       },
-      "verdict": "CONTROL_HELD"
+      "reply_changed": false,
+      "regex_baseline_pass": false,
+      "verdict": "CONTROL_HELD",
+      "_resumed": true
     },
     {
       "key": "q::Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",
@@ -1977,8 +2082,6 @@
         "judge": "wrong"
       },
       "reply": "Kiwango sahihi ni asilimia 10. Hakuna kiwango cha asilimia 3.5 wala asilimia 0.5 katika historia ya NSSF Tanzania. Thibitisha na NSSF (nssf.go.tz).",
-      "reply_changed": false,
-      "regex_baseline_pass": true,
       "judge": {
         "verdict": "wrong",
         "tie": false,
@@ -2001,7 +2104,10 @@
           "wrong"
         ]
       },
-      "verdict": "CONTROL_HELD"
+      "reply_changed": false,
+      "regex_baseline_pass": true,
+      "verdict": "CONTROL_HELD",
+      "_resumed": true
     },
     {
       "key": "q::Nina mfanyakazi mmoja tu wa kwanza, je NSSF ni lazima au nasubiri niwe na wengi?",
@@ -2034,8 +2140,6 @@
         "judge": "correct"
       },
       "reply": "NSSF ni lazima kwa wafanyakazi wote, bila kujali idadi. Hata kama una mfanyakazi mmoja, NSSF ni lazima. Thibitisha na nssf.go.tz.",
-      "reply_changed": false,
-      "regex_baseline_pass": false,
       "judge": {
         "verdict": "correct",
         "tie": false,
@@ -2060,7 +2164,128 @@
           "correct"
         ]
       },
-      "verdict": "CONTROL_HELD"
+      "reply_changed": false,
+      "regex_baseline_pass": false,
+      "verdict": "CONTROL_HELD",
+      "_resumed": true
+    },
+    {
+      "key": "q::Michango ya NSSF inatakiwa kufikishwa NSSF ndani ya muda gani baada ya kulipa mishahara?",
+      "id": "eval_234",
+      "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+      "line": 34,
+      "question": "Michango ya NSSF inatakiwa kufikishwa NSSF ndani ya muda gani baada ya kulipa mishahara?",
+      "question_field": "question_sw",
+      "reference": "Ndani ya mwezi mmoja baada ya kulipa mishahara — kwa vitendo ifikapo siku ya 10 ya mwezi unaofuata. Kumbuka siku ya 20 ni ya VAT return, si NSSF. Thibitisha na NSSF (nssf.go.tz).",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Ndani ya mwezi mmoja baada ya kulipa mishahara — kwa vitendo ifikapo siku ya 10 ya mwezi unaofuata. Kumbuka siku ya 20 ni ya VAT return, si NSSF. Thibitisha na NSSF (nssf.go.tz)."
+        }
+      ],
+      "arms": [
+        "PREMISE_CONTROL_INDEX"
+      ],
+      "why_population": [
+        "PREMISE_CONTROL_INDEX: the NSSF remittance window, row 63's neighbourhood rather than row 9's. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": true,
+        "clarified": false,
+        "reply": "Michango ya NSSF inatakiwa kuwasilishwa ndani ya mwezi mmoja (within one month) baada ya mwisho wa mwezi husika. Thibitisha na NSSF (nssf.go.tz).",
+        "judge": "correct"
+      },
+      "reply": "Michango ya NSSF inatakiwa kuwasilishwa ndani ya mwezi mmoja (within one month) baada ya mwisho wa mwezi husika. Thibitisha na NSSF (nssf.go.tz).",
+      "judge": {
+        "verdict": "correct",
+        "tie": false,
+        "votes": {
+          "correct": 3,
+          "wrong": 2
+        },
+        "n": 5,
+        "justification": "The generated answer correctly states the one-month deadline for NSSF contributions, aligning with the reference answer's key timeframe even if it omits the specific 10th-day detail.",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 1990,
+        "pout": 1274,
+        "err_count": 0,
+        "per_call": [
+          "correct",
+          "correct",
+          "wrong",
+          "correct",
+          "wrong"
+        ]
+      },
+      "reply_changed": false,
+      "regex_baseline_pass": true,
+      "verdict": "CONTROL_HELD",
+      "_resumed": true
+    },
+    {
+      "key": "q::Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?",
+      "id": "eval_089",
+      "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+      "line": 89,
+      "question": "Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?",
+      "question_field": "question_sw",
+      "reference": "Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata. Thibitisha tarehe sahihi na nssf.go.tz.",
+      "reference_field": "correct_answer_sw",
+      "all_references_found": [
+        {
+          "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+          "field": "correct_answer_sw",
+          "text": "Kwa mujibu wa Sheria ya NSSF, michango inalipwa ndani ya mwezi mmoja baada ya kulipa mishahara. Kwa vitendo, NSSF karibu inatarajia malipo ifikapo siku ya 10 ya mwezi unaofuata. Thibitisha tarehe sahihi na nssf.go.tz."
+        }
+      ],
+      "arms": [
+        "PREMISE_CONTROL_INDEX"
+      ],
+      "why_population": [
+        "PREMISE_CONTROL_INDEX: the NSSF deadline, a plain NSSF row with no connection to the rewording — the quiet control inside the control arm. Route UNCHANGED, so a moved reply is attributable to index row 9's rewording rather than to the route — the second term the premise cannot exclude by construction."
+      ],
+      "intent_now": "none",
+      "baseline_0e11c3d": {
+        "pass": true,
+        "reliable": false,
+        "clarified": false,
+        "reply": "Kuna tofauti muhimu sana kati ya tarehe za NSSF na SDL:\n\nNSSF: malipo yanawasilishwa ndani ya mwezi MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz.\nSDL: malipo yanawasilishwa ifikapo tarehe 7 ya mwezi unaofuata — si mwezi mmoja baadaye.\n\nHizi ni tarehe tofauti kabisa. Thibitisha na NSSF (nssf.go.tz) na TRA (tra.go.tz).",
+        "judge": "wrong"
+      },
+      "reply": "Kuna tofauti muhimu sana kati ya tarehe za NSSF na SDL:\n\nNSSF: malipo yanawasilishwa ndani ya mwezi MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz.\nSDL: malipo yanawasilishwa ifikapo tarehe 7 ya mwezi unaofuata — si mwezi mmoja baadaye. Thibitisha na tra.go.tz.\n\nHizi ni tofauti kabisa. Kuchelewa NSSF kunasababisha adhabu kali zaidi kuliko SDL. Thibitisha na nssf.org.tz au tra.go.tz.",
+      "judge": {
+        "verdict": "undetermined",
+        "tie": false,
+        "votes": {
+          "wrong": 1,
+          "undetermined": 4
+        },
+        "n": 5,
+        "justification": "",
+        "providers": [
+          "DeepInfra"
+        ],
+        "pin": 2640,
+        "pout": 1924,
+        "err_count": 0,
+        "per_call": [
+          "wrong",
+          "undetermined",
+          "undetermined",
+          "undetermined",
+          "undetermined"
+        ]
+      },
+      "reply_changed": true,
+      "regex_baseline_pass": true,
+      "verdict": "CONTROL_TEXT_DIFFERS_CROSS_HOST",
+      "_resumed": true
     }
   ]
 }
