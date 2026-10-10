@@ -213,10 +213,23 @@ def health(tok):
     except Exception as exc:                                             # noqa: BLE001
         return {"error": f"{type(exc).__name__}: {str(exc)[:200]}"}, head
     build = h.get("build") or ""
+    # ⛔ ANCESTRY PLUS A SERVING-PATH DIFF, NOT EQUALITY TO HEAD — AND I WROTE THE EQUALITY
+    # CHECK FIRST AND TRIPPED IT IMMEDIATELY. Committing this harness before running it (R18)
+    # moves HEAD one commit past the deploy, so `build == HEAD` reports a STALE DEPLOY on a
+    # perfectly fresh one. The targeted-route harness records this in its own artifact — "an
+    # equality check called that a stale deploy" — and I re-derived the wrong version anyway,
+    # which is R30's decay shape inside a single week.
+    #
+    # The question actually meant is: is the deployed commit an ancestor of HEAD, and has any
+    # SERVING path changed since it? A doc or harness commit after a deploy is not staleness;
+    # a changed chike/ file is.
+    ancestor = bool(build) and subprocess.run(
+        ["git", "merge-base", "--is-ancestor", build, "HEAD"],
+        cwd=REPO, capture_output=True).returncode == 0
     moved = [p for p in _sh("git", "diff", "--name-only", f"{build}..HEAD", "--",
-                            *DEPLOY_PATHS).splitlines() if p.strip()] if build else ["?"]
+                            *DEPLOY_PATHS).splitlines() if p.strip()] if ancestor else ["?"]
     h["_checks"] = {
-        "build_is_HEAD": build == head,
+        "build_is_an_ancestor_of_head": ancestor,
         "web_and_gpu_tiers_agree": h.get("build_matches") is True,
         "no_serving_path_moved_since_the_build": not moved,
     }
