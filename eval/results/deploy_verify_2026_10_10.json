@@ -1,0 +1,257 @@
+{
+ "_what": "live verification of the 2026-10-10 deploy — party renderer, optionality premise, D-FIDELITY-9, each with a negative",
+ "_why_two_limbs": "a deploy verdict and an answer-quality verdict are different claims; a probe that cannot tell them apart will block a good deploy or pass a dead one (R38)",
+ "_no_cross_host_byte_comparison": "production no longer reproduces the gate harness's bytes (R24b, measured 2026-10-10), so every assertion here is a substring or structure of THIS host's reply",
+ "endpoint": "https://prosperpiusmbaruku007--chike-inference-web-endpoint.modal.run",
+ "health": {
+  "status": "ok",
+  "app": "chike-inference",
+  "build": "3b351e2",
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "base_model": "McGill-NLP/AfriqueLlama-8B",
+  "web_tier_config_loaded": false,
+  "web_tier_config_rag_fact_count": null,
+  "config_note": "the WEB tier carries no chike_config.json by design; the serving GPU tier loads it. Its real value is in deep mode as served.config_rag_fact_count.",
+  "deep": true,
+  "served": {
+   "build": "3b351e2",
+   "rag_rows_loaded": 184,
+   "rag_embeddings_shape": [
+    184,
+    768
+   ],
+   "rag_facts_text_sha256": "5f76d40cf46d8be515f356c05bfb072529482c5bdf3dab966264965a9d98381f",
+   "config_rag_fact_count": 184,
+   "adapter_repo": "prospAprospA007/africa-giants-adapter-v15"
+  },
+  "build_matches": true,
+  "_checks": {
+   "build_is_an_ancestor_of_head": true,
+   "web_and_gpu_tiers_agree": true,
+   "no_serving_path_moved_since_the_build": true
+  },
+  "_provenance": {
+   "deployed_build": "3b351e2",
+   "head": "aa77c48",
+   "serving_paths_moved": []
+  }
+ },
+ "totals": {
+  "rows": 11,
+  "measured": 11,
+  "by_verdict": {
+   "PASS": 11
+  }
+ },
+ "deploy_limb_verdict": "PASS",
+ "rows": [
+  {
+   "id": "pv_01_eval_086_employer",
+   "limb": "deploy",
+   "question": "Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?",
+   "must_match": [
+    "Sehemu ya mwajiri ni asilimia 10"
+   ],
+   "must_not_match": [],
+   "starts_with": "Sehemu ya mwajiri",
+   "note": "eval_086 verbatim. Before this deploy it was answered 'Kiwango cha NSSF ni asilimia 20 …' with the asked-for 10% in a parenthetical. A reply opening with the employer's own share can only come from levy_party_share_statement, which exists only in this build.",
+   "reply": "Sehemu ya mwajiri ni asilimia 10 ya mshahara ghafi wa mfanyakazi. Mwajiri hulipa kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)",
+   "health_build": "3b351e2",
+   "missing": [],
+   "forbidden_present": [],
+   "bad_lead": false,
+   "verdict": "PASS"
+  },
+  {
+   "id": "pv_02_eval_087_employee",
+   "limb": "deploy",
+   "question": "Kiwango cha mchango wa NSSF kwa upande wa mfanyakazi ni asilimia ngapi ya mshahara wake wa jumla?",
+   "must_match": [
+    "Sehemu ya mfanyakazi ni asilimia 10"
+   ],
+   "must_not_match": [],
+   "starts_with": "Sehemu ya mfanyakazi",
+   "note": "THE REGRESSION THIS DEPLOY FIXES. eval_087 went from CORRECT to a 2-wrong/2-correct/1-undetermined judge split when the statement route began answering it total-first. eval_086 survived the identical text only because the clause after the parenthetical happens to lead with the employer, so the two rows differed by luck rather than by handling.",
+   "reply": "Sehemu ya mfanyakazi ni asilimia 10 ya mshahara wake ghafi, na ndiyo inayokatwa kwenye mshahara wake. Mwajiri huikata kabla ya kulipa mshahara. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)",
+   "health_build": "3b351e2",
+   "missing": [],
+   "forbidden_present": [],
+   "bad_lead": false,
+   "verdict": "PASS"
+  },
+  {
+   "id": "pv_03_eval_394_negated_premise",
+   "limb": "deploy",
+   "question": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
+   "must_match": [
+    "Ndiyo, ni kweli",
+    "si ya hiari",
+    "LAZIMA"
+   ],
+   "must_not_match": [
+    "Hapana"
+   ],
+   "starts_with": "Ndiyo, ni kweli",
+   "note": "eval_394. The engine's applicability lead is written for 'does this levy apply?', so it answered 'Ndiyo.' to a question about COMPULSION and contradicted the model body's 'Hapana, si ya hiari' one sentence later. The body is now blanked and the verdict re-led, so no 'Hapana' may survive.",
+   "reply": "Ndiyo, ni kweli — NSSF si ya hiari kwa mwajiri anayestahili — ni LAZIMA kisheria. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+   "health_build": "3b351e2",
+   "missing": [],
+   "forbidden_present": [],
+   "bad_lead": false,
+   "verdict": "PASS"
+  },
+  {
+   "id": "pv_04_mirror_positive_premise",
+   "limb": "deploy",
+   "question": "Je, NSSF ni ya hiari kwa mwajiri anayestahili?",
+   "must_match": [
+    "Hapana.",
+    "si ya hiari",
+    "LAZIMA"
+   ],
+   "must_not_match": [],
+   "starts_with": "Hapana.",
+   "note": "⛔ THE WORSE HALF, AND IT WAS NEVER IN ANY GATE. The un-negated form asserts the levy IS voluntary; before this deploy it was answered 'Ndiyo.' — yes, NSSF is voluntary — on a compulsory levy, in the engine's own voice. Found by asking the mirror of the gate row.",
+   "reply": "Hapana. NSSF si ya hiari kwa mwajiri anayestahili — ni LAZIMA kisheria. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+   "health_build": "3b351e2",
+   "missing": [],
+   "forbidden_present": [],
+   "bad_lead": false,
+   "verdict": "PASS"
+  },
+  {
+   "id": "pv_05_th_22_no_fabricated_figure",
+   "limb": "deploy",
+   "question": "Nina mfanyakazi mmoja tu — je nalipa WCF?",
+   "must_match": [
+    "WCF inahusu waajiri wote"
+   ],
+   "must_not_match": [
+    "TZS 50,000",
+    "50,000 kwa mwaka"
+   ],
+   "starts_with": null,
+   "note": "th_22. The live reply carried 'Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka' — a shilling amount invented from a salary nobody gave — and the judge voted CORRECT 5/5 on it. The engine's working must still render, so this also checks that blanking did not ship silence.",
+   "reply": "Ndiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+   "health_build": "3b351e2",
+   "missing": [],
+   "forbidden_present": [],
+   "bad_lead": false,
+   "verdict": "PASS"
+  },
+  {
+   "id": "pv_06_negative_eval_111_aggregate_base",
+   "limb": "deploy",
+   "question": "Kiwango cha SDL ni asilimia ngapi ya jumla ya mishahara ya jumla ya wafanyakazi wote?",
+   "must_match": [
+    "asilimia 3.5",
+    "JUMLA ya mishahara"
+   ],
+   "must_not_match": [
+    "Sehemu ya mfanyakazi ni asilimia",
+    "Sehemu ya mwajiri ni asilimia"
+   ],
+   "starts_with": "Kiwango cha SDL",
+   "note": "⛔ THE NEGATIVE THAT MATTERS MOST. This asks for a RATE on the aggregate BASE and contains the word 'wafanyakazi'. If the party extractor were one notch wider it would answer a base question with one party's share — and the diversion count would have gone UP, which reads as the change working.",
+   "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+   "health_build": "3b351e2",
+   "missing": [],
+   "forbidden_present": [],
+   "bad_lead": false,
+   "verdict": "PASS"
+  },
+  {
+   "id": "pv_07_negative_eval_112_wcf_base",
+   "limb": "deploy",
+   "question": "Kiwango cha WCF ni asilimia ngapi ya jumla ya mishahara ya jumla?",
+   "must_match": [
+    "asilimia 0.5",
+    "JUMLA ya mishahara ghafi ya wafanyakazi wote"
+   ],
+   "must_not_match": [
+    "Sehemu ya"
+   ],
+   "starts_with": "Kiwango cha WCF",
+   "note": "eval_112 — the row whose BASE was wrong two days ago, and which the judge called CORRECT both before and after that fix. It must keep the aggregate base and the rate renderer.",
+   "reply": "Kiwango cha WCF ni asilimia 0.5 ya JUMLA ya mishahara ghafi ya wafanyakazi wote — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA.",
+   "health_build": "3b351e2",
+   "missing": [],
+   "forbidden_present": [],
+   "bad_lead": false,
+   "verdict": "PASS"
+  },
+  {
+   "id": "pv_08_negative_amount_question_still_clarifies",
+   "limb": "deploy",
+   "question": "Mfanyakazi alifanya kazi siku 26 mwezi huu, NSSF yake ni kiasi gani basi?",
+   "must_match": [],
+   "must_not_match": [
+    "Sehemu ya mfanyakazi ni asilimia 10 ya mshahara wake ghafi"
+   ],
+   "starts_with": null,
+   "note": "⛔ ONE OF THE SIX REGRESSIONS MY FIRST VERSION OF THE PARTY BRANCH SHIPPED. A party is named in every AMOUNT question about a levy. This asks for a figure, has none, and must keep asking for the salary rather than being answered with a rate. `asks_rate` is the gate that fixed it.",
+   "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+   "health_build": "3b351e2",
+   "missing": [],
+   "forbidden_present": [],
+   "bad_lead": false,
+   "verdict": "PASS"
+  },
+  {
+   "id": "pv_09_negative_voluntary_opt_in_untouched",
+   "limb": "deploy",
+   "question": "Naweza kujiunga NSSF kwa hiari?",
+   "must_match": [],
+   "must_not_match": [
+    "LAZIMA",
+    "Ndiyo, ni kweli"
+   ],
+   "starts_with": null,
+   "note": "⛔ THE REAL COUNTER-EXAMPLE. NSSF genuinely HAS voluntary membership for the self-employed, so this asks about opting IN. Answering it 'NSSF is mandatory for employers' is the eval_211 wrong-topic harm class, and it is why the cue is the predicative `si/ni ya hiari` frame and not a bare `hiari`.",
+   "reply": "Ndiyo, unaweza kujiunga NSSF kwa hiari bila kuwa na wafanyakazi wowote. Thibitisha na NSSF (nssf.go.tz).",
+   "health_build": "3b351e2",
+   "missing": [],
+   "forbidden_present": [],
+   "bad_lead": false,
+   "verdict": "PASS"
+  },
+  {
+   "id": "pv_10_negative_eval_130_method_still_leads_with_the_operation",
+   "limb": "deploy",
+   "question": "Mwajiri anahesabu kiasi cha SDL cha kulipa kwa mwezi vipi?",
+   "must_match": [
+    "Zidisha"
+   ],
+   "must_not_match": [
+    "Sehemu ya"
+   ],
+   "starts_with": "Zidisha",
+   "note": "The branch ORDER, live. A method ask names the employer and must still reach the method renderer, not the party one — the more specific renderer wins.",
+   "reply": "Zidisha JUMLA ya mishahara ghafi ya wafanyakazi wote kwa asilimia 3.5. Hiyo ndiyo SDL ya mwezi. Inamhusu mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+   "health_build": "3b351e2",
+   "missing": [],
+   "forbidden_present": [],
+   "bad_lead": false,
+   "verdict": "PASS"
+  },
+  {
+   "id": "pv_11_negative_eval_233_threshold_still_rate_free",
+   "limb": "deploy",
+   "question": "Ni idadi gani ya waajiriwa inayofanya mwajiri kuwa na wajibu wa kulipa SDL Tanzania Bara?",
+   "must_match": [
+    "wafanyakazi 10 au zaidi"
+   ],
+   "must_not_match": [
+    "asilimia"
+   ],
+   "starts_with": "Mwajiri mwenye wafanyakazi 10",
+   "note": "The threshold renderer, unchanged by this deploy and asserted anyway: it is the row whose regression produced the renderer split, and the rate's ABSENCE is its contract.",
+   "reply": "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL. Mwenye wafanyakazi chini ya 10 hana wajibu wa kulipa SDL.",
+   "health_build": "3b351e2",
+   "missing": [],
+   "forbidden_present": [],
+   "bad_lead": false,
+   "verdict": "PASS"
+  }
+ ]
+}
