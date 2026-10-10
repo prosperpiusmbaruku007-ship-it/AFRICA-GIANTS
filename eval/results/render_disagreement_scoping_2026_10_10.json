@@ -1,0 +1,332 @@
+{
+ "_what": "how often a reply's model BODY disagrees with its engine WORKING, and which half is wrong",
+ "_why_not_a_guard_yet": "D-FIDELITY-5's precedent — price the rule over every stored reply before writing blanking code. The unnarrowed D-FIDELITY-7 would have blanked the gold answer to the row it was built to fix, with 22 unit tests green.",
+ "_the_finding_that_changes_the_design": "the two founding specimens are OPPOSITE defects. th_22's BODY is wrong (it invents an annual shilling amount from a salary nobody gave) and eval_394's WORKING is wrong (a bare 'Ndiyo' answering the un-negated form of a 'si ya hiari' question, where `agree_with_negated_premise` already exists and the applicability renderer does not consult it). A single rule that blanks the body on disagreement would delete the correct half of eval_394.",
+ "_population_and_why": "every stored reply in the four named artifacts, re-run through the REAL orchestrator with a sentinel body so the deterministic working is derived rather than pattern-matched out of the merged text. A body can contain newlines, so no regex can find the split point; the sentinel can.",
+ "_bound": "R21/R22: the stored replies come from our own corpora and gate runs, and the detectors below were written by the person who read the two specimens. The flag counts are a LOWER bound on the false-positive surface, and the population on which a blanking rule would act is this one — which is why it is reported before any rule is written, not after.",
+ "offline_tree_note": "the working is derived at HEAD while the replies were served by build 054fb19; rows whose working moved are excluded and counted rather than mis-split",
+ "stored_replies": 439,
+ "with_a_body_and_a_working": 64,
+ "no_working_to_disagree_with": 366,
+ "excluded_working_moved": 9,
+ "detector_polarity_flags": 2,
+ "detector_orphan_figure_flags": 14,
+ "detector_unsupported_figure_flags": 1,
+ "_adjudication": {
+  "_how": "every orphan flag read by hand against its question, its body and its working — the three together, because an orphan figure is only a fabrication relative to what the question supplied",
+  "orphan_figure": {
+   "flags": 14,
+   "true_positive": [
+    "th_22"
+   ],
+   "false_positive_correct_body": [
+    "eval_092 — per-head breakdown reaching the working's own total",
+    "eval_280 — 18 x TZS 480,000, with the per-employee share",
+    "eval_296 — the TZS 18,000 DAILY wage the question gave",
+    "eval_360 / eval_377 / eval_191 — PAYE band edges from the band table",
+    "eval_361 — the intermediate 30% x TZS 10,000 = TZS 3,000",
+    "eval_371 / eval_372 / eval_378 — the payroll quoted while correctly answering SDL = 0",
+    "eval_386 — TZS 250,000 + TZS 250,000 = TZS 500,000",
+    "eval_395 — NET PAY, which the question explicitly asked for and the engine's working cannot contain"
+   ],
+   "false_positive_but_defective_for_another_reason": [
+    "eval_324 — 'Faida = 1,000,000 - madeni - NSSF - WCF = TZS 760,000' is arithmetic that does not hold, and 760,000 is a PAYE band edge. A real defect, invisible to THIS detector's logic and unbuildable per R19 (a wrong DERIVED quantity).",
+    "eval_191 — the band LABELS are muddled ('Kanda 2 (8%): TZS 250,000' then 'Kanda 3 (20%)') while the final figure is right."
+   ],
+   "precision": "1/14 = 7%",
+   "verdict": "DO NOT BUILD. 11 of the 13 false positives are CORRECT bodies, and two of them (eval_092, eval_395) would lose the exact thing the user asked for. This is D-FIDELITY-7's unnarrowed shape."
+  },
+  "unsupported_figure_narrowed": {
+   "flags": 1,
+   "verdict": "the candidate worth designing. On this population it isolates the one true positive and drops all 13 false positives, because every one of them derives from a figure the question supplied.",
+   "_what_it_still_does_not_do": "it stops the fabrication; it does not produce the right answer. th_22's body would lose a sentence and keep the engine's correct one — cheap here BECAUSE a working exists. The same rule on the fact path would ship silence (R35's path asymmetry), so any wiring must be compute-path only.",
+   "_before_wiring": "price it over the gold answers and the training corpus too, not only these 64 pairs. A rule measured on 64 rows has been measured on 64 rows."
+  },
+  "polarity": {
+   "flags": 2,
+   "distinct_rows": [
+    "eval_394"
+   ],
+   "verdict": "A REAL DISAGREEMENT WHOSE WRONG HALF IS THE WORKING. Blanking the body here deletes the correct answer. The fix is in the applicability renderer: 'Je, NSSF si ya hiari?' is a negated premise and the engine answers the un-negated form. `rules_engine.agree_with_negated_premise` already exists for this and the renderer does not call it — R31's shape, a capability with no caller."
+  }
+ },
+ "polarity_rows": [
+  {
+   "source": "eval/results/targeted_route_verification_2026_10_09.json",
+   "id": "eval_394",
+   "question": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
+   "reply": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+   "body": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.",
+   "working": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+   "body_polarity": "no",
+   "working_polarity": "yes"
+  },
+  {
+   "source": "eval/results/statement_route_live_2026_10_09.json",
+   "id": "eval_394_nssf_not_optional",
+   "question": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
+   "reply": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+   "body": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.",
+   "working": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+   "body_polarity": "no",
+   "working_polarity": "yes"
+  }
+ ],
+ "unsupported_figure_rows": [
+  {
+   "source": "eval/results/targeted_route_verification_2026_10_09.json",
+   "id": "th_22",
+   "question": "Nina mfanyakazi mmoja tu — je nalipa WCF?",
+   "reply": "Ndiyo. WCF inatumika kwa waajiri WOTE bila kujali idadi ya wafanyakazi. Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara). Inalipwa na mwajiri pekee. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+   "body": "Ndiyo. WCF inatumika kwa waajiri WOTE bila kujali idadi ya wafanyakazi. Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara). Inalipwa na mwajiri pekee. Thibitisha na WCF (wcf.go.tz).",
+   "working": "Ndiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+   "orphan_figures": [
+    50000
+   ],
+   "why": "the question supplies no figure, so no arithmetic on the user's own numbers can produce this one"
+  }
+ ],
+ "orphan_figure_rows": [
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_092",
+   "question": "Wafanyakazi 5 kila mmoja anapata TZS 400,000 kwa mwezi — mwajiri anachangia kiasi gani NSSF kwa sehemu yake peke yake?",
+   "reply": "Kwa kila mfanyakazi: NSSF ya mwajiri = 10% × TZS 400,000 = TZS 40,000. Jumla ya michango ya wafanyakazi 5: 40,000 × 5 = TZS 200,000. Thibitisha na nssf.go.tz.\nNSSF (sehemu ya mwajiri) = 10% × TZS 2,000,000 = TZS 200,000 — jumla ya NSSF ni 20% (mwajiri TZS 200,000 + mfanyakazi TZS 200,000)",
+   "body": "Kwa kila mfanyakazi: NSSF ya mwajiri = 10% × TZS 400,000 = TZS 40,000. Jumla ya michango ya wafanyakazi 5: 40,000 × 5 = TZS 200,000. Thibitisha na nssf.go.tz.",
+   "working": "NSSF (sehemu ya mwajiri) = 10% × TZS 2,000,000 = TZS 200,000 — jumla ya NSSF ni 20% (mwajiri TZS 200,000 + mfanyakazi TZS 200,000)",
+   "orphan_figures": [
+    40000,
+    400000
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_191",
+   "question": "PAYE ya mfanyakazi wangu mwenye mshahara wa TZS 800,000 kwa mwezi ni kiasi gani?",
+   "reply": "Kwa mshahara wa TZS 800,000/mwezi, PAYE inakokotolewa kwa kanda kama ifuatavyo:\n\nKanda 1 (0%): TZS 270,000\nKanda 2 (8%): TZS 250,000 (yaani TZS 760,000)\nKanda 3 (20%): TZS 240,000 (yaani TZS 800,000)\n\nJumla ya PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000.\n\nPAYE hii inakatwa mshahara wa mfanyakazi na kuwasilishwa TRA ifikapo tarehe 7 ya mwezi unaofuata. Thibitisha na TRA kupitia tra.go.tz.\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "body": "Kwa mshahara wa TZS 800,000/mwezi, PAYE inakokotolewa kwa kanda kama ifuatavyo: Kanda 1 (0%): TZS 270,000 Kanda 2 (8%): TZS 250,000 (yaani TZS 760,000) Kanda 3 (20%): TZS 240,000 (yaani TZS 800,000) Jumla ya PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. PAYE hii inakatwa mshahara wa mfanyakazi na kuwasilishwa TRA ifikapo tarehe 7 ya mwezi unaofuata. Thibitisha na TRA kupitia tra.go.tz.",
+   "working": "PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "orphan_figures": [
+    240000,
+    250000,
+    270000
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_280",
+   "question": "Tuna wafanyakazi wengi sana karibu, lakini hasa ni 18 wenye mshahara wa TZS 480,000 kila mmoja — NSSF ya wote?",
+   "reply": "NSSF ya wafanyakazi wote 18: jumla ya mishahara = TZS 8,640,000 (18 × TZS 480,000). Msingi wa NSSF = 10% mwajiri + 10% mfanyakazi = 20% ya jumla. Hivyo, NSSF ya jumla = 20% × TZS 8,640,000 = TZS 1,728,000. Mgawanyo: mwajiri analipa TZS 864,000; mfanyakazi kila mmoja analipa TZS 48,000 (TZS 480,000 × 10%). Thibitisha na nssf.go.tz.\nNSSF = 20% × TZS 8,640,000 = TZS 1,728,000 (mwajiri TZS 864,000 + mfanyakazi TZS 864,000)",
+   "body": "NSSF ya wafanyakazi wote 18: jumla ya mishahara = TZS 8,640,000 (18 × TZS 480,000). Msingi wa NSSF = 10% mwajiri + 10% mfanyakazi = 20% ya jumla. Hivyo, NSSF ya jumla = 20% × TZS 8,640,000 = TZS 1,728,000. Mgawanyo: mwajiri analipa TZS 864,000; mfanyakazi kila mmoja analipa TZS 48,000 (TZS 480,000 × 10%). Thibitisha na nssf.go.tz.",
+   "working": "NSSF = 20% × TZS 8,640,000 = TZS 1,728,000 (mwajiri TZS 864,000 + mfanyakazi TZS 864,000)",
+   "orphan_figures": [
+    48000,
+    480000
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_296",
+   "question": "Analipwa TZS 18,000 kwa siku, anafanya kazi siku 26 kwa mwezi — NSSF yake ya mwezi?",
+   "reply": "Kwa mshahara wa TZS 18,000 × 26 = TZS 468,000/mwezi, NSSF ya mfanyakazi ni 10% ya TZS 468,000 = TZS 46,800. Thibitisha na NSSF (nssf.go.tz).\nNSSF (sehemu ya mfanyakazi) = 10% × TZS 468,000 = TZS 46,800 — jumla ya NSSF ni 20% (mwajiri TZS 46,800 + mfanyakazi TZS 46,800)",
+   "body": "Kwa mshahara wa TZS 18,000 × 26 = TZS 468,000/mwezi, NSSF ya mfanyakazi ni 10% ya TZS 468,000 = TZS 46,800. Thibitisha na NSSF (nssf.go.tz).",
+   "working": "NSSF (sehemu ya mfanyakazi) = 10% × TZS 468,000 = TZS 46,800 — jumla ya NSSF ni 20% (mwajiri TZS 46,800 + mfanyakazi TZS 46,800)",
+   "orphan_figures": [
+    18000
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_324",
+   "question": "Biashara yangu ina mishahara TZS 4,800,000 kwa watu 13, na madeni TZS 2,000,000, na faida TZS 1,000,000 — SDL yangu ni ngapi?",
+   "reply": "Kwa hesabu kamili:\n\nSDL = 3.5% × TZS 4,800,000 = TZS 168,000\nNSSF = 20% × TZS 4,800,000 = TZS 960,000\nWCF = 0.5% × TZS 4,800,000 = TZS 24,000\n\nJumla ya malipo ya mwajiri = TZS 252,000\n\nFaida ya mwajiri = TZS 1,000,000 − madeni − NSSF − WCF = TZS 760,000\n\nSDL inakatwa kabla ya kutoa faida, si baadaye. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 4,800,000 = TZS 168,000",
+   "body": "Kwa hesabu kamili: SDL = 3.5% × TZS 4,800,000 = TZS 168,000 NSSF = 20% × TZS 4,800,000 = TZS 960,000 WCF = 0.5% × TZS 4,800,000 = TZS 24,000 Jumla ya malipo ya mwajiri = TZS 252,000 Faida ya mwajiri = TZS 1,000,000 − madeni − NSSF − WCF = TZS 760,000 SDL inakatwa kabla ya kutoa faida, si baadaye. Thibitisha na TRA (tra.go.tz).",
+   "working": "SDL = 3.5% × TZS 4,800,000 = TZS 168,000",
+   "orphan_figures": [
+    24000,
+    252000,
+    760000,
+    960000,
+    1000000
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_360",
+   "question": "Mshahara ni TZS 1,000,000 kamili — PAYE yake ni kiasi gani?",
+   "reply": "Kwa mshahara wa TZS 1,000,000, PAYE inakokotolewa kwa kanda za asilimia 8 (0%), 20%, 25%, na 30%. Sehemu ya kwanza (TZS 0 hadi 270,000) inalipwa 0%; sehemu ya pili (TZS 270,001 hadi 760,000) inalipwa 20%; sehemu ya tatu (TZS 760,001 hadi 1,000,000) inalipwa 25%. Jumla ya PAYE = TZS 68,000 + 25% × (1,000,000 − 760,000) = TZS 128,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 1,000,000 − TZS 760,000) = TZS 128,000",
+   "body": "Kwa mshahara wa TZS 1,000,000, PAYE inakokotolewa kwa kanda za asilimia 8 (0%), 20%, 25%, na 30%. Sehemu ya kwanza (TZS 0 hadi 270,000) inalipwa 0%; sehemu ya pili (TZS 270,001 hadi 760,000) inalipwa 20%; sehemu ya tatu (TZS 760,001 hadi 1,000,000) inalipwa 25%. Jumla ya PAYE = TZS 68,000 + 25% × (1,000,000 − 760,000) = TZS 128,000. Thibitisha na TRA (tra.go.tz).",
+   "working": "PAYE = TZS 68,000 + 25% × (TZS 1,000,000 − TZS 760,000) = TZS 128,000",
+   "orphan_figures": [
+    270000,
+    270001,
+    760001
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_361",
+   "question": "Mshahara ni TZS 1,010,000 — PAYE ni ngapi?",
+   "reply": "Hesabu: TZS 128,000 + 30% × (TZS 1,010,000 − TZS 1,000,000) = TZS 128,000 + 30% × TZS 10,000 = TZS 128,000 + TZS 3,000 = TZS 131,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 128,000 + 30% × (TZS 1,010,000 − TZS 1,000,000) = TZS 131,000",
+   "body": "Hesabu: TZS 128,000 + 30% × (TZS 1,010,000 − TZS 1,000,000) = TZS 128,000 + 30% × TZS 10,000 = TZS 128,000 + TZS 3,000 = TZS 131,000. Thibitisha na TRA (tra.go.tz).",
+   "working": "PAYE = TZS 128,000 + 30% × (TZS 1,010,000 − TZS 1,000,000) = TZS 131,000",
+   "orphan_figures": [
+    3000,
+    10000
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_371",
+   "question": "Kampuni yangu ina wafanyakazi 7 na mishahara TZS 2,800,000 — SDL inayostahili ni kiasi gani?",
+   "reply": "Kwa wafanyakazi 7, chini ya kiwango cha 10, hakuna SDL inayostahili kulipa. Jumla ya mishahara ni TZS 2,800,000, lakini kwa kuwa una wafanyakazi chini ya 10, SDL = TZS 0. Thibitisha na TRA (tra.go.tz).\nSDL inayolipwa ni TZS 0. Una wafanyakazi 7 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+   "body": "Kwa wafanyakazi 7, chini ya kiwango cha 10, hakuna SDL inayostahili kulipa. Jumla ya mishahara ni TZS 2,800,000, lakini kwa kuwa una wafanyakazi chini ya 10, SDL = TZS 0. Thibitisha na TRA (tra.go.tz).",
+   "working": "SDL inayolipwa ni TZS 0. Una wafanyakazi 7 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+   "orphan_figures": [
+    2800000
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_372",
+   "question": "Duka dogo lina wafanyakazi 5, mishahara TZS 1,500,000 — SDL yake?",
+   "reply": "Hapana — duka lenye wafanyakazi 5 halifikii kiwango cha chini cha 10, hivyo halilipi SDL. Mishahara ya TZS 1,500,000 kwa wafanyakazi 5 = wastani wa TZS 300,000/mfanyakazi. Thibitisha na TRA (tra.go.tz).\nSDL inayolipwa ni TZS 0. Una wafanyakazi 5 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+   "body": "Hapana — duka lenye wafanyakazi 5 halifikii kiwango cha chini cha 10, hivyo halilipi SDL. Mishahara ya TZS 1,500,000 kwa wafanyakazi 5 = wastani wa TZS 300,000/mfanyakazi. Thibitisha na TRA (tra.go.tz).",
+   "working": "SDL inayolipwa ni TZS 0. Una wafanyakazi 5 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+   "orphan_figures": [
+    300000,
+    1500000
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_377",
+   "question": "Mfanyakazi wa muda analipwa TZS 200,000 kwa mwezi — anakatwa PAYE kiasi gani?",
+   "reply": "Kwa mshahara wa TZS 200,000/mwezi, hakuna PAYE inayokatwa. Mshahara uko ndani ya Bendi ya 0% — si chini ya kiwango cha kwanza cha TZS 270,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 0 (mshahara TZS 200,000 uko ndani ya bendi ya 0%)",
+   "body": "Kwa mshahara wa TZS 200,000/mwezi, hakuna PAYE inayokatwa. Mshahara uko ndani ya Bendi ya 0% — si chini ya kiwango cha kwanza cha TZS 270,000. Thibitisha na TRA (tra.go.tz).",
+   "working": "PAYE = TZS 0 (mshahara TZS 200,000 uko ndani ya bendi ya 0%)",
+   "orphan_figures": [
+    270000
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_378",
+   "question": "Kampuni ina wafanyakazi 8 wenye jumla ya mishahara TZS 5,000,000 — SDL inayolipwa ni ngapi?",
+   "reply": "Kwa jumla ya mishahara TZS 5,000,000, hakuna SDL inayohusika kwa sababu una wafanyakazi chini ya 10. SDL inatakiwa tu pale unapokuwa na wafanyakazi 10 au zaidi. Thibitisha na TRA (tra.go.tz).\nSDL inayolipwa ni TZS 0. Una wafanyakazi 8 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+   "body": "Kwa jumla ya mishahara TZS 5,000,000, hakuna SDL inayohusika kwa sababu una wafanyakazi chini ya 10. SDL inatakiwa tu pale unapokuwa na wafanyakazi 10 au zaidi. Thibitisha na TRA (tra.go.tz).",
+   "working": "SDL inayolipwa ni TZS 0. Una wafanyakazi 8 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+   "orphan_figures": [
+    5000000
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_386",
+   "question": "Mshahara wa meneja ni TZS 2,500,000 kwa mwezi — mchango wake wa NSSF ni ngapi?",
+   "reply": "Mshahara kamili: TZS 2,500,000. Sehemu ya mwajiri: TZS 2,500,000 × 10% = TZS 250,000. Sehemu ya mfanyakazi: TZS 2,500,000 × 10% = TZS 250,000. Jumla ya michango: TZS 250,000 + TZS 250,000 = TZS 500,000. Thibitisha na nssf.go.tz.\nNSSF (sehemu ya mfanyakazi) = 10% × TZS 2,500,000 = TZS 250,000 — jumla ya NSSF ni 20% (mwajiri TZS 250,000 + mfanyakazi TZS 250,000)",
+   "body": "Mshahara kamili: TZS 2,500,000. Sehemu ya mwajiri: TZS 2,500,000 × 10% = TZS 250,000. Sehemu ya mfanyakazi: TZS 2,500,000 × 10% = TZS 250,000. Jumla ya michango: TZS 250,000 + TZS 250,000 = TZS 500,000. Thibitisha na nssf.go.tz.",
+   "working": "NSSF (sehemu ya mfanyakazi) = 10% × TZS 2,500,000 = TZS 250,000 — jumla ya NSSF ni 20% (mwajiri TZS 250,000 + mfanyakazi TZS 250,000)",
+   "orphan_figures": [
+    500000
+   ]
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_395",
+   "question": "Mshahara ni TZS 800,000 — PAYE ni ngapi na mshahara halisi baada ya PAYE ni ngapi?",
+   "reply": "Kwa mshahara wa TZS 800,000, PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Mshahara halisi baada ya PAYE = TZS 800,000 − TZS 78,000 = TZS 722,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "body": "Kwa mshahara wa TZS 800,000, PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Mshahara halisi baada ya PAYE = TZS 800,000 − TZS 78,000 = TZS 722,000. Thibitisha na TRA (tra.go.tz).",
+   "working": "PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "orphan_figures": [
+    722000
+   ]
+  },
+  {
+   "source": "eval/results/targeted_route_verification_2026_10_09.json",
+   "id": "th_22",
+   "question": "Nina mfanyakazi mmoja tu — je nalipa WCF?",
+   "reply": "Ndiyo. WCF inatumika kwa waajiri WOTE bila kujali idadi ya wafanyakazi. Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara). Inalipwa na mwajiri pekee. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+   "body": "Ndiyo. WCF inatumika kwa waajiri WOTE bila kujali idadi ya wafanyakazi. Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara). Inalipwa na mwajiri pekee. Thibitisha na WCF (wcf.go.tz).",
+   "working": "Ndiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+   "orphan_figures": [
+    50000
+   ]
+  }
+ ],
+ "orphan_figure_rows_truncated_at": 60,
+ "excluded_rows": [
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_318",
+   "question": "Nina wafanyakazi 11 na mishahara TZS 5,500,000 na nataka kujua SDL na NSSF na pia je nasajili VAT kama mapato ni TZS 205,000,000?",
+   "reply": "SDL = 3.5% × TZS 5,500,000 = TZS 192,500\n\nNSSF = 20% × TZS 5,500,000 = TZS 1,100,000 (mwajiri TZS 550,000 + mfanyakazi TZS 550,000)\n\nNdiyo, unatakiwa kusajili VAT kama mauzo yako yanazidi milioni 200 katika kipindi chochote cha miezi 12. Thibitisha na tra.go.tz.",
+   "why": "the stored reply does not end with the locally derived working — the engine text moved between build 054fb19 and HEAD, so the split point is unknown and this row is NOT guessed at",
+   "local_working": "SDL = 3.5% × TZS 5,500,000 = TZS 192,500 ⁣SENTINEL-BODY⁣ NSSF = 20% × TZS 5,500,000 = TZS 1,100,000 (mwajiri TZS 550,000 + mfanyakazi TZS 550,000) ⁣SENTINEL-BODY⁣"
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_319",
+   "question": "Kama nikizingatia kwamba wafanyakazi wangu, ambao ni 14 wanaopata kila mmoja TZS 500,000, wanastahili NSSF, je jumla ni ngapi na SDL yao pia?",
+   "reply": "Kwa hesabu ya NSSF, jumla ya mishahara ya wafanyakazi wote ni TZS 7,000,000 (14 x TZS 500,000). Thibisha na NSSF (nssf.go.tz). SDL ni asilimia 3.5 ya jumla hiyo, sawa na TZS 245,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 7,000,000 = TZS 245,000\n\nKwa hesabu sahihi ya NSSF na SDL, unapaswa kuainisha idadi kamili ya wafanyakazi wanaostahili na mishahara halisi. Thibitisha na NSSF (nssf.go.tz).\nNSSF = 20% × TZS 7,000,000 = TZS 1,400,000 (mwajiri TZS 700,000 + mfanyakazi TZS 700,000)",
+   "why": "the stored reply does not end with the locally derived working — the engine text moved between build 054fb19 and HEAD, so the split point is unknown and this row is NOT guessed at",
+   "local_working": "SDL = 3.5% × TZS 7,000,000 = TZS 245,000 ⁣SENTINEL-BODY⁣ NSSF = 20% × TZS 7,000,000 = TZS 1,400,000 (mwajiri TZS 700,000 + mfanyakazi TZS 700,000)"
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_320",
+   "question": "Nilipe SDL, NSSF, PAYE na WCF kwa mfanyakazi mmoja mwenye TZS 800,000 — nionyeshe vyote.",
+   "reply": "Thibitisha na TRA (tra.go.tz).\nSDL inayolipwa ni TZS 0. Una wafanyakazi 1 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.\n\nNSSF (sehemu ya mfanyakazi) = 10% × TZS 800,000 = TZS 80,000 — jumla ya NSSF ni 20% (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)\n\nThibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000\n\nWCF = 0.5% × TZS 800,000 = TZS 4,000",
+   "why": "the stored reply does not end with the locally derived working — the engine text moved between build 054fb19 and HEAD, so the split point is unknown and this row is NOT guessed at",
+   "local_working": "SDL inayolipwa ni TZS 0. Una wafanyakazi 1 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu. ⁣SENTINEL-BODY⁣ NSSF (sehemu ya mfanyakazi) = 10% × TZS 800,000 = TZS 80,000 — jumla ya NSSF ni 20% (mwajiri TZS 80,000 + mfanyakazi TZS 80,000) ⁣SENTINEL-BODY⁣ PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000 ⁣SENTINEL-BODY⁣ WCF = 0.5% × TZS 800,000 = TZS 4,000"
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_321",
+   "question": "Nina maswali: mishahara ni TZS 3,200,000 kwa watu 8, nataka SDL, NSSF na WCF, na pia je nawajibika kusajili OSHA?",
+   "reply": "Thibitisha na TRA (tra.go.tz).\nSDL inayolipwa ni TZS 0. Una wafanyakazi 8 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.\n\nThibitisha na TRA (tra.go.tz).\nNSSF = 20% × TZS 3,200,000 = TZS 640,000 (mwajiri TZS 320,000 + mfanyakazi TZS 320,000)\n\nThibitisha na TRA (tra.go.tz).\nWCF = 0.5% × TZS 3,200,000 = TZS 16,000\n\nNdiyo, unatakiwa kusajili OSHA. Thibitisha na osha.go.tz.",
+   "why": "the stored reply does not end with the locally derived working — the engine text moved between build 054fb19 and HEAD, so the split point is unknown and this row is NOT guessed at",
+   "local_working": "SDL inayolipwa ni TZS 0. Una wafanyakazi 8 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu. ⁣SENTINEL-BODY⁣ NSSF = 20% × TZS 3,200,000 = TZS 640,000 (mwajiri TZS 320,000 + mfanyakazi TZS 320,000) ⁣SENTINEL-BODY⁣ WCF = 0.5% × TZS 3,200,000 = TZS 16,000 ⁣SENTINEL-BODY⁣"
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_323",
+   "question": "Mfanyakazi anapata TZS 760,000 na nataka PAYE yake na kama nikiongeza watu wengine 9 kufikia 10, SDL ya jumla ya mishahara ya TZS 7,600,000 itakuwa ngapi?",
+   "reply": "Kwa PAYE, tumia kipengele cha 'Paye Calculator' kwenye tra.go.tz. Thibitisha na TRA (tra.go.tz). Kwa SDL, hesabu ni asilimia 3.5 ya jumla ya mishahara ya fedha tu (TZS 7,600,000 × 3.5%) = TZS 266,000.\nSDL = 3.5% × TZS 7,600,000 = TZS 266,000\n\nKwa PAYE, tumia jedwali la kawaida. Kwa SDL, asilimia 3.5 ya jumla ya mishahara ya fedha ya wafanyakazi wote 10. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 20,000 + 20% × (TZS 760,000 − TZS 520,000) = TZS 68,000",
+   "why": "the stored reply does not end with the locally derived working — the engine text moved between build 054fb19 and HEAD, so the split point is unknown and this row is NOT guessed at",
+   "local_working": "SDL = 3.5% × TZS 7,600,000 = TZS 266,000 ⁣SENTINEL-BODY⁣ PAYE = TZS 20,000 + 20% × (TZS 760,000 − TZS 520,000) = TZS 68,000"
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_327",
+   "question": "Nina wafanyakazi 10, kati yao 4 wana mishahara ya TZS 700,000 na 6 wana TZS 300,000, nataka WCF na SDL — zote mbili.",
+   "reply": "Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 4,600,000 = TZS 161,000\n\nThibitisha na TRA (tra.go.tz).\nWCF = 0.5% × TZS 4,600,000 = TZS 23,000",
+   "why": "the stored reply does not end with the locally derived working — the engine text moved between build 054fb19 and HEAD, so the split point is unknown and this row is NOT guessed at",
+   "local_working": "SDL = 3.5% × TZS 4,600,000 = TZS 161,000 ⁣SENTINEL-BODY⁣ WCF = 0.5% × TZS 4,600,000 = TZS 23,000"
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_330",
+   "question": "Nataka jibu la haraka: NSSF ya mfanyakazi wa TZS 450,000, na pia deadline ya kuwasilisha, na kama nikichelewa adhabu ni ngapi?",
+   "reply": "NSSF ya mfanyakazi (sehemu yake): TZS 450,000 × 10% = TZS 45,000. Thibitisha na nssf.go.tz.\nNSSF (sehemu ya mfanyakazi) = 10% × TZS 450,000 = TZS 45,000 — jumla ya NSSF ni 20% (mwajiri TZS 45,000 + mfanyakazi TZS 45,000)\n\nKuna taarifa mbili tofauti kuhusu adhabu ya kuchelewa malipo ya NSSF. Thibitisha na NSSF (nssf.go.tz). Taarifa #1: Adhabu ni asilimia 5 ya kiasi kilichochelewa kwa kila mwezi. Taarifa #2: Adhabu ni shilingi 2000 TZS kwa kila mwezi. Tafadhali thibitisha na NSSF (nssf.go.tz) kwa taarifa sahihi.",
+   "why": "the stored reply does not end with the locally derived working — the engine text moved between build 054fb19 and HEAD, so the split point is unknown and this row is NOT guessed at",
+   "local_working": "NSSF (sehemu ya mfanyakazi) = 10% × TZS 450,000 = TZS 45,000 — jumla ya NSSF ni 20% (mwajiri TZS 45,000 + mfanyakazi TZS 45,000) ⁣SENTINEL-BODY⁣"
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_364",
+   "question": "Nina mfanyakazi mmoja tu, je WCF inanihusu au ni kwa makampuni makubwa?",
+   "reply": "Ndiyo, WCF inawahusu hata waajiri wenye mfanyakazi MMOJA. Hakuna kiwango cha chini cha idadi ya wafanyakazi kinachokuruhusu kusamehewa. Thibitisha na WCF (wcf.go.tz).",
+   "why": "the stored reply does not end with the locally derived working — the engine text moved between build 054fb19 and HEAD, so the split point is unknown and this row is NOT guessed at",
+   "local_working": "Ndiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara."
+  },
+  {
+   "source": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_394",
+   "question": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
+   "reply": "Ndiyo, NSSF ni ya lazima kwa waajiri wenye wafanyakazi 10 au zaidi. Thibitisha na NSSF (nssf.go.tz).",
+   "why": "the stored reply does not end with the locally derived working — the engine text moved between build 054fb19 and HEAD, so the split point is unknown and this row is NOT guessed at",
+   "local_working": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi)."
+  }
+ ]
+}

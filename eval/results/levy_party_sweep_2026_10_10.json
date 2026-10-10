@@ -1,0 +1,223 @@
+{
+ "_what": "every corpus question's deterministic answer with and without the party renderer, run through the REAL orchestrator",
+ "_why_this_is_a_population": "the party branch can only fire where routing.levy_party returns a party, so a row where it returns None cannot have changed. The control arm is what tests that premise rather than assuming it.",
+ "_the_extractor_is_reused_not_rewritten": "routing.levy_party delegates to nssf_party, which has resolved this signal since 2026-08-15 including the first-person and object-concord work. A second cue list would be R39's two-rules defect.",
+ "questions_swept": 2473,
+ "files": [
+  "data/reviewed/gn487a_seed_batch.jsonl",
+  "data/reviewed/gn487a_seed_flagged.jsonl",
+  "data/reviewed/gn487a_seed_raw.jsonl",
+  "data/reviewed/hand_coded_batch_015_b01.jsonl",
+  "data/reviewed/hand_coded_batch_015_b02.jsonl",
+  "data/reviewed/hand_coded_batch_015_b03.jsonl",
+  "data/reviewed/hand_coded_batch_015_b04.jsonl",
+  "data/reviewed/hand_coded_batch_015_b05.jsonl",
+  "data/reviewed/hand_coded_batch_015_b06.jsonl",
+  "data/reviewed/hand_coded_batch_015_b07.jsonl",
+  "data/reviewed/hand_coded_batch_015_b08.jsonl",
+  "data/reviewed/hand_coded_batch_015_b09.jsonl",
+  "data/reviewed/hand_coded_batch_015_b10.jsonl",
+  "data/reviewed/hand_coded_batch_015_b11.jsonl",
+  "data/reviewed/hand_coded_batch_015_b12a.jsonl",
+  "data/reviewed/hand_coded_batch_015_b12b.jsonl",
+  "data/reviewed/hand_coded_batch_015_b12c.jsonl",
+  "data/reviewed/hand_coded_batch_015_b12d.jsonl",
+  "data/reviewed/human_review_priority.jsonl",
+  "data/reviewed/nssf_confident_pairs.jsonl",
+  "data/reviewed/recovered_from_flags.jsonl",
+  "data/reviewed/slot_extraction_stress_test_001.jsonl",
+  "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl",
+  "data/reviewed/targeted_ooc_refusals.jsonl",
+  "eval/accuracy_gate/a2_levy_cues_012.jsonl",
+  "eval/accuracy_gate/applicability_adversarial_in_scope_017.jsonl",
+  "eval/accuracy_gate/clarification_copy_probes_008.jsonl",
+  "eval/accuracy_gate/decimal_separator_probes_019.jsonl",
+  "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+  "eval/accuracy_gate/edge_probe_natural_048.jsonl",
+  "eval/accuracy_gate/edge_probe_plain_sw_005b.jsonl",
+  "eval/accuracy_gate/edge_probe_plain_sw_015.jsonl",
+  "eval/accuracy_gate/employment_type_probes_008.jsonl",
+  "eval/accuracy_gate/eval_questions_001.jsonl",
+  "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+  "eval/accuracy_gate/eval_questions_003.jsonl",
+  "eval/accuracy_gate/extraction_adversarial_in_scope_016.jsonl",
+  "eval/accuracy_gate/extraction_fraction_probes_008.jsonl",
+  "eval/accuracy_gate/faithfulness_leseni_probes.jsonl",
+  "eval/accuracy_gate/faithfulness_probes.jsonl",
+  "eval/accuracy_gate/false_premise_pairs_016.jsonl",
+  "eval/accuracy_gate/gn487a_inversion_probes.jsonl",
+  "eval/accuracy_gate/group_payroll_probes_008.jsonl",
+  "eval/accuracy_gate/headcount_contradiction_probes_010.jsonl",
+  "eval/accuracy_gate/headcount_extraction_probes_012.jsonl",
+  "eval/accuracy_gate/minimum_wage_probes_018.jsonl",
+  "eval/accuracy_gate/output_shape_probes_010.jsonl",
+  "eval/accuracy_gate/presumptive_tax_probes_020.jsonl",
+  "eval/accuracy_gate/quantity_instruction_heldout_024.jsonl",
+  "eval/accuracy_gate/rate_period_probes_016.jsonl",
+  "eval/accuracy_gate/residency_unclear_probes_014.jsonl",
+  "eval/accuracy_gate/threshold_comparison_probes_024.jsonl",
+  "eval/accuracy_gate/vat_efd_probes_019.jsonl",
+  "eval/accuracy_gate/wage_pay_concord_018.jsonl",
+  "eval/grounding/bucket_e_reach_probes_014.jsonl",
+  "eval/grounding/bucket_f_reach_probes_012.jsonl",
+  "eval/refusal_gate/concord_1pl_in_scope_020.jsonl",
+  "eval/refusal_gate/mining_royalty_narrowing_probes_010.jsonl",
+  "eval/refusal_gate/object_concord_in_scope_022.jsonl",
+  "eval/refusal_gate/ooc_adversarial_in_scope_015.jsonl",
+  "eval/refusal_gate/orthographic_heldout_038.jsonl",
+  "eval/refusal_gate/orthographic_variant_in_scope_012.jsonl",
+  "eval/refusal_gate/stock_market_narrowing_probes_014.jsonl"
+ ],
+ "moved": 3,
+ "must_move": {
+  "eval_086": [
+   "nssf",
+   "employer"
+  ],
+  "eval_087": [
+   "nssf",
+   "employee"
+  ],
+  "data/reviewed/hand_coded_batch_015_b05.jsonl:1": [
+   "nssf",
+   "employer"
+  ]
+ },
+ "must_not_move": {
+  "eval_111": "asks SDL's rate on 'jumla ya mishahara ya jumla ya WAFANYAKAZI wote' — the aggregate BASE, not a party. Plural, so the singular cues miss it by design.",
+  "eval_112": "same shape for WCF, and this is the row whose BASE was wrong a day ago — answering it with a share would reintroduce that defect from the other side.",
+  "fp_01b": "plain SDL rate question.",
+  "fp_02b": "plain WCF rate question.",
+  "eval_233": "a headcount question — the THRESHOLD renderer owns it and is ordered first.",
+  "eval_130": "a method question — the METHOD renderer owns it and is ordered first.",
+  "eval_364": "WCF applicability from the first employee; no party is named.",
+  "ext_50": "asks which QUANTITY is right (10 vs 20), naming no party — the total is the answer, and this is the strongest row the rate renderer has."
+ },
+ "moved_rows": [
+  {
+   "file": "data/reviewed/hand_coded_batch_015_b05.jsonl",
+   "line": 1,
+   "id": "data/reviewed/hand_coded_batch_015_b05.jsonl:1",
+   "q": "Mchango wa mwajiri kwa NSSF ni asilimia ngapi ya mshahara?",
+   "before": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+   "after": "Sehemu ya mwajiri ni asilimia 10 ya mshahara ghafi wa mfanyakazi. Mwajiri hulipa kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)",
+   "party": "employer"
+  },
+  {
+   "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "line": 86,
+   "id": "eval_086",
+   "q": "Kiwango cha mchango wa NSSF kwa upande wa mwajiri ni asilimia ngapi ya mshahara wa jumla wa mfanyakazi?",
+   "before": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+   "after": "Sehemu ya mwajiri ni asilimia 10 ya mshahara ghafi wa mfanyakazi. Mwajiri hulipa kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)",
+   "party": "employer"
+  },
+  {
+   "file": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "line": 87,
+   "id": "eval_087",
+   "q": "Kiwango cha mchango wa NSSF kwa upande wa mfanyakazi ni asilimia ngapi ya mshahara wake wa jumla?",
+   "before": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+   "after": "Sehemu ya mfanyakazi ni asilimia 10 ya mshahara wake ghafi, na ndiyo inayokatwa kwenye mshahara wake. Mwajiri huikata kabla ya kulipa mshahara. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)",
+   "party": "employee"
+  }
+ ],
+ "natural_phrasing_probes": [
+  {
+   "question": "Kiwango cha NSSF kwa upande wa mfanyakazi ni asilimia ngapi?",
+   "expect_levy": "nssf",
+   "expect_party": "employee",
+   "intent": "nssf",
+   "party": "employee",
+   "ok": true,
+   "why": "eval_087's own construction"
+  },
+  {
+   "question": "Kiwango cha WCF kwa upande wa mwajiri ni asilimia ngapi?",
+   "expect_levy": "wcf",
+   "expect_party": "employer",
+   "intent": "wcf",
+   "party": "employer",
+   "ok": true,
+   "why": "WCF is employer-only, so the party answer and the rate answer agree in substance; what changes is that it leads with the party the question named."
+  },
+  {
+   "question": "Kiwango cha SDL kwa upande wa mfanyakazi ni asilimia ngapi?",
+   "expect_levy": "sdl",
+   "expect_party": "employee",
+   "intent": "sdl",
+   "party": "employee",
+   "ok": true,
+   "why": "AN EMPLOYER-ONLY LEVY ASKED ABOUT THE EMPLOYEE. The honest answer is that there is no employee share, and the contract requires that denial to precede any rate — otherwise the reply reads as the employee's own figure."
+  }
+ ],
+ "blocked_upstream_by_detect_intent": [
+  {
+   "question": "Sehemu ya mwajiri katika NSSF ni kiasi gani cha asilimia?",
+   "expect_party": "employer",
+   "party": "employer",
+   "intent": "none",
+   "extractor_resolves": true,
+   "router_declines": true,
+   "ok": true,
+   "why": "the plainest third-person employer framing. `asks_rate` wants 'kiwango'/'asilimia ngapi' and this says 'kiasi gani cha asilimia', so the statement route declines it."
+  },
+  {
+   "question": "Je, SDL ina sehemu ya mfanyakazi ya asilimia ngapi?",
+   "expect_party": "employee",
+   "party": "employee",
+   "intent": "none",
+   "extractor_resolves": true,
+   "router_declines": true,
+   "ok": true,
+   "why": "'ina sehemu ya' is a HAVING frame rather than a rate ask, so the route declines it."
+  }
+ ],
+ "extractor_gaps_recorded_not_closed": [
+  {
+   "question": "Mimi kama mwajiri nalipa asilimia ngapi ya NSSF?",
+   "party": null,
+   "still_a_gap": true,
+   "why": "first-person employer with 'nalipa' where the cue list has 'nachangia'. Resolves to None, so the rate renderer answers it with the total — not wrong, just not led by the party that was named."
+  }
+ ],
+ "must_stay_off_party": [
+  {
+   "question": "Kiwango cha SDL ni asilimia ngapi ya mishahara ya wafanyakazi wote?",
+   "intent": "sdl",
+   "party": null,
+   "ok": true,
+   "why": "PLURAL wafanyakazi — the aggregate base. This is the collision the whole narrowing exists for, authored rather than harvested."
+  },
+  {
+   "question": "SDL inalipwa na mwajiri au mfanyakazi?",
+   "intent": "none",
+   "party": null,
+   "ok": true,
+   "why": "an INCIDENCE question. It names both parties and asks which one pays; answering it with one party's percentage answers a different question. The incidence renderer holds this and is deliberately not routed yet."
+  },
+  {
+   "question": "Jumla ya mchango wa NSSF kwa mwajiri na mfanyakazi ni asilimia ngapi?",
+   "intent": "none",
+   "party": null,
+   "ok": true,
+   "why": "names BOTH parties and asks for the total — `nssf_party`'s TOTAL cues must win, which is the precedence this reuses rather than reimplements."
+  },
+  {
+   "question": "Nyaraka gani zinahitajika kusajili mfanyakazi NSSF?",
+   "intent": "none",
+   "party": null,
+   "ok": true,
+   "why": "contains 'mfanyakazi' and asks for DOCUMENTS. No engine holds the document list."
+  },
+  {
+   "question": "Mfanyakazi wangu ana mshahara mdogo, NSSF inamhusu?",
+   "intent": "none",
+   "party": null,
+   "ok": true,
+   "why": "an applicability question naming an employee. The applicability branch owns it."
+  }
+ ],
+ "findings": [],
+ "_bound": "R21: a lower bound on cost. These corpora share vocabulary with the facts by construction, and both probe arms were authored by whoever wrote the rule — so a clean result says the change does not break what we have, not that it is safe on a stranger's phrasing."
+}

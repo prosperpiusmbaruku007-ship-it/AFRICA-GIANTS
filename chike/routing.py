@@ -1938,6 +1938,46 @@ def nssf_party(text: str) -> str:
     return "total"
 
 
+# ══ THE EXTRACTOR THAT MAKES THE PARTY RENDERER A CAPABILITY RATHER THAN AN INTENTION ════
+# ⛔ R31, FIFTH INSTANCE, CAUGHT BEFORE DEPLOY INSTEAD OF AFTER. `levy_party_share_statement`
+# was written last night with a docstring naming an extractor called `asks_levy_party` that
+# existed in no file — an engine function, a support predicate, no extractor and no call site.
+# That is precisely the corporate `sector=` shape: a branch that is unit-testable by passing
+# the keyword in by hand, and unreachable from anything a person would type.
+#
+# ⛔⛔ AND IT IS DELIBERATELY NOT A NEW CUE LIST. `nssf_party` has resolved this signal since
+# 2026-08-15 and already gets eval_086 ("upande wa mwajiri" -> employer) and eval_087 ("wa
+# mfanyakazi" -> employee) right. A second list would be R39's two-rules defect by
+# construction: a cue removed from one and surviving in the other, with the first-person and
+# object-concord work (nat_07, nat_08) silently absent from the copy. So this REUSES it and
+# does exactly two things of its own:
+#
+#   1. maps 'total' -> None, because "total" is the ABSENCE of a party ask. nssf_party defaults
+#      to 'total' on no match, which was right for picking an amount headline and would be
+#      wrong here: it would make every levy rate question a party question.
+#   2. extends it to SDL and WCF, where the cue list is NSSF-worded but the party vocabulary
+#      ('upande wa mwajiri', 'sehemu ya mfanyakazi') is levy-independent. The NSSF-specific
+#      members ('nssf yake', 'wake wa nssf') simply cannot match an SDL question, so reuse
+#      costs nothing and the three levies stay on one list.
+#
+# ⚠️ THE NARROWNESS IS LOAD-BEARING AND IT IS NOT MINE — it is inherited. The employee cues are
+# 'ya mfanyakazi' / 'wa mfanyakazi', SINGULAR, so "jumla ya mishahara ya WAFANYAKAZI wote"
+# (eval_111, eval_112, fp_01b, fp_02b — the aggregate BASE, not a party) does not match. A bare
+# 'mfanyakazi' cue would have diverted every one of those onto the party renderer and answered
+# a base question with a share. Swept, not assumed: see
+# eval/routing/sweep_levy_party_2026_10_10.py.
+def levy_party(text: str, computation_type: str) -> str:
+    """Which party's share a levy question asks for: 'employer' | 'employee' | None.
+
+    None means no party was named, which is the common case and must stay the common case —
+    an unmatched question keeps whatever renderer it had.
+    """
+    if computation_type not in ("nssf", "sdl", "wcf"):
+        return None
+    party = nssf_party(text)
+    return None if party == "total" else party
+
+
 # D-PAYE-1. Non-resident employees pay a flat 15% final withholding, NOT the resident
 # progressive bands. The engine (compute_paye) already expresses this via resident=False;
 # it was never told, so every PAYE compute got resident bands (eval_367: a non-resident on

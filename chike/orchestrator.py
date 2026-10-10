@@ -447,6 +447,43 @@ class Orchestrator:
                 and swn.sole_plausible_amount(sq.text) is None):
             return self._deterministic_answer(
                 sq, rules_engine.levy_method_statement(sq.computation_type))
+        # ⛔ A PARTY ASK GETS THE PARTY'S OWN FIGURE FIRST — THE FOURTH INSTANCE, AND THE FIRST
+        # ONE THIS ROUTE CAUSED RATHER THAN INHERITED (measured 2026-10-09 on the fixed build).
+        # eval_087 asks the EMPLOYEE's share and the rate statement answers "Kiwango cha NSSF ni
+        # asilimia 20 …", leaving the asked-for 10% in a parenthetical: the judge moved it from
+        # CORRECT to a 2-wrong/2-correct/1-undetermined split. eval_086 asks the EMPLOYER's share
+        # and survives the identical text only because the clause after the parenthetical happens
+        # to lead with the employer — so the two rows differ by luck, not by handling.
+        #
+        # Ordered after METHOD and before RATE: "how do I compute the employer's share" is a
+        # method ask first, while "what IS the employer's share" is a party ask and must not be
+        # answered with the total.
+        #
+        # GATED ON NO FIGURE, like the method branch. With an amount present the question is a
+        # computation and `compute_nssf` already resolves the party through this same
+        # `nssf_party` — so the gate keeps this change's blast radius to figure-free party
+        # questions and leaves every computing row byte-identical.
+        # ⛔⛔ `asks_rate` IS LOAD-BEARING AND ITS ABSENCE WAS MEASURED AS SIX REGRESSIONS.
+        # My first version fired on the party signal alone, and a party name is not an ask: it
+        # appears in every AMOUNT question about a levy ("Mfanyakazi alifanya kazi siku 26,
+        # NSSF YAKE ni kiasi gani?"). Those rows asked for a figure, had none, and correctly
+        # CLARIFIED — so the branch replaced six never-guess clarifications with a rate
+        # statement that answers a question nobody asked. eval_289 was the worst: it had a
+        # correct COMPUTED answer (10% x TZS 7,000,000 = TZS 700,000) and lost it, because two
+        # salaries are present so `sole_plausible_amount` returns None and my amount gate let
+        # it straight through.
+        #
+        # The rate and method branches never had this problem because each is gated on its own
+        # ASK. Gating on the party alone was asking "is a party mentioned" where the question
+        # that matters is "is the party's SHARE what was requested".
+        # eval/routing/sweep_levy_party_2026_10_10.py — control arm plus these six rows.
+        party = routing.levy_party(sq.text, sq.computation_type)
+        if (party is not None
+                and routing.asks_rate(sq.text)
+                and swn.sole_plausible_amount(sq.text) is None
+                and rules_engine.rate_statement_supports_party(sq.computation_type, party)):
+            return self._deterministic_answer(
+                sq, rules_engine.levy_party_share_statement(sq.computation_type, party))
         if (rules_engine.rate_statement_supports(sq.computation_type)
                 and (routing.asks_rate(sq.text) or routing.asks_levy_method(sq.text))):
             amount = swn.sole_plausible_amount(sq.text)

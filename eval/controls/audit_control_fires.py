@@ -166,6 +166,41 @@ HOLDS = {
                 '181 by tests/test_fee_band_copy.py (16 assertions). The expiry stands: what '
                 'remains is the founder\'s approval of the copy and the wiring itself.'),
     },
+    # ── THE INCIDENCE RENDERER'S ROUTE, held 2026-10-10 with a date on the day it was held ──
+    # The renderer-split pass gave each ask its own renderer: rate, threshold, method,
+    # incidence, party. Four of the five are reachable. INCIDENCE is reached only as a
+    # COMPONENT of the other four (they all compose `_INCIDENCE`), not by a route of its own,
+    # so an incidence ask -- "SDL inalipwa na mwajiri au mfanyakazi?" -- still goes to the
+    # fact path, where `eval_099` is judged CORRECT.
+    #
+    # WHY HELD RATHER THAN BUILT: routing it is a route change with its own blast radius, and
+    # this is the fourth consecutive instance of that exact change surprising its author --
+    # eval_233, eval_130, eval_112 and eval_087 were all measured regressions from widening a
+    # levy route, three of them invisible to the regex scorer. Bundling an unmeasured diversion
+    # into a measured renderer split is how a good change arrives carrying a bad one.
+    #
+    # WHY IT IS NOT MERELY AN ABSENCE: `routing._APPLICABILITY_CUES`' own notes already record
+    # "WCF ni ya mwajiri au mfanyakazi?" as a KNOWN NEAR-MISS, deliberately not widened for.
+    # That note is dated nowhere and has no owner, which is precisely the shape R35 was written
+    # about. This row gives it a date.
+    'incidence renderer route': {
+        'state': 'HELD',
+        'decided': '2026-10-10',
+        'expires': '2026-11-10',
+        'why': ('the incidence renderer exists, carries its own contract (it must name who '
+                'pays AND state the deduction polarity) and is exercised by '
+                'tests/test_levy_renderer_split.py -- but nothing routes an incidence ASK to '
+                'it, so an incidence question is still answered from the index. THE DECISION '
+                'PENDING is whether to add a `routing.asks_levy_incidence` cue list, which '
+                'needs its own full corpus sweep plus authored probes in both directions '
+                '(eval/routing/sweep_levy_party_2026_10_10.py is the template -- its control '
+                'arm is what caught my party branch hijacking six amount questions). '
+                'MEASURE BEFORE DECIDING: how many corpus rows ask an incidence question and '
+                'how many of them the fact path already answers correctly. The party branch '
+                'was worth it at 3 diverted rows with an 8-row control arm holding; if the '
+                'incidence population is mostly rows the index already gets right, the honest '
+                'answer is to leave it DISABLED and say so.'),
+    },
 }
 
 
