@@ -1,0 +1,90 @@
+{
+ "_what": "Retrieval rank of the governing fact for each of the six rows the 2026-10-09 closability pass classified MODEL. Discharges the rank caveat CLAUDE.md records against citing those six as the A2 ceiling.",
+ "_population": {
+  "n": 6,
+  "why_this_population": "These six are the whole of the retrain case. A1's other six rows are ROUTE/CORPUS/GOLD and no model change reaches them, so measuring anything else would not move the decision this was taken for."
+ },
+ "_what_this_does_NOT_settle": "AMBIGUITY. A fact can be present, top-ranked, and still readable as supporting the wrong answer — eval_086's row 9 was. CLAUDE.md predicts more than one of these six reclassifies on that axis, which would lower the ceiling further. Rank is mechanical; that is a reading, and it is not done here.",
+ "index": {
+  "dir": "C:\\Users\\jhjh\\AFRICA-GIANTS\\chike-inference",
+  "rows": 184
+ },
+ "pin_findings": [],
+ "model_confirmed": 1,
+ "not_a_model_failure": 5,
+ "_the_conclusion": "THE RETRAIN CASE IS ONE ROW, NOT SIX. Five of the six never reached the pooled context, so they cannot be instances of a reply contradicting a fact it was handed. 'In the served index' was necessary and not sufficient, exactly as CLAUDE.md's caveat said, and the gap between the two is large: ranks 4, 7, 12, 46 and 61. eval_237 alone is confirmed — rank 2, pooled, contradicted. A retrain justified on six rows is being justified on one.",
+ "rows": [
+  {
+   "id": "eval_104",
+   "question": "Mwajiri anahitaji nyaraka gani kuwasilisha NSSF ili kusajilisha wafanyakazi wake?",
+   "needle": "'Form P9' is Kenyan",
+   "needle_is_a_substring_of": "row 3, paye p9 deadline — the row that EXPLICITLY FORBIDS the instrument the reply named",
+   "raw_rank": 61,
+   "category": "DEEP",
+   "reaches_pooled_context": false,
+   "verdict": "NOT A MODEL FAILURE — the fact never reached the pooled context",
+   "recorded_defect": "wrong_instrument_named",
+   "recorded_guard_possible": true
+  },
+  {
+   "id": "eval_162",
+   "question": "'Mgeni' katika GN 487A inamaanisha nani hasa?",
+   "needle": "recognises three citizen categories",
+   "needle_is_a_substring_of": "row 91, gn487a mgeni cap357 definition — the statutory definition the reply inverted",
+   "raw_rank": 7,
+   "category": "BOUNDARY",
+   "reaches_pooled_context": false,
+   "verdict": "NOT A MODEL FAILURE — the fact never reached the pooled context",
+   "recorded_defect": "definition_inverted_with_fabricated_criteria",
+   "recorded_guard_possible": false
+  },
+  {
+   "id": "eval_171",
+   "question": "Mimi ni mgeni ninayefanya biashara ya rejareja — GN 487A tayari imetangazwa. Nifanye nini sasa?",
+   "needle": "may continue until licence expiry",
+   "needle_is_a_substring_of": "row 56, gn487a transitional provision — the gold's own relief, against a reply that advised the prohibited act",
+   "raw_rank": 46,
+   "category": "DEEP",
+   "reaches_pooled_context": false,
+   "verdict": "NOT A MODEL FAILURE — the fact never reached the pooled context",
+   "recorded_defect": "advises_the_prohibited_act",
+   "recorded_guard_possible": true
+  },
+  {
+   "id": "eval_237",
+   "question": "Kodi ya zuio (withholding tax) inatakiwa kuwasilishwa TRA ndani ya muda gani baada ya mwisho wa mwezi?",
+   "needle": "within 7 DAYS after end of the calendar month",
+   "needle_is_a_substring_of": "row 37, wht deadline — which pre-empts the exact one-word date shift the reply made",
+   "raw_rank": 2,
+   "category": "IN_TOP3",
+   "reaches_pooled_context": true,
+   "verdict": "MODEL CONFIRMED — served at top-3 and contradicted",
+   "recorded_defect": "one_word_date_shift",
+   "recorded_guard_possible": true
+  },
+  {
+   "id": "eval_304",
+   "question": "Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?",
+   "needle": "THREE main legal forms",
+   "needle_is_a_substring_of": "row 82, brela business structures — which says the choice turns NOT on headcount or capital, against a reply that invented a threshold",
+   "raw_rank": 12,
+   "category": "BOUNDARY",
+   "reaches_pooled_context": false,
+   "verdict": "NOT A MODEL FAILURE — the fact never reached the pooled context",
+   "recorded_defect": "fabricated_threshold_rule",
+   "recorded_guard_possible": true
+  },
+  {
+   "id": "eval_338",
+   "question": "VAT withholding kwa huduma ni asilimia 18 kama kiwango cha kawaida, sivyo?",
+   "needle": "withholding on services is 6%",
+   "needle_is_a_substring_of": "row 17, vat withholding services — 6%, against a reply that confirmed 18%",
+   "raw_rank": 4,
+   "category": "BOUNDARY",
+   "reaches_pooled_context": false,
+   "verdict": "NOT A MODEL FAILURE — the fact never reached the pooled context",
+   "recorded_defect": "refuses_then_confirms_the_false_premise",
+   "recorded_guard_possible": true
+  }
+ ]
+}
