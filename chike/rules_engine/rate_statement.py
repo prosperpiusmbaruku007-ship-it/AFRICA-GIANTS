@@ -218,6 +218,19 @@ def _assert_answers_its_own_question(kind: str, computation_type: str, text: str
         _assert_base_attached_to_rate(kind, computation_type, body)
         return
 
+    if kind == "optionality":
+        # The claim is about COMPULSION. A text that states a threshold or a rate instead is
+        # the eval_394 defect: a headcount answer to a question about whether it is voluntary.
+        low = body.lower()
+        if "hiari" not in low:
+            fail("does not mention voluntariness, which is the only thing an optionality "
+                 "question asks about")
+        if "lazima" not in low:
+            fail("does not state that it is compulsory, so the denial has no substance")
+        if rates:
+            fail(f"volunteers a rate ({rates[0]}) on a question about compulsion")
+        return
+
     if kind == "incidence":
         if "mwajiri" not in body.lower():
             fail("does not say who pays")
@@ -281,6 +294,48 @@ def levy_threshold_statement(computation_type: str) -> ComputationResult:
         inputs={"min_employees": (SDL_MIN_EMPLOYEES if computation_type == "sdl" else None)},
         note="threshold question — answered with the headcount rule, deliberately without the "
              "rate, which is an unsupported figure on this question")
+
+
+# ── OPTIONALITY: "IS IT VOLUNTARY" IS A QUESTION ABOUT COMPULSION, NOT ABOUT HEADCOUNT ──
+# ⛔ BOTH POLARITIES WERE WRONG AND ONE WAS FLATLY WRONG (measured 2026-10-10). The
+# applicability verdict's "Ndiyo." answers "does this levy apply?", and the optionality route
+# sends it questions where yes/no means something else entirely. `nssf_applies()` replies
+# "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi …" — a HEADCOUNT answer to a question
+# about COMPULSION, which is R15's wrong-topic harm wearing an engine's authority.
+#
+# These clauses are the answer the question actually asks for, and they are stated BEFORE the
+# engine's applicability detail rather than instead of it: "si ya hiari" is the verdict, the
+# threshold rule is the supporting fact.
+#
+# ⚠️ SDL'S CLAUSE CARRIES ITS THRESHOLD AND THE OTHER TWO DO NOT, deliberately. SDL is
+# compulsory only at 10+, so "SDL si ya hiari" without the qualifier would be the eval_394
+# bleed in the other direction — SDL's headcount rule bolted onto a compulsion claim. NSSF and
+# WCF have no threshold at all, so naming one would invent it.
+_OPTIONALITY = {
+    "nssf": ("NSSF si ya hiari kwa mwajiri anayestahili — ni LAZIMA kisheria."),
+    "wcf": ("WCF si ya hiari — ni LAZIMA kwa mwajiri yeyote aliye na mfanyakazi."),
+    "sdl": (f"SDL si ya hiari — ni LAZIMA kwa mwajiri mwenye wafanyakazi "
+            f"{SDL_MIN_EMPLOYEES} au zaidi."),
+}
+
+
+def supports_optionality(computation_type: str) -> bool:
+    return computation_type in _OPTIONALITY
+
+
+def levy_optionality_claim(computation_type: str) -> str:
+    """The compulsion verdict in the asker's own terms, for re-leading an applicability result.
+
+    Returns the CLAUSE rather than a ComputationResult: it is spliced ahead of the engine's own
+    verdict by `results.relead_for_premise`, so the substantive applicability answer still
+    governs and this can only change what the reply LEADS with.
+    """
+    if computation_type not in _OPTIONALITY:
+        raise ValueError(
+            f"levy_optionality_claim: no compulsion claim for {computation_type!r}")
+    claim = _OPTIONALITY[computation_type]
+    _assert_answers_its_own_question("optionality", computation_type, claim)
+    return claim
 
 
 # ── INCIDENCE-LED ANSWERS: "WHO ACTUALLY PAYS THIS" IS ITS OWN QUESTION ─────────────────

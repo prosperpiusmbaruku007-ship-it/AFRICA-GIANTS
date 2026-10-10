@@ -139,6 +139,7 @@ def main():
     except Exception:                                                    # noqa: BLE001
         pass
 
+    from chike import fidelity
     from chike.model_abstraction import FakeBackend
     from chike.orchestrator import Orchestrator
 
@@ -202,11 +203,52 @@ def main():
             # unsupported by construction, and no lawful transformation of the user's numbers
             # can make it true because there are no numbers. R19 says the first is buildable and
             # the second is not, and this is the first.
-            if not _money(p["question"]):
-                unsupported_flags.append({**p, "orphan_figures": orphans,
-                                          "why": "the question supplies no figure, so no "
-                                                 "arithmetic on the user's own numbers can "
-                                                 "produce this one"})
+        # ⛔ THE REAL GUARD, IMPORTED — NOT A SECOND COPY OF ITS RULE. The 2026-10-07 dry run
+        # reported SAFE TO RUN while the real regen aborted, because it re-implemented the
+        # gates it was supposed to be exercising. A scoping pass that prices a paraphrase of a
+        # rule has priced a paraphrase.
+        hits = fidelity.unsupported_body_figures(p["question"], p["body"], p["working"])
+        if hits:
+            unsupported_flags.append({**p, "unsupported": [[a, s] for a, s in hits]})
+
+    # ⛔ THE GOLD ARM, AND IT IS THE BLOCKING ONE. D-FIDELITY-7's pricing pass found THREE GOLD
+    # ANSWERS the unnarrowed rule would have destroyed, including the gold for the very row it
+    # was built to fix. A guard that flags a human-asserted-correct answer is not ready at any
+    # precision. Every gate question is re-run offline to derive its working, and the GOLD is
+    # substituted for the model body.
+    gold_flags, gold_checked = [], 0
+    for path in sorted(glob.glob(os.path.join(REPO, "eval", "accuracy_gate", "*.jsonl"))):
+        rel = os.path.relpath(path, REPO).replace(os.sep, "/")
+        for n, line in enumerate(io.open(path, encoding="utf-8"), 1):
+            if not line.strip():
+                continue
+            try:
+                obj = json.loads(line)
+            except Exception:                                            # noqa: BLE001
+                continue
+            q = obj.get("question_sw") or obj.get("question") or ""
+            gold = next((obj[k] for k in ("correct_answer_sw", "expected_answer_sw",
+                                          "answer_sw", "gold_sw")
+                         if isinstance(obj.get(k), str) and obj[k].strip()), "")
+            if not q or not gold:
+                continue
+            fake = FakeBackend(scripted_reply=SENTINEL)
+            try:
+                local = Orchestrator(backend=fake, retriever=lambda _q: []).answer(q)
+            except Exception:                                            # noqa: BLE001
+                continue
+            text = local.text or ""
+            if SENTINEL not in text:
+                continue                     # no working, so the compute-path rule cannot act
+            working = _norm(text.split(SENTINEL, 1)[1])
+            if not working:
+                continue
+            gold_checked += 1
+            hits = fidelity.unsupported_body_figures(q, gold, working)
+            if hits:
+                gold_flags.append({"id": obj.get("id") or f"{rel}:{n}", "question": q,
+                                   "gold": gold, "working": working,
+                                   "unsupported": [[a, s] for a, s in hits]})
 
     payload = {
         "_what": "how often a reply's model BODY disagrees with its engine WORKING, and which "
@@ -290,7 +332,14 @@ def main():
             },
             "polarity": {
                 "flags": len(polarity_flags),
-                "distinct_rows": ["eval_394"],
+                "_why_this_is_now_ZERO": (
+                    "it was 2 (both eval_394) on the first run and is 0 after the fix — NOT "
+                    "because the detector broke. eval_394 now takes the deterministic "
+                    "optionality path, so it has no model body at all and leaves the "
+                    "body+working population entirely (64 pairs -> 62). That disappearance IS "
+                    "the fix landing, and it is recorded here because a detector going quiet "
+                    "looks identical to a detector going blind (R39)."),
+                "distinct_rows_before_the_fix": ["eval_394"],
                 "verdict": "A REAL DISAGREEMENT WHOSE WRONG HALF IS THE WORKING. Blanking the "
                            "body here deletes the correct answer. The fix is in the "
                            "applicability renderer: 'Je, NSSF si ya hiari?' is a negated "
@@ -300,6 +349,9 @@ def main():
                            "no caller.",
             },
         },
+        "gold_answers_checked_with_a_working": gold_checked,
+        "gold_answers_flagged": len(gold_flags),
+        "gold_flag_rows": gold_flags,
         "polarity_rows": polarity_flags,
         "unsupported_figure_rows": unsupported_flags,
         "orphan_figure_rows": orphan_flags[:60],
@@ -322,9 +374,12 @@ def main():
           f"(adjudicated: 1 true positive, 13 false — DO NOT BUILD)")
     for f in orphan_flags:
         print(f"  {f['id']:14s} {f['orphan_figures']}  {f['body'][:70]}")
-    print(f"NARROWED — no figure in the question: {len(unsupported_flags)}")
+    print(f"NARROWED (the real guard) — no figure in the question: {len(unsupported_flags)}")
     for f in unsupported_flags:
-        print(f"  {f['id']:14s} {f['orphan_figures']}  {f['body'][:70]}")
+        print(f"  {f['id']:14s} {f['unsupported']}")
+    print(f"GOLD arm: {len(gold_flags)} flagged of {gold_checked} golds with a working")
+    for f in gold_flags:
+        print(f"  [BLOCKER] {f['id']:14s} {f['unsupported']}")
     print("\nEvery flag above needs reading by hand before any blanking rule is designed. "
           "That is the deliverable, not a verdict.")
     return 0

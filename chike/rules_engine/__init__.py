@@ -9,7 +9,8 @@ computation request in a domain NOT in this set must return a template refusal,
 never fall through to raw language-model generation.
 """
 
-from .results import ComputationResult, agree_with_negated_premise
+from .results import (ComputationResult, agree_with_negated_premise,
+                      deny_positive_premise, relead_for_premise)
 from .base_rejection import reject_base
 from .sdl import (compute_sdl, sdl_applies, sdl_crosses_threshold,
                   sdl_zero_below_threshold)
@@ -22,7 +23,9 @@ from .rate_statement import (levy_rate_statement, levy_threshold_statement,
                              supports_threshold as rate_statement_supports_threshold,
                              supports_method as rate_statement_supports_method,
                              supports_incidence as rate_statement_supports_incidence,
-                             supports_party_share as rate_statement_supports_party)
+                             supports_party_share as rate_statement_supports_party,
+                             supports_optionality as rate_statement_supports_optionality,
+                             levy_optionality_claim)
 from .paye import compute_paye, compute_paye_each
 from .wcf import compute_wcf, wcf_applies
 from .minimum_wage import compare_to_floor, sector_rates_statement

@@ -166,6 +166,36 @@ HOLDS = {
                 '181 by tests/test_fee_band_copy.py (16 assertions). The expiry stands: what '
                 'remains is the founder\'s approval of the copy and the wiring itself.'),
     },
+    # ── D-FIDELITY-9's WIDENING, held on the day the guard was wired ─────────────────
+    # The guard itself is WIRED and proven: it removes th_22's live fabricated "WCF = TZS
+    # 50,000 kwa mwaka". What is HELD is everything beyond its narrowest scope, because one
+    # true positive on 62 pairs is ONE ROW, not a measured rate, and the founder's instruction
+    # was explicit: "keep it soft until it's seen more."
+    'D-FIDELITY-9 widening (fact path / figure-bearing questions)': {
+        'state': 'HELD',
+        'decided': '2026-10-10',
+        'expires': '2026-11-10',
+        'why': ('WIRED, compute-path only, gated on the QUESTION supplying no figure at all. '
+                'Two widenings are deliberately not taken and each has a measured reason, not '
+                'a hunch. '
+                '(1) THE FACT PATH: `ufp_11` is the specimen — a CORRECT locked constant (GN '
+                '605A\'s TZS 358,322) on a figure-free question, which the rule DOES flag. On '
+                'the fact path `_render` returns the body alone, so acting on that flag ships '
+                'silence or needs replacement copy, and the copy would have to state a figure '
+                'the guard cannot verify. Excluded on measured harm. '
+                '(2) FIGURE-BEARING QUESTIONS: the loose form is 1/14 precise over every '
+                'stored reply (eval/fidelity/'
+                'scope_render_body_working_disagreement_2026_10_10.py) and would delete '
+                'eval_092\'s per-head breakdown and eval_395\'s NET PAY, the quantity its own '
+                'question asked for. '
+                'WHAT WOULD RESOLVE THIS: more firings. The guard currently has ONE. Re-read '
+                'the next gate run and every live-verify artifact for rows it blanked, '
+                'classify each by hand, and then decide — widen on evidence, or record it '
+                'DISABLED with the evidence that one row is all there is. '
+                '⚠️ AND A GUARD THAT NEVER FIRES AGAIN IS NOT A VINDICATION: it is R26\'s '
+                'question. If the next sweep shows zero firings, check the rule still blocks '
+                'its planted specimen before concluding the defect class is closed.'),
+    },
     # ── THE INCIDENCE RENDERER'S ROUTE, held 2026-10-10 with a date on the day it was held ──
     # The renderer-split pass gave each ask its own renderer: rate, threshold, method,
     # incidence, party. Four of the five are reachable. INCIDENCE is reached only as a
@@ -867,6 +897,58 @@ def audit_unexercisable():
            'retrieval or wording change can reach the defect',
            _v, 'a fee of TZS 290,000 asserted for TZS 2,000,000,000 of share capital',
            'the correct TZS 600,000, and the no-share-capital sibling that was already right',
+           _note)
+
+    # ── D-FIDELITY-9, WIRED 2026-10-10 ──────────────────────────────────────────
+    # Four limbs, because this guard's narrowing is the whole of it and a two-limb plant would
+    # certify the LOOSE rule just as happily. The clean limbs are the ones that distinguish
+    # them: ufp_02's per-head breakdown and ufp_03's NET PAY are both flagged by the loose form
+    # and must both pass here.
+    try:
+        from chike import fidelity as _f9
+        _TH22_Q = 'Nina mfanyakazi mmoja tu — je nalipa WCF?'
+        _TH22_W = ('Ndiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna '
+                   'kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya '
+                   'mishahara.')
+        _p9 = _f9.body_states_unsupported_figure(
+            _TH22_Q, 'Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara).',
+            _TH22_W)
+        _words9 = _f9.body_states_unsupported_figure(
+            'Nina wafanyakazi wawili — WCF yangu ni nini?',
+            'Kwa wafanyakazi wawili, ni takriban milioni 1 kwa mwaka.', _TH22_W)
+        _mention9 = _f9.body_states_unsupported_figure(
+            _TH22_Q, 'Kiwango ni asilimia 0.5. SI TZS 50,000 kwa mwaka — hakuna kiasi cha '
+                     'kudumu.', _TH22_W)
+        _perhead9 = _f9.body_states_unsupported_figure(
+            'Wafanyakazi 5 kila mmoja anapata TZS 400,000 kwa mwezi — mwajiri anachangia '
+            'kiasi gani NSSF kwa sehemu yake peke yake?',
+            'Kwa kila mfanyakazi: NSSF ya mwajiri = 10% × TZS 400,000 = TZS 40,000.',
+            'NSSF (sehemu ya mwajiri) = 10% × TZS 2,000,000 = TZS 200,000')
+        _netpay9 = _f9.body_states_unsupported_figure(
+            'Mshahara ni TZS 800,000 — PAYE ni ngapi na mshahara halisi baada ya PAYE ni '
+            'ngapi?',
+            'PAYE = TZS 78,000. Mshahara halisi = TZS 800,000 − TZS 78,000 = TZS 722,000.',
+            'PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000')
+        _v = ('FIRES' if (_p9 and _words9 and not _mention9 and not _perhead9
+                          and not _netpay9) else 'ERROR')
+        _note = (f'planted th_22(TZS 50,000, no figure in question) flagged: {bool(_p9)}; '
+                 f'SWAHILI WORD ORDER "milioni 1" flagged: {bool(_words9)} — my first pattern '
+                 f'was English-order "1 milioni" and matched NOTHING on the notation it was '
+                 f'added for (R39, caught by a probe not by reading); negated MENTION flagged: '
+                 f'{bool(_mention9)}; per-head breakdown flagged: {bool(_perhead9)}; NET PAY '
+                 f'flagged: {bool(_netpay9)} — the last two are flagged by the LOOSE rule and '
+                 f'are the only limbs that tell the two rules apart. COMPUTE PATH ONLY; the '
+                 f'fact-path widening is HELD with a dated specimen (ufp_11, a correct GN 605A '
+                 f'constant the rule DOES flag).')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:120]}'
+    record('D-FIDELITY-9 (unsupported-figure guard)', 'fidelity',
+           'a money figure the body asserts that NEITHER the question NOR the engine working '
+           'contains, on a question supplying no figure at all — th_22, live, which the judge '
+           'voted CORRECT 5/5 and the regex scorer passed',
+           _v, 'th_22 verbatim, and the Swahili "milioni 1" notation',
+           'the per-head breakdown and the net-pay answer, both flagged by the loose rule, '
+           'plus a negated mention of the fabricated figure',
            _note)
 
     record('chike-inference /health (build + served-index digest)', 'infrastructure',

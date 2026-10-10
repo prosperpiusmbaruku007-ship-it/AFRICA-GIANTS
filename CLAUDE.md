@@ -749,6 +749,42 @@ ends plus `PASS` / **`PROVISIONAL — adjudicate the queue`** / `BELOW`.
   gate says so in its own output.
 - **Cost is not the constraint:** $0.21 for 361 rows against ~1h of GPU.
 
+> ### 🔴 CAVEAT ON THIS PROMOTION, ADDED 2026-10-10 FROM MEASURED MISSES: THE JUDGE IS A BETTER HEADLINE THAN THE REGEX. IT IS NOT A REPLACEMENT FOR HAND READING, AND THE PROMOTION MUST NOT BE READ AS RETIRING IT.
+>
+> **Two defects found this week were found by READING ROWS, and the judge scored both as
+> correct — one of them 5/5 with no dissent.**
+>
+> | row | the defect | the judge said |
+> |---|---|---|
+> | `eval_112` | WCF's rate stated on **one employee's wage** where WCF is charged on the WHOLE PAYROLL | **CORRECT, before AND after the fix.** The regex passes it either way (`answer_type: number`, "0.5" present), so **no automated column in this project moved when the row was genuinely repaired** |
+> | `th_22` | *"Kwa mfanyakazi MMOJA: WCF = **TZS 50,000 kwa mwaka**"* — a shilling amount invented from a salary nobody gave | **CORRECT 5/5** |
+>
+> **WHY THE JUDGE MISSES THESE, AND IT IS STRUCTURAL RATHER THAN A TUNING PROBLEM.** It grades
+> the reply against the GOLD. Both replies agree with their gold on everything the gold states —
+> the rate, the payer, the applicability — and the defect is in a dimension **the gold does not
+> mention**: the BASE in one case, an EXTRA FABRICATED FIGURE in the other. A gold-relative
+> judge cannot see a wrong answer to a question the gold did not answer, and `th_22` shows the
+> worse form: **adding a fabrication to an otherwise correct reply does not make it disagree
+> with the gold.**
+>
+> **So the honest statement of what the promotion bought:** the judge sees the
+> wrong-DIRECTION class the regex is blind to (`eval_318`'s TZS 205,000,000 non-registration,
+> `eval_130`'s inverted operation), and that is why it is the headline. It does **not** see
+> wrong-BASE or added-fabrication. Those have been found, every time, by a person reading the
+> rows a targeted check returned.
+>
+> **IN PRACTICE:**
+> - **A targeted check's deliverable is the ROWS, not its verdict column.** Every defect worth
+>   shipping a fix for this week came out of reading replies; the verdict column told us where
+>   to look, and twice it said "correct" about the thing we then fixed.
+> - **Never report "the judge found no defects" as "there are no defects."** Report the
+>   population read by hand, separately.
+> - **When a fix produces no movement in any automated column, that is expected on this class,
+>   not evidence the fix did nothing.** `eval_112` is the worked example — committed at
+>   `c188763` precisely so the next reader does not mistake a flat column for a flat result.
+> - This does not reopen the promotion: the regex **positively credits** `eval_318` and
+>   `eval_320`, so going back is strictly worse. Both instruments are floors.
+
 ### ⛔⛔ R12c — THE FULL GATE IS A **BATCH** INSTRUMENT. NEVER RUN IT TO CONFIRM ONE CHANGE'S PREDICTION. VERIFY A SINGLE CHANGE AGAINST ITS **ENUMERATED BLAST RADIUS** INSTEAD. (restated 2026-10-09 — and the reason it had to be restated is the lesson)
 
 **This convention was set months ago and was written down NOWHERE, so the default decayed to
@@ -1886,6 +1922,18 @@ five independent mechanisms, each requiring a different eye to catch:
 > **The question to ask of any new detector: whose words is it matching, and were they written
 > for the population you are now pointing it at?**
 >
+> **⚠️ AND IT ARRIVES WITHIN A SINGLE FILE, BETWEEN TWO SIBLING CHECKS WRITTEN AN HOUR APART —
+> which is the cheapest instance to catch and the easiest to wave through** (2026-10-10, the
+> renderer-split contracts). `_DEDUCTION_POLARITY` answers *"does this text state the deduction
+> polarity at all"* for the INCIDENCE contract, and I reused it in the PARTY contract to answer
+> *"does this text deny that an employee share exists"*. Different questions: `haikatwi`
+> satisfies the first, so an employer-only levy's employee answer could have passed on an
+> incidence clause (*"SDL … haikatwi kwenye mshahara"*) **without ever saying there is no
+> employee share** — which is the whole claim that contract exists to guarantee. Split into
+> `_NO_EMPLOYEE_SHARE` (`halipi|hakuna sehemu`). *Two sibling checks in one module are exactly
+> as prone to this as two populations in different repos, and the shared pattern makes it look
+> like good hygiene rather than a conflation.*
+>
 > **⛔ AND WHEN YOU ADD A MENTION-VS-ASSERTION FILTER TO ONE, NOTE WHICH WAY IT FAILS — IT IS
 > NOT THE WAY FILTERS NORMALLY FAIL.** A sweep for a wrong value matches the documentation of
 > its own correction: after the four stale NSSF-fine rows were quarantined, the sweep came back
@@ -2483,6 +2531,45 @@ afterwards:**
    unit-test suite structurally cannot provide, and it is the one that would have caught all
    three instances above before deploy instead of after.
 
+### ⛔⛔ R31's CONVERSE, AND IT IS THE MORE EXPENSIVE HALF: A SIGNAL IS NOT AN ASK. GATE A BRANCH ON WHAT WAS REQUESTED, NEVER ON WHAT WAS MENTIONED. (added 2026-10-10, measured as six regressions I shipped)
+
+**R31 is an extractor missing for a parameter the engine has. This is an extractor WORKING and
+the branch firing on it anyway — and it costs more, because R31's failure is an engine nobody
+reaches while this one is an engine reaching rows it should never have touched.**
+
+The party renderer (`levy_party_share_statement`) was gated on `routing.levy_party(...) is not
+None` plus "no sole amount in the text". Both true, both correct, and the branch was wrong:
+
+> **A PARTY IS NAMED IN EVERY AMOUNT QUESTION ABOUT A LEVY.** *"Mfanyakazi alifanya kazi siku
+> 26 mwezi huu, **NSSF YAKE** ni kiasi gani?"* names the employee and asks for a FIGURE. Six
+> such rows had correctly CLARIFIED — the never-guess path — and the branch replaced all six
+> with a rate statement answering a question nobody asked.
+
+**`eval_289` is the one to remember, because the amount gate looked like it covered this.** It
+had a correct COMPUTED answer — `10% × TZS 7,000,000 = TZS 700,000` — and lost it. Two salaries
+are present, so `sole_plausible_amount` returns `None`, and a gate written as *"no amount
+present"* silently means *"no SINGLE unambiguous amount present"*, which is a different
+predicate and admits the richest compute rows in the corpus.
+
+**THE FIX IS ONE CONJUNCT AND THE DIAGNOSIS IS THE WHOLE VALUE: `asks_rate`.** The rate,
+threshold and method branches never had this defect because each is gated on **its own ask**.
+Gating on the party asked *"is a party mentioned"* where the question that matters is *"is the
+party's SHARE what was requested"*.
+
+**In practice, for any new branch:**
+- **Name the ASK and the SIGNAL separately, and require both.** The signal says *which* answer
+  to give; the ask says *whether this is the question*. A branch with only the signal fires on
+  every row that happens to contain the vocabulary.
+- **Read what a candidate gate ACTUALLY means, not what it is named.** `sole_plausible_amount
+  is None` is not "no figure given". If you want "no figure given", say that.
+- **The control arm is what finds this, and nothing else did.** All of my authored probes passed;
+  the six regressions came out of a full-corpus sweep comparing the real orchestrator's output
+  before and after. R12c's step 2 earning its place: *the enumeration is not a population until
+  the unchanged rows are tested too.*
+- **A diversion count that goes UP is not progress.** It went 3 → 10 with the loose gate. In a
+  routing change the count rising looks exactly like reach improving, which is R39's direction
+  arriving in the routing layer.
+
 ### R32 — A TIME-BOUNDED PROVISION NEEDS THE DATE IN THE LOGIC, NOT ONLY IN THE PROSE. A REPLY THAT NAMES A SUNSET IT DOESN'T ENFORCE IS WORSE THAN ONE THAT OMITS IT.
 
 **Found alongside R31, in the same function, and worth its own rule because it is a different
@@ -2623,6 +2710,50 @@ test, because probes that exercise the limbs *together* let a limb silently beco
 fabrication to a non-answer, which **still scores as a gate miss** — correctly, because the user
 did not get their answer. Closing R7's Bar A converts a wrong-answer class into a no-answer class;
 **do not read a shrinking wrong-answer count as a rising correct-answer count.**
+
+### ⛔⛔ THE STANDING ANSWER TO "THE BODY AND THE ENGINE DISAGREE — BLANK THE BODY": NO. DISAGREEMENT IS NOT A DEFECT SIGNAL. IT IS 1/14 PRECISE AND THE WRONG HALF IS OFTEN THE ENGINE. (measured 2026-10-10)
+
+**`_render` returns `body\nworking` on the compute path, so a user reads the model's sentence
+and the engine's sentence together, and when they disagree the instinct is to delete the
+model's. Priced over every stored reply this project holds — 439 replies, 62 carrying both a
+body and a working — that rule flags 14 at a precision of 1 in 14**
+(`eval/fidelity/scope_render_body_working_disagreement_2026_10_10.py`).
+
+| flagged body | what the "unsupported" figure actually was |
+|---|---|
+| `eval_092` *"NSSF ya mwajiri = 10% × TZS 400,000 = TZS 40,000"* | the per-head breakdown, reaching the working's own total by a more useful route |
+| `eval_395` *"TZS 800,000 − TZS 78,000 = TZS 722,000"* | **NET PAY — which the question EXPLICITLY ASKED FOR**, and which an engine working structurally cannot contain |
+| `eval_296` *"TZS 18,000 × 26"* | the DAILY WAGE the user supplied |
+| `eval_360`, `eval_377`, `eval_191` | PAYE band edges from the band table |
+| + 8 more | 11 of the 13 false positives are **CORRECT bodies** |
+
+**TWO LESSONS, AND THE SECOND IS THE ONE NOBODY EXPECTS.**
+
+1. **THE DISCRIMINATOR IS NOT DISAGREEMENT, IT IS WHETHER THE QUESTION SUPPLIED A FIGURE AT
+   ALL.** All 13 false positives derive from a number the user gave. `th_22` — the single true
+   positive, live, *"Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka"* — differs in exactly one
+   respect: its question gives no figure, so **no lawful transformation of the user's numbers
+   reaches it, because there are no numbers.** R19's line precisely: that makes it a CONSTANT
+   comparison and buildable, where the general form is Guard B and impossible. Narrowed:
+   **1 flag, 0 of 66 gold answers.** Shipped as D-FIDELITY-9, compute-path only.
+2. **🔴 THE WRONG HALF WAS THE ENGINE ON THE OTHER FOUNDING SPECIMEN, AND A BLANKING RULE WOULD
+   HAVE DELETED THE RIGHT ANSWER.** `eval_394`'s body opened *"Hapana, si ya hiari"* against an
+   engine saying *"Ndiyo."* — and **the body was correct.** *"Je, NSSF si ya hiari?"* is a
+   NEGATED premise; the applicability verdict writes its lead for the plain frame *"does this
+   levy apply?"*, so its `Ndiyo.` answered a question nobody asked. The judge marked the row
+   WRONG for the contradiction, and every automated signal pointed at the model.
+
+> **So "the engine is authoritative" is a claim about ARITHMETIC, not about LEADS, POLARITY or
+> TOPIC.** A deterministic renderer can be wrong in every way a sentence can be wrong, and it is
+> wrong with more authority than the model. Before blanking a body that disagrees with a
+> working, **read both and say which is wrong** — the asymmetry that makes arithmetic safe to
+> delegate does not extend to the rest of the answer.
+
+**AND ASKING THE MIRROR OF THE GATE ROW FOUND A WORSE DEFECT IN ONE MINUTE.** eval_394's premise
+is negated; the un-negated form *"Je, NSSF **ni** ya hiari?"* was answered **`"Ndiyo."`** —
+*yes, NSSF is voluntary* — flatly wrong, in the engine's own voice, on a compulsory levy. One
+gate row shows one polarity. **R17 step 2 applies to a PREMISE exactly as it does to a cue
+list: author the opposite and ask it.**
 
 ### ⛔ R36 — A QUARANTINE THAT DOES NOT REACH `datasets/tier1a/sft/` HAS NOT REMOVED ANYTHING FROM TRAINING. (added 2026-10-06)
 

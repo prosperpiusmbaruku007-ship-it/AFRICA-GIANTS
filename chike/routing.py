@@ -1722,6 +1722,31 @@ def asks_levy_optionality(text: str) -> bool:
     return bool(_OPTIONALITY_ASK.search(text))
 
 
+# ⛔ THE POLARITY OF THE PREMISE, WHICH `asks_levy_optionality` DELIBERATELY DOES NOT CARRY.
+# `_OPTIONALITY_ASK` matches BOTH `si ya hiari` and `ni ya hiari` — correctly, because both are
+# optionality questions and both belong on this route. But they state OPPOSITE premises, and
+# the verdict is the same in each case, so the same verdict must AGREE with one and DENY the
+# other:
+#
+#   "Je, NSSF SI ya hiari?"  premise: not voluntary. TRUE  -> agree  ("Ndiyo, ni kweli —")
+#   "Je, NSSF NI ya hiari?"  premise: voluntary.     FALSE -> deny   ("Hapana.")
+#
+# Until 2026-10-10 the engine led "Ndiyo." for both, so the second asserted that NSSF IS
+# VOLUNTARY. One predicate for the route and one for the polarity, because conflating them is
+# what produced a wrong answer that no route check could see.
+_OPTIONALITY_NEGATED = re.compile(r"\bsi\s+ya\s+hiari\b", re.IGNORECASE)
+
+
+def negates_optionality(text: str) -> bool:
+    """True when the question's premise is that the levy is NOT voluntary ("si ya hiari").
+
+    False for the positive frame ("ni ya hiari"), whose premise the same verdict contradicts.
+    Callers must pair this with `asks_levy_optionality`; on its own it says nothing about
+    whether an optionality question was asked at all.
+    """
+    return bool(_OPTIONALITY_NEGATED.search(text))
+
+
 # ── THE FOUR VETOES, EVERY ONE FROM A MEASURED DIVERSION IN THE FULL-CORPUS SWEEP ────────
 # The first draft of this route swept 23 diversions beyond the 8 it was built for. Most were
 # genuine improvements, and FOUR were defects. Each veto below exists for a named row; none was

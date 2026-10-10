@@ -773,6 +773,34 @@ class Orchestrator:
         if not result.applicable and routing.confirms_negated_premise(sq.text):
             return self._deterministic_answer(
                 sq, rules_engine.agree_with_negated_premise(result))
+        # ⛔ AN OPTIONALITY QUESTION IS NOT AN APPLICABILITY QUESTION, AND THE VERDICT'S LEAD
+        # WAS ANSWERING THE WRONG ONE IN BOTH DIRECTIONS (measured 2026-10-10).
+        #
+        # eval_394 ("Je, NSSF si ya hiari …") came back "<body>\nNdiyo. NSSF haina kizingiti cha
+        # idadi ya wafanyakazi …" — a HEADCOUNT answer to a question about COMPULSION, led by a
+        # "Ndiyo." that contradicted the model body's "Hapana, si ya hiari" in the next
+        # sentence. The judge marked the row WRONG for that contradiction and THE BODY WAS THE
+        # CORRECT HALF, which is why the fix is here and not a body-blanking rule: blanking on
+        # disagreement would have deleted the right answer and kept the confusing one.
+        #
+        # AND THE MIRROR WAS WORSE. "Je, NSSF NI ya hiari?" asserts the levy IS voluntary, the
+        # verdict contradicts that, and the same "Ndiyo." read as agreeing with it — flatly
+        # wrong, in the engine's voice. Found by asking the mirror of the gate row rather than
+        # only the gate row (R17 step 2, applied to a premise instead of a cue list).
+        #
+        # The body is blanked for the same reason the eval_393 branch above blanks it: the
+        # yes/no polarity is read from the first paragraph, so a model preamble in front of the
+        # re-led verdict puts the lead back out of reach. Compute path, so `_render` still
+        # emits the engine's working and the user loses no substance (R35's path asymmetry).
+        if (result.applicable and routing.asks_levy_optionality(sq.text)
+                and rules_engine.rate_statement_supports_optionality(sq.computation_type)):
+            claim = rules_engine.levy_optionality_claim(sq.computation_type)
+            agrees = routing.negates_optionality(sq.text)
+            return self._deterministic_answer(
+                sq, rules_engine.agree_with_negated_premise(
+                    result, confirmed_when_applicable=True, restate=claim)
+                if agrees else
+                rules_engine.deny_positive_premise(result, restate=claim))
         prompt = self._build_compute_prompt(sq.text, result)
         reply = self.backend.generate(prompt, self.gen_params)
         return SubAnswer(sub_question=sq, text=reply, computation=result)
@@ -912,7 +940,26 @@ class Orchestrator:
                 # D-FIDELITY-7 (built 2026-08-23, WIRED 2026-10-06). A stated turnover threshold
                 # that is not the statutory one. Safe to blank here for the same reason as every
                 # rule above: the engine's working still renders.
-                or fidelity.body_states_wrong_threshold(cleaned)):
+                or fidelity.body_states_wrong_threshold(cleaned)
+                # D-FIDELITY-9 (scoped, priced and wired 2026-10-10). A money figure the body
+                # asserts that NEITHER the question NOR the engine's working contains, and only
+                # when the question supplies no figure at all — th_22's live "Kwa mfanyakazi
+                # MMOJA: WCF = TZS 50,000 kwa mwaka", invented from a salary nobody gave, which
+                # the judge voted CORRECT 5/5.
+                #
+                # COMPUTE PATH ONLY AND THAT IS THE SOFTNESS. The loose form of this rule — any
+                # body figure absent from the working — is 1/14 precise and would delete
+                # eval_092's per-head breakdown and eval_395's net pay, the latter being the
+                # exact thing its question asked for. The question-has-no-figure gate drops all
+                # 13. Priced before wiring over 439 stored replies and 66 gold answers with a
+                # working: 1 flag, 0 golds (eval/fidelity/
+                # scope_render_body_working_disagreement_2026_10_10.py).
+                #
+                # ONE TRUE POSITIVE ON 62 PAIRS IS ONE ROW, NOT A RATE. Widening it to the fact
+                # path or to figure-bearing questions is a HOLD WITH AN EXPIRY rather than a
+                # note, so "until it has seen more" is a decision somebody takes on a date.
+                or fidelity.body_states_unsupported_figure(
+                    sub.sub_question.text, cleaned, sub.computation.working)):
             cleaned = ""
         elif sub.computation is None and fidelity.body_states_wrong_threshold(cleaned):
             # ⛔ THE FACT PATH CANNOT BE BLANKED, AND THAT IS WHY THIS IS A SECOND BRANCH RATHER

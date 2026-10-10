@@ -6,10 +6,10 @@
  "_bound": "R21/R22: the stored replies come from our own corpora and gate runs, and the detectors below were written by the person who read the two specimens. The flag counts are a LOWER bound on the false-positive surface, and the population on which a blanking rule would act is this one — which is why it is reported before any rule is written, not after.",
  "offline_tree_note": "the working is derived at HEAD while the replies were served by build 054fb19; rows whose working moved are excluded and counted rather than mis-split",
  "stored_replies": 439,
- "with_a_body_and_a_working": 64,
- "no_working_to_disagree_with": 366,
- "excluded_working_moved": 9,
- "detector_polarity_flags": 2,
+ "with_a_body_and_a_working": 62,
+ "no_working_to_disagree_with": 369,
+ "excluded_working_moved": 8,
+ "detector_polarity_flags": 0,
  "detector_orphan_figure_flags": 14,
  "detector_unsupported_figure_flags": 1,
  "_adjudication": {
@@ -43,35 +43,18 @@
    "_before_wiring": "price it over the gold answers and the training corpus too, not only these 64 pairs. A rule measured on 64 rows has been measured on 64 rows."
   },
   "polarity": {
-   "flags": 2,
-   "distinct_rows": [
+   "flags": 0,
+   "_why_this_is_now_ZERO": "it was 2 (both eval_394) on the first run and is 0 after the fix — NOT because the detector broke. eval_394 now takes the deterministic optionality path, so it has no model body at all and leaves the body+working population entirely (64 pairs -> 62). That disappearance IS the fix landing, and it is recorded here because a detector going quiet looks identical to a detector going blind (R39).",
+   "distinct_rows_before_the_fix": [
     "eval_394"
    ],
    "verdict": "A REAL DISAGREEMENT WHOSE WRONG HALF IS THE WORKING. Blanking the body here deletes the correct answer. The fix is in the applicability renderer: 'Je, NSSF si ya hiari?' is a negated premise and the engine answers the un-negated form. `rules_engine.agree_with_negated_premise` already exists for this and the renderer does not call it — R31's shape, a capability with no caller."
   }
  },
- "polarity_rows": [
-  {
-   "source": "eval/results/targeted_route_verification_2026_10_09.json",
-   "id": "eval_394",
-   "question": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
-   "reply": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
-   "body": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.",
-   "working": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
-   "body_polarity": "no",
-   "working_polarity": "yes"
-  },
-  {
-   "source": "eval/results/statement_route_live_2026_10_09.json",
-   "id": "eval_394_nssf_not_optional",
-   "question": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
-   "reply": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
-   "body": "Hapana, si ya hiari. Mwajiri aliyeidhinishwa lazima asajili na kulipa NSSF kuanzia mfanyakazi wa kwanza. Thibitisha na nssf.go.tz.",
-   "working": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
-   "body_polarity": "no",
-   "working_polarity": "yes"
-  }
- ],
+ "gold_answers_checked_with_a_working": 66,
+ "gold_answers_flagged": 0,
+ "gold_flag_rows": [],
+ "polarity_rows": [],
  "unsupported_figure_rows": [
   {
    "source": "eval/results/targeted_route_verification_2026_10_09.json",
@@ -80,10 +63,12 @@
    "reply": "Ndiyo. WCF inatumika kwa waajiri WOTE bila kujali idadi ya wafanyakazi. Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara). Inalipwa na mwajiri pekee. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
    "body": "Ndiyo. WCF inatumika kwa waajiri WOTE bila kujali idadi ya wafanyakazi. Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara). Inalipwa na mwajiri pekee. Thibitisha na WCF (wcf.go.tz).",
    "working": "Ndiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
-   "orphan_figures": [
-    50000
-   ],
-   "why": "the question supplies no figure, so no arithmetic on the user's own numbers can produce this one"
+   "unsupported": [
+    [
+     50000,
+     "Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara)."
+    ]
+   ]
   }
  ],
  "orphan_figure_rows": [
@@ -319,14 +304,6 @@
    "reply": "Ndiyo, WCF inawahusu hata waajiri wenye mfanyakazi MMOJA. Hakuna kiwango cha chini cha idadi ya wafanyakazi kinachokuruhusu kusamehewa. Thibitisha na WCF (wcf.go.tz).",
    "why": "the stored reply does not end with the locally derived working — the engine text moved between build 054fb19 and HEAD, so the split point is unknown and this row is NOT guessed at",
    "local_working": "Ndiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara."
-  },
-  {
-   "source": "eval/results/gate_production_0e11c3d.json",
-   "id": "eval_394",
-   "question": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
-   "reply": "Ndiyo, NSSF ni ya lazima kwa waajiri wenye wafanyakazi 10 au zaidi. Thibitisha na NSSF (nssf.go.tz).",
-   "why": "the stored reply does not end with the locally derived working — the engine text moved between build 054fb19 and HEAD, so the split point is unknown and this row is NOT guessed at",
-   "local_working": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi)."
   }
  ]
 }

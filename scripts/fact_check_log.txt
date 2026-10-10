@@ -1268,3 +1268,17 @@ Total: 1 | Flagged: 1
 
 [2026-10-08T19:06:58.516871] Checked C:\Users\jhjh\AppData\Local\Temp\tmpc_8szamw\lf_ok.jsonl
 Total: 1 | Flagged: 0
+
+[2026-10-10T15:37:57.944545] Checked C:\Users\jhjh\AppData\Local\Temp\tmp7g_twksi\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-10-10T15:37:58.183727] Checked C:\Users\jhjh\AppData\Local\Temp\tmp7g_twksi\lf_ok.jsonl
+Total: 1 | Flagged: 0
+
+[2026-10-10T15:38:59.128902] Checked C:\Users\jhjh\AppData\Local\Temp\tmpl5uz2_zf\lf_bad.jsonl
+Total: 1 | Flagged: 1
+  FLAG [audit_001] OSHA_penalties: osha.*faini.*TZS 500,000(?! na)
+
+[2026-10-10T15:38:59.328713] Checked C:\Users\jhjh\AppData\Local\Temp\tmpl5uz2_zf\lf_ok.jsonl
+Total: 1 | Flagged: 0

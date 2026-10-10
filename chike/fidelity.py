@@ -1034,3 +1034,115 @@ def stated_wrong_fee_band(question: str, body: str):
 def body_states_wrong_fee_band(question: str, body: str) -> bool:
     """True iff the body states a registration fee that is wrong for the stated share capital."""
     return bool(stated_wrong_fee_band(question, body))
+
+
+# ─── D-FIDELITY-9 — A MONEY FIGURE THE QUESTION NEVER SUPPLIED AND THE ENGINE NEVER STATED ──
+#
+# ⛔ SCOPED BEFORE BUILT, AND THE SCOPING IS WHY THIS RULE IS THE NARROW ONE.
+# eval/fidelity/scope_render_body_working_disagreement_2026_10_10.py measured the obvious form
+# first — "flag any money figure in the body that is absent from the engine's working" — over
+# every stored reply this project holds. 439 replies, 64 with a body AND a working, and that
+# rule flags 14 at a precision of 1/14:
+#
+#   eval_092  "NSSF ya mwajiri = 10% x TZS 400,000 = TZS 40,000"   the per-head breakdown
+#   eval_296  "TZS 18,000 x 26 = TZS 468,000/mwezi"                 the DAILY wage given
+#   eval_395  "TZS 800,000 - TZS 78,000 = TZS 722,000"              NET PAY, which the question
+#                                                                   EXPLICITLY ASKED FOR and the
+#                                                                   working cannot contain
+#   eval_360  "TZS 270,001 hadi 760,000"                            PAYE band edges
+#   + 9 more, 11 of the 13 being CORRECT bodies
+#
+# Wiring that would be D-FIDELITY-7's unnarrowed shape: deleting the half of the answer the
+# user asked for. THE ADJUDICATION PRODUCED THE DISCRIMINATOR, and it is R19's line exactly.
+# All 13 false positives derive from a figure THE QUESTION SUPPLIED. th_22 — the one true
+# positive, live, "Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka" — differs in that its
+# question ("Nina mfanyakazi mmoja tu — je nalipa WCF?") supplies NO FIGURE AT ALL.
+#
+# With no input amount, any money figure in the body is unsupported BY CONSTRUCTION: there is
+# no lawful transformation of the user's numbers that reaches it, because there are no numbers.
+# R19 calls that a CONSTANT comparison and buildable, as against the derived-quantity form
+# (Guard B) which is impossible. Measured on the same 64 pairs the loose rule was priced on:
+# 1 flag, 0 false positives, and the flag IS th_22.
+#
+# ⚠️ SOFT, DELIBERATELY, AND HERE IS WHAT SOFT MEANS. One true positive on 64 pairs is one row,
+# not a measured rate, so the rule is held to the narrowest scope that still reaches the live
+# defect:
+#   * COMPUTE PATH ONLY. The fact path cannot be blanked (_render returns the body alone), so
+#     there the remedy is silence or replacement copy — a separate decision with its own cost.
+#     Excluded on measured harm, not on absence of defect.
+#   * REQUIRES AN EMPTY QUESTION-SIDE FIGURE SET. One figure in the question and the rule stands
+#     down entirely, which is what drops all 13.
+#   * Widening it is a HOLD WITH AN EXPIRY in eval/controls/audit_control_fires.py, so "until it
+#     has seen more" is a dated decision rather than a note that lapses (R35).
+#
+# ⚠️ BOTH NOTATIONS, because a figure sweep keyed on digits is blind to words by construction
+# and this project has already paid for that once: R36's EFD count went 3 -> 7 -> 14 as the
+# notation widened, and Swahili writes money both ways in one file. "TZS 50,000" and "milioni
+# 11" are the same claim and are compared as integers.
+_FIG_DIGITS = re.compile(r"(?:TZS|tsh|shilingi)\s*([\d][\d,\.]*)|\b(\d{6,})\b", re.I)
+# ⛔ BOTH WORD ORDERS, AND THE SWAHILI ONE IS THE ONE THAT MATTERS. My first version was
+# `(\d+)\s*(milioni|elfu)` — English order, "11 milioni" — and Swahili writes **"milioni 11"**,
+# which is the form CLAUDE.md itself quotes from the worst row of the EFD quarantine ("Kizingiti
+# sahihi ni TZS milioni 11"). The pattern matched NOTHING on the notation it was added for, and
+# a cue that matches nothing is indistinguishable from a cue with nothing to match (R39). Caught
+# by a probe written in the real word order, not by reading the pattern.
+_FIG_WORDS = re.compile(
+    r"\b(?:(?P<n1>\d+(?:\.\d+)?)\s*(?P<s1>milioni|bilioni|elfu)"
+    r"|(?P<s2>milioni|bilioni|elfu)\s+(?P<n2>\d+(?:\.\d+)?))\b", re.I)
+_FIG_SCALE = {"elfu": 1_000, "milioni": 1_000_000, "bilioni": 1_000_000_000}
+# Below this a "figure" is a count, a year, a day-of-month or a percentage written oddly, not a
+# money claim. The threshold guard uses the same reasoning with its own floor.
+_FIG_FLOOR = 1_000
+
+
+def _figures(text: str):
+    """{int} — every money claim in `text`, in either notation, normalised to shillings."""
+    out = set()
+    for m in _FIG_DIGITS.finditer(text or ""):
+        tok = (m.group(1) or m.group(2) or "").strip(".,")
+        digits = tok.replace(",", "").split(".")[0]
+        if digits.isdigit() and int(digits) >= _FIG_FLOOR:
+            out.add(int(digits))
+    for m in _FIG_WORDS.finditer(text or ""):
+        number = m.group("n1") or m.group("n2")
+        scale = m.group("s1") or m.group("s2")
+        try:
+            value = int(float(number) * _FIG_SCALE[scale.lower()])
+        except (ValueError, KeyError, TypeError, AttributeError):
+            continue
+        if value >= _FIG_FLOOR:
+            out.add(value)
+    return out
+
+
+def _asserted_figures(text: str):
+    """[(amount, sentence)] for money claims the text ASSERTS — negated ones are MENTIONS.
+
+    Reuses `_negated_at` and therefore `_THRESHOLD_NEGATION`, rather than restating the
+    polarity rule: a cue list written twice has to be corrected twice, and CLAUDE.md records a
+    cue surviving removal from one of two rules. Same reason the superseded-value sweep, the
+    offline test and the pre-flight gate all import one `_asserted_spans`.
+    """
+    out = []
+    for sentence in _SENTENCE_SPLIT.split(text or ""):
+        for m in list(_FIG_DIGITS.finditer(sentence)) + list(_FIG_WORDS.finditer(sentence)):
+            if _negated_at(sentence, m.start()):
+                continue
+            for amount in _figures(m.group(0)):
+                out.append((amount, sentence.strip()))
+    return out
+
+
+def unsupported_body_figures(question: str, body: str, working: str):
+    """[(amount, sentence)] for money the body asserts that neither the question nor the
+    engine's working contains — and ONLY when the question supplies no figure at all."""
+    if _figures(question):
+        return []                     # the narrowing that drops all 13 false positives
+    known = _figures(working) | _figures(question)
+    return [(amount, sentence) for amount, sentence in _asserted_figures(body)
+            if amount not in known]
+
+
+def body_states_unsupported_figure(question: str, body: str, working: str) -> bool:
+    """True iff the body asserts a money figure nothing in the exchange can support."""
+    return bool(unsupported_body_figures(question, body, working))
