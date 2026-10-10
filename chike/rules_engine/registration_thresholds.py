@@ -64,6 +64,7 @@ outcome, is what differs.
 
 from decimal import Decimal
 
+from . import premise
 from .results import ComputationResult, tzs
 
 COMPUTATION_VAT = "vat_registration"
@@ -159,6 +160,13 @@ def vat_registration(turnover, period: str) -> ComputationResult:
                 "limb_tested": period, "limb_untested": None if over else other},
         note=("over the VAT threshold on the limb tested" if over else
               f"below the {period} limb; {other} limb untested and stated conditionally"),
+        # ⚠️ DECLARED ONLY ON THE `over` BRANCH, AND THE ASYMMETRY IS DELIBERATE. The
+        # over branch leads "Ndiyo, unatakiwa kujisajili VAT" — a clean prefix the
+        # resolver can re-lead. The below branch opens "Kwa upande wa {window}: hapana,
+        # …" with the particle EMBEDDED mid-sentence, so re-leading it would produce two
+        # polarity markers in one sentence. A verdict whose particle is not a prefix is
+        # out of this resolver's scope and says so rather than being mis-declared.
+        lead_claim=(premise.OBLIGATION_APPLIES, True) if over else None,
     )
 
 
@@ -196,6 +204,7 @@ def efd_required(vat_registered: bool = False) -> ComputationResult:
     return ComputationResult(
         computation=COMPUTATION_EFD, applicable=True, amount=None, working=working,
         inputs={"vat_registered": vat_registered, "ground": ground},
+        lead_claim=(premise.OBLIGATION_APPLIES, True),
         note="EFD required by default for everyone; turnover is never consulted because no "
              "turnover threshold exists in the Act (TAA Cap.438 s.44). Exemption is only by "
              "Commissioner-General public notice naming a class, which this engine cannot "

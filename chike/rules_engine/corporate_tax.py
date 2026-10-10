@@ -26,6 +26,7 @@ AMT applies at year one.
 from datetime import date
 from decimal import Decimal
 
+from . import premise
 from .rates import (
     CORPORATE_STANDARD_RATE, CORPORATE_DSE_RATE, CORPORATE_DSE_RATE_YEARS,
     CORPORATE_DSE_PUBLIC_FLOAT_CURRENT, CORPORATE_DSE_PUBLIC_FLOAT_CHANGE_DATE,
@@ -87,7 +88,11 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
                 f"{_pct(CORPORATE_STANDARD_RATE)} inatumika kwa faida (si AMT).")
             return ComputationResult(
                 computation="corporate_tax", applicable=True, amount=None, working=working,
-                inputs=inputs, note="s.4(8) — permanent sector exemption from AMT")
+                inputs=inputs, note="s.4(8) — permanent sector exemption from AMT",
+                # ⚠️ applicable=True AND the lead says "Hapana, AMT haitumiki". The flag
+                # means the corporate-tax statement applies; the LEAD claims AMT does
+                # not. Read off the text, never off the flag.
+                lead_claim=(premise.OBLIGATION_APPLIES, False))
         if exempt_tea:
             working = (
                 f"Hapana, AMT haitumiki kwa sasa. Kampuni za usindikaji chai ZIMESAMEHEWA AMT "
@@ -99,7 +104,8 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
             return ComputationResult(
                 computation="corporate_tax", applicable=True, amount=None, working=working,
                 inputs=inputs,
-                note="s.4(8) as amended by FA2024 s.34 — time-limited tea-processing exemption")
+                note="s.4(8) as amended by FA2024 s.34 — time-limited tea-processing exemption",
+                lead_claim=(premise.OBLIGATION_APPLIES, False))
         if loss_years < AMT_LOSS_YEARS_REQUIRED:
             working = (
                 f"Bado hapana. AMT inatumika tu baada ya miaka {AMT_LOSS_YEARS_REQUIRED} "
@@ -108,7 +114,12 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
                 f"inatumika kwa faida kwa sasa.")
             return ComputationResult(
                 computation="corporate_tax", applicable=False, amount=None, working=working,
-                inputs=inputs, note="First Schedule para 3(3) — loss-year count below threshold")
+                inputs=inputs,
+                note="First Schedule para 3(3) — loss-year count below threshold",
+                # "Bado hapana." — a THIRD surface form of the negative particle, which
+                # is why results._LEAD_PARTICLE lists it. A strip that only knew
+                # "Hapana." would prepend a second particle in front of this one.
+                lead_claim=(premise.OBLIGATION_APPLIES, False))
         working = (
             f"Ndiyo, AMT inatumika. Kampuni yenye hasara isiyopunguzwa kwa miaka "
             f"{AMT_LOSS_YEARS_REQUIRED} mfululizo hulipa AMT ya asilimia {_pct(AMT_RATE)} ya "
@@ -118,7 +129,9 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
             f"thibitisha na TRA.")
         return ComputationResult(
             computation="corporate_tax", applicable=True, amount=None, working=working,
-            inputs=inputs, note="First Schedule para 3(3) — AMT applies, amount needs turnover")
+            inputs=inputs,
+            note="First Schedule para 3(3) — AMT applies, amount needs turnover",
+            lead_claim=(premise.OBLIGATION_APPLIES, True))
 
     # Ordinary rate branch.
     if is_dse_listed is True:

@@ -56,6 +56,8 @@ import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, REPO)
+
+from chike.rules_engine import premise as _premise          # noqa: E402
 OUT = os.path.join(REPO, "eval", "results", "mirror_premise_sweep_2026_10_10.json")
 
 _LEAD = re.compile(r"^\s*(Ndiyo|Hapana)\b", re.IGNORECASE)
@@ -70,36 +72,50 @@ _LEAD = re.compile(r"^\s*(Ndiyo|Hapana)\b", re.IGNORECASE)
 # ⚠️ EVERY PAIR MUST BE EXERCISED BY THE RUN OR DECLARED AUTHORED-ONLY. A transform that
 # matches nothing is a dead anchor: it costs nothing, reports nothing, and makes the
 # transform list look more thorough than it is. The run asserts coverage per pair.
-TRANSFORMS = [
-    # applicability, 1sg/1pl/3pl object concord — the plainest and commonest frame
-    ("inanihusu", "hainihusu", "applies-to-me", "ap_13, ap_14, ap_16, et_02, eval_363"),
-    ("inatuhusu", "haituhusu", "applies-to-us", "hc_10"),
-    ("inawahusu", "haiwahusu", "applies-to-them", "oc_09"),
-    ("inahusika", "haihusiki", "applies", "sdl_applies working, corpus-adjacent"),
-    # obligation / modality
-    ("nalazimika", "silazimika", "i-am-obliged", "eval_308, eval_351, probe_14, hcb015_b02:5"),
-    ("tunalazimika", "hatulazimika", "we-are-obliged", "authored mirror of the 1pl form"),
-    ("natakiwa", "sitakiwi", "i-am-required", "eval_351-adjacent"),
-    ("tunatakiwa", "hatutakiwi", "we-are-required", "ext_05"),
-    ("inatakiwa", "haitakiwi", "it-is-required", "eval_124, eval_393, os_06"),
-    ("ana wajibu", "hana wajibu", "has-a-duty", "eval_121"),
-    ("ni lazima", "si lazima", "is-compulsory", "nat_38, edge_p08"),
-    # payment / contribution
-    ("nalipa", "silipi", "i-pay", "th_11, th_22, ext_12, hc_03"),
-    ("tunalipa", "hatulipi", "we-pay", "smn_12, ext_05"),
-    ("nachangia", "sichangii", "i-contribute", "eval_311"),
-    ("nahitaji", "sihitaji", "i-need", "nat_36, th_02"),
-    # lawfulness — minimum_wage's own two frames, which already carry a polarity table
-    ("ni halali", "si halali", "is-lawful", "mw_01..mw_05, th_15"),
-    ("nakiuka", "sikiuki", "i-am-breaking", "mw_06, mw_07"),
-    # optionality — the founding specimen's own frame
-    ("ni ya hiari", "si ya hiari", "is-voluntary", "eval_394 (negated side in corpus)"),
-    # threshold crossing
-    ("nimevuka", "sijavuka", "i-have-crossed", "eval_370"),
-    ("yamefika", "hayajafika", "has-reached", "eval_351, th_02"),
-    # confirmation of a stated claim
-    ("ni kweli", "si kweli", "is-it-true", "edge_p08"),
-]
+# ⛔ THE TABLE IS NOT DEFINED HERE ANY MORE. chike/rules_engine/premise.py OWNS IT, and this
+# sweep imports it — because the production resolver and the instrument that measures the
+# resolver must not be able to disagree about what a polarity pair IS. A second copy is how a
+# cue removed from one rule survives in the other (2026-10-07, four times in one afternoon),
+# and here the asymmetry would be worse than that: a sweep with a narrower table than the
+# resolver reports a CLEAN population while rows go unresolved.
+#
+# `source` is kept locally because it is provenance for the harvest, not behaviour.
+_SOURCES = {
+    "applies-to-me": "ap_13, ap_14, ap_16, et_02, eval_363",
+    "applies-to-us": "hc_10, extract_004",
+    "applies-to-them": "oc_09",
+    "applies": "sdl_applies working, corpus-adjacent",
+    "i-am-obliged": "eval_308, eval_351, probe_14, hcb015_b02:5",
+    "we-are-obliged": "authored mirror of the 1pl form",
+    "i-am-required": "eval_351-adjacent",
+    "we-are-required": "ext_05",
+    "it-is-required": "eval_124, eval_393, os_06",
+    "has-a-duty": "eval_121, hc_06",
+    "is-compulsory": "nat_38, edge_p08, extract_184",
+    "i-pay": "th_11, th_22, ext_12, hc_03",
+    "we-pay": "smn_12, ext_05",
+    "i-contribute": "eval_311",
+    "i-need": "nat_36, th_02",
+    "is-lawful": "mw_01..mw_05, th_15",
+    "i-am-breaking": "mw_06, mw_07",
+    "is-voluntary": "eval_394 (negated side in corpus)",
+    "i-have-crossed": "eval_370",
+    "has-reached": "eval_351, th_02",
+    "is-it-true": "edge_p08",
+}
+
+# ⚠️ AND ONE FRAME THE RESOLVER DELIBERATELY DOES NOT CARRY. `ni kweli`/`si kweli` asserts no
+# proposition of its own — the claim being confirmed sits in an embedded clause — so
+# premise.py excludes it rather than resolving it wrongly. The SWEEP keeps it, because a pair
+# the resolver cannot fix is exactly the kind of row that must stay visible in the finding
+# list instead of vanishing from the population along with the fix.
+_SWEEP_ONLY_FRAMES = [("ni kweli", "si kweli", "is-it-true")]
+
+TRANSFORMS = (
+    [(pos, neg, frame, _SOURCES.get(frame, "premise.FRAMES"))
+     for pos, neg, frame, _prop, _inv in _premise.FRAMES]
+    + [(pos, neg, frame, _SOURCES.get(frame, "sweep-only"))
+       for pos, neg, frame in _SWEEP_ONLY_FRAMES])
 
 # ⛔ THE PLANTED SPECIMEN (R26 limb 1). The recorded PRE-FIX behaviour of the founding pair:
 # both polarities led "Ndiyo.". The classifier must flag it. Provenance is the orchestrator
@@ -176,17 +192,13 @@ _SEP = re.compile(r"(?<!\d),(?!\d)|[;—–]|\.\s+|\?\s+")
 
 
 def _ask_clause(question):
-    """(ask clause, prefix, suffix) — the last clause, which is where the ask lives."""
-    from chike import routing
-    stripped = routing._CONFIRMATION_TAG.sub("", question.strip())
-    tag = question.strip()[len(stripped):]
-    parts = [p for p in _SEP.split(stripped) if p is not None]
-    parts = [p for p in parts if p.strip()]
-    if not parts:
-        return stripped, "", tag
-    last = parts[-1]
-    cut = stripped.rfind(last)
-    return last, stripped[:cut], stripped[cut + len(last):] + tag
+    """Delegates to premise.ask_clause — SAME OWNER as the resolver.
+
+    The narrowing is load-bearing in both directions: the resolver must not re-lead on a
+    frame outside the ask, and the sweep must not REPORT on one. If the two drifted, the
+    sweep would measure a population the resolver never sees.
+    """
+    return _premise.ask_clause(question)
 
 
 def mirror(question):
@@ -429,6 +441,22 @@ def main():
             # is almost always `detect_intent` resolving one polarity and not the other.
             "intent": _routing.detect_intent(r["q"]),
             "intent_mirror": _routing.detect_intent(mir),
+            # ⛔ WHICH PREDICATE FLIPS, so the remaining asymmetries are a WORKLIST and not a
+            # number. After the 2026-10-10 cue widening closed 16 of 27, the residue is not a
+            # single gap: it is the OTHER cue systems (the vat/efd turnover gate and the
+            # minimum-wage cue list), each of which widens a different route with a different
+            # risk and needs its own sweep. Recording the flipping predicate per row is what
+            # keeps the next pass from re-deriving this diagnosis by hand.
+            "predicates_that_flip": [
+                n for n, f in (
+                    ("detect_intent", _routing.detect_intent),
+                    ("asks_applicability", _routing.asks_applicability),
+                    ("is_applicability_question", _routing.is_applicability_question),
+                    ("asks_levy_statement", _routing.asks_levy_statement),
+                    ("_OWN_OBLIGATION", lambda q: bool(
+                        _routing._OWN_OBLIGATION.search(q.lower()))),
+                    ("all_compute_levies", lambda q: tuple(_routing.all_compute_levies(q))),
+                ) if f(r["q"]) != f(mir)],
             "mirror": mir, "mirror_lead": lead_m,
             "mirror_lead_form": lead_form(text_m), "mirror_reply": text_m,
         })

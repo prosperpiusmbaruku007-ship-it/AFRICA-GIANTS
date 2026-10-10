@@ -2,6 +2,7 @@
 
 from decimal import Decimal
 
+from . import premise
 from .rates import SDL_RATE, SDL_MIN_EMPLOYEES
 from .results import ComputationResult, to_shillings, tzs
 
@@ -98,6 +99,7 @@ def sdl_crosses_threshold(ordinal: int) -> ComputationResult:
         ),
         inputs={"crossing_ordinal": ordinal},
         note="headcount crosses the SDL threshold mid-period",
+        lead_claim=(premise.OBLIGATION_APPLIES, True),
     )
 
 
@@ -119,6 +121,7 @@ def sdl_applies(employee_count: int) -> ComputationResult:
             ),
             inputs={"employee_count": employee_count},
             note="below SDL 10-employee threshold",
+            lead_claim=(premise.OBLIGATION_APPLIES, False),
         )
     return ComputationResult(
         computation="sdl",
@@ -130,4 +133,5 @@ def sdl_applies(employee_count: int) -> ComputationResult:
         ),
         inputs={"employee_count": employee_count},
         note="at/above SDL 10-employee threshold",
+        lead_claim=(premise.OBLIGATION_APPLIES, True),
     )

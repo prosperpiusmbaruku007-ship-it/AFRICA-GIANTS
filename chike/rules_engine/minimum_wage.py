@@ -36,6 +36,7 @@ wage_schedule.py.
 
 from decimal import Decimal
 
+from . import premise
 from . import wage_schedule as ws
 from .results import ComputationResult, tzs
 
@@ -103,6 +104,17 @@ def compare_to_floor(paid, sector_no, sub, period="monthly",
                 "sector": sector_no, "sub_sector": sub, "frame": frame},
         note="wage at or above the GN 605A floor" if compliant
              else "wage below the GN 605A floor",
+        # ⛔ DECLARED ONLY WHEN A LEAD WAS ACTUALLY WRITTEN. `frame="unknown"` emits no
+        # particle at all (by design — the comparison is right under either frame), so there
+        # is nothing for the premise resolver to re-lead and claiming one would invite it to
+        # prepend a particle to an answer that deliberately has none.
+        #
+        # ⚠️ THE TRUTH IS THE RAW LAWFULNESS, NOT THE FRAME-ADJUSTED LEAD. _LEADS above
+        # already resolves the `violation` frame's inversion ("Hapana, hukiuki sheria" for a
+        # COMPLIANT wage), and premise.detect reports the same inversion independently from
+        # the question. Declaring the frame-adjusted value here would apply the inversion
+        # twice and answer every lawfulness question backwards.
+        lead_claim=(premise.WAGE_IS_LAWFUL, compliant) if lead else None,
     )
 
 

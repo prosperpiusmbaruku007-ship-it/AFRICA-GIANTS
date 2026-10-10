@@ -29,6 +29,7 @@ over- nor under-claims.
 
 from decimal import Decimal
 
+from . import premise
 from .rates import (
     PRESUMPTIVE_BANDS,
     PRESUMPTIVE_TURNOVER_CEILING,
@@ -112,7 +113,8 @@ def compute_presumptive(annual_turnover, keeps_records: bool,
                 "hii inatozwa kodi ya mapato kwa viwango vya kawaida vya mtu binafsi, si "
                 "jedwali la makadirio."),
             inputs=inputs,
-            note="First Schedule para 2(1)(a) as amended by FA2022 s.72(a)(i) — excluded service")
+            note="First Schedule para 2(1)(a) as amended by FA2022 s.72(a)(i) — excluded service",
+            lead_claim=(premise.OBLIGATION_APPLIES, False))
 
     if turnover > PRESUMPTIVE_TURNOVER_CEILING:
         return ComputationResult(
@@ -124,7 +126,8 @@ def compute_presumptive(annual_turnover, keeps_records: bool,
                 f"halisi, si kwa mauzo."),
             inputs=inputs,
             note="First Schedule para 2(2) — above the 200M presumptive threshold (WEF "
-                 "2026-07-01, FA2026 s.27(a)(i); was 100M)")
+                 "2026-07-01, FA2026 s.27(a)(i); was 100M)",
+            lead_claim=(premise.OBLIGATION_APPLIES, False))
 
     # NEW-BUSINESS EXEMPTION, CONFIRMED GRANTED. The only state that can assert TZS 0 outright —
     # everything else falls through to the ordinary band table below, which is still the

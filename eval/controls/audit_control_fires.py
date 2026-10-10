@@ -951,6 +951,48 @@ def audit_unexercisable():
            'plus a negated mention of the fabricated figure',
            _note)
 
+    # ── THE PREMISE RESOLVER (2026-10-10) ────────────────────────────────────────────────
+    # ⚠️ NOT A FIDELITY GUARD. It does not flag or blank anything — it CORRECTS a lead, and on
+    # a proposition mismatch it withholds one. So "fires" means "changed the answer where it
+    # should and left it alone where it should not", and both limbs are needed: a resolver
+    # that re-led everything would destroy every correct positive yes/no in the corpus.
+    try:
+        from chike.model_abstraction import FakeBackend as _FB
+        from chike.orchestrator import Orchestrator as _Orch
+        from chike.rules_engine import premise as _pm
+
+        def _ans(q):
+            return (_Orch(backend=_FB(scripted_reply=''),
+                          retriever=lambda _q: []).answer(q).text or '')
+
+        _neg = _ans('nina wafanyakazi 15 je SDL hainihusu')          # verdict says it applies
+        _pos = _ans('nina wafanyakazi 15 je SDL inanihusu')
+        _mismatch = _ans('Tunachangia NSSF kwa wafanyakazi 15, je WCF nayo ni lazima?')
+        _planted = _neg.startswith('Hapana.')
+        _clean = _pos.startswith('Ndiyo.')
+        _withheld = not _mismatch.startswith(('Ndiyo', 'Hapana'))
+        _v = 'FIRES' if (_planted and _clean and _withheld) else 'INERT'
+        _note = (f'planted negated premise re-led to a DENIAL: {_planted}; positive premise '
+                 f'left byte-identical: {_clean}; proposition mismatch withheld its particle: '
+                 f'{_withheld}. Measured blast radius over all 2,484 corpus questions: 3 rows '
+                 f'moved, 0 control violations (eval/results/'
+                 f'premise_polarity_sweep_2026_10_10.json). The mirror sweep went SAME_LEAD '
+                 f'37 -> 1 and FLIPS 1 -> 51.')
+        if not _pm.OBLIGATION_APPLIES in _pm._COMPATIBLE.get(_pm.IS_VOLUNTARY, ()):
+            _note += (' IS_VOLUNTARY is not compatible with OBLIGATION_APPLIES, which is the '
+                      'non-compatibility eval_394 was about.')
+    except Exception as _exc:                                            # noqa: BLE001
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:120]}'
+    record('premise resolver (yes/no lead vs asserted premise)', 'routing',
+           'a deterministic yes/no lead answering a premise the question did not assert — '
+           'the class behind eval_393, eval_394 and 37 of 65 polarity pairs, including a '
+           'compulsory levy declared voluntary in the engine\'s own voice',
+           _v, 'a negated applicability premise against a verdict that contradicts it, plus '
+               'extract_184\'s real proposition mismatch',
+           'a POSITIVE premise, which must come back byte-identical — a resolver that re-led '
+           'everything would destroy every correct yes/no in the corpus',
+           _note)
+
     record('chike-inference /health (build + served-index digest)', 'infrastructure',
            'a deploy that did not reach production, or a WARM GPU container serving an older '
            'index behind a freshly-deployed web tier — the R16 hazard that previously could '

@@ -97,12 +97,32 @@ def test_every_transform_frame_has_a_severity_subject():
 
 # ── the artifact, shrink-only ──────────────────────────────────────────────────────────
 def test_the_findings_may_fall_but_not_rise():
+    """⛔ A RATCHET, TIGHTENED WHEN THE CLASS FIX LANDED. The bounds were 37/2/27 when the
+    sweep first ran and are 1/0/11 now, because premise.py closed 36 of the 37 same-lead
+    pairs and the negated cue lists closed 16 of the 27 route asymmetries. Leaving the old
+    bounds in place would have kept the test green through a total regression of the fix,
+    which is the stale-pin shape: an assertion that was once meaningful and now cannot fail.
+
+    The remaining 1 is `edge_p08`/`is-it-true`, the frame premise.py DELIBERATELY excludes —
+    it asserts no proposition of its own, so the claim being confirmed sits in an embedded
+    clause the resolver does not parse. Left visible in the finding list rather than removed
+    from the population along with the fix.
+
+    The remaining 11 asymmetries are the OTHER two cue systems (the vat/efd turnover gate and
+    the minimum-wage cue list); `predicates_that_flip` names the blocker per row."""
     a = _art()
-    assert a["verdicts"]["SAME_LEAD"] <= 37, (
+    assert a["verdicts"]["SAME_LEAD"] <= 1, (
         "the same-lead population has GROWN. A new engine lead has been added that answers "
-        "both premises identically — re-read the sweep before shipping it")
-    assert a["severity"]["UNCORRECTED_same_lead"] <= 2
-    assert a["verdicts"]["MIRROR_LEFT_THE_ENGINE"] <= 27
+        "both premises identically, or the resolver stopped reaching one — re-read the sweep "
+        "before shipping it")
+    assert a["severity"]["UNCORRECTED_same_lead"] == 0, (
+        "a pair is back to answering a proposition the verdict never evaluated — the "
+        "eval_394 class. This is the one count that should never be non-zero again")
+    assert a["verdicts"]["MIRROR_LEFT_THE_ENGINE"] <= 11
+    assert a["verdicts"]["FLIPS"] >= 51, (
+        "fewer pairs flip correctly than before the class fix — the ratchet runs both ways, "
+        "because a resolver that stops resolving shows up as FEWER findings AND fewer "
+        "flips, and only the second is unambiguous (R39)")
 
 
 def test_the_positive_limb_is_recorded_and_is_the_row_fixed_by_hand():
@@ -112,9 +132,9 @@ def test_the_positive_limb_is_recorded_and_is_the_row_fixed_by_hand():
     flips = _art()["pairs_that_flip_correctly"]
     assert flips, "no pair flips — the harness can no longer distinguish health from defect"
     assert any(r["id"] == "eval_394" for r in flips), (
-        "eval_394 was the only polarity-correct pair in the population and it is the one "
-        "that was fixed by hand on 2026-10-10. Losing it is a regression in the fix, not in "
-        "this test")
+        "eval_394 was the ONLY polarity-correct pair in the population when this sweep first "
+        "ran, and it is the one that was fixed by hand on 2026-10-10. It is now one of 51. "
+        "Losing it is a regression in the fix, not in this test")
 
 
 def test_the_narrowing_keeps_its_itemised_receipt():
@@ -126,6 +146,22 @@ def test_the_narrowing_keeps_its_itemised_receipt():
     assert all(r.get("frame_found_outside_the_ask") and r.get("ask_clause")
                for r in rejected)
     assert any(r["id"] == "extract_087" for r in rejected)
+
+
+def test_the_frame_table_has_ONE_owner():
+    """The sweep must not be able to disagree with the resolver about what a polarity pair IS.
+    A sweep with a narrower table than the resolver reports a CLEAN population while rows go
+    unresolved — the R39 direction, in the instrument rather than the rule."""
+    from chike.rules_engine import premise
+    owned = {(p, n, f) for p, n, f, _prop, _inv in premise.FRAMES}
+    swept = {(p, n, f) for p, n, f, _src in ms.TRANSFORMS}
+    assert owned <= swept, f"the resolver carries frames the sweep cannot see: {owned - swept}"
+    extra = {f for _p, _n, f in swept - owned}
+    assert extra == {"is-it-true"}, (
+        f"the sweep carries frames the resolver does not, beyond the one deliberately "
+        f"excluded: {extra}")
+    assert ms._ask_clause("Je, NSSF si ya hiari?")[0] == premise.ask_clause(
+        "Je, NSSF si ya hiari?")[0]
 
 
 def test_the_dead_and_shadowed_transforms_are_reported_separately():

@@ -1536,7 +1536,25 @@ _GAP_B_APPLICABILITY_CUES = [
     "je nachangia", "je tunachangia", "je nalazimika", "je tunalazimika",
 ]
 
-_APPLICABILITY_CUES = _APPLICABILITY_CUES + _GAP_B_APPLICABILITY_CUES
+# ⛔ THE NEGATED MIRROR OF THE TWO LISTS ABOVE (2026-10-10). Same shape, same narrowness:
+# every multi-word form keeps its qualifier, and the bare `je`-prefixed ones keep the
+# interrogative, because `je silipi` cannot occur in a statement the way a bare `silipi` can.
+#
+# These are the SUBJECT-concord negatives. `_APPLICABILITY_CONCORD` already covers the OBJECT
+# -concord ones (`hainihusu`) through `_object_concord`'s negative branch, so re-listing those
+# here would be a second copy of a rule that already works — which is how a cue removed from
+# one place survives in another.
+#
+# Its own named list for the same reason as _GAP_B: a sweep must be able to subtract it.
+_NEGATED_APPLICABILITY_CUES = [
+    "silazimika kulipa", "hatulazimika kulipa", "sichangii", "hatuchangii",
+    "sitakiwi kulipa", "hatutakiwi kulipa", "hana wajibu wa kulipa",
+    "sifikii kizingiti", "hatufikii kizingiti",
+    "je silipi", "je nisilipe", "je hatulipi", "je tusilipe",
+    "je sichangii", "je hatuchangii", "je silazimika", "je hatulazimika",
+]
+_APPLICABILITY_CUES = (_APPLICABILITY_CUES + _GAP_B_APPLICABILITY_CUES
+                       + _NEGATED_APPLICABILITY_CUES)
 
 # ROUTING-GAP-B, second form: "nilipe nini kati ya A na B" — WHICH of these do I pay.
 # nat_24's shape. Not a money 'how-much' ask (no shilling quantity is requested) and not an
@@ -1801,12 +1819,42 @@ _SUFFICIENCY_FRAME = re.compile(r"\binatosha\b|\bbadala\s+ya\b|\bni\s+sawa\s+na\
 _OTHER_DOMAIN = re.compile(r"\bosha\b|\bbrela\b|\bnest\b|\btaneps\b|\buhamiaji\b"
                            r"|\bvat\b|\befd\b|\bleseni\b", re.IGNORECASE)
 
-_OWN_OBLIGATION = re.compile(
+_OWN_OBLIGATION_AFFIRMATIVE = (
     r"\bina(?:ni|ku|tu)husu\b|\bitani(?:husu)?\b|\bitakuhusu\b|\bzina(?:ni|ku|tu)husu\b"
     r"|\bnalipa\b|\bnilipe\b|\bnawajibika\b|\bnalazimika\b|\bnachangia\b"
     r"|\bkuwa\s+na\s+wajibu\b|\bkuwahusu\b|\bwangapi\b|\bsi\s+ya\s+hiari\b"
-    r"|\bnafikia\s+kizingiti\b|\bfikia\s+kizingiti\b|\blazima\s+nilipe\b",
-    re.IGNORECASE)
+    r"|\bnafikia\s+kizingiti\b|\bfikia\s+kizingiti\b|\blazima\s+nilipe\b")
+
+# ⛔⛔ THE NEGATED HALF, AND ITS ABSENCE WAS A CLASS DEFECT WITH A VISIBLE SYMPTOM SITTING IN
+# THE LIST ABOVE. Every alternative up there is AFFIRMATIVE except one — `si ya hiari`, added
+# on 2026-10-10 for eval_394, one row, by hand. That lone negative is the tell: the list was
+# being extended a row at a time along an axis nobody had named.
+#
+# Measured the next day (eval/controls/mirror_premise_sweep_2026_10_10.py): of 65 corpus
+# questions whose polarity mirror was generated, **27 LOST THE DETERMINISTIC ENGINE
+# ENTIRELY** when the premise was negated — 23 of them `detect_intent` going X -> none. The
+# user who asks "nimeajiri watumishi 25 je SILIPI SDL?" gets a free-generated model answer
+# where the one who asks "je NALIPA SDL?" gets the engine. Same question, opposite phrasing,
+# and only one of them is answered deterministically.
+#
+# ⚠️ KEPT AS ITS OWN NAMED ALTERNATION so a blast-radius sweep can subtract exactly this set,
+# per the precedent this file already sets for `_GAP_B_APPLICABILITY_CUES`: an earlier sweep
+# inlined that set, could not turn it off, and therefore reported a zero blast radius — a
+# false clean sweep, which is the one result R17 says never to trust.
+#
+# ⚠️ AND THE FORMS ARE LISTED, NOT BUILT (R37). `_object_concord` DOES already generate the
+# negative OBJECT-concord forms, which is why `hainihusu` was matching `_APPLICABILITY_CONCORD`
+# all along — the gap is the SUBJECT-concord negatives (`si-lipi`, `si-lazimika`,
+# `hatu-lipi`), a different morphology that generator does not and should not cover.
+_OWN_OBLIGATION_NEGATED = (
+    r"\bha(?:i|zi)(?:ni|ku|tu)husu\b"
+    r"|\bsilipi\b|\bnisilipe\b|\bsiwajibiki\b|\bsilazimika\b|\bsichangii\b"
+    r"|\bhatulipi\b|\btusilipe\b|\bhatuwajibiki\b|\bhatulazimika\b|\bhatuchangii\b"
+    r"|\bkutokuwa\s+na\s+wajibu\b|\bsifikii\s+kizingiti\b|\bhatufikii\s+kizingiti\b"
+    r"|\bsi\s+lazima\s+nilipe\b")
+
+_OWN_OBLIGATION = re.compile(
+    _OWN_OBLIGATION_AFFIRMATIVE + "|" + _OWN_OBLIGATION_NEGATED, re.IGNORECASE)
 
 
 def asks_levy_statement(text: str) -> bool:

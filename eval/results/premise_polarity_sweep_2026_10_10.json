@@ -1,0 +1,71 @@
+{
+ "_what": "Before/after over every corpus question, with each of the two changes separately armed, plus authored probes in both directions.",
+ "_why_each_population": {
+  "corpus": "the real orchestrator on all 2,484 corpus questions is the only thing that can show a row moving that nobody predicted — which is how six regressions were found on 2026-10-10's party renderer, after every authored probe passed.",
+  "MUST_NOT_ROUTE": "R21: the corpora share vocabulary with the cues by construction, so a clean corpus sweep is a lower bound. These put the negated forms in contexts no engine should answer.",
+  "MUST_ROUTE": "R31 step 3: the signal arrives ONLY through natural phrasing, which a unit test calling detect_intent with a crafted string cannot establish."
+ },
+ "corpus_questions": 2484,
+ "moved": 3,
+ "attribution": {
+  "resolver": 3,
+  "cues": 0,
+  "both_together": 0
+ },
+ "control_violations": [],
+ "mismatch_strips": [],
+ "_the_cue_arm_moved_nothing_and_that_is_the_expected_result": "ZERO corpus rows moved from the cue widening, because the corpus is ~96% positive-premise: of 135 questions receiving a deterministic yes/no lead, 6 carry a negated premise. The cue change is INVISIBLE to the corpus by construction, which is exactly R21's point — a clean corpus sweep here is not evidence of safety, it is evidence that the corpus does not exercise the change. The MUST_ROUTE and MUST_NOT_ROUTE arms are where its evidence lives.",
+ "moved_with_no_detected_premise": [],
+ "probe_findings": [],
+ "rows": [
+  {
+   "id": "oc_12",
+   "file": "eval/refusal_gate/object_concord_in_scope_022.jsonl",
+   "line": 12,
+   "question": "nina wafanyakazi 6 je tozo ya mafunzo hainihusu",
+   "attributed_to": "resolver",
+   "action": "unknown",
+   "premise": {
+    "frame": "applies-to-me",
+    "proposition": "obligation_applies",
+    "asserted_truth": false,
+    "surface_negated": true
+   },
+   "before": "Hapana. SDL haihusiki: una wafanyakazi 6 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.",
+   "after": "Ndiyo, ni kweli — SDL haihusiki: una wafanyakazi 6 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi."
+  },
+  {
+   "id": "extract_184",
+   "file": "data/reviewed/slot_extraction_stress_test_001.jsonl",
+   "line": 184,
+   "question": "Tunachangia NSSF kwa wafanyakazi 15, je WCF nayo ni lazima?",
+   "attributed_to": "resolver",
+   "action": "unknown",
+   "premise": {
+    "frame": "is-compulsory",
+    "proposition": "is_voluntary",
+    "asserted_truth": false,
+    "surface_negated": false
+   },
+   "before": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).\n\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+   "after": "NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).\n\nWCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara."
+  },
+  {
+   "id": "extract_184",
+   "file": "data/reviewed/slot_extraction_stress_test_001_reviewed.jsonl",
+   "line": 184,
+   "question": "Tunachangia NSSF kwa wafanyakazi 15, je WCF nayo ni lazima?",
+   "attributed_to": "resolver",
+   "action": "unknown",
+   "premise": {
+    "frame": "is-compulsory",
+    "proposition": "is_voluntary",
+    "asserted_truth": false,
+    "surface_negated": false
+   },
+   "before": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).\n\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+   "after": "NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).\n\nWCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara."
+  }
+ ],
+ "errors": []
+}

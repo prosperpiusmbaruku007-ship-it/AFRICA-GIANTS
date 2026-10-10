@@ -25,6 +25,7 @@ The authority URLs are the ones the eval golds and sources/whitelist.json alread
 
 from decimal import Decimal
 
+from . import premise
 from .rates import (NSSF_EMPLOYEE_RATE, NSSF_TOTAL_RATE, SDL_RATE, WCF_RATE)
 from .results import ComputationResult, tzs
 
@@ -90,4 +91,9 @@ def reject_base(computation_type: str, stated_amount=None,
                  f"{figure}{ask} Thibitisha na {_AUTHORITY[computation_type]}."),
         inputs={"stated_non_payroll_figure": stated_amount},
         note="non-payroll base offered for a payroll levy",
+        # "Does the figure you named count as this levy's base?" — NO. Deliberately
+        # NOT obligation_applies: the levy may well apply to this employer, and
+        # answering "does SDL apply to me?" with this "Hapana." is the wrong-topic harm
+        # class. premise._COMPATIBLE keeps the two apart for that reason.
+        lead_claim=(premise.BASE_COUNTS, False),
     )

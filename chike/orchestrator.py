@@ -29,7 +29,7 @@ from typing import Callable, Optional, Sequence
 
 from . import rules_engine
 from . import swahili_numbers as swn
-from .rules_engine import rates
+from .rules_engine import premise, rates
 from .rules_engine.results import ComputationResult
 from .model_abstraction import ModelBackend
 from .extraction import SlotExtractor, REQUIRED_FIELDS, APPLICABILITY_REQUIRED_FIELDS
@@ -577,6 +577,38 @@ class Orchestrator:
         FIRST paragraph: _render joins body and working with a single newline, so a model
         preamble leading with the wrong word would flip a correct 'Hapana.' verdict."""
         return SubAnswer(sub_question=sq, text="", computation=result)
+
+    @staticmethod
+    def _resolve_premise(sa: SubAnswer) -> SubAnswer:
+        """Make the engine's yes/no lead answer the premise the question actually asserted.
+
+        ⛔ ONE SITE, FOR EVERY BRANCH, DELIBERATELY. The defect this closes was patched twice
+        row by row (eval_393, eval_394) before the mirror sweep showed it was a property of
+        the mechanism: 37 of 65 polarity pairs received the SAME lead in both directions, and
+        the only pair that flipped was the one fixed by hand the day before. Resolving per
+        branch would mean doing it ten more times and missing the eleventh.
+
+        Applied AFTER `_answer_sub` rather than inside `_deterministic_answer`, because the
+        applicability path can put the model in the loop — `_render` then emits the engine's
+        `working` alongside the body, so the lead reaches the user on BOTH paths and only a
+        post-dispatch hook covers both. SubAnswer carries the question and the computation
+        together, which is exactly what the resolution needs.
+
+        A no-op unless the verdict declares a `lead_claim` AND the question's own ask asserts
+        a listed premise AND that premise is negated or answers a different proposition — so
+        every plain positive question is byte-identical and the blast radius is the pairs the
+        sweep enumerated.
+        """
+        if sa.computation is None:
+            return sa
+        res = premise.resolve(sa.sub_question.text, sa.computation)
+        if res.action == "untouched":
+            return sa
+        return SubAnswer(
+            sub_question=sa.sub_question, text=sa.text, raw_text=sa.raw_text,
+            facts=sa.facts, computation=res.result,
+            needs_clarification=sa.needs_clarification,
+            coverage_refused=sa.coverage_refused)
 
     def _answer_minimum_wage(self, sq: SubQuestion) -> SubAnswer:
         """GN 605A lawfulness — deterministic end to end, with four never-guess exits.
@@ -1165,7 +1197,8 @@ class Orchestrator:
             # pooled fact generation over the fact sub-questions only. Compute parts are
             # NEVER folded into the fact generation (that would forfeit the authoritative
             # deterministic figure — the one load-bearing reason per-part generation exists).
-            subs = self._cross_levy_guard([self._answer_sub(sq) for sq in compute_parts])
+            subs = self._cross_levy_guard(
+                [self._resolve_premise(self._answer_sub(sq)) for sq in compute_parts])
             if covered_fact_parts:
                 fact_question = " ".join(sq.text for sq in covered_fact_parts)
                 subs.append(self._answer_facts_single_pass(

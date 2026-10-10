@@ -2,6 +2,7 @@
 
 from decimal import Decimal
 
+from . import premise
 from .rates import WCF_RATE
 from .results import ComputationResult, to_shillings, tzs
 
@@ -34,4 +35,5 @@ def wcf_applies() -> ComputationResult:
         ),
         inputs={},
         note="WCF applies to all employers from first employee, no threshold",
+        lead_claim=(premise.OBLIGATION_APPLIES, True),
     )

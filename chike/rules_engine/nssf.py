@@ -2,6 +2,7 @@
 
 from decimal import Decimal
 
+from . import premise
 from .rates import NSSF_EMPLOYER_RATE, NSSF_EMPLOYEE_RATE
 from .results import ComputationResult, to_shillings, tzs
 
@@ -77,4 +78,9 @@ def nssf_applies() -> ComputationResult:
         ),
         inputs={},
         note="NSSF applies from first employee, no headcount threshold",
+        # ⛔ THE FOUNDING SPECIMEN. This verdict answers obligation_applies and NOTHING
+        # ELSE; eval_394 routed "is NSSF voluntary?" to it and the "Ndiyo." read as
+        # "yes, it is voluntary". is_voluntary is a different proposition and the
+        # resolver must refuse to answer it from here.
+        lead_claim=(premise.OBLIGATION_APPLIES, True),
     )
