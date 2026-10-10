@@ -545,9 +545,15 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
     read = set(re.findall(r'os\.environ\.get\(\s*"([A-Z_]+)"', src))
     # Tunables carry safe defaults and are not secret material; CHIKE_BUILD is baked
     # at deploy time, not stored in the secret.
+    #
+    # SUPERVISED (2026-10-10) is a deploy-time FLAG, not a credential, and listing it here
+    # rather than in EXPECTED_KEYS is deliberate: EXPECTED_KEYS makes /health report a key's
+    # PRESENCE, which for this flag would read as `supervised: true` merely because the var
+    # exists — including when it is set to "false". /health reports its PARSED value instead,
+    # which is a stronger guarantee than presence and the one the reviewer actually needs.
     tunables = {"CHIKE_BUILD", "WAPPFLY_SEND_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
                 "SECOND_ACK_AFTER_S", "COLD_START_SUSPECTED_S", "SEND_ATTEMPTS",
-                "WAPPFLY_TIMEOUT_S"}
+                "WAPPFLY_TIMEOUT_S", "SUPERVISED"}
     assert read - tunables == set(mw.EXPECTED_KEYS), (
         "a secret key is read but not reported by /health, or vice versa")
 

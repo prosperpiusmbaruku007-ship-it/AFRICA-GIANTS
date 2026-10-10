@@ -148,6 +148,26 @@ class Settings:
     # Values scrubbed out of every log line and transcript field.
     secrets: tuple = field(default_factory=tuple)
 
+    # ── SUPERVISED MODE (2026-10-10) ────────────────────────────────────────────────────
+    # When True, the ANSWER is held as a draft for human review instead of being sent.
+    # The founder's R7 reading depends on this literally: "nothing reaches a participant
+    # unreviewed". So the default is False and the flag is read from the environment at
+    # deploy time, never inferred.
+    #
+    # ⛔⛔ THE ACK LADDER IS DELIBERATELY *NOT* HELD, AND THIS IS THE ONE PLACE THE DESIGN
+    # COULD HAVE GONE WRONG SILENTLY. `deliver` uses ONE `send_once` for both the acks and
+    # the answer, so injecting a blanket hold would have held the acks too — leaving a user
+    # who asked a question at 9pm with total silence until the reviewer woke up. In
+    # supervised mode the acks matter MORE than in autonomous mode, not less, because the
+    # wait is now human-paced. The answer and the acks therefore travel through two
+    # different callables from here on.
+    supervised: bool = False
+    # What the user is told while a human reads their answer. Held replies can take hours,
+    # so the honest ack says a person is checking — not "nearly done".
+    supervised_ack: str = ("Nimepata swali lako. Jibu linapitiwa na mtu kwanza ili "
+                           "kuhakikisha ni sahihi — nitakujibu hivi punde. Asante kwa "
+                           "kuvumilia.")
+
 
 def scrub(text, secrets=()) -> str:
     """Strip credentials from anything bound for a log or a transcript.
@@ -260,14 +280,25 @@ def _blank_row(kind, sender, settings, build):
         "acks_sent": 0,
         "send_ok": None,
         "send_error": None,
+        # 'sent' | 'held' | 'misconfigured'. None on rows written before supervised mode
+        # existed, which is why every reader must treat None as 'sent' explicitly rather
+        # than letting a missing key default silently.
+        "supervision": None,
     }
 
 
-async def deliver(sender, text, ask, send_once, settings, build="dev"):
+async def deliver(sender, text, ask, send_once, settings, build="dev",
+                  hold_reply=None):
     """Answer one question. MUST NOT RAISE.
 
     `ask` is an async callable taking the message and returning the model's dict.
     `send_once` is an async callable (to, text) -> (ok, detail).
+    `hold_reply` is an async callable (to, text, row) -> (ok, detail) used for the ANSWER
+    ONLY when `settings.supervised` is on — it stores a draft instead of sending it. The ack
+    ladder keeps `send_once` regardless, which is the whole reason this is a second
+    parameter and not a substitution of the first. Note the THIRD argument: a reviewer needs
+    the row, and a (to, text) hold cannot see it.
+
     Returns the transcript row; the caller persists it.
     """
     t0 = time.monotonic()
@@ -296,7 +327,11 @@ async def deliver(sender, text, ask, send_once, settings, build="dev"):
             """
             if settings.slow_ack_after_s <= 0:
                 return                     # kill switch — the whole ladder, not half of it
-            rungs = [(settings.slow_ack_after_s, SLOW_ACK)]
+            # In supervised mode the first rung says a PERSON is checking the answer,
+            # because that is true and because the wait is now human-paced rather than
+            # GPU-paced. "Nearly done" would be a lie at 2am.
+            first = settings.supervised_ack if settings.supervised else SLOW_ACK
+            rungs = [(settings.slow_ack_after_s, first)]
             if settings.second_ack_after_s > settings.slow_ack_after_s:
                 rungs.append((settings.second_ack_after_s, SECOND_ACK))
             t_ack = time.monotonic()
@@ -357,9 +392,51 @@ async def deliver(sender, text, ask, send_once, settings, build="dev"):
 
         row["reply"] = reply
         row["reply_chars"] = len(reply)
-        ok, send_error = await send_with_retry(send_once, sender, reply, settings)
-        row["send_ok"] = ok
-        row["send_error"] = send_error
+        # ⛔ THE ONE BRANCH SUPERVISION ADDS. `supervised` with no `hold_reply` supplied
+        # must NOT silently fall back to sending: that is the failure direction that
+        # breaks the founder's R7 condition while looking like it works, so it is recorded
+        # as a handler bug and the answer is withheld.
+        if settings.supervised and hold_reply is None:
+            row["supervision"] = "misconfigured"
+            row["error_class"] = row["error_class"] or "handler_bug"
+            row["error_detail"] = ("supervised=True with no hold_reply — the answer was "
+                                   "WITHHELD rather than sent unreviewed")
+            row["send_ok"] = False
+            row["send_error"] = "withheld: supervision misconfigured"
+            print("[chike] SUPERVISION MISCONFIGURED — answer withheld, not sent")
+        elif settings.supervised:
+            # ⛔ THE HOLD TAKES THE ROW AND DOES **NOT** GO THROUGH `send_with_retry`, for
+            # two reasons that are easy to get wrong in opposite directions:
+            #
+            #   THE SIGNATURE. A hold needs the row — the queue entry carries the question,
+            #   the latency and the error class so the reviewer can judge the draft instead
+            #   of guessing at it. My first attempt kept the (to, text) shape and closed over
+            #   a mutable dict to smuggle the row in; the row does not EXIST until deliver()
+            #   returns, so that closure would have read an empty dict and raised inside the
+            #   one path that must never raise. Three arguments, no smuggling.
+            #
+            #   NO RETRY. `send_attempts=2` is right for a flaky HTTP send and wrong for a
+            #   key-value put: a put that appears to fail but landed would be retried into a
+            #   DUPLICATE queue entry, and the reviewer would send the same answer twice —
+            #   which `answer_and_send`'s own `retries=0` comment already names as worse
+            #   than one missing answer.
+            row["supervision"] = "held"
+            try:
+                ok, send_error = await hold_reply(sender, reply, row)
+            except Exception as e:                                   # noqa: BLE001
+                ok, send_error = False, scrub(f"{type(e).__name__}: {e}", settings.secrets)
+            row["send_ok"] = ok
+            row["send_error"] = send_error
+            # `reply` here is the DRAFT, not what the user received. Renaming the field
+            # would break every existing transcript reader, so the distinction is carried
+            # by `supervision` — and a reader that ignores it will over-count deliveries,
+            # which is why review_summary() below refuses to compute a delivery rate
+            # without it.
+        else:
+            row["supervision"] = "sent"
+            ok, send_error = await send_with_retry(send_once, sender, reply, settings)
+            row["send_ok"] = ok
+            row["send_error"] = send_error
 
     except Exception as e:                                           # noqa: BLE001
         # Reaching here means a bug in the code above, not a model failure. The user
@@ -377,6 +454,124 @@ async def deliver(sender, text, ask, send_once, settings, build="dev"):
     finally:
         row["total_latency_ms"] = int((time.monotonic() - t0) * 1000)
     return row
+
+
+# ---------------------------------------------------------------------------
+# SUPERVISED REVIEW — the queue's pure logic (2026-10-10)
+# ---------------------------------------------------------------------------
+# ⛔⛔ DRAFT, EDIT AND FINAL ARE THREE SEPARATE FIELDS AND ARE NEVER COLLAPSED. This is the
+# founder's own requirement and it is the most valuable thing the pilot produces: the edits
+# are LABELLED CORRECTIONS on real traffic, which is precisely what no sweep over our own
+# corpora can manufacture (R21/R33 — our corpora share vocabulary with our facts by
+# construction, and what real users type is a traffic claim no offline instrument can settle).
+#
+# A design that stored only the final text would destroy the dataset while appearing to work:
+# every transcript would look like a correct answer, the queue would look healthy, and the
+# one irreplaceable signal — WHAT the model got wrong and HOW a human fixed it — would be
+# gone. So `draft` is immutable once written, `final` is what was sent, and `edit_reason` is
+# required whenever they differ.
+REVIEW_ACTIONS = ("send", "edit", "withhold")
+
+
+def review_item(row, sender, draft, engine_working=None, facts=(), review_id=None):
+    """A queue entry. `sender` is the REAL number, which the transcript deliberately does not
+    store — so this lives in its own store, behind its own token, and is purged on decision.
+
+    ⚠️ THAT ASYMMETRY IS DELIBERATE AND WORTH STATING: transcripts keep a salted hash plus a
+    4-digit tail precisely so the analysis corpus carries no reachable identifier. The review
+    queue CANNOT work that way, because sending the approved answer needs the number. Keeping
+    them in one store would quietly re-introduce the identifier into the analysis corpus.
+    """
+    return {
+        "review_id": review_id or row["ts"] + "-" + row["sender_hash"][:8],
+        "ts_held": row["ts"],
+        "build": row.get("build"),
+        "sender": sender,
+        "sender_hash": row["sender_hash"],
+        "sender_tail": row.get("sender_tail"),
+        "question": row.get("question"),
+        # IMMUTABLE. The model's own words, kept whatever the reviewer does next.
+        "draft": draft,
+        # The evidence the reviewer needs in order to judge the draft rather than guess at
+        # it: the engine's deterministic working and the facts retrieval actually served.
+        "engine_working": engine_working,
+        "facts": list(facts),
+        "model_latency_ms": row.get("model_latency_ms"),
+        "fallback": row.get("fallback"),
+        "error_class": row.get("error_class"),
+        "status": "pending",
+        "final": None,
+        "edit_reason": None,
+        "decided_ts": None,
+        "decision_latency_s": None,
+    }
+
+
+def apply_decision(item, action, *, edited=None, reason=None, now=None):
+    """(updated item, text to send or None). Pure — no I/O, so the rules are testable.
+
+    ⛔ A REASON IS REQUIRED FOR EVERY DEPARTURE FROM THE DRAFT, and the requirement is
+    enforced here rather than in the UI. A UI-only check is bypassed by the first curl, and
+    an edit with no reason is a correction whose *label* is missing — which is the entire
+    value of the edit. `send` needs no reason: agreeing with the draft is the null decision.
+    """
+    if item.get("status") != "pending":
+        raise ValueError(f"review {item.get('review_id')} is already "
+                         f"{item.get('status')!r} — a decision is taken once")
+    if action not in REVIEW_ACTIONS:
+        raise ValueError(f"unknown review action {action!r}; expected one of {REVIEW_ACTIONS}")
+    if action in ("edit", "withhold") and not (reason or "").strip():
+        raise ValueError(f"action {action!r} requires a reason — the reason is the label on "
+                         f"the correction and is the most valuable field in the record")
+    if action == "edit" and not (edited or "").strip():
+        raise ValueError("action 'edit' requires the edited text")
+
+    out = dict(item)
+    out["status"] = {"send": "sent", "edit": "edited", "withhold": "withheld"}[action]
+    out["decided_ts"] = (now or datetime.now(timezone.utc)).isoformat(timespec="seconds")
+    out["edit_reason"] = (reason or "").strip() or None
+    if action == "send":
+        out["final"] = item["draft"]
+    elif action == "edit":
+        out["final"] = edited.strip()
+    else:
+        out["final"] = None
+    try:
+        held = datetime.fromisoformat(item["ts_held"])
+        decided = datetime.fromisoformat(out["decided_ts"])
+        out["decision_latency_s"] = int((decided - held).total_seconds())
+    except Exception:                                                # noqa: BLE001
+        out["decision_latency_s"] = None
+    # `draft` is never touched. Asserted here rather than trusted, because a dict copy that
+    # later grows an in-place edit somewhere would destroy the dataset silently.
+    assert out["draft"] == item["draft"], "the draft must survive every decision verbatim"
+    return out, out["final"]
+
+
+def review_summary(items):
+    """The throughput and quality numbers the pilot exists to produce.
+
+    ⚠️ IT REFUSES TO REPORT AN EDIT RATE UNTIL AT LEAST ONE DECISION EXISTS, rather than
+    returning 0.0 — a zero edit rate on an empty queue is indistinguishable from a perfect
+    model, and that is the direction this project keeps getting wrong (R39).
+    """
+    decided = [i for i in items if i.get("status") in ("sent", "edited", "withheld")]
+    counts = {a: sum(1 for i in decided if i["status"] == a)
+              for a in ("sent", "edited", "withheld")}
+    lat = [i["decision_latency_s"] for i in decided
+           if isinstance(i.get("decision_latency_s"), int)]
+    return {
+        "pending": sum(1 for i in items if i.get("status") == "pending"),
+        "decided": len(decided),
+        "counts": counts,
+        "edit_or_withhold_rate": (
+            None if not decided
+            else round((counts["edited"] + counts["withheld"]) / len(decided), 3)),
+        "median_decision_latency_s": (None if not lat else sorted(lat)[len(lat) // 2]),
+        "_why_no_rate_on_an_empty_queue": (
+            "a 0.0 edit rate with nothing decided reads exactly like a perfect model; None "
+            "cannot be mistaken for one"),
+    }
 
 
 async def deliver_greeting(sender, send_once, settings, build="dev"):

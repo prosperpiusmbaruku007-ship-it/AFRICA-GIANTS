@@ -92,6 +92,18 @@ image = (
 # by the deploy.
 TRANSCRIPTS = modal.Dict.from_name("chike-transcripts-kv", create_if_missing=True)
 
+# ⛔⛔ A SEPARATE STORE FROM TRANSCRIPTS, AND THE REASON IS PII, NOT TIDINESS.
+#
+# A transcript row carries a SALTED HASH plus a 4-digit tail and deliberately no reachable
+# identifier — that is what makes the analysis corpus safe to read, export and quote. The
+# review queue CANNOT work that way: sending an approved answer needs the real number. Keeping
+# both in `chike-transcripts-kv` would quietly re-introduce reachable phone numbers into the
+# corpus every analysis pass reads, and nothing would announce it.
+#
+# So: its own Dict, behind the same ADMIN_TOKEN gate, and `/review/purge` drops the `sender`
+# from decided items so the number's lifetime is the decision's lifetime and not the pilot's.
+REVIEW_QUEUE = modal.Dict.from_name("chike-review-queue-kv", create_if_missing=True)
+
 # Lazy cross-app handle — resolved on first use, so a chike-inference redeploy does not
 # require a chike-whatsapp redeploy.
 ChikeModel = modal.Cls.from_name("chike-inference", "ChikeModel")
@@ -123,6 +135,21 @@ def _settings():
         secrets=(os.environ.get("WAPPFLY_TOKEN", ""),
                  os.environ.get("WEBHOOK_TOKEN", ""),
                  os.environ.get("ADMIN_TOKEN", "")),
+        # ⛔⛔ OFF BY DEFAULT, AND THE DANGEROUS DIRECTION IS THE ONE A DEFAULT CANNOT FIX.
+        # A typo in SUPERVISED does not fail safe: it silently DISABLES supervision while
+        # the reviewer believes every reply is being read, which is exactly the condition
+        # the founder's R7 reading rests on. Defaulting to True is not the answer either —
+        # that would hold every reply in the autonomous deployment and look like an outage.
+        #
+        # So the flag is not trusted on its own. Three things make the state checkable
+        # instead of assumed, and they are the R16 pattern applied to a config-only change:
+        #   1. STRICT PARSING — "1"/"true"/"yes" and nothing else; "ture" is False, loudly.
+        #   2. /health REPORTS IT, so the deploy can be verified rather than hoped at.
+        #   3. handler_core WITHHOLDS the answer if supervised is on and no hold_reply was
+        #      wired, instead of falling through to a send.
+        # The one remaining hole is a reviewer who never checks /health — which is why the
+        # pilot runbook makes that the first step, not the last.
+        supervised=os.environ.get("SUPERVISED", "").strip().lower() in ("1", "true", "yes"),
     )
 
 
@@ -170,9 +197,49 @@ async def answer_and_send(sender: str, text: str):
     async def ask(message):
         return await ChikeModel().run.remote.aio(message)
 
-    row = await core.deliver(sender, text, ask, _send_once, settings, BUILD)
+    # ⛔ THE ANSWER AND THE ACKS TRAVEL THROUGH DIFFERENT CALLABLES IN SUPERVISED MODE.
+    # `_send_once` still carries the ack ladder — a user who asks at 9pm must not sit in
+    # total silence until the reviewer wakes up, and in supervised mode the wait is
+    # human-paced, so the acks matter MORE than in autonomous mode. The ANSWER goes to
+    # `_hold_for_review`, which writes a draft and sends nothing.
+    captured = {}
+
+    async def ask_capturing(message):
+        """The reviewer must be able to judge the draft rather than guess at it, so the
+        engine's deterministic working and the facts retrieval actually served are captured
+        here and stored beside it. Only wired in supervised mode — in autonomous mode this
+        is pure overhead on the hot path."""
+        result = await ask(message)
+        if isinstance(result, dict):
+            captured["working"] = (result.get("working")
+                                   or result.get("computation_working"))
+            facts = (result.get("facts") or result.get("retrieved_facts") or ())
+            captured["facts"] = list(facts) if isinstance(facts, (list, tuple)) else []
+        return result
+
+    async def _hold_for_review(to, reply_text, row):
+        item = core.review_item(row=row, sender=to, draft=reply_text,
+                                engine_working=captured.get("working"),
+                                facts=captured.get("facts", ()))
+        try:
+            REVIEW_QUEUE[item["review_id"]] = item
+        except Exception as e:                                       # noqa: BLE001
+            # ⚠️ A HOLD THAT CANNOT BE STORED MUST NOT REPORT SUCCESS. The answer would be
+            # neither sent nor reviewable, and `send_ok: true` in the transcript would say
+            # it reached the user. That is the instrument-lie shape this handler was
+            # rewritten to abolish.
+            return False, f"review store failed ({type(e).__name__}: {e})"
+        print(f"[review] HELD {item['review_id']} from ...{item['sender_tail']} "
+              f"({len(reply_text)} chars)", flush=True)
+        return True, None
+
+    row = await core.deliver(
+        sender, text, ask_capturing if settings.supervised else ask,
+        _send_once, settings, BUILD,
+        hold_reply=_hold_for_review if settings.supervised else None)
     _write_row(row)
-    return {"fallback": row["fallback"], "error_class": row["error_class"]}
+    return {"fallback": row["fallback"], "error_class": row["error_class"],
+            "supervision": row.get("supervision")}
 
 
 @app.function(image=image, secrets=[SECRET],
@@ -275,6 +342,263 @@ def webhook(item: dict, token: str = None):
         return {"status": "error"}
 
 
+# ---------------------------------------------------------------------------
+# SUPERVISED REVIEW — the queue the founder clears from a phone
+# ---------------------------------------------------------------------------
+# ⚠️ DESIGNED FOR ONE THUMB AND A BAD CONNECTION, because that is where it will be used. No
+# framework, no external asset, no JS beyond one fetch — a review queue that needs a good
+# connection is a review queue that gets skipped, and this one runs over the same Tanzanian
+# link that has dropped three measurement runs this month.
+#
+# ⛔ AND IT SHOWS THE EVIDENCE, NOT JUST THE DRAFT. The engine's deterministic working and the
+# facts retrieval served sit under the reply, because a reviewer shown only the Swahili prose
+# is being asked to judge it against memory — which is exactly how two of my own adjudications
+# went wrong this week by reading the gold instead of the served index.
+
+
+def _admin_ok(token):
+    expected = os.environ.get("ADMIN_TOKEN", "")
+    return bool(expected) and token == expected
+
+
+def _queue_items():
+    out = []
+    try:
+        for k in REVIEW_QUEUE.keys():
+            try:
+                out.append(REVIEW_QUEUE[k])
+            except Exception:                                        # noqa: BLE001
+                continue
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[review] queue read failed ({type(e).__name__}: {e})")
+    return sorted(out, key=lambda i: i.get("ts_held") or "")
+
+
+def _esc(x):
+    return str(x or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def _supervision_health():
+    """{supervised, supervised_raw_env} — or supervised=None when it cannot be determined.
+
+    Calls `_settings()` so the parse rule has ONE owner: a /health that re-parsed SUPERVISED
+    itself could agree with itself while disagreeing with the handler, which is the dual-file
+    divergence CLAUDE.md warns about arriving in the one endpoint built to detect it.
+    """
+    raw = os.environ.get("SUPERVISED", "")
+    try:
+        return {"supervised": _settings().supervised, "supervised_raw_env": raw}
+    except Exception as e:                                           # noqa: BLE001
+        return {"supervised": None, "supervised_raw_env": raw,
+                "supervised_error": f"{type(e).__name__}: {e}"}
+
+
+def _review_queue_health():
+    """Queue depth for /health. A supervised pilot's one operational risk is a queue nobody
+    is clearing, and a pending count that nothing reports is a queue nobody is watching."""
+    try:
+        items = _queue_items()
+    except Exception as e:                                           # noqa: BLE001
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+    pending = [i for i in items if i.get("status") == "pending"]
+    oldest = min((i.get("ts_held") or "" for i in pending), default=None)
+    return {"ok": True, "total": len(items), "pending": len(pending),
+            "oldest_pending_ts": oldest}
+
+
+@app.function(image=image, secrets=[SECRET])
+@modal.fastapi_endpoint(method="GET")
+def review(token: str = None):
+    """The queue, as a phone-sized page. Disabled entirely when ADMIN_TOKEN is unset."""
+    from fastapi.responses import HTMLResponse, JSONResponse
+    if not _admin_ok(token):
+        return JSONResponse({"status": "not found"}, status_code=404)
+    core = _core()
+    items = _queue_items()
+    pending = [i for i in items if i.get("status") == "pending"]
+    summary = core.review_summary(items)
+    cards = []
+    for it in pending:
+        rid = _esc(it["review_id"])
+        facts_html = "".join(
+            "<li>" + _esc(f)[:400] + "</li>" for f in (it.get("facts") or []))
+        working = it.get("engine_working")
+        work_html = (
+            "<div class=w><b>Engine working</b><br>" + _esc(working) + "</div>" if working
+            else "<div class=w><i>no deterministic working &mdash; this answer came from "
+                 "the model and the index alone, so it carries no arithmetic to check "
+                 "against</i></div>")
+        flags = ""
+        if it.get("fallback"):
+            flags += " &middot; <b>FALLBACK</b>"
+        if it.get("error_class"):
+            flags += " &middot; <b>" + _esc(it.get("error_class")) + "</b>"
+        cards.append(
+            "<div class=c>"
+            "<div class=m>..." + _esc(it.get("sender_tail")) + " &middot; "
+            + _esc(it.get("ts_held")) + " &middot; "
+            + _esc(it.get("model_latency_ms")) + "ms" + flags + "</div>"
+            "<div class=q>" + _esc(it.get("question")) + "</div>"
+            '<textarea id="t-' + rid + '" rows=9>' + _esc(it.get("draft")) + "</textarea>"
+            + work_html
+            + ("<div class=f><b>Facts served</b><ul>" + facts_html + "</ul></div>"
+               if facts_html else "")
+            + '<input id="r-' + rid + '" placeholder="reason (required to edit or '
+              'withhold)">'
+            "<div class=b>"
+            "<button class=s onclick=\"act('" + rid + "','send')\">Send</button>"
+            "<button class=e onclick=\"act('" + rid + "','edit')\">Send edit</button>"
+            "<button class=x onclick=\"act('" + rid + "','withhold')\">Withhold</button>"
+            "</div>"
+            '<div class=o id="o-' + rid + '"></div>'
+            "</div>")
+    body = "".join(cards) or "<p class=z>Queue empty.</p>"
+    head = (
+        "<!doctype html><meta name=viewport "
+        'content="width=device-width,initial-scale=1">'
+        "<title>Chike review (" + str(len(pending)) + ")</title><style>"
+        "body{font:16px/1.45 system-ui,sans-serif;margin:0;padding:10px;background:#111;"
+        "color:#eee}"
+        "h1{font-size:17px;margin:4px 0 8px}"
+        ".c{background:#1c1c1e;border-radius:12px;padding:12px;margin:0 0 14px}"
+        ".m{font-size:12px;color:#9a9a9f;margin-bottom:6px}"
+        ".q{font-weight:600;margin-bottom:8px}"
+        "textarea,input{width:100%;box-sizing:border-box;font:15px/1.4 inherit;"
+        "background:#2a2a2d;color:#eee;border:1px solid #3a3a3d;border-radius:8px;"
+        "padding:8px;margin-bottom:8px}"
+        ".w,.f{font-size:13px;color:#b9b9be;background:#17171a;border-radius:8px;"
+        "padding:8px;margin-bottom:8px;white-space:pre-wrap}"
+        ".f ul{margin:4px 0 0 16px;padding:0}"
+        ".b{display:flex;gap:8px}"
+        "button{flex:1;padding:14px 0;font-size:15px;font-weight:600;border:0;"
+        "border-radius:10px;color:#fff}"
+        ".s{background:#1f7a3a}.e{background:#8a5a00}.x{background:#7a1f1f}"
+        ".o{font-size:13px;margin-top:8px;color:#9ad}.z{color:#9a9a9f}"
+        ".t{font-size:12px;color:#9a9a9f;margin-bottom:12px}"
+        "</style>")
+    stats = ("<h1>Chike review &mdash; " + str(len(pending)) + " pending</h1>"
+             "<div class=t>decided " + str(summary["decided"])
+             + " &middot; edit/withhold rate " + str(summary["edit_or_withhold_rate"])
+             + " &middot; median decision "
+             + str(summary["median_decision_latency_s"]) + "s</div>")
+    script = (
+        "<script>async function act(id,action){"
+        "var out=document.getElementById('o-'+id);out.textContent='working...';"
+        "var tok=new URLSearchParams(location.search).get('token');"
+        "try{var r=await fetch('review_act?token='+encodeURIComponent(tok),"
+        "{method:'POST',headers:{'Content-Type':'application/json'},"
+        "body:JSON.stringify({review_id:id,action:action,"
+        "edited:document.getElementById('t-'+id).value,"
+        "reason:document.getElementById('r-'+id).value})});"
+        "var j=await r.json();"
+        "out.textContent=j.ok?(j.status+(j.send_ok===false?' BUT SEND FAILED: '+"
+        "(j.send_error||''):'')):('ERROR: '+(j.detail||r.status));"
+        "}catch(e){out.textContent='ERROR: '+e;}}</script>")
+    return HTMLResponse(head + stats + body + script)
+
+
+@app.function(image=image, secrets=[SECRET], timeout=120)
+@modal.fastapi_endpoint(method="POST")
+async def review_act(item: dict, token: str = None):
+    """Take one decision. The rules live in handler_core.apply_decision — pure, and tested
+    without Modal — so this function only does I/O.
+
+    ⛔ THE REASON REQUIREMENT IS ENFORCED IN apply_decision, NOT HERE. A UI-only check is
+    bypassed by the first curl, and an edit with no reason is a correction whose LABEL is
+    missing, which is the whole value of the edit."""
+    from fastapi.responses import JSONResponse
+    if not _admin_ok(token):
+        return JSONResponse({"status": "not found"}, status_code=404)
+    core = _core()
+    rid = (item or {}).get("review_id")
+    try:
+        existing = REVIEW_QUEUE[rid]
+    except Exception:                                                # noqa: BLE001
+        return JSONResponse({"ok": False, "detail": f"unknown review_id {rid!r}"},
+                            status_code=404)
+    try:
+        updated, to_send = core.apply_decision(
+            existing, (item or {}).get("action"),
+            edited=(item or {}).get("edited"), reason=(item or {}).get("reason"))
+    except ValueError as e:
+        return JSONResponse({"ok": False, "detail": str(e)}, status_code=400)
+
+    # ⚠️ STORE THE DECISION BEFORE SENDING. A stored decision with send_ok=false is
+    # recoverable; a successful send with no stored decision is a message the user has and
+    # the record does not — and the same answer can then be sent twice, which this app's own
+    # `retries=0` comment already names as worse than one missing answer.
+    send_ok, send_error = None, None
+    try:
+        REVIEW_QUEUE[rid] = updated
+    except Exception as e:                                           # noqa: BLE001
+        return JSONResponse({"ok": False, "detail": f"store failed: {e}"}, status_code=500)
+    if to_send:
+        send_ok, send_error = await _send_once(existing["sender"], to_send)
+        updated["send_ok"], updated["send_error"] = send_ok, send_error
+        try:
+            REVIEW_QUEUE[rid] = updated
+        except Exception as e:                                       # noqa: BLE001
+            print(f"[review] send result recorded only in logs ({e})")
+
+    # The decided item also lands in the TRANSCRIPT store, so the analysis corpus holds
+    # draft / final / edit_reason as three separate fields without a manual export.
+    _write_row({
+        "ts": updated["decided_ts"], "build": updated.get("build"), "kind": "review",
+        "sender_hash": updated["sender_hash"], "sender_tail": updated.get("sender_tail"),
+        "sender_domain": None, "question": updated.get("question"),
+        "reply": updated.get("final"), "reply_chars": len(updated.get("final") or ""),
+        "model_latency_ms": updated.get("model_latency_ms"), "total_latency_ms": None,
+        "fallback": updated.get("fallback"), "error_class": updated.get("error_class"),
+        "error_detail": None, "cold_start_suspected": False, "ack_sent": False,
+        "acks_sent": 0, "send_ok": send_ok, "send_error": send_error,
+        "supervision": updated["status"],
+        "draft": updated["draft"], "final": updated.get("final"),
+        "edit_reason": updated.get("edit_reason"),
+        "decision_latency_s": updated.get("decision_latency_s"),
+    })
+    print(f"[review] {updated['status'].upper()} {rid} "
+          f"latency={updated.get('decision_latency_s')}s "
+          f"reason={updated.get('edit_reason')!r}", flush=True)
+    return {"ok": True, "status": updated["status"], "send_ok": send_ok,
+            "send_error": send_error}
+
+
+@app.function(image=image, secrets=[SECRET])
+@modal.fastapi_endpoint(method="GET")
+def review_queue(token: str = None, include_sender: bool = False):
+    """The queue as JSON, for analysis. `sender` is withheld unless explicitly requested, so
+    the default export carries no reachable identifier — matching the transcript store."""
+    if not _admin_ok(token):
+        return {"status": "not found"}
+    core = _core()
+    items = _queue_items()
+    if not include_sender:
+        items = [{k: v for k, v in i.items() if k != "sender"} for i in items]
+    return {"count": len(items), "summary": core.review_summary(items), "items": items}
+
+
+@app.function(image=image, secrets=[SECRET])
+@modal.fastapi_endpoint(method="POST")
+def review_purge(token: str = None):
+    """Drop the real number from every DECIDED item, keeping everything else.
+
+    The number's lifetime should be the decision's lifetime, not the pilot's. Pending items
+    are untouched — purging one would make its answer undeliverable."""
+    if not _admin_ok(token):
+        return {"status": "not found"}
+    purged = 0
+    for it in _queue_items():
+        if it.get("status") != "pending" and it.get("sender"):
+            it["sender"] = None
+            it["sender_purged"] = True
+            try:
+                REVIEW_QUEUE[it["review_id"]] = it
+                purged += 1
+            except Exception as e:                                   # noqa: BLE001
+                print(f"[review] purge failed for {it['review_id']}: {e}")
+    return {"purged": purged}
+
+
 @app.function(image=image, secrets=[SECRET])
 @modal.fastapi_endpoint(method="GET")
 def health():
@@ -303,6 +627,28 @@ def health():
         "webhook_token_set": bool(os.environ.get("WEBHOOK_TOKEN", "")),
         "transcripts_endpoint": bool(os.environ.get("ADMIN_TOKEN", "")),
         "transcript_store": store,
+        # ⛔⛔ THE SUPERVISION STATE, REPORTED FROM THE SAME FUNCTION THE HANDLER USES.
+        #
+        # This is the field the founder's R7 reading rests on: "nothing reaches a
+        # participant unreviewed". A typo in SUPERVISED does not fail safe — it silently
+        # turns supervision OFF while the reviewer believes every reply is being read — so
+        # the state has to be CHECKABLE rather than assumed, and the pilot runbook makes
+        # reading this the first step after any deploy, not the last.
+        #
+        # ⚠️ IT CALLS `_settings().supervised` RATHER THAN RE-READING THE ENV VAR. Re-parsing
+        # it here would be a second copy of the parse rule, and a /health that agreed with
+        # itself while disagreeing with the handler is the dual-file divergence CLAUDE.md
+        # warns about, in the one place built to detect divergence.
+        # ⚠️ AND IF IT CANNOT BE DETERMINED, /health SAYS SO RATHER THAN GUESSING. `None` is
+        # not `False`: reporting False on a failed lookup would read as "supervision is off"
+        # when the truth is "this endpoint could not tell", and the whole point of the field
+        # is that the reviewer can trust what it says. /health is the diagnostic of last
+        # resort, so it must degrade rather than raise — a 500 here tells you nothing about
+        # anything. (It broke two tests the moment it could raise, which is how this was
+        # caught rather than discovered live.)
+        **_supervision_health(),
+        "review_endpoint": bool(os.environ.get("ADMIN_TOKEN", "")),
+        "review_queue": _review_queue_health(),
         # PRESENCE BY NAME, never values. A misnamed key in the secret and a wrong
         # value produce identical failures at the endpoint — that ambiguity cost hours
         # on `modal-api-token`. This makes "is the key even there, spelled that way?"

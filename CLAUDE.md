@@ -1254,6 +1254,79 @@ Two measurements per row, re-derived on every run of the harness rather than ass
   it needs **replacement copy**, and that copy is the only thing standing between a caught
   fabrication and a blank reply.
 
+### ⚖️ THE R7 READING ON A SUPERVISED COHORT — ON THE RECORD, WITH ITS CONDITION, SO IT CANNOT DECAY INTO "WE DECIDED PILOTS DON'T COUNT" (founder's call, 2026-10-10)
+
+**R7 says: never ship any user-facing product before BOTH accuracy gates pass.** Gate 1 is at
+**80.2–81.9%** against its 85% line and Gate 2 is **unsolved** after five dead designs. The
+question put to the founder was whether a small supervised cohort counts as *shipping*. **It
+was flagged as adjacent, the call was theirs, and they took it: a supervised cohort is NOT
+shipping — ON THE CONDITION BELOW.**
+
+> **THE CONDITION, IN THE FOUNDER'S OWN TERMS:** *"I read every draft before it's sent and can
+> edit or withhold it; nothing reaches a participant unreviewed. Participants are told it's a
+> supervised test. Every reply logged with draft, edit and final kept separately."*
+
+**WHY THE CONDITION IS THE WHOLE RULING AND NOT A CAVEAT.** What R7 forbids is an unsupervised
+system giving a Tanzanian employer a confident wrong compliance answer. A cohort where a human
+reads every reply before it goes is **not that system** — the human is the gate. Remove the
+human and it becomes exactly that system, with no code change and nothing to announce. So the
+reading is conditional by construction, and **the condition is enforced in code rather than
+remembered** (R35: a hold without an expiry lapses; a condition without an enforcement point
+decays the same way):
+
+- `Settings.supervised` holds the ANSWER and sends nothing. `handler_core` **withholds** rather
+  than falling through to a send when supervision is on and no hold was wired — the
+  misconfiguration path is the one that would otherwise look like it was working.
+- **`/health` reports the PARSED flag, and reports `None` when it cannot determine it.** A typo
+  in `SUPERVISED` does not fail safe: it silently turns supervision off while the reviewer
+  believes every reply is being read. `False` and "could not tell" are therefore different
+  values, and the runbook makes reading this the FIRST step after any deploy.
+- **The acks are deliberately NOT held.** One `send_once` carried both the ack ladder and the
+  answer, so a blanket hold would have left a 9pm asker in total silence until morning. In
+  supervised mode the acks matter *more*, not less.
+- **`draft`, `final` and `edit_reason` are three separate fields and are never collapsed.** The
+  edits are labelled corrections on real traffic — the one signal no sweep over our own
+  corpora can manufacture (R21/R33). A design storing only the final text would leave every
+  transcript looking like a correct answer and destroy the dataset while appearing to work.
+- An edit or a withhold **requires a reason, enforced in the pure layer, not the UI** — a
+  UI-only check is bypassed by the first curl, and an edit with no reason is a correction whose
+  *label* is missing.
+
+**⚠️ WHAT WOULD MAKE THIS READING STOP APPLYING — stated so a later session cannot quietly
+widen it.** Any one of these ends it and puts the cohort back under R7 as a launch:
+auto-sending any class of reply however safe it looks; a cohort large enough that review
+becomes skimming; dropping the participant disclosure; or collapsing draft/final into one
+field. **"We ran a pilot before the gates passed" is not a precedent for the next one** — the
+precedent is the condition, not the pilot.
+
+**🔴 AND THE THROUGHPUT FINDING, REPORTED BEFORE RECRUITING BECAUSE THE FOUNDER ASKED FOR IT
+BEFORE RECRUITING.** Their own test was *"if clearing it takes more than a few minutes a day
+for ten users, tell me before we recruit — a supervision step that's too slow becomes
+rubber-stamping, and then it's the thing R7 forbids."* Measured inputs, modelled decision cost
+(`eval/controls/estimate_review_throughput_2026_10_10.py`): median stored reply **197 chars**
+over 3,230 replies, edit rate **17.7%** (= 1 − A2, a LOWER bound since A2 was measured on our
+own corpora).
+
+| cohort | questions/day | min/day |
+|---|---|---|
+| 10 users × 2 | 20 | **~21** |
+| 10 users × 1 | 10 | ~10 |
+| 5 users × 2 | 10 | ~10 |
+| **3 users × 2** | 6 | **~6** |
+
+**So the answer is YES, it exceeds the budget at ten users — by roughly four times.** The
+honest reading is that **~3 participants** fits "a few minutes a day", and the cohort is the
+lever rather than the review depth, because reducing review depth is the one adjustment that
+voids the R7 reading above.
+
+**AND THE COST NO MINUTE-COUNT CAPTURES IS LATENCY.** A supervised answer cannot arrive faster
+than the reviewer, so a 9pm question waits until morning. That changes *what the pilot
+measures*: a user who waits twelve hours for their first answer may simply stop asking, and the
+transcripts would then **under-report demand rather than reveal it** — R22's shape, arriving in
+the pilot's own instrumentation. `decision_latency_s` is recorded per item and
+`median_decision_latency_s` in `review_summary()` precisely so this is measured in the first
+week instead of assumed.
+
 ### ⛔ BEFORE PROPOSING ANY MECHANISM THAT CAN REFUSE A USER — read this, then R21.
 
 **Applies to: refusal phrases, OOC lists, coverage gates, similarity floors, confidence

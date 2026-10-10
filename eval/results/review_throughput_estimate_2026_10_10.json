@@ -1,0 +1,92 @@
+{
+ "_what": "Estimated daily cost of clearing the supervised review queue, asked before recruiting because a supervision step that is too slow becomes rubber-stamping.",
+ "_measured_inputs": {
+  "reply_length_chars": {
+   "n": 3230,
+   "median": 197.0,
+   "p90": 344,
+   "sources": {
+    "eval/results/gate_orchestrator_combined_19fce68.json": 399,
+    "eval/results/gate_orchestrator_combined_5239190.json": 400,
+    "eval/results/gate_orchestrator_combined_5a62c00.json": 400,
+    "eval/results/gate_orchestrator_combined_75421f0.json": 400,
+    "eval/results/gate_orchestrator_combined_7eb9226.json": 399,
+    "eval/results/gate_orchestrator_combined_afef9dd.json": 400,
+    "eval/results/gate_orchestrator_combined_e9cc68a.json": 398,
+    "eval/results/gate_production_0e11c3d.json": 400,
+    "eval/results/targeted_route_verification_2026_10_09.json": 34
+   },
+   "_why_this_population": "these are replies this system actually produced, so the reading cost is derived from real output length rather than an assumed one"
+  },
+  "edit_rate": {
+   "value": 0.177,
+   "derivation": "1 - A2 (0.823), gate 0e11c3d, hand-adjudicated",
+   "_why_this_is_a_LOWER_bound": "A2 was measured on our own authored corpora, which share vocabulary and framing with our facts by construction (R21/R33). Real traffic is a different population and every time this project has measured one, the mechanism did worse on it — 1.9% vs 71% on the coverage gate, 42/42 OOC leaks across two axes."
+  }
+ },
+ "_modelled_inputs": {
+  "words_per_minute": 180.0,
+  "chars_per_word": 6.0,
+  "fixed_check_seconds": 25.0,
+  "edit_extra_seconds": 150.0,
+  "_not_measured": "seconds per decision is MODELLED, not measured. decision_latency_s is recorded on every item and review_summary() reports the median, so the pilot replaces this estimate with a real number inside the first week."
+ },
+ "seconds_per_decision": {
+  "send_median_length": 35.9,
+  "send_p90_length": 44.1,
+  "edit_median_length": 185.9
+ },
+ "rows": [
+  {
+   "users": 10,
+   "questions_per_user_per_day": 1,
+   "questions_per_day": 10,
+   "expected_edits_or_withholds_per_day": 1.8,
+   "minutes_per_day_median_length": 10.4,
+   "minutes_per_day_p90_length": 11.8,
+   "note": "ten employers, one question each per day — the quiet case"
+  },
+  {
+   "users": 10,
+   "questions_per_user_per_day": 2,
+   "questions_per_day": 20,
+   "expected_edits_or_withholds_per_day": 3.5,
+   "minutes_per_day_median_length": 20.8,
+   "minutes_per_day_p90_length": 23.6,
+   "note": "ten employers, two each — the planning case"
+  },
+  {
+   "users": 10,
+   "questions_per_user_per_day": 3,
+   "questions_per_day": 30,
+   "expected_edits_or_withholds_per_day": 5.3,
+   "minutes_per_day_median_length": 31.2,
+   "minutes_per_day_p90_length": 35.3,
+   "note": "ten employers, three each — a busy day, or the first week when the novelty is high"
+  },
+  {
+   "users": 5,
+   "questions_per_user_per_day": 2,
+   "questions_per_day": 10,
+   "expected_edits_or_withholds_per_day": 1.8,
+   "minutes_per_day_median_length": 10.4,
+   "minutes_per_day_p90_length": 11.8,
+   "note": "five employers, two each — the cohort that fits a 'few minutes a day' budget"
+  },
+  {
+   "users": 3,
+   "questions_per_user_per_day": 2,
+   "questions_per_day": 6,
+   "expected_edits_or_withholds_per_day": 1.1,
+   "minutes_per_day_median_length": 6.2,
+   "minutes_per_day_p90_length": 7.1,
+   "note": "three employers, two each — the cohort that fits comfortably"
+  }
+ ],
+ "verdict": {
+  "question_asked": "does clearing it take more than a few minutes a day for ten users?",
+  "answer": "YES",
+  "at_ten_users_two_questions_each_minutes_per_day": 20.8,
+  "_the_second_cost_no_estimate_captures": "LATENCY, not minutes. A supervised answer cannot arrive faster than the reviewer, so a 9pm question waits until morning. That changes what the pilot MEASURES — a user who waits twelve hours for their first answer may simply stop asking, and the transcripts would then under-report demand rather than reveal it. The acks say a person is checking, which is honest, but honesty is not immediacy."
+ }
+}
