@@ -113,7 +113,15 @@ SECRET = modal.Secret.from_name("chike-whatsapp")
 # The exact key names this app reads from that secret. /health reports which are
 # PRESENT (never their values), so a misspelling is caught by name rather than
 # diagnosed later from a failure that looks identical to a wrong value.
-EXPECTED_KEYS = ("WAPPFLY_TOKEN", "WEBHOOK_TOKEN", "ADMIN_TOKEN", "SENDER_SALT")
+# REVIEWER_ROSTER and REVIEW_SIGNING_KEY joined on 2026-10-10. Both are credentials in the
+# sense that matters: the roster decides WHO may approve a compliance answer, and the signing
+# key is what makes an approval link unforgeable. Neither belongs in code.
+EXPECTED_KEYS = ("WAPPFLY_TOKEN", "WEBHOOK_TOKEN", "ADMIN_TOKEN", "SENDER_SALT",
+                 "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY")
+
+# The public base URL of this app, needed to build approval links that work inside WhatsApp.
+# Modal does not tell a function its own URL, so the deploy passes it.
+PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL", "").rstrip("/")
 
 WAPPFLY_SEND_URL = os.environ.get("WAPPFLY_SEND_URL",
                                   "https://wappfly.com/api/messages/send")
@@ -150,7 +158,24 @@ def _settings():
         # The one remaining hole is a reviewer who never checks /health — which is why the
         # pilot runbook makes that the first step, not the last.
         supervised=os.environ.get("SUPERVISED", "").strip().lower() in ("1", "true", "yes"),
+        # A SETTING, not a fixed number — 1, 10 or 30 are all legitimate, and the right one
+        # is an operational judgement about review capacity that changes as the roster does.
+        cohort_size=int(os.environ.get("COHORT_SIZE", "0") or 0),
+        roster=parse_roster_env(),
+        review_signing_key=os.environ.get("REVIEW_SIGNING_KEY", ""),
+        claim_ttl_s=float(os.environ.get("CLAIM_TTL_S", "900")),
+        renotify_after_s=float(os.environ.get("RENOTIFY_AFTER_S", "1800")),
     )
+
+
+def parse_roster_env():
+    """The roster, from the secret. Parsed by handler_core so the rule has one owner."""
+    try:
+        return _core().parse_roster(os.environ.get("REVIEWER_ROSTER", ""))
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[roster] parse failed ({type(e).__name__}: {e}) — treating as EMPTY, which "
+              f"means no links are issued and every draft HOLDS")
+        return ()
 
 
 def _core():
@@ -231,6 +256,21 @@ async def answer_and_send(sender: str, text: str):
             return False, f"review store failed ({type(e).__name__}: {e})"
         print(f"[review] HELD {item['review_id']} from ...{item['sender_tail']} "
               f"({len(reply_text)} chars)", flush=True)
+        # ⛔ PUSHED IMMEDIATELY, WHICH IS THE WHOLE POINT OF REAL-TIME REVIEW. The
+        # queue-checking model made the reviewer the polling loop, and a reviewer who has to
+        # remember to look IS the latency. Notifying inside the hold means the draft reaches
+        # a phone within seconds of being ready.
+        #
+        # ⚠️ A FAILED NOTIFICATION DOES NOT FAIL THE HOLD. The draft is already stored, so
+        # the sweeper will re-notify; returning False here would mark the answer as
+        # undelivered when in fact it is safely pending. Two different failures, two
+        # different records.
+        try:
+            sent = await _notify_reviewers(item)
+            _mark_notified(item, sent)
+        except Exception as e:                                       # noqa: BLE001
+            print(f"[review] notify raised for {item['review_id']}: "
+                  f"{type(e).__name__}: {e} — the draft HOLDS and will be re-notified")
         return True, None
 
     row = await core.deliver(
@@ -378,6 +418,120 @@ def _esc(x):
     return str(x or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+def _draft_link(settings, item, number):
+    """The per-(draft, reviewer) link. No phone number in the URL — a reviewer handle."""
+    core = _core()
+    rid = core.reviewer_id(settings.review_signing_key, number)
+    tok = core.review_token(settings.review_signing_key, item["review_id"], number)
+    base = PUBLIC_BASE_URL or ""
+    return (f"{base}/d?r={item['review_id']}&v={rid}&t={tok}")
+
+
+async def _notify_reviewers(item, *, renotify=False):
+    """Push one draft to every reviewer on the roster, each with their own link.
+
+    ⛔⛔ IF THE ROSTER IS EMPTY OR THE SIGNING KEY IS MISSING, NOTHING IS SENT AND THE DRAFT
+    HOLDS. It is never auto-approved, never auto-sent and never discarded — it stays pending
+    and the sweeper keeps re-notifying. A misconfigured roster must cost a delay, never an
+    unreviewed answer.
+
+    ⚠️ IT NOTIFIES EVERY REVIEWER RATHER THAN ONE, AND THE CLAIM LOCK IS WHAT MAKES THAT
+    SAFE. Round-robin would be cheaper on notifications and far worse in practice: a
+    reviewer who is asleep, driving or out of signal silently becomes a queue of one. The
+    lock means whoever opens first owns it, so capacity is whoever is actually awake.
+    """
+    core = _core()
+    settings = _settings()
+    if not settings.roster or not settings.review_signing_key:
+        print(f"[review] NOT NOTIFIED {item['review_id']} — "
+              f"roster={len(settings.roster)} signing_key="
+              f"{bool(settings.review_signing_key)}. The draft HOLDS.", flush=True)
+        return 0
+    if not PUBLIC_BASE_URL:
+        print(f"[review] NOT NOTIFIED {item['review_id']} — PUBLIC_BASE_URL is unset, so "
+              f"any link would be relative and unusable inside WhatsApp. The draft HOLDS.",
+              flush=True)
+        return 0
+    ok_count = 0
+    for number, name in settings.roster:
+        text = core.notification_text(
+            item, _draft_link(settings, item, number), reviewer_name=name,
+            renotify=renotify)
+        ok, detail = await _send_once(number, text)
+        if ok:
+            ok_count += 1
+        else:
+            print(f"[review] notify FAILED to ...{number[-4:]} for "
+                  f"{item['review_id']}: {detail}", flush=True)
+    return ok_count
+
+
+def _mark_notified(item, sent_count, *, renotify=False):
+    from datetime import datetime, timezone
+    item["last_notified_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    item["notify_count"] = int(item.get("notify_count") or 0) + 1
+    item["last_notify_recipients"] = sent_count
+    if renotify:
+        item["renotify_count"] = int(item.get("renotify_count") or 0) + 1
+    try:
+        REVIEW_QUEUE[item["review_id"]] = item
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[review] could not record notification for {item['review_id']}: {e}")
+
+
+def _participants_seen():
+    """Distinct participants in the transcript store — the number the cohort SETTING is
+    monitored against. Reviewer notifications are not transcript rows, so they cannot
+    inflate this."""
+    try:
+        seen = set()
+        for k in TRANSCRIPTS.keys():
+            try:
+                row = TRANSCRIPTS[k]
+            except Exception:                                        # noqa: BLE001
+                continue
+            if isinstance(row, dict) and row.get("kind") in ("question", "greeting"):
+                if row.get("sender_hash"):
+                    seen.add(row["sender_hash"])
+        return len(seen)
+    except Exception:                                                # noqa: BLE001
+        return None
+
+
+def _cohort_health():
+    size = int(os.environ.get("COHORT_SIZE", "0") or 0)
+    seen = _participants_seen()
+    return {"declared_size": size, "participants_seen": seen,
+            "over_capacity": (None if (seen is None or not size) else seen > size),
+            "_note": "a MONITOR, not a gate — see the comment at the call site"}
+
+
+def _roster_health():
+    try:
+        settings = _settings()
+    except Exception as e:                                           # noqa: BLE001
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+    core = _core()
+    key = settings.review_signing_key
+    return {
+        "ok": True,
+        "reviewers": len(settings.roster),
+        # Handles, not numbers. Lets a reviewer confirm their own link belongs to them
+        # without publishing anyone's phone number.
+        "reviewer_ids": [core.reviewer_id(key, n) for n, _name in settings.roster] if key
+                        else [],
+        "names": [name for _n, name in settings.roster],
+        "signing_key_set": bool(key),
+        "claim_ttl_s": settings.claim_ttl_s,
+        "renotify_after_s": settings.renotify_after_s,
+        "public_base_url_set": bool(PUBLIC_BASE_URL),
+        # ⛔ THE ONE LINE THAT SAYS WHETHER REVIEW CAN HAPPEN AT ALL. Any of these three
+        # missing means no links are issued, which means drafts HOLD — safe, and silent
+        # unless something reports it.
+        "can_issue_links": bool(settings.roster and key and PUBLIC_BASE_URL),
+    }
+
+
 def _supervision_health():
     """{supervised, supervised_raw_env} — or supervised=None when it cannot be determined.
 
@@ -443,14 +597,10 @@ def review(token: str = None):
             + work_html
             + ("<div class=f><b>Facts served</b><ul>" + facts_html + "</ul></div>"
                if facts_html else "")
-            + '<input id="r-' + rid + '" placeholder="reason (required to edit or '
-              'withhold)">'
-            "<div class=b>"
-            "<button class=s onclick=\"act('" + rid + "','send')\">Send</button>"
-            "<button class=e onclick=\"act('" + rid + "','edit')\">Send edit</button>"
-            "<button class=x onclick=\"act('" + rid + "','withhold')\">Withhold</button>"
-            "</div>"
-            '<div class=o id="o-' + rid + '"></div>'
+            + ("<div class=o>claimed by " + _esc(it.get("claimed_by") and "a reviewer")
+               + " until " + _esc(it.get("claim_expires_at")) + "</div>"
+               if it.get("claimed_by") else "<div class=o>unclaimed</div>")
+            + "<div class=o>notified " + str(it.get("notify_count") or 0) + "x</div>"
             "</div>")
     body = "".join(cards) or "<p class=z>Queue empty.</p>"
     head = (
@@ -481,47 +631,217 @@ def review(token: str = None):
              + " &middot; edit/withhold rate " + str(summary["edit_or_withhold_rate"])
              + " &middot; median decision "
              + str(summary["median_decision_latency_s"]) + "s</div>")
-    script = (
-        "<script>async function act(id,action){"
-        "var out=document.getElementById('o-'+id);out.textContent='working...';"
-        "var tok=new URLSearchParams(location.search).get('token');"
-        "try{var r=await fetch('review_act?token='+encodeURIComponent(tok),"
-        "{method:'POST',headers:{'Content-Type':'application/json'},"
-        "body:JSON.stringify({review_id:id,action:action,"
-        "edited:document.getElementById('t-'+id).value,"
-        "reason:document.getElementById('r-'+id).value})});"
-        "var j=await r.json();"
-        "out.textContent=j.ok?(j.status+(j.send_ok===false?' BUT SEND FAILED: '+"
-        "(j.send_error||''):'')):('ERROR: '+(j.detail||r.status));"
-        "}catch(e){out.textContent='ERROR: '+e;}}</script>")
+    # ⛔ READ-ONLY. There are no action buttons here any more, and that is the design:
+    # `apply_decision` refuses an unattributed decision, so an ADMIN_TOKEN holder acting
+    # from this page would either be impossible or would have to be given a fake reviewer
+    # identity — and a fake identity in the attribution column is worse than no column.
+    # Decisions happen on /d, from a reviewer's own signed link. This page is the overview:
+    # what is waiting, who holds what, how often it has been notified.
+    script = ("<div class=t>Read-only. Decisions are taken from a reviewer's own link "
+              "(/d), so every decision carries a reviewer.</div>")
     return HTMLResponse(head + stats + body + script)
+
+
+@app.function(image=image, secrets=[SECRET])
+@modal.fastapi_endpoint(method="GET")
+def d(r: str = None, v: str = None, t: str = None):
+    """One draft, opened from a WhatsApp link. GET is READ-ONLY by design.
+
+    ⛔⛔ NOTHING ON THIS PAGE ACTS ON A GET, AND THE REASON IS WHATSAPP'S OWN LINK PREVIEW.
+    WhatsApp fetches the URL to render a preview card the moment the notification is
+    delivered. A GET that claimed, sent or withheld would therefore fire before any human
+    saw it — and "approve by tapping a link" is exactly the design that invites it. The
+    claim is a POST issued by this page's JavaScript on load, and the three actions are
+    POSTs from buttons; a preview crawler executes neither.
+    """
+    from fastapi.responses import HTMLResponse, JSONResponse
+    core = _core()
+    settings = _settings()
+    who = core.authenticate_reviewer(settings, r, v, t)
+    if not who:
+        # Deliberately a 404 with no detail: a bad token and an unknown draft look the
+        # same from outside, so the page cannot be used to enumerate either.
+        return JSONResponse({"status": "not found"}, status_code=404)
+    _number, name = who
+    try:
+        it = REVIEW_QUEUE[r]
+    except Exception:                                                # noqa: BLE001
+        return JSONResponse({"status": "not found"}, status_code=404)
+
+    facts_html = "".join("<li>" + _esc(f)[:600] + "</li>" for f in (it.get("facts") or []))
+    working = it.get("engine_working")
+    work_html = ("<div class=w><b>Hesabu ya mfumo</b><br>" + _esc(working) + "</div>"
+                 if working else
+                 "<div class=w><i>Hakuna hesabu ya mfumo — jibu hili limetoka kwa modeli "
+                 "na kumbukumbu pekee, hivyo hakuna hesabu ya kuthibitisha.</i></div>")
+    decided = it.get("status") != "pending"
+    banner = ""
+    if decided:
+        banner = ("<div class=dec><b>Imeshaamuliwa:</b> " + _esc(it.get("status"))
+                  + " &middot; " + _esc(it.get("decided_by_name"))
+                  + " &middot; " + _esc(it.get("decided_ts")) + "</div>")
+    head = (
+        "<!doctype html><meta name=viewport "
+        'content="width=device-width,initial-scale=1">'
+        "<title>Chike &mdash; rasimu</title><style>"
+        "body{font:16px/1.45 system-ui,sans-serif;margin:0;padding:12px;background:#111;"
+        "color:#eee}"
+        ".m{font-size:12px;color:#9a9a9f;margin-bottom:6px}"
+        ".q{font-weight:600;margin-bottom:10px}"
+        "textarea,input{width:100%;box-sizing:border-box;font:15px/1.45 inherit;"
+        "background:#2a2a2d;color:#eee;border:1px solid #3a3a3d;border-radius:8px;"
+        "padding:9px;margin-bottom:10px}"
+        ".w,.f{font-size:13px;color:#b9b9be;background:#17171a;border-radius:8px;"
+        "padding:9px;margin-bottom:10px;white-space:pre-wrap}"
+        ".f ul{margin:4px 0 0 16px;padding:0}"
+        ".b{display:flex;gap:8px}"
+        "button{flex:1;padding:16px 0;font-size:15px;font-weight:600;border:0;"
+        "border-radius:10px;color:#fff}"
+        "button:disabled{opacity:.45}"
+        ".s{background:#1f7a3a}.e{background:#8a5a00}.x{background:#7a1f1f}"
+        ".o{font-size:14px;margin-top:10px;color:#9ad;min-height:1.4em}"
+        ".lock{font-size:13px;padding:9px;border-radius:8px;margin-bottom:10px;"
+        "background:#2a2320;color:#e8c89a}"
+        ".dec{font-size:13px;padding:9px;border-radius:8px;margin-bottom:10px;"
+        "background:#20262a;color:#9ad}"
+        "</style>")
+    body = (
+        "<div class=m>" + _esc(name) + " &middot; mteja ...“"
+        + _esc(it.get("sender_tail")) + "” &middot; " + _esc(it.get("ts_held")) + "</div>"
+        + banner
+        + '<div class=lock id=lock>Inashikiliwa&hellip;</div>'
+        "<div class=q>" + _esc(it.get("question")) + "</div>"
+        '<textarea id=t rows=10 '
+        + ("disabled" if decided else "") + ">" + _esc(it.get("draft")) + "</textarea>"
+        + work_html
+        + ("<div class=f><b>Vigezo vilivyotumika (" + str(len(it.get("facts") or []))
+           + ")</b><ul>" + facts_html + "</ul></div>" if facts_html else "")
+        + '<input id=reason placeholder="sababu (lazima kwa kuhariri au kuzuia)" '
+        + ("disabled" if decided else "") + ">"
+        "<div class=b>"
+        '<button class=s id=bs onclick="act(\'send\')" disabled>Tuma</button>'
+        '<button class=e id=be onclick="act(\'edit\')" disabled>Tuma iliyohaririwa</button>'
+        '<button class=x id=bx onclick="act(\'withhold\')" disabled>Zuia</button>'
+        "</div><div class=o id=o></div>")
+    script = (
+        "<script>"
+        "var P=new URLSearchParams(location.search);"
+        "var B={review_id:P.get('r'),v:P.get('v'),t:P.get('t')};"
+        "function en(on){['bs','be','bx'].forEach(function(i){"
+        "document.getElementById(i).disabled=!on;});}"
+        # ⛔ THE CLAIM IS POSTED FROM JS ON LOAD. A link preview crawler never reaches here,
+        # so WhatsApp's own prefetch cannot lock a draft to a reviewer who has not read it.
+        "async function claim(){"
+        "try{var r=await fetch('review_claim',{method:'POST',"
+        "headers:{'Content-Type':'application/json'},body:JSON.stringify(B)});"
+        "var j=await r.json();var L=document.getElementById('lock');"
+        "if(j.outcome==='decided'){L.textContent='Imeshaamuliwa.';en(false);}"
+        "else if(j.ok){L.textContent='Umeishikilia hadi '+(j.claim_expires_at||'')"
+        "+' — wewe tu unaweza kuamua.';en(true);}"
+        "else{L.textContent='Inashikiliwa na '+(j.held_by||'mtu mwingine')"
+        "+' hadi '+(j.claim_expires_at||'')+'. Hauwezi kuamua sasa.';en(false);}"
+        "}catch(e){document.getElementById('lock').textContent='Imeshindikana: '+e;}}"
+        "async function act(a){var o=document.getElementById('o');"
+        "o.textContent='inatuma...';en(false);"
+        "var b=Object.assign({},B,{action:a,"
+        "edited:document.getElementById('t').value,"
+        "reason:document.getElementById('reason').value});"
+        "try{var r=await fetch('review_act',{method:'POST',"
+        "headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});"
+        "var j=await r.json();"
+        "if(j.ok){o.textContent=j.status.toUpperCase()+(j.send_ok===false?"
+        "' LAKINI KUTUMA KUMESHINDIKANA: '+(j.send_error||''):' — imekamilika');}"
+        "else{o.textContent='HITILAFU: '+(j.detail||r.status);en(true);}"
+        "}catch(e){o.textContent='HITILAFU: '+e;en(true);}}"
+        + ("" if decided else "claim();")
+        + "</script>")
+    return HTMLResponse(head + body + script)
+
+
+@app.function(image=image, secrets=[SECRET], timeout=60)
+@modal.fastapi_endpoint(method="POST")
+def review_claim(item: dict):
+    """Lock one draft to the reviewer whose link this is.
+
+    ⛔⛔ CLAIMING IS A **POST**, FIRED BY THE PAGE'S JAVASCRIPT ON LOAD — AND THAT IS NOT A
+    STYLE CHOICE, IT IS THE DEFENCE AGAINST WHATSAPP ITSELF. WhatsApp fetches a link to
+    render its preview card. A GET that claimed would therefore be triggered the instant the
+    notification was DELIVERED, locking every draft to whichever reviewer's client previewed
+    it first — someone who has not read a word of it — and the draft would then sit until the
+    claim timed out. Crawlers do not execute JavaScript; a human opening the page does.
+
+    This is the same hazard class as a side effect on import (R40): the action runs regardless
+    of whether anyone asked for it, because something other than the user triggered the path.
+    """
+    from fastapi.responses import JSONResponse
+    core = _core()
+    settings = _settings()
+    rid = (item or {}).get("review_id")
+    who = core.authenticate_reviewer(settings, rid, (item or {}).get("v"),
+                                     (item or {}).get("t"))
+    if not who:
+        return JSONResponse({"ok": False, "detail": "not found"}, status_code=404)
+    number, name = who
+    try:
+        existing = REVIEW_QUEUE[rid]
+    except Exception:                                                # noqa: BLE001
+        return JSONResponse({"ok": False, "detail": "unknown draft"}, status_code=404)
+    # Release first, so a stale claim does not block a reviewer who is here now.
+    existing, released = core.release_expired_claim(existing)
+    updated, outcome = core.claim(existing, number, ttl_s=settings.claim_ttl_s)
+    if outcome in ("claimed", "already_yours") or released:
+        try:
+            REVIEW_QUEUE[rid] = updated
+        except Exception as e:                                       # noqa: BLE001
+            return JSONResponse({"ok": False, "detail": f"store failed: {e}"},
+                                status_code=500)
+    holder_name = None
+    if outcome == "held_by_other":
+        holder = updated.get("claimed_by")
+        holder_name = next((n for num, n in settings.roster if num == holder), "mtu mwingine")
+    print(f"[review] CLAIM {outcome} {rid} by ...{number[-4:]} ({name})"
+          f"{' (released a stale claim)' if released else ''}", flush=True)
+    return {"ok": outcome in ("claimed", "already_yours"), "outcome": outcome,
+            "reviewer": name, "held_by": holder_name,
+            "claim_expires_at": updated.get("claim_expires_at"),
+            "status": updated.get("status")}
 
 
 @app.function(image=image, secrets=[SECRET], timeout=120)
 @modal.fastapi_endpoint(method="POST")
-async def review_act(item: dict, token: str = None):
+async def review_act(item: dict):
     """Take one decision. The rules live in handler_core.apply_decision — pure, and tested
     without Modal — so this function only does I/O.
 
-    ⛔ THE REASON REQUIREMENT IS ENFORCED IN apply_decision, NOT HERE. A UI-only check is
-    bypassed by the first curl, and an edit with no reason is a correction whose LABEL is
-    missing, which is the whole value of the edit."""
+    ⛔ AUTHENTICATED BY THE REVIEWER'S OWN LINK TOKEN, NOT BY ADMIN_TOKEN. There is no longer
+    any way to decide without being a named reviewer on the roster: `apply_decision` refuses
+    an unattributed decision outright, because a roster whose weakest reviewer is invisible
+    is not an auditable roster. The admin page is read-only for the same reason.
+
+    ⛔ THE REASON AND THE CLAIM ARE BOTH ENFORCED IN apply_decision, NOT HERE. A check in the
+    HTTP layer is bypassed by the first curl and leaves the pure function usable without it
+    by the next caller — and the next caller is a sweeper or a backfill script."""
     from fastapi.responses import JSONResponse
-    if not _admin_ok(token):
-        return JSONResponse({"status": "not found"}, status_code=404)
     core = _core()
+    settings = _settings()
     rid = (item or {}).get("review_id")
+    who = core.authenticate_reviewer(settings, rid, (item or {}).get("v"),
+                                     (item or {}).get("t"))
+    if not who:
+        return JSONResponse({"ok": False, "detail": "not found"}, status_code=404)
+    number, name = who
     try:
         existing = REVIEW_QUEUE[rid]
     except Exception:                                                # noqa: BLE001
         return JSONResponse({"ok": False, "detail": f"unknown review_id {rid!r}"},
                             status_code=404)
+    existing, _released = core.release_expired_claim(existing)
     try:
         updated, to_send = core.apply_decision(
-            existing, (item or {}).get("action"),
+            existing, (item or {}).get("action"), reviewer=number, reviewer_name=name,
             edited=(item or {}).get("edited"), reason=(item or {}).get("reason"))
     except ValueError as e:
-        return JSONResponse({"ok": False, "detail": str(e)}, status_code=400)
+        return JSONResponse({"ok": False, "detail": str(e)}, status_code=409)
 
     # ⚠️ STORE THE DECISION BEFORE SENDING. A stored decision with send_ok=false is
     # recoverable; a successful send with no stored decision is a message the user has and
@@ -555,11 +875,18 @@ async def review_act(item: dict, token: str = None):
         "draft": updated["draft"], "final": updated.get("final"),
         "edit_reason": updated.get("edit_reason"),
         "decision_latency_s": updated.get("decision_latency_s"),
+        # ⛔ WHO decided, in the analysis corpus too — not only in the queue, which gets
+        # purged. Per-reviewer corrections are the signal that shows one reviewer approving
+        # what another would have caught, and it cannot be recovered later.
+        "decided_by_name": updated.get("decided_by_name"),
+        "claim_count": updated.get("claim_count"),
+        "release_count": updated.get("release_count"),
+        "notify_count": updated.get("notify_count"),
     })
-    print(f"[review] {updated['status'].upper()} {rid} "
+    print(f"[review] {updated['status'].upper()} {rid} by {name} "
           f"latency={updated.get('decision_latency_s')}s "
           f"reason={updated.get('edit_reason')!r}", flush=True)
-    return {"ok": True, "status": updated["status"], "send_ok": send_ok,
+    return {"ok": True, "status": updated["status"], "by": name, "send_ok": send_ok,
             "send_error": send_error}
 
 
@@ -575,6 +902,92 @@ def review_queue(token: str = None, include_sender: bool = False):
     if not include_sender:
         items = [{k: v for k, v in i.items() if k != "sender"} for i in items]
     return {"count": len(items), "summary": core.review_summary(items), "items": items}
+
+
+# ⛔⛔ THE SWEEPER, AND THE ONE PROPERTY THAT MATTERS ABOUT IT: IT HAS NO SEND PATH.
+#
+# Grep this function for `_send_once` on a participant. It appears exactly nowhere — it can
+# only RELEASE an expired claim and RE-NOTIFY the roster. No elapsed time, no queue depth and
+# no number of reviewers causes a reply to reach a participant unread, and that is not a
+# policy written in a comment: there is no line of code here that could do it.
+#
+# This is the line R7's condition rests on. A "send after N minutes if nobody objects"
+# fallback is the single change that would void the founder's reading, and it is exactly the
+# change that looks reasonable at 2am when a queue has backed up — so it is ruled out
+# structurally rather than left to judgement.
+@app.function(image=image, secrets=[SECRET], timeout=600,
+              schedule=modal.Period(minutes=3))
+async def sweep_review_queue():
+    """Release expired claims; re-notify unclaimed drafts. Never sends to a participant."""
+    core = _core()
+    settings = _settings()
+    released, renotified, pending = 0, 0, 0
+    for it in _queue_items():
+        if it.get("status") != "pending":
+            continue
+        pending += 1
+        it, was_released = core.release_expired_claim(it)
+        if was_released:
+            released += 1
+            try:
+                REVIEW_QUEUE[it["review_id"]] = it
+            except Exception as e:                                   # noqa: BLE001
+                print(f"[sweep] release not stored for {it['review_id']}: {e}")
+            print(f"[sweep] RELEASED {it['review_id']} from "
+                  f"...{(it.get('released_from') or '')[-4:]} — back to the roster, "
+                  f"NOT sent", flush=True)
+        if core.needs_renotify(it, renotify_after_s=settings.renotify_after_s):
+            sent = await _notify_reviewers(it, renotify=True)
+            _mark_notified(it, sent, renotify=True)
+            renotified += 1
+            print(f"[sweep] RENOTIFIED {it['review_id']} to {sent} reviewer(s) — "
+                  f"still pending, still unsent", flush=True)
+    if pending or released or renotified:
+        print(f"[sweep] pending={pending} released={released} renotified={renotified}",
+              flush=True)
+    return {"pending": pending, "released": released, "renotified": renotified,
+            "sent_to_participants": 0}
+
+
+@app.function(image=image, secrets=[SECRET], timeout=120)
+async def seed_test_draft(label: str = "seed"):
+    """Put ONE synthetic draft in the queue, for verifying the roster mechanics live.
+
+    ⛔⛔ A MODAL FUNCTION, NOT A WEB ENDPOINT, AND THAT IS THE SECURITY PROPERTY. Reaching
+    this requires Modal CLI credentials (`modal run ...::seed_test_draft`); there is NO public
+    route that can place a draft in the review queue. A `/review_seed?token=` endpoint would
+    have been easier to call from a test script and would also have been a way to make a
+    reviewer approve text that no participant ever asked for.
+
+    ⚠️ THE SENDER IS A DOCUMENTED UNROUTABLE TEST NUMBER. Even a successful send cannot reach
+    a person — but the verification asserts the send was never ATTEMPTED, which is the
+    stronger claim and the one R7's condition actually needs.
+    """
+    from datetime import datetime, timezone
+    core = _core()
+    settings = _settings()
+    now = datetime.now(timezone.utc)
+    sender = "+255700000000"          # reserved test number, routes nowhere
+    sender_hash, sender_tail = core.sender_ids(sender, settings.sender_salt)
+    row = {
+        "ts": now.isoformat(timespec="seconds") + f"-{label}",
+        "build": BUILD, "kind": "question",
+        "sender_hash": sender_hash, "sender_tail": sender_tail,
+        "question": f"[MTIHANI {label}] Nina wafanyakazi 15 — je SDL inanihusu?",
+        "model_latency_ms": 0, "fallback": False, "error_class": None,
+    }
+    item = core.review_item(
+        row=row, sender=sender,
+        draft=f"[MTIHANI {label}] Ndiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL "
+              f"inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+        engine_working="Ndiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa.",
+        facts=["sdl_rate: SDL ni asilimia 3.5 ya jumla ya mishahara."],
+        review_id=f"TEST-{label}")
+    REVIEW_QUEUE[item["review_id"]] = item
+    sent = await _notify_reviewers(item)
+    _mark_notified(item, sent)
+    print(f"SEEDED {item['review_id']}", flush=True)
+    return item["review_id"]
 
 
 @app.function(image=image, secrets=[SECRET])
@@ -649,6 +1062,17 @@ def health():
         **_supervision_health(),
         "review_endpoint": bool(os.environ.get("ADMIN_TOKEN", "")),
         "review_queue": _review_queue_health(),
+        # ── THE COHORT, REPORTED BESIDE THE SUPERVISION FLAG (asked for explicitly) ──
+        # `cohort_size` is the declared enrolment; `participants_seen` is how many distinct
+        # people have actually messaged. Reporting both is what stops the setting being
+        # decoration (R32: a number the code never compares to anything is not a rule).
+        # It MONITORS rather than gates, because refusing an 11th participant is a mechanism
+        # whose failure lands on a real user and is invisible to us when it fires.
+        "cohort": _cohort_health(),
+        # Roster SIZE and reviewer HANDLES, never the numbers. A /health that printed the
+        # roster would publish the reviewers' phone numbers to anyone who can read it, and
+        # the handles are what the links carry anyway.
+        "roster": _roster_health(),
         # PRESENCE BY NAME, never values. A misnamed key in the secret and a wrong
         # value produce identical failures at the endpoint — that ambiguity cost hours
         # on `modal-api-token`. This makes "is the key even there, spelled that way?"

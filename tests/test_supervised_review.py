@@ -150,14 +150,24 @@ def test_deliver_still_never_raises_in_supervised_mode():
 
 
 # ── the queue's pure logic ─────────────────────────────────────────────────────────────
-def _item():
+R1 = "+255700000011"
+R2 = "+255700000022"
+ROSTER = ((R1, "Asha"), (R2, "Juma"))
+KEY = "test-signing-key"
+
+
+def _item(claimed_by=R1):
     r = _Recorder()
     row = _run(hc.deliver("+255700000007", "Je, SDL inanihusu?", _ask_ok, r.send,
                           _settings(supervised=True, slow_ack_after_s=0),
                           hold_reply=r.hold))
-    return hc.review_item(row=row, sender="+255700000007", draft=row["reply"],
-                          engine_working="Ndiyo. Una wafanyakazi 15...",
-                          facts=["sdl_rate: 3.5%"])
+    it = hc.review_item(row=row, sender="+255700000007", draft=row["reply"],
+                        engine_working="Ndiyo. Una wafanyakazi 15...",
+                        facts=["sdl_rate: 3.5%"])
+    if claimed_by:
+        it, outcome = hc.claim(it, claimed_by)
+        assert outcome == "claimed"
+    return it
 
 
 def test_the_review_item_carries_the_EVIDENCE_not_just_the_draft():
@@ -184,7 +194,8 @@ def test_the_item_carries_the_real_number_and_the_HASH_separately():
 def test_the_three_decisions(action, expect_status, expect_sends):
     it = _item()
     updated, to_send = hc.apply_decision(
-        it, action, edited="JIBU LILILOSAHIHISHWA", reason="rate was stated per employee")
+        it, action, reviewer=R1, reviewer_name="Asha",
+        edited="JIBU LILILOSAHIHISHWA", reason="rate was stated per employee")
     assert updated["status"] == expect_status
     assert (to_send is not None) is expect_sends
     if action == "edit":
@@ -200,7 +211,7 @@ def test_the_DRAFT_survives_every_decision_verbatim():
                        ("edit", {"edited": "X", "reason": "r"}),
                        ("withhold", {"reason": "r"})):
         it = _item()
-        updated, _ = hc.apply_decision(it, action, **kw)
+        updated, _ = hc.apply_decision(it, action, reviewer=R1, **kw)
         assert updated["draft"] == it["draft"]
         if action == "edit":
             assert updated["final"] != updated["draft"]
@@ -215,33 +226,33 @@ def test_an_EDIT_or_WITHHOLD_without_a_reason_is_REFUSED(action, kw):
     """Enforced in the pure layer, not the UI: a UI-only check is bypassed by the first curl,
     and an edit with no reason is a correction whose label is missing."""
     with pytest.raises(ValueError, match="requires a reason"):
-        hc.apply_decision(_item(), action, **kw)
+        hc.apply_decision(_item(), action, reviewer=R1, **kw)
 
 
 def test_an_EDIT_with_no_TEXT_is_refused():
     with pytest.raises(ValueError, match="requires the edited text"):
-        hc.apply_decision(_item(), "edit", edited="  ", reason="r")
+        hc.apply_decision(_item(), "edit", reviewer=R1, edited="  ", reason="r")
 
 
 def test_a_decision_is_taken_ONCE():
     """Idempotence by refusal rather than by overwrite: a second decision on a sent item
     would send the same compliance answer twice, which this app already rules worse than one
     missing answer."""
-    updated, _ = hc.apply_decision(_item(), "send")
+    updated, _ = hc.apply_decision(_item(), "send", reviewer=R1)
     with pytest.raises(ValueError, match="already"):
-        hc.apply_decision(updated, "send")
+        hc.apply_decision(updated, "send", reviewer=R1)
 
 
 def test_an_unknown_action_is_refused():
     with pytest.raises(ValueError, match="unknown review action"):
-        hc.apply_decision(_item(), "approve")
+        hc.apply_decision(_item(), "approve", reviewer=R1)
 
 
 def test_the_decision_latency_is_recorded():
     it = _item()
     it["ts_held"] = (datetime.now(timezone.utc) - timedelta(minutes=7)).isoformat(
         timespec="seconds")
-    updated, _ = hc.apply_decision(it, "send")
+    updated, _ = hc.apply_decision(it, "send", reviewer=R1)
     assert 6 * 60 <= updated["decision_latency_s"] <= 8 * 60
 
 
@@ -260,7 +271,8 @@ def test_the_summary_counts_the_three_outcomes():
     for action, kw in (("send", {}), ("send", {}),
                        ("edit", {"edited": "X", "reason": "r"}),
                        ("withhold", {"reason": "r"})):
-        updated, _ = hc.apply_decision(_item(), action, **kw)
+        updated, _ = hc.apply_decision(_item(), action, reviewer=R1,
+                                       reviewer_name="Asha", **kw)
         items.append(updated)
     s = hc.review_summary(items)
     assert s["decided"] == 4

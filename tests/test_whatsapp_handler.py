@@ -551,9 +551,17 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
     # PRESENCE, which for this flag would read as `supervised: true` merely because the var
     # exists — including when it is set to "false". /health reports its PARSED value instead,
     # which is a stronger guarantee than presence and the one the reviewer actually needs.
+    #
+    # The 2026-10-10 review tunables are here for the same reason, and each one's ABSENCE
+    # is safe: no COHORT_SIZE means the monitor reports nothing rather than gating anything;
+    # no CLAIM_TTL_S / RENOTIFY_AFTER_S fall back to 15/30 minutes; and no PUBLIC_BASE_URL
+    # means NO LINKS ARE ISSUED, so drafts hold and re-notify. All four are reported by
+    # /health, which is a stronger check than EXPECTED_KEYS gives a credential — presence
+    # would say nothing about the VALUE, and the value is the whole point for a flag.
     tunables = {"CHIKE_BUILD", "WAPPFLY_SEND_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
                 "SECOND_ACK_AFTER_S", "COLD_START_SUSPECTED_S", "SEND_ATTEMPTS",
-                "WAPPFLY_TIMEOUT_S", "SUPERVISED"}
+                "WAPPFLY_TIMEOUT_S", "SUPERVISED",
+                "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "PUBLIC_BASE_URL"}
     assert read - tunables == set(mw.EXPECTED_KEYS), (
         "a secret key is read but not reported by /health, or vice versa")
 

@@ -1262,9 +1262,18 @@ question put to the founder was whether a small supervised cohort counts as *shi
 was flagged as adjacent, the call was theirs, and they took it: a supervised cohort is NOT
 shipping — ON THE CONDITION BELOW.**
 
-> **THE CONDITION, IN THE FOUNDER'S OWN TERMS:** *"I read every draft before it's sent and can
-> edit or withhold it; nothing reaches a participant unreviewed. Participants are told it's a
-> supervised test. Every reply logged with draft, edit and final kept separately."*
+> **THE CONDITION, AS AMENDED 2026-10-10 WHEN THE DESIGN MOVED FROM ONE REVIEWER TO A ROSTER:**
+> **every reply is read by a human reviewer ON THE ROSTER before it is sent**, with
+> **claim-before-act** (a draft opened by one reviewer is locked to them, so two cannot both
+> decide and nobody can send while another withholds), **attribution on every action** (draft,
+> edit and final each carry who did it, so each reviewer's corrections read separately), and
+> **no auto-send, ever** (a draft nobody acts on holds and re-notifies — it never falls through
+> on a timeout). Participants are told it is a supervised test.
+>
+> *The original one-reviewer wording was: "I read every draft before it's sent and can edit or
+> withhold it; nothing reaches a participant unreviewed." Kept here because the amendment
+> WIDENED who may review and did not weaken what review means — and a condition that gets
+> quietly relaxed while being "updated" is exactly what the void list below exists to stop.*
 
 **WHY THE CONDITION IS THE WHOLE RULING AND NOT A CAVEAT.** What R7 forbids is an unsupervised
 system giving a Tanzanian employer a confident wrong compliance answer. A cohort where a human
@@ -1291,13 +1300,56 @@ decays the same way):
 - An edit or a withhold **requires a reason, enforced in the pure layer, not the UI** — a
   UI-only check is bypassed by the first curl, and an edit with no reason is a correction whose
   *label* is missing.
+- **The claim and the reviewer are enforced in `apply_decision`, not at the endpoint.** A check
+  in the HTTP layer leaves the pure function usable without it by the next caller — and the
+  next caller is a sweeper, a backfill or a test. An unattributed decision raises.
+- **There is no longer any way to decide without being a named reviewer.** `/review` (the
+  ADMIN_TOKEN overview) is **read-only**: an admin action would have to invent a reviewer
+  identity, and a fake name in the attribution column is worse than no column.
+- **🔴 THE TIMEOUT PATH HAS NO SEND PATH AT ALL, AND THAT IS ASSERTED STRUCTURALLY RATHER THAN
+  BEHAVIOURALLY.** `sweep_review_queue` can only *release* an expired claim and *re-notify* the
+  roster; `tests/test_review_roster.py` parses its AST and fails if it so much as reads
+  `item["sender"]`, `item["final"]` or `item["draft"]`, or calls `_send_once` directly. A
+  behavioural test can only show that today's sweeper does not send — this shows there is no
+  code in it that *could*. **"Send after N minutes if nobody objects" is the single change that
+  would void this reading, and it is exactly the change that looks reasonable at 2am when a
+  queue has backed up**, so it is ruled out by construction.
+- **Claiming is a POST fired by the page's JavaScript, never a GET** — because **WhatsApp
+  fetches a link to render its preview card**. A GET that claimed would fire the instant the
+  notification was *delivered*, locking every draft to whichever reviewer's client previewed it
+  first, someone who has read nothing. Crawlers do not run JS. Same hazard class as a side
+  effect on import (R40): the action runs regardless of whether anyone asked for it.
+- **Links carry a reviewer HANDLE, not a phone number**, and the token is HMAC-bound to **both**
+  the draft and the reviewer, so a forwarded link cannot be replayed as someone else — which is
+  what keeps the attribution column honest. **A missing signing key fails CLOSED and is checked
+  explicitly**: an empty HMAC key still produces a stable digest anyone who knows the scheme can
+  reproduce, so the absence would not disable the links, it would make every one *forgeable*.
 
 **⚠️ WHAT WOULD MAKE THIS READING STOP APPLYING — stated so a later session cannot quietly
 widen it.** Any one of these ends it and puts the cohort back under R7 as a launch:
-auto-sending any class of reply however safe it looks; a cohort large enough that review
-becomes skimming; dropping the participant disclosure; or collapsing draft/final into one
-field. **"We ran a pilot before the gates passed" is not a precedent for the next one** — the
+
+1. **auto-sending any class of reply**, however safe it looks;
+2. **a draft sending because a timeout expired** — the no-auto-send line, named separately from
+   (1) because it is the form that arrives as an operational convenience rather than a product
+   decision, and because a backed-up queue is precisely when it will be proposed;
+3. **a reviewer added to the roster without being told the review standard** — a seat on the
+   roster is authority to approve a compliance answer that a Tanzanian employer will act on;
+   an untrained reviewer is an unreviewed reply with a name attached, which is worse than an
+   unreviewed reply, because the record then says it was checked;
+4. **a cohort large enough that review becomes skimming**;
+5. **dropping the participant disclosure**;
+6. **collapsing draft/final into one field**, or dropping per-reviewer attribution.
+
+**"We ran a pilot before the gates passed" is not a precedent for the next one** — the
 precedent is the condition, not the pilot.
+
+**⚠️ AND THE COHORT IS A SETTING, NOT A NUMBER IN THIS FILE.** `COHORT_SIZE` is read from the
+environment and reported by `/health` beside `participants_seen`, because the right size is an
+operational judgement that moves with review capacity — and review capacity now scales with
+**reviewers**, not with how fast one person reads. **It MONITORS rather than GATES**, deliberately:
+enforcing it by refusing an 11th participant would be a mechanism whose failure mode is blocking
+a real user — the expensive direction, and invisible to us when it fires, because a
+wrongly-refused question looks exactly like a question nobody asked.
 
 **🔴 AND THE THROUGHPUT FINDING, REPORTED BEFORE RECRUITING BECAUSE THE FOUNDER ASKED FOR IT
 BEFORE RECRUITING.** Their own test was *"if clearing it takes more than a few minutes a day
@@ -1315,9 +1367,22 @@ own corpora).
 | **3 users × 2** | 6 | **~6** |
 
 **So the answer is YES, it exceeds the budget at ten users — by roughly four times.** The
-honest reading is that **~3 participants** fits "a few minutes a day", and the cohort is the
-lever rather than the review depth, because reducing review depth is the one adjustment that
-voids the R7 reading above.
+honest reading is that **~3 participants fits "a few minutes a day" FOR ONE REVIEWER**, and
+reducing review *depth* is never the lever, because that is the adjustment that voids the R7
+reading above.
+
+> **🎯 WHICH IS WHY THE ROSTER CHANGES THE ARITHMETIC AND THE TABLE ABOVE IS NOW PER-REVIEWER.**
+> The minutes/day figures are a **total review load**, and the roster divides it: ~21 min/day at
+> ten participants is ~7 each across three reviewers. **Capacity scales with reviewers, not with
+> how fast one person reads** — that is the whole reason the roster exists, and it is what makes
+> a cohort of 10 or 30 a staffing question rather than a safety question.
+>
+> **⚠️ TWO THINGS THE DIVISION DOES NOT BUY, AND BOTH MATTER.** (1) **Coverage is not capacity:**
+> three reviewers asleep at the same hour are one reviewer, which is why every reviewer is
+> notified rather than one being assigned round-robin, and why the claim lock is what makes that
+> safe. (2) **A pooled edit rate hides a weak reviewer.** Per-reviewer attribution exists for
+> exactly this: a reviewer whose edit rate is far *below* the others may not be faster — they may
+> be approving what the others would have caught. Read `per_reviewer`, never only the total.
 
 **AND THE COST NO MINUTE-COUNT CAPTURES IS LATENCY.** A supervised answer cannot arrive faster
 than the reviewer, so a 9pm question waits until morning. That changes *what the pilot

@@ -31,10 +31,11 @@ ERROR CLASSES, and how they changed in the move to Modal:
 
 import asyncio
 import hashlib
+import hmac
 import json
 import time
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 GREETINGS = {
     "habari", "hujambo", "mambo", "hello", "hi", "hey",
@@ -162,6 +163,42 @@ class Settings:
     # wait is now human-paced. The answer and the acks therefore travel through two
     # different callables from here on.
     supervised: bool = False
+
+    # ── THE COHORT (2026-10-10) ─────────────────────────────────────────────────────────
+    # How many participants the pilot is enrolled for. A SETTING, because the right number
+    # is an operational judgement that changes as review capacity changes — 1, 10 or 30 are
+    # all legitimate — and hard-coding a recommendation into the handler would freeze
+    # yesterday's throughput estimate into today's deployment.
+    #
+    # ⚠️ IT IS A MONITORED DECLARATION, NOT A GATE, AND THAT IS A DELIBERATE CHOICE WITH A
+    # REASON. Enforcing it by refusing an 11th participant would be a mechanism whose
+    # failure mode is BLOCKING A REAL USER — the expensive direction this project has a
+    # standing rule about, priced at one frozen held-out set per iteration, and invisible to
+    # us when it fires because a wrongly-refused question looks exactly like a question
+    # nobody asked. So /health reports the setting ALONGSIDE the distinct participants
+    # actually seen, which makes over-enrolment visible without building something that can
+    # turn a real employer away. R32's line is still honoured: the number does something.
+    cohort_size: int = 0
+
+    # ── THE REVIEWER ROSTER AND THE CLAIM LOCK (2026-10-10) ─────────────────────────────
+    # Review capacity scales with reviewers, not with how fast one person can read. The
+    # roster lives in the Modal Secret, like every other credential — never in code.
+    roster: tuple = field(default_factory=tuple)        # ((number, name), ...)
+
+    # Signs the per-(draft, reviewer) action links. SEPARATE from ADMIN_TOKEN on purpose: a
+    # leaked read token must not become a forgeable action link.
+    #
+    # ⛔ ITS ABSENCE FAILS CLOSED, AND THAT IS THE WHOLE POINT. With no signing key no links
+    # can be issued, so drafts HOLD and re-notify. They never fall through to a send.
+    review_signing_key: str = ""
+
+    # A claimed draft that is not acted on is released back to the roster after this. Long
+    # enough to read and compose a correction, short enough that a reviewer who puts their
+    # phone down does not strand a participant's answer.
+    claim_ttl_s: float = 900.0
+
+    # An unacted draft is re-notified this often. RE-NOTIFIED — never auto-sent.
+    renotify_after_s: float = 1800.0
     # What the user is told while a human reads their answer. Held replies can take hours,
     # so the honest ack says a person is checking — not "nearly done".
     supervised_ack: str = ("Nimepata swali lako. Jibu linapitiwa na mtu kwanza ili "
@@ -473,6 +510,175 @@ async def deliver(sender, text, ask, send_once, settings, build="dev",
 REVIEW_ACTIONS = ("send", "edit", "withhold")
 
 
+# ---------------------------------------------------------------------------
+# THE ROSTER, AND IDENTITY WITHOUT A LOGIN
+# ---------------------------------------------------------------------------
+def parse_roster(raw):
+    """"+255700000001:Asha, +255700000002" -> ((number, name), ...).
+
+    ⚠️ ORDER AND DUPLICATES ARE PRESERVED-THEN-DEDUPED BY NUMBER, not silently collapsed: a
+    roster with the same number twice under two names is a configuration mistake, and
+    keeping the FIRST name makes the behaviour predictable rather than dependent on dict
+    ordering. An entry with no number at all is dropped, because a nameless blank would
+    otherwise become a reviewer who can never be notified and never acts — i.e. a phantom
+    seat that quietly lowers effective capacity.
+    """
+    out, seen = [], set()
+    for chunk in (raw or "").replace(";", ",").split(","):
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        number, _, name = chunk.partition(":")
+        number = number.strip()
+        if not number:
+            continue
+        if number in seen:
+            continue
+        seen.add(number)
+        out.append((number, name.strip() or number[-4:]))
+    return tuple(out)
+
+
+def reviewer_id(signing_key, number):
+    """A stable, non-reversible handle for one reviewer.
+
+    ⛔ USED IN LINKS INSTEAD OF THE PHONE NUMBER. A link is pasted into WhatsApp, forwarded,
+    screenshotted and logged by every hop in between; putting a reviewer's number in a query
+    string publishes it to all of them for no benefit, since the roster can map the handle
+    back locally.
+    """
+    return hmac.new(_key(signing_key), f"rid|{number}".encode("utf-8"),
+                    hashlib.sha256).hexdigest()[:10]
+
+
+def review_token(signing_key, review_id, number):
+    """The per-(draft, reviewer) action token. HMAC, so it cannot be constructed without the
+    key, and bound to BOTH the draft and the reviewer so one reviewer's link cannot act on
+    another's draft or be replayed as someone else."""
+    return hmac.new(_key(signing_key), f"tok|{review_id}|{number}".encode("utf-8"),
+                    hashlib.sha256).hexdigest()[:32]
+
+
+def _key(signing_key):
+    return (signing_key or "").encode("utf-8")
+
+
+def authenticate_reviewer(settings, review_id, rid, token):
+    """(number, name) for a valid link, else None.
+
+    ⛔ FAILS CLOSED WITH NO SIGNING KEY. An empty key would make `hmac` produce a perfectly
+    stable digest that anyone who knows the scheme can reproduce — so a missing secret would
+    not disable the links, it would make every one of them forgeable. That is the direction
+    that matters here, so it is checked first and explicitly.
+
+    ⚠️ CONSTANT-TIME COMPARISON. The tokens are short-lived and low-value, and
+    `compare_digest` costs nothing; a `==` here would be the one timing side channel in a
+    path that authorises sending a compliance answer to a stranger.
+    """
+    if not settings.review_signing_key:
+        return None
+    if not (review_id and rid and token):
+        return None
+    for number, name in settings.roster:
+        if hmac.compare_digest(reviewer_id(settings.review_signing_key, number), str(rid)):
+            expected = review_token(settings.review_signing_key, review_id, number)
+            if hmac.compare_digest(expected, str(token)):
+                return number, name
+            return None
+    return None
+
+
+# ---------------------------------------------------------------------------
+# THE CLAIM LOCK — two reviewers must not both act
+# ---------------------------------------------------------------------------
+# ⛔⛔ THE RACE THIS EXISTS FOR IS NOT "TWO SENDS". It is one reviewer SENDING while another
+# WITHHOLDS, which would deliver an answer a human had just decided to withhold — and the
+# record would hold both decisions, so even afterwards it would not be clear what the
+# participant received. A single-decision lock makes that unreachable rather than unlikely.
+CLAIM_OUTCOMES = ("claimed", "already_yours", "held_by_other", "decided")
+
+
+def claim(item, reviewer_number, *, now=None, ttl_s=900.0):
+    """(item, outcome). Pure, so the lock's rules are testable without Modal.
+
+    A claim is granted when the draft is unclaimed OR its claim has EXPIRED. Expiry is read
+    from the stored timestamp rather than tracked by a timer, because a timer lives in one
+    container and the queue is read from many.
+    """
+    now = now or datetime.now(timezone.utc)
+    if item.get("status") != "pending":
+        return item, "decided"
+    held_by = item.get("claimed_by")
+    if held_by and not _claim_expired(item, now):
+        return (item, "already_yours") if held_by == reviewer_number else (item,
+                                                                          "held_by_other")
+    out = dict(item)
+    out["claimed_by"] = reviewer_number
+    out["claimed_at"] = now.isoformat(timespec="seconds")
+    out["claim_expires_at"] = (
+        now + timedelta(seconds=float(ttl_s))).isoformat(timespec="seconds")
+    out["claim_count"] = int(item.get("claim_count") or 0) + 1
+    return out, "claimed"
+
+
+def _claim_expired(item, now):
+    exp = item.get("claim_expires_at")
+    if not exp:
+        return True
+    try:
+        return datetime.fromisoformat(exp) <= now
+    except Exception:                                                # noqa: BLE001
+        # An unparseable expiry is treated as EXPIRED, which releases the draft to the
+        # roster. The alternative — treating it as valid forever — would strand a
+        # participant's answer behind one corrupt field, and stranding is the failure this
+        # whole mechanism is built to avoid.
+        return True
+
+
+def release_expired_claim(item, *, now=None):
+    """(item, released). Releasing is the ONLY thing a timeout does.
+
+    ⛔⛔ THERE IS NO SEND PATH IN THIS FUNCTION, OR IN ANY TIMEOUT PATH, ANYWHERE. A draft
+    whose claim expires goes back to the roster; a draft nobody ever claims stays pending and
+    is re-notified. R7's condition rests on exactly this: no elapsed time, no queue depth and
+    no number of reviewers causes a reply to reach a participant unread.
+    """
+    now = now or datetime.now(timezone.utc)
+    if item.get("status") != "pending" or not item.get("claimed_by"):
+        return item, False
+    if not _claim_expired(item, now):
+        return item, False
+    out = dict(item)
+    out["released_from"] = item.get("claimed_by")
+    out["released_at"] = now.isoformat(timespec="seconds")
+    out["claimed_by"] = None
+    out["claimed_at"] = None
+    out["claim_expires_at"] = None
+    out["release_count"] = int(item.get("release_count") or 0) + 1
+    return out, True
+
+
+def needs_renotify(item, *, now=None, renotify_after_s=1800.0):
+    """True when an UNCLAIMED pending draft has gone unanswered long enough to re-notify.
+
+    A claimed, unexpired draft is NOT re-notified — someone is reading it, and pinging the
+    whole roster about a draft already in hand is how a roster learns to ignore the
+    notifications."""
+    now = now or datetime.now(timezone.utc)
+    if item.get("status") != "pending":
+        return False
+    if item.get("claimed_by") and not _claim_expired(item, now):
+        return False
+    stamp = item.get("last_notified_at") or item.get("ts_held")
+    if not stamp:
+        return True
+    try:
+        return (now - datetime.fromisoformat(stamp)).total_seconds() >= float(
+            renotify_after_s)
+    except Exception:                                                # noqa: BLE001
+        return True
+
+
 def review_item(row, sender, draft, engine_working=None, facts=(), review_id=None):
     """A queue entry. `sender` is the REAL number, which the transcript deliberately does not
     store — so this lives in its own store, behind its own token, and is purged on decision.
@@ -504,22 +710,56 @@ def review_item(row, sender, draft, engine_working=None, facts=(), review_id=Non
         "edit_reason": None,
         "decided_ts": None,
         "decision_latency_s": None,
+        # ── the claim lock ──
+        "claimed_by": None,
+        "claimed_at": None,
+        "claim_expires_at": None,
+        "claim_count": 0,
+        "release_count": 0,
+        "last_notified_at": None,
+        "notify_count": 0,
+        # ⛔ ATTRIBUTION. WHO decided, recorded beside WHAT they decided, so each reviewer's
+        # corrections can be read separately — which is the only way to notice that one
+        # reviewer is approving what another would have caught. A roster without per-reviewer
+        # attribution is a roster whose weakest reviewer is invisible.
+        "decided_by": None,
+        "decided_by_name": None,
     }
 
 
-def apply_decision(item, action, *, edited=None, reason=None, now=None):
+def apply_decision(item, action, *, reviewer=None, edited=None, reason=None,
+                   reviewer_name=None, now=None):
     """(updated item, text to send or None). Pure — no I/O, so the rules are testable.
 
     ⛔ A REASON IS REQUIRED FOR EVERY DEPARTURE FROM THE DRAFT, and the requirement is
     enforced here rather than in the UI. A UI-only check is bypassed by the first curl, and
     an edit with no reason is a correction whose *label* is missing — which is the entire
     value of the edit. `send` needs no reason: agreeing with the draft is the null decision.
+
+    ⛔⛔ AND THE CLAIM IS REQUIRED, CHECKED HERE RATHER THAN AT THE ENDPOINT. The race that
+    matters is not two sends — it is one reviewer SENDING while another WITHHOLDS, which
+    delivers an answer a human had just decided to withhold. Checking the lock in the HTTP
+    layer would leave `apply_decision` usable without it by the next caller, and the next
+    caller is a sweeper, a backfill script or a test.
     """
     if item.get("status") != "pending":
         raise ValueError(f"review {item.get('review_id')} is already "
                          f"{item.get('status')!r} — a decision is taken once")
     if action not in REVIEW_ACTIONS:
         raise ValueError(f"unknown review action {action!r}; expected one of {REVIEW_ACTIONS}")
+    if not reviewer:
+        raise ValueError("a decision needs the reviewer who took it — an unattributed "
+                         "decision cannot be read back per reviewer, which is the whole "
+                         "reason a roster is auditable")
+    now = now or datetime.now(timezone.utc)
+    holder = item.get("claimed_by")
+    if not holder or _claim_expired(item, now):
+        raise ValueError(f"review {item.get('review_id')} is not claimed (or the claim has "
+                         f"expired) — claim it before acting, so two reviewers cannot both "
+                         f"decide")
+    if holder != reviewer:
+        raise ValueError(f"review {item.get('review_id')} is claimed by another reviewer "
+                         f"until {item.get('claim_expires_at')} — only the holder may act")
     if action in ("edit", "withhold") and not (reason or "").strip():
         raise ValueError(f"action {action!r} requires a reason — the reason is the label on "
                          f"the correction and is the most valuable field in the record")
@@ -528,7 +768,9 @@ def apply_decision(item, action, *, edited=None, reason=None, now=None):
 
     out = dict(item)
     out["status"] = {"send": "sent", "edit": "edited", "withhold": "withheld"}[action]
-    out["decided_ts"] = (now or datetime.now(timezone.utc)).isoformat(timespec="seconds")
+    out["decided_by"] = reviewer
+    out["decided_by_name"] = reviewer_name or reviewer[-4:]
+    out["decided_ts"] = now.isoformat(timespec="seconds")
     out["edit_reason"] = (reason or "").strip() or None
     if action == "send":
         out["final"] = item["draft"]
@@ -546,6 +788,74 @@ def apply_decision(item, action, *, edited=None, reason=None, now=None):
     # later grows an in-place edit somewhere would destroy the dataset silently.
     assert out["draft"] == item["draft"], "the draft must survive every decision verbatim"
     return out, out["final"]
+
+
+def notification_text(item, link, reviewer_name=None, renotify=False):
+    """The WhatsApp push a reviewer receives the moment a draft is ready.
+
+    ⚠️ THE DRAFT IS INCLUDED IN FULL AND THE EVIDENCE IS SUMMARISED, NOT OMITTED. A
+    notification that only says "a draft is waiting" makes the reviewer open a page before
+    they know whether they can act now — which on a bad connection means they do not, and
+    the draft waits for the next person. Median reply is 197 characters, so the whole thing
+    fits in a WhatsApp message comfortably.
+
+    The ENGINE WORKING is quoted because it is the one part a reviewer can check arithmetic
+    against. The facts are COUNTED rather than quoted: nine of them would bury the draft,
+    and the link carries them in full.
+    """
+    head = ("🔁 KUPITIA TENA (bado hakuna aliyeshughulikia)" if renotify
+            else "📋 RASIMU MPYA — inahitaji kupitiwa")
+    who = f" · {reviewer_name}" if reviewer_name else ""
+    lines = [f"{head}{who}",
+             f"Mteja: ...{item.get('sender_tail') or '????'}",
+             "",
+             f"SWALI: {item.get('question') or '(hakuna)'}",
+             "",
+             f"RASIMU: {item.get('draft') or '(hakuna)'}"]
+    if item.get("engine_working"):
+        lines += ["", f"HESABU YA MFUMO: {item['engine_working']}"]
+    else:
+        lines += ["", "HESABU YA MFUMO: hakuna — jibu hili limetoka kwa modeli na "
+                      "kumbukumbu pekee, hivyo hakuna hesabu ya kuthibitisha."]
+    n_facts = len(item.get("facts") or [])
+    lines += [f"VIGEZO VILIVYOTUMIKA: {n_facts}"]
+    if item.get("fallback"):
+        lines += ["⚠️ FALLBACK — modeli haikujibu."]
+    if item.get("error_class"):
+        lines += [f"⚠️ {item['error_class']}"]
+    lines += ["", "Fungua ili kuthibitisha, kuhariri au kuzuia:", link,
+              "", "Hakuna jibu linalotumwa mpaka mtu abonyeze. Likikaa bila kushughulikiwa, "
+                  "nitakumbusha tena."]
+    return "\n".join(lines)
+
+
+def per_reviewer(items):
+    """Each reviewer's decisions, separately.
+
+    ⛔ THE POINT OF A ROSTER'S AUDIT TRAIL. Aggregate numbers hide the one thing worth
+    watching: a reviewer whose edit rate is far BELOW the others is not necessarily faster,
+    they may be approving what the others would have caught. That cannot be seen in a pooled
+    rate, and it is invisible without per-decision attribution — which is why `decided_by`
+    is required rather than optional.
+    """
+    out = {}
+    for i in items:
+        who = i.get("decided_by")
+        if not who or i.get("status") not in ("sent", "edited", "withheld"):
+            continue
+        row = out.setdefault(who, {"name": i.get("decided_by_name"), "sent": 0, "edited": 0,
+                                   "withheld": 0, "latencies": []})
+        row[i["status"]] += 1
+        if isinstance(i.get("decision_latency_s"), int):
+            row["latencies"].append(i["decision_latency_s"])
+    for who, row in out.items():
+        n = row["sent"] + row["edited"] + row["withheld"]
+        row["decided"] = n
+        row["edit_or_withhold_rate"] = (
+            None if not n else round((row["edited"] + row["withheld"]) / n, 3))
+        lat = sorted(row.pop("latencies"))
+        row["median_decision_latency_s"] = (None if not lat else lat[len(lat) // 2])
+    return out
 
 
 def review_summary(items):
@@ -568,6 +878,9 @@ def review_summary(items):
             None if not decided
             else round((counts["edited"] + counts["withheld"]) / len(decided), 3)),
         "median_decision_latency_s": (None if not lat else sorted(lat)[len(lat) // 2]),
+        "claimed_now": sum(1 for i in items
+                           if i.get("status") == "pending" and i.get("claimed_by")),
+        "per_reviewer": per_reviewer(items),
         "_why_no_rate_on_an_empty_queue": (
             "a 0.0 edit rate with nothing decided reads exactly like a perfect model; None "
             "cannot be mistaken for one"),
