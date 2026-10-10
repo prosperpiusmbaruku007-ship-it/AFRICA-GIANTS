@@ -1033,6 +1033,16 @@
       "why_not_edited": "⛔ ABSENCE IS NOT A VALUE, and inventing one would be the mirror of the effective_date error these same amendments were careful to avoid. All three are present in the June capture (items 3, 4, 5) and absent from the October capture. Three readings are all consistent with that and they imply different advice: abolished (the fee is now zero), folded in (the fee still exists inside another line), or relocated (the fee exists and we are looking at the wrong page). Nothing in either capture distinguishes them, so the facts are left AS THEY STAND with this item recording that their source no longer carries them -- which is strictly more honest than either editing them to a guess or deleting them.",
       "what_would_settle_it": "the Companies (Fees) Regulations located under the lead above; or BRELA's incorporation-steps page (brela.go.tz/pages/hatua-za-usajili, cached at data/source_documents/brela/brela_hatua_10.html from June) re-fetched live, which may itemise what an applicant pays today.",
       "recorded": "2026-10-06"
+    },
+    "wc_regulations_reg_13_7_ten_to_two": {
+      "claim": "GN 668/2021 reg.2 substitutes 'two' for 'ten' in Reg.13(7) of GN 185/2016. WHAT Reg.13(7) counts is unknown to us.",
+      "current_assumption": "NONE — deliberately not assumed.",
+      "status": "NEEDS_GN_185_2016_BASE_TEXT",
+      "why_it_matters": "The substituted number is TWO, and locked fact osha_vs_wcf_roles asserts 'WCF applies from the first employee — there is NO 2-employee or other minimum-count threshold for WCF', with a wrong_pattern firing on 'wafanyakazi wawili … wcf'. If Reg.13(7) is a headcount condition, our fact and a 2021 amendment are describing the same number from opposite directions. If it is a claims or medical-aid provision there is no conflict at all. The amendment text gives no context, and the sibling amendments (regs 36/38/41) are compensation amounts — so inferring the subject from its neighbours would be exactly the metadata inference R34 forbids.",
+      "resolution_source": "GN 185/2016 base text — not on wcf.go.tz/publications/acts and tanzlii.org is 403. Untried: the Government Printer / gazette supplements, and portal.wcf.go.tz.",
+      "priority": "MEDIUM",
+      "found_by": "the 2026-10-10 R29 mode-3 check on eval_239's gold correction — i.e. by reading an amending instrument opened only to confirm it changed nothing.",
+      "pairs_affected": []
     }
   },
   "wht_director_fees": {

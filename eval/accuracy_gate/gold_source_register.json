@@ -164,5 +164,46 @@
     "bytes": 3215470,
     "quote": "458. The Minister may by regulations require the payment to the Registrar of companies such fees as may be specified in the regulations ... 489.-(3) The fees to be paid under this Act shall be as the Minister may prescribe in regulations.",
     "note": "Decisive for the USD 25 vs TZS 70,000 question: the Act delegates it. Only the Companies (Fees) Regulations can answer, and they were not located (brela.go.tz law pages HTTP 500; tanzlii search is a client-rendered SPA). Both figures therefore stand UNRESOLVED rather than being settled from the Act."
+  },
+  "wcf_occupational_disease_two_stage": {
+    "claim": "Occupational disease notification to WCF is a two-stage chain: employee to employer within 14 working days of diagnosis (Reg.16(1)); employer to WCF within 7 working days of receiving that notice (Reg.16(2)). Worst case diagnosis-to-WCF is 21 working days, not 7.",
+    "url": "https://www.wcf.go.tz/publications/acts",
+    "source_type": "subsidiary_legislation",
+    "statute_named_by_source": "Workers Compensation Regulations, 2016 (GN 185/2016), Reg.16, made under s.94 Workers Compensation Act Cap.263",
+    "fetched": "2026-10-10",
+    "http": 200,
+    "bytes": 101545,
+    "amending_instrument_checked": {
+      "instrument": "GN No. 668 of 10/09/2021 — The Workers Compensation (Amendment) Regulations, 2021",
+      "url": "https://www.wcf.go.tz/uploads/documents/sw-1666602336-sw1658489562-GN No. 668 WC Regulations Ammendment.pdf",
+      "http": 200,
+      "bytes": 217366,
+      "sha256_prefix": "85863161e0197bff7613d486",
+      "regulations_amended": [
+        13,
+        26,
+        36,
+        38,
+        41
+      ],
+      "reg_16_amended": false,
+      "why_this_check_was_run": "R29 mode 3 — a correctly-cited figure that a LATER, SEPARATE instrument has since changed. WCF's own acts page lists an amendment to the very Regulations this gold now cites, so citing GN 185/2016 without reading GN 668 would have repeated the vat_deferment_minimum_value failure: two sources agreeing because both are frozen at the same earlier date.",
+      "corroboration_found": "GN 668's amended notification form carries 'Date of diagnosis' AND 'Date of reporting disease to employer' as SEPARATE fields. A flat 7-day diagnosis-to-WCF deadline would need only the first, so a 2021 instrument independently corroborates the two-stage structure.",
+      "clean_negative_recorded": "None of GN 668's substituted figures (3,685,852.69 → 8,400,000.00; 551,405.66; 16,800,000.00; 275,702.83) appears anywhere in locked_facts.json, the served index, or datasets/tier1a/sft/. Checked and recorded because 'the number didn't move' is a finding, not an absence of one."
+    },
+    "quote": "Reg.16 is not among the regulations GN 668 amends, so the principal Regulations' Reg.16(1)/(2) stand. The two-stage text and citation have been served verbatim in index row 46 since the 2026-10-09 correction.",
+    "_provenance_limit": "⚠️ THE BASE INSTRUMENT'S OWN TEXT WAS NOT RE-FETCHED TODAY. GN 185/2016 is not published on wcf.go.tz/publications/acts (which lists only GN 478F, GN 496G, GN 668, GN 151 and GN 152) and tanzlii.org returns 403 behind Cloudflare, as R30 records permanently. What WAS fetched and read today is the AMENDING instrument — the part that could have invalidated the citation. Reg.16's wording rests on the 2026-10-09 correction pass. Stated so a later reader does not mistake this for a full statute-tier read."
+  },
+  "osha_safety_representative_threshold": {
+    "claim": "An employer with MORE THAN 20 employees must DESIGNATE a health-and-safety representative from existing staff — not hire a dedicated safety officer. Ratios: 1 per 50 in a factory, 1 per 100 in a shop/office. A safety committee is required once 2+ representatives exist. An inspector may compel designation even at 4 or fewer employees.",
+    "url": "https://www.osha.go.tz",
+    "source_type": "statute",
+    "statute_named_by_source": "Occupational Health and Safety Act, Cap.297 R.E.2023, s.11(1), s.11(4), s.11(5), s.13",
+    "fetched": "2026-09-01",
+    "http": null,
+    "bytes": null,
+    "quote": "Recorded by the 2026-09-01 Tier 3 correction pass as a direct read of Cap.297 s.11 primary text; locked fact OSHA_safety_officer_threshold carries verified_by 'Direct read of Cap.297 s.11 primary text, 2026-09-01' and the full mechanism including the s.11(4) ratios and s.11(5) inspector discretion.",
+    "_provenance_limit": "⚠️ WEAKER THAN EVERY OTHER STATUTE ENTRY HERE, AND MARKED SO. This entry has no fetched bytes of its own: it records a dated direct read, not a capture. Three routes were tried on 2026-10-10 and all failed — osha.go.tz/laws-and-regulations returns 200/52448 bytes with no document links at all, a guessed uploads/ PDF path 404s, and tanzlii.org/akn/tz/act/2003/5 returns 403 (Cloudflare). Per R30 that is three named failed requests, not a claim that the Act is unreachable; a later session should retry and replace this entry with a sha256-pinned capture. The gold was corrected anyway because the INCUMBENT key cited auditaxinternational.co.tz's Finance Act tax article — an unwhitelisted source about a different subject — so the choice was never between a sourced key and an unsourced one.",
+    "_why_the_old_gold_was_not_merely_stale": "It answered a different question. The asker says 'kumwajiri' (to HIRE); Cap.297 s.11 requires designation from existing staff. 'The threshold is not explicitly confirmed' concedes the premise that hiring is the obligation and only declines to give its number."
   }
 }
