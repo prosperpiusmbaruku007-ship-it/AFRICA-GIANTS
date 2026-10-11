@@ -1021,7 +1021,7 @@ def dump_queue():
 
 
 @app.function(image=image, secrets=[SECRET], timeout=120)
-async def seed_test_draft(label: str = "seed"):
+async def seed_test_draft(label: str = "seed", to_reviewer: bool = False):
     """Put ONE synthetic draft in the queue, for verifying the roster mechanics live.
 
     ⛔⛔ A MODAL FUNCTION, NOT A WEB ENDPOINT, AND THAT IS THE SECURITY PROPERTY. Reaching
@@ -1039,6 +1039,12 @@ async def seed_test_draft(label: str = "seed"):
     settings = _settings()
     now = datetime.now(timezone.utc)
     sender = "+255700000000"          # reserved test number, routes nowhere
+    if to_reviewer:
+        # An approved/edited draft is then DELIVERED to the first reviewer's own phone, which
+        # proves the send leg end to end without any participant being involved.
+        if not settings.roster:
+            raise RuntimeError("to_reviewer needs a roster")
+        sender = settings.roster[0][0]
     sender_hash, sender_tail = core.sender_ids(sender, settings.sender_salt)
     row = {
         "ts": now.isoformat(timespec="seconds") + f"-{label}",
@@ -1059,6 +1065,29 @@ async def seed_test_draft(label: str = "seed"):
     _mark_notified(item, sent)
     print(f"SEEDED {item['review_id']}", flush=True)
     return item["review_id"]
+
+
+@app.function(image=image, secrets=[SECRET], timeout=60)
+def mint_review_link(review_id: str):
+    """The first reviewer's link credentials for ONE SEEDED TEST DRAFT, over the CLI.
+
+    The signing key never leaves the container: the live verification needs a valid token to
+    exercise claim/act, and the alternative is handing the key to a script (and so to a
+    transcript). ONLY `TEST-` drafts are accepted -- minting a token for a real participant's
+    draft from the CLI would be a way to approve a reply without being the reviewer.
+    """
+    if not str(review_id).startswith("TEST-"):
+        raise ValueError("mint_review_link only serves seeded TEST- drafts")
+    core = _core()
+    settings = _settings()
+    if not settings.roster or not settings.review_signing_key:
+        raise RuntimeError("no roster or no signing key")
+    number, _name = settings.roster[0]
+    out = {"review_id": review_id,
+           "v": core.reviewer_id(settings.review_signing_key, number),
+           "t": core.review_token(settings.review_signing_key, review_id, number)}
+    print("MINTED " + json.dumps(out), flush=True)
+    return out
 
 
 @app.function(image=image, secrets=[SECRET])

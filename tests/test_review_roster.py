@@ -623,3 +623,71 @@ def test_opening_a_draft_twice_does_not_let_it_send_twice(monkeypatch):
     a2 = _run(mw.review_act.get_raw_f()(_Req({**base, "action": "send"})))
     assert a1.status_code == 200 and a2.status_code == 409
     assert len(sent) == 1, "the participant must receive exactly one message"
+
+
+def test_TWO_reviewers_contending_for_one_draft_through_the_deployed_endpoints(monkeypatch):
+    """The multi-reviewer path, offline, because the live roster has one person.
+
+    Goes through review_claim / review_act (the functions the deployed app serves), not just
+    the pure core: the second reviewer is refused the claim, cannot withhold OR send what the
+    first holds, the first can still decide, and exactly one message is ever sent.
+    """
+    import json as _json
+    mw = _load_app(monkeypatch)
+    monkeypatch.setenv("REVIEWER_ROSTER", "+255700000011:Asha, 0700000022:Juma")
+    sent = []
+
+    async def fake_send(to, text):
+        sent.append((to, text))
+        return True, None
+
+    mw._send_once = fake_send
+    (n1, _), (n2, _) = mw._settings().roster
+    assert (n1, n2) == (R1, R2)
+    it = _item(claimed_by=None)
+    mw.REVIEW_QUEUE[it["review_id"]] = it
+
+    def cred(n):
+        return {"review_id": it["review_id"], "v": hc.reviewer_id(KEY, n),
+                "t": hc.review_token(KEY, it["review_id"], n)}
+
+    def post(fn, payload):
+        r = _run(fn.get_raw_f()(_Req(payload)))
+        return r.status_code, _json.loads(r.body)
+
+    assert post(mw.review_claim, cred(n1))[1]["outcome"] == "claimed"
+    s, j = post(mw.review_claim, cred(n2))
+    assert j["outcome"] == "held_by_other" and j["ok"] is False and j["held_by"] == "Asha"
+    for action, kw in (("withhold", {"reason": "r"}), ("send", {})):
+        s, j = post(mw.review_act, {**cred(n2), "action": action, **kw})
+        assert s == 409 and "another reviewer" in j["detail"], (action, j)
+    assert sent == [], "the refused reviewer must not have caused any send"
+    # A reviewer's token is bound to THEM: reviewer 2 cannot use reviewer 1's token.
+    s, _j = post(mw.review_act, {**cred(n2), "t": cred(n1)["t"], "action": "send"})
+    assert s == 404
+    s, j = post(mw.review_act, {**cred(n1), "action": "send"})
+    assert s == 200 and j["by"] == "Asha" and len(sent) == 1
+    # And once decided, the other reviewer cannot decide it again either.
+    s, _j = post(mw.review_act, {**cred(n2), "action": "send"})
+    assert s == 409 and len(sent) == 1
+
+
+def test_a_timed_out_claim_is_released_to_the_OTHER_reviewer_and_never_sent(monkeypatch):
+    import json as _json
+    mw = _load_app(monkeypatch)
+    monkeypatch.setenv("REVIEWER_ROSTER", "+255700000011:Asha, +255700000022:Juma")
+    sent = []
+
+    async def fake_send(to, text):
+        sent.append((to, text))
+        return True, None
+
+    mw._send_once = fake_send
+    it = _item(claimed_by=R1)
+    it["claim_expires_at"] = "2020-01-01T00:00:00+00:00"          # long expired
+    mw.REVIEW_QUEUE[it["review_id"]] = it
+    cred2 = {"review_id": it["review_id"], "v": hc.reviewer_id(KEY, R2),
+             "t": hc.review_token(KEY, it["review_id"], R2)}
+    r = _run(mw.review_claim.get_raw_f()(_Req(cred2)))
+    assert _json.loads(r.body)["outcome"] == "claimed", "the expired claim must not block Juma"
+    assert sent == []

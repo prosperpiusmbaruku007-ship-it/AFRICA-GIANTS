@@ -49,11 +49,11 @@ exists to prevent, and it is on the void list.
 | `SUPERVISED=1` | **Secret** (or deploy env) | founder | **answers send unreviewed.** The one failure that voids the R7 reading |
 | `REVIEWER_ROSTER` | **Secret** | founder | drafts HOLD and notify nobody — safe, silent |
 | `REVIEW_SIGNING_KEY` | **Secret** | founder | **every link forgeable, none authenticating.** Fails closed |
-| `PUBLIC_BASE_URL` | deploy env | either | links are relative and unusable inside WhatsApp — drafts HOLD |
+| `REVIEW_D_URL`, `REVIEW_CLAIM_URL`, `REVIEW_ACT_URL` | deploy env | either | **all three or none**: Modal serves each endpoint on its own hostname (`<ws>--chike-whatsapp-<function>.modal.run`), there is no shared base. Unset -> no link issued, drafts HOLD. Take them from the first deploy's output |
 | `COHORT_SIZE`, `CLAIM_TTL_S`, `RENOTIFY_AFTER_S` | deploy env | either | defaults: 0 (monitor-only), 900s, 1800s |
 
-`REVIEWER_ROSTER` is `+255700000001:Asha, +255700000002:Juma` — comma- or
-semicolon-separated, `number:name`, name optional (defaults to the last 4 digits). Duplicate
+`REVIEWER_ROSTER` is `+255 754 123 456:Asha, 0712 345 678:Juma` — comma- or
+semicolon-separated, `number:name`, name optional (defaults to the last 4 digits). Numbers are written the way a person writes them (`+255…`, `0…`, spaces and dashes fine) and are normalised to WhatsApp ID form (`255…@s.whatsapp.net`); fewer than 9 digits is dropped. Duplicate
 numbers keep the first name; an entry with no number is dropped, because a nameless blank
 would become a seat that can never be notified and never acts, quietly lowering capacity.
 
@@ -89,10 +89,7 @@ The pre-flight comes **before** the stop, not after: the stop is instant and irr
 the deploy is neither. Three times a pre-flight has earned its place — twice on build failures
 nobody had enumerated, once by refusing a deploy whose commit was still local-only.
 
-⚠️ **The endpoint URLs are per-function, not per-app** (`...--chike-whatsapp-d.modal.run`,
-`...-health.modal.run`). `PUBLIC_BASE_URL` must be the prefix the `/d` link resolves against —
-take it from the deploy output, then confirm `roster.can_issue_links` in §2 rather than
-assuming the shape.
+⚠️ **The endpoint URLs are per-function, not per-app.** Deploy once WITHOUT the three review URLs (safe: no link is issued, drafts hold), copy the `d`, `review_claim` and `review_act` URLs from the deploy output, then redeploy with them set and confirm `roster.can_issue_links` in §2.
 
 ---
 
