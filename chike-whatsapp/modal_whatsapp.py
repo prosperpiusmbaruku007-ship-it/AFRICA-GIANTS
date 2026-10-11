@@ -1073,6 +1073,24 @@ async def seed_test_draft(label: str = "seed", to_reviewer: bool = False):
 
 
 @app.function(image=image, secrets=[SECRET], timeout=60)
+async def send_probe():
+    """ONE real send to the FIRST REVIEWER'S OWN number, over the CLI. Reports Wappfly's answer.
+
+    For confirming delivery works after a plan or token change, before anything depends on
+    it. It can only ever address roster[0] -- never a participant -- and takes no text.
+    """
+    settings = _settings()
+    if not settings.roster:
+        raise RuntimeError("no roster")
+    number, _name = settings.roster[0]
+    ok, detail = await _send_once(
+        number, "[MTIHANI] Chike: ujumbe wa kujaribu uwasilishaji. Hakuna hatua inayohitajika.")
+    print("PROBE " + json.dumps({"ok": ok, "detail": detail,
+                                  "to_tail": _core().number_tail(number)}), flush=True)
+    return {"ok": ok, "detail": detail}
+
+
+@app.function(image=image, secrets=[SECRET], timeout=60)
 def mint_review_link(review_id: str):
     """The first reviewer's link credentials for ONE SEEDED TEST DRAFT, over the CLI.
 

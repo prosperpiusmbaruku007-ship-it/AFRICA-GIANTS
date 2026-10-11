@@ -242,14 +242,20 @@ def _audit():
     mod = importlib.util.module_from_spec(spec)
     sys.modules["audit_quarantine_reach"] = mod
     cwd = os.getcwd()
+    # WRITE TO A TEMP PATH, NOT THE COMMITTED ARTIFACT. The harness stamps today's date into
+    # its output, so running this test rewrote a tracked file on every run -- and a dirty tree
+    # makes scripts/preflight_deploy.py refuse a deploy (it did, twice, on 2026-10-11).
+    import tempfile
+    tmp = os.path.join(tempfile.mkdtemp(prefix="quarantine_reach_"), "audit.json")
     try:
         os.chdir(REPO)
         spec.loader.exec_module(mod)
+        mod.OUT = tmp
         rc = mod.main()
     finally:
         os.chdir(cwd)
     assert rc == 0
-    return json.load(open(ARTIFACT, encoding="utf-8"))
+    return json.load(open(tmp, encoding="utf-8"))
 
 
 AUDIT = _audit()
