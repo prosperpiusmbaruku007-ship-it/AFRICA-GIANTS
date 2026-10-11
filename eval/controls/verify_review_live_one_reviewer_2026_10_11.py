@@ -205,6 +205,8 @@ def main():
     s4, j4, _ = act(ca, "send")
     record("3a. after the claim EXPIRED the holder cannot act on it (nothing sends)",
            s4 == 409, f"HTTP {s4} {j4}")
+    q0 = _queue() or {}
+    n_before = {x: (q0.get(x, {}).get("notify_count") or 0) for x in (a, b)}   # BEFORE any sweep
     print("  ... sweeping (releases the expired claim)", flush=True)
     _modal("sweep_review_queue")
     q = _queue() or {}
@@ -214,14 +216,16 @@ def main():
            and ia.get("status") == "pending",
            f"claimed_by={ia.get('claimed_by')!r} release_count={ia.get('release_count')} "
            f"status={ia.get('status')}")
-    n_before = {x: (q.get(x, {}).get("notify_count") or 0) for x in (a, b)}
     wait = max(0, args.renotify + 10 - (time.time() - t_seed))
     print(f"  ... waiting {wait:.0f}s for the re-notify interval", flush=True)
     time.sleep(wait)
     _modal("sweep_review_queue")
     q = _queue() or {}
-    record("3c. an unacted draft RE-NOTIFIES the reviewer (it holds; it does not fall through)",
-           all((q.get(x, {}).get("notify_count") or 0) > n_before[x] for x in (a, b)),
+    record("3c. an unacted draft RE-NOTIFIES the reviewer (it holds; it does not fall through). "
+           "Baseline is taken BEFORE the first sweep: run 3 read it after, and a sweep that had "
+           "already re-notified made 2->2 look like a failure",
+           all((q.get(x, {}).get("notify_count") or 0) > n_before[x]
+               and (q.get(x, {}).get("renotify_count") or 0) >= 1 for x in (a, b)),
            f"notify_count A {n_before[a]}->{q.get(a, {}).get('notify_count')}, "
            f"B {n_before[b]}->{q.get(b, {}).get('notify_count')}; "
            f"renotify_count A={q.get(a, {}).get('renotify_count')}")

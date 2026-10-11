@@ -1,0 +1,125 @@
+{
+ "_what": "LIVE VERIFICATION OF THE SUPERVISED REVIEW PATH, WITH ONE REVIEWER ON THE ROSTER.",
+ "checks": [
+  {
+   "name": "gate: supervised, 1 reviewer, key set, links issuable, build == HEAD",
+   "ok": true,
+   "detail": "build=bdc2e83 head=bdc2e83 supervised=True roster={'reviewers': 1, 'signing_key_set': True, 'can_issue_links': True, 'claim_ttl_s': 60.0, 'renotify_after_s': 120.0}",
+   "must_pass": true
+  },
+  {
+   "name": "1a. two drafts pending at once",
+   "ok": true,
+   "detail": "TEST-1791721912A / TEST-1791721912B",
+   "must_pass": true
+  },
+  {
+   "name": "1b. BOTH were pushed to the reviewer (Wappfly accepted: recipients == 1) -- ARRIVAL ON THE HANDSET is for the reviewer to confirm by looking",
+   "ok": false,
+   "detail": "A notify_count=1 recipients=0; B notify_count=1 recipients=0",
+   "must_pass": true
+  },
+  {
+   "name": "2a. first open claims the draft, response readable cross-origin",
+   "ok": true,
+   "detail": "HTTP 200 {'ok': True, 'outcome': 'claimed', 'reviewer': 'Prosper', 'held_by': None, 'claim_expires_at': '2026-10-11T12:34:33+00:00', 'status': 'pending'}",
+   "must_pass": true
+  },
+  {
+   "name": "2b. opening it AGAIN is idempotent (already_yours), not a second claim",
+   "ok": true,
+   "detail": "HTTP 200 {'ok': True, 'outcome': 'already_yours', 'reviewer': 'Prosper', 'held_by': None, 'claim_expires_at': '2026-10-11T12:34:33+00:00', 'status': 'pending'}",
+   "must_pass": true
+  },
+  {
+   "name": "2c. a forged token cannot claim",
+   "ok": true,
+   "detail": "HTTP 404 {'ok': False, 'detail': 'not found'}",
+   "must_pass": true
+  },
+  {
+   "name": "3a. after the claim EXPIRED the holder cannot act on it (nothing sends)",
+   "ok": true,
+   "detail": "HTTP 409 {'ok': False, 'detail': 'review TEST-1791721912A is not claimed (or the claim has expired) — claim it before acting, so two reviewers cannot both decide'}",
+   "must_pass": true
+  },
+  {
+   "name": "3b. the claim RELEASED back to the roster and the release is recorded",
+   "ok": true,
+   "detail": "claimed_by=None release_count=1 status=pending",
+   "must_pass": true
+  },
+  {
+   "name": "3c. an unacted draft RE-NOTIFIES the reviewer (it holds; it does not fall through)",
+   "ok": false,
+   "detail": "notify_count A 2->2, B 2->2; renotify_count A=1",
+   "must_pass": true
+  },
+  {
+   "name": "4. after 209s -- more than the claim timeout AND the re-notify interval, with two sweeps -- A and B are STILL pending, undecided, with no final answer and no send recorded",
+   "ok": true,
+   "detail": "A=pending/None/send_ok=None B=pending/None/send_ok=None",
+   "must_pass": true
+  },
+  {
+   "name": "5a. APPROVE: sent once, delivered (send_ok), and a second approve is refused so it cannot send twice",
+   "ok": false,
+   "detail": "first HTTP 200 {'ok': True, 'status': 'sent', 'by': 'Prosper', 'send_ok': False, 'send_error': 'HTTP 402: {\"error\":\"Free plan lifetime quota reached — upgrade to keep sending.\",\"quota\":25,\"requests_used\":28,\"lifetime\":true,\"resets_at\":null}'}; second HTTP 409 {'ok': False, 'detail': \"review TEST-1791721912C is already 'sent' — a decision is taken once\"}",
+   "must_pass": true
+  },
+  {
+   "name": "5d. an edit WITHOUT a reason is refused while the draft is still pending",
+   "ok": true,
+   "detail": "HTTP 409 {'ok': False, 'detail': \"action 'edit' requires a reason — the reason is the label on the correction and is the most valuable field in the record\"}",
+   "must_pass": true
+  },
+  {
+   "name": "5b. EDIT: sent the edited text",
+   "ok": false,
+   "detail": "HTTP 200 {'ok': True, 'status': 'edited', 'by': 'Prosper', 'send_ok': False, 'send_error': 'HTTP 402: {\"error\":\"Free plan lifetime quota reached — upgrade to keep sending.\",\"quota\":25,\"requests_used\":28,\"lifetime\":true,\"resets_at\":null}'}",
+   "must_pass": true
+  },
+  {
+   "name": "5c. WITHHOLD: nothing sent",
+   "ok": true,
+   "detail": "HTTP 200 {'ok': True, 'status': 'withheld', 'by': 'Prosper', 'send_ok': None, 'send_error': None}",
+   "must_pass": true
+  },
+  {
+   "name": "5e. approve: draft == final, status sent, attributed",
+   "ok": true,
+   "detail": "sent by Prosper",
+   "must_pass": true
+  },
+  {
+   "name": "5f. edit: draft KEPT, final DIFFERENT, reason recorded -- three separate fields",
+   "ok": true,
+   "detail": "draft!=final True reason='live check: the edit reason is recorded'",
+   "must_pass": true
+  },
+  {
+   "name": "5g. withhold: draft kept, NO final, reason recorded",
+   "ok": true,
+   "detail": "withheld final=None",
+   "must_pass": true
+  }
+ ],
+ "findings": [
+  "1b. BOTH were pushed to the reviewer (Wappfly accepted: recipients == 1) -- ARRIVAL ON THE HANDSET is for the reviewer to confirm by looking",
+  "3c. an unacted draft RE-NOTIFIES the reviewer (it holds; it does not fall through)",
+  "5a. APPROVE: sent once, delivered (send_ok), and a second approve is refused so it cannot send twice",
+  "5b. EDIT: sent the edited text"
+ ],
+ "health_url": "https://prosperpiusmbaruku007--chike-whatsapp-health.modal.run",
+ "started": "2026-10-11T15:31:49+0300",
+ "summary": {
+  "checks": 17,
+  "failed": [
+   "1b. BOTH were pushed to the reviewer (Wappfly accepted: recipients == 1) -- ARRIVAL ON THE HANDSET is for the reviewer to confirm by looking",
+   "3c. an unacted draft RE-NOTIFIES the reviewer (it holds; it does not fall through)",
+   "5a. APPROVE: sent once, delivered (send_ok), and a second approve is refused so it cannot send twice",
+   "5b. EDIT: sent the edited text"
+  ],
+  "multi_reviewer_contention": "NOT exercised live (one reviewer); proven offline in tests/test_review_roster.py"
+ }
+}
