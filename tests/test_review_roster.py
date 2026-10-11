@@ -501,3 +501,125 @@ def test_a_JID_tail_is_digits_not_the_domain():
     """number[-4:] on a JID is 'z.net' — which would label every reviewer identically in logs."""
     assert hc.number_tail(R1) == "0011" and hc.number_tail("+255700000011") == "0011"
     assert hc.parse_roster("+255700000011")[0][1] == "0011"
+
+
+def _run(coro):
+    """Run a coroutine on a PRIVATE loop. asyncio.run() unsets the global loop, and the sibling
+    test files fetch it with get_event_loop() -- so using it here broke 21 unrelated tests."""
+    loop = asyncio.new_event_loop()
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()
+
+
+# ── per-function hostnames: the links, the page, and the POSTs ─────────────────────────
+D_URL = "https://ws--chike-whatsapp-d.modal.run"
+CLAIM_URL = "https://ws--chike-whatsapp-review-claim.modal.run"
+ACT_URL = "https://ws--chike-whatsapp-review-act.modal.run"
+
+
+def _load_app(monkeypatch, urls=True):
+    import importlib.util, sys, types
+    if urls:
+        monkeypatch.setenv("REVIEW_D_URL", D_URL + "/")           # trailing slash stripped
+        monkeypatch.setenv("REVIEW_CLAIM_URL", CLAIM_URL)
+        monkeypatch.setenv("REVIEW_ACT_URL", ACT_URL)
+    else:
+        for k in ("REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL"):
+            monkeypatch.delenv(k, raising=False)
+    monkeypatch.setenv("SUPERVISED", "1")
+    monkeypatch.setenv("REVIEWER_ROSTER", "+255 700 000 011:Asha")
+    monkeypatch.setenv("REVIEW_SIGNING_KEY", KEY)
+    spec = importlib.util.spec_from_file_location(
+        "chike_modal_whatsapp_urls_" + ("on" if urls else "off"),
+        os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"))
+    mw = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mw)
+    pkg = types.ModuleType("chike_whatsapp")
+    pkg.handler_core = hc
+    monkeypatch.setitem(sys.modules, "chike_whatsapp", pkg)
+    monkeypatch.setitem(sys.modules, "chike_whatsapp.handler_core", hc)
+    mw.REVIEW_QUEUE = {}
+    return mw
+
+
+class _Req:
+    def __init__(self, payload):
+        import json as _json
+        self._b = _json.dumps(payload).encode()
+
+    async def body(self):
+        return self._b
+
+
+def test_the_draft_link_points_at_the_d_function_host_not_a_path(monkeypatch):
+    mw = _load_app(monkeypatch)
+    it = _item(claimed_by=None)
+    link = mw._draft_link(mw._settings(), it, mw._settings().roster[0][0])
+    assert link.startswith(D_URL + "?r=") and "/d?" not in link
+    assert "v=" in link and "t=" in link
+
+
+def test_no_link_is_issued_until_ALL_THREE_urls_are_set(monkeypatch):
+    mw = _load_app(monkeypatch, urls=False)
+    assert mw._review_urls_set() is False
+    assert mw._roster_health()["can_issue_links"] is False
+    assert _run(mw._notify_reviewers(_item(claimed_by=None))) == 0, "the draft HOLDS"
+    mw2 = _load_app(monkeypatch)
+    assert mw2._roster_health()["can_issue_links"] is True
+
+
+def test_the_page_posts_to_ABSOLUTE_urls_as_text_plain(monkeypatch):
+    mw = _load_app(monkeypatch)
+    s = mw._settings()
+    number = s.roster[0][0]
+    it = _item(claimed_by=None)
+    mw.REVIEW_QUEUE[it["review_id"]] = it
+    r = mw.d.get_raw_f()(it["review_id"], hc.reviewer_id(KEY, number),
+                         hc.review_token(KEY, it["review_id"], number))
+    html = r.body.decode("utf-8")
+    assert CLAIM_URL in html and ACT_URL in html
+    assert "fetch(CU," in html and "fetch(AU," in html
+    assert "fetch('review_claim'" not in html and "fetch('review_act'" not in html
+    assert "text/plain" in html
+
+
+def test_the_claim_endpoint_reads_a_text_plain_body_and_allows_only_the_d_origin(monkeypatch):
+    mw = _load_app(monkeypatch)
+    number = mw._settings().roster[0][0]
+    it = _item(claimed_by=None)
+    mw.REVIEW_QUEUE[it["review_id"]] = it
+    payload = {"review_id": it["review_id"], "v": hc.reviewer_id(KEY, number),
+               "t": hc.review_token(KEY, it["review_id"], number)}
+    resp = _run(mw.review_claim.get_raw_f()(_Req(payload)))
+    assert resp.headers["access-control-allow-origin"] == "https://ws--chike-whatsapp-d.modal.run"
+    import json as _json
+    assert _json.loads(resp.body)["outcome"] == "claimed"
+    bad = _run(mw.review_claim.get_raw_f()(_Req({**payload, "t": "forged"})))
+    assert bad.status_code == 404
+
+
+def test_opening_a_draft_twice_does_not_let_it_send_twice(monkeypatch):
+    """One reviewer, one draft: claim twice is idempotent, and a second SEND is refused."""
+    import json as _json
+    mw = _load_app(monkeypatch)
+    sent = []
+
+    async def fake_send(to, text):
+        sent.append((to, text))
+        return True, None
+
+    mw._send_once = fake_send
+    number = mw._settings().roster[0][0]
+    it = _item(claimed_by=None)
+    mw.REVIEW_QUEUE[it["review_id"]] = it
+    base = {"review_id": it["review_id"], "v": hc.reviewer_id(KEY, number),
+            "t": hc.review_token(KEY, it["review_id"], number)}
+    c1 = _json.loads(_run(mw.review_claim.get_raw_f()(_Req(base))).body)
+    c2 = _json.loads(_run(mw.review_claim.get_raw_f()(_Req(base))).body)
+    assert c1["outcome"] == "claimed" and c2["outcome"] == "already_yours"
+    a1 = _run(mw.review_act.get_raw_f()(_Req({**base, "action": "send"})))
+    a2 = _run(mw.review_act.get_raw_f()(_Req({**base, "action": "send"})))
+    assert a1.status_code == 200 and a2.status_code == 409
+    assert len(sent) == 1, "the participant must receive exactly one message"

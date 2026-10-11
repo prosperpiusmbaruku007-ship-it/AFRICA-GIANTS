@@ -48,9 +48,11 @@ DEPLOY (R16b — the handler is now on Modal, so R16 applies to it in full):
 then GET /health and confirm `build`, then the live forced-failure check.
 """
 
+import json
 import os
 
 import modal
+from fastapi import Request     # in the image via fastapi[standard]; annotation must be real
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -80,7 +82,7 @@ BUILD = os.environ.get("CHIKE_BUILD", "") or "dev"
 # silently shadow the real one. They are read here only so a THROWAWAY verification app can
 # be given a test roster without writing to the production secret.
 _DEPLOY_TUNABLES = ("SUPERVISED", "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S",
-                    "PUBLIC_BASE_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
+                    "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
                     "SECOND_ACK_AFTER_S", "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY")
 
 image = (
@@ -139,9 +141,18 @@ SECRET = modal.Secret.from_name("chike-whatsapp")
 EXPECTED_KEYS = ("WAPPFLY_TOKEN", "WEBHOOK_TOKEN", "ADMIN_TOKEN", "SENDER_SALT",
                  "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY")
 
-# The public base URL of this app, needed to build approval links that work inside WhatsApp.
-# Modal does not tell a function its own URL, so the deploy passes it.
-PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL", "").rstrip("/")
+# THE THREE REVIEW URLS. Modal serves every web endpoint on its OWN hostname
+# (`<ws>--chike-whatsapp-<function>.modal.run`), so there is no single "base" a `/d` path
+# can hang off -- the first design assumed one and every approval link would have 404'd.
+# Modal does not tell a function its own URL, so they are deploy-time settings taken from
+# the deploy output. Until all three are set no link is issued and drafts HOLD.
+REVIEW_D_URL = os.environ.get("REVIEW_D_URL", "").rstrip("/")
+REVIEW_CLAIM_URL = os.environ.get("REVIEW_CLAIM_URL", "").rstrip("/")
+REVIEW_ACT_URL = os.environ.get("REVIEW_ACT_URL", "").rstrip("/")
+
+
+def _review_urls_set():
+    return bool(REVIEW_D_URL and REVIEW_CLAIM_URL and REVIEW_ACT_URL)
 
 WAPPFLY_SEND_URL = os.environ.get("WAPPFLY_SEND_URL",
                                   "https://wappfly.com/api/messages/send")
@@ -443,8 +454,7 @@ def _draft_link(settings, item, number):
     core = _core()
     rid = core.reviewer_id(settings.review_signing_key, number)
     tok = core.review_token(settings.review_signing_key, item["review_id"], number)
-    base = PUBLIC_BASE_URL or ""
-    return (f"{base}/d?r={item['review_id']}&v={rid}&t={tok}")
+    return f"{REVIEW_D_URL}?r={item['review_id']}&v={rid}&t={tok}"
 
 
 async def _notify_reviewers(item, *, renotify=False):
@@ -467,10 +477,10 @@ async def _notify_reviewers(item, *, renotify=False):
               f"roster={len(settings.roster)} signing_key="
               f"{bool(settings.review_signing_key)}. The draft HOLDS.", flush=True)
         return 0
-    if not PUBLIC_BASE_URL:
-        print(f"[review] NOT NOTIFIED {item['review_id']} — PUBLIC_BASE_URL is unset, so "
-              f"any link would be relative and unusable inside WhatsApp. The draft HOLDS.",
-              flush=True)
+    if not _review_urls_set():
+        print(f"[review] NOT NOTIFIED {item['review_id']} — REVIEW_D_URL / REVIEW_CLAIM_URL / "
+              f"REVIEW_ACT_URL are not all set, so any link would be unusable inside "
+              f"WhatsApp. The draft HOLDS.", flush=True)
         return 0
     ok_count = 0
     for number, name in settings.roster:
@@ -544,11 +554,11 @@ def _roster_health():
         "signing_key_set": bool(key),
         "claim_ttl_s": settings.claim_ttl_s,
         "renotify_after_s": settings.renotify_after_s,
-        "public_base_url_set": bool(PUBLIC_BASE_URL),
+        "review_urls_set": _review_urls_set(),
         # ⛔ THE ONE LINE THAT SAYS WHETHER REVIEW CAN HAPPEN AT ALL. Any of these three
         # missing means no links are issued, which means drafts HOLD — safe, and silent
         # unless something reports it.
-        "can_issue_links": bool(settings.roster and key and PUBLIC_BASE_URL),
+        "can_issue_links": bool(settings.roster and key and _review_urls_set()),
     }
 
 
@@ -745,6 +755,7 @@ def d(r: str = None, v: str = None, t: str = None):
         "</div><div class=o id=o></div>")
     script = (
         "<script>"
+        "var CU=" + json.dumps(REVIEW_CLAIM_URL) + ",AU=" + json.dumps(REVIEW_ACT_URL) + ";"
         "var P=new URLSearchParams(location.search);"
         "var B={review_id:P.get('r'),v:P.get('v'),t:P.get('t')};"
         "function en(on){['bs','be','bx'].forEach(function(i){"
@@ -752,8 +763,8 @@ def d(r: str = None, v: str = None, t: str = None):
         # ⛔ THE CLAIM IS POSTED FROM JS ON LOAD. A link preview crawler never reaches here,
         # so WhatsApp's own prefetch cannot lock a draft to a reviewer who has not read it.
         "async function claim(){"
-        "try{var r=await fetch('review_claim',{method:'POST',"
-        "headers:{'Content-Type':'application/json'},body:JSON.stringify(B)});"
+        "try{var r=await fetch(CU,{method:'POST',"
+        "headers:{'Content-Type':'text/plain'},body:JSON.stringify(B)});"
         "var j=await r.json();var L=document.getElementById('lock');"
         "if(j.outcome==='decided'){L.textContent='Imeshaamuliwa.';en(false);}"
         "else if(j.ok){L.textContent='Umeishikilia hadi '+(j.claim_expires_at||'')"
@@ -766,8 +777,8 @@ def d(r: str = None, v: str = None, t: str = None):
         "var b=Object.assign({},B,{action:a,"
         "edited:document.getElementById('t').value,"
         "reason:document.getElementById('reason').value});"
-        "try{var r=await fetch('review_act',{method:'POST',"
-        "headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});"
+        "try{var r=await fetch(AU,{method:'POST',"
+        "headers:{'Content-Type':'text/plain'},body:JSON.stringify(b)});"
         "var j=await r.json();"
         "if(j.ok){o.textContent=j.status.toUpperCase()+(j.send_ok===false?"
         "' LAKINI KUTUMA KUMESHINDIKANA: '+(j.send_error||''):' — imekamilika');}"
@@ -778,9 +789,37 @@ def d(r: str = None, v: str = None, t: str = None):
     return HTMLResponse(head + body + script)
 
 
+def _d_origin():
+    from urllib.parse import urlsplit
+    u = urlsplit(REVIEW_D_URL)
+    return f"{u.scheme}://{u.netloc}" if u.scheme and u.netloc else ""
+
+
+def _cors(payload, status=200):
+    """JSON response the review page (a DIFFERENT Modal hostname) is allowed to read.
+
+    THE PAGE POSTS `text/plain`, NOT `application/json`, so the request is a CORS "simple
+    request" and no preflight is needed (a web endpoint is one method, and an OPTIONS handler
+    per function would be extra surface). The origin allowed is exactly the /d host. Nothing
+    here relies on the origin for authority: every call carries the reviewer's HMAC token.
+    """
+    from fastapi.responses import JSONResponse
+    h = {"Access-Control-Allow-Origin": _d_origin()} if _d_origin() else {}
+    return JSONResponse(payload, status_code=status, headers=h)
+
+
+async def _read_json(request):
+    """Body as a dict regardless of Content-Type (the page sends text/plain)."""
+    try:
+        v = json.loads((await request.body()) or b"{}")
+        return v if isinstance(v, dict) else {}
+    except Exception:                                                # noqa: BLE001
+        return {}
+
+
 @app.function(image=image, secrets=[SECRET], timeout=60)
 @modal.fastapi_endpoint(method="POST")
-def review_claim(item: dict):
+async def review_claim(request: Request):
     """Lock one draft to the reviewer whose link this is.
 
     ⛔⛔ CLAIMING IS A **POST**, FIRED BY THE PAGE'S JAVASCRIPT ON LOAD — AND THAT IS NOT A
@@ -793,19 +832,18 @@ def review_claim(item: dict):
     This is the same hazard class as a side effect on import (R40): the action runs regardless
     of whether anyone asked for it, because something other than the user triggered the path.
     """
-    from fastapi.responses import JSONResponse
+    item = await _read_json(request)
     core = _core()
     settings = _settings()
-    rid = (item or {}).get("review_id")
-    who = core.authenticate_reviewer(settings, rid, (item or {}).get("v"),
-                                     (item or {}).get("t"))
+    rid = item.get("review_id")
+    who = core.authenticate_reviewer(settings, rid, item.get("v"), item.get("t"))
     if not who:
-        return JSONResponse({"ok": False, "detail": "not found"}, status_code=404)
+        return _cors({"ok": False, "detail": "not found"}, 404)
     number, name = who
     try:
         existing = REVIEW_QUEUE[rid]
     except Exception:                                                # noqa: BLE001
-        return JSONResponse({"ok": False, "detail": "unknown draft"}, status_code=404)
+        return _cors({"ok": False, "detail": "unknown draft"}, 404)
     # Release first, so a stale claim does not block a reviewer who is here now.
     existing, released = core.release_expired_claim(existing)
     updated, outcome = core.claim(existing, number, ttl_s=settings.claim_ttl_s)
@@ -813,23 +851,22 @@ def review_claim(item: dict):
         try:
             REVIEW_QUEUE[rid] = updated
         except Exception as e:                                       # noqa: BLE001
-            return JSONResponse({"ok": False, "detail": f"store failed: {e}"},
-                                status_code=500)
+            return _cors({"ok": False, "detail": f"store failed: {e}"}, 500)
     holder_name = None
     if outcome == "held_by_other":
         holder = updated.get("claimed_by")
         holder_name = next((n for num, n in settings.roster if num == holder), "mtu mwingine")
     print(f"[review] CLAIM {outcome} {rid} by ...{core.number_tail(number)} ({name})"
           f"{' (released a stale claim)' if released else ''}", flush=True)
-    return {"ok": outcome in ("claimed", "already_yours"), "outcome": outcome,
-            "reviewer": name, "held_by": holder_name,
-            "claim_expires_at": updated.get("claim_expires_at"),
-            "status": updated.get("status")}
+    return _cors({"ok": outcome in ("claimed", "already_yours"), "outcome": outcome,
+                  "reviewer": name, "held_by": holder_name,
+                  "claim_expires_at": updated.get("claim_expires_at"),
+                  "status": updated.get("status")})
 
 
 @app.function(image=image, secrets=[SECRET], timeout=120)
 @modal.fastapi_endpoint(method="POST")
-async def review_act(item: dict):
+async def review_act(request: Request):
     """Take one decision. The rules live in handler_core.apply_decision — pure, and tested
     without Modal — so this function only does I/O.
 
@@ -841,27 +878,25 @@ async def review_act(item: dict):
     ⛔ THE REASON AND THE CLAIM ARE BOTH ENFORCED IN apply_decision, NOT HERE. A check in the
     HTTP layer is bypassed by the first curl and leaves the pure function usable without it
     by the next caller — and the next caller is a sweeper or a backfill script."""
-    from fastapi.responses import JSONResponse
+    item = await _read_json(request)
     core = _core()
     settings = _settings()
-    rid = (item or {}).get("review_id")
-    who = core.authenticate_reviewer(settings, rid, (item or {}).get("v"),
-                                     (item or {}).get("t"))
+    rid = item.get("review_id")
+    who = core.authenticate_reviewer(settings, rid, item.get("v"), item.get("t"))
     if not who:
-        return JSONResponse({"ok": False, "detail": "not found"}, status_code=404)
+        return _cors({"ok": False, "detail": "not found"}, 404)
     number, name = who
     try:
         existing = REVIEW_QUEUE[rid]
     except Exception:                                                # noqa: BLE001
-        return JSONResponse({"ok": False, "detail": f"unknown review_id {rid!r}"},
-                            status_code=404)
+        return _cors({"ok": False, "detail": f"unknown review_id {rid!r}"}, 404)
     existing, _released = core.release_expired_claim(existing)
     try:
         updated, to_send = core.apply_decision(
-            existing, (item or {}).get("action"), reviewer=number, reviewer_name=name,
-            edited=(item or {}).get("edited"), reason=(item or {}).get("reason"))
+            existing, item.get("action"), reviewer=number, reviewer_name=name,
+            edited=item.get("edited"), reason=item.get("reason"))
     except ValueError as e:
-        return JSONResponse({"ok": False, "detail": str(e)}, status_code=409)
+        return _cors({"ok": False, "detail": str(e)}, 409)
 
     # ⚠️ STORE THE DECISION BEFORE SENDING. A stored decision with send_ok=false is
     # recoverable; a successful send with no stored decision is a message the user has and
@@ -871,7 +906,7 @@ async def review_act(item: dict):
     try:
         REVIEW_QUEUE[rid] = updated
     except Exception as e:                                           # noqa: BLE001
-        return JSONResponse({"ok": False, "detail": f"store failed: {e}"}, status_code=500)
+        return _cors({"ok": False, "detail": f"store failed: {e}"}, 500)
     if to_send:
         send_ok, send_error = await _send_once(existing["sender"], to_send)
         updated["send_ok"], updated["send_error"] = send_ok, send_error
@@ -906,8 +941,8 @@ async def review_act(item: dict):
     print(f"[review] {updated['status'].upper()} {rid} by {name} "
           f"latency={updated.get('decision_latency_s')}s "
           f"reason={updated.get('edit_reason')!r}", flush=True)
-    return {"ok": True, "status": updated["status"], "by": name, "send_ok": send_ok,
-            "send_error": send_error}
+    return _cors({"ok": True, "status": updated["status"], "by": name, "send_ok": send_ok,
+                  "send_error": send_error})
 
 
 @app.function(image=image, secrets=[SECRET])

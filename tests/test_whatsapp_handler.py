@@ -561,7 +561,7 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
     tunables = {"CHIKE_BUILD", "WAPPFLY_SEND_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
                 "SECOND_ACK_AFTER_S", "COLD_START_SUSPECTED_S", "SEND_ATTEMPTS",
                 "WAPPFLY_TIMEOUT_S", "SUPERVISED",
-                "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "PUBLIC_BASE_URL"}
+                "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL"}
     assert read - tunables == set(mw.EXPECTED_KEYS), (
         "a secret key is read but not reported by /health, or vice versa")
 
