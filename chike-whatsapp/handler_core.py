@@ -790,6 +790,10 @@ def apply_decision(item, action, *, reviewer=None, edited=None, reason=None,
     return out, out["final"]
 
 
+_PUSH_FACTS_MAX = 5
+_PUSH_FACT_CHARS = 180
+
+
 def notification_text(item, link, reviewer_name=None, renotify=False):
     """The WhatsApp push a reviewer receives the moment a draft is ready.
 
@@ -800,8 +804,15 @@ def notification_text(item, link, reviewer_name=None, renotify=False):
     fits in a WhatsApp message comfortably.
 
     The ENGINE WORKING is quoted because it is the one part a reviewer can check arithmetic
-    against. The facts are COUNTED rather than quoted: nine of them would bury the draft,
-    and the link carries them in full.
+    against. The FACTS SERVED are quoted too, truncated and capped — a reviewer who can only
+    see a count is being asked to approve the draft without seeing what it was grounded in,
+    which is the rubber-stamping the R7 condition exists to prevent. The link carries them
+    in full.
+
+    ONE LINK, NOT THREE. Approve / edit / withhold are buttons on the page the link opens,
+    and each is a POST. Three separate GET links would each be fetched by WhatsApp's own link
+    preview the moment the message is delivered, so an "approve" link would fire before any
+    human saw it.
     """
     head = ("🔁 KUPITIA TENA (bado hakuna aliyeshughulikia)" if renotify
             else "📋 RASIMU MPYA — inahitaji kupitiwa")
@@ -817,8 +828,12 @@ def notification_text(item, link, reviewer_name=None, renotify=False):
     else:
         lines += ["", "HESABU YA MFUMO: hakuna — jibu hili limetoka kwa modeli na "
                       "kumbukumbu pekee, hivyo hakuna hesabu ya kuthibitisha."]
-    n_facts = len(item.get("facts") or [])
-    lines += [f"VIGEZO VILIVYOTUMIKA: {n_facts}"]
+    facts = [str(f) for f in (item.get("facts") or [])]
+    lines += [f"VIGEZO VILIVYOTUMIKA ({len(facts)}):"]
+    for f in facts[:_PUSH_FACTS_MAX]:
+        lines.append("• " + (f if len(f) <= _PUSH_FACT_CHARS else f[:_PUSH_FACT_CHARS] + "…"))
+    if len(facts) > _PUSH_FACTS_MAX:
+        lines.append(f"• …na {len(facts) - _PUSH_FACTS_MAX} zaidi kwenye kiungo")
     if item.get("fallback"):
         lines += ["⚠️ FALLBACK — modeli haikujibu."]
     if item.get("error_class"):

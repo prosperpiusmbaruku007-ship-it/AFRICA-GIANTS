@@ -433,3 +433,55 @@ def test_the_cohort_size_does_NOT_gate_delivery():
                    _settings(cohort_size=1), hold_reply=r.hold))
     assert row["supervision"] == "held", "cohort_size changed the delivery path"
     assert r.held, "a cohort limit silently dropped an answer"
+
+
+# ── the push carries the facts SERVED, not a count of them ─────────────────────────────
+def test_the_notification_quotes_the_facts_served_not_only_a_count():
+    it = _item(claimed_by=None)
+    it["facts"] = ["sdl_rate: SDL ni asilimia 3.5 ya jumla ya mishahara."]
+    text = hc.notification_text(it, "https://x/d")
+    assert "SDL ni asilimia 3.5 ya jumla ya mishahara." in text
+
+
+def test_a_long_fact_list_is_capped_and_says_how_many_were_left_out():
+    it = _item(claimed_by=None)
+    it["facts"] = [f"fact_{i}: " + "x" * 400 for i in range(9)]
+    text = hc.notification_text(it, "https://x/d")
+    assert "fact_4" in text and "fact_5" not in text
+    assert "…na 4 zaidi" in text
+    assert "x" * 300 not in text, "each fact is truncated, or nine of them bury the draft"
+
+
+def test_approve_edit_and_withhold_are_POST_buttons_behind_one_link_not_three_GET_links():
+    """WhatsApp prefetches every URL it is sent. A GET link per action would fire on delivery."""
+    text = hc.notification_text(_item(claimed_by=None), "https://x/d?r=1&v=2&t=3")
+    assert text.count("https://x/d") == 1
+    src = open(os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"), encoding="utf-8").read()
+    for action in ("send", "edit", "withhold"):
+        assert "act(" + chr(92) + "'" + action + chr(92) + "')" in src, action
+
+
+
+# ── /health: the supervision flag sits beside the cohort block ─────────────────────────
+def test_health_reports_supervised_beside_declared_size_and_participants_seen(monkeypatch):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "chike_modal_whatsapp_health_cohort",
+        os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"))
+    mw = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mw)
+    # In the container the app dir is /root/chike_whatsapp; locally, alias it.
+    import sys, types
+    pkg = types.ModuleType("chike_whatsapp")
+    pkg.handler_core = hc
+    monkeypatch.setitem(sys.modules, "chike_whatsapp", pkg)
+    monkeypatch.setitem(sys.modules, "chike_whatsapp.handler_core", hc)
+    monkeypatch.setenv("SUPERVISED", "1")
+    monkeypatch.setenv("COHORT_SIZE", "10")
+    h = mw.health.get_raw_f()()
+    assert h["supervised"] is True and h["supervised_raw_env"] == "1"
+    assert h["cohort"]["declared_size"] == 10
+    assert "participants_seen" in h["cohort"]
+    monkeypatch.setenv("SUPERVISED", "ture")          # a typo must read as False, visibly
+    h = mw.health.get_raw_f()()
+    assert h["supervised"] is False and h["supervised_raw_env"] == "ture"
