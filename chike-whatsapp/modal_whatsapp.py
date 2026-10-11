@@ -1017,7 +1017,12 @@ def dump_queue():
     """
     core = _core()
     items = [{k: v for k, v in i.items() if k != "sender"} for i in _queue_items()]
-    return {"count": len(items), "summary": core.review_summary(items), "items": items}
+    out = {"count": len(items), "summary": core.review_summary(items), "items": items}
+    # `modal run` prints the return value as a Python repr (single quotes), which no JSON
+    # parser reads -- the first live run found every queue read returning nothing. A marked
+    # JSON line is parseable by the caller.
+    print("QUEUE " + json.dumps(out, default=str), flush=True)
+    return out
 
 
 @app.function(image=image, secrets=[SECRET], timeout=120)

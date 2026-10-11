@@ -79,19 +79,13 @@ def _marker(out, marker):
 
 
 def _queue():
-    out = _modal("dump_queue")
-    i = out.find('{"count"')
-    if i < 0:
+    m = _marker(_modal("dump_queue"), "QUEUE ")
+    if not m:
         return None
-    depth = 0
-    for j, ch in enumerate(out[i:], i):
-        depth += (ch == "{") - (ch == "}")
-        if depth == 0:
-            try:
-                return {x["review_id"]: x for x in json.loads(out[i:j + 1])["items"]}
-            except Exception:                                        # noqa: BLE001
-                return None
-    return None
+    try:
+        return {x["review_id"]: x for x in json.loads(m)["items"]}
+    except Exception:                                                # noqa: BLE001
+        return None
 
 
 def main():
@@ -106,6 +100,14 @@ def main():
     ap.add_argument("--claim-ttl", type=float, required=True, help="the deployed CLAIM_TTL_S")
     ap.add_argument("--renotify", type=float, required=True, help="the deployed RENOTIFY_AFTER_S")
     args = ap.parse_args()
+    # `modal run` executes the LOCAL file in an ephemeral app whose image bakes the SHELL's
+    # environment. Without these the seeded drafts' push finds no review URLs and reports
+    # "NOT NOTIFIED" -- the first live run never exercised the push at all for this reason.
+    base = args.claim_url.rsplit("-review-claim", 1)[0]
+    os.environ.update({"REVIEW_D_URL": base + "-d.modal.run",
+                       "REVIEW_CLAIM_URL": args.claim_url, "REVIEW_ACT_URL": args.act_url,
+                       "CLAIM_TTL_S": str(int(args.claim_ttl)),
+                       "RENOTIFY_AFTER_S": str(int(args.renotify))})
 
     art = {"_what": __doc__.strip().splitlines()[0], "checks": [], "findings": [],
            "health_url": args.health_url, "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
@@ -183,6 +185,7 @@ def main():
            f"recipients={q.get(b, {}).get('last_notify_recipients')}")
 
     # -- 2. the claim lock ----------------------------------------------------------------
+    t_claim = time.time()
     s1, j1, hd = claim(ca)
     record("2a. first open claims the draft, response readable cross-origin",
            s1 == 200 and j1.get("outcome") == "claimed"
@@ -195,8 +198,9 @@ def main():
     record("2c. a forged token cannot claim", s3 == 404, f"HTTP {s3} {j3}")
 
     # -- 3. timeout releases; the roster is re-notified ----------------------------------
-    wait = max(0, args.claim_ttl + 10 - (time.time() - t_seed))
-    print(f"  ... waiting {wait:.0f}s for A's claim to expire", flush=True)
+    wait = max(0, args.claim_ttl + 10 - (time.time() - t_claim))
+    print(f"  ... waiting {wait:.0f}s for A's claim to expire (measured from the claim)",
+          flush=True)
     time.sleep(wait)
     s4, j4, _ = act(ca, "send")
     record("3a. after the claim EXPIRED the holder cannot act on it (nothing sends)",
