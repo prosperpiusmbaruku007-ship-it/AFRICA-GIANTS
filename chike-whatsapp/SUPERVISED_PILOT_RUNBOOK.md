@@ -79,7 +79,9 @@ would become a seat that can never be notified and never acts, quietly lowering 
 python scripts/preflight_deploy.py chike-whatsapp/modal_whatsapp.py   # must exit 0 FIRST
 python -m modal app stop chike-whatsapp --yes
 CHIKE_BUILD=$(git rev-parse --short HEAD) \
-  PUBLIC_BASE_URL=https://<workspace>--chike-whatsapp \
+  REVIEW_D_URL=https://<ws>--chike-whatsapp-d.modal.run \
+  REVIEW_CLAIM_URL=https://<ws>--chike-whatsapp-review-claim.modal.run \
+  REVIEW_ACT_URL=https://<ws>--chike-whatsapp-review-act.modal.run \
   COHORT_SIZE=3 CLAIM_TTL_S=900 RENOTIFY_AFTER_S=1800 \
   PYTHONIOENCODING=utf-8 PYTHONUTF8=1 \
   python -m modal deploy chike-whatsapp/modal_whatsapp.py
@@ -305,7 +307,7 @@ does not hold):
 
 ```bash
 REVIEWER_ROSTER='+255700000001:TestA,+255700000002:TestB' REVIEW_SIGNING_KEY=<test-key> \
-  SUPERVISED=1 CLAIM_TTL_S=60 PUBLIC_BASE_URL=https://<workspace>--chike-whatsapp-verify \
+  SUPERVISED=1 CLAIM_TTL_S=60 REVIEW_D_URL=<d-url> REVIEW_CLAIM_URL=<claim-url> REVIEW_ACT_URL=<act-url> \
   python -m modal deploy --name chike-whatsapp-verify chike-whatsapp/modal_whatsapp.py
 # ... run the harness against it ...
 python -m modal app stop chike-whatsapp-verify --yes
