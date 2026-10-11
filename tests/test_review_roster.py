@@ -26,8 +26,8 @@ sys.path.insert(0, os.path.join(_ROOT, "chike-whatsapp"))
 
 import handler_core as hc                                   # noqa: E402
 
-R1 = "+255700000011"
-R2 = "+255700000022"
+R1 = "255700000011@s.whatsapp.net"
+R2 = "255700000022@s.whatsapp.net"
 ROSTER = ((R1, "Asha"), (R2, "Juma"))
 KEY = "test-signing-key"
 
@@ -85,6 +85,16 @@ def _expire_claim(it, seconds_ago=1):
     ("+255700000011:Asha", ((R1, "Asha"),)),
     ("+255700000011:Asha, +255700000022:Juma", ((R1, "Asha"), (R2, "Juma"))),
     ("+255700000011:Asha; +255700000022", ((R1, "Asha"), (R2, "0022"))),
+    # Written the way a PERSON writes a phone number -> the WhatsApp ID form.
+    ("+255 700 000 011:Asha", ((R1, "Asha"),)),
+    ("0700000011:Asha", ((R1, "Asha"),)),                 # Tanzanian national format
+    ("0700-000-011", ((R1, "0011"),)),
+    ("(+255) 700 000 011", ((R1, "0011"),)),
+    ("255700000011@s.whatsapp.net:Asha", ((R1, "Asha"),)),   # already a JID
+    # The same person written two ways is ONE seat, keeping the first name.
+    ("+255700000011:Asha, 0700000011:Juma", ((R1, "Asha"),)),
+    # Too few digits to be a phone number: dropped rather than made a seat nobody can reach.
+    ("12345:Nobody, +255700000011:Asha", ((R1, "Asha"),)),
     # A duplicate number keeps the FIRST name instead of depending on ordering.
     ("+255700000011:Asha, +255700000011:Juma", ((R1, "Asha"),)),
     # A nameless blank is dropped: it would be a seat that can never be notified and never
@@ -485,3 +495,9 @@ def test_health_reports_supervised_beside_declared_size_and_participants_seen(mo
     monkeypatch.setenv("SUPERVISED", "ture")          # a typo must read as False, visibly
     h = mw.health.get_raw_f()()
     assert h["supervised"] is False and h["supervised_raw_env"] == "ture"
+
+
+def test_a_JID_tail_is_digits_not_the_domain():
+    """number[-4:] on a JID is 'z.net' — which would label every reviewer identically in logs."""
+    assert hc.number_tail(R1) == "0011" and hc.number_tail("+255700000011") == "0011"
+    assert hc.parse_roster("+255700000011")[0][1] == "0011"

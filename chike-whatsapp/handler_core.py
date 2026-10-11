@@ -513,13 +513,45 @@ REVIEW_ACTIONS = ("send", "edit", "withhold")
 # ---------------------------------------------------------------------------
 # THE ROSTER, AND IDENTITY WITHOUT A LOGIN
 # ---------------------------------------------------------------------------
+WA_USER_DOMAIN = "s.whatsapp.net"
+_DEFAULT_COUNTRY_CODE = "255"          # Tanzania
+_MIN_PHONE_DIGITS = 9
+
+
+def number_tail(number, n=4):
+    """Last n DIGITS of a number or JID. `number[-4:]` on a JID returns 'z.net'."""
+    digits = "".join(c for c in str(number or "").split("@")[0] if c.isdigit())
+    return digits[-n:]
+
+
+def normalize_reviewer_number(raw):
+    """A phone number as a person writes it -> the WhatsApp ID form that is proven to send.
+
+    "+255 754 123 456", "0754123456", "255754123456" and "255754123456@s.whatsapp.net" all
+    become "255754123456@s.whatsapp.net" — the form that sent successfully on 2026-08-15.
+    A leading 0 on a ten-digit number is Tanzanian national format and becomes 255.
+    Returns None when there are too few digits to be a phone number: a junk seat that can
+    never be notified is worse than a refused one, and /health's reviewer count shows it.
+    """
+    digits = "".join(c for c in str(raw or "").split("@")[0] if c.isdigit())
+    if len(digits) == 10 and digits.startswith("0"):
+        digits = _DEFAULT_COUNTRY_CODE + digits[1:]
+    if len(digits) < _MIN_PHONE_DIGITS:
+        return None
+    return f"{digits}@{WA_USER_DOMAIN}"
+
+
 def parse_roster(raw):
-    """"+255700000001:Asha, +255700000002" -> ((number, name), ...).
+    """"+255 700 000 001:Asha, 0700000002" -> (("255700000001@s.whatsapp.net", "Asha"), ...).
+
+    Numbers are NORMALISED to WhatsApp ID form (see normalize_reviewer_number), so the roster
+    can be written the way a person writes a phone number, and the same person written two
+    ways is one seat.
 
     ⚠️ ORDER AND DUPLICATES ARE PRESERVED-THEN-DEDUPED BY NUMBER, not silently collapsed: a
     roster with the same number twice under two names is a configuration mistake, and
     keeping the FIRST name makes the behaviour predictable rather than dependent on dict
-    ordering. An entry with no number at all is dropped, because a nameless blank would
+    ordering. An entry with no usable number is dropped, because a nameless blank would
     otherwise become a reviewer who can never be notified and never acts — i.e. a phantom
     seat that quietly lowers effective capacity.
     """
@@ -529,13 +561,11 @@ def parse_roster(raw):
         if not chunk:
             continue
         number, _, name = chunk.partition(":")
-        number = number.strip()
-        if not number:
-            continue
-        if number in seen:
+        number = normalize_reviewer_number(number)
+        if not number or number in seen:
             continue
         seen.add(number)
-        out.append((number, name.strip() or number[-4:]))
+        out.append((number, name.strip() or number_tail(number)))
     return tuple(out)
 
 
@@ -769,7 +799,7 @@ def apply_decision(item, action, *, reviewer=None, edited=None, reason=None,
     out = dict(item)
     out["status"] = {"send": "sent", "edit": "edited", "withhold": "withheld"}[action]
     out["decided_by"] = reviewer
-    out["decided_by_name"] = reviewer_name or reviewer[-4:]
+    out["decided_by_name"] = reviewer_name or number_tail(reviewer)
     out["decided_ts"] = now.isoformat(timespec="seconds")
     out["edit_reason"] = (reason or "").strip() or None
     if action == "send":

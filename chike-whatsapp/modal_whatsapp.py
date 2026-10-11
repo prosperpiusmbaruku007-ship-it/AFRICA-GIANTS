@@ -481,7 +481,7 @@ async def _notify_reviewers(item, *, renotify=False):
         if ok:
             ok_count += 1
         else:
-            print(f"[review] notify FAILED to ...{number[-4:]} for "
+            print(f"[review] notify FAILED to ...{core.number_tail(number)} for "
                   f"{item['review_id']}: {detail}", flush=True)
     return ok_count
 
@@ -819,7 +819,7 @@ def review_claim(item: dict):
     if outcome == "held_by_other":
         holder = updated.get("claimed_by")
         holder_name = next((n for num, n in settings.roster if num == holder), "mtu mwingine")
-    print(f"[review] CLAIM {outcome} {rid} by ...{number[-4:]} ({name})"
+    print(f"[review] CLAIM {outcome} {rid} by ...{core.number_tail(number)} ({name})"
           f"{' (released a stale claim)' if released else ''}", flush=True)
     return {"ok": outcome in ("claimed", "already_yours"), "outcome": outcome,
             "reviewer": name, "held_by": holder_name,
@@ -954,7 +954,7 @@ async def sweep_review_queue():
             except Exception as e:                                   # noqa: BLE001
                 print(f"[sweep] release not stored for {it['review_id']}: {e}")
             print(f"[sweep] RELEASED {it['review_id']} from "
-                  f"...{(it.get('released_from') or '')[-4:]} — back to the roster, "
+                  f"...{_core().number_tail(it.get('released_from'))} — back to the roster, "
                   f"NOT sent", flush=True)
         if core.needs_renotify(it, renotify_after_s=settings.renotify_after_s):
             sent = await _notify_reviewers(it, renotify=True)
