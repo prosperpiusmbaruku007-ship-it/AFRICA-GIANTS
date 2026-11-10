@@ -45,9 +45,13 @@ Exit: 0 = safe to stop and deploy; 1 = a gate failed; 2 = could not evaluate (NO
 """
 import argparse
 import ast
+import json
 import os
+import re
 import subprocess
 import sys
+import time
+import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
@@ -121,6 +125,71 @@ def gate_chain_lint(path):
     return fails
 
 
+# ── GATE 3b: WHAT THE BUILT IMAGE ACTUALLY CONTAINS ──────────────────────────────
+# ⛔ ADDED 2026-11-10 after a bare `modal deploy chike-whatsapp` — no COHORT_SIZE, no REVIEW_*
+# URLs — passed all three gates above and shipped `cohort.declared_size: 0` and
+# `can_issue_links: false`. It failed SAFE (every draft held, no link sent, so a supervised
+# pilot would have been silently dead rather than unsupervised) but it was caught by /health
+# AFTER the deploy instead of refused BEFORE it. These tunables are baked into the image at
+# deploy time (see _DEPLOY_TUNABLES), so no static check of the FILE can see them: the only
+# place the truth exists is the image the throwaway build produced. So we ask that image.
+#
+# THE ASSERTIONS ARE ABOUT /health's OWN FIELDS, not about re-deriving them here: a second
+# copy of `can_issue_links`'s rule (roster AND key AND urls) would be the dual-file divergence
+# CLAUDE.md warns about, in the check built to catch divergence.
+WHATSAPP_APP = "chike-whatsapp"
+
+
+def check_whatsapp_health(h):
+    """Pure. Returns a list of failures for a /health payload; empty means the image is
+    deployable as a supervised pilot. Missing fields FAIL — cannot evaluate is not a pass."""
+    fails = []
+    cohort = (h or {}).get("cohort") or {}
+    size = cohort.get("declared_size")
+    if not isinstance(size, int) or isinstance(size, bool) or size <= 0:
+        fails.append(
+            f"cohort.declared_size is {size!r}; it must be > 0. COHORT_SIZE is a DEPLOY-TIME "
+            f"env var baked into the image — a deploy without it silently reverts to 0 "
+            f"(monitor-only) and the pilot loses its over-capacity signal.")
+    roster = (h or {}).get("roster") or {}
+    if roster.get("can_issue_links") is not True:
+        fails.append(
+            f"roster.can_issue_links is {roster.get('can_issue_links')!r}; it must be true "
+            f"(review_urls_set={roster.get('review_urls_set')!r}, "
+            f"signing_key_set={roster.get('signing_key_set')!r}, "
+            f"reviewers={roster.get('reviewers')!r}). Without it every draft is held and the "
+            f"reviewer is never sent a link — safe, but the pilot is dead. Set REVIEW_D_URL, "
+            f"REVIEW_CLAIM_URL and REVIEW_ACT_URL on the pre-flight AND the deploy command.")
+    if (h or {}).get("supervised") is not True:
+        fails.append(
+            f"supervised is {(h or {}).get('supervised')!r}; the R7 reading on a supervised "
+            f"cohort rests on it being true. (None means /health could not tell — also a "
+            f"refusal.)")
+    return fails
+
+
+_HEALTH_URL = re.compile(r"https://[A-Za-z0-9.-]+--[A-Za-z0-9-]*health[A-Za-z0-9.-]*\.modal\.run")
+
+
+def _find_health_url(deploy_output):
+    # Modal wraps long URLs at the terminal width; collapse a wrap before matching.
+    flat = re.sub(r"\s*\n[│├└─ ]*", "", deploy_output or "")
+    m = _HEALTH_URL.search(flat) or _HEALTH_URL.search(deploy_output or "")
+    return m.group(0) if m else None
+
+
+def _fetch_health(url, attempts=4):
+    last = None
+    for i in range(attempts):
+        try:
+            with urllib.request.urlopen(url, timeout=90) as r:
+                return json.load(r), None
+        except Exception as e:                 # cold start, DNS blip, 5xx: retry then refuse
+            last = f"{type(e).__name__}: {e}"
+            time.sleep(5 * (i + 1))
+    return None, last
+
+
 # ── GATE 3 ───────────────────────────────────────────────────────────────────────
 def gate_real_build(path, app_name):
     """Deploy the SAME FILE under a throwaway app name, then stop it.
@@ -135,7 +204,22 @@ def gate_real_build(path, app_name):
     p = subprocess.run([sys.executable, "-m", "modal", "deploy", "--name", pre, path],
                        cwd=REPO, capture_output=True, text=True, encoding="utf-8",
                        errors="replace", env=env)
-    tail = ((p.stdout or "") + (p.stderr or ""))[-1200:]
+    full = (p.stdout or "") + (p.stderr or "")
+    tail = full[-1200:]
+    extra = []
+    if p.returncode == 0 and app_name == WHATSAPP_APP:
+        url = _find_health_url(full)
+        if not url:
+            extra.append("GATE 3b: could not find the preflight app's /health URL in the "
+                         "deploy output, so the image's env could not be checked. Cannot "
+                         "evaluate, which is NOT a pass.")
+        else:
+            h, err = _fetch_health(url)
+            if h is None:
+                extra.append(f"GATE 3b: could not read {url} ({err}). Cannot evaluate, "
+                             f"which is NOT a pass.")
+            else:
+                extra += [f"GATE 3b: {f}" for f in check_whatsapp_health(h)]
     # Stop the preflight app whatever happened, so a failed run does not leave one behind.
     subprocess.run([sys.executable, "-m", "modal", "app", "stop", pre, "--yes"],
                    cwd=REPO, capture_output=True, text=True, env=env)
@@ -143,7 +227,7 @@ def gate_real_build(path, app_name):
         return [f"THE REAL BUILD FAILED under the preflight name {pre!r}, so the live deploy "
                 f"would have failed too — and if the stop had already run, production would "
                 f"be DOWN right now. Output tail:\n{tail}"], pre
-    return [], pre
+    return extra, pre
 
 
 def main():
@@ -207,6 +291,11 @@ def main():
           f"  CHIKE_BUILD=$(git rev-parse --short HEAD) PYTHONIOENCODING=utf-8 PYTHONUTF8=1 \\\n"
           f"    python -m modal deploy {args.app_file}\n"
           "  then verify: GET /health (build == the SHA), and ?deep=1 for the served digest.")
+    if app_name == WHATSAPP_APP:
+        print("\n  ⚠️ GATE 3b validated the image built with THIS shell's env "
+              "(COHORT_SIZE, REVIEW_*_URL, ...). The deploy must carry the SAME values — "
+              "export them once and run both commands in this shell, or the check certified "
+              "a different image from the one that ships.")
     return 0
 
 

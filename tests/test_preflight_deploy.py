@@ -155,3 +155,63 @@ def test_cannot_evaluate_exits_2_not_0():
                        cwd=REPO, capture_output=True, text=True, encoding="utf-8",
                        errors="replace")
     assert r.returncode == 2, f"exited {r.returncode}, expected 2:\n{r.stdout}"
+
+
+# ── GATE 3b: THE BUILT IMAGE'S SUPERVISED-PILOT ENV, PLANTED BOTH WAYS (2026-11-10) ──
+# The specimen is the real thing: the /health a bare `modal deploy chike-whatsapp` produced on
+# 2026-11-10 — cohort 0, links unissuable — which passed gates 1-3 and failed safe.
+_GOOD_WA = {"supervised": True, "cohort": {"declared_size": 5},
+            "roster": {"reviewers": 1, "signing_key_set": True,
+                       "review_urls_set": True, "can_issue_links": True}}
+_BARE_DEPLOY_WA = {"supervised": True, "cohort": {"declared_size": 0},
+                   "roster": {"reviewers": 1, "signing_key_set": True,
+                              "review_urls_set": False, "can_issue_links": False}}
+
+
+def test_3b_PASSES_the_correctly_configured_image():
+    assert pf.check_whatsapp_health(_GOOD_WA) == []
+
+
+def test_3b_BLOCKS_the_2026_11_10_bare_redeploy_on_BOTH_assertions():
+    """Both fields must fire independently — a check that reports only the first would let a
+    fix for one ship the other."""
+    fails = pf.check_whatsapp_health(_BARE_DEPLOY_WA)
+    assert any("declared_size" in f for f in fails)
+    assert any("can_issue_links" in f for f in fails)
+
+
+@pytest.mark.parametrize("mutate", [
+    lambda h: h["cohort"].update(declared_size=0),
+    lambda h: h["roster"].update(can_issue_links=False),
+    lambda h: h["roster"].update(can_issue_links=None),
+    lambda h: h.update(supervised=False),
+    lambda h: h.update(supervised=None),          # "could not tell" is not "on"
+    lambda h: h["cohort"].update(declared_size=True),   # bool is an int in Python
+])
+def test_3b_each_single_defect_blocks_alone(mutate):
+    import copy
+    h = copy.deepcopy(_GOOD_WA)
+    mutate(h)
+    assert pf.check_whatsapp_health(h), "a single defect passed the gate"
+
+
+@pytest.mark.parametrize("payload", [None, {}, {"cohort": None, "roster": None}])
+def test_3b_missing_fields_FAIL_rather_than_pass(payload):
+    """Cannot evaluate is not passed."""
+    assert pf.check_whatsapp_health(payload)
+
+
+def test_3b_finds_the_health_url_even_when_modal_wraps_it():
+    out = ("├── Created web function health => \n"
+           "│   https://ws--chike-whatsapp-preflight-health.us-east.modal.ru\n"
+           "│   n\n"
+           "└── Created web function transcripts => \n"
+           "    https://ws--chike-whatsapp-preflight-transcripts.us-east.modal.run\n")
+    assert pf._find_health_url(out) == \
+        "https://ws--chike-whatsapp-preflight-health.us-east.modal.run"
+    assert pf._find_health_url("nothing here") is None
+
+
+def test_3b_applies_only_to_the_whatsapp_app():
+    """The inference app has no cohort; applying 3b to it would block every model deploy."""
+    assert pf.WHATSAPP_APP == "chike-whatsapp"

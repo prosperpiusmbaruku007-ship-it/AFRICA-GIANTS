@@ -691,3 +691,97 @@ def test_a_timed_out_claim_is_released_to_the_OTHER_reviewer_and_never_sent(monk
     r = _run(mw.review_claim.get_raw_f()(_Req(cred2)))
     assert _json.loads(r.body)["outcome"] == "claimed", "the expired claim must not block Juma"
     assert sent == []
+
+
+# ── THE LINK ROUND-TRIP THROUGH REAL URL PARSING (2026-11-10) ──────────────────────────
+# ⛔ A REAL review_id ENDS IN `+00:00` AND A TEST- ID DOES NOT. The first real draft's link
+# returned 404: `+` in a query string decodes to a SPACE, so the id the page looked up was not
+# the id that was stored. Every earlier test passed the id STRAIGHT to the function — never
+# through a URL — and the 17/17 live checks used TEST- ids, which contain no `+`. Both
+# exercised the function and neither exercised the encoding, so both were green on a link that
+# could not open.
+def _real_draft(mw):
+    s = mw._settings()
+    row = hc._blank_row("question", "255700000001@lid", s, "test")
+    return hc.review_item(row, "255700000001@lid", "Ndiyo. jaribio")
+
+
+def _opened_via_url(mw, link):
+    """What a browser does: split the URL, decode the query, hand the VALUES to the function."""
+    from urllib.parse import urlsplit, parse_qs
+    q = parse_qs(urlsplit(link).query)          # parse_qs decodes '+' to ' ', like a browser
+    return mw.d.get_raw_f()(q["r"][0], q["v"][0], q["t"][0])
+
+
+def test_a_REAL_draft_id_contains_a_plus_so_the_test_is_not_vacuous(monkeypatch):
+    mw = _load_app(monkeypatch)
+    assert "+" in _real_draft(mw)["review_id"], (
+        "a real review_id no longer contains '+', so the round-trip below no longer exercises "
+        "the encoding and would pass on a broken link")
+
+
+def test_a_REAL_draft_link_OPENS_when_parsed_as_a_URL(monkeypatch):
+    mw = _load_app(monkeypatch)
+    s = mw._settings()
+    it = _real_draft(mw)
+    mw.REVIEW_QUEUE[it["review_id"]] = it
+    link = mw._draft_link(s, it, s.roster[0][0])
+    assert "%2B" in link and "+00:00" not in link
+    resp = _opened_via_url(mw, link)
+    assert resp.status_code == 200, "the link a reviewer taps must open the draft it names"
+
+
+def test_the_OLD_unencoded_link_form_fails_at_the_core_PLANTED_SPECIMEN(monkeypatch):
+    """The defect reinstated: the pre-fix link, built by raw interpolation. At the core
+    authenticator the altered id does NOT authenticate — this is the specimen that proves the
+    encoding test above can fail."""
+    from urllib.parse import urlsplit, parse_qs
+    mw = _load_app(monkeypatch)
+    s = mw._settings()
+    number = s.roster[0][0]
+    it = _real_draft(mw)
+    raw = (f"{D_URL}?r={it['review_id']}&v={hc.reviewer_id(KEY, number)}"
+           f"&t={hc.review_token(KEY, it['review_id'], number)}")
+    r = parse_qs(urlsplit(raw).query)["r"][0]
+    assert r != it["review_id"] and " " in r
+    assert hc.authenticate_reviewer(s, r, hc.reviewer_id(KEY, number),
+                                    hc.review_token(KEY, it["review_id"], number)) is None
+
+
+def test_a_link_ALREADY_ISSUED_in_the_old_form_still_opens(monkeypatch):
+    """Notifications sent before the fix are on a reviewer's phone. The endpoint maps a space
+    back to '+' (ids never contain whitespace), so they open without a re-send."""
+    mw = _load_app(monkeypatch)
+    s = mw._settings()
+    number = s.roster[0][0]
+    it = _real_draft(mw)
+    mw.REVIEW_QUEUE[it["review_id"]] = it
+    raw = (f"{D_URL}?r={it['review_id']}&v={hc.reviewer_id(KEY, number)}"
+           f"&t={hc.review_token(KEY, it['review_id'], number)}")
+    assert _opened_via_url(mw, raw).status_code == 200
+
+
+def test_the_space_tolerance_does_NOT_let_a_forged_token_in(monkeypatch):
+    """The relaxation must widen what is accepted AS THE ID, never who is authenticated."""
+    mw = _load_app(monkeypatch)
+    s = mw._settings()
+    number = s.roster[0][0]
+    it = _real_draft(mw)
+    mw.REVIEW_QUEUE[it["review_id"]] = it
+    spaced = it["review_id"].replace("+", " ")
+    resp = mw.d.get_raw_f()(spaced, hc.reviewer_id(KEY, number), "forged")
+    assert resp.status_code == 404
+
+
+def test_claim_and_act_accept_the_id_the_page_JS_will_send_from_an_old_link(monkeypatch):
+    """The page reads `r` with URLSearchParams, so from an OLD link it POSTs the spaced id."""
+    mw = _load_app(monkeypatch)
+    number = mw._settings().roster[0][0]
+    it = _real_draft(mw)
+    mw.REVIEW_QUEUE[it["review_id"]] = it
+    spaced = it["review_id"].replace("+", " ")
+    payload = {"review_id": spaced, "v": hc.reviewer_id(KEY, number),
+               "t": hc.review_token(KEY, it["review_id"], number)}
+    import json as _json
+    resp = _run(mw.review_claim.get_raw_f()(_Req(payload)))
+    assert _json.loads(resp.body)["outcome"] == "claimed"

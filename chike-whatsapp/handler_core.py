@@ -581,6 +581,15 @@ def reviewer_id(signing_key, number):
                     hashlib.sha256).hexdigest()[:10]
 
 
+def normalise_review_id(review_id):
+    """A review id as stored. A raw `+` in a query string arrives as a SPACE, and the ids
+    minted before links were URL-encoded carry `+00:00` — those notifications are already on
+    a reviewer's phone. Review ids never contain whitespace by construction (isoformat ts +
+    `-` + hex), so mapping a space back is lossless, and the HMAC still binds the exact id:
+    this widens what is ACCEPTED as the id, never who is authenticated."""
+    return None if review_id is None else str(review_id).replace(" ", "+")
+
+
 def review_token(signing_key, review_id, number):
     """The per-(draft, reviewer) action token. HMAC, so it cannot be constructed without the
     key, and bound to BOTH the draft and the reviewer so one reviewer's link cannot act on

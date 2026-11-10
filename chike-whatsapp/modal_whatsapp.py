@@ -400,6 +400,13 @@ def webhook(item: dict, token: str = None):
             return {"status": "ignored"}
 
         print(f"[chike] From: {parsed['sender']} — {parsed['text'][:80]}")
+        if parsed["sender"].endswith("@lid"):
+            # KEY NAMES ONLY, never values. A `@lid` sender is a linked-ID, not the phone
+            # number, and whether Wappfly also sends the phone JID in some field decides
+            # whether a reply can be addressed to a number we KNOW delivers (2026-11-10).
+            _m = (item.get("data") or {}).get("messages") or {}
+            print(f"[chike] LID sender; messages keys = {sorted(_m)[:30]}; "
+                  f"key keys = {sorted(_m.get('key') or {})[:15]}")
         if parsed["kind"] == "greeting":
             greet_and_send.spawn(parsed["sender"])
         else:
@@ -454,7 +461,12 @@ def _draft_link(settings, item, number):
     core = _core()
     rid = core.reviewer_id(settings.review_signing_key, number)
     tok = core.review_token(settings.review_signing_key, item["review_id"], number)
-    return f"{REVIEW_D_URL}?r={item['review_id']}&v={rid}&t={tok}"
+    # ⛔ URL-ENCODED, NOT INTERPOLATED. A real review_id is `<isoformat ts>-<hash>` and the
+    # ts ends in `+00:00`; in a query string a raw `+` decodes to a SPACE, so the id the
+    # server saw was not the id it stored and every real draft's link returned 404
+    # (2026-11-10). The TEST- ids contain no `+`, which is why 17/17 live checks passed.
+    from urllib.parse import urlencode
+    return f"{REVIEW_D_URL}?{urlencode({'r': item['review_id'], 'v': rid, 't': tok})}"
 
 
 async def _notify_reviewers(item, *, renotify=False):
@@ -687,6 +699,7 @@ def d(r: str = None, v: str = None, t: str = None):
     from fastapi.responses import HTMLResponse, JSONResponse
     core = _core()
     settings = _settings()
+    r = core.normalise_review_id(r)
     who = core.authenticate_reviewer(settings, r, v, t)
     if not who:
         # Deliberately a 404 with no detail: a bad token and an unknown draft look the
@@ -835,7 +848,7 @@ async def review_claim(request: Request):
     item = await _read_json(request)
     core = _core()
     settings = _settings()
-    rid = item.get("review_id")
+    rid = core.normalise_review_id(item.get("review_id"))
     who = core.authenticate_reviewer(settings, rid, item.get("v"), item.get("t"))
     if not who:
         return _cors({"ok": False, "detail": "not found"}, 404)
@@ -881,7 +894,7 @@ async def review_act(request: Request):
     item = await _read_json(request)
     core = _core()
     settings = _settings()
-    rid = item.get("review_id")
+    rid = core.normalise_review_id(item.get("review_id"))
     who = core.authenticate_reviewer(settings, rid, item.get("v"), item.get("t"))
     if not who:
         return _cors({"ok": False, "detail": "not found"}, 404)
