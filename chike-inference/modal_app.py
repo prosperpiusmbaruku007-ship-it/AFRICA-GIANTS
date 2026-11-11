@@ -11,6 +11,27 @@ import modal
 # printed as one `[coldstart]` line per container start.
 _CONTAINER_IMPORT_TS = time.time()
 
+# GPU FALLBACK (2026-11-12). SCARCITY IS CONFIRMED, not suspected: Modal logged "waiting to be scheduled
+# on a GPU_T4 worker. We are actively working on acquiring more capacity", and a request waited ~138 s
+# (a production one) and 300 s (a test one, which timed out as an HTTP 500) before any T4 appeared.
+# Modal tries the list in order, so T4 stays first (it is what every measurement was taken on) and L4
+# (24 GB, comfortably above this 4-bit 8B model) only serves when no T4 is available.
+#
+# ⚠️ REPLIES MAY DIFFER ACROSS HARDWARE (R24b: production is self-deterministic but does not reproduce
+# another host's bytes). The compute engines and routing are hardware-independent; the model's fact-path
+# text is not guaranteed to be. coldstart['gpu'] below records the device that ACTUALLY served, so any
+# difference is attributable. CHIKE_GPU overrides the list at DEPLOY time only -- it is how a single-
+# type throwaway is built for the cross-hardware check, and the real deploy never sets it.
+_GPU = [g.strip() for g in os.environ.get('CHIKE_GPU', 'T4,L4').split(',') if g.strip()]
+
+
+def _device_name():
+    try:
+        import torch
+        return torch.cuda.get_device_name(0)
+    except Exception as e:                                           # noqa: BLE001
+        return f'unknown ({type(e).__name__})'
+
 # ---------------------------------------------------------------------------
 # Modal port of chike-inference/main.py (Cerebrium -> Modal).
 # Same logic: 4-bit Llama adapter v8 + pre-computed RAG fact injection.
@@ -224,7 +245,7 @@ def classify_question(message: str) -> bool:
 
 @app.cls(
     image=image,
-    gpu='T4',
+    gpu=_GPU,
     volumes={'/persistent-storage': volume},
     scaledown_window=300,
     timeout=600,
@@ -378,7 +399,7 @@ class ChikeModel:
             'enter_done_ts': round(_enter_done_ts, 3),
             'import_to_enter_s': round(_enter_started_ts - _CONTAINER_IMPORT_TS, 1),
             'load_s': round(_enter_done_ts - _enter_started_ts, 1),
-            'gpu': 'T4',
+            'gpu': _device_name(),
         }
         print('[coldstart] ' + json.dumps(self._coldstart))
 

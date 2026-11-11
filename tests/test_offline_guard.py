@@ -179,6 +179,24 @@ def test_cold_start_attribution_is_recorded_and_reported():
            for n in c.body if isinstance(n, ast.FunctionDef)}
     load = ast.unparse(fns["load_model"])
     assert "self._coldstart" in load and "[coldstart]" in load and "_CONTAINER_IMPORT_TS" in load
+    assert "_device_name()" in load, "coldstart must report the device that ACTUALLY served"
+    assert "'T4'" not in load, "a hard-coded GPU name makes the arms unattributable once L4 can serve"
     assert "'coldstart'" in ast.unparse(fns["served_index_identity"])
     assert any(isinstance(n, ast.Assign) and getattr(n.targets[0], "id", "") == "_CONTAINER_IMPORT_TS"
                for n in tree.body), "the import stamp must be module-level so it predates the model load"
+
+
+def test_gpu_fallback_lists_t4_first_and_l4_second():
+    """Scarcity is confirmed (Modal: 'waiting to be scheduled on a GPU_T4 worker'). T4 stays FIRST --
+    every measurement was taken on it -- and L4 only serves when no T4 exists. Asserted on the
+    parsed default, not on the source text."""
+    import ast
+    src = open(os.path.join(_HERE, "..", "chike-inference", "modal_app.py"), encoding="utf-8").read()
+    tree = ast.parse(src)
+    gpu_assign = [n for n in tree.body if isinstance(n, ast.Assign)
+                  and getattr(n.targets[0], "id", "") == "_GPU"]
+    assert gpu_assign, "_GPU list missing"
+    assert "'T4,L4'" in ast.unparse(gpu_assign[0]), ast.unparse(gpu_assign[0])
+    cls = next(n for n in ast.walk(tree) if isinstance(n, ast.ClassDef) and n.name == "ChikeModel")
+    dec = " ".join(ast.unparse(d) for d in cls.decorator_list)
+    assert "gpu=_GPU" in dec, dec
