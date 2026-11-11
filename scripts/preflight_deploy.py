@@ -165,6 +165,21 @@ def check_whatsapp_health(h):
             f"supervised is {(h or {}).get('supervised')!r}; the R7 reading on a supervised "
             f"cohort rests on it being true. (None means /health could not tell — also a "
             f"refusal.)")
+    w = (h or {}).get("wappfly") or {}
+    if w.get("session_status") != "connected":
+        fails.append(
+            f"wappfly.session_status is {w.get('session_status')!r} "
+            f"({w.get('session_detail')!r}); it must be 'connected'. Wappfly has accepted "
+            f"sends while delivering nothing, so a deploy onto a dropped session would "
+            f"look healthy. NOTE the converse is NOT proven by this: 'connected' does not "
+            f"mean inbound is being forwarded -- confirm with a message seen in the logs.")
+    alerting = w.get("alerting") or {}
+    if alerting.get("configured") is not True:
+        fails.append(
+            f"wappfly.alerting.configured is {alerting.get('configured')!r} "
+            f"(missing: {alerting.get('missing')!r}); the status poll can detect a dropped "
+            f"session but nothing would tell anyone. Add ALERT_SMTP_HOST, ALERT_SMTP_USER, "
+            f"ALERT_SMTP_PASS and ALERT_TO to the chike-whatsapp secret.")
     return fails
 
 

@@ -591,7 +591,11 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
     tunables = {"CHIKE_BUILD", "WAPPFLY_SEND_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
                 "SECOND_ACK_AFTER_S", "COLD_START_SUSPECTED_S", "SEND_ATTEMPTS",
                 "WAPPFLY_TIMEOUT_S", "SUPERVISED",
-                "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL"}
+                "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL",
+                # 2026-11-11 watcher: optional-with-default. The four REQUIRED alert keys are
+                # reported by name under /health's wappfly.alerting.missing, and the pre-flight
+                # refuses an image where that list is non-empty.
+                "WAPPFLY_STATUS_URL", "ALERT_FROM", "ALERT_SMTP_PORT"}
     assert read - tunables == set(mw.EXPECTED_KEYS), (
         "a secret key is read but not reported by /health, or vice versa")
 
@@ -604,6 +608,8 @@ def test_health_reports_key_presence_without_leaking_values(monkeypatch):
     spec.loader.exec_module(mw)
     monkeypatch.setenv("WAPPFLY_TOKEN", "a-real-looking-token-value")
     monkeypatch.delenv("SENDER_SALT", raising=False)
+    # /health now makes one live read-only status call; a test must not reach the network.
+    monkeypatch.setattr(mw, "_wappfly_status_now", lambda: ("connected", "connected"))
 
     h = mw.health.get_raw_f()()
     assert h["secret_keys_present"]["WAPPFLY_TOKEN"] is True

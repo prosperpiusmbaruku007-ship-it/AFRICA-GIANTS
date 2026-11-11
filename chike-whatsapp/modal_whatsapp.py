@@ -156,6 +156,15 @@ def _review_urls_set():
 
 WAPPFLY_SEND_URL = os.environ.get("WAPPFLY_SEND_URL",
                                   "https://wappfly.com/api/messages/send")
+# READ-ONLY. `GET /api/status` -> {"status": "connected", ...}; GETs are not metered against
+# the Starter quota (checked 2026-11-11). It proves the session is up and NOTHING about
+# forwarding -- the dashboard said "connected" through an inbound outage the same day.
+WAPPFLY_STATUS_URL = os.environ.get("WAPPFLY_STATUS_URL", "https://wappfly.com/api/status")
+
+# Where the poll writes its state (last check, last connected, alert bookkeeping). Its own
+# Dict: not PII, and unrelated to transcripts or the review queue.
+WAPPFLY_HEALTH = modal.Dict.from_name("chike-wappfly-health-kv", create_if_missing=True)
+_WAPPFLY_STATE_KEY = "session"
 
 
 def _settings():
@@ -339,6 +348,106 @@ async def _send_once(to: str, text: str):
         return False, f"HTTP {r.status_code}: {r.text[:200]}"
     except Exception as e:                                           # noqa: BLE001
         return False, f"{type(e).__name__}: {e}"
+
+
+def _wappfly_status_now():
+    """(verdict, detail) from one read-only GET. Never raises, never sends. With no token it
+    says 'error' without touching the network: cannot evaluate is not connected."""
+    import httpx
+    token = os.environ.get("WAPPFLY_TOKEN", "")
+    if not token:
+        return "error", "WAPPFLY_TOKEN unset"
+    try:
+        r = httpx.get(WAPPFLY_STATUS_URL, headers={"X-API-Token": token}, timeout=10)
+        try:
+            body = r.json()
+        except Exception:                                            # noqa: BLE001
+            body = None
+        return _core().wappfly_status_verdict(r.status_code, body)
+    except Exception as e:                                           # noqa: BLE001
+        return "error", f"{type(e).__name__}"
+
+
+_ALERT_KEYS = ("ALERT_SMTP_HOST", "ALERT_SMTP_USER", "ALERT_SMTP_PASS", "ALERT_TO")
+
+
+def _alerting_configured():
+    return all(os.environ.get(k, "") for k in _ALERT_KEYS)
+
+
+def _send_alert_email(subject, body):
+    """(ok, detail). EMAIL TO THE FOUNDER, NOT WHATSAPP: the channel being watched is the one
+    that failed, so an alert through it would fail exactly when it matters. This is not a
+    participant send path, and tests/test_wappfly_poll.py keeps the poll away from one."""
+    import smtplib
+    from email.message import EmailMessage
+    if not _alerting_configured():
+        return False, "alerting not configured (ALERT_SMTP_* / ALERT_TO missing)"
+    try:
+        msg = EmailMessage()
+        msg["Subject"] = subject
+        msg["From"] = os.environ.get("ALERT_FROM") or os.environ["ALERT_SMTP_USER"]
+        msg["To"] = os.environ["ALERT_TO"]
+        msg.set_content(body)
+        with smtplib.SMTP(os.environ["ALERT_SMTP_HOST"],
+                          int(os.environ.get("ALERT_SMTP_PORT", "587")), timeout=30) as smtp:
+            smtp.starttls()
+            smtp.login(os.environ["ALERT_SMTP_USER"], os.environ["ALERT_SMTP_PASS"])
+            smtp.send_message(msg)
+        return True, None
+    except Exception as e:                                           # noqa: BLE001
+        return False, f"{type(e).__name__}"
+
+
+def _session_state():
+    try:
+        return dict(WAPPFLY_HEALTH.get(_WAPPFLY_STATE_KEY) or {})
+    except Exception:                                                # noqa: BLE001
+        return {}
+
+
+# READ-ONLY WATCHER. It reads Wappfly's status and may send ONE kind of message: an email to
+# ALERT_TO. It has no WhatsApp send path, no queue access and no model call, and
+# tests/test_wappfly_poll.py parses this function's AST to keep it that way -- the same
+# structural guarantee the review sweeper carries, for the same reason.
+@app.function(image=image, secrets=[SECRET], timeout=120,
+              schedule=modal.Period(minutes=5))
+def poll_wappfly_status():
+    import time
+    core = _core()
+    now = time.time()
+    verdict, detail = _wappfly_status_now()
+    state, events = core.advance_session_health(_session_state(), verdict, detail, now)
+    sent = []
+    for ev in events:
+        last_ok = state.get("last_ok_ts")
+        since = (f"last seen connected {int((now - last_ok) / 60)} min ago"
+                 if last_ok else "never seen connected by this poll")
+        if ev == "recovered":
+            subj = "CHIKE: Wappfly session RECOVERED"
+            body = ("The Wappfly session reports connected again.\n"
+                    "Status says the session is up, not that forwarding works: send a "
+                    "message and confirm it reaches the logs.")
+        else:
+            subj = ("CHIKE: Wappfly session DOWN" if ev == "down"
+                    else "CHIKE: Wappfly session STILL DOWN")
+            body = (f"Wappfly status check: {verdict} ({detail}); {since}.\n"
+                    "Inbound and replies are likely not flowing. Check the session in the "
+                    "Wappfly dashboard and the plan/renewal date. Do not recruit until "
+                    "a test message is seen in the logs.")
+        ok, err = _send_alert_email(subj, body)
+        sent.append({"event": ev, "email_ok": ok})
+        state["last_alert_email_ok"] = ok
+        state["last_alert_email_error"] = err
+        print(f"[wappfly-poll] ALERT {ev}: email_ok={ok}"
+              f"{'' if ok else ' error=' + str(err)}", flush=True)
+    try:
+        WAPPFLY_HEALTH[_WAPPFLY_STATE_KEY] = state
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[wappfly-poll] state not stored: {type(e).__name__}", flush=True)
+    print(f"[wappfly-poll] {verdict} ({detail}) failures={state.get('consecutive_failures')}",
+          flush=True)
+    return {"verdict": verdict, "events": sent}
 
 
 # ---------------------------------------------------------------------------
@@ -1153,6 +1262,38 @@ def review_purge(token: str = None):
     return {"purged": purged}
 
 
+def _wappfly_health():
+    """Live status (one read-only GET) beside the poll's own record. `session_status` is what
+    the pre-flight refuses on. `poll.stale` is the watcher's heartbeat -- on a freshly built
+    image it is legitimately 'never polled', so the pre-flight does not gate on it, but on the
+    LIVE app a stale poll means nobody is watching. `canary` says what is NOT covered."""
+    try:
+        return _wappfly_health_inner()
+    except Exception as e:                                           # noqa: BLE001
+        # /health is the diagnostic of last resort and must degrade, not raise. "error" is
+        # not "connected", so the pre-flight still refuses on it.
+        return {"session_status": "error",
+                "session_detail": f"health section failed: {type(e).__name__}"}
+
+
+def _wappfly_health_inner():
+    import time
+    core = _core()
+    live, detail = _wappfly_status_now()
+    st = _session_state()
+    return {
+        "session_status": live, "session_detail": detail,
+        "poll": core.poll_age_verdict(st, time.time()),
+        "last_connected_ts": st.get("last_ok_ts"),
+        "consecutive_failures": st.get("consecutive_failures", 0),
+        "alerting": {"configured": _alerting_configured(),
+                     "missing": [k for k in _ALERT_KEYS if not os.environ.get(k, "")],
+                     "last_email_ok": st.get("last_alert_email_ok")},
+        "canary": {"round_trip": "not_configured",
+                   "note": "status proves the session is up, not that inbound is forwarded"},
+    }
+
+
 @app.function(image=image, secrets=[SECRET])
 @modal.fastapi_endpoint(method="GET")
 def health():
@@ -1235,6 +1376,7 @@ def health():
         # quoted from these key names, and a diagnostic people have used should not
         # move out from under them.
         **_token_fingerprint_flat("WAPPFLY_TOKEN"),
+        "wappfly": _wappfly_health(),
     }
 
 

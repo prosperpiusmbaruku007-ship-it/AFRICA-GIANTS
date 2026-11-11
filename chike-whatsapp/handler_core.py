@@ -220,6 +220,70 @@ def scrub(text, secrets=()) -> str:
     return s
 
 
+# ---------------------------------------------------------------------------
+# WAPPFLY SESSION HEALTH — pure; the poll in modal_whatsapp.py does the I/O
+# ---------------------------------------------------------------------------
+# Wappfly accepted every send while delivering nothing ("Proxy pool exhausted"), and has now
+# stopped forwarding inbound while its dashboard said connected. `/api/status` is therefore a
+# NECESSARY signal and never a SUFFICIENT one: it catches a dropped session within minutes
+# and says nothing about forwarding. The round-trip canary is the only check on that, and it
+# needs a second number.
+
+def wappfly_status_verdict(http_status, body):
+    """('connected' | 'disconnected' | 'error', detail). Only an explicit 200 carrying
+    status == 'connected' is connected: an unreadable body, a non-200, or a missing field is
+    NOT a pass -- cannot evaluate is not passed."""
+    if http_status != 200:
+        return "error", f"HTTP {http_status}"
+    if not isinstance(body, dict) or not isinstance(body.get("status"), str):
+        return "error", "no status field in response"
+    st = body["status"].strip().lower()
+    return ("connected", "connected") if st == "connected" else ("disconnected", st[:40])
+
+
+def advance_session_health(prev, verdict, detail, now, *, fail_threshold=2,
+                           realert_after_s=6 * 3600):
+    """(new_state, events). `events` is a list of 'down' | 'still_down' | 'recovered'.
+
+    Two consecutive non-connected readings (10 minutes at the 5-minute cadence) raise 'down':
+    one blip is a network hiccup, and an alert that cries wolf gets filtered, which is how a
+    real one is missed. 'still_down' repeats at most every `realert_after_s`. A recovery is
+    reported only if a 'down' was, so there is never a 'recovered' for an outage nobody heard
+    about. `last_ok_ts` is when it was last seen connected -- the number a human asks for."""
+    st = dict(prev or {})
+    events = []
+    st["last_check_ts"] = now
+    st["last_verdict"] = verdict
+    st["last_detail"] = detail
+    if verdict == "connected":
+        if st.get("alerted_down"):
+            events.append("recovered")
+        st.update(consecutive_failures=0, alerted_down=False, last_ok_ts=now,
+                  last_alert_ts=st.get("last_alert_ts"))
+        return st, events
+    st["consecutive_failures"] = int(st.get("consecutive_failures", 0)) + 1
+    if st["consecutive_failures"] >= fail_threshold:
+        if not st.get("alerted_down"):
+            events.append("down")
+            st["alerted_down"] = True
+            st["last_alert_ts"] = now
+        elif now - float(st.get("last_alert_ts") or 0) >= realert_after_s:
+            events.append("still_down")
+            st["last_alert_ts"] = now
+    return st, events
+
+
+def poll_age_verdict(state, now, *, max_age_s=15 * 60):
+    """The poll's OWN heartbeat. A poll that stopped running reports nothing and alerts
+    nobody, so absence is a finding: never polled, or older than `max_age_s`, is stale."""
+    ts = (state or {}).get("last_check_ts")
+    if ts is None:
+        return {"age_s": None, "stale": True, "reason": "never polled"}
+    age = max(0.0, float(now) - float(ts))
+    return {"age_s": int(age), "stale": age > max_age_s,
+            "reason": None if age <= max_age_s else f"last poll {int(age)}s ago"}
+
+
 def sender_ids(sender: str, salt: str = ""):
     """Pseudonymous, stable, and still correlatable to a known pilot user.
 
