@@ -138,6 +138,7 @@ def gate_chain_lint(path):
 # copy of `can_issue_links`'s rule (roster AND key AND urls) would be the dual-file divergence
 # CLAUDE.md warns about, in the check built to catch divergence.
 WHATSAPP_APP = "chike-whatsapp"
+BRIDGE_APP = "chike-bridge"
 
 
 def check_whatsapp_health(h):
@@ -282,7 +283,18 @@ def main():
     print(f"  GATE 2 chain lint   : {'OK' if not lint else 'FAIL'}")
     all_fails += lint
 
-    if args.no_build:
+    if app_name == BRIDGE_APP and not args.no_build:
+        # DECISION, not a gap (2026-11-11): the throwaway build starts a second container of
+        # the same code, which takes the lease or opens a second WhatsApp socket on the live
+        # session -- the exact overlap the bridge's lease exists to prevent. Gates 1-2 only.
+        print("  GATE 3 real build   : REFUSED for the bridge (a throwaway copy would compete "
+              "for the lease / second socket). Re-run with --no-build.")
+        all_fails.append("bridge pre-flight must use --no-build: the real-build gate would "
+                         "start a second socket-holder against the live session")
+    elif args.no_build and app_name == BRIDGE_APP:
+        print("  GATE 3 real build   : SKIPPED BY DECISION for the bridge, not a gap -- a "
+              "throwaway build would compete for the single-socket lease. Gates 1-2 only.")
+    elif args.no_build:
         print("  GATE 3 real build   : SKIPPED (--no-build). This is NOT a full pre-flight: "
               "the 2026-10-08 class is caught by gate 2, but a build failure nobody has "
               "thought of is only caught here.")

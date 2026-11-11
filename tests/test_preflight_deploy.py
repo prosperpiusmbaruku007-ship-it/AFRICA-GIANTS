@@ -223,3 +223,22 @@ def test_3b_finds_the_health_url_even_when_modal_wraps_it():
 def test_3b_applies_only_to_the_whatsapp_app():
     """The inference app has no cohort; applying 3b to it would block every model deploy."""
     assert pf.WHATSAPP_APP == "chike-whatsapp"
+
+
+def test_bridge_refuses_the_real_build_gate_and_passes_with_no_build(monkeypatch, capsys):
+    """A throwaway build of the bridge would compete for the single-socket lease, so the gate is
+    refused for it by decision, and --no-build is the only way through."""
+    import importlib.util, os, sys
+    spec = importlib.util.spec_from_file_location(
+        "preflight_bridge_t", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                           "scripts", "preflight_deploy.py"))
+    pf = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pf)
+    monkeypatch.setattr(pf, "gate_provenance", lambda: ([], "abc1234"))
+    monkeypatch.setattr(pf, "gate_chain_lint", lambda p: [])
+    monkeypatch.setattr(pf, "gate_real_build", lambda *a: pytest.fail("must not build the bridge"))
+    monkeypatch.setattr(sys, "argv", ["p", "chike-whatsapp/bridge/modal_bridge.py"])
+    assert pf.main() == 1
+    monkeypatch.setattr(sys, "argv", ["p", "chike-whatsapp/bridge/modal_bridge.py", "--no-build"])
+    assert pf.main() == 0
+    assert "BY DECISION" in capsys.readouterr().out
