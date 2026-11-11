@@ -23,6 +23,7 @@ ComputationResult.working, which is carried on the SubAnswer and rendered verbat
 into the final reply — the model only supplies Swahili persona around it.
 """
 
+import re
 import dataclasses
 from dataclasses import dataclass
 from typing import Callable, Optional, Sequence
@@ -672,6 +673,17 @@ class Orchestrator:
         if turnover is None:
             return SubAnswer(sub_question=sq, text=clarification.VAT_NO_TURNOVER,
                              needs_clarification=True)
+        # A THRESHOLD NAMED INSIDE A NEGATED PREMISE IS A BOUND, NOT THE USER'S TURNOVER (2026-11-12).
+        bound = routing.upper_bound_amount(sq.text)
+        if bound is not None and routing.turnover_period(sq.text) != \
+                rules_engine.registration_thresholds.MONTHLY:
+            return SubAnswer(
+                sub_question=sq, needs_clarification=True,
+                text=clarification.vat_upper_bound(
+                    bound, routing.turnover_period(sq.text),
+                    bool(re.search(r"hiari|voluntar", sq.text, re.IGNORECASE)),
+                    rules_engine.registration_thresholds.VAT_ANNUAL,
+                    rules_engine.registration_thresholds.VAT_SIX_MONTH))
         period = routing.turnover_period(sq.text)
         if period is None:
             return SubAnswer(sub_question=sq, text=clarification.VAT_NO_PERIOD,
@@ -722,6 +734,13 @@ class Orchestrator:
         if routing.turnover_period(sq.text) != rules_engine.registration_thresholds.ANNUAL:
             return SubAnswer(sub_question=sq, text=clarification.PRESUMPTIVE_PERIOD_IS_A_RATE,
                              needs_clarification=True)
+        # A BOUND IS NOT A FIGURE (2026-11-12): "mauzo hayajafika milioni 4" says turnover is BELOW 4M.
+        bound = routing.upper_bound_amount(sq.text)
+        if bound is not None:
+            return SubAnswer(
+                sub_question=sq, needs_clarification=bound > rules_engine.presumptive._RECORDS_MATTER_ABOVE,
+                text=clarification.presumptive_upper_bound(
+                    bound, rules_engine.presumptive._RECORDS_MATTER_ABOVE))
         records = routing.keeps_records(sq.text)
         if records is None:
             if rules_engine.records_status_matters(turnover):

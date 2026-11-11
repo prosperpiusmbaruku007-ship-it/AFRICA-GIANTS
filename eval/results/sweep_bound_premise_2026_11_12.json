@@ -1,0 +1,18 @@
+[
+ {
+  "q": "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari (voluntary VAT registration)?",
+  "intent": "vat_registration",
+  "amount": 200000000,
+  "bound": "upper",
+  "cue": "hayajafika",
+  "answer": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 200,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz)."
+ },
+ {
+  "q": "My turnover reached exactly TZS 200,000,000 for the year, must I register for VAT?",
+  "intent": "vat_registration",
+  "amount": 200000000,
+  "bound": "lower",
+  "cue": "over",
+  "answer": "Ili nilinganishe na kizingiti cha VAT, niambie kiasi ulichotaja ni cha kipindi gani — je ni jumla ya miezi 12, au ya miezi 6 mfululizo? Vizingiti ni viwili tofauti: TZS 200,000,000 kwa miezi 12, na TZS 100,000,000 kwa miezi 6 mfululizo, hivyo jibu linategemea kipindi."
+ }
+]

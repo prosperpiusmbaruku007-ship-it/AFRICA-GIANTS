@@ -642,6 +642,63 @@ def turnover_period(text: str):
     return None
 
 
+# ── A THRESHOLD NAMED INSIDE A NEGATED PREMISE IS A BOUND, NOT THE USER'S FIGURE (2026-11-12) ─────────
+#
+# "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari?" was answered
+# "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 200,000,000 ... yamefikia" -- the engine took the
+# ONLY amount in the sentence to be the user's turnover. It is the opposite: the sentence says turnover has
+# NOT reached it. Same in scale-first ("TZS milioni 200"); the number-first parser fix merely unmasked it.
+#
+# ONLY ONE committed question in 8,086 has this shape, so no corpus could ever have caught it (R33): the
+# probes in eval/accuracy_gate/bound_premise_probes_2026_11_12.jsonl are authored, in both directions.
+#
+# NARROW BY CONSTRUCTION (R17): the cue must be an UPPER-bound/negated-reach verb or a preposition that
+# is IMMEDIATELY followed by the amount, and the text between cue and amount may contain only filler
+# words from a closed list. "chini ya Sheria ya VAT, mauzo yangu ni TZS 250 milioni" and "biashara
+# haijafika mwaka mmoja, mauzo ya TZS 250 milioni" each contain a cue and a single amount, and neither
+# is a bound -- `sheria` / `mwaka mmoja` are not filler, so neither matches. Lower bounds ("zaidi ya",
+# "yamezidi") are DELIBERATELY not handled here: see PROGRESS 4f for why that is a separate decision.
+_BOUND_VERB = (
+    r"ha(?:ya|i)ja(?:fika|fikia|fikisha|vuka|zidi)|sija(?:fika|fikia|fikisha|vuka|zidi)|"
+    r"ha(?:ya|i)fiki|ha(?:ya|i)zidi|sifiki|sizidi|yasiyozidi|isiyozidi|"
+    r"(?:have|has)\s*(?:not|n['’]t)\s+(?:yet\s+)?(?:reached|exceeded|hit)|"
+    r"not\s+yet\s+(?:reached|exceeded)|(?:does|do)(?:\s+not|n['’]t)\s+exceed")
+_BOUND_PREP = r"chini\s+ya|pungufu\s+ya|below|under|less\s+than"
+_BOUND_VERB_RE = re.compile(rf"\b(?:{_BOUND_VERB})\b", re.IGNORECASE)
+_BOUND_PREP_RE = re.compile(rf"\b(?:{_BOUND_PREP})\b", re.IGNORECASE)
+_BOUND_FILLER = frozenset({
+    "bado", "kiwango", "kizingiti", "kikomo", "cha", "ya", "la", "wa", "kwa", "kiasi", "kile", "hiki",
+    "hicho", "mauzo", "yangu", "jumla", "tzs", "tsh", "sh", "shilingi", "usd", "the", "a", "of", "to",
+    "turnover", "sales", "my", "our"})
+
+
+def _only_filler(gap: str) -> bool:
+    if re.search(r"\d", gap) or re.search(r"[^a-zA-Z\s.$'’]", gap):
+        return False
+    return all(t.lower().strip(".$'’") in _BOUND_FILLER for t in gap.split() if t.strip(".$'’"))
+
+
+def upper_bound_amount(text: str):
+    """The sole plausible amount IF it is the object of an upper-bound / negated-reach cue, else None.
+
+    A bound B on turnover means "turnover is BELOW B", never "turnover is B". Returning the amount lets
+    the caller refuse to use it as a figure; it does not say what the figure is."""
+    located = [(pos, amt) for pos, amt in swn.parse_amounts_located(text)
+               if amt >= swn.MIN_PLAUSIBLE_AMOUNT]
+    if len(located) != 1:
+        return None
+    pos, amt = located[0]
+    head = text.lower()[:pos]
+    for m in _BOUND_VERB_RE.finditer(head):
+        gap = head[m.end():]
+        if len(gap) <= 40 and _only_filler(gap):
+            return amt
+    for m in _BOUND_PREP_RE.finditer(head):
+        if _only_filler(head[m.end():]):
+            return amt
+    return None
+
+
 def states_vat_registered(text: str) -> bool:
     """True when the trader says they are ALREADY VAT-registered."""
     ql = text.lower()
