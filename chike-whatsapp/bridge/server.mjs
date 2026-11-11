@@ -6,9 +6,10 @@
 // State    : every field of /state is set from the library's own events, never inferred.
 import http from "node:http";
 import QRCode from "qrcode";
+import { makeKv, useKvAuthState } from "./authstate.mjs";
 import pino from "pino";
 import makeWASocket, {
-  initAuthCreds, BufferJSON, proto, DisconnectReason, fetchLatestBaileysVersion, Browsers,
+  DisconnectReason, fetchLatestBaileysVersion, Browsers,
 } from "@whiskeysockets/baileys";
 
 const PORT = Number(process.env.PORT || 8080);
@@ -47,53 +48,12 @@ function codeName(code) {
   return Object.entries(DisconnectReason).find(([, v]) => v === code)?.[0] || String(code);
 }
 
-const kvCall = async (route, body) => {
-  const r = await fetch(KV + route, { method: "POST", headers: { "x-ctl": CTL_TOKEN, "content-type": "application/json" }, body: JSON.stringify(body) });
-  if (!r.ok && r.status !== 404) throw new Error("kv " + route + " " + r.status);
-  return r.status === 404 ? null : (await r.json()).v ?? null;
-};
-const kv = { get: (k) => kvCall("/kv/get", { k }), set: (k, v) => kvCall("/kv/set", { k, v }),
-             del: (k) => kvCall("/kv/del", { k }), clear: () => kvCall("/kv/clear", {}) };
-
-// Baileys' custom auth-state interface. Every key change is awaited into the Dict before Baileys
-// continues, so the stored state is never behind the live session.
-async function useKvAuthState() {
-  const cache = new Map();
-  const read = async (k) => {
-    if (cache.has(k)) return cache.get(k);
-    const raw = await kv.get(k);
-    const v = raw ? JSON.parse(raw, BufferJSON.reviver) : null;
-    cache.set(k, v); return v;
-  };
-  const write = async (k, v) => {
-    if (v == null) { await kv.del(k); cache.delete(k); return; }
-    await kv.set(k, JSON.stringify(v, BufferJSON.replacer)); cache.set(k, v);
-  };
-  const creds = (await read("creds")) || initAuthCreds();
-  return {
-    state: { creds, keys: {
-      get: async (type, ids) => {
-        const out = {};
-        await Promise.all(ids.map(async (id) => {
-          let v = await read(`${type}-${id}`);
-          if (type === "app-state-sync-key" && v) v = proto.Message.AppStateSyncKeyData.fromObject(v);
-          out[id] = v;
-        }));
-        return out;
-      },
-      set: async (data) => {
-        const t = [];
-        for (const type of Object.keys(data)) for (const id of Object.keys(data[type])) t.push(write(`${type}-${id}`, data[type][id]));
-        await Promise.all(t);
-      } } },
-    saveCreds: () => write("creds", creds),
-  };
-}
+const kv = makeKv(KV, CTL_TOKEN);
 
 let connecting = false;
 async function start() {
   if (connecting) return; connecting = true;
-  const { state, saveCreds } = await useKvAuthState();
+  const { state, saveCreds } = await useKvAuthState(kv);
   const { version } = await fetchLatestBaileysVersion();
   S.connection = "connecting"; ev("connecting");
   sock = makeWASocket({
@@ -112,7 +72,9 @@ async function start() {
     if (u.connection === "close") {
       const code = u.lastDisconnect?.error?.output?.statusCode;
       S.last_disconnect = { code: code ?? null, name: codeName(code), ts: now() };
-      S.disconnects.push(now()); S.disconnects = S.disconnects.filter((t) => t > now() - 86400);
+      // Only a close of a PAIRED session counts toward the "disconnects per day" revisit criterion:
+      // QR-timeout closes before the scan are not lost connections.
+      if (S.me) { S.disconnects.push(now()); S.disconnects = S.disconnects.filter((t) => t > now() - 86400); }
       S.connected_since_ts = null; ev("close:" + codeName(code));
       if (stopping) return;
       if (code === DisconnectReason.loggedOut) {

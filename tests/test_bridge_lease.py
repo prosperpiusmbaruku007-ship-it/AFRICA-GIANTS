@@ -140,3 +140,13 @@ def test_release_hands_over_immediately():
 def test_self_deadline_must_sit_inside_the_ttl():
     with pytest.raises(AssertionError):
         L.Lease(Store(), "X", ttl=L.SELF_DEADLINE_S)
+
+
+def test_the_proxy_has_batch_routes_and_node_never_goes_key_by_key():
+    """Found live: one round trip per pre-key made pairing's commit time out. The proxy must
+    serve the whole state and accept a commit in one call."""
+    src = open(os.path.join(_ROOT, "chike-whatsapp", "bridge", "modal_bridge.py"), encoding="utf-8").read()
+    for route in ('"/kv/all"', '"/kv/setmany"', '"/kv/delmany"'):
+        assert route in src
+    node = open(os.path.join(_ROOT, "chike-whatsapp", "bridge", "authstate.mjs"), encoding="utf-8").read()
+    assert "/kv/get" not in node and "/kv/set\"" not in node

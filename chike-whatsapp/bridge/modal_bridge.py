@@ -83,6 +83,18 @@ def _kv_server(token):
                     except KeyError:
                         pass
                     return self._reply(200, {"v": True})
+                if self.path == "/kv/all":            # whole state, once at start
+                    return self._reply(200, {"items": dict(AUTH.items())})
+                if self.path == "/kv/setmany":        # one commit = one write
+                    AUTH.update(body["items"])
+                    return self._reply(200, {"v": True})
+                if self.path == "/kv/delmany":
+                    for k in body["keys"]:
+                        try:
+                            AUTH.pop(k)
+                        except KeyError:
+                            pass
+                    return self._reply(200, {"v": True})
                 if self.path == "/kv/clear":
                     AUTH.clear()
                     return self._reply(200, {"v": True})
