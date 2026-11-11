@@ -2,14 +2,19 @@
 
 ## 📋 2026-11-11 — **WHATSAPP MOVED OFF WAPPFLY ONTO OUR OWN BRIDGE; SUPERVISED REVIEW NOW SURVIVES A 20-MINUTE GPU START; THE "OFFLINE" SUITE WAS NOT OFFLINE.**
 
-> **Provenance of this entry.** Commit-derived facts cite their SHA. Two items — *why* Wappfly was
-> left, and *that* the bridge has delivered end to end — are **the founder's account relayed to this
-> session**; this session did not observe either, and the dated specifics of the three failures are
-> **not in the record it was given** (add them). Recorded as relayed, not as verified.
+> **Provenance of this entry.** Commit-derived facts cite their SHA. The Wappfly failure history and the
+> first bridge delivery are **the founder's account, given to this session** (dates supplied 2026-11-11);
+> this session did not observe them and no artifact in the repo corroborates them. Recorded as stated.
 
 ### 1. The move off Wappfly to our own Baileys bridge (`chike-bridge`, Modal)
 
-- **Why (founder's account):** three silent failures and a status endpoint that could not be trusted.
+- **Why (founder's account) — three Wappfly failures, each with a different shape:**
+  1. **Mid-August — token outage, ~3 days:** angle brackets (`<` `>`) in the webhook URL. (Fits the
+     `/health` credential fingerprints built in August after "three Wappfly 401s and two token rotations".)
+  2. **11–14 October — session disconnected,** Wappfly reporting *"proxy pool exhausted"*.
+  3. **10–11 November — forwarding silently stopped while status read "connected".** The one that
+     decided it: the vendor's own status was green while nothing arrived.
+  Together: a status endpoint that could not be trusted.
   Wappfly's `GET /api/status` proves the *session* is up, not that inbound is being forwarded —
   `b9e3612` says so in its own message, and `/health` says the round-trip canary (needs a second
   number) is not built. A transport whose health cannot be read from outside is an unobservable
@@ -25,7 +30,7 @@
 - **Live pairing found a real defect** (`8d0752b`): one Dict round trip per pre-key (~800) timed out
   Baileys' commit (*"failed to commit mutations"*). Fixed by loading auth state once and committing in one
   batched write. Only post-pairing closes count toward `disconnects_24h`.
-- **First end-to-end delivery on the bridge (founder's report).** Receipt lags measured in `92f2290`:
+- **First end-to-end delivery on the bridge: the founder's own test, 11 November ~22:04.** Receipt lags measured in `92f2290`:
   **3, 7, 10, 178, 1298 s** — which is why the receipt ceiling is **60 min**.
 - The real-build pre-flight gate is **skipped for the bridge by recorded decision** (`1a558db`): a
   throwaway build would compete for the single-socket lease.
@@ -87,9 +92,19 @@
   and never reproduced; `--junitxml` is now used so a recurrence leaves names.
 
 ### 5. Open
-- 46 polluted production transcript rows (delete?). Withholding the real "Habari, hi,  hellow" draft needs a
-  roster reviewer's own link — this session cannot decide as a reviewer without inventing an attribution.
-- GPU: multi-type fallback and warming cost. Receipt-lag wording in alerts.
+- **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
+  `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy
+  committed at `eval/results/test_pollution_archive_2026_11_11.json`, then removed from the live store. The
+  live store now holds 10 rows from two real senders and none from the harness. (The delete step was cut by a
+  dropped connection; the archive-first order meant nothing was lost, and it was finished with a loop that
+  re-checks each row against the archive before removing it.)
+- **ALSO FOUND: 15 seeded `TEST-` items sit in the live review queue** (2026-10-11 live-verification of the
+  review flow, labelled `[MTIHANI …]`) **and `review_summary()` counted them** — 9 of 15 withheld or edited,
+  i.e. a 0.6 edit rate before any participant. Kept as evidence the flow was verified; now excluded from every
+  statistic and reported as `excluded_test_items`, planted-tested. **Needs a `chike-whatsapp` deploy to take effect.**
+- GPU: **do not switch yet.** First measure whether the 20-min start was scarcity (log scheduling wait
+  separately from model load on the next cold start); only if so, add L4 as fallback and re-run the gate checks.
+- The old "Habari, hi,  hellow" draft was withheld by the founder.
 - PROGRESS.md had no entry between 2026-10-09 and this one; the October→November arc (supervised cohort,
   roster, D-FIDELITY-9) lives in the commit log and CLAUDE.md only.
 

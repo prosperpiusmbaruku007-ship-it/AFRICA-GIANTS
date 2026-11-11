@@ -260,3 +260,23 @@ def test_no_receipt_of_any_message_since_the_send_means_the_bridge_is_suspect():
 def test_the_offline_class_is_daily_and_the_bridge_class_is_hourly():
     src = _src("modal_whatsapp.py")
     assert 'every_s=3600 if kind == "bridge_suspect" else 86400' in src
+
+
+# -- seeded TEST- items must never reach the pilot statistics -----------------------------------
+def test_seeded_test_items_are_excluded_from_every_pilot_statistic_but_visibly():
+    """Planted (R26): 15 live TEST- seeds made the edit rate 9/15 before any participant. Plant
+    one TEST- and one real item; the summary must see only the real one, and say it excluded one."""
+    import handler_core as _hc
+    seed = {"review_id": "TEST-1791721161B", "status": "withheld", "decided_by": "r1",
+            "decided_by_name": "Prosper", "decision_latency_s": 5}
+    real = {"review_id": "2026-11-11T20:54:51+00:00-b5908217", "status": "sent",
+            "decided_by": "r1", "decided_by_name": "Prosper", "decision_latency_s": 300}
+    out = _hc.review_summary([seed, real])
+    assert out["excluded_test_items"] == 1
+    assert out["decided"] == 1 and out["counts"] == {"sent": 1, "edited": 0, "withheld": 0}
+    assert out["edit_or_withhold_rate"] == 0.0 and out["median_decision_latency_s"] == 300
+    assert sum(r.get("decided", 0) for r in out["per_reviewer"].values()
+               ) in (1,) if isinstance(out["per_reviewer"], dict) else True
+    # the clean case: with ONLY the seed, there is nothing to report -- None, not 1.0
+    only = _hc.review_summary([seed])
+    assert only["decided"] == 0 and only["edit_or_withhold_rate"] is None

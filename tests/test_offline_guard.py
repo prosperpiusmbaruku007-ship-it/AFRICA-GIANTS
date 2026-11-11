@@ -166,3 +166,19 @@ def test_isolate_modal_stores_leaves_no_live_dict(monkeypatch):
     assert not [n for n, v in vars(mw).items() if isinstance(v, modal.Dict)]
     mw._write_row({"question": "probe", "sender": "x", "ts": "2026-11-11T00:00:00+00:00"})
     assert len(mw.TRANSCRIPTS) == 1                          # landed in the stub, not production
+
+
+def test_cold_start_attribution_is_recorded_and_reported():
+    """modal_app.ChikeModel must stamp container-import / enter-start / enter-done and expose them,
+    or the next 20-minute start cannot be split into scheduling wait vs model load (AST, offline:
+    importing modal_app would need the GPU image)."""
+    import ast
+    src = open(os.path.join(_HERE, "..", "chike-inference", "modal_app.py"), encoding="utf-8").read()
+    tree = ast.parse(src)
+    fns = {n.name: n for c in ast.walk(tree) if isinstance(c, ast.ClassDef) and c.name == "ChikeModel"
+           for n in c.body if isinstance(n, ast.FunctionDef)}
+    load = ast.unparse(fns["load_model"])
+    assert "self._coldstart" in load and "[coldstart]" in load and "_CONTAINER_IMPORT_TS" in load
+    assert "'coldstart'" in ast.unparse(fns["served_index_identity"])
+    assert any(isinstance(n, ast.Assign) and getattr(n.targets[0], "id", "") == "_CONTAINER_IMPORT_TS"
+               for n in tree.body), "the import stamp must be module-level so it predates the model load"

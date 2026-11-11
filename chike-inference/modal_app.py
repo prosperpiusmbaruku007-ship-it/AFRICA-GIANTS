@@ -1,5 +1,15 @@
 import os
+import time
 import modal
+
+# COLD-START ATTRIBUTION (2026-11-12). The 2026-11-11 GPU start took ~20 min and nobody could say
+# whether that was Modal failing to SCHEDULE a T4 or this container slowly LOADING the model --
+# and the answer decides whether adding an L4 fallback helps at all (it fixes scarcity and does
+# nothing for load time). This line runs when the container first executes our code, i.e. AFTER
+# scheduling and image pull, so   scheduling wait = this - request arrival (the transcript row),
+# and load = enter_done - enter_started. Reported by served_index_identity()['coldstart'] and
+# printed as one `[coldstart]` line per container start.
+_CONTAINER_IMPORT_TS = time.time()
 
 # ---------------------------------------------------------------------------
 # Modal port of chike-inference/main.py (Cerebrium -> Modal).
@@ -224,6 +234,7 @@ class ChikeModel:
 
     @modal.enter()
     def load_model(self):
+        _enter_started_ts = time.time()
         import shutil
         import json
         import numpy as np
@@ -359,6 +370,17 @@ class ChikeModel:
             print('[chike] volume committed -- caches persisted')
         except Exception as e:
             print(f'[chike] volume commit skipped: {e}')
+
+        _enter_done_ts = time.time()
+        self._coldstart = {
+            'container_import_ts': round(_CONTAINER_IMPORT_TS, 3),
+            'enter_started_ts': round(_enter_started_ts, 3),
+            'enter_done_ts': round(_enter_done_ts, 3),
+            'import_to_enter_s': round(_enter_started_ts - _CONTAINER_IMPORT_TS, 1),
+            'load_s': round(_enter_done_ts - _enter_started_ts, 1),
+            'gpu': 'T4',
+        }
+        print('[coldstart] ' + json.dumps(self._coldstart))
 
     def retrieve_facts(self, question: str, top_k: int = 3) -> list:
         import numpy as np
@@ -612,6 +634,7 @@ class ChikeModel:
             'rag_facts_text_sha256': hashlib.sha256(blob).hexdigest(),
             'config_rag_fact_count': CONFIG.get('rag_fact_count'),
             'adapter_repo': ADAPTER_REPO,
+            'coldstart': getattr(self, '_coldstart', None),
         }
 
     @modal.method()

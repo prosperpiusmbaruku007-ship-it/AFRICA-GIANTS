@@ -1214,19 +1214,33 @@ def per_reviewer(items):
     return out
 
 
+def is_seeded_test(item) -> bool:
+    """A `TEST-` review id is a labelled live-verification seed (mint_review_link serves ONLY
+    these). 15 of them sit in the production queue from 2026-10-11 and, uncounted-for, they made
+    the pilot's edit rate 9/15 before a single participant had been served. They are kept as
+    evidence that the review flow was verified live -- and excluded from every statistic."""
+    return str(item.get("review_id") or "").startswith("TEST-")
+
+
 def review_summary(items):
     """The throughput and quality numbers the pilot exists to produce.
+
+    ⚠️ SEEDED `TEST-` ITEMS ARE EXCLUDED (and counted in `excluded_test_items`, so the exclusion
+    is visible rather than silent -- an exclusion that cannot be seen is R39's shrinking count).
 
     ⚠️ IT REFUSES TO REPORT AN EDIT RATE UNTIL AT LEAST ONE DECISION EXISTS, rather than
     returning 0.0 — a zero edit rate on an empty queue is indistinguishable from a perfect
     model, and that is the direction this project keeps getting wrong (R39).
     """
+    excluded = sum(1 for i in items if is_seeded_test(i))
+    items = [i for i in items if not is_seeded_test(i)]
     decided = [i for i in items if i.get("status") in ("sent", "edited", "withheld")]
     counts = {a: sum(1 for i in decided if i["status"] == a)
               for a in ("sent", "edited", "withheld")}
     lat = [i["decision_latency_s"] for i in decided
            if isinstance(i.get("decision_latency_s"), int)]
     return {
+        "excluded_test_items": excluded,
         "pending": sum(1 for i in items if i.get("status") == "pending"),
         "decided": len(decided),
         "counts": counts,
