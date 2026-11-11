@@ -82,7 +82,7 @@ BUILD = os.environ.get("CHIKE_BUILD", "") or "dev"
 # silently shadow the real one. They are read here only so a THROWAWAY verification app can
 # be given a test roster without writing to the production secret.
 _DEPLOY_TUNABLES = ("TRANSPORT", "BRIDGE_URL", "SUPERVISED", "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S",
-                    "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
+                    "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "MAX_RENOTIFIES", "SLOW_ACK_AFTER_S",
                     "SECOND_ACK_AFTER_S", "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY")
 
 image = (
@@ -167,6 +167,10 @@ BRIDGE_URL = os.environ.get(
 BRIDGE_OPS = modal.Dict.from_name("chike-bridge-ops-kv", create_if_missing=True)
 BRIDGE_WATCH = modal.Dict.from_name("chike-bridge-watch-kv", create_if_missing=True)
 _WATCH_KEY = "session"
+# message id -> transcript key, for rows written while a send had no delivery receipt yet; the
+# reconcile job rewrites them when the late receipt arrives. The bridge's send ledger is READ.
+PENDING_ROWS = modal.Dict.from_name("chike-pending-rows-kv", create_if_missing=True)
+BRIDGE_LEDGER = modal.Dict.from_name("chike-bridge-ledger-kv", create_if_missing=True)
 # BRIDGE_SEND_TOKEN is the only key used from it; attached here so no one has to copy a token
 # between secrets by hand.
 BRIDGE_SECRET = modal.Secret.from_name("chike-bridge")
@@ -181,6 +185,8 @@ def _settings():
 
     return Settings(
         model_timeout_s=float(os.environ.get("MODEL_TIMEOUT_S", "240")),
+        supervised_model_timeout_s=float(os.environ.get("SUPERVISED_MODEL_TIMEOUT_S", "1800")),
+        max_renotifies=int(os.environ.get("MAX_RENOTIFIES", "3")),
         slow_ack_after_s=float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
         second_ack_after_s=float(os.environ.get("SECOND_ACK_AFTER_S", "45")),
         cold_start_suspected_s=float(os.environ.get("COLD_START_SUSPECTED_S", "30")),
@@ -246,6 +252,11 @@ def _write_row(row):
         TRANSCRIPTS[core.transcript_filename(row)] = row
     except Exception as e:                                           # noqa: BLE001
         print(f"[transcript] WRITE FAILED ({type(e).__name__}: {e})")
+    try:
+        if row.get("send_state") == "pending_receipt" and core.pending_message_id(row):
+            PENDING_ROWS[core.pending_message_id(row)] = core.transcript_filename(row)
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[transcript] pending row not registered ({type(e).__name__})")
     print("[transcript] " + line, flush=True)
 
 
@@ -254,10 +265,14 @@ def _write_row(row):
 # ---------------------------------------------------------------------------
 
 @app.function(image=image, secrets=SECRETS,
-              timeout=900, retries=0)
-async def answer_and_send(sender: str, text: str):
-    """One question, end to end. timeout=900 leaves headroom over the 240s model wait
-    plus the slow ack and two send attempts.
+              timeout=2400, retries=0)
+async def answer_and_send(sender: str, text: str, retry_of: str = None):
+    """One question, end to end. timeout=2400 leaves headroom over the 1800s supervised model
+    wait (240s unsupervised) plus the acks and two send attempts.
+
+    `retry_of` marks a reviewer-requested RETRY of a failed question: no new acks (the
+    participant was already acked), and the new draft is held like any other -- nothing is
+    sent to the participant by the retry itself.
 
     retries=0 is deliberate: a retry would re-run the GPU call and could deliver the
     user a SECOND answer to the same question. Duplicate compliance answers are worse
@@ -265,6 +280,9 @@ async def answer_and_send(sender: str, text: str):
     """
     core = _core()
     settings = _settings()
+    if retry_of:
+        import dataclasses
+        settings = dataclasses.replace(settings, slow_ack_after_s=0)    # 0 = the ack kill switch
 
     async def ask(message):
         return await ChikeModel().run.remote.aio(message)
@@ -293,6 +311,7 @@ async def answer_and_send(sender: str, text: str):
         item = core.review_item(row=row, sender=to, draft=reply_text,
                                 engine_working=captured.get("working"),
                                 facts=captured.get("facts", ()))
+        item["retry_of"] = retry_of
         try:
             REVIEW_QUEUE[item["review_id"]] = item
         except Exception as e:                                       # noqa: BLE001
@@ -324,6 +343,8 @@ async def answer_and_send(sender: str, text: str):
         sender, text, ask_capturing if settings.supervised else ask,
         _send_once, settings, BUILD,
         hold_reply=_hold_for_review if settings.supervised else None)
+    if retry_of:
+        row["retry_of"] = retry_of
     _write_row(row)
     return {"fallback": row["fallback"], "error_class": row["error_class"],
             "supervision": row.get("supervision")}
@@ -462,8 +483,13 @@ def poll_bridge_status():
                                                 fail_threshold=threshold)
     outbound = ((rec or {}).get("node") or {}).get("outbound") or {}
     flagged = int(outbound.get("flagged_no_receipt") or 0)
-    if core.pending_alert_due(prev.get("last_pending_alert_ts"), flagged, now):
-        events.append("pending")
+    # An unreceipted send is two different things: the bridge may be broken (page, hourly), or
+    # that recipient's phone is off (low priority, daily). See core.pending_alert_kind.
+    kind = core.pending_alert_kind((rec or {}).get("node"))
+    if kind and core.pending_alert_due(
+            prev.get("last_pending_alert_ts"), flagged, now,
+            every_s=3600 if kind == "bridge_suspect" else 86400):
+        events.append("pending_" + kind)
         state["last_pending_alert_ts"] = now
     sent = []
     for ev in events:
@@ -473,13 +499,18 @@ def poll_bridge_status():
         if ev == "recovered":
             subj = "CHIKE bridge RECOVERED"
             body = "The WhatsApp bridge reports connected again, socket open, one lease holder."
-        elif ev == "pending":
-            subj = "CHIKE bridge: sends WITHOUT a delivery receipt"
-            body = (f"{flagged} message(s) were accepted by WhatsApp but have had no delivery "
-                    f"receipt for over the ceiling; the oldest has waited "
-                    f"{int(outbound.get('oldest_pending_s') or 0)}s. They were NOT resent. "
-                    "The recipient's phone may be off, or the message may be lost: check "
-                    "GET /health -> bridge.pending.")
+        elif ev == "pending_bridge_suspect":
+            subj = "CHIKE bridge: sends WITHOUT a receipt and NOTHING receipted since"
+            body = (f"{flagged} message(s) were accepted by WhatsApp but no delivery receipt of "
+                    f"ANY message has arrived since the oldest was sent "
+                    f"({int(outbound.get('oldest_pending_s') or 0)}s ago). They were NOT resent. "
+                    "The bridge or WhatsApp may be broken: check GET /health -> bridge.")
+        elif ev == "pending_recipient_offline":
+            subj = "CHIKE bridge (low priority): a recipient's phone looks offline"
+            body = (f"{flagged} message(s) have no delivery receipt after the ceiling, but other "
+                    "messages HAVE been receipted since, so the bridge is working and that "
+                    "recipient's phone is probably off. They were NOT resent. Sent at most once "
+                    "a day.")
         else:
             two = str(detail).startswith("TWO_SOCKETS")
             subj = ("CHIKE bridge: TWO SOCKETS" if two else
@@ -678,6 +709,8 @@ def _mark_notified(item, sent_count, *, renotify=False):
     from datetime import datetime, timezone
     item["last_notified_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     item["notify_count"] = int(item.get("notify_count") or 0) + 1
+    if not item.get("first_notified_at"):
+        item["first_notified_at"] = item["last_notified_at"]    # decision latency counts from here
     item["last_notify_recipients"] = sent_count
     if renotify:
         item["renotify_count"] = int(item.get("renotify_count") or 0) + 1
@@ -920,25 +953,38 @@ def d(r: str = None, v: str = None, t: str = None):
         + banner
         + '<div class=lock id=lock>Inashikiliwa&hellip;</div>'
         "<div class=q>" + _esc(it.get("question")) + "</div>"
-        '<textarea id=t rows=10 '
-        + ("disabled" if decided else "") + ">" + _esc(it.get("draft")) + "</textarea>"
+        + ('<div class=lock style="background:#3a1f1f;color:#f0b4b4"><b>MODELI IMESHINDWA'
+           '</b> &mdash; hakuna rasimu ya jibu. Samahani iliyo chini ndiyo ingetumwa kama '
+           'hakuna anayeandika jibu.</div>'
+           '<div class=w><b>Samahani (kwa &ldquo;Tuma samahani&rdquo;)</b><br>'
+           + _esc(it.get("draft")) + "</div>" if it.get("fallback") else "")
+        + '<textarea id=t rows=10 placeholder="'
+        + ("andika jibu lako hapa..." if it.get("fallback") else "")
+        + '" ' + ("disabled" if decided else "") + ">"
+        + ("" if it.get("fallback") else _esc(it.get("draft"))) + "</textarea>"
         + work_html
         + ("<div class=f><b>Vigezo vilivyotumika (" + str(len(it.get("facts") or []))
            + ")</b><ul>" + facts_html + "</ul></div>" if facts_html else "")
         + '<input id=reason placeholder="sababu (lazima kwa kuhariri au kuzuia)" '
         + ("disabled" if decided else "") + ">"
         "<div class=b>"
-        '<button class=s id=bs onclick="act(\'send\')" disabled>Tuma</button>'
-        '<button class=e id=be onclick="act(\'edit\')" disabled>Tuma iliyohaririwa</button>'
-        '<button class=x id=bx onclick="act(\'withhold\')" disabled>Zuia</button>'
+        + ('<button class=s id=bs onclick="act(\'send\')" disabled>Tuma samahani</button>'
+           '<button class=e id=be onclick="act(\'edit\')" disabled>Tuma nilichoandika</button>'
+           '<button class=e id=br onclick="act(\'retry\')" disabled>Jaribu tena</button>'
+           '<button class=x id=bx onclick="act(\'withhold\')" disabled>Zuia</button>'
+           if it.get("fallback") else
+           '<button class=s id=bs onclick="act(\'send\')" disabled>Tuma</button>'
+           '<button class=e id=be onclick="act(\'edit\')" disabled>Tuma iliyohaririwa</button>'
+           '<button class=x id=bx onclick="act(\'withhold\')" disabled>Zuia</button>')
+        +
         "</div><div class=o id=o></div>")
     script = (
         "<script>"
         "var CU=" + json.dumps(REVIEW_CLAIM_URL) + ",AU=" + json.dumps(REVIEW_ACT_URL) + ";"
         "var P=new URLSearchParams(location.search);"
         "var B={review_id:P.get('r'),v:P.get('v'),t:P.get('t')};"
-        "function en(on){['bs','be','bx'].forEach(function(i){"
-        "document.getElementById(i).disabled=!on;});}"
+        "function en(on){['bs','be','bx','br'].forEach(function(i){"
+        "var e=document.getElementById(i);if(e)e.disabled=!on;});}"
         # ⛔ THE CLAIM IS POSTED FROM JS ON LOAD. A link preview crawler never reaches here,
         # so WhatsApp's own prefetch cannot lock a draft to a reviewer who has not read it.
         "async function claim(){"
@@ -1088,6 +1134,22 @@ async def review_act(request: Request):
         REVIEW_QUEUE[rid] = updated
     except Exception as e:                                           # noqa: BLE001
         return _cors({"ok": False, "detail": f"store failed: {e}"}, 500)
+    if updated.get("status") == "retried":
+        # RETRY sends NOTHING to the participant: it re-asks the model and holds the NEW draft
+        # for review like any other (answer_and_send with retry_of: no new acks). If the job
+        # cannot be started the decision is put back, so the question is never left decided
+        # and unanswered.
+        try:
+            answer_and_send.spawn(existing["sender"], existing.get("question") or "", rid)
+        except Exception as e:                                       # noqa: BLE001
+            try:
+                REVIEW_QUEUE[rid] = existing
+            except Exception:                                        # noqa: BLE001
+                pass
+            return _cors({"ok": False,
+                          "detail": f"retry could not be started ({type(e).__name__}); "
+                                    f"the draft is still pending"}, 500)
+        print(f"[review] RETRY of {rid} started by {name}", flush=True)
     if to_send:
         send_ok, send_error = await _send_once(existing["sender"], to_send)
         updated["send_ok"], updated["send_error"] = send_ok, send_error
@@ -1155,6 +1217,56 @@ def review_queue(token: str = None, include_sender: bool = False):
 # fallback is the single change that would void the founder's reading, and it is exactly the
 # change that looks reasonable at 2am when a queue has backed up — so it is ruled out
 # structurally rather than left to judgement.
+# Rewrites a transcript row whose send was pending when it was written, once WhatsApp's late
+# delivery receipt has landed. Touches only `send_*` / receipt fields of rows this app wrote, and
+# has no send path: it reads the bridge ledger and writes the record.
+@app.function(image=image, secrets=SECRETS, timeout=300, schedule=modal.Period(minutes=5))
+def reconcile_receipts():
+    import time
+    core = _core()
+    done = dropped = left = 0
+    now = time.time()
+    for mid in list(PENDING_ROWS.keys()):
+        try:
+            key = PENDING_ROWS[mid]
+            try:
+                led = BRIDGE_LEDGER[mid]
+            except KeyError:
+                led = None
+            row = TRANSCRIPTS[key]
+            new = core.reconcile_row(row, led)
+            if new:
+                TRANSCRIPTS[key] = new
+                PENDING_ROWS.pop(mid)
+                done += 1
+            elif led and now - float(led.get("ts") or now) > 172800:
+                PENDING_ROWS.pop(mid)         # two days with no receipt: leave it pending, stop
+                dropped += 1
+            else:
+                left += 1
+        except Exception as e:                                       # noqa: BLE001
+            print(f"[reconcile] {mid[:8]}: {type(e).__name__}", flush=True)
+    print(f"[reconcile] reconciled={done} gave_up={dropped} waiting={left}", flush=True)
+    return {"reconciled": done, "gave_up": dropped, "waiting": left}
+
+
+async def _send_digest(items):
+    """The once-a-day roster message for drafts that used up their re-notifications. Roster
+    only: it reaches reviewers, never a participant, and lives outside the sweeper so the
+    sweeper's AST test (no direct send, no reading `sender`) still holds."""
+    core = _core()
+    settings = _settings()
+    if not settings.roster or not settings.review_signing_key or not _review_urls_set():
+        return 0
+    n = 0
+    for number, name in settings.roster:
+        text = core.digest_text(items, lambda it, number=number: _draft_link(settings, it, number))
+        ok, detail = await _send_once(number, text)
+        if ok or core.is_pending_receipt(detail):
+            n += 1
+    return n
+
+
 @app.function(image=image, secrets=SECRETS, timeout=600,
               schedule=modal.Period(minutes=3))
 async def sweep_review_queue():
@@ -1176,12 +1288,26 @@ async def sweep_review_queue():
             print(f"[sweep] RELEASED {it['review_id']} from "
                   f"...{_core().number_tail(it.get('released_from'))} — back to the roster, "
                   f"NOT sent", flush=True)
-        if core.needs_renotify(it, renotify_after_s=settings.renotify_after_s):
+        if core.needs_renotify(it, renotify_after_s=settings.renotify_after_s,
+                               max_renotifies=settings.max_renotifies):
             sent = await _notify_reviewers(it, renotify=True)
             _mark_notified(it, sent, renotify=True)
             renotified += 1
             print(f"[sweep] RENOTIFIED {it['review_id']} to {sent} reviewer(s) — "
                   f"still pending, still unsent", flush=True)
+    digest_sent = 0
+    try:
+        import time as _t
+        capped = core.digest_candidates(_queue_items(), settings.max_renotifies)
+        last = BRIDGE_WATCH.get("digest_ts")
+        if capped and core.digest_due(last, _t.time()):
+            digest_sent = await _send_digest(capped)
+            if digest_sent:
+                BRIDGE_WATCH["digest_ts"] = _t.time()
+                print(f"[sweep] DAILY DIGEST of {len(capped)} capped draft(s) to "
+                      f"{digest_sent} reviewer(s)", flush=True)
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[sweep] digest failed: {type(e).__name__}", flush=True)
     if pending or released or renotified:
         print(f"[sweep] pending={pending} released={released} renotified={renotified}",
               flush=True)
@@ -1390,6 +1516,8 @@ def health():
         "build": os.environ.get("CHIKE_BUILD", "dev"),
         "app": "chike-whatsapp",
         "model_timeout_s": float(os.environ.get("MODEL_TIMEOUT_S", "240")),
+        "supervised_model_timeout_s": float(os.environ.get("SUPERVISED_MODEL_TIMEOUT_S", "1800")),
+        "max_renotifies": int(os.environ.get("MAX_RENOTIFIES", "3")),
         "slow_ack_after_s": float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
         # Reported so the live check can prove WHICH ack timing is serving. R16: a
         # config-only change has no code diff to remind you a deploy happened, and a

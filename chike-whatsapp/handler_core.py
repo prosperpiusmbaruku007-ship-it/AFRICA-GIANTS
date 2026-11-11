@@ -30,6 +30,7 @@ ERROR CLASSES, and how they changed in the move to Modal:
 """
 
 import asyncio
+import re
 import hashlib
 import hmac
 import json
@@ -120,6 +121,16 @@ class Settings:
     # 600s, so nothing upstream cuts us off. Costs nothing: on a cold path the user
     # waits longer instead of receiving nothing, and WhatsApp is asynchronous.
     model_timeout_s: float = 240.0
+    # ⛔ IN SUPERVISED MODE THE TIMEOUT IS A DIFFERENT QUESTION. A human must act on every
+    # reply anyway and the participant has been told it takes time, so 240s only THROWS ANSWERS
+    # AWAY: on 2026-11-11 the GPU container took ~20 minutes to start, the handler gave up at
+    # 240s and sent an apology to review, and the model then answered the question correctly
+    # at +21 min with nobody listening. The fallback is for a GENUINE failure (an exception),
+    # not a slow start, so supervised mode waits up to this much longer limit.
+    supervised_model_timeout_s: float = 1800.0
+    # Re-notify at most this many times per draft, then it moves to the daily digest. Without
+    # a cap an unacted draft pings the roster every renotify_after_s forever.
+    max_renotifies: int = 3
 
     # One short "I'm working on it" if the answer is slow. A user who hears nothing for
     # three minutes concludes the service is broken; one Wappfly message is far cheaper
@@ -335,9 +346,63 @@ def bridge_verdict(rec, alive, now, *, max_age_s=90, fresh_s=30):
                             f"last_close={last.get('name')}; holding_lease={rec.get('holding_lease')}")
 
 
+def pending_alert_kind(node):
+    """Why sends are sitting past the receipt ceiling -- the distinction that stops the alert
+    crying wolf every night. Receipts track whether the RECIPIENT'S PHONE is reachable, so a
+    send with no receipt is only worth waking someone for if nothing else has been receipted
+    since it was sent.
+
+      bridge_suspect    no receipt of ANY message has arrived since the oldest unreceipted send:
+                        the bridge or WhatsApp may be broken
+      recipient_offline other sends HAVE been receipted since: those phones are reachable and
+                        this recipient's is probably off. Low priority, once a day.
+      None              nothing is past the ceiling
+
+    LIMIT, stated: with a single recipient the two are indistinguishable (nothing else can be
+    receipted), so a lone unreceipted send reads as bridge_suspect. The split only starts to
+    work with several recipients, which is what a pilot is."""
+    out = (node or {}).get("outbound") or {}
+    if not int(out.get("flagged_no_receipt") or 0):
+        return None
+    oldest = float(out.get("oldest_pending_s") or 0)
+    since = (node or {}).get("since_receipt_s")
+    if since is None or float(since) > oldest:
+        return "bridge_suspect"
+    return "recipient_offline"
+
+
 def pending_alert_due(prev_ts, flagged, now, *, every_s=3600):
     """True when sends have waited past the receipt ceiling and the last such email is old."""
     return bool(flagged) and (not prev_ts or now - float(prev_ts) >= every_s)
+
+
+_MSG_ID = re.compile(r"id=([A-Za-z0-9]+)")
+
+
+def pending_message_id(row):
+    """The WhatsApp message id inside a PENDING_RECEIPT detail, or None."""
+    m = _MSG_ID.search(str(row.get("send_error") or ""))
+    return m.group(1) if m else None
+
+
+def reconcile_row(row, ledger_row):
+    """The row as it should read once the late delivery receipt has arrived, or None.
+
+    A pending row is true at the moment of sending and stale afterwards: on 2026-11-11 the
+    reply read `pending_receipt` for ever although WhatsApp returned the receipt 178s later.
+    The original state is KEPT beside the corrected one, never overwritten, so the record
+    shows both that the receipt was slow and by how much."""
+    if row.get("send_state") != "pending_receipt":
+        return None
+    if not ledger_row or int(ledger_row.get("rank") or 0) < 3 or not ledger_row.get("receipt_ts"):
+        return None
+    out = dict(row)
+    out["send_state_at_send"] = "pending_receipt"
+    out["send_ok_at_send"] = row.get("send_ok")
+    out["send_state"] = "delivered"
+    out["send_ok"] = True
+    out["receipt_lag_s"] = int(ledger_row["receipt_ts"] - ledger_row["ts"])
+    return out
 
 
 def bridge_send_result(code, body):
@@ -546,12 +611,14 @@ async def deliver(sender, text, ask, send_once, settings, build="dev",
         m0 = time.monotonic()
         reply = error_class = detail = None
         result = None
+        limit_s = (settings.supervised_model_timeout_s if settings.supervised
+                   else settings.model_timeout_s)
+        row["model_timeout_s"] = limit_s
         try:
-            result = await asyncio.wait_for(ask(text),
-                                            timeout=settings.model_timeout_s)
+            result = await asyncio.wait_for(ask(text), timeout=limit_s)
         except asyncio.TimeoutError:
             error_class = "timeout"
-            detail = f"no reply after {settings.model_timeout_s}s"
+            detail = f"no reply after {limit_s}s"
         except Exception as e:                                       # noqa: BLE001
             error_class = "model_error"
             detail = scrub(f"{type(e).__name__}: {e}", settings.secrets)
@@ -668,7 +735,7 @@ async def deliver(sender, text, ask, send_once, settings, build="dev",
 # one irreplaceable signal — WHAT the model got wrong and HOW a human fixed it — would be
 # gone. So `draft` is immutable once written, `final` is what was sent, and `edit_reason` is
 # required whenever they differ.
-REVIEW_ACTIONS = ("send", "edit", "withhold")
+REVIEW_ACTIONS = ("send", "edit", "withhold", "retry")
 
 
 # ---------------------------------------------------------------------------
@@ -858,14 +925,54 @@ def release_expired_claim(item, *, now=None):
     return out, True
 
 
-def needs_renotify(item, *, now=None, renotify_after_s=1800.0):
+def renotify_exhausted(item, max_renotifies=3):
+    """True once a draft has used its re-notifications. It then goes to the daily digest."""
+    return int(item.get("renotify_count") or 0) >= int(max_renotifies)
+
+
+def digest_candidates(items, max_renotifies=3):
+    """Pending drafts that have used up their re-notifications, oldest first."""
+    out = [i for i in items if i.get("status") == "pending"
+           and renotify_exhausted(i, max_renotifies)]
+    return sorted(out, key=lambda i: i.get("ts_held") or "")
+
+
+def digest_due(last_digest_ts, now_ts, *, every_s=86400.0):
+    return not last_digest_ts or (now_ts - float(last_digest_ts)) >= every_s
+
+
+def digest_text(items, link_for, *, now=None, max_items=5):
+    """The once-a-day roster message for drafts that stopped being re-notified. Names the
+    customer by tail only; each line carries that reviewer's own link. Roster-only: nothing
+    here is, or can become, a participant message."""
+    now = now or datetime.now(timezone.utc)
+    lines = [f"📋 MUHTASARI WA KILA SIKU — rasimu {len(items)} bado zinasubiri "
+             f"(zimeacha kukumbushwa)"]
+    for it in items[:max_items]:
+        try:
+            age_h = int((now - datetime.fromisoformat(it["ts_held"])).total_seconds() // 3600)
+        except Exception:                                            # noqa: BLE001
+            age_h = "?"
+        tag = " [MODELI IMESHINDWA]" if it.get("fallback") else ""
+        lines += ["", f"• ...{it.get('sender_tail') or '????'} · saa {age_h} zilizopita{tag}",
+                  f"  {(it.get('question') or '')[:80]}", f"  {link_for(it)}"]
+    if len(items) > max_items:
+        lines.append(f"…na {len(items) - max_items} zaidi")
+    lines += ["", "Hakuna jibu linalotumwa mpaka mtu abonyeze. Zuia rasimu za majaribio."]
+    return "\n".join(lines)
+
+
+def needs_renotify(item, *, now=None, renotify_after_s=1800.0, max_renotifies=3):
     """True when an UNCLAIMED pending draft has gone unanswered long enough to re-notify.
 
     A claimed, unexpired draft is NOT re-notified — someone is reading it, and pinging the
     whole roster about a draft already in hand is how a roster learns to ignore the
-    notifications."""
+    notifications. And never more than `max_renotifies` times: after that the draft is in
+    the daily digest, because an uncapped reminder is a ping every half hour for ever."""
     now = now or datetime.now(timezone.utc)
     if item.get("status") != "pending":
+        return False
+    if renotify_exhausted(item, max_renotifies):
         return False
     if item.get("claimed_by") and not _claim_expired(item, now):
         return False
@@ -918,6 +1025,12 @@ def review_item(row, sender, draft, engine_working=None, facts=(), review_id=Non
         "release_count": 0,
         "last_notified_at": None,
         "notify_count": 0,
+        "renotify_count": 0,
+        # When the reviewer was FIRST pushed. decision_latency_s counts from here: counting from
+        # the question folded the model's own wait into the reviewer's time (317s reported
+        # for a 76s review on 2026-11-11).
+        "first_notified_at": None,
+        "retry_of": None,
         # ⛔ ATTRIBUTION. WHO decided, recorded beside WHAT they decided, so each reviewer's
         # corrections can be read separately — which is the only way to notice that one
         # reviewer is approving what another would have caught. A roster without per-reviewer
@@ -967,7 +1080,8 @@ def apply_decision(item, action, *, reviewer=None, edited=None, reason=None,
         raise ValueError("action 'edit' requires the edited text")
 
     out = dict(item)
-    out["status"] = {"send": "sent", "edit": "edited", "withhold": "withheld"}[action]
+    out["status"] = {"send": "sent", "edit": "edited", "withhold": "withheld",
+                     "retry": "retried"}[action]
     out["decided_by"] = reviewer
     out["decided_by_name"] = reviewer_name or number_tail(reviewer)
     out["decided_ts"] = now.isoformat(timespec="seconds")
@@ -977,11 +1091,13 @@ def apply_decision(item, action, *, reviewer=None, edited=None, reason=None,
     elif action == "edit":
         out["final"] = edited.strip()
     else:
-        out["final"] = None
+        out["final"] = None        # withhold and retry send NOTHING to the participant
     try:
-        held = datetime.fromisoformat(item["ts_held"])
         decided = datetime.fromisoformat(out["decided_ts"])
-        out["decision_latency_s"] = int((decided - held).total_seconds())
+        held = datetime.fromisoformat(item["ts_held"])
+        pushed = datetime.fromisoformat(item["first_notified_at"])             if item.get("first_notified_at") else held
+        out["decision_latency_s"] = int((decided - pushed).total_seconds())       # from the PUSH
+        out["time_from_question_s"] = int((decided - held).total_seconds())      # the old figure
     except Exception:                                                # noqa: BLE001
         out["decision_latency_s"] = None
     # `draft` is never touched. Asserted here rather than trusted, because a dict copy that
@@ -1014,6 +1130,8 @@ def notification_text(item, link, reviewer_name=None, renotify=False):
     preview the moment the message is delivered, so an "approve" link would fire before any
     human saw it.
     """
+    if item.get("fallback"):
+        return _model_failure_text(item, link, reviewer_name, renotify)
     head = ("🔁 KUPITIA TENA (bado hakuna aliyeshughulikia)" if renotify
             else "📋 RASIMU MPYA — inahitaji kupitiwa")
     who = f" · {reviewer_name}" if reviewer_name else ""
@@ -1041,6 +1159,29 @@ def notification_text(item, link, reviewer_name=None, renotify=False):
     lines += ["", "Fungua ili kuthibitisha, kuhariri au kuzuia:", link,
               "", "Hakuna jibu linalotumwa mpaka mtu abonyeze. Likikaa bila kushughulikiwa, "
                   "nitakumbusha tena."]
+    return "\n".join(lines)
+
+
+def _model_failure_text(item, link, reviewer_name=None, renotify=False):
+    """THE MODEL FAILED, so there is no draft answer and this must not look like one. The old
+    push put the apology under a 'RASIMU MPYA' header, so approving it read as approving
+    Chike's answer when it sent the participant an apology instead of one."""
+    head = ("🔁 KUPITIA TENA — MODELI IMESHINDWA" if renotify else "⛔ MODELI IMESHINDWA")
+    who = f" · {reviewer_name}" if reviewer_name else ""
+    lines = [f"{head}{who}",
+             f"Mteja: ...{item.get('sender_tail') or '????'}",
+             "",
+             f"SWALI: {item.get('question') or '(hakuna)'}",
+             "",
+             f"HAKUNA RASIMU YA JIBU. Modeli haikujibu ({item.get('error_class') or 'hitilafu'}).",
+             "",
+             "Chagua kwenye kiungo:",
+             "1) JARIBU TENA — swali linaulizwa tena, rasimu mpya inakuja kwako",
+             "2) ANDIKA MWENYEWE — unaandika jibu, linatumwa baada ya kubonyeza",
+             "3) TUMA SAMAHANI — mteja anapata: " + (item.get("draft") or "")[:70] + "…",
+             "4) ZUIA — hakuna kinachotumwa",
+             "", link,
+             "", "Hakuna kinachotumwa mpaka mtu abonyeze."]
     return "\n".join(lines)
 
 

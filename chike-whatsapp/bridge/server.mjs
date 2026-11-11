@@ -21,7 +21,13 @@ const ADMIN_TOKEN = process.env.BRIDGE_ADMIN_TOKEN || "";
 const SEND_TOKEN = process.env.BRIDGE_SEND_TOKEN || "";
 const WEBHOOK_URL = process.env.WEBHOOK_URL || "";
 const RECEIPT_WAIT_MS = Number(process.env.RECEIPT_WAIT_MS || 20000);
-const PENDING_FLAG_S = Number(process.env.PENDING_FLAG_S || 600);
+// The ceiling is how long a send may wait for its delivery receipt before it is FLAGGED.
+// Measured 2026-11-11, five sends to a recipient who confirmed receiving every one: receipt lags of
+// 3s, 7s, 10s, 178s and 1298s (21.6 minutes). So 10 minutes cried wolf at the first sample, and
+// 30 minutes would have cleared the longest by a narrow margin. 60 minutes sits ~2.8x above the
+// observed maximum; /state reports the live lag distribution (median, max, count) so this is a
+// number to revisit against data, not to guess.
+const PENDING_FLAG_S = Number(process.env.PENDING_FLAG_S || 3600);
 // Baileys 7.0.0-rc14 is a RELEASE CANDIDATE, pinned exactly in package.json. WhatsApp changes its
 // protocol without notice, so the library can break underneath us; /state shows the library's own
 // disconnect reasons so that shows up as an alert rather than as silence.
@@ -169,7 +175,11 @@ function ledgerSummary() {
     if (t - r.ts > 86400) { LEDGER.delete(id); continue; }
     if (r.rank < 3) { pending++; oldest = Math.max(oldest, t - r.ts); if (t - r.ts > PENDING_FLAG_S) flagged++; }
   }
-  return { sent_24h: LEDGER.size, pending, oldest_pending_s: oldest, flagged_no_receipt: flagged };
+  const lags = [...LEDGER.values()].filter((r) => r.receipt_ts).map((r) => r.receipt_ts - r.ts).sort((a, b) => a - b);
+  return { sent_24h: LEDGER.size, pending, oldest_pending_s: oldest, flagged_no_receipt: flagged,
+           ceiling_s: PENDING_FLAG_S, receipts_24h: lags.length,
+           receipt_lag_median_s: lags.length ? lags[Math.floor(lags.length / 2)] : null,
+           receipt_lag_max_s: lags.length ? lags[lags.length - 1] : null };
 }
 
 function state() {
