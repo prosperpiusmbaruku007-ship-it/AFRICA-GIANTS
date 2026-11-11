@@ -209,6 +209,21 @@ mitigation.** (Both T4 and L4 were granted within the hour; the time to first gr
 
 **Throwaway apps `chike-inference-t4test` / `chike-inference-l4test` were stopped after the check.**
 
+### 4e. 2026-11-12 — DEPLOYED AND VERIFIED LIVE (`caf6ea8`, no participants)
+
+- **`chike-inference`** (parser fix + `gpu=['T4','L4']` + device-name coldstart): `build_matches: true`; served by `Tesla T4`, scheduling
+  17 s, load 37 s. **Live: "6 milioni" SDL → TZS 210,000** (was 35,000); **"120 milioni" VAT → "Ndiyo, unatakiwa kujisajili"** (was
+  "hapana, TZS 1,000,000"); scale-first SDL unchanged (negative case).
+- **D-FIDELITY-7 FIRED LIVE on the exact question that went through unflagged on 2026-11-11:** *"Efd ni lazima kwa biashara yenye mauzo ya
+  milioni 15"* now returns a reply **byte-identical to `clarification.wrong_threshold_withheld("efd")`** — the correct rule, *"Sitatoa kiwango
+  chochote cha mauzo hapa"*. (The model asserted a threshold again; the guard now sees it and replaces it. It stops the wrong answer and
+  supplies the correct rule only because the replacement copy states it — **A1 moved, and here A2 too, by construction of that copy.**)
+- **`chike-whatsapp`** (handles, cohort capacity, repair marker; `COHORT_SIZE=3`): `/health.cohort` reads `declared_size 3`,
+  `sized_for_reviewers 1`, `within_review_capacity true`; the admin payload contains **no `@s.whatsapp.net`/`@lid` and no 12-digit run**;
+  `per_reviewer` is keyed `f03b0f9ac3`; 15 test items excluded; **0 items still `pending_receipt`**, 2 marked `manual_repair_2026-11-12`.
+- **Inbound on the new bridge container confirmed:** the founder's 00:43 (EAT) / 21:43 UTC message, processed on build `bc4eda6`, reviewed
+  and delivered. Bridge: connected, `lease_holders: 1`.
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy
