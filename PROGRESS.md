@@ -178,6 +178,37 @@ reviewer**, `within_review_capacity`, a monitor not a gate); the participant dis
 test is **skipped** (stop-before-deploy is the runbook; a re-pair risk to exercise a path we avoid is not worth it); cohort **3** while
 the founder is the only reviewer.
 
+### 4d. 2026-11-12 — L4 AS A FALLBACK: THE CROSS-HARDWARE CHECK, AND WHAT IT DID AND DID NOT PROVE
+
+`eval/controls/verify_l4_vs_t4_2026_11_12.py` → `eval/results/l4_vs_t4_2026_11_12.json`. The same fixed 53-probe set (36 in-corpus gate
+questions, 8 refusal-gate, 8 number-first compute/VAT controls, the live EFD question) through a **T4-only** and an **L4-only**
+throwaway deployment of the identical file; devices confirmed from the containers themselves (`Tesla T4`, `NVIDIA L4`).
+
+| | result |
+|---|---|
+| **identical** | **51 / 53** |
+| different | **2 / 53** — both are model fact-path rows (2 of ~44 model-dependent probes, ~4.5%) |
+| compute / routing controls | **9 / 9 identical** — as they must be (hardware-independent by construction) |
+| any verdict flipped | **no** |
+| load time | T4 ~35 s, **L4 ~52 s** |
+
+**The two differences, read in full:**
+- `eval_315` (VAT withholding on a TZS 3,000,000 invoice): both state 6% and TZS 180,000. **L4 adds a muddled sentence** — *"VAT iliyobaki ni
+  TZS 360,000 (12%) — lakini hiyo ni hesabu ya VAT ya pungufu, si jumla kamili"* — arithmetically true (18% − 6%), explanatorily nonsense, and
+  absent from T4's reply. **Not a wrong figure; an unsupported flourish, which is the shape a reviewer has to catch.**
+- `eval_335` (WCF 3.5%?): both say *Hapana, 0.5%*. T4 adds a throwaway sentence; **L4 omits it**. Neither is wrong.
+
+**WHAT THIS DOES NOT PROVE — stated so it cannot be read as the full gate.** It is a 53-row targeted check on one build, not the 400-row
+Kaggle gate (~100 min GPU), and "no verdict flipped in 44 model rows" bounds the flip rate at roughly 7% at 95% confidence, not at zero.
+The full gate on L4 has **not** been run. T4 stays FIRST in the list, so L4 serves only when no T4 exists.
+
+**⚠️ L4 IS NOT A GUARANTEED RELIEF EITHER.** The L4 arm's first request waited **~13–16 minutes** (two 300 s HTTP-500 timeouts) before an
+L4 was granted — the same order as the 20-minute start it was added to fix. **Scarcity is a property of the GPU market for this workspace,
+not of one SKU.** The fallback widens the pool; it does not remove the wait, and **the 30-minute supervised wait remains the real
+mitigation.** (Both T4 and L4 were granted within the hour; the time to first grant is what varies.)
+
+**Throwaway apps `chike-inference-t4test` / `chike-inference-l4test` were stopped after the check.**
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy

@@ -1,0 +1,616 @@
+{
+ "probes": [
+  "eval_251",
+  "eval_255",
+  "eval_259",
+  "eval_263",
+  "eval_267",
+  "eval_271",
+  "eval_275",
+  "eval_279",
+  "eval_283",
+  "eval_287",
+  "eval_291",
+  "eval_295",
+  "eval_299",
+  "eval_303",
+  "eval_307",
+  "eval_311",
+  "eval_315",
+  "eval_319",
+  "eval_323",
+  "eval_327",
+  "eval_331",
+  "eval_335",
+  "eval_339",
+  "eval_343",
+  "eval_347",
+  "eval_351",
+  "eval_355",
+  "eval_359",
+  "eval_363",
+  "eval_367",
+  "eval_371",
+  "eval_375",
+  "eval_379",
+  "eval_383",
+  "eval_387",
+  "eval_391",
+  "cc_01",
+  "cn_01",
+  "mrn_01",
+  "oc_01",
+  "oc_11",
+  "oh_09",
+  "oh_19",
+  "oh_29",
+  "ctl_sdl_nf",
+  "ctl_vat_nf",
+  "ctl_sdl_nf2",
+  "ctl_pres_nf",
+  "ctl_pres_nf2",
+  "ctl_vat_nf2",
+  "ctl_vat_nf3",
+  "ctl_sdl_nf3",
+  "live_efd"
+ ],
+ "arms": {
+  "T4": {
+   "eval_251": {
+    "q": "Mzee faida ya duka mwezi huu imefika TZS 8,400,000, sasa SDL yangu itakuwa ngapi?",
+    "reply": "Hapana. SDL inatozwa kwa asilimia 3.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 8,400,000) si mshahara, hivyo hakitumiki kukokotoa SDL. Nipe jumla ya mishahara ya wafanyakazi kwa mwezi na idadi yao. Thibitisha na TRA (tra.go.tz).",
+    "secs": 8.8
+   },
+   "eval_255": {
+    "q": "Mzunguko wa fedha (cash flow) wa biashara ni TZS 9,000,000 kwa mwezi, PAYE inakatwa vipi hapo?",
+    "reply": "Hapana. PAYE inatozwa kwa kodi inayokatwa kutoka mshahara wa mfanyakazi kwa mabano (0% hadi TZS 270,000, kisha 8%, 20%, 25%, 30%). Kiasi ulichotaja (TZS 9,000,000) si mshahara, hivyo hakitumiki kukokotoa PAYE. Nipe mshahara wa mwezi wa mfanyakazi. Thibitisha na TRA (tra.go.tz).",
+    "secs": 5.5
+   },
+   "eval_259": {
+    "q": "Magari yangu ya biashara yana thamani ya TZS 40,000,000 kwa jumla, WCF yake naikadiriaje?",
+    "reply": "Hapana. WCF inatozwa kwa asilimia 0.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 40,000,000) si mshahara, hivyo hakitumiki kukokotoa WCF. Nipe jumla ya mishahara ya wafanyakazi kwa mwezi. Thibitisha na WCF (wcf.go.tz).",
+    "secs": 6.0
+   },
+   "eval_263": {
+    "q": "Nimetoa invoice 450 mwezi huu, sasa NSSF yangu itakuwaje?",
+    "reply": "Hapana. NSSF inatozwa kwa asilimia 10 ya mshahara ghafi wa mfanyakazi (jumla asilimia 20 — mwajiri na mfanyakazi). Idadi uliyotaja si kiasi cha mshahara, hivyo haitumiki kukokotoa NSSF. Nipe mshahara wa mwezi wa mfanyakazi. Thibitisha na NSSF (nssf.go.tz).",
+    "secs": 5.6
+   },
+   "eval_267": {
+    "q": "Mfanyakazi alifanya kazi siku 26 mwezi huu, NSSF yake ni kiasi gani basi?",
+    "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "secs": 4.4
+   },
+   "eval_271": {
+    "q": "Mfanyakazi wangu analipwa dola 500 za Marekani kwa mwezi, NSSF yake ni ngapi?",
+    "reply": "Ili nihesabu NSSF, tafadhali badilisha kiasi kuwa shilingi za Tanzania (TZS) — kiasi ulichotaja kiko katika sarafu ya kigeni. Kisha nitahesabu.",
+    "secs": 4.9
+   },
+   "eval_275": {
+    "q": "Nina wafanyakazi 12 kila mmoja analipwa dola 300, jumla ya NSSF ya wote ni ngapi?",
+    "reply": "Ili nihesabu NSSF, tafadhali badilisha kiasi kuwa shilingi za Tanzania (TZS) — kiasi ulichotaja kiko katika sarafu ya kigeni. Kisha nitahesabu.",
+    "secs": 5.7
+   },
+   "eval_279": {
+    "q": "Mishahara yetu ni mingi kiasi, lakini jumla hasa ni TZS 3,750,000 kwa wafanyakazi 13 — SDL ni ngapi?",
+    "reply": "Kwa jumla hiyo, SDL ni TZS 131,250. Thibitisha hesabu:\n\nTZS 3,750,000 × 3.5% = TZS 131,250\n\nHii ni kwa sababu unalipa asilimia 3.5 ya mishahara yote ya fedha kwa mwajiri mwenye wafanyakazi 10 au zaidi. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 3,750,000 = TZS 131,250",
+    "secs": 11.8
+   },
+   "eval_283": {
+    "q": "Kama kawaida mishahara inabadilika, mwezi huu ni TZS 5,200,000 kwa watu 16 — SDL yake?",
+    "reply": "Kwa mwezi huu, hesabu SDL kwa msingi wa mishahara halisi ya mwezi huo. Thibisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 5,200,000 = TZS 182,000",
+    "secs": 8.7
+   },
+   "eval_287": {
+    "q": "Theluthi mbili ya watu 30 wanalipwa TZS 500,000, wengine wanalipwa TZS 900,000 — SDL?",
+    "reply": "SDL = 3.5% × TZS 19,000,000 = TZS 665,000",
+    "secs": 15.1
+   },
+   "eval_291": {
+    "q": "Analipwa TZS 320,000 kila wiki mbili (bi-weekly), NSSF yake ya mwezi ni ngapi?",
+    "reply": "Ili nihesabu NSSF, niambie mshahara wa MWEZI ni kiasi gani — kiasi ulichotaja ni cha kipindi au kazi moja, si cha mwezi mzima. Kisha nitahesabu.",
+    "secs": 6.2
+   },
+   "eval_295": {
+    "q": "Muuzaji analipwa kwa kamisheni, asilimia 5 ya alichouza mwezi — NSSF yake ni ngapi?",
+    "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "secs": 8.2
+   },
+   "eval_299": {
+    "q": "Ile hesabu ya wiki iliyopita ya PAYE, ongeza tu asilimia kumi juu yake — jibu jipya ni ngapi?",
+    "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "secs": 11.3
+   },
+   "eval_303": {
+    "q": "Mshahara wangu ni TZS 900,000, sasa kodi ya majengo (property tax) ninayolipa ni ngapi?",
+    "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+    "secs": 1.0
+   },
+   "eval_307": {
+    "q": "Tuna mishahara ya TZS 4,000,000, je hii inatuweka kwenye kundi la kulipa ushuru wa forodha (import duty)?",
+    "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+    "secs": 0.9
+   },
+   "eval_311": {
+    "q": "Nina mfanyakazi mmoja tu anayelipwa TZS 500,000, je bado nachangia WCF?",
+    "reply": "Ndiyo, unachangia WCF kwa asilimia 0.5 ya jumla ya mishahara. Thibisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+    "secs": 4.5
+   },
+   "eval_315": {
+    "q": "Kiwango cha VAT withholding kwa huduma ni asilimia ngapi kwa ankara ya TZS 3,000,000?",
+    "reply": "Kiwango cha VAT withholding kwa huduma ni asilimia 6, si 3. Kwa ankara ya TZS 3,000,000, VAT ya msingi ni TZS 540,000 (18%). Sehemu ya kuzuia ni 6% × 3,000,000 = TZS 180,000. Mnunuzi anayehitimu atakata TZS 180,000 na kuwasilisha TRA. Muuzaji atasema VAT iliyobaki (TZS 360,000) kwenye VAT return yake. Thibitisha na TRA (tra.go.tz).",
+    "secs": 19.2
+   },
+   "eval_319": {
+    "q": "Kama nikizingatia kwamba wafanyakazi wangu, ambao ni 14 wanaopata kila mmoja TZS 500,000, wanastahili NSSF, je jumla ni ngapi na SDL yao pia?",
+    "reply": "Kwa hesabu ya NSSF, jumla ya mishahara ya wafanyakazi wote ni TZS 7,000,000 (14 x TZS 500,000). Thibisha na NSSF (nssf.go.tz). SDL ni asilimia 3.5 ya jumla hiyo, sawa na TZS 245,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 7,000,000 = TZS 245,000\n\nKwa hesabu sahihi ya NSSF na SDL, unapaswa kuainisha idadi kamili ya wafanyakazi wanaostahili na mishahara halisi. Thibitisha na NSSF (nssf.go.tz).\nNSSF = 20% × TZS 7,000,000 = TZS 1,400,000 (mwajiri TZS 700,000 + mfanyakazi TZS 700,000)",
+    "secs": 32.3
+   },
+   "eval_323": {
+    "q": "Mfanyakazi anapata TZS 760,000 na nataka PAYE yake na kama nikiongeza watu wengine 9 kufikia 10, SDL ya jumla ya mishahara ya TZS 7,600,000 itakuwa ngapi?",
+    "reply": "Kwa PAYE, tumia kipengele cha 'Paye Calculator' kwenye tra.go.tz. Thibitisha na TRA (tra.go.tz). Kwa SDL, hesabu ni asilimia 3.5 ya jumla ya mishahara ya fedha tu (TZS 7,600,000 × 3.5%) = TZS 266,000.\nSDL = 3.5% × TZS 7,600,000 = TZS 266,000\n\nKwa PAYE, tumia jedwali la kawaida. Kwa SDL, asilimia 3.5 ya jumla ya mishahara ya fedha ya wafanyakazi wote 10. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 20,000 + 20% × (TZS 760,000 − TZS 520,000) = TZS 68,000",
+    "secs": 25.9
+   },
+   "eval_327": {
+    "q": "Nina wafanyakazi 10, kati yao 4 wana mishahara ya TZS 700,000 na 6 wana TZS 300,000, nataka WCF na SDL — zote mbili.",
+    "reply": "Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 4,600,000 = TZS 161,000\n\nThibitisha na TRA (tra.go.tz).\nWCF = 0.5% × TZS 4,600,000 = TZS 23,000",
+    "secs": 19.2
+   },
+   "eval_331": {
+    "q": "Mauzo yangu ni TZS 9,000,000 kwa mwaka na sina VAT, je nahitaji EFD na kama ndiyo nitoe risiti kwa kila muamala hata wa TZS 500?",
+    "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia taarifa rasmi (Commissioner-General public notice) inayotaja jina lako au kundi lako maalum. Thibitisha na TRA kama taarifa kama hiyo inakuhusu. Thibitisha na TRA (tra.go.tz).",
+    "secs": 1.1
+   },
+   "eval_335": {
+    "q": "Kiwango cha WCF ni asilimia 3.5 ya mishahara, sivyo?",
+    "reply": "Hapana. Kiwango cha WCF ni asilimia 0.5 ya mishahara ghafi (gross payroll). Asilimia 3.5 ingekuwa tofauti kabisa na utaratibu uliopo. Thibitisha na WCF (wcf.go.tz).",
+    "secs": 6.3
+   },
+   "eval_339": {
+    "q": "GN 487A ilianza kutumika Januari 2026, sivyo?",
+    "reply": "Hapana. GN 487A ilianza kutumika tarehe 28 Julai 2025 — si Januari 2026. Tarehe hiyo ndiyo ilipotangazwa katika Gazeti Rasmi la Serikali. Januari 2026 ni tarehe nyingine kabisa — ni tarehe ya agizo tofauti la mishahara ya chini (GN 605A). Thibitisha na https://immigration.go.tz.",
+    "secs": 9.3
+   },
+   "eval_343": {
+    "q": "Ajali ya kazini WCF lazima itolewe taarifa ndani ya siku 30, sivyo?",
+    "reply": "Hapana, si siku 30. Taarifa ya ajali ya kazini kwa WCF inatakiwa kuwasilishwa ndani ya siku 7 tu baada ya ajali kutokea. Thibitisha na WCF (wcf.go.tz).",
+    "secs": 5.9
+   },
+   "eval_347": {
+    "q": "Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?",
+    "reply": "Mashine ya risiti (EFD) haina kizingiti cha mauzo — inahitajika bila kujali kiwango cha mauzo ya mwaka. Msamaha hutolewa tu kwa tangazo la Kamishna Mkuu wa TRA. Sitatoa kiwango chochote cha mauzo hapa. Thibitisha na TRA (tra.go.tz).",
+    "secs": 5.7
+   },
+   "eval_351": {
+    "q": "Mapato yangu yamefika TZS 200,000,000 kamili kwa mwaka, je nalazimika kusajili VAT?",
+    "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 200,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+    "secs": 0.9
+   },
+   "eval_355": {
+    "q": "Mauzo yangu ni TZS 10,999,000 kwa mwaka, je EFD ni lazima kwangu?",
+    "reply": "Ndiyo, kwa mauzo hayo, unatakiwa kutumia EFD. Hakuna msamaha wa mauzo chini ya TZS 11M. Thibitisha na TRA (tra.go.tz).",
+    "secs": 5.2
+   },
+   "eval_359": {
+    "q": "Mshahara ni TZS 760,000 kamili — PAYE ni ngapi?",
+    "reply": "Kwa mshahara wa TZS 760,000/mwezi, PAYE = TZS 20,000 + 20% × (TZS 760,000 − TZS 520,000) = TZS 68,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 20,000 + 20% × (TZS 760,000 − TZS 520,000) = TZS 68,000",
+    "secs": 9.0
+   },
+   "eval_363": {
+    "q": "Nina wafanyakazi 9 na mishahara TZS 3,600,000 — je SDL inanihusu?",
+    "reply": "Hapana. Una wafanyakazi 9, chini ya kiwango cha 10. SDL inatakiwa tu pale unapoajiri wafanyakazi 10 au zaidi. Thibitisha na TRA (tra.go.tz).\nHapana. SDL haihusiki: una wafanyakazi 9 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.",
+    "secs": 9.5
+   },
+   "eval_367": {
+    "q": "Mfanyakazi asiye mkazi analipwa TZS 5,000,000 kwa mwezi — PAYE yake ni ngapi?",
+    "reply": "PAYE (asiye mkazi) = 15% × TZS 5,000,000 = TZS 750,000 (kodi ya mwisho, si mabano ya kupanda)",
+    "secs": 15.6
+   },
+   "eval_371": {
+    "q": "Kampuni yangu ina wafanyakazi 7 na mishahara TZS 2,800,000 — SDL inayostahili ni kiasi gani?",
+    "reply": "Kwa wafanyakazi 7, chini ya kiwango cha 10, hakuna SDL inayostahili kulipa. Jumla ya mishahara ni TZS 2,800,000, lakini kwa kuwa una wafanyakazi chini ya 10, SDL = TZS 0. Thibitisha na TRA (tra.go.tz).\nSDL inayolipwa ni TZS 0. Una wafanyakazi 7 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+    "secs": 7.7
+   },
+   "eval_375": {
+    "q": "Msambazaji wangu hajasajiliwa VAT na hatoi ankara ya VAT — VAT withholding ninayozuia ni ngapi?",
+    "reply": "Kiwango cha VAT withholding ni 3% (kwa bidhaa) au 6% (kwa huduma) ya invoice ya msambazaji asiyesajiliwa VAT. Thibitisha na TRA (tra.go.tz).",
+    "secs": 6.0
+   },
+   "eval_379": {
+    "q": "Nina wafanyakazi 6 tu — SDL yangu ni kiasi gani?",
+    "reply": "Kwa sasa una wafanyakazi chini ya kiwango cha 10, hivyo hakuna SDL unayopaswa kulipa. Thibitisha na TRA (tra.go.tz).\nSDL inayolipwa ni TZS 0. Una wafanyakazi 6 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+    "secs": 5.6
+   },
+   "eval_383": {
+    "q": "Ada ya kusajili kampuni isiyo na mtaji wa hisa (no share capital) BRELA ni TZS ngapi?",
+    "reply": "Ada ya kusajili kampuni bila mtaji wa hisa (no share capital) ni TZS 95,000. Thibitisha na BRELA (brela.go.tz).",
+    "secs": 5.7
+   },
+   "eval_387": {
+    "q": "Ada ya kuhifadhi jina la kampuni (name reservation) BRELA ni TZS ngapi?",
+    "reply": "Ada ya kuhifadhi jina la kampuni (name reservation) ni TZS 50,000. Thibitisha na BRELA Official (brela.go.tz).",
+    "secs": 5.5
+   },
+   "eval_391": {
+    "q": "Si lazima kusajili mahali pa kazi na OSHA kama nina mfanyakazi mmoja tu, sivyo?",
+    "reply": "Hapana, si sahihi. Sheria ya Afya na Usalama Mahali pa Kazi Na.5 ya 2003 inasema kuwa kila mwajiri anapaswa kusajili mahali pake pa kazi na OSHA, bila kujali idadi ya wafanyakazi. Thibitisha na osha.go.tz.",
+    "secs": 7.5
+   },
+   "cc_01": {
+    "q": "Biashara yetu ina mauzo ya TZS 250,000,000 kwa miezi 12 je tunatakiwa kujisajili VAT",
+    "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+    "secs": 0.9
+   },
+   "cn_01": {
+    "q": "Maduka mangapi yanatakiwa kuwa na EFD katika soko moja",
+    "reply": "Kiwango cha juu cha maduka kinachohitaji EFD katika soko moja ni 10. Thibitisha na TRA (tra.go.tz).",
+    "secs": 4.6
+   },
+   "mrn_01": {
+    "q": "Namlipa mwandishi mrabaha kwa kitabu chake, nakata kodi ya zuio asilimia ngapi?",
+    "reply": "Kodi ya zuio kwenye mrabaha wa milki ya kiakili ni asilimia 15 kwa mkazi na asilimia 20 kwa asiye mkazi. Thibitisha na tra.go.tz.",
+    "secs": 5.2
+   },
+   "oc_01": {
+    "q": "watanikata kiasi gani kwenye mshahara wangu wa 700000 kwa ajili ya mfuko wa uzeeni",
+    "reply": "NSSF (sehemu ya mfanyakazi) = 10% × TZS 700,000 = TZS 70,000 — jumla ya NSSF ni 20% (mwajiri TZS 70,000 + mfanyakazi TZS 70,000)",
+    "secs": 11.4
+   },
+   "oc_11": {
+    "q": "tuna wafanyakazi 11 je tozo ya mafunzo itatuhusu",
+    "reply": "Ndiyo, kulingana na taarifa uliyonipa, unapaswa kulipa asilimia 3.5 ya jumla ya mishahara kwa ajili ya SDL. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 11 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+    "secs": 9.7
+   },
+   "oh_09": {
+    "q": "Kodi ya medini kwa mchimbaji mdogo ni kiasi gani?",
+    "reply": "Kiwango cha kodi ya madini kwa wachimbaji wadogo ni asilimia 5%. Thibitisha na tra.go.tz.",
+    "secs": 4.3
+   },
+   "oh_19": {
+    "q": "Nina matatizo ya kuwasilisha return ya VAT mwezi huu, nifanyeje?",
+    "reply": "Kuna adhabu ya faini ya TZS 200,000 kwa kuchelewa kuwasilisha return ya VAT. Thibitisha na tra.go.tz.",
+    "secs": 4.6
+   },
+   "oh_29": {
+    "q": "Nimepokea hati ya usajili wa kampuni kutoka BRELA, hatua inayofuata ni ipi?",
+    "reply": "Baada ya kupokea hati ya usajili, unapaswa kuomba TIN (Taxpayer Identification Number) kutoka TRA. Pamoja na TIN, unaweza kuanza shughuli za kisheria za kampuni, kama vile kuingia mikataba, kufungua akaunti ya benki, na kuwasilisha annual return. Thibitisha na BRELA (brela.go.tz).",
+    "secs": 9.1
+   },
+   "ctl_sdl_nf": {
+    "q": "Nina wafanyakazi 12, mishahara yote kwa mwezi ni 6 milioni. SDL nitalipa kiasi gani?",
+    "reply": "Kwa hesabu sahihi, unatakiwa kulipa asilimia 3.5 ya jumla ya mishahara yote. Thibisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 6,000,000 = TZS 210,000",
+    "secs": 7.9
+   },
+   "ctl_vat_nf": {
+    "q": "Katika miezi 6 iliyopita nimeuza jumla ya TZS 120 milioni — je nimefika kiwango cha VAT?",
+    "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 120,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+    "secs": 1.0
+   },
+   "ctl_sdl_nf2": {
+    "q": "Kampuni yenye wafanyakazi 15 inalipa SDL kiasi gani kwa mishahara ya jumla 9 milioni?",
+    "reply": "Kwa wafanyakazi 15, kampuni inalipa SDL ya asilimia 3.5 ya jumla ya mishahara. Thibisha hesabu: 3.5% × TZS 9,000,000 = TZS 315,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 9,000,000 = TZS 315,000",
+    "secs": 10.1
+   },
+   "ctl_pres_nf": {
+    "q": "Mauzo yangu kwa mwaka ni 40 milioni, nitalipa kodi ya makadirio kiasi gani?",
+    "reply": "Kodi ya makadirio = 4.0% × TZS 40,000,000 = TZS 1,600,000 (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la) Kumbuka: kama umepata TIN mara ya kwanza kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 iliyopita, huenda ukastahili msamaha wa TZS 0 kwa mwaka wa kwanza — LAKINI hii SI ya moja kwa moja: lazima uombe kwa Kamishna na aidhinishe (First Schedule para 2(4)). Bila kuidhinishwa, kiasi hapo juu ndicho kinachotumika. Thibitisha na TRA.",
+    "secs": 1.0
+   },
+   "ctl_pres_nf2": {
+    "q": "Biashara yangu inauza 4 milioni kwa mwaka, kodi ya makadirio ni ngapi?",
+    "reply": "Kodi ya makadirio = TZS 0 (mauzo ya TZS 4,000,000 kwa mwaka yako ndani ya kiwango cha sifuri hadi TZS 4,000,000)",
+    "secs": 0.9
+   },
+   "ctl_vat_nf2": {
+    "q": "Mauzo yangu ya mwaka ni TZS 250 milioni, je ni lazima kusajili VAT?",
+    "reply": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+    "secs": 1.0
+   },
+   "ctl_vat_nf3": {
+    "q": "Biashara yangu imepata mauzo ya TZS 95 milioni katika miezi 6 — je nimevuka kizingiti cha VAT?",
+    "reply": "Kwa upande wa miezi 6 mfululizo: hapana, mauzo yako ya TZS 95,000,000 hayajafikia kizingiti cha TZS 100,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 200,000,000 katika miezi 12. Sijui mauzo yako ya miezi 12, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 12 nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+    "secs": 1.0
+   },
+   "ctl_sdl_nf3": {
+    "q": "Nina wafanyakazi 9, mishahara yote kwa mwezi ni 3.6 milioni. SDL ni kiasi gani?",
+    "reply": "Kwa kuwa una wafanyakazi chini ya 10, hakuna SDL unayopaswa kulipa. Thibitisha na tra.go.tz.\nSDL inayolipwa ni TZS 0. Una wafanyakazi 9 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+    "secs": 4.4
+   },
+   "live_efd": {
+    "q": "Efd ni lazima kwa biashara yenye mauzo ya milioni 15",
+    "reply": "Mashine ya risiti (EFD) haina kizingiti cha mauzo — inahitajika bila kujali kiwango cha mauzo ya mwaka. Msamaha hutolewa tu kwa tangazo la Kamishna Mkuu wa TRA. Sitatoa kiwango chochote cha mauzo hapa. Thibitisha na TRA (tra.go.tz).",
+    "secs": 9.9
+   }
+  },
+  "L4": {
+   "eval_251": {
+    "q": "Mzee faida ya duka mwezi huu imefika TZS 8,400,000, sasa SDL yangu itakuwa ngapi?",
+    "reply": "Hapana. SDL inatozwa kwa asilimia 3.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 8,400,000) si mshahara, hivyo hakitumiki kukokotoa SDL. Nipe jumla ya mishahara ya wafanyakazi kwa mwezi na idadi yao. Thibitisha na TRA (tra.go.tz).",
+    "secs": 9.4
+   },
+   "eval_255": {
+    "q": "Mzunguko wa fedha (cash flow) wa biashara ni TZS 9,000,000 kwa mwezi, PAYE inakatwa vipi hapo?",
+    "reply": "Hapana. PAYE inatozwa kwa kodi inayokatwa kutoka mshahara wa mfanyakazi kwa mabano (0% hadi TZS 270,000, kisha 8%, 20%, 25%, 30%). Kiasi ulichotaja (TZS 9,000,000) si mshahara, hivyo hakitumiki kukokotoa PAYE. Nipe mshahara wa mwezi wa mfanyakazi. Thibitisha na TRA (tra.go.tz).",
+    "secs": 6.4
+   },
+   "eval_259": {
+    "q": "Magari yangu ya biashara yana thamani ya TZS 40,000,000 kwa jumla, WCF yake naikadiriaje?",
+    "reply": "Hapana. WCF inatozwa kwa asilimia 0.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 40,000,000) si mshahara, hivyo hakitumiki kukokotoa WCF. Nipe jumla ya mishahara ya wafanyakazi kwa mwezi. Thibitisha na WCF (wcf.go.tz).",
+    "secs": 228.6
+   },
+   "eval_263": {
+    "q": "Nimetoa invoice 450 mwezi huu, sasa NSSF yangu itakuwaje?",
+    "reply": "Hapana. NSSF inatozwa kwa asilimia 10 ya mshahara ghafi wa mfanyakazi (jumla asilimia 20 — mwajiri na mfanyakazi). Idadi uliyotaja si kiasi cha mshahara, hivyo haitumiki kukokotoa NSSF. Nipe mshahara wa mwezi wa mfanyakazi. Thibitisha na NSSF (nssf.go.tz).",
+    "secs": 6.6
+   },
+   "eval_267": {
+    "q": "Mfanyakazi alifanya kazi siku 26 mwezi huu, NSSF yake ni kiasi gani basi?",
+    "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "secs": 4.9
+   },
+   "eval_271": {
+    "q": "Mfanyakazi wangu analipwa dola 500 za Marekani kwa mwezi, NSSF yake ni ngapi?",
+    "reply": "Ili nihesabu NSSF, tafadhali badilisha kiasi kuwa shilingi za Tanzania (TZS) — kiasi ulichotaja kiko katika sarafu ya kigeni. Kisha nitahesabu.",
+    "secs": 5.5
+   },
+   "eval_275": {
+    "q": "Nina wafanyakazi 12 kila mmoja analipwa dola 300, jumla ya NSSF ya wote ni ngapi?",
+    "reply": "Ili nihesabu NSSF, tafadhali badilisha kiasi kuwa shilingi za Tanzania (TZS) — kiasi ulichotaja kiko katika sarafu ya kigeni. Kisha nitahesabu.",
+    "secs": 6.7
+   },
+   "eval_279": {
+    "q": "Mishahara yetu ni mingi kiasi, lakini jumla hasa ni TZS 3,750,000 kwa wafanyakazi 13 — SDL ni ngapi?",
+    "reply": "Kwa jumla hiyo, SDL ni TZS 131,250. Thibitisha hesabu:\n\nTZS 3,750,000 × 3.5% = TZS 131,250\n\nHii ni kwa sababu unalipa asilimia 3.5 ya mishahara yote ya fedha kwa mwajiri mwenye wafanyakazi 10 au zaidi. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 3,750,000 = TZS 131,250",
+    "secs": 13.5
+   },
+   "eval_283": {
+    "q": "Kama kawaida mishahara inabadilika, mwezi huu ni TZS 5,200,000 kwa watu 16 — SDL yake?",
+    "reply": "Kwa mwezi huu, hesabu SDL kwa msingi wa mishahara halisi ya mwezi huo. Thibisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 5,200,000 = TZS 182,000",
+    "secs": 9.8
+   },
+   "eval_287": {
+    "q": "Theluthi mbili ya watu 30 wanalipwa TZS 500,000, wengine wanalipwa TZS 900,000 — SDL?",
+    "reply": "SDL = 3.5% × TZS 19,000,000 = TZS 665,000",
+    "secs": 16.1
+   },
+   "eval_291": {
+    "q": "Analipwa TZS 320,000 kila wiki mbili (bi-weekly), NSSF yake ya mwezi ni ngapi?",
+    "reply": "Ili nihesabu NSSF, niambie mshahara wa MWEZI ni kiasi gani — kiasi ulichotaja ni cha kipindi au kazi moja, si cha mwezi mzima. Kisha nitahesabu.",
+    "secs": 7.1
+   },
+   "eval_295": {
+    "q": "Muuzaji analipwa kwa kamisheni, asilimia 5 ya alichouza mwezi — NSSF yake ni ngapi?",
+    "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "secs": 9.6
+   },
+   "eval_299": {
+    "q": "Ile hesabu ya wiki iliyopita ya PAYE, ongeza tu asilimia kumi juu yake — jibu jipya ni ngapi?",
+    "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+    "secs": 12.9
+   },
+   "eval_303": {
+    "q": "Mshahara wangu ni TZS 900,000, sasa kodi ya majengo (property tax) ninayolipa ni ngapi?",
+    "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+    "secs": 0.9
+   },
+   "eval_307": {
+    "q": "Tuna mishahara ya TZS 4,000,000, je hii inatuweka kwenye kundi la kulipa ushuru wa forodha (import duty)?",
+    "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+    "secs": 0.9
+   },
+   "eval_311": {
+    "q": "Nina mfanyakazi mmoja tu anayelipwa TZS 500,000, je bado nachangia WCF?",
+    "reply": "Ndiyo, unachangia WCF kwa asilimia 0.5 ya jumla ya mishahara. Thibisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+    "secs": 4.7
+   },
+   "eval_315": {
+    "q": "Kiwango cha VAT withholding kwa huduma ni asilimia ngapi kwa ankara ya TZS 3,000,000?",
+    "reply": "Kiwango cha VAT withholding kwa huduma ni asilimia 6, si 3. Kwa ankara ya TZS 3,000,000, VAT ya msingi ni TZS 540,000 (18%). Sehemu ya kuzuia ni 6% × 3,000,000 = TZS 180,000. Mnunuzi anayehitimu atakata TZS 180,000 na kulipa TRA. Muuzaji atasema VAT iliyobaki ni TZS 360,000 (12%) — lakini hiyo ni hesabu ya VAT ya pungufu, si jumla kamili. Thibitisha na TRA (tra.go.tz).",
+    "secs": 24.0
+   },
+   "eval_319": {
+    "q": "Kama nikizingatia kwamba wafanyakazi wangu, ambao ni 14 wanaopata kila mmoja TZS 500,000, wanastahili NSSF, je jumla ni ngapi na SDL yao pia?",
+    "reply": "Kwa hesabu ya NSSF, jumla ya mishahara ya wafanyakazi wote ni TZS 7,000,000 (14 x TZS 500,000). Thibisha na NSSF (nssf.go.tz). SDL ni asilimia 3.5 ya jumla hiyo, sawa na TZS 245,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 7,000,000 = TZS 245,000\n\nKwa hesabu sahihi ya NSSF na SDL, unapaswa kuainisha idadi kamili ya wafanyakazi wanaostahili na mishahara halisi. Thibitisha na NSSF (nssf.go.tz).\nNSSF = 20% × TZS 7,000,000 = TZS 1,400,000 (mwajiri TZS 700,000 + mfanyakazi TZS 700,000)",
+    "secs": 36.5
+   },
+   "eval_323": {
+    "q": "Mfanyakazi anapata TZS 760,000 na nataka PAYE yake na kama nikiongeza watu wengine 9 kufikia 10, SDL ya jumla ya mishahara ya TZS 7,600,000 itakuwa ngapi?",
+    "reply": "Kwa PAYE, tumia kipengele cha 'Paye Calculator' kwenye tra.go.tz. Thibitisha na TRA (tra.go.tz). Kwa SDL, hesabu ni asilimia 3.5 ya jumla ya mishahara ya fedha tu (TZS 7,600,000 × 3.5%) = TZS 266,000.\nSDL = 3.5% × TZS 7,600,000 = TZS 266,000\n\nKwa PAYE, tumia jedwali la kawaida. Kwa SDL, asilimia 3.5 ya jumla ya mishahara ya fedha ya wafanyakazi wote 10. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 20,000 + 20% × (TZS 760,000 − TZS 520,000) = TZS 68,000",
+    "secs": 30.0
+   },
+   "eval_327": {
+    "q": "Nina wafanyakazi 10, kati yao 4 wana mishahara ya TZS 700,000 na 6 wana TZS 300,000, nataka WCF na SDL — zote mbili.",
+    "reply": "Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 4,600,000 = TZS 161,000\n\nThibitisha na TRA (tra.go.tz).\nWCF = 0.5% × TZS 4,600,000 = TZS 23,000",
+    "secs": 22.2
+   },
+   "eval_331": {
+    "q": "Mauzo yangu ni TZS 9,000,000 kwa mwaka na sina VAT, je nahitaji EFD na kama ndiyo nitoe risiti kwa kila muamala hata wa TZS 500?",
+    "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia taarifa rasmi (Commissioner-General public notice) inayotaja jina lako au kundi lako maalum. Thibitisha na TRA kama taarifa kama hiyo inakuhusu. Thibitisha na TRA (tra.go.tz).",
+    "secs": 0.9
+   },
+   "eval_335": {
+    "q": "Kiwango cha WCF ni asilimia 3.5 ya mishahara, sivyo?",
+    "reply": "Hapana. Kiwango cha WCF ni asilimia 0.5 ya mishahara ghafi (gross payroll). Thibitisha na WCF (wcf.go.tz).",
+    "secs": 4.9
+   },
+   "eval_339": {
+    "q": "GN 487A ilianza kutumika Januari 2026, sivyo?",
+    "reply": "Hapana. GN 487A ilianza kutumika tarehe 28 Julai 2025 — si Januari 2026. Tarehe hiyo ndiyo ilipotangazwa katika Gazeti Rasmi la Serikali. Januari 2026 ni tarehe nyingine kabisa — ni tarehe ya agizo tofauti la mishahara ya chini (GN 605A). Thibitisha na https://immigration.go.tz.",
+    "secs": 10.8
+   },
+   "eval_343": {
+    "q": "Ajali ya kazini WCF lazima itolewe taarifa ndani ya siku 30, sivyo?",
+    "reply": "Hapana, si siku 30. Taarifa ya ajali ya kazini kwa WCF inatakiwa kuwasilishwa ndani ya siku 7 tu baada ya ajali kutokea. Thibitisha na WCF (wcf.go.tz).",
+    "secs": 6.7
+   },
+   "eval_347": {
+    "q": "Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 200,000,000, sivyo?",
+    "reply": "Mashine ya risiti (EFD) haina kizingiti cha mauzo — inahitajika bila kujali kiwango cha mauzo ya mwaka. Msamaha hutolewa tu kwa tangazo la Kamishna Mkuu wa TRA. Sitatoa kiwango chochote cha mauzo hapa. Thibitisha na TRA (tra.go.tz).",
+    "secs": 6.2
+   },
+   "eval_351": {
+    "q": "Mapato yangu yamefika TZS 200,000,000 kamili kwa mwaka, je nalazimika kusajili VAT?",
+    "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 200,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+    "secs": 0.9
+   },
+   "eval_355": {
+    "q": "Mauzo yangu ni TZS 10,999,000 kwa mwaka, je EFD ni lazima kwangu?",
+    "reply": "Ndiyo, kwa mauzo hayo, unatakiwa kutumia EFD. Hakuna msamaha wa mauzo chini ya TZS 11M. Thibitisha na TRA (tra.go.tz).",
+    "secs": 5.5
+   },
+   "eval_359": {
+    "q": "Mshahara ni TZS 760,000 kamili — PAYE ni ngapi?",
+    "reply": "Kwa mshahara wa TZS 760,000/mwezi, PAYE = TZS 20,000 + 20% × (TZS 760,000 − TZS 520,000) = TZS 68,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 20,000 + 20% × (TZS 760,000 − TZS 520,000) = TZS 68,000",
+    "secs": 10.0
+   },
+   "eval_363": {
+    "q": "Nina wafanyakazi 9 na mishahara TZS 3,600,000 — je SDL inanihusu?",
+    "reply": "Hapana. Una wafanyakazi 9, chini ya kiwango cha 10. SDL inatakiwa tu pale unapoajiri wafanyakazi 10 au zaidi. Thibitisha na TRA (tra.go.tz).\nHapana. SDL haihusiki: una wafanyakazi 9 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.",
+    "secs": 10.9
+   },
+   "eval_367": {
+    "q": "Mfanyakazi asiye mkazi analipwa TZS 5,000,000 kwa mwezi — PAYE yake ni ngapi?",
+    "reply": "PAYE (asiye mkazi) = 15% × TZS 5,000,000 = TZS 750,000 (kodi ya mwisho, si mabano ya kupanda)",
+    "secs": 18.3
+   },
+   "eval_371": {
+    "q": "Kampuni yangu ina wafanyakazi 7 na mishahara TZS 2,800,000 — SDL inayostahili ni kiasi gani?",
+    "reply": "Kwa wafanyakazi 7, chini ya kiwango cha 10, hakuna SDL inayostahili kulipa. Jumla ya mishahara ni TZS 2,800,000, lakini kwa kuwa una wafanyakazi chini ya 10, SDL = TZS 0. Thibitisha na TRA (tra.go.tz).\nSDL inayolipwa ni TZS 0. Una wafanyakazi 7 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+    "secs": 8.3
+   },
+   "eval_375": {
+    "q": "Msambazaji wangu hajasajiliwa VAT na hatoi ankara ya VAT — VAT withholding ninayozuia ni ngapi?",
+    "reply": "Kiwango cha VAT withholding ni 3% (kwa bidhaa) au 6% (kwa huduma) ya invoice ya msambazaji asiyesajiliwa VAT. Thibitisha na TRA (tra.go.tz).",
+    "secs": 6.0
+   },
+   "eval_379": {
+    "q": "Nina wafanyakazi 6 tu — SDL yangu ni kiasi gani?",
+    "reply": "Kwa sasa una wafanyakazi chini ya kiwango cha 10, hivyo hakuna SDL unayopaswa kulipa. Thibitisha na TRA (tra.go.tz).\nSDL inayolipwa ni TZS 0. Una wafanyakazi 6 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+    "secs": 5.4
+   },
+   "eval_383": {
+    "q": "Ada ya kusajili kampuni isiyo na mtaji wa hisa (no share capital) BRELA ni TZS ngapi?",
+    "reply": "Ada ya kusajili kampuni bila mtaji wa hisa (no share capital) ni TZS 95,000. Thibitisha na BRELA (brela.go.tz).",
+    "secs": 5.4
+   },
+   "eval_387": {
+    "q": "Ada ya kuhifadhi jina la kampuni (name reservation) BRELA ni TZS ngapi?",
+    "reply": "Ada ya kuhifadhi jina la kampuni (name reservation) ni TZS 50,000. Thibitisha na BRELA Official (brela.go.tz).",
+    "secs": 5.0
+   },
+   "eval_391": {
+    "q": "Si lazima kusajili mahali pa kazi na OSHA kama nina mfanyakazi mmoja tu, sivyo?",
+    "reply": "Hapana, si sahihi. Sheria ya Afya na Usalama Mahali pa Kazi Na.5 ya 2003 inasema kuwa kila mwajiri anapaswa kusajili mahali pake pa kazi na OSHA, bila kujali idadi ya wafanyakazi. Thibitisha na osha.go.tz.",
+    "secs": 8.1
+   },
+   "cc_01": {
+    "q": "Biashara yetu ina mauzo ya TZS 250,000,000 kwa miezi 12 je tunatakiwa kujisajili VAT",
+    "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+    "secs": 1.1
+   },
+   "cn_01": {
+    "q": "Maduka mangapi yanatakiwa kuwa na EFD katika soko moja",
+    "reply": "Kiwango cha juu cha maduka kinachohitaji EFD katika soko moja ni 10. Thibitisha na TRA (tra.go.tz).",
+    "secs": 4.8
+   },
+   "mrn_01": {
+    "q": "Namlipa mwandishi mrabaha kwa kitabu chake, nakata kodi ya zuio asilimia ngapi?",
+    "reply": "Kodi ya zuio kwenye mrabaha wa milki ya kiakili ni asilimia 15 kwa mkazi na asilimia 20 kwa asiye mkazi. Thibitisha na tra.go.tz.",
+    "secs": 5.7
+   },
+   "oc_01": {
+    "q": "watanikata kiasi gani kwenye mshahara wangu wa 700000 kwa ajili ya mfuko wa uzeeni",
+    "reply": "NSSF (sehemu ya mfanyakazi) = 10% × TZS 700,000 = TZS 70,000 — jumla ya NSSF ni 20% (mwajiri TZS 70,000 + mfanyakazi TZS 70,000)",
+    "secs": 13.3
+   },
+   "oc_11": {
+    "q": "tuna wafanyakazi 11 je tozo ya mafunzo itatuhusu",
+    "reply": "Ndiyo, kulingana na taarifa uliyonipa, unapaswa kulipa asilimia 3.5 ya jumla ya mishahara kwa ajili ya SDL. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 11 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+    "secs": 11.1
+   },
+   "oh_09": {
+    "q": "Kodi ya medini kwa mchimbaji mdogo ni kiasi gani?",
+    "reply": "Kiwango cha kodi ya madini kwa wachimbaji wadogo ni asilimia 5%. Thibitisha na tra.go.tz.",
+    "secs": 4.5
+   },
+   "oh_19": {
+    "q": "Nina matatizo ya kuwasilisha return ya VAT mwezi huu, nifanyeje?",
+    "reply": "Kuna adhabu ya faini ya TZS 200,000 kwa kuchelewa kuwasilisha return ya VAT. Thibitisha na tra.go.tz.",
+    "secs": 4.8
+   },
+   "oh_29": {
+    "q": "Nimepokea hati ya usajili wa kampuni kutoka BRELA, hatua inayofuata ni ipi?",
+    "reply": "Baada ya kupokea hati ya usajili, unapaswa kuomba TIN (Taxpayer Identification Number) kutoka TRA. Pamoja na TIN, unaweza kuanza shughuli za kisheria za kampuni, kama vile kuingia mikataba, kufungua akaunti ya benki, na kuwasilisha annual return. Thibitisha na BRELA (brela.go.tz).",
+    "secs": 10.0
+   },
+   "ctl_sdl_nf": {
+    "q": "Nina wafanyakazi 12, mishahara yote kwa mwezi ni 6 milioni. SDL nitalipa kiasi gani?",
+    "reply": "Kwa hesabu sahihi, unatakiwa kulipa asilimia 3.5 ya jumla ya mishahara yote. Thibisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 6,000,000 = TZS 210,000",
+    "secs": 8.6
+   },
+   "ctl_vat_nf": {
+    "q": "Katika miezi 6 iliyopita nimeuza jumla ya TZS 120 milioni — je nimefika kiwango cha VAT?",
+    "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 120,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+    "secs": 1.0
+   },
+   "ctl_sdl_nf2": {
+    "q": "Kampuni yenye wafanyakazi 15 inalipa SDL kiasi gani kwa mishahara ya jumla 9 milioni?",
+    "reply": "Kwa wafanyakazi 15, kampuni inalipa SDL ya asilimia 3.5 ya jumla ya mishahara. Thibisha hesabu: 3.5% × TZS 9,000,000 = TZS 315,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 9,000,000 = TZS 315,000",
+    "secs": 11.2
+   },
+   "ctl_pres_nf": {
+    "q": "Mauzo yangu kwa mwaka ni 40 milioni, nitalipa kodi ya makadirio kiasi gani?",
+    "reply": "Kodi ya makadirio = 4.0% × TZS 40,000,000 = TZS 1,600,000 (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la) Kumbuka: kama umepata TIN mara ya kwanza kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 iliyopita, huenda ukastahili msamaha wa TZS 0 kwa mwaka wa kwanza — LAKINI hii SI ya moja kwa moja: lazima uombe kwa Kamishna na aidhinishe (First Schedule para 2(4)). Bila kuidhinishwa, kiasi hapo juu ndicho kinachotumika. Thibitisha na TRA.",
+    "secs": 0.9
+   },
+   "ctl_pres_nf2": {
+    "q": "Biashara yangu inauza 4 milioni kwa mwaka, kodi ya makadirio ni ngapi?",
+    "reply": "Kodi ya makadirio = TZS 0 (mauzo ya TZS 4,000,000 kwa mwaka yako ndani ya kiwango cha sifuri hadi TZS 4,000,000)",
+    "secs": 0.9
+   },
+   "ctl_vat_nf2": {
+    "q": "Mauzo yangu ya mwaka ni TZS 250 milioni, je ni lazima kusajili VAT?",
+    "reply": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+    "secs": 0.9
+   },
+   "ctl_vat_nf3": {
+    "q": "Biashara yangu imepata mauzo ya TZS 95 milioni katika miezi 6 — je nimevuka kizingiti cha VAT?",
+    "reply": "Kwa upande wa miezi 6 mfululizo: hapana, mauzo yako ya TZS 95,000,000 hayajafikia kizingiti cha TZS 100,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 200,000,000 katika miezi 12. Sijui mauzo yako ya miezi 12, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 12 nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+    "secs": 0.9
+   },
+   "ctl_sdl_nf3": {
+    "q": "Nina wafanyakazi 9, mishahara yote kwa mwezi ni 3.6 milioni. SDL ni kiasi gani?",
+    "reply": "Kwa kuwa una wafanyakazi chini ya 10, hakuna SDL unayopaswa kulipa. Thibitisha na tra.go.tz.\nSDL inayolipwa ni TZS 0. Una wafanyakazi 9 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.",
+    "secs": 4.4
+   },
+   "live_efd": {
+    "q": "Efd ni lazima kwa biashara yenye mauzo ya milioni 15",
+    "reply": "Mashine ya risiti (EFD) haina kizingiti cha mauzo — inahitajika bila kujali kiwango cha mauzo ya mwaka. Msamaha hutolewa tu kwa tangazo la Kamishna Mkuu wa TRA. Sitatoa kiwango chochote cha mauzo hapa. Thibitisha na TRA (tra.go.tz).",
+    "secs": 11.7
+   }
+  }
+ },
+ "device": {
+  "T4": {
+   "container_import_ts": 1794437310.864,
+   "enter_started_ts": 1794437310.871,
+   "enter_done_ts": 1794437345.893,
+   "import_to_enter_s": 0.0,
+   "load_s": 35.0,
+   "gpu": "Tesla T4"
+  },
+  "L4": {
+   "container_import_ts": 1794436636.191,
+   "enter_started_ts": 1794436636.199,
+   "enter_done_ts": 1794436687.886,
+   "import_to_enter_s": 0.0,
+   "load_s": 51.7,
+   "gpu": "NVIDIA L4"
+  }
+ },
+ "summary": {
+  "IDENTICAL": 51,
+  "DIFFERENT": 2,
+  "MISSING": 0
+ }
+}
