@@ -285,3 +285,46 @@ def test_the_hold_is_registered_dated_and_records_the_recruiting_condition():
     assert state == "active"
     assert "NO PARTICIPANT IS RECRUITED WHILE ALERTING IS OFF" in note
     assert pf.alerting_hold("2026-11-26")[0] == "expired"
+
+
+def test_real_build_gate_drops_cron_only_in_the_throwaway_build(monkeypatch):
+    """Workspace limit of 5 scheduled functions made gate 3 unpassable for chike-whatsapp (live 3 +
+    throwaway 3). The throwaway build gets CHIKE_PREFLIGHT_NO_SCHEDULE=1; the stop that follows
+    must not. Planted: capture the env of every subprocess the gate launches."""
+    import importlib.util, os, subprocess
+    spec = importlib.util.spec_from_file_location(
+        "pf_sched_probe", os.path.join(os.path.dirname(__file__), "..", "scripts", "preflight_deploy.py"))
+    pf = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pf)
+    seen = []
+
+    def fake_run(cmd, **kw):
+        seen.append((cmd, (kw.get("env") or {}).get("CHIKE_PREFLIGHT_NO_SCHEDULE")))
+        return subprocess.CompletedProcess(cmd, 0, stdout="ok", stderr="")
+    monkeypatch.setattr(pf.subprocess, "run", fake_run)
+    pf.gate_real_build("chike-inference/modal_app.py", "chike-inference")
+    deploy = [e for c, e in seen if "deploy" in c]
+    stop = [e for c, e in seen if "stop" in c]
+    assert deploy == ["1"], "the throwaway build must drop the schedule"
+    assert stop and all(e is None for e in stop), "nothing but the throwaway build may carry it"
+    assert os.environ.get("CHIKE_PREFLIGHT_NO_SCHEDULE") is None, "must not leak into this process"
+
+
+def test_sched_helper_is_a_noop_for_the_real_deploy(monkeypatch):
+    import importlib.util, os, sys, types
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "chike-whatsapp"))
+    try:
+        import handler_core as hc
+    finally:
+        sys.path.pop(0)
+    pkg = types.ModuleType("chike_whatsapp"); pkg.handler_core = hc
+    monkeypatch.setitem(sys.modules, "chike_whatsapp", pkg)
+    monkeypatch.setitem(sys.modules, "chike_whatsapp.handler_core", hc)
+    def load(tag):
+        spec = importlib.util.spec_from_file_location(
+            tag, os.path.join(os.path.dirname(__file__), "..", "chike-whatsapp", "modal_whatsapp.py"))
+        m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+    monkeypatch.delenv("CHIKE_PREFLIGHT_NO_SCHEDULE", raising=False)
+    assert load("mw_sched_real")._sched("P") == "P"            # real deploy: schedule kept
+    monkeypatch.setenv("CHIKE_PREFLIGHT_NO_SCHEDULE", "1")
+    assert load("mw_sched_pre")._sched("P") is None            # throwaway build: dropped

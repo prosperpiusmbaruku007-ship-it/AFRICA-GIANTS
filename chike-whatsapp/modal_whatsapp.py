@@ -58,6 +58,20 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 
 app = modal.App("chike-whatsapp")
 
+
+def _sched(period):
+    """The schedule, except in the pre-flight's THROWAWAY build.
+
+    Modal's plan allows 5 scheduled functions per workspace and this app has 3, so the pre-flight's
+    `chike-whatsapp-preflight` copy needs 3 more while the live app still holds its 3: 6 > 5, and the
+    real-build gate failed with "reached limit of 5 scheduled functions" (2026-11-12) -- which would
+    have made gate 3 permanently unpassable for this app. Only the cron METADATA is dropped; the
+    image, every function body and every endpoint are built exactly as in the real deploy, which is
+    what gate 3 exists to prove. The real deploy never sets this variable (scripts/preflight_deploy.py
+    sets it only on the subprocess that builds the throwaway name).
+    """
+    return None if os.environ.get("CHIKE_PREFLIGHT_NO_SCHEDULE") == "1" else period
+
 # BUILD is baked at deploy time so /health can prove WHICH code is serving. Modal
 # injects no git SHA (Railway did, via RAILWAY_GIT_COMMIT_SHA), so the deploy command
 # passes it: CHIKE_BUILD=$(git rev-parse --short HEAD) modal deploy ...
@@ -477,7 +491,7 @@ def _session_state():
 # are emailed on the FIRST sighting, because two sockets is the failure this design exists to
 # prevent.
 @app.function(image=image, secrets=SECRETS, timeout=120,
-              schedule=modal.Period(minutes=2))
+              schedule=_sched(modal.Period(minutes=2)))
 def poll_bridge_status():
     import time
     core = _core()
@@ -1226,7 +1240,7 @@ def review_queue(token: str = None, include_sender: bool = False):
 # Rewrites a transcript row whose send was pending when it was written, once WhatsApp's late
 # delivery receipt has landed. Touches only `send_*` / receipt fields of rows this app wrote, and
 # has no send path: it reads the bridge ledger and writes the record.
-@app.function(image=image, secrets=SECRETS, timeout=300, schedule=modal.Period(minutes=5))
+@app.function(image=image, secrets=SECRETS, timeout=300, schedule=_sched(modal.Period(minutes=5)))
 def reconcile_receipts():
     import time
     core = _core()
@@ -1274,7 +1288,7 @@ async def _send_digest(items):
 
 
 @app.function(image=image, secrets=SECRETS, timeout=600,
-              schedule=modal.Period(minutes=3))
+              schedule=_sched(modal.Period(minutes=3)))
 async def sweep_review_queue():
     """Release expired claims; re-notify unclaimed drafts. Never sends to a participant."""
     core = _core()

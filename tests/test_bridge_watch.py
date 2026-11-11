@@ -227,7 +227,7 @@ def test_the_bridge_status_read_never_writes_the_bridge_dicts():
 def test_poll_is_scheduled_every_two_minutes():
     src = open(os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"),
                encoding="utf-8").read()
-    assert "schedule=modal.Period(minutes=2)" in src
+    assert "schedule=_sched(modal.Period(minutes=2))" in src
 
 
 # -- /health -----------------------------------------------------------------------------
