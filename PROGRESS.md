@@ -224,6 +224,59 @@ mitigation.** (Both T4 and L4 were granted within the hour; the time to first gr
 - **Inbound on the new bridge container confirmed:** the founder's 00:43 (EAT) / 21:43 UTC message, processed on build `bc4eda6`, reviewed
   and delivered. Bridge: connected, `lease_holders: 1`.
 
+### 4f. 2026-11-12 (night) — THE NEGATED-PREMISE BUG, AND THE AUTOMATIC DISCLOSURE. **BOTH ARE COMMITTED AND PUSHED (`0913e2f`) AND NEITHER IS DEPLOYED.**
+
+**Founder confirmations, on the record:** the two `…5913` numbers are two different phones of the founder's that share their last four
+digits (reviewer and tester are genuinely different numbers); sender `6995` is the founder's own earlier messages in linked-ID form;
+**no one else has used the number.** (Resolves the "who is messaging Chike" question before recruiting.) L4: **no full gate now** — T4
+stays first, L4 is a rare fallback; **revisit if L4 starts serving regularly** (`coldstart.gpu` records the device that served).
+
+**1. A threshold named inside a negated premise is a BOUND, not the user's turnover (`1400a63`).**
+*"Mauzo yangu bado hayajafika TZS 200 milioni… kwa hiari?"* → *"Ndiyo, unatakiwa kujisajili VAT"* — in scale-first notation too.
+- **The sweep found ONE committed question in 8,086 strings with this shape** (the live specimen itself). **No corpus could ever have caught
+  it** (R33), so the probes are authored: `eval/accuracy_gate/bound_premise_probes_2026_11_12.jsonl` — 9 bound + 7 figure rows, **three of
+  them traps** that carry a cue and a single amount and are NOT bounds (*"chini ya SHERIA ya VAT…"*, *"haijafika MWAKA MMOJA, mauzo ya TZS 250M"*,
+  *"I UNDERstand…"*), in both notations.
+- **What it does:** `routing.upper_bound_amount` fires only for an upper-bound / negated-reach cue IMMEDIATELY before the sole amount, with a
+  closed filler-word list between them. VAT derives only what "turnover < B" implies (limb A not met iff B ≤ 200M, limb B iff B ≤ 100M,
+  otherwise it asks) and **says it holds no fact on voluntary registration** rather than letting the model improvise one. Presumptive: B ≤ 4M
+  settles TZS 0; above it, asks — **a tax computed on a bound would be a confident wrong figure.**
+- **Regression sweep (R12c):** 73 engine-routed strings, old tree vs new tree in separate processes — **only the founding specimen and my own
+  bound probes change; every other row, including all 7 figure/trap probes, is byte-identical.**
+- ⚠️ **Specimens first, code second (R26):** 8 of my first 18 probes failed — all 8 because the QUESTION did not route (`intent=none`), none
+  because of the fix. **The detector was right on all 18.** That surfaced **R31 gaps, pre-existing and not fixed:** *"je nisajili VAT?"*,
+  *"nasajili?"* and every English VAT-registration question (even the plain figure *"My annual turnover is TZS 250 million. Must I register for
+  VAT?"*) never reach the VAT engine.
+- ⚠️ **THE MIRROR CASE IS LIVE, MEASURED, AND NOT FIXED — A DECISION FOR THE FOUNDER.** A LOWER bound is read as the exact figure:
+  *"Mauzo yangu ya mwaka **yamezidi / ni zaidi ya TZS 100 milioni**, je ni lazima kusajili VAT?"* → *"hapana, mauzo yako ya TZS 100,000,000
+  hayajafikia kizingiti"* (wrong: sales ABOVE 100M may be 250M); *"zaidi ya TZS 2 milioni"* → presumptive **TZS 0** (wrong if actual is 40M).
+  Same defect class, opposite direction; it was left out because it is a separate behaviour change, not because it is small.
+
+**2. The participant disclosure is automatic (`0913e2f`).** Founder's verbatim text; asserted equal to the runbook §8a copy in a test, so the
+two cannot drift. Sent to each new sender on their first message, **in both `answer_and_send` and `greet_and_send`, before `core.deliver`
+sends any ack** (asserted on the deployed file's AST). Recorded in the transcript row (`disclosure_state`) and on the review item; the review
+card shows a red **DISCLOSURE NOT DELIVERED** banner when it did not land.
+- **Never twice, under a race:** an **atomic claim** (`Dict.put(skip_if_exists=True)`) is taken BEFORE the send, so two messages arriving
+  together send one. The loser waits (bounded) so its ack cannot overtake the disclosure.
+- **Failure modes, each planted:** `delivered` and `pending_receipt` are never repeated (a resend of an accepted message makes a duplicate); a
+  **clean failure releases the claim** so the next message retries; an **unreadable store sends NOTHING** (a missing disclosure is flagged, a
+  duplicate cannot be unsent); losing the record after a successful send does not trigger a resend.
+- ⚠️ **Found by a slow test, not by thought:** the first version made EVERY later message from a participant wait 30 s whenever a claim stuck
+  in `sending` (a crash, or a failed record write). Now only a FRESH claim is waited for; a stale one is passed at once — never resent, counted
+  in `/health` as `stuck_sending`.
+- **Switchable only on purpose:** ON unless `DISCLOSURE` is explicitly `0/false/no/off` — **a typo stays ON** (the opposite reading from
+  `SUPERVISED`). `/health.disclosure` reports the parsed value; **pre-flight gate 3b now refuses a deploy where it is not true** (R35: a
+  condition with no enforcement point decays). Skipped for reviewer retries.
+- **One person reaching us as `@lid` and as a phone JID is two senders and is told twice** — the cost of not guessing that two addresses are
+  one human. **The two existing testers have no record, so each gets the disclosure once on their next message** — which is the live test.
+
+**3. DEPLOY: HELD — not requested this turn, and the harness refused a production deploy in the same command.** Live is still `caf6ea8` on
+both apps (verified read-only: `chike-whatsapp` `/health` has no `disclosure` field; `chike-inference` build `caf6ea8`). Needed: `chike-inference`
+(bound fix) then `chike-whatsapp` (disclosure; carry `COHORT_SIZE=3` and the three `REVIEW_*_URL`s, per §1b). **Live-verify plan:** inference —
+the founding question must return the bound answer in BOTH notations, with the figure rows unchanged; whatsapp — `/health.disclosure.enabled`
+true, then ONE message from the `…5913` tester phone must produce the disclosure BEFORE the ack, recorded in its row, and a SECOND message must
+produce none.
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy
