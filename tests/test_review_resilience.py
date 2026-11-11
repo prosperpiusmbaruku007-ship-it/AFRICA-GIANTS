@@ -306,3 +306,86 @@ def test_a_pending_row_is_registered_under_the_filename_it_was_stored_under(monk
     mw._write_row(row)
     registered = mw.PENDING_ROWS["3EB0TESTID"]
     assert registered in mw.TRANSCRIPTS, "registry points at a file that was never stored"
+
+
+# -- the admin view shows reviewer HANDLES, never phone numbers --------------------------------------
+_REVIEWER_JID = "255712615913@s.whatsapp.net"
+_KEY = "test-signing-key-not-a-secret"
+
+
+def _decided(**kw):
+    base = {"review_id": "2026-11-11T20:54:51+00:00-b5908217", "status": "sent", "decided_by": _REVIEWER_JID,
+            "claimed_by": _REVIEWER_JID, "released_from": _REVIEWER_JID, "decided_by_name": "Prosper",
+            "sender": "255760915913@s.whatsapp.net", "decision_latency_s": 28}
+    base.update(kw)
+    return base
+
+
+def test_public_review_items_replace_reviewer_numbers_with_handles_and_drop_the_participant():
+    import json, re
+    items = [_decided()]
+    shown = core.public_review_items(items, _KEY)
+    blob = json.dumps(shown)
+    assert not re.search(r"\d{9,}", blob.replace("2026-11-11T20", "")), blob   # no phone-number-shaped run
+    assert "@" not in blob and "sender" not in shown[0]
+    handle = core.reviewer_id(_KEY, _REVIEWER_JID)
+    assert shown[0]["decided_by"] == shown[0]["claimed_by"] == shown[0]["released_from"] == handle
+    assert items[0]["decided_by"] == _REVIEWER_JID, "the STORED item must be untouched (a copy is shown)"
+
+
+def test_without_a_signing_key_the_view_masks_to_a_tail_rather_than_showing_the_number():
+    shown = core.public_review_items([_decided()], None)
+    assert shown[0]["decided_by"] == "...5913"
+
+
+def test_per_reviewer_is_keyed_by_handle_not_jid():
+    out = core.review_summary([_decided()], _KEY)["per_reviewer"]
+    assert list(out) == [core.reviewer_id(_KEY, _REVIEWER_JID)]
+    assert "@" not in " ".join(out) and out[core.reviewer_id(_KEY, _REVIEWER_JID)]["name"] == "Prosper"
+
+
+@pytest.mark.parametrize("size,reviewers,need,within", [
+    (3, 1, 1, True),         # the founder's call 2026-11-12: cohort 3 while one reviewer
+    (4, 1, 2, False),        # a 4th participant needs a second reviewer FIRST
+    (10, 1, 4, False),
+    (10, 4, 4, True),
+    (0, 1, 0, None),         # undeclared -> monitor-only, no claim either way
+])
+def test_cohort_capacity_says_how_many_reviewers_the_cohort_is_sized_for(size, reviewers, need, within):
+    c = core.cohort_capacity(size, reviewers)
+    assert c["sized_for_reviewers"] == need and c["within_review_capacity"] is within
+    assert c["roster_reviewers"] == reviewers and c["participants_per_reviewer"] == 3
+    if size and not within:
+        assert "OVER" in c["capacity_note"]
+
+
+def test_a_reconciled_row_records_that_it_was_corrected_after_the_fact():
+    row = {"send_state": "pending_receipt", "send_ok": False}
+    led = {"rank": 4, "ts": 1000, "receipt_ts": 1046}
+    out = core.reconcile_row(row, led, source="manual_repair_2026-11-12")
+    assert out["send_state"] == "delivered" and out["send_state_at_send"] == "pending_receipt"
+    assert out["receipt_lag_s"] == 46 and out["reconciled_by"] == "manual_repair_2026-11-12"
+    assert out["reconciled_ts"], "the correction must carry its own timestamp"
+    assert core.reconcile_row(row, led)["reconciled_by"] == "reconcile_receipts"   # the default path
+
+
+def test_health_cohort_reports_it_is_sized_for_one_reviewer(monkeypatch):
+    import importlib.util, sys, types
+    from conftest import isolate_modal_stores
+    pkg = types.ModuleType("chike_whatsapp")
+    pkg.handler_core = core
+    monkeypatch.setitem(sys.modules, "chike_whatsapp", pkg)
+    monkeypatch.setitem(sys.modules, "chike_whatsapp.handler_core", core)
+    spec = importlib.util.spec_from_file_location(
+        "chike_mw_cohort_probe", os.path.join(os.path.dirname(__file__), "..", "chike-whatsapp",
+                                              "modal_whatsapp.py"))
+    mw = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mw)
+    isolate_modal_stores(mw, monkeypatch)
+    monkeypatch.setenv("COHORT_SIZE", "3")
+    monkeypatch.setenv("REVIEWER_ROSTER", "+255700000011:Prosper")
+    monkeypatch.setenv("REVIEW_SIGNING_KEY", _KEY)
+    c = mw._cohort_health()
+    assert c["declared_size"] == 3 and c["roster_reviewers"] == 1
+    assert c["sized_for_reviewers"] == 1 and c["within_review_capacity"] is True
+    assert "sized for 1 reviewer" in c["capacity_note"]

@@ -762,8 +762,16 @@ def _participants_seen():
 def _cohort_health():
     size = int(os.environ.get("COHORT_SIZE", "0") or 0)
     seen = _participants_seen()
+    try:
+        reviewers = len(_settings().roster)
+    except Exception:                                                # noqa: BLE001
+        reviewers = None
+    cap = (_core().cohort_capacity(size, reviewers) if reviewers is not None
+           else {"roster_reviewers": None, "within_review_capacity": None,
+                 "capacity_note": "roster could not be read"})
     return {"declared_size": size, "participants_seen": seen,
             "over_capacity": (None if (seen is None or not size) else seen > size),
+            **cap,
             "_note": "a MONITOR, not a gate — see the comment at the call site"}
 
 
@@ -1220,10 +1228,16 @@ def review_queue(token: str = None, include_sender: bool = False):
     if not _admin_ok(token):
         return {"status": "not found"}
     core = _core()
+    key = _settings().review_signing_key
     items = _queue_items()
-    if not include_sender:
-        items = [{k: v for k, v in i.items() if k != "sender"} for i in items]
-    return {"count": len(items), "summary": core.review_summary(items), "items": items}
+    # Reviewer numbers become HANDLES here whatever `include_sender` says: include_sender is about the
+    # PARTICIPANT, and nothing about analysis needs a reviewer's phone number.
+    shown = core.public_review_items(items, key)
+    if include_sender:
+        by_id = {i.get("review_id"): i.get("sender") for i in items}
+        for j in shown:
+            j["sender"] = by_id.get(j.get("review_id"))
+    return {"count": len(shown), "summary": core.review_summary(items, key), "items": shown}
 
 
 # ⛔⛔ THE SWEEPER, AND THE ONE PROPERTY THAT MATTERS ABOUT IT: IT HAS NO SEND PATH.
@@ -1347,8 +1361,10 @@ def dump_queue():
     returns so the two cannot drift into disagreeing about what the queue holds.
     """
     core = _core()
-    items = [{k: v for k, v in i.items() if k != "sender"} for i in _queue_items()]
-    out = {"count": len(items), "summary": core.review_summary(items), "items": items}
+    key = _settings().review_signing_key
+    raw_items = _queue_items()
+    items = core.public_review_items(raw_items, key)
+    out = {"count": len(items), "summary": core.review_summary(raw_items, key), "items": items}
     # `modal run` prints the return value as a Python repr (single quotes), which no JSON
     # parser reads -- the first live run found every queue read returning nothing. A marked
     # JSON line is parseable by the caller.

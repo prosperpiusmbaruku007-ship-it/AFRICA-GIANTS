@@ -385,8 +385,11 @@ def pending_message_id(row):
     return m.group(1) if m else None
 
 
-def reconcile_row(row, ledger_row):
+def reconcile_row(row, ledger_row, source="reconcile_receipts"):
     """The row as it should read once the late delivery receipt has arrived, or None.
+
+    `source` is RECORDED (`reconciled_by`, `reconciled_ts`): a row corrected after the fact must say
+    that it was, and by what, or the corrected state is indistinguishable from the original.
 
     A pending row is true at the moment of sending and stale afterwards: on 2026-11-11 the
     reply read `pending_receipt` for ever although WhatsApp returned the receipt 178s later.
@@ -402,6 +405,8 @@ def reconcile_row(row, ledger_row):
     out["send_state"] = "delivered"
     out["send_ok"] = True
     out["receipt_lag_s"] = int(ledger_row["receipt_ts"] - ledger_row["ts"])
+    out["reconciled_by"] = source
+    out["reconciled_ts"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     return out
 
 
@@ -1185,8 +1190,37 @@ def _model_failure_text(item, link, reviewer_name=None, renotify=False):
     return "\n".join(lines)
 
 
-def per_reviewer(items):
+_REVIEWER_FIELDS = ("claimed_by", "decided_by", "released_from")
+
+
+def reviewer_handle(signing_key, number):
+    """What the ADMIN view shows for a reviewer: the same 10-hex handle their link carries, or -- if no
+    signing key is configured -- an obviously-masked tail. NEVER the number: the admin JSON is pasted
+    into tickets and chats, and a reviewer's phone number is not ours to publish."""
+    if not number:
+        return number
+    if signing_key:
+        return reviewer_id(signing_key, number)
+    return "..." + number_tail(number)
+
+
+def public_review_items(items, signing_key=None):
+    """`items` safe to show an admin: reviewer numbers -> handles, participant `sender` removed.
+    Applied to a COPY -- the stored queue is untouched."""
+    out = []
+    for i in items:
+        j = {k: v for k, v in i.items() if k != "sender"}
+        for f in _REVIEWER_FIELDS:
+            if j.get(f):
+                j[f] = reviewer_handle(signing_key, j[f])
+        out.append(j)
+    return out
+
+
+def per_reviewer(items, signing_key=None):
     """Each reviewer's decisions, separately.
+
+    Keyed by HANDLE (`reviewer_handle`), not by the reviewer's JID.
 
     ⛔ THE POINT OF A ROSTER'S AUDIT TRAIL. Aggregate numbers hide the one thing worth
     watching: a reviewer whose edit rate is far BELOW the others is not necessarily faster,
@@ -1199,6 +1233,7 @@ def per_reviewer(items):
         who = i.get("decided_by")
         if not who or i.get("status") not in ("sent", "edited", "withheld"):
             continue
+        who = reviewer_handle(signing_key, who)
         row = out.setdefault(who, {"name": i.get("decided_by_name"), "sent": 0, "edited": 0,
                                    "withheld": 0, "latencies": []})
         row[i["status"]] += 1
@@ -1214,6 +1249,31 @@ def per_reviewer(items):
     return out
 
 
+# How many participants ONE reviewer can supervise without review turning into skimming. Source:
+# SUPERVISED_PILOT_RUNBOOK.md section 0 / eval/results/review_throughput_estimate_2026_10_10.json --
+# "3 x 2 questions/day ~ 6 min/day to clear" is the row that fits "a few minutes a day" for one reviewer;
+# 5 x 2 is ~10 and 10 x 2 is ~21. A planning figure, not a limit: /health MONITORS against it.
+PARTICIPANTS_PER_REVIEWER = 3
+
+
+def cohort_capacity(declared_size, reviewers):
+    """What the declared cohort size implies about the roster. Pure, so /health and tests share it."""
+    import math
+    need = math.ceil(declared_size / PARTICIPANTS_PER_REVIEWER) if declared_size else 0
+    return {
+        "roster_reviewers": reviewers,
+        "participants_per_reviewer": PARTICIPANTS_PER_REVIEWER,
+        "sized_for_reviewers": need,
+        "within_review_capacity": (None if not declared_size else need <= reviewers),
+        "capacity_note": (
+            None if not declared_size else
+            f"cohort of {declared_size} is sized for {need} reviewer(s); the roster has {reviewers}. "
+            + ("Growing the cohort needs more reviewers on the roster FIRST (review depth is never the lever)."
+               if need <= reviewers else
+               "OVER the review capacity: review will start to skim, which voids the R7 reading.")),
+    }
+
+
 def is_seeded_test(item) -> bool:
     """A `TEST-` review id is a labelled live-verification seed (mint_review_link serves ONLY
     these). 15 of them sit in the production queue from 2026-10-11 and, uncounted-for, they made
@@ -1222,7 +1282,7 @@ def is_seeded_test(item) -> bool:
     return str(item.get("review_id") or "").startswith("TEST-")
 
 
-def review_summary(items):
+def review_summary(items, signing_key=None):
     """The throughput and quality numbers the pilot exists to produce.
 
     ⚠️ SEEDED `TEST-` ITEMS ARE EXCLUDED (and counted in `excluded_test_items`, so the exclusion
@@ -1250,7 +1310,7 @@ def review_summary(items):
         "median_decision_latency_s": (None if not lat else sorted(lat)[len(lat) // 2]),
         "claimed_now": sum(1 for i in items
                            if i.get("status") == "pending" and i.get("claimed_by")),
-        "per_reviewer": per_reviewer(items),
+        "per_reviewer": per_reviewer(items, signing_key),
         "_why_no_rate_on_an_empty_queue": (
             "a 0.0 edit rate with nothing decided reads exactly like a perfect model; None "
             "cannot be mistaken for one"),

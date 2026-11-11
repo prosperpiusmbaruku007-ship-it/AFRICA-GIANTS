@@ -353,13 +353,18 @@ def test_per_reviewer_separates_the_two_reviewers_records():
     items.append(hc.apply_decision(_item(claimed_by=R2), "withhold", reviewer=R2,
                                    reviewer_name="Juma", reason="out of scope")[0])
 
-    by = hc.per_reviewer(items)
-    assert set(by) == {R1, R2}
-    assert by[R1]["decided"] == 3 and by[R1]["edit_or_withhold_rate"] == 0.0
-    assert by[R2]["decided"] == 2 and by[R2]["edit_or_withhold_rate"] == 1.0
-    assert by[R1]["name"] == "Asha" and by[R2]["name"] == "Juma"
+    # 2026-11-12: keyed by HANDLE, not by JID -- the admin view must never show a reviewer's number.
+    # The property under test (two reviewers' records stay SEPARATE) is unchanged.
+    key = "roster-test-key"
+    h1, h2 = hc.reviewer_id(key, R1), hc.reviewer_id(key, R2)
+    by = hc.per_reviewer(items, key)
+    assert set(by) == {h1, h2} and h1 != h2
+    assert not any("@" in k for k in by)
+    assert by[h1]["decided"] == 3 and by[h1]["edit_or_withhold_rate"] == 0.0
+    assert by[h2]["decided"] == 2 and by[h2]["edit_or_withhold_rate"] == 1.0
+    assert by[h1]["name"] == "Asha" and by[h2]["name"] == "Juma"
     # Reachable from the summary, so nobody has to know to ask for it.
-    assert hc.review_summary(items)["per_reviewer"][R2]["decided"] == 2
+    assert hc.review_summary(items, key)["per_reviewer"][h2]["decided"] == 2
 
 
 def test_per_reviewer_ignores_pending_and_unattributed_rows():
