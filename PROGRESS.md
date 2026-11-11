@@ -277,6 +277,39 @@ the founding question must return the bound answer in BOTH notations, with the f
 true, then ONE message from the `…5913` tester phone must produce the disclosure BEFORE the ack, recorded in its row, and a SECOND message must
 produce none.
 
+### 4g. 2026-11-12 (late) — THE MIRROR CASE IS FIXED; BOTH FIXES AND THE DISCLOSURE ARE DEPLOYED AND VERIFIED LIVE (`9ea1136`)
+
+**Founder's decisions:** the mirror case outranks the routing gaps ("a liable trader told they need not register is the confident-denial
+shape that ends the pilot") and was fixed before deploying; the **routing gaps** (*"je nisajili VAT?"*, *"nasajili?"*, every English
+VAT-registration question) are **QUEUED FOR AFTER THE PILOT STARTS** — they fall to the fact path, "weaker but not the confident-wrong case".
+
+**The lower-bound fix.** *"Mauzo yangu ya mwaka yamezidi TZS 100 milioni… ni lazima kusajili VAT?"* was answered *"hapana, mauzo yako ya TZS
+100,000,000 hayajafikia kizingiti"*. A lower-bound cue (`yamezidi`, `zaidi ya`, `juu ya`, `above`, `over`, `exceeded`…) is now read as **"at least B"**:
+- VAT: **settled** ("Ndiyo, unatakiwa kujisajili VAT") only when the stated period's threshold is ≤ B (250M floor over a year; 100M floor over six
+  months); a floor under the line, or **no period at all**, asks for the figure and **never says hapana**. A floor over an UNSTATED period is not
+  assumed to be annual (it could be two years).
+- Presumptive: a floor settles nothing — asks; **never computes on B** (the old answer put a 40M trader's tax at 1.6M by luck and a 2M-floor trader on
+  the zero band).
+- **NEGATION WINS:** *"does not exceed TZS 200 million"* contains the lower cue `exceed` but is an UPPER bound; asserted by test.
+- **Sweep + probes:** the corpora hold NO lower-bound question, so probes are authored — 9 lower + 3 traps (*"zaidi ya HAYO"* = moreover, *"juu ya
+  VAT"* = about VAT, *"zaidi ya miezi 6"* = a period), both notations. **Regression sweep: 87 engine-routed strings; the pre-existing corpus is
+  byte-identical; only my probes and test literals change.**
+
+**The disclosure alias (minor, but the first thing a participant sees).** `parse_webhook` already replaces a linked-ID sender with its `senderPn`
+phone, so the disclosure was already keyed on the phone whenever the payload carried one. The residual gap was one person seen under BOTH forms; the
+`@lid` is now recorded as an **alias** beside the phone key and checked first, **in either order**. An alias only covers someone actually already told.
+
+**LIVE, `chike-inference` `9ea1136` (T4 served; 10 s scheduling, 36 s load): 12 / 12 checks.** Lower founding question in BOTH notations → asks, no
+*hapana*; 250M floor → settled *Ndiyo*; presumptive floor → asks; **upper founding question in both notations → "hapana, hujakifikia" for the 12-month
+limb with the 6-month limb carried, and *"sina taarifa"* on voluntary registration**; SDL "6 milioni" → TZS 210,000; VAT "120 milioni" → required; the
+plain-figure, "chini ya sheria" trap and scale-first SDL negatives unchanged; the EFD question → the guard's correct replacement copy.
+**LIVE, `chike-whatsapp` `9ea1136`:** `disclosure.enabled: true`, `participants_told: 0`, `stuck_sending: 0`; cohort **3**, `sized_for_reviewers: 1`,
+`within_review_capacity: true`; `can_issue_links: true`; bridge `open`, `lease_holders: 1`.
+
+**LIVE TEST THE FOUNDER IS RUNNING:** one message from the `…5913` tester phone must produce the disclosure BEFORE the ack, recorded in its row
+(`disclosure_state`), and a second message must produce none. (That phone's handle `b5908217c09e` has no disclosure record, so it is a genuine first
+message to the disclosure code.)
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy
