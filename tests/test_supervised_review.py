@@ -49,7 +49,13 @@ async def _ask_ok(_message):
 
 
 def _run(coro):
-    return asyncio.get_event_loop().run_until_complete(coro)
+    """A PRIVATE loop: asyncio.run() in sibling files unsets the global loop, so
+    get_event_loop() made this file order-dependent (it failed after test_whatsapp_handler)."""
+    loop = asyncio.new_event_loop()
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()
 
 
 # ── the hold itself ────────────────────────────────────────────────────────────────────

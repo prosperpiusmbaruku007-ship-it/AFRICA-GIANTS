@@ -59,7 +59,7 @@ async def _ask_ok(_m):
 
 def _item(claimed_by=R1):
     r = _Recorder()
-    row = asyncio.get_event_loop().run_until_complete(
+    row = _run(
         hc.deliver("+255700000007", "Je, SDL inanihusu?", _ask_ok, r.send,
                    _settings(), hold_reply=r.hold))
     it = hc.review_item(row=row, sender="+255700000007", draft=row["reply"],
@@ -438,7 +438,7 @@ def test_the_cohort_size_does_NOT_gate_delivery():
     against the participants actually seen instead, so over-enrolment is visible without
     building something that can turn an employer away."""
     r = _Recorder()
-    row = asyncio.get_event_loop().run_until_complete(
+    row = _run(
         hc.deliver("+255700000099", "swali", _ask_ok, r.send,
                    _settings(cohort_size=1), hold_reply=r.hold))
     assert row["supervision"] == "held", "cohort_size changed the delivery path"
