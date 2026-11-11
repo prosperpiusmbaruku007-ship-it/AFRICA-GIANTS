@@ -1,5 +1,100 @@
 # Africa Giants — Project Progress
 
+## 📋 2026-11-11 — **WHATSAPP MOVED OFF WAPPFLY ONTO OUR OWN BRIDGE; SUPERVISED REVIEW NOW SURVIVES A 20-MINUTE GPU START; THE "OFFLINE" SUITE WAS NOT OFFLINE.**
+
+> **Provenance of this entry.** Commit-derived facts cite their SHA. Two items — *why* Wappfly was
+> left, and *that* the bridge has delivered end to end — are **the founder's account relayed to this
+> session**; this session did not observe either, and the dated specifics of the three failures are
+> **not in the record it was given** (add them). Recorded as relayed, not as verified.
+
+### 1. The move off Wappfly to our own Baileys bridge (`chike-bridge`, Modal)
+
+- **Why (founder's account):** three silent failures and a status endpoint that could not be trusted.
+  Wappfly's `GET /api/status` proves the *session* is up, not that inbound is being forwarded —
+  `b9e3612` says so in its own message, and `/health` says the round-trip canary (needs a second
+  number) is not built. A transport whose health cannot be read from outside is an unobservable
+  dependency under a supervised pilot whose whole safety case is *"every reply is read"*.
+- **Transport defaults to the bridge** (`42ba644`); the Wappfly path stays configured but unused.
+- **`ok` means a delivery receipt.** Accepted-without-receipt is `PENDING_RECEIPT`: never retried, no
+  fallback (a resend is a duplicate to a real person). The bridge flags sends past a ceiling by email.
+  Rows record `reply_address_kind` and `send_state`; the send ledger is persisted so a restart forgets nothing.
+- **Single-socket lease** (`276e980`): one container holds the WhatsApp socket, lease-fenced. Poll and
+  `/health` read the bridge's own library state (lease holders, containers, disconnects); pre-flight gate 3b checks it.
+- **Durable auth state:** Baileys 7.0.0-rc14 (**a release candidate, pinned exactly**); keys are written to a
+  Modal Dict on every key change, so a container death does not unpair the number.
+- **Live pairing found a real defect** (`8d0752b`): one Dict round trip per pre-key (~800) timed out
+  Baileys' commit (*"failed to commit mutations"*). Fixed by loading auth state once and committing in one
+  batched write. Only post-pairing closes count toward `disconnects_24h`.
+- **First end-to-end delivery on the bridge (founder's report).** Receipt lags measured in `92f2290`:
+  **3, 7, 10, 178, 1298 s** — which is why the receipt ceiling is **60 min**.
+- The real-build pre-flight gate is **skipped for the bridge by recorded decision** (`1a558db`): a
+  throwaway build would compete for the single-socket lease.
+
+### 2. GPU cold start, and the supervised wait (`92f2290`)
+
+- **Finding:** on 2026-11-11 the GPU took **~20 min** to start; the handler's 240 s timeout fired and an
+  apology went to review; **the model answered correctly at +21 min with nobody listening.**
+- **Supervised mode now waits up to `SUPERVISED_MODEL_TIMEOUT_S` (1800)**; the fallback is for a genuine
+  failure. A failed question gets its own **`MODELI IMESHINDWA`** push and page (retry / write by hand /
+  send apology / withhold). Retry re-asks with no new acks and sends nothing.
+- Re-notify capped at 3, then a daily digest. A pending row is rewritten when the late receipt lands
+  (original state kept). `decision_latency_s` counts from the **first push**.
+- **Receipt lag describes the recipient's phone, not send failure.** An unreceipted send is classed
+  `bridge_suspect` (hourly) vs `recipient_offline` (daily). Alert wording is still to be split when
+  alerting returns (open).
+- ⚠️ **The 30-min wait makes slow starts SAFE, not FAST.** A 9pm asker still waits. Open: whether Modal
+  accepts several GPU types so a scarce T4 cannot stall start-up, and the cost of warming before sessions.
+
+### 3. Alerting is OFF, held by R35 (`3619b2b`) — and the recruiting condition
+
+- Pre-flight gate 3b is **held, not removed**: it WARNS and prints `ALERTING IS OFF` while live, and
+  **refuses again by itself on 2026-11-26** (hold expires 2026-11-25; in the hold registry and the runbook).
+- **THE CONDITION: NO PARTICIPANT IS RECRUITED WHILE ALERTING IS OFF.** Without it a bridge disconnect,
+  two lease-holders or a stuck receipt would be silent under a cohort whose safety rests on review.
+
+### 4. Test isolation: the "offline" suite was reaching production Modal (this session)
+
+- **Symptom:** the pre-push hook exited 1 with an **empty log**. **Cause (partly inferred):** the suite ran
+  **490 s** against the ~90 s the hook documents; pytest redirected to a file is block-buffered, so a run
+  killed by a caller's timeout leaves 0 bytes. A failure was never reproduced — 2198 passed, exit 0.
+- **Why it was long:** `test_health_reports_supervised_beside_…` called the real `health()`, whose
+  `TRANSCRIPTS.keys()` is a live read of the **production** `chike-transcripts-kv` Dict: 3 s to 114 s
+  depending on the Tanzanian link. The October fix marked HTTP tests `network`; **Modal's gRPC client
+  went through none of that.**
+- **Worse than slow: tests WROTE to production.** `_write_row` stores into `TRANSCRIPTS`; the roster tests
+  stubbed `REVIEW_QUEUE` and left the other Dicts live. **46 of the 53 rows in the live transcript store are
+  test pollution** (`"Je, SDL inanihusu?"` from `tests/test_review_roster.py:63`, sender hash `6524b272ba18`)
+  — in the dataset the pilot exists to collect. **Not deleted; awaiting the founder's word.** The other
+  rows (`220401cbf17f`, `b5908217c09e`) are not from the tests.
+- **The guard (`tests/conftest.py`):** for every test not marked `network`/`integration`, any non-loopback
+  `connect`/`connect_ex`/`create_connection`/`getaddrinfo` fails with a message naming the fix. It covers
+  requests, httpx, smtplib and every Modal object. Found by planting, not reasoning:
+  - **The exception is a `BaseException`.** Modal's client retried a refused DNS lookup **17 times (~2 min)**
+    because it catches `Exception`.
+  - **The violation is also RECORDED**, and a passing test with a recorded violation is flipped to FAILED —
+    `health()` wraps its I/O in `except Exception`, which would otherwise leave the test green having connected.
+  - **My first plant certified nothing:** `modal.Dict.keys()` is a *lazy generator*; unconsumed, it never
+    touches the network, so the guard looked as if it had not fired. (R26's second half: suspect the specimen.)
+- **What it caught, listed before fixing (6):** `test_bridge_watch::test_health_reports_the_bridges_own_state`;
+  `test_review_roster::{test_health_reports_supervised…, test_opening_a_draft_twice…, test_TWO_reviewers_contending…}`;
+  `test_whatsapp_handler::{test_health_reports_key_presence…, test_every_credential_is_fingerprinted…}`.
+  One cause. Fixed with **`isolate_modal_stores`**, which enumerates every `modal.Dict` on the loaded module
+  (a Dict added next month is covered) and asserts a non-empty population.
+- **Proved (R26):** `tests/test_offline_guard.py` blocks each route, passes loopback, exempts `network`,
+  fails a *swallowed* violation, fails a wrapped Modal Dict read in a subprocess, and checks the helper
+  leaves no live Dict.
+- **Result:** full suite **78–86 s** (was 490 s). The three mid-run failures seen earlier were never captured
+  and never reproduced; `--junitxml` is now used so a recurrence leaves names.
+
+### 5. Open
+- 46 polluted production transcript rows (delete?). Withholding the real "Habari, hi,  hellow" draft needs a
+  roster reviewer's own link — this session cannot decide as a reviewer without inventing an attribution.
+- GPU: multi-type fallback and warming cost. Receipt-lag wording in alerts.
+- PROGRESS.md had no entry between 2026-10-09 and this one; the October→November arc (supervised cohort,
+  roster, D-FIDELITY-9) lives in the commit log and CLAUDE.md only.
+
+---
+
 ## 📋 2026-10-09 (fifth pass) — **THE STATEMENT ROUTE IS LIVE AND VERIFIED. AND THE PRE-REGISTRATION SAYS THE REGEX HEADLINE *CANNOT* MOVE — BECAUSE IT WAS ALREADY CREDITING EVERY ROW THIS CHANGE FIXES.**
 
 ### 1. ✅ SHIPPED: the row-9 regen, the statement route, and the threshold renderer — three gates, two deploys, no downtime

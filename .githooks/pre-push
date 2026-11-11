@@ -70,9 +70,10 @@ if [ $SCAN -ne 0 ]; then
     exit 1
 fi
 
-echo "[pre-push] offline suite (this takes ~90s) ..."
+echo "[pre-push] offline suite (this takes ~90s (78-86s measured 2026-11-11, once truly offline)) ..."
 # NO PIPE. The exit status of pytest is read directly; nothing consumes it.
-PYTHONIOENCODING=utf-8 PYTHONUTF8=1 python -m pytest "$REPO/tests" -q > "$LOG_DIR/pytest.txt" 2>&1
+# UNBUFFERED: a run killed by a caller timeout used to leave a 0-byte log (block-buffered), hiding which test was running.
+PYTHONUNBUFFERED=1 PYTHONIOENCODING=utf-8 PYTHONUTF8=1 python -m pytest "$REPO/tests" -q > "$LOG_DIR/pytest.txt" 2>&1
 STATUS=$?
 tail -n 3 "$LOG_DIR/pytest.txt"
 

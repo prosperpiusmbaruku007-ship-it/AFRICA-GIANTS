@@ -606,6 +606,8 @@ def test_health_reports_key_presence_without_leaking_values(monkeypatch):
         os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"))
     mw = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mw)
+    from conftest import isolate_modal_stores
+    isolate_modal_stores(mw, monkeypatch)
     monkeypatch.setenv("WAPPFLY_TOKEN", "a-real-looking-token-value")
     monkeypatch.delenv("SENDER_SALT", raising=False)
     # /health now makes one live read-only status call; a test must not reach the network.
@@ -671,6 +673,8 @@ def test_every_credential_is_fingerprinted_not_just_the_one_in_dispute(monkeypat
         os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"))
     mw = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mw)
+    from conftest import isolate_modal_stores
+    isolate_modal_stores(mw, monkeypatch)
     for k in mw.EXPECTED_KEYS:
         monkeypatch.setenv(k, "value-for-" + k)
     h = mw.health.get_raw_f()()

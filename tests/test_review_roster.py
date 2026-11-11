@@ -486,6 +486,8 @@ def test_health_reports_supervised_beside_declared_size_and_participants_seen(mo
     pkg.handler_core = hc
     monkeypatch.setitem(sys.modules, "chike_whatsapp", pkg)
     monkeypatch.setitem(sys.modules, "chike_whatsapp.handler_core", hc)
+    from conftest import isolate_modal_stores
+    isolate_modal_stores(mw, monkeypatch)
     monkeypatch.setenv("SUPERVISED", "1")
     monkeypatch.setenv("COHORT_SIZE", "10")
     h = mw.health.get_raw_f()()
@@ -540,7 +542,8 @@ def _load_app(monkeypatch, urls=True):
     pkg.handler_core = hc
     monkeypatch.setitem(sys.modules, "chike_whatsapp", pkg)
     monkeypatch.setitem(sys.modules, "chike_whatsapp.handler_core", hc)
-    mw.REVIEW_QUEUE = {}
+    from conftest import isolate_modal_stores
+    isolate_modal_stores(mw, monkeypatch)
     return mw
 
 

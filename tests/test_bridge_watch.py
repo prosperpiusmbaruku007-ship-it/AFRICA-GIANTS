@@ -40,6 +40,9 @@ def _load_mw(monkeypatch=None):
         "chike_modal_whatsapp_bw", os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"))
     mw = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mw)
+    if monkeypatch is not None:
+        from conftest import isolate_modal_stores
+        isolate_modal_stores(mw, monkeypatch)
     return mw
 
 
