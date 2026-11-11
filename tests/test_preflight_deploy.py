@@ -205,7 +205,8 @@ def test_3b_each_single_defect_blocks_alone(mutate):
     import copy
     h = copy.deepcopy(_GOOD_WA)
     mutate(h)
-    assert pf.check_whatsapp_health(h), "a single defect passed the gate"
+    # dated AFTER the alerting hold's expiry, so the alert-keys mutations are judged as defects
+    assert pf.check_whatsapp_health(h, today="2026-12-01"), "a single defect passed the gate"
 
 
 @pytest.mark.parametrize("payload", [None, {}, {"cohort": None, "roster": None}])
@@ -247,3 +248,40 @@ def test_bridge_refuses_the_real_build_gate_and_passes_with_no_build(monkeypatch
     monkeypatch.setattr(sys, "argv", ["p", "chike-whatsapp/bridge/modal_bridge.py", "--no-build"])
     assert pf.main() == 0
     assert "BY DECISION" in capsys.readouterr().out
+
+
+# -- THE ALERTING HOLD (R35): held, not removed; loud while live; refusing again on expiry ----
+def _no_alerting():
+    import copy
+    h = copy.deepcopy(_GOOD_WA)
+    h["bridge"]["alerting"] = {"configured": False,
+                               "missing": ["ALERT_SMTP_HOST", "ALERT_SMTP_USER",
+                                           "ALERT_SMTP_PASS", "ALERT_TO"]}
+    return h
+
+
+def test_while_the_hold_is_live_missing_alerting_warns_loudly_and_does_not_refuse():
+    del pf.WARNINGS[:]
+    assert pf.check_whatsapp_health(_no_alerting(), today="2026-11-12") == []
+    text = " ".join(pf.WARNINGS)
+    assert "ALERTING IS OFF" in text and "NO PARTICIPANT MAY BE RECRUITED" in text
+
+
+def test_the_refusal_comes_back_by_itself_on_the_expiry_date():
+    del pf.WARNINGS[:]
+    assert pf.check_whatsapp_health(_no_alerting(), today="2026-11-25") == [], "expiry day still held"
+    fails = pf.check_whatsapp_health(_no_alerting(), today="2026-11-26")
+    assert fails and "alerting" in fails[0].lower() and "hold expired 2026-11-25" in fails[0]
+
+
+def test_configured_alerting_produces_no_warning():
+    del pf.WARNINGS[:]
+    assert pf.check_whatsapp_health(_GOOD_WA, today="2026-11-12") == []
+    assert pf.WARNINGS == []
+
+
+def test_the_hold_is_registered_dated_and_records_the_recruiting_condition():
+    state, note = pf.alerting_hold("2026-11-12")
+    assert state == "active"
+    assert "NO PARTICIPANT IS RECRUITED WHILE ALERTING IS OFF" in note
+    assert pf.alerting_hold("2026-11-26")[0] == "expired"

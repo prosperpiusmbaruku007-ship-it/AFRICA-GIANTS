@@ -329,3 +329,23 @@ reading no longer applies.
 Remove `SUPERVISED` from the secret (or set it to `0`), redeploy per §1, and **re-check
 `/health` shows `supervised: false`**. Clear any pending items first — turning supervision off
 does not send them, and nothing else will.
+
+---
+
+## ⛔ ALERTING IS OFF (hold until 2026-11-25) — NO PARTICIPANT IS RECRUITED WHILE IT IS
+
+The bridge watcher (`poll_bridge_status`, every 2 minutes) can detect a dropped connection, two
+lease-holders, or a send stuck without a delivery receipt — but it tells you **by email**, and the
+four alert keys (`ALERT_SMTP_HOST`, `ALERT_SMTP_USER`, `ALERT_SMTP_PASS`, `ALERT_TO`) are not yet in
+the `chike-whatsapp` secret. The founder deferred them on 2026-11-11 to finish the bridge first.
+
+- Pre-flight gate 3b is **held, not removed** (R35): it WARNS and prints `ALERTING IS OFF` while the
+  hold is live, and **refuses again by itself on 2026-11-26**. The hold is the row `bridge alerting
+  gate (pre-flight 3b: ALERT_SMTP_* / ALERT_TO)` in `eval/controls/audit_control_fires.py`, and
+  `tests/test_control_hold_expiry.py` fails when it lapses.
+- **THE CONDITION: no participant is recruited while alerting is off.** Without it a bridge
+  disconnect is silent unless someone reads `/health` — the exact failure the bridge exists to end
+  (Wappfly's dashboard said "connected" while dead). Test traffic from the founder's own phone is
+  fine; a participant is not.
+- To resolve: add the four keys to the secret, redeploy, and confirm `/health` →
+  `bridge.alerting.configured: true`. Then mark the hold resolved in the registry.

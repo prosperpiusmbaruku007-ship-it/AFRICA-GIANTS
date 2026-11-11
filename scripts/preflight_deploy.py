@@ -53,6 +53,36 @@ import sys
 import time
 import urllib.request
 
+# Non-fatal findings printed by main(): a held gate must be LOUD, never merely absent.
+WARNINGS = []
+
+_ALERT_HOLD_ID = "bridge alerting gate (pre-flight 3b: ALERT_SMTP_* / ALERT_TO)"
+
+
+def alerting_hold(today=None):
+    """('active'|'expired'|'none', text). The hold lives in the R35 registry
+    (eval/controls/audit_control_fires.py HOLDS), so it carries an expiry and a test fails when
+    it passes. While active, missing alert keys WARN; once expired the gate REFUSES again."""
+    import datetime
+    import importlib.util
+    path = os.path.join(REPO, "eval", "controls", "audit_control_fires.py")
+    cwd = os.getcwd()
+    try:
+        spec = importlib.util.spec_from_file_location("_audit_control_fires_pf", path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        hold = mod.HOLDS.get(_ALERT_HOLD_ID)
+    except Exception as e:                                           # noqa: BLE001
+        return "none", f"hold registry unreadable ({type(e).__name__}); treated as no hold"
+    finally:
+        os.chdir(cwd)
+    if not hold or hold.get("state") != "HELD" or not hold.get("expires"):
+        return "none", "no live hold"
+    today = today or datetime.date.today().isoformat()
+    if today > hold["expires"]:
+        return "expired", f"hold expired {hold['expires']}"
+    return "active", f"hold until {hold['expires']}: {hold['why']}"
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 
@@ -141,7 +171,7 @@ WHATSAPP_APP = "chike-whatsapp"
 BRIDGE_APP = "chike-bridge"
 
 
-def check_whatsapp_health(h):
+def check_whatsapp_health(h, today=None):
     """Pure. Returns a list of failures for a /health payload; empty means the image is
     deployable as a supervised pilot. Missing fields FAIL — cannot evaluate is not a pass."""
     fails = []
@@ -184,11 +214,22 @@ def check_whatsapp_health(h):
             f"sockets on one session (they log each other out); zero means nothing is connected.")
     alerting = w.get("alerting") or {}
     if alerting.get("configured") is not True:
-        fails.append(
-            f"bridge.alerting.configured is {alerting.get('configured')!r} "
-            f"(missing: {alerting.get('missing')!r}); the watcher can detect a dropped "
-            f"session but nothing would tell anyone. Add ALERT_SMTP_HOST, ALERT_SMTP_USER, "
-            f"ALERT_SMTP_PASS and ALERT_TO to the chike-whatsapp secret.")
+        hold_state, hold_note = alerting_hold(today)
+        if hold_state == "active":
+            # HELD, not removed (R35): a dated, registered hold turns the refusal into a loud
+            # warning, and the refusal comes back by itself on the expiry date.
+            WARNINGS.append(
+                f"ALERTING IS OFF (missing: {alerting.get('missing')!r}). A bridge disconnect, "
+                f"two lease-holders or a send stuck without a receipt will NOT be emailed; it "
+                f"is visible only if someone reads /health. This deploy is NOT fully "
+                f"protected. NO PARTICIPANT MAY BE RECRUITED WHILE ALERTING IS OFF. "
+                f"({hold_note.split(':')[0]})")
+        else:
+            fails.append(
+                f"bridge.alerting.configured is {alerting.get('configured')!r} "
+                f"(missing: {alerting.get('missing')!r}); the watcher can detect a dropped "
+                f"session but nothing would tell anyone ({hold_note}). Add ALERT_SMTP_HOST, "
+                f"ALERT_SMTP_USER, ALERT_SMTP_PASS and ALERT_TO to the chike-whatsapp secret.")
     return fails
 
 
@@ -279,6 +320,7 @@ def main():
             return 2
         app_name = m.group(1)
 
+    del WARNINGS[:]
     print(f"[preflight] {args.app_file}  (live app: {app_name})")
     all_fails = []
 
@@ -314,6 +356,10 @@ def main():
         all_fails += build
 
     print()
+    for w in WARNINGS:
+        print(f"  ⚠️  {w}")
+    if WARNINGS:
+        print()
     for f in all_fails:
         print(f"  ⛔ {f}")
     if all_fails:

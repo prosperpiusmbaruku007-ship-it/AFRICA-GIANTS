@@ -213,6 +213,24 @@ HOLDS = {
     # "WCF ni ya mwajiri au mfanyakazi?" as a KNOWN NEAR-MISS, deliberately not widened for.
     # That note is dated nowhere and has no owner, which is precisely the shape R35 was written
     # about. This row gives it a date.
+    # ── PRE-FLIGHT GATE 3b's ALERT-KEYS CHECK, held 2026-11-11 by the founder ────────────
+    # Not a control the audit exercises -- it is registered here so R35 applies to it: a hold
+    # without a date lapses. scripts/preflight_deploy.py reads this row, prints that alerting is
+    # OFF while the hold is live, and goes back to REFUSING the day it expires.
+    'bridge alerting gate (pre-flight 3b: ALERT_SMTP_* / ALERT_TO)': {
+        'state': 'HELD',
+        'decided': '2026-11-11',
+        'expires': '2026-11-25',
+        'why': ('The founder deferred setting up alert email to finish the message bridge '
+                'first. The gate stays; while this hold is live a missing ALERT_* key is a '
+                'WARNING and the pre-flight prints that ALERTING IS OFF, so the deploy cannot '
+                'be mistaken for a fully protected one. CONDITION: NO PARTICIPANT IS RECRUITED '
+                'WHILE ALERTING IS OFF. Without it a bridge disconnect, two lease-holders or a '
+                'send stuck without a delivery receipt is silent unless someone happens to read '
+                '/health -- the exact failure the bridge exists to end (Wappfly said "connected" '
+                'while dead). Resolve by adding the four keys to the chike-whatsapp secret, or '
+                'take the decision again here with a new date.'),
+    },
     'incidence renderer route': {
         'state': 'HELD',
         'decided': '2026-10-10',
