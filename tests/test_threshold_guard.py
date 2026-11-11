@@ -161,3 +161,75 @@ def test_N3b_admits_only_the_vat_magnitudes_never_the_whole_table():
         "Kizingiti cha EFD ni TZS 11,000,000, au usajili wa VAT.")
     assert not fidelity.body_states_wrong_threshold(
         "Lazima utumie EFD ukifikia kizingiti cha VAT cha TZS 200,000,000.")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+# 2026-11-12 — THE LIVE MISS: "TZS 11 milioni" (NUMBER BEFORE THE SCALE WORD)
+#
+# Delivered live through the supervised pilot, build bc4eda6, 21:43 UTC, and the reviewer account
+# sent it unedited. The fact it contradicts was RETRIEVED AT RANK 2 and states the answer
+# ("Ndiyo, kwa default, bila kujali kiasi cha mauzo yako -- HAKUNA kizingiti") -- so this is the
+# rank-1..3-and-still-wrong GENERATION class, and D-FIDELITY-7 is the only layer that can reach it.
+#
+# IT DID NOT FIRE BECAUSE THE PARSER READS "TZS 11 milioni" AS TWO AMOUNTS: 11 (under the money
+# floor) and a bare 1,000,000 (dropped by N2, because another amount sits between it and the
+# frame word). No amount ever equals 11,000,000. "milioni 11" (scale first) parses correctly --
+# every earlier specimen used it, which is R33 exactly: the probe set shared its author's notation.
+#
+# THE POSITIVE LIMB IS strict-xfail UNTIL THE PARSER IS FIXED: a red suite would block the pre-push
+# hook and a deleted test would erase the specimen. strict=True means that the day the parser is
+# fixed this test FAILS (as XPASS) and forces the marker's removal -- the gap cannot be closed
+# silently, and cannot be forgotten either.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+LIVE_QUESTION_2026_11_12 = "Efd ni lazima kwa biashara yenye mauzo ya milioni 15"
+LIVE_REPLY_2026_11_12 = (
+    "Hapana, si lazima kwa biashara yenye mauzo ya milioni 15 pekee. EFD inahitajika tu pale "
+    "unapofikia kizingiti cha TZS 11 milioni kwa mwaka au TZS 100 milioni kwa miezi 6. Ukifikia "
+    "kizingiti hicho, utatakiwa kujiandikisha kwa VAT na kupata EFD kutoka kwa msambazaji "
+    "aliyeidhinishwa. Thibitisha na TRA (tra.go.tz).")
+# The CORRECT answer, taken verbatim from the served index row 58 that was at rank 2 for that
+# very question (chike-inference/rag_facts_text.json[58]).
+CORRECT_REPLY_2026_11_12 = (
+    "Ndiyo, kwa default, bila kujali kiasi cha mauzo yako -- HAKUNA kizingiti cha mauzo "
+    "unaosubiri kufikia. Msamaha ni TU kwa taarifa rasmi ya TRA (Commissioner-General) "
+    "inayokutaja wewe au kundi lako.")
+
+
+@pytest.mark.xfail(strict=True, reason=(
+    "KNOWN LIVE GAP 2026-11-12: swahili_numbers parses 'TZS 11 milioni' as [11, 1000000], so no "
+    "amount equals 11,000,000 and D-FIDELITY-7 never sees the fabrication. Fix the parser, then "
+    "delete this marker (strict: it will XPASS and fail until you do)."))
+def test_live_2026_11_12_fabricated_efd_threshold_in_number_first_notation_is_flagged():
+    from chike import fidelity
+    flags = fidelity.stated_wrong_thresholds(LIVE_REPLY_2026_11_12)
+    assert flags and flags[0][0] == "efd", flags
+
+
+def test_live_2026_11_12_the_correct_reply_is_not_flagged():
+    """The other direction (R17 step 2): row 58's correct answer must pass clean, in the same
+    notation family the fix will have to learn."""
+    from chike import fidelity
+    assert fidelity.stated_wrong_thresholds(CORRECT_REPLY_2026_11_12) == []
+
+
+@pytest.mark.parametrize("body", [
+    "EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 11 milioni -- EFD inahitajika kwa kila mtu.",
+    "Kizingiti cha kusajili VAT ni TZS 200 milioni kwa miezi 12. EFD yenyewe haina kizingiti.",
+])
+def test_live_2026_11_12_number_first_notation_negations_and_lawful_figures_stay_clean(body):
+    """Twin of the positive specimen in the SAME notation, so a fix cannot be 'flag every
+    N milioni'. NB: these pass TODAY, vacuously -- the parser cannot see the amount at all. They
+    become meaningful only once it can, which is exactly when they have to keep passing."""
+    from chike import fidelity
+    assert fidelity.stated_wrong_thresholds(body) == []
+
+
+@pytest.mark.xfail(strict=True, reason=(
+    "KNOWN GAP 2026-11-12, SAME ROOT CAUSE, WIDER BLAST RADIUS: the shared parser also feeds the "
+    "compute engines. 'mishahara ... ni 6 milioni' hands compute_sdl TZS 1,000,000 (SDL 35,000) "
+    "instead of 6,000,000 (SDL 210,000). Fix swahili_numbers once; both specimens flip."))
+def test_live_2026_11_12_number_first_scale_words_parse_to_the_full_amount():
+    from chike.swahili_numbers import parse_amounts, sole_plausible_amount
+    assert 11_000_000 in {int(a) for a in parse_amounts("TZS 11 milioni")}
+    assert sole_plausible_amount("mishahara yote kwa mwezi ni 6 milioni") == 6_000_000
+    assert sole_plausible_amount("mauzo ya 400 elfu") == 400_000
