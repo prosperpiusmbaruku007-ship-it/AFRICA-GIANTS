@@ -266,7 +266,7 @@ def test_the_offline_class_is_daily_and_the_bridge_class_is_hourly():
 def test_seeded_test_items_are_excluded_from_every_pilot_statistic_but_visibly():
     """Planted (R26): 15 live TEST- seeds made the edit rate 9/15 before any participant. Plant
     one TEST- and one real item; the summary must see only the real one, and say it excluded one."""
-    import handler_core as _hc
+    _hc = core
     seed = {"review_id": "TEST-1791721161B", "status": "withheld", "decided_by": "r1",
             "decided_by_name": "Prosper", "decision_latency_s": 5}
     real = {"review_id": "2026-11-11T20:54:51+00:00-b5908217", "status": "sent",
@@ -280,3 +280,29 @@ def test_seeded_test_items_are_excluded_from_every_pilot_statistic_but_visibly()
     # the clean case: with ONLY the seed, there is nothing to report -- None, not 1.0
     only = _hc.review_summary([seed])
     assert only["decided"] == 0 and only["edit_or_withhold_rate"] is None
+
+
+def test_a_pending_row_is_registered_under_the_filename_it_was_stored_under(monkeypatch):
+    """2026-11-12: _write_row called transcript_filename() twice (random suffix each time), so
+    PENDING_ROWS named a file that was never written and the late receipt could not reconcile it.
+    Assert the registry value IS a key of the store -- the property, not the code shape."""
+    import importlib.util, sys, types
+    _hc = core
+    from conftest import isolate_modal_stores
+    pkg = types.ModuleType("chike_whatsapp")
+    pkg.handler_core = _hc
+    monkeypatch.setitem(sys.modules, "chike_whatsapp", pkg)
+    monkeypatch.setitem(sys.modules, "chike_whatsapp.handler_core", _hc)
+    spec = importlib.util.spec_from_file_location(
+        "chike_mw_pending_probe", os.path.join(os.path.dirname(__file__), "..", "chike-whatsapp",
+                                               "modal_whatsapp.py"))
+    mw = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mw)
+    isolate_modal_stores(mw, monkeypatch)
+    row = {"ts": "2026-11-12T00:00:00+00:00", "sender_hash": "abc123def456", "kind": "review",
+           "send_state": "pending_receipt",
+           "send_error": "PENDING_RECEIPT: id=3EB0TESTID status=server_ack"}
+    assert _hc.pending_message_id(row) == "3EB0TESTID"
+    mw._write_row(row)
+    registered = mw.PENDING_ROWS["3EB0TESTID"]
+    assert registered in mw.TRANSCRIPTS, "registry points at a file that was never stored"

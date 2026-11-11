@@ -248,13 +248,19 @@ def _write_row(row):
     the store has to actually work."""
     core = _core()
     line = core.row_to_line(row)
+    # ONE FILENAME, COMPUTED ONCE. transcript_filename() draws a RANDOM suffix on every call, and
+    # this function used to call it twice -- once to store the row, once to register it for late-
+    # receipt reconciliation. The registry therefore named a file that did not exist, so every
+    # pending row stayed `pending_receipt` forever (seen 2026-11-12: ledger said `read`, row said
+    # pending, the two names differing only in their last six characters).
+    fname = core.transcript_filename(row)
     try:
-        TRANSCRIPTS[core.transcript_filename(row)] = row
+        TRANSCRIPTS[fname] = row
     except Exception as e:                                           # noqa: BLE001
         print(f"[transcript] WRITE FAILED ({type(e).__name__}: {e})")
     try:
         if row.get("send_state") == "pending_receipt" and core.pending_message_id(row):
-            PENDING_ROWS[core.pending_message_id(row)] = core.transcript_filename(row)
+            PENDING_ROWS[core.pending_message_id(row)] = fname
     except Exception as e:                                           # noqa: BLE001
         print(f"[transcript] pending row not registered ({type(e).__name__})")
     print("[transcript] " + line, flush=True)
