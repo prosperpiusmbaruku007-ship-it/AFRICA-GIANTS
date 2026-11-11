@@ -289,7 +289,7 @@ def _write_row(row):
 
 @app.function(image=image, secrets=SECRETS,
               timeout=2400, retries=0)
-async def answer_and_send(sender: str, text: str, retry_of: str = None):
+async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_lid: str = None):
     """One question, end to end. timeout=2400 leaves headroom over the 1800s supervised model
     wait (240s unsupervised) plus the acks and two send attempts.
 
@@ -367,7 +367,7 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None):
     # reviewer-requested RETRY (the participant is long past their first message).
     disclosure = {}
     if settings.disclosure_enabled and not retry_of:
-        disclosure = await _ensure_disclosure(sender, settings)
+        disclosure = await _ensure_disclosure(sender, settings, alias=sender_lid)
     row = await core.deliver(
         sender, text, ask_capturing if settings.supervised else ask,
         _send_once, settings, BUILD,
@@ -382,17 +382,18 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None):
 
 @app.function(image=image, secrets=SECRETS,
               timeout=300, retries=0)
-async def greet_and_send(sender: str):
+async def greet_and_send(sender: str, sender_lid: str = None):
     core = _core()
     settings = _settings()
-    disclosure = (await _ensure_disclosure(sender, settings)) if settings.disclosure_enabled else {}
+    disclosure = ((await _ensure_disclosure(sender, settings, alias=sender_lid))
+                  if settings.disclosure_enabled else {})
     row = await core.deliver_greeting(sender, _send_once, settings, BUILD)
     row.update(disclosure)
     _write_row(row)
     return {"send_ok": row["send_ok"]}
 
 
-async def _ensure_disclosure(sender, settings):
+async def _ensure_disclosure(sender, settings, alias=None):
     """Wires handler_core.ensure_disclosure to the Modal Dict. put(skip_if_exists=True) is the ATOMIC
     claim that makes "never twice" hold when two messages arrive together."""
     core = _core()
@@ -402,7 +403,7 @@ async def _ensure_disclosure(sender, settings):
         peek=lambda k: DISCLOSURES.get(k),
         finish=lambda k, v: DISCLOSURES.__setitem__(k, v),
         release=lambda k: DISCLOSURES.pop(k, None),
-        settings=settings, build=BUILD)
+        settings=settings, build=BUILD, alias=alias)
 
 
 def _disclosure_banner(it):
@@ -661,9 +662,10 @@ def webhook(item: dict, token: str = None):
             print(f"[chike] LID sender; messages keys = {sorted(_m)[:30]}; "
                   f"key keys = {sorted(_m.get('key') or {})[:15]}")
         if parsed["kind"] == "greeting":
-            greet_and_send.spawn(parsed["sender"])
+            greet_and_send.spawn(parsed["sender"], sender_lid=parsed.get("sender_lid"))
         else:
-            answer_and_send.spawn(parsed["sender"], parsed["text"])
+            answer_and_send.spawn(parsed["sender"], parsed["text"],
+                                  sender_lid=parsed.get("sender_lid"))
         return {"status": "ok"}
 
     except Exception as e:                                           # noqa: BLE001

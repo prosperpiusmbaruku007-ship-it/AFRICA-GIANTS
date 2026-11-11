@@ -298,3 +298,56 @@ def test_the_review_card_warns_only_when_the_disclosure_did_not_land(monkeypatch
     assert "DISCLOSURE NOT DELIVERED" in mw._disclosure_banner({"disclosure_state": "unknown"})
     for ok in ("delivered", "pending_receipt", "already", None):
         assert mw._disclosure_banner({"disclosure_state": ok}) == ""
+
+
+# ── one person, two addresses: the phone is the key, the linked-ID is its alias ───────────────────
+LID = "9988776655@lid"
+
+
+def _ensure_with(w, sender, alias=None):
+    return hc.ensure_disclosure(sender, w.send_once, w.claim, w.peek, w.finish, w.release,
+                                _settings(), "testbuild", alias=alias)
+
+
+def test_phone_first_then_the_linked_id_alone_is_told_once():
+    """The payload carried senderPn: the phone is the primary key and the @lid is recorded as its alias,
+    so the SAME person arriving later as a bare @lid (no senderPn) is already covered."""
+    w = _World()
+    a = _run(_ensure_with(w, SENDER, alias=LID))
+    b = _run(_ensure_with(w, LID))
+    assert a["disclosure_state"] == "delivered" and b["disclosure_state"] == "already"
+    assert len(w.sent) == 1
+    assert LID not in str(w.store) and SENDER not in str(w.store), "hashes only, never an address"
+
+
+def test_linked_id_first_then_the_phone_with_its_alias_is_told_once():
+    w = _World()
+    _run(_ensure_with(w, LID))                                   # no senderPn that time
+    out = _run(_ensure_with(w, SENDER, alias=LID))               # now the phone is known
+    assert out["disclosure_state"] == "already" and len(w.sent) == 1
+
+
+def test_an_alias_that_was_never_told_does_not_suppress_a_new_participant():
+    """The negative case: an alias must only cover a person we have ACTUALLY already told."""
+    w = _World()
+    out = _run(_ensure_with(w, SENDER, alias=LID))
+    assert out["disclosure_state"] == "delivered" and len(w.sent) == 1
+    other = "255700000022@s.whatsapp.net"
+    out2 = _run(_ensure_with(w, other, alias="1122334455@lid"))
+    assert out2["disclosure_state"] == "delivered" and len(w.sent) == 2
+
+
+def test_the_webhook_hands_the_linked_id_through_to_both_entry_points():
+    src, tree = _mw_tree()
+    seg = src[src.index("def webhook"):src.index("# SUPERVISED REVIEW")]
+    assert seg.count('sender_lid=parsed.get("sender_lid")') == 2, "both spawns must pass the alias"
+    for name in ("answer_and_send", "greet_and_send"):
+        assert "sender_lid" in ast.get_source_segment(src, _fn(tree, name)), name
+
+
+def test_the_real_payload_with_senderPn_yields_the_phone_as_sender_and_the_lid_as_alias():
+    body = {"event": "messages.received", "data": {"messages": {
+        "remoteJid": LID, "conversation": "Habari",
+        "key": {"remoteJid": LID, "senderPn": "255760915913@s.whatsapp.net"}}}}
+    p = hc.parse_webhook(body)
+    assert p["sender"].endswith("@s.whatsapp.net") and p["sender_lid"] == LID

@@ -18,6 +18,12 @@
   "changed": false
  },
  {
+  "q": "Biashara yangu ina zaidi ya miezi 6, mauzo yangu ya mwaka ni TZS 250 milioni — je ni lazima kusajili VAT?",
+  "old": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "new": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "changed": false
+ },
+ {
   "q": "Biashara yangu inauza milioni 4 kwa mwaka, kodi ya makadirio ni ngapi?",
   "old": "Kodi ya makadirio = TZS 0 (mauzo ya TZS 4,000,000 kwa mwaka yako ndani ya kiwango cha sifuri hadi TZS 4,000,000)",
   "new": "Kodi ya makadirio = TZS 0 (mauzo ya TZS 4,000,000 kwa mwaka yako ndani ya kiwango cha sifuri hadi TZS 4,000,000)",
@@ -66,6 +72,12 @@
   "changed": false
  },
  {
+  "q": "Juu ya VAT, mauzo yangu ya mwaka ni TZS 250 milioni — je ni lazima kusajili VAT?",
+  "old": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "new": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "changed": false
+ },
+ {
   "q": "Kampuni haijafika mwaka mmoja; mauzo yangu kwa mwaka ni TZS 250 milioni. Je, ni lazima kusajili VAT?",
   "old": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
   "new": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
@@ -85,8 +97,20 @@
  },
  {
   "q": "Katika miezi 6 mauzo yangu hayajafika TZS 100 milioni, je ni lazima kusajili VAT?",
-  "old": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 100,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "old": "Umesema mauzo yako hayajafika TZS 100,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kwa kizingiti cha miezi 6 mfululizo (TZS 100,000,000): hapana, hujakifikia. LAKINI usajili wa VAT ni wa lazima pia IKIWA mauzo ya miezi 12 yamefikia TZS 200,000,000. Niambie mauzo yako ya miezi 12 nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
   "new": "Umesema mauzo yako hayajafika TZS 100,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kwa kizingiti cha miezi 6 mfululizo (TZS 100,000,000): hapana, hujakifikia. LAKINI usajili wa VAT ni wa lazima pia IKIWA mauzo ya miezi 12 yamefikia TZS 200,000,000. Niambie mauzo yako ya miezi 12 nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+  "changed": false
+ },
+ {
+  "q": "Katika miezi 6 mauzo yangu yamezidi TZS 100 milioni, je ni lazima kusajili VAT?",
+  "old": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 100,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "new": "Ndiyo, unatakiwa kujisajili VAT. Umesema mauzo yako yamezidi TZS 100,000,000 — hicho ni kiwango cha chini, si mauzo yako kamili. Kwa kizingiti cha miezi 6 mfululizo (TZS 100,000,000): umekizidi, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "changed": true
+ },
+ {
+  "q": "Katika miezi 6 mauzo yangu yamezidi TZS 50 milioni, je ni lazima kusajili VAT?",
+  "old": "Kwa upande wa miezi 6 mfululizo: hapana, mauzo yako ya TZS 50,000,000 hayajafikia kizingiti cha TZS 100,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 200,000,000 katika miezi 12. Sijui mauzo yako ya miezi 12, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 12 nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+  "new": "Umesema mauzo yako yamezidi TZS 50,000,000 — hicho ni kiwango cha chini, si mauzo yako kamili. Hilo halitoshi kujua kama umefikia kizingiti (TZS 200,000,000 kwa miezi 12, au TZS 100,000,000 kwa miezi 6 mfululizo), wala kwa kipindi gani. Niambie mauzo yako halisi na kipindi chake nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
   "changed": true
  },
  {
@@ -109,33 +133,51 @@
  },
  {
   "q": "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari (voluntary VAT registration)?",
-  "old": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 200,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "old": "Umesema mauzo yako hayajafika TZS 200,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kwa kizingiti cha miezi 12 (TZS 200,000,000): hapana, hujakifikia. LAKINI usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo — niambie nami nitathibitisha. Kuhusu kujisajili kwa hiari: sina taarifa iliyothibitishwa hapa; thibitisha na TRA (tra.go.tz). Thibitisha na TRA (tra.go.tz).",
   "new": "Umesema mauzo yako hayajafika TZS 200,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kwa kizingiti cha miezi 12 (TZS 200,000,000): hapana, hujakifikia. LAKINI usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo — niambie nami nitathibitisha. Kuhusu kujisajili kwa hiari: sina taarifa iliyothibitishwa hapa; thibitisha na TRA (tra.go.tz). Thibitisha na TRA (tra.go.tz).",
-  "changed": true
+  "changed": false
  },
  {
   "q": "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari?",
-  "old": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 200,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "old": "Umesema mauzo yako hayajafika TZS 200,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kwa kizingiti cha miezi 12 (TZS 200,000,000): hapana, hujakifikia. LAKINI usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo — niambie nami nitathibitisha. Kuhusu kujisajili kwa hiari: sina taarifa iliyothibitishwa hapa; thibitisha na TRA (tra.go.tz). Thibitisha na TRA (tra.go.tz).",
   "new": "Umesema mauzo yako hayajafika TZS 200,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kwa kizingiti cha miezi 12 (TZS 200,000,000): hapana, hujakifikia. LAKINI usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo — niambie nami nitathibitisha. Kuhusu kujisajili kwa hiari: sina taarifa iliyothibitishwa hapa; thibitisha na TRA (tra.go.tz). Thibitisha na TRA (tra.go.tz).",
-  "changed": true
+  "changed": false
  },
  {
   "q": "Mauzo yangu bado hayajafika TZS milioni 200 kwa mwaka. Ninaweza kusajili VAT kwa hiari?",
-  "old": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 200,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "old": "Umesema mauzo yako hayajafika TZS 200,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kwa kizingiti cha miezi 12 (TZS 200,000,000): hapana, hujakifikia. LAKINI usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo — niambie nami nitathibitisha. Kuhusu kujisajili kwa hiari: sina taarifa iliyothibitishwa hapa; thibitisha na TRA (tra.go.tz). Thibitisha na TRA (tra.go.tz).",
   "new": "Umesema mauzo yako hayajafika TZS 200,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kwa kizingiti cha miezi 12 (TZS 200,000,000): hapana, hujakifikia. LAKINI usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo — niambie nami nitathibitisha. Kuhusu kujisajili kwa hiari: sina taarifa iliyothibitishwa hapa; thibitisha na TRA (tra.go.tz). Thibitisha na TRA (tra.go.tz).",
-  "changed": true
+  "changed": false
  },
  {
   "q": "Mauzo yangu kwa mwaka ni chini ya TZS 4 milioni, kodi ya makadirio ni kiasi gani?",
-  "old": "Kodi ya makadirio = TZS 0 (mauzo ya TZS 4,000,000 kwa mwaka yako ndani ya kiwango cha sifuri hadi TZS 4,000,000)",
+  "old": "Kwa kuwa mauzo yako ya mwaka hayajafika TZS 4,000,000, uko ndani ya kiwango cha sifuri (TZS 0 hadi TZS 4,000,000): kodi ya makadirio = TZS 0. Thibitisha na TRA (tra.go.tz).",
   "new": "Kwa kuwa mauzo yako ya mwaka hayajafika TZS 4,000,000, uko ndani ya kiwango cha sifuri (TZS 0 hadi TZS 4,000,000): kodi ya makadirio = TZS 0. Thibitisha na TRA (tra.go.tz).",
-  "changed": true
+  "changed": false
  },
  {
   "q": "Mauzo yangu kwa mwaka ni milioni 40, nitalipa kodi ya makadirio kiasi gani?",
   "old": "Kodi ya makadirio = 4.0% × TZS 40,000,000 = TZS 1,600,000 (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la) Kumbuka: kama umepata TIN mara ya kwanza kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 iliyopita, huenda ukastahili msamaha wa TZS 0 kwa mwaka wa kwanza — LAKINI hii SI ya moja kwa moja: lazima uombe kwa Kamishna na aidhinishe (First Schedule para 2(4)). Bila kuidhinishwa, kiasi hapo juu ndicho kinachotumika. Thibitisha na TRA.",
   "new": "Kodi ya makadirio = 4.0% × TZS 40,000,000 = TZS 1,600,000 (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la) Kumbuka: kama umepata TIN mara ya kwanza kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 iliyopita, huenda ukastahili msamaha wa TZS 0 kwa mwaka wa kwanza — LAKINI hii SI ya moja kwa moja: lazima uombe kwa Kamishna na aidhinishe (First Schedule para 2(4)). Bila kuidhinishwa, kiasi hapo juu ndicho kinachotumika. Thibitisha na TRA.",
   "changed": false
+ },
+ {
+  "q": "Mauzo yangu kwa mwaka ni zaidi ya TZS 2 milioni, kodi ya makadirio ni ngapi?",
+  "old": "Kodi ya makadirio = TZS 0 (mauzo ya TZS 2,000,000 kwa mwaka yako ndani ya kiwango cha sifuri hadi TZS 4,000,000)",
+  "new": "Umesema mauzo yako ya mwaka yamezidi TZS 2,000,000 — hicho ni kiwango cha chini, si mauzo yako kamili, kwa hiyo sikitumii kama mauzo yako. Kodi ya makadirio inategemea kiasi halisi cha mauzo ya mwaka: niambie mauzo yako ya miezi 12 nami nitahesabu. Thibitisha na TRA (tra.go.tz).",
+  "changed": true
+ },
+ {
+  "q": "Mauzo yangu kwa mwaka ni zaidi ya TZS 40 milioni, kodi ya makadirio ni ngapi?",
+  "old": "Kodi ya makadirio = 4.0% × TZS 40,000,000 = TZS 1,600,000 (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la) Kumbuka: kama umepata TIN mara ya kwanza kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 iliyopita, huenda ukastahili msamaha wa TZS 0 kwa mwaka wa kwanza — LAKINI hii SI ya moja kwa moja: lazima uombe kwa Kamishna na aidhinishe (First Schedule para 2(4)). Bila kuidhinishwa, kiasi hapo juu ndicho kinachotumika. Thibitisha na TRA.",
+  "new": "Umesema mauzo yako ya mwaka yamezidi TZS 40,000,000 — hicho ni kiwango cha chini, si mauzo yako kamili, kwa hiyo sikitumii kama mauzo yako. Kodi ya makadirio inategemea kiasi halisi cha mauzo ya mwaka: niambie mauzo yako ya miezi 12 nami nitahesabu. Thibitisha na TRA (tra.go.tz).",
+  "changed": true
+ },
+ {
+  "q": "Mauzo yangu kwa mwaka ni zaidi ya TZS milioni 40, kodi ya makadirio ni ngapi?",
+  "old": "Kodi ya makadirio = 4.0% × TZS 40,000,000 = TZS 1,600,000 (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la) Kumbuka: kama umepata TIN mara ya kwanza kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 iliyopita, huenda ukastahili msamaha wa TZS 0 kwa mwaka wa kwanza — LAKINI hii SI ya moja kwa moja: lazima uombe kwa Kamishna na aidhinishe (First Schedule para 2(4)). Bila kuidhinishwa, kiasi hapo juu ndicho kinachotumika. Thibitisha na TRA.",
+  "new": "Umesema mauzo yako ya mwaka yamezidi TZS 40,000,000 — hicho ni kiwango cha chini, si mauzo yako kamili, kwa hiyo sikitumii kama mauzo yako. Kodi ya makadirio inategemea kiasi halisi cha mauzo ya mwaka: niambie mauzo yako ya miezi 12 nami nitahesabu. Thibitisha na TRA (tra.go.tz).",
+  "changed": true
  },
  {
   "q": "Mauzo yangu ni milioni 12 kwa mwaka na natunza kumbukumbu vizuri. Kodi ya makadirio?",
@@ -217,27 +259,27 @@
  },
  {
   "q": "Mauzo yangu ya mwaka hayajafika TZS 150 milioni, je ni lazima kusajili VAT?",
-  "old": "Kwa upande wa miezi 12: hapana, mauzo yako ya TZS 150,000,000 hayajafikia kizingiti cha TZS 200,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 6 mfululizo nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+  "old": "Umesema mauzo yako hayajafika TZS 150,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kwa kizingiti cha miezi 12 (TZS 200,000,000): hapana, hujakifikia. LAKINI usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo — niambie nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
   "new": "Umesema mauzo yako hayajafika TZS 150,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kwa kizingiti cha miezi 12 (TZS 200,000,000): hapana, hujakifikia. LAKINI usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo — niambie nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
-  "changed": true
+  "changed": false
  },
  {
   "q": "Mauzo yangu ya mwaka hayajafika TZS 300 milioni, je ni lazima kusajili VAT?",
-  "old": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 300,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "old": "Umesema mauzo yako hayajafika TZS 300,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Hilo halitoshi kujua kama umefikia kizingiti (TZS 200,000,000 kwa miezi 12, au TZS 100,000,000 kwa miezi 6 mfululizo). Niambie mauzo yako halisi na kipindi chake. Thibitisha na TRA (tra.go.tz).",
   "new": "Umesema mauzo yako hayajafika TZS 300,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Hilo halitoshi kujua kama umefikia kizingiti (TZS 200,000,000 kwa miezi 12, au TZS 100,000,000 kwa miezi 6 mfululizo). Niambie mauzo yako halisi na kipindi chake. Thibitisha na TRA (tra.go.tz).",
-  "changed": true
+  "changed": false
  },
  {
   "q": "Mauzo yangu ya mwaka hayajafika TZS 40 milioni, kodi ya makadirio ni ngapi?",
-  "old": "Kodi ya makadirio = 4.0% × TZS 40,000,000 = TZS 1,600,000 (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la) Kumbuka: kama umepata TIN mara ya kwanza kwa ajili ya kuanzisha biashara hii ndani ya miezi 12 iliyopita, huenda ukastahili msamaha wa TZS 0 kwa mwaka wa kwanza — LAKINI hii SI ya moja kwa moja: lazima uombe kwa Kamishna na aidhinishe (First Schedule para 2(4)). Bila kuidhinishwa, kiasi hapo juu ndicho kinachotumika. Thibitisha na TRA.",
+  "old": "Umesema mauzo yako hayajafika TZS 40,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kodi ya makadirio inategemea kiasi halisi cha mauzo ya mwaka: niambie mauzo yako ya miezi 12 nami nitahesabu. Thibitisha na TRA (tra.go.tz).",
   "new": "Umesema mauzo yako hayajafika TZS 40,000,000 — hicho ni kikomo, si mauzo yako halisi, kwa hiyo sikitumii kama mauzo yako. Kodi ya makadirio inategemea kiasi halisi cha mauzo ya mwaka: niambie mauzo yako ya miezi 12 nami nitahesabu. Thibitisha na TRA (tra.go.tz).",
-  "changed": true
+  "changed": false
  },
  {
   "q": "Mauzo yangu ya mwaka hayajafika TZS milioni 4, kodi ya makadirio ni ngapi?",
-  "old": "Kodi ya makadirio = TZS 0 (mauzo ya TZS 4,000,000 kwa mwaka yako ndani ya kiwango cha sifuri hadi TZS 4,000,000)",
+  "old": "Kwa kuwa mauzo yako ya mwaka hayajafika TZS 4,000,000, uko ndani ya kiwango cha sifuri (TZS 0 hadi TZS 4,000,000): kodi ya makadirio = TZS 0. Thibitisha na TRA (tra.go.tz).",
   "new": "Kwa kuwa mauzo yako ya mwaka hayajafika TZS 4,000,000, uko ndani ya kiwango cha sifuri (TZS 0 hadi TZS 4,000,000): kodi ya makadirio = TZS 0. Thibitisha na TRA (tra.go.tz).",
-  "changed": true
+  "changed": false
  },
  {
   "q": "Mauzo yangu ya mwaka ni TZS 250 milioni, je ni lazima kusajili VAT?",
@@ -288,6 +330,36 @@
   "changed": false
  },
  {
+  "q": "Mauzo yangu ya mwaka ni zaidi ya TZS milioni 200, je ni lazima kusajili VAT?",
+  "old": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 200,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "new": "Ndiyo, unatakiwa kujisajili VAT. Umesema mauzo yako yamezidi TZS 200,000,000 — hicho ni kiwango cha chini, si mauzo yako kamili. Kwa kizingiti cha miezi 12 (TZS 200,000,000): umekizidi, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "changed": true
+ },
+ {
+  "q": "Mauzo yangu ya mwaka yamezidi TZS 100 milioni, je ni lazima kusajili VAT?",
+  "old": "Kwa upande wa miezi 12: hapana, mauzo yako ya TZS 100,000,000 hayajafikia kizingiti cha TZS 200,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 6 mfululizo nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+  "new": "Umesema mauzo yako yamezidi TZS 100,000,000 — hicho ni kiwango cha chini, si mauzo yako kamili. Hilo halitoshi kujua kama umefikia kizingiti (TZS 200,000,000 kwa miezi 12, au TZS 100,000,000 kwa miezi 6 mfululizo), wala kwa kipindi gani. Niambie mauzo yako halisi na kipindi chake nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+  "changed": true
+ },
+ {
+  "q": "Mauzo yangu ya mwaka yamezidi TZS 250 milioni, je ni lazima kusajili VAT?",
+  "old": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "new": "Ndiyo, unatakiwa kujisajili VAT. Umesema mauzo yako yamezidi TZS 250,000,000 — hicho ni kiwango cha chini, si mauzo yako kamili. Kwa kizingiti cha miezi 12 (TZS 200,000,000): umekizidi, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "changed": true
+ },
+ {
+  "q": "Mauzo yangu ya mwaka yamezidi TZS milioni 100, je ni lazima kusajili VAT?",
+  "old": "Kwa upande wa miezi 12: hapana, mauzo yako ya TZS 100,000,000 hayajafikia kizingiti cha TZS 200,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 6 mfululizo nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+  "new": "Umesema mauzo yako yamezidi TZS 100,000,000 — hicho ni kiwango cha chini, si mauzo yako kamili. Hilo halitoshi kujua kama umefikia kizingiti (TZS 200,000,000 kwa miezi 12, au TZS 100,000,000 kwa miezi 6 mfululizo), wala kwa kipindi gani. Niambie mauzo yako halisi na kipindi chake nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+  "changed": true
+ },
+ {
+  "q": "Mauzo yangu ya mwaka yamezidi TZS milioni 250, je ni lazima kusajili VAT?",
+  "old": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "new": "Ndiyo, unatakiwa kujisajili VAT. Umesema mauzo yako yamezidi TZS 250,000,000 — hicho ni kiwango cha chini, si mauzo yako kamili. Kwa kizingiti cha miezi 12 (TZS 200,000,000): umekizidi, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "changed": true
+ },
+ {
   "q": "Mauzo yangu yamefika TZS 250 milioni kwa mwaka, je ni lazima kusajili VAT?",
   "old": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
   "new": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
@@ -298,6 +370,12 @@
   "old": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 450,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
   "new": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 450,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
   "changed": false
+ },
+ {
+  "q": "Mauzo yangu yamezidi TZS 250 milioni, je ni lazima kusajili VAT?",
+  "old": "Ili nilinganishe na kizingiti cha VAT, niambie kiasi ulichotaja ni cha kipindi gani — je ni jumla ya miezi 12, au ya miezi 6 mfululizo? Vizingiti ni viwili tofauti: TZS 200,000,000 kwa miezi 12, na TZS 100,000,000 kwa miezi 6 mfululizo, hivyo jibu linategemea kipindi.",
+  "new": "Umesema mauzo yako yamezidi TZS 250,000,000 — hicho ni kiwango cha chini, si mauzo yako kamili. Hilo halitoshi kujua kama umefikia kizingiti (TZS 200,000,000 kwa miezi 12, au TZS 100,000,000 kwa miezi 6 mfululizo), wala kwa kipindi gani. Niambie mauzo yako halisi na kipindi chake nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+  "changed": true
  },
  {
   "q": "Mimi ni mhasibu huru, mauzo yangu ni milioni 20 kwa mwaka, kodi ya mapato ni kiasi gani?",
@@ -393,6 +471,12 @@
   "q": "Ninaweza kusajili VAT hata kama mauzo yangu ni TZS 50M tu kwa mwaka?",
   "old": "Kwa upande wa miezi 12: hapana, mauzo yako ya TZS 50,000,000 hayajafikia kizingiti cha TZS 200,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 6 mfululizo nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
   "new": "Kwa upande wa miezi 12: hapana, mauzo yako ya TZS 50,000,000 hayajafikia kizingiti cha TZS 200,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,000 katika miezi 6 mfululizo. Sijui mauzo yako ya miezi 6 mfululizo, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 6 mfululizo nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+  "changed": false
+ },
+ {
+  "q": "Zaidi ya hayo, mauzo yangu ya mwaka ni TZS 250 milioni — je ni lazima kusajili VAT?",
+  "old": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+  "new": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
   "changed": false
  },
  {

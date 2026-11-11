@@ -678,25 +678,58 @@ def _only_filler(gap: str) -> bool:
     return all(t.lower().strip(".$'’") in _BOUND_FILLER for t in gap.split() if t.strip(".$'’"))
 
 
-def upper_bound_amount(text: str):
-    """The sole plausible amount IF it is the object of an upper-bound / negated-reach cue, else None.
-
-    A bound B on turnover means "turnover is BELOW B", never "turnover is B". Returning the amount lets
-    the caller refuse to use it as a figure; it does not say what the figure is."""
+def _bound_amount(text: str, verb_re, prep_re):
+    """The sole plausible amount IF a cue from `verb_re`/`prep_re` governs it directly, else None."""
     located = [(pos, amt) for pos, amt in swn.parse_amounts_located(text)
                if amt >= swn.MIN_PLAUSIBLE_AMOUNT]
     if len(located) != 1:
         return None
     pos, amt = located[0]
     head = text.lower()[:pos]
-    for m in _BOUND_VERB_RE.finditer(head):
+    for m in verb_re.finditer(head):
         gap = head[m.end():]
         if len(gap) <= 40 and _only_filler(gap):
             return amt
-    for m in _BOUND_PREP_RE.finditer(head):
+    for m in prep_re.finditer(head):
         if _only_filler(head[m.end():]):
             return amt
     return None
+
+
+def upper_bound_amount(text: str):
+    """The sole plausible amount IF it is the object of an upper-bound / negated-reach cue, else None.
+
+    A bound B on turnover means "turnover is BELOW B", never "turnover is B". Returning the amount lets
+    the caller refuse to use it as a figure; it does not say what the figure is."""
+    return _bound_amount(text, _BOUND_VERB_RE, _BOUND_PREP_RE)
+
+
+# ── THE MIRROR: A LOWER BOUND IS "AT LEAST B", NOT "B" (2026-11-12) ────────────────────────────────
+#
+# "Mauzo yangu ya mwaka yamezidi TZS 100 milioni, je ni lazima kusajili VAT?" was answered "hapana,
+# mauzo yako ya TZS 100,000,000 hayajafikia kizingiti" -- the exact-figure reading of a sentence that says
+# sales EXCEEDED 100M. To a trader whose turnover is 250M that is a confident denial of a legal duty, the
+# shape this project has said ends the pilot. Same defect class as the upper bound, opposite direction.
+#
+# Only EXPLICIT "more than / exceeded" cues. "yamefika" / "has reached" stay figures: reaching a number is
+# how people state an exact turnover, and the gate corpus reads it that way.
+#
+# PRECEDENCE: NEGATION WINS. "does not exceed TZS 200 million" contains the English lower-bound cue
+# "exceed"; it is an UPPER bound, so a lower reading is refused whenever an upper cue also governs the amount.
+_LOWER_VERB = (
+    r"(?:ya|i|ni|u|tu|wa)mezidi|(?:ya|i|ni|u|tu|wa)mevuka|yanazidi|inazidi|nazidi|unazidi|"
+    r"(?:have|has)\s+(?:already\s+)?(?:exceeded|surpassed)|exceed(?:s|ed)?|surpass(?:es|ed)?")
+_LOWER_PREP = r"zaidi\s+ya|juu\s+ya|above|over|more\s+than|in\s+excess\s+of"
+_LOWER_VERB_RE = re.compile(rf"\b(?:{_LOWER_VERB})\b", re.IGNORECASE)
+_LOWER_PREP_RE = re.compile(rf"\b(?:{_LOWER_PREP})\b", re.IGNORECASE)
+
+
+def lower_bound_amount(text: str):
+    """The sole plausible amount IF it is the object of a LOWER-bound ("at least / more than") cue, else
+    None. Never fires when an upper-bound cue also governs the amount (negation wins)."""
+    if upper_bound_amount(text) is not None:
+        return None
+    return _bound_amount(text, _LOWER_VERB_RE, _LOWER_PREP_RE)
 
 
 def states_vat_registered(text: str) -> bool:

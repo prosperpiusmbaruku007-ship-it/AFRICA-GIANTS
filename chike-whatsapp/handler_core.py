@@ -1299,7 +1299,8 @@ def parse_disclosure_flag(value) -> bool:
     return str(value or "").strip().lower() not in ("0", "false", "no", "off")
 
 
-async def ensure_disclosure(sender, send_once, claim, peek, finish, release, settings, build="dev"):
+async def ensure_disclosure(sender, send_once, claim, peek, finish, release, settings, build="dev",
+                            alias=None):
     """Send the disclosure to `sender` if -- and only if -- nobody has yet. Returns the row fields.
 
     NEVER TWICE: `claim(key, record)` is an ATOMIC put-if-absent (modal.Dict.put(skip_if_exists=True)),
@@ -1312,11 +1313,25 @@ async def ensure_disclosure(sender, send_once, claim, peek, finish, release, set
         row says `failed` so the reviewer sees the disclosure did not land.
       * the store cannot be read -> `unknown`, and NOTHING is sent: a missing disclosure is flagged, a
         duplicate one is not undoable.
-    Keyed by sender hash (no raw number is stored). One person reaching us as @lid and as a phone JID is
-    two senders and is told twice -- the cost of not guessing that two addresses are one human."""
+    Keyed by sender hash (no raw number is stored), and by the PHONE whenever the payload carries one:
+    parse_webhook already swaps a linked-ID sender for its `senderPn` phone JID, so the primary key IS the
+    phone. `alias` is the linked-ID that phone arrived as; it is recorded beside the phone key and checked
+    first, so one person who reaches us as @lid and as a phone is told ONCE, in either order."""
     import asyncio
     key, _tail = sender_ids(sender, settings.sender_salt)
+    alias_key = sender_ids(alias, settings.sender_salt)[0] if alias else None
     ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    if alias_key and alias_key != key:
+        try:
+            prior = peek(alias_key)
+        except Exception:                                            # noqa: BLE001
+            prior = None
+        if prior and prior.get("state") in ("delivered", "pending_receipt", "sending", "alias"):
+            try:
+                claim(key, {"state": "alias", "ts": prior.get("ts") or ts, "via": "lid", "build": build})
+            except Exception:                                        # noqa: BLE001
+                pass
+            return {"disclosure_state": "already", "disclosure_ts": prior.get("ts")}
     try:
         claimed = claim(key, {"state": "sending", "ts": ts, "build": build})
     except Exception as e:                                           # noqa: BLE001
@@ -1358,6 +1373,11 @@ async def ensure_disclosure(sender, send_once, claim, peek, finish, release, set
                          "message_id": None if ok else pending_message_id({"send_error": detail})})
         except Exception:                                            # noqa: BLE001
             pass                                  # it WAS sent; losing the record must not trigger a resend
+        if alias_key and alias_key != key:
+            try:                                  # so a later message under the linked-ID alone is covered
+                finish(alias_key, {"state": "alias", "ts": ts, "via": "phone", "build": build})
+            except Exception:                                        # noqa: BLE001
+                pass
         return {"disclosure_state": state, "disclosure_ts": ts}
     try:
         release(key)

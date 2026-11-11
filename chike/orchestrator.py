@@ -684,6 +684,16 @@ class Orchestrator:
                     bool(re.search(r"hiari|voluntar", sq.text, re.IGNORECASE)),
                     rules_engine.registration_thresholds.VAT_ANNUAL,
                     rules_engine.registration_thresholds.VAT_SIX_MONTH))
+        # AND A LOWER BOUND IS "AT LEAST B", NOT B (2026-11-12): "yamezidi TZS 100 milioni" must never read
+        # as exactly 100M -- that denied a liable trader's duty to register.
+        lower = routing.lower_bound_amount(sq.text)
+        if lower is not None and routing.turnover_period(sq.text) != \
+                rules_engine.registration_thresholds.MONTHLY:
+            text, settled = clarification.vat_lower_bound(
+                lower, routing.turnover_period(sq.text),
+                rules_engine.registration_thresholds.VAT_ANNUAL,
+                rules_engine.registration_thresholds.VAT_SIX_MONTH)
+            return SubAnswer(sub_question=sq, text=text, needs_clarification=not settled)
         period = routing.turnover_period(sq.text)
         if period is None:
             return SubAnswer(sub_question=sq, text=clarification.VAT_NO_PERIOD,
@@ -733,6 +743,12 @@ class Orchestrator:
         # and is never annualised; an unstated period addresses no year at all.
         if routing.turnover_period(sq.text) != rules_engine.registration_thresholds.ANNUAL:
             return SubAnswer(sub_question=sq, text=clarification.PRESUMPTIVE_PERIOD_IS_A_RATE,
+                             needs_clarification=True)
+        # A LOWER BOUND IS NOT A FIGURE EITHER: "zaidi ya milioni 2" says AT LEAST 2M, which settles nothing
+        # about the tax -- never settle on B (it would put a 40M trader on the zero band).
+        lower = routing.lower_bound_amount(sq.text)
+        if lower is not None:
+            return SubAnswer(sub_question=sq, text=clarification.presumptive_lower_bound(lower),
                              needs_clarification=True)
         # A BOUND IS NOT A FIGURE (2026-11-12): "mauzo hayajafika milioni 4" says turnover is BELOW 4M.
         bound = routing.upper_bound_amount(sq.text)

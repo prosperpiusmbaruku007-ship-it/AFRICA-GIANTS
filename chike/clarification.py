@@ -175,6 +175,34 @@ def vat_upper_bound(bound, period, asks_voluntary, annual, six_month) -> str:
     return head + body + voluntary + " Thibitisha na TRA (tra.go.tz)."
 
 
+def vat_lower_bound(bound, period, annual, six_month):
+    """The user said turnover has EXCEEDED `bound`: "at least B", never "B". Returns (text, settled).
+    Settled ONLY when the stated period's threshold is at or below B -- then turnover is over it whatever
+    the true figure is, and registration is compulsory. Below the threshold (or with no period, or a
+    period that is not a total) nothing is established and the figure is asked for; the answer must
+    never be 'hapana' on the strength of a floor."""
+    head = (f"Umesema mauzo yako yamezidi {_tzs(bound)} — hicho ni kiwango cha chini, si mauzo yako kamili.")
+    if period == "annual" and bound >= annual:
+        return ("Ndiyo, unatakiwa kujisajili VAT. " + head + f" Kwa kizingiti cha miezi 12 ({_tzs(annual)}): "
+                f"umekizidi, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. "
+                f"Thibitisha na TRA (tra.go.tz)."), True
+    if period == "six_month" and bound >= six_month:
+        return ("Ndiyo, unatakiwa kujisajili VAT. " + head + f" Kwa kizingiti cha miezi 6 mfululizo "
+                f"({_tzs(six_month)}): umekizidi, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba "
+                f"usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz)."), True
+    return (head + f" Hilo halitoshi kujua kama umefikia kizingiti ({_tzs(annual)} kwa miezi 12, au "
+            f"{_tzs(six_month)} kwa miezi 6 mfululizo), wala kwa kipindi gani. Niambie mauzo yako halisi na "
+            f"kipindi chake nami nitathibitisha. Thibitisha na TRA (tra.go.tz)."), False
+
+
+def presumptive_lower_bound(bound) -> str:
+    """Annual turnover is ABOVE `bound`. That settles nothing about the tax -- the figure is asked for,
+    and B is never used as turnover (it would put a trader above the zero band on the zero band)."""
+    return (f"Umesema mauzo yako ya mwaka yamezidi {_tzs(bound)} — hicho ni kiwango cha chini, si mauzo yako "
+            f"kamili, kwa hiyo sikitumii kama mauzo yako. Kodi ya makadirio inategemea kiasi halisi cha mauzo "
+            f"ya mwaka: niambie mauzo yako ya miezi 12 nami nitahesabu. Thibitisha na TRA (tra.go.tz).")
+
+
 def presumptive_upper_bound(bound, zero_band_top) -> str:
     """Annual turnover is BELOW `bound`. At or under the top of the zero band that settles the tax
     (TZS 0 for any turnover in the band); above it, nothing is settled and the figure is asked for."""
