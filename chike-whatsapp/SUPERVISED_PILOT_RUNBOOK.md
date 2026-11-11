@@ -218,6 +218,61 @@ A reviewer must be told, before their number goes in the Secret:
    figure is a lower bound, measured on our own corpora.
 6. **Your name is on every action you take** — draft, edit and final. This is so corrections
    read separately, not to grade you; but it does mean a rubber-stamp is attributable.
+7. **Read the worked example below before your first decision.** It is a real draft that was
+   approved, and it is the shape that gets approved.
+
+### 4a. WORKED EXAMPLE — a review miss, 2026-11-11 21:49 UTC (approved unedited, 110 s after the push)
+
+**The participant asked:** *"Efd ni lazima kwa biashara yenye mauzo ya milioni 15"*
+(is an EFD machine required for a business with sales of 15 million?)
+
+**The draft, verbatim:**
+
+> *Hapana, si lazima kwa biashara yenye mauzo ya milioni 15 pekee. EFD inahitajika tu pale
+> unapofikia kizingiti cha TZS 11 milioni kwa mwaka au TZS 100 milioni kwa miezi 6. Ukifikia
+> kizingiti hicho, utatakiwa kujiandikisha kwa VAT na kupata EFD kutoka kwa msambazaji
+> aliyeidhinishwa. Thibitisha na TRA (tra.go.tz).*
+
+**It was sent, and it was wrong. Why it gets through a skim:**
+
+| what you see | what it is |
+|---|---|
+| fluent, confident Swahili; opens with a clear verdict | fluency and confidence are properties of the model, not of the answer |
+| cites **TRA**, links `tra.go.tz`, ends *"Thibitisha na TRA"* | **a citation and a disclaimer are decoration, not evidence.** The link proves nothing about the sentence before it |
+| a precise-looking threshold, *"TZS 11 milioni"* | **that figure does not exist in the law** |
+
+**Why it is wrong — three independent ways, each enough on its own:**
+
+1. **EFD has no turnover threshold.** Under TAA Cap.438 s.44, issuing fiscal receipts is the
+   DEFAULT for everyone; the only exemption is a Commissioner-General notice naming a class,
+   never a number. The *TZS 11,000,000 EFD threshold* is a fabrication, found and corrected
+   in the corpus on 2026-08-29.
+2. **It contradicts itself.** 15 million is *more* than the 11 million it cites — yet it says
+   "not required". A threshold answer that fails its own arithmetic is wrong whichever way the
+   threshold is read.
+3. **IT CONTRADICTS THE FACT THE SYSTEM RETRIEVED, AND THAT FACT WAS ON THE CARD.** The
+   second fact served for this very question was *"…je nahitaji mashine ya risiti (EFD)?
+   **Ndiyo, kwa default, bila kujali kiasi cha mauzo yako — HAKUNA kizingiti**…"*. The draft
+   says **Hapana**; the fact says **Ndiyo**. The model had the answer in front of it and said
+   the opposite.
+
+**What to do, as a procedure rather than a feeling:**
+
+- **Compare the draft's VERDICT with the first sentence of the top served fact.** If one says
+  *Ndiyo* and the other *Hapana*, **withhold** — do not try to decide which is right from
+  memory, and do not "fix" it by editing the number. That one comparison catches this draft in
+  five seconds and needs no legal knowledge.
+- **Treat any specific threshold you cannot see on the card as unverified.** A figure in the
+  draft that appears in none of the served facts is where fabrications live.
+- **Do not let "cites TRA" lower your guard.** It is the most reassuring and least informative
+  feature of a draft.
+
+**Recorded as a REVIEW MISS, not only a model miss.** The record shows the draft reached a
+reviewer, was approved unedited (`edit_reason: null`), and was delivered. The automatic guard
+(D-FIDELITY-7) also missed it, because its parser read *"TZS 11 milioni"* as two amounts
+(fixed 2026-11-12). **Two controls failed on one answer; the human one is the one a participant
+is relying on while the automatic one is incomplete.** This is the worked example precisely
+because the reviewer was competent and the draft was ordinary.
 
 ---
 
@@ -321,6 +376,29 @@ Part of the R7 condition, not a courtesy: that this is a **supervised test**, th
 reads every answer before it is sent, that answers may therefore take hours, and that
 important answers should still be confirmed with TRA. If that disclosure is dropped, the R7
 reading no longer applies.
+
+### 8a. THE MESSAGE EVERY PARTICIPANT RECEIVES BEFORE THEIR FIRST QUESTION
+
+**Send this, exactly, before a participant's first question is answered** (founder's text,
+2026-11-12; do not paraphrase or shorten it — dropping any limb of it is dropping the
+disclosure):
+
+> Karibu kwenye majaribio ya Chike. Chike ni msaidizi wa maswali ya kodi na sheria za biashara Tanzania. Kwa sasa ni jaribio linalosimamiwa: kila jibu linasomwa na mtu kabla ya kutumwa kwako, hivyo jibu linaweza kuchukua muda — wakati mwingine saa kadhaa. Majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA au mamlaka husika. Usitume taarifa binafsi zisizo za lazima. Asante kwa kutusaidia kuiboresha Chike.
+
+What each sentence is for, so nobody "tidies" one away:
+
+| sentence (gist) | the R7 limb it carries |
+|---|---|
+| *majaribio… msaidizi wa maswali ya kodi na sheria za biashara* | what Chike is — and is not (not a general assistant) |
+| *kwa sasa ni jaribio linalosimamiwa: kila jibu linasomwa na mtu kabla ya kutumwa* | **supervised test; a person reads every answer** |
+| *jibu linaweza kuchukua muda — wakati mwingine saa kadhaa* | **latency is real** — a 9pm question may wait until morning, and a participant who does not expect that stops asking |
+| *majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA* | **confirm important answers with TRA** |
+| *usitume taarifa binafsi zisizo za lazima* | do not send personal data we do not need |
+
+⚠️ **This is the message, not yet an enforced step.** Nothing in the handler sends it today — it is
+sent by hand, and **nothing checks that it was.** Under the R35 rule a condition with no
+enforcement point decays, so before the first participant is recruited this needs either a
+send-once-per-new-sender step in the handler, or an explicit checklist line the founder signs.
 
 ---
 

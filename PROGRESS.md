@@ -119,6 +119,65 @@
 - ⚠️ `per_reviewer` (admin `dump_queue` / `/review`) is keyed by the reviewer's full JID, i.e. their phone
   number, where the runbook says handles only.
 
+### 4c. 2026-11-12 (later) — A FABRICATED EFD ANSWER WAS DELIVERED; THE PARSER BEHIND THE GUARD HAD A HOLE; THE GPU IS SCARCE
+
+**The miss.** At 21:43 UTC a real question — *"Efd ni lazima kwa biashara yenye mauzo ya milioni 15"* — was answered with the
+fabricated TZS 11,000,000 EFD threshold (*"…kizingiti cha TZS 11 milioni kwa mwaka au TZS 100 milioni kwa miezi 6"*), **approved
+unedited by the reviewer account 110 s after the push, and delivered.** Founder: *"I did approve the EFD answer."* **Recorded as a
+REVIEW MISS and as a model miss**, and added verbatim to the review standard (runbook §4a) as the worked example: fluent, cites TRA,
+wrong threshold, self-contradicting (15M > 11M, yet "not required"), and contradicting the fact it was handed.
+
+**Three independent failures on one answer, in order of when each could have stopped it:**
+1. **Generation (the model).** The correct fact was retrieved at **rank 2** and answers the question outright (served row 58:
+   *"…je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako — HAKUNA kizingiti"*). The model said
+   *Hapana*. The rank-1..3-and-still-wrong class: no index or wording work reaches it, which is why a guard exists.
+2. **The guard (D-FIDELITY-7) did not fire — because the parser read "TZS 11 milioni" as TWO amounts, `11` and a bare `1,000,000`.**
+   The `11` is under the money floor; the stray `1,000,000` is dropped by N2 (another amount sits between it and the frame word). **No
+   amount ever equalled 11,000,000.** Scale-first ("TZS milioni 11") and digits ("TZS 11,000,000") flag the identical body; only
+   number-first missed. Every earlier specimen was scale-first — R33 exactly.
+3. **The human review.** The draft was on the card beside the fact that contradicted it.
+
+**The parser fix (`215950c`) — and the wider defect it closes.** The same parser feeds routing, every compute engine and D-FIDELITY-7:
+`sole_plausible_amount("mishahara … ni 6 milioni")` returned **1,000,000**, so `compute_sdl` answered **TZS 35,000 where 210,000 is
+owed** — a confident wrong figure on the path this project trusts most, on a common way of typing. **Swept before switching:**
+- 8,060 distinct committed question strings over 503 files; **39 changed**, every one read (4 are prose from test docstrings; the rest
+  are all corrected readings).
+- **Equivalence test** (R33's cure): 236 scale-first corpus questions rewritten number-first. **OLD parser: a different engine answer on
+  67 (28%)** — SDL 22, presumptive 17, VAT registration 10, NSSF 9, WCF 6, PAYE 3. **NEW parser: 0.** Worst old answer: a business that
+  sold **TZS 120 million** in six months was told *"hapana, mauzo yako ya TZS 1,000,000 hayajafikia kizingiti"*.
+- Policy mirrors scale-first: `1,500 milioni` is **declined and reported** (a factor of 1000), a 1–2 digit tail is a decimal mark, and
+  **scale-first wins a collision** (`siku 26 elfu 18`, `milioni 6 elfu 500` unchanged).
+- Handles `elfu`, `laki`, `milioni`, `bilioni` and English `million(s)`/`billion(s)`. **Not handled:** number-WORDS before the scale
+  (`kumi na moja milioni`) — uncommon, and it fails toward "no amount" (a clarification), the safe direction.
+- ⚠️ **A non-raw heredoc compiled `\b` to a backspace and the first patch matched nothing — R39's trap, caught by the patch's own
+  assertion and then by compiling the patterns and checking for control characters** (now a test).
+
+**⚠️ SEPARATE, PRE-EXISTING, NOT FIXED: a threshold named inside a *negated premise* is read as the user's turnover.** *"Mauzo yangu bado
+hayajafika TZS 200 milioni… ninaweza kusajili VAT kwa hiari?"* → *"Ndiyo, unatakiwa kujisajili VAT"* — **in scale-first notation too**
+(`TZS milioni 200`). The correct parse unmasked it in number-first form, where the wrong parse had been hiding it. Bar A item.
+
+**GPU: SCARCITY IS CONFIRMED, NOT SUSPECTED.** Modal's own log: *"Function 'ChikeModel.*' is waiting to be scheduled on a GPU_T4 worker.
+We are actively working on acquiring more capacity"*, and a direct test call returned **HTTP 500 after the 300 s input timeout** with no
+T4 granted. The 21:43 production request (222.7 s) decomposes as **~138 s waiting for a T4 + 56 s model load + ~28 s generation**.
+**The 23:54 run the founder called "warm" could not have been** (`scaledown_window` 300 s, last call ~89 min earlier): a 61 s cold start.
+L4 is added behind T4 (`gpu=['T4','L4']`); `coldstart['gpu']` now reports the device that actually served. **L4 RESULT: see 4d.**
+
+**Who is messaging the number (founder asked, before recruiting).** The transcript store holds **two distinct senders**, both
+consistent with the founder's own testing, and **no third party**: handle `220401cbf17f` (tail 6995, `@lid` address, 10–11 Nov, the
+Wappfly era) and handle `b5908217c09e` (tail 5913, phone JID — **all bridge-era traffic, 16 sends**, asked the SDL and EFD questions).
+Caveats: the store only records messages the handler accepted (not groups/status/non-text); and the tail `5913` happens to match the
+reviewer's own tail — **different numbers**, same last four digits.
+
+**Also done:** the two stuck `pending_receipt` rows (and their queue items) reconciled from the ledger (lags 46 s and 178 s), each marked
+`reconciled_by: manual_repair_2026-11-12 (pending_row_registry bug, e86b4cd)` with the original state kept; the admin view and both
+admin JSON endpoints now show reviewer **handles**, never numbers; `/health` cohort states its capacity (**cohort 3 = sized for 1
+reviewer**, `within_review_capacity`, a monitor not a gate); the participant disclosure is in the runbook **verbatim** (§8a) — and
+**is not yet an enforced step**, only a message sent by hand (R35: needs a send-once step or a signed checklist line before recruiting).
+
+**Founder decisions, on the record:** ban risk of the unofficial Baileys transport **accepted for the pilot**; the lease-overlap deploy
+test is **skipped** (stop-before-deploy is the runbook; a re-pair risk to exercise a path we avoid is not worth it); cohort **3** while
+the founder is the only reviewer.
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy
