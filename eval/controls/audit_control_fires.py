@@ -174,7 +174,7 @@ HOLDS = {
     'D-FIDELITY-9 widening (fact path / figure-bearing questions)': {
         'state': 'HELD',
         'decided': '2026-10-10',
-        'expires': '2026-11-10',
+        'expires': '2026-12-10',  # EXTENDED 2026-11-11 from 2026-11-10: the pilot has not run, so there are no firings to decide on
         'why': ('WIRED, compute-path only, gated on the QUESTION supplying no figure at all. '
                 'Two widenings are deliberately not taken and each has a measured reason, not '
                 'a hunch. '
@@ -216,7 +216,7 @@ HOLDS = {
     'incidence renderer route': {
         'state': 'HELD',
         'decided': '2026-10-10',
-        'expires': '2026-11-10',
+        'expires': '2026-12-10',  # EXTENDED 2026-11-11 from 2026-11-10: the pilot has not run, so there are no firings to decide on
         'why': ('the incidence renderer exists, carries its own contract (it must name who '
                 'pays AND state the deduction polarity) and is exercised by '
                 'tests/test_levy_renderer_split.py -- but nothing routes an incidence ASK to '

@@ -399,7 +399,12 @@ def webhook(item: dict, token: str = None):
             _write_row(core.rejection_row("ignored", item, _settings(), BUILD))
             return {"status": "ignored"}
 
-        print(f"[chike] From: {parsed['sender']} — {parsed['text'][:80]}")
+        # The reply address is now a phone JID for @lid senders, so log the tail and domain
+        # only: a full phone number does not belong in a log that outlives the request.
+        _h, _tail = core.sender_ids(parsed["sender"])
+        print(f"[chike] From: ...{_tail}@{core.sender_domain(parsed['sender'])}"
+              f"{' (phone resolved from lid)' if parsed.get('sender_lid') else ''}"
+              f" — {parsed['text'][:80]}")
         if parsed["sender"].endswith("@lid"):
             # KEY NAMES ONLY, never values. A `@lid` sender is a linked-ID, not the phone
             # number, and whether Wappfly also sends the phone JID in some field decides

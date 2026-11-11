@@ -431,6 +431,36 @@ def test_parse_webhook_routes_greetings_and_questions():
     assert core.parse_webhook(_delivery("SDL ni ngapi?"))["kind"] == "question"
 
 
+def _lid_delivery(**key_extra):
+    key = {"remoteJid": "92686082166995@lid", "senderLid": "92686082166995@lid",
+           "fromMe": False, "addressingMode": "lid"}
+    key.update(key_extra)
+    return {"event": "messages.received",
+            "data": {"messages": {"key": key, "messageBody": "SDL ni ngapi?"}}}
+
+
+def test_lid_sender_is_addressed_by_phone_when_wappfly_supplies_one():
+    p = core.parse_webhook(_lid_delivery(cleanedSenderPn="255712345913"))
+    assert p["sender"] == "255712345913@s.whatsapp.net"
+    assert p["sender_lid"] == "92686082166995@lid"
+    assert core.sender_ids(p["sender"])[1] == "5913"
+
+
+def test_lid_sender_falls_back_through_senderPn_then_to_the_lid():
+    p = core.parse_webhook(_lid_delivery(senderPn="255712345913@s.whatsapp.net"))
+    assert p["sender"] == "255712345913@s.whatsapp.net"
+    for bad in ({}, {"cleanedSenderPn": ""}, {"cleanedSenderPn": "12"},
+                {"cleanedSenderPn": "x" * 20}):
+        q = core.parse_webhook(_lid_delivery(**bad))
+        assert q["sender"] == "92686082166995@lid" and "sender_lid" not in q
+
+
+def test_a_phone_jid_sender_is_never_rewritten():
+    body = _delivery("SDL ni ngapi?")
+    body["data"]["messages"]["senderPn"] = "255700000000"
+    assert core.parse_webhook(body)["sender"] == SENDER
+
+
 @pytest.mark.parametrize("body", [
     {}, None, "nonsense",
     {"event": "messages.sent", "data": {"messages": {"conversation": "hi",

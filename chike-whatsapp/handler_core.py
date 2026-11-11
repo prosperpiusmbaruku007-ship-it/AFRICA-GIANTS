@@ -259,7 +259,22 @@ def parse_webhook(body):
     if not text or not sender:
         return None
     kind = "greeting" if text.lower() in GREETINGS else "question"
-    return {"kind": kind, "sender": sender, "text": text}
+    out = {"kind": kind, "sender": sender, "text": text}
+    if sender.endswith("@lid"):
+        # A linked-ID is not a phone number. Wappfly also sends the phone in
+        # `cleanedSenderPn` / `senderPn` (seen 2026-11-10), and a phone JID is the address
+        # whose delivery is PROVEN, so reply there and keep the linked-ID for the record.
+        # Digits are validated rather than trusted: a malformed field falls back to the
+        # linked-ID, which is what shipped before and is known to deliver.
+        key = messages.get("key") or {}
+        for field in ("cleanedSenderPn", "senderPn"):
+            raw = key.get(field) or messages.get(field) or ""
+            digits = "".join(c for c in str(raw).split("@")[0] if c.isdigit())
+            if 7 <= len(digits) <= 15:
+                out["sender"] = digits + "@s.whatsapp.net"
+                out["sender_lid"] = sender
+                break
+    return out
 
 
 def extract_reply(result):
