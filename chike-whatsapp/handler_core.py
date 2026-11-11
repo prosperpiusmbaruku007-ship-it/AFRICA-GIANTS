@@ -174,6 +174,11 @@ class Settings:
     # wait is now human-paced. The answer and the acks therefore travel through two
     # different callables from here on.
     supervised: bool = False
+    # ⛔ THE PARTICIPANT DISCLOSURE (runbook §8a) IS PART OF THE R7 CONDITION. Default ON, and the only
+    # way to turn it off is an explicit 0/false/no/off -- a TYPO STAYS ON (fail toward disclosing, the
+    # opposite of how the SUPERVISED flag has to be read). /health reports it and pre-flight gate 3b
+    # refuses a deploy where it is not true.
+    disclosure_enabled: bool = True
 
     # ── THE COHORT (2026-10-10) ─────────────────────────────────────────────────────────
     # How many participants the pilot is enrolled for. A SETTING, because the right number
@@ -1272,6 +1277,94 @@ def cohort_capacity(declared_size, reviewers):
                if need <= reviewers else
                "OVER the review capacity: review will start to skim, which voids the R7 reading.")),
     }
+
+
+# ── THE PARTICIPANT DISCLOSURE: sent ONCE, AUTOMATICALLY, BEFORE THE ACK (founder, 2026-11-12) ───────
+#
+# "A disclosure that depends on me remembering will eventually be skipped, and dropping it voids the R7
+# reading." So it is not a runbook step; it is code, and it is VERBATIM the founder's text (the runbook's
+# §8a copy is asserted equal to this constant in tests, so the two cannot drift apart).
+DISCLOSURE_TEXT = (
+    "Karibu kwenye majaribio ya Chike. Chike ni msaidizi wa maswali ya kodi na sheria za biashara Tanzania. Kwa sasa ni jaribio linalosimamiwa: kila jibu linasomwa na mtu kabla ya kutumwa kwako, hivyo jibu linaweza kuchukua muda — wakati mwingine saa kadhaa. Majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA au mamlaka husika. Usitume taarifa binafsi zisizo za lazima. Asante kwa kutusaidia kuiboresha Chike.")
+
+# States in which the participant HAS been told (or the message is on its way and must never be repeated).
+DISCLOSURE_OK = ("delivered", "pending_receipt", "already")
+_DISCLOSURE_WAIT_S = 30.0          # a second message racing the first waits for the first send to settle
+_DISCLOSURE_STALE_S = 60.0         # a claim older than this is a crash, not a send in flight
+_DISCLOSURE_POLL_S = 1.0
+
+
+def parse_disclosure_flag(value) -> bool:
+    """ON unless explicitly switched off. "ture" stays ON: a typo must not silently drop the disclosure."""
+    return str(value or "").strip().lower() not in ("0", "false", "no", "off")
+
+
+async def ensure_disclosure(sender, send_once, claim, peek, finish, release, settings, build="dev"):
+    """Send the disclosure to `sender` if -- and only if -- nobody has yet. Returns the row fields.
+
+    NEVER TWICE: `claim(key, record)` is an ATOMIC put-if-absent (modal.Dict.put(skip_if_exists=True)),
+    taken BEFORE the send, so two messages arriving together cannot both send. The loser waits (bounded)
+    for the winner's send to settle, so its own ack cannot overtake the disclosure.
+      * delivered / pending_receipt -> recorded, and never sent again. PENDING_RECEIPT is "accepted, not
+        yet receipted" -- resending a message that may be on its way is how a duplicate is made.
+      * a CLEAN failure (nothing reached them) -> the claim is RELEASED so the participant's next message
+        retries; the reply to THIS message still goes to review (every reply is human-read), and the
+        row says `failed` so the reviewer sees the disclosure did not land.
+      * the store cannot be read -> `unknown`, and NOTHING is sent: a missing disclosure is flagged, a
+        duplicate one is not undoable.
+    Keyed by sender hash (no raw number is stored). One person reaching us as @lid and as a phone JID is
+    two senders and is told twice -- the cost of not guessing that two addresses are one human."""
+    import asyncio
+    key, _tail = sender_ids(sender, settings.sender_salt)
+    ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    try:
+        claimed = claim(key, {"state": "sending", "ts": ts, "build": build})
+    except Exception as e:                                           # noqa: BLE001
+        return {"disclosure_state": "unknown", "disclosure_detail": f"store: {type(e).__name__}"}
+    if not claimed:
+        waited = 0.0
+        while waited < _DISCLOSURE_WAIT_S:
+            try:
+                rec = peek(key) or {}
+            except Exception:                                        # noqa: BLE001
+                break
+            if rec.get("state") != "sending":
+                break
+            # Only a FRESH claim is worth waiting for. A 'sending' record older than a minute is a crash
+            # (or a failed record write) -- waiting 30 s on it would delay EVERY later message from this
+            # participant for a send that will never settle. It is not resent (never twice); it is
+            # counted in /health as `stuck_sending`.
+            try:
+                age = (datetime.now(timezone.utc) - datetime.fromisoformat(rec["ts"])).total_seconds()
+            except Exception:                                        # noqa: BLE001
+                age = 1e9
+            if age > _DISCLOSURE_STALE_S:
+                break
+            await asyncio.sleep(_DISCLOSURE_POLL_S)
+            waited += _DISCLOSURE_POLL_S
+        try:
+            ts_prev = (peek(key) or {}).get("ts")
+        except Exception:                                            # noqa: BLE001
+            ts_prev = None
+        return {"disclosure_state": "already", "disclosure_ts": ts_prev}
+    try:
+        ok, detail = await send_with_retry(send_once, sender, DISCLOSURE_TEXT, settings)
+    except Exception as e:                                           # noqa: BLE001
+        ok, detail = False, f"{type(e).__name__}: {e}"
+    if ok or is_pending_receipt(detail):
+        state = "delivered" if ok else "pending_receipt"
+        try:
+            finish(key, {"state": state, "ts": ts, "build": build,
+                         "message_id": None if ok else pending_message_id({"send_error": detail})})
+        except Exception:                                            # noqa: BLE001
+            pass                                  # it WAS sent; losing the record must not trigger a resend
+        return {"disclosure_state": state, "disclosure_ts": ts}
+    try:
+        release(key)
+    except Exception:                                                # noqa: BLE001
+        pass
+    return {"disclosure_state": "failed", "disclosure_ts": ts,
+            "disclosure_detail": scrub(str(detail), settings.secrets)[:160]}
 
 
 def is_seeded_test(item) -> bool:

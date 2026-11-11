@@ -160,7 +160,7 @@ def test_cannot_evaluate_exits_2_not_0():
 # ── GATE 3b: THE BUILT IMAGE'S SUPERVISED-PILOT ENV, PLANTED BOTH WAYS (2026-11-10) ──
 # The specimen is the real thing: the /health a bare `modal deploy chike-whatsapp` produced on
 # 2026-11-10 — cohort 0, links unissuable — which passed gates 1-3 and failed safe.
-_GOOD_WA = {"supervised": True, "cohort": {"declared_size": 5},
+_GOOD_WA = {"supervised": True, "cohort": {"declared_size": 5}, "disclosure": {"enabled": True},
             "roster": {"reviewers": 1, "signing_key_set": True,
                        "review_urls_set": True, "can_issue_links": True},
             "bridge": {"session_status": "connected", "session_detail": "open",
@@ -328,3 +328,17 @@ def test_sched_helper_is_a_noop_for_the_real_deploy(monkeypatch):
     assert load("mw_sched_real")._sched("P") == "P"            # real deploy: schedule kept
     monkeypatch.setenv("CHIKE_PREFLIGHT_NO_SCHEDULE", "1")
     assert load("mw_sched_pre")._sched("P") is None            # throwaway build: dropped
+
+
+def test_3b_REFUSES_an_image_whose_participant_disclosure_is_off_or_unreadable():
+    """The disclosure (runbook 8a) is part of the R7 condition; a deploy that silently drops it must not
+    pass. Planted both ways: explicitly off, absent from /health (cannot evaluate is not a pass), and on."""
+    import copy
+    for bad in ({"enabled": False}, {"enabled": None}, {}):
+        h = copy.deepcopy(_GOOD_WA)
+        h["disclosure"] = bad
+        assert any("disclosure.enabled" in f for f in pf.check_whatsapp_health(h)), bad
+    h = copy.deepcopy(_GOOD_WA)
+    del h["disclosure"]
+    assert any("disclosure.enabled" in f for f in pf.check_whatsapp_health(h))
+    assert pf.check_whatsapp_health(_GOOD_WA) == []

@@ -143,6 +143,18 @@ def isolate_modal_stores(mw, monkeypatch):
     import modal
     names = [n for n, v in vars(mw).items() if isinstance(v, modal.Dict)]
     for n in names:
-        monkeypatch.setattr(mw, n, {})
+        monkeypatch.setattr(mw, n, StubDict())
     assert names, "no modal.Dict found on the module -- the isolation helper is inert"
     return names
+
+
+class StubDict(dict):
+    """A plain dict with modal.Dict's put(skip_if_exists=True) -- the ATOMIC claim primitive the participant
+    disclosure relies on. A bare dict has no .put, so the claim would raise and every disclosure test would
+    quietly exercise the `unknown` path instead of the one it names."""
+
+    def put(self, key, value, *, skip_if_exists=False):
+        if skip_if_exists and key in self:
+            return False
+        self[key] = value
+        return True

@@ -191,6 +191,12 @@ def check_whatsapp_health(h, today=None):
             f"reviewers={roster.get('reviewers')!r}). Without it every draft is held and the "
             f"reviewer is never sent a link — safe, but the pilot is dead. Set REVIEW_D_URL, "
             f"REVIEW_CLAIM_URL and REVIEW_ACT_URL on the pre-flight AND the deploy command.")
+    if ((h or {}).get("disclosure") or {}).get("enabled") is not True:
+        fails.append(
+            f"disclosure.enabled is {((h or {}).get('disclosure') or {}).get('enabled')!r}; it must be "
+            f"true. The participant disclosure (runbook 8a) is part of the R7 condition: dropping it "
+            f"voids the supervised-cohort reading. It is ON by default and only an explicit "
+            f"DISCLOSURE=0/false/no/off turns it off.")
     if (h or {}).get("supervised") is not True:
         fails.append(
             f"supervised is {(h or {}).get('supervised')!r}; the R7 reading on a supervised "

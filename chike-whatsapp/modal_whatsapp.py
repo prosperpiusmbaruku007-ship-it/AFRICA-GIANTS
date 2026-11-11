@@ -184,6 +184,8 @@ _WATCH_KEY = "session"
 # message id -> transcript key, for rows written while a send had no delivery receipt yet; the
 # reconcile job rewrites them when the late receipt arrives. The bridge's send ledger is READ.
 PENDING_ROWS = modal.Dict.from_name("chike-pending-rows-kv", create_if_missing=True)
+# Who has been sent the participant disclosure (runbook 8a). Keyed by sender HASH, never a number.
+DISCLOSURES = modal.Dict.from_name("chike-disclosures-kv", create_if_missing=True)
 BRIDGE_LEDGER = modal.Dict.from_name("chike-bridge-ledger-kv", create_if_missing=True)
 # BRIDGE_SEND_TOKEN is the only key used from it; attached here so no one has to copy a token
 # between secrets by hand.
@@ -206,6 +208,7 @@ def _settings():
         cold_start_suspected_s=float(os.environ.get("COLD_START_SUSPECTED_S", "30")),
         send_attempts=int(os.environ.get("SEND_ATTEMPTS", "2")),
         sender_salt=os.environ.get("SENDER_SALT", ""),
+        disclosure_enabled=_core().parse_disclosure_flag(os.environ.get("DISCLOSURE")),
         secrets=(os.environ.get("WAPPFLY_TOKEN", ""),
                  os.environ.get("WEBHOOK_TOKEN", ""),
                  os.environ.get("ADMIN_TOKEN", ""),
@@ -332,6 +335,7 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None):
                                 engine_working=captured.get("working"),
                                 facts=captured.get("facts", ()))
         item["retry_of"] = retry_of
+        item["disclosure_state"] = disclosure.get("disclosure_state")     # the card warns if it failed
         try:
             REVIEW_QUEUE[item["review_id"]] = item
         except Exception as e:                                       # noqa: BLE001
@@ -359,12 +363,18 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None):
                   f"{type(e).__name__}: {e} — the draft HOLDS and will be re-notified")
         return True, None
 
+    # ⛔ THE DISCLOSURE GOES FIRST -- before core.deliver, which is what sends the acks. Skipped for a
+    # reviewer-requested RETRY (the participant is long past their first message).
+    disclosure = {}
+    if settings.disclosure_enabled and not retry_of:
+        disclosure = await _ensure_disclosure(sender, settings)
     row = await core.deliver(
         sender, text, ask_capturing if settings.supervised else ask,
         _send_once, settings, BUILD,
         hold_reply=_hold_for_review if settings.supervised else None)
     if retry_of:
         row["retry_of"] = retry_of
+    row.update(disclosure)
     _write_row(row)
     return {"fallback": row["fallback"], "error_class": row["error_class"],
             "supervision": row.get("supervision")}
@@ -374,9 +384,35 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None):
               timeout=300, retries=0)
 async def greet_and_send(sender: str):
     core = _core()
-    row = await core.deliver_greeting(sender, _send_once, _settings(), BUILD)
+    settings = _settings()
+    disclosure = (await _ensure_disclosure(sender, settings)) if settings.disclosure_enabled else {}
+    row = await core.deliver_greeting(sender, _send_once, settings, BUILD)
+    row.update(disclosure)
     _write_row(row)
     return {"send_ok": row["send_ok"]}
+
+
+async def _ensure_disclosure(sender, settings):
+    """Wires handler_core.ensure_disclosure to the Modal Dict. put(skip_if_exists=True) is the ATOMIC
+    claim that makes "never twice" hold when two messages arrive together."""
+    core = _core()
+    return await core.ensure_disclosure(
+        sender, _send_once,
+        claim=lambda k, v: DISCLOSURES.put(k, v, skip_if_exists=True),
+        peek=lambda k: DISCLOSURES.get(k),
+        finish=lambda k, v: DISCLOSURES.__setitem__(k, v),
+        release=lambda k: DISCLOSURES.pop(k, None),
+        settings=settings, build=BUILD)
+
+
+def _disclosure_banner(it):
+    """A red line on the review card when the participant's disclosure did NOT land, so the reviewer
+    knows to tell them before approving. Silent when delivered/already/unrecorded (older items)."""
+    if it.get("disclosure_state") in ("failed", "unknown"):
+        return ("<div class=w style='color:#ff6b6b'><b>DISCLOSURE NOT DELIVERED</b> &mdash; this "
+                "participant has not been told it is a supervised test. It will be re-sent with their "
+                "next message; consider telling them before you approve.</div>")
+    return ""
 
 
 async def _send_once(to: str, text: str):
@@ -775,6 +811,34 @@ def _cohort_health():
             "_note": "a MONITOR, not a gate — see the comment at the call site"}
 
 
+def _disclosure_health():
+    """Reported from the SAME parse the handler uses, plus how many participants have been told. A
+    'sending' record older than 10 minutes is a crash between claim and send: it is counted, never
+    auto-resent (never twice), so it is visible instead of silent."""
+    try:
+        enabled = _settings().disclosure_enabled
+    except Exception:                                                # noqa: BLE001
+        enabled = None
+    try:
+        import time as _t
+        from datetime import datetime as _dt
+        counts, stuck = {}, 0
+        for k in DISCLOSURES.keys():
+            rec = DISCLOSURES.get(k) or {}
+            st = rec.get("state")
+            counts[st] = counts.get(st, 0) + 1
+            if st == "sending":
+                try:
+                    if _t.time() - _dt.fromisoformat(rec["ts"]).timestamp() > 600:
+                        stuck += 1
+                except Exception:                                    # noqa: BLE001
+                    stuck += 1
+        return {"enabled": enabled, "participants_told": counts.get("delivered", 0) + counts.get("pending_receipt", 0),
+                "by_state": counts, "stuck_sending": stuck}
+    except Exception as e:                                           # noqa: BLE001
+        return {"enabled": enabled, "ok": False, "error": f"{type(e).__name__}"}
+
+
 def _roster_health():
     try:
         settings = _settings()
@@ -863,6 +927,7 @@ def review(token: str = None):
             + _esc(it.get("model_latency_ms")) + "ms" + flags + "</div>"
             "<div class=q>" + _esc(it.get("question")) + "</div>"
             '<textarea id="t-' + rid + '" rows=9>' + _esc(it.get("draft")) + "</textarea>"
+            + _disclosure_banner(it)
             + work_html
             + ("<div class=f><b>Facts served</b><ul>" + facts_html + "</ul></div>"
                if facts_html else "")
@@ -990,6 +1055,7 @@ def d(r: str = None, v: str = None, t: str = None):
         + ("andika jibu lako hapa..." if it.get("fallback") else "")
         + '" ' + ("disabled" if decided else "") + ">"
         + ("" if it.get("fallback") else _esc(it.get("draft"))) + "</textarea>"
+        + _disclosure_banner(it)
         + work_html
         + ("<div class=f><b>Vigezo vilivyotumika (" + str(len(it.get("facts") or []))
            + ")</b><ul>" + facts_html + "</ul></div>" if facts_html else "")
@@ -1582,6 +1648,7 @@ def health():
         # anything. (It broke two tests the moment it could raise, which is how this was
         # caught rather than discovered live.)
         **_supervision_health(),
+        "disclosure": _disclosure_health(),
         "review_endpoint": bool(os.environ.get("ADMIN_TOKEN", "")),
         "review_queue": _review_queue_health(),
         # ── THE COHORT, REPORTED BESIDE THE SUPERVISION FLAG (asked for explicitly) ──

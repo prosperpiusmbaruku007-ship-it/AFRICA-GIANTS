@@ -591,7 +591,10 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
     # CHIKE_PREFLIGHT_NO_SCHEDULE (2026-11-12) is a BUILD-TIME flag set only on the pre-flight's
     # throwaway deploy (see _sched()); never a secret and deliberately not reported by /health,
     # because a running app has no business knowing it was built as a throwaway.
-    tunables = {"CHIKE_BUILD", "CHIKE_PREFLIGHT_NO_SCHEDULE", "WAPPFLY_SEND_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
+    # DISCLOSURE (2026-11-12) is a deploy-time FLAG: the participant disclosure is ON unless explicitly
+    # 0/false/no/off, so a typo stays ON. Not a secret; /health reports its PARSED value and pre-flight
+    # gate 3b refuses a deploy where it is not true.
+    tunables = {"CHIKE_BUILD", "CHIKE_PREFLIGHT_NO_SCHEDULE", "DISCLOSURE", "WAPPFLY_SEND_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
                 "SECOND_ACK_AFTER_S", "COLD_START_SUSPECTED_S", "SEND_ATTEMPTS",
                 "WAPPFLY_TIMEOUT_S", "SUPERVISED",
                 "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL",
