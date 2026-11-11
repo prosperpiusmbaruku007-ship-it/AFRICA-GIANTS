@@ -91,6 +91,34 @@
 - **Result:** full suite **78–86 s** (was 490 s). The three mid-run failures seen earlier were never captured
   and never reproduced; `--junitxml` is now used so a recurrence leaves names.
 
+### 4b. 2026-11-12 — the three-app redeploy, and three things it turned up
+
+- **Deployed in one window with no participants:** `chike-inference` (cold-start timings), `chike-whatsapp`
+  (TEST- items excluded from pilot stats; pending-row fix), `chike-bridge` (60-min receipt ceiling) — all at
+  `e86b4cd`/`bc4eda6`, each pre-flighted and verified live.
+- **FIRST COLD-START DATUM (post-deploy, T4): 5.5 s scheduling + image pull, 35.5 s model load, 42 s wall.**
+  One sample says only that the 20-minute start of 2026-11-11 is **not reproducible on demand** — it does not
+  say it was not scarcity. The instrumentation stays; the L4 decision still waits for a *slow* start to measure.
+- **THE 23:54 "WARM RUN" WAS NOT WARM.** `scaledown_window=300` and the previous call ended ~89 min earlier,
+  so that container could not have survived; the row says so itself (`model_latency_ms` 60,910,
+  `cold_start_suspected: true`, two acks). **A 61 s cold start, not a warm one — do not mistake it for a solved
+  problem, and do not mistake it for the 20-minute case either.** The draft's figure was right
+  (3.5% × TZS 6,000,000 = TZS 210,000); end to end 106 s from question to delivery, receipt lag 46 s (`read`).
+- **BUG FOUND BY READING THAT ROW: late receipts never reconciled.** The ledger said `read`; the transcript
+  said `pending_receipt`. `_write_row` called `transcript_filename()` twice (random suffix each call), so
+  `PENDING_ROWS` named a file that was never stored. Shipped in `92f2290`; fixed in `e86b4cd` with a planted
+  test. **Two existing rows (19:09 and 20:56 on 11 Nov) remain `pending_receipt` and are not repaired.**
+- **PRE-FLIGHT GATE 3 WAS ABOUT TO BECOME PERMANENTLY UNPASSABLE for `chike-whatsapp`:** Modal's plan allows
+  5 scheduled functions; the live app has 3 and the throwaway copy needs 3 more. Fixed by dropping only the
+  cron metadata in the throwaway build (`_sched()`, `CHIKE_PREFLIGHT_NO_SCHEDULE`). It passed on the previous
+  deploy only because the live app then had 2. **Any new scheduled function now needs a plan decision.**
+- **Bridge redeploy:** stop → deploy; new container reconnected in ~17 s, `paired: true`, `has_qr: false`
+  (no QR), `holders_fresh` never above 1, ledger survived (12 sends), `ceiling_s: 3600`. ⚠️ **This did NOT
+  exercise lease overlap** — stopping first removes it. The overlap case is protected by the lease and its
+  tests, not by a live deploy; a deliberate no-stop deploy would be a separate decision with a QR-re-pair downside.
+- ⚠️ `per_reviewer` (admin `dump_queue` / `/review`) is keyed by the reviewer's full JID, i.e. their phone
+  number, where the runbook says handles only.
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy
