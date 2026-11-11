@@ -82,6 +82,33 @@ _DIGIT_M = re.compile(r"(\d+(?:[.,]\d+)?)\s*m\b", re.IGNORECASE)        # "20m",
 _DIGITS = re.compile(r"\d[\d,\.]*")
 _SCALE_DIGIT = re.compile(r"\b(elfu|laki|milioni|bilioni)\s+(\d[\d,.]*)", re.IGNORECASE)
 
+# ── NUMBER BEFORE THE SCALE WORD: "11 milioni", "400 elfu", "1.5 milioni", "11 million" ──────
+#
+# Added 2026-11-12 after a LIVE miss. The parser only knew the scale-first order ("milioni 11"). Given
+# "TZS 11 milioni" it returned TWO amounts, [11, 1_000_000] -- the numeral, and the bare scale word read
+# by the word-number path as one million. The consequences were not symmetrical:
+#   * D-FIDELITY-7 never saw 11,000,000, so a fabricated EFD threshold was delivered unflagged;
+#   * the compute engines were handed TZS 1,000,000 for "mishahara ... ni 6 milioni" and answered SDL
+#     TZS 35,000 where 210,000 is owed -- a confident wrong figure on the path this project trusts most.
+# Every corpus specimen used the scale-first order, so every test passed (R33: the probe set shared the
+# notation of the person who wrote the parser).
+#
+# THE POLICY MIRRORS THE SCALE-FIRST ONE, deliberately:
+#   * a three-digit tail is ambiguous ("1,500 milioni" = 1.5 million or 1,500 million?) -> DECLINE, and
+#     ambiguous_scale_figures() reports it so the caller can ask rather than guess;
+#   * a figure with a one/two-digit tail is a decimal mark ("1.5 milioni", "1,5 milioni");
+#   * SCALE-FIRST WINS A COLLISION. In "siku 26 elfu 18" the word `elfu` belongs to `elfu 18`; reading it
+#     as "26 elfu" as well would double-spend one word. Collisions keep today's reading exactly.
+_DIGIT_SCALE = re.compile(
+    r"(?<![A-Za-z0-9])(\d[\d,.]*?)\s*\b(elfu|laki|milioni|bilioni|millions?|billions?)\b",
+    re.IGNORECASE)
+_EN_SCALE = {"million": 1000000, "millions": 1000000, "billion": 1000000000, "billions": 1000000000}
+
+
+def _scale_value(word):
+    w = word.lower()
+    return BIG_SCALE.get(w) or _EN_SCALE[w]
+
 # ── SEPARATORS: THE SAME MARK MEANS TWO THINGS, AND GUESSING COSTS A FACTOR OF 10 ──────
 #
 # Swahili writing uses BOTH conventions. `milioni 5,5` is five-and-a-half million to a
@@ -216,6 +243,12 @@ def ambiguous_scale_figures(text):
             # back to the user verbatim and a stray comma in the quote reads as if we
             # misread them — in a message whose entire job is to show we read them exactly.
             out.append(m.group(0).rstrip(".,"))
+    sf_words = {i for m in _SCALE_DIGIT.finditer(text.lower()) for i in range(m.start(1), m.end(1))}
+    for m in _DIGIT_SCALE.finditer(text.lower()):
+        if m.start(2) in sf_words:
+            continue
+        if _resolve_figure(m.group(1), after_scale_word=True) is None:
+            out.append(m.group(0).strip().rstrip(".,"))
     return out
 
 
@@ -253,6 +286,19 @@ def parse_amounts_located(text):
             continue                                     # guess; ambiguous_scale_figures()
         found.append((m.start(), Decimal(scale) * digits))
 
+    # NUMBER-FIRST ("11 milioni"). Scale words that scale-first matches already own are not reused: a
+    # collision keeps the scale-first reading (see the block above _DIGIT_SCALE).
+    sf_scale_words = {i for m in _SCALE_DIGIT.finditer(text_l) for i in range(m.start(1), m.end(1))}
+    nf_consumed = set()
+    for m in _DIGIT_SCALE.finditer(text_l):
+        if m.start(2) in sf_scale_words:
+            continue
+        nf_consumed.update(range(m.start(), m.end()))     # consumed even when DECLINED, so the digits
+        digits = _resolve_figure(m.group(1), after_scale_word=True)   # cannot resurface as a bare amount
+        if digits is None:                               # '1,500 milioni' -- DECLINE, do not guess
+            continue
+        found.append((m.start(), Decimal(_scale_value(m.group(2))) * digits))
+
     for m in _DIGIT_M.finditer(text_l):                  # "20m" -> 20,000,000
         digits = _resolve_figure(m.group(1), after_scale_word=True)
         if digits is None:
@@ -261,6 +307,7 @@ def parse_amounts_located(text):
 
     # word-number runs (skip any that were already consumed by a scale+digit match)
     consumed = {i for m in _SCALE_DIGIT.finditer(text_l) for i in range(m.start(), m.end())}
+    consumed |= nf_consumed
     for m in re.finditer(r"[a-z]+", text_l):
         if m.group(0) in NUMBER_TOKENS and m.start() not in consumed:
             # extend to the maximal run of number tokens

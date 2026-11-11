@@ -1,0 +1,569 @@
+{
+ "files_scanned": 503,
+ "distinct_strings": 8060,
+ "changed": [
+  {
+   "q": "A business earns TZS 20 million per month — after how many months does it cross the 6-month VAT threshold of TZS 100 million?",
+   "old_amounts": [
+    6.0,
+    20.0,
+    100.0
+   ],
+   "new_amounts": [
+    6.0,
+    20000000.0,
+    100000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "A business earns TZS 25 million per month — after how many months does it hit the TZS 200 million VAT threshold?",
+   "old_amounts": [
+    25.0,
+    200.0
+   ],
+   "new_amounts": [
+    25000000.0,
+    200000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "A non-citizen was fined TZS 8 million and not imprisoned. Is this a correct penalty under GN 487A?",
+   "old_amounts": [
+    8.0
+   ],
+   "new_amounts": [
+    8000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 8000000.0
+  },
+  {
+   "q": "A qualifying buyer purchases TZS 5 million of goods — what VAT withholding amount is deducted?",
+   "old_amounts": [
+    5.0
+   ],
+   "new_amounts": [
+    5000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 5000000.0
+  },
+  {
+   "q": "A qualifying government entity pays TZS 3 million for consultancy services — what VAT withholding amount is deducted?",
+   "old_amounts": [
+    3.0
+   ],
+   "new_amounts": [
+    3000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 3000000.0
+  },
+  {
+   "q": "An employee earns a gross salary of TZS 2 million per month — does NSSF apply to the full TZS 2 million?",
+   "old_amounts": [
+    2.0,
+    2.0
+   ],
+   "new_amounts": [
+    2000000.0,
+    2000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "Does a Tanzanian facilitator pay the TZS 5 million fine AND serve 3 months imprisonment, or just one of the two?",
+   "old_amounts": [
+    3.0,
+    5.0
+   ],
+   "new_amounts": [
+    3.0,
+    5000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 5000000.0
+  },
+  {
+   "q": "EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 11 milioni -- EFD inahitajika kwa kila mtu.",
+   "old_amounts": [
+    11.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    11000000.0
+   ],
+   "old_sole": 1000000.0,
+   "new_sole": 11000000.0
+  },
+  {
+   "q": "Faini ya TZS 5 milioni (msaidizi) ni kubwa zaidi kuliko faini ya TZS 10 milioni (mgeni)?",
+   "old_amounts": [
+    5.0,
+    10.0,
+    1000000.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    5000000.0,
+    10000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "Hapana, si lazima kwa biashara yenye mauzo ya milioni 15 pekee. EFD inahitajika tu pale unapofikia kizingiti cha TZS 11 milioni kwa mwaka au TZS 100 milioni kwa miezi 6. Ukifikia kizingiti hicho, utatakiwa kujiandikisha kwa VAT na kupata EFD kutoka kwa msambazaji aliyeidhinishwa. Thibitisha na TRA (tra.go.tz).",
+   "old_amounts": [
+    6.0,
+    11.0,
+    100.0,
+    1000000.0,
+    1000000.0,
+    15000000.0
+   ],
+   "new_amounts": [
+    6.0,
+    11000000.0,
+    15000000.0,
+    100000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "Hiyo TZS 5 milioni ni kwa kila kosa au ni faini ya jumla?",
+   "old_amounts": [
+    5.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    5000000.0
+   ],
+   "old_sole": 1000000.0,
+   "new_sole": 5000000.0
+  },
+  {
+   "q": "Hiyo adhabu ya TZS 5 milioni au miezi 3 inamhusu mwananchi pekee au inamhusu pia mgeni?",
+   "old_amounts": [
+    3.0,
+    5.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    3.0,
+    5000000.0
+   ],
+   "old_sole": 1000000.0,
+   "new_sole": 5000000.0
+  },
+  {
+   "q": "I heard a Tanzanian who helps a foreigner can get a TZS 10 million fine — is this true?",
+   "old_amounts": [
+    10.0
+   ],
+   "new_amounts": [
+    10000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 10000000.0
+  },
+  {
+   "q": "If I paid the TZS 10 million fine, can I continue running my salon as a non-citizen?",
+   "old_amounts": [
+    10.0
+   ],
+   "new_amounts": [
+    10000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 10000000.0
+  },
+  {
+   "q": "Is the TZS 5 million fine (facilitator) larger than the TZS 10 million fine (non-citizen)?",
+   "old_amounts": [
+    5.0,
+    10.0
+   ],
+   "new_amounts": [
+    5000000.0,
+    10000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "Is the VAT threshold TZS 100 million or TZS 200 million? I am confused.",
+   "old_amounts": [
+    100.0,
+    200.0
+   ],
+   "new_amounts": [
+    100000000.0,
+    200000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "Is the non-citizen fine (TZS 10 million minimum) larger or smaller than the Tanzanian facilitator fine (TZS 5 million)?",
+   "old_amounts": [
+    5.0,
+    10.0
+   ],
+   "new_amounts": [
+    5000000.0,
+    10000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "Je, biashara ndogo yenye mauzo ya TZS 50 milioni kwa mwaka inalazimika kulipa VAT?",
+   "old_amounts": [
+    50.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    50000000.0
+   ],
+   "old_sole": 1000000.0,
+   "new_sole": 50000000.0
+  },
+  {
+   "q": "KNOWN GAP 2026-11-12, SAME ROOT CAUSE, WIDER BLAST RADIUS: the shared parser also feeds the compute engines. 'mishahara ... ni 6 milioni' hands compute_sdl TZS 1,000,000 (SDL 35,000) instead of 6,000,000 (SDL 210,000). Fix swahili_numbers once; both specimens flip.",
+   "old_amounts": [
+    6.0,
+    11.0,
+    12.0,
+    2026.0,
+    35000.0,
+    210000.0,
+    1000000.0,
+    1000000.0,
+    6000000.0
+   ],
+   "new_amounts": [
+    11.0,
+    12.0,
+    2026.0,
+    35000.0,
+    210000.0,
+    1000000.0,
+    6000000.0,
+    6000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "KNOWN LIVE GAP 2026-11-12: swahili_numbers parses 'TZS 11 milioni' as [11, 1000000], so no amount equals 11,000,000 and D-FIDELITY-7 never sees the fabrication. Fix the parser, then delete this marker (strict: it will XPASS and fail until you do).",
+   "old_amounts": [
+    7.0,
+    11.0,
+    11.0,
+    11.0,
+    12.0,
+    2026.0,
+    1000000.0,
+    1000000.0,
+    11000000.0
+   ],
+   "new_amounts": [
+    7.0,
+    11.0,
+    11.0,
+    12.0,
+    2026.0,
+    1000000.0,
+    11000000.0,
+    11000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "Kizingiti cha EFD ni TZS 11 milioni kwa mwaka — ni lazima kuwa VAT registered pia?",
+   "old_amounts": [
+    11.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    11000000.0
+   ],
+   "old_sole": 1000000.0,
+   "new_sole": 11000000.0
+  },
+  {
+   "q": "Kizingiti cha VAT ni TZS 100 milioni au TZS 200 milioni? Sielewi.",
+   "old_amounts": [
+    100.0,
+    200.0,
+    1000000.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    100000000.0,
+    200000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "Kizingiti cha kusajili VAT ni TZS 200 milioni kwa miezi 12. EFD yenyewe haina kizingiti.",
+   "old_amounts": [
+    12.0,
+    200.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    12.0,
+    200000000.0
+   ],
+   "old_sole": 1000000.0,
+   "new_sole": 200000000.0
+  },
+  {
+   "q": "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari (voluntary VAT registration)?",
+   "old_amounts": [
+    200.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    200000000.0
+   ],
+   "old_sole": 1000000.0,
+   "new_sole": 200000000.0
+  },
+  {
+   "q": "Mgeni alipewa faini ya TZS 8 milioni na hakufungwa. Je, hii ni adhabu sahihi chini ya GN 487A?",
+   "old_amounts": [
+    8.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    8000000.0
+   ],
+   "old_sole": 1000000.0,
+   "new_sole": 8000000.0
+  },
+  {
+   "q": "Must a registered lawyer register for VAT even with annual revenue below TZS 200 million?",
+   "old_amounts": [
+    200.0
+   ],
+   "new_amounts": [
+    200000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 200000000.0
+  },
+  {
+   "q": "Must a small business with TZS 50 million annual sales pay VAT?",
+   "old_amounts": [
+    50.0
+   ],
+   "new_amounts": [
+    50000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 50000000.0
+  },
+  {
+   "q": "My annual sales have not yet reached TZS 200 million. Can I register for VAT voluntarily?",
+   "old_amounts": [
+    200.0
+   ],
+   "new_amounts": [
+    200000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 200000000.0
+  },
+  {
+   "q": "My annual turnover has reached TZS 250 million — must I register for VAT?",
+   "old_amounts": [
+    250.0
+   ],
+   "new_amounts": [
+    250000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 250000000.0
+  },
+  {
+   "q": "My business earned TZS 95 million in 6 months — have I crossed the mandatory VAT threshold?",
+   "old_amounts": [
+    6.0,
+    95.0
+   ],
+   "new_amounts": [
+    6.0,
+    95000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 95000000.0
+  },
+  {
+   "q": "My business earns TZS 80 million per year — must I register for VAT?",
+   "old_amounts": [
+    80.0
+   ],
+   "new_amounts": [
+    80000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 80000000.0
+  },
+  {
+   "q": "My business has TZS 180 million in annual sales — how much more revenue until mandatory VAT registration?",
+   "old_amounts": [
+    180.0
+   ],
+   "new_amounts": [
+    180000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 180000000.0
+  },
+  {
+   "q": "My business has had TZS 95 million in sales over 6 months — have I crossed the mandatory VAT threshold?",
+   "old_amounts": [
+    6.0,
+    95.0
+   ],
+   "new_amounts": [
+    6.0,
+    95000000.0
+   ],
+   "old_sole": null,
+   "new_sole": 95000000.0
+  },
+  {
+   "q": "Nimefikisha mauzo ya TZS 150 milioni katika miezi 4 iliyopita. Je, ni lazima nisajili VAT?",
+   "old_amounts": [
+    4.0,
+    150.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    4.0,
+    150000000.0
+   ],
+   "old_sole": 1000000.0,
+   "new_sole": 150000000.0
+  },
+  {
+   "q": "PREREQ-2 pattern B — multi-group payroll, and the eval_399 individual shape.\n\nWHY THIS PARSER IS ALL-OR-NOTHING. A prototype of the obvious structural template\n(\"<count> <pay-verb> <amount>\") was swept over 524 questions: it matched 12 and MIS-PARSED\nSIX, two of them catastrophically — eval_304 became a TZS 1 BILLION payroll (mtaji is\ncapital), nat_18 became 2 x 400,000 instead of 400,000 + 1,100,000, and eval_285/287/288/289\ntook the fraction BASE (24, 30, 16, 14) as the group count. Every one of those replaces an\nhonest clarification with a confident wrong number, which is the failure never-guess exists\nto prevent. Four validations must all pass or the parser declines.\n\nMagnitude cannot be the count-vs-salary discriminator: MIN_PLAUSIBLE_AMOUNT is 10,000, but\nreal rates here are 1,500/piece and 18,000/day. Roles are assigned STRUCTURALLY.\n",
+   "old_amounts": [
+    1.0,
+    2.0,
+    2.0,
+    12.0,
+    14.0,
+    16.0,
+    18.0,
+    24.0,
+    30.0,
+    285.0,
+    287.0,
+    288.0,
+    289.0,
+    304.0,
+    399.0,
+    524.0,
+    1500.0,
+    10000.0,
+    18000.0,
+    400000.0,
+    400000.0,
+    1100000.0
+   ],
+   "new_amounts": [
+    2.0,
+    2.0,
+    12.0,
+    14.0,
+    16.0,
+    18.0,
+    24.0,
+    30.0,
+    285.0,
+    287.0,
+    288.0,
+    289.0,
+    304.0,
+    399.0,
+    524.0,
+    1500.0,
+    10000.0,
+    18000.0,
+    400000.0,
+    400000.0,
+    1100000.0,
+    1000000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  },
+  {
+   "q": "TZS 11 milioni",
+   "old_amounts": [
+    11.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    11000000.0
+   ],
+   "old_sole": 1000000.0,
+   "new_sole": 11000000.0
+  },
+  {
+   "q": "mauzo ya 400 elfu",
+   "old_amounts": [
+    400.0,
+    1000.0
+   ],
+   "new_amounts": [
+    400000.0
+   ],
+   "old_sole": null,
+   "new_sole": 400000.0
+  },
+  {
+   "q": "mishahara yote kwa mwezi ni 6 milioni",
+   "old_amounts": [
+    6.0,
+    1000000.0
+   ],
+   "new_amounts": [
+    6000000.0
+   ],
+   "old_sole": 1000000.0,
+   "new_sole": 6000000.0
+  },
+  {
+   "q": "⛔⛔ THE PERMANENT RECORD, PINNED TO THE REAL SPECIMEN RATHER THAN A PROXY.\n\n    `eval_130`'s reply at gate `0e11c3d` was: *\"Kiasi cha SDL kinahesabiwa kwa kuchukua jumla ya\n    mishahara ... na KUIGAWANYA kwa 3.5%\"* — **divide the payroll by 3.5%**, which for a TZS\n    10,000,000 payroll gives roughly 286 million instead of 350,000. The regex scorer marked that\n    row `pass=True`, `reliable=True`. The judge flagged it; hand adjudication confirmed it as one\n    of the seventeen false passes.\n\n    This test reads that reply OUT OF THE COMMITTED GATE ARTIFACT and asserts the scorer still\n    credits it. Not a proxy, not a paraphrase (R26: a five-word paraphrase was once enough to\n    flip a correct body into a flagged one), and not my own reconstruction of what the defect\n    looked like.\n\n    **WHAT IT IS FOR.** It is the standing reason the judge is the Bar A headline and the reason a\n    targeted judge-scored check is worth running when a full gate is not: a 100-minute gate would\n    have scored this answer, the WCF base defect and the missing operation as three passes. If\n    this assertion ever fails, the regex scorer has become able to see the wrong-direction class\n    and that is a material change in what the gate measures — **read R12b before touching it.**\n    ",
+   "old_amounts": [
+    100.0,
+    130.0,
+    286.0,
+    350000.0,
+    10000000.0
+   ],
+   "new_amounts": [
+    100.0,
+    130.0,
+    350000.0,
+    10000000.0,
+    286000000.0
+   ],
+   "old_sole": null,
+   "new_sole": null
+  }
+ ]
+}

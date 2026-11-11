@@ -176,10 +176,9 @@ def test_N3b_admits_only_the_vat_magnitudes_never_the_whole_table():
 # frame word). No amount ever equals 11,000,000. "milioni 11" (scale first) parses correctly --
 # every earlier specimen used it, which is R33 exactly: the probe set shared its author's notation.
 #
-# THE POSITIVE LIMB IS strict-xfail UNTIL THE PARSER IS FIXED: a red suite would block the pre-push
-# hook and a deleted test would erase the specimen. strict=True means that the day the parser is
-# fixed this test FAILS (as XPASS) and forces the marker's removal -- the gap cannot be closed
-# silently, and cannot be forgotten either.
+# RESOLVED 2026-11-12: the positive limb and the shared-parser limb were strict-xfail until the parser
+# learned number-first notation (chike/swahili_numbers.py `_DIGIT_SCALE`); they now PASS as ordinary tests.
+# strict=True did its job: it was the only thing that would have forced this marker's removal.
 # ═══════════════════════════════════════════════════════════════════════════════════════════
 LIVE_QUESTION_2026_11_12 = "Efd ni lazima kwa biashara yenye mauzo ya milioni 15"
 LIVE_REPLY_2026_11_12 = (
@@ -195,10 +194,6 @@ CORRECT_REPLY_2026_11_12 = (
     "inayokutaja wewe au kundi lako.")
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "KNOWN LIVE GAP 2026-11-12: swahili_numbers parses 'TZS 11 milioni' as [11, 1000000], so no "
-    "amount equals 11,000,000 and D-FIDELITY-7 never sees the fabrication. Fix the parser, then "
-    "delete this marker (strict: it will XPASS and fail until you do)."))
 def test_live_2026_11_12_fabricated_efd_threshold_in_number_first_notation_is_flagged():
     from chike import fidelity
     flags = fidelity.stated_wrong_thresholds(LIVE_REPLY_2026_11_12)
@@ -224,10 +219,6 @@ def test_live_2026_11_12_number_first_notation_negations_and_lawful_figures_stay
     assert fidelity.stated_wrong_thresholds(body) == []
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "KNOWN GAP 2026-11-12, SAME ROOT CAUSE, WIDER BLAST RADIUS: the shared parser also feeds the "
-    "compute engines. 'mishahara ... ni 6 milioni' hands compute_sdl TZS 1,000,000 (SDL 35,000) "
-    "instead of 6,000,000 (SDL 210,000). Fix swahili_numbers once; both specimens flip."))
 def test_live_2026_11_12_number_first_scale_words_parse_to_the_full_amount():
     from chike.swahili_numbers import parse_amounts, sole_plausible_amount
     assert 11_000_000 in {int(a) for a in parse_amounts("TZS 11 milioni")}
