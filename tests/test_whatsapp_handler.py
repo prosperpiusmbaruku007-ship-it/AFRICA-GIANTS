@@ -588,7 +588,10 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
     # means NO LINKS ARE ISSUED, so drafts hold and re-notify. All four are reported by
     # /health, which is a stronger check than EXPECTED_KEYS gives a credential — presence
     # would say nothing about the VALUE, and the value is the whole point for a flag.
-    tunables = {"CHIKE_BUILD", "WAPPFLY_SEND_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
+    # CHIKE_PREFLIGHT_NO_SCHEDULE (2026-11-12) is a BUILD-TIME flag set only on the pre-flight's
+    # throwaway deploy (see _sched()); never a secret and deliberately not reported by /health,
+    # because a running app has no business knowing it was built as a throwaway.
+    tunables = {"CHIKE_BUILD", "CHIKE_PREFLIGHT_NO_SCHEDULE", "WAPPFLY_SEND_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
                 "SECOND_ACK_AFTER_S", "COLD_START_SUSPECTED_S", "SEND_ATTEMPTS",
                 "WAPPFLY_TIMEOUT_S", "SUPERVISED",
                 "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL",
