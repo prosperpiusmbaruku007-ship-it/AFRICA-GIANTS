@@ -81,7 +81,7 @@ BUILD = os.environ.get("CHIKE_BUILD", "") or "dev"
 # Modal Secret, and a Secret value OVERRIDES the image env, so a deploy-time value cannot
 # silently shadow the real one. They are read here only so a THROWAWAY verification app can
 # be given a test roster without writing to the production secret.
-_DEPLOY_TUNABLES = ("SUPERVISED", "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S",
+_DEPLOY_TUNABLES = ("TRANSPORT", "BRIDGE_URL", "SUPERVISED", "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S",
                     "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
                     "SECOND_ACK_AFTER_S", "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY")
 
@@ -139,7 +139,7 @@ SECRET = modal.Secret.from_name("chike-whatsapp")
 # sense that matters: the roster decides WHO may approve a compliance answer, and the signing
 # key is what makes an approval link unforgeable. Neither belongs in code.
 EXPECTED_KEYS = ("WAPPFLY_TOKEN", "WEBHOOK_TOKEN", "ADMIN_TOKEN", "SENDER_SALT",
-                 "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY")
+                 "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY", "BRIDGE_SEND_TOKEN")
 
 # THE THREE REVIEW URLS. Modal serves every web endpoint on its OWN hostname
 # (`<ws>--chike-whatsapp-<function>.modal.run`), so there is no single "base" a `/d` path
@@ -156,15 +156,21 @@ def _review_urls_set():
 
 WAPPFLY_SEND_URL = os.environ.get("WAPPFLY_SEND_URL",
                                   "https://wappfly.com/api/messages/send")
-# READ-ONLY. `GET /api/status` -> {"status": "connected", ...}; GETs are not metered against
-# the Starter quota (checked 2026-11-11). It proves the session is up and NOTHING about
-# forwarding -- the dashboard said "connected" through an inbound outage the same day.
-WAPPFLY_STATUS_URL = os.environ.get("WAPPFLY_STATUS_URL", "https://wappfly.com/api/status")
-
-# Where the poll writes its state (last check, last connected, alert bookkeeping). Its own
-# Dict: not PII, and unrelated to transcripts or the review queue.
-WAPPFLY_HEALTH = modal.Dict.from_name("chike-wappfly-health-kv", create_if_missing=True)
-_WAPPFLY_STATE_KEY = "session"
+# THE TRANSPORT. "bridge" is our own Baileys bridge (the chike-bridge app); "wappfly" is the old
+# vendor path, kept configured but unused until the bridge is verified, then removed.
+TRANSPORT = os.environ.get("TRANSPORT", "bridge")
+BRIDGE_URL = os.environ.get(
+    "BRIDGE_URL", "https://prosperpiusmbaruku007--chike-bridge-bridge.us-east.modal.run").rstrip("/")
+# The bridge publishes its own library-event state here; this app only READS it. The watcher's
+# bookkeeping (last check, alert times) lives in its own Dict: not PII, and unrelated to
+# transcripts or the review queue.
+BRIDGE_OPS = modal.Dict.from_name("chike-bridge-ops-kv", create_if_missing=True)
+BRIDGE_WATCH = modal.Dict.from_name("chike-bridge-watch-kv", create_if_missing=True)
+_WATCH_KEY = "session"
+# BRIDGE_SEND_TOKEN is the only key used from it; attached here so no one has to copy a token
+# between secrets by hand.
+BRIDGE_SECRET = modal.Secret.from_name("chike-bridge")
+SECRETS = [SECRET, BRIDGE_SECRET]
 
 
 def _settings():
@@ -182,7 +188,8 @@ def _settings():
         sender_salt=os.environ.get("SENDER_SALT", ""),
         secrets=(os.environ.get("WAPPFLY_TOKEN", ""),
                  os.environ.get("WEBHOOK_TOKEN", ""),
-                 os.environ.get("ADMIN_TOKEN", "")),
+                 os.environ.get("ADMIN_TOKEN", ""),
+                 os.environ.get("BRIDGE_SEND_TOKEN", "")),
         # ⛔⛔ OFF BY DEFAULT, AND THE DANGEROUS DIRECTION IS THE ONE A DEFAULT CANNOT FIX.
         # A typo in SUPERVISED does not fail safe: it silently DISABLES supervision while
         # the reviewer believes every reply is being read, which is exactly the condition
@@ -246,7 +253,7 @@ def _write_row(row):
 # the spawned jobs — Modal owns these, they survive the webhook container
 # ---------------------------------------------------------------------------
 
-@app.function(image=image, secrets=[SECRET],
+@app.function(image=image, secrets=SECRETS,
               timeout=900, retries=0)
 async def answer_and_send(sender: str, text: str):
     """One question, end to end. timeout=900 leaves headroom over the 240s model wait
@@ -322,7 +329,7 @@ async def answer_and_send(sender: str, text: str):
             "supervision": row.get("supervision")}
 
 
-@app.function(image=image, secrets=[SECRET],
+@app.function(image=image, secrets=SECRETS,
               timeout=300, retries=0)
 async def greet_and_send(sender: str):
     core = _core()
@@ -333,6 +340,40 @@ async def greet_and_send(sender: str):
 
 async def _send_once(to: str, text: str):
     """(ok, detail). The retry policy lives in handler_core, where it is tested."""
+    if TRANSPORT == "bridge":
+        return await _send_once_bridge(to, text)
+    return await _send_once_wappfly(to, text)
+
+
+async def _send_once_bridge(to: str, text: str):
+    """ok is True ONLY on WhatsApp's delivery receipt, relayed by the bridge. Accepted-but-not-
+    receipted comes back as a PENDING_RECEIPT detail, which the retry layer never retries (a
+    resend could duplicate). Only a request that never reached the bridge is retryable."""
+    import httpx
+    core = _core()
+    token = os.environ.get("BRIDGE_SEND_TOKEN", "")
+    if not token:
+        return False, "BRIDGE_SEND_TOKEN unset"
+    try:
+        async with httpx.AsyncClient(
+                timeout=float(os.environ.get("BRIDGE_TIMEOUT_S", "35"))) as client:
+            r = await client.post(f"{BRIDGE_URL}/send",
+                                  headers={"authorization": f"Bearer {token}"},
+                                  json={"to": to, "text": text})
+        try:
+            body = r.json()
+        except Exception:                                            # noqa: BLE001
+            body = None
+        return core.bridge_send_result(r.status_code, body)
+    except (httpx.ConnectError, httpx.ConnectTimeout) as e:
+        return False, f"bridge unreachable: {type(e).__name__}"      # never reached it: retryable
+    except Exception as e:                                           # noqa: BLE001
+        # The request may have reached the bridge and been sent: AMBIGUOUS, so never retried.
+        return False, f"{core.PENDING_RECEIPT}: no response from the bridge ({type(e).__name__})"
+
+
+async def _send_once_wappfly(to: str, text: str):
+    """The old vendor path. Kept configured but unused until the bridge is verified."""
     import httpx
     timeout = float(os.environ.get("WAPPFLY_TIMEOUT_S", "15"))
     try:
@@ -350,22 +391,17 @@ async def _send_once(to: str, text: str):
         return False, f"{type(e).__name__}: {e}"
 
 
-def _wappfly_status_now():
-    """(verdict, detail) from one read-only GET. Never raises, never sends. With no token it
-    says 'error' without touching the network: cannot evaluate is not connected."""
-    import httpx
-    token = os.environ.get("WAPPFLY_TOKEN", "")
-    if not token:
-        return "error", "WAPPFLY_TOKEN unset"
+def _bridge_status_now():
+    """(verdict, detail, rec, alive) from the bridge's OWN published state. Read-only; never
+    raises and never sends. An unreadable store is 'error', never 'connected'."""
+    import time
     try:
-        r = httpx.get(WAPPFLY_STATUS_URL, headers={"X-API-Token": token}, timeout=10)
-        try:
-            body = r.json()
-        except Exception:                                            # noqa: BLE001
-            body = None
-        return _core().wappfly_status_verdict(r.status_code, body)
+        rec = BRIDGE_OPS.get("state")
+        alive = {k: BRIDGE_OPS[k] for k in BRIDGE_OPS.keys() if k.startswith("alive:")}
+        verdict, detail = _core().bridge_verdict(rec, alive, time.time())
+        return verdict, detail, rec, alive
     except Exception as e:                                           # noqa: BLE001
-        return "error", f"{type(e).__name__}"
+        return "error", f"{type(e).__name__}", None, {}
 
 
 _ALERT_KEYS = ("ALERT_SMTP_HOST", "ALERT_SMTP_USER", "ALERT_SMTP_PASS", "ALERT_TO")
@@ -401,52 +437,68 @@ def _send_alert_email(subject, body):
 
 def _session_state():
     try:
-        return dict(WAPPFLY_HEALTH.get(_WAPPFLY_STATE_KEY) or {})
+        return dict(BRIDGE_WATCH.get(_WATCH_KEY) or {})
     except Exception:                                                # noqa: BLE001
         return {}
 
 
-# READ-ONLY WATCHER. It reads Wappfly's status and may send ONE kind of message: an email to
-# ALERT_TO. It has no WhatsApp send path, no queue access and no model call, and
+# READ-ONLY WATCHER. It reads the bridge's published state and may send ONE kind of message: an
+# email to ALERT_TO. It has no WhatsApp send path, no queue access and no model call, and
 # tests/test_wappfly_poll.py parses this function's AST to keep it that way -- the same
-# structural guarantee the review sweeper carries, for the same reason.
-@app.function(image=image, secrets=[SECRET], timeout=120,
-              schedule=modal.Period(minutes=5))
-def poll_wappfly_status():
+# structural guarantee the review sweeper carries, for the same reason. Every 2 minutes with a
+# two-reading debounce, so a dropped connection is emailed in about 4 minutes; two lease-holders
+# are emailed on the FIRST sighting, because two sockets is the failure this design exists to
+# prevent.
+@app.function(image=image, secrets=SECRETS, timeout=120,
+              schedule=modal.Period(minutes=2))
+def poll_bridge_status():
     import time
     core = _core()
     now = time.time()
-    verdict, detail = _wappfly_status_now()
-    state, events = core.advance_session_health(_session_state(), verdict, detail, now)
+    verdict, detail, rec, alive = _bridge_status_now()
+    prev = _session_state()
+    threshold = 1 if str(detail).startswith("TWO_SOCKETS") else 2
+    state, events = core.advance_session_health(prev, verdict, detail, now,
+                                                fail_threshold=threshold)
+    outbound = ((rec or {}).get("node") or {}).get("outbound") or {}
+    flagged = int(outbound.get("flagged_no_receipt") or 0)
+    if core.pending_alert_due(prev.get("last_pending_alert_ts"), flagged, now):
+        events.append("pending")
+        state["last_pending_alert_ts"] = now
     sent = []
     for ev in events:
         last_ok = state.get("last_ok_ts")
         since = (f"last seen connected {int((now - last_ok) / 60)} min ago"
                  if last_ok else "never seen connected by this poll")
         if ev == "recovered":
-            subj = "CHIKE: Wappfly session RECOVERED"
-            body = ("The Wappfly session reports connected again.\n"
-                    "Status says the session is up, not that forwarding works: send a "
-                    "message and confirm it reaches the logs.")
+            subj = "CHIKE bridge RECOVERED"
+            body = "The WhatsApp bridge reports connected again, socket open, one lease holder."
+        elif ev == "pending":
+            subj = "CHIKE bridge: sends WITHOUT a delivery receipt"
+            body = (f"{flagged} message(s) were accepted by WhatsApp but have had no delivery "
+                    f"receipt for over the ceiling; the oldest has waited "
+                    f"{int(outbound.get('oldest_pending_s') or 0)}s. They were NOT resent. "
+                    "The recipient's phone may be off, or the message may be lost: check "
+                    "GET /health -> bridge.pending.")
         else:
-            subj = ("CHIKE: Wappfly session DOWN" if ev == "down"
-                    else "CHIKE: Wappfly session STILL DOWN")
-            body = (f"Wappfly status check: {verdict} ({detail}); {since}.\n"
-                    "Inbound and replies are likely not flowing. Check the session in the "
-                    "Wappfly dashboard and the plan/renewal date. Do not recruit until "
-                    "a test message is seen in the logs.")
+            two = str(detail).startswith("TWO_SOCKETS")
+            subj = ("CHIKE bridge: TWO SOCKETS" if two else
+                    "CHIKE bridge DOWN" if ev == "down" else "CHIKE bridge STILL DOWN")
+            body = (f"Bridge status: {verdict} ({detail}); {since}.\n"
+                    "Inbound and replies may not be flowing. Check GET /health -> bridge and "
+                    "the chike-bridge app logs. A logged-out session needs a new QR scan.")
         ok, err = _send_alert_email(subj, body)
         sent.append({"event": ev, "email_ok": ok})
         state["last_alert_email_ok"] = ok
         state["last_alert_email_error"] = err
-        print(f"[wappfly-poll] ALERT {ev}: email_ok={ok}"
+        print(f"[bridge-poll] ALERT {ev}: email_ok={ok}"
               f"{'' if ok else ' error=' + str(err)}", flush=True)
     try:
-        WAPPFLY_HEALTH[_WAPPFLY_STATE_KEY] = state
+        BRIDGE_WATCH[_WATCH_KEY] = state
     except Exception as e:                                           # noqa: BLE001
-        print(f"[wappfly-poll] state not stored: {type(e).__name__}", flush=True)
-    print(f"[wappfly-poll] {verdict} ({detail}) failures={state.get('consecutive_failures')}",
-          flush=True)
+        print(f"[bridge-poll] state not stored: {type(e).__name__}", flush=True)
+    print(f"[bridge-poll] {verdict} ({detail}) failures={state.get('consecutive_failures')} "
+          f"pending_flagged={flagged}", flush=True)
     return {"verdict": verdict, "events": sent}
 
 
@@ -458,7 +510,7 @@ def poll_wappfly_status():
 # against ~$5.68/mo always-warm, and the GPU's own cold start dwarfs the webhook's.
 # Buy warmth only if the transcripts show Wappfly retrying on slow delivery — the same
 # discipline as holding the GPU scaledown at 300.
-@app.function(image=image, secrets=[SECRET],
+@app.function(image=image, secrets=SECRETS,
               min_containers=0, scaledown_window=1200)
 @modal.fastapi_endpoint(method="POST")
 def webhook(item: dict, token: str = None):
@@ -614,7 +666,7 @@ async def _notify_reviewers(item, *, renotify=False):
             item, _draft_link(settings, item, number), reviewer_name=name,
             renotify=renotify)
         ok, detail = await _send_once(number, text)
-        if ok:
+        if ok or core.is_pending_receipt(detail):      # accepted by WhatsApp; the ceiling flags a stall
             ok_count += 1
         else:
             print(f"[review] notify FAILED to ...{core.number_tail(number)} for "
@@ -716,7 +768,7 @@ def _review_queue_health():
             "oldest_pending_ts": oldest}
 
 
-@app.function(image=image, secrets=[SECRET])
+@app.function(image=image, secrets=SECRETS)
 @modal.fastapi_endpoint(method="GET")
 def review(token: str = None):
     """The queue, as a phone-sized page. Disabled entirely when ADMIN_TOKEN is unset."""
@@ -798,7 +850,7 @@ def review(token: str = None):
     return HTMLResponse(head + stats + body + script)
 
 
-@app.function(image=image, secrets=[SECRET])
+@app.function(image=image, secrets=SECRETS)
 @modal.fastapi_endpoint(method="GET")
 def d(r: str = None, v: str = None, t: str = None):
     """One draft, opened from a WhatsApp link. GET is READ-ONLY by design.
@@ -907,8 +959,10 @@ def d(r: str = None, v: str = None, t: str = None):
         "try{var r=await fetch(AU,{method:'POST',"
         "headers:{'Content-Type':'text/plain'},body:JSON.stringify(b)});"
         "var j=await r.json();"
-        "if(j.ok){o.textContent=j.status.toUpperCase()+(j.send_ok===false?"
-        "' LAKINI KUTUMA KUMESHINDIKANA: '+(j.send_error||''):' — imekamilika');}"
+        "if(j.ok){o.textContent=j.status.toUpperCase()+(j.send_state==='pending_receipt'?"
+        "' — imetumwa, inasubiri uthibitisho wa kuwasilishwa (HAITATUMWA TENA)':"
+        "(j.send_ok===false?"
+        "' LAKINI KUTUMA KUMESHINDIKANA: '+(j.send_error||''):' — imekamilika'));}"
         "else{o.textContent='HITILAFU: '+(j.detail||r.status);en(true);}"
         "}catch(e){o.textContent='HITILAFU: '+e;en(true);}}"
         + ("" if decided else "claim();")
@@ -944,7 +998,7 @@ async def _read_json(request):
         return {}
 
 
-@app.function(image=image, secrets=[SECRET], timeout=60)
+@app.function(image=image, secrets=SECRETS, timeout=60)
 @modal.fastapi_endpoint(method="POST")
 async def review_claim(request: Request):
     """Lock one draft to the reviewer whose link this is.
@@ -991,7 +1045,7 @@ async def review_claim(request: Request):
                   "status": updated.get("status")})
 
 
-@app.function(image=image, secrets=[SECRET], timeout=120)
+@app.function(image=image, secrets=SECRETS, timeout=120)
 @modal.fastapi_endpoint(method="POST")
 async def review_act(request: Request):
     """Take one decision. The rules live in handler_core.apply_decision — pure, and tested
@@ -1037,6 +1091,8 @@ async def review_act(request: Request):
     if to_send:
         send_ok, send_error = await _send_once(existing["sender"], to_send)
         updated["send_ok"], updated["send_error"] = send_ok, send_error
+        updated["send_state"] = core.send_state(send_ok, send_error)
+        updated["reply_address_kind"] = core.reply_address_kind(existing["sender"])
         try:
             REVIEW_QUEUE[rid] = updated
         except Exception as e:                                       # noqa: BLE001
@@ -1047,7 +1103,9 @@ async def review_act(request: Request):
     _write_row({
         "ts": updated["decided_ts"], "build": updated.get("build"), "kind": "review",
         "sender_hash": updated["sender_hash"], "sender_tail": updated.get("sender_tail"),
-        "sender_domain": None, "question": updated.get("question"),
+        "sender_domain": core.sender_domain(existing["sender"]),
+        "reply_address_kind": core.reply_address_kind(existing["sender"]),
+        "send_state": updated.get("send_state"), "question": updated.get("question"),
         "reply": updated.get("final"), "reply_chars": len(updated.get("final") or ""),
         "model_latency_ms": updated.get("model_latency_ms"), "total_latency_ms": None,
         "fallback": updated.get("fallback"), "error_class": updated.get("error_class"),
@@ -1069,10 +1127,10 @@ async def review_act(request: Request):
           f"latency={updated.get('decision_latency_s')}s "
           f"reason={updated.get('edit_reason')!r}", flush=True)
     return _cors({"ok": True, "status": updated["status"], "by": name, "send_ok": send_ok,
-                  "send_error": send_error})
+                  "send_error": send_error, "send_state": updated.get("send_state")})
 
 
-@app.function(image=image, secrets=[SECRET])
+@app.function(image=image, secrets=SECRETS)
 @modal.fastapi_endpoint(method="GET")
 def review_queue(token: str = None, include_sender: bool = False):
     """The queue as JSON, for analysis. `sender` is withheld unless explicitly requested, so
@@ -1097,7 +1155,7 @@ def review_queue(token: str = None, include_sender: bool = False):
 # fallback is the single change that would void the founder's reading, and it is exactly the
 # change that looks reasonable at 2am when a queue has backed up — so it is ruled out
 # structurally rather than left to judgement.
-@app.function(image=image, secrets=[SECRET], timeout=600,
+@app.function(image=image, secrets=SECRETS, timeout=600,
               schedule=modal.Period(minutes=3))
 async def sweep_review_queue():
     """Release expired claims; re-notify unclaimed drafts. Never sends to a participant."""
@@ -1131,7 +1189,7 @@ async def sweep_review_queue():
             "sent_to_participants": 0}
 
 
-@app.function(image=image, secrets=[SECRET], timeout=120)
+@app.function(image=image, secrets=SECRETS, timeout=120)
 def dump_queue():
     """The queue, over the CLI, with the phone numbers stripped.
 
@@ -1152,7 +1210,7 @@ def dump_queue():
     return out
 
 
-@app.function(image=image, secrets=[SECRET], timeout=120)
+@app.function(image=image, secrets=SECRETS, timeout=120)
 async def seed_test_draft(label: str = "seed", to_reviewer: bool = False):
     """Put ONE synthetic draft in the queue, for verifying the roster mechanics live.
 
@@ -1199,7 +1257,7 @@ async def seed_test_draft(label: str = "seed", to_reviewer: bool = False):
     return item["review_id"]
 
 
-@app.function(image=image, secrets=[SECRET], timeout=60)
+@app.function(image=image, secrets=SECRETS, timeout=60)
 async def send_probe():
     """ONE real send to the FIRST REVIEWER'S OWN number, over the CLI. Reports Wappfly's answer.
 
@@ -1217,7 +1275,7 @@ async def send_probe():
     return {"ok": ok, "detail": detail}
 
 
-@app.function(image=image, secrets=[SECRET], timeout=60)
+@app.function(image=image, secrets=SECRETS, timeout=60)
 def mint_review_link(review_id: str):
     """The first reviewer's link credentials for ONE SEEDED TEST DRAFT, over the CLI.
 
@@ -1240,7 +1298,7 @@ def mint_review_link(review_id: str):
     return out
 
 
-@app.function(image=image, secrets=[SECRET])
+@app.function(image=image, secrets=SECRETS)
 @modal.fastapi_endpoint(method="POST")
 def review_purge(token: str = None):
     """Drop the real number from every DECIDED item, keeping everything else.
@@ -1262,39 +1320,57 @@ def review_purge(token: str = None):
     return {"purged": purged}
 
 
-def _wappfly_health():
-    """Live status (one read-only GET) beside the poll's own record. `session_status` is what
-    the pre-flight refuses on. `poll.stale` is the watcher's heartbeat -- on a freshly built
-    image it is legitimately 'never polled', so the pre-flight does not gate on it, but on the
-    LIVE app a stale poll means nobody is watching. `canary` says what is NOT covered."""
+def _bridge_health():
+    """The bridge's own library-event state beside the watcher's record. `session_status` is
+    what the pre-flight refuses on. A broken section degrades to 'error', never to 'connected'."""
     try:
-        return _wappfly_health_inner()
+        return _bridge_health_inner()
     except Exception as e:                                           # noqa: BLE001
-        # /health is the diagnostic of last resort and must degrade, not raise. "error" is
-        # not "connected", so the pre-flight still refuses on it.
-        return {"session_status": "error",
-                "session_detail": f"health section failed: {type(e).__name__}"}
+        return {"session_status": "error", "session_detail": f"health section failed: "
+                f"{type(e).__name__}", "alerting": {"configured": _alerting_configured(),
+                "missing": [k for k in _ALERT_KEYS if not os.environ.get(k, "")]}}
 
 
-def _wappfly_health_inner():
+def _bridge_health_inner():
     import time
     core = _core()
-    live, detail = _wappfly_status_now()
+    now = time.time()
+    live, detail, rec, alive = _bridge_status_now()
     st = _session_state()
+    node = (rec or {}).get("node") or {}
+    fresh = {k: v for k, v in alive.items()
+             if isinstance(v, dict) and now - float(v.get("ts") or 0) < 30}
     return {
+        "transport": TRANSPORT,
         "session_status": live, "session_detail": detail,
-        "poll": core.poll_age_verdict(st, time.time()),
+        "bridge_build": (rec or {}).get("build"),
+        # the library's own events, never inferred
+        "connection": node.get("connection"), "last_event": node.get("last_event"),
+        "last_event_age_s": node.get("last_event_age_s"),
+        "last_disconnect": node.get("last_disconnect"),
+        "disconnects_24h": node.get("disconnects_24h"),
+        "connected_for_s": node.get("connected_for_s"),
+        "since_inbound_s": node.get("since_inbound_s"),
+        "since_outbound_s": node.get("since_outbound_s"),
+        "since_receipt_s": node.get("since_receipt_s"),
+        # the single-socket lease
+        "lease_holder": ((rec or {}).get("lease") or {}).get("holder"),
+        "containers_alive": len(fresh),
+        "lease_holders": sum(1 for v in fresh.values() if v.get("holding")),
+        # sends accepted but not yet receipted, and how many passed the ceiling
+        "pending": node.get("outbound") or {},
+        "poll": core.poll_age_verdict(st, now, max_age_s=300),
         "last_connected_ts": st.get("last_ok_ts"),
         "consecutive_failures": st.get("consecutive_failures", 0),
         "alerting": {"configured": _alerting_configured(),
                      "missing": [k for k in _ALERT_KEYS if not os.environ.get(k, "")],
                      "last_email_ok": st.get("last_alert_email_ok")},
         "canary": {"round_trip": "not_configured",
-                   "note": "status proves the session is up, not that inbound is forwarded"},
+                   "note": "state comes from the bridge's own library events"},
     }
 
 
-@app.function(image=image, secrets=[SECRET])
+@app.function(image=image, secrets=SECRETS)
 @modal.fastapi_endpoint(method="GET")
 def health():
     """The deploy check. `build` is the git SHA baked at deploy time — Modal can serve
@@ -1376,7 +1452,7 @@ def health():
         # quoted from these key names, and a diagnostic people have used should not
         # move out from under them.
         **_token_fingerprint_flat("WAPPFLY_TOKEN"),
-        "wappfly": _wappfly_health(),
+        "bridge": _bridge_health(),
     }
 
 
@@ -1414,7 +1490,7 @@ def _token_fingerprint_flat(key: str) -> dict:
             f"{key.lower()}_has_whitespace": fp["has_whitespace"]}
 
 
-@app.function(image=image, secrets=[SECRET])
+@app.function(image=image, secrets=SECRETS)
 @modal.fastapi_endpoint(method="GET")
 def transcripts(token: str = None, n: int = 50):
     """Read the pilot's record. Disabled entirely when ADMIN_TOKEN is unset — an open

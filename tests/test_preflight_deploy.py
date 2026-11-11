@@ -163,8 +163,9 @@ def test_cannot_evaluate_exits_2_not_0():
 _GOOD_WA = {"supervised": True, "cohort": {"declared_size": 5},
             "roster": {"reviewers": 1, "signing_key_set": True,
                        "review_urls_set": True, "can_issue_links": True},
-            "wappfly": {"session_status": "connected", "session_detail": "connected",
-                        "alerting": {"configured": True, "missing": []}}}
+            "bridge": {"session_status": "connected", "session_detail": "open",
+                       "transport": "bridge", "lease_holders": 1,
+                       "alerting": {"configured": True, "missing": []}}}
 _BARE_DEPLOY_WA = {"supervised": True, "cohort": {"declared_size": 0},
                    "roster": {"reviewers": 1, "signing_key_set": True,
                               "review_urls_set": False, "can_issue_links": False}}
@@ -189,12 +190,16 @@ def test_3b_BLOCKS_the_2026_11_10_bare_redeploy_on_BOTH_assertions():
     lambda h: h.update(supervised=False),
     lambda h: h.update(supervised=None),          # "could not tell" is not "on"
     lambda h: h["cohort"].update(declared_size=True),   # bool is an int in Python
-    lambda h: h["wappfly"].update(session_status="disconnected"),
-    lambda h: h["wappfly"].update(session_status="error"),
-    lambda h: h["wappfly"].update(session_status=None),
-    lambda h: h["wappfly"]["alerting"].update(configured=False),
-    lambda h: h["wappfly"]["alerting"].update(configured=None),
-    lambda h: h.pop("wappfly"),                   # field absent: cannot evaluate
+    lambda h: h["bridge"].update(session_status="disconnected"),
+    lambda h: h["bridge"].update(session_status="error"),
+    lambda h: h["bridge"].update(transport="wappfly"),
+    lambda h: h["bridge"].update(lease_holders=2),
+    lambda h: h["bridge"].update(lease_holders=0),
+    lambda h: h["bridge"].update(lease_holders=None),
+    lambda h: h["bridge"].update(session_status=None),
+    lambda h: h["bridge"]["alerting"].update(configured=False),
+    lambda h: h["bridge"]["alerting"].update(configured=None),
+    lambda h: h.pop("bridge"),                   # field absent: cannot evaluate
 ])
 def test_3b_each_single_defect_blocks_alone(mutate):
     import copy

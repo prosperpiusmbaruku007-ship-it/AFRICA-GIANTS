@@ -166,19 +166,27 @@ def check_whatsapp_health(h):
             f"supervised is {(h or {}).get('supervised')!r}; the R7 reading on a supervised "
             f"cohort rests on it being true. (None means /health could not tell — also a "
             f"refusal.)")
-    w = (h or {}).get("wappfly") or {}
+    w = (h or {}).get("bridge") or {}
     if w.get("session_status") != "connected":
         fails.append(
-            f"wappfly.session_status is {w.get('session_status')!r} "
-            f"({w.get('session_detail')!r}); it must be 'connected'. Wappfly has accepted "
-            f"sends while delivering nothing, so a deploy onto a dropped session would "
-            f"look healthy. NOTE the converse is NOT proven by this: 'connected' does not "
-            f"mean inbound is being forwarded -- confirm with a message seen in the logs.")
+            f"bridge.session_status is {w.get('session_status')!r} "
+            f"({w.get('session_detail')!r}); it must be 'connected'. This is the bridge's OWN "
+            f"library state (socket open, lease held, one holder), so a deploy onto a dropped "
+            f"session would look healthy to nobody.")
+    if w.get("transport") != "bridge":
+        fails.append(
+            f"bridge.transport is {w.get('transport')!r}; it must be 'bridge'. Wappfly is "
+            f"retired: a handler sending through it delivers nothing and says nothing.")
+    holders = w.get("lease_holders")
+    if holders != 1:
+        fails.append(
+            f"bridge.lease_holders is {holders!r}; it must be exactly 1. Two means two WhatsApp "
+            f"sockets on one session (they log each other out); zero means nothing is connected.")
     alerting = w.get("alerting") or {}
     if alerting.get("configured") is not True:
         fails.append(
-            f"wappfly.alerting.configured is {alerting.get('configured')!r} "
-            f"(missing: {alerting.get('missing')!r}); the status poll can detect a dropped "
+            f"bridge.alerting.configured is {alerting.get('configured')!r} "
+            f"(missing: {alerting.get('missing')!r}); the watcher can detect a dropped "
             f"session but nothing would tell anyone. Add ALERT_SMTP_HOST, ALERT_SMTP_USER, "
             f"ALERT_SMTP_PASS and ALERT_TO to the chike-whatsapp secret.")
     return fails

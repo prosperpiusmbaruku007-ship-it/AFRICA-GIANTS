@@ -39,6 +39,7 @@ image = (
 SECRET = modal.Secret.from_name("chike-bridge")   # BRIDGE_ADMIN_TOKEN, BRIDGE_SEND_TOKEN, WEBHOOK_URL
 AUTH = modal.Dict.from_name("chike-bridge-auth-kv", create_if_missing=True)
 OPS = modal.Dict.from_name("chike-bridge-ops-kv", create_if_missing=True)   # lease, alive, state
+LEDGER = modal.Dict.from_name("chike-bridge-ledger-kv", create_if_missing=True)  # sends awaiting receipts
 
 KV_PORT = 8081
 NODE_PORT = 8080
@@ -46,7 +47,15 @@ NODE_PORT = 8080
 
 def _publish(cid, holding, node_state, lease_rec):
     t = time.time()
-    OPS[f"alive:{cid}"] = t
+    OPS[f"alive:{cid}"] = {"ts": t, "holding": bool(holding)}
+    for k in list(OPS.keys()):                      # forget dead containers' heartbeats
+        if k.startswith("alive:") and k != f"alive:{cid}":
+            try:
+                v = OPS[k]
+                if not isinstance(v, dict) or t - float(v.get("ts") or 0) > 300:
+                    OPS.pop(k)
+            except Exception:                        # noqa: BLE001
+                pass
     OPS["state"] = {"ts": t, "container": cid, "holding_lease": holding, "lease": lease_rec,
                     "node": node_state, "build": BUILD}
 
@@ -94,6 +103,17 @@ def _kv_server(token):
                             AUTH.pop(k)
                         except KeyError:
                             pass
+                    return self._reply(200, {"v": True})
+                if self.path == "/ledger/all":
+                    return self._reply(200, {"items": dict(LEDGER.items())})
+                if self.path == "/ledger/put":
+                    LEDGER[body["id"]] = body["row"]
+                    return self._reply(200, {"v": True})
+                if self.path == "/ledger/del":
+                    try:
+                        LEDGER.pop(body["id"])
+                    except KeyError:
+                        pass
                     return self._reply(200, {"v": True})
                 if self.path == "/kv/clear":
                     AUTH.clear()

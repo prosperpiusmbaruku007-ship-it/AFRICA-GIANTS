@@ -54,6 +54,14 @@ let connecting = false;
 async function start() {
   if (connecting) return; connecting = true;
   const { state, saveCreds } = await useKvAuthState(kv);
+  // The send ledger survives restarts: a message accepted just before a restart must still be
+  // watched for its receipt and flagged, or "pending" becomes a silent loss.
+  try {
+    for (const [id, row] of Object.entries(await kv.ledgerAll())) {
+      if (now() - row.ts > 86400) { kv.ledgerDel(id).catch(() => {}); continue; }
+      if (!LEDGER.has(id)) LEDGER.set(id, row);
+    }
+  } catch (e) { ev("ledger_load_error"); log.error(e); }
   const { version } = await fetchLatestBaileysVersion();
   S.connection = "connecting"; ev("connecting");
   sock = makeWASocket({
@@ -124,7 +132,7 @@ async function start() {
       const name = STATUS[update.status];
       if (!name) continue;
       if (update.status >= 3 && !row.receipt_ts) { row.receipt_ts = now(); S.last_receipt_ts = now(); }
-      if (update.status > row.rank) { row.rank = update.status; row.status = name; }
+      if (update.status > row.rank) { row.rank = update.status; row.status = name; kv.ledgerPut(key.id, row).catch(() => {}); }
     }
   });
 }
@@ -147,6 +155,7 @@ async function send({ to, text }) {
   S.last_outbound_ts = now();
   const row = { to: jid, ts: now(), status: "sent", rank: 1, receipt_ts: null };
   LEDGER.set(id, row);
+  kv.ledgerPut(id, row).catch(() => {});
   const t0 = Date.now();
   while (Date.now() - t0 < RECEIPT_WAIT_MS && row.rank < 3) await new Promise((r) => setTimeout(r, 250));
   // ok is true ONLY on a delivery receipt. "server_ack" means WhatsApp took it, not that it arrived,

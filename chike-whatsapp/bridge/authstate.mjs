@@ -19,6 +19,9 @@ export function makeKv(base, token) {
     setMany: (items) => call("/kv/setmany", { items }),
     delMany: (keys) => call("/kv/delmany", { keys }),
     clear: () => call("/kv/clear", {}),
+    ledgerAll: async () => (await call("/ledger/all", {})).items || {},
+    ledgerPut: (id, row) => call("/ledger/put", { id, row }),
+    ledgerDel: (id) => call("/ledger/del", { id }),
   };
 }
 

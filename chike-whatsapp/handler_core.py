@@ -284,6 +284,78 @@ def poll_age_verdict(state, now, *, max_age_s=15 * 60):
             "reason": None if age <= max_age_s else f"last poll {int(age)}s ago"}
 
 
+PENDING_RECEIPT = "PENDING_RECEIPT"
+
+
+def is_pending_receipt(detail):
+    """WhatsApp ACCEPTED the message but no delivery receipt has arrived. Not a failure and not a
+    delivery, and above all NOT retryable: resending would duplicate a message that may be on
+    its way. The bridge's pending ceiling is what stops this becoming a silent loss."""
+    return str(detail or "").startswith(PENDING_RECEIPT)
+
+
+def send_state(ok, detail=None):
+    """delivered | pending_receipt | failed. None when no send was attempted."""
+    if ok is None:
+        return None
+    if ok:
+        return "delivered"
+    return "pending_receipt" if is_pending_receipt(detail) else "failed"
+
+
+def reply_address_kind(jid):
+    """Which kind of address a reply was sent to: phone | lid | other. Recorded on every row so
+    that if the phone-number path ever fails it is visible at once, not inferred later."""
+    d = sender_domain(jid)
+    return "phone" if d == "s.whatsapp.net" else ("lid" if d == "lid" else "other")
+
+
+def bridge_verdict(rec, alive, now, *, max_age_s=90, fresh_s=30):
+    """(verdict, detail) from the bridge's OWN published state -- its library events, never an
+    inference from a vendor dashboard. `connected` requires every one of: a fresh heartbeat,
+    the socket open, and this container holding the lease. Two lease-holders is reported with
+    the TWO_SOCKETS prefix so the caller can alert on the first sighting."""
+    if not isinstance(rec, dict) or not isinstance(rec.get("node"), dict):
+        return "error", "no heartbeat from the bridge"
+    age = now - float(rec.get("ts") or 0)
+    if age > max_age_s:
+        return "error", f"bridge heartbeat stale ({int(age)}s)"
+    holders = [k for k, v in (alive or {}).items()
+               if isinstance(v, dict) and now - float(v.get("ts") or 0) < fresh_s and v.get("holding")]
+    if len(holders) > 1:
+        return "error", f"TWO_SOCKETS: {len(holders)} containers hold the lease"
+    node = rec["node"]
+    conn = node.get("connection")
+    if conn == "open" and rec.get("holding_lease"):
+        return "connected", "open"
+    if conn == "logged_out":
+        return "disconnected", "logged out: the session must be re-paired (QR)"
+    last = node.get("last_disconnect") or {}
+    return "disconnected", (f"{conn}; last_event={node.get('last_event')}; "
+                            f"last_close={last.get('name')}; holding_lease={rec.get('holding_lease')}")
+
+
+def pending_alert_due(prev_ts, flagged, now, *, every_s=3600):
+    """True when sends have waited past the receipt ceiling and the last such email is old."""
+    return bool(flagged) and (not prev_ts or now - float(prev_ts) >= every_s)
+
+
+def bridge_send_result(code, body):
+    """(ok, detail) from the bridge's /send response. ok is True ONLY for a delivery receipt.
+    Pending (accepted, not receipted) carries PENDING_RECEIPT and is never retried; a clean
+    refusal that sent nothing (not connected, bad auth) is an ordinary, retryable failure."""
+    b = body if isinstance(body, dict) else {}
+    if code == 200 and b.get("ok") is True:
+        return True, None
+    if code == 200 and b.get("pending"):
+        return False, f"{PENDING_RECEIPT}: id={b.get('id')} status={b.get('status')}"
+    if code == 503:
+        return False, f"bridge not connected ({b.get('connection')})"
+    if code == 401:
+        return False, "bridge rejected the send token"
+    return False, f"bridge HTTP {code}: {str(b.get('error') or body)[:120]}"
+
+
 def sender_ids(sender: str, salt: str = ""):
     """Pseudonymous, stable, and still correlatable to a known pilot user.
 
@@ -365,6 +437,11 @@ async def send_with_retry(send_once, to, text, settings):
             if ok:
                 return True, None
             last = detail
+            if is_pending_receipt(detail):
+                # Accepted, not yet receipted: a second send could duplicate a message that is
+                # on its way. Stop here; the bridge's pending ceiling flags it if it never lands.
+                print(f"[send] pending receipt, NOT retrying -- {scrub(last, settings.secrets)}")
+                return False, scrub(last, settings.secrets)
         except Exception as e:                                       # noqa: BLE001
             last = f"{type(e).__name__}: {e}"
         last = scrub(last, settings.secrets)
@@ -383,6 +460,10 @@ def _blank_row(kind, sender, settings, build):
         "sender_hash": sender_hash,
         "sender_tail": sender_tail,
         "sender_domain": sender_domain(sender),
+        # The address REPLIES go to: phone | lid | other. send_state: delivered | pending_receipt
+        # | failed (None until a send is attempted).
+        "reply_address_kind": reply_address_kind(sender),
+        "send_state": None,
         "question": None,
         "reply": None,
         "reply_chars": 0,
@@ -553,6 +634,7 @@ async def deliver(sender, text, ask, send_once, settings, build="dev",
             ok, send_error = await send_with_retry(send_once, sender, reply, settings)
             row["send_ok"] = ok
             row["send_error"] = send_error
+            row["send_state"] = send_state(ok, send_error)
 
     except Exception as e:                                           # noqa: BLE001
         # Reaching here means a bug in the code above, not a model failure. The user
@@ -1029,6 +1111,7 @@ async def deliver_greeting(sender, send_once, settings, build="dev"):
     try:
         ok, send_error = await send_with_retry(send_once, sender, WELCOME, settings)
         row["send_ok"], row["send_error"] = ok, send_error
+        row["send_state"] = send_state(ok, send_error)
     except Exception as e:                                           # noqa: BLE001
         row["send_ok"] = False
         row["error_class"] = "handler_bug"
