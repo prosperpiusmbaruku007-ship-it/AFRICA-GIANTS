@@ -46,7 +46,7 @@ GREETINGS = {
 
 WELCOME = (
     "Habari! Karibu sana. 🙏\n\n"
-    "Mimi ni *Chike* — mshauri wako wa biashara\n"
+    "Mimi ni *Chike* — msaidizi wako wa maswali ya biashara\n"
     "kutoka *Africa Giants*.\n"
     "_Fahamu Biashara Yako, Maarifa Yako._\n\n"
     "Ninakusaidia na:\n"
@@ -57,7 +57,7 @@ WELCOME = (
     "Uliza swali lako sasa hivi. 👇\n\n"
     "---\n\n"
     "Hello! Welcome. 🙏\n\n"
-    "I am *Chike* — your business adviser\n"
+    "I am *Chike* — your assistant for business questions\n"
     "from *Africa Giants*.\n"
     "_Understand Your Business, That Knowledge Is Yours._\n\n"
     "I can help with:\n"
@@ -69,6 +69,14 @@ WELCOME = (
     "---\n"
     "_⚠ Beta: thibitisha majibu muhimu na TRA._\n"
     "_⚠ Beta: verify important answers with TRA._"
+)
+
+# SENT INSTEAD OF THE WELCOME WHILE A QUESTION IS PENDING (founder, 2026-11-12). A participant who says
+# "habari" while waiting for a supervised answer used to get the full welcome menu, which reads as if their
+# question had been forgotten. Brief on purpose: it says the answer is coming, nothing else.
+PENDING_NOTICE = (
+    "Swali lako limepokelewa — jibu bado linaandaliwa. Nitakutumia mara litakapokuwa tayari. 🙏\n\n"
+    "Your question was received — the answer is still being prepared. I will send it as soon as it is ready."
 )
 
 FALLBACK = (
@@ -1265,17 +1273,24 @@ def cohort_capacity(declared_size, reviewers):
     """What the declared cohort size implies about the roster. Pure, so /health and tests share it."""
     import math
     need = math.ceil(declared_size / PARTICIPANTS_PER_REVIEWER) if declared_size else 0
+    capacity = reviewers * PARTICIPANTS_PER_REVIEWER
     return {
         "roster_reviewers": reviewers,
         "participants_per_reviewer": PARTICIPANTS_PER_REVIEWER,
         "sized_for_reviewers": need,
+        # What THIS ROSTER can review properly, beside the declared ceiling -- the gap between the two is
+        # the number the founder asked to keep visible (cap 15, one reviewer -> 3).
+        "review_capacity_participants": capacity,
         "within_review_capacity": (None if not declared_size else need <= reviewers),
         "capacity_note": (
             None if not declared_size else
-            f"cohort of {declared_size} is sized for {need} reviewer(s); the roster has {reviewers}. "
-            + ("Growing the cohort needs more reviewers on the roster FIRST (review depth is never the lever)."
-               if need <= reviewers else
-               "OVER the review capacity: review will start to skim, which voids the R7 reading.")),
+            (f"cohort of {declared_size} is sized for {need} reviewer(s); the roster has {reviewers}. "
+             "Growing the cohort needs more reviewers on the roster FIRST (review depth is never the lever)."
+             if need <= reviewers else
+             f"the declared CEILING of {declared_size} is OVER what {reviewers} reviewer(s) can review "
+             f"properly ({capacity} participants): invite only as many people as the roster can review, "
+             f"and add reviewers before growing. Reviewing more than that starts to skim, which voids the "
+             f"R7 reading.")),
     }
 
 
@@ -1438,6 +1453,25 @@ async def deliver_greeting(sender, send_once, settings, build="dev"):
     row["reply_chars"] = len(WELCOME)
     try:
         ok, send_error = await send_with_retry(send_once, sender, WELCOME, settings)
+        row["send_ok"], row["send_error"] = ok, send_error
+        row["send_state"] = send_state(ok, send_error)
+    except Exception as e:                                           # noqa: BLE001
+        row["send_ok"] = False
+        row["error_class"] = "handler_bug"
+        row["error_detail"] = scrub(f"{type(e).__name__}: {e}", settings.secrets)
+    finally:
+        row["total_latency_ms"] = int((time.monotonic() - t0) * 1000)
+    return row
+
+
+async def deliver_pending_notice(sender, send_once, settings, build="dev"):
+    """Same guarantee as deliver_greeting(), for a greeting that arrives while a question is pending."""
+    t0 = time.monotonic()
+    row = _blank_row("greeting_pending", sender, settings, build)
+    row["reply"] = "PENDING_NOTICE"
+    row["reply_chars"] = len(PENDING_NOTICE)
+    try:
+        ok, send_error = await send_with_retry(send_once, sender, PENDING_NOTICE, settings)
         row["send_ok"], row["send_error"] = ok, send_error
         row["send_state"] = send_state(ok, send_error)
     except Exception as e:                                           # noqa: BLE001

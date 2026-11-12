@@ -186,6 +186,9 @@ _WATCH_KEY = "session"
 PENDING_ROWS = modal.Dict.from_name("chike-pending-rows-kv", create_if_missing=True)
 # Who has been sent the participant disclosure (runbook 8a). Keyed by sender HASH, never a number.
 DISCLOSURES = modal.Dict.from_name("chike-disclosures-kv", create_if_missing=True)
+# A question that is being answered RIGHT NOW (before a draft exists to be 'pending' in the review queue).
+# Keyed by sender hash; stamped at the start of answer_and_send, cleared when it ends, ignored once stale.
+INFLIGHT = modal.Dict.from_name("chike-inflight-kv", create_if_missing=True)
 BRIDGE_LEDGER = modal.Dict.from_name("chike-bridge-ledger-kv", create_if_missing=True)
 # BRIDGE_SEND_TOKEN is the only key used from it; attached here so no one has to copy a token
 # between secrets by hand.
@@ -328,6 +331,7 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
                                    or result.get("computation_working"))
             facts = (result.get("facts") or result.get("retrieved_facts") or ())
             captured["facts"] = list(facts) if isinstance(facts, (list, tuple)) else []
+            captured["path"] = result.get("path")
         return result
 
     async def _hold_for_review(to, reply_text, row):
@@ -336,6 +340,7 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
                                 facts=captured.get("facts", ()))
         item["retry_of"] = retry_of
         item["disclosure_state"] = disclosure.get("disclosure_state")     # the card warns if it failed
+        item["answer_path"] = captured.get("path")                         # engine vs model, on the card
         try:
             REVIEW_QUEUE[item["review_id"]] = item
         except Exception as e:                                       # noqa: BLE001
@@ -365,6 +370,7 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
 
     # ⛔ THE DISCLOSURE GOES FIRST -- before core.deliver, which is what sends the acks. Skipped for a
     # reviewer-requested RETRY (the participant is long past their first message).
+    _mark_inflight(sender, settings)
     disclosure = {}
     if settings.disclosure_enabled and not retry_of:
         disclosure = await _ensure_disclosure(sender, settings, alias=sender_lid)
@@ -375,7 +381,9 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
     if retry_of:
         row["retry_of"] = retry_of
     row.update(disclosure)
+    row["answer_path"] = captured.get("path")
     _write_row(row)
+    _clear_inflight(sender, settings)
     return {"fallback": row["fallback"], "error_class": row["error_class"],
             "supervision": row.get("supervision")}
 
@@ -387,7 +395,12 @@ async def greet_and_send(sender: str, sender_lid: str = None):
     settings = _settings()
     disclosure = ((await _ensure_disclosure(sender, settings, alias=sender_lid))
                   if settings.disclosure_enabled else {})
-    row = await core.deliver_greeting(sender, _send_once, settings, BUILD)
+    # A greeting while a question is PENDING must not get the welcome menu (it reads as "your question was
+    # forgotten"); it gets one brief line saying the answer is still being prepared.
+    if _has_pending_question(sender, settings):
+        row = await core.deliver_pending_notice(sender, _send_once, settings, BUILD)
+    else:
+        row = await core.deliver_greeting(sender, _send_once, settings, BUILD)
     row.update(disclosure)
     _write_row(row)
     return {"send_ok": row["send_ok"]}
@@ -404,6 +417,56 @@ async def _ensure_disclosure(sender, settings, alias=None):
         finish=lambda k, v: DISCLOSURES.__setitem__(k, v),
         release=lambda k: DISCLOSURES.pop(k, None),
         settings=settings, build=BUILD, alias=alias)
+
+
+_INFLIGHT_STALE_S = 45 * 60          # longer than the 30-min supervised model wait + margin; older is a crash
+
+
+def _sender_key(sender, settings):
+    return _core().sender_ids(sender, settings.sender_salt)[0]
+
+
+def _mark_inflight(sender, settings):
+    try:
+        import time as _t
+        INFLIGHT[_sender_key(sender, settings)] = {"ts": _t.time()}
+    except Exception:                                                # noqa: BLE001
+        pass                                    # a missing marker only costs the brief-reply nicety
+
+
+def _clear_inflight(sender, settings):
+    try:
+        INFLIGHT.pop(_sender_key(sender, settings), None)
+    except Exception:                                                # noqa: BLE001
+        pass
+
+
+def _has_pending_question(sender, settings) -> bool:
+    """True if this sender has a question being answered now OR a draft waiting in the review queue.
+    Errs toward False: a failed lookup sends the ordinary welcome, which is the old behaviour."""
+    key = _sender_key(sender, settings)
+    try:
+        import time as _t
+        rec = INFLIGHT.get(key)
+        if rec and _t.time() - float(rec.get("ts") or 0) < _INFLIGHT_STALE_S:
+            return True
+    except Exception:                                                # noqa: BLE001
+        pass
+    try:
+        return any(i.get("sender_hash") == key and i.get("status") == "pending" for i in _queue_items())
+    except Exception:                                                # noqa: BLE001
+        return False
+
+
+def _path_html(it):
+    """Which SOURCE answered: the one fact that tells the reviewer whether any arithmetic was checked."""
+    p = it.get("answer_path")
+    if not p:
+        return ""
+    hint = ("" if p.startswith("engine:") and not p.endswith(":ask") else
+            " &mdash; the MODEL answered from retrieved facts; NO engine, no arithmetic was checked"
+            if p == "fact" else "")
+    return "<div class=o>path: <b>" + _esc(p) + "</b>" + hint + "</div>"
 
 
 def _disclosure_banner(it):
@@ -807,8 +870,13 @@ def _cohort_health():
     cap = (_core().cohort_capacity(size, reviewers) if reviewers is not None
            else {"roster_reviewers": None, "within_review_capacity": None,
                  "capacity_note": "roster could not be read"})
+    capacity = cap.get("review_capacity_participants")
     return {"declared_size": size, "participants_seen": seen,
             "over_capacity": (None if (seen is None or not size) else seen > size),
+            # The ceiling can be higher than the roster can review; THIS is the monitor for the gap that
+            # actually matters -- participants served vs participants one roster can review properly.
+            "seen_exceeds_review_capacity": (None if (seen is None or capacity is None)
+                                             else seen > capacity),
             **cap,
             "_note": "a MONITOR, not a gate — see the comment at the call site"}
 
@@ -930,6 +998,7 @@ def review(token: str = None):
             "<div class=q>" + _esc(it.get("question")) + "</div>"
             '<textarea id="t-' + rid + '" rows=9>' + _esc(it.get("draft")) + "</textarea>"
             + _disclosure_banner(it)
+            + _path_html(it)
             + work_html
             + ("<div class=f><b>Facts served</b><ul>" + facts_html + "</ul></div>"
                if facts_html else "")
@@ -1058,6 +1127,7 @@ def d(r: str = None, v: str = None, t: str = None):
         + '" ' + ("disabled" if decided else "") + ">"
         + ("" if it.get("fallback") else _esc(it.get("draft"))) + "</textarea>"
         + _disclosure_banner(it)
+        + _path_html(it)
         + work_html
         + ("<div class=f><b>Vigezo vilivyotumika (" + str(len(it.get("facts") or []))
            + ")</b><ul>" + facts_html + "</ul></div>" if facts_html else "")

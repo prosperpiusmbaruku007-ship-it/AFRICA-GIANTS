@@ -601,7 +601,16 @@ class ChikeModel:
             reply = self._orchestrator().answer(message)
             print(f'[chike/v16] Q: {message[:60]}')
             print(f'[chike/v16] A: {reply.text[:60]}')
-            return {'reply': reply.text}
+            # THE REVIEW CARD'S EVIDENCE (2026-11-12). This used to return ONLY {'reply': ...}, so the
+            # handler never received the engine's working or the facts retrieval served: all 7 real
+            # queue items had engine_working=null and facts=[]. answer_trace.trace is the one place that
+            # turns a Reply into what the card shows; `path` says which SOURCE answered (engine vs model).
+            from chike.answer_trace import trace
+            out = {'reply': reply.text}
+            out.update(trace(reply))
+            print(f"[chike/v16] path={out['path']} facts={len(out['facts'])} "
+                  f"working={'yes' if out['working'] else 'no'}")
+            return out
 
         from chike import pipeline_v15
 

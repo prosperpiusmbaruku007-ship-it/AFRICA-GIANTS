@@ -207,8 +207,12 @@ A reviewer must be told, before their number goes in the Secret:
 1. **Nothing sends until you press a button.** If you do nothing, nothing happens — the draft
    waits and you get reminded. **Holding is always safe. Guessing is not.**
 2. **Check the draft against the evidence on the card, not against memory.** The engine's
-   working and the served facts are on the page for this reason: two adjudications went wrong
-   in one week by reading the gold answer instead of the served index.
+   working, the served facts and the **path** (engine vs model) are on the page for this reason:
+   two adjudications went wrong in one week by reading the gold answer instead of the served
+   index. ⚠️ **UNTIL 2026-11-12 THE EVIDENCE PANEL WAS SILENTLY EMPTY** — all 7 drafts ever held
+   carried `engine_working: null` and `facts: []`, because the inference app returned only the
+   reply. A card with no facts and no working says **"path: fact — no engine, no arithmetic was
+   checked"** now; before the fix it said nothing, and nothing looked like a missing panel.
 3. **Withhold when unsure.** A missing answer costs one delay. A confident wrong compliance
    answer is the thing R7 exists to prevent, and it is what the participant will act on.
 4. **The reason field is the most valuable output of the pilot** (§5). Write what was
@@ -250,11 +254,20 @@ A reviewer must be told, before their number goes in the Secret:
 2. **It contradicts itself.** 15 million is *more* than the 11 million it cites — yet it says
    "not required". A threshold answer that fails its own arithmetic is wrong whichever way the
    threshold is read.
-3. **IT CONTRADICTS THE FACT THE SYSTEM RETRIEVED, AND THAT FACT WAS ON THE CARD.** The
-   second fact served for this very question was *"…je nahitaji mashine ya risiti (EFD)?
-   **Ndiyo, kwa default, bila kujali kiasi cha mauzo yako — HAKUNA kizingiti**…"*. The draft
-   says **Hapana**; the fact says **Ndiyo**. The model had the answer in front of it and said
-   the opposite.
+3. **IT CONTRADICTS THE FACT THE SYSTEM RETRIEVED.** The second fact served *to the model* for
+   this very question was *"…je nahitaji mashine ya risiti (EFD)? **Ndiyo, kwa default, bila
+   kujali kiasi cha mauzo yako — HAKUNA kizingiti**…"*. The draft says **Hapana**; the fact says
+   **Ndiyo**. The model had the answer in front of it and said the opposite.
+
+   > ⚠️ **CORRECTION, 2026-11-12 — THIS DOCUMENT FIRST SAID THAT FACT "WAS ON THE CARD". IT WAS NOT.**
+   > The queue item for that draft has `facts: []` and `engine_working: null`, as did **every one of
+   > the 7 items held to date**: `ChikeModel.run` returned only `{'reply': …}`, so the handler never
+   > received what retrieval served. **The reviewer was shown the draft alone.** The claim was
+   > written from the design's intent and never checked against a stored item — the same error as
+   > asserting a fix works because the code reads as though it should. Fixed in the commit that adds
+   > `chike/answer_trace.py`; from the first deploy carrying it, the card shows the facts, the
+   > working and the path. **Everything below that tells a reviewer to compare the draft with the
+   > card's facts was therefore unusable by a reviewer until then.**
 
 **What to do, as a procedure rather than a feeling:**
 
@@ -267,8 +280,9 @@ A reviewer must be told, before their number goes in the Secret:
 - **Do not let "cites TRA" lower your guard.** It is the most reassuring and least informative
   feature of a draft.
 
-**Recorded as a REVIEW MISS, not only a model miss.** The record shows the draft reached a
-reviewer, was approved unedited (`edit_reason: null`), and was delivered. The automatic guard
+**Recorded as a REVIEW MISS and a TOOLING MISS, not only a model miss.** The record shows the
+draft reached a reviewer, was approved unedited (`edit_reason: null`), and was delivered — **and
+that the reviewer had been given no evidence to check it against** (see the correction above). The automatic guard
 (D-FIDELITY-7) also missed it, because its parser read *"TZS 11 milioni"* as two amounts
 (fixed 2026-11-12). **Two controls failed on one answer; the human one is the one a participant
 is relying on while the automatic one is incomplete.** This is the worked example precisely

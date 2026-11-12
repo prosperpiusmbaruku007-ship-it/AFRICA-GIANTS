@@ -135,7 +135,9 @@ wrong threshold, self-contradicting (15M > 11M, yet "not required"), and contrad
    The `11` is under the money floor; the stray `1,000,000` is dropped by N2 (another amount sits between it and the frame word). **No
    amount ever equalled 11,000,000.** Scale-first ("TZS milioni 11") and digits ("TZS 11,000,000") flag the identical body; only
    number-first missed. Every earlier specimen was scale-first — R33 exactly.
-3. **The human review.** The draft was on the card beside the fact that contradicted it.
+3. **The human review.** ⚠️ **CORRECTED 2026-11-12 (this line first said "the draft was on the card beside the fact that contradicted
+   it" — FALSE).** The card carried NO facts and NO engine working: every one of the 7 queue items had `facts: []` / `engine_working: null`.
+   The reviewer approved a draft they had been given no evidence to check. See 4h.
 
 **The parser fix (`215950c`) — and the wider defect it closes.** The same parser feeds routing, every compute engine and D-FIDELITY-7:
 `sole_plausible_amount("mishahara … ni 6 milioni")` returned **1,000,000**, so `compute_sdl` answered **TZS 35,000 where 210,000 is
@@ -309,6 +311,43 @@ plain-figure, "chini ya sheria" trap and scale-first SDL negatives unchanged; th
 **LIVE TEST THE FOUNDER IS RUNNING:** one message from the `…5913` tester phone must produce the disclosure BEFORE the ack, recorded in its row
 (`disclosure_state`), and a second message must produce none. (That phone's handle `b5908217c09e` has no disclosure record, so it is a genuine first
 message to the disclosure code.)
+
+### 4h. 2026-11-12 (03:00) — THE FIRST DISCLOSURE-ERA ANSWER; THE REVIEW CARD HAS NEVER SHOWN ITS EVIDENCE; GREETING, PENDING NOTICE, COHORT CEILING
+
+**Disclosure verified live, from the rows (founder's request).** First message: row `disclosure_state: delivered`, `disclosure_ts` 23:45:39 UTC — one second BEFORE the question row (23:45:40). Second
+message (the greeting): `disclosure_state: already`. Store: `b5908217c09e` `delivered`, and **`220401cbf17f` recorded as an `alias` (`via: phone`)** — the alias logic fired on a real
+payload, and it shows the `…5913` phone and the earlier `…6995` linked-ID are one person (the founder's own statement, now also in the data).
+
+**The 02:47 (local) answer — what the record says, since the founder's note left "approved / edited" blank.** Queue item: `status: sent`, **`draft == final`, `edit_reason: null`, `decided_by_name: Prosper`,
+62 s after the push — approved unedited.** Question: *"Mauzo yangu ni milioni 250 kwa mwaka. Je, ni lazima nijisaji(li) VAT"*; draft: *"Ndiyo, unapaswa kujiandikisha kwa ajili ya VAT. Thibitisha na TRA."* The
+verdict is RIGHT. It carries no figure, no threshold and no working because **the engine never ran.**
+
+**Which path answered, and why: the FACT path; the router missed the question.** `detect_intent` returns `none` for it. The VAT-registration cues (`_VAT_REG_CUES`) know only the infinitive —
+*"kusajili VAT"*, *"kujisajili VAT"*, *"usajili wa VAT"*. The first-person subjunctive a trader actually types — *"nijisajili VAT"*, *"nisajili VAT"*, *"nijiandikishe VAT"* — matches none. **Measured:
+4 of 7 natural phrasings of this one question miss the engine** (the plain *"…kujisajili VAT?"* and *"…kusajili VAT?"* reach it; *"nijisajili"*, *"nisajili"*, *"nijiandikishe"*, and *"VAT ni lazima kwangu?"* do not).
+This is the R31 gap the founder queued on 2026-11-12 (*"je nisajili VAT?"*, *"nasajili?"*) **now evidenced on the plainest possible form of the question, from a real participant-shaped message.**
+**NOT FIXED — the founder's queue decision stands, and the verdict was correct — but held as a strict xfail (`test_first_person_vat_registration_reaches_the_engine`) and RECOMMENDED for promotion before
+recruiting, because every participant will type it this way.**
+
+**⚠️ THE FINDING THAT MATTERS MORE: THE REVIEW CARD HAS NEVER SHOWN ITS EVIDENCE.** That item has `engine_working: null` and `facts: []` — and so did **ALL 7 real queue items, every draft ever held.**
+Cause: `Orchestrator.answer` returns a `Reply` whose sub-answers carry the served facts and the engine's computation, but **`ChikeModel.run` returned only `{'reply': text}`**; the handler's
+`ask_capturing` looks for `working`/`facts` and never found them. The reviewer has been approving drafts with no working, no facts and — the part that made this invisible — **no sign that the panel was
+missing.**
+- **A RECORD OF MINE WAS WRONG, AND IS CORRECTED IN PLACE.** Runbook §4a and PROGRESS 4c both said the contradicting EFD fact *"was on the card"*. **It was not.** The claim was written from the
+  design's intent and never checked against a stored item. The EFD answer is therefore a **review miss AND a tooling miss**: the reviewer was handed a draft and no evidence to check it against.
+  Every instruction in the review standard to compare the draft with the card's facts was **unusable by a reviewer until this fix.**
+- **Fix:** `chike/answer_trace.py::trace(reply)` → `{path, working, facts}`, returned by `run()`; the handler captures `path` too and stamps `answer_path` on the review item and the transcript row; both cards
+  show it, with an explicit warning on `path: fact` — *"the MODEL answered from retrieved facts; NO engine, no arithmetic was checked"*. `path` is one of `engine:<type>`, `engine:<type>:ask`, `fact`,
+  `clarification`, `coverage_refusal`, `refusal`. **NEEDS BOTH APPS REDEPLOYED to take effect** (inference returns it; the handler consumes it).
+
+**Greeting.** *"Mimi ni Chike — mshauri wako wa biashara"* contradicted the disclosure's *"si ushauri rasmi"*. Now **"msaidizi wako wa maswali ya biashara"** / *"your assistant for business questions"* (asserted
+in a test against `DISCLOSURE_TEXT`). A **greeting while a question is pending** now gets one brief line — *"Swali lako limepokelewa — jibu bado linaandaliwa"* — **not the welcome menu**. "Pending" = a question
+being answered now (an `INFLIGHT` marker, ignored once older than 45 min so a crash cannot pin the notice) OR a draft waiting in the review queue; it errs toward the ordinary welcome. The disclosure still
+comes first.
+
+**Cohort ceiling 15 (founder).** `COHORT_SIZE=15` as a CEILING; the founder invites only as many as can be reviewed properly, starting with 2–3, and adds reviewers before growing. **`/health` keeps the gap
+visible rather than hiding it behind the larger number:** at 15 with one reviewer it reports `within_review_capacity: false`, `sized_for_reviewers: 5`, **`review_capacity_participants: 3`**, a note naming the
+gap, and a new monitor **`seen_exceeds_review_capacity`** (participants served vs participants one roster can review).
 
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
