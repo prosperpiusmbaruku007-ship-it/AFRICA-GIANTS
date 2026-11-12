@@ -634,20 +634,61 @@ def _bridge_status_now():
         return "error", f"{type(e).__name__}", None, {}
 
 
-_ALERT_KEYS = ("ALERT_SMTP_HOST", "ALERT_SMTP_USER", "ALERT_SMTP_PASS", "ALERT_TO")
+# ALERTING IS A DEAD-MAN'S SWITCH (founder, 2026-11-13): healthchecks.io. The watcher pings HEALTHCHECK_PING_URL on every
+# healthy poll and `<url>/fail` when it detects a problem; the service emails the founder on a fail ping AND when pings
+# STOP -- which also covers Modal's scheduler dying, the one failure an emailing watcher cannot report. The URL is a
+# credential (anyone holding it can mark the check healthy): it is never logged, never returned, never in /health.
+# The SMTP path below is kept but UNUSED -- the poll no longer calls it.
+_ALERT_KEYS = ("HEALTHCHECK_PING_URL",)
+_SMTP_KEYS = ("ALERT_SMTP_HOST", "ALERT_SMTP_USER", "ALERT_SMTP_PASS", "ALERT_TO")
 
 
 def _alerting_configured():
     return all(os.environ.get(k, "") for k in _ALERT_KEYS)
 
 
+def _smtp_configured():
+    return all(os.environ.get(k, "") for k in _SMTP_KEYS)
+
+
+def _ping_healthcheck(kind, body=""):
+    """(ok, error). kind 'ok' -> the check's ping URL; 'fail' -> `<url>/fail`. Three attempts (the service's own advice),
+    each 10 s. The error is a CLASS or an HTTP status -- never the URL, which is the credential."""
+    import time
+    import urllib.error
+    import urllib.request
+    url = os.environ.get("HEALTHCHECK_PING_URL", "").strip()
+    if not url:
+        return False, "not configured"
+    if not url.startswith("https://"):
+        return False, "not https"
+    target = url.rstrip("/") + ("/fail" if kind == "fail" else "")
+    data = (body or "").encode("utf-8")[:10000]
+    last = "unknown"
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(target, data=data, method="POST",
+                                         headers={"User-Agent": "chike-bridge-watch"})
+            with urllib.request.urlopen(req, timeout=10) as r:
+                if 200 <= int(r.status) < 300:
+                    return True, None
+                last = f"HTTP {r.status}"
+        except urllib.error.HTTPError as e:
+            last = f"HTTP {e.code}"
+        except Exception as e:                                       # noqa: BLE001
+            last = type(e).__name__
+        if attempt < 2:
+            time.sleep(1)
+    return False, last
+
+
 def _send_alert_email(subject, body):
-    """(ok, detail). EMAIL TO THE FOUNDER, NOT WHATSAPP: the channel being watched is the one
-    that failed, so an alert through it would fail exactly when it matters. This is not a
-    participant send path, and tests/test_wappfly_poll.py keeps the poll away from one."""
+    """(ok, detail). UNUSED since 2026-11-13 (the poll pings healthchecks.io instead); kept, with its own SMTP_* keys,
+    so a second channel can be switched back on without rewriting it. EMAIL TO THE FOUNDER, NOT WHATSAPP: the channel
+    being watched is the one that failed. This is not a participant send path."""
     import smtplib
     from email.message import EmailMessage
-    if not _alerting_configured():
+    if not _smtp_configured():
         return False, "alerting not configured (ALERT_SMTP_* / ALERT_TO missing)"
     try:
         msg = EmailMessage()
@@ -672,8 +713,8 @@ def _session_state():
         return {}
 
 
-# READ-ONLY WATCHER. It reads the bridge's published state and may send ONE kind of message: an
-# email to ALERT_TO. It has no WhatsApp send path, no queue access and no model call, and
+# READ-ONLY WATCHER. It reads the bridge's published state and may send ONE kind of message: a ping to
+# HEALTHCHECK_PING_URL (ok, or /fail). It has no WhatsApp send path, no queue access and no model call, and
 # tests/test_wappfly_poll.py parses this function's AST to keep it that way -- the same
 # structural guarantee the review sweeper carries, for the same reason. Every 2 minutes with a
 # two-reading debounce, so a dropped connection is emailed in about 4 minutes; two lease-holders
@@ -701,6 +742,7 @@ def poll_bridge_status():
         events.append("pending_" + kind)
         state["last_pending_alert_ts"] = now
     sent = []
+    notes = []
     for ev in events:
         last_ok = state.get("last_ok_ts")
         since = (f"last seen connected {int((now - last_ok) / 60)} min ago"
@@ -727,19 +769,62 @@ def poll_bridge_status():
             body = (f"Bridge status: {verdict} ({detail}); {since}.\n"
                     "Inbound and replies may not be flowing. Check GET /health -> bridge and "
                     "the chike-bridge app logs. A logged-out session needs a new QR scan.")
-        ok, err = _send_alert_email(subj, body)
-        sent.append({"event": ev, "email_ok": ok})
-        state["last_alert_email_ok"] = ok
-        state["last_alert_email_error"] = err
-        print(f"[bridge-poll] ALERT {ev}: email_ok={ok}"
-              f"{'' if ok else ' error=' + str(err)}", flush=True)
+        notes.append(f"{subj}: {body}")
+        sent.append({"event": ev})
+        print(f"[bridge-poll] EVENT {ev}", flush=True)
+    # THE HEARTBEAT. Sent on EVERY poll, before the state write, so a failing write cannot silence it; a poll that
+    # never runs sends nothing, and that silence is itself the alarm.
+    decision, reason = core.heartbeat_decision(verdict, detail, state, threshold, kind)
+    ping = None
+    if decision != "skip":
+        text = (f"{reason}\n" + "\n".join(notes))[:2000] if decision == "fail" else ""
+        p_ok, p_err = _ping_healthcheck(decision, text)
+        ping = {"kind": decision, "ok": p_ok}
+        state.update(last_ping_kind=decision, last_ping_ok=p_ok, last_ping_error=p_err, last_ping_ts=now)
+        print(f"[bridge-poll] heartbeat {decision} ok={p_ok}{'' if p_ok else ' error=' + str(p_err)}", flush=True)
+    else:
+        print(f"[bridge-poll] heartbeat skipped: {reason}", flush=True)
     try:
         BRIDGE_WATCH[_WATCH_KEY] = state
     except Exception as e:                                           # noqa: BLE001
         print(f"[bridge-poll] state not stored: {type(e).__name__}", flush=True)
     print(f"[bridge-poll] {verdict} ({detail}) failures={state.get('consecutive_failures')} "
           f"pending_flagged={flagged}", flush=True)
-    return {"verdict": verdict, "events": sent}
+    return {"verdict": verdict, "events": sent, "ping": ping}
+
+
+def _fire_test_ping(kind):
+    """ONE ping on demand, so the founder can see the alert path DELIVER (an alert path never seen to deliver is
+    the same mistake as trusting 'accepted'). `fail` sends /fail with a body saying it is a test; `ok` sends a
+    normal ping so the check shows healthy again. Never returns or logs the URL. Not a participant send path."""
+    import time
+    if kind not in ("fail", "ok"):
+        return {"ok": False, "error": "kind must be 'fail' or 'ok'"}
+    body = ("TEST FAILURE fired from the admin endpoint -- NOT a real outage. A normal ping follows."
+            if kind == "fail" else "")
+    p_ok, p_err = _ping_healthcheck(kind, body)
+    rec = {"ts": time.time(), "kind": kind, "ok": p_ok, "error": p_err}
+    try:
+        BRIDGE_WATCH["alert_test"] = rec
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[alert-test] not recorded: {type(e).__name__}", flush=True)
+    print(f"[alert-test] {kind} ok={p_ok}{'' if p_ok else ' error=' + str(p_err)}", flush=True)
+    return {"kind": kind, "ok": p_ok, "error": p_err}
+
+
+@app.function(image=image, secrets=SECRETS)
+@modal.fastapi_endpoint(method="POST")
+def alert_test(token: str = None, kind: str = "fail"):
+    """ADMIN-ONLY. POST ?token=<ADMIN_TOKEN>&kind=fail|ok. A POST, never a GET, because a link preview fetches GETs."""
+    if not _admin_ok(token):
+        return _cors({"ok": False, "detail": "not found"}, 404)
+    return _cors(_fire_test_ping(kind))
+
+
+@app.function(image=image, secrets=SECRETS)
+def alert_test_remote(kind: str = "fail"):
+    """The same ping, callable only with workspace credentials (`modal.Function.from_name(...).remote(kind)`)."""
+    return _fire_test_ping(kind)
 
 
 # ---------------------------------------------------------------------------
@@ -1832,7 +1917,11 @@ def _bridge_health_inner():
         "consecutive_failures": st.get("consecutive_failures", 0),
         "alerting": {"configured": _alerting_configured(),
                      "missing": [k for k in _ALERT_KEYS if not os.environ.get(k, "")],
-                     "last_email_ok": st.get("last_alert_email_ok")},
+                     "mechanism": "healthchecks.io dead-man's switch",
+                     "last_ping": {"kind": st.get("last_ping_kind"), "ok": st.get("last_ping_ok"),
+                                   "error": st.get("last_ping_error"),
+                                   "age_s": (int(now - float(st["last_ping_ts"]))
+                                             if st.get("last_ping_ts") else None)}},
         "canary": {"round_trip": "not_configured",
                    "note": "state comes from the bridge's own library events"},
     }

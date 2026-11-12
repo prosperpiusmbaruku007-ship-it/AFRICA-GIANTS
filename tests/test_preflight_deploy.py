@@ -255,8 +255,7 @@ def _no_alerting():
     import copy
     h = copy.deepcopy(_GOOD_WA)
     h["bridge"]["alerting"] = {"configured": False,
-                               "missing": ["ALERT_SMTP_HOST", "ALERT_SMTP_USER",
-                                           "ALERT_SMTP_PASS", "ALERT_TO"]}
+                               "missing": ["HEALTHCHECK_PING_URL"]}
     return h
 
 
@@ -342,3 +341,18 @@ def test_3b_REFUSES_an_image_whose_participant_disclosure_is_off_or_unreadable()
     del h["disclosure"]
     assert any("disclosure.enabled" in f for f in pf.check_whatsapp_health(h))
     assert pf.check_whatsapp_health(_GOOD_WA) == []
+
+
+def test_configured_but_the_last_ping_failed_warns_loudly_and_does_not_refuse():
+    """2026-11-13: `configured` only proves the key is set. A failing ping path must not read as protected."""
+    import copy
+    del pf.WARNINGS[:]
+    h = copy.deepcopy(_GOOD_WA)
+    h["bridge"]["alerting"] = {"configured": True, "missing": [],
+                               "last_ping": {"kind": "ok", "ok": False, "error": "HTTP 404", "age_s": 30}}
+    assert pf.check_whatsapp_health(h, today="2026-11-12") == []
+    assert "LAST PING FAILED" in " ".join(pf.WARNINGS) and "HTTP 404" in " ".join(pf.WARNINGS)
+    del pf.WARNINGS[:]
+    h["bridge"]["alerting"]["last_ping"]["ok"] = True
+    pf.check_whatsapp_health(h, today="2026-11-12")
+    assert pf.WARNINGS == []

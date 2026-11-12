@@ -200,7 +200,8 @@ def _fn(name):
 
 
 @pytest.mark.parametrize("name", ["poll_bridge_status", "_bridge_status_now",
-                                  "_send_alert_email", "_bridge_health"])
+                                  "_send_alert_email", "_bridge_health", "_ping_healthcheck",
+                                  "_fire_test_ping"])
 def test_the_watcher_has_no_whatsapp_send_path_and_no_queue_access(name):
     fn = _fn(name)
     called = {getattr(c.func, "id", None) or getattr(c.func, "attr", None)
@@ -264,7 +265,7 @@ def test_a_failing_health_section_degrades_to_error_not_connected(monkeypatch):
 
 def test_alert_email_refuses_cleanly_when_unconfigured(monkeypatch):
     mw = _load_mw()
-    for k in mw._ALERT_KEYS:
+    for k in mw._SMTP_KEYS:
         monkeypatch.delenv(k, raising=False)
     ok, detail = mw._send_alert_email("s", "b")
     assert ok is False and "not configured" in detail

@@ -297,6 +297,27 @@ def advance_session_health(prev, verdict, detail, now, *, fail_threshold=2,
     return st, events
 
 
+def heartbeat_decision(verdict, detail, state, threshold, pending_kind=None):
+    """('ok' | 'fail' | 'skip', reason) -- what the watcher tells the dead-man's-switch this poll.
+
+    ok   = the bridge is connected, one lease holder, and no send is stuck past the ceiling with NOTHING receipted.
+    fail = a problem the founder must hear about NOW: two sockets, sends stuck while no receipt has arrived for ANY
+           message (`bridge_suspect`), or a non-connected reading that has repeated `threshold` times.
+    skip = ONE non-connected reading -- neither ok nor fail. A blip must not page, and must not be reported healthy.
+           (Silence is safe: the check's period is longer than several polls.)
+    A recipient whose phone is merely off (`bridge_recipient_offline`) is NOT a problem here: other messages are being
+    receipted, so the bridge works, and a page for it would teach the founder to ignore pages."""
+    if str(detail or "").startswith("TWO_SOCKETS"):
+        return "fail", f"TWO SOCKETS: {detail}"
+    if pending_kind == "bridge_suspect":
+        return "fail", "sends past the receipt ceiling and NO receipt for any message since"
+    if verdict != "connected":
+        if int((state or {}).get("consecutive_failures", 0)) >= int(threshold):
+            return "fail", f"bridge {verdict} ({detail})"
+        return "skip", f"one non-connected reading ({verdict}); debounce"
+    return "ok", ""
+
+
 def poll_age_verdict(state, now, *, max_age_s=15 * 60):
     """The poll's OWN heartbeat. A poll that stopped running reports nothing and alerts
     nobody, so absence is a finding: never polled, or older than `max_age_s`, is stale."""

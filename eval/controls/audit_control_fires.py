@@ -213,11 +213,13 @@ HOLDS = {
     # "WCF ni ya mwajiri au mfanyakazi?" as a KNOWN NEAR-MISS, deliberately not widened for.
     # That note is dated nowhere and has no owner, which is precisely the shape R35 was written
     # about. This row gives it a date.
-    # ── PRE-FLIGHT GATE 3b's ALERT-KEYS CHECK, held 2026-11-11 by the founder ────────────
+    # ── PRE-FLIGHT GATE 3b's ALERT-KEY CHECK, held 2026-11-11 by the founder. 2026-11-13: the mechanism became
+    # a healthchecks.io dead-man's switch (HEALTHCHECK_PING_URL) and the key was set; the hold stays HELD until the
+    # founder has SEEN a fail ping arrive as an email, because a configured key is not a delivering path. ──────
     # Not a control the audit exercises -- it is registered here so R35 applies to it: a hold
     # without a date lapses. scripts/preflight_deploy.py reads this row, prints that alerting is
     # OFF while the hold is live, and goes back to REFUSING the day it expires.
-    'bridge alerting gate (pre-flight 3b: ALERT_SMTP_* / ALERT_TO)': {
+    'bridge alerting gate (pre-flight 3b: HEALTHCHECK_PING_URL)': {
         'state': 'HELD',
         'decided': '2026-11-11',
         'expires': '2026-11-25',
@@ -228,7 +230,7 @@ HOLDS = {
                 'WHILE ALERTING IS OFF. Without it a bridge disconnect, two lease-holders or a '
                 'send stuck without a delivery receipt is silent unless someone happens to read '
                 '/health -- the exact failure the bridge exists to end (Wappfly said "connected" '
-                'while dead). Resolve by adding the four keys to the chike-whatsapp secret, or '
+                'while dead). Resolve when the founder has received a test /fail ping as an email, or '
                 'take the decision again here with a new date.'),
     },
     'incidence renderer route': {

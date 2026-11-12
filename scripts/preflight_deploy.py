@@ -56,7 +56,7 @@ import urllib.request
 # Non-fatal findings printed by main(): a held gate must be LOUD, never merely absent.
 WARNINGS = []
 
-_ALERT_HOLD_ID = "bridge alerting gate (pre-flight 3b: ALERT_SMTP_* / ALERT_TO)"
+_ALERT_HOLD_ID = "bridge alerting gate (pre-flight 3b: HEALTHCHECK_PING_URL)"
 
 
 def alerting_hold(today=None):
@@ -234,8 +234,14 @@ def check_whatsapp_health(h, today=None):
             fails.append(
                 f"bridge.alerting.configured is {alerting.get('configured')!r} "
                 f"(missing: {alerting.get('missing')!r}); the watcher can detect a dropped "
-                f"session but nothing would tell anyone ({hold_note}). Add ALERT_SMTP_HOST, "
-                f"ALERT_SMTP_USER, ALERT_SMTP_PASS and ALERT_TO to the chike-whatsapp secret.")
+                f"session but nothing would tell anyone ({hold_note}). Add HEALTHCHECK_PING_URL "
+                f"(the healthchecks.io ping URL) to the chike-whatsapp secret.")
+    elif (alerting.get("last_ping") or {}).get("ok") is False:
+        # Configured is NOT delivering: the key is set and the last ping failed. Loud, not a refusal -- the deploy
+        # itself is not what is broken, but the founder must not read "configured" as "protected".
+        WARNINGS.append(
+            f"ALERTING IS CONFIGURED BUT THE LAST PING FAILED (kind {alerting['last_ping'].get('kind')!r}, "
+            f"error {alerting['last_ping'].get('error')!r}). A bridge problem would NOT reach the founder.")
     return fails
 
 

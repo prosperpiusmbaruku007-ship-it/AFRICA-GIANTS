@@ -438,20 +438,18 @@ does not send them, and nothing else will.
 
 ---
 
-## ⛔ ALERTING IS OFF (hold until 2026-11-25) — NO PARTICIPANT IS RECRUITED WHILE IT IS
+## ⛔ ALERTING IS A DEAD-MAN'S SWITCH (healthchecks.io) — NO PARTICIPANT IS RECRUITED UNTIL A TEST ALERT HAS BEEN SEEN TO ARRIVE
 
-The bridge watcher (`poll_bridge_status`, every 2 minutes) can detect a dropped connection, two
-lease-holders, or a send stuck without a delivery receipt — but it tells you **by email**, and the
-four alert keys (`ALERT_SMTP_HOST`, `ALERT_SMTP_USER`, `ALERT_SMTP_PASS`, `ALERT_TO`) are not yet in
-the `chike-whatsapp` secret. The founder deferred them on 2026-11-11 to finish the bridge first.
+**Mechanism (2026-11-13, replaces the SMTP design; the SMTP code is kept, unused).** `poll_bridge_status` runs every 2 minutes and pings
+`HEALTHCHECK_PING_URL` (a key in the `chike-whatsapp` secret) when the bridge is healthy, and `<url>/fail` when it detects a problem:
+a disconnect that repeats twice, two lease holders (at once), or sends stuck past the ceiling with NO receipt for any message. The check
+(7-minute period, 5-minute grace, email to the founder) emails on a fail ping AND when pings stop — which also covers Modal's scheduler
+dying. One non-connected reading sends nothing (not green, not red). A recipient whose phone is merely off is not a page.
 
-- Pre-flight gate 3b is **held, not removed** (R35): it WARNS and prints `ALERTING IS OFF` while the
-  hold is live, and **refuses again by itself on 2026-11-26**. The hold is the row `bridge alerting
-  gate (pre-flight 3b: ALERT_SMTP_* / ALERT_TO)` in `eval/controls/audit_control_fires.py`, and
-  `tests/test_control_hold_expiry.py` fails when it lapses.
-- **THE CONDITION: no participant is recruited while alerting is off.** Without it a bridge
-  disconnect is silent unless someone reads `/health` — the exact failure the bridge exists to end
-  (Wappfly's dashboard said "connected" while dead). Test traffic from the founder's own phone is
-  fine; a participant is not.
-- To resolve: add the four keys to the secret, redeploy, and confirm `/health` →
-  `bridge.alerting.configured: true`. Then mark the hold resolved in the registry.
+- **The URL is a credential** (whoever holds it can mark the check healthy). It is never logged, returned, or shown in `/health`.
+- **`/health` → `bridge.alerting.configured: true` only proves the key is set.** `alerting.last_ping` shows whether the last ping was
+  accepted. **Delivery is proven only by firing a test:** `POST <alert_test url>?token=<ADMIN_TOKEN>&kind=fail` sends one `/fail` ping
+  marked as a test; `kind=ok` sends a normal ping. **The hold is resolved only when the founder has seen the email arrive.** The next
+  healthy poll (≤ 2 min) turns the check green again by itself.
+- Pre-flight gate 3b refuses (after the hold) when the key is absent, and WARNS when it is set but the last ping failed.
+- The hold row is `bridge alerting gate (pre-flight 3b: HEALTHCHECK_PING_URL)` in `eval/controls/audit_control_fires.py` (expires 2026-11-25).
