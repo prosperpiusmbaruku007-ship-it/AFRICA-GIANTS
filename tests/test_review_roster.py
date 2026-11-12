@@ -565,8 +565,11 @@ def test_the_draft_link_points_at_the_d_function_host_not_a_path(monkeypatch):
     mw = _load_app(monkeypatch)
     it = _item(claimed_by=None)
     link = mw._draft_link(mw._settings(), it, mw._settings().roster[0][0])
-    assert link.startswith(D_URL + "?r=") and "/d?" not in link
-    assert "v=" in link and "t=" in link
+    # 2026-11-12: ONE opaque path token, not three joined query parameters (see core.review_link_token).
+    assert link.startswith(D_URL + "/") and "/d?" not in link
+    token = link[len(D_URL) + 1:]
+    assert re.fullmatch(r"[0-9a-z2-7]{60,}", token), token
+    assert not any(c in link[len(D_URL):] for c in "?&=+%"), "the link must have nothing a client can cut or decode"
 
 
 def test_no_link_is_issued_until_ALL_THREE_urls_are_set(monkeypatch):
@@ -584,8 +587,8 @@ def test_the_page_posts_to_ABSOLUTE_urls_as_text_plain(monkeypatch):
     number = s.roster[0][0]
     it = _item(claimed_by=None)
     mw.REVIEW_QUEUE[it["review_id"]] = it
-    r = mw.d.get_raw_f()(it["review_id"], hc.reviewer_id(KEY, number),
-                         hc.review_token(KEY, it["review_id"], number))
+    r = mw._d_page(it["review_id"], hc.reviewer_id(KEY, number),
+                   hc.review_token(KEY, it["review_id"], number))
     html = r.body.decode("utf-8")
     assert CLAIM_URL in html and ACT_URL in html
     assert "fetch(CU," in html and "fetch(AU," in html
@@ -718,7 +721,7 @@ def _opened_via_url(mw, link):
     """What a browser does: split the URL, decode the query, hand the VALUES to the function."""
     from urllib.parse import urlsplit, parse_qs
     q = parse_qs(urlsplit(link).query)          # parse_qs decodes '+' to ' ', like a browser
-    return mw.d.get_raw_f()(q["r"][0], q["v"][0], q["t"][0])
+    return mw._d_page(q["r"][0], q["v"][0], q["t"][0])
 
 
 def test_a_REAL_draft_id_contains_a_plus_so_the_test_is_not_vacuous(monkeypatch):
@@ -734,9 +737,13 @@ def test_a_REAL_draft_link_OPENS_when_parsed_as_a_URL(monkeypatch):
     it = _real_draft(mw)
     mw.REVIEW_QUEUE[it["review_id"]] = it
     link = mw._draft_link(s, it, s.roster[0][0])
-    assert "%2B" in link and "+00:00" not in link
-    resp = _opened_via_url(mw, link)
+    # The new link has no `+`, no `%2B`, no `:` -- nothing for a client to mangle. Opened through the ACTUAL ASGI route.
+    assert "%" not in link and "+" not in link and "+00:00" not in link
+    from fastapi.testclient import TestClient
+    from urllib.parse import urlsplit
+    resp = TestClient(mw.d.get_raw_f()()).get(urlsplit(link).path)
     assert resp.status_code == 200, "the link a reviewer taps must open the draft it names"
+    assert it["review_id"] in resp.text, "the page must embed the draft's own id for its JS (no query string to read)"
 
 
 def test_the_OLD_unencoded_link_form_fails_at_the_core_PLANTED_SPECIMEN(monkeypatch):
@@ -777,7 +784,7 @@ def test_the_space_tolerance_does_NOT_let_a_forged_token_in(monkeypatch):
     it = _real_draft(mw)
     mw.REVIEW_QUEUE[it["review_id"]] = it
     spaced = it["review_id"].replace("+", " ")
-    resp = mw.d.get_raw_f()(spaced, hc.reviewer_id(KEY, number), "forged")
+    resp = mw._d_page(spaced, hc.reviewer_id(KEY, number), "forged")
     assert resp.status_code == 404
 
 

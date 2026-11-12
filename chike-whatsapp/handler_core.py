@@ -827,6 +827,50 @@ def reviewer_id(signing_key, number):
                     hashlib.sha256).hexdigest()[:10]
 
 
+# ── ONE OPAQUE STRING IN THE PATH, NOT THREE JOINED QUERY PARAMETERS (founder, 2026-11-12) ────────────────────────
+#
+# Four real links failed authentication (measured: the 404s ran in ~75 ms, before any queue read) although the same
+# container built and checked every one and the ids round-trip. Whatever damaged them in transit, a link made of
+# `?r=<id with + and :>&v=<handle>&t=<token>` is a LONG, PUNCTUATED string: `&`, `=`, `+` and `%3A` are exactly what link
+# detectors, copy-paste and in-app browsers cut, decode or "clean" (`t` and `v` are even well-known tracking-parameter
+# names). A path token has none of that: ONE unbroken run of [0-9a-z2-7], no `&`, no `=`, no `+`, no `%`, nothing to
+# split on, and lower-case only, so a client that case-folds a path cannot corrupt it.
+#
+#     token = handle(10 hex) + signature(32 hex) + base32(review_id)      fixed-width fields, then the id
+#
+# The SIGNING IS UNCHANGED: `signature` is review_token(key, review_id, number), the handle is reviewer_id(key, number),
+# and authenticate_reviewer is the same function -- the token is only a different ENVELOPE for the same three facts, so
+# a forged token still fails, and a TRUNCATED one either fails to decode or decodes to a different id whose HMAC does not
+# match. The envelope reveals nothing readable (the id is base32, not text).
+import base64 as _b64
+import re as _re_tok
+
+_TOKEN_RE = _re_tok.compile(r"^[0-9a-f]{10}[0-9a-f]{32}[a-z2-7]{8,}$")
+
+
+def review_link_token(signing_key, review_id, number):
+    handle = reviewer_id(signing_key, number)
+    sig = review_token(signing_key, review_id, number)
+    idpart = _b64.b32encode(str(review_id).encode("utf-8")).decode("ascii").lower().rstrip("=")
+    return handle + sig + idpart
+
+
+def parse_review_link_token(token):
+    """(review_id, handle, signature) or None. Never raises; says nothing about WHETHER it will authenticate."""
+    if not token:
+        return None
+    t = str(token).strip().lower()
+    if not _TOKEN_RE.match(t):
+        return None
+    handle, sig, idpart = t[:10], t[10:42], t[42:]
+    try:
+        raw = _b64.b32decode(idpart.upper() + "=" * (-len(idpart) % 8))
+        review_id = raw.decode("utf-8")
+    except Exception:                                                # noqa: BLE001
+        return None
+    return review_id, handle, sig
+
+
 def normalise_review_id(review_id):
     """A review id as stored. A raw `+` in a query string arrives as a SPACE, and the ids
     minted before links were URL-encoded carry `+00:00` — those notifications are already on
@@ -1128,6 +1172,46 @@ _PUSH_FACTS_MAX = 5
 _PUSH_FACT_CHARS = 180
 
 
+# ── A PARTICIPANT WHO RE-SENDS A QUESTION CREATES A SECOND DRAFT (founder, 2026-11-12) ────────────────────────
+#
+# When two review links failed the participant re-sent both questions, and four drafts -- two PAIRS -- were pending for
+# one person. Approving both of a pair delivers the same answer twice. Nothing on the card said so. The flag is a pure
+# function over the queue: another PENDING draft from the SAME sender whose question is the same or near-identical.
+# Word-set Jaccard, because the pairs differ by one word ("nisajili" vs "nijiandikishe") as often as by none -- and a
+# near-identical question is exactly the one a reviewer should not answer twice.
+DUPLICATE_THRESHOLD = 0.75
+
+
+def _qwords(q):
+    return set(_re_tok.findall(r"[a-z0-9']+", str(q or "").lower()))
+
+
+def question_similarity(a, b) -> float:
+    wa, wb = _qwords(a), _qwords(b)
+    if not wa or not wb:
+        return 0.0
+    return len(wa & wb) / len(wa | wb)
+
+
+def pending_duplicates(item, items, threshold=DUPLICATE_THRESHOLD):
+    """review_ids of OTHER pending drafts from the same sender with a same / near-identical question."""
+    out = []
+    for o in items:
+        if o.get("review_id") == item.get("review_id") or o.get("status") != "pending":
+            continue
+        if o.get("sender_hash") != item.get("sender_hash") or not item.get("sender_hash"):
+            continue
+        if question_similarity(o.get("question"), item.get("question")) >= threshold:
+            out.append(o.get("review_id"))
+    return out
+
+
+DUPLICATE_WARNING_SW = ("⚠️ MARUDIO: swali linalofanana au linalokaribia kufanana kutoka kwa mteja huyu tayari "
+                        "linasubiri ({n}). Usijibu kitu kimoja mara mbili — zuia rasimu moja.")
+DUPLICATE_WARNING_EN = ("DUPLICATE: a same or near-identical question from this sender is already pending ({n}). "
+                        "Do not answer the same thing twice -- withhold one draft.")
+
+
 # ── AN EMPTY EVIDENCE PANEL MUST BE IMPOSSIBLE TO MISTAKE FOR "NOTHING TO CHECK" (2026-11-12) ──────────────
 #
 # Every one of the first 7 drafts ever held reached the reviewer with NO engine working and NO facts -- the panel
@@ -1195,6 +1279,9 @@ def notification_text(item, link, reviewer_name=None, renotify=False):
             else "📋 RASIMU MPYA — inahitaji kupitiwa")
     who = f" · {reviewer_name}" if reviewer_name else ""
     lines = [f"{head}{who}"]
+    dups = item.get("duplicates_pending") or []
+    if dups:
+        lines += [DUPLICATE_WARNING_SW.format(n=len(dups)), DUPLICATE_WARNING_EN.format(n=len(dups)), ""]
     if evidence_is_loud(item):
         # FIRST, before the question: a reviewer reading on a phone must meet this before the draft.
         lines += [EVIDENCE_WARNING_SW, EVIDENCE_WARNING_EN]

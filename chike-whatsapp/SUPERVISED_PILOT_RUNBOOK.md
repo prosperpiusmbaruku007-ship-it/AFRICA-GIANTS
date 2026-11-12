@@ -229,7 +229,12 @@ A reviewer must be told, before their number goes in the Secret:
    figure is a lower bound, measured on our own corpora.
 6. **Your name is on every action you take** — draft, edit and final. This is so corrections
    read separately, not to grade you; but it does mean a rubber-stamp is attributable.
-7. **Read the worked example below before your first decision.** It is a real draft that was
+7. **A participant who re-sends a question creates a SECOND draft.** When a link would not open, the
+   participant's questions were re-sent and four drafts — two pairs — sat pending for one person; approving
+   both of a pair delivers the same answer twice. A draft now carries an amber **MARUDIO / DUPLICATE** block
+   (in the push and on the card) when another pending draft from the same sender has the same or a
+   near-identical question. **Withhold one; answer the other.**
+8. **Read the worked example below before your first decision.** It is a real draft that was
    approved, and it is the shape that gets approved.
 
 ### 4a. WORKED EXAMPLE — a review miss, 2026-11-11 21:49 UTC (approved unedited, 110 s after the push)

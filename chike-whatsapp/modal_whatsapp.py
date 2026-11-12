@@ -341,6 +341,10 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
         item["retry_of"] = retry_of
         item["disclosure_state"] = disclosure.get("disclosure_state")     # the card warns if it failed
         item["answer_path"] = captured.get("path")                         # engine vs model, on the card
+        try:    # ANOTHER pending draft from this sender with the same / near-identical question (in the PUSH)
+            item["duplicates_pending"] = core.pending_duplicates(item, _queue_items())
+        except Exception:                                            # noqa: BLE001
+            item["duplicates_pending"] = []
         try:
             REVIEW_QUEUE[item["review_id"]] = item
         except Exception as e:                                       # noqa: BLE001
@@ -525,6 +529,22 @@ def _evidence_banner(it):
     return ("<div style='background:#4a1010;border:2px solid #ff4d4d;color:#ffd6d6;border-radius:8px;"
             "padding:10px;margin-bottom:8px;font-weight:700'>"
             + _esc(core.EVIDENCE_WARNING_SW) + "<br>" + _esc(core.EVIDENCE_WARNING_EN) + extra + "</div>")
+
+
+def _duplicate_banner(it, items):
+    """Amber block: a same / near-identical question from this sender is ALREADY pending. A re-sent question makes a
+    second draft; approving both delivers the same answer twice. Evaluated LIVE against the queue, so it reflects what
+    is pending now rather than what was pending when the push went out."""
+    core = _core()
+    try:
+        dups = core.pending_duplicates(it, items)
+    except Exception:                                                # noqa: BLE001
+        dups = []
+    if not dups or it.get("status") != "pending":
+        return ""
+    return ("<div style='background:#4a3a10;border:2px solid #e0a800;color:#ffe9a8;border-radius:8px;padding:10px;"
+            "margin-bottom:8px;font-weight:700'>" + _esc(core.DUPLICATE_WARNING_SW.format(n=len(dups))) + "<br>"
+            + _esc(core.DUPLICATE_WARNING_EN.format(n=len(dups))) + "</div>")
 
 
 def _path_html(it):
@@ -846,14 +866,12 @@ def _esc(x):
 def _draft_link(settings, item, number):
     """The per-(draft, reviewer) link. No phone number in the URL — a reviewer handle."""
     core = _core()
-    rid = core.reviewer_id(settings.review_signing_key, number)
-    tok = core.review_token(settings.review_signing_key, item["review_id"], number)
-    # ⛔ URL-ENCODED, NOT INTERPOLATED. A real review_id is `<isoformat ts>-<hash>` and the
-    # ts ends in `+00:00`; in a query string a raw `+` decodes to a SPACE, so the id the
-    # server saw was not the id it stored and every real draft's link returned 404
-    # (2026-11-10). The TEST- ids contain no `+`, which is why 17/17 live checks passed.
-    from urllib.parse import urlencode
-    return f"{REVIEW_D_URL}?{urlencode({'r': item['review_id'], 'v': rid, 't': tok})}"
+    # ⛔ ONE OPAQUE STRING IN THE PATH (2026-11-12): `<d host>/<token>`, token = handle + signature + base32(id) -- no
+    # `&`, no `=`, no `+`, no `%`, all lower-case. The three-parameter query it replaces
+    # (`?r=<id with + and :>&v=…&t=…`) is what link detection, copy-paste and in-app browsers cut or "clean"; four
+    # real links failed authentication on 2026-11-12. Same signing, same authenticate_reviewer: a different envelope.
+    # (The OLD query form is still ACCEPTED by `d`, so links already on a reviewer's phone keep working.)
+    return f"{REVIEW_D_URL}/{core.review_link_token(settings.review_signing_key, item['review_id'], number)}"
 
 
 async def _notify_reviewers(item, *, renotify=False):
@@ -1068,6 +1086,7 @@ def review(token: str = None):
             + _esc(it.get("ts_held")) + " &middot; "
             + _esc(it.get("model_latency_ms")) + "ms" + flags + "</div>"
             + _evidence_banner(it)                 # FIRST: before the question and before the draft
+            + _duplicate_banner(it, items)
             + "<div class=q>" + _esc(it.get("question")) + "</div>"
             + '<textarea id="t-' + rid + '" rows=9>' + _esc(it.get("draft")) + "</textarea>"
             + _disclosure_banner(it)
@@ -1120,9 +1139,7 @@ def review(token: str = None):
     return HTMLResponse(head + stats + body + script)
 
 
-@app.function(image=image, secrets=SECRETS)
-@modal.fastapi_endpoint(method="GET")
-def d(r: str = None, v: str = None, t: str = None):
+def _d_page(r, v, t, via="query"):
     """One draft, opened from a WhatsApp link. GET is READ-ONLY by design.
 
     ⛔⛔ NOTHING ON THIS PAGE ACTS ON A GET, AND THE REASON IS WHATSAPP'S OWN LINK PREVIEW.
@@ -1142,7 +1159,7 @@ def d(r: str = None, v: str = None, t: str = None):
         # STILL a 404 with the same text whether the token is wrong or the id is unknown -- the page must not be an
         # oracle for which drafts exist. But it no longer says "not found": it says the LINK is bad, and that the
         # draft is not lost. The SHAPE of what arrived is logged (never the values) so the next failure explains itself.
-        print("[review/d] 404 reason=auth_failed " + json.dumps(
+        print("[review/d] 404 reason=auth_failed via=" + via + " " + json.dumps(
             _link_failure_shape(core, settings, r_raw, v_raw, t_raw)), flush=True)
         return HTMLResponse(_link_page("Kiungo hiki hakifanyi kazi", _INVALID_LINK_SW, _INVALID_LINK_EN),
                             status_code=404)
@@ -1209,6 +1226,7 @@ def d(r: str = None, v: str = None, t: str = None):
         + _esc(it.get("sender_tail")) + "” &middot; " + _esc(it.get("ts_held")) + "</div>"
         + banner
         + _evidence_banner(it)                     # FIRST: before the question and before the draft
+        + _duplicate_banner(it, _queue_items())
         + '<div class=lock id=lock>Inashikiliwa&hellip;</div>'
         "<div class=q>" + _esc(it.get("question")) + "</div>"
         + ('<div class=lock style="background:#3a1f1f;color:#f0b4b4"><b>MODELI IMESHINDWA'
@@ -1241,8 +1259,9 @@ def d(r: str = None, v: str = None, t: str = None):
     script = (
         "<script>"
         "var CU=" + json.dumps(REVIEW_CLAIM_URL) + ",AU=" + json.dumps(REVIEW_ACT_URL) + ";"
-        "var P=new URLSearchParams(location.search);"
-        "var B={review_id:P.get('r'),v:P.get('v'),t:P.get('t')};"
+        # The credentials come from the SERVER-RENDERED, already-authenticated link -- not from location.search, because
+        # the link is now a path token and there is no query to read.
+        "var B=" + json.dumps({"review_id": r, "v": v, "t": t}).replace("<", "\\u003c") + ";"
         "function en(on){['bs','be','bx','br'].forEach(function(i){"
         "var e=document.getElementById(i);if(e)e.disabled=!on;});}"
         # ⛔ THE CLAIM IS POSTED FROM JS ON LOAD. A link preview crawler never reaches here,
@@ -1274,6 +1293,44 @@ def d(r: str = None, v: str = None, t: str = None):
         + ("" if decided else "claim();")
         + "</script>")
     return HTMLResponse(head + body + script)
+
+
+@app.function(image=image, secrets=SECRETS)
+@modal.asgi_app()
+def d():
+    """The reviewer's page, served at the SAME host as before so every pushed link keeps its origin.
+
+      GET /<token>             the new link: ONE opaque path segment (see core.review_link_token)
+      GET /?r=…&v=…&t=…        the OLD query form, still accepted so links already on a phone keep working
+
+    `@modal.fastapi_endpoint` can serve only the root path, which is why this is an ASGI app. Both routes end in the
+    SAME `_d_page` and the SAME authenticate_reviewer. NOTHING here acts on a GET (the claim is a JS POST)."""
+    from fastapi import FastAPI
+    from fastapi.responses import HTMLResponse
+    web = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+
+    @web.get("/")
+    def legacy(r: str = None, v: str = None, t: str = None):
+        return _d_page(r, v, t, via="query")
+
+    @web.get("/{token}")
+    def by_token(token: str):
+        core = _core()
+        parsed = core.parse_review_link_token(token)
+        if parsed is None:
+            # Not a well-formed token: the SAME invalid-link page as a failed signature (no oracle), logged by shape
+            # only. Short segments (favicon.ico, robots.txt) are crawler noise and are not logged as failures.
+            if len(token or "") >= 20:
+                import re as _re
+                print("[review/d] 404 reason=malformed_token via=path " + json.dumps({
+                    "token_len": len(token), "charset_ok": bool(_re.fullmatch(r"[0-9a-z2-7]+", token.lower())),
+                    "has_non_token_char": bool(_re.search(r"[^0-9A-Za-z]", token))}), flush=True)
+            return HTMLResponse(_link_page("Kiungo hiki hakifanyi kazi", _INVALID_LINK_SW, _INVALID_LINK_EN),
+                                status_code=404)
+        review_id, handle, sig = parsed
+        return _d_page(review_id, handle, sig, via="path")
+
+    return web
 
 
 def _d_origin():

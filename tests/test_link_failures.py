@@ -54,7 +54,7 @@ def _creds(mw, rid=RID):
 
 
 def _call(mw, **kw):
-    resp = mw.d.get_raw_f()(**kw)
+    resp = mw._d_page(kw.get("r"), kw.get("v"), kw.get("t"))
     return resp.status_code, resp.body.decode("utf-8")
 
 

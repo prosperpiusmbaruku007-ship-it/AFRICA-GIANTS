@@ -228,7 +228,7 @@ def _render_d(mw, item):
     mw.REVIEW_QUEUE[item["review_id"]] = item
     rid = hc.reviewer_id(key, number)
     tok = hc.review_token(key, item["review_id"], number)
-    resp = mw.d.get_raw_f()(r=item["review_id"], v=rid, t=tok)
+    resp = mw._d_page(item["review_id"], rid, tok)
     return resp.body.decode("utf-8") if hasattr(resp, "body") else str(resp)
 
 
