@@ -390,6 +390,30 @@ the signature of the pipeline being broken again) / `not_applicable` (the apolog
 against a stored item, is the same defect as the gate scores (R12b), the undeployed fix (R16) and the control verified by wiring (R26).* The EFD miss stands recorded as a review
 miss AND a tooling miss.
 
+### 4j. 2026-11-12 (00:35 UTC) — DEPLOYED AND VERIFIED LIVE: `chike-inference` `c738cad`, `chike-whatsapp` `0c6befc`, `COHORT_SIZE=15`
+
+**One more defect found by rendering the REAL page.** The first version of the evidence guard put the red block *below* the textarea holding the draft on the reviewer's own `/d` page — so a skimming reviewer
+read the draft first and met the alarm after. Found by a test that renders the actual `/d` function against a stored bare item (the helper's own test could not have seen it); fixed so the block leads the page on
+BOTH cards, asserted on the rendered HTML (banner index < draft index). That is why `chike-whatsapp` was deployed twice tonight (`c738cad` then `0c6befc`); `chike-inference` has not changed since `c738cad`.
+
+**LIVE, from the deployed endpoints:**
+- **The four VAT phrasings** (*nijisajili*, *nisajili*, *nijiandikishe*, *VAT ni lazima kwangu*) — each returns **`path: engine:vat_registration`** with the engine's **working** (*"Mauzo yako ya TZS 250,000,000 kwa miezi
+  12 yamefikia au kuzidi kizingiti cha TZS 200,000,000 …"*), i.e. exactly what the review card receives. The founding question previously produced a bare *"Ndiyo"* with nothing.
+- **A fact-path question** (PAYE late-filing penalty) returns **`path: fact`** with **3 facts** — and the facts are visibly **off-topic** (BRELA annual-return fines). **That is the card doing its job:** a reviewer can now SEE
+  that retrieval missed the PAYE row. (Retrieval quality for that question is a separate, newly visible item.)
+- Earlier guarantees hold: EFD live question → the correct rule; lower bound → asks, no *hapana*; upper-bound founding question → *"hapana, hujakifikia"* + *"sina taarifa"* on voluntary registration; SDL "6 milioni" → 210,000;
+  **a third party's turnover is no longer answered as the user's** (the *"Rafiki yangu anauza…"* trap now falls to the fact path).
+- **`/health` (whatsapp):** `disclosure.enabled: true`, `participants_told: 1`, `by_state {delivered 1, alias 1}`, `stuck_sending 0`; **`review_queue.pending_without_evidence: 0`**;
+  **cohort: `declared_size 15`, `sized_for_reviewers 5`, `review_capacity_participants 3`, `within_review_capacity: false`, `seen_exceeds_review_capacity: false`** with the note *"the declared CEILING of 15 is OVER what 1 reviewer(s)
+  can review properly (3 participants): invite only as many people as the roster can review, and add reviewers before growing"*; `can_issue_links: true`; bridge `open`, one lease holder.
+
+**Known and recorded, not fixed:** (a) when D-FIDELITY-7 REPLACES a model draft with the canned correct rule, `path` reads `clarification` — accurate about the text, silent about the fact that a guard fired;
+(b) the old infinitive VAT cues still ignore approximation; (c) a projection (*"yatakuwa yamefikia"*) is answered in the present tense.
+
+**NOT YET VERIFIED — needs the founder's phone:** the four VAT phrasings arriving as REAL held drafts, so that the engine path and working are seen ON THE CARD itself (the endpoint check above proves what the card
+RECEIVES; the page-render tests prove how it DISPLAYS it; neither is the end-to-end the founder asked for). **After the founder sends them, read the four queue items: each must have `answer_path: engine:vat_registration`
+and a non-null `engine_working`, and `pending_without_evidence` must stay 0.**
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy
