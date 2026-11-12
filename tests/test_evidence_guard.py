@@ -102,6 +102,9 @@ def test_both_cards_render_the_banner_loudly_and_only_when_it_should(monkeypatch
     assert mw._evidence_banner({"fallback": True}) == ""
     src = open(os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"), encoding="utf-8").read()
     assert src.count("+ _evidence_banner(it)") == 2, "the overview card AND the reviewer's own /d page"
+    # ...and on BOTH it must precede the question, i.e. be the first thing a reviewer meets
+    for marker in ('+ "<div class=q>" + _esc(it.get("question"))', "+ '<div class=lock id=lock>"):
+        assert src.index("+ _evidence_banner(it)") < src.index(marker)
 
 
 def test_health_counts_pending_drafts_that_carry_no_evidence(monkeypatch):
@@ -216,3 +219,44 @@ def test_a_fact_path_answer_that_retrieved_nothing_is_loud_even_though_the_path_
     item, pushes = _drive(mw, monkeypatch, {"reply": "Ndiyo.", "working": None, "facts": [], "path": "fact"})
     assert hc.evidence_state(item) == "none" and hc.EVIDENCE_PATH_MISSING not in pushes[0]
     assert all(hc.EVIDENCE_WARNING_SW in p for p in pushes)
+
+
+# ── 5. the REAL /d page, rendered: the banner is on the page a reviewer actually opens ──────────────
+def _render_d(mw, item):
+    key = "test-key"
+    number = mw._settings().roster[0][0]      # the roster's NORMALISED JID, not the raw "+255..." string
+    mw.REVIEW_QUEUE[item["review_id"]] = item
+    rid = hc.reviewer_id(key, number)
+    tok = hc.review_token(key, item["review_id"], number)
+    resp = mw.d.get_raw_f()(r=item["review_id"], v=rid, t=tok)
+    return resp.body.decode("utf-8") if hasattr(resp, "body") else str(resp)
+
+
+def _item(**kw):
+    base = {"review_id": "2026-11-12T00:00:00+00:00-abcd1234", "ts_held": "2026-11-12T00:00:00+00:00",
+            "question": "Mauzo yangu ni milioni 250 kwa mwaka. Je, ni lazima nijisajili VAT",
+            "draft": "Ndiyo, unapaswa kujiandikisha kwa ajili ya VAT.", "status": "pending", "sender_tail": "5913",
+            "sender_hash": "abc", "facts": [], "engine_working": None, "answer_path": "fact"}
+    base.update(kw)
+    return base
+
+
+def test_the_real_reviewer_page_shows_the_loud_block_for_a_bare_draft(monkeypatch):
+    mw = _load_mw(monkeypatch)
+    html = _render_d(mw, _item())
+    assert "HAKUNA USHAHIDI" in html and "NO EVIDENCE" in html and "#ff4d4d" in html
+    assert html.index("HAKUNA USHAHIDI") < html.index("Ndiyo, unapaswa"), "the warning must come BEFORE the draft"
+
+
+def test_the_real_reviewer_page_for_an_engine_draft_shows_working_and_path_and_no_alarm(monkeypatch):
+    mw = _load_mw(monkeypatch)
+    html = _render_d(mw, _item(answer_path="engine:vat_registration",
+                               engine_working="Mauzo TZS 250,000,000 >= TZS 200,000,000 (miezi 12)"))
+    assert "HAKUNA USHAHIDI" not in html
+    assert "engine:vat_registration" in html and "250,000,000" in html
+
+
+def test_the_real_reviewer_page_flags_a_missing_path_as_a_broken_pipeline(monkeypatch):
+    mw = _load_mw(monkeypatch)
+    html = _render_d(mw, _item(answer_path=None))
+    assert "HAKUNA USHAHIDI" in html and "evidence pipeline itself may be broken" in html

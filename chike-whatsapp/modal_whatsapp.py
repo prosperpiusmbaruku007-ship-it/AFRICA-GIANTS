@@ -1011,9 +1011,9 @@ def review(token: str = None):
             "<div class=m>..." + _esc(it.get("sender_tail")) + " &middot; "
             + _esc(it.get("ts_held")) + " &middot; "
             + _esc(it.get("model_latency_ms")) + "ms" + flags + "</div>"
-            "<div class=q>" + _esc(it.get("question")) + "</div>"
-            '<textarea id="t-' + rid + '" rows=9>' + _esc(it.get("draft")) + "</textarea>"
-            + _evidence_banner(it)
+            + _evidence_banner(it)                 # FIRST: before the question and before the draft
+            + "<div class=q>" + _esc(it.get("question")) + "</div>"
+            + '<textarea id="t-' + rid + '" rows=9>' + _esc(it.get("draft")) + "</textarea>"
             + _disclosure_banner(it)
             + _path_html(it)
             + work_html
@@ -1132,6 +1132,7 @@ def d(r: str = None, v: str = None, t: str = None):
         "<div class=m>" + _esc(name) + " &middot; mteja ...“"
         + _esc(it.get("sender_tail")) + "” &middot; " + _esc(it.get("ts_held")) + "</div>"
         + banner
+        + _evidence_banner(it)                     # FIRST: before the question and before the draft
         + '<div class=lock id=lock>Inashikiliwa&hellip;</div>'
         "<div class=q>" + _esc(it.get("question")) + "</div>"
         + ('<div class=lock style="background:#3a1f1f;color:#f0b4b4"><b>MODELI IMESHINDWA'
@@ -1143,7 +1144,6 @@ def d(r: str = None, v: str = None, t: str = None):
         + ("andika jibu lako hapa..." if it.get("fallback") else "")
         + '" ' + ("disabled" if decided else "") + ">"
         + ("" if it.get("fallback") else _esc(it.get("draft"))) + "</textarea>"
-        + _evidence_banner(it)
         + _disclosure_banner(it)
         + _path_html(it)
         + work_html
