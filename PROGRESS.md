@@ -414,6 +414,38 @@ BOTH cards, asserted on the rendered HTML (banner index < draft index). That is 
 RECEIVES; the page-render tests prove how it DISPLAYS it; neither is the end-to-end the founder asked for). **After the founder sends them, read the four queue items: each must have `answer_path: engine:vat_registration`
 and a non-null `engine_working`, and `pending_without_evidence` must stay 0.**
 
+### 4k. 2026-11-12 (00:55 UTC) — TWO OF FOUR REVIEW LINKS FAILED; WHAT IS ESTABLISHED, WHAT IS NOT, AND WHAT IS PENDING
+
+Founder's phone test of the four VAT phrasings: Q1 (*nijisajili*) and Q4 (*VAT ni lazima kwangu*) worked end to end (engine answer + working + the 200M threshold, delivered, both read). **The review links for Q2 (*nisajili*) and Q3
+(*nijiandikishe*) returned "not found"**; both were re-sent, so duplicates exist. The founder asked that it be diagnosed from the stored IDs and the logs, not guessed.
+
+**ESTABLISHED, from the queue, the transcripts, the bridge ledger and the Modal logs:**
+- **Six drafts exist** (Q1–Q4 plus the two re-sends), each stored under a DISTINCT id (key == review_id, no overwrite, no collision), each stored BEFORE its push (`first_notified_at` is 2–3 s after `ts_held`),
+  each notified exactly once, none superseded or collapsed. **Candidates eliminated: an ID collision/overwrite; the draft not yet stored when the push went out; drafts collapsed because another question was pending.**
+- **Q1 and Q4 are decided and delivered; FOUR drafts are PENDING and unopened (`claim_count: 0`):** Q2, Q3 and the re-send of each. The ledger (what was actually transmitted) shows 8 sends in the window — 6 pushes to the
+  reviewer and **2 answers to the participant (Q1, Q4)**. **Nothing from the four pending drafts reached the participant phone.** (The ledger shows tail `…5913` for both the reviewer and the tester — the two phones share
+  their last four digits, so the tail alone cannot separate pushes from answers; the pattern of times does.)
+- **ALL TWELVE 404s were AUTHENTICATION failures, not missing drafts.** Same function (`/d`), same single container for every request, and **the 404s executed in 73–76 ms against 282–287 ms for the two links that
+  worked**. Measured directly with deliberately bad credentials (~94–127 ms) vs a valid link to a draft that does not exist (~197–320 ms): the 404s match the first. The page failed before it read the queue.
+- **The same container built every link** (`ta-01M76K5W…` emitted every `[review] HELD`) **and the same container checked every link** (`ta-01M76K6V…` served every `GET /d`). So **a different container, a stale secret and a
+  different roster are eliminated**: what was built and what was checked were identical for the links that worked and the links that did not.
+- **The link construction round-trips for all six ids**, including through the old mangled-`+` form (offline, test key). **"An ID character mangled" is eliminated for THESE ids on the server's side of the URL.**
+
+**NOT ESTABLISHED — and recorded as such:** *why the `r`/`v`/`t` the page received differed from what was built.* The server cannot see query strings, so the logs cannot say which part differed. What remains is the link as it
+ARRIVED (altered or cut between the WhatsApp message and the opener, e.g. by the client, a link-cleaning browser, or copying) — **unproven**. Per-link, not per-container: Q4 worked 13 s before the re-send of Q3 failed, same phone, same app.
+
+**THE PAGE HAD TWO DIFFERENT FAILURES BEHIND ONE SENTENCE** (a bare `{"status":"not found"}` for both an auth failure and a failed queue read), so a reviewer could not tell a missing draft from a damaged link and, told "not found",
+would conclude the draft was gone. **Fixed (`/d`):** an auth failure now says the LINK is invalid or damaged and that this **does not mean the draft is lost** (still a 404 with the same text for a wrong token and an unknown id —
+the page is still no oracle for which drafts exist); a failed queue READ says it is temporary (503, "the draft is NOT lost"); only an AUTHENTICATED request for an id the store genuinely lacks may say the draft is missing.
+**And every failure is now logged as SHAPES, never values** — which of r/v/t was absent, its length, whether it is hex, whether `v` is a roster handle, whether the draft exists in the store (logged server-side, never shown) —
+so the next failure identifies itself. Tests assert the log never contains a token, handle or key.
+
+**Also fixed — debris from the registry bug:** `[reconcile] 3EB00D96: KeyError` repeated every few minutes for ever: the pre-`e86b4cd` bug had registered a filename that was never stored, and the reconcile job raised on it and
+never removed it. Orphaned entries are now dropped once and counted (`orphaned`).
+
+**PENDING (founder to act):** four drafts — Q2 `00:41:28`, Q3 `00:42:57`, Q3-resend `00:45:25`, Q2-resend `00:46:18` (all `-b5908217`). They are two PAIRS of duplicates: approving both of a pair would deliver the same answer to the
+participant twice. Each will be re-notified (fresh links, built the same way) after `RENOTIFY_AFTER_S` (30 min), up to 3 times, then a daily digest.
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy

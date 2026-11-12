@@ -458,6 +458,62 @@ def _has_pending_question(sender, settings) -> bool:
         return False
 
 
+# ── "NOT FOUND" MUST NEVER BE SAID ABOUT A DRAFT THAT EXISTS (founder, 2026-11-12) ──────────────────────────
+#
+# Two reviewer links (and their re-sends) answered a bare {"status":"not found"} while their drafts sat in the queue,
+# stored, un-superseded and notified. The page had TWO different failures behind ONE sentence: an authentication
+# failure (the r / v / t that arrived did not match what the server computes) and a failed queue read. A reviewer
+# cannot tell a missing draft from a damaged link, and told "not found" they conclude the draft is gone.
+#
+# So: an AUTH failure says the LINK is invalid or damaged -- and says explicitly that this does NOT mean the draft is
+# lost (pending drafts are never lost; they are re-notified with a fresh link). It still reveals nothing about
+# whether any draft exists (the original no-enumeration property is kept: status 404, same text for a wrong token
+# and an unknown id). A store ERROR says it is temporary. Only an AUTHENTICATED request for an id the store
+# genuinely does not hold may say the draft is missing.
+_LINK_PAGE_HEAD = ("<!doctype html><meta name=viewport content='width=device-width,initial-scale=1'>"
+                   "<title>Chike &mdash; kiungo</title><body style='font:16px/1.5 system-ui,sans-serif;"
+                   "background:#111;color:#eee;margin:0;padding:18px'>")
+
+
+def _link_page(title, sw, en):
+    return (_LINK_PAGE_HEAD + "<h2 style='margin:0 0 10px'>" + _esc(title) + "</h2><p>" + _esc(sw) + "</p>"
+            "<p style='color:#9a9a9f'>" + _esc(en) + "</p></body>")
+
+
+_INVALID_LINK_SW = ("Kiungo hiki hakifanyi kazi — si sahihi, au kimeharibika njiani (kwa mfano kimekatwa au "
+                    "kubadilishwa wakati wa kunakili). HII HAIMAANISHI rasimu imepotea: rasimu zinazosubiri "
+                    "hazipotei, na hukumbushwa upya na kiungo kipya. Fungua kiungo kutoka kwenye ujumbe wa "
+                    "'RASIMU MPYA' (kiungo chote, hadi mwisho), au subiri ukumbusho.")
+_INVALID_LINK_EN = ("This link does not work -- it is invalid or was damaged in transit (cut short or altered when "
+                    "copied). THIS DOES NOT MEAN THE DRAFT IS LOST: pending drafts are never lost and are "
+                    "re-notified with a fresh link. Open the link from the 'RASIMU MPYA' message (the whole link, "
+                    "to the end), or wait for the reminder.")
+
+
+def _link_failure_shape(core, settings, r_raw, v_raw, t_raw):
+    """WHY a link failed, as SHAPES only -- never the values (a token is a credential). This is the evidence the
+    server could not give when two real links failed: which of r / v / t differed from what was built."""
+    import re as _re
+    r = core.normalise_review_id(r_raw)
+    try:
+        handles = {core.reviewer_id(settings.review_signing_key, n) for n, _ in settings.roster} \
+            if settings.review_signing_key else set()
+    except Exception:                                                # noqa: BLE001
+        handles = set()
+    try:
+        r_known = bool(r) and r in REVIEW_QUEUE
+    except Exception:                                                # noqa: BLE001
+        r_known = None
+    return {
+        "r_present": bool(r_raw), "r_len": len(r_raw or ""), "r_had_space": " " in (r_raw or ""),
+        "r_known_to_store": r_known,
+        "v_present": bool(v_raw), "v_len": len(v_raw or ""), "v_is_hex": bool(_re.fullmatch(r"[0-9a-f]+", v_raw or "")),
+        "v_is_a_roster_handle": (v_raw in handles) if v_raw else False,
+        "t_present": bool(t_raw), "t_len": len(t_raw or ""), "t_is_hex": bool(_re.fullmatch(r"[0-9a-f]+", t_raw or "")),
+        "signing_key_set": bool(settings.review_signing_key), "roster_size": len(settings.roster),
+    }
+
+
 def _evidence_banner(it):
     """LOUD red block when a draft reaches review with neither engine working nor facts. An empty panel must
     never be readable as 'nothing to check' -- for the first 7 drafts ever held it was exactly that."""
@@ -1079,17 +1135,37 @@ def d(r: str = None, v: str = None, t: str = None):
     from fastapi.responses import HTMLResponse, JSONResponse
     core = _core()
     settings = _settings()
+    r_raw, v_raw, t_raw = r, v, t
     r = core.normalise_review_id(r)
     who = core.authenticate_reviewer(settings, r, v, t)
     if not who:
-        # Deliberately a 404 with no detail: a bad token and an unknown draft look the
-        # same from outside, so the page cannot be used to enumerate either.
-        return JSONResponse({"status": "not found"}, status_code=404)
+        # STILL a 404 with the same text whether the token is wrong or the id is unknown -- the page must not be an
+        # oracle for which drafts exist. But it no longer says "not found": it says the LINK is bad, and that the
+        # draft is not lost. The SHAPE of what arrived is logged (never the values) so the next failure explains itself.
+        print("[review/d] 404 reason=auth_failed " + json.dumps(
+            _link_failure_shape(core, settings, r_raw, v_raw, t_raw)), flush=True)
+        return HTMLResponse(_link_page("Kiungo hiki hakifanyi kazi", _INVALID_LINK_SW, _INVALID_LINK_EN),
+                            status_code=404)
     _number, name = who
     try:
         it = REVIEW_QUEUE[r]
-    except Exception:                                                # noqa: BLE001
-        return JSONResponse({"status": "not found"}, status_code=404)
+    except KeyError:
+        # AUTHENTICATED, and the store genuinely does not hold this id: the only case that may say so.
+        print(f"[review/d] 404 reason=authenticated_but_no_such_draft r_len={len(r or '')}", flush=True)
+        return HTMLResponse(_link_page(
+            "Rasimu haipatikani",
+            "Kiungo ni sahihi, lakini rasimu hii haipo kwenye foleni (huenda ilishaondolewa baada ya uamuzi).",
+            "The link is valid, but this draft is not in the queue (it may have been cleared after a decision)."),
+            status_code=404)
+    except Exception as e:                                           # noqa: BLE001
+        # The store could not be READ. That is not "not found" and must not read like it.
+        print(f"[review/d] 503 reason=store_error {type(e).__name__}", flush=True)
+        return HTMLResponse(_link_page(
+            "Tatizo la muda",
+            "Kiungo ni sahihi, lakini foleni haikuweza kusomwa sasa hivi. Rasimu HAIJAPOTEA — jaribu tena baada ya "
+            "sekunde chache.",
+            "The link is valid, but the queue could not be read just now. The draft is NOT lost -- try again in a "
+            "few seconds."), status_code=503)
 
     facts_html = "".join("<li>" + _esc(f)[:600] + "</li>" for f in (it.get("facts") or []))
     working = it.get("engine_working")
@@ -1414,7 +1490,7 @@ def review_queue(token: str = None, include_sender: bool = False):
 def reconcile_receipts():
     import time
     core = _core()
-    done = dropped = left = 0
+    done = dropped = left = orphaned = 0
     now = time.time()
     for mid in list(PENDING_ROWS.keys()):
         try:
@@ -1423,7 +1499,15 @@ def reconcile_receipts():
                 led = BRIDGE_LEDGER[mid]
             except KeyError:
                 led = None
-            row = TRANSCRIPTS[key]
+            try:
+                row = TRANSCRIPTS[key]
+            except KeyError:
+                # AN ORPHAN: the registry names a row that was never stored (the pre-e86b4cd bug registered a
+                # filename different from the one it stored under). It used to raise here on EVERY run, for ever.
+                PENDING_ROWS.pop(mid)
+                orphaned += 1
+                print(f"[reconcile] {mid[:8]}: orphaned registry entry dropped (no such transcript row)", flush=True)
+                continue
             new = core.reconcile_row(row, led)
             if new:
                 TRANSCRIPTS[key] = new
@@ -1436,8 +1520,8 @@ def reconcile_receipts():
                 left += 1
         except Exception as e:                                       # noqa: BLE001
             print(f"[reconcile] {mid[:8]}: {type(e).__name__}", flush=True)
-    print(f"[reconcile] reconciled={done} gave_up={dropped} waiting={left}", flush=True)
-    return {"reconciled": done, "gave_up": dropped, "waiting": left}
+    print(f"[reconcile] reconciled={done} gave_up={dropped} waiting={left} orphaned={orphaned}", flush=True)
+    return {"reconciled": done, "gave_up": dropped, "waiting": left, "orphaned": orphaned}
 
 
 async def _send_digest(items):
