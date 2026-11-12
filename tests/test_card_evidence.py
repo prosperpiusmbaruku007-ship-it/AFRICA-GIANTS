@@ -223,9 +223,9 @@ def test_the_health_cohort_keeps_the_gap_between_the_cap_and_the_capacity_visibl
     monkeypatch.setenv("COHORT_SIZE", "15")
     monkeypatch.setenv("REVIEWER_ROSTER", "+255700000011:Prosper")
     monkeypatch.setenv("REVIEW_SIGNING_KEY", "k")
-    monkeypatch.setattr(mw, "_participants_seen", lambda: 2)
+    monkeypatch.setattr(mw, "_participants_split", lambda: (2, 0))
     c = mw._cohort_health()
     assert c["declared_size"] == 15 and c["within_review_capacity"] is False
     assert c["review_capacity_participants"] == 3 and c["seen_exceeds_review_capacity"] is False
-    monkeypatch.setattr(mw, "_participants_seen", lambda: 4)
+    monkeypatch.setattr(mw, "_participants_split", lambda: (4, 0))
     assert mw._cohort_health()["seen_exceeds_review_capacity"] is True, "serving more people than one reviewer can review"
