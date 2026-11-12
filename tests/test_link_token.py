@@ -284,3 +284,28 @@ def test_a_re_sent_question_through_the_real_handler_marks_the_second_draft_and_
     assert len(items) == 2
     assert items[0].get("duplicates_pending") == [] and items[1]["duplicates_pending"] == [items[0]["review_id"]]
     assert "MARUDIO" not in pushes[0] and "MARUDIO" in pushes[1]
+
+
+def test_a_RENOTIFICATION_of_a_draft_held_before_the_flag_existed_still_warns_about_its_duplicate(monkeypatch):
+    """The three drafts pending when the flag shipped have NO stored `duplicates_pending`. The push must compute it now."""
+    mw = _load_mw(monkeypatch)
+    pushes = []
+
+    async def fake_send(to, text):
+        pushes.append(text)
+        return True, None
+    monkeypatch.setattr(mw, "_send_once", fake_send)
+    a = _store(mw, IDS[0], question=Q2, sender_hash="s1")
+    b = _store(mw, IDS[1], question=Q3, sender_hash="s1")
+    assert "duplicates_pending" not in a and "duplicates_pending" not in b
+    _run(mw._notify_reviewers(a, renotify=True))
+    assert "MARUDIO" in pushes[-1] and "DUPLICATE" in pushes[-1]
+    assert pushes[-1].index("MARUDIO") < pushes[-1].index("SWALI:")
+    # a draft with no pending sibling is NOT cried-wolf, and a decided sibling stops flagging
+    c = _store(mw, "2026-11-12T01:00:00+00:00-b5908217", question="SDL ni asilimia ngapi?", sender_hash="s1")
+    _run(mw._notify_reviewers(c, renotify=True))
+    assert "MARUDIO" not in pushes[-1]
+    b["status"] = "withheld"
+    mw.REVIEW_QUEUE[IDS[1]] = b
+    _run(mw._notify_reviewers(a, renotify=True))
+    assert "MARUDIO" not in pushes[-1]

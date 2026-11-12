@@ -901,6 +901,13 @@ async def _notify_reviewers(item, *, renotify=False):
               f"REVIEW_ACT_URL are not all set, so any link would be unusable inside "
               f"WhatsApp. The draft HOLDS.", flush=True)
         return 0
+    # DUPLICATES ARE COMPUTED NOW, NOT TAKEN FROM WHAT WAS STORED AT HOLD TIME. A draft held before the duplicate flag existed
+    # has no stored field, and a re-notification must still warn about its near-identical sibling (the two pairs that sat
+    # pending for one participant were exactly such drafts). Live against the queue, so a decided sibling stops flagging.
+    try:
+        item = {**item, "duplicates_pending": core.pending_duplicates(item, _queue_items())}
+    except Exception:                                                # noqa: BLE001
+        pass
     ok_count = 0
     for number, name in settings.roster:
         text = core.notification_text(
