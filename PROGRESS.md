@@ -497,6 +497,22 @@ without the amber block while the cards (computed live) showed it. It is now com
 **PENDING (founder to act, from the NEXT re-notification's cards):** Q2 `00:41:28`, Q3 `00:42:57`, Q2-resend `00:46:18`. Founder's plan: **withhold Q3** (its near-identical re-send was already answered and delivered), **withhold one of Q2 / Q2-resend, approve the other if the answer is right.** The cards and pushes now carry the amber DUPLICATE block between Q2 and Q2-resend and
 between Q2 and Q3 (word-set Jaccard 0.82).
 
+### 4n. 2026-11-12 (22:25 UTC) — THE PATH LINKS OPEN AND THE REVIEW STEP WORKS ON THEM; DELIVERY ON A PATH LINK IS NOT YET OBSERVED
+
+**Read from the chike-whatsapp log, the queue items and the bridge ledger (all read-only).** Times UTC.
+- **Reminders that carried path links:** 01:44:42 / 01:45:11 / 01:47:30 and 02:17:30 / 02:17:51 / 02:18:12 (the two re-notify rounds after deploy `85d587a`), then the DAILY DIGEST at 20:53:36 (capped drafts, `MAX_RENOTIFIES=3`). The ledger says all six re-notifications were `delivered` with one receipt at 04:51:13 (the phone was unreachable until then); the digest was received 21:25:04.
+- **`GET /<token>` — three requests, all `200 OK`:** 22:10:41, 22:13:39, 22:15:02 (one per draft, 4.1 s / 6.8 s / 3.5 s cold). **No `[review/d] 404` and no failed shape in the window.** Each GET was followed 5–11 s later by `POST /` claim `200`, which only the page's JavaScript fires, so a person's browser ran them, not a link-preview crawler. First observation of a real draft opening through a path token in production.
+- **Decisions (named reviewer Prosper, `decided_by` the roster number):** Q2 `00:41:28` WITHHELD 22:14:48, reason `Re send`, latency 77,597 s; Q3 `00:42:57` WITHHELD 22:15:26, reason `Re send`, latency 77,547 s. No reply sent for either (`send_state: null`).
+- **Q2-resend `00:46:18` is STILL PENDING:** claimed 22:10:46 (claim expires 22:25:46, after which it is released, never sent). Nothing has been sent or delivered on a path link yet.
+- **One `POST / -> 409 Conflict` at 22:14:34** between Q2's claim and its withhold. The log does not record why; `apply_decision` refuses with 409 (a withhold without a reason is one cause). **Unexplained, not verified.**
+
+**NOT VERIFIED, AND SAID SO (R41):** the push TEXT is stored nowhere (the ledger keeps `ts/to/status/receipt`, the queue keeps counters), so "the amber MARUDIO block was on the pushes" is a RECONSTRUCTION, not an observation: running the real `pending_duplicates` + `notification_text` over the three stored items with all three pending gives the block (2 duplicates each, SW + EN lines before the question, then the engine working). What the founder saw on the phone is the only first-hand record. **Gap:** nothing stores what a push said; a flag on the item (`last_notify_flags`) would make this checkable next time.
+
+**WHAT THAT MAKES THE LOOP:** question in → disclosure → ack → held draft with evidence → push with an unbreakable link → link opens `200` → claim → withhold with reason: **verified on path links.** Approval → send → delivery receipt **on a path link: still outstanding** (the Q2-resend). **Not recorded as verified end to end until it is.**
+
+**LATENCY, for the recruiting decision:** the drafts waited 21.6 hours (phone off ~3 h, re-notify capped at 3, then one digest a day). That is the measured cost of a single reviewer asleep, and the thing R7's condition cannot hide.
+
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy
