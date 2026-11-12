@@ -475,6 +475,28 @@ decided sibling stops flagging. Runbook review standard updated.
 **STATE AT 01:20 UTC:** Q3-resend was opened, sent and delivered (founder). **Three drafts remain pending:** Q2 `00:41:28`, Q3 `00:42:57`, Q2-resend `00:46:18` — each re-notified once (old-format links). Q3 `00:42:57` is now a duplicate of an answer already SENT; one of Q2 / Q2-resend is
 redundant. The next re-notification (~30 min) will carry path-token links **only after the build above is deployed.**
 
+### 4m. 2026-11-12 (01:35 UTC) — PATH-TOKEN LINKS, THE DUPLICATE FLAG AND R42 ARE LIVE: `chike-whatsapp` `85d587a`
+
+**Founder's framing, recorded:** the colon in the timestamp id ending link detection explains BOTH the failures and why Q1 and Q4 survived (a client-dependent boundary: some paths through the chat app keep the percent-encoding, some cut at the colon). It is the SAME CLASS as the
+`+` bug of 2026-11-10 — *a character legal in a URL but treated as a boundary by whatever displays it* — and the general rule is **any link sent through a chat app is a single unbroken alphanumeric token.** **Recorded as CLAUDE.md R42** beside R41, with both bugs as instances.
+
+**The rule is ENFORCED, not remembered.** `core.assert_chat_safe_link` runs INSIDE `_draft_link` — the one builder behind every push, re-notify and digest — and **fails closed**: an unsafe link raises, **no message goes out, and the draft still holds**. The accepted shape is exactly
+`https://<host>/<[a-z0-9]+>`. `tests/test_chat_safe_links.py`: the two real failing links are PLANTED and the guard must refuse both (R26); adversarial ids (spaces, symbols, unicode, 200 chars, TEST- ids) all yield safe links that round-trip; every text builder (push, re-notify, failure,
+duplicate, digest) is swept and must contain no link outside the set; the sweep itself is shown to catch a planted unsafe link; and a source test fails if anything but `_draft_link` builds from `REVIEW_D_URL` or `urlencode` returns. **Two defects in the guard's OWN code were found by those tests:** the reporter named "no path
+token" instead of "a query string" for the old link (it was refused, for the wrong stated reason), and the token PARSER demanded ≥ 8 id characters so a token WE MINT for a very short id would not parse back (a builder/parser disagreement).
+
+**LIVE (verified against the deployed host, not only offline):**
+- a VALID path token for a nonexistent TEST draft → **authenticated**, and the page says *"Rasimu haipatikani — the link is valid, but this draft is not in the queue"* (the ONE case allowed to say so) — proves the ASGI route and the signing in production;
+- the SAME token cut 3 characters short, with one signature character changed, the legacy query form with bad credentials, the legacy form with only `r` (the exact cut shape), the bare host and `/favicon.ico` → all the **"Kiungo hiki hakifanyi kazi … HII HAIMAANISHI rasimu imepotea"** page, **none says "not found"**;
+- `/health`: build `85d587a`, `supervised: true`, disclosure on, cohort 15 / `within_review_capacity: false`, **3 pending, `pending_without_evidence: 0`**, `can_issue_links: true`, bridge open with one lease holder.
+- **NOT YET VERIFIED LIVE — needs the founder's tap:** a real draft opening at `GET /<token> → 200`. Covered offline through the actual ASGI route (`TestClient`); the next re-notification (~01:44–01:47 UTC) is the first real push carrying a path link.
+
+**A BUG IN MY OWN FIRST DUPLICATE FLAG, caught before it mattered.** The flag was computed when a draft was HELD and read from the stored item when a push was built — so the three drafts pending when the feature shipped (held before it existed) had NO stored field, and their re-notifications would have gone out
+without the amber block while the cards (computed live) showed it. It is now computed against the live queue inside `_notify_reviewers`; tested for a draft with no stored field, for a draft with no sibling (no cried-wolf) and for a sibling that has since been decided (stops flagging). That is why `chike-whatsapp` was deployed twice more tonight (`ceca765`, then `85d587a`).
+
+**PENDING (founder to act, from the NEXT re-notification's cards):** Q2 `00:41:28`, Q3 `00:42:57`, Q2-resend `00:46:18`. Founder's plan: **withhold Q3** (its near-identical re-send was already answered and delivered), **withhold one of Q2 / Q2-resend, approve the other if the answer is right.** The cards and pushes now carry the amber DUPLICATE block between Q2 and Q2-resend and
+between Q2 and Q3 (word-set Jaccard 0.82).
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy
