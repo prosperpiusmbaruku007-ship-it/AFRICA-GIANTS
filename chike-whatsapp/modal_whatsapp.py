@@ -871,7 +871,9 @@ def _draft_link(settings, item, number):
     # (`?r=<id with + and :>&v=…&t=…`) is what link detection, copy-paste and in-app browsers cut or "clean"; four
     # real links failed authentication on 2026-11-12. Same signing, same authenticate_reviewer: a different envelope.
     # (The OLD query form is still ACCEPTED by `d`, so links already on a reviewer's phone keep working.)
-    return f"{REVIEW_D_URL}/{core.review_link_token(settings.review_signing_key, item['review_id'], number)}"
+    # FAILS CLOSED: a link with any character a chat app might treat specially is refused, not sent.
+    return core.assert_chat_safe_link(
+        f"{REVIEW_D_URL}/{core.review_link_token(settings.review_signing_key, item['review_id'], number)}")
 
 
 async def _notify_reviewers(item, *, renotify=False):

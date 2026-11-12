@@ -845,7 +845,59 @@ def reviewer_id(signing_key, number):
 import base64 as _b64
 import re as _re_tok
 
-_TOKEN_RE = _re_tok.compile(r"^[0-9a-f]{10}[0-9a-f]{32}[a-z2-7]{8,}$")
+# The id part is >= 1 char: whatever review_link_token MINTS must parse back (a builder and a parser that disagree about
+# the shortest legal token is a latent defect). Junk is rejected by the fixed-width hex prefix and the alphabet, not by length.
+_TOKEN_RE = _re_tok.compile(r"^[0-9a-f]{10}[0-9a-f]{32}[a-z2-7]+$")
+
+
+# ── THE RULE, ENFORCED (founder, 2026-11-12): A LINK SENT THROUGH A CHAT APP IS ONE UNBROKEN ALPHANUMERIC TOKEN ──────
+#
+# Two bugs, one class. `+` (2026-11-10): legal in a URL, decoded to a SPACE by a query parser, so every real draft's link
+# returned 404. `:` (2026-11-12): legal in a URL, treated as a BOUNDARY by whatever displayed the link, so the URL arrived
+# cut at the first colon of the review id and lost the rest of the id, the `+`, `&v=` and `&t=`. Different characters,
+# same mechanism: a character that is LEGAL in a URL but means something to the thing that DISPLAYS it. Escaping fixes
+# one character at a time; the only robust form is a token with NO character that anything treats specially.
+#
+# So the shape is checked, not remembered: `https://<host>/<[a-z0-9]+>` -- no query, no fragment, no percent-encoding,
+# no punctuation in the path. `_draft_link` calls this before returning, so a future change that sneaks a `?`, `&`, `=`,
+# `+`, `%`, `:` or `-` into a link we send FAILS CLOSED (no push goes out) instead of shipping a link that dies in transit.
+_CHAT_LINK_RE = _re_tok.compile(r"^https://[a-z0-9][a-z0-9.-]*/[a-z0-9]+$")
+
+
+def chat_link_problems(url):
+    """[] if `url` is safe to send through a chat app; otherwise the reasons (one per offending character class)."""
+    u = str(url or "")
+    if _CHAT_LINK_RE.match(u):
+        return []
+    out = []
+    if not u.startswith("https://"):
+        out.append("is not https")
+    rest = u.split("://", 1)[-1]
+    names = {"?": "a query string", "&": "an ampersand", "=": "an equals sign", "+": "a plus", "%": "percent-encoding",
+             "#": "a fragment", " ": "whitespace"}
+    for ch, why in names.items():                   # anywhere after the scheme: host, path or query
+        if ch in rest:
+            out.append("contains " + why)
+    host, _, path = rest.partition("/")
+    more = {":": "a colon", "-": "a hyphen", ".": "a dot", "_": "an underscore"}
+    for ch in sorted(set(path)):
+        if ch in names:
+            continue
+        if not (ch.isascii() and (ch.islower() or ch.isdigit())):
+            out.append("path contains " + more.get(ch, repr(ch)))
+    if "/" not in rest or not path:
+        out.append("has no path token")
+    if not out:
+        out.append("does not match https://<host>/<[a-z0-9]+>")
+    return out
+
+
+def assert_chat_safe_link(url):
+    """Fail closed: raise rather than let an unsafe link into a message."""
+    problems = chat_link_problems(url)
+    if problems:
+        raise ValueError("unsafe chat link (" + "; ".join(problems) + ")")
+    return url
 
 
 def review_link_token(signing_key, review_id, number):

@@ -1471,6 +1471,21 @@ introduced it.
    locked. **So the trigger to re-check refusals is ADDING A DOMAIN, not editing a phrase** —
    and adding a domain does not look like touching refusals, which is exactly why it is missed.
 
+### ⛔⛔ R42 — A CHARACTER LEGAL IN A URL BUT TREATED AS A BOUNDARY BY WHATEVER DISPLAYS IT. EVERY LINK SENT THROUGH A CHAT APP IS ONE UNBROKEN ALPHANUMERIC TOKEN. (added 2026-11-12)
+
+**Two bugs, one class, found three days apart.** The reviewer's link was `?r=<review id>&v=<handle>&t=<token>` and a review id is `<isoformat ts>-<hash>`:
+- **`+` (2026-11-10):** legal in a URL, decoded to a SPACE by a query parser, so the id the server saw was not the id it stored and every real draft's link returned 404. Fixed by URL-encoding it — which fixed ONE character.
+- **`:` (2026-11-12):** legal in a URL, treated as a BOUNDARY by whatever displayed or opened the link. The URL arrived **cut at the first colon** (`2026-11-12T00` | `:41:28+…`), losing the rest of the id, the `+`, `&v=…` and `&t=…`. Logged as `r_len: 13`, `v_present: false`, `t_present: false`. Some links survived and some did not, which is exactly what a client-dependent boundary looks like.
+
+**Escaping one character at a time is the wrong remedy: it is a list, and the next character is not on it.** The robust form has *no* character that anything treats specially.
+
+**THE RULE:** a link we send through a chat app is `https://<host>/<token>` with `token` matching `[a-z0-9]+` — **no query string, no fragment, no percent-encoding, no `& = + % : - ? .` in the path**, lower-case only (a client that case-folds a path cannot corrupt it). The reviewer link is
+`handle(10 hex) + signature(32 hex) + base32(review_id)`, signed exactly as before.
+
+**ENFORCED, NOT REMEMBERED:** `core.assert_chat_safe_link` runs INSIDE `_draft_link` (the one builder behind every push, re-notify and digest), so an unsafe link **fails closed — no message goes out** — rather than shipping a link that dies in transit. `tests/test_chat_safe_links.py` sweeps adversarial ids and every text builder, and fails if any link we send contains a character outside the set.
+
+**AND THE DIAGNOSTIC THAT FOUND IT is the standing pattern for any rejected credential:** log the SHAPE of what arrived (which parts present, their lengths, hex-ness, whether the id exists) and never the values. The page said `{"status":"not found"}` for both an authentication failure and a failed queue read; the shapes are what said *which*.
+
 ### ⛔⛔ R41 — A CLAIM ABOUT WHAT THE SYSTEM SHOWS, WRITTEN FROM DESIGN INTENT AND NEVER CHECKED AGAINST A STORED ITEM, IS THE SAME DEFECT AS THE GATE SCORE AND THE UNDEPLOYED FIX. (added 2026-11-12)
 
 **Found by reading one answer.** The review tool was built to put evidence — the engine's working, the facts retrieval
