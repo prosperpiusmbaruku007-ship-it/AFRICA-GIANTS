@@ -446,6 +446,35 @@ never removed it. Orphaned entries are now dropped once and counted (`orphaned`)
 **PENDING (founder to act):** four drafts — Q2 `00:41:28`, Q3 `00:42:57`, Q3-resend `00:45:25`, Q2-resend `00:46:18` (all `-b5908217`). They are two PAIRS of duplicates: approving both of a pair would deliver the same answer to the
 participant twice. Each will be re-notified (fresh links, built the same way) after `RENOTIFY_AFTER_S` (30 min), up to 3 times, then a daily digest.
 
+### 4l. 2026-11-12 (01:20 UTC) — THE LINK IS CUT AT THE FIRST COLON; ONE OPAQUE PATH TOKEN REPLACES THE QUERY; DUPLICATES FLAGGED. **BUILT, TESTED, PUSHED (`d86ab8a`) — NOT DEPLOYED.**
+
+**THE LOG EVIDENCE (deployed diagnostic `f4d12fc`, shapes only):** every failing request that carried its shape looks like
+
+`auth_failed  r_present=true r_len=13  r_known_to_store=false  v_present=false  t_present=false`
+
+**`r` is 13 characters, and `v` and `t` are ABSENT.** `2026-11-12T00` is exactly 13 characters: **the URL arrived cut at the first `:` of the review id** (`2026-11-12T00` | `:41:28+00:00-b5908217&v=…&t=…`). Everything after the colon — the rest of the id, the `+`, the
+`&v=…`, the `&t=…` — never reached the server. **That also explains every earlier failure's ~75 ms:** with no `v` and no `t`, authentication fails instantly, before any queue read (measured: bad credentials ~94–127 ms, a valid link to a missing draft ~197–320 ms).
+Two entries at 01:08 are the author's own probes (`v` zeros, `r_len 34`) and are not evidence about the founder's links.
+
+**WHAT THIS ESTABLISHES, AND WHAT IT DOES NOT.**
+- **Established:** the failing links arrived cut at the colon. A link made of `?r=<id containing ':' and '+'>&v=…&t=…` is exactly what a link detector, a copy-paste or an in-app browser truncates; the push itself was correct (the encoded
+  form round-trips for all six ids and two links opened intact).
+- **Not established: WHO or WHAT sent the cut requests.** A cut request arrived ~30 s after each re-notification batch (01:14:26 after the 01:13:55 pushes; 01:17:24 after the 01:16:51 pushes) — consistent with a link-preview crawler as
+  much as with a tap. **The same push batch produced one link that opened intact (01:17:03, claimed and SENT at 01:17:20, delivered, latency 1911 s) and one cut request.** Both explanations point at the same fix: the link must contain nothing that can be cut.
+
+**THE FIX — `/<token>`, ONE UNBROKEN STRING (founder's design).** `token = handle(10 hex) + signature(32 hex) + base32(review_id)`: a single run of `[0-9a-z2-7]` — **no `&`, no `=`, no `+`, no `%`, no `:`, no `?`**, lower-case only (a client that
+case-folds a path cannot corrupt it). **Same signing, same `authenticate_reviewer`** — a different envelope for the same three facts. **Tested:** every possible truncation of a token fails to authenticate as ANYTHING; a forged signature, a swapped handle,
+a swapped id and a token minted under another key all fail; junk never parses and never raises. `d` becomes an ASGI app at the SAME host (`fastapi_endpoint` serves only `/`): `/<token>` is the new link, `/?r&v&t` still opens so links already on a phone keep
+working; the page's JS takes its credentials from the server-rendered, already-authenticated link (there is no query string to read). Existing tests that asserted the old `?r=` shape were updated deliberately, and the old form keeps its own tests.
+- ⚠️ **Caught in my own test:** an assertion ending `… or True` — a check that can never fail (R20) — replaced with the real symmetric property before commit.
+
+**DUPLICATES (founder).** *A participant who re-sends a question creates a second draft.* Two PAIRS sat pending for one participant; approving both of a pair delivers the same answer twice. `pending_duplicates` flags another PENDING draft from the SAME sender with a same
+or near-identical question (word-set Jaccard ≥ 0.75 — the pairs differ by one word, *nisajili* vs *nijiandikishe*, as often as by none): an **amber MARUDIO / DUPLICATE block in the push (before the question) and on both cards**, evaluated LIVE against the queue so a
+decided sibling stops flagging. Runbook review standard updated.
+
+**STATE AT 01:20 UTC:** Q3-resend was opened, sent and delivered (founder). **Three drafts remain pending:** Q2 `00:41:28`, Q3 `00:42:57`, Q2-resend `00:46:18` — each re-notified once (old-format links). Q3 `00:42:57` is now a duplicate of an answer already SENT; one of Q2 / Q2-resend is
+redundant. The next re-notification (~30 min) will carry path-token links **only after the build above is deployed.**
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy
