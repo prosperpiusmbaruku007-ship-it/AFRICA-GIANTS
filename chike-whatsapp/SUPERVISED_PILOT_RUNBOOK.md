@@ -438,6 +438,23 @@ does not send them, and nothing else will.
 
 ---
 
+## Designated test senders (`TEST_SENDERS`, 2026-11-13)
+
+A phone that is not a participant but messages Chike (the founder's test phones) is listed in the `TEST_SENDERS` secret key, comma-
+separated, like the roster: a phone number written any way (`+255 7xx xxx xxx`, `07xx…`, `255…`) or `hash:<12 hex>` (a sender hash as
+shown in `/health` / the transcripts — **the `hash:` prefix is required**, because a number written 255XXXXXXXXX is itself 12 digits).
+Use the hash form for a sender that arrives only as `@lid`.
+
+- **Full loop, unchanged:** disclosure, ack, held draft, review. A test sender's answer is HELD exactly like a participant's, and a
+  test (`tests/test_test_senders.py`) asserts no handler path branches on the flag except where counts are made.
+- **Excluded from:** `participants_seen`, `over_capacity`, `seen_exceeds_review_capacity` (so capacity 3 means 3 real participants) and
+  from the review statistics (`excluded_test_items`; the founder's own test edits must not read as the pilot's edit rate).
+- **Never silent:** `/health` → `cohort.test_senders` = `{listed, rejected_entries, seen}`. A typo is COUNTED as rejected, and an entry
+  that is really a participant would show up there too: **check `seen` equals the number of phones you own.**
+- Adding the key needs a redeploy (the secret is read at container start).
+
+---
+
 ## ⛔ ALERTING IS A DEAD-MAN'S SWITCH (healthchecks.io) — NO PARTICIPANT IS RECRUITED UNTIL A TEST ALERT HAS BEEN SEEN TO ARRIVE
 
 **Mechanism (2026-11-13, replaces the SMTP design; the SMTP code is kept, unused).** `poll_bridge_status` runs every 2 minutes and pings

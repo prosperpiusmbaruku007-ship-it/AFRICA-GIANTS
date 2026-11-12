@@ -220,9 +220,13 @@ HOLDS = {
     # without a date lapses. scripts/preflight_deploy.py reads this row, prints that alerting is
     # OFF while the hold is live, and goes back to REFUSING the day it expires.
     'bridge alerting gate (pre-flight 3b: HEALTHCHECK_PING_URL)': {
-        'state': 'HELD',
+        'state': 'RESOLVED',
         'decided': '2026-11-11',
-        'expires': '2026-11-25',
+        'resolved': '2026-11-13',
+        'evidence': ('2026-11-13: a test /fail ping fired at 23:14:45 UTC (02:14:45 local) and a normal ping followed at '
+                     '23:14:56 UTC; the founder confirmed the DOWN email arrived at 02:14 and the UP email at 02:14 (local, '
+                     'as stated) and the check showed green. Seen to deliver, not merely accepted. Pre-flight gate 3b '
+                     'now REFUSES a deploy with HEALTHCHECK_PING_URL absent (no hold applies).'),
         'why': ('The founder deferred setting up alert email to finish the message bridge '
                 'first. The gate stays; while this hold is live a missing ALERT_* key is a '
                 'WARNING and the pre-flight prints that ALERTING IS OFF, so the deploy cannot '

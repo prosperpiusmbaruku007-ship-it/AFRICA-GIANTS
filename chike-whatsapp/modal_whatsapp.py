@@ -235,10 +235,22 @@ def _settings():
         # is an operational judgement about review capacity that changes as the roster does.
         cohort_size=int(os.environ.get("COHORT_SIZE", "0") or 0),
         roster=parse_roster_env(),
+        test_sender_hashes=_test_sender_parse()[0],
         review_signing_key=os.environ.get("REVIEW_SIGNING_KEY", ""),
         claim_ttl_s=float(os.environ.get("CLAIM_TTL_S", "900")),
         renotify_after_s=float(os.environ.get("RENOTIFY_AFTER_S", "1800")),
     )
+
+
+def _test_sender_parse():
+    """(hashes, rejected) from TEST_SENDERS in the secret. Never raises: an unreadable list means NO exclusions,
+    i.e. the safe direction (a test phone is counted as a participant, over- not under-counting)."""
+    try:
+        return _core().parse_test_senders(os.environ.get("TEST_SENDERS", ""),
+                                          os.environ.get("SENDER_SALT", ""))
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[test-senders] parse failed ({type(e).__name__}) -- no exclusions")
+        return frozenset(), 0
 
 
 def parse_roster_env():
@@ -1022,28 +1034,39 @@ def _mark_notified(item, sent_count, *, renotify=False):
         print(f"[review] could not record notification for {item['review_id']}: {e}")
 
 
-def _participants_seen():
-    """Distinct participants in the transcript store — the number the cohort SETTING is
-    monitored against. Reviewer notifications are not transcript rows, so they cannot
-    inflate this."""
+def _participants_split():
+    """(real, test) distinct senders in the transcript store. Reviewer notifications are not transcript rows, so they
+    cannot inflate this. A sender is a TEST sender if TEST_SENDERS lists it (by hash, so older rows are classified
+    too) or the row was stamped `test_sender` when written. Both numbers are reported: an exclusion that cannot be
+    seen is R39's shrinking count."""
+    hashes = _test_sender_parse()[0]
     try:
-        seen = set()
+        real, test = set(), set()
         for k in TRANSCRIPTS.keys():
             try:
                 row = TRANSCRIPTS[k]
             except Exception:                                        # noqa: BLE001
                 continue
             if isinstance(row, dict) and row.get("kind") in ("question", "greeting"):
-                if row.get("sender_hash"):
-                    seen.add(row["sender_hash"])
-        return len(seen)
+                h = row.get("sender_hash")
+                if h:
+                    (test if (row.get("test_sender") or h in hashes) else real).add(h)
+        test |= {h for h in real if h in hashes}
+        real -= test
+        return len(real), len(test)
     except Exception:                                                # noqa: BLE001
-        return None
+        return None, None
+
+
+def _participants_seen():
+    """REAL participants only (the number the cohort SETTING is monitored against)."""
+    return _participants_split()[0]
 
 
 def _cohort_health():
     size = int(os.environ.get("COHORT_SIZE", "0") or 0)
-    seen = _participants_seen()
+    seen, test_seen = _participants_split()
+    n_test_listed, n_test_rejected = len(_test_sender_parse()[0]), _test_sender_parse()[1]
     try:
         reviewers = len(_settings().roster)
     except Exception:                                                # noqa: BLE001
@@ -1053,6 +1076,9 @@ def _cohort_health():
                  "capacity_note": "roster could not be read"})
     capacity = cap.get("review_capacity_participants")
     return {"declared_size": size, "participants_seen": seen,
+            # TEST SENDERS (TEST_SENDERS in the secret): full review loop, not counted above or in any limit below.
+            "test_senders": {"listed": n_test_listed, "rejected_entries": n_test_rejected, "seen": test_seen,
+                             "excluded_from": "participants_seen, over_capacity, seen_exceeds_review_capacity"},
             "over_capacity": (None if (seen is None or not size) else seen > size),
             # The ceiling can be higher than the roster can review; THIS is the monitor for the gap that
             # actually matters -- participants served vs participants one roster can review properly.
@@ -1157,7 +1183,7 @@ def review(token: str = None):
     core = _core()
     items = _queue_items()
     pending = [i for i in items if i.get("status") == "pending"]
-    summary = core.review_summary(items)
+    summary = core.review_summary(items, test_hashes=_test_sender_parse()[0])
     cards = []
     for it in pending:
         rid = _esc(it["review_id"])
@@ -1620,7 +1646,7 @@ def review_queue(token: str = None, include_sender: bool = False):
         by_id = {i.get("review_id"): i.get("sender") for i in items}
         for j in shown:
             j["sender"] = by_id.get(j.get("review_id"))
-    return {"count": len(shown), "summary": core.review_summary(items, key), "items": shown}
+    return {"count": len(shown), "summary": core.review_summary(items, key, _test_sender_parse()[0]), "items": shown}
 
 
 # ⛔⛔ THE SWEEPER, AND THE ONE PROPERTY THAT MATTERS ABOUT IT: IT HAS NO SEND PATH.
@@ -1755,7 +1781,7 @@ def dump_queue():
     key = _settings().review_signing_key
     raw_items = _queue_items()
     items = core.public_review_items(raw_items, key)
-    out = {"count": len(items), "summary": core.review_summary(raw_items, key), "items": items}
+    out = {"count": len(items), "summary": core.review_summary(raw_items, key, _test_sender_parse()[0]), "items": items}
     # `modal run` prints the return value as a Python repr (single quotes), which no JSON
     # parser reads -- the first live run found every queue read returning nothing. A marked
     # JSON line is parseable by the caller.

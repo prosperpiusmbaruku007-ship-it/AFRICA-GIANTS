@@ -64,7 +64,7 @@ def test_every_held_control_declares_a_state_and_a_reason(cid):
     # the whole point of retaining the date is that the undone half cannot go quiet, which
     # is how D-FIDELITY-7 lapsed for six weeks while sitting built.
     assert h.get("state") in ("DISABLED", "HELD", "LAPSED_THEN_WIRED",
-                              "WIRED_PENDING_LIVE_VERIFY"), (
+                              "WIRED_PENDING_LIVE_VERIFY", "RESOLVED"), (
         f"{cid}: unknown state {h.get('state')!r}")
     assert h.get("decided"), f"{cid}: no decision date — an undated decision cannot expire"
     assert len(h.get("why", "")) > 40, (
@@ -82,6 +82,12 @@ def test_a_pending_hold_carries_an_expiry(cid):
         assert h.get("expires"), (
             f"{cid} is HELD with no expiry. That is the D-FIDELITY-7 defect exactly: a hold "
             f"nothing brings due is not a hold, it is a thing that was forgotten on purpose.")
+    if h["state"] == "RESOLVED":
+        # 2026-11-13: a hold closed on OBSERVED evidence (a delivered test alert). It must say when and on what, and
+        # carries no expiry -- nothing is pending. Kept in the registry as the record of how it was closed.
+        assert h.get("resolved") and len(h.get("evidence", "")) > 40, (
+            f"{cid} is RESOLVED with no date or no recorded evidence: a hold closed on nothing is a hold dropped")
+        assert h.get("expires") is None
     if h["state"] == "DISABLED":
         assert h.get("expires") is None, (
             f"{cid} is DISABLED but carries an expiry. Pick one: decided (no expiry) or pending "

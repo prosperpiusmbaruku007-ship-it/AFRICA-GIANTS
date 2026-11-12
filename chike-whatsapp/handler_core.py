@@ -209,6 +209,12 @@ class Settings:
     # roster lives in the Modal Secret, like every other credential — never in code.
     roster: tuple = field(default_factory=tuple)        # ((number, name), ...)
 
+    # ── DESIGNATED TEST SENDERS (founder, 2026-11-13) ───────────────────────────────────
+    # The founder's own test phones are not on the roster, so they were counted as participants and a review
+    # capacity of 3 fitted only 2 outside people. Their messages go through the FULL loop (disclosure, ack, held
+    # draft, review) -- only the COUNTS differ. Hashes of the senders listed in the TEST_SENDERS secret.
+    test_sender_hashes: frozenset = frozenset()
+
     # Signs the per-(draft, reviewer) action links. SEPARATE from ADMIN_TOKEN on purpose: a
     # leaked read token must not become a forgeable action link.
     #
@@ -564,6 +570,8 @@ def _blank_row(kind, sender, settings, build):
         "sender_hash": sender_hash,
         "sender_tail": sender_tail,
         "sender_domain": sender_domain(sender),
+        # A designated test sender (TEST_SENDERS): full loop, excluded from the participant counts.
+        "test_sender": is_test_sender_hash(settings, sender_hash),
         # The address REPLIES go to: phone | lid | other. send_state: delivered | pending_receipt
         # | failed (None until a send is attempted).
         "reply_address_kind": reply_address_kind(sender),
@@ -806,6 +814,47 @@ def normalize_reviewer_number(raw):
     if len(digits) < _MIN_PHONE_DIGITS:
         return None
     return f"{digits}@{WA_USER_DOMAIN}"
+
+
+_HASH12_RE = re.compile(r"^[0-9a-f]{12}$")
+
+
+def parse_test_senders(raw, salt=""):
+    """TEST_SENDERS -> (frozenset of sender hashes, number of entries rejected).
+
+    Each comma/semicolon-separated entry is EITHER a phone number (any way a person writes it; hashed exactly as a
+    sender is hashed, `sender_ids(<normalised JID>, salt)`) OR `hash:<12 hex>`, a sender hash as shown in /health and
+    the transcripts -- the second form exists because a participant who arrives only as a `@lid` address cannot be
+    reached from a phone number. THE `hash:` PREFIX IS REQUIRED, not decoration: a Tanzanian number written
+    255XXXXXXXXX is exactly 12 digits, i.e. a valid-looking 12-hex string, and the first draft of this parser read it
+    as a hash and hashed NOTHING (caught by a test, 2026-11-13). An optional `:label` after a phone is ignored. A rejected entry is COUNTED, never silently
+    dropped (a typo that quietly leaves a test phone counted is the failure this must make visible)."""
+    hashes, rejected = set(), 0
+    for chunk in (raw or "").replace(";", ",").split(","):
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        if chunk.lower().startswith("hash:"):
+            h = chunk[5:].strip().partition(":")[0].strip().lower()
+            if _HASH12_RE.match(h):
+                hashes.add(h)
+            else:
+                rejected += 1
+            continue
+        entry = chunk.partition(":")[0].strip()
+        jid = normalize_reviewer_number(entry)
+        if jid is None:
+            rejected += 1
+            continue
+        hashes.add(sender_ids(jid, salt)[0])
+    return frozenset(hashes), rejected
+
+
+def is_test_sender_hash(settings_or_hashes, sender_hash):
+    # A settings-like object without the field (older stubs) means "no test senders", never "iterate the object".
+    hashes = (settings_or_hashes if isinstance(settings_or_hashes, (set, frozenset, tuple, list))
+              else getattr(settings_or_hashes, "test_sender_hashes", ()))
+    return bool(sender_hash) and sender_hash in (hashes or ())
 
 
 def parse_roster(raw):
@@ -1137,6 +1186,7 @@ def review_item(row, sender, draft, engine_working=None, facts=(), review_id=Non
         "sender": sender,
         "sender_hash": row["sender_hash"],
         "sender_tail": row.get("sender_tail"),
+        "test_sender": bool(row.get("test_sender")),
         "question": row.get("question"),
         # IMMUTABLE. The model's own words, kept whatever the reviewer does next.
         "draft": draft,
@@ -1617,7 +1667,12 @@ def is_seeded_test(item) -> bool:
     return str(item.get("review_id") or "").startswith("TEST-")
 
 
-def review_summary(items, signing_key=None):
+def _is_test_item(item, test_hashes=()):
+    return bool(is_seeded_test(item) or item.get("test_sender")
+                or (item.get("sender_hash") and item.get("sender_hash") in (test_hashes or ())))
+
+
+def review_summary(items, signing_key=None, test_hashes=()):
     """The throughput and quality numbers the pilot exists to produce.
 
     ⚠️ SEEDED `TEST-` ITEMS ARE EXCLUDED (and counted in `excluded_test_items`, so the exclusion
@@ -1627,8 +1682,8 @@ def review_summary(items, signing_key=None):
     returning 0.0 — a zero edit rate on an empty queue is indistinguishable from a perfect
     model, and that is the direction this project keeps getting wrong (R39).
     """
-    excluded = sum(1 for i in items if is_seeded_test(i))
-    items = [i for i in items if not is_seeded_test(i)]
+    excluded = sum(1 for i in items if _is_test_item(i, test_hashes))
+    items = [i for i in items if not _is_test_item(i, test_hashes)]
     decided = [i for i in items if i.get("status") in ("sent", "edited", "withheld")]
     counts = {a: sum(1 for i in decided if i["status"] == a)
               for a in ("sent", "edited", "withheld")}

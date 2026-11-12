@@ -259,18 +259,36 @@ def _no_alerting():
     return h
 
 
-def test_while_the_hold_is_live_missing_alerting_warns_loudly_and_does_not_refuse():
+_LIVE_HOLD = ("active", "hold until 2026-11-25: NO PARTICIPANT IS RECRUITED WHILE ALERTING IS OFF")
+
+
+def test_while_a_hold_is_live_missing_alerting_warns_loudly_and_does_not_refuse(monkeypatch):
+    """The HELD mechanism (R35) stays tested with an injected hold: the real registry row is now RESOLVED."""
+    monkeypatch.setattr(pf, "alerting_hold", lambda today=None: _LIVE_HOLD)
     del pf.WARNINGS[:]
     assert pf.check_whatsapp_health(_no_alerting(), today="2026-11-12") == []
     text = " ".join(pf.WARNINGS)
     assert "ALERTING IS OFF" in text and "NO PARTICIPANT MAY BE RECRUITED" in text
 
 
-def test_the_refusal_comes_back_by_itself_on_the_expiry_date():
+def test_the_refusal_comes_back_by_itself_when_a_hold_expires(monkeypatch):
+    monkeypatch.setattr(pf, "alerting_hold",
+                        lambda today=None: ("active" if (today or "") <= "2026-11-25" else "expired",
+                                            "hold expired 2026-11-25" if (today or "") > "2026-11-25" else "held"))
     del pf.WARNINGS[:]
-    assert pf.check_whatsapp_health(_no_alerting(), today="2026-11-25") == [], "expiry day still held"
+    assert pf.check_whatsapp_health(_no_alerting(), today="2026-11-25") == []
     fails = pf.check_whatsapp_health(_no_alerting(), today="2026-11-26")
     assert fails and "alerting" in fails[0].lower() and "hold expired 2026-11-25" in fails[0]
+
+
+def test_now_the_hold_is_resolved_missing_alerting_REFUSES_the_deploy():
+    """2026-11-13: the founder saw the test alert arrive; the registry row is RESOLVED, so no hold applies and a
+    deploy without HEALTHCHECK_PING_URL is refused on any date -- the gate is no longer a warning."""
+    del pf.WARNINGS[:]
+    assert pf.alerting_hold("2026-11-14")[0] == "none"
+    fails = pf.check_whatsapp_health(_no_alerting(), today="2026-11-14")
+    assert fails and "HEALTHCHECK_PING_URL" in fails[0]
+    assert pf.WARNINGS == []
 
 
 def test_configured_alerting_produces_no_warning():
@@ -279,11 +297,16 @@ def test_configured_alerting_produces_no_warning():
     assert pf.WARNINGS == []
 
 
-def test_the_hold_is_registered_dated_and_records_the_recruiting_condition():
-    state, note = pf.alerting_hold("2026-11-12")
-    assert state == "active"
-    assert "NO PARTICIPANT IS RECRUITED WHILE ALERTING IS OFF" in note
-    assert pf.alerting_hold("2026-11-26")[0] == "expired"
+def test_the_alerting_hold_is_registered_as_RESOLVED_with_its_evidence_and_times():
+    import importlib.util, os
+    path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eval", "controls", "audit_control_fires.py")
+    spec = importlib.util.spec_from_file_location("_acf_t", path)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    h = m.HOLDS[pf._ALERT_HOLD_ID]
+    assert h["state"] == "RESOLVED" and h["resolved"] == "2026-11-13"
+    assert "23:14:45" in h["evidence"] and "23:14:56" in h["evidence"] and "02:14" in h["evidence"]
+    assert "NO PARTICIPANT IS RECRUITED WHILE ALERTING IS OFF" in h["why"], "the recruiting condition stays on record"
 
 
 def test_real_build_gate_drops_cron_only_in_the_throwaway_build(monkeypatch):

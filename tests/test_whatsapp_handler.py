@@ -602,7 +602,7 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
                 # reported by name under /health's wappfly.alerting.missing, and the pre-flight
                 # refuses an image where that list is non-empty.
                 "TRANSPORT", "BRIDGE_URL", "BRIDGE_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "MAX_RENOTIFIES", "ALERT_FROM", "ALERT_SMTP_PORT",
-                "HEALTHCHECK_PING_URL"}   # 2026-11-13: the alert key; reported by name under /health alerting.missing
+                "HEALTHCHECK_PING_URL", "TEST_SENDERS"}   # 2026-11-13: alert key (reported under /health alerting.missing); designated test senders (reported under cohort.test_senders)
     assert read - tunables == set(mw.EXPECTED_KEYS), (
         "a secret key is read but not reported by /health, or vice versa")
 
