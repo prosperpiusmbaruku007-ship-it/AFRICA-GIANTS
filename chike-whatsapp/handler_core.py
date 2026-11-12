@@ -1128,6 +1128,47 @@ _PUSH_FACTS_MAX = 5
 _PUSH_FACT_CHARS = 180
 
 
+# ── AN EMPTY EVIDENCE PANEL MUST BE IMPOSSIBLE TO MISTAKE FOR "NOTHING TO CHECK" (2026-11-12) ──────────────
+#
+# Every one of the first 7 drafts ever held reached the reviewer with NO engine working and NO facts -- the panel
+# was empty because ChikeModel.run returned only the reply -- and nothing said so loudly. The push did print
+# "VIGEZO VILIVYOTUMIKA (0)" and "HESABU YA MFUMO: hakuna", in the same quiet type as everything else: the
+# information was technically present and visually identical to a draft that simply had nothing to check.
+#
+# So the rule is stated as a pure function, used by the push, BOTH cards and /health, and pinned by tests:
+#   ok             the draft carries engine working or retrieved facts
+#   deterministic  the text is the engine's / canned copy (path engine:*, clarification, refusal): there is no
+#                  model-written claim on the card to verify, so an empty panel is the correct state
+#   none           a MODEL answer (path 'fact') with no facts and no working: nothing to check it against
+#   path_missing   no path recorded at all -- the signature of the evidence pipeline being broken again
+#   not_applicable the model failed and this is the canned apology
+EVIDENCE_LOUD = ("none", "path_missing")
+
+EVIDENCE_WARNING_SW = ("⚠️⚠️ HAKUNA USHAHIDI — rasimu hii haina hesabu ya mfumo wala vigezo vilivyotumika. "
+                       "HAKUNA CHOCHOTE cha kuilinganisha nacho. Usiidhinishe kwa sababu inasomeka vizuri: "
+                       "izuie, au ithibitishe mwenyewe na TRA.")
+EVIDENCE_WARNING_EN = ("NO EVIDENCE: this draft has no engine working and no retrieved facts, so there is "
+                       "NOTHING on this card to check it against. Do not approve it because it reads well "
+                       "-- withhold it, or verify it against TRA yourself.")
+EVIDENCE_PATH_MISSING = ("(The answer path was not recorded at all -- the evidence pipeline itself may be "
+                         "broken. Tell the developer.)")
+
+
+def evidence_state(item) -> str:
+    if item.get("fallback"):
+        return "not_applicable"
+    if item.get("engine_working") or item.get("facts"):
+        return "ok"
+    path = item.get("answer_path")
+    if path and (str(path).startswith("engine:") or path in ("clarification", "coverage_refusal", "refusal")):
+        return "deterministic"
+    return "none" if path else "path_missing"
+
+
+def evidence_is_loud(item) -> bool:
+    return evidence_state(item) in EVIDENCE_LOUD
+
+
 def notification_text(item, link, reviewer_name=None, renotify=False):
     """The WhatsApp push a reviewer receives the moment a draft is ready.
 
@@ -1153,10 +1194,16 @@ def notification_text(item, link, reviewer_name=None, renotify=False):
     head = ("🔁 KUPITIA TENA (bado hakuna aliyeshughulikia)" if renotify
             else "📋 RASIMU MPYA — inahitaji kupitiwa")
     who = f" · {reviewer_name}" if reviewer_name else ""
-    lines = [f"{head}{who}",
-             f"Mteja: ...{item.get('sender_tail') or '????'}",
-             "",
-             f"SWALI: {item.get('question') or '(hakuna)'}",
+    lines = [f"{head}{who}"]
+    if evidence_is_loud(item):
+        # FIRST, before the question: a reviewer reading on a phone must meet this before the draft.
+        lines += [EVIDENCE_WARNING_SW, EVIDENCE_WARNING_EN]
+        if evidence_state(item) == "path_missing":
+            lines.append(EVIDENCE_PATH_MISSING)
+        lines.append("")
+    lines += [f"Mteja: ...{item.get('sender_tail') or '????'}",
+              "",
+              f"SWALI: {item.get('question') or '(hakuna)'}",
              "",
              f"RASIMU: {item.get('draft') or '(hakuna)'}"]
     if item.get("engine_working"):

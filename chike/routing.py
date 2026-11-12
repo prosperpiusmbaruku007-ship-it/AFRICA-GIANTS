@@ -551,6 +551,32 @@ _VAT_REG_CUES = ["kusajili vat", "kujisajili vat", "kusajilisha vat", "kujisajil
                  "kizingiti cha vat", "kufika kiwango cha vat", "nimefika kiwango cha vat",
                  "tumefika kiwango cha vat",            # CONCORD: 1pl counterpart
                  "register for vat", "vat registration", "vat threshold"]
+# ── THE VAT-REGISTRATION CUE LIST KNEW ONLY THE INFINITIVE (2026-11-12) ─────────────────────────────────
+#
+# "Mauzo yangu ni milioni 250 kwa mwaka. Je, ni lazima NIJISAJILI VAT" is the plainest possible form of the
+# commonest VAT question, and it returned intent `none`: _VAT_REG_CUES holds "kusajili vat" / "kujisajili vat" /
+# "usajili wa vat" and nothing a trader actually types in the first person. Measured: 4 of 7 natural phrasings
+# of one question missed the engine and fell to the fact path -- which answered with a bare "Ndiyo" and no
+# figure, no threshold, no working. (The verdict was right; the next one need not be.)
+#
+# TWO FORMS, one anchored pattern each:
+#   SUBJUNCTIVE  ni-/tu- + sajili | jisajili | sajilishe | jisajilishe | sajiliwe | jiandikishe | andikishe |
+#                andikishwe   ("nisajili VAT", "nijisajili VAT", "nijiandikishe kwa VAT", "tujisajili VAT" --
+#                the 1pl counterpart, per this file's CONCORD convention), plus the infinitive
+#                "kujiandikisha (kwa (ajili ya)) VAT" that the list also lacked.
+#   OBJECT-CONCORD  "VAT ni lazima kwangu / kwetu / kwa biashara yangu / kwa mimi / kwa sisi" -- the question
+#                asked of VAT rather than of the registering.
+#
+# NARROW BY CONSTRUCTION (R17): the verb must sit IMMEDIATELY before "vat" (optionally "kwa" / "kwa ajili ya"),
+# so "nisajili biashara yangu BRELA", "nijisajili NSSF" and "nijiandikishe TRA kupata TIN" contain a registration
+# verb and are not VAT. And a cue alone routes nothing: the existing gates still apply -- the trader must state
+# THEIR OWN turnover, there must be a money figure, and the threshold-lookup veto runs first. This widens what
+# counts as "asking about VAT registration"; it does not widen who gets an engine answer.
+_VAT_REG_RE = re.compile(
+    r"\b(?:(?:ni|tu)(?:sajili|jisajili|sajilishe|jisajilishe|sajiliwe|jiandikishe|andikishe|andikishwe)"
+    r"|kujiandikisha|kujiandikishwa)\s+(?:kwa\s+(?:ajili\s+ya\s+)?)?vat\b"
+    r"|\bvat\s+(?:ni\s+)?lazima\s+(?:kwangu|kwetu|kwa\s+(?:mimi|sisi)|kwa\s+biashara\s+(?:yangu|yetu))\b",
+    re.IGNORECASE)
 _EFD_CUES = ["mashine ya risiti", "mashine ya efd", "risiti ya mashine", "kuwa na efd",
              "nahitaji efd", "lazima niwe na efd", "efd machine", "kutumia efd"]
 
@@ -577,6 +603,25 @@ _OWN_TURNOVER_CUES = ["mauzo yangu", "mauzo ya biashara yangu", "mauzo ya duka l
                       "tumepata mauzo",
                       "my turnover", "my sales"]
 
+# ⛔ THE OWNERSHIP GATE MATCHED CUES AS BARE SUBSTRINGS (found 2026-11-12 by a probe, not by the corpus).
+# "nauza" sits inside "a-NAUZA" (he/she sells), so "Rafiki yangu anauza milioni 250 kwa mwaka, je ni lazima
+# kusajili VAT?" passed the gate as if it were the USER's turnover -- and, as a probe showed, `naingiza` sits
+# inside "anaingiza" the same way. This is the substring collision R17 records three-for-three, here in the
+# ownership gate: the gate whose whole job is "my sales, not anyone's". Word-bounded: a cue must not be
+# preceded or followed by a letter.
+#
+# ⚠️ AND THE BUG HAD BEEN PROPPING UP THREE LEGITIMATE ROWS, found by reading what the fix DEMOTED (R39's
+# direction: a fix that shrinks a population). "Biashara yangu ya VIPURI inaingiza TZS milioni 25 kila mwezi"
+# is plainly the user's own business -- but it only reached the engine because "naingiza" matched INSIDE
+# "inaingiza". The honest cue is the construction itself: a first-person possessive business/shop, a short
+# descriptor, then an earning verb. It is added here so the three rows keep their route for the right reason.
+_OWN_BUSINESS_EARNS = (
+    r"(?:biashara|duka)\s+(?:yangu|langu|yetu|letu)\b[^.?!\n]{0,30}?\b"
+    r"(?:inaingiza|linaingiza|inauza|linauza|ina\s+mauzo|lina\s+mauzo|imepata|limepata)\b")
+_OWN_TURNOVER_RE = re.compile(
+    r"(?<![a-z])(?:" + "|".join(re.escape(c) for c in sorted(_OWN_TURNOVER_CUES, key=len, reverse=True))
+    + r")(?![a-z])|" + _OWN_BUSINESS_EARNS)
+
 # Asks that are NOT "am I over the threshold?", even when every other cue is present. Each is
 # a question the comparison cannot answer, and answering it with a comparison is worse than
 # leaving it on the fact path:
@@ -587,7 +632,10 @@ _OWN_TURNOVER_CUES = ["mauzo yangu", "mauzo ya biashara yangu", "mauzo ya duka l
 _THRESHOLD_ASK_VETO = re.compile(
     r"ni\s+tzs\s+ngapi|ni\s+kiasi\s+gani\s*\?|\bsivyo\s*\?|baada\s+ya\s+miezi\s+mingapi|"
     r"mauzo\s+ya\s+ziada|kiasi\s+gani\s+zaidi|ngapi\s+kabla|vizingiti\s+viwili|"
-    r"kizingiti\s+cha\s+mauzo\s+cha|asilimia\s+ngapi")
+    r"kizingiti\s+cha\s+mauzo\s+cha|asilimia\s+ngapi|"
+    # "...yamefikia jumla ya SHILINGI NGAPI ili nisajiliwe kwa VAT?" asks what the threshold IS. The widened
+    # cue list newly routed it to the engine, which asked for the trader's turnover instead of stating it.
+    r"shilingi\s+ngapi")
 
 # A figure quoted in a FOREIGN currency is not TZS turnover and must never be compared against
 # a TZS threshold (eval_278 states Kenyan shillings). The existing money-magnitude test counts
@@ -1540,11 +1588,18 @@ def detect_intent(text: str) -> str:
                  or any(c in ql for c in _BUSINESS_INCOME_TAX_CUES))):
         return "presumptive"
 
-    vat_reg = any(c in ql for c in _VAT_REG_CUES)
+    # The NEW first-person cue does not fire on an APPROXIMATE figure ("karibu / takriban / kama milioni 200"):
+    # the engine compares a figure EXACTLY against the threshold, and nothing in the VAT arm consults
+    # swn.detect_approximation. "Nearly 200M" answered "Ndiyo, unatakiwa kujisajili ... yamefikia" is a
+    # confident claim about a number the trader did not give. The OLD infinitive cues keep their existing
+    # behaviour (measured: one old-routed row has such a cue, and it is a monthly rate that declines
+    # anyway) -- this widening must not create NEW exposure, so it does not.
+    vat_reg = any(c in ql for c in _VAT_REG_CUES) or (
+        bool(_VAT_REG_RE.search(ql)) and not swn.detect_approximation(text))
     efd = any(c in ql for c in _EFD_CUES)
     if (vat_reg or efd) and not _THRESHOLD_ASK_VETO.search(ql) \
             and not _FOREIGN_CURRENCY.search(ql):
-        own = any(c in ql for c in _OWN_TURNOVER_CUES)
+        own = bool(_OWN_TURNOVER_RE.search(ql))
         # EFD needs no figure when registration alone settles it; VAT always needs one.
         if (own and _has_money_magnitude(ql)) or (efd and states_vat_registered(text)):
             return "efd_requirement" if efd else "vat_registration"

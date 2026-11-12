@@ -349,6 +349,47 @@ comes first.
 visible rather than hiding it behind the larger number:** at 15 with one reviewer it reports `within_review_capacity: false`, `sized_for_reviewers: 5`, **`review_capacity_participants: 3`**, a note naming the
 gap, and a new monitor **`seen_exceeds_review_capacity`** (participants served vs participants one roster can review).
 
+### 4i. 2026-11-12 (04:00) — VAT PHRASINGS CLOSED; THE EVIDENCE PANEL CAN NO LONGER BE EMPTY SILENTLY; R41
+
+**Founder's call:** fix the VAT routing FIRST and ship it in the same deploy — *"a real participant will hit the fact path on the commonest VAT question."* The queue
+decision of earlier tonight is reversed on the strength of the 4-of-7 measurement.
+
+**1. The cue list learned the first-person forms (`chike/routing.py`, `_VAT_REG_RE`).** Subjunctive `ni-/tu-` + `sajili | jisajili | sajilishe | jisajilishe | sajiliwe |
+jiandikishe | andikishe | andikishwe` (+ the 1pl counterpart, per the file's CONCORD convention), the infinitive `kujiandikisha (kwa (ajili ya)) VAT`, and the object-concord
+`VAT ni lazima kwangu / kwetu / kwa biashara yangu`. Anchored: the verb must sit IMMEDIATELY before "vat". A cue alone routes nothing — the own-turnover, money-figure and
+threshold-lookup gates all still apply.
+- **Sweep over the whole corpus** (8,132 strings, old routing vs new, intent AND orchestrator answer, separate processes): **19 changed, 0 demoted**, and I read every row.
+  17 of the 19 are gains or my own probes. **THE SWEEP FOUND THREE THINGS THE PROBES DID NOT:** (a) two rows with an APPROXIMATE figure (*"yamefikia karibu milioni mia mbili"*,
+  *"kama milioni 150"*) were newly routed to an engine that compares exactly — `detect_approximation` is consulted by NO route — so the NEW cue now refuses an approximate
+  figure; (b) a threshold LOOKUP (*"…shilingi ngapi ili nisajiliwe kwa VAT"*) was newly routed and answered with a request for the trader's turnover instead of the threshold —
+  added to the lookup veto; (c) the bug below.
+- **⚠️ A PRE-EXISTING BUG, FOUND BY A PROBE AND FIXED: THE OWNERSHIP GATE MATCHED BARE SUBSTRINGS.** `"nauza"` sits inside *"a-NAUZA"* (he/she sells), so *"Rafiki yangu
+  anauza milioni 250 kwa mwaka, je ni lazima kusajili VAT?"* was answered as the USER's turnover — in the infinitive form too, long before tonight. Word-bounded now.
+  **And the bug had been propping up three LEGITIMATE rows** (*"Biashara yangu ya vipuri INAINGIZA TZS milioni 25 kila mwezi"* reached the engine only because `naingiza`
+  matched inside `inaingiza`); the first word-boundary fix DEMOTED them, found by reading the demoted set (R39's direction). Restored for the right reason with an explicit
+  possessive-business + earning-verb pattern. **Final: 0 demoted.**
+- **17 authored probes in both directions** (`eval/accuracy_gate/vat_phrasing_probes_2026_11_12.jsonl`): 9 must route (the four phrasings, 1pl, `kwa ajili ya`, under-threshold,
+  object-concord with the figure after, scale-first) and 8 must NOT (BRELA, TIN, a VAT-rate question, an approximate figure, a threshold lookup, no turnover, a procedure
+  question, someone else's turnover). **The strict-xfail is now an ordinary passing test.**
+- **Open, measured, NOT fixed:** the OLD infinitive cues still ignore approximation (*"karibu milioni 200 … ni lazima kujisajili VAT"* → exact comparison); and a PROJECTION
+  (*"mauzo yangu YATAKUWA yamefikia TZS 200,000,000 mwaka huu, je nisajili VAT?"*) is answered in the present tense. Neither is a new exposure; both are Bar A items.
+
+**2. THE EVIDENCE GUARD — the most important result of the night.** The push for the 02:47 draft DID print *"VIGEZO VILIVYOTUMIKA (0)"* and *"HESABU YA MFUMO: hakuna"* — in the
+same quiet type as everything else. **The information was present and visually identical to a draft with nothing to check.** `hc.evidence_state(item)` is now the single rule:
+`ok` / `deterministic` (engine or canned copy: nothing model-written to verify) / **`none`** (a MODEL answer with no facts and no working) / **`path_missing`** (no path recorded —
+the signature of the pipeline being broken again) / `not_applicable` (the apology). `none` and `path_missing` are LOUD:
+- **the reviewer's WhatsApp push leads with a red-flag block BEFORE the question**, bilingual, and says when the path itself is missing;
+- **both cards** (overview and the reviewer's own `/d` page) show a red bordered block;
+- **`/health` → `review_queue.pending_without_evidence`** counts drafts waiting with nothing to check — should be 0, visible without opening a card.
+- **Tests that fail if `ChikeModel.run` ever stops returning the evidence:** `tests/test_evidence_guard.py` COMPILES AND RUNS THE ACTUAL BODY of `run()` from `modal_app.py`
+  against a real orchestrator (engine and fact answers), plus the handler end to end with a stubbed model in BOTH directions — a bare-reply model yields a loud item and a loud
+  push; an evidence-bearing one yields a card with it and a quiet push; a fact answer that retrieved nothing is loud even though its path is recorded. **R26: planted by making
+  `run()` return only the reply → 4 tests failed; restored.** All 7 real held items are asserted loud under the new rule.
+
+**3. R41 recorded** (`CLAUDE.md`), with the runbook corrected in place and cross-referenced: *a claim about what the system shows, written from design intent and never checked
+against a stored item, is the same defect as the gate scores (R12b), the undeployed fix (R16) and the control verified by wiring (R26).* The EFD miss stands recorded as a review
+miss AND a tooling miss.
+
 ### 5. Open
 - **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
   `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy

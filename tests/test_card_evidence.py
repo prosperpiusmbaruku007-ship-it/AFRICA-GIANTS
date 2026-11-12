@@ -87,15 +87,14 @@ def test_the_handler_captures_path_working_and_facts_and_puts_them_on_the_item_a
     assert src.count("_path_html(it)") >= 3          # defined once, shown on BOTH cards
 
 
-# ── the plainest phrasing of the question: a KNOWN ROUTING GAP, queued, held as a strict xfail ──
-@pytest.mark.xfail(strict=True, reason=(
-    "KNOWN R31 GAP, QUEUED for after the pilot starts (founder, 2026-11-12): the router's VAT cues know only the "
-    "infinitive ('kusajili VAT', 'kujisajili VAT'). First-person 'nijisajili VAT' / 'nisajili VAT' / 'nijiandikishe "
-    "VAT' fall to the fact path -- 4 of 7 natural phrasings of the same question. Fix the cues, then delete this "
-    "marker (strict: it XPASSes and fails until you do)."))
+# ── the plainest phrasing of the question: WAS a known routing gap, now closed ───────────────────
+# This was a strict-xfail until the VAT cue list learned the first-person subjunctive (2026-11-12). It is an
+# ordinary passing test now -- and strict=True is why it could not be forgotten: the day the cues were fixed it
+# would have failed as an XPASS until the marker was removed. The probes and sweep live in tests/test_vat_phrasing.py.
 def test_first_person_vat_registration_reaches_the_engine():
     t = answer_trace.trace(_engine_reply("Mauzo yangu ni milioni 250 kwa mwaka. Je, ni lazima nijisajili VAT"))
     assert t["path"].startswith("engine:vat_registration")
+    assert t["working"] is None or "250,000,000" in t["working"] or t["path"] == "engine:vat_registration"
 
 
 # ── the greeting ─────────────────────────────────────────────────────────────────────────────────

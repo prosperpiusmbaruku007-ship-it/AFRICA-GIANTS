@@ -198,6 +198,13 @@ That is what keeps attribution honest.
 
 ## 4. ⛔ Before adding anyone to the roster: the review standard
 
+> **IF A CARD OR PUSH OPENS WITH A RED "HAKUNA USHAHIDI / NO EVIDENCE" BLOCK, THE DRAFT HAS NOTHING TO CHECK IT AGAINST.**
+> That is not a quiet state: it means the draft carries no engine working and no retrieved facts. **Withhold it, or
+> verify it against TRA yourself — never approve it because it reads well.** (Added 2026-11-12: for the first 7 drafts
+> ever held the panel was empty and nothing said so.) If the block also says the answer path *was not recorded*, the
+> evidence pipeline itself is broken — tell the developer before approving anything else. `/health` shows
+> `review_queue.pending_without_evidence`; it should be 0.
+
 **A seat on the roster is authority to approve a compliance answer a Tanzanian employer will
 act on.** Adding a reviewer without telling them this is on the void list, and it is worse
 than an unreviewed reply — because the record then says the reply *was* checked.
@@ -264,7 +271,9 @@ A reviewer must be told, before their number goes in the Secret:
    > the 7 items held to date**: `ChikeModel.run` returned only `{'reply': …}`, so the handler never
    > received what retrieval served. **The reviewer was shown the draft alone.** The claim was
    > written from the design's intent and never checked against a stored item — the same error as
-   > asserting a fix works because the code reads as though it should. Fixed in the commit that adds
+   > asserting a fix works because the code reads as though it should. **The general form is now CLAUDE.md
+> R41:** a claim about what the system shows, written from design intent and never checked against a stored item,
+> is the same defect as the gate scores and the undeployed fixes this project has already recorded. Fixed in the commit that adds
    > `chike/answer_trace.py`; from the first deploy carrying it, the card shows the facts, the
    > working and the path. **Everything below that tells a reviewer to compare the draft with the
    > card's facts was therefore unusable by a reviewer until then.**

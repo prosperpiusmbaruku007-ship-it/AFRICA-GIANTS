@@ -1471,6 +1471,35 @@ introduced it.
    locked. **So the trigger to re-check refusals is ADDING A DOMAIN, not editing a phrase** —
    and adding a domain does not look like touching refusals, which is exactly why it is missed.
 
+### ⛔⛔ R41 — A CLAIM ABOUT WHAT THE SYSTEM SHOWS, WRITTEN FROM DESIGN INTENT AND NEVER CHECKED AGAINST A STORED ITEM, IS THE SAME DEFECT AS THE GATE SCORE AND THE UNDEPLOYED FIX. (added 2026-11-12)
+
+**Found by reading one answer.** The review tool was built to put evidence — the engine's working, the facts retrieval
+served — beside every draft. **On all 7 real items it showed none** (`engine_working: null`, `facts: []`), because
+`ChikeModel.run` returned only `{'reply': …}`; and **nothing signalled that the panel was empty**, so an empty panel
+read exactly like a draft with nothing to check. Meanwhile the runbook, and a PROGRESS entry, said the contradicting
+EFD fact *"was on the card"* — **written from the design's intent, never checked against a stored item.** The reviewer
+approved a draft they had been given no evidence to check.
+
+**It is the same defect this file has already recorded, in a different layer:** a regex gate headline that
+*positively credited* the confident wrong answers it could not see (R12b); `✓ App deployed` taken as "the change is
+live" while warm containers served the old code (R16); a control "verified" by asserting its *wiring* rather than by
+watching it block (R26); a stale reference document used as the baseline for judging new evidence. In every case a
+description of the system stood in for an observation of it.
+
+**IN PRACTICE:**
+- **Before writing "the card / page / reply / log shows X", open ONE stored item and quote the field.** If you cannot
+  quote it, the sentence is a hope. A claim about a display cites the artifact, exactly as a claim about a figure cites
+  the source.
+- **A pipeline feeding a display needs a test on a REAL-SHAPED item that the field is non-empty** — and the test must
+  run the code that produces it, not read its source. (`tests/test_evidence_guard.py` compiles and runs the actual
+  body of `ChikeModel.run`; planted by making it return only the reply, it fails four ways.)
+- **An empty panel must be loud, not silent.** Absence has to be indistinguishable from nothing-to-check *only if
+  nothing-to-check is genuinely possible* — so state the rule as a pure function (`evidence_state`), use it in every
+  place the panel is shown, and put a counter in `/health` (`pending_without_evidence`) so the failure is visible
+  without opening a card. **A missing signal must itself be a signal.**
+- **Correct a wrong claim in place, in the file that made it, and say it was wrong** — a stale line in a runbook is
+  worse than a gap, because the next reader treats it as the baseline.
+
 ### ⛔⛔ R40 — A SCRIPT'S `main()` MAY SET UP ITS WORLD. A LIBRARY'S IMPORT MAY NOT. (added 2026-10-09)
 
 **The same line is correct in one place and an outage in the other, and the difference is not

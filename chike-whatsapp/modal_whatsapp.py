@@ -458,6 +458,19 @@ def _has_pending_question(sender, settings) -> bool:
         return False
 
 
+def _evidence_banner(it):
+    """LOUD red block when a draft reaches review with neither engine working nor facts. An empty panel must
+    never be readable as 'nothing to check' -- for the first 7 drafts ever held it was exactly that."""
+    core = _core()
+    if not core.evidence_is_loud(it):
+        return ""
+    extra = ("<br><i>" + _esc(core.EVIDENCE_PATH_MISSING) + "</i>"
+             if core.evidence_state(it) == "path_missing" else "")
+    return ("<div style='background:#4a1010;border:2px solid #ff4d4d;color:#ffd6d6;border-radius:8px;"
+            "padding:10px;margin-bottom:8px;font-weight:700'>"
+            + _esc(core.EVIDENCE_WARNING_SW) + "<br>" + _esc(core.EVIDENCE_WARNING_EN) + extra + "</div>")
+
+
 def _path_html(it):
     """Which SOURCE answered: the one fact that tells the reviewer whether any arithmetic was checked."""
     p = it.get("answer_path")
@@ -960,7 +973,10 @@ def _review_queue_health():
     pending = [i for i in items if i.get("status") == "pending"]
     oldest = min((i.get("ts_held") or "" for i in pending), default=None)
     return {"ok": True, "total": len(items), "pending": len(pending),
-            "oldest_pending_ts": oldest}
+            "oldest_pending_ts": oldest,
+            # Drafts waiting for a human that carry NOTHING to check them against. Should be 0; a non-zero
+            # value is the evidence pipeline failing again, visible without opening a single card.
+            "pending_without_evidence": sum(1 for i in pending if _core().evidence_is_loud(i))}
 
 
 @app.function(image=image, secrets=SECRETS)
@@ -997,6 +1013,7 @@ def review(token: str = None):
             + _esc(it.get("model_latency_ms")) + "ms" + flags + "</div>"
             "<div class=q>" + _esc(it.get("question")) + "</div>"
             '<textarea id="t-' + rid + '" rows=9>' + _esc(it.get("draft")) + "</textarea>"
+            + _evidence_banner(it)
             + _disclosure_banner(it)
             + _path_html(it)
             + work_html
@@ -1126,6 +1143,7 @@ def d(r: str = None, v: str = None, t: str = None):
         + ("andika jibu lako hapa..." if it.get("fallback") else "")
         + '" ' + ("disabled" if decided else "") + ">"
         + ("" if it.get("fallback") else _esc(it.get("draft"))) + "</textarea>"
+        + _evidence_banner(it)
         + _disclosure_banner(it)
         + _path_html(it)
         + work_html
