@@ -564,22 +564,26 @@ between Q2 and Q3 (word-set Jaccard 0.82).
 **TEST_SENDERS: the founder's setting had reached the app by the time of the run** — `env_present true`, `listed 2`, `seen 2`, **`participants_seen 0`**, the identities-not-people note present (the "[result]" in the founder's message was left unfilled, so this is from `/health`, not from the founder's report).
 
 
-### 5. Open
-- **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the
-  `chike-transcripts-test-archive-kv` Dict (each stamped with the reason), verified 46/46 identical, a copy
-  committed at `eval/results/test_pollution_archive_2026_11_11.json`, then removed from the live store. The
-  live store now holds 10 rows from two real senders and none from the harness. (The delete step was cut by a
-  dropped connection; the archive-first order meant nothing was lost, and it was finished with a loop that
-  re-checks each row against the archive before removing it.)
-- **ALSO FOUND: 15 seeded `TEST-` items sit in the live review queue** (2026-10-11 live-verification of the
-  review flow, labelled `[MTIHANI …]`) **and `review_summary()` counted them** — 9 of 15 withheld or edited,
-  i.e. a 0.6 edit rate before any participant. Kept as evidence the flow was verified; now excluded from every
-  statistic and reported as `excluded_test_items`, planted-tested. **Needs a `chike-whatsapp` deploy to take effect.**
-- GPU: **do not switch yet.** First measure whether the 20-min start was scarcity (log scheduling wait
-  separately from model load on the next cold start); only if so, add L4 as fallback and re-run the gate checks.
+### 5. Open — **REWRITTEN 2026-11-13; the earlier list was stale (most of it was resolved in 4b–4r). Resolved items are kept, marked, not deleted.**
+
+**OPEN**
+- **Review capacity is 3 participants (one reviewer) against a `COHORT_SIZE` ceiling of 15** — `/health` shows `within_review_capacity: false`. Invite 3 at most until the roster grows. (Report of 2026-11-13 after 4r, flag 1; `TEST_SENDERS` made capacity 3 mean 3 real people — 4p.)
+- **The holding message carries no deadline.** A participant on a model-path question who gets it can wait until a reviewer acts; participants must be told answers can be held. Re-notification every 7 min is uncapped (`MAX_RENOTIFIES=0`) for unreviewed model drafts. (4q/4r; founder's design.)
+- **Auto-send covers only `model_calls == 0` statement routes** (VAT registration, EFD, presumptive, corporate and partnership tax, rent WHT, minimum wage). NSSF / SDL / PAYE amount answers wait for review. A deliberate deviation from the literal `engine:*` rule — **R43, the founder's call, reversible.** (4q; R43 in CLAUDE.md.)
+- **A dead GPU path is invisible with no traffic.** The inference watch is a shallow web check plus `model_watch_problem` (needs real-question failures). A canary question (~$1/day of GPU) was proposed and **not built.** (4q/4r.)
+- **R7 gates not met:** Gate 1 about 80-82% against 85%; Gate 2 (refusal) unsolved after five dead designs. The supervised-pilot reading rests entirely on the supervision condition (every model-generated reply read by a human; amended 2026-11-13), not on the gates. (CLAUDE.md, R7 reading + amendment.)
+- **NOT YET RECORDED ANYWHERE — the official channel:** BRELA entity registration, then Meta business verification, then the official WhatsApp Cloud API. **The Baileys bridge is unofficial and carries ban risk**, which is accepted for the pilot only. Nothing in this repo tracks the path off it.
+- Smaller, from the same runs: one unexplained 409 at 22:14:34 UTC on 2026-11-12; push text is stored nowhere (the amber block is only reconstructed); the queued routing gaps (English VAT routing, projection tense, approximation in old VAT cues, PAYE-penalty retrieval, L4 full gate); GPU: do not switch yet — first measure whether the 20-min start was scarcity.
+
+**RESOLVED (kept for the record)**
+- **RESOLVED 2026-11-12 — the 46 polluted rows were MOVED, not deleted:** copied to the `chike-transcripts-test-archive-kv` Dict, verified 46/46 identical, a copy at `eval/results/test_pollution_archive_2026_11_11.json`, then removed from the live store.
+- **RESOLVED — the 15 seeded `TEST-` items no longer count:** excluded from every statistic and reported as `excluded_test_items`; the later `TEST_SENDERS` mechanism (4p) extends this to the founder's tester identities.
+- **RESOLVED 2026-11-13 (4o, 4p) — alerting:** healthchecks.io dead-man's switch live; DOWN and UP emails confirmed by the founder at 02:14; hold marked RESOLVED in the registry.
+- **RESOLVED 2026-11-13 (4q) — pilot hours, re-notify, review timeout:** 24 h, 7-min re-notify, 15-min timeout live-verified.
+- **RESOLVED 2026-11-13 (4r) — both timeout paths verified on a real question; the holding message follows the topic; `participants_seen: 0`.**
+- **RESOLVED 2026-11-13 — chike-inference on the dead-man's switch (4q);** latency figure in `/health` (4q).
 - The old "Habari, hi,  hellow" draft was withheld by the founder.
-- PROGRESS.md had no entry between 2026-10-09 and this one; the October→November arc (supervised cohort,
-  roster, D-FIDELITY-9) lives in the commit log and CLAUDE.md only.
+- PROGRESS.md had no entry between 2026-10-09 and 2026-11-11; the October-to-November arc lives in the commit log and CLAUDE.md.
 
 ---
 
