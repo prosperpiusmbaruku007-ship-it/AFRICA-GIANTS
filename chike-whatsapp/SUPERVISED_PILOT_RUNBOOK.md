@@ -82,7 +82,8 @@ CHIKE_BUILD=$(git rev-parse --short HEAD) \
   REVIEW_D_URL=https://<ws>--chike-whatsapp-d.modal.run \
   REVIEW_CLAIM_URL=https://<ws>--chike-whatsapp-review-claim.modal.run \
   REVIEW_ACT_URL=https://<ws>--chike-whatsapp-review-act.modal.run \
-  COHORT_SIZE=3 CLAIM_TTL_S=900 RENOTIFY_AFTER_S=1800 \
+  COHORT_SIZE=15 CLAIM_TTL_S=900 RENOTIFY_AFTER_S=420 MAX_RENOTIFIES=0 \
+  AUTOSEND_ENGINE=1 AUTOSEND_AFTER_S=900 \
   PYTHONIOENCODING=utf-8 PYTHONUTF8=1 \
   python -m modal deploy chike-whatsapp/modal_whatsapp.py
 ```
@@ -437,6 +438,34 @@ Remove `SUPERVISED` from the secret (or set it to `0`), redeploy per §1, and **
 does not send them, and nothing else will.
 
 ---
+
+## ⚖️ THE REVIEW TIMEOUT, PILOT HOURS AND RE-NOTIFICATION (founder's decision, 2026-11-13)
+
+**Pilot hours: all 24 hours** — no quiet hours; every draft is pushed whenever it is ready. **Re-notify every 7 minutes, no cap**
+(`RENOTIFY_AFTER_S=420`, `MAX_RENOTIFIES=0`; the sweep runs every minute so 7 means 7, not 9; no cap means no daily digest). Consequence the
+founder chose: a model-path draft nobody reviews pings the roster every 7 minutes for ever.
+
+**The 15-minute rule — a change to the R7 reading, recorded in CLAUDE.md.** From *"every reply is read by a human"* to *"every
+model-generated reply is read by a human; deterministic engine answers may send after 15 minutes unreviewed."* A draft not reviewed 15
+minutes after it became reviewable (`held_at`) is:
+- **AUTO-SENT** if it contains **no model-written word** — `model_calls == 0`, no guard fired, engine working present, evidence present —
+  prefixed *"Hii ni hesabu ya kiotomatiki ya mfumo — bado haijakaguliwa na mtu."* Today that means the statement routes (VAT registration,
+  EFD, presumptive, corporate/partnership tax, rent WHT, minimum wage, base rejections). **A compute answer whose body the model wrote
+  (NSSF/SDL/PAYE amounts) is NOT auto-sent**, even though its `path` says `engine:*` — measured: 81 of the 99 engine-path gate questions.
+- otherwise **held**: the participant gets ONE holding message (no figures, no rates; TRA toll-free 0800 780 078 / 0800 750 075, Mon–Fri
+  08:00–19:00, verified on tra.go.tz 2026-11-13), the draft stays in review and **sends as normal when you approve it**.
+- **A claimed draft is left alone** (someone has it open); a decided draft is never touched; each thing happens once.
+- **Flagged for you:** the push and the card say, before the question, either *AUTO-SEND … sends itself at HH:MM UTC unless you act* or
+  *MODEL ANSWER: never auto-sent*; an auto-sent item shows a red *AUTO-SENT … check it now* banner, is listed on the admin page, counted in
+  `/health → review_queue.auto_sent`, and attributed to `AUTO-SEND (engine answer, no person read it)` — never to a person.
+- **Switch:** `AUTOSEND_ENGINE=1` (+ `AUTOSEND_AFTER_S`). A typo turns the WHOLE timeout off (every draft then waits for a human); gate 3b warns.
+- **Latency:** `/health → review_queue.latency_24h` — question-to-delivery, median and worst, count over 15 minutes, and whether the cause
+  was `review_wait` or `gpu_or_model` (with the cold-start subset), for real participants and (separately) including test senders.
+- **chike-inference is on the dead-man's switch:** a shallow web-tier check every 2 minutes (it does not wake the GPU) fails the check on the
+  second failed reading; and two real questions failing at the model in a row with no success since fails it too. **Honest limit:** with no
+  traffic, a GPU path that fails while the web tier is up is invisible; a tester question that succeeds clears it.
+- **Live-verify without waiting:** `.remote()` of `seed_timeout_probe('engine'|'model')` seeds an aged `TEST-` draft addressed to
+  the reviewer's OWN phone, then `review_timeout_sweep.remote()`.
 
 ## Designated test senders (`TEST_SENDERS`, 2026-11-13)
 
